@@ -98,7 +98,8 @@ src/
   shared/
     ui/           Designsystem-Komponenten
     lib/          HLC, IDs, Datum (dayKey), Einheiten, Formatierung, Textnormalisierung
-    db/           Dexie-Datenbank, Basis-Repository, Snapshots, Gesundheitsprüfung
+    db/           Dexie-Datenbank, Basis-Repository, Snapshots, Gesundheitsprüfung, Fehlerprotokoll
+    pwa/          Service Worker, Update-Zustand, Installationsdialog (Chromium)
     i18n/         Typisierter deutscher Textkatalog
     testing/      Fixtures, Datengenerator, fake-indexeddb-Setup
 public/           Manifest, Icons
@@ -205,12 +206,13 @@ Navigation: im MVP Tab-Leiste mit Heute, Training, Fortschritt, Mehr; am Desktop
 - **Service Worker (Workbox über vite-plugin-pwa):** Vorab-Cache aller gebauten Dateien einschließlich aller nachgeladenen Code-Teile und der gebündelten Stammdaten; Navigations-Fallback auf die App-Shell; kein Cache für spätere API-Antworten, weil Daten in IndexedDB liegen.
 - **Update:** `registerType: 'prompt'`. Eine neue Version wird geladen und erst nach „Jetzt aktualisieren" aktiv; während einer laufenden Einheit erscheint der Hinweis erst danach (AK-PWA-03).
 - **Installationshilfe:** iOS bietet keinen Installationsdialog. Die App erkennt den Safari-Tab über `display-mode: standalone` und `navigator.standalone` und zeigt die Anleitung „Teilen › Zum Home-Bildschirm". Sie weist darauf hin, dass Daten im Browser-Tab getrennt von der installierten App gespeichert werden (AK-PWA-04).
+- **Umsetzung M0:** Das Manifest trägt die helle Theme-Farbe; `<meta name="theme-color">` folgt zur Laufzeit der gewählten Darstellung. `public/theme-init.js` setzt Hell oder Dunkel vor dem ersten Bild (extern, weil die CSP keine Inline-Skripte erlaubt). Nach Updates fragt die App beim Start und höchstens stündlich bei Rückkehr in den Vordergrund.
 - **Prüfung:** Lighthouse hat die PWA-Kategorie entfernt (D-221). Playwright prüft Manifest, Registrierung des Service Workers und den Offline-Start; zusätzlich prüfe ich die Installierbarkeit manuell in den Chrome-Entwicklerwerkzeugen.
 
 ## 10. Hosting und Auslieferung
 
 - **Feste Produktivadresse:** IndexedDB-Daten gehören zu genau einer Adresse (Origin). Ein späterer Wechsel der Adresse oder Domain macht vorhandene Daten in der App unsichtbar; sie müssen dann per Export und Import umziehen. Die Adresse wird deshalb vor der ersten echten Nutzung festgelegt (Q-02).
-- **Entscheidung:** Vercel im kostenlosen Hobby-Plan für persönliche Nutzung (D-231) mit Build aus dem privaten GitHub-Repository. Der Hauptzweig `main` wird zur Produktivadresse `<projekt>.vercel.app`, jeder andere Branch erhält eine Vorschau-Adresse. Vorschau-Adressen haben eigene, getrennte Daten und zeigen „Vorschau – Testdaten" (AK-PWA-07). Die Konfiguration liegt in `vercel.json` (Weiterleitung aller App-Routen auf `index.html`, Header, Caching). Supabase bietet kein eigenes Hosting für Web-Apps und dient erst ab R3 für Anmeldung und Sync. Cloudflare Pages bleibt eine gleichwertige Alternative; GitHub Pages scheidet für private Repositories im kostenlosen Plan aus.
+- **Entscheidung:** Vercel im kostenlosen Hobby-Plan für persönliche Nutzung (D-231) mit Build aus dem privaten GitHub-Repository. Der Hauptzweig `main` wird zur Produktivadresse `https://fitness-app-mu-drab.vercel.app`, jeder andere Branch erhält eine Vorschau-Adresse nach dem Muster `fitness-app-git-<branch>-dr-b21f.vercel.app`. Vorschau-Adressen haben eigene, getrennte Daten und zeigen „Vorschau – Testdaten" (AK-PWA-07). Die Konfiguration liegt in `vercel.json` (Weiterleitung aller App-Routen auf `index.html`, Header, Caching). Supabase bietet kein eigenes Hosting für Web-Apps und dient erst ab R3 für Anmeldung und Sync. Cloudflare Pages bleibt eine gleichwertige Alternative; GitHub Pages scheidet für private Repositories im kostenlosen Plan aus.
 - **Header:** Content Security Policy mit `default-src 'self'` als Ausgangspunkt; `style-src` mit `'unsafe-inline'`, weil Radix Positionierung über Inline-Styles setzt; `connect-src` ab R2 und R3 um die nötigen Hosts erweitert. Weitere Header: `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff`, `Permissions-Policy` mit Kamera nur ab R2. Für `sw.js` und `index.html` kein langes Caching.
 - **Auslieferung:** Push auf den Hauptzweig → CI (Abschnitt 14) → Build → Deployment. Ein roter CI-Lauf verhindert die Auslieferung.
 

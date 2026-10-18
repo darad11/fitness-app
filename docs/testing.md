@@ -1,6 +1,6 @@
 # Teststrategie und Testprotokolle
 
-Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: verbindlich ab M0 · Vorgänger: `archive/v0.1-phase-1/testing.md`
+Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: verbindlich ab M0 · Vorgänger: `archive/v0.1-phase-1/testing.md`
 
 ## Änderungen gegenüber Version 0.1
 
@@ -8,6 +8,7 @@ Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: verbindlich ab M0 · Vorg�
 - Testumgebung präzisiert: WebKit läuft in GitHub Actions, nicht in dieser Cloud-Umgebung.
 - Lighthouse-PWA-Prüfung ersetzt durch eigene PWA-Prüfungen (D-221).
 - Neu: Geräteprotokolle T-IPH-M0, T-IPH-M1, T-IPH-M4, T-IPD-M4, T-MAC-M4 und Konflikttests K-01 bis K-21.
+- Version 0.3 (M0): E2E-Läufe mit den Produktions-Headern (D-237) und Abbruch bei Konsolenfehlern; CI-Gates technisch umgesetzt (Abschnitt 5); Ergebnisse von M0 in Abschnitt 10.
 
 ## 1. Grundsätze
 
@@ -33,6 +34,8 @@ Ergänzend: Testing Library für Komponenten, axe-core in Playwright für Barrie
 - **GitHub Actions:** Node 24; `npx playwright install --with-deps chromium webkit`; alle E2E-Tests in beiden Engines (D-210).
 - **Playwright-WebKit ist nicht Safari auf iOS.** Es deckt Rendering und Standardverhalten von WebKit ab, nicht aber Home-Bildschirm-Modus, Speicherisolation, Anhalten im Hintergrund, Wake Lock, Audio-Session oder Installation. Diese Punkte prüfen nur die Geräteprotokolle.
 - **Lighthouse** hat die PWA-Kategorie entfernt. Stattdessen prüft Playwright: Manifest gültig und verlinkt; Service Worker registriert und kontrolliert die Seite nach Reload; jede MVP-Route lädt offline (Netzwerk im Browserkontext abgeschaltet).
+- **Produktionsnahe E2E-Läufe:** Playwright testet den Build über `vite preview`. Die Vorschau sendet dieselben Sicherheits-Header wie Vercel, gelesen aus `vercel.json` (D-237). Jeder Test schlägt fehl, sobald der Browser einen Konsolenfehler meldet; so fallen auch CSP-Verstöße auf.
+- **Service Worker und Offline-Start** prüft der E2E-Test in Chromium. In WebKit wird dieser Test übersprungen; dort gilt das Geräteprotokoll T-IPH-M0.
 
 ## 4. Testinhalte
 
@@ -100,7 +103,18 @@ Repositories mit Tombstones · Transaktion „Training starten" atomar · „Sat
 
 ## 5. CI-Gates
 
-Jeder Push und jeder Pull Request: Lint, Typprüfung, Unit- und Integrationstests mit Abdeckung (`calc/` ≥ 95 %, `service/` und `data/` ≥ 85 % Zeilen), E2E in Chromium und WebKit, Build, PWA-Prüfungen aus Abschnitt 3, Bündelgröße der Startansicht unter 250 KB komprimiert, Kontrasttest der Tokens. Ein roter Lauf blockiert Merge und Auslieferung.
+Jeder Pull Request und jeder Push auf `main` (Arbeitszweige laufen über ihren Pull Request, damit nichts doppelt läuft): Lint, Typprüfung, Unit- und Integrationstests mit Abdeckung (`calc/` ≥ 95 %, `service/` und `data/` ≥ 85 % Zeilen), E2E in Chromium und WebKit, Build, PWA-Prüfungen aus Abschnitt 3, Bündelgröße der Startansicht unter 250 KB komprimiert, Kontrasttest der Tokens. Ein roter Lauf blockiert Merge und Auslieferung.
+
+Umsetzung (M0) in `.github/workflows/ci.yml`:
+
+| Gate | Befehl | Stand |
+|---|---|---|
+| Formatierung, Lint mit Modulgrenzen, Typprüfung | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Umgesetzt |
+| Unit-, Integrations- und Komponententests mit Abdeckungsschwellen | `pnpm test:coverage` (Schwellen in `vitest.config.ts`: `shared/lib` und `calc/` ≥ 95 %, `shared/db`, `data/` und `service/` ≥ 85 % Zeilen) | Umgesetzt |
+| Kontrasttest der Tokens | Teil von `pnpm test:coverage` (`tokens.test.ts`) | Umgesetzt |
+| Dokumentprüfungen | `pnpm check:docs` | Umgesetzt |
+| Build und Bündelgröße der Startansicht | `pnpm build`, `pnpm check:bundle` (Grenze 250 KB gzip) | Umgesetzt |
+| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt; der erste CI-Lauf folgt, sobald das Repository besteht |
 
 ## 6. Geräteprotokolle
 
@@ -108,7 +122,7 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 
 ### T-IPH-M0 · iPhone, Installation und Offline-Start
 
-1. Produktivadresse in Safari öffnen. Erwartung: Hinweis zur Installation und zur Datentrennung.
+1. Produktivadresse `https://fitness-app-mu-drab.vercel.app` in Safari öffnen. Erwartung: Hinweis zur Installation und zur Datentrennung.
 2. „Teilen › Zum Home-Bildschirm" ausführen, App vom Home-Bildschirm starten. Erwartung: Vollbild ohne Browserleiste, Name und Icon korrekt.
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
@@ -158,3 +172,26 @@ Deterministische Fixtures je Modul unter `shared/testing/fixtures`; ein Generato
 ## 9. Berichtspflicht
 
 Jeder Arbeitspaket-Bericht nennt die ausgeführten Befehle, Anzahl bestandener und fehlgeschlagener Tests, Dauer, bei Fehlern die wörtliche Ausgabe und Playwright-Traces sowie offene Fehler mit ID.
+
+## 10. Ergebnisse je Meilenstein
+
+### M0 · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 20 Testdateien, 247 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 94 %, alle Schwellen erreicht |
+| Dokumente | `pnpm check:docs` | Bestanden |
+| Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 172,8 KB gzip; Service Worker mit 30 vorab gespeicherten Dateien |
+| E2E Chromium (Desktop und Pixel 7) | `E2E_ENGINES=chromium PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e` | 26 Tests bestanden, 0 fehlgeschlagen |
+| E2E WebKit | – | In dieser Umgebung nicht ausführbar (WebKit nicht installiert); siehe GitHub Actions unten |
+| Gerätetest T-IPH-M0 | – | Offen (Produktinhaber, nach dem Merge auf der Produktivadresse) |
+
+GitHub Actions (Node 24, Ubuntu, Pull Request darad11/fitness-app#1):
+
+| Lauf | Stand | Ergebnis |
+|---|---|---|
+| 1 | `016fc5d` | Fehlgeschlagen in `pnpm test:coverage`: Der Formatierungstest erwartete für de-CH das Tausendertrennzeichen „’"; Node 24 bringt ICU 78 mit und liefert „'". Der Test prüft seitdem die Art des Zeichens (D-233). E2E wurde nicht erreicht |
+| 2 | `0ab67f2` | Bestanden: Formatierung, Lint, Typen, Unit-Tests mit Schwellen, Dokumente, Build, Bündelgröße; E2E in Chromium und in WebKit (Desktop und iPhone-Profil). Die Logdateien sind aus dieser Umgebung nicht abrufbar; die genaue Zahl der Tests je Engine steht deshalb hier nicht. In WebKit wird der Offline-Test mit Service Worker planmäßig übersprungen (Abschnitt 3) |
+
+Abgedeckte Fälle: PWA-Prüfungen aus Abschnitt 3 (Manifest, Icons, Service Worker, Offline-Start aller vorhandenen Routen), E-24 (nur eigene Adresse, Sicherheits-Header), E-25 (Safari-Tab-Hinweis simuliert; das Vorschau-Etikett ist nur als Komponententest geprüft, weil es vom Vercel-Build abhängt), E-27 als Grundfassung (axe hell und dunkel ohne Verstöße; Tastatur und Kürzel folgen). Fehlergrenze je Ansicht und Update-Bestätigung sind als Komponententests geprüft (Teile von E-22 und E-23).

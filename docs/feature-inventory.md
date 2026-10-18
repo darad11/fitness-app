@@ -1,6 +1,6 @@
 # Funktionsinventar und Funktionsmatrix
 
-Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: Entscheidungen vorläufig freigegeben · Vorgänger: `archive/v0.1-phase-1/feature-inventory.md`
+Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Entscheidungen vorläufig freigegeben; erste Umsetzungsstände eingetragen · Vorgänger: `archive/v0.1-phase-1/feature-inventory.md`
 
 Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `python3 tools/feature_inventory_to_csv.py` erzeugt.
 
@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.3 (M0): Status nur dort geändert, wo der Nachweis vorliegt. „Getestet": SY-16 (Nachweis U bestanden) und SY-10 (E2E in Chromium und WebKit bestanden). „Implementiert": SY-01, SY-06, SY-08, SY-14, SY-15, SY-17 (Gerätetest bzw. spätere Nachweise stehen aus). Teilweise umgesetzte Funktionen (SY-02, SY-11, SY-13, CH-08) bleiben „Zur Umsetzung ausgewählt"; ihr Stand steht in `implementation-plan.md` (Stand M0).
 - Funktionen, die Xeela laut Rezensionen fehlen, sind als Stand der Rezensionen (2024/2025) formuliert, nicht als aktueller Zustand der App (D-118).
 
 ## Legende
@@ -58,9 +59,11 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Status | Anzahl |
 |---|---|
 | Analysiert | 43 |
+| Getestet | 2 |
+| Implementiert | 6 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 38 |
-| Zur Umsetzung ausgewählt | 82 |
+| Zur Umsetzung ausgewählt | 74 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -257,23 +260,23 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| SY-01 | Lokale Datenbank (Dexie, IndexedDB) als führender Speicher | Server-Backend | DT | E | EV | H | – | M | P0 | MVP | R1 · M0 | Verbesserung (D-113, D-204) | Zur Umsetzung ausgewählt | AK-DAT-07, AK-DAT-11, AK-UX-06 |
+| SY-01 | Lokale Datenbank (Dexie, IndexedDB) als führender Speicher | Server-Backend | DT | E | EV | H | – | M | P0 | MVP | R1 · M0 | Verbesserung (D-113, D-204) | Implementiert | AK-DAT-07, AK-DAT-11, AK-UX-06 |
 | SY-02 | PWA mit Installation, Offline-Betrieb, Update-Hinweis | Native App | – | E | EV | H | SY-15 | M | P0 | MVP | R1 · M0/M4 | Verbesserung (D-101) | Zur Umsetzung ausgewählt | AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02 |
 | SY-03 | Cloud-Synchronisierung | Server-Backend | DT | E | EV | H | SY-09; SY-17 | XL | P1 | Später | R3 · M9/M10 | Verbesserung (D-205) | Spezifiziert | Konfliktregeln pro Entität; Tests mit zwei Geräten; RLS-Tests |
 | SY-04 | Export und Import | Nicht belegt | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M2/M4 | Verbesserung (D-218) | Zur Umsetzung ausgewählt | AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05 |
 | SY-05 | Backup und Wiederherstellung | – | – | E | EV | H | SY-04; SY-11 | M | P1 | MVP | R1 · M2/M4 (Cloud R3) | Verbesserung | Zur Umsetzung ausgewählt | AK-DAT-02, AK-DAT-12 |
-| SY-06 | Hell- und Dunkelmodus | – | – | E | EV | M | Design-Tokens | S | P1 | MVP | R1 · M0/M4 | Verbesserung (D-119) | Zur Umsetzung ausgewählt | AK-SET-03, AK-UX-04 |
+| SY-06 | Hell- und Dunkelmodus | – | – | E | EV | M | Design-Tokens | S | P1 | MVP | R1 · M0/M4 | Verbesserung (D-119) | Implementiert | AK-SET-03, AK-UX-04 |
 | SY-07 | Tastaturbedienung und Barrierearmut | – | – | E | EV | M | – | M | P1 | MVP | R1 · M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-UX-03 bis AK-UX-05, AK-UX-08 |
-| SY-08 | Lokales Fehlerprotokoll ohne Nutzdaten | – | – | E | EV | M | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-DAT-09 |
+| SY-08 | Lokales Fehlerprotokoll ohne Nutzdaten | – | – | E | EV | M | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Implementiert | AK-DAT-09 |
 | SY-09 | Anmeldung nur für die Sync | Pflichtkonto | SD 00:39 | E | EV | M | SY-03 | M | P1 | Später | R3 · M9 | Verbesserung | Spezifiziert | App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS |
-| SY-10 | Keine Drittanbieter-Telemetrie | Tracking-Identifier laut Privacy Label | AS | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-030) | Zur Umsetzung ausgewählt | AK-PWA-06 |
+| SY-10 | Keine Drittanbieter-Telemetrie | Tracking-Identifier laut Privacy Label | AS | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-030) | Getestet | AK-PWA-06 |
 | SY-11 | Automatischer Snapshot vor riskanten Vorgängen | – | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-217) | Zur Umsetzung ausgewählt | AK-DAT-06, AK-DAT-04 |
 | SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-PWA-05 |
 | SY-13 | Wiederherstellung bei Datenbankfehlern | Anlass: Abstürze mit Datenverlust (laut Rezensionen) | REV | E | EV | H | SY-11 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-216) | Zur Umsetzung ausgewählt | AK-DAT-08, AK-TRN-25, AK-TRN-26 |
-| SY-14 | Hinweis bei Nutzung im Safari-Tab | – | – | E | EV | H | SY-02 | S | P0 | MVP | R1 · M0 | Verbesserung | Zur Umsetzung ausgewählt | AK-PWA-04, AK-SET-06 |
-| SY-15 | Hosting mit fester HTTPS-Adresse und Vorschau-Umgebungen | – | – | E | EV | H | Q-01; Q-02 | S | P0 | MVP | R1 · M0 | Verbesserung (D-021) | Zur Umsetzung ausgewählt | AK-PWA-07 |
-| SY-16 | Deutsche Oberfläche, Formatierung nach Gerätesprache | – | – | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-103, D-212) | Zur Umsetzung ausgewählt | AK-SET-04 |
-| SY-17 | Sync-fähige Metadaten ab Schema v1 | – | – | E | EV | H | SY-01 | S | P0 | MVP | R1 · M0 | Verbesserung (D-206, D-207) | Zur Umsetzung ausgewählt | AK-DAT-11 |
+| SY-14 | Hinweis bei Nutzung im Safari-Tab | – | – | E | EV | H | SY-02 | S | P0 | MVP | R1 · M0 | Verbesserung | Implementiert | AK-PWA-04, AK-SET-06 |
+| SY-15 | Hosting mit fester HTTPS-Adresse und Vorschau-Umgebungen | – | – | E | EV | H | Q-01; Q-02 | S | P0 | MVP | R1 · M0 | Verbesserung (D-021) | Implementiert | AK-PWA-07 |
+| SY-16 | Deutsche Oberfläche, Formatierung nach Gerätesprache | – | – | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-103, D-212) | Getestet | AK-SET-04 |
+| SY-17 | Sync-fähige Metadaten ab Schema v1 | – | – | E | EV | H | SY-01 | S | P0 | MVP | R1 · M0 | Verbesserung (D-206, D-207) | Implementiert | AK-DAT-11 |
 | SY-18 | Lokale Projektionen für Auswertungen | – | – | E | EV | H | SY-01 | S | P0 | MVP | R1 · M1 | Verbesserung (D-204) | Zur Umsetzung ausgewählt | AK-TRN-05, AK-HIS-03 |
 | SY-19 | Import mit Zusammenführung nach Konfliktregeln | – | – | E | EV | H | SY-04 | M | P1 | MVP | R1 · M4 | Verbesserung (D-218) | Zur Umsetzung ausgewählt | AK-DAT-03 |
 | SY-20 | Versionsanzeige und Änderungsprotokoll in der App | – | – | E | EV | N | – | S | P2 | MVP | R1 · M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-SET-07 |

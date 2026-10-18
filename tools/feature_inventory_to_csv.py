@@ -9,11 +9,15 @@ Quelle der Wahrheit ist docs/feature-inventory.md. Das Skript
   4. ersetzt den Kennzahlenblock zwischen den Markern STATS-BEGIN/STATS-END
      (oder den Platzhalter <!-- STATS -->) in docs/feature-inventory.md.
 Andere Teile der Markdown-Datei bleiben unverändert.
-Exit-Code 1, wenn eine Regel verletzt ist.
+Mit --check werden keine Dateien geschrieben; stattdessen schlägt das Skript
+fehl, wenn CSV oder Kennzahlenblock nicht zum aktuellen Stand der Matrix passen
+(für die CI).
+Exit-Code 1, wenn eine Regel verletzt ist oder --check Abweichungen findet.
 """
 from __future__ import annotations
 
 import csv
+import io
 import re
 import sys
 from collections import Counter
@@ -36,6 +40,7 @@ MATRIX_ID_RE = re.compile(r"\b[A-Z]{2}-\d{2}\b")
 MATRIX_RANGE_RE = re.compile(r"\b([A-Z]{2})-(\d{2}) bis ([A-Z]{2})-(\d{2})\b")
 HERKUNFT = {"V": "OV", "V-R": "OV", "P": "ON", "N": "ON", "VF": "EV", "E": "EV"}
 LATER_STATUS = {"Noch zu recherchieren", "Analysiert", "Spezifiziert"}
+MVP_STATUS = {"Zur Umsetzung ausgewählt", "Implementiert", "Getestet", "Abgenommen"}
 BEGIN, END = "<!-- STATS-BEGIN -->", "<!-- STATS-END -->"
 
 
@@ -94,7 +99,7 @@ def check(rows: list[dict[str, str]], aks: dict[str, set[str]]) -> list[str]:
         if scope == "MVP":
             if not r["Release"].startswith("R1"):
                 errors.append(f"{rid}: MVP ohne Release R1")
-            if r["Status"] != "Zur Umsetzung ausgewählt":
+            if r["Status"] not in MVP_STATUS:
                 errors.append(f"{rid}: MVP mit Status {r['Status']}")
             if not refs:
                 errors.append(f"{rid}: MVP ohne AK-Verweis")
@@ -153,27 +158,40 @@ def stats_block(rows: list[dict[str, str]]) -> str:
     return "\n".join(lines)
 
 
-def write_stats(rows: list[dict[str, str]]) -> None:
+def render_stats(rows: list[dict[str, str]]) -> str:
     text = SRC.read_text(encoding="utf-8")
     block = stats_block(rows)
     if BEGIN in text and END in text:
         start, stop = text.index(BEGIN), text.index(END) + len(END)
-        text = text[:start] + block + text[stop:]
-    elif "<!-- STATS -->" in text:
-        text = text.replace("<!-- STATS -->", block)
-    else:
-        sys.exit("Kein Kennzahlen-Marker gefunden")
-    SRC.write_text(text, encoding="utf-8")
+        return text[:start] + block + text[stop:]
+    if "<!-- STATS -->" in text:
+        return text.replace("<!-- STATS -->", block)
+    sys.exit("Kein Kennzahlen-Marker gefunden")
+
+
+def render_csv(rows: list[dict[str, str]]) -> str:
+    buf = io.StringIO(newline="")
+    writer = csv.DictWriter(buf, fieldnames=["Modul", *COLUMNS], delimiter=";")
+    writer.writeheader()
+    writer.writerows(rows)
+    return buf.getvalue()
 
 
 def main() -> int:
+    check_only = "--check" in sys.argv[1:]
     rows, aks = read_matrix(), read_requirements()
     errors = check(rows, aks)
-    with DST.open("w", encoding="utf-8-sig", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=["Modul", *COLUMNS], delimiter=";")
-        writer.writeheader()
-        writer.writerows(rows)
-    write_stats(rows)
+    csv_text, md_text = render_csv(rows), render_stats(rows)
+    if check_only:
+        current_csv = DST.read_text(encoding="utf-8-sig") if DST.exists() else ""
+        if current_csv.replace("\r\n", "\n") != csv_text.replace("\r\n", "\n"):
+            errors.append(f"{DST.relative_to(ROOT)} ist veraltet: Skript ohne --check ausführen")
+        if SRC.read_text(encoding="utf-8") != md_text:
+            errors.append(f"Kennzahlenblock in {SRC.relative_to(ROOT)} ist veraltet: Skript ohne --check ausführen")
+    else:
+        with DST.open("w", encoding="utf-8-sig", newline="") as fh:
+            fh.write(csv_text)
+        SRC.write_text(md_text, encoding="utf-8")
     print(f"{len(rows)} Funktionen -> {DST.relative_to(ROOT)}; {len(aks)} Akzeptanzkriterien gelesen")
     print("Umfang:", dict(Counter(r["Umfang"] for r in rows)))
     print("Herkunft:", dict(Counter(r["Herkunft"] for r in rows)))
@@ -182,7 +200,7 @@ def main() -> int:
         for e in errors:
             print("  -", e)
         return 1
-    print("Konsistenzprüfung bestanden")
+    print("Konsistenzprüfung bestanden" + (" (nur geprüft, nichts geschrieben)" if check_only else ""))
     return 0
 
 

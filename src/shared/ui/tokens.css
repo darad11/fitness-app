@@ -1,0 +1,104 @@
+/*
+ * Farbtokens (design-system.md Abschnitt 2). Hell ist Standard; Dunkel gilt bei Systemeinstellung
+ * „dunkel" ohne manuelle Wahl „hell" und immer bei manueller Wahl „dunkel".
+ * Die Werte prüft src/shared/ui/tokens.test.ts auf Kontrast (WCAG 2.1 AA) und auf Gleichheit
+ * der beiden dunklen Blöcke.
+ */
+
+:root {
+  color-scheme: light;
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-2: #f3f4f6;
+  --fg: #111318;
+  --fg-muted: #5b6270;
+  --border: #e5e7eb;
+  --border-input: #828b99;
+  --accent: #256abf;
+  --accent-hover: #1c5cab;
+  --accent-fg: #ffffff;
+  --accent-ink: #256abf;
+  --focus: #256abf;
+  --success: #13794d;
+  --warning: #976200;
+  --danger: #c53030;
+  --data-1: #2a78d6;
+  --data-2: #eb6834;
+  --data-3: #1baf7a;
+  --data-4: #eda100;
+  --data-5: #e87ba4;
+  --data-6: #008300;
+  --data-7: #6250d6;
+  --data-8: #e34948;
+  --chart-grid: #e5e7eb;
+  --chart-axis: #5b6270;
+  --chart-point: #8a93a1;
+  --meter-track: #cde2fb;
+  --chart-total: #3a4150;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #0f1115;
+    --surface: #171a21;
+    --surface-2: #1f232c;
+    --fg: #eceef2;
+    --fg-muted: #9aa3b2;
+    --border: #2a2f3a;
+    --border-input: #6b7383;
+    --accent: #3987e5;
+    --accent-hover: #5598e7;
+    --accent-fg: #0b0e14;
+    --accent-ink: #5598e7;
+    --focus: #5598e7;
+    --success: #3dbe86;
+    --warning: #e0a943;
+    --danger: #f26d6d;
+    --data-1: #3987e5;
+    --data-2: #d95926;
+    --data-3: #199e70;
+    --data-4: #c98500;
+    --data-5: #d55181;
+    --data-6: #008300;
+    --data-7: #9085e9;
+    --data-8: #e66767;
+    --chart-grid: #2a2f3a;
+    --chart-axis: #9aa3b2;
+    --chart-point: #6b7383;
+    --meter-track: #15365f;
+    --chart-total: #c3cad6;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-2: #1f232c;
+  --fg: #eceef2;
+  --fg-muted: #9aa3b2;
+  --border: #2a2f3a;
+  --border-input: #6b7383;
+  --accent: #3987e5;
+  --accent-hover: #5598e7;
+  --accent-fg: #0b0e14;
+  --accent-ink: #5598e7;
+  --focus: #5598e7;
+  --success: #3dbe86;
+  --warning: #e0a943;
+  --danger: #f26d6d;
+  --data-1: #3987e5;
+  --data-2: #d95926;
+  --data-3: #199e70;
+  --data-4: #c98500;
+  --data-5: #d55181;
+  --data-6: #008300;
+  --data-7: #9085e9;
+  --data-8: #e66767;
+  --chart-grid: #2a2f3a;
+  --chart-axis: #9aa3b2;
+  --chart-point: #6b7383;
+  --meter-track: #15365f;
+  --chart-total: #c3cad6;
+}

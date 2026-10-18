@@ -1,6 +1,6 @@
 # Datenmodell
 
-Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: MVP-Schema zur Umsetzung freigegeben, spätere Aggregate spezifiziert · Vorgänger: `archive/v0.1-phase-1/data-model.md`
+Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: MVP-Schema v1 umgesetzt (Basisfelder, Tabellen, Indizes), Fachtypen folgen ab M1 · Vorgänger: `archive/v0.1-phase-1/data-model.md`
 
 ## Änderungen gegenüber Version 0.1
 
@@ -10,12 +10,13 @@ Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: MVP-Schema zur Umsetzung f
 - Versionsketten für Programme und Rezepte entfallen; historische Treue über Snapshots (D-209).
 - Konfliktregeln je Entität als 3-Wege-Merge mit Vorrangregeln (Abschnitt 7) statt einer Tabelle mit Zwei-Wege-Regeln.
 - Konkretes Dexie-Schema v1 für den MVP (Abschnitt 6), Export- und Importformat (Abschnitt 11), Serverschema für R3 (Abschnitt 12).
+- Version 0.3 (M0): Basisfeld `type` an jeder Wurzel; unbekannte Felder bleiben erhalten (D-234); fester Namensraum für UUID v5 (D-235); Inhalt der Tabelle `meta` und der Snapshot-Datenbank konkretisiert (Abschnitt 5); Schema v1 umgesetzt in `src/shared/db/schema.ts` (Abschnitt 6).
 
 ## 1. Konventionen
 
 | Thema | Regel |
 |---|---|
-| IDs | UUID v4 über `crypto.randomUUID()`. Deterministische UUID v5 für Datensätze mit natürlichem Schlüssel (z. B. Schritte eines Tages, Woche eines Menüs) und für gebündelte Stammdaten (Basisübungen, Beispielvorlagen, BLS-Lebensmittel). Namensräume je Typ, z. B. `core-exercise:bench_press` |
+| IDs | UUID v4 über `crypto.randomUUID()`. Deterministische UUID v5 für Datensätze mit natürlichem Schlüssel (z. B. Schritte eines Tages, Woche eines Menüs) und für gebündelte Stammdaten (Basisübungen, Beispielvorlagen, BLS-Lebensmittel). Alle im festen Namensraum der App `a9f1c5d1-6d1e-4d1d-b94d-d8ca701b9904` (D-235) mit Schlüsseln je Typ, z. B. `core-exercise:bench_press` oder `singleton:settings` |
 | Zeitpunkte | ISO 8601 in UTC mit Millisekunden, z. B. `2026-10-18T09:15:02.123Z` |
 | Tagesbezug | `dayKey` (lokales Datum `YYYY-MM-DD`) plus `tz` (IANA-Zone, z. B. `Europe/Vienna`) am Datensatz. Tageswerte gruppieren nach `dayKey`, nie nach UTC. Eine Trainingseinheit gehört zum Tag ihres Starts (D-223) |
 | Änderungsstempel | `hlc` = hybride logische Uhr im Format `<ISO-Zeit>-<Zähler 4-stellig>-<Geräte-ID 8-stellig>`, z. B. `2026-10-18T09:15:02.123Z-0003-a1b2c3d4`. Lexikografisch sortierbar. Bei lokaler Änderung: `max(jetzt, letzte Zeit)`, bei Gleichstand Zähler + 1. Beim Empfang fremder Stempel springt die lokale Uhr mindestens auf deren Zeit |
@@ -73,6 +74,7 @@ type DayKey = string;         // 'YYYY-MM-DD'
 
 interface Root {
   id: string;                 // UUID
+  type: string;               // Dokumenttyp, z. B. 'session', 'settings' (D-234)
   schemaVersion: number;
   createdAt: string;          // ISO UTC
   hlc: HLC;                   // letzte Änderung
@@ -82,6 +84,8 @@ interface Root {
 }
 interface Child { id: string; hlc: HLC; deletedAt: HLC | null; deletedFrom?: string; position: number; }
 ```
+
+Umsetzung (M0): Zod-Schemas in `src/shared/db/documents.ts`, Basis-Repository in `src/shared/db/repository.ts`. Das Repository setzt alle Basisfelder, speichert den Zustand der Uhr in derselben Transaktion (Tabelle `meta`) und erhält Felder, die das Schema nicht kennt (D-234). Eine Wiederherstellung nach dem Löschen entfernt `deletedFrom`.
 
 ### 3.1 Trainingseinheit (`session`)
 
@@ -258,9 +262,9 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 |---|---|---|
 | `exerciseHistory` | Projektion je abgeschlossener Einheit und Übung: exerciseId, sessionId, completedAt, dayKey, title, Sätze (Typ, Gewicht, Wiederholungen, Dauer), bester Satz, bestes geschätztes 1RM, Volumen, Satzzahl | Wird bei Abschluss, Bearbeitung und Löschung in derselben Transaktion aktualisiert; vollständiger Neuaufbau bei Versionswechsel der Projektion |
 | `sessionUi` | UI-Zustand der laufenden Einheit (fokussierte Übung und Satz) | Bis zum Abschluss |
-| `meta` | Geräte-ID, HLC-Zustand, Projektionsversion, Version der gebündelten Daten, letzter Export, Status „dauerhafter Speicher", ausgeblendete Hinweise, Ersteinrichtung erledigt | Dauerhaft |
+| `meta` | Geräte-ID, HLC-Zustand, Projektionsversion, Version der gebündelten Daten, letzter Export, Status „dauerhafter Speicher", ausgeblendete Hinweise, Ersteinrichtung erledigt. Seit M0 belegt: `deviceId` (8 Hex-Zeichen), `hlc` (`{ wallMs, counter }`), `hints.dismissed` (Liste, z. B. `ios-install`) | Dauerhaft |
 | `errorLog` | Ringpuffer mit 500 Einträgen: Zeit, Ebene, Bereich, Meldung ohne Nutzdaten, Hash des Stacks, Route, App-Version | Rollierend |
-| Datenbank `fitness-snapshots` | Snapshots (gzip über `CompressionStream`): Zeitpunkt, Anlass, App- und Schemaversion, Größe | Die letzten fünf |
+| Datenbank `fitness-snapshots` | Tabelle `snapshots` (`++id, createdAt`): Zeitpunkt, Anlass (`schema-upgrade`, `import`, `delete-all`), App-Version, Quelldatenbank und deren Schemaversion, Kodierung (`gzip` über `CompressionStream`, sonst `json`), Größe, Anzahl je Tabelle und der Inhalt aller Tabellen als komprimiertes JSON | Die letzten fünf |
 | R2: `generic_food` | Importierte BLS-Daten | Je Datenversion |
 | R3: `outbox`, `syncBase`, `syncState` | Ausstehende Änderungen, letzte bekannte Serverversion je Dokument (Basis für den 3-Wege-Merge), Pull-Cursor | Dauerhaft |
 | R4: `mediaBlob` | Fotos und Vorschaubilder | Bis zur Löschung |
@@ -268,7 +272,7 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 ## 6. Dexie-Schema v1 (MVP)
 
 ```ts
-// src/shared/db/schema.ts – Entwurf für M0
+// src/shared/db/schema.ts – Entwurf; umgesetzt in M0 mit generischen Tabellentypen (siehe unten)
 import Dexie, { type Table } from 'dexie';
 
 export class AppDb extends Dexie {
@@ -302,6 +306,8 @@ export class AppDb extends Dexie {
   }
 }
 ```
+
+Umsetzung (M0): Die Tabellen speichern Dokumente generisch (`StoredDoc` = Basisfelder plus beliebige Felder); die Fachmodule prüfen beim Lesen mit ihrem Zod-Schema. So kennt `shared/db` keine Fachtypen (Modulgrenzen, `architecture.md` Abschnitt 4). Indizes und Tabellen entsprechen genau dem Entwurf; ein Test prüft beides.
 
 Regeln für spätere Versionen: Neue Module fügen Tabellen in einer neuen Dexie-Version hinzu (additiv). Vor jedem Upgrade entsteht ein Snapshot (D-217). Jede Version hat einen Migrationstest mit einer Datenbank der Vorversion (AK-DAT-07). Gelöschte Datensätze bleiben in den Tabellen und werden in den Repositories gefiltert.
 

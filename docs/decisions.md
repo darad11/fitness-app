@@ -151,6 +151,7 @@ Stand: 18.10.2026 · Version 0.5 (M1 in Arbeit) · Vorgängerversion: `archive/v
 | D-303 | USDA FoodData Central nicht vorgesehen | Entschieden | Englische Bezeichnungen; BLS deckt den Bedarf |
 | D-304 | Übungsdaten aus eigener Basisbibliothek (D-213); wger und free-exercise-db nur als spätere optionale Importquelle | Entschieden | Lizenzprüfung je Übung bei wger nötig |
 | D-305 | Barcode-Erkennung über das Paket `barcode-detector` (Polyfill auf Basis von zxing-wasm), weil Safari `BarcodeDetector` nicht standardmäßig anbietet | Vorgesehen | Prüfspike S-3 auf dem iPhone zu Beginn von M6 |
+| D-306 | Ernährung mit Bezug auf Österreich: Der Produktinhaber lebt in Österreich und kauft überwiegend in österreichischen Supermärkten. Zu Beginn von Schritt G prüfen wir zuerst österreichische Quellen und Datenbanken: Abdeckung von Open Food Facts für die üblichen Ketten (Billa, Spar, Hofer, Lidl, Penny und Eigenmarken), öffentlich zugängliche österreichische Nährwertdaten und bestehende österreichische Ernährungs-Apps als Datenquelle. Datenbanken anderer Apps werden nur mit ausdrücklicher Erlaubnis des Anbieters genutzt (Lizenz, Nutzungsbedingungen); ohne Erlaubnis bleibt es bei BLS, Open Food Facts und eigenen Einträgen. Lebensmittel gehen weiterhin nur nach Einwilligung und nur als Barcode- oder Suchanfrage an einen Dienst (D-302) | Vorgabe des Produktinhabers vom 18.10.2026; Quellen offen (Q-19) | BLS ist deutsch und bündelt generische Lebensmittel; Markenprodukte aus österreichischen Regalen findet man eher in Open Food Facts oder in österreichischen Quellen. Die Prüfung gehört in den Prüfspike S-1 zu Beginn von Schritt G |
 
 Details, Quellen und Prüfkriterien stehen in `data-sources.md`.
 
@@ -183,6 +184,7 @@ Details, Quellen und Prüfkriterien stehen in `data-sources.md`.
 | Q-16 | Kalorienschätzung: Anzeige nur mit gespeichertem Körpergewicht; Laufband ohne Tempo ohne Kalorienwert; keine Verrechnung mit der Ernährung? | Beantwortet am 18.10.2026 („mach, wie du denkst“): ja zu allen drei Punkten; keine Verrechnung mit der Ernährung |
 | Q-17 | Tagesaufgaben: eigene Aufgaben frei anlegen (z. B. „30 min Cardio“, „Wasser“), ohne Wettbewerb und ohne Vorgaben aus Xeela? | Beantwortet am 18.10.2026: frei anlegbar, keine Vorgaben |
 | Q-18 | Reihenfolge der Schritte A bis H in `evolution-plan.md` Abschnitt 5 freigeben; beginnt die Umsetzung mit Schritt A (M1 abschließen)? | Beantwortet am 18.10.2026: ja, Reihenfolge freigegeben; Umsetzung beginnt mit Schritt A |
+| Q-19 | Ernährung (Schritt G): Welche österreichischen Quellen kommen infrage? Prüfung zu Beginn von Schritt G: Abdeckung von Open Food Facts für österreichische Supermarktprodukte, öffentlich zugängliche österreichische Nährwertdaten, Lizenz und Zugang bestehender österreichischer Ernährungs-Apps (D-306). Rückfrage an den Produktinhaber mit Ergebnis und Vorschlag, bevor Daten an einen Dienst gehen | Offen, fällig zu Beginn von Schritt G |
 
 ## F. Phase-1-Fragen und ihr Stand
 

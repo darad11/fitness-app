@@ -8,7 +8,7 @@ test('Übungen: Weg über Training, Suche mit Umlaut-Ersatz und Filter (AK-EXL-0
   await expect(page.getByRole('heading', { level: 1, name: 'Training' })).toBeVisible();
   await page.getByRole('main').getByRole('link', { name: 'Übungen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Übungen' })).toBeVisible();
-  await expect(page.getByText('105 Übungen')).toBeVisible();
+  await expect(page.getByText('124 Übungen')).toBeVisible();
 
   await page.getByLabel('Übungen suchen').fill('schraegbank kurzhantel');
   const results = page.getByRole('list', { name: '2 Treffer' }).getByRole('listitem');

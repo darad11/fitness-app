@@ -14,8 +14,8 @@
       "xeela": "Incline Cable Chest Press",
       "de": "Schrägbankdrücken am Kabel",
       "key": "incline_press_cable",
-      "status": "neu",
-      "addition": "Neu: Brust, Kabel und Bank, Gewicht × Wiederholungen; Alias „Incline Cable Press“",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Brust, Kabel und Bank, Gewicht × Wiederholungen; Alias „Incline Cable Press“",
       "confidence": "mittel"
     },
     {
@@ -102,8 +102,8 @@
       "xeela": "Kneeling Single-Arm Lat Pulldown",
       "de": "Einarmiges Latziehen am Kabel, kniend",
       "key": "lat_pulldown_single_arm",
-      "status": "neu",
-      "addition": "Neu: Latissimus, Kabel, je Seite, Gewicht × Wiederholungen",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Latissimus, Kabel, je Seite, Gewicht × Wiederholungen",
       "confidence": "mittel"
     },
     {
@@ -118,8 +118,8 @@
       "xeela": "Smith Machine Row",
       "de": "Rudern an der Multipresse, vorgebeugt",
       "key": "bent_over_row_smith",
-      "status": "neu",
-      "addition": "Neu: Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung)",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung)",
       "confidence": "mittel"
     },
     {
@@ -206,16 +206,16 @@
       "xeela": "Spider Cable Front Raise",
       "de": "Frontheben am Kabel",
       "key": "front_raise_cable",
-      "status": "neu",
-      "addition": "Neu: Vordere Schulter, Kabel; Hinweis „Brust auf der Schrägbank aufgelegt“",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kabel; Hinweis „Brust auf der Schrägbank aufgelegt“",
       "confidence": "mittel"
     },
     {
       "xeela": "Standing Alternating Shoulder Press",
       "de": "Schulterdrücken mit Kurzhanteln, stehend",
       "key": "shoulder_press_dumbbell_standing",
-      "status": "neu",
-      "addition": "Neu: Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“",
       "confidence": "mittel"
     },
     {
@@ -246,16 +246,16 @@
       "xeela": "Rope Hammer Curl",
       "de": "Hammercurls am Kabel mit Seil",
       "key": "hammer_curl_cable",
-      "status": "neu",
-      "addition": "Neu: Bizeps und Unterarme, Kabel",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Bizeps und Unterarme, Kabel",
       "confidence": "hoch"
     },
     {
       "xeela": "Dual Dumbbell Preacher Curls",
       "de": "Scottcurls mit Kurzhanteln",
       "key": "preacher_curl_dumbbell",
-      "status": "neu",
-      "addition": "Neu: Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange)",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange)",
       "confidence": "mittel"
     },
     {
@@ -270,8 +270,8 @@
       "xeela": "Reverse Grip EZ Bar Curls",
       "de": "Reverse Curls mit SZ-Stange",
       "key": "reverse_curl_ez_bar",
-      "status": "neu",
-      "addition": "Neu: Unterarme und Bizeps, SZ-Stange",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Unterarme und Bizeps, SZ-Stange",
       "confidence": "hoch"
     },
     {
@@ -302,8 +302,8 @@
       "xeela": "Cross-Body Cable Extensions",
       "de": "Trizepsdrücken am Kabel, über Kreuz",
       "key": "triceps_extension_cable_cross_body",
-      "status": "neu",
-      "addition": "Neu: Trizeps, Kabel, je Seite",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Trizeps, Kabel, je Seite",
       "confidence": "mittel"
     },
     {
@@ -318,8 +318,8 @@
       "xeela": "Incline Dumbbell Skull Crushers",
       "de": "French Press mit Kurzhanteln",
       "key": "skull_crusher_dumbbell",
-      "status": "neu",
-      "addition": "Neu: Trizeps, Kurzhanteln und Bank; Hinweis „auf der Schrägbank“",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Trizeps, Kurzhanteln und Bank; Hinweis „auf der Schrägbank“",
       "confidence": "hoch"
     },
     {
@@ -350,8 +350,8 @@
       "xeela": "Single-Arm Cross-Body Cable Extension",
       "de": "Trizepsdrücken am Kabel, über Kreuz",
       "key": "triceps_extension_cable_cross_body",
-      "status": "neu",
-      "addition": "Gleiche neue Übung wie „Cross-Body Cable Extensions“",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026). Gleiche neue Übung wie „Cross-Body Cable Extensions“",
       "confidence": "mittel"
     },
     {
@@ -390,8 +390,8 @@
       "xeela": "Cable Hip Hinge Pull-Throughs",
       "de": "Pull-Throughs am Kabel",
       "key": "cable_pull_through",
-      "status": "neu",
-      "addition": "Neu: Gesäß und Oberschenkel hinten, Kabel",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Gesäß und Oberschenkel hinten, Kabel",
       "confidence": "hoch"
     },
     {
@@ -422,24 +422,24 @@
       "xeela": "Dumbbell Hip Thrust",
       "de": "Hip Thrust mit Kurzhantel",
       "key": "hip_thrust_dumbbell",
-      "status": "neu",
-      "addition": "Neu: Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine)",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine)",
       "confidence": "hoch"
     },
     {
       "xeela": "Single Leg Press Machine",
       "de": "Beinpresse, einbeinig",
       "key": "leg_press_single_leg",
-      "status": "neu",
-      "addition": "Neu: Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung)",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung)",
       "confidence": "mittel"
     },
     {
       "xeela": "Dumbbell Calf Raises",
       "de": "Wadenheben mit Kurzhanteln",
       "key": "calf_raise_dumbbell",
-      "status": "neu",
-      "addition": "Neu: Waden, Kurzhanteln",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Waden, Kurzhanteln",
       "confidence": "hoch"
     },
     {
@@ -486,8 +486,8 @@
       "xeela": "Bicycles",
       "de": "Bicycle Crunches",
       "key": "bicycle_crunch",
-      "status": "neu",
-      "addition": "Neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen",
       "confidence": "hoch"
     },
     {
@@ -510,16 +510,16 @@
       "xeela": "Heel Taps",
       "de": "Heel Taps",
       "key": "heel_tap",
-      "status": "neu",
-      "addition": "Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
       "confidence": "hoch"
     },
     {
       "xeela": "Knee Raises",
       "de": "Knieheben stehend",
       "key": "standing_knee_raise",
-      "status": "neu",
-      "addition": "Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026). Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen",
       "confidence": "hoch"
     },
     {
@@ -550,16 +550,16 @@
       "xeela": "Sit-Ups",
       "de": "Sit-ups",
       "key": "sit_up",
-      "status": "neu",
-      "addition": "Neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen",
       "confidence": "hoch"
     },
     {
       "xeela": "Windshield Wipers",
       "de": "Windshield Wipers",
       "key": "windshield_wiper",
-      "status": "neu",
-      "addition": "Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
       "confidence": "hoch"
     },
     {

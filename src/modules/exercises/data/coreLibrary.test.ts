@@ -14,7 +14,7 @@ describe('Basisbibliothek (AK-EXL-01)', () => {
   });
 
   it('enthält mindestens 100 gültige Übungen mit Name, Hauptmuskeln, Gerät und Erfassungsart', () => {
-    expect(exercises.length).toBe(105);
+    expect(exercises.length).toBe(124);
     for (const exercise of exercises) {
       expect(exercise.name.length).toBeGreaterThan(0);
       expect(exercise.primaryMuscles.length).toBeGreaterThan(0);
@@ -99,7 +99,7 @@ describe('Fehler beim Nachladen', () => {
     await expect(fresh.loadCoreExercises()).rejects.toThrow();
     fail = false;
     vi.resetModules();
-    await expect(fresh.loadCoreExercises()).resolves.toHaveLength(105);
+    await expect(fresh.loadCoreExercises()).resolves.toHaveLength(124);
     vi.doUnmock('./core-exercises.v1.json');
   });
 });

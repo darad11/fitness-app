@@ -226,4 +226,6 @@ Nächste Schritte: <Liste>
 14. Erledigt: AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen.
 15. Erledigt: AP 1.8 Datensicherung.
 16. Erledigt: AP 1.9 E2E-Tests. Offen: Gerätetest T-IPH-M1 durch den Produktinhaber, Auswertung in `known-limitations.md`.
-17. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.
+17. Erledigt (Branch `evolution-programs`): Schritt B, Bibliothek um 19 Übungen aus dem Winter-Arc-Abgleich erweitert (D-248).
+18. Ich: Schritt C, Programme A, B, C als Stammdaten und aktives Programm.
+19. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

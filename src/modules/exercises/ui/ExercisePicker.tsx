@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { t } from '@/shared/i18n/de';
 import { Dialog, SearchField, SelectField } from '@/shared/ui';
+import { findAlternatives } from '../calc/alternatives';
 import { buildSearchIndex, searchExercises } from '../calc/search';
 import { loadCoreExercises } from '../data/coreLibrary';
 import type { Equipment, Exercise, Muscle } from '../model/exercise';
@@ -11,10 +12,18 @@ export interface ExercisePickerProps {
   title: string;
   onClose: () => void;
   onSelect: (exercise: Exercise) => void;
+  /** Beim Ersetzen: ID der bisherigen Übung; passende Alternativen stehen dann vorn (TP-12). */
+  alternativesForId?: string;
 }
 
 /** Übung auswählen (S-39): Suche und Filter wie in der Bibliothek, als Blatt von unten. */
-export function ExercisePicker({ open, title, onClose, onSelect }: ExercisePickerProps) {
+export function ExercisePicker({
+  open,
+  title,
+  onClose,
+  onSelect,
+  alternativesForId,
+}: ExercisePickerProps) {
   const [exercises, setExercises] = useState<readonly Exercise[]>([]);
   const [query, setQuery] = useState('');
   const [muscle, setMuscle] = useState<Muscle | ''>('');
@@ -38,6 +47,33 @@ export function ExercisePicker({ open, title, onClose, onSelect }: ExercisePicke
         ...(equipment ? { equipment } : {}),
       }),
     [index, query, muscle, equipment],
+  );
+  const alternatives = useMemo(() => {
+    const original = alternativesForId
+      ? exercises.find((exercise) => exercise.id === alternativesForId)
+      : undefined;
+    if (!original || query.trim() !== '') return [];
+    return findAlternatives(exercises, original, {
+      ...(equipment ? { equipment } : {}),
+    }).filter((exercise) => !muscle || exercise.primaryMuscles.includes(muscle));
+  }, [alternativesForId, exercises, query, muscle, equipment]);
+  const renderList = (list: readonly Exercise[]) => (
+    <ul className="divide-y divide-line overflow-hidden rounded-card bg-surface-2">
+      {list.map((exercise) => (
+        <li key={exercise.id}>
+          <button
+            type="button"
+            onClick={() => {
+              onSelect(exercise);
+            }}
+            className="block min-h-14 w-full px-4 py-3 text-left hover:bg-line"
+          >
+            <span className="block font-medium">{exercise.name}</span>
+            <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
   );
   return (
     <Dialog open={open} onClose={onClose} title={title} closeLabel={t.common.close} variant="sheet">
@@ -64,28 +100,25 @@ export function ExercisePicker({ open, title, onClose, onSelect }: ExercisePicke
           onChange={setEquipment}
         />
       </div>
+      {alternatives.length > 0 ? (
+        <section aria-labelledby="alternativen" className="mb-4">
+          <h3 id="alternativen" className="eyebrow mb-1 text-muted">
+            {t.exercises.alternatives}
+          </h3>
+          <p className="mb-2 text-sm text-muted">{t.exercises.alternativesHint}</p>
+          {renderList(alternatives)}
+        </section>
+      ) : null}
+      {alternatives.length > 0 ? (
+        <h3 className="eyebrow mb-1 text-muted">{t.exercises.allExercises}</h3>
+      ) : null}
       <p role="status" className="mb-2 text-sm text-muted">
         {exercises.length > 0 ? t.exercises.results(results.length) : ''}
       </p>
       {exercises.length > 0 && results.length === 0 ? (
         <p className="text-muted">{t.exercises.emptyText}</p>
       ) : (
-        <ul className="divide-y divide-line overflow-hidden rounded-card bg-surface-2">
-          {results.map((exercise) => (
-            <li key={exercise.id}>
-              <button
-                type="button"
-                onClick={() => {
-                  onSelect(exercise);
-                }}
-                className="block min-h-14 w-full px-4 py-3 text-left hover:bg-line"
-              >
-                <span className="block font-medium">{exercise.name}</span>
-                <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        renderList(results)
       )}
     </Dialog>
   );

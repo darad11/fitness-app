@@ -50,9 +50,9 @@ C. Aktive Trainingseinheit (TS);TS-04;Gewicht eingeben;Verbesserte Gewichtsauswa
 C. Aktive Trainingseinheit (TS);TS-05;Wiederholungen eingeben;Vorhanden;HC-G;V;OV;H;–;S;P0;MVP;R1 · M1;Übernehmen;Implementiert;AK-TRN-04
 C. Aktive Trainingseinheit (TS);TS-06;Satz abschließen, mit Vorschlag;"„log reps and weight after each set""";HC-G;V;OV;H;TS-04;S;P0;MVP;R1 · M1;Übernehmen (D-225);Implementiert;AK-TRN-06, AK-TRN-07
 C. Aktive Trainingseinheit (TS);TS-07;Pausentimer;"Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter";"AS 3.1.6; SD 13:18";V;OV;H;TP-09;M;P0;MVP;R1 · M1;"Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215)";Implementiert;AK-TRN-10, AK-TRN-11, AK-TRN-12
-C. Aktive Trainingseinheit (TS);TS-08;Übungstimer für Zeitsätze;Vorhanden;AS 3.1.6;V;OV;M;TS-07;S;P1;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-14
+C. Aktive Trainingseinheit (TS);TS-08;Übungstimer für Zeitsätze;Vorhanden;AS 3.1.6;V;OV;M;TS-07;S;P1;MVP;R1 · M2;Übernehmen;Implementiert;AK-TRN-14
 C. Aktive Trainingseinheit (TS);TS-09;Nächster Satz im Pausentimer;Fehlt laut Videoanalyse;SD 13:18;VF;EV;M;TS-07;S;P1;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-10
-C. Aktive Trainingseinheit (TS);TS-10;Übung im Training ersetzen;Möglich (laut Rezensionen);REV;V-R;OV;H;TP-12;S;P1;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-09
+C. Aktive Trainingseinheit (TS);TS-10;Übung im Training ersetzen;Möglich (laut Rezensionen);REV;V-R;OV;H;TP-12;S;P1;MVP;R1 · M2;Übernehmen;Implementiert;AK-TRN-09
 C. Aktive Trainingseinheit (TS);TS-11;Sätze und Übungen im Training hinzufügen und entfernen;Sätze laut Rezensionen nicht ergänzbar;REV;VF;EV;H;–;S;P0;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-09, AK-TRN-02
 C. Aktive Trainingseinheit (TS);TS-12;Automatisches Speichern jeder Eingabe;Laut Rezensionen Abstürze mit Verlust der Eingaben;REV;VF;EV;H;SY-01;M;P0;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-16, AK-TRN-25
 C. Aktive Trainingseinheit (TS);TS-13;"Wiederaufnahme nach Reload, Hintergrund und Offline-Phase; Pausieren";Nicht belegt;–;P;ON;H;"TS-12; SY-13";M;P0;MVP;R1 · M1/M2;Übernehmen (D-109, D-216);Zur Umsetzung ausgewählt;AK-TRN-17, AK-TRN-18, AK-TRN-26

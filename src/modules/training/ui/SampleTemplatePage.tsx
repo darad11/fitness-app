@@ -1,11 +1,12 @@
 import { Info, Play } from 'lucide-react';
 import { useState } from 'react';
 import { useLoaderData } from 'react-router';
-import { useFormatters } from '@/modules/settings';
+import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import type { Exercise } from '@/modules/exercises';
 import { Badge, Button, ButtonLink, Card, Meter, PageHeader } from '@/shared/ui';
+import { estimateDay, roundMinutes } from '../calc/duration';
 import { formatRest, formatTargetRange } from '../calc/format';
 import { programProgress, type ProgramProgress } from '../calc/programProgress';
 import { distinctDays, summarizeSets } from '../calc/sampleTemplates';
@@ -34,6 +35,7 @@ export function SampleTemplatePage() {
   const { start, error, busy } = useStartSession();
   const state = useTrainingState();
   const sessions = useCompletedSessions();
+  const restDefaultSec = (useSettings() ?? SETTINGS_DEFAULTS).restDefaultSec;
   const active = template.program === true && state?.activeProgramId === template.id;
   const progress =
     active && sessions ? programProgress(template, sessions, state.activeSince) : undefined;
@@ -113,6 +115,9 @@ export function SampleTemplatePage() {
                       ) : undefined
                     }
                   >
+                    <p className="-mt-2 mb-3 text-sm text-muted" title={t.programs.estimateHint}>
+                      {describeDay(day, restDefaultSec)}
+                    </p>
                     <ol className="divide-y divide-line">
                       {day.exercises.map((exercise, position) => (
                         <li key={exercise.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
@@ -359,4 +364,14 @@ export function describeSets(exercise: PlannedExercise, perSide: boolean): strin
         ? t.programs.noRest
         : t.programs.rest(formatRest(exercise.restSec));
   return [sets, target, rest].filter(Boolean).join(' · ');
+}
+
+/** Tagesvorschau: „5 Übungen · 17 Sätze · ca. 50 min" (Schritt D). */
+export function describeDay(day: Pick<Day, 'exercises'>, restDefaultSec: number): string {
+  const estimate = estimateDay(day, restDefaultSec);
+  return [
+    t.programs.exerciseCount(estimate.exercises),
+    t.programs.setCount(estimate.sets),
+    t.programs.estimate(roundMinutes(estimate.seconds)),
+  ].join(' · ');
 }

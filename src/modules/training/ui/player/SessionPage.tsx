@@ -1,7 +1,12 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { ArrowLeftRight, ChevronDown, ChevronUp, Ellipsis, Info, Plus, Trash2 } from 'lucide-react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
-import { ExercisePicker } from '@/modules/exercises';
+import {
+  describeExercise,
+  ExercisePicker,
+  loadCoreExercises,
+  type Exercise,
+} from '@/modules/exercises';
 import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -19,6 +24,7 @@ import {
   sessionDurationSec,
   sessionProgress,
   setSlot,
+  REQUIRED_FIELDS,
   suggestValues,
 } from '../../calc/session';
 import { usePreviousHistory, useSession } from '../../data/useSession';
@@ -33,12 +39,16 @@ import {
   finishSession,
   InvalidValueError,
   MissingValuesError,
+  moveExercise,
   removeExercise,
   removeSet,
   reopenSet,
+  replaceExercise,
   setValues,
   skipRest,
   skipSet,
+  startSetTimer,
+  stopSetTimer,
 } from '../../service/sessionService';
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
@@ -154,19 +164,41 @@ function useRestEndSound(timer: Session['restTimer'], now: Date, enabled: boolea
   }, [enabled, endsAt, remaining]);
 }
 
+/** Basisbibliothek nach ID, für Übungsinfo und Alternativen; leer, bis sie geladen ist. */
+function useLibrary(): ReadonlyMap<string, Exercise> {
+  const [library, setLibrary] = useState<ReadonlyMap<string, Exercise>>(() => new Map());
+  useEffect(() => {
+    let active = true;
+    loadCoreExercises().then(
+      (list) => {
+        if (active) setLibrary(new Map(list.map((exercise) => [exercise.id, exercise])));
+      },
+      () => undefined,
+    );
+    return () => {
+      active = false;
+    };
+  }, []);
+  return library;
+}
+
 function Player({ session }: { session: Session }) {
   const rt = useDb();
   const navigate = useNavigate();
   const settings = useSettings() ?? SETTINGS_DEFAULTS;
   const fmt = useFormatters();
   const history = usePreviousHistory(session);
-  const now = useNow(session.restTimer ? 250 : 1000);
+  const library = useLibrary();
+  const now = useNow(session.restTimer || session.setTimer ? 250 : 1000);
   useRestEndSound(session.restTimer ?? null, now, settings.restSound);
   useEffect(() => {
     if (!settings.keepAwake) return undefined;
     return keepScreenAwake();
   }, [settings.keepAwake]);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [replaceTarget, setReplaceTarget] = useState<SessionExercise | null>(null);
+  const [info, setInfo] = useState<SessionExercise | null>(null);
+  const [actionsFor, setActionsFor] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<Confirm | null>(null);
   const [errors, setErrors] = useState<Record<string, RowError>>({});
   const number = useCallback(
@@ -180,6 +212,27 @@ function Player({ session }: { session: Session }) {
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
   const afterRest = restTimer ? nextOpenSet(session, restTimer.afterSetId) : null;
+  const setTimer = session.setTimer ?? null;
+  const timerElapsed = setTimer
+    ? Math.max(0, Math.floor((now.getTime() - Date.parse(setTimer.startedAt)) / 1000))
+    : 0;
+  const timerFor = (exercise: SessionExercise, set: SessionSet) => {
+    if (!REQUIRED_FIELDS[exercise.trackingMode].includes('durationSec')) return undefined;
+    const running = setTimer?.setId === set.id;
+    return {
+      running,
+      elapsedSec: running ? timerElapsed : 0,
+      onToggle: () =>
+        void run(set.id, () =>
+          running ? stopSetTimer(rt, session.id) : startSetTimer(rt, session.id, set.id),
+        ),
+    };
+  };
+  const removeWithConfirm = (exercise: SessionExercise) => {
+    const done = liveSets(exercise).filter((s) => s.status === 'done').length;
+    if (done === 0) void run(exercise.id, () => removeExercise(rt, session.id, exercise.id));
+    else setConfirm({ kind: 'removeExercise', exercise, done });
+  };
 
   const previousFor = (exercise: SessionExercise, set: SessionSet): SetValues | undefined =>
     previousValues(history?.get(exercise.exerciseId), setSlot(exercise, set.id));
@@ -339,6 +392,14 @@ function Player({ session }: { session: Session }) {
               .filter(Boolean)
               .join(' · ')}
           </p>
+          {setTimer?.setId === current.id ? (
+            <p className="mt-2 text-timer font-bold tabular-nums" role="timer">
+              {formatClock(timerElapsed)}
+            </p>
+          ) : null}
+          {currentExercise.notes ? (
+            <p className="mt-2 text-sm text-on-ink-muted">{currentExercise.notes}</p>
+          ) : null}
           <p className="mt-3 text-sm text-on-ink-muted">
             {nextExercise
               ? t.session.nextExercise(nextExercise.nameSnapshot)
@@ -359,16 +420,17 @@ function Player({ session }: { session: Session }) {
       {exercises.length === 0 ? <p className="mb-4 text-muted">{t.session.empty}</p> : null}
 
       <div className="grid gap-4">
-        {exercises.map((exercise) => {
+        {exercises.map((exercise, index) => {
           const row = history?.get(exercise.exerciseId);
           const sets = liveSets(exercise);
+          const open = actionsFor === exercise.id;
           return (
             <section
               key={exercise.id}
               aria-labelledby={`uebung-${exercise.id}`}
               className="rounded-card bg-surface p-3 shadow-card"
             >
-              <div className="mb-2 flex items-start gap-2 px-1">
+              <div className="mb-2 flex items-start gap-1 px-1">
                 <div className="min-w-0 flex-1">
                   <h2 id={`uebung-${exercise.id}`} className="text-lg font-bold">
                     {exercise.nameSnapshot}
@@ -379,19 +441,75 @@ function Player({ session }: { session: Session }) {
                       : t.session.firstTime}
                     {exercise.perSide ? ` · ${t.session.perSide}` : ''}
                   </p>
+                  {exercise.notes ? <p className="mt-1 text-sm">{exercise.notes}</p> : null}
                 </div>
                 <IconButton
-                  label={t.session.removeExercise}
+                  label={t.session.exerciseInfo(exercise.nameSnapshot)}
                   onClick={() => {
-                    const done = sets.filter((s) => s.status === 'done').length;
-                    if (done === 0)
-                      void run(exercise.id, () => removeExercise(rt, session.id, exercise.id));
-                    else setConfirm({ kind: 'removeExercise', exercise, done });
+                    setInfo(exercise);
                   }}
                 >
-                  <Trash2 aria-hidden="true" className="size-5" />
+                  <Info aria-hidden="true" className="size-5" />
+                </IconButton>
+                <IconButton
+                  label={t.session.moreExercise(exercise.nameSnapshot)}
+                  aria-expanded={open}
+                  onClick={() => {
+                    setActionsFor(open ? null : exercise.id);
+                  }}
+                >
+                  <Ellipsis aria-hidden="true" className="size-5" />
                 </IconButton>
               </div>
+              {open ? (
+                <div className="mb-3 flex flex-wrap gap-2 px-1">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={index === 0}
+                    onClick={() =>
+                      void run(exercise.id, () => moveExercise(rt, session.id, exercise.id, -1))
+                    }
+                  >
+                    <ChevronUp aria-hidden="true" className="size-4" />
+                    {t.session.moveUp}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={index === exercises.length - 1}
+                    onClick={() =>
+                      void run(exercise.id, () => moveExercise(rt, session.id, exercise.id, 1))
+                    }
+                  >
+                    <ChevronDown aria-hidden="true" className="size-4" />
+                    {t.session.moveDown}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      setActionsFor(null);
+                      setReplaceTarget(exercise);
+                      setPickerOpen(true);
+                    }}
+                  >
+                    <ArrowLeftRight aria-hidden="true" className="size-4" />
+                    {t.session.replaceExercise}
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => {
+                      setActionsFor(null);
+                      removeWithConfirm(exercise);
+                    }}
+                  >
+                    <Trash2 aria-hidden="true" className="size-4" />
+                    {t.session.removeExercise}
+                  </Button>
+                </div>
+              ) : null}
               {errors[exercise.id] ? (
                 <p role="alert" className="mb-2 px-1 text-sm text-danger">
                   {errors[exercise.id]?.message}
@@ -434,6 +552,7 @@ function Player({ session }: { session: Session }) {
                       }}
                       onSkip={() => void run(set.id, () => skipSet(rt, session.id, set.id))}
                       onRemove={() => void run(set.id, () => removeSet(rt, session.id, set.id))}
+                      timer={timerFor(exercise, set)}
                     />
                   );
                 })}
@@ -497,25 +616,47 @@ function Player({ session }: { session: Session }) {
         <Suspense fallback={null}>
           <ExercisePicker
             open={pickerOpen}
-            title={t.session.pickTitle}
+            title={
+              replaceTarget
+                ? t.session.replaceTitle(replaceTarget.nameSnapshot)
+                : t.session.pickTitle
+            }
+            alternativesForId={replaceTarget?.exerciseId}
             onClose={() => {
               setPickerOpen(false);
+              setReplaceTarget(null);
             }}
             onSelect={(exercise) => {
               setPickerOpen(false);
-              void run('session', () =>
-                addExercise(rt, session.id, {
-                  exerciseId: exercise.id,
-                  name: exercise.name,
-                  trackingMode: exercise.trackingMode,
-                  ...(exercise.distanceUnit ? { distanceUnit: exercise.distanceUnit } : {}),
-                  ...(exercise.isUnilateral ? { perSide: true } : {}),
-                }),
-              );
+              const target = replaceTarget;
+              setReplaceTarget(null);
+              const input = {
+                exerciseId: exercise.id,
+                name: exercise.name,
+                trackingMode: exercise.trackingMode,
+                ...(exercise.distanceUnit ? { distanceUnit: exercise.distanceUnit } : {}),
+                ...(exercise.isUnilateral ? { perSide: true } : {}),
+              };
+              if (target) {
+                void run(target.id, () => replaceExercise(rt, session.id, target.id, input));
+              } else {
+                void run('session', () => addExercise(rt, session.id, input));
+              }
             }}
           />
         </Suspense>
       ) : null}
+
+      <Dialog
+        open={info !== null}
+        onClose={() => {
+          setInfo(null);
+        }}
+        closeLabel={t.common.close}
+        title={info?.nameSnapshot ?? ''}
+      >
+        {info ? <ExerciseInfo exercise={info} library={library} /> : null}
+      </Dialog>
 
       <Dialog
         open={confirm !== null}
@@ -589,6 +730,60 @@ function Player({ session }: { session: Session }) {
       <p className="sr-only">
         <Link to="/training">{t.training.title}</Link>
       </p>
+    </div>
+  );
+}
+
+/** Übungsinfo im Player: Muskeln, Gerät, Erfassung, Hinweis aus dem Programm, Herkunft beim Ersetzen. */
+function ExerciseInfo({
+  exercise,
+  library,
+}: {
+  exercise: SessionExercise;
+  library: ReadonlyMap<string, Exercise>;
+}) {
+  const entry = library.get(exercise.exerciseId);
+  const origin = exercise.replacedFromExerciseId
+    ? library.get(exercise.replacedFromExerciseId)
+    : undefined;
+  const rows: [string, string][] = [];
+  if (entry) {
+    rows.push([
+      t.session.info.primary,
+      entry.primaryMuscles.map((m) => t.exercises.muscles[m]).join(', '),
+    ]);
+    if (entry.secondaryMuscles.length > 0) {
+      rows.push([
+        t.session.info.secondary,
+        entry.secondaryMuscles.map((m) => t.exercises.muscles[m]).join(', '),
+      ]);
+    }
+    rows.push([
+      t.session.info.equipment,
+      entry.equipment.map((e) => t.exercises.equipment[e]).join(', '),
+    ]);
+  }
+  rows.push([
+    t.session.info.tracking,
+    t.session.trackingModes[exercise.trackingMode] +
+      (exercise.perSide ? ` · ${t.session.perSide}` : ''),
+  ]);
+  if (exercise.notes) rows.push([t.session.note, exercise.notes]);
+  return (
+    <div>
+      {entry ? <p className="mb-3 text-sm text-muted">{describeExercise(entry)}</p> : null}
+      <dl className="grid gap-2">
+        {rows.map(([label, value]) => (
+          <div key={label}>
+            <dt className="eyebrow text-muted">{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      {exercise.replacedFromExerciseId ? (
+        <p className="mt-3 text-sm text-muted">{t.session.replacedFrom(origin?.name ?? '')}</p>
+      ) : null}
+      {!entry && !exercise.notes ? <p className="text-muted">{t.session.info.none}</p> : null}
     </div>
   );
 }

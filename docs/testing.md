@@ -374,3 +374,18 @@ Programme als gebündelte Vorlagen (`programs.v1.json`, 3 Programme, 84 Training
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions (steht aus); Gerätetest T-IPH-M1 steht aus |
 
 Befunde: Dauerziele ab einer Minute wurden in der Vorlagenansicht und im Player als „1800 s“ angezeigt; jetzt „30:00 min“. Eine Pause von 0 s erscheint als „ohne Pause“.
+
+### Schritt D · Player ausgebaut · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Übungsinfo (Muskeln, Gerät, Erfassung, Hinweis aus dem Programm, Herkunft nach dem Ersetzen), Umsortieren, Übung ersetzen mit Alternativen gleicher Hauptmuskelgruppe, Übungstimer für Zeitsätze, Tagesvorschau „5 Übungen · 17 Sätze · ca. 50 min“ in Vorlage und auf der Karte des aktiven Programms (D-250).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 45 Dateien, 421 Tests bestanden. Neu: `alternatives.test.ts` (Hauptmuskel, Rangfolge, Gerätefilter, Obergrenze), `duration.test.ts` (Formel, Standardpause, Drop-Sätze, Rundung, Tag A plausibel), `playerService.test.ts` (ersetzen ohne und mit erledigten Sätzen, andere Erfassungsart, Drop-Sätze, Herkunft; umsortieren; Timer starten, stoppen, wechseln, „erledigt“, überspringen, entfernen; Hinweis aus dem Programm), `player-ui.test.tsx` (4 neue Fälle: Info, Umsortieren, Ersetzen über Alternativen, Timer). Bestehender Fall angepasst: „Übung entfernen“ liegt jetzt hinter „Weitere Aktionen“ der Übung |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90,2 %, Zweige 82,3 %, Funktionen 89,1 %, Zeilen 91,3 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 206,3 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 46 Tests bestanden. Neu `player.spec.ts`: Tagesvorschau, Übungsinfo, Umsortieren mit gesperrter Taste am Rand, Ersetzen über „Alternativen“ (Kniebeuge → Beinpresse, Sätze bleiben), Timer starten, Neuladen mit laufendem Timer, stoppen mit gespeicherter Dauer, „erledigt“ |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions (steht aus); Gerätetest T-IPH-M1 steht aus |
+
+Befund: Beim Ersetzen wurde die Erfassungsart zuerst umgeschrieben und dann die Ziele verglichen, sodass Zeitziele an einer Wiederholungsübung blieben; im Dienst korrigiert (Testfall „verwirft Eingaben und unpassende Ziele“).

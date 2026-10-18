@@ -21,12 +21,13 @@ import {
   type ValueField,
 } from '../calc/session';
 import type { SampleTemplate, SetType } from '../model/program';
-import type {
-  Session,
-  SessionExercise,
-  SessionSet,
-  SessionSetTarget,
-  SetValues,
+import {
+  LIMITS,
+  type Session,
+  type SessionExercise,
+  type SessionSet,
+  type SessionSetTarget,
+  type SetValues,
 } from '../model/session';
 import { findActiveSession, sessionDef, writeHistory } from '../data/sessionRepository';
 
@@ -48,6 +49,11 @@ export class SessionClosedError extends Error {
 
 export class ItemNotFoundError extends Error {
   override name = 'ItemNotFoundError';
+}
+
+/** Der Übungstimer läuft nur an offenen Sätzen (AK-TRN-14). */
+export class SetNotOpenError extends Error {
+  override name = 'SetNotOpenError';
 }
 
 /** „Erledigt" ohne Eingabe und ohne Vorschlag (AK-TRN-06). */
@@ -96,6 +102,8 @@ export interface ExerciseInput {
   distanceUnit?: DistanceUnit;
   perSide?: boolean;
   restSec?: number;
+  /** Ausführungshinweis aus dem Programm, z. B. die Dropset-Regel. */
+  notes?: string;
   sets: readonly PlannedSetInput[];
 }
 
@@ -141,6 +149,7 @@ function buildExercise(input: ExerciseInput, position: number, hlc: Hlc): Sessio
     ...(input.distanceUnit ? { distanceUnit: input.distanceUnit } : {}),
     ...(input.perSide ? { perSide: true as const } : {}),
     ...(input.restSec !== undefined ? { restSec: input.restSec } : {}),
+    ...(input.notes ? { notes: input.notes } : {}),
     sets,
   };
 }
@@ -259,6 +268,7 @@ export function planFromTemplateDay(
         ...(info.distanceUnit ? { distanceUnit: info.distanceUnit } : {}),
         ...(info.isUnilateral ? { perSide: true } : {}),
         ...(planned.restSec !== undefined ? { restSec: planned.restSec } : {}),
+        ...(planned.notes ? { notes: planned.notes } : {}),
         sets: planned.sets.map((set) => {
           const parentIndex = set.parentSetId
             ? planned.sets.findIndex((candidate) => candidate.id === set.parentSetId)
@@ -311,6 +321,148 @@ export function removeExercise(
     ) {
       session.restTimer = null;
     }
+    if (session.setTimer && exercise.sets.some((set) => set.id === session.setTimer?.setId)) {
+      session.setTimer = null;
+    }
+  });
+}
+
+/** Tauscht eine Übung mit ihrer Nachbarin (AK-PRG-03, Umsortieren im Player); am Rand passiert nichts. */
+export function moveExercise(
+  rt: DbRuntime,
+  sessionId: string,
+  sessionExerciseId: string,
+  direction: -1 | 1,
+): Promise<Session> {
+  return changeSession(rt, sessionId, (session, hlc) => {
+    const ordered = liveExercises(session);
+    const index = ordered.findIndex((exercise) => exercise.id === sessionExerciseId);
+    if (index < 0) throw new ItemNotFoundError('Übung nicht gefunden');
+    const self = ordered[index];
+    const other = ordered[index + direction];
+    if (!self || !other) return;
+    [self.position, other.position] = [other.position, self.position];
+    self.hlc = hlc;
+    other.hlc = hlc;
+  });
+}
+
+const REPS_MODES: readonly TrackingMode[] = ['weight_reps', 'reps', 'assisted_reps'];
+
+/** Ziel eines Satzes für eine andere Erfassungsart: nur, wenn beide Wiederholungen oder beide Zeit messen. */
+function targetForMode(
+  target: SessionSetTarget | undefined,
+  from: TrackingMode,
+  to: TrackingMode,
+): SessionSetTarget | undefined {
+  if (!target) return undefined;
+  if (from === to) return target;
+  if (REPS_MODES.includes(from) !== REPS_MODES.includes(to)) return undefined;
+  const { repsMin, repsMax, durationMinSec, durationMaxSec } = target;
+  const kept: SessionSetTarget = {};
+  if (repsMin !== undefined) kept.repsMin = repsMin;
+  if (repsMax !== undefined) kept.repsMax = repsMax;
+  if (durationMinSec !== undefined) kept.durationMinSec = durationMinSec;
+  if (durationMaxSec !== undefined) kept.durationMaxSec = durationMaxSec;
+  return Object.keys(kept).length > 0 ? kept : undefined;
+}
+
+/**
+ * Ersetzt eine Übung (AK-TRN-09, TS-10). Ohne erledigte Sätze wird die Übung selbst umgeschrieben
+ * und behält ihre Sätze. Mit erledigten Sätzen bleiben diese bei der bisherigen Übung; die offenen
+ * Sätze wandern als Kopien zur neuen Übung direkt dahinter (Drop-Sätze nur mit ihrem Arbeitssatz).
+ * Eingaben bleiben nur bei gleicher Erfassungsart erhalten.
+ */
+export function replaceExercise(
+  rt: DbRuntime,
+  sessionId: string,
+  sessionExerciseId: string,
+  input: Omit<ExerciseInput, 'sets' | 'notes'>,
+): Promise<Session> {
+  return changeSession(rt, sessionId, (session, hlc) => {
+    const exercise = findExercise(session, sessionExerciseId);
+    const fromMode = exercise.trackingMode;
+    const sameMode = input.trackingMode === fromMode;
+    const convert = (set: SessionSet): SessionSet => {
+      const target = targetForMode(set.target, fromMode, input.trackingMode);
+      const { target: _old, ...rest } = set;
+      return {
+        ...rest,
+        ...(target ? { target } : {}),
+        actual: sameMode ? set.actual : {},
+        hlc,
+      };
+    };
+    const sets = liveSets(exercise);
+    const done = sets.filter((set) => set.status === 'done');
+    const apply = (target: SessionExercise) => {
+      target.exerciseId = input.exerciseId;
+      target.nameSnapshot = input.name;
+      target.trackingMode = input.trackingMode;
+      if (input.distanceUnit) target.distanceUnit = input.distanceUnit;
+      else delete target.distanceUnit;
+      if (input.perSide) target.perSide = true;
+      else delete target.perSide;
+      if (input.restSec !== undefined) target.restSec = input.restSec;
+      target.hlc = hlc;
+    };
+    if (done.length === 0) {
+      exercise.replacedFromExerciseId ??= exercise.exerciseId;
+      apply(exercise);
+      exercise.sets = exercise.sets.map((set) => (set.deletedAt === null ? convert(set) : set));
+      if (session.setTimer && sets.some((set) => set.id === session.setTimer?.setId)) {
+        session.setTimer = null;
+      }
+      return;
+    }
+    const doneIds = new Set(done.map((set) => set.id));
+    const moving = sets.filter(
+      (set) =>
+        set.status === 'planned' && (set.type !== 'drop' || !doneIds.has(set.parentSetId ?? '')),
+    );
+    const idMap = new Map(moving.map((set) => [set.id, uuidv4()]));
+    const copies: SessionSet[] = moving.map((set, index) => {
+      const converted = convert(set);
+      const parentSetId = set.parentSetId ? idMap.get(set.parentSetId) : undefined;
+      const { parentSetId: _p, ...rest } = converted;
+      return {
+        ...rest,
+        id: idMap.get(set.id) ?? uuidv4(),
+        position: index,
+        ...(parentSetId ? { parentSetId } : {}),
+      };
+    });
+    for (const set of exercise.sets) {
+      if (idMap.has(set.id)) {
+        set.deletedAt = hlc;
+        set.hlc = hlc;
+      }
+    }
+    if (session.setTimer && idMap.has(session.setTimer.setId)) session.setTimer = null;
+    exercise.hlc = hlc;
+    for (const other of session.exercises) {
+      if (other.position > exercise.position) {
+        other.position += 1;
+        other.hlc = hlc;
+      }
+    }
+    const replacement: SessionExercise = {
+      ...child(hlc, exercise.position + 1),
+      exerciseId: input.exerciseId,
+      nameSnapshot: input.name,
+      trackingMode: input.trackingMode,
+      ...(input.distanceUnit ? { distanceUnit: input.distanceUnit } : {}),
+      ...(input.perSide ? { perSide: true as const } : {}),
+      ...(input.restSec !== undefined
+        ? { restSec: input.restSec }
+        : exercise.restSec !== undefined
+          ? { restSec: exercise.restSec }
+          : {}),
+      ...(exercise.notes ? { notes: exercise.notes } : {}),
+      replacedFromExerciseId: exercise.replacedFromExerciseId ?? exercise.exerciseId,
+      sets: copies,
+    };
+    session.exercises.push(replacement);
   });
 }
 
@@ -366,6 +518,7 @@ export function removeSet(rt: DbRuntime, sessionId: string, setId: string): Prom
       }
     }
     if (session.restTimer?.afterSetId === setId) session.restTimer = null;
+    if (session.setTimer?.setId === setId) session.setTimer = null;
   });
 }
 
@@ -417,6 +570,10 @@ export function completeSet(
   const now = (options.now ?? (() => new Date()))();
   return changeSession(rt, sessionId, (session, hlc) => {
     const { exercise, set } = findSet(session, setId);
+    if (session.setTimer?.setId === setId) {
+      applySetTimer(session, session.setTimer, now, hlc);
+      session.setTimer = null;
+    }
     const { values, missing } = resolveCompletion(
       exercise.trackingMode,
       set.actual,
@@ -465,11 +622,63 @@ export function reopenSet(rt: DbRuntime, sessionId: string, setId: string): Prom
 }
 
 export function skipSet(rt: DbRuntime, sessionId: string, setId: string): Promise<Session> {
-  return changeSession(rt, sessionId, (_session, hlc) => {
-    const { set } = findSet(_session, setId);
+  return changeSession(rt, sessionId, (session, hlc) => {
+    const { set } = findSet(session, setId);
     set.status = 'skipped';
     delete set.completedAt;
     set.hlc = hlc;
+    if (session.setTimer?.setId === setId) session.setTimer = null;
+  });
+}
+
+// ---------------------------------------------------------------------------------------------
+// Übungstimer (AK-TRN-14)
+
+/** Schreibt die gelaufene Zeit des Timers als Istwert in seinen Satz. */
+function applySetTimer(
+  session: Session,
+  timer: NonNullable<Session['setTimer']>,
+  now: Date,
+  hlc: Hlc,
+): void {
+  const found = liveExercises(session)
+    .flatMap((exercise) => liveSets(exercise))
+    .find((set) => set.id === timer.setId);
+  if (!found) return;
+  const elapsed = Math.round((now.getTime() - Date.parse(timer.startedAt)) / 1000);
+  found.actual.durationSec = Math.min(LIMITS.durationSec.max, Math.max(0, elapsed));
+  found.hlc = hlc;
+}
+
+/** Startet den Timer an einem offenen Zeitsatz; ein anderer laufender Timer wird dabei gestoppt. */
+export function startSetTimer(
+  rt: DbRuntime,
+  sessionId: string,
+  setId: string,
+  clock: Clock = {},
+): Promise<Session> {
+  const now = (clock.now ?? (() => new Date()))();
+  return changeSession(rt, sessionId, (session, hlc) => {
+    const { set } = findSet(session, setId);
+    if (set.status !== 'planned') throw new SetNotOpenError('Satz ist nicht offen');
+    if (session.setTimer && session.setTimer.setId !== setId) {
+      applySetTimer(session, session.setTimer, now, hlc);
+    }
+    session.setTimer = { setId, startedAt: iso(now) };
+  });
+}
+
+/** Stoppt den Timer und speichert die Dauer als Istwert; ohne Timer passiert nichts. */
+export function stopSetTimer(
+  rt: DbRuntime,
+  sessionId: string,
+  clock: Clock = {},
+): Promise<Session> {
+  const now = (clock.now ?? (() => new Date()))();
+  return changeSession(rt, sessionId, (session, hlc) => {
+    if (!session.setTimer) return;
+    applySetTimer(session, session.setTimer, now, hlc);
+    session.setTimer = null;
   });
 }
 

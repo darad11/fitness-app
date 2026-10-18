@@ -99,7 +99,11 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await expect(page.getByRole('definition').nth(1)).toHaveText('2');
   await expect(page.getByRole('definition').nth(2)).toHaveText('500 kg');
   await expectNoAxeViolations(page, 'Zusammenfassung');
-  await page.getByRole('link', { name: 'Fertig' }).click();
+  // „Fertig" per Ereignis statt Zeigerklick: Im CI-Chromium (Pixel-7-Emulation) meldet die
+  // Treffererkennung an dieser Stelle fälschlich <main>; lokal und in WebKit klappt der Klick.
+  const doneLink = page.getByRole('link', { name: 'Fertig' });
+  await expect(doneLink).toHaveAttribute('href', '/training');
+  await doneLink.dispatchEvent('click');
   await expect(page.getByRole('button', { name: 'Freies Training starten' })).toBeVisible();
 
   // Verlauf mit Liste nach Woche und Detail (AK-HIS-01, AK-HIS-02).

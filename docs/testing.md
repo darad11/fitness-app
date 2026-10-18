@@ -9,6 +9,7 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: verbindlich ab M0 · 
 - Lighthouse-PWA-Prüfung ersetzt durch eigene PWA-Prüfungen (D-221).
 - Neu: Geräteprotokolle T-IPH-M0, T-IPH-M1, T-IPH-M4, T-IPD-M4, T-MAC-M4 und Konflikttests K-01 bis K-21.
 - Version 0.3 (M0): E2E-Läufe mit den Produktions-Headern (D-237) und Abbruch bei Konsolenfehlern; CI-Gates technisch umgesetzt (Abschnitt 5); Ergebnisse von M0 in Abschnitt 10.
+- Nachtrag M0: Ursache und Behebung unzuverlässiger E2E-Tests in Chromium (Abschnitt 10); E2E-Fehler erscheinen in der CI zusätzlich als GitHub-Annotationen (Abschnitt 5).
 
 ## 1. Grundsätze
 
@@ -114,7 +115,7 @@ Umsetzung (M0) in `.github/workflows/ci.yml`:
 | Kontrasttest der Tokens | Teil von `pnpm test:coverage` (`tokens.test.ts`) | Umgesetzt |
 | Dokumentprüfungen | `pnpm check:docs` | Umgesetzt |
 | Build und Bündelgröße der Startansicht | `pnpm build`, `pnpm check:bundle` (Grenze 250 KB gzip) | Umgesetzt |
-| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt; der erste CI-Lauf folgt, sobald das Repository besteht |
+| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt. In der CI wird ein fehlgeschlagener Test einmal wiederholt; Fehler erscheinen zusätzlich als GitHub-Annotationen (Reporter `github`), weil die Logdateien aus der Cloud-Umgebung nicht abrufbar sind. `openPage` wartet, bis die Überschrift sichtbar ist und kein Bereich mehr `aria-busy` trägt |
 
 ## 6. Geräteprotokolle
 
@@ -195,3 +196,44 @@ GitHub Actions (Node 24, Ubuntu, Pull Request darad11/fitness-app#1):
 | 2 | `0ab67f2` | Bestanden: Formatierung, Lint, Typen, Unit-Tests mit Schwellen, Dokumente, Build, Bündelgröße; E2E in Chromium und in WebKit (Desktop und iPhone-Profil). Die Logdateien sind aus dieser Umgebung nicht abrufbar; die genaue Zahl der Tests je Engine steht deshalb hier nicht. In WebKit wird der Offline-Test mit Service Worker planmäßig übersprungen (Abschnitt 3) |
 
 Abgedeckte Fälle: PWA-Prüfungen aus Abschnitt 3 (Manifest, Icons, Service Worker, Offline-Start aller vorhandenen Routen), E-24 (nur eigene Adresse, Sicherheits-Header), E-25 (Safari-Tab-Hinweis simuliert; das Vorschau-Etikett ist nur als Komponententest geprüft, weil es vom Vercel-Build abhängt), E-27 als Grundfassung (axe hell und dunkel ohne Verstöße; Tastatur und Kürzel folgen). Fehlergrenze je Ansicht und Update-Bestätigung sind als Komponententests geprüft (Teile von E-22 und E-23).
+
+### Nachtrag M0 · 18.10.2026 · Unzuverlässige E2E-Tests in Chromium
+
+GitHub Actions nach der Abnahme:
+
+| Lauf | Stand | Ergebnis |
+|---|---|---|
+| 3, 4 | `d17ed3f` (darad11/fitness-app#1), `b5fb9aa` (`main`) | Bestanden |
+| 5, 6 | `29b0e08`, `a56e363` (darad11/fitness-app#2) | Bestanden |
+| 7 | `66abab4` (`main`) | E2E Chromium fehlgeschlagen, alles andere bestanden. Welche Tests betroffen waren, lässt sich nicht mehr feststellen: Die Logdatei ist aus der Cloud-Umgebung nicht abrufbar, Annotationen gab es damals noch nicht |
+| 8 | `ec0c1df` (darad11/fitness-app#3) | Wie Lauf 7 |
+| 9 | `a3dfd48` (`main`) | Bestanden |
+| 10 | `42be4a1` (darad11/fitness-app#4) | Formatierungsprüfung fehlgeschlagen (Playwright-Konfiguration); E2E nicht erreicht |
+| 11 | `263728d` (darad11/fitness-app#4) | Versuche 1 bis 3 bestanden. Versuch 4: E2E Chromium mit 22 bestandenen, 3 fehlgeschlagenen und 1 erst in der Wiederholung bestandenen Test |
+
+E2E Chromium war damit in 3 von 12 Ausführungen rot, WebKit in allen Läufen grün. Ursache laut den Annotationen von Lauf 11, Versuch 4 (beide Fehler auch in der Wiederholung):
+
+1. **Safari-Hinweis (E-25):** Der Test tippte „Hinweis wieder anzeigen" und wechselte sofort die Seite. War das Speichern bis dahin nicht fertig, blieb der Hinweis ausgeblendet. Ein Fehler des Tests, nicht der App.
+2. **axe in „Dunkel" (E-27):** Kontrastfehler am Umschalter „Farbschema" unter `/mehr/einstellungen`. Die Seite zeigte vor dem Laden der Einstellungen die Standardwahl „Hell" und sprang danach mit einem Farbübergang von 120 ms auf „Dunkel"; axe hat mitten im Übergang gemessen. Das war auch in der App zu sehen: kurz eine falsche Auswahl, dann ein Flackern.
+
+Lokal trat keiner der Fehler auf, auch nicht mit sechsfach gedrosselter CPU (42 Läufe der beiden betroffenen Testdateien mit dem alten Stand, alle bestanden).
+
+Behebung (darad11/fitness-app#4, D-239):
+
+- Die Einstellungsseite zeigt bis zum Laden nur einen Platzhalter in der Form der Karten (`Skeleton`, Bereich mit `aria-busy`). Die Auswahl erscheint erst mit den gespeicherten Werten und damit ohne Übergang. Das Beispiel zur Formatierung nutzt dieselben Werte.
+- `openPage` in `e2e/fixtures.ts` wartet zusätzlich, bis kein Bereich mehr `aria-busy` trägt.
+- Der Test zum Safari-Hinweis wartet, bis „Hinweis wieder anzeigen" verschwunden und die Änderung damit gespeichert ist.
+- Neuer Komponententest: Beim ersten Bild ist keine Auswahl zu sehen, danach gleich die gespeicherte. Er schlägt mit dem alten Stand fehl und besteht mit dem neuen.
+- Die CI meldet E2E-Fehler zusätzlich als GitHub-Annotationen.
+
+Ergebnisse des neuen Stands:
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 20 Testdateien, 248 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 94 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 172,9 KB gzip |
+| E2E Chromium lokal | `pnpm test:e2e`, danach mit `--repeat-each=3` | 26 von 26 bestanden; jeder Test dreimal: 78 von 78 bestanden |
+| GitHub Actions, Lauf 12 auf `2ce322d` (darad11/fitness-app#4) | – | Alle Prüfungen bestanden. E2E Chromium in fünf Versuchen je 26 von 26 bestanden, ohne Wiederholung; WebKit 24 bestanden, 2 planmäßig übersprungen |
+
+Vorher waren 3 von 12 Ausführungen rot. Fünf grüne Versuche allein beweisen die Behebung nicht. Zusammen mit der gefundenen Ursache und dem neuen Komponententest gilt der Fehler als behoben. Tritt er wieder auf, zeigen die Annotationen den betroffenen Test.

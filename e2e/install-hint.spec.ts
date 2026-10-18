@@ -28,7 +28,11 @@ test('zeigt im Safari-Tab den Hinweis; Ausblenden bleibt; unter Installieren ern
   await openPage(page, '/mehr/installieren');
   await expect(page.getByText('Die App läuft gerade im Browser.')).toBeVisible();
   await expect(page.getByRole('heading', { level: 2 }).first()).toHaveText('iPhone');
-  await page.getByRole('button', { name: 'Hinweis wieder anzeigen' }).click();
+  const showAgain = page.getByRole('button', { name: 'Hinweis wieder anzeigen' });
+  await showAgain.click();
+  // Der Knopf verschwindet erst, wenn die Änderung gespeichert ist; ein früherer Seitenwechsel
+  // kann dem Speichern zuvorkommen.
+  await expect(showAgain).toBeHidden();
   await openPage(page, '/heute');
   await expect(page.getByText(HINT)).toBeVisible();
 });

@@ -8,7 +8,7 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Sitemap und Screen-Ka
 - Diagrammregeln neu nach einer validierten Methode (Abschnitt 8).
 - Navigation im MVP ohne Ernährung (D-211); Sitemap und Screen-Katalog mit Ausbaustufen, Routen, Zuständen und AK-Verweisen.
 - Neu: Unterschiede Touch und Desktop, Texte und Ton.
-- Version 0.3 (M0): Tokens als CSS-Variablen in `src/shared/ui/tokens.css`, Tailwind nutzt nur diese (Standardpaletten abgeschaltet). Der automatische Kontrasttest fand zwei Grenzfälle; angepasst wurden `--border-input` hell und `--meter-track` dunkel (D-236). Grundfassungen von S-01 und S-34 in M0.
+- Version 0.3 (M0): Tokens als CSS-Variablen in `src/shared/ui/tokens.css`, Tailwind nutzt nur diese (Standardpaletten abgeschaltet). Der automatische Kontrasttest fand zwei Grenzfälle; angepasst wurden `--border-input` hell und `--meter-track` dunkel (D-236). Grundfassungen von S-01 und S-34 in M0. Nachtrag: Ladezustand mit `Skeleton` und `aria-busy` (D-239).
 
 ## 1. Designprinzipien
 
@@ -121,7 +121,7 @@ Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, g
 
 | Zustand | Gestaltung | Beispieltext |
 |---|---|---|
-| Laden | Skelett in der Form des Inhalts, nie ein Ganzseiten-Spinner | – |
+| Laden | Skelett in der Form des Inhalts (`Skeleton`, ohne Animation), der Bereich trägt `aria-busy`; Auswahlen und Eingaben erst mit den gespeicherten Werten, nie vorab mit Standardwerten (D-239); nie ein Ganzseiten-Spinner | – |
 | Leer | Ein Satz, eine Hauptaktion | „Noch kein Training gespeichert. Starte mit einer Vorlage oder einem freien Training." |
 | Fehler | Ursache in einfachen Worten, „Erneut versuchen", Verweis auf das Fehlerprotokoll | „Speichern hat nicht geklappt. Deine Eingabe ist noch da." |
 | Zu wenig Daten | Liste statt Diagramm | „Für einen Verlauf braucht es mindestens drei Einträge." |

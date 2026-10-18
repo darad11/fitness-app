@@ -8,6 +8,7 @@ import { DbProvider, dismissHint, META_KEYS, type DbRuntime } from '@/shared/db'
 import { createTestRuntime } from '@/shared/testing/db';
 import { saveSettings } from '../data/settingsRepository';
 import { InstallPage } from './InstallPage';
+import { SettingsPage } from './SettingsPage';
 import { ThemeSync } from './ThemeSync';
 
 const IPAD_UA =
@@ -76,6 +77,23 @@ describe('Mehr › Installieren (AK-SET-06)', () => {
     renderPage(<InstallPage />);
     expect(await screen.findByText('Die App läuft als installierte App.')).toBeInTheDocument();
     expect(screen.queryByText(/getrennt gespeichert/)).not.toBeInTheDocument();
+  });
+});
+
+describe('Mehr › Einstellungen (AK-SET-02, AK-SET-04)', () => {
+  it('zeigt beim Laden nur einen Platzhalter und danach gleich die gespeicherte Auswahl', async () => {
+    await saveSettings(rt, { theme: 'dark', locale: 'de-DE' });
+    renderPage(<SettingsPage />);
+    // Erstes Bild: Die Einstellungen sind noch nicht gelesen, also auch keine Auswahl sichtbar.
+    expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
+    expect(screen.queryAllByRole('radio')).toHaveLength(0);
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+
+    expect(await screen.findByRole('radio', { name: 'Dunkel' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Hell' })).not.toBeChecked();
+    expect(screen.getByRole('combobox', { name: 'Datum und Zahlen' })).toHaveValue('de-DE');
+    expect(screen.getByText(/^Beispiel: 17\. Januar 2026 · 21:05/)).toBeInTheDocument();
+    expect(document.querySelector('[aria-busy="true"]')).toBeNull();
   });
 });
 

@@ -32,7 +32,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
-  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : [['list']],
+  // In der CI zusätzlich als GitHub-Annotationen, damit Fehler ohne Logdatei lesbar sind.
+  reporter: process.env.CI ? [['github'], ['list'], ['html', { open: 'never' }]] : [['list']],
   use: {
     baseURL: 'http://localhost:4173',
     locale: 'de-AT',

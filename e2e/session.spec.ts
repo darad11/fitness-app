@@ -21,6 +21,8 @@ async function expectNoAxeViolations(page: Page, where: string) {
 test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, -07, -16, -19)', async ({
   page,
 }) => {
+  // Langer Ablauf mit Neuladen und mehreren axe-Prüfungen: dreifaches Zeitlimit für langsame CI-Runner.
+  test.slow();
   await openPage(page, '/training/vorlagen/full_body_ab');
   await page.getByRole('button', { name: 'Tag A heute trainieren' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\/[0-9a-f-]+$/);
@@ -110,6 +112,7 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
 test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-TRN-02, -21, -22)', async ({
   page,
 }) => {
+  test.slow();
   await chooseTheme(page, 'Dunkel');
   await openPage(page, '/training');
   await page.getByRole('button', { name: 'Freies Training starten' }).click();

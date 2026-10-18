@@ -234,4 +234,6 @@ Ergebnisse des neuen Stands:
 | Unit, Integration, Komponenten | `pnpm test:coverage` | 20 Testdateien, 248 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 94 %, alle Schwellen erreicht |
 | Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 172,9 KB gzip |
 | E2E Chromium lokal | `pnpm test:e2e`, danach mit `--repeat-each=3` | 26 von 26 bestanden; jeder Test dreimal: 78 von 78 bestanden |
-| GitHub Actions | – | Ausstehend |
+| GitHub Actions, Lauf 12 auf `2ce322d` (darad11/fitness-app#4) | – | Alle Prüfungen bestanden. E2E Chromium in fünf Versuchen je 26 von 26 bestanden, ohne Wiederholung; WebKit 24 bestanden, 2 planmäßig übersprungen |
+
+Vorher waren 3 von 12 Ausführungen rot. Fünf grüne Versuche allein beweisen die Behebung nicht. Zusammen mit der gefundenen Ursache und dem neuen Komponententest gilt der Fehler als behoben. Tritt er wieder auf, zeigen die Annotationen den betroffenen Test.

@@ -60,14 +60,14 @@ Abnahme M0: CI grün mit Chromium und WebKit; Produktivadresse erreichbar; Gerä
 
 | AP | Stand |
 |---|---|
-| 0.1 | Umgesetzt. Werkzeuge, Lösungs-`tsconfig` mit App- und Node-Teil, ESLint mit Modulgrenzen, Prettier, Vitest mit Abdeckungsschwellen, Playwright; CI-Workflow vorbereitet. Erster CI-Lauf folgt mit dem Repository |
-| 0.2 | Teilweise. `vercel.json` (Weiterleitung, Sicherheits-Header, Caching) und Etikett „Vorschau – Testdaten" umgesetzt; Verbindung mit Vercel durch den Produktinhaber offen |
+| 0.1 | Umgesetzt. Werkzeuge, Lösungs-`tsconfig` mit App- und Node-Teil, ESLint mit Modulgrenzen, Prettier, Vitest mit Abdeckungsschwellen, Playwright; CI in GitHub Actions am 18.10.2026 grün mit Chromium und WebKit (nach einer Korrektur, siehe `testing.md` Abschnitt 10) |
+| 0.2 | Umgesetzt. `vercel.json` (Weiterleitung, Sicherheits-Header, Caching), Etikett „Vorschau – Testdaten"; Vercel mit dem Repository verbunden; Produktivadresse `https://fitness-app-mu-drab.vercel.app`; Vorschau-Builds der Branches erfolgreich |
 | 0.3 | Umgesetzt. Tokens hell und dunkel, Typografie, Basiskomponenten (Button, ButtonLink, Card, PageHeader, LinkList, Banner, SegmentedControl, SelectField, StatusList), automatischer Kontrasttest; zwei Tokens angepasst (D-236) |
 | 0.4 | Umgesetzt. Router 8 im Data Mode mit nachgeladenen Seiten, Tab-Leiste und Seitenleiste (nur verfügbare Bereiche), Mehr, Einstellungen (Darstellung, Formatierung), Installieren, Über, Fehlergrenzen, Textkatalog, Formatierung nach Gerätesprache |
 | 0.5 | Umgesetzt. Manifest, Icons, Service Worker mit Vorab-Cache und Navigations-Fallback, Update-Hinweis mit Bestätigung, Hinweis im Safari-Tab, Installationsknopf in Chromium |
 | 0.6 | Umgesetzt. Dexie-Schema v1 mit allen MVP-Tabellen, Basis-Repository (HLC, Tombstones, Schemaversion, Zod, unbekannte Felder bleiben), Geräte-ID, UUID v5, Textnormalisierung, Gesundheitsprüfung mit kontrolliertem Neustart, Snapshot-Datenbank, Fehlerprotokoll |
 
-Offen für die Abnahme: Repository mit grünem CI-Lauf in Chromium und WebKit, Produktivadresse auf Vercel, Gerätetest T-IPH-M0.
+Offen für die Abnahme: Merge nach `main`, damit die Produktivadresse die App ausliefert, und Gerätetest T-IPH-M0.
 
 ### M1 · Training auf dem iPhone (Größe XL) – wichtigster Meilenstein
 
@@ -191,8 +191,8 @@ Nächste Schritte: <Liste>
 ## 9. Nächste konkrete Schritte
 
 1. Erledigt: Q-01 und Q-02 beantwortet (`darad11/fitness-app`, Vercel).
-2. Erledigt: M0 umgesetzt (AP 0.1 und 0.3 bis 0.6, AP 0.2 bis auf die Verbindung mit Vercel) und berichtet.
-3. Produktinhaber: leeres privates Repository `fitness-app` anlegen und für Claude freigeben; ich übertrage beide Branches und prüfe den ersten CI-Lauf.
-4. Produktinhaber: Vercel mit dem Repository verbinden; Gerätetest T-IPH-M0.
+2. Erledigt: M0 umgesetzt (AP 0.1 bis 0.6) und berichtet; Repository angelegt, Pull Request mit grüner CI; Vercel verbunden, Produktivadresse `https://fitness-app-mu-drab.vercel.app`.
+3. Produktinhaber: Pull Request von M0 nach `main` mergen.
+4. Produktinhaber: Gerätetest T-IPH-M0 auf der Produktivadresse.
 5. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
 6. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

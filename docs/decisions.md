@@ -148,7 +148,7 @@ Details, Quellen und Prüfkriterien stehen in `data-sources.md`.
 | Nr. | Frage | Empfehlung |
 |---|---|---|
 | Q-01 | Darf ich Code, Dokumente und CI in einem neuen privaten GitHub-Repository führen? | Beantwortet am 18.10.2026: ja, `darad11/fitness-app`, privat. Diese Sitzung darf keine Repositories anlegen; der Produktinhaber legt es leer an, danach binde ich es an und lade alles hoch |
-| Q-02 | Welches Hosting und welche feste Adresse? | Beantwortet am 18.10.2026: Vercel (D-231). Die Adresse `<projekt>.vercel.app` muss vor der ersten echten Datennutzung (M1) feststehen; eine eigene Domain wäre vorher einzurichten. Die Verknüpfung von Vercel-Konto und Repository macht der Produktinhaber einmalig |
+| Q-02 | Welches Hosting und welche feste Adresse? | Beantwortet am 18.10.2026: Vercel (D-231). Produktivadresse `https://fitness-app-mu-drab.vercel.app` (von Vercel vergeben, Projekt `fitness-app`). Sie muss bis zur ersten echten Datennutzung (M1) unverändert bleiben; eine Änderung oder eigene Domain wäre vorher einzurichten. Vercel ist mit dem Repository verbunden |
 
 ### E.2 Nicht blockierend, mit Standardentscheidung
 

@@ -69,7 +69,7 @@ Auf iOS und iPadOS nutzen alle Browser WebKit. Maßgeblich ist, was Safari und i
 
 ## 6. Hosting und Adresse
 
-- IndexedDB-Daten gehören zu genau einer Adresse. Ein Wechsel der Adresse oder Domain lässt vorhandene Daten in der App verschwinden; sie müssen per Export und Import umziehen. Die Produktivadresse wird deshalb vor M1 festgelegt (Q-02).
+- IndexedDB-Daten gehören zu genau einer Adresse. Ein Wechsel der Adresse oder Domain lässt vorhandene Daten in der App verschwinden; sie müssen per Export und Import umziehen. Die Produktivadresse ist deshalb vor M1 festgelegt: `https://fitness-app-mu-drab.vercel.app` (Q-02).
 - Vorschau-Adressen haben eigene, getrennte Daten; sie dienen nur Tests.
 - Hosting erfolgt auf Vercel (D-231). Der Hobby-Plan ist nur für persönliche, nicht kommerzielle Nutzung erlaubt; laut Sekundärquellen gelten 100 GB Datentransfer und 100 Deployments pro Tag. Bei Überschreitung pausiert Vercel Funktionen statt Kosten zu berechnen.
 - Vorschau-Adressen können je nach Einstellung des Vercel-Kontos eine Vercel-Anmeldung verlangen. Eine installierte Vorschau-App hat wegen der Speichertrennung keine solche Anmeldung; Vorschauen werden deshalb im Safari-Tab geprüft, die installierte App nutzt die Produktivadresse.
@@ -114,8 +114,8 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 
 ## 12. Stand M0 (18.10.2026)
 
-- **WebKit ungetestet:** Alle E2E-Tests liefen bisher nur in Chromium. WebKit läuft erst in GitHub Actions, sobald das Repository besteht; das Verhalten auf dem iPhone prüft T-IPH-M0.
-- **Noch keine Produktivadresse:** `vercel.json` ist fertig, das Vercel-Projekt verbindet der Produktinhaber. Das Etikett „Vorschau – Testdaten" hängt an der Vercel-Umgebung (`VERCEL_ENV`) und lässt sich erst auf einer Vorschau-Adresse sehen; lokal ist es nur als Komponententest geprüft.
+- **WebKit nur über Playwright geprüft:** Die E2E-Tests sind in GitHub Actions auch mit WebKit bestanden. Playwright-WebKit ist aber nicht Safari auf dem iPhone; Installation, Home-Bildschirm und Offline-Start dort prüft T-IPH-M0.
+- **Produktivadresse und Vorschau:** Vercel ist verbunden; Produktivadresse `https://fitness-app-mu-drab.vercel.app`. Das Etikett „Vorschau – Testdaten" hängt an der Vercel-Umgebung (`VERCEL_ENV`) und lässt sich erst auf einer Vorschau-Adresse sehen; lokal ist es nur als Komponententest geprüft.
 - **Safari-Hinweis:** Die Erkennung nutzt Browserkennung, Touch-Unterstützung und `display-mode`. Eingebettete Browser anderer Apps können wie Safari erscheinen. Die Anleitung ist bewusst allgemein formuliert, weil sich die Lage von „Teilen" je nach iOS-Version unterscheidet.
 - **Installationsknopf** gibt es nur in Chromium-Browsern (`beforeinstallprompt`); Safari bietet keinen solchen Dialog, dort hilft nur die Anleitung.
 - **Offline-Status:** Beim allerersten Aufruf zeigt „Heute" „Wird für die Offline-Nutzung vorbereitet", bis der Service Worker alle Dateien gespeichert hat. Im Entwicklungsmodus (`pnpm dev`) gibt es keinen Service Worker.

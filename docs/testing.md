@@ -122,7 +122,7 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 
 ### T-IPH-M0 · iPhone, Installation und Offline-Start
 
-1. Produktivadresse in Safari öffnen. Erwartung: Hinweis zur Installation und zur Datentrennung.
+1. Produktivadresse `https://fitness-app-mu-drab.vercel.app` in Safari öffnen. Erwartung: Hinweis zur Installation und zur Datentrennung.
 2. „Teilen › Zum Home-Bildschirm" ausführen, App vom Home-Bildschirm starten. Erwartung: Vollbild ohne Browserleiste, Name und Icon korrekt.
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
@@ -184,7 +184,14 @@ Jeder Arbeitspaket-Bericht nennt die ausgeführten Befehle, Anzahl bestandener u
 | Dokumente | `pnpm check:docs` | Bestanden |
 | Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 172,8 KB gzip; Service Worker mit 30 vorab gespeicherten Dateien |
 | E2E Chromium (Desktop und Pixel 7) | `E2E_ENGINES=chromium PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e` | 26 Tests bestanden, 0 fehlgeschlagen |
-| E2E WebKit | – | Nicht ausgeführt: WebKit ist hier nicht installiert; läuft in GitHub Actions, sobald das Repository besteht |
-| Gerätetest T-IPH-M0 | – | Offen (Produktinhaber, nach Verbindung mit Vercel) |
+| E2E WebKit | – | In dieser Umgebung nicht ausführbar (WebKit nicht installiert); siehe GitHub Actions unten |
+| Gerätetest T-IPH-M0 | – | Offen (Produktinhaber, nach dem Merge auf der Produktivadresse) |
+
+GitHub Actions (Node 24, Ubuntu, Pull Request darad11/fitness-app#1):
+
+| Lauf | Stand | Ergebnis |
+|---|---|---|
+| 1 | `016fc5d` | Fehlgeschlagen in `pnpm test:coverage`: Der Formatierungstest erwartete für de-CH das Tausendertrennzeichen „’"; Node 24 bringt ICU 78 mit und liefert „'". Der Test prüft seitdem die Art des Zeichens (D-233). E2E wurde nicht erreicht |
+| 2 | `0ab67f2` | Bestanden: Formatierung, Lint, Typen, Unit-Tests mit Schwellen, Dokumente, Build, Bündelgröße; E2E in Chromium und in WebKit (Desktop und iPhone-Profil). Die Logdateien sind aus dieser Umgebung nicht abrufbar; die genaue Zahl der Tests je Engine steht deshalb hier nicht. In WebKit wird der Offline-Test mit Service Worker planmäßig übersprungen (Abschnitt 3) |
 
 Abgedeckte Fälle: PWA-Prüfungen aus Abschnitt 3 (Manifest, Icons, Service Worker, Offline-Start aller vorhandenen Routen), E-24 (nur eigene Adresse, Sicherheits-Header), E-25 (Safari-Tab-Hinweis simuliert; das Vorschau-Etikett ist nur als Komponententest geprüft, weil es vom Vercel-Build abhängt), E-27 als Grundfassung (axe hell und dunkel ohne Verstöße; Tastatur und Kürzel folgen). Fehlergrenze je Ansicht und Update-Bestätigung sind als Komponententests geprüft (Teile von E-22 und E-23).

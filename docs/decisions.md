@@ -172,6 +172,12 @@ Details, Quellen und Prüfkriterien stehen in `data-sources.md`.
 | Q-10 | Anrede und Designrichtung | „du", Akzentfarbe Blau, Systemschrift (D-227, `design-system.md`) |
 | Q-11 | Welche Xeela-Funktionen nutzen Sie heute täglich, welche nie? | Dient der Prioritätsprüfung von R2 bis R4 |
 | Q-12 | Screenshots oder Bildschirmaufnahmen aus Xeela (Liste in `product-research.md` Abschnitt 11) | Optional; nur zum Verständnis von Abläufen |
+| Q-13 | Winter Arc (`winter-arc-reconstruction.md` Abschnitt 4): Was bedeutet die orangefarbene Sternmarkierung an einzelnen Übungen? Tag 14 Laufband „3 Sets • 30:00“ übernehmen oder 1 × 30 min? Ausführung der fünf unklaren Übungen (Chest Fly With Push, Seated Front Lateral Raise, Knee Raises, Leg Raises, Calf Raise Machine)? Klimmzüge mit oder ohne Unterstützung? | Stern ignorieren; Laufband 1 × 30 min; unklare Übungen mit der Zuordnung aus Abschnitt 5 und Hinweis „Zuordnung unsicher“; Klimmzüge ohne Unterstützung, Ersatz per „Übung ersetzen“ |
+| Q-14 | Programm A (`evolution-plan.md` Abschnitt 4.1): Übungsauswahl und Geräte passend zum Studio? Kniebeuge oder Beinpresse? Zwei Einstiegswochen mit 2 Arbeitssätzen in Ordnung? | Vorschlag wie beschrieben, Beinpresse als Ersatz wählbar |
+| Q-15 | Programm B (`evolution-plan.md` Abschnitt 4.2): Rotation über 4 Tage ohne Rücksetzung je Woche bestätigt? Übungen aus der vorhandenen Push/Pull/Beine-Vorlage übernehmen? | Ja, Rotation; Übungen aus der Vorlage |
+| Q-16 | Kalorienschätzung: Anzeige nur mit gespeichertem Körpergewicht; Laufband ohne Tempo ohne Kalorienwert; keine Verrechnung mit der Ernährung? | Ja zu allen drei Punkten |
+| Q-17 | Tagesaufgaben: eigene Aufgaben frei anlegen (z. B. „30 min Cardio“, „Wasser“), ohne Wettbewerb und ohne Vorgaben aus Xeela? | Eigene Aufgaben, keine Vorgaben |
+| Q-18 | Reihenfolge der Schritte A bis H in `evolution-plan.md` Abschnitt 5 freigeben; beginnt die Umsetzung mit Schritt A (M1 abschließen)? | Ja; Schritt A beginnt nach Freigabe des Plans |
 
 ## F. Phase-1-Fragen und ihr Stand
 

@@ -270,3 +270,21 @@ Hinweis: Screenshots dienen nur dem Verständnis der Workflows. Gestaltung und I
 ## 12. Offene Fragen an den Produktinhaber
 
 Siehe `decisions.md`, Abschnitt „Offene Produktentscheidungen". Die wichtigsten: eigene Programme vs. Programm-Builder, Datenquellen für Übungen und Lebensmittel, Umfang des MVP, Sync-Zeitpunkt, Umgang mit Fotos und Schritten, UI-Sprache, Zielgeräte und Browser, Hosting.
+
+## 13. Nachtrag 18.10.2026: Primärmaterial des Produktinhabers und ergänzende Recherche
+
+**Primärmaterial.** Der Produktinhaber hat am 18.10.2026 drei Bildschirmaufnahmen seiner Xeela-App (Fortschritt, Ernährung, Trainingsplayer), acht Aufnahmen des Programms „2026 Winter Arc“ und zwei Screenshots (Daily Challenges, Program Progress) bereitgestellt. Auswertung mit Zeitstempeln in `reference-analysis.md`; das Programm in `winter-arc-reconstruction.md`. Damit sind die Abläufe des Players, der Ernährungs-Tagesansicht und der Fortschrittsseite erstmals aus erster Hand belegt (Stufe „gesehen“); frühere Angaben in den Abschnitten 5 bis 8 bleiben als Sekundärbelege stehen.
+
+**Ergänzende Websuche (Abruf 18.10.2026).** Direkte Seitenabrufe scheiterten in dieser Sitzung an der Namensauflösung (`apps.apple.com`, `play.google.com`, `xeelafitness.com`, `openfoodfacts.github.io`, `pacompendium.com`); verfügbar waren nur Suchausschnitte. Kennzeichnung: **O** offiziell bestätigt (Ausschnitt einer offiziellen Seite), **U** unverifiziert, **A** abgeleitet, **E** eigener Vorschlag.
+
+| Thema | Befund | Quelle (Websuche, 18.10.2026) | Stufe |
+|---|---|---|---|
+| Winter Arc | Keine öffentliche Seite mit Übungsliste, Satzschema oder Trainingstagen; Treffer nur zu Marketing und Challenge-Bedingungen | Suche „Xeela Winter Arc 2026“ | A: die Aufnahme ist die einzige Quelle |
+| Xeela Nutzerfeedback | Rezensionsaggregatoren berichten weiterhin Abstürze und verlorene Trainingsdaten | Rezensionsseiten (REV) | U: zeitabhängig, nicht nachprüfbar |
+| Open Food Facts Limits | 15 Produktabfragen und 10 Suchanfragen je Minute und IP; eigener User-Agent erbeten; Lizenz ODbL mit Namensnennung und Share-Alike | API-Dokumentation (Ausschnitte) | O: deckt sich mit `data-sources.md` Abschnitt 3.1 |
+| MET-Werte | Adult Compendium 2024: 02050 Krafttraining kräftig 6,0; 02052 Kniebeuge/Kreuzheben 5,0; 02054 mehrere Übungen 8–15 Wdh. 3,5; 02056 Körpergewicht allgemein 3,0; 02057 hochintensiv 6,5 | Suchausschnitte zu pacompendium.com | O mit Vorbehalt: Seite nicht abrufbar, vor Umsetzung prüfen |
+| free-exercise-db | Unlicense, über 800 Übungen mit Bildern (JSON auf GitHub) | GitHub-Suchausschnitt | O mit Vorbehalt: Lizenzdatei prüfen |
+| wger | Lizenz je Datensatz (CC-Varianten), keine pauschale Freigabe | wger-Dokumentation | O |
+
+**Folgen für die Planung:** `evolution-plan.md` (Schritte A bis H), Rückfragen Q-13 bis Q-18 in `decisions.md`.
+

@@ -214,5 +214,6 @@ Nächste Schritte: <Liste>
 8. Erledigt: AP 1.2 Beispielvorlagen (ohne „Nur heute trainieren", das mit AP 1.3 und 1.4 folgt).
 9. Erledigt: AP 1.3 Trainings-Domain.
 10. Erledigt: AP 1.4 Trainingsplayer (ohne Pausenleiste).
-11. Ich: AP 1.5 Pausentimer mit Leiste, Ton und Wake Lock, danach AP 1.6 Persistenz und Wiederaufnahme.
-12. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+11. Zur Freigabe: Erweiterungsplan `evolution-plan.md` mit Rekonstruktion „Winter Arc“ (`winter-arc-reconstruction.md`), Referenzanalyse (`reference-analysis.md`) und Rückfragen Q-13 bis Q-18 (Branch `evolution-plan`, Pull Request als Entwurf).
+12. Ich: AP 1.5 Pausentimer mit Leiste, Ton und Wake Lock, danach AP 1.6 Persistenz und Wiederaufnahme (Schritt A des Erweiterungsplans).
+13. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

@@ -14,11 +14,11 @@ import {
   type Muscle,
 } from '../model/exercise';
 
-const MUSCLE_OPTIONS: readonly SelectOption<Muscle | ''>[] = [
+export const MUSCLE_OPTIONS: readonly SelectOption<Muscle | ''>[] = [
   { value: '', label: t.exercises.all },
   ...MUSCLES.map((muscle) => ({ value: muscle, label: t.exercises.muscles[muscle] })),
 ];
-const EQUIPMENT_OPTIONS: readonly SelectOption<Equipment | ''>[] = [
+export const EQUIPMENT_OPTIONS: readonly SelectOption<Equipment | ''>[] = [
   { value: '', label: t.exercises.all },
   ...EQUIPMENT.map((item) => ({ value: item, label: t.exercises.equipment[item] })),
 ];
@@ -171,14 +171,14 @@ function ExerciseList({ exercises, label }: { exercises: readonly Exercise[]; la
       {exercises.map((exercise) => (
         <li key={exercise.id} className="min-h-12 px-4 py-3">
           <p className="font-medium">{exercise.name}</p>
-          <p className="text-sm text-muted">{describe(exercise)}</p>
+          <p className="text-sm text-muted">{describeExercise(exercise)}</p>
         </li>
       ))}
     </ul>
   );
 }
 
-function describe(exercise: Exercise): string {
+export function describeExercise(exercise: Exercise): string {
   const muscles = exercise.primaryMuscles.map((m) => t.exercises.muscles[m]).join(', ');
   const equipment = exercise.equipment.map((e) => t.exercises.equipment[e]).join(', ');
   const parts = [muscles, equipment];

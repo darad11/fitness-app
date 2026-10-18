@@ -99,7 +99,8 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.1 | Umgesetzt bis auf die Übungsauswahl. Basisliste vom Produktinhaber durchgesehen (Q-05, `exercise-library.md`), 105 Übungen als gebündelte, mit Zod geprüfte Daten (D-240, D-241); Suche mit Rang, Filter nach Hauptmuskel und Gerät, Bibliotheksansicht `/uebungen` (S-12) über den Bereich Training (D-242). Die Übungsauswahl im Training (ExercisePicker) entsteht mit dem Trainingsplayer in AP 1.4, weil sie erst dort eine Funktion hat |
 | 1.2 | Umgesetzt bis auf „Nur heute trainieren". Die vier Beispielvorlagen sind gebündelte Daten, erzeugt aus `sample-templates.md` und in `pnpm check:docs` geprüft (D-243); Liste `/training/programme` (S-04, nur Beispielvorlagen) und Vorlage `/training/vorlagen/:key` (S-49) mit Etikett „Beispiel", Hinweis, Ablauf und Satzschema. „Nur heute trainieren" kommt mit AP 1.3 und 1.4, weil es eine laufende Einheit und den Player braucht |
 | 1.3 | Umgesetzt (ohne Oberfläche, die mit AP 1.4 folgt). Zod-Modell der Einheit; Anwendungsfälle starten (aus einem Vorlagentag oder frei), Übung und Satz hinzufügen oder entfernen, Werte setzen, erledigt mit Vorschlägen, rückgängig, übersprungen, Pausentimer mit Endzeitpunkt (±, überspringen, Drop-Kette), beenden mit Rückfrage bei offenen Sätzen, verwerfen und wiederherstellen; Invarianten (eine laufende Einheit, abgeschlossene unveränderlich, Drop-Sätze mit Arbeitssatz); Berechnungen (Volumen, bester Satz, 1RM, Dauer, Fortschritt, nächster offener Satz); Projektion `exerciseHistory` beim Abschluss in derselben Transaktion, Vorwerte je Satzplatz (D-244) |
-| 1.4 bis 1.9 | Offen |
+| 1.4 | Umgesetzt bis auf die Pausenleiste (AP 1.5). Player `/training/einheit/:id` als Vollbild mit Kopf (Titel, Dauer, Fortschritt), Übungsblöcken mit Vorwert und „Erstes Mal", Satzzeilen je Erfassungsart mit Vorschlägen als Platzhalter, erledigt, rückgängig, überspringen, entfernen, ±-Tasten, Satz und Übung hinzufügen (Übungsauswahl S-39), Übung entfernen mit Rückfrage, Aktionsleiste, Beenden mit Rückfrage, Verwerfen mit 10 s Rückgängig; Einstiege „Freies Training starten", „Training fortsetzen" und „… heute trainieren" in der Vorlage; einfache Zusammenfassung (Teil von AP 1.7); Fehlerhinweis am Satz mit „Erneut versuchen" (D-245) |
+| 1.5 bis 1.9 | Offen |
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -212,5 +213,6 @@ Nächste Schritte: <Liste>
 7. Erledigt: AP 1.1 Übungsbibliothek (ohne Übungsauswahl, die mit AP 1.4 folgt).
 8. Erledigt: AP 1.2 Beispielvorlagen (ohne „Nur heute trainieren", das mit AP 1.3 und 1.4 folgt).
 9. Erledigt: AP 1.3 Trainings-Domain.
-10. Ich: AP 1.4 Trainingsplayer mit „Nur heute trainieren" und Übungsauswahl, danach AP 1.5 Pausentimer und AP 1.6 Persistenz.
-11. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+10. Erledigt: AP 1.4 Trainingsplayer (ohne Pausenleiste).
+11. Ich: AP 1.5 Pausentimer mit Leiste, Ton und Wake Lock, danach AP 1.6 Persistenz und Wiederaufnahme.
+12. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

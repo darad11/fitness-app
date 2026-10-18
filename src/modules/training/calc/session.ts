@@ -239,3 +239,20 @@ export function nextOpenSet(
     ) ?? null
   );
 }
+
+/** Hervorgehobener Satz: der nächste offene nach dem zuletzt erledigten (freie Reihenfolge). */
+export function currentSet(session: Pick<Session, 'exercises'>): SessionSet | null {
+  let last: SessionSet | undefined;
+  for (const exercise of liveExercises(session)) {
+    for (const set of liveSets(exercise)) {
+      if (
+        set.status === 'done' &&
+        set.completedAt &&
+        (!last?.completedAt || set.completedAt >= last.completedAt)
+      ) {
+        last = set;
+      }
+    }
+  }
+  return nextOpenSet(session, last?.id)?.set ?? null;
+}

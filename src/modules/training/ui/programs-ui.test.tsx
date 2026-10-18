@@ -1,16 +1,30 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DbProvider, type DbRuntime } from '@/shared/db';
+import { createTestRuntime } from '@/shared/testing/db';
+import { findActiveSession } from '../data/sessionRepository';
 import { trainingRoutes } from '../routes';
 
-afterEach(cleanup);
+let rt: DbRuntime;
+beforeEach(async () => {
+  rt = await createTestRuntime({ deviceId: 'a1b2c3d4' });
+});
+afterEach(async () => {
+  cleanup();
+  await rt.db.delete();
+});
 
 async function renderAt(path: string, heading: string) {
   const router = createMemoryRouter(trainingRoutes, { initialEntries: [path] });
-  render(<RouterProvider router={router} />);
+  render(
+    <DbProvider runtime={rt}>
+      <RouterProvider router={router} />
+    </DbProvider>,
+  );
   await screen.findByRole('heading', { level: 1, name: heading });
   return router;
 }
@@ -59,8 +73,11 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     ]);
     const dayB = screen.getByRole('region', { name: 'Tag B' });
     expect(within(dayB).getByText('2 Sätze je Seite · 20–40 s · Pause 1:00 min')).toBeVisible();
-    // Keine Bearbeitung: Beispielvorlagen sind schreibgeschützt.
-    expect(screen.queryByRole('button')).toBeNull();
+    // Keine Bearbeitung: Beispielvorlagen sind schreibgeschützt; nur „heute trainieren".
+    expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual([
+      'Tag A heute trainieren',
+      'Tag B heute trainieren',
+    ]);
   });
 
   it('zeigt Drop-Sätze mit eigenem Bereich', async () => {
@@ -72,5 +89,28 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     expect(
       screen.getByText('Woche 1: Oberkörper 1, Unterkörper 1, Oberkörper 2, Unterkörper 2'),
     ).toBeVisible();
+  });
+
+  it('startet einen Tag der Vorlage als Training und bietet danach Fortsetzen an (AK-TRN-22)', async () => {
+    const user = userEvent.setup();
+    const router = await renderAt('/training/vorlagen/full_body_ab', 'Ganzkörper A/B');
+    await user.click(screen.getByRole('button', { name: 'Tag B heute trainieren' }));
+    const active = await waitFor(async () => {
+      const found = await findActiveSession(rt.db);
+      expect(found).toBeDefined();
+      return found!;
+    });
+    expect(active).toMatchObject({ source: 'template', title: 'Tag B · Ganzkörper A/B' });
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe(`/training/einheit/${active.id}`);
+    });
+    await router.navigate('/training/vorlagen/full_body_ab');
+    await screen.findByRole('heading', { level: 1, name: 'Ganzkörper A/B' });
+    await user.click(screen.getByRole('button', { name: 'Tag A heute trainieren' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Es läuft bereits ein Training.');
+    expect(screen.getByRole('link', { name: 'Training fortsetzen' })).toHaveAttribute(
+      'href',
+      `/training/einheit/${active.id}`,
+    );
   });
 });

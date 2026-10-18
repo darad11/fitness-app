@@ -22,3 +22,13 @@ export function formatRest(seconds: number): string {
   const rest = seconds % 60;
   return `${String(minutes)}:${String(rest).padStart(2, '0')} min`;
 }
+
+/** Laufende Dauer als „12:34" bzw. ab einer Stunde „1:02:03". */
+export function formatClock(totalSec: number): string {
+  const sec = Math.max(0, Math.floor(totalSec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  const two = (n: number) => String(n).padStart(2, '0');
+  return h > 0 ? `${String(h)}:${two(m)}:${two(s)}` : `${String(m)}:${two(s)}`;
+}

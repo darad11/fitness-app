@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Outlet, useMatches } from 'react-router';
 import { ThemeSync } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { GlobalBanners } from '../banners/GlobalBanners';
@@ -7,6 +7,10 @@ import { TabBar } from './TabBar';
 
 /** Rahmen aller Bereiche: Seitenleiste ab 1024 px, sonst Tab-Leiste; Hinweisleisten oben. */
 export function AppLayout() {
+  // Der Trainingsplayer ist eine Vollbildansicht ohne Navigation (design-system.md Abschnitt 9).
+  const fullscreen = useMatches().some(
+    (match) => (match.handle as { fullscreen?: boolean } | undefined)?.fullscreen === true,
+  );
   return (
     <div className="min-h-dvh lg:flex">
       <a
@@ -15,7 +19,7 @@ export function AppLayout() {
       >
         {t.nav.skipToContent}
       </a>
-      <Sidebar />
+      {fullscreen ? null : <Sidebar />}
       <div className="flex min-h-dvh min-w-0 flex-1 flex-col pt-[env(safe-area-inset-top)] lg:pt-0">
         <GlobalBanners />
         <main
@@ -26,7 +30,7 @@ export function AppLayout() {
           <Outlet />
         </main>
       </div>
-      <TabBar />
+      {fullscreen ? null : <TabBar />}
       <ThemeSync />
     </div>
   );

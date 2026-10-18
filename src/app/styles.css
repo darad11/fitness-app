@@ -57,6 +57,7 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --color-meter-track: var(--meter-track);
+  --color-scrim: var(--scrim);
 }
 
 /* Seitenrand 16 / 24 / 32 px, mindestens so breit wie der sichere Bereich (Querformat am iPhone). */

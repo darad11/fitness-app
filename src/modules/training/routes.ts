@@ -35,12 +35,20 @@ export const trainingRoutes: RouteObject[] = [
           // React Router erwartet hier eine Antwort, kein Error-Objekt; die Fehlergrenze zeigt „Seite nicht gefunden".
           // eslint-disable-next-line @typescript-eslint/only-throw-error
           if (!template) throw data(null, { status: 404 });
-          const unilateral = (await loadCoreExercises())
-            .filter((exercise) => exercise.isUnilateral)
-            .map((exercise) => exercise.id);
-          return { template, unilateral };
+          return { template, exercises: await loadCoreExercises() };
         },
       };
     },
+  },
+  {
+    path: 'training/einheit/:id',
+    handle: { fullscreen: true },
+    lazy: async () => ({
+      Component: (await import('./ui/player/SessionPage')).SessionPage,
+    }),
+  },
+  {
+    path: 'training/einheit/:id/zusammenfassung',
+    lazy: async () => ({ Component: (await import('./ui/SummaryPage')).SummaryPage }),
   },
 ];

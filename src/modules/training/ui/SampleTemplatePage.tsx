@@ -1,23 +1,32 @@
 import { Info } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 import { t } from '@/shared/i18n/de';
-import { Badge, Card, PageHeader } from '@/shared/ui';
+import type { Exercise } from '@/modules/exercises';
+import { Badge, Button, ButtonLink, Card, PageHeader } from '@/shared/ui';
 import { formatRest, formatTargetRange } from '../calc/format';
 import { distinctDays, summarizeSets } from '../calc/sampleTemplates';
 import type { PlannedExercise, SampleTemplate } from '../model/program';
+import { planFromTemplateDay } from '../service/sessionService';
 import { describeTemplate } from './ProgramsPage';
+import { useStartSession } from './useStartSession';
 
 export interface SampleTemplateData {
   template: SampleTemplate;
-  /** IDs der Übungen, die je Seite ausgeführt werden. */
-  unilateral: readonly string[];
+  exercises: readonly Exercise[];
 }
 
 /** Beispielvorlage (S-49): schreibgeschützt, mit Etikett und Hinweis (AK-PRG-06). */
 export function SampleTemplatePage() {
-  const { template, unilateral } = useLoaderData<SampleTemplateData>();
+  const { template, exercises } = useLoaderData<SampleTemplateData>();
   const days = distinctDays(template);
-  const perSide = new Set(unilateral);
+  const perSide = new Set(exercises.filter((e) => e.isUnilateral).map((e) => e.id));
+  const { start, error, busy } = useStartSession();
+  const startDay = (dayId: string) => {
+    const weekIndex = template.weeks.findIndex((week) => week.days.some((day) => day.id === dayId));
+    const dayIndex = template.weeks[weekIndex]?.days.findIndex((day) => day.id === dayId) ?? -1;
+    const byId = new Map(exercises.map((exercise) => [exercise.id, exercise]));
+    void start(planFromTemplateDay(template, weekIndex, dayIndex, (id) => byId.get(id)));
+  };
   return (
     <>
       <PageHeader
@@ -32,6 +41,14 @@ export function SampleTemplatePage() {
           <p>{t.programs.sampleHint}</p>
         </div>
       </div>
+      {error ? (
+        <div role="alert" className="mb-4 rounded-card border border-line bg-surface p-4">
+          <p className="mb-3">{error.message}</p>
+          {error.activeId ? (
+            <ButtonLink to={`/training/einheit/${error.activeId}`}>{t.training.resume}</ButtonLink>
+          ) : null}
+        </div>
+      ) : null}
       <div className="grid gap-4">
         <Card title={t.programs.schedule}>
           <ul className="space-y-1">
@@ -44,6 +61,7 @@ export function SampleTemplatePage() {
           {template.repeat ? (
             <p className="mt-2 text-sm text-muted">{t.programs.scheduleRepeat}</p>
           ) : null}
+          <p className="mt-2 text-sm text-muted">{t.training.startDayHint}</p>
         </Card>
         {days.map((day) => (
           <Card key={day.id} title={day.name}>
@@ -60,6 +78,16 @@ export function SampleTemplatePage() {
                 </li>
               ))}
             </ol>
+            <Button
+              variant="secondary"
+              className="mt-4 w-full md:w-auto"
+              disabled={busy}
+              onClick={() => {
+                startDay(day.id);
+              }}
+            >
+              {t.training.startDay(day.name)}
+            </Button>
           </Card>
         ))}
       </div>

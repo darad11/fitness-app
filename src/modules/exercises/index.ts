@@ -1,6 +1,12 @@
 // Öffentliche Schnittstelle des Moduls „exercises" (Basisbibliothek, Suche).
+import { lazy } from 'react';
+
+/** Übungsauswahl (S-39), erst beim Öffnen geladen, damit sie den Start nicht verlangsamt. */
+export const ExercisePicker = lazy(async () => ({
+  default: (await import('./ui/ExercisePicker')).ExercisePicker,
+}));
+export type { ExercisePickerProps } from './ui/ExercisePicker';
 export { exercisesRoutes } from './routes';
-export { buildSearchIndex, searchExercises, type ExerciseFilter } from './calc/search';
 export { coreExerciseId, loadCoreExercises } from './data/coreLibrary';
 export {
   EQUIPMENT,

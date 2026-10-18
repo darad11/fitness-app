@@ -279,3 +279,16 @@ Fehlschlag im ersten Lauf: `e2e/exercises.spec.ts` (Desktop) wartete vergeblich 
 Abgedeckt mit Integrationstests gegen eine Test-Datenbank (fake-indexeddb): AK-TRN-01 (Start aus einem Vorlagentag mit Snapshot), AK-TRN-03 (Aufwärm-, Arbeits- und Drop-Sätze; Pause erst nach der Drop-Kette), AK-TRN-04 (Grenzen, ungültige Werte überschreiben nichts), AK-TRN-05 (Vorwerte je Satzplatz aus der Projektion), AK-TRN-06 (Vorschläge, Pflichteingabe bei Bereichen), AK-TRN-07 (erledigt, übersprungen, rückgängig mit Werten), AK-TRN-09 (Übungen und Sätze hinzufügen und entfernen), AK-TRN-10 und AK-TRN-11 (Timer mit Endzeitpunkt, ±, Überspringen), AK-TRN-19 (Rückfrage bei offenen Sätzen, Abschluss mit Projektion), AK-TRN-21 (Verwerfen und Wiederherstellen), AK-TRN-22 (eine laufende Einheit). Die Nachweise per E2E folgen mit der Oberfläche.
 
 Während der Arbeit gefunden und behoben (vier Tests zunächst rot): „Erledigt" übernahm feste Zielwerte nur, wenn der Aufrufer sie mitgab; ein neuer Satz übernahm das Ziel eines noch leeren Satzes; nach einer Drop-Kette startete keine Pause, weil Drop-Sätze 0 s Pause haben; ein eigener Fehlertyp hieß wie ein eingebauter Fehler von Dexie („NotFoundError") und wurde deshalb verpackt.
+
+### M1 · AP 1.4 Trainingsplayer · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 32 Testdateien, 327 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,44 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 181,9 KB gzip |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Neue E2E-Abläufe in `e2e/session.spec.ts`: Training aus einem Vorlagentag starten; „erledigt" ohne Gewicht verlangt eine Eingabe, die Wiederholungen kommen aus dem festen Ziel; erledigter Satz übersteht ein sofortiges Neuladen; eine Eingabe mit Komma ist nach 0,6 s gespeichert und übersteht ein Neuladen (AK-TRN-16); Rückgängig behält die Werte; Beenden mit Rückfrage bei 15 offenen Sätzen; Zusammenfassung mit 2 Sätzen und 500 kg Volumen; beim nächsten Mal Vorwert als Platzhalter und „Letztes Mal". Zweiter Ablauf im dunklen Modus: freies Training, Übung über die Suche auswählen (Entlastung × Wiederholungen), verwerfen, „Rückgängig", zweiter Start bietet „Training fortsetzen" an. axe ohne Verstöße im Player (hell und dunkel), im Dialog und in der Zusammenfassung. Komponententests decken Überspringen, Entfernen, Satz hinzufügen, Übung entfernen mit und ohne Rückfrage, ungültige Eingabe, ±-Taste und unbekannte Einheiten ab.
+
+Während der Arbeit gefunden und behoben: Ohne Spaltenköpfe war im Bildschirmfoto nicht erkennbar, welches Feld kg und welches Wiederholungen ist; jetzt hat jede Übung eine Kopfzeile. Die Übungsauswahl, die Bibliotheksseite und die Suche lagen über die Schnittstelle des Moduls im Startbündel (183,4 KB); die Auswahl wird jetzt erst beim Öffnen geladen. jsdom kennt `showModal` nicht; die Testumgebung hat dafür einen kleinen Ersatz.

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { SessionExercise, SessionSet } from '../model/session';
 import {
+  currentSet,
   bestOneRepMax,
   bestSet,
   checkValue,
@@ -242,5 +243,23 @@ describe('Kennzahlen (data-model.md Abschnitt 9)', () => {
     expect(
       nextOpenSet({ exercises: [exercise('reps', [done('working', { reps: 1 })])] }),
     ).toBeNull();
+  });
+
+  it('hebt den nächsten offenen Satz nach dem zuletzt erledigten hervor', () => {
+    const a = exercise('weight_reps', [
+      done('working', { weightKg: 1, reps: 1 }, { completedAt: '2026-10-18T09:10:00.000Z' }),
+      set({ type: 'working' }),
+      set({ type: 'working' }),
+    ]);
+    const b = exercise('reps', [
+      done('working', { reps: 5 }, { completedAt: '2026-10-18T09:20:00.000Z' }),
+      set({ type: 'working' }),
+    ]);
+    b.position = 1;
+    expect(currentSet({ exercises: [a, b] })?.id).toBe(b.sets[1]!.id);
+    expect(
+      currentSet({ exercises: [exercise('reps', [set({ type: 'working' })])] }),
+    ).not.toBeNull();
+    expect(currentSet({ exercises: [] })).toBeNull();
   });
 });

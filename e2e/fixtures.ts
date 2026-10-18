@@ -47,6 +47,7 @@ export const APP_PAGES = [
   '/heute/aufgaben',
   '/training',
   '/training/programme',
+  '/training/nachtragen',
   '/training/vorlagen/full_body_ab',
   '/training/vorlagen/winter_arc_2026',
   '/uebungen',

@@ -51,11 +51,18 @@ export function HistoryPage() {
                           <span className="block font-semibold">{session.title}</span>
                           <span className="block text-sm text-muted tabular-nums">
                             {fmt.weekdayDayMonth(dateOf(session.dayKey))} ·{' '}
-                            {t.history.summary(
-                              formatClock(summary.durationSec),
-                              t.history.sets(summary.doneSets),
-                              fmt.loadKg(summary.volumeKg),
-                            )}
+                            {session.activity
+                              ? t.log.activitySummary(
+                                  formatClock(summary.durationSec),
+                                  session.activity.distanceM !== undefined
+                                    ? `${fmt.number(session.activity.distanceM / 1000, { maximumFractionDigits: 2 })} km`
+                                    : null,
+                                )
+                              : t.history.summary(
+                                  formatClock(summary.durationSec),
+                                  t.history.sets(summary.doneSets),
+                                  fmt.loadKg(summary.volumeKg),
+                                )}
                           </span>
                         </span>
                         <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />

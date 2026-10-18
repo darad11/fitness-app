@@ -40,17 +40,32 @@ export function HistoryDetailPage() {
   return (
     <>
       <PageHeader
-        eyebrow={t.history.detailEyebrow}
+        eyebrow={session.activity ? t.log.activityEyebrow : t.history.detailEyebrow}
         title={session.title}
-        subtitle={`${fmt.weekdayDayMonth(ended)} · ${fmt.time(ended)}`}
+        subtitle={`${fmt.weekdayDayMonth(ended)} · ${fmt.time(ended)}${session.source === 'manual' ? ` · ${t.log.manualBadge}` : ''}`}
         back={{ to: '/training/verlauf', label: t.history.title }}
       />
-      <dl className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatTile label={t.summary.duration} value={formatClock(summary.durationSec)} />
-        <StatTile label={t.summary.exercises} value={fmt.number(summary.exercises)} />
-        <StatTile label={t.summary.sets} value={fmt.number(summary.doneSets)} />
-        <StatTile label={t.summary.volume} value={fmt.number(summary.volumeKg)} unit="kg" />
-      </dl>
+      {session.activity ? (
+        <dl className="mb-4 grid grid-cols-2 gap-3">
+          <StatTile label={t.summary.duration} value={formatClock(summary.durationSec)} />
+          <StatTile
+            label={t.log.distance}
+            value={
+              session.activity.distanceM === undefined
+                ? '–'
+                : fmt.number(session.activity.distanceM / 1000, { maximumFractionDigits: 2 })
+            }
+            unit={session.activity.distanceM === undefined ? undefined : 'km'}
+          />
+        </dl>
+      ) : (
+        <dl className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <StatTile label={t.summary.duration} value={formatClock(summary.durationSec)} />
+          <StatTile label={t.summary.exercises} value={fmt.number(summary.exercises)} />
+          <StatTile label={t.summary.sets} value={fmt.number(summary.doneSets)} />
+          <StatTile label={t.summary.volume} value={fmt.number(summary.volumeKg)} unit="kg" />
+        </dl>
+      )}
       {session.notes ? (
         <Card title={t.history.notes} className="mb-4">
           <p className="whitespace-pre-line">{session.notes}</p>

@@ -40,7 +40,8 @@ export function totalsFor<T extends SessionLike>(
   period: StatPeriod,
   now: Date,
   volumeOf: (session: T) => number,
-  kcalOf: (session: T) => number | null,
+  /** Schätzung, `null` ohne Körpergewicht, `undefined` wenn nicht anwendbar (Aktivität). */
+  kcalOf: (session: T) => number | null | undefined,
   timeZone?: string,
 ): Totals {
   const start = statPeriodStart(period, now, timeZone);
@@ -49,6 +50,7 @@ export function totalsFor<T extends SessionLike>(
   let withoutKcal = 0;
   for (const session of scoped) {
     const estimate = kcalOf(session);
+    if (estimate === undefined) continue;
     if (estimate === null) withoutKcal += 1;
     else kcal = (kcal ?? 0) + estimate;
   }

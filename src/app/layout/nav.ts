@@ -7,14 +7,29 @@ export interface NavItem {
   icon: LucideIcon;
   /** Nicht verfügbare Bereiche erscheinen nicht in der Navigation (AK-UX-01). */
   available: boolean;
+  /** Weitere Pfade, die zu diesem Bereich gehören (z. B. Übungen zu Training). */
+  sections?: readonly string[];
 }
 
-/** Navigation im MVP nach D-211. Training folgt mit M1, Fortschritt mit M3. */
+/** Navigation im MVP nach D-211. Training ab M1, Fortschritt folgt mit M3. */
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: '/heute', label: t.nav.today, icon: House, available: true },
-  { to: '/training', label: t.nav.training, icon: Dumbbell, available: false },
+  {
+    to: '/training',
+    label: t.nav.training,
+    icon: Dumbbell,
+    available: true,
+    sections: ['/uebungen'],
+  },
   { to: '/fortschritt', label: t.nav.progress, icon: ChartLine, available: false },
   { to: '/mehr', label: t.nav.more, icon: Ellipsis, available: true },
 ];
 
 export const VISIBLE_NAV_ITEMS: readonly NavItem[] = NAV_ITEMS.filter((item) => item.available);
+
+/** Gehört der Pfad zu einem weiteren Bereich des Eintrags (NavLink prüft nur `to`)? */
+export function inSection(pathname: string, item: NavItem): boolean {
+  return (item.sections ?? []).some(
+    (section) => pathname === section || pathname.startsWith(`${section}/`),
+  );
+}

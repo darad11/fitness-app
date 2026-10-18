@@ -1,5 +1,21 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.4 · 18.10.2026 · M1, AP 1.1 (Übungsbibliothek)
+
+Grundlage: Durchsicht der Basisübungsliste durch den Produktinhaber (Q-05).
+
+| Datei | Änderung |
+|---|---|
+| `exercise-library.md` | Neu: Basisübungsliste mit 105 Übungen, Rückfragen und Antworten; Abschnitt 5 wird aus den Daten erzeugt |
+| `decisions.md` | D-240 Schlüssel der Basisübungen, D-241 Erfassungsarten Dauer und Distanz sowie Entlastung, D-242 Übungsbibliothek in der App; Q-05 beantwortet |
+| `data-model.md` | Erfassungsarten und Satzfelder `distanceM`, `assistKg`, Feld `distanceUnit` |
+| `sample-templates.md` | Kabelrudern in Push/Pull/Beine vereinheitlicht; Schlüsselformat; Erfassungsarten |
+| `implementation-plan.md` | Stand M1; nächste Schritte |
+| `feature-inventory.md` | TP-06 „Implementiert" |
+| `design-system.md` | Stand der Navigation, S-03 und S-12 |
+| `testing.md` | Abschnitt 10: Ergebnisse AP 1.1 |
+| Code | Modul `exercises` (Daten, Prüfung, Suche, Seite `/uebungen`), Modul `training` mit Seite `/training`, Suchfeld als Basiskomponente; `tools/exercise_library_to_md.py` in `pnpm check:docs` |
+
 ## Nachtrag zu Version 0.3 · 18.10.2026 · Stabile E2E-Tests
 
 Grundlage: unzuverlässige E2E-Läufe in Chromium nach der Abnahme von M0 (darad11/fitness-app#4).

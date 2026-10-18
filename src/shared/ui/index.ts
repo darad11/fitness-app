@@ -4,6 +4,7 @@ export * from './Card';
 export * from './LinkList';
 export * from './PageHeader';
 export * from './SegmentedControl';
+export * from './SearchField';
 export * from './SelectField';
 export * from './Skeleton';
 export * from './StatusList';

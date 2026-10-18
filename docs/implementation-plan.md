@@ -1,6 +1,6 @@
 # Implementierungsplan
 
-Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: vorläufig freigegeben · Vorgänger: `archive/v0.1-phase-1/implementation-plan.md`
+Stand: 18.10.2026 · Version 0.4 (M1 in Arbeit) · Status: vorläufig freigegeben · Vorgänger: `archive/v0.1-phase-1/implementation-plan.md`
 
 ## Änderungen gegenüber Version 0.1
 
@@ -91,6 +91,14 @@ Ziel: Ein echtes Training wird auf dem iPhone protokolliert. Erledigte Sätze ü
 AK: AK-TRN-01, AK-TRN-02, AK-TRN-03 (Aufwärm- und Arbeitssätze), AK-TRN-04 bis AK-TRN-08, AK-TRN-09 (hinzufügen, entfernen), AK-TRN-10 bis AK-TRN-13, AK-TRN-15 bis AK-TRN-17, AK-TRN-19, AK-TRN-20 (Basis), AK-TRN-21, AK-TRN-22, AK-TRN-25, AK-TRN-26, AK-EXL-01, AK-EXL-02, AK-PRG-06 (Beispielvorlage starten), AK-PWA-02, AK-PWA-05, AK-DSH-01, AK-DSH-03, AK-HIS-01, AK-HIS-02, AK-DAT-01, AK-DAT-06 (Erstellung), AK-DAT-07, AK-SET-02 (Training), AK-UX-03, AK-DEV-01, AK-DEV-03.
 
 Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber bestanden und ausgewertet. Ab hier ist die Produktivadresse für echte Trainings freigegeben.
+
+**Stand M1 (18.10.2026):** In Arbeit auf dem Branch `m1-training`, Pull Request darad11/fitness-app#5 (Entwurf). Ergebnisse in `testing.md` Abschnitt 10.
+
+| AP | Stand |
+|---|---|
+| 1.1 | Umgesetzt bis auf die Übungsauswahl. Basisliste vom Produktinhaber durchgesehen (Q-05, `exercise-library.md`), 105 Übungen als gebündelte, mit Zod geprüfte Daten (D-240, D-241); Suche mit Rang, Filter nach Hauptmuskel und Gerät, Bibliotheksansicht `/uebungen` (S-12) über den Bereich Training (D-242). Die Übungsauswahl im Training (ExercisePicker) entsteht mit dem Trainingsplayer in AP 1.4, weil sie erst dort eine Funktion hat |
+| 1.2 bis 1.9 | Offen |
+
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
 
@@ -198,6 +206,7 @@ Nächste Schritte: <Liste>
 3. Erledigt: M0 gemergt und ausgeliefert; T-IPH-M0 Schritte 1 bis 3 bestanden (iOS 27.0.1).
 4. Erledigt: T-IPH-M0 Schritt 4 (Update-Hinweis) bestanden.
 5. Erledigt mit darad11/fitness-app#4: E2E Chromium in der CI stabilisiert (`testing.md` Abschnitt 10).
-6. Erledigt: Basisübungsliste als Entwurf vorgelegt (`exercise-library.md`, 104 Übungen, fünf Rückfragen); Branch `m1-training`.
-7. Produktinhaber: Durchsicht der Liste und Antworten auf die Rückfragen in `exercise-library.md` Abschnitt 3.
-8. M1 umsetzen, beginnend mit AP 1.1 (Liste als gebündelte Daten); Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+6. Erledigt: Basisübungsliste vorgelegt und vom Produktinhaber durchgesehen (Q-05, D-241).
+7. Erledigt: AP 1.1 Übungsbibliothek (ohne Übungsauswahl, die mit AP 1.4 folgt).
+8. Ich: AP 1.2 Beispielvorlagen als gebündelte Daten, danach AP 1.3 Trainings-Domain.
+9. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

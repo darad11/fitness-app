@@ -71,7 +71,20 @@ describe('App-Shell', () => {
       const labels = within(nav)
         .getAllByRole('link')
         .map((link) => link.textContent);
-      expect(labels).toEqual(['Heute', 'Mehr']);
+      expect(labels).toEqual(['Heute', 'Training', 'Mehr']);
+    }
+  });
+
+  it('führt über Training zu den Übungen; Training bleibt dort markiert', async () => {
+    const user = userEvent.setup();
+    const router = renderApp('/training');
+    await screen.findByRole('heading', { level: 1, name: 'Training' });
+    await user.click(screen.getByRole('link', { name: 'Übungen' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Übungen' })).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/uebungen');
+    for (const nav of screen.getAllByRole('navigation', { name: 'Hauptnavigation' })) {
+      expect(within(nav).getByRole('link', { name: 'Training' })).toHaveClass('text-accent-ink');
+      expect(within(nav).getByRole('link', { name: 'Heute' })).not.toHaveClass('text-accent-ink');
     }
   });
 

@@ -1,6 +1,8 @@
 import { redirect, type RouteObject } from 'react-router';
 import { dashboardRoutes } from '@/modules/dashboard';
+import { exercisesRoutes } from '@/modules/exercises';
 import { settingsRoutes } from '@/modules/settings';
+import { trainingRoutes } from '@/modules/training';
 import { NotFoundPage, RootErrorView, RouteErrorView, ShellFallback } from './errors/ErrorViews';
 import { AppLayout } from './layout/AppLayout';
 
@@ -20,6 +22,8 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, loader: () => redirect('/heute') },
           ...dashboardRoutes,
+          ...trainingRoutes,
+          ...exercisesRoutes,
           ...settingsRoutes,
           { path: '*', Component: NotFoundPage },
         ],

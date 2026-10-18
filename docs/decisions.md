@@ -1,6 +1,6 @@
 # Entscheidungsprotokoll
 
-Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v0.1-phase-1/decisions.md`
+Stand: 18.10.2026 · Version 0.5 (M1 in Arbeit) · Vorgängerversion: `archive/v0.1-phase-1/decisions.md`
 
 ## Statuswerte
 
@@ -21,7 +21,7 @@ Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v
 - Phase-1-Vorschläge D-010 bis D-030 mit neuem Status.
 - Abschnitte C bis E neu: technische Entscheidungen, Datenquellen, offene Fragen.
 - Die Phase-1-Fragen F-01 bis F-20 sind in Abschnitt F ihren Antworten zugeordnet.
-- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232), Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237) und Arbeit über mehrere Sitzungen (D-238); Nachtrag: Ladezustand ohne Standardwerte (D-239). M1: Schlüssel der Basisübungen (D-240), Erfassungsarten nach der Durchsicht (D-241).
+- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232), Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237) und Arbeit über mehrere Sitzungen (D-238); Nachtrag: Ladezustand ohne Standardwerte (D-239). M1: Schlüssel der Basisübungen (D-240), Erfassungsarten nach der Durchsicht (D-241), Übungsbibliothek in der App (D-242).
 
 ## A. Durch den Auftrag festgelegt
 
@@ -132,6 +132,7 @@ Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v
 | D-239 | Ladezustand: Bis gespeicherte Werte gelesen sind, zeigt eine Ansicht einen ruhigen Platzhalter in der Form des Inhalts (`Skeleton`, ohne Animation; der Bereich trägt `aria-busy`). Auswahlen und Eingaben erscheinen erst mit den gespeicherten Werten, nie vorab mit Standardwerten | Entschieden in M0 (Nachtrag) | Mit Standardwerten zeigte die Einstellungsseite kurz „Hell" als gewählt und sprang nach dem Laden mit einem Farbübergang um; in der CI fiel das als Kontrastfehler auf (`testing.md` Abschnitt 10). Setzt `design-system.md` Abschnitt 7 um („Skelett in der Form des Inhalts"). E2E-Tests warten, bis kein Bereich mehr `aria-busy` trägt |
 | D-240 | Schlüssel der Basisübungen in Kleinbuchstaben mit Unterstrich ohne Präfix (z. B. `bench_press_barbell`); die ID entsteht per UUID v5 aus `core-exercise:<Schlüssel>` | Entschieden in M1 | Vereinheitlicht `sample-templates.md` (bisher `core.bench_press_barbell`) mit `data-model.md` und dem Test in `uuid.test.ts`. Schlüssel ändern sich nie, sonst ändern sich die IDs |
 | D-241 | Zwei weitere Erfassungsarten: `time_distance` (Dauer und Distanz) und `assisted_reps` (Entlastung in kg × Wiederholungen). Distanz wird in Metern gespeichert (`distanceM`) und je Übung in m oder km eingegeben und angezeigt (`distanceUnit`); die Entlastung steht in `assistKg`, nie in `weightKg`. Volumen und geschätztes 1RM entstehen nur aus Gewicht × Wiederholungen. Bester Satz: bei Entlastung die geringste Entlastung, bei Gleichstand mehr Wiederholungen; bei Dauer und Distanz die größte Distanz | Entschieden in M1 auf Antwort des Produktinhabers (Q-05) | Der Produktinhaber braucht Distanz an Cardiogeräten und unterstützte Klimmzüge und Dips. Ein eigenes Feld für die Entlastung verhindert, dass sie als Last ins Volumen oder in Bestleistungen eingeht. Das Rudergerät zählt in Metern, Laufband, Fahrradergometer und Crosstrainer in Kilometern |
+| D-242 | Übungsbibliothek in der App: Die Basisübungen liegen in einer eigenen, nachgeladenen Datei (`core-exercises.v1.json`), die der Service Worker vorab speichert. Die Seite `/uebungen` gehört zum Bereich Training; Suche und Filter stehen in der Adresse (`?q=…&muskel=…&geraet=…`). Der Muskelfilter prüft nur Hauptmuskeln. Ohne Suche und Filter ist die Liste nach Gruppen gegliedert, sonst nach Rang (Name beginnt mit der Suche, Treffer im Namen, Treffer im Alias) und alphabetisch | Entschieden in M1 | Die Daten (rund 5 KB gzip, mit eigenen Übungen und Medien später mehr) verlangsamen so nicht den Start der App und sind trotzdem offline da. Suche und Filter bleiben bei Zurück und Neuladen erhalten. Nebenmuskeln im Filter brächten zu viele unpassende Treffer (z. B. Bankdrücken unter Trizeps) |
 
 ## D. Datenquellen
 

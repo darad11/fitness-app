@@ -243,7 +243,7 @@ Mehr (/mehr)                                           R1
 | S-44 | Fehleransicht | Je Route | M0, M4 | Meldung | Neu laden | – | AK-DAT-09 |
 | S-46 | Globale Hinweisleisten | Alle Seiten | M0 bis M4 | Training läuft, Update verfügbar, Vorschau – Testdaten, Installationshinweis | Tippen führt zur Aktion | – | AK-TRN-17, AK-PWA-03, AK-PWA-04, AK-PWA-07 |
 
-Grundfassungen aus M0: S-01 zeigt Datum, die Karte „Diese Version“ und die Karte „Status“ (Offline-Bereitschaft, Startart mit Weg zu „Installieren“, Hinweis auf lokale Daten). S-34 enthält Darstellung (Hell, Dunkel, System) und „Datum und Zahlen“ mit Beispielzeile. Navigation in M0: Heute und Mehr; Training und Fortschritt erscheinen erst mit M1 und M3 (AK-UX-01).
+Grundfassungen aus M0: S-01 zeigt Datum, die Karte „Diese Version“ und die Karte „Status“ (Offline-Bereitschaft, Startart mit Weg zu „Installieren“, Hinweis auf lokale Daten). S-34 enthält Darstellung (Hell, Dunkel, System) und „Datum und Zahlen“ mit Beispielzeile. Navigation in M0: Heute und Mehr; Training und Fortschritt erscheinen erst mit M1 und M3 (AK-UX-01). Stand M1 (AP 1.1): Training erscheint in der Navigation; S-03 enthält zunächst nur den Einstieg „Übungen", weitere Einstiege folgen mit ihren Arbeitspaketen. S-12 ist umgesetzt (Suche, Filter Muskelgruppe und Gerät nebeneinander, Liste nach Gruppen; ohne Öffnen, weil das Übungsdetail S-13 erst in M2 kommt). Auf `/uebungen` bleibt Training in der Navigation markiert.
 
 ### 10.2 Spätere Ausbaustufen
 

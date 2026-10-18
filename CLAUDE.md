@@ -7,7 +7,7 @@ Persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, den Pro
 - `docs/implementation-plan.md`: Meilensteine, Arbeitspakete, „Stand" und „Nächste konkrete Schritte"
 - `docs/decisions.md`: Entscheidungen (D-…) und offene Fragen (Q-…)
 - `docs/requirements.md`: Akzeptanzkriterien (AK-…); `docs/testing.md`: Nachweise und Protokolle
-- Je nach Aufgabe: `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`
+- Je nach Aufgabe: `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`, `docs/exercise-library.md`
 
 ## Zusammenarbeit
 

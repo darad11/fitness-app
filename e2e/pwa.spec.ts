@@ -1,4 +1,4 @@
-import { expect, M0_PAGES, openPage, test } from './fixtures';
+import { expect, APP_PAGES, openPage, test } from './fixtures';
 
 interface ManifestIcon {
   src: string;
@@ -60,7 +60,7 @@ test('Service Worker übernimmt und alle Bereiche starten offline (AK-PWA-02 She
   await expect(page.getByText('Offline verfügbar')).toBeVisible();
 
   await context.setOffline(true);
-  for (const path of [...M0_PAGES, '/']) {
+  for (const path of [...APP_PAGES, '/']) {
     await openPage(page, path);
   }
   await expect(page).toHaveURL(/\/heute$/);

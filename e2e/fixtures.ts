@@ -41,8 +41,11 @@ export async function chooseTheme(page: Page, label: 'Hell' | 'Dunkel' | 'System
   await expect(radio).toBeChecked();
 }
 
-export const M0_PAGES = [
+/** Alle verfügbaren Seiten; geprüft werden Offline-Start, Netzwerk und Barrierefreiheit. */
+export const APP_PAGES = [
   '/heute',
+  '/training',
+  '/uebungen',
   '/mehr',
   '/mehr/einstellungen',
   '/mehr/installieren',

@@ -10,8 +10,9 @@ Grundlage: Antwort des Produktinhabers zu Repository und Hosting (Q-01, Q-02). E
 | `architecture.md` | Hosting-Entscheidung; Modul `shared/pwa`; Umsetzungshinweise zur PWA |
 | `data-model.md` | Basisfeld `type`; Namensraum der deterministischen IDs; Inhalt von `meta` und Snapshot-Datenbank; Schema v1 umgesetzt |
 | `design-system.md` | Tokens umgesetzt und automatisch geprüft; `--border-input` hell und `--meter-track` dunkel angepasst; Grundfassungen von S-01 und S-34 |
-| `testing.md` | Produktionsnahe E2E-Läufe; CI-Gates umgesetzt; Ergebnisse M0 (Abschnitt 10) |
-| `implementation-plan.md` | Stand M0 je Arbeitspaket; nächste Schritte |
+| `testing.md` | Produktionsnahe E2E-Läufe; CI-Gates umgesetzt; Ergebnisse M0 (Abschnitt 10); Gerätetest T-IPH-M0 mit iOS 27.0.1 (Abschnitt 7) |
+| `implementation-plan.md` | Stand M0 je Arbeitspaket; nächste Schritte; Arbeit über mehrere Sitzungen (D-238) |
+| `CLAUDE.md`, `.claude/` | Neu: Arbeitsregeln für Claude-Sitzungen und Start-Hook für Cloud-Sitzungen |
 | `known-limitations.md` | Grenzen des Standes M0 (Abschnitt 12) |
 | `feature-inventory.md`, `.csv` | Status von sieben Funktionen nach Nachweis geändert |
 | Datenbankschema | Version 1 mit allen MVP-Tabellen (`src/shared/db/schema.ts`) |

@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { createTestRuntime } from '../testing/db';
 import { rootFieldsSchema } from './documents';
 import type { DbRuntime } from './runtime';
-import { DB_VERSION, STORES_V1 } from './schema';
+import { DB_VERSION, STORES_CURRENT, STORES_V1 } from './schema';
 
 let rt: DbRuntime;
 
@@ -24,15 +24,21 @@ const validRoot = {
   deviceId: 'a1b2c3d4',
 };
 
-describe('Dexie-Schema v1 (data-model.md Abschnitt 6)', () => {
-  it('enthält genau die Tabellen des MVP', () => {
-    expect(DB_VERSION).toBe(1);
-    expect(rt.db.verno).toBe(1);
-    expect(rt.db.tables.map((table) => table.name).sort()).toEqual(Object.keys(STORES_V1).sort());
+describe('Dexie-Schema v2 (data-model.md Abschnitt 6)', () => {
+  it('enthält genau die Tabellen des MVP plus Tagesaufgaben', () => {
+    expect(DB_VERSION).toBe(2);
+    expect(rt.db.verno).toBe(2);
+    expect(rt.db.tables.map((table) => table.name).sort()).toEqual(
+      Object.keys(STORES_CURRENT).sort(),
+    );
+    expect(Object.keys(STORES_CURRENT).filter((name) => !(name in STORES_V1))).toEqual([
+      'habits',
+      'habitLogs',
+    ]);
   });
 
   it('legt die dokumentierten Indizes an', () => {
-    const indexes = (name: keyof typeof STORES_V1) =>
+    const indexes = (name: keyof typeof STORES_CURRENT) =>
       rt.db.table(name).schema.indexes.map((index) => index.name);
     expect(indexes('sessions')).toEqual(
       expect.arrayContaining([
@@ -47,6 +53,7 @@ describe('Dexie-Schema v1 (data-model.md Abschnitt 6)', () => {
     expect(indexes('exerciseHistory')).toEqual(
       expect.arrayContaining(['[exerciseId+completedAt]', 'sessionId']),
     );
+    expect(indexes('habitLogs')).toEqual(expect.arrayContaining(['habitId', 'dayKey']));
     expect(rt.db.errorLog.schema.primKey.auto).toBe(true);
   });
 

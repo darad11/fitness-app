@@ -22,6 +22,8 @@ export const EXPORT_TYPES: Record<DocumentTableName, readonly string[]> = {
   bodyWeights: ['body_weight'],
   goals: ['goal'],
   singletons: ['settings', 'profile', 'training_state'],
+  habits: ['habit'],
+  habitLogs: ['habit_log'],
 };
 
 export interface Backup {

@@ -1,9 +1,8 @@
 /**
  * Migrationstests (AK-DAT-07, data-model.md Abschnitt 13): Für jede Schemaversion liegt eine
  * Datenbank der Vorversion als Fixture vor; das Öffnen mit der aktuellen Version muss alle
- * Dokumente erhalten. Bei DB_VERSION 1 gibt es keine Vorversion; das Gerüst prüft, dass das
- * Öffnen einer Datenbank mit genau den v1-Tabellen und -Indizes verlustfrei bleibt und dass vor
- * einem künftigen Upgrade ein Snapshot entsteht.
+ * Dokumente erhalten. v1 → v2 (Schritt F) fügt die Tabellen `habits` und `habitLogs` hinzu;
+ * vor dem Upgrade entsteht ein Snapshot (AK-DAT-06).
  */
 import Dexie from 'dexie';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -47,22 +46,37 @@ afterEach(async () => {
 });
 
 describe('Migration auf Schemaversion ' + String(DB_VERSION), () => {
-  it('öffnet eine v1-Datenbank verlustfrei', async () => {
+  it('sichert eine v1-Datenbank und öffnet sie als v2 verlustfrei', async () => {
     await seedLegacyDatabase(DB, 1, STORES_V1, V1_ROWS);
-    // Bei einer neuen Schemaversion: Fixture der Vorversion ergänzen und hier 'created' erwarten.
     expect(await snapshotBeforeUpgradeIfNeeded(DB, DB_VERSION, { snapshotDbName: SNAPSHOTS })).toBe(
-      'current',
+      'created',
     );
+    expect((await listSnapshots({ snapshotDbName: SNAPSHOTS }))[0]).toMatchObject({
+      reason: 'schema-upgrade',
+      sourceVersion: 1,
+    });
     const db = new AppDb(DB);
     await db.open();
     try {
       expect(db.verno).toBe(DB_VERSION);
+      expect(await db.habits.count()).toBe(0);
+      expect(await db.habitLogs.count()).toBe(0);
       expect(await db.sessions.count()).toBe(1);
       expect((await db.sessions.get(V1_ROWS.sessions[0]!.id))?.title).toBe('Alt');
       expect((await db.meta.get('deviceId'))?.value).toBe('a1b2c3d4');
     } finally {
       db.close();
     }
+  });
+
+  it('erstellt bei aktueller Version keinen Snapshot', async () => {
+    const db = new AppDb(DB);
+    await db.open();
+    db.close();
+    expect(await snapshotBeforeUpgradeIfNeeded(DB, DB_VERSION, { snapshotDbName: SNAPSHOTS })).toBe(
+      'current',
+    );
+    expect(await listSnapshots({ snapshotDbName: SNAPSHOTS })).toHaveLength(0);
   });
 
   it('sichert vor einem Upgrade auf eine höhere Version einen Snapshot', async () => {

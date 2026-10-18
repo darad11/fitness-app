@@ -2,6 +2,7 @@ import { redirect, type RouteObject } from 'react-router';
 import { bodyRoutes } from '@/modules/body';
 import { dashboardRoutes } from '@/modules/dashboard';
 import { exercisesRoutes } from '@/modules/exercises';
+import { habitsRoutes } from '@/modules/habits';
 import { progressRoutes } from '@/modules/progress';
 import { settingsRoutes } from '@/modules/settings';
 import { trainingRoutes } from '@/modules/training';
@@ -24,6 +25,7 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, loader: () => redirect('/heute') },
           ...dashboardRoutes,
+          ...habitsRoutes,
           ...trainingRoutes,
           ...bodyRoutes,
           ...progressRoutes,

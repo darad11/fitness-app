@@ -87,13 +87,15 @@ src/
     dashboard/    „Heute": Zusammensetzung aus anderen Modulen
     training/     Programme, Vorlagen, Einheiten, Verlauf, Projektionen, Timer
     exercises/    Basisbibliothek (gebündelt), eigene Übungen, persönliche Angaben, Suche
-    body/         Körpergewicht (R4: Maße, Fotos)
+    body/         Körpergewicht (Schritt E); R4: Maße, Fotos
     goals/        Wochenziel, Zielgewicht
     settings/     Einstellungen, Profil, Installation, Über
     data/         Export, Import, Snapshots, Speicherstatus, Wiederherstellung
     nutrition/    R2
     recipes/      R2 (Rezepte, Wochenmenü, Einkaufsliste)
-    activity/     R4 (Schritte, Gewohnheiten)
+    habits/       Tagesaufgaben mit Serie (Schritt F)
+    progress/     Fortschritt: Kennzahlen, Bestleistungen, Übungsverlauf (Schritt E)
+    activity/     R4 (Schritte)
     sync/         R3
   shared/
     ui/           Designsystem-Komponenten

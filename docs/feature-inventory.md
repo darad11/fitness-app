@@ -63,7 +63,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 65 | 29 | 19 | 10 |
+| Anzahl | 42 | 65 | 30 | 18 | 10 |
 
 | Status | Anzahl |
 |---|---|
@@ -151,7 +151,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TS-15 | Trainingszusammenfassung | Übungen, Kalorien, Sätze | SD 14:40 | V | OV | M | TS-14 | S | P0 | MVP | R1 · M1/M3 | Anpassen: ohne Kalorienschätzung (D-226); Vergleich ab M3 | Zur Umsetzung ausgewählt | AK-TRN-20 |
 | TS-16 | Ergebnis teilen | Social Sharing | AS 3.1.5; AS 3.2.1 | V | OV | N | Web Share | S | P3 | Später | R5 | Später | Analysiert | Bild erzeugen und über das Teilen-Menü teilen |
 | TS-17 | Krafttraining nachtragen, Aktivität erfassen | Manuelle Workouts seit 3.4.11 | AS 3.4.11 | V | OV | H | TS-01 | M | P1 | MVP | R1 · M2 | Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz | Zur Umsetzung ausgewählt | AK-TRN-23 |
-| TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P3 | MVP | R1 · Schritt E | Vorgezogen als gekennzeichnete Schätzung nach MET (D-251, Q-16) | Implementiert | MET-basiert, als Schätzung markiert, nur mit gespeichertem Körpergewicht |
+| TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P2 | MVP | R1 · Schritt E | Vorgezogen als gekennzeichnete Schätzung nach MET (D-251, Q-16) | Implementiert | AK-HIS-06 |
 | TS-19 | Notizen zu Einheit und Übung | Nicht belegt | – | P | ON | M | – | S | P2 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-24 |
 | TS-20 | RPE/RIR und Tempo | Nicht belegt | – | P | ON | N | TS-05 | S | P3 | Später | R4 · M11 | Später: Feld im Datenmodell reserviert (D-108) | Spezifiziert | Optionales Feld je Satz |
 | TS-21 | Bildschirm während des Trainings aktiv halten | – | – | E | EV | H | Wake Lock (iOS ab 18.4 in installierten Web-Apps) | S | P1 | MVP | R1 · M1 | Verbesserung (D-215, D-228) | Implementiert | AK-TRN-13 |
@@ -170,8 +170,8 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Implementiert | AK-EXL-05, AK-HIS-05 |
 | TH-03 | Trainingskalender | Nicht belegt | – | P | ON | M | AH-08 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monatsansicht mit geplanten und absolvierten Einheiten |
 | TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | P3 | Später | R4 · M11 | Später (D-027) | Analysiert | Regel dokumentiert und getestet; Ruhetage unterbrechen nicht |
-| TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | Erkennung beim Abschluss für Maximalgewicht, Wiederholungen bei Gewicht und geschätztes 1RM; Stammdatenänderungen verfälschen nicht |
-| TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | Kennzahlen aus echten Daten; Zeiträume wählbar |
+| TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-07 |
+| TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-06 |
 | TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-TRN-20, AK-DSH-04 |
 | TH-08 | Fortschritt zum Wochenziel | Nicht belegt | – | P | ON | M | ON-07 | S | P1 | MVP | R1 · M3 | Übernehmen (D-220) | Zur Umsetzung ausgewählt | AK-DSH-05 |
 

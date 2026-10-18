@@ -54,9 +54,8 @@ export function TrainingPage() {
         {active === undefined ? (
           <Skeleton className="h-40" />
         ) : active ? (
-          <Card tone="ink" eyebrow={t.training.running}>
-            <h2 className="text-2xl font-bold">{active.title}</h2>
-            <p className="mt-1 text-on-ink-muted">
+          <Card tone="ink" eyebrow={t.training.running} title={active.title}>
+            <p className="-mt-2 text-on-ink-muted">
               {t.training.since(fmt.time(new Date(active.startedAt)))}
             </p>
             <ButtonLink to={`/training/einheit/${active.id}`} variant="onInk" className="mt-5">
@@ -65,9 +64,8 @@ export function TrainingPage() {
             </ButtonLink>
           </Card>
         ) : (
-          <Card tone="ink" eyebrow={t.training.freeEyebrow}>
-            <h2 className="text-2xl font-bold">{t.training.freeTitle}</h2>
-            <p className="mt-1 max-w-md text-on-ink-muted">{t.training.freeHint}</p>
+          <Card tone="ink" eyebrow={t.training.freeEyebrow} title={t.training.freeTitle}>
+            <p className="-mt-2 max-w-md text-on-ink-muted">{t.training.freeHint}</p>
             <Button
               variant="onInk"
               className="mt-5"

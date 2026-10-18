@@ -8,3 +8,4 @@ export * from './repository';
 export * from './runtime';
 export * from './schema';
 export * from './snapshots';
+export * from './storage';

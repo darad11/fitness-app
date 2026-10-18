@@ -51,7 +51,10 @@ export function Card({
               </p>
             ) : null}
             {title ? (
-              <h2 id={titleId} className="text-lg font-semibold">
+              <h2
+                id={titleId}
+                className={tone === 'ink' ? 'text-2xl font-bold' : 'text-lg font-semibold'}
+              >
                 {title}
               </h2>
             ) : null}

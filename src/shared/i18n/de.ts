@@ -32,6 +32,7 @@ export const de = {
     heroText:
       'Starte ein freies Training oder wähle eine Vorlage. Dein Fortschritt bleibt auf diesem Gerät.',
     startLink: 'Zum Training',
+    runningText: (duration: string, progress: string) => `Seit ${duration} · ${progress}`,
     offlineReady: 'Offline verfügbar',
     offlinePreparing: 'Wird für die Offline-Nutzung vorbereitet',
     offlineUnsupported: 'Offline-Nutzung in diesem Browser nicht verfügbar',

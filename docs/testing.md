@@ -308,3 +308,14 @@ Bildschirmfotos aller Seiten hell und dunkel (iPhone-Breite) wurden vor und nach
 
 Während der Arbeit gefunden und behoben: Die Vollansicht der Pause lag falsch, weil der Weichzeichner der klebenden Kopfzeile den Bezugsrahmen für `position: fixed` bildet; sie wird jetzt als Portal gerendert. axe meldete `label-content-name-mismatch` für Listeneinträge mit `aria-labelledby` und für den Aufklapp-Knopf der Pause; die Beschreibung läuft jetzt über `aria-describedby`, der Knopf ist ein Symbol-Knopf. Drei Tests brauchten neue Erwartungen (nummerierte Übungen in der Vorlage, Reihenfolge der Kennzahlen in der Zusammenfassung, dunkler Seitenhintergrund). Nicht geprüft: Ton und Wake Lock auf dem iPhone (Gerätetest T-IPH-M1, Schritte 6 und 7).
 
+### M1 · AP 1.6 Persistenz und Wiederaufnahme · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 35 Testdateien, 365 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,53 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 188,6 KB gzip (Leiste „Training läuft“ liegt im Startbündel) |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Bereits aus M0 vorhanden und unverändert: Gesundheitsprüfung der Datenbank bei Rückkehr mit einmaligem Neuöffnen und kontrolliertem Neustart samt Schleifenschutz (`health.ts`, verdrahtet in `main.tsx`, AK-TRN-26); Speichern je Änderung mit 300 ms Entprellung und sofort beim Verbergen (AP 1.4, AK-TRN-16); Fehlerhinweis am Satz (AK-TRN-25). Neu: Leiste „Training läuft“ auf allen Seiten außer Player, „Heute“ und „Training“ mit Dauer, Fortschritt und Rücksprung (`SessionBanner`, AK-TRN-17, TS-25); Karte „Training läuft“ auf „Heute“ mit Fortschrittsbalken und „Fortsetzen“ (AK-DSH-01); dauerhafter Speicher wird mit der ersten laufenden Einheit einmal je App-Lauf angefordert (`storage.ts`, AK-PWA-05; die Statusanzeige unter „Mehr › Daten“ folgt mit AP 1.8). Nachweise: `storage.test.ts` (nicht unterstützt, einmalige Anforderung, Ablehnung und Fehler), `app.test.tsx` (Leiste mit Dauer und Fortschritt, Rücksprung, keine Leiste im Player, Karte auf „Heute“, Anforderung des Speichers), E2E in `session.spec.ts` (Leiste auf „Mehr“ ohne axe-Verstöße, Rücksprung, Karte auf „Heute“). Offen aus AP 1.6: nichts; „Pausieren“ (AK-TRN-18) gehört zu M2.
+

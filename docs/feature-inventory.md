@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.4 (AP 1.6): „Implementiert": TS-25, SY-12 (Statusanzeige folgt mit AP 1.8).
 - Version 0.4 (AP D2): „Implementiert": TS-07, TS-09, TS-21 (Pausentimer mit nächstem Satz, Wake Lock; Nachweise U, K und E in Chromium, Gerätetest steht aus).
 - Version 0.3 (M0): Status nur dort geändert, wo der Nachweis vorliegt. „Getestet": SY-16 (Nachweis U bestanden) und SY-10 (E2E in Chromium und WebKit bestanden). „Implementiert": SY-01, SY-06, SY-08, SY-15, SY-17 (Gerätetest bzw. spätere Nachweise stehen aus). „Abgenommen": SY-14 (Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden). Teilweise umgesetzte Funktionen (SY-02, SY-11, SY-13, CH-08) bleiben „Zur Umsetzung ausgewählt"; ihr Stand steht in `implementation-plan.md` (Stand M0).
 - Version 0.4 (M1, AP 1.1 und 1.2): TP-06 „Getestet" (Unit-, Komponenten- und E2E-Tests in Chromium und WebKit bestanden; der Gerätetest steht aus). TP-24 bleibt „Zur Umsetzung ausgewählt", bis „Vorlage verwenden" (M2) umgesetzt ist; „Nur heute trainieren" gibt es seit AP 1.4.
@@ -64,10 +65,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 43 |
 | Getestet | 3 |
-| Implementiert | 20 |
+| Implementiert | 22 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 38 |
-| Zur Umsetzung ausgewählt | 58 |
+| Zur Umsetzung ausgewählt | 56 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -152,7 +153,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TS-22 | Aufwärmsätze | Nicht belegt | – | P | ON | H | TP-08 | S | P0 | MVP | R1 · M1 | Übernehmen (D-108) | Implementiert | AK-TRN-03 |
 | TS-23 | Satzstatus geplant, erledigt, übersprungen | – | – | E | EV | H | TS-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-108) | Implementiert | AK-TRN-07 |
 | TS-24 | Fortschrittsanzeige der Einheit | – | – | E | EV | M | TS-02 | S | P1 | MVP | R1 · M1 | Verbesserung (D-108) | Implementiert | AK-TRN-15 |
-| TS-25 | Leiste „Training läuft" und Rücksprung ins Training | – | – | E | EV | H | TS-13 | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-17, AK-DSH-01 |
+| TS-25 | Leiste „Training läuft" und Rücksprung ins Training | – | – | E | EV | H | TS-13 | S | P0 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-17, AK-DSH-01 |
 | TS-26 | Training verwerfen | – | – | E | EV | M | TS-01 | S | P1 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-21 |
 | TS-27 | Freie Reihenfolge der Satzerfassung | Erzwungene Reihenfolge (laut Rezensionen) | REV | VF | EV | H | TS-02 | S | P0 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-08 |
 
@@ -275,7 +276,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | SY-09 | Anmeldung nur für die Sync | Pflichtkonto | SD 00:39 | E | EV | M | SY-03 | M | P1 | Später | R3 · M9 | Verbesserung | Spezifiziert | App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS |
 | SY-10 | Keine Drittanbieter-Telemetrie | Tracking-Identifier laut Privacy Label | AS | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-030) | Getestet | AK-PWA-06 |
 | SY-11 | Automatischer Snapshot vor riskanten Vorgängen | – | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-217) | Zur Umsetzung ausgewählt | AK-DAT-06, AK-DAT-04 |
-| SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-PWA-05 |
+| SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Implementiert | AK-PWA-05 |
 | SY-13 | Wiederherstellung bei Datenbankfehlern | Anlass: Abstürze mit Datenverlust (laut Rezensionen) | REV | E | EV | H | SY-11 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-216) | Zur Umsetzung ausgewählt | AK-DAT-08, AK-TRN-25, AK-TRN-26 |
 | SY-14 | Hinweis bei Nutzung im Safari-Tab | – | – | E | EV | H | SY-02 | S | P0 | MVP | R1 · M0 | Verbesserung | Abgenommen | AK-PWA-04, AK-SET-06 |
 | SY-15 | Hosting mit fester HTTPS-Adresse und Vorschau-Umgebungen | – | – | E | EV | H | Q-01; Q-02 | S | P0 | MVP | R1 · M0 | Verbesserung (D-021) | Implementiert | AK-PWA-07 |

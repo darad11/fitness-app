@@ -103,7 +103,8 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | D2 | Umgesetzt (18.10.2026): Premium-Player mit Bühne „Jetzt“, Pause als Bühne mit Vollansicht, Ton und Wake Lock (D-247); ersetzt AP 1.5. Gerätebefund zu Ton und Wake Lock steht aus (T-IPH-M1) |
 | 1.4 | Umgesetzt bis auf die Pausenleiste (AP 1.5). Player `/training/einheit/:id` als Vollbild mit Kopf (Titel, Dauer, Fortschritt), Übungsblöcken mit Vorwert und „Erstes Mal", Satzzeilen je Erfassungsart mit Vorschlägen als Platzhalter, erledigt, rückgängig, überspringen, entfernen, ±-Tasten, Satz und Übung hinzufügen (Übungsauswahl S-39), Übung entfernen mit Rückfrage, Aktionsleiste, Beenden mit Rückfrage, Verwerfen mit 10 s Rückgängig; Einstiege „Freies Training starten", „Training fortsetzen" und „… heute trainieren" in der Vorlage; einfache Zusammenfassung (Teil von AP 1.7); Fehlerhinweis am Satz mit „Erneut versuchen" (D-245) |
 | 1.5 | Umgesetzt als AP D2 |
-| 1.6 bis 1.9 | Offen |
+| 1.6 | Umgesetzt (18.10.2026): Leiste „Training läuft“ mit Rücksprung, Karte auf „Heute“, dauerhafter Speicher; Gesundheitsprüfung und kontrollierter Neustart bestanden schon aus M0 |
+| 1.7 bis 1.9 | Offen |
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -219,5 +220,6 @@ Nächste Schritte: <Liste>
 10. Erledigt: AP 1.4 Trainingsplayer (ohne Pausenleiste).
 11. Zur Freigabe: Erweiterungsplan `evolution-plan.md` mit Rekonstruktion „Winter Arc“ (`winter-arc-reconstruction.md`), Referenzanalyse (`reference-analysis.md`) und Rückfragen Q-13 bis Q-18 (Branch `evolution-plan`, Pull Request als Entwurf).
 12. Erledigt: Q-18 beantwortet (ja); Vorgabe des Produktinhabers, ab jetzt alles nach dem Master-Prompt zu gestalten. Darauf Designsystem 2.0 (AP D1) und Premium-Player mit Pause, Ton und Wake Lock (AP D2, ersetzt AP 1.5), siehe `ux-audit.md`, D-246, D-247.
-13. Ich: AP 1.6 Persistenz und Wiederaufnahme, danach AP 1.7 bis 1.9 (Schritt A des Erweiterungsplans), alles im neuen Designsystem.
-14. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.
+13. Erledigt: AP 1.6 Persistenz und Wiederaufnahme.
+14. Ich: AP 1.7 Verlauf, Zusammenfassung, Dashboard-Basis, Trainingseinstellungen; danach AP 1.8 und 1.9 (Schritt A des Erweiterungsplans), alles im neuen Designsystem.
+15. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

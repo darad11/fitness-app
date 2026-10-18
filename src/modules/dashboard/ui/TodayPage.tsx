@@ -2,10 +2,24 @@ import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, Play, RefreshCw } 
 import { useMemo } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
+import {
+  formatClock,
+  sessionDurationSec,
+  sessionProgress,
+  useActiveSession,
+} from '@/modules/training';
 import { t } from '@/shared/i18n/de';
 import { currentPlatform } from '@/shared/lib/platform';
 import { usePwaState, type PwaState } from '@/shared/pwa/state';
-import { ButtonLink, Card, PageHeader, StatusList, type StatusItem } from '@/shared/ui';
+import {
+  ButtonLink,
+  Card,
+  Meter,
+  PageHeader,
+  Skeleton,
+  StatusList,
+  type StatusItem,
+} from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 
 function offlineStatus(pwa: PwaState): StatusItem {
@@ -27,6 +41,8 @@ export function TodayPage() {
   const today = useToday();
   const pwa = usePwaState();
   const platform = useMemo(() => currentPlatform(), []);
+  const active = useActiveSession();
+  const now = useToday(1000);
 
   const items: StatusItem[] = [
     offlineStatus(pwa),
@@ -55,14 +71,55 @@ export function TodayPage() {
     <>
       <PageHeader eyebrow={formatters.weekdayDayMonth(today)} title={t.today.title} />
       <div className="grid gap-4 md:grid-cols-2">
-        <Card tone="ink" eyebrow={t.today.heroEyebrow} className="md:col-span-2">
-          <h2 className="text-2xl font-bold">{t.today.heroTitle}</h2>
-          <p className="mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
-          <ButtonLink to="/training" variant="onInk" className="mt-5">
-            <Play aria-hidden="true" className="size-5" />
-            {t.today.startLink}
-          </ButtonLink>
-        </Card>
+        {active === undefined ? (
+          <div aria-busy="true" className="md:col-span-2">
+            <Skeleton className="h-44" />
+          </div>
+        ) : active ? (
+          <Card
+            tone="ink"
+            eyebrow={t.training.running}
+            title={active.title}
+            className="md:col-span-2"
+          >
+            <p className="-mt-2 text-on-ink-muted tabular-nums">
+              {t.today.runningText(
+                formatClock(sessionDurationSec(active, now)),
+                t.session.progress(sessionProgress(active).done, sessionProgress(active).total),
+              )}
+            </p>
+            <Meter
+              tone="onInk"
+              className="mt-3"
+              label={t.session.progress(
+                sessionProgress(active).done,
+                sessionProgress(active).total,
+              )}
+              value={
+                sessionProgress(active).total > 0
+                  ? sessionProgress(active).done / sessionProgress(active).total
+                  : 0
+              }
+            />
+            <ButtonLink to={`/training/einheit/${active.id}`} variant="onInk" className="mt-5">
+              <Play aria-hidden="true" className="size-5" />
+              {t.training.resume}
+            </ButtonLink>
+          </Card>
+        ) : (
+          <Card
+            tone="ink"
+            eyebrow={t.today.heroEyebrow}
+            title={t.today.heroTitle}
+            className="md:col-span-2"
+          >
+            <p className="-mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
+            <ButtonLink to="/training" variant="onInk" className="mt-5">
+              <Play aria-hidden="true" className="size-5" />
+              {t.today.startLink}
+            </ButtonLink>
+          </Card>
+        )}
         <Card title={t.today.statusTitle}>
           <StatusList items={items} />
         </Card>

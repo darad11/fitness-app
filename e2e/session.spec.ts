@@ -142,4 +142,17 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
   await openPage(page, '/training');
   await expect(page.getByRole('link', { name: 'Training fortsetzen' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Freies Training starten' })).toHaveCount(0);
+
+  // Leiste „Training läuft" auf anderen Seiten mit Rücksprung; „Heute" zeigt die Karte (AK-TRN-17, AK-DSH-01).
+  await openPage(page, '/mehr');
+  const banner = page.getByRole('status').filter({ hasText: 'Training läuft' });
+  await expect(banner).toContainText('1 von 1 Sätzen');
+  await expectNoAxeViolations(page, 'Leiste Training läuft');
+  await banner.getByRole('link', { name: 'Training fortsetzen' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Freies Training' })).toBeVisible();
+  await openPage(page, '/heute');
+  await expect(page.getByRole('region', { name: 'Freies Training' })).toContainText(
+    '1 von 1 Sätzen',
+  );
+  await expect(page.getByRole('status').filter({ hasText: 'Training läuft' })).toHaveCount(0);
 });

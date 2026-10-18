@@ -88,6 +88,36 @@ describe('App-Shell', () => {
     }
   });
 
+  it('zeigt die Leiste „Training läuft" auf anderen Seiten und springt zurück; „Heute" hat die Karte (AK-TRN-17, AK-DSH-01)', async () => {
+    const { startSession } = await import('@/modules/training/service/sessionService');
+    const session = await startSession(rt, {
+      source: 'free',
+      title: 'Freies Training',
+      exercises: [],
+    });
+    const persist = vi.fn(() => Promise.resolve(true));
+    Object.defineProperty(navigator, 'storage', { configurable: true, value: { persist } });
+    const user = userEvent.setup();
+    const router = renderApp('/mehr');
+    const banner = await screen.findByRole('status');
+    expect(banner).toHaveTextContent(/Training läuft.*Freies Training · 0:0\d · 0 von 0 Sätzen/);
+    await waitFor(() => {
+      expect(persist).toHaveBeenCalledTimes(1);
+    });
+    await user.click(within(banner).getByRole('link', { name: 'Training fortsetzen' }));
+    await screen.findByRole('heading', { level: 1, name: 'Freies Training' });
+    expect(router.state.location.pathname).toBe(`/training/einheit/${session.id}`);
+    // Im Player selbst keine Leiste.
+    expect(screen.queryByRole('status')).toBeNull();
+
+    await act(() => router.navigate('/heute'));
+    const card = await screen.findByRole('region', { name: 'Freies Training' });
+    expect(card).toHaveTextContent(/Seit 0:0\d · 0 von 0 Sätzen/);
+    expect(within(card).getByRole('link', { name: 'Training fortsetzen' })).toBeInTheDocument();
+    expect(screen.queryByRole('status')).toBeNull();
+    Reflect.deleteProperty(navigator, 'storage');
+  });
+
   it('listet unter „Mehr" nur fertige Seiten', async () => {
     renderApp('/mehr');
     await screen.findByRole('heading', { level: 1, name: 'Mehr' });

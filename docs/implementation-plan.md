@@ -56,7 +56,7 @@ AK: AK-PWA-01, AK-PWA-02 (Shell), AK-PWA-03 (Basis), AK-PWA-04, AK-PWA-06, AK-PW
 
 Abnahme M0: CI grün mit Chromium und WebKit; Produktivadresse erreichbar; Gerätetest T-IPH-M0 (Installation und Offline-Start) durch den Produktinhaber bestanden.
 
-**Stand M0 (18.10.2026):** Umgesetzt im Branch `m0-projektbasis`, lokal mit Git-Historie und als Archiv übergeben. Ergebnisse in `testing.md` Abschnitt 10.
+**Stand M0 (18.10.2026):** Umgesetzt und über den Pull Request darad11/fitness-app#1 nach `main` gemergt; ausgeliefert unter https://fitness-app-mu-drab.vercel.app. Ergebnisse in `testing.md` Abschnitte 7 und 10.
 
 | AP | Stand |
 |---|---|
@@ -67,7 +67,7 @@ Abnahme M0: CI grün mit Chromium und WebKit; Produktivadresse erreichbar; Gerä
 | 0.5 | Umgesetzt. Manifest, Icons, Service Worker mit Vorab-Cache und Navigations-Fallback, Update-Hinweis mit Bestätigung, Hinweis im Safari-Tab, Installationsknopf in Chromium |
 | 0.6 | Umgesetzt. Dexie-Schema v1 mit allen MVP-Tabellen, Basis-Repository (HLC, Tombstones, Schemaversion, Zod, unbekannte Felder bleiben), Geräte-ID, UUID v5, Textnormalisierung, Gesundheitsprüfung mit kontrolliertem Neustart, Snapshot-Datenbank, Fehlerprotokoll |
 
-Offen für die Abnahme: Merge nach `main`, damit die Produktivadresse die App ausliefert, und Gerätetest T-IPH-M0.
+Abnahme am 18.10.2026: CI grün mit Chromium und WebKit, Produktivadresse erreichbar, Gerätetest T-IPH-M0 mit iOS 27.0.1 in den Schritten 1 bis 3 bestanden. Offen ist nur Schritt 4 (Update-Hinweis); er lässt sich erst mit der nächsten Auslieferung prüfen.
 
 ### M1 · Training auf dem iPhone (Größe XL) – wichtigster Meilenstein
 
@@ -192,7 +192,7 @@ Nächste Schritte: <Liste>
 
 1. Erledigt: Q-01 und Q-02 beantwortet (`darad11/fitness-app`, Vercel).
 2. Erledigt: M0 umgesetzt (AP 0.1 bis 0.6) und berichtet; Repository angelegt, Pull Request mit grüner CI; Vercel verbunden, Produktivadresse `https://fitness-app-mu-drab.vercel.app`.
-3. Produktinhaber: Pull Request von M0 nach `main` mergen.
-4. Produktinhaber: Gerätetest T-IPH-M0 auf der Produktivadresse.
+3. Erledigt: M0 gemergt und ausgeliefert; T-IPH-M0 Schritte 1 bis 3 bestanden (iOS 27.0.1).
+4. Produktinhaber: T-IPH-M0 Schritt 4 (Update-Hinweis) bei der nächsten Auslieferung.
 5. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
 6. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

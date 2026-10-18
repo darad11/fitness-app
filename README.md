@@ -6,7 +6,7 @@ Eigenständige, local-first Web-App für Trainingsplanung, Trainingsdurchführun
 
 - Phase 1 (Produktanalyse) abgeschlossen am 17.10.2026.
 - Phase 2 (Produktentscheidungen, MVP) abgeschlossen am 18.10.2026: MVP-Umfang, 101 Akzeptanzkriterien, Sitemap, Screen-Katalog und Implementierungsplan liegen vor und sind vorläufig freigegeben.
-- Meilenstein M0 (Projektbasis, Auslieferung, PWA-Grundlage) umgesetzt am 18.10.2026 im Branch `m0-projektbasis`: installierbare App-Shell mit Offline-Start, Einstellungen für Darstellung und Formatierung, Datenbasis mit Schema v1. Offen für die Abnahme: Repository mit CI-Lauf in Chromium und WebKit, Produktivadresse auf Vercel, Gerätetest T-IPH-M0 (`docs/implementation-plan.md`, Stand M0).
+- Meilenstein M0 (Projektbasis, Auslieferung, PWA-Grundlage) abgeschlossen am 18.10.2026: installierbare App-Shell mit Offline-Start, Einstellungen für Darstellung und Formatierung, Datenbasis mit Schema v1. Ausgeliefert unter https://fitness-app-mu-drab.vercel.app; CI grün mit Chromium und WebKit; Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden (der Update-Hinweis wird mit der nächsten Auslieferung geprüft).
 - Hosting: Vercel (D-231), Produktivadresse https://fitness-app-mu-drab.vercel.app. Repository: privat, `darad11/fitness-app` (Q-01).
 
 ## Entwicklung
@@ -68,6 +68,5 @@ WebKit läuft in GitHub Actions (`.github/workflows/ci.yml`).
 
 ## Nächste Schritte
 
-1. Pull Request von M0 nach `main` mergen (CI grün mit Chromium und WebKit).
-2. Gerätetest T-IPH-M0 auf der Produktivadresse.
-3. Meilenstein M1: ein echtes Training auf dem iPhone mit Gerätetest T-IPH-M1.
+1. Entwurf der Basisübungsliste und der Beispielvorlagen durchsehen (Q-05, Q-06).
+2. Meilenstein M1: ein echtes Training auf dem iPhone mit Gerätetest T-IPH-M1.

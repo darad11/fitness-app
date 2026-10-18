@@ -1,6 +1,6 @@
 # Entscheidungsprotokoll
 
-Stand: 18.10.2026 · Version 0.3 (Beginn M0) · Vorgängerversion: `archive/v0.1-phase-1/decisions.md`
+Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v0.1-phase-1/decisions.md`
 
 ## Statuswerte
 
@@ -21,6 +21,7 @@ Stand: 18.10.2026 · Version 0.3 (Beginn M0) · Vorgängerversion: `archive/v0.1
 - Phase-1-Vorschläge D-010 bis D-030 mit neuem Status.
 - Abschnitte C bis E neu: technische Entscheidungen, Datenquellen, offene Fragen.
 - Die Phase-1-Fragen F-01 bis F-20 sind in Abschnitt F ihren Antworten zugeordnet.
+- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232) und Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237).
 
 ## A. Durch den Auftrag festgelegt
 
@@ -122,6 +123,11 @@ Stand: 18.10.2026 · Version 0.3 (Beginn M0) · Vorgängerversion: `archive/v0.1
 | D-230 | Basisbibliothek, Beispielvorlagen und später generische Lebensmittel sind gebündelte, versionierte Stammdaten; sie werden nicht synchronisiert | Entschieden | Gleiche Daten auf allen Geräten derselben App-Version; nur Nutzerdaten werden synchronisiert |
 | D-231 | Hosting auf Vercel (Hobby-Plan, kostenlos, nur persönliche Nutzung) mit Build aus dem privaten Repository; Hauptzweig `main` ist die Produktivadresse `<projekt>.vercel.app`, jeder andere Branch erhält eine Vorschau-Adresse. Supabase dient erst ab R3 für Anmeldung und Synchronisierung, nicht für das Hosting | Entschieden am 18.10.2026 auf Rückfrage des Produktinhabers | Supabase bietet kein eigenes Hosting für Web-Apps; der Umweg über Storage hat keine SPA-Weiterleitung und keine eigenen Header, und kostenlose Projekte pausieren nach 7 Tagen, die App wäre dann nicht erreichbar. Vercel verbindet private GitHub-Repositories direkt, erkennt Vite, setzt Header über `vercel.json` und ist für persönliche Nutzung kostenlos (laut Sekundärquellen 100 GB Datentransfer pro Monat, für diese App reichlich). Cloudflare Pages wäre gleichwertig; Vercel ist für die Einrichtung durch den Produktinhaber einfacher. Ein späterer Wechsel betrifft nur `vercel.json` |
 | D-232 | Modulgrenzen über die ESLint-Regel `no-restricted-imports` mit Pfad-Aliasen (`@/shared`, `@/modules/<name>`) statt eslint-plugin-boundaries | Entschieden | Keine zusätzliche Abhängigkeit, die mit ESLint 10 erst erprobt werden müsste; die Regeln aus `architecture.md` Abschnitt 4 bleiben gleich |
+| D-233 | Formatierung de-CH: Schweizer Tausendertrennzeichen („1’234“), aber Dezimalkomma statt Punkt | Entschieden in M0 | AK-SET-04 verlangt ein Dezimalkomma; `Intl` liefert für de-CH einen Punkt. Das Dezimalzeichen wird deshalb ersetzt. Eingaben akzeptieren weiterhin Komma und Punkt. Betrifft nur Geräte mit Sprache oder Region Schweiz |
+| D-234 | Jedes Dokument trägt sein Typfeld `type`; das Repository erhält Felder, die das Schema nicht kennt, beim Lesen und Schreiben | Entschieden in M0 | `type` unterscheidet Dokumente in gemeinsamen Tabellen (z. B. Einstellungen und Profil in `singletons`) und im Export. Unbekannte Felder bleiben, damit eine ältere App-Version Daten einer neueren nicht still verkürzt (Vorbereitung auf Sync und Import) |
+| D-235 | Fester Namensraum für deterministische IDs (UUID v5): `a9f1c5d1-6d1e-4d1d-b94d-d8ca701b9904`; SHA-1 dafür im eigenen Code | Entschieden in M0 | Der Namensraum darf sich nie ändern, sonst ändern sich alle abgeleiteten IDs (z. B. Einstellungen, Basisübungen). Eigenes SHA-1, weil `crypto.subtle` nur asynchron arbeitet; geprüft mit Referenzwerten |
+| D-236 | Zwei Farbtokens nach dem automatischen Kontrasttest angepasst: `--border-input` hell `#8A93A1` → `#828b99`; `--meter-track` dunkel `#184f95` → `#15365f` | Entschieden in M0 | Der alte Eingaberahmen lag auf dem Seitenhintergrund bei 2,97:1 und auf Fläche 2 bei 2,82:1 (Grenze 3:1); neu 3,30, 3,44 und 3,13. Die alte dunkle Spur des Fortschrittsbalkens hatte zur Füllung nur 2,23:1; neu 3,35:1 |
+| D-237 | Die lokale Vorschau für E2E-Tests (`vite preview`) sendet dieselben Sicherheits-Header wie Vercel; sie werden aus `vercel.json` gelesen | Entschieden in M0 | Verstöße gegen die Content Security Policy fallen so schon in den Tests auf; die Header sind nur an einer Stelle gepflegt |
 
 ## D. Datenquellen
 

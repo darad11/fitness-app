@@ -1,6 +1,6 @@
 # Designsystem, Sitemap und Screen-Katalog
 
-Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens rechnerisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
+Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens umgesetzt und automatisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
 
 ## Änderungen gegenüber Version 0.1
 
@@ -8,6 +8,7 @@ Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: Sitemap und Screen-Katalog
 - Diagrammregeln neu nach einer validierten Methode (Abschnitt 8).
 - Navigation im MVP ohne Ernährung (D-211); Sitemap und Screen-Katalog mit Ausbaustufen, Routen, Zuständen und AK-Verweisen.
 - Neu: Unterschiede Touch und Desktop, Texte und Ton.
+- Version 0.3 (M0): Tokens als CSS-Variablen in `src/shared/ui/tokens.css`, Tailwind nutzt nur diese (Standardpaletten abgeschaltet). Der automatische Kontrasttest fand zwei Grenzfälle; angepasst wurden `--border-input` hell und `--meter-track` dunkel (D-236). Grundfassungen von S-01 und S-34 in M0.
 
 ## 1. Designprinzipien
 
@@ -32,7 +33,7 @@ Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,
 | `--fg` | `#111318` | `#ECEEF2` | Primärtext | 18,6 / 15,0 auf Fläche |
 | `--fg-muted` | `#5B6270` | `#9AA3B2` | Sekundärtext, Achsen, Zielinien | 6,1 / 6,8 auf Fläche; 5,6 / 6,2 auf Fläche 2 |
 | `--border` | `#E5E7EB` | `#2A2F3A` | Trennlinien, Gitterlinien (dekorativ) | – |
-| `--border-input` | `#8A93A1` | `#6B7383` | Rahmen von Eingabefeldern | 3,1 / 3,7 |
+| `--border-input` | `#828b99` (D-236) | `#6B7383` | Rahmen von Eingabefeldern | auf Seite, Fläche, Fläche 2: 3,3 / 3,4 / 3,1 (hell), 4,0 / 3,7 / 3,3 (dunkel) |
 | `--accent` | `#256abf` | `#3987e5` | Primäre Schaltflächen, aktive Tabs, Fortschritt | Weiß auf Akzent 5,4; Dunkel auf Akzent 5,3 |
 | `--accent-hover` | `#1c5cab` | `#5598e7` | Hover und gedrückt | Weiß 6,6; Dunkel 6,5 |
 | `--accent-fg` | `#FFFFFF` | `#0B0E14` | Text auf Akzentfläche | siehe oben |
@@ -68,7 +69,7 @@ Weitere Diagramm-Tokens:
 | `--chart-grid` | `#E5E7EB` | `#2A2F3A` | Gitterlinien, 1 px, durchgezogen |
 | `--chart-axis` | `#5B6270` | `#9AA3B2` | Achsenbeschriftung, Ziel- und Referenzlinien |
 | `--chart-point` | `#8A93A1` | `#6B7383` | Einzelmesspunkte als Kontext (3,1 / 3,7) |
-| `--meter-track` | `#cde2fb` | `#184f95` | Unbefüllter Teil eines Fortschrittsbalkens (hellere bzw. dunklere Stufe der Akzentskala) |
+| `--meter-track` | `#cde2fb` | `#15365f` (D-236) | Unbefüllter Teil eines Fortschrittsbalkens (hellere bzw. dunklere Stufe der Akzentskala); Füllung `--accent` dazu 4,1:1 bzw. 3,4:1 |
 | `--chart-total` | `#3A4150` | `#C3CAD6` | Gesamtwert (ab R2 Kalorien) neben farbigen Makros |
 
 ### 2.3 Umsetzung
@@ -210,7 +211,7 @@ Mehr (/mehr)                                           R1
 
 | ID | Screen | Route | M | Inhalt | Aktionen | Zustände | AK |
 |---|---|---|---|---|---|---|---|
-| S-01 | Heute | `/heute` | M1, M3 | Karten nach Datenlage: Training läuft, Heute geplant oder Nächstes Training, Letztes Training, Wochenziel, Körpergewicht, Hinweise | Fortsetzen, Starten, Anderen Tag wählen, Erfassen, Gewicht erfassen, Wochenziel festlegen | Ohne Programm: Vorlage, Eigenes, Frei; ohne Gewicht: Gewicht erfassen; Laden: Skelett je Karte | AK-DSH-01 bis AK-DSH-08, AK-DAT-12 |
+| S-01 | Heute | `/heute` | M0 (Grundfassung), M1, M3 | Karten nach Datenlage: Training läuft, Heute geplant oder Nächstes Training, Letztes Training, Wochenziel, Körpergewicht, Hinweise | Fortsetzen, Starten, Anderen Tag wählen, Erfassen, Gewicht erfassen, Wochenziel festlegen | Ohne Programm: Vorlage, Eigenes, Frei; ohne Gewicht: Gewicht erfassen; Laden: Skelett je Karte | AK-DSH-01 bis AK-DSH-08, AK-DAT-12 |
 | S-02 | Ersteinrichtung | Overlay beim ersten Start | M3 | Begrüßung, Installationshinweis, Wochenziel, Zielgewicht, Programmwahl | Weiter, Überspringen | – | AK-ONB-01 |
 | S-03 | Training | `/training` | M1, M2 | Aktives Programm, Woche, nächster Tag, Vorschau; Einstiege Programme, Verlauf, Übungen, Nachtragen | Starten, Anderen Tag wählen, Freies Training, Programm wechseln | Ohne Programm: Leerzustand | AK-PRG-08, AK-PRG-12, AK-TRN-02 |
 | S-04 | Programme und Vorlagen | `/training/programme` | M1, M2 | Meine Programme (aktiv markiert), meine Vorlagen, Beispielvorlagen | Neu, Vorlage verwenden, Importieren | Nur Beispielvorlagen vorhanden | AK-PRG-06, AK-PRG-11, AK-PRG-13 |
@@ -233,7 +234,7 @@ Mehr (/mehr)                                           R1
 | S-41 | Gewicht erfassen | Sheet | M3 | Gewicht, Datum, Uhrzeit, Notiz | Speichern, Löschen (bei Bearbeitung) | Plausibilitätshinweis | AK-BW-01, AK-BW-02, AK-BW-04 |
 | S-48 | Mehr | `/mehr` | M0 | Profil und Ziele, Einstellungen, Daten und Sicherung, Installieren, Über | Öffnen | – | AK-UX-01 |
 | S-33 | Profil und Ziele | `/mehr/profil` | M3 | Anzeigename, Zielgewicht, Wochenziel, Zielhistorie | Ändern, Entfernen | – | AK-SET-01, AK-SET-05 |
-| S-34 | Einstellungen | `/mehr/einstellungen` | M1, M3, M4 | Training, Darstellung, Hinweis zur Sprache und Formatierung | Umschalten, Werte ändern | Wake Lock nicht verfügbar: Erklärung | AK-SET-02 bis AK-SET-04, AK-TRN-13 |
+| S-34 | Einstellungen | `/mehr/einstellungen` | M0 (Darstellung, Formatierung), M1, M3, M4 | Training, Darstellung, Hinweis zur Sprache und Formatierung | Umschalten, Werte ändern | Wake Lock nicht verfügbar: Erklärung | AK-SET-02 bis AK-SET-04, AK-TRN-13 |
 | S-35 | Daten und Sicherung | `/mehr/daten` | M1, M2, M4 | Speicherstatus, Export, Import, Snapshots, Fehlerprotokoll, Alle Daten löschen | Exportieren, Importieren, Wiederherstellen, Löschen | – | AK-DAT-01 bis AK-DAT-10, AK-PWA-05 |
 | S-45 | Import-Assistent | Sheet bzw. Dialog | M2, M4 | Datei wählen, Prüfung, Vorschau mit Anzahl je Typ, Modus, Bericht | Zusammenführen, Ersetzen, Abbrechen | Ungültige Datei mit Grund | AK-DAT-02 bis AK-DAT-05 |
 | S-42 | Installieren | `/mehr/installieren` | M0 | Anleitung für iPhone, iPad und Mac; erkannter Status | – | Bereits installiert | AK-PWA-04, AK-SET-06 |
@@ -241,6 +242,8 @@ Mehr (/mehr)                                           R1
 | S-43 | Wiederherstellung | Vollbild bei Datenbankfehler | M1, M4 | Ursache, Optionen | Erneut versuchen, Snapshot wiederherstellen, Fehlerprotokoll exportieren, Zurücksetzen | – | AK-DAT-08 |
 | S-44 | Fehleransicht | Je Route | M0, M4 | Meldung | Neu laden | – | AK-DAT-09 |
 | S-46 | Globale Hinweisleisten | Alle Seiten | M0 bis M4 | Training läuft, Update verfügbar, Vorschau – Testdaten, Installationshinweis | Tippen führt zur Aktion | – | AK-TRN-17, AK-PWA-03, AK-PWA-04, AK-PWA-07 |
+
+Grundfassungen aus M0: S-01 zeigt Datum, die Karte „Diese Version“ und die Karte „Status“ (Offline-Bereitschaft, Startart mit Weg zu „Installieren“, Hinweis auf lokale Daten). S-34 enthält Darstellung (Hell, Dunkel, System) und „Datum und Zahlen“ mit Beispielzeile. Navigation in M0: Heute und Mehr; Training und Fortschritt erscheinen erst mit M1 und M3 (AK-UX-01).
 
 ### 10.2 Spätere Ausbaustufen
 
@@ -280,7 +283,7 @@ Mehr (/mehr)                                           R1
 
 | Prüfung | Werkzeug | Stand |
 |---|---|---|
-| Kontrast der UI-Tokens | Eigenes WCAG-Skript | Bestanden nach Anpassung (Abschnitt 2.1) |
+| Kontrast der UI-Tokens | Automatischer Test `src/shared/ui/tokens.test.ts` (liest `tokens.css`, läuft in der CI) | Bestanden nach Anpassung (D-236); prüft auch, dass beide dunklen Blöcke gleich sind |
 | Diagrammpalette | Validierungsskript der Datenvisualisierungs-Methode, hell und dunkel, benachbarte und alle Paare | Bestanden; Kontrast-Hinweis für drei helle Slots (Abschnitt 2.2) |
-| Automatische Barrierefreiheit | axe in Playwright | Ab M1 je Kernansicht |
+| Automatische Barrierefreiheit | axe in Playwright (WCAG 2.1 A und AA) | Ab M0 für alle vorhandenen Ansichten in Hell und Dunkel; Chromium bestanden, WebKit folgt in der CI |
 | Diagramme visuell | Bildschirmfotos hell und dunkel | M3 |

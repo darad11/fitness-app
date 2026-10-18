@@ -98,7 +98,8 @@ src/
   shared/
     ui/           Designsystem-Komponenten
     lib/          HLC, IDs, Datum (dayKey), Einheiten, Formatierung, Textnormalisierung
-    db/           Dexie-Datenbank, Basis-Repository, Snapshots, Gesundheitsprüfung
+    db/           Dexie-Datenbank, Basis-Repository, Snapshots, Gesundheitsprüfung, Fehlerprotokoll
+    pwa/          Service Worker, Update-Zustand, Installationsdialog (Chromium)
     i18n/         Typisierter deutscher Textkatalog
     testing/      Fixtures, Datengenerator, fake-indexeddb-Setup
 public/           Manifest, Icons
@@ -205,6 +206,7 @@ Navigation: im MVP Tab-Leiste mit Heute, Training, Fortschritt, Mehr; am Desktop
 - **Service Worker (Workbox über vite-plugin-pwa):** Vorab-Cache aller gebauten Dateien einschließlich aller nachgeladenen Code-Teile und der gebündelten Stammdaten; Navigations-Fallback auf die App-Shell; kein Cache für spätere API-Antworten, weil Daten in IndexedDB liegen.
 - **Update:** `registerType: 'prompt'`. Eine neue Version wird geladen und erst nach „Jetzt aktualisieren" aktiv; während einer laufenden Einheit erscheint der Hinweis erst danach (AK-PWA-03).
 - **Installationshilfe:** iOS bietet keinen Installationsdialog. Die App erkennt den Safari-Tab über `display-mode: standalone` und `navigator.standalone` und zeigt die Anleitung „Teilen › Zum Home-Bildschirm". Sie weist darauf hin, dass Daten im Browser-Tab getrennt von der installierten App gespeichert werden (AK-PWA-04).
+- **Umsetzung M0:** Das Manifest trägt die helle Theme-Farbe; `<meta name="theme-color">` folgt zur Laufzeit der gewählten Darstellung. `public/theme-init.js` setzt Hell oder Dunkel vor dem ersten Bild (extern, weil die CSP keine Inline-Skripte erlaubt). Nach Updates fragt die App beim Start und höchstens stündlich bei Rückkehr in den Vordergrund.
 - **Prüfung:** Lighthouse hat die PWA-Kategorie entfernt (D-221). Playwright prüft Manifest, Registrierung des Service Workers und den Offline-Start; zusätzlich prüfe ich die Installierbarkeit manuell in den Chrome-Entwicklerwerkzeugen.
 
 ## 10. Hosting und Auslieferung

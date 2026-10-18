@@ -1,12 +1,13 @@
 # Bekannte Einschränkungen
 
-Stand: 18.10.2026 · Version 0.2 (Phase 2) · Vorgänger: `archive/v0.1-phase-1/known-limitations.md`
+Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Vorgänger: `archive/v0.1-phase-1/known-limitations.md`
 
 ## Änderungen gegenüber Version 0.1
 
 - iOS-Befunde mit Quellen belegt und präzisiert: Speichertrennung zwischen Safari und installierter App, Wake Lock erst ab iOS 18.4, Verbindungsverlust der IndexedDB, Audio-Session, fehlende Vibration, fehlender BarcodeDetector.
 - Korrektur zu `navigator.storage.persist()`: Safari gewährt den dauerhaften Speicher nach Heuristik und laut Quellen für Home-Bildschirm-Apps; in v0.1 stand pauschal „keine Garantie".
 - Neu: Zusagen und Nicht-Zusagen zum Timer (Abschnitt 3), Grenzen der Testwerkzeuge (Abschnitt 5), Bindung an die Adresse (Abschnitt 6), Supabase-Grenzen (Abschnitt 7), Liste dessen, was ausdrücklich nicht behauptet wird (Abschnitt 11).
+- Version 0.3: Grenzen des Standes M0 (Abschnitt 12); Quellen jetzt Abschnitt 13.
 
 ## 1. Grenzen der Analyse
 
@@ -111,7 +112,19 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - Dass Open Food Facts ohne Prüfspike verlässlich aus dem Browser nutzbar ist.
 - Dass die App Schritte misst oder Daten mit Apple Health austauscht.
 
-## 12. Quellen
+## 12. Stand M0 (18.10.2026)
+
+- **WebKit ungetestet:** Alle E2E-Tests liefen bisher nur in Chromium. WebKit läuft erst in GitHub Actions, sobald das Repository besteht; das Verhalten auf dem iPhone prüft T-IPH-M0.
+- **Noch keine Produktivadresse:** `vercel.json` ist fertig, das Vercel-Projekt verbindet der Produktinhaber. Das Etikett „Vorschau – Testdaten" hängt an der Vercel-Umgebung (`VERCEL_ENV`) und lässt sich erst auf einer Vorschau-Adresse sehen; lokal ist es nur als Komponententest geprüft.
+- **Safari-Hinweis:** Die Erkennung nutzt Browserkennung, Touch-Unterstützung und `display-mode`. Eingebettete Browser anderer Apps können wie Safari erscheinen. Die Anleitung ist bewusst allgemein formuliert, weil sich die Lage von „Teilen" je nach iOS-Version unterscheidet.
+- **Installationsknopf** gibt es nur in Chromium-Browsern (`beforeinstallprompt`); Safari bietet keinen solchen Dialog, dort hilft nur die Anleitung.
+- **Offline-Status:** Beim allerersten Aufruf zeigt „Heute" „Wird für die Offline-Nutzung vorbereitet", bis der Service Worker alle Dateien gespeichert hat. Im Entwicklungsmodus (`pnpm dev`) gibt es keinen Service Worker.
+- **Updates:** Die App fragt beim Start und höchstens einmal pro Stunde bei Rückkehr in den Vordergrund nach einer neuen Version, außerdem über „Nach Update suchen". Die Sperre des Update-Hinweises während eines Trainings folgt mit M4 (AK-PWA-03), weil es in M0 noch kein Training gibt.
+- **Snapshots und Wiederherstellung:** Snapshots lassen sich anlegen und lesen; das Wiederherstellen folgt mit M1 und M4. Der Wiederherstellungsbildschirm bietet in M0 nur Ursache, „Erneut versuchen" und gegebenenfalls „Jetzt aktualisieren".
+- **Formatierung de-CH:** Schweizer Tausendertrennzeichen mit Dezimalkomma (D-233); das weicht von der üblichen Schweizer Schreibweise mit Punkt ab.
+- **Build-Manifest:** `dist/.vite/manifest.json` wird mit ausgeliefert, weil die Prüfung der Bündelgröße es braucht. Es enthält nur Dateinamen und keine Daten.
+
+## 13. Quellen
 
 - WebKit-Features in Safari 18.4: https://webkit.org/blog/16574/webkit-features-in-safari-18-4/
 - WebKit-Bug 254545 (Wake Lock in Home-Bildschirm-Apps): https://bugs.webkit.org/show_bug.cgi?id=254545

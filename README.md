@@ -6,8 +6,45 @@ Eigenständige, local-first Web-App für Trainingsplanung, Trainingsdurchführun
 
 - Phase 1 (Produktanalyse) abgeschlossen am 17.10.2026.
 - Phase 2 (Produktentscheidungen, MVP) abgeschlossen am 18.10.2026: MVP-Umfang, 101 Akzeptanzkriterien, Sitemap, Screen-Katalog und Implementierungsplan liegen vor und sind vorläufig freigegeben.
-- Es gibt noch keinen Anwendungscode. Vor Meilenstein M0 sind zwei Fragen offen: Repository (Q-01) und Hosting mit fester Adresse (Q-02), siehe `docs/decisions.md` Abschnitt E.
-- Wichtig: Diese Dateien liegen bis zur Antwort auf Q-01 nur in einer kurzlebigen Cloud-Umgebung.
+- Meilenstein M0 (Projektbasis, Auslieferung, PWA-Grundlage) umgesetzt am 18.10.2026 im Branch `m0-projektbasis`: installierbare App-Shell mit Offline-Start, Einstellungen für Darstellung und Formatierung, Datenbasis mit Schema v1. Offen für die Abnahme: Repository mit CI-Lauf in Chromium und WebKit, Produktivadresse auf Vercel, Gerätetest T-IPH-M0 (`docs/implementation-plan.md`, Stand M0).
+- Hosting: Vercel (D-231). Repository: privat, `darad11/fitness-app` (Q-01).
+
+## Entwicklung
+
+Voraussetzungen: Node 22.22 oder neuer (CI: Node 24), pnpm 10.
+
+```
+pnpm install            # Abhängigkeiten
+pnpm dev                # Entwicklungsserver (ohne Service Worker)
+pnpm build              # Produktions-Build nach dist/
+pnpm preview            # Build lokal ausliefern (Port 4173, mit den Headern aus vercel.json)
+
+pnpm format:check       # Prettier
+pnpm lint               # ESLint mit Modulgrenzen
+pnpm typecheck          # TypeScript (App und Node)
+pnpm test               # Vitest: Unit-, Integrations- und Komponententests
+pnpm test:coverage      # dasselbe mit Abdeckung und Schwellen
+pnpm test:e2e           # Playwright gegen den Build (vorher pnpm build)
+pnpm check:docs         # Querverweise der Dokumente und Funktionsmatrix
+pnpm check:bundle       # Größe der Startansicht (nach pnpm build)
+pnpm icons              # App-Icons neu erzeugen
+```
+
+In der Cloud-Entwicklungsumgebung ist nur Chromium vorhanden:
+`E2E_ENGINES=chromium PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e`.
+WebKit läuft in GitHub Actions (`.github/workflows/ci.yml`).
+
+## Aufbau
+
+| Pfad | Inhalt |
+|---|---|
+| `src/app/` | App-Shell: Router, Layout mit Tab-Leiste und Seitenleiste, Hinweisleisten, Fehleransichten, Wiederherstellung |
+| `src/modules/` | Fachmodule mit öffentlicher Schnittstelle `index.ts` (M0: `dashboard`, `settings`) |
+| `src/shared/` | Gemeinsame Bausteine: `db` (Dexie, Repository, Snapshots), `lib` (HLC, IDs, Formatierung), `ui` (Tokens, Komponenten), `pwa`, `i18n`, `testing` |
+| `e2e/` | Playwright-Tests |
+| `public/` | Icons, `theme-init.js`, `robots.txt` |
+| `tools/` | Skripte für Matrix, Dokumentprüfung, Bündelgröße und Icons |
+| `docs/` | Planungs- und Projektdokumente |
 
 ## Dokumente
 
@@ -22,21 +59,15 @@ Eigenständige, local-first Web-App für Trainingsplanung, Trainingsdurchführun
 | `docs/data-sources.md` | Prüfung von Open Food Facts, BLS 4.0, Schweizer Nährwertdatenbank, Übungsdaten |
 | `docs/sample-templates.md` | Gekennzeichnete Beispielvorlagen und Rahmen der deutschen Basisübungsbibliothek |
 | `docs/design-system.md` | Designprinzipien, geprüfte Farbtokens, Diagrammregeln, Sitemap, Screen-Katalog |
-| `docs/implementation-plan.md` | Meilensteine M0 bis M13 mit Arbeitspaketen und Abnahmekriterien |
-| `docs/testing.md` | Teststrategie, E2E-Abläufe, Konflikttests, Geräteprotokolle |
+| `docs/implementation-plan.md` | Meilensteine M0 bis M13 mit Arbeitspaketen, Abnahmekriterien und Stand |
+| `docs/testing.md` | Teststrategie, E2E-Abläufe, Konflikttests, Geräteprotokolle, Ergebnisse je Meilenstein |
 | `docs/decisions.md` | Entscheidungsprotokoll und offene Fragen |
-| `docs/known-limitations.md` | Grenzen der Analyse, iOS- und Browser-Einschränkungen mit Quellen |
+| `docs/known-limitations.md` | Grenzen der Analyse, iOS- und Browser-Einschränkungen mit Quellen, Stand M0 |
 | `docs/CHANGELOG.md` | Änderungen je Dokumentversion |
 | `docs/archive/v0.1-phase-1/` | Unveränderter Stand von Phase 1 mit Prüfsummen |
 
-## Werkzeuge
-
-```
-python3 tools/feature_inventory_to_csv.py   # prüft die Matrix, erzeugt die CSV, aktualisiert die Kennzahlen
-```
-
 ## Nächste Schritte
 
-1. Q-01 und Q-02 beantworten (Repository, Hosting und Adresse).
-2. Dokumente ins Repository übernehmen; Meilenstein M0 umsetzen: Projektbasis, Auslieferung, PWA-Grundlage.
+1. Repository `fitness-app` anlegen und freigeben; beide Branches übertragen; erster CI-Lauf mit WebKit.
+2. Vercel mit dem Repository verbinden; Produktivadresse festhalten; Gerätetest T-IPH-M0.
 3. Meilenstein M1: ein echtes Training auf dem iPhone mit Gerätetest T-IPH-M1.

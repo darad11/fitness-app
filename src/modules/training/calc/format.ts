@@ -32,3 +32,13 @@ export function formatClock(totalSec: number): string {
   const two = (n: number) => String(n).padStart(2, '0');
   return h > 0 ? `${String(h)}:${two(m)}:${two(s)}` : `${String(m)}:${two(s)}`;
 }
+
+/** Restzeit der Pause aus dem gespeicherten Endzeitpunkt (AK-TRN-11); negativ heißt überzogen. */
+export function restRemainingSec(endsAt: string, now: Date): number {
+  return Math.ceil((Date.parse(endsAt) - now.getTime()) / 1000);
+}
+
+/** „1:23" während der Pause, „+0:42" bei Überziehung. */
+export function formatRestRemaining(remainingSec: number): string {
+  return remainingSec > 0 ? formatClock(remainingSec) : `+${formatClock(-remainingSec)}`;
+}

@@ -1,7 +1,9 @@
 name: CI
 
+# Arbeitszweige laufen über ihren Pull Request; main nach jedem Merge.
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

@@ -1,6 +1,6 @@
 # Änderungsprotokoll der Dokumentation
 
-## Version 0.4 · 18.10.2026 · M1, AP 1.1 (Übungsbibliothek) und AP 1.2 (Beispielvorlagen)
+## Version 0.4 · 18.10.2026 · M1, AP 1.1 bis 1.3 (Übungsbibliothek, Beispielvorlagen, Trainings-Domain)
 
 Grundlage: Durchsicht der Basisübungsliste durch den Produktinhaber (Q-05).
 
@@ -16,6 +16,7 @@ Grundlage: Durchsicht der Basisübungsliste durch den Produktinhaber (Q-05).
 | `testing.md` | Abschnitt 10: Ergebnisse AP 1.1 |
 | Code | Modul `exercises` (Daten, Prüfung, Suche, Seite `/uebungen`), Modul `training` mit Seite `/training`, Suchfeld als Basiskomponente; `tools/exercise_library_to_md.py` in `pnpm check:docs` |
 | AP 1.2 | `decisions.md` D-243; `sample-templates.md` Regeln zu Aufwärmsätzen und „je Seite"; `data-model.md` Zeitbereiche `durationMinSec`, `durationMaxSec`; Code: Programm-Modell, Beispielvorlagen als Daten aus dem Dokument (`tools/sample_templates_from_md.py`), Seiten `/training/programme` und `/training/vorlagen/:key`, Basiskomponente `Badge` |
+| AP 1.3 | `decisions.md` D-244; `data-model.md` Snapshot-Felder der Einheit und Aufbau der Projektion; Code: Basis-Repository reicht den Änderungsstempel weiter; Modell, Berechnungen, Anwendungsfälle und Projektion der Einheit |
 
 ## Nachtrag zu Version 0.3 · 18.10.2026 · Stabile E2E-Tests
 

@@ -6,6 +6,8 @@ export {
   EQUIPMENT,
   MUSCLES,
   TRACKING_MODES,
+  distanceUnitSchema,
+  trackingModeSchema,
   type DistanceUnit,
   type Equipment,
   type Exercise,

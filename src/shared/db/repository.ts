@@ -81,18 +81,22 @@ function parseStored<T extends RootFields>(
   return validated(def, row);
 }
 
-/** Legt ein neues Dokument an. Ohne `id` entsteht eine UUID v4. */
+/**
+ * Legt ein neues Dokument an. Ohne `id` entsteht eine UUID v4. Statt fester Daten darf eine
+ * Funktion stehen; sie erhält den Stempel der Änderung, z. B. für Kinder eines Aggregats.
+ */
 export async function insertDoc<T extends RootFields>(
   rt: DbRuntime,
   def: DocDef<T>,
-  data: DocData<T>,
+  data: DocData<T> | ((hlc: Hlc) => DocData<T>),
   id: string = uuidv4(),
 ): Promise<T> {
   const table = def.table(rt.db);
   return rt.db.transaction('rw', table, rt.db.meta, async () => {
     if (await table.get(id)) throw new DocExistsError('Dokument existiert bereits');
     const hlc = await nextStamp(rt);
-    const doc = buildDoc(rt, def, id, data, hlc, new Date().toISOString());
+    const resolved = typeof data === 'function' ? data(hlc) : data;
+    const doc = buildDoc(rt, def, id, resolved, hlc, new Date().toISOString());
     await table.add(doc);
     return doc;
   });
@@ -100,20 +104,22 @@ export async function insertDoc<T extends RootFields>(
 
 /**
  * Legt an oder ändert, z. B. für Singletons und deterministische IDs.
- * `mutate` erhält das aktive Dokument oder `undefined`, wenn es fehlt oder gelöscht ist.
+ * `mutate` erhält das aktive Dokument oder `undefined`, wenn es fehlt oder gelöscht ist, und den
+ * Stempel dieser Änderung (für geänderte Kinder eines Aggregats). Wirft `mutate`, wird nichts
+ * geschrieben.
  */
 export async function upsertDoc<T extends RootFields>(
   rt: DbRuntime,
   def: DocDef<T>,
   id: string,
-  mutate: (current: T | undefined) => DocData<T>,
+  mutate: (current: T | undefined, hlc: Hlc) => DocData<T>,
 ): Promise<T> {
   const table = def.table(rt.db);
   return rt.db.transaction('rw', table, rt.db.meta, async () => {
     const stored = parseStored(def, await table.get(id));
     const active = stored && stored.deletedAt === null ? stored : undefined;
-    const data = mutate(active);
     const hlc = await nextStamp(rt);
+    const data = mutate(active, hlc);
     const doc = buildDoc(rt, def, id, data, hlc, active?.createdAt ?? new Date().toISOString());
     await table.put(doc);
     return doc;
@@ -125,11 +131,11 @@ export async function updateDoc<T extends RootFields>(
   rt: DbRuntime,
   def: DocDef<T>,
   id: string,
-  mutate: (current: T) => DocData<T>,
+  mutate: (current: T, hlc: Hlc) => DocData<T>,
 ): Promise<T> {
-  return upsertDoc(rt, def, id, (current) => {
+  return upsertDoc(rt, def, id, (current, hlc) => {
     if (!current) throw new DocNotFoundError('Dokument nicht gefunden');
-    return mutate(current);
+    return mutate(current, hlc);
   });
 }
 

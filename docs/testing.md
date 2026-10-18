@@ -266,3 +266,16 @@ Ein Fehler wurde während der Arbeit gefunden und behoben: Die Übungsdaten land
 Abgedeckt: Vorlagenliste und Vorlage mit Etikett „Beispiel", Hinweistext, Ablauf und Satzschema (Teil von AK-PRG-06), stabile IDs, Aufwärm- und Drop-Sätze, Zeitbereiche, unbekannte Vorlage als „Seite nicht gefunden". Beide neuen Seiten sind im Offline-Test aller Seiten sowie in den Prüfungen auf fremde Anfragen und axe-Verstöße enthalten (Teil von AK-PWA-02). Ein Fehlschlag beim Nachladen der Daten führt beim nächsten Aufruf zu einem neuen Versuch (Unit-Test).
 
 Fehlschlag im ersten Lauf: `e2e/exercises.spec.ts` (Desktop) wartete vergeblich auf die Liste „3 Treffer" nach der Wahl von Muskelgruppe und Gerät. In 15 Einzelwiederholungen und vier weiteren kompletten Läufen trat er nicht wieder auf, ein Komponententest mit zwei direkt aufeinanderfolgenden Filteränderungen bestand. Wahrscheinliche Ursache: Die Seite hat jede Änderung aus der aktuellen Adresse abgeleitet; React Router übernimmt eine neue Adresse verzögert, sodass ein zweiter Filter kurz danach den ersten überschreiben konnte. Das betrifft auch schnelle Eingaben auf dem iPhone. Die Seite hält Suche und Filter seitdem selbst und schreibt sie nur in die Adresse. Ob genau das die Ursache war, ist nicht bewiesen; der Komponententest sichert das Verhalten ab.
+
+### M1 · AP 1.3 Trainings-Domain · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 30 Testdateien, 316 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 96,18 %, `training/calc` 100 %, `training/service` 98,18 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 178,5 KB gzip |
+| E2E Chromium | `pnpm test:e2e` | 30 von 30 bestanden (keine neuen E2E-Tests; die Oberfläche folgt mit AP 1.4) |
+
+Abgedeckt mit Integrationstests gegen eine Test-Datenbank (fake-indexeddb): AK-TRN-01 (Start aus einem Vorlagentag mit Snapshot), AK-TRN-03 (Aufwärm-, Arbeits- und Drop-Sätze; Pause erst nach der Drop-Kette), AK-TRN-04 (Grenzen, ungültige Werte überschreiben nichts), AK-TRN-05 (Vorwerte je Satzplatz aus der Projektion), AK-TRN-06 (Vorschläge, Pflichteingabe bei Bereichen), AK-TRN-07 (erledigt, übersprungen, rückgängig mit Werten), AK-TRN-09 (Übungen und Sätze hinzufügen und entfernen), AK-TRN-10 und AK-TRN-11 (Timer mit Endzeitpunkt, ±, Überspringen), AK-TRN-19 (Rückfrage bei offenen Sätzen, Abschluss mit Projektion), AK-TRN-21 (Verwerfen und Wiederherstellen), AK-TRN-22 (eine laufende Einheit). Die Nachweise per E2E folgen mit der Oberfläche.
+
+Während der Arbeit gefunden und behoben (vier Tests zunächst rot): „Erledigt" übernahm feste Zielwerte nur, wenn der Aufrufer sie mitgab; ein neuer Satz übernahm das Ziel eines noch leeren Satzes; nach einer Drop-Kette startete keine Pause, weil Drop-Sätze 0 s Pause haben; ein eigener Fehlertyp hieß wie ein eingebauter Fehler von Dexie („NotFoundError") und wurde deshalb verpackt.

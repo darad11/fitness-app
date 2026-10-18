@@ -1,0 +1,132 @@
+import { z } from 'zod';
+import { distanceUnitSchema, trackingModeSchema } from '@/modules/exercises';
+import {
+  childFieldsSchema,
+  defineDocSchema,
+  isoDateTimeSchema,
+  type DocData,
+} from '@/shared/db/documents';
+import { isValidDayKey, isValidTimeZone } from '@/shared/lib/time';
+import { setTypeSchema } from './program';
+
+/** Trainingseinheit als Aggregat mit Übungen und Sätzen (data-model.md Abschnitt 3.1). */
+export const SESSION_SCHEMA_VERSION = 1;
+
+/** Grenzen der Eingaben (AK-TRN-04, D-241). */
+export const LIMITS = {
+  weightKg: { min: 0, max: 500 },
+  reps: { min: 0, max: 200 },
+  durationSec: { min: 0, max: 24 * 60 * 60 },
+  distanceM: { min: 0, max: 1_000_000 },
+  assistKg: { min: 0, max: 500 },
+} as const;
+
+const range = (key: keyof typeof LIMITS) => z.number().min(LIMITS[key].min).max(LIMITS[key].max);
+const whole = (key: keyof typeof LIMITS) => range(key).int();
+
+export const setValuesSchema = z.strictObject({
+  weightKg: range('weightKg').optional(),
+  reps: whole('reps').optional(),
+  durationSec: whole('durationSec').optional(),
+  distanceM: range('distanceM').optional(),
+  assistKg: range('assistKg').optional(),
+});
+export type SetValues = z.infer<typeof setValuesSchema>;
+
+export const sessionSetTargetSchema = z.strictObject({
+  repsMin: whole('reps').optional(),
+  repsMax: whole('reps').optional(),
+  weightKg: range('weightKg').optional(),
+  durationMinSec: whole('durationSec').optional(),
+  durationMaxSec: whole('durationSec').optional(),
+  distanceM: range('distanceM').optional(),
+  assistKg: range('assistKg').optional(),
+});
+export type SessionSetTarget = z.infer<typeof sessionSetTargetSchema>;
+
+export const SET_STATUSES = ['planned', 'done', 'skipped'] as const;
+
+export const sessionSetSchema = childFieldsSchema.extend({
+  type: setTypeSchema,
+  parentSetId: z.uuid().optional(),
+  target: sessionSetTargetSchema.optional(),
+  actual: setValuesSchema,
+  status: z.enum(SET_STATUSES),
+  completedAt: isoDateTimeSchema.optional(),
+  restSec: whole('durationSec').optional(),
+});
+export type SessionSet = z.infer<typeof sessionSetSchema>;
+
+export const sessionExerciseSchema = childFieldsSchema.extend({
+  exerciseId: z.uuid(),
+  nameSnapshot: z.string().min(1),
+  trackingMode: trackingModeSchema,
+  /** Snapshot für die Anzeige (D-241, D-243). */
+  distanceUnit: distanceUnitSchema.optional(),
+  perSide: z.literal(true).optional(),
+  restSec: whole('durationSec').optional(),
+  notes: z.string().max(2000).optional(),
+  replacedFromExerciseId: z.uuid().optional(),
+  sets: z.array(sessionSetSchema),
+});
+export type SessionExercise = z.infer<typeof sessionExerciseSchema>;
+
+export const SESSION_SOURCES = ['program', 'template', 'free', 'manual'] as const;
+export const SESSION_STATUSES = ['in_progress', 'completed'] as const;
+
+export const sessionSchema = defineDocSchema('session', {
+  kind: z.enum(['strength', 'activity']),
+  source: z.enum(SESSION_SOURCES),
+  status: z.enum(SESSION_STATUSES),
+  title: z.string().min(1).max(200),
+  program: z
+    .strictObject({
+      programId: z.uuid(),
+      programName: z.string().min(1),
+      sampleKey: z.string().min(1).optional(),
+      weekId: z.uuid(),
+      weekIndex: z.number().int().min(0),
+      weekName: z.string().min(1),
+      dayId: z.uuid(),
+      dayIndex: z.number().int().min(0),
+      dayName: z.string().min(1),
+    })
+    .optional(),
+  dayKey: z.string().refine(isValidDayKey, 'Ungültiger Tag'),
+  tz: z.string().refine(isValidTimeZone, 'Ungültige Zeitzone'),
+  startedAt: isoDateTimeSchema,
+  endedAt: isoDateTimeSchema.optional(),
+  pauses: z.array(z.strictObject({ start: isoDateTimeSchema, end: isoDateTimeSchema.optional() })),
+  durationSec: whole('durationSec').optional(),
+  notes: z.string().max(5000).optional(),
+  restTimer: z
+    .strictObject({
+      afterSetId: z.uuid(),
+      startedAt: isoDateTimeSchema,
+      endsAt: isoDateTimeSchema,
+      durationSec: whole('durationSec'),
+    })
+    .nullable()
+    .optional(),
+  exerciseIds: z.array(z.uuid()),
+  exercises: z.array(sessionExerciseSchema),
+})
+  .refine(
+    (s) => s.status !== 'completed' || (s.endedAt !== undefined && s.durationSec !== undefined),
+    { message: 'Abgeschlossene Einheit ohne Ende oder Dauer', path: ['endedAt'] },
+  )
+  .refine(
+    (s) =>
+      s.exercises.every((exercise) =>
+        exercise.sets.every(
+          (set) =>
+            (set.type === 'drop') === (set.parentSetId !== undefined) &&
+            (set.parentSetId === undefined ||
+              exercise.sets.some((p) => p.id === set.parentSetId && p.type === 'working')),
+        ),
+      ),
+    { message: 'Drop-Satz ohne Arbeitssatz derselben Übung', path: ['exercises'] },
+  );
+
+export type Session = z.infer<typeof sessionSchema>;
+export type SessionData = DocData<Session>;

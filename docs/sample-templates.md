@@ -8,7 +8,7 @@ Stand: 18.10.2026 · Version 0.2 (neu in Phase 2) · Status: Entwurf zur Durchsi
 - Sie sind keine individuelle Trainingsempfehlung. Zielgewichte sind bewusst leer, weil die Leistungsfähigkeit unbekannt ist.
 - In der App trägt jede Beispielvorlage das Etikett „Beispiel". Die Detailansicht zeigt: „Beispieldaten – keine individuelle Trainingsempfehlung. Passe Übungen, Sätze und Gewichte an dich an. Bei gesundheitlichen Fragen hol dir ärztlichen Rat."
 - Beispielvorlagen sind schreibgeschützt. „Vorlage verwenden" erzeugt ein eigenes Programm als Kopie, das frei bearbeitbar ist (AK-PRG-06).
-- Technisch sind sie gebündelte, versionierte Stammdaten (`src/modules/training/data/sample-templates.v1.json`) mit stabilen IDs (UUID v5 aus Schlüssel und Position). Die Datei wird mit `python3 tools/sample_templates_from_md.py` aus den Tabellen in Abschnitt 3 erzeugt; `pnpm check:docs` prüft, dass beides übereinstimmt. Eine neue Version der Vorlagen verändert nie bereits erstellte Kopien.
+- Technisch sind sie gebündelte, versionierte Stammdaten (`src/modules/training/data/sample-templates.v1.json`) mit stabilen IDs (UUID v5 aus Schlüssel und Position). Die Datei wird mit `python3 tools/sample_templates_from_md.py` aus den Tabellen in Abschnitt 3 erzeugt; `pnpm check:docs` prüft, dass beides übereinstimmt. Eine neue Version der Vorlagen verändert nie bereits erstellte Kopien. Die Programme A, B, C (`programs.md`, `programs.v1.json`) haben dieselbe Form mit zusätzlichen Feldern (D-249); beide Dateien lädt `loadSampleTemplates()` gemeinsam.
 
 ## 2. Gemeinsame Festlegungen
 

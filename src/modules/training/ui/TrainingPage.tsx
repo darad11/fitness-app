@@ -16,11 +16,13 @@ import {
 } from '@/shared/ui';
 import { useActiveSession } from '../data/useSession';
 import { restoreSession } from '../service/sessionService';
+import { ActiveProgramCard } from './ActiveProgramCard';
+import { useActiveProgram } from './useActiveProgram';
 import { useStartSession } from './useStartSession';
 
 /**
- * Training (S-03). Einstiege erscheinen erst, wenn ihr Bereich fertig ist (AK-UX-01);
- * Programme mit nächstem Tag und Verlauf folgen mit den weiteren Arbeitspaketen.
+ * Training (S-03): laufende Einheit, sonst das aktive Programm mit dem nächsten Tag (TP-21),
+ * sonst freies Training. Einstiege erscheinen erst, wenn ihr Bereich fertig ist (AK-UX-01).
  */
 const ENTRIES: readonly LinkListItem[] = [
   {
@@ -45,6 +47,7 @@ const ENTRIES: readonly LinkListItem[] = [
 
 export function TrainingPage() {
   const active = useActiveSession();
+  const program = useActiveProgram();
   const fmt = useFormatters();
   const { start, error, busy } = useStartSession();
   const rt = useDb();
@@ -56,8 +59,8 @@ export function TrainingPage() {
   return (
     <>
       <PageHeader title={t.training.title} />
-      <div aria-busy={active === undefined} className="mb-4">
-        {active === undefined ? (
+      <div aria-busy={active === undefined || program === undefined} className="mb-4">
+        {active === undefined || program === undefined ? (
           <Skeleton className="h-40" />
         ) : active ? (
           <Card tone="ink" eyebrow={t.training.running} title={active.title}>
@@ -69,6 +72,26 @@ export function TrainingPage() {
               {t.training.resume}
             </ButtonLink>
           </Card>
+        ) : program ? (
+          <ActiveProgramCard
+            program={program}
+            eyebrow={t.training.activeProgram}
+            busy={busy}
+            onStart={(input) => {
+              void start(input);
+            }}
+          >
+            <Button
+              variant="quiet"
+              className="text-on-ink"
+              disabled={busy}
+              onClick={() => {
+                void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
+              }}
+            >
+              {t.training.startFree}
+            </Button>
+          </ActiveProgramCard>
         ) : (
           <Card tone="ink" eyebrow={t.training.freeEyebrow} title={t.training.freeTitle}>
             <p className="-mt-2 max-w-md text-on-ink-muted">{t.training.freeHint}</p>

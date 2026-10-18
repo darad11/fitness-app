@@ -20,8 +20,18 @@ let pending: Promise<readonly SampleTemplate[]> | undefined;
  * erst bei Bedarf geladen und vom Service Worker vorab gespeichert wird (D-242).
  */
 export function loadSampleTemplates(): Promise<readonly SampleTemplate[]> {
-  pending ??= Promise.all([import('./sample-templates.v1.json'), loadCoreExercises()]).then(
-    ([module, exercises]) => Object.freeze(parseSampleTemplates(module.default, exercises)),
+  // Programme A, B, C (programs.v1.json, erzeugt von tools/programs_build.py) stehen vor den
+  // Beispielvorlagen; beide Dateien haben dasselbe Format.
+  pending ??= Promise.all([
+    import('./programs.v1.json'),
+    import('./sample-templates.v1.json'),
+    loadCoreExercises(),
+  ]).then(
+    ([programs, samples, exercises]) =>
+      Object.freeze([
+        ...parseSampleTemplates(programs.default, exercises),
+        ...parseSampleTemplates(samples.default, exercises),
+      ]),
     (error: unknown) => {
       pending = undefined;
       throw error;

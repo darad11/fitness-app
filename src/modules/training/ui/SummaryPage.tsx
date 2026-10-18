@@ -4,14 +4,17 @@ import { t } from '@/shared/i18n/de';
 import { ButtonLink, Card, PageHeader, Skeleton, StatTile } from '@/shared/ui';
 import { formatSetValues } from '../calc/fields';
 import { formatClock } from '../calc/format';
+import { dayNumber } from '../calc/programProgress';
 import { bestSet, liveExercises, sessionProgress, sessionVolume } from '../calc/session';
 import { useSession } from '../data/useSession';
+import { useSampleTemplate } from './useActiveProgram';
 
-/** Zusammenfassung nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20 ohne Vergleich). */
+/** Zusammenfassung nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20 ohne Vergleich) mit „Trainingstag x von n". */
 export function SummaryPage() {
   const { id = '' } = useParams();
   const session = useSession(id);
   const fmt = useFormatters();
+  const template = useSampleTemplate(session?.program?.sampleKey);
   if (session === undefined) {
     return (
       <div aria-busy="true" className="grid gap-4">
@@ -32,9 +35,18 @@ export function SummaryPage() {
   const number = (value: number) => fmt.number(value, { maximumFractionDigits: 2 });
   const exercises = liveExercises(session);
   const progress = sessionProgress(session);
+  const number_ =
+    session.program && template
+      ? dayNumber(template, session.program.weekIndex, session.program.dayIndex)
+      : undefined;
+  const total = template ? template.weeks.reduce((sum, week) => sum + week.days.length, 0) : 0;
+  const subtitle =
+    number_ !== undefined
+      ? `${session.title} · ${t.programs.dayOf(number_, total)}`
+      : session.title;
   return (
     <>
-      <PageHeader eyebrow={t.summary.headline} title={t.summary.title} subtitle={session.title} />
+      <PageHeader eyebrow={t.summary.headline} title={t.summary.title} subtitle={subtitle} />
       <Card tone="ink" eyebrow={t.summary.duration}>
         <p className="text-timer font-bold tabular-nums">{formatClock(session.durationSec ?? 0)}</p>
         <dl className="mt-5 grid grid-cols-3 gap-3">

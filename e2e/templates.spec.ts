@@ -9,9 +9,15 @@ test('Beispielvorlagen: Liste und Vorlage mit Etikett und Hinweis (AK-PRG-06, TP
   await expect(
     page.getByRole('heading', { level: 1, name: 'Programme und Vorlagen' }),
   ).toBeVisible();
-  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(4);
+  // Drei Programme (A, B, C) und vier Beispielvorlagen.
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(7);
+  await expect(page.getByText('Programm', { exact: true })).toHaveCount(3);
 
-  await page.getByRole('link', { name: /Push\/Pull\/Beine/ }).click();
+  await page
+    .getByRole('listitem')
+    .filter({ has: page.getByText('Push/Pull/Beine', { exact: true }) })
+    .getByRole('link')
+    .click();
   await expect(page.getByRole('heading', { level: 1, name: 'Push/Pull/Beine' })).toBeVisible();
   await expect(page.getByText('Beispiel', { exact: true })).toBeVisible();
   await expect(page.getByText(/keine individuelle Trainingsempfehlung/)).toBeVisible();

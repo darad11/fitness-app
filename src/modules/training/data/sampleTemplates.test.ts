@@ -4,7 +4,7 @@ import { loadSampleTemplate, loadSampleTemplates } from './sampleTemplates';
 describe('Laden der Beispielvorlagen', () => {
   it('lädt einmal und liefert dieselbe, unveränderliche Liste', async () => {
     const first = await loadSampleTemplates();
-    expect(first).toHaveLength(4);
+    expect(first).toHaveLength(7);
     expect(await loadSampleTemplates()).toBe(first);
     expect(Object.isFrozen(first)).toBe(true);
   });
@@ -27,7 +27,7 @@ describe('Fehler beim Nachladen', () => {
     await expect(fresh.loadSampleTemplates()).rejects.toThrow();
     fail = false;
     vi.resetModules();
-    await expect(fresh.loadSampleTemplates()).resolves.toHaveLength(4);
+    await expect(fresh.loadSampleTemplates()).resolves.toHaveLength(7);
     vi.doUnmock('./sample-templates.v1.json');
   });
 });

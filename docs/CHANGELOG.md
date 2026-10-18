@@ -1,5 +1,21 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.6 · 18.10.2026 · Schritte B und C: Bibliothek, Programme A, B, C, aktives Programm
+
+Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufband Tag 14, Studio, Beinpresse, drei Sätze von Beginn an, Rotation, Kalorien, Tagesaufgaben).
+
+| Datei | Änderung |
+|---|---|
+| `programs.md` | Neu, erzeugt: Programme A, B, C mit Wochen, Tagen, Sätzen, Zielen, Pausen und Hinweisen |
+| `exercise-library.md` | 124 Übungen (19 neu, D-248) |
+| `winter-arc-reconstruction.md` | Zuordnung nach Antworten; U-1 Dropset-Liste (12 Sterne, Rest offen) |
+| `decisions.md` | D-248 Bibliothek, D-249 Programme und aktives Programm; Q-13 bis Q-17 beantwortet |
+| `evolution-plan.md` | Schritte B und C als umgesetzt; Programme A und B bestätigt |
+| `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
+| `implementation-plan.md` | Stand Erweiterungsplan; AP 2.3 teilweise vorgezogen; nächste Schritte |
+| `feature-inventory.md` | TP-17, TP-19, TP-21 auf „Implementiert“ |
+| `testing.md` | Ergebnisse Schritt B und C |
+
 ## Version 0.5 · 18.10.2026 · Erweiterungsplan, Designsystem 2.0 und Premium-Player (AP D1, D2)
 
 Grundlage: Master-Prompt „Fitness App Evolution“ des Produktinhabers, Freigabe des Plans (Q-18) und seine Vorgabe, ab jetzt alles nach dem neuen Prompt zu gestalten.

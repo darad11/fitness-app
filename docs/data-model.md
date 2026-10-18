@@ -168,7 +168,7 @@ interface PlannedSet extends Child {
 }
 ```
 
-Beispielvorlagen sind gebündelte, schreibgeschützte Stammdaten mit stabilen IDs (`sample-templates.md`). „Vorlage verwenden" erzeugt ein Nutzerprogramm mit neuen IDs und `origin = 'sample-copy'`.
+Beispielvorlagen sind gebündelte, schreibgeschützte Stammdaten mit stabilen IDs (`sample-templates.md`). „Vorlage verwenden" erzeugt ein Nutzerprogramm mit neuen IDs und `origin = 'sample-copy'`. Die Programme A, B, C (`programs.md`) nutzen dieselbe Form (`programs.v1.json`, erzeugt von `tools/programs_build.py`), erweitert um `program: true`, `description`, `source` sowie je Übung `notes` und `originalName` (D-249).
 
 ### 3.3 Trainingszustand (`training_state`, Singleton)
 
@@ -178,6 +178,8 @@ interface TrainingState extends Root {             // feste ID (UUID v5 aus 'sin
   history: { programId: string; from: string; to?: string }[];
 }
 ```
+
+Der Fortschritt (nächster Tag, Durchlauf, erledigte Tage) wird nicht gespeichert, sondern aus den abgeschlossenen Einheiten mit `program.programId` seit `activeSince` berechnet (`calc/programProgress.ts`, D-249). Das Dokument liegt in der Tabelle `singletons`.
 
 ### 3.4 Übungen
 

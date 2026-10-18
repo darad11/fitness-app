@@ -108,6 +108,8 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
 | 1.9 | Umgesetzt bis auf den Gerätetest (18.10.2026): E2E für Sichtbarkeitswechsel, Überziehung und Offline; T-IPH-M1 steht aus |
 
+**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request als Entwurf, Basis `m1-training`). Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
+
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
 
@@ -115,7 +117,7 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 |---|---|---|
 | 2.1 | Programm-Domain und Editor: Wochen, Tage, Übungen, Satzschema mit Aufwärm-, Arbeits- und Drop-Sätzen, Wiederholungsbereich, Zielgewicht, Zielzeit, Pausen; Sortieren per Aktion | L |
 | 2.2 | Vorlagen: als Vorlage speichern, Vorlage verwenden, duplizieren, archivieren, löschen mit Rückgängig | M |
-| 2.3 | Aktivieren, Reihenfolge-Modus, Wochentag-Hinweis, Vorschau, Trainingsübersicht | M |
+| 2.3 | Aktivieren, Reihenfolge-Modus, Wochentag-Hinweis, Vorschau, Trainingsübersicht (Aktivieren, Reihenfolge-Modus, Vorschau und „Heute geplant“ für gebündelte Programme seit Schritt C, D-249) | M |
 | 2.4 | Einheit aus Programm mit Snapshots; Ersetzen im Training und im Plan; Drop-Sätze im Player; Übungstimer; Pausieren und Fortsetzen; Notizen | L |
 | 2.5 | Eigene Übungen, persönliche Übungsangaben, Übungsdetail mit letzten Einheiten | M |
 | 2.6 | Krafttraining nachtragen, Aktivität erfassen | M |
@@ -226,4 +228,7 @@ Nächste Schritte: <Liste>
 14. Erledigt: AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen.
 15. Erledigt: AP 1.8 Datensicherung.
 16. Erledigt: AP 1.9 E2E-Tests. Offen: Gerätetest T-IPH-M1 durch den Produktinhaber, Auswertung in `known-limitations.md`.
-17. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.
+17. Erledigt (Branch `evolution-programs`): Schritt B, Bibliothek um 19 Übungen aus dem Winter-Arc-Abgleich erweitert (D-248).
+18. Erledigt (Branch `evolution-programs`): Schritt C, Programme A, B, C als Stammdaten (`programs.md`) und aktives Programm mit nächstem Tag, Zähler und „Heute geplant“ (D-249). Offen: weitere Dropset-Sterne des Winter Arc vom Produktinhaber (U-1).
+19. Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere; danach Pull Requests #5 und `evolution-programs` zur Freigabe.
+20. Ich: Schritt D (Player ausbauen) nach `evolution-plan.md` Abschnitt 5; danach E bis H.

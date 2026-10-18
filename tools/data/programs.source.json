@@ -1,0 +1,300 @@
+{
+  "$comment": "Programme A und B (evolution-plan.md Abschnitt 4, Q-14 und Q-15). Programm C entsteht aus tools/data/winter-arc-2026.source.json. tools/programs_build.py erzeugt daraus src/modules/training/data/programs.v1.json und docs/programs.md. Keine Gewichte: Der Player zeigt den Vorwert.",
+  "version": 1,
+  "dropsets": {
+    "$comment": "Dropset-Markierungen (orangefarbener Stern) im Winter Arc nach den Notizen zur Aufnahme; [Kalendertag, Position]. Die Liste ist aus den Notizen und noch nicht vollständig gegen alle 40 Tage geprüft (winter-arc-reconstruction.md U-1).",
+    "items": [
+      [17, 4],
+      [18, 3],
+      [19, 3],
+      [20, 1],
+      [25, 5],
+      [27, 2],
+      [32, 1],
+      [46, 5],
+      [52, 1],
+      [53, 1],
+      [54, 1],
+      [55, 2]
+    ]
+  },
+  "winterArc": {
+    "key": "winter_arc_2026",
+    "name": "Winter Arc 2026 (Nachbau)",
+    "description": "Nachbau des Xeela-Programms „2026 Winter Arc“ aus der Aufnahme des Produktinhabers: 8 Wochen, 40 Trainingstage, 5 Tage je Woche mit zwei frei wählbaren Ruhetagen. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.",
+    "level": "intermediate",
+    "location": "gym",
+    "daysPerWeek": "5",
+    "repeat": false,
+    "dropsetNote": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+  },
+  "templates": [
+    {
+      "key": "compound_ab_4",
+      "program": true,
+      "name": "Ganzkörper A/B, 4 Tage",
+      "description": "Wiedereinstieg nach längerer Pause mit Grundübungen an Beinpresse, Kurzhanteln, Kabelzug und Maschinen. Zwei Einheiten im Wechsel (A, B, A, B), 8 Wochen, von Beginn an 3 Arbeitssätze. Steigerung: Wenn alle Arbeitssätze die obere Grenze erreichen, beim nächsten Mal einen Gewichtsschritt mehr. Keine Gewichtsvorgaben; der Player zeigt den letzten Wert.",
+      "level": "intermediate",
+      "location": "gym",
+      "daysPerWeek": "4",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Tag A",
+          "exercises": [
+            {
+              "exercise": "leg_press",
+              "warmup": 2,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 120
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "warmup": 1,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 120
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 90
+            },
+            {
+              "exercise": "shoulder_press_machine",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 90
+            },
+            {
+              "exercise": "plank",
+              "warmup": 0,
+              "working": 3,
+              "target": { "durationMinSec": 30, "durationMaxSec": 45 },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "Tag B",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "warmup": 2,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 120
+            },
+            {
+              "exercise": "lat_pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 90
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "warmup": 1,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 10, "repsMax": 12 },
+              "restSec": 75
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 12, "repsMax": 15 },
+              "restSec": 60
+            },
+            {
+              "exercise": "crunch",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 12, "repsMax": 15 },
+              "restSec": 45
+            }
+          ]
+        }
+      ],
+      "weeks": [
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"],
+        ["Tag A", "Tag B", "Tag A", "Tag B"]
+      ]
+    },
+    {
+      "key": "ppl_rotation_4",
+      "program": true,
+      "name": "Push/Pull/Beine, rotierend",
+      "description": "Drei Einheiten Push, Pull und Beine auf vier Trainingstage je Woche verteilt. Die Reihenfolge läuft ohne Rücksetzung weiter: Woche 1 Push, Pull, Beine, Push; Woche 2 Pull, Beine, Push, Pull; Woche 3 Beine, Push, Pull, Beine; danach von vorn. So kommt jede Einheit in drei Wochen viermal dran. Klimmzüge an der Maschine mit Gegengewicht; ohne Unterstützung ersetzen, sobald es geht. Steigerung wie bei Ganzkörper A/B.",
+      "level": "intermediate",
+      "location": "gym",
+      "daysPerWeek": "4",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Push",
+          "exercises": [
+            {
+              "exercise": "bench_press_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": { "repsMin": 6, "repsMax": 8 },
+              "restSec": 150
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "warmup": 1,
+              "working": 3,
+              "target": { "repsMin": 6, "repsMax": 8 },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 10 },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 12, "repsMax": 15 },
+              "restSec": 60
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 10, "repsMax": 12 },
+              "restSec": 75
+            },
+            {
+              "exercise": "dip",
+              "warmup": 0,
+              "working": 2,
+              "target": { "repsMin": 8, "repsMax": 12 },
+              "restSec": 90
+            }
+          ]
+        },
+        {
+          "name": "Pull",
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "warmup": 1,
+              "working": 4,
+              "target": { "repsMin": 6, "repsMax": 10 },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 6, "repsMax": 8 },
+              "restSec": 150
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 10, "repsMax": 12 },
+              "restSec": 120
+            },
+            {
+              "exercise": "face_pull",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 12, "repsMax": 15 },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 10 },
+              "restSec": 75
+            },
+            {
+              "exercise": "hammer_curl",
+              "warmup": 0,
+              "working": 2,
+              "target": { "repsMin": 10, "repsMax": 12 },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Beine",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": { "repsMin": 5, "repsMax": 7 },
+              "restSec": 180
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 8, "repsMax": 10 },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 10, "repsMax": 12 },
+              "restSec": 120
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 10, "repsMax": 12 },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 12, "repsMax": 15 },
+              "restSec": 60
+            },
+            {
+              "exercise": "hanging_leg_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": { "repsMin": 10, "repsMax": 15 },
+              "restSec": 60
+            }
+          ]
+        }
+      ],
+      "weeks": [
+        ["Push", "Pull", "Beine", "Push"],
+        ["Pull", "Beine", "Push", "Pull"],
+        ["Beine", "Push", "Pull", "Beine"]
+      ]
+    }
+  ]
+}

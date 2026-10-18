@@ -41,7 +41,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 
 | Nr. | Punkt | Stand | Umgang |
 |---|---|---|---|
-| U-1 | Orangefarbene Sternmarkierung an einzelnen Übungen (z. B. Tag 17 Übung 4, Tag 32 Übung 1, Tag 46 Übung 5, Tag 52 bis 55 jeweils erste oder zweite Übung) | gesehen; laut Produktinhaber (Q-13, 18.10.2026) ein **Dropset**: schwer beginnen, nach jedem Satz das Gewicht um 30 % senken, keine Pause dazwischen | Vor Programm C die vollständige Sternliste aus den Aufnahmen in die Datendatei übertragen (`dropset: true`) und als Drop-Sätze ohne Pause abbilden (AK-TRN-03); keine Gewichte vorgeben |
+| U-1 | Orangefarbene Sternmarkierung an einzelnen Übungen (z. B. Tag 17 Übung 4, Tag 32 Übung 1, Tag 46 Übung 5, Tag 52 bis 55 jeweils erste oder zweite Übung) | gesehen; laut Produktinhaber (Q-13, 18.10.2026) ein **Dropset**: schwer beginnen, nach jedem Satz das Gewicht um 30 % senken, keine Pause dazwischen | Umgesetzt (Schritt C, D-249): die 12 in den Notizen belegten Sterne stehen in `tools/data/programs.source.json` (`dropsets.items`, Kalendertag und Position) und werden als Arbeitssatz plus Drop-Sätze ohne Pause abgebildet (AK-TRN-03); keine Gewichte. **Offen:** Die Liste ist noch nicht gegen alle 40 Tage geprüft; weitere Sterne meldet der Produktinhaber als „Tag x, Übung y“ und das Skript nimmt sie auf |
 | U-2 | Tag 14: Laufband mit „3 Sets • 30:00“, Kopfzeile 24 Sätze | gesehen; wahrscheinlich Datenfehler in Xeela | In der Datendatei wie angezeigt; in Programm C als 1 × 30 min (Q-13, beantwortet 18.10.2026) |
 | U-3 | „279 Exercises“ in der Fortschrittsansicht gegen 278 gezählte Einträge | gesehen | Differenz vermutlich durch U-2 oder eine Zählung je Satzgruppe; kein Tag fehlt (40 Tage, Kopfzeilen stimmen) |
 | U-4 | Tippfehler in Xeela („Quad Extentions“, „Leg press Calf Raise“, „Overhead Cable Tricep Extention“, „Flat Dumbbell Bench Press (chest)“) | gesehen | Wörtlich beibehalten; deutsche Namen im Abgleich |
@@ -52,79 +52,79 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 
 ## 5. Übungsabgleich
 
-71 Xeela-Namen: 30 vorhanden, 20 Varianten vorhandener Übungen, 20 fehlen (19 neue Übungen vorgeschlagen), 1 unklar. Erzeugt aus `tools/data/winter-arc-exercise-map.json`; Status und Konfidenz beziehen sich auf die Zuordnung, nicht auf die Satzwerte. Varianten werden als Ausführungshinweis im Programm und als Alias in der Bibliothek geführt, nicht als eigene Übung (`exercise-library.md` Abschnitt 2). Quelle je Übung: erstes Vorkommen im Programm.
+71 Xeela-Namen: 50 vorhanden, 20 Varianten vorhandener Übungen, 0 fehlen (0 neue Übungen vorgeschlagen), 1 unklar. Erzeugt aus `tools/data/winter-arc-exercise-map.json`; Status und Konfidenz beziehen sich auf die Zuordnung, nicht auf die Satzwerte. Varianten werden als Ausführungshinweis im Programm und als Alias in der Bibliothek geführt, nicht als eigene Übung (`exercise-library.md` Abschnitt 2). Quelle je Übung: erstes Vorkommen im Programm.
 
 | Xeela-Name | Deutscher Name | Schlüssel | Status | Ergänzung | Quelle | Konfidenz |
 |---|---|---|---|---|---|---|
-| Single Leg Press Machine | Beinpresse, einbeinig | `leg_press_single_leg` (Vorschlag) | Neu | Neu: Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung) | W1 T7, T2 00:12–00:20 | mittel |
-| Bicycles | Bicycle Crunches | `bicycle_crunch` (Vorschlag) | Neu | Neu: Rumpf, Körpergewicht, nur Wiederholungen | W1 T5, T1 00:31–00:42 | hoch |
-| Kneeling Single-Arm Lat Pulldown | Einarmiges Latziehen am Kabel, kniend | `lat_pulldown_single_arm` (Vorschlag) | Neu | Neu: Latissimus, Kabel, je Seite, Gewicht × Wiederholungen | W1 T6, T2 00:01–00:08 | mittel |
-| Incline Dumbbell Skull Crushers | French Press mit Kurzhanteln | `skull_crusher_dumbbell` (Vorschlag) | Neu | Neu: Trizeps, Kurzhanteln und Bank; Hinweis „auf der Schrägbank“ | W3 T18, T3 00:38–00:41; T4 00:00–00:04 | hoch |
-| Spider Cable Front Raise | Frontheben am Kabel | `front_raise_cable` (Vorschlag) | Neu | Neu: Vordere Schulter, Kabel; Hinweis „Brust auf der Schrägbank aufgelegt“ | W3 T20, T4 00:20–00:23 | mittel |
-| Rope Hammer Curl | Hammercurls am Kabel mit Seil | `hammer_curl_cable` (Vorschlag) | Neu | Neu: Bizeps und Unterarme, Kabel | W1 T6, T2 00:01–00:08 | hoch |
-| Heel Taps | Heel Taps | `heel_tap` (Vorschlag) | Neu | Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen | W1 T7, T2 00:12–00:20 | hoch |
-| Dumbbell Hip Thrust | Hip Thrust mit Kurzhantel | `hip_thrust_dumbbell` (Vorschlag) | Neu | Neu: Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine) | W1 T7, T2 00:12–00:20 | hoch |
-| Knee Raises | Knieheben stehend | `standing_knee_raise` (Vorschlag) | Neu | Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
-| Cable Hip Hinge Pull-Throughs | Pull-Throughs am Kabel | `cable_pull_through` (Vorschlag) | Neu | Neu: Gesäß und Oberschenkel hinten, Kabel | W1 T5, T1 00:31–00:42 | hoch |
-| Reverse Grip EZ Bar Curls | Reverse Curls mit SZ-Stange | `reverse_curl_ez_bar` (Vorschlag) | Neu | Neu: Unterarme und Bizeps, SZ-Stange | W2 T13, T3 00:08–00:12 | hoch |
-| Smith Machine Row | Rudern an der Multipresse, vorgebeugt | `bent_over_row_smith` (Vorschlag) | Neu | Neu: Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung) | W2 T10, T2 00:28–00:33 | mittel |
-| Incline Cable Chest Press | Schrägbankdrücken am Kabel | `incline_press_cable` (Vorschlag) | Neu | Neu: Brust, Kabel und Bank, Gewicht × Wiederholungen; Alias „Incline Cable Press“ | W1 T1, player 00:00–00:02; T1 Liste | mittel |
-| Standing Alternating Shoulder Press | Schulterdrücken mit Kurzhanteln, stehend | `shoulder_press_dumbbell_standing` (Vorschlag) | Neu | Neu: Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“ | W4 T25, T4 00:45; T5 00:00–00:02 | mittel |
-| Dual Dumbbell Preacher Curls | Scottcurls mit Kurzhanteln | `preacher_curl_dumbbell` (Vorschlag) | Neu | Neu: Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange) | W2 T11, T2 00:36–00:41 | mittel |
-| Sit-Ups | Sit-ups | `sit_up` (Vorschlag) | Neu | Neu: Rumpf, Körpergewicht, nur Wiederholungen | W3 T19, T4 00:11–00:15 | hoch |
-| Cross-Body Cable Extensions | Trizepsdrücken am Kabel, über Kreuz | `triceps_extension_cable_cross_body` (Vorschlag) | Neu | Neu: Trizeps, Kabel, je Seite | W2 T11, T2 00:36–00:41 | mittel |
-| Single-Arm Cross-Body Cable Extension | Trizepsdrücken am Kabel, über Kreuz | `triceps_extension_cable_cross_body` (Vorschlag) | Neu | Gleiche neue Übung wie „Cross-Body Cable Extensions“ | W6 T41, T7 00:03–00:06 (Übungen 2, 3 mit 6 B/s bestätigt) | mittel |
-| Dumbbell Calf Raises | Wadenheben mit Kurzhanteln | `calf_raise_dumbbell` (Vorschlag) | Neu | Neu: Waden, Kurzhanteln | W1 T7, T2 00:12–00:20 | hoch |
-| Windshield Wipers | Windshield Wipers | `windshield_wiper` (Vorschlag) | Neu | Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen | W3 T19, T4 00:11–00:15 | hoch |
 | Alternating Dumbbell Lunges | Ausfallschritte mit Kurzhanteln | `lunge_dumbbell` | Vorhanden | Hinweis „wechselseitig“ | W1 T7, T2 00:12–00:20 | hoch |
 | Alternating Flat Dumbbell Press | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Variante | Hinweis „wechselseitig“; Alias „Alternating Dumbbell Press“ | W1 T1, player 00:00–00:02; T1 Liste | hoch |
 | Flat Dumbbell Bench Press (chest) | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Vorhanden | Klammer „(chest)“ stammt aus Xeela | W3 T17, T3 00:28–00:34 | hoch |
 | Lying Hamstring Curls | Beinbeuger liegend | `lying_leg_curl` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Leg Raises | Beinheben liegend | `lying_leg_raise` | Vorhanden | Laut Produktinhaber (18.10.2026) liegend | W2 T14, T3 00:18–00:22 | hoch |
 | Leg Press Machine | Beinpresse | `leg_press` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
+| Single Leg Press Machine | Beinpresse, einbeinig | `leg_press_single_leg` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung) | W1 T7, T2 00:12–00:20 | mittel |
 | Quad Extentions | Beinstrecker | `leg_extension` | Vorhanden | Tippfehler „Extentions“ stammt aus Xeela | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Single-Leg Quad Extension | Beinstrecker | `leg_extension` | Variante | Hinweis „einbeinig“ | W2 T14, T3 00:18–00:22 | mittel |
+| Bicycles | Bicycle Crunches | `bicycle_crunch` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen | W1 T5, T1 00:31–00:42 | hoch |
 | Cable Bayesian Curl | Bizepscurls am Kabel | `biceps_curl_cable` | Variante | Hinweis „Bayesian: Zug hinter dem Körper, einarmig“; Alias „Bayesian Curl“ | W1 T4, T1 00:19–00:27 | mittel |
 | Single-Arm High Cable Curls | Bizepscurls am Kabel | `biceps_curl_cable` | Variante | Hinweis „hoher Zug, einarmig“; Alias „High Cable Curl“ | W3 T18, T3 00:38–00:41; T4 00:00–00:04 | mittel |
 | Alternating Dumbbell Curl With Hold | Bizepscurls mit Kurzhanteln | `biceps_curl_dumbbell` | Variante | Hinweis „wechselseitig, mit Halten“ | W1 T4, T1 00:19–00:27 | hoch |
 | Chest Fly Machine | Butterfly an der Maschine | `pec_deck` | Vorhanden | Alias „Chest Fly Machine“ | W1 T1, player 00:00–00:02; T1 Liste | hoch |
 | Crunches | Crunches | `crunch` | Vorhanden | – | W1 T5, T1 00:31–00:42 | hoch |
 | Dead Bugs | Dead Bug | `dead_bug` | Vorhanden | – | W1 T7, T2 00:12–00:20 | hoch |
+| Kneeling Single-Arm Lat Pulldown | Einarmiges Latziehen am Kabel, kniend | `lat_pulldown_single_arm` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Latissimus, Kabel, je Seite, Gewicht × Wiederholungen | W1 T6, T2 00:01–00:08 | mittel |
 | Close Grip Bench Press | Enges Bankdrücken | `close_grip_bench_press` | Vorhanden | Xeela führt die Übung unter Brust, die Bibliothek unter Trizeps | W1 T4, T1 00:19–00:27 | hoch |
 | Chest Fly With Push | Fliegende am Kabel | `cable_fly` | Unklar | Produktinhaber konnte die Ausführung nicht einordnen (18.10.2026); bleibt Fliegende am Kabel mit Hinweis „Zuordnung unsicher“ | W1 T6, T2 00:01–00:08 | niedrig |
 | Decline Cable Fly | Fliegende am Kabel | `cable_fly` | Variante | Hinweis „von oben nach unten“; Alias „Decline Cable Fly“ | W2 T10, T2 00:28–00:33 | hoch |
 | Incline Cable Fly | Fliegende am Kabel | `cable_fly` | Variante | Hinweis „von unten nach oben“; Alias „Incline Cable Fly“ | W3 T17, T3 00:28–00:34 | hoch |
+| Incline Dumbbell Skull Crushers | French Press mit Kurzhanteln | `skull_crusher_dumbbell` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Trizeps, Kurzhanteln und Bank; Hinweis „auf der Schrägbank“ | W3 T18, T3 00:38–00:41; T4 00:00–00:04 | hoch |
 | EZ Bar Skull Crushers | French Press mit SZ-Stange | `skull_crusher` | Vorhanden | Alias „Skull Crusher“ | W2 T11, T2 00:36–00:41 | hoch |
 | Incline EZ Bar Skull Crushers | French Press mit SZ-Stange | `skull_crusher` | Variante | Hinweis „auf der Schrägbank“ | W2 T13, T3 00:08–00:12 | hoch |
+| Spider Cable Front Raise | Frontheben am Kabel | `front_raise_cable` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kabel; Hinweis „Brust auf der Schrägbank aufgelegt“ | W3 T20, T4 00:20–00:23 | mittel |
 | Seated Front Lateral Raise | Frontheben mit Kurzhanteln | `front_raise_dumbbell` | Variante | Laut Produktinhaber (18.10.2026) Frontheben; Hinweis „sitzend“ | W2 T11, T2 00:36–00:41 | hoch |
 | Heel-Elevated Goblet Squats | Goblet Squat | `goblet_squat` | Variante | Hinweis „Fersen erhöht“ | W1 T5, T1 00:31–00:42 | hoch |
+| Rope Hammer Curl | Hammercurls am Kabel mit Seil | `hammer_curl_cable` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Bizeps und Unterarme, Kabel | W1 T6, T2 00:01–00:08 | hoch |
+| Heel Taps | Heel Taps | `heel_tap` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Rumpf (seitlich), Körpergewicht, nur Wiederholungen | W1 T7, T2 00:12–00:20 | hoch |
+| Dumbbell Hip Thrust | Hip Thrust mit Kurzhantel | `hip_thrust_dumbbell` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine) | W1 T7, T2 00:12–00:20 | hoch |
 | Pull-Ups | Klimmzüge mit Unterstützung | `assisted_pull_up` | Vorhanden | Laut Produktinhaber (18.10.2026) an der Maschine mit Gegengewicht (Entlastung × Wiederholungen, D-241) | W2 T10, T2 00:28–00:33 | hoch |
 | Barbell Back Squats | Kniebeuge mit Langhantel | `back_squat_barbell` | Vorhanden | – | W1 T5, T1 00:31–00:42 | hoch |
+| Knee Raises | Knieheben stehend | `standing_knee_raise` | Vorhanden | Aufgenommen in Schritt B (18.10.2026). Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Wide Grip Lat Pulldown | Latziehen | `lat_pulldown` | Vorhanden | Weiter Griff ist die Standardausführung; Alias „Wide Grip Lat Pulldown“ | W4 T24, T4 00:39–00:41 (Lücke 00:40 mit 6 B/s geschlossen) | hoch |
 | Close Grip Lat Pulldown | Latziehen, enger Griff | `lat_pulldown_close` | Vorhanden | – | W1 T1, player 00:00–00:02; T1 Liste | hoch |
 | Cardio Treadmill | Laufband | `treadmill` | Vorhanden | Dauer und Distanz (D-241); im Programm nur die Dauer 30 min vorgegeben | W1 T1, player 00:00–00:02; T1 Liste | hoch |
 | Close Grip Push-Up | Liegestütze | `push_up` | Variante | Hinweis „enge Handstellung“; Alias „Close Grip Push-Up“ | W1 T6, T2 00:01–00:08 | hoch |
 | Push-Ups | Liegestütze | `push_up` | Vorhanden | – | W3 T17, T3 00:28–00:34 | hoch |
+| Cable Hip Hinge Pull-Throughs | Pull-Throughs am Kabel | `cable_pull_through` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Gesäß und Oberschenkel hinten, Kabel | W1 T5, T1 00:31–00:42 | hoch |
+| Reverse Grip EZ Bar Curls | Reverse Curls mit SZ-Stange | `reverse_curl_ez_bar` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Unterarme und Bizeps, SZ-Stange | W2 T13, T3 00:08–00:12 | hoch |
 | Bent-Over Dumbbell Rear Delt Fly | Reverse Flys mit Kurzhanteln | `reverse_fly_dumbbell` | Vorhanden | Alias „Rear Delt Fly“ | W2 T11, T2 00:36–00:41 | hoch |
 | Underhand Cable Rows | Rudern am Kabel, sitzend | `seated_cable_row` | Variante | Hinweis „Untergriff“; Alias „Underhand Cable Row“ | W3 T17, T3 00:28–00:34 | hoch |
 | Wide Grip Cable Rows | Rudern am Kabel, sitzend | `seated_cable_row` | Variante | Hinweis „weiter Griff“; Alias „Wide Grip Cable Row“ | W3 T20, T4 00:20–00:23 | hoch |
+| Smith Machine Row | Rudern an der Multipresse, vorgebeugt | `bent_over_row_smith` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung) | W2 T10, T2 00:28–00:33 | mittel |
 | Dumbbell Romanian Deadlifts | Rumänisches Kreuzheben mit Kurzhanteln | `romanian_deadlift_dumbbell` | Vorhanden | – | W1 T7, T2 00:12–00:20 | hoch |
 | Barbell Romanian Deadlift | Rumänisches Kreuzheben mit Langhantel | `romanian_deadlift_barbell` | Vorhanden | – | W1 T5, T1 00:31–00:42 | hoch |
 | Russian Twists | Russian Twist | `russian_twist` | Vorhanden | – | W2 T14, T3 00:18–00:22 | hoch |
 | Incline Dumbbell Curls | Schrägbank-Curls mit Kurzhanteln | `incline_curl_dumbbell` | Vorhanden | – | W2 T11, T2 00:36–00:41 | hoch |
+| Incline Cable Chest Press | Schrägbankdrücken am Kabel | `incline_press_cable` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Brust, Kabel und Bank, Gewicht × Wiederholungen; Alias „Incline Cable Press“ | W1 T1, player 00:00–00:02; T1 Liste | mittel |
 | Alternating Incline Dumbbell Press | Schrägbankdrücken mit Kurzhanteln | `incline_bench_press_dumbbell` | Variante | Hinweis „wechselseitig“ | W2 T13, T3 00:08–00:12 | hoch |
 | Machine Shoulder Press | Schulterdrücken an der Maschine | `shoulder_press_machine` | Vorhanden | – | W1 T4, T1 00:19–00:27 | hoch |
+| Standing Alternating Shoulder Press | Schulterdrücken mit Kurzhanteln, stehend | `shoulder_press_dumbbell_standing` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“ | W4 T25, T4 00:45; T5 00:00–00:02 | mittel |
+| Dual Dumbbell Preacher Curls | Scottcurls mit Kurzhanteln | `preacher_curl_dumbbell` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange) | W2 T11, T2 00:36–00:41 | mittel |
 | Arm Cable Lateral Raise | Seitheben am Kabel | `lateral_raise_cable` | Vorhanden | Name in Xeela vermutlich abgeschnitten („Single-Arm …“); einarmig ist die übliche Ausführung | W1 T4, T1 00:19–00:27 | hoch |
 | Seated Dumbbell Lateral Raise (with hold) | Seitheben mit Kurzhanteln | `lateral_raise_dumbbell` | Variante | Hinweis „sitzend, mit Halten“ | W5 T32, T5 00:36–00:39 | hoch |
 | Spider Dumbbell Lateral Raise | Seitheben mit Kurzhanteln | `lateral_raise_dumbbell` | Variante | Hinweis „Brust auf der Schrägbank aufgelegt“; Alias „Spider Lateral Raise“ | W1 T6, T2 00:01–00:08 | mittel |
+| Sit-Ups | Sit-ups | `sit_up` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen | W3 T19, T4 00:11–00:15 | hoch |
 | T-Bar Row | T-Bar-Rudern | `t_bar_row` | Vorhanden | – | W1 T1, player 00:00–00:02; T1 Liste | hoch |
 | Cable Tricep Pushdown (3-Second Eccentric) | Trizepsdrücken am Kabel | `triceps_pushdown_cable` | Variante | Hinweis „3 s senken“ (Tempo, TS-20 ist später vorgesehen; bis dahin Text im Programm) | W1 T4, T1 00:19–00:27 | hoch |
 | Single Arm Cable Tricep Extension | Trizepsdrücken am Kabel | `triceps_pushdown_cable` | Variante | Hinweis „einarmig“ | W3 T18, T3 00:38–00:41; T4 00:00–00:04 | mittel |
+| Cross-Body Cable Extensions | Trizepsdrücken am Kabel, über Kreuz | `triceps_extension_cable_cross_body` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Trizeps, Kabel, je Seite | W2 T11, T2 00:36–00:41 | mittel |
+| Single-Arm Cross-Body Cable Extension | Trizepsdrücken am Kabel, über Kreuz | `triceps_extension_cable_cross_body` | Vorhanden | Aufgenommen in Schritt B (18.10.2026). Gleiche neue Übung wie „Cross-Body Cable Extensions“ | W6 T41, T7 00:03–00:06 (Übungen 2, 3 mit 6 B/s bestätigt) | mittel |
 | Overhead Cable Tricep Extention | Trizepsstrecken über Kopf am Kabel | `overhead_extension_cable` | Vorhanden | Tippfehler „Extention“ stammt aus Xeela | W3 T20, T4 00:20–00:23 | hoch |
 | Seated Single-Arm Dumbbell Extensions | Trizepsstrecken über Kopf mit Kurzhantel | `overhead_extension_dumbbell` | Variante | Hinweis „sitzend, einarmig“ | W4 T25, T4 00:45; T5 00:00–00:02 | hoch |
 | Plank | Unterarmstütz (Plank) | `plank` | Vorhanden | Dauer (Erfassungsart Zeit) | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Leg press Calf Raise | Wadenheben an der Beinpresse | `calf_press_leg_press` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
+| Dumbbell Calf Raises | Wadenheben mit Kurzhanteln | `calf_raise_dumbbell` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Waden, Kurzhanteln | W1 T7, T2 00:12–00:20 | hoch |
 | Calf Raise Machine | Wadenheben sitzend | `seated_calf_raise` | Vorhanden | Laut Produktinhaber (18.10.2026) sitzend | W1 T5, T1 00:31–00:42 | hoch |
+| Windshield Wipers | Windshield Wipers | `windshield_wiper` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Rumpf (seitlich), Körpergewicht, nur Wiederholungen | W3 T19, T4 00:11–00:15 | hoch |
 | Single-Arm Cable Pullover | Überzüge am Kabel | `straight_arm_pulldown` | Variante | Hinweis „einarmig“; Alias „Cable Pullover“. Eigene Übung, falls der Verlauf getrennt sein soll (offene Frage) | W2 T10, T2 00:28–00:33 | mittel |
 | Straight-Arm Lat Pulldown | Überzüge am Kabel | `straight_arm_pulldown` | Vorhanden | Alias „Straight-Arm Pulldown“ | W3 T17, T3 00:28–00:34 | hoch |
 

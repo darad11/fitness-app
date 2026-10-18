@@ -65,11 +65,11 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
       .getAllByRole('listitem')
       .map((li) => li.textContent);
     expect(rows).toEqual([
-      'Kniebeuge mit Langhantel2 Aufwärmsätze, 3 Sätze · 6–8 Wdh. · Pause 2:30 min',
-      'Bankdrücken mit Langhantel1 Aufwärmsatz, 3 Sätze · 6–8 Wdh. · Pause 2:30 min',
-      'Rudern am Kabel, sitzend3 Sätze · 8–12 Wdh. · Pause 2:00 min',
-      'Beinbeuger liegend2 Sätze · 10–12 Wdh. · Pause 1:15 min',
-      'Unterarmstütz (Plank)3 Sätze · 30–45 s · Pause 1:00 min',
+      '1Kniebeuge mit Langhantel2 Aufwärmsätze, 3 Sätze · 6–8 Wdh. · Pause 2:30 min',
+      '2Bankdrücken mit Langhantel1 Aufwärmsatz, 3 Sätze · 6–8 Wdh. · Pause 2:30 min',
+      '3Rudern am Kabel, sitzend3 Sätze · 8–12 Wdh. · Pause 2:00 min',
+      '4Beinbeuger liegend2 Sätze · 10–12 Wdh. · Pause 1:15 min',
+      '5Unterarmstütz (Plank)3 Sätze · 30–45 s · Pause 1:00 min',
     ]);
     const dayB = screen.getByRole('region', { name: 'Tag B' });
     expect(within(dayB).getByText('2 Sätze je Seite · 20–40 s · Pause 1:00 min')).toBeVisible();

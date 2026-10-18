@@ -15,7 +15,7 @@ export function AppLayout() {
     <div className="min-h-dvh lg:flex">
       <a
         href="#inhalt"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-input focus:bg-surface focus:px-4 focus:py-3"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-pill focus:bg-surface focus:shadow-float focus:px-4 focus:py-3"
       >
         {t.nav.skipToContent}
       </a>
@@ -25,7 +25,7 @@ export function AppLayout() {
         <main
           id="inhalt"
           tabIndex={-1}
-          className="page-gutters mx-auto w-full max-w-[1200px] flex-1 pt-6 pb-[calc(env(safe-area-inset-bottom)+5.5rem)] outline-none lg:pt-8 lg:pb-10"
+          className="page-gutters mx-auto w-full max-w-[1200px] flex-1 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] outline-none lg:pt-8 lg:pb-10"
         >
           <Outlet />
         </main>

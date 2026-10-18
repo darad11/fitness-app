@@ -28,8 +28,9 @@ export interface SetRowProps {
 }
 
 /**
- * Satzzeile (design-system.md Abschnitt 11): Typ, Vorwert, Felder je Erfassungsart und „erledigt".
- * Jede Zeile ist jederzeit bedienbar; der nächste offene Satz ist hervorgehoben (AK-TRN-08).
+ * Satzzeile (design-system.md Abschnitt 11, ux-audit.md DS-5): Typ, Vorwert, Felder je
+ * Erfassungsart und „erledigt". Jede Zeile ist jederzeit bedienbar; der nächste offene Satz
+ * ist als Tonfläche hervorgehoben (AK-TRN-08). Bedienziele 48 px.
  */
 export function SetRow(props: SetRowProps) {
   const { exercise, set, current, error } = props;
@@ -50,22 +51,29 @@ export function SetRow(props: SetRowProps) {
       aria-label={props.name}
       aria-current={current ? 'step' : undefined}
       className={cn(
-        'rounded-input px-2 py-2',
+        'rounded-input px-2 py-1.5',
         set.type === 'drop' && 'ml-6',
-        current && 'bg-surface-2 ring-2 ring-accent',
+        current && 'bg-accent-soft',
+        skipped && 'opacity-70',
       )}
     >
       <div className="flex items-center gap-2">
         <span
           aria-hidden="true"
           className={cn(
-            'w-6 shrink-0 text-center font-semibold tabular-nums',
-            set.type === 'warmup' ? 'text-muted' : 'text-fg',
+            'flex size-8 shrink-0 items-center justify-center rounded-pill text-sm font-bold tabular-nums',
+            done
+              ? 'bg-success-soft text-success'
+              : set.type === 'warmup'
+                ? 'bg-surface-2 text-muted'
+                : current
+                  ? 'bg-accent text-on-accent'
+                  : 'bg-surface-2 text-fg',
           )}
         >
           {props.label}
         </span>
-        <span className="w-16 shrink-0 text-sm text-muted tabular-nums">
+        <span className="w-14 shrink-0 text-xs text-muted tabular-nums">
           <span className="sr-only">{t.session.previous}: </span>
           {props.previous
             ? formatSetValues(
@@ -109,10 +117,12 @@ export function SetRow(props: SetRowProps) {
           }
           aria-pressed={done}
           className={cn(
-            'flex size-11 shrink-0 items-center justify-center rounded-input border',
+            'flex size-12 shrink-0 items-center justify-center rounded-pill transition-colors duration-120',
             done
-              ? 'border-success bg-surface text-success'
-              : 'border-line-input bg-surface text-muted hover:bg-surface-2',
+              ? 'bg-success text-on-accent'
+              : current
+                ? 'bg-surface text-fg shadow-card hover:bg-surface-2'
+                : 'bg-surface-2 text-muted hover:text-fg',
           )}
         >
           {skipped ? (
@@ -128,29 +138,33 @@ export function SetRow(props: SetRowProps) {
           }}
           aria-expanded={actionsOpen}
           aria-label={`${t.session.more}, ${props.name}`}
-          className="-mr-1 flex h-11 w-8 shrink-0 items-center justify-center rounded-input text-muted hover:bg-surface"
+          className="-mr-1 flex h-12 w-9 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
         >
           <Ellipsis aria-hidden="true" className="size-5" />
         </button>
       </div>
-      {skipped ? <p className="mt-1 ml-8 text-sm text-muted">{t.session.skipped}</p> : null}
+      {skipped ? <p className="mt-1 ml-10 text-sm text-muted">{t.session.skipped}</p> : null}
       {error ? (
-        <p role="alert" className="mt-2 ml-8 flex flex-wrap items-center gap-2 text-sm text-danger">
+        <p
+          role="alert"
+          className="mt-2 ml-10 flex flex-wrap items-center gap-2 text-sm text-danger"
+        >
           {error}
           {props.onRetry ? (
-            <Button variant="quiet" className="min-h-9 px-2 text-sm" onClick={props.onRetry}>
+            <Button variant="quiet" size="sm" className="px-2" onClick={props.onRetry}>
               {t.session.retry}
             </Button>
           ) : null}
         </p>
       ) : null}
       {(current && weight && !done) || actionsOpen ? (
-        <div className="mt-2 ml-8 flex flex-wrap gap-2">
+        <div className="mt-2 ml-10 flex flex-wrap gap-2">
           {current && weight && !done ? (
             <>
               <Button
                 variant="secondary"
-                className="min-h-10 px-3"
+                size="sm"
+                className="bg-surface shadow-card"
                 onClick={() => {
                   stepValue(-1);
                 }}
@@ -161,7 +175,8 @@ export function SetRow(props: SetRowProps) {
               </Button>
               <Button
                 variant="secondary"
-                className="min-h-10 px-3"
+                size="sm"
+                className="bg-surface shadow-card"
                 onClick={() => {
                   stepValue(1);
                 }}
@@ -175,11 +190,11 @@ export function SetRow(props: SetRowProps) {
           {actionsOpen ? (
             <>
               {!done && !skipped ? (
-                <Button variant="secondary" className="min-h-10 px-3" onClick={props.onSkip}>
+                <Button variant="secondary" size="sm" onClick={props.onSkip}>
                   {t.session.skip}
                 </Button>
               ) : null}
-              <Button variant="danger" className="min-h-10 px-3" onClick={props.onRemove}>
+              <Button variant="danger" size="sm" onClick={props.onRemove}>
                 {t.session.removeSet}
               </Button>
             </>
@@ -194,12 +209,9 @@ export function SetRow(props: SetRowProps) {
 export function SetHeader({ exercise }: { exercise: SessionExercise }) {
   const fields = fieldsFor(exercise.trackingMode, exercise.distanceUnit);
   return (
-    <div
-      aria-hidden="true"
-      className="flex items-center gap-2 px-2 text-xs font-semibold text-muted"
-    >
-      <span className="w-6 shrink-0 text-center">#</span>
-      <span className="w-16 shrink-0">{t.session.previous}</span>
+    <div aria-hidden="true" className="eyebrow mb-1 flex items-center gap-2 px-2 text-muted">
+      <span className="w-8 shrink-0 text-center">#</span>
+      <span className="w-14 shrink-0">{t.session.previous}</span>
       <span
         className={cn(
           'grid min-w-0 flex-1 gap-2',
@@ -212,8 +224,8 @@ export function SetHeader({ exercise }: { exercise: SessionExercise }) {
           </span>
         ))}
       </span>
-      <span className="w-11 shrink-0" />
-      <span className="w-8 shrink-0" />
+      <span className="w-12 shrink-0" />
+      <span className="w-9 shrink-0" />
     </div>
   );
 }

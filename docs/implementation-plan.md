@@ -99,8 +99,11 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.1 | Umgesetzt bis auf die Übungsauswahl. Basisliste vom Produktinhaber durchgesehen (Q-05, `exercise-library.md`), 105 Übungen als gebündelte, mit Zod geprüfte Daten (D-240, D-241); Suche mit Rang, Filter nach Hauptmuskel und Gerät, Bibliotheksansicht `/uebungen` (S-12) über den Bereich Training (D-242). Die Übungsauswahl im Training (ExercisePicker) entsteht mit dem Trainingsplayer in AP 1.4, weil sie erst dort eine Funktion hat |
 | 1.2 | Umgesetzt bis auf „Nur heute trainieren". Die vier Beispielvorlagen sind gebündelte Daten, erzeugt aus `sample-templates.md` und in `pnpm check:docs` geprüft (D-243); Liste `/training/programme` (S-04, nur Beispielvorlagen) und Vorlage `/training/vorlagen/:key` (S-49) mit Etikett „Beispiel", Hinweis, Ablauf und Satzschema. „Nur heute trainieren" kommt mit AP 1.3 und 1.4, weil es eine laufende Einheit und den Player braucht |
 | 1.3 | Umgesetzt (ohne Oberfläche, die mit AP 1.4 folgt). Zod-Modell der Einheit; Anwendungsfälle starten (aus einem Vorlagentag oder frei), Übung und Satz hinzufügen oder entfernen, Werte setzen, erledigt mit Vorschlägen, rückgängig, übersprungen, Pausentimer mit Endzeitpunkt (±, überspringen, Drop-Kette), beenden mit Rückfrage bei offenen Sätzen, verwerfen und wiederherstellen; Invarianten (eine laufende Einheit, abgeschlossene unveränderlich, Drop-Sätze mit Arbeitssatz); Berechnungen (Volumen, bester Satz, 1RM, Dauer, Fortschritt, nächster offener Satz); Projektion `exerciseHistory` beim Abschluss in derselben Transaktion, Vorwerte je Satzplatz (D-244) |
+| D1 | Umgesetzt (18.10.2026): Designsystem 2.0 nach `ux-audit.md` (D-246): Tokens, Tailwind-Theme, Grundkomponenten, alle bestehenden Seiten; Bildschirmfotos hell und dunkel geprüft |
+| D2 | Umgesetzt (18.10.2026): Premium-Player mit Bühne „Jetzt“, Pause als Bühne mit Vollansicht, Ton und Wake Lock (D-247); ersetzt AP 1.5. Gerätebefund zu Ton und Wake Lock steht aus (T-IPH-M1) |
 | 1.4 | Umgesetzt bis auf die Pausenleiste (AP 1.5). Player `/training/einheit/:id` als Vollbild mit Kopf (Titel, Dauer, Fortschritt), Übungsblöcken mit Vorwert und „Erstes Mal", Satzzeilen je Erfassungsart mit Vorschlägen als Platzhalter, erledigt, rückgängig, überspringen, entfernen, ±-Tasten, Satz und Übung hinzufügen (Übungsauswahl S-39), Übung entfernen mit Rückfrage, Aktionsleiste, Beenden mit Rückfrage, Verwerfen mit 10 s Rückgängig; Einstiege „Freies Training starten", „Training fortsetzen" und „… heute trainieren" in der Vorlage; einfache Zusammenfassung (Teil von AP 1.7); Fehlerhinweis am Satz mit „Erneut versuchen" (D-245) |
-| 1.5 bis 1.9 | Offen |
+| 1.5 | Umgesetzt als AP D2 |
+| 1.6 bis 1.9 | Offen |
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -214,5 +217,7 @@ Nächste Schritte: <Liste>
 8. Erledigt: AP 1.2 Beispielvorlagen (ohne „Nur heute trainieren", das mit AP 1.3 und 1.4 folgt).
 9. Erledigt: AP 1.3 Trainings-Domain.
 10. Erledigt: AP 1.4 Trainingsplayer (ohne Pausenleiste).
-11. Ich: AP 1.5 Pausentimer mit Leiste, Ton und Wake Lock, danach AP 1.6 Persistenz und Wiederaufnahme.
-12. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+11. Zur Freigabe: Erweiterungsplan `evolution-plan.md` mit Rekonstruktion „Winter Arc“ (`winter-arc-reconstruction.md`), Referenzanalyse (`reference-analysis.md`) und Rückfragen Q-13 bis Q-18 (Branch `evolution-plan`, Pull Request als Entwurf).
+12. Erledigt: Q-18 beantwortet (ja); Vorgabe des Produktinhabers, ab jetzt alles nach dem Master-Prompt zu gestalten. Darauf Designsystem 2.0 (AP D1) und Premium-Player mit Pause, Ton und Wake Lock (AP D2, ersetzt AP 1.5), siehe `ux-audit.md`, D-246, D-247.
+13. Ich: AP 1.6 Persistenz und Wiederaufnahme, danach AP 1.7 bis 1.9 (Schritt A des Erweiterungsplans), alles im neuen Designsystem.
+14. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

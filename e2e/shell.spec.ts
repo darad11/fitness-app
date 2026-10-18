@@ -30,9 +30,9 @@ test('speichert die Darstellung „Dunkel" über einen Neustart (D-212, AK-SET-0
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Einstellungen' })).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#0f1115');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#0d1016');
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
-    'rgb(15, 17, 21)',
+    'rgb(13, 16, 22)',
   );
   await chooseTheme(page, 'Hell');
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');

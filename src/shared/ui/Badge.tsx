@@ -1,11 +1,30 @@
 import { cn } from '../lib/cn';
 
-/** Kleines Etikett, z. B. „Beispiel" (design-system.md Abschnitt 6). Die Farbe trägt keine Bedeutung. */
-export function Badge({ children, className }: { children: string; className?: string }) {
+export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'onInk';
+
+const TONES: Record<BadgeTone, string> = {
+  neutral: 'bg-surface-2 text-fg',
+  accent: 'bg-accent-soft text-accent-ink',
+  success: 'bg-success-soft text-success',
+  warning: 'bg-warning-soft text-warning',
+  onInk: 'bg-ink-2 text-on-ink',
+};
+
+/** Kleines Etikett als Tonfläche, z. B. „Beispiel" (ux-audit.md Abschnitt 2). Die Farbe trägt keine Bedeutung allein. */
+export function Badge({
+  children,
+  tone = 'neutral',
+  className,
+}: {
+  children: string;
+  tone?: BadgeTone;
+  className?: string;
+}) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-input border border-line-input px-2 py-0.5 text-sm font-medium text-fg',
+        'inline-flex items-center rounded-pill px-2.5 py-0.5 text-xs font-semibold',
+        TONES[tone],
         className,
       )}
     >

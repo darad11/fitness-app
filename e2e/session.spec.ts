@@ -2,6 +2,11 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { chooseTheme, expect, openPage, test } from './fixtures';
 
+const toSec = (text: string | null) => {
+  const [m = 0, s = 0] = (text ?? '0:00').split(':').map(Number);
+  return m * 60 + s;
+};
+
 async function expectNoAxeViolations(page: Page, where: string) {
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -39,6 +44,24 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await expect(page.getByText('1 von 17 Sätzen')).toBeVisible();
   await expectNoAxeViolations(page, 'Player');
 
+  // Pausentimer nach „erledigt" (AK-TRN-10, -11): Restzeit, ±15 s, Vollansicht, Neuladen, Überspringen.
+  const rest = page.getByRole('region', { name: 'Pause' });
+  const timer = rest.getByRole('timer');
+  await expect(timer).toHaveText(/^\d:\d\d$/);
+  const before = toSec(await timer.textContent());
+  await rest.getByRole('button', { name: '15 s weniger' }).click();
+  await expect.poll(async () => toSec(await timer.textContent())).toBeLessThanOrEqual(before - 14);
+  await page.getByRole('button', { name: 'Pause groß anzeigen' }).click();
+  await expect(page.getByRole('button', { name: 'Pause klein anzeigen' })).toBeVisible();
+  await expectNoAxeViolations(page, 'Pause groß');
+  await page.getByRole('button', { name: 'Pause klein anzeigen' }).click();
+  await page.reload();
+  await expect(page.getByRole('region', { name: 'Pause' }).getByRole('timer')).toHaveText(
+    /^\d:\d\d$/,
+  );
+  await page.getByRole('button', { name: 'Pause überspringen' }).click();
+  await expect(page.getByRole('region', { name: 'Pause' })).toHaveCount(0);
+
   // Erledigt übersteht ein sofortiges Neuladen (AK-TRN-16).
   await page.reload();
   await expect(
@@ -71,8 +94,8 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
 
   await expect(page.getByRole('heading', { level: 1, name: 'Zusammenfassung' })).toBeVisible();
   await expect(page.getByText('Erledigte Sätze')).toBeVisible();
-  await expect(page.getByRole('definition').nth(2)).toHaveText('2');
-  await expect(page.getByRole('definition').nth(3)).toHaveText('500 kg');
+  await expect(page.getByRole('definition').nth(1)).toHaveText('2');
+  await expect(page.getByRole('definition').nth(2)).toHaveText('500 kg');
   await expectNoAxeViolations(page, 'Zusammenfassung');
   await page.getByRole('link', { name: 'Fertig' }).click();
   await expect(page.getByRole('button', { name: 'Freies Training starten' })).toBeVisible();

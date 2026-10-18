@@ -8,6 +8,7 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Sitemap und Screen-Ka
 - Diagrammregeln neu nach einer validierten Methode (Abschnitt 8).
 - Navigation im MVP ohne Ernährung (D-211); Sitemap und Screen-Katalog mit Ausbaustufen, Routen, Zuständen und AK-Verweisen.
 - Neu: Unterschiede Touch und Desktop, Texte und Ton.
+- Version 0.4 (Designsystem 2.0, AP D1 und D2): Richtung und Befunde in `ux-audit.md`. Flächen ohne Rahmen mit Schatten `--shadow-card`, Bühne `--ink` mit `--on-ink`, Tonflächen `--accent-soft`, `--success-soft`, `--warning-soft`, `--danger-soft`; Schaltflächen als Pille (48 px); Radien 12/20/28; Vorzeile (`eyebrow`), Display 40 px, Timer 64 px; neue Komponenten `StatTile`, `Meter`, `ProgressRing`, `EmptyState`, `IconButton`; Player mit Bühne „Jetzt“ und Pause als Bühne (`RestStage`). Seitenhintergrund hell `#f3f4f7`, dunkel `#0d1016`.
 - Version 0.3 (M0): Tokens als CSS-Variablen in `src/shared/ui/tokens.css`, Tailwind nutzt nur diese (Standardpaletten abgeschaltet). Der automatische Kontrasttest fand zwei Grenzfälle; angepasst wurden `--border-input` hell und `--meter-track` dunkel (D-236). Grundfassungen von S-01 und S-34 in M0. Nachtrag: Ladezustand mit `Skeleton` und `aria-busy` (D-239).
 
 ## 1. Designprinzipien
@@ -42,6 +43,10 @@ Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,
 | `--success` | `#13794D` | `#3DBE86` | Erfolgstext, „erledigt", Ziel erreicht | 5,4 / 7,4 |
 | `--warning` | `#976200` | `#E0A943` | Hinweise, „geschätzt", Speicherwarnung | 5,2 / 8,2 |
 | `--danger` | `#C53030` | `#F26D6D` | Löschen, Fehler | 5,5 / 6,0 |
+| `--accent-soft`, `--success-soft`, `--warning-soft`, `--danger-soft` | `#e6edf9`, `#e2f3ea`, `#fbf0da`, `#fbe7e7` | `#15263f`, `#10302a`, `#33290f`, `#3a1c1f` | Tonflächen für Chips, Etiketten, Hinweise, aktiven Tab; Text darauf in der Vollfarbe | je ≥ 4,5 (Test) |
+| `--ink`, `--ink-2` | `#151b2b`, `#212a3f` | `#1a2030`, `#242c40` | Bühne: eine Karte je Seite für die wichtigste Information (laufendes Training, „Jetzt“, Pause, Abschluss); `--ink-2` für Kacheln auf der Bühne | – |
+| `--on-ink`, `--on-ink-muted` | `#f5f7fb`, `#aab3c5` | `#f1f3f8`, `#aab3c5` | Text auf der Bühne | ≥ 4,5 auf `--ink` und `--ink-2` (Test) |
+| `--shadow-card`, `--shadow-float` | weich, 4 bis 6 % | 25 bis 45 % | Karten; schwebende Elemente (Sheet, Toast, Menü) | – |
 
 Statusfarben erscheinen nie allein: immer mit Symbol und Text.
 
@@ -79,15 +84,15 @@ Tokens als CSS-Variablen auf `:root`; Tailwind liest sie über `@theme`. Der dun
 ## 3. Typografie
 
 - Systemschrift: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` (San Francisco auf Apple-Geräten).
-- Skala: 12 (Hilfstext), 14 (Sekundär), 16 (Fließtext, Mindestgröße für Eingabefelder, damit iOS nicht zoomt), 18 (Listentitel), 22 (Abschnitt), 28 (Seitentitel), 34 (Kennzahl), 48 bis 56 (Timer, Leitzahl).
+- Skala: 12 (Hilfstext und Vorzeile `eyebrow`: Versalien, Laufweite 0,08 em, 600), 14 (Sekundär), 16 (Fließtext, Mindestgröße für Eingabefelder, damit iOS nicht zoomt), 18 (Listentitel), 22 (Abschnitt), 28 (Kennzahl), 40 (Display: Seitentitel, Laufweite −0,02 em, 700), 64 (Timer, Laufweite −0,02 em, 700).
 - Ziffern: Tabellenziffern (`tabular-nums`) in Satzzeilen, Tabellen, Achsen und im Timer, damit sich wechselnde Ziffern nicht verschieben; proportionale Ziffern für große, stehende Kennzahlen auf dem Dashboard.
 - Zeilenhöhe 1,4 für Text, 1,1 für große Zahlen. Gewicht 600 für Kennzahlen und Titel, 400 für Text.
 
 ## 4. Abstände, Radien, Schatten, Bewegung
 
 - 4-pt-Raster: 4, 8, 12, 16, 24, 32, 48. Seitenrand mobil 16, Tablet 24, Desktop 32.
-- Radien 8 (Eingaben, Chips), 12 (Karten), 20 (Sheets).
-- Schatten nur für schwebende Elemente (Sheet, Toast, Menü), eine Stufe.
+- Radien 12 (Eingaben), 20 (Karten), 28 (Sheets), Pille (Schaltflächen, Chips, Etiketten).
+- Schatten: Karten eine weiche Stufe (`--shadow-card`) statt Rahmen; schwebende Elemente (Sheet, Toast, Menü) eine kräftigere (`--shadow-float`).
 - Bewegung: 120 ms für Zustandswechsel, 240 ms für Sheets; bei `prefers-reduced-motion` nur Überblendungen.
 - Sichere Bereiche: `env(safe-area-inset-*)` für Tab-Leiste, Aktionsleiste des Trainings und Sheets.
 
@@ -95,11 +100,11 @@ Tokens als CSS-Variablen auf `:root`; Tailwind liest sie über `@theme`. Der dun
 
 | Ebene | Komponenten |
 |---|---|
-| Basis | Button (primär, sekundär, leise, destruktiv), IconButton, Input, NumberField (Dezimalkomma, ±-Schritte), DurationField, Select, SegmentedControl, Switch, Checkbox, Tag, Badge („Beispiel", „Vorschau"), Tooltip, Skeleton |
+| Basis | Button (primär, sekundär, leise, destruktiv, auf der Bühne), IconButton, Input, NumberField (Dezimalkomma, ±-Schritte), DurationField, Select, SegmentedControl, Switch, Checkbox, Tag, Badge („Beispiel", „Vorschau"), Tooltip, Skeleton |
 | Struktur | Card, Section mit Titel und Aktion, List und ListItem, Table (Desktop und Tabellenansicht der Diagramme), Sheet (mobil, unten) und Dialog (Desktop), Tabs, Accordion, Toast mit „Rückgängig", Banner (global) |
 | Navigation | TabBar (mobil), Sidebar (Desktop), TopBar mit Titel und Aktionen, Back-Navigation |
 | Training | SetRow (Typ, Vorwert, Gewicht, Wiederholungen oder Zeit, Status), ExerciseBlock, RestTimerBar und RestTimerFull, SessionHeader (Dauer, Fortschritt), SessionBanner („Training läuft"), ExercisePicker, ReplaceSheet, ProgramWeekView, DayEditor, SetSchemeEditor |
-| Fortschritt | StatTile, Meter, Sparkline, WeightChart, ExerciseProgressChart, ChartTable |
+| Fortschritt | StatTile (mit Vorzeile, auch auf der Bühne), Meter, ProgressRing, Sparkline, WeightChart, ExerciseProgressChart, ChartTable |
 | System | EmptyState, ErrorState, RecoveryScreen, UpdateBanner, InstallGuide, PreviewBadge, StorageStatus, ImportWizard |
 
 Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, gedrückt, deaktiviert, Laden, Fehler.
@@ -260,8 +265,10 @@ Grundfassungen aus M0: S-01 zeigt Datum, die Karte „Diese Version“ und die K
 - **Übungsblöcke:** Name, Hauptmuskelgruppe, Notiz; darunter Satzzeilen. Jede Zeile zeigt Typ (A = Aufwärmen, Zahl = Arbeitssatz, D = Drop-Satz, eingerückt), Vorwert („60 × 8"), Felder für Gewicht und Wiederholungen (bzw. Zeit mit Start-Knopf) und den Knopf „erledigt". Erledigte Sätze erscheinen in Erfolgsfarbe mit Häkchen.
 - **Freie Reihenfolge:** Jede Zeile ist jederzeit bedienbar; die App hebt den nächsten offenen Satz hervor, erzwingt ihn aber nicht.
 - **Vorschläge:** Platzhalter zeigen Vorwert oder festen Zielwert; „erledigt" übernimmt sichtbare Vorschläge (D-225).
-- **Pausenleiste:** Erscheint nach „erledigt" unten über der Aktionsleiste: Restzeit groß, nächster Satz, ±15 s, Überspringen; aufklappbar zur Vollansicht.
-- **Aktionsleiste:** „Satz erledigt" für den hervorgehobenen Satz, „Übung hinzufügen", „Beenden".
+- **Bühne „Jetzt":** Unter dem Kopf eine Karte in `--ink` mit der aktuellen Übung, Satz x von n, Ziel, Vorwert und der nächsten Übung; nach dem letzten Satz „Alle Sätze erledigt".
+- **Pause als Bühne (`RestStage`):** Erscheint nach „erledigt" im klebenden Kopf und ersetzt „Jetzt": Restzeit 40 px, nächster Satz mit Ziel und Vorwert, −15 s, +15 s, Überspringen; Pfeil öffnet die Vollansicht mit Timer 64 px. Überziehung „+0:42" färbt die Bühne in Akzent (AK-TRN-12).
+- **Kopf:** Vorzeile (Programm und Woche oder „Freies Training"), Titel, Fortschrittsbalken mit Dauer, „x von n Sätzen", Schaltfläche „Beenden".
+- **Aktionsleiste:** „Satz erledigt" (groß) für den hervorgehobenen Satz und „Übung hinzufügen"; „Beenden" steht im Kopf, „Training verwerfen" am Ende der Liste.
 - **Speicherung:** Ohne Speichern-Knopf; jede Änderung wird sofort gesichert. Bei einem Fehler erscheint ein Hinweis direkt am betroffenen Satz.
 
 ## 12. Texte und Ton

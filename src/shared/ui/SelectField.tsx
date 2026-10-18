@@ -39,7 +39,7 @@ export function SelectField<T extends string>({
           const next = options.find((option) => option.value === event.target.value);
           if (next) onChange(next.value);
         }}
-        className="min-h-11 w-full rounded-input border border-line-input bg-surface px-3 text-base text-fg disabled:opacity-50"
+        className="min-h-12 w-full rounded-input bg-surface-2 px-4 text-base font-medium text-fg disabled:opacity-50"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

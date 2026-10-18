@@ -114,7 +114,7 @@ describe('ThemeSync', () => {
           removeEventListener: () => undefined,
         }) as unknown as MediaQueryList,
     );
-    document.head.innerHTML = '<meta name="theme-color" content="#fafaf9" />';
+    document.head.innerHTML = '<meta name="theme-color" content="#f3f4f7" />';
     document.documentElement.setAttribute('data-theme', 'light');
     await saveSettings(rt, { theme: 'system' });
     renderPage(<ThemeSync />);
@@ -126,7 +126,7 @@ describe('ThemeSync', () => {
       listener?.();
     });
     expect(document.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-      '#0f1115',
+      '#0d1016',
     );
   });
 });

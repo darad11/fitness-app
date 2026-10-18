@@ -3,20 +3,33 @@ import { act, cleanup, render, screen, waitFor, within } from '@testing-library/
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { loadCoreExercises } from '@/modules/exercises';
+import { playRestEndSound } from '@/shared/lib/sound';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { getSession } from '../../data/sessionRepository';
 import { loadSampleTemplate } from '../../data/sampleTemplates';
 import { trainingRoutes } from '../../routes';
 import {
+  adjustRest,
   completeSet,
   finishSession,
   planFromTemplateDay,
+  setValues,
   startSession,
 } from '../../service/sessionService';
 import { SAVE_DELAY_MS } from './ValueInput';
+
+vi.mock('@/shared/lib/sound', () => ({
+  playRestEndSound: vi.fn(() => true),
+  unlockSound: vi.fn(),
+}));
+
+const toSec = (text: string | null) => {
+  const [m = 0, s = 0] = (text ?? '0:00').replace('+', '').split(':').map(Number);
+  return m * 60 + s;
+};
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -24,6 +37,7 @@ beforeEach(async () => {
 });
 afterEach(async () => {
   cleanup();
+  vi.mocked(playRestEndSound).mockClear();
   await rt.db.delete();
 });
 
@@ -102,6 +116,90 @@ describe('Trainingsplayer (S-07)', () => {
       await screen.findByRole('button', { name: `Erledigt zurücknehmen, ${warmup}` }),
     ).toBeInTheDocument();
     expect(screen.getByText(/1 von 17 Sätzen/)).toBeInTheDocument();
+  });
+
+  it('zeigt die Pause mit Restzeit, nächstem Satz, ±15 s, Vollansicht und Überspringen (AK-TRN-10, -11)', async () => {
+    const user = userEvent.setup();
+    const session = await startTemplate();
+    renderAt(`/training/einheit/${session.id}`);
+    const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1';
+    await user.type(await screen.findByLabelText(`Gewicht in kg, ${warmup}`), '40');
+    await user.click(screen.getByRole('button', { name: `Satz erledigt, ${warmup}` }));
+    const stage = await screen.findByRole('region', { name: 'Pause' });
+    const timer = within(stage).getByRole('timer');
+    expect(timer).toHaveTextContent(/^\d:\d\d$/);
+    const before = toSec(timer.textContent);
+    expect(before).toBeGreaterThan(30);
+    expect(stage).toHaveTextContent(
+      'Nächster Satz: Kniebeuge mit Langhantel, Aufwärmsatz 2 · Ziel 5',
+    );
+    await user.click(within(stage).getByRole('button', { name: '15 s weniger' }));
+    await waitFor(() => {
+      expect(toSec(timer.textContent)).toBeLessThanOrEqual(before - 14);
+    });
+    await user.click(within(stage).getByRole('button', { name: '15 s mehr' }));
+    await waitFor(() => {
+      expect(toSec(timer.textContent)).toBeGreaterThanOrEqual(before - 2);
+    });
+    // Während der Pause ist die Bühne „Jetzt" ausgeblendet; der nächste Satz bleibt hervorgehoben.
+    expect(screen.queryByRole('region', { name: 'Jetzt' })).toBeNull();
+    expect(
+      screen.getByRole('listitem', { name: 'Kniebeuge mit Langhantel, Aufwärmsatz 2' }),
+    ).toHaveAttribute('aria-current', 'step');
+
+    await user.click(screen.getByRole('button', { name: 'Pause groß anzeigen' }));
+    const collapse = await screen.findByRole('button', { name: 'Pause klein anzeigen' });
+    expect(screen.getAllByRole('timer')).toHaveLength(1);
+    await user.click(collapse);
+    expect(screen.getByRole('button', { name: 'Pause groß anzeigen' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Pause überspringen' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('region', { name: 'Pause' })).toBeNull();
+    });
+    expect(screen.getByRole('region', { name: 'Jetzt' })).toHaveTextContent(
+      'Kniebeuge mit Langhantel',
+    );
+    expect(playRestEndSound).not.toHaveBeenCalled();
+  });
+
+  it('zeigt nach einer Rückkehr die Überziehung ohne nachträglichen Ton (AK-TRN-11, -12)', async () => {
+    const session = await startTemplate();
+    const setId = session.exercises[0]!.sets[0]!.id;
+    await setValues(rt, session.id, setId, { weightKg: 40 });
+    await completeSet(rt, session.id, setId, {
+      restDefaultSec: 90,
+      autoStartRest: true,
+      now: () => new Date(Date.now() - 200_000),
+    });
+    renderAt(`/training/einheit/${session.id}`);
+    const stage = await screen.findByRole('region', { name: 'Pause' });
+    expect(stage).toHaveTextContent('Pause vorbei');
+    expect(within(stage).getByRole('timer')).toHaveTextContent(/^\+\d:\d\d$/);
+    expect(within(stage).getByRole('timer')).toHaveAccessibleName(/^Pause vorbei seit /);
+    await act(() => new Promise((resolve) => setTimeout(resolve, 600)));
+    expect(playRestEndSound).not.toHaveBeenCalled();
+  });
+
+  it('spielt den Ton, wenn das Pausenende während der Anzeige erreicht wird (AK-TRN-12)', async () => {
+    const session = await startTemplate();
+    const setId = session.exercises[0]!.sets[0]!.id;
+    await setValues(rt, session.id, setId, { weightKg: 40 });
+    const completed = await completeSet(rt, session.id, setId, {
+      restDefaultSec: 90,
+      autoStartRest: true,
+    });
+    await adjustRest(rt, session.id, -(completed.restTimer!.durationSec - 1));
+    renderAt(`/training/einheit/${session.id}`);
+    const stage = await screen.findByRole('region', { name: 'Pause' });
+    expect(within(stage).getByRole('timer')).toHaveTextContent(/^0:0[12]$/);
+    await waitFor(
+      () => {
+        expect(playRestEndSound).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 3000 },
+    );
+    expect(stage).toHaveTextContent('Pause vorbei');
   });
 
   it('überspringt und entfernt Sätze, fügt Sätze hinzu und entfernt Übungen mit Rückfrage', async () => {

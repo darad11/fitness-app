@@ -1,11 +1,11 @@
-import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, RefreshCw } from 'lucide-react';
+import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, Play, RefreshCw } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { currentPlatform } from '@/shared/lib/platform';
 import { usePwaState, type PwaState } from '@/shared/pwa/state';
-import { Card, PageHeader, StatusList, type StatusItem } from '@/shared/ui';
+import { ButtonLink, Card, PageHeader, StatusList, type StatusItem } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 
 function offlineStatus(pwa: PwaState): StatusItem {
@@ -19,8 +19,8 @@ function offlineStatus(pwa: PwaState): StatusItem {
 }
 
 /**
- * „Heute" in M0: Datum, Inhalt dieser Version und echter Status (Offline-Bereitschaft,
- * Startart). Trainings-, Ziel- und Gewichtskarten folgen mit M1 und M3 (S-01).
+ * „Heute" (S-01): Bühne mit dem Einstieg ins Training, darunter Inhalt dieser Version und
+ * echter Status. Programmkarte, letztes Training und Wochenziel folgen mit AP 1.7 und M3.
  */
 export function TodayPage() {
   const formatters = useFormatters();
@@ -53,13 +53,21 @@ export function TodayPage() {
 
   return (
     <>
-      <PageHeader title={t.today.title} subtitle={formatters.weekdayDayMonth(today)} />
+      <PageHeader eyebrow={formatters.weekdayDayMonth(today)} title={t.today.title} />
       <div className="grid gap-4 md:grid-cols-2">
-        <Card title={t.today.versionTitle}>
-          <p>{t.today.versionText}</p>
+        <Card tone="ink" eyebrow={t.today.heroEyebrow} className="md:col-span-2">
+          <h2 className="text-2xl font-bold">{t.today.heroTitle}</h2>
+          <p className="mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
+          <ButtonLink to="/training" variant="onInk" className="mt-5">
+            <Play aria-hidden="true" className="size-5" />
+            {t.today.startLink}
+          </ButtonLink>
         </Card>
         <Card title={t.today.statusTitle}>
           <StatusList items={items} />
+        </Card>
+        <Card title={t.today.versionTitle}>
+          <p className="text-muted">{t.today.versionText}</p>
         </Card>
       </div>
     </>

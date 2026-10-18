@@ -23,8 +23,18 @@ import { useStartSession } from './useStartSession';
  * Programme mit nächstem Tag und Verlauf folgen mit den weiteren Arbeitspaketen.
  */
 const ENTRIES: readonly LinkListItem[] = [
-  { to: '/training/programme', label: t.training.programs, icon: ClipboardList },
-  { to: '/uebungen', label: t.training.exercises, icon: ListChecks },
+  {
+    to: '/training/programme',
+    label: t.training.programs,
+    icon: ClipboardList,
+    description: t.training.programsHint,
+  },
+  {
+    to: '/uebungen',
+    label: t.training.exercises,
+    icon: ListChecks,
+    description: t.training.exercisesHint,
+  },
 ];
 
 export function TrainingPage() {
@@ -40,29 +50,36 @@ export function TrainingPage() {
   return (
     <>
       <PageHeader title={t.training.title} />
-      <div aria-busy={active === undefined} className="mb-6">
+      <div aria-busy={active === undefined} className="mb-4">
         {active === undefined ? (
-          <Skeleton className="h-28" />
+          <Skeleton className="h-40" />
         ) : active ? (
-          <Card title={t.training.running}>
-            <p className="mb-4 text-muted">
-              {t.training.runningSince(active.title, fmt.time(new Date(active.startedAt)))}
+          <Card tone="ink" eyebrow={t.training.running}>
+            <h2 className="text-2xl font-bold">{active.title}</h2>
+            <p className="mt-1 text-on-ink-muted">
+              {t.training.since(fmt.time(new Date(active.startedAt)))}
             </p>
-            <ButtonLink to={`/training/einheit/${active.id}`}>
+            <ButtonLink to={`/training/einheit/${active.id}`} variant="onInk" className="mt-5">
               <Play aria-hidden="true" className="size-5" />
               {t.training.resume}
             </ButtonLink>
           </Card>
         ) : (
-          <Button
-            disabled={busy}
-            onClick={() => {
-              void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
-            }}
-          >
-            <Play aria-hidden="true" className="size-5" />
-            {t.training.startFree}
-          </Button>
+          <Card tone="ink" eyebrow={t.training.freeEyebrow}>
+            <h2 className="text-2xl font-bold">{t.training.freeTitle}</h2>
+            <p className="mt-1 max-w-md text-on-ink-muted">{t.training.freeHint}</p>
+            <Button
+              variant="onInk"
+              className="mt-5"
+              disabled={busy}
+              onClick={() => {
+                void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
+              }}
+            >
+              <Play aria-hidden="true" className="size-5" />
+              {t.training.startFree}
+            </Button>
+          </Card>
         )}
         {error ? (
           <p role="alert" className="mt-3 text-danger">
@@ -80,7 +97,8 @@ export function TrainingPage() {
           }}
           action={
             <Button
-              variant="quiet"
+              variant="onInk"
+              size="sm"
               onClick={() => {
                 setUndoVisible(false);
                 restoreSession(rt, discarded).then(

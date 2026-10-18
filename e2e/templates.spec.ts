@@ -16,7 +16,7 @@ test('Beispielvorlagen: Liste und Vorlage mit Etikett und Hinweis (AK-PRG-06, TP
   await expect(page.getByText('Beispiel', { exact: true })).toBeVisible();
   await expect(page.getByText(/keine individuelle Trainingsempfehlung/)).toBeVisible();
   await expect(page.getByRole('region', { name: 'Pull' }).getByRole('listitem').first()).toHaveText(
-    /^Klimmzüge1 Aufwärmsatz, 4 Sätze · 6–10 Wdh\. · Pause 2:30 min$/,
+    /^1Klimmzüge1 Aufwärmsatz, 4 Sätze · 6–10 Wdh\. · Pause 2:30 min$/,
   );
 
   await page.getByRole('link', { name: 'Programme und Vorlagen' }).click();

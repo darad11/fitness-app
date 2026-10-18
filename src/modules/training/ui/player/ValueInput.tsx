@@ -106,7 +106,7 @@ export function ValueInput({
         if (event.key === 'Enter') event.currentTarget.blur();
       }}
       className={cn(
-        'h-11 w-full min-w-0 rounded-input border border-line-input bg-surface px-2 text-center text-base text-fg tabular-nums placeholder:text-muted disabled:opacity-60',
+        'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-2 text-center text-lg font-semibold text-fg tabular-nums placeholder:font-normal placeholder:text-muted disabled:opacity-60',
       )}
     />
   );

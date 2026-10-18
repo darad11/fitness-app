@@ -12,21 +12,21 @@ export function ProgramsPage() {
     <>
       <PageHeader title={t.programs.title} back={{ to: '/training', label: t.training.title }} />
       <section aria-labelledby="beispielvorlagen">
-        <h2 id="beispielvorlagen" className="text-lg font-semibold">
+        <h2 id="beispielvorlagen" className="eyebrow text-muted">
           {t.programs.samplesTitle}
         </h2>
-        <p className="mt-1 mb-3 text-muted">{t.programs.samplesIntro}</p>
+        <p className="mt-2 mb-4 max-w-xl text-muted">{t.programs.samplesIntro}</p>
         <ul className="grid gap-3 md:grid-cols-2">
           {templates.map((template) => (
             <li key={template.id}>
               <Link
                 to={`/training/vorlagen/${template.key}`}
-                className="flex min-h-12 items-center gap-3 rounded-card border border-line bg-surface p-4 hover:bg-surface-2"
+                className="flex min-h-14 items-center gap-3 rounded-card bg-surface p-5 shadow-card hover:bg-surface-2"
               >
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="text-lg font-semibold">{template.name}</span>
-                    <Badge>{t.programs.sampleBadge}</Badge>
+                    <Badge tone="accent">{t.programs.sampleBadge}</Badge>
                   </span>
                   <span className="mt-1 block text-sm text-muted">
                     {describeTemplate(template)}

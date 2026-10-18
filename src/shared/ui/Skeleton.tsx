@@ -5,5 +5,5 @@ import { cn } from '../lib/cn';
  * Ohne Animation und ohne Text; den Ladezustand meldet der umgebende Bereich mit `aria-busy`.
  */
 export function Skeleton({ className }: { className?: string }) {
-  return <div aria-hidden="true" className={cn('rounded-input bg-surface-2', className)} />;
+  return <div aria-hidden="true" className={cn('rounded-card bg-surface-2', className)} />;
 }

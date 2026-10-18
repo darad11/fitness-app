@@ -292,3 +292,19 @@ Während der Arbeit gefunden und behoben (vier Tests zunächst rot): „Erledigt
 Neue E2E-Abläufe in `e2e/session.spec.ts`: Training aus einem Vorlagentag starten; „erledigt" ohne Gewicht verlangt eine Eingabe, die Wiederholungen kommen aus dem festen Ziel; erledigter Satz übersteht ein sofortiges Neuladen; eine Eingabe mit Komma ist nach 0,6 s gespeichert und übersteht ein Neuladen (AK-TRN-16); Rückgängig behält die Werte; Beenden mit Rückfrage bei 15 offenen Sätzen; Zusammenfassung mit 2 Sätzen und 500 kg Volumen; beim nächsten Mal Vorwert als Platzhalter und „Letztes Mal". Zweiter Ablauf im dunklen Modus: freies Training, Übung über die Suche auswählen (Entlastung × Wiederholungen), verwerfen, „Rückgängig", zweiter Start bietet „Training fortsetzen" an. axe ohne Verstöße im Player (hell und dunkel), im Dialog und in der Zusammenfassung. Komponententests decken Überspringen, Entfernen, Satz hinzufügen, Übung entfernen mit und ohne Rückfrage, ungültige Eingabe, ±-Taste und unbekannte Einheiten ab.
 
 Während der Arbeit gefunden und behoben: Ohne Spaltenköpfe war im Bildschirmfoto nicht erkennbar, welches Feld kg und welches Wiederholungen ist; jetzt hat jede Übung eine Kopfzeile. Die Übungsauswahl, die Bibliotheksseite und die Suche lagen über die Schnittstelle des Moduls im Startbündel (183,4 KB); die Auswahl wird jetzt erst beim Öffnen geladen. jsdom kennt `showModal` nicht; die Testumgebung hat dafür einen kleinen Ersatz.
+
+### M1 · AP D1 Designsystem 2.0 und AP D2 Premium-Player · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 34 Testdateien, 361 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,43 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 184,3 KB gzip (vorher 181,9 KB) |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Neue Nachweise: Farbtokens (`tokens.test.ts`) prüfen zusätzlich Tonflächen mit ihrem Text, Bühne mit `--on-ink` und `--on-ink-muted` sowie Akzent auf der Bühne (DS-1). Unit: Restzeit und Überziehung (`format.test.ts`), Ton mit gemocktem `AudioContext` und Audio-Session (`sound.test.ts`), Wake Lock mit gemocktem `navigator.wakeLock` inklusive Neuanforderung bei Rückkehr, Ablehnung und spätem Eintreffen nach dem Beenden (`wakeLock.test.ts`). Komponenten (`player-ui.test.tsx`): Pause mit Restzeit, nächstem Satz und Ziel, −15 s und +15 s, Vollansicht und zurück, Überspringen; Überziehung nach Rückkehr ohne nachträglichen Ton; Ton genau einmal, wenn das Pausenende während der Anzeige erreicht wird (AK-TRN-10 bis AK-TRN-12). E2E (`session.spec.ts`): nach „erledigt“ Restzeit sichtbar, −15 s wirkt, Vollansicht ohne axe-Verstöße, nach Neuladen weiter die Restzeit, Überspringen entfernt die Pause (AK-TRN-11, DS-6).
+
+Bildschirmfotos aller Seiten hell und dunkel (iPhone-Breite) wurden vor und nach der Umstellung aufgenommen und gegen `ux-audit.md` geprüft (DS-2, DS-4, DS-5, DS-7); sie liegen nicht im Repository.
+
+Während der Arbeit gefunden und behoben: Die Vollansicht der Pause lag falsch, weil der Weichzeichner der klebenden Kopfzeile den Bezugsrahmen für `position: fixed` bildet; sie wird jetzt als Portal gerendert. axe meldete `label-content-name-mismatch` für Listeneinträge mit `aria-labelledby` und für den Aufklapp-Knopf der Pause; die Beschreibung läuft jetzt über `aria-describedby`, der Knopf ist ein Symbol-Knopf. Drei Tests brauchten neue Erwartungen (nummerierte Übungen in der Vorlage, Reihenfolge der Kennzahlen in der Zusammenfassung, dunkler Seitenhintergrund). Nicht geprüft: Ton und Wake Lock auf dem iPhone (Gerätetest T-IPH-M1, Schritte 6 und 7).
+

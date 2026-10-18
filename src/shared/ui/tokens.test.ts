@@ -76,6 +76,14 @@ describe('Farbtokens', () => {
       ['chart-axis', 'surface'],
       ['chart-total', 'surface'],
       ['bg', 'warning'],
+      ['accent-ink', 'accent-soft'],
+      ['success', 'success-soft'],
+      ['warning', 'warning-soft'],
+      ['danger', 'danger-soft'],
+      ['on-ink', 'ink'],
+      ['on-ink', 'ink-2'],
+      ['on-ink-muted', 'ink'],
+      ['on-ink-muted', 'ink-2'],
     ])('Text --%s auf --%s erreicht 4,5:1', (fg, bg) => {
       expect(contrast(token(tokens, fg), token(tokens, bg))).toBeGreaterThanOrEqual(4.5);
     });
@@ -87,6 +95,8 @@ describe('Farbtokens', () => {
       ['chart-point', 'surface'],
       ['data-1', 'surface'],
       ['accent', 'meter-track'],
+      ['accent', 'ink'],
+      ['on-ink', 'ink'],
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(contrast(token(tokens, fg), token(tokens, bg))).toBeGreaterThanOrEqual(3);
     });

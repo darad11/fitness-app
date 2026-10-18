@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react';
+import { Info, Play } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 import { t } from '@/shared/i18n/de';
 import type { Exercise } from '@/modules/exercises';
@@ -30,26 +30,52 @@ export function SampleTemplatePage() {
   return (
     <>
       <PageHeader
+        eyebrow={t.programs.sampleEyebrow}
         title={template.name}
         subtitle={describeTemplate(template)}
         back={{ to: '/training/programme', label: t.programs.title }}
       />
-      <div className="mb-6 flex items-start gap-3 rounded-card border border-line bg-surface p-4">
-        <Info aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-accent-ink" />
-        <div>
-          <Badge className="mb-2">{t.programs.sampleBadge}</Badge>
-          <p>{t.programs.sampleHint}</p>
-        </div>
-      </div>
       {error ? (
-        <div role="alert" className="mb-4 rounded-card border border-line bg-surface p-4">
+        <div role="alert" className="mb-4 rounded-card bg-danger-soft p-4 text-danger">
           <p className="mb-3">{error.message}</p>
           {error.activeId ? (
-            <ButtonLink to={`/training/einheit/${error.activeId}`}>{t.training.resume}</ButtonLink>
+            <ButtonLink to={`/training/einheit/${error.activeId}`} size="sm">
+              {t.training.resume}
+            </ButtonLink>
           ) : null}
         </div>
       ) : null}
       <div className="grid gap-4">
+        {days.map((day, index) => (
+          <Card key={day.id} eyebrow={t.programs.dayEyebrow(index + 1)} title={day.name}>
+            <ol className="divide-y divide-line">
+              {day.exercises.map((exercise, position) => (
+                <li key={exercise.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
+                  <span className="w-6 shrink-0 pt-0.5 text-sm font-semibold text-muted tabular-nums">
+                    {position + 1}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-medium">{exercise.nameSnapshot}</span>
+                    <span className="block text-sm text-muted">
+                      {describeSets(exercise, perSide.has(exercise.exerciseId))}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <Button
+              variant="secondary"
+              className="mt-5 w-full md:w-auto"
+              disabled={busy}
+              onClick={() => {
+                startDay(day.id);
+              }}
+            >
+              <Play aria-hidden="true" className="size-5" />
+              {t.training.startDay(day.name)}
+            </Button>
+          </Card>
+        ))}
         <Card title={t.programs.schedule}>
           <ul className="space-y-1">
             {template.weeks.map((week) => (
@@ -63,33 +89,15 @@ export function SampleTemplatePage() {
           ) : null}
           <p className="mt-2 text-sm text-muted">{t.training.startDayHint}</p>
         </Card>
-        {days.map((day) => (
-          <Card key={day.id} title={day.name}>
-            <p className="-mt-2 mb-3 text-sm text-muted">
-              {t.programs.exerciseCount(day.exercises.length)}
-            </p>
-            <ol className="divide-y divide-line">
-              {day.exercises.map((exercise) => (
-                <li key={exercise.id} className="py-3 first:pt-0 last:pb-0">
-                  <p className="font-medium">{exercise.nameSnapshot}</p>
-                  <p className="text-sm text-muted">
-                    {describeSets(exercise, perSide.has(exercise.exerciseId))}
-                  </p>
-                </li>
-              ))}
-            </ol>
-            <Button
-              variant="secondary"
-              className="mt-4 w-full md:w-auto"
-              disabled={busy}
-              onClick={() => {
-                startDay(day.id);
-              }}
-            >
-              {t.training.startDay(day.name)}
-            </Button>
-          </Card>
-        ))}
+        <div className="flex items-start gap-3 rounded-card bg-surface-2 p-4">
+          <Info aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-accent-ink" />
+          <div>
+            <Badge tone="accent" className="mb-2">
+              {t.programs.sampleBadge}
+            </Badge>
+            <p className="text-sm text-muted">{t.programs.sampleHint}</p>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 # Übergabe M1 · Training auf dem iPhone
 
-Stand: 18.10.2026, 14:40 UTC · Für die nächste Claude-Sitzung (D-238) · Verbindlich bleiben `CLAUDE.md`, `implementation-plan.md` und `decisions.md`; diese Datei fasst nur den Arbeitsstand zusammen.
+Stand: 18.10.2026, 16:30 UTC · Für die nächste Claude-Sitzung (D-238) · Verbindlich bleiben `CLAUDE.md`, `implementation-plan.md` und `decisions.md`; diese Datei fasst nur den Arbeitsstand zusammen.
 
 ## 1. Wo alles liegt
 
@@ -8,7 +8,7 @@ Stand: 18.10.2026, 14:40 UTC · Für die nächste Claude-Sitzung (D-238) · Verb
 |---|---|
 | Branch | `m1-training` |
 | Pull Request | darad11/fitness-app#5 (Entwurf, begleitet ganz M1; gemergt wird vom Produktinhaber) |
-| Letzter Commit mit grüner CI | `4c183b8` (AP 1.4): Lint, Typen, Unit-Tests, Dokumente, Build, E2E Chromium und WebKit bestanden |
+| Letzter Commit mit grüner CI | `6f2a093` (AP 1.4 und Übergabe); AP D1 und D2 siehe `testing.md` Abschnitt 10 |
 | Vorschau | https://fitness-app-git-m1-training-dr-b21f.vercel.app (Testdaten, getrennt von `main`) |
 | Stand je Arbeitspaket | `implementation-plan.md`, Abschnitt M1 („Stand M1") und Abschnitt 9 |
 | Testergebnisse | `testing.md` Abschnitt 10 (je AP ein Unterabschnitt) |
@@ -24,26 +24,15 @@ Stand: 18.10.2026, 14:40 UTC · Für die nächste Claude-Sitzung (D-238) · Verb
 | 1.3 | Trainings-Domain: Modell, Anwendungsfälle, Berechnungen, Projektion `exerciseHistory` |
 | 1.4 | Trainingsplayer `/training/einheit/:id`, Übungsauswahl, Einstiege, Grundfassung der Zusammenfassung, `Dialog`, `Toast`, Token `--scrim` |
 
-## 3. Angefangen, nicht committet: AP 1.5 Pausentimer
+## 3. Neu seit der Übergabe: Erweiterungsplan, Designsystem 2.0, Premium-Player
 
-Diese Änderungen liegen auf dem Sicherungsbranch `m1-training-wip-ap15` (ein Commit auf `m1-training`), nicht im Pull Request, weil sie ungetestet und noch nicht lint-sauber sind und die CI sonst rot würde. Übernehmen mit `git fetch origin m1-training-wip-ap15 && git cherry-pick origin/m1-training-wip-ap15`, danach den Branch löschen.
-
-| Datei | Inhalt | Zustand |
-|---|---|---|
-| `src/shared/i18n/de.ts` | Texte `rest.*` für die Pausenleiste | Fertig |
-| `src/modules/training/calc/format.ts` | `restRemainingSec`, `formatRestRemaining` („1:23", „+0:42") | Fertig, ohne Tests |
-| `src/shared/lib/sound.ts` | Ton über Web Audio, `unlockSound`, `setAmbientAudioSession`, `playRestEndSound` | Lint sauber, ohne Tests |
-| `src/shared/lib/wakeLock.ts` | `keepScreenAwake` mit Neuanforderung bei Rückkehr | Lint-Fehler `no-unnecessary-condition` (Zeile 28): `let stopped` durch ein Objekt `state = { stopped: false }` ersetzen; ohne Tests |
-
-Die Dateien sind klein; sie lassen sich auch nach der Beschreibung unten neu schreiben.
+- Der Produktinhaber hat den Master-Prompt „Fitness App Evolution“ gegeben und den Erweiterungsplan freigegeben (Q-18). Verbindlich: `evolution-plan.md` (Schritte A bis H), `ux-audit.md`, `reference-analysis.md`, `winter-arc-reconstruction.md`. Seine Vorgabe: Alles Weitere folgt dem neuen Prompt, nicht dem alten Erscheinungsbild.
+- AP D1 Designsystem 2.0 (D-246) und AP D2 Premium-Player mit Pause, Ton und Wake Lock (D-247, ersetzt AP 1.5) sind umgesetzt. Der frühere WIP-Branch `m1-training-wip-ap15` ist übernommen und kann gelöscht werden.
+- Pull Request darad11/fitness-app#6 (Planung) ist in `m1-training` enthalten und kann geschlossen werden.
 
 ## 4. Nächste Schritte
 
-1. **AP 1.5 fertigstellen:**
-   - `RestTimerBar` im Player: erscheint bei `session.restTimer`; Restzeit aus `endsAt` (Anzeige alle 250 ms, sofort bei `visibilitychange`); Überziehung „+0:42" mit deutlicher Anzeige; nächster offener Satz über `nextOpenSet(session, afterSetId)`; Knöpfe −15 s, +15 s, Überspringen (`adjustRest`, `skipRest` in `sessionService.ts`); aufklappbar zur Vollansicht.
-   - Ton nur im Vordergrund und nur, wenn `settings.restSound`: `unlockSound()` bei der ersten Bedienung im Player, Ton nur, wenn das Ende während der Anzeige erreicht wird (nicht nachträglich).
-   - Wake Lock während einer laufenden Einheit, wenn `settings.keepAwake`; Status für die Trainingseinstellungen (AP 1.7) bereitstellen.
-   - Tests: Unit für Formatierung, Ton (gemocktes `AudioContext`) und Wake Lock (gemocktes `navigator.wakeLock`), Schwelle `shared/lib` 95 %; Komponententest der Leiste mit Fake-Timern; E2E: erledigen → Leiste, ±15 s, Überspringen, Neuladen zeigt die richtige Restzeit (AK-TRN-11).
+1. **Erledigt (AP D2):** Pause als Bühne (`RestStage`), Ton (`sound.ts`), Wake Lock (`wakeLock.ts` mit `wakeLockStatus()` und `subscribeWakeLockStatus()` für die Trainingseinstellungen in AP 1.7), Tests Unit, Komponenten und E2E.
 2. **AP 1.6:** Leiste „Training läuft" auf allen Seiten (TS-25), Rücksprung, Gesundheitsprüfung bei Rückkehr (D-216), Speicherfehler-Hinweis, `navigator.storage.persist()`.
 3. **AP 1.7:** Verlauf (Liste, Detail), Zusammenfassung vervollständigen, Dashboard-Basis auf „Heute", Trainingseinstellungen (Pause, Gewichtsschritt, Ton, Bildschirm aktiv halten mit Erklärung bei fehlender Unterstützung).
 4. **AP 1.8:** JSON-Export, Snapshot vor Schema-Upgrade, Gerüst für Migrationstests.

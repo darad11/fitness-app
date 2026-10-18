@@ -79,7 +79,7 @@ export function ExerciseLibraryPage() {
       />
       <div
         role="search"
-        className="mb-6 grid grid-cols-2 gap-x-3 gap-y-4 md:grid-cols-[2fr_1fr_1fr]"
+        className="mb-6 grid grid-cols-2 gap-x-3 gap-y-3 md:grid-cols-[2fr_1fr_1fr]"
       >
         <div className="col-span-2 md:col-span-1">
           <SearchField
@@ -122,7 +122,7 @@ export function ExerciseLibraryPage() {
           <ExerciseList exercises={results} label={t.exercises.results(results.length)} />
         </>
       ) : (
-        <div className="rounded-card border border-line bg-surface p-6 text-center">
+        <div className="rounded-card bg-surface p-6 text-center shadow-card">
           <h2 className="text-lg font-semibold">{t.exercises.emptyTitle}</h2>
           <p className="mt-1 mb-4 text-muted">{t.exercises.emptyText}</p>
           <Button
@@ -152,7 +152,7 @@ function GroupedList({ exercises }: { exercises: readonly Exercise[] }) {
     <div className="grid gap-6">
       {groups.map(({ group, items }) => (
         <section key={group} aria-labelledby={`gruppe-${group}`}>
-          <h2 id={`gruppe-${group}`} className="mb-2 text-lg font-semibold">
+          <h2 id={`gruppe-${group}`} className="eyebrow mb-2 text-muted">
             {t.exercises.groups[group]}
           </h2>
           <ExerciseList exercises={items} label={t.exercises.groups[group]} />
@@ -166,10 +166,10 @@ function ExerciseList({ exercises, label }: { exercises: readonly Exercise[]; la
   return (
     <ul
       aria-label={label}
-      className="divide-y divide-line overflow-hidden rounded-card border border-line bg-surface"
+      className="divide-y divide-line overflow-hidden rounded-card bg-surface shadow-card"
     >
       {exercises.map((exercise) => (
-        <li key={exercise.id} className="min-h-12 px-4 py-3">
+        <li key={exercise.id} className="min-h-14 px-5 py-3">
           <p className="font-medium">{exercise.name}</p>
           <p className="text-sm text-muted">{describeExercise(exercise)}</p>
         </li>

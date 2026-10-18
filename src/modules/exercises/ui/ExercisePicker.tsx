@@ -41,7 +41,7 @@ export function ExercisePicker({ open, title, onClose, onSelect }: ExercisePicke
   );
   return (
     <Dialog open={open} onClose={onClose} title={title} closeLabel={t.common.close} variant="sheet">
-      <div className="mb-4 grid grid-cols-2 gap-x-3 gap-y-4">
+      <div className="mb-4 grid grid-cols-2 gap-x-3 gap-y-3">
         <div className="col-span-2">
           <SearchField
             label={t.exercises.searchLabel}
@@ -70,7 +70,7 @@ export function ExercisePicker({ open, title, onClose, onSelect }: ExercisePicke
       {exercises.length > 0 && results.length === 0 ? (
         <p className="text-muted">{t.exercises.emptyText}</p>
       ) : (
-        <ul className="divide-y divide-line overflow-hidden rounded-card border border-line">
+        <ul className="divide-y divide-line overflow-hidden rounded-card bg-surface-2">
           {results.map((exercise) => (
             <li key={exercise.id}>
               <button
@@ -78,7 +78,7 @@ export function ExercisePicker({ open, title, onClose, onSelect }: ExercisePicke
                 onClick={() => {
                   onSelect(exercise);
                 }}
-                className="block min-h-12 w-full px-4 py-3 text-left hover:bg-surface-2"
+                className="block min-h-14 w-full px-4 py-3 text-left hover:bg-line"
               >
                 <span className="block font-medium">{exercise.name}</span>
                 <span className="block text-sm text-muted">{describeExercise(exercise)}</span>

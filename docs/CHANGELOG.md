@@ -1,5 +1,20 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.5 · 18.10.2026 · Erweiterungsplan, Designsystem 2.0 und Premium-Player (AP D1, D2)
+
+Grundlage: Master-Prompt „Fitness App Evolution“ des Produktinhabers, Freigabe des Plans (Q-18) und seine Vorgabe, ab jetzt alles nach dem neuen Prompt zu gestalten.
+
+| Datei | Änderung |
+|---|---|
+| `evolution-plan.md`, `winter-arc-reconstruction.md`, `reference-analysis.md` | Neu: Erweiterungsplan, Rekonstruktion „Winter Arc“, Referenzanalyse (Branch `evolution-plan`, in `m1-training` übernommen) |
+| `ux-audit.md` | Neu: Befunde A-01 bis A-18, Richtung Designsystem 2.0, Kriterien DS-1 bis DS-8 |
+| `design-system.md` | Version 0.4: Tonflächen, Bühne, Schatten, Radien, Typografie, Komponenten, Player |
+| `decisions.md` | D-246 Designsystem 2.0, D-247 Premium-Player; Q-13 bis Q-18 |
+| `implementation-plan.md` | Stand AP D1 und D2; AP 1.5 durch D2 ersetzt; nächste Schritte |
+| `feature-inventory.md` | TS-07, TS-09, TS-21 auf „Implementiert“ |
+| `testing.md` | Ergebnisse AP D1 und D2 |
+| `handover-m1.md` | Stand nach AP D2 |
+
 ## Version 0.4 · 18.10.2026 · M1, AP 1.1 bis 1.4 (Übungsbibliothek, Beispielvorlagen, Trainings-Domain, Trainingsplayer)
 
 Grundlage: Durchsicht der Basisübungsliste durch den Produktinhaber (Q-05).

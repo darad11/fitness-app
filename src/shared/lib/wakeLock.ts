@@ -6,37 +6,64 @@
 
 export type WakeLockStatus = 'off' | 'active' | 'released' | 'unsupported' | 'denied';
 
+type Listener = (status: WakeLockStatus) => void;
+
+let lastStatus: WakeLockStatus = 'off';
+const listeners = new Set<Listener>();
+
+function publish(status: WakeLockStatus): void {
+  lastStatus = status;
+  for (const listener of listeners) listener(status);
+}
+
+/** Letzter gemeldeter Zustand, z. B. für die Trainingseinstellungen. */
+export function wakeLockStatus(): WakeLockStatus {
+  return lastStatus;
+}
+
+/** Meldet jeden Statuswechsel; gibt die Abmeldefunktion zurück. */
+export function subscribeWakeLockStatus(listener: Listener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
 export function isWakeLockSupported(): boolean {
   return typeof navigator !== 'undefined' && 'wakeLock' in navigator;
 }
 
 /**
- * Hält den Bildschirm aktiv, bis `stop` aufgerufen wird. Meldet Statuswechsel über `onStatus`.
+ * Hält den Bildschirm aktiv, bis die zurückgegebene Funktion aufgerufen wird. Der Zustand ist
+ * über `wakeLockStatus` und `subscribeWakeLockStatus` abfragbar.
  */
-export function keepScreenAwake(onStatus: (status: WakeLockStatus) => void): () => void {
+export function keepScreenAwake(): () => void {
   if (!isWakeLockSupported()) {
-    onStatus('unsupported');
+    publish('unsupported');
     return () => undefined;
   }
-  let sentinel: WakeLockSentinel | null = null;
-  const state = { stopped: false };
+  const state: { stopped: boolean; sentinel: WakeLockSentinel | null } = {
+    stopped: false,
+    sentinel: null,
+  };
+  const stopped = () => state.stopped;
+  const held = () => state.sentinel !== null && !state.sentinel.released;
 
   const request = async () => {
-    if (state.stopped || document.visibilityState !== 'visible' || (sentinel && !sentinel.released))
-      return;
+    if (stopped() || document.visibilityState !== 'visible' || held()) return;
     try {
       const lock = await navigator.wakeLock.request('screen');
-      if (state.stopped) {
+      if (stopped()) {
         void lock.release();
         return;
       }
-      sentinel = lock;
-      onStatus('active');
+      state.sentinel = lock;
+      publish('active');
       lock.addEventListener('release', () => {
-        if (!state.stopped) onStatus('released');
+        if (!stopped()) publish('released');
       });
     } catch {
-      onStatus('denied');
+      publish('denied');
     }
   };
   const onVisibility = () => {
@@ -48,7 +75,13 @@ export function keepScreenAwake(onStatus: (status: WakeLockStatus) => void): () 
   return () => {
     state.stopped = true;
     document.removeEventListener('visibilitychange', onVisibility);
-    if (sentinel && !sentinel.released) void sentinel.release();
-    onStatus('off');
+    if (held()) void state.sentinel?.release();
+    publish('off');
   };
+}
+
+/** Nur für Tests. */
+export function resetWakeLockForTests(): void {
+  lastStatus = 'off';
+  listeners.clear();
 }

@@ -44,7 +44,7 @@ export function Dialog({
         onClose();
       }}
       className={cn(
-        'bg-surface text-fg backdrop:bg-scrim',
+        'bg-surface text-fg shadow-float backdrop:bg-scrim',
         variant === 'sheet'
           ? 'mt-auto mb-0 h-[85dvh] w-full max-w-none rounded-t-sheet p-0 md:m-auto md:h-[80dvh] md:max-w-xl md:rounded-sheet'
           : 'm-auto w-[min(28rem,calc(100%-2rem))] rounded-sheet p-5',
@@ -65,7 +65,7 @@ export function Dialog({
               type="button"
               onClick={onClose}
               aria-label={closeLabel}
-              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-input text-muted hover:bg-surface-2"
+              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2"
             >
               <X aria-hidden="true" className="size-5" />
             </button>

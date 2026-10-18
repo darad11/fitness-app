@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Session, SessionExercise, SessionSet } from '../model/session';
-import { buildHistoryRows, previousValues } from './history';
+import { buildHistoryRows, groupByWeek, previousValues, summarizeSession } from './history';
 
 const HLC = '2026-10-18T09:00:00.000Z-0000-a1b2c3d4';
 const EX = '11111111-1111-4111-8111-111111111111';
@@ -80,5 +80,61 @@ describe('Projektion exerciseHistory', () => {
     expect(
       buildHistoryRows(session([exercise(0, [set({ weightKg: 60, reps: 8 })])], 'in_progress')),
     ).toEqual([]);
+  });
+});
+
+describe('Verlauf: Wochen und Kennzahlen (AK-HIS-01)', () => {
+  it('gruppiert nach Kalenderwoche ab Montag in Eingabereihenfolge', () => {
+    const groups = groupByWeek([
+      { dayKey: '2026-10-18' }, // Sonntag
+      { dayKey: '2026-10-14' },
+      { dayKey: '2026-10-12' }, // Montag
+      { dayKey: '2026-10-11' }, // Sonntag der Vorwoche
+    ]);
+    expect(groups.map((g) => [g.weekStart, g.items.length])).toEqual([
+      ['2026-10-12', 3],
+      ['2026-10-05', 1],
+    ]);
+    expect(groupByWeek([])).toEqual([]);
+  });
+
+  it('fasst Dauer, Übungen, erledigte Sätze und Volumen ohne Aufwärmsätze zusammen', () => {
+    const set = (
+      type: SessionSet['type'],
+      status: SessionSet['status'],
+      weightKg: number,
+      reps: number,
+    ): SessionSet => ({
+      id: `${type}-${String(weightKg)}`,
+      position: 0,
+      type,
+      actual: { weightKg, reps },
+      status,
+      hlc: '0',
+      deletedAt: null,
+    });
+    const exercise = {
+      id: 'e1',
+      exerciseId: 'x',
+      nameSnapshot: 'Test',
+      trackingMode: 'weight_reps',
+      sets: [
+        set('warmup', 'done', 20, 10),
+        set('working', 'done', 60, 8),
+        set('working', 'skipped', 60, 8),
+      ],
+      deletedAt: null,
+    } as unknown as SessionExercise;
+    const session = {
+      status: 'completed',
+      durationSec: 1500,
+      exercises: [exercise],
+    } as unknown as Session;
+    expect(summarizeSession(session)).toEqual({
+      durationSec: 1500,
+      exercises: 1,
+      doneSets: 2,
+      volumeKg: 480,
+    });
   });
 });

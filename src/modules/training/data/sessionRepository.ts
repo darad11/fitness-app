@@ -24,6 +24,19 @@ export async function findActiveSession(db: AppDb): Promise<Session | undefined>
   return first ? getSession(db, first.id) : undefined;
 }
 
+/** Abgeschlossene Einheiten, neueste zuerst (AK-HIS-01); ungültige Dokumente werden übergangen. */
+export async function listCompletedSessions(db: AppDb): Promise<Session[]> {
+  const rows = await db.sessions.where('status').equals('completed').toArray();
+  const live = rows.filter((row) => row.type === 'session' && row.deletedAt === null);
+  live.sort((a, b) =>
+    String(b.endedAt ?? b.startedAt).localeCompare(String(a.endedAt ?? a.startedAt)),
+  );
+  return live.flatMap((row) => {
+    const parsed = sessionSchema.safeParse(row);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
 /** Schreibt die Projektion einer Einheit neu; Aufruf innerhalb der Transaktion des Abschlusses. */
 export async function writeHistory(db: AppDb, session: Session): Promise<void> {
   await db.exerciseHistory.where('sessionId').equals(session.id).delete();

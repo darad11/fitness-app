@@ -1,3 +1,4 @@
+import { startOfWeek, type DayKey } from '@/shared/lib/time';
 import type { HistoryRow } from '../model/history';
 import { HISTORY_VERSION } from '../model/history';
 import type { Session, SessionExercise, SetValues } from '../model/session';
@@ -8,8 +9,45 @@ import {
   exerciseVolume,
   liveExercises,
   liveSets,
+  sessionProgress,
+  sessionVolume,
   setSlot,
 } from './session';
+
+export interface SessionSummary {
+  durationSec: number;
+  exercises: number;
+  doneSets: number;
+  volumeKg: number;
+}
+
+/** Kennzahlen einer abgeschlossenen Einheit für Verlauf und Zusammenfassung (AK-HIS-01). */
+export function summarizeSession(session: Session): SessionSummary {
+  return {
+    durationSec: session.durationSec ?? 0,
+    exercises: liveExercises(session).length,
+    doneSets: sessionProgress(session).done,
+    volumeKg: Math.round(sessionVolume(session)),
+  };
+}
+
+export interface WeekGroup<T> {
+  /** Montag der Woche als `dayKey`. */
+  weekStart: DayKey;
+  items: T[];
+}
+
+/** Gruppiert nach Kalenderwoche (Montag bis Sonntag) in der Reihenfolge der Eingabe. */
+export function groupByWeek<T extends { dayKey: string }>(items: readonly T[]): WeekGroup<T>[] {
+  const groups: WeekGroup<T>[] = [];
+  for (const item of items) {
+    const weekStart = startOfWeek(item.dayKey);
+    const last = groups.at(-1);
+    if (last?.weekStart === weekStart) last.items.push(item);
+    else groups.push({ weekStart, items: [item] });
+  }
+  return groups;
+}
 
 /**
  * Zeilen der Projektion für eine abgeschlossene Einheit. Kommt eine Übung mehrfach vor, zählen

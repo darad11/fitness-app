@@ -32,6 +32,7 @@ export const de = {
     heroText:
       'Starte ein freies Training oder wähle eine Vorlage. Dein Fortschritt bleibt auf diesem Gerät.',
     startLink: 'Zum Training',
+    chooseTemplate: 'Vorlage wählen',
     runningText: (duration: string, progress: string) => `Seit ${duration} · ${progress}`,
     offlineReady: 'Offline verfügbar',
     offlinePreparing: 'Wird für die Offline-Nutzung vorbereitet',
@@ -68,6 +69,36 @@ export const de = {
     example: (date: string, time: string, number: string, weight: string) =>
       `Beispiel: ${date} · ${time} · ${number} · ${weight}`,
     saveFailed: 'Speichern hat nicht geklappt. Bitte versuche es erneut.',
+    training: 'Training',
+    restDefault: 'Standardpause',
+    restDefaultHint: 'Gilt, wenn Übung oder Satz keine eigene Pause haben.',
+    weightStep: 'Gewichtsschritt',
+    autoStartRest: 'Pause nach „erledigt“ automatisch starten',
+    restSound: 'Ton bei Pausenende',
+    restSoundHint:
+      'Nur, solange die App im Vordergrund ist. Bei gesperrtem Bildschirm gibt es keinen Ton.',
+    keepAwake: 'Bildschirm im Training aktiv halten',
+    keepAwakeUnsupported:
+      'Dein Browser unterstützt das nicht. Auf dem iPhone funktioniert es ab iOS 18.4 in der installierten App; im Stromsparmodus kann das System ablehnen.',
+    keepAwakeDenied: 'Zuletzt hat das System die Anforderung abgelehnt, z. B. im Stromsparmodus.',
+    seconds: (n: number) => `${n} s`,
+    off: 'Aus',
+  },
+  history: {
+    title: 'Verlauf',
+    emptyTitle: 'Noch kein Training gespeichert',
+    emptyText:
+      'Starte mit einer Vorlage oder einem freien Training. Abgeschlossene Trainings erscheinen hier.',
+    chooseTemplate: 'Vorlage wählen',
+    weekOf: (date: string) => `Woche ab ${date}`,
+    summary: (duration: string, sets: string, volume: string) =>
+      `${duration} · ${sets} · ${volume}`,
+    sets: (n: number) => (n === 1 ? '1 Satz' : `${n} Sätze`),
+    detailEyebrow: 'Abgeschlossenes Training',
+    notes: 'Notiz',
+    status: { planned: 'Offen', done: 'Erledigt', skipped: 'Übersprungen' },
+    noValues: '–',
+    notFound: 'Dieses Training gibt es nicht mehr.',
   },
   install: {
     title: 'Installieren',
@@ -152,6 +183,7 @@ export const de = {
     freeEyebrow: 'Ohne Vorlage',
     freeHint: 'Leere Einheit; Übungen kommen aus der Bibliothek dazu.',
     programsHint: 'Beispielvorlagen; eigene Programme folgen',
+    historyHint: 'Abgeschlossene Trainings nach Wochen',
     exercisesHint: 'Bibliothek mit Suche und Filtern',
     startDay: (day: string) => `${day} heute trainieren`,
     startDayHint: 'Startet ein Training mit diesem Tag, ohne die Vorlage zu kopieren.',

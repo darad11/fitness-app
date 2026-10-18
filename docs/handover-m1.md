@@ -34,7 +34,7 @@ Stand: 18.10.2026, 16:30 UTC · Für die nächste Claude-Sitzung (D-238) · Verb
 
 1. **Erledigt (AP D2):** Pause als Bühne (`RestStage`), Ton (`sound.ts`), Wake Lock (`wakeLock.ts` mit `wakeLockStatus()` und `subscribeWakeLockStatus()` für die Trainingseinstellungen in AP 1.7), Tests Unit, Komponenten und E2E.
 2. **Erledigt (AP 1.6):** Leiste „Training läuft" (`SessionBanner`), Karte auf „Heute", dauerhafter Speicher (`storage.ts`); Gesundheitsprüfung und Neustart stammen aus M0 (`main.tsx`).
-3. **AP 1.7:** Verlauf (Liste, Detail), Zusammenfassung vervollständigen, Dashboard-Basis auf „Heute", Trainingseinstellungen (Pause, Gewichtsschritt, Ton, Bildschirm aktiv halten mit Erklärung bei fehlender Unterstützung).
+3. **Erledigt (AP 1.7):** Verlauf (`HistoryPage`, `HistoryDetailPage`), „Heute" mit Einstiegen, Trainingseinstellungen (`SettingsPage`, `Switch`).
 4. **AP 1.8:** JSON-Export, Snapshot vor Schema-Upgrade, Gerüst für Migrationstests.
 5. **AP 1.9:** restliche E2E-Tests (Offline, Sichtbarkeitswechsel), Gerätetest T-IPH-M1 durch den Produktinhaber, Befunde in `known-limitations.md`.
 6. Vor dem Abschluss von M1: Karte „Diese Version" auf „Heute" (`today.versionText`) an den tatsächlichen Umfang anpassen; Pull Request auf „bereit" stellen.

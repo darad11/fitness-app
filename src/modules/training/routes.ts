@@ -41,6 +41,16 @@ export const trainingRoutes: RouteObject[] = [
     },
   },
   {
+    path: 'training/verlauf',
+    lazy: async () => ({ Component: (await import('./ui/HistoryPage')).HistoryPage }),
+  },
+  {
+    path: 'training/verlauf/:id',
+    lazy: async () => ({
+      Component: (await import('./ui/HistoryDetailPage')).HistoryDetailPage,
+    }),
+  },
+  {
     path: 'training/einheit/:id',
     handle: { fullscreen: true },
     lazy: async () => ({

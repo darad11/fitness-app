@@ -41,8 +41,8 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 
 | Nr. | Punkt | Stand | Umgang |
 |---|---|---|---|
-| U-1 | Orangefarbene Sternmarkierung an einzelnen Übungen (z. B. Tag 17 Übung 4, Tag 32 Übung 1, Tag 46 Übung 5, Tag 52 bis 55 jeweils erste oder zweite Übung) | gesehen, Bedeutung offen | Nicht übernommen; Frage an den Produktinhaber (Q-13) |
-| U-2 | Tag 14: Laufband mit „3 Sets • 30:00“, Kopfzeile 24 Sätze | gesehen; wahrscheinlich Datenfehler in Xeela | Als 3 × 30:00 übernommen wie angezeigt; im Programm C als 1 × 30:00 vorgeschlagen, Entscheidung Q-13 |
+| U-1 | Orangefarbene Sternmarkierung an einzelnen Übungen (z. B. Tag 17 Übung 4, Tag 32 Übung 1, Tag 46 Übung 5, Tag 52 bis 55 jeweils erste oder zweite Übung) | gesehen; laut Produktinhaber (Q-13, 18.10.2026) ein **Dropset**: schwer beginnen, nach jedem Satz das Gewicht um 30 % senken, keine Pause dazwischen | Vor Programm C die vollständige Sternliste aus den Aufnahmen in die Datendatei übertragen (`dropset: true`) und als Drop-Sätze ohne Pause abbilden (AK-TRN-03); keine Gewichte vorgeben |
+| U-2 | Tag 14: Laufband mit „3 Sets • 30:00“, Kopfzeile 24 Sätze | gesehen; wahrscheinlich Datenfehler in Xeela | In der Datendatei wie angezeigt; in Programm C als 1 × 30 min (Q-13, beantwortet 18.10.2026) |
 | U-3 | „279 Exercises“ in der Fortschrittsansicht gegen 278 gezählte Einträge | gesehen | Differenz vermutlich durch U-2 oder eine Zählung je Satzgruppe; kein Tag fehlt (40 Tage, Kopfzeilen stimmen) |
 | U-4 | Tippfehler in Xeela („Quad Extentions“, „Leg press Calf Raise“, „Overhead Cable Tricep Extention“, „Flat Dumbbell Bench Press (chest)“) | gesehen | Wörtlich beibehalten; deutsche Namen im Abgleich |
 | U-5 | Ausführung einzelner Übungen („Chest Fly With Push“, „Seated Front Lateral Raise“, „Knee Raises“, „Leg Raises“, „Calf Raise Machine“) | offen, nur Name sichtbar | Im Abgleich als „unklar“; Zuordnung mit niedriger Konfidenz, Frage Q-13 |

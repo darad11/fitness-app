@@ -2,7 +2,12 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useDb } from '@/shared/db';
 import type { HistoryRow } from '../model/history';
 import type { Session } from '../model/session';
-import { findActiveSession, getSession, latestHistory } from './sessionRepository';
+import {
+  findActiveSession,
+  getSession,
+  latestHistory,
+  listCompletedSessions,
+} from './sessionRepository';
 
 /** Einheit, reaktiv: `undefined` beim Laden, `null`, wenn es sie nicht (mehr) gibt. */
 export function useSession(id: string): Session | null | undefined {
@@ -14,6 +19,12 @@ export function useSession(id: string): Session | null | undefined {
 export function useActiveSession(): Session | null | undefined {
   const { db } = useDb();
   return useLiveQuery(async () => (await findActiveSession(db)) ?? null, [db]);
+}
+
+/** Abgeschlossene Einheiten, neueste zuerst; `undefined` beim Laden. */
+export function useCompletedSessions(): Session[] | undefined {
+  const { db } = useDb();
+  return useLiveQuery(() => listCompletedSessions(db), [db]);
 }
 
 /** Letzte abgeschlossene Einheit je Übung, ohne die laufende (AK-TRN-05). */

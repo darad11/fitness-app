@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.4 (AP 1.7): TH-01 bleibt „Zur Umsetzung ausgewählt" (Liste und Detail umgesetzt, Bearbeiten und Löschen in M2); CH-06 bleibt bis M3.
 - Version 0.4 (AP 1.6): „Implementiert": TS-25, SY-12 (Statusanzeige folgt mit AP 1.8).
 - Version 0.4 (AP D2): „Implementiert": TS-07, TS-09, TS-21 (Pausentimer mit nächstem Satz, Wake Lock; Nachweise U, K und E in Chromium, Gerätetest steht aus).
 - Version 0.3 (M0): Status nur dort geändert, wo der Nachweis vorliegt. „Getestet": SY-16 (Nachweis U bestanden) und SY-10 (E2E in Chromium und WebKit bestanden). „Implementiert": SY-01, SY-06, SY-08, SY-15, SY-17 (Gerätetest bzw. spätere Nachweise stehen aus). „Abgenommen": SY-14 (Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden). Teilweise umgesetzte Funktionen (SY-02, SY-11, SY-13, CH-08) bleiben „Zur Umsetzung ausgewählt"; ihr Stand steht in `implementation-plan.md` (Stand M0).

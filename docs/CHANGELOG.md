@@ -12,7 +12,7 @@ Grundlage: Master-Prompt „Fitness App Evolution“ des Produktinhabers, Freiga
 | `decisions.md` | D-246 Designsystem 2.0, D-247 Premium-Player; Q-13 bis Q-18 |
 | `implementation-plan.md` | Stand AP D1 und D2; AP 1.5 durch D2 ersetzt; nächste Schritte |
 | `feature-inventory.md` | TS-07, TS-09, TS-21 auf „Implementiert“ |
-| `testing.md` | Ergebnisse AP D1, D2 und 1.6 |
+| `testing.md` | Ergebnisse AP D1, D2, 1.6 und 1.7 |
 | `handover-m1.md` | Stand nach AP D2 |
 
 ## Version 0.4 · 18.10.2026 · M1, AP 1.1 bis 1.4 (Übungsbibliothek, Beispielvorlagen, Trainings-Domain, Trainingsplayer)

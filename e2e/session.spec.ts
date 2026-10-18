@@ -102,6 +102,26 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await page.getByRole('link', { name: 'Fertig' }).click();
   await expect(page.getByRole('button', { name: 'Freies Training starten' })).toBeVisible();
 
+  // Verlauf mit Liste nach Woche und Detail (AK-HIS-01, AK-HIS-02).
+  await page.getByRole('link', { name: 'Verlauf' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Verlauf' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: /^Woche ab/ })).toBeVisible();
+  const entry = page.getByRole('link', { name: /Tag A · Ganzkörper A\/B/ });
+  await expect(entry).toContainText('2 Sätze · 500 kg');
+  await expectNoAxeViolations(page, 'Verlauf');
+  await entry.click();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' }),
+  ).toBeVisible();
+  const squatRegion = page.getByRole('region', { name: 'Kniebeuge mit Langhantel' });
+  await expect(squatRegion.getByRole('listitem').first()).toContainText(
+    'Aufwärmsatz 140 × 10Erledigt',
+  );
+  await expect(squatRegion.getByRole('listitem').nth(2)).toContainText(
+    'Arbeitssatz 162,5 × 8Erledigt',
+  );
+  await expectNoAxeViolations(page, 'Verlauf Detail');
+
   // Beim nächsten Mal erscheinen die Vorwerte (AK-TRN-05).
   await openPage(page, '/training/vorlagen/full_body_ab');
   await page.getByRole('button', { name: 'Tag A heute trainieren' }).click();
@@ -114,6 +134,9 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
 }) => {
   test.slow();
   await chooseTheme(page, 'Dunkel');
+  // Trainingseinstellungen wirken sofort (AK-SET-02): Standardpause 60 s.
+  await page.getByRole('combobox', { name: 'Standardpause' }).selectOption('60');
+  await expect(page.getByRole('combobox', { name: 'Standardpause' })).toHaveValue('60');
   await openPage(page, '/training');
   await page.getByRole('button', { name: 'Freies Training starten' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Freies Training' })).toBeVisible();
@@ -129,6 +152,9 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
   await page.getByLabel(`Wiederholungen, ${set}`).fill('6');
   await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();
   await expect(page.getByText('1 von 1 Sätzen')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Pause' }).getByRole('timer')).toHaveText(
+    /^(1:00|0:5\d)$/,
+  );
   await expectNoAxeViolations(page, 'Player dunkel');
 
   await page.getByRole('button', { name: 'Training verwerfen' }).click();

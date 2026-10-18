@@ -7,11 +7,13 @@ import {
   sessionDurationSec,
   sessionProgress,
   useActiveSession,
+  useStartSession,
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
 import { currentPlatform } from '@/shared/lib/platform';
 import { usePwaState, type PwaState } from '@/shared/pwa/state';
 import {
+  Button,
   ButtonLink,
   Card,
   Meter,
@@ -43,6 +45,7 @@ export function TodayPage() {
   const platform = useMemo(() => currentPlatform(), []);
   const active = useActiveSession();
   const now = useToday(1000);
+  const { start, error, busy } = useStartSession();
 
   const items: StatusItem[] = [
     offlineStatus(pwa),
@@ -114,10 +117,26 @@ export function TodayPage() {
             className="md:col-span-2"
           >
             <p className="-mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
-            <ButtonLink to="/training" variant="onInk" className="mt-5">
-              <Play aria-hidden="true" className="size-5" />
-              {t.today.startLink}
-            </ButtonLink>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Button
+                variant="onInk"
+                disabled={busy}
+                onClick={() => {
+                  void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
+                }}
+              >
+                <Play aria-hidden="true" className="size-5" />
+                {t.training.startFree}
+              </Button>
+              <ButtonLink to="/training/programme" variant="quiet" className="text-on-ink">
+                {t.today.chooseTemplate}
+              </ButtonLink>
+            </div>
+            {error ? (
+              <p role="alert" className="mt-3 text-sm text-on-ink">
+                {error.message}
+              </p>
+            ) : null}
           </Card>
         )}
         <Card title={t.today.statusTitle}>

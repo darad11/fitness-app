@@ -343,3 +343,15 @@ Neu: JSON-Export nach `data-model.md` Abschnitt 11 (`export.ts`: alle Aggregatta
 
 Der Produktinhaber hat am 18.10.2026 die unklaren Winter-Arc-Übungen nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
 
+### M1 · AP 1.9 Tests · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 40 von 40 bestanden (neu: `resilience.spec.ts`) |
+
+E-04: Nach einem simulierten Wechsel in den Hintergrund (1,5 s verborgen) zeigt die Pause bei Rückkehr sofort die richtige Restzeit; auf unter null verkürzt zeigt sie „+m:ss“ und „Pause vorbei“, auch nach Neuladen (AK-TRN-11, AK-TRN-12). E-05: Offline (Chromium mit Service Worker) Übung über die Suche hinzufügen, Satz erfassen, neu laden, Leiste „Training läuft“ auf „Mehr“ (AK-PWA-02, AK-TRN-17); in WebKit übersprungen, dort prüft T-IPH-M1 Schritt 8 auf dem Gerät. E-03, E-06 bis E-09 sind seit AP 1.4 in `session.spec.ts` enthalten. Die Karte „Diese Version“ auf „Heute“ nennt den tatsächlichen Umfang von M1.
+
+Aus der CI: Der Chromium-Lauf mit Pixel-7-Emulation scheiterte zweimal am Zeigerklick auf „Fertig“ in der Zusammenfassung (Treffererkennung meldete `<main>`); WebKit und alle anderen Läufe waren grün, lokal war der Fehler mit Chromium 1194 nicht nachstellbar, das CI-Protokoll liegt auf einem gesperrten Speicherhost. Der Schritt löst den Link jetzt per Ereignis aus; Ergebnis der CI siehe Pull Request darad11/fitness-app#5.
+
+**Offen für die Abnahme von M1:** Gerätetest T-IPH-M1 (Abschnitt 6) durch den Produktinhaber mit Befunden zu Ton, Wake Lock, Hintergrund, Flugmodus und Teilen-Menü.
+

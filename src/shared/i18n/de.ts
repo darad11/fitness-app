@@ -25,7 +25,7 @@ export const de = {
     title: 'Heute',
     versionTitle: 'Diese Version',
     versionText:
-      'Diese Version enthält Installation, Offline-Start, Einstellungen, die Übungsbibliothek, Beispielvorlagen und das Erfassen eines Trainings. Pausentimer-Anzeige, Verlauf und Datensicherung folgen.',
+      'Diese Version enthält Installation, Offline-Start, Einstellungen, die Übungsbibliothek, Beispielvorlagen, das Training mit Pausentimer, den Verlauf und den Export der Daten. Eigene Programme, Fortschritt und Ernährung folgen.',
     statusTitle: 'Status',
     heroEyebrow: 'Training',
     heroTitle: 'Bereit für dein Training?',

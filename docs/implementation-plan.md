@@ -106,7 +106,7 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.6 | Umgesetzt (18.10.2026): Leiste „Training läuft“ mit Rücksprung, Karte auf „Heute“, dauerhafter Speicher; Gesundheitsprüfung und kontrollierter Neustart bestanden schon aus M0 |
 | 1.7 | Umgesetzt (18.10.2026): Verlauf mit Detail, „Heute“ mit Einstiegen, Trainingseinstellungen; Vergleich in der Zusammenfassung bleibt M3 |
 | 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
-| 1.9 | Offen |
+| 1.9 | Umgesetzt bis auf den Gerätetest (18.10.2026): E2E für Sichtbarkeitswechsel, Überziehung und Offline; T-IPH-M1 steht aus |
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -225,5 +225,5 @@ Nächste Schritte: <Liste>
 13. Erledigt: AP 1.6 Persistenz und Wiederaufnahme.
 14. Erledigt: AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen.
 15. Erledigt: AP 1.8 Datensicherung.
-16. Ich: AP 1.9 restliche E2E-Tests (Offline, Sichtbarkeitswechsel); Produktinhaber führt T-IPH-M1 durch.
+16. Erledigt: AP 1.9 E2E-Tests. Offen: Gerätetest T-IPH-M1 durch den Produktinhaber, Auswertung in `known-limitations.md`.
 17. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

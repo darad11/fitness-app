@@ -36,8 +36,8 @@ Stand: 18.10.2026, 16:30 UTC · Für die nächste Claude-Sitzung (D-238) · Verb
 2. **Erledigt (AP 1.6):** Leiste „Training läuft" (`SessionBanner`), Karte auf „Heute", dauerhafter Speicher (`storage.ts`); Gesundheitsprüfung und Neustart stammen aus M0 (`main.tsx`).
 3. **Erledigt (AP 1.7):** Verlauf (`HistoryPage`, `HistoryDetailPage`), „Heute" mit Einstiegen, Trainingseinstellungen (`SettingsPage`, `Switch`).
 4. **Erledigt (AP 1.8):** JSON-Export (`export.ts`), Seite `/mehr/daten` (`DataPage`), Migrationstest-Gerüst (`migrations.test.ts`, `testing/legacyDb.ts`).
-5. **AP 1.9:** restliche E2E-Tests (Offline, Sichtbarkeitswechsel), Gerätetest T-IPH-M1 durch den Produktinhaber, Befunde in `known-limitations.md`.
-6. Vor dem Abschluss von M1: Karte „Diese Version" auf „Heute" (`today.versionText`) an den tatsächlichen Umfang anpassen; Pull Request auf „bereit" stellen.
+5. **Erledigt (AP 1.9) bis auf den Gerätetest:** E2E in `resilience.spec.ts`; T-IPH-M1 durch den Produktinhaber, Befunde in `known-limitations.md`.
+6. Erledigt: Karte „Diese Version" angepasst. Offen: Pull Request auf „bereit" stellen, sobald der Gerätetest bestanden ist.
 
 ## 5. Vom Produktinhaber noch zu bestätigen
 

@@ -1,27 +1,35 @@
 /*
- * Farbtokens (design-system.md Abschnitt 2). Hell ist Standard; Dunkel gilt bei Systemeinstellung
- * „dunkel" ohne manuelle Wahl „hell" und immer bei manueller Wahl „dunkel".
- * Die Werte prüft src/shared/ui/tokens.test.ts auf Kontrast (WCAG 2.1 AA) und auf Gleichheit
- * der beiden dunklen Blöcke.
+ * Farbtokens (design-system.md Abschnitt 2, ux-audit.md Abschnitt 2). Hell ist Standard; Dunkel
+ * gilt bei Systemeinstellung „dunkel" ohne manuelle Wahl „hell" und immer bei manueller Wahl
+ * „dunkel". Die Werte prüft src/shared/ui/tokens.test.ts auf Kontrast (WCAG 2.1 AA) und auf
+ * Gleichheit der beiden dunklen Blöcke.
  */
 
 :root {
   color-scheme: light;
-  --bg: #fafaf9;
+  --bg: #f3f4f7;
   --surface: #ffffff;
-  --surface-2: #f3f4f6;
-  --fg: #111318;
-  --fg-muted: #5b6270;
-  --border: #e5e7eb;
-  --border-input: #828b99;
+  --surface-2: #eef0f4;
+  --fg: #12151c;
+  --fg-muted: #5a6271;
+  --border: #e3e6ec;
+  --border-input: #7c8594;
   --accent: #256abf;
   --accent-hover: #1c5cab;
   --accent-fg: #ffffff;
   --accent-ink: #256abf;
+  --accent-soft: #e6edf9;
   --focus: #256abf;
   --success: #13794d;
+  --success-soft: #e2f3ea;
   --warning: #976200;
+  --warning-soft: #fbf0da;
   --danger: #c53030;
+  --danger-soft: #fbe7e7;
+  --ink: #151b2b;
+  --ink-2: #212a3f;
+  --on-ink: #f5f7fb;
+  --on-ink-muted: #aab3c5;
   --data-1: #2a78d6;
   --data-2: #eb6834;
   --data-3: #1baf7a;
@@ -30,31 +38,42 @@
   --data-6: #008300;
   --data-7: #6250d6;
   --data-8: #e34948;
-  --chart-grid: #e5e7eb;
-  --chart-axis: #5b6270;
+  --chart-grid: #e3e6ec;
+  --chart-axis: #5a6271;
   --chart-point: #8a93a1;
   --meter-track: #cde2fb;
   --chart-total: #3a4150;
+  --scrim: rgb(18 21 28 / 0.5);
+  --shadow-card: 0 1px 2px rgb(18 21 28 / 0.04), 0 4px 16px rgb(18 21 28 / 0.06);
+  --shadow-float: 0 8px 24px rgb(18 21 28 / 0.14), 0 2px 6px rgb(18 21 28 / 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --bg: #0f1115;
-    --surface: #171a21;
-    --surface-2: #1f232c;
-    --fg: #eceef2;
-    --fg-muted: #9aa3b2;
-    --border: #2a2f3a;
-    --border-input: #6b7383;
+    --bg: #0d1016;
+    --surface: #161a23;
+    --surface-2: #1f2430;
+    --fg: #eef0f4;
+    --fg-muted: #9ca5b5;
+    --border: #272d3a;
+    --border-input: #6f7889;
     --accent: #3987e5;
     --accent-hover: #5598e7;
     --accent-fg: #0b0e14;
     --accent-ink: #5598e7;
+    --accent-soft: #15263f;
     --focus: #5598e7;
     --success: #3dbe86;
+    --success-soft: #10302a;
     --warning: #e0a943;
+    --warning-soft: #33290f;
     --danger: #f26d6d;
+    --danger-soft: #3a1c1f;
+    --ink: #1a2030;
+    --ink-2: #242c40;
+    --on-ink: #f1f3f8;
+    --on-ink-muted: #aab3c5;
     --data-1: #3987e5;
     --data-2: #d95926;
     --data-3: #199e70;
@@ -63,31 +82,42 @@
     --data-6: #008300;
     --data-7: #9085e9;
     --data-8: #e66767;
-    --chart-grid: #2a2f3a;
-    --chart-axis: #9aa3b2;
+    --chart-grid: #272d3a;
+    --chart-axis: #9ca5b5;
     --chart-point: #6b7383;
     --meter-track: #15365f;
     --chart-total: #c3cad6;
+    --scrim: rgb(0 0 0 / 0.6);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #0f1115;
-  --surface: #171a21;
-  --surface-2: #1f232c;
-  --fg: #eceef2;
-  --fg-muted: #9aa3b2;
-  --border: #2a2f3a;
-  --border-input: #6b7383;
+  --bg: #0d1016;
+  --surface: #161a23;
+  --surface-2: #1f2430;
+  --fg: #eef0f4;
+  --fg-muted: #9ca5b5;
+  --border: #272d3a;
+  --border-input: #6f7889;
   --accent: #3987e5;
   --accent-hover: #5598e7;
   --accent-fg: #0b0e14;
   --accent-ink: #5598e7;
+  --accent-soft: #15263f;
   --focus: #5598e7;
   --success: #3dbe86;
+  --success-soft: #10302a;
   --warning: #e0a943;
+  --warning-soft: #33290f;
   --danger: #f26d6d;
+  --danger-soft: #3a1c1f;
+  --ink: #1a2030;
+  --ink-2: #242c40;
+  --on-ink: #f1f3f8;
+  --on-ink-muted: #aab3c5;
   --data-1: #3987e5;
   --data-2: #d95926;
   --data-3: #199e70;
@@ -96,9 +126,12 @@
   --data-6: #008300;
   --data-7: #9085e9;
   --data-8: #e66767;
-  --chart-grid: #2a2f3a;
-  --chart-axis: #9aa3b2;
+  --chart-grid: #272d3a;
+  --chart-axis: #9ca5b5;
   --chart-point: #6b7383;
   --meter-track: #15365f;
   --chart-total: #c3cad6;
+  --scrim: rgb(0 0 0 / 0.6);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+  --shadow-float: 0 8px 24px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
 }

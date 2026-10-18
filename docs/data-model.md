@@ -96,7 +96,7 @@ interface Session extends Root {
   status: 'in_progress' | 'completed';
   title: string;                                   // z. B. „Tag A · Ganzkörper"
   program?: {                                      // Snapshot bei Start aus Programm oder Vorlage
-    programId: string; programName: string;
+    programId: string; programName: string; sampleKey?: string;   // sampleKey bei Beispielvorlagen (D-244)
     weekId: string; weekIndex: number; weekName: string;
     dayId: string; dayIndex: number; dayName: string;
   };
@@ -117,7 +117,8 @@ interface Session extends Root {
 }
 interface SessionExercise extends Child {
   exerciseId: string; nameSnapshot: string;
-  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time';
+  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time' | 'time_distance' | 'assisted_reps';  // D-241
+  distanceUnit?: 'm' | 'km'; perSide?: true;      // Snapshot für die Anzeige (D-244)
   restSec?: number; notes?: string;
   replacedFromExerciseId?: string;                 // ursprünglich geplante Übung
   group?: { id: string; type: 'superset' | 'circuit' };     // reserviert (R4)
@@ -126,8 +127,8 @@ interface SessionExercise extends Child {
 interface SessionSet extends Child {
   type: 'warmup' | 'working' | 'drop';
   parentSetId?: string;                            // Pflicht bei 'drop'
-  target?: { repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number };
-  actual: { weightKg?: number; reps?: number; durationSec?: number; rpe?: number };  // rpe reserviert (R4)
+  target?: { repsMin?: number; repsMax?: number; weightKg?: number; durationMinSec?: number; durationMaxSec?: number; distanceM?: number; assistKg?: number };  // Zeitbereich D-243
+  actual: { weightKg?: number; reps?: number; durationSec?: number; distanceM?: number; assistKg?: number; rpe?: number };  // rpe reserviert (R4); distanceM, assistKg D-241
   status: 'planned' | 'done' | 'skipped';
   completedAt?: string;
   restSec?: number;
@@ -160,7 +161,9 @@ interface PlannedExercise extends Child {
 }
 interface PlannedSet extends Child {
   type: 'warmup' | 'working' | 'drop'; parentSetId?: string;
-  repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number;
+  repsMin?: number; repsMax?: number; weightKg?: number;
+  durationMinSec?: number; durationMaxSec?: number; // Zeitbereich wie bei Wiederholungen (D-243)
+  distanceM?: number; assistKg?: number;           // D-241
   restSec?: number; rpeTarget?: number;            // rpeTarget reserviert (R4)
 }
 ```
@@ -186,8 +189,9 @@ interface CustomExercise extends Root {            // Typ 'exercise'
   primaryMuscles: Muscle[]; secondaryMuscles: Muscle[];
   equipment: Equipment[];
   category: 'strength' | 'cardio' | 'mobility' | 'core';
-  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time';
+  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time' | 'time_distance' | 'assisted_reps';  // D-241
   isUnilateral?: boolean; instructions?: string[];
+  distanceUnit?: 'm' | 'km';                      // Eingabe und Anzeige bei time_distance (D-241)
   archivedAt?: string;
 }
 interface ExercisePref extends Root {              // Typ 'exercise_pref', ID = UUID v5 aus der Übungs-ID
@@ -260,7 +264,7 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 
 | Tabelle | Inhalt | Lebensdauer |
 |---|---|---|
-| `exerciseHistory` | Projektion je abgeschlossener Einheit und Übung: exerciseId, sessionId, completedAt, dayKey, title, Sätze (Typ, Gewicht, Wiederholungen, Dauer), bester Satz, bestes geschätztes 1RM, Volumen, Satzzahl | Wird bei Abschluss, Bearbeitung und Löschung in derselben Transaktion aktualisiert; vollständiger Neuaufbau bei Versionswechsel der Projektion |
+| `exerciseHistory` | Projektion je abgeschlossener Einheit und Übung (ID `<sessionId>:<exerciseId>`; kommt eine Übung mehrfach vor, zählen ihre Sätze zusammen): version, exerciseId, sessionId, completedAt, dayKey, title, trackingMode, erledigte Sätze mit Platz (`working:1`, `drop:1:0`), Typ und Werten, bester Satz, bestes geschätztes 1RM, Volumen, Wiederholungen, Satzzahl ohne Aufwärmsätze (D-244) | Wird bei Abschluss, Bearbeitung und Löschung in derselben Transaktion aktualisiert; vollständiger Neuaufbau bei Versionswechsel der Projektion |
 | `sessionUi` | UI-Zustand der laufenden Einheit (fokussierte Übung und Satz) | Bis zum Abschluss |
 | `meta` | Geräte-ID, HLC-Zustand, Projektionsversion, Version der gebündelten Daten, letzter Export, Status „dauerhafter Speicher", ausgeblendete Hinweise, Ersteinrichtung erledigt. Seit M0 belegt: `deviceId` (8 Hex-Zeichen), `hlc` (`{ wallMs, counter }`), `hints.dismissed` (Liste, z. B. `ios-install`) | Dauerhaft |
 | `errorLog` | Ringpuffer mit 500 Einträgen: Zeit, Ebene, Bereich, Meldung ohne Nutzdaten, Hash des Stacks, Route, App-Version | Rollierend |

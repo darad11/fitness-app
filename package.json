@@ -20,7 +20,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "check:docs": "python3 tools/check_docs.py && python3 tools/feature_inventory_to_csv.py --check",
+    "check:docs": "python3 tools/check_docs.py && python3 tools/feature_inventory_to_csv.py --check && python3 tools/exercise_library_to_md.py --check && python3 tools/sample_templates_from_md.py --check && python3 tools/winter_arc_to_md.py --check",
     "icons": "node tools/generate-icons.mjs",
     "check:bundle": "node tools/check-bundle-size.mjs"
   },

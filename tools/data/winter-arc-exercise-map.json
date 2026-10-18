@@ -1,0 +1,574 @@
+{
+  "$comment": "Abgleich der Winter-Arc-Übungen (Namen wörtlich aus der Aufnahme) mit der Basisbibliothek core-exercises.v1.json. status: vorhanden = gleiche Übung; variante = gleiche Übung, abweichende Ausführung (als Ausführungshinweis im Programm, Alias in der Bibliothek); neu = fehlt, Vorschlag mit Schlüssel; unklar = Ausführung aus dem Namen nicht eindeutig. Konfidenz bezieht sich auf die Zuordnung, nicht auf die Werte. Quelle: docs/winter-arc-reconstruction.md.",
+  "version": 1,
+  "entries": [
+    {
+      "xeela": "Alternating Flat Dumbbell Press",
+      "de": "Bankdrücken mit Kurzhanteln",
+      "key": "bench_press_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „wechselseitig“; Alias „Alternating Dumbbell Press“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Incline Cable Chest Press",
+      "de": "Schrägbankdrücken am Kabel",
+      "key": "incline_press_cable",
+      "status": "neu",
+      "addition": "Neu: Brust, Kabel und Bank, Gewicht × Wiederholungen; Alias „Incline Cable Press“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Chest Fly Machine",
+      "de": "Butterfly an der Maschine",
+      "key": "pec_deck",
+      "status": "vorhanden",
+      "addition": "Alias „Chest Fly Machine“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Close Grip Bench Press",
+      "de": "Enges Bankdrücken",
+      "key": "close_grip_bench_press",
+      "status": "vorhanden",
+      "addition": "Xeela führt die Übung unter Brust, die Bibliothek unter Trizeps",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Chest Fly With Push",
+      "de": "Fliegende am Kabel",
+      "key": "cable_fly",
+      "status": "unklar",
+      "addition": "Produktinhaber konnte die Ausführung nicht einordnen (18.10.2026); bleibt Fliegende am Kabel mit Hinweis „Zuordnung unsicher“",
+      "confidence": "niedrig"
+    },
+    {
+      "xeela": "Decline Cable Fly",
+      "de": "Fliegende am Kabel",
+      "key": "cable_fly",
+      "status": "variante",
+      "addition": "Hinweis „von oben nach unten“; Alias „Decline Cable Fly“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Alternating Incline Dumbbell Press",
+      "de": "Schrägbankdrücken mit Kurzhanteln",
+      "key": "incline_bench_press_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „wechselseitig“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Flat Dumbbell Bench Press (chest)",
+      "de": "Bankdrücken mit Kurzhanteln",
+      "key": "bench_press_dumbbell",
+      "status": "vorhanden",
+      "addition": "Klammer „(chest)“ stammt aus Xeela",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Push-Ups",
+      "de": "Liegestütze",
+      "key": "push_up",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Incline Cable Fly",
+      "de": "Fliegende am Kabel",
+      "key": "cable_fly",
+      "status": "variante",
+      "addition": "Hinweis „von unten nach oben“; Alias „Incline Cable Fly“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "T-Bar Row",
+      "de": "T-Bar-Rudern",
+      "key": "t_bar_row",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Close Grip Lat Pulldown",
+      "de": "Latziehen, enger Griff",
+      "key": "lat_pulldown_close",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Kneeling Single-Arm Lat Pulldown",
+      "de": "Einarmiges Latziehen am Kabel, kniend",
+      "key": "lat_pulldown_single_arm",
+      "status": "neu",
+      "addition": "Neu: Latissimus, Kabel, je Seite, Gewicht × Wiederholungen",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Pull-Ups",
+      "de": "Klimmzüge mit Unterstützung",
+      "key": "assisted_pull_up",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) an der Maschine mit Gegengewicht (Entlastung × Wiederholungen, D-241)",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Smith Machine Row",
+      "de": "Rudern an der Multipresse, vorgebeugt",
+      "key": "bent_over_row_smith",
+      "status": "neu",
+      "addition": "Neu: Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung)",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Single-Arm Cable Pullover",
+      "de": "Überzüge am Kabel",
+      "key": "straight_arm_pulldown",
+      "status": "variante",
+      "addition": "Hinweis „einarmig“; Alias „Cable Pullover“. Eigene Übung, falls der Verlauf getrennt sein soll (offene Frage)",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Straight-Arm Lat Pulldown",
+      "de": "Überzüge am Kabel",
+      "key": "straight_arm_pulldown",
+      "status": "vorhanden",
+      "addition": "Alias „Straight-Arm Pulldown“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Underhand Cable Rows",
+      "de": "Rudern am Kabel, sitzend",
+      "key": "seated_cable_row",
+      "status": "variante",
+      "addition": "Hinweis „Untergriff“; Alias „Underhand Cable Row“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Wide Grip Cable Rows",
+      "de": "Rudern am Kabel, sitzend",
+      "key": "seated_cable_row",
+      "status": "variante",
+      "addition": "Hinweis „weiter Griff“; Alias „Wide Grip Cable Row“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Wide Grip Lat Pulldown",
+      "de": "Latziehen",
+      "key": "lat_pulldown",
+      "status": "vorhanden",
+      "addition": "Weiter Griff ist die Standardausführung; Alias „Wide Grip Lat Pulldown“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Machine Shoulder Press",
+      "de": "Schulterdrücken an der Maschine",
+      "key": "shoulder_press_machine",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Arm Cable Lateral Raise",
+      "de": "Seitheben am Kabel",
+      "key": "lateral_raise_cable",
+      "status": "vorhanden",
+      "addition": "Name in Xeela vermutlich abgeschnitten („Single-Arm …“); einarmig ist die übliche Ausführung",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Spider Dumbbell Lateral Raise",
+      "de": "Seitheben mit Kurzhanteln",
+      "key": "lateral_raise_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „Brust auf der Schrägbank aufgelegt“; Alias „Spider Lateral Raise“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Seated Front Lateral Raise",
+      "de": "Frontheben mit Kurzhanteln",
+      "key": "front_raise_dumbbell",
+      "status": "variante",
+      "addition": "Laut Produktinhaber (18.10.2026) Frontheben; Hinweis „sitzend“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Bent-Over Dumbbell Rear Delt Fly",
+      "de": "Reverse Flys mit Kurzhanteln",
+      "key": "reverse_fly_dumbbell",
+      "status": "vorhanden",
+      "addition": "Alias „Rear Delt Fly“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Spider Cable Front Raise",
+      "de": "Frontheben am Kabel",
+      "key": "front_raise_cable",
+      "status": "neu",
+      "addition": "Neu: Vordere Schulter, Kabel; Hinweis „Brust auf der Schrägbank aufgelegt“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Standing Alternating Shoulder Press",
+      "de": "Schulterdrücken mit Kurzhanteln, stehend",
+      "key": "shoulder_press_dumbbell_standing",
+      "status": "neu",
+      "addition": "Neu: Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Seated Dumbbell Lateral Raise (with hold)",
+      "de": "Seitheben mit Kurzhanteln",
+      "key": "lateral_raise_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „sitzend, mit Halten“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Alternating Dumbbell Curl With Hold",
+      "de": "Bizepscurls mit Kurzhanteln",
+      "key": "biceps_curl_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „wechselseitig, mit Halten“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Cable Bayesian Curl",
+      "de": "Bizepscurls am Kabel",
+      "key": "biceps_curl_cable",
+      "status": "variante",
+      "addition": "Hinweis „Bayesian: Zug hinter dem Körper, einarmig“; Alias „Bayesian Curl“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Rope Hammer Curl",
+      "de": "Hammercurls am Kabel mit Seil",
+      "key": "hammer_curl_cable",
+      "status": "neu",
+      "addition": "Neu: Bizeps und Unterarme, Kabel",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Dual Dumbbell Preacher Curls",
+      "de": "Scottcurls mit Kurzhanteln",
+      "key": "preacher_curl_dumbbell",
+      "status": "neu",
+      "addition": "Neu: Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange)",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Incline Dumbbell Curls",
+      "de": "Schrägbank-Curls mit Kurzhanteln",
+      "key": "incline_curl_dumbbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Reverse Grip EZ Bar Curls",
+      "de": "Reverse Curls mit SZ-Stange",
+      "key": "reverse_curl_ez_bar",
+      "status": "neu",
+      "addition": "Neu: Unterarme und Bizeps, SZ-Stange",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Single-Arm High Cable Curls",
+      "de": "Bizepscurls am Kabel",
+      "key": "biceps_curl_cable",
+      "status": "variante",
+      "addition": "Hinweis „hoher Zug, einarmig“; Alias „High Cable Curl“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Cable Tricep Pushdown (3-Second Eccentric)",
+      "de": "Trizepsdrücken am Kabel",
+      "key": "triceps_pushdown_cable",
+      "status": "variante",
+      "addition": "Hinweis „3 s senken“ (Tempo, TS-20 ist später vorgesehen; bis dahin Text im Programm)",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "EZ Bar Skull Crushers",
+      "de": "French Press mit SZ-Stange",
+      "key": "skull_crusher",
+      "status": "vorhanden",
+      "addition": "Alias „Skull Crusher“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Cross-Body Cable Extensions",
+      "de": "Trizepsdrücken am Kabel, über Kreuz",
+      "key": "triceps_extension_cable_cross_body",
+      "status": "neu",
+      "addition": "Neu: Trizeps, Kabel, je Seite",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Incline EZ Bar Skull Crushers",
+      "de": "French Press mit SZ-Stange",
+      "key": "skull_crusher",
+      "status": "variante",
+      "addition": "Hinweis „auf der Schrägbank“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Incline Dumbbell Skull Crushers",
+      "de": "French Press mit Kurzhanteln",
+      "key": "skull_crusher_dumbbell",
+      "status": "neu",
+      "addition": "Neu: Trizeps, Kurzhanteln und Bank; Hinweis „auf der Schrägbank“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Single Arm Cable Tricep Extension",
+      "de": "Trizepsdrücken am Kabel",
+      "key": "triceps_pushdown_cable",
+      "status": "variante",
+      "addition": "Hinweis „einarmig“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Overhead Cable Tricep Extention",
+      "de": "Trizepsstrecken über Kopf am Kabel",
+      "key": "overhead_extension_cable",
+      "status": "vorhanden",
+      "addition": "Tippfehler „Extention“ stammt aus Xeela",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Seated Single-Arm Dumbbell Extensions",
+      "de": "Trizepsstrecken über Kopf mit Kurzhantel",
+      "key": "overhead_extension_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „sitzend, einarmig“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Single-Arm Cross-Body Cable Extension",
+      "de": "Trizepsdrücken am Kabel, über Kreuz",
+      "key": "triceps_extension_cable_cross_body",
+      "status": "neu",
+      "addition": "Gleiche neue Übung wie „Cross-Body Cable Extensions“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Close Grip Push-Up",
+      "de": "Liegestütze",
+      "key": "push_up",
+      "status": "variante",
+      "addition": "Hinweis „enge Handstellung“; Alias „Close Grip Push-Up“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Barbell Back Squats",
+      "de": "Kniebeuge mit Langhantel",
+      "key": "back_squat_barbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Barbell Romanian Deadlift",
+      "de": "Rumänisches Kreuzheben mit Langhantel",
+      "key": "romanian_deadlift_barbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Heel-Elevated Goblet Squats",
+      "de": "Goblet Squat",
+      "key": "goblet_squat",
+      "status": "variante",
+      "addition": "Hinweis „Fersen erhöht“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Cable Hip Hinge Pull-Throughs",
+      "de": "Pull-Throughs am Kabel",
+      "key": "cable_pull_through",
+      "status": "neu",
+      "addition": "Neu: Gesäß und Oberschenkel hinten, Kabel",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Calf Raise Machine",
+      "de": "Wadenheben sitzend",
+      "key": "seated_calf_raise",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) sitzend",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Dumbbell Romanian Deadlifts",
+      "de": "Rumänisches Kreuzheben mit Kurzhanteln",
+      "key": "romanian_deadlift_dumbbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Alternating Dumbbell Lunges",
+      "de": "Ausfallschritte mit Kurzhanteln",
+      "key": "lunge_dumbbell",
+      "status": "vorhanden",
+      "addition": "Hinweis „wechselseitig“",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Dumbbell Hip Thrust",
+      "de": "Hip Thrust mit Kurzhantel",
+      "key": "hip_thrust_dumbbell",
+      "status": "neu",
+      "addition": "Neu: Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine)",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Single Leg Press Machine",
+      "de": "Beinpresse, einbeinig",
+      "key": "leg_press_single_leg",
+      "status": "neu",
+      "addition": "Neu: Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung)",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Dumbbell Calf Raises",
+      "de": "Wadenheben mit Kurzhanteln",
+      "key": "calf_raise_dumbbell",
+      "status": "neu",
+      "addition": "Neu: Waden, Kurzhanteln",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Leg Press Machine",
+      "de": "Beinpresse",
+      "key": "leg_press",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Leg press Calf Raise",
+      "de": "Wadenheben an der Beinpresse",
+      "key": "calf_press_leg_press",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Quad Extentions",
+      "de": "Beinstrecker",
+      "key": "leg_extension",
+      "status": "vorhanden",
+      "addition": "Tippfehler „Extentions“ stammt aus Xeela",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Lying Hamstring Curls",
+      "de": "Beinbeuger liegend",
+      "key": "lying_leg_curl",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Single-Leg Quad Extension",
+      "de": "Beinstrecker",
+      "key": "leg_extension",
+      "status": "variante",
+      "addition": "Hinweis „einbeinig“",
+      "confidence": "mittel"
+    },
+    {
+      "xeela": "Bicycles",
+      "de": "Bicycle Crunches",
+      "key": "bicycle_crunch",
+      "status": "neu",
+      "addition": "Neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Crunches",
+      "de": "Crunches",
+      "key": "crunch",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Dead Bugs",
+      "de": "Dead Bug",
+      "key": "dead_bug",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Heel Taps",
+      "de": "Heel Taps",
+      "key": "heel_tap",
+      "status": "neu",
+      "addition": "Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Knee Raises",
+      "de": "Knieheben stehend",
+      "key": "standing_knee_raise",
+      "status": "neu",
+      "addition": "Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Plank",
+      "de": "Unterarmstütz (Plank)",
+      "key": "plank",
+      "status": "vorhanden",
+      "addition": "Dauer (Erfassungsart Zeit)",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Leg Raises",
+      "de": "Beinheben liegend",
+      "key": "lying_leg_raise",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) liegend",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Russian Twists",
+      "de": "Russian Twist",
+      "key": "russian_twist",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Sit-Ups",
+      "de": "Sit-ups",
+      "key": "sit_up",
+      "status": "neu",
+      "addition": "Neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Windshield Wipers",
+      "de": "Windshield Wipers",
+      "key": "windshield_wiper",
+      "status": "neu",
+      "addition": "Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "xeela": "Cardio Treadmill",
+      "de": "Laufband",
+      "key": "treadmill",
+      "status": "vorhanden",
+      "addition": "Dauer und Distanz (D-241); im Programm nur die Dauer 30 min vorgegeben",
+      "confidence": "hoch"
+    }
+  ]
+}

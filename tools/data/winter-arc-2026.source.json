@@ -1,0 +1,713 @@
+{
+  "$comment": "Rekonstruktion des Xeela-Programms „2026 Winter Arc“ aus der Bildschirmaufnahme des Produktinhabers (8 Teile, 18.10.2026) und dem Player-Video (ScreenRecording 15-53-45). Namen wörtlich wie angezeigt, auch Tippfehler der App. source = Teil und Zeitstempel, an dem der Wert gelesen wurde; „player“ = Player-Video. Kein Wert ist geraten; siehe docs/winter-arc-reconstruction.md.",
+  "program": {
+    "name": "2026 Winter Arc",
+    "trainer": "Ilya | Xeela Trainer",
+    "weeks": 8,
+    "sessions": 40,
+    "trainingDaysPerWeek": 5,
+    "caloriesPerDayApprox": 525,
+    "minutesPerDayApprox": 75,
+    "muscleGroups": 12,
+    "about": "Winter Arc is an 8-week challenge inside Xeela built for people who refuse to get soft when the year slows down. You train five days a week for eight weeks, forty sessions total, all programmed in the app so you never have to guess what to do. This is not a casual plan and it is not a participation trophy. One person who stays consistent, checks in, and shows real change wins $10,000. If you want winter to be a build season instead of a fade, this is the lock-in.",
+    "keyBenefits": [
+      ["Enhanced Muscle Definition", "Sculpt & define your muscles with targeted training."],
+      ["Increased Strength", "Lift heavier and perform more reps with improved endurance."],
+      ["Improved Metabolism", "Burn more calories even at rest with increased muscle mass."],
+      ["Boosted Confidence", "Achieve a stronger, more athletic physique."]
+    ],
+    "source": "T1 00:00–00:07",
+    "scheduleNote": "Woche 1 beginnt am Sonntag (Tag 1 = 18.10.2026, Chest and Back), Ruhetage Mo+Di. Ab Woche 2 sind Ruhetage So+Mo und die fünf Einheiten liegen Di–Sa. Datumsangaben nur in der Aufnahme des Produktinhabers (Start 18.10.2026); das Programm selbst ist datumsunabhängig."
+  },
+  "restDaysByWeek": {
+    "1": [2, 3],
+    "2": [8, 9],
+    "3": [15, 16],
+    "4": [22, 23],
+    "5": [29, 30],
+    "6": [36, 37],
+    "7": [43, 44],
+    "8": [50, 51]
+  },
+  "days": [
+    {
+      "week": 1,
+      "day": 1,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "player 00:00–00:02; T1 Liste",
+      "items": [
+        ["Chest", "Alternating Flat Dumbbell Press", 3, "10", 90],
+        ["Lats", "T-Bar Row", 3, "10", 90],
+        ["Chest", "Incline Cable Chest Press", 3, "12", 90],
+        ["Lats", "Close Grip Lat Pulldown", 3, "12", 75],
+        ["Chest", "Chest Fly Machine", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 1,
+      "day": 4,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T1 00:19–00:27",
+      "items": [
+        ["Shoulders", "Machine Shoulder Press", 3, "10", 90],
+        ["Shoulders", "Arm Cable Lateral Raise", 3, "15", 60],
+        ["Biceps", "Alternating Dumbbell Curl With Hold", 3, "10", 75],
+        ["Chest", "Close Grip Bench Press", 3, "12", 75],
+        ["Biceps", "Cable Bayesian Curl", 3, "15", 75],
+        ["Triceps", "Cable Tricep Pushdown (3-Second Eccentric)", 3, "12", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 1,
+      "day": 5,
+      "name": "Legs and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T1 00:31–00:42",
+      "items": [
+        ["Quads", "Barbell Back Squats", 3, "10", 90],
+        ["Hamstrings", "Barbell Romanian Deadlift", 3, "10", 90],
+        ["Quads", "Heel-Elevated Goblet Squats", 3, "12", 90],
+        ["Hamstrings", "Cable Hip Hinge Pull-Throughs", 3, "15", 75],
+        ["Calves", "Calf Raise Machine", 3, "15", 60],
+        ["Abs", "Bicycles", 3, "20", 45],
+        ["Abs", "Crunches", 3, "20", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 1,
+      "day": 6,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T2 00:01–00:08",
+      "items": [
+        ["Lats", "Kneeling Single-Arm Lat Pulldown", 3, "10", 75],
+        ["Chest", "Chest Fly With Push", 3, "12", 75],
+        ["Shoulders", "Spider Dumbbell Lateral Raise", 3, "15", 75],
+        ["Biceps", "Rope Hammer Curl", 3, "12", 60],
+        ["Triceps", "Close Grip Push-Up", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 1,
+      "day": 7,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T2 00:12–00:20",
+      "items": [
+        ["Hamstrings", "Dumbbell Romanian Deadlifts", 3, "12", 90],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "12", 90],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "15", 75],
+        ["Quads", "Single Leg Press Machine", 3, "15", 75],
+        ["Calves", "Dumbbell Calf Raises", 3, "12", 60],
+        ["Abs", "Dead Bugs", 3, "20", 45],
+        ["Obliques", "Heel Taps", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 2,
+      "day": 10,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T2 00:28–00:33",
+      "items": [
+        ["Chest", "Incline Cable Chest Press", 3, "10", 90],
+        ["Lats", "Pull-Ups", 3, "10", 90],
+        ["Lats", "Smith Machine Row", 3, "12", 90],
+        ["Lats", "Single-Arm Cable Pullover", 3, "15", 60],
+        ["Chest", "Decline Cable Fly", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 2,
+      "day": 11,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T2 00:36–00:41",
+      "items": [
+        ["Shoulders", "Seated Front Lateral Raise", 3, "10", 90],
+        ["Shoulders", "Bent-Over Dumbbell Rear Delt Fly", 3, "15", 75],
+        ["Biceps", "Dual Dumbbell Preacher Curls", 3, "12", 75],
+        ["Triceps", "EZ Bar Skull Crushers", 3, "12", 75],
+        ["Biceps", "Incline Dumbbell Curls", 3, "15", 75],
+        ["Triceps", "Cross-Body Cable Extensions", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 2,
+      "day": 12,
+      "name": "Legs and Abs",
+      "exercises": 7,
+      "sets": 21,
+      "source": "T2 00:45; T3 00:00–00:04",
+      "items": [
+        ["Quads", "Leg Press Machine", 3, "12", 90],
+        ["Calves", "Leg press Calf Raise", 3, "15", 60],
+        ["Hamstrings", "Cable Hip Hinge Pull-Throughs", 3, "15", 75],
+        ["Quads", "Quad Extentions", 3, "15", 90],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "12", 75],
+        ["Abs", "Knee Raises", 3, "15", 45],
+        ["Abs", "Plank", 3, "00:45 s", 45]
+      ]
+    },
+    {
+      "week": 2,
+      "day": 13,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T3 00:08–00:12",
+      "items": [
+        ["Chest", "Alternating Incline Dumbbell Press", 3, "10", 90],
+        ["Lats", "T-Bar Row", 3, "10", 90],
+        ["Shoulders", "Arm Cable Lateral Raise", 3, "12", 60],
+        ["Biceps", "Reverse Grip EZ Bar Curls", 3, "15", 60],
+        ["Triceps", "Incline EZ Bar Skull Crushers", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 2,
+      "day": 14,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 24,
+      "source": "T3 00:18–00:22",
+      "note": "Cardio Treadmill hier als „3 Sets • 30:00 minutes“ angezeigt (Summe 24 passt); vermutlich Datenfehler bei Xeela. In der App als 1 Satz 30 min übernommen, als Abweichung markiert.",
+      "items": [
+        ["Hamstrings", "Barbell Romanian Deadlift", 3, "10", 90],
+        ["Quads", "Single-Leg Quad Extension", 3, "15", 75],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "12", 75],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "10", 90],
+        ["Calves", "Calf Raise Machine", 3, "15", 60],
+        ["Abs", "Leg Raises", 3, "15", 45],
+        ["Obliques", "Russian Twists", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 3, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 3,
+      "day": 17,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T3 00:28–00:34",
+      "items": [
+        ["Chest", "Flat Dumbbell Bench Press (chest)", 3, "10", 90],
+        ["Lats", "Straight-Arm Lat Pulldown", 3, "12", 75],
+        ["Chest", "Push-Ups", 3, "15", 75],
+        ["Lats", "Underhand Cable Rows", 3, "8", 75],
+        ["Chest", "Incline Cable Fly", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 3,
+      "day": 18,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T3 00:38–00:41; T4 00:00–00:04",
+      "items": [
+        ["Shoulders", "Machine Shoulder Press", 3, "10", 90],
+        ["Shoulders", "Spider Dumbbell Lateral Raise", 3, "15", 75],
+        ["Biceps", "Rope Hammer Curl", 3, "10", 75],
+        ["Triceps", "Incline Dumbbell Skull Crushers", 3, "12", 75],
+        ["Biceps", "Single-Arm High Cable Curls", 3, "15", 60],
+        ["Triceps", "Single Arm Cable Tricep Extension", 3, "15", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 3,
+      "day": 19,
+      "name": "Legs and Abs",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T4 00:11–00:15",
+      "items": [
+        ["Quads", "Alternating Dumbbell Lunges", 3, "10", 75],
+        ["Hamstrings", "Dumbbell Romanian Deadlifts", 3, "12", 90],
+        ["Quads", "Heel-Elevated Goblet Squats", 3, "10", 90],
+        ["Calves", "Calf Raise Machine", 3, "12", 60],
+        ["Abs", "Sit-Ups", 3, "15", 45],
+        ["Obliques", "Windshield Wipers", 3, "12", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 3,
+      "day": 20,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T4 00:20–00:23",
+      "items": [
+        ["Chest", "Incline Cable Chest Press", 3, "10", 90],
+        ["Lats", "Wide Grip Cable Rows", 3, "15", 75],
+        ["Shoulders", "Spider Cable Front Raise", 3, "12", 60],
+        ["Biceps", "Single-Arm High Cable Curls", 3, "15", 60],
+        ["Triceps", "Overhead Cable Tricep Extention", 3, "12", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 3,
+      "day": 21,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T4 00:27–00:30",
+      "items": [
+        ["Glutes", "Dumbbell Hip Thrust", 3, "15", 90],
+        ["Quads", "Single Leg Press Machine", 3, "15", 75],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "12", 75],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "12", 75],
+        ["Calves", "Dumbbell Calf Raises", 3, "15", 60],
+        ["Abs", "Leg Raises", 3, "15", 45],
+        ["Abs", "Bicycles", 3, "20", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 4,
+      "day": 24,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T4 00:39–00:41 (Lücke 00:40 mit 6 B/s geschlossen)",
+      "items": [
+        ["Lats", "Smith Machine Row", 3, "10", 90],
+        ["Chest", "Alternating Incline Dumbbell Press", 3, "8", 75],
+        ["Lats", "Kneeling Single-Arm Lat Pulldown", 3, "12", 75],
+        ["Chest", "Push-Ups", 3, "15", 75],
+        ["Lats", "Wide Grip Lat Pulldown", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 4,
+      "day": 25,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T4 00:45; T5 00:00–00:02",
+      "items": [
+        ["Shoulders", "Standing Alternating Shoulder Press", 3, "10", 90],
+        ["Shoulders", "Arm Cable Lateral Raise", 3, "15", 60],
+        ["Biceps", "Alternating Dumbbell Curl With Hold", 3, "12", 75],
+        ["Triceps", "Cross-Body Cable Extensions", 3, "15", 75],
+        ["Biceps", "Rope Hammer Curl", 3, "10", 75],
+        ["Triceps", "Seated Single-Arm Dumbbell Extensions", 3, "12", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 4,
+      "day": 26,
+      "name": "Legs and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T5 00:06–00:11",
+      "items": [
+        ["Quads", "Leg Press Machine", 3, "10", 90],
+        ["Calves", "Leg press Calf Raise", 3, "15", 60],
+        ["Hamstrings", "Barbell Romanian Deadlift", 3, "12", 90],
+        ["Hamstrings", "Cable Hip Hinge Pull-Throughs", 3, "12", 75],
+        ["Quads", "Quad Extentions", 3, "15", 75],
+        ["Abs", "Crunches", 3, "20", 45],
+        ["Abs", "Plank", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 4,
+      "day": 27,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T5 00:15–00:17 (Titel und Übung 3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Chest", "Flat Dumbbell Bench Press (chest)", 3, "10", 90],
+        ["Lats", "Close Grip Lat Pulldown", 3, "10", 90],
+        ["Shoulders", "Bent-Over Dumbbell Rear Delt Fly", 3, "15", 60],
+        ["Biceps", "Dual Dumbbell Preacher Curls", 3, "15", 75],
+        ["Triceps", "Overhead Cable Tricep Extention", 3, "12", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 4,
+      "day": 28,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T5 00:20–00:22 (Übungen 2, 5, 6 mit 6 B/s bestätigt)",
+      "items": [
+        ["Hamstrings", "Dumbbell Romanian Deadlifts", 3, "15", 90],
+        ["Quads", "Single-Leg Quad Extension", 3, "15", 75],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "12", 75],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "12", 90],
+        ["Calves", "Dumbbell Calf Raises", 3, "15", 60],
+        ["Obliques", "Heel Taps", 3, "00:45 s", 45],
+        ["Abs", "Plank", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 5,
+      "day": 31,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T5 00:30–00:33 (Übungen 3, 4 mit 6 B/s bestätigt)",
+      "items": [
+        ["Chest", "Incline Cable Chest Press", 3, "12", 90],
+        ["Lats", "T-Bar Row", 3, "10", 90],
+        ["Chest", "Decline Cable Fly", 3, "12", 75],
+        ["Lats", "Kneeling Single-Arm Lat Pulldown", 3, "12", 75],
+        ["Chest", "Chest Fly Machine", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 5,
+      "day": 32,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T5 00:36–00:39",
+      "items": [
+        ["Shoulders", "Machine Shoulder Press", 3, "10", 90],
+        ["Shoulders", "Seated Dumbbell Lateral Raise (with hold)", 3, "15", 75],
+        ["Chest", "Close Grip Bench Press", 3, "12", 75],
+        ["Biceps", "Single-Arm High Cable Curls", 3, "15", 60],
+        ["Triceps", "Cable Tricep Pushdown (3-Second Eccentric)", 3, "12", 75],
+        ["Biceps", "Incline Dumbbell Curls", 3, "12", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 5,
+      "day": 33,
+      "name": "Legs and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T6 00:00–00:03",
+      "items": [
+        ["Quads", "Barbell Back Squats", 3, "10", 90],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "15", 75],
+        ["Quads", "Single-Leg Quad Extension", 3, "15", 75],
+        ["Hamstrings", "Cable Hip Hinge Pull-Throughs", 3, "12", 75],
+        ["Calves", "Calf Raise Machine", 3, "15", 60],
+        ["Abs", "Knee Raises", 3, "15", 45],
+        ["Obliques", "Russian Twists", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 5,
+      "day": 34,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T6 00:09–00:11",
+      "items": [
+        ["Chest", "Alternating Flat Dumbbell Press", 3, "10", 90],
+        ["Lats", "Smith Machine Row", 3, "12", 90],
+        ["Shoulders", "Spider Dumbbell Lateral Raise", 3, "15", 75],
+        ["Biceps", "Reverse Grip EZ Bar Curls", 3, "12", 60],
+        ["Triceps", "Cross-Body Cable Extensions", 3, "15", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 5,
+      "day": 35,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T6 00:14–00:16 (Übungen 2, 3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Hamstrings", "Barbell Romanian Deadlift", 3, "12", 90],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "12", 75],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "15", 75],
+        ["Quads", "Single Leg Press Machine", 3, "15", 75],
+        ["Calves", "Dumbbell Calf Raises", 3, "15", 60],
+        ["Abs", "Leg Raises", 3, "15", 45],
+        ["Abs", "Sit-Ups", 3, "15", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 6,
+      "day": 38,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T6 00:25–00:28",
+      "items": [
+        ["Chest", "Alternating Flat Dumbbell Press", 3, "8", 90],
+        ["Lats", "Underhand Cable Rows", 3, "12", 75],
+        ["Chest", "Incline Cable Chest Press", 3, "12", 75],
+        ["Lats", "Close Grip Lat Pulldown", 3, "15", 75],
+        ["Lats", "Straight-Arm Lat Pulldown", 3, "15", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 6,
+      "day": 39,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T6 00:32–00:38",
+      "items": [
+        ["Shoulders", "Seated Front Lateral Raise", 3, "10", 90],
+        ["Shoulders", "Bent-Over Dumbbell Rear Delt Fly", 3, "15", 75],
+        ["Biceps", "Rope Hammer Curl", 3, "12", 75],
+        ["Triceps", "EZ Bar Skull Crushers", 3, "12", 75],
+        ["Biceps", "Dual Dumbbell Preacher Curls", 3, "15", 75],
+        ["Triceps", "Overhead Cable Tricep Extention", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 6,
+      "day": 40,
+      "name": "Legs and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T6 00:42–00:45 (Titel mit 6 B/s bestätigt)",
+      "items": [
+        ["Quads", "Leg Press Machine", 3, "15", 90],
+        ["Hamstrings", "Dumbbell Romanian Deadlifts", 3, "10", 90],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "12", 75],
+        ["Quads", "Quad Extentions", 3, "15", 75],
+        ["Calves", "Dumbbell Calf Raises", 3, "12", 60],
+        ["Abs", "Leg Raises", 3, "15", 45],
+        ["Abs", "Crunches", 3, "20", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 6,
+      "day": 41,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T7 00:03–00:06 (Übungen 2, 3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Lats", "Smith Machine Row", 3, "10", 75],
+        ["Chest", "Chest Fly Machine", 3, "15", 75],
+        ["Shoulders", "Arm Cable Lateral Raise", 3, "15", 60],
+        ["Triceps", "Single-Arm Cross-Body Cable Extension", 3, "12", 60],
+        ["Biceps", "Alternating Dumbbell Curl With Hold", 3, "12", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 6,
+      "day": 42,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T7 00:08–00:11 (Titel und Übungen 1, 5, 6 mit 6 B/s bestätigt)",
+      "items": [
+        ["Quads", "Alternating Dumbbell Lunges", 3, "15", 90],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "15", 75],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "15", 75],
+        ["Quads", "Single Leg Press Machine", 3, "12", 75],
+        ["Calves", "Calf Raise Machine", 3, "15", 60],
+        ["Abs", "Sit-Ups", 3, "15", 45],
+        ["Abs", "Plank", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 7,
+      "day": 45,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T7 00:18–00:21 (Übung 4 mit 6 B/s bestätigt)",
+      "items": [
+        ["Chest", "Alternating Incline Dumbbell Press", 3, "10", 90],
+        ["Chest", "Push-Ups", 3, "15", 75],
+        ["Lats", "Kneeling Single-Arm Lat Pulldown", 3, "10", 75],
+        ["Lats", "Wide Grip Cable Rows", 3, "12", 75],
+        ["Chest", "Decline Cable Fly", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 7,
+      "day": 46,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T7 00:25–00:27 (Titel und Übungen 1, 5 mit 6 B/s bestätigt)",
+      "items": [
+        ["Shoulders", "Spider Cable Front Raise", 3, "12", 75],
+        ["Shoulders", "Bent-Over Dumbbell Rear Delt Fly", 3, "15", 75],
+        ["Biceps", "Incline Dumbbell Curls", 3, "12", 75],
+        ["Triceps", "Incline Dumbbell Skull Crushers", 3, "10", 75],
+        ["Biceps", "Cable Bayesian Curl", 3, "10", 90],
+        ["Triceps", "Cable Tricep Pushdown (3-Second Eccentric)", 3, "12", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 7,
+      "day": 47,
+      "name": "Legs and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T7 00:31–00:34 (Übungen 2–4 mit 6 B/s bestätigt)",
+      "items": [
+        ["Quads", "Barbell Back Squats", 3, "12", 90],
+        ["Hamstrings", "Cable Hip Hinge Pull-Throughs", 3, "12", 75],
+        ["Quads", "Heel-Elevated Goblet Squats", 3, "15", 90],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "12", 75],
+        ["Calves", "Calf Raise Machine", 3, "15", 60],
+        ["Abs", "Knee Raises", 3, "15", 45],
+        ["Obliques", "Heel Taps", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 7,
+      "day": 48,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T7 00:39–00:40; T8 00:01–00:04",
+      "items": [
+        ["Chest", "Incline Cable Chest Press", 3, "10", 90],
+        ["Lats", "Smith Machine Row", 3, "12", 90],
+        ["Shoulders", "Seated Front Lateral Raise", 3, "10", 75],
+        ["Biceps", "Single-Arm High Cable Curls", 3, "15", 60],
+        ["Triceps", "Overhead Cable Tricep Extention", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 7,
+      "day": 49,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T8 00:07–00:10 (Titel und Übungen 1, 5 mit 6 B/s bestätigt)",
+      "items": [
+        ["Hamstrings", "Dumbbell Romanian Deadlifts", 3, "10", 90],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "15", 90],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "10", 75],
+        ["Quads", "Single Leg Press Machine", 3, "12", 60],
+        ["Calves", "Dumbbell Calf Raises", 3, "12", 60],
+        ["Obliques", "Russian Twists", 3, "00:45 s", 45],
+        ["Abs", "Plank", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 8,
+      "day": 52,
+      "name": "Chest and Back",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T8 00:18–00:21 (Übungen 2, 3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Chest", "Flat Dumbbell Bench Press (chest)", 3, "8", 90],
+        ["Lats", "Close Grip Lat Pulldown", 3, "12", 75],
+        ["Chest", "Incline Cable Chest Press", 3, "12", 75],
+        ["Lats", "Straight-Arm Lat Pulldown", 3, "15", 75],
+        ["Chest", "Chest Fly Machine", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 8,
+      "day": 53,
+      "name": "Shoulders and Arms",
+      "exercises": 7,
+      "sets": 19,
+      "source": "T8 00:23–00:26 (Übung 3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Shoulders", "Machine Shoulder Press", 3, "8", 90],
+        ["Shoulders", "Arm Cable Lateral Raise", 3, "15", 75],
+        ["Biceps", "Dual Dumbbell Preacher Curls", 3, "15", 75],
+        ["Triceps", "Incline EZ Bar Skull Crushers", 3, "10", 75],
+        ["Biceps", "Rope Hammer Curl", 3, "10", 75],
+        ["Triceps", "Single-Arm Cross-Body Cable Extension", 3, "15", 60],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 8,
+      "day": 54,
+      "name": "Legs and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T8 00:29–00:31 (Titel und Übungen 4–6 mit 6 B/s bestätigt)",
+      "items": [
+        ["Quads", "Heel-Elevated Goblet Squats", 3, "10", 90],
+        ["Hamstrings", "Barbell Romanian Deadlift", 3, "12", 90],
+        ["Quads", "Single-Leg Quad Extension", 3, "15", 75],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "12", 75],
+        ["Calves", "Calf Raise Machine", 3, "15", 60],
+        ["Abs", "Leg Raises", 3, "15", 45],
+        ["Obliques", "Russian Twists", 3, "00:45 s", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 8,
+      "day": 55,
+      "name": "Upper Body",
+      "exercises": 6,
+      "sets": 16,
+      "source": "T8 00:35–00:38 (Übungen 2, 3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Lats", "Kneeling Single-Arm Lat Pulldown", 3, "12", 75],
+        ["Chest", "Chest Fly Machine", 3, "10", 90],
+        ["Shoulders", "Standing Alternating Shoulder Press", 3, "10", 75],
+        ["Biceps", "Reverse Grip EZ Bar Curls", 3, "12", 60],
+        ["Triceps", "Cross-Body Cable Extensions", 3, "15", 75],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    },
+    {
+      "week": 8,
+      "day": 56,
+      "name": "Lower Body and Abs",
+      "exercises": 8,
+      "sets": 22,
+      "source": "T8 00:41–00:44 (Titel und Übungen 1–3 mit 6 B/s bestätigt)",
+      "items": [
+        ["Quads", "Barbell Back Squats", 3, "12", 90],
+        ["Hamstrings", "Lying Hamstring Curls", 3, "15", 75],
+        ["Glutes", "Dumbbell Hip Thrust", 3, "12", 75],
+        ["Quads", "Alternating Dumbbell Lunges", 3, "10", 75],
+        ["Calves", "Dumbbell Calf Raises", 3, "15", 60],
+        ["Abs", "Plank", 3, "01:00 min", 45],
+        ["Abs", "Crunches", 3, "20", 45],
+        ["Cardio", "Cardio Treadmill", 1, "30:00 min", 0]
+      ]
+    }
+  ]
+}

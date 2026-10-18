@@ -237,3 +237,121 @@ Ergebnisse des neuen Stands:
 | GitHub Actions, Lauf 12 auf `2ce322d` (darad11/fitness-app#4) | – | Alle Prüfungen bestanden. E2E Chromium in fünf Versuchen je 26 von 26 bestanden, ohne Wiederholung; WebKit 24 bestanden, 2 planmäßig übersprungen |
 
 Vorher waren 3 von 12 Ausführungen rot. Fünf grüne Versuche allein beweisen die Behebung nicht. Zusammen mit der gefundenen Ursache und dem neuen Komponententest gilt der Fehler als behoben. Tritt er wieder auf, zeigen die Annotationen den betroffenen Test.
+
+### M1 · AP 1.1 Übungsbibliothek · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 23 Testdateien, 270 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 94,59 %, alle Schwellen erreicht |
+| Dokumente | `pnpm check:docs` | Bestanden; neu geprüft: Liste in `exercise-library.md` stimmt mit den Daten überein, alle 39 Übungen der Vorlagen sind enthalten |
+| Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 177,5 KB gzip (vorher 173,3 KB); Service Worker mit 37 vorab gespeicherten Dateien, darunter die Übungsdaten |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 28 Tests bestanden, 0 fehlgeschlagen |
+| GitHub Actions auf `784b93e` (darad11/fitness-app#5) | – | Alle Prüfungen bestanden: Lint, Typen, Unit-Tests, Dokumente, Build; E2E Chromium und E2E WebKit |
+
+Abgedeckt: AK-EXL-01 (105 Übungen mit Name, Hauptmuskeln, Gerät und Erfassungsart; Seite `/uebungen` startet offline, geprüft im Offline-Test aller Seiten in Chromium) und AK-EXL-02 (Suche nach Namen und Alias-Namen, auch englisch, unabhängig von Groß- und Kleinschreibung, ä/ae und Bindestrichen; Filter nach Muskelgruppe und Gerät; 500 Übungen in unter 100 ms, gemessen im Unit-Test). Die neuen Seiten `/training` und `/uebungen` sind in die Prüfungen auf fremde Anfragen und auf axe-Verstöße in Hell und Dunkel aufgenommen.
+
+Ein Fehler wurde während der Arbeit gefunden und behoben: Die Übungsdaten landeten zunächst im Startbündel (180,8 KB gzip); sie werden jetzt mit der Seite nachgeladen (D-242). Danach lud zunächst jede Eingabe ins Suchfeld die Daten neu, weil sich die Adresse ändert; zwei Komponententests schlugen deshalb fehl. Die Route lädt seitdem nicht mehr neu, beide Tests bestehen.
+
+### M1 · AP 1.2 Beispielvorlagen · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 27 Testdateien, 289 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 95,33 %, alle Schwellen erreicht |
+| Dokumente | `pnpm check:docs` | Bestanden; neu geprüft: Vorlagen-Daten stimmen mit den Tabellen in `sample-templates.md` überein |
+| Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 178,4 KB gzip |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | Erster Lauf: 29 bestanden, 1 fehlgeschlagen (siehe unten). Nach der Behebung drei Läufe mit je 30 von 30 bestanden; dazu Übungen und Vorlagen zehnfach mit 8 parallelen Workern: 40 von 40 bestanden |
+
+Abgedeckt: Vorlagenliste und Vorlage mit Etikett „Beispiel", Hinweistext, Ablauf und Satzschema (Teil von AK-PRG-06), stabile IDs, Aufwärm- und Drop-Sätze, Zeitbereiche, unbekannte Vorlage als „Seite nicht gefunden". Beide neuen Seiten sind im Offline-Test aller Seiten sowie in den Prüfungen auf fremde Anfragen und axe-Verstöße enthalten (Teil von AK-PWA-02). Ein Fehlschlag beim Nachladen der Daten führt beim nächsten Aufruf zu einem neuen Versuch (Unit-Test).
+
+Fehlschlag im ersten Lauf: `e2e/exercises.spec.ts` (Desktop) wartete vergeblich auf die Liste „3 Treffer" nach der Wahl von Muskelgruppe und Gerät. In 15 Einzelwiederholungen und vier weiteren kompletten Läufen trat er nicht wieder auf, ein Komponententest mit zwei direkt aufeinanderfolgenden Filteränderungen bestand. Wahrscheinliche Ursache: Die Seite hat jede Änderung aus der aktuellen Adresse abgeleitet; React Router übernimmt eine neue Adresse verzögert, sodass ein zweiter Filter kurz danach den ersten überschreiben konnte. Das betrifft auch schnelle Eingaben auf dem iPhone. Die Seite hält Suche und Filter seitdem selbst und schreibt sie nur in die Adresse. Ob genau das die Ursache war, ist nicht bewiesen; der Komponententest sichert das Verhalten ab.
+
+### M1 · AP 1.3 Trainings-Domain · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 30 Testdateien, 316 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 96,18 %, `training/calc` 100 %, `training/service` 98,18 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 178,5 KB gzip |
+| E2E Chromium | `pnpm test:e2e` | 30 von 30 bestanden (keine neuen E2E-Tests; die Oberfläche folgt mit AP 1.4) |
+
+Abgedeckt mit Integrationstests gegen eine Test-Datenbank (fake-indexeddb): AK-TRN-01 (Start aus einem Vorlagentag mit Snapshot), AK-TRN-03 (Aufwärm-, Arbeits- und Drop-Sätze; Pause erst nach der Drop-Kette), AK-TRN-04 (Grenzen, ungültige Werte überschreiben nichts), AK-TRN-05 (Vorwerte je Satzplatz aus der Projektion), AK-TRN-06 (Vorschläge, Pflichteingabe bei Bereichen), AK-TRN-07 (erledigt, übersprungen, rückgängig mit Werten), AK-TRN-09 (Übungen und Sätze hinzufügen und entfernen), AK-TRN-10 und AK-TRN-11 (Timer mit Endzeitpunkt, ±, Überspringen), AK-TRN-19 (Rückfrage bei offenen Sätzen, Abschluss mit Projektion), AK-TRN-21 (Verwerfen und Wiederherstellen), AK-TRN-22 (eine laufende Einheit). Die Nachweise per E2E folgen mit der Oberfläche.
+
+Während der Arbeit gefunden und behoben (vier Tests zunächst rot): „Erledigt" übernahm feste Zielwerte nur, wenn der Aufrufer sie mitgab; ein neuer Satz übernahm das Ziel eines noch leeren Satzes; nach einer Drop-Kette startete keine Pause, weil Drop-Sätze 0 s Pause haben; ein eigener Fehlertyp hieß wie ein eingebauter Fehler von Dexie („NotFoundError") und wurde deshalb verpackt.
+
+### M1 · AP 1.4 Trainingsplayer · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 32 Testdateien, 327 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,44 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 181,9 KB gzip |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Neue E2E-Abläufe in `e2e/session.spec.ts`: Training aus einem Vorlagentag starten; „erledigt" ohne Gewicht verlangt eine Eingabe, die Wiederholungen kommen aus dem festen Ziel; erledigter Satz übersteht ein sofortiges Neuladen; eine Eingabe mit Komma ist nach 0,6 s gespeichert und übersteht ein Neuladen (AK-TRN-16); Rückgängig behält die Werte; Beenden mit Rückfrage bei 15 offenen Sätzen; Zusammenfassung mit 2 Sätzen und 500 kg Volumen; beim nächsten Mal Vorwert als Platzhalter und „Letztes Mal". Zweiter Ablauf im dunklen Modus: freies Training, Übung über die Suche auswählen (Entlastung × Wiederholungen), verwerfen, „Rückgängig", zweiter Start bietet „Training fortsetzen" an. axe ohne Verstöße im Player (hell und dunkel), im Dialog und in der Zusammenfassung. Komponententests decken Überspringen, Entfernen, Satz hinzufügen, Übung entfernen mit und ohne Rückfrage, ungültige Eingabe, ±-Taste und unbekannte Einheiten ab.
+
+Während der Arbeit gefunden und behoben: Ohne Spaltenköpfe war im Bildschirmfoto nicht erkennbar, welches Feld kg und welches Wiederholungen ist; jetzt hat jede Übung eine Kopfzeile. Die Übungsauswahl, die Bibliotheksseite und die Suche lagen über die Schnittstelle des Moduls im Startbündel (183,4 KB); die Auswahl wird jetzt erst beim Öffnen geladen. jsdom kennt `showModal` nicht; die Testumgebung hat dafür einen kleinen Ersatz.
+
+### M1 · AP D1 Designsystem 2.0 und AP D2 Premium-Player · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 34 Testdateien, 361 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,43 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 184,3 KB gzip (vorher 181,9 KB) |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Neue Nachweise: Farbtokens (`tokens.test.ts`) prüfen zusätzlich Tonflächen mit ihrem Text, Bühne mit `--on-ink` und `--on-ink-muted` sowie Akzent auf der Bühne (DS-1). Unit: Restzeit und Überziehung (`format.test.ts`), Ton mit gemocktem `AudioContext` und Audio-Session (`sound.test.ts`), Wake Lock mit gemocktem `navigator.wakeLock` inklusive Neuanforderung bei Rückkehr, Ablehnung und spätem Eintreffen nach dem Beenden (`wakeLock.test.ts`). Komponenten (`player-ui.test.tsx`): Pause mit Restzeit, nächstem Satz und Ziel, −15 s und +15 s, Vollansicht und zurück, Überspringen; Überziehung nach Rückkehr ohne nachträglichen Ton; Ton genau einmal, wenn das Pausenende während der Anzeige erreicht wird (AK-TRN-10 bis AK-TRN-12). E2E (`session.spec.ts`): nach „erledigt“ Restzeit sichtbar, −15 s wirkt, Vollansicht ohne axe-Verstöße, nach Neuladen weiter die Restzeit, Überspringen entfernt die Pause (AK-TRN-11, DS-6).
+
+Bildschirmfotos aller Seiten hell und dunkel (iPhone-Breite) wurden vor und nach der Umstellung aufgenommen und gegen `ux-audit.md` geprüft (DS-2, DS-4, DS-5, DS-7); sie liegen nicht im Repository.
+
+Während der Arbeit gefunden und behoben: Die Vollansicht der Pause lag falsch, weil der Weichzeichner der klebenden Kopfzeile den Bezugsrahmen für `position: fixed` bildet; sie wird jetzt als Portal gerendert. axe meldete `label-content-name-mismatch` für Listeneinträge mit `aria-labelledby` und für den Aufklapp-Knopf der Pause; die Beschreibung läuft jetzt über `aria-describedby`, der Knopf ist ein Symbol-Knopf. Drei Tests brauchten neue Erwartungen (nummerierte Übungen in der Vorlage, Reihenfolge der Kennzahlen in der Zusammenfassung, dunkler Seitenhintergrund). Nicht geprüft: Ton und Wake Lock auf dem iPhone (Gerätetest T-IPH-M1, Schritte 6 und 7).
+
+### M1 · AP 1.6 Persistenz und Wiederaufnahme · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 35 Testdateien, 365 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,53 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 188,6 KB gzip (Leiste „Training läuft“ liegt im Startbündel) |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Bereits aus M0 vorhanden und unverändert: Gesundheitsprüfung der Datenbank bei Rückkehr mit einmaligem Neuöffnen und kontrolliertem Neustart samt Schleifenschutz (`health.ts`, verdrahtet in `main.tsx`, AK-TRN-26); Speichern je Änderung mit 300 ms Entprellung und sofort beim Verbergen (AP 1.4, AK-TRN-16); Fehlerhinweis am Satz (AK-TRN-25). Neu: Leiste „Training läuft“ auf allen Seiten außer Player, „Heute“ und „Training“ mit Dauer, Fortschritt und Rücksprung (`SessionBanner`, AK-TRN-17, TS-25); Karte „Training läuft“ auf „Heute“ mit Fortschrittsbalken und „Fortsetzen“ (AK-DSH-01); dauerhafter Speicher wird mit der ersten laufenden Einheit einmal je App-Lauf angefordert (`storage.ts`, AK-PWA-05; die Statusanzeige unter „Mehr › Daten“ folgt mit AP 1.8). Nachweise: `storage.test.ts` (nicht unterstützt, einmalige Anforderung, Ablehnung und Fehler), `app.test.tsx` (Leiste mit Dauer und Fortschritt, Rücksprung, keine Leiste im Player, Karte auf „Heute“, Anforderung des Speichers), E2E in `session.spec.ts` (Leiste auf „Mehr“ ohne axe-Verstöße, Rücksprung, Karte auf „Heute“). Offen aus AP 1.6: nichts; „Pausieren“ (AK-TRN-18) gehört zu M2.
+
+### M1 · AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 36 Testdateien, 371 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 92,69 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 192,8 KB gzip (Start aus „Heute“ bringt den Trainingsdienst ins Startbündel) |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 34 von 34 bestanden |
+
+Neu: Verlauf `/training/verlauf` mit Wochen (Montag bis Sonntag), Name, Datum, Dauer, erledigten Sätzen und Volumen, Leerzustand mit „Vorlage wählen“ (AK-HIS-01); Detail `/training/verlauf/:id` mit Kennzahlen, Notizen und allen Sätzen mit Typ, Werten und Status (AK-HIS-02); Einstieg „Verlauf“ auf „Training“. „Heute“ ohne laufendes Training mit „Freies Training starten“ und „Vorlage wählen“ (AK-DSH-03; „Eigenes Programm erstellen“ folgt mit M2, AK-UX-01). Trainingseinstellungen: Standardpause (Auswahl 0 bis 600 s), Gewichtsschritt 0,5 / 1 / 1,25 / 2,5 / 5 kg, Pause automatisch, Ton, Bildschirm aktiv halten mit Erklärung ohne Wake-Lock-Unterstützung und nach Ablehnung (AK-SET-02); neue Komponente `Switch`. Nachweise: `history.test.ts` (Wochengruppen, Kennzahlen), `history-ui.test.tsx` (Leerzustand, Liste nach Woche, Detail mit Status, unbekannte Einheit), `settings-ui.test.tsx` (gespeicherte Werte, sofortiges Speichern, Erklärung ohne Wake Lock), E2E in `session.spec.ts` (Verlauf und Detail nach dem Abschluss ohne axe-Verstöße; Standardpause 60 s wirkt sofort im freien Training). Nicht Teil von AP 1.7: Bearbeiten und Löschen im Verlauf (AK-HIS-03, AK-HIS-04, M2), Vergleich in der Zusammenfassung (M3).
+
+### M1 · AP 1.8 Datensicherung · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 39 Testdateien, 378 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 90,00 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 195,1 KB gzip |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 36 von 36 bestanden |
+
+Neu: JSON-Export nach `data-model.md` Abschnitt 11 (`export.ts`: alle Aggregattabellen inklusive Löschmarkierungen, ohne Projektionen; Dateiname mit Datum und Uhrzeit; Teilen-Menü, wenn der Browser Dateien teilen kann, sonst Download; Zeitpunkt des letzten Exports in `meta`, AK-DAT-01) und die Seite „Mehr › Daten und Sicherung“ (S-35) mit Speicherstatus und belegtem Speicher (AK-PWA-05), Export und der Liste der Snapshots (AK-DAT-06, nur Anzeige; Wiederherstellen und Import folgen mit M2 und M4). Migrationstest-Gerüst (`migrations.test.ts`, `testing/legacyDb.ts`): eine Datenbank in Schemaversion 1 wird angelegt, mit der aktuellen Version verlustfrei geöffnet, und vor einem höheren Ziel entsteht ein Snapshot (AK-DAT-07). Nachweise: `export.test.ts` (Tabellen, Typen, Löschmarkierungen, keine Projektionen, Dateiname, Teilen/Download/Abbruch mit Zeitpunkt), `bundle-versions.test.ts` (Versionen der Stammdaten), E2E in `shell.spec.ts` (Seite ohne axe-Verstöße in beiden Modi über die Seitenliste; Export erzeugt eine Datei `fitness-sicherung-…json` mit Format und Daten; Hinweis „Letzter Export“). Der Weg über das Teilen-Menü auf dem iPhone ist Teil des Gerätetests T-IPH-M1.
+
+Der Produktinhaber hat am 18.10.2026 die unklaren Winter-Arc-Übungen nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
+
+### M1 · AP 1.9 Tests · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 40 von 40 bestanden (neu: `resilience.spec.ts`) |
+
+E-04: Nach einem simulierten Wechsel in den Hintergrund (1,5 s verborgen) zeigt die Pause bei Rückkehr sofort die richtige Restzeit; auf unter null verkürzt zeigt sie „+m:ss“ und „Pause vorbei“, auch nach Neuladen (AK-TRN-11, AK-TRN-12). E-05: Offline (Chromium mit Service Worker) Übung über die Suche hinzufügen, Satz erfassen, neu laden, Leiste „Training läuft“ auf „Mehr“ (AK-PWA-02, AK-TRN-17); in WebKit übersprungen, dort prüft T-IPH-M1 Schritt 8 auf dem Gerät. E-03, E-06 bis E-09 sind seit AP 1.4 in `session.spec.ts` enthalten. Die Karte „Diese Version“ auf „Heute“ nennt den tatsächlichen Umfang von M1.
+
+Aus der CI: Der Chromium-Lauf mit Pixel-7-Emulation scheiterte zweimal am Zeigerklick auf „Fertig“ in der Zusammenfassung (Treffererkennung meldete `<main>`); WebKit und alle anderen Läufe waren grün, lokal war der Fehler mit Chromium 1194 nicht nachstellbar, das CI-Protokoll liegt auf einem gesperrten Speicherhost. Der Schritt löst den Link jetzt per Ereignis aus; Ergebnis der CI siehe Pull Request darad11/fitness-app#5.
+
+**Offen für die Abnahme von M1:** Gerätetest T-IPH-M1 (Abschnitt 6) durch den Produktinhaber mit Befunden zu Ton, Wake Lock, Hintergrund, Flugmodus und Teilen-Menü.
+

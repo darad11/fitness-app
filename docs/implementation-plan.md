@@ -1,6 +1,6 @@
 # Implementierungsplan
 
-Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: vorläufig freigegeben · Vorgänger: `archive/v0.1-phase-1/implementation-plan.md`
+Stand: 18.10.2026 · Version 0.4 (M1 in Arbeit) · Status: vorläufig freigegeben · Vorgänger: `archive/v0.1-phase-1/implementation-plan.md`
 
 ## Änderungen gegenüber Version 0.1
 
@@ -91,6 +91,23 @@ Ziel: Ein echtes Training wird auf dem iPhone protokolliert. Erledigte Sätze ü
 AK: AK-TRN-01, AK-TRN-02, AK-TRN-03 (Aufwärm- und Arbeitssätze), AK-TRN-04 bis AK-TRN-08, AK-TRN-09 (hinzufügen, entfernen), AK-TRN-10 bis AK-TRN-13, AK-TRN-15 bis AK-TRN-17, AK-TRN-19, AK-TRN-20 (Basis), AK-TRN-21, AK-TRN-22, AK-TRN-25, AK-TRN-26, AK-EXL-01, AK-EXL-02, AK-PRG-06 (Beispielvorlage starten), AK-PWA-02, AK-PWA-05, AK-DSH-01, AK-DSH-03, AK-HIS-01, AK-HIS-02, AK-DAT-01, AK-DAT-06 (Erstellung), AK-DAT-07, AK-SET-02 (Training), AK-UX-03, AK-DEV-01, AK-DEV-03.
 
 Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber bestanden und ausgewertet. Ab hier ist die Produktivadresse für echte Trainings freigegeben.
+
+**Stand M1 (18.10.2026):** In Arbeit auf dem Branch `m1-training`, Pull Request darad11/fitness-app#5 (Entwurf). Ergebnisse in `testing.md` Abschnitt 10.
+
+| AP | Stand |
+|---|---|
+| 1.1 | Umgesetzt bis auf die Übungsauswahl. Basisliste vom Produktinhaber durchgesehen (Q-05, `exercise-library.md`), 105 Übungen als gebündelte, mit Zod geprüfte Daten (D-240, D-241); Suche mit Rang, Filter nach Hauptmuskel und Gerät, Bibliotheksansicht `/uebungen` (S-12) über den Bereich Training (D-242). Die Übungsauswahl im Training (ExercisePicker) entsteht mit dem Trainingsplayer in AP 1.4, weil sie erst dort eine Funktion hat |
+| 1.2 | Umgesetzt bis auf „Nur heute trainieren". Die vier Beispielvorlagen sind gebündelte Daten, erzeugt aus `sample-templates.md` und in `pnpm check:docs` geprüft (D-243); Liste `/training/programme` (S-04, nur Beispielvorlagen) und Vorlage `/training/vorlagen/:key` (S-49) mit Etikett „Beispiel", Hinweis, Ablauf und Satzschema. „Nur heute trainieren" kommt mit AP 1.3 und 1.4, weil es eine laufende Einheit und den Player braucht |
+| 1.3 | Umgesetzt (ohne Oberfläche, die mit AP 1.4 folgt). Zod-Modell der Einheit; Anwendungsfälle starten (aus einem Vorlagentag oder frei), Übung und Satz hinzufügen oder entfernen, Werte setzen, erledigt mit Vorschlägen, rückgängig, übersprungen, Pausentimer mit Endzeitpunkt (±, überspringen, Drop-Kette), beenden mit Rückfrage bei offenen Sätzen, verwerfen und wiederherstellen; Invarianten (eine laufende Einheit, abgeschlossene unveränderlich, Drop-Sätze mit Arbeitssatz); Berechnungen (Volumen, bester Satz, 1RM, Dauer, Fortschritt, nächster offener Satz); Projektion `exerciseHistory` beim Abschluss in derselben Transaktion, Vorwerte je Satzplatz (D-244) |
+| D1 | Umgesetzt (18.10.2026): Designsystem 2.0 nach `ux-audit.md` (D-246): Tokens, Tailwind-Theme, Grundkomponenten, alle bestehenden Seiten; Bildschirmfotos hell und dunkel geprüft |
+| D2 | Umgesetzt (18.10.2026): Premium-Player mit Bühne „Jetzt“, Pause als Bühne mit Vollansicht, Ton und Wake Lock (D-247); ersetzt AP 1.5. Gerätebefund zu Ton und Wake Lock steht aus (T-IPH-M1) |
+| 1.4 | Umgesetzt bis auf die Pausenleiste (AP 1.5). Player `/training/einheit/:id` als Vollbild mit Kopf (Titel, Dauer, Fortschritt), Übungsblöcken mit Vorwert und „Erstes Mal", Satzzeilen je Erfassungsart mit Vorschlägen als Platzhalter, erledigt, rückgängig, überspringen, entfernen, ±-Tasten, Satz und Übung hinzufügen (Übungsauswahl S-39), Übung entfernen mit Rückfrage, Aktionsleiste, Beenden mit Rückfrage, Verwerfen mit 10 s Rückgängig; Einstiege „Freies Training starten", „Training fortsetzen" und „… heute trainieren" in der Vorlage; einfache Zusammenfassung (Teil von AP 1.7); Fehlerhinweis am Satz mit „Erneut versuchen" (D-245) |
+| 1.5 | Umgesetzt als AP D2 |
+| 1.6 | Umgesetzt (18.10.2026): Leiste „Training läuft“ mit Rücksprung, Karte auf „Heute“, dauerhafter Speicher; Gesundheitsprüfung und kontrollierter Neustart bestanden schon aus M0 |
+| 1.7 | Umgesetzt (18.10.2026): Verlauf mit Detail, „Heute“ mit Einstiegen, Trainingseinstellungen; Vergleich in der Zusammenfassung bleibt M3 |
+| 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
+| 1.9 | Umgesetzt bis auf den Gerätetest (18.10.2026): E2E für Sichtbarkeitswechsel, Überziehung und Offline; T-IPH-M1 steht aus |
+
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
 
@@ -198,5 +215,15 @@ Nächste Schritte: <Liste>
 3. Erledigt: M0 gemergt und ausgeliefert; T-IPH-M0 Schritte 1 bis 3 bestanden (iOS 27.0.1).
 4. Erledigt: T-IPH-M0 Schritt 4 (Update-Hinweis) bestanden.
 5. Erledigt mit darad11/fitness-app#4: E2E Chromium in der CI stabilisiert (`testing.md` Abschnitt 10).
-6. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
-7. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+6. Erledigt: Basisübungsliste vorgelegt und vom Produktinhaber durchgesehen (Q-05, D-241).
+7. Erledigt: AP 1.1 Übungsbibliothek (ohne Übungsauswahl, die mit AP 1.4 folgt).
+8. Erledigt: AP 1.2 Beispielvorlagen (ohne „Nur heute trainieren", das mit AP 1.3 und 1.4 folgt).
+9. Erledigt: AP 1.3 Trainings-Domain.
+10. Erledigt: AP 1.4 Trainingsplayer (ohne Pausenleiste).
+11. Zur Freigabe: Erweiterungsplan `evolution-plan.md` mit Rekonstruktion „Winter Arc“ (`winter-arc-reconstruction.md`), Referenzanalyse (`reference-analysis.md`) und Rückfragen Q-13 bis Q-18 (Branch `evolution-plan`, Pull Request als Entwurf).
+12. Erledigt: Q-18 beantwortet (ja); Vorgabe des Produktinhabers, ab jetzt alles nach dem Master-Prompt zu gestalten. Darauf Designsystem 2.0 (AP D1) und Premium-Player mit Pause, Ton und Wake Lock (AP D2, ersetzt AP 1.5), siehe `ux-audit.md`, D-246, D-247.
+13. Erledigt: AP 1.6 Persistenz und Wiederaufnahme.
+14. Erledigt: AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen.
+15. Erledigt: AP 1.8 Datensicherung.
+16. Erledigt: AP 1.9 E2E-Tests. Offen: Gerätetest T-IPH-M1 durch den Produktinhaber, Auswertung in `known-limitations.md`.
+17. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

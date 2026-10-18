@@ -1,0 +1,777 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "key": "full_body_ab",
+      "name": "Ganzkörper A/B",
+      "level": "beginner",
+      "location": "gym",
+      "daysPerWeek": "3",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Tag A",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bench_press_barbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Tag B",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lat_pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "side_plank",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "durationMinSec": 20,
+                "durationMaxSec": 40
+              },
+              "restSec": 60
+            }
+          ]
+        }
+      ],
+      "weeks": [
+        ["Tag A", "Tag B", "Tag A"],
+        ["Tag B", "Tag A", "Tag B"]
+      ]
+    },
+    {
+      "key": "upper_lower",
+      "name": "Oberkörper/Unterkörper",
+      "level": "intermediate",
+      "location": "gym",
+      "daysPerWeek": "4",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Oberkörper 1",
+          "exercises": [
+            {
+              "exercise": "bench_press_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lat_pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "drop": 1,
+              "dropTarget": {
+                "repsMin": 8,
+                "repsMax": 12
+              }
+            }
+          ]
+        },
+        {
+          "name": "Unterkörper 1",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 7
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Oberkörper 2",
+          "exercises": [
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "pull_up",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "drop": 1,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 15
+              }
+            },
+            {
+              "exercise": "face_pull",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hammer_curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Unterkörper 2",
+          "exercises": [
+            {
+              "exercise": "deadlift_barbell",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 4,
+                "repsMax": 6
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "bulgarian_split_squat_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "hip_thrust_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "drop": 1,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 15
+              }
+            },
+            {
+              "exercise": "plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 60
+              },
+              "restSec": 60
+            }
+          ]
+        }
+      ],
+      "weeks": [["Oberkörper 1", "Unterkörper 1", "Oberkörper 2", "Unterkörper 2"]]
+    },
+    {
+      "key": "push_pull_legs",
+      "name": "Push/Pull/Beine",
+      "level": "advanced",
+      "location": "gym",
+      "daysPerWeek": "3–6",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Push",
+          "exercises": [
+            {
+              "exercise": "bench_press_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "dip",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            }
+          ]
+        },
+        {
+          "name": "Pull",
+          "exercises": [
+            {
+              "exercise": "pull_up",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "face_pull",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "hammer_curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Beine",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 7
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hanging_leg_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 60
+            }
+          ]
+        }
+      ],
+      "weeks": [["Push", "Pull", "Beine"]]
+    },
+    {
+      "key": "home_dumbbells",
+      "name": "Zuhause mit Kurzhanteln",
+      "level": "beginner",
+      "location": "home",
+      "daysPerWeek": "3",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Tag 1",
+          "exercises": [
+            {
+              "exercise": "goblet_squat",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "push_up",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 15
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "one_arm_row_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Tag 2",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "floor_press_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "reverse_fly_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "side_plank",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "durationMinSec": 20,
+                "durationMaxSec": 40
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Tag 3",
+          "exercises": [
+            {
+              "exercise": "bulgarian_split_squat_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "bent_over_row_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "glute_bridge",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            }
+          ]
+        }
+      ],
+      "weeks": [["Tag 1", "Tag 2", "Tag 3"]]
+    }
+  ]
+}

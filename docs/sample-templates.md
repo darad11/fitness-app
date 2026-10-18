@@ -8,17 +8,18 @@ Stand: 18.10.2026 · Version 0.2 (neu in Phase 2) · Status: Entwurf zur Durchsi
 - Sie sind keine individuelle Trainingsempfehlung. Zielgewichte sind bewusst leer, weil die Leistungsfähigkeit unbekannt ist.
 - In der App trägt jede Beispielvorlage das Etikett „Beispiel". Die Detailansicht zeigt: „Beispieldaten – keine individuelle Trainingsempfehlung. Passe Übungen, Sätze und Gewichte an dich an. Bei gesundheitlichen Fragen hol dir ärztlichen Rat."
 - Beispielvorlagen sind schreibgeschützt. „Vorlage verwenden" erzeugt ein eigenes Programm als Kopie, das frei bearbeitbar ist (AK-PRG-06).
-- Technisch sind sie gebündelte, versionierte Stammdaten (`sample-templates.v1.json`) mit stabilen IDs (UUID v5 aus Schlüssel und Position). Eine neue Version der Vorlagen verändert nie bereits erstellte Kopien.
+- Technisch sind sie gebündelte, versionierte Stammdaten (`src/modules/training/data/sample-templates.v1.json`) mit stabilen IDs (UUID v5 aus Schlüssel und Position). Die Datei wird mit `python3 tools/sample_templates_from_md.py` aus den Tabellen in Abschnitt 3 erzeugt; `pnpm check:docs` prüft, dass beides übereinstimmt. Eine neue Version der Vorlagen verändert nie bereits erstellte Kopien.
 
 ## 2. Gemeinsame Festlegungen
 
 | Thema | Festlegung |
 |---|---|
-| Aufwärmsätze | Vor der ersten Grundübung eines Tages zwei Aufwärmsätze (10 und 5 Wiederholungen, Hinweis „leicht" und „mittel"), bei weiteren Grundübungen einer |
+| Aufwärmsätze | Vor der ersten Grundübung eines Tages zwei Aufwärmsätze (10 und 5 Wiederholungen, Hinweis „leicht" und „mittel"), bei weiteren Grundübungen einer mit 5 Wiederholungen (D-243) |
 | Pausen | Schwere Grundübungen 150 bis 180 s, weitere mehrgelenkige Übungen 120 s, Isolationsübungen 60 bis 75 s, Rumpf- und Zeitübungen 60 s, Drop-Sätze ohne Pause |
 | Wiederholungen | Bereiche, z. B. 8–10; bei Zeitübungen eine Zeitspanne, z. B. 30–45 s |
 | Struktur | Wochen mit Trainingstagen; „wiederholen" ist aktiv; keine festen Ruhetage (Reihenfolge-Modus, D-214) |
 | Körpergewichtsübungen | Wiederholungen plus optionales Zusatzgewicht (0 kg = ohne Zusatzgewicht) |
+| Je Seite | „3 je Seite" heißt drei Sätze; jeder Satz umfasst beide Seiten, Wiederholungen und Zeit gelten je Seite (D-243) |
 
 ## 3. Vorlagen
 
@@ -113,7 +114,7 @@ Niveau fortgeschritten · Studio · 1 Woche: Push, Pull, Beine · wiederholen (b
 |---|---|---|---|
 | Klimmzüge | 1 Aufwärmen + 4 | 6–10 | 150 s |
 | Rudern mit Langhantel, vorgebeugt | 3 | 6–8 | 150 s |
-| Rudern am Kabel, enger Griff | 3 | 10–12 | 120 s |
+| Rudern am Kabel, sitzend | 3 | 10–12 | 120 s |
 | Face Pulls am Kabel | 3 | 12–15 | 60 s |
 | Bizepscurls mit Langhantel | 3 | 8–10 | 75 s |
 | Hammercurls | 2 | 10–12 | 60 s |
@@ -173,7 +174,7 @@ Niveau Einsteiger · Zuhause (Kurzhanteln, optional Bank, Körpergewicht) · 1 W
 
 ### 5.1 Umfang
 
-Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen für die Suche, Haupt- und Nebenmuskeln, Geräten, Kategorie und Erfassungsart. Alle Übungen der Beispielvorlagen (rund 40) sind enthalten. Die vollständige Liste entsteht in M1 und wird vom Produktinhaber durchgesehen (Q-05).
+Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen für die Suche, Haupt- und Nebenmuskeln, Geräten, Kategorie und Erfassungsart. Alle Übungen der Beispielvorlagen (39 nach der Durchsicht) sind enthalten. Die vollständige Liste steht in `exercise-library.md`; der Produktinhaber hat sie am 18.10.2026 durchgesehen (Q-05).
 
 | Gruppe | Richtwert |
 |---|---|
@@ -214,11 +215,11 @@ Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen fü
 | `calves` | Waden | | | |
 | `full_body` | Ganzkörper | | | |
 
-Erfassungsarten: `weight_reps` (Gewicht × Wiederholungen; bei Körpergewichtsübungen Zusatzgewicht), `reps` (nur Wiederholungen), `time` (Dauer), `weight_time` (Gewicht × Dauer, z. B. Farmer's Walk).
+Erfassungsarten: `weight_reps` (Gewicht × Wiederholungen; bei Körpergewichtsübungen Zusatzgewicht), `reps` (nur Wiederholungen), `time` (Dauer), `weight_time` (Gewicht × Dauer, z. B. Farmer's Walk), `time_distance` (Dauer und Distanz, Cardiogeräte) und `assisted_reps` (Entlastung × Wiederholungen, z. B. Klimmzüge mit Unterstützung); die letzten beiden seit der Durchsicht (D-241).
 
 ### 5.3 Pflege
 
-- Schlüssel wie `core.bench_press_barbell` sind dauerhaft; die ID entsteht daraus per UUID v5. Eine Übung wird nie entfernt, höchstens als veraltet markiert, damit alte Einheiten lesbar bleiben.
+- Schlüssel wie `bench_press_barbell` sind dauerhaft; die ID entsteht daraus per UUID v5 aus `core-exercise:<Schlüssel>` (D-240). Eine Übung wird nie entfernt, höchstens als veraltet markiert, damit alte Einheiten lesbar bleiben.
 - Persönliche Notizen, Standardpause, Gewichtsschritt, Videolink, Favorit und Ausblenden liegen in den persönlichen Übungsangaben (`exercise_pref`) und bleiben bei Updates erhalten.
 
 ## 6. Durchsicht durch den Produktinhaber

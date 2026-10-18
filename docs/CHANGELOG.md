@@ -1,5 +1,39 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.5 · 18.10.2026 · Erweiterungsplan, Designsystem 2.0 und Premium-Player (AP D1, D2)
+
+Grundlage: Master-Prompt „Fitness App Evolution“ des Produktinhabers, Freigabe des Plans (Q-18) und seine Vorgabe, ab jetzt alles nach dem neuen Prompt zu gestalten.
+
+| Datei | Änderung |
+|---|---|
+| `evolution-plan.md`, `winter-arc-reconstruction.md`, `reference-analysis.md` | Neu: Erweiterungsplan, Rekonstruktion „Winter Arc“, Referenzanalyse (Branch `evolution-plan`, in `m1-training` übernommen) |
+| `ux-audit.md` | Neu: Befunde A-01 bis A-18, Richtung Designsystem 2.0, Kriterien DS-1 bis DS-8 |
+| `design-system.md` | Version 0.4: Tonflächen, Bühne, Schatten, Radien, Typografie, Komponenten, Player |
+| `decisions.md` | D-246 Designsystem 2.0, D-247 Premium-Player; Q-13 bis Q-18 |
+| `implementation-plan.md` | Stand AP D1 und D2; AP 1.5 durch D2 ersetzt; nächste Schritte |
+| `feature-inventory.md` | TS-07, TS-09, TS-21 auf „Implementiert“ |
+| `testing.md` | Ergebnisse AP D1, D2, 1.6 bis 1.9 |
+| `handover-m1.md` | Stand nach AP D2 |
+
+## Version 0.4 · 18.10.2026 · M1, AP 1.1 bis 1.4 (Übungsbibliothek, Beispielvorlagen, Trainings-Domain, Trainingsplayer)
+
+Grundlage: Durchsicht der Basisübungsliste durch den Produktinhaber (Q-05).
+
+| Datei | Änderung |
+|---|---|
+| `exercise-library.md` | Neu: Basisübungsliste mit 105 Übungen, Rückfragen und Antworten; Abschnitt 5 wird aus den Daten erzeugt |
+| `decisions.md` | D-240 Schlüssel der Basisübungen, D-241 Erfassungsarten Dauer und Distanz sowie Entlastung, D-242 Übungsbibliothek in der App; Q-05 beantwortet |
+| `data-model.md` | Erfassungsarten und Satzfelder `distanceM`, `assistKg`, Feld `distanceUnit` |
+| `sample-templates.md` | Kabelrudern in Push/Pull/Beine vereinheitlicht; Schlüsselformat; Erfassungsarten |
+| `implementation-plan.md` | Stand M1; nächste Schritte |
+| `feature-inventory.md` | TP-06 „Implementiert" |
+| `design-system.md` | Stand der Navigation, S-03 und S-12 |
+| `testing.md` | Abschnitt 10: Ergebnisse AP 1.1 |
+| Code | Modul `exercises` (Daten, Prüfung, Suche, Seite `/uebungen`), Modul `training` mit Seite `/training`, Suchfeld als Basiskomponente; `tools/exercise_library_to_md.py` in `pnpm check:docs` |
+| AP 1.2 | `decisions.md` D-243; `sample-templates.md` Regeln zu Aufwärmsätzen und „je Seite"; `data-model.md` Zeitbereiche `durationMinSec`, `durationMaxSec`; Code: Programm-Modell, Beispielvorlagen als Daten aus dem Dokument (`tools/sample_templates_from_md.py`), Seiten `/training/programme` und `/training/vorlagen/:key`, Basiskomponente `Badge` |
+| AP 1.3 | `decisions.md` D-244; `data-model.md` Snapshot-Felder der Einheit und Aufbau der Projektion; Code: Basis-Repository reicht den Änderungsstempel weiter; Modell, Berechnungen, Anwendungsfälle und Projektion der Einheit |
+| AP 1.4 | `decisions.md` D-245; `design-system.md` Stand S-07, S-09, S-39; `feature-inventory.md` zwölf Funktionen „Implementiert"; Code: Player, Übungsauswahl, Zusammenfassung, Einstiege, `Dialog`, `Toast`, Token `--scrim` |
+
 ## Nachtrag zu Version 0.3 · 18.10.2026 · Stabile E2E-Tests
 
 Grundlage: unzuverlässige E2E-Läufe in Chromium nach der Abnahme von M0 (darad11/fitness-app#4).

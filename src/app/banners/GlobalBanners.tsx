@@ -14,6 +14,7 @@ import { t } from '@/shared/i18n/de';
 import { appInfo, isPreview, type AppEnv } from '@/shared/lib/env';
 import { currentPlatform, type PlatformInfo } from '@/shared/lib/platform';
 import { applyUpdate, usePwaState } from '@/shared/pwa/state';
+import { SessionBanner } from '@/modules/training';
 import { Banner, Button, ButtonLink } from '@/shared/ui';
 
 /** Dauerhaftes Etikett auf Vorschau-Adressen (AK-PWA-07). */
@@ -112,6 +113,7 @@ export function GlobalBanners() {
     <>
       <PreviewBanner />
       <ConnectionBanner />
+      <SessionBanner />
       <UpdateBanner />
       <InstallHintBanner />
     </>

@@ -10,7 +10,7 @@ interface MoreItem extends LinkListItem {
 const MORE_ITEMS: readonly MoreItem[] = [
   { to: '/mehr/profil', label: t.more.profile, icon: UserRound, available: false },
   { to: '/mehr/einstellungen', label: t.more.settings, icon: Settings, available: true },
-  { to: '/mehr/daten', label: t.more.data, icon: Database, available: false },
+  { to: '/mehr/daten', label: t.more.data, icon: Database, available: true },
   { to: '/mehr/installieren', label: t.more.install, icon: Download, available: true },
   { to: '/mehr/ueber', label: t.more.about, icon: Info, available: true },
 ];

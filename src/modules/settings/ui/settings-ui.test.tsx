@@ -6,7 +6,7 @@ import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbProvider, dismissHint, META_KEYS, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
-import { saveSettings } from '../data/settingsRepository';
+import { loadSettings, saveSettings } from '../data/settingsRepository';
 import { InstallPage } from './InstallPage';
 import { SettingsPage } from './SettingsPage';
 import { ThemeSync } from './ThemeSync';
@@ -97,6 +97,30 @@ describe('Mehr › Einstellungen (AK-SET-02, AK-SET-04)', () => {
   });
 });
 
+describe('Mehr › Einstellungen › Training (AK-SET-02)', () => {
+  it('zeigt die gespeicherten Trainingswerte und speichert Änderungen sofort', async () => {
+    await saveSettings(rt, { restDefaultSec: 120, weightStepKg: 1.25, restSound: false });
+    const user = userEvent.setup();
+    renderPage(<SettingsPage />);
+    expect(await screen.findByRole('combobox', { name: 'Standardpause' })).toHaveValue('120');
+    expect(screen.getByRole('combobox', { name: 'Gewichtsschritt' })).toHaveValue('1.25');
+    expect(screen.getByRole('switch', { name: 'Ton bei Pausenende' })).not.toBeChecked();
+    expect(
+      screen.getByRole('switch', { name: 'Pause nach „erledigt“ automatisch starten' }),
+    ).toBeChecked();
+    // jsdom kennt keinen Wake Lock: Erklärung statt stiller Schalter.
+    expect(screen.getByText(/Dein Browser unterstützt das nicht/)).toBeInTheDocument();
+
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Standardpause' }), '60');
+    await user.click(screen.getByRole('switch', { name: 'Ton bei Pausenende' }));
+    await waitFor(async () => {
+      const stored = await loadSettings(rt.db);
+      expect(stored.restDefaultSec).toBe(60);
+      expect(stored.restSound).toBe(true);
+    });
+  });
+});
+
 describe('ThemeSync', () => {
   it('folgt bei „System" Änderungen der Geräteeinstellung', async () => {
     let listener: (() => void) | undefined;
@@ -114,7 +138,7 @@ describe('ThemeSync', () => {
           removeEventListener: () => undefined,
         }) as unknown as MediaQueryList,
     );
-    document.head.innerHTML = '<meta name="theme-color" content="#fafaf9" />';
+    document.head.innerHTML = '<meta name="theme-color" content="#f3f4f7" />';
     document.documentElement.setAttribute('data-theme', 'light');
     await saveSettings(rt, { theme: 'system' });
     renderPage(<ThemeSync />);
@@ -126,7 +150,7 @@ describe('ThemeSync', () => {
       listener?.();
     });
     expect(document.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-      '#0f1115',
+      '#0d1016',
     );
   });
 });

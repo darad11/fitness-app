@@ -48,7 +48,7 @@ export function Banner({
             type="button"
             onClick={onDismiss}
             aria-label={dismissLabel}
-            className="-mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-input text-muted hover:bg-surface-2"
+            className="-mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2"
           >
             <X aria-hidden="true" className="size-5" />
           </button>

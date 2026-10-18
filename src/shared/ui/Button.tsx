@@ -2,22 +2,28 @@ import type { ButtonHTMLAttributes } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import { cn } from '../lib/cn';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger';
-export type ButtonSize = 'md' | 'lg';
+/**
+ * Schaltflächen (ux-audit.md Abschnitt 2): Pille, 48 px hoch. Primär in Akzent, sekundär als
+ * Tonfläche ohne Rahmen, leise nur Text, destruktiv als Gefahr-Tonfläche; `onInk` für die Bühne.
+ */
+export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger' | 'onInk';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const BASE =
-  'inline-flex select-none items-center justify-center gap-2 rounded-input font-semibold transition-colors duration-120 disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex select-none items-center justify-center gap-2 rounded-pill font-semibold transition-colors duration-120 disabled:cursor-not-allowed disabled:opacity-50';
 
 const SIZES: Record<ButtonSize, string> = {
-  md: 'min-h-11 px-4 text-base',
-  lg: 'min-h-12 px-5 text-lg',
+  sm: 'min-h-10 px-4 text-sm',
+  md: 'min-h-12 px-5 text-base',
+  lg: 'min-h-14 px-6 text-lg',
 };
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-accent text-on-accent hover:bg-accent-hover active:bg-accent-hover',
-  secondary: 'border border-line-input bg-surface text-fg hover:bg-surface-2 active:bg-surface-2',
+  secondary: 'bg-surface-2 text-fg hover:bg-line active:bg-line',
   quiet: 'text-accent-ink hover:bg-surface-2 active:bg-surface-2',
-  danger: 'border border-danger bg-surface text-danger hover:bg-surface-2 active:bg-surface-2',
+  danger: 'bg-danger-soft text-danger hover:bg-surface-2 active:bg-surface-2',
+  onInk: 'bg-on-ink text-ink hover:bg-on-ink-muted active:bg-on-ink-muted',
 };
 
 export function buttonClasses(
@@ -49,6 +55,29 @@ export function ButtonLink({ variant, size, className, ...props }: ButtonLinkPro
         variant,
         size,
         typeof className === 'string' ? className : undefined,
+      )}
+      {...props}
+    />
+  );
+}
+
+/** Runde Symbol-Schaltfläche, 44 px (im Training 48 px über `className`). */
+export interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
+  tone?: 'default' | 'onInk';
+}
+
+export function IconButton({ label, tone = 'default', className, ...props }: IconButtonProps) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      className={cn(
+        'inline-flex size-11 shrink-0 items-center justify-center rounded-pill transition-colors duration-120',
+        tone === 'onInk'
+          ? 'text-on-ink hover:bg-ink-2 active:bg-ink-2'
+          : 'text-muted hover:bg-surface-2 hover:text-fg active:bg-surface-2',
+        className,
       )}
       {...props}
     />

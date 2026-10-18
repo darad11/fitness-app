@@ -22,7 +22,7 @@ B. Trainingsplanung (TP);TP-02;Programmdetailseite;Vorhanden, 2025 überarbeitet
 B. Trainingsplanung (TP);TP-03;Programmstruktur aus Wochen und Trainingstagen;Feste Wochenstruktur mit festen Ruhetagen (laut Rezensionen 2024/2025);REV;V-R;OV;H;–;M;P0;MVP;R1 · M2;Anpassen: Wochen frei definierbar, keine festen Ruhetage (D-214);Zur Umsetzung ausgewählt;AK-PRG-01, AK-PRG-02
 B. Trainingsplanung (TP);TP-04;Übungsreihenfolge im Plan festlegen;Reihenfolge im Training erzwungen (laut Rezensionen);REV;V-R;OV;H;TP-06;M;P0;MVP;R1 · M2;"Anpassen: sortierbar; im Training nicht erzwungen";Zur Umsetzung ausgewählt;AK-PRG-03, AK-TRN-08
 B. Trainingsplanung (TP);TP-05;Einheiten im Kalender verschieben (Drag and Drop);"„Swap Workouts"" per Drag and Drop";SD 12:05;V;OV;M;AH-08;M;P2;Später;R4 · M11;Später: der Reihenfolge-Modus macht Verschieben im MVP unnötig;Analysiert;"Einheit per Ziehen oder Menü auf einen anderen Tag; Historie unberührt"
-B. Trainingsplanung (TP);TP-06;Übungsbibliothek mit Suche und Filtern;"Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms";"HC-G; SD 06:28; AS 3.4.2";V;OV;H;–;M;P0;MVP;R1 · M1;Anpassen: eigene deutsche Basisbibliothek (D-213);Zur Umsetzung ausgewählt;AK-EXL-01, AK-EXL-02
+B. Trainingsplanung (TP);TP-06;Übungsbibliothek mit Suche und Filtern;"Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms";"HC-G; SD 06:28; AS 3.4.2";V;OV;H;–;M;P0;MVP;R1 · M1;Anpassen: eigene deutsche Basisbibliothek (D-213);Getestet;AK-EXL-01, AK-EXL-02
 B. Trainingsplanung (TP);TP-07;Übungsdetail mit Beschreibung, Muskeln, Gerät, Videolink;Eingebettetes Video pro Übung;"REV; SD 12:38";V;OV;M;TP-06;S;P1;MVP;R1 · M2;Anpassen: ohne eigene Medien, mit persönlichem Videolink;Zur Umsetzung ausgewählt;AK-EXL-04, AK-EXL-05
 B. Trainingsplanung (TP);TP-08;Satzschema (Typ, Wiederholungsbereich, Zielgewicht, Zielzeit);Feste Satzanzahl, Rep-Bereiche;"REV; WEB";V;OV;H;TP-04;M;P0;MVP;R1 · M2;Anpassen: frei editierbar;Zur Umsetzung ausgewählt;AK-PRG-04
 B. Trainingsplanung (TP);TP-09;Pausenzeiten je Übung und Satz;"Vorgegeben; Pausentimer vorhanden";"AS 3.1.6; WEB";V;OV;H;TS-07;S;P0;MVP;R1 · M1/M2;Übernehmen;Zur Umsetzung ausgewählt;AK-PRG-04, AK-TRN-10
@@ -44,32 +44,32 @@ B. Trainingsplanung (TP);TP-24;Gekennzeichnete Beispielvorlagen;–;–;E;EV;M;T
 B. Trainingsplanung (TP);TP-25;Als Vorlage speichern, Vorlage verwenden;–;–;E;EV;M;TP-23;S;P1;MVP;R1 · M2;Verbesserung (D-107);Zur Umsetzung ausgewählt;AK-PRG-06
 B. Trainingsplanung (TP);TP-26;Programm als Datei auf ein anderes Gerät übertragen;–;–;E;EV;M;SY-04;S;P2;MVP;R1 · M2;Verbesserung: Mehrgerätenutzung vor der Sync (D-218);Zur Umsetzung ausgewählt;AK-PRG-13
 C. Aktive Trainingseinheit (TS);TS-01;Training starten: aus Programm, Vorlage oder frei;Start des Tagestrainings von Home;"HC-G; SD";V;OV;H;TP-21;M;P0;MVP;R1 · M1;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-01, AK-TRN-02, AK-TRN-22
-C. Aktive Trainingseinheit (TS);TS-02;Übungsliste mit Sätzen;Video, Satzliste, Eingaben je Übung;SD 13:04;V;OV;H;TP-06;M;P0;MVP;R1 · M1;Anpassen: alle Übungen in einer Liste;Zur Umsetzung ausgewählt;AK-TRN-08, AK-UX-03
-C. Aktive Trainingseinheit (TS);TS-03;Vorherige Leistungswerte;Vorherige Wiederholungen seit einem Update sichtbar;"REV; AS";V;OV;H;SY-18;S;P0;MVP;R1 · M1;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-05
-C. Aktive Trainingseinheit (TS);TS-04;Gewicht eingeben;Verbesserte Gewichtsauswahl;AS 3.1.6;V;OV;H;SY-16;S;P0;MVP;R1 · M1;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-04
-C. Aktive Trainingseinheit (TS);TS-05;Wiederholungen eingeben;Vorhanden;HC-G;V;OV;H;–;S;P0;MVP;R1 · M1;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-04
-C. Aktive Trainingseinheit (TS);TS-06;Satz abschließen, mit Vorschlag;"„log reps and weight after each set""";HC-G;V;OV;H;TS-04;S;P0;MVP;R1 · M1;Übernehmen (D-225);Zur Umsetzung ausgewählt;AK-TRN-06, AK-TRN-07
-C. Aktive Trainingseinheit (TS);TS-07;Pausentimer;"Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter";"AS 3.1.6; SD 13:18";V;OV;H;TP-09;M;P0;MVP;R1 · M1;"Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215)";Zur Umsetzung ausgewählt;AK-TRN-10, AK-TRN-11, AK-TRN-12
+C. Aktive Trainingseinheit (TS);TS-02;Übungsliste mit Sätzen;Video, Satzliste, Eingaben je Übung;SD 13:04;V;OV;H;TP-06;M;P0;MVP;R1 · M1;Anpassen: alle Übungen in einer Liste;Implementiert;AK-TRN-08, AK-UX-03
+C. Aktive Trainingseinheit (TS);TS-03;Vorherige Leistungswerte;Vorherige Wiederholungen seit einem Update sichtbar;"REV; AS";V;OV;H;SY-18;S;P0;MVP;R1 · M1;Übernehmen;Implementiert;AK-TRN-05
+C. Aktive Trainingseinheit (TS);TS-04;Gewicht eingeben;Verbesserte Gewichtsauswahl;AS 3.1.6;V;OV;H;SY-16;S;P0;MVP;R1 · M1;Übernehmen;Implementiert;AK-TRN-04
+C. Aktive Trainingseinheit (TS);TS-05;Wiederholungen eingeben;Vorhanden;HC-G;V;OV;H;–;S;P0;MVP;R1 · M1;Übernehmen;Implementiert;AK-TRN-04
+C. Aktive Trainingseinheit (TS);TS-06;Satz abschließen, mit Vorschlag;"„log reps and weight after each set""";HC-G;V;OV;H;TS-04;S;P0;MVP;R1 · M1;Übernehmen (D-225);Implementiert;AK-TRN-06, AK-TRN-07
+C. Aktive Trainingseinheit (TS);TS-07;Pausentimer;"Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter";"AS 3.1.6; SD 13:18";V;OV;H;TP-09;M;P0;MVP;R1 · M1;"Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215)";Implementiert;AK-TRN-10, AK-TRN-11, AK-TRN-12
 C. Aktive Trainingseinheit (TS);TS-08;Übungstimer für Zeitsätze;Vorhanden;AS 3.1.6;V;OV;M;TS-07;S;P1;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-14
-C. Aktive Trainingseinheit (TS);TS-09;Nächster Satz im Pausentimer;Fehlt laut Videoanalyse;SD 13:18;VF;EV;M;TS-07;S;P1;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-10
+C. Aktive Trainingseinheit (TS);TS-09;Nächster Satz im Pausentimer;Fehlt laut Videoanalyse;SD 13:18;VF;EV;M;TS-07;S;P1;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-10
 C. Aktive Trainingseinheit (TS);TS-10;Übung im Training ersetzen;Möglich (laut Rezensionen);REV;V-R;OV;H;TP-12;S;P1;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-09
-C. Aktive Trainingseinheit (TS);TS-11;Sätze und Übungen im Training hinzufügen und entfernen;Sätze laut Rezensionen nicht ergänzbar;REV;VF;EV;H;–;S;P0;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-09, AK-TRN-02
+C. Aktive Trainingseinheit (TS);TS-11;Sätze und Übungen im Training hinzufügen und entfernen;Sätze laut Rezensionen nicht ergänzbar;REV;VF;EV;H;–;S;P0;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-09, AK-TRN-02
 C. Aktive Trainingseinheit (TS);TS-12;Automatisches Speichern jeder Eingabe;Laut Rezensionen Abstürze mit Verlust der Eingaben;REV;VF;EV;H;SY-01;M;P0;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-16, AK-TRN-25
 C. Aktive Trainingseinheit (TS);TS-13;"Wiederaufnahme nach Reload, Hintergrund und Offline-Phase; Pausieren";Nicht belegt;–;P;ON;H;"TS-12; SY-13";M;P0;MVP;R1 · M1/M2;Übernehmen (D-109, D-216);Zur Umsetzung ausgewählt;AK-TRN-17, AK-TRN-18, AK-TRN-26
-C. Aktive Trainingseinheit (TS);TS-14;Training abschließen;"„complete workout""";HC-G;V;OV;H;TS-06;S;P0;MVP;R1 · M1;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-19
+C. Aktive Trainingseinheit (TS);TS-14;Training abschließen;"„complete workout""";HC-G;V;OV;H;TS-06;S;P0;MVP;R1 · M1;Übernehmen;Implementiert;AK-TRN-19
 C. Aktive Trainingseinheit (TS);TS-15;Trainingszusammenfassung;Übungen, Kalorien, Sätze;SD 14:40;V;OV;M;TS-14;S;P0;MVP;R1 · M1/M3;"Anpassen: ohne Kalorienschätzung (D-226); Vergleich ab M3";Zur Umsetzung ausgewählt;AK-TRN-20
 C. Aktive Trainingseinheit (TS);TS-16;Ergebnis teilen;Social Sharing;"AS 3.1.5; AS 3.2.1";V;OV;N;Web Share;S;P3;Später;R5;Später;Analysiert;Bild erzeugen und über das Teilen-Menü teilen
 C. Aktive Trainingseinheit (TS);TS-17;Krafttraining nachtragen, Aktivität erfassen;Manuelle Workouts seit 3.4.11;AS 3.4.11;V;OV;H;TS-01;M;P1;MVP;R1 · M2;Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz;Zur Umsetzung ausgewählt;AK-TRN-23
 C. Aktive Trainingseinheit (TS);TS-18;Kalorienschätzung pro Einheit;In der Zusammenfassung;SD 14:40;V;OV;N;ON-09;S;P3;Später;Backlog;Später: nur als gekennzeichnete Schätzung, frühestens mit R2 (D-226);Analysiert;MET-basiert, abschaltbar, als Schätzung markiert
 C. Aktive Trainingseinheit (TS);TS-19;Notizen zu Einheit und Übung;Nicht belegt;–;P;ON;M;–;S;P2;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-24
 C. Aktive Trainingseinheit (TS);TS-20;RPE/RIR und Tempo;Nicht belegt;–;P;ON;N;TS-05;S;P3;Später;R4 · M11;Später: Feld im Datenmodell reserviert (D-108);Spezifiziert;Optionales Feld je Satz
-C. Aktive Trainingseinheit (TS);TS-21;Bildschirm während des Trainings aktiv halten;–;–;E;EV;H;Wake Lock (iOS ab 18.4 in installierten Web-Apps);S;P1;MVP;R1 · M1;Verbesserung (D-215, D-228);Zur Umsetzung ausgewählt;AK-TRN-13
-C. Aktive Trainingseinheit (TS);TS-22;Aufwärmsätze;Nicht belegt;–;P;ON;H;TP-08;S;P0;MVP;R1 · M1;Übernehmen (D-108);Zur Umsetzung ausgewählt;AK-TRN-03
-C. Aktive Trainingseinheit (TS);TS-23;Satzstatus geplant, erledigt, übersprungen;–;–;E;EV;H;TS-06;S;P0;MVP;R1 · M1;Verbesserung (D-108);Zur Umsetzung ausgewählt;AK-TRN-07
-C. Aktive Trainingseinheit (TS);TS-24;Fortschrittsanzeige der Einheit;–;–;E;EV;M;TS-02;S;P1;MVP;R1 · M1;Verbesserung (D-108);Zur Umsetzung ausgewählt;AK-TRN-15
-C. Aktive Trainingseinheit (TS);TS-25;"Leiste „Training läuft"" und Rücksprung ins Training";–;–;E;EV;H;TS-13;S;P0;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-17, AK-DSH-01
-C. Aktive Trainingseinheit (TS);TS-26;Training verwerfen;–;–;E;EV;M;TS-01;S;P1;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-21
-C. Aktive Trainingseinheit (TS);TS-27;Freie Reihenfolge der Satzerfassung;Erzwungene Reihenfolge (laut Rezensionen);REV;VF;EV;H;TS-02;S;P0;MVP;R1 · M1;Verbesserung;Zur Umsetzung ausgewählt;AK-TRN-08
+C. Aktive Trainingseinheit (TS);TS-21;Bildschirm während des Trainings aktiv halten;–;–;E;EV;H;Wake Lock (iOS ab 18.4 in installierten Web-Apps);S;P1;MVP;R1 · M1;Verbesserung (D-215, D-228);Implementiert;AK-TRN-13
+C. Aktive Trainingseinheit (TS);TS-22;Aufwärmsätze;Nicht belegt;–;P;ON;H;TP-08;S;P0;MVP;R1 · M1;Übernehmen (D-108);Implementiert;AK-TRN-03
+C. Aktive Trainingseinheit (TS);TS-23;Satzstatus geplant, erledigt, übersprungen;–;–;E;EV;H;TS-06;S;P0;MVP;R1 · M1;Verbesserung (D-108);Implementiert;AK-TRN-07
+C. Aktive Trainingseinheit (TS);TS-24;Fortschrittsanzeige der Einheit;–;–;E;EV;M;TS-02;S;P1;MVP;R1 · M1;Verbesserung (D-108);Implementiert;AK-TRN-15
+C. Aktive Trainingseinheit (TS);TS-25;"Leiste „Training läuft"" und Rücksprung ins Training";–;–;E;EV;H;TS-13;S;P0;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-17, AK-DSH-01
+C. Aktive Trainingseinheit (TS);TS-26;Training verwerfen;–;–;E;EV;M;TS-01;S;P1;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-21
+C. Aktive Trainingseinheit (TS);TS-27;Freie Reihenfolge der Satzerfassung;Erzwungene Reihenfolge (laut Rezensionen);REV;VF;EV;H;TS-02;S;P0;MVP;R1 · M1;Verbesserung;Implementiert;AK-TRN-08
 D. Trainingshistorie und Analyse (TH);TH-01;Verlauf mit Detail, Bearbeiten und Löschen;Historie wird gespeichert;HC-G;V;OV;H;TS-14;M;P0;MVP;R1 · M1/M2;Übernehmen;Zur Umsetzung ausgewählt;AK-HIS-01 bis AK-HIS-04
 D. Trainingshistorie und Analyse (TH);TH-02;Übungsverlauf als Liste und Diagramm;"Anspruch „visualize your rep & weight progress""; Nutzer vermissen Verlaufsgraphen (Rezensionen)";"AS; REV";V;OV;H;"SY-18; Recharts";M;P1;MVP;R1 · M2/M3;Anpassen: Diagramm aus echten Daten als Verbesserungsziel;Zur Umsetzung ausgewählt;AK-EXL-05, AK-HIS-05
 D. Trainingshistorie und Analyse (TH);TH-03;Trainingskalender;Nicht belegt;–;P;ON;M;AH-08;M;P2;Später;R4 · M11;Später;Analysiert;Monatsansicht mit geplanten und absolvierten Einheiten
@@ -155,7 +155,7 @@ J. System, Daten, Synchronisierung (SY);SY-08;Lokales Fehlerprotokoll ohne Nutzd
 J. System, Daten, Synchronisierung (SY);SY-09;Anmeldung nur für die Sync;Pflichtkonto;SD 00:39;E;EV;M;SY-03;M;P1;Später;R3 · M9;Verbesserung;Spezifiziert;"App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS"
 J. System, Daten, Synchronisierung (SY);SY-10;Keine Drittanbieter-Telemetrie;Tracking-Identifier laut Privacy Label;AS;E;EV;H;–;S;P0;MVP;R1 · M0;Verbesserung (D-030);Getestet;AK-PWA-06
 J. System, Daten, Synchronisierung (SY);SY-11;Automatischer Snapshot vor riskanten Vorgängen;–;–;E;EV;H;SY-01;M;P0;MVP;R1 · M1/M4;Verbesserung (D-217);Zur Umsetzung ausgewählt;AK-DAT-06, AK-DAT-04
-J. System, Daten, Synchronisierung (SY);SY-12;Dauerhaften Speicher anfordern, Speicherstatus;–;–;E;EV;H;–;S;P1;MVP;R1 · M1/M4;Verbesserung;Zur Umsetzung ausgewählt;AK-PWA-05
+J. System, Daten, Synchronisierung (SY);SY-12;Dauerhaften Speicher anfordern, Speicherstatus;–;–;E;EV;H;–;S;P1;MVP;R1 · M1/M4;Verbesserung;Implementiert;AK-PWA-05
 J. System, Daten, Synchronisierung (SY);SY-13;Wiederherstellung bei Datenbankfehlern;Anlass: Abstürze mit Datenverlust (laut Rezensionen);REV;E;EV;H;SY-11;M;P0;MVP;R1 · M1/M4;Verbesserung (D-216);Zur Umsetzung ausgewählt;AK-DAT-08, AK-TRN-25, AK-TRN-26
 J. System, Daten, Synchronisierung (SY);SY-14;Hinweis bei Nutzung im Safari-Tab;–;–;E;EV;H;SY-02;S;P0;MVP;R1 · M0;Verbesserung;Abgenommen;AK-PWA-04, AK-SET-06
 J. System, Daten, Synchronisierung (SY);SY-15;Hosting mit fester HTTPS-Adresse und Vorschau-Umgebungen;–;–;E;EV;H;"Q-01; Q-02";S;P0;MVP;R1 · M0;Verbesserung (D-021);Implementiert;AK-PWA-07

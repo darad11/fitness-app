@@ -1,6 +1,6 @@
 # Funktionsinventar und Funktionsmatrix
 
-Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Entscheidungen vorläufig freigegeben; erste Umsetzungsstände eingetragen · Vorgänger: `archive/v0.1-phase-1/feature-inventory.md`
+Stand: 18.10.2026 · Version 0.4 (M1 in Arbeit) · Status: Entscheidungen vorläufig freigegeben; erste Umsetzungsstände eingetragen · Vorgänger: `archive/v0.1-phase-1/feature-inventory.md`
 
 Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `python3 tools/feature_inventory_to_csv.py` erzeugt.
 
@@ -10,7 +10,13 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.4 (AP 1.8): SY-04 bleibt „Zur Umsetzung ausgewählt" (Export umgesetzt, Import in M2 und M4); SY-11 unverändert (Snapshots entstehen, Oberfläche zum Wiederherstellen in M4).
+- Version 0.4 (AP 1.7): TH-01 bleibt „Zur Umsetzung ausgewählt" (Liste und Detail umgesetzt, Bearbeiten und Löschen in M2); CH-06 bleibt bis M3.
+- Version 0.4 (AP 1.6): „Implementiert": TS-25, SY-12 (Statusanzeige folgt mit AP 1.8).
+- Version 0.4 (AP D2): „Implementiert": TS-07, TS-09, TS-21 (Pausentimer mit nächstem Satz, Wake Lock; Nachweise U, K und E in Chromium, Gerätetest steht aus).
 - Version 0.3 (M0): Status nur dort geändert, wo der Nachweis vorliegt. „Getestet": SY-16 (Nachweis U bestanden) und SY-10 (E2E in Chromium und WebKit bestanden). „Implementiert": SY-01, SY-06, SY-08, SY-15, SY-17 (Gerätetest bzw. spätere Nachweise stehen aus). „Abgenommen": SY-14 (Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden). Teilweise umgesetzte Funktionen (SY-02, SY-11, SY-13, CH-08) bleiben „Zur Umsetzung ausgewählt"; ihr Stand steht in `implementation-plan.md` (Stand M0).
+- Version 0.4 (M1, AP 1.1 und 1.2): TP-06 „Getestet" (Unit-, Komponenten- und E2E-Tests in Chromium und WebKit bestanden; der Gerätetest steht aus). TP-24 bleibt „Zur Umsetzung ausgewählt", bis „Vorlage verwenden" (M2) umgesetzt ist; „Nur heute trainieren" gibt es seit AP 1.4.
+- Version 0.4 (M1, AP 1.4): „Implementiert" (Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest T-IPH-M1 stehen aus): TS-02, TS-03, TS-04, TS-05, TS-06, TS-11, TS-14, TS-22, TS-23, TS-24, TS-26, TS-27. Teilweise umgesetzt und deshalb unverändert: TS-01 (Start aus Programm folgt in M2), TS-12 und TS-13 (AP 1.6), TS-15 (Vergleich in M3), TS-07, TS-09 und TS-21 (AP 1.5), TS-25 (AP 1.6).
 - Funktionen, die Xeela laut Rezensionen fehlen, sind als Stand der Rezensionen (2024/2025) formuliert, nicht als aktueller Zustand der App (D-118).
 
 ## Legende
@@ -60,11 +66,11 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|
 | Abgenommen | 1 |
 | Analysiert | 43 |
-| Getestet | 2 |
-| Implementiert | 5 |
+| Getestet | 3 |
+| Implementiert | 22 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 38 |
-| Zur Umsetzung ausgewählt | 74 |
+| Zur Umsetzung ausgewählt | 56 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -99,7 +105,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TP-03 | Programmstruktur aus Wochen und Trainingstagen | Feste Wochenstruktur mit festen Ruhetagen (laut Rezensionen 2024/2025) | REV | V-R | OV | H | – | M | P0 | MVP | R1 · M2 | Anpassen: Wochen frei definierbar, keine festen Ruhetage (D-214) | Zur Umsetzung ausgewählt | AK-PRG-01, AK-PRG-02 |
 | TP-04 | Übungsreihenfolge im Plan festlegen | Reihenfolge im Training erzwungen (laut Rezensionen) | REV | V-R | OV | H | TP-06 | M | P0 | MVP | R1 · M2 | Anpassen: sortierbar; im Training nicht erzwungen | Zur Umsetzung ausgewählt | AK-PRG-03, AK-TRN-08 |
 | TP-05 | Einheiten im Kalender verschieben (Drag and Drop) | „Swap Workouts" per Drag and Drop | SD 12:05 | V | OV | M | AH-08 | M | P2 | Später | R4 · M11 | Später: der Reihenfolge-Modus macht Verschieben im MVP unnötig | Analysiert | Einheit per Ziehen oder Menü auf einen anderen Tag; Historie unberührt |
-| TP-06 | Übungsbibliothek mit Suche und Filtern | Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms | HC-G; SD 06:28; AS 3.4.2 | V | OV | H | – | M | P0 | MVP | R1 · M1 | Anpassen: eigene deutsche Basisbibliothek (D-213) | Zur Umsetzung ausgewählt | AK-EXL-01, AK-EXL-02 |
+| TP-06 | Übungsbibliothek mit Suche und Filtern | Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms | HC-G; SD 06:28; AS 3.4.2 | V | OV | H | – | M | P0 | MVP | R1 · M1 | Anpassen: eigene deutsche Basisbibliothek (D-213) | Getestet | AK-EXL-01, AK-EXL-02 |
 | TP-07 | Übungsdetail mit Beschreibung, Muskeln, Gerät, Videolink | Eingebettetes Video pro Übung | REV; SD 12:38 | V | OV | M | TP-06 | S | P1 | MVP | R1 · M2 | Anpassen: ohne eigene Medien, mit persönlichem Videolink | Zur Umsetzung ausgewählt | AK-EXL-04, AK-EXL-05 |
 | TP-08 | Satzschema (Typ, Wiederholungsbereich, Zielgewicht, Zielzeit) | Feste Satzanzahl, Rep-Bereiche | REV; WEB | V | OV | H | TP-04 | M | P0 | MVP | R1 · M2 | Anpassen: frei editierbar | Zur Umsetzung ausgewählt | AK-PRG-04 |
 | TP-09 | Pausenzeiten je Übung und Satz | Vorgegeben; Pausentimer vorhanden | AS 3.1.6; WEB | V | OV | H | TS-07 | S | P0 | MVP | R1 · M1/M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-04, AK-TRN-10 |
@@ -126,32 +132,32 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | TS-01 | Training starten: aus Programm, Vorlage oder frei | Start des Tagestrainings von Home | HC-G; SD | V | OV | H | TP-21 | M | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-01, AK-TRN-02, AK-TRN-22 |
-| TS-02 | Übungsliste mit Sätzen | Video, Satzliste, Eingaben je Übung | SD 13:04 | V | OV | H | TP-06 | M | P0 | MVP | R1 · M1 | Anpassen: alle Übungen in einer Liste | Zur Umsetzung ausgewählt | AK-TRN-08, AK-UX-03 |
-| TS-03 | Vorherige Leistungswerte | Vorherige Wiederholungen seit einem Update sichtbar | REV; AS | V | OV | H | SY-18 | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-05 |
-| TS-04 | Gewicht eingeben | Verbesserte Gewichtsauswahl | AS 3.1.6 | V | OV | H | SY-16 | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-04 |
-| TS-05 | Wiederholungen eingeben | Vorhanden | HC-G | V | OV | H | – | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-04 |
-| TS-06 | Satz abschließen, mit Vorschlag | „log reps and weight after each set" | HC-G | V | OV | H | TS-04 | S | P0 | MVP | R1 · M1 | Übernehmen (D-225) | Zur Umsetzung ausgewählt | AK-TRN-06, AK-TRN-07 |
-| TS-07 | Pausentimer | Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter | AS 3.1.6; SD 13:18 | V | OV | H | TP-09 | M | P0 | MVP | R1 · M1 | Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215) | Zur Umsetzung ausgewählt | AK-TRN-10, AK-TRN-11, AK-TRN-12 |
+| TS-02 | Übungsliste mit Sätzen | Video, Satzliste, Eingaben je Übung | SD 13:04 | V | OV | H | TP-06 | M | P0 | MVP | R1 · M1 | Anpassen: alle Übungen in einer Liste | Implementiert | AK-TRN-08, AK-UX-03 |
+| TS-03 | Vorherige Leistungswerte | Vorherige Wiederholungen seit einem Update sichtbar | REV; AS | V | OV | H | SY-18 | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-05 |
+| TS-04 | Gewicht eingeben | Verbesserte Gewichtsauswahl | AS 3.1.6 | V | OV | H | SY-16 | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-04 |
+| TS-05 | Wiederholungen eingeben | Vorhanden | HC-G | V | OV | H | – | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-04 |
+| TS-06 | Satz abschließen, mit Vorschlag | „log reps and weight after each set" | HC-G | V | OV | H | TS-04 | S | P0 | MVP | R1 · M1 | Übernehmen (D-225) | Implementiert | AK-TRN-06, AK-TRN-07 |
+| TS-07 | Pausentimer | Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter | AS 3.1.6; SD 13:18 | V | OV | H | TP-09 | M | P0 | MVP | R1 · M1 | Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215) | Implementiert | AK-TRN-10, AK-TRN-11, AK-TRN-12 |
 | TS-08 | Übungstimer für Zeitsätze | Vorhanden | AS 3.1.6 | V | OV | M | TS-07 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-14 |
-| TS-09 | Nächster Satz im Pausentimer | Fehlt laut Videoanalyse | SD 13:18 | VF | EV | M | TS-07 | S | P1 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-10 |
+| TS-09 | Nächster Satz im Pausentimer | Fehlt laut Videoanalyse | SD 13:18 | VF | EV | M | TS-07 | S | P1 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-10 |
 | TS-10 | Übung im Training ersetzen | Möglich (laut Rezensionen) | REV | V-R | OV | H | TP-12 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-09 |
-| TS-11 | Sätze und Übungen im Training hinzufügen und entfernen | Sätze laut Rezensionen nicht ergänzbar | REV | VF | EV | H | – | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-09, AK-TRN-02 |
+| TS-11 | Sätze und Übungen im Training hinzufügen und entfernen | Sätze laut Rezensionen nicht ergänzbar | REV | VF | EV | H | – | S | P0 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-09, AK-TRN-02 |
 | TS-12 | Automatisches Speichern jeder Eingabe | Laut Rezensionen Abstürze mit Verlust der Eingaben | REV | VF | EV | H | SY-01 | M | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-16, AK-TRN-25 |
 | TS-13 | Wiederaufnahme nach Reload, Hintergrund und Offline-Phase; Pausieren | Nicht belegt | – | P | ON | H | TS-12; SY-13 | M | P0 | MVP | R1 · M1/M2 | Übernehmen (D-109, D-216) | Zur Umsetzung ausgewählt | AK-TRN-17, AK-TRN-18, AK-TRN-26 |
-| TS-14 | Training abschließen | „complete workout" | HC-G | V | OV | H | TS-06 | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-19 |
+| TS-14 | Training abschließen | „complete workout" | HC-G | V | OV | H | TS-06 | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-19 |
 | TS-15 | Trainingszusammenfassung | Übungen, Kalorien, Sätze | SD 14:40 | V | OV | M | TS-14 | S | P0 | MVP | R1 · M1/M3 | Anpassen: ohne Kalorienschätzung (D-226); Vergleich ab M3 | Zur Umsetzung ausgewählt | AK-TRN-20 |
 | TS-16 | Ergebnis teilen | Social Sharing | AS 3.1.5; AS 3.2.1 | V | OV | N | Web Share | S | P3 | Später | R5 | Später | Analysiert | Bild erzeugen und über das Teilen-Menü teilen |
 | TS-17 | Krafttraining nachtragen, Aktivität erfassen | Manuelle Workouts seit 3.4.11 | AS 3.4.11 | V | OV | H | TS-01 | M | P1 | MVP | R1 · M2 | Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz | Zur Umsetzung ausgewählt | AK-TRN-23 |
 | TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P3 | Später | Backlog | Später: nur als gekennzeichnete Schätzung, frühestens mit R2 (D-226) | Analysiert | MET-basiert, abschaltbar, als Schätzung markiert |
 | TS-19 | Notizen zu Einheit und Übung | Nicht belegt | – | P | ON | M | – | S | P2 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-24 |
 | TS-20 | RPE/RIR und Tempo | Nicht belegt | – | P | ON | N | TS-05 | S | P3 | Später | R4 · M11 | Später: Feld im Datenmodell reserviert (D-108) | Spezifiziert | Optionales Feld je Satz |
-| TS-21 | Bildschirm während des Trainings aktiv halten | – | – | E | EV | H | Wake Lock (iOS ab 18.4 in installierten Web-Apps) | S | P1 | MVP | R1 · M1 | Verbesserung (D-215, D-228) | Zur Umsetzung ausgewählt | AK-TRN-13 |
-| TS-22 | Aufwärmsätze | Nicht belegt | – | P | ON | H | TP-08 | S | P0 | MVP | R1 · M1 | Übernehmen (D-108) | Zur Umsetzung ausgewählt | AK-TRN-03 |
-| TS-23 | Satzstatus geplant, erledigt, übersprungen | – | – | E | EV | H | TS-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-108) | Zur Umsetzung ausgewählt | AK-TRN-07 |
-| TS-24 | Fortschrittsanzeige der Einheit | – | – | E | EV | M | TS-02 | S | P1 | MVP | R1 · M1 | Verbesserung (D-108) | Zur Umsetzung ausgewählt | AK-TRN-15 |
-| TS-25 | Leiste „Training läuft" und Rücksprung ins Training | – | – | E | EV | H | TS-13 | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-17, AK-DSH-01 |
-| TS-26 | Training verwerfen | – | – | E | EV | M | TS-01 | S | P1 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-21 |
-| TS-27 | Freie Reihenfolge der Satzerfassung | Erzwungene Reihenfolge (laut Rezensionen) | REV | VF | EV | H | TS-02 | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-08 |
+| TS-21 | Bildschirm während des Trainings aktiv halten | – | – | E | EV | H | Wake Lock (iOS ab 18.4 in installierten Web-Apps) | S | P1 | MVP | R1 · M1 | Verbesserung (D-215, D-228) | Implementiert | AK-TRN-13 |
+| TS-22 | Aufwärmsätze | Nicht belegt | – | P | ON | H | TP-08 | S | P0 | MVP | R1 · M1 | Übernehmen (D-108) | Implementiert | AK-TRN-03 |
+| TS-23 | Satzstatus geplant, erledigt, übersprungen | – | – | E | EV | H | TS-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-108) | Implementiert | AK-TRN-07 |
+| TS-24 | Fortschrittsanzeige der Einheit | – | – | E | EV | M | TS-02 | S | P1 | MVP | R1 · M1 | Verbesserung (D-108) | Implementiert | AK-TRN-15 |
+| TS-25 | Leiste „Training läuft" und Rücksprung ins Training | – | – | E | EV | H | TS-13 | S | P0 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-17, AK-DSH-01 |
+| TS-26 | Training verwerfen | – | – | E | EV | M | TS-01 | S | P1 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-21 |
+| TS-27 | Freie Reihenfolge der Satzerfassung | Erzwungene Reihenfolge (laut Rezensionen) | REV | VF | EV | H | TS-02 | S | P0 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-08 |
 
 ## D. Trainingshistorie und Analyse (TH)
 
@@ -272,7 +278,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | SY-09 | Anmeldung nur für die Sync | Pflichtkonto | SD 00:39 | E | EV | M | SY-03 | M | P1 | Später | R3 · M9 | Verbesserung | Spezifiziert | App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS |
 | SY-10 | Keine Drittanbieter-Telemetrie | Tracking-Identifier laut Privacy Label | AS | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-030) | Getestet | AK-PWA-06 |
 | SY-11 | Automatischer Snapshot vor riskanten Vorgängen | – | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-217) | Zur Umsetzung ausgewählt | AK-DAT-06, AK-DAT-04 |
-| SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-PWA-05 |
+| SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Implementiert | AK-PWA-05 |
 | SY-13 | Wiederherstellung bei Datenbankfehlern | Anlass: Abstürze mit Datenverlust (laut Rezensionen) | REV | E | EV | H | SY-11 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-216) | Zur Umsetzung ausgewählt | AK-DAT-08, AK-TRN-25, AK-TRN-26 |
 | SY-14 | Hinweis bei Nutzung im Safari-Tab | – | – | E | EV | H | SY-02 | S | P0 | MVP | R1 · M0 | Verbesserung | Abgenommen | AK-PWA-04, AK-SET-06 |
 | SY-15 | Hosting mit fester HTTPS-Adresse und Vorschau-Umgebungen | – | – | E | EV | H | Q-01; Q-02 | S | P0 | MVP | R1 · M0 | Verbesserung (D-021) | Implementiert | AK-PWA-07 |

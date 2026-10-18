@@ -71,8 +71,51 @@ describe('App-Shell', () => {
       const labels = within(nav)
         .getAllByRole('link')
         .map((link) => link.textContent);
-      expect(labels).toEqual(['Heute', 'Mehr']);
+      expect(labels).toEqual(['Heute', 'Training', 'Mehr']);
     }
+  });
+
+  it('führt über Training zu den Übungen; Training bleibt dort markiert', async () => {
+    const user = userEvent.setup();
+    const router = renderApp('/training');
+    await screen.findByRole('heading', { level: 1, name: 'Training' });
+    await user.click(screen.getByRole('link', { name: 'Übungen' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Übungen' })).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/uebungen');
+    for (const nav of screen.getAllByRole('navigation', { name: 'Hauptnavigation' })) {
+      expect(within(nav).getByRole('link', { name: 'Training' })).toHaveClass('text-accent-ink');
+      expect(within(nav).getByRole('link', { name: 'Heute' })).not.toHaveClass('text-accent-ink');
+    }
+  });
+
+  it('zeigt die Leiste „Training läuft" auf anderen Seiten und springt zurück; „Heute" hat die Karte (AK-TRN-17, AK-DSH-01)', async () => {
+    const { startSession } = await import('@/modules/training/service/sessionService');
+    const session = await startSession(rt, {
+      source: 'free',
+      title: 'Freies Training',
+      exercises: [],
+    });
+    const persist = vi.fn(() => Promise.resolve(true));
+    Object.defineProperty(navigator, 'storage', { configurable: true, value: { persist } });
+    const user = userEvent.setup();
+    const router = renderApp('/mehr');
+    const banner = await screen.findByRole('status');
+    expect(banner).toHaveTextContent(/Training läuft.*Freies Training · 0:0\d · 0 von 0 Sätzen/);
+    await waitFor(() => {
+      expect(persist).toHaveBeenCalledTimes(1);
+    });
+    await user.click(within(banner).getByRole('link', { name: 'Training fortsetzen' }));
+    await screen.findByRole('heading', { level: 1, name: 'Freies Training' });
+    expect(router.state.location.pathname).toBe(`/training/einheit/${session.id}`);
+    // Im Player selbst keine Leiste.
+    expect(screen.queryByRole('status')).toBeNull();
+
+    await act(() => router.navigate('/heute'));
+    const card = await screen.findByRole('region', { name: 'Freies Training' });
+    expect(card).toHaveTextContent(/Seit 0:0\d · 0 von 0 Sätzen/);
+    expect(within(card).getByRole('link', { name: 'Training fortsetzen' })).toBeInTheDocument();
+    expect(screen.queryByRole('status')).toBeNull();
+    Reflect.deleteProperty(navigator, 'storage');
   });
 
   it('listet unter „Mehr" nur fertige Seiten', async () => {
@@ -83,7 +126,7 @@ describe('App-Shell', () => {
       within(main)
         .getAllByRole('link')
         .map((link) => link.textContent),
-    ).toEqual(['Einstellungen', 'Installieren', 'Über die App']);
+    ).toEqual(['Einstellungen', 'Daten und Sicherung', 'Installieren', 'Über die App']);
   });
 
   it('speichert die Darstellung und wendet sie an', async () => {
@@ -131,6 +174,14 @@ describe('App-Shell', () => {
     expect(
       await screen.findByText('In dieser Umgebung gibt es keine automatischen Updates.'),
     ).toBeInTheDocument();
+  });
+
+  it('meldet unbekannte Beispielvorlagen als nicht gefunden, ohne Fehlerprotokoll', async () => {
+    renderApp('/training/vorlagen/gibt_es_nicht');
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Seite nicht gefunden' }),
+    ).toBeInTheDocument();
+    expect(await listErrorLog(rt.db)).toEqual([]);
   });
 
   it('meldet unbekannte Adressen', async () => {

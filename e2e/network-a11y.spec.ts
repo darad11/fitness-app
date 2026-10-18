@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { chooseTheme, expect, M0_PAGES, openPage, test } from './fixtures';
+import { chooseTheme, expect, APP_PAGES, openPage, test } from './fixtures';
 
 test('alle Anfragen gehen an die eigene Adresse; Sicherheits-Header gesetzt (AK-PWA-06)', async ({
   page,
@@ -19,7 +19,7 @@ test('alle Anfragen gehen an die eigene Adresse; Sicherheits-Header gesetzt (AK-
   expect(headers['content-security-policy']).toContain("default-src 'self'");
   expect(headers['referrer-policy']).toBe('no-referrer');
 
-  for (const path of M0_PAGES) await openPage(page, path);
+  for (const path of APP_PAGES) await openPage(page, path);
   await chooseTheme(page, 'Dunkel');
   await page.getByLabel('Datum und Zahlen').selectOption('de-DE');
   expect(foreign).toEqual([]);
@@ -28,7 +28,7 @@ test('alle Anfragen gehen an die eigene Adresse; Sicherheits-Header gesetzt (AK-
 for (const theme of ['Hell', 'Dunkel'] as const) {
   test(`keine axe-Verstöße nach WCAG 2.1 AA in „${theme}" (AK-UX-04 Basis)`, async ({ page }) => {
     await chooseTheme(page, theme);
-    for (const path of M0_PAGES) {
+    for (const path of APP_PAGES) {
       await openPage(page, path);
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])

@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Schritt E, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; Diagramme hell und dunkel per Bildschirmfoto geprüft): BP-01, BP-02 (ohne Ziellinie), TH-02 (Übungsverlauf unter `/fortschritt/uebung/:id`, Übungsdetail folgt in M2), TH-05, TH-06, TH-07 (Vergleich in Zusammenfassung und auf „Heute"), TS-18 (Kalorienschätzung nach MET, D-251). BP-06 und TH-08 bleiben, bis die Ziele (AP 3.3) umgesetzt sind.
 - Version 0.5 (Schritt D, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-08 (Übungstimer), TS-10 (Übung im Training ersetzen, mit Alternativen; D-250). TP-12 (Ersetzen im Plan) folgt mit dem Programm-Editor in M2.
 - Version 0.5 (Schritt C, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-17 (Vorschau aller Wochen und Tage), TP-19 (Programm aktivieren und beenden; erneutes Aktivieren zählt von vorn), TP-21 (Reihenfolge-Modus mit „Heute geplant"). Gilt für die gebündelten Programme A, B, C (D-249); TP-01, TP-02 und TP-03 bleiben bis zu den eigenen Programmen in M2 „Zur Umsetzung ausgewählt".
 - Version 0.4 (AP 1.8): SY-04 bleibt „Zur Umsetzung ausgewählt" (Export umgesetzt, Import in M2 und M4); SY-11 unverändert (Snapshots entstehen, Oberfläche zum Wiederherstellen in M4).
@@ -46,18 +47,18 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 38 | 42 | 8 | 88 |
-| Original nicht verifiziert (ON) | 7 | 19 | 2 | 28 |
+| Original verifiziert (OV) | 39 | 41 | 8 | 88 |
+| Original nicht verifiziert (ON) | 9 | 17 | 2 | 28 |
 | Eigene Verbesserung (EV) | 37 | 12 | 0 | 49 |
-| Summe | 82 | 73 | 10 | 165 |
+| Summe | 85 | 70 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
-| Backlog | 8 |
-| R1 | 82 |
+| Backlog | 7 |
+| R1 | 85 |
 | R2 | 39 |
 | R3 | 2 |
-| R4 | 19 |
+| R4 | 17 |
 | R5 | 5 |
 
 | Prio | P0 | P1 | P2 | P3 | – |
@@ -67,12 +68,12 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
-| Analysiert | 43 |
+| Analysiert | 41 |
 | Getestet | 3 |
-| Implementiert | 27 |
+| Implementiert | 34 |
 | Noch zu recherchieren | 2 |
-| Spezifiziert | 38 |
-| Zur Umsetzung ausgewählt | 51 |
+| Spezifiziert | 37 |
+| Zur Umsetzung ausgewählt | 47 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -150,7 +151,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TS-15 | Trainingszusammenfassung | Übungen, Kalorien, Sätze | SD 14:40 | V | OV | M | TS-14 | S | P0 | MVP | R1 · M1/M3 | Anpassen: ohne Kalorienschätzung (D-226); Vergleich ab M3 | Zur Umsetzung ausgewählt | AK-TRN-20 |
 | TS-16 | Ergebnis teilen | Social Sharing | AS 3.1.5; AS 3.2.1 | V | OV | N | Web Share | S | P3 | Später | R5 | Später | Analysiert | Bild erzeugen und über das Teilen-Menü teilen |
 | TS-17 | Krafttraining nachtragen, Aktivität erfassen | Manuelle Workouts seit 3.4.11 | AS 3.4.11 | V | OV | H | TS-01 | M | P1 | MVP | R1 · M2 | Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz | Zur Umsetzung ausgewählt | AK-TRN-23 |
-| TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P3 | Später | Backlog | Später: nur als gekennzeichnete Schätzung, frühestens mit R2 (D-226) | Analysiert | MET-basiert, abschaltbar, als Schätzung markiert |
+| TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P3 | MVP | R1 · Schritt E | Vorgezogen als gekennzeichnete Schätzung nach MET (D-251, Q-16) | Implementiert | MET-basiert, als Schätzung markiert, nur mit gespeichertem Körpergewicht |
 | TS-19 | Notizen zu Einheit und Übung | Nicht belegt | – | P | ON | M | – | S | P2 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-24 |
 | TS-20 | RPE/RIR und Tempo | Nicht belegt | – | P | ON | N | TS-05 | S | P3 | Später | R4 · M11 | Später: Feld im Datenmodell reserviert (D-108) | Spezifiziert | Optionales Feld je Satz |
 | TS-21 | Bildschirm während des Trainings aktiv halten | – | – | E | EV | H | Wake Lock (iOS ab 18.4 in installierten Web-Apps) | S | P1 | MVP | R1 · M1 | Verbesserung (D-215, D-228) | Implementiert | AK-TRN-13 |
@@ -166,12 +167,12 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | TH-01 | Verlauf mit Detail, Bearbeiten und Löschen | Historie wird gespeichert | HC-G | V | OV | H | TS-14 | M | P0 | MVP | R1 · M1/M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-HIS-01 bis AK-HIS-04 |
-| TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Zur Umsetzung ausgewählt | AK-EXL-05, AK-HIS-05 |
+| TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Implementiert | AK-EXL-05, AK-HIS-05 |
 | TH-03 | Trainingskalender | Nicht belegt | – | P | ON | M | AH-08 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monatsansicht mit geplanten und absolvierten Einheiten |
 | TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | P3 | Später | R4 · M11 | Später (D-027) | Analysiert | Regel dokumentiert und getestet; Ruhetage unterbrechen nicht |
-| TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | Später | R4 · M11 | Später | Spezifiziert | Erkennung beim Abschluss für Maximalgewicht, Wiederholungen bei Gewicht und geschätztes 1RM; Stammdatenänderungen verfälschen nicht |
-| TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | Später | R4 · M11 | Später | Analysiert | Kennzahlen aus echten Daten; Zeiträume wählbar |
-| TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-20, AK-DSH-04 |
+| TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | Erkennung beim Abschluss für Maximalgewicht, Wiederholungen bei Gewicht und geschätztes 1RM; Stammdatenänderungen verfälschen nicht |
+| TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | Kennzahlen aus echten Daten; Zeiträume wählbar |
+| TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-TRN-20, AK-DSH-04 |
 | TH-08 | Fortschritt zum Wochenziel | Nicht belegt | – | P | ON | M | ON-07 | S | P1 | MVP | R1 · M3 | Übernehmen (D-220) | Zur Umsetzung ausgewählt | AK-DSH-05 |
 
 ## E. Ernährung (NU)
@@ -228,8 +229,8 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| BP-01 | Körpergewicht erfassen, bearbeiten, löschen, als Liste | Gewicht im Onboarding; ein Verlauf ist nur in einer Drittquelle genannt | GP; MWM | V | OV | H | – | S | P0 | MVP | R1 · M3 | Übernehmen (D-111) | Zur Umsetzung ausgewählt | AK-BW-01 bis AK-BW-04 |
-| BP-02 | Gewichtsverlauf mit Trend | Nur in einer Drittquelle genannt | MWM | N | ON | H | BP-01; Recharts | M | P1 | MVP | R1 · M3 | Übernehmen (D-111) | Zur Umsetzung ausgewählt | AK-BW-05, AK-BW-06 |
+| BP-01 | Körpergewicht erfassen, bearbeiten, löschen, als Liste | Gewicht im Onboarding; ein Verlauf ist nur in einer Drittquelle genannt | GP; MWM | V | OV | H | – | S | P0 | MVP | R1 · M3 | Übernehmen (D-111) | Implementiert | AK-BW-01 bis AK-BW-04 |
+| BP-02 | Gewichtsverlauf mit Trend | Nur in einer Drittquelle genannt | MWM | N | ON | H | BP-01; Recharts | M | P1 | MVP | R1 · M3 | Übernehmen (D-111) | Implementiert | AK-BW-05, AK-BW-06 |
 | BP-03 | Körpermaße | Nicht belegt | – | P | ON | M | – | S | P2 | Später | R4 · M12 | Später | Analysiert | Umfänge in cm mit Verlauf |
 | BP-04 | Körperfett, optional | Nicht belegt | – | P | ON | N | – | S | P3 | Später | R4 · M12 | Später | Analysiert | Prozentwert mit Messmethode |
 | BP-05 | Fortschrittsfotos, lokal | „progress photo library" (Rezension); Fotos für Challenges | REV; TC | V | OV | M | Gerätespeicher | L | P2 | Später | R4 · M12 | Später: lokal (D-114); Cloud in R5 | Analysiert | Lokal komprimiert; Vergleich; Export; vollständige Löschung |

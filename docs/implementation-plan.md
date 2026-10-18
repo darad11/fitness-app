@@ -108,7 +108,7 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
 | 1.9 | Umgesetzt bis auf den Gerätetest (18.10.2026): E2E für Sichtbarkeitswechsel, Überziehung und Offline; T-IPH-M1 steht aus |
 
-**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request #7, Basis `m1-training`); Schritt D (Player: Übungsinfo, Umsortieren, Ersetzen mit Alternativen, Übungstimer, Tagesvorschau, D-250) auf dem Branch `evolution-player` (Basis `evolution-programs`). Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
+**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request #7, Basis `m1-training`); Schritt D (Player: Übungsinfo, Umsortieren, Ersetzen mit Alternativen, Übungstimer, Tagesvorschau, D-250) auf dem Branch `evolution-player`; B, C und D am 18.10.2026 über #5, #7 und #8 nach `main` gemergt. Schritt E (Fortschritt: Körpergewicht mit Diagramm, Kennzahlen, Bestleistungen, Übungsverlauf, Kalorienschätzung, D-251, D-252) auf dem Branch `evolution-progress`; damit sind AP 3.1, 3.2 und 3.6 sowie Teile von 3.4 vorgezogen, AP 3.3 (Ziele) steht aus. Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -133,12 +133,12 @@ Abnahme M2: Alle genannten AK bestanden; Gerätekurztest bestanden.
 
 | AP | Inhalt | Größe |
 |---|---|---|
-| 3.1 | Körpergewicht: Domain, Erfassen-Sheet, Liste, Bearbeiten und Löschen, Plausibilitätshinweis | M |
-| 3.2 | Diagramm-Basis (Recharts mit Tokens, Tooltip, Tabellenansicht, Zeitraum) und die Diagramme C-01 bis C-03; Rendering hell und dunkel per Bildschirmfoto geprüft | L |
+| 3.1 | Körpergewicht: Domain, Erfassen-Sheet, Liste, Bearbeiten und Löschen, Plausibilitätshinweis (umgesetzt mit Schritt E, D-252) | M |
+| 3.2 | Diagramm-Basis (Recharts mit Tokens, Tooltip, Tabellenansicht, Zeitraum) und die Diagramme C-01 bis C-03; Rendering hell und dunkel per Bildschirmfoto geprüft (umgesetzt mit Schritt E; C-01 ohne Ziellinie bis AP 3.3) | L |
 | 3.3 | Ziele und Profil (Wochenziel, Zielgewicht, Historie); Einstellungen vervollständigen | S |
 | 3.4 | Dashboard vollständig: alle Karten, Vergleich mit der letzten Einheit, Wochenziel, Gewicht, Erfassen-Sheet, Sicherungshinweis | M |
 | 3.5 | Ersteinrichtung | S |
-| 3.6 | Zusammenfassung mit Vergleich | S |
+| 3.6 | Zusammenfassung mit Vergleich (umgesetzt mit Schritt E, dazu Kalorienschätzung und Bestleistung) | S |
 | 3.7 | Tests | M |
 
 AK: AK-BW-01 bis AK-BW-06, AK-HIS-05, AK-EXL-05 (Diagramm), AK-DSH-02 bis AK-DSH-08, AK-SET-01, AK-SET-05, AK-ONB-01, AK-TRN-20 (Vergleich), AK-DAT-12.
@@ -232,4 +232,6 @@ Nächste Schritte: <Liste>
 18. Erledigt (Branch `evolution-programs`): Schritt C, Programme A, B, C als Stammdaten (`programs.md`) und aktives Programm mit nächstem Tag, Zähler und „Heute geplant“ (D-249). Offen: weitere Dropset-Sterne des Winter Arc vom Produktinhaber (U-1).
 19. Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere; danach Pull Requests #5 und `evolution-programs` zur Freigabe.
 20. Erledigt (Branch `evolution-player`): Schritt D, Player ausgebaut (D-250).
-21. Produktinhaber prüft die Vorschauen von #5, #7 und Schritt D und mergt in dieser Reihenfolge; danach Schritt E (Fortschritt und Auswertung) nach `evolution-plan.md` Abschnitt 5.
+21. Erledigt: #5, #7 und #8 nach `main` gemergt (Freigabe des Produktinhabers am 18.10.2026 ohne ausführlichen Test; Befunde meldet er nach).
+22. Erledigt (Branch `evolution-progress`): Schritt E, Fortschritt und Auswertung (D-251, D-252).
+23. Ich: Schritt F (Tagesaufgaben und Motivation); danach Ziele (AP 3.3) und G, H nach `evolution-plan.md` Abschnitt 5.

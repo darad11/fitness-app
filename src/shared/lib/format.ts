@@ -57,6 +57,10 @@ export interface Formatters {
   dayMonthYear(date: Date): string;
   /** „18.10.2026, 09:15" */
   dateTimeShort(date: Date): string;
+  /** „18. Okt." (Achsenbeschriftung) */
+  dayMonth(date: Date): string;
+  /** „Oktober 2026" */
+  monthYear(date: Date): string;
   /** „09:15" */
   time(date: Date): string;
   number(value: number, options?: NumberOptions): string;
@@ -92,6 +96,8 @@ export function createFormatters(
     minute: '2-digit',
   });
   const time = new Intl.DateTimeFormat(locale, { ...base, hour: '2-digit', minute: '2-digit' });
+  const dayMonth = new Intl.DateTimeFormat(locale, { ...base, day: 'numeric', month: 'short' });
+  const monthYear = new Intl.DateTimeFormat(locale, { ...base, month: 'long', year: 'numeric' });
   const numberFormats = new Map<string, Intl.NumberFormat>();
 
   const formatNumber = (value: number, options: NumberOptions = {}): string => {
@@ -114,6 +120,8 @@ export function createFormatters(
     dayMonthYear: (date) => dayMonthYear.format(date),
     dateTimeShort: (date) => dateTimeShort.format(date),
     time: (date) => time.format(date),
+    dayMonth: (date) => dayMonth.format(date),
+    monthYear: (date) => monthYear.format(date),
     number: formatNumber,
     loadKg: (value) => `${formatNumber(value, { maximumFractionDigits: 2 })}${NBSP}kg`,
     bodyWeightKg: (value) =>

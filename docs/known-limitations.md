@@ -121,7 +121,7 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - **Offline-Status:** Beim allerersten Aufruf zeigt „Heute" „Wird für die Offline-Nutzung vorbereitet", bis der Service Worker alle Dateien gespeichert hat. Im Entwicklungsmodus (`pnpm dev`) gibt es keinen Service Worker.
 - **Updates:** Die App fragt beim Start und höchstens einmal pro Stunde bei Rückkehr in den Vordergrund nach einer neuen Version, außerdem über „Nach Update suchen". Die Sperre des Update-Hinweises während eines Trainings folgt mit M4 (AK-PWA-03), weil es in M0 noch kein Training gibt.
 - **Snapshots und Wiederherstellung:** Snapshots lassen sich anlegen und lesen; das Wiederherstellen folgt mit M1 und M4. Der Wiederherstellungsbildschirm bietet in M0 nur Ursache, „Erneut versuchen" und gegebenenfalls „Jetzt aktualisieren".
-- **Formatierung de-CH:** Schweizer Tausendertrennzeichen mit Dezimalkomma (D-233); das weicht von der üblichen Schweizer Schreibweise mit Punkt ab.
+- **Formatierung de-CH:** Schweizer Tausendertrennzeichen mit Dezimalkomma (D-233); das weicht von der üblichen Schweizer Schreibweise mit Punkt ab. Das Tausendertrennzeichen hängt von den Sprachdaten des Geräts ab („’“ oder „'“).
 - **Build-Manifest:** `dist/.vite/manifest.json` wird mit ausgeliefert, weil die Prüfung der Bündelgröße es braucht. Es enthält nur Dateinamen und keine Daten.
 
 ## 13. Quellen

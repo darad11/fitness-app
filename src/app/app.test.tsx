@@ -114,7 +114,7 @@ describe('App-Shell', () => {
     });
     await user.selectOptions(select, 'de-AT');
     expect(
-      await screen.findByText(/17\. Jänner 2026 · 21:05 · 1\u00A0234,5 · 72,5\u00A0kg/, exact),
+      await screen.findByText(/17\. Jänner 2026 · 21:05 · 1\s234,5 · 72,5\u00A0kg/, exact),
     ).toBeInTheDocument();
     await user.selectOptions(select, 'de-DE');
     expect(

@@ -43,9 +43,16 @@ describe('createFormatters', () => {
   });
 
   it('nutzt die Tausendertrennung der Gerätesprache und immer ein Dezimalkomma', () => {
-    expect(createFormatters('de-DE').number(1234.5)).toBe('1.234,5');
-    expect(createFormatters('de-AT').number(1234.5)).toBe('1\u00A0234,5');
-    expect(createFormatters('de-CH').number(1234.5)).toBe('1’234,5');
+    // Das Trennzeichen kommt aus den Sprachdaten (ICU) und unterscheidet sich je nach Version:
+    // de-CH liefert mit ICU 77 „’", mit ICU 78 „'". Geprüft wird deshalb die Art des Zeichens.
+    const group = (locale: string) =>
+      new Intl.NumberFormat(locale).formatToParts(1234.5).find((p) => p.type === 'group')?.value;
+    expect(group('de-DE')).toBe('.');
+    expect(group('de-AT')).toMatch(/^\s$/u);
+    expect(["'", '’']).toContain(group('de-CH'));
+    for (const locale of ['de-DE', 'de-AT', 'de-CH'] as const) {
+      expect(createFormatters(locale).number(1234.5)).toBe(`1${group(locale) ?? ''}234,5`);
+    }
   });
 
   it('zeigt Lasten bis 0,25 kg genau ohne überflüssige Nullen', () => {

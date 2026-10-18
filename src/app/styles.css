@@ -105,6 +105,9 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    /* Programmatisches Scrollen (Fokus, scrollIntoView) hält Abstand zu klebenden Köpfen und festen Leisten. */
+    scroll-padding-top: 5rem;
+    scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
   }
 
   body {

@@ -51,7 +51,8 @@ export function SetRow(props: SetRowProps) {
       aria-label={props.name}
       aria-current={current ? 'step' : undefined}
       className={cn(
-        'rounded-input px-2 py-1.5',
+        // Scroll-Abstand zum klebenden Kopf mit Pause und zur Aktionsleiste (Fokus, Tests).
+        'scroll-mt-[21rem] scroll-mb-32 rounded-input px-2 py-1.5',
         set.type === 'drop' && 'ml-6',
         current && 'bg-accent-soft',
         skipped && 'opacity-70',

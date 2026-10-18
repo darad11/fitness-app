@@ -7,6 +7,7 @@ export const META_KEYS = {
   deviceId: 'deviceId',
   hlc: 'hlc',
   dismissedHints: 'hints.dismissed',
+  lastExportAt: 'export.lastAt',
 } as const;
 
 export type HintId = 'ios-install';

@@ -39,7 +39,7 @@
       "de": "Fliegende am Kabel",
       "key": "cable_fly",
       "status": "unklar",
-      "addition": "Ausführung „mit Drücken“ nur aus dem Namen; Videoanleitung in der Aufnahme nicht sichtbar",
+      "addition": "Produktinhaber konnte die Ausführung nicht einordnen (18.10.2026); bleibt Fliegende am Kabel mit Hinweis „Zuordnung unsicher“",
       "confidence": "niedrig"
     },
     {
@@ -108,10 +108,10 @@
     },
     {
       "xeela": "Pull-Ups",
-      "de": "Klimmzüge",
-      "key": "pull_up",
+      "de": "Klimmzüge mit Unterstützung",
+      "key": "assisted_pull_up",
       "status": "vorhanden",
-      "addition": "Im Programm wählbar mit „Klimmzüge mit Unterstützung“ (assisted_pull_up) als Ersatz",
+      "addition": "Laut Produktinhaber (18.10.2026) an der Maschine mit Gegengewicht (Entlastung × Wiederholungen, D-241)",
       "confidence": "hoch"
     },
     {
@@ -190,9 +190,9 @@
       "xeela": "Seated Front Lateral Raise",
       "de": "Frontheben mit Kurzhanteln",
       "key": "front_raise_dumbbell",
-      "status": "unklar",
-      "addition": "„Front Lateral“ ist mehrdeutig (Frontheben oder Seitheben nach vorn); Hinweis „sitzend“",
-      "confidence": "niedrig"
+      "status": "variante",
+      "addition": "Laut Produktinhaber (18.10.2026) Frontheben; Hinweis „sitzend“",
+      "confidence": "hoch"
     },
     {
       "xeela": "Bent-Over Dumbbell Rear Delt Fly",
@@ -396,11 +396,11 @@
     },
     {
       "xeela": "Calf Raise Machine",
-      "de": "Wadenheben stehend",
-      "key": "standing_calf_raise",
-      "status": "unklar",
-      "addition": "Ob stehend oder sitzend, ist aus der Aufnahme nicht erkennbar",
-      "confidence": "niedrig"
+      "de": "Wadenheben sitzend",
+      "key": "seated_calf_raise",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) sitzend",
+      "confidence": "hoch"
     },
     {
       "xeela": "Dumbbell Romanian Deadlifts",
@@ -516,11 +516,11 @@
     },
     {
       "xeela": "Knee Raises",
-      "de": "Beinheben hängend",
-      "key": "hanging_leg_raise",
-      "status": "unklar",
-      "addition": "Hängend oder liegend nicht erkennbar; Hinweis „Knie angewinkelt“",
-      "confidence": "niedrig"
+      "de": "Knieheben stehend",
+      "key": "standing_knee_raise",
+      "status": "neu",
+      "addition": "Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
     },
     {
       "xeela": "Plank",
@@ -534,9 +534,9 @@
       "xeela": "Leg Raises",
       "de": "Beinheben liegend",
       "key": "lying_leg_raise",
-      "status": "unklar",
-      "addition": "Liegend oder hängend nicht erkennbar",
-      "confidence": "niedrig"
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) liegend",
+      "confidence": "hoch"
     },
     {
       "xeela": "Russian Twists",

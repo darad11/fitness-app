@@ -17,6 +17,7 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   await expect(page.getByRole('heading', { level: 1, name: 'Mehr' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link')).toHaveText([
     'Einstellungen',
+    'Daten und Sicherung',
     'Installieren',
     'Über die App',
   ]);
@@ -58,4 +59,28 @@ test('zeigt Version, Build und Speicher-ID', async ({ page }) => {
   await openPage(page, '/mehr/ueber');
   await expect(page.getByText(/^\d+\.\d+\.\d+$/)).toBeVisible();
   await expect(page.getByText(/^[0-9a-f]{8}$/)).toBeVisible();
+});
+
+test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-PWA-05)', async ({
+  page,
+}) => {
+  await openPage(page, '/mehr');
+  await page.getByRole('link', { name: 'Daten und Sicherung' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Daten und Sicherung' })).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+  await expect(page.getByText(/^Belegt: /)).toBeVisible();
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Jetzt exportieren' }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/^fitness-sicherung-\d{4}-\d{2}-\d{2}-\d{4}\.json$/);
+  const content = JSON.parse(
+    await (await file.createReadStream()).toArray().then((c) => Buffer.concat(c).toString()),
+  ) as {
+    format: string;
+    data: Record<string, unknown[]>;
+  };
+  expect(content.format).toBe('fitness-app-backup');
+  expect(Object.keys(content.data)).toContain('session');
+  await expect(page.getByText('Die Datei wurde heruntergeladen.')).toBeVisible();
+  await expect(page.getByText(/^Letzter Export: /)).toBeVisible();
 });

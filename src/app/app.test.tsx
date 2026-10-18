@@ -126,7 +126,7 @@ describe('App-Shell', () => {
       within(main)
         .getAllByRole('link')
         .map((link) => link.textContent),
-    ).toEqual(['Einstellungen', 'Installieren', 'Über die App']);
+    ).toEqual(['Einstellungen', 'Daten und Sicherung', 'Installieren', 'Über die App']);
   });
 
   it('speichert die Darstellung und wendet sie an', async () => {

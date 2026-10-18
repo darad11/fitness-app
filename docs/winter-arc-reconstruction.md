@@ -45,14 +45,14 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | U-2 | Tag 14: Laufband mit „3 Sets • 30:00“, Kopfzeile 24 Sätze | gesehen; wahrscheinlich Datenfehler in Xeela | In der Datendatei wie angezeigt; in Programm C als 1 × 30 min (Q-13, beantwortet 18.10.2026) |
 | U-3 | „279 Exercises“ in der Fortschrittsansicht gegen 278 gezählte Einträge | gesehen | Differenz vermutlich durch U-2 oder eine Zählung je Satzgruppe; kein Tag fehlt (40 Tage, Kopfzeilen stimmen) |
 | U-4 | Tippfehler in Xeela („Quad Extentions“, „Leg press Calf Raise“, „Overhead Cable Tricep Extention“, „Flat Dumbbell Bench Press (chest)“) | gesehen | Wörtlich beibehalten; deutsche Namen im Abgleich |
-| U-5 | Ausführung einzelner Übungen („Chest Fly With Push“, „Seated Front Lateral Raise“, „Knee Raises“, „Leg Raises“, „Calf Raise Machine“) | offen, nur Name sichtbar | Im Abgleich als „unklar“; Zuordnung mit niedriger Konfidenz, Frage Q-13 |
+| U-5 | Ausführung einzelner Übungen | vom Produktinhaber am 18.10.2026 nachgesehen: Frontheben sitzend, Knieheben stehend, Beinheben liegend, Wadenheben sitzend, Klimmzüge an der Maschine; nur „Chest Fly With Push“ bleibt unklar | Abgleich in Abschnitt 5 aktualisiert; Klimmzüge mit Entlastung × Wiederholungen |
 | U-6 | Gewichte, Tempo außer „3-Second Eccentric“, Aufwärmsätze | nicht Teil des Programms | Nicht erfunden; Aufwärmsätze nach den Regeln der App optional |
 | U-7 | Kalorien „525 cal“ und „75 min“ je Tag | gesehen, Berechnung unbekannt | Nicht übernommen; eigene Schätzung nach MET mit Kennzeichnung (`evolution-plan.md`) |
 | U-8 | Datum des Programmstarts | nur in der Aufnahme des Produktinhabers | Programm C ohne Datum; Start wählt der Nutzer |
 
 ## 5. Übungsabgleich
 
-71 Xeela-Namen: 28 vorhanden, 19 Varianten vorhandener Übungen, 19 fehlen (18 neue Übungen vorgeschlagen), 5 unklar. Erzeugt aus `tools/data/winter-arc-exercise-map.json`; Status und Konfidenz beziehen sich auf die Zuordnung, nicht auf die Satzwerte. Varianten werden als Ausführungshinweis im Programm und als Alias in der Bibliothek geführt, nicht als eigene Übung (`exercise-library.md` Abschnitt 2). Quelle je Übung: erstes Vorkommen im Programm.
+71 Xeela-Namen: 30 vorhanden, 20 Varianten vorhandener Übungen, 20 fehlen (19 neue Übungen vorgeschlagen), 1 unklar. Erzeugt aus `tools/data/winter-arc-exercise-map.json`; Status und Konfidenz beziehen sich auf die Zuordnung, nicht auf die Satzwerte. Varianten werden als Ausführungshinweis im Programm und als Alias in der Bibliothek geführt, nicht als eigene Übung (`exercise-library.md` Abschnitt 2). Quelle je Übung: erstes Vorkommen im Programm.
 
 | Xeela-Name | Deutscher Name | Schlüssel | Status | Ergänzung | Quelle | Konfidenz |
 |---|---|---|---|---|---|---|
@@ -64,6 +64,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Rope Hammer Curl | Hammercurls am Kabel mit Seil | `hammer_curl_cable` (Vorschlag) | Neu | Neu: Bizeps und Unterarme, Kabel | W1 T6, T2 00:01–00:08 | hoch |
 | Heel Taps | Heel Taps | `heel_tap` (Vorschlag) | Neu | Neu: Rumpf (seitlich), Körpergewicht, nur Wiederholungen | W1 T7, T2 00:12–00:20 | hoch |
 | Dumbbell Hip Thrust | Hip Thrust mit Kurzhantel | `hip_thrust_dumbbell` (Vorschlag) | Neu | Neu: Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine) | W1 T7, T2 00:12–00:20 | hoch |
+| Knee Raises | Knieheben stehend | `standing_knee_raise` (Vorschlag) | Neu | Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Cable Hip Hinge Pull-Throughs | Pull-Throughs am Kabel | `cable_pull_through` (Vorschlag) | Neu | Neu: Gesäß und Oberschenkel hinten, Kabel | W1 T5, T1 00:31–00:42 | hoch |
 | Reverse Grip EZ Bar Curls | Reverse Curls mit SZ-Stange | `reverse_curl_ez_bar` (Vorschlag) | Neu | Neu: Unterarme und Bizeps, SZ-Stange | W2 T13, T3 00:08–00:12 | hoch |
 | Smith Machine Row | Rudern an der Multipresse, vorgebeugt | `bent_over_row_smith` (Vorschlag) | Neu | Neu: Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung) | W2 T10, T2 00:28–00:33 | mittel |
@@ -79,8 +80,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Alternating Flat Dumbbell Press | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Variante | Hinweis „wechselseitig“; Alias „Alternating Dumbbell Press“ | W1 T1, player 00:00–00:02; T1 Liste | hoch |
 | Flat Dumbbell Bench Press (chest) | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Vorhanden | Klammer „(chest)“ stammt aus Xeela | W3 T17, T3 00:28–00:34 | hoch |
 | Lying Hamstring Curls | Beinbeuger liegend | `lying_leg_curl` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
-| Knee Raises | Beinheben hängend | `hanging_leg_raise` | Unklar | Hängend oder liegend nicht erkennbar; Hinweis „Knie angewinkelt“ | W2 T12, T2 00:45; T3 00:00–00:04 | niedrig |
-| Leg Raises | Beinheben liegend | `lying_leg_raise` | Unklar | Liegend oder hängend nicht erkennbar | W2 T14, T3 00:18–00:22 | niedrig |
+| Leg Raises | Beinheben liegend | `lying_leg_raise` | Vorhanden | Laut Produktinhaber (18.10.2026) liegend | W2 T14, T3 00:18–00:22 | hoch |
 | Leg Press Machine | Beinpresse | `leg_press` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Quad Extentions | Beinstrecker | `leg_extension` | Vorhanden | Tippfehler „Extentions“ stammt aus Xeela | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Single-Leg Quad Extension | Beinstrecker | `leg_extension` | Variante | Hinweis „einbeinig“ | W2 T14, T3 00:18–00:22 | mittel |
@@ -91,14 +91,14 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Crunches | Crunches | `crunch` | Vorhanden | – | W1 T5, T1 00:31–00:42 | hoch |
 | Dead Bugs | Dead Bug | `dead_bug` | Vorhanden | – | W1 T7, T2 00:12–00:20 | hoch |
 | Close Grip Bench Press | Enges Bankdrücken | `close_grip_bench_press` | Vorhanden | Xeela führt die Übung unter Brust, die Bibliothek unter Trizeps | W1 T4, T1 00:19–00:27 | hoch |
-| Chest Fly With Push | Fliegende am Kabel | `cable_fly` | Unklar | Ausführung „mit Drücken“ nur aus dem Namen; Videoanleitung in der Aufnahme nicht sichtbar | W1 T6, T2 00:01–00:08 | niedrig |
+| Chest Fly With Push | Fliegende am Kabel | `cable_fly` | Unklar | Produktinhaber konnte die Ausführung nicht einordnen (18.10.2026); bleibt Fliegende am Kabel mit Hinweis „Zuordnung unsicher“ | W1 T6, T2 00:01–00:08 | niedrig |
 | Decline Cable Fly | Fliegende am Kabel | `cable_fly` | Variante | Hinweis „von oben nach unten“; Alias „Decline Cable Fly“ | W2 T10, T2 00:28–00:33 | hoch |
 | Incline Cable Fly | Fliegende am Kabel | `cable_fly` | Variante | Hinweis „von unten nach oben“; Alias „Incline Cable Fly“ | W3 T17, T3 00:28–00:34 | hoch |
 | EZ Bar Skull Crushers | French Press mit SZ-Stange | `skull_crusher` | Vorhanden | Alias „Skull Crusher“ | W2 T11, T2 00:36–00:41 | hoch |
 | Incline EZ Bar Skull Crushers | French Press mit SZ-Stange | `skull_crusher` | Variante | Hinweis „auf der Schrägbank“ | W2 T13, T3 00:08–00:12 | hoch |
-| Seated Front Lateral Raise | Frontheben mit Kurzhanteln | `front_raise_dumbbell` | Unklar | „Front Lateral“ ist mehrdeutig (Frontheben oder Seitheben nach vorn); Hinweis „sitzend“ | W2 T11, T2 00:36–00:41 | niedrig |
+| Seated Front Lateral Raise | Frontheben mit Kurzhanteln | `front_raise_dumbbell` | Variante | Laut Produktinhaber (18.10.2026) Frontheben; Hinweis „sitzend“ | W2 T11, T2 00:36–00:41 | hoch |
 | Heel-Elevated Goblet Squats | Goblet Squat | `goblet_squat` | Variante | Hinweis „Fersen erhöht“ | W1 T5, T1 00:31–00:42 | hoch |
-| Pull-Ups | Klimmzüge | `pull_up` | Vorhanden | Im Programm wählbar mit „Klimmzüge mit Unterstützung“ (assisted_pull_up) als Ersatz | W2 T10, T2 00:28–00:33 | hoch |
+| Pull-Ups | Klimmzüge mit Unterstützung | `assisted_pull_up` | Vorhanden | Laut Produktinhaber (18.10.2026) an der Maschine mit Gegengewicht (Entlastung × Wiederholungen, D-241) | W2 T10, T2 00:28–00:33 | hoch |
 | Barbell Back Squats | Kniebeuge mit Langhantel | `back_squat_barbell` | Vorhanden | – | W1 T5, T1 00:31–00:42 | hoch |
 | Wide Grip Lat Pulldown | Latziehen | `lat_pulldown` | Vorhanden | Weiter Griff ist die Standardausführung; Alias „Wide Grip Lat Pulldown“ | W4 T24, T4 00:39–00:41 (Lücke 00:40 mit 6 B/s geschlossen) | hoch |
 | Close Grip Lat Pulldown | Latziehen, enger Griff | `lat_pulldown_close` | Vorhanden | – | W1 T1, player 00:00–00:02; T1 Liste | hoch |
@@ -124,7 +124,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Seated Single-Arm Dumbbell Extensions | Trizepsstrecken über Kopf mit Kurzhantel | `overhead_extension_dumbbell` | Variante | Hinweis „sitzend, einarmig“ | W4 T25, T4 00:45; T5 00:00–00:02 | hoch |
 | Plank | Unterarmstütz (Plank) | `plank` | Vorhanden | Dauer (Erfassungsart Zeit) | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Leg press Calf Raise | Wadenheben an der Beinpresse | `calf_press_leg_press` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
-| Calf Raise Machine | Wadenheben stehend | `standing_calf_raise` | Unklar | Ob stehend oder sitzend, ist aus der Aufnahme nicht erkennbar | W1 T5, T1 00:31–00:42 | niedrig |
+| Calf Raise Machine | Wadenheben sitzend | `seated_calf_raise` | Vorhanden | Laut Produktinhaber (18.10.2026) sitzend | W1 T5, T1 00:31–00:42 | hoch |
 | Single-Arm Cable Pullover | Überzüge am Kabel | `straight_arm_pulldown` | Variante | Hinweis „einarmig“; Alias „Cable Pullover“. Eigene Übung, falls der Verlauf getrennt sein soll (offene Frage) | W2 T10, T2 00:28–00:33 | mittel |
 | Straight-Arm Lat Pulldown | Überzüge am Kabel | `straight_arm_pulldown` | Vorhanden | Alias „Straight-Arm Pulldown“ | W3 T17, T3 00:28–00:34 | hoch |
 

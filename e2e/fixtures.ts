@@ -50,6 +50,7 @@ export const APP_PAGES = [
   '/uebungen',
   '/mehr',
   '/mehr/einstellungen',
+  '/mehr/daten',
   '/mehr/installieren',
   '/mehr/ueber',
 ];

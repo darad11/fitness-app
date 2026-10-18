@@ -330,3 +330,16 @@ Bereits aus M0 vorhanden und unverändert: Gesundheitsprüfung der Datenbank bei
 
 Neu: Verlauf `/training/verlauf` mit Wochen (Montag bis Sonntag), Name, Datum, Dauer, erledigten Sätzen und Volumen, Leerzustand mit „Vorlage wählen“ (AK-HIS-01); Detail `/training/verlauf/:id` mit Kennzahlen, Notizen und allen Sätzen mit Typ, Werten und Status (AK-HIS-02); Einstieg „Verlauf“ auf „Training“. „Heute“ ohne laufendes Training mit „Freies Training starten“ und „Vorlage wählen“ (AK-DSH-03; „Eigenes Programm erstellen“ folgt mit M2, AK-UX-01). Trainingseinstellungen: Standardpause (Auswahl 0 bis 600 s), Gewichtsschritt 0,5 / 1 / 1,25 / 2,5 / 5 kg, Pause automatisch, Ton, Bildschirm aktiv halten mit Erklärung ohne Wake-Lock-Unterstützung und nach Ablehnung (AK-SET-02); neue Komponente `Switch`. Nachweise: `history.test.ts` (Wochengruppen, Kennzahlen), `history-ui.test.tsx` (Leerzustand, Liste nach Woche, Detail mit Status, unbekannte Einheit), `settings-ui.test.tsx` (gespeicherte Werte, sofortiges Speichern, Erklärung ohne Wake Lock), E2E in `session.spec.ts` (Verlauf und Detail nach dem Abschluss ohne axe-Verstöße; Standardpause 60 s wirkt sofort im freien Training). Nicht Teil von AP 1.7: Bearbeiten und Löschen im Verlauf (AK-HIS-03, AK-HIS-04, M2), Vergleich in der Zusammenfassung (M3).
 
+### M1 · AP 1.8 Datensicherung · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 39 Testdateien, 378 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 90,00 %, alle Schwellen erreicht |
+| Dokumente, Build, Bündelgröße | `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 195,1 KB gzip |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 36 von 36 bestanden |
+
+Neu: JSON-Export nach `data-model.md` Abschnitt 11 (`export.ts`: alle Aggregattabellen inklusive Löschmarkierungen, ohne Projektionen; Dateiname mit Datum und Uhrzeit; Teilen-Menü, wenn der Browser Dateien teilen kann, sonst Download; Zeitpunkt des letzten Exports in `meta`, AK-DAT-01) und die Seite „Mehr › Daten und Sicherung“ (S-35) mit Speicherstatus und belegtem Speicher (AK-PWA-05), Export und der Liste der Snapshots (AK-DAT-06, nur Anzeige; Wiederherstellen und Import folgen mit M2 und M4). Migrationstest-Gerüst (`migrations.test.ts`, `testing/legacyDb.ts`): eine Datenbank in Schemaversion 1 wird angelegt, mit der aktuellen Version verlustfrei geöffnet, und vor einem höheren Ziel entsteht ein Snapshot (AK-DAT-07). Nachweise: `export.test.ts` (Tabellen, Typen, Löschmarkierungen, keine Projektionen, Dateiname, Teilen/Download/Abbruch mit Zeitpunkt), `bundle-versions.test.ts` (Versionen der Stammdaten), E2E in `shell.spec.ts` (Seite ohne axe-Verstöße in beiden Modi über die Seitenliste; Export erzeugt eine Datei `fitness-sicherung-…json` mit Format und Daten; Hinweis „Letzter Export“). Der Weg über das Teilen-Menü auf dem iPhone ist Teil des Gerätetests T-IPH-M1.
+
+Der Produktinhaber hat am 18.10.2026 die unklaren Winter-Arc-Übungen nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
+

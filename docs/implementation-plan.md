@@ -105,7 +105,8 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.5 | Umgesetzt als AP D2 |
 | 1.6 | Umgesetzt (18.10.2026): Leiste „Training läuft“ mit Rücksprung, Karte auf „Heute“, dauerhafter Speicher; Gesundheitsprüfung und kontrollierter Neustart bestanden schon aus M0 |
 | 1.7 | Umgesetzt (18.10.2026): Verlauf mit Detail, „Heute“ mit Einstiegen, Trainingseinstellungen; Vergleich in der Zusammenfassung bleibt M3 |
-| 1.8 bis 1.9 | Offen |
+| 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
+| 1.9 | Offen |
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -223,5 +224,6 @@ Nächste Schritte: <Liste>
 12. Erledigt: Q-18 beantwortet (ja); Vorgabe des Produktinhabers, ab jetzt alles nach dem Master-Prompt zu gestalten. Darauf Designsystem 2.0 (AP D1) und Premium-Player mit Pause, Ton und Wake Lock (AP D2, ersetzt AP 1.5), siehe `ux-audit.md`, D-246, D-247.
 13. Erledigt: AP 1.6 Persistenz und Wiederaufnahme.
 14. Erledigt: AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen.
-15. Ich: AP 1.8 Export und Snapshot, danach AP 1.9 Tests und Gerätetest (Schritt A des Erweiterungsplans).
-16. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.
+15. Erledigt: AP 1.8 Datensicherung.
+16. Ich: AP 1.9 restliche E2E-Tests (Offline, Sichtbarkeitswechsel); Produktinhaber führt T-IPH-M1 durch.
+17. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere. Danach Schritte B bis H nach `evolution-plan.md` Abschnitt 5.

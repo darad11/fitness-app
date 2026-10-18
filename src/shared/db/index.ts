@@ -2,6 +2,7 @@ export * from './connection';
 export * from './DbProvider';
 export * from './documents';
 export * from './errorLog';
+export * from './export';
 export * from './health';
 export * from './meta';
 export * from './repository';

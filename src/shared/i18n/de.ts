@@ -84,6 +84,40 @@ export const de = {
     seconds: (n: number) => `${n} s`,
     off: 'Aus',
   },
+  data: {
+    title: 'Daten und Sicherung',
+    exportTitle: 'Daten exportieren',
+    exportText:
+      'Eine JSON-Datei mit allen Trainings und Einstellungen dieses Geräts. Auf dem iPhone über das Teilen-Menü („In Dateien sichern“), am Mac als Download.',
+    exportButton: 'Jetzt exportieren',
+    lastExport: (when: string) => `Letzter Export: ${when}`,
+    noExportYet: 'Noch kein Export.',
+    exportResult: {
+      shared: 'Die Datei wurde übergeben.',
+      downloaded: 'Die Datei wurde heruntergeladen.',
+      cancelled: 'Der Export wurde abgebrochen.',
+      failed: 'Der Export hat nicht geklappt. Bitte versuche es erneut.',
+    },
+    storageTitle: 'Speicher',
+    storageHint:
+      'Der Browser kann Daten bei Speichermangel löschen, wenn der Speicher nicht dauerhaft ist. In der installierten App gilt er als dauerhaft. Ein regelmäßiger Export schützt zusätzlich.',
+    persist: {
+      persisted: 'Speicher ist dauerhaft.',
+      denied: 'Speicher ist nicht garantiert.',
+      unsupported: 'Dauerhafter Speicher wird von diesem Browser nicht gemeldet.',
+    },
+    usage: (size: string) => `Belegt: ${size}`,
+    snapshotsTitle: 'Snapshots',
+    snapshotsText:
+      'Automatische Sicherungen vor Schema-Upgrades, Importen und dem Löschen aller Daten; die letzten fünf bleiben erhalten. Wiederherstellen folgt in einer späteren Version.',
+    noSnapshots: 'Noch kein Snapshot angelegt.',
+    snapshotReason: {
+      'schema-upgrade': 'Vor Schema-Upgrade',
+      import: 'Vor Import',
+      'delete-all': 'Vor „Alle Daten löschen“',
+    },
+    appVersion: 'Version',
+  },
   history: {
     title: 'Verlauf',
     emptyTitle: 'Noch kein Training gespeichert',

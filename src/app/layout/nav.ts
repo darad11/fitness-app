@@ -11,7 +11,7 @@ export interface NavItem {
   sections?: readonly string[];
 }
 
-/** Navigation im MVP nach D-211. Training ab M1, Fortschritt folgt mit M3. */
+/** Navigation im MVP nach D-211. Training ab M1, Fortschritt ab Schritt E. */
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: '/heute', label: t.nav.today, icon: House, available: true },
   {
@@ -21,7 +21,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     available: true,
     sections: ['/uebungen'],
   },
-  { to: '/fortschritt', label: t.nav.progress, icon: ChartLine, available: false },
+  { to: '/fortschritt', label: t.nav.progress, icon: ChartLine, available: true },
   { to: '/mehr', label: t.nav.more, icon: Ellipsis, available: true },
 ];
 

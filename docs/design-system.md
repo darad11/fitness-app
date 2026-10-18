@@ -153,6 +153,8 @@ Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, g
 
 ### 8.2 Diagramme im MVP
 
+Stand Schritt E (18.10.2026): C-01, C-02 und C-03 umgesetzt (`src/shared/charts/LineTimeChart.tsx`, Recharts), Bildschirmfotos hell und dunkel in `screenshots/c01-gewicht-*.png`; die Ziellinie in C-01 folgt mit den Zielen (AP 3.3). Linien verbinden Punkte gerade, ohne Glättung, damit keine Werte zwischen den Messungen erfunden wirken.
+
 | ID | Diagramm | Form | Farben | Interaktion | Regeln |
 |---|---|---|---|---|---|
 | C-01 | Körpergewicht (S-28) | Linie für den gleitenden 7-Tage-Durchschnitt, Punkte für jede Messung, waagerechte Ziellinie | Linie `--data-1`; Punkte `--chart-point`; Ziellinie 1 px `--chart-axis` mit Beschriftung „Ziel 75,0 kg" | Legende „Messung" und „Ø 7 Tage"; Beschriftung am Linienende; Tooltip mit Datum, Uhrzeit, Wert und Durchschnitt; Zeiträume 30 T, 90 T (Standard), 1 J, Gesamt; Tabellenansicht | Durchschnitt ab drei Einträgen im Zeitraum; y-Achse mit runden Grenzen um die Daten |

@@ -103,3 +103,39 @@ export function previousValues(
   if (!row || slot === null) return undefined;
   return row.sets.find((set) => set.slot === slot)?.values;
 }
+
+export interface SessionComparison {
+  previous: Session;
+  volumeDiffKg: number;
+  doneSetsDiff: number;
+}
+
+/**
+ * Vergleich mit der letzten abgeschlossenen Einheit desselben Programmtags (gleiche `dayId`),
+ * nur wenn es eine gibt (AK-TRN-20, data-model.md Abschnitt 9).
+ */
+export function compareWithPrevious(
+  session: Session,
+  sessions: readonly Session[],
+): SessionComparison | null {
+  const dayId = session.program?.dayId;
+  if (!dayId || !session.endedAt) return null;
+  const previous = sessions
+    .filter(
+      (candidate) =>
+        candidate.id !== session.id &&
+        candidate.status === 'completed' &&
+        candidate.program?.dayId === dayId &&
+        candidate.endedAt !== undefined &&
+        candidate.endedAt < (session.endedAt ?? ''),
+    )
+    .sort((a, b) => (b.endedAt ?? '').localeCompare(a.endedAt ?? ''))[0];
+  if (!previous) return null;
+  const current = summarizeSession(session);
+  const before = summarizeSession(previous);
+  return {
+    previous,
+    volumeDiffKg: current.volumeKg - before.volumeKg,
+    doneSetsDiff: current.doneSets - before.doneSets,
+  };
+}

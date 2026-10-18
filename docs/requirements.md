@@ -172,6 +172,8 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-HIS-03 | Werte, Sätze, Datum, Uhrzeit und Notiz einer abgeschlossenen Einheit sind änderbar; vorherige Werte und Verläufe aktualisieren sich danach | TH-01, SY-18 | I, E | M2 |
 | AK-HIS-04 | Eine Einheit lässt sich mit Rückfrage löschen und 10 s lang wiederherstellen; danach bleibt eine Löschmarkierung für die spätere Synchronisierung | TH-01 | I, E | M2 |
 | AK-HIS-05 | Das Übungsdiagramm zeigt je Einheit den besten Satz (Gewicht) oder das geschätzte 1RM (Epley, nur 1 bis 10 Wiederholungen) in den Zeiträumen 3 Monate, 1 Jahr und Gesamt; unter drei Datenpunkten erscheint statt einer Linie die Liste mit Hinweis | TH-02 | U, E | M3 |
+| AK-HIS-06 | „Fortschritt“ zeigt Trainings, Minuten, Volumen und die Kalorienschätzung für die Zeiträume Woche (ab Montag), Monat, 3 Monate, Jahr und Gesamt, ausschließlich aus gespeicherten Einheiten; die Kalorienschätzung erscheint nur mit gespeichertem Körpergewicht und ist als Schätzung gekennzeichnet (D-251) | TH-06, TS-18 | U, E | Schritt E |
+| AK-HIS-07 | Je Übung gilt der beste Satz nach Erfassungsart als Bestleistung (bei Gewicht höchstes Gewicht, bei Gleichstand mehr Wiederholungen; dazu das beste geschätzte 1RM); die Zusammenfassung markiert „Neue Bestleistung“ nur, wenn eine frühere Einheit der Übung existiert und übertroffen wurde | TH-05 | U, K | Schritt E |
 
 ### 6.7 Körpergewicht (AK-BW)
 

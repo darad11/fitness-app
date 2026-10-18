@@ -1,14 +1,18 @@
 import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, Play, RefreshCw } from 'lucide-react';
 import { useMemo } from 'react';
 import { Link } from 'react-router';
+import { changeInPeriod, inPeriod, recentValues, Sparkline, useBodyWeights } from '@/modules/body';
 import { useFormatters } from '@/modules/settings';
 import {
   ActiveProgramCard,
+  compareWithPrevious,
   formatClock,
   sessionDurationSec,
   sessionProgress,
+  summarizeSession,
   useActiveProgram,
   useActiveSession,
+  useCompletedSessions,
   useStartSession,
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
@@ -48,7 +52,15 @@ export function TodayPage() {
   const platform = useMemo(() => currentPlatform(), []);
   const active = useActiveSession();
   const program = useActiveProgram();
+  const sessions = useCompletedSessions();
+  const weights = useBodyWeights();
   const now = useToday(1000);
+  const last = sessions?.[0];
+  const lastSummary = last ? summarizeSession(last) : null;
+  const lastComparison = sessions?.[0] ? compareWithPrevious(sessions[0], sessions) : null;
+  const latestWeight = weights?.[0];
+  const weightChange = weights ? changeInPeriod(inPeriod(weights, '30d', now)) : null;
+  const sparkValues = weights ? recentValues(weights) : [];
   const { start, error, busy } = useStartSession();
 
   const items: StatusItem[] = [
@@ -159,6 +171,64 @@ export function TodayPage() {
             ) : null}
           </Card>
         )}
+        {last && lastSummary ? (
+          <Card eyebrow={t.today.lastTitle} title={last.title}>
+            <p className="-mt-2 text-sm text-muted tabular-nums">
+              {formatters.weekdayDayMonth(new Date(`${last.dayKey}T12:00:00`))} ·{' '}
+              {t.history.summary(
+                formatClock(lastSummary.durationSec),
+                t.history.sets(lastSummary.doneSets),
+                formatters.loadKg(lastSummary.volumeKg),
+              )}
+            </p>
+            {lastComparison ? (
+              <p className="mt-2 text-sm text-muted tabular-nums">
+                {t.today.lastCompare(
+                  `${lastComparison.volumeDiffKg >= 0 ? '+' : '−'}${formatters.loadKg(Math.abs(lastComparison.volumeDiffKg))}`,
+                  `${lastComparison.doneSetsDiff >= 0 ? '+' : '−'}${formatters.number(Math.abs(lastComparison.doneSetsDiff))}`,
+                )}
+              </p>
+            ) : null}
+            <ButtonLink
+              to={`/training/verlauf/${last.id}`}
+              variant="secondary"
+              size="sm"
+              className="mt-4"
+            >
+              {t.today.lastOpen}
+            </ButtonLink>
+          </Card>
+        ) : null}
+        <Card
+          title={t.body.title}
+          action={
+            <Link
+              to="/fortschritt/gewicht"
+              className="inline-flex min-h-11 items-center font-semibold text-accent-ink"
+            >
+              {latestWeight ? t.today.weightOpen : t.body.add}
+            </Link>
+          }
+        >
+          {latestWeight ? (
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-2xl font-bold tabular-nums">
+                  {formatters.bodyWeightKg(latestWeight.weightKg)}
+                </p>
+                <p className="text-sm text-muted">
+                  {t.body.lastMeasured(formatters.dateTimeShort(new Date(latestWeight.measuredAt)))}
+                  {weightChange !== null
+                    ? ` · ${weightChange > 0 ? '+' : weightChange < 0 ? '−' : ''}${formatters.bodyWeightKg(Math.abs(weightChange))} ${t.body.periods['30d']}`
+                    : ''}
+                </p>
+              </div>
+              {sparkValues.length >= 3 ? <Sparkline values={sparkValues} /> : null}
+            </div>
+          ) : (
+            <p className="text-muted">{t.today.weightNone}</p>
+          )}
+        </Card>
         <Card title={t.today.statusTitle}>
           <StatusList items={items} />
         </Card>

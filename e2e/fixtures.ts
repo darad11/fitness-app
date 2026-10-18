@@ -49,6 +49,8 @@ export const APP_PAGES = [
   '/training/vorlagen/full_body_ab',
   '/training/vorlagen/winter_arc_2026',
   '/uebungen',
+  '/fortschritt',
+  '/fortschritt/gewicht',
   '/mehr',
   '/mehr/einstellungen',
   '/mehr/daten',

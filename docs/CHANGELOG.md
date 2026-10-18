@@ -1,6 +1,6 @@
 # Änderungsprotokoll der Dokumentation
 
-## Version 0.6 · 18.10.2026 · Schritte B, C und D: Bibliothek, Programme A, B, C, aktives Programm, Player
+## Version 0.6 · 18.10.2026 · Schritte B bis E: Bibliothek, Programme A, B, C, aktives Programm, Player, Fortschritt
 
 Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufband Tag 14, Studio, Beinpresse, drei Sätze von Beginn an, Rotation, Kalorien, Tagesaufgaben).
 
@@ -14,7 +14,12 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
 | `implementation-plan.md` | Stand Erweiterungsplan; AP 2.3 teilweise vorgezogen; nächste Schritte |
 | `feature-inventory.md` | TP-17, TP-19, TP-21 auf „Implementiert“ |
-| `testing.md` | Ergebnisse Schritt B, C und D |
+| `testing.md` | Ergebnisse Schritt B bis E |
+| `decisions.md` (Schritt E) | D-251 Kalorienschätzung nach MET (ersetzt D-226), D-252 Fortschritt mit Modulen `body` und `progress`, Diagramme |
+| `feature-inventory.md` (Schritt E) | BP-01, BP-02, TH-02, TH-05, TH-06, TH-07, TS-18 auf „Implementiert“ |
+| `design-system.md` | Stand der Diagramme C-01 bis C-03, Bildschirmfotos unter `screenshots/` |
+| `requirements.md` | AK-HIS-06 Kennzahlen und Kalorienschätzung, AK-HIS-07 Bestleistungen |
+| `evolution-plan.md`, `implementation-plan.md` | Schritt E als umgesetzt; AP 3.1, 3.2, 3.6 vorgezogen; nächste Schritte |
 | `decisions.md` (Schritt D) | D-250 Player ausgebaut: Ersetzen, Alternativen, Umsortieren, Übungstimer, Tagesvorschau, Übungsinfo |
 | `feature-inventory.md` (Schritt D) | TS-08, TS-10 auf „Implementiert“ |
 | `evolution-plan.md`, `implementation-plan.md`, `data-model.md` (Schritt D) | Schritt D als umgesetzt; AP 2.4 teilweise vorgezogen; Felder `notes` und `replacedFromExerciseId` erläutert |

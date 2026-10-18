@@ -389,3 +389,17 @@ Befunde: Dauerziele ab einer Minute wurden in der Vorlagenansicht und im Player 
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions (steht aus); Gerätetest T-IPH-M1 steht aus |
 
 Befund: Beim Ersetzen wurde die Erfassungsart zuerst umgeschrieben und dann die Ziele verglichen, sodass Zeitziele an einer Wiederholungsübung blieben; im Dienst korrigiert (Testfall „verwirft Eingaben und unpassende Ziele“).
+
+### Schritt E · Fortschritt und Auswertung · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Körpergewicht (Modul `body`: erfassen, bearbeiten, löschen mit Rückgängig, Plausibilitätshinweis, Liste nach Monaten, Diagramm C-01 mit Zeitraum, 7-Tage-Durchschnitt und Tabellenansicht), Fortschritt (Modul `progress`: Kennzahlen mit Zeitraum, Kalorienschätzung, Bestleistungen, Übungsverläufe mit Diagramm C-02), Zusammenfassung mit Vergleich, Kalorien und „Neue Bestleistung“, „Heute“ mit „Letztes Training“ und „Körpergewicht“ (D-251, D-252).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 51 Dateien, 450 Tests bestanden. Neu: `bodyWeight.test.ts` (Plausibilität, Zeiträume, Trend, Veränderung, Monatsgruppen), `bodyWeightService.test.ts` (Grenzen, Zukunft, ändern, löschen, wiederherstellen), `body-ui.test.tsx` (Leerzustand, Sheet, Hinweis „Bitte prüfen“, Liste mit Differenz, Bearbeiten, Löschen mit Rückgängig, Tabellenansicht, Zeiträume), `calories.test.ts` (MET-Zuordnung, Formel, Verteilung, Cardio ohne Wert), `stats.test.ts` (Zeiträume, Summen, Vergleich je Erfassungsart, Bestleistungen, Übungsverlauf, 1RM, Häufigkeit), `progress-ui.test.tsx` (Leerzustand, Kennzahlen, Kalorien nur mit Körpergewicht, Bestleistungen, Übungsverlauf als Liste unter drei Einheiten, 1RM, unbekannte Übung). `app.test.tsx` und `shell.spec.ts` auf vier Bereiche in der Navigation angepasst |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 89,8 %, Zweige 80,2 %, Funktionen 88,2 %, Zeilen 90,7 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 214,1 KB gzip (Grenze 250 KB); Recharts liegt in den nachgeladenen Seiten Körpergewicht und Übungsverlauf |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 48 Tests bestanden. Neu `progress.spec.ts`: Weg über die Navigation, drei Einträge über das Sheet, „Bitte prüfen“ bei Sprung, Veränderung, Diagramm und Tabellenansicht, Löschen mit Rückgängig, Karten auf „Heute“ und „Fortschritt“. `/fortschritt` und `/fortschritt/gewicht` gehören jetzt zu den Seiten der Netz- und axe-Prüfung |
+| Bildschirmfotos (design-system.md 8.1) | C-01 hell und dunkel geprüft (`screenshots/c01-gewicht-hell.png`, `-dunkel.png`), dazu Fortschritt und Heute. Befund beim ersten Durchgang: y-Achse mit Einheit brach um und überlappte, erste Datumsmarke abgeschnitten; behoben (Achse ohne Einheit, Innenabstand, Linie ohne Glättung) |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

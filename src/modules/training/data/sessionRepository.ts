@@ -65,3 +65,14 @@ export async function latestHistory(
   }
   return undefined;
 }
+
+/** Alle Zeilen der Projektion, neueste zuerst (Fortschritt, Bestleistungen). */
+export async function listHistoryRows(db: AppDb): Promise<HistoryRow[]> {
+  const rows = await db.exerciseHistory.toArray();
+  const parsed = rows.flatMap((row) => {
+    const result = historyRowSchema.safeParse(row);
+    return result.success ? [result.data] : [];
+  });
+  parsed.sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+  return parsed;
+}

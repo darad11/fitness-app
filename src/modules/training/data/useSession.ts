@@ -7,6 +7,7 @@ import {
   getSession,
   latestHistory,
   listCompletedSessions,
+  listHistoryRows,
 } from './sessionRepository';
 
 /** Einheit, reaktiv: `undefined` beim Laden, `null`, wenn es sie nicht (mehr) gibt. */
@@ -25,6 +26,12 @@ export function useActiveSession(): Session | null | undefined {
 export function useCompletedSessions(): Session[] | undefined {
   const { db } = useDb();
   return useLiveQuery(() => listCompletedSessions(db), [db]);
+}
+
+/** Alle Zeilen der Projektion `exerciseHistory`, neueste zuerst; `undefined` beim Laden. */
+export function useHistoryRows(): HistoryRow[] | undefined {
+  const { db } = useDb();
+  return useLiveQuery(() => listHistoryRows(db), [db]);
 }
 
 /** Letzte abgeschlossene Einheit je Übung, ohne die laufende (AK-TRN-05). */

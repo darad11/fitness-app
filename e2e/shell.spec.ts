@@ -12,7 +12,12 @@ test('leitet auf „Heute" um und zeigt Datum und Status', async ({ page }) => {
 
 test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ page }) => {
   await openPage(page, '/heute');
-  await expect(mainNav(page).getByRole('link')).toHaveText(['Heute', 'Training', 'Mehr']);
+  await expect(mainNav(page).getByRole('link')).toHaveText([
+    'Heute',
+    'Training',
+    'Fortschritt',
+    'Mehr',
+  ]);
   await mainNav(page).getByRole('link', { name: 'Mehr' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Mehr' })).toBeVisible();
   await expect(page.getByRole('main').getByRole('link')).toHaveText([

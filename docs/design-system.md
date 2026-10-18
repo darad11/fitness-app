@@ -1,0 +1,286 @@
+# Designsystem, Sitemap und Screen-Katalog
+
+Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens rechnerisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
+
+## Änderungen gegenüber Version 0.1
+
+- Farbtokens rechnerisch geprüft (WCAG-Kontrast und Diagrammpalette). Geändert: heller Akzent `#1F6FEB` → `#256abf`, Erfolgstext `#1B8A5A` → `#13794D`, Warntext `#B7791F` → `#976200`; im dunklen Modus getrennte Tokens für Akzentfläche und Akzenttext. Neu: Rahmen für Eingabefelder mit mindestens 3:1.
+- Diagrammregeln neu nach einer validierten Methode (Abschnitt 8).
+- Navigation im MVP ohne Ernährung (D-211); Sitemap und Screen-Katalog mit Ausbaustufen, Routen, Zuständen und AK-Verweisen.
+- Neu: Unterschiede Touch und Desktop, Texte und Ton.
+
+## 1. Designprinzipien
+
+1. **Zahlen zuerst.** Gewicht, Wiederholungen, Zeiten und später Nährwerte sind der Inhalt. Große, ruhige Ziffern, hoher Kontrast, keine Dekoration, die mit Zahlen konkurriert.
+2. **Einhändig im Training.** Alle Aktionen einer Einheit liegen im unteren Drittel; Bedienziele mindestens 48 pt; Eingaben ohne Umwege.
+3. **Ruhig und hochwertig.** Wenige Farben, ein Akzent, viel Weißraum, Hierarchie über Typografie und Abstand statt über Rahmen und Schatten. Kein Kachel-Dashboard mit gleich lauten Karten.
+4. **Ehrliche Daten.** Leere Zustände nennen den nächsten Schritt; keine Platzhalterwerte; Schätzungen sichtbar markiert; Trends erst ab ausreichender Datenlage.
+5. **Gleiche Sorgfalt auf dem Mac.** Seitenleiste, zweispaltige Ansichten, Tastaturkürzel, Hover als Ergänzung.
+6. **Hell als Standard, Dunkel gleichwertig.** Jedes Token ist für beide Modi definiert und geprüft.
+
+## 2. Farbtokens
+
+### 2.1 Oberfläche
+
+Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,5:1, Bedienelemente und Diagrammlinien 3:1.
+
+| Token | Hell | Dunkel | Verwendung | Kontrast (hell / dunkel) |
+|---|---|---|---|---|
+| `--bg` | `#FAFAF9` | `#0F1115` | Seitenhintergrund | – |
+| `--surface` | `#FFFFFF` | `#171A21` | Karten, Sheets, Diagrammfläche | – |
+| `--surface-2` | `#F3F4F6` | `#1F232C` | Eingabefelder, gruppierte Bereiche | – |
+| `--fg` | `#111318` | `#ECEEF2` | Primärtext | 18,6 / 15,0 auf Fläche |
+| `--fg-muted` | `#5B6270` | `#9AA3B2` | Sekundärtext, Achsen, Zielinien | 6,1 / 6,8 auf Fläche; 5,6 / 6,2 auf Fläche 2 |
+| `--border` | `#E5E7EB` | `#2A2F3A` | Trennlinien, Gitterlinien (dekorativ) | – |
+| `--border-input` | `#8A93A1` | `#6B7383` | Rahmen von Eingabefeldern | 3,1 / 3,7 |
+| `--accent` | `#256abf` | `#3987e5` | Primäre Schaltflächen, aktive Tabs, Fortschritt | Weiß auf Akzent 5,4; Dunkel auf Akzent 5,3 |
+| `--accent-hover` | `#1c5cab` | `#5598e7` | Hover und gedrückt | Weiß 6,6; Dunkel 6,5 |
+| `--accent-fg` | `#FFFFFF` | `#0B0E14` | Text auf Akzentfläche | siehe oben |
+| `--accent-ink` | `#256abf` | `#5598e7` | Links, Akzenttext, Symbole auf Flächen | 5,4 / 5,8 auf Fläche; 4,9 / 5,3 auf Fläche 2 |
+| `--focus` | `#256abf` | `#5598e7` | Fokusring 2 px mit 2 px Abstand | ≥ 3:1 |
+| `--success` | `#13794D` | `#3DBE86` | Erfolgstext, „erledigt", Ziel erreicht | 5,4 / 7,4 |
+| `--warning` | `#976200` | `#E0A943` | Hinweise, „geschätzt", Speicherwarnung | 5,2 / 8,2 |
+| `--danger` | `#C53030` | `#F26D6D` | Löschen, Fehler | 5,5 / 6,0 |
+
+Statusfarben erscheinen nie allein: immer mit Symbol und Text.
+
+### 2.2 Diagramme
+
+Die Diagrammpalette ist die validierte Referenzpalette der Datenvisualisierungs-Methode, geprüft gegen unsere Flächen `#FFFFFF` (hell) und `#171A21` (dunkel) mit dem Validierungsskript der Methode (Prüfungen: Helligkeitsband, Chroma, Farbfehlsichtigkeit, Unterscheidbarkeit bei normalem Sehen, Kontrast).
+
+| Slot | Farbton | Hell | Dunkel | Verwendung |
+|---|---|---|---|---|
+| `--data-1` | Blau | `#2a78d6` | `#3987e5` | Hauptreihe jedes Diagramms; ab R2 Protein |
+| `--data-2` | Orange | `#eb6834` | `#d95926` | ab R2 Kohlenhydrate |
+| `--data-3` | Aqua | `#1baf7a` | `#199e70` | ab R2 Fett |
+| `--data-4` bis `--data-8` | Gelb, Magenta, Grün, Violett, Rot | `#eda100`, `#e87ba4`, `#008300`, `#6250d6`, `#e34948` | `#c98500`, `#d55181`, `#008300`, `#9085e9`, `#e66767` | Reserve in fester Reihenfolge |
+
+| Prüfung | Ergebnis hell | Ergebnis dunkel |
+|---|---|---|
+| Alle 8 Slots, benachbarte Paare | Bestanden; schwächstes Paar unter Farbfehlsichtigkeit ΔE 9,1, normales Sehen ΔE 19,6 | Bestanden; ΔE 8,4 bzw. 19,3 |
+| Slots 1 bis 3, alle Paare | Bestanden; ΔE 9,2 bzw. 24,0 | Bestanden; ΔE 9,4 bzw. 20,9 |
+| Kontrast zur Fläche | Aqua, Gelb und Magenta unter 3:1: Diese Slots erscheinen nur mit sichtbarer Beschriftung oder Tabellenansicht | Alle ≥ 3:1 |
+
+Weitere Diagramm-Tokens:
+
+| Token | Hell | Dunkel | Verwendung |
+|---|---|---|---|
+| `--chart-grid` | `#E5E7EB` | `#2A2F3A` | Gitterlinien, 1 px, durchgezogen |
+| `--chart-axis` | `#5B6270` | `#9AA3B2` | Achsenbeschriftung, Ziel- und Referenzlinien |
+| `--chart-point` | `#8A93A1` | `#6B7383` | Einzelmesspunkte als Kontext (3,1 / 3,7) |
+| `--meter-track` | `#cde2fb` | `#184f95` | Unbefüllter Teil eines Fortschrittsbalkens (hellere bzw. dunklere Stufe der Akzentskala) |
+| `--chart-total` | `#3A4150` | `#C3CAD6` | Gesamtwert (ab R2 Kalorien) neben farbigen Makros |
+
+### 2.3 Umsetzung
+
+Tokens als CSS-Variablen auf `:root`; Tailwind liest sie über `@theme`. Der dunkle Modus gilt bei `@media (prefers-color-scheme: dark)` für `:root:not([data-theme="light"])` und immer bei `:root[data-theme="dark"]`, damit die manuelle Wahl in beide Richtungen gewinnt. Der `body` erhält ausdrücklich `background: var(--bg)`.
+
+## 3. Typografie
+
+- Systemschrift: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` (San Francisco auf Apple-Geräten).
+- Skala: 12 (Hilfstext), 14 (Sekundär), 16 (Fließtext, Mindestgröße für Eingabefelder, damit iOS nicht zoomt), 18 (Listentitel), 22 (Abschnitt), 28 (Seitentitel), 34 (Kennzahl), 48 bis 56 (Timer, Leitzahl).
+- Ziffern: Tabellenziffern (`tabular-nums`) in Satzzeilen, Tabellen, Achsen und im Timer, damit sich wechselnde Ziffern nicht verschieben; proportionale Ziffern für große, stehende Kennzahlen auf dem Dashboard.
+- Zeilenhöhe 1,4 für Text, 1,1 für große Zahlen. Gewicht 600 für Kennzahlen und Titel, 400 für Text.
+
+## 4. Abstände, Radien, Schatten, Bewegung
+
+- 4-pt-Raster: 4, 8, 12, 16, 24, 32, 48. Seitenrand mobil 16, Tablet 24, Desktop 32.
+- Radien 8 (Eingaben, Chips), 12 (Karten), 20 (Sheets).
+- Schatten nur für schwebende Elemente (Sheet, Toast, Menü), eine Stufe.
+- Bewegung: 120 ms für Zustandswechsel, 240 ms für Sheets; bei `prefers-reduced-motion` nur Überblendungen.
+- Sichere Bereiche: `env(safe-area-inset-*)` für Tab-Leiste, Aktionsleiste des Trainings und Sheets.
+
+## 5. Komponenten (MVP)
+
+| Ebene | Komponenten |
+|---|---|
+| Basis | Button (primär, sekundär, leise, destruktiv), IconButton, Input, NumberField (Dezimalkomma, ±-Schritte), DurationField, Select, SegmentedControl, Switch, Checkbox, Tag, Badge („Beispiel", „Vorschau"), Tooltip, Skeleton |
+| Struktur | Card, Section mit Titel und Aktion, List und ListItem, Table (Desktop und Tabellenansicht der Diagramme), Sheet (mobil, unten) und Dialog (Desktop), Tabs, Accordion, Toast mit „Rückgängig", Banner (global) |
+| Navigation | TabBar (mobil), Sidebar (Desktop), TopBar mit Titel und Aktionen, Back-Navigation |
+| Training | SetRow (Typ, Vorwert, Gewicht, Wiederholungen oder Zeit, Status), ExerciseBlock, RestTimerBar und RestTimerFull, SessionHeader (Dauer, Fortschritt), SessionBanner („Training läuft"), ExercisePicker, ReplaceSheet, ProgramWeekView, DayEditor, SetSchemeEditor |
+| Fortschritt | StatTile, Meter, Sparkline, WeightChart, ExerciseProgressChart, ChartTable |
+| System | EmptyState, ErrorState, RecoveryScreen, UpdateBanner, InstallGuide, PreviewBadge, StorageStatus, ImportWizard |
+
+Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, gedrückt, deaktiviert, Laden, Fehler.
+
+## 6. Touch und Desktop
+
+| Thema | Touch (iPhone, iPad) | Desktop (Mac), iPad mit Tastatur |
+|---|---|---|
+| Bedienziele | Mindestens 44 × 44 pt, im Training 48 × 48 pt | Gleiche Größen; zusätzlich Hover |
+| Primäraktionen | Unten erreichbar (Tab-Leiste, Aktionsleiste, Sheets) | Oben rechts in der Kopfzeile oder in der Detailspalte |
+| Eingaben | `inputmode="decimal"` für Gewicht, `numeric` für Wiederholungen, `enterkeyhint="next"` bzw. `done`; Schrift ≥ 16 px | Tastatur; Pfeiltasten ändern Zahlen um einen Schritt |
+| Gesten | Keine Funktion nur per Wischen; jede Wischaktion hat einen sichtbaren Knopf | Kontextmenü als Ergänzung |
+| Overlays | Sheet von unten mit Griff | Dialog zentriert, Esc schließt |
+| Layout | Einspaltig; iPad zweispaltig ab 768 pt | Seitenleiste, Inhalt bis 1200 px, Liste und Detail nebeneinander |
+| Kürzel | – | Im Training: Eingabetaste im Wiederholungsfeld = Satz erledigt; Tab und Umschalt+Tab zwischen Feldern; Esc schließt; ⌘K bzw. Strg+K öffnet die Übungssuche |
+| Fokus | Sichtbar bei Tastaturbedienung | Immer sichtbar (2 px `--focus`) |
+
+## 7. Zustände und Hinweise
+
+| Zustand | Gestaltung | Beispieltext |
+|---|---|---|
+| Laden | Skelett in der Form des Inhalts, nie ein Ganzseiten-Spinner | – |
+| Leer | Ein Satz, eine Hauptaktion | „Noch kein Training gespeichert. Starte mit einer Vorlage oder einem freien Training." |
+| Fehler | Ursache in einfachen Worten, „Erneut versuchen", Verweis auf das Fehlerprotokoll | „Speichern hat nicht geklappt. Deine Eingabe ist noch da." |
+| Zu wenig Daten | Liste statt Diagramm | „Für einen Verlauf braucht es mindestens drei Einträge." |
+| Geschätzt (ab R2) | Warnfarbe mit Symbol und Wort | „geschätzt" |
+| Vorschau-Deployment | Dauerhaftes Etikett oben | „Vorschau – Testdaten" |
+| Safari-Tab unter iOS | Banner mit Anleitung | „Für dauerhafte Daten: Teilen › Zum Home-Bildschirm. Daten im Browser-Tab sind von der installierten App getrennt." |
+| Update | Banner, nie während eines Trainings | „Neue Version verfügbar · Jetzt aktualisieren" |
+| Sicherung | Karte auf „Heute" nach 14 Tagen ohne Export | „Letzte Sicherung vor 16 Tagen · Jetzt exportieren" |
+
+## 8. Diagramme
+
+### 8.1 Grundregeln
+
+- Erst die Form wählen, dann die Farbe. Eine einzelne Zahl ist eine Kennzahl, kein Diagramm.
+- Eine Achse pro Diagramm; nie zwei Skalen.
+- Linien 2 px, Punkte mindestens 8 px mit 2 px Ring in Flächenfarbe; Gitterlinien 1 px, durchgezogen, nur horizontal.
+- Text trägt Text-Tokens, nie die Reihenfarbe; die Zuordnung leistet ein Farbsymbol daneben.
+- Ab zwei Reihen gibt es eine Legende; das Ende der Hauptreihe trägt eine direkte Beschriftung; nie eine Zahl an jedem Punkt.
+- Hover und Tastaturfokus zeigen einen Tooltip mit Fadenkreuz; Trefferflächen mindestens 24 px. Jedes Diagramm hat eine umschaltbare Tabellenansicht, damit kein Wert nur im Tooltip steht.
+- Zeitraumwahl als Segmented Control in einer Zeile über dem Diagramm.
+- Unter drei Datenpunkten keine Linie und kein Trend; Lücken werden nicht interpoliert.
+- Liniendiagramme dürfen eine Achse ohne Nullpunkt haben; Balken beginnen immer bei null.
+- Nach der Umsetzung werden alle Diagramme in Hell und Dunkel gerendert und als Bildschirmfoto geprüft (Beschriftungen, Überlappungen, Ränder).
+
+### 8.2 Diagramme im MVP
+
+| ID | Diagramm | Form | Farben | Interaktion | Regeln |
+|---|---|---|---|---|---|
+| C-01 | Körpergewicht (S-28) | Linie für den gleitenden 7-Tage-Durchschnitt, Punkte für jede Messung, waagerechte Ziellinie | Linie `--data-1`; Punkte `--chart-point`; Ziellinie 1 px `--chart-axis` mit Beschriftung „Ziel 75,0 kg" | Legende „Messung" und „Ø 7 Tage"; Beschriftung am Linienende; Tooltip mit Datum, Uhrzeit, Wert und Durchschnitt; Zeiträume 30 T, 90 T (Standard), 1 J, Gesamt; Tabellenansicht | Durchschnitt ab drei Einträgen im Zeitraum; y-Achse mit runden Grenzen um die Daten |
+| C-02 | Übungsverlauf (S-13) | Linie mit Punkt je Einheit auf einer echten Zeitachse | `--data-1`, keine Legende (eine Reihe; der Titel nennt die Kennzahl) | Umschalter „Bester Satz" und „Geschätztes 1RM"; Zeiträume 3 M, 1 J (Standard), Gesamt; Tooltip mit Datum, Wert, Satz (z. B. „80 kg × 6") und Einheit; Beschriftung am letzten Punkt; Tabellenansicht | 1RM nur für 1 bis 10 Wiederholungen; unter drei Punkten Liste |
+| C-03 | Mini-Verlauf Körpergewicht (S-01) | Sparkline mit bis zu 12 letzten Messungen | Linie `--chart-point`, letzter Punkt `--data-1` | Keine; für Screenreader als Text „78,4 kg, minus 1,2 kg in 30 Tagen" | Ab drei Einträgen |
+
+### 8.3 Kennzahlen und Fortschrittsbalken
+
+- **StatTile:** Bezeichnung in Satzschreibweise ohne Doppelpunkt · Wert (Gewicht 600, proportionale Ziffern) · optionale Veränderung mit Vorzeichen und Zeitraum · optionale Sparkline. Beispiel: „Körpergewicht · 78,4 kg · −1,2 kg in 30 Tagen".
+- **Farbe der Veränderung:** Beim Gewicht in Richtung Ziel `--success`; vom Ziel weg und ohne Ziel neutral `--fg-muted`; nie Rot. Beim Trainingsvolumen immer neutral mit Pfeilsymbol, damit Entlastungswochen nicht als Misserfolg erscheinen.
+- **Meter (Wochenziel):** Füllung `--accent`, Spur `--meter-track`, Text daneben „2 von 3 Trainings"; bei erreichtem Ziel zusätzlich Häkchen-Symbol und „Wochenziel erreicht".
+
+### 8.4 Ausblick R2
+
+Makronährstoffe tragen feste Farben über alle Ansichten: Protein `--data-1`, Kohlenhydrate `--data-2`, Fett `--data-3`; Kalorien neutral `--chart-total`. Weil Aqua im hellen Modus unter 3:1 liegt, zeigen Makro-Balken immer den Wert als Text daneben. Über- und Unterschreitung des Ziels erscheinen mit Symbol und Text, nicht nur farbig.
+
+## 9. Navigation und Sitemap
+
+### 9.1 Navigation
+
+| Ausbaustufe | iPhone (Tab-Leiste) | Desktop und iPad quer (Seitenleiste) |
+|---|---|---|
+| R1 (MVP) | Heute · Training · Fortschritt · Mehr | Heute, Training (Programme, Verlauf, Übungen), Fortschritt, Mehr |
+| ab R2 | Heute · Training · Ernährung · Fortschritt · Mehr | zusätzlich Ernährung (Tag, Lebensmittel, Rezepte, Wochenmenü, Einkauf) |
+
+- Die Aktion „Erfassen" sitzt oben rechts auf „Heute" und öffnet ein Sheet: Training starten oder fortsetzen, Training nachtragen, Gewicht erfassen; ab R2 Mahlzeit und Wasser.
+- Der Trainingsplayer ist eine Vollbildansicht ohne Tab-Leiste. Außerhalb davon zeigt eine Leiste „Training läuft" den Weg zurück.
+- Höchstens drei Ebenen Tiefe.
+
+### 9.2 Sitemap
+
+```
+Heute (/heute)                                         R1
+  Training läuft · Heute geplant / Nächstes Training · Letztes Training
+  Wochenziel · Körpergewicht · Hinweise (Installation, Update, Sicherung)
+  Erfassen › Training starten · Training nachtragen · Gewicht erfassen
+Training (/training)                                   R1
+  Aktives Programm, nächster Tag, Vorschau
+  Programme und Vorlagen › Detail › Editor › Trainingstag
+  Beispielvorlage (/training/vorlagen/:key)
+  Trainingsplayer (/training/einheit/:id) › Zusammenfassung
+  Nachtragen (/training/nachtragen)
+  Verlauf (/training/verlauf) › Detail
+  Übungen (/uebungen) › Detail › Eigene Übung
+Ernährung (/ernaehrung/:datum)                         R2
+  Tag › Eintrag hinzufügen · Lebensmittel · Rezepte · Wochenmenü · Einkaufsliste
+Fortschritt (/fortschritt)                             R1
+  Körpergewicht (/fortschritt/gewicht)                 R1
+  Übungsverläufe (Einstieg, Detail in /uebungen/:id)   R1
+  Maße, Fotos, Trainingsanalyse, Bestleistungen        R4
+Mehr (/mehr)                                           R1
+  Profil und Ziele · Einstellungen · Daten und Sicherung
+  Installieren · Über
+  Synchronisierung (/mehr/sync)                        R3
+  Gewohnheiten (/gewohnheiten), Kalender (/kalender)   R4
+```
+
+## 10. Screen-Katalog
+
+### 10.1 MVP (R1)
+
+| ID | Screen | Route | M | Inhalt | Aktionen | Zustände | AK |
+|---|---|---|---|---|---|---|---|
+| S-01 | Heute | `/heute` | M1, M3 | Karten nach Datenlage: Training läuft, Heute geplant oder Nächstes Training, Letztes Training, Wochenziel, Körpergewicht, Hinweise | Fortsetzen, Starten, Anderen Tag wählen, Erfassen, Gewicht erfassen, Wochenziel festlegen | Ohne Programm: Vorlage, Eigenes, Frei; ohne Gewicht: Gewicht erfassen; Laden: Skelett je Karte | AK-DSH-01 bis AK-DSH-08, AK-DAT-12 |
+| S-02 | Ersteinrichtung | Overlay beim ersten Start | M3 | Begrüßung, Installationshinweis, Wochenziel, Zielgewicht, Programmwahl | Weiter, Überspringen | – | AK-ONB-01 |
+| S-03 | Training | `/training` | M1, M2 | Aktives Programm, Woche, nächster Tag, Vorschau; Einstiege Programme, Verlauf, Übungen, Nachtragen | Starten, Anderen Tag wählen, Freies Training, Programm wechseln | Ohne Programm: Leerzustand | AK-PRG-08, AK-PRG-12, AK-TRN-02 |
+| S-04 | Programme und Vorlagen | `/training/programme` | M1, M2 | Meine Programme (aktiv markiert), meine Vorlagen, Beispielvorlagen | Neu, Vorlage verwenden, Importieren | Nur Beispielvorlagen vorhanden | AK-PRG-06, AK-PRG-11, AK-PRG-13 |
+| S-05 | Programmdetail | `/training/programme/:id` | M2 | Wochen, Tage, Übungen, Satzschema, nächster Tag markiert | Aktivieren, Tag starten, Bearbeiten, Duplizieren, Als Vorlage speichern, Exportieren, Archivieren, Löschen | – | AK-PRG-05 bis AK-PRG-07, AK-PRG-12, AK-PRG-13 |
+| S-49 | Beispielvorlage | `/training/vorlagen/:key` | M1 | Wie Programmdetail, mit Etikett „Beispiel" und Hinweistext | Vorlage verwenden, Nur heute trainieren | – | AK-PRG-06 |
+| S-06 | Programm-Editor | `/training/programme/:id/bearbeiten` | M2 | Name, Beschreibung, wiederholen, Wochen und Tage | Hinzufügen, Umbenennen, Duplizieren, Löschen, Nach oben, Nach unten | Laufende Speicherung; Löschen mit Rückgängig | AK-PRG-01, AK-PRG-02 |
+| S-38 | Trainingstag bearbeiten | `/training/programme/:id/tage/:dayId` | M2 | Übungen mit Satzschema; Wochentag-Hinweis | Übung hinzufügen, ersetzen, verschieben, entfernen; Satz hinzufügen; Typ, Bereich, Zielgewicht, Zielzeit, Pause | – | AK-PRG-03, AK-PRG-04, AK-PRG-09 |
+| S-39 | Übung auswählen | Sheet | M1 | Suche, Filter Muskelgruppe und Gerät, Zuletzt, Favoriten | Auswählen, mehrfach | Keine Treffer: „Eigene Übung anlegen" | AK-EXL-02, AK-TRN-02 |
+| S-40 | Übung ersetzen | Sheet | M2 | Alternativen gleicher Hauptmuskelgruppe, Suche | Nur heute ersetzen, Im Plan ersetzen | – | AK-PRG-03, AK-TRN-09 |
+| S-07 | Trainingsplayer | `/training/einheit/:id` | M1 | Kopf mit Titel, Dauer, Fortschritt; Übungsblöcke mit Satzzeilen; Pausenleiste; Aktionsleiste | Satz erledigt, rückgängig, überspringen; Werte ändern; Satz und Übung hinzufügen, entfernen, ersetzen; Pausieren; Notiz; Beenden; Verwerfen | Speicherfehler-Hinweis; Wake Lock nicht verfügbar; Wiederaufnahme | AK-TRN-01 bis AK-TRN-26 |
+| S-08 | Pausentimer | Leiste im Player, aufklappbar zur Vollansicht | M1 | Restzeit groß, nächster Satz mit Zielwerten | +15 s, −15 s, Überspringen | Überziehung „+0:42" | AK-TRN-10 bis AK-TRN-12 |
+| S-09 | Zusammenfassung | `/training/einheit/:id/zusammenfassung` | M1, M3 | Dauer, Übungen, Sätze, Volumen, bester Satz je Übung, Vergleich (M3), Notiz | Fertig, Bearbeiten | Ohne Vorgängereinheit kein Vergleich | AK-TRN-20 |
+| S-10 | Nachtragen | `/training/nachtragen` | M2 | Wahl Krafttraining oder Aktivität; Formulare | Speichern | Validierungshinweise | AK-TRN-23 |
+| S-11 | Verlauf | `/training/verlauf`, `/training/verlauf/:id` | M1, M2 | Liste nach Wochen; Detail mit allen Sätzen | Öffnen, Bearbeiten, Löschen | Leer: „Noch kein Training gespeichert" | AK-HIS-01 bis AK-HIS-04 |
+| S-12 | Übungen | `/uebungen` | M1 | Suche, Filter, Liste mit Muskelgruppe und Gerät | Öffnen, Eigene Übung | Keine Treffer | AK-EXL-01, AK-EXL-02 |
+| S-13 | Übungsdetail | `/uebungen/:id` | M2, M3 | Muskeln, Gerät, persönliche Angaben, Videolink, letzte Einheiten, Diagramm C-02 | Persönliche Angaben bearbeiten, Favorit, eigene Übung bearbeiten | Unter drei Einheiten: Liste mit Hinweis | AK-EXL-04, AK-EXL-05, AK-HIS-05 |
+| S-14 | Eigene Übung | `/uebungen/neu` | M2 | Formular: Name, Alias, Muskeln, Gerät, Kategorie, Erfassungsart | Speichern, Archivieren | Hinweis bei gleichem Namen | AK-EXL-03 |
+| S-27 | Fortschritt | `/fortschritt` | M3 | Körpergewicht (Kennzahl, Mini-Verlauf), häufig trainierte Übungen mit Einstieg in den Verlauf | Öffnen | Leer mit nächstem Schritt | AK-BW-05, AK-HIS-05 |
+| S-28 | Körpergewicht | `/fortschritt/gewicht` | M3 | Kennzahlen, Diagramm C-01 mit Zeitraum, Tabellenansicht, Liste nach Monaten | Erfassen, Bearbeiten, Löschen | Leer; unter drei Einträgen kein Trend | AK-BW-01 bis AK-BW-06 |
+| S-41 | Gewicht erfassen | Sheet | M3 | Gewicht, Datum, Uhrzeit, Notiz | Speichern, Löschen (bei Bearbeitung) | Plausibilitätshinweis | AK-BW-01, AK-BW-02, AK-BW-04 |
+| S-48 | Mehr | `/mehr` | M0 | Profil und Ziele, Einstellungen, Daten und Sicherung, Installieren, Über | Öffnen | – | AK-UX-01 |
+| S-33 | Profil und Ziele | `/mehr/profil` | M3 | Anzeigename, Zielgewicht, Wochenziel, Zielhistorie | Ändern, Entfernen | – | AK-SET-01, AK-SET-05 |
+| S-34 | Einstellungen | `/mehr/einstellungen` | M1, M3, M4 | Training, Darstellung, Hinweis zur Sprache und Formatierung | Umschalten, Werte ändern | Wake Lock nicht verfügbar: Erklärung | AK-SET-02 bis AK-SET-04, AK-TRN-13 |
+| S-35 | Daten und Sicherung | `/mehr/daten` | M1, M2, M4 | Speicherstatus, Export, Import, Snapshots, Fehlerprotokoll, Alle Daten löschen | Exportieren, Importieren, Wiederherstellen, Löschen | – | AK-DAT-01 bis AK-DAT-10, AK-PWA-05 |
+| S-45 | Import-Assistent | Sheet bzw. Dialog | M2, M4 | Datei wählen, Prüfung, Vorschau mit Anzahl je Typ, Modus, Bericht | Zusammenführen, Ersetzen, Abbrechen | Ungültige Datei mit Grund | AK-DAT-02 bis AK-DAT-05 |
+| S-42 | Installieren | `/mehr/installieren` | M0 | Anleitung für iPhone, iPad und Mac; erkannter Status | – | Bereits installiert | AK-PWA-04, AK-SET-06 |
+| S-37 | Über | `/mehr/ueber` | M0, M4 | Version, Änderungen, Lizenzen | Nach Update suchen | – | AK-SET-07 |
+| S-43 | Wiederherstellung | Vollbild bei Datenbankfehler | M1, M4 | Ursache, Optionen | Erneut versuchen, Snapshot wiederherstellen, Fehlerprotokoll exportieren, Zurücksetzen | – | AK-DAT-08 |
+| S-44 | Fehleransicht | Je Route | M0, M4 | Meldung | Neu laden | – | AK-DAT-09 |
+| S-46 | Globale Hinweisleisten | Alle Seiten | M0 bis M4 | Training läuft, Update verfügbar, Vorschau – Testdaten, Installationshinweis | Tippen führt zur Aktion | – | AK-TRN-17, AK-PWA-03, AK-PWA-04, AK-PWA-07 |
+
+### 10.2 Spätere Ausbaustufen
+
+| ID | Screen | Stufe |
+|---|---|---|
+| S-15 bis S-26 | Ernährung: Tag, Eintrag hinzufügen, Portion, Lebensmittel, Lebensmitteldetail, Barcode, Rezepte, Rezeptdetail, Rezept-Editor, Wochenmenü, Einkaufsliste, Ernährungsziele | R2 |
+| S-36 | Synchronisierung: Konto, Status, Geräte, Protokoll | R3 |
+| S-29, S-30, S-47 | Fotos, Trainingsanalyse mit Bestleistungen und Statistik, Körpermaße | R4 |
+| S-31, S-32 | Gewohnheiten, Kalender | R4 |
+
+## 11. Trainingsplayer im Detail
+
+- **Kopf:** Titel (z. B. „Tag A · Ganzkörper"), laufende Dauer ohne Pausen, Fortschritt „8 von 20 Sätzen", Menü mit Pausieren, Notiz, Übung hinzufügen, Beenden, Verwerfen.
+- **Übungsblöcke:** Name, Hauptmuskelgruppe, Notiz; darunter Satzzeilen. Jede Zeile zeigt Typ (A = Aufwärmen, Zahl = Arbeitssatz, D = Drop-Satz, eingerückt), Vorwert („60 × 8"), Felder für Gewicht und Wiederholungen (bzw. Zeit mit Start-Knopf) und den Knopf „erledigt". Erledigte Sätze erscheinen in Erfolgsfarbe mit Häkchen.
+- **Freie Reihenfolge:** Jede Zeile ist jederzeit bedienbar; die App hebt den nächsten offenen Satz hervor, erzwingt ihn aber nicht.
+- **Vorschläge:** Platzhalter zeigen Vorwert oder festen Zielwert; „erledigt" übernimmt sichtbare Vorschläge (D-225).
+- **Pausenleiste:** Erscheint nach „erledigt" unten über der Aktionsleiste: Restzeit groß, nächster Satz, ±15 s, Überspringen; aufklappbar zur Vollansicht.
+- **Aktionsleiste:** „Satz erledigt" für den hervorgehobenen Satz, „Übung hinzufügen", „Beenden".
+- **Speicherung:** Ohne Speichern-Knopf; jede Änderung wird sofort gesichert. Bei einem Fehler erscheint ein Hinweis direkt am betroffenen Satz.
+
+## 12. Texte und Ton
+
+- Anrede „du", kurze Sätze, aktive Verben auf Knöpfen („Training starten", „Satz erledigt", „Gewicht erfassen").
+- Satzschreibweise in Überschriften und Bezeichnungen.
+- Zahlen und Datum über `Intl` nach Gerätesprache (D-212): „72,5 kg", „Sa., 18. Okt.", „09:15"; Tausendertrennung nach Gerätesprache; „heute" und „gestern" für die letzten zwei Tage.
+- Keine Bewertung von Körperwerten; neutrale Formulierungen, keine medizinischen Aussagen.
+
+## 13. Barrierefreiheit
+
+- Kontrast nach Abschnitt 2; Fokus immer sichtbar; logische Reihenfolge; Sheets und Dialoge mit Fokusfalle und Esc.
+- Jedes Eingabefeld hat eine Beschriftung; Satzzeilen sind für Screenreader als „Satz 2, Arbeitssatz, 60 Kilogramm, 8 Wiederholungen, erledigt" lesbar.
+- Der Timer meldet über `aria-live` nur Zustandswechsel (Start, Ende), nicht jede Sekunde.
+- Diagramme haben eine Tabellenansicht und eine kurze Textzusammenfassung.
+- Bewegung reduzierbar; keine Information nur über Farbe.
+
+## 14. Prüfungen
+
+| Prüfung | Werkzeug | Stand |
+|---|---|---|
+| Kontrast der UI-Tokens | Eigenes WCAG-Skript | Bestanden nach Anpassung (Abschnitt 2.1) |
+| Diagrammpalette | Validierungsskript der Datenvisualisierungs-Methode, hell und dunkel, benachbarte und alle Paare | Bestanden; Kontrast-Hinweis für drei helle Slots (Abschnitt 2.2) |
+| Automatische Barrierefreiheit | axe in Playwright | Ab M1 je Kernansicht |
+| Diagramme visuell | Bildschirmfotos hell und dunkel | M3 |

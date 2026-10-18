@@ -1,0 +1,279 @@
+# Funktionsinventar und Funktionsmatrix
+
+Stand: 18.10.2026 · Version 0.2 (Phase 2) · Status: Entscheidungen vorläufig freigegeben · Vorgänger: `archive/v0.1-phase-1/feature-inventory.md`
+
+Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `python3 tools/feature_inventory_to_csv.py` erzeugt.
+
+## Änderungen gegenüber Version 0.1
+
+- Neue Spalten **Herkunft** (Original verifiziert, Original nicht verifiziert, eigene Verbesserung), **Umfang** (MVP, später, ausgeschlossen) und **Release** (Ausbaustufe und Meilenstein).
+- Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
+- MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
+- Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Funktionen, die Xeela laut Rezensionen fehlen, sind als Stand der Rezensionen (2024/2025) formuliert, nicht als aktueller Zustand der App (D-118).
+
+## Legende
+
+**Spalten:** ID · Funktion · Originalverhalten (Xeela) · Evidenz · Konfidenz · Herkunft · Nutzen · Abhängigkeiten · Aufwand · Prio · Umfang · Release · Entscheidung · Status · Akzeptanzkriterien. Das Modul ergibt sich aus Abschnitt und ID-Präfix.
+
+**Konfidenz** (Beleglage zu Xeela): V verifiziert (offizielle Quelle oder Videoanalyse) · V-R nur über Nutzerrezensionen belegt · P plausibel, nicht bestätigt · N nur Drittquelle · VF laut Rezensionen fehlend oder eingeschränkt (Stand der Rezension; aktueller Stand nicht geprüft) · E eigener Vorschlag ohne Xeela-Bezug.
+
+**Herkunft:** OV Verifizierte Originalfunktion (Konfidenz V oder V-R) · ON Nicht verifizierte Originalfunktion (Konfidenz P oder N) · EV Eigene Verbesserung (Konfidenz VF oder E; Funktion geht über den belegten Xeela-Stand hinaus).
+
+**Umfang:** MVP (für R1 ausgewählt) · Später (für eine spätere Ausbaustufe vorgesehen) · Ausgeschlossen (bewusst nicht geplant).
+
+**Release:** R1 bis R5 mit Meilenstein (M0 bis M13), Backlog (später, noch ohne Stufe) oder „–".
+
+**Nutzen:** H hoch · M mittel · N niedrig. **Aufwand:** S unter 1 Tag · M 1 bis 3 Tage · L 3 bis 7 Tage · XL über 1 Woche (Richtwerte). **Prio:** P0 kritische Grundlage · P1 Kernfunktion · P2 Erweiterung · P3 optional · „–" nicht geplant.
+
+**Status:** Noch zu recherchieren · Analysiert · Spezifiziert · Zur Umsetzung ausgewählt · Implementiert · Getestet · Abgenommen. MVP-Zeilen stehen auf „Zur Umsetzung ausgewählt", spätere Zeilen mit konkreten Kriterien auf „Spezifiziert".
+
+**Evidenz:** AS App Store (mit Version bei Release Notes) · GP Google Play · WEB xeelafitness.com · HC-G Hilfecenter Gorgias · HC-Z Hilfecenter Zendesk · TC Challenge-Bedingungen · SD screensdesign-Videoanalyse (Zeitmarke) · DT devteam.inc · MWM mwm.ai · REV Rezensionen · DC Discord. Details in `product-research.md`.
+
+<!-- STATS-BEGIN -->
+## Überblick in Zahlen
+
+Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
+
+| Herkunft | MVP | Später | Ausgeschlossen | Summe |
+|---|---|---|---|---|
+| Original verifiziert (OV) | 38 | 42 | 8 | 88 |
+| Original nicht verifiziert (ON) | 7 | 19 | 2 | 28 |
+| Eigene Verbesserung (EV) | 37 | 12 | 0 | 49 |
+| Summe | 82 | 73 | 10 | 165 |
+
+| Release | Funktionen |
+|---|---|
+| Backlog | 8 |
+| R1 | 82 |
+| R2 | 39 |
+| R3 | 2 |
+| R4 | 19 |
+| R5 | 5 |
+
+| Prio | P0 | P1 | P2 | P3 | – |
+|---|---|---|---|---|---|
+| Anzahl | 42 | 65 | 29 | 19 | 10 |
+
+| Status | Anzahl |
+|---|---|
+| Analysiert | 43 |
+| Noch zu recherchieren | 2 |
+| Spezifiziert | 38 |
+| Zur Umsetzung ausgewählt | 82 |
+<!-- STATS-END -->
+
+## A. Onboarding, Profil, Ziele (ON)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ON-01 | Nutzung ohne Konto; lokales Profil mit optionalem Anzeigenamen | Pflicht-Registrierung mit E-Mail vor dem Quiz | SD 00:39; HC-G | V | OV | H | SY-01 | S | P0 | MVP | R1 · M3 | Anpassen: kein Konto; Anmeldung nur für Sync (D-113) | Zur Umsetzung ausgewählt | AK-SET-05 |
+| ON-02 | Kurze Ersteinrichtung | Quiz mit 19 Schritten, danach Paywall | SD 01:12; GP | V | OV | M | ON-07; ON-18; TP-24; SY-14 | S | P1 | MVP | R1 · M3 | Anpassen: höchstens vier Schritte, alles überspringbar | Zur Umsetzung ausgewählt | AK-ONB-01 |
+| ON-03 | Zieltyp (Abnehmen, Halten, Aufbauen, Leistung) | Ziele im Quiz; Programme nach Zielen | HC-G; GP; WEB | V | OV | M | NU-01 | S | P2 | Später | R2 · M5 | Später: steuert das Kalorienziel; im MVP ergibt sich die Richtung aus dem Zielgewicht | Analysiert | Zieltyp datiert gespeichert; steuert die Kalorienanpassung |
+| ON-04 | Plausibilitätsprüfung für Zielgewicht und Zielrate | Warnung „Health risk!" bei zu ehrgeizigem Ziel | SD 01:58 | V | OV | M | ON-09; ON-18 | S | P2 | Später | R2 · M5 | Später: benötigt Größe und Zieldatum | Analysiert | Hinweis bei Zielrate über 1 % Körpergewicht pro Woche; keine Diagnose |
+| ON-05 | Trainingsniveau | Survey-Frage „experience"; Level-Tags an Programmen | HC-G; WEB | V | OV | N | – | S | P3 | Später | Backlog | Später: nur als Metadatum von Vorlagen | Analysiert | Niveau filtert Vorlagen |
+| ON-06 | Trainingsort und verfügbare Geräte | Home oder Gym, Geräte im Quiz | GP; HC-G | V | OV | M | TP-12 | M | P3 | Später | Backlog | Später: Filter für Übungsalternativen | Analysiert | Gerätefilter wirkt auf Alternativen und Bibliothek |
+| ON-07 | Wochenziel „Trainings pro Woche" | Trainingshäufigkeit nicht belegt | – | P | ON | H | TH-08 | S | P1 | MVP | R1 · M3 | Übernehmen als Wochenziel (D-220) | Zur Umsetzung ausgewählt | AK-SET-01, AK-DSH-05 |
+| ON-08 | Ernährungspräferenzen und Ausschlüsse | Diätpräferenz im Quiz; laut Rezensionen nur wenige Optionen | HC-G; REV | V | OV | M | RE-01 | S | P2 | Später | R2 · M7 | Anpassen: frei definierbare Tags | Analysiert | Rezeptfilter respektieren Ausschlüsse |
+| ON-09 | Körperdaten für Formeln (Größe, Geburtsdatum, Geschlecht, Aktivität) | Gewicht und Alter im Quiz; Größe plausibel | GP; HC-G | V | OV | H | NU-01 | S | P1 | Später | R2 · M5 | Später: erst für die Kalorienberechnung nötig | Analysiert | Eingaben validiert; Formeln dokumentiert |
+| ON-10 | Programmempfehlung nach dem Quiz | Empfohlenes Programm oder Katalog | HC-Z | V | OV | N | – | M | – | Ausgeschlossen | – | Ausschließen: Auswahl trifft der Nutzer selbst | Analysiert | Entfällt |
+| ON-11 | Profil bearbeiten | „Profile & settings" | HC-G | V | OV | M | ON-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-SET-02, AK-SET-05 |
+| ON-12 | Einheiten metrisch oder imperial | Einstellung „Units" | HC-G | V | OV | N | – | S | – | Ausgeschlossen | – | Ausschließen: nur metrisch (D-104); Umrechnung bleibt intern | Analysiert | Entfällt |
+| ON-13 | Erinnerungen und Benachrichtigungseinstellungen | Workout-Reminder; tägliche Motivationsnachrichten | AS 3.1.4; WEB | V | OV | M | Web Push; Server | L | P3 | Später | R5 | Später: nur installierte Web-App, Server nötig | Analysiert | Push nach Einwilligung; iOS nur installiert ab 16.4 |
+| ON-14 | Programm wechseln, Ziel ändern | Menü, „Change workout plan", neues Ziel, Programm wählen | HC-Z | V | OV | H | TP-19; ON-18 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-07, AK-SET-01 |
+| ON-15 | Alle Daten löschen | Konto löschen ist permanent | WEB; REV | V | OV | H | SY-11 | S | P1 | MVP | R1 · M4 | Anpassen: lokal im MVP, Cloud-Daten ab R3 | Zur Umsetzung ausgewählt | AK-DAT-10 |
+| ON-16 | Abo, Testphase, Paywall | 7 Tage Testphase, harte Paywall nach dem Quiz | AS; SD 02:38 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
+| ON-17 | Referral-Programm und Sweat Equity | Credits durch Nutzung, anrechenbar auf die Mitgliedschaft | AS 3.4.0; AS 3.4.2 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
+| ON-18 | Zielgewicht festlegen | Zielgewicht im Quiz mit Warnung | SD 01:58 | V | OV | H | BP-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-SET-01, AK-DSH-06, AK-BW-05 |
+
+## B. Trainingsplanung (TP)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| TP-01 | Programme und Vorlagen | Benannte Trainerprogramme mit Level, Wochen, Minuten, Sätzen; Home und Gym | WEB; HC-Z | V | OV | H | TP-03; TP-24 | M | P0 | MVP | R1 · M1/M2 | Anpassen: eigene Programme, eigene Vorlagen, Beispielvorlagen; keine Xeela-Inhalte (D-106) | Zur Umsetzung ausgewählt | AK-PRG-01, AK-PRG-06, AK-PRG-11 |
+| TP-02 | Programmdetailseite | Vorhanden, 2025 überarbeitet | AS 3.1.5 | V | OV | M | TP-01 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-12 |
+| TP-03 | Programmstruktur aus Wochen und Trainingstagen | Feste Wochenstruktur mit festen Ruhetagen (laut Rezensionen 2024/2025) | REV | V-R | OV | H | – | M | P0 | MVP | R1 · M2 | Anpassen: Wochen frei definierbar, keine festen Ruhetage (D-214) | Zur Umsetzung ausgewählt | AK-PRG-01, AK-PRG-02 |
+| TP-04 | Übungsreihenfolge im Plan festlegen | Reihenfolge im Training erzwungen (laut Rezensionen) | REV | V-R | OV | H | TP-06 | M | P0 | MVP | R1 · M2 | Anpassen: sortierbar; im Training nicht erzwungen | Zur Umsetzung ausgewählt | AK-PRG-03, AK-TRN-08 |
+| TP-05 | Einheiten im Kalender verschieben (Drag and Drop) | „Swap Workouts" per Drag and Drop | SD 12:05 | V | OV | M | AH-08 | M | P2 | Später | R4 · M11 | Später: der Reihenfolge-Modus macht Verschieben im MVP unnötig | Analysiert | Einheit per Ziehen oder Menü auf einen anderen Tag; Historie unberührt |
+| TP-06 | Übungsbibliothek mit Suche und Filtern | Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms | HC-G; SD 06:28; AS 3.4.2 | V | OV | H | – | M | P0 | MVP | R1 · M1 | Anpassen: eigene deutsche Basisbibliothek (D-213) | Zur Umsetzung ausgewählt | AK-EXL-01, AK-EXL-02 |
+| TP-07 | Übungsdetail mit Beschreibung, Muskeln, Gerät, Videolink | Eingebettetes Video pro Übung | REV; SD 12:38 | V | OV | M | TP-06 | S | P1 | MVP | R1 · M2 | Anpassen: ohne eigene Medien, mit persönlichem Videolink | Zur Umsetzung ausgewählt | AK-EXL-04, AK-EXL-05 |
+| TP-08 | Satzschema (Typ, Wiederholungsbereich, Zielgewicht, Zielzeit) | Feste Satzanzahl, Rep-Bereiche | REV; WEB | V | OV | H | TP-04 | M | P0 | MVP | R1 · M2 | Anpassen: frei editierbar | Zur Umsetzung ausgewählt | AK-PRG-04 |
+| TP-09 | Pausenzeiten je Übung und Satz | Vorgegeben; Pausentimer vorhanden | AS 3.1.6; WEB | V | OV | H | TS-07 | S | P0 | MVP | R1 · M1/M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-04, AK-TRN-10 |
+| TP-10 | Drop-Sätze | „Refined dropsets" | AS 3.1.7; WEB | V | OV | M | TP-08 | M | P1 | MVP | R1 · M2 | Übernehmen (D-108) | Zur Umsetzung ausgewählt | AK-TRN-03, AK-PRG-04 |
+| TP-11 | Supersätze und Zirkel | Nicht belegt | – | P | ON | M | TP-04 | M | P2 | Später | R4 · M11 | Später: Gruppenfeld im Datenmodell reserviert (D-108) | Spezifiziert | Übungen gruppierbar; Wechsel innerhalb der Gruppe; Pause nach der Gruppe |
+| TP-12 | Übung im Plan ersetzen, mit Alternativen | Alternativen bei fehlendem Gerät (laut Rezensionen) | REV | V-R | OV | H | TP-06 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-03 |
+| TP-13 | Eigene Übungen | Nicht belegt | – | P | ON | H | TP-06 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-EXL-03 |
+| TP-14 | Eigenes Programm erstellen und bearbeiten | Nur Trainerprogramme (laut Rezensionen) | REV | VF | EV | H | TP-03 | L | P0 | MVP | R1 · M2 | Verbesserung (D-107) | Zur Umsetzung ausgewählt | AK-PRG-01 bis AK-PRG-04, AK-PRG-10 |
+| TP-15 | Sätze im Plan hinzufügen und entfernen | Laut Rezensionen nicht möglich | REV | VF | EV | H | TP-08 | S | P0 | MVP | R1 · M2 | Verbesserung | Zur Umsetzung ausgewählt | AK-PRG-04 |
+| TP-16 | Verpasste Einheiten nachholen, Tag frei wählen | Laut Rezensionen nur nach Zurücksetzen des Plans | REV | VF | EV | H | TP-21 | S | P1 | MVP | R1 · M2 | Verbesserung über den Reihenfolge-Modus | Zur Umsetzung ausgewählt | AK-PRG-08 |
+| TP-17 | Vorschau aller Wochen und Tage | Laut Rezensionen nur der aktuelle Tag sichtbar | REV | VF | EV | M | TP-03 | S | P1 | MVP | R1 · M2 | Verbesserung | Zur Umsetzung ausgewählt | AK-PRG-12 |
+| TP-18 | Progressionsvorschlag | Smart Weight Suggestion aus zuletzt erreichten Wiederholungen | HC-G; WEB | V | OV | M | TH-02 | M | P2 | Später | R4 · M11 | Später: transparente Regel (Double Progression) | Spezifiziert | Vorschlag mit sichtbarer Begründung; nie automatisch übernommen |
+| TP-19 | Programm aktivieren, beenden, neu starten | Zurücksetzen möglich | REV; HC-Z | V-R | OV | M | TP-01 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-07 |
+| TP-20 | Programmphasen und Deload-Wochen | Nicht belegt | – | P | ON | N | TP-03 | M | P3 | Später | Backlog | Später: über die Wochenstruktur abbildbar | Analysiert | Optional |
+| TP-21 | Reihenfolge-Modus: nächster Trainingstag aus der Programmfolge | – | – | E | EV | H | TP-03 | S | P0 | MVP | R1 · M2 | Verbesserung (D-214) | Zur Umsetzung ausgewählt | AK-PRG-08, AK-DSH-02 |
+| TP-22 | Optionaler Wochentag je Trainingstag | – | – | E | EV | M | TP-21 | S | P2 | MVP | R1 · M2 | Verbesserung | Zur Umsetzung ausgewählt | AK-PRG-09 |
+| TP-23 | Programm duplizieren | – | – | E | EV | H | TP-14 | S | P1 | MVP | R1 · M2 | Verbesserung (D-107) | Zur Umsetzung ausgewählt | AK-PRG-05 |
+| TP-24 | Gekennzeichnete Beispielvorlagen | – | – | E | EV | M | TP-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-106); Inhalt in `sample-templates.md` | Zur Umsetzung ausgewählt | AK-PRG-06, AK-PWA-02 |
+| TP-25 | Als Vorlage speichern, Vorlage verwenden | – | – | E | EV | M | TP-23 | S | P1 | MVP | R1 · M2 | Verbesserung (D-107) | Zur Umsetzung ausgewählt | AK-PRG-06 |
+| TP-26 | Programm als Datei auf ein anderes Gerät übertragen | – | – | E | EV | M | SY-04 | S | P2 | MVP | R1 · M2 | Verbesserung: Mehrgerätenutzung vor der Sync (D-218) | Zur Umsetzung ausgewählt | AK-PRG-13 |
+
+## C. Aktive Trainingseinheit (TS)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| TS-01 | Training starten: aus Programm, Vorlage oder frei | Start des Tagestrainings von Home | HC-G; SD | V | OV | H | TP-21 | M | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-01, AK-TRN-02, AK-TRN-22 |
+| TS-02 | Übungsliste mit Sätzen | Video, Satzliste, Eingaben je Übung | SD 13:04 | V | OV | H | TP-06 | M | P0 | MVP | R1 · M1 | Anpassen: alle Übungen in einer Liste | Zur Umsetzung ausgewählt | AK-TRN-08, AK-UX-03 |
+| TS-03 | Vorherige Leistungswerte | Vorherige Wiederholungen seit einem Update sichtbar | REV; AS | V | OV | H | SY-18 | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-05 |
+| TS-04 | Gewicht eingeben | Verbesserte Gewichtsauswahl | AS 3.1.6 | V | OV | H | SY-16 | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-04 |
+| TS-05 | Wiederholungen eingeben | Vorhanden | HC-G | V | OV | H | – | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-04 |
+| TS-06 | Satz abschließen, mit Vorschlag | „log reps and weight after each set" | HC-G | V | OV | H | TS-04 | S | P0 | MVP | R1 · M1 | Übernehmen (D-225) | Zur Umsetzung ausgewählt | AK-TRN-06, AK-TRN-07 |
+| TS-07 | Pausentimer | Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter | AS 3.1.6; SD 13:18 | V | OV | H | TP-09 | M | P0 | MVP | R1 · M1 | Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215) | Zur Umsetzung ausgewählt | AK-TRN-10, AK-TRN-11, AK-TRN-12 |
+| TS-08 | Übungstimer für Zeitsätze | Vorhanden | AS 3.1.6 | V | OV | M | TS-07 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-14 |
+| TS-09 | Nächster Satz im Pausentimer | Fehlt laut Videoanalyse | SD 13:18 | VF | EV | M | TS-07 | S | P1 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-10 |
+| TS-10 | Übung im Training ersetzen | Möglich (laut Rezensionen) | REV | V-R | OV | H | TP-12 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-09 |
+| TS-11 | Sätze und Übungen im Training hinzufügen und entfernen | Sätze laut Rezensionen nicht ergänzbar | REV | VF | EV | H | – | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-09, AK-TRN-02 |
+| TS-12 | Automatisches Speichern jeder Eingabe | Laut Rezensionen Abstürze mit Verlust der Eingaben | REV | VF | EV | H | SY-01 | M | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-16, AK-TRN-25 |
+| TS-13 | Wiederaufnahme nach Reload, Hintergrund und Offline-Phase; Pausieren | Nicht belegt | – | P | ON | H | TS-12; SY-13 | M | P0 | MVP | R1 · M1/M2 | Übernehmen (D-109, D-216) | Zur Umsetzung ausgewählt | AK-TRN-17, AK-TRN-18, AK-TRN-26 |
+| TS-14 | Training abschließen | „complete workout" | HC-G | V | OV | H | TS-06 | S | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-19 |
+| TS-15 | Trainingszusammenfassung | Übungen, Kalorien, Sätze | SD 14:40 | V | OV | M | TS-14 | S | P0 | MVP | R1 · M1/M3 | Anpassen: ohne Kalorienschätzung (D-226); Vergleich ab M3 | Zur Umsetzung ausgewählt | AK-TRN-20 |
+| TS-16 | Ergebnis teilen | Social Sharing | AS 3.1.5; AS 3.2.1 | V | OV | N | Web Share | S | P3 | Später | R5 | Später | Analysiert | Bild erzeugen und über das Teilen-Menü teilen |
+| TS-17 | Krafttraining nachtragen, Aktivität erfassen | Manuelle Workouts seit 3.4.11 | AS 3.4.11 | V | OV | H | TS-01 | M | P1 | MVP | R1 · M2 | Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz | Zur Umsetzung ausgewählt | AK-TRN-23 |
+| TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P3 | Später | Backlog | Später: nur als gekennzeichnete Schätzung, frühestens mit R2 (D-226) | Analysiert | MET-basiert, abschaltbar, als Schätzung markiert |
+| TS-19 | Notizen zu Einheit und Übung | Nicht belegt | – | P | ON | M | – | S | P2 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-24 |
+| TS-20 | RPE/RIR und Tempo | Nicht belegt | – | P | ON | N | TS-05 | S | P3 | Später | R4 · M11 | Später: Feld im Datenmodell reserviert (D-108) | Spezifiziert | Optionales Feld je Satz |
+| TS-21 | Bildschirm während des Trainings aktiv halten | – | – | E | EV | H | Wake Lock (iOS ab 18.4 in installierten Web-Apps) | S | P1 | MVP | R1 · M1 | Verbesserung (D-215, D-228) | Zur Umsetzung ausgewählt | AK-TRN-13 |
+| TS-22 | Aufwärmsätze | Nicht belegt | – | P | ON | H | TP-08 | S | P0 | MVP | R1 · M1 | Übernehmen (D-108) | Zur Umsetzung ausgewählt | AK-TRN-03 |
+| TS-23 | Satzstatus geplant, erledigt, übersprungen | – | – | E | EV | H | TS-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-108) | Zur Umsetzung ausgewählt | AK-TRN-07 |
+| TS-24 | Fortschrittsanzeige der Einheit | – | – | E | EV | M | TS-02 | S | P1 | MVP | R1 · M1 | Verbesserung (D-108) | Zur Umsetzung ausgewählt | AK-TRN-15 |
+| TS-25 | Leiste „Training läuft" und Rücksprung ins Training | – | – | E | EV | H | TS-13 | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-17, AK-DSH-01 |
+| TS-26 | Training verwerfen | – | – | E | EV | M | TS-01 | S | P1 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-21 |
+| TS-27 | Freie Reihenfolge der Satzerfassung | Erzwungene Reihenfolge (laut Rezensionen) | REV | VF | EV | H | TS-02 | S | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-08 |
+
+## D. Trainingshistorie und Analyse (TH)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| TH-01 | Verlauf mit Detail, Bearbeiten und Löschen | Historie wird gespeichert | HC-G | V | OV | H | TS-14 | M | P0 | MVP | R1 · M1/M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-HIS-01 bis AK-HIS-04 |
+| TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Zur Umsetzung ausgewählt | AK-EXL-05, AK-HIS-05 |
+| TH-03 | Trainingskalender | Nicht belegt | – | P | ON | M | AH-08 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monatsansicht mit geplanten und absolvierten Einheiten |
+| TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | P3 | Später | R4 · M11 | Später (D-027) | Analysiert | Regel dokumentiert und getestet; Ruhetage unterbrechen nicht |
+| TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | Später | R4 · M11 | Später | Spezifiziert | Erkennung beim Abschluss für Maximalgewicht, Wiederholungen bei Gewicht und geschätztes 1RM; Stammdatenänderungen verfälschen nicht |
+| TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | Später | R4 · M11 | Später | Analysiert | Kennzahlen aus echten Daten; Zeiträume wählbar |
+| TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-20, AK-DSH-04 |
+| TH-08 | Fortschritt zum Wochenziel | Nicht belegt | – | P | ON | M | ON-07 | S | P1 | MVP | R1 · M3 | Übernehmen (D-220) | Zur Umsetzung ausgewählt | AK-DSH-05 |
+
+## E. Ernährung (NU)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| NU-01 | Kalorien- und Makroziele berechnen | Aus Präferenzen, Alter, Gewicht, Ziel; Formel unbekannt | HC-G; GP; HC-Z | V | OV | H | ON-09 | M | P1 | Später | R2 · M5 | Anpassen: dokumentierte Formel, überschreibbar | Spezifiziert | Mifflin-St Jeor mit Aktivitätsfaktor; Protein in g/kg einstellbar; Ziele datiert |
+| NU-02 | Tagesübersicht mit Zielfortschritt | Kalorien-Widget, „clearer daily targets" | AS 3.1.5; AS 3.5.0 | V | OV | H | NU-05 | M | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Summen aus Einträgen; Restwerte; Tageswechsel nach lokaler Zeit |
+| NU-03 | Mahlzeiten-Slots | Frühstück, Mittag, Abend (laut Rezensionen) | REV | V | OV | H | – | S | P1 | Später | R2 · M5 | Anpassen: konfigurierbar | Spezifiziert | Vier Standardslots; umbenennbar; Reihenfolge änderbar |
+| NU-04 | Geplante Mahlzeit protokollieren und wechseln | „switch meals, log them" | SD 05:54; HC-G | V | OV | M | RE-03 | M | P2 | Später | R2 · M8 | Anpassen: aus dem eigenen Wochenmenü | Analysiert | Ein Tipp protokolliert die geplante Mahlzeit |
+| NU-05 | Lebensmittel oder Mahlzeit protokollieren, mit Snapshot | Portionsanteil, z. B. 0,75 | HC-G | V | OV | H | NU-08 | M | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Menge in g/ml oder Portionen; Nährwerte beim Protokollieren eingefroren |
+| NU-06 | Hinzufügen als selbstgemacht, Restaurant oder per Barcode | Drei Wege über „+" | HC-G | V | OV | H | NU-07; NU-10 | M | P1 | Später | R2 · M5/M6 | Übernehmen | Spezifiziert | Jeder Weg erzeugt ein validiertes Lebensmittel mit Quelle |
+| NU-07 | Barcode-Scanning | Vorhanden, 2026 verbessert | REV; AS 3.5.0 | V | OV | H | Kamera; barcode-detector; Open Food Facts | L | P2 | Später | R2 · M6 | Anpassen: Polyfill (D-305); Open Food Facts erst nach Prüfspike S-1 (D-302) | Spezifiziert | Kamera-Scan im Browser; Fallback manuell; Treffer lokal gespeichert |
+| NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | Später | R2 · M5/M6 | Anpassen: lokal zuerst, online ergänzend | Spezifiziert | Offline-Suche über eigene, generische und gespeicherte Einträge |
+| NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | Später | R2 · M5 | Verbesserung | Spezifiziert | Menge = Anzahl × Portionsgröße; beide editierbar |
+| NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Werte pro 100 g/ml; Pflicht kcal und Makros; Plausibilitätsprüfung |
+| NU-11 | Favoriten, zuletzt verwendet, Mahlzeitvorlagen | Von Nutzern gewünscht, nicht belegt | REV | VF | EV | H | NU-05 | M | P1 | Später | R2 · M5 | Verbesserung | Spezifiziert | „Zuletzt" automatisch; Favoriten markierbar; Vorlagen aus mehreren Einträgen |
+| NU-12 | Ernährungsverlauf | Historie wird gespeichert | HC-G | V | OV | H | NU-02 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Jeder Tag aufrufbar und editierbar; Wochendurchschnitt |
+| NU-13 | Wassertracking | Nur als tägliche Challenge-Aufgabe | TC | V | OV | M | – | S | P3 | Später | R4 · M13 | Später, mit den Gewohnheiten | Analysiert | Schnelleingabe in ml; Tagesziel |
+| NU-14 | Fotoerkennung von Mahlzeiten | Nur in einer Drittquelle genannt | MWM | N | ON | N | KI-Dienst | XL | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |
+| NU-15 | Neuberechnung bei Mengenänderung | Seit 3.1.7 | AS 3.1.7 | V | OV | H | NU-05 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Mengenänderung aktualisiert Eintrag und Tagessumme sofort |
+| NU-16 | Nährwert-Aufschlüsselung je Lebensmittel | Protein, Fett, Kohlenhydrate | REV | V | OV | M | NU-08 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | kcal, Makros, optional Ballaststoffe, Zucker, Salz |
+| NU-17 | Ziele manuell überschreiben | Nicht belegt | – | P | ON | M | NU-01 | S | P2 | Später | R2 · M5 | Übernehmen | Spezifiziert | Manuelle Ziele; Ziele je Wochentag erst später |
+| NU-18 | Roh- und Gargewicht | Nicht belegt | – | P | ON | M | NU-21 | S | P2 | Später | R2 · M5 | Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor | Analysiert | Faktor-Werte als Schätzung markiert |
+| NU-19 | Quelle und Qualitätsstatus je Lebensmittel | Nicht belegt | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme |
+| NU-20 | Schnelleintrag nur mit kcal und Makros | Nicht belegt | – | E | EV | M | NU-05 | S | P2 | Später | R2 · M5 | Verbesserung | Spezifiziert | Als Schätzung markiert |
+| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | BLS 4.0 (D-301) | M | P1 | Später | R2 · M5 | Verbesserung (D-110, D-301) | Noch zu recherchieren | Gebündelt und offline; Quelle sichtbar; Prüfspike S-2 bestanden |
+| NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Fehlende Felder markiert; Summen tragen „unvollständig" |
+| NU-23 | Einheiten und Haushaltsmaße mit Umrechnung | – | – | E | EV | H | NU-09 | M | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert |
+| NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | Später | R2 · M6 | Verbesserung | Spezifiziert | Ohne Netz: Hinweis, lokale Ergebnisse, Barcode für später merken |
+| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | Später | R2 · M5/M6 | Verbesserung | Spezifiziert | Namensnennung BLS (CC BY 4.0) und Open Food Facts (ODbL) |
+
+## F. Rezepte und Mahlzeitenplanung (RE)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| RE-01 | Rezeptkatalog mit Filtern | Nach Mahlzeit, Küche, Schwierigkeit | AS 3.5.0 | V | OV | H | RE-02 | M | P2 | Später | R2 · M7 | Anpassen: eigene Rezepte | Spezifiziert | Filter nach Mahlzeit, Tags, Dauer, kcal pro Portion; Volltextsuche |
+| RE-02 | Rezept mit Zutaten, Schritten, Nährwerten pro Portion | Rezepte und Anleitungen vorhanden | AS; REV | V | OV | H | NU-10 | M | P1 | Später | R2 · M7 | Übernehmen | Spezifiziert | Nährwerte aus Zutaten berechnet; Portionen; Schritte |
+| RE-03 | Wochenmenü erstellen, manuell oder per Vorschlag | Generiert um das Kalorienziel | AS 3.5.0 | V | OV | M | RE-01; NU-01 | L | P2 | Später | R2 · M8 | Anpassen: manuelle Planung zuerst; Vorschlag aus eigenem Katalog nachrangig | Spezifiziert | Woche × Slots; Tagessummen sichtbar |
+| RE-04 | Rezepte im Plan tauschen | „swap recipes" | AS 3.5.0 | V | OV | H | RE-03 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Tausch aktualisiert Summen und Einkaufsliste |
+| RE-05 | Kochtage und Reste | „pick your cooking days" | AS 3.5.0 | V | OV | M | RE-03 | M | P3 | Später | Backlog | Später | Analysiert | Kochtage markierbar; Reste auf Folgetage verteilbar |
+| RE-06 | Auswahl der geplanten Mahlzeiten | „choose which meals Xeela plans" | AS 3.5.0 | V | OV | M | RE-03 | S | P2 | Später | R2 · M8 | Übernehmen | Spezifiziert | Slots pro Woche ein- und ausschaltbar |
+| RE-07 | Woche bestätigen | „confirmed week" | AS 3.5.0 | V | OV | M | RE-03 | S | P2 | Später | R2 · M8 | Übernehmen | Spezifiziert | Bestätigung erzeugt die Einkaufsliste; spätere Änderung markiert sie als veraltet |
+| RE-08 | Einkaufsliste aus der bestätigten Woche | Vorhanden | AS 3.5.0 | V | OV | H | RE-07 | M | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Aus Rezepten × Portionen; reproduzierbar |
+| RE-09 | Einkaufsliste nach Kategorien | „easier to read and shop from" | AS 3.5.1 | V | OV | H | RE-08 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Gruppierung nach Lebensmittelkategorie |
+| RE-10 | Einkaufsliste bearbeiten, abhaken, Vorrat | Nicht belegt | – | P | ON | H | RE-08 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Eigene Einträge; Abhaken gespeichert; Vorrat ausblendbar |
+| RE-11 | Zutatenmengen zusammenführen | Plausibel | – | P | ON | H | RE-08 | M | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Gleiche Zutat und Einheit summiert; Stück getrennt von Gramm |
+| RE-12 | Eigene Rezepte anlegen und bearbeiten | Nicht belegt | – | P | ON | H | RE-02 | M | P1 | Später | R2 · M7 | Anpassen: Snapshots statt Versionsketten (D-209); Konfliktkopie bei Sync (D-208) | Spezifiziert | Protokolle behalten ihren Snapshot |
+| RE-13 | Portionsskalierung | Nicht belegt | – | P | ON | H | RE-02 | S | P1 | Später | R2 · M7 | Übernehmen | Spezifiziert | Linear; Tests mit 1, 2 und 3,5 Portionen |
+| RE-14 | Planung nach Ernährungspräferenzen | Vorschläge respektieren Präferenzen | HC-G | V | OV | M | ON-08 | S | P3 | Später | Backlog | Später | Analysiert | Ausschlüsse wirken auf Vorschläge |
+| RE-15 | Rezept-Import aus URL oder Text | Nicht belegt | – | E | EV | M | RE-12 | L | P3 | Später | R5 | Später | Analysiert | Später |
+
+## G. Körper und Fortschritt (BP)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| BP-01 | Körpergewicht erfassen, bearbeiten, löschen, als Liste | Gewicht im Onboarding; ein Verlauf ist nur in einer Drittquelle genannt | GP; MWM | V | OV | H | – | S | P0 | MVP | R1 · M3 | Übernehmen (D-111) | Zur Umsetzung ausgewählt | AK-BW-01 bis AK-BW-04 |
+| BP-02 | Gewichtsverlauf mit Trend | Nur in einer Drittquelle genannt | MWM | N | ON | H | BP-01; Recharts | M | P1 | MVP | R1 · M3 | Übernehmen (D-111) | Zur Umsetzung ausgewählt | AK-BW-05, AK-BW-06 |
+| BP-03 | Körpermaße | Nicht belegt | – | P | ON | M | – | S | P2 | Später | R4 · M12 | Später | Analysiert | Umfänge in cm mit Verlauf |
+| BP-04 | Körperfett, optional | Nicht belegt | – | P | ON | N | – | S | P3 | Später | R4 · M12 | Später | Analysiert | Prozentwert mit Messmethode |
+| BP-05 | Fortschrittsfotos, lokal | „progress photo library" (Rezension); Fotos für Challenges | REV; TC | V | OV | M | Gerätespeicher | L | P2 | Später | R4 · M12 | Später: lokal (D-114); Cloud in R5 | Analysiert | Lokal komprimiert; Vergleich; Export; vollständige Löschung |
+| BP-06 | Fortschritt zum Zielgewicht | Zielgewicht im Onboarding | SD 01:58 | V | OV | M | ON-18 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-DSH-06, AK-BW-05 |
+| BP-07 | Wochen- und Monatsauswertung | Nicht belegt | – | P | ON | M | TH-06 | M | P2 | Später | R4 · M12 | Später | Analysiert | Zusammenfassung pro Woche aus echten Daten |
+| BP-08 | Persönliche Notizen pro Tag | Nicht belegt | – | P | ON | N | – | S | P3 | Später | Backlog | Später | Analysiert | Freitext pro Tag |
+
+## H. Aktivität und Gewohnheiten (AH)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| AH-01 | Schritte erfassen, manuell oder per Kurzbefehl | Schritte beworben; Datenquelle unklar | WEB; DT | V | OV | M | – | M | P2 | Später | R4 · M13 (automatisch R5) | Anpassen: manuell sowie Kurzbefehl über Datei oder Zwischenablage; automatisch erst über Server in R5 (D-115) | Noch zu recherchieren | Tageswert; Import; keine Behauptung automatischer Messung |
+| AH-02 | Aktivitätsziele | Nicht belegt | – | P | ON | M | AH-01 | S | P3 | Später | R4 · M13 | Später | Analysiert | Tagesziel mit Fortschritt |
+| AH-03 | Tägliche Aufgaben | In Challenges: Wasser, Lesen, Schritte, Diät | TC | V | OV | M | AH-04 | M | P2 | Später | R4 · M13 | Anpassen: als Gewohnheiten (D-117) | Analysiert | Aufgabenliste pro Tag mit Verlauf |
+| AH-04 | Gewohnheiten definieren und verfolgen | Außerhalb von Challenges nicht belegt | – | P | ON | M | – | M | P2 | Später | R4 · M13 | Später (D-117) | Analysiert | Häufigkeit; Verlauf; Erfüllungsquote |
+| AH-05 | Streaks für Gewohnheiten | Streak-Funktion für Training | AS 3.2.0 | V | OV | N | AH-04 | S | P3 | Später | R4 · M13 | Später | Analysiert | Regeln dokumentiert |
+| AH-06 | Erinnerungen | Workout-Reminder | AS 3.1.4 | V | OV | M | ON-13 | L | P3 | Später | R5 | Später | Analysiert | Siehe ON-13 |
+| AH-07 | Apple Health, Apple Watch, Wearables | Laut Agentur integriert; Rezensionen bezweifeln es | DT; REV | N | ON | M | Native App | XL | – | Ausgeschlossen | – | Ausschließen für die Web-App (D-116); native Option dokumentiert | Analysiert | Entfällt in der Web-App |
+| AH-08 | Kalender aller Ereignisse | Nicht belegt | – | P | ON | M | TH-03 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monats- und Wochenansicht mit allen Ereignissen |
+| AH-09 | Manuelle Aktivitätseinträge | Manuelle Workouts | AS 3.4.11 | V | OV | H | TS-17 | – | P1 | MVP | R1 · M2 | Übernehmen über TS-17 | Zur Umsetzung ausgewählt | AK-TRN-23 |
+
+## I. Challenges, Community, Dashboard (CH)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CH-01 | Persönliche Challenges mit Tagesaufgaben | Zeitlich begrenzte Programme mit Aufgaben, Fotos, Gewinnern | TC | V | OV | N | AH-04 | M | P3 | Später | Backlog | Später: nur persönlich, ohne Wettbewerb | Analysiert | Dauer, Aufgaben, Fortschritt in Prozent |
+| CH-02 | Wettbewerb, Rangliste, Preise | Gewinnerauswahl; „top 5" | TC; REV | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
+| CH-03 | Community (Discord) | Extern | DC | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |
+| CH-04 | Social Sharing | Vorhanden | AS 3.1.5 | V | OV | N | Web Share | S | P3 | Später | R5 | Später | Analysiert | Siehe TS-16 |
+| CH-05 | Motivationsnachrichten | Beworben | WEB | V | OV | N | – | S | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |
+| CH-06 | Dashboard „Heute" | Workout-Karte, Kalorien-Widget, „+" | SD; HC-G | V | OV | H | TS-01; BP-01 | M | P0 | MVP | R1 · M1/M3 | Anpassen: nur verfügbare Daten, keine Platzhalter | Zur Umsetzung ausgewählt | AK-DSH-01 bis AK-DSH-07, AK-UX-02 |
+| CH-07 | Schnellaktionen | „Plus-Zone" | HC-G; AS 3.4.2 | V | OV | H | – | S | P1 | MVP | R1 · M3 | Anpassen: Aktion „Erfassen" | Zur Umsetzung ausgewählt | AK-DSH-08 |
+| CH-08 | Navigation mit Hauptbereichen | Vier Hauptscreens mit Tab-Leiste | HC-G | V | OV | H | – | S | P0 | MVP | R1 · M0 | Anpassen: Heute, Training, Fortschritt, Mehr (D-211) | Zur Umsetzung ausgewählt | AK-UX-01, AK-UX-07 |
+| CH-09 | Shop, Supplements, Coaching, PDF-Guides | Geschäftsmodell | WEB | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
+
+## J. System, Daten, Synchronisierung (SY)
+
+| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| SY-01 | Lokale Datenbank (Dexie, IndexedDB) als führender Speicher | Server-Backend | DT | E | EV | H | – | M | P0 | MVP | R1 · M0 | Verbesserung (D-113, D-204) | Zur Umsetzung ausgewählt | AK-DAT-07, AK-DAT-11, AK-UX-06 |
+| SY-02 | PWA mit Installation, Offline-Betrieb, Update-Hinweis | Native App | – | E | EV | H | SY-15 | M | P0 | MVP | R1 · M0/M4 | Verbesserung (D-101) | Zur Umsetzung ausgewählt | AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02 |
+| SY-03 | Cloud-Synchronisierung | Server-Backend | DT | E | EV | H | SY-09; SY-17 | XL | P1 | Später | R3 · M9/M10 | Verbesserung (D-205) | Spezifiziert | Konfliktregeln pro Entität; Tests mit zwei Geräten; RLS-Tests |
+| SY-04 | Export und Import | Nicht belegt | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M2/M4 | Verbesserung (D-218) | Zur Umsetzung ausgewählt | AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05 |
+| SY-05 | Backup und Wiederherstellung | – | – | E | EV | H | SY-04; SY-11 | M | P1 | MVP | R1 · M2/M4 (Cloud R3) | Verbesserung | Zur Umsetzung ausgewählt | AK-DAT-02, AK-DAT-12 |
+| SY-06 | Hell- und Dunkelmodus | – | – | E | EV | M | Design-Tokens | S | P1 | MVP | R1 · M0/M4 | Verbesserung (D-119) | Zur Umsetzung ausgewählt | AK-SET-03, AK-UX-04 |
+| SY-07 | Tastaturbedienung und Barrierearmut | – | – | E | EV | M | – | M | P1 | MVP | R1 · M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-UX-03 bis AK-UX-05, AK-UX-08 |
+| SY-08 | Lokales Fehlerprotokoll ohne Nutzdaten | – | – | E | EV | M | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-DAT-09 |
+| SY-09 | Anmeldung nur für die Sync | Pflichtkonto | SD 00:39 | E | EV | M | SY-03 | M | P1 | Später | R3 · M9 | Verbesserung | Spezifiziert | App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS |
+| SY-10 | Keine Drittanbieter-Telemetrie | Tracking-Identifier laut Privacy Label | AS | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-030) | Zur Umsetzung ausgewählt | AK-PWA-06 |
+| SY-11 | Automatischer Snapshot vor riskanten Vorgängen | – | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-217) | Zur Umsetzung ausgewählt | AK-DAT-06, AK-DAT-04 |
+| SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-PWA-05 |
+| SY-13 | Wiederherstellung bei Datenbankfehlern | Anlass: Abstürze mit Datenverlust (laut Rezensionen) | REV | E | EV | H | SY-11 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-216) | Zur Umsetzung ausgewählt | AK-DAT-08, AK-TRN-25, AK-TRN-26 |
+| SY-14 | Hinweis bei Nutzung im Safari-Tab | – | – | E | EV | H | SY-02 | S | P0 | MVP | R1 · M0 | Verbesserung | Zur Umsetzung ausgewählt | AK-PWA-04, AK-SET-06 |
+| SY-15 | Hosting mit fester HTTPS-Adresse und Vorschau-Umgebungen | – | – | E | EV | H | Q-01; Q-02 | S | P0 | MVP | R1 · M0 | Verbesserung (D-021) | Zur Umsetzung ausgewählt | AK-PWA-07 |
+| SY-16 | Deutsche Oberfläche, Formatierung nach Gerätesprache | – | – | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-103, D-212) | Zur Umsetzung ausgewählt | AK-SET-04 |
+| SY-17 | Sync-fähige Metadaten ab Schema v1 | – | – | E | EV | H | SY-01 | S | P0 | MVP | R1 · M0 | Verbesserung (D-206, D-207) | Zur Umsetzung ausgewählt | AK-DAT-11 |
+| SY-18 | Lokale Projektionen für Auswertungen | – | – | E | EV | H | SY-01 | S | P0 | MVP | R1 · M1 | Verbesserung (D-204) | Zur Umsetzung ausgewählt | AK-TRN-05, AK-HIS-03 |
+| SY-19 | Import mit Zusammenführung nach Konfliktregeln | – | – | E | EV | H | SY-04 | M | P1 | MVP | R1 · M4 | Verbesserung (D-218) | Zur Umsetzung ausgewählt | AK-DAT-03 |
+| SY-20 | Versionsanzeige und Änderungsprotokoll in der App | – | – | E | EV | N | – | S | P2 | MVP | R1 · M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-SET-07 |

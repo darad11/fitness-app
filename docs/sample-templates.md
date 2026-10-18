@@ -8,17 +8,18 @@ Stand: 18.10.2026 · Version 0.2 (neu in Phase 2) · Status: Entwurf zur Durchsi
 - Sie sind keine individuelle Trainingsempfehlung. Zielgewichte sind bewusst leer, weil die Leistungsfähigkeit unbekannt ist.
 - In der App trägt jede Beispielvorlage das Etikett „Beispiel". Die Detailansicht zeigt: „Beispieldaten – keine individuelle Trainingsempfehlung. Passe Übungen, Sätze und Gewichte an dich an. Bei gesundheitlichen Fragen hol dir ärztlichen Rat."
 - Beispielvorlagen sind schreibgeschützt. „Vorlage verwenden" erzeugt ein eigenes Programm als Kopie, das frei bearbeitbar ist (AK-PRG-06).
-- Technisch sind sie gebündelte, versionierte Stammdaten (`sample-templates.v1.json`) mit stabilen IDs (UUID v5 aus Schlüssel und Position). Eine neue Version der Vorlagen verändert nie bereits erstellte Kopien.
+- Technisch sind sie gebündelte, versionierte Stammdaten (`src/modules/training/data/sample-templates.v1.json`) mit stabilen IDs (UUID v5 aus Schlüssel und Position). Die Datei wird mit `python3 tools/sample_templates_from_md.py` aus den Tabellen in Abschnitt 3 erzeugt; `pnpm check:docs` prüft, dass beides übereinstimmt. Eine neue Version der Vorlagen verändert nie bereits erstellte Kopien.
 
 ## 2. Gemeinsame Festlegungen
 
 | Thema | Festlegung |
 |---|---|
-| Aufwärmsätze | Vor der ersten Grundübung eines Tages zwei Aufwärmsätze (10 und 5 Wiederholungen, Hinweis „leicht" und „mittel"), bei weiteren Grundübungen einer |
+| Aufwärmsätze | Vor der ersten Grundübung eines Tages zwei Aufwärmsätze (10 und 5 Wiederholungen, Hinweis „leicht" und „mittel"), bei weiteren Grundübungen einer mit 5 Wiederholungen (D-243) |
 | Pausen | Schwere Grundübungen 150 bis 180 s, weitere mehrgelenkige Übungen 120 s, Isolationsübungen 60 bis 75 s, Rumpf- und Zeitübungen 60 s, Drop-Sätze ohne Pause |
 | Wiederholungen | Bereiche, z. B. 8–10; bei Zeitübungen eine Zeitspanne, z. B. 30–45 s |
 | Struktur | Wochen mit Trainingstagen; „wiederholen" ist aktiv; keine festen Ruhetage (Reihenfolge-Modus, D-214) |
 | Körpergewichtsübungen | Wiederholungen plus optionales Zusatzgewicht (0 kg = ohne Zusatzgewicht) |
+| Je Seite | „3 je Seite" heißt drei Sätze; jeder Satz umfasst beide Seiten, Wiederholungen und Zeit gelten je Seite (D-243) |
 
 ## 3. Vorlagen
 

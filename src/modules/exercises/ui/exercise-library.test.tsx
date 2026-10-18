@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -71,6 +71,17 @@ describe('Übungen (S-12, AK-EXL-01, AK-EXL-02)', () => {
       'Wadenheben sitzend',
       'Wadenheben stehend',
     ]);
+  });
+
+  it('verliert keinen Filter, wenn zwei Änderungen direkt aufeinander folgen', async () => {
+    const router = await renderPage();
+    fireEvent.change(screen.getByLabelText('Muskelgruppe'), { target: { value: 'calves' } });
+    fireEvent.change(screen.getByLabelText('Gerät'), { target: { value: 'machine' } });
+    await waitFor(() => {
+      expect(router.state.location.search).toBe('?muskel=calves&geraet=machine');
+    });
+    expect(screen.getByLabelText('Muskelgruppe')).toHaveValue('calves');
+    expect(screen.getByRole('status')).toHaveTextContent('3 Treffer');
   });
 
   it('übernimmt Suche und Filter aus der Adresse und ignoriert ungültige Werte', async () => {

@@ -97,7 +97,8 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | AP | Stand |
 |---|---|
 | 1.1 | Umgesetzt bis auf die Übungsauswahl. Basisliste vom Produktinhaber durchgesehen (Q-05, `exercise-library.md`), 105 Übungen als gebündelte, mit Zod geprüfte Daten (D-240, D-241); Suche mit Rang, Filter nach Hauptmuskel und Gerät, Bibliotheksansicht `/uebungen` (S-12) über den Bereich Training (D-242). Die Übungsauswahl im Training (ExercisePicker) entsteht mit dem Trainingsplayer in AP 1.4, weil sie erst dort eine Funktion hat |
-| 1.2 bis 1.9 | Offen |
+| 1.2 | Umgesetzt bis auf „Nur heute trainieren". Die vier Beispielvorlagen sind gebündelte Daten, erzeugt aus `sample-templates.md` und in `pnpm check:docs` geprüft (D-243); Liste `/training/programme` (S-04, nur Beispielvorlagen) und Vorlage `/training/vorlagen/:key` (S-49) mit Etikett „Beispiel", Hinweis, Ablauf und Satzschema. „Nur heute trainieren" kommt mit AP 1.3 und 1.4, weil es eine laufende Einheit und den Player braucht |
+| 1.3 bis 1.9 | Offen |
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -208,5 +209,6 @@ Nächste Schritte: <Liste>
 5. Erledigt mit darad11/fitness-app#4: E2E Chromium in der CI stabilisiert (`testing.md` Abschnitt 10).
 6. Erledigt: Basisübungsliste vorgelegt und vom Produktinhaber durchgesehen (Q-05, D-241).
 7. Erledigt: AP 1.1 Übungsbibliothek (ohne Übungsauswahl, die mit AP 1.4 folgt).
-8. Ich: AP 1.2 Beispielvorlagen als gebündelte Daten, danach AP 1.3 Trainings-Domain.
-9. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+8. Erledigt: AP 1.2 Beispielvorlagen (ohne „Nur heute trainieren", das mit AP 1.3 und 1.4 folgt).
+9. Ich: AP 1.3 Trainings-Domain, danach AP 1.4 Trainingsplayer.
+10. M1 fertig umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

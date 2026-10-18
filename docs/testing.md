@@ -247,8 +247,22 @@ Vorher waren 3 von 12 Ausführungen rot. Fünf grüne Versuche allein beweisen d
 | Dokumente | `pnpm check:docs` | Bestanden; neu geprüft: Liste in `exercise-library.md` stimmt mit den Daten überein, alle 39 Übungen der Vorlagen sind enthalten |
 | Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 177,5 KB gzip (vorher 173,3 KB); Service Worker mit 37 vorab gespeicherten Dateien, darunter die Übungsdaten |
 | E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | 28 Tests bestanden, 0 fehlgeschlagen |
-| E2E WebKit | – | Läuft in GitHub Actions (Pull Request darad11/fitness-app#5) |
+| GitHub Actions auf `784b93e` (darad11/fitness-app#5) | – | Alle Prüfungen bestanden: Lint, Typen, Unit-Tests, Dokumente, Build; E2E Chromium und E2E WebKit |
 
 Abgedeckt: AK-EXL-01 (105 Übungen mit Name, Hauptmuskeln, Gerät und Erfassungsart; Seite `/uebungen` startet offline, geprüft im Offline-Test aller Seiten in Chromium) und AK-EXL-02 (Suche nach Namen und Alias-Namen, auch englisch, unabhängig von Groß- und Kleinschreibung, ä/ae und Bindestrichen; Filter nach Muskelgruppe und Gerät; 500 Übungen in unter 100 ms, gemessen im Unit-Test). Die neuen Seiten `/training` und `/uebungen` sind in die Prüfungen auf fremde Anfragen und auf axe-Verstöße in Hell und Dunkel aufgenommen.
 
 Ein Fehler wurde während der Arbeit gefunden und behoben: Die Übungsdaten landeten zunächst im Startbündel (180,8 KB gzip); sie werden jetzt mit der Seite nachgeladen (D-242). Danach lud zunächst jede Eingabe ins Suchfeld die Daten neu, weil sich die Adresse ändert; zwei Komponententests schlugen deshalb fehl. Die Route lädt seitdem nicht mehr neu, beide Tests bestehen.
+
+### M1 · AP 1.2 Beispielvorlagen · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+| Prüfung | Befehl | Ergebnis |
+|---|---|---|
+| Formatierung, Lint, Typen | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | Bestanden |
+| Unit, Integration, Komponenten | `pnpm test:coverage` | 27 Testdateien, 289 Tests bestanden, 0 fehlgeschlagen; Zeilenabdeckung gesamt 95,33 %, alle Schwellen erreicht |
+| Dokumente | `pnpm check:docs` | Bestanden; neu geprüft: Vorlagen-Daten stimmen mit den Tabellen in `sample-templates.md` überein |
+| Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 178,4 KB gzip |
+| E2E Chromium (Desktop und Pixel 7) | `pnpm test:e2e` | Erster Lauf: 29 bestanden, 1 fehlgeschlagen (siehe unten). Nach der Behebung drei Läufe mit je 30 von 30 bestanden; dazu Übungen und Vorlagen zehnfach mit 8 parallelen Workern: 40 von 40 bestanden |
+
+Abgedeckt: Vorlagenliste und Vorlage mit Etikett „Beispiel", Hinweistext, Ablauf und Satzschema (Teil von AK-PRG-06), stabile IDs, Aufwärm- und Drop-Sätze, Zeitbereiche, unbekannte Vorlage als „Seite nicht gefunden". Beide neuen Seiten sind im Offline-Test aller Seiten sowie in den Prüfungen auf fremde Anfragen und axe-Verstöße enthalten (Teil von AK-PWA-02). Ein Fehlschlag beim Nachladen der Daten führt beim nächsten Aufruf zu einem neuen Versuch (Unit-Test).
+
+Fehlschlag im ersten Lauf: `e2e/exercises.spec.ts` (Desktop) wartete vergeblich auf die Liste „3 Treffer" nach der Wahl von Muskelgruppe und Gerät. In 15 Einzelwiederholungen und vier weiteren kompletten Läufen trat er nicht wieder auf, ein Komponententest mit zwei direkt aufeinanderfolgenden Filteränderungen bestand. Wahrscheinliche Ursache: Die Seite hat jede Änderung aus der aktuellen Adresse abgeleitet; React Router übernimmt eine neue Adresse verzögert, sodass ein zweiter Filter kurz danach den ersten überschreiben konnte. Das betrifft auch schnelle Eingaben auf dem iPhone. Die Seite hält Suche und Filter seitdem selbst und schreibt sie nur in die Adresse. Ob genau das die Ursache war, ist nicht bewiesen; der Komponententest sichert das Verhalten ab.

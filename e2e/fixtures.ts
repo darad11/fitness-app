@@ -45,6 +45,8 @@ export async function chooseTheme(page: Page, label: 'Hell' | 'Dunkel' | 'System
 export const APP_PAGES = [
   '/heute',
   '/training',
+  '/training/programme',
+  '/training/vorlagen/full_body_ab',
   '/uebungen',
   '/mehr',
   '/mehr/einstellungen',

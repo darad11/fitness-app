@@ -126,7 +126,7 @@ interface SessionExercise extends Child {
 interface SessionSet extends Child {
   type: 'warmup' | 'working' | 'drop';
   parentSetId?: string;                            // Pflicht bei 'drop'
-  target?: { repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number; distanceM?: number; assistKg?: number };
+  target?: { repsMin?: number; repsMax?: number; weightKg?: number; durationMinSec?: number; durationMaxSec?: number; distanceM?: number; assistKg?: number };  // Zeitbereich D-243
   actual: { weightKg?: number; reps?: number; durationSec?: number; distanceM?: number; assistKg?: number; rpe?: number };  // rpe reserviert (R4); distanceM, assistKg D-241
   status: 'planned' | 'done' | 'skipped';
   completedAt?: string;
@@ -160,7 +160,8 @@ interface PlannedExercise extends Child {
 }
 interface PlannedSet extends Child {
   type: 'warmup' | 'working' | 'drop'; parentSetId?: string;
-  repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number;
+  repsMin?: number; repsMax?: number; weightKg?: number;
+  durationMinSec?: number; durationMaxSec?: number; // Zeitbereich wie bei Wiederholungen (D-243)
   distanceM?: number; assistKg?: number;           // D-241
   restSec?: number; rpeTarget?: number;            // rpeTarget reserviert (R4)
 }

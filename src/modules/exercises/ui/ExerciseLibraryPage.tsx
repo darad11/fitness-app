@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLoaderData, useSearchParams } from 'react-router';
 import { t } from '@/shared/i18n/de';
 import { Button, PageHeader, SearchField, SelectField, type SelectOption } from '@/shared/ui';
@@ -23,33 +23,52 @@ const EQUIPMENT_OPTIONS: readonly SelectOption<Equipment | ''>[] = [
   ...EQUIPMENT.map((item) => ({ value: item, label: t.exercises.equipment[item] })),
 ];
 
-/** Suche und Filter stehen in der Adresse, damit „Zurück" sie erhält. */
+/** Suche und Filter stehen in der Adresse, damit „Zurück" und Neuladen sie erhalten (D-242). */
 const PARAM = { query: 'q', muscle: 'muskel', equipment: 'geraet' } as const;
+
+interface LibraryFilter {
+  query: string;
+  muscle?: Muscle;
+  equipment?: Equipment;
+}
+
+const EMPTY_FILTER: LibraryFilter = { query: '' };
+
+function readFilter(params: URLSearchParams): LibraryFilter {
+  return {
+    query: params.get(PARAM.query) ?? '',
+    muscle: muscleSchema.safeParse(params.get(PARAM.muscle)).data,
+    equipment: equipmentSchema.safeParse(params.get(PARAM.equipment)).data,
+  };
+}
+
+function writeFilter({ query, muscle, equipment }: LibraryFilter): URLSearchParams {
+  const params = new URLSearchParams();
+  if (query) params.set(PARAM.query, query);
+  if (muscle) params.set(PARAM.muscle, muscle);
+  if (equipment) params.set(PARAM.equipment, equipment);
+  return params;
+}
 
 export function ExerciseLibraryPage() {
   const exercises = useLoaderData<readonly Exercise[]>();
   const index = useMemo(() => buildSearchIndex(exercises), [exercises]);
   const [params, setParams] = useSearchParams();
-  const query = params.get(PARAM.query) ?? '';
-  const muscle = muscleSchema.safeParse(params.get(PARAM.muscle)).data;
-  const equipment = equipmentSchema.safeParse(params.get(PARAM.equipment)).data;
+  // Die Seite hält Suche und Filter selbst und schreibt sie nur in die Adresse. So geht bei schnell
+  // aufeinanderfolgenden Änderungen nichts verloren, auch wenn der Router die Adresse verzögert
+  // übernimmt, und das Tippen reagiert sofort.
+  const [filter, setFilter] = useState(() => readFilter(params));
+  useEffect(() => {
+    const next = writeFilter(filter);
+    if (next.toString() !== params.toString()) setParams(next, { replace: true });
+  }, [filter, params, setParams]);
+
+  const { query, muscle, equipment } = filter;
   const filtered = query.trim() !== '' || muscle !== undefined || equipment !== undefined;
   const results = useMemo(
     () => searchExercises(index, { query, muscle, equipment }),
     [index, query, muscle, equipment],
   );
-
-  function update(key: string, value: string) {
-    setParams(
-      (current) => {
-        const next = new URLSearchParams(current);
-        if (value) next.set(key, value);
-        else next.delete(key);
-        return next;
-      },
-      { replace: true },
-    );
-  }
 
   return (
     <>
@@ -69,7 +88,7 @@ export function ExerciseLibraryPage() {
             clearLabel={t.exercises.clearSearch}
             value={query}
             onChange={(value) => {
-              update(PARAM.query, value);
+              setFilter((current) => ({ ...current, query: value }));
             }}
           />
         </div>
@@ -78,7 +97,7 @@ export function ExerciseLibraryPage() {
           options={MUSCLE_OPTIONS}
           value={muscle ?? ''}
           onChange={(value) => {
-            update(PARAM.muscle, value);
+            setFilter((current) => ({ ...current, muscle: value || undefined }));
           }}
         />
         <SelectField
@@ -86,7 +105,7 @@ export function ExerciseLibraryPage() {
           options={EQUIPMENT_OPTIONS}
           value={equipment ?? ''}
           onChange={(value) => {
-            update(PARAM.equipment, value);
+            setFilter((current) => ({ ...current, equipment: value || undefined }));
           }}
         />
       </div>
@@ -109,7 +128,7 @@ export function ExerciseLibraryPage() {
           <Button
             variant="secondary"
             onClick={() => {
-              setParams(new URLSearchParams(), { replace: true });
+              setFilter(EMPTY_FILTER);
             }}
           >
             {t.exercises.reset}

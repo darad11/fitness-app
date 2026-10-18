@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { stableId } from '@/shared/lib/uuid';
 import { TRACKING_MODES } from '../model/exercise';
 import raw from './core-exercises.v1.json';
@@ -84,5 +84,22 @@ describe('Prüfung der gebündelten Daten', () => {
     const overlap = clone();
     overlap.exercises[0]!.secondaryMuscles = [overlap.exercises[0]!.primaryMuscles[0]!];
     expect(() => parseCoreLibrary(overlap)).toThrow(/Haupt- und Nebenmuskel/);
+  });
+});
+
+describe('Fehler beim Nachladen', () => {
+  it('meldet den Fehler und lädt beim nächsten Aufruf erneut', async () => {
+    vi.resetModules();
+    let fail = true;
+    vi.doMock('./core-exercises.v1.json', async (importOriginal) => {
+      if (fail) throw new Error('Datei nicht erreichbar');
+      return importOriginal();
+    });
+    const fresh = await import('./coreLibrary');
+    await expect(fresh.loadCoreExercises()).rejects.toThrow();
+    fail = false;
+    vi.resetModules();
+    await expect(fresh.loadCoreExercises()).resolves.toHaveLength(105);
+    vi.doUnmock('./core-exercises.v1.json');
   });
 });

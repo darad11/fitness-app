@@ -1,4 +1,4 @@
-import { ListChecks } from 'lucide-react';
+import { ClipboardList, ListChecks } from 'lucide-react';
 import { t } from '@/shared/i18n/de';
 import { LinkList, PageHeader, type LinkListItem } from '@/shared/ui';
 
@@ -7,6 +7,7 @@ import { LinkList, PageHeader, type LinkListItem } from '@/shared/ui';
  * Starten, Programme und Verlauf folgen mit den weiteren Arbeitspaketen von M1.
  */
 const ENTRIES: readonly LinkListItem[] = [
+  { to: '/training/programme', label: t.training.programs, icon: ClipboardList },
   { to: '/uebungen', label: t.training.exercises, icon: ListChecks },
 ];
 

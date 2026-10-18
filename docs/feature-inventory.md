@@ -11,7 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.3 (M0): Status nur dort geändert, wo der Nachweis vorliegt. „Getestet": SY-16 (Nachweis U bestanden) und SY-10 (E2E in Chromium und WebKit bestanden). „Implementiert": SY-01, SY-06, SY-08, SY-15, SY-17 (Gerätetest bzw. spätere Nachweise stehen aus). „Abgenommen": SY-14 (Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden). Teilweise umgesetzte Funktionen (SY-02, SY-11, SY-13, CH-08) bleiben „Zur Umsetzung ausgewählt"; ihr Stand steht in `implementation-plan.md` (Stand M0).
-- Version 0.4 (M1, AP 1.1): TP-06 „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und der Gerätetest stehen aus).
+- Version 0.4 (M1, AP 1.1 und 1.2): TP-06 „Getestet" (Unit-, Komponenten- und E2E-Tests in Chromium und WebKit bestanden; der Gerätetest steht aus). TP-24 bleibt „Zur Umsetzung ausgewählt", bis „Nur heute trainieren" umgesetzt ist; Stand in `implementation-plan.md`.
 - Funktionen, die Xeela laut Rezensionen fehlen, sind als Stand der Rezensionen (2024/2025) formuliert, nicht als aktueller Zustand der App (D-118).
 
 ## Legende
@@ -61,8 +61,8 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|
 | Abgenommen | 1 |
 | Analysiert | 43 |
-| Getestet | 2 |
-| Implementiert | 6 |
+| Getestet | 3 |
+| Implementiert | 5 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 38 |
 | Zur Umsetzung ausgewählt | 73 |
@@ -100,7 +100,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TP-03 | Programmstruktur aus Wochen und Trainingstagen | Feste Wochenstruktur mit festen Ruhetagen (laut Rezensionen 2024/2025) | REV | V-R | OV | H | – | M | P0 | MVP | R1 · M2 | Anpassen: Wochen frei definierbar, keine festen Ruhetage (D-214) | Zur Umsetzung ausgewählt | AK-PRG-01, AK-PRG-02 |
 | TP-04 | Übungsreihenfolge im Plan festlegen | Reihenfolge im Training erzwungen (laut Rezensionen) | REV | V-R | OV | H | TP-06 | M | P0 | MVP | R1 · M2 | Anpassen: sortierbar; im Training nicht erzwungen | Zur Umsetzung ausgewählt | AK-PRG-03, AK-TRN-08 |
 | TP-05 | Einheiten im Kalender verschieben (Drag and Drop) | „Swap Workouts" per Drag and Drop | SD 12:05 | V | OV | M | AH-08 | M | P2 | Später | R4 · M11 | Später: der Reihenfolge-Modus macht Verschieben im MVP unnötig | Analysiert | Einheit per Ziehen oder Menü auf einen anderen Tag; Historie unberührt |
-| TP-06 | Übungsbibliothek mit Suche und Filtern | Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms | HC-G; SD 06:28; AS 3.4.2 | V | OV | H | – | M | P0 | MVP | R1 · M1 | Anpassen: eigene deutsche Basisbibliothek (D-213) | Implementiert | AK-EXL-01, AK-EXL-02 |
+| TP-06 | Übungsbibliothek mit Suche und Filtern | Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms | HC-G; SD 06:28; AS 3.4.2 | V | OV | H | – | M | P0 | MVP | R1 · M1 | Anpassen: eigene deutsche Basisbibliothek (D-213) | Getestet | AK-EXL-01, AK-EXL-02 |
 | TP-07 | Übungsdetail mit Beschreibung, Muskeln, Gerät, Videolink | Eingebettetes Video pro Übung | REV; SD 12:38 | V | OV | M | TP-06 | S | P1 | MVP | R1 · M2 | Anpassen: ohne eigene Medien, mit persönlichem Videolink | Zur Umsetzung ausgewählt | AK-EXL-04, AK-EXL-05 |
 | TP-08 | Satzschema (Typ, Wiederholungsbereich, Zielgewicht, Zielzeit) | Feste Satzanzahl, Rep-Bereiche | REV; WEB | V | OV | H | TP-04 | M | P0 | MVP | R1 · M2 | Anpassen: frei editierbar | Zur Umsetzung ausgewählt | AK-PRG-04 |
 | TP-09 | Pausenzeiten je Übung und Satz | Vorgegeben; Pausentimer vorhanden | AS 3.1.6; WEB | V | OV | H | TS-07 | S | P0 | MVP | R1 · M1/M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-04, AK-TRN-10 |

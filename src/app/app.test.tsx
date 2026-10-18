@@ -146,6 +146,14 @@ describe('App-Shell', () => {
     ).toBeInTheDocument();
   });
 
+  it('meldet unbekannte Beispielvorlagen als nicht gefunden, ohne Fehlerprotokoll', async () => {
+    renderApp('/training/vorlagen/gibt_es_nicht');
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Seite nicht gefunden' }),
+    ).toBeInTheDocument();
+    expect(await listErrorLog(rt.db)).toEqual([]);
+  });
+
   it('meldet unbekannte Adressen', async () => {
     renderApp('/gibt-es-nicht');
     expect(

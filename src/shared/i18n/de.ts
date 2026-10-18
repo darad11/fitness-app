@@ -136,6 +136,38 @@ export const de = {
   training: {
     title: 'Training',
     exercises: 'Übungen',
+    programs: 'Programme und Vorlagen',
+  },
+  programs: {
+    title: 'Programme und Vorlagen',
+    samplesTitle: 'Beispielvorlagen',
+    samplesIntro:
+      'Verbreitete Trainingsstrukturen als Ausgangspunkt. Zielgewichte sind leer, weil sie von dir abhängen.',
+    sampleBadge: 'Beispiel',
+    sampleHint:
+      'Beispieldaten – keine individuelle Trainingsempfehlung. Passe Übungen, Sätze und Gewichte an dich an. Bei gesundheitlichen Fragen hol dir ärztlichen Rat.',
+    levels: {
+      beginner: 'Einsteiger',
+      intermediate: 'Fortgeschrittene Einsteiger',
+      advanced: 'Fortgeschritten',
+    },
+    locations: { gym: 'Studio', home: 'Zuhause', both: 'Studio oder Zuhause' },
+    daysPerWeek: (days: string) => `${days} Tage pro Woche`,
+    dayCount: (n: number) => (n === 1 ? '1 Trainingstag' : `${n} Trainingstage`),
+    schedule: 'Ablauf',
+    scheduleRepeat:
+      'Danach beginnt der Ablauf von vorn. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.',
+    week: (name: string, days: string) => `${name}: ${days}`,
+    exerciseCount: (n: number) => (n === 1 ? '1 Übung' : `${n} Übungen`),
+    warmupSets: (n: number) => (n === 1 ? '1 Aufwärmsatz' : `${n} Aufwärmsätze`),
+    workingSets: (n: number) => (n === 1 ? '1 Satz' : `${n} Sätze`),
+    dropSets: (n: number) => (n === 1 ? '1 Drop-Satz' : `${n} Drop-Sätze`),
+    perSide: 'je Seite',
+    reps: (range: string) => `${range} Wdh.`,
+    rest: (time: string) => `Pause ${time}`,
+    notFoundTitle: 'Vorlage nicht gefunden',
+    notFoundText: 'Diese Vorlage gibt es in dieser Version der App nicht.',
+    toPrograms: 'Zu den Vorlagen',
   },
   exercises: {
     title: 'Übungen',

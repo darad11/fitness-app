@@ -232,6 +232,9 @@ describe('Trainingsplayer (S-07)', () => {
     });
 
     // Ohne erledigte Sätze ohne Rückfrage, mit erledigten Sätzen mit Rückfrage.
+    await user.click(
+      within(plank).getByRole('button', { name: 'Weitere Aktionen, Unterarmstütz (Plank)' }),
+    );
     await user.click(within(plank).getByRole('button', { name: 'Übung entfernen' }));
     await waitFor(() => {
       expect(screen.queryByRole('region', { name: 'Unterarmstütz (Plank)' })).toBeNull();
@@ -246,6 +249,9 @@ describe('Trainingsplayer (S-07)', () => {
         restDefaultSec: 90,
         autoStartRest: false,
       },
+    );
+    await user.click(
+      within(curl).getByRole('button', { name: 'Weitere Aktionen, Beinbeuger liegend' }),
     );
     await user.click(within(curl).getByRole('button', { name: 'Übung entfernen' }));
     const dialog = await screen.findByRole('dialog', { name: 'Übung entfernen?' });
@@ -274,5 +280,118 @@ describe('Trainingsplayer (S-07)', () => {
     const session = await startTemplate();
     renderAt(`/training/einheit/${session.id}/zusammenfassung`);
     expect(await screen.findByText('Dieses Training gibt es nicht mehr.')).toBeInTheDocument();
+  });
+});
+
+describe('Player ausgebaut (Schritt D): Info, Umsortieren, Ersetzen, Übungstimer', () => {
+  const headings = () => screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+
+  it('zeigt die Übungsinfo mit Muskeln, Gerät und Erfassung', async () => {
+    const user = userEvent.setup();
+    const session = await startTemplate();
+    renderAt(`/training/einheit/${session.id}`);
+    await screen.findByRole('heading', { level: 1 });
+    await user.click(screen.getByRole('button', { name: 'Übungsinfo, Kniebeuge mit Langhantel' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Kniebeuge mit Langhantel' });
+    await waitFor(() => {
+      expect(within(dialog).getByText('Hauptmuskeln')).toBeVisible();
+    });
+    expect(within(dialog).getByText('Gerät')).toBeVisible();
+    expect(within(dialog).getByText('Langhantel', { selector: 'dd' })).toBeVisible();
+    expect(within(dialog).getByText('Gewicht und Wiederholungen')).toBeVisible();
+  });
+
+  it('sortiert Übungen nach oben und unten; am Rand sind die Tasten gesperrt', async () => {
+    const user = userEvent.setup();
+    const session = await startTemplate();
+    renderAt(`/training/einheit/${session.id}`);
+    await screen.findByRole('heading', { level: 1 });
+    expect(headings().slice(0, 2)).toEqual([
+      'Kniebeuge mit Langhantel',
+      'Bankdrücken mit Langhantel',
+    ]);
+    await user.click(
+      screen.getByRole('button', { name: 'Weitere Aktionen, Kniebeuge mit Langhantel' }),
+    );
+    expect(screen.getByRole('button', { name: 'Nach oben' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Nach unten' }));
+    await waitFor(() => {
+      expect(headings().slice(0, 2)).toEqual([
+        'Bankdrücken mit Langhantel',
+        'Kniebeuge mit Langhantel',
+      ]);
+    });
+    await user.click(screen.getByRole('button', { name: 'Nach oben' }));
+    await waitFor(() => {
+      expect(headings()[0]).toBe('Kniebeuge mit Langhantel');
+    });
+  });
+
+  it('ersetzt eine Übung über die Alternativen und merkt sich die Herkunft (AK-TRN-09)', async () => {
+    const user = userEvent.setup();
+    const session = await startTemplate();
+    renderAt(`/training/einheit/${session.id}`);
+    await screen.findByRole('heading', { level: 1 });
+    await user.click(
+      screen.getByRole('button', { name: 'Weitere Aktionen, Kniebeuge mit Langhantel' }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Übung ersetzen' }));
+    const picker = await screen.findByRole('dialog', { name: 'Kniebeuge mit Langhantel ersetzen' });
+    const alternatives = await within(picker).findByRole('region', { name: 'Alternativen' });
+    const names = within(alternatives)
+      .getAllByRole('button')
+      .map((b) => b.textContent);
+    expect(names.length).toBeGreaterThan(2);
+    expect(names.some((n) => n.startsWith('Beinpresse'))).toBe(true);
+    expect(names.some((n) => n.startsWith('Kniebeuge mit Langhantel'))).toBe(false);
+    const legPress = within(alternatives)
+      .getAllByRole('button')
+      .find((b) => b.querySelector('span')?.textContent === 'Beinpresse')!;
+    await user.click(legPress);
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: /ersetzen$/ })).toBeNull();
+    });
+    expect(await screen.findByRole('region', { name: 'Beinpresse' })).toBeVisible();
+    expect(screen.queryByRole('region', { name: 'Kniebeuge mit Langhantel' })).toBeNull();
+    expect(headings()[0]).toBe('Beinpresse');
+    // Sätze und Ziele bleiben: 2 Aufwärmsätze + 3 Arbeitssätze.
+    expect(
+      within(screen.getByRole('region', { name: 'Beinpresse' })).getAllByRole('listitem'),
+    ).toHaveLength(5);
+    await user.click(screen.getByRole('button', { name: 'Übungsinfo, Beinpresse' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Beinpresse' });
+    expect(await within(dialog).findByText('Ersetzt Kniebeuge mit Langhantel')).toBeVisible();
+  });
+
+  it('startet und stoppt den Übungstimer eines Zeitsatzes und speichert die Dauer (AK-TRN-14)', async () => {
+    const user = userEvent.setup();
+    const session = await startTemplate();
+    renderAt(`/training/einheit/${session.id}`);
+    await screen.findByRole('heading', { level: 1 });
+    const plankSet = 'Unterarmstütz (Plank), Arbeitssatz 1';
+    // Kein Timer an Übungen ohne Zeitfeld.
+    await user.click(screen.getByRole('button', { name: `Weitere Aktionen, ${SQUAT_W1}` }));
+    expect(screen.queryByRole('button', { name: /^Timer starten/ })).toBeNull();
+    await user.click(screen.getByRole('button', { name: `Weitere Aktionen, ${plankSet}` }));
+    await user.click(screen.getByRole('button', { name: `Timer starten, ${plankSet}` }));
+    const stop = await screen.findByRole('button', { name: `Timer stoppen, ${plankSet}` });
+    expect((await getSession(rt.db, session.id))!.setTimer?.setId).toBeDefined();
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1100);
+    });
+    expect(stop).toHaveTextContent(/Timer stoppen 0:0[1-9]/);
+    await user.click(stop);
+    await waitFor(() => {
+      const input = screen.getByLabelText<HTMLInputElement>(`Zeit in Sekunden, ${plankSet}`);
+      expect(input.value).toMatch(/^[1-9]$/);
+    });
+    expect((await getSession(rt.db, session.id))!.setTimer).toBeNull();
+    // „Erledigt" übernimmt die gespeicherte Zeit.
+    await user.click(screen.getByRole('button', { name: `Satz erledigt, ${plankSet}` }));
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: `Erledigt zurücknehmen, ${plankSet}` }),
+      ).toBeVisible();
+    });
   });
 });

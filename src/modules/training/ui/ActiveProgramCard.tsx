@@ -1,8 +1,10 @@
 import { Play } from 'lucide-react';
+import { SETTINGS_DEFAULTS, useSettings } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter } from '@/shared/ui';
 import type { StartInput } from '../service/sessionService';
 import { planFromTemplateDay } from '../service/sessionService';
+import { describeDay } from './SampleTemplatePage';
 import type { ActiveProgram } from './useActiveProgram';
 
 export interface ActiveProgramCardProps {
@@ -25,6 +27,7 @@ export function ActiveProgramCard({
 }: ActiveProgramCardProps) {
   const { template, exercises, progress } = program;
   const next = progress.next;
+  const restDefaultSec = (useSettings() ?? SETTINGS_DEFAULTS).restDefaultSec;
   const templateLink = `/training/vorlagen/${template.key}`;
   if (!next) {
     return (
@@ -47,6 +50,12 @@ export function ActiveProgramCard({
       <p className="-mt-2 text-on-ink-muted">
         {t.programs.dayOf(next.index + 1, progress.total)} · {template.name}
       </p>
+      {(() => {
+        const day = template.weeks[next.weekIndex]?.days[next.dayIndex];
+        return day ? (
+          <p className="mt-1 text-sm text-on-ink-muted">{describeDay(day, restDefaultSec)}</p>
+        ) : null;
+      })()}
       <Meter
         tone="onInk"
         className="mt-3"

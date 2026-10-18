@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Schritt D, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-08 (Übungstimer), TS-10 (Übung im Training ersetzen, mit Alternativen; D-250). TP-12 (Ersetzen im Plan) folgt mit dem Programm-Editor in M2.
 - Version 0.5 (Schritt C, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-17 (Vorschau aller Wochen und Tage), TP-19 (Programm aktivieren und beenden; erneutes Aktivieren zählt von vorn), TP-21 (Reihenfolge-Modus mit „Heute geplant"). Gilt für die gebündelten Programme A, B, C (D-249); TP-01, TP-02 und TP-03 bleiben bis zu den eigenen Programmen in M2 „Zur Umsetzung ausgewählt".
 - Version 0.4 (AP 1.8): SY-04 bleibt „Zur Umsetzung ausgewählt" (Export umgesetzt, Import in M2 und M4); SY-11 unverändert (Snapshots entstehen, Oberfläche zum Wiederherstellen in M4).
 - Version 0.4 (AP 1.7): TH-01 bleibt „Zur Umsetzung ausgewählt" (Liste und Detail umgesetzt, Bearbeiten und Löschen in M2); CH-06 bleibt bis M3.
@@ -68,10 +69,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 43 |
 | Getestet | 3 |
-| Implementiert | 25 |
+| Implementiert | 27 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 38 |
-| Zur Umsetzung ausgewählt | 53 |
+| Zur Umsetzung ausgewählt | 51 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -139,9 +140,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TS-05 | Wiederholungen eingeben | Vorhanden | HC-G | V | OV | H | – | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-04 |
 | TS-06 | Satz abschließen, mit Vorschlag | „log reps and weight after each set" | HC-G | V | OV | H | TS-04 | S | P0 | MVP | R1 · M1 | Übernehmen (D-225) | Implementiert | AK-TRN-06, AK-TRN-07 |
 | TS-07 | Pausentimer | Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter | AS 3.1.6; SD 13:18 | V | OV | H | TP-09 | M | P0 | MVP | R1 · M1 | Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215) | Implementiert | AK-TRN-10, AK-TRN-11, AK-TRN-12 |
-| TS-08 | Übungstimer für Zeitsätze | Vorhanden | AS 3.1.6 | V | OV | M | TS-07 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-14 |
+| TS-08 | Übungstimer für Zeitsätze | Vorhanden | AS 3.1.6 | V | OV | M | TS-07 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-TRN-14 |
 | TS-09 | Nächster Satz im Pausentimer | Fehlt laut Videoanalyse | SD 13:18 | VF | EV | M | TS-07 | S | P1 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-10 |
-| TS-10 | Übung im Training ersetzen | Möglich (laut Rezensionen) | REV | V-R | OV | H | TP-12 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-09 |
+| TS-10 | Übung im Training ersetzen | Möglich (laut Rezensionen) | REV | V-R | OV | H | TP-12 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-TRN-09 |
 | TS-11 | Sätze und Übungen im Training hinzufügen und entfernen | Sätze laut Rezensionen nicht ergänzbar | REV | VF | EV | H | – | S | P0 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-09, AK-TRN-02 |
 | TS-12 | Automatisches Speichern jeder Eingabe | Laut Rezensionen Abstürze mit Verlust der Eingaben | REV | VF | EV | H | SY-01 | M | P0 | MVP | R1 · M1 | Verbesserung | Zur Umsetzung ausgewählt | AK-TRN-16, AK-TRN-25 |
 | TS-13 | Wiederaufnahme nach Reload, Hintergrund und Offline-Phase; Pausieren | Nicht belegt | – | P | ON | H | TS-12; SY-13 | M | P0 | MVP | R1 · M1/M2 | Übernehmen (D-109, D-216) | Zur Umsetzung ausgewählt | AK-TRN-17, AK-TRN-18, AK-TRN-26 |

@@ -8,6 +8,8 @@ export const ExercisePicker = lazy(async () => ({
 export type { ExercisePickerProps } from './ui/ExercisePicker';
 export { exercisesRoutes } from './routes';
 export { coreExerciseId, loadCoreExercises } from './data/coreLibrary';
+export { findAlternatives } from './calc/alternatives';
+export { describeExercise } from './ui/ExerciseLibraryPage';
 export {
   EQUIPMENT,
   MUSCLES,

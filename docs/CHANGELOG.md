@@ -1,6 +1,6 @@
 # Änderungsprotokoll der Dokumentation
 
-## Version 0.6 · 18.10.2026 · Schritte B und C: Bibliothek, Programme A, B, C, aktives Programm
+## Version 0.6 · 18.10.2026 · Schritte B, C und D: Bibliothek, Programme A, B, C, aktives Programm, Player
 
 Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufband Tag 14, Studio, Beinpresse, drei Sätze von Beginn an, Rotation, Kalorien, Tagesaufgaben).
 
@@ -14,7 +14,10 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
 | `implementation-plan.md` | Stand Erweiterungsplan; AP 2.3 teilweise vorgezogen; nächste Schritte |
 | `feature-inventory.md` | TP-17, TP-19, TP-21 auf „Implementiert“ |
-| `testing.md` | Ergebnisse Schritt B und C |
+| `testing.md` | Ergebnisse Schritt B, C und D |
+| `decisions.md` (Schritt D) | D-250 Player ausgebaut: Ersetzen, Alternativen, Umsortieren, Übungstimer, Tagesvorschau, Übungsinfo |
+| `feature-inventory.md` (Schritt D) | TS-08, TS-10 auf „Implementiert“ |
+| `evolution-plan.md`, `implementation-plan.md`, `data-model.md` (Schritt D) | Schritt D als umgesetzt; AP 2.4 teilweise vorgezogen; Felder `notes` und `replacedFromExerciseId` erläutert |
 
 ## Version 0.5 · 18.10.2026 · Erweiterungsplan, Designsystem 2.0 und Premium-Player (AP D1, D2)
 

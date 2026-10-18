@@ -1,9 +1,10 @@
-import { Check, Ellipsis, Minus, Plus, RotateCcw } from 'lucide-react';
+import { Check, Ellipsis, Minus, Plus, RotateCcw, Square, Timer } from 'lucide-react';
 import { useState } from 'react';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui';
 import { fieldsFor, formatSetValues } from '../../calc/fields';
+import { formatClock } from '../../calc/format';
 import type { SessionExercise, SessionSet, SetValues } from '../../model/session';
 import { ValueInput } from './ValueInput';
 
@@ -25,6 +26,8 @@ export interface SetRowProps {
   onToggleDone: () => void;
   onSkip: () => void;
   onRemove: () => void;
+  /** Übungstimer für Zeitsätze (AK-TRN-14); fehlt bei Übungen ohne Zeitfeld. */
+  timer?: { running: boolean; elapsedSec: number; onToggle: () => void };
 }
 
 /**
@@ -33,7 +36,7 @@ export interface SetRowProps {
  * ist als Tonfläche hervorgehoben (AK-TRN-08). Bedienziele 48 px.
  */
 export function SetRow(props: SetRowProps) {
-  const { exercise, set, current, error } = props;
+  const { exercise, set, current, error, timer } = props;
   const [actionsOpen, setActionsOpen] = useState(false);
   const fields = fieldsFor(exercise.trackingMode, exercise.distanceUnit);
   const done = set.status === 'done';
@@ -158,8 +161,26 @@ export function SetRow(props: SetRowProps) {
           ) : null}
         </p>
       ) : null}
-      {(current && weight && !done) || actionsOpen ? (
+      {(current && (weight || timer) && !done) || timer?.running || actionsOpen ? (
         <div className="mt-2 ml-10 flex flex-wrap gap-2">
+          {timer && !done && !skipped && (current || timer.running || actionsOpen) ? (
+            <Button
+              variant={timer.running ? 'primary' : 'secondary'}
+              size="sm"
+              className={timer.running ? 'tabular-nums' : 'bg-surface shadow-card'}
+              aria-label={`${timer.running ? t.session.stopTimer : t.session.startTimer}, ${props.name}`}
+              onClick={timer.onToggle}
+            >
+              {timer.running ? (
+                <Square aria-hidden="true" className="size-4" />
+              ) : (
+                <Timer aria-hidden="true" className="size-4" />
+              )}
+              {timer.running
+                ? `${t.session.stopTimer} ${formatClock(timer.elapsedSec)}`
+                : t.session.startTimer}
+            </Button>
+          ) : null}
           {current && weight && !done ? (
             <>
               <Button

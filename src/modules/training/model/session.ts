@@ -108,6 +108,8 @@ export const sessionSchema = defineDocSchema('session', {
     })
     .nullable()
     .optional(),
+  /** Laufender Übungstimer eines Zeitsatzes (AK-TRN-14); übersteht einen Reload. */
+  setTimer: z.strictObject({ setId: z.uuid(), startedAt: isoDateTimeSchema }).nullable().optional(),
   exerciseIds: z.array(z.uuid()),
   exercises: z.array(sessionExerciseSchema),
 })

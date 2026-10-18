@@ -114,7 +114,7 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 
 ## 12. Stand M0 (18.10.2026)
 
-- **WebKit und iPhone:** Die E2E-Tests sind in GitHub Actions auch mit WebKit bestanden. Auf dem iPhone mit iOS 27.0.1 funktionieren laut Gerätetest T-IPH-M0 der Hinweis im Safari-Tab, die Installation über „Teilen › Zum Home-Bildschirm" und der Offline-Start. Der Update-Hinweis auf dem Gerät ist noch nicht geprüft.
+- **WebKit und iPhone:** Die E2E-Tests sind in GitHub Actions auch mit WebKit bestanden. Auf dem iPhone mit iOS 27.0.1 funktionieren laut Gerätetest T-IPH-M0 der Hinweis im Safari-Tab, die Installation über „Teilen › Zum Home-Bildschirm" und der Offline-Start. Auch der Update-Hinweis funktioniert dort: Eine neue Version wurde erst nach „Jetzt aktualisieren" aktiv.
 - **Produktivadresse und Vorschau:** Vercel ist verbunden; Produktivadresse `https://fitness-app-mu-drab.vercel.app`. Das Etikett „Vorschau – Testdaten" hängt an der Vercel-Umgebung (`VERCEL_ENV`) und lässt sich erst auf einer Vorschau-Adresse sehen; lokal ist es nur als Komponententest geprüft.
 - **Safari-Hinweis:** Die Erkennung nutzt Browserkennung, Touch-Unterstützung und `display-mode`. Eingebettete Browser anderer Apps können wie Safari erscheinen. Die Anleitung ist bewusst allgemein formuliert, weil sich die Lage von „Teilen" je nach iOS-Version unterscheidet.
 - **Installationsknopf** gibt es nur in Chromium-Browsern (`beforeinstallprompt`); Safari bietet keinen solchen Dialog, dort hilft nur die Anleitung.

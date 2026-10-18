@@ -68,7 +68,7 @@ Abnahme M0: CI grün mit Chromium und WebKit; Produktivadresse erreichbar; Gerä
 | 0.5 | Umgesetzt. Manifest, Icons, Service Worker mit Vorab-Cache und Navigations-Fallback, Update-Hinweis mit Bestätigung, Hinweis im Safari-Tab, Installationsknopf in Chromium |
 | 0.6 | Umgesetzt. Dexie-Schema v1 mit allen MVP-Tabellen, Basis-Repository (HLC, Tombstones, Schemaversion, Zod, unbekannte Felder bleiben), Geräte-ID, UUID v5, Textnormalisierung, Gesundheitsprüfung mit kontrolliertem Neustart, Snapshot-Datenbank, Fehlerprotokoll |
 
-Abnahme am 18.10.2026: CI grün mit Chromium und WebKit, Produktivadresse erreichbar, Gerätetest T-IPH-M0 mit iOS 27.0.1 in den Schritten 1 bis 3 bestanden. Offen ist nur Schritt 4 (Update-Hinweis); er lässt sich erst mit der nächsten Auslieferung prüfen.
+Abnahme am 18.10.2026: CI grün mit Chromium und WebKit, Produktivadresse erreichbar, Gerätetest T-IPH-M0 mit iOS 27.0.1 in allen vier Schritten bestanden, einschließlich Update-Hinweis. M0 ist damit vollständig abgenommen.
 
 ### M1 · Training auf dem iPhone (Größe XL) – wichtigster Meilenstein
 
@@ -194,6 +194,6 @@ Nächste Schritte: <Liste>
 1. Erledigt: Q-01 und Q-02 beantwortet (`darad11/fitness-app`, Vercel).
 2. Erledigt: M0 umgesetzt (AP 0.1 bis 0.6) und berichtet; Repository angelegt, Pull Request mit grüner CI; Vercel verbunden, Produktivadresse `https://fitness-app-mu-drab.vercel.app`.
 3. Erledigt: M0 gemergt und ausgeliefert; T-IPH-M0 Schritte 1 bis 3 bestanden (iOS 27.0.1).
-4. Produktinhaber: T-IPH-M0 Schritt 4 (Update-Hinweis) bei der nächsten Auslieferung.
+4. Erledigt: T-IPH-M0 Schritt 4 (Update-Hinweis) bestanden.
 5. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
 6. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

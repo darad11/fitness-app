@@ -163,7 +163,7 @@ Safari „Zum Dock hinzufügen" und Chrome-Installation; Fenstergrößen von 102
 
 | Datum | Protokoll | Gerät | Betriebssystem | App-Version | Ergebnis | Abweichungen |
 |---|---|---|---|---|---|---|
-| 18.10.2026 | T-IPH-M0 | iPhone (Modell nicht angegeben) | iOS 27.0.1 | 0.1.0, Build `b5fb9aa` | Schritte 1 bis 3 bestanden: Hinweis im Safari-Tab, Installation über „Teilen › Zum Home-Bildschirm" mit Name und Icon, Offline-Start aller Bereiche. Schritt 4 (Update-Hinweis) folgt mit der nächsten Auslieferung | Keine |
+| 18.10.2026 | T-IPH-M0 | iPhone (Modell nicht angegeben) | iOS 27.0.1 | 0.1.0, Build `b5fb9aa` | Alle vier Schritte bestanden: Hinweis im Safari-Tab, Installation über „Teilen › Zum Home-Bildschirm" mit Name und Icon, Offline-Start aller Bereiche; nach der Auslieferung von Build `66abab4` erschien „Neue Version verfügbar", der Wechsel erfolgte erst nach „Jetzt aktualisieren" (Schritt 4, am selben Tag) | Keine |
 
 ## 8. Testdaten
 
@@ -185,7 +185,7 @@ Jeder Arbeitspaket-Bericht nennt die ausgeführten Befehle, Anzahl bestandener u
 | Build, Bündelgröße | `pnpm build`, `pnpm check:bundle` | Bestanden; Startansicht 172,8 KB gzip; Service Worker mit 30 vorab gespeicherten Dateien |
 | E2E Chromium (Desktop und Pixel 7) | `E2E_ENGINES=chromium PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e` | 26 Tests bestanden, 0 fehlgeschlagen |
 | E2E WebKit | – | In dieser Umgebung nicht ausführbar (WebKit nicht installiert); siehe GitHub Actions unten |
-| Gerätetest T-IPH-M0 | – | Schritte 1 bis 3 bestanden am 18.10.2026 mit iOS 27.0.1 (Abschnitt 7); Schritt 4 folgt mit der nächsten Auslieferung |
+| Gerätetest T-IPH-M0 | – | Alle vier Schritte bestanden am 18.10.2026 mit iOS 27.0.1 (Abschnitt 7) |
 
 GitHub Actions (Node 24, Ubuntu, Pull Request darad11/fitness-app#1):
 

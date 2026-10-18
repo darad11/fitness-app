@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Nachtrag zu Version 0.3 · 18.10.2026 · Stabile E2E-Tests
+
+Grundlage: unzuverlässige E2E-Läufe in Chromium nach der Abnahme von M0 (darad11/fitness-app#4).
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-239: Ladezustand mit Platzhalter statt Standardwerten |
+| `design-system.md` | Abschnitt 7: Zustand „Laden" präzisiert |
+| `testing.md` | Abschnitt 5: Annotationen in der CI, Wartebedingung von `openPage`; Abschnitt 10: Ursache, Behebung und Ergebnisse |
+| `implementation-plan.md` | Nachtrag zum Stand M0; nächste Schritte |
+| Code | Einstellungsseite mit Platzhalter beim Laden; Basiskomponente `Skeleton`; `openPage` und Test zum Safari-Hinweis warten auf gespeicherte Zustände |
+
 ## Version 0.3 · 18.10.2026 · M0 (Projektbasis, Auslieferung, PWA-Grundlage)
 
 Grundlage: Antwort des Produktinhabers zu Repository und Hosting (Q-01, Q-02). Erster Anwendungscode (App-Version 0.1.0, Datenbankschema v1).

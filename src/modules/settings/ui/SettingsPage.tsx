@@ -1,16 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { Card, PageHeader, SegmentedControl, SelectField } from '@/shared/ui';
+import { Card, PageHeader, SegmentedControl, SelectField, Skeleton } from '@/shared/ui';
 import { saveSettings } from '../data/settingsRepository';
 import { useSettings } from '../data/useSettings';
-import {
-  SETTINGS_DEFAULTS,
-  type LocaleSetting,
-  type SettingsData,
-  type ThemeSetting,
-} from '../model/settings';
-import { useFormatters } from '../service/formatting';
+import type { LocaleSetting, SettingsData, ThemeSetting } from '../model/settings';
+import { formattersFor } from '../service/formatting';
 
 const THEME_OPTIONS: readonly { value: ThemeSetting; label: string }[] = [
   { value: 'light', label: t.settings.themeLight },
@@ -29,12 +24,37 @@ const LOCALE_OPTIONS: readonly { value: LocaleSetting; label: string }[] = [
 const SAMPLE_DATE = new Date(2026, 0, 17, 21, 5);
 
 export function SettingsPage() {
-  const rt = useDb();
   const settings = useSettings();
-  const formatters = useFormatters();
+  return (
+    <>
+      <PageHeader title={t.settings.title} back={{ to: '/mehr', label: t.more.title }} />
+      {settings ? <SettingsForm settings={settings} /> : <SettingsSkeleton />}
+    </>
+  );
+}
+
+/**
+ * Bis die Einstellungen geladen sind, nur die Form der Karten. Standardwerte würden kurz eine
+ * falsche Auswahl zeigen und dann umspringen.
+ */
+function SettingsSkeleton() {
+  return (
+    <div aria-busy="true" className="space-y-4">
+      <Card title={t.settings.appearance}>
+        <Skeleton className="h-[52px]" />
+      </Card>
+      <Card title={t.settings.formatting}>
+        <Skeleton className="h-11" />
+      </Card>
+    </div>
+  );
+}
+
+function SettingsForm({ settings }: { settings: SettingsData }) {
+  const rt = useDb();
   const [saveFailed, setSaveFailed] = useState(false);
-  const current = settings ?? SETTINGS_DEFAULTS;
-  const loading = settings === undefined;
+  // Aus denselben geladenen Werten wie die Auswahl, damit das Beispiel nicht nachträglich umspringt.
+  const formatters = useMemo(() => formattersFor(settings.locale), [settings.locale]);
 
   const save = (patch: Partial<SettingsData>) => {
     setSaveFailed(false);
@@ -45,47 +65,42 @@ export function SettingsPage() {
   };
 
   return (
-    <>
-      <PageHeader title={t.settings.title} back={{ to: '/mehr', label: t.more.title }} />
-      <div className="space-y-4">
-        <Card title={t.settings.appearance}>
-          <SegmentedControl
-            legend={t.settings.themeLabel}
-            options={THEME_OPTIONS}
-            value={current.theme}
-            onChange={(theme) => {
-              save({ theme });
-            }}
-            hint={t.settings.themeHint}
-            disabled={loading}
-          />
-        </Card>
-        <Card title={t.settings.formatting}>
-          <SelectField
-            label={t.settings.localeLabel}
-            options={LOCALE_OPTIONS}
-            value={current.locale}
-            onChange={(locale) => {
-              save({ locale });
-            }}
-            hint={t.settings.formattingHint}
-            disabled={loading}
-          />
-          <p className="mt-3 tabular-nums" aria-live="polite">
-            {t.settings.example(
-              formatters.dayMonthYear(SAMPLE_DATE),
-              formatters.time(SAMPLE_DATE),
-              formatters.number(1234.5),
-              formatters.loadKg(72.5),
-            )}
-          </p>
-        </Card>
-        {saveFailed ? (
-          <p role="alert" className="text-danger">
-            {t.settings.saveFailed}
-          </p>
-        ) : null}
-      </div>
-    </>
+    <div className="space-y-4">
+      <Card title={t.settings.appearance}>
+        <SegmentedControl
+          legend={t.settings.themeLabel}
+          options={THEME_OPTIONS}
+          value={settings.theme}
+          onChange={(theme) => {
+            save({ theme });
+          }}
+          hint={t.settings.themeHint}
+        />
+      </Card>
+      <Card title={t.settings.formatting}>
+        <SelectField
+          label={t.settings.localeLabel}
+          options={LOCALE_OPTIONS}
+          value={settings.locale}
+          onChange={(locale) => {
+            save({ locale });
+          }}
+          hint={t.settings.formattingHint}
+        />
+        <p className="mt-3 tabular-nums" aria-live="polite">
+          {t.settings.example(
+            formatters.dayMonthYear(SAMPLE_DATE),
+            formatters.time(SAMPLE_DATE),
+            formatters.number(1234.5),
+            formatters.loadKg(72.5),
+          )}
+        </p>
+      </Card>
+      {saveFailed ? (
+        <p role="alert" className="text-danger">
+          {t.settings.saveFailed}
+        </p>
+      ) : null}
+    </div>
   );
 }

@@ -70,6 +70,8 @@ Abnahme M0: CI grün mit Chromium und WebKit; Produktivadresse erreichbar; Gerä
 
 Abnahme am 18.10.2026: CI grün mit Chromium und WebKit, Produktivadresse erreichbar, Gerätetest T-IPH-M0 mit iOS 27.0.1 in allen vier Schritten bestanden, einschließlich Update-Hinweis. M0 ist damit vollständig abgenommen.
 
+Nachtrag vom 18.10.2026: Nach der Abnahme war E2E Chromium in der CI unzuverlässig (3 von 12 Ausführungen rot, WebKit immer grün). Ursache waren ein Wettlauf im Test zum Safari-Hinweis und eine kurz falsche Auswahl auf der Einstellungsseite während des Ladens. Behoben über darad11/fitness-app#4 mit einem Platzhalter beim Laden (`Skeleton`, D-239) und angepassten Tests; Einzelheiten in `testing.md` Abschnitt 10.
+
 ### M1 · Training auf dem iPhone (Größe XL) – wichtigster Meilenstein
 
 Ziel: Ein echtes Training wird auf dem iPhone protokolliert. Erledigte Sätze überstehen Reload, Wechsel in den Hintergrund, Sperrbildschirm und Offline-Phasen. Die Daten lassen sich exportieren.
@@ -195,5 +197,6 @@ Nächste Schritte: <Liste>
 2. Erledigt: M0 umgesetzt (AP 0.1 bis 0.6) und berichtet; Repository angelegt, Pull Request mit grüner CI; Vercel verbunden, Produktivadresse `https://fitness-app-mu-drab.vercel.app`.
 3. Erledigt: M0 gemergt und ausgeliefert; T-IPH-M0 Schritte 1 bis 3 bestanden (iOS 27.0.1).
 4. Erledigt: T-IPH-M0 Schritt 4 (Update-Hinweis) bestanden.
-5. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
-6. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+5. Erledigt mit darad11/fitness-app#4: E2E Chromium in der CI stabilisiert (`testing.md` Abschnitt 10).
+6. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
+7. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

@@ -26,9 +26,11 @@ export function mainNav(page: Page) {
   return page.getByRole('navigation', { name: 'Hauptnavigation' });
 }
 
+/** Öffnet eine Seite und wartet, bis sie fertig geladen ist: Überschrift da, kein Platzhalter mehr. */
 export async function openPage(page: Page, path: string) {
   await page.goto(path);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
 }
 
 export async function chooseTheme(page: Page, label: 'Hell' | 'Dunkel' | 'System') {

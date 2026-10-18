@@ -21,7 +21,7 @@ Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v
 - Phase-1-Vorschläge D-010 bis D-030 mit neuem Status.
 - Abschnitte C bis E neu: technische Entscheidungen, Datenquellen, offene Fragen.
 - Die Phase-1-Fragen F-01 bis F-20 sind in Abschnitt F ihren Antworten zugeordnet.
-- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232), Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237) und Arbeit über mehrere Sitzungen (D-238); Nachtrag: Ladezustand ohne Standardwerte (D-239).
+- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232), Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237) und Arbeit über mehrere Sitzungen (D-238); Nachtrag: Ladezustand ohne Standardwerte (D-239). M1: Schlüssel der Basisübungen (D-240).
 
 ## A. Durch den Auftrag festgelegt
 
@@ -130,6 +130,7 @@ Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v
 | D-237 | Die lokale Vorschau für E2E-Tests (`vite preview`) sendet dieselben Sicherheits-Header wie Vercel; sie werden aus `vercel.json` gelesen | Entschieden in M0 | Verstöße gegen die Content Security Policy fallen so schon in den Tests auf; die Header sind nur an einer Stelle gepflegt |
 | D-238 | Arbeit über mehrere Sitzungen: je Meilenstein oder größerem Arbeitspaket eine eigene Claude-Sitzung; Übergabe über Pull Requests und die Dokumente im Repository. `CLAUDE.md` enthält die Arbeitsregeln, ein Start-Hook (`.claude/hooks/session-start.sh`) installiert in Cloud-Sitzungen die Abhängigkeiten | Entschieden am 18.10.2026 auf Rückfrage des Produktinhabers | Frische Sitzungen arbeiten zuverlässiger als eine sehr lange, deren frühe Teile nur noch zusammengefasst vorliegen. Weil Stand und Entscheidungen vollständig im Repository stehen, geht beim Wechsel nichts verloren. Sitzungen laufen nacheinander, nicht parallel auf denselben Dateien; ein Pull Request wird von der Sitzung betreut, die ihn angelegt hat |
 | D-239 | Ladezustand: Bis gespeicherte Werte gelesen sind, zeigt eine Ansicht einen ruhigen Platzhalter in der Form des Inhalts (`Skeleton`, ohne Animation; der Bereich trägt `aria-busy`). Auswahlen und Eingaben erscheinen erst mit den gespeicherten Werten, nie vorab mit Standardwerten | Entschieden in M0 (Nachtrag) | Mit Standardwerten zeigte die Einstellungsseite kurz „Hell" als gewählt und sprang nach dem Laden mit einem Farbübergang um; in der CI fiel das als Kontrastfehler auf (`testing.md` Abschnitt 10). Setzt `design-system.md` Abschnitt 7 um („Skelett in der Form des Inhalts"). E2E-Tests warten, bis kein Bereich mehr `aria-busy` trägt |
+| D-240 | Schlüssel der Basisübungen in Kleinbuchstaben mit Unterstrich ohne Präfix (z. B. `bench_press_barbell`); die ID entsteht per UUID v5 aus `core-exercise:<Schlüssel>` | Entschieden in M1 | Vereinheitlicht `sample-templates.md` (bisher `core.bench_press_barbell`) mit `data-model.md` und dem Test in `uuid.test.ts`. Schlüssel ändern sich nie, sonst ändern sich die IDs |
 
 ## D. Datenquellen
 
@@ -158,7 +159,7 @@ Details, Quellen und Prüfkriterien stehen in `data-sources.md`.
 |---|---|---|
 | Q-03 | Name der App | Arbeitstitel „Fitness" (D-222) |
 | Q-04 | Geräte und Versionen (iPhone, iPad, Mac; Safari oder Chrome am Mac) | Mindestziel 18.4, Referenz aktuelle Versionen (D-228) |
-| Q-05 | Prüfung der deutschen Basisübungsliste | Entwurf in M1, Durchsicht durch den Produktinhaber |
+| Q-05 | Prüfung der deutschen Basisübungsliste | Entwurf mit 104 Übungen und fünf Rückfragen am 18.10.2026 in `exercise-library.md` vorgelegt; Durchsicht durch den Produktinhaber offen |
 | Q-06 | Prüfung der Beispielvorlagen | `sample-templates.md` |
 | Q-07 | Zählen Aktivitäten wie Laufen zum Wochenziel? | Ja (D-220) |
 | Q-08 | Einwilligung für Open-Food-Facts-Abfragen (Barcode, Suchbegriff und IP gehen an Open Food Facts) | Einmalige Einwilligung vor der ersten Online-Abfrage, jederzeit widerrufbar (R2) |

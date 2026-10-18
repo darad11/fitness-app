@@ -173,7 +173,7 @@ Niveau Einsteiger · Zuhause (Kurzhanteln, optional Bank, Körpergewicht) · 1 W
 
 ### 5.1 Umfang
 
-Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen für die Suche, Haupt- und Nebenmuskeln, Geräten, Kategorie und Erfassungsart. Alle Übungen der Beispielvorlagen (rund 40) sind enthalten. Die vollständige Liste entsteht in M1 und wird vom Produktinhaber durchgesehen (Q-05).
+Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen für die Suche, Haupt- und Nebenmuskeln, Geräten, Kategorie und Erfassungsart. Alle Übungen der Beispielvorlagen (rund 40) sind enthalten. Die vollständige Liste steht als Entwurf in `exercise-library.md` und wird vom Produktinhaber durchgesehen (Q-05).
 
 | Gruppe | Richtwert |
 |---|---|
@@ -218,7 +218,7 @@ Erfassungsarten: `weight_reps` (Gewicht × Wiederholungen; bei Körpergewichtsü
 
 ### 5.3 Pflege
 
-- Schlüssel wie `core.bench_press_barbell` sind dauerhaft; die ID entsteht daraus per UUID v5. Eine Übung wird nie entfernt, höchstens als veraltet markiert, damit alte Einheiten lesbar bleiben.
+- Schlüssel wie `bench_press_barbell` sind dauerhaft; die ID entsteht daraus per UUID v5 aus `core-exercise:<Schlüssel>` (D-240). Eine Übung wird nie entfernt, höchstens als veraltet markiert, damit alte Einheiten lesbar bleiben.
 - Persönliche Notizen, Standardpause, Gewichtsschritt, Videolink, Favorit und Ausblenden liegen in den persönlichen Übungsangaben (`exercise_pref`) und bleiben bei Updates erhalten.
 
 ## 6. Durchsicht durch den Produktinhaber

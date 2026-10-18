@@ -198,5 +198,6 @@ Nächste Schritte: <Liste>
 3. Erledigt: M0 gemergt und ausgeliefert; T-IPH-M0 Schritte 1 bis 3 bestanden (iOS 27.0.1).
 4. Erledigt: T-IPH-M0 Schritt 4 (Update-Hinweis) bestanden.
 5. Erledigt mit darad11/fitness-app#4: E2E Chromium in der CI stabilisiert (`testing.md` Abschnitt 10).
-6. Ich: Basisübungsliste als Entwurf zur Durchsicht vorlegen.
-7. M1 umsetzen; Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.
+6. Erledigt: Basisübungsliste als Entwurf vorgelegt (`exercise-library.md`, 104 Übungen, fünf Rückfragen); Branch `m1-training`.
+7. Produktinhaber: Durchsicht der Liste und Antworten auf die Rückfragen in `exercise-library.md` Abschnitt 3.
+8. M1 umsetzen, beginnend mit AP 1.1 (Liste als gebündelte Daten); Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere.

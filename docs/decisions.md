@@ -177,7 +177,7 @@ Details, Quellen und Prüfkriterien stehen in `data-sources.md`.
 | Q-15 | Programm B (`evolution-plan.md` Abschnitt 4.2): Rotation über 4 Tage ohne Rücksetzung je Woche bestätigt? Übungen aus der vorhandenen Push/Pull/Beine-Vorlage übernehmen? | Ja, Rotation; Übungen aus der Vorlage |
 | Q-16 | Kalorienschätzung: Anzeige nur mit gespeichertem Körpergewicht; Laufband ohne Tempo ohne Kalorienwert; keine Verrechnung mit der Ernährung? | Ja zu allen drei Punkten |
 | Q-17 | Tagesaufgaben: eigene Aufgaben frei anlegen (z. B. „30 min Cardio“, „Wasser“), ohne Wettbewerb und ohne Vorgaben aus Xeela? | Eigene Aufgaben, keine Vorgaben |
-| Q-18 | Reihenfolge der Schritte A bis H in `evolution-plan.md` Abschnitt 5 freigeben; beginnt die Umsetzung mit Schritt A (M1 abschließen)? | Ja; Schritt A beginnt nach Freigabe des Plans |
+| Q-18 | Reihenfolge der Schritte A bis H in `evolution-plan.md` Abschnitt 5 freigeben; beginnt die Umsetzung mit Schritt A (M1 abschließen)? | Beantwortet am 18.10.2026: ja, Reihenfolge freigegeben; Umsetzung beginnt mit Schritt A |
 
 ## F. Phase-1-Fragen und ihr Stand
 

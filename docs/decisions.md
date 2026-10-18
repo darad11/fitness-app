@@ -21,7 +21,7 @@ Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v
 - Phase-1-Vorschläge D-010 bis D-030 mit neuem Status.
 - Abschnitte C bis E neu: technische Entscheidungen, Datenquellen, offene Fragen.
 - Die Phase-1-Fragen F-01 bis F-20 sind in Abschnitt F ihren Antworten zugeordnet.
-- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232) und Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237).
+- Version 0.3 und 0.4: Hosting (D-231), Modulgrenzen (D-232), Entscheidungen aus der Umsetzung von M0 (D-233 bis D-237) und Arbeit über mehrere Sitzungen (D-238).
 
 ## A. Durch den Auftrag festgelegt
 
@@ -128,6 +128,7 @@ Stand: 18.10.2026 · Version 0.4 (M0 umgesetzt) · Vorgängerversion: `archive/v
 | D-235 | Fester Namensraum für deterministische IDs (UUID v5): `a9f1c5d1-6d1e-4d1d-b94d-d8ca701b9904`; SHA-1 dafür im eigenen Code | Entschieden in M0 | Der Namensraum darf sich nie ändern, sonst ändern sich alle abgeleiteten IDs (z. B. Einstellungen, Basisübungen). Eigenes SHA-1, weil `crypto.subtle` nur asynchron arbeitet; geprüft mit Referenzwerten |
 | D-236 | Zwei Farbtokens nach dem automatischen Kontrasttest angepasst: `--border-input` hell `#8A93A1` → `#828b99`; `--meter-track` dunkel `#184f95` → `#15365f` | Entschieden in M0 | Der alte Eingaberahmen lag auf dem Seitenhintergrund bei 2,97:1 und auf Fläche 2 bei 2,82:1 (Grenze 3:1); neu 3,30, 3,44 und 3,13. Die alte dunkle Spur des Fortschrittsbalkens hatte zur Füllung nur 2,23:1; neu 3,35:1 |
 | D-237 | Die lokale Vorschau für E2E-Tests (`vite preview`) sendet dieselben Sicherheits-Header wie Vercel; sie werden aus `vercel.json` gelesen | Entschieden in M0 | Verstöße gegen die Content Security Policy fallen so schon in den Tests auf; die Header sind nur an einer Stelle gepflegt |
+| D-238 | Arbeit über mehrere Sitzungen: je Meilenstein oder größerem Arbeitspaket eine eigene Claude-Sitzung; Übergabe über Pull Requests und die Dokumente im Repository. `CLAUDE.md` enthält die Arbeitsregeln, ein Start-Hook (`.claude/hooks/session-start.sh`) installiert in Cloud-Sitzungen die Abhängigkeiten | Entschieden am 18.10.2026 auf Rückfrage des Produktinhabers | Frische Sitzungen arbeiten zuverlässiger als eine sehr lange, deren frühe Teile nur noch zusammengefasst vorliegen. Weil Stand und Entscheidungen vollständig im Repository stehen, geht beim Wechsel nichts verloren. Sitzungen laufen nacheinander, nicht parallel auf denselben Dateien; ein Pull Request wird von der Sitzung betreut, die ihn angelegt hat |
 
 ## D. Datenquellen
 

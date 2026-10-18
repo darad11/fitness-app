@@ -30,6 +30,8 @@ pnpm check:bundle       # Größe der Startansicht (nach pnpm build)
 pnpm icons              # App-Icons neu erzeugen
 ```
 
+Arbeitsregeln für Claude-Sitzungen stehen in `CLAUDE.md`. In Cloud-Sitzungen installiert der Start-Hook `.claude/hooks/session-start.sh` die Abhängigkeiten automatisch und setzt die Variablen für die E2E-Tests (D-238).
+
 In der Cloud-Entwicklungsumgebung ist nur Chromium vorhanden:
 `E2E_ENGINES=chromium PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e`.
 WebKit läuft in GitHub Actions (`.github/workflows/ci.yml`).

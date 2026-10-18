@@ -17,6 +17,7 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: vorläufig freigegebe
 - Testergebnisse werden wörtlich berichtet, auch Fehlschläge.
 - Größen: S unter 1 Tag, M 1 bis 3 Tage, L 3 bis 7 Tage, XL über 1 Woche. Sie dienen der Reihenfolge, nicht als Zusage.
 - Code entsteht erst mit Repository (Q-01). Ausnahme M0: Weil das Repository beschlossen ist, aber erst vom Produktinhaber angelegt werden kann, entsteht M0 lokal mit Git-Historie und wird zusätzlich als Archiv übergeben, damit nichts verloren geht.
+- Ab M1 arbeitet je Meilenstein oder größerem Arbeitspaket eine eigene Sitzung (D-238). Sie liest zuerst `CLAUDE.md` und diesen Plan, arbeitet auf einem eigenen Branch und endet mit einem Pull Request, dessen CI grün ist, und mit nachgetragenem Stand in den Dokumenten.
 
 ## 2. Abweichungen von der Phasenreihenfolge des Auftrags
 

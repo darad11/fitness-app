@@ -153,7 +153,7 @@ Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, g
 
 ### 8.2 Diagramme im MVP
 
-Stand Schritt E (18.10.2026): C-01, C-02 und C-03 umgesetzt (`src/shared/charts/LineTimeChart.tsx`, Recharts), Bildschirmfotos hell und dunkel in `screenshots/c01-gewicht-*.png`; die Ziellinie in C-01 folgt mit den Zielen (AP 3.3). Linien verbinden Punkte gerade, ohne Glättung, damit keine Werte zwischen den Messungen erfunden wirken.
+Stand Schritt E (18.10.2026): C-01, C-02 und C-03 umgesetzt (`src/shared/charts/LineTimeChart.tsx`, Recharts), Bildschirmfotos hell und dunkel in `screenshots/c01-gewicht-*.png`; die Ziellinie in C-01 kam mit den Zielen (D-254). Linien verbinden Punkte gerade, ohne Glättung, damit keine Werte zwischen den Messungen erfunden wirken.
 
 | ID | Diagramm | Form | Farben | Interaktion | Regeln |
 |---|---|---|---|---|---|
@@ -241,7 +241,7 @@ Mehr (/mehr)                                           R1
 | S-28 | Körpergewicht | `/fortschritt/gewicht` | M3 | Kennzahlen, Diagramm C-01 mit Zeitraum, Tabellenansicht, Liste nach Monaten | Erfassen, Bearbeiten, Löschen | Leer; unter drei Einträgen kein Trend | AK-BW-01 bis AK-BW-06 |
 | S-41 | Gewicht erfassen | Sheet | M3 | Gewicht, Datum, Uhrzeit, Notiz | Speichern, Löschen (bei Bearbeitung) | Plausibilitätshinweis | AK-BW-01, AK-BW-02, AK-BW-04 |
 | S-48 | Mehr | `/mehr` | M0 | Profil und Ziele, Einstellungen, Daten und Sicherung, Installieren, Über | Öffnen | – | AK-UX-01 |
-| S-33 | Profil und Ziele | `/mehr/profil` | M3 | Anzeigename, Zielgewicht, Wochenziel, Zielhistorie | Ändern, Entfernen | – | AK-SET-01, AK-SET-05 |
+| S-33 | Profil und Ziele | `/mehr/profil` | M3 (umgesetzt 18.10.2026, D-254) | Anzeigename, Zielgewicht, Wochenziel, Zielhistorie | Ändern, Entfernen | – | AK-SET-01, AK-SET-05 |
 | S-34 | Einstellungen | `/mehr/einstellungen` | M0 (Darstellung, Formatierung), M1, M3, M4 | Training, Darstellung, Hinweis zur Sprache und Formatierung | Umschalten, Werte ändern | Wake Lock nicht verfügbar: Erklärung | AK-SET-02 bis AK-SET-04, AK-TRN-13 |
 | S-35 | Daten und Sicherung | `/mehr/daten` | M1, M2, M4 | Speicherstatus, Export, Import, Snapshots, Fehlerprotokoll, Alle Daten löschen | Exportieren, Importieren, Wiederherstellen, Löschen | – | AK-DAT-01 bis AK-DAT-10, AK-PWA-05 |
 | S-45 | Import-Assistent | Sheet bzw. Dialog | M2, M4 | Datei wählen, Prüfung, Vorschau mit Anzahl je Typ, Modus, Bericht | Zusammenführen, Ersetzen, Abbrechen | Ungültige Datei mit Grund | AK-DAT-02 bis AK-DAT-05 |

@@ -53,6 +53,7 @@ export const APP_PAGES = [
   '/fortschritt',
   '/fortschritt/gewicht',
   '/mehr',
+  '/mehr/profil',
   '/mehr/einstellungen',
   '/mehr/daten',
   '/mehr/installieren',

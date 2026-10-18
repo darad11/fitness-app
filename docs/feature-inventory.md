@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Ziele, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): ON-07, ON-18, TH-08, BP-06 (D-254). ON-01 und ON-11 (Profil ohne Konto, Anzeigename) ebenfalls „Implementiert"; ON-14 bleibt bis zum Programmwechsel-Dialog in M2.
 - Version 0.5 (Schritt F, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): AH-03, AH-04 (täglich), AH-05 (Serie für Tagesaufgaben, D-253). TH-04 (Serie für Trainings) bleibt offen.
 - Version 0.5 (Schritt E, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; Diagramme hell und dunkel per Bildschirmfoto geprüft): BP-01, BP-02 (ohne Ziellinie), TH-02 (Übungsverlauf unter `/fortschritt/uebung/:id`, Übungsdetail folgt in M2), TH-05, TH-06, TH-07 (Vergleich in Zusammenfassung und auf „Heute"), TS-18 (Kalorienschätzung nach MET, D-251). BP-06 und TH-08 bleiben, bis die Ziele (AP 3.3) umgesetzt sind.
 - Version 0.5 (Schritt D, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-08 (Übungstimer), TS-10 (Übung im Training ersetzen, mit Alternativen; D-250). TP-12 (Ersetzen im Plan) folgt mit dem Programm-Editor in M2.
@@ -71,34 +72,34 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 37 |
+| Implementiert | 43 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 37 |
-| Zur Umsetzung ausgewählt | 47 |
+| Zur Umsetzung ausgewählt | 41 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
 
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| ON-01 | Nutzung ohne Konto; lokales Profil mit optionalem Anzeigenamen | Pflicht-Registrierung mit E-Mail vor dem Quiz | SD 00:39; HC-G | V | OV | H | SY-01 | S | P0 | MVP | R1 · M3 | Anpassen: kein Konto; Anmeldung nur für Sync (D-113) | Zur Umsetzung ausgewählt | AK-SET-05 |
+| ON-01 | Nutzung ohne Konto; lokales Profil mit optionalem Anzeigenamen | Pflicht-Registrierung mit E-Mail vor dem Quiz | SD 00:39; HC-G | V | OV | H | SY-01 | S | P0 | MVP | R1 · M3 | Anpassen: kein Konto; Anmeldung nur für Sync (D-113) | Implementiert | AK-SET-05 |
 | ON-02 | Kurze Ersteinrichtung | Quiz mit 19 Schritten, danach Paywall | SD 01:12; GP | V | OV | M | ON-07; ON-18; TP-24; SY-14 | S | P1 | MVP | R1 · M3 | Anpassen: höchstens vier Schritte, alles überspringbar | Zur Umsetzung ausgewählt | AK-ONB-01 |
 | ON-03 | Zieltyp (Abnehmen, Halten, Aufbauen, Leistung) | Ziele im Quiz; Programme nach Zielen | HC-G; GP; WEB | V | OV | M | NU-01 | S | P2 | Später | R2 · M5 | Später: steuert das Kalorienziel; im MVP ergibt sich die Richtung aus dem Zielgewicht | Analysiert | Zieltyp datiert gespeichert; steuert die Kalorienanpassung |
 | ON-04 | Plausibilitätsprüfung für Zielgewicht und Zielrate | Warnung „Health risk!" bei zu ehrgeizigem Ziel | SD 01:58 | V | OV | M | ON-09; ON-18 | S | P2 | Später | R2 · M5 | Später: benötigt Größe und Zieldatum | Analysiert | Hinweis bei Zielrate über 1 % Körpergewicht pro Woche; keine Diagnose |
 | ON-05 | Trainingsniveau | Survey-Frage „experience"; Level-Tags an Programmen | HC-G; WEB | V | OV | N | – | S | P3 | Später | Backlog | Später: nur als Metadatum von Vorlagen | Analysiert | Niveau filtert Vorlagen |
 | ON-06 | Trainingsort und verfügbare Geräte | Home oder Gym, Geräte im Quiz | GP; HC-G | V | OV | M | TP-12 | M | P3 | Später | Backlog | Später: Filter für Übungsalternativen | Analysiert | Gerätefilter wirkt auf Alternativen und Bibliothek |
-| ON-07 | Wochenziel „Trainings pro Woche" | Trainingshäufigkeit nicht belegt | – | P | ON | H | TH-08 | S | P1 | MVP | R1 · M3 | Übernehmen als Wochenziel (D-220) | Zur Umsetzung ausgewählt | AK-SET-01, AK-DSH-05 |
+| ON-07 | Wochenziel „Trainings pro Woche" | Trainingshäufigkeit nicht belegt | – | P | ON | H | TH-08 | S | P1 | MVP | R1 · M3 | Übernehmen als Wochenziel (D-220) | Implementiert | AK-SET-01, AK-DSH-05 |
 | ON-08 | Ernährungspräferenzen und Ausschlüsse | Diätpräferenz im Quiz; laut Rezensionen nur wenige Optionen | HC-G; REV | V | OV | M | RE-01 | S | P2 | Später | R2 · M7 | Anpassen: frei definierbare Tags | Analysiert | Rezeptfilter respektieren Ausschlüsse |
 | ON-09 | Körperdaten für Formeln (Größe, Geburtsdatum, Geschlecht, Aktivität) | Gewicht und Alter im Quiz; Größe plausibel | GP; HC-G | V | OV | H | NU-01 | S | P1 | Später | R2 · M5 | Später: erst für die Kalorienberechnung nötig | Analysiert | Eingaben validiert; Formeln dokumentiert |
 | ON-10 | Programmempfehlung nach dem Quiz | Empfohlenes Programm oder Katalog | HC-Z | V | OV | N | – | M | – | Ausgeschlossen | – | Ausschließen: Auswahl trifft der Nutzer selbst | Analysiert | Entfällt |
-| ON-11 | Profil bearbeiten | „Profile & settings" | HC-G | V | OV | M | ON-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-SET-02, AK-SET-05 |
+| ON-11 | Profil bearbeiten | „Profile & settings" | HC-G | V | OV | M | ON-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-SET-02, AK-SET-05 |
 | ON-12 | Einheiten metrisch oder imperial | Einstellung „Units" | HC-G | V | OV | N | – | S | – | Ausgeschlossen | – | Ausschließen: nur metrisch (D-104); Umrechnung bleibt intern | Analysiert | Entfällt |
 | ON-13 | Erinnerungen und Benachrichtigungseinstellungen | Workout-Reminder; tägliche Motivationsnachrichten | AS 3.1.4; WEB | V | OV | M | Web Push; Server | L | P3 | Später | R5 | Später: nur installierte Web-App, Server nötig | Analysiert | Push nach Einwilligung; iOS nur installiert ab 16.4 |
 | ON-14 | Programm wechseln, Ziel ändern | Menü, „Change workout plan", neues Ziel, Programm wählen | HC-Z | V | OV | H | TP-19; ON-18 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-07, AK-SET-01 |
 | ON-15 | Alle Daten löschen | Konto löschen ist permanent | WEB; REV | V | OV | H | SY-11 | S | P1 | MVP | R1 · M4 | Anpassen: lokal im MVP, Cloud-Daten ab R3 | Zur Umsetzung ausgewählt | AK-DAT-10 |
 | ON-16 | Abo, Testphase, Paywall | 7 Tage Testphase, harte Paywall nach dem Quiz | AS; SD 02:38 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
 | ON-17 | Referral-Programm und Sweat Equity | Credits durch Nutzung, anrechenbar auf die Mitgliedschaft | AS 3.4.0; AS 3.4.2 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
-| ON-18 | Zielgewicht festlegen | Zielgewicht im Quiz mit Warnung | SD 01:58 | V | OV | H | BP-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-SET-01, AK-DSH-06, AK-BW-05 |
+| ON-18 | Zielgewicht festlegen | Zielgewicht im Quiz mit Warnung | SD 01:58 | V | OV | H | BP-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-SET-01, AK-DSH-06, AK-BW-05 |
 
 ## B. Trainingsplanung (TP)
 
@@ -174,7 +175,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-07 |
 | TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-06 |
 | TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-TRN-20, AK-DSH-04 |
-| TH-08 | Fortschritt zum Wochenziel | Nicht belegt | – | P | ON | M | ON-07 | S | P1 | MVP | R1 · M3 | Übernehmen (D-220) | Zur Umsetzung ausgewählt | AK-DSH-05 |
+| TH-08 | Fortschritt zum Wochenziel | Nicht belegt | – | P | ON | M | ON-07 | S | P1 | MVP | R1 · M3 | Übernehmen (D-220) | Implementiert | AK-DSH-05 |
 
 ## E. Ernährung (NU)
 
@@ -235,7 +236,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | BP-03 | Körpermaße | Nicht belegt | – | P | ON | M | – | S | P2 | Später | R4 · M12 | Später | Analysiert | Umfänge in cm mit Verlauf |
 | BP-04 | Körperfett, optional | Nicht belegt | – | P | ON | N | – | S | P3 | Später | R4 · M12 | Später | Analysiert | Prozentwert mit Messmethode |
 | BP-05 | Fortschrittsfotos, lokal | „progress photo library" (Rezension); Fotos für Challenges | REV; TC | V | OV | M | Gerätespeicher | L | P2 | Später | R4 · M12 | Später: lokal (D-114); Cloud in R5 | Analysiert | Lokal komprimiert; Vergleich; Export; vollständige Löschung |
-| BP-06 | Fortschritt zum Zielgewicht | Zielgewicht im Onboarding | SD 01:58 | V | OV | M | ON-18 | S | P1 | MVP | R1 · M3 | Übernehmen | Zur Umsetzung ausgewählt | AK-DSH-06, AK-BW-05 |
+| BP-06 | Fortschritt zum Zielgewicht | Zielgewicht im Onboarding | SD 01:58 | V | OV | M | ON-18 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-DSH-06, AK-BW-05 |
 | BP-07 | Wochen- und Monatsauswertung | Nicht belegt | – | P | ON | M | TH-06 | M | P2 | Später | R4 · M12 | Später | Analysiert | Zusammenfassung pro Woche aus echten Daten |
 | BP-08 | Persönliche Notizen pro Tag | Nicht belegt | – | P | ON | N | – | S | P3 | Später | Backlog | Später | Analysiert | Freitext pro Tag |
 

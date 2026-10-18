@@ -1,6 +1,6 @@
 # Änderungsprotokoll der Dokumentation
 
-## Version 0.6 · 18.10.2026 · Schritte B bis F: Bibliothek, Programme A, B, C, aktives Programm, Player, Fortschritt, Tagesaufgaben
+## Version 0.6 · 18.10.2026 · Schritte B bis F und Ziele: Bibliothek, Programme A, B, C, aktives Programm, Player, Fortschritt, Tagesaufgaben, Ziele
 
 Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufband Tag 14, Studio, Beinpresse, drei Sätze von Beginn an, Rotation, Kalorien, Tagesaufgaben).
 
@@ -14,7 +14,10 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
 | `implementation-plan.md` | Stand Erweiterungsplan; AP 2.3 teilweise vorgezogen; nächste Schritte |
 | `feature-inventory.md` | TP-17, TP-19, TP-21 auf „Implementiert“ |
-| `testing.md` | Ergebnisse Schritt B bis F |
+| `testing.md` | Ergebnisse Schritt B bis F und Ziele |
+| `decisions.md` (Ziele) | D-254 Ziele und Profil |
+| `feature-inventory.md` (Ziele) | ON-07, ON-18, TH-08, BP-06 auf „Implementiert“ |
+| `implementation-plan.md`, `design-system.md` (Ziele) | AP 3.3 umgesetzt, AP 3.4 Stand, S-33 |
 | `decisions.md` (Schritt F) | D-253 Tagesaufgaben, Serie, Dexie v2, Motivationstexte |
 | `requirements.md` (Schritt F) | Abschnitt 6.12 Tagesaufgaben: AK-HAB-01, AK-HAB-02; Gerätetests jetzt 6.13 |
 | `feature-inventory.md` (Schritt F) | AH-03, AH-04, AH-05 auf „Implementiert“ |

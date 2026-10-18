@@ -1,5 +1,6 @@
 import { Plus, Scale } from 'lucide-react';
 import { lazy, Suspense, useMemo, useState } from 'react';
+import { changeTone, useActiveGoals, weightToGoal } from '@/modules/goals';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -42,6 +43,7 @@ export function BodyWeightPage() {
   const rt = useDb();
   const fmt = useFormatters();
   const entries = useBodyWeights();
+  const goals = useActiveGoals();
   const now = useToday();
   const [period, setPeriod] = useState<WeightPeriod>('90d');
   const [table, setTable] = useState(false);
@@ -55,6 +57,9 @@ export function BodyWeightPage() {
   const points = useMemo(() => withTrend(scoped), [scoped]);
   const change = changeInPeriod(scoped);
   const latest = entries?.[0];
+  const goalKg = goals?.bodyWeightKg;
+  const tone = latest && change !== null ? changeTone(change, latest.weightKg, goalKg) : 'neutral';
+  const toGoal = latest && goalKg !== undefined ? weightToGoal(latest.weightKg, goalKg) : null;
   const formatWeight = (value: number) =>
     fmt.number(value, { maximumFractionDigits: 1, minimumFractionDigits: 1 });
 
@@ -129,7 +134,24 @@ export function BodyWeightPage() {
               label={t.body.changeLabel(t.body.periods[period])}
               value={change === null ? '–' : `${change > 0 ? '+' : ''}${formatWeight(change)}`}
               unit={change === null ? undefined : 'kg'}
-              hint={change === null ? t.body.changeHint : undefined}
+              hint={
+                change === null
+                  ? t.body.changeHint
+                  : toGoal && goalKg !== undefined
+                    ? toGoal.reached
+                      ? t.goals.goalReached(`${formatWeight(goalKg)} kg`)
+                      : toGoal.diffKg > 0
+                        ? t.goals.toGoal(
+                            `${formatWeight(toGoal.diffKg)} kg`,
+                            `${formatWeight(goalKg)} kg`,
+                          )
+                        : t.goals.toGoalUp(
+                            `${formatWeight(-toGoal.diffKg)} kg`,
+                            `${formatWeight(goalKg)} kg`,
+                          )
+                    : undefined
+              }
+              className={tone === 'toward' ? '[&_dd>span:first-child]:text-success' : undefined}
             />
           </dl>
           <Card title={t.body.chartTitle}>
@@ -174,7 +196,7 @@ export function BodyWeightPage() {
               </table>
             ) : (
               <Suspense fallback={<Skeleton className="h-60" />}>
-                <WeightChart points={points} formatWeight={formatWeight} />
+                <WeightChart points={points} formatWeight={formatWeight} goalKg={goalKg} />
               </Suspense>
             )}
             {scoped.length > 0 && scoped.length < 3 ? (

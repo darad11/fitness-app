@@ -117,7 +117,7 @@ interface Session extends Root {
 }
 interface SessionExercise extends Child {
   exerciseId: string; nameSnapshot: string;
-  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time';
+  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time' | 'time_distance' | 'assisted_reps';  // D-241
   restSec?: number; notes?: string;
   replacedFromExerciseId?: string;                 // ursprünglich geplante Übung
   group?: { id: string; type: 'superset' | 'circuit' };     // reserviert (R4)
@@ -126,8 +126,8 @@ interface SessionExercise extends Child {
 interface SessionSet extends Child {
   type: 'warmup' | 'working' | 'drop';
   parentSetId?: string;                            // Pflicht bei 'drop'
-  target?: { repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number };
-  actual: { weightKg?: number; reps?: number; durationSec?: number; rpe?: number };  // rpe reserviert (R4)
+  target?: { repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number; distanceM?: number; assistKg?: number };
+  actual: { weightKg?: number; reps?: number; durationSec?: number; distanceM?: number; assistKg?: number; rpe?: number };  // rpe reserviert (R4); distanceM, assistKg D-241
   status: 'planned' | 'done' | 'skipped';
   completedAt?: string;
   restSec?: number;
@@ -161,6 +161,7 @@ interface PlannedExercise extends Child {
 interface PlannedSet extends Child {
   type: 'warmup' | 'working' | 'drop'; parentSetId?: string;
   repsMin?: number; repsMax?: number; weightKg?: number; durationSec?: number;
+  distanceM?: number; assistKg?: number;           // D-241
   restSec?: number; rpeTarget?: number;            // rpeTarget reserviert (R4)
 }
 ```
@@ -186,8 +187,9 @@ interface CustomExercise extends Root {            // Typ 'exercise'
   primaryMuscles: Muscle[]; secondaryMuscles: Muscle[];
   equipment: Equipment[];
   category: 'strength' | 'cardio' | 'mobility' | 'core';
-  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time';
+  trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time' | 'time_distance' | 'assisted_reps';  // D-241
   isUnilateral?: boolean; instructions?: string[];
+  distanceUnit?: 'm' | 'km';                      // Eingabe und Anzeige bei time_distance (D-241)
   archivedAt?: string;
 }
 interface ExercisePref extends Root {              // Typ 'exercise_pref', ID = UUID v5 aus der Übungs-ID

@@ -113,7 +113,7 @@ Niveau fortgeschritten · Studio · 1 Woche: Push, Pull, Beine · wiederholen (b
 |---|---|---|---|
 | Klimmzüge | 1 Aufwärmen + 4 | 6–10 | 150 s |
 | Rudern mit Langhantel, vorgebeugt | 3 | 6–8 | 150 s |
-| Rudern am Kabel, enger Griff | 3 | 10–12 | 120 s |
+| Rudern am Kabel, sitzend | 3 | 10–12 | 120 s |
 | Face Pulls am Kabel | 3 | 12–15 | 60 s |
 | Bizepscurls mit Langhantel | 3 | 8–10 | 75 s |
 | Hammercurls | 2 | 10–12 | 60 s |
@@ -173,7 +173,7 @@ Niveau Einsteiger · Zuhause (Kurzhanteln, optional Bank, Körpergewicht) · 1 W
 
 ### 5.1 Umfang
 
-Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen für die Suche, Haupt- und Nebenmuskeln, Geräten, Kategorie und Erfassungsart. Alle Übungen der Beispielvorlagen (rund 40) sind enthalten. Die vollständige Liste steht als Entwurf in `exercise-library.md` und wird vom Produktinhaber durchgesehen (Q-05).
+Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen für die Suche, Haupt- und Nebenmuskeln, Geräten, Kategorie und Erfassungsart. Alle Übungen der Beispielvorlagen (39 nach der Durchsicht) sind enthalten. Die vollständige Liste steht in `exercise-library.md`; der Produktinhaber hat sie am 18.10.2026 durchgesehen (Q-05).
 
 | Gruppe | Richtwert |
 |---|---|
@@ -214,7 +214,7 @@ Zielgröße 100 bis 110 Übungen mit deutschen Namen, englischen Alias-Namen fü
 | `calves` | Waden | | | |
 | `full_body` | Ganzkörper | | | |
 
-Erfassungsarten: `weight_reps` (Gewicht × Wiederholungen; bei Körpergewichtsübungen Zusatzgewicht), `reps` (nur Wiederholungen), `time` (Dauer), `weight_time` (Gewicht × Dauer, z. B. Farmer's Walk).
+Erfassungsarten: `weight_reps` (Gewicht × Wiederholungen; bei Körpergewichtsübungen Zusatzgewicht), `reps` (nur Wiederholungen), `time` (Dauer), `weight_time` (Gewicht × Dauer, z. B. Farmer's Walk), `time_distance` (Dauer und Distanz, Cardiogeräte) und `assisted_reps` (Entlastung × Wiederholungen, z. B. Klimmzüge mit Unterstützung); die letzten beiden seit der Durchsicht (D-241).
 
 ### 5.3 Pflege
 

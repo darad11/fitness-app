@@ -1,0 +1,2106 @@
+{
+  "version": 1,
+  "exercises": [
+    {
+      "key": "bench_press_barbell",
+      "name": "Bankdrücken mit Langhantel",
+      "group": "chest",
+      "aliases": [
+        "Bench Press",
+        "Flachbankdrücken"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "front_delts"
+      ],
+      "equipment": [
+        "barbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "bench_press_dumbbell",
+      "name": "Bankdrücken mit Kurzhanteln",
+      "group": "chest",
+      "aliases": [
+        "Dumbbell Bench Press",
+        "KH-Bankdrücken"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "front_delts"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "incline_bench_press_barbell",
+      "name": "Schrägbankdrücken mit Langhantel",
+      "group": "chest",
+      "aliases": [
+        "Incline Bench Press"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts",
+        "triceps"
+      ],
+      "equipment": [
+        "barbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "incline_bench_press_dumbbell",
+      "name": "Schrägbankdrücken mit Kurzhanteln",
+      "group": "chest",
+      "aliases": [
+        "Incline Dumbbell Press"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts",
+        "triceps"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "bench_press_smith",
+      "name": "Bankdrücken an der Multipresse",
+      "group": "chest",
+      "aliases": [
+        "Smith Machine Bench Press"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "front_delts"
+      ],
+      "equipment": [
+        "smith",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "chest_press_machine",
+      "name": "Brustpresse an der Maschine",
+      "group": "chest",
+      "aliases": [
+        "Chest Press",
+        "Brustpresse"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "front_delts"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "floor_press_dumbbell",
+      "name": "Bodendrücken mit Kurzhanteln",
+      "group": "chest",
+      "aliases": [
+        "Dumbbell Floor Press",
+        "Floor Press"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "fly_dumbbell",
+      "name": "Fliegende mit Kurzhanteln",
+      "group": "chest",
+      "aliases": [
+        "Dumbbell Fly",
+        "Flys"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "cable_fly",
+      "name": "Fliegende am Kabel",
+      "group": "chest",
+      "aliases": [
+        "Cable Fly",
+        "Cable Crossover",
+        "Kabelziehen über Kreuz"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "pec_deck",
+      "name": "Butterfly an der Maschine",
+      "group": "chest",
+      "aliases": [
+        "Pec Deck",
+        "Butterfly"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "push_up",
+      "name": "Liegestütze",
+      "group": "chest",
+      "aliases": [
+        "Push-up",
+        "Liegestütz"
+      ],
+      "primaryMuscles": [
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "front_delts",
+        "abs"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "deadlift_barbell",
+      "name": "Kreuzheben mit Langhantel",
+      "group": "back",
+      "aliases": [
+        "Deadlift"
+      ],
+      "primaryMuscles": [
+        "lower_back",
+        "glutes",
+        "hamstrings"
+      ],
+      "secondaryMuscles": [
+        "quads",
+        "traps",
+        "forearms"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "pull_up",
+      "name": "Klimmzüge",
+      "group": "back",
+      "aliases": [
+        "Pull-up",
+        "Klimmzug",
+        "Obergriff"
+      ],
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "upper_back"
+      ],
+      "equipment": [
+        "pullup_bar"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "assisted_pull_up",
+      "name": "Klimmzüge mit Unterstützung",
+      "group": "back",
+      "aliases": [
+        "Assisted Pull-up",
+        "Klimmzugmaschine",
+        "Gravitron"
+      ],
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "upper_back"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "assisted_reps"
+    },
+    {
+      "key": "chin_up",
+      "name": "Klimmzüge im Untergriff",
+      "group": "back",
+      "aliases": [
+        "Chin-up",
+        "Untergriff"
+      ],
+      "primaryMuscles": [
+        "lats",
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "upper_back"
+      ],
+      "equipment": [
+        "pullup_bar"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "lat_pulldown",
+      "name": "Latziehen",
+      "group": "back",
+      "aliases": [
+        "Lat Pulldown",
+        "Latzug"
+      ],
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "upper_back"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "lat_pulldown_close",
+      "name": "Latziehen, enger Griff",
+      "group": "back",
+      "aliases": [
+        "Close-Grip Lat Pulldown",
+        "V-Griff"
+      ],
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "upper_back"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "seated_cable_row",
+      "name": "Rudern am Kabel, sitzend",
+      "group": "back",
+      "aliases": [
+        "Seated Cable Row",
+        "Kabelrudern",
+        "enger Griff",
+        "Close-Grip Cable Row"
+      ],
+      "primaryMuscles": [
+        "upper_back",
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "rear_delts"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "bent_over_row_barbell",
+      "name": "Rudern mit Langhantel, vorgebeugt",
+      "group": "back",
+      "aliases": [
+        "Barbell Row",
+        "Bent-over Row",
+        "Langhantelrudern"
+      ],
+      "primaryMuscles": [
+        "upper_back",
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "rear_delts",
+        "lower_back"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "bent_over_row_dumbbell",
+      "name": "Rudern mit Kurzhanteln, vorgebeugt",
+      "group": "back",
+      "aliases": [
+        "Dumbbell Bent-over Row"
+      ],
+      "primaryMuscles": [
+        "upper_back",
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "rear_delts"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "one_arm_row_dumbbell",
+      "name": "Einarmiges Rudern mit Kurzhantel",
+      "group": "back",
+      "aliases": [
+        "One-Arm Dumbbell Row",
+        "Kurzhantelrudern"
+      ],
+      "primaryMuscles": [
+        "lats",
+        "upper_back"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "rear_delts"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "t_bar_row",
+      "name": "T-Bar-Rudern",
+      "group": "back",
+      "aliases": [
+        "T-Bar Row"
+      ],
+      "primaryMuscles": [
+        "upper_back",
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "rear_delts",
+        "lower_back"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "machine_row",
+      "name": "Rudern an der Maschine",
+      "group": "back",
+      "aliases": [
+        "Machine Row",
+        "Chest-supported Row"
+      ],
+      "primaryMuscles": [
+        "upper_back",
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "biceps",
+        "rear_delts"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "straight_arm_pulldown",
+      "name": "Überzüge am Kabel",
+      "group": "back",
+      "aliases": [
+        "Straight-Arm Pulldown",
+        "Pullover am Kabel"
+      ],
+      "primaryMuscles": [
+        "lats"
+      ],
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "back_extension",
+      "name": "Rückenstrecken",
+      "group": "back",
+      "aliases": [
+        "Back Extension",
+        "Hyperextension",
+        "Hyperextensions"
+      ],
+      "primaryMuscles": [
+        "lower_back"
+      ],
+      "secondaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "shrug_dumbbell",
+      "name": "Schulterheben mit Kurzhanteln",
+      "group": "back",
+      "aliases": [
+        "Dumbbell Shrug",
+        "Shrugs"
+      ],
+      "primaryMuscles": [
+        "traps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "overhead_press_barbell",
+      "name": "Schulterdrücken mit Langhantel, stehend",
+      "group": "shoulders",
+      "aliases": [
+        "Overhead Press",
+        "OHP",
+        "Military Press"
+      ],
+      "primaryMuscles": [
+        "front_delts"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "side_delts"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "shoulder_press_dumbbell_seated",
+      "name": "Schulterdrücken mit Kurzhanteln, sitzend",
+      "group": "shoulders",
+      "aliases": [
+        "Seated Dumbbell Shoulder Press"
+      ],
+      "primaryMuscles": [
+        "front_delts"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "side_delts"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "shoulder_press_machine",
+      "name": "Schulterdrücken an der Maschine",
+      "group": "shoulders",
+      "aliases": [
+        "Machine Shoulder Press"
+      ],
+      "primaryMuscles": [
+        "front_delts"
+      ],
+      "secondaryMuscles": [
+        "triceps",
+        "side_delts"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "arnold_press",
+      "name": "Arnold Press mit Kurzhanteln",
+      "group": "shoulders",
+      "aliases": [
+        "Arnold Press",
+        "Arnold-Drücken"
+      ],
+      "primaryMuscles": [
+        "front_delts",
+        "side_delts"
+      ],
+      "secondaryMuscles": [
+        "triceps"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "lateral_raise_dumbbell",
+      "name": "Seitheben mit Kurzhanteln",
+      "group": "shoulders",
+      "aliases": [
+        "Lateral Raise"
+      ],
+      "primaryMuscles": [
+        "side_delts"
+      ],
+      "secondaryMuscles": [
+        "traps"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "lateral_raise_cable",
+      "name": "Seitheben am Kabel",
+      "group": "shoulders",
+      "aliases": [
+        "Cable Lateral Raise"
+      ],
+      "primaryMuscles": [
+        "side_delts"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "front_raise_dumbbell",
+      "name": "Frontheben mit Kurzhanteln",
+      "group": "shoulders",
+      "aliases": [
+        "Front Raise"
+      ],
+      "primaryMuscles": [
+        "front_delts"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "reverse_fly_dumbbell",
+      "name": "Reverse Flys mit Kurzhanteln",
+      "group": "shoulders",
+      "aliases": [
+        "Reverse Fly",
+        "Rear Delt Fly",
+        "vorgebeugtes Seitheben"
+      ],
+      "primaryMuscles": [
+        "rear_delts"
+      ],
+      "secondaryMuscles": [
+        "upper_back"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "reverse_pec_deck",
+      "name": "Reverse Butterfly an der Maschine",
+      "group": "shoulders",
+      "aliases": [
+        "Reverse Pec Deck"
+      ],
+      "primaryMuscles": [
+        "rear_delts"
+      ],
+      "secondaryMuscles": [
+        "upper_back"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "face_pull",
+      "name": "Face Pulls am Kabel",
+      "group": "shoulders",
+      "aliases": [
+        "Face Pull"
+      ],
+      "primaryMuscles": [
+        "rear_delts"
+      ],
+      "secondaryMuscles": [
+        "upper_back",
+        "traps"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "biceps_curl_barbell",
+      "name": "Bizepscurls mit Langhantel",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Barbell Curl",
+        "Langhantelcurls"
+      ],
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "biceps_curl_dumbbell",
+      "name": "Bizepscurls mit Kurzhanteln",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Dumbbell Curl",
+        "Kurzhantelcurls"
+      ],
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "biceps_curl_ez_bar",
+      "name": "Bizepscurls mit SZ-Stange",
+      "group": "biceps_forearms",
+      "aliases": [
+        "EZ-Bar Curl",
+        "SZ-Curls"
+      ],
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": [
+        "ez_bar"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "hammer_curl",
+      "name": "Hammercurls",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Hammer Curl"
+      ],
+      "primaryMuscles": [
+        "biceps",
+        "forearms"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "preacher_curl",
+      "name": "Scottcurls",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Preacher Curl",
+        "Larry-Scott-Curls"
+      ],
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "ez_bar",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "biceps_curl_cable",
+      "name": "Bizepscurls am Kabel",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Cable Curl"
+      ],
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [
+        "forearms"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "incline_curl_dumbbell",
+      "name": "Schrägbank-Curls mit Kurzhanteln",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Incline Dumbbell Curl"
+      ],
+      "primaryMuscles": [
+        "biceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "wrist_curl",
+      "name": "Handgelenkcurls",
+      "group": "biceps_forearms",
+      "aliases": [
+        "Wrist Curl",
+        "Unterarmcurls"
+      ],
+      "primaryMuscles": [
+        "forearms"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "triceps_pushdown_cable",
+      "name": "Trizepsdrücken am Kabel",
+      "group": "triceps",
+      "aliases": [
+        "Triceps Pushdown",
+        "Pushdown"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "overhead_extension_cable",
+      "name": "Trizepsstrecken über Kopf am Kabel",
+      "group": "triceps",
+      "aliases": [
+        "Overhead Cable Triceps Extension"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "overhead_extension_dumbbell",
+      "name": "Trizepsstrecken über Kopf mit Kurzhantel",
+      "group": "triceps",
+      "aliases": [
+        "Dumbbell Overhead Triceps Extension"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "skull_crusher",
+      "name": "French Press mit SZ-Stange",
+      "group": "triceps",
+      "aliases": [
+        "Skull Crusher",
+        "Stirndrücken",
+        "Lying Triceps Extension"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "ez_bar",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "close_grip_bench_press",
+      "name": "Enges Bankdrücken",
+      "group": "triceps",
+      "aliases": [
+        "Close-Grip Bench Press"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [
+        "chest",
+        "front_delts"
+      ],
+      "equipment": [
+        "barbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "triceps_kickback",
+      "name": "Trizeps-Kickbacks mit Kurzhantel",
+      "group": "triceps",
+      "aliases": [
+        "Triceps Kickback"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "dip",
+      "name": "Dips",
+      "group": "triceps",
+      "aliases": [
+        "Barrendips",
+        "Dips am Barren"
+      ],
+      "primaryMuscles": [
+        "triceps",
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts"
+      ],
+      "equipment": [
+        "dip_station"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "assisted_dip",
+      "name": "Dips mit Unterstützung",
+      "group": "triceps",
+      "aliases": [
+        "Assisted Dip",
+        "Dipmaschine"
+      ],
+      "primaryMuscles": [
+        "triceps",
+        "chest"
+      ],
+      "secondaryMuscles": [
+        "front_delts"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "assisted_reps"
+    },
+    {
+      "key": "bench_dip",
+      "name": "Dips an der Bank",
+      "group": "triceps",
+      "aliases": [
+        "Bench Dip"
+      ],
+      "primaryMuscles": [
+        "triceps"
+      ],
+      "secondaryMuscles": [
+        "chest",
+        "front_delts"
+      ],
+      "equipment": [
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "plank",
+      "name": "Unterarmstütz (Plank)",
+      "group": "core",
+      "aliases": [
+        "Plank",
+        "Front Plank"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [
+        "lower_back"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "time"
+    },
+    {
+      "key": "side_plank",
+      "name": "Seitstütz",
+      "group": "core",
+      "aliases": [
+        "Side Plank"
+      ],
+      "primaryMuscles": [
+        "obliques"
+      ],
+      "secondaryMuscles": [
+        "abs"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "time",
+      "isUnilateral": true
+    },
+    {
+      "key": "crunch",
+      "name": "Crunches",
+      "group": "core",
+      "aliases": [
+        "Crunch"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "cable_crunch",
+      "name": "Crunches am Kabel, kniend",
+      "group": "core",
+      "aliases": [
+        "Cable Crunch"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cable"
+      ],
+      "category": "core",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "hanging_leg_raise",
+      "name": "Beinheben hängend",
+      "group": "core",
+      "aliases": [
+        "Hanging Leg Raise"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [
+        "obliques"
+      ],
+      "equipment": [
+        "pullup_bar"
+      ],
+      "category": "core",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "lying_leg_raise",
+      "name": "Beinheben liegend",
+      "group": "core",
+      "aliases": [
+        "Lying Leg Raise"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "russian_twist",
+      "name": "Russian Twist",
+      "group": "core",
+      "aliases": [
+        "Russian Twists"
+      ],
+      "primaryMuscles": [
+        "obliques"
+      ],
+      "secondaryMuscles": [
+        "abs"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "ab_wheel",
+      "name": "Bauchroller",
+      "group": "core",
+      "aliases": [
+        "Ab Wheel Rollout",
+        "Ab Roller"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [
+        "lats"
+      ],
+      "equipment": [
+        "other"
+      ],
+      "category": "core",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "dead_bug",
+      "name": "Dead Bug",
+      "group": "core",
+      "aliases": [
+        "Käfer"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "bird_dog",
+      "name": "Vierfüßlerstand diagonal (Bird Dog)",
+      "group": "core",
+      "aliases": [
+        "Bird Dog"
+      ],
+      "primaryMuscles": [
+        "lower_back"
+      ],
+      "secondaryMuscles": [
+        "abs",
+        "glutes"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "core",
+      "trackingMode": "reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "pallof_press",
+      "name": "Pallof Press am Kabel",
+      "group": "core",
+      "aliases": [
+        "Pallof Press",
+        "Anti-Rotation"
+      ],
+      "primaryMuscles": [
+        "obliques"
+      ],
+      "secondaryMuscles": [
+        "abs"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "core",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "hip_thrust_barbell",
+      "name": "Hip Thrust mit Langhantel",
+      "group": "glutes",
+      "aliases": [
+        "Hip Thrust",
+        "Hüftstoßen"
+      ],
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "barbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "hip_thrust_machine",
+      "name": "Hip Thrust an der Maschine",
+      "group": "glutes",
+      "aliases": [
+        "Machine Hip Thrust",
+        "Glute Drive"
+      ],
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "glute_bridge",
+      "name": "Hüftheben am Boden (Glute Bridge)",
+      "group": "glutes",
+      "aliases": [
+        "Glute Bridge"
+      ],
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "cable_kickback",
+      "name": "Kickbacks am Kabel",
+      "group": "glutes",
+      "aliases": [
+        "Cable Glute Kickback"
+      ],
+      "primaryMuscles": [
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "cable"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "step_up_dumbbell",
+      "name": "Step-ups mit Kurzhanteln",
+      "group": "glutes",
+      "aliases": [
+        "Step-up",
+        "Aufsteiger"
+      ],
+      "primaryMuscles": [
+        "glutes",
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "sumo_deadlift",
+      "name": "Kreuzheben Sumo mit Langhantel",
+      "group": "glutes",
+      "aliases": [
+        "Sumo Deadlift"
+      ],
+      "primaryMuscles": [
+        "glutes",
+        "adductors",
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "hamstrings",
+        "lower_back"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "reverse_lunge_dumbbell",
+      "name": "Ausfallschritte rückwärts mit Kurzhanteln",
+      "group": "glutes",
+      "aliases": [
+        "Reverse Lunge"
+      ],
+      "primaryMuscles": [
+        "glutes",
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "back_squat_barbell",
+      "name": "Kniebeuge mit Langhantel",
+      "group": "quads",
+      "aliases": [
+        "Back Squat",
+        "Squat"
+      ],
+      "primaryMuscles": [
+        "quads",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "adductors",
+        "lower_back"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "front_squat_barbell",
+      "name": "Frontkniebeuge mit Langhantel",
+      "group": "quads",
+      "aliases": [
+        "Front Squat"
+      ],
+      "primaryMuscles": [
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "glutes",
+        "abs"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "goblet_squat",
+      "name": "Goblet Squat",
+      "group": "quads",
+      "aliases": [
+        "Becherkniebeuge"
+      ],
+      "primaryMuscles": [
+        "quads",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "abs"
+      ],
+      "equipment": [
+        "dumbbell",
+        "kettlebell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "squat_smith",
+      "name": "Kniebeuge an der Multipresse",
+      "group": "quads",
+      "aliases": [
+        "Smith Machine Squat"
+      ],
+      "primaryMuscles": [
+        "quads",
+        "glutes"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "smith"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "leg_press",
+      "name": "Beinpresse",
+      "group": "quads",
+      "aliases": [
+        "Leg Press"
+      ],
+      "primaryMuscles": [
+        "quads",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "hack_squat",
+      "name": "Hackenschmidt-Kniebeuge",
+      "group": "quads",
+      "aliases": [
+        "Hack Squat"
+      ],
+      "primaryMuscles": [
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "bulgarian_split_squat_dumbbell",
+      "name": "Bulgarische Kniebeuge mit Kurzhanteln",
+      "group": "quads",
+      "aliases": [
+        "Bulgarian Split Squat"
+      ],
+      "primaryMuscles": [
+        "quads",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "lunge_dumbbell",
+      "name": "Ausfallschritte mit Kurzhanteln",
+      "group": "quads",
+      "aliases": [
+        "Dumbbell Lunge",
+        "Lunges"
+      ],
+      "primaryMuscles": [
+        "quads",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "hamstrings"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "leg_extension",
+      "name": "Beinstrecker",
+      "group": "quads",
+      "aliases": [
+        "Leg Extension"
+      ],
+      "primaryMuscles": [
+        "quads"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "wall_sit",
+      "name": "Wandsitzen",
+      "group": "quads",
+      "aliases": [
+        "Wall Sit"
+      ],
+      "primaryMuscles": [
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "strength",
+      "trackingMode": "time"
+    },
+    {
+      "key": "romanian_deadlift_barbell",
+      "name": "Rumänisches Kreuzheben mit Langhantel",
+      "group": "hamstrings",
+      "aliases": [
+        "Romanian Deadlift",
+        "RDL"
+      ],
+      "primaryMuscles": [
+        "hamstrings",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "lower_back"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "romanian_deadlift_dumbbell",
+      "name": "Rumänisches Kreuzheben mit Kurzhanteln",
+      "group": "hamstrings",
+      "aliases": [
+        "Dumbbell Romanian Deadlift",
+        "Dumbbell RDL"
+      ],
+      "primaryMuscles": [
+        "hamstrings",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "lower_back"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "single_leg_rdl_dumbbell",
+      "name": "Einbeiniges Rumänisches Kreuzheben mit Kurzhantel",
+      "group": "hamstrings",
+      "aliases": [
+        "Single-Leg RDL"
+      ],
+      "primaryMuscles": [
+        "hamstrings",
+        "glutes"
+      ],
+      "secondaryMuscles": [
+        "lower_back"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps",
+      "isUnilateral": true
+    },
+    {
+      "key": "lying_leg_curl",
+      "name": "Beinbeuger liegend",
+      "group": "hamstrings",
+      "aliases": [
+        "Lying Leg Curl"
+      ],
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "secondaryMuscles": [
+        "calves"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "seated_leg_curl",
+      "name": "Beinbeuger sitzend",
+      "group": "hamstrings",
+      "aliases": [
+        "Seated Leg Curl"
+      ],
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "good_morning",
+      "name": "Good Mornings mit Langhantel",
+      "group": "hamstrings",
+      "aliases": [
+        "Good Morning"
+      ],
+      "primaryMuscles": [
+        "hamstrings",
+        "lower_back"
+      ],
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": [
+        "barbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "nordic_curl",
+      "name": "Nordic Curls",
+      "group": "hamstrings",
+      "aliases": [
+        "Nordic Hamstring Curl"
+      ],
+      "primaryMuscles": [
+        "hamstrings"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "strength",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "standing_calf_raise",
+      "name": "Wadenheben stehend",
+      "group": "lower_leg",
+      "aliases": [
+        "Standing Calf Raise"
+      ],
+      "primaryMuscles": [
+        "calves"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "seated_calf_raise",
+      "name": "Wadenheben sitzend",
+      "group": "lower_leg",
+      "aliases": [
+        "Seated Calf Raise"
+      ],
+      "primaryMuscles": [
+        "calves"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "calf_press_leg_press",
+      "name": "Wadenheben an der Beinpresse",
+      "group": "lower_leg",
+      "aliases": [
+        "Calf Press",
+        "Leg Press Calf Raise"
+      ],
+      "primaryMuscles": [
+        "calves"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "hip_adduction_machine",
+      "name": "Adduktorenmaschine",
+      "group": "lower_leg",
+      "aliases": [
+        "Hip Adduction",
+        "Adduktoren"
+      ],
+      "primaryMuscles": [
+        "adductors"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "hip_abduction_machine",
+      "name": "Abduktorenmaschine",
+      "group": "lower_leg",
+      "aliases": [
+        "Hip Abduction",
+        "Abduktoren"
+      ],
+      "primaryMuscles": [
+        "abductors"
+      ],
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": [
+        "machine"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "lateral_band_walk",
+      "name": "Seitliches Gehen mit Widerstandsband",
+      "group": "lower_leg",
+      "aliases": [
+        "Lateral Band Walk",
+        "Monster Walk"
+      ],
+      "primaryMuscles": [
+        "abductors"
+      ],
+      "secondaryMuscles": [
+        "glutes"
+      ],
+      "equipment": [
+        "band"
+      ],
+      "category": "strength",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "kettlebell_swing",
+      "name": "Kettlebell Swing",
+      "group": "conditioning",
+      "aliases": [
+        "KB Swing"
+      ],
+      "primaryMuscles": [
+        "glutes",
+        "hamstrings"
+      ],
+      "secondaryMuscles": [
+        "lower_back",
+        "full_body"
+      ],
+      "equipment": [
+        "kettlebell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "thruster_dumbbell",
+      "name": "Thruster mit Kurzhanteln",
+      "group": "conditioning",
+      "aliases": [
+        "Dumbbell Thruster"
+      ],
+      "primaryMuscles": [
+        "full_body"
+      ],
+      "secondaryMuscles": [
+        "quads",
+        "front_delts"
+      ],
+      "equipment": [
+        "dumbbell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
+      "key": "farmers_walk",
+      "name": "Farmer's Walk",
+      "group": "conditioning",
+      "aliases": [
+        "Farmers Walk",
+        "Bauernlauf",
+        "Farmer Carry"
+      ],
+      "primaryMuscles": [
+        "forearms",
+        "traps"
+      ],
+      "secondaryMuscles": [
+        "full_body"
+      ],
+      "equipment": [
+        "dumbbell",
+        "kettlebell"
+      ],
+      "category": "strength",
+      "trackingMode": "weight_time"
+    },
+    {
+      "key": "burpee",
+      "name": "Burpees",
+      "group": "conditioning",
+      "aliases": [
+        "Burpee"
+      ],
+      "primaryMuscles": [
+        "full_body"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "cardio",
+      "trackingMode": "reps"
+    },
+    {
+      "key": "mountain_climber",
+      "name": "Bergsteiger (Mountain Climbers)",
+      "group": "conditioning",
+      "aliases": [
+        "Mountain Climber"
+      ],
+      "primaryMuscles": [
+        "abs"
+      ],
+      "secondaryMuscles": [
+        "full_body"
+      ],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "cardio",
+      "trackingMode": "time"
+    },
+    {
+      "key": "jumping_jack",
+      "name": "Hampelmann",
+      "group": "conditioning",
+      "aliases": [
+        "Jumping Jacks"
+      ],
+      "primaryMuscles": [
+        "full_body"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "bodyweight"
+      ],
+      "category": "cardio",
+      "trackingMode": "time"
+    },
+    {
+      "key": "jump_rope",
+      "name": "Seilspringen",
+      "group": "conditioning",
+      "aliases": [
+        "Jump Rope",
+        "Rope Skipping"
+      ],
+      "primaryMuscles": [
+        "calves"
+      ],
+      "secondaryMuscles": [
+        "full_body"
+      ],
+      "equipment": [
+        "other"
+      ],
+      "category": "cardio",
+      "trackingMode": "time"
+    },
+    {
+      "key": "rowing_machine",
+      "name": "Rudergerät",
+      "group": "conditioning",
+      "aliases": [
+        "Rowing Machine",
+        "Ruderergometer",
+        "Rower"
+      ],
+      "primaryMuscles": [
+        "full_body"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cardio_machine"
+      ],
+      "category": "cardio",
+      "trackingMode": "time_distance",
+      "distanceUnit": "m"
+    },
+    {
+      "key": "stationary_bike",
+      "name": "Fahrradergometer",
+      "group": "conditioning",
+      "aliases": [
+        "Stationary Bike",
+        "Heimtrainer",
+        "Indoor Bike"
+      ],
+      "primaryMuscles": [
+        "quads"
+      ],
+      "secondaryMuscles": [
+        "calves"
+      ],
+      "equipment": [
+        "cardio_machine"
+      ],
+      "category": "cardio",
+      "trackingMode": "time_distance",
+      "distanceUnit": "km"
+    },
+    {
+      "key": "treadmill",
+      "name": "Laufband",
+      "group": "conditioning",
+      "aliases": [
+        "Treadmill"
+      ],
+      "primaryMuscles": [
+        "full_body"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cardio_machine"
+      ],
+      "category": "cardio",
+      "trackingMode": "time_distance",
+      "distanceUnit": "km"
+    },
+    {
+      "key": "elliptical",
+      "name": "Crosstrainer",
+      "group": "conditioning",
+      "aliases": [
+        "Elliptical",
+        "Ellipsentrainer"
+      ],
+      "primaryMuscles": [
+        "full_body"
+      ],
+      "secondaryMuscles": [],
+      "equipment": [
+        "cardio_machine"
+      ],
+      "category": "cardio",
+      "trackingMode": "time_distance",
+      "distanceUnit": "km"
+    }
+  ]
+}

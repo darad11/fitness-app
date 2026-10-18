@@ -221,18 +221,22 @@ export interface ExerciseInfo {
   isUnilateral?: boolean;
 }
 
-/** Einheit aus einem Tag einer Beispielvorlage, ohne Kopie der Vorlage (S-49, AK-PRG-06). */
+/**
+ * Einheit aus einem Tag einer Vorlage, ohne Kopie der Vorlage (S-49, AK-PRG-06). Aus dem aktiven
+ * Programm gestartet ist die Quelle `program`, sonst `template` (D-249).
+ */
 export function planFromTemplateDay(
   template: SampleTemplate,
   weekIndex: number,
   dayIndex: number,
   lookup: (exerciseId: string) => ExerciseInfo | undefined,
+  source: 'program' | 'template' = 'template',
 ): StartInput {
   const week = template.weeks[weekIndex];
   const day = week?.days[dayIndex];
   if (!week || !day) throw new ItemNotFoundError('Trainingstag nicht gefunden');
   return {
-    source: 'template',
+    source,
     title: `${day.name} · ${template.name}`,
     program: {
       programId: template.id,

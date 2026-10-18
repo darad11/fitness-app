@@ -33,11 +33,11 @@ B. Trainingsplanung (TP);TP-13;Eigene Übungen;Nicht belegt;–;P;ON;H;TP-06;S;P
 B. Trainingsplanung (TP);TP-14;Eigenes Programm erstellen und bearbeiten;Nur Trainerprogramme (laut Rezensionen);REV;VF;EV;H;TP-03;L;P0;MVP;R1 · M2;Verbesserung (D-107);Zur Umsetzung ausgewählt;AK-PRG-01 bis AK-PRG-04, AK-PRG-10
 B. Trainingsplanung (TP);TP-15;Sätze im Plan hinzufügen und entfernen;Laut Rezensionen nicht möglich;REV;VF;EV;H;TP-08;S;P0;MVP;R1 · M2;Verbesserung;Zur Umsetzung ausgewählt;AK-PRG-04
 B. Trainingsplanung (TP);TP-16;Verpasste Einheiten nachholen, Tag frei wählen;Laut Rezensionen nur nach Zurücksetzen des Plans;REV;VF;EV;H;TP-21;S;P1;MVP;R1 · M2;Verbesserung über den Reihenfolge-Modus;Zur Umsetzung ausgewählt;AK-PRG-08
-B. Trainingsplanung (TP);TP-17;Vorschau aller Wochen und Tage;Laut Rezensionen nur der aktuelle Tag sichtbar;REV;VF;EV;M;TP-03;S;P1;MVP;R1 · M2;Verbesserung;Zur Umsetzung ausgewählt;AK-PRG-12
+B. Trainingsplanung (TP);TP-17;Vorschau aller Wochen und Tage;Laut Rezensionen nur der aktuelle Tag sichtbar;REV;VF;EV;M;TP-03;S;P1;MVP;R1 · M2;Verbesserung;Implementiert;AK-PRG-12
 B. Trainingsplanung (TP);TP-18;Progressionsvorschlag;Smart Weight Suggestion aus zuletzt erreichten Wiederholungen;"HC-G; WEB";V;OV;M;TH-02;M;P2;Später;R4 · M11;Später: transparente Regel (Double Progression);Spezifiziert;"Vorschlag mit sichtbarer Begründung; nie automatisch übernommen"
-B. Trainingsplanung (TP);TP-19;Programm aktivieren, beenden, neu starten;Zurücksetzen möglich;"REV; HC-Z";V-R;OV;M;TP-01;S;P1;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-PRG-07
+B. Trainingsplanung (TP);TP-19;Programm aktivieren, beenden, neu starten;Zurücksetzen möglich;"REV; HC-Z";V-R;OV;M;TP-01;S;P1;MVP;R1 · M2;Übernehmen;Implementiert;AK-PRG-07
 B. Trainingsplanung (TP);TP-20;Programmphasen und Deload-Wochen;Nicht belegt;–;P;ON;N;TP-03;M;P3;Später;Backlog;Später: über die Wochenstruktur abbildbar;Analysiert;Optional
-B. Trainingsplanung (TP);TP-21;Reihenfolge-Modus: nächster Trainingstag aus der Programmfolge;–;–;E;EV;H;TP-03;S;P0;MVP;R1 · M2;Verbesserung (D-214);Zur Umsetzung ausgewählt;AK-PRG-08, AK-DSH-02
+B. Trainingsplanung (TP);TP-21;Reihenfolge-Modus: nächster Trainingstag aus der Programmfolge;–;–;E;EV;H;TP-03;S;P0;MVP;R1 · M2;Verbesserung (D-214);Implementiert;AK-PRG-08, AK-DSH-02
 B. Trainingsplanung (TP);TP-22;Optionaler Wochentag je Trainingstag;–;–;E;EV;M;TP-21;S;P2;MVP;R1 · M2;Verbesserung;Zur Umsetzung ausgewählt;AK-PRG-09
 B. Trainingsplanung (TP);TP-23;Programm duplizieren;–;–;E;EV;H;TP-14;S;P1;MVP;R1 · M2;Verbesserung (D-107);Zur Umsetzung ausgewählt;AK-PRG-05
 B. Trainingsplanung (TP);TP-24;Gekennzeichnete Beispielvorlagen;–;–;E;EV;M;TP-06;S;P0;MVP;R1 · M1;"Verbesserung (D-106); Inhalt in `sample-templates.md`";Zur Umsetzung ausgewählt;AK-PRG-06, AK-PWA-02

@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Schritt C, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-17 (Vorschau aller Wochen und Tage), TP-19 (Programm aktivieren und beenden; erneutes Aktivieren zählt von vorn), TP-21 (Reihenfolge-Modus mit „Heute geplant"). Gilt für die gebündelten Programme A, B, C (D-249); TP-01, TP-02 und TP-03 bleiben bis zu den eigenen Programmen in M2 „Zur Umsetzung ausgewählt".
 - Version 0.4 (AP 1.8): SY-04 bleibt „Zur Umsetzung ausgewählt" (Export umgesetzt, Import in M2 und M4); SY-11 unverändert (Snapshots entstehen, Oberfläche zum Wiederherstellen in M4).
 - Version 0.4 (AP 1.7): TH-01 bleibt „Zur Umsetzung ausgewählt" (Liste und Detail umgesetzt, Bearbeiten und Löschen in M2); CH-06 bleibt bis M3.
 - Version 0.4 (AP 1.6): „Implementiert": TS-25, SY-12 (Statusanzeige folgt mit AP 1.8).
@@ -67,10 +68,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 43 |
 | Getestet | 3 |
-| Implementiert | 22 |
+| Implementiert | 25 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 38 |
-| Zur Umsetzung ausgewählt | 56 |
+| Zur Umsetzung ausgewählt | 53 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -116,11 +117,11 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TP-14 | Eigenes Programm erstellen und bearbeiten | Nur Trainerprogramme (laut Rezensionen) | REV | VF | EV | H | TP-03 | L | P0 | MVP | R1 · M2 | Verbesserung (D-107) | Zur Umsetzung ausgewählt | AK-PRG-01 bis AK-PRG-04, AK-PRG-10 |
 | TP-15 | Sätze im Plan hinzufügen und entfernen | Laut Rezensionen nicht möglich | REV | VF | EV | H | TP-08 | S | P0 | MVP | R1 · M2 | Verbesserung | Zur Umsetzung ausgewählt | AK-PRG-04 |
 | TP-16 | Verpasste Einheiten nachholen, Tag frei wählen | Laut Rezensionen nur nach Zurücksetzen des Plans | REV | VF | EV | H | TP-21 | S | P1 | MVP | R1 · M2 | Verbesserung über den Reihenfolge-Modus | Zur Umsetzung ausgewählt | AK-PRG-08 |
-| TP-17 | Vorschau aller Wochen und Tage | Laut Rezensionen nur der aktuelle Tag sichtbar | REV | VF | EV | M | TP-03 | S | P1 | MVP | R1 · M2 | Verbesserung | Zur Umsetzung ausgewählt | AK-PRG-12 |
+| TP-17 | Vorschau aller Wochen und Tage | Laut Rezensionen nur der aktuelle Tag sichtbar | REV | VF | EV | M | TP-03 | S | P1 | MVP | R1 · M2 | Verbesserung | Implementiert | AK-PRG-12 |
 | TP-18 | Progressionsvorschlag | Smart Weight Suggestion aus zuletzt erreichten Wiederholungen | HC-G; WEB | V | OV | M | TH-02 | M | P2 | Später | R4 · M11 | Später: transparente Regel (Double Progression) | Spezifiziert | Vorschlag mit sichtbarer Begründung; nie automatisch übernommen |
-| TP-19 | Programm aktivieren, beenden, neu starten | Zurücksetzen möglich | REV; HC-Z | V-R | OV | M | TP-01 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-07 |
+| TP-19 | Programm aktivieren, beenden, neu starten | Zurücksetzen möglich | REV; HC-Z | V-R | OV | M | TP-01 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-PRG-07 |
 | TP-20 | Programmphasen und Deload-Wochen | Nicht belegt | – | P | ON | N | TP-03 | M | P3 | Später | Backlog | Später: über die Wochenstruktur abbildbar | Analysiert | Optional |
-| TP-21 | Reihenfolge-Modus: nächster Trainingstag aus der Programmfolge | – | – | E | EV | H | TP-03 | S | P0 | MVP | R1 · M2 | Verbesserung (D-214) | Zur Umsetzung ausgewählt | AK-PRG-08, AK-DSH-02 |
+| TP-21 | Reihenfolge-Modus: nächster Trainingstag aus der Programmfolge | – | – | E | EV | H | TP-03 | S | P0 | MVP | R1 · M2 | Verbesserung (D-214) | Implementiert | AK-PRG-08, AK-DSH-02 |
 | TP-22 | Optionaler Wochentag je Trainingstag | – | – | E | EV | M | TP-21 | S | P2 | MVP | R1 · M2 | Verbesserung | Zur Umsetzung ausgewählt | AK-PRG-09 |
 | TP-23 | Programm duplizieren | – | – | E | EV | H | TP-14 | S | P1 | MVP | R1 · M2 | Verbesserung (D-107) | Zur Umsetzung ausgewählt | AK-PRG-05 |
 | TP-24 | Gekennzeichnete Beispielvorlagen | – | – | E | EV | M | TP-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-106); Inhalt in `sample-templates.md` | Zur Umsetzung ausgewählt | AK-PRG-06, AK-PWA-02 |

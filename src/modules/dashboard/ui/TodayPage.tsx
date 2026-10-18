@@ -3,9 +3,11 @@ import { useMemo } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import {
+  ActiveProgramCard,
   formatClock,
   sessionDurationSec,
   sessionProgress,
+  useActiveProgram,
   useActiveSession,
   useStartSession,
 } from '@/modules/training';
@@ -35,8 +37,9 @@ function offlineStatus(pwa: PwaState): StatusItem {
 }
 
 /**
- * „Heute" (S-01): Bühne mit dem Einstieg ins Training, darunter Inhalt dieser Version und
- * echter Status. Programmkarte, letztes Training und Wochenziel folgen mit AP 1.7 und M3.
+ * „Heute" (S-01): Bühne mit der laufenden Einheit, sonst „Heute geplant" aus dem aktiven
+ * Programm (AK-DSH-02), sonst dem freien Einstieg; darunter Inhalt dieser Version und echter
+ * Status. Letztes Training und Wochenziel folgen mit M3.
  */
 export function TodayPage() {
   const formatters = useFormatters();
@@ -44,6 +47,7 @@ export function TodayPage() {
   const pwa = usePwaState();
   const platform = useMemo(() => currentPlatform(), []);
   const active = useActiveSession();
+  const program = useActiveProgram();
   const now = useToday(1000);
   const { start, error, busy } = useStartSession();
 
@@ -74,7 +78,7 @@ export function TodayPage() {
     <>
       <PageHeader eyebrow={formatters.weekdayDayMonth(today)} title={t.today.title} />
       <div className="grid gap-4 md:grid-cols-2">
-        {active === undefined ? (
+        {active === undefined || program === undefined ? (
           <div aria-busy="true" className="md:col-span-2">
             <Skeleton className="h-44" />
           </div>
@@ -109,6 +113,22 @@ export function TodayPage() {
               {t.training.resume}
             </ButtonLink>
           </Card>
+        ) : program ? (
+          <div className="md:col-span-2">
+            <ActiveProgramCard
+              program={program}
+              eyebrow={t.today.plannedEyebrow}
+              busy={busy}
+              onStart={(input) => {
+                void start(input);
+              }}
+            />
+            {error ? (
+              <p role="alert" className="mt-3 text-sm text-danger">
+                {error.message}
+              </p>
+            ) : null}
+          </div>
         ) : (
           <Card
             tone="ink"

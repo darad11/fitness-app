@@ -1,0 +1,3874 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "key": "compound_ab_4",
+      "program": true,
+      "name": "Ganzkörper A/B, 4 Tage",
+      "description": "Wiedereinstieg nach längerer Pause mit Grundübungen an Beinpresse, Kurzhanteln, Kabelzug und Maschinen. Zwei Einheiten im Wechsel (A, B, A, B), 8 Wochen, von Beginn an 3 Arbeitssätze. Steigerung: Wenn alle Arbeitssätze die obere Grenze erreichen, beim nächsten Mal einen Gewichtsschritt mehr. Keine Gewichtsvorgaben; der Player zeigt den letzten Wert.",
+      "level": "intermediate",
+      "location": "gym",
+      "daysPerWeek": "4",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Tag A",
+          "exercises": [
+            {
+              "exercise": "leg_press",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "shoulder_press_machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "Tag B",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lat_pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "crunch",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        }
+      ],
+      "weeks": [
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ],
+        [
+          "Tag A",
+          "Tag B",
+          "Tag A",
+          "Tag B"
+        ]
+      ]
+    },
+    {
+      "key": "ppl_rotation_4",
+      "program": true,
+      "name": "Push/Pull/Beine, rotierend",
+      "description": "Drei Einheiten Push, Pull und Beine auf vier Trainingstage je Woche verteilt. Die Reihenfolge läuft ohne Rücksetzung weiter: Woche 1 Push, Pull, Beine, Push; Woche 2 Pull, Beine, Push, Pull; Woche 3 Beine, Push, Pull, Beine; danach von vorn. So kommt jede Einheit in drei Wochen viermal dran. Klimmzüge an der Maschine mit Gegengewicht; ohne Unterstützung ersetzen, sobald es geht. Steigerung wie bei Ganzkörper A/B.",
+      "level": "intermediate",
+      "location": "gym",
+      "daysPerWeek": "4",
+      "repeat": true,
+      "days": [
+        {
+          "name": "Push",
+          "exercises": [
+            {
+              "exercise": "bench_press_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "dip",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            }
+          ]
+        },
+        {
+          "name": "Pull",
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 8
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "seated_cable_row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "face_pull",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "hammer_curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 60
+            }
+          ]
+        },
+        {
+          "name": "Beine",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 7
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hanging_leg_raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 60
+            }
+          ]
+        }
+      ],
+      "weeks": [
+        [
+          "Push",
+          "Pull",
+          "Beine",
+          "Push"
+        ],
+        [
+          "Pull",
+          "Beine",
+          "Push",
+          "Pull"
+        ],
+        [
+          "Beine",
+          "Push",
+          "Pull",
+          "Beine"
+        ]
+      ]
+    },
+    {
+      "key": "winter_arc_2026",
+      "program": true,
+      "name": "Winter Arc 2026 (Nachbau)",
+      "description": "Nachbau des Xeela-Programms „2026 Winter Arc“ aus der Aufnahme des Produktinhabers: 8 Wochen, 40 Trainingstage, 5 Tage je Woche mit zwei frei wählbaren Ruhetagen. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.",
+      "source": "Rekonstruktion aus der Aufnahme des Produktinhabers (docs/winter-arc-reconstruction.md)",
+      "level": "intermediate",
+      "location": "gym",
+      "daysPerWeek": "5",
+      "repeat": false,
+      "days": [
+        {
+          "name": "Tag 1 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Alternating Flat Dumbbell Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "t_bar_row",
+              "originalName": "T-Bar Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lat_pulldown_close",
+              "originalName": "Close Grip Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "pec_deck",
+              "originalName": "Chest Fly Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 4 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "shoulder_press_machine",
+              "originalName": "Machine Shoulder Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lateral_raise_cable",
+              "originalName": "Arm Cable Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Alternating Dumbbell Curl With Hold",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "wechselseitig, mit Halten"
+            },
+            {
+              "exercise": "close_grip_bench_press",
+              "originalName": "Close Grip Bench Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "biceps_curl_cable",
+              "originalName": "Cable Bayesian Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "Bayesian: Zug hinter dem Körper, einarmig"
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown (3-Second Eccentric)",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "3 s senken"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 5 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "originalName": "Barbell Back Squats",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "originalName": "Barbell Romanian Deadlift",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "goblet_squat",
+              "originalName": "Heel-Elevated Goblet Squats",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90,
+              "note": "Fersen erhöht"
+            },
+            {
+              "exercise": "cable_pull_through",
+              "originalName": "Cable Hip Hinge Pull-Throughs",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "bicycle_crunch",
+              "originalName": "Bicycles",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "crunch",
+              "originalName": "Crunches",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 6 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "lat_pulldown_single_arm",
+              "originalName": "Kneeling Single-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Chest Fly With Push",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "Zuordnung unsicher · Zuordnung unsicher"
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Spider Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "Brust auf der Schrägbank aufgelegt"
+            },
+            {
+              "exercise": "hammer_curl_cable",
+              "originalName": "Rope Hammer Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "push_up",
+              "originalName": "Close Grip Push-Up",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "enge Handstellung"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 7 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "originalName": "Dumbbell Romanian Deadlifts",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_press_single_leg",
+              "originalName": "Single Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "dead_bug",
+              "originalName": "Dead Bugs",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "heel_tap",
+              "originalName": "Heel Taps",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 10 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "bent_over_row_smith",
+              "originalName": "Smith Machine Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "straight_arm_pulldown",
+              "originalName": "Single-Arm Cable Pullover",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "note": "einarmig"
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Decline Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "von oben nach unten"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 11 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "front_raise_dumbbell",
+              "originalName": "Seated Front Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "sitzend"
+            },
+            {
+              "exercise": "reverse_fly_dumbbell",
+              "originalName": "Bent-Over Dumbbell Rear Delt Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "preacher_curl_dumbbell",
+              "originalName": "Dual Dumbbell Preacher Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "skull_crusher",
+              "originalName": "EZ Bar Skull Crushers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "incline_curl_dumbbell",
+              "originalName": "Incline Dumbbell Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_extension_cable_cross_body",
+              "originalName": "Cross-Body Cable Extensions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 12 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "leg_press",
+              "originalName": "Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "calf_press_leg_press",
+              "originalName": "Leg press Calf Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_pull_through",
+              "originalName": "Cable Hip Hinge Pull-Throughs",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Quad Extentions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_knee_raise",
+              "originalName": "Knee Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "Tag 13 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Alternating Incline Dumbbell Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "t_bar_row",
+              "originalName": "T-Bar Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lateral_raise_cable",
+              "originalName": "Arm Cable Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "reverse_curl_ez_bar",
+              "originalName": "Reverse Grip EZ Bar Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "skull_crusher",
+              "originalName": "Incline EZ Bar Skull Crushers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "auf der Schrägbank"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 14 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "originalName": "Barbell Romanian Deadlift",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Single-Leg Quad Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "einbeinig"
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "lying_leg_raise",
+              "originalName": "Leg Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "russian_twist",
+              "originalName": "Russian Twists",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 17 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Flat Dumbbell Bench Press (chest)",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "straight_arm_pulldown",
+              "originalName": "Straight-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "push_up",
+              "originalName": "Push-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_cable_row",
+              "originalName": "Underhand Cable Rows",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "restSec": 75,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen · Untergriff"
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Incline Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "von unten nach oben"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 18 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "shoulder_press_machine",
+              "originalName": "Machine Shoulder Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Spider Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "Brust auf der Schrägbank aufgelegt"
+            },
+            {
+              "exercise": "hammer_curl_cable",
+              "originalName": "Rope Hammer Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "skull_crusher_dumbbell",
+              "originalName": "Incline Dumbbell Skull Crushers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "auf der Schrägbank"
+            },
+            {
+              "exercise": "biceps_curl_cable",
+              "originalName": "Single-Arm High Cable Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "note": "hoher Zug, einarmig"
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Single Arm Cable Tricep Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "note": "einarmig"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 19 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "originalName": "Dumbbell Romanian Deadlifts",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "goblet_squat",
+              "originalName": "Heel-Elevated Goblet Squats",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen · Fersen erhöht"
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "sit_up",
+              "originalName": "Sit-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "windshield_wiper",
+              "originalName": "Windshield Wipers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 20 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "seated_cable_row",
+              "originalName": "Wide Grip Cable Rows",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "weiter Griff"
+            },
+            {
+              "exercise": "front_raise_cable",
+              "originalName": "Spider Cable Front Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60,
+              "note": "Brust auf der Schrägbank aufgelegt"
+            },
+            {
+              "exercise": "biceps_curl_cable",
+              "originalName": "Single-Arm High Cable Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "note": "hoher Zug, einarmig"
+            },
+            {
+              "exercise": "overhead_extension_cable",
+              "originalName": "Overhead Cable Tricep Extention",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 21 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "leg_press_single_leg",
+              "originalName": "Single Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "lying_leg_raise",
+              "originalName": "Leg Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "bicycle_crunch",
+              "originalName": "Bicycles",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 24 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "bent_over_row_smith",
+              "originalName": "Smith Machine Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Alternating Incline Dumbbell Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "restSec": 75,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "lat_pulldown_single_arm",
+              "originalName": "Kneeling Single-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "push_up",
+              "originalName": "Push-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lat_pulldown",
+              "originalName": "Wide Grip Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 25 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "shoulder_press_dumbbell_standing",
+              "originalName": "Standing Alternating Shoulder Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "lateral_raise_cable",
+              "originalName": "Arm Cable Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Alternating Dumbbell Curl With Hold",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "wechselseitig, mit Halten"
+            },
+            {
+              "exercise": "triceps_extension_cable_cross_body",
+              "originalName": "Cross-Body Cable Extensions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "hammer_curl_cable",
+              "originalName": "Rope Hammer Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "overhead_extension_dumbbell",
+              "originalName": "Seated Single-Arm Dumbbell Extensions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60,
+              "note": "sitzend, einarmig"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 26 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "leg_press",
+              "originalName": "Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "calf_press_leg_press",
+              "originalName": "Leg press Calf Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "originalName": "Barbell Romanian Deadlift",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "cable_pull_through",
+              "originalName": "Cable Hip Hinge Pull-Throughs",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Quad Extentions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "crunch",
+              "originalName": "Crunches",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 27 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Flat Dumbbell Bench Press (chest)",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lat_pulldown_close",
+              "originalName": "Close Grip Lat Pulldown",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "reverse_fly_dumbbell",
+              "originalName": "Bent-Over Dumbbell Rear Delt Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "preacher_curl_dumbbell",
+              "originalName": "Dual Dumbbell Preacher Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "overhead_extension_cable",
+              "originalName": "Overhead Cable Tricep Extention",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 28 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "originalName": "Dumbbell Romanian Deadlifts",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Single-Leg Quad Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "einbeinig"
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "heel_tap",
+              "originalName": "Heel Taps",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 31 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "t_bar_row",
+              "originalName": "T-Bar Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Decline Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "von oben nach unten"
+            },
+            {
+              "exercise": "lat_pulldown_single_arm",
+              "originalName": "Kneeling Single-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "pec_deck",
+              "originalName": "Chest Fly Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 32 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "shoulder_press_machine",
+              "originalName": "Machine Shoulder Press",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Seated Dumbbell Lateral Raise (with hold)",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "sitzend, mit Halten"
+            },
+            {
+              "exercise": "close_grip_bench_press",
+              "originalName": "Close Grip Bench Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "biceps_curl_cable",
+              "originalName": "Single-Arm High Cable Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "note": "hoher Zug, einarmig"
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown (3-Second Eccentric)",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "3 s senken"
+            },
+            {
+              "exercise": "incline_curl_dumbbell",
+              "originalName": "Incline Dumbbell Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 33 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "originalName": "Barbell Back Squats",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Single-Leg Quad Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "einbeinig"
+            },
+            {
+              "exercise": "cable_pull_through",
+              "originalName": "Cable Hip Hinge Pull-Throughs",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "standing_knee_raise",
+              "originalName": "Knee Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "russian_twist",
+              "originalName": "Russian Twists",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 34 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Alternating Flat Dumbbell Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "bent_over_row_smith",
+              "originalName": "Smith Machine Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Spider Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "Brust auf der Schrägbank aufgelegt"
+            },
+            {
+              "exercise": "reverse_curl_ez_bar",
+              "originalName": "Reverse Grip EZ Bar Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "triceps_extension_cable_cross_body",
+              "originalName": "Cross-Body Cable Extensions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 35 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "originalName": "Barbell Romanian Deadlift",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_press_single_leg",
+              "originalName": "Single Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "lying_leg_raise",
+              "originalName": "Leg Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "sit_up",
+              "originalName": "Sit-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 38 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Alternating Flat Dumbbell Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "seated_cable_row",
+              "originalName": "Underhand Cable Rows",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "Untergriff"
+            },
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lat_pulldown_close",
+              "originalName": "Close Grip Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "straight_arm_pulldown",
+              "originalName": "Straight-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 39 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "front_raise_dumbbell",
+              "originalName": "Seated Front Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "sitzend"
+            },
+            {
+              "exercise": "reverse_fly_dumbbell",
+              "originalName": "Bent-Over Dumbbell Rear Delt Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "hammer_curl_cable",
+              "originalName": "Rope Hammer Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "skull_crusher",
+              "originalName": "EZ Bar Skull Crushers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "preacher_curl_dumbbell",
+              "originalName": "Dual Dumbbell Preacher Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "overhead_extension_cable",
+              "originalName": "Overhead Cable Tricep Extention",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 40 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "leg_press",
+              "originalName": "Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "originalName": "Dumbbell Romanian Deadlifts",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Quad Extentions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "lying_leg_raise",
+              "originalName": "Leg Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "crunch",
+              "originalName": "Crunches",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 41 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "bent_over_row_smith",
+              "originalName": "Smith Machine Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "pec_deck",
+              "originalName": "Chest Fly Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lateral_raise_cable",
+              "originalName": "Arm Cable Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "triceps_extension_cable_cross_body",
+              "originalName": "Single-Arm Cross-Body Cable Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Alternating Dumbbell Curl With Hold",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60,
+              "note": "wechselseitig, mit Halten"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 42 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_press_single_leg",
+              "originalName": "Single Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "sit_up",
+              "originalName": "Sit-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 45 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Alternating Incline Dumbbell Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "push_up",
+              "originalName": "Push-Ups",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lat_pulldown_single_arm",
+              "originalName": "Kneeling Single-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_cable_row",
+              "originalName": "Wide Grip Cable Rows",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "weiter Griff"
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Decline Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "von oben nach unten"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 46 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "front_raise_cable",
+              "originalName": "Spider Cable Front Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "Brust auf der Schrägbank aufgelegt"
+            },
+            {
+              "exercise": "reverse_fly_dumbbell",
+              "originalName": "Bent-Over Dumbbell Rear Delt Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "incline_curl_dumbbell",
+              "originalName": "Incline Dumbbell Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "skull_crusher_dumbbell",
+              "originalName": "Incline Dumbbell Skull Crushers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "auf der Schrägbank"
+            },
+            {
+              "exercise": "biceps_curl_cable",
+              "originalName": "Cable Bayesian Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen · Bayesian: Zug hinter dem Körper, einarmig"
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown (3-Second Eccentric)",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75,
+              "note": "3 s senken"
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 47 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "originalName": "Barbell Back Squats",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "cable_pull_through",
+              "originalName": "Cable Hip Hinge Pull-Throughs",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "goblet_squat",
+              "originalName": "Heel-Elevated Goblet Squats",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90,
+              "note": "Fersen erhöht"
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "standing_knee_raise",
+              "originalName": "Knee Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "heel_tap",
+              "originalName": "Heel Taps",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 48 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "bent_over_row_smith",
+              "originalName": "Smith Machine Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "front_raise_dumbbell",
+              "originalName": "Seated Front Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "sitzend"
+            },
+            {
+              "exercise": "biceps_curl_cable",
+              "originalName": "Single-Arm High Cable Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60,
+              "note": "hoher Zug, einarmig"
+            },
+            {
+              "exercise": "overhead_extension_cable",
+              "originalName": "Overhead Cable Tricep Extention",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 49 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "romanian_deadlift_dumbbell",
+              "originalName": "Dumbbell Romanian Deadlifts",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 90,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_press_single_leg",
+              "originalName": "Single Leg Press Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "russian_twist",
+              "originalName": "Russian Twists",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 52 · Brust und Rücken",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Flat Dumbbell Bench Press (chest)",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "lat_pulldown_close",
+              "originalName": "Close Grip Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "incline_press_cable",
+              "originalName": "Incline Cable Chest Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "straight_arm_pulldown",
+              "originalName": "Straight-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "pec_deck",
+              "originalName": "Chest Fly Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 53 · Schultern und Arme",
+          "exercises": [
+            {
+              "exercise": "shoulder_press_machine",
+              "originalName": "Machine Shoulder Press",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 8,
+                "repsMax": 8
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "lateral_raise_cable",
+              "originalName": "Arm Cable Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "preacher_curl_dumbbell",
+              "originalName": "Dual Dumbbell Preacher Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "skull_crusher",
+              "originalName": "Incline EZ Bar Skull Crushers",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "auf der Schrägbank"
+            },
+            {
+              "exercise": "hammer_curl_cable",
+              "originalName": "Rope Hammer Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_extension_cable_cross_body",
+              "originalName": "Single-Arm Cross-Body Cable Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 54 · Beine und Bauch",
+          "exercises": [
+            {
+              "exercise": "goblet_squat",
+              "originalName": "Heel-Elevated Goblet Squats",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen · Fersen erhöht"
+            },
+            {
+              "exercise": "romanian_deadlift_barbell",
+              "originalName": "Barbell Romanian Deadlift",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Single-Leg Quad Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75,
+              "note": "einbeinig"
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Calf Raise Machine",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "lying_leg_raise",
+              "originalName": "Leg Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "russian_twist",
+              "originalName": "Russian Twists",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 45,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 55 · Oberkörper",
+          "exercises": [
+            {
+              "exercise": "lat_pulldown_single_arm",
+              "originalName": "Kneeling Single-Arm Lat Pulldown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "pec_deck",
+              "originalName": "Chest Fly Machine",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 90,
+              "drop": 2,
+              "dropTarget": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "note": "Dropset: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen"
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_standing",
+              "originalName": "Standing Alternating Shoulder Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "reverse_curl_ez_bar",
+              "originalName": "Reverse Grip EZ Bar Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "triceps_extension_cable_cross_body",
+              "originalName": "Cross-Body Cable Extensions",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        },
+        {
+          "name": "Tag 56 · Unterkörper und Bauch",
+          "exercises": [
+            {
+              "exercise": "back_squat_barbell",
+              "originalName": "Barbell Back Squats",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Lying Hamstring Curls",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "hip_thrust_dumbbell",
+              "originalName": "Dumbbell Hip Thrust",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 12
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "lunge_dumbbell",
+              "originalName": "Alternating Dumbbell Lunges",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 10
+              },
+              "restSec": 75,
+              "note": "wechselseitig"
+            },
+            {
+              "exercise": "calf_raise_dumbbell",
+              "originalName": "Dumbbell Calf Raises",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 15,
+                "repsMax": 15
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 60,
+                "durationMaxSec": 60
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "crunch",
+              "originalName": "Crunches",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 20,
+                "repsMax": 20
+              },
+              "restSec": 45
+            },
+            {
+              "exercise": "treadmill",
+              "originalName": "Cardio Treadmill",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 1800,
+                "durationMaxSec": 1800
+              },
+              "restSec": 0
+            }
+          ]
+        }
+      ],
+      "weeks": [
+        [
+          "Tag 1 · Brust und Rücken",
+          "Tag 4 · Schultern und Arme",
+          "Tag 5 · Beine und Bauch",
+          "Tag 6 · Oberkörper",
+          "Tag 7 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 10 · Brust und Rücken",
+          "Tag 11 · Schultern und Arme",
+          "Tag 12 · Beine und Bauch",
+          "Tag 13 · Oberkörper",
+          "Tag 14 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 17 · Brust und Rücken",
+          "Tag 18 · Schultern und Arme",
+          "Tag 19 · Beine und Bauch",
+          "Tag 20 · Oberkörper",
+          "Tag 21 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 24 · Brust und Rücken",
+          "Tag 25 · Schultern und Arme",
+          "Tag 26 · Beine und Bauch",
+          "Tag 27 · Oberkörper",
+          "Tag 28 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 31 · Brust und Rücken",
+          "Tag 32 · Schultern und Arme",
+          "Tag 33 · Beine und Bauch",
+          "Tag 34 · Oberkörper",
+          "Tag 35 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 38 · Brust und Rücken",
+          "Tag 39 · Schultern und Arme",
+          "Tag 40 · Beine und Bauch",
+          "Tag 41 · Oberkörper",
+          "Tag 42 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 45 · Brust und Rücken",
+          "Tag 46 · Schultern und Arme",
+          "Tag 47 · Beine und Bauch",
+          "Tag 48 · Oberkörper",
+          "Tag 49 · Unterkörper und Bauch"
+        ],
+        [
+          "Tag 52 · Brust und Rücken",
+          "Tag 53 · Schultern und Arme",
+          "Tag 54 · Beine und Bauch",
+          "Tag 55 · Oberkörper",
+          "Tag 56 · Unterkörper und Bauch"
+        ]
+      ]
+    }
+  ]
+}

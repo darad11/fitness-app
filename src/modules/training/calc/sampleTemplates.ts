@@ -30,6 +30,9 @@ export function expandSampleTemplate(
     id: stableId(base),
     key: source.key,
     name: source.name,
+    ...(source.description ? { description: source.description } : {}),
+    ...(source.program ? { program: true } : {}),
+    ...(source.source ? { source: source.source } : {}),
     level: source.level,
     location: source.location,
     daysPerWeek: source.daysPerWeek,
@@ -56,6 +59,8 @@ export function expandSampleTemplate(
               exerciseId: exercise.id,
               nameSnapshot: exercise.name,
               restSec: entry.restSec,
+              ...(entry.note ? { notes: entry.note } : {}),
+              ...(entry.originalName ? { originalName: entry.originalName } : {}),
               sets: buildSets(exerciseBase, entry),
             };
           }),

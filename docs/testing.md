@@ -359,3 +359,18 @@ Aus der CI: Der Chromium-Lauf mit Pixel-7-Emulation scheiterte zweimal am Zeiger
 
 19 neue Übungen und englische Alias-Namen für Varianten (D-248); `exercise-library.md` Abschnitte 4 und 5 neu erzeugt, Abgleich in `winter-arc-reconstruction.md` auf „vorhanden“ gesetzt. Zod-Prüfung der Daten, Suche, Filter und Bibliotheksansicht mit 124 Übungen bestanden (`coreLibrary.test.ts`, `search.test.ts`, `exercise-library.test.tsx`, E2E `exercises.spec.ts`); vier Sucherwartungen an die größeren Treffermengen angepasst (z. B. findet „t bar“ jetzt auch Alias-Namen mit „Barbell“, der Namenstreffer bleibt vorn).
 
+### Schritt C · Programme A, B, C und aktives Programm · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Programme als gebündelte Vorlagen (`programs.v1.json`, 3 Programme, 84 Trainingstage; `programs.md`), Singleton `training_state`, Fortschritt aus den Einheiten, Aktivieren und Beenden, nächster Tag mit Zähler „Trainingstag x von n“ auf Training, „Heute geplant“ und in der Vorlage, Zusammenfassung mit Zähler (D-249).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm check:docs` (mit `programs_build.py --check`) | bestanden: Programme 3, Trainingstage 84; `programs.v1.json` steht in `.prettierignore`, weil Prettier die erzeugte Datei sonst umformatiert |
+| `pnpm test` | 42 Dateien, 402 Tests bestanden. Neu: `programProgress.test.ts` (Folge, nächster Tag, Durchläufe, Wiederholung, Abschluss, frei gewählter Tag), `programs.test.ts` (Inhalt A, B, C: Beinpresse, 3 Sätze, Rotation, Laufband Tag 14 einmal 30 min, Dropsets ohne Pause, Xeela-Namen), `programService.test.ts` (aktivieren, Wechsel, beenden, ungültige ID), `programs-ui.test.tsx` (6 neue Fälle: aktivieren, Zähler, Folgetag, Start von Training als `source: 'program'`, Zusammenfassung, Etikett „Aktiv“, beenden, Winter Arc mit Wochen und „Erledigt“); `format.test.ts` (Dauerziele ab einer Minute als „30:00 min“) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 89,4 %, Zweige 81,9 %, Funktionen 87,5 %, Zeilen 90,2 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 199,2 KB gzip (Grenze 250 KB); Programme werden wie die Vorlagen erst bei Bedarf geladen |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 44 Tests bestanden, zweimal hintereinander. Neu `programs.spec.ts`: Programm A aktivieren, „Als Nächstes“, Start aus „Heute geplant“, Beenden, Zusammenfassung „Trainingstag 1 von 32“, Training zeigt „Trainingstag 2 von 32 · Tag B“, Etikett „Aktiv“, Programm beenden; Winter Arc mit 8 Wochen, Dropset-Hinweis, Xeela-Name, Laufband „1 Satz · 30:00 min · ohne Pause“. `templates.spec.ts` auf 7 Einträge angepasst. Die Programmseite Winter Arc gehört jetzt zu den Seiten der axe-Prüfung |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions (steht aus); Gerätetest T-IPH-M1 steht aus |
+
+Befunde: Dauerziele ab einer Minute wurden in der Vorlagenansicht und im Player als „1800 s“ angezeigt; jetzt „30:00 min“. Eine Pause von 0 s erscheint als „ohne Pause“.

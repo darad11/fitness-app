@@ -57,6 +57,10 @@ export interface PlannedExercise {
   /** Anzeige, auch wenn die Übung später fehlt. */
   nameSnapshot: string;
   restSec?: number;
+  /** Ausführungshinweis, z. B. „wechselseitig“ oder die Dropset-Regel. */
+  notes?: string;
+  /** Name in der Quelle des Programms, z. B. der Xeela-Name beim Winter Arc. */
+  originalName?: string;
   sets: PlannedSet[];
 }
 
@@ -79,6 +83,11 @@ export interface SampleTemplate {
   id: string;
   key: string;
   name: string;
+  description?: string;
+  /** Vollständiges Programm (A, B, C) statt kurzer Beispielvorlage. */
+  program?: boolean;
+  /** Herkunft, z. B. die Rekonstruktion aus einer Aufnahme. */
+  source?: string;
   level: Level;
   location: Location;
   /** Anzeige, z. B. „3" oder „3–6". */
@@ -91,6 +100,8 @@ export interface SampleTemplate {
 const sourceExerciseSchema = z
   .strictObject({
     exercise: z.string().min(1),
+    note: z.string().min(1).max(300).optional(),
+    originalName: z.string().min(1).optional(),
     warmup: z.number().int().min(0).max(2),
     working: z.number().int().min(1).max(10),
     target: setTargetSchema,
@@ -109,6 +120,9 @@ export const sampleTemplateSourceSchema = z
           .strictObject({
             key: z.string().regex(/^[a-z0-9]+(?:_[a-z0-9]+)*$/),
             name: z.string().min(1),
+            description: z.string().min(1).optional(),
+            program: z.literal(true).optional(),
+            source: z.string().min(1).optional(),
             level: levelSchema,
             location: locationSchema,
             daysPerWeek: z.string().min(1),

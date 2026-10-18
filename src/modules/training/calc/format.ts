@@ -10,7 +10,13 @@ export function formatTargetRange(
     return { kind: 'reps', text: range(target.repsMin, target.repsMax) };
   }
   if (target.durationMinSec !== undefined && target.durationMaxSec !== undefined) {
-    return { kind: 'time', text: `${range(target.durationMinSec, target.durationMaxSec)} s` };
+    const { durationMinSec: min, durationMaxSec: max } = target;
+    // Unter einer Minute „30–45 s", sonst „30:00 min" bzw. „45 s–1:30 min".
+    if (max < 60) return { kind: 'time', text: `${range(min, max)} s` };
+    return {
+      kind: 'time',
+      text: min === max ? formatRest(min) : `${formatRest(min)}–${formatRest(max)}`,
+    };
   }
   return null;
 }

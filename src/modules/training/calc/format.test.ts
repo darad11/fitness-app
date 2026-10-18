@@ -9,6 +9,14 @@ describe('Anzeige von Zielen und Pausen', () => {
       kind: 'time',
       text: '30–45 s',
     });
+    expect(formatTargetRange({ durationMinSec: 1800, durationMaxSec: 1800 })).toEqual({
+      kind: 'time',
+      text: '30:00 min',
+    });
+    expect(formatTargetRange({ durationMinSec: 45, durationMaxSec: 90 })).toEqual({
+      kind: 'time',
+      text: '45 s–1:30 min',
+    });
     expect(formatTargetRange({})).toBeNull();
   });
 

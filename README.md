@@ -6,7 +6,7 @@ Eigenständige, local-first Web-App für Trainingsplanung, Trainingsdurchführun
 
 - Phase 1 (Produktanalyse) abgeschlossen am 17.10.2026.
 - Phase 2 (Produktentscheidungen, MVP) abgeschlossen am 18.10.2026: MVP-Umfang, 101 Akzeptanzkriterien, Sitemap, Screen-Katalog und Implementierungsplan liegen vor und sind vorläufig freigegeben.
-- Meilenstein M0 (Projektbasis, Auslieferung, PWA-Grundlage) abgeschlossen am 18.10.2026: installierbare App-Shell mit Offline-Start, Einstellungen für Darstellung und Formatierung, Datenbasis mit Schema v1. Ausgeliefert unter https://fitness-app-mu-drab.vercel.app; CI grün mit Chromium und WebKit; Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden (der Update-Hinweis wird mit der nächsten Auslieferung geprüft).
+- Meilenstein M0 (Projektbasis, Auslieferung, PWA-Grundlage) abgeschlossen am 18.10.2026: installierbare App-Shell mit Offline-Start, Einstellungen für Darstellung und Formatierung, Datenbasis mit Schema v1. Ausgeliefert unter https://fitness-app-mu-drab.vercel.app; CI grün mit Chromium und WebKit; Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden, einschließlich Update-Hinweis.
 - Hosting: Vercel (D-231), Produktivadresse https://fitness-app-mu-drab.vercel.app. Repository: privat, `darad11/fitness-app` (Q-01).
 
 ## Entwicklung

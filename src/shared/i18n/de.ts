@@ -646,6 +646,7 @@ export const de = {
     dayOf: (x: number, n: number) => `Trainingstag ${x} von ${n}`,
     round: (n: number) => `Durchlauf ${n}`,
     finishedTitle: 'Programm abgeschlossen',
+    loadingProgress: 'Fortschritt wird geladen …',
     finishedText: (name: string, n: number) =>
       `Alle ${n} Trainingstage von „${name}“ sind erledigt. Du kannst einzelne Tage erneut trainieren oder ein anderes Programm aktivieren.`,
     source: (text: string) => `Quelle: ${text}`,

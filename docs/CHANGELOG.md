@@ -14,7 +14,9 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
 | `implementation-plan.md` | Stand Erweiterungsplan; AP 2.3 teilweise vorgezogen; nächste Schritte |
 | `feature-inventory.md` | TP-17, TP-19, TP-21 auf „Implementiert“ |
-| `testing.md` | Ergebnisse Schritt B bis F, Ziele und Nachtragen |
+| `testing.md` | Ergebnisse Schritt B bis F, Ziele, Nachtragen und Verlauf bearbeiten |
+| `decisions.md` (Verlauf) | D-256 Verlauf bearbeiten und löschen |
+| `feature-inventory.md` (Verlauf) | TH-01 auf „Implementiert“ |
 | `decisions.md` (Nachtragen) | D-255 Nachtragen von Krafttraining und Aktivität |
 | `feature-inventory.md` (Nachtragen) | TS-17, AH-09 auf „Implementiert“ |
 | `implementation-plan.md`, `design-system.md` (Nachtragen) | AP 2.6 umgesetzt, S-10 |

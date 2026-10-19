@@ -442,3 +442,17 @@ Seite „Nachtragen“ mit Krafttraining (Übungen aus der Bibliothek, Aufwärm-
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 220,6 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 54 Tests bestanden. Neu `log.spec.ts`: Wochenziel 2 setzen, Laufen 32 min und 5,2 km nachtragen, Detail mit „Nachgetragen“ und „5,2 km“, Verlauf „32:00 · 5,2 km“, „Heute“ zeigt „1 von 2 Trainings diese Woche“. `/training/nachtragen` gehört zu den Seiten der Netz- und axe-Prüfung |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Verlauf bearbeiten und löschen (AP 2.7) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Detail einer abgeschlossenen Einheit mit „Bearbeiten“ (Titel, Beginn, Dauer, Notiz, Werte, Sätze entfernen) und „Löschen“ mit Rückfrage und 10 s „Rückgängig“ in der Liste; Projektion in derselben Transaktion (D-256).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 60 Dateien, 489 Tests bestanden. Neu: `historyService.test.ts` (Änderungen mit neuer Projektion; Grenzen und fehlende Werte ohne Schreiben; keine laufende Einheit; Aktivitätsdauer; Löschen und Wiederherstellen samt Projektion), drei Fälle in `history-ui.test.tsx` (Bearbeiten mit Vorwert, Satz entfernen, Fehlermeldung, Löschen mit Rückgängig) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90,03 %, Zweige 80,43 %, Funktionen 87,9 %, Zeilen 90,94 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 220,8 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 56 Tests bestanden. Neu `history-edit.spec.ts`: Aktivität nachtragen, Titel, Dauer und Notiz ändern, löschen, „Rückgängig“ |
+| Befund aus der CI von #12 | Der Winter-Arc-Komponententest fand „Trainingstag 2 von 40“ nicht innerhalb von 1 s, weil die Seite mit 40 Tagen in jsdom auf dem Runner langsamer rendert; zugleich zeigte die Programmkarte während des Ladens fälschlich „Programm abgeschlossen“. Behoben in #12: Ladetext statt „abgeschlossen“, Wartezeit 10 s, Testzeit 20 s |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

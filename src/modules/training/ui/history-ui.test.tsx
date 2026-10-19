@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -8,6 +8,7 @@ import { loadCoreExercises } from '@/modules/exercises';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { loadSampleTemplate } from '../data/sampleTemplates';
+import { getSession, latestHistory, listCompletedSessions } from '../data/sessionRepository';
 import { trainingRoutes } from '../routes';
 import {
   completeSet,
@@ -112,5 +113,73 @@ describe('Verlauf (S-11, AK-HIS-01, AK-HIS-02)', () => {
   it('meldet unbekannte oder laufende Einheiten im Verlauf', async () => {
     renderAt('/training/verlauf/00000000-0000-4000-8000-000000000000');
     expect(await screen.findByText('Dieses Training gibt es nicht mehr.')).toBeInTheDocument();
+  });
+});
+
+describe('Verlauf bearbeiten und löschen (AK-HIS-03, AK-HIS-04)', () => {
+  it('ändert Titel und Werte, aktualisiert die Vorwerte und entfernt einen Satz', async () => {
+    const user = userEvent.setup();
+    const session = await finishedTemplateSession(new Date('2026-10-15T17:00:00.000Z'));
+    renderAt(`/training/verlauf/${session.id}`);
+    await screen.findByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' });
+    await user.click(screen.getByRole('button', { name: 'Bearbeiten' }));
+    const title = await screen.findByLabelText('Titel');
+    await user.clear(title);
+    await user.type(title, 'Tag A schwer');
+    const weight = screen.getByLabelText('Gewicht in kg, Kniebeuge mit Langhantel, Arbeitssatz 1');
+    expect(weight).toHaveValue('60');
+    await user.clear(weight);
+    await user.type(weight, '62,5');
+    await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Tag A schwer' })).toBeVisible();
+    const squatId = session.exercises[0]!.exerciseId;
+    expect((await latestHistory(rt.db, squatId))?.best).toEqual({ weightKg: 62.5, reps: 8 });
+
+    // Satz entfernen: danach hat die Übung keinen erledigten Satz mehr.
+    await user.click(screen.getByRole('button', { name: 'Bearbeiten' }));
+    await user.click(
+      await screen.findByRole('button', {
+        name: 'Satz entfernen, Kniebeuge mit Langhantel, Arbeitssatz 1',
+      }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
+    await screen.findByRole('heading', { level: 1, name: 'Tag A schwer' });
+    expect(await latestHistory(rt.db, squatId)).toMatchObject({ best: null, sets: [] });
+  });
+
+  it('zeigt Fehler beim Bearbeiten und speichert nichts', async () => {
+    const user = userEvent.setup();
+    const session = await finishedTemplateSession(new Date('2026-10-15T17:00:00.000Z'));
+    renderAt(`/training/verlauf/${session.id}`);
+    await user.click(await screen.findByRole('button', { name: 'Bearbeiten' }));
+    const weight = await screen.findByLabelText(
+      'Gewicht in kg, Kniebeuge mit Langhantel, Arbeitssatz 1',
+    );
+    await user.clear(weight);
+    await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Jeder erledigte Satz braucht alle Werte',
+    );
+    await user.click(screen.getByRole('button', { name: 'Abbrechen' }));
+    expect((await getSession(rt.db, session.id))?.hlc).toBe(session.hlc);
+  });
+
+  it('löscht mit Rückfrage und stellt mit „Rückgängig“ wieder her', async () => {
+    const user = userEvent.setup();
+    const session = await finishedTemplateSession(new Date('2026-10-15T17:00:00.000Z'));
+    const router = renderAt(`/training/verlauf/${session.id}`);
+    await user.click(await screen.findByRole('button', { name: 'Löschen' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Training löschen?' });
+    await user.click(within(dialog).getByRole('button', { name: 'Löschen' }));
+    await waitFor(() => {
+      expect(router.state.location.pathname).toBe('/training/verlauf');
+    });
+    expect(await screen.findByText('Training gelöscht')).toBeVisible();
+    expect(await listCompletedSessions(rt.db)).toHaveLength(0);
+    await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
+    await waitFor(async () => {
+      expect((await listCompletedSessions(rt.db)).map((s) => s.id)).toEqual([session.id]);
+    });
+    expect(await screen.findByRole('link', { name: /Tag A · Ganzkörper A\/B/ })).toBeVisible();
   });
 });

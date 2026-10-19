@@ -223,6 +223,27 @@ export const de = {
     distance: 'Distanz',
     manualBadge: 'Nachgetragen',
   },
+  historyEdit: {
+    edit: 'Bearbeiten',
+    delete: 'Löschen',
+    title: 'Training bearbeiten',
+    save: 'Änderungen speichern',
+    saved: 'Gespeichert',
+    keepSet: 'Satz behalten',
+    saveFailed: 'Nicht gespeichert. Bitte versuche es erneut.',
+    deleteTitle: 'Training löschen?',
+    deleteText:
+      'Das Training verschwindet aus Verlauf, Statistik und Vorwerten. Du kannst das 10 Sekunden lang rückgängig machen.',
+    deleteConfirm: 'Löschen',
+    deleted: 'Training gelöscht',
+    errors: {
+      future: 'Der Beginn darf höchstens einen Tag in der Zukunft liegen.',
+      duration: 'Dauer als ganze Minuten, mindestens 1.',
+      missing: 'Jeder erledigte Satz braucht alle Werte; sonst entferne ihn.',
+      title: 'Bitte einen Titel angeben.',
+      values: 'Bitte die Werte als Zahl eintragen.',
+    },
+  },
   nav: {
     label: 'Hauptnavigation',
     skipToContent: 'Zum Inhalt springen',

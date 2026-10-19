@@ -12,6 +12,15 @@
 | `implementation-plan.md` | Stand und nächste Schritte |
 | `feature-inventory.md` | NU-01, NU-02, NU-03, NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21, NU-22, NU-25 vorgezogen und „Implementiert“ |
 | `testing.md` | Ergebnisse Ernährung |
+## Version 0.9 · 19.10.2026 · Notizen im Player (TS-19)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-260 Notizen zu Übung und Einheit |
+| `data-model.md` | Feld `note` je Übung einer Einheit |
+| `implementation-plan.md` | AP 2.4 vollständig, nächste Schritte (Ernährung) |
+| `feature-inventory.md` | TS-19 auf „Implementiert“ |
+| `testing.md` | Ergebnisse Notizen |
 
 ## Version 0.8 · 19.10.2026 · Eigene Übungen und persönliche Angaben (AP 2.5)
 

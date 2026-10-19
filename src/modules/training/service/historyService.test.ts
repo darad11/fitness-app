@@ -150,3 +150,29 @@ describe('Verlauf löschen (AK-HIS-04)', () => {
     expect(await latestHistory(rt.db, exerciseId)).toMatchObject({ sessionId: session.id });
   });
 });
+
+describe('Notizen im Verlauf (AK-TRN-24, D-260)', () => {
+  it('ändert die Notiz einer Übung und schreibt sie in die Projektion', async () => {
+    const session = await logged();
+    const exercise = liveExercises(session)[0]!;
+    const edited = await editCompletedSession(
+      rt,
+      session.id,
+      { exerciseNotes: { [exercise.id]: '  tiefer gehen ' } },
+      NOW,
+    );
+    expect(liveExercises(edited)[0]?.note).toBe('tiefer gehen');
+    expect((await latestHistory(rt.db, exercise.exerciseId))?.note).toBe('tiefer gehen');
+    const cleared = await editCompletedSession(
+      rt,
+      session.id,
+      { exerciseNotes: { [exercise.id]: '' } },
+      NOW,
+    );
+    expect(liveExercises(cleared)[0]).not.toHaveProperty('note');
+    expect(await latestHistory(rt.db, exercise.exerciseId)).not.toHaveProperty('note');
+    await expect(
+      editCompletedSession(rt, session.id, { exerciseNotes: { unbekannt: 'x' } }, NOW),
+    ).rejects.toThrow('Übung nicht gefunden');
+  });
+});

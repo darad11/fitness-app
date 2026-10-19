@@ -8,8 +8,8 @@ import {
   type ValueField,
 } from '../calc/session';
 import { sessionDef, writeHistory } from '../data/sessionRepository';
-import { LIMITS, type Session, type SetValues } from '../model/session';
-import { InvalidValueError, ItemNotFoundError } from './sessionService';
+import { LIMITS, NOTE_MAX, SESSION_NOTE_MAX, type Session, type SetValues } from '../model/session';
+import { cleanNote, InvalidValueError, ItemNotFoundError } from './sessionService';
 
 /** Nur abgeschlossene Einheiten lassen sich im Verlauf bearbeiten (AK-HIS-03). */
 export class NotCompletedError extends Error {
@@ -34,6 +34,8 @@ export interface CompletedEdit {
   sets?: Readonly<Record<string, SetValues>>;
   /** Sätze, die entfernt werden (weich, mit Drop-Sätzen). */
   removeSetIds?: readonly string[];
+  /** Eigene Notizen je Übung (Schlüssel: ID der Übung in der Einheit); leer entfernt (AK-TRN-24). */
+  exerciseNotes?: Readonly<Record<string, string>>;
 }
 
 const MAX_FUTURE_MS = 24 * 60 * 60 * 1000;
@@ -66,7 +68,7 @@ export async function editCompletedSession(
         draft.title = title;
       }
       if (edit.notes !== undefined) {
-        const notes = edit.notes.trim();
+        const notes = cleanNote(edit.notes, SESSION_NOTE_MAX);
         if (notes) draft.notes = notes;
         else delete draft.notes;
       }
@@ -94,6 +96,15 @@ export async function editCompletedSession(
         if (draft.activity) draft.activity = { ...draft.activity, durationSec };
       }
       const remove = new Set(edit.removeSetIds ?? []);
+      for (const [key, text] of Object.entries(edit.exerciseNotes ?? {})) {
+        const exercise = liveExercises(draft).find((candidate) => candidate.id === key);
+        if (!exercise) throw new ItemNotFoundError('Übung nicht gefunden');
+        const note = cleanNote(text, NOTE_MAX);
+        if (note === exercise.note) continue;
+        if (note) exercise.note = note;
+        else delete exercise.note;
+        exercise.hlc = hlc;
+      }
       for (const exercise of liveExercises(draft)) {
         for (const set of liveSets(exercise)) {
           if (remove.has(set.id) || (set.parentSetId && remove.has(set.parentSetId))) {

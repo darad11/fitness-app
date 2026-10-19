@@ -16,6 +16,7 @@ import {
   completeSet,
   finishSession,
   planFromTemplateDay,
+  setExerciseNote,
   setValues,
   startSession,
 } from '../../service/sessionService';
@@ -424,5 +425,56 @@ describe('Persönliche Angaben im Player (AK-EXL-04, D-258)', () => {
     await waitFor(async () => {
       expect((await getSession(rt.db, session.id))?.restTimer?.durationSec).toBe(45);
     });
+  });
+});
+
+describe('Notizen im Player (AK-TRN-24, D-260)', () => {
+  const benchInput = () => ({
+    source: 'free' as const,
+    title: 'Frei',
+    exercises: [
+      {
+        exerciseId: coreExerciseId('bench_press_barbell'),
+        name: 'Bankdrücken mit Langhantel',
+        trackingMode: 'weight_reps' as const,
+        sets: [{ type: 'working' as const }],
+      },
+    ],
+  });
+
+  it('schreibt Notizen zu Übung und Einheit und zeigt die Notiz vom letzten Mal', async () => {
+    const user = userEvent.setup();
+    const earlier = await startSession(rt, benchInput());
+    await setExerciseNote(rt, earlier.id, earlier.exercises[0]!.id, 'Griff enger');
+    await completeSet(rt, earlier.id, earlier.exercises[0]!.sets[0]!.id, {
+      previous: { weightKg: 60, reps: 8 },
+      restDefaultSec: 90,
+      autoStartRest: false,
+    });
+    await finishSession(rt, earlier.id, { skipOpen: false });
+
+    const session = await startSession(rt, benchInput());
+    renderAt(`/training/einheit/${session.id}`);
+    expect(await screen.findByText('Griff enger')).toBeVisible();
+    expect(screen.getByText(/Notiz vom letzten Mal/)).toBeVisible();
+
+    await user.click(
+      screen.getByRole('button', { name: 'Weitere Aktionen, Bankdrücken mit Langhantel' }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Notiz' }));
+    const dialog = screen.getByRole('dialog', { name: 'Notiz zu Bankdrücken mit Langhantel' });
+    await user.type(within(dialog).getByLabelText('Notiz'), 'Heute leichter');
+    await user.click(within(dialog).getByRole('button', { name: 'Speichern' }));
+    expect(await screen.findByText('Heute leichter')).toBeVisible();
+    expect(screen.queryByText(/Notiz vom letzten Mal/)).toBeNull();
+
+    await user.click(screen.getByRole('button', { name: 'Notiz zur Einheit' }));
+    const sessionDialog = screen.getByRole('dialog', { name: 'Notiz zur Einheit' });
+    await user.type(within(sessionDialog).getByLabelText('Notiz'), 'Wenig Schlaf');
+    await user.click(within(sessionDialog).getByRole('button', { name: 'Speichern' }));
+    expect(await screen.findByText('Wenig Schlaf')).toBeVisible();
+    const stored = await getSession(rt.db, session.id);
+    expect(stored?.notes).toBe('Wenig Schlaf');
+    expect(stored?.exercises[0]?.note).toBe('Heute leichter');
   });
 });

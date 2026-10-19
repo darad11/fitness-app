@@ -4,13 +4,14 @@ import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { Button, buttonClasses, Card, Dialog, Skeleton } from '@/shared/ui';
-import type { CatalogImportResult } from '../calc/catalogImport';
 import { useImportedCatalog } from '../data/catalogStore';
 import {
   CatalogFileError,
-  commitCatalog,
+  CatalogMissingError,
+  commitImport,
   deleteCatalog,
-  prepareCatalog,
+  prepareImport,
+  type PreparedImport,
 } from '../service/catalogService';
 
 type Busy = 'reading' | 'saving' | 'removing' | undefined;
@@ -24,7 +25,7 @@ export function CatalogCard() {
   const fmt = useFormatters();
   const catalog = useImportedCatalog();
   const input = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<CatalogImportResult>();
+  const [preview, setPreview] = useState<PreparedImport>();
   const [confirmRemove, setConfirmRemove] = useState(false);
   const [busy, setBusy] = useState<Busy>();
   const [error, setError] = useState<string>();
@@ -39,12 +40,18 @@ export function CatalogCard() {
     setDone(undefined);
     setBusy('reading');
     try {
-      const result = await prepareCatalog(file);
-      if (result.rows.length === 0) setError(tc.nothingNew);
-      else setPreview(result);
+      const prepared = await prepareImport(db, file);
+      if (prepared.result.rows.length === 0) setError(tc.nothingNew);
+      else setPreview(prepared);
     } catch (e) {
-      setError(e instanceof CatalogFileError ? tc.wrongFile : tc.failed);
-      if (!(e instanceof CatalogFileError)) {
+      setError(
+        e instanceof CatalogMissingError
+          ? tc.brandsNeedCatalog
+          : e instanceof CatalogFileError
+            ? tc.wrongFile
+            : tc.failed,
+      );
+      if (!(e instanceof CatalogFileError || e instanceof CatalogMissingError)) {
         void logError(db, { area: 'nutrition', error: e, route: window.location.pathname });
       }
     } finally {
@@ -56,8 +63,12 @@ export function CatalogCard() {
     if (!preview) return;
     setBusy('saving');
     try {
-      await commitCatalog(db, preview);
-      setDone(tc.imported(n(preview.rows.length)));
+      await commitImport(db, preview);
+      setDone(
+        preview.kind === 'brands'
+          ? tc.brandsImported(n(preview.matched))
+          : tc.imported(n(preview.result.rows.length)),
+      );
       setPreview(undefined);
     } catch (e) {
       setError(tc.failed);
@@ -82,7 +93,7 @@ export function CatalogCard() {
     }
   };
 
-  const summary = preview?.summary;
+  const summary = preview?.kind === 'catalog' ? preview.result.summary : undefined;
 
   return (
     <Card title={tc.title} className="mt-6">
@@ -95,6 +106,11 @@ export function CatalogCard() {
           <p className="font-medium">{tc.status(n(catalog.info.count))}</p>
           <p className="text-sm text-muted">
             {tc.statusDetail(fmt.dayMonthYear(new Date(catalog.info.importedAt)))}
+          </p>
+          <p className="text-sm text-muted">
+            {catalog.info.brandCount === undefined
+              ? tc.brandsMissing
+              : tc.brandsStatus(n(catalog.info.brandCount))}
           </p>
         </div>
       )}
@@ -140,7 +156,7 @@ export function CatalogCard() {
         onClose={() => {
           if (busy !== 'saving') setPreview(undefined);
         }}
-        title={tc.previewTitle}
+        title={preview?.kind === 'brands' ? tc.brandsPreviewTitle : tc.previewTitle}
         closeLabel={t.nutrition.cancel}
         actions={
           <>
@@ -159,9 +175,15 @@ export function CatalogCard() {
           </>
         }
       >
+        {preview?.kind === 'brands' ? (
+          <div className="space-y-3">
+            <p className="font-medium">{tc.brandsPreview(n(preview.matched))}</p>
+            <p className="text-sm text-muted">{tc.brandsHow}</p>
+          </div>
+        ) : null}
         {summary ? (
           <div className="space-y-3">
-            <p className="font-medium">{tc.previewKept(n(preview.rows.length))}</p>
+            <p className="font-medium">{tc.previewKept(n(preview?.result.rows.length ?? 0))}</p>
             <ul className="list-disc space-y-1 pl-5 text-sm">
               <li>{tc.keptOenwt(n(summary.kept.oenwt))}</li>
             </ul>

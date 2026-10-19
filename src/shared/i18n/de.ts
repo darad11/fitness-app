@@ -384,7 +384,17 @@ export const de = {
     catalog: {
       title: 'Lebensmitteldaten',
       empty: 'Noch keine Lebensmitteldaten importiert.',
-      hint: 'Datei der BLS-Recherche von nutritional-software.at (JSON). Die Daten bleiben nur auf diesem Gerät; nichts wird hochgeladen.',
+      hint: 'Datei der BLS-Recherche von nutritional-software.at (nuts-recherche.json), danach die Marken (nuts-marken.json). Die Daten bleiben nur auf diesem Gerät; nichts wird hochgeladen.',
+      brandsMissing: 'Noch keine Marken. Importiere dazu die Datei nuts-marken.json.',
+      brandsStatus: (count: string) => `${count} davon mit Marke`,
+      brandsPreviewTitle: 'Marken importieren',
+      brandsPreview: (count: string) =>
+        `${count} deiner importierten Lebensmittel bekommen eine Marke.`,
+      brandsHow:
+        'Die Marke stammt aus der Herstellerangabe der Recherche, z. B. „Alnatura“ oder „Spar“. Sie erscheint in der Suche neben dem Namen und lässt sich suchen. Frühere Marken werden ersetzt.',
+      brandsImported: (count: string) => `Marken für ${count} Lebensmittel importiert.`,
+      brandsNeedCatalog:
+        'Zu dieser Markendatei passen keine Lebensmittel. Importiere zuerst nuts-recherche.json.',
       status: (count: string) => `${count} Lebensmittel importiert`,
       statusDetail: (date: string) =>
         `Aus der Österreichischen Nährwerttabelle (ÖNWT), importiert am ${date}`,
@@ -409,8 +419,7 @@ export const de = {
       removeTitle: 'Import entfernen?',
       removeText:
         'Die importierten Lebensmittel verschwinden aus der Suche. Deine Einträge im Protokoll behalten ihre Werte. Du kannst die Datei jederzeit erneut importieren.',
-      wrongFile:
-        'Diese Datei passt nicht. Bitte wähle die Datei der BLS-Recherche (nuts-recherche.json).',
+      wrongFile: 'Diese Datei passt nicht. Bitte wähle nuts-recherche.json oder nuts-marken.json.',
       nothingNew: 'Die Datei enthält keine neuen Lebensmittel.',
       failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',
     },

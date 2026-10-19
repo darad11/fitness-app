@@ -615,5 +615,6 @@ Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, K
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 84,4 %, Zweige 76,34 %, Funktionen 82,99 %, Zeilen 85,63 %); die Linse ist per E2E geprüft |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 243,5 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 183 bestanden, 1 übersprungen (Linse nur am Handy). Neu `tabbar.spec.ts`: Ziehen von „Heute“ nach „Ernährung“ hebt die Linse an und wählt beim Loslassen, danach liegt sie wieder; Tippen auf „Training“. Erster Lauf: axe meldete zu wenig Kontrast der aktiven Beschriftung über einer dunklen Karte (Leiste mit 80 % Deckkraft); behoben mit 90 %. `shell.spec.ts`: neue Farbe für `theme-color` |
+| Nachtrag Seitenleiste | Auf Wunsch rückt der Inhalt beim Ausklappen mit (Abstand links 5,5 → 16,5 rem, 0,24 s); `tabbar.spec.ts` prüft am Desktop, dass der Titel unter der Maus um mehr als 150 px nach rechts rückt: bestanden |
 | Bekannt | Das Weichzeichnen hinter der Tab-Leiste zeigt Chromium im Test nur teilweise; auf dem iPhone steht es aus (Gerätetest) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest auf dem iPhone steht aus |

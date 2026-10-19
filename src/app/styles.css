@@ -198,6 +198,16 @@
   .sidebar:focus-within {
     width: 15rem;
   }
+  /* Inhalt rückt beim Ausklappen im gleichen Tempo mit, statt verdeckt zu werden. */
+  @media (width >= 64rem) {
+    .app-content {
+      padding-left: 5.5rem;
+      transition: padding-left 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .app-shell:has(.sidebar:hover, .sidebar:focus-within) .app-content {
+      padding-left: 16.5rem;
+    }
+  }
   .sidebar-label {
     white-space: nowrap;
     opacity: 0;

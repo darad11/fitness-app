@@ -15,7 +15,7 @@ export function AppLayout() {
     (match) => (match.handle as { fullscreen?: boolean } | undefined)?.fullscreen === true,
   );
   return (
-    <div className="min-h-dvh lg:flex">
+    <div className="app-shell min-h-dvh lg:flex">
       <div aria-hidden="true" className="app-backdrop">
         <span />
         <span />
@@ -31,7 +31,7 @@ export function AppLayout() {
       <div
         className={cn(
           'flex min-h-dvh min-w-0 flex-1 flex-col pt-[env(safe-area-inset-top)] lg:pt-0',
-          !fullscreen && 'lg:pl-[5.5rem]',
+          !fullscreen && 'app-content',
         )}
       >
         <GlobalBanners />

@@ -24,3 +24,15 @@ test('Tab-Leiste: Ziehen mit der Linse wählt beim Loslassen, Tippen wie gewohnt
   await bar.getByRole('link', { name: 'Training' }).click();
   await expect(page).toHaveURL(/\/training$/);
 });
+
+test('Seitenleiste: klappt unter der Maus aus, der Inhalt rückt mit (D-272)', async ({
+  page,
+}, testInfo) => {
+  test.skip(!testInfo.project.name.includes('desktop'), 'Seitenleiste ab 1024 px');
+  await openPage(page, '/heute');
+  const title = page.getByRole('heading', { level: 1, name: 'Heute' });
+  const before = (await title.boundingBox())?.x ?? 0;
+  await page.getByRole('navigation', { name: 'Hauptnavigation' }).first().hover();
+  await expect.poll(async () => (await title.boundingBox())?.x ?? 0).toBeGreaterThan(before + 150);
+  await expect(page.getByText('Ernährung', { exact: true }).first()).toBeVisible();
+});

@@ -185,7 +185,7 @@ Makronährstoffe tragen feste Farben über alle Ansichten: Protein `--data-1`, K
 - Die Aktion „Erfassen" sitzt oben rechts auf „Heute" und öffnet ein Sheet: Training starten oder fortsetzen, Training nachtragen, Gewicht erfassen; ab R2 Mahlzeit und Wasser.
 - Der Trainingsplayer ist eine Vollbildansicht ohne Tab-Leiste. Außerhalb davon zeigt eine Leiste „Training läuft" den Weg zurück.
 - Höchstens drei Ebenen Tiefe.
-- Glas-Look (D-272): Am Handy schwebt die Tab-Leiste als Glas-Kapsel über dem Inhalt; ein Finger hebt die Auswahl als Linse an, Ziehen wählt beim Loslassen. Ab 1024 px schwebt links eine eingeklappte Seitenleiste mit Symbolen, die unter der Maus oder mit Tastaturfokus ausklappt.
+- Glas-Look (D-272): Am Handy schwebt die Tab-Leiste als Glas-Kapsel über dem Inhalt; ein Finger hebt die Auswahl als Linse an, Ziehen wählt beim Loslassen. Ab 1024 px schwebt links eine eingeklappte Seitenleiste mit Symbolen, die unter der Maus oder mit Tastaturfokus ausklappt; der Inhalt rückt dabei mit.
 
 ### 9.2 Sitemap
 

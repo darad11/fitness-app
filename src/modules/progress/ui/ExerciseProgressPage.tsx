@@ -1,10 +1,10 @@
 import { lazy, Suspense, useState } from 'react';
-import { useLoaderData } from 'react-router';
-import type { Exercise } from '@/modules/exercises';
+import { useParams } from 'react-router';
+import { useExercises, type Exercise } from '@/modules/exercises';
 import { useFormatters } from '@/modules/settings';
 import { formatSetValues, useHistoryRows } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
-import { Card, PageHeader, SegmentedControl, Skeleton, Switch } from '@/shared/ui';
+import { ButtonLink, Card, PageHeader, SegmentedControl, Skeleton, Switch } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import {
   EXERCISE_PERIODS,
@@ -24,7 +24,32 @@ const PERIOD_OPTIONS = EXERCISE_PERIODS.map((value) => ({
 
 /** Übungsverlauf (C-02, AK-HIS-05): bester Satz oder geschätztes 1RM je Einheit auf einer Zeitachse. */
 export function ExerciseProgressPage() {
-  const exercise = useLoaderData<Exercise>();
+  const { exerciseId } = useParams();
+  const exercises = useExercises();
+  if (exercises === undefined) {
+    return (
+      <div aria-busy="true">
+        <Skeleton className="h-64" />
+      </div>
+    );
+  }
+  const exercise = exercises.find((e) => e.id === exerciseId);
+  if (!exercise) return <ExerciseNotFound back="/fortschritt" />;
+  return <ExerciseProgress key={exercise.id} exercise={exercise} />;
+}
+
+/** „Übung nicht gefunden“ mit Weg zurück; auch für das Übungsdetail. */
+export function ExerciseNotFound({ back }: { back: string }) {
+  return (
+    <>
+      <PageHeader title={t.exercises.notFoundTitle} back={{ to: back, label: t.common.back }} />
+      <p className="mb-6 text-muted">{t.exercises.notFoundText}</p>
+      <ButtonLink to="/uebungen">{t.exercises.toLibrary}</ButtonLink>
+    </>
+  );
+}
+
+function ExerciseProgress({ exercise }: { exercise: Exercise }) {
   const rows = useHistoryRows();
   const fmt = useFormatters();
   const now = useToday();

@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.6 (Eigene Übungen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-13 (eigene Übungen anlegen, bearbeiten, archivieren), TP-07 (Übungsdetail mit Angaben, persönlicher Notiz, Standardpause, Gewichtsschritt, Videolink und letzten Einheiten; D-258). TP-26 (Programmdatei) entfällt für R1 und wird über die Synchronisierung in R3 gelöst (D-259).
 - Version 0.6 (Eigene Programme, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-01, TP-02, TP-03, TP-04, TP-08, TP-09, TP-10, TP-12, TP-14, TP-15, TP-16, TP-22, TP-23, TP-24, TP-25 (D-257). TP-13 (eigene Übungen) und TP-26 (Programmdatei) folgen mit AP 2.5 und AP 2.8; ON-14 bleibt bis zum Programmwechsel-Dialog.
 - Version 0.5 (Verlauf bearbeiten, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TH-01 (Liste, Detail, Bearbeiten, Löschen mit Rückgängig; D-256).
 - Version 0.5 (Nachtragen, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-17, AH-09 (D-255). TS-19 bleibt, bis Notizen auch im Player erfasst werden.
@@ -54,15 +55,15 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|
 | Original verifiziert (OV) | 41 | 39 | 8 | 88 |
 | Original nicht verifiziert (ON) | 10 | 16 | 2 | 28 |
-| Eigene Verbesserung (EV) | 37 | 12 | 0 | 49 |
-| Summe | 88 | 67 | 10 | 165 |
+| Eigene Verbesserung (EV) | 36 | 13 | 0 | 49 |
+| Summe | 87 | 68 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 88 |
+| R1 | 87 |
 | R2 | 39 |
-| R3 | 2 |
+| R3 | 3 |
 | R4 | 14 |
 | R5 | 5 |
 
@@ -73,12 +74,12 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
-| Analysiert | 38 |
+| Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 61 |
+| Implementiert | 63 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 37 |
-| Zur Umsetzung ausgewählt | 23 |
+| Zur Umsetzung ausgewählt | 20 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -114,13 +115,13 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TP-04 | Übungsreihenfolge im Plan festlegen | Reihenfolge im Training erzwungen (laut Rezensionen) | REV | V-R | OV | H | TP-06 | M | P0 | MVP | R1 · M2 | Anpassen: sortierbar; im Training nicht erzwungen | Implementiert | AK-PRG-03, AK-TRN-08 |
 | TP-05 | Einheiten im Kalender verschieben (Drag and Drop) | „Swap Workouts" per Drag and Drop | SD 12:05 | V | OV | M | AH-08 | M | P2 | Später | R4 · M11 | Später: der Reihenfolge-Modus macht Verschieben im MVP unnötig | Analysiert | Einheit per Ziehen oder Menü auf einen anderen Tag; Historie unberührt |
 | TP-06 | Übungsbibliothek mit Suche und Filtern | Muskelkarte; Liste nach Muskel inklusive Übungen außerhalb des Programms | HC-G; SD 06:28; AS 3.4.2 | V | OV | H | – | M | P0 | MVP | R1 · M1 | Anpassen: eigene deutsche Basisbibliothek (D-213) | Getestet | AK-EXL-01, AK-EXL-02 |
-| TP-07 | Übungsdetail mit Beschreibung, Muskeln, Gerät, Videolink | Eingebettetes Video pro Übung | REV; SD 12:38 | V | OV | M | TP-06 | S | P1 | MVP | R1 · M2 | Anpassen: ohne eigene Medien, mit persönlichem Videolink | Zur Umsetzung ausgewählt | AK-EXL-04, AK-EXL-05 |
+| TP-07 | Übungsdetail mit Beschreibung, Muskeln, Gerät, Videolink | Eingebettetes Video pro Übung | REV; SD 12:38 | V | OV | M | TP-06 | S | P1 | MVP | R1 · M2 | Anpassen: ohne eigene Medien, mit persönlichem Videolink | Implementiert | AK-EXL-04, AK-EXL-05 |
 | TP-08 | Satzschema (Typ, Wiederholungsbereich, Zielgewicht, Zielzeit) | Feste Satzanzahl, Rep-Bereiche | REV; WEB | V | OV | H | TP-04 | M | P0 | MVP | R1 · M2 | Anpassen: frei editierbar | Implementiert | AK-PRG-04 |
 | TP-09 | Pausenzeiten je Übung und Satz | Vorgegeben; Pausentimer vorhanden | AS 3.1.6; WEB | V | OV | H | TS-07 | S | P0 | MVP | R1 · M1/M2 | Übernehmen | Implementiert | AK-PRG-04, AK-TRN-10 |
 | TP-10 | Drop-Sätze | „Refined dropsets" | AS 3.1.7; WEB | V | OV | M | TP-08 | M | P1 | MVP | R1 · M2 | Übernehmen (D-108) | Implementiert | AK-TRN-03, AK-PRG-04 |
 | TP-11 | Supersätze und Zirkel | Nicht belegt | – | P | ON | M | TP-04 | M | P2 | Später | R4 · M11 | Später: Gruppenfeld im Datenmodell reserviert (D-108) | Spezifiziert | Übungen gruppierbar; Wechsel innerhalb der Gruppe; Pause nach der Gruppe |
 | TP-12 | Übung im Plan ersetzen, mit Alternativen | Alternativen bei fehlendem Gerät (laut Rezensionen) | REV | V-R | OV | H | TP-06 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-PRG-03 |
-| TP-13 | Eigene Übungen | Nicht belegt | – | P | ON | H | TP-06 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-EXL-03 |
+| TP-13 | Eigene Übungen | Nicht belegt | – | P | ON | H | TP-06 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-EXL-03 |
 | TP-14 | Eigenes Programm erstellen und bearbeiten | Nur Trainerprogramme (laut Rezensionen) | REV | VF | EV | H | TP-03 | L | P0 | MVP | R1 · M2 | Verbesserung (D-107) | Implementiert | AK-PRG-01 bis AK-PRG-04, AK-PRG-10 |
 | TP-15 | Sätze im Plan hinzufügen und entfernen | Laut Rezensionen nicht möglich | REV | VF | EV | H | TP-08 | S | P0 | MVP | R1 · M2 | Verbesserung | Implementiert | AK-PRG-04 |
 | TP-16 | Verpasste Einheiten nachholen, Tag frei wählen | Laut Rezensionen nur nach Zurücksetzen des Plans | REV | VF | EV | H | TP-21 | S | P1 | MVP | R1 · M2 | Verbesserung über den Reihenfolge-Modus | Implementiert | AK-PRG-08 |
@@ -133,7 +134,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TP-23 | Programm duplizieren | – | – | E | EV | H | TP-14 | S | P1 | MVP | R1 · M2 | Verbesserung (D-107) | Implementiert | AK-PRG-05 |
 | TP-24 | Gekennzeichnete Beispielvorlagen | – | – | E | EV | M | TP-06 | S | P0 | MVP | R1 · M1 | Verbesserung (D-106); Inhalt in `sample-templates.md` | Implementiert | AK-PRG-06, AK-PWA-02 |
 | TP-25 | Als Vorlage speichern, Vorlage verwenden | – | – | E | EV | M | TP-23 | S | P1 | MVP | R1 · M2 | Verbesserung (D-107) | Implementiert | AK-PRG-06 |
-| TP-26 | Programm als Datei auf ein anderes Gerät übertragen | – | – | E | EV | M | SY-04 | S | P2 | MVP | R1 · M2 | Verbesserung: Mehrgerätenutzung vor der Sync (D-218) | Zur Umsetzung ausgewählt | AK-PRG-13 |
+| TP-26 | Programm als Datei auf ein anderes Gerät übertragen | – | – | E | EV | M | SY-04 | S | P2 | Später | R3 · M9 | Ersetzt durch die Synchronisierung mit Supabase (D-259) | Analysiert | Programm erscheint nach der Synchronisierung auf dem zweiten Gerät |
 
 ## C. Aktive Trainingseinheit (TS)
 

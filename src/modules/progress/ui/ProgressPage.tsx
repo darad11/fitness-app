@@ -1,6 +1,6 @@
 import { ChevronRight, LineChart, Scale, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useLoaderData } from 'react-router';
+import { Link } from 'react-router';
 import {
   changeInPeriod,
   inPeriod,
@@ -9,7 +9,7 @@ import {
   Sparkline,
   useBodyWeights,
 } from '@/modules/body';
-import type { Exercise } from '@/modules/exercises';
+import { useExercises } from '@/modules/exercises';
 import { useFormatters } from '@/modules/settings';
 import {
   estimateCalories,
@@ -41,17 +41,22 @@ const PERIOD_OPTIONS = STAT_PERIODS.map((value) => ({ value, label: t.progress.p
 
 /** Fortschritt (S-27): Kennzahlen mit Zeitraum, Körpergewicht, Bestleistungen, Übungsverläufe. */
 export function ProgressPage() {
-  const library = useLoaderData<readonly Exercise[]>();
+  const library = useExercises();
   const fmt = useFormatters();
   const now = useToday();
   const sessions = useCompletedSessions();
   const rows = useHistoryRows();
   const weights = useBodyWeights();
   const [period, setPeriod] = useState<StatPeriod>('month');
-  const names = useMemo(() => new Map(library.map((e) => [e.id, e.name])), [library]);
+  const names = useMemo(() => new Map((library ?? []).map((e) => [e.id, e.name])), [library]);
   const number = (value: number) => fmt.number(value, { maximumFractionDigits: 2 });
 
-  if (sessions === undefined || rows === undefined || weights === undefined) {
+  if (
+    sessions === undefined ||
+    rows === undefined ||
+    weights === undefined ||
+    library === undefined
+  ) {
     return (
       <>
         <PageHeader title={t.progress.title} />

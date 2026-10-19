@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { loadCoreExercises } from '@/modules/exercises';
+import { coreExerciseId, loadCoreExercises, savePrefs } from '@/modules/exercises';
 import { playRestEndSound } from '@/shared/lib/sound';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
@@ -392,6 +392,37 @@ describe('Player ausgebaut (Schritt D): Info, Umsortieren, Ersetzen, Übungstime
       expect(
         screen.getByRole('button', { name: `Erledigt zurücknehmen, ${plankSet}` }),
       ).toBeVisible();
+    });
+  });
+});
+
+describe('Persönliche Angaben im Player (AK-EXL-04, D-258)', () => {
+  it('nutzt Standardpause und Gewichtsschritt der Übung, wenn der Plan keine Pause hat', async () => {
+    const user = userEvent.setup();
+    const benchId = coreExerciseId('bench_press_barbell');
+    await savePrefs(rt, benchId, { defaultRestSec: 45, weightStepKg: 1.25 });
+    const session = await startSession(rt, {
+      source: 'free',
+      title: 'Frei',
+      exercises: [
+        {
+          exerciseId: benchId,
+          name: 'Bankdrücken mit Langhantel',
+          trackingMode: 'weight_reps',
+          sets: [{ type: 'working' }, { type: 'working' }],
+        },
+      ],
+    });
+    renderAt(`/training/einheit/${session.id}`);
+    const first = 'Bankdrücken mit Langhantel, Arbeitssatz 1';
+    await user.click(await screen.findByRole('button', { name: 'Gewicht + 1,25' }));
+    await waitFor(() => {
+      expect(screen.getByLabelText(`Gewicht in kg, ${first}`)).toHaveValue('1,25');
+    });
+    await user.type(screen.getByLabelText(`Wiederholungen, ${first}`), '8');
+    await user.click(screen.getByRole('button', { name: `Satz erledigt, ${first}` }));
+    await waitFor(async () => {
+      expect((await getSession(rt.db, session.id))?.restTimer?.durationSec).toBe(45);
     });
   });
 });

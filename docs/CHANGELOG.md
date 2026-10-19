@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.8 · 19.10.2026 · Eigene Übungen und persönliche Angaben (AP 2.5)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-258 eigene Übungen und persönliche Angaben; D-259 Programmdatei entfällt zugunsten der Synchronisierung |
+| `requirements.md` | AK-PRG-13 nach R3 verschoben |
+| `data-model.md` | Umsetzung `exercise` und `exercise_pref` |
+| `design-system.md` | S-12, S-13, S-14, S-39 Stand AP 2.5 |
+| `implementation-plan.md` | AP 2.5 umgesetzt, AP 2.8 ohne Programmdatei, nächste Schritte |
+| `feature-inventory.md` | TP-07, TP-13 auf „Implementiert“; TP-26 „Später“ (R3) |
+| `testing.md` | Ergebnisse eigene Übungen |
+
 ## Version 0.7 · 19.10.2026 · Eigene Programme und Vorlagen (AP 2.1 bis 2.4)
 
 | Datei | Änderung |

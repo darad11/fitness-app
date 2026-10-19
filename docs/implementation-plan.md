@@ -108,7 +108,7 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
 | 1.9 | Umgesetzt bis auf den Gerätetest (18.10.2026): E2E für Sichtbarkeitswechsel, Überziehung und Offline; T-IPH-M1 steht aus |
 
-**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request #7, Basis `m1-training`); Schritt D (Player: Übungsinfo, Umsortieren, Ersetzen mit Alternativen, Übungstimer, Tagesvorschau, D-250) auf dem Branch `evolution-player`; B, C und D am 18.10.2026 über #5, #7 und #8 nach `main` gemergt. Schritt E (Fortschritt: Körpergewicht mit Diagramm, Kennzahlen, Bestleistungen, Übungsverlauf, Kalorienschätzung, D-251, D-252) über #9 gemergt; damit sind AP 3.1, 3.2 und 3.6 sowie Teile von 3.4 vorgezogen, AP 3.3 (Ziele) steht aus. Schritt F (Tagesaufgaben mit Serie, Motivationssatz, Dexie v2, D-253) auf dem Branch `evolution-tasks` (PR #11); Ziele und Profil (AP 3.3, D-254) auf dem Branch `evolution-goals` (PR #12); Nachtragen (AP 2.6, D-255) auf dem Branch `m2-nachtragen` (PR #13); Verlauf bearbeiten und löschen (AP 2.7, D-256) auf dem Branch `m2-verlauf-bearbeiten`. Alles bis hier am 19.10.2026 über #11 bis #14 gemergt. Eigene Programme und Vorlagen (AP 2.1 bis 2.4, D-257) auf dem Branch `feat/eigene-programme`. Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
+**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request #7, Basis `m1-training`); Schritt D (Player: Übungsinfo, Umsortieren, Ersetzen mit Alternativen, Übungstimer, Tagesvorschau, D-250) auf dem Branch `evolution-player`; B, C und D am 18.10.2026 über #5, #7 und #8 nach `main` gemergt. Schritt E (Fortschritt: Körpergewicht mit Diagramm, Kennzahlen, Bestleistungen, Übungsverlauf, Kalorienschätzung, D-251, D-252) über #9 gemergt; damit sind AP 3.1, 3.2 und 3.6 sowie Teile von 3.4 vorgezogen, AP 3.3 (Ziele) steht aus. Schritt F (Tagesaufgaben mit Serie, Motivationssatz, Dexie v2, D-253) auf dem Branch `evolution-tasks` (PR #11); Ziele und Profil (AP 3.3, D-254) auf dem Branch `evolution-goals` (PR #12); Nachtragen (AP 2.6, D-255) auf dem Branch `m2-nachtragen` (PR #13); Verlauf bearbeiten und löschen (AP 2.7, D-256) auf dem Branch `m2-verlauf-bearbeiten`. Alles bis hier am 19.10.2026 über #11 bis #14 gemergt. Eigene Programme und Vorlagen (AP 2.1 bis 2.4, D-257) über #15 gemergt. Eigene Übungen (AP 2.5, D-258) auf dem Branch `feat/eigene-uebungen`; die Programmdatei entfällt (D-259). Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -119,13 +119,13 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 2.2 | Vorlagen: als Vorlage speichern, Vorlage verwenden, duplizieren, archivieren, löschen mit Rückgängig (umgesetzt am 19.10.2026, D-257) | M |
 | 2.3 | Aktivieren, Reihenfolge-Modus, Wochentag-Hinweis, Vorschau, Trainingsübersicht (Aktivieren, Reihenfolge-Modus, Vorschau und „Heute geplant“ für gebündelte Programme seit Schritt C, D-249; für eigene Programme mit Wochentag-Hinweis am 19.10.2026, D-257) | M |
 | 2.4 | Einheit aus Programm mit Snapshots; Ersetzen im Training und im Plan; Drop-Sätze im Player; Übungstimer; Pausieren und Fortsetzen; Notizen (Ersetzen im Training, Umsortieren und Übungstimer seit Schritt D, D-250; Einheit aus eigenem Programm mit Snapshot samt Zielgewicht, Ersetzen im Plan und Drop-Sätze im Plan am 19.10.2026, D-257; offen: Notizen im Player) | L |
-| 2.5 | Eigene Übungen, persönliche Übungsangaben, Übungsdetail mit letzten Einheiten | M |
+| 2.5 | Eigene Übungen, persönliche Übungsangaben, Übungsdetail mit letzten Einheiten (umgesetzt am 19.10.2026, D-258) | M |
 | 2.6 | Krafttraining nachtragen, Aktivität erfassen (umgesetzt am 18.10.2026, D-255) | M |
 | 2.7 | Verlauf bearbeiten und löschen mit Aktualisierung der Projektion (umgesetzt am 19.10.2026, D-256) | M |
-| 2.8 | Import in eine leere Datenbank; Programmdatei exportieren und importieren | M |
-| 2.9 | Tests und Gerätekurztest (eigenes Programm am iPhone; Programmdatei vom Mac übertragen) | M |
+| 2.8 | Import in eine leere Datenbank (Programmdatei entfällt, D-259: Mehrgerätenutzung über die Synchronisierung in R3) | M |
+| 2.9 | Tests und Gerätekurztest (eigenes Programm und eigene Übung am iPhone; Programmdatei entfällt, D-259) | M |
 
-AK: AK-PRG-01 bis AK-PRG-13, AK-TRN-03 (Drop), AK-TRN-09 (ersetzen), AK-TRN-14, AK-TRN-18, AK-TRN-23, AK-TRN-24, AK-EXL-03, AK-EXL-04, AK-EXL-05 (ohne Diagramm), AK-HIS-03, AK-HIS-04, AK-DAT-02, AK-DAT-05, AK-DSH-02 (Programmkarte).
+AK: AK-PRG-01 bis AK-PRG-12 (AK-PRG-13 nach R3, D-259), AK-TRN-03 (Drop), AK-TRN-09 (ersetzen), AK-TRN-14, AK-TRN-18, AK-TRN-23, AK-TRN-24, AK-EXL-03, AK-EXL-04, AK-EXL-05 (ohne Diagramm), AK-HIS-03, AK-HIS-04, AK-DAT-02, AK-DAT-05, AK-DSH-02 (Programmkarte).
 
 Abnahme M2: Alle genannten AK bestanden; Gerätekurztest bestanden.
 
@@ -239,4 +239,5 @@ Nächste Schritte: <Liste>
 25. Erledigt (Branch `m2-nachtragen`): AP 2.6 Training nachtragen und Aktivität erfassen (D-255).
 26. Erledigt (Branch `m2-verlauf-bearbeiten`): AP 2.7 Verlauf bearbeiten und löschen (D-256).
 27. Erledigt (Branch `feat/eigene-programme`): AP 2.1 bis 2.4 eigene Programme und Vorlagen mit Editor, Kopieren, Archiv und Löschen mit Rückgängig (D-257); offen in AP 2.4: Notizen im Player (TS-19).
-28. Ich: eigene Übungen (AP 2.5), Import und Programmdatei (AP 2.8); Schritt G nach Prüfung von Q-19.
+28. Erledigt (Branch `feat/eigene-uebungen`): AP 2.5 eigene Übungen, persönliche Angaben und Übungsdetail (D-258). Programmdatei entfällt auf Wunsch des Produktinhabers (D-259).
+29. Ich: Import einer Datensicherung in eine leere Datenbank (AP 2.8), Notizen im Player (TS-19); Schritt G nach Prüfung von Q-19.

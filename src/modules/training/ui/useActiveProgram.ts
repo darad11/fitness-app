@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { loadCoreExercises, type Exercise } from '@/modules/exercises';
+import { useExercises, type Exercise } from '@/modules/exercises';
 import { logError, useDb } from '@/shared/db';
 import { programProgress, type ProgramProgress } from '../calc/programProgress';
 import { useOwnProgram } from '../data/programRepository';
@@ -29,7 +29,6 @@ export interface ActiveProgram {
 interface Loaded {
   programId: string;
   bundled?: SampleTemplate;
-  exercises: readonly Exercise[];
 }
 
 /**
@@ -41,20 +40,21 @@ export function useProgramById(
 ): { program: AnyProgram; exercises: readonly Exercise[] } | null | undefined {
   const { db } = useDb();
   const own = useOwnProgram(programId);
+  const exercises = useExercises();
   const [loaded, setLoaded] = useState<Loaded>();
 
   useEffect(() => {
     if (!programId) return;
     let cancelled = false;
-    Promise.all([loadSampleTemplates(), loadCoreExercises()]).then(
-      ([templates, exercises]) => {
+    loadSampleTemplates().then(
+      (templates) => {
         if (cancelled) return;
-        setLoaded({ programId, bundled: templates.find((t) => t.id === programId), exercises });
+        setLoaded({ programId, bundled: templates.find((t) => t.id === programId) });
       },
       (error: unknown) => {
         if (cancelled) return;
         void logError(db, { area: 'training', error, route: window.location.pathname });
-        setLoaded({ programId, exercises: [] });
+        setLoaded({ programId });
       },
     );
     return () => {
@@ -64,9 +64,9 @@ export function useProgramById(
 
   if (!programId) return null;
   const current = loaded?.programId === programId ? loaded : undefined;
-  if (own === undefined || !current) return undefined;
+  if (own === undefined || !current || exercises === undefined) return undefined;
   const program = own ?? current.bundled;
-  return program ? { program, exercises: current.exercises } : null;
+  return program ? { program, exercises } : null;
 }
 
 /**

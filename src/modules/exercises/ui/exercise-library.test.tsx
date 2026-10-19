@@ -3,14 +3,27 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { DbProvider, type DbRuntime } from '@/shared/db';
+import { createTestRuntime } from '@/shared/testing/db';
 import { exercisesRoutes } from '../routes';
 
-afterEach(cleanup);
+let rt: DbRuntime;
+beforeEach(async () => {
+  rt = await createTestRuntime({ deviceId: 'a1b2c3d4' });
+});
+afterEach(async () => {
+  cleanup();
+  await rt.db.delete();
+});
 
 async function renderPage(path = '/uebungen') {
   const router = createMemoryRouter(exercisesRoutes, { initialEntries: [path] });
-  render(<RouterProvider router={router} />);
+  render(
+    <DbProvider runtime={rt}>
+      <RouterProvider router={router} />
+    </DbProvider>,
+  );
   await screen.findByRole('heading', { level: 1, name: 'Übungen' });
   return router;
 }
@@ -66,7 +79,7 @@ describe('Übungen (S-12, AK-EXL-01, AK-EXL-02)', () => {
     await user.selectOptions(screen.getByLabelText('Muskelgruppe'), 'Waden');
     await user.selectOptions(screen.getByLabelText('Gerät'), 'Maschine');
     const items = within(screen.getByRole('list', { name: '3 Treffer' })).getAllByRole('listitem');
-    expect(items.map((item) => item.firstChild?.textContent)).toEqual([
+    expect(items.map((item) => item.querySelector('.font-medium')?.textContent)).toEqual([
       'Wadenheben an der Beinpresse',
       'Wadenheben sitzend',
       'Wadenheben stehend',

@@ -1,10 +1,11 @@
 import { ArrowLeftRight, ChevronDown, ChevronUp, Ellipsis, Info, Plus, Trash2 } from 'lucide-react';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import {
   describeExercise,
   ExercisePicker,
-  loadCoreExercises,
+  useExercisePrefs,
+  useExercises,
   type Exercise,
 } from '@/modules/exercises';
 import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/settings';
@@ -164,22 +165,13 @@ function useRestEndSound(timer: Session['restTimer'], now: Date, enabled: boolea
   }, [enabled, endsAt, remaining]);
 }
 
-/** Basisbibliothek nach ID, für Übungsinfo und Alternativen; leer, bis sie geladen ist. */
+/** Basis- und eigene Übungen nach ID, für Übungsinfo und Alternativen; leer, bis sie geladen sind. */
 function useLibrary(): ReadonlyMap<string, Exercise> {
-  const [library, setLibrary] = useState<ReadonlyMap<string, Exercise>>(() => new Map());
-  useEffect(() => {
-    let active = true;
-    loadCoreExercises().then(
-      (list) => {
-        if (active) setLibrary(new Map(list.map((exercise) => [exercise.id, exercise])));
-      },
-      () => undefined,
-    );
-    return () => {
-      active = false;
-    };
-  }, []);
-  return library;
+  const exercises = useExercises();
+  return useMemo(
+    () => new Map((exercises ?? []).map((exercise) => [exercise.id, exercise])),
+    [exercises],
+  );
 }
 
 function Player({ session }: { session: Session }) {
@@ -189,6 +181,7 @@ function Player({ session }: { session: Session }) {
   const fmt = useFormatters();
   const history = usePreviousHistory(session);
   const library = useLibrary();
+  const prefs = useExercisePrefs();
   const now = useNow(session.restTimer || session.setTimer ? 250 : 1000);
   useRestEndSound(session.restTimer ?? null, now, settings.restSound);
   useEffect(() => {
@@ -269,7 +262,8 @@ function Player({ session }: { session: Session }) {
     run(set.id, () =>
       completeSet(rt, session.id, set.id, {
         previous: previousFor(exercise, set),
-        restDefaultSec: settings.restDefaultSec,
+        // Standardpause der Übung (AK-EXL-04), sonst aus den Einstellungen.
+        restDefaultSec: prefs?.get(exercise.exerciseId)?.defaultRestSec ?? settings.restDefaultSec,
         autoStartRest: settings.autoStartRest,
       }),
     );
@@ -532,7 +526,9 @@ function Player({ session }: { session: Session }) {
                       current={current?.id === set.id}
                       error={errors[set.id]?.message}
                       onRetry={errors[set.id]?.retry}
-                      weightStep={settings.weightStepKg}
+                      weightStep={
+                        prefs?.get(exercise.exerciseId)?.weightStepKg ?? settings.weightStepKg
+                      }
                       number={number}
                       onValue={(field, value) => {
                         if (value === 'invalid') {

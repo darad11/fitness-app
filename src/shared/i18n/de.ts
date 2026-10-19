@@ -612,6 +612,28 @@ export const de = {
     loginSubtitle:
       'Melde dich an, damit Training, Ernährung und Fortschritt auf all deinen Geräten gleich sind.',
     later: 'Später',
+    signUp: 'Registrieren',
+    signingUp: 'Wird registriert …',
+    signUpSubtitle:
+      'Lege dein Konto mit E-Mail und Passwort an. Damit gleichst du Training, Ernährung und Fortschritt zwischen deinen Geräten ab.',
+    toSignUp: 'Noch kein Konto? Registrieren',
+    toSignIn: 'Schon registriert? Anmelden',
+    passwordNew: (min: number) => `Passwort (mindestens ${String(min)} Zeichen)`,
+    passwordRepeat: 'Passwort wiederholen',
+    passwordTooShort: (min: number) => `Das Passwort braucht mindestens ${String(min)} Zeichen.`,
+    passwordMismatch: 'Die Passwörter stimmen nicht überein.',
+    confirmSent: (email: string) =>
+      `Fast geschafft: Wir haben eine E-Mail an ${email} geschickt. Tippe auf den Link darin und melde dich dann hier an.`,
+    confirmed: 'E-Mail bestätigt. Melde dich jetzt mit E-Mail und Passwort an.',
+    confirmFailed:
+      'Der Bestätigungslink ist abgelaufen oder ungültig. Registriere dich erneut oder melde dich an.',
+    signUpErrors: {
+      disabled:
+        'Neue Konten sind gerade nicht erlaubt. Schalte in Supabase „Allow new users to sign up“ ein oder lege das Konto dort an.',
+      exists: 'Zu dieser E-Mail gibt es schon ein Konto. Melde dich an.',
+      weakPassword: 'Das Passwort ist zu schwach. Nimm ein längeres Passwort.',
+      invalidEmail: 'Diese E-Mail-Adresse passt nicht. Bitte prüfe sie.',
+    },
     loginNote: 'Ohne Anmeldung bleibt alles auf diesem Gerät.',
     invalidCredentials: 'E-Mail oder Passwort stimmt nicht.',
     offline: 'Keine Verbindung. Bitte versuche es mit Netz erneut.',

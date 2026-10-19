@@ -22,6 +22,8 @@ export class SyncHttpError extends Error {
   constructor(
     readonly status: number,
     message: string,
+    /** Fehlercode von Supabase Auth, z. B. „signup_disabled“. */
+    readonly code?: string,
   ) {
     super(message);
   }
@@ -34,6 +36,19 @@ export class SyncOfflineError extends Error {
 
 export class InvalidCredentialsError extends Error {
   override name = 'InvalidCredentialsError';
+}
+
+/** Gründe, warum eine Registrierung abgelehnt wird (D-273). */
+export type SignUpProblem = 'disabled' | 'exists' | 'weakPassword' | 'invalidEmail';
+
+export class SignUpError extends Error {
+  override name = 'SignUpError';
+  constructor(
+    readonly problem: SignUpProblem,
+    message: string,
+  ) {
+    super(message);
+  }
 }
 
 async function request(
@@ -69,11 +84,12 @@ async function request(
   const text = await response.text();
   const body: unknown = text ? JSON.parse(text) : null;
   if (!response.ok) {
-    const message =
-      typeof body === 'object' && body !== null && 'message' in body
-        ? String(body.message)
-        : `HTTP ${String(response.status)}`;
-    throw new SyncHttpError(response.status, message);
+    const field = (key: string) =>
+      typeof body === 'object' && body !== null && key in body
+        ? String((body as Record<string, unknown>)[key])
+        : undefined;
+    const message = field('message') ?? field('msg') ?? `HTTP ${String(response.status)}`;
+    throw new SyncHttpError(response.status, message, field('error_code'));
   }
   return body;
 }
@@ -109,6 +125,59 @@ export async function signInWithPassword(
   } catch (error) {
     if (error instanceof SyncHttpError && (error.status === 400 || error.status === 401)) {
       throw new InvalidCredentialsError(error.message);
+    }
+    throw error;
+  }
+}
+
+export type SignUpResult =
+  | { kind: 'signedIn'; auth: AuthSession }
+  /** Supabase verlangt eine Bestätigung per E-Mail; danach normal anmelden. */
+  | { kind: 'confirmEmail' };
+
+const SIGN_UP_PROBLEMS: Record<string, SignUpProblem> = {
+  signup_disabled: 'disabled',
+  email_provider_disabled: 'disabled',
+  user_already_exists: 'exists',
+  email_exists: 'exists',
+  weak_password: 'weakPassword',
+  email_address_invalid: 'invalidEmail',
+  validation_failed: 'invalidEmail',
+};
+
+/**
+ * Registrierung mit E-Mail und Passwort (D-273). Ist in Supabase die Bestätigung per E-Mail an,
+ * kommt keine Sitzung zurück; der Link in der Mail führt zurück zu `redirectTo`.
+ */
+export async function signUpWithPassword(
+  email: string,
+  password: string,
+  redirectTo: string,
+  fetchImpl: typeof fetch = fetch,
+  now = Date.now(),
+): Promise<SignUpResult> {
+  try {
+    const body = await request(
+      fetchImpl,
+      `/auth/v1/signup?redirect_to=${encodeURIComponent(redirectTo)}`,
+      { method: 'POST', body: JSON.stringify({ email: email.trim(), password }) },
+    );
+    const b = body as { access_token?: unknown };
+    return typeof b.access_token === 'string'
+      ? { kind: 'signedIn', auth: toSession(body, now) }
+      : { kind: 'confirmEmail' };
+  } catch (error) {
+    if (error instanceof SyncHttpError && error.status >= 400 && error.status < 500) {
+      const problem =
+        (error.code ? SIGN_UP_PROBLEMS[error.code] : undefined) ??
+        (/not allowed|disabled/i.test(error.message)
+          ? 'disabled'
+          : /already/i.test(error.message)
+            ? 'exists'
+            : /password/i.test(error.message)
+              ? 'weakPassword'
+              : 'invalidEmail');
+      throw new SignUpError(problem, error.message);
     }
     throw error;
   }

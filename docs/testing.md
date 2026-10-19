@@ -656,3 +656,13 @@ Aktuelles Gewicht beim Zielgewicht, ein Knopf „Gewicht erfassen“ (D-274).
 | `pnpm test` | 80 Dateien, 674 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 190 bestanden, 2 übersprungen. Neu in `goals.spec.ts`: ohne Eintrag genau ein Knopf; Profil zeigt „Noch kein Gewicht gemessen“, nach 81,4 kg „Dein aktuelles Gewicht: 81,4 kg“. Ein zuerst gebautes Häkchen beim Kalorien-Vorschlag wurde auf Wunsch wieder entfernt |
 | Bildschirmfotos | Handy dunkel: Körpergewicht leer, Zielgewicht mit aktuellem Gewicht |
+
+### Ring und Scanner auf „Heute“ · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kleiner Makro-Ring und „Barcode scannen“ auf „Heute“ (D-275).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 81 Dateien, 675 Tests bestanden (neu: `mealSlot.test.ts`, Mahlzeit nach Uhrzeit) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 190 bestanden, 2 übersprungen (Stand vor dem Einholen von #29). Neu in `barcode.spec.ts`: Ring auf „Heute“ mit „0 / 2.200 kcal“, „Barcode scannen“ öffnet den Scanner sofort, nach dem Eintragen zurück auf „Heute“ mit neuem Wert |
+| Bildschirmfotos | Entwurf als Bilder aus der gebauten App (Handy hell und dunkel, Web hell und dunkel, Scanner), vom Produktinhaber freigegeben |

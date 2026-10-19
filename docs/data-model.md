@@ -170,6 +170,8 @@ interface PlannedSet extends Child {
 
 Beispielvorlagen sind gebündelte, schreibgeschützte Stammdaten mit stabilen IDs (`sample-templates.md`). „Vorlage verwenden" erzeugt ein Nutzerprogramm mit neuen IDs und `origin = 'sample-copy'`. Die Programme A, B, C (`programs.md`) nutzen dieselbe Form (`programs.v1.json`, erzeugt von `tools/programs_build.py`), erweitert um `program: true`, `description`, `source` sowie je Übung `notes` und `originalName` (D-249).
 
+Eigene Programme und Vorlagen (D-257) liegen als Dokument `program` (Schemaversion 1) in der Tabelle `programs`. Wochen, Tage, Übungen und Sätze tragen `hlc`, `deletedAt` und `position`; der Editor stempelt nur geänderte oder verschobene Elemente neu und behält entfernte als Tombstone. Gelesen wird die Anzeigeform ohne Tombstones, nach Position sortiert (`calc/programTree.ts`). Je Übung bleibt `originalName` aus einer Kopie erhalten. Grenzen des Editors: 52 Wochen, 14 Tage je Woche, 40 Übungen je Tag, 30 Sätze je Übung, Namen bis 80 Zeichen. `weekdayHint` dient nur der Anzeige „Heute geplant“ (AK-PRG-09).
+
 ### 3.3 Trainingszustand (`training_state`, Singleton)
 
 ```ts

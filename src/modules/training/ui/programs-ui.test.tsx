@@ -86,8 +86,10 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     ]);
     const dayB = screen.getByRole('region', { name: 'Tag B' });
     expect(within(dayB).getByText('2 Sätze je Seite · 20–40 s · Pause 1:00 min')).toBeVisible();
-    // Keine Bearbeitung: Beispielvorlagen sind schreibgeschützt; nur „heute trainieren".
+    // Keine Bearbeitung: Beispielvorlagen sind schreibgeschützt; nur übernehmen (als Kopie)
+    // und „heute trainieren".
     expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual([
+      'Als eigenes Programm übernehmen',
       'Tag A heute trainieren',
       'Tag B heute trainieren',
     ]);

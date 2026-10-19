@@ -456,3 +456,16 @@ Detail einer abgeschlossenen Einheit mit „Bearbeiten“ (Titel, Beginn, Dauer,
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 56 Tests bestanden. Neu `history-edit.spec.ts`: Aktivität nachtragen, Titel, Dauer und Notiz ändern, löschen, „Rückgängig“ |
 | Befund aus der CI von #12 | Der Winter-Arc-Komponententest fand „Trainingstag 2 von 40“ nicht innerhalb von 1 s, weil die Seite mit 40 Tagen in jsdom auf dem Runner langsamer rendert; zugleich zeigte die Programmkarte während des Ladens fälschlich „Programm abgeschlossen“. Behoben in #12: Ladetext statt „abgeschlossen“, Wartezeit 10 s, Testzeit 20 s |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Eigene Programme und Vorlagen (AP 2.1 bis 2.4) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Eigene Programme anlegen, übernehmen, bearbeiten (Wochen, Tage, Übungen, Sätze mit Bereich, Zielgewicht, Zeit, Distanz, Drop-Sätzen, Pausen, Hinweisen, Wochentag), duplizieren, als Vorlage speichern, Vorlage verwenden, archivieren und löschen mit Rückgängig; Start und Fortschritt wie bei gebündelten Programmen (D-257).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 63 Dateien, 519 Tests bestanden. Neu: `programTree.test.ts` (Stempel nur für geänderte und verschobene Elemente, Tombstones, Anzeigeform, Kopie mit neuen IDs und verknüpften Drops), `programEdit.test.ts` (Wochen, Tage, Übungen, Sätze; Grenzen „letzte Woche“, „letzter Tag“, „letzter Arbeitssatz“, Höchstzahl; Ersetzen mit Anpassung an die Erfassungsart; Original bleibt unverändert), sechs Fälle in `programService.test.ts` (Anlegen, Namensprüfung, Übernahme Winter Arc mit neuen IDs, Duplizieren und Vorlagen, AK-PRG-10 laufende Einheit behält ihre Ziele, ungültige Struktur ohne Speichern, Archivieren und Löschen beenden ein aktives Programm, Wiederherstellen ohne erneute Aktivierung), Wochentag-Hinweis in `programProgress.test.ts`, vier Fälle in `own-programs-ui.test.tsx` (Anlegen bis Start mit Zielgewicht; Übernehmen; Löschen mit Rückgängig; Duplizieren und Archiv) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,69 %, Zweige 79,43 %, Funktionen 86,25 %, Zeilen 89,83 %; leicht gesunken, weil der Tag-Editor in jsdom nicht jede Erfassungsart durchläuft) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 227,3 KB gzip (Grenze 250 KB; +6,5 KB, weil „Heute“ für das aktive Programm jetzt auch eigene Programme liest) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 122 Tests bestanden. Neu `own-programs.spec.ts`: „Ganzkörper A/B“ übernehmen, Plank nach oben, Wdh. bis 10, nach Neuladen erhalten, Original unverändert; axe ohne Verstöße auf Programmseite, Editor, Tag-Editor und Liste in „Hell“ und „Dunkel“ |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest (eigenes Programm am iPhone) steht aus |

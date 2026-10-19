@@ -22,6 +22,24 @@ export const trainingRoutes: RouteObject[] = [
     },
   },
   {
+    path: 'training/programme/:id',
+    lazy: async () => ({
+      Component: (await import('./ui/programs/OwnProgramPage')).OwnProgramPage,
+    }),
+  },
+  {
+    path: 'training/programme/:id/bearbeiten',
+    lazy: async () => ({
+      Component: (await import('./ui/programs/ProgramEditPage')).ProgramEditPage,
+    }),
+  },
+  {
+    path: 'training/programme/:id/tage/:dayId',
+    lazy: async () => ({
+      Component: (await import('./ui/programs/DayEditPage')).DayEditPage,
+    }),
+  },
+  {
     path: 'training/vorlagen/:key',
     lazy: async () => {
       const [{ SampleTemplatePage }, { loadSampleTemplate }] = await Promise.all([

@@ -1,7 +1,7 @@
 // Öffentliche Schnittstelle des Moduls „training".
 export { trainingRoutes } from './routes';
 export { SessionBanner } from './ui/SessionBanner';
-export { ActiveProgramCard } from './ui/ActiveProgramCard';
+export { ActiveProgramCard, plannedEyebrow } from './ui/ActiveProgramCard';
 export { useActiveProgram } from './ui/useActiveProgram';
 export { useActiveSession, useCompletedSessions, useHistoryRows } from './data/useSession';
 export { useStartSession } from './ui/useStartSession';

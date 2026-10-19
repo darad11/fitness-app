@@ -1,4 +1,4 @@
-import type { SampleTemplate } from '../model/program';
+import type { PlanTree } from '../model/program';
 
 /** Ein Trainingstag in der flachen Folge aller Wochen eines Programms. */
 export interface ProgramDayRef {
@@ -34,7 +34,7 @@ export interface ProgramProgress {
 }
 
 /** Alle Trainingstage eines Programms in Reihenfolge, Woche für Woche (Reihenfolge-Modus, D-214). */
-export function flattenDays(template: SampleTemplate): ProgramDayRef[] {
+export function flattenDays(template: PlanTree): ProgramDayRef[] {
   const days: ProgramDayRef[] = [];
   template.weeks.forEach((week, weekIndex) => {
     week.days.forEach((day, dayIndex) => {
@@ -54,7 +54,7 @@ export function flattenDays(template: SampleTemplate): ProgramDayRef[] {
 
 /** Nummer eines Tages in der Folge (ab 1) oder `undefined`, wenn es ihn im Programm nicht gibt. */
 export function dayNumber(
-  template: SampleTemplate,
+  template: PlanTree,
   weekIndex: number,
   dayIndex: number,
 ): number | undefined {
@@ -71,7 +71,7 @@ export function dayNumber(
  * Nach dem letzten Tag beginnt ein Programm mit `repeat` von vorn, sonst ist es abgeschlossen.
  */
 export function programProgress(
-  template: SampleTemplate,
+  template: PlanTree,
   sessions: readonly ProgramSessionLike[],
   activeSince?: string,
 ): ProgramProgress {
@@ -115,4 +115,23 @@ export function programProgress(
   if (last + 1 < total) return { ...base, next: days[last + 1], finished: false };
   if (template.repeat) return { ...base, next: days[0], finished: false };
   return { ...base, finished: true };
+}
+
+/** ISO-Wochentag (1 = Montag … 7 = Sonntag) eines Datums in lokaler Zeit. */
+export function isoWeekday(date: Date): number {
+  return ((date.getDay() + 6) % 7) + 1;
+}
+
+/**
+ * Wochentag-Hinweis des nächsten Tags (AK-PRG-09): `today` ohne Hinweis oder wenn er zu heute
+ * passt, sonst der geplante Wochentag. Feste Ruhetage gibt es nicht (D-214).
+ */
+export function plannedFor(
+  template: PlanTree,
+  next: Pick<ProgramDayRef, 'weekIndex' | 'dayIndex'>,
+  now: Date,
+): { kind: 'today' } | { kind: 'weekday'; weekday: number } {
+  const hint = template.weeks[next.weekIndex]?.days[next.dayIndex]?.weekdayHint;
+  if (hint === undefined || hint === isoWeekday(now)) return { kind: 'today' };
+  return { kind: 'weekday', weekday: hint };
 }

@@ -12,6 +12,7 @@ import {
   sessionDurationSec,
   sessionProgress,
   summarizeSession,
+  plannedEyebrow,
   useActiveProgram,
   useActiveSession,
   useCompletedSessions,
@@ -151,7 +152,7 @@ export function TodayPage() {
           <div className="md:col-span-2">
             <ActiveProgramCard
               program={program}
-              eyebrow={t.today.plannedEyebrow}
+              eyebrow={plannedEyebrow(program, today)}
               busy={busy}
               onStart={(input) => {
                 void start(input);

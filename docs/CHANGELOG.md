@@ -10,6 +10,16 @@
 | `implementation-plan.md` | Stand und nächste Schritte |
 | `testing.md` | Ergebnisse Glas-Look |
 
+## Version 0.17 · 19.10.2026 · Marken zu den ÖNWT-Lebensmitteln
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-271 Marken aus `nuts-marken.json` |
+| `data-model.md` | Zeile `marken` in der Katalog-Datenbank |
+| `data-sources.md` | Marken aus den Detailseiten übernommen |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Marken-Import |
+
 ## Version 0.16 · 19.10.2026 · Synchronisierung, erste Stufe
 
 | Datei | Änderung |

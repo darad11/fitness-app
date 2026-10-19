@@ -602,6 +602,20 @@ Supabase-Projekt „fitness-app“ (Frankfurt), Tabelle `sync_documents` mit RLS
 | WebKit in GitHub Actions | Erster Lauf: `sync.spec.ts` rot, die Anmeldung erreichte den echten Server statt der Nachbildung (Anfragen der vom Service Worker gesteuerten Seite umgehen in WebKit `page.route`); behoben, der Test blockiert den Service Worker. Zweiter Lauf: `barcode.spec.ts` rot auf webkit-mobile, „Importing a module script failed“, weil ein Seitenwechsel das Nachladen des Hintergrund-Abgleichs abbrach und die Fehleranzeige auslöste; behoben, ein gescheitertes Nachladen lässt die App ohne Abgleich weiterlaufen. Lokal danach `barcode`, `sync`, `shell` (Chromium) 20 Tests bestanden; Startansicht 237,8 KB gzip |
 | Gerätetest | Abgleich zwischen zwei echten Geräten steht aus |
 
+### Marken zu den ÖNWT-Lebensmitteln · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Marken aus `nuts-marken.json` herauslösen, beim Import zuordnen, in der Suche anzeigen (D-271).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 76 Dateien, 593 Tests bestanden. Neu: `catalogBrands.test.ts` (Regeln an Beispielen aus der Datei, u. a. Alnatura, Bahlsen GmbH & Co. KG, Knorr, Unilever, ja! Natürlich, Dr. Oetker; keine Marke bei „/“ und Beschreibungen; Datei erkennen und lesen), ein Fall in `catalogService.test.ts` (Markendatei ohne Lebensmitteldaten abgelehnt, Zuordnung nur bei gleichem Code und Namen, Marken bleiben bei neuem Import, „Import entfernen“ löscht beide) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 87,43 %, Zweige 79,09 %, Funktionen 84,59 %, Zeilen 88,69 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 236,2 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 174 Tests bestanden |
+| Echte Dateien im Build (Chromium, Pixel-Größe) | `nuts-recherche.json`: Vorschau 7.476 übernommen; `nuts-marken.json`: Vorschau „5.934 deiner importierten Lebensmittel bekommen eine Marke“; danach „7.476 Lebensmittel importiert · 5.934 davon mit Marke“. Suche „hummus“: 12 Treffer, z. B. „Hummus classic · Alnatura“, „Hummus Classic · NENI“; Suche „alnatura“: 50 Treffer (Grenze der Liste) |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Import auf dem iPhone steht aus |
+
 ### Glas-Look · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
 Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, Kalorien-Ring, Gewichtskurve, ohne Vorschau-Balken (D-272).

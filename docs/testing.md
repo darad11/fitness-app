@@ -570,3 +570,16 @@ Rezepte mit Zutaten aus allen Quellen, Nährwerte je Portion und gesamt, portion
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 235,7 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 168 Tests bestanden. Neu in `nutrition.spec.ts`: Rezept anlegen, nach Neuladen eintragen; `/ernaehrung/rezepte` und `/ernaehrung/rezepte/neu` in der Netz- und axe-Prüfung (Hell und Dunkel) ohne Verstöße |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Mahlzeit-Vorlagen · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Vorlage aus einer Mahlzeit speichern, mit einem Tipp in eine Mahlzeit eintragen, umbenennen, löschen mit Rückgängig, Dexie v5 (D-268).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 75 Dateien, 585 Tests bestanden. Neu: `mealTemplateService.test.ts` (Frühstück aus Haferflocken 60 g, Banane 120 g und Schnelleintrag als Vorlage; an einem anderen Tag in „Snacks“ eingetragen mit 208,8, 94,8 und 30 kcal, Reihenfolge und Schätzung erhalten, eigene IDs; umbenennen, löschen, wiederherstellen; Prüfungen), Migrationstest v4 → v5, ein Fall in `nutrition-ui.test.tsx` (speichern am Tag, eintragen über „Vorlagen“ ins Abendessen, löschen mit Rückgängig) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 87,4 %, Zweige 79,17 %, Funktionen 84,71 %, Zeilen 88,63 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 236,0 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 174 Tests bestanden. Neu in `nutrition.spec.ts`: Vorlage speichern, nach Neuladen ins Abendessen eintragen; `/ernaehrung/vorlagen` in der Netz- und axe-Prüfung (Hell und Dunkel) ohne Verstöße |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

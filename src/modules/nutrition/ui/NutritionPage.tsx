@@ -1,4 +1,13 @@
-import { ChevronLeft, ChevronRight, CookingPot, Plus, Target, UtensilsCrossed } from 'lucide-react';
+import {
+  Bookmark,
+  BookmarkPlus,
+  ChevronLeft,
+  ChevronRight,
+  CookingPot,
+  Plus,
+  Target,
+  UtensilsCrossed,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -19,9 +28,10 @@ import { useToday } from '@/shared/ui/useToday';
 import { sumEntries } from '../calc/nutrients';
 import { targetOn } from '../calc/targets';
 import { useDayEntries, useTargets } from '../data/nutritionRepository';
-import { MEAL_SLOTS, type FoodLogEntry } from '../model/nutrition';
+import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
+import { SaveTemplateDialog } from './TemplateDialogs';
 import { dayDate, describeAmount, grams, kcal } from './format';
 
 /** Weitere Tageswerte neben den Makros. */
@@ -39,6 +49,8 @@ export function NutritionPage() {
   const targets = useTargets();
   const [editing, setEditing] = useState<FoodLogEntry | null>(null);
   const [deleted, setDeleted] = useState<FoodLogEntry | null>(null);
+  const [saving, setSaving] = useState<MealSlot | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const rt = useDb();
 
   const goTo = (key: string) => {
@@ -218,16 +230,30 @@ export function NutritionPage() {
                     ))}
                   </ul>
                 )}
-                <ButtonLink
-                  to={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`}
-                  variant="quiet"
-                  size="sm"
-                  className="mt-2"
-                  aria-label={t.nutrition.addTo(t.nutrition.slots[slot])}
-                >
-                  <Plus aria-hidden="true" className="size-4" />
-                  {t.nutrition.add}
-                </ButtonLink>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <ButtonLink
+                    to={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`}
+                    variant="quiet"
+                    size="sm"
+                    aria-label={t.nutrition.addTo(t.nutrition.slots[slot])}
+                  >
+                    <Plus aria-hidden="true" className="size-4" />
+                    {t.nutrition.add}
+                  </ButtonLink>
+                  {items.length > 0 ? (
+                    <Button
+                      variant="quiet"
+                      size="sm"
+                      aria-label={t.nutrition.templates.saveFromSlotLabel(t.nutrition.slots[slot])}
+                      onClick={() => {
+                        setSaving(slot);
+                      }}
+                    >
+                      <BookmarkPlus aria-hidden="true" className="size-4" />
+                      {t.nutrition.templates.saveFromSlot}
+                    </Button>
+                  ) : null}
+                </div>
               </Card>
             );
           })}
@@ -245,6 +271,10 @@ export function NutritionPage() {
               <CookingPot aria-hidden="true" className="size-5" />
               {t.nutrition.recipes.title}
             </ButtonLink>
+            <ButtonLink to="/ernaehrung/vorlagen" variant="secondary">
+              <Bookmark aria-hidden="true" className="size-5" />
+              {t.nutrition.templates.title}
+            </ButtonLink>
           </div>
           <p className="text-xs text-muted">{t.nutrition.sources}</p>
         </div>
@@ -260,6 +290,28 @@ export function NutritionPage() {
           onDeleted={(entry) => {
             setEditing(null);
             setDeleted(entry);
+          }}
+        />
+      ) : null}
+      {saving ? (
+        <SaveTemplateDialog
+          slot={saving}
+          entries={(entries ?? []).filter((e) => e.slot === saving)}
+          onClose={() => {
+            setSaving(null);
+          }}
+          onSaved={(template) => {
+            setNotice(t.nutrition.templates.saved(template.name));
+          }}
+        />
+      ) : null}
+      {notice && !deleted ? (
+        <Toast
+          key={notice}
+          message={notice}
+          durationMs={4000}
+          onTimeout={() => {
+            setNotice(null);
           }}
         />
       ) : null}

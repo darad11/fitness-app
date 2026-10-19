@@ -11,7 +11,7 @@ import { catalogDbName } from '../data/catalogStore';
 import { setOffConsent } from '../data/openFoodFacts';
 import { listDayEntries, listFoods, listTargets } from '../data/nutritionRepository';
 import { nutritionRoutes } from '../routes';
-import { localDayKey } from '../service/nutritionService';
+import { localDayKey, logQuick } from '../service/nutritionService';
 
 const localDay = () => localDayKey(new Date());
 const setOffConsentForTest = () => setOffConsent(rt.db, true);
@@ -498,6 +498,49 @@ describe('Ernährung (Schritt G, D-261)', () => {
       await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
       const [entry] = await listDayEntries(rt.db, localDay());
       expect(entry).toMatchObject({ kind: 'recipe', nameSnapshot: 'Overnight Oats', amount: 100 });
+    },
+  );
+
+  it(
+    'speichert eine Mahlzeit als Vorlage und trägt sie mit einem Tipp ein (D-268)',
+    { timeout: 60_000 },
+    async () => {
+      const user = userEvent.setup();
+      await logQuick(rt, { name: 'Müsli', slot: 'breakfast', dayKey: localDay(), kcal: 350 });
+      await logQuick(rt, { name: 'Kaffee', slot: 'breakfast', dayKey: localDay(), kcal: 30 });
+      await renderAt('/ernaehrung', 'Ernährung');
+      await user.click(
+        await screen.findByRole('button', { name: 'Frühstück als Vorlage speichern' }, WAIT),
+      );
+      const save = screen.getByRole('dialog', { name: 'Als Vorlage speichern' });
+      expect(within(save).getByLabelText('Name der Vorlage')).toHaveValue('Frühstück');
+      await user.clear(within(save).getByLabelText('Name der Vorlage'));
+      await user.type(within(save).getByLabelText('Name der Vorlage'), 'Mein Frühstück');
+      await user.click(within(save).getByRole('button', { name: 'Speichern' }));
+      expect(
+        await screen.findByText('Vorlage „Mein Frühstück“ gespeichert', {}, WAIT),
+      ).toBeVisible();
+
+      cleanup();
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=dinner', 'Lebensmittel hinzufügen');
+      const templates = await screen.findByRole('list', { name: 'Vorlagen' }, WAIT);
+      expect(within(templates).getByText('2 Einträge · 380 kcal')).toBeVisible();
+      await user.click(within(templates).getByRole('button', { name: /Mein Frühstück/ }));
+      const apply = screen.getByRole('dialog', { name: 'Mein Frühstück eintragen' });
+      expect(within(apply).getByText('Alle Einträge kommen zu „Abendessen“.')).toBeVisible();
+      await user.click(within(apply).getByRole('button', { name: 'Alle eintragen' }));
+      const dinner = await screen.findByRole('region', { name: 'Abendessen' }, WAIT);
+      expect(await within(dinner).findByText('Müsli', {}, WAIT)).toBeVisible();
+      expect(within(dinner).getByText('Kaffee')).toBeVisible();
+      expect(await listDayEntries(rt.db, localDay())).toHaveLength(4);
+
+      cleanup();
+      await renderAt('/ernaehrung/vorlagen', 'Vorlagen');
+      await user.click(await screen.findByRole('button', { name: 'Mein Frühstück löschen' }, WAIT));
+      expect(await screen.findByText('Vorlage „Mein Frühstück“ gelöscht', {}, WAIT)).toBeVisible();
+      expect(await screen.findByText(/Noch keine Vorlagen/, {}, WAIT)).toBeVisible();
+      await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
+      expect(await screen.findByText('Mein Frühstück', {}, WAIT)).toBeVisible();
     },
   );
 });

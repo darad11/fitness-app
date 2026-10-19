@@ -3,6 +3,7 @@ import { useDb, type AppDb, type DocDef } from '@/shared/db';
 import { stableId } from '@/shared/lib/uuid';
 import { recipeTotals } from '../calc/recipe';
 import type { FoodItem } from '../model/foodItem';
+import { mealTemplateSchema, type MealTemplate } from '../model/mealTemplate';
 import { recipeSchema, type Recipe } from '../model/recipe';
 import {
   foodLogEntrySchema,
@@ -33,6 +34,13 @@ export const recipeDef: DocDef<Recipe> = {
   schemaVersion: NUTRITION_SCHEMA_VERSION,
   schema: recipeSchema,
   table: (db) => db.recipes,
+};
+
+export const mealTemplateDef: DocDef<MealTemplate> = {
+  type: 'meal_template',
+  schemaVersion: NUTRITION_SCHEMA_VERSION,
+  schema: mealTemplateSchema,
+  table: (db) => db.mealTemplates,
 };
 
 export const nutritionTargetDef: DocDef<NutritionTarget> = {
@@ -166,4 +174,19 @@ export function toRecipeItem(recipe: Recipe): FoodItem {
     ...(recipe.favorite ? { favorite: true } : {}),
     ...(recipe.archivedAt ? { archivedAt: recipe.archivedAt } : {}),
   };
+}
+
+/** Mahlzeit-Vorlagen, alphabetisch. */
+export async function listMealTemplates(db: AppDb): Promise<MealTemplate[]> {
+  const rows = parseRows<MealTemplate>(
+    await db.mealTemplates.toArray(),
+    'meal_template',
+    mealTemplateSchema,
+  );
+  return rows.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+}
+
+export function useMealTemplates(): MealTemplate[] | undefined {
+  const { db } = useDb();
+  return useLiveQuery(() => listMealTemplates(db), [db]);
 }

@@ -1,4 +1,4 @@
-import { Plus, ScanBarcode, Star, Zap } from 'lucide-react';
+import { Bookmark, Plus, ScanBarcode, Star, Zap } from 'lucide-react';
 import { useDeferredValue, useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -19,13 +19,15 @@ import {
 import { useToday } from '@/shared/ui/useToday';
 import { searchFoods } from '../calc/foodSearch';
 import { scaleNutrients } from '../calc/nutrients';
-import { useEntriesSince } from '../data/nutritionRepository';
+import { useEntriesSince, useMealTemplates } from '../data/nutritionRepository';
+import type { MealTemplate } from '../model/mealTemplate';
 import type { FoodItem } from '../model/foodItem';
 import { MEAL_SLOTS, type MealSlot } from '../model/nutrition';
 import { logFood, logQuick, type Quantity } from '../service/nutritionService';
 import { BarcodeFlow } from './BarcodeFlow';
 import { kcal } from './format';
 import { NutrientTable } from './NutrientTable';
+import { ApplyTemplateDialog, templateKcal } from './TemplateDialogs';
 import { useFoodCatalog } from './useFoodCatalog';
 
 const INPUT =
@@ -55,6 +57,8 @@ export function AddFoodPage() {
   const [picked, setPicked] = useState<FoodItem | null>(null);
   const [quick, setQuick] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [applying, setApplying] = useState<MealTemplate | null>(null);
+  const templates = useMealTemplates();
   const [savedNotice, setSavedNotice] = useState(false);
   const back = `/ernaehrung${day === today ? '' : `?tag=${day}`}`;
 
@@ -183,6 +187,41 @@ export function AddFoodPage() {
         </section>
       ) : (
         <div className="grid gap-6">
+          {templates && templates.length > 0 ? (
+            <section aria-labelledby="vorlagen">
+              <h2 id="vorlagen" className="eyebrow mb-2 flex items-center gap-1 text-muted">
+                <Bookmark aria-hidden="true" className="size-4" />
+                {t.nutrition.templates.title}
+              </h2>
+              <ul
+                aria-label={t.nutrition.templates.title}
+                className="divide-y divide-line overflow-hidden rounded-card bg-surface shadow-card"
+              >
+                {templates.map((template) => (
+                  <li key={template.id}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setApplying(template);
+                      }}
+                      className="flex min-h-14 w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface-2"
+                    >
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-medium break-words">{template.name}</span>
+                        <span className="block text-sm text-muted">
+                          {t.nutrition.templates.summary(
+                            template.items.length,
+                            kcal(fmt, templateKcal(template)),
+                          )}
+                        </span>
+                      </span>
+                      <Plus aria-hidden="true" className="size-5 shrink-0 text-muted" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
           {favorites.length > 0 ? (
             <section aria-labelledby="favoriten">
               <h2 id="favoriten" className="eyebrow mb-2 flex items-center gap-1 text-muted">
@@ -203,6 +242,20 @@ export function AddFoodPage() {
         </div>
       )}
 
+      {applying ? (
+        <ApplyTemplateDialog
+          template={applying}
+          slot={slot}
+          day={day}
+          onClose={() => {
+            setApplying(null);
+          }}
+          onApplied={() => {
+            setApplying(null);
+            void navigate(back);
+          }}
+        />
+      ) : null}
       {scanning ? (
         <BarcodeFlow
           returnTo={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`}

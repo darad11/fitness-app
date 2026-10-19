@@ -88,7 +88,7 @@ E. Ernährung (NU);NU-07;Barcode-Scanning;Vorhanden, 2026 verbessert;"REV; AS 3.
 E. Ernährung (NU);NU-08;Lebensmittelsuche;"Vorhanden; bekannte Marken fehlen oft (laut Rezensionen)";REV;V;OV;H;"NU-21; Open Food Facts";L;P1;Später;R2 · M5/M6;Anpassen: lokal zuerst, online ergänzend;Spezifiziert;Offline-Suche über eigene, generische und gespeicherte Einträge
 E. Ernährung (NU);NU-09;Portionsgröße und Anzahl kombinierbar;Nur eines von beiden (laut Rezension);REV;VF;EV;H;NU-05;S;P1;MVP;R1 · Schritt G;Verbesserung, vorgezogen (D-261);Implementiert;AK-NUT-02
 E. Ernährung (NU);NU-10;Eigene Lebensmittel mit Nährwerten;Manuelle Eingabe mit Nährwerten;SD 05:54;V;OV;H;–;S;P1;MVP;R1 · Schritt G;Übernehmen, vorgezogen (D-261);Implementiert;AK-NUT-03
-E. Ernährung (NU);NU-11;Favoriten, zuletzt verwendet, Mahlzeitvorlagen;Von Nutzern gewünscht, nicht belegt;REV;VF;EV;H;NU-05;M;P1;Später;R2 · M5;Verbesserung;Spezifiziert;"„Zuletzt"" automatisch; Favoriten markierbar; Vorlagen aus mehreren Einträgen"
+E. Ernährung (NU);NU-11;Favoriten, zuletzt verwendet, Mahlzeitvorlagen;Von Nutzern gewünscht, nicht belegt;REV;VF;EV;H;NU-05;M;P1;MVP;R1 · Schritt G;Verbesserung, vorgezogen (D-268);Implementiert;AK-NUT-11
 E. Ernährung (NU);NU-12;Ernährungsverlauf;Historie wird gespeichert;HC-G;V;OV;H;NU-02;S;P1;Später;R2 · M5;Übernehmen;Spezifiziert;"Jeder Tag aufrufbar und editierbar; Wochendurchschnitt"
 E. Ernährung (NU);NU-13;Wassertracking;Nur als tägliche Challenge-Aufgabe;TC;V;OV;M;–;S;P3;Später;R4 · M13;Später, mit den Gewohnheiten;Analysiert;"Schnelleingabe in ml; Tagesziel"
 E. Ernährung (NU);NU-14;Fotoerkennung von Mahlzeiten;Nur in einer Drittquelle genannt;MWM;N;ON;N;KI-Dienst;XL;–;Ausgeschlossen;–;Ausschließen;Analysiert;Entfällt

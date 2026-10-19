@@ -4,6 +4,7 @@ import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { inSection, VISIBLE_NAV_ITEMS } from './nav';
 import { attachTabLens, PILL_OUTSET } from './tabLens';
+import { attachTabMinimize } from './tabMinimize';
 
 function activeKey(pathname: string): string | undefined {
   return VISIBLE_NAV_ITEMS.find(
@@ -20,6 +21,7 @@ export function TabBar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const bar = useRef<HTMLElement>(null);
+  const wrapper = useRef<HTMLDivElement>(null);
   const indicator = useRef<HTMLSpanElement>(null);
   const current = activeKey(pathname);
   const currentRef = useRef(current);
@@ -64,6 +66,8 @@ export function TabBar() {
       }
     };
     window.addEventListener('resize', onResize);
+    // Vor der Linse anmelden: Ein Tipp auf den Kreis klappt nur auf.
+    const detachMinimize = wrapper.current ? attachTabMinimize(node, wrapper.current) : undefined;
     const detach = attachTabLens(node, {
       active: () => currentRef.current,
       select: (key) => {
@@ -73,11 +77,15 @@ export function TabBar() {
     return () => {
       window.removeEventListener('resize', onResize);
       detach();
+      detachMinimize?.();
     };
   }, [navigate]);
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center px-3 lg:hidden">
+    <div
+      ref={wrapper}
+      className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center px-3 lg:hidden"
+    >
       <nav ref={bar} aria-label={t.nav.label} className="tabbar glass-blur pointer-events-auto">
         <span ref={indicator} aria-hidden="true" className="tabbar-indicator" />
         <ul className="tabbar-items">

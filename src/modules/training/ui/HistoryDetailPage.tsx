@@ -1,19 +1,28 @@
-import { useParams } from 'react-router';
+import { Pencil, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
+import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
-import { ButtonLink, Card, PageHeader, Skeleton, StatTile } from '@/shared/ui';
+import { Button, ButtonLink, Card, Dialog, PageHeader, Skeleton, StatTile } from '@/shared/ui';
 import { formatSetValues } from '../calc/fields';
 import { formatClock } from '../calc/format';
 import { summarizeSession } from '../calc/history';
 import { liveExercises, liveSets } from '../calc/session';
 import { useSession } from '../data/useSession';
+import { deleteCompletedSession } from '../service/historyService';
+import { HistoryEditForm } from './HistoryEditForm';
 
 /** Detail einer abgeschlossenen Einheit (S-11, AK-HIS-02): alle Übungen und Sätze mit Status. */
 export function HistoryDetailPage() {
   const { id = '' } = useParams();
   const session = useSession(id);
   const fmt = useFormatters();
+  const rt = useDb();
+  const navigate = useNavigate();
+  const [editing, setEditing] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   if (session === undefined) {
     return (
       <div aria-busy="true" className="grid gap-4">
@@ -37,6 +46,49 @@ export function HistoryDetailPage() {
   const number = (value: number) => fmt.number(value, { maximumFractionDigits: 2 });
   const summary = summarizeSession(session);
   const ended = new Date(session.endedAt ?? session.startedAt);
+  if (editing) {
+    return (
+      <>
+        <PageHeader
+          eyebrow={t.history.detailEyebrow}
+          title={session.title}
+          back={{ to: '/training/verlauf', label: t.history.title }}
+        />
+        <HistoryEditForm
+          session={session}
+          number={number}
+          onDone={() => {
+            setEditing(false);
+          }}
+        />
+      </>
+    );
+  }
+  const actions = (
+    <div className="flex gap-2">
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => {
+          setEditing(true);
+        }}
+      >
+        <Pencil aria-hidden="true" className="size-4" />
+        {t.historyEdit.edit}
+      </Button>
+      <Button
+        variant="secondary"
+        size="sm"
+        className="text-danger"
+        onClick={() => {
+          setConfirmDelete(true);
+        }}
+      >
+        <Trash2 aria-hidden="true" className="size-4" />
+        {t.historyEdit.delete}
+      </Button>
+    </div>
+  );
   return (
     <>
       <PageHeader
@@ -44,6 +96,7 @@ export function HistoryDetailPage() {
         title={session.title}
         subtitle={`${fmt.weekdayDayMonth(ended)} · ${fmt.time(ended)}${session.source === 'manual' ? ` · ${t.log.manualBadge}` : ''}`}
         back={{ to: '/training/verlauf', label: t.history.title }}
+        action={actions}
       />
       {session.activity ? (
         <dl className="mb-4 grid grid-cols-2 gap-3">
@@ -122,6 +175,46 @@ export function HistoryDetailPage() {
           );
         })}
       </div>
+      <Dialog
+        open={confirmDelete}
+        onClose={() => {
+          setConfirmDelete(false);
+        }}
+        title={t.historyEdit.deleteTitle}
+        closeLabel={t.common.close}
+        actions={
+          <>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setConfirmDelete(false);
+              }}
+            >
+              {t.session.cancel}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                setConfirmDelete(false);
+                deleteCompletedSession(rt, session.id).then(
+                  () => navigate('/training/verlauf', { state: { deleted: session.id } }),
+                  (caught: unknown) => {
+                    void logError(rt.db, {
+                      area: 'training',
+                      error: caught,
+                      route: window.location.pathname,
+                    });
+                  },
+                );
+              }}
+            >
+              {t.historyEdit.deleteConfirm}
+            </Button>
+          </>
+        }
+      >
+        <p>{t.historyEdit.deleteText}</p>
+      </Dialog>
     </>
   );
 }

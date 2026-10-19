@@ -108,7 +108,7 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 1.8 | Umgesetzt (18.10.2026): JSON-Export, Seite „Daten und Sicherung“ mit Speicherstatus und Snapshot-Liste, Migrationstest-Gerüst; Snapshot vor Schema-Upgrade bestand schon aus M0 |
 | 1.9 | Umgesetzt bis auf den Gerätetest (18.10.2026): E2E für Sichtbarkeitswechsel, Überziehung und Offline; T-IPH-M1 steht aus |
 
-**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request #7, Basis `m1-training`); Schritt D (Player: Übungsinfo, Umsortieren, Ersetzen mit Alternativen, Übungstimer, Tagesvorschau, D-250) auf dem Branch `evolution-player`; B, C und D am 18.10.2026 über #5, #7 und #8 nach `main` gemergt. Schritt E (Fortschritt: Körpergewicht mit Diagramm, Kennzahlen, Bestleistungen, Übungsverlauf, Kalorienschätzung, D-251, D-252) über #9 gemergt; damit sind AP 3.1, 3.2 und 3.6 sowie Teile von 3.4 vorgezogen, AP 3.3 (Ziele) steht aus. Schritt F (Tagesaufgaben mit Serie, Motivationssatz, Dexie v2, D-253) auf dem Branch `evolution-tasks` (PR #11); Ziele und Profil (AP 3.3, D-254) auf dem Branch `evolution-goals` (PR #12); Nachtragen (AP 2.6, D-255) auf dem Branch `m2-nachtragen`. Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
+**Stand Erweiterungsplan (18.10.2026):** Schritt B (Bibliothek, D-248) und Schritt C (Programme A, B, C und aktives Programm, D-249) umgesetzt auf dem Branch `evolution-programs` (Pull Request #7, Basis `m1-training`); Schritt D (Player: Übungsinfo, Umsortieren, Ersetzen mit Alternativen, Übungstimer, Tagesvorschau, D-250) auf dem Branch `evolution-player`; B, C und D am 18.10.2026 über #5, #7 und #8 nach `main` gemergt. Schritt E (Fortschritt: Körpergewicht mit Diagramm, Kennzahlen, Bestleistungen, Übungsverlauf, Kalorienschätzung, D-251, D-252) über #9 gemergt; damit sind AP 3.1, 3.2 und 3.6 sowie Teile von 3.4 vorgezogen, AP 3.3 (Ziele) steht aus. Schritt F (Tagesaufgaben mit Serie, Motivationssatz, Dexie v2, D-253) auf dem Branch `evolution-tasks` (PR #11); Ziele und Profil (AP 3.3, D-254) auf dem Branch `evolution-goals` (PR #12); Nachtragen (AP 2.6, D-255) auf dem Branch `m2-nachtragen` (PR #13); Verlauf bearbeiten und löschen (AP 2.7, D-256) auf dem Branch `m2-verlauf-bearbeiten`. Ergebnisse in `testing.md` Abschnitt 10; Inhalt der Programme in `programs.md`. Damit ist AP 2.3 für gebündelte Programme vorgezogen; für eigene Programme folgt der Rest in M2.
 
 
 ### M2 · Programm-Builder und Trainingsplanung (Größe XL)
@@ -121,7 +121,7 @@ Abnahme M1: Alle genannten AK bestanden; Gerätetest T-IPH-M1 vom Produktinhaber
 | 2.4 | Einheit aus Programm mit Snapshots; Ersetzen im Training und im Plan; Drop-Sätze im Player; Übungstimer; Pausieren und Fortsetzen; Notizen (Ersetzen im Training, Umsortieren und Übungstimer seit Schritt D, D-250) | L |
 | 2.5 | Eigene Übungen, persönliche Übungsangaben, Übungsdetail mit letzten Einheiten | M |
 | 2.6 | Krafttraining nachtragen, Aktivität erfassen (umgesetzt am 18.10.2026, D-255) | M |
-| 2.7 | Verlauf bearbeiten und löschen mit Aktualisierung der Projektion | M |
+| 2.7 | Verlauf bearbeiten und löschen mit Aktualisierung der Projektion (umgesetzt am 19.10.2026, D-256) | M |
 | 2.8 | Import in eine leere Datenbank; Programmdatei exportieren und importieren | M |
 | 2.9 | Tests und Gerätekurztest (eigenes Programm am iPhone; Programmdatei vom Mac übertragen) | M |
 
@@ -237,4 +237,5 @@ Nächste Schritte: <Liste>
 23. Erledigt (Branch `evolution-tasks`): Schritt F, Tagesaufgaben mit Serie und Motivationssatz (D-253); erste Schemaänderung (Dexie v2) mit Snapshot und Migrationstest.
 24. Erledigt (Branch `evolution-goals`): Ziele und Profil (AP 3.3, D-254) mit Ziellinie, Wochenziel-Karte, Abstand zum Zielgewicht und Anzeigename.
 25. Erledigt (Branch `m2-nachtragen`): AP 2.6 Training nachtragen und Aktivität erfassen (D-255).
-26. Ich: Verlauf bearbeiten und löschen (AP 2.7), dann eigene Programme (AP 2.1 bis 2.4), eigene Übungen (AP 2.5), Import und Programmdatei (AP 2.8); Schritt G nach Beantwortung von Q-19.
+26. Erledigt (Branch `m2-verlauf-bearbeiten`): AP 2.7 Verlauf bearbeiten und löschen (D-256).
+27. Ich: eigene Programme (AP 2.1 bis 2.4), eigene Übungen (AP 2.5), Import und Programmdatei (AP 2.8); Schritt G nach Beantwortung von Q-19.

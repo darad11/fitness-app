@@ -1,11 +1,14 @@
 import { ChevronRight, History } from 'lucide-react';
-import { Link } from 'react-router';
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router';
 import { useFormatters } from '@/modules/settings';
+import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { ButtonLink, EmptyState, PageHeader, Skeleton } from '@/shared/ui';
+import { Button, ButtonLink, EmptyState, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { formatClock } from '../calc/format';
 import { groupByWeek, summarizeSession } from '../calc/history';
 import { useCompletedSessions } from '../data/useSession';
+import { restoreCompletedSession } from '../service/historyService';
 
 /** Datum aus `dayKey` für die Anzeige (lokale Mittagszeit, damit die Zeitzone nicht kippt). */
 function dateOf(dayKey: string): Date {
@@ -16,8 +19,39 @@ function dateOf(dayKey: string): Date {
 export function HistoryPage() {
   const sessions = useCompletedSessions();
   const fmt = useFormatters();
+  const rt = useDb();
+  const location = useLocation();
+  const deleted = (location.state as { deleted?: string } | null)?.deleted;
+  const [undoVisible, setUndoVisible] = useState(true);
   return (
     <>
+      {deleted && undoVisible ? (
+        <Toast
+          message={t.historyEdit.deleted}
+          durationMs={10_000}
+          onTimeout={() => {
+            setUndoVisible(false);
+          }}
+          action={
+            <Button
+              variant="onInk"
+              size="sm"
+              onClick={() => {
+                setUndoVisible(false);
+                restoreCompletedSession(rt, deleted).catch((caught: unknown) => {
+                  void logError(rt.db, {
+                    area: 'training',
+                    error: caught,
+                    route: '/training/verlauf',
+                  });
+                });
+              }}
+            >
+              {t.session.undoDiscard}
+            </Button>
+          }
+        />
+      ) : null}
       <PageHeader title={t.history.title} back={{ to: '/training', label: t.training.title }} />
       {sessions === undefined ? (
         <div aria-busy="true" className="grid gap-3">

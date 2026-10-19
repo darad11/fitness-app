@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Verlauf bearbeiten, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TH-01 (Liste, Detail, Bearbeiten, Löschen mit Rückgängig; D-256).
 - Version 0.5 (Nachtragen, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-17, AH-09 (D-255). TS-19 bleibt, bis Notizen auch im Player erfasst werden.
 - Version 0.5 (Ziele, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): ON-07, ON-18, TH-08, BP-06 (D-254). ON-01 und ON-11 (Profil ohne Konto, Anzeigename) ebenfalls „Implementiert"; ON-14 bleibt bis zum Programmwechsel-Dialog in M2.
 - Version 0.5 (Schritt F, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): AH-03, AH-04 (täglich), AH-05 (Serie für Tagesaufgaben, D-253). TH-04 (Serie für Trainings) bleibt offen.
@@ -73,10 +74,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 45 |
+| Implementiert | 46 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 37 |
-| Zur Umsetzung ausgewählt | 39 |
+| Zur Umsetzung ausgewählt | 38 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -169,7 +170,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| TH-01 | Verlauf mit Detail, Bearbeiten und Löschen | Historie wird gespeichert | HC-G | V | OV | H | TS-14 | M | P0 | MVP | R1 · M1/M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-HIS-01 bis AK-HIS-04 |
+| TH-01 | Verlauf mit Detail, Bearbeiten und Löschen | Historie wird gespeichert | HC-G | V | OV | H | TS-14 | M | P0 | MVP | R1 · M1/M2 | Übernehmen | Implementiert | AK-HIS-01 bis AK-HIS-04 |
 | TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Implementiert | AK-EXL-05, AK-HIS-05 |
 | TH-03 | Trainingskalender | Nicht belegt | – | P | ON | M | AH-08 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monatsansicht mit geplanten und absolvierten Einheiten |
 | TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | P3 | Später | R4 · M11 | Später (D-027) | Analysiert | Regel dokumentiert und getestet; Ruhetage unterbrechen nicht |

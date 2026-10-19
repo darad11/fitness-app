@@ -243,9 +243,16 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     );
     await finishSession(rt, session.id, { skipOpen: true });
     await renderAt('/training/vorlagen/winter_arc_2026', 'Winter Arc 2026 (Nachbau)');
+    // 40 Tage mit rund 280 Übungen: in jsdom auf langsamen CI-Runnern deutlich über 1 s.
     expect(
-      await screen.findByRole('heading', { level: 2, name: 'Trainingstag 2 von 40' }),
+      await screen.findByRole(
+        'heading',
+        { level: 2, name: 'Trainingstag 2 von 40' },
+        { timeout: 10_000 },
+      ),
     ).toBeVisible();
+    // Während des Ladens nie „abgeschlossen“ (Befund aus der CI von #12).
+    expect(screen.queryByText('Programm abgeschlossen')).toBeNull();
     // Die Tagesnamen tragen den Kalendertag der Aufnahme (Tag 1, 4, 5, 6, 7, 10, ...).
     expect(screen.getAllByRole('heading', { level: 2, name: /^Woche \d$/ })).toHaveLength(8);
     const day1 = screen.getByRole('region', { name: /^Tag 1 · / });
@@ -255,5 +262,5 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect(screen.getAllByText(/^Xeela: /).length).toBeGreaterThan(100);
     expect(screen.getAllByText(/^Dropset: schwer beginnen/).length).toBeGreaterThan(5);
     expect(screen.getByText(/^Quelle: Rekonstruktion/)).toBeVisible();
-  });
+  }, 20_000);
 });

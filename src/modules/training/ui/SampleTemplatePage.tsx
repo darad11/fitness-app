@@ -280,9 +280,11 @@ function ProgramCard({
       tone="ink"
       eyebrow={t.training.activeProgram}
       title={
-        progress && next
-          ? t.programs.dayOf(next.index + 1, progress.total)
-          : t.programs.finishedTitle
+        !progress
+          ? t.programs.loadingProgress
+          : next
+            ? t.programs.dayOf(next.index + 1, progress.total)
+            : t.programs.finishedTitle
       }
     >
       <p className="-mt-2 text-on-ink-muted">

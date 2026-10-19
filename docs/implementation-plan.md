@@ -241,5 +241,6 @@ Nächste Schritte: <Liste>
 27. Erledigt (Branch `feat/eigene-programme`): AP 2.1 bis 2.4 eigene Programme und Vorlagen mit Editor, Kopieren, Archiv und Löschen mit Rückgängig (D-257); offen in AP 2.4: Notizen im Player (TS-19).
 28. Erledigt (Branch `feat/eigene-uebungen`): AP 2.5 eigene Übungen, persönliche Angaben und Übungsdetail (D-258). Programmdatei entfällt auf Wunsch des Produktinhabers (D-259).
 29. Erledigt (über #17 gemergt): Notizen im Player (TS-19, D-260). Import einer Datensicherung (AP 2.8) zurückgestellt auf Wunsch des Produktinhabers.
-30. Erledigt (Branch `feat/ernaehrung-basis`): Schritt G Grundausbau (M5 ohne Rezepte): Q-19 beantwortet, BLS 4.0 gebündelt mit österreichischen Suchbegriffen, eigene Lebensmittel, Tagesprotokoll mit vier Mahlzeiten, Schnelleintrag, Ziele selbst oder per Vorschlag, Dexie v3 (D-261, D-262).
-31. Ich: Lebensmitteldaten der BLS-Recherche als lokaler Import (Datei vom Produktinhaber); Barcode und Open Food Facts (M6) nach Einwilligung; danach Rezepte (M7).
+30. Erledigt (über #18 gemergt): Schritt G Grundausbau (M5 ohne Rezepte): Q-19 beantwortet, BLS 4.0 gebündelt mit österreichischen Suchbegriffen, eigene Lebensmittel, Tagesprotokoll mit vier Mahlzeiten, Schnelleintrag, Ziele selbst oder per Vorschlag, Dexie v3 (D-261, D-262).
+31. Erledigt (Branch `feat/lebensmittel-import`): Lebensmitteldaten der BLS-Recherche als lokaler Import, 17.104 Lebensmittel aus BLS 3.02 und ÖNWT, auslaufende Produkte weggelassen (D-263). Offen beim Produktinhaber: Import auf dem iPhone mit seiner Datei.
+32. Ich: Barcode-Scanner und Open Food Facts (M6) nach Einwilligung in der App (D-302, D-305), eigenes Paket; danach Rezepte (M7).

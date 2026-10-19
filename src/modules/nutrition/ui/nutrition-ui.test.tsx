@@ -3,11 +3,16 @@ import { cleanup, render, screen, waitFor, within } from '@testing-library/react
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
+import Dexie from 'dexie';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
-import { listFoods, listTargets } from '../data/nutritionRepository';
+import { catalogDbName } from '../data/catalogStore';
+import { listDayEntries, listFoods, listTargets } from '../data/nutritionRepository';
 import { nutritionRoutes } from '../routes';
+import { localDayKey } from '../service/nutritionService';
+
+const localDay = () => localDayKey(new Date());
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -15,6 +20,7 @@ beforeEach(async () => {
 });
 afterEach(async () => {
   cleanup();
+  await Dexie.delete(catalogDbName(rt.db));
   await rt.db.delete();
 });
 
@@ -178,5 +184,94 @@ describe('Ernährung (Schritt G, D-261)', () => {
       heightCm: 180,
       weightKg: 80,
     });
+  });
+
+  it(
+    'importiert Lebensmitteldaten lokal, findet sie und entfernt sie wieder (D-263)',
+    { timeout: 40_000 },
+    async () => {
+      const user = userEvent.setup();
+      await renderAt('/ernaehrung/lebensmittel', 'Meine Lebensmittel');
+      expect(
+        await screen.findByText('Noch keine Lebensmitteldaten importiert.', {}, WAIT),
+      ).toBeVisible();
+      const values = {
+        fiber: 1,
+        kcal: 98,
+        fat: 3,
+        saturatedFat: 1,
+        carbs: 9,
+        sugar: 1,
+        protein: 7,
+        salt: 0.4,
+      };
+      const content = JSON.stringify({
+        fetchedAt: '2026-10-19 13:41',
+        rows: [
+          { code: 'C133000', source: 'BLS4.0', name: 'Hafer Flocken', ...values },
+          { code: '0003384', source: 'ÖNWT-HH', name: 'Fisolen mit Speck', ...values },
+          { code: 'X100000', source: 'BLS3.02', name: 'Testbrot hell', ...values },
+          { code: '0003385', source: 'ÖNWT2.0', name: 'Altbrot, +++läuft aus', ...values },
+        ],
+      });
+      await user.upload(
+        screen.getByLabelText('Datei auswählen'),
+        new File([content], 'nuts-recherche.json', { type: 'application/json' }),
+      );
+      const preview = await screen.findByRole(
+        'dialog',
+        { name: 'Lebensmitteldaten importieren' },
+        WAIT,
+      );
+      expect(within(preview).getByText('2 Lebensmittel werden übernommen:')).toBeVisible();
+      expect(within(preview).getByText('1 stehen schon im BLS 4.0')).toBeVisible();
+      expect(within(preview).getByText('1 auslaufende Produkte')).toBeVisible();
+      await user.click(within(preview).getByRole('button', { name: 'Importieren' }));
+      expect(await screen.findByText('2 Lebensmittel importiert', {}, WAIT)).toBeVisible();
+      expect(screen.getByText(/1 aus BLS 3\.02, 1 aus der Österreichischen/)).toBeVisible();
+
+      // In der Suche mit Herkunft; österreichische Begriffe greifen auch hier.
+      cleanup();
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=lunch', 'Lebensmittel hinzufügen');
+      await waitFor(() => {
+        expect(document.querySelector('[aria-busy="true"]')).toBeNull();
+      }, WAIT);
+      await user.type(screen.getByLabelText('Lebensmittel suchen'), 'fisolen speck');
+      await user.click(
+        await screen.findByRole('button', { name: /^Fisolen mit SpeckÖNWT98 kcal/ }, WAIT),
+      );
+      const dialog = screen.getByRole('dialog', { name: 'Fisolen mit Speck hinzufügen' });
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      await waitFor(async () => {
+        expect((await listDayEntries(rt.db, localDay()))[0]?.nameSnapshot).toBe(
+          'Fisolen mit Speck',
+        );
+      });
+
+      // Entfernen: Protokoll bleibt.
+      cleanup();
+      await renderAt('/ernaehrung/lebensmittel', 'Meine Lebensmittel');
+      await user.click(await screen.findByRole('button', { name: 'Import entfernen' }, WAIT));
+      await user.click(
+        within(screen.getByRole('dialog', { name: 'Import entfernen?' })).getByRole('button', {
+          name: 'Import entfernen',
+        }),
+      );
+      expect(
+        await screen.findByText('Noch keine Lebensmitteldaten importiert.', {}, WAIT),
+      ).toBeVisible();
+      expect(await listDayEntries(rt.db, localDay())).toHaveLength(1);
+    },
+  );
+
+  it('meldet eine unpassende Datei', { timeout: 20_000 }, async () => {
+    const user = userEvent.setup();
+    await renderAt('/ernaehrung/lebensmittel', 'Meine Lebensmittel');
+    await user.upload(
+      await screen.findByLabelText('Datei auswählen', {}, WAIT),
+      new File(['{"foods":[]}'], 'falsch.json', { type: 'application/json' }),
+    );
+    expect(await screen.findByText(/Diese Datei passt nicht/, {}, WAIT)).toBeVisible();
   });
 });

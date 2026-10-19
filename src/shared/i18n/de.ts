@@ -294,7 +294,7 @@ export const de = {
     saveFailed: 'Das ließ sich nicht speichern. Bitte versuche es erneut.',
     invalidAmount: 'Bitte gib eine Menge größer als 0 ein.',
     sources:
-      'Grunddaten: Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut, gekürzt. Österreichische Bezeichnungen als zusätzliche Suchbegriffe.',
+      'Grunddaten: Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut, gekürzt. Österreichische Bezeichnungen als zusätzliche Suchbegriffe. Importierte Daten (BLS 3.02, ÖNWT) über die BLS-Recherche von nutritional-software.at, nur auf diesem Gerät.',
     // Hinzufügen
     addTitle: 'Lebensmittel hinzufügen',
     searchLabel: 'Lebensmittel suchen',
@@ -303,7 +303,8 @@ export const de = {
     favorites: 'Favoriten',
     results: (n: number) => (n === 1 ? '1 Treffer' : `${n} Treffer`),
     noResults: 'Nichts gefunden. Lege ein eigenes Lebensmittel an oder nutze den Schnelleintrag.',
-    searchHint: 'Suche in deinen Lebensmitteln und im Bundeslebensmittelschlüssel.',
+    searchHint:
+      'Suche in deinen Lebensmitteln, im Bundeslebensmittelschlüssel und in importierten Lebensmitteldaten.',
     loadingFoods: 'Lebensmittel werden geladen …',
     sourceBadge: {
       custom: 'Eigenes',
@@ -312,6 +313,7 @@ export const de = {
       off: 'Open Food Facts',
       import: 'Import',
     },
+    catalogBadge: { bls302: 'BLS 3.02', oenwt: 'ÖNWT' },
     per100: (unit: string) => `je 100 ${unit}`,
     quick: 'Schnelleintrag',
     quickTitle: 'Schnelleintrag',
@@ -356,6 +358,40 @@ export const de = {
       range: 'Ein Wert liegt außerhalb des möglichen Bereichs (je 100 höchstens 100 g, 900 kcal).',
       serving: 'Jede Portion braucht einen Namen und eine Menge größer als 0.',
       number: 'Bitte gib Zahlen ein, z. B. 12,5.',
+    },
+    catalog: {
+      title: 'Lebensmitteldaten',
+      empty: 'Noch keine Lebensmitteldaten importiert.',
+      hint: 'Datei der BLS-Recherche von nutritional-software.at (JSON). Die Daten bleiben nur auf diesem Gerät; nichts wird hochgeladen.',
+      status: (count: string) => `${count} Lebensmittel importiert`,
+      statusDetail: (bls: string, oenwt: string, date: string) =>
+        `${bls} aus BLS 3.02, ${oenwt} aus der Österreichischen Nährwerttabelle (ÖNWT), importiert am ${date}`,
+      choose: 'Datei auswählen',
+      replace: 'Neue Datei importieren',
+      reading: 'Datei wird geprüft …',
+      remove: 'Import entfernen',
+      previewTitle: 'Lebensmitteldaten importieren',
+      previewKept: (count: string) => `${count} Lebensmittel werden übernommen:`,
+      keptBls302: (count: string) => `${count} aus BLS 3.02`,
+      keptOenwt: (count: string) => `${count} aus der ÖNWT`,
+      previewSkipped: 'Weggelassen:',
+      skippedInBls: (count: string) => `${count} stehen schon im BLS 4.0`,
+      skippedDiscontinued: (count: string) => `${count} auslaufende Produkte`,
+      skippedInvalid: (count: string) => `${count} unvollständig oder doppelt`,
+      skippedAmbiguous: (count: string) =>
+        `${count} mit unklarer Zuordnung (gleicher Code, verschiedene Namen)`,
+      replaces: 'Der bisherige Import wird ersetzt.',
+      confirm: 'Importieren',
+      saving: 'Wird gespeichert …',
+      imported: (count: string) => `${count} Lebensmittel importiert.`,
+      removed: 'Import entfernt.',
+      removeTitle: 'Import entfernen?',
+      removeText:
+        'Die importierten Lebensmittel verschwinden aus der Suche. Deine Einträge im Protokoll behalten ihre Werte. Du kannst die Datei jederzeit erneut importieren.',
+      wrongFile:
+        'Diese Datei passt nicht. Bitte wähle die Datei der BLS-Recherche (nuts-recherche.json).',
+      nothingNew: 'Die Datei enthält keine neuen Lebensmittel.',
+      failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',
     },
     // Ziele
     targetsTitle: 'Tagesziele',

@@ -5,6 +5,7 @@ import { t } from '@/shared/i18n/de';
 import { ButtonLink, PageHeader, Skeleton } from '@/shared/ui';
 import { useFoods } from '../data/nutritionRepository';
 import type { Food } from '../model/nutrition';
+import { CatalogCard } from './CatalogCard';
 import { kcal } from './format';
 
 /** Eigene Lebensmittel (S-18, NU-10). */
@@ -71,6 +72,7 @@ export function FoodsPage() {
           <div className="mt-2">{list(archived, t.nutrition.archivedTitle(archived.length))}</div>
         </details>
       ) : null}
+      <CatalogCard />
     </>
   );
 }

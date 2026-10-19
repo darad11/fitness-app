@@ -42,7 +42,7 @@ test('Ernährung: Ziel setzen, aus dem BLS protokollieren, nach Neuladen erhalte
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Mittagessen' }).getByText('200 g')).toBeVisible();
-  await expect(page.getByText(/von 2\D?200 kcal/).first()).toBeVisible();
+  await expect(page.getByText(/\/ 2\D?200 kcal/).first()).toBeVisible();
 
   await openPage(page, '/heute');
   await expect(page.getByText('Ernährung heute')).toBeVisible();

@@ -128,10 +128,14 @@ export function NutritionPage() {
         </div>
       ) : (
         <div className="grid gap-4">
-          <Card tone="ink" eyebrow={t.nutrition.eaten}>
-            <div className="flex items-center gap-5">
+          <Card tone="ink">
+            <div className="flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
+              <p className="eyebrow text-on-ink-muted md:hidden">{t.nutrition.eaten}</p>
               {target ? (
                 <MacroRing
+                  className="self-center md:self-auto"
+                  size={176}
+                  stroke={18}
                   label={[
                     t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal)),
                     ...MACROS.map(
@@ -145,58 +149,76 @@ export function NutritionPage() {
                     color: MACRO_COLORS[macro],
                   }))}
                 >
-                  <span className="text-center leading-tight">
-                    <span className="block text-lg font-bold tabular-nums">
+                  <span className="block text-center leading-tight">
+                    <span className="block text-4xl font-extrabold tracking-tight tabular-nums">
                       {kcal(fmt, totals.sums.kcal)}
                     </span>
-                    <span className="block text-xs text-on-ink-muted">
-                      {t.nutrition.units.kcal}
+                    <span className="mt-1 block text-sm text-on-ink-muted tabular-nums">
+                      {t.nutrition.ofKcal(kcal(fmt, target.kcal))}
                     </span>
                   </span>
                 </MacroRing>
-              ) : null}
+              ) : (
+                <div>
+                  <p className="text-3xl font-bold tabular-nums">
+                    {t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
+                  </p>
+                  <p className="mt-1 text-sm text-on-ink-muted">{t.nutrition.noTarget}</p>
+                </div>
+              )}
               <div className="min-w-0 flex-1">
-                <p
-                  className={
-                    target ? 'text-xl font-bold tabular-nums' : 'text-3xl font-bold tabular-nums'
-                  }
-                >
-                  {target
-                    ? t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal))
-                    : t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
+                <p className="eyebrow mb-4 hidden text-on-ink-muted md:block">
+                  {t.nutrition.eaten}
                 </p>
-                <p className="mt-1 text-sm text-on-ink-muted">
-                  {target
-                    ? totals.sums.kcal <= target.kcal
+                <dl className="grid grid-cols-3 gap-4 md:gap-6">
+                  {MACROS.map((macro) => {
+                    const goal = target ? macroGoal(target, macro) : undefined;
+                    const eaten = totals.sums[macro];
+                    return (
+                      <div key={macro} className="min-w-0">
+                        <dt className="truncate text-sm text-on-ink-muted">
+                          <span aria-hidden="true" className="md:hidden">
+                            {t.nutrition.macrosShort[macro]}
+                          </span>
+                          <span className="max-md:sr-only">{t.nutrition.macros[macro]}</span>
+                        </dt>
+                        <dd className="mt-0.5 tabular-nums">
+                          <span className="text-xl font-bold">{grams(fmt, eaten)}</span>
+                          {goal !== undefined ? (
+                            <span className="text-sm whitespace-nowrap text-on-ink-muted">
+                              {` / ${grams(fmt, goal)} ${t.nutrition.units.g}`}
+                            </span>
+                          ) : (
+                            <span className="text-xl font-bold">{` ${t.nutrition.units.g}`}</span>
+                          )}
+                        </dd>
+                        {goal !== undefined ? (
+                          <span
+                            aria-hidden="true"
+                            className="mt-2.5 block h-1.5 overflow-hidden rounded-pill bg-on-ink/15"
+                          >
+                            <span
+                              className="block h-full rounded-pill"
+                              style={{
+                                width: `${String(Math.min(100, goal > 0 ? (eaten / goal) * 100 : 0))}%`,
+                                background: MACRO_COLORS[macro],
+                              }}
+                            />
+                          </span>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </dl>
+                {target ? (
+                  <p className="mt-3 text-sm text-on-ink-muted">
+                    {totals.sums.kcal <= target.kcal
                       ? t.nutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
-                      : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))
-                    : t.nutrition.noTarget}
-                </p>
+                      : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
+                  </p>
+                ) : null}
               </div>
             </div>
-            <dl className="mt-4 grid grid-cols-3 gap-3">
-              {MACROS.map((macro) => {
-                const goal = target ? macroGoal(target, macro) : undefined;
-                const eaten = totals.sums[macro];
-                return (
-                  <div key={macro}>
-                    {target ? (
-                      <span
-                        aria-hidden="true"
-                        className="mb-1.5 block h-1 w-7 rounded-pill"
-                        style={{ background: MACRO_COLORS[macro] }}
-                      />
-                    ) : null}
-                    <dt className="text-sm text-on-ink-muted">{t.nutrition.macros[macro]}</dt>
-                    <dd className="font-semibold tabular-nums">
-                      {goal !== undefined
-                        ? t.nutrition.gramsOf(grams(fmt, eaten), grams(fmt, goal))
-                        : t.nutrition.gramsOnly(grams(fmt, eaten))}
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
             {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
             <details className="group mt-1">
               <summary

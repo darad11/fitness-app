@@ -19,8 +19,10 @@ export function MacroRing({
   label,
   size = 132,
   stroke = 12,
+  className,
   children,
 }: {
+  className?: string;
   /** Anteil am Ziel; über 1 bleibt der Ring voll. */
   value: number;
   segments: readonly RingSegment[];
@@ -76,7 +78,7 @@ export function MacroRing({
     <div
       role="img"
       aria-label={label}
-      className="relative inline-flex shrink-0 items-center justify-center"
+      className={`relative inline-flex shrink-0 items-center justify-center ${className ?? ''}`}
       style={{ width: size, height: size }}
     >
       <div aria-hidden="true" className="absolute inset-0 rounded-full" style={track} />

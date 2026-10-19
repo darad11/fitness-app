@@ -36,7 +36,7 @@ test('Ernährung: Ziel setzen, aus dem BLS protokollieren, nach Neuladen erhalte
   await expect(lunch.getByText('200 g')).toBeVisible();
   // Weitere Nährwerte sind dezent zugeklappt (D-272).
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toBeHidden();
-  await page.getByText('Weitere Nährwerte', { exact: true }).click();
+  await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Zucker');
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Salz');
 
@@ -155,4 +155,27 @@ test('Vorlage: Frühstück speichern, nach Neuladen mit einem Tipp eintragen (D-
     .getByRole('button', { name: 'Alle eintragen' })
     .click();
   await expect(page.getByRole('region', { name: 'Abendessen' }).getByText('Müsli')).toBeVisible();
+});
+
+test('Meine Küche: ein Knopf für Lebensmittel, Rezepte und Vorlagen (D-272)', async ({
+  page,
+}, testInfo) => {
+  await openPage(page, '/ernaehrung');
+  await page.getByRole('button', { name: 'Meine Küche' }).click();
+  if (testInfo.project.name.includes('mobile')) {
+    const sheet = page.getByRole('dialog', { name: 'Meine Küche' });
+    await expect(sheet).toBeVisible();
+    await sheet.getByRole('link', { name: /Rezepte/ }).click();
+  } else {
+    const menu = page.getByRole('group', { name: 'Meine Küche' });
+    await expect(menu.getByRole('link', { name: /Vorlagen/ })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeHidden();
+    await page.getByRole('button', { name: 'Meine Küche' }).click();
+    await page
+      .getByRole('group', { name: 'Meine Küche' })
+      .getByRole('link', { name: /Rezepte/ })
+      .click();
+  }
+  await expect(page.getByRole('heading', { level: 1, name: 'Rezepte' })).toBeVisible();
 });

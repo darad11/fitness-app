@@ -311,7 +311,11 @@ describe('Ernährung (Schritt G, D-261)', () => {
       await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
 
       await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
-      const list = await screen.findByLabelText('Weitere Nährwerte', {}, WAIT);
+      const list = await screen.findByRole(
+        'group',
+        { name: 'Weitere Nährwerte', hidden: true },
+        WAIT,
+      );
       expect(within(list).getByText('Zucker').nextElementSibling).toHaveTextContent('0,4 g');
       expect(within(list).getByText('Ballaststoffe').nextElementSibling).toHaveTextContent('5,5 g');
       expect(within(list).getByText('Salz').nextElementSibling).toHaveTextContent('0 g');

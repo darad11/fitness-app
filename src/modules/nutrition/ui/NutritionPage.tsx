@@ -1,14 +1,4 @@
-import {
-  Bookmark,
-  BookmarkPlus,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  CookingPot,
-  Plus,
-  Target,
-  UtensilsCrossed,
-} from 'lucide-react';
+import { BookmarkPlus, ChevronDown, ChevronLeft, ChevronRight, Plus, Target } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -33,14 +23,11 @@ import { useDayEntries, useTargets } from '../data/nutritionRepository';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
+import { KitchenMenu, PILL } from './KitchenMenu';
 import { SaveTemplateDialog } from './TemplateDialogs';
 import { dayDate, describeAmount, grams, kcal } from './format';
 
 /** Weitere Tageswerte neben den Makros. */
-/** Kachel für die Wege zu Zielen, Lebensmitteln, Rezepten und Vorlagen. */
-const TILE =
-  'flex min-h-[4.5rem] flex-col items-center justify-center gap-1.5 rounded-card bg-surface-2 px-3 py-3 text-center text-sm font-semibold text-fg shadow-[inset_0_0_0_1px_var(--border),inset_0_1px_0_var(--glass-edge)] transition-colors duration-120 hover:bg-surface';
-
 /**
  * Weitere Nährwerte in den Spalten der Makros darunter: Salz unter Eiweiß, Zucker und Ballaststoffe
  * unter Kohlenhydrate, gesättigte Fettsäuren unter Fett.
@@ -188,12 +175,16 @@ export function NutritionPage() {
               })}
             </dl>
             {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
-            <details className="group mt-2">
-              <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1 text-sm text-on-ink-muted hover:text-on-ink [&::-webkit-details-marker]:hidden">
-                {t.nutrition.extrasLabel}
+            <details className="group mt-1">
+              <summary
+                aria-label={t.nutrition.extrasLabel}
+                title={t.nutrition.extrasLabel}
+                className="mx-auto flex min-h-11 w-16 cursor-pointer list-none items-center justify-center rounded-pill text-on-ink-muted hover:text-on-ink [&::-webkit-details-marker]:hidden"
+              >
                 <ChevronDown
                   aria-hidden="true"
-                  className="size-4 transition-transform duration-200 group-open:rotate-180"
+                  strokeWidth={1.75}
+                  className="size-6 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
               <div role="group" aria-label={t.nutrition.extrasLabel}>
@@ -227,23 +218,15 @@ export function NutritionPage() {
             ) : null}
           </Card>
 
-          <nav aria-label={t.nutrition.shortcuts} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            <Link to="/ernaehrung/ziele" className={TILE}>
-              <Target aria-hidden="true" className="size-6" />
-              {target ? t.nutrition.targets : t.nutrition.setTarget}
+          <nav
+            aria-label={t.nutrition.shortcuts}
+            className="my-2 grid grid-cols-2 gap-2 md:flex md:justify-center md:gap-3"
+          >
+            <Link to="/ernaehrung/ziele" className={PILL}>
+              <Target aria-hidden="true" className="size-5 text-accent-ink" />
+              {t.nutrition.kitchen.target}
             </Link>
-            <Link to="/ernaehrung/lebensmittel" className={TILE}>
-              <UtensilsCrossed aria-hidden="true" className="size-6" />
-              {t.nutrition.myFoods}
-            </Link>
-            <Link to="/ernaehrung/rezepte" className={TILE}>
-              <CookingPot aria-hidden="true" className="size-6" />
-              {t.nutrition.recipes.title}
-            </Link>
-            <Link to="/ernaehrung/vorlagen" className={TILE}>
-              <Bookmark aria-hidden="true" className="size-6" />
-              {t.nutrition.templates.title}
-            </Link>
+            <KitchenMenu />
           </nav>
 
           {MEAL_SLOTS.map((slot) => {

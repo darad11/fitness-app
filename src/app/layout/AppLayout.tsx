@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import { Outlet, useMatches } from 'react-router';
 import { ThemeSync } from '@/modules/settings';
+import { SyncRunner } from '@/modules/sync';
 import { t } from '@/shared/i18n/de';
 import { GlobalBanners } from '../banners/GlobalBanners';
 import { Sidebar } from './Sidebar';
@@ -32,6 +34,9 @@ export function AppLayout() {
       </div>
       {fullscreen ? null : <TabBar />}
       <ThemeSync />
+      <Suspense fallback={null}>
+        <SyncRunner />
+      </Suspense>
     </div>
   );
 }

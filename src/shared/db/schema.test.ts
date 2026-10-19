@@ -24,10 +24,10 @@ const validRoot = {
   deviceId: 'a1b2c3d4',
 };
 
-describe('Dexie-Schema v5 (data-model.md Abschnitt 6)', () => {
-  it('enthält genau die Tabellen des MVP plus Tagesaufgaben, Ernährung, Rezepte und Vorlagen', () => {
-    expect(DB_VERSION).toBe(5);
-    expect(rt.db.verno).toBe(5);
+describe('Dexie-Schema v6 (data-model.md Abschnitt 6)', () => {
+  it('enthält die Tabellen des MVP plus Tagesaufgaben, Ernährung, Rezepte, Vorlagen und Sync-Basis', () => {
+    expect(DB_VERSION).toBe(6);
+    expect(rt.db.verno).toBe(6);
     expect(rt.db.tables.map((table) => table.name).sort()).toEqual(
       Object.keys(STORES_CURRENT).sort(),
     );
@@ -39,6 +39,7 @@ describe('Dexie-Schema v5 (data-model.md Abschnitt 6)', () => {
       'nutritionTargets',
       'recipes',
       'mealTemplates',
+      'syncBase',
     ]);
   });
 

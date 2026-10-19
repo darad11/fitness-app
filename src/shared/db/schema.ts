@@ -1,7 +1,7 @@
 /**
  * Dexie-Schema (data-model.md Abschnitt 6): v1 aus M0, v2 mit den Tabellen für Tagesaufgaben
  * (Schritt F, D-253), v3 mit den Tabellen für die Ernährung (Schritt G, D-261), v4 mit Rezepten
- * (M7, D-267).
+ * (M7, D-267), v5 mit Mahlzeit-Vorlagen (NU-11, D-268).
  *
  * Die Tabellen speichern Dokumente generisch; die genauen Typen und Zod-Schemas liegen in den
  * Fachmodulen und werden beim Lesen geprüft. Neue Indizes oder Tabellen erhöhen die Version
@@ -11,7 +11,7 @@ import Dexie, { type Table } from 'dexie';
 import type { RootFields } from './documents';
 
 export const DB_NAME = 'fitness';
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 
 export const STORES_V1 = {
   sessions: 'id, status, dayKey, startedAt, endedAt, *exerciseIds, [program.programId+endedAt]',
@@ -48,7 +48,13 @@ export const STORES_V4 = {
   recipes: 'id, nameNorm, archivedAt',
 } as const;
 
-export const STORES_CURRENT = STORES_V4;
+/** v5 (NU-11): Mahlzeit-Vorlagen; additiv zu v4. */
+export const STORES_V5 = {
+  ...STORES_V4,
+  mealTemplates: 'id, archivedAt',
+} as const;
+
+export const STORES_CURRENT = STORES_V5;
 
 /** Tabellen mit synchronisierbaren Dokumenten (Aggregatwurzeln). */
 export const DOCUMENT_TABLES = [
@@ -65,6 +71,7 @@ export const DOCUMENT_TABLES = [
   'foodLog',
   'nutritionTargets',
   'recipes',
+  'mealTemplates',
 ] as const;
 export type DocumentTableName = (typeof DOCUMENT_TABLES)[number];
 
@@ -114,6 +121,7 @@ export class AppDb extends Dexie {
   declare foodLog: Table<StoredDoc, string>;
   declare nutritionTargets: Table<StoredDoc, string>;
   declare recipes: Table<StoredDoc, string>;
+  declare mealTemplates: Table<StoredDoc, string>;
   declare exerciseHistory: Table<ExerciseHistoryRow, string>;
   declare sessionUi: Table<SessionUiRow, string>;
   declare meta: Table<MetaEntry, string>;
@@ -125,5 +133,6 @@ export class AppDb extends Dexie {
     this.version(2).stores(STORES_V2);
     this.version(3).stores(STORES_V3);
     this.version(4).stores(STORES_V4);
+    this.version(5).stores(STORES_V5);
   }
 }

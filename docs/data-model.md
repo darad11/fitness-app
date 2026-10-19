@@ -290,6 +290,8 @@ v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedA
 
 v4 (D-267, M7) ergänzt additiv `recipes: 'id, nameNorm, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v3 → v4. Umsetzung `recipe`: `name`, `nameNorm`, `servings` (ganzzahlig 1 bis 50), `ingredients[{id, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot{name, count}, per100Snapshot}]` (1 bis 40), `steps` (Text), `favorite`, `archivedAt`; ohne Tags, Zeiten und Mahlzeittypen vorerst. `food_log_entry.kind` kennt zusätzlich `'recipe'` (foodId ist dann die Rezept-ID).
 
+v5 (D-268, NU-11) ergänzt additiv `mealTemplates: 'id, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v4 → v5. `meal_template`: `name`, `items[{id, kind, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot, nutrients, isEstimated}]` (1 bis 30), `archivedAt` (vorgesehen, noch nicht genutzt).
+
 Importierte Lebensmitteldaten (D-263) liegen in einer eigenen IndexedDB-Datenbank `<App-Datenbank>-lebensmittel` (Dexie v1, Tabelle `catalogs: 'id'`) mit genau einer Zeile `bls-recherche`: `formatVersion`, `importedAt`, `fetchedAt`, `summary` (übernommen je Quelle, weggelassen je Grund) und `rows` als kompakte Liste `[Code, Quelle ('oenwt'), Name, kcal, Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe, Salz]` (fehlende Werte `null`). Keine Dokumente: kein HLC, keine Löschmarke, nicht in Export, Snapshot und Synchronisierung; ein Import ersetzt die Zeile, „Import entfernen“ löscht sie. Lebensmittel-ID `uuidv5('import:' + Quelle + ':' + Code)`.
 
 ```ts

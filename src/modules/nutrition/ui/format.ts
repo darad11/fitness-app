@@ -9,7 +9,10 @@ export const grams = (fmt: Formatters, value: number) =>
   fmt.number(value, { maximumFractionDigits: value < 10 ? 1 : 0 });
 
 /** Menge eines Eintrags, z. B. „150 g“ oder „½ Becher (225 g)“ bzw. „0,5 Becher (225 g)“. */
-export function describeAmount(fmt: Formatters, entry: FoodLogEntry): string {
+export function describeAmount(
+  fmt: Formatters,
+  entry: Pick<FoodLogEntry, 'amount' | 'basisSnapshot' | 'servingSnapshot'>,
+): string {
   if (entry.amount === undefined) return t.nutrition.quick;
   const unit = t.nutrition.units[entry.basisSnapshot ?? 'g'];
   const amount = `${fmt.number(entry.amount, { maximumFractionDigits: 1 })} ${unit}`;

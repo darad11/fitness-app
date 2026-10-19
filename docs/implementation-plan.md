@@ -246,5 +246,6 @@ Nächste Schritte: <Liste>
 32. Erledigt (über #20 gemergt): alle Nährwerte beim Hinzufügen und Bearbeiten, Zucker, Salz, Ballaststoffe und gesättigte Fettsäuren in der Tagesübersicht (D-264); „Heute“ ohne „Status“ und „Diese Version“ (D-265).
 33. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald der Produktinhaber die Datei hochlädt.
 34. Erledigt (über #21 gemergt): Barcode-Scanner mit Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266). Gerätetest bestanden: Kamera und Open Food Facts mit Marke und Nährwerten (S-1, S-3).
-35. Erledigt (Branch `feat/rezepte`): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
-36. Ich: Mahlzeit-Vorlagen (NU-11), danach Synchronisierung mit Supabase (Freigabe des Produktinhabers liegt vor; Region und Anmeldung vorher abstimmen). Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers.
+35. Erledigt (über #22 gemergt): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
+36. Erledigt (Branch `feat/mahlzeit-vorlagen`): Mahlzeit-Vorlagen aus einer Mahlzeit speichern und mit einem Tipp eintragen, Dexie v5 (D-268).
+37. Ich: Synchronisierung mit Supabase (Freigabe des Produktinhabers liegt vor; Region und Anmeldung vorher abstimmen). Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers.

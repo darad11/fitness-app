@@ -15,6 +15,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Version 0.9 (Nährwerte anzeigen, 19.10.2026): NU-16 vorgezogen und „Implementiert“ (AK-NUT-08, D-264).
 - Version 0.10 (Barcode-Scanner, 19.10.2026): NU-07 und NU-24 vorgezogen und „Implementiert“ (AK-NUT-09, D-266); Gerätetest auf dem iPhone steht aus.
 - Version 0.11 (Rezepte, 19.10.2026): RE-02, RE-12 und RE-13 vorgezogen und „Implementiert“ (AK-NUT-10, D-267); RE-01 (Katalog mit Filtern) bleibt später.
+- Version 0.12 (Mahlzeit-Vorlagen, 19.10.2026): NU-11 vorgezogen und „Implementiert“ (Favoriten, Zuletzt verwendet und Vorlagen; AK-NUT-11, D-268).
 - Version 0.6 (Notizen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-19 (Notizen zu Übung und Einheit im Player, im Verlauf und beim nächsten Mal; D-260).
 - Version 0.6 (Eigene Übungen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-13 (eigene Übungen anlegen, bearbeiten, archivieren), TP-07 (Übungsdetail mit Angaben, persönlicher Notiz, Standardpause, Gewichtsschritt, Videolink und letzten Einheiten; D-258). TP-26 (Programmdatei) entfällt für R1 und wird über die Synchronisierung in R3 gelöst (D-259).
 - Version 0.6 (Eigene Programme, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-01, TP-02, TP-03, TP-04, TP-08, TP-09, TP-10, TP-12, TP-14, TP-15, TP-16, TP-22, TP-23, TP-24, TP-25 (D-257). TP-13 (eigene Übungen) und TP-26 (Programmdatei) folgen mit AP 2.5 und AP 2.8; ON-14 bleibt bis zum Programmwechsel-Dialog.
@@ -61,14 +62,14 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|
 | Original verifiziert (OV) | 50 | 30 | 8 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
-| Eigene Verbesserung (EV) | 42 | 7 | 0 | 49 |
-| Summe | 105 | 50 | 10 | 165 |
+| Eigene Verbesserung (EV) | 43 | 6 | 0 | 49 |
+| Summe | 106 | 49 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 105 |
-| R2 | 21 |
+| R1 | 106 |
+| R2 | 20 |
 | R3 | 3 |
 | R4 | 14 |
 | R5 | 5 |
@@ -82,9 +83,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 82 |
+| Implementiert | 83 |
 | Noch zu recherchieren | 1 |
-| Spezifiziert | 20 |
+| Spezifiziert | 19 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -201,7 +202,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | Später | R2 · M5/M6 | Anpassen: lokal zuerst, online ergänzend | Spezifiziert | Offline-Suche über eigene, generische und gespeicherte Einträge |
 | NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
 | NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-03 |
-| NU-11 | Favoriten, zuletzt verwendet, Mahlzeitvorlagen | Von Nutzern gewünscht, nicht belegt | REV | VF | EV | H | NU-05 | M | P1 | Später | R2 · M5 | Verbesserung | Spezifiziert | „Zuletzt" automatisch; Favoriten markierbar; Vorlagen aus mehreren Einträgen |
+| NU-11 | Favoriten, zuletzt verwendet, Mahlzeitvorlagen | Von Nutzern gewünscht, nicht belegt | REV | VF | EV | H | NU-05 | M | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-268) | Implementiert | AK-NUT-11 |
 | NU-12 | Ernährungsverlauf | Historie wird gespeichert | HC-G | V | OV | H | NU-02 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Jeder Tag aufrufbar und editierbar; Wochendurchschnitt |
 | NU-13 | Wassertracking | Nur als tägliche Challenge-Aufgabe | TC | V | OV | M | – | S | P3 | Später | R4 · M13 | Später, mit den Gewohnheiten | Analysiert | Schnelleingabe in ml; Tagesziel |
 | NU-14 | Fotoerkennung von Mahlzeiten | Nur in einer Drittquelle genannt | MWM | N | ON | N | KI-Dienst | XL | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |

@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.15 · 19.10.2026 · Mahlzeit-Vorlagen
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-268 Mahlzeit-Vorlagen |
+| `requirements.md` | AK-NUT-11 |
+| `data-model.md` | Dexie v5 mit `mealTemplates`, Felder `meal_template` |
+| `feature-inventory.md` | NU-11 vorgezogen und „Implementiert“ |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Mahlzeit-Vorlagen |
+
 ## Version 0.14 · 19.10.2026 · Rezepte (M7)
 
 | Datei | Änderung |

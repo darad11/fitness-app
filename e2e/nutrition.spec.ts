@@ -123,3 +123,33 @@ test('Rezept: zwei Zutaten, je Portion gerechnet, nach Neuladen eintragen (D-267
     page.getByRole('region', { name: 'Mittagessen' }).getByText('Overnight Oats'),
   ).toBeVisible();
 });
+
+test('Vorlage: Frühstück speichern, nach Neuladen mit einem Tipp eintragen (D-268)', async ({
+  page,
+}) => {
+  test.slow();
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=breakfast');
+  await page.getByRole('button', { name: 'Schnelleintrag' }).click();
+  const quick = page.getByRole('dialog', { name: 'Schnelleintrag' });
+  await quick.getByLabel('Bezeichnung (optional)').fill('Müsli');
+  await quick.getByLabel('Energie (kcal)').fill('350');
+  await quick.getByRole('button', { name: 'Hinzufügen' }).click();
+  await page.getByRole('button', { name: 'Frühstück als Vorlage speichern' }).click();
+  await page
+    .getByRole('dialog', { name: 'Als Vorlage speichern' })
+    .getByRole('button', { name: 'Speichern' })
+    .click();
+  await expect(page.getByText('Vorlage „Frühstück“ gespeichert')).toBeVisible();
+
+  await page.reload();
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=dinner');
+  await page
+    .getByRole('list', { name: 'Vorlagen' })
+    .getByRole('button', { name: /Frühstück/ })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Frühstück eintragen' })
+    .getByRole('button', { name: 'Alle eintragen' })
+    .click();
+  await expect(page.getByRole('region', { name: 'Abendessen' }).getByText('Müsli')).toBeVisible();
+});

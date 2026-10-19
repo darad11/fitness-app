@@ -17,7 +17,7 @@ describe('Snapshots', () => {
     const snapshotDbName = uniqueName('snap');
 
     const info = await createSnapshot(rt.db, 'import', { snapshotDbName });
-    expect(info).toMatchObject({ reason: 'import', encoding: 'gzip', sourceVersion: 4 });
+    expect(info).toMatchObject({ reason: 'import', encoding: 'gzip', sourceVersion: 5 });
     expect(info.bytes).toBeGreaterThan(0);
     expect(info.counts.meta).toBe(2); // deviceId und probe
 
@@ -60,11 +60,11 @@ describe('Snapshots', () => {
     await db.meta.put({ key: 'deviceId', value: 'a1b2c3d4' });
     db.close();
 
-    expect(await snapshotBeforeUpgradeIfNeeded(name, 4, { snapshotDbName })).toBe('current');
-    expect(await snapshotBeforeUpgradeIfNeeded(name, 5, { snapshotDbName })).toBe('created');
+    expect(await snapshotBeforeUpgradeIfNeeded(name, 5, { snapshotDbName })).toBe('current');
+    expect(await snapshotBeforeUpgradeIfNeeded(name, 6, { snapshotDbName })).toBe('created');
 
     const [snapshot] = await listSnapshots({ snapshotDbName });
-    expect(snapshot).toMatchObject({ reason: 'schema-upgrade', sourceVersion: 4 });
+    expect(snapshot).toMatchObject({ reason: 'schema-upgrade', sourceVersion: 5 });
     const payload = await readSnapshot(snapshot!.id, { snapshotDbName });
     expect(payload?.tables.meta).toContainEqual({ key: 'deviceId', value: 'a1b2c3d4' });
 

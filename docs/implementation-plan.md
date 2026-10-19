@@ -244,7 +244,7 @@ Nächste Schritte: <Liste>
 30. Erledigt (über #18 gemergt): Schritt G Grundausbau (M5 ohne Rezepte): Q-19 beantwortet, BLS 4.0 gebündelt mit österreichischen Suchbegriffen, eigene Lebensmittel, Tagesprotokoll mit vier Mahlzeiten, Schnelleintrag, Ziele selbst oder per Vorschlag, Dexie v3 (D-261, D-262).
 31. Erledigt (über #19 gemergt): Lebensmitteldaten der BLS-Recherche als lokaler Import, nur die 7.476 ÖNWT-Lebensmittel; deutsche Daten (BLS 3.02) und auslaufende Produkte weggelassen (D-263). Offen: Marken aus den Detailseiten (Skript beim Produktinhaber), Entscheidung zum gebündelten BLS 4.0. Offen beim Produktinhaber: Import auf dem iPhone mit seiner Datei.
 32. Erledigt (über #20 gemergt): alle Nährwerte beim Hinzufügen und Bearbeiten, Zucker, Salz, Ballaststoffe und gesättigte Fettsäuren in der Tagesübersicht (D-264); „Heute“ ohne „Status“ und „Diese Version“ (D-265).
-33. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald der Produktinhaber die Datei hochlädt.
+33. Erledigt (Branch `feat/marken`): Marken aus `nuts-marken.json` beim lokalen Import, 5.934 der 7.476 Lebensmittel mit Marke, in der Suche sichtbar und suchbar (D-271). Offen beim Produktinhaber: Datei auf dem iPhone importieren.
 34. Erledigt (über #21 gemergt): Barcode-Scanner mit Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266). Gerätetest bestanden: Kamera und Open Food Facts mit Marke und Nährwerten (S-1, S-3).
 35. Erledigt (über #22 gemergt): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
 36. Erledigt (Branch `feat/mahlzeit-vorlagen`): Mahlzeit-Vorlagen aus einer Mahlzeit speichern und mit einem Tipp eintragen, Dexie v5 (D-268).

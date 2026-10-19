@@ -45,6 +45,20 @@ export async function writeHistory(db: AppDb, session: Session): Promise<void> {
 }
 
 /**
+ * Projektion einer Einheit nach einer Änderung von außen (Synchronisierung, D-269) neu aufbauen:
+ * nur abgeschlossene, nicht gelöschte Einheiten haben Zeilen. Aufruf innerhalb einer
+ * Transaktion mit `sessions` und `exerciseHistory`.
+ */
+export async function refreshSessionProjection(db: AppDb, sessionId: string): Promise<void> {
+  const parsed = sessionSchema.safeParse(await db.sessions.get(sessionId));
+  if (parsed.success && parsed.data.status === 'completed' && parsed.data.deletedAt === null) {
+    await writeHistory(db, parsed.data);
+  } else {
+    await db.exerciseHistory.where('sessionId').equals(sessionId).delete();
+  }
+}
+
+/**
  * Letzte abgeschlossene Einheit mit dieser Übung (AK-TRN-05), optional ohne eine bestimmte
  * Einheit (die laufende). Zeilen einer anderen Projektionsversion werden übergangen.
  */

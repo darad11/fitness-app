@@ -7,6 +7,7 @@ import { habitsRoutes } from '@/modules/habits';
 import { nutritionRoutes } from '@/modules/nutrition';
 import { progressRoutes } from '@/modules/progress';
 import { settingsRoutes } from '@/modules/settings';
+import { syncRoutes } from '@/modules/sync';
 import { trainingRoutes } from '@/modules/training';
 import { NotFoundPage, RootErrorView, RouteErrorView, ShellFallback } from './errors/ErrorViews';
 import { AppLayout } from './layout/AppLayout';
@@ -34,6 +35,7 @@ export const routes: RouteObject[] = [
           ...exercisesRoutes,
           ...nutritionRoutes,
           ...settingsRoutes,
+          ...syncRoutes,
           ...goalsRoutes,
           { path: '*', Component: NotFoundPage },
         ],

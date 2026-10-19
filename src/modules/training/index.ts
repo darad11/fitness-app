@@ -24,3 +24,4 @@ export {
 } from './service/sessionService';
 export { loadSampleTemplate } from './data/sampleTemplates';
 export { liveExercises, liveSets } from './calc/session';
+export { refreshSessionProjection } from './data/sessionRepository';

@@ -146,13 +146,13 @@ I. Challenges, Community, Dashboard (CH);CH-08;Navigation mit Hauptbereichen;Vie
 I. Challenges, Community, Dashboard (CH);CH-09;Shop, Supplements, Coaching, PDF-Guides;Geschäftsmodell;WEB;V;OV;N;–;–;–;Ausgeschlossen;–;Ausschließen (D-005);Analysiert;Entfällt
 J. System, Daten, Synchronisierung (SY);SY-01;Lokale Datenbank (Dexie, IndexedDB) als führender Speicher;Server-Backend;DT;E;EV;H;–;M;P0;MVP;R1 · M0;Verbesserung (D-113, D-204);Implementiert;AK-DAT-07, AK-DAT-11, AK-UX-06
 J. System, Daten, Synchronisierung (SY);SY-02;PWA mit Installation, Offline-Betrieb, Update-Hinweis;Native App;–;E;EV;H;SY-15;M;P0;MVP;R1 · M0/M4;Verbesserung (D-101);Zur Umsetzung ausgewählt;AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02
-J. System, Daten, Synchronisierung (SY);SY-03;Cloud-Synchronisierung;Server-Backend;DT;E;EV;H;"SY-09; SY-17";XL;P1;Später;R3 · M9/M10;Verbesserung (D-205);Spezifiziert;"Konfliktregeln pro Entität; Tests mit zwei Geräten; RLS-Tests"
+J. System, Daten, Synchronisierung (SY);SY-03;Cloud-Synchronisierung;Server-Backend;DT;E;EV;H;"SY-09; SY-17";XL;P1;MVP;R1 · M9;Verbesserung (D-205), erste Stufe vorgezogen (D-269): ganze Dokumente, jüngerer HLC, Regeln K-01 und Konfliktkopie;Implementiert;AK-SYN-02, AK-SYN-03
 J. System, Daten, Synchronisierung (SY);SY-04;Export und Import;Nicht belegt;–;E;EV;H;SY-01;M;P0;MVP;R1 · M1/M2/M4;Verbesserung (D-218);Zur Umsetzung ausgewählt;AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05
 J. System, Daten, Synchronisierung (SY);SY-05;Backup und Wiederherstellung;–;–;E;EV;H;"SY-04; SY-11";M;P1;MVP;R1 · M2/M4 (Cloud R3);Verbesserung;Zur Umsetzung ausgewählt;AK-DAT-02, AK-DAT-12
 J. System, Daten, Synchronisierung (SY);SY-06;Hell- und Dunkelmodus;–;–;E;EV;M;Design-Tokens;S;P1;MVP;R1 · M0/M4;Verbesserung (D-119);Implementiert;AK-SET-03, AK-UX-04
 J. System, Daten, Synchronisierung (SY);SY-07;Tastaturbedienung und Barrierearmut;–;–;E;EV;M;–;M;P1;MVP;R1 · M4;Verbesserung;Zur Umsetzung ausgewählt;AK-UX-03 bis AK-UX-05, AK-UX-08
 J. System, Daten, Synchronisierung (SY);SY-08;Lokales Fehlerprotokoll ohne Nutzdaten;–;–;E;EV;M;–;S;P1;MVP;R1 · M1/M4;Verbesserung;Implementiert;AK-DAT-09
-J. System, Daten, Synchronisierung (SY);SY-09;Anmeldung nur für die Sync;Pflichtkonto;SD 00:39;E;EV;M;SY-03;M;P1;Später;R3 · M9;Verbesserung;Spezifiziert;"App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS"
+J. System, Daten, Synchronisierung (SY);SY-09;Anmeldung nur für die Sync;Pflichtkonto;SD 00:39;E;EV;M;SY-03;M;P1;MVP;R1 · M9;Verbesserung, vorgezogen (D-269): E-Mail und Passwort, Konto im Supabase-Dashboard;Implementiert;AK-SYN-01
 J. System, Daten, Synchronisierung (SY);SY-10;Keine Drittanbieter-Telemetrie;Tracking-Identifier laut Privacy Label;AS;E;EV;H;–;S;P0;MVP;R1 · M0;Verbesserung (D-030);Getestet;AK-PWA-06
 J. System, Daten, Synchronisierung (SY);SY-11;Automatischer Snapshot vor riskanten Vorgängen;–;–;E;EV;H;SY-01;M;P0;MVP;R1 · M1/M4;Verbesserung (D-217);Zur Umsetzung ausgewählt;AK-DAT-06, AK-DAT-04
 J. System, Daten, Synchronisierung (SY);SY-12;Dauerhaften Speicher anfordern, Speicherstatus;–;–;E;EV;H;–;S;P1;MVP;R1 · M1/M4;Verbesserung;Implementiert;AK-PWA-05

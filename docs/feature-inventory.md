@@ -16,6 +16,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Version 0.10 (Barcode-Scanner, 19.10.2026): NU-07 und NU-24 vorgezogen und „Implementiert“ (AK-NUT-09, D-266); Gerätetest auf dem iPhone steht aus.
 - Version 0.11 (Rezepte, 19.10.2026): RE-02, RE-12 und RE-13 vorgezogen und „Implementiert“ (AK-NUT-10, D-267); RE-01 (Katalog mit Filtern) bleibt später.
 - Version 0.12 (Mahlzeit-Vorlagen, 19.10.2026): NU-11 vorgezogen und „Implementiert“ (Favoriten, Zuletzt verwendet und Vorlagen; AK-NUT-11, D-268).
+- Version 0.13 (Synchronisierung, 19.10.2026): SY-03 und SY-09 in erster Stufe „Implementiert“ (AK-SYN-01 bis AK-SYN-03, D-269); Gerätetest mit zwei Geräten steht aus.
 - Version 0.6 (Notizen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-19 (Notizen zu Übung und Einheit im Player, im Verlauf und beim nächsten Mal; D-260).
 - Version 0.6 (Eigene Übungen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-13 (eigene Übungen anlegen, bearbeiten, archivieren), TP-07 (Übungsdetail mit Angaben, persönlicher Notiz, Standardpause, Gewichtsschritt, Videolink und letzten Einheiten; D-258). TP-26 (Programmdatei) entfällt für R1 und wird über die Synchronisierung in R3 gelöst (D-259).
 - Version 0.6 (Eigene Programme, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-01, TP-02, TP-03, TP-04, TP-08, TP-09, TP-10, TP-12, TP-14, TP-15, TP-16, TP-22, TP-23, TP-24, TP-25 (D-257). TP-13 (eigene Übungen) und TP-26 (Programmdatei) folgen mit AP 2.5 und AP 2.8; ON-14 bleibt bis zum Programmwechsel-Dialog.
@@ -62,15 +63,15 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|
 | Original verifiziert (OV) | 50 | 30 | 8 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
-| Eigene Verbesserung (EV) | 43 | 6 | 0 | 49 |
-| Summe | 106 | 49 | 10 | 165 |
+| Eigene Verbesserung (EV) | 45 | 4 | 0 | 49 |
+| Summe | 108 | 47 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 106 |
+| R1 | 108 |
 | R2 | 20 |
-| R3 | 3 |
+| R3 | 1 |
 | R4 | 14 |
 | R5 | 5 |
 
@@ -83,9 +84,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 83 |
+| Implementiert | 85 |
 | Noch zu recherchieren | 1 |
-| Spezifiziert | 19 |
+| Spezifiziert | 17 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -285,13 +286,13 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | SY-01 | Lokale Datenbank (Dexie, IndexedDB) als führender Speicher | Server-Backend | DT | E | EV | H | – | M | P0 | MVP | R1 · M0 | Verbesserung (D-113, D-204) | Implementiert | AK-DAT-07, AK-DAT-11, AK-UX-06 |
 | SY-02 | PWA mit Installation, Offline-Betrieb, Update-Hinweis | Native App | – | E | EV | H | SY-15 | M | P0 | MVP | R1 · M0/M4 | Verbesserung (D-101) | Zur Umsetzung ausgewählt | AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02 |
-| SY-03 | Cloud-Synchronisierung | Server-Backend | DT | E | EV | H | SY-09; SY-17 | XL | P1 | Später | R3 · M9/M10 | Verbesserung (D-205) | Spezifiziert | Konfliktregeln pro Entität; Tests mit zwei Geräten; RLS-Tests |
+| SY-03 | Cloud-Synchronisierung | Server-Backend | DT | E | EV | H | SY-09; SY-17 | XL | P1 | MVP | R1 · M9 | Verbesserung (D-205), erste Stufe vorgezogen (D-269): ganze Dokumente, jüngerer HLC, Regeln K-01 und Konfliktkopie | Implementiert | AK-SYN-02, AK-SYN-03 |
 | SY-04 | Export und Import | Nicht belegt | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M2/M4 | Verbesserung (D-218) | Zur Umsetzung ausgewählt | AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05 |
 | SY-05 | Backup und Wiederherstellung | – | – | E | EV | H | SY-04; SY-11 | M | P1 | MVP | R1 · M2/M4 (Cloud R3) | Verbesserung | Zur Umsetzung ausgewählt | AK-DAT-02, AK-DAT-12 |
 | SY-06 | Hell- und Dunkelmodus | – | – | E | EV | M | Design-Tokens | S | P1 | MVP | R1 · M0/M4 | Verbesserung (D-119) | Implementiert | AK-SET-03, AK-UX-04 |
 | SY-07 | Tastaturbedienung und Barrierearmut | – | – | E | EV | M | – | M | P1 | MVP | R1 · M4 | Verbesserung | Zur Umsetzung ausgewählt | AK-UX-03 bis AK-UX-05, AK-UX-08 |
 | SY-08 | Lokales Fehlerprotokoll ohne Nutzdaten | – | – | E | EV | M | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Implementiert | AK-DAT-09 |
-| SY-09 | Anmeldung nur für die Sync | Pflichtkonto | SD 00:39 | E | EV | M | SY-03 | M | P1 | Später | R3 · M9 | Verbesserung | Spezifiziert | App ohne Konto voll nutzbar; Magic Link oder Passkey; RLS |
+| SY-09 | Anmeldung nur für die Sync | Pflichtkonto | SD 00:39 | E | EV | M | SY-03 | M | P1 | MVP | R1 · M9 | Verbesserung, vorgezogen (D-269): E-Mail und Passwort, Konto im Supabase-Dashboard | Implementiert | AK-SYN-01 |
 | SY-10 | Keine Drittanbieter-Telemetrie | Tracking-Identifier laut Privacy Label | AS | E | EV | H | – | S | P0 | MVP | R1 · M0 | Verbesserung (D-030) | Getestet | AK-PWA-06 |
 | SY-11 | Automatischer Snapshot vor riskanten Vorgängen | – | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M4 | Verbesserung (D-217) | Zur Umsetzung ausgewählt | AK-DAT-06, AK-DAT-04 |
 | SY-12 | Dauerhaften Speicher anfordern, Speicherstatus | – | – | E | EV | H | – | S | P1 | MVP | R1 · M1/M4 | Verbesserung | Implementiert | AK-PWA-05 |

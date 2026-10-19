@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.16 · 19.10.2026 · Synchronisierung, erste Stufe
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-269 Synchronisierung mit Supabase; D-270 Anmeldung im Vollbild |
+| `requirements.md` | Abschnitt 6.12b mit AK-SYN-01 bis AK-SYN-03 |
+| `data-model.md` | Dexie v6 mit `syncBase`; umgesetztes Serverschema |
+| `feature-inventory.md` | SY-03 und SY-09 vorgezogen und „Implementiert“ |
+| `known-limitations.md` | Grenzen der ersten Stufe |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Synchronisierung |
+
 ## Version 0.15 · 19.10.2026 · Mahlzeit-Vorlagen
 
 | Datei | Änderung |

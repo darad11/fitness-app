@@ -247,5 +247,6 @@ Nächste Schritte: <Liste>
 33. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald der Produktinhaber die Datei hochlädt.
 34. Erledigt (über #21 gemergt): Barcode-Scanner mit Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266). Gerätetest bestanden: Kamera und Open Food Facts mit Marke und Nährwerten (S-1, S-3).
 35. Erledigt (über #22 gemergt): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
-36. Erledigt (Branch `feat/mahlzeit-vorlagen`): Mahlzeit-Vorlagen aus einer Mahlzeit speichern und mit einem Tipp eintragen, Dexie v5 (D-268).
-37. Ich: Synchronisierung mit Supabase (Freigabe des Produktinhabers liegt vor; Region und Anmeldung vorher abstimmen). Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers.
+36. Erledigt (über #23 gemergt): Mahlzeit-Vorlagen aus einer Mahlzeit speichern und mit einem Tipp eintragen, Dexie v5 (D-268).
+37. Erledigt (Branch `feat/sync`): Synchronisierung, erste Stufe: Supabase-Projekt in Frankfurt, Tabelle und Funktion mit RLS, Anmeldung mit E-Mail und Passwort, automatischer Abgleich, Dexie v6 (D-269). Offen beim Produktinhaber: Konto im Supabase-Dashboard anlegen, Anmeldungen sperren, Gerätetest mit zwei Geräten.
+38. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald die Datei da ist. Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

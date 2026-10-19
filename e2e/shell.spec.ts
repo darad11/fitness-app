@@ -29,6 +29,7 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
     'Einstellungen',
     'Daten und Sicherung',
     'Installieren',
+    'Synchronisierung',
     'Über die App',
   ]);
 });

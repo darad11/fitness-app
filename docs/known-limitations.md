@@ -81,6 +81,10 @@ Auf iOS und iPadOS nutzen alle Browser WebKit. Maßgeblich ist, was Safari und i
 - Laut einer Quelle ändert sich die Data API für bestehende kostenlose Projekte ab 30.10.2026; vor R3 zu prüfen.
 - Der öffentliche Anon-Key ist kein Geheimnis; die Sicherheit hängt vollständig an RLS. RLS-Tests sind Teil der Abnahme von R3.
 - Bei aktivierter Sync liegen die synchronisierten Nutzdaten bei Supabase (`data-sources.md` Abschnitt 8).
+- Stand 19.10.2026 (D-269): Projekt „fitness-app“ in Frankfurt im kostenlosen Tarif; nach 7 Tagen ohne Nutzung pausiert es und muss im Supabase-Dashboard geweckt werden, bis dahin meldet die App einen Fehler beim Abgleich und arbeitet lokal weiter.
+- Erste Stufe: Bei Änderungen am selben Dokument auf zwei Geräten zwischen zwei Abgleichen gewinnt die jüngere Fassung ganz (z. B. ein Ernährungseintrag); nur Trainingseinheiten (abgeschlossen vor laufend) sowie Programme und Rezepte (Konfliktkopie) haben eigene Regeln. Feldweise Zusammenführung folgt bei Bedarf.
+- Löschmarkierungen bleiben auf dem Server unbegrenzt; ein Aufräumen nach 180 Tagen (data-model.md 7.3) ist noch nicht umgesetzt.
+- Supabase war aus der Cloud-Entwicklungsumgebung nicht erreichbar. Server-Funktion und RLS sind per SQL im Projekt geprüft, der Client mit nachgebildeten Antworten; der erste echte Abgleich zwischen zwei Geräten ist der Gerätetest.
 
 ## 8. Datenquellen
 

@@ -120,11 +120,11 @@ export interface Clock {
 
 const iso = (date: Date) => date.toISOString();
 
-function child(hlc: Hlc, position: number) {
+export function child(hlc: Hlc, position: number) {
   return { id: uuidv4(), hlc, deletedAt: null, position };
 }
 
-function buildExercise(input: ExerciseInput, position: number, hlc: Hlc): SessionExercise {
+export function buildExercise(input: ExerciseInput, position: number, hlc: Hlc): SessionExercise {
   const sets: SessionSet[] = [];
   input.sets.forEach((planned, index) => {
     const parent = planned.parentIndex !== undefined ? sets[planned.parentIndex] : undefined;

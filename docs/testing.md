@@ -429,3 +429,16 @@ Modul `goals`: Zielgewicht und Wochenziel setzen, ändern, entfernen mit Histori
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 219,3 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 52 Tests bestanden. Neu `goals.spec.ts`: Weg von „Heute“ zu „Profil und Ziele“, Anzeigename, Zielgewicht 78 kg, Wochenziel 3, Begrüßung „Hallo Dali!“, „0 von 3 Trainings diese Woche“, Ziellinie „Ziel 78,0 kg“ im Diagramm, „noch 2,4 kg bis 78,0 kg“ auf „Heute“. `/mehr/profil` gehört zu den Seiten der Netz- und axe-Prüfung |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Nachtragen (AP 2.6) · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Seite „Nachtragen“ mit Krafttraining (Übungen aus der Bibliothek, Aufwärm- und Arbeitssätze, Werte je Satz) und Aktivität (Typ, Beginn, Dauer, Distanz, Notiz); Aktivitäten im Verlauf, im Detail und im Wochenziel (D-255).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 59 Dateien, 482 Tests bestanden. Neu: `logService.test.ts` (Aktivität mit Dauer und Distanz ohne Kalorienschätzung; Grenzen Zukunft, Dauer, Distanz; Krafttraining mit erledigten Sätzen und Projektion; fehlende Werte und Übungen), `log-ui.test.tsx` (Aktivität über das Formular bis zum Detail; Krafttraining mit Übungsauswahl, Satz entfernen, Aufwärmsatz, Werten und Volumen im Detail). Kalorien: Aktivitäten liefern keine Schätzung und zählen in der Statistik nicht als „ohne Schätzung“ |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90 %, Zweige 80,27 %, Funktionen 88,12 %, Zeilen 90,94 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 220,6 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 54 Tests bestanden. Neu `log.spec.ts`: Wochenziel 2 setzen, Laufen 32 min und 5,2 km nachtragen, Detail mit „Nachgetragen“ und „5,2 km“, Verlauf „32:00 · 5,2 km“, „Heute“ zeigt „1 von 2 Trainings diese Woche“. `/training/nachtragen` gehört zu den Seiten der Netz- und axe-Prüfung |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

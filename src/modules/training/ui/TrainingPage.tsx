@@ -1,4 +1,4 @@
-import { ClipboardList, History, ListChecks, Play } from 'lucide-react';
+import { ClipboardList, History, ListChecks, PencilLine, Play } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -30,6 +30,12 @@ const ENTRIES: readonly LinkListItem[] = [
     label: t.training.programs,
     icon: ClipboardList,
     description: t.training.programsHint,
+  },
+  {
+    to: '/training/nachtragen',
+    label: t.log.title,
+    icon: PencilLine,
+    description: t.log.hint,
   },
   {
     to: '/training/verlauf',

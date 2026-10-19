@@ -33,9 +33,11 @@ export interface CalorieEstimate {
  * (Cardio ohne Tempo) nehmen ihre gemessene Zeit aus der Rechnung. Ohne Körpergewicht `null`.
  */
 export function estimateCalories(
-  session: Pick<Session, 'exercises' | 'durationSec'>,
+  session: Pick<Session, 'exercises' | 'durationSec'> & { kind?: Session['kind'] },
   bodyWeightKg: number | undefined,
 ): CalorieEstimate | null {
+  // Aktivitäten (Laufen und Co.) bekommen ohne Tempo-Tabellen keinen Wert (Q-16, D-251).
+  if (session.kind === 'activity') return null;
   if (bodyWeightKg === undefined || !session.durationSec) return null;
   const exercises = liveExercises(session).map((exercise) => ({
     met: metFor(exercise),

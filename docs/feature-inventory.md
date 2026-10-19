@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Nachtragen, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-17, AH-09 (D-255). TS-19 bleibt, bis Notizen auch im Player erfasst werden.
 - Version 0.5 (Ziele, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): ON-07, ON-18, TH-08, BP-06 (D-254). ON-01 und ON-11 (Profil ohne Konto, Anzeigename) ebenfalls „Implementiert"; ON-14 bleibt bis zum Programmwechsel-Dialog in M2.
 - Version 0.5 (Schritt F, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): AH-03, AH-04 (täglich), AH-05 (Serie für Tagesaufgaben, D-253). TH-04 (Serie für Trainings) bleibt offen.
 - Version 0.5 (Schritt E, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; Diagramme hell und dunkel per Bildschirmfoto geprüft): BP-01, BP-02 (ohne Ziellinie), TH-02 (Übungsverlauf unter `/fortschritt/uebung/:id`, Übungsdetail folgt in M2), TH-05, TH-06, TH-07 (Vergleich in Zusammenfassung und auf „Heute"), TS-18 (Kalorienschätzung nach MET, D-251). BP-06 und TH-08 bleiben, bis die Ziele (AP 3.3) umgesetzt sind.
@@ -72,10 +73,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 43 |
+| Implementiert | 45 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 37 |
-| Zur Umsetzung ausgewählt | 41 |
+| Zur Umsetzung ausgewählt | 39 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -152,7 +153,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TS-14 | Training abschließen | „complete workout" | HC-G | V | OV | H | TS-06 | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-19 |
 | TS-15 | Trainingszusammenfassung | Übungen, Kalorien, Sätze | SD 14:40 | V | OV | M | TS-14 | S | P0 | MVP | R1 · M1/M3 | Anpassen: ohne Kalorienschätzung (D-226); Vergleich ab M3 | Zur Umsetzung ausgewählt | AK-TRN-20 |
 | TS-16 | Ergebnis teilen | Social Sharing | AS 3.1.5; AS 3.2.1 | V | OV | N | Web Share | S | P3 | Später | R5 | Später | Analysiert | Bild erzeugen und über das Teilen-Menü teilen |
-| TS-17 | Krafttraining nachtragen, Aktivität erfassen | Manuelle Workouts seit 3.4.11 | AS 3.4.11 | V | OV | H | TS-01 | M | P1 | MVP | R1 · M2 | Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz | Zur Umsetzung ausgewählt | AK-TRN-23 |
+| TS-17 | Krafttraining nachtragen, Aktivität erfassen | Manuelle Workouts seit 3.4.11 | AS 3.4.11 | V | OV | H | TS-01 | M | P1 | MVP | R1 · M2 | Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz | Implementiert | AK-TRN-23 |
 | TS-18 | Kalorienschätzung pro Einheit | In der Zusammenfassung | SD 14:40 | V | OV | N | ON-09 | S | P2 | MVP | R1 · Schritt E | Vorgezogen als gekennzeichnete Schätzung nach MET (D-251, Q-16) | Implementiert | AK-HIS-06 |
 | TS-19 | Notizen zu Einheit und Übung | Nicht belegt | – | P | ON | M | – | S | P2 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-24 |
 | TS-20 | RPE/RIR und Tempo | Nicht belegt | – | P | ON | N | TS-05 | S | P3 | Später | R4 · M11 | Später: Feld im Datenmodell reserviert (D-108) | Spezifiziert | Optionales Feld je Satz |
@@ -252,7 +253,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | AH-06 | Erinnerungen | Workout-Reminder | AS 3.1.4 | V | OV | M | ON-13 | L | P3 | Später | R5 | Später | Analysiert | Siehe ON-13 |
 | AH-07 | Apple Health, Apple Watch, Wearables | Laut Agentur integriert; Rezensionen bezweifeln es | DT; REV | N | ON | M | Native App | XL | – | Ausgeschlossen | – | Ausschließen für die Web-App (D-116); native Option dokumentiert | Analysiert | Entfällt in der Web-App |
 | AH-08 | Kalender aller Ereignisse | Nicht belegt | – | P | ON | M | TH-03 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monats- und Wochenansicht mit allen Ereignissen |
-| AH-09 | Manuelle Aktivitätseinträge | Manuelle Workouts | AS 3.4.11 | V | OV | H | TS-17 | – | P1 | MVP | R1 · M2 | Übernehmen über TS-17 | Zur Umsetzung ausgewählt | AK-TRN-23 |
+| AH-09 | Manuelle Aktivitätseinträge | Manuelle Workouts | AS 3.4.11 | V | OV | H | TS-17 | – | P1 | MVP | R1 · M2 | Übernehmen über TS-17 | Implementiert | AK-TRN-23 |
 
 ## I. Challenges, Community, Dashboard (CH)
 

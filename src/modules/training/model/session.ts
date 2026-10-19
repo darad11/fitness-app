@@ -72,6 +72,17 @@ export const sessionExerciseSchema = childFieldsSchema.extend({
 export type SessionExercise = z.infer<typeof sessionExerciseSchema>;
 
 export const SESSION_SOURCES = ['program', 'template', 'free', 'manual'] as const;
+export const ACTIVITY_TYPES = ['run', 'walk', 'cycle', 'swim', 'row', 'hike', 'other'] as const;
+export type ActivityType = (typeof ACTIVITY_TYPES)[number];
+
+/** Aktivität mit Dauer und optionaler Distanz (AK-TRN-23); nur bei `kind = 'activity'`. */
+export const activitySchema = z.strictObject({
+  type: z.enum(ACTIVITY_TYPES),
+  label: z.string().trim().min(1).max(60).optional(),
+  durationSec: whole('durationSec').min(1),
+  distanceM: range('distanceM').optional(),
+});
+export type Activity = z.infer<typeof activitySchema>;
 export const SESSION_STATUSES = ['in_progress', 'completed'] as const;
 
 export const sessionSchema = defineDocSchema('session', {
@@ -98,6 +109,7 @@ export const sessionSchema = defineDocSchema('session', {
   endedAt: isoDateTimeSchema.optional(),
   pauses: z.array(z.strictObject({ start: isoDateTimeSchema, end: isoDateTimeSchema.optional() })),
   durationSec: whole('durationSec').optional(),
+  activity: activitySchema.optional(),
   notes: z.string().max(5000).optional(),
   restTimer: z
     .strictObject({
@@ -117,6 +129,10 @@ export const sessionSchema = defineDocSchema('session', {
     (s) => s.status !== 'completed' || (s.endedAt !== undefined && s.durationSec !== undefined),
     { message: 'Abgeschlossene Einheit ohne Ende oder Dauer', path: ['endedAt'] },
   )
+  .refine((s) => (s.kind === 'activity') === (s.activity !== undefined), {
+    message: 'Aktivität nur mit Aktivitätsdaten',
+    path: ['activity'],
+  })
   .refine(
     (s) =>
       s.exercises.every((exercise) =>

@@ -69,10 +69,12 @@ export function ProgressPage() {
     now,
     (session) => summarizeSession(session).volumeKg,
     (session) =>
-      estimateCalories(
-        session,
-        latestBefore(weights, session.endedAt ?? session.startedAt)?.weightKg,
-      )?.kcal ?? null,
+      session.kind === 'activity'
+        ? undefined
+        : (estimateCalories(
+            session,
+            latestBefore(weights, session.endedAt ?? session.startedAt)?.weightKg,
+          )?.kcal ?? null),
     fmt.timeZone,
   );
   const latestWeight = weights[0];

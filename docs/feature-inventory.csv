@@ -61,7 +61,7 @@ C. Aktive Trainingseinheit (TS);TS-15;Trainingszusammenfassung;Übungen, Kalorie
 C. Aktive Trainingseinheit (TS);TS-16;Ergebnis teilen;Social Sharing;"AS 3.1.5; AS 3.2.1";V;OV;N;Web Share;S;P3;Später;R5;Später;Analysiert;Bild erzeugen und über das Teilen-Menü teilen
 C. Aktive Trainingseinheit (TS);TS-17;Krafttraining nachtragen, Aktivität erfassen;Manuelle Workouts seit 3.4.11;AS 3.4.11;V;OV;H;TS-01;M;P1;MVP;R1 · M2;Anpassen: Krafttraining mit Sätzen oder Aktivität mit Dauer und Distanz;Implementiert;AK-TRN-23
 C. Aktive Trainingseinheit (TS);TS-18;Kalorienschätzung pro Einheit;In der Zusammenfassung;SD 14:40;V;OV;N;ON-09;S;P2;MVP;R1 · Schritt E;Vorgezogen als gekennzeichnete Schätzung nach MET (D-251, Q-16);Implementiert;AK-HIS-06
-C. Aktive Trainingseinheit (TS);TS-19;Notizen zu Einheit und Übung;Nicht belegt;–;P;ON;M;–;S;P2;MVP;R1 · M2;Übernehmen;Zur Umsetzung ausgewählt;AK-TRN-24
+C. Aktive Trainingseinheit (TS);TS-19;Notizen zu Einheit und Übung;Nicht belegt;–;P;ON;M;–;S;P2;MVP;R1 · M2;Übernehmen;Implementiert;AK-TRN-24
 C. Aktive Trainingseinheit (TS);TS-20;RPE/RIR und Tempo;Nicht belegt;–;P;ON;N;TS-05;S;P3;Später;R4 · M11;Später: Feld im Datenmodell reserviert (D-108);Spezifiziert;Optionales Feld je Satz
 C. Aktive Trainingseinheit (TS);TS-21;Bildschirm während des Trainings aktiv halten;–;–;E;EV;H;Wake Lock (iOS ab 18.4 in installierten Web-Apps);S;P1;MVP;R1 · M1;Verbesserung (D-215, D-228);Implementiert;AK-TRN-13
 C. Aktive Trainingseinheit (TS);TS-22;Aufwärmsätze;Nicht belegt;–;P;ON;H;TP-08;S;P0;MVP;R1 · M1;Übernehmen (D-108);Implementiert;AK-TRN-03

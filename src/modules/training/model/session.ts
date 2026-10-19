@@ -12,6 +12,11 @@ import { setTypeSchema } from './program';
 /** Trainingseinheit als Aggregat mit Übungen und Sätzen (data-model.md Abschnitt 3.1). */
 export const SESSION_SCHEMA_VERSION = 1;
 
+/** Länge einer eigenen Notiz je Übung (AK-TRN-24, D-260). */
+export const NOTE_MAX = 2000;
+/** Länge der Notiz zur ganzen Einheit. */
+export const SESSION_NOTE_MAX = 5000;
+
 /** Grenzen der Eingaben (AK-TRN-04, D-241). */
 export const LIMITS = {
   weightKg: { min: 0, max: 500 },
@@ -66,6 +71,8 @@ export const sessionExerciseSchema = childFieldsSchema.extend({
   perSide: z.literal(true).optional(),
   restSec: whole('durationSec').optional(),
   notes: z.string().max(2000).optional(),
+  /** Eigene Notiz zu dieser Übung in dieser Einheit (AK-TRN-24); `notes` ist der Hinweis aus dem Plan. */
+  note: z.string().max(NOTE_MAX).optional(),
   replacedFromExerciseId: z.uuid().optional(),
   sets: z.array(sessionSetSchema),
 });
@@ -110,7 +117,7 @@ export const sessionSchema = defineDocSchema('session', {
   pauses: z.array(z.strictObject({ start: isoDateTimeSchema, end: isoDateTimeSchema.optional() })),
   durationSec: whole('durationSec').optional(),
   activity: activitySchema.optional(),
-  notes: z.string().max(5000).optional(),
+  notes: z.string().max(SESSION_NOTE_MAX).optional(),
   restTimer: z
     .strictObject({
       afterSetId: z.uuid(),

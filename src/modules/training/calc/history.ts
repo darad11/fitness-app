@@ -56,6 +56,7 @@ export function groupByWeek<T extends { dayKey: string }>(items: readonly T[]): 
 export function buildHistoryRows(session: Session): HistoryRow[] {
   if (session.status !== 'completed' || !session.endedAt) return [];
   const groups = new Map<string, SessionExercise>();
+  const notes = new Map<string, string[]>();
   for (const exercise of liveExercises(session)) {
     const existing = groups.get(exercise.exerciseId);
     if (existing)
@@ -64,6 +65,11 @@ export function buildHistoryRows(session: Session): HistoryRow[] {
         ...renumber(liveSets(exercise), existing.sets.length),
       ];
     else groups.set(exercise.exerciseId, { ...exercise, sets: liveSets(exercise) });
+    if (exercise.note) {
+      const list = notes.get(exercise.exerciseId) ?? [];
+      list.push(exercise.note);
+      notes.set(exercise.exerciseId, list);
+    }
   }
   return [...groups.values()].map((exercise) => {
     const done = exercise.sets.filter((set) => set.status === 'done');
@@ -87,6 +93,9 @@ export function buildHistoryRows(session: Session): HistoryRow[] {
       volumeKg: exerciseVolume(exercise),
       reps: exerciseReps(exercise),
       setCount: done.filter((set) => set.type !== 'warmup').length,
+      ...(notes.has(exercise.exerciseId)
+        ? { note: (notes.get(exercise.exerciseId) ?? []).join(' · ') }
+        : {}),
     };
   });
 }

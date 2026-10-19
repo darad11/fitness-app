@@ -120,6 +120,7 @@ interface SessionExercise extends Child {
   trackingMode: 'weight_reps' | 'reps' | 'time' | 'weight_time' | 'time_distance' | 'assisted_reps';  // D-241
   distanceUnit?: 'm' | 'km'; perSide?: true;      // Snapshot für die Anzeige (D-244)
   restSec?: number; notes?: string;                // notes: Hinweis aus dem Programm, beim Start übernommen (D-250)
+  note?: string;                                   // eigene Notiz in dieser Einheit (D-260), auch in exerciseHistory
   replacedFromExerciseId?: string;                 // ursprünglich geplante Übung (Ersetzen, D-250)
   group?: { id: string; type: 'superset' | 'circuit' };     // reserviert (R4)
   sets: SessionSet[];

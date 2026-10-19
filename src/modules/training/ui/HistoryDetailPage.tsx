@@ -134,6 +134,12 @@ export function HistoryDetailPage() {
               {exercise.notes ? (
                 <p className="-mt-2 mb-3 text-sm text-muted">{exercise.notes}</p>
               ) : null}
+              {exercise.note ? (
+                <p className="mb-3 text-sm whitespace-pre-line">
+                  <span className="font-semibold">{t.session.yourNote}: </span>
+                  {exercise.note}
+                </p>
+              ) : null}
               <ol className="divide-y divide-line">
                 {liveSets(exercise).map((set) => {
                   const ordinal =

@@ -23,6 +23,8 @@ import {
 import type { PlanTree, SetType } from '../model/program';
 import {
   LIMITS,
+  NOTE_MAX,
+  SESSION_NOTE_MAX,
   type Session,
   type SessionExercise,
   type SessionSet,
@@ -684,6 +686,49 @@ export function stopSetTimer(
     if (!session.setTimer) return;
     applySetTimer(session, session.setTimer, now, hlc);
     session.setTimer = null;
+  });
+}
+
+// ---------------------------------------------------------------------------------------------
+// Notizen (AK-TRN-24, D-260)
+
+export class NoteTooLongError extends Error {
+  override name = 'NoteTooLongError';
+}
+
+/** Bereinigt eine Notiz; leer heißt entfernen. Wirft bei zu langem Text. */
+export function cleanNote(text: string, max: number): string | undefined {
+  const cleaned = text.trim();
+  if (cleaned.length > max) throw new NoteTooLongError('Notiz zu lang');
+  return cleaned || undefined;
+}
+
+/** Eigene Notiz zu einer Übung der laufenden Einheit; leerer Text entfernt sie. */
+export async function setExerciseNote(
+  rt: DbRuntime,
+  sessionId: string,
+  exerciseKey: string,
+  text: string,
+): Promise<Session> {
+  const note = cleanNote(text, NOTE_MAX);
+  return changeSession(rt, sessionId, (session, hlc) => {
+    const exercise = findExercise(session, exerciseKey);
+    if (note) exercise.note = note;
+    else delete exercise.note;
+    exercise.hlc = hlc;
+  });
+}
+
+/** Notiz zur laufenden Einheit; leerer Text entfernt sie. */
+export async function setSessionNote(
+  rt: DbRuntime,
+  sessionId: string,
+  text: string,
+): Promise<Session> {
+  const note = cleanNote(text, SESSION_NOTE_MAX);
+  return changeSession(rt, sessionId, (session) => {
+    if (note) session.notes = note;
+    else delete session.notes;
   });
 }
 

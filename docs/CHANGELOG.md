@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.9 · 19.10.2026 · Notizen im Player (TS-19)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-260 Notizen zu Übung und Einheit |
+| `data-model.md` | Feld `note` je Übung einer Einheit |
+| `implementation-plan.md` | AP 2.4 vollständig, nächste Schritte (Ernährung) |
+| `feature-inventory.md` | TS-19 auf „Implementiert“ |
+| `testing.md` | Ergebnisse Notizen |
+
 ## Version 0.8 · 19.10.2026 · Eigene Übungen und persönliche Angaben (AP 2.5)
 
 | Datei | Änderung |

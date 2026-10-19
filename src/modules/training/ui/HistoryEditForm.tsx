@@ -6,7 +6,7 @@ import { parseDecimal } from '@/shared/lib/format';
 import { Button, Card, IconButton } from '@/shared/ui';
 import { fieldsFor, toDisplay, toStored } from '../calc/fields';
 import { liveExercises, liveSets } from '../calc/session';
-import type { Session, SetValues } from '../model/session';
+import { NOTE_MAX, type Session, type SetValues } from '../model/session';
 import { editCompletedSession, InvalidEditError } from '../service/historyService';
 import { InvalidValueError } from '../service/sessionService';
 
@@ -34,6 +34,9 @@ export function HistoryEditForm({
   const [when, setWhen] = useState(toLocalInput(session.startedAt));
   const [minutes, setMinutes] = useState(String(Math.round((session.durationSec ?? 0) / 60)));
   const [notes, setNotes] = useState(session.notes ?? '');
+  const [exerciseNotes, setExerciseNotes] = useState<Record<string, string>>(() =>
+    Object.fromEntries(liveExercises(session).map((e) => [e.id, e.note ?? ''])),
+  );
   const [values, setValues] = useState<Record<string, Record<string, string>>>(() => {
     const initial: Record<string, Record<string, string>> = {};
     for (const exercise of liveExercises(session)) {
@@ -88,6 +91,11 @@ export function HistoryEditForm({
         notes,
         sets,
         removeSetIds: [...removed],
+        exerciseNotes: Object.fromEntries(
+          liveExercises(session)
+            .filter((e) => (exerciseNotes[e.id] ?? '') !== (e.note ?? ''))
+            .map((e) => [e.id, exerciseNotes[e.id] ?? '']),
+        ),
       });
       onDone();
     } catch (caught) {
@@ -169,9 +177,21 @@ export function HistoryEditForm({
         let warmup = 0;
         let drop = 0;
         const done = liveSets(exercise).filter((set) => set.status === 'done');
-        if (done.length === 0) return null;
+        if (done.length === 0 && !exercise.note) return null;
         return (
           <Card key={exercise.id} title={exercise.nameSnapshot}>
+            <Labeled id={`notiz-${exercise.id}`} label={t.session.noteTitle(exercise.nameSnapshot)}>
+              <textarea
+                id={`notiz-${exercise.id}`}
+                rows={2}
+                maxLength={NOTE_MAX}
+                value={exerciseNotes[exercise.id] ?? ''}
+                onChange={(event) => {
+                  setExerciseNotes((all) => ({ ...all, [exercise.id]: event.target.value }));
+                }}
+                className="mb-3 w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+              />
+            </Labeled>
             <ol className="grid gap-2">
               {liveSets(exercise).map((set) => {
                 const ordinal =

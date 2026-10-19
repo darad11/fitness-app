@@ -1,4 +1,13 @@
-import { ArrowLeftRight, ChevronDown, ChevronUp, Ellipsis, Info, Plus, Trash2 } from 'lucide-react';
+import {
+  ArrowLeftRight,
+  ChevronDown,
+  ChevronUp,
+  Ellipsis,
+  Info,
+  NotebookPen,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import {
@@ -15,6 +24,7 @@ import { playRestEndSound, unlockSound } from '@/shared/lib/sound';
 import { keepScreenAwake } from '@/shared/lib/wakeLock';
 import { Button, ButtonLink, Dialog, IconButton, Meter, Skeleton } from '@/shared/ui';
 import { previousValues } from '../../calc/history';
+import { NoteDialog } from './NoteDialog';
 import { formatSetValues } from '../../calc/fields';
 import { formatClock, formatTargetRange, restRemainingSec } from '../../calc/format';
 import {
@@ -30,7 +40,14 @@ import {
 } from '../../calc/session';
 import { usePreviousHistory, useSession } from '../../data/useSession';
 import type { HistoryRow } from '../../model/history';
-import type { Session, SessionExercise, SessionSet, SetValues } from '../../model/session';
+import {
+  NOTE_MAX,
+  SESSION_NOTE_MAX,
+  type Session,
+  type SessionExercise,
+  type SessionSet,
+  type SetValues,
+} from '../../model/session';
 import {
   addExercise,
   addSet,
@@ -45,6 +62,8 @@ import {
   removeSet,
   reopenSet,
   replaceExercise,
+  setExerciseNote,
+  setSessionNote,
   setValues,
   skipRest,
   skipSet,
@@ -193,6 +212,8 @@ function Player({ session }: { session: Session }) {
   const [info, setInfo] = useState<SessionExercise | null>(null);
   const [actionsFor, setActionsFor] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<Confirm | null>(null);
+  // Notiz-Dialog: zu einer Übung (Schlüssel der Übung in der Einheit) oder zur ganzen Einheit.
+  const [noteFor, setNoteFor] = useState<SessionExercise | 'session' | null>(null);
   const [errors, setErrors] = useState<Record<string, RowError>>({});
   const number = useCallback(
     (value: number) => fmt.number(value, { maximumFractionDigits: 2 }),
@@ -436,6 +457,17 @@ function Player({ session }: { session: Session }) {
                     {exercise.perSide ? ` · ${t.session.perSide}` : ''}
                   </p>
                   {exercise.notes ? <p className="mt-1 text-sm">{exercise.notes}</p> : null}
+                  {exercise.note ? (
+                    <p className="mt-1 text-sm">
+                      <span className="font-semibold">{t.session.yourNote}: </span>
+                      {exercise.note}
+                    </p>
+                  ) : row?.note ? (
+                    <p className="mt-1 text-sm text-muted">
+                      <span className="font-semibold">{t.session.previousNote}: </span>
+                      {row.note}
+                    </p>
+                  ) : null}
                 </div>
                 <IconButton
                   label={t.session.exerciseInfo(exercise.nameSnapshot)}
@@ -490,6 +522,17 @@ function Player({ session }: { session: Session }) {
                   >
                     <ArrowLeftRight aria-hidden="true" className="size-4" />
                     {t.session.replaceExercise}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      setActionsFor(null);
+                      setNoteFor(exercise);
+                    }}
+                  >
+                    <NotebookPen aria-hidden="true" className="size-4" />
+                    {t.session.noteAction}
                   </Button>
                   <Button
                     variant="danger"
@@ -567,6 +610,28 @@ function Player({ session }: { session: Session }) {
         })}
       </div>
 
+      <section
+        aria-label={t.session.sessionNoteTitle}
+        className="mt-6 rounded-card bg-surface p-4 shadow-card"
+      >
+        {session.notes ? (
+          <p className="mb-3 whitespace-pre-line">
+            <span className="font-semibold">{t.session.sessionNoteTitle}: </span>
+            {session.notes}
+          </p>
+        ) : null}
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            setNoteFor('session');
+          }}
+        >
+          <NotebookPen aria-hidden="true" className="size-4" />
+          {t.session.sessionNoteAction}
+        </Button>
+      </section>
+
       <div className="mt-8 flex justify-center">
         <Button
           variant="quiet"
@@ -607,6 +672,31 @@ function Player({ session }: { session: Session }) {
           </Button>
         </div>
       </div>
+
+      {noteFor ? (
+        <NoteDialog
+          title={
+            noteFor === 'session'
+              ? t.session.sessionNoteTitle
+              : t.session.noteTitle(noteFor.nameSnapshot)
+          }
+          hint={noteFor === 'session' ? t.session.sessionNoteHint : t.session.noteHint}
+          initial={(noteFor === 'session' ? session.notes : noteFor.note) ?? ''}
+          maxLength={noteFor === 'session' ? SESSION_NOTE_MAX : NOTE_MAX}
+          onClose={() => {
+            setNoteFor(null);
+          }}
+          onSave={(text) => {
+            const target = noteFor;
+            setNoteFor(null);
+            if (target === 'session') {
+              void run('session', () => setSessionNote(rt, session.id, text));
+            } else {
+              void run(target.id, () => setExerciseNote(rt, session.id, target.id, text));
+            }
+          }}
+        />
+      ) : null}
 
       {pickerOpen ? (
         <Suspense fallback={null}>

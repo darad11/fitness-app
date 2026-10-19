@@ -18,6 +18,7 @@ import {
   InvalidValueError,
   MissingValuesError,
   ItemNotFoundError,
+  NoteTooLongError,
   OpenSetsError,
   planFromTemplateDay,
   removeExercise,
@@ -25,6 +26,8 @@ import {
   reopenSet,
   restoreSession,
   SessionClosedError,
+  setExerciseNote,
+  setSessionNote,
   setValues,
   skipRest,
   skipSet,
@@ -382,5 +385,43 @@ describe('Beenden, Verlauf, Verwerfen (AK-TRN-19, AK-TRN-21, AK-TRN-05)', () => 
     s = await setValues(rt, s.id, st(s, 0, 0).id, { reps: 5 });
     expect(st(s, 0, 0).hlc).toBe(s.hlc);
     expect(st(s, 0, 1).hlc).toBe(before);
+  });
+});
+
+describe('Notizen (AK-TRN-24, D-260)', () => {
+  it('speichert Notizen zu Übung und Einheit, entfernt leere und lehnt zu lange ab', async () => {
+    let s = await startSession(rt, freeInput('bench_press_barbell'));
+    const key = ex(s, 0).id;
+    s = await setExerciseNote(rt, s.id, key, '  Schulter zwickt  ');
+    expect(ex(s, 0).note).toBe('Schulter zwickt');
+    s = await setSessionNote(rt, s.id, 'Wenig Schlaf');
+    expect(s.notes).toBe('Wenig Schlaf');
+    await expect(setExerciseNote(rt, s.id, key, 'x'.repeat(2001))).rejects.toBeInstanceOf(
+      NoteTooLongError,
+    );
+    s = await setSessionNote(rt, s.id, '   ');
+    expect(s).not.toHaveProperty('notes');
+    expect(ex(s, 0).note).toBe('Schulter zwickt');
+    await expect(setExerciseNote(rt, s.id, 'unbekannt', 'x')).rejects.toBeInstanceOf(
+      ItemNotFoundError,
+    );
+  });
+
+  it('übernimmt die Notiz in den Verlauf und zeigt sie beim nächsten Mal', async () => {
+    let s = await startSession(rt, freeInput('bench_press_barbell'));
+    s = await setExerciseNote(rt, s.id, ex(s, 0).id, 'Griff enger');
+    s = await completeSet(rt, s.id, st(s, 0, 0).id, {
+      ...REST,
+      previous: { weightKg: 60, reps: 8 },
+    });
+    await finishSession(rt, s.id, { skipOpen: true });
+    await expect(setExerciseNote(rt, s.id, ex(s, 0).id, 'zu spät')).rejects.toBeInstanceOf(
+      SessionClosedError,
+    );
+    const next = await startSession(rt, freeInput('bench_press_barbell'));
+    const row = await latestHistory(rt.db, byKey('bench_press_barbell').id, next.id);
+    expect(row?.note).toBe('Griff enger');
+    // Die neue Einheit beginnt ohne eigene Notiz.
+    expect(ex(next, 0)).not.toHaveProperty('note');
   });
 });

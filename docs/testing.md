@@ -482,3 +482,16 @@ Eigene Übungen anlegen (auch aus der Übungsauswahl), bearbeiten, archivieren; 
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 230,6 KB gzip (Grenze 250 KB; +3,3 KB, weil „Heute“ für das aktive Programm auch eigene Übungen liest) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 128 Tests bestanden. Neu `custom-exercises.spec.ts`: Übung anlegen, Notiz und Standardpause nach Neuladen erhalten, in einem neuen Programm über die Suche hinzufügen und starten; axe ohne Verstöße auf Detail, Dialog und Liste in „Hell“ und „Dunkel“ |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Notizen im Player (TS-19) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Notiz je Übung und zur Einheit im Player, im Verlauf (anzeigen und bearbeiten), in der Projektion und als „Notiz vom letzten Mal“ (D-260).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 66 Dateien, 535 Tests bestanden. Neu: zwei Fälle in `sessionService.test.ts` (Notizen setzen, leeren, zu lang, unbekannte Übung; Notiz in der Projektion, nicht nach dem Beenden änderbar, neue Einheit ohne Notiz), ein Fall in `historyService.test.ts` (Notiz bearbeiten und leeren samt Projektion), ein Fall in `player-ui.test.tsx` (Notiz vom letzten Mal, eigene Notiz, Notiz zur Einheit) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,81 %, Zweige 80,52 %, Funktionen 86,4 %, Zeilen 89,94 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 231,0 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 130 Tests bestanden. Neu `notes.spec.ts`: Notiz zur Kniebeuge und zur Einheit, axe im Dialog ohne Verstöße, nach Neuladen erhalten, beide Notizen im Verlauf |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

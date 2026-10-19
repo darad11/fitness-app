@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.25 · 19.10.2026 · Übergabe
+
+| Datei | Änderung |
+|---|---|
+| `handover-2026-10-19.md` | Neu: Stand nach #19 bis #32, offene Punkte, Arbeitsweise |
+| `CLAUDE.md` | Verweis auf die Übergabe unter „Zuerst lesen“ |
+| `implementation-plan.md` | #32 gemergt |
+
 ## Version 0.24 · 19.10.2026 · Schritte aus dem Dashboard
 
 | Datei | Änderung |

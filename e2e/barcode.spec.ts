@@ -65,3 +65,44 @@ test('Barcode: Einwilligung, Open Food Facts, speichern und eintragen; zweiter S
   await page.getByRole('button', { name: 'Erlaubnis zurückziehen' }).click();
   await expect(page.getByText('Nicht erlaubt.', { exact: false })).toBeVisible();
 });
+
+test('„Heute“: kleiner Ring und „Barcode scannen“ öffnet sofort den Scanner, danach zurück zu „Heute“ (D-275)', async ({
+  page,
+}) => {
+  test.slow();
+  await page.route('https://world.openfoodfacts.org/**', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: { 'access-control-allow-origin': '*' },
+      body: JSON.stringify(SKYR),
+    });
+  });
+  // Ziel setzen, damit der Ring erscheint.
+  await openPage(page, '/ernaehrung/ziele');
+  await page.getByLabel('Energie (kcal)').fill('2200');
+  await page.getByLabel('Eiweiß (g)').fill('140');
+  await page.getByLabel('Kohlenhydrate (g)').fill('230');
+  await page.getByLabel('Fett (g)').fill('75');
+  await page.getByRole('button', { name: 'Ziel speichern' }).click();
+  await expect(page.getByText(/^2\D?200 kcal$/)).toBeVisible();
+
+  await openPage(page, '/heute');
+  await expect(page.getByRole('img', { name: /^0 \/ 2\D?200 kcal, Eiweiß/ })).toBeVisible();
+  await page.getByRole('link', { name: 'Barcode scannen' }).click();
+  await expect(page).toHaveURL(/scan=1&von=heute/);
+  const scanner = page.getByRole('dialog', { name: 'Barcode scannen' });
+  await expect(scanner).toBeVisible();
+  await scanner.getByLabel('Barcode eingeben').fill('9001234567896');
+  await scanner.getByRole('button', { name: 'Suchen' }).click();
+  await page
+    .getByRole('dialog', { name: 'Open Food Facts verwenden?' })
+    .getByRole('button', { name: 'Erlauben und suchen' })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Skyr Natur hinzufügen' })
+    .getByRole('button', { name: 'Hinzufügen' })
+    .click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Heute' })).toBeVisible();
+  await expect(page.getByRole('img', { name: /^9\d \/ 2\D?200 kcal, Eiweiß/ })).toBeVisible();
+});

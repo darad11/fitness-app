@@ -19,8 +19,10 @@ const SIZES: Record<ButtonSize, string> = {
 };
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-accent text-on-accent hover:bg-accent-hover active:bg-accent-hover',
-  secondary: 'bg-surface-2 text-fg hover:bg-line active:bg-line',
+  primary:
+    'bg-accent text-on-accent shadow-[0_8px_20px_-8px_var(--accent)] hover:bg-accent-hover active:bg-accent-hover',
+  secondary:
+    'bg-surface-2 text-fg shadow-[inset_0_0_0_1px_var(--border),inset_0_1px_0_var(--glass-edge)] hover:bg-surface active:bg-surface',
   quiet: 'text-accent-ink hover:bg-surface-2 active:bg-surface-2',
   danger: 'bg-danger-soft text-danger hover:bg-surface-2 active:bg-surface-2',
   onInk: 'bg-on-ink text-ink hover:bg-on-ink-muted active:bg-on-ink-muted',
@@ -75,7 +77,7 @@ export function IconButton({ label, tone = 'default', className, ...props }: Ico
       className={cn(
         'inline-flex size-11 shrink-0 items-center justify-center rounded-pill transition-colors duration-120',
         tone === 'onInk'
-          ? 'text-on-ink hover:bg-ink-2 active:bg-ink-2'
+          ? 'text-on-ink hover:bg-on-ink/15 active:bg-on-ink/20'
           : 'text-muted hover:bg-surface-2 hover:text-fg active:bg-surface-2',
         className,
       )}

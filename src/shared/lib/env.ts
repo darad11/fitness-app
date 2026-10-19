@@ -1,6 +1,6 @@
 /**
  * Build-Informationen. `VERCEL_ENV` unterscheidet Produktiv- und Vorschau-Deployments
- * (AK-PWA-07); lokal und in der CI gibt es eigene Werte.
+ * (AK-PWA-07, sichtbar unter „Mehr“ › „Über die App“); lokal und in der CI gibt es eigene Werte.
  */
 
 export type AppEnv = 'production' | 'preview' | 'development' | 'ci' | 'local';
@@ -24,8 +24,3 @@ export const appInfo: AppInfo = {
   buildSha: __BUILD_SHA__,
   buildTime: __BUILD_TIME__,
 };
-
-/** Vorschau-Deployments zeigen dauerhaft „Vorschau – Testdaten". */
-export function isPreview(env: AppEnv): boolean {
-  return env === 'preview';
-}

@@ -625,3 +625,24 @@ Registrieren mit E-Mail und Passwort, Bestätigungsmail, Rückkehr über den Lin
 | `pnpm test` (Synchronisierung) | 25 Tests bestanden. Neu in `syncService.test.ts`: sofort angemeldet ohne Bestätigung (Anfrage an `/auth/v1/signup` mit `redirect_to`, E-Mail ohne Leerzeichen), mit Bestätigung kein gespeicherter Zugang, fünf Ablehnungen werden richtig erkannt; in `sync-ui.test.tsx`: zu kurzes und abweichendes Passwort ohne Anfrage, danach Hinweis auf die Bestätigungsmail und zurück zu „Anmelden“ |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | alle 184 bestanden; davon `sync.spec.ts` 6. Neu: Registrieren mit Bestätigungsmail; Rückkehr über den Link entfernt `access_token` aus der Adresse und zeigt den Hinweis. Erster Versuch scheiterte am Test selbst (Sprung nur im Anker lädt die Seite nicht neu) |
 | Gerätetest | Steht aus: echte Registrierung gegen Supabase, Bestätigungsmail, Anmeldung am iPhone |
+
+### Glas-Look · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, Kalorien-Ring, Gewichtskurve, ohne Vorschau-Balken (D-272).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Entwürfe | Als Bild abgenommen (Heute, Training, Ernährung; Handy und Web); danach Bildschirmfotos aus der gebauten App in hell und dunkel, Handy (390 px) und Web (1280 px), auch Seitenleiste ausgeklappt und Linse beim Ziehen |
+| Kontrast der Tokens | `tokens.test.ts` neu: mischt durchscheinende Farben und prüft jede sichtbare Mischfarbe (3 Verlaufspunkte, 3 Lichtflecken in voller Stärke auf jedem, Glas darauf, Glas auf Glas); 140 Fälle bestanden. Erste Werte fielen bei 36 Paaren durch (vor allem Akzent und Signalfarben auf den Lichtflecken im Dunkeln); Flecken abgeschwächt, Textfarben angepasst |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 79 Dateien, 646 Tests bestanden. Angepasst: Navigationstest (Tab-Leiste markiert über die Klasse `active`), Farbe für `theme-color`; entfernt: Test des Vorschau-Balkens |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 84,4 %, Zweige 76,34 %, Funktionen 82,99 %, Zeilen 85,63 %); die Linse ist per E2E geprüft |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 243,5 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 183 bestanden, 1 übersprungen (Linse nur am Handy). Neu `tabbar.spec.ts`: Ziehen von „Heute“ nach „Ernährung“ hebt die Linse an und wählt beim Loslassen, danach liegt sie wieder; Tippen auf „Training“. Erster Lauf: axe meldete zu wenig Kontrast der aktiven Beschriftung über einer dunklen Karte (Leiste mit 80 % Deckkraft); behoben mit 90 %. `shell.spec.ts`: neue Farbe für `theme-color` |
+| Nachtrag Seitenleiste | Auf Wunsch rückt der Inhalt beim Ausklappen mit (Abstand links 5,5 → 16,5 rem, 0,24 s); `tabbar.spec.ts` prüft am Desktop, dass der Titel unter der Maus um mehr als 150 px nach rechts rückt: bestanden |
+| Nachtrag Ernährung | Weitere Nährwerte in den Spalten der Makros (Salz, Zucker, Ballaststoffe, gesättigte Fettsäuren) und dezent zugeklappt; Ziel, Lebensmittel, Rezepte, Vorlagen als Kacheln direkt unter „Gegessen“. `nutrition.spec.ts` klappt die weiteren Nährwerte auf. E2E 184 bestanden; einmal `network-a11y` „eigene Adresse“ am Desktop rot, bei Wiederholung grün |
+| Nachtrag „Meine Küche“ | Entwürfe zweimal als Bild abgestimmt; danach Bildschirmfotos aus der gebauten App (Handy mit Glas-Fläche, Web mit Menü). Neu in `nutrition.spec.ts`: „Meine Küche“ öffnet am Handy die Fläche, am Desktop das Menü (Escape schließt), führt zu „Rezepte“. Ernährung und Netz/axe: 112 bestanden |
+| Nachtrag Ring | Mehrere Entwürfe als Bild abgestimmt (mehrere Ringe, ein geteilter Ring, Verlauf, zuletzt 1:1 nach Vorlage); Bilder aus der gebauten App mit Haferflocken 150 g, Hähnchenbrust 250 g, Olivenöl 20 g. `tokens.test.ts`: Farben der Makros mindestens 3:1 auf `--ink` und `--ink-2` in beiden Modi (erstes Blau fiel mit 2,94:1 durch, aufgehellt). `nutrition.spec.ts` erwartet „/ 2.200 kcal“ |
+| WebKit in GitHub Actions (Glas-Look) | `sync.spec.ts` „Später und Escape“ am Desktop rot: Escape kam, bevor das Anmeldefenster nach dem erneuten Öffnen offen war (Zeitproblem im Test). Behoben: Der Test wartet jetzt auf den Fokus im Fenster |
+| Bekannt | Das Weichzeichnen hinter der Tab-Leiste zeigt Chromium im Test nur teilweise; auf dem iPhone steht es aus (Gerätetest) |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest auf dem iPhone steht aus |

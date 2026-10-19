@@ -18,7 +18,7 @@ import type { PlatformInfo } from '@/shared/lib/platform';
 import { resetPwaState, setUpdateActivator } from '@/shared/pwa/state';
 import { createTestRuntime } from '@/shared/testing/db';
 import { App } from './App';
-import { InstallHintBanner, PreviewBanner, UpdateBanner } from './banners/GlobalBanners';
+import { InstallHintBanner, UpdateBanner } from './banners/GlobalBanners';
 import { RouteErrorView } from './errors/ErrorViews';
 import { AppLayout } from './layout/AppLayout';
 import { recoveryCause, RecoveryScreen } from './RecoveryScreen';
@@ -82,9 +82,12 @@ describe('App-Shell', () => {
     await user.click(screen.getByRole('link', { name: 'Übungen' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Übungen' })).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/uebungen');
+    // Seitenleiste: Farbklasse; Tab-Leiste: Klasse „active“ (Farbe per CSS, wegen der Linse).
+    const marked = (link: HTMLElement) =>
+      link.classList.contains('text-accent-ink') || link.classList.contains('active');
     for (const nav of screen.getAllByRole('navigation', { name: 'Hauptnavigation' })) {
-      expect(within(nav).getByRole('link', { name: 'Training' })).toHaveClass('text-accent-ink');
-      expect(within(nav).getByRole('link', { name: 'Heute' })).not.toHaveClass('text-accent-ink');
+      expect(marked(within(nav).getByRole('link', { name: 'Training' }))).toBe(true);
+      expect(marked(within(nav).getByRole('link', { name: 'Heute' }))).toBe(false);
     }
   });
 
@@ -262,13 +265,6 @@ describe('Hinweisleisten', () => {
     );
     await screen.findByText('geladen');
     expect(screen.queryByText(/Teilen › Zum Home-Bildschirm/)).not.toBeInTheDocument();
-  });
-
-  it('kennzeichnet nur Vorschau-Deployments (AK-PWA-07)', () => {
-    const { rerender } = render(<PreviewBanner env="preview" />);
-    expect(screen.getByText('Vorschau – Testdaten')).toBeInTheDocument();
-    rerender(<PreviewBanner env="production" />);
-    expect(screen.queryByText('Vorschau – Testdaten')).not.toBeInTheDocument();
   });
 
   it('aktiviert eine neue Version erst nach Bestätigung (AK-PWA-03)', async () => {

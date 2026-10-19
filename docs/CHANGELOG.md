@@ -9,6 +9,16 @@
 | `implementation-plan.md` | Stand und nächste Schritte |
 | `testing.md` | Ergebnisse Registrierung |
 
+## Version 0.18 · 19.10.2026 · Glas-Look
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-272 Glas-Look, Tab-Leiste mit Linse, einklappbare Seitenleiste, Ring und Gewichtskurve, ohne Vorschau-Balken |
+| `design-system.md` | Glas-Tokens, Hintergrund, Navigation, Hinweisleisten |
+| `requirements.md`, `architecture.md` | AK-PWA-07 ohne Vorschau-Balken |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Glas-Look |
+
 ## Version 0.17 · 19.10.2026 · Marken zu den ÖNWT-Lebensmitteln
 
 | Datei | Änderung |

@@ -34,12 +34,15 @@ test('Ernährung: Ziel setzen, aus dem BLS protokollieren, nach Neuladen erhalte
   await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
   const lunch = page.getByRole('region', { name: 'Mittagessen' });
   await expect(lunch.getByText('200 g')).toBeVisible();
+  // Weitere Nährwerte sind dezent zugeklappt (D-272).
+  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toBeHidden();
+  await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Zucker');
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Salz');
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Mittagessen' }).getByText('200 g')).toBeVisible();
-  await expect(page.getByText(/von 2\D?200 kcal/).first()).toBeVisible();
+  await expect(page.getByText(/\/ 2\D?200 kcal/).first()).toBeVisible();
 
   await openPage(page, '/heute');
   await expect(page.getByText('Ernährung heute')).toBeVisible();
@@ -152,4 +155,35 @@ test('Vorlage: Frühstück speichern, nach Neuladen mit einem Tipp eintragen (D-
     .getByRole('button', { name: 'Alle eintragen' })
     .click();
   await expect(page.getByRole('region', { name: 'Abendessen' }).getByText('Müsli')).toBeVisible();
+});
+
+test('Meine Küche: ein Knopf für Lebensmittel, Rezepte und Vorlagen (D-272)', async ({
+  page,
+}, testInfo) => {
+  await openPage(page, '/ernaehrung');
+  await page.getByRole('button', { name: 'Meine Küche' }).click();
+  if (testInfo.project.name.includes('mobile')) {
+    const sheet = page.getByRole('dialog', { name: 'Meine Küche' });
+    await expect(sheet).toBeVisible();
+    await sheet.getByRole('link', { name: /Rezepte/ }).click();
+  } else {
+    const menu = page.getByRole('group', { name: 'Meine Küche' });
+    await expect(menu.getByRole('link', { name: /Vorlagen/ })).toBeVisible();
+    // Mittig unter „Ziel“ und „Meine Küche“.
+    const ziel = await page.getByRole('link', { name: 'Ziel', exact: true }).boundingBox();
+    const kitchen = await page.getByRole('button', { name: 'Meine Küche' }).boundingBox();
+    const box = await menu.boundingBox();
+    if (!ziel || !kitchen || !box) throw new Error('Knöpfe fehlen');
+    expect(Math.abs(box.x + box.width / 2 - (ziel.x + kitchen.x + kitchen.width) / 2)).toBeLessThan(
+      2,
+    );
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeHidden();
+    await page.getByRole('button', { name: 'Meine Küche' }).click();
+    await page
+      .getByRole('group', { name: 'Meine Küche' })
+      .getByRole('link', { name: /Rezepte/ })
+      .click();
+  }
+  await expect(page.getByRole('heading', { level: 1, name: 'Rezepte' })).toBeVisible();
 });

@@ -7,7 +7,7 @@ const TONES: Record<BadgeTone, string> = {
   accent: 'bg-accent-soft text-accent-ink',
   success: 'bg-success-soft text-success',
   warning: 'bg-warning-soft text-warning',
-  onInk: 'bg-ink-2 text-on-ink',
+  onInk: 'bg-on-ink/15 text-on-ink',
 };
 
 /** Kleines Etikett als Tonfläche, z. B. „Beispiel" (ux-audit.md Abschnitt 2). Die Farbe trägt keine Bedeutung allein. */

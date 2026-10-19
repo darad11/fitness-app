@@ -48,7 +48,7 @@ export function SessionBanner() {
   if (!active || hiddenOn(pathname, active.id)) return null;
   const progress = sessionProgress(active);
   return (
-    <div role="status" className="bg-ink text-on-ink">
+    <div role="status" className="hero-glass text-on-ink">
       <div className="page-gutters mx-auto flex max-w-[1200px] items-center gap-3 py-2">
         <div className="min-w-0 flex-1">
           <p className="eyebrow text-on-ink-muted">{t.training.running}</p>

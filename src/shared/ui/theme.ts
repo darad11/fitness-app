@@ -11,8 +11,8 @@ export const THEME_STORAGE_KEY = 'fitness.theme';
 
 /** Seitenhintergrund `--bg` je Modus; für `<meta name="theme-color">`. Test: tokens.test.ts */
 export const THEME_BACKGROUND: Record<EffectiveTheme, string> = {
-  light: '#f3f4f7',
-  dark: '#0d1016',
+  light: '#e8eef7',
+  dark: '#151b2b',
 };
 
 export function resolveTheme(

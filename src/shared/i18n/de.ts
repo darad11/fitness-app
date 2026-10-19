@@ -256,11 +256,13 @@ export const de = {
     goal: 'Ziel',
     remaining: (kcal: string) => `noch ${kcal} kcal`,
     over: (kcal: string) => `${kcal} kcal über dem Ziel`,
-    kcalOf: (eaten: string, goal: string) => `${eaten} von ${goal} kcal`,
+    kcalOf: (eaten: string, goal: string) => `${eaten} / ${goal} kcal`,
+    ofKcal: (goal: string) => `/ ${goal} kcal`,
     kcalOnly: (eaten: string) => `${eaten} kcal`,
-    gramsOf: (eaten: string, goal: string) => `${eaten} von ${goal} g`,
+    gramsOf: (eaten: string, goal: string) => `${eaten} / ${goal} g`,
     gramsOnly: (eaten: string) => `${eaten} g`,
     macros: { protein: 'Eiweiß', carbs: 'Kohlenhydrate', fat: 'Fett' },
+    macrosShort: { protein: 'Eiweiß', carbs: 'Kohlenh.', fat: 'Fett' },
     nutrients: {
       kcal: 'Energie',
       protein: 'Eiweiß',
@@ -295,6 +297,17 @@ export const de = {
     noTarget: 'Noch kein Tagesziel.',
     setTarget: 'Ziel festlegen',
     targets: 'Ziele',
+    shortcuts: 'Ziel und Meine Küche',
+    kitchen: {
+      title: 'Meine Küche',
+      target: 'Ziel',
+      subtitle: 'Alles, was du immer wieder isst.',
+      foodsHint: 'Eigene, gescannte und ÖNWT-Daten',
+      recipesHint: 'Aus Zutaten, portionsweise eintragen',
+      templatesHint: 'Ganze Mahlzeiten mit einem Tipp',
+      newFood: 'Lebensmittel',
+      newRecipe: 'Rezept',
+    },
     myFoods: 'Meine Lebensmittel',
     emptySlot: 'Noch nichts eingetragen.',
     incomplete: (names: string) => `Unvollständig: ${names} fehlt bei mindestens einem Eintrag.`,
@@ -809,9 +822,6 @@ export const de = {
       'Keine Anmeldung, keine Werbung, keine Analyse. Alle Daten bleiben auf diesem Gerät; die App lädt nur ihre eigenen Dateien von der eigenen Adresse.',
   },
   banners: {
-    preview: 'Vorschau – Testdaten',
-    previewHint:
-      'Diese Adresse ist eine Vorschau. Daten hier sind von der Produktivversion getrennt.',
     updateAvailable: 'Neue Version verfügbar',
     updateNow: 'Jetzt aktualisieren',
     installHint:

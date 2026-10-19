@@ -1,7 +1,13 @@
 import { Play } from 'lucide-react';
 import { Suspense } from 'react';
 import { Link } from 'react-router';
-import { changeInPeriod, inPeriod, recentValues, Sparkline, useBodyWeights } from '@/modules/body';
+import {
+  changeInPeriod,
+  inPeriod,
+  recentValues,
+  useBodyWeights,
+  WeightCurve,
+} from '@/modules/body';
 import { changeTone, useActiveGoals, WeeklyGoalCard, weightToGoal } from '@/modules/goals';
 import { pickDaily, TasksCard } from '@/modules/habits';
 import { NutritionTodayCard } from '@/modules/nutrition';
@@ -196,7 +202,7 @@ export function TodayPage() {
           }
         >
           {latestWeight ? (
-            <div className="flex items-center justify-between gap-4">
+            <div>
               <div>
                 <p className="text-2xl font-bold tabular-nums">
                   {formatters.bodyWeightKg(latestWeight.weightKg)}
@@ -228,7 +234,9 @@ export function TodayPage() {
                   </p>
                 ) : null}
               </div>
-              {sparkValues.length >= 3 ? <Sparkline values={sparkValues} /> : null}
+              {sparkValues.length >= 2 ? (
+                <WeightCurve values={sparkValues} className="mt-3" />
+              ) : null}
             </div>
           ) : (
             <p className="text-muted">{t.today.weightNone}</p>

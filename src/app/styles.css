@@ -52,6 +52,7 @@
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-panel: var(--panel);
   --color-fg: var(--fg);
   --color-muted: var(--fg-muted);
   --color-line: var(--border);
@@ -111,7 +112,7 @@
   }
 
   body {
-    background: var(--bg);
+    background: var(--bg-bottom);
     color: var(--fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -130,6 +131,105 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * Glas-Look (D-272): ruhiger Verlauf mit drei weichen Lichtflecken hinter der ganzen App. Die
+ * Flecken bewegen sich nicht (Akku); Karten sind durchscheinendes Glas (Tokens), schwebende
+ * Leisten und Dialoge zusätzlich weichgezeichnet.
+ */
+@layer components {
+  .app-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 90% at 50% 0%,
+      var(--bg-top) 0%,
+      var(--bg) 55%,
+      var(--bg-bottom) 100%
+    );
+  }
+  .app-backdrop > span {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+  }
+  .app-backdrop > span:nth-child(1) {
+    width: 32rem;
+    height: 32rem;
+    top: -10rem;
+    left: -8rem;
+    background: var(--glow-1);
+  }
+  .app-backdrop > span:nth-child(2) {
+    width: 28rem;
+    height: 28rem;
+    right: -8rem;
+    bottom: -10rem;
+    background: var(--glow-2);
+  }
+  .app-backdrop > span:nth-child(3) {
+    width: 20rem;
+    height: 20rem;
+    top: 45%;
+    left: 55%;
+    background: var(--glow-3);
+  }
+  /* Wichtigste Karte einer Seite: blaues Glas. */
+  .hero-glass {
+    background: linear-gradient(140deg, var(--ink-2) 0%, var(--ink) 80%);
+    box-shadow: var(--shadow-card);
+    --focus: var(--on-ink);
+  }
+  /* Seitenleiste ab 1024 px: eingeklappt 4,5 rem, unter Maus oder Fokus 15 rem über dem Inhalt. */
+  .sidebar {
+    width: 4.5rem;
+    border-radius: var(--radius-sheet);
+    background: color-mix(in srgb, var(--panel) 90%, transparent);
+    box-shadow: var(--shadow-float);
+    transition: width 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .sidebar:hover,
+  .sidebar:focus-within {
+    width: 15rem;
+  }
+  /* Inhalt rückt beim Ausklappen im gleichen Tempo mit, statt verdeckt zu werden. */
+  @media (width >= 64rem) {
+    .app-content {
+      padding-left: 5.5rem;
+      transition: padding-left 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .app-shell:has(.sidebar:hover, .sidebar:focus-within) .app-content {
+      padding-left: 16.5rem;
+    }
+  }
+  .sidebar-label {
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.16s;
+  }
+  .sidebar:hover .sidebar-label,
+  .sidebar:focus-within .sidebar-label {
+    opacity: 1;
+  }
+  /* Schwebende Ebene: Navigation, Dialoge, Leisten. */
+  .glass-blur {
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .app-backdrop > span {
+      display: none;
+    }
+    .glass-blur {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      background: var(--panel);
     }
   }
 }
@@ -187,5 +287,293 @@
 @keyframes login-float {
   to {
     transform: translate(60px, 40px) scale(1.15);
+  }
+}
+
+/*
+ * Tab-Leiste mit Glas-Linse (D-272, src/app/layout/tabLens.ts), nach der iOS-26-Tab-Leiste und
+ * dem Dashboard des Produktinhabers: schwebende Glas-Kapsel, gleitende Auswahl; unter dem Finger
+ * eine klare Linse, die vergrößert und am Rand die Farben aufbricht.
+ */
+@layer components {
+  .tabbar {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: min(100%, 34rem);
+    height: 4rem;
+    padding: 4px;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--panel) 90%, transparent);
+    box-shadow: var(--shadow-float);
+    transform-origin: 50% 50%;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .tabbar-items {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: stretch;
+    padding: 0 4px;
+  }
+  .tabbar-indicator {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: 0;
+    border-radius: 9999px;
+    background: var(--selection-pill);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.42s cubic-bezier(0.34, 1.3, 0.64, 1),
+      width 0.42s cubic-bezier(0.34, 1.3, 0.64, 1),
+      opacity 0.2s;
+  }
+  .tabbar-indicator.no-transition {
+    transition: none;
+  }
+  .tabbar-tab,
+  .tabbar-lens-tab {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 2px;
+    border-radius: 9999px;
+    color: var(--fg);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.15;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .tabbar-tab {
+    -webkit-user-drag: none;
+  }
+  .tabbar-lens-tab svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .tabbar-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tabbar-tab.active,
+  .tabbar-lens-tab.candidate {
+    color: var(--accent-ink);
+  }
+  .tabbar-tab:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: -3px;
+  }
+  .tabbar:not(.lens-ready) .tabbar-tab:active {
+    transform: scale(0.94);
+    transition: transform 0.12s;
+  }
+  .tabbar-glow,
+  .tabbar-lens {
+    display: none;
+    pointer-events: none;
+  }
+  .tabbar.lens-active .tabbar-glow,
+  .tabbar.lens-active .tabbar-lens {
+    display: block;
+  }
+  .tabbar.lens-active .tabbar-indicator {
+    opacity: 0 !important;
+    transition: none;
+  }
+  .tabbar.lens-active .tabbar-tab.active {
+    color: var(--fg);
+  }
+  .tabbar.lens-active .tabbar-tab,
+  .tabbar.lens-settling .tabbar-tab {
+    transition: none;
+  }
+  /* Loch in Linsenform in den echten Einträgen: Kapsel = zwei Kreise und das Rechteck dazwischen. */
+  .tabbar.lens-active > .tabbar-items {
+    -webkit-mask-image:
+      linear-gradient(#000 0 0),
+      radial-gradient(closest-side, #000 calc(100% - 0.5px), transparent),
+      radial-gradient(closest-side, #000 calc(100% - 0.5px), transparent), linear-gradient(#000 0 0);
+    mask-image:
+      linear-gradient(#000 0 0),
+      radial-gradient(closest-side, #000 calc(100% - 0.5px), transparent),
+      radial-gradient(closest-side, #000 calc(100% - 0.5px), transparent), linear-gradient(#000 0 0);
+    -webkit-mask-size:
+      100% 100%,
+      var(--hole-h) var(--hole-h),
+      var(--hole-h) var(--hole-h),
+      max(0px, calc(var(--hole-w) - var(--hole-h))) var(--hole-h);
+    mask-size:
+      100% 100%,
+      var(--hole-h) var(--hole-h),
+      var(--hole-h) var(--hole-h),
+      max(0px, calc(var(--hole-w) - var(--hole-h))) var(--hole-h);
+    -webkit-mask-position:
+      0 0,
+      var(--hole-x) var(--hole-y),
+      calc(var(--hole-x) + var(--hole-w) - var(--hole-h)) var(--hole-y),
+      calc(var(--hole-x) + var(--hole-h) / 2) var(--hole-y);
+    mask-position:
+      0 0,
+      var(--hole-x) var(--hole-y),
+      calc(var(--hole-x) + var(--hole-w) - var(--hole-h)) var(--hole-y),
+      calc(var(--hole-x) + var(--hole-h) / 2) var(--hole-y);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-composite: source-out, source-over, source-over, source-over;
+    mask-composite: subtract, add, add, add;
+  }
+  .tabbar-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: var(--lift, 0);
+    background: radial-gradient(
+      circle 150px at var(--glow-x, 50%) 50%,
+      var(--lens-glow-core),
+      var(--lens-glow-floor)
+    );
+  }
+  .tabbar-lens {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    border-radius: 9999px;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 calc(var(--lift, 0) * 3px) calc(var(--lift, 0) * 14px) var(--lens-shadow);
+  }
+  .tabbar-lens-pill,
+  .tabbar-lens-fill,
+  .tabbar-lens-ring,
+  .tabbar-lens-rim {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .tabbar-lens-pill {
+    background: var(--selection-pill);
+    opacity: calc(1 - var(--lift, 0));
+  }
+  .tabbar-lens-fill {
+    background: var(--lens-fill);
+    opacity: var(--lift, 0);
+  }
+  .tabbar-lens-core {
+    position: absolute;
+    inset: var(--rw, 0px);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .tabbar-lens-ring {
+    --ih: max(0px, calc(var(--lh, 0px) - 2 * var(--rw, 0px)));
+    isolation: isolate;
+    -webkit-mask-image:
+      linear-gradient(#000 0 0), radial-gradient(closest-side, #000 calc(100% - 1px), transparent),
+      radial-gradient(closest-side, #000 calc(100% - 1px), transparent), linear-gradient(#000 0 0);
+    mask-image:
+      linear-gradient(#000 0 0), radial-gradient(closest-side, #000 calc(100% - 1px), transparent),
+      radial-gradient(closest-side, #000 calc(100% - 1px), transparent), linear-gradient(#000 0 0);
+    -webkit-mask-size:
+      100% 100%,
+      var(--ih) var(--ih),
+      var(--ih) var(--ih),
+      max(0px, calc(var(--lw, 0px) - 2 * var(--rw, 0px) - var(--ih))) var(--ih);
+    mask-size:
+      100% 100%,
+      var(--ih) var(--ih),
+      var(--ih) var(--ih),
+      max(0px, calc(var(--lw, 0px) - 2 * var(--rw, 0px) - var(--ih))) var(--ih);
+    -webkit-mask-position:
+      0 0,
+      var(--rw, 0px) var(--rw, 0px),
+      calc(var(--lw, 0px) - var(--rw, 0px) - var(--ih)) var(--rw, 0px),
+      calc(var(--rw, 0px) + var(--ih) / 2) var(--rw, 0px);
+    mask-position:
+      0 0,
+      var(--rw, 0px) var(--rw, 0px),
+      calc(var(--lw, 0px) - var(--rw, 0px) - var(--ih)) var(--rw, 0px),
+      calc(var(--rw, 0px) + var(--ih) / 2) var(--rw, 0px);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-composite: source-out, source-over, source-over, source-over;
+    mask-composite: subtract, add, add, add;
+  }
+  .tabbar-lens-view {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+  }
+  .tabbar-lens-ring > .tabbar-lens-view {
+    filter: blur(0.8px);
+  }
+  .tabbar-lens-page,
+  .tabbar-lens-edge {
+    position: absolute;
+    border-radius: 9999px;
+  }
+  .tabbar-lens-ring > .channel-r .tabbar-lens-page {
+    box-shadow: 0 0 0 240px var(--bg);
+  }
+  .tabbar-lens-edge {
+    border: 1px solid currentColor;
+    opacity: var(--lens-edge-opacity, 0);
+  }
+  .tabbar-items-copy {
+    position: absolute;
+    display: flex;
+    align-items: stretch;
+    padding: 0 4px;
+  }
+  .tabbar-lens-ring > .tabbar-lens-view + .tabbar-lens-view {
+    mix-blend-mode: var(--lens-blend, multiply);
+  }
+  .tabbar-lens-ring > .channel-r {
+    color: var(--lens-r);
+  }
+  .tabbar-lens-ring > .channel-g {
+    color: var(--lens-g);
+  }
+  .tabbar-lens-ring > .channel-b {
+    color: var(--lens-b);
+  }
+  .tabbar-lens-ring > .tabbar-lens-view .tabbar-lens-tab {
+    color: inherit;
+  }
+  .tabbar-lens-rim {
+    opacity: var(--lift, 0);
+    box-shadow:
+      inset 0 0 0 0.5px var(--lens-hairline),
+      inset 1.5px 1.5px 1px -0.5px var(--lens-specular),
+      inset -1.5px -1.5px 1px -0.5px var(--lens-specular-low);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .tabbar {
+      background: var(--panel);
+    }
+    .tabbar-lens-fill {
+      background: var(--panel);
+    }
+    .tabbar-lens-ring {
+      display: none;
+    }
   }
 }

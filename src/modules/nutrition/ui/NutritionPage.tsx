@@ -1,13 +1,4 @@
-import {
-  Bookmark,
-  BookmarkPlus,
-  ChevronLeft,
-  ChevronRight,
-  CookingPot,
-  Plus,
-  Target,
-  UtensilsCrossed,
-} from 'lucide-react';
+import { BookmarkPlus, ChevronDown, ChevronLeft, ChevronRight, Plus, Target } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -31,11 +22,42 @@ import { useDayEntries, useTargets } from '../data/nutritionRepository';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
+import { KitchenMenu, PILL } from './KitchenMenu';
+import { MacroRing } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
 import { dayDate, describeAmount, grams, kcal } from './format';
 
 /** Weitere Tageswerte neben den Makros. */
-const EXTRAS = ['sugar', 'salt', 'fiber', 'saturatedFat'] as const;
+const MACROS = ['protein', 'carbs', 'fat'] as const;
+type Macro = (typeof MACROS)[number];
+
+/** Farben der Makros in Ring und Liste (Tokens, Kontrast in tokens.test.ts). */
+const MACRO_COLORS: Record<Macro, string> = {
+  protein: 'var(--macro-protein)',
+  carbs: 'var(--macro-carbs)',
+  fat: 'var(--macro-fat)',
+};
+
+function macroGoal(
+  target: { proteinG: number; carbsG: number; fatG: number },
+  macro: Macro,
+): number {
+  return { protein: target.proteinG, carbs: target.carbsG, fat: target.fatG }[macro];
+}
+
+/** Brennwert je Gramm (Atwater), um den Ring nach Kalorien aus den Makros zu teilen. */
+const KCAL_PER_GRAM: Record<Macro, number> = { protein: 4, carbs: 4, fat: 9 };
+
+/**
+ * Weitere Nährwerte in den Spalten der Makros darunter: Salz unter Eiweiß, Zucker und Ballaststoffe
+ * unter Kohlenhydrate, gesättigte Fettsäuren unter Fett.
+ */
+const EXTRAS = [
+  { nutrient: 'salt', column: 'col-start-1' },
+  { nutrient: 'sugar', column: 'col-start-2' },
+  { nutrient: 'saturatedFat', column: 'col-start-3' },
+  { nutrient: 'fiber', column: 'col-start-2' },
+] as const;
 
 /** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
 export function NutritionPage() {
@@ -106,70 +128,126 @@ export function NutritionPage() {
         </div>
       ) : (
         <div className="grid gap-4">
-          <Card tone="ink" eyebrow={t.nutrition.eaten}>
-            <p className="text-3xl font-bold tabular-nums">
-              {target
-                ? t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal))
-                : t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
-            </p>
-            {target ? (
-              <>
-                <Meter
-                  tone="onInk"
-                  className="mt-3"
-                  label={t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal))}
+          <Card tone="ink">
+            <div className="flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
+              <p className="eyebrow text-on-ink-muted md:hidden">{t.nutrition.eaten}</p>
+              {target ? (
+                <MacroRing
+                  className="self-center md:self-auto"
+                  size={176}
+                  stroke={18}
+                  label={[
+                    t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal)),
+                    ...MACROS.map(
+                      (macro) =>
+                        `${t.nutrition.macros[macro]} ${t.nutrition.gramsOf(grams(fmt, totals.sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
+                    ),
+                  ].join(', ')}
                   value={target.kcal > 0 ? totals.sums.kcal / target.kcal : 0}
-                />
-                <p className="mt-2 text-sm text-on-ink-muted">
-                  {totals.sums.kcal <= target.kcal
-                    ? t.nutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
-                    : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
+                  segments={MACROS.map((macro) => ({
+                    amount: totals.sums[macro] * KCAL_PER_GRAM[macro],
+                    color: MACRO_COLORS[macro],
+                  }))}
+                >
+                  <span className="block text-center leading-tight">
+                    <span className="block text-4xl font-extrabold tracking-tight tabular-nums">
+                      {kcal(fmt, totals.sums.kcal)}
+                    </span>
+                    <span className="mt-1 block text-sm text-on-ink-muted tabular-nums">
+                      {t.nutrition.ofKcal(kcal(fmt, target.kcal))}
+                    </span>
+                  </span>
+                </MacroRing>
+              ) : (
+                <div>
+                  <p className="text-3xl font-bold tabular-nums">
+                    {t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
+                  </p>
+                  <p className="mt-1 text-sm text-on-ink-muted">{t.nutrition.noTarget}</p>
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="eyebrow mb-4 hidden text-on-ink-muted md:block">
+                  {t.nutrition.eaten}
                 </p>
-              </>
-            ) : (
-              <p className="mt-2 text-sm text-on-ink-muted">{t.nutrition.noTarget}</p>
-            )}
-            <dl className="mt-4 grid grid-cols-3 gap-3">
-              {(['protein', 'carbs', 'fat'] as const).map((macro) => {
-                const goal = target
-                  ? { protein: target.proteinG, carbs: target.carbsG, fat: target.fatG }[macro]
-                  : undefined;
-                const eaten = totals.sums[macro];
-                return (
-                  <div key={macro}>
-                    <dt className="text-sm text-on-ink-muted">{t.nutrition.macros[macro]}</dt>
-                    <dd className="font-semibold tabular-nums">
-                      {goal !== undefined
-                        ? t.nutrition.gramsOf(grams(fmt, eaten), grams(fmt, goal))
-                        : t.nutrition.gramsOnly(grams(fmt, eaten))}
-                    </dd>
-                    {goal !== undefined ? (
-                      <Meter
-                        tone="onInk"
-                        className="mt-1"
-                        label={`${t.nutrition.macros[macro]}: ${t.nutrition.gramsOf(grams(fmt, eaten), grams(fmt, goal))}`}
-                        value={goal > 0 ? eaten / goal : 0}
-                      />
-                    ) : null}
-                  </div>
-                );
-              })}
-            </dl>
-            <div role="group" aria-label={t.nutrition.extrasLabel}>
-              <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-                {EXTRAS.map((nutrient) => (
-                  <div key={nutrient} className="flex justify-between gap-2">
-                    <dt className="text-on-ink-muted">{t.nutrition.extras[nutrient]}</dt>
-                    <dd className="font-semibold tabular-nums">
-                      {nutrient === 'salt'
-                        ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
-                        : grams(fmt, totals.sums[nutrient])}{' '}
-                      {t.nutrition.units.g}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
+                <dl className="grid grid-cols-3 gap-4 md:gap-6">
+                  {MACROS.map((macro) => {
+                    const goal = target ? macroGoal(target, macro) : undefined;
+                    const eaten = totals.sums[macro];
+                    return (
+                      <div key={macro} className="min-w-0">
+                        <dt className="truncate text-sm text-on-ink-muted">
+                          <span aria-hidden="true" className="md:hidden">
+                            {t.nutrition.macrosShort[macro]}
+                          </span>
+                          <span className="max-md:sr-only">{t.nutrition.macros[macro]}</span>
+                        </dt>
+                        <dd className="mt-0.5 tabular-nums">
+                          <span className="text-xl font-bold">{grams(fmt, eaten)}</span>
+                          {goal !== undefined ? (
+                            <span className="text-sm whitespace-nowrap text-on-ink-muted">
+                              {` / ${grams(fmt, goal)} ${t.nutrition.units.g}`}
+                            </span>
+                          ) : (
+                            <span className="text-xl font-bold">{` ${t.nutrition.units.g}`}</span>
+                          )}
+                        </dd>
+                        {goal !== undefined ? (
+                          <span
+                            aria-hidden="true"
+                            className="mt-2.5 block h-1.5 overflow-hidden rounded-pill bg-on-ink/15"
+                          >
+                            <span
+                              className="block h-full rounded-pill"
+                              style={{
+                                width: `${String(Math.min(100, goal > 0 ? (eaten / goal) * 100 : 0))}%`,
+                                background: MACRO_COLORS[macro],
+                              }}
+                            />
+                          </span>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </dl>
+                {target ? (
+                  <p className="mt-3 text-sm text-on-ink-muted">
+                    {totals.sums.kcal <= target.kcal
+                      ? t.nutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
+                      : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
+                  </p>
+                ) : null}
+              </div>
             </div>
+            {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
+            <details className="group mt-1">
+              <summary
+                aria-label={t.nutrition.extrasLabel}
+                title={t.nutrition.extrasLabel}
+                className="mx-auto flex min-h-11 w-16 cursor-pointer list-none items-center justify-center rounded-pill text-on-ink-muted hover:text-on-ink [&::-webkit-details-marker]:hidden"
+              >
+                <ChevronDown
+                  aria-hidden="true"
+                  strokeWidth={1.75}
+                  className="size-6 transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div role="group" aria-label={t.nutrition.extrasLabel}>
+                <dl className="mt-1 grid grid-flow-row-dense grid-cols-3 gap-x-3 gap-y-2 text-sm">
+                  {EXTRAS.map(({ nutrient, column }) => (
+                    <div key={nutrient} className={column}>
+                      <dt className="text-on-ink-muted">{t.nutrition.extras[nutrient]}</dt>
+                      <dd className="font-semibold tabular-nums">
+                        {nutrient === 'salt'
+                          ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
+                          : grams(fmt, totals.sums[nutrient])}{' '}
+                        {t.nutrition.units.g}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </details>
             {totals.incomplete.some((n) => n !== 'kcal') ? (
               <p className="mt-3 text-sm text-on-ink-muted">
                 {t.nutrition.incomplete(
@@ -184,6 +262,17 @@ export function NutritionPage() {
               <p className="mt-1 text-sm text-on-ink-muted">{t.nutrition.estimatedHint}</p>
             ) : null}
           </Card>
+
+          <nav
+            aria-label={t.nutrition.shortcuts}
+            className="my-2 grid grid-cols-2 gap-2 md:relative md:flex md:justify-center md:gap-3"
+          >
+            <Link to="/ernaehrung/ziele" className={PILL}>
+              <Target aria-hidden="true" className="size-5 text-accent-ink" />
+              {t.nutrition.kitchen.target}
+            </Link>
+            <KitchenMenu />
+          </nav>
 
           {MEAL_SLOTS.map((slot) => {
             const items = (entries ?? []).filter((e) => e.slot === slot);
@@ -258,24 +347,6 @@ export function NutritionPage() {
             );
           })}
 
-          <div className="flex flex-wrap gap-2">
-            <ButtonLink to="/ernaehrung/ziele" variant="secondary">
-              <Target aria-hidden="true" className="size-5" />
-              {target ? t.nutrition.targets : t.nutrition.setTarget}
-            </ButtonLink>
-            <ButtonLink to="/ernaehrung/lebensmittel" variant="secondary">
-              <UtensilsCrossed aria-hidden="true" className="size-5" />
-              {t.nutrition.myFoods}
-            </ButtonLink>
-            <ButtonLink to="/ernaehrung/rezepte" variant="secondary">
-              <CookingPot aria-hidden="true" className="size-5" />
-              {t.nutrition.recipes.title}
-            </ButtonLink>
-            <ButtonLink to="/ernaehrung/vorlagen" variant="secondary">
-              <Bookmark aria-hidden="true" className="size-5" />
-              {t.nutrition.templates.title}
-            </ButtonLink>
-          </div>
           <p className="text-xs text-muted">{t.nutrition.sources}</p>
         </div>
       )}

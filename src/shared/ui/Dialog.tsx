@@ -44,7 +44,7 @@ export function Dialog({
         onClose();
       }}
       className={cn(
-        'bg-surface text-fg shadow-float backdrop:bg-scrim',
+        'glass-blur bg-panel text-fg shadow-float backdrop:bg-scrim',
         variant === 'sheet'
           ? 'mt-auto mb-0 h-[85dvh] w-full max-w-none rounded-t-sheet p-0 md:m-auto md:h-[80dvh] md:max-w-xl md:rounded-sheet'
           : 'm-auto w-[min(28rem,calc(100%-2rem))] rounded-sheet p-5',

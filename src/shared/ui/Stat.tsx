@@ -19,7 +19,7 @@ export function StatTile({ label, value, unit, hint, tone = 'surface', className
       className={cn(
         'min-w-0',
         tone === 'surface' && 'rounded-card bg-surface p-4 shadow-card',
-        tone === 'ink' && 'rounded-card bg-ink-2 p-4 text-on-ink',
+        tone === 'ink' && 'rounded-card bg-on-ink/10 p-4 text-on-ink',
         className,
       )}
     >
@@ -59,7 +59,7 @@ export function Meter({ value, label, tone = 'default', className }: MeterProps)
       aria-valuenow={percent}
       className={cn(
         'h-2 w-full overflow-hidden rounded-pill',
-        tone === 'onInk' ? 'bg-ink-2' : 'bg-meter-track',
+        tone === 'onInk' ? 'bg-on-ink/20' : 'bg-meter-track',
         className,
       )}
     >
@@ -116,7 +116,7 @@ export function ProgressRing({
           r={radius}
           fill="none"
           strokeWidth={stroke}
-          className={tone === 'onInk' ? 'stroke-ink-2' : 'stroke-meter-track'}
+          className={tone === 'onInk' ? 'stroke-on-ink/20' : 'stroke-meter-track'}
         />
         <circle
           cx={size / 2}

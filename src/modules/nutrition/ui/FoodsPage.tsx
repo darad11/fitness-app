@@ -6,6 +6,7 @@ import { ButtonLink, PageHeader, Skeleton } from '@/shared/ui';
 import { useFoods } from '../data/nutritionRepository';
 import type { Food } from '../model/nutrition';
 import { CatalogCard } from './CatalogCard';
+import { OffConsentCard } from './OffConsentCard';
 import { kcal } from './format';
 
 /** Eigene Lebensmittel (S-18, NU-10). */
@@ -73,6 +74,7 @@ export function FoodsPage() {
         </details>
       ) : null}
       <CatalogCard />
+      <OffConsentCard />
     </>
   );
 }

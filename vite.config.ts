@@ -79,7 +79,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt}'],
+        // wasm: Barcode-Erkennung auch ohne Netz (D-266, rund 1,1 MB).
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
       },

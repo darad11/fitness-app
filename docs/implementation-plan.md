@@ -245,4 +245,5 @@ Nächste Schritte: <Liste>
 31. Erledigt (über #19 gemergt): Lebensmitteldaten der BLS-Recherche als lokaler Import, nur die 7.476 ÖNWT-Lebensmittel; deutsche Daten (BLS 3.02) und auslaufende Produkte weggelassen (D-263). Offen: Marken aus den Detailseiten (Skript beim Produktinhaber), Entscheidung zum gebündelten BLS 4.0. Offen beim Produktinhaber: Import auf dem iPhone mit seiner Datei.
 32. Erledigt (Branch `feat/naehrwerte-anzeige`): alle Nährwerte beim Hinzufügen und Bearbeiten, Zucker, Salz, Ballaststoffe und gesättigte Fettsäuren in der Tagesübersicht (D-264); „Heute“ ohne „Status“ und „Diese Version“ (D-265).
 33. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald der Produktinhaber die Datei hochlädt.
-34. Ich: Barcode-Scanner und Open Food Facts (M6) nach Einwilligung in der App (D-302, D-305), eigenes Paket; danach Rezepte (M7).
+34. Erledigt (Branch `feat/barcode-scanner`): Barcode-Scanner mit Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266). Offen beim Produktinhaber: erster echter Scan auf dem iPhone (Prüfspike S-1, S-3).
+35. Ich: als Nächstes nach Wahl des Produktinhabers Rezepte (M7), Mahlzeit-Vorlagen, Datensicherung einspielen (AP 2.8) oder Synchronisierung (nach Freigabe).

@@ -25,6 +25,7 @@
     "check:bundle": "node tools/check-bundle-size.mjs"
   },
   "dependencies": {
+    "barcode-detector": "3.2.2",
     "clsx": "^2.1.1",
     "dexie": "^4.4.6",
     "dexie-react-hooks": "^4.4.0",
@@ -34,7 +35,8 @@
     "react-router": "^8.4.0",
     "recharts": "^3.10.1",
     "workbox-window": "^7.4.1",
-    "zod": "^4.6.7"
+    "zod": "^4.6.7",
+    "zxing-wasm": "3.1.3"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

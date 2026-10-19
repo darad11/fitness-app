@@ -536,3 +536,17 @@ Nährwerttabelle beim Hinzufügen und Bearbeiten, weitere Tageswerte (D-264); �
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 233,1 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | Erster Lauf: 152 bestanden, 2 fehlgeschlagen (`install-hint.spec.ts` suchte „Als App installiert“ aus der entfernten Statuskarte). Prüfung angepasst, die Erkennung prüft weiter die Seite „Installieren“; danach `install-hint.spec.ts` 4 bestanden. Neu in `nutrition.spec.ts`: Nährwerttabelle „für 200 g“ mit Zucker und Salz, Tageswerte. Erster Lauf der axe-Prüfung fand `dlitem` bei `role="group"` auf der Liste; behoben mit einer Gruppe um die Liste |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Barcode-Scanner mit Open Food Facts · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Scanner mit Kamera und Eingabe von Hand, lokale Suche nach Barcode, Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Open Food Facts erreichbar? | Nein, aus der Cloud-Umgebung gesperrt (`connect_rejected`). Alle Abfragen sind mit nachgebildeten Antworten getestet; der erste echte Scan auf dem iPhone ist Prüfspike S-1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 73 Dateien, 575 Tests bestanden. Neu: `barcode.test.ts` (Prüfziffer EAN-13, EAN-8, UPC-A; UPC-A gleich EAN-13 mit 0; Übersetzung der Antwort mit Marke, Portion, kJ → kcal, ml, fehlende Pflichtwerte, unbekannt), `barcodeService.test.ts` (ohne Einwilligung keine Anfrage; nach Einwilligung genau eine Anfrage mit `credentials: 'omit'`, gespeichert mit Quelle und Barcode; zweiter Scan lokal; zurückgezogen wieder keine Anfrage; eigenes Lebensmittel mit Barcode ohne Netz; ungültig, 404, Netzfehler, 503, unvollständig), zwei Fälle in `nutrition-ui.test.tsx` (Eingabe von Hand, Einwilligung, speichern und eintragen, zweiter Scan lokal; unbekannt → Formular mit Barcode) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 87,96 %, Zweige 79,66 %, Funktionen 85,69 %, Zeilen 89,21 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 235,1 KB gzip (Grenze 250 KB); Scanner und WebAssembly (1,1 MB) liegen in eigenen, erst beim Öffnen geladenen Teilen und im Offline-Speicher |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 158 Tests bestanden. Neu `barcode.spec.ts` (Open Food Facts nachgebildet: vor der Einwilligung keine Anfrage, danach genau eine, eingetragen, nach Neuladen lokal gefunden, Erlaubnis zurückziehen; CSP ohne Konsolenfehler) und `barcode-camera.spec.ts` (künstliche Kamera: Scanner läuft, WebAssembly von der eigenen Adresse, keine fremden Anfragen) |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Kamera und echter Scan auf dem iPhone stehen aus |

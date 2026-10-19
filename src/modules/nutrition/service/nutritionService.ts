@@ -2,6 +2,7 @@ import { insertDoc, restoreDoc, softDeleteDoc, updateDoc, type DbRuntime } from 
 import { searchKey } from '@/shared/lib/normalize';
 import { dayKey as toDayKey, localTimeZone } from '@/shared/lib/time';
 import { uuidv4 } from '@/shared/lib/uuid';
+import { normalizeBarcode } from '../calc/barcode';
 import { missingCore, scaleNutrients } from '../calc/nutrients';
 import { activeTarget, type TargetValues } from '../calc/targets';
 import { foodDef, foodLogDef, listTargets, nutritionTargetDef } from '../data/nutritionRepository';
@@ -28,7 +29,7 @@ const nowOf = (clock: Clock) => (clock.now ?? (() => new Date()))();
 
 export class InvalidFoodError extends Error {
   override name = 'InvalidFoodError';
-  constructor(readonly reason: 'name' | 'core' | 'range' | 'serving') {
+  constructor(readonly reason: 'name' | 'core' | 'range' | 'serving' | 'barcode') {
     super(`Ungültiges Lebensmittel: ${reason}`);
   }
 }
@@ -53,6 +54,8 @@ export interface FoodInput {
   basis: FoodBasis;
   per100: Nutrients;
   servings?: readonly { name: string; amount: number }[];
+  /** EAN/UPC; leer entfernt den Barcode. */
+  barcode?: string;
 }
 
 function cleanPer100(per100: Nutrients): Nutrients {
@@ -85,10 +88,14 @@ function buildFood(input: FoodInput, previous?: Food) {
     };
   });
   if (servings.length > 10) throw new InvalidFoodError('serving');
+  const rawBarcode = input.barcode?.trim();
+  const barcode = rawBarcode ? normalizeBarcode(rawBarcode) : undefined;
+  if (barcode === null) throw new InvalidFoodError('barcode');
   return {
     name,
     nameNorm: searchKey(name),
     ...(brand ? { brand: brand.slice(0, 60) } : {}),
+    ...(barcode ? { barcode } : {}),
     basis: input.basis,
     per100: cleanPer100(input.per100),
     servings,
@@ -103,10 +110,21 @@ export async function createFood(rt: DbRuntime, input: FoodInput): Promise<Food>
   });
 }
 
+/** Produkt aus Open Food Facts als eigenes Lebensmittel speichern (D-266): Quelle und Barcode. */
+export async function createFoodFromOff(rt: DbRuntime, input: FoodInput): Promise<Food> {
+  const built = buildFood(input);
+  return insertDoc(rt, foodDef, {
+    ...built,
+    source: 'off',
+    quality: 'community',
+    ...(built.barcode ? { sourceRef: built.barcode } : {}),
+  });
+}
+
 /** Ändert ein eigenes Lebensmittel; bestehende Protokolleinträge behalten ihre Werte (D-209). */
 export async function updateFood(rt: DbRuntime, id: string, input: FoodInput): Promise<Food> {
   return updateDoc(rt, foodDef, id, (current) => {
-    const { brand: _brand, ...rest } = current;
+    const { brand: _brand, barcode: _barcode, ...rest } = current;
     return { ...rest, ...buildFood(input, current) };
   });
 }

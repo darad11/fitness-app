@@ -86,6 +86,8 @@ Auf iOS und iPadOS nutzen alle Browser WebKit. Maßgeblich ist, was Safari und i
 
 Prüfergebnisse und Restfragen stehen in `data-sources.md`: strengere Limits bei Open Food Facts (15 Produktabfragen und 10 Suchanfragen pro Minute und IP), ungeklärte User-Agent-Anforderung im Browser, unsicheres CORS-Verhalten der Suche; BLS 4.0 frei unter CC BY 4.0.
 
+Barcode-Scanner (D-266): Open Food Facts war aus der Cloud-Umgebung nicht erreichbar; die Abfrage ist mit nachgebildeten Antworten getestet. Ob CORS von der Produktivadresse klappt, zeigt erst der erste echte Scan (Prüfspike S-1). Ein Browser darf keinen eigenen User-Agent setzen; die Abfrage geht ohne App-Kennung. Auf dem iPhone fragt iOS bei installierten Web-Apps unter Umständen bei jedem Start erneut nach der Kamera. Die Erkennung braucht genug Licht und einen ruhigen Abstand von etwa 10 bis 20 cm; sonst bleibt die Eingabe von Hand.
+
 ## 9. Native Erweiterung (spätere Option)
 
 Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lokal geplante Benachrichtigungen, verlässliche Signale im Hintergrund und Haptik ermöglichen. Er setzt einen Apple-Developer-Account, Xcode und eine Verteilung über TestFlight oder den App Store voraus. Die Web-Architektur bleibt dabei unverändert. Die Option ist bewusst nicht Teil von R1 bis R4.

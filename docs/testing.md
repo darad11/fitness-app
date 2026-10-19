@@ -494,4 +494,5 @@ Notiz je Übung und zur Einheit im Player, im Verlauf (anzeigen und bearbeiten),
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,81 %, Zweige 80,52 %, Funktionen 86,4 %, Zeilen 89,94 %) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 231,0 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 130 Tests bestanden. Neu `notes.spec.ts`: Notiz zur Kniebeuge und zur Einheit, axe im Dialog ohne Verstöße, nach Neuladen erhalten, beide Notizen im Verlauf |
+| Befund aus der CI von #17 | `custom-exercises-ui.test.tsx` (aus #16) fand die Detailseite der neuen Übung nicht innerhalb von 1 s; die Übung war angelegt („125 Übungen“), die nachgeladene Seite brauchte auf dem Runner länger. Behoben in #17: Wartezeit 10 s für Seitenwechsel, Testzeit 30 bis 40 s |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

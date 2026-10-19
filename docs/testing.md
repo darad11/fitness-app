@@ -646,3 +646,13 @@ Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, K
 | WebKit in GitHub Actions (Glas-Look) | `sync.spec.ts` „Später und Escape“ am Desktop rot: Escape kam, bevor das Anmeldefenster nach dem erneuten Öffnen offen war (Zeitproblem im Test). Behoben: Der Test wartet jetzt auf den Fokus im Fenster |
 | Bekannt | Das Weichzeichnen hinter der Tab-Leiste zeigt Chromium im Test nur teilweise; auf dem iPhone steht es aus (Gerätetest) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest auf dem iPhone steht aus |
+
+### Gewicht nur einmal eintragen · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Aktuelles Gewicht beim Zielgewicht, ein Knopf „Gewicht erfassen“ (D-274).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 80 Dateien, 674 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 190 bestanden, 2 übersprungen. Neu in `goals.spec.ts`: ohne Eintrag genau ein Knopf; Profil zeigt „Noch kein Gewicht gemessen“, nach 81,4 kg „Dein aktuelles Gewicht: 81,4 kg“. Ein zuerst gebautes Häkchen beim Kalorien-Vorschlag wurde auf Wunsch wieder entfernt |
+| Bildschirmfotos | Handy dunkel: Körpergewicht leer, Zielgewicht mit aktuellem Gewicht |

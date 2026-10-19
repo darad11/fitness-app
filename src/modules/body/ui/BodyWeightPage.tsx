@@ -91,14 +91,17 @@ export function BodyWeightPage() {
         title={t.body.title}
         back={{ to: '/fortschritt', label: t.nav.progress }}
         action={
-          <Button
-            onClick={() => {
-              setSheet({});
-            }}
-          >
-            <Plus aria-hidden="true" className="size-5" />
-            {t.body.add}
-          </Button>
+          // Ohne Einträge steht „Gewicht erfassen“ nur einmal, im leeren Zustand darunter.
+          entries && entries.length > 0 ? (
+            <Button
+              onClick={() => {
+                setSheet({});
+              }}
+            >
+              <Plus aria-hidden="true" className="size-5" />
+              {t.body.add}
+            </Button>
+          ) : undefined
         }
       />
       {entries === undefined ? (

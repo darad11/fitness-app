@@ -251,4 +251,5 @@ Nächste Schritte: <Liste>
 37. Erledigt (über #24 gemergt): Synchronisierung, erste Stufe: Supabase-Projekt in Frankfurt, Tabelle und Funktion mit RLS, Anmeldung mit E-Mail und Passwort, automatischer Abgleich, Dexie v6 (D-269). Offen beim Produktinhaber: Konto im Supabase-Dashboard anlegen, Anmeldungen sperren, Gerätetest mit zwei Geräten.
 38. Erledigt (über #27 gemergt): Registrieren im Anmeldefenster mit Bestätigungsmail (D-273).
 39. Erledigt (über #26 gemergt): Glas-Look für die ganze App in hell und dunkel, Tab-Leiste mit Glas-Linse, einklappbare Seitenleiste, Kalorien-Ring und Gewichtskurve, Vorschau-Balken entfernt (D-272). Offen: Gerätetest auf dem iPhone (Weichzeichnen und Linse).
-40. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+40. Erledigt (Branch `feat/gewicht-eingabe`): aktuelles Gewicht beim Zielgewicht; ein Knopf „Gewicht erfassen“ (D-274).
+41. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

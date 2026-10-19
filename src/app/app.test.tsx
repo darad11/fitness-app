@@ -137,6 +137,7 @@ describe('App-Shell', () => {
       'Daten und Sicherung',
       'Installieren',
       'Synchronisierung',
+      'Schritte aus dem Dashboard',
       'Über die App',
     ]);
   });

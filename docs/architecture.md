@@ -245,7 +245,7 @@ Nach der Beziehungsanalyse in `data-model.md` Abschnitt 2 ist die Sync-Einheit d
 
 ## 12. Externe Integrationen
 
-Siehe `data-sources.md`. Im MVP gibt es keine externen Datenabrufe. Ab R2 kommen BLS-Daten gebündelt und Open Food Facts nach Einwilligung hinzu.
+Siehe `data-sources.md`. Im MVP gibt es keine externen Datenabrufe. Ab R2 kommen BLS-Daten gebündelt und Open Food Facts nach Einwilligung hinzu. Seit D-277 liest das Modul `steps` nach Anmeldung die Schritte aus dem Supabase-Projekt des Dashboards (`https://jbkufpyyfmbxjeswagli.supabase.co`, in `connect-src`); ohne Anmeldung keine Anfrage.
 
 ## 13. Sicherheit und Datenschutz
 

@@ -12,6 +12,7 @@ import { changeTone, useActiveGoals, WeeklyGoalCard, weightToGoal } from '@/modu
 import { TasksCard } from '@/modules/habits';
 import { NutritionTodayCard } from '@/modules/nutrition';
 import { useFormatters, useProfile } from '@/modules/settings';
+import { StepsTodayCard } from '@/modules/steps';
 import {
   ActiveProgramCard,
   compareWithPrevious,
@@ -172,6 +173,9 @@ export function TodayPage() {
         )}
         <Suspense fallback={null}>
           <NutritionTodayCard />
+        </Suspense>
+        <Suspense fallback={null}>
+          <StepsTodayCard />
         </Suspense>
         {sessions && goals ? (
           <WeeklyGoalCard sessions={sessions} target={goals.weeklySessions} today={todayKey} />

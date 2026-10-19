@@ -666,3 +666,15 @@ Kleiner Makro-Ring und „Barcode scannen“ auf „Heute“ (D-275).
 | `pnpm test` | 81 Dateien, 675 Tests bestanden (neu: `mealSlot.test.ts`, Mahlzeit nach Uhrzeit) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 190 bestanden, 2 übersprungen (Stand vor dem Einholen von #29). Neu in `barcode.spec.ts`: Ring auf „Heute“ mit „0 / 2.200 kcal“, „Barcode scannen“ öffnet den Scanner sofort, nach dem Eintragen zurück auf „Heute“ mit neuem Wert |
 | Bildschirmfotos | Entwurf als Bilder aus der gebauten App (Handy hell und dunkel, Web hell und dunkel, Scanner), vom Produktinhaber freigegeben |
+
+### „Heute“ wie im Dashboard · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Begrüßung mit Uhr, minimierte Tab-Leiste, Tagesaufgaben unten (D-276).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 81 Dateien, 675 Tests bestanden (`app.test.tsx` erwartet die Überschrift „Heute: Guten …“) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 193 bestanden, 3 übersprungen. Neu in `tabbar.spec.ts`: Runterscrollen macht die Leiste zum Kreis am rechten Rand (schmaler als ein Drittel, nur das aktive Symbol), Hochscrollen und Tipp auf den Kreis klappen auf, ohne die Seite zu wechseln. `goals.spec.ts` erwartet „Guten …, Dali.“; `tasks.spec.ts` ohne Motivationssatz |
+| Bildschirmfotos | Handy hell und dunkel (oben, gescrollt mit Kreis, wieder aufgeklappt), Web dunkel; vom Produktinhaber freigegeben |
+| Bekannt | Getestet mit Mausrad und Tasten in Chromium; das Wischen am iPhone steht als Gerätetest aus |
+

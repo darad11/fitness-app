@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.23 · 19.10.2026 · „Heute“ wie im Dashboard
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-276 Begrüßung mit Uhr, minimierte Tab-Leiste, Tagesaufgaben unten |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse „Heute“ wie im Dashboard |
+
 ## Version 0.22 · 19.10.2026 · Ring und Scanner auf „Heute“
 
 | Datei | Änderung |

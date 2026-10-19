@@ -57,7 +57,6 @@ test('Service Worker übernimmt und alle Bereiche starten offline (AK-PWA-02 She
   await expect
     .poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null))
     .toBe(true);
-  await expect(page.getByText('Offline verfügbar')).toBeVisible();
 
   await context.setOffline(true);
   for (const path of [...APP_PAGES, '/']) {

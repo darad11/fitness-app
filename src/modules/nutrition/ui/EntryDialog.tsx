@@ -6,6 +6,8 @@ import { parseDecimal } from '@/shared/lib/format';
 import { Button, Dialog, SelectField } from '@/shared/ui';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { changeEntry, deleteEntry } from '../service/nutritionService';
+import { describeAmount } from './format';
+import { NutrientTable } from './NutrientTable';
 
 const INPUT =
   'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
@@ -122,6 +124,14 @@ export function EntryDialog({
           value={slot}
           options={MEAL_SLOTS.map((s) => ({ value: s, label: t.nutrition.slots[s] }))}
           onChange={setSlot}
+        />
+        <NutrientTable
+          caption={
+            entry.amount === undefined
+              ? t.nutrition.nutrientsTitle
+              : `${t.nutrition.nutrientsTitle} ${t.nutrition.forAmount(describeAmount(fmt, entry))}`
+          }
+          columns={[{ label: t.nutrition.nutrientsTitle, values: entry.nutrients }]}
         />
         {error ? (
           <p role="alert" className="text-sm text-danger">

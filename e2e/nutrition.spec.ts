@@ -25,10 +25,17 @@ test('Ernährung: Ziel setzen, aus dem BLS protokollieren, nach Neuladen erhalte
     .click();
   const dialog = page.getByRole('dialog');
   await dialog.getByLabel('Menge in g').fill('200');
+  // Alle Nährwerte je 100 g und für die Menge (AK-NUT-08).
+  const nutrientTable = dialog.getByRole('table', { name: 'Nährwerte' });
+  await expect(nutrientTable.getByRole('columnheader', { name: 'für 200 g' })).toBeVisible();
+  await expect(nutrientTable.getByRole('row', { name: /davon Zucker/ })).toBeVisible();
+  await expect(nutrientTable.getByRole('row', { name: /Salz/ })).toBeVisible();
   await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
   const lunch = page.getByRole('region', { name: 'Mittagessen' });
   await expect(lunch.getByText('200 g')).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Zucker');
+  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Salz');
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Mittagessen' }).getByText('200 g')).toBeVisible();

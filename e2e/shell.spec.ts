@@ -1,13 +1,16 @@
 import { chooseTheme, expect, mainNav, openPage, test } from './fixtures';
 
-test('leitet auf „Heute" um und zeigt Datum und Status', async ({ page }) => {
+test('leitet auf „Heute" um und zeigt das Datum ohne Status und „Diese Version“ (D-265)', async ({
+  page,
+}) => {
   await page.goto('/');
   await expect(page).toHaveURL(/\/heute$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Heute' })).toBeVisible();
   await expect(
     page.getByText(/^(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag), /),
   ).toBeVisible();
-  await expect(page.getByText('Alle Daten bleiben auf diesem Gerät.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Status' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Diese Version' })).toHaveCount(0);
 });
 
 test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ page }) => {

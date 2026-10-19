@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.11 · 19.10.2026 · Lebensmitteldaten importieren
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-263 lokaler Import der BLS-Recherche; Nachtrag zu Q-19 |
+| `data-sources.md` | BLS-Recherche als lokaler Import (Version 0.4) |
+| `requirements.md` | AK-NUT-07 |
+| `data-model.md` | Eigene Datenbank für importierte Lebensmitteldaten |
+| `feature-inventory.md` | NU-25 mit AK-NUT-07 |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Import |
+
 ## Version 0.10 · 19.10.2026 · Ernährung Grundausbau (Schritt G)
 
 | Datei | Änderung |

@@ -91,8 +91,10 @@ export function AddFoodPage() {
               <span className="flex flex-wrap items-center gap-2">
                 <span className="font-medium break-words">{food.name}</span>
                 {food.brand ? <span className="text-sm text-muted">{food.brand}</span> : null}
-                <Badge tone={food.source === 'bls' ? 'neutral' : 'accent'}>
-                  {t.nutrition.sourceBadge[food.source]}
+                <Badge tone={food.source === 'bls' || food.catalog ? 'neutral' : 'accent'}>
+                  {food.catalog
+                    ? t.nutrition.catalogBadge[food.catalog]
+                    : t.nutrition.sourceBadge[food.source]}
                 </Badge>
               </span>
               <span className="block text-sm text-muted">

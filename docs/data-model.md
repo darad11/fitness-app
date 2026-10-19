@@ -288,6 +288,8 @@ v2 (D-253) ergänzt additiv `habits: 'id, archivedAt'` und `habitLogs: 'id, habi
 
 v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedAt'`, `foodLog: 'id, dayKey, foodId'` und `nutritionTargets: 'id, effectiveFrom'`; Snapshot vor dem Upgrade, Migrationstest v2 → v3. Der BLS liegt nicht in einer Tabelle, sondern gebündelt als Datei (590 KB, im Speicher durchsucht); die geplante Tabelle `generic_food` entfällt vorerst.
 
+Importierte Lebensmitteldaten (D-263) liegen in einer eigenen IndexedDB-Datenbank `<App-Datenbank>-lebensmittel` (Dexie v1, Tabelle `catalogs: 'id'`) mit genau einer Zeile `bls-recherche`: `formatVersion`, `importedAt`, `fetchedAt`, `summary` (übernommen je Quelle, weggelassen je Grund) und `rows` als kompakte Liste `[Code, Quelle ('oenwt'), Name, kcal, Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe, Salz]` (fehlende Werte `null`). Keine Dokumente: kein HLC, keine Löschmarke, nicht in Export, Snapshot und Synchronisierung; ein Import ersetzt die Zeile, „Import entfernen“ löscht sie. Lebensmittel-ID `uuidv5('import:' + Quelle + ':' + Code)`.
+
 ```ts
 // src/shared/db/schema.ts – Entwurf v1; umgesetzt in M0 mit generischen Tabellentypen (siehe unten)
 import Dexie, { type Table } from 'dexie';

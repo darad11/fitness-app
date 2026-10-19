@@ -42,6 +42,12 @@ export type Nutrients = Partial<Record<Nutrient, number>>;
 
 export const FOOD_NAME_MAX = 100;
 export const FOOD_SOURCES = ['custom', 'quick', 'bls', 'off', 'import'] as const;
+/**
+ * Quellen importierter Lebensmitteldaten (D-263): nur die Österreichische Nährwerttabelle; die
+ * deutschen BLS-Daten der Recherche übernimmt der Import auf Wunsch des Produktinhabers nicht.
+ */
+export const CATALOG_SOURCES = ['oenwt'] as const;
+export type CatalogSource = (typeof CATALOG_SOURCES)[number];
 export const FOOD_QUALITIES = ['verified', 'community', 'user', 'estimated'] as const;
 export const FOOD_BASES = ['g', 'ml'] as const;
 export type FoodBasis = (typeof FOOD_BASES)[number];

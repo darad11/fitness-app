@@ -509,3 +509,17 @@ BLS 4.0 gebündelt mit österreichischen Suchbegriffen, eigene Lebensmittel, Tag
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 150 Tests bestanden. Neu `nutrition.spec.ts`: Ziel 2.200 kcal, „erdäpfel gekocht“ suchen und 200 g zum Mittagessen, nach Neuladen erhalten, Karte „Ernährung heute“; fünf Ernährungsseiten in der Netz- und axe-Prüfung (Hell und Dunkel) ohne Verstöße und ohne fremde Anfragen |
 | Sichtprüfung | Bildschirmfoto Pixel 7: Navigation mit fünf Bereichen passt in eine Zeile |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Lebensmitteldaten importieren · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Lokaler Import der BLS-Recherche mit Vorschau, Herkunft in der Suche und „Import entfernen“ (D-263).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Datei des Produktinhabers (`nuts-recherche.json`, 31.817 Einträge, abgerufen 19.10.2026 13:41) | Lokaler Lauf, nicht im Repository: 7.476 ÖNWT-Einträge übernommen (rund 0,56 MB); weggelassen 21.952 deutsche BLS-Einträge (4.0 und 3.02, auf Wunsch des Produktinhabers), 2.343 auslaufend, 46 mit unklarer Zuordnung (23 Codes mit je zwei Namen). Im Browser (Chromium, Pixel 7) mit der früheren Fassung samt BLS 3.02: Prüfung 0,7 s, Speichern 0,4 s für 17.104 Einträge |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 71 Dateien, 563 Tests bestanden. Neu: `catalogImport.test.ts` (Quellen, nur ÖNWT, BLS und Auslaufendes weggelassen, unklare Codes, Kappung 900 kcal, fremde Dateien), `catalogService.test.ts` (Vorschau, Speichern erst nach Bestätigung, nichts in der App-Datenbank, Entfernen lässt Protokoll unverändert, stabile IDs), zwei Fälle in `nutrition-ui.test.tsx` (Import mit Vorschau, Suche „fisolen speck“ mit Herkunft ÖNWT, protokollieren, entfernen; fremde Datei) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,72 %, Zweige 79,91 %, Funktionen 86,26 %, Zeilen 89,89 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 234,3 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 154 Tests bestanden. Neu in `nutrition.spec.ts`: Datei importieren, nach Neuladen erhalten, „fisolen“ findet den ÖNWT-Eintrag |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Import auf dem iPhone mit der echten Datei steht aus |

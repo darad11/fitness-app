@@ -139,14 +139,17 @@ export function ProgressPage() {
           <Card
             title={t.progress.weightTitle}
             action={
-              <Link
-                to="/fortschritt/gewicht"
-                aria-label={t.progress.weightOpen}
-                className="inline-flex min-h-11 items-center gap-1 font-semibold text-accent-ink"
-              >
-                {t.body.title}
-                <ChevronRight aria-hidden="true" className="size-5" />
-              </Link>
+              // Ohne Gewicht genügt der Knopf „Gewicht erfassen“ in der Karte.
+              latestWeight ? (
+                <Link
+                  to="/fortschritt/gewicht"
+                  aria-label={t.progress.weightOpen}
+                  className="inline-flex min-h-11 items-center gap-1 font-semibold text-accent-ink"
+                >
+                  {t.body.title}
+                  <ChevronRight aria-hidden="true" className="size-5" />
+                </Link>
+              ) : undefined
             }
           >
             {latestWeight && weightText ? (

@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.21 · 19.10.2026 · Gewicht klarer eintragen
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-274 |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.19 · 19.10.2026 · Registrieren im Anmeldefenster
 
 | Datei | Änderung |

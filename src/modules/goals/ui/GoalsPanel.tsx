@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useBodyWeights } from '@/modules/body';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -21,6 +22,8 @@ export function GoalsPanel() {
   const rt = useDb();
   const fmt = useFormatters();
   const goals = useGoals();
+  const weights = useBodyWeights();
+  const latestWeight = weights?.[0];
   const [weightInput, setWeightInput] = useState('');
   const [weekly, setWeekly] = useState('3');
   const [error, setError] = useState<{ kind: GoalKind; message: string } | null>(null);
@@ -47,6 +50,12 @@ export function GoalsPanel() {
       <Card title={t.goals.weightTitle}>
         <p className="mb-3 text-muted">
           {weightGoal ? t.goals.current(fmt.bodyWeightKg(weightGoal.value)) : t.goals.weightNone}
+        </p>
+        {/* Zielgewicht ist ein Wunsch, keine Messung: das gemessene Gewicht steht daneben. */}
+        <p className="-mt-2 mb-3 text-sm text-muted">
+          {latestWeight
+            ? t.goals.currentWeight(fmt.bodyWeightKg(latestWeight.weightKg))
+            : t.goals.noCurrentWeight}
         </p>
         <form
           className="flex flex-wrap gap-2"

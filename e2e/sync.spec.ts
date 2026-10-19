@@ -2,6 +2,10 @@ import { expect, openPage, test } from './fixtures';
 
 const BASE = 'https://eyxqciryeggpjzvaxjvu.supabase.co';
 
+// In WebKit umgehen Anfragen einer von einem Service Worker gesteuerten Seite `page.route`;
+// ohne Service Worker erreicht keine Anfrage den echten Server.
+test.use({ serviceWorkers: 'block' });
+
 test('Synchronisierung: anmelden, Gewicht senden, nach Neuladen weiter angemeldet (D-269)', async ({
   page,
 }) => {

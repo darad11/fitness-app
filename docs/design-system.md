@@ -188,6 +188,7 @@ Makronährstoffe tragen feste Farben über alle Ansichten: Protein `--data-1`, K
 
 ```
 Heute (/heute)                                         R1
+  Tagesaufgaben (/heute/aufgaben)                      R1 (Schritt F)
   Training läuft · Heute geplant / Nächstes Training · Letztes Training
   Wochenziel · Körpergewicht · Hinweise (Installation, Update, Sicherung)
   Erfassen › Training starten · Training nachtragen · Gewicht erfassen
@@ -248,6 +249,7 @@ Mehr (/mehr)                                           R1
 | S-37 | Über | `/mehr/ueber` | M0, M4 | Version, Änderungen, Lizenzen | Nach Update suchen | – | AK-SET-07 |
 | S-43 | Wiederherstellung | Vollbild bei Datenbankfehler | M1, M4 | Ursache, Optionen | Erneut versuchen, Snapshot wiederherstellen, Fehlerprotokoll exportieren, Zurücksetzen | – | AK-DAT-08 |
 | S-44 | Fehleransicht | Je Route | M0, M4 | Meldung | Neu laden | – | AK-DAT-09 |
+| S-50 | Tagesaufgaben | `/heute/aufgaben` | Schritt F | Serie, Heute erledigt, neue Aufgabe, Liste mit Abhaken, Umbenennen, Ordnen, Beenden, letzte 14 Tage, beendete Aufgaben | Anlegen, Umbenennen, Nach oben, Nach unten, Beenden, Wieder aufnehmen | Leer: „Noch keine Aufgabe“ | AK-HAB-01, AK-HAB-02 |
 | S-46 | Globale Hinweisleisten | Alle Seiten | M0 bis M4 | Training läuft, Update verfügbar, Vorschau – Testdaten, Installationshinweis | Tippen führt zur Aktion | – | AK-TRN-17, AK-PWA-03, AK-PWA-04, AK-PWA-07 |
 
 Grundfassungen aus M0: S-01 zeigt Datum, die Karte „Diese Version“ und die Karte „Status“ (Offline-Bereitschaft, Startart mit Weg zu „Installieren“, Hinweis auf lokale Daten). S-34 enthält Darstellung (Hell, Dunkel, System) und „Datum und Zahlen“ mit Beispielzeile. Navigation in M0: Heute und Mehr; Training und Fortschritt erscheinen erst mit M1 und M3 (AK-UX-01). Stand M1 (AP 1.1): Training erscheint in der Navigation; S-03 enthält zunächst nur den Einstieg „Übungen", weitere Einstiege folgen mit ihren Arbeitspaketen. S-12 ist umgesetzt (Suche, Filter Muskelgruppe und Gerät nebeneinander, Liste nach Gruppen; ohne Öffnen, weil das Übungsdetail S-13 erst in M2 kommt). Auf `/uebungen` bleibt Training in der Navigation markiert. AP 1.2: S-03 hat den Einstieg „Programme und Vorlagen"; S-04 zeigt in M1 nur die Beispielvorlagen als Karten mit Etikett „Beispiel" und Kurzangaben; S-49 zeigt Hinweis, Ablauf der Wochen und jeden Trainingstag einmal mit Satzschema, z. B. „2 Aufwärmsätze, 3 Sätze · 6–8 Wdh. · Pause 2:30 min". Basiskomponente `Badge` neu. AP 1.4: S-07 umgesetzt wie in Abschnitt 11, ohne Pausenleiste (AP 1.5), Pausieren und Notiz (M2); Kopfzeile je Übung mit Satz, Vorwert und Einheiten; ±-Tasten am hervorgehobenen Satz; Zusatzaktionen je Satz hinter „…". S-39 als Blatt von unten. S-09 in einer Grundfassung (Dauer, Übungen, Sätze, Volumen, bester Satz). Basiskomponenten `Dialog` (natives `<dialog>`) und `Toast` neu; Token `--scrim` für den Hintergrund von Dialogen.

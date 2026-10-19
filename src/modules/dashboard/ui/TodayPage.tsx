@@ -2,6 +2,7 @@ import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, Play, RefreshCw } 
 import { useMemo } from 'react';
 import { Link } from 'react-router';
 import { changeInPeriod, inPeriod, recentValues, Sparkline, useBodyWeights } from '@/modules/body';
+import { pickDaily, TasksCard } from '@/modules/habits';
 import { useFormatters } from '@/modules/settings';
 import {
   ActiveProgramCard,
@@ -17,6 +18,7 @@ import {
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
 import { currentPlatform } from '@/shared/lib/platform';
+import { dayKey } from '@/shared/lib/time';
 import { usePwaState, type PwaState } from '@/shared/pwa/state';
 import {
   Button,
@@ -88,7 +90,11 @@ export function TodayPage() {
 
   return (
     <>
-      <PageHeader eyebrow={formatters.weekdayDayMonth(today)} title={t.today.title} />
+      <PageHeader
+        eyebrow={formatters.weekdayDayMonth(today)}
+        title={t.today.title}
+        subtitle={pickDaily(t.motivation.sentences, dayKey(today, formatters.timeZone))}
+      />
       <div className="grid gap-4 md:grid-cols-2">
         {active === undefined || program === undefined ? (
           <div aria-busy="true" className="md:col-span-2">
@@ -171,6 +177,7 @@ export function TodayPage() {
             ) : null}
           </Card>
         )}
+        <TasksCard />
         {last && lastSummary ? (
           <Card eyebrow={t.today.lastTitle} title={last.title}>
             <p className="-mt-2 text-sm text-muted tabular-nums">

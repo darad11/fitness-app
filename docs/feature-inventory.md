@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.5 (Schritt F, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): AH-03, AH-04 (täglich), AH-05 (Serie für Tagesaufgaben, D-253). TH-04 (Serie für Trainings) bleibt offen.
 - Version 0.5 (Schritt E, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; Diagramme hell und dunkel per Bildschirmfoto geprüft): BP-01, BP-02 (ohne Ziellinie), TH-02 (Übungsverlauf unter `/fortschritt/uebung/:id`, Übungsdetail folgt in M2), TH-05, TH-06, TH-07 (Vergleich in Zusammenfassung und auf „Heute"), TS-18 (Kalorienschätzung nach MET, D-251). BP-06 und TH-08 bleiben, bis die Ziele (AP 3.3) umgesetzt sind.
 - Version 0.5 (Schritt D, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-08 (Übungstimer), TS-10 (Übung im Training ersetzen, mit Alternativen; D-250). TP-12 (Ersetzen im Plan) folgt mit dem Programm-Editor in M2.
 - Version 0.5 (Schritt C, 18.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-17 (Vorschau aller Wochen und Tage), TP-19 (Programm aktivieren und beenden; erneutes Aktivieren zählt von vorn), TP-21 (Reihenfolge-Modus mit „Heute geplant"). Gilt für die gebündelten Programme A, B, C (D-249); TP-01, TP-02 und TP-03 bleiben bis zu den eigenen Programmen in M2 „Zur Umsetzung ausgewählt".
@@ -47,30 +48,30 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 39 | 41 | 8 | 88 |
-| Original nicht verifiziert (ON) | 9 | 17 | 2 | 28 |
+| Original verifiziert (OV) | 41 | 39 | 8 | 88 |
+| Original nicht verifiziert (ON) | 10 | 16 | 2 | 28 |
 | Eigene Verbesserung (EV) | 37 | 12 | 0 | 49 |
-| Summe | 85 | 70 | 10 | 165 |
+| Summe | 88 | 67 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 85 |
+| R1 | 88 |
 | R2 | 39 |
 | R3 | 2 |
-| R4 | 17 |
+| R4 | 14 |
 | R5 | 5 |
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 65 | 30 | 18 | 10 |
+| Anzahl | 42 | 65 | 31 | 17 | 10 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
-| Analysiert | 41 |
+| Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 34 |
+| Implementiert | 37 |
 | Noch zu recherchieren | 2 |
 | Spezifiziert | 37 |
 | Zur Umsetzung ausgewählt | 47 |
@@ -244,9 +245,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | AH-01 | Schritte erfassen, manuell oder per Kurzbefehl | Schritte beworben; Datenquelle unklar | WEB; DT | V | OV | M | – | M | P2 | Später | R4 · M13 (automatisch R5) | Anpassen: manuell sowie Kurzbefehl über Datei oder Zwischenablage; automatisch erst über Server in R5 (D-115) | Noch zu recherchieren | Tageswert; Import; keine Behauptung automatischer Messung |
 | AH-02 | Aktivitätsziele | Nicht belegt | – | P | ON | M | AH-01 | S | P3 | Später | R4 · M13 | Später | Analysiert | Tagesziel mit Fortschritt |
-| AH-03 | Tägliche Aufgaben | In Challenges: Wasser, Lesen, Schritte, Diät | TC | V | OV | M | AH-04 | M | P2 | Später | R4 · M13 | Anpassen: als Gewohnheiten (D-117) | Analysiert | Aufgabenliste pro Tag mit Verlauf |
-| AH-04 | Gewohnheiten definieren und verfolgen | Außerhalb von Challenges nicht belegt | – | P | ON | M | – | M | P2 | Später | R4 · M13 | Später (D-117) | Analysiert | Häufigkeit; Verlauf; Erfüllungsquote |
-| AH-05 | Streaks für Gewohnheiten | Streak-Funktion für Training | AS 3.2.0 | V | OV | N | AH-04 | S | P3 | Später | R4 · M13 | Später | Analysiert | Regeln dokumentiert |
+| AH-03 | Tägliche Aufgaben | In Challenges: Wasser, Lesen, Schritte, Diät | TC | V | OV | M | AH-04 | M | P2 | MVP | R1 · Schritt F | Anpassen: eigene Aufgaben ohne Vorgaben, vorgezogen (D-253, Q-17) | Implementiert | AK-HAB-01 |
+| AH-04 | Gewohnheiten definieren und verfolgen | Außerhalb von Challenges nicht belegt | – | P | ON | M | – | M | P2 | MVP | R1 · Schritt F | Täglich vorgezogen (D-253); Häufigkeiten und Erfüllungsquote später | Implementiert | AK-HAB-01 |
+| AH-05 | Streaks für Gewohnheiten | Streak-Funktion für Training | AS 3.2.0 | V | OV | N | AH-04 | S | P2 | MVP | R1 · Schritt F | Vorgezogen, Regel in D-253 | Implementiert | AK-HAB-02 |
 | AH-06 | Erinnerungen | Workout-Reminder | AS 3.1.4 | V | OV | M | ON-13 | L | P3 | Später | R5 | Später | Analysiert | Siehe ON-13 |
 | AH-07 | Apple Health, Apple Watch, Wearables | Laut Agentur integriert; Rezensionen bezweifeln es | DT; REV | N | ON | M | Native App | XL | – | Ausgeschlossen | – | Ausschließen für die Web-App (D-116); native Option dokumentiert | Analysiert | Entfällt in der Web-App |
 | AH-08 | Kalender aller Ereignisse | Nicht belegt | – | P | ON | M | TH-03 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monats- und Wochenansicht mit allen Ereignissen |

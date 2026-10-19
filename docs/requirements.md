@@ -241,7 +241,14 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-UX-07 | iPhone im Hochformat, iPad hoch und quer sowie in Split View und Mac ab 1024 px Breite funktionieren ohne horizontales Scrollen; am Desktop gibt es eine Seitenleiste | CH-08 | E, G | M4 |
 | AK-UX-08 | Bei `prefers-reduced-motion` entfallen Bewegungen außer notwendigen Zustandswechseln | SY-07 | E | M4 |
 
-### 6.12 Gerätetests (AK-DEV)
+### 6.12 Tagesaufgaben (AK-HAB)
+
+| AK | Kriterium | Matrix | Nachweis | M |
+|---|---|---|---|---|
+| AK-HAB-01 | Tagesaufgaben lassen sich frei anlegen (Name bis 80 Zeichen), umbenennen, per „nach oben“ und „nach unten“ ordnen und ab heute beenden (10 s rückgängig, später wieder aufnehmbar); jede Aufgabe gilt ab dem Tag des Anlegens bis vor den Tag des Beendens; je Aufgabe und Tag gibt es genau einen Eintrag „erledigt“ | AH-03, AH-04 | U, K, E | Schritt F |
+| AK-HAB-02 | Die Serie zählt aufeinanderfolgende Tage, an denen alle geltenden Aufgaben erledigt waren, bis heute oder bis gestern, solange heute noch offen ist; Tage ohne geltende Aufgabe unterbrechen sie; „Heute“ zeigt Aufgaben, Serie und Fortschritt des Tages | AH-05 | U, K, E | Schritt F |
+
+### 6.13 Gerätetests (AK-DEV)
 
 | AK | Kriterium | Matrix | Nachweis | M |
 |---|---|---|---|---|

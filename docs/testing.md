@@ -403,3 +403,16 @@ Körpergewicht (Modul `body`: erfassen, bearbeiten, löschen mit Rückgängig, P
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 48 Tests bestanden. Neu `progress.spec.ts`: Weg über die Navigation, drei Einträge über das Sheet, „Bitte prüfen“ bei Sprung, Veränderung, Diagramm und Tabellenansicht, Löschen mit Rückgängig, Karten auf „Heute“ und „Fortschritt“. `/fortschritt` und `/fortschritt/gewicht` gehören jetzt zu den Seiten der Netz- und axe-Prüfung |
 | Bildschirmfotos (design-system.md 8.1) | C-01 hell und dunkel geprüft (`screenshots/c01-gewicht-hell.png`, `-dunkel.png`), dazu Fortschritt und Heute. Befund beim ersten Durchgang: y-Achse mit Einheit brach um und überlappte, erste Datumsmarke abgeschnitten; behoben (Achse ohne Einheit, Innenabstand, Linie ohne Glättung) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Schritt F · Tagesaufgaben und Motivation · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Modul `habits`: Aufgaben anlegen, umbenennen, ordnen, beenden mit Rückgängig und Wiederaufnahme; Abhaken je Tag mit einem Dokument je Aufgabe und Tag; Serie und Übersicht der letzten 14 Tage; Karte auf „Heute“ mit Motivationssatz; Dexie v2 mit Snapshot vor dem Upgrade (D-253).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 54 Dateien, 466 Tests bestanden. Neu: `streak.test.ts` (geltende Aufgaben, Tagesstatus, Serie bis heute oder gestern, Abbruch, Übersicht, Satz je Tag), `habitService.test.ts` (anlegen mit Namensbereinigung und Grenzen, umbenennen, ordnen, beenden, wieder aufnehmen, löschen, wiederherstellen, ein Eintrag je Tag), `habits-ui.test.tsx` (Verwaltung mit Umbenennen, Ordnen, Beenden mit Rückgängig; Abhaken mit Serie und Übersicht; Karte auf „Heute“). Datenbank: `schema.test.ts` auf v2, `migrations.test.ts` sichert eine v1-Datenbank und öffnet sie als v2 (Tabellen `habits`, `habitLogs` leer, Bestand erhalten), `snapshots.test.ts` und `export.test.ts` auf Version 2 und die Typen `habit`, `habit_log` angepasst |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90,1 %, Zweige 80,7 %, Funktionen 88,5 %, Zeilen 91,0 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 216,6 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 50 Tests bestanden. Neu `tasks.spec.ts`: Leerzustand auf „Heute“, Motivationssatz, zwei Aufgaben anlegen, auf „Heute“ abhaken mit „1 von 2“ und „Serie: 1 Tag · Alles erledigt“, Neuladen behält den Stand. `/heute/aufgaben` gehört zu den Seiten der Netz- und axe-Prüfung |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus. Das Schema-Upgrade v1 → v2 läuft beim ersten Öffnen der neuen Version auf dem iPhone; der Snapshot davor erscheint unter „Daten und Sicherung“ |

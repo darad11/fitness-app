@@ -259,7 +259,7 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 | `body_measurement` | R4 | measuredAt, dayKey, site, valueCm, optional bodyFatPercent mit Methode | – |
 | `progress_photo` | R4 | takenAt, dayKey, pose, blobId (lokal), sha256, width, height, bytes, note | Bild unveränderlich; Blob in lokaler Tabelle `mediaBlob` |
 | `step_entry` | R4 | ID aus dayKey, dayKey, steps, source ('manual'/'shortcut'/'import') | Einer je Tag |
-| `habit`, `habit_log` | R4 | habit: name, frequency, targetValue, unit; log: ID aus Gewohnheit und Tag, done, value | Einer je Gewohnheit und Tag |
+| `habit`, `habit_log` | R1 (Schritt F, D-253, Tagesaufgaben) | habit: name, position, fromDayKey, toDayKey?, archivedAt?; log: ID aus Aufgabe und Tag (UUID v5 aus `habit_log:<habitId>:<dayKey>`), done, doneAt?. Später: frequency, targetValue, unit, value | Einer je Aufgabe und Tag |
 | `water_entry`, `daily_note` | R4 | dayKey, ml bzw. text | – |
 
 ## 5. Lokale, nicht synchronisierte Tabellen
@@ -275,10 +275,12 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 | R3: `outbox`, `syncBase`, `syncState` | Ausstehende Änderungen, letzte bekannte Serverversion je Dokument (Basis für den 3-Wege-Merge), Pull-Cursor | Dauerhaft |
 | R4: `mediaBlob` | Fotos und Vorschaubilder | Bis zur Löschung |
 
-## 6. Dexie-Schema v1 (MVP)
+## 6. Dexie-Schema (MVP: v1 aus M0, v2 seit Schritt F)
+
+v2 (D-253) ergänzt additiv `habits: 'id, archivedAt'` und `habitLogs: 'id, habitId, dayKey'`; vor dem Upgrade entsteht ein Snapshot, der Migrationstest öffnet eine v1-Datenbank verlustfrei (`migrations.test.ts`).
 
 ```ts
-// src/shared/db/schema.ts – Entwurf; umgesetzt in M0 mit generischen Tabellentypen (siehe unten)
+// src/shared/db/schema.ts – Entwurf v1; umgesetzt in M0 mit generischen Tabellentypen (siehe unten)
 import Dexie, { type Table } from 'dexie';
 
 export class AppDb extends Dexie {

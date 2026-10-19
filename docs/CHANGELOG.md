@@ -1,6 +1,6 @@
 # Änderungsprotokoll der Dokumentation
 
-## Version 0.6 · 18.10.2026 · Schritte B bis E: Bibliothek, Programme A, B, C, aktives Programm, Player, Fortschritt
+## Version 0.6 · 18.10.2026 · Schritte B bis F: Bibliothek, Programme A, B, C, aktives Programm, Player, Fortschritt, Tagesaufgaben
 
 Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufband Tag 14, Studio, Beinpresse, drei Sätze von Beginn an, Rotation, Kalorien, Tagesaufgaben).
 
@@ -14,7 +14,11 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
 | `implementation-plan.md` | Stand Erweiterungsplan; AP 2.3 teilweise vorgezogen; nächste Schritte |
 | `feature-inventory.md` | TP-17, TP-19, TP-21 auf „Implementiert“ |
-| `testing.md` | Ergebnisse Schritt B bis E |
+| `testing.md` | Ergebnisse Schritt B bis F |
+| `decisions.md` (Schritt F) | D-253 Tagesaufgaben, Serie, Dexie v2, Motivationstexte |
+| `requirements.md` (Schritt F) | Abschnitt 6.12 Tagesaufgaben: AK-HAB-01, AK-HAB-02; Gerätetests jetzt 6.13 |
+| `feature-inventory.md` (Schritt F) | AH-03, AH-04, AH-05 auf „Implementiert“ |
+| `data-model.md`, `architecture.md`, `design-system.md` (Schritt F) | Dexie v2, Felder von `habit` und `habit_log`, Module `body`, `progress`, `habits`, Screen S-50 |
 | `decisions.md` (Schritt E) | D-251 Kalorienschätzung nach MET (ersetzt D-226), D-252 Fortschritt mit Modulen `body` und `progress`, Diagramme |
 | `feature-inventory.md` (Schritt E) | BP-01, BP-02, TH-02, TH-05, TH-06, TH-07, TS-18 auf „Implementiert“ |
 | `design-system.md` | Stand der Diagramme C-01 bis C-03, Bildschirmfotos unter `screenshots/` |

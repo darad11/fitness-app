@@ -264,6 +264,14 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-NUT-10 | Ein Rezept mit Name, Portionen und Zutaten aus der Lebensmittelsuche (Menge in g bzw. ml oder als Portion) lässt sich anlegen, bearbeiten, archivieren und löschen; die Nährwerte je Portion und gesamt stimmen mit einer Handrechnung überein; fehlende Werte einer Zutat erscheinen als unvollständig; das Rezept lässt sich portionsweise eintragen, und spätere Änderungen am Rezept ändern bestehende Einträge nicht | RE-02, RE-12, RE-13 | U, K, E | M7 |
 | AK-NUT-11 | Die Einträge einer Mahlzeit lassen sich als Vorlage mit Namen speichern; unter „Lebensmittel hinzufügen“ trägt „Alle eintragen“ alle Posten mit unveränderten Werten in die gewählte Mahlzeit und den gewählten Tag ein; Vorlagen lassen sich umbenennen und mit Rückgängig löschen | NU-11 | U, K, E | Schritt G |
 
+### 6.12b Synchronisierung, erste Stufe (AK-SYN)
+
+| AK | Kriterium | Matrix | Nachweis | M |
+|---|---|---|---|---|
+| AK-SYN-01 | Unter „Mehr“ → „Synchronisierung“ meldet man sich mit E-Mail und Passwort an und ab; ohne Anmeldung bleibt die App voll nutzbar und sendet nichts; falsche Zugangsdaten und fehlendes Netz werden verständlich gemeldet; beim Abmelden bleiben die Daten auf dem Gerät | SY-09 | U, I, E | M9 |
+| AK-SYN-02 | Angemeldet gleicht die App alle eigenen Dokumente (inklusive Löschmarkierungen) mit Supabase ab: beim Öffnen, nach Änderungen, beim Zurückkehren, bei wiederkehrendem Netz, alle 5 Minuten und per „Jetzt abgleichen“; ein zweites Gerät erhält neue, geänderte und gelöschte Dokumente; der Stand (Zeit, geholt, gesendet, Fehler) ist sichtbar | SY-03 | U, I, E, G | M9 |
+| AK-SYN-03 | Bei Änderungen auf beiden Geräten gewinnt die jüngere Fassung; eine abgeschlossene Trainingseinheit wird nie durch eine laufende ersetzt; bei Programmen und Rezepten entsteht statt Überschreiben eine Konfliktkopie; ein anderer Nutzer sieht keine fremden Zeilen (RLS) | SY-03 | U, I | M9 |
+
 ### 6.13 Gerätetests (AK-DEV)
 
 | AK | Kriterium | Matrix | Nachweis | M |

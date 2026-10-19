@@ -292,6 +292,8 @@ v4 (D-267, M7) ergänzt additiv `recipes: 'id, nameNorm, archivedAt'`; Snapshot 
 
 v5 (D-268, NU-11) ergänzt additiv `mealTemplates: 'id, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v4 → v5. `meal_template`: `name`, `items[{id, kind, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot, nutrients, isEstimated}]` (1 bis 30), `archivedAt` (vorgesehen, noch nicht genutzt).
 
+v6 (D-269, R3) ergänzt additiv die lokale Tabelle `syncBase: 'id'` mit `{id, hlc}` (letzter mit dem Server abgeglichener Stempel je Dokument); nicht synchronisiert, nicht exportiert. Snapshot vor dem Upgrade, Migrationstest v5 → v6. Zugang, Cursor und Status des Abgleichs liegen in `meta` (`sync.auth`, `sync.cursor`, `sync.status`, `sync.user`).
+
 Importierte Lebensmitteldaten (D-263) liegen in einer eigenen IndexedDB-Datenbank `<App-Datenbank>-lebensmittel` (Dexie v1, Tabelle `catalogs: 'id'`) mit genau einer Zeile `bls-recherche`: `formatVersion`, `importedAt`, `fetchedAt`, `summary` (übernommen je Quelle, weggelassen je Grund) und `rows` als kompakte Liste `[Code, Quelle ('oenwt'), Name, kcal, Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe, Salz]` (fehlende Werte `null`). Keine Dokumente: kein HLC, keine Löschmarke, nicht in Export, Snapshot und Synchronisierung; ein Import ersetzt die Zeile, „Import entfernen“ löscht sie. Lebensmittel-ID `uuidv5('import:' + Quelle + ':' + Code)`. Marken (D-271) liegen als zweite Zeile `marken` daneben: `formatVersion`, `importedAt`, `fetchedAt` und `rows` als Liste `[Code, Name, Marke]`; zugeordnet wird bei gleichem Code und Namen. Ein neuer Import der Lebensmitteldaten lässt sie stehen, „Import entfernen“ löscht beide Zeilen.
 
 ```ts
@@ -479,6 +481,8 @@ alter table public.sync_documents enable row level security;
 create policy own_rows on public.sync_documents for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 ```
+
+**Umsetzung der ersten Stufe (D-269, 19.10.2026):** Tabelle `public.sync_documents` mit `user_id`, `doc_id`, `doc_table`, `doc_type`, `hlc`, `deleted`, `schema_version`, `payload`, `device_id`, `rev` (Sequenz) und `server_updated_at`; Primärschlüssel `(user_id, doc_id)`, Index `(user_id, rev)`; RLS je Nutzer für Lesen, Anlegen und Ändern, kein Löschen; `anon` ohne Rechte. `push_documents(docs jsonb)` (bis 500 Dokumente, `security invoker`) übernimmt eine Fassung nur mit jüngerem HLC und liefert je Dokument `accepted` mit neuer `rev` oder `stale`. Abholen per REST: `rev > Cursor`, aufsteigend, 500 je Seite. Basisrevision, Mutations-ID und feldweise 3-Wege-Zusammenführung aus dem Entwurf unten sind noch nicht umgesetzt; der Client entscheidet mit `syncBase` und dem HLC (D-269).
 
 Schreiben erfolgt über eine Postgres-Funktion `push_documents(docs jsonb)`: Sie prüft je Dokument die mitgesendete Basisrevision (optimistische Nebenläufigkeit), erkennt Wiederholungen über `last_mutation_id`, vergibt `rev + 1` und `server_updated_at` und liefert je Dokument „angenommen", „Duplikat" oder „Konflikt" mit der aktuellen Serverfassung. Der Ablauf steht in `architecture.md` Abschnitt 11.
 

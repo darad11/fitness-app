@@ -604,7 +604,45 @@ export const de = {
     data: 'Daten und Sicherung',
     settings: 'Einstellungen',
     install: 'Installieren',
+    sync: 'Synchronisierung',
     about: 'Über die App',
+  },
+  sync: {
+    title: 'Synchronisierung',
+    intro:
+      'Gleicht deine Daten zwischen iPhone, iPad und Mac ab. Gespeichert wird in deinem eigenen Supabase-Projekt in Frankfurt; nur du kannst nach der Anmeldung darauf zugreifen.',
+    notSynced:
+      'Nicht abgeglichen werden importierte Lebensmitteldaten (ÖNWT) und die Erlaubnis für Open Food Facts; beides bleibt je Gerät.',
+    email: 'E-Mail',
+    password: 'Passwort',
+    signIn: 'Anmelden',
+    signingIn: 'Wird angemeldet …',
+    loginTitle: 'Fitness',
+    loginSubtitle:
+      'Melde dich an, damit Training, Ernährung und Fortschritt auf all deinen Geräten gleich sind.',
+    later: 'Später',
+    loginNote: 'Ohne Anmeldung bleibt alles auf diesem Gerät.',
+    invalidCredentials: 'E-Mail oder Passwort stimmt nicht.',
+    offline: 'Keine Verbindung. Bitte versuche es mit Netz erneut.',
+    failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',
+    signedInAs: (email: string) => `Angemeldet als ${email}`,
+    lastSync: (date: string) => `Zuletzt abgeglichen: ${date}`,
+    never: 'Noch nicht abgeglichen.',
+    lastResult: (pulled: number, pushed: number) =>
+      `Zuletzt ${String(pulled)} geholt, ${String(pushed)} gesendet.`,
+    conflicts: (n: number) =>
+      `${String(n)} Konfliktkopie${n === 1 ? '' : 'n'} angelegt (Name mit „Konflikt“). Bitte prüfen und die nicht benötigte Fassung löschen.`,
+    errors: {
+      SyncOfflineError: 'Letzter Versuch ohne Verbindung. Sobald Netz da ist, geht es weiter.',
+      SessionExpiredError: 'Die Anmeldung ist abgelaufen. Bitte melde dich erneut an.',
+      NotSignedInError: 'Nicht angemeldet.',
+      other: 'Der letzte Abgleich ist fehlgeschlagen. Er wird automatisch wiederholt.',
+    } as Record<string, string>,
+    syncNow: 'Jetzt abgleichen',
+    syncing: 'Wird abgeglichen …',
+    auto: 'Die App gleicht automatisch ab: beim Öffnen, nach Änderungen und alle 5 Minuten, solange sie offen ist.',
+    signOut: 'Abmelden',
+    signOutHint: 'Beim Abmelden bleiben alle Daten auf diesem Gerät.',
   },
   settings: {
     title: 'Einstellungen',

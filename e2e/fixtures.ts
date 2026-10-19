@@ -66,5 +66,6 @@ export const APP_PAGES = [
   '/mehr/einstellungen',
   '/mehr/daten',
   '/mehr/installieren',
+  '/mehr/synchronisierung',
   '/mehr/ueber',
 ];

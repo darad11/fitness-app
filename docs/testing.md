@@ -584,6 +584,24 @@ Vorlage aus einer Mahlzeit speichern, mit einem Tipp in eine Mahlzeit eintragen,
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 174 Tests bestanden. Neu in `nutrition.spec.ts`: Vorlage speichern, nach Neuladen ins Abendessen eintragen; `/ernaehrung/vorlagen` in der Netz- und axe-Prüfung (Hell und Dunkel) ohne Verstöße |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
 
+### Synchronisierung, erste Stufe · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194) und Supabase-Projekt
+
+Supabase-Projekt „fitness-app“ (Frankfurt), Tabelle `sync_documents` mit RLS, Funktion `push_documents`, Anmeldung, automatischer Abgleich, Dexie v6 (D-269).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Supabase erreichbar? | Aus der Cloud-Umgebung nicht (`curl` ohne Antwort); Datenbank über das Supabase-Werkzeug erreichbar |
+| SQL-Test im Projekt (in einer Transaktion, danach zurückgerollt) | Zwei Testnutzer: neues Dokument `accepted`; ältere Fassung `stale`; jüngere Fassung `accepted`, Inhalt ersetzt, `rev` höher; zweiter Nutzer sieht 0 Zeilen (RLS). Danach 0 Nutzer, 0 Dokumente |
+| Supabase-Sicherheitsprüfung (Advisors) | keine Hinweise |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 79 Dateien, 603 Tests bestanden. Neu: `merge.test.ts` (Regeln: Neues, unverändert, eigene Fassung, jüngerer HLC, K-01, Konfliktkopie, Löschung), `syncEngine.test.ts` (zwei Geräte mit nachgebildetem Server nach den Regeln von `push_documents`: anlegen, ändern, löschen in beide Richtungen; gleichzeitige Änderung, Uhr läuft vor; Konfliktkopie bei Programmen; abgeschlossene Einheit gewinnt, Projektion wird neu aufgebaut; ungültige Zeilen übergangen; anderer Nutzer setzt Cursor und Basis zurück), `syncService.test.ts` (Anmeldung, falsches Passwort, Abmelden, Token-Erneuerung und Wiederholung nach 401, abgelaufene Anmeldung, Status), `sync-ui.test.tsx` (anmelden, abgleichen, abmelden), Migrationstest v5 → v6. Gefunden und behoben beim Test: Ein Gerät hielt die eigene, schon gesendete Fassung beim Abholen für einen Konflikt |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 87,11 %, Zweige 78,95 %, Funktionen 84,48 %, Zeilen 88,42 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 236,9 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 180 Tests bestanden. Neu `sync.spec.ts` (Supabase nachgebildet: Gewicht erfassen, anmelden, Abgleich sendet das Gewicht, nach Neuladen weiter angemeldet; CSP ohne Konsolenfehler); `/mehr/synchronisierung` in der Netz- und axe-Prüfung; ohne Anmeldung keine Anfragen an Supabase |
+| Anmeldung im Vollbild (D-270) | Entwürfe als Bild abgenommen; danach Bildschirmfotos aus der gebauten App (Chromium, 1280 px und iPhone-Größe 390 px) wie der Entwurf. Kontraste der neuen Tokens in `tokens.test.ts`; `sync.spec.ts` zusätzlich: Startfokus auf dem Titel, „Später“ und Escape führen zu „Mehr“. Erster Versuch mit `autoFocus` scheiterte (Fokus landete auf „Später“), behoben durch Fokus nach dem Öffnen |
+| WebKit in GitHub Actions | Erster Lauf: `sync.spec.ts` rot, die Anmeldung erreichte den echten Server statt der Nachbildung (Anfragen der vom Service Worker gesteuerten Seite umgehen in WebKit `page.route`); behoben, der Test blockiert den Service Worker. Zweiter Lauf: `barcode.spec.ts` rot auf webkit-mobile, „Importing a module script failed“, weil ein Seitenwechsel das Nachladen des Hintergrund-Abgleichs abbrach und die Fehleranzeige auslöste; behoben, ein gescheitertes Nachladen lässt die App ohne Abgleich weiterlaufen. Lokal danach `barcode`, `sync`, `shell` (Chromium) 20 Tests bestanden; Startansicht 237,8 KB gzip |
+| Gerätetest | Abgleich zwischen zwei echten Geräten steht aus |
+
 ### Marken zu den ÖNWT-Lebensmitteln · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
 Marken aus `nuts-marken.json` herauslösen, beim Import zuordnen, in der Suche anzeigen (D-271).

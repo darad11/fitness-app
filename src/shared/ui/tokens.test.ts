@@ -84,6 +84,13 @@ describe('Farbtokens', () => {
       ['on-ink', 'ink-2'],
       ['on-ink-muted', 'ink'],
       ['on-ink-muted', 'ink-2'],
+      ...['login-bg-1', 'login-bg-2', 'login-bg-3'].flatMap((bg) => [
+        ['login-fg', bg],
+        ['login-fg-muted', bg],
+        ['login-error', bg],
+      ]),
+      ['login-fg', 'login-accent'],
+      ['login-fg', 'login-accent-2'],
     ])('Text --%s auf --%s erreicht 4,5:1', (fg, bg) => {
       expect(contrast(token(tokens, fg), token(tokens, bg))).toBeGreaterThanOrEqual(4.5);
     });
@@ -97,6 +104,7 @@ describe('Farbtokens', () => {
       ['accent', 'meter-track'],
       ['accent', 'ink'],
       ['on-ink', 'ink'],
+      ['login-focus', 'login-bg-1'],
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(contrast(token(tokens, fg), token(tokens, bg))).toBeGreaterThanOrEqual(3);
     });

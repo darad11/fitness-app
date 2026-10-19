@@ -62,3 +62,17 @@ test('Synchronisierung: anmelden, Gewicht senden, nach Neuladen weiter angemelde
   await page.reload();
   await expect(page.getByText('Angemeldet als ich@example.org')).toBeVisible();
 });
+
+test('Anmeldung im Vollbild: „Später“ und Escape führen ohne Anmeldung zurück (D-270)', async ({
+  page,
+}) => {
+  await openPage(page, '/mehr/synchronisierung');
+  const login = page.getByRole('dialog', { name: 'Fitness' });
+  await expect(login).toBeVisible();
+  await expect(login.getByRole('heading', { name: 'Fitness' })).toBeFocused();
+  await login.getByRole('button', { name: 'Später' }).click();
+  await expect(page).toHaveURL(/\/mehr$/);
+  await openPage(page, '/mehr/synchronisierung');
+  await page.keyboard.press('Escape');
+  await expect(page).toHaveURL(/\/mehr$/);
+});

@@ -4,7 +4,7 @@
 
 | Datei | Änderung |
 |---|---|
-| `decisions.md` | D-269 Synchronisierung mit Supabase |
+| `decisions.md` | D-269 Synchronisierung mit Supabase; D-270 Anmeldung im Vollbild |
 | `requirements.md` | Abschnitt 6.12b mit AK-SYN-01 bis AK-SYN-03 |
 | `data-model.md` | Dexie v6 mit `syncBase`; umgesetztes Serverschema |
 | `feature-inventory.md` | SY-03 und SY-09 vorgezogen und „Implementiert“ |

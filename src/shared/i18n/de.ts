@@ -604,13 +604,15 @@ export const de = {
       'Gleicht deine Daten zwischen iPhone, iPad und Mac ab. Gespeichert wird in deinem eigenen Supabase-Projekt in Frankfurt; nur du kannst nach der Anmeldung darauf zugreifen.',
     notSynced:
       'Nicht abgeglichen werden importierte Lebensmitteldaten (ÖNWT) und die Erlaubnis für Open Food Facts; beides bleibt je Gerät.',
-    signInTitle: 'Anmelden',
     email: 'E-Mail',
     password: 'Passwort',
     signIn: 'Anmelden',
     signingIn: 'Wird angemeldet …',
-    accountHint:
-      'Das Konto legst du einmal im Supabase-Dashboard an (Authentication → Users → Add user, „Auto Confirm User“). Danach meldest du dich hier auf jedem Gerät an.',
+    loginTitle: 'Fitness',
+    loginSubtitle:
+      'Melde dich an, damit Training, Ernährung und Fortschritt auf all deinen Geräten gleich sind.',
+    later: 'Später',
+    loginNote: 'Ohne Anmeldung bleibt alles auf diesem Gerät.',
     invalidCredentials: 'E-Mail oder Passwort stimmt nicht.',
     offline: 'Keine Verbindung. Bitte versuche es mit Netz erneut.',
     failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',

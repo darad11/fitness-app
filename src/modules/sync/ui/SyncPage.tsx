@@ -1,22 +1,20 @@
-import { useId, useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { InvalidCredentialsError, SyncOfflineError } from '../data/remote';
 import { useSyncView } from '../data/syncState';
+import { LoginScreen } from './LoginScreen';
 import { signIn, signOut, syncNow } from '../service/syncService';
-
-const INPUT = 'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg';
 
 /** Synchronisierung (D-269): anmelden, Stand ansehen, abgleichen, abmelden. */
 export function SyncPage() {
   const rt = useDb();
   const fmt = useFormatters();
   const view = useSyncView();
-  const id = useId();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   const [busy, setBusy] = useState<'signIn' | 'sync' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const ts = t.sync;
@@ -31,12 +29,11 @@ export function SyncPage() {
       });
   };
 
-  const submit = () => {
+  const submit = (email: string, password: string) => {
     setBusy('signIn');
     setError(null);
     signIn(rt.db, email, password)
       .then(() => {
-        setPassword('');
         setBusy(null);
         run();
       })
@@ -99,66 +96,14 @@ export function SyncPage() {
             <p className="mt-2 text-xs text-muted">{ts.signOutHint}</p>
           </Card>
         ) : (
-          <Card title={ts.signInTitle}>
-            {errorText && status?.lastError === 'SessionExpiredError' ? (
-              <p className="mb-3 text-sm text-danger">{errorText}</p>
-            ) : null}
-            <form
-              className="grid gap-3"
-              onSubmit={(event) => {
-                event.preventDefault();
-                submit();
-              }}
-            >
-              <div>
-                <label
-                  htmlFor={`${id}-email`}
-                  className="mb-2 block text-sm font-semibold text-muted"
-                >
-                  {ts.email}
-                </label>
-                <input
-                  id={`${id}-email`}
-                  type="email"
-                  required
-                  autoComplete="username"
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                  }}
-                  className={INPUT}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor={`${id}-password`}
-                  className="mb-2 block text-sm font-semibold text-muted"
-                >
-                  {ts.password}
-                </label>
-                <input
-                  id={`${id}-password`}
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                  }}
-                  className={INPUT}
-                />
-              </div>
-              {error ? (
-                <p role="alert" className="text-sm text-danger">
-                  {error}
-                </p>
-              ) : null}
-              <Button type="submit" disabled={busy !== null} className="justify-self-start">
-                {busy === 'signIn' ? ts.signingIn : ts.signIn}
-              </Button>
-            </form>
-            <p className="mt-3 text-sm text-muted">{ts.accountHint}</p>
-          </Card>
+          <LoginScreen
+            busy={busy === 'signIn'}
+            error={
+              error ?? (status?.lastError === 'SessionExpiredError' ? (errorText ?? null) : null)
+            }
+            onSubmit={submit}
+            onLater={() => void navigate('/mehr')}
+          />
         )}
       </div>
     </>

@@ -598,4 +598,5 @@ Supabase-Projekt „fitness-app“ (Frankfurt), Tabelle `sync_documents` mit RLS
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 87,11 %, Zweige 78,95 %, Funktionen 84,48 %, Zeilen 88,42 %) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 236,9 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 180 Tests bestanden. Neu `sync.spec.ts` (Supabase nachgebildet: Gewicht erfassen, anmelden, Abgleich sendet das Gewicht, nach Neuladen weiter angemeldet; CSP ohne Konsolenfehler); `/mehr/synchronisierung` in der Netz- und axe-Prüfung; ohne Anmeldung keine Anfragen an Supabase |
+| Anmeldung im Vollbild (D-270) | Entwürfe als Bild abgenommen; danach Bildschirmfotos aus der gebauten App (Chromium, 1280 px und iPhone-Größe 390 px) wie der Entwurf. Kontraste der neuen Tokens in `tokens.test.ts`; `sync.spec.ts` zusätzlich: Startfokus auf dem Titel, „Später“ und Escape führen zu „Mehr“. Erster Versuch mit `autoFocus` scheiterte (Fokus landete auf „Später“), behoben durch Fokus nach dem Öffnen |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Abgleich zwischen zwei echten Geräten steht aus |

@@ -96,7 +96,7 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-PWA-04 | Läuft die App unter iOS oder iPadOS im Safari-Tab, erscheint ein Hinweis mit Installationsanleitung und dem Satz, dass Daten im Browser-Tab getrennt von der installierten App gespeichert werden; der Hinweis ist ausblendbar und unter Mehr › Installieren erneut abrufbar | SY-14 | E, G | M0 |
 | AK-PWA-05 | Nach dem ersten gespeicherten Datensatz fordert die App dauerhaften Speicher an, sofern die Schnittstelle existiert; Mehr › Daten zeigt den Status („dauerhaft" oder „nicht garantiert") und den geschätzten Speicherverbrauch | SY-12 | E | M1 |
 | AK-PWA-06 | Im MVP verlassen keine Nutzdaten das Gerät; alle Netzwerkzugriffe gehen an die eigene Hosting-Adresse | SY-10 | E | M0, M4 |
-| AK-PWA-07 | Die Produktivadresse ist fest und dokumentiert; Vorschau-Deployments laufen unter anderen Adressen und zeigen dauerhaft „Vorschau – Testdaten" | SY-15 | E, G | M0 |
+| AK-PWA-07 | Die Produktivadresse ist fest und dokumentiert; Vorschau-Deployments laufen unter anderen Adressen; die Umgebung steht unter „Mehr“ › „Über die App“ (der dauerhafte Balken „Vorschau – Testdaten“ entfällt, D-272) | SY-15 | E, G | M0 |
 
 ### 6.2 Ersteinrichtung (AK-ONB)
 

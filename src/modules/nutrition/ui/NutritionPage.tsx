@@ -21,6 +21,7 @@ import {
   IconButton,
   Meter,
   PageHeader,
+  ProgressRing,
   Skeleton,
   Toast,
 } from '@/shared/ui';
@@ -107,28 +108,45 @@ export function NutritionPage() {
       ) : (
         <div className="grid gap-4">
           <Card tone="ink" eyebrow={t.nutrition.eaten}>
-            <p className="text-3xl font-bold tabular-nums">
-              {target
-                ? t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal))
-                : t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
-            </p>
-            {target ? (
-              <>
-                <Meter
+            <div className="flex items-center gap-5">
+              {target ? (
+                <ProgressRing
                   tone="onInk"
-                  className="mt-3"
+                  size={116}
+                  stroke={11}
+                  className="shrink-0"
                   label={t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal))}
                   value={target.kcal > 0 ? totals.sums.kcal / target.kcal : 0}
-                />
-                <p className="mt-2 text-sm text-on-ink-muted">
-                  {totals.sums.kcal <= target.kcal
-                    ? t.nutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
-                    : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
+                >
+                  <span className="text-center leading-tight">
+                    <span className="block text-xl font-bold tabular-nums">
+                      {kcal(fmt, totals.sums.kcal)}
+                    </span>
+                    <span className="block text-xs text-on-ink-muted">
+                      {t.nutrition.units.kcal}
+                    </span>
+                  </span>
+                </ProgressRing>
+              ) : null}
+              <div className="min-w-0 flex-1">
+                <p
+                  className={
+                    target ? 'text-xl font-bold tabular-nums' : 'text-3xl font-bold tabular-nums'
+                  }
+                >
+                  {target
+                    ? t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal))
+                    : t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
                 </p>
-              </>
-            ) : (
-              <p className="mt-2 text-sm text-on-ink-muted">{t.nutrition.noTarget}</p>
-            )}
+                <p className="mt-1 text-sm text-on-ink-muted">
+                  {target
+                    ? totals.sums.kcal <= target.kcal
+                      ? t.nutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
+                      : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))
+                    : t.nutrition.noTarget}
+                </p>
+              </div>
+            </div>
             <dl className="mt-4 grid grid-cols-3 gap-3">
               {(['protein', 'carbs', 'fat'] as const).map((macro) => {
                 const goal = target

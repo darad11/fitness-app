@@ -88,7 +88,7 @@ export function RestStage(props: RestStageProps) {
         aria-label={t.rest.label}
         className={cn(
           'fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center text-on-ink',
-          over ? 'bg-accent' : 'bg-ink',
+          over ? 'bg-accent' : 'hero-glass',
         )}
       >
         <p className="eyebrow text-on-ink-muted">{over ? t.rest.over : t.rest.label}</p>
@@ -118,7 +118,7 @@ export function RestStage(props: RestStageProps) {
   return (
     <section
       aria-label={t.rest.label}
-      className={cn('mt-3 rounded-card p-4 text-on-ink', over ? 'bg-accent' : 'bg-ink')}
+      className={cn('mt-3 rounded-card p-4 text-on-ink', over ? 'bg-accent' : 'hero-glass')}
     >
       <div className="flex min-h-12 items-center gap-4">
         <p role="timer" aria-label={status} className="text-4xl font-bold tabular-nums">

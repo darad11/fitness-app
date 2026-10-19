@@ -4,6 +4,7 @@ export { useBodyWeights } from './data/useBodyWeights';
 export { addBodyWeight } from './service/bodyWeightService';
 export { listBodyWeights } from './data/bodyWeightRepository';
 export { Sparkline } from './ui/Sparkline';
+export { WeightCurve } from './ui/WeightCurve';
 export {
   changeInPeriod,
   inPeriod,

@@ -249,4 +249,5 @@ Nächste Schritte: <Liste>
 35. Erledigt (über #22 gemergt): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
 36. Erledigt (über #23 gemergt): Mahlzeit-Vorlagen aus einer Mahlzeit speichern und mit einem Tipp eintragen, Dexie v5 (D-268).
 37. Erledigt (Branch `feat/sync`): Synchronisierung, erste Stufe: Supabase-Projekt in Frankfurt, Tabelle und Funktion mit RLS, Anmeldung mit E-Mail und Passwort, automatischer Abgleich, Dexie v6 (D-269). Offen beim Produktinhaber: Konto im Supabase-Dashboard anlegen, Anmeldungen sperren, Gerätetest mit zwei Geräten.
-38. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald die Datei da ist. Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+38. Erledigt (Branch `feat/glas-look`): Glas-Look für die ganze App in hell und dunkel, Tab-Leiste mit Glas-Linse, einklappbare Seitenleiste, Kalorien-Ring und Gewichtskurve, Vorschau-Balken entfernt (D-272). Offen: Gerätetest auf dem iPhone (Weichzeichnen und Linse).
+39. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald die Datei da ist. Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

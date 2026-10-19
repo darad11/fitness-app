@@ -778,9 +778,6 @@ export const de = {
       'Keine Anmeldung, keine Werbung, keine Analyse. Alle Daten bleiben auf diesem Gerät; die App lädt nur ihre eigenen Dateien von der eigenen Adresse.',
   },
   banners: {
-    preview: 'Vorschau – Testdaten',
-    previewHint:
-      'Diese Adresse ist eine Vorschau. Daten hier sind von der Produktivversion getrennt.',
     updateAvailable: 'Neue Version verfügbar',
     updateNow: 'Jetzt aktualisieren',
     installHint:

@@ -601,3 +601,19 @@ Supabase-Projekt „fitness-app“ (Frankfurt), Tabelle `sync_documents` mit RLS
 | Anmeldung im Vollbild (D-270) | Entwürfe als Bild abgenommen; danach Bildschirmfotos aus der gebauten App (Chromium, 1280 px und iPhone-Größe 390 px) wie der Entwurf. Kontraste der neuen Tokens in `tokens.test.ts`; `sync.spec.ts` zusätzlich: Startfokus auf dem Titel, „Später“ und Escape führen zu „Mehr“. Erster Versuch mit `autoFocus` scheiterte (Fokus landete auf „Später“), behoben durch Fokus nach dem Öffnen |
 | WebKit in GitHub Actions | Erster Lauf: `sync.spec.ts` rot, die Anmeldung erreichte den echten Server statt der Nachbildung (Anfragen der vom Service Worker gesteuerten Seite umgehen in WebKit `page.route`); behoben, der Test blockiert den Service Worker. Zweiter Lauf: `barcode.spec.ts` rot auf webkit-mobile, „Importing a module script failed“, weil ein Seitenwechsel das Nachladen des Hintergrund-Abgleichs abbrach und die Fehleranzeige auslöste; behoben, ein gescheitertes Nachladen lässt die App ohne Abgleich weiterlaufen. Lokal danach `barcode`, `sync`, `shell` (Chromium) 20 Tests bestanden; Startansicht 237,8 KB gzip |
 | Gerätetest | Abgleich zwischen zwei echten Geräten steht aus |
+
+### Glas-Look · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, Kalorien-Ring, Gewichtskurve, ohne Vorschau-Balken (D-272).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Entwürfe | Als Bild abgenommen (Heute, Training, Ernährung; Handy und Web); danach Bildschirmfotos aus der gebauten App in hell und dunkel, Handy (390 px) und Web (1280 px), auch Seitenleiste ausgeklappt und Linse beim Ziehen |
+| Kontrast der Tokens | `tokens.test.ts` neu: mischt durchscheinende Farben und prüft jede sichtbare Mischfarbe (3 Verlaufspunkte, 3 Lichtflecken in voller Stärke auf jedem, Glas darauf, Glas auf Glas); 140 Fälle bestanden. Erste Werte fielen bei 36 Paaren durch (vor allem Akzent und Signalfarben auf den Lichtflecken im Dunkeln); Flecken abgeschwächt, Textfarben angepasst |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 79 Dateien, 646 Tests bestanden. Angepasst: Navigationstest (Tab-Leiste markiert über die Klasse `active`), Farbe für `theme-color`; entfernt: Test des Vorschau-Balkens |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 84,4 %, Zweige 76,34 %, Funktionen 82,99 %, Zeilen 85,63 %); die Linse ist per E2E geprüft |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 243,5 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 183 bestanden, 1 übersprungen (Linse nur am Handy). Neu `tabbar.spec.ts`: Ziehen von „Heute“ nach „Ernährung“ hebt die Linse an und wählt beim Loslassen, danach liegt sie wieder; Tippen auf „Training“. Erster Lauf: axe meldete zu wenig Kontrast der aktiven Beschriftung über einer dunklen Karte (Leiste mit 80 % Deckkraft); behoben mit 90 %. `shell.spec.ts`: neue Farbe für `theme-color` |
+| Bekannt | Das Weichzeichnen hinter der Tab-Leiste zeigt Chromium im Test nur teilweise; auf dem iPhone steht es aus (Gerätetest) |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest auf dem iPhone steht aus |

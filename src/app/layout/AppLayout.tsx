@@ -3,6 +3,7 @@ import { Outlet, useMatches } from 'react-router';
 import { ThemeSync } from '@/modules/settings';
 import { SyncRunner } from '@/modules/sync';
 import { t } from '@/shared/i18n/de';
+import { cn } from '@/shared/lib/cn';
 import { GlobalBanners } from '../banners/GlobalBanners';
 import { Sidebar } from './Sidebar';
 import { TabBar } from './TabBar';
@@ -15,6 +16,11 @@ export function AppLayout() {
   );
   return (
     <div className="min-h-dvh lg:flex">
+      <div aria-hidden="true" className="app-backdrop">
+        <span />
+        <span />
+        <span />
+      </div>
       <a
         href="#inhalt"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-pill focus:bg-surface focus:shadow-float focus:px-4 focus:py-3"
@@ -22,7 +28,12 @@ export function AppLayout() {
         {t.nav.skipToContent}
       </a>
       {fullscreen ? null : <Sidebar />}
-      <div className="flex min-h-dvh min-w-0 flex-1 flex-col pt-[env(safe-area-inset-top)] lg:pt-0">
+      <div
+        className={cn(
+          'flex min-h-dvh min-w-0 flex-1 flex-col pt-[env(safe-area-inset-top)] lg:pt-0',
+          !fullscreen && 'lg:pl-[5.5rem]',
+        )}
+      >
         <GlobalBanners />
         <main
           id="inhalt"

@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { FlaskConical, RefreshCw, Smartphone, TriangleAlert } from 'lucide-react';
+import { RefreshCw, Smartphone, TriangleAlert } from 'lucide-react';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router';
 import {
@@ -11,25 +11,10 @@ import {
   useDb,
 } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { appInfo, isPreview, type AppEnv } from '@/shared/lib/env';
 import { currentPlatform, type PlatformInfo } from '@/shared/lib/platform';
 import { applyUpdate, usePwaState } from '@/shared/pwa/state';
 import { SessionBanner } from '@/modules/training';
 import { Banner, Button, ButtonLink } from '@/shared/ui';
-
-/** Dauerhaftes Etikett auf Vorschau-Adressen (AK-PWA-07). */
-export function PreviewBanner({ env = appInfo.env }: { env?: AppEnv }) {
-  if (!isPreview(env)) return null;
-  return (
-    <div
-      title={t.banners.previewHint}
-      className="sticky top-0 z-30 flex items-center justify-center gap-2 bg-warning px-4 py-1 text-sm font-semibold text-bg"
-    >
-      <FlaskConical aria-hidden="true" className="size-4" />
-      {t.banners.preview}
-    </div>
-  );
-}
 
 /** Anderes Fenster hat die Datenbank auf eine neuere Version gebracht. */
 export function ConnectionBanner() {
@@ -111,7 +96,6 @@ export function InstallHintBanner({ platform }: { platform?: PlatformInfo }) {
 export function GlobalBanners() {
   return (
     <>
-      <PreviewBanner />
       <ConnectionBanner />
       <SessionBanner />
       <UpdateBanner />

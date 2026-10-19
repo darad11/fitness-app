@@ -22,6 +22,8 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Sitemap und Screen-Ka
 
 ## 2. Farbtokens
 
+Glas-Look (D-272): `--surface`, `--surface-2`, `--border`, `--accent-soft` und die übrigen „-soft“-Töne sind durchscheinend (`#rrggbbaa`) und liegen auf einem Verlauf `--bg-top` → `--bg` → `--bg-bottom` mit den Lichtflecken `--glow-1` bis `--glow-3`. `--panel` ist die fast deckende Fläche für Dialoge und schwebende Leisten, `--glass-edge` die Lichtkante, `--ink` und `--ink-2` bilden das blaue Glas der wichtigsten Karte, `--selection-pill` und `--lens-*` die Tab-Leiste. Die Werte stehen in `src/shared/ui/tokens.css`; `tokens.test.ts` prüft den Kontrast auf jeder sichtbaren Mischfarbe. Die Tabellen unten zeigen den Stand vor D-272 und gelten für Namen und Verwendung weiter.
+
 ### 2.1 Oberfläche
 
 Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,5:1, Bedienelemente und Diagrammlinien 3:1.
@@ -79,7 +81,7 @@ Weitere Diagramm-Tokens:
 
 ### 2.3 Umsetzung
 
-Tokens als CSS-Variablen auf `:root`; Tailwind liest sie über `@theme`. Der dunkle Modus gilt bei `@media (prefers-color-scheme: dark)` für `:root:not([data-theme="light"])` und immer bei `:root[data-theme="dark"]`, damit die manuelle Wahl in beide Richtungen gewinnt. Der `body` erhält ausdrücklich `background: var(--bg)`.
+Tokens als CSS-Variablen auf `:root`; Tailwind liest sie über `@theme`. Der dunkle Modus gilt bei `@media (prefers-color-scheme: dark)` für `:root:not([data-theme="light"])` und immer bei `:root[data-theme="dark"]`, damit die manuelle Wahl in beide Richtungen gewinnt. Der `body` erhält ausdrücklich eine Hintergrundfarbe (`--bg-bottom`); darüber liegt fest die Ebene `.app-backdrop` mit Verlauf und Lichtflecken (D-272).
 
 ## 3. Typografie
 
@@ -183,6 +185,7 @@ Makronährstoffe tragen feste Farben über alle Ansichten: Protein `--data-1`, K
 - Die Aktion „Erfassen" sitzt oben rechts auf „Heute" und öffnet ein Sheet: Training starten oder fortsetzen, Training nachtragen, Gewicht erfassen; ab R2 Mahlzeit und Wasser.
 - Der Trainingsplayer ist eine Vollbildansicht ohne Tab-Leiste. Außerhalb davon zeigt eine Leiste „Training läuft" den Weg zurück.
 - Höchstens drei Ebenen Tiefe.
+- Glas-Look (D-272): Am Handy schwebt die Tab-Leiste als Glas-Kapsel über dem Inhalt; ein Finger hebt die Auswahl als Linse an, Ziehen wählt beim Loslassen. Ab 1024 px schwebt links eine eingeklappte Seitenleiste mit Symbolen, die unter der Maus oder mit Tastaturfokus ausklappt.
 
 ### 9.2 Sitemap
 
@@ -250,7 +253,7 @@ Mehr (/mehr)                                           R1
 | S-43 | Wiederherstellung | Vollbild bei Datenbankfehler | M1, M4 | Ursache, Optionen | Erneut versuchen, Snapshot wiederherstellen, Fehlerprotokoll exportieren, Zurücksetzen | – | AK-DAT-08 |
 | S-44 | Fehleransicht | Je Route | M0, M4 | Meldung | Neu laden | – | AK-DAT-09 |
 | S-50 | Tagesaufgaben | `/heute/aufgaben` | Schritt F | Serie, Heute erledigt, neue Aufgabe, Liste mit Abhaken, Umbenennen, Ordnen, Beenden, letzte 14 Tage, beendete Aufgaben | Anlegen, Umbenennen, Nach oben, Nach unten, Beenden, Wieder aufnehmen | Leer: „Noch keine Aufgabe“ | AK-HAB-01, AK-HAB-02 |
-| S-46 | Globale Hinweisleisten | Alle Seiten | M0 bis M4 | Training läuft, Update verfügbar, Vorschau – Testdaten, Installationshinweis | Tippen führt zur Aktion | – | AK-TRN-17, AK-PWA-03, AK-PWA-04, AK-PWA-07 |
+| S-46 | Globale Hinweisleisten | Alle Seiten | M0 bis M4 | Training läuft, Update verfügbar, Installationshinweis (Vorschau-Balken entfällt, D-272) | Tippen führt zur Aktion | – | AK-TRN-17, AK-PWA-03, AK-PWA-04, AK-PWA-07 |
 
 Grundfassungen aus M0: S-01 zeigt Datum, die Karte „Diese Version“ und die Karte „Status“ (Offline-Bereitschaft, Startart mit Weg zu „Installieren“, Hinweis auf lokale Daten); beide Karten entfallen am 19.10.2026 (D-265), die Anleitung bleibt unter „Mehr“ → „Installieren“, der Speicherstand unter „Daten“. S-34 enthält Darstellung (Hell, Dunkel, System) und „Datum und Zahlen“ mit Beispielzeile. Navigation in M0: Heute und Mehr; Training und Fortschritt erscheinen erst mit M1 und M3 (AK-UX-01). Stand M1 (AP 1.1): Training erscheint in der Navigation; S-03 enthält zunächst nur den Einstieg „Übungen", weitere Einstiege folgen mit ihren Arbeitspaketen. S-12 ist umgesetzt (Suche, Filter Muskelgruppe und Gerät nebeneinander, Liste nach Gruppen; ohne Öffnen, weil das Übungsdetail S-13 erst in M2 kommt). Auf `/uebungen` bleibt Training in der Navigation markiert. AP 1.2: S-03 hat den Einstieg „Programme und Vorlagen"; S-04 zeigt in M1 nur die Beispielvorlagen als Karten mit Etikett „Beispiel" und Kurzangaben; S-49 zeigt Hinweis, Ablauf der Wochen und jeden Trainingstag einmal mit Satzschema, z. B. „2 Aufwärmsätze, 3 Sätze · 6–8 Wdh. · Pause 2:30 min". Basiskomponente `Badge` neu. AP 1.4: S-07 umgesetzt wie in Abschnitt 11, ohne Pausenleiste (AP 1.5), Pausieren und Notiz (M2); Kopfzeile je Übung mit Satz, Vorwert und Einheiten; ±-Tasten am hervorgehobenen Satz; Zusatzaktionen je Satz hinter „…". S-39 als Blatt von unten. S-09 in einer Grundfassung (Dauer, Übungen, Sätze, Volumen, bester Satz). Basiskomponenten `Dialog` (natives `<dialog>`) und `Toast` neu; Token `--scrim` für den Hintergrund von Dialogen. AP 2.1 bis 2.4 (D-257): S-04 zeigt „Meine Programme“ mit „Neues Programm“ (Dialog mit Name und Beschreibung), „Meine Vorlagen“ (nur wenn vorhanden), ein einklappbares Archiv und danach die gebündelten Programme und Beispielvorlagen; Löschen bietet 10 s „Rückgängig“. S-05 zeigt Bearbeiten, Als Vorlage speichern bzw. Vorlage verwenden, Duplizieren, Archivieren und Löschen; Exportieren folgt mit AP 2.8. S-49 bietet „Als eigenes Programm übernehmen“. S-06 speichert Name und Beschreibung mit „Speichern“, alles andere sofort; Aktionen je Woche und Tag als Symbolknöpfe mit ausgeschriebener Beschriftung für Screenreader. S-38 zeigt je Übung die Sätze als Karten mit Typ, Bereich von–bis, Zielgewicht bzw. Unterstützung, Zeit und Distanz je Erfassungsart; Pause je Übung als Auswahl mit „Standard“; S-40 (Ersetzen im Plan) nutzt die Übungsauswahl mit Alternativen. AP 2.5 (D-258): S-12 zeigt oben „Eigene Übung“, „Eigene Übungen“ als erste Gruppe mit Etikett „Eigene“, jede Zeile öffnet S-13; ohne Treffer bietet die Liste „„<Suche>“ als eigene Übung anlegen“ an; archivierte eigene Übungen stehen einklappbar am Ende. S-13 unter `/uebungen/:id` zeigt Angaben (Muskeln, Gerät, Erfassung), „Persönliche Angaben“ (Notiz, Standardpause, Gewichtsschritt, Videolink mit „Video öffnen“) und „Letzte Einheiten“ (fünf, mit Weg zu C-02); eigene Übungen zusätzlich „Bearbeiten“ und „Archivieren“. S-14 (eigene Übung) als Dialog mit Name, Hauptmuskelgruppe, weiterer Muskelgruppe, Gerät, Erfassung, Distanz-Einheit und „Je Seite“, mit Hinweis bei gleichem Namen. S-39 zeigt eigene Übungen mit Etikett und am Ende „Eigene Übung anlegen“. Programmdatei und „Importieren“ in S-04 und S-05 entfallen (D-259).
 

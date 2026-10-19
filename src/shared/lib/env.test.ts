@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appInfo, isPreview, resolveAppEnv } from './env';
+import { appInfo, resolveAppEnv } from './env';
 import { fnv1a32 } from './hash';
 
 describe('Umgebung', () => {
@@ -7,12 +7,6 @@ describe('Umgebung', () => {
     expect(resolveAppEnv('production')).toBe('production');
     expect(resolveAppEnv('preview')).toBe('preview');
     expect(resolveAppEnv('unbekannt')).toBe('local');
-  });
-
-  it('kennzeichnet nur Vorschau-Deployments', () => {
-    expect(isPreview('preview')).toBe(true);
-    expect(isPreview('production')).toBe(false);
-    expect(isPreview('local')).toBe(false);
   });
 
   it('übernimmt die Version aus package.json', () => {

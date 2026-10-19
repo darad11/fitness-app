@@ -1,49 +1,58 @@
 /*
- * Farbtokens (design-system.md Abschnitt 2, ux-audit.md Abschnitt 2). Hell ist Standard; Dunkel
- * gilt bei Systemeinstellung „dunkel" ohne manuelle Wahl „hell" und immer bei manueller Wahl
- * „dunkel". Die Werte prüft src/shared/ui/tokens.test.ts auf Kontrast (WCAG 2.1 AA) und auf
- * Gleichheit der beiden dunklen Blöcke.
+ * Farbtokens (design-system.md Abschnitt 2, D-272 Glas-Look). Hell ist Standard; Dunkel gilt bei
+ * Systemeinstellung „dunkel" ohne manuelle Wahl „hell" und immer bei manueller Wahl „dunkel".
+ * Flächen sind durchscheinendes Glas (Farbe mit Deckkraft, #rrggbbaa) über einem Verlauf mit
+ * Lichtflecken (--bg-top, --bg, --bg-bottom, --glow-1 bis 3). src/shared/ui/tokens.test.ts prüft
+ * den Kontrast (WCAG 2.1 AA) auf den tatsächlich sichtbaren Mischfarben und die Gleichheit der
+ * beiden dunklen Blöcke.
  */
 
 :root {
   color-scheme: light;
-  --bg: #f3f4f7;
-  --surface: #ffffff;
-  --surface-2: #eef0f4;
+  --bg: #e8eef7;
+  --bg-top: #f5f8fd;
+  --bg-bottom: #dce4f0;
+  --glow-1: #256abf24;
+  --glow-2: #3987e51f;
+  --glow-3: #1baf7a17;
+  --surface: #ffffffa6;
+  --surface-2: #ffffff73;
+  --panel: #f8fafdeb;
   --fg: #12151c;
-  --fg-muted: #5a6271;
-  --border: #e3e6ec;
-  --border-input: #7c8594;
+  --fg-muted: #4c5565;
+  --border: #0f1c3a1f;
+  --border-input: #5f6878;
+  --glass-edge: #ffffffcc;
   --accent: #256abf;
   --accent-hover: #1c5cab;
   --accent-fg: #ffffff;
-  --accent-ink: #256abf;
-  --accent-soft: #e6edf9;
+  --accent-ink: #1a5296;
+  --accent-soft: #256abf17;
   --focus: #256abf;
-  --success: #13794d;
-  --success-soft: #e2f3ea;
-  --warning: #976200;
-  --warning-soft: #fbf0da;
-  --danger: #c53030;
-  --danger-soft: #fbe7e7;
-  --ink: #151b2b;
-  --ink-2: #212a3f;
+  --success: #0c5f3b;
+  --success-soft: #13794d17;
+  --warning: #714a00;
+  --warning-soft: #9762001c;
+  --danger: #9a2121;
+  --danger-soft: #c5303014;
+  --ink: #0f1d3c;
+  --ink-2: #2463b3;
   --on-ink: #f5f7fb;
-  --on-ink-muted: #aab3c5;
+  --on-ink-muted: #dfe7f4;
   --data-1: #2a78d6;
-  --data-2: #eb6834;
+  --data-2: #d9592a;
   --data-3: #1baf7a;
   --data-4: #eda100;
   --data-5: #e87ba4;
   --data-6: #008300;
   --data-7: #6250d6;
   --data-8: #e34948;
-  --chart-grid: #e3e6ec;
-  --chart-axis: #5a6271;
-  --chart-point: #8a93a1;
-  --meter-track: #cde2fb;
+  --chart-grid: #0f1c3a1f;
+  --chart-axis: #4c5565;
+  --chart-point: #7a8394;
+  --meter-track: #c9dcf5;
   --chart-total: #3a4150;
-  --scrim: rgb(18 21 28 / 0.5);
+  --scrim: rgb(18 21 28 / 0.45);
   /* Vollbild-Anmeldung (D-270): immer dunkel, in allen Modi gleich. */
   --login-bg-1: #212a3f;
   --login-bg-2: #151b2b;
@@ -61,49 +70,74 @@
   --login-glass-line: rgb(255 255 255 / 0.14);
   --login-input: rgb(255 255 255 / 0.06);
   --login-input-line: rgb(255 255 255 / 0.3);
-  --shadow-card: 0 1px 2px rgb(18 21 28 / 0.04), 0 4px 16px rgb(18 21 28 / 0.06);
-  --shadow-float: 0 8px 24px rgb(18 21 28 / 0.14), 0 2px 6px rgb(18 21 28 / 0.08);
+  /* Glas: feine Lichtkante oben, Haarlinie, weicher Schatten (D-272). */
+  --shadow-card:
+    inset 0 1px 0 var(--glass-edge), 0 0 0 1px var(--border), 0 10px 30px rgb(30 50 90 / 0.1);
+  --shadow-float:
+    inset 0 1px 0 var(--glass-edge), 0 0 0 1px var(--border), 0 16px 40px rgb(30 50 90 / 0.18);
+  --glass-blur: blur(24px) saturate(160%);
+  /* Linse der Tab-Leiste (D-272): dunkle Symbole, Farbkanäle multipliziert. */
+  --selection-pill: rgb(37 106 191 / 0.14);
+  --lens-fill: rgb(255 255 255 / 0.2);
+  --lens-hairline: rgb(0 0 0 / 0.1);
+  --lens-specular: rgb(255 255 255 / 0.95);
+  --lens-specular-low: rgb(255 255 255 / 0.6);
+  --lens-shadow: rgb(0 0 0 / 0.16);
+  --lens-glow-core: rgb(255 255 255 / 0.55);
+  --lens-glow-floor: rgb(255 255 255 / 0);
+  --lens-edge-opacity: 0;
+  --lens-blend: multiply;
+  --lens-r: #00ffff;
+  --lens-g: #ff00ff;
+  --lens-b: #ffff00;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --bg: #0d1016;
-    --surface: #161a23;
-    --surface-2: #1f2430;
-    --fg: #eef0f4;
-    --fg-muted: #9ca5b5;
-    --border: #272d3a;
-    --border-input: #6f7889;
-    --accent: #3987e5;
-    --accent-hover: #5598e7;
+    --bg: #151b2b;
+    --bg-top: #212a3f;
+    --bg-bottom: #0d1016;
+    --glow-1: #256abf33;
+    --glow-2: #3987e529;
+    --glow-3: #1baf7a1a;
+    --surface: #ffffff0f;
+    --surface-2: #ffffff0d;
+    --panel: #1a2133eb;
+    --fg: #f5f7fb;
+    --fg-muted: #c3cad6;
+    --border: #ffffff24;
+    --border-input: #99a2b2;
+    --glass-edge: #ffffff2e;
+    --accent: #5da1ee;
+    --accent-hover: #77b0f1;
     --accent-fg: #0b0e14;
-    --accent-ink: #5598e7;
-    --accent-soft: #15263f;
-    --focus: #5598e7;
-    --success: #3dbe86;
-    --success-soft: #10302a;
-    --warning: #e0a943;
-    --warning-soft: #33290f;
-    --danger: #f26d6d;
-    --danger-soft: #3a1c1f;
-    --ink: #1a2030;
-    --ink-2: #242c40;
-    --on-ink: #f1f3f8;
-    --on-ink-muted: #aab3c5;
-    --data-1: #3987e5;
-    --data-2: #d95926;
-    --data-3: #199e70;
-    --data-4: #c98500;
-    --data-5: #d55181;
-    --data-6: #008300;
-    --data-7: #9085e9;
-    --data-8: #e66767;
-    --chart-grid: #272d3a;
-    --chart-axis: #9ca5b5;
-    --chart-point: #6b7383;
-    --meter-track: #15365f;
-    --chart-total: #c3cad6;
+    --accent-ink: #b1d1f8;
+    --accent-soft: #3987e51f;
+    --focus: #6aa7ee;
+    --success: #7fe0b3;
+    --success-soft: #3dbe8617;
+    --warning: #f0c46e;
+    --warning-soft: #e0a94317;
+    --danger: #ffb9b9;
+    --danger-soft: #f26d6d17;
+    --ink: #142a4f;
+    --ink-2: #1f4f8f;
+    --on-ink: #f5f7fb;
+    --on-ink-muted: #c9d4e6;
+    --data-1: #4b94ea;
+    --data-2: #ee7a48;
+    --data-3: #21b07e;
+    --data-4: #d69200;
+    --data-5: #e0679a;
+    --data-6: #41b34c;
+    --data-7: #9c92ee;
+    --data-8: #ee7777;
+    --chart-grid: #ffffff1f;
+    --chart-axis: #c3cad6;
+    --chart-point: #8f98a9;
+    --meter-track: #1a3157;
+    --chart-total: #c9d0db;
     --scrim: rgb(0 0 0 / 0.6);
     /* Vollbild-Anmeldung (D-270): immer dunkel, in allen Modi gleich. */
     --login-bg-1: #212a3f;
@@ -122,49 +156,74 @@
     --login-glass-line: rgb(255 255 255 / 0.14);
     --login-input: rgb(255 255 255 / 0.06);
     --login-input-line: rgb(255 255 255 / 0.3);
-    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
-    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
+    /* Glas: feine Lichtkante oben, Haarlinie, weicher Schatten (D-272). */
+    --shadow-card:
+      inset 0 1px 0 var(--glass-edge), 0 0 0 1px var(--border), 0 12px 32px rgb(0 0 0 / 0.28);
+    --shadow-float:
+      inset 0 1px 0 var(--glass-edge), 0 0 0 1px var(--border), 0 18px 44px rgb(0 0 0 / 0.45);
+    --glass-blur: blur(24px) saturate(160%);
+    /* Linse der Tab-Leiste (D-272): helle Symbole, Farbkanäle addiert. */
+    --selection-pill: rgb(0 0 0 / 0.35);
+    --lens-fill: rgb(255 255 255 / 0.025);
+    --lens-hairline: rgb(255 255 255 / 0.2);
+    --lens-specular: rgb(255 255 255 / 0.6);
+    --lens-specular-low: rgb(255 255 255 / 0.3);
+    --lens-shadow: rgb(0 0 0 / 0.35);
+    --lens-glow-core: rgb(255 255 255 / 0.07);
+    --lens-glow-floor: rgb(255 255 255 / 0.035);
+    --lens-edge-opacity: 0.45;
+    --lens-blend: screen;
+    --lens-r: #ff0000;
+    --lens-g: #00ff00;
+    --lens-b: #0000ff;
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #0d1016;
-  --surface: #161a23;
-  --surface-2: #1f2430;
-  --fg: #eef0f4;
-  --fg-muted: #9ca5b5;
-  --border: #272d3a;
-  --border-input: #6f7889;
-  --accent: #3987e5;
-  --accent-hover: #5598e7;
+  --bg: #151b2b;
+  --bg-top: #212a3f;
+  --bg-bottom: #0d1016;
+  --glow-1: #256abf33;
+  --glow-2: #3987e529;
+  --glow-3: #1baf7a1a;
+  --surface: #ffffff0f;
+  --surface-2: #ffffff0d;
+  --panel: #1a2133eb;
+  --fg: #f5f7fb;
+  --fg-muted: #c3cad6;
+  --border: #ffffff24;
+  --border-input: #99a2b2;
+  --glass-edge: #ffffff2e;
+  --accent: #5da1ee;
+  --accent-hover: #77b0f1;
   --accent-fg: #0b0e14;
-  --accent-ink: #5598e7;
-  --accent-soft: #15263f;
-  --focus: #5598e7;
-  --success: #3dbe86;
-  --success-soft: #10302a;
-  --warning: #e0a943;
-  --warning-soft: #33290f;
-  --danger: #f26d6d;
-  --danger-soft: #3a1c1f;
-  --ink: #1a2030;
-  --ink-2: #242c40;
-  --on-ink: #f1f3f8;
-  --on-ink-muted: #aab3c5;
-  --data-1: #3987e5;
-  --data-2: #d95926;
-  --data-3: #199e70;
-  --data-4: #c98500;
-  --data-5: #d55181;
-  --data-6: #008300;
-  --data-7: #9085e9;
-  --data-8: #e66767;
-  --chart-grid: #272d3a;
-  --chart-axis: #9ca5b5;
-  --chart-point: #6b7383;
-  --meter-track: #15365f;
-  --chart-total: #c3cad6;
+  --accent-ink: #b1d1f8;
+  --accent-soft: #3987e51f;
+  --focus: #6aa7ee;
+  --success: #7fe0b3;
+  --success-soft: #3dbe8617;
+  --warning: #f0c46e;
+  --warning-soft: #e0a94317;
+  --danger: #ffb9b9;
+  --danger-soft: #f26d6d17;
+  --ink: #142a4f;
+  --ink-2: #1f4f8f;
+  --on-ink: #f5f7fb;
+  --on-ink-muted: #c9d4e6;
+  --data-1: #4b94ea;
+  --data-2: #ee7a48;
+  --data-3: #21b07e;
+  --data-4: #d69200;
+  --data-5: #e0679a;
+  --data-6: #41b34c;
+  --data-7: #9c92ee;
+  --data-8: #ee7777;
+  --chart-grid: #ffffff1f;
+  --chart-axis: #c3cad6;
+  --chart-point: #8f98a9;
+  --meter-track: #1a3157;
+  --chart-total: #c9d0db;
   --scrim: rgb(0 0 0 / 0.6);
   /* Vollbild-Anmeldung (D-270): immer dunkel, in allen Modi gleich. */
   --login-bg-1: #212a3f;
@@ -183,6 +242,24 @@
   --login-glass-line: rgb(255 255 255 / 0.14);
   --login-input: rgb(255 255 255 / 0.06);
   --login-input-line: rgb(255 255 255 / 0.3);
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
-  --shadow-float: 0 8px 24px rgb(0 0 0 / 0.45), 0 2px 6px rgb(0 0 0 / 0.3);
+  /* Glas: feine Lichtkante oben, Haarlinie, weicher Schatten (D-272). */
+  --shadow-card:
+    inset 0 1px 0 var(--glass-edge), 0 0 0 1px var(--border), 0 12px 32px rgb(0 0 0 / 0.28);
+  --shadow-float:
+    inset 0 1px 0 var(--glass-edge), 0 0 0 1px var(--border), 0 18px 44px rgb(0 0 0 / 0.45);
+  --glass-blur: blur(24px) saturate(160%);
+  /* Linse der Tab-Leiste (D-272): helle Symbole, Farbkanäle addiert. */
+  --selection-pill: rgb(0 0 0 / 0.35);
+  --lens-fill: rgb(255 255 255 / 0.025);
+  --lens-hairline: rgb(255 255 255 / 0.2);
+  --lens-specular: rgb(255 255 255 / 0.6);
+  --lens-specular-low: rgb(255 255 255 / 0.3);
+  --lens-shadow: rgb(0 0 0 / 0.35);
+  --lens-glow-core: rgb(255 255 255 / 0.07);
+  --lens-glow-floor: rgb(255 255 255 / 0.035);
+  --lens-edge-opacity: 0.45;
+  --lens-blend: screen;
+  --lens-r: #ff0000;
+  --lens-g: #00ff00;
+  --lens-b: #0000ff;
 }

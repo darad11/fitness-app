@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { applyTheme, resolveTheme, THEME_STORAGE_KEY } from './theme';
 
 beforeEach(() => {
-  document.head.innerHTML = '<meta name="theme-color" content="#f3f4f7" />';
+  document.head.innerHTML = '<meta name="theme-color" content="#e8eef7" />';
   document.documentElement.setAttribute('data-theme', 'light');
   localStorage.clear();
 });
@@ -14,20 +14,20 @@ describe('Darstellung', () => {
   it('setzt Dunkel ausdrücklich, auch gegen die Systemeinstellung', () => {
     applyTheme('dark', false);
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-    expect(metaColor()).toBe('#0d1016');
+    expect(metaColor()).toBe('#151b2b');
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
   });
 
   it('setzt Hell ausdrücklich, auch wenn das System dunkel ist', () => {
     applyTheme('light', true);
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
-    expect(metaColor()).toBe('#f3f4f7');
+    expect(metaColor()).toBe('#e8eef7');
   });
 
   it('folgt bei „System" dem Gerät', () => {
     applyTheme('system', true);
     expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
-    expect(metaColor()).toBe('#0d1016');
+    expect(metaColor()).toBe('#151b2b');
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('system');
     expect(resolveTheme('system', false)).toBe('light');
   });

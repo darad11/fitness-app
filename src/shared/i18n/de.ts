@@ -295,6 +295,7 @@ export const de = {
     noTarget: 'Noch kein Tagesziel.',
     setTarget: 'Ziel festlegen',
     targets: 'Ziele',
+    shortcuts: 'Ziele, Lebensmittel, Rezepte und Vorlagen',
     myFoods: 'Meine Lebensmittel',
     emptySlot: 'Noch nichts eingetragen.',
     incomplete: (names: string) => `Unvollständig: ${names} fehlt bei mindestens einem Eintrag.`,

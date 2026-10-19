@@ -1,6 +1,7 @@
 import {
   Bookmark,
   BookmarkPlus,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   CookingPot,
@@ -36,7 +37,20 @@ import { SaveTemplateDialog } from './TemplateDialogs';
 import { dayDate, describeAmount, grams, kcal } from './format';
 
 /** Weitere Tageswerte neben den Makros. */
-const EXTRAS = ['sugar', 'salt', 'fiber', 'saturatedFat'] as const;
+/** Kachel für die Wege zu Zielen, Lebensmitteln, Rezepten und Vorlagen. */
+const TILE =
+  'flex min-h-[4.5rem] flex-col items-center justify-center gap-1.5 rounded-card bg-surface-2 px-3 py-3 text-center text-sm font-semibold text-fg shadow-[inset_0_0_0_1px_var(--border),inset_0_1px_0_var(--glass-edge)] transition-colors duration-120 hover:bg-surface';
+
+/**
+ * Weitere Nährwerte in den Spalten der Makros darunter: Salz unter Eiweiß, Zucker und Ballaststoffe
+ * unter Kohlenhydrate, gesättigte Fettsäuren unter Fett.
+ */
+const EXTRAS = [
+  { nutrient: 'salt', column: 'col-start-1' },
+  { nutrient: 'sugar', column: 'col-start-2' },
+  { nutrient: 'saturatedFat', column: 'col-start-3' },
+  { nutrient: 'fiber', column: 'col-start-2' },
+] as const;
 
 /** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
 export function NutritionPage() {
@@ -173,21 +187,31 @@ export function NutritionPage() {
                 );
               })}
             </dl>
-            <div role="group" aria-label={t.nutrition.extrasLabel}>
-              <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
-                {EXTRAS.map((nutrient) => (
-                  <div key={nutrient} className="flex justify-between gap-2">
-                    <dt className="text-on-ink-muted">{t.nutrition.extras[nutrient]}</dt>
-                    <dd className="font-semibold tabular-nums">
-                      {nutrient === 'salt'
-                        ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
-                        : grams(fmt, totals.sums[nutrient])}{' '}
-                      {t.nutrition.units.g}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+            {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
+            <details className="group mt-2">
+              <summary className="inline-flex min-h-11 cursor-pointer list-none items-center gap-1 text-sm text-on-ink-muted hover:text-on-ink [&::-webkit-details-marker]:hidden">
+                {t.nutrition.extrasLabel}
+                <ChevronDown
+                  aria-hidden="true"
+                  className="size-4 transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div role="group" aria-label={t.nutrition.extrasLabel}>
+                <dl className="mt-1 grid grid-flow-row-dense grid-cols-3 gap-x-3 gap-y-2 text-sm">
+                  {EXTRAS.map(({ nutrient, column }) => (
+                    <div key={nutrient} className={column}>
+                      <dt className="text-on-ink-muted">{t.nutrition.extras[nutrient]}</dt>
+                      <dd className="font-semibold tabular-nums">
+                        {nutrient === 'salt'
+                          ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
+                          : grams(fmt, totals.sums[nutrient])}{' '}
+                        {t.nutrition.units.g}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </details>
             {totals.incomplete.some((n) => n !== 'kcal') ? (
               <p className="mt-3 text-sm text-on-ink-muted">
                 {t.nutrition.incomplete(
@@ -202,6 +226,25 @@ export function NutritionPage() {
               <p className="mt-1 text-sm text-on-ink-muted">{t.nutrition.estimatedHint}</p>
             ) : null}
           </Card>
+
+          <nav aria-label={t.nutrition.shortcuts} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <Link to="/ernaehrung/ziele" className={TILE}>
+              <Target aria-hidden="true" className="size-6" />
+              {target ? t.nutrition.targets : t.nutrition.setTarget}
+            </Link>
+            <Link to="/ernaehrung/lebensmittel" className={TILE}>
+              <UtensilsCrossed aria-hidden="true" className="size-6" />
+              {t.nutrition.myFoods}
+            </Link>
+            <Link to="/ernaehrung/rezepte" className={TILE}>
+              <CookingPot aria-hidden="true" className="size-6" />
+              {t.nutrition.recipes.title}
+            </Link>
+            <Link to="/ernaehrung/vorlagen" className={TILE}>
+              <Bookmark aria-hidden="true" className="size-6" />
+              {t.nutrition.templates.title}
+            </Link>
+          </nav>
 
           {MEAL_SLOTS.map((slot) => {
             const items = (entries ?? []).filter((e) => e.slot === slot);
@@ -276,24 +319,6 @@ export function NutritionPage() {
             );
           })}
 
-          <div className="flex flex-wrap gap-2">
-            <ButtonLink to="/ernaehrung/ziele" variant="secondary">
-              <Target aria-hidden="true" className="size-5" />
-              {target ? t.nutrition.targets : t.nutrition.setTarget}
-            </ButtonLink>
-            <ButtonLink to="/ernaehrung/lebensmittel" variant="secondary">
-              <UtensilsCrossed aria-hidden="true" className="size-5" />
-              {t.nutrition.myFoods}
-            </ButtonLink>
-            <ButtonLink to="/ernaehrung/rezepte" variant="secondary">
-              <CookingPot aria-hidden="true" className="size-5" />
-              {t.nutrition.recipes.title}
-            </ButtonLink>
-            <ButtonLink to="/ernaehrung/vorlagen" variant="secondary">
-              <Bookmark aria-hidden="true" className="size-5" />
-              {t.nutrition.templates.title}
-            </ButtonLink>
-          </div>
           <p className="text-xs text-muted">{t.nutrition.sources}</p>
         </div>
       )}

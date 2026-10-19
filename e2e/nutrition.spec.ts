@@ -34,6 +34,9 @@ test('Ernährung: Ziel setzen, aus dem BLS protokollieren, nach Neuladen erhalte
   await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
   const lunch = page.getByRole('region', { name: 'Mittagessen' });
   await expect(lunch.getByText('200 g')).toBeVisible();
+  // Weitere Nährwerte sind dezent zugeklappt (D-272).
+  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toBeHidden();
+  await page.getByText('Weitere Nährwerte', { exact: true }).click();
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Zucker');
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Salz');
 

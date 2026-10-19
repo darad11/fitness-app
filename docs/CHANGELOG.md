@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.14 · 19.10.2026 · Rezepte (M7)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-267 Rezepte |
+| `requirements.md` | AK-NUT-10 |
+| `data-model.md` | Dexie v4 mit `recipes`, Felder `recipe` |
+| `feature-inventory.md` | RE-02, RE-12, RE-13 vorgezogen und „Implementiert“ |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Rezepte; Gerätetest Barcode-Scanner |
+
 ## Version 0.13 · 19.10.2026 · Barcode-Scanner mit Open Food Facts
 
 | Datei | Änderung |

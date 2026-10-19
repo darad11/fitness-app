@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Plus, Target, UtensilsCrossed } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CookingPot, Plus, Target, UtensilsCrossed } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -24,10 +24,10 @@ import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
 import { dayDate, describeAmount, grams, kcal } from './format';
 
-/** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
 /** Weitere Tageswerte neben den Makros. */
 const EXTRAS = ['sugar', 'salt', 'fiber', 'saturatedFat'] as const;
 
+/** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
 export function NutritionPage() {
   const fmt = useFormatters();
   const now = useToday();
@@ -240,6 +240,10 @@ export function NutritionPage() {
             <ButtonLink to="/ernaehrung/lebensmittel" variant="secondary">
               <UtensilsCrossed aria-hidden="true" className="size-5" />
               {t.nutrition.myFoods}
+            </ButtonLink>
+            <ButtonLink to="/ernaehrung/rezepte" variant="secondary">
+              <CookingPot aria-hidden="true" className="size-5" />
+              {t.nutrition.recipes.title}
             </ButtonLink>
           </div>
           <p className="text-xs text-muted">{t.nutrition.sources}</p>

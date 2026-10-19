@@ -3,7 +3,7 @@ import { logError, useDb } from '@/shared/db';
 import { buildFoodIndex, type FoodIndex } from '../calc/foodSearch';
 import { loadBls } from '../data/bls';
 import { useImportedCatalog } from '../data/catalogStore';
-import { toFoodItem, useFoods } from '../data/nutritionRepository';
+import { toFoodItem, toRecipeItem, useFoods, useRecipes } from '../data/nutritionRepository';
 import type { FoodItem } from '../model/foodItem';
 
 export interface FoodCatalog {
@@ -22,6 +22,7 @@ export interface FoodCatalog {
 export function useFoodCatalog(): FoodCatalog | undefined {
   const { db } = useDb();
   const foods = useFoods();
+  const recipes = useRecipes();
   const imported = useImportedCatalog();
   const [bls, setBls] = useState<readonly FoodItem[] | 'failed'>();
   useEffect(() => {
@@ -48,8 +49,9 @@ export function useFoodCatalog(): FoodCatalog | undefined {
     return { items, index: buildFoodIndex(items) };
   }, [bls, imported]);
   return useMemo(() => {
-    if (foods === undefined || generic === undefined) return undefined;
-    const own = foods.map(toFoodItem);
+    if (foods === undefined || recipes === undefined || generic === undefined) return undefined;
+    // Rezepte zählen zu den eigenen Einträgen (D-267): Favoriten, Archiv, zuerst in der Suche.
+    const own = [...recipes.map(toRecipeItem), ...foods.map(toFoodItem)];
     const ownIndex = buildFoodIndex(own.filter((f) => !f.archivedAt));
     return {
       index: { entries: [...ownIndex.entries, ...generic.index.entries] },
@@ -57,5 +59,5 @@ export function useFoodCatalog(): FoodCatalog | undefined {
       own,
       blsFailed: bls === 'failed',
     };
-  }, [foods, generic, bls]);
+  }, [foods, recipes, generic, bls]);
 }

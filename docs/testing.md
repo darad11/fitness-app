@@ -550,3 +550,23 @@ Scanner mit Kamera und Eingabe von Hand, lokale Suche nach Barcode, Open Food Fa
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 235,1 KB gzip (Grenze 250 KB); Scanner und WebAssembly (1,1 MB) liegen in eigenen, erst beim Öffnen geladenen Teilen und im Offline-Speicher |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 158 Tests bestanden. Neu `barcode.spec.ts` (Open Food Facts nachgebildet: vor der Einwilligung keine Anfrage, danach genau eine, eingetragen, nach Neuladen lokal gefunden, Erlaubnis zurückziehen; CSP ohne Konsolenfehler) und `barcode-camera.spec.ts` (künstliche Kamera: Scanner läuft, WebAssembly von der eigenen Adresse, keine fremden Anfragen) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Kamera und echter Scan auf dem iPhone stehen aus |
+
+### Gerätetest Barcode-Scanner · 19.10.2026, iPhone (Produktinhaber)
+
+| Nachweis | Ergebnis |
+|---|---|
+| Prüfspike S-3 (Kamera und Erkennung auf dem iPhone) | bestanden: „Scanner funktioniert“ |
+| Prüfspike S-1 (Open Food Facts von der App aus) | bestanden: Marke und Nährwerte wurden geliefert |
+
+### Rezepte (M7) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Rezepte mit Zutaten aus allen Quellen, Nährwerte je Portion und gesamt, portionsweise eintragen, Dexie v4 (D-267).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 74 Dateien, 581 Tests bestanden. Neu: `recipeService.test.ts` (Haferflocken 80 g und Banane 120 g: 373,2 kcal gesamt, 186,6 kcal je Portion und je 100 g, wie per Hand; fehlende Werte fehlen in der Summe; speichern, ändern, archivieren, löschen, wiederherstellen; Prüfungen; Eintrag als `recipe` mit Portion 100 g und eingefrorenen Werten), Migrationstest v3 → v4, ein Fall in `nutrition-ui.test.tsx` (Rezept anlegen mit zwei Zutaten, 187 kcal je Portion, in der Suche mit Etikett „Rezept“ eintragen); angepasst: Schema-, Snapshot- und Exporttests auf v4 |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 87,45 %, Zweige 79,17 %, Funktionen 84,85 %, Zeilen 88,72 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 235,7 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 168 Tests bestanden. Neu in `nutrition.spec.ts`: Rezept anlegen, nach Neuladen eintragen; `/ernaehrung/rezepte` und `/ernaehrung/rezepte/neu` in der Netz- und axe-Prüfung (Hell und Dunkel) ohne Verstöße |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

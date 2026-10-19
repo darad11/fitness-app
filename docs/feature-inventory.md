@@ -14,6 +14,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Version 0.8 (Lebensmitteldaten importieren, 19.10.2026): NU-25 zusätzlich mit AK-NUT-07 (lokaler Import der ÖNWT-Daten aus der BLS-Recherche, Herkunft in der Suche, D-263). NU-08 bleibt teilweise, bis die Online-Suche (M6) folgt.
 - Version 0.9 (Nährwerte anzeigen, 19.10.2026): NU-16 vorgezogen und „Implementiert“ (AK-NUT-08, D-264).
 - Version 0.10 (Barcode-Scanner, 19.10.2026): NU-07 und NU-24 vorgezogen und „Implementiert“ (AK-NUT-09, D-266); Gerätetest auf dem iPhone steht aus.
+- Version 0.11 (Rezepte, 19.10.2026): RE-02, RE-12 und RE-13 vorgezogen und „Implementiert“ (AK-NUT-10, D-267); RE-01 (Katalog mit Filtern) bleibt später.
 - Version 0.6 (Notizen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-19 (Notizen zu Übung und Einheit im Player, im Verlauf und beim nächsten Mal; D-260).
 - Version 0.6 (Eigene Übungen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-13 (eigene Übungen anlegen, bearbeiten, archivieren), TP-07 (Übungsdetail mit Angaben, persönlicher Notiz, Standardpause, Gewichtsschritt, Videolink und letzten Einheiten; D-258). TP-26 (Programmdatei) entfällt für R1 und wird über die Synchronisierung in R3 gelöst (D-259).
 - Version 0.6 (Eigene Programme, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-01, TP-02, TP-03, TP-04, TP-08, TP-09, TP-10, TP-12, TP-14, TP-15, TP-16, TP-22, TP-23, TP-24, TP-25 (D-257). TP-13 (eigene Übungen) und TP-26 (Programmdatei) folgen mit AP 2.5 und AP 2.8; ON-14 bleibt bis zum Programmwechsel-Dialog.
@@ -58,16 +59,16 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 49 | 31 | 8 | 88 |
-| Original nicht verifiziert (ON) | 11 | 15 | 2 | 28 |
+| Original verifiziert (OV) | 50 | 30 | 8 | 88 |
+| Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
 | Eigene Verbesserung (EV) | 42 | 7 | 0 | 49 |
-| Summe | 102 | 53 | 10 | 165 |
+| Summe | 105 | 50 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 102 |
-| R2 | 24 |
+| R1 | 105 |
+| R2 | 21 |
 | R3 | 3 |
 | R4 | 14 |
 | R5 | 5 |
@@ -81,9 +82,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 79 |
+| Implementiert | 82 |
 | Noch zu recherchieren | 1 |
-| Spezifiziert | 23 |
+| Spezifiziert | 20 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -221,7 +222,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | RE-01 | Rezeptkatalog mit Filtern | Nach Mahlzeit, Küche, Schwierigkeit | AS 3.5.0 | V | OV | H | RE-02 | M | P2 | Später | R2 · M7 | Anpassen: eigene Rezepte | Spezifiziert | Filter nach Mahlzeit, Tags, Dauer, kcal pro Portion; Volltextsuche |
-| RE-02 | Rezept mit Zutaten, Schritten, Nährwerten pro Portion | Rezepte und Anleitungen vorhanden | AS; REV | V | OV | H | NU-10 | M | P1 | Später | R2 · M7 | Übernehmen | Spezifiziert | Nährwerte aus Zutaten berechnet; Portionen; Schritte |
+| RE-02 | Rezept mit Zutaten, Schritten, Nährwerten pro Portion | Rezepte und Anleitungen vorhanden | AS; REV | V | OV | H | NU-10 | M | P1 | MVP | R1 · M7 | Übernehmen, vorgezogen (D-267) | Implementiert | AK-NUT-10 |
 | RE-03 | Wochenmenü erstellen, manuell oder per Vorschlag | Generiert um das Kalorienziel | AS 3.5.0 | V | OV | M | RE-01; NU-01 | L | P2 | Später | R2 · M8 | Anpassen: manuelle Planung zuerst; Vorschlag aus eigenem Katalog nachrangig | Spezifiziert | Woche × Slots; Tagessummen sichtbar |
 | RE-04 | Rezepte im Plan tauschen | „swap recipes" | AS 3.5.0 | V | OV | H | RE-03 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Tausch aktualisiert Summen und Einkaufsliste |
 | RE-05 | Kochtage und Reste | „pick your cooking days" | AS 3.5.0 | V | OV | M | RE-03 | M | P3 | Später | Backlog | Später | Analysiert | Kochtage markierbar; Reste auf Folgetage verteilbar |
@@ -231,8 +232,8 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | RE-09 | Einkaufsliste nach Kategorien | „easier to read and shop from" | AS 3.5.1 | V | OV | H | RE-08 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Gruppierung nach Lebensmittelkategorie |
 | RE-10 | Einkaufsliste bearbeiten, abhaken, Vorrat | Nicht belegt | – | P | ON | H | RE-08 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Eigene Einträge; Abhaken gespeichert; Vorrat ausblendbar |
 | RE-11 | Zutatenmengen zusammenführen | Plausibel | – | P | ON | H | RE-08 | M | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Gleiche Zutat und Einheit summiert; Stück getrennt von Gramm |
-| RE-12 | Eigene Rezepte anlegen und bearbeiten | Nicht belegt | – | P | ON | H | RE-02 | M | P1 | Später | R2 · M7 | Anpassen: Snapshots statt Versionsketten (D-209); Konfliktkopie bei Sync (D-208) | Spezifiziert | Protokolle behalten ihren Snapshot |
-| RE-13 | Portionsskalierung | Nicht belegt | – | P | ON | H | RE-02 | S | P1 | Später | R2 · M7 | Übernehmen | Spezifiziert | Linear; Tests mit 1, 2 und 3,5 Portionen |
+| RE-12 | Eigene Rezepte anlegen und bearbeiten | Nicht belegt | – | P | ON | H | RE-02 | M | P1 | MVP | R1 · M7 | Anpassen: Snapshots statt Versionsketten (D-209); Konfliktkopie bei Sync (D-208), vorgezogen (D-267) | Implementiert | AK-NUT-10 |
+| RE-13 | Portionsskalierung | Nicht belegt | – | P | ON | H | RE-02 | S | P1 | MVP | R1 · M7 | Übernehmen, vorgezogen (D-267): Portionen ganzzahlig, eingetragen wird die Anzahl Portionen | Implementiert | AK-NUT-10 |
 | RE-14 | Planung nach Ernährungspräferenzen | Vorschläge respektieren Präferenzen | HC-G | V | OV | M | ON-08 | S | P3 | Später | Backlog | Später | Analysiert | Ausschlüsse wirken auf Vorschläge |
 | RE-15 | Rezept-Import aus URL oder Text | Nicht belegt | – | E | EV | M | RE-12 | L | P3 | Später | R5 | Später | Analysiert | Später |
 

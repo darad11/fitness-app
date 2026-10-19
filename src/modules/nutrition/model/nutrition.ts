@@ -84,7 +84,8 @@ export type FoodData = DocData<Food>;
 export const MEAL_SLOTS = ['breakfast', 'lunch', 'dinner', 'snacks'] as const;
 export type MealSlot = (typeof MEAL_SLOTS)[number];
 
-export const LOG_KINDS = ['food', 'quick'] as const;
+/** 'recipe' seit M7 (D-267): Eintrag aus einem Rezept, Nährwerte wie bei Lebensmitteln eingefroren. */
+export const LOG_KINDS = ['food', 'quick', 'recipe'] as const;
 
 /** Protokolleintrag mit eingefrorenen Werten (D-209): spätere Änderungen am Lebensmittel wirken nicht zurück. */
 export const foodLogEntrySchema = defineDocSchema('food_log_entry', {

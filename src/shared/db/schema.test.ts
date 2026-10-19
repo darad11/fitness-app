@@ -24,10 +24,10 @@ const validRoot = {
   deviceId: 'a1b2c3d4',
 };
 
-describe('Dexie-Schema v3 (data-model.md Abschnitt 6)', () => {
-  it('enthält genau die Tabellen des MVP plus Tagesaufgaben und Ernährung', () => {
-    expect(DB_VERSION).toBe(3);
-    expect(rt.db.verno).toBe(3);
+describe('Dexie-Schema v4 (data-model.md Abschnitt 6)', () => {
+  it('enthält genau die Tabellen des MVP plus Tagesaufgaben, Ernährung und Rezepte', () => {
+    expect(DB_VERSION).toBe(4);
+    expect(rt.db.verno).toBe(4);
     expect(rt.db.tables.map((table) => table.name).sort()).toEqual(
       Object.keys(STORES_CURRENT).sort(),
     );
@@ -37,6 +37,7 @@ describe('Dexie-Schema v3 (data-model.md Abschnitt 6)', () => {
       'foods',
       'foodLog',
       'nutritionTargets',
+      'recipes',
     ]);
   });
 
@@ -60,6 +61,7 @@ describe('Dexie-Schema v3 (data-model.md Abschnitt 6)', () => {
     expect(indexes('foods')).toEqual(expect.arrayContaining(['nameNorm', 'barcode', 'archivedAt']));
     expect(indexes('foodLog')).toEqual(expect.arrayContaining(['dayKey', 'foodId']));
     expect(indexes('nutritionTargets')).toEqual(expect.arrayContaining(['effectiveFrom']));
+    expect(indexes('recipes')).toEqual(expect.arrayContaining(['nameNorm', 'archivedAt']));
     expect(rt.db.errorLog.schema.primKey.auto).toBe(true);
   });
 

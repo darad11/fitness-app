@@ -71,7 +71,7 @@ describe('App-Shell', () => {
       const labels = within(nav)
         .getAllByRole('link')
         .map((link) => link.textContent);
-      expect(labels).toEqual(['Heute', 'Training', 'Fortschritt', 'Mehr']);
+      expect(labels).toEqual(['Heute', 'Training', 'Ernährung', 'Fortschritt', 'Mehr']);
     }
   });
 

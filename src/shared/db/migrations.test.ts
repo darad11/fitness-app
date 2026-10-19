@@ -1,13 +1,14 @@
 /**
  * Migrationstests (AK-DAT-07, data-model.md Abschnitt 13): Für jede Schemaversion liegt eine
  * Datenbank der Vorversion als Fixture vor; das Öffnen mit der aktuellen Version muss alle
- * Dokumente erhalten. v1 → v2 (Schritt F) fügt die Tabellen `habits` und `habitLogs` hinzu;
- * vor dem Upgrade entsteht ein Snapshot (AK-DAT-06).
+ * Dokumente erhalten. v1 → v2 (Schritt F) fügt die Tabellen `habits` und `habitLogs` hinzu,
+ * v2 → v3 (Schritt G) `foods`, `foodLog` und `nutritionTargets`; vor dem Upgrade entsteht ein
+ * Snapshot (AK-DAT-06).
  */
 import Dexie from 'dexie';
 import { afterEach, describe, expect, it } from 'vitest';
 import { seedLegacyDatabase } from '../testing/legacyDb';
-import { AppDb, DB_VERSION, STORES_V1 } from './schema';
+import { AppDb, DB_VERSION, STORES_V1, STORES_V2 } from './schema';
 import { listSnapshots, snapshotBeforeUpgradeIfNeeded } from './snapshots';
 
 const DB = 'fitness-migration-test';
@@ -46,7 +47,42 @@ afterEach(async () => {
 });
 
 describe('Migration auf Schemaversion ' + String(DB_VERSION), () => {
-  it('sichert eine v1-Datenbank und öffnet sie als v2 verlustfrei', async () => {
+  it('sichert eine v2-Datenbank und öffnet sie als v3 verlustfrei', async () => {
+    const habit = {
+      id: '7c0d2e1c-8f6d-4f3e-9a8e-1f2a3b4c5d6e',
+      type: 'habit',
+      schemaVersion: 1,
+      createdAt: '2026-10-18T10:00:00.000Z',
+      hlc: '00000000000000000000:00000000:a1b2c3d4',
+      deletedAt: null,
+      name: 'Wasser trinken',
+      position: 0,
+      fromDayKey: '2026-10-18',
+    };
+    await seedLegacyDatabase(DB, 2, STORES_V2, { ...V1_ROWS, habits: [habit] });
+    expect(await snapshotBeforeUpgradeIfNeeded(DB, DB_VERSION, { snapshotDbName: SNAPSHOTS })).toBe(
+      'created',
+    );
+    expect((await listSnapshots({ snapshotDbName: SNAPSHOTS }))[0]).toMatchObject({
+      reason: 'schema-upgrade',
+      sourceVersion: 2,
+      counts: { sessions: 1, habits: 1, meta: 1 },
+    });
+    const db = new AppDb(DB);
+    await db.open();
+    try {
+      expect(db.verno).toBe(DB_VERSION);
+      expect(await db.foods.count()).toBe(0);
+      expect(await db.foodLog.count()).toBe(0);
+      expect(await db.nutritionTargets.count()).toBe(0);
+      expect((await db.habits.get(habit.id))?.name).toBe('Wasser trinken');
+      expect(await db.sessions.count()).toBe(1);
+    } finally {
+      db.close();
+    }
+  });
+
+  it('sichert eine v1-Datenbank und öffnet sie als aktuelle Version verlustfrei', async () => {
     await seedLegacyDatabase(DB, 1, STORES_V1, V1_ROWS);
     expect(await snapshotBeforeUpgradeIfNeeded(DB, DB_VERSION, { snapshotDbName: SNAPSHOTS })).toBe(
       'created',

@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.7 (Ernährung Grundausbau, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): NU-01 (Zielvorschlag), NU-02, NU-03 (vier feste Mahlzeiten), NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21 (BLS 4.0 mit österreichischen Suchbegriffen), NU-22, NU-25 (D-261, D-262). Teilweise und deshalb noch nicht umgestellt: NU-08 (nur lokale Suche), NU-11 (Favoriten und Zuletzt, ohne Mahlzeitvorlagen), NU-12 (jeder Tag aufrufbar, ohne Wochendurchschnitt), NU-16, NU-19, NU-23 (g, ml und Portionen, ohne Umrechnung ml in g). Barcode und Open Food Facts (NU-07, NU-24) folgen als eigenes Paket.
 - Version 0.6 (Notizen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-19 (Notizen zu Übung und Einheit im Player, im Verlauf und beim nächsten Mal; D-260).
 - Version 0.6 (Eigene Übungen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-13 (eigene Übungen anlegen, bearbeiten, archivieren), TP-07 (Übungsdetail mit Angaben, persönlicher Notiz, Standardpause, Gewichtsschritt, Videolink und letzten Einheiten; D-258). TP-26 (Programmdatei) entfällt für R1 und wird über die Synchronisierung in R3 gelöst (D-259).
 - Version 0.6 (Eigene Programme, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-01, TP-02, TP-03, TP-04, TP-08, TP-09, TP-10, TP-12, TP-14, TP-15, TP-16, TP-22, TP-23, TP-24, TP-25 (D-257). TP-13 (eigene Übungen) und TP-26 (Programmdatei) folgen mit AP 2.5 und AP 2.8; ON-14 bleibt bis zum Programmwechsel-Dialog.
@@ -54,16 +55,16 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 41 | 39 | 8 | 88 |
-| Original nicht verifiziert (ON) | 10 | 16 | 2 | 28 |
-| Eigene Verbesserung (EV) | 36 | 13 | 0 | 49 |
-| Summe | 87 | 68 | 10 | 165 |
+| Original verifiziert (OV) | 47 | 33 | 8 | 88 |
+| Original nicht verifiziert (ON) | 11 | 15 | 2 | 28 |
+| Eigene Verbesserung (EV) | 41 | 8 | 0 | 49 |
+| Summe | 99 | 56 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 87 |
-| R2 | 39 |
+| R1 | 99 |
+| R2 | 27 |
 | R3 | 3 |
 | R4 | 14 |
 | R5 | 5 |
@@ -77,9 +78,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 64 |
-| Noch zu recherchieren | 2 |
-| Spezifiziert | 37 |
+| Implementiert | 76 |
+| Noch zu recherchieren | 1 |
+| Spezifiziert | 26 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -186,31 +187,31 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| NU-01 | Kalorien- und Makroziele berechnen | Aus Präferenzen, Alter, Gewicht, Ziel; Formel unbekannt | HC-G; GP; HC-Z | V | OV | H | ON-09 | M | P1 | Später | R2 · M5 | Anpassen: dokumentierte Formel, überschreibbar | Spezifiziert | Mifflin-St Jeor mit Aktivitätsfaktor; Protein in g/kg einstellbar; Ziele datiert |
-| NU-02 | Tagesübersicht mit Zielfortschritt | Kalorien-Widget, „clearer daily targets" | AS 3.1.5; AS 3.5.0 | V | OV | H | NU-05 | M | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Summen aus Einträgen; Restwerte; Tageswechsel nach lokaler Zeit |
-| NU-03 | Mahlzeiten-Slots | Frühstück, Mittag, Abend (laut Rezensionen) | REV | V | OV | H | – | S | P1 | Später | R2 · M5 | Anpassen: konfigurierbar | Spezifiziert | Vier Standardslots; umbenennbar; Reihenfolge änderbar |
+| NU-01 | Kalorien- und Makroziele berechnen | Aus Präferenzen, Alter, Gewicht, Ziel; Formel unbekannt | HC-G; GP; HC-Z | V | OV | H | ON-09 | M | P1 | MVP | R1 · Schritt G | Anpassen: dokumentierte Formel, überschreibbar, vorgezogen (D-261) | Implementiert | AK-NUT-05 |
+| NU-02 | Tagesübersicht mit Zielfortschritt | Kalorien-Widget, „clearer daily targets" | AS 3.1.5; AS 3.5.0 | V | OV | H | NU-05 | M | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
+| NU-03 | Mahlzeiten-Slots | Frühstück, Mittag, Abend (laut Rezensionen) | REV | V | OV | H | – | S | P1 | MVP | R1 · Schritt G | Anpassen: konfigurierbar, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
 | NU-04 | Geplante Mahlzeit protokollieren und wechseln | „switch meals, log them" | SD 05:54; HC-G | V | OV | M | RE-03 | M | P2 | Später | R2 · M8 | Anpassen: aus dem eigenen Wochenmenü | Analysiert | Ein Tipp protokolliert die geplante Mahlzeit |
-| NU-05 | Lebensmittel oder Mahlzeit protokollieren, mit Snapshot | Portionsanteil, z. B. 0,75 | HC-G | V | OV | H | NU-08 | M | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Menge in g/ml oder Portionen; Nährwerte beim Protokollieren eingefroren |
+| NU-05 | Lebensmittel oder Mahlzeit protokollieren, mit Snapshot | Portionsanteil, z. B. 0,75 | HC-G | V | OV | H | NU-08 | M | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
 | NU-06 | Hinzufügen als selbstgemacht, Restaurant oder per Barcode | Drei Wege über „+" | HC-G | V | OV | H | NU-07; NU-10 | M | P1 | Später | R2 · M5/M6 | Übernehmen | Spezifiziert | Jeder Weg erzeugt ein validiertes Lebensmittel mit Quelle |
 | NU-07 | Barcode-Scanning | Vorhanden, 2026 verbessert | REV; AS 3.5.0 | V | OV | H | Kamera; barcode-detector; Open Food Facts | L | P2 | Später | R2 · M6 | Anpassen: Polyfill (D-305); Open Food Facts erst nach Prüfspike S-1 (D-302) | Spezifiziert | Kamera-Scan im Browser; Fallback manuell; Treffer lokal gespeichert |
 | NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | Später | R2 · M5/M6 | Anpassen: lokal zuerst, online ergänzend | Spezifiziert | Offline-Suche über eigene, generische und gespeicherte Einträge |
-| NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | Später | R2 · M5 | Verbesserung | Spezifiziert | Menge = Anzahl × Portionsgröße; beide editierbar |
-| NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Werte pro 100 g/ml; Pflicht kcal und Makros; Plausibilitätsprüfung |
+| NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
+| NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-03 |
 | NU-11 | Favoriten, zuletzt verwendet, Mahlzeitvorlagen | Von Nutzern gewünscht, nicht belegt | REV | VF | EV | H | NU-05 | M | P1 | Später | R2 · M5 | Verbesserung | Spezifiziert | „Zuletzt" automatisch; Favoriten markierbar; Vorlagen aus mehreren Einträgen |
 | NU-12 | Ernährungsverlauf | Historie wird gespeichert | HC-G | V | OV | H | NU-02 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Jeder Tag aufrufbar und editierbar; Wochendurchschnitt |
 | NU-13 | Wassertracking | Nur als tägliche Challenge-Aufgabe | TC | V | OV | M | – | S | P3 | Später | R4 · M13 | Später, mit den Gewohnheiten | Analysiert | Schnelleingabe in ml; Tagesziel |
 | NU-14 | Fotoerkennung von Mahlzeiten | Nur in einer Drittquelle genannt | MWM | N | ON | N | KI-Dienst | XL | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |
-| NU-15 | Neuberechnung bei Mengenänderung | Seit 3.1.7 | AS 3.1.7 | V | OV | H | NU-05 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | Mengenänderung aktualisiert Eintrag und Tagessumme sofort |
+| NU-15 | Neuberechnung bei Mengenänderung | Seit 3.1.7 | AS 3.1.7 | V | OV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
 | NU-16 | Nährwert-Aufschlüsselung je Lebensmittel | Protein, Fett, Kohlenhydrate | REV | V | OV | M | NU-08 | S | P1 | Später | R2 · M5 | Übernehmen | Spezifiziert | kcal, Makros, optional Ballaststoffe, Zucker, Salz |
-| NU-17 | Ziele manuell überschreiben | Nicht belegt | – | P | ON | M | NU-01 | S | P2 | Später | R2 · M5 | Übernehmen | Spezifiziert | Manuelle Ziele; Ziele je Wochentag erst später |
+| NU-17 | Ziele manuell überschreiben | Nicht belegt | – | P | ON | M | NU-01 | S | P2 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-05 |
 | NU-18 | Roh- und Gargewicht | Nicht belegt | – | P | ON | M | NU-21 | S | P2 | Später | R2 · M5 | Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor | Analysiert | Faktor-Werte als Schätzung markiert |
 | NU-19 | Quelle und Qualitätsstatus je Lebensmittel | Nicht belegt | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme |
-| NU-20 | Schnelleintrag nur mit kcal und Makros | Nicht belegt | – | E | EV | M | NU-05 | S | P2 | Später | R2 · M5 | Verbesserung | Spezifiziert | Als Schätzung markiert |
-| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | BLS 4.0 (D-301) | M | P1 | Später | R2 · M5 | Verbesserung (D-110, D-301) | Noch zu recherchieren | Gebündelt und offline; Quelle sichtbar; Prüfspike S-2 bestanden |
-| NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Fehlende Felder markiert; Summen tragen „unvollständig" |
+| NU-20 | Schnelleintrag nur mit kcal und Makros | Nicht belegt | – | E | EV | M | NU-05 | S | P2 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-04 |
+| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | BLS 4.0 (D-301) | M | P1 | MVP | R1 · Schritt G | Verbesserung (D-110, D-301), vorgezogen (D-261) | Implementiert | AK-NUT-01, AK-NUT-06 |
+| NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | MVP | R1 · Schritt G | Verbesserung (D-110), vorgezogen (D-261) | Implementiert | AK-NUT-04 |
 | NU-23 | Einheiten und Haushaltsmaße mit Umrechnung | – | – | E | EV | H | NU-09 | M | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert |
 | NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | Später | R2 · M6 | Verbesserung | Spezifiziert | Ohne Netz: Hinweis, lokale Ergebnisse, Barcode für später merken |
-| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | Später | R2 · M5/M6 | Verbesserung | Spezifiziert | Namensnennung BLS (CC BY 4.0) und Open Food Facts (ODbL) |
+| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-06 |
 
 ## F. Rezepte und Mahlzeitenplanung (RE)
 

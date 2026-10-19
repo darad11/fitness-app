@@ -248,6 +248,17 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-HAB-01 | Tagesaufgaben lassen sich frei anlegen (Name bis 80 Zeichen), umbenennen, per „nach oben“ und „nach unten“ ordnen und ab heute beenden (10 s rückgängig, später wieder aufnehmbar); jede Aufgabe gilt ab dem Tag des Anlegens bis vor den Tag des Beendens; je Aufgabe und Tag gibt es genau einen Eintrag „erledigt“ | AH-03, AH-04 | U, K, E | Schritt F |
 | AK-HAB-02 | Die Serie zählt aufeinanderfolgende Tage, an denen alle geltenden Aufgaben erledigt waren, bis heute oder bis gestern, solange heute noch offen ist; Tage ohne geltende Aufgabe unterbrechen sie; „Heute“ zeigt Aufgaben, Serie und Fortschritt des Tages | AH-05 | U, K, E | Schritt F |
 
+### 6.12a Ernährung, Grundausbau (AK-NUT)
+
+| AK | Kriterium | Matrix | Nachweis | M |
+|---|---|---|---|---|
+| AK-NUT-01 | Ein Tag lässt sich in vier Mahlzeiten (Frühstück, Mittagessen, Abendessen, Snacks) mit Lebensmitteln aus dem BLS und eigenen Lebensmitteln protokollieren; die Tagessumme stimmt mit einer Handrechnung überein; Einträge behalten ihre Werte, auch wenn das Lebensmittel später geändert wird; jeder Tag ist über Vor und Zurück aufrufbar | NU-02, NU-03, NU-05, NU-21 | U, K, E | Schritt G |
+| AK-NUT-02 | Die Menge wird in g bzw. ml oder als Anzahl einer Portion erfasst; eine Mengenänderung rechnet den Eintrag neu; ein Eintrag lässt sich in eine andere Mahlzeit verschieben und mit 10 s „Rückgängig“ löschen | NU-09, NU-15 | U, K | Schritt G |
+| AK-NUT-03 | Eigene Lebensmittel mit Name, optional Marke, Basis g oder ml, Pflichtwerten Energie, Eiweiß, Kohlenhydrate und Fett je 100, optionalen weiteren Werten und Portionen; bei Abweichung der Energie von 4/4/9 erscheint ein Hinweis; Favorit und Archiv | NU-10 | U, K | Schritt G |
+| AK-NUT-04 | Ein Schnelleintrag nur mit Energie und optional Makros ist möglich und als Schätzung gekennzeichnet; fehlen Werte bei einem Eintrag, weist die Tagesübersicht darauf hin | NU-20, NU-22 | U, K | Schritt G |
+| AK-NUT-05 | Das Tagesziel lässt sich selbst eintragen oder aus einem Vorschlag (Mifflin-St Jeor, Aktivität, Richtung) übernehmen; Ziele sind datiert, eine Änderung gilt ab heute; die Tagesübersicht zeigt Ziel, Rest und Makros | NU-01, NU-17 | U, K, E | Schritt G |
+| AK-NUT-06 | Die Suche findet Lebensmittel auch über österreichische Bezeichnungen (z. B. Topfen, Erdäpfel, Paradeiser) und funktioniert ohne Netz; der Quellenhinweis zum BLS ist sichtbar | NU-21, NU-25 | U, K, E | Schritt G |
+
 ### 6.13 Gerätetests (AK-DEV)
 
 | AK | Kriterium | Matrix | Nachweis | M |

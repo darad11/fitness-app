@@ -24,16 +24,19 @@ const validRoot = {
   deviceId: 'a1b2c3d4',
 };
 
-describe('Dexie-Schema v2 (data-model.md Abschnitt 6)', () => {
-  it('enthält genau die Tabellen des MVP plus Tagesaufgaben', () => {
-    expect(DB_VERSION).toBe(2);
-    expect(rt.db.verno).toBe(2);
+describe('Dexie-Schema v3 (data-model.md Abschnitt 6)', () => {
+  it('enthält genau die Tabellen des MVP plus Tagesaufgaben und Ernährung', () => {
+    expect(DB_VERSION).toBe(3);
+    expect(rt.db.verno).toBe(3);
     expect(rt.db.tables.map((table) => table.name).sort()).toEqual(
       Object.keys(STORES_CURRENT).sort(),
     );
     expect(Object.keys(STORES_CURRENT).filter((name) => !(name in STORES_V1))).toEqual([
       'habits',
       'habitLogs',
+      'foods',
+      'foodLog',
+      'nutritionTargets',
     ]);
   });
 
@@ -54,6 +57,9 @@ describe('Dexie-Schema v2 (data-model.md Abschnitt 6)', () => {
       expect.arrayContaining(['[exerciseId+completedAt]', 'sessionId']),
     );
     expect(indexes('habitLogs')).toEqual(expect.arrayContaining(['habitId', 'dayKey']));
+    expect(indexes('foods')).toEqual(expect.arrayContaining(['nameNorm', 'barcode', 'archivedAt']));
+    expect(indexes('foodLog')).toEqual(expect.arrayContaining(['dayKey', 'foodId']));
+    expect(indexes('nutritionTargets')).toEqual(expect.arrayContaining(['effectiveFrom']));
     expect(rt.db.errorLog.schema.primKey.auto).toBe(true);
   });
 

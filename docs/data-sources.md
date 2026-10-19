@@ -1,6 +1,6 @@
 # Externe Datenquellen: Prüfung und Entscheidung
 
-Stand: 18.10.2026 · Version 0.2 (neu in Phase 2) · Bezug: D-110, D-301 bis D-305
+Stand: 19.10.2026 · Version 0.3 · Bezug: D-110, D-261, D-301 bis D-306
 
 ## 1. Zweck und Prüfmethode
 
@@ -19,10 +19,12 @@ Der Produktinhaber verlangt, API-Limits, Lizenzbedingungen, Datenschutz und Offl
 
 | Quelle | Zweck | Lizenz | Zugriff und Limits | Datenschutz | Offline | Bewertung | Status |
 |---|---|---|---|---|---|---|---|
-| Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut | Generische Lebensmittel mit deutschen Namen, rund 7.140 Lebensmittel, 138 Nährstoffe | CC BY 4.0, Namensnennung des MRI als Herausgeber; seit Dezember 2025 kostenfrei | Download (DOI 10.25826/Data20251217-134202-0); keine Laufzeitabfragen | Keine Datenübertragung zur Laufzeit | Vollständig, weil gebündelt | Sehr gut geeignet | Vorgesehen (D-301), Prüfspike S-2 |
+| Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut | Generische Lebensmittel mit deutschen Namen, rund 7.140 Lebensmittel, 138 Nährstoffe | CC BY 4.0, Namensnennung des MRI als Herausgeber; seit Dezember 2025 kostenfrei | Download (DOI 10.25826/Data20251217-134202-0); keine Laufzeitabfragen | Keine Datenübertragung zur Laufzeit | Vollständig, weil gebündelt | Sehr gut geeignet | Umgesetzt (D-261): Datei vom Produktinhaber, Prüfspike S-2 bestanden |
 | Schweizer Nährwertdatenbank 7.1, BLV | Generische Lebensmittel, 1.246 Einträge, Deutsch, Französisch, Italienisch, Englisch | Freie Nutzung, auch kommerziell, mit Pflicht zur Quellenangabe; keine benannte Standardlizenz gefunden | Excel-Download und API | Keine bei gebündelter Nutzung | Vollständig, weil gebündelt | Gut; Alternative, falls BLS ausscheidet | Reserve |
-| Österreichische und deutschsprachige Quellen (Prüfung zu Beginn von Schritt G, D-306) | Markenprodukte aus österreichischen Supermärkten (Billa, Spar, Hofer, Lidl, Penny, Eigenmarken); öffentliche österreichische Nährwertdaten; Datenbanken bestehender österreichischer Ernährungs-Apps | Je Quelle zu prüfen; Datenbanken anderer Apps nur mit ausdrücklicher Erlaubnis des Anbieters | Je Quelle zu prüfen | Nur nach Einwilligung, nur Barcode oder Suchbegriff | Je Quelle | Vorgabe des Produktinhabers: Österreich zuerst, dann der deutschsprachige Raum | Offen (Q-19) |
-| Open Food Facts | Markenprodukte, Barcode-Suche | Datenbank ODbL; Einzelinhalte Database Contents License; Bilder CC BY-SA, teils mit Rechten Dritter | Laut offizieller Doku (Stand Okt. 2026): 15 Produktabfragen und 10 Suchanfragen pro Minute und IP; Überschreitung führt zu Fehlern. Eigener User-Agent im Format `AppName/Version (Kontakt)` erbeten, Registrierung der App über ein Formular erbeten | Barcode bzw. Suchbegriff und IP-Adresse gehen an Open Food Facts | Nur zwischengespeicherte Produkte | Gut für Barcodes, eingeschränkt für Suche | Vorgesehen, nicht verbindlich (D-302), Prüfspike S-1 |
+| Österreichische Nährwerttabelle (ÖNWT, nut.s, Universität Wien) | Österreichische Lebensmittel und Markenprodukte, über 10.000 Datensätze | Kommerziell; Daten nur mit Lizenz und Wartungsvertrag, Auslieferung als Installationsprogramm für die Software nut.s | Kein offener Zugang | – | – | Inhaltlich passend, aber kostenpflichtig; die vom Produktinhaber übergebenen RTF-Dateien (13 Pakete, rund 8.200 Einträge, Stand 2024 bis 2026) enthalten nur Namen und Codes, keine Nährwerte | Vorerst nicht (Produktinhaber, 19.10.2026) |
+| Website „BLS-Recherche“ von nutritional-software.at | Anzeige von BLS-Daten auf rund 1.061 Seiten | Angebot eines Drittanbieters; Nutzungsbedingungen nicht geprüft (Host aus der Cloud-Umgebung nicht erreichbar) | Nur Webseiten | – | – | Nicht nötig, weil der BLS 4.0 im Original vorliegt; automatisches Kopieren fremder Webseiten ohne Erlaubnis ist ausgeschlossen | Nicht verwendet |
+| Andere Apps (FatSecret, Fddb, Yazio, MyFitnessPal) | Markenprodukte | FatSecret: lokale Daten nur in der kostenpflichtigen Ausgabe; die übrigen ohne offenen Zugang | – | – | – | Nur mit ausdrücklicher Erlaubnis des Anbieters (D-306) | Nicht verwendet |
+| Open Food Facts | Markenprodukte, Barcode-Suche | Datenbank ODbL; Einzelinhalte Database Contents License; Bilder CC BY-SA, teils mit Rechten Dritter | Laut offizieller Doku (Stand Okt. 2026): 15 Produktabfragen und 10 Suchanfragen pro Minute und IP; Überschreitung führt zu Fehlern. Eigener User-Agent im Format `AppName/Version (Kontakt)` erbeten, Registrierung der App über ein Formular erbeten | Barcode bzw. Suchbegriff und IP-Adresse gehen an Open Food Facts | Nur zwischengespeicherte Produkte | Gut für Barcodes, eingeschränkt für Suche; rund 17.500 Produkte aus Österreich (Stand Oktober 2026) | Erlaubt vom Produktinhaber nach Einwilligung in der App (Q-19); eigenes Paket mit Prüfspike S-1 |
 | USDA FoodData Central | Generische Lebensmittel | Public Domain | API-Schlüssel nötig | IP an US-Behörde | Nur bei Bündelung | Englische Namen, für Deutsch ungeeignet | Nicht vorgesehen (D-303) |
 | Eigene Lebensmittel | Alles, was keine Quelle liefert | Eigene Daten | Lokal | Lokal | Vollständig | Pflichtbestandteil | Vorgesehen |
 | Eigene Basisübungsbibliothek | Übungen mit deutschen Namen | Eigene Daten, Teil der App | Gebündelt | Lokal | Vollständig | Pflichtbestandteil | Entschieden (D-213) |
@@ -90,7 +92,7 @@ Version 7.1 mit 1.246 generischen Lebensmitteln in 19 Ober- und 106 Unterkategor
 | Spike | Zeitpunkt | Prüfpunkte | Ergebnis |
 |---|---|---|---|
 | S-1 Open Food Facts | Beginn M6 | CORS von der Produktivadresse für Produkt- und Such-Endpunkt; Antwortzeiten; Verhalten an den Limits; User-Agent-Klärung; Vollständigkeit für 20 typische Produkte aus Österreich und Deutschland | Entscheidung direkt, Proxy oder Verzicht; Eintrag in `decisions.md` |
-| S-2 BLS-Import | Beginn M5 | Siehe Abschnitt 4 | Freigabe D-301 oder Wechsel auf die Schweizer Datenbank |
+| S-2 BLS-Import | 19.10.2026 | Nutzungsbedingungen (Dokumentation Abschnitt 9.3: kostenfrei, ohne Lizenzbarrieren, auch für App-Entwicklung, Quellenangabe empfohlen), Format (Excel, 7.140 Zeilen, 418 Spalten, je Nährstoff Wert, Herkunft und Referenz), Feldnamen (ENERCC, PROT625, CHO, SUGAR, FAT, FASAT, FIBT, NACL), Einheiten je 100 g, alle Einträge mit Energiewert, Bündelgröße 590 KB bzw. 164 KB gzip | Bestanden; D-261 |
 | S-3 Barcode im Browser | Beginn M6 | `barcode-detector`-Polyfill auf dem iPhone in der installierten App: Erkennungsrate für EAN-13, EAN-8, UPC-A; Kamerazugriff und wiederholte Berechtigungsabfragen; Akkulast | Freigabe D-305 |
 
 ## 8. Datenflüsse nach Ausbaustufe
@@ -98,7 +100,7 @@ Version 7.1 mit 1.246 generischen Lebensmitteln in 19 Ober- und 106 Unterkategor
 | Ausbaustufe | Externe Empfänger | Übertragene Daten |
 |---|---|---|
 | R1 (MVP) | Nur das Hosting | Abruf der App-Dateien; der Anbieter sieht IP-Adresse und Zugriffsprotokolle. Keine Nutzdaten |
-| R2 | Open Food Facts (nach Einwilligung) | Barcode oder Suchbegriff, IP-Adresse |
+| R2 | Keine im Grundausbau (BLS gebündelt); später Open Food Facts nach Einwilligung | Barcode oder Suchbegriff, IP-Adresse |
 | R3 | Supabase (nach Anmeldung) | Alle synchronisierten Nutzdaten: Training, Körperwerte, Einstellungen, Ernährung |
 | R5 | Supabase Storage (nach Zustimmung) | Fortschrittsfotos |
 

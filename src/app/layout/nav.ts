@@ -1,4 +1,4 @@
-import { ChartLine, Dumbbell, Ellipsis, House, type LucideIcon } from 'lucide-react';
+import { Apple, ChartLine, Dumbbell, Ellipsis, House, type LucideIcon } from 'lucide-react';
 import { t } from '@/shared/i18n/de';
 
 export interface NavItem {
@@ -11,7 +11,7 @@ export interface NavItem {
   sections?: readonly string[];
 }
 
-/** Navigation im MVP nach D-211. Training ab M1, Fortschritt ab Schritt E. */
+/** Navigation nach D-211. Training ab M1, Fortschritt ab Schritt E, Ernährung ab Schritt G. */
 export const NAV_ITEMS: readonly NavItem[] = [
   { to: '/heute', label: t.nav.today, icon: House, available: true },
   {
@@ -21,6 +21,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     available: true,
     sections: ['/uebungen'],
   },
+  { to: '/ernaehrung', label: t.nav.nutrition, icon: Apple, available: true },
   { to: '/fortschritt', label: t.nav.progress, icon: ChartLine, available: true },
   { to: '/mehr', label: t.nav.more, icon: Ellipsis, available: true },
 ];

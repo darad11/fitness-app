@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.10 · 19.10.2026 · Ernährung Grundausbau (Schritt G)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-261 Ernährung Grundausbau, D-262 Zielvorschlag; Q-19 beantwortet |
+| `data-sources.md` | ÖNWT, BLS-Recherche und andere Apps bewertet; BLS 4.0 umgesetzt, Prüfspike S-2 bestanden |
+| `requirements.md` | Abschnitt 6.12a mit AK-NUT-01 bis AK-NUT-06 |
+| `data-model.md` | Dexie v3, Felder `food`, `food_log_entry`, `nutrition_target` |
+| `design-system.md` | Navigation mit Ernährung; S-15, S-16, S-18, S-19, S-26 |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `feature-inventory.md` | NU-01, NU-02, NU-03, NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21, NU-22, NU-25 vorgezogen und „Implementiert“ |
+| `testing.md` | Ergebnisse Ernährung |
 ## Version 0.9 · 19.10.2026 · Notizen im Player (TS-19)
 
 | Datei | Änderung |

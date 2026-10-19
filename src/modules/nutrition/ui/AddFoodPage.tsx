@@ -56,11 +56,13 @@ export function AddFoodPage() {
   const deferred = useDeferredValue(query);
   const [picked, setPicked] = useState<FoodItem | null>(null);
   const [quick, setQuick] = useState(false);
-  const [scanning, setScanning] = useState(false);
+  // Schnell-Eintrag von „Heute“ (D-275): Scanner sofort offen, danach zurück zu „Heute“.
+  const fromToday = params.get('von') === 'heute';
+  const [scanning, setScanning] = useState(params.get('scan') === '1');
   const [applying, setApplying] = useState<MealTemplate | null>(null);
   const templates = useMealTemplates();
   const [savedNotice, setSavedNotice] = useState(false);
-  const back = `/ernaehrung${day === today ? '' : `?tag=${day}`}`;
+  const back = fromToday ? '/heute' : `/ernaehrung${day === today ? '' : `?tag=${day}`}`;
 
   const results = useMemo(
     () => (catalog ? searchFoods(catalog.index, deferred) : []),
@@ -122,7 +124,7 @@ export function AddFoodPage() {
       <PageHeader
         eyebrow={t.nutrition.slots[slot]}
         title={t.nutrition.addTitle}
-        back={{ to: back, label: t.nutrition.backToDay }}
+        back={{ to: back, label: fromToday ? t.today.title : t.nutrition.backToDay }}
       />
       <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
         <SelectField
@@ -258,7 +260,7 @@ export function AddFoodPage() {
       ) : null}
       {scanning ? (
         <BarcodeFlow
-          returnTo={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`}
+          returnTo={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}${fromToday ? '&von=heute' : ''}`}
           onClose={() => {
             setScanning(false);
           }}

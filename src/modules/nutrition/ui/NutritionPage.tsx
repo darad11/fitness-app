@@ -1,21 +1,21 @@
-import { BookmarkPlus, ChevronDown, ChevronLeft, ChevronRight, Plus, Target } from 'lucide-react';
+import {
+  BookmarkPlus,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  ScanBarcode,
+  Target,
+} from 'lucide-react';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { addDays, dayKey as toDayKey, isValidDayKey } from '@/shared/lib/time';
-import {
-  Button,
-  ButtonLink,
-  Card,
-  IconButton,
-  Meter,
-  PageHeader,
-  Skeleton,
-  Toast,
-} from '@/shared/ui';
+import { Button, ButtonLink, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
+import { mealSlotAt } from '../calc/mealSlot';
 import { sumEntries } from '../calc/nutrients';
 import { targetOn } from '../calc/targets';
 import { useDayEntries, useTargets } from '../data/nutritionRepository';
@@ -419,7 +419,11 @@ export function NutritionPage() {
   );
 }
 
-/** Kurzkarte für „Heute“: gegessen und Ziel (NU-02). */
+/**
+ * Kurzkarte für „Heute“ (D-275): kleiner Ring wie auf der Ernährungsseite, die drei Makros und
+ * „Barcode scannen“ als schnellster Weg zum Eintrag. Der Scanner öffnet sofort; die Mahlzeit
+ * folgt der Uhrzeit.
+ */
 export function NutritionTodayCard() {
   const fmt = useFormatters();
   const now = useToday();
@@ -428,29 +432,101 @@ export function NutritionTodayCard() {
   const targets = useTargets();
   if (entries === undefined || targets === undefined) return null;
   const target = targetOn(targets, today);
-  if (entries.length === 0 && !target) return null;
-  const eaten = sumEntries(entries).sums.kcal;
+  const sums = sumEntries(entries).sums;
+  const hour = Number(
+    new Intl.DateTimeFormat('de-AT', {
+      hour: 'numeric',
+      hourCycle: 'h23',
+      timeZone: fmt.timeZone,
+    }).format(now),
+  );
+  const scanTo = `/ernaehrung/hinzufuegen?mahlzeit=${mealSlotAt(hour)}&scan=1&von=heute`;
   return (
-    <Card
-      eyebrow={t.nutrition.todayCard}
-      title={
-        target
-          ? t.nutrition.kcalOf(kcal(fmt, eaten), kcal(fmt, target.kcal))
-          : t.nutrition.kcalOnly(kcal(fmt, eaten))
-      }
-    >
-      {target ? (
-        <Meter
-          label={t.nutrition.kcalOf(kcal(fmt, eaten), kcal(fmt, target.kcal))}
-          value={target.kcal > 0 ? eaten / target.kcal : 0}
-        />
-      ) : null}
-      <Link
-        to="/ernaehrung"
-        className="mt-3 inline-block text-sm font-semibold text-accent-ink underline"
-      >
-        {t.nutrition.toNutrition}
-      </Link>
+    <Card eyebrow={t.nutrition.todayCard}>
+      <div className="flex items-center gap-4">
+        {target ? (
+          <MacroRing
+            tone="surface"
+            size={104}
+            stroke={11}
+            label={[
+              t.nutrition.kcalOf(kcal(fmt, sums.kcal), kcal(fmt, target.kcal)),
+              ...MACROS.map(
+                (macro) =>
+                  `${t.nutrition.macros[macro]} ${t.nutrition.gramsOf(grams(fmt, sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
+              ),
+            ].join(', ')}
+            value={target.kcal > 0 ? sums.kcal / target.kcal : 0}
+            segments={MACROS.map((macro) => ({
+              amount: sums[macro] * KCAL_PER_GRAM[macro],
+              color: MACRO_COLORS[macro],
+            }))}
+          >
+            <span className="block text-center leading-tight">
+              <span className="block text-xl font-extrabold tracking-tight tabular-nums">
+                {kcal(fmt, sums.kcal)}
+              </span>
+              <span className="block text-xs text-muted tabular-nums">
+                {t.nutrition.ofKcal(kcal(fmt, target.kcal))}
+              </span>
+            </span>
+          </MacroRing>
+        ) : null}
+        <div className="min-w-0 flex-1">
+          {target ? null : (
+            <p className="mb-3 text-2xl font-bold tabular-nums">
+              {t.nutrition.kcalOnly(kcal(fmt, sums.kcal))}
+            </p>
+          )}
+          <dl className="grid grid-cols-3 gap-3">
+            {MACROS.map((macro) => {
+              const goal = target ? macroGoal(target, macro) : undefined;
+              const eaten = sums[macro];
+              return (
+                <div key={macro} className="min-w-0">
+                  <dt className="truncate text-xs text-muted">
+                    <span aria-hidden="true">{t.nutrition.macrosShort[macro]}</span>
+                    <span className="sr-only">{t.nutrition.macros[macro]}</span>
+                  </dt>
+                  <dd className="tabular-nums">
+                    <span className="block text-lg leading-tight font-bold">
+                      {grams(fmt, eaten)}
+                    </span>
+                    <span className="block text-xs whitespace-nowrap text-muted">
+                      {goal !== undefined
+                        ? `/ ${grams(fmt, goal)} ${t.nutrition.units.g}`
+                        : t.nutrition.units.g}
+                    </span>
+                  </dd>
+                  {goal !== undefined ? (
+                    <span
+                      aria-hidden="true"
+                      className="mt-1.5 block h-1 overflow-hidden rounded-pill bg-fg/10"
+                    >
+                      <span
+                        className="block h-full rounded-pill"
+                        style={{
+                          width: `${String(Math.min(100, goal > 0 ? (eaten / goal) * 100 : 0))}%`,
+                          background: MACRO_COLORS[macro],
+                        }}
+                      />
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })}
+          </dl>
+        </div>
+      </div>
+      <div className="mt-4 flex gap-2">
+        <ButtonLink to={scanTo} size="sm" className="flex-1">
+          <ScanBarcode aria-hidden="true" className="size-5" />
+          {t.nutrition.barcode.scan}
+        </ButtonLink>
+        <ButtonLink to="/ernaehrung" size="sm" variant="secondary">
+          {t.nutrition.toNutrition}
+        </ButtonLink>
+      </div>
     </Card>
   );
 }

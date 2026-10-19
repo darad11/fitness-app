@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.22 · 19.10.2026 · Ring und Scanner auf „Heute“
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-275 kleiner Makro-Ring und „Barcode scannen“ auf „Heute“ |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Ring und Scanner auf „Heute“ |
+
 ## Version 0.21 · 19.10.2026 · Gewicht klarer eintragen
 
 | Datei | Änderung |

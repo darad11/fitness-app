@@ -26,5 +26,7 @@ export const historyRowSchema = z.strictObject({
   volumeKg: z.number(),
   reps: z.number().int(),
   setCount: z.number().int(),
+  /** Eigene Notiz zur Übung in dieser Einheit (AK-TRN-24); fehlt in älteren Zeilen. */
+  note: z.string().max(5000).optional(),
 });
 export type HistoryRow = z.infer<typeof historyRowSchema>;

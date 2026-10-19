@@ -188,6 +188,11 @@ function Detail({ exercise, pref }: { exercise: Exercise; pref: ExercisePref | u
                               )}`
                             : t.exercises.noSets}
                         </span>
+                        {row.note ? (
+                          <span className="mt-1 block text-sm">
+                            {t.session.yourNote}: {row.note}
+                          </span>
+                        ) : null}
                       </span>
                       <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
                     </Link>

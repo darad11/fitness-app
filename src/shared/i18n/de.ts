@@ -153,6 +153,10 @@ export const de = {
   goals: {
     weightTitle: 'Zielgewicht',
     weightNone: 'Kein Zielgewicht gesetzt.',
+    currentWeight: (kg: string) =>
+      `Dein aktuelles Gewicht: ${kg}. Das Zielgewicht ist dein Wunschgewicht, keine Messung.`,
+    noCurrentWeight:
+      'Noch kein Gewicht gemessen. Das Zielgewicht ist dein Wunschgewicht; dein Gewicht trägst du unter „Fortschritt“ › „Körpergewicht“ ein.',
     weightLabel: 'Zielgewicht in kg',
     weightPlaceholder: 'z. B. 78,0',
     invalidWeight: 'Zielgewicht von 30 bis 300 kg.',

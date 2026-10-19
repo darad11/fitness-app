@@ -243,7 +243,8 @@ Nächste Schritte: <Liste>
 29. Erledigt (über #17 gemergt): Notizen im Player (TS-19, D-260). Import einer Datensicherung (AP 2.8) zurückgestellt auf Wunsch des Produktinhabers.
 30. Erledigt (über #18 gemergt): Schritt G Grundausbau (M5 ohne Rezepte): Q-19 beantwortet, BLS 4.0 gebündelt mit österreichischen Suchbegriffen, eigene Lebensmittel, Tagesprotokoll mit vier Mahlzeiten, Schnelleintrag, Ziele selbst oder per Vorschlag, Dexie v3 (D-261, D-262).
 31. Erledigt (über #19 gemergt): Lebensmitteldaten der BLS-Recherche als lokaler Import, nur die 7.476 ÖNWT-Lebensmittel; deutsche Daten (BLS 3.02) und auslaufende Produkte weggelassen (D-263). Offen: Marken aus den Detailseiten (Skript beim Produktinhaber), Entscheidung zum gebündelten BLS 4.0. Offen beim Produktinhaber: Import auf dem iPhone mit seiner Datei.
-32. Erledigt (Branch `feat/naehrwerte-anzeige`): alle Nährwerte beim Hinzufügen und Bearbeiten, Zucker, Salz, Ballaststoffe und gesättigte Fettsäuren in der Tagesübersicht (D-264); „Heute“ ohne „Status“ und „Diese Version“ (D-265).
+32. Erledigt (über #20 gemergt): alle Nährwerte beim Hinzufügen und Bearbeiten, Zucker, Salz, Ballaststoffe und gesättigte Fettsäuren in der Tagesübersicht (D-264); „Heute“ ohne „Status“ und „Diese Version“ (D-265).
 33. Ich: Marken aus `nuts-marken.json` in den Import übernehmen, sobald der Produktinhaber die Datei hochlädt.
-34. Erledigt (Branch `feat/barcode-scanner`): Barcode-Scanner mit Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266). Offen beim Produktinhaber: erster echter Scan auf dem iPhone (Prüfspike S-1, S-3).
-35. Ich: als Nächstes nach Wahl des Produktinhabers Rezepte (M7), Mahlzeit-Vorlagen, Datensicherung einspielen (AP 2.8) oder Synchronisierung (nach Freigabe).
+34. Erledigt (über #21 gemergt): Barcode-Scanner mit Open Food Facts nach Einwilligung, Treffer unter „Meine Lebensmittel“ (D-266). Gerätetest bestanden: Kamera und Open Food Facts mit Marke und Nährwerten (S-1, S-3).
+35. Erledigt (Branch `feat/rezepte`): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
+36. Ich: Mahlzeit-Vorlagen (NU-11), danach Synchronisierung mit Supabase (Freigabe des Produktinhabers liegt vor; Region und Anmeldung vorher abstimmen). Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers.

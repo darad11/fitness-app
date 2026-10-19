@@ -1,6 +1,9 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useDb, type AppDb, type DocDef } from '@/shared/db';
+import { stableId } from '@/shared/lib/uuid';
+import { recipeTotals } from '../calc/recipe';
 import type { FoodItem } from '../model/foodItem';
+import { recipeSchema, type Recipe } from '../model/recipe';
 import {
   foodLogEntrySchema,
   foodSchema,
@@ -23,6 +26,13 @@ export const foodLogDef: DocDef<FoodLogEntry> = {
   schemaVersion: NUTRITION_SCHEMA_VERSION,
   schema: foodLogEntrySchema,
   table: (db) => db.foodLog,
+};
+
+export const recipeDef: DocDef<Recipe> = {
+  type: 'recipe',
+  schemaVersion: NUTRITION_SCHEMA_VERSION,
+  schema: recipeSchema,
+  table: (db) => db.recipes,
 };
 
 export const nutritionTargetDef: DocDef<NutritionTarget> = {
@@ -121,4 +131,39 @@ export function useEntriesSince(fromDayKey: string): FoodLogEntry[] | undefined 
 export function useTargets(): NutritionTarget[] | undefined {
   const { db } = useDb();
   return useLiveQuery(() => listTargets(db), [db]);
+}
+
+/** Rezepte (auch archivierte), alphabetisch. */
+export async function listRecipes(db: AppDb): Promise<Recipe[]> {
+  const recipes = parseRows<Recipe>(await db.recipes.toArray(), 'recipe', recipeSchema);
+  return recipes.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+}
+
+export function useRecipes(): Recipe[] | undefined {
+  const { db } = useDb();
+  return useLiveQuery(() => listRecipes(db), [db]);
+}
+
+/**
+ * Rezept als Lebensmittel zum Eintragen (D-267): Nährwerte je 100 g des ganzen Rezepts und eine
+ * Portion „Portion“ (Gesamtmenge geteilt durch die Portionen).
+ */
+export function toRecipeItem(recipe: Recipe): FoodItem {
+  const totals = recipeTotals(recipe.ingredients, recipe.servings);
+  const portion = Math.round((totals.grams / recipe.servings) * 10) / 10;
+  return {
+    id: recipe.id,
+    name: recipe.name,
+    aliases: [],
+    basis: 'g',
+    per100: totals.per100,
+    servings:
+      portion > 0 && portion <= 5000
+        ? [{ id: stableId(`recipe-portion:${recipe.id}`), name: 'Portion', amount: portion }]
+        : [],
+    source: 'recipe',
+    quality: 'user',
+    ...(recipe.favorite ? { favorite: true } : {}),
+    ...(recipe.archivedAt ? { archivedAt: recipe.archivedAt } : {}),
+  };
 }

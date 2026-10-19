@@ -443,4 +443,61 @@ describe('Ernährung (Schritt G, D-261)', () => {
       }
     },
   );
+
+  it(
+    'legt ein Rezept aus zwei Zutaten an und trägt eine Portion ein (D-267)',
+    { timeout: 60_000 },
+    async () => {
+      const user = userEvent.setup();
+      await renderAt('/ernaehrung/rezepte', 'Rezepte');
+      expect(await screen.findByText(/Noch keine Rezepte/, {}, WAIT)).toBeVisible();
+      await user.click(screen.getByRole('link', { name: 'Neues Rezept' }));
+      await screen.findByRole('heading', { level: 1, name: 'Neues Rezept' }, WAIT);
+      await user.type(screen.getByLabelText('Name'), 'Overnight Oats');
+      await user.clear(screen.getByLabelText('Portionen'));
+      await user.type(screen.getByLabelText('Portionen'), '2');
+
+      const addIngredient = async (query: string, name: RegExp, amount: string) => {
+        await user.click(screen.getByRole('button', { name: 'Zutat hinzufügen' }));
+        const picker = await screen.findByRole('dialog', { name: 'Zutat hinzufügen' }, WAIT);
+        await waitFor(() => {
+          expect(picker.querySelector('[aria-busy="true"]')).toBeNull();
+        }, WAIT);
+        await user.type(within(picker).getByLabelText('Zutat suchen'), query);
+        await user.click(await within(picker).findByRole('button', { name }, WAIT));
+        const amountDialog = screen.getByRole('dialog', { name: /: Menge$/ });
+        await user.clear(within(amountDialog).getByLabelText('Menge in g'));
+        await user.type(within(amountDialog).getByLabelText('Menge in g'), amount);
+        await user.click(within(amountDialog).getByRole('button', { name: 'Hinzufügen' }));
+      };
+      await addIngredient('haferflocken', /^Hafer FlockenBLS/, '80');
+      await addIngredient('banane roh', /^Banane rohBLS/, '120');
+      expect(screen.getByLabelText('Menge Hafer Flocken in g')).toHaveValue('80');
+      const table = screen.getByRole('table', { name: 'Nährwerte' });
+      const energy = within(table).getByRole('row', { name: /Energie/ });
+      expect(
+        within(energy)
+          .getAllByRole('cell')
+          .map((c) => c.textContent),
+      ).toEqual(['187 kcal', '373 kcal']);
+      expect(screen.getByText(/Zutaten zusammen 200 g/)).toBeVisible();
+      await user.click(screen.getByRole('button', { name: 'Speichern' }));
+      await screen.findByRole('heading', { level: 1, name: 'Rezepte' }, WAIT);
+      expect(await screen.findByText('2 Portionen · 187 kcal je Portion', {}, WAIT)).toBeVisible();
+
+      cleanup();
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
+      await waitFor(() => {
+        expect(document.querySelector('[aria-busy="true"]')).toBeNull();
+      }, WAIT);
+      await user.type(screen.getByLabelText('Lebensmittel suchen'), 'overnight');
+      await user.click(await screen.findByRole('button', { name: /^Overnight OatsRezept/ }, WAIT));
+      const log = screen.getByRole('dialog', { name: 'Overnight Oats hinzufügen' });
+      expect(within(log).getByRole('status')).toHaveTextContent('187 kcal');
+      await user.click(within(log).getByRole('button', { name: 'Hinzufügen' }));
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      const [entry] = await listDayEntries(rt.db, localDay());
+      expect(entry).toMatchObject({ kind: 'recipe', nameSnapshot: 'Overnight Oats', amount: 100 });
+    },
+  );
 });

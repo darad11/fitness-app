@@ -44,7 +44,7 @@ describe('JSON-Export (AK-DAT-01, data-model.md Abschnitt 11)', () => {
       format: 'fitness-app-backup',
       formatVersion: 1,
       appVersion: '1.2.3',
-      schemaVersion: 3,
+      schemaVersion: 4,
       exportedAt: NOW.toISOString(),
       deviceId: 'a1b2c3d4',
     });
@@ -60,6 +60,7 @@ describe('JSON-Export (AK-DAT-01, data-model.md Abschnitt 11)', () => {
       'nutrition_target',
       'profile',
       'program',
+      'recipe',
       'session',
       'settings',
       'training_state',

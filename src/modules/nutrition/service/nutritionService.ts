@@ -189,7 +189,7 @@ export async function logFood(
     tz: localTimeZone(),
     slot: input.slot,
     loggedAt: nowOf(clock).toISOString(),
-    kind: 'food',
+    kind: input.food.source === 'recipe' ? 'recipe' : 'food',
     foodId: input.food.id,
     nameSnapshot: name.slice(0, FOOD_NAME_MAX),
     basisSnapshot: input.food.basis,

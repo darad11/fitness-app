@@ -90,3 +90,36 @@ test('Lebensmitteldaten: Datei importieren, nach Neuladen in der Suche finden (D
   await page.getByLabel('Lebensmittel suchen').fill('fisolen');
   await expect(page.getByRole('button', { name: /^Fisolen mit Speck\s*ÖNWT/ })).toBeVisible();
 });
+
+test('Rezept: zwei Zutaten, je Portion gerechnet, nach Neuladen eintragen (D-267)', async ({
+  page,
+}) => {
+  test.slow();
+  await openPage(page, '/ernaehrung/rezepte/neu');
+  await page.getByLabel('Name').fill('Overnight Oats');
+  await page.getByLabel('Portionen').fill('2');
+  for (const [query, name, amount] of [
+    ['haferflocken', /^Hafer Flocken/, '80'],
+    ['banane roh', /^Banane roh/, '120'],
+  ] as const) {
+    await page.getByRole('button', { name: 'Zutat hinzufügen' }).click();
+    const picker = page.getByRole('dialog', { name: 'Zutat hinzufügen' });
+    await picker.getByLabel('Zutat suchen').fill(query);
+    await picker.getByRole('button', { name }).first().click();
+    const amountDialog = page.getByRole('dialog', { name: /: Menge$/ });
+    await amountDialog.getByLabel('Menge in g').fill(amount);
+    await amountDialog.getByRole('button', { name: 'Hinzufügen' }).click();
+  }
+  await expect(page.getByText(/Zutaten zusammen 200 g/)).toBeVisible();
+  await page.getByRole('button', { name: 'Speichern' }).click();
+  await expect(page.getByText('2 Portionen · 187 kcal je Portion')).toBeVisible();
+
+  await page.reload();
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
+  await page.getByLabel('Lebensmittel suchen').fill('overnight');
+  await page.getByRole('button', { name: /^Overnight Oats/ }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Hinzufügen' }).click();
+  await expect(
+    page.getByRole('region', { name: 'Mittagessen' }).getByText('Overnight Oats'),
+  ).toBeVisible();
+});

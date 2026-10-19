@@ -23,6 +23,18 @@ export const nutritionRoutes: RouteObject[] = [
     lazy: async () => ({ Component: (await import('./ui/FoodFormPage')).FoodFormPage }),
   },
   {
+    path: 'ernaehrung/rezepte',
+    lazy: async () => ({ Component: (await import('./ui/RecipesPage')).RecipesPage }),
+  },
+  {
+    path: 'ernaehrung/rezepte/neu',
+    lazy: async () => ({ Component: (await import('./ui/RecipeEditPage')).RecipeEditPage }),
+  },
+  {
+    path: 'ernaehrung/rezepte/:recipeId',
+    lazy: async () => ({ Component: (await import('./ui/RecipeEditPage')).RecipeEditPage }),
+  },
+  {
     path: 'ernaehrung/ziele',
     lazy: async () => ({ Component: (await import('./ui/TargetsPage')).TargetsPage }),
   },

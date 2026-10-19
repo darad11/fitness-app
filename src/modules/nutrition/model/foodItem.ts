@@ -10,7 +10,8 @@ export interface FoodItem {
   basis: FoodBasis;
   per100: Nutrients;
   servings: readonly Serving[];
-  source: Food['source'];
+  /** 'recipe' für eigene Rezepte (D-267), die sich wie ein Lebensmittel eintragen lassen. */
+  source: Food['source'] | 'recipe';
   /** Bei importierten Daten (D-263): Österreichische Nährwerttabelle (ÖNWT). */
   catalog?: CatalogSource;
   quality: Food['quality'];

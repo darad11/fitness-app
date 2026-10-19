@@ -80,3 +80,51 @@ test('Anmeldung im Vollbild: „Später“ und Escape führen ohne Anmeldung zur
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(/\/mehr$/);
 });
+
+test('Registrieren im Anmeldefenster: Bestätigungsmail, danach anmelden (D-273)', async ({
+  page,
+}) => {
+  const signups: string[] = [];
+  await page.route(`${BASE}/**`, async (route) => {
+    const headers = {
+      'access-control-allow-origin': '*',
+      'access-control-allow-headers': 'apikey, authorization, content-type, accept',
+      'access-control-allow-methods': 'GET, POST, OPTIONS',
+    };
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers });
+      return;
+    }
+    if (route.request().url().includes('/auth/v1/signup')) signups.push(route.request().url());
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers,
+      body: JSON.stringify({
+        id: '11111111-1111-4111-8111-111111111111',
+        email: 'neu@example.org',
+      }),
+    });
+  });
+  await openPage(page, '/mehr/synchronisierung');
+  const login = page.getByRole('dialog', { name: 'Fitness' });
+  await login.getByRole('button', { name: 'Noch kein Konto? Registrieren' }).click();
+  await login.getByLabel('E-Mail').fill('neu@example.org');
+  await login.getByLabel('Passwort', { exact: true }).fill('langesPasswort');
+  await login.getByLabel('Passwort wiederholen').fill('langesPasswort');
+  await login.getByRole('button', { name: 'Registrieren' }).click();
+  await expect(
+    login.getByText(/Wir haben eine E-Mail an neu@example\.org geschickt/),
+  ).toBeVisible();
+  expect(signups).toHaveLength(1);
+  expect(decodeURIComponent(signups[0] ?? '')).toContain('redirect_to=http://localhost:');
+  await expect(login.getByRole('button', { name: 'Anmelden' })).toBeVisible();
+
+  // Rückkehr über den Link: Zugangsdaten verschwinden aus der Adresse, Hinweis erscheint.
+  await page.goto('/mehr');
+  await page.goto('/mehr/synchronisierung#access_token=x&refresh_token=y&type=signup');
+  await expect(
+    page.getByText('E-Mail bestätigt. Melde dich jetzt mit E-Mail und Passwort an.'),
+  ).toBeVisible();
+  expect(page.url()).not.toContain('access_token');
+});

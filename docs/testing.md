@@ -616,6 +616,16 @@ Marken aus `nuts-marken.json` herauslösen, beim Import zuordnen, in der Suche a
 | Echte Dateien im Build (Chromium, Pixel-Größe) | `nuts-recherche.json`: Vorschau 7.476 übernommen; `nuts-marken.json`: Vorschau „5.934 deiner importierten Lebensmittel bekommen eine Marke“; danach „7.476 Lebensmittel importiert · 5.934 davon mit Marke“. Suche „hummus“: 12 Treffer, z. B. „Hummus classic · Alnatura“, „Hummus Classic · NENI“; Suche „alnatura“: 50 Treffer (Grenze der Liste) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Import auf dem iPhone steht aus |
 
+### Registrieren im Anmeldefenster · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Registrieren mit E-Mail und Passwort, Bestätigungsmail, Rückkehr über den Link (D-273). Supabase ist aus der Cloud-Umgebung nicht erreichbar; geprüft mit nachgebildeten Antworten.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` (Synchronisierung) | 25 Tests bestanden. Neu in `syncService.test.ts`: sofort angemeldet ohne Bestätigung (Anfrage an `/auth/v1/signup` mit `redirect_to`, E-Mail ohne Leerzeichen), mit Bestätigung kein gespeicherter Zugang, fünf Ablehnungen werden richtig erkannt; in `sync-ui.test.tsx`: zu kurzes und abweichendes Passwort ohne Anfrage, danach Hinweis auf die Bestätigungsmail und zurück zu „Anmelden“ |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | alle 184 bestanden; davon `sync.spec.ts` 6. Neu: Registrieren mit Bestätigungsmail; Rückkehr über den Link entfernt `access_token` aus der Adresse und zeigt den Hinweis. Erster Versuch scheiterte am Test selbst (Sprung nur im Anker lädt die Seite nicht neu) |
+| Gerätetest | Steht aus: echte Registrierung gegen Supabase, Bestätigungsmail, Anmeldung am iPhone |
+
 ### Glas-Look · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
 Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, Kalorien-Ring, Gewichtskurve, ohne Vorschau-Balken (D-272).
@@ -632,5 +642,6 @@ Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, K
 | Nachtrag Seitenleiste | Auf Wunsch rückt der Inhalt beim Ausklappen mit (Abstand links 5,5 → 16,5 rem, 0,24 s); `tabbar.spec.ts` prüft am Desktop, dass der Titel unter der Maus um mehr als 150 px nach rechts rückt: bestanden |
 | Nachtrag Ernährung | Weitere Nährwerte in den Spalten der Makros (Salz, Zucker, Ballaststoffe, gesättigte Fettsäuren) und dezent zugeklappt; Ziel, Lebensmittel, Rezepte, Vorlagen als Kacheln direkt unter „Gegessen“. `nutrition.spec.ts` klappt die weiteren Nährwerte auf. E2E 184 bestanden; einmal `network-a11y` „eigene Adresse“ am Desktop rot, bei Wiederholung grün |
 | Nachtrag „Meine Küche“ | Entwürfe zweimal als Bild abgestimmt; danach Bildschirmfotos aus der gebauten App (Handy mit Glas-Fläche, Web mit Menü). Neu in `nutrition.spec.ts`: „Meine Küche“ öffnet am Handy die Fläche, am Desktop das Menü (Escape schließt), führt zu „Rezepte“. Ernährung und Netz/axe: 112 bestanden |
+| Nachtrag Ring | Mehrere Entwürfe als Bild abgestimmt (mehrere Ringe, ein geteilter Ring, Verlauf, zuletzt 1:1 nach Vorlage); Bilder aus der gebauten App mit Haferflocken 150 g, Hähnchenbrust 250 g, Olivenöl 20 g. `tokens.test.ts`: Farben der Makros mindestens 3:1 auf `--ink` und `--ink-2` in beiden Modi (erstes Blau fiel mit 2,94:1 durch, aufgehellt). `nutrition.spec.ts` erwartet „/ 2.200 kcal“ |
 | Bekannt | Das Weichzeichnen hinter der Tab-Leiste zeigt Chromium im Test nur teilweise; auf dem iPhone steht es aus (Gerätetest) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest auf dem iPhone steht aus |

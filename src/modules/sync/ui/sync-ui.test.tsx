@@ -79,4 +79,52 @@ describe('Synchronisierung (D-269)', () => {
     expect(await screen.findByRole('button', { name: 'Anmelden' }, WAIT)).toBeVisible();
     expect(await getAuth(rt.db)).toBeNull();
   });
+
+  it(
+    'registriert mit Bestätigungsmail und prüft die Passwörter vorher (D-273)',
+    { timeout: 30_000 },
+    async () => {
+      const signups: string[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn<typeof fetch>((input, init) => {
+          const url = urlOf(input);
+          if (url.includes('/auth/v1/signup')) signups.push(init?.body as string);
+          return Promise.resolve(
+            new Response(JSON.stringify({ id: USER, email: 'neu@example.org' }), { status: 200 }),
+          );
+        }),
+      );
+      const user = userEvent.setup();
+      const router = createMemoryRouter(syncRoutes, { initialEntries: ['/mehr/synchronisierung'] });
+      render(
+        <DbProvider runtime={rt}>
+          <RouterProvider router={router} />
+        </DbProvider>,
+      );
+      await user.click(
+        await screen.findByRole('button', { name: 'Noch kein Konto? Registrieren' }, WAIT),
+      );
+      await user.type(screen.getByLabelText('E-Mail'), 'neu@example.org');
+      await user.type(screen.getByLabelText('Passwort'), 'kurz');
+      await user.type(screen.getByLabelText('Passwort wiederholen'), 'kurz');
+      await user.click(screen.getByRole('button', { name: 'Registrieren' }));
+      expect(screen.getByRole('alert')).toHaveTextContent('mindestens 8 Zeichen');
+      await user.clear(screen.getByLabelText('Passwort'));
+      await user.type(screen.getByLabelText('Passwort'), 'langesPasswort');
+      await user.click(screen.getByRole('button', { name: 'Registrieren' }));
+      expect(screen.getByRole('alert')).toHaveTextContent('stimmen nicht überein');
+      expect(signups).toEqual([]);
+      await user.clear(screen.getByLabelText('Passwort wiederholen'));
+      await user.type(screen.getByLabelText('Passwort wiederholen'), 'langesPasswort');
+      await user.click(screen.getByRole('button', { name: 'Registrieren' }));
+      expect(
+        await screen.findByText(/Wir haben eine E-Mail an neu@example\.org geschickt/, {}, WAIT),
+      ).toBeVisible();
+      expect(signups).toHaveLength(1);
+      // Zurück im Anmelden-Modus, noch kein Zugang gespeichert.
+      expect(screen.getByRole('button', { name: 'Anmelden' })).toBeVisible();
+      expect(await getAuth(rt.db)).toBeNull();
+    },
+  );
 });

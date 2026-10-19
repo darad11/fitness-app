@@ -1,5 +1,14 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.19 · 19.10.2026 · Registrieren im Anmeldefenster
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-273 Registrieren mit E-Mail und Passwort |
+| `known-limitations.md` | Bestätigungslink öffnet Safari, nicht die installierte App |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Registrierung |
+
 ## Version 0.18 · 19.10.2026 · Glas-Look
 
 | Datei | Änderung |

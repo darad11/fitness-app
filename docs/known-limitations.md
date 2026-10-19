@@ -149,3 +149,8 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - GitHub Pages und private Repositories: https://github.com/orgs/community/discussions/22817
 - Cloudflare-Pages-Limits: https://developers.cloudflare.com/pages/platform/limits/
 - Supabase-Limits (Sekundärquelle): https://www.jetadmin.io/blog/supabase-pricing-2026-guide-to-plans-limits-and-real-world-costs/
+
+## Registrieren (D-273)
+
+- Der Link in der Bestätigungsmail öffnet am iPhone Safari, nicht die installierte App. Beide haben getrennte Speicher; deshalb meldet man sich nach dem Bestätigen in der App selbst mit E-Mail und Passwort an.
+- Der Link führt nur dann zurück in die App, wenn in Supabase unter Authentication › URL Configuration die Adresse der App als „Site URL“ bzw. unter „Redirect URLs“ eingetragen ist; sonst landet er auf der voreingestellten Adresse.

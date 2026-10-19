@@ -2,9 +2,18 @@ import Dexie from 'dexie';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
-import { catalogDbName, catalogFoodId } from '../data/catalogStore';
+import { parseCatalogFile } from '../calc/catalogImport';
+import { brandIndex, catalogDbName, catalogFoodId, toCatalogItems } from '../data/catalogStore';
 import { logFood } from './nutritionService';
-import { CatalogFileError, commitCatalog, deleteCatalog, prepareCatalog } from './catalogService';
+import {
+  CatalogFileError,
+  CatalogMissingError,
+  commitCatalog,
+  commitImport,
+  deleteCatalog,
+  prepareCatalog,
+  prepareImport,
+} from './catalogService';
 import { listDayEntries } from '../data/nutritionRepository';
 
 let rt: DbRuntime;
@@ -106,5 +115,48 @@ describe('Lebensmitteldaten importieren (D-263)', () => {
   it('bildet stabile IDs je Quelle und Code', () => {
     expect(catalogFoodId('oenwt', '0003384')).toBe(catalogFoodId('oenwt', '0003384'));
     expect(catalogFoodId('oenwt', '0003384')).not.toBe(catalogFoodId('oenwt', '0003385'));
+  });
+
+  it('ergänzt Marken aus nuts-marken.json und behält sie bei neuem Import (D-271)', async () => {
+    const MARKEN = {
+      fetchedAt: '2026-10-19 18:04',
+      rows: [
+        {
+          code: '0003384',
+          source: 'ÖNWT-HH',
+          name: 'Bohnen mit Speck',
+          firma: 'Firma: Iglo Bohnen grün tiefgefroren',
+        },
+        // Gleicher Code, anderer Name: wird nicht zugeordnet.
+        {
+          code: '0003384',
+          source: 'ÖNWT-HH',
+          name: 'Speckbohnen',
+          firma: 'Firma: Knorr, Unilever',
+        },
+        { code: '9999999', source: 'ÖNWT-HH', name: 'Unbekannt', firma: 'Firma: Spar Natur' },
+      ],
+    };
+    // Ohne Lebensmitteldaten passt nichts.
+    await expect(prepareImport(rt.db, file(MARKEN))).rejects.toBeInstanceOf(CatalogMissingError);
+
+    const catalog = await prepareImport(rt.db, file(RECHERCHE));
+    expect(catalog.kind).toBe('catalog');
+    await commitImport(rt.db, catalog);
+    const brands = await prepareImport(rt.db, file(MARKEN));
+    expect(brands).toMatchObject({ kind: 'brands', matched: 1 });
+    await commitImport(rt.db, brands);
+    expect((await catalogRecord()).map((r) => r.id).sort()).toEqual(['bls-recherche', 'marken']);
+
+    // Ein neuer Import der Lebensmitteldaten lässt die Marken stehen.
+    await commitImport(rt.db, await prepareImport(rt.db, file(RECHERCHE)));
+    const records = await catalogRecord();
+    const brandRows = records.find((r) => r.id === 'marken')?.rows as [string, string, string][];
+    const [item] = toCatalogItems(parseCatalogFile(RECHERCHE).rows, brandIndex(brandRows));
+    expect(item).toMatchObject({ name: 'Bohnen mit Speck', brand: 'Iglo' });
+
+    // Entfernen löscht beides.
+    await deleteCatalog(rt.db);
+    expect(await catalogRecord()).toEqual([]);
   });
 });

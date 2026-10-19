@@ -615,3 +615,13 @@ Marken aus `nuts-marken.json` herauslösen, beim Import zuordnen, in der Suche a
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 174 Tests bestanden |
 | Echte Dateien im Build (Chromium, Pixel-Größe) | `nuts-recherche.json`: Vorschau 7.476 übernommen; `nuts-marken.json`: Vorschau „5.934 deiner importierten Lebensmittel bekommen eine Marke“; danach „7.476 Lebensmittel importiert · 5.934 davon mit Marke“. Suche „hummus“: 12 Treffer, z. B. „Hummus classic · Alnatura“, „Hummus Classic · NENI“; Suche „alnatura“: 50 Treffer (Grenze der Liste) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Import auf dem iPhone steht aus |
+
+### Registrieren im Anmeldefenster · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Registrieren mit E-Mail und Passwort, Bestätigungsmail, Rückkehr über den Link (D-273). Supabase ist aus der Cloud-Umgebung nicht erreichbar; geprüft mit nachgebildeten Antworten.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` (Synchronisierung) | 25 Tests bestanden. Neu in `syncService.test.ts`: sofort angemeldet ohne Bestätigung (Anfrage an `/auth/v1/signup` mit `redirect_to`, E-Mail ohne Leerzeichen), mit Bestätigung kein gespeicherter Zugang, fünf Ablehnungen werden richtig erkannt; in `sync-ui.test.tsx`: zu kurzes und abweichendes Passwort ohne Anfrage, danach Hinweis auf die Bestätigungsmail und zurück zu „Anmelden“ |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | alle 184 bestanden; davon `sync.spec.ts` 6. Neu: Registrieren mit Bestätigungsmail; Rückkehr über den Link entfernt `access_token` aus der Adresse und zeigt den Hinweis. Erster Versuch scheiterte am Test selbst (Sprung nur im Anker lädt die Seite nicht neu) |
+| Gerätetest | Steht aus: echte Registrierung gegen Supabase, Bestätigungsmail, Anmeldung am iPhone |

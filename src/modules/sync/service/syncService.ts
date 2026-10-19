@@ -6,7 +6,9 @@ import {
   refreshSession,
   signInWithPassword,
   signOutRemote,
+  signUpWithPassword,
   SyncHttpError,
+  type SignUpResult,
 } from '../data/remote';
 import { getAuth, getStatus, setAuth, setStatus } from '../data/syncState';
 import type { AuthSession, SyncResult } from '../model/sync';
@@ -31,6 +33,28 @@ export async function signIn(
   await resetForUser(db, auth.userId);
   await setAuth(db, auth);
   return auth;
+}
+
+/** Kürzeste Passwortlänge in der App (Supabase verlangt mindestens 6). */
+export const PASSWORD_MIN = 8;
+
+/**
+ * Registrieren (D-273). Ohne Bestätigungsmail ist man danach angemeldet; sonst kommt eine Mail,
+ * und die Anmeldung folgt nach dem Klick auf den Link.
+ */
+export async function signUp(
+  db: AppDb,
+  email: string,
+  password: string,
+  redirectTo: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<SignUpResult> {
+  const result = await signUpWithPassword(email, password, redirectTo, fetchImpl);
+  if (result.kind === 'signedIn') {
+    await resetForUser(db, result.auth.userId);
+    await setAuth(db, result.auth);
+  }
+  return result;
 }
 
 /** Abmelden: Zugang lokal entfernen; die Daten auf dem Gerät bleiben. */

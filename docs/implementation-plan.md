@@ -249,4 +249,5 @@ Nächste Schritte: <Liste>
 35. Erledigt (über #22 gemergt): Rezepte mit Zutaten, Portionen und Nährwerten, portionsweise eintragen, Dexie v4 (D-267).
 36. Erledigt (über #23 gemergt): Mahlzeit-Vorlagen aus einer Mahlzeit speichern und mit einem Tipp eintragen, Dexie v5 (D-268).
 37. Erledigt (über #24 gemergt): Synchronisierung, erste Stufe: Supabase-Projekt in Frankfurt, Tabelle und Funktion mit RLS, Anmeldung mit E-Mail und Passwort, automatischer Abgleich, Dexie v6 (D-269). Offen beim Produktinhaber: Konto im Supabase-Dashboard anlegen, Anmeldungen sperren, Gerätetest mit zwei Geräten.
-38. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+38. Erledigt (über #27 gemergt): Registrieren im Anmeldefenster mit Bestätigungsmail (D-273).
+39. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

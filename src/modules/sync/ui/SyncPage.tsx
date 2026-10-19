@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
-import { InvalidCredentialsError, SyncOfflineError } from '../data/remote';
+import { InvalidCredentialsError, SignUpError, SyncOfflineError } from '../data/remote';
 import { useSyncView } from '../data/syncState';
-import { LoginScreen } from './LoginScreen';
-import { signIn, signOut, syncNow } from '../service/syncService';
+import { LoginScreen, type LoginMode } from './LoginScreen';
+import { PASSWORD_MIN, signIn, signOut, signUp, syncNow } from '../service/syncService';
 
 /** Synchronisierung (D-269): anmelden, Stand ansehen, abgleichen, abmelden. */
 export function SyncPage() {
@@ -17,7 +17,26 @@ export function SyncPage() {
   const navigate = useNavigate();
   const [busy, setBusy] = useState<'signIn' | 'sync' | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Rückkehr über den Link der Bestätigungsmail: Supabase hängt Zugangsdaten an die Adresse.
+  // Sie werden nicht übernommen (die installierte App hat einen eigenen Speicher), sondern sofort
+  // aus Adresse und Verlauf entfernt; angemeldet wird wie gewohnt mit E-Mail und Passwort.
+  const [returned] = useState(() => {
+    const hash = window.location.hash;
+    if (hash.includes('error_description=')) return 'failed' as const;
+    if (hash.includes('access_token=')) return 'confirmed' as const;
+    return null;
+  });
+  const [notice, setNotice] = useState<string | null>(
+    returned === 'failed' ? t.sync.confirmFailed : returned ? t.sync.confirmed : null,
+  );
+  const [mode, setMode] = useState<LoginMode>('signIn');
   const ts = t.sync;
+
+  useEffect(() => {
+    if (returned) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  }, [returned]);
 
   const run = () => {
     setBusy('sync');
@@ -29,24 +48,44 @@ export function SyncPage() {
       });
   };
 
-  const submit = (email: string, password: string) => {
+  const fail = (caught: unknown) => {
+    setBusy(null);
+    setError(
+      caught instanceof InvalidCredentialsError
+        ? ts.invalidCredentials
+        : caught instanceof SignUpError
+          ? ts.signUpErrors[caught.problem]
+          : caught instanceof SyncOfflineError
+            ? ts.offline
+            : ts.failed,
+    );
+  };
+
+  const submit = (how: LoginMode, email: string, password: string) => {
     setBusy('signIn');
     setError(null);
-    signIn(rt.db, email, password)
-      .then(() => {
+    setNotice(null);
+    if (how === 'signIn') {
+      signIn(rt.db, email, password)
+        .then(() => {
+          setBusy(null);
+          run();
+        })
+        .catch(fail);
+      return;
+    }
+    // Der Link in der Bestätigungsmail führt zurück auf diese Seite.
+    signUp(rt.db, email, password, `${window.location.origin}/mehr/synchronisierung`)
+      .then((result) => {
         setBusy(null);
-        run();
+        if (result.kind === 'signedIn') {
+          run();
+        } else {
+          setMode('signIn');
+          setNotice(ts.confirmSent(email.trim()));
+        }
       })
-      .catch((caught: unknown) => {
-        setBusy(null);
-        setError(
-          caught instanceof InvalidCredentialsError
-            ? ts.invalidCredentials
-            : caught instanceof SyncOfflineError
-              ? ts.offline
-              : ts.failed,
-        );
-      });
+      .catch(fail);
   };
 
   const status = view?.status;
@@ -97,6 +136,14 @@ export function SyncPage() {
           </Card>
         ) : (
           <LoginScreen
+            mode={mode}
+            notice={notice}
+            passwordMin={PASSWORD_MIN}
+            onModeChange={(next) => {
+              setMode(next);
+              setError(null);
+              setNotice(null);
+            }}
             busy={busy === 'signIn'}
             error={
               error ?? (status?.lastError === 'SessionExpiredError' ? (errorText ?? null) : null)

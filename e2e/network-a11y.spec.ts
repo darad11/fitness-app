@@ -25,10 +25,14 @@ test('alle Anfragen gehen an die eigene Adresse; Sicherheits-Header gesetzt (AK-
   expect(foreign).toEqual([]);
 });
 
+// Je Seite und Darstellung ein eigener Test: Mit 16 Seiten überschritt die gemeinsame Schleife in
+// WebKit auf dem CI-Runner das Zeitlimit von 30 s (Befund aus der CI von #13).
 for (const theme of ['Hell', 'Dunkel'] as const) {
-  test(`keine axe-Verstöße nach WCAG 2.1 AA in „${theme}" (AK-UX-04 Basis)`, async ({ page }) => {
-    await chooseTheme(page, theme);
-    for (const path of APP_PAGES) {
+  for (const path of APP_PAGES) {
+    test(`keine axe-Verstöße nach WCAG 2.1 AA in „${theme}": ${path} (AK-UX-04 Basis)`, async ({
+      page,
+    }) => {
+      await chooseTheme(page, theme);
       await openPage(page, path);
       const results = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -38,6 +42,6 @@ for (const theme of ['Hell', 'Dunkel'] as const) {
           `${path} ${violation.id}: ${violation.nodes.map((node) => node.target.join(' ')).join(', ')}`,
       );
       expect(violations).toEqual([]);
-    }
-  });
+    });
+  }
 }

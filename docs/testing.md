@@ -678,3 +678,15 @@ Begrüßung mit Uhr, minimierte Tab-Leiste, Tagesaufgaben unten (D-276).
 | Bildschirmfotos | Handy hell und dunkel (oben, gescrollt mit Kreis, wieder aufgeklappt), Web dunkel; vom Produktinhaber freigegeben |
 | Bekannt | Getestet mit Mausrad und Tasten in Chromium; das Wischen am iPhone steht als Gerätetest aus |
 
+### Schritte aus dem Dashboard · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Anmeldung beim Dashboard je Gerät, nur lesend; Karte unter „Ernährung heute“ (D-277).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 82 Dateien, 682 Tests bestanden. Neu `stepStats.test.ts`: dieselben Zahlen wie `steps-core.js` und `home-core.js` des Dashboards, mit Node nachgerechnet (Ziel 23.892, noch 15.472, 35 %, Jahr 2.258.872 = 56 %); ohne Eintrag heute, Tagesziel erreicht, Jahresziel erreicht, Stichtag nach heute, 31. Dezember |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | Erster Lauf: 192 bestanden, 2 rot, 3 übersprungen (`shell.spec.ts` erwartete die Liste unter „Mehr“ ohne den neuen Eintrag; `pwa.spec.ts` Offline-Start am Handy). Liste ergänzt, `/mehr/schritte` in die geprüften Seiten aufgenommen; danach `pwa`, `shell`, `network-a11y`: 124 bestanden. Neu `steps.spec.ts` (Dashboard nachgebildet, Service Worker blockiert): ohne Verbindung keine Anfrage, falsches Passwort mit Hinweis, Karte direkt unter „Ernährung heute“ mit 8.420 Schritten, Ziel und Jahresstand, keine schreibende Anfrage, „Verbindung trennen“ |
+| `pnpm check:bundle` | 247,7 KB Startansicht (Grenze 250 KB) |
+| Bildschirmfotos | Karte auf „Heute“ hell und dunkel, Web, Seite vor und nach dem Verbinden (Beispielwerte); vom Produktinhaber freigegeben, danach unter die Ernährung verschoben |
+| Offen | Echte Anmeldung beim Dashboard und Vergleich der Zahlen mit dem Dashboard (Produktinhaber) |
+

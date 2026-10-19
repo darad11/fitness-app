@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.24 · 19.10.2026 · Schritte aus dem Dashboard
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-277 Schritte aus dem Dashboard, nur lesend |
+| `data-model.md` | Lokale Schlüssel `steps.*` in `meta` |
+| `architecture.md` | Modul `steps`, Dashboard-Host in `connect-src` |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Schritte |
+
 ## Version 0.23 · 19.10.2026 · „Heute“ wie im Dashboard
 
 | Datei | Änderung |

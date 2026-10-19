@@ -254,4 +254,5 @@ Nächste Schritte: <Liste>
 40. Erledigt (über #29 gemergt): aktuelles Gewicht beim Zielgewicht; ein Knopf „Gewicht erfassen“ (D-274).
 41. Erledigt (über #30 gemergt): kleiner Makro-Ring und „Barcode scannen“ auf „Heute“; Scanner öffnet sofort, Mahlzeit nach Uhrzeit, danach zurück zu „Heute“ (D-275).
 42. Erledigt (Branch `feat/heute-dashboard`): Begrüßung mit Uhr wie im Dashboard, Tab-Leiste minimiert sich beim Runterscrollen zum Kreis, Tagesaufgaben unten (D-276).
-43. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+43. Erledigt (Branch `feat/schritte-dashboard`): Schritte aus dem Dashboard auf „Heute“ unter der Ernährung, Anmeldung je Gerät unter Mehr, nur lesend (D-277). Offen beim Produktinhaber: einmal verbinden und die Zahlen mit dem Dashboard vergleichen.
+44. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 export interface RingSegment {
   /** Gewicht des Abschnitts, z. B. kcal aus Eiweiß; die Abschnitte teilen die Füllung anteilig. */
@@ -7,13 +7,11 @@ export interface RingSegment {
   color: string;
 }
 
-const GAP_DEG = 2.5;
-
 /**
- * Ein Ring (D-272): Die Füllung zeigt den Anteil am Kalorienziel und ist nach den Kalorien aus
- * Eiweiß, Kohlenhydraten und Fett in deren Farben geteilt. Ohne Makro-Angaben (z. B. nur
- * Schnelleinträge) füllt er sich einfarbig. Rein grafisch; die Zahlen stehen daneben und im
- * `label` für VoiceOver.
+ * Ein Ring (D-272): Die Füllung zeigt den Anteil am Kalorienziel und läuft in durchgehendem Verlauf
+ * durch die Farben von Eiweiß, Kohlenhydraten und Fett, jeweils so lang wie ihr Anteil an den
+ * Kalorien; runde Enden. Ohne Makro-Angaben (z. B. nur Schnelleinträge) einfarbig. Rein
+ * grafisch; die Zahlen stehen daneben und im `label` für VoiceOver.
  */
 export function MacroRing({
   value,
@@ -31,9 +29,6 @@ export function MacroRing({
   stroke?: number;
   children?: ReactNode;
 }) {
-  const center = size / 2;
-  const radius = center - stroke / 2;
-  const circumference = 2 * Math.PI * radius;
   const filled = Math.min(1, Math.max(0, value));
   const total = segments.reduce((sum, s) => sum + Math.max(0, s.amount), 0);
   const parts =
@@ -42,8 +37,41 @@ export function MacroRing({
           .filter((s) => s.amount > 0)
           .map((s) => ({ color: s.color, share: s.amount / total }))
       : [{ color: 'var(--on-ink)', share: 1 }];
-  const gap = parts.length > 1 ? (GAP_DEG / 360) * circumference : 0;
-  let offset = 0;
+  const end = filled * 360;
+  // Farbstopps: jede Farbe in der Mitte ihres Abschnitts, dazwischen durchgehender Verlauf.
+  const stops: string[] = [];
+  let at = 0;
+  parts.forEach((part, index) => {
+    const length = part.share * end;
+    if (index === 0) stops.push(`${part.color} 0deg`);
+    stops.push(`${part.color} ${String(at + length / 2)}deg`);
+    if (index === parts.length - 1) stops.push(`${part.color} ${String(end)}deg`);
+    at += length;
+  });
+  stops.push(`transparent ${String(end)}deg`);
+  const ring: CSSProperties = {
+    background: `conic-gradient(${stops.join(', ')})`,
+    mask: `radial-gradient(farthest-side, transparent calc(100% - ${String(stroke)}px), #000 calc(100% - ${String(stroke - 0.5)}px))`,
+    WebkitMask: `radial-gradient(farthest-side, transparent calc(100% - ${String(stroke)}px), #000 calc(100% - ${String(stroke - 0.5)}px))`,
+  };
+  const track: CSSProperties = {
+    ...ring,
+    background: 'color-mix(in srgb, var(--on-ink) 15%, transparent)',
+  };
+  // Runde Enden: Punkte in Strichbreite am Anfang und am Ende der Füllung.
+  const radius = size / 2 - stroke / 2;
+  const cap = (deg: number, color: string): CSSProperties => {
+    const rad = ((deg - 90) * Math.PI) / 180;
+    return {
+      width: stroke,
+      height: stroke,
+      left: size / 2 + radius * Math.cos(rad) - stroke / 2,
+      top: size / 2 + radius * Math.sin(rad) - stroke / 2,
+      background: color,
+    };
+  };
+  const first = parts[0]?.color ?? 'var(--on-ink)';
+  const last = parts[parts.length - 1]?.color ?? first;
   return (
     <div
       role="img"
@@ -51,41 +79,15 @@ export function MacroRing({
       className="relative inline-flex shrink-0 items-center justify-center"
       style={{ width: size, height: size }}
     >
-      <svg aria-hidden="true" width={size} height={size} className="-rotate-90">
-        <circle
-          cx={center}
-          cy={center}
-          r={radius}
-          fill="none"
-          strokeWidth={stroke}
-          stroke="var(--on-ink)"
-          strokeOpacity={0.15}
-        />
-        {filled > 0
-          ? parts.map((part) => {
-              const length = part.share * filled * circumference;
-              const visible = Math.max(0, length - gap);
-              const dash = (
-                <circle
-                  key={part.color}
-                  cx={center}
-                  cy={center}
-                  r={radius}
-                  fill="none"
-                  strokeWidth={stroke}
-                  stroke={part.color}
-                  strokeDasharray={`${String(visible)} ${String(circumference)}`}
-                  strokeDashoffset={-offset}
-                />
-              );
-              offset += length;
-              return dash;
-            })
-          : null}
-      </svg>
-      {children ? (
-        <div className="absolute inset-0 flex items-center justify-center">{children}</div>
+      <div aria-hidden="true" className="absolute inset-0 rounded-full" style={track} />
+      {filled > 0 ? (
+        <>
+          <div aria-hidden="true" className="absolute inset-0 rounded-full" style={ring} />
+          <span aria-hidden="true" className="absolute rounded-full" style={cap(0, first)} />
+          <span aria-hidden="true" className="absolute rounded-full" style={cap(end, last)} />
+        </>
       ) : null}
+      {children ? <div className="relative">{children}</div> : null}
     </div>
   );
 }

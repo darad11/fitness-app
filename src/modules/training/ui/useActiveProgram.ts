@@ -2,14 +2,25 @@ import { useEffect, useMemo, useState } from 'react';
 import { loadCoreExercises, type Exercise } from '@/modules/exercises';
 import { logError, useDb } from '@/shared/db';
 import { programProgress, type ProgramProgress } from '../calc/programProgress';
+import { useOwnProgram } from '../data/programRepository';
 import { loadSampleTemplates } from '../data/sampleTemplates';
 import { useCompletedSessions } from '../data/useSession';
 import { useTrainingState } from '../data/useTrainingState';
-import type { SampleTemplate } from '../model/program';
+import type { OwnProgram, SampleTemplate } from '../model/program';
 import type { TrainingStateData } from '../model/trainingState';
 
+/** Gebündeltes oder eigenes Programm; eigene haben keinen `key`. */
+export type AnyProgram = SampleTemplate | OwnProgram;
+
+/** Seite eines Programms: eigene unter /training/programme, gebündelte unter /training/vorlagen. */
+export function programLink(program: AnyProgram): string {
+  return 'key' in program
+    ? `/training/vorlagen/${program.key}`
+    : `/training/programme/${program.id}`;
+}
+
 export interface ActiveProgram {
-  template: SampleTemplate;
+  template: AnyProgram;
   exercises: readonly Exercise[];
   progress: ProgramProgress;
   state: TrainingStateData;
@@ -17,19 +28,19 @@ export interface ActiveProgram {
 
 interface Loaded {
   programId: string;
-  template?: SampleTemplate;
+  bundled?: SampleTemplate;
   exercises: readonly Exercise[];
 }
 
 /**
- * Aktives Programm mit Fortschritt: `undefined` beim Laden, `null` ohne aktives Programm oder
- * wenn es das Programm in dieser Version nicht (mehr) gibt.
+ * Programm nach ID (eigenes zuerst, sonst gebündeltes) mit der Übungsbibliothek: `undefined` beim
+ * Laden, `null`, wenn es das Programm nicht (mehr) gibt.
  */
-export function useActiveProgram(): ActiveProgram | null | undefined {
+export function useProgramById(
+  programId: string | undefined,
+): { program: AnyProgram; exercises: readonly Exercise[] } | null | undefined {
   const { db } = useDb();
-  const state = useTrainingState();
-  const sessions = useCompletedSessions();
-  const programId = state?.activeProgramId;
+  const own = useOwnProgram(programId);
   const [loaded, setLoaded] = useState<Loaded>();
 
   useEffect(() => {
@@ -38,7 +49,7 @@ export function useActiveProgram(): ActiveProgram | null | undefined {
     Promise.all([loadSampleTemplates(), loadCoreExercises()]).then(
       ([templates, exercises]) => {
         if (cancelled) return;
-        setLoaded({ programId, template: templates.find((t) => t.id === programId), exercises });
+        setLoaded({ programId, bundled: templates.find((t) => t.id === programId), exercises });
       },
       (error: unknown) => {
         if (cancelled) return;
@@ -51,8 +62,23 @@ export function useActiveProgram(): ActiveProgram | null | undefined {
     };
   }, [db, programId]);
 
-  const current = loaded && loaded.programId === programId ? loaded : undefined;
-  const template = current?.template;
+  if (!programId) return null;
+  const current = loaded?.programId === programId ? loaded : undefined;
+  if (own === undefined || !current) return undefined;
+  const program = own ?? current.bundled;
+  return program ? { program, exercises: current.exercises } : null;
+}
+
+/**
+ * Aktives Programm mit Fortschritt: `undefined` beim Laden, `null` ohne aktives Programm oder
+ * wenn es das Programm nicht (mehr) gibt.
+ */
+export function useActiveProgram(): ActiveProgram | null | undefined {
+  const state = useTrainingState();
+  const sessions = useCompletedSessions();
+  const programId = state?.activeProgramId;
+  const found = useProgramById(programId);
+  const template = found?.program;
   const progress = useMemo(
     () =>
       template && sessions ? programProgress(template, sessions, state?.activeSince) : undefined,
@@ -61,29 +87,7 @@ export function useActiveProgram(): ActiveProgram | null | undefined {
 
   if (state === undefined || sessions === undefined) return undefined;
   if (!programId) return null;
-  if (!current) return undefined;
-  if (!template || !progress) return null;
-  return { template, exercises: current.exercises, progress, state };
-}
-
-/** Lädt eine gebündelte Vorlage über ihren Schlüssel; `undefined` beim Laden, `null`, wenn es sie nicht gibt. */
-export function useSampleTemplate(key: string | undefined): SampleTemplate | null | undefined {
-  const [result, setResult] = useState<{ key: string; template: SampleTemplate | null }>();
-  useEffect(() => {
-    if (!key) return;
-    let cancelled = false;
-    loadSampleTemplates().then(
-      (templates) => {
-        if (!cancelled) setResult({ key, template: templates.find((t) => t.key === key) ?? null });
-      },
-      () => {
-        if (!cancelled) setResult({ key, template: null });
-      },
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, [key]);
-  if (!key) return null;
-  return result?.key === key ? result.template : undefined;
+  if (found === undefined) return undefined;
+  if (!found || !template || !progress) return null;
+  return { template, exercises: found.exercises, progress, state };
 }

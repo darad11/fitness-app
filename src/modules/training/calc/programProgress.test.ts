@@ -3,6 +3,8 @@ import type { SampleTemplate } from '../model/program';
 import {
   dayNumber,
   flattenDays,
+  isoWeekday,
+  plannedFor,
   programProgress,
   type ProgramSessionLike,
 } from './programProgress';
@@ -130,5 +132,41 @@ describe('Folge der Trainingstage (D-214, D-249)', () => {
 
   it('kommt mit einem Programm ohne Tage zurecht', () => {
     expect(programProgress(template([], true), [])).toMatchObject({ total: 0, finished: false });
+  });
+});
+
+describe('Wochentag-Hinweis (AK-PRG-09)', () => {
+  const plan = {
+    id: 'p',
+    name: 'Plan',
+    repeat: true,
+    weeks: [
+      {
+        id: 'w',
+        position: 0,
+        name: 'Woche 1',
+        days: [
+          { id: 'a', position: 0, name: 'A', weekdayHint: 1 as const, exercises: [] },
+          { id: 'b', position: 1, name: 'B', exercises: [] },
+        ],
+      },
+    ],
+  };
+  // 19.10.2026 ist ein Montag, 22.10.2026 ein Donnerstag.
+  const monday = new Date(2026, 9, 19, 12);
+  const thursday = new Date(2026, 9, 22, 12);
+
+  it('zählt Wochentage nach ISO', () => {
+    expect(isoWeekday(monday)).toBe(1);
+    expect(isoWeekday(new Date(2026, 9, 25, 12))).toBe(7);
+  });
+
+  it('ist heute geplant ohne Hinweis oder bei passendem Wochentag, sonst für den Wochentag', () => {
+    expect(plannedFor(plan, { weekIndex: 0, dayIndex: 0 }, monday)).toEqual({ kind: 'today' });
+    expect(plannedFor(plan, { weekIndex: 0, dayIndex: 0 }, thursday)).toEqual({
+      kind: 'weekday',
+      weekday: 1,
+    });
+    expect(plannedFor(plan, { weekIndex: 0, dayIndex: 1 }, thursday)).toEqual({ kind: 'today' });
   });
 });

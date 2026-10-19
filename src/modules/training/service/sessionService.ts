@@ -20,7 +20,7 @@ import {
   type ValueError,
   type ValueField,
 } from '../calc/session';
-import type { SampleTemplate, SetType } from '../model/program';
+import type { PlanTree, SetType } from '../model/program';
 import {
   LIMITS,
   type Session,
@@ -235,7 +235,7 @@ export interface ExerciseInfo {
  * Programm gestartet ist die Quelle `program`, sonst `template` (D-249).
  */
 export function planFromTemplateDay(
-  template: SampleTemplate,
+  template: PlanTree & { key?: string; sampleKey?: string },
   weekIndex: number,
   dayIndex: number,
   lookup: (exerciseId: string) => ExerciseInfo | undefined,
@@ -250,7 +250,9 @@ export function planFromTemplateDay(
     program: {
       programId: template.id,
       programName: template.name,
-      sampleKey: template.key,
+      ...((template.key ?? template.sampleKey)
+        ? { sampleKey: template.key ?? template.sampleKey }
+        : {}),
       weekId: week.id,
       weekIndex,
       weekName: week.name,
@@ -278,6 +280,9 @@ export function planFromTemplateDay(
           if (set.repsMax !== undefined) target.repsMax = set.repsMax;
           if (set.durationMinSec !== undefined) target.durationMinSec = set.durationMinSec;
           if (set.durationMaxSec !== undefined) target.durationMaxSec = set.durationMaxSec;
+          if (set.weightKg !== undefined) target.weightKg = set.weightKg;
+          if (set.distanceM !== undefined) target.distanceM = set.distanceM;
+          if (set.assistKg !== undefined) target.assistKg = set.assistKg;
           return {
             type: set.type,
             ...(parentIndex >= 0 ? { parentIndex } : {}),

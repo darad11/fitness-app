@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.7 · 19.10.2026 · Eigene Programme und Vorlagen (AP 2.1 bis 2.4)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-257 eigene Programme und Vorlagen |
+| `data-model.md` | Dokument `program` mit Stempeln je Element, Grenzen des Editors |
+| `design-system.md` | S-04, S-05, S-06, S-38, S-49 Stand AP 2.1 bis 2.4 |
+| `implementation-plan.md` | AP 2.1 bis 2.4 umgesetzt, Stand, nächste Schritte |
+| `feature-inventory.md` | TP-01 bis TP-04, TP-08 bis TP-10, TP-12, TP-14 bis TP-16, TP-22 bis TP-25 auf „Implementiert“ |
+| `testing.md` | Ergebnisse eigene Programme |
+
 ## Version 0.6 · 18.10.2026 · Schritte B bis F und Ziele: Bibliothek, Programme A, B, C, aktives Programm, Player, Fortschritt, Tagesaufgaben, Ziele
 
 Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufband Tag 14, Studio, Beinpresse, drei Sätze von Beginn an, Rotation, Kalorien, Tagesaufgaben).

@@ -11,14 +11,14 @@ import { dayNumber } from '../calc/programProgress';
 import { isNewRecord } from '../calc/records';
 import { bestSet, liveExercises, sessionProgress, sessionVolume } from '../calc/session';
 import { useCompletedSessions, useHistoryRows, useSession } from '../data/useSession';
-import { useSampleTemplate } from './useActiveProgram';
+import { useProgramById } from './useActiveProgram';
 
 /** Zusammenfassung nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20 ohne Vergleich) mit „Trainingstag x von n". */
 export function SummaryPage() {
   const { id = '' } = useParams();
   const session = useSession(id);
   const fmt = useFormatters();
-  const template = useSampleTemplate(session?.program?.sampleKey);
+  const template = useProgramById(session?.program?.programId)?.program;
   const sessions = useCompletedSessions();
   const rows = useHistoryRows();
   const weights = useBodyWeights();

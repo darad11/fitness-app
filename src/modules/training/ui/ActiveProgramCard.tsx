@@ -4,8 +4,9 @@ import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter } from '@/shared/ui';
 import type { StartInput } from '../service/sessionService';
 import { planFromTemplateDay } from '../service/sessionService';
+import { plannedFor } from '../calc/programProgress';
 import { describeDay } from './SampleTemplatePage';
-import type { ActiveProgram } from './useActiveProgram';
+import { programLink, type ActiveProgram } from './useActiveProgram';
 
 export interface ActiveProgramCardProps {
   program: ActiveProgram;
@@ -28,7 +29,7 @@ export function ActiveProgramCard({
   const { template, exercises, progress } = program;
   const next = progress.next;
   const restDefaultSec = (useSettings() ?? SETTINGS_DEFAULTS).restDefaultSec;
-  const templateLink = `/training/vorlagen/${template.key}`;
+  const templateLink = programLink(template);
   if (!next) {
     return (
       <Card tone="ink" eyebrow={eyebrow} title={t.programs.finishedTitle} className={className}>
@@ -88,4 +89,17 @@ export function ActiveProgramCard({
       </div>
     </Card>
   );
+}
+
+/**
+ * Überschrift auf „Heute“ (AK-PRG-09): „Heute geplant“, außer der nächste Tag hat einen anderen
+ * Wochentag-Hinweis; dann „Geplant für Donnerstag“.
+ */
+export function plannedEyebrow(program: ActiveProgram, now: Date): string {
+  const next = program.progress.next;
+  if (!next) return t.today.plannedEyebrow;
+  const planned = plannedFor(program.template, next, now);
+  return planned.kind === 'today'
+    ? t.today.plannedEyebrow
+    : t.programs.plannedWeekday(t.programs.weekdays[planned.weekday - 1] ?? '');
 }

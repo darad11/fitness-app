@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.12 · 19.10.2026 · Alle Nährwerte anzeigen, „Heute“ aufgeräumt
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-264 Nährwerttabelle und weitere Tageswerte; D-265 „Heute“ ohne „Status“ und „Diese Version“ |
+| `design-system.md` | S-01 ohne die beiden Karten |
+| `requirements.md` | AK-NUT-08 |
+| `feature-inventory.md` | NU-16 vorgezogen und „Implementiert“ |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Nährwertanzeige |
+
 ## Version 0.11 · 19.10.2026 · Lebensmitteldaten importieren
 
 | Datei | Änderung |

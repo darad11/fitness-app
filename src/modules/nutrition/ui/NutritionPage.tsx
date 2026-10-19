@@ -25,6 +25,9 @@ import { EntryDialog } from './EntryDialog';
 import { dayDate, describeAmount, grams, kcal } from './format';
 
 /** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
+/** Weitere Tageswerte neben den Makros. */
+const EXTRAS = ['sugar', 'salt', 'fiber', 'saturatedFat'] as const;
+
 export function NutritionPage() {
   const fmt = useFormatters();
   const now = useToday();
@@ -140,12 +143,27 @@ export function NutritionPage() {
                 );
               })}
             </dl>
-            {totals.incomplete.some((n) => ['kcal', 'protein', 'carbs', 'fat'].includes(n)) ? (
+            <div role="group" aria-label={t.nutrition.extrasLabel}>
+              <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+                {EXTRAS.map((nutrient) => (
+                  <div key={nutrient} className="flex justify-between gap-2">
+                    <dt className="text-on-ink-muted">{t.nutrition.extras[nutrient]}</dt>
+                    <dd className="font-semibold tabular-nums">
+                      {nutrient === 'salt'
+                        ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
+                        : grams(fmt, totals.sums[nutrient])}{' '}
+                      {t.nutrition.units.g}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+            {totals.incomplete.some((n) => n !== 'kcal') ? (
               <p className="mt-3 text-sm text-on-ink-muted">
                 {t.nutrition.incomplete(
                   totals.incomplete
-                    .filter((n) => ['protein', 'carbs', 'fat'].includes(n))
-                    .map((n) => t.nutrition.nutrients[n])
+                    .filter((n) => n !== 'kcal')
+                    .map((n) => t.nutrition.nutrientNames[n])
                     .join(', '),
                 )}
               </p>

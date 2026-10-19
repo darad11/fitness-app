@@ -24,6 +24,7 @@ import type { FoodItem } from '../model/foodItem';
 import { MEAL_SLOTS, type MealSlot } from '../model/nutrition';
 import { logFood, logQuick, type Quantity } from '../service/nutritionService';
 import { kcal } from './format';
+import { NutrientTable } from './NutrientTable';
 import { useFoodCatalog } from './useFoodCatalog';
 
 const INPUT =
@@ -246,7 +247,8 @@ function LogDialog({
   const [error, setError] = useState<string | null>(null);
   const parsed = parseDecimal(value);
   const amount = parsed === null ? null : serving ? parsed * serving.amount : parsed;
-  const preview = amount !== null && amount > 0 ? scaleNutrients(food.per100, amount).kcal : null;
+  const scaled = amount !== null && amount > 0 ? scaleNutrients(food.per100, amount) : null;
+  const preview = scaled?.kcal ?? null;
 
   const submit = () => {
     if (parsed === null || parsed <= 0) {
@@ -325,10 +327,24 @@ function LogDialog({
           />
         </div>
         <p role="status" className="text-lg font-semibold tabular-nums">
-          {preview !== null && preview !== undefined
-            ? t.nutrition.preview(kcal(fmt, preview))
-            : '–'}
+          {preview !== null ? t.nutrition.preview(kcal(fmt, preview)) : '–'}
         </p>
+        <NutrientTable
+          caption={t.nutrition.nutrientsTitle}
+          columns={[
+            { label: t.nutrition.per100(unit), values: food.per100 },
+            ...(scaled && amount !== null
+              ? [
+                  {
+                    label: t.nutrition.forAmount(
+                      `${fmt.number(amount, { maximumFractionDigits: 1 })} ${unit}`,
+                    ),
+                    values: scaled,
+                  },
+                ]
+              : []),
+          ]}
+        />
         {error ? (
           <p role="alert" className="text-sm text-danger">
             {error}

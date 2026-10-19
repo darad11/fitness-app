@@ -259,6 +259,7 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-NUT-05 | Das Tagesziel lässt sich selbst eintragen oder aus einem Vorschlag (Mifflin-St Jeor, Aktivität, Richtung) übernehmen; Ziele sind datiert, eine Änderung gilt ab heute; die Tagesübersicht zeigt Ziel, Rest und Makros | NU-01, NU-17 | U, K, E | Schritt G |
 | AK-NUT-06 | Die Suche findet Lebensmittel auch über österreichische Bezeichnungen (z. B. Topfen, Erdäpfel, Paradeiser) und funktioniert ohne Netz; der Quellenhinweis zum BLS ist sichtbar | NU-21, NU-25 | U, K, E | Schritt G |
 | AK-NUT-07 | Eine Datei der BLS-Recherche lässt sich lokal importieren: Vorschau mit übernommenen (ÖNWT) und weggelassenen Einträgen (deutsche BLS-Daten, auslaufend, unklar oder unvollständig); nach Bestätigung erscheinen die Lebensmittel mit Herkunft in der Suche, auch nach Neuladen und ohne Netz; „Import entfernen“ nimmt sie aus der Suche, Protokolleinträge bleiben; eine fremde Datei wird abgelehnt | NU-25 | U, K, E | Schritt G |
+| AK-NUT-08 | Beim Hinzufügen zeigt die App alle acht Nährwerte je 100 und für die gewählte Menge, beim Bearbeiten die Werte des Eintrags; die Tagesübersicht zeigt zusätzlich Zucker, Salz, Ballaststoffe und gesättigte Fettsäuren; fehlende Werte sind als „–“ bzw. „Unvollständig“ erkennbar | NU-16 | K, E | Schritt G |
 
 ### 6.13 Gerätetests (AK-DEV)
 

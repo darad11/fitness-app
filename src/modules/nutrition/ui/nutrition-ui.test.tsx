@@ -274,4 +274,50 @@ describe('Ernährung (Schritt G, D-261)', () => {
     );
     expect(await screen.findByText(/Diese Datei passt nicht/, {}, WAIT)).toBeVisible();
   });
+
+  it(
+    'zeigt alle Nährwerte mit Zucker und Salz im Dialog und in der Tagessumme',
+    { timeout: 40_000 },
+    async () => {
+      const user = userEvent.setup();
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
+      await waitFor(() => {
+        expect(document.querySelector('[aria-busy="true"]')).toBeNull();
+      }, WAIT);
+      await user.type(screen.getByLabelText('Lebensmittel suchen'), 'haferflocken');
+      await user.click(
+        await screen.findByRole('button', { name: /^Hafer FlockenBLS348 kcal/ }, WAIT),
+      );
+      const dialog = screen.getByRole('dialog', { name: 'Hafer Flocken hinzufügen' });
+      await user.clear(within(dialog).getByLabelText('Menge in g'));
+      await user.type(within(dialog).getByLabelText('Menge in g'), '50');
+      const table = within(dialog).getByRole('table', { name: 'Nährwerte' });
+      const sugar = within(table).getByRole('row', { name: /davon Zucker/ });
+      expect(
+        within(sugar)
+          .getAllByRole('cell')
+          .map((c) => c.textContent),
+      ).toEqual(['0,7 g', '0,4 g']);
+      const fiber = within(table).getByRole('row', { name: /Ballaststoffe/ });
+      expect(
+        within(fiber)
+          .getAllByRole('cell')
+          .map((c) => c.textContent),
+      ).toEqual(['11 g', '5,5 g']);
+      expect(within(table).getByRole('row', { name: /Salz/ })).toHaveTextContent('0 g');
+      expect(within(table).getByRole('columnheader', { name: 'für 50 g' })).toBeVisible();
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      const list = await screen.findByLabelText('Weitere Nährwerte', {}, WAIT);
+      expect(within(list).getByText('Zucker').nextElementSibling).toHaveTextContent('0,4 g');
+      expect(within(list).getByText('Ballaststoffe').nextElementSibling).toHaveTextContent('5,5 g');
+      expect(within(list).getByText('Salz').nextElementSibling).toHaveTextContent('0 g');
+
+      // Bearbeiten zeigt die Werte des Eintrags.
+      await user.click(screen.getByRole('button', { name: 'Hafer Flocken bearbeiten' }));
+      const edit = screen.getByRole('dialog', { name: 'Hafer Flocken' });
+      expect(within(edit).getByRole('table', { name: 'Nährwerte für 50 g' })).toBeVisible();
+    },
+  );
 });

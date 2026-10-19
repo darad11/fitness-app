@@ -45,7 +45,6 @@ test('erkennt die installierte App und zeigt dort keinen Hinweis (AK-SET-06)', a
     });
   });
   await openPage(page, '/heute');
-  await expect(page.getByText('Als App installiert')).toBeVisible();
   await expect(page.getByText(HINT)).toHaveCount(0);
   await openPage(page, '/mehr/installieren');
   await expect(page.getByText('Die App läuft als installierte App.')).toBeVisible();

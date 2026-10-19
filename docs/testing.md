@@ -482,3 +482,18 @@ Eigene Übungen anlegen (auch aus der Übungsauswahl), bearbeiten, archivieren; 
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 230,6 KB gzip (Grenze 250 KB; +3,3 KB, weil „Heute“ für das aktive Programm auch eigene Übungen liest) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 128 Tests bestanden. Neu `custom-exercises.spec.ts`: Übung anlegen, Notiz und Standardpause nach Neuladen erhalten, in einem neuen Programm über die Suche hinzufügen und starten; axe ohne Verstöße auf Detail, Dialog und Liste in „Hell“ und „Dunkel“ |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
+
+### Ernährung Grundausbau (Schritt G) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+BLS 4.0 gebündelt mit österreichischen Suchbegriffen, eigene Lebensmittel, Tagesprotokoll mit vier Mahlzeiten, Schnelleintrag, Ziele selbst oder per Vorschlag, Dexie v3 (D-261, D-262).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Prüfspike S-2 (BLS 4.0) | Datei `BLS_4_0_2025_DE.zip` vom Produktinhaber; Nutzungsbedingungen (Dokumentation 9.3) erlauben App-Entwicklung mit Quellenangabe; 7.140 Lebensmittel, alle mit Energiewert; Umwandlung `tools/bls_build.py` → 590 KB, gzip 164 KB |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden; Matrix-Konsistenzprüfung bestanden (111 AK) |
+| `pnpm test` | 69 Dateien, 551 Tests bestanden. Neu: `nutrition.test.ts` (Umrechnung je Menge, Tagessumme wie per Hand 821,8 kcal, Lücken und Schätzung, 4/4/9-Prüfung, Mifflin-St Jeor 1750 kcal und Vorschlag 2710 kcal, Ziel an einem Tag, Suche „Topfen“, „Paradeiser“, „Erdäpfel“), `nutritionService.test.ts` (BLS lädt 7.140 Einträge mit stabilen IDs; eigene Lebensmittel mit Prüfungen; Protokoll nach Gramm und Portion mit eingefrorenen Werten; Schnelleintrag; Mengenänderung anteilig; Löschen und Wiederherstellen; datierte Ziele), `nutrition-ui.test.tsx` (Tag protokollieren, ändern, löschen mit Rückgängig, Schnelleintrag; Suche „topfen“; eigenes Lebensmittel mit Portion und Plausibilitätshinweis; Ziele selbst und per Vorschlag), Migrationstest v2 → v3; angepasst: Schema-, Snapshot- und Exporttests auf v3, Navigation mit „Ernährung“ |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,41 %, Zweige 79,36 %, Funktionen 86,04 %, Zeilen 89,5 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 233,4 KB gzip (Grenze 250 KB); der BLS liegt in einem eigenen, erst im Ernährungsbereich geladenen Teil |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 150 Tests bestanden. Neu `nutrition.spec.ts`: Ziel 2.200 kcal, „erdäpfel gekocht“ suchen und 200 g zum Mittagessen, nach Neuladen erhalten, Karte „Ernährung heute“; fünf Ernährungsseiten in der Netz- und axe-Prüfung (Hell und Dunkel) ohne Verstöße und ohne fremde Anfragen |
+| Sichtprüfung | Bildschirmfoto Pixel 7: Navigation mit fünf Bereichen passt in eine Zeile |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

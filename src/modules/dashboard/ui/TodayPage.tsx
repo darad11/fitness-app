@@ -1,9 +1,10 @@
 import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, Play, RefreshCw } from 'lucide-react';
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { Link } from 'react-router';
 import { changeInPeriod, inPeriod, recentValues, Sparkline, useBodyWeights } from '@/modules/body';
 import { changeTone, useActiveGoals, WeeklyGoalCard, weightToGoal } from '@/modules/goals';
 import { pickDaily, TasksCard } from '@/modules/habits';
+import { NutritionTodayCard } from '@/modules/nutrition';
 import { useFormatters, useProfile } from '@/modules/settings';
 import {
   ActiveProgramCard,
@@ -195,6 +196,9 @@ export function TodayPage() {
           </Card>
         )}
         <TasksCard />
+        <Suspense fallback={null}>
+          <NutritionTodayCard />
+        </Suspense>
         {sessions && goals ? (
           <WeeklyGoalCard sessions={sessions} target={goals.weeklySessions} today={todayKey} />
         ) : null}

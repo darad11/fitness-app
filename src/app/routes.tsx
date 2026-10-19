@@ -4,6 +4,7 @@ import { dashboardRoutes } from '@/modules/dashboard';
 import { exercisesRoutes } from '@/modules/exercises';
 import { goalsRoutes } from '@/modules/goals';
 import { habitsRoutes } from '@/modules/habits';
+import { nutritionRoutes } from '@/modules/nutrition';
 import { progressRoutes } from '@/modules/progress';
 import { settingsRoutes } from '@/modules/settings';
 import { trainingRoutes } from '@/modules/training';
@@ -31,6 +32,7 @@ export const routes: RouteObject[] = [
           ...bodyRoutes,
           ...progressRoutes,
           ...exercisesRoutes,
+          ...nutritionRoutes,
           ...settingsRoutes,
           ...goalsRoutes,
           { path: '*', Component: NotFoundPage },

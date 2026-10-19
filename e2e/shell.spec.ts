@@ -15,6 +15,7 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   await expect(mainNav(page).getByRole('link')).toHaveText([
     'Heute',
     'Training',
+    'Ernährung',
     'Fortschritt',
     'Mehr',
   ]);

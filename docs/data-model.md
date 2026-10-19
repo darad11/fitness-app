@@ -266,6 +266,8 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 | `habit`, `habit_log` | R1 (Schritt F, D-253, Tagesaufgaben) | habit: name, position, fromDayKey, toDayKey?, archivedAt?; log: ID aus Aufgabe und Tag (UUID v5 aus `habit_log:<habitId>:<dayKey>`), done, doneAt?. Später: frequency, targetValue, unit, value | Einer je Aufgabe und Tag |
 | `water_entry`, `daily_note` | R4 | dayKey, ml bzw. text | – |
 
+Umsetzung im Grundausbau (D-261): `food` mit `basis` ('g' | 'ml'), `per100` (fehlende Werte fehlen), `servings[{id, name, amount}]`, `source` ('custom' | 'quick' | 'bls' | 'off' | 'import'), `quality`, optional `brand`, `barcode`, `sourceRef`, `favorite`, `archivedAt`. `food_log_entry` mit `slot` ('breakfast' | 'lunch' | 'dinner' | 'snacks'), `kind` ('food' | 'quick'), `foodId` (eigenes Lebensmittel oder BLS-ID `uuidv5('bls:' + Code)`), `nameSnapshot`, `basisSnapshot`, `amount`, `servingSnapshot{name, count}`, `nutrients` (absolut), `isEstimated`. `nutrition_target` mit `effectiveFrom`, `endedAt`, `kcal`, `proteinG`, `carbsG`, `fatG`, `method`, `inputsSnapshot` (D-262).
+
 ## 5. Lokale, nicht synchronisierte Tabellen
 
 | Tabelle | Inhalt | Lebensdauer |
@@ -279,9 +281,11 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 | R3: `outbox`, `syncBase`, `syncState` | Ausstehende Änderungen, letzte bekannte Serverversion je Dokument (Basis für den 3-Wege-Merge), Pull-Cursor | Dauerhaft |
 | R4: `mediaBlob` | Fotos und Vorschaubilder | Bis zur Löschung |
 
-## 6. Dexie-Schema (MVP: v1 aus M0, v2 seit Schritt F)
+## 6. Dexie-Schema (MVP: v1 aus M0, v2 seit Schritt F, v3 seit Schritt G)
 
 v2 (D-253) ergänzt additiv `habits: 'id, archivedAt'` und `habitLogs: 'id, habitId, dayKey'`; vor dem Upgrade entsteht ein Snapshot, der Migrationstest öffnet eine v1-Datenbank verlustfrei (`migrations.test.ts`).
+
+v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedAt'`, `foodLog: 'id, dayKey, foodId'` und `nutritionTargets: 'id, effectiveFrom'`; Snapshot vor dem Upgrade, Migrationstest v2 → v3. Der BLS liegt nicht in einer Tabelle, sondern gebündelt als Datei (590 KB, im Speicher durchsucht); die geplante Tabelle `generic_food` entfällt vorerst.
 
 ```ts
 // src/shared/db/schema.ts – Entwurf v1; umgesetzt in M0 mit generischen Tabellentypen (siehe unten)

@@ -1,6 +1,6 @@
 /**
- * Dexie-Schema für den MVP (data-model.md Abschnitt 6): v1 aus M0, v2 mit den Tabellen für
- * Tagesaufgaben (Schritt F, D-253).
+ * Dexie-Schema (data-model.md Abschnitt 6): v1 aus M0, v2 mit den Tabellen für Tagesaufgaben
+ * (Schritt F, D-253), v3 mit den Tabellen für die Ernährung (Schritt G, D-261).
  *
  * Die Tabellen speichern Dokumente generisch; die genauen Typen und Zod-Schemas liegen in den
  * Fachmodulen und werden beim Lesen geprüft. Neue Indizes oder Tabellen erhöhen die Version
@@ -10,7 +10,7 @@ import Dexie, { type Table } from 'dexie';
 import type { RootFields } from './documents';
 
 export const DB_NAME = 'fitness';
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 
 export const STORES_V1 = {
   sessions: 'id, status, dayKey, startedAt, endedAt, *exerciseIds, [program.programId+endedAt]',
@@ -33,7 +33,15 @@ export const STORES_V2 = {
   habitLogs: 'id, habitId, dayKey',
 } as const;
 
-export const STORES_CURRENT = STORES_V2;
+/** v3 (Schritt G): Lebensmittel, Protokolleinträge und Ernährungsziele; additiv zu v2. */
+export const STORES_V3 = {
+  ...STORES_V2,
+  foods: 'id, nameNorm, barcode, archivedAt',
+  foodLog: 'id, dayKey, foodId',
+  nutritionTargets: 'id, effectiveFrom',
+} as const;
+
+export const STORES_CURRENT = STORES_V3;
 
 /** Tabellen mit synchronisierbaren Dokumenten (Aggregatwurzeln). */
 export const DOCUMENT_TABLES = [
@@ -46,6 +54,9 @@ export const DOCUMENT_TABLES = [
   'singletons',
   'habits',
   'habitLogs',
+  'foods',
+  'foodLog',
+  'nutritionTargets',
 ] as const;
 export type DocumentTableName = (typeof DOCUMENT_TABLES)[number];
 
@@ -91,6 +102,9 @@ export class AppDb extends Dexie {
   declare singletons: Table<StoredDoc, string>;
   declare habits: Table<StoredDoc, string>;
   declare habitLogs: Table<StoredDoc, string>;
+  declare foods: Table<StoredDoc, string>;
+  declare foodLog: Table<StoredDoc, string>;
+  declare nutritionTargets: Table<StoredDoc, string>;
   declare exerciseHistory: Table<ExerciseHistoryRow, string>;
   declare sessionUi: Table<SessionUiRow, string>;
   declare meta: Table<MetaEntry, string>;
@@ -100,5 +114,6 @@ export class AppDb extends Dexie {
     super(name);
     this.version(1).stores(STORES_V1);
     this.version(2).stores(STORES_V2);
+    this.version(3).stores(STORES_V3);
   }
 }

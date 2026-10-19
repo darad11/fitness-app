@@ -151,7 +151,7 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-PRG-10 | Änderungen an einem Programm wirken nur auf künftig gestartete Einheiten; laufende und abgeschlossene Einheiten behalten ihren Snapshot | TP-14 | I | M2 |
 | AK-PRG-11 | Programme lassen sich archivieren oder löschen (mit Rückfrage, 10 s rückgängig); Einheiten daraus bleiben mit Programmname im Verlauf | TP-01 | E | M2 |
 | AK-PRG-12 | Die Programmansicht zeigt alle Wochen und Tage mit Übungen und markiert den nächsten Tag | TP-02, TP-17 | E | M2 |
-| AK-PRG-13 | Ein Programm lässt sich als Datei exportieren und auf einem anderen Gerät importieren; bei gleicher ID fragt die App, ob aktualisiert oder als Kopie angelegt werden soll | TP-26 | I, E | M2 |
+| AK-PRG-13 | Ein Programm lässt sich als Datei exportieren und auf einem anderen Gerät importieren; bei gleicher ID fragt die App, ob aktualisiert oder als Kopie angelegt werden soll | TP-26 | I, E | R3 (D-259: über die Synchronisierung statt Programmdatei) |
 
 ### 6.5 Übungen (AK-EXL)
 

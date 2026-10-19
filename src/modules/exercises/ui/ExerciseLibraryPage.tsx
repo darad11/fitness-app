@@ -1,8 +1,22 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useLoaderData, useSearchParams } from 'react-router';
+import { ChevronRight, Plus } from 'lucide-react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router';
 import { t } from '@/shared/i18n/de';
-import { Button, PageHeader, SearchField, SelectField, type SelectOption } from '@/shared/ui';
+import {
+  Badge,
+  Button,
+  PageHeader,
+  SearchField,
+  SelectField,
+  Skeleton,
+  type SelectOption,
+} from '@/shared/ui';
 import { buildSearchIndex, compareExerciseNames, searchExercises } from '../calc/search';
+import { useExercises } from '../data/customExercises';
+
+const CustomExerciseDialog = lazy(async () => ({
+  default: (await import('./CustomExerciseDialog')).CustomExerciseDialog,
+}));
 import {
   EQUIPMENT,
   EXERCISE_GROUPS,
@@ -50,8 +64,28 @@ function writeFilter({ query, muscle, equipment }: LibraryFilter): URLSearchPara
   return params;
 }
 
+/** Übungsbibliothek (S-12) mit eigenen Übungen (AK-EXL-03, D-258). */
 export function ExerciseLibraryPage() {
-  const exercises = useLoaderData<readonly Exercise[]>();
+  const all = useExercises();
+  if (all === undefined) {
+    return (
+      <div aria-busy="true" className="grid gap-4">
+        <Skeleton className="h-10 w-1/2" />
+        <Skeleton className="h-64" />
+      </div>
+    );
+  }
+  return <Library all={all} />;
+}
+
+function Library({ all }: { all: readonly Exercise[] }) {
+  const navigate = useNavigate();
+  const [creating, setCreating] = useState<{ name?: string } | null>(null);
+  const exercises = useMemo(() => all.filter((exercise) => !exercise.archivedAt), [all]);
+  const archived = useMemo(
+    () => all.filter((exercise) => exercise.archivedAt).sort(compareExerciseNames),
+    [all],
+  );
   const index = useMemo(() => buildSearchIndex(exercises), [exercises]);
   const [params, setParams] = useSearchParams();
   // Die Seite hält Suche und Filter selbst und schreibt sie nur in die Adresse. So geht bei schnell
@@ -77,6 +111,30 @@ export function ExerciseLibraryPage() {
         subtitle={t.exercises.count(exercises.length)}
         back={{ to: '/training', label: t.training.title }}
       />
+      <Button
+        variant="secondary"
+        className="mb-4"
+        onClick={() => {
+          setCreating({});
+        }}
+      >
+        <Plus aria-hidden="true" className="size-5" />
+        {t.exercises.createCustom}
+      </Button>
+      {creating ? (
+        <Suspense fallback={null}>
+          <CustomExerciseDialog
+            initialName={creating.name}
+            onClose={() => {
+              setCreating(null);
+            }}
+            onSaved={(exercise) => {
+              setCreating(null);
+              void navigate(`/uebungen/${exercise.id}`);
+            }}
+          />
+        </Suspense>
+      ) : null}
       <div
         role="search"
         className="mb-6 grid grid-cols-2 gap-x-3 gap-y-3 md:grid-cols-[2fr_1fr_1fr]"
@@ -113,7 +171,21 @@ export function ExerciseLibraryPage() {
         {filtered ? t.exercises.results(results.length) : ''}
       </p>
       {!filtered ? (
-        <GroupedList exercises={exercises} />
+        <>
+          <GroupedList exercises={exercises} />
+          {archived.length > 0 ? (
+            <details className="mt-6">
+              <summary className="eyebrow cursor-pointer py-2 text-muted">
+                {t.exercises.archivedTitle(archived.length)}
+              </summary>
+              <p className="mt-2 mb-3 text-sm text-muted">{t.exercises.archivedHint}</p>
+              <ExerciseList
+                exercises={archived}
+                label={t.exercises.archivedTitle(archived.length)}
+              />
+            </details>
+          ) : null}
+        </>
       ) : results.length > 0 ? (
         <>
           <p aria-hidden="true" className="mb-2 text-sm text-muted">
@@ -125,14 +197,26 @@ export function ExerciseLibraryPage() {
         <div className="rounded-card bg-surface p-6 text-center shadow-card">
           <h2 className="text-lg font-semibold">{t.exercises.emptyTitle}</h2>
           <p className="mt-1 mb-4 text-muted">{t.exercises.emptyText}</p>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setFilter(EMPTY_FILTER);
-            }}
-          >
-            {t.exercises.reset}
-          </Button>
+          <div className="flex flex-wrap justify-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setFilter(EMPTY_FILTER);
+              }}
+            >
+              {t.exercises.reset}
+            </Button>
+            {query.trim() ? (
+              <Button
+                onClick={() => {
+                  setCreating({ name: query.trim() });
+                }}
+              >
+                <Plus aria-hidden="true" className="size-5" />
+                {t.exercises.createCustomFrom(query.trim())}
+              </Button>
+            ) : null}
+          </div>
         </div>
       )}
     </>
@@ -148,8 +232,20 @@ function GroupedList({ exercises }: { exercises: readonly Exercise[] }) {
       })).filter(({ items }) => items.length > 0),
     [exercises],
   );
+  const custom = useMemo(
+    () => exercises.filter((exercise) => exercise.source === 'custom').sort(compareExerciseNames),
+    [exercises],
+  );
   return (
     <div className="grid gap-6">
+      {custom.length > 0 ? (
+        <section aria-labelledby="gruppe-eigene">
+          <h2 id="gruppe-eigene" className="eyebrow mb-2 text-muted">
+            {t.exercises.customTitle}
+          </h2>
+          <ExerciseList exercises={custom} label={t.exercises.customTitle} />
+        </section>
+      ) : null}
       {groups.map(({ group, items }) => (
         <section key={group} aria-labelledby={`gruppe-${group}`}>
           <h2 id={`gruppe-${group}`} className="eyebrow mb-2 text-muted">
@@ -169,9 +265,22 @@ function ExerciseList({ exercises, label }: { exercises: readonly Exercise[]; la
       className="divide-y divide-line overflow-hidden rounded-card bg-surface shadow-card"
     >
       {exercises.map((exercise) => (
-        <li key={exercise.id} className="min-h-14 px-5 py-3">
-          <p className="font-medium">{exercise.name}</p>
-          <p className="text-sm text-muted">{describeExercise(exercise)}</p>
+        <li key={exercise.id}>
+          <Link
+            to={`/uebungen/${exercise.id}`}
+            className="flex min-h-14 items-center gap-3 px-5 py-3 hover:bg-surface-2"
+          >
+            <span className="min-w-0 flex-1">
+              <span className="flex flex-wrap items-center gap-2">
+                <span className="font-medium">{exercise.name}</span>
+                {exercise.source === 'custom' ? (
+                  <Badge tone="accent">{t.exercises.customBadge}</Badge>
+                ) : null}
+              </span>
+              <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
+            </span>
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+          </Link>
         </li>
       ))}
     </ul>

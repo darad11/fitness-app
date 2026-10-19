@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -123,8 +123,9 @@ describe('Fortschritt (S-27, TH-05, TH-06)', () => {
         <RouterProvider router={router} />
       </DbProvider>,
     );
-    await waitFor(() => {
-      expect(router.state.errors).not.toBeNull();
-    });
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Übung nicht gefunden' }),
+    ).toBeVisible();
+    expect(router.state.errors).toBeNull();
   });
 });

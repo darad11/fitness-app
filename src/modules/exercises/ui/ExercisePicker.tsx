@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { t } from '@/shared/i18n/de';
-import { Dialog, SearchField, SelectField } from '@/shared/ui';
+import { Badge, Button, Dialog, SearchField, SelectField } from '@/shared/ui';
 import { findAlternatives } from '../calc/alternatives';
 import { buildSearchIndex, searchExercises } from '../calc/search';
-import { loadCoreExercises } from '../data/coreLibrary';
+import { useExercises } from '../data/customExercises';
+import { CustomExerciseDialog } from './CustomExerciseDialog';
 import type { Equipment, Exercise, Muscle } from '../model/exercise';
 import { EQUIPMENT_OPTIONS, MUSCLE_OPTIONS, describeExercise } from './ExerciseLibraryPage';
 
@@ -24,20 +26,13 @@ export function ExercisePicker({
   onSelect,
   alternativesForId,
 }: ExercisePickerProps) {
-  const [exercises, setExercises] = useState<readonly Exercise[]>([]);
+  const all = useExercises();
+  // Archivierte eigene Übungen erscheinen nicht in der Auswahl (AK-EXL-03).
+  const exercises = useMemo(() => (all ?? []).filter((e) => !e.archivedAt), [all]);
   const [query, setQuery] = useState('');
   const [muscle, setMuscle] = useState<Muscle | ''>('');
   const [equipment, setEquipment] = useState<Equipment | ''>('');
-  useEffect(() => {
-    if (!open) return;
-    let active = true;
-    void loadCoreExercises().then((list) => {
-      if (active) setExercises(list);
-    });
-    return () => {
-      active = false;
-    };
-  }, [open]);
+  const [creating, setCreating] = useState(false);
   const index = useMemo(() => buildSearchIndex(exercises), [exercises]);
   const results = useMemo(
     () =>
@@ -68,7 +63,12 @@ export function ExercisePicker({
             }}
             className="block min-h-14 w-full px-4 py-3 text-left hover:bg-line"
           >
-            <span className="block font-medium">{exercise.name}</span>
+            <span className="flex flex-wrap items-center gap-2">
+              <span className="font-medium">{exercise.name}</span>
+              {exercise.source === 'custom' ? (
+                <Badge tone="accent">{t.exercises.customBadge}</Badge>
+              ) : null}
+            </span>
             <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
           </button>
         </li>
@@ -120,6 +120,28 @@ export function ExercisePicker({
       ) : (
         renderList(results)
       )}
+      <Button
+        variant="secondary"
+        className="mt-4 w-full"
+        onClick={() => {
+          setCreating(true);
+        }}
+      >
+        <Plus aria-hidden="true" className="size-5" />
+        {query.trim() ? t.exercises.createCustomFrom(query.trim()) : t.exercises.createCustomEmpty}
+      </Button>
+      {creating ? (
+        <CustomExerciseDialog
+          initialName={query.trim()}
+          onClose={() => {
+            setCreating(false);
+          }}
+          onSaved={(exercise) => {
+            setCreating(false);
+            onSelect(exercise);
+          }}
+        />
+      ) : null}
     </Dialog>
   );
 }

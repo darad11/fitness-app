@@ -207,6 +207,8 @@ interface ExercisePref extends Root {              // Typ 'exercise_pref', ID = 
 
 Persönliche Angaben zu Basisübungen liegen ausschließlich in `ExercisePref`; ein App-Update der Basisbibliothek berührt sie nie (AK-EXL-04).
 
+Umsetzung (D-258): Eigene Übungen speichern eine Hauptmuskelgruppe und ein Gerät als Liste mit einem Eintrag, `aliases` bleibt leer, `isUnilateral` ist `true` oder fehlt, `category` folgt aus Erfassungsart und Muskeln. `exercise_pref` hat die ID `uuidv5('exercise_pref:' + exerciseId)`; leere Angaben werden entfernt statt leer gespeichert; `videoUrl` nur mit https. `hidden` und `favorite` sind reserviert. Die Oberfläche liest Basis- und eigene Übungen als eine Liste (`useExercises`), archivierte eigene Übungen nur für Verlauf und Pläne.
+
 ### 3.5 Körpergewicht (`body_weight`)
 
 ```ts

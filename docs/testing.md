@@ -469,3 +469,16 @@ Eigene Programme anlegen, übernehmen, bearbeiten (Wochen, Tage, Übungen, Sätz
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 227,3 KB gzip (Grenze 250 KB; +6,5 KB, weil „Heute“ für das aktive Programm jetzt auch eigene Programme liest) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 122 Tests bestanden. Neu `own-programs.spec.ts`: „Ganzkörper A/B“ übernehmen, Plank nach oben, Wdh. bis 10, nach Neuladen erhalten, Original unverändert; axe ohne Verstöße auf Programmseite, Editor, Tag-Editor und Liste in „Hell“ und „Dunkel“ |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest (eigenes Programm am iPhone) steht aus |
+
+### Eigene Übungen und persönliche Angaben (AP 2.5) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Eigene Übungen anlegen (auch aus der Übungsauswahl), bearbeiten, archivieren; Hinweis bei gleichem Namen; Übungsdetail mit Angaben, persönlichen Angaben (Notiz, Standardpause, Gewichtsschritt, Videolink) und letzten Einheiten; Standardpause und Gewichtsschritt im Player (D-258). Programmdatei entfällt (D-259).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 66 Dateien, 531 Tests bestanden. Neu: `names.test.ts` (Vergleich ohne Schreibweise, Alias, eigene Übung ausgenommen), `exerciseService.test.ts` (Anlegen mit Suchschlüssel und Kategorie, Distanz-Einheit, Prüfungen ohne Speichern, Bearbeiten, Archivieren und Wiederherstellen, persönliche Angaben mit fester ID, Teiländerung, nur https und gültige Werte), `custom-exercises-ui.test.tsx` (Anlegen mit Hinweis, Angaben, Videolink, Bearbeiten, Archiv; Anlegen aus leerer Suche mit Zeit und Distanz; Angaben zu einer Basisübung ohne Änderung der Bibliothek), ein Fall in `player-ui.test.tsx` (Standardpause 45 s und Gewichtsschritt 1,25 kg der Übung). Angepasst: `exercise-library.test.tsx` (Datenbank, Zeilen als Links), `progress-ui.test.tsx` (unbekannte Übung zeigt „Übung nicht gefunden“ statt Fehlerseite) |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,73 %, Zweige 80,36 %, Funktionen 86,34 %, Zeilen 89,87 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 230,6 KB gzip (Grenze 250 KB; +3,3 KB, weil „Heute“ für das aktive Programm auch eigene Übungen liest) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 128 Tests bestanden. Neu `custom-exercises.spec.ts`: Übung anlegen, Notiz und Standardpause nach Neuladen erhalten, in einem neuen Programm über die Suche hinzufügen und starten; axe ohne Verstöße auf Detail, Dialog und Liste in „Hell“ und „Dunkel“ |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

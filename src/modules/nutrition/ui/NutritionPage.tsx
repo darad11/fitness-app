@@ -220,7 +220,7 @@ export function NutritionPage() {
 
           <nav
             aria-label={t.nutrition.shortcuts}
-            className="my-2 grid grid-cols-2 gap-2 md:flex md:justify-center md:gap-3"
+            className="my-2 grid grid-cols-2 gap-2 md:relative md:flex md:justify-center md:gap-3"
           >
             <Link to="/ernaehrung/ziele" className={PILL}>
               <Target aria-hidden="true" className="size-5 text-accent-ink" />

@@ -61,7 +61,7 @@ function Entries({ entries, onPick }: { entries: readonly Entry[]; onPick: () =>
 
 /**
  * „Meine Küche“ (D-272): ein Knopf für Meine Lebensmittel, Rezepte und Vorlagen. Am Handy öffnet
- * er eine Glas-Fläche von unten, ab 768 px ein kleines Menü unter dem Knopf.
+ * * er eine Glas-Fläche von unten, ab 768 px ein kleines Menü mittig unter „Ziel“ und „Meine Küche“.
  */
 export function KitchenMenu() {
   const id = useId();
@@ -131,7 +131,7 @@ export function KitchenMenu() {
   }, [open]);
 
   return (
-    <div ref={wrapper} className="relative">
+    <div ref={wrapper} className="relative md:static">
       <button
         ref={button}
         type="button"

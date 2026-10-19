@@ -169,6 +169,14 @@ test('Meine Küche: ein Knopf für Lebensmittel, Rezepte und Vorlagen (D-272)', 
   } else {
     const menu = page.getByRole('group', { name: 'Meine Küche' });
     await expect(menu.getByRole('link', { name: /Vorlagen/ })).toBeVisible();
+    // Mittig unter „Ziel“ und „Meine Küche“.
+    const ziel = await page.getByRole('link', { name: 'Ziel', exact: true }).boundingBox();
+    const kitchen = await page.getByRole('button', { name: 'Meine Küche' }).boundingBox();
+    const box = await menu.boundingBox();
+    if (!ziel || !kitchen || !box) throw new Error('Knöpfe fehlen');
+    expect(Math.abs(box.x + box.width / 2 - (ziel.x + kitchen.x + kitchen.width) / 2)).toBeLessThan(
+      2,
+    );
     await page.keyboard.press('Escape');
     await expect(menu).toBeHidden();
     await page.getByRole('button', { name: 'Meine Küche' }).click();

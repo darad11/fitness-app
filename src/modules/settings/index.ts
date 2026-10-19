@@ -10,3 +10,6 @@ export {
   type Settings,
   type SettingsData,
 } from './model/settings';
+export { useProfile } from './data/useProfile';
+export { loadProfile, PROFILE_ID, profileDef, saveProfile } from './data/profileRepository';
+export { DISPLAY_NAME_MAX, profileSchema, type Profile, type ProfileData } from './model/profile';

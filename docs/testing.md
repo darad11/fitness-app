@@ -416,3 +416,16 @@ Modul `habits`: Aufgaben anlegen, umbenennen, ordnen, beenden mit Rückgängig u
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 216,6 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 50 Tests bestanden. Neu `tasks.spec.ts`: Leerzustand auf „Heute“, Motivationssatz, zwei Aufgaben anlegen, auf „Heute“ abhaken mit „1 von 2“ und „Serie: 1 Tag · Alles erledigt“, Neuladen behält den Stand. `/heute/aufgaben` gehört zu den Seiten der Netz- und axe-Prüfung |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus. Das Schema-Upgrade v1 → v2 läuft beim ersten Öffnen der neuen Version auf dem iPhone; der Snapshot davor erscheint unter „Daten und Sicherung“ |
+
+### Ziele und Profil (AP 3.3) · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Modul `goals`: Zielgewicht und Wochenziel setzen, ändern, entfernen mit Historie; Karte „Wochenziel“ und Abstand zum Zielgewicht auf „Heute“; Ziellinie in C-01; Profil mit optionalem Anzeigenamen und Begrüßung (D-254).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 57 Dateien, 476 Tests bestanden. Neu: `goals.test.ts` (aktives Ziel, Woche Montag bis Sonntag, Abstand und Erreichen, Farbe nur in Richtung Ziel), `goalService.test.ts` (ab heute anlegen, Änderung beendet das bisherige, gleicher Wert ändert nichts, Grenzen, Entfernen mit Historie), `goals-ui.test.tsx` (Profilseite: Grenzen, Setzen, Ändern, Entfernen, Historie, Anzeigename; Wochenziel-Karte ohne und mit Ziel). `app.test.tsx` auf „Profil und Ziele“ unter „Mehr“ angepasst |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90,2 %, Zweige 80,5 %, Funktionen 88,4 %, Zeilen 91,1 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 219,3 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 52 Tests bestanden. Neu `goals.spec.ts`: Weg von „Heute“ zu „Profil und Ziele“, Anzeigename, Zielgewicht 78 kg, Wochenziel 3, Begrüßung „Hallo Dali!“, „0 von 3 Trainings diese Woche“, Ziellinie „Ziel 78,0 kg“ im Diagramm, „noch 2,4 kg bis 78,0 kg“ auf „Heute“. `/mehr/profil` gehört zu den Seiten der Netz- und axe-Prüfung |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

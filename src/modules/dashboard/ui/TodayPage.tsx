@@ -2,8 +2,9 @@ import { CircleCheck, CloudOff, HardDrive, MonitorSmartphone, Play, RefreshCw } 
 import { useMemo } from 'react';
 import { Link } from 'react-router';
 import { changeInPeriod, inPeriod, recentValues, Sparkline, useBodyWeights } from '@/modules/body';
+import { changeTone, useActiveGoals, WeeklyGoalCard, weightToGoal } from '@/modules/goals';
 import { pickDaily, TasksCard } from '@/modules/habits';
-import { useFormatters } from '@/modules/settings';
+import { useFormatters, useProfile } from '@/modules/settings';
 import {
   ActiveProgramCard,
   compareWithPrevious,
@@ -56,13 +57,23 @@ export function TodayPage() {
   const program = useActiveProgram();
   const sessions = useCompletedSessions();
   const weights = useBodyWeights();
+  const goals = useActiveGoals();
+  const profile = useProfile();
   const now = useToday(1000);
+  const todayKey = dayKey(today, formatters.timeZone);
   const last = sessions?.[0];
   const lastSummary = last ? summarizeSession(last) : null;
   const lastComparison = sessions?.[0] ? compareWithPrevious(sessions[0], sessions) : null;
   const latestWeight = weights?.[0];
   const weightChange = weights ? changeInPeriod(inPeriod(weights, '30d', now)) : null;
   const sparkValues = weights ? recentValues(weights) : [];
+  const goalKg = goals?.bodyWeightKg;
+  const toGoal =
+    latestWeight && goalKg !== undefined ? weightToGoal(latestWeight.weightKg, goalKg) : null;
+  const tone =
+    latestWeight && weightChange !== null
+      ? changeTone(weightChange, latestWeight.weightKg, goalKg)
+      : 'neutral';
   const { start, error, busy } = useStartSession();
 
   const items: StatusItem[] = [
@@ -93,7 +104,12 @@ export function TodayPage() {
       <PageHeader
         eyebrow={formatters.weekdayDayMonth(today)}
         title={t.today.title}
-        subtitle={pickDaily(t.motivation.sentences, dayKey(today, formatters.timeZone))}
+        subtitle={[
+          profile?.displayName ? t.profile.greeting(profile.displayName) : null,
+          pickDaily(t.motivation.sentences, todayKey),
+        ]
+          .filter(Boolean)
+          .join(' ')}
       />
       <div className="grid gap-4 md:grid-cols-2">
         {active === undefined || program === undefined ? (
@@ -178,6 +194,9 @@ export function TodayPage() {
           </Card>
         )}
         <TasksCard />
+        {sessions && goals ? (
+          <WeeklyGoalCard sessions={sessions} target={goals.weeklySessions} today={todayKey} />
+        ) : null}
         {last && lastSummary ? (
           <Card eyebrow={t.today.lastTitle} title={last.title}>
             <p className="-mt-2 text-sm text-muted tabular-nums">
@@ -225,10 +244,30 @@ export function TodayPage() {
                 </p>
                 <p className="text-sm text-muted">
                   {t.body.lastMeasured(formatters.dateTimeShort(new Date(latestWeight.measuredAt)))}
-                  {weightChange !== null
-                    ? ` · ${weightChange > 0 ? '+' : weightChange < 0 ? '−' : ''}${formatters.bodyWeightKg(Math.abs(weightChange))} ${t.body.periods['30d']}`
-                    : ''}
+                  {weightChange !== null ? (
+                    <>
+                      {' · '}
+                      <span className={tone === 'toward' ? 'text-success' : undefined}>
+                        {`${weightChange > 0 ? '+' : weightChange < 0 ? '−' : ''}${formatters.bodyWeightKg(Math.abs(weightChange))} ${t.body.periods['30d']}`}
+                      </span>
+                    </>
+                  ) : null}
                 </p>
+                {toGoal && goalKg !== undefined ? (
+                  <p className="mt-1 text-sm text-muted">
+                    {toGoal.reached
+                      ? t.goals.goalReached(formatters.bodyWeightKg(goalKg))
+                      : toGoal.diffKg > 0
+                        ? t.goals.toGoal(
+                            formatters.bodyWeightKg(toGoal.diffKg),
+                            formatters.bodyWeightKg(goalKg),
+                          )
+                        : t.goals.toGoalUp(
+                            formatters.bodyWeightKg(-toGoal.diffKg),
+                            formatters.bodyWeightKg(goalKg),
+                          )}
+                  </p>
+                ) : null}
               </div>
               {sparkValues.length >= 3 ? <Sparkline values={sparkValues} /> : null}
             </div>

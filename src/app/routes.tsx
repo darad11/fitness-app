@@ -2,6 +2,7 @@ import { redirect, type RouteObject } from 'react-router';
 import { bodyRoutes } from '@/modules/body';
 import { dashboardRoutes } from '@/modules/dashboard';
 import { exercisesRoutes } from '@/modules/exercises';
+import { goalsRoutes } from '@/modules/goals';
 import { habitsRoutes } from '@/modules/habits';
 import { progressRoutes } from '@/modules/progress';
 import { settingsRoutes } from '@/modules/settings';
@@ -31,6 +32,7 @@ export const routes: RouteObject[] = [
           ...progressRoutes,
           ...exercisesRoutes,
           ...settingsRoutes,
+          ...goalsRoutes,
           { path: '*', Component: NotFoundPage },
         ],
       },

@@ -523,3 +523,16 @@ Lokaler Import der BLS-Recherche mit Vorschau, Herkunft in der Suche und „Impo
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 234,3 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 154 Tests bestanden. Neu in `nutrition.spec.ts`: Datei importieren, nach Neuladen erhalten, „fisolen“ findet den ÖNWT-Eintrag |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Import auf dem iPhone mit der echten Datei steht aus |
+
+### Alle Nährwerte anzeigen, „Heute“ aufgeräumt · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Nährwerttabelle beim Hinzufügen und Bearbeiten, weitere Tageswerte (D-264); „Heute“ ohne „Status“ und „Diese Version“ (D-265).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 71 Dateien, 564 Tests bestanden. Neu in `nutrition-ui.test.tsx`: Haferflocken 50 g zeigen Zucker 0,7 g je 100 g und 0,4 g für 50 g, Ballaststoffe 11 g und 5,5 g, Salz; Tagessumme mit Zucker, Ballaststoffen, Salz; Bearbeiten zeigt „Nährwerte für 50 g“ |
+| `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,78 %, Zweige 80,06 %, Funktionen 86,29 %, Zeilen 89,94 %) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 233,1 KB gzip (Grenze 250 KB) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | Erster Lauf: 152 bestanden, 2 fehlgeschlagen (`install-hint.spec.ts` suchte „Als App installiert“ aus der entfernten Statuskarte). Prüfung angepasst, die Erkennung prüft weiter die Seite „Installieren“; danach `install-hint.spec.ts` 4 bestanden. Neu in `nutrition.spec.ts`: Nährwerttabelle „für 200 g“ mit Zucker und Salz, Tageswerte. Erster Lauf der axe-Prüfung fand `dlitem` bei `role="group"` auf der Liste; behoben mit einer Gruppe um die Liste |
+| WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |

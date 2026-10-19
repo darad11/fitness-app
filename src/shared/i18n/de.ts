@@ -599,6 +599,12 @@ export const de = {
     more: 'Mehr',
   },
   today: {
+    /** Begrüßung wie im Dashboard des Produktinhabers (ab 5, 12 und 18 Uhr). */
+    greetingMorning: 'Guten Morgen',
+    greetingDay: 'Guten Tag',
+    greetingEvening: 'Guten Abend',
+    greetingLine: (greeting: string, name: string | undefined) =>
+      name ? `${greeting}, ${name}.` : `${greeting}.`,
     title: 'Heute',
     heroEyebrow: 'Training',
     heroTitle: 'Bereit für dein Training?',

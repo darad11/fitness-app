@@ -491,12 +491,16 @@ export function NutritionTodayCard() {
                   <dd className="tabular-nums">
                     <span className="block text-lg leading-tight font-bold">
                       {grams(fmt, eaten)}
+                      {/* Ohne Ziel steht die Einheit neben der Zahl, nicht allein darunter. */}
+                      {goal === undefined ? (
+                        <span className="text-xs font-normal text-muted">{` ${t.nutrition.units.g}`}</span>
+                      ) : null}
                     </span>
-                    <span className="block text-xs whitespace-nowrap text-muted">
-                      {goal !== undefined
-                        ? `/ ${grams(fmt, goal)} ${t.nutrition.units.g}`
-                        : t.nutrition.units.g}
-                    </span>
+                    {goal !== undefined ? (
+                      <span className="block text-xs whitespace-nowrap text-muted">
+                        {`/ ${grams(fmt, goal)} ${t.nutrition.units.g}`}
+                      </span>
+                    ) : null}
                   </dd>
                   {goal !== undefined ? (
                     <span

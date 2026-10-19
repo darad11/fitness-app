@@ -1,12 +1,10 @@
 import { expect, openPage, test } from './fixtures';
 
-test('Tagesaufgaben: anlegen, abhaken, Serie, Motivationssatz (AH-03, TH-04)', async ({ page }) => {
+test('Tagesaufgaben: anlegen, abhaken, Serie (AH-03, TH-04)', async ({ page }) => {
   await openPage(page, '/heute');
   await expect(page.getByRole('region', { name: 'Tagesaufgaben' })).toContainText(
     'Leg dir eigene Aufgaben',
   );
-  // Ein kurzer Satz je Tag unter dem Titel.
-  await expect(page.getByRole('main').locator('header p').nth(1)).not.toBeEmpty();
   await page.getByRole('link', { name: 'Aufgabe anlegen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Tagesaufgaben' })).toBeVisible();
   await page.getByLabel('Name der Aufgabe').fill('30 min Cardio');

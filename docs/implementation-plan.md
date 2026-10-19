@@ -252,5 +252,6 @@ Nächste Schritte: <Liste>
 38. Erledigt (über #27 gemergt): Registrieren im Anmeldefenster mit Bestätigungsmail (D-273).
 39. Erledigt (über #26 gemergt): Glas-Look für die ganze App in hell und dunkel, Tab-Leiste mit Glas-Linse, einklappbare Seitenleiste, Kalorien-Ring und Gewichtskurve, Vorschau-Balken entfernt (D-272). Offen: Gerätetest auf dem iPhone (Weichzeichnen und Linse).
 40. Erledigt (über #29 gemergt): aktuelles Gewicht beim Zielgewicht; ein Knopf „Gewicht erfassen“ (D-274).
-41. Erledigt (Branch `feat/heute-ring-scanner`): kleiner Makro-Ring und „Barcode scannen“ auf „Heute“; Scanner öffnet sofort, Mahlzeit nach Uhrzeit, danach zurück zu „Heute“ (D-275).
-42. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+41. Erledigt (über #30 gemergt): kleiner Makro-Ring und „Barcode scannen“ auf „Heute“; Scanner öffnet sofort, Mahlzeit nach Uhrzeit, danach zurück zu „Heute“ (D-275).
+42. Erledigt (Branch `feat/heute-dashboard`): Begrüßung mit Uhr wie im Dashboard, Tab-Leiste minimiert sich beim Runterscrollen zum Kreis, Tagesaufgaben unten (D-276).
+43. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

@@ -36,3 +36,37 @@ test('Seitenleiste: klappt unter der Maus aus, der Inhalt rückt mit (D-272)', a
   await expect.poll(async () => (await title.boundingBox())?.x ?? 0).toBeGreaterThan(before + 150);
   await expect(page.getByText('Ernährung', { exact: true }).first()).toBeVisible();
 });
+
+test('Tab-Leiste: beim Runterscrollen ein Kreis rechts, zurück beim Hochscrollen und per Tipp (D-276)', async ({
+  page,
+}, testInfo) => {
+  test.skip(!testInfo.project.name.includes('mobile'), 'Tab-Leiste nur unter 1024 px');
+  await openPage(page, '/heute');
+  const bar = page.getByRole('navigation', { name: 'Hauptnavigation' }).last();
+  const full = await bar.boundingBox();
+  if (!full) throw new Error('Leiste fehlt');
+  // Eigenes Scrollen: Taste, dann Bewegung (wie Finger oder Mausrad).
+  const scrollBy = (dy: number) =>
+    page.evaluate((delta) => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      window.scrollBy(0, delta);
+    }, dy);
+  await scrollBy(300);
+  await expect(bar).toHaveClass(/minimized/);
+  await expect.poll(async () => (await bar.boundingBox())?.width ?? 0).toBeLessThan(full.width / 3);
+  const small = await bar.boundingBox();
+  expect((small?.x ?? 0) + (small?.width ?? 0)).toBeGreaterThan(full.x + full.width - 40);
+  // Nur das aktive Symbol bleibt erreichbar.
+  await expect(bar.getByRole('link', { name: 'Training' })).toBeHidden();
+
+  await scrollBy(-100);
+  await expect(bar).not.toHaveClass(/minimized/);
+
+  // Tipp auf den Kreis klappt auf, ohne die Seite zu wechseln.
+  await scrollBy(300);
+  await expect(bar).toHaveClass(/minimized/);
+  await expect.poll(async () => (await bar.boundingBox())?.width ?? 0).toBeLessThan(80);
+  await bar.click();
+  await expect(bar).not.toHaveClass(/minimized/);
+  await expect(page).toHaveURL(/\/heute$/);
+});

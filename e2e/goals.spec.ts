@@ -20,7 +20,9 @@ test('Profil und Ziele: Zielgewicht und Wochenziel wirken auf „Heute“ und da
   await expect(weekly.getByText('Aktuell: 3 Trainings pro Woche')).toBeVisible();
 
   await openPage(page, '/heute');
-  await expect(page.getByRole('main').locator('header')).toContainText('Hallo Dali!');
+  await expect(page.getByRole('main').locator('header')).toContainText(
+    /Guten (Morgen|Tag|Abend), Dali\./,
+  );
   await expect(page.getByRole('region', { name: 'Wochenziel' })).toContainText(
     '0 von 3 Trainings diese Woche',
   );

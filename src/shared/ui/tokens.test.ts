@@ -162,6 +162,10 @@ describe('Farbtokens', () => {
       ['accent', 'ink'],
       ['on-ink', 'ink'],
       ['on-ink', 'ink-2'],
+      ...['macro-protein', 'macro-carbs', 'macro-fat'].flatMap((ring) => [
+        [ring, 'ink'],
+        [ring, 'ink-2'],
+      ]),
       ['login-focus', 'login-bg-1'],
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);

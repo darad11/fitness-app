@@ -258,7 +258,7 @@ export const de = {
     over: (kcal: string) => `${kcal} kcal über dem Ziel`,
     kcalOf: (eaten: string, goal: string) => `${eaten} von ${goal} kcal`,
     kcalOnly: (eaten: string) => `${eaten} kcal`,
-    gramsOf: (eaten: string, goal: string) => `${eaten} von ${goal} g`,
+    gramsOf: (eaten: string, goal: string) => `${eaten} / ${goal} g`,
     gramsOnly: (eaten: string) => `${eaten} g`,
     macros: { protein: 'Eiweiß', carbs: 'Kohlenhydrate', fat: 'Fett' },
     nutrients: {

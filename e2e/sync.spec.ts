@@ -77,6 +77,8 @@ test('Anmeldung im Vollbild: „Später“ und Escape führen ohne Anmeldung zur
   await login.getByRole('button', { name: 'Später' }).click();
   await expect(page).toHaveURL(/\/mehr$/);
   await openPage(page, '/mehr/synchronisierung');
+  // Erst warten, bis das Anmeldefenster offen ist und den Fokus hat (WebKit lädt langsamer).
+  await expect(login.getByRole('heading', { name: 'Fitness' })).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(/\/mehr$/);
 });

@@ -312,6 +312,73 @@
     user-select: none;
     -webkit-touch-callout: none;
   }
+  /*
+   * Minimiert beim Runterscrollen (D-276, tabMinimize.ts): Kreis am rechten Rand mit dem aktiven
+   * Symbol. .minimized: klein oder auf dem Weg dorthin; .collapsed: auch beim Zurückwachsen.
+   * Die Einträge behalten die Breite der vollen Leiste und werden so verschoben, dass das aktive
+   * Symbol in der Kreismitte sitzt; der Kreis schneidet sie ab. 0,4 s ohne Überschwingen.
+   */
+  .tabbar {
+    --tabbar-min: 56px;
+  }
+  .tabbar.collapsed {
+    overflow: clip;
+    transition:
+      width 0.4s cubic-bezier(0.2, 0.9, 0.3, 1),
+      height 0.4s cubic-bezier(0.2, 0.9, 0.3, 1),
+      padding 0.4s cubic-bezier(0.2, 0.9, 0.3, 1),
+      transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .tabbar.minimized {
+    width: var(--tabbar-min);
+    height: var(--tabbar-min);
+    padding: 0;
+    transform: translate(var(--min-shift), calc((4rem - var(--tabbar-min)) / -2));
+  }
+  .tabbar.collapsed > .tabbar-items {
+    flex: 0 0 var(--items-w);
+    height: var(--items-h);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .tabbar.minimized > .tabbar-items {
+    transform: translate(var(--icon-dx), var(--icon-dy));
+  }
+  .tabbar.collapsed .tabbar-indicator {
+    opacity: 0 !important;
+    transition: opacity 0.1s;
+  }
+  .tabbar.collapsed .tabbar-tab,
+  .tabbar.collapsed .tabbar-label {
+    transition:
+      color 0.2s,
+      opacity 0.2s,
+      filter 0.2s,
+      visibility 0s;
+  }
+  .tabbar.minimized .tabbar-tab:not(.active) {
+    visibility: hidden;
+    opacity: 0;
+    filter: blur(6px);
+    transition:
+      color 0.2s,
+      opacity 0.2s,
+      filter 0.2s,
+      visibility 0s 0.2s;
+  }
+  .tabbar.minimized .tabbar-tab.active .tabbar-label {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  .tabbar.no-morph,
+  .tabbar.no-morph * {
+    transition: none !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tabbar.collapsed,
+    .tabbar.collapsed * {
+      transition: none !important;
+    }
+  }
   .tabbar-items {
     position: relative;
     z-index: 1;

@@ -1,12 +1,46 @@
 # Änderungsprotokoll der Dokumentation
 
-## Version 0.20 · 19.10.2026 · Übergabe
+## Version 0.25 · 19.10.2026 · Übergabe
 
 | Datei | Änderung |
 |---|---|
-| `handover-2026-10-19.md` | Neu: Stand nach #19 bis #27, offene Punkte, Arbeitsweise |
+| `handover-2026-10-19.md` | Neu: Stand nach #19 bis #32, offene Punkte, Arbeitsweise |
 | `CLAUDE.md` | Verweis auf die Übergabe unter „Zuerst lesen“ |
-| `implementation-plan.md` | #26 gemergt |
+| `implementation-plan.md` | #32 gemergt |
+
+## Version 0.24 · 19.10.2026 · Schritte aus dem Dashboard
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-277 Schritte aus dem Dashboard, nur lesend |
+| `data-model.md` | Lokale Schlüssel `steps.*` in `meta` |
+| `architecture.md` | Modul `steps`, Dashboard-Host in `connect-src` |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Schritte |
+
+## Version 0.23 · 19.10.2026 · „Heute“ wie im Dashboard
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-276 Begrüßung mit Uhr, minimierte Tab-Leiste, Tagesaufgaben unten |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse „Heute“ wie im Dashboard |
+
+## Version 0.22 · 19.10.2026 · Ring und Scanner auf „Heute“
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-275 kleiner Makro-Ring und „Barcode scannen“ auf „Heute“ |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Ring und Scanner auf „Heute“ |
+
+## Version 0.21 · 19.10.2026 · Gewicht klarer eintragen
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-274 |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
 
 ## Version 0.19 · 19.10.2026 · Registrieren im Anmeldefenster
 

@@ -19,10 +19,13 @@ export function MacroRing({
   label,
   size = 132,
   stroke = 12,
+  tone = 'ink',
   className,
   children,
 }: {
   className?: string;
+  /** Untergrund: dunkle Bühne (`ink`) oder normale Karte (`surface`, z. B. auf „Heute“). */
+  tone?: 'ink' | 'surface';
   /** Anteil am Ziel; über 1 bleibt der Ring voll. */
   value: number;
   segments: readonly RingSegment[];
@@ -38,7 +41,7 @@ export function MacroRing({
       ? segments
           .filter((s) => s.amount > 0)
           .map((s) => ({ color: s.color, share: s.amount / total }))
-      : [{ color: 'var(--on-ink)', share: 1 }];
+      : [{ color: tone === 'ink' ? 'var(--on-ink)' : 'var(--accent)', share: 1 }];
   const end = filled * 360;
   // Farbstopps: jede Farbe in der Mitte ihres Abschnitts, dazwischen durchgehender Verlauf.
   const stops: string[] = [];
@@ -58,7 +61,10 @@ export function MacroRing({
   };
   const track: CSSProperties = {
     ...ring,
-    background: 'color-mix(in srgb, var(--on-ink) 15%, transparent)',
+    background:
+      tone === 'ink'
+        ? 'color-mix(in srgb, var(--on-ink) 15%, transparent)'
+        : 'color-mix(in srgb, var(--fg) 10%, transparent)',
   };
   // Runde Enden: Punkte in Strichbreite am Anfang und am Ende der Füllung.
   const radius = size / 2 - stroke / 2;

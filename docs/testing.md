@@ -646,3 +646,47 @@ Glas-Look in hell und dunkel, Tab-Leiste mit Linse, einklappbare Seitenleiste, K
 | WebKit in GitHub Actions (Glas-Look) | `sync.spec.ts` „Später und Escape“ am Desktop rot: Escape kam, bevor das Anmeldefenster nach dem erneuten Öffnen offen war (Zeitproblem im Test). Behoben: Der Test wartet jetzt auf den Fokus im Fenster |
 | Bekannt | Das Weichzeichnen hinter der Tab-Leiste zeigt Chromium im Test nur teilweise; auf dem iPhone steht es aus (Gerätetest) |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest auf dem iPhone steht aus |
+
+### Gewicht nur einmal eintragen · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Aktuelles Gewicht beim Zielgewicht, ein Knopf „Gewicht erfassen“ (D-274).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 80 Dateien, 674 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 190 bestanden, 2 übersprungen. Neu in `goals.spec.ts`: ohne Eintrag genau ein Knopf; Profil zeigt „Noch kein Gewicht gemessen“, nach 81,4 kg „Dein aktuelles Gewicht: 81,4 kg“. Ein zuerst gebautes Häkchen beim Kalorien-Vorschlag wurde auf Wunsch wieder entfernt |
+| Bildschirmfotos | Handy dunkel: Körpergewicht leer, Zielgewicht mit aktuellem Gewicht |
+
+### Ring und Scanner auf „Heute“ · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kleiner Makro-Ring und „Barcode scannen“ auf „Heute“ (D-275).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 81 Dateien, 675 Tests bestanden (neu: `mealSlot.test.ts`, Mahlzeit nach Uhrzeit) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 190 bestanden, 2 übersprungen (Stand vor dem Einholen von #29). Neu in `barcode.spec.ts`: Ring auf „Heute“ mit „0 / 2.200 kcal“, „Barcode scannen“ öffnet den Scanner sofort, nach dem Eintragen zurück auf „Heute“ mit neuem Wert |
+| Bildschirmfotos | Entwurf als Bilder aus der gebauten App (Handy hell und dunkel, Web hell und dunkel, Scanner), vom Produktinhaber freigegeben |
+
+### „Heute“ wie im Dashboard · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Begrüßung mit Uhr, minimierte Tab-Leiste, Tagesaufgaben unten (D-276).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 81 Dateien, 675 Tests bestanden (`app.test.tsx` erwartet die Überschrift „Heute: Guten …“) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 193 bestanden, 3 übersprungen. Neu in `tabbar.spec.ts`: Runterscrollen macht die Leiste zum Kreis am rechten Rand (schmaler als ein Drittel, nur das aktive Symbol), Hochscrollen und Tipp auf den Kreis klappen auf, ohne die Seite zu wechseln. `goals.spec.ts` erwartet „Guten …, Dali.“; `tasks.spec.ts` ohne Motivationssatz |
+| Bildschirmfotos | Handy hell und dunkel (oben, gescrollt mit Kreis, wieder aufgeklappt), Web dunkel; vom Produktinhaber freigegeben |
+| Bekannt | Getestet mit Mausrad und Tasten in Chromium; das Wischen am iPhone steht als Gerätetest aus |
+
+### Schritte aus dem Dashboard · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Anmeldung beim Dashboard je Gerät, nur lesend; Karte unter „Ernährung heute“ (D-277).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 82 Dateien, 682 Tests bestanden. Neu `stepStats.test.ts`: dieselben Zahlen wie `steps-core.js` und `home-core.js` des Dashboards, mit Node nachgerechnet (Ziel 23.892, noch 15.472, 35 %, Jahr 2.258.872 = 56 %); ohne Eintrag heute, Tagesziel erreicht, Jahresziel erreicht, Stichtag nach heute, 31. Dezember |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | Erster Lauf: 192 bestanden, 2 rot, 3 übersprungen (`shell.spec.ts` erwartete die Liste unter „Mehr“ ohne den neuen Eintrag; `pwa.spec.ts` Offline-Start am Handy). Liste ergänzt, `/mehr/schritte` in die geprüften Seiten aufgenommen; danach `pwa`, `shell`, `network-a11y`: 124 bestanden. Neu `steps.spec.ts` (Dashboard nachgebildet, Service Worker blockiert): ohne Verbindung keine Anfrage, falsches Passwort mit Hinweis, Karte direkt unter „Ernährung heute“ mit 8.420 Schritten, Ziel und Jahresstand, keine schreibende Anfrage, „Verbindung trennen“ |
+| `pnpm check:bundle` | 247,7 KB Startansicht (Grenze 250 KB) |
+| Bildschirmfotos | Karte auf „Heute“ hell und dunkel, Web, Seite vor und nach dem Verbinden (Beispielwerte); vom Produktinhaber freigegeben, danach unter die Ernährung verschoben |
+| Offen | Echte Anmeldung beim Dashboard und Vergleich der Zahlen mit dem Dashboard (Produktinhaber) |
+

@@ -20,7 +20,9 @@ test('Profil und Ziele: Zielgewicht und Wochenziel wirken auf „Heute“ und da
   await expect(weekly.getByText('Aktuell: 3 Trainings pro Woche')).toBeVisible();
 
   await openPage(page, '/heute');
-  await expect(page.getByRole('main').locator('header')).toContainText('Hallo Dali!');
+  await expect(page.getByRole('main').locator('header')).toContainText(
+    /Guten (Morgen|Tag|Abend), Dali\./,
+  );
   await expect(page.getByRole('region', { name: 'Wochenziel' })).toContainText(
     '0 von 3 Trainings diese Woche',
   );
@@ -37,4 +39,24 @@ test('Profil und Ziele: Zielgewicht und Wochenziel wirken auf „Heute“ und da
   await expect(page.getByRole('region', { name: 'Körpergewicht' })).toContainText(
     'noch 2,4 kg bis 78,0 kg',
   );
+});
+
+test('Ein Knopf „Gewicht erfassen“; Zielgewicht zeigt das gemessene Gewicht (D-274)', async ({
+  page,
+}) => {
+  // Ohne Eintrag gibt es auf „Körpergewicht“ nur einen Knopf „Gewicht erfassen“.
+  await openPage(page, '/fortschritt/gewicht');
+  await expect(page.getByRole('button', { name: 'Gewicht erfassen' })).toHaveCount(1);
+  await openPage(page, '/mehr/profil');
+  await expect(page.getByText(/Noch kein Gewicht gemessen/)).toBeVisible();
+
+  await openPage(page, '/fortschritt/gewicht');
+  await page.getByRole('button', { name: 'Gewicht erfassen' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Gewicht erfassen' });
+  await sheet.getByLabel('Gewicht in kg').fill('81,4');
+  await sheet.getByRole('button', { name: 'Speichern' }).click();
+  await expect(sheet).toBeHidden();
+
+  await openPage(page, '/mehr/profil');
+  await expect(page.getByText(/Dein aktuelles Gewicht: 81,4\skg/)).toBeVisible();
 });

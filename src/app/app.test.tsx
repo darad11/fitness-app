@@ -55,7 +55,9 @@ function renderWithDb(element: React.ReactNode, path = '/') {
 describe('App-Shell', () => {
   it('leitet die Startadresse auf „Heute" um und zeigt das Datum', async () => {
     const router = renderApp('/');
-    expect(await screen.findByRole('heading', { level: 1, name: 'Heute' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /^Heute:\s*Guten / }),
+    ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/heute');
     expect(
       screen.getByText(/^(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag), /),
@@ -64,7 +66,7 @@ describe('App-Shell', () => {
 
   it('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async () => {
     renderApp('/heute');
-    await screen.findByRole('heading', { level: 1, name: 'Heute' });
+    await screen.findByRole('heading', { level: 1, name: /^Heute:\s*Guten / });
     const navs = screen.getAllByRole('navigation', { name: 'Hauptnavigation' });
     expect(navs.length).toBeGreaterThan(0);
     for (const nav of navs) {
@@ -135,6 +137,7 @@ describe('App-Shell', () => {
       'Daten und Sicherung',
       'Installieren',
       'Synchronisierung',
+      'Schritte aus dem Dashboard',
       'Über die App',
     ]);
   });

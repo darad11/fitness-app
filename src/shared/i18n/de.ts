@@ -153,6 +153,10 @@ export const de = {
   goals: {
     weightTitle: 'Zielgewicht',
     weightNone: 'Kein Zielgewicht gesetzt.',
+    currentWeight: (kg: string) =>
+      `Dein aktuelles Gewicht: ${kg}. Das Zielgewicht ist dein Wunschgewicht, keine Messung.`,
+    noCurrentWeight:
+      'Noch kein Gewicht gemessen. Das Zielgewicht ist dein Wunschgewicht; dein Gewicht trägst du unter „Fortschritt“ › „Körpergewicht“ ein.',
     weightLabel: 'Zielgewicht in kg',
     weightPlaceholder: 'z. B. 78,0',
     invalidWeight: 'Zielgewicht von 30 bis 300 kg.',
@@ -595,6 +599,12 @@ export const de = {
     more: 'Mehr',
   },
   today: {
+    /** Begrüßung wie im Dashboard des Produktinhabers (ab 5, 12 und 18 Uhr). */
+    greetingMorning: 'Guten Morgen',
+    greetingDay: 'Guten Tag',
+    greetingEvening: 'Guten Abend',
+    greetingLine: (greeting: string, name: string | undefined) =>
+      name ? `${greeting}, ${name}.` : `${greeting}.`,
     title: 'Heute',
     heroEyebrow: 'Training',
     heroTitle: 'Bereit für dein Training?',
@@ -618,7 +628,42 @@ export const de = {
     settings: 'Einstellungen',
     install: 'Installieren',
     sync: 'Synchronisierung',
+    steps: 'Schritte aus dem Dashboard',
     about: 'Über die App',
+  },
+  steps: {
+    title: 'Schritte',
+    pageTitle: 'Schritte aus dem Dashboard',
+    intro:
+      'Zeigt deine Schritte aus der Step Challenge deines Dashboards auf „Heute“. Melde dich dazu einmal mit deinem Dashboard-Konto an. Die App liest nur und ändert im Dashboard nichts.',
+    privacy:
+      'E-Mail und Passwort gehen nur an die Datenbank deines Dashboards. Die Anmeldung bleibt auf diesem Gerät; am iPhone und am Mac je einmal anmelden.',
+    email: 'E-Mail des Dashboards',
+    password: 'Passwort des Dashboards',
+    connect: 'Verbinden',
+    connecting: 'Verbinde …',
+    connectedAs: (email: string) => `Verbunden als ${email}`,
+    refresh: 'Jetzt abholen',
+    refreshing: 'Hole Schritte …',
+    disconnect: 'Verbindung trennen',
+    disconnectHint: 'Löscht die Anmeldung und die abgeholten Schritte auf diesem Gerät.',
+    lastFetched: (time: string) => `Zuletzt abgeholt: ${time}`,
+    invalidCredentials:
+      'E-Mail oder Passwort stimmen nicht. Nutzt du im Dashboard nur den Link per E-Mail, vergib dort zuerst ein Passwort.',
+    offline: 'Keine Verbindung zum Dashboard. Versuch es später noch einmal.',
+    failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',
+    authExpired: 'Die Anmeldung beim Dashboard ist abgelaufen. Bitte neu verbinden.',
+    notSetUp: 'Die Step Challenge ist im Dashboard für dieses Jahr noch nicht eingerichtet.',
+    connectHint: 'Verbinde dein Dashboard, dann siehst du hier deine Schritte.',
+    connectLink: 'Verbinden',
+    unit: 'Schritte',
+    target: (n: string) => `Ziel ${n}`,
+    toGo: (n: string) => `noch ${n}`,
+    targetReached: 'Tagesziel erreicht',
+    notLogged: 'Heute noch nichts übertragen',
+    year: (percent: string, ytd: string, goal: string) => `Jahr ${percent} % · ${ytd} von ${goal}`,
+    stale: (time: string) => `Stand ${time}`,
+    meterLabel: 'Schritte heute im Verhältnis zum Tagesziel',
   },
   sync: {
     title: 'Synchronisierung',

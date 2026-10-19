@@ -294,7 +294,7 @@ export const de = {
     saveFailed: 'Das ließ sich nicht speichern. Bitte versuche es erneut.',
     invalidAmount: 'Bitte gib eine Menge größer als 0 ein.',
     sources:
-      'Grunddaten: Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut, gekürzt. Österreichische Bezeichnungen als zusätzliche Suchbegriffe. Importierte Daten (BLS 3.02, ÖNWT) über die BLS-Recherche von nutritional-software.at, nur auf diesem Gerät.',
+      'Grunddaten: Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut, gekürzt. Österreichische Bezeichnungen als zusätzliche Suchbegriffe. Importierte Daten der Österreichischen Nährwerttabelle (ÖNWT) über die BLS-Recherche von nutritional-software.at, nur auf diesem Gerät.',
     // Hinzufügen
     addTitle: 'Lebensmittel hinzufügen',
     searchLabel: 'Lebensmittel suchen',
@@ -313,7 +313,7 @@ export const de = {
       off: 'Open Food Facts',
       import: 'Import',
     },
-    catalogBadge: { bls302: 'BLS 3.02', oenwt: 'ÖNWT' },
+    catalogBadge: { oenwt: 'ÖNWT' },
     per100: (unit: string) => `je 100 ${unit}`,
     quick: 'Schnelleintrag',
     quickTitle: 'Schnelleintrag',
@@ -364,18 +364,17 @@ export const de = {
       empty: 'Noch keine Lebensmitteldaten importiert.',
       hint: 'Datei der BLS-Recherche von nutritional-software.at (JSON). Die Daten bleiben nur auf diesem Gerät; nichts wird hochgeladen.',
       status: (count: string) => `${count} Lebensmittel importiert`,
-      statusDetail: (bls: string, oenwt: string, date: string) =>
-        `${bls} aus BLS 3.02, ${oenwt} aus der Österreichischen Nährwerttabelle (ÖNWT), importiert am ${date}`,
+      statusDetail: (date: string) =>
+        `Aus der Österreichischen Nährwerttabelle (ÖNWT), importiert am ${date}`,
       choose: 'Datei auswählen',
       replace: 'Neue Datei importieren',
       reading: 'Datei wird geprüft …',
       remove: 'Import entfernen',
       previewTitle: 'Lebensmitteldaten importieren',
       previewKept: (count: string) => `${count} Lebensmittel werden übernommen:`,
-      keptBls302: (count: string) => `${count} aus BLS 3.02`,
-      keptOenwt: (count: string) => `${count} aus der ÖNWT`,
+      keptOenwt: (count: string) => `${count} aus der Österreichischen Nährwerttabelle (ÖNWT)`,
       previewSkipped: 'Weggelassen:',
-      skippedInBls: (count: string) => `${count} stehen schon im BLS 4.0`,
+      skippedBls: (count: string) => `${count} deutsche Einträge (BLS)`,
       skippedDiscontinued: (count: string) => `${count} auslaufende Produkte`,
       skippedInvalid: (count: string) => `${count} unvollständig oder doppelt`,
       skippedAmbiguous: (count: string) =>

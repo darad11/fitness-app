@@ -21,8 +21,8 @@ export interface CatalogSummary {
   /** Übernommene Einträge je Quelle. */
   kept: Record<CatalogSource, number>;
   skipped: {
-    /** Schon im gebündelten BLS 4.0 (gleicher Code oder bei BLS 3.02 gleicher Name). */
-    inBls: number;
+    /** Deutsche Daten (BLS 4.0 und BLS 3.02), auf Wunsch des Produktinhabers nicht übernommen. */
+    bls: number;
     /** Vom Hersteller als auslaufend markiert („+++läuft aus“). */
     discontinued: number;
     /** Unbekannte Quelle, fehlende Pflichtwerte, Werte außerhalb des Bereichs oder doppelt. */
@@ -57,11 +57,10 @@ const fileSchema = z.object({
   rows: z.array(z.unknown()).min(1),
 });
 
-/** Quelle aus der Kennung der Recherche, z. B. „BLS3.02“ oder „ÖNWT-TK“. BLS 4.0 ist gebündelt. */
-export function catalogSource(tag: string): CatalogSource | 'bls4' | undefined {
+/** Quelle aus der Kennung der Recherche, z. B. „BLS3.02“ oder „ÖNWT-TK“. */
+export function catalogSource(tag: string): CatalogSource | 'bls' | undefined {
   const normalized = tag.normalize('NFC').trim().toUpperCase();
-  if (normalized === 'BLS4.0') return 'bls4';
-  if (normalized === 'BLS3.02') return 'bls302';
+  if (normalized.startsWith('BLS')) return 'bls';
   if (normalized.startsWith('ÖNWT')) return 'oenwt';
   return undefined;
 }
@@ -91,18 +90,15 @@ function nutrientValues(row: Record<string, unknown>): (number | null)[] | undef
 }
 
 /**
- * Prüft und filtert die Datei. `blsCodes` und `blsNames` (klein geschrieben) stammen aus dem
- * gebündelten BLS 4.0; was dort schon steht, wird nicht doppelt übernommen.
+ * Prüft und filtert die Datei: übernimmt nur ÖNWT-Einträge; BLS 4.0 und BLS 3.02 (deutsche Daten),
+ * auslaufende Produkte, unvollständige und unklare Einträge fallen weg.
  */
-export function parseCatalogFile(
-  raw: unknown,
-  bls: { codes: ReadonlySet<string>; names: ReadonlySet<string> },
-): CatalogImportResult {
+export function parseCatalogFile(raw: unknown): CatalogImportResult {
   const file = fileSchema.safeParse(raw);
   if (!file.success) throw new CatalogFileError('Unbekanntes Dateiformat');
   const summary: CatalogSummary = {
-    kept: { bls302: 0, oenwt: 0 },
-    skipped: { inBls: 0, discontinued: 0, invalid: 0, ambiguous: 0 },
+    kept: { oenwt: 0 },
+    skipped: { bls: 0, discontinued: 0, invalid: 0, ambiguous: 0 },
   };
   const byKey = new Map<string, { row: CatalogRow; count: number; ambiguous: boolean }>();
   let recognized = 0;
@@ -125,19 +121,12 @@ export function parseCatalogFile(
       continue;
     }
     recognized += 1;
-    if (source === 'bls4') {
-      summary.skipped.inBls += 1;
+    if (source === 'bls') {
+      summary.skipped.bls += 1;
       continue;
     }
     if (name.includes('+++')) {
       summary.skipped.discontinued += 1;
-      continue;
-    }
-    if (
-      source === 'bls302' &&
-      (bls.codes.has(code) || bls.names.has(name.toLocaleLowerCase('de')))
-    ) {
-      summary.skipped.inBls += 1;
       continue;
     }
     const values = nutrientValues(row);

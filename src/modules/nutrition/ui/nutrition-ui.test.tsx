@@ -223,12 +223,12 @@ describe('Ernährung (Schritt G, D-261)', () => {
         { name: 'Lebensmitteldaten importieren' },
         WAIT,
       );
-      expect(within(preview).getByText('2 Lebensmittel werden übernommen:')).toBeVisible();
-      expect(within(preview).getByText('1 stehen schon im BLS 4.0')).toBeVisible();
+      expect(within(preview).getByText('1 Lebensmittel werden übernommen:')).toBeVisible();
+      expect(within(preview).getByText('2 deutsche Einträge (BLS)')).toBeVisible();
       expect(within(preview).getByText('1 auslaufende Produkte')).toBeVisible();
       await user.click(within(preview).getByRole('button', { name: 'Importieren' }));
-      expect(await screen.findByText('2 Lebensmittel importiert', {}, WAIT)).toBeVisible();
-      expect(screen.getByText(/1 aus BLS 3\.02, 1 aus der Österreichischen/)).toBeVisible();
+      expect(await screen.findByText('1 Lebensmittel importiert', {}, WAIT)).toBeVisible();
+      expect(screen.getByText(/^Aus der Österreichischen Nährwerttabelle/)).toBeVisible();
 
       // In der Suche mit Herkunft; österreichische Begriffe greifen auch hier.
       cleanup();

@@ -4,7 +4,6 @@ import {
   parseCatalogFile,
   type CatalogImportResult,
 } from '../calc/catalogImport';
-import { loadBls } from '../data/bls';
 import { removeCatalog, saveCatalog } from '../data/catalogStore';
 
 export { CatalogFileError };
@@ -24,14 +23,7 @@ export async function prepareCatalog(file: Blob): Promise<CatalogImportResult> {
   } catch {
     throw new CatalogFileError('Kein JSON');
   }
-  const bls = await loadBls();
-  const codes = new Set<string>();
-  const names = new Set<string>();
-  for (const food of bls) {
-    if (food.sourceRef) codes.add(food.sourceRef);
-    names.add(food.name.toLocaleLowerCase('de'));
-  }
-  return parseCatalogFile(raw, { codes, names });
+  return parseCatalogFile(raw);
 }
 
 export async function commitCatalog(

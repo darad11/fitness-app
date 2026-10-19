@@ -54,11 +54,11 @@ async function catalogRecord(): Promise<Record<string, unknown>[]> {
 }
 
 describe('Lebensmitteldaten importieren (D-263)', () => {
-  it('prüft gegen den gebündelten BLS 4.0, speichert lokal und entfernt wieder', async () => {
+  it('übernimmt nur ÖNWT, speichert lokal und entfernt wieder', async () => {
     const result = await prepareCatalog(file(RECHERCHE));
     expect(result.summary).toEqual({
-      kept: { bls302: 1, oenwt: 1 },
-      skipped: { inBls: 2, discontinued: 0, invalid: 0, ambiguous: 0 },
+      kept: { oenwt: 1 },
+      skipped: { bls: 3, discontinued: 0, invalid: 0, ambiguous: 0 },
     });
     // Erst die Bestätigung speichert.
     expect(await catalogRecord()).toEqual([]);
@@ -70,7 +70,7 @@ describe('Lebensmitteldaten importieren (D-263)', () => {
       importedAt: '2026-10-19T12:00:00.000Z',
       fetchedAt: '2026-10-19 13:41',
     });
-    expect((record as { rows: unknown[] }).rows).toHaveLength(2);
+    expect((record as { rows: unknown[] }).rows).toHaveLength(1);
     // Nichts davon landet in der App-Datenbank (kein Export, kein Snapshot, keine Sync).
     expect(await rt.db.foods.count()).toBe(0);
 
@@ -105,6 +105,6 @@ describe('Lebensmitteldaten importieren (D-263)', () => {
 
   it('bildet stabile IDs je Quelle und Code', () => {
     expect(catalogFoodId('oenwt', '0003384')).toBe(catalogFoodId('oenwt', '0003384'));
-    expect(catalogFoodId('oenwt', '0003384')).not.toBe(catalogFoodId('bls302', '0003384'));
+    expect(catalogFoodId('oenwt', '0003384')).not.toBe(catalogFoodId('oenwt', '0003385'));
   });
 });

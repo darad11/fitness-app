@@ -83,7 +83,6 @@ export function CatalogCard() {
   };
 
   const summary = preview?.summary;
-  const skippedInBls = summary?.skipped.inBls ?? 0;
 
   return (
     <Card title={tc.title} className="mt-6">
@@ -95,11 +94,7 @@ export function CatalogCard() {
         <div className="space-y-1">
           <p className="font-medium">{tc.status(n(catalog.info.count))}</p>
           <p className="text-sm text-muted">
-            {tc.statusDetail(
-              n(catalog.info.summary.kept.bls302),
-              n(catalog.info.summary.kept.oenwt),
-              fmt.dayMonthYear(new Date(catalog.info.importedAt)),
-            )}
+            {tc.statusDetail(fmt.dayMonthYear(new Date(catalog.info.importedAt)))}
           </p>
         </div>
       )}
@@ -168,12 +163,11 @@ export function CatalogCard() {
           <div className="space-y-3">
             <p className="font-medium">{tc.previewKept(n(preview.rows.length))}</p>
             <ul className="list-disc space-y-1 pl-5 text-sm">
-              <li>{tc.keptBls302(n(summary.kept.bls302))}</li>
               <li>{tc.keptOenwt(n(summary.kept.oenwt))}</li>
             </ul>
             <p className="text-sm text-muted">{tc.previewSkipped}</p>
             <ul className="list-disc space-y-1 pl-5 text-sm text-muted">
-              <li>{tc.skippedInBls(n(skippedInBls))}</li>
+              <li>{tc.skippedBls(n(summary.skipped.bls))}</li>
               <li>{tc.skippedDiscontinued(n(summary.skipped.discontinued))}</li>
               {summary.skipped.ambiguous > 0 ? (
                 <li>{tc.skippedAmbiguous(n(summary.skipped.ambiguous))}</li>

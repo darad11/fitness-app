@@ -11,7 +11,7 @@ export interface FoodItem {
   per100: Nutrients;
   servings: readonly Serving[];
   source: Food['source'];
-  /** Bei importierten Daten (D-263): BLS 3.02 oder ÖNWT. */
+  /** Bei importierten Daten (D-263): Österreichische Nährwerttabelle (ÖNWT). */
   catalog?: CatalogSource;
   quality: Food['quality'];
   favorite?: boolean;

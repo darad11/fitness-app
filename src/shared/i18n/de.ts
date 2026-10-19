@@ -377,6 +377,7 @@ export const de = {
       core: 'Energie, Eiweiß, Kohlenhydrate und Fett sind Pflicht.',
       range: 'Ein Wert liegt außerhalb des möglichen Bereichs (je 100 höchstens 100 g, 900 kcal).',
       serving: 'Jede Portion braucht einen Namen und eine Menge größer als 0.',
+      barcode: 'Der Barcode ist ungültig (8, 12, 13 oder 14 Ziffern mit passender Prüfziffer).',
       number: 'Bitte gib Zahlen ein, z. B. 12,5.',
     },
     catalog: {
@@ -411,6 +412,43 @@ export const de = {
         'Diese Datei passt nicht. Bitte wähle die Datei der BLS-Recherche (nuts-recherche.json).',
       nothingNew: 'Die Datei enthält keine neuen Lebensmittel.',
       failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',
+    },
+    barcode: {
+      scan: 'Barcode scannen',
+      title: 'Barcode scannen',
+      hint: 'Halte den Barcode ruhig in den Rahmen.',
+      starting: 'Kamera wird gestartet …',
+      denied:
+        'Kein Zugriff auf die Kamera. Erlaube ihn in den Einstellungen oder gib den Barcode unten ein.',
+      unsupported: 'Die Kamera ist hier nicht verfügbar. Gib den Barcode unten ein.',
+      cameraError: 'Die Kamera ließ sich nicht starten. Gib den Barcode unten ein.',
+      manualLabel: 'Barcode eingeben',
+      manualHint: '8 oder 13 Ziffern unter den Strichen',
+      search: 'Suchen',
+      invalid: 'Das ist kein gültiger Barcode. Bitte prüfe die Ziffern.',
+      searching: (code: string) => `Suche ${code} …`,
+      notFound: (code: string) =>
+        `${code} ist bei Open Food Facts nicht bekannt. Lege das Produkt selbst an; beim nächsten Scan findet die App es.`,
+      unavailable:
+        'Open Food Facts ist gerade nicht erreichbar (kein Netz?). Lege das Produkt selbst an oder versuche es später.',
+      incomplete: 'Bei Open Food Facts fehlen Werte. Bitte ergänze sie.',
+      saved: (name: string) => `„${name}“ unter „Meine Lebensmittel“ gespeichert`,
+      createOwn: 'Selbst anlegen',
+      retry: 'Erneut versuchen',
+      consentTitle: 'Open Food Facts verwenden?',
+      consentText:
+        'Für unbekannte Barcodes fragt die App bei Open Food Facts nach, einer freien Lebensmitteldatenbank. Dabei werden nur der Barcode und deine IP-Adresse übertragen, keine anderen Daten. Gefundene Produkte speichert die App unter „Meine Lebensmittel“, damit der nächste Scan ohne Netz geht. Die Angaben stammen von Freiwilligen und können Fehler enthalten.',
+      consentAllow: 'Erlauben und suchen',
+      consentDeny: 'Nein, selbst anlegen',
+      barcodeLabel: 'Barcode (optional)',
+      offTitle: 'Open Food Facts',
+      offOn: (date: string) =>
+        `Erlaubt seit ${date}. Beim Scannen geht nur der Barcode an Open Food Facts.`,
+      offOff: 'Nicht erlaubt. Unbekannte Barcodes legst du selbst an.',
+      offRevoke: 'Erlaubnis zurückziehen',
+      offGrant: 'Erlauben',
+      offSource: 'Daten: Open Food Facts, Open Database License (ODbL).',
+      fromOff: 'Werte von Open Food Facts. Bitte mit der Verpackung vergleichen.',
     },
     // Ziele
     targetsTitle: 'Tagesziele',

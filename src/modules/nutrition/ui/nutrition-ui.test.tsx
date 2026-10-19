@@ -4,15 +4,17 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import Dexie from 'dexie';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { catalogDbName } from '../data/catalogStore';
+import { setOffConsent } from '../data/openFoodFacts';
 import { listDayEntries, listFoods, listTargets } from '../data/nutritionRepository';
 import { nutritionRoutes } from '../routes';
 import { localDayKey } from '../service/nutritionService';
 
 const localDay = () => localDayKey(new Date());
+const setOffConsentForTest = () => setOffConsent(rt.db, true);
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -318,6 +320,127 @@ describe('Ernährung (Schritt G, D-261)', () => {
       await user.click(screen.getByRole('button', { name: 'Hafer Flocken bearbeiten' }));
       const edit = screen.getByRole('dialog', { name: 'Hafer Flocken' });
       expect(within(edit).getByRole('table', { name: 'Nährwerte für 50 g' })).toBeVisible();
+    },
+  );
+
+  it(
+    'scannt per Eingabe, fragt um Erlaubnis, speichert das Produkt und trägt es ein (D-266)',
+    { timeout: 40_000 },
+    async () => {
+      const fetchMock = vi.fn<typeof fetch>(() =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify({
+              status: 1,
+              product: {
+                product_name: 'Skyr Natur',
+                brands: 'Spar',
+                serving_quantity: 150,
+                nutriments: {
+                  'energy-kcal_100g': 63,
+                  proteins_100g: 11,
+                  carbohydrates_100g: 4,
+                  sugars_100g: 4,
+                  fat_100g: 0.2,
+                  salt_100g: 0.1,
+                },
+              },
+            }),
+            { status: 200 },
+          ),
+        ),
+      );
+      vi.stubGlobal('fetch', fetchMock);
+      try {
+        const user = userEvent.setup();
+        await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
+        await user.click(screen.getByRole('button', { name: 'Barcode scannen' }));
+        const scanner = await screen.findByRole('dialog', { name: 'Barcode scannen' }, WAIT);
+        // Ohne Kamera (jsdom) bleibt die Eingabe von Hand.
+        expect(within(scanner).getByText(/Kamera ist hier nicht verfügbar/)).toBeVisible();
+        await user.type(within(scanner).getByLabelText('Barcode eingeben'), '9001234567897');
+        await user.click(within(scanner).getByRole('button', { name: 'Suchen' }));
+        expect(within(scanner).getByRole('alert')).toHaveTextContent('kein gültiger Barcode');
+        await user.clear(within(scanner).getByLabelText('Barcode eingeben'));
+        await user.type(within(scanner).getByLabelText('Barcode eingeben'), '9001234567896');
+        await user.click(within(scanner).getByRole('button', { name: 'Suchen' }));
+
+        const consent = await screen.findByRole(
+          'dialog',
+          { name: 'Open Food Facts verwenden?' },
+          WAIT,
+        );
+        expect(fetchMock).not.toHaveBeenCalled();
+        await user.click(within(consent).getByRole('button', { name: 'Erlauben und suchen' }));
+
+        const log = await screen.findByRole('dialog', { name: 'Skyr Natur hinzufügen' }, WAIT);
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(fetchMock.mock.calls[0]?.[0]).toMatch(
+          /^https:\/\/world\.openfoodfacts\.org\/api\/v2\/product\/9001234567896\.json\?fields=/,
+        );
+        expect(
+          within(log).getByText('„Skyr Natur“ unter „Meine Lebensmittel“ gespeichert'),
+        ).toBeVisible();
+        expect(within(log).getByLabelText('Einheit')).toBeVisible();
+        await user.click(within(log).getByRole('button', { name: 'Hinzufügen' }));
+        await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+        const [food] = await listFoods(rt.db);
+        expect(food).toMatchObject({ barcode: '9001234567896', source: 'off', brand: 'Spar' });
+        const [entry] = await listDayEntries(rt.db, localDay());
+        expect(entry).toMatchObject({ nameSnapshot: 'Skyr Natur (Spar)', amount: 150 });
+
+        // Zweiter Scan: lokal, ohne Anfrage.
+        cleanup();
+        await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
+        await user.click(screen.getByRole('button', { name: 'Barcode scannen' }));
+        const again = await screen.findByRole('dialog', { name: 'Barcode scannen' }, WAIT);
+        await user.type(within(again).getByLabelText('Barcode eingeben'), '9001234567896');
+        await user.click(within(again).getByRole('button', { name: 'Suchen' }));
+        expect(
+          await screen.findByRole('dialog', { name: 'Skyr Natur hinzufügen' }, WAIT),
+        ).toBeVisible();
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    },
+  );
+
+  it(
+    'bietet bei unbekanntem Barcode das Formular mit Barcode an',
+    { timeout: 30_000 },
+    async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn<typeof fetch>(() =>
+          Promise.resolve(new Response(JSON.stringify({ status: 0 }), { status: 404 })),
+        ),
+      );
+      try {
+        const user = userEvent.setup();
+        const router = await renderAt(
+          '/ernaehrung/hinzufuegen?mahlzeit=lunch',
+          'Lebensmittel hinzufügen',
+        );
+        await setOffConsentForTest();
+        await user.click(screen.getByRole('button', { name: 'Barcode scannen' }));
+        const scanner = await screen.findByRole('dialog', { name: 'Barcode scannen' }, WAIT);
+        await user.type(within(scanner).getByLabelText('Barcode eingeben'), '96385074');
+        await user.click(within(scanner).getByRole('button', { name: 'Suchen' }));
+        expect(
+          await within(scanner).findByText(
+            /96385074 ist bei Open Food Facts nicht bekannt/,
+            {},
+            WAIT,
+          ),
+        ).toBeVisible();
+        await user.click(within(scanner).getByRole('button', { name: 'Selbst anlegen' }));
+        await screen.findByRole('heading', { level: 1, name: 'Neues Lebensmittel' }, WAIT);
+        expect(screen.getByLabelText('Barcode (optional)')).toHaveValue('96385074');
+        expect(router.state.location.search).toContain('zurueck=');
+      } finally {
+        vi.unstubAllGlobals();
+      }
     },
   );
 });

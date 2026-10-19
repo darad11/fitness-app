@@ -58,6 +58,7 @@ export function toFoodItem(food: Food): FoodItem {
     ...(food.favorite ? { favorite: true } : {}),
     ...(food.archivedAt ? { archivedAt: food.archivedAt } : {}),
     ...(food.sourceRef ? { sourceRef: food.sourceRef } : {}),
+    ...(food.barcode ? { barcode: food.barcode } : {}),
   };
 }
 
@@ -65,6 +66,20 @@ export function toFoodItem(food: Food): FoodItem {
 export async function listFoods(db: AppDb): Promise<Food[]> {
   const foods = parseRows<Food>(await db.foods.toArray(), 'food', foodSchema);
   return foods.sort((a, b) => a.name.localeCompare(b.name, 'de'));
+}
+
+/** Eigenes Lebensmittel mit diesem Barcode (auch archiviert), sonst `undefined`. */
+export async function findFoodByBarcode(
+  db: AppDb,
+  barcodes: readonly string[],
+): Promise<Food | undefined> {
+  const rows = await db.foods
+    .where('barcode')
+    .anyOf([...barcodes])
+    .toArray();
+  return parseRows<Food>(rows, 'food', foodSchema).sort(
+    (a, b) => Number(Boolean(a.archivedAt)) - Number(Boolean(b.archivedAt)),
+  )[0];
 }
 
 export async function listDayEntries(db: AppDb, dayKey: string): Promise<FoodLogEntry[]> {

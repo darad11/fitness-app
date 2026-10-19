@@ -13,6 +13,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Version 0.7 (Ernährung Grundausbau, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): NU-01 (Zielvorschlag), NU-02, NU-03 (vier feste Mahlzeiten), NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21 (BLS 4.0 mit österreichischen Suchbegriffen), NU-22, NU-25 (D-261, D-262). Teilweise und deshalb noch nicht umgestellt: NU-08 (nur lokale Suche), NU-11 (Favoriten und Zuletzt, ohne Mahlzeitvorlagen), NU-12 (jeder Tag aufrufbar, ohne Wochendurchschnitt), NU-16, NU-19, NU-23 (g, ml und Portionen, ohne Umrechnung ml in g). Barcode und Open Food Facts (NU-07, NU-24) folgen als eigenes Paket.
 - Version 0.8 (Lebensmitteldaten importieren, 19.10.2026): NU-25 zusätzlich mit AK-NUT-07 (lokaler Import der ÖNWT-Daten aus der BLS-Recherche, Herkunft in der Suche, D-263). NU-08 bleibt teilweise, bis die Online-Suche (M6) folgt.
 - Version 0.9 (Nährwerte anzeigen, 19.10.2026): NU-16 vorgezogen und „Implementiert“ (AK-NUT-08, D-264).
+- Version 0.10 (Barcode-Scanner, 19.10.2026): NU-07 und NU-24 vorgezogen und „Implementiert“ (AK-NUT-09, D-266); Gerätetest auf dem iPhone steht aus.
 - Version 0.6 (Notizen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden): TS-19 (Notizen zu Übung und Einheit im Player, im Verlauf und beim nächsten Mal; D-260).
 - Version 0.6 (Eigene Übungen, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-13 (eigene Übungen anlegen, bearbeiten, archivieren), TP-07 (Übungsdetail mit Angaben, persönlicher Notiz, Standardpause, Gewichtsschritt, Videolink und letzten Einheiten; D-258). TP-26 (Programmdatei) entfällt für R1 und wird über die Synchronisierung in R3 gelöst (D-259).
 - Version 0.6 (Eigene Programme, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): TP-01, TP-02, TP-03, TP-04, TP-08, TP-09, TP-10, TP-12, TP-14, TP-15, TP-16, TP-22, TP-23, TP-24, TP-25 (D-257). TP-13 (eigene Übungen) und TP-26 (Programmdatei) folgen mit AP 2.5 und AP 2.8; ON-14 bleibt bis zum Programmwechsel-Dialog.
@@ -57,16 +58,16 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 48 | 32 | 8 | 88 |
+| Original verifiziert (OV) | 49 | 31 | 8 | 88 |
 | Original nicht verifiziert (ON) | 11 | 15 | 2 | 28 |
-| Eigene Verbesserung (EV) | 41 | 8 | 0 | 49 |
-| Summe | 100 | 55 | 10 | 165 |
+| Eigene Verbesserung (EV) | 42 | 7 | 0 | 49 |
+| Summe | 102 | 53 | 10 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 100 |
-| R2 | 26 |
+| R1 | 102 |
+| R2 | 24 |
 | R3 | 3 |
 | R4 | 14 |
 | R5 | 5 |
@@ -80,9 +81,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 77 |
+| Implementiert | 79 |
 | Noch zu recherchieren | 1 |
-| Spezifiziert | 25 |
+| Spezifiziert | 23 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -195,7 +196,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-04 | Geplante Mahlzeit protokollieren und wechseln | „switch meals, log them" | SD 05:54; HC-G | V | OV | M | RE-03 | M | P2 | Später | R2 · M8 | Anpassen: aus dem eigenen Wochenmenü | Analysiert | Ein Tipp protokolliert die geplante Mahlzeit |
 | NU-05 | Lebensmittel oder Mahlzeit protokollieren, mit Snapshot | Portionsanteil, z. B. 0,75 | HC-G | V | OV | H | NU-08 | M | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
 | NU-06 | Hinzufügen als selbstgemacht, Restaurant oder per Barcode | Drei Wege über „+" | HC-G | V | OV | H | NU-07; NU-10 | M | P1 | Später | R2 · M5/M6 | Übernehmen | Spezifiziert | Jeder Weg erzeugt ein validiertes Lebensmittel mit Quelle |
-| NU-07 | Barcode-Scanning | Vorhanden, 2026 verbessert | REV; AS 3.5.0 | V | OV | H | Kamera; barcode-detector; Open Food Facts | L | P2 | Später | R2 · M6 | Anpassen: Polyfill (D-305); Open Food Facts erst nach Prüfspike S-1 (D-302) | Spezifiziert | Kamera-Scan im Browser; Fallback manuell; Treffer lokal gespeichert |
+| NU-07 | Barcode-Scanning | Vorhanden, 2026 verbessert | REV; AS 3.5.0 | V | OV | H | Kamera; barcode-detector; Open Food Facts | L | P2 | MVP | R1 · Schritt G | Anpassen: Polyfill (D-305), Open Food Facts nach Einwilligung, vorgezogen (D-266) | Implementiert | AK-NUT-09 |
 | NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | Später | R2 · M5/M6 | Anpassen: lokal zuerst, online ergänzend | Spezifiziert | Offline-Suche über eigene, generische und gespeicherte Einträge |
 | NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
 | NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-03 |
@@ -212,7 +213,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | BLS 4.0 (D-301) | M | P1 | MVP | R1 · Schritt G | Verbesserung (D-110, D-301), vorgezogen (D-261) | Implementiert | AK-NUT-01, AK-NUT-06 |
 | NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | MVP | R1 · Schritt G | Verbesserung (D-110), vorgezogen (D-261) | Implementiert | AK-NUT-04 |
 | NU-23 | Einheiten und Haushaltsmaße mit Umrechnung | – | – | E | EV | H | NU-09 | M | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert |
-| NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | Später | R2 · M6 | Verbesserung | Spezifiziert | Ohne Netz: Hinweis, lokale Ergebnisse, Barcode für später merken |
+| NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-266): ohne Netz Hinweis, lokale Treffer, „Selbst anlegen“ mit Barcode; „für später merken“ entfällt vorerst | Implementiert | AK-NUT-09 |
 | NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-06, AK-NUT-07 |
 
 ## F. Rezepte und Mahlzeitenplanung (RE)

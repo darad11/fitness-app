@@ -1,6 +1,6 @@
 import { Plus, X } from 'lucide-react';
 import { useId, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -25,8 +25,10 @@ import {
   type Nutrient,
   type Nutrients,
 } from '../model/nutrition';
+import type { FoodDraftState } from './BarcodeFlow';
 import {
   createFood,
+  createFoodFromOff,
   InvalidFoodError,
   setFoodArchived,
   setFoodFavorite,
@@ -37,10 +39,24 @@ const INPUT =
   'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
 
 /** Eigenes Lebensmittel anlegen oder bearbeiten (S-19, NU-10, NU-19, NU-22, NU-23). */
+/** Vorbelegung aus dem Scan (Navigation mit `state`), geprüft, weil der Verlauf sie speichert. */
+function readDraft(state: unknown): FoodDraftState | undefined {
+  if (typeof state !== 'object' || state === null || !('draft' in state)) return undefined;
+  const { draft, fromOff } = state as { draft: unknown; fromOff?: unknown };
+  if (typeof draft !== 'object' || draft === null) return undefined;
+  const d = draft as Partial<NonNullable<FoodDraftState['draft']>>;
+  if (typeof d.barcode !== 'string') return undefined;
+  return { draft: d as FoodDraftState['draft'], fromOff: fromOff === true };
+}
+
 export function FoodFormPage() {
   const { foodId } = useParams();
+  const location = useLocation();
   const foods = useFoods();
-  if (!foodId) return <FoodForm />;
+  if (!foodId) {
+    const draft = readDraft(location.state);
+    return <FoodForm key={location.key} {...(draft ? { draft } : {})} />;
+  }
   if (foods === undefined) {
     return (
       <div aria-busy="true">
@@ -64,7 +80,9 @@ export function FoodFormPage() {
   return <FoodForm key={food.id} food={food} />;
 }
 
-function FoodForm({ food }: { food?: Food }) {
+function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftState }) {
+  const draft = draftState?.draft;
+  const fromOff = draftState?.fromOff === true;
   const rt = useDb();
   const fmt = useFormatters();
   const navigate = useNavigate();
@@ -78,18 +96,21 @@ function FoodForm({ food }: { food?: Food }) {
       : fmt
           .number(value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })
           .replace(/\s/g, '');
-  const [name, setName] = useState(food?.name ?? '');
-  const [brand, setBrand] = useState(food?.brand ?? '');
-  const [basis, setBasis] = useState<FoodBasis>(food?.basis ?? 'g');
+  const [name, setName] = useState(food?.name ?? draft?.name ?? '');
+  const [brand, setBrand] = useState(food?.brand ?? draft?.brand ?? '');
+  const [barcode, setBarcode] = useState(food?.barcode ?? draft?.barcode ?? '');
+  const [basis, setBasis] = useState<FoodBasis>(food?.basis ?? draft?.basis ?? 'g');
   const [values, setValues] = useState<Record<Nutrient, string>>(
     () =>
-      Object.fromEntries(NUTRIENTS.map((n) => [n, show(food?.per100[n])])) as Record<
-        Nutrient,
-        string
-      >,
+      Object.fromEntries(
+        NUTRIENTS.map((n) => [n, show(food?.per100[n] ?? draft?.per100?.[n])]),
+      ) as Record<Nutrient, string>,
   );
   const [servings, setServings] = useState(
-    (food?.servings ?? []).map((s) => ({ name: s.name, amount: show(s.amount) })),
+    (food?.servings ?? draft?.servings ?? []).map((s) => ({
+      name: s.name,
+      amount: show(s.amount),
+    })),
   );
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -120,8 +141,13 @@ function FoodForm({ food }: { food?: Food }) {
     }
     setBusy(true);
     setError(null);
-    const input = { name, brand, basis, per100, servings: parsedServings };
-    (food ? updateFood(rt, food.id, input) : createFood(rt, input))
+    const input = { name, brand, basis, per100, servings: parsedServings, barcode };
+    (food
+      ? updateFood(rt, food.id, input)
+      : fromOff
+        ? createFoodFromOff(rt, input)
+        : createFood(rt, input)
+    )
       .then(() => navigate(back))
       .catch((caught: unknown) => {
         if (caught instanceof InvalidFoodError) setError(t.nutrition.errors[caught.reason]);
@@ -152,6 +178,11 @@ function FoodForm({ food }: { food?: Food }) {
           submit();
         }}
       >
+        {fromOff ? (
+          <p role="status" className="rounded-card bg-surface-2 p-4">
+            {t.nutrition.barcode.incomplete}
+          </p>
+        ) : null}
         <Card>
           <div className="grid gap-4">
             <div>
@@ -184,6 +215,25 @@ function FoodForm({ food }: { food?: Food }) {
                 value={brand}
                 onChange={(event) => {
                   setBrand(event.target.value);
+                }}
+                className={INPUT}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor={`${id}-barcode`}
+                className="mb-2 block text-sm font-semibold text-muted"
+              >
+                {t.nutrition.barcode.barcodeLabel}
+              </label>
+              <input
+                id={`${id}-barcode`}
+                inputMode="numeric"
+                autoComplete="off"
+                maxLength={20}
+                value={barcode}
+                onChange={(event) => {
+                  setBarcode(event.target.value);
                 }}
                 className={INPUT}
               />

@@ -18,4 +18,5 @@ export interface FoodItem {
   archivedAt?: string;
   /** BLS-Code bzw. Barcode. */
   sourceRef?: string;
+  barcode?: string;
 }

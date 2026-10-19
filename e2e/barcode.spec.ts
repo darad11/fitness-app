@@ -1,0 +1,67 @@
+import { expect, openPage, test } from './fixtures';
+
+const SKYR = {
+  status: 1,
+  product: {
+    product_name: 'Skyr Natur',
+    brands: 'Spar',
+    serving_quantity: 150,
+    nutriments: {
+      'energy-kcal_100g': 63,
+      proteins_100g: 11,
+      carbohydrates_100g: 4,
+      sugars_100g: 4,
+      fat_100g: 0.2,
+      salt_100g: 0.1,
+    },
+  },
+};
+
+test('Barcode: Einwilligung, Open Food Facts, speichern und eintragen; zweiter Scan lokal (NU-07, D-266)', async ({
+  page,
+}) => {
+  test.slow();
+  const offRequests: string[] = [];
+  await page.route('https://world.openfoodfacts.org/**', async (route) => {
+    offRequests.push(route.request().url());
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: { 'access-control-allow-origin': '*' },
+      body: JSON.stringify(SKYR),
+    });
+  });
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=breakfast');
+  await page.getByRole('button', { name: 'Barcode scannen' }).click();
+  const scanner = page.getByRole('dialog', { name: 'Barcode scannen' });
+  await scanner.getByLabel('Barcode eingeben').fill('9001234567896');
+  await scanner.getByRole('button', { name: 'Suchen' }).click();
+  const consent = page.getByRole('dialog', { name: 'Open Food Facts verwenden?' });
+  await expect(consent).toBeVisible();
+  expect(offRequests).toEqual([]);
+  await consent.getByRole('button', { name: 'Erlauben und suchen' }).click();
+  const log = page.getByRole('dialog', { name: 'Skyr Natur hinzufügen' });
+  await expect(log.getByText('„Skyr Natur“ unter „Meine Lebensmittel“ gespeichert')).toBeVisible();
+  expect(offRequests).toHaveLength(1);
+  expect(offRequests[0]).toMatch(/\/api\/v2\/product\/9001234567896\.json\?fields=/);
+  await log.getByRole('button', { name: 'Hinzufügen' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
+  await expect(
+    page.getByRole('region', { name: 'Frühstück' }).getByText('Skyr Natur (Spar)'),
+  ).toBeVisible();
+
+  // Nach Neuladen: lokal gefunden, keine weitere Anfrage.
+  await page.reload();
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=snacks');
+  await page.getByRole('button', { name: 'Barcode scannen' }).click();
+  await scanner.getByLabel('Barcode eingeben').fill('9001234567896');
+  await scanner.getByRole('button', { name: 'Suchen' }).click();
+  await expect(page.getByRole('dialog', { name: 'Skyr Natur hinzufügen' })).toBeVisible();
+  expect(offRequests).toHaveLength(1);
+
+  // Erlaubnis zurückziehen unter „Meine Lebensmittel“.
+  await openPage(page, '/ernaehrung/lebensmittel');
+  await expect(page.getByRole('link', { name: /Skyr Natur/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Erlaubnis zurückziehen' }).click();
+  await expect(page.getByText('Nicht erlaubt.', { exact: false })).toBeVisible();
+});

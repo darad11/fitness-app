@@ -1,4 +1,4 @@
-import { Plus, Star, Zap } from 'lucide-react';
+import { Plus, ScanBarcode, Star, Zap } from 'lucide-react';
 import { useDeferredValue, useId, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
@@ -23,6 +23,7 @@ import { useEntriesSince } from '../data/nutritionRepository';
 import type { FoodItem } from '../model/foodItem';
 import { MEAL_SLOTS, type MealSlot } from '../model/nutrition';
 import { logFood, logQuick, type Quantity } from '../service/nutritionService';
+import { BarcodeFlow } from './BarcodeFlow';
 import { kcal } from './format';
 import { NutrientTable } from './NutrientTable';
 import { useFoodCatalog } from './useFoodCatalog';
@@ -53,6 +54,8 @@ export function AddFoodPage() {
   const deferred = useDeferredValue(query);
   const [picked, setPicked] = useState<FoodItem | null>(null);
   const [quick, setQuick] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [savedNotice, setSavedNotice] = useState(false);
   const back = `/ernaehrung${day === today ? '' : `?tag=${day}`}`;
 
   const results = useMemo(
@@ -128,6 +131,15 @@ export function AddFoodPage() {
           <Button
             variant="secondary"
             onClick={() => {
+              setScanning(true);
+            }}
+          >
+            <ScanBarcode aria-hidden="true" className="size-5" />
+            {t.nutrition.barcode.scan}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
               setQuick(true);
             }}
           >
@@ -191,14 +203,29 @@ export function AddFoodPage() {
         </div>
       )}
 
+      {scanning ? (
+        <BarcodeFlow
+          returnTo={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`}
+          onClose={() => {
+            setScanning(false);
+          }}
+          onFood={(food, saved) => {
+            setScanning(false);
+            setSavedNotice(saved);
+            setPicked(food);
+          }}
+        />
+      ) : null}
       {picked ? (
         <LogDialog
           key={picked.id}
           food={picked}
+          savedNotice={savedNotice}
           slot={slot}
           day={day}
           onClose={() => {
             setPicked(null);
+            setSavedNotice(false);
           }}
           onLogged={() => {
             setPicked(null);
@@ -227,10 +254,12 @@ function LogDialog({
   food,
   slot,
   day,
+  savedNotice = false,
   onClose,
   onLogged,
 }: {
   food: FoodItem;
+  savedNotice?: boolean;
   slot: MealSlot;
   day: string;
   onClose: () => void;
@@ -329,6 +358,14 @@ function LogDialog({
         <p role="status" className="text-lg font-semibold tabular-nums">
           {preview !== null ? t.nutrition.preview(kcal(fmt, preview)) : '–'}
         </p>
+        {savedNotice ? (
+          <p className="rounded-card bg-surface-2 p-3 text-sm">
+            {t.nutrition.barcode.saved(food.name)}
+          </p>
+        ) : null}
+        {food.source === 'off' ? (
+          <p className="text-sm text-muted">{t.nutrition.barcode.fromOff}</p>
+        ) : null}
         <NutrientTable
           caption={t.nutrition.nutrientsTitle}
           columns={[

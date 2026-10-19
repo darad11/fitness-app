@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.13 · 19.10.2026 · Barcode-Scanner mit Open Food Facts
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-266 Barcode-Scanner, Einwilligung, Abhängigkeiten, Sicherheitsheader; D-302 und D-305 umgesetzt |
+| `requirements.md` | AK-NUT-09 |
+| `feature-inventory.md` | NU-07 und NU-24 vorgezogen und „Implementiert“ |
+| `data-sources.md` | Open Food Facts für Barcodes umgesetzt |
+| `known-limitations.md` | Grenzen des Scanners und der Abfrage |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Barcode-Scanner |
+
 ## Version 0.12 · 19.10.2026 · Alle Nährwerte anzeigen, „Heute“ aufgeräumt
 
 | Datei | Änderung |

@@ -1,4 +1,4 @@
-import { Database, Download, Footprints, Info, RefreshCw, Settings, UserRound } from 'lucide-react';
+import { Info, RefreshCw, Settings, UserRound } from 'lucide-react';
 import { t } from '@/shared/i18n/de';
 import { LinkList, PageHeader, type LinkListItem } from '@/shared/ui';
 
@@ -10,10 +10,7 @@ interface MoreItem extends LinkListItem {
 const MORE_ITEMS: readonly MoreItem[] = [
   { to: '/mehr/profil', label: t.more.profile, icon: UserRound, available: true },
   { to: '/mehr/einstellungen', label: t.more.settings, icon: Settings, available: true },
-  { to: '/mehr/daten', label: t.more.data, icon: Database, available: true },
-  { to: '/mehr/installieren', label: t.more.install, icon: Download, available: true },
   { to: '/mehr/synchronisierung', label: t.more.sync, icon: RefreshCw, available: true },
-  { to: '/mehr/schritte', label: t.more.steps, icon: Footprints, available: true },
   { to: '/mehr/ueber', label: t.more.about, icon: Info, available: true },
 ];
 

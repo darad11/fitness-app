@@ -74,6 +74,11 @@ export function TodayPage() {
     <>
       {/* Begrüßung wie im Dashboard (D-276): Gruß mit Namen, darunter Datum und Uhr. */}
       <header className="mb-6">
+        {/* Logo und Name wie im Dashboard (D-280); am Desktop zeigt die Seitenleiste sie schon. */}
+        <p className="mb-4 flex items-center gap-2.5 lg:hidden">
+          <img src="/icons/icon-192.png" alt="" className="size-8 shrink-0 rounded-[9px]" />
+          <span className="text-lg font-bold">{t.app.name}</span>
+        </p>
         <h1 className="text-display font-bold">
           <span className="sr-only">{t.today.title}: </span>
           {t.today.greetingLine(greetingFor(hour), profile?.displayName)}

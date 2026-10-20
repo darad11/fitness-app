@@ -725,3 +725,15 @@ BLS 4.0 entfernt (D-279), Gewichte gleicher Minute, Zutatenzeile im Rezept, robu
 | `pnpm check:bundle` | 247,7 KB Startansicht (Grenze 250 KB); der BLS war nie Teil der Startansicht |
 | Geräteprüfung | Produktinhaber: Glas-Look am iPhone passt; Schritte werden richtig dargestellt und aus dem Dashboard übertragen |
 
+
+### Logo und Einstellungen · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Logo und Name der App über der Begrüßung (nur Handy), „Daten und Sicherung“, „Installieren“ und „Schritte aus dem Dashboard“ unter Einstellungen › Weiteres (D-280).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 83 Dateien, 687 Tests bestanden; „Mehr“ zeigt vier Einträge |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 202 bestanden, 4 übersprungen. Neu: Logo und Name über der Begrüßung am Handy; Einstellungen › „Weiteres“ mit drei Links; Rücksprung von Daten, Installieren und Schritte zu den Einstellungen |
+| `pnpm check:bundle` | 247,8 KB Startansicht (Grenze 250 KB) |
+| Bilder | Vom Produktinhaber vorab freigegeben („bilder passen“) |

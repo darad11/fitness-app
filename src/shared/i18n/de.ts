@@ -722,6 +722,7 @@ export const de = {
     signOutHint: 'Beim Abmelden bleiben alle Daten auf diesem Gerät.',
   },
   settings: {
+    more: 'Weiteres',
     title: 'Einstellungen',
     appearance: 'Darstellung',
     themeLabel: 'Farbschema',

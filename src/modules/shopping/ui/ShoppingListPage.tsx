@@ -74,6 +74,14 @@ export function ShoppingListPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [showDone, setShowDone] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  // Beim Eintragen bleibt die Tastatur offen; damit man trotzdem sieht, was dazukam, steht es
+  // direkt unter dem Feld. „Fertig“ schließt die Tastatur. Die Zeile bleibt beim Verlassen des
+  // Feldes stehen (sonst springt die Liste unter dem Finger) und weicht erst beim nächsten Eintragen.
+  const [justAdded, setJustAdded] = useState<readonly string[]>([]);
+  const blurredAt = useRef<number | null>(null);
+  const remember = (item: ShoppingItem) => {
+    setJustAdded((ids) => [item.id, ...ids.filter((id) => id !== item.id)].slice(0, 3));
+  };
   // Eigene Lebensmittel aus „Meine Küche“ als Vorschläge; freie Eingabe bleibt immer möglich.
   const [foodNames, setFoodNames] = useState<readonly string[]>([]);
   useEffect(() => {
@@ -126,7 +134,7 @@ export function ShoppingListPage() {
       return;
     }
     run(async () => {
-      await addItem(rt, entry);
+      remember(await addItem(rt, entry));
       finish();
     });
   };
@@ -146,6 +154,9 @@ export function ShoppingListPage() {
   const open = items.filter(isOpen);
   const done = items.filter((item) => item.doneAt !== undefined && item.clearedAt === undefined);
   const recent = recentItems(items);
+  const addedNow = justAdded
+    .map((id) => items.find((item) => item.id === id))
+    .filter((item): item is ShoppingItem => item !== undefined);
   // Vorschläge erst beim Tippen, als eigene Knöpfe unter dem Feld statt der Auswahl des Browsers
   // (die blieb auf dem iPhone nach dem Hinzufügen offen): frühere Namen und eigene Lebensmittel,
   // nicht was schon offen auf der Liste steht (D-287).
@@ -268,6 +279,16 @@ export function ShoppingListPage() {
                 setText(event.target.value);
                 setPending(null);
               }}
+              onFocus={() => {
+                // Nach einer echten Pause neu beginnen; kurzes Abgeben des Fokus (Plus) zählt nicht.
+                if (blurredAt.current !== null && Date.now() - blurredAt.current > 1000) {
+                  setJustAdded([]);
+                }
+                blurredAt.current = null;
+              }}
+              onBlur={() => {
+                blurredAt.current = Date.now();
+              }}
               className={INPUT}
             />
             <Button type="submit" aria-label={ts.add}>
@@ -297,13 +318,37 @@ export function ShoppingListPage() {
               ))}
             </ul>
           ) : null}
+          {addedNow.length > 0 ? (
+            <div className="mt-2 flex items-start gap-2">
+              <p aria-live="polite" className="min-w-0 flex-1 py-2 text-sm">
+                <Check aria-hidden="true" className="mr-1 inline size-4 text-success" />
+                <span className="text-muted">{ts.justAdded} </span>
+                {addedNow
+                  .map((item) => (amount(item) ? `${item.name} ${amount(item)}` : item.name))
+                  .join(' · ')}
+              </p>
+              <Button
+                size="sm"
+                variant="secondary"
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                }}
+                onClick={() => {
+                  setJustAdded([]);
+                  input.current?.blur();
+                }}
+              >
+                {ts.doneTyping}
+              </Button>
+            </div>
+          ) : null}
           {error ? (
             <p role="alert" className="mt-2 text-sm text-danger">
               {error}
             </p>
-          ) : (
+          ) : items.length === 0 ? (
             <p className="mt-2 text-sm text-muted">{ts.inputHint}</p>
-          )}
+          ) : null}
           {pending ? (
             <div role="status" className="mt-3 rounded-input bg-surface-2 p-3">
               <p className="text-sm">
@@ -316,7 +361,7 @@ export function ShoppingListPage() {
                     onClick={() => {
                       const { existing, entry } = pending;
                       run(async () => {
-                        await mergeQuantity(rt, existing.id, entry.quantity ?? 0);
+                        remember(await mergeQuantity(rt, existing.id, entry.quantity ?? 0));
                         finish();
                       });
                     }}
@@ -330,7 +375,7 @@ export function ShoppingListPage() {
                   onClick={() => {
                     const { entry } = pending;
                     run(async () => {
-                      await addItem(rt, entry);
+                      remember(await addItem(rt, entry));
                       finish();
                     });
                   }}

@@ -1,13 +1,15 @@
-import { Flame } from 'lucide-react';
 import { Link } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { ButtonLink, Card, Skeleton } from '@/shared/ui';
+import { ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
 import { setHabitDone } from '../service/habitService';
 import { TaskCheckbox } from './TaskCheckbox';
 import { useTodayTasks } from './useTodayTasks';
 
-/** Karte „Tagesaufgaben“ auf „Heute“ (AH-03): abhaken, Serie, Weg zur Verwaltung. */
+/**
+ * Karte „Tagesaufgaben“ auf „Heute“ (AH-03, D-283): schlichte Liste zum Abhaken, jeden Tag neu,
+ * darunter ein schmaler Balken mit „x von y erledigt“; Weg zur Verwaltung.
+ */
 export function TasksCard({ className }: { className?: string }) {
   const rt = useDb();
   const tasks = useTodayTasks();
@@ -52,19 +54,18 @@ export function TasksCard({ className }: { className?: string }) {
               </li>
             ))}
           </ul>
-          <p className="mt-3 flex items-center gap-2 text-sm text-muted">
-            <Flame
-              aria-hidden="true"
-              className={tasks.streak.days > 0 ? 'size-4 text-warning' : 'size-4'}
+          <div className="mt-3 flex items-center gap-3">
+            <Meter
+              className="h-1.5 flex-1"
+              label={t.tasks.progressLabel}
+              value={tasks.status.total === 0 ? 0 : tasks.status.done / tasks.status.total}
             />
-            <span>
-              {t.tasks.streak(tasks.streak.days)}
-              {' · '}
+            <p className="shrink-0 text-sm text-muted tabular-nums">
               {tasks.status.complete
                 ? t.tasks.todayDone
                 : t.tasks.todayProgress(tasks.status.done, tasks.status.total)}
-            </span>
-          </p>
+            </p>
+          </div>
         </>
       )}
     </Card>

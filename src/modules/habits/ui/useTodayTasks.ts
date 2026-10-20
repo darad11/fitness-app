@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { addDays, dayKey, localTimeZone } from '@/shared/lib/time';
 import { useToday } from '@/shared/ui/useToday';
-import { activeOn, dayStatus, streak, type Streak } from '../calc/streak';
+import { activeOn, dayStatus } from '../calc/streak';
 import { useHabitLogs, useHabits } from '../data/useHabits';
 import type { Habit, HabitLog } from '../model/habit';
 
-/** Wie weit die Serie höchstens zurückschaut; mehr Einträge werden nicht geladen. */
-const LOOKBACK_DAYS = 400;
+/** Wie weit die Übersicht zurückschaut; ältere Einträge werden nicht geladen. */
+const LOOKBACK_DAYS = 30;
 
 export interface TodayTasks {
   today: string;
@@ -15,10 +15,9 @@ export interface TodayTasks {
   logs: HabitLog[];
   doneIds: ReadonlySet<string>;
   status: ReturnType<typeof dayStatus>;
-  streak: Streak;
 }
 
-/** Aufgaben, Einträge und Serie für heute; `undefined` beim Laden. Der Tag wechselt mit der Uhr. */
+/** Aufgaben, Einträge und Stand für heute; `undefined` beim Laden. Der Tag wechselt mit der Uhr. */
 export function useTodayTasks(): TodayTasks | undefined {
   const now = useToday();
   const today = dayKey(now, localTimeZone());
@@ -37,7 +36,6 @@ export function useTodayTasks(): TodayTasks | undefined {
       logs,
       doneIds,
       status: dayStatus(habits, logs, today),
-      streak: streak(habits, logs, today),
     };
   }, [habits, logs, today]);
 }

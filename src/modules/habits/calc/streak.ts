@@ -4,6 +4,7 @@ export interface HabitLike {
   id: string;
   fromDayKey: DayKey;
   toDayKey?: DayKey;
+  pauses?: readonly { fromDayKey: DayKey; toDayKey: DayKey }[];
 }
 
 export interface LogLike {
@@ -12,11 +13,16 @@ export interface LogLike {
   done: boolean;
 }
 
-/** Aufgaben, die an einem Tag gelten: ab dem Tag des Anlegens bis vor den Tag des Beendens. */
+/**
+ * Aufgaben, die an einem Tag gelten: ab dem Tag des Anlegens bis vor den Tag des Pausierens
+ * oder Löschens, ohne frühere Pausen.
+ */
 export function activeOn<T extends HabitLike>(habits: readonly T[], dayKey: DayKey): T[] {
   return habits.filter(
     (habit) =>
-      habit.fromDayKey <= dayKey && (habit.toDayKey === undefined || dayKey < habit.toDayKey),
+      habit.fromDayKey <= dayKey &&
+      (habit.toDayKey === undefined || dayKey < habit.toDayKey) &&
+      !(habit.pauses ?? []).some((pause) => pause.fromDayKey <= dayKey && dayKey < pause.toDayKey),
   );
 }
 

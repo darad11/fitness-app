@@ -56,23 +56,67 @@ export async function moveHabit(rt: DbRuntime, id: string, direction: -1 | 1): P
 }
 
 /**
- * Beendet eine Aufgabe ab heute: Sie bleibt für vergangene Tage und die Serie erhalten und
- * verschwindet aus der Liste. „Rückgängig“ ist 10 s lang möglich.
+ * Pausiert eine Aufgabe ab heute (D-283): Sie gilt ab heute nicht mehr, vergangene Tage bleiben
+ * erhalten, unter „Pausiert“ lässt sie sich wieder aufnehmen. „Rückgängig“ ist 10 s lang möglich.
  */
 export function endHabit(rt: DbRuntime, id: string, clock: Clock = {}): Promise<Habit> {
   const today = todayOf(clock);
   const at = nowOf(clock).toISOString();
   return updateDoc(rt, habitDef, id, (current) => ({
     ...current,
-    toDayKey: today,
-    archivedAt: at,
+    toDayKey: current.toDayKey ?? today,
+    archivedAt: current.archivedAt ?? at,
   }));
 }
 
-export function reopenHabit(rt: DbRuntime, id: string): Promise<Habit> {
+/**
+ * Nimmt eine pausierte oder gelöschte Aufgabe ab heute wieder auf. Lag die Pause vor heute, wird
+ * sie als frühere Pause gemerkt, damit diese Tage nicht nachträglich als offen zählen.
+ */
+export function reopenHabit(rt: DbRuntime, id: string, clock: Clock = {}): Promise<Habit> {
+  const today = todayOf(clock);
   return updateDoc(rt, habitDef, id, (current) => {
-    const { toDayKey: _to, archivedAt: _at, ...rest } = current;
-    return rest;
+    const { toDayKey, archivedAt: _at, removedAt: _removed, ...rest } = current;
+    if (toDayKey === undefined || toDayKey >= today) return rest;
+    return {
+      ...rest,
+      pauses: [...(current.pauses ?? []), { fromDayKey: toDayKey, toDayKey: today }],
+    };
+  });
+}
+
+/**
+ * Löscht eine Aufgabe aus der Liste (D-283): Sie erscheint nicht mehr, auch nicht unter
+ * „Pausiert“; vergangene Tage behalten sie, damit ihr Stand stimmt. „Rückgängig“ 10 s lang.
+ */
+export function removeHabit(rt: DbRuntime, id: string, clock: Clock = {}): Promise<Habit> {
+  const today = todayOf(clock);
+  const at = nowOf(clock).toISOString();
+  return updateDoc(rt, habitDef, id, (current) => ({
+    ...current,
+    toDayKey: current.toDayKey ?? today,
+    archivedAt: current.archivedAt ?? at,
+    removedAt: at,
+  }));
+}
+
+/** „Rückgängig“ nach Pausieren oder Löschen: stellt Gültigkeit und Pausen wie vorher her. */
+export function undoHabitChange(rt: DbRuntime, before: Habit): Promise<Habit> {
+  return updateDoc(rt, habitDef, before.id, (current) => {
+    const {
+      toDayKey: _to,
+      archivedAt: _at,
+      removedAt: _removed,
+      pauses: _pauses,
+      ...rest
+    } = current;
+    return {
+      ...rest,
+      ...(before.toDayKey !== undefined ? { toDayKey: before.toDayKey } : {}),
+      ...(before.archivedAt !== undefined ? { archivedAt: before.archivedAt } : {}),
+      ...(before.removedAt !== undefined ? { removedAt: before.removedAt } : {}),
+      ...(before.pauses !== undefined ? { pauses: before.pauses } : {}),
+    };
   });
 }
 

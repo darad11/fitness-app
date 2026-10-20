@@ -96,6 +96,8 @@ export const foodLogEntrySchema = defineDocSchema('food_log_entry', {
   kind: z.enum(LOG_KINDS),
   foodId: z.uuid().optional(),
   nameSnapshot: z.string().trim().min(1).max(FOOD_NAME_MAX),
+  /** Marke zum Zeitpunkt des Eintrags (D-278); früher stand sie in Klammern im Namen. */
+  brandSnapshot: z.string().trim().min(1).max(60).optional(),
   basisSnapshot: z.enum(FOOD_BASES).optional(),
   /** Gramm bzw. Milliliter; bei Schnelleinträgen leer. */
   amount: z.number().positive().max(10_000).optional(),

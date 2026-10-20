@@ -11,7 +11,10 @@ const LOOKBACK_DAYS = 30;
 export interface TodayTasks {
   today: string;
   habits: Habit[];
+  /** Heute fällig (D-285: nur an ihren Wochentagen). */
   active: Habit[];
+  /** Alle laufenden Aufgaben, auch die heute nicht fälligen (Verwaltung). */
+  listed: Habit[];
   logs: HabitLog[];
   doneIds: ReadonlySet<string>;
   status: ReturnType<typeof dayStatus>;
@@ -33,6 +36,7 @@ export function useTodayTasks(): TodayTasks | undefined {
       today,
       habits,
       active,
+      listed: habits.filter((habit) => habit.toDayKey === undefined),
       logs,
       doneIds,
       status: dayStatus(habits, logs, today),

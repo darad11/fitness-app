@@ -787,3 +787,15 @@ Kennzahlen, Verlauf, Gesamtübersicht, Einzelauswertung und Hinweise (D-284).
 | `pnpm check:bundle` | zuerst 251,3 KB (über 250 KB); die Karte „Tagesaufgaben“ wird jetzt wie „Schritte“ nachgeladen, ungenutzte Exporte entfernt: 248,8 KB |
 | Nachtrag Vorschau | Produktinhaber: am ersten Tag füllte das einzige Feld der Gesamtübersicht die ganze Breite, ebenso der Kalender der Einzelauswertung am Mac (Kalender jetzt höchstens 240 px breit, Tage etwa 31 px). Felder jetzt höchstens 40 px, bei bis zu 7 Spalten höchstens 448 px breit; Text „noch nichts zu werten; heute zählt ab morgen mit“. `tasks.spec.ts` 8 bestanden, Habits-Unit-Tests 37 bestanden, Startansicht 248,8 KB |
 | Bilder | Fortschritt, Einzelauswertung und Gesamtübersicht mit Testdaten (45 bzw. 89 Tage im Browser erzeugt, nicht Nutzerdaten), vom Produktinhaber freigegeben |
+
+### Wochentage je Aufgabe · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Fällig nur an gewählten Wochentagen, „Mit Training abhaken“ (D-285).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 85 Dateien, 715 Tests bestanden. Neu: nur an Wochentagen fällig, Änderung erst ab ihrem Tag; Quote und Serie nur über fällige Tage; gleiche Änderung am selben Tag ersetzt; „mit Training“ hakt nur ohne eigenen Eintrag ab; Karte zeigt nur heute Fälliges, „Heute ist keine Aufgabe fällig.“; Verwaltung speichert Wochentage und Schalter |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 211 bestanden, 1 rot, 4 übersprungen: `network-a11y` „eigene Adresse“ (Pixel 7) fand unter voller Last eine Überschrift nicht rechtzeitig; allein dreimal je 2 bestanden (bekannt wackelig, siehe Übergabe). Neu in `tasks.spec.ts`: Mo/Mi/Fr, am Dienstag nicht auf „Heute“, am Mittwoch nach nachgetragener Aktivität abgehakt, Zurücknehmen bleibt nach Neuladen |
+| `pnpm check:bundle` | 248,6 KB Startansicht (Grenze 250 KB) |
+| Bilder | Bearbeiten mit „Fällig an“, „Heute“ an einem freien Tag, Auswertung Mo/Mi/Fr; vom Produktinhaber freigegeben („es kann alles zählen“) |

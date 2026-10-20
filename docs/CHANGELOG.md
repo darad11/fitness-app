@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.34 · 20.10.2026 · Wochentage je Aufgabe
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-285 Wochentage und „Mit Training abhaken“; Q-21 beantwortet |
+| `requirements.md` | AK-HAB-04 |
+| `data-model.md` | `habit.schedule`, `habit.autoDone` |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.33 · 20.10.2026 · Fortschritt der Tagesaufgaben
 
 | Datei | Änderung |

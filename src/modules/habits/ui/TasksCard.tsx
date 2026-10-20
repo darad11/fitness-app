@@ -1,10 +1,12 @@
 import { Settings2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { useCompletedSessions } from '@/modules/training';
 import { logError, useDb } from '@/shared/db';
+import { dayKey, localTimeZone } from '@/shared/lib/time';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
-import { setHabitDone } from '../service/habitService';
+import { applyAutoDone, setHabitDone } from '../service/habitService';
 import { TaskCheckbox } from './TaskCheckbox';
 import { useTodayTasks } from './useTodayTasks';
 
@@ -19,6 +21,25 @@ export function TasksCard({ className }: { className?: string }) {
   const rt = useDb();
   const tasks = useTodayTasks();
   const [expanded, setExpanded] = useState(false);
+  const sessions = useCompletedSessions();
+  const trainedToday =
+    tasks !== undefined &&
+    (sessions ?? []).some(
+      (session) =>
+        dayKey(new Date(session.endedAt ?? session.startedAt), localTimeZone()) === tasks.today,
+    );
+  // D-285: Aufgaben „mit Training abhaken“, sobald heute ein Training abgeschlossen ist.
+  useEffect(() => {
+    if (!tasks || !trainedToday) return;
+    const logged = new Set(
+      tasks.logs.filter((log) => log.dayKey === tasks.today).map((log) => log.habitId),
+    );
+    applyAutoDone(rt, tasks.active, tasks.today, (id) => logged.has(id), true).catch(
+      (error: unknown) => {
+        void logError(rt.db, { area: 'habits', error, route: '/heute' });
+      },
+    );
+  }, [rt, tasks, trainedToday]);
   const hidden = tasks ? Math.max(0, tasks.active.length - VISIBLE) : 0;
   const shown = tasks ? (expanded ? tasks.active : tasks.active.slice(0, VISIBLE)) : [];
   return (
@@ -39,6 +60,8 @@ export function TasksCard({ className }: { className?: string }) {
         <div aria-busy="true">
           <Skeleton className="h-16" />
         </div>
+      ) : tasks.active.length === 0 && tasks.listed.length > 0 ? (
+        <p className="text-muted">{t.tasks.noneDueToday}</p>
       ) : tasks.active.length === 0 ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-muted">{t.tasks.emptyCard}</p>

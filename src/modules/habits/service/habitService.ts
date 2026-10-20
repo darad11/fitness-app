@@ -145,3 +145,64 @@ export function setHabitDone(
     ...(done ? { doneAt: at } : {}),
   }));
 }
+
+export class InvalidWeekdaysError extends Error {
+  override name = 'InvalidWeekdaysError';
+}
+
+/**
+ * Wochentage ändern (D-285): gilt ab heute, frühere Tage behalten ihre Regel. Eine Änderung am
+ * selben Tag ersetzt die von heute. Alle sieben Tage heißt wieder „jeden Tag“.
+ */
+export async function setHabitWeekdays(
+  rt: DbRuntime,
+  id: string,
+  weekdays: readonly number[],
+  clock: Clock = {},
+): Promise<Habit> {
+  const days = [...new Set(weekdays)].filter((day) => day >= 1 && day <= 7).sort((a, b) => a - b);
+  if (days.length === 0) throw new InvalidWeekdaysError('Mindestens ein Wochentag');
+  const today = todayOf(clock);
+  return updateDoc(rt, habitDef, id, (current) => {
+    const earlier = (current.schedule ?? []).filter((entry) => entry.fromDayKey < today);
+    const before = earlier.at(-1)?.weekdays ?? [1, 2, 3, 4, 5, 6, 7];
+    const same = before.length === days.length && before.every((day, i) => day === days[i]);
+    const { schedule: _schedule, ...rest } = current;
+    const next = same ? earlier : [...earlier, { fromDayKey: today, weekdays: days }];
+    return next.length === 0 ? rest : { ...rest, schedule: next };
+  });
+}
+
+/** Automatisch abhaken ein- oder ausschalten (D-285). */
+export function setHabitAutoDone(
+  rt: DbRuntime,
+  id: string,
+  autoDone: 'training' | null,
+): Promise<Habit> {
+  return updateDoc(rt, habitDef, id, (current) => {
+    const { autoDone: _auto, ...rest } = current;
+    return autoDone ? { ...rest, autoDone } : rest;
+  });
+}
+
+/**
+ * Hakt Aufgaben mit `autoDone: 'training'` ab, wenn heute ein Training abgeschlossen ist (D-285).
+ * Nur wenn es für heute noch keinen Eintrag gibt: Wer selbst zurücknimmt, wird nicht überstimmt.
+ */
+export async function applyAutoDone(
+  rt: DbRuntime,
+  habits: readonly Habit[],
+  today: DayKey,
+  hasLog: (habitId: string) => boolean,
+  trainedToday: boolean,
+  clock: Clock = {},
+): Promise<number> {
+  if (!trainedToday) return 0;
+  let count = 0;
+  for (const habit of habits) {
+    if (habit.autoDone !== 'training' || hasLog(habit.id)) continue;
+    await setHabitDone(rt, habit.id, today, true, clock);
+    count += 1;
+  }
+  return count;
+}

@@ -135,7 +135,10 @@ export function TaskStats({
           unit={ts.days(streaks.current)}
           hint={ts.streakHint(fmt.number(streaks.best))}
         />
-        <StatTile label={ts.active} value={fmt.number(todayStatus.total)} />
+        <StatTile
+          label={ts.active}
+          value={fmt.number(habits.filter((habit) => habit.toDayKey === undefined).length)}
+        />
       </dl>
       {clipped || rate.noDataDays > 0 ? (
         <p className="-mt-1 text-sm text-muted">

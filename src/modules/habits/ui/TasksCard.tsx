@@ -1,11 +1,15 @@
 import { Settings2 } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
+import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
 import { setHabitDone } from '../service/habitService';
 import { TaskCheckbox } from './TaskCheckbox';
 import { useTodayTasks } from './useTodayTasks';
+
+/** So viele Aufgaben zeigt die Karte zuerst; der Rest per „weitere anzeigen“. */
+const VISIBLE = 6;
 
 /**
  * Karte „Tagesaufgaben“ auf „Heute“ (AH-03, D-283): schlichte Liste zum Abhaken, jeden Tag neu,
@@ -14,6 +18,9 @@ import { useTodayTasks } from './useTodayTasks';
 export function TasksCard({ className }: { className?: string }) {
   const rt = useDb();
   const tasks = useTodayTasks();
+  const [expanded, setExpanded] = useState(false);
+  const hidden = tasks ? Math.max(0, tasks.active.length - VISIBLE) : 0;
+  const shown = tasks ? (expanded ? tasks.active : tasks.active.slice(0, VISIBLE)) : [];
   return (
     <Card
       title={t.tasks.title}
@@ -42,7 +49,7 @@ export function TasksCard({ className }: { className?: string }) {
       ) : (
         <>
           <ul className="divide-y divide-line">
-            {tasks.active.map((habit) => (
+            {shown.map((habit) => (
               <li key={habit.id}>
                 <TaskCheckbox
                   label={habit.name}
@@ -56,6 +63,19 @@ export function TasksCard({ className }: { className?: string }) {
               </li>
             ))}
           </ul>
+          {hidden > 0 ? (
+            <Button
+              size="sm"
+              variant="quiet"
+              className="-ml-3"
+              aria-expanded={expanded}
+              onClick={() => {
+                setExpanded((open) => !open);
+              }}
+            >
+              {expanded ? t.tasks.showLess : t.tasks.showMore(hidden)}
+            </Button>
+          ) : null}
           <div className="mt-3 flex items-center gap-3">
             <Meter
               className="h-1.5 flex-1"

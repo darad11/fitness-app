@@ -774,3 +774,16 @@ Schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergang
 | GitHub Actions | `tasks.spec.ts` „kleiner Bildschirm“ in Chromium rot: 27 px zu breit, weil die Überschrift „Tagesaufgaben“ mit den Schriften des Runners breiter als 320 px war (lokal nicht nachstellbar, bei 290 px schon: 310 statt 290). Behoben in `PageHeader`: unter 360 px etwas kleinere Überschrift, Silbentrennung und Umbruch im Wort als Rückfall; danach `tasks.spec.ts` und `shell.spec.ts` 21 bestanden |
 | GitHub Actions, WebKit | „abhaken ohne Netz“ rot: „Failed to load resource“ im Browser, weil die Seite offline ging, bevor der Service Worker sie steuerte (ohne ihn schlägt jede Anfrage fehl). Test wartet jetzt wie `resilience.spec.ts` auf den Service Worker; Chromium 6 bestanden, WebKit nur in GitHub Actions prüfbar |
 | Bilder | Karte und Verwalten vom Produktinhaber freigegeben (Symbol oben rechts für Pausierte, ohne Hinweistext und ohne Übersicht der letzten 14 Tage) |
+
+### Fortschritt der Tagesaufgaben · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kennzahlen, Verlauf, Gesamtübersicht, Einzelauswertung und Hinweise (D-284).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 85 Dateien, 709 Tests bestanden. Neu `insights.test.ts` (20): Zustände erledigt, offen, nicht fällig, kein Eintrag; Zeiträume nie vor der ersten Aufgabe; neue Aufgaben ohne Rückwirkung; gelöschte nur bis zum Löschen; Vergleich nur mit genug Daten; aktuelle und beste Serie (heute offen unterbricht nicht, Tag ohne Eintrag schon, Pausen neutral); Tage und Wochen im Verlauf; Wochentage; Hinweise nur mit genug Daten. `task-stats.test.tsx` (3): Kennzahlen, Gesamtübersicht, Sortieren, Zeitraum, Einzelauswertung, leerer Zustand |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 210 bestanden, 4 übersprungen. Neu in `tasks.spec.ts`: drei Tage mit gestellter Uhr, Quote 75 %, Diagramm, Übersicht, Einzelauswertung, 360 px ohne Überlauf. Dabei gefunden und behoben: das Diagramm machte das Raster breiter als den Bildschirm (Raster jetzt `grid-cols-1`) |
+| `pnpm check:bundle` | zuerst 251,3 KB (über 250 KB); die Karte „Tagesaufgaben“ wird jetzt wie „Schritte“ nachgeladen, ungenutzte Exporte entfernt: 248,8 KB |
+| Nachtrag Vorschau | Produktinhaber: am ersten Tag füllte das einzige Feld der Gesamtübersicht die ganze Breite, ebenso der Kalender der Einzelauswertung am Mac (Kalender jetzt höchstens 240 px breit, Tage etwa 31 px). Felder jetzt höchstens 40 px, bei bis zu 7 Spalten höchstens 448 px breit; Text „noch nichts zu werten; heute zählt ab morgen mit“. `tasks.spec.ts` 8 bestanden, Habits-Unit-Tests 37 bestanden, Startansicht 248,8 KB |
+| Bilder | Fortschritt, Einzelauswertung und Gesamtübersicht mit Testdaten (45 bzw. 89 Tage im Browser erzeugt, nicht Nutzerdaten), vom Produktinhaber freigegeben |

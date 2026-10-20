@@ -1,5 +1,14 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.33 · 20.10.2026 · Fortschritt der Tagesaufgaben
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-284 Fortschritt der Tagesaufgaben; Q-21 Wochentage je Aufgabe |
+| `requirements.md` | AK-HAB-03 |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.32 · 20.10.2026 · Tagesaufgaben als Checkliste
 
 | Datei | Änderung |

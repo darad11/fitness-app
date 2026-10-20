@@ -260,5 +260,7 @@ Nächste Schritte: <Liste>
 46. Erledigt (über #37 gemergt): Logo und Name über der Begrüßung, Daten/Installieren/Schritte in den Einstellungen (D-280).
 47. Erledigt (über #38 gemergt): Statusleiste auf allen Seiten und bei der Anmeldung ohne farbliche Unterbrechung (D-281).
 48. Erledigt (über #39 gemergt): Datumsfeld beim Nachtragen ragt am iPhone nicht mehr über den Rand (D-282).
-49. Erledigt (Branch `feat/tagesaufgaben`): Tagesaufgaben als schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergangenheit (D-283).
-50. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+49. Erledigt (über #40 gemergt): Tagesaufgaben als schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergangenheit (D-283).
+50. Erledigt (Branch `feat/aufgaben-statistik`): Fortschritt der Tagesaufgaben mit Kennzahlen, Verlauf, Gesamtübersicht, Einzelauswertung und Hinweisen (D-284).
+51. Ich, nach Bildern: Wochentage je Aufgabe (Q-21), danach optional „Training“ und „Schritte“ automatisch vorschlagen.
+52. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

@@ -13,7 +13,10 @@ import {
   reopenHabit,
   undoHabitChange,
 } from '../service/habitService';
+import { TaskStats } from './TaskStats';
+import { useHabitHistory } from './useHabitHistory';
 import { useTodayTasks } from './useTodayTasks';
+import type { InsightPeriod } from '../calc/insights';
 
 const INPUT =
   'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
@@ -35,6 +38,8 @@ export function TasksPage() {
   const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
   const [change, setChange] = useState<Change | null>(null);
   const [showPaused, setShowPaused] = useState(false);
+  const [period, setPeriod] = useState<InsightPeriod>('30d');
+  const history = useHabitHistory();
   const run = (action: () => Promise<unknown>) => {
     action().catch((caught: unknown) => {
       void logError(rt.db, { area: 'habits', error: caught, route: '/heute/aufgaben' });
@@ -65,7 +70,7 @@ export function TasksPage() {
           <Skeleton className="h-24" />
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <Card
             title={t.tasks.listTitle}
             action={
@@ -283,6 +288,7 @@ export function TasksPage() {
               </section>
             ) : null}
           </Card>
+          {history ? <TaskStats history={history} period={period} onPeriod={setPeriod} /> : null}
         </div>
       )}
       {change ? (

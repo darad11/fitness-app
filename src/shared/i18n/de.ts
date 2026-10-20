@@ -101,7 +101,7 @@ export const de = {
   },
   tasks: {
     title: 'Tagesaufgaben',
-    manage: 'Verwalten',
+    manage: 'Tagesaufgaben verwalten',
     add: 'Aufgabe hinzufügen',
     addShort: 'Hinzufügen',
     nameLabel: 'Name der Aufgabe',

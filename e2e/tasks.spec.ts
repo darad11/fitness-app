@@ -31,6 +31,19 @@ test('Tagesaufgaben: hinzufügen, abhaken, neu laden, nächster Tag wieder offen
   await openPage(page, '/heute');
   const card = page.getByRole('region', { name: 'Tagesaufgaben' });
   await expect(card.getByRole('checkbox')).toHaveCount(3);
+  // Direkt unter „Schritte“, Verwalten über das Symbol oben rechts.
+  await expect(page.getByRole('region', { name: 'Schritte', exact: true })).toBeVisible();
+  const order = await page
+    .getByRole('main')
+    .locator('section')
+    .evaluateAll((sections) =>
+      sections.map((s) => s.getAttribute('aria-labelledby') && s.querySelector('h2')?.textContent),
+    );
+  expect(order[order.indexOf('Schritte') + 1]).toBe('Tagesaufgaben');
+  await expect(card.getByRole('link', { name: 'Tagesaufgaben verwalten' })).toHaveAttribute(
+    'href',
+    '/heute/aufgaben',
+  );
   await card.getByText('30 min Cardio').click();
   await expect(card).toContainText('1 von 3 erledigt');
   await card.getByText('2 l Wasser').click();

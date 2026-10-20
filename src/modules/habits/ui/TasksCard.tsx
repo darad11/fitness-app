@@ -1,3 +1,4 @@
+import { Settings2 } from 'lucide-react';
 import { Link } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -20,9 +21,10 @@ export function TasksCard({ className }: { className?: string }) {
       action={
         <Link
           to="/heute/aufgaben"
-          className="inline-flex min-h-11 items-center font-semibold text-accent-ink"
+          aria-label={t.tasks.manage}
+          className="-my-2 -mr-2 inline-flex size-11 items-center justify-center rounded-pill text-accent-ink transition-colors duration-120 hover:bg-surface-2"
         >
-          {t.tasks.manage}
+          <Settings2 aria-hidden="true" className="size-5" />
         </Link>
       }
     >

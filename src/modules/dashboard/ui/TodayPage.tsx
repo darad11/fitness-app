@@ -176,6 +176,7 @@ export function TodayPage() {
         <Suspense fallback={null}>
           <StepsTodayCard />
         </Suspense>
+        <TasksCard />
         {sessions && goals ? (
           <WeeklyGoalCard sessions={sessions} target={goals.weeklySessions} today={todayKey} />
         ) : null}
@@ -259,7 +260,6 @@ export function TodayPage() {
             <p className="text-muted">{t.today.weightNone}</p>
           )}
         </Card>
-        <TasksCard />
       </div>
     </>
   );

@@ -770,4 +770,5 @@ Schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergang
 | `pnpm test` | 83 Dateien, 693 Tests bestanden. Neu: Pausentage zählen nach dem Wiederaufnehmen nicht als offen (vorher ein Fehler); Löschen erhält frühere Tage; Rückgängig stellt den Stand vor dem Pausieren oder Löschen her; Karte ohne Serie mit „x von y erledigt“; neuer Tag offen, gestern gespeichert; Neuladen behält heute |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 208 bestanden, 4 übersprungen. `tasks.spec.ts`: hinzufügen, ordnen, abhaken, neu laden, nächster Tag (Uhr der Seite gestellt) alles offen und gestern noch in der Datenbank; 320 px breit ohne Überlauf; abhaken ohne Netz bleibt nach dem Neuladen |
 | `pnpm check:bundle` | 248,2 KB Startansicht (Grenze 250 KB) |
+| Nachtrag | Karte direkt unter „Schritte“, Verwalten über das Symbol mit den Schiebereglern: `tasks.spec.ts` prüft Reihenfolge und Link; `tasks.spec.ts` und `steps.spec.ts` zusammen 8 bestanden |
 | Bilder | Karte und Verwalten vom Produktinhaber freigegeben (Symbol oben rechts für Pausierte, ohne Hinweistext und ohne Übersicht der letzten 14 Tage) |

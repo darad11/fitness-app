@@ -147,7 +147,7 @@ describe('Karte „Tagesaufgaben“ auf „Heute“', () => {
       'href',
       '/heute/aufgaben',
     );
-    expect(screen.getByRole('link', { name: 'Verwalten' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Tagesaufgaben verwalten' })).toHaveAttribute(
       'href',
       '/heute/aufgaben',
     );

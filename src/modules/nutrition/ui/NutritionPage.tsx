@@ -7,7 +7,7 @@ import {
   ScanBarcode,
   Target,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
@@ -18,6 +18,7 @@ import { useToday } from '@/shared/ui/useToday';
 import { mealSlotAt } from '../calc/mealSlot';
 import { sumEntries } from '../calc/nutrients';
 import { targetOn } from '../calc/targets';
+import { useImportedCatalog } from '../data/catalogStore';
 import { useDayEntries, useTargets } from '../data/nutritionRepository';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { restoreEntry } from '../service/nutritionService';
@@ -25,7 +26,7 @@ import { EntryDialog } from './EntryDialog';
 import { KitchenMenu, PILL } from './KitchenMenu';
 import { MacroRing } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
-import { dayDate, describeAmount, grams, kcal } from './format';
+import { brandedName, dayDate, describeAmount, entryNameAndBrand, grams, kcal } from './format';
 
 /** Weitere Tageswerte neben den Makros. */
 const MACROS = ['protein', 'carbs', 'fat'] as const;
@@ -74,6 +75,13 @@ export function NutritionPage() {
   const [saving, setSaving] = useState<MealSlot | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const rt = useDb();
+  // Marke älterer Einträge aus den importierten Lebensmitteldaten (D-278).
+  const imported = useImportedCatalog();
+  const brandOf = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const item of imported?.items ?? []) if (item.brand) map.set(item.id, item.brand);
+    return (foodId: string) => map.get(foodId);
+  }, [imported]);
 
   const goTo = (key: string) => {
     setParams(key === today ? {} : { tag: key }, { replace: true });
@@ -297,7 +305,9 @@ export function NutritionPage() {
                       <li key={entry.id}>
                         <button
                           type="button"
-                          aria-label={t.nutrition.entryLabel(entry.nameSnapshot)}
+                          aria-label={t.nutrition.entryLabel(
+                            brandedName(entryNameAndBrand(entry, brandOf)),
+                          )}
                           onClick={() => {
                             setEditing(entry);
                           }}
@@ -305,10 +315,12 @@ export function NutritionPage() {
                         >
                           <span className="min-w-0 flex-1">
                             <span className="block font-medium break-words">
-                              {entry.nameSnapshot}
+                              {entryNameAndBrand(entry, brandOf).name}
                             </span>
                             <span className="block text-sm text-muted">
-                              {describeAmount(fmt, entry)}
+                              {[entryNameAndBrand(entry, brandOf).brand, describeAmount(fmt, entry)]
+                                .filter(Boolean)
+                                .join(' · ')}
                             </span>
                           </span>
                           <span className="shrink-0 font-semibold tabular-nums">
@@ -355,6 +367,7 @@ export function NutritionPage() {
         <EntryDialog
           key={editing.id}
           entry={editing}
+          brandOf={brandOf}
           onClose={() => {
             setEditing(null);
           }}
@@ -389,7 +402,7 @@ export function NutritionPage() {
       {deleted ? (
         <Toast
           key={deleted.id}
-          message={t.nutrition.deleted(deleted.nameSnapshot)}
+          message={t.nutrition.deleted(entryNameAndBrand(deleted, brandOf).name)}
           durationMs={10_000}
           onTimeout={() => {
             setDeleted(null);

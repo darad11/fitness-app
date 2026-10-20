@@ -6,7 +6,7 @@ import { parseDecimal } from '@/shared/lib/format';
 import { Button, Dialog, SelectField } from '@/shared/ui';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { changeEntry, deleteEntry } from '../service/nutritionService';
-import { describeAmount } from './format';
+import { describeAmount, entryNameAndBrand } from './format';
 import { NutrientTable } from './NutrientTable';
 
 const INPUT =
@@ -17,14 +17,18 @@ export function EntryDialog({
   entry,
   onClose,
   onDeleted,
+  brandOf,
 }: {
   entry: FoodLogEntry;
+  /** Marke älterer Einträge aus den importierten Lebensmitteldaten (D-278). */
+  brandOf?: (foodId: string) => string | undefined;
   onClose: () => void;
   onDeleted: (entry: FoodLogEntry) => void;
 }) {
   const rt = useDb();
   const fmt = useFormatters();
   const id = useId();
+  const shown = entryNameAndBrand(entry, brandOf);
   const byServing = entry.servingSnapshot !== undefined;
   const [value, setValue] = useState(
     entry.amount === undefined
@@ -59,7 +63,7 @@ export function EntryDialog({
     <Dialog
       open
       onClose={onClose}
-      title={entry.nameSnapshot}
+      title={shown.name}
       closeLabel={t.common.close}
       actions={
         <>
@@ -100,6 +104,7 @@ export function EntryDialog({
           save();
         }}
       >
+        {shown.brand ? <p className="-mt-2 text-muted">{shown.brand}</p> : null}
         {entry.amount !== undefined ? (
           <div>
             <label htmlFor={`${id}-menge`} className="mb-2 block text-sm font-semibold text-muted">

@@ -25,3 +25,26 @@ export function describeAmount(
 export function dayDate(dayKey: string): Date {
   return new Date(`${dayKey}T12:00:00`);
 }
+
+/**
+ * Name und Marke eines Eintrags für die Anzeige (D-278). Neue Einträge haben die Marke eigens;
+ * ältere hatten sie in Klammern am Namen („Hummus (Alnatura)“) oder gar nicht, dann hilft die
+ * Marke des Lebensmittels aus den importierten Daten (`brandOf`).
+ */
+export function entryNameAndBrand(
+  entry: { nameSnapshot: string; brandSnapshot?: string; foodId?: string },
+  brandOf?: (foodId: string) => string | undefined,
+): { name: string; brand?: string } {
+  const brand = entry.brandSnapshot ?? (entry.foodId ? brandOf?.(entry.foodId) : undefined);
+  if (!brand) return { name: entry.nameSnapshot };
+  const suffix = ` (${brand})`;
+  const name = entry.nameSnapshot.endsWith(suffix)
+    ? entry.nameSnapshot.slice(0, -suffix.length)
+    : entry.nameSnapshot;
+  return { name, brand };
+}
+
+/** „Hummus, Alnatura“ für Vorleser und Hinweise. */
+export function brandedName({ name, brand }: { name: string; brand?: string }): string {
+  return brand ? `${name}, ${brand}` : name;
+}

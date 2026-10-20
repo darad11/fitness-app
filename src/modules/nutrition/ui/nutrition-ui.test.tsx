@@ -159,7 +159,7 @@ describe('Ernährung (Schritt G, D-261)', () => {
     expect(within(dialog).getByRole('status')).toHaveTextContent('284 kcal');
     await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
     const snacks = await screen.findByRole('region', { name: 'Snacks' }, WAIT);
-    expect(await within(snacks).findByText('1 × Becher (450 g)')).toBeVisible();
+    expect(await within(snacks).findByText(/1 × Becher \(450 g\)/)).toBeVisible();
   });
 
   it('legt Ziele selbst fest und übernimmt einen Vorschlag', { timeout: 30_000 }, async () => {
@@ -391,7 +391,11 @@ describe('Ernährung (Schritt G, D-261)', () => {
         const [food] = await listFoods(rt.db);
         expect(food).toMatchObject({ barcode: '9001234567896', source: 'off', brand: 'Spar' });
         const [entry] = await listDayEntries(rt.db, localDay());
-        expect(entry).toMatchObject({ nameSnapshot: 'Skyr Natur (Spar)', amount: 150 });
+        expect(entry).toMatchObject({
+          nameSnapshot: 'Skyr Natur',
+          brandSnapshot: 'Spar',
+          amount: 150,
+        });
 
         // Zweiter Scan: lokal, ohne Anfrage.
         cleanup();

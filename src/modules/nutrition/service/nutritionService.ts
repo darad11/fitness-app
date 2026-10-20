@@ -183,7 +183,6 @@ export async function logFood(
   clock: Clock = {},
 ): Promise<FoodLogEntry> {
   const { amount, servingSnapshot } = resolveAmount(input.food, input.quantity);
-  const name = input.food.brand ? `${input.food.name} (${input.food.brand})` : input.food.name;
   return insertDoc(rt, foodLogDef, {
     dayKey: input.dayKey,
     tz: localTimeZone(),
@@ -191,7 +190,8 @@ export async function logFood(
     loggedAt: nowOf(clock).toISOString(),
     kind: input.food.source === 'recipe' ? 'recipe' : 'food',
     foodId: input.food.id,
-    nameSnapshot: name.slice(0, FOOD_NAME_MAX),
+    nameSnapshot: input.food.name.slice(0, FOOD_NAME_MAX),
+    ...(input.food.brand ? { brandSnapshot: input.food.brand } : {}),
     basisSnapshot: input.food.basis,
     amount,
     ...(servingSnapshot ? { servingSnapshot } : {}),

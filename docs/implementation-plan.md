@@ -262,5 +262,6 @@ Nächste Schritte: <Liste>
 48. Erledigt (über #39 gemergt): Datumsfeld beim Nachtragen ragt am iPhone nicht mehr über den Rand (D-282).
 49. Erledigt (über #40 gemergt): Tagesaufgaben als schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergangenheit (D-283).
 50. Erledigt (über #41 gemergt): Fortschritt der Tagesaufgaben mit Kennzahlen, Verlauf, Gesamtübersicht, Einzelauswertung und Hinweisen (D-284).
-51. Erledigt (Branch `feat/aufgaben-wochentage`): Wochentage je Aufgabe und „Mit Training abhaken“ (D-285). Später möglich: „10.000 Schritte“ aus den Dashboard-Schritten abhaken.
-52. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+51. Erledigt (über #42 gemergt): Wochentage je Aufgabe und „Mit Training abhaken“ (D-285). Später möglich: „10.000 Schritte“ aus den Dashboard-Schritten abhaken.
+52. Erledigt (Branch `feat/logo-ueberall`): Logo und Name auf jeder Seite links oben (D-286).
+53. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

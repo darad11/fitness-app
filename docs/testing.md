@@ -799,3 +799,15 @@ Fällig nur an gewählten Wochentagen, „Mit Training abhaken“ (D-285).
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 211 bestanden, 1 rot, 4 übersprungen: `network-a11y` „eigene Adresse“ (Pixel 7) fand unter voller Last eine Überschrift nicht rechtzeitig; allein dreimal je 2 bestanden (bekannt wackelig, siehe Übergabe). Neu in `tasks.spec.ts`: Mo/Mi/Fr, am Dienstag nicht auf „Heute“, am Mittwoch nach nachgetragener Aktivität abgehakt, Zurücknehmen bleibt nach Neuladen |
 | `pnpm check:bundle` | 248,6 KB Startansicht (Grenze 250 KB) |
 | Bilder | Bearbeiten mit „Fällig an“, „Heute“ an einem freien Tag, Auswertung Mo/Mi/Fr; vom Produktinhaber freigegeben („es kann alles zählen“) |
+
+### Logo auf jeder Seite · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Logo und Name am Handy auf jeder Seite links oben (D-286).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 85 Dateien, 715 Tests bestanden; der Test der Liste unter „Mehr“ zählt den Link „Fitness“ nicht mit (vorher rot) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 212 bestanden, 4 übersprungen. `shell.spec.ts`: Logo am Handy auf Heute, Training, Ernährung, Fortschritt und Einstellungen links über der Überschrift, Tipp führt zu „Heute“ |
+| `pnpm check:bundle` | 248,6 KB Startansicht (Grenze 250 KB) |
+| Bilder | Training, Ernährung, Tagesaufgaben; vom Produktinhaber freigegeben („ja passt“) |

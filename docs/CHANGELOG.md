@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.35 · 20.10.2026 · Logo auf jeder Seite
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-286 Logo und Name auf jeder Seite |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.34 · 20.10.2026 · Wochentage je Aufgabe
 
 | Datei | Änderung |

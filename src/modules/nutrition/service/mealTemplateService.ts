@@ -3,7 +3,7 @@ import { localTimeZone } from '@/shared/lib/time';
 import { uuidv4 } from '@/shared/lib/uuid';
 import { foodLogDef, mealTemplateDef } from '../data/nutritionRepository';
 import { TEMPLATE_LIMITS, type MealTemplate, type TemplateItem } from '../model/mealTemplate';
-import type { FoodLogEntry, MealSlot } from '../model/nutrition';
+import { FOOD_NAME_MAX, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import type { Clock } from './nutritionService';
 
 export class InvalidTemplateError extends Error {
@@ -25,7 +25,12 @@ function toItem(entry: FoodLogEntry): TemplateItem {
     id: uuidv4(),
     kind: entry.kind,
     ...(entry.foodId ? { foodId: entry.foodId } : {}),
-    nameSnapshot: entry.nameSnapshot,
+    // Vorlagen kennen kein eigenes Markenfeld (strenges Schema auf älteren Geräten): Die Marke
+    // steht dort wie früher in Klammern am Namen (D-278).
+    nameSnapshot: (entry.brandSnapshot
+      ? `${entry.nameSnapshot} (${entry.brandSnapshot})`
+      : entry.nameSnapshot
+    ).slice(0, FOOD_NAME_MAX),
     ...(entry.basisSnapshot ? { basisSnapshot: entry.basisSnapshot } : {}),
     ...(entry.amount !== undefined ? { amount: entry.amount } : {}),
     ...(entry.servingSnapshot ? { servingSnapshot: { ...entry.servingSnapshot } } : {}),

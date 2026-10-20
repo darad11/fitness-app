@@ -1,5 +1,8 @@
 // Öffentliche Schnittstelle des Moduls „habits" (Tagesaufgaben).
+import { lazy } from 'react';
+
 export { habitsRoutes } from './routes';
-export { TasksCard } from './ui/TasksCard';
-export { pickDaily } from './calc/streak';
-export { addHabit, setHabitDone } from './service/habitService';
+/** Karte „Tagesaufgaben“ für „Heute“, erst bei Bedarf geladen (Platz in der Startansicht). */
+export const TasksCard = lazy(async () => ({
+  default: (await import('./ui/TasksCard')).TasksCard,
+}));

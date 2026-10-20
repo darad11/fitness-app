@@ -77,7 +77,7 @@ export function TaskDetailPage() {
   return (
     <>
       <PageHeader title={habit.name} back={back} />
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {status ? <p className="text-muted">{td.status(status)}</p> : null}
         <SegmentedControl
           legend={ts.periodLegend}

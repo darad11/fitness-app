@@ -135,3 +135,57 @@ test('Tagesaufgaben: abhaken ohne Netz, bleibt nach dem Neuladen (D-283)', async
   await page.reload();
   await expect(card.getByRole('checkbox', { name: 'Wasser' })).toBeChecked();
 });
+
+test('Tagesaufgaben: Fortschritt über drei Tage, Übersicht und Auswertung (D-284)', async ({
+  page,
+}) => {
+  test.slow();
+  await page.setViewportSize({ width: 360, height: 760 });
+  await page.clock.install({ time: new Date('2026-10-18T09:00:00+02:00') });
+  await openPage(page, '/heute/aufgaben');
+  const list = page.getByRole('region', { name: 'Meine Aufgaben' });
+  for (const [index, name] of ['Wasser', 'Lesen'].entries()) {
+    await page.getByLabel('Name der Aufgabe').fill(name);
+    await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
+    await expect(list.getByRole('button', { name: / bearbeiten$/ })).toHaveCount(index + 1);
+    await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
+  }
+  // Tag 1: beides, Tag 2: nur Wasser, Tag 3 (heute): Wasser.
+  const tick = async (names: string[]) => {
+    await openPage(page, '/heute');
+    const card = page.getByRole('region', { name: 'Tagesaufgaben' });
+    for (const name of names) {
+      await card.getByText(name, { exact: true }).click();
+      await expect(card.getByRole('checkbox', { name })).toBeChecked();
+    }
+  };
+  await tick(['Wasser', 'Lesen']);
+  await page.clock.setSystemTime(new Date('2026-10-19T09:00:00+02:00'));
+  await tick(['Wasser']);
+  await page.clock.setSystemTime(new Date('2026-10-20T09:00:00+02:00'));
+  await tick(['Wasser']);
+
+  await openPage(page, '/heute/aufgaben');
+  const stats = page.getByRole('region', { name: 'Fortschritt' });
+  // Ohne heute: 3 von 4 fälligen erledigt; Serie: nur Tag 1 vollständig, Tag 2 nicht.
+  await expect(stats.getByRole('definition').nth(0)).toHaveText('1 / 2');
+  await expect(stats.getByRole('definition').nth(1)).toContainText('75 %');
+  await expect(stats.getByRole('img', { name: /Balkendiagramm, 3 Tage/ })).toBeVisible();
+  const perTask = stats.getByRole('region', { name: 'Je Aufgabe' });
+  await expect(perTask.getByRole('rowheader')).toHaveText(['Wasser', 'Lesen']);
+  await expect(perTask.getByText(/an 2 von 2 fälligen Tagen/)).toBeVisible();
+  await expect(perTask.getByText(/an 1 von 2 fälligen Tagen/)).toBeVisible();
+  const overflow = () =>
+    page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+  expect(await overflow()).toBeLessThanOrEqual(0);
+
+  await perTask.getByRole('link', { name: 'Lesen: Auswertung öffnen' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Lesen' })).toBeVisible();
+  await expect(page.getByRole('definition').nth(0)).toContainText('50 %');
+  await expect(page.getByRole('list', { name: /Kalender/ }).getByTitle(/: erledigt$/)).toHaveCount(
+    1,
+  );
+  expect(await overflow()).toBeLessThanOrEqual(0);
+});

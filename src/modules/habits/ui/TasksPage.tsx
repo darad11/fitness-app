@@ -70,7 +70,7 @@ export function TasksPage() {
           <Skeleton className="h-24" />
         </div>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <Card
             title={t.tasks.listTitle}
             action={

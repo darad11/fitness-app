@@ -690,3 +690,14 @@ Anmeldung beim Dashboard je Gerät, nur lesend; Karte unter „Ernährung heute�
 | Bildschirmfotos | Karte auf „Heute“ hell und dunkel, Web, Seite vor und nach dem Verbinden (Beispielwerte); vom Produktinhaber freigegeben, danach unter die Ernährung verschoben |
 | Offen | Echte Anmeldung beim Dashboard und Vergleich der Zahlen mit dem Dashboard (Produktinhaber) |
 
+### Marke in Tagesliste und Fenstern · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Marke unter dem Namen in der Tagesliste, in den Fenstern zum Eintragen und Bearbeiten, in Vorlagen in Klammern (D-278).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 83 Dateien, 686 Tests bestanden. Neu `format.test.ts` (Marke aus Eintrag, aus den Lebensmitteldaten, Klammer entfällt, ohne Marke unverändert); `mealTemplateService.test.ts` (Marke in Klammern im Vorlagenposten); `nutrition-ui.test.tsx` erwartet `brandSnapshot: 'Spar'` |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 199 bestanden, 3 übersprungen. `barcode.spec.ts`: „Skyr Natur“ mit „Spar ·“ in der Tagesliste |
+| `pnpm check:bundle` | 247,8 KB Startansicht (Grenze 250 KB) |
+| Bildschirmfotos | Suche, Eintragen, Tagesliste, Bearbeiten mit Testdaten (Alnatura, Bahlsen); vom Produktinhaber freigegeben |
+

@@ -9,6 +9,13 @@
 | `handover-2026-10-19.md` | BLS und Gewichtsfehler erledigt, Geräteprüfungen |
 | `testing.md` | Ergebnisse Aufräumen |
 
+## Version 0.27 · 20.10.2026 · Merkliste mehrere Nutzer
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | Q-20 mehrere Nutzer, zurückgestellt |
+| `handover-2026-10-19.md` | Stand nach #34, Q-20, wackelige Tests |
+
 ## Version 0.26 · 20.10.2026 · Marke in Tagesliste und Fenstern
 
 | Datei | Änderung |

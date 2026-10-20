@@ -2,7 +2,9 @@ import { ChevronDown, ChevronUp, Plus, Settings2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { Button, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
+import { cn } from '@/shared/lib/cn';
+import { Button, Card, IconButton, PageHeader, Skeleton, Switch, Toast } from '@/shared/ui';
+import { weekdaysOn } from '../calc/streak';
 import { HABIT_NAME_MAX, type Habit } from '../model/habit';
 import {
   addHabit,
@@ -11,6 +13,8 @@ import {
   removeHabit,
   renameHabit,
   reopenHabit,
+  setHabitAutoDone,
+  setHabitWeekdays,
   undoHabitChange,
 } from '../service/habitService';
 import { TaskStats } from './TaskStats';
@@ -21,9 +25,38 @@ import type { InsightPeriod } from '../calc/insights';
 const INPUT =
   'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
 
+interface Editing {
+  id: string;
+  name: string;
+  weekdays: number[];
+  auto: boolean;
+}
+
+const ALL_DAYS = [1, 2, 3, 4, 5, 6, 7];
+
+function startEditing(habit: Habit, today: string): Editing {
+  return {
+    id: habit.id,
+    name: habit.name,
+    weekdays: [...(weekdaysOn(habit, today) ?? ALL_DAYS)],
+    auto: habit.autoDone === 'training',
+  };
+}
+
 interface Change {
   kind: 'paused' | 'removed';
   before: Habit;
+}
+
+/** Kurzinfo unter dem Namen: Wochentage und automatisches Abhaken. */
+function summary(habit: Habit, today: string): string {
+  const days = weekdaysOn(habit, today);
+  const names = t.tasks.stats.detail.weekdayNames;
+  const parts = [
+    days ? days.map((day) => names[day - 1] ?? '').join(', ') : null,
+    habit.autoDone === 'training' ? t.tasks.autoTrainingShort : null,
+  ].filter((part): part is string => part !== null);
+  return parts.join(' · ');
 }
 
 /**
@@ -35,7 +68,7 @@ export function TasksPage() {
   const tasks = useTodayTasks();
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
+  const [editing, setEditing] = useState<Editing | null>(null);
   const [change, setChange] = useState<Change | null>(null);
   const [showPaused, setShowPaused] = useState(false);
   const [period, setPeriod] = useState<InsightPeriod>('30d');
@@ -119,12 +152,12 @@ export function TasksPage() {
                 {error}
               </p>
             ) : null}
-            {tasks.active.length === 0 ? (
+            {tasks.listed.length === 0 ? (
               <p className="mt-4 text-muted">{t.tasks.emptyList}</p>
             ) : (
               <>
                 <ul className="mt-3 divide-y divide-line">
-                  {tasks.active.map((habit, index) => (
+                  {tasks.listed.map((habit, index) => (
                     <li key={habit.id}>
                       {editing?.id === habit.id ? (
                         <form
@@ -136,8 +169,19 @@ export function TasksPage() {
                               setError(t.tasks.nameMissing);
                               return;
                             }
+                            const before = startEditing(habit, tasks.today);
                             run(async () => {
-                              await renameHabit(rt, habit.id, next);
+                              if (next !== habit.name) await renameHabit(rt, habit.id, next);
+                              if (editing.weekdays.join() !== before.weekdays.join()) {
+                                await setHabitWeekdays(rt, habit.id, editing.weekdays);
+                              }
+                              if (editing.auto !== before.auto) {
+                                await setHabitAutoDone(
+                                  rt,
+                                  habit.id,
+                                  editing.auto ? 'training' : null,
+                                );
+                              }
                               setEditing(null);
                             });
                           }}
@@ -152,9 +196,52 @@ export function TasksPage() {
                             maxLength={HABIT_NAME_MAX}
                             autoFocus
                             onChange={(event) => {
-                              setEditing({ id: habit.id, name: event.target.value });
+                              setEditing({ ...editing, name: event.target.value });
                             }}
                             className={INPUT}
+                          />
+                          <fieldset>
+                            <legend className="mb-1.5 text-sm font-semibold text-muted">
+                              {t.tasks.weekdaysLegend}
+                            </legend>
+                            <div className="flex gap-1">
+                              {ALL_DAYS.map((day) => {
+                                const on = editing.weekdays.includes(day);
+                                const name = t.tasks.stats.detail.weekdayNames[day - 1] ?? '';
+                                return (
+                                  <button
+                                    key={day}
+                                    type="button"
+                                    aria-pressed={on}
+                                    aria-label={t.tasks.weekdayToggle(name)}
+                                    onClick={() => {
+                                      const next = on
+                                        ? editing.weekdays.filter((d) => d !== day)
+                                        : [...editing.weekdays, day].sort((a, b) => a - b);
+                                      if (next.length === 0) return;
+                                      setEditing({ ...editing, weekdays: next });
+                                    }}
+                                    className={cn(
+                                      'flex h-10 min-w-0 flex-1 items-center justify-center rounded-pill text-sm font-semibold transition-colors duration-120',
+                                      on
+                                        ? 'bg-accent text-on-accent'
+                                        : 'border border-line-input text-muted',
+                                    )}
+                                  >
+                                    {name}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <p className="mt-1.5 text-sm text-muted">{t.tasks.weekdaysHint}</p>
+                          </fieldset>
+                          <Switch
+                            label={t.tasks.autoTraining}
+                            hint={t.tasks.autoTrainingHint}
+                            checked={editing.auto}
+                            onChange={(checked) => {
+                              setEditing({ ...editing, auto: checked });
+                            }}
                           />
                           <div className="flex flex-wrap items-center gap-2">
                             <Button type="submit" size="sm">
@@ -210,10 +297,15 @@ export function TasksPage() {
                             aria-label={t.tasks.editLabel(habit.name)}
                             className="min-h-12 min-w-0 flex-1 py-2 text-left"
                             onClick={() => {
-                              setEditing({ id: habit.id, name: habit.name });
+                              setEditing(startEditing(habit, tasks.today));
                             }}
                           >
-                            {habit.name}
+                            <span className="block">{habit.name}</span>
+                            {summary(habit, tasks.today) ? (
+                              <span className="block text-sm text-muted">
+                                {summary(habit, tasks.today)}
+                              </span>
+                            ) : null}
                           </button>
                           <IconButton
                             label={`${t.session.moveUp}, ${habit.name}`}
@@ -227,7 +319,7 @@ export function TasksPage() {
                           </IconButton>
                           <IconButton
                             label={`${t.session.moveDown}, ${habit.name}`}
-                            disabled={index === tasks.active.length - 1}
+                            disabled={index === tasks.listed.length - 1}
                             className="disabled:opacity-30"
                             onClick={() => {
                               run(() => moveHabit(rt, habit.id, 1));

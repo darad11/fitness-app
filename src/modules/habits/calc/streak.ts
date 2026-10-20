@@ -1,10 +1,20 @@
-import { addDays, type DayKey } from '@/shared/lib/time';
+import { addDays, isoWeekday, type DayKey } from '@/shared/lib/time';
 
 export interface HabitLike {
   id: string;
   fromDayKey: DayKey;
   toDayKey?: DayKey;
   pauses?: readonly { fromDayKey: DayKey; toDayKey: DayKey }[];
+  schedule?: readonly { fromDayKey: DayKey; weekdays: readonly number[] }[];
+}
+
+/** Wochentage, die an einem Tag gelten (D-285); `null` heißt jeder Tag. */
+export function weekdaysOn(habit: HabitLike, dayKey: DayKey): readonly number[] | null {
+  let current: readonly number[] | null = null;
+  for (const entry of habit.schedule ?? []) {
+    if (entry.fromDayKey <= dayKey) current = entry.weekdays;
+  }
+  return current === null || current.length === 7 ? null : current;
 }
 
 export interface LogLike {
@@ -15,14 +25,17 @@ export interface LogLike {
 
 /**
  * Aufgaben, die an einem Tag gelten: ab dem Tag des Anlegens bis vor den Tag des Pausierens
- * oder Löschens, ohne frühere Pausen.
+ * oder Löschens, ohne frühere Pausen und nur an ihren Wochentagen (D-285).
  */
 export function activeOn<T extends HabitLike>(habits: readonly T[], dayKey: DayKey): T[] {
   return habits.filter(
     (habit) =>
       habit.fromDayKey <= dayKey &&
       (habit.toDayKey === undefined || dayKey < habit.toDayKey) &&
-      !(habit.pauses ?? []).some((pause) => pause.fromDayKey <= dayKey && dayKey < pause.toDayKey),
+      !(habit.pauses ?? []).some(
+        (pause) => pause.fromDayKey <= dayKey && dayKey < pause.toDayKey,
+      ) &&
+      (weekdaysOn(habit, dayKey)?.includes(isoWeekday(dayKey)) ?? true),
   );
 }
 

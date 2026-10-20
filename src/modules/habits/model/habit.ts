@@ -27,6 +27,20 @@ export const habitSchema = defineDocSchema('habit', {
   pauses: z.array(z.object({ fromDayKey: dayKeySchema, toDayKey: dayKeySchema })).optional(),
   /** Gelöscht (D-283): erscheint nirgends mehr zum Abhaken; vergangene Tage bleiben erhalten. */
   removedAt: isoDateTimeSchema.optional(),
+  /**
+   * Wochentage (D-285): ab `fromDayKey` gilt die Aufgabe nur an diesen Tagen (Montag = 1).
+   * Aufsteigend nach Tag; fehlt das Feld oder liegt der Tag vor dem ersten Eintrag, gilt jeder Tag.
+   */
+  schedule: z
+    .array(
+      z.object({
+        fromDayKey: dayKeySchema,
+        weekdays: z.array(z.number().int().min(1).max(7)).min(1).max(7),
+      }),
+    )
+    .optional(),
+  /** Automatisch abhaken (D-285): `training` hakt ab, sobald an dem Tag ein Training abgeschlossen ist. */
+  autoDone: z.enum(['training']).optional(),
 });
 
 export const habitLogSchema = defineDocSchema('habit_log', {

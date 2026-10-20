@@ -5,11 +5,11 @@ import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DbProvider, type DbRuntime } from '@/shared/db';
-import { addDays, dayKey, localTimeZone } from '@/shared/lib/time';
+import { addDays, dayKey, isoWeekday, localTimeZone } from '@/shared/lib/time';
 import { createTestRuntime } from '@/shared/testing/db';
 import { listHabitLogs, listHabits } from '../data/habitRepository';
 import { habitsRoutes } from '../routes';
-import { addHabit, setHabitDone } from '../service/habitService';
+import { addHabit, setHabitDone, setHabitWeekdays } from '../service/habitService';
 import { TasksCard } from './TasksCard';
 
 let rt: DbRuntime;
@@ -194,5 +194,49 @@ describe('Karte „Tagesaufgaben“ auf „Heute“', () => {
     cleanup();
     renderRoutes(CARD_ROUTE, '/heute');
     expect(await screen.findByRole('checkbox', { name: 'Wasser' })).toBeChecked();
+  });
+});
+
+describe('Wochentage (D-285)', () => {
+  it('Karte zeigt nur heute fällige Aufgaben; Verwaltung zeigt alle mit Wochentagen', async () => {
+    const user = userEvent.setup();
+    const weekday = isoWeekday(today());
+    const other = (weekday % 7) + 1;
+    const a = await addHabit(rt, 'Training');
+    await addHabit(rt, 'Wasser');
+    await setHabitWeekdays(rt, a.id, [other]);
+    renderRoutes(CARD_ROUTE, '/heute');
+    expect(await screen.findByRole('checkbox', { name: 'Wasser' })).toBeVisible();
+    expect(screen.queryByRole('checkbox', { name: 'Training' })).toBeNull();
+    expect(screen.getByText('0 von 1 erledigt')).toBeVisible();
+    cleanup();
+
+    renderRoutes(habitsRoutes, '/heute/aufgaben');
+    const list = await screen.findByRole('region', { name: 'Meine Aufgaben' });
+    const row = await within(list).findByRole('button', { name: 'Training bearbeiten' });
+    const names = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    expect(row).toHaveTextContent(names[other - 1]!);
+    await user.click(row);
+    const todayToggle = within(list).getByRole('button', { name: `${names[weekday - 1]} fällig` });
+    expect(todayToggle).toHaveAttribute('aria-pressed', 'false');
+    await user.click(todayToggle);
+    await user.click(within(list).getByRole('switch', { name: 'Mit Training abhaken' }));
+    await user.click(within(list).getByRole('button', { name: 'Speichern' }));
+    await waitFor(async () => {
+      const saved = (await listHabits(rt.db)).find((habit) => habit.id === a.id);
+      expect(saved?.schedule?.at(-1)?.weekdays).toEqual([weekday, other].sort((x, y) => x - y));
+      expect(saved?.autoDone).toBe('training');
+    });
+    cleanup();
+    renderRoutes(CARD_ROUTE, '/heute');
+    expect(await screen.findByRole('checkbox', { name: 'Training' })).toBeVisible();
+  });
+
+  it('nichts fällig: eigener Hinweis statt Leerzustand', async () => {
+    const other = (isoWeekday(today()) % 7) + 1;
+    const a = await addHabit(rt, 'Training');
+    await setHabitWeekdays(rt, a.id, [other]);
+    renderRoutes(CARD_ROUTE, '/heute');
+    expect(await screen.findByText('Heute ist keine Aufgabe fällig.')).toBeVisible();
   });
 });

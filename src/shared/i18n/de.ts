@@ -111,6 +111,14 @@ export const de = {
     cancel: 'Abbrechen',
     editLabel: (name: string) => `${name} bearbeiten`,
     pause: 'Pausieren',
+    weekdaysLegend: 'Fällig an',
+    weekdayToggle: (day: string) => `${day} fällig`,
+    weekdaysHint: 'Änderungen gelten ab heute; frühere Tage bleiben, wie sie waren.',
+    autoTraining: 'Mit Training abhaken',
+    autoTrainingHint:
+      'Ist an dem Tag ein Training oder eine Aktivität abgeschlossen, hakt die App die Aufgabe ab. Du kannst es zurücknehmen.',
+    autoTrainingShort: 'mit Training',
+    noneDueToday: 'Heute ist keine Aufgabe fällig.',
     paused: (name: string) => `„${name}“ pausiert`,
     remove: 'Löschen',
     removed: (name: string) => `„${name}“ gelöscht`,
@@ -230,7 +238,8 @@ export const de = {
         },
         weekdays: 'Wochentage',
         weekdaysHint: 'Erfüllt je Wochentag im Zeitraum.',
-        weekdaysTooFew: 'Für Wochentage braucht es mindestens drei fällige Tage je Wochentag.',
+        weekdaysTooFew:
+          'Für Wochentage braucht es mindestens drei fällige Tage je Wochentag, an dem die Aufgabe gilt.',
         weekdayNames: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
         notFound: 'Diese Aufgabe gibt es nicht mehr.',
         status: (state: 'paused' | 'removed') =>

@@ -207,3 +207,33 @@ describe('Hinweise (D-284)', () => {
     expect(found[2]).toMatchObject({ habitId: 'better', change: 50 });
   });
 });
+
+describe('Wochentage (D-285)', () => {
+  // 20.10.2026 ist ein Dienstag; Training Mo/Mi/Fr seit -15, ab -2 (So) Di/Do.
+  const training = habit('t', d(-15), {
+    schedule: [
+      { fromDayKey: d(-15), weekdays: [1, 3, 5] },
+      { fromDayKey: d(-2), weekdays: [2, 4] },
+    ],
+  });
+
+  it('nur an den Wochentagen fällig, Änderungen erst ab ihrem Tag', () => {
+    const index = indexLogs([log('x', d(-8))]);
+    expect(habitState(training, d(-8), index, TODAY)).toBe('open'); // Mo 12.10.
+    expect(habitState(training, d(-7), index, TODAY)).toBe('notDue'); // Di 13.10.
+    expect(habitState(training, d(-1), index, TODAY)).toBe('notDue'); // Mo 19.10., schon Di/Do
+    expect(habitState(training, TODAY, index, TODAY)).toBe('open'); // Di
+  });
+
+  it('Quote und Serie nur über fällige Tage', () => {
+    // Mo -15? -15 ist Montag 5.10.; fällig: 5., 7., 9., 12., 14., 16. Oktober, dann heute.
+    const logs = [d(-15), d(-13), d(-11), d(-8), d(-6), d(-4)].map((day) => log('t', day));
+    const index = indexLogs(logs);
+    expect(habitRate(training, periodDays('30d', [training], TODAY), index, TODAY)).toMatchObject({
+      done: 6,
+      due: 6,
+      noDataDays: 0,
+    });
+    expect(habitStreaks(training, index, TODAY)).toEqual({ current: 6, best: 6 });
+  });
+});

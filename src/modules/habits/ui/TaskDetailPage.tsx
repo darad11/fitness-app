@@ -71,8 +71,9 @@ export function TaskDetailPage() {
   const calendarDays = days.slice(-CALENDAR_MAX);
   const firstDay = calendarDays[0];
   const lead = firstDay === undefined ? 0 : isoWeekday(firstDay) - 1;
-  const weekdays = weekdayRates(habit, days, index, today);
-  const weekdaysOk = weekdays.every((row) => row.due >= WEEKDAY_MIN_DUE);
+  // Nur Wochentage, an denen die Aufgabe im Zeitraum fällig war (D-285: z. B. nur Mo, Mi, Fr).
+  const weekdays = weekdayRates(habit, days, index, today).filter((row) => row.due > 0);
+  const weekdaysOk = weekdays.length >= 2 && weekdays.every((row) => row.due >= WEEKDAY_MIN_DUE);
 
   return (
     <>

@@ -8,6 +8,10 @@ import {
   deleteHabit,
   endHabit,
   InvalidNameError,
+  InvalidWeekdaysError,
+  applyAutoDone,
+  setHabitAutoDone,
+  setHabitWeekdays,
   removeHabit,
   undoHabitChange,
   moveHabit,
@@ -136,5 +140,47 @@ describe('Pausieren, Wiederaufnehmen und Löschen erhalten die Vergangenheit (D-
     const undone = await undoHabitChange(rt, paused);
     expect(undone.toDayKey).toBe('2026-10-02');
     expect(undone).not.toHaveProperty('removedAt');
+  });
+});
+
+describe('Wochentage und automatisch abhaken (D-285)', () => {
+  const noon = (day: string) => at(`${day}T12:00:00.000Z`);
+
+  it('Wochentage gelten ab heute; am selben Tag ersetzt, alle sieben heißt jeden Tag', async () => {
+    const a = await addHabit(rt, 'Training', noon('2026-10-01'));
+    const first = await setHabitWeekdays(rt, a.id, [5, 1, 3, 3], noon('2026-10-05'));
+    expect(first.schedule).toEqual([{ fromDayKey: '2026-10-05', weekdays: [1, 3, 5] }]);
+    const sameDay = await setHabitWeekdays(rt, a.id, [1, 3], noon('2026-10-05'));
+    expect(sameDay.schedule).toEqual([{ fromDayKey: '2026-10-05', weekdays: [1, 3] }]);
+    const later = await setHabitWeekdays(rt, a.id, [2, 4], noon('2026-10-12'));
+    expect(later.schedule).toEqual([
+      { fromDayKey: '2026-10-05', weekdays: [1, 3] },
+      { fromDayKey: '2026-10-12', weekdays: [2, 4] },
+    ]);
+    const unchanged = await setHabitWeekdays(rt, a.id, [2, 4], noon('2026-10-14'));
+    expect(unchanged.schedule).toHaveLength(2);
+    const all = await setHabitWeekdays(rt, a.id, [1, 2, 3, 4, 5, 6, 7], noon('2026-10-15'));
+    expect(all.schedule?.at(-1)).toEqual({
+      fromDayKey: '2026-10-15',
+      weekdays: [1, 2, 3, 4, 5, 6, 7],
+    });
+    await expect(setHabitWeekdays(rt, a.id, [])).rejects.toBeInstanceOf(InvalidWeekdaysError);
+  });
+
+  it('hakt mit Training ab, aber nie gegen einen eigenen Eintrag', async () => {
+    const a = await addHabit(rt, 'Training');
+    const b = await addHabit(rt, 'Wasser');
+    await setHabitAutoDone(rt, a.id, 'training');
+    const habits = await listHabits(rt.db);
+    const day = '2026-10-20';
+    expect(await applyAutoDone(rt, habits, day, () => false, false)).toBe(0);
+    expect(await applyAutoDone(rt, habits, day, () => false, true)).toBe(1);
+    expect((await listHabitLogs(rt.db)).map((l) => [l.habitId, l.done])).toEqual([[a.id, true]]);
+    await setHabitDone(rt, a.id, day, false);
+    expect(await applyAutoDone(rt, habits, day, (id) => id === a.id, true)).toBe(0);
+    expect((await listHabitLogs(rt.db)).find((l) => l.habitId === a.id)?.done).toBe(false);
+    expect((await listHabitLogs(rt.db)).some((l) => l.habitId === b.id)).toBe(false);
+    const off = await setHabitAutoDone(rt, a.id, null);
+    expect(off).not.toHaveProperty('autoDone');
   });
 });

@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.31 · 20.10.2026 · Datumsfeld
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-282 Datum- und Zeitfelder in ihrer Spalte |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.30 · 20.10.2026 · Statusleiste
 
 | Datei | Änderung |

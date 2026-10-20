@@ -749,3 +749,13 @@ Statusleiste ohne farbliche Unterbrechung auf allen Seiten und bei der Anmeldung
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 202 bestanden, 4 übersprungen; Hintergrund im Dunkelmodus `rgb(33, 42, 63)` |
 | `pnpm check:bundle` | 247,9 KB Startansicht (Grenze 250 KB) |
 | Bilder | Anmeldung und „Heute“ hell/dunkel mit nachgestellter Statusleiste, vom Produktinhaber freigegeben. Die Färbung durch iOS selbst ist erst am iPhone prüfbar |
+
+### Datumsfeld · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Datum- und Zeitfelder bleiben in ihrer Spalte (D-282), nach Bildschirmfoto vom iPhone (Nachtragen: „Beginn“ ragte über den Rand bzw. in „Dauer in Minuten“).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 83 Dateien, 687 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 204 bestanden, 4 übersprungen. Neu `date-field.spec.ts`: rechter Rand des Felds liegt in der Spalte und vor „Dauer in Minuten“. In Chromium war der Fehler nicht nachstellbar (der Test ist dort auch ohne Änderung grün); WebKit in GitHub Actions ist kein echtes iOS. Nachweis am iPhone durch den Produktinhaber steht aus |

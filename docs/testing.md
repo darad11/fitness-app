@@ -701,3 +701,14 @@ Marke unter dem Namen in der Tagesliste, in den Fenstern zum Eintragen und Bearb
 | `pnpm check:bundle` | 247,8 KB Startansicht (Grenze 250 KB) |
 | Bildschirmfotos | Suche, Eintragen, Tagesliste, Bearbeiten mit Testdaten (Alnatura, Bahlsen); vom Produktinhaber freigegeben |
 
+### Fehler: Begrüßung immer „Guten Abend“ · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Gemeldet vom Produktinhaber um 7:05 Uhr. Ursache: `Intl.DateTimeFormat` mit nur der Stunde liefert in `de-AT` „07 Uhr“; `Number("07 Uhr")` ergibt keine Zahl, deshalb galt jede Stunde als Abend (D-276), und „Barcode scannen“ auf „Heute“ wählte immer „Snacks“ (D-275). Behoben mit `hourIn` in `src/shared/lib/time.ts` (liest die Stunde über `formatToParts`).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgestellt | Node 22: `format` liefert „07 Uhr“, `formatToParts` die Stunde „07“ |
+| `time.test.ts` | `hourIn` liefert 7 um 05:05 UTC in Wien, 0 um Mitternacht, 18 um 18:59 |
+| `goals.spec.ts` | Neu: Uhr auf 7:05 gestellt, „Guten Morgen“; auf 19 Uhr, „Guten Abend“. Der bisherige Test hatte jeden Gruß akzeptiert und den Fehler deshalb nicht bemerkt |
+| WebKit in GitHub Actions | `tabbar.spec.ts` „Kreis rechts … zurück beim Hochscrollen“ am Handy einmal rot (zweimal im selben Lauf: die Leiste blieb nach dem Hochscrollen klein), beim Neustart grün; in Chromium morgens und abends grün. Wackelig, beobachten |
+

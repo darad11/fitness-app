@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, dayKey, isoWeekday, isValidDayKey, isValidTimeZone, startOfWeek } from './time';
+import {
+  addDays,
+  dayKey,
+  hourIn,
+  isoWeekday,
+  isValidDayKey,
+  isValidTimeZone,
+  startOfWeek,
+} from './time';
 
 describe('dayKey', () => {
   it('nutzt das lokale Datum, nicht UTC', () => {
@@ -39,5 +47,15 @@ describe('Kalenderhilfen', () => {
     expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
     expect(addDays('2026-03-01', -1)).toBe('2026-02-28');
     expect(() => addDays('2026-02-30', 1)).toThrow();
+  });
+});
+
+describe('hourIn', () => {
+  it('liest die Stunde in der Zeitzone, auch wenn das Format „07 Uhr“ lautet', () => {
+    const at = new Date('2026-10-20T05:05:00Z');
+    expect(hourIn(at, 'Europe/Vienna')).toBe(7);
+    expect(hourIn(at, 'UTC')).toBe(5);
+    expect(hourIn(new Date('2026-10-20T22:30:00Z'), 'Europe/Vienna')).toBe(0);
+    expect(hourIn(new Date('2026-10-20T16:59:00Z'), 'Europe/Vienna')).toBe(18);
   });
 });

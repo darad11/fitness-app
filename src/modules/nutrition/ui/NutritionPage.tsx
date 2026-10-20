@@ -12,7 +12,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { addDays, dayKey as toDayKey, isValidDayKey } from '@/shared/lib/time';
+import { addDays, dayKey as toDayKey, hourIn, isValidDayKey } from '@/shared/lib/time';
 import { Button, ButtonLink, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import { mealSlotAt } from '../calc/mealSlot';
@@ -446,13 +446,7 @@ export function NutritionTodayCard() {
   if (entries === undefined || targets === undefined) return null;
   const target = targetOn(targets, today);
   const sums = sumEntries(entries).sums;
-  const hour = Number(
-    new Intl.DateTimeFormat('de-AT', {
-      hour: 'numeric',
-      hourCycle: 'h23',
-      timeZone: fmt.timeZone,
-    }).format(now),
-  );
+  const hour = hourIn(now, fmt.timeZone);
   const scanTo = `/ernaehrung/hinzufuegen?mahlzeit=${mealSlotAt(hour)}&scan=1&von=heute`;
   return (
     <Card eyebrow={t.nutrition.todayCard}>

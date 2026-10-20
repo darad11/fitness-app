@@ -60,3 +60,14 @@ test('Ein Knopf „Gewicht erfassen“; Zielgewicht zeigt das gemessene Gewicht 
   await openPage(page, '/mehr/profil');
   await expect(page.getByText(/Dein aktuelles Gewicht: 81,4\skg/)).toBeVisible();
 });
+
+test('Begrüßung folgt der Uhrzeit: 7:05 Uhr „Guten Morgen“, 19 Uhr „Guten Abend“ (D-276)', async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date('2026-10-20T07:05:00+02:00') });
+  await openPage(page, '/heute');
+  await expect(page.getByRole('main').locator('header h1')).toContainText('Guten Morgen');
+  await page.clock.setSystemTime(new Date('2026-10-20T19:00:00+02:00'));
+  await page.reload();
+  await expect(page.getByRole('main').locator('header h1')).toContainText('Guten Abend');
+});

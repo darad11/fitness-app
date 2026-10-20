@@ -77,3 +77,14 @@ export function isoWeekday(key: DayKey): number {
 export function startOfWeek(key: DayKey): DayKey {
   return addDays(key, 1 - isoWeekday(key));
 }
+
+/**
+ * Stunde (0 bis 23) in einer Zeitzone. Über `formatToParts`, weil `format` je nach Sprache und
+ * Browser „07 Uhr“ liefert statt „07“ (Fehler vom 20.10.2026: immer „Guten Abend“).
+ */
+export function hourIn(date: Date, timeZone: string = localTimeZone()): number {
+  const part = new Intl.DateTimeFormat('de-AT', { hour: 'numeric', hourCycle: 'h23', timeZone })
+    .formatToParts(date)
+    .find((p) => p.type === 'hour');
+  return Number(part?.value ?? 0) % 24;
+}

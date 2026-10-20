@@ -759,3 +759,18 @@ Datum- und Zeitfelder bleiben in ihrer Spalte (D-282), nach Bildschirmfoto vom i
 | `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm test` | 83 Dateien, 687 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 204 bestanden, 4 übersprungen. Neu `date-field.spec.ts`: rechter Rand des Felds liegt in der Spalte und vor „Dauer in Minuten“. In Chromium war der Fehler nicht nachstellbar (der Test ist dort auch ohne Änderung grün); WebKit in GitHub Actions ist kein echtes iOS. Nachweis am iPhone durch den Produktinhaber steht aus |
+
+### Tagesaufgaben als Checkliste · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergangenheit (D-283).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 83 Dateien, 693 Tests bestanden. Neu: Pausentage zählen nach dem Wiederaufnehmen nicht als offen (vorher ein Fehler); Löschen erhält frühere Tage; Rückgängig stellt den Stand vor dem Pausieren oder Löschen her; Karte ohne Serie mit „x von y erledigt“; neuer Tag offen, gestern gespeichert; Neuladen behält heute |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 208 bestanden, 4 übersprungen. `tasks.spec.ts`: hinzufügen, ordnen, abhaken, neu laden, nächster Tag (Uhr der Seite gestellt) alles offen und gestern noch in der Datenbank; 320 px breit ohne Überlauf; abhaken ohne Netz bleibt nach dem Neuladen |
+| `pnpm check:bundle` | 248,2 KB Startansicht (Grenze 250 KB) |
+| Nachtrag | Karte direkt unter „Schritte“, Verwalten über das Symbol mit den Schiebereglern: `tasks.spec.ts` prüft Reihenfolge und Link; `tasks.spec.ts` und `steps.spec.ts` zusammen 8 bestanden |
+| GitHub Actions | `tasks.spec.ts` „kleiner Bildschirm“ in Chromium rot: 27 px zu breit, weil die Überschrift „Tagesaufgaben“ mit den Schriften des Runners breiter als 320 px war (lokal nicht nachstellbar, bei 290 px schon: 310 statt 290). Behoben in `PageHeader`: unter 360 px etwas kleinere Überschrift, Silbentrennung und Umbruch im Wort als Rückfall; danach `tasks.spec.ts` und `shell.spec.ts` 21 bestanden |
+| GitHub Actions, WebKit | „abhaken ohne Netz“ rot: „Failed to load resource“ im Browser, weil die Seite offline ging, bevor der Service Worker sie steuerte (ohne ihn schlägt jede Anfrage fehl). Test wartet jetzt wie `resilience.spec.ts` auf den Service Worker; Chromium 6 bestanden, WebKit nur in GitHub Actions prüfbar |
+| Bilder | Karte und Verwalten vom Produktinhaber freigegeben (Symbol oben rechts für Pausierte, ohne Hinweistext und ohne Übersicht der letzten 14 Tage) |

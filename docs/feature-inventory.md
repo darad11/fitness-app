@@ -61,15 +61,15 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 50 | 30 | 8 | 88 |
+| Original verifiziert (OV) | 49 | 30 | 9 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
 | Eigene Verbesserung (EV) | 45 | 4 | 0 | 49 |
-| Summe | 108 | 47 | 10 | 165 |
+| Summe | 107 | 47 | 11 | 165 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 108 |
+| R1 | 107 |
 | R2 | 20 |
 | R3 | 1 |
 | R4 | 14 |
@@ -77,16 +77,17 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 65 | 31 | 17 | 10 |
+| Anzahl | 42 | 65 | 30 | 17 | 11 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 85 |
+| Implementiert | 84 |
 | Noch zu recherchieren | 1 |
 | Spezifiziert | 17 |
+| Verworfen | 1 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -260,7 +261,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | AH-02 | Aktivitätsziele | Nicht belegt | – | P | ON | M | AH-01 | S | P3 | Später | R4 · M13 | Später | Analysiert | Tagesziel mit Fortschritt |
 | AH-03 | Tägliche Aufgaben | In Challenges: Wasser, Lesen, Schritte, Diät | TC | V | OV | M | AH-04 | M | P2 | MVP | R1 · Schritt F | Anpassen: eigene Aufgaben ohne Vorgaben, vorgezogen (D-253, Q-17) | Implementiert | AK-HAB-01 |
 | AH-04 | Gewohnheiten definieren und verfolgen | Außerhalb von Challenges nicht belegt | – | P | ON | M | – | M | P2 | MVP | R1 · Schritt F | Täglich vorgezogen (D-253); Häufigkeiten und Erfüllungsquote später | Implementiert | AK-HAB-01 |
-| AH-05 | Streaks für Gewohnheiten | Streak-Funktion für Training | AS 3.2.0 | V | OV | N | AH-04 | S | P2 | MVP | R1 · Schritt F | Vorgezogen, Regel in D-253 | Implementiert | AK-HAB-02 |
+| AH-05 | Streaks für Gewohnheiten | Streak-Funktion für Training | AS 3.2.0 | V | OV | N | AH-04 | S | – | Ausgeschlossen | – | Auf Wunsch des Produktinhabers entfernt (D-283): nur „x von y erledigt“ | Verworfen | AK-HAB-02 |
 | AH-06 | Erinnerungen | Workout-Reminder | AS 3.1.4 | V | OV | M | ON-13 | L | P3 | Später | R5 | Später | Analysiert | Siehe ON-13 |
 | AH-07 | Apple Health, Apple Watch, Wearables | Laut Agentur integriert; Rezensionen bezweifeln es | DT; REV | N | ON | M | Native App | XL | – | Ausgeschlossen | – | Ausschließen für die Web-App (D-116); native Option dokumentiert | Analysiert | Entfällt in der Web-App |
 | AH-08 | Kalender aller Ereignisse | Nicht belegt | – | P | ON | M | TH-03 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monats- und Wochenansicht mit allen Ereignissen |

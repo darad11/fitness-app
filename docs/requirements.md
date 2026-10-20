@@ -245,8 +245,8 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 
 | AK | Kriterium | Matrix | Nachweis | M |
 |---|---|---|---|---|
-| AK-HAB-01 | Tagesaufgaben lassen sich frei anlegen (Name bis 80 Zeichen), umbenennen, per „nach oben“ und „nach unten“ ordnen und ab heute beenden (10 s rückgängig, später wieder aufnehmbar); jede Aufgabe gilt ab dem Tag des Anlegens bis vor den Tag des Beendens; je Aufgabe und Tag gibt es genau einen Eintrag „erledigt“ | AH-03, AH-04 | U, K, E | Schritt F |
-| AK-HAB-02 | Die Serie zählt aufeinanderfolgende Tage, an denen alle geltenden Aufgaben erledigt waren, bis heute oder bis gestern, solange heute noch offen ist; Tage ohne geltende Aufgabe unterbrechen sie; „Heute“ zeigt Aufgaben, Serie und Fortschritt des Tages | AH-05 | U, K, E | Schritt F |
+| AK-HAB-01 | Tagesaufgaben lassen sich frei anlegen (Name bis 80 Zeichen), umbenennen, per „nach oben“ und „nach unten“ ordnen, ab heute pausieren (hinter dem Symbol oben rechts wieder aufnehmbar) und löschen (beides 10 s rückgängig); jede Aufgabe gilt ab dem Tag des Anlegens bis vor den Tag des Pausierens oder Löschens, ohne frühere Pausen; je Aufgabe und Tag gibt es genau einen Eintrag „erledigt“; am neuen Tag ist alles offen, Neuladen setzt nichts zurück, frühere Tage bleiben unverändert (D-283) | AH-03, AH-04 | U, K, E | Schritt F, D-283 |
+| AK-HAB-02 | „Heute“ zeigt die Tagesaufgaben als schlichte Liste zum Abhaken (Kreis mit Haken, Text durchgestrichen) und darunter einen schmalen Balken mit „x von y erledigt“; keine Serie (D-283, ersetzt die Serie aus D-253) | AH-05 | U, K, E | Schritt F, D-283 |
 
 ### 6.12a Ernährung, Grundausbau (AK-NUT)
 

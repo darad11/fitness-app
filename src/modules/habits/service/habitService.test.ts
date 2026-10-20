@@ -1,13 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
-import { streak } from '../calc/streak';
+import { dayStatus, streak } from '../calc/streak';
 import { habitLogId, listHabitLogs, listHabits } from '../data/habitRepository';
 import {
   addHabit,
   deleteHabit,
   endHabit,
   InvalidNameError,
+  removeHabit,
+  undoHabitChange,
   moveHabit,
   renameHabit,
   reopenHabit,
@@ -79,5 +81,60 @@ describe('Abhaken je Tag', () => {
       includesToday: true,
     });
     expect(await listHabitLogs(rt.db, '2026-10-17')).toHaveLength(1);
+  });
+});
+
+describe('Pausieren, Wiederaufnehmen und Löschen erhalten die Vergangenheit (D-283)', () => {
+  // Mittag UTC, damit der lokale Tag in jeder Zeitzone der Testumgebung gleich bleibt.
+  const noon = (day: string) => at(`${day}T12:00:00.000Z`);
+
+  it('Pausentage zählen nach dem Wiederaufnehmen nicht als offen', async () => {
+    const a = await addHabit(rt, 'A', noon('2026-10-01'));
+    await setHabitDone(rt, a.id, '2026-10-04', true, noon('2026-10-04'));
+    await endHabit(rt, a.id, noon('2026-10-05'));
+    const reopened = await reopenHabit(rt, a.id, noon('2026-10-08'));
+    expect(reopened.pauses).toEqual([{ fromDayKey: '2026-10-05', toDayKey: '2026-10-08' }]);
+    expect(reopened).not.toHaveProperty('toDayKey');
+    const habits = await listHabits(rt.db);
+    const logs = await listHabitLogs(rt.db);
+    expect(dayStatus(habits, logs, '2026-10-04')).toEqual({ total: 1, done: 1, complete: true });
+    expect(dayStatus(habits, logs, '2026-10-06').total).toBe(0);
+    expect(dayStatus(habits, logs, '2026-10-08')).toEqual({
+      total: 1,
+      done: 0,
+      complete: false,
+    });
+  });
+
+  it('am selben Tag wieder aufgenommen entsteht keine Pause', async () => {
+    const a = await addHabit(rt, 'A', noon('2026-10-01'));
+    await endHabit(rt, a.id, noon('2026-10-05'));
+    const reopened = await reopenHabit(rt, a.id, noon('2026-10-05'));
+    expect(reopened).not.toHaveProperty('pauses');
+  });
+
+  it('Löschen nimmt die Aufgabe ab heute heraus, frühere Tage bleiben; Rückgängig stellt her', async () => {
+    const a = await addHabit(rt, 'A', noon('2026-10-01'));
+    await setHabitDone(rt, a.id, '2026-10-02', true, noon('2026-10-02'));
+    const before = (await listHabits(rt.db))[0]!;
+    const removed = await removeHabit(rt, a.id, noon('2026-10-03'));
+    expect(removed.removedAt).toBe('2026-10-03T12:00:00.000Z');
+    expect(removed.toDayKey).toBe('2026-10-03');
+    const habits = await listHabits(rt.db);
+    const logs = await listHabitLogs(rt.db);
+    expect(dayStatus(habits, logs, '2026-10-02')).toEqual({ total: 1, done: 1, complete: true });
+    expect(dayStatus(habits, logs, '2026-10-03').total).toBe(0);
+    const undone = await undoHabitChange(rt, before);
+    expect(undone).not.toHaveProperty('removedAt');
+    expect(undone).not.toHaveProperty('toDayKey');
+  });
+
+  it('Rückgängig nach Löschen einer pausierten Aufgabe lässt sie pausiert', async () => {
+    const a = await addHabit(rt, 'A', noon('2026-10-01'));
+    const paused = await endHabit(rt, a.id, noon('2026-10-02'));
+    await removeHabit(rt, a.id, noon('2026-10-03'));
+    const undone = await undoHabitChange(rt, paused);
+    expect(undone.toDayKey).toBe('2026-10-02');
+    expect(undone).not.toHaveProperty('removedAt');
   });
 });

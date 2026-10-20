@@ -259,5 +259,6 @@ Nächste Schritte: <Liste>
 45. Erledigt (über #36 gemergt): BLS 4.0 entfernt (D-279), Gewichte mit gleichem Zeitpunkt in richtiger Reihenfolge, Zutatenzeile im Rezept, wackelige Tests robuster, Hinweis zu Grunddaten entfernt.
 46. Erledigt (über #37 gemergt): Logo und Name über der Begrüßung, Daten/Installieren/Schritte in den Einstellungen (D-280).
 47. Erledigt (über #38 gemergt): Statusleiste auf allen Seiten und bei der Anmeldung ohne farbliche Unterbrechung (D-281).
-48. Erledigt (Branch `fix/datum-feld`): Datumsfeld beim Nachtragen ragt am iPhone nicht mehr über den Rand (D-282).
-49. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+48. Erledigt (über #39 gemergt): Datumsfeld beim Nachtragen ragt am iPhone nicht mehr über den Rand (D-282).
+49. Erledigt (Branch `feat/tagesaufgaben`): Tagesaufgaben als schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergangenheit (D-283).
+50. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

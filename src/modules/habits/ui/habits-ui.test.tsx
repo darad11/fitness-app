@@ -34,82 +34,108 @@ function renderRoutes(routes: typeof habitsRoutes, path: string) {
   return router;
 }
 
-describe('Tagesaufgaben verwalten (AH-03, AH-04, D-253)', () => {
-  it('legt Aufgaben an, benennt um, ordnet und beendet mit Rückgängig', async () => {
+const names = (region: HTMLElement) =>
+  within(region)
+    .getAllByRole('button', { name: / bearbeiten$/ })
+    .map((button) => button.textContent);
+
+describe('Tagesaufgaben verwalten (AH-03, D-283)', () => {
+  it('fügt hinzu, benennt um, ordnet, pausiert und nimmt wieder auf', async () => {
     const user = userEvent.setup();
     renderRoutes(habitsRoutes, '/heute/aufgaben');
     await screen.findByRole('heading', { level: 1, name: 'Tagesaufgaben' });
     expect(await screen.findByText('Noch keine Aufgabe. Leg oben eine an.')).toBeVisible();
-    await user.click(screen.getByRole('button', { name: 'Aufgabe anlegen' }));
+    await user.click(screen.getByRole('button', { name: 'Aufgabe hinzufügen' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Gib der Aufgabe einen Namen.');
     await user.type(screen.getByLabelText('Name der Aufgabe'), '30 min Cardio{Enter}');
     await waitFor(() => {
       expect(screen.getByLabelText('Name der Aufgabe')).toHaveValue('');
     });
     await user.type(screen.getByLabelText('Name der Aufgabe'), 'Wasser{Enter}');
-    await waitFor(async () => {
-      expect((await listHabits(rt.db)).map((h) => h.name)).toEqual(['30 min Cardio', 'Wasser']);
-    });
-    const list = screen.getByRole('region', { name: 'Heute' });
+    const list = screen.getByRole('region', { name: 'Meine Aufgaben' });
     await waitFor(() => {
-      expect(within(list).getAllByRole('checkbox')).toHaveLength(2);
+      expect(names(list)).toEqual(['30 min Cardio', 'Wasser']);
     });
+    // In der Verwaltung wird nicht abgehakt.
+    expect(within(list).queryAllByRole('checkbox')).toHaveLength(0);
 
-    // Umbenennen
-    await user.click(within(list).getAllByRole('button', { name: 'Umbenennen' })[1]!);
-    const field = within(list).getByLabelText('Name der Aufgabe');
+    // Umbenennen: Tipp auf die Aufgabe öffnet sie.
+    await user.click(within(list).getByRole('button', { name: 'Wasser bearbeiten' }));
+    const field = within(list).getByDisplayValue('Wasser');
     await user.clear(field);
     await user.type(field, '2 l Wasser{Enter}');
-    expect(await within(list).findByText('2 l Wasser')).toBeVisible();
+    await waitFor(() => {
+      expect(names(list)).toEqual(['30 min Cardio', '2 l Wasser']);
+    });
 
     // Ordnen: zweite nach oben; die erste ist oben gesperrt.
     expect(within(list).getByRole('button', { name: 'Nach oben, 30 min Cardio' })).toBeDisabled();
     await user.click(within(list).getByRole('button', { name: 'Nach oben, 2 l Wasser' }));
     await waitFor(() => {
-      expect(
-        within(list)
-          .getAllByRole('checkbox')
-          .map((c) => c.closest('label')?.textContent),
-      ).toEqual(['2 l Wasser', '30 min Cardio']);
+      expect(names(list)).toEqual(['2 l Wasser', '30 min Cardio']);
     });
 
-    // Beenden mit Rückgängig
-    await user.click(within(list).getByRole('button', { name: 'Beenden, 30 min Cardio' }));
-    expect(await screen.findByText('„30 min Cardio“ beendet')).toBeVisible();
+    // Pausieren mit Rückgängig
+    await user.click(within(list).getByRole('button', { name: '30 min Cardio bearbeiten' }));
+    await user.click(within(list).getByRole('button', { name: 'Pausieren' }));
+    expect(await screen.findByText('„30 min Cardio“ pausiert')).toBeVisible();
     await waitFor(() => {
-      expect(within(list).getAllByRole('checkbox')).toHaveLength(1);
+      expect(names(list)).toEqual(['2 l Wasser']);
     });
-    expect(screen.getByRole('region', { name: 'Beendete Aufgaben' })).toHaveTextContent(
-      '30 min Cardio',
-    );
     await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
     await waitFor(() => {
-      expect(within(list).getAllByRole('checkbox')).toHaveLength(2);
+      expect(names(list)).toEqual(['2 l Wasser', '30 min Cardio']);
     });
+
+    // Pausierte liegen hinter dem Symbol oben rechts.
+    await user.click(within(list).getByRole('button', { name: '30 min Cardio bearbeiten' }));
+    await user.click(within(list).getByRole('button', { name: 'Pausieren' }));
+    await waitFor(() => {
+      expect(names(list)).toEqual(['2 l Wasser']);
+    });
+    expect(screen.queryByRole('region', { name: 'Pausiert' })).toBeNull();
+    const toggle = await within(list).findByRole('button', { name: 'Pausierte Aufgaben (1)' });
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    const pausedBox = screen.getByRole('region', { name: 'Pausiert' });
+    await user.click(
+      within(pausedBox).getByRole('button', { name: 'Wieder aufnehmen, 30 min Cardio' }),
+    );
+    await waitFor(() => {
+      expect(names(list)).toEqual(['2 l Wasser', '30 min Cardio']);
+    });
+    expect(within(pausedBox).getByText('Keine pausierte Aufgabe.')).toBeVisible();
   });
 
-  it('hakt ab, zeigt Serie und Übersicht', async () => {
+  it('löscht eine Aufgabe, auch aus „Pausiert“, mit Rückgängig', async () => {
     const user = userEvent.setup();
-    const a = await addHabit(rt, 'A', { now: () => new Date(Date.now() - 3 * 86_400_000) });
-    await setHabitDone(rt, a.id, addDays(today(), -1), true);
-    await setHabitDone(rt, a.id, addDays(today(), -2), true);
+    await addHabit(rt, 'Lesen');
+    const b = await addHabit(rt, 'Dehnen');
     renderRoutes(habitsRoutes, '/heute/aufgaben');
-    await screen.findByRole('heading', { level: 1, name: 'Tagesaufgaben' });
-    const tiles = await screen.findAllByRole('definition');
-    expect(tiles[0]).toHaveTextContent('2 Tage');
-    expect(screen.getByText(/Heute noch offen/)).toBeVisible();
-    expect(tiles[1]).toHaveTextContent('0 / 1');
-    await user.click(screen.getByRole('checkbox', { name: 'A' }));
+    const list = await screen.findByRole('region', { name: 'Meine Aufgaben' });
+    await user.click(await within(list).findByRole('button', { name: 'Lesen bearbeiten' }));
+    expect(within(list).getByText(/Vergangene Tage bleiben/)).toBeVisible();
+    await user.click(within(list).getByRole('button', { name: 'Löschen' }));
+    expect(await screen.findByText('„Lesen“ gelöscht')).toBeVisible();
     await waitFor(() => {
-      expect(screen.getAllByRole('definition')[0]).toHaveTextContent('3 Tage');
+      expect(names(list)).toEqual(['Dehnen']);
     });
-    expect(screen.getByText('Alles erledigt')).toBeVisible();
-    const overview = screen.getByRole('list', { name: /Letzte 14 Tage/ });
-    const items = within(overview).getAllByRole('listitem');
-    expect(items).toHaveLength(14);
-    expect(items[13]).toHaveClass('bg-success-soft');
-    expect(items[10]).not.toHaveClass('bg-success-soft');
-    expect((await listHabitLogs(rt.db, today()))[0]).toMatchObject({ habitId: a.id, done: true });
+    await user.click(within(list).getByRole('button', { name: /Pausierte Aufgaben/ }));
+    expect(screen.getByText('Keine pausierte Aufgabe.')).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
+    await waitFor(() => {
+      expect(names(list)).toEqual(['Lesen', 'Dehnen']);
+    });
+
+    await user.click(within(list).getByRole('button', { name: 'Dehnen bearbeiten' }));
+    await user.click(within(list).getByRole('button', { name: 'Pausieren' }));
+    const pausedBox = await screen.findByRole('region', { name: 'Pausiert' });
+    await user.click(await within(pausedBox).findByRole('button', { name: 'Löschen, Dehnen' }));
+    await waitFor(() => {
+      expect(within(pausedBox).getByText('Keine pausierte Aufgabe.')).toBeVisible();
+    });
+    const stored = (await listHabits(rt.db)).find((habit) => habit.id === b.id);
+    expect(stored?.removedAt).toBeDefined();
   });
 });
 
@@ -117,26 +143,56 @@ describe('Karte „Tagesaufgaben“ auf „Heute“', () => {
   it('zeigt den Leerzustand mit Weg zur Verwaltung', async () => {
     renderRoutes(CARD_ROUTE, '/heute');
     expect(await screen.findByText(/Leg dir eigene Aufgaben/)).toBeVisible();
-    expect(screen.getByRole('link', { name: 'Aufgabe anlegen' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Aufgabe hinzufügen' })).toHaveAttribute(
       'href',
       '/heute/aufgaben',
     );
-    expect(screen.getByRole('link', { name: 'Verwalten' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Tagesaufgaben verwalten' })).toHaveAttribute(
       'href',
       '/heute/aufgaben',
     );
   });
 
-  it('hakt Aufgaben ab und zeigt Serie und Fortschritt', async () => {
+  it('hakt ab, nimmt zurück und zeigt den Fortschritt ohne Serie', async () => {
     const user = userEvent.setup();
     await addHabit(rt, 'Wasser');
     await addHabit(rt, 'Dehnen');
+    await addHabit(rt, 'Lesen');
     renderRoutes(CARD_ROUTE, '/heute');
     await user.click(await screen.findByRole('checkbox', { name: 'Wasser' }));
-    expect(await screen.findByText(/Keine Serie · 1 von 2 erledigt/)).toBeVisible();
+    expect(await screen.findByText('1 von 3 erledigt')).toBeVisible();
+    expect(screen.getByRole('progressbar', { name: 'Heute erledigt' })).toHaveAttribute(
+      'aria-valuenow',
+      '33',
+    );
     await user.click(screen.getByRole('checkbox', { name: 'Dehnen' }));
-    expect(await screen.findByText(/Serie: 1 Tag · Alles erledigt/)).toBeVisible();
-    await user.click(screen.getByRole('checkbox', { name: 'Dehnen' }));
-    expect(await screen.findByText(/Keine Serie · 1 von 2 erledigt/)).toBeVisible();
+    await user.click(screen.getByRole('checkbox', { name: 'Lesen' }));
+    expect(await screen.findByText('Alles erledigt')).toBeVisible();
+    await user.click(screen.getByRole('checkbox', { name: 'Lesen' }));
+    expect(await screen.findByText('2 von 3 erledigt')).toBeVisible();
+    expect(screen.queryByText(/Serie/)).toBeNull();
+    expect((await listHabitLogs(rt.db, today())).filter((log) => log.done)).toHaveLength(2);
+  });
+
+  it('neuer Tag: gestern Abgehaktes ist heute offen, gestern bleibt gespeichert', async () => {
+    const a = await addHabit(rt, 'Wasser', { now: () => new Date(Date.now() - 2 * 86_400_000) });
+    await setHabitDone(rt, a.id, addDays(today(), -1), true);
+    renderRoutes(CARD_ROUTE, '/heute');
+    expect(await screen.findByRole('checkbox', { name: 'Wasser' })).not.toBeChecked();
+    expect(screen.getByText('0 von 1 erledigt')).toBeVisible();
+    const yesterday = (await listHabitLogs(rt.db)).find(
+      (log) => log.dayKey === addDays(today(), -1),
+    );
+    expect(yesterday).toMatchObject({ habitId: a.id, done: true });
+  });
+
+  it('neu laden: Abgehaktes von heute bleibt abgehakt', async () => {
+    const a = await addHabit(rt, 'Wasser');
+    await setHabitDone(rt, a.id, today(), true);
+    renderRoutes(CARD_ROUTE, '/heute');
+    expect(await screen.findByRole('checkbox', { name: 'Wasser' })).toBeChecked();
+    cleanup();
+    renderRoutes(CARD_ROUTE, '/heute');
+    expect(await screen.findByRole('checkbox', { name: 'Wasser' })).toBeChecked();
   });
 });

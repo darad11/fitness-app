@@ -20,6 +20,13 @@ export const habitSchema = defineDocSchema('habit', {
   /** Ab diesem Tag zählt sie nicht mehr (Tag des Beendens); fehlt, solange sie aktiv ist. */
   toDayKey: dayKeySchema.optional(),
   archivedAt: isoDateTimeSchema.optional(),
+  /**
+   * Frühere Pausen (D-283): an diesen Tagen galt die Aufgabe nicht, `toDayKey` ist der Tag der
+   * Wiederaufnahme (ausschließlich). So bleibt die Vergangenheit nach „Wieder aufnehmen“ richtig.
+   */
+  pauses: z.array(z.object({ fromDayKey: dayKeySchema, toDayKey: dayKeySchema })).optional(),
+  /** Gelöscht (D-283): erscheint nirgends mehr zum Abhaken; vergangene Tage bleiben erhalten. */
+  removedAt: isoDateTimeSchema.optional(),
 });
 
 export const habitLogSchema = defineDocSchema('habit_log', {

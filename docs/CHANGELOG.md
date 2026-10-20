@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.29 · 20.10.2026 · Logo und Einstellungen
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-280 Logo über der Begrüßung, Daten/Installieren/Schritte in den Einstellungen |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.27 · 20.10.2026 · Merkliste mehrere Nutzer
 
 | Datei | Änderung |

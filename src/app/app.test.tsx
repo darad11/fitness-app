@@ -131,15 +131,7 @@ describe('App-Shell', () => {
       within(main)
         .getAllByRole('link')
         .map((link) => link.textContent),
-    ).toEqual([
-      'Profil und Ziele',
-      'Einstellungen',
-      'Daten und Sicherung',
-      'Installieren',
-      'Synchronisierung',
-      'Schritte aus dem Dashboard',
-      'Über die App',
-    ]);
+    ).toEqual(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   });
 
   it('speichert die Darstellung und wendet sie an', async () => {

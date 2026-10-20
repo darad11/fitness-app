@@ -27,11 +27,15 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   await expect(page.getByRole('main').getByRole('link')).toHaveText([
     'Profil und Ziele',
     'Einstellungen',
+    'Synchronisierung',
+    'Über die App',
+  ]);
+  // Daten, Installieren und Schritte stehen in den Einstellungen (D-280).
+  await page.getByRole('main').getByRole('link', { name: 'Einstellungen' }).click();
+  await expect(page.getByRole('list', { name: 'Weiteres' }).getByRole('link')).toHaveText([
     'Daten und Sicherung',
     'Installieren',
-    'Synchronisierung',
     'Schritte aus dem Dashboard',
-    'Über die App',
   ]);
 });
 
@@ -76,7 +80,7 @@ test('zeigt Version, Build und Speicher-ID', async ({ page }) => {
 test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-PWA-05)', async ({
   page,
 }) => {
-  await openPage(page, '/mehr');
+  await openPage(page, '/mehr/einstellungen');
   await page.getByRole('link', { name: 'Daten und Sicherung' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Daten und Sicherung' })).toBeVisible();
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
@@ -95,4 +99,16 @@ test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-
   expect(Object.keys(content.data)).toContain('session');
   await expect(page.getByText('Die Datei wurde heruntergeladen.')).toBeVisible();
   await expect(page.getByText(/^Letzter Export: /)).toBeVisible();
+});
+
+test('„Heute“ zeigt am Handy Logo und Namen über der Begrüßung (D-280)', async ({
+  page,
+}, testInfo) => {
+  test.skip(!testInfo.project.name.includes('mobile'), 'Am Desktop zeigt die Seitenleiste beides');
+  await openPage(page, '/heute');
+  const header = page.getByRole('main').locator('header').first();
+  await expect(header.getByText('Fitness', { exact: true })).toBeVisible();
+  const logo = await header.getByText('Fitness', { exact: true }).boundingBox();
+  const title = await header.getByRole('heading', { level: 1 }).boundingBox();
+  expect((logo?.y ?? 0) + (logo?.height ?? 0)).toBeLessThanOrEqual(title?.y ?? 0);
 });

@@ -236,14 +236,28 @@
 
 /* Vollbild-Anmeldung (D-270): dunkler Grund mit langsam schwebenden Lichtflecken und Glas-Karte. */
 @layer components {
+  /* Oben einheitlich in --login-bg-1: iOS färbt die Statusleiste nach dem oberen Rand ein. */
   .login-screen {
-    background: radial-gradient(
-      120% 90% at 50% 0%,
-      var(--login-bg-1) 0%,
+    background: linear-gradient(
+      180deg,
+      var(--login-bg-1) 0,
+      var(--login-bg-1) calc(env(safe-area-inset-top) + 1rem),
       var(--login-bg-2) 55%,
       var(--login-bg-3) 100%
     );
     color: var(--login-fg);
+  }
+  /* Lichtflecken erst unterhalb der Statusleiste, weich eingeblendet. */
+  .login-glows {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0,
+      transparent calc(env(safe-area-inset-top) + 0.5rem),
+      #000 calc(env(safe-area-inset-top) + 8rem)
+    );
   }
   .login-glow {
     position: absolute;

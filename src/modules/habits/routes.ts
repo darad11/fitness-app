@@ -6,4 +6,8 @@ export const habitsRoutes: RouteObject[] = [
     path: 'heute/aufgaben',
     lazy: async () => ({ Component: (await import('./ui/TasksPage')).TasksPage }),
   },
+  {
+    path: 'heute/aufgaben/:id',
+    lazy: async () => ({ Component: (await import('./ui/TaskDetailPage')).TaskDetailPage }),
+  },
 ];

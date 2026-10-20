@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
-import { Card, Meter, SegmentedControl, StatTile } from '@/shared/ui';
+import { Card, Meter, SegmentedControl, SelectField, StatTile } from '@/shared/ui';
 import {
   dataStart,
   habitRate,
@@ -22,6 +22,7 @@ import {
 import { activeOn, dayStatus } from '../calc/streak';
 import type { Habit } from '../model/habit';
 import { ProgressChart } from './ProgressChart';
+import { TaskMatrix } from './TaskMatrix';
 import type { HabitHistory } from './useHabitHistory';
 
 const ts = t.tasks.stats;
@@ -152,13 +153,21 @@ export function TaskStats({
       </Card>
 
       <Card title={ts.perTask}>
+        <TaskMatrix
+          habits={sorted.map((row) => row.habit)}
+          days={days}
+          index={index}
+          today={today}
+        />
         {sortOptions.length > 1 && rows.length > 1 ? (
-          <SegmentedControl
-            legend={ts.sortLegend}
-            options={sortOptions}
-            value={activeSort}
-            onChange={setSort}
-          />
+          <div className="mt-4">
+            <SelectField
+              label={ts.sortLegend}
+              options={sortOptions}
+              value={activeSort}
+              onChange={setSort}
+            />
+          </div>
         ) : null}
         <ul className="mt-2 divide-y divide-line">
           {sorted.map(({ habit, rate: r, change, streak }) => {

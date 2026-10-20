@@ -167,13 +167,17 @@ export const de = {
       chartWeekValue: (date: string, percent: string, done: number, due: number) =>
         `Woche ab ${date}: ${percent} (${done} von ${due})`,
       perTask: 'Je Aufgabe',
+      matrixCaptionDay: 'Alle Aufgaben je Tag im Zeitraum',
+      matrixCaptionWeek: 'Alle Aufgaben je Woche im Zeitraum',
+      matrixWeekFull: 'Füllhöhe: Anteil erledigt',
+      matrixWeekNone: 'nichts erledigt',
       sortLegend: 'Sortieren',
       sorts: {
-        list: 'Liste',
-        best: 'Höchste',
-        lowest: 'Niedrigste',
-        up: 'Verbessert',
-        down: 'Zurückgegangen',
+        list: 'Eigene Reihenfolge',
+        best: 'Höchste Quote zuerst',
+        lowest: 'Niedrigste Quote zuerst',
+        up: 'Größte Verbesserung zuerst',
+        down: 'Stärkster Rückgang zuerst',
       },
       taskLine: (done: number, due: number) =>
         due === 1 ? `an ${done} von 1 fälligen Tag` : `an ${done} von ${due} fälligen Tagen`,

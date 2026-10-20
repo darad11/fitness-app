@@ -491,7 +491,7 @@ export function NutritionTodayCard() {
               const goal = target ? macroGoal(target, macro) : undefined;
               const eaten = sums[macro];
               return (
-                <div key={macro} className="min-w-0">
+                <div key={macro} className="min-w-0 text-center">
                   <dt className="truncate text-xs text-muted">
                     <span aria-hidden="true">{t.nutrition.macrosShort[macro]}</span>
                     <span className="sr-only">{t.nutrition.macros[macro]}</span>

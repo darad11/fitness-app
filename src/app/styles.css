@@ -111,8 +111,9 @@
     scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
   }
 
+  /* Oberer Verlaufston: iOS färbt die Statusleiste nach dem Seitenhintergrund ein. */
   body {
-    background: var(--bg-bottom);
+    background: var(--bg-top);
     color: var(--fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -152,6 +153,19 @@
       var(--bg-top) 0%,
       var(--bg) 55%,
       var(--bg-bottom) 100%
+    );
+  }
+  /* Oberer Rand einheitlich (Statusleiste), die Lichtflecken blenden erst darunter ein. */
+  .app-backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: calc(env(safe-area-inset-top) + 5rem);
+    background: linear-gradient(
+      180deg,
+      var(--bg-top) 0,
+      var(--bg-top) env(safe-area-inset-top),
+      transparent 100%
     );
   }
   .app-backdrop > span {

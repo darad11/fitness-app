@@ -111,7 +111,10 @@ export function DataPage() {
 
   return (
     <>
-      <PageHeader title={t.data.title} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader
+        title={t.data.title}
+        back={{ to: '/mehr/einstellungen', label: t.settings.title }}
+      />
       <div className="space-y-4">
         <Card title={t.data.exportTitle}>
           <p className="text-muted">{t.data.exportText}</p>

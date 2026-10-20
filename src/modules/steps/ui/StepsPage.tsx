@@ -26,7 +26,12 @@ export function StepsPage() {
   const year = Number(dayKey(now, fmt.timeZone).slice(0, 4));
   const ts = t.steps;
 
-  const header = <PageHeader title={ts.pageTitle} back={{ to: '/mehr', label: t.more.title }} />;
+  const header = (
+    <PageHeader
+      title={ts.pageTitle}
+      back={{ to: '/mehr/einstellungen', label: t.settings.title }}
+    />
+  );
   if (view === undefined) {
     return (
       <>

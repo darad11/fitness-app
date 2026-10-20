@@ -36,7 +36,10 @@ export function InstallPage() {
 
   return (
     <>
-      <PageHeader title={t.install.title} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader
+        title={t.install.title}
+        back={{ to: '/mehr/einstellungen', label: t.settings.title }}
+      />
       <div className="space-y-4">
         <Card>
           <StatusList

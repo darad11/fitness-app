@@ -1,3 +1,4 @@
+import { Database, Download, Footprints } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -6,7 +7,15 @@ import {
   subscribeWakeLockStatus,
   wakeLockStatus,
 } from '@/shared/lib/wakeLock';
-import { Card, PageHeader, SegmentedControl, SelectField, Skeleton, Switch } from '@/shared/ui';
+import {
+  Card,
+  LinkList,
+  PageHeader,
+  SegmentedControl,
+  SelectField,
+  Skeleton,
+  Switch,
+} from '@/shared/ui';
 import { useSyncExternalStore } from 'react';
 import { saveSettings } from '../data/settingsRepository';
 import { useSettings } from '../data/useSettings';
@@ -39,6 +48,16 @@ export function SettingsPage() {
     <>
       <PageHeader title={t.settings.title} back={{ to: '/mehr', label: t.more.title }} />
       {settings ? <SettingsForm settings={settings} /> : <SettingsSkeleton />}
+      {/* Daten, Installieren und Schritte unter den Einstellungen statt unter „Mehr“ (D-280). */}
+      <h2 className="mt-6 mb-2 px-1 text-sm font-semibold text-muted">{t.settings.more}</h2>
+      <LinkList
+        label={t.settings.more}
+        items={[
+          { to: '/mehr/daten', label: t.more.data, icon: Database },
+          { to: '/mehr/installieren', label: t.more.install, icon: Download },
+          { to: '/mehr/schritte', label: t.more.steps, icon: Footprints },
+        ]}
+      />
     </>
   );
 }

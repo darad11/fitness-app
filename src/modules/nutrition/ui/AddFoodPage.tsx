@@ -373,6 +373,7 @@ function LogDialog({
           submit();
         }}
       >
+        {food.brand ? <p className="-mt-2 text-muted">{food.brand}</p> : null}
         {food.servings.length > 0 ? (
           <SelectField
             label={t.nutrition.quantityLabel}

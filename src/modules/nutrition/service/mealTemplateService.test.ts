@@ -101,3 +101,20 @@ describe('Mahlzeit-Vorlagen (NU-11, D-268)', () => {
     expect(await reason(createTemplateFromEntries(rt, 'Leer', []))).toBe('items');
   });
 });
+
+describe('Vorlagen mit Marke (D-278)', () => {
+  it('übernimmt die Marke eines Eintrags in Klammern in den Vorlagenposten', async () => {
+    const oats = (await loadBls()).find((f) => f.id === blsFoodId('C133000'));
+    if (!oats) throw new Error('BLS');
+    await logFood(rt, {
+      food: { ...oats, brand: 'Alnatura' },
+      slot: 'breakfast',
+      dayKey: '2026-10-20',
+      quantity: { kind: 'amount', amount: 50 },
+    });
+    const entries = await listDayEntries(rt.db, '2026-10-20');
+    expect(entries[0]).toMatchObject({ nameSnapshot: oats.name, brandSnapshot: 'Alnatura' });
+    const template = await createTemplateFromEntries(rt, 'Frühstück', entries);
+    expect(template.items[0]?.nameSnapshot).toBe(`${oats.name} (Alnatura)`);
+  });
+});

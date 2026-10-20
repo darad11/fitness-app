@@ -47,8 +47,12 @@ test('Barcode: Einwilligung, Open Food Facts, speichern und eintragen; zweiter S
   await log.getByRole('button', { name: 'Hinzufügen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
   await expect(
-    page.getByRole('region', { name: 'Frühstück' }).getByText('Skyr Natur (Spar)'),
+    page
+      .getByRole('region', { name: 'Frühstück' })
+      .getByRole('button', { name: /Skyr Natur, Spar/ }),
   ).toBeVisible();
+  // Marke in der Tagesliste unter dem Namen (D-278).
+  await expect(page.getByRole('region', { name: 'Frühstück' })).toContainText('Spar ·');
 
   // Nach Neuladen: lokal gefunden, keine weitere Anfrage.
   await page.reload();

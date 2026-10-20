@@ -255,4 +255,5 @@ Nächste Schritte: <Liste>
 41. Erledigt (über #30 gemergt): kleiner Makro-Ring und „Barcode scannen“ auf „Heute“; Scanner öffnet sofort, Mahlzeit nach Uhrzeit, danach zurück zu „Heute“ (D-275).
 42. Erledigt (über #31 gemergt): Begrüßung mit Uhr wie im Dashboard, Tab-Leiste minimiert sich beim Runterscrollen zum Kreis, Tagesaufgaben unten (D-276).
 43. Erledigt (über #32 gemergt): Schritte aus dem Dashboard auf „Heute“ unter der Ernährung, Anmeldung je Gerät unter Mehr, nur lesend (D-277). Offen beim Produktinhaber: einmal verbinden und die Zahlen mit dem Dashboard vergleichen.
-44. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+44. Erledigt (Branch `feat/marken-anzeige`): Marke in Tagesliste und in den Fenstern zum Eintragen und Bearbeiten (D-278).
+45. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

@@ -1,5 +1,14 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.26 · 20.10.2026 · Marke in Tagesliste und Fenstern
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-278 Marke überall sichtbar, Feld `brandSnapshot` |
+| `data-model.md` | `food_log_entry.brandSnapshot` |
+| `implementation-plan.md` | Stand und nächste Schritte |
+| `testing.md` | Ergebnisse Marken-Anzeige |
+
 ## Version 0.25 · 19.10.2026 · Übergabe
 
 | Datei | Änderung |

@@ -67,3 +67,20 @@ test('Einkaufsliste: kleiner Bildschirm ohne Überlauf (D-287)', async ({ page }
     ),
   ).toBeLessThanOrEqual(0);
 });
+
+test('„Heute“: runde Knöpfe in „Ernährung heute“, Einkaufswagen öffnet die Einkaufsliste', async ({
+  page,
+}) => {
+  await openPage(page, '/heute');
+  for (const name of ['Barcode scannen', 'Zur Ernährung', 'Einkaufsliste']) {
+    const link = page.getByRole('link', { name, exact: true });
+    await expect(link).toBeVisible();
+    const box = await link.boundingBox();
+    // Rund und klein: 48 × 48 px, das Symbol in voller Größe.
+    expect(box?.width).toBe(48);
+    expect(box?.height).toBe(48);
+    expect((await link.locator('svg').boundingBox())?.width).toBe(20);
+  }
+  await page.getByRole('link', { name: 'Einkaufsliste', exact: true }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Einkaufsliste' })).toBeVisible();
+});

@@ -5,6 +5,7 @@
 export const de = {
   app: {
     name: 'Fitness',
+    brandLink: 'Fitness, zu „Heute“',
   },
   common: {
     back: 'Zurück',

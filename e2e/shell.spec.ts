@@ -101,14 +101,25 @@ test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-
   await expect(page.getByText(/^Letzter Export: /)).toBeVisible();
 });
 
-test('„Heute“ zeigt am Handy Logo und Namen über der Begrüßung (D-280)', async ({
+test('Logo und Name am Handy auf jeder Seite links oben, führt zu „Heute“ (D-280, D-286)', async ({
   page,
 }, testInfo) => {
   test.skip(!testInfo.project.name.includes('mobile'), 'Am Desktop zeigt die Seitenleiste beides');
-  await openPage(page, '/heute');
-  const header = page.getByRole('main').locator('header').first();
-  await expect(header.getByText('Fitness', { exact: true })).toBeVisible();
-  const logo = await header.getByText('Fitness', { exact: true }).boundingBox();
-  const title = await header.getByRole('heading', { level: 1 }).boundingBox();
-  expect((logo?.y ?? 0) + (logo?.height ?? 0)).toBeLessThanOrEqual(title?.y ?? 0);
+  for (const path of [
+    '/heute',
+    '/training',
+    '/ernaehrung',
+    '/fortschritt',
+    '/mehr/einstellungen',
+  ]) {
+    await openPage(page, path);
+    const brand = page.getByRole('main').getByRole('link', { name: 'Fitness, zu „Heute“' });
+    await expect(brand).toBeVisible();
+    const logo = await brand.boundingBox();
+    const title = await page.getByRole('heading', { level: 1 }).boundingBox();
+    expect((logo?.y ?? 0) + (logo?.height ?? 0)).toBeLessThanOrEqual(title?.y ?? 0);
+    expect(logo?.x ?? 99).toBeLessThan(30);
+  }
+  await page.getByRole('main').getByRole('link', { name: 'Fitness, zu „Heute“' }).click();
+  await expect(page).toHaveURL(/\/heute$/);
 });

@@ -127,7 +127,7 @@ export function TaskDetailPage() {
 
         <Card title={td.calendar}>
           <ol
-            className="grid max-w-sm grid-cols-7 gap-1.5"
+            className="grid max-w-60 grid-cols-7 gap-1"
             aria-label={`${td.calendar}, ${td.calendarHint}`}
           >
             {Array.from({ length: lead }, (_, i) => (

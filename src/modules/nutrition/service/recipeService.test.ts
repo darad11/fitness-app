@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { recipeTotals } from '../calc/recipe';
-import { blsFoodId, loadBls } from '../data/bls';
+import { BANANA, OATS } from '../testing/foods';
 import { listDayEntries, listRecipes, toRecipeItem } from '../data/nutritionRepository';
 import type { FoodItem } from '../model/foodItem';
 import { logFood, logQuick } from './nutritionService';
@@ -25,10 +25,10 @@ afterEach(async () => {
   await rt.db.delete();
 });
 
-async function bls(code: string): Promise<FoodItem> {
-  const food = (await loadBls()).find((f) => f.id === blsFoodId(code));
-  if (!food) throw new Error(code);
-  return food;
+// Feste Testlebensmittel mit den früheren BLS-Werten (D-279).
+// eslint-disable-next-line @typescript-eslint/require-await
+async function bls(code: 'C133000' | 'F503100'): Promise<FoodItem> {
+  return code === 'C133000' ? OATS : BANANA;
 }
 
 const reason = async (promise: Promise<unknown> | (() => unknown)) => {

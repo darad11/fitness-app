@@ -230,7 +230,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                           all.map((r, i) => (i === index ? { ...r, amountText: text } : r)),
                         );
                       }}
-                      className={`${INPUT} w-24 text-right`}
+                      className={`${INPUT.replace('w-full', 'w-24')} shrink-0 text-right`}
                     />
                     <span aria-hidden="true" className="w-6 text-sm text-muted">
                       {unit}

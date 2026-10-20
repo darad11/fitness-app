@@ -330,8 +330,6 @@ export const de = {
     undo: 'Rückgängig',
     saveFailed: 'Das ließ sich nicht speichern. Bitte versuche es erneut.',
     invalidAmount: 'Bitte gib eine Menge größer als 0 ein.',
-    sources:
-      'Grunddaten: Bundeslebensmittelschlüssel (BLS) 4.0, Max Rubner-Institut, gekürzt. Österreichische Bezeichnungen als zusätzliche Suchbegriffe. Importierte Daten der Österreichischen Nährwerttabelle (ÖNWT) über die BLS-Recherche von nutritional-software.at, nur auf diesem Gerät.',
     // Hinzufügen
     addTitle: 'Lebensmittel hinzufügen',
     searchLabel: 'Lebensmittel suchen',
@@ -340,8 +338,7 @@ export const de = {
     favorites: 'Favoriten',
     results: (n: number) => (n === 1 ? '1 Treffer' : `${n} Treffer`),
     noResults: 'Nichts gefunden. Lege ein eigenes Lebensmittel an oder nutze den Schnelleintrag.',
-    searchHint:
-      'Suche in deinen Lebensmitteln, im Bundeslebensmittelschlüssel und in importierten Lebensmitteldaten.',
+    searchHint: 'Suche in deinen Lebensmitteln, Rezepten und importierten Lebensmitteldaten.',
     loadingFoods: 'Lebensmittel werden geladen …',
     sourceBadge: {
       custom: 'Eigenes',

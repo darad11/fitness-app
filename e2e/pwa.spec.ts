@@ -49,6 +49,9 @@ test('Service Worker übernimmt und alle Bereiche starten offline (AK-PWA-02 She
     browserName !== 'chromium',
     'Offline-Start mit Service Worker wird in Chromium geprüft; Safari prüft T-IPH-M0 auf dem Gerät.',
   );
+  // Alle Seiten offline in einem Durchgang: dreifache Zeit wie beim Seiten-Rundgang in
+  // network-a11y.spec.ts (einmal rot am Handy auf dem CI-Runner).
+  test.slow();
   await openPage(page, '/heute');
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;

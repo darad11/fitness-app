@@ -98,7 +98,7 @@ E. Ernährung (NU);NU-17;Ziele manuell überschreiben;Nicht belegt;–;P;ON;M;NU
 E. Ernährung (NU);NU-18;Roh- und Gargewicht;Nicht belegt;–;P;ON;M;NU-21;S;P2;Später;R2 · M5;"Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor";Analysiert;Faktor-Werte als Schätzung markiert
 E. Ernährung (NU);NU-19;Quelle und Qualitätsstatus je Lebensmittel;Nicht belegt;–;E;EV;M;NU-10;S;P1;Später;R2 · M5;Verbesserung (D-110);Spezifiziert;"Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme"
 E. Ernährung (NU);NU-20;Schnelleintrag nur mit kcal und Makros;Nicht belegt;–;E;EV;M;NU-05;S;P2;MVP;R1 · Schritt G;Verbesserung, vorgezogen (D-261);Implementiert;AK-NUT-04
-E. Ernährung (NU);NU-21;Generische Lebensmittel mit deutschen Namen;–;–;E;EV;H;BLS 4.0 (D-301);M;P1;MVP;R1 · Schritt G;Verbesserung (D-110, D-301), vorgezogen (D-261);Implementiert;AK-NUT-01, AK-NUT-06
+E. Ernährung (NU);NU-21;Generische Lebensmittel mit deutschen Namen;–;–;E;EV;H;"Importierte ÖNWT-Daten (D-263); BLS 4.0 entfernt (D-279)";M;P1;MVP;R1 · Schritt G;Verbesserung (D-110, D-301), vorgezogen (D-261);Implementiert;AK-NUT-01, AK-NUT-06
 E. Ernährung (NU);NU-22;Kennzeichnung unvollständiger Nährwerte;–;–;E;EV;M;NU-10;S;P1;MVP;R1 · Schritt G;Verbesserung (D-110), vorgezogen (D-261);Implementiert;AK-NUT-04
 E. Ernährung (NU);NU-23;Einheiten und Haushaltsmaße mit Umrechnung;–;–;E;EV;H;NU-09;M;P1;Später;R2 · M5;Verbesserung (D-110);Spezifiziert;"g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert"
 E. Ernährung (NU);NU-24;Offline-Verhalten der Online-Suche;–;–;E;EV;M;NU-08;S;P1;MVP;R1 · Schritt G;"Verbesserung, vorgezogen (D-266): ohne Netz Hinweis, lokale Treffer, „Selbst anlegen“ mit Barcode; „für später merken“ entfällt vorerst";Implementiert;AK-NUT-09

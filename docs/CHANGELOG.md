@@ -8,6 +8,15 @@
 | `implementation-plan.md` | Stand |
 | `testing.md` | Ergebnisse |
 
+## Version 0.28 · 20.10.2026 · Aufräumen
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-279 BLS 4.0 entfällt; D-301 ersetzt |
+| `data-sources.md`, `feature-inventory.md` | BLS 4.0 entfernt |
+| `handover-2026-10-19.md` | BLS und Gewichtsfehler erledigt, Geräteprüfungen |
+| `testing.md` | Ergebnisse Aufräumen |
+
 ## Version 0.27 · 20.10.2026 · Merkliste mehrere Nutzer
 
 | Datei | Änderung |

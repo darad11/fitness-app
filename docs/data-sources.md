@@ -116,3 +116,5 @@ Version 7.1 mit 1.246 generischen Lebensmitteln in 19 Ober- und 106 Unterkategor
 - wger-Dokumentation: https://wger.readthedocs.io/
 - free-exercise-db: https://github.com/yuhonas/free-exercise-db (Websuche 18.10.2026)
 - Adult Compendium of Physical Activities 2024: https://pacompendium.com/ (Websuche 18.10.2026, Seite selbst nicht abrufbar)
+
+**Nachtrag 20.10.2026 (D-279):** Der gebündelte BLS 4.0 ist aus der App entfernt. Lebensmitteldaten kommen nur noch aus dem lokalen Import (ÖNWT, D-263), eigenen Einträgen und Open Food Facts (Barcode).

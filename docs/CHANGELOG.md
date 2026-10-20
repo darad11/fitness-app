@@ -10,6 +10,7 @@
 | `feature-inventory.md` | NU-26 |
 | `implementation-plan.md` | Stand |
 | `testing.md` | Ergebnisse |
+| `shopping-list.md` | Neu: Analyse, Abgleich mit dem Auftrag, Produktbewertung, Bericht |
 
 ## Version 0.35 · 20.10.2026 · Logo auf jeder Seite
 

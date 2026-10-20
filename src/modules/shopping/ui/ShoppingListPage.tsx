@@ -1,5 +1,6 @@
 import { Check, ChevronDown, Pencil, Plus, RotateCcw } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { loadOwnFoodNames } from '@/modules/nutrition';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { tShopping } from '@/shared/i18n/de-shopping';
@@ -72,6 +73,25 @@ export function ShoppingListPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [showDone, setShowDone] = useState(false);
   const [notice, setNotice] = useState<Notice | null>(null);
+  // Eigene Lebensmittel aus „Meine Küche“ als Vorschläge; freie Eingabe bleibt immer möglich.
+  const [foodNames, setFoodNames] = useState<readonly string[]>([]);
+  useEffect(() => {
+    let active = true;
+    loadOwnFoodNames(rt.db)
+      .then((names) => {
+        if (active) setFoodNames(names);
+      })
+      .catch((caught: unknown) => {
+        void logError(rt.db, {
+          area: 'shopping',
+          error: caught,
+          route: '/ernaehrung/einkaufsliste',
+        });
+      });
+    return () => {
+      active = false;
+    };
+  }, [rt.db]);
 
   const run = (action: () => Promise<unknown>) => {
     action().catch((caught: unknown) => {
@@ -123,10 +143,13 @@ export function ShoppingListPage() {
   const open = items.filter(isOpen);
   const done = items.filter((item) => item.doneAt !== undefined && item.clearedAt === undefined);
   const recent = recentItems(items);
-  // Vorschläge beim Tippen: alle bisher eingetragenen Namen, je einmal (D-287).
-  const suggestions = [
-    ...new Map(items.map((item) => [item.name.toLocaleLowerCase('de'), item.name])).values(),
-  ];
+  // Vorschläge beim Tippen: bisher eingetragene Namen, dann eigene Lebensmittel, je einmal (D-287).
+  const suggestionMap = new Map<string, string>();
+  for (const name of [...items.map((item) => item.name), ...foodNames]) {
+    const key = name.toLocaleLowerCase('de');
+    if (!suggestionMap.has(key)) suggestionMap.set(key, name);
+  }
+  const suggestions = [...suggestionMap.values()];
   const total = open.length + done.length;
   const groups: { key: ShoppingCategory | 'none'; label: string; items: ShoppingItem[] }[] =
     view === 'list'

@@ -264,5 +264,5 @@ Nächste Schritte: <Liste>
 50. Erledigt (über #41 gemergt): Fortschritt der Tagesaufgaben mit Kennzahlen, Verlauf, Gesamtübersicht, Einzelauswertung und Hinweisen (D-284).
 51. Erledigt (über #42 gemergt): Wochentage je Aufgabe und „Mit Training abhaken“ (D-285). Später möglich: „10.000 Schritte“ aus den Dashboard-Schritten abhaken.
 52. Erledigt (über #43 gemergt): Logo und Name auf jeder Seite links oben (D-286).
-53. Erledigt (Branch `feat/einkaufsliste`): Einkaufsliste in „Meine Küche“ mit Rezept-Zutaten (D-287). Später möglich: eigene Lebensmittel beim Tippen vorschlagen, mehrere Listen, Vorlagen.
+53. Erledigt (Branch `feat/einkaufsliste`): Einkaufsliste in „Meine Küche“ mit Rezept-Zutaten (D-287). Eigene Lebensmittel werden beim Tippen vorgeschlagen. Abgleich mit dem Auftrag, Bewertung und Bericht: `shopping-list.md`. Später möglich: Favoriten, Kategorien-Reihenfolge, mehrere Listen, Vorlagen.
 54. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

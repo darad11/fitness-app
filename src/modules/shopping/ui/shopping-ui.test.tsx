@@ -3,11 +3,16 @@ import { cleanup, render, screen, waitFor, within } from '@testing-library/react
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { listShoppingItems } from '../data/shoppingRepository';
 import { shoppingRoutes } from '../routes';
+
+// Eigene Lebensmittel aus „Meine Küche“ (Ernährungsmodul) als Vorschläge.
+vi.mock('@/modules/nutrition', () => ({
+  loadOwnFoodNames: () => Promise.resolve(['Skyr natur', 'Milch']),
+}));
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -135,5 +140,26 @@ describe('Einkaufsliste (D-287)', () => {
     });
     await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
     expect(await screen.findByRole('region', { name: 'Ohne Kategorie' })).toBeVisible();
+  });
+
+  it('schlägt Listen-Namen und eigene Lebensmittel vor, freie Eingabe bleibt möglich', async () => {
+    const user = userEvent.setup();
+    renderList();
+    await user.type(await screen.findByLabelText('Was möchtest du einkaufen?'), 'milch{Enter}');
+    await waitFor(() => {
+      expect(rows()).toEqual(['milch']);
+    });
+    const options = () =>
+      [...document.querySelectorAll('#einkauf-vorschlaege option')].map((o) =>
+        o.getAttribute('value'),
+      );
+    // „Milch“ steht schon als „milch“ auf der Liste und wird nicht doppelt vorgeschlagen.
+    await waitFor(() => {
+      expect(options()).toEqual(['milch', 'Skyr natur']);
+    });
+    await user.type(field(), 'Etwas ganz Neues{Enter}');
+    await waitFor(() => {
+      expect(rows()).toEqual(['milch', 'Etwas ganz Neues']);
+    });
   });
 });

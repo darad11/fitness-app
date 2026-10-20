@@ -9,6 +9,10 @@ test('Tagesaufgaben: anlegen, abhaken, Serie (AH-03, TH-04)', async ({ page }) =
   await expect(page.getByRole('heading', { level: 1, name: 'Tagesaufgaben' })).toBeVisible();
   await page.getByLabel('Name der Aufgabe').fill('30 min Cardio');
   await page.getByRole('button', { name: 'Aufgabe anlegen' }).click();
+  // Erst wenn die erste Aufgabe gespeichert und das Feld geleert ist, die zweite eintippen; sonst
+  // leerte das Zurücksetzen nach dem Speichern manchmal den zweiten Namen (WebKit).
+  await expect(page.getByRole('region', { name: 'Heute' }).getByRole('checkbox')).toHaveCount(1);
+  await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
   await page.getByLabel('Name der Aufgabe').fill('2 l Wasser');
   await page.getByRole('button', { name: 'Aufgabe anlegen' }).click();
   const list = page.getByRole('region', { name: 'Heute' });

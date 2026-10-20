@@ -257,5 +257,6 @@ Nächste Schritte: <Liste>
 43. Erledigt (über #32 gemergt): Schritte aus dem Dashboard auf „Heute“ unter der Ernährung, Anmeldung je Gerät unter Mehr, nur lesend (D-277). Vom Produktinhaber am 20.10.2026 am Gerät bestätigt.
 44. Erledigt (über #34 gemergt): Marke in Tagesliste und in den Fenstern zum Eintragen und Bearbeiten (D-278).
 45. Erledigt (über #36 gemergt): BLS 4.0 entfernt (D-279), Gewichte mit gleichem Zeitpunkt in richtiger Reihenfolge, Zutatenzeile im Rezept, wackelige Tests robuster, Hinweis zu Grunddaten entfernt.
-46. Erledigt (Branch `feat/einstellungen-logo`): Logo und Name über der Begrüßung, Daten/Installieren/Schritte in den Einstellungen (D-280).
-47. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+46. Erledigt (über #37 gemergt): Logo und Name über der Begrüßung, Daten/Installieren/Schritte in den Einstellungen (D-280).
+47. Erledigt (Branch `fix/statusleiste`): Statusleiste auf allen Seiten und bei der Anmeldung ohne farbliche Unterbrechung (D-281).
+48. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).

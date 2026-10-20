@@ -737,3 +737,15 @@ Logo und Name der App über der Begrüßung (nur Handy), „Daten und Sicherung�
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 202 bestanden, 4 übersprungen. Neu: Logo und Name über der Begrüßung am Handy; Einstellungen › „Weiteres“ mit drei Links; Rücksprung von Daten, Installieren und Schritte zu den Einstellungen |
 | `pnpm check:bundle` | 247,8 KB Startansicht (Grenze 250 KB) |
 | Bilder | Vom Produktinhaber vorab freigegeben („bilder passen“) |
+
+### Statusleiste · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Statusleiste ohne farbliche Unterbrechung auf allen Seiten und bei der Anmeldung (D-281).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 83 Dateien, 687 Tests bestanden; `theme-color` folgt `--bg-top` (hell `#f5f8fd`, dunkel `#212a3f`) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 202 bestanden, 4 übersprungen; Hintergrund im Dunkelmodus `rgb(33, 42, 63)` |
+| `pnpm check:bundle` | 247,9 KB Startansicht (Grenze 250 KB) |
+| Bilder | Anmeldung und „Heute“ hell/dunkel mit nachgestellter Statusleiste, vom Produktinhaber freigegeben. Die Färbung durch iOS selbst ist erst am iPhone prüfbar |

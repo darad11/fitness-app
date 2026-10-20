@@ -11,7 +11,7 @@
       preference === 'dark' ||
       (preference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', dark ? '#151b2b' : '#e8eef7');
+    if (meta) meta.setAttribute('content', dark ? '#212a3f' : '#f5f8fd');
   } catch (error) {
     // Ohne localStorage bleibt die Standarddarstellung „Hell".
   }

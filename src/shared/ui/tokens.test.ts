@@ -109,9 +109,9 @@ describe('Farbtokens', () => {
     expect(Object.keys(dark).sort()).toEqual(Object.keys(light).sort());
   });
 
-  it('nutzt für theme-color die Hintergrundfarben', () => {
-    expect(THEME_BACKGROUND.light).toBe(token(light, 'bg'));
-    expect(THEME_BACKGROUND.dark).toBe(token(dark, 'bg'));
+  it('nutzt für theme-color den oberen Hintergrund', () => {
+    expect(THEME_BACKGROUND.light).toBe(token(light, 'bg-top'));
+    expect(THEME_BACKGROUND.dark).toBe(token(dark, 'bg-top'));
   });
 
   it('mischt durchscheinende Farben richtig', () => {

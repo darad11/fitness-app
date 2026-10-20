@@ -9,10 +9,10 @@ export type EffectiveTheme = 'light' | 'dark';
 
 export const THEME_STORAGE_KEY = 'fitness.theme';
 
-/** Seitenhintergrund `--bg` je Modus; für `<meta name="theme-color">`. Test: tokens.test.ts */
+/** Oberer Seitenhintergrund `--bg-top` je Modus (Farbe der Statusleiste); für `<meta name="theme-color">`. Test: tokens.test.ts */
 export const THEME_BACKGROUND: Record<EffectiveTheme, string> = {
-  light: '#e8eef7',
-  dark: '#151b2b',
+  light: '#f5f8fd',
+  dark: '#212a3f',
 };
 
 export function resolveTheme(

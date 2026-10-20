@@ -51,6 +51,17 @@ export function LoginScreen({
   const signUp = mode === 'signUp';
   const shownError = localError ?? error;
 
+  // Statusleiste in der Grundfarbe der Anmeldung, danach zurück (iOS färbt sie danach ein).
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const before = meta?.getAttribute('content');
+    const top = getComputedStyle(document.documentElement).getPropertyValue('--login-bg-1').trim();
+    if (meta && top) meta.setAttribute('content', top);
+    return () => {
+      if (meta && before) meta.setAttribute('content', before);
+    };
+  }, []);
+
   useEffect(() => {
     const dialog = ref.current;
     if (dialog && !dialog.open) dialog.showModal();
@@ -71,14 +82,15 @@ export function LoginScreen({
       className="login-screen m-0 h-dvh max-h-none w-screen max-w-none p-0 backdrop:bg-transparent"
     >
       <div className="relative flex min-h-full items-center justify-center overflow-hidden px-4 pt-[calc(env(safe-area-inset-top)+5rem)] pb-[calc(env(safe-area-inset-bottom)+2rem)]">
-        {GLOWS.map((glow) => (
-          <div
-            key={glow.color}
-            aria-hidden="true"
-            className={`login-glow ${glow.className}`}
-            style={{ background: glow.color, animationDelay: glow.delay }}
-          />
-        ))}
+        <div aria-hidden="true" className="login-glows">
+          {GLOWS.map((glow) => (
+            <div
+              key={glow.color}
+              className={`login-glow ${glow.className}`}
+              style={{ background: glow.color, animationDelay: glow.delay }}
+            />
+          ))}
+        </div>
         <button
           type="button"
           onClick={onLater}

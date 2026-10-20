@@ -117,7 +117,17 @@ test('Tagesaufgaben: abhaken ohne Netz, bleibt nach dem Neuladen (D-283)', async
   await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
   await expect(page.getByRole('button', { name: 'Wasser bearbeiten' })).toBeVisible();
   await openPage(page, '/heute');
+  // Wie in resilience.spec.ts: erst wenn der Service Worker die Seite steuert, lädt sie offline
+  // nachgeladene Teile aus dem Cache (sonst meldet WebKit einen Ladefehler).
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.reload();
+  await expect
+    .poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null))
+    .toBe(true);
   const card = page.getByRole('region', { name: 'Tagesaufgaben' });
+  await expect(card.getByRole('checkbox', { name: 'Wasser' })).toBeVisible();
   await context.setOffline(true);
   await card.getByText('Wasser').click();
   await expect(card).toContainText('Alles erledigt');

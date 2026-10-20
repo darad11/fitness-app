@@ -175,18 +175,17 @@ describe('Einkaufsliste (D-287)', () => {
   it('zeigt unter dem Feld, was gerade dazukam; „Fertig“ schließt die Eingabe', async () => {
     const user = userEvent.setup();
     renderList();
-    expect(await screen.findByText(/Zum Beispiel/)).toBeVisible();
+    expect(await screen.findByText(/Die Liste ist leer/)).toBeVisible();
     for (const text of ['Reis 1 kg', 'Äpfel', 'Brot', 'Milch']) {
       await user.type(field(), `${text}{Enter}`);
       await waitFor(() => {
         expect(field()).toHaveValue('');
       });
     }
-    // Die letzten drei, neueste zuerst; der Beispieltext weicht, sobald etwas auf der Liste steht.
+    // Die letzten drei, neueste zuerst.
     expect((await screen.findByText(/Hinzugefügt:/)).closest('p')).toHaveTextContent(
       'Hinzugefügt: Milch · Brot · Äpfel',
     );
-    expect(screen.queryByText(/Zum Beispiel/)).toBeNull();
     await user.click(screen.getByRole('button', { name: 'Fertig' }));
     expect(field()).not.toHaveFocus();
     expect(screen.queryByText(/Hinzugefügt:/)).toBeNull();

@@ -28,7 +28,7 @@ Stand 20.10.2026, Branch `feat/einkaufsliste` (PR #44). Auftrag: „REFORM – K
 | 6 Mehrere Listen | Nur wenn einfach; sonst eine Hauptliste mit erweiterbarer Struktur | Eine Hauptliste; ein späteres Feld `listId` lässt sich additiv ergänzen |
 | 7A Lebensmittelbibliothek | Auswahl übernimmt den Namen, freie Eingabe bleibt | Eigene, nicht archivierte Lebensmittel erscheinen beim Tippen als Vorschläge unter dem Feld (ein Tipp fügt hinzu); Marke und Nährwerte werden nicht übernommen, weil die Liste keine Nährwerte braucht |
 | 7B Rezepte und Mahlzeiten | Nur wenn Daten da sind; Doppelte zusammenrechnen | Rezepte ja („Zutaten auf die Einkaufsliste“, 200 g + 150 g Reis = 350 g); geplante Mahlzeiten gibt es noch nicht |
-| 7C Trennung vom Tagebuch | Nichts zählt als gegessen | Ja; Hinweis auf der Seite, getestet (Ernährung bleibt 0 kcal) |
+| 7C Trennung vom Tagebuch | Nichts zählt als gegessen | Ja, getestet (Ernährung bleibt 0 kcal); den Hinweis auf der Seite hat der Produktinhaber entfernen lassen |
 | 8A Wiederkehrende Artikel | Häufige, zuletzt verwendete, erneut hinzufügen | „Zuletzt gekauft“ mit einem Tipp; Favoriten nicht (siehe Abschnitt 3) |
 | 8B Vorlagen | Prüfen | Nicht umgesetzt (siehe Abschnitt 3) |
 | 8C Einheiten | g, kg, Stück, ml, l, Packung, flexibel | Ja; dazu Flasche und Dose, Menge immer optional |

@@ -346,8 +346,6 @@ export function ShoppingListPage() {
             <p role="alert" className="mt-2 text-sm text-danger">
               {error}
             </p>
-          ) : items.length === 0 ? (
-            <p className="mt-2 text-sm text-muted">{ts.inputHint}</p>
           ) : null}
           {pending ? (
             <div role="status" className="mt-3 rounded-input bg-surface-2 p-3">
@@ -491,7 +489,6 @@ export function ShoppingListPage() {
             ) : null}
           </>
         )}
-        <p className="text-sm text-muted">{ts.planningHint}</p>
       </div>
       {notice ? (
         <Toast

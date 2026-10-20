@@ -5,7 +5,6 @@ export const tShopping = {
   kitchenHint: 'Was du einkaufen möchtest',
   back: 'Ernährung',
   inputLabel: 'Was möchtest du einkaufen?',
-  inputHint: 'Zum Beispiel „500 g Hähnchenbrust“, „6 Bananen“ oder „Reis 1 kg“.',
   add: 'Zur Liste hinzufügen',
   suggestionsLabel: 'Vorschläge',
   justAdded: 'Hinzugefügt:',
@@ -45,8 +44,6 @@ export const tShopping = {
   save: 'Speichern',
   delete: 'Löschen',
   deleted: (name: string) => `„${name}“ gelöscht`,
-  planningHint:
-    'Die Einkaufsliste zählt nicht als gegessen; das trägst du wie gewohnt unter „Gegessen“ ein.',
   categories: {
     produce: 'Obst und Gemüse',
     meat: 'Fleisch und Fisch',

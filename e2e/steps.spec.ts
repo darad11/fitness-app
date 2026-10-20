@@ -89,6 +89,8 @@ test('Schritte aus dem Dashboard: verbinden, Karte unter Ernährung, trennen (D-
   await expect(card).toContainText(/8\D?420/);
   await expect(card).toContainText('Ziel');
   await expect(card).toContainText(/Jahr \d+ %/);
+  // Die Ernährungskarte wird nachgeladen; erst danach die Reihenfolge lesen.
+  await expect(page.getByText('Ernährung heute')).toBeVisible();
   const order = await page
     .getByRole('main')
     .locator('section')

@@ -712,3 +712,15 @@ Gemeldet vom Produktinhaber um 7:05 Uhr. Ursache: `Intl.DateTimeFormat` mit nur 
 | `goals.spec.ts` | Neu: Uhr auf 7:05 gestellt, „Guten Morgen“; auf 19 Uhr, „Guten Abend“. Der bisherige Test hatte jeden Gruß akzeptiert und den Fehler deshalb nicht bemerkt |
 | WebKit in GitHub Actions | `tabbar.spec.ts` „Kreis rechts … zurück beim Hochscrollen“ am Handy einmal rot (zweimal im selben Lauf: die Leiste blieb nach dem Hochscrollen klein), beim Neustart grün; in Chromium morgens und abends grün. Wackelig, beobachten |
 
+### Aufräumen · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+BLS 4.0 entfernt (D-279), Gewichte gleicher Minute, Zutatenzeile im Rezept, robustere Tests, Hinweis zu Grunddaten entfernt.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm test` | 83 Dateien, 687 Tests bestanden. Neu: sechs Gewichte im selben Zeitpunkt in Erfassungsreihenfolge (mit dem alten Code rot, die zufällige ID entschied); Tests nutzen feste Testlebensmittel mit den früheren BLS-Werten (`testing/foods.ts`), die Oberflächen-Tests importieren sie als ÖNWT-Daten |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 200 bestanden, 1 rot, 3 übersprungen: `steps.spec.ts` am Handy las die Reihenfolge der Karten, bevor die nachgeladene Ernährungskarte da war (Zeitproblem im Test). Behoben: Der Test wartet auf „Ernährung heute“; danach dreimal je 2 bestanden. `nutrition.spec.ts` importiert Testlebensmittel statt BLS |
+| Wackelige Tests | `network-a11y` „eigene Adresse“ und `pwa` „Offline-Start“ gehen in einem Durchgang über alle Seiten und lagen nahe am Zeitlimit von 30 s: `test.slow()`. `tabbar` in WebKit: Vermutung, dass WebKit auf einem ausgelasteten Runner das Scrollen später als 0,6 s nach der Taste meldet; der Test sendet die Taste unmittelbar vor der Meldung erneut. Beobachten |
+| `pnpm check:bundle` | 247,7 KB Startansicht (Grenze 250 KB); der BLS war nie Teil der Startansicht |
+| Geräteprüfung | Produktinhaber: Glas-Look am iPhone passt; Schritte werden richtig dargestellt und aus dem Dashboard übertragen |
+

@@ -759,3 +759,15 @@ Datum- und Zeitfelder bleiben in ihrer Spalte (D-282), nach Bildschirmfoto vom i
 | `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm test` | 83 Dateien, 687 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 204 bestanden, 4 übersprungen. Neu `date-field.spec.ts`: rechter Rand des Felds liegt in der Spalte und vor „Dauer in Minuten“. In Chromium war der Fehler nicht nachstellbar (der Test ist dort auch ohne Änderung grün); WebKit in GitHub Actions ist kein echtes iOS. Nachweis am iPhone durch den Produktinhaber steht aus |
+
+### Tagesaufgaben als Checkliste · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Schlichte tägliche Checkliste, Pausieren und Löschen ohne verfälschte Vergangenheit (D-283).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 83 Dateien, 693 Tests bestanden. Neu: Pausentage zählen nach dem Wiederaufnehmen nicht als offen (vorher ein Fehler); Löschen erhält frühere Tage; Rückgängig stellt den Stand vor dem Pausieren oder Löschen her; Karte ohne Serie mit „x von y erledigt“; neuer Tag offen, gestern gespeichert; Neuladen behält heute |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 208 bestanden, 4 übersprungen. `tasks.spec.ts`: hinzufügen, ordnen, abhaken, neu laden, nächster Tag (Uhr der Seite gestellt) alles offen und gestern noch in der Datenbank; 320 px breit ohne Überlauf; abhaken ohne Netz bleibt nach dem Neuladen |
+| `pnpm check:bundle` | 248,2 KB Startansicht (Grenze 250 KB) |
+| Bilder | Karte und Verwalten vom Produktinhaber freigegeben (Symbol oben rechts für Pausierte, ohne Hinweistext und ohne Übersicht der letzten 14 Tage) |

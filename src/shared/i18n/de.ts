@@ -124,7 +124,6 @@ export const de = {
     pausedEmpty: 'Keine pausierte Aufgabe.',
     pausedHint: 'Pausierte Aufgaben erscheinen nicht auf „Heute“, bis du sie wieder aufnimmst.',
     listTitle: 'Meine Aufgaben',
-    listHint: 'Jeden Tag wieder offen. Tippe auf eine Aufgabe, um sie zu bearbeiten.',
     emptyList: 'Noch keine Aufgabe. Leg oben eine an.',
     emptyCard: 'Leg dir eigene Aufgaben für jeden Tag an, z. B. „30 min Cardio“ oder „2 l Wasser“.',
     saveFailed: 'Nicht gespeichert. Bitte versuche es erneut.',

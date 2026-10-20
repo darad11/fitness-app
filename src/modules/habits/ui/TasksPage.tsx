@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Plus, Settings, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, Settings2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -78,7 +78,7 @@ export function TasksPage() {
                   setShowPaused((open) => !open);
                 }}
               >
-                <Settings aria-hidden="true" className="size-5" />
+                <Settings2 aria-hidden="true" className="size-5" />
               </IconButton>
             }
           >
@@ -235,7 +235,6 @@ export function TasksPage() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-2 text-sm text-muted">{t.tasks.listHint}</p>
               </>
             )}
             {showPaused ? (

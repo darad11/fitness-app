@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.32 · 20.10.2026 · Tagesaufgaben als Checkliste
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-283 Tagesaufgaben als schlichte Checkliste, Pausieren und Löschen |
+| `requirements.md` | AK-HAB-01, AK-HAB-02 |
+| `data-model.md` | `habit.pauses`, `habit.removedAt` |
+| `feature-inventory.md` | AH-05 verworfen |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.31 · 20.10.2026 · Datumsfeld
 
 | Datei | Änderung |

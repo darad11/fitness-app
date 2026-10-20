@@ -130,7 +130,9 @@ describe('App-Shell', () => {
     expect(
       within(main)
         .getAllByRole('link')
-        .map((link) => link.textContent),
+        .map((link) => link.textContent)
+        // Ohne den Link „Fitness“ oben links (D-286).
+        .filter((text) => text !== 'Fitness'),
     ).toEqual(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   });
 

@@ -24,12 +24,13 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   ]);
   await mainNav(page).getByRole('link', { name: 'Mehr' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Mehr' })).toBeVisible();
-  await expect(page.getByRole('main').getByRole('link')).toHaveText([
-    'Profil und Ziele',
-    'Einstellungen',
-    'Synchronisierung',
-    'Über die App',
-  ]);
+  // Ohne den Link „Fitness“ oben links (D-286).
+  await expect(
+    page
+      .getByRole('main')
+      .getByRole('link')
+      .filter({ hasNotText: /^Fitness$/ }),
+  ).toHaveText(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   // Daten, Installieren und Schritte stehen in den Einstellungen (D-280).
   await page.getByRole('main').getByRole('link', { name: 'Einstellungen' }).click();
   await expect(page.getByRole('list', { name: 'Weiteres' }).getByRole('link')).toHaveText([

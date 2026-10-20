@@ -690,3 +690,13 @@ Anmeldung beim Dashboard je Gerät, nur lesend; Karte unter „Ernährung heute�
 | Bildschirmfotos | Karte auf „Heute“ hell und dunkel, Web, Seite vor und nach dem Verbinden (Beispielwerte); vom Produktinhaber freigegeben, danach unter die Ernährung verschoben |
 | Offen | Echte Anmeldung beim Dashboard und Vergleich der Zahlen mit dem Dashboard (Produktinhaber) |
 
+### Fehler: Begrüßung immer „Guten Abend“ · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Gemeldet vom Produktinhaber um 7:05 Uhr. Ursache: `Intl.DateTimeFormat` mit nur der Stunde liefert in `de-AT` „07 Uhr“; `Number("07 Uhr")` ergibt keine Zahl, deshalb galt jede Stunde als Abend (D-276), und „Barcode scannen“ auf „Heute“ wählte immer „Snacks“ (D-275). Behoben mit `hourIn` in `src/shared/lib/time.ts` (liest die Stunde über `formatToParts`).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgestellt | Node 22: `format` liefert „07 Uhr“, `formatToParts` die Stunde „07“ |
+| `time.test.ts` | `hourIn` liefert 7 um 05:05 UTC in Wien, 0 um Mitternacht, 18 um 18:59 |
+| `goals.spec.ts` | Neu: Uhr auf 7:05 gestellt, „Guten Morgen“; auf 19 Uhr, „Guten Abend“. Der bisherige Test hatte jeden Gruß akzeptiert und den Fehler deshalb nicht bemerkt |
+

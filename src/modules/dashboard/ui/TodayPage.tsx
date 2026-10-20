@@ -27,7 +27,7 @@ import {
   useStartSession,
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
-import { dayKey } from '@/shared/lib/time';
+import { dayKey, hourIn } from '@/shared/lib/time';
 import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 
@@ -68,13 +68,7 @@ export function TodayPage() {
     hourCycle: 'h23',
     timeZone: formatters.timeZone,
   });
-  const hour = Number(
-    new Intl.DateTimeFormat('de-AT', {
-      hour: 'numeric',
-      hourCycle: 'h23',
-      timeZone: formatters.timeZone,
-    }).format(now),
-  );
+  const hour = hourIn(now, formatters.timeZone);
 
   return (
     <>

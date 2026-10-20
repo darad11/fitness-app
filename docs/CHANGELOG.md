@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.30 · 20.10.2026 · Statusleiste
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-281 Statusleiste einheitlich |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+
 ## Version 0.29 · 20.10.2026 · Logo und Einstellungen
 
 | Datei | Änderung |

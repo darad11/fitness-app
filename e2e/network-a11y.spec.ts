@@ -5,6 +5,9 @@ test('alle Anfragen gehen an die eigene Adresse; Sicherheits-Header gesetzt (AK-
   page,
   baseURL,
 }) => {
+  // Ein Durchgang über alle Seiten; mit jeder neuen Seite näher am Zeitlimit von 30 s (einmal rot
+  // auf dem CI-Runner), deshalb die dreifache Zeit.
+  test.slow();
   const own = new URL(baseURL ?? '').origin;
   const foreign: string[] = [];
   page.on('request', (request) => {

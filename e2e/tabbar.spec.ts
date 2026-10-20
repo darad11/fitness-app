@@ -48,7 +48,12 @@ test('Tab-Leiste: beim Runterscrollen ein Kreis rechts, zurück beim Hochscrolle
   // Eigenes Scrollen: Taste, dann Bewegung (wie Finger oder Mausrad).
   const scrollBy = (dy: number) =>
     page.evaluate((delta) => {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      const key = () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      // WebKit meldet das Scrollen auf einem ausgelasteten Runner manchmal erst nach mehr als
+      // 0,6 s; wie beim gedrückt gehaltenen Pfeil kommt die Taste unmittelbar vor der Meldung
+      // noch einmal (Erfassung vor dem Listener der App auf window).
+      window.addEventListener('scroll', key, { capture: true, once: true });
+      key();
       window.scrollBy(0, delta);
     }, dy);
   await scrollBy(300);

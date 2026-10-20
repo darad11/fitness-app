@@ -358,8 +358,6 @@ export function NutritionPage() {
               </Card>
             );
           })}
-
-          <p className="text-xs text-muted">{t.nutrition.sources}</p>
         </div>
       )}
 

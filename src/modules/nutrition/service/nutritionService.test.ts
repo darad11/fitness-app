@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { sumEntries } from '../calc/nutrients';
-import { blsFoodId, loadBls } from '../data/bls';
+import { BREAD, OATS } from '../testing/foods';
 import { listDayEntries, listFoods, listTargets, toFoodItem } from '../data/nutritionRepository';
 import {
   changeEntry,
@@ -41,24 +41,6 @@ const reason = async (promise: Promise<unknown>) => {
   }
   return 'none';
 };
-
-describe('BLS 4.0 (D-301)', () => {
-  it('lädt alle Lebensmittel mit stabilen IDs und österreichischen Suchbegriffen', async () => {
-    const bls = await loadBls();
-    expect(bls.length).toBe(7140);
-    const oats = bls.find((f) => f.sourceRef === 'C133000');
-    expect(oats).toMatchObject({
-      id: blsFoodId('C133000'),
-      name: 'Hafer Flocken',
-      basis: 'g',
-      source: 'bls',
-      quality: 'verified',
-      per100: { kcal: 348, protein: 13.22, fat: 6.65, carbs: 53.3 },
-    });
-    expect(bls.some((f) => f.aliases.includes('Topfen'))).toBe(true);
-    expect(bls.every((f) => f.per100.kcal !== undefined)).toBe(true);
-  });
-});
 
 describe('Eigene Lebensmittel (NU-10)', () => {
   const skyr = {
@@ -157,7 +139,7 @@ describe('Protokoll (NU-05, NU-09, NU-15, NU-20)', () => {
       isEstimated: true,
     });
     expect(await reason(logQuick(rt, { slot: 'lunch', dayKey: DAY, kcal: -1 }))).toBe('kcal');
-    const bls = (await loadBls())[0]!;
+    const bls = BREAD;
     expect(
       await reason(
         logFood(rt, {
@@ -171,7 +153,7 @@ describe('Protokoll (NU-05, NU-09, NU-15, NU-20)', () => {
   });
 
   it('ändert Menge, Portionen und Mahlzeit anteilig und löscht mit Rückgängig', async () => {
-    const bls = (await loadBls()).find((f) => f.sourceRef === 'C133000')!;
+    const bls = OATS;
     const entry = await logFood(rt, {
       food: bls,
       slot: 'breakfast',

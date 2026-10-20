@@ -46,6 +46,37 @@ test('eigenes Programm übernehmen, bearbeiten und nach Neuladen behalten (AK-PR
   await repsMax.fill('10');
   await repsMax.press('Enter');
   await expect(repsMax).toHaveValue('10');
+  // Gespeichert wird im Hintergrund; erst wenn die Datenbank den Wert liefert, neu laden (in
+  // WebKit lud der Test sonst manchmal vor dem Speichern neu und sah wieder 8).
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          new Promise<boolean>((resolve) => {
+            const open = indexedDB.open('fitness');
+            open.onsuccess = () => {
+              const db = open.result;
+              const names = Array.from(db.objectStoreNames);
+              const store = names.find((n) => n === 'programs');
+              if (!store) {
+                resolve(false);
+                return;
+              }
+              const all = db.transaction(store).objectStore(store).getAll();
+              all.onsuccess = () => {
+                resolve(JSON.stringify(all.result).includes('"repsMax":10'));
+              };
+              all.onerror = () => {
+                resolve(false);
+              };
+            };
+            open.onerror = () => {
+              resolve(false);
+            };
+          }),
+      ),
+    )
+    .toBe(true);
 
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Tag A' })).toBeVisible();

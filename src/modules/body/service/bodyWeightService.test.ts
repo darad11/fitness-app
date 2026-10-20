@@ -90,3 +90,13 @@ describe('Körpergewicht erfassen, ändern, löschen (AK-BW-01, AK-BW-04)', () =
     expect((await listBodyWeights(rt.db)).map((e) => e.id)).toEqual([a.id, b.id]);
   });
 });
+
+describe('Reihenfolge bei gleichem Zeitpunkt', () => {
+  it('zeigt bei zwei Messungen in derselben Minute die zuletzt erfasste zuerst', async () => {
+    const at = new Date('2026-10-18T06:30:00.000Z');
+    // Sechs Einträge: Vorher entschied die zufällige ID, welcher vorne lag.
+    const kg = [80.5, 80.4, 80.3, 80.2, 80.1, 80];
+    for (const weightKg of kg) await addBodyWeight(rt, { weightKg, measuredAt: at }, NOW);
+    expect((await listBodyWeights(rt.db)).map((w) => w.weightKg)).toEqual([...kg].reverse());
+  });
+});

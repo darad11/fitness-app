@@ -9,6 +9,7 @@ import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { catalogDbName } from '../data/catalogStore';
 import { setOffConsent } from '../data/openFoodFacts';
+import { commitCatalog, prepareCatalog } from '../service/catalogService';
 import { listDayEntries, listFoods, listTargets } from '../data/nutritionRepository';
 import { nutritionRoutes } from '../routes';
 import { localDayKey, logQuick } from '../service/nutritionService';
@@ -28,6 +29,39 @@ afterEach(async () => {
 
 const WAIT = { timeout: 10_000 };
 
+/**
+ * Importierte Testlebensmittel (ÖNWT) statt des früher gebündelten BLS (D-279), mit dessen Werten
+ * für Haferflocken und Banane, damit die erwarteten Zahlen gleich bleiben.
+ */
+async function seedCatalog() {
+  const row = (code: string, name: string, v: number[]) => {
+    const [kcal, protein, carbs, sugar, fat, saturatedFat, fiber, salt] = v;
+    return {
+      code,
+      source: 'ÖNWT-HH',
+      name,
+      kcal,
+      protein,
+      carbs,
+      sugar,
+      fat,
+      saturatedFat,
+      fiber,
+      salt,
+    };
+  };
+  const file = new Blob([
+    JSON.stringify({
+      rows: [
+        row('C133000', 'Hafer Flocken', [348, 13.22, 53.3, 0.74, 6.65, 1.34, 10.98, 0]),
+        row('F503100', 'Banane roh', [79, 1.32, 15.89, 13.89, 0.4, 0.07, 2, 0]),
+        row('M161000', 'Speisequark mager', [67, 12, 4, 4, 0.3, 0.2, 0, 0.1]),
+      ],
+    }),
+  ]);
+  await commitCatalog(rt.db, await prepareCatalog(file));
+}
+
 async function renderAt(path: string, heading: string) {
   const router = createMemoryRouter(nutritionRoutes, { initialEntries: [path] });
   render(
@@ -41,9 +75,10 @@ async function renderAt(path: string, heading: string) {
 
 describe('Ernährung (Schritt G, D-261)', () => {
   it(
-    'protokolliert aus dem BLS, ändert, löscht mit Rückgängig und nimmt Schnelleinträge',
+    'protokolliert importierte Lebensmittel, ändert, löscht mit Rückgängig und nimmt Schnelleinträge',
     { timeout: 40_000 },
     async () => {
+      await seedCatalog();
       const user = userEvent.setup();
       const router = await renderAt('/ernaehrung', 'Ernährung');
       expect(await screen.findByText('Noch kein Tagesziel.', {}, WAIT)).toBeVisible();
@@ -55,7 +90,7 @@ describe('Ernährung (Schritt G, D-261)', () => {
       }, WAIT);
       await user.type(search, 'haferflocken');
       await user.click(
-        await screen.findByRole('button', { name: /^Hafer FlockenBLS348 kcal/ }, WAIT),
+        await screen.findByRole('button', { name: /^Hafer FlockenÖNWT348 kcal/ }, WAIT),
       );
       const dialog = screen.getByRole('dialog', { name: 'Hafer Flocken hinzufügen' });
       const amount = within(dialog).getByLabelText('Menge in g');
@@ -108,6 +143,7 @@ describe('Ernährung (Schritt G, D-261)', () => {
   );
 
   it('findet österreichische Bezeichnungen', { timeout: 30_000 }, async () => {
+    await seedCatalog();
     const user = userEvent.setup();
     await renderAt('/ernaehrung/hinzufuegen?mahlzeit=lunch', 'Lebensmittel hinzufügen');
     const search = await screen.findByLabelText('Lebensmittel suchen', {}, WAIT);
@@ -116,7 +152,6 @@ describe('Ernährung (Schritt G, D-261)', () => {
     }, WAIT);
     await user.type(search, 'topfen');
     const list = await screen.findByRole('list', { name: /Treffer$/ }, WAIT);
-    expect(within(list).getAllByRole('listitem').length).toBeGreaterThan(5);
     expect(within(list).getAllByRole('button')[0]).toHaveTextContent(/quark/i);
   });
 
@@ -281,6 +316,7 @@ describe('Ernährung (Schritt G, D-261)', () => {
     'zeigt alle Nährwerte mit Zucker und Salz im Dialog und in der Tagessumme',
     { timeout: 40_000 },
     async () => {
+      await seedCatalog();
       const user = userEvent.setup();
       await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
       await waitFor(() => {
@@ -288,7 +324,7 @@ describe('Ernährung (Schritt G, D-261)', () => {
       }, WAIT);
       await user.type(screen.getByLabelText('Lebensmittel suchen'), 'haferflocken');
       await user.click(
-        await screen.findByRole('button', { name: /^Hafer FlockenBLS348 kcal/ }, WAIT),
+        await screen.findByRole('button', { name: /^Hafer FlockenÖNWT348 kcal/ }, WAIT),
       );
       const dialog = screen.getByRole('dialog', { name: 'Hafer Flocken hinzufügen' });
       await user.clear(within(dialog).getByLabelText('Menge in g'));
@@ -456,6 +492,7 @@ describe('Ernährung (Schritt G, D-261)', () => {
     'legt ein Rezept aus zwei Zutaten an und trägt eine Portion ein (D-267)',
     { timeout: 60_000 },
     async () => {
+      await seedCatalog();
       const user = userEvent.setup();
       await renderAt('/ernaehrung/rezepte', 'Rezepte');
       expect(await screen.findByText(/Noch keine Rezepte/, {}, WAIT)).toBeVisible();
@@ -478,8 +515,8 @@ describe('Ernährung (Schritt G, D-261)', () => {
         await user.type(within(amountDialog).getByLabelText('Menge in g'), amount);
         await user.click(within(amountDialog).getByRole('button', { name: 'Hinzufügen' }));
       };
-      await addIngredient('haferflocken', /^Hafer FlockenBLS/, '80');
-      await addIngredient('banane roh', /^Banane rohBLS/, '120');
+      await addIngredient('haferflocken', /^Hafer FlockenÖNWT/, '80');
+      await addIngredient('banane roh', /^Banane rohÖNWT/, '120');
       expect(screen.getByLabelText('Menge Hafer Flocken in g')).toHaveValue('80');
       const table = screen.getByRole('table', { name: 'Nährwerte' });
       const energy = within(table).getByRole('row', { name: /Energie/ });

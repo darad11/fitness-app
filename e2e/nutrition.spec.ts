@@ -1,9 +1,49 @@
+import type { Page } from '@playwright/test';
 import { expect, openPage, test } from './fixtures';
 
-test('Ernährung: Ziel setzen, aus dem BLS protokollieren, nach Neuladen erhalten, auf „Heute“ sehen', async ({
+/** Lebensmitteldaten wie aus der BLS-Recherche importieren (D-263); der gebündelte BLS entfällt (D-279). */
+async function importFoods(page: Page) {
+  const row = (code: string, name: string, v: number[]) => {
+    const [kcal, protein, carbs, sugar, fat, saturatedFat, fiber, salt] = v;
+    return {
+      code,
+      source: 'ÖNWT-HH',
+      name,
+      kcal,
+      protein,
+      carbs,
+      sugar,
+      fat,
+      saturatedFat,
+      fiber,
+      salt,
+    };
+  };
+  const content = JSON.stringify({
+    rows: [
+      row('0200001', 'Kartoffel geschält gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]),
+      row('C133000', 'Hafer Flocken', [348, 13.22, 53.3, 0.74, 6.65, 1.34, 10.98, 0]),
+      row('F503100', 'Banane roh', [79, 1.32, 15.89, 13.89, 0.4, 0.07, 2, 0]),
+    ],
+  });
+  await openPage(page, '/ernaehrung/lebensmittel');
+  await page.getByLabel('Datei auswählen').setInputFiles({
+    name: 'nuts-recherche.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(content, 'utf8'),
+  });
+  await page
+    .getByRole('dialog', { name: 'Lebensmitteldaten importieren' })
+    .getByRole('button', { name: 'Importieren' })
+    .click();
+  await expect(page.getByText('3 Lebensmittel importiert', { exact: true })).toBeVisible();
+}
+
+test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Neuladen erhalten, auf „Heute“ sehen', async ({
   page,
 }) => {
   test.slow();
+  await importFoods(page);
   await openPage(page, '/ernaehrung/ziele');
   await page.getByLabel('Energie (kcal)').fill('2200');
   await page.getByLabel('Eiweiß (g)').fill('140');
@@ -98,6 +138,7 @@ test('Rezept: zwei Zutaten, je Portion gerechnet, nach Neuladen eintragen (D-267
   page,
 }) => {
   test.slow();
+  await importFoods(page);
   await openPage(page, '/ernaehrung/rezepte/neu');
   await page.getByLabel('Name').fill('Overnight Oats');
   await page.getByLabel('Portionen').fill('2');

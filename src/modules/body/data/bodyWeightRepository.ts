@@ -15,9 +15,17 @@ export function getBodyWeight(db: AppDb, id: string): Promise<BodyWeight | undef
 /** Alle Einträge, neueste zuerst; ungültige Dokumente werden übergangen. */
 export async function listBodyWeights(db: AppDb): Promise<BodyWeight[]> {
   const rows = await db.bodyWeights.orderBy('measuredAt').reverse().toArray();
-  return rows.flatMap((row) => {
+  const list = rows.flatMap((row) => {
     if (row.type !== 'body_weight' || row.deletedAt !== null) return [];
     const parsed = bodyWeightSchema.safeParse(row);
     return parsed.success ? [parsed.data] : [];
   });
+  // Gleicher Messzeitpunkt (z. B. zweimal in derselben Minute erfasst): das zuletzt angelegte
+  // zuerst, sonst zeigte „Heute“ nicht immer den neuesten Eintrag.
+  return list.sort(
+    (a, b) =>
+      b.measuredAt.localeCompare(a.measuredAt) ||
+      b.createdAt.localeCompare(a.createdAt) ||
+      b.hlc.localeCompare(a.hlc),
+  );
 }

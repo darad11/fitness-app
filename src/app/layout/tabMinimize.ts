@@ -68,6 +68,14 @@ export function attachTabMinimize(bar: HTMLElement, wrapper: HTMLElement): () =>
       anchor = y;
       return;
     }
+    // Hochscrollen klappt immer auf, auch ohne erkannte eigene Bewegung (z. B. Nachschwingen nach
+    // dem Loslassen oder eine verspätete Scroll-Meldung in WebKit). Nur das Einklappen verlangt
+    // eigenes Scrollen, damit Sprünge der Seite die Leiste nicht verstecken.
+    if (anchor - y > STEP) {
+      restore();
+      anchor = y;
+      return;
+    }
     const intended = touching || performance.now() - intentAt < INTENT_MS;
     if (!intended) {
       anchor = y;
@@ -75,9 +83,6 @@ export function attachTabMinimize(bar: HTMLElement, wrapper: HTMLElement): () =>
     }
     if (y - anchor > STEP) {
       minimize();
-      anchor = y;
-    } else if (anchor - y > STEP) {
-      restore();
       anchor = y;
     } else if (bar.classList.contains('minimized') === y > anchor) {
       // Gleiche Richtung wie der Zustand: Bezugspunkt mitziehen.

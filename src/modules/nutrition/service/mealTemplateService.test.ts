@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
-import { blsFoodId, loadBls } from '../data/bls';
 import { listDayEntries, listMealTemplates } from '../data/nutritionRepository';
 import {
   applyTemplate,
@@ -11,6 +10,7 @@ import {
   renameTemplate,
   restoreTemplate,
 } from './mealTemplateService';
+import { BANANA, OATS } from '../testing/foods';
 import { logFood, logQuick } from './nutritionService';
 
 let rt: DbRuntime;
@@ -22,10 +22,8 @@ afterEach(async () => {
 });
 
 async function breakfast() {
-  const bls = await loadBls();
-  const oats = bls.find((f) => f.id === blsFoodId('C133000'));
-  const banana = bls.find((f) => f.id === blsFoodId('F503100'));
-  if (!oats || !banana) throw new Error('BLS');
+  const oats = OATS;
+  const banana = BANANA;
   const at = (minute: number) => ({ now: () => new Date(`2026-10-19T07:0${String(minute)}:00Z`) });
   await logFood(
     rt,
@@ -104,8 +102,7 @@ describe('Mahlzeit-Vorlagen (NU-11, D-268)', () => {
 
 describe('Vorlagen mit Marke (D-278)', () => {
   it('übernimmt die Marke eines Eintrags in Klammern in den Vorlagenposten', async () => {
-    const oats = (await loadBls()).find((f) => f.id === blsFoodId('C133000'));
-    if (!oats) throw new Error('BLS');
+    const oats = OATS;
     await logFood(rt, {
       food: { ...oats, brand: 'Alnatura' },
       slot: 'breakfast',

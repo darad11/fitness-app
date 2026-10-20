@@ -47,6 +47,8 @@ export function TaskMatrix({
       <table
         className={cn(
           'w-full table-fixed border-separate',
+          // Wenige Spalten: nicht über die ganze Breite ziehen (z. B. erster Tag, 7 Tage am Desktop).
+          columns.length <= 7 && 'max-w-md',
           columns.length > 14 ? 'border-spacing-x-px border-spacing-y-1' : 'border-spacing-[3px]',
         )}
       >
@@ -163,7 +165,7 @@ function Cell({
       aria-hidden="true"
       className={cn(
         'block w-full rounded-[3px]',
-        tall ? 'h-5' : 'aspect-square',
+        tall ? 'h-5' : 'mx-auto aspect-square max-w-10',
         state === 'done' && 'bg-success',
         state === 'open' && 'border border-line-input',
         state === 'notDue' && 'bg-surface-2 opacity-60',
@@ -182,7 +184,7 @@ function WeekCell({ done, due, noData }: { done: number; due: number; noData: bo
   return (
     <span
       aria-hidden="true"
-      className="relative block aspect-square w-full overflow-hidden rounded-[3px] border border-line-input"
+      className="relative mx-auto block aspect-square w-full max-w-10 overflow-hidden rounded-[3px] border border-line-input"
     >
       <span
         className="absolute inset-x-0 bottom-0 bg-success"

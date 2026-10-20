@@ -181,7 +181,7 @@ export const de = {
       },
       taskLine: (done: number, due: number) =>
         due === 1 ? `an ${done} von 1 fälligen Tag` : `an ${done} von ${due} fälligen Tagen`,
-      taskNone: 'im Zeitraum noch nicht fällig',
+      taskNone: 'noch nichts zu werten; heute zählt ab morgen mit',
       taskStreak: (n: number) => `Serie ${n}`,
       change: (points: number) =>
         points === 0 ? '± 0 Punkte' : `${points > 0 ? '+' : '−'}${Math.abs(points)} Punkte`,

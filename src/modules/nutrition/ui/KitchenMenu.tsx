@@ -3,12 +3,14 @@ import {
   ChevronRight,
   CookingPot,
   Plus,
+  ShoppingCart,
   Utensils,
   UtensilsCrossed,
   type LucideIcon,
 } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router';
+import { isShoppingItemOpen, useShoppingItems } from '@/modules/shopping';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
@@ -72,6 +74,7 @@ export function KitchenMenu() {
   const foods = useFoods();
   const recipes = useRecipes();
   const templates = useMealTemplates();
+  const shopping = useShoppingItems();
   const tk = t.nutrition.kitchen;
 
   const entries: Entry[] = [
@@ -88,6 +91,13 @@ export function KitchenMenu() {
       title: t.nutrition.recipes.title,
       hint: tk.recipesHint,
       count: recipes?.filter((recipe) => !recipe.archivedAt).length,
+    },
+    {
+      to: '/ernaehrung/einkaufsliste',
+      icon: ShoppingCart,
+      title: t.shopping.title,
+      hint: t.shopping.kitchenHint,
+      count: shopping?.filter(isShoppingItemOpen).length,
     },
     {
       to: '/ernaehrung/vorlagen',

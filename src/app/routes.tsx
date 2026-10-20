@@ -7,6 +7,7 @@ import { habitsRoutes } from '@/modules/habits';
 import { nutritionRoutes } from '@/modules/nutrition';
 import { progressRoutes } from '@/modules/progress';
 import { settingsRoutes } from '@/modules/settings';
+import { shoppingRoutes } from '@/modules/shopping';
 import { stepsRoutes } from '@/modules/steps';
 import { syncRoutes } from '@/modules/sync';
 import { trainingRoutes } from '@/modules/training';
@@ -35,6 +36,7 @@ export const routes: RouteObject[] = [
           ...progressRoutes,
           ...exercisesRoutes,
           ...nutritionRoutes,
+          ...shoppingRoutes,
           ...settingsRoutes,
           ...syncRoutes,
           ...stepsRoutes,

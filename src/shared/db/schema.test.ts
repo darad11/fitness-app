@@ -24,10 +24,10 @@ const validRoot = {
   deviceId: 'a1b2c3d4',
 };
 
-describe('Dexie-Schema v6 (data-model.md Abschnitt 6)', () => {
-  it('enthält die Tabellen des MVP plus Tagesaufgaben, Ernährung, Rezepte, Vorlagen und Sync-Basis', () => {
-    expect(DB_VERSION).toBe(6);
-    expect(rt.db.verno).toBe(6);
+describe('Dexie-Schema v7 (data-model.md Abschnitt 6)', () => {
+  it('enthält die Tabellen des MVP plus Tagesaufgaben, Ernährung, Rezepte, Vorlagen, Sync-Basis und Einkaufsliste', () => {
+    expect(DB_VERSION).toBe(7);
+    expect(rt.db.verno).toBe(7);
     expect(rt.db.tables.map((table) => table.name).sort()).toEqual(
       Object.keys(STORES_CURRENT).sort(),
     );
@@ -40,6 +40,7 @@ describe('Dexie-Schema v6 (data-model.md Abschnitt 6)', () => {
       'recipes',
       'mealTemplates',
       'syncBase',
+      'shoppingItems',
     ]);
   });
 
@@ -65,6 +66,7 @@ describe('Dexie-Schema v6 (data-model.md Abschnitt 6)', () => {
     expect(indexes('nutritionTargets')).toEqual(expect.arrayContaining(['effectiveFrom']));
     expect(indexes('recipes')).toEqual(expect.arrayContaining(['nameNorm', 'archivedAt']));
     expect(indexes('mealTemplates')).toEqual(expect.arrayContaining(['archivedAt']));
+    expect(indexes('shoppingItems')).toEqual(expect.arrayContaining(['clearedAt']));
     expect(rt.db.errorLog.schema.primKey.auto).toBe(true);
   });
 

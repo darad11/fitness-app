@@ -29,6 +29,7 @@ export const EXPORT_TYPES: Record<DocumentTableName, readonly string[]> = {
   nutritionTargets: ['nutrition_target'],
   recipes: ['recipe'],
   mealTemplates: ['meal_template'],
+  shoppingItems: ['shopping_item'],
 };
 
 export interface Backup {

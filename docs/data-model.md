@@ -290,6 +290,8 @@ v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedA
 
 v4 (D-267, M7) ergänzt additiv `recipes: 'id, nameNorm, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v3 → v4. Umsetzung `recipe`: `name`, `nameNorm`, `servings` (ganzzahlig 1 bis 50), `ingredients[{id, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot{name, count}, per100Snapshot}]` (1 bis 40), `steps` (Text), `favorite`, `archivedAt`; ohne Tags, Zeiten und Mahlzeittypen vorerst. `food_log_entry.kind` kennt zusätzlich `'recipe'` (foodId ist dann die Rezept-ID).
 
+v7 (D-287, NU-26) ergänzt additiv `shoppingItems: 'id, clearedAt'`; Snapshot vor dem Upgrade, Migrationstest v6 → v7. `shopping_item`: `name`, `quantity?`, `unit?`, `category?` (produce, meat, dairy, grains, frozen, drinks, supplements, household, other), `note?`, `doneAt?` (gekauft), `clearedAt?` („Gekaufte entfernen“, bleibt für „Zuletzt gekauft“), `position`; ein Dokument je Artikel, damit zwei Geräte gleichzeitig abhaken können. Mehrere Listen sind vorbereitet, aber nicht umgesetzt (später optionales `listId`).
+
 v5 (D-268, NU-11) ergänzt additiv `mealTemplates: 'id, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v4 → v5. `meal_template`: `name`, `items[{id, kind, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot, nutrients, isEstimated}]` (1 bis 30), `archivedAt` (vorgesehen, noch nicht genutzt).
 
 v6 (D-269, R3) ergänzt additiv die lokale Tabelle `syncBase: 'id'` mit `{id, hlc}` (letzter mit dem Server abgeglichener Stempel je Dokument); nicht synchronisiert, nicht exportiert. Snapshot vor dem Upgrade, Migrationstest v5 → v6. Zugang, Cursor und Status des Abgleichs liegen in `meta` (`sync.auth`, `sync.cursor`, `sync.status`, `sync.user`).

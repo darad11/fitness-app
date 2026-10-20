@@ -5,6 +5,7 @@ import { parseEntry } from '../calc/entry';
 import { listShoppingItems } from '../data/shoppingRepository';
 import {
   addItem,
+  addLines,
   addParsed,
   clearDone,
   deleteItem,
@@ -77,5 +78,29 @@ describe('Einkaufsliste speichern (D-287)', () => {
   it('bucht nichts in die Ernährung', async () => {
     await addItem(rt, { name: 'Hähnchenbrust', quantity: 500, unit: 'g' });
     expect(await rt.db.foodLog.count()).toBe(0);
+  });
+});
+
+describe('Rezept-Zutaten auf die Liste (D-287)', () => {
+  it('fasst gleiche Zutaten zusammen und rechnet zu offenen Artikeln dazu', async () => {
+    await addItem(rt, { name: 'Reis', quantity: 100, unit: 'g' });
+    await addItem(rt, { name: 'Salz' });
+    const result = await addLines(rt, [
+      { name: 'Reis', quantity: 200, unit: 'g' },
+      { name: 'reis', quantity: 150, unit: 'g' },
+      { name: 'Hähnchenbrust', quantity: 400, unit: 'g' },
+      { name: 'Milch', quantity: 300, unit: 'ml' },
+      { name: 'Salz', quantity: 2, unit: 'g' },
+      { name: '  ' },
+    ]);
+    expect(result).toEqual({ added: 3, merged: 1 });
+    const items = await listShoppingItems(rt.db);
+    expect(items.map((i) => [i.name, i.quantity, i.unit])).toEqual([
+      ['Reis', 450, 'g'],
+      ['Salz', undefined, undefined],
+      ['Hähnchenbrust', 400, 'g'],
+      ['Milch', 300, 'ml'],
+      ['Salz', 2, 'g'],
+    ]);
   });
 });

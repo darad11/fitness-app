@@ -1,7 +1,8 @@
-import { Plus, Trash2, X } from 'lucide-react';
+import { Plus, ShoppingCart, Trash2, X } from 'lucide-react';
 import { useId, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
+import { addShoppingLines } from '@/modules/shopping';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { parseDecimal } from '@/shared/lib/format';
@@ -87,6 +88,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
   const [picking, setPicking] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shopped, setShopped] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
 
   /** Zutaten mit den eingegebenen Mengen; `null`, wenn eine Menge keine Zahl ist. */
@@ -336,6 +338,48 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
           {t.nutrition.recipes.save}
         </Button>
       </form>
+
+      {recipe ? (
+        // D-287: gespeicherte Zutaten auf die Einkaufsliste; gleiche Zutaten werden zusammengerechnet.
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              addShoppingLines(
+                rt,
+                recipe.ingredients.map((ingredient) => ({
+                  name: ingredient.nameSnapshot,
+                  quantity: ingredient.amount,
+                  unit: ingredient.basisSnapshot,
+                })),
+              ).then(
+                ({ added, merged }) => {
+                  setShopped(added + merged);
+                },
+                (caught: unknown) => {
+                  setError(t.nutrition.saveFailed);
+                  void logError(rt.db, {
+                    area: 'nutrition',
+                    error: caught,
+                    route: window.location.pathname,
+                  });
+                },
+              );
+            }}
+          >
+            <ShoppingCart aria-hidden="true" className="size-5" />
+            {t.nutrition.recipes.toShopping}
+          </Button>
+          {shopped !== null ? (
+            <p role="status" className="text-sm text-muted">
+              {t.nutrition.recipes.toShoppingDone(shopped)}{' '}
+              <Link to="/ernaehrung/einkaufsliste" className="font-semibold text-accent-ink">
+                {t.shopping.title}
+              </Link>
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       {picking ? (
         <IngredientPicker

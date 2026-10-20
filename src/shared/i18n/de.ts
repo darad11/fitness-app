@@ -646,6 +646,9 @@ export const de = {
       fromOff: 'Werte von Open Food Facts. Bitte mit der Verpackung vergleichen.',
     },
     recipes: {
+      toShopping: 'Zutaten auf die Einkaufsliste',
+      toShoppingDone: (n: number) =>
+        n === 1 ? '1 Zutat steht auf der' : `${String(n)} Zutaten stehen auf der`,
       title: 'Rezepte',
       empty:
         'Noch keine Rezepte. Lege ein Gericht aus Zutaten an; die App rechnet die Nährwerte je Portion aus.',

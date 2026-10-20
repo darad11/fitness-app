@@ -123,6 +123,10 @@ export function ShoppingListPage() {
   const open = items.filter(isOpen);
   const done = items.filter((item) => item.doneAt !== undefined && item.clearedAt === undefined);
   const recent = recentItems(items);
+  // Vorschläge beim Tippen: alle bisher eingetragenen Namen, je einmal (D-287).
+  const suggestions = [
+    ...new Map(items.map((item) => [item.name.toLocaleLowerCase('de'), item.name])).values(),
+  ];
   const total = open.length + done.length;
   const groups: { key: ShoppingCategory | 'none'; label: string; items: ShoppingItem[] }[] =
     view === 'list'
@@ -232,6 +236,7 @@ export function ShoppingListPage() {
               maxLength={SHOPPING_NAME_MAX + 20}
               placeholder={ts.inputLabel}
               autoComplete="off"
+              list="einkauf-vorschlaege"
               enterKeyHint="done"
               onChange={(event) => {
                 setText(event.target.value);
@@ -239,6 +244,11 @@ export function ShoppingListPage() {
               }}
               className={INPUT}
             />
+            <datalist id="einkauf-vorschlaege">
+              {suggestions.map((name) => (
+                <option key={name} value={name} />
+              ))}
+            </datalist>
             <Button type="submit" aria-label={ts.add}>
               <Plus aria-hidden="true" className="size-5" />
             </Button>

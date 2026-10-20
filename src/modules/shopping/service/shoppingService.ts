@@ -1,5 +1,5 @@
 import { insertDoc, restoreDoc, softDeleteDoc, updateDoc, type DbRuntime } from '@/shared/db';
-import { guessCategory, isOpen, type ParsedEntry } from '../calc/entry';
+import { guessCategory, isOpen, nameKey, type ParsedEntry } from '../calc/entry';
 import { listShoppingItems, shoppingItemDef } from '../data/shoppingRepository';
 import {
   SHOPPING_NAME_MAX,
@@ -144,4 +144,53 @@ export async function undoClear(rt: DbRuntime, ids: readonly string[]): Promise<
 /** Offene Artikel zählen, z. B. für „Meine Küche“. */
 export function openCount(items: readonly ShoppingItem[]): number {
   return items.filter(isOpen).length;
+}
+
+export interface ShoppingLine {
+  name: string;
+  quantity?: number;
+  unit?: string;
+}
+
+/**
+ * Mehrere Zeilen auf die Liste, z. B. die Zutaten eines Rezepts (D-287): Steht derselbe Name mit
+ * derselben Einheit schon offen auf der Liste, wird die Menge dazugerechnet, sonst neu angelegt.
+ * Gleiche Zeilen innerhalb der Eingabe werden vorher zusammengefasst („200 g Reis“ + „150 g Reis“
+ * = „350 g Reis“).
+ */
+export async function addLines(
+  rt: DbRuntime,
+  lines: readonly ShoppingLine[],
+): Promise<{ added: number; merged: number }> {
+  const combined = new Map<string, ShoppingLine>();
+  for (const line of lines) {
+    const name = line.name.trim().replace(/\s+/g, ' ');
+    if (name.length === 0) continue;
+    const key = `${nameKey(name)}|${line.unit ?? ''}`;
+    const known = combined.get(key);
+    if (known?.quantity !== undefined && line.quantity !== undefined) {
+      known.quantity = Math.round((known.quantity + line.quantity) * 1000) / 1000;
+    } else if (!known) combined.set(key, { ...line, name });
+  }
+  let added = 0;
+  let merged = 0;
+  for (const line of combined.values()) {
+    const items = await listShoppingItems(rt.db);
+    const existing = items.find(
+      (item) =>
+        isOpen(item) &&
+        nameKey(item.name) === nameKey(line.name) &&
+        (item.unit ?? '') === (line.unit ?? ''),
+    );
+    if (existing?.quantity !== undefined && line.quantity !== undefined) {
+      await mergeQuantity(rt, existing.id, line.quantity);
+      merged += 1;
+    } else if (!existing) {
+      await addItem(rt, line);
+      added += 1;
+    } else {
+      merged += 1; // schon drauf, ohne Menge zum Dazurechnen
+    }
+  }
+  return { added, merged };
 }

@@ -102,6 +102,7 @@ E. Ernährung (NU);NU-21;Generische Lebensmittel mit deutschen Namen;–;–;E;E
 E. Ernährung (NU);NU-22;Kennzeichnung unvollständiger Nährwerte;–;–;E;EV;M;NU-10;S;P1;MVP;R1 · Schritt G;Verbesserung (D-110), vorgezogen (D-261);Implementiert;AK-NUT-04
 E. Ernährung (NU);NU-23;Einheiten und Haushaltsmaße mit Umrechnung;–;–;E;EV;H;NU-09;M;P1;Später;R2 · M5;Verbesserung (D-110);Spezifiziert;"g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert"
 E. Ernährung (NU);NU-24;Offline-Verhalten der Online-Suche;–;–;E;EV;M;NU-08;S;P1;MVP;R1 · Schritt G;"Verbesserung, vorgezogen (D-266): ohne Netz Hinweis, lokale Treffer, „Selbst anlegen“ mit Barcode; „für später merken“ entfällt vorerst";Implementiert;AK-NUT-09
+E. Ernährung (NU);NU-26;Einkaufsliste in „Meine Küche“;–;–;E;EV;H;–;M;P1;MVP;R1 · D-287;Wunsch des Produktinhabers (D-287);Implementiert;AK-NUT-12
 E. Ernährung (NU);NU-25;Lizenz- und Quellenhinweise für Lebensmitteldaten;–;–;E;EV;M;"D-301; D-302";S;P1;MVP;R1 · Schritt G;Verbesserung, vorgezogen (D-261);Implementiert;AK-NUT-06, AK-NUT-07
 F. Rezepte und Mahlzeitenplanung (RE);RE-01;Rezeptkatalog mit Filtern;Nach Mahlzeit, Küche, Schwierigkeit;AS 3.5.0;V;OV;H;RE-02;M;P2;Später;R2 · M7;Anpassen: eigene Rezepte;Spezifiziert;"Filter nach Mahlzeit, Tags, Dauer, kcal pro Portion; Volltextsuche"
 F. Rezepte und Mahlzeitenplanung (RE);RE-02;Rezept mit Zutaten, Schritten, Nährwerten pro Portion;Rezepte und Anleitungen vorhanden;"AS; REV";V;OV;H;NU-10;M;P1;MVP;R1 · M7;Übernehmen, vorgezogen (D-267);Implementiert;AK-NUT-10

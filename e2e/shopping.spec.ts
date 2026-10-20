@@ -68,7 +68,7 @@ test('Einkaufsliste: kleiner Bildschirm ohne Überlauf (D-287)', async ({ page }
   ).toBeLessThanOrEqual(0);
 });
 
-test('„Heute“: runde Knöpfe in „Ernährung heute“, Einkaufswagen öffnet die Einkaufsliste', async ({
+test('„Heute“: runde Knöpfe mittig in „Ernährung heute“, Einkaufswagen öffnet die Einkaufsliste', async ({
   page,
 }) => {
   await openPage(page, '/heute');
@@ -81,6 +81,14 @@ test('„Heute“: runde Knöpfe in „Ernährung heute“, Einkaufswagen öffne
     expect(box?.height).toBe(48);
     expect((await link.locator('svg').boundingBox())?.width).toBe(20);
   }
+  // Mittig: links und rechts gleich viel Platz in der Zeile.
+  const row = await page.getByRole('link', { name: 'Barcode scannen' }).locator('..').boundingBox();
+  const first = await page.getByRole('link', { name: 'Barcode scannen' }).boundingBox();
+  const last = await page.getByRole('link', { name: 'Einkaufsliste', exact: true }).boundingBox();
+  if (!row || !first || !last) throw new Error('Knöpfe nicht gefunden');
+  const left = first.x - row.x;
+  const right = row.x + row.width - (last.x + last.width);
+  expect(Math.abs(left - right)).toBeLessThanOrEqual(1);
   await page.getByRole('link', { name: 'Einkaufsliste', exact: true }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Einkaufsliste' })).toBeVisible();
 });

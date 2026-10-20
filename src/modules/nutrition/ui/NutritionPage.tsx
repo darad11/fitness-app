@@ -530,8 +530,8 @@ export function NutritionTodayCard() {
           </dl>
         </div>
       </div>
-      {/* Drei runde Symbol-Knöpfe: scannen, Ernährung, Einkaufsliste. */}
-      <div className="mt-4 flex gap-3">
+      {/* Drei runde Symbol-Knöpfe, mittig: scannen, Ernährung, Einkaufsliste. */}
+      <div className="mt-4 flex justify-center gap-3">
         {(
           [
             { to: scanTo, label: t.nutrition.barcode.scan, icon: ScanBarcode, primary: true },

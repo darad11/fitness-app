@@ -710,4 +710,5 @@ Gemeldet vom Produktinhaber um 7:05 Uhr. Ursache: `Intl.DateTimeFormat` mit nur 
 | Nachgestellt | Node 22: `format` liefert „07 Uhr“, `formatToParts` die Stunde „07“ |
 | `time.test.ts` | `hourIn` liefert 7 um 05:05 UTC in Wien, 0 um Mitternacht, 18 um 18:59 |
 | `goals.spec.ts` | Neu: Uhr auf 7:05 gestellt, „Guten Morgen“; auf 19 Uhr, „Guten Abend“. Der bisherige Test hatte jeden Gruß akzeptiert und den Fehler deshalb nicht bemerkt |
+| WebKit in GitHub Actions | `tabbar.spec.ts` „Kreis rechts … zurück beim Hochscrollen“ am Handy einmal rot (zweimal im selben Lauf: die Leiste blieb nach dem Hochscrollen klein), beim Neustart grün; in Chromium morgens und abends grün. Wackelig, beobachten |
 

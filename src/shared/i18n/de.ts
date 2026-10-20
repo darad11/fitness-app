@@ -119,6 +119,9 @@ export const de = {
     reopen: 'Wieder aufnehmen',
     reopenShort: 'Aufnehmen',
     pausedTitle: 'Pausiert',
+    pausedToggle: (count: number) =>
+      count === 0 ? 'Pausierte Aufgaben' : `Pausierte Aufgaben (${String(count)})`,
+    pausedEmpty: 'Keine pausierte Aufgabe.',
     pausedHint: 'Pausierte Aufgaben erscheinen nicht auf „Heute“, bis du sie wieder aufnimmst.',
     listTitle: 'Meine Aufgaben',
     listHint: 'Jeden Tag wieder offen. Tippe auf eine Aufgabe, um sie zu bearbeiten.',
@@ -128,11 +131,6 @@ export const de = {
     progressLabel: 'Heute erledigt',
     todayDone: 'Alles erledigt',
     todayProgress: (done: number, total: number) => `${done} von ${total} erledigt`,
-    overviewTitle: 'Letzte 14 Tage',
-    overviewAria: 'Letzte 14 Tage, ältester zuerst',
-    overviewHint: 'Grün: alle Aufgaben des Tages erledigt.',
-    dayTitle: (date: string, done: number, total: number) =>
-      total === 0 ? `${date}: keine Aufgabe` : `${date}: ${done} von ${total} erledigt`,
   },
   motivation: {
     // Eigene, kurze Sätze ohne Zitate oder Namen (Schritt F).

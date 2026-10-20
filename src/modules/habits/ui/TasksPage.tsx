@@ -1,11 +1,8 @@
-import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Plus, Settings, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { cn } from '@/shared/lib/cn';
 import { Button, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
-import { recentDays } from '../calc/streak';
 import { HABIT_NAME_MAX, type Habit } from '../model/habit';
 import {
   addHabit,
@@ -32,12 +29,12 @@ interface Change {
  */
 export function TasksPage() {
   const rt = useDb();
-  const fmt = useFormatters();
   const tasks = useTodayTasks();
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
   const [change, setChange] = useState<Change | null>(null);
+  const [showPaused, setShowPaused] = useState(false);
   const run = (action: () => Promise<unknown>) => {
     action().catch((caught: unknown) => {
       void logError(rt.db, { area: 'habits', error: caught, route: '/heute/aufgaben' });
@@ -69,7 +66,22 @@ export function TasksPage() {
         </div>
       ) : (
         <div className="grid gap-4">
-          <Card title={t.tasks.listTitle}>
+          <Card
+            title={t.tasks.listTitle}
+            action={
+              <IconButton
+                label={t.tasks.pausedToggle(paused.length)}
+                aria-expanded={showPaused}
+                aria-controls="pausierte-aufgaben"
+                className={showPaused ? 'bg-surface-2 text-fg' : undefined}
+                onClick={() => {
+                  setShowPaused((open) => !open);
+                }}
+              >
+                <Settings aria-hidden="true" className="size-5" />
+              </IconButton>
+            }
+          >
             <form
               className="flex gap-2"
               onSubmit={(event) => {
@@ -226,74 +238,51 @@ export function TasksPage() {
                 <p className="mt-2 text-sm text-muted">{t.tasks.listHint}</p>
               </>
             )}
-          </Card>
-
-          {paused.length > 0 ? (
-            <Card title={t.tasks.pausedTitle}>
-              <ul className="divide-y divide-line">
-                {paused.map((habit) => (
-                  <li key={habit.id} className="flex items-center gap-2 py-2">
-                    <span className="min-w-0 flex-1 truncate text-muted">{habit.name}</span>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      aria-label={`${t.tasks.reopen}, ${habit.name}`}
-                      onClick={() => {
-                        run(() => reopenHabit(rt, habit.id));
-                      }}
-                    >
-                      {t.tasks.reopenShort}
-                    </Button>
-                    <IconButton
-                      label={`${t.tasks.remove}, ${habit.name}`}
-                      className="text-danger"
-                      onClick={() => {
-                        run(async () => {
-                          await removeHabit(rt, habit.id);
-                          setChange({ kind: 'removed', before: habit });
-                        });
-                      }}
-                    >
-                      <Trash2 aria-hidden="true" className="size-5" />
-                    </IconButton>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2 text-sm text-muted">{t.tasks.pausedHint}</p>
-            </Card>
-          ) : null}
-
-          <Card title={t.tasks.overviewTitle}>
-            <ol className="flex flex-wrap gap-1.5" aria-label={t.tasks.overviewAria}>
-              {recentDays(tasks.habits, tasks.logs, tasks.today, 14).map(({ dayKey, status }) => (
-                <li
-                  key={dayKey}
-                  className={cn(
-                    'flex size-9 items-center justify-center rounded-pill text-xs font-semibold tabular-nums',
-                    status.complete
-                      ? 'bg-success-soft text-success'
-                      : status.total === 0
-                        ? 'bg-surface-2 text-muted'
-                        : 'bg-surface-2 text-fg',
-                  )}
-                  title={t.tasks.dayTitle(
-                    fmt.dayMonth(new Date(`${dayKey}T12:00:00`)),
-                    status.done,
-                    status.total,
-                  )}
-                >
-                  <span className="sr-only">
-                    {t.tasks.dayTitle(
-                      fmt.dayMonth(new Date(`${dayKey}T12:00:00`)),
-                      status.done,
-                      status.total,
-                    )}
-                  </span>
-                  <span aria-hidden="true">{dayKey.slice(8)}</span>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-2 text-sm text-muted">{t.tasks.overviewHint}</p>
+            {showPaused ? (
+              <section
+                id="pausierte-aufgaben"
+                aria-label={t.tasks.pausedTitle}
+                className="mt-4 rounded-input bg-surface-2 px-3 py-2"
+              >
+                <h3 className="pt-1 text-sm font-semibold">{t.tasks.pausedTitle}</h3>
+                {paused.length === 0 ? (
+                  <p className="py-2 text-sm text-muted">{t.tasks.pausedEmpty}</p>
+                ) : (
+                  <>
+                    <ul className="divide-y divide-line">
+                      {paused.map((habit) => (
+                        <li key={habit.id} className="flex items-center gap-2 py-2">
+                          <span className="min-w-0 flex-1 truncate text-muted">{habit.name}</span>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            aria-label={`${t.tasks.reopen}, ${habit.name}`}
+                            onClick={() => {
+                              run(() => reopenHabit(rt, habit.id));
+                            }}
+                          >
+                            {t.tasks.reopenShort}
+                          </Button>
+                          <IconButton
+                            label={`${t.tasks.remove}, ${habit.name}`}
+                            className="text-danger"
+                            onClick={() => {
+                              run(async () => {
+                                await removeHabit(rt, habit.id);
+                                setChange({ kind: 'removed', before: habit });
+                              });
+                            }}
+                          >
+                            <Trash2 aria-hidden="true" className="size-5" />
+                          </IconButton>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-2 text-sm text-muted">{t.tasks.pausedHint}</p>
+                  </>
+                )}
+              </section>
+            ) : null}
           </Card>
         </div>
       )}

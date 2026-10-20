@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { ShoppingItem } from '../model/shoppingItem';
-import { canMerge, findDuplicate, guessCategory, parseEntry, recentItems } from './entry';
+import {
+  canMerge,
+  findDuplicate,
+  guessCategory,
+  matchSuggestions,
+  parseEntry,
+  recentItems,
+} from './entry';
 
 const item = (over: Partial<ShoppingItem>): ShoppingItem => ({
   id: crypto.randomUUID(),
@@ -87,5 +94,17 @@ describe('Doppelte und „Zuletzt gekauft“', () => {
       { name: 'Reis', count: 1 },
       { name: 'milch', count: 2, quantity: 2, unit: 'l' },
     ]);
+  });
+});
+
+describe('Vorschläge beim Tippen', () => {
+  const names = ['Fleisch', 'Fisch', 'fisch', 'Skyr natur', 'Hafermilch', 'Milch', 'Reis'];
+
+  it('erst beim Tippen, Wortanfang zuerst, ohne Offene und ohne Doppelte', () => {
+    expect(matchSuggestions(names, [], '')).toEqual([]);
+    expect(matchSuggestions(names, [], 'f')).toEqual(['Fleisch', 'Fisch', 'Hafermilch']);
+    expect(matchSuggestions(names, ['Fisch'], 'fi')).toEqual([]);
+    expect(matchSuggestions(names, [], 'milch')).toEqual(['Hafermilch']);
+    expect(matchSuggestions(names, [], '500 g Re')).toEqual(['Reis']);
   });
 });

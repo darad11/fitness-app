@@ -7,6 +7,8 @@ export const tShopping = {
   inputLabel: 'Was möchtest du einkaufen?',
   inputHint: 'Zum Beispiel „500 g Hähnchenbrust“, „6 Bananen“ oder „Reis 1 kg“.',
   add: 'Zur Liste hinzufügen',
+  suggestionsLabel: 'Vorschläge',
+  suggestionAdd: (name: string) => `${name} hinzufügen`,
   nameMissing: 'Gib einen Namen ein.',
   saveFailed: 'Nicht gespeichert. Bitte versuche es erneut.',
   duplicate: (name: string, amount: string) =>

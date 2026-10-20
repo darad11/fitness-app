@@ -19,6 +19,7 @@ import {
   canMerge,
   findDuplicate,
   isOpen,
+  matchSuggestions,
   parseEntry,
   recentItems,
   type ParsedEntry,
@@ -110,13 +111,15 @@ export function ShoppingListPage() {
     setError(null);
     input.current?.focus();
   };
-  const submit = () => {
+  /** `name` kommt von einem Vorschlag: Menge und Einheit aus dem Getippten bleiben erhalten. */
+  const submit = (name?: string) => {
     const trimmed = text.trim();
-    if (trimmed.length === 0) {
+    if (trimmed.length === 0 && name === undefined) {
       setError(ts.nameMissing);
       return;
     }
-    const entry = parseEntry(trimmed);
+    const parsed = parseEntry(trimmed);
+    const entry = name === undefined ? parsed : { ...parsed, name };
     const existing = items ? findDuplicate(items, entry.name) : undefined;
     if (existing) {
       setPending({ entry, existing });
@@ -143,13 +146,14 @@ export function ShoppingListPage() {
   const open = items.filter(isOpen);
   const done = items.filter((item) => item.doneAt !== undefined && item.clearedAt === undefined);
   const recent = recentItems(items);
-  // Vorschläge beim Tippen: bisher eingetragene Namen, dann eigene Lebensmittel, je einmal (D-287).
-  const suggestionMap = new Map<string, string>();
-  for (const name of [...items.map((item) => item.name), ...foodNames]) {
-    const key = name.toLocaleLowerCase('de');
-    if (!suggestionMap.has(key)) suggestionMap.set(key, name);
-  }
-  const suggestions = [...suggestionMap.values()];
+  // Vorschläge erst beim Tippen, als eigene Knöpfe unter dem Feld statt der Auswahl des Browsers
+  // (die blieb auf dem iPhone nach dem Hinzufügen offen): frühere Namen und eigene Lebensmittel,
+  // nicht was schon offen auf der Liste steht (D-287).
+  const suggestions = matchSuggestions(
+    [...items.map((item) => item.name), ...foodNames],
+    open.map((item) => item.name),
+    text,
+  );
   const total = open.length + done.length;
   const groups: { key: ShoppingCategory | 'none'; label: string; items: ShoppingItem[] }[] =
     view === 'list'
@@ -259,7 +263,6 @@ export function ShoppingListPage() {
               maxLength={SHOPPING_NAME_MAX + 20}
               placeholder={ts.inputLabel}
               autoComplete="off"
-              list="einkauf-vorschlaege"
               enterKeyHint="done"
               onChange={(event) => {
                 setText(event.target.value);
@@ -267,15 +270,33 @@ export function ShoppingListPage() {
               }}
               className={INPUT}
             />
-            <datalist id="einkauf-vorschlaege">
-              {suggestions.map((name) => (
-                <option key={name} value={name} />
-              ))}
-            </datalist>
             <Button type="submit" aria-label={ts.add}>
               <Plus aria-hidden="true" className="size-5" />
             </Button>
           </form>
+          {suggestions.length > 0 && !pending ? (
+            <ul aria-label={ts.suggestionsLabel} className="mt-2 flex flex-wrap gap-2">
+              {suggestions.map((name) => (
+                <li key={name}>
+                  <button
+                    type="button"
+                    aria-label={ts.suggestionAdd(name)}
+                    // Fokus im Feld lassen, damit die Tastatur offen bleibt.
+                    onPointerDown={(event) => {
+                      event.preventDefault();
+                    }}
+                    onClick={() => {
+                      submit(name);
+                    }}
+                    className="flex min-h-10 items-center gap-1 rounded-pill border border-line bg-surface-2 px-3 text-sm text-fg"
+                  >
+                    <Plus aria-hidden="true" className="size-3.5" />
+                    {name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           {error ? (
             <p role="alert" className="mt-2 text-sm text-danger">
               {error}
@@ -329,7 +350,7 @@ export function ShoppingListPage() {
               </div>
             </div>
           ) : null}
-          {recent.length > 0 ? (
+          {recent.length > 0 && text.trim().length === 0 ? (
             <div className="mt-4">
               <p className="mb-2 text-sm font-semibold text-muted">{ts.recentTitle}</p>
               <ul className="flex flex-wrap gap-2">

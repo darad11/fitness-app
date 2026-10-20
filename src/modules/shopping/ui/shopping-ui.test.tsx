@@ -142,24 +142,33 @@ describe('Einkaufsliste (D-287)', () => {
     expect(await screen.findByRole('region', { name: 'Ohne Kategorie' })).toBeVisible();
   });
 
-  it('schlägt Listen-Namen und eigene Lebensmittel vor, freie Eingabe bleibt möglich', async () => {
+  it('schlägt beim Tippen frühere Namen und eigene Lebensmittel vor, ein Tipp fügt hinzu', async () => {
     const user = userEvent.setup();
     renderList();
     await user.type(await screen.findByLabelText('Was möchtest du einkaufen?'), 'milch{Enter}');
     await waitFor(() => {
       expect(rows()).toEqual(['milch']);
     });
-    const options = () =>
-      [...document.querySelectorAll('#einkauf-vorschlaege option')].map((o) =>
-        o.getAttribute('value'),
-      );
-    // „Milch“ steht schon als „milch“ auf der Liste und wird nicht doppelt vorgeschlagen.
+    // Leeres Feld: keine Vorschläge.
+    expect(screen.queryByRole('list', { name: 'Vorschläge' })).toBeNull();
+    await user.type(field(), '2 sk');
+    // „Milch“ (Lebensmittel) steht schon offen auf der Liste und wird nicht vorgeschlagen.
+    const list = await screen.findByRole('list', { name: 'Vorschläge' });
+    expect(
+      within(list)
+        .getAllByRole('button')
+        .map((b) => b.textContent),
+    ).toEqual(['Skyr natur']);
+    await user.click(within(list).getByRole('button', { name: 'Skyr natur hinzufügen' }));
     await waitFor(() => {
-      expect(options()).toEqual(['milch', 'Skyr natur']);
+      expect(rows()).toEqual(['milch', 'Skyr natur2 Stück']);
     });
+    expect(field()).toHaveValue('');
+    expect(field()).toHaveFocus();
+    expect(screen.queryByRole('list', { name: 'Vorschläge' })).toBeNull();
     await user.type(field(), 'Etwas ganz Neues{Enter}');
     await waitFor(() => {
-      expect(rows()).toEqual(['milch', 'Etwas ganz Neues']);
+      expect(rows()).toEqual(['milch', 'Skyr natur2 Stück', 'Etwas ganz Neues']);
     });
   });
 });

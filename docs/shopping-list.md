@@ -26,7 +26,7 @@ Stand 20.10.2026, Branch `feat/einkaufsliste` (PR #44). Auftrag: „REFORM – K
 | 5 Einkauf | Antippen hakt ab, sofort gespeichert, wieder öffnen, Gekaufte eingeklappt, Menge ändern, einzeln löschen, „Gekaufte entfernen“ | Ja, mit Rückgängig für Löschen und Entfernen |
 | 5 Liste leeren | Nur falls umgesetzt, mit Bestätigung | Bewusst nicht umgesetzt: „Gekaufte entfernen“ deckt den Alltag ab, ein Knopf, der auch offene Artikel löscht, wäre ein unnötiges Risiko |
 | 6 Mehrere Listen | Nur wenn einfach; sonst eine Hauptliste mit erweiterbarer Struktur | Eine Hauptliste; ein späteres Feld `listId` lässt sich additiv ergänzen |
-| 7A Lebensmittelbibliothek | Auswahl übernimmt den Namen, freie Eingabe bleibt | Eigene, nicht archivierte Lebensmittel erscheinen als Vorschläge beim Tippen; Marke und Nährwerte werden nicht übernommen, weil die Liste keine Nährwerte braucht |
+| 7A Lebensmittelbibliothek | Auswahl übernimmt den Namen, freie Eingabe bleibt | Eigene, nicht archivierte Lebensmittel erscheinen beim Tippen als Vorschläge unter dem Feld (ein Tipp fügt hinzu); Marke und Nährwerte werden nicht übernommen, weil die Liste keine Nährwerte braucht |
 | 7B Rezepte und Mahlzeiten | Nur wenn Daten da sind; Doppelte zusammenrechnen | Rezepte ja („Zutaten auf die Einkaufsliste“, 200 g + 150 g Reis = 350 g); geplante Mahlzeiten gibt es noch nicht |
 | 7C Trennung vom Tagebuch | Nichts zählt als gegessen | Ja; Hinweis auf der Seite, getestet (Ernährung bleibt 0 kcal) |
 | 8A Wiederkehrende Artikel | Häufige, zuletzt verwendete, erneut hinzufügen | „Zuletzt gekauft“ mit einem Tipp; Favoriten nicht (siehe Abschnitt 3) |

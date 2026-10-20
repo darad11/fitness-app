@@ -354,3 +354,29 @@ export function recentItems(items: readonly ShoppingItem[], limit = 8): RecentIt
       ...(item.category !== undefined ? { category: item.category } : {}),
     }));
 }
+
+const SUGGESTION_MAX = 4;
+
+/**
+ * Vorschläge zum Getippten: Namen, die mit dem Getippten beginnen, zuerst, dann solche, in denen
+ * es vorkommt; ohne Doppelte, ohne offene Artikel und ohne den genau getippten Namen.
+ */
+export function matchSuggestions(
+  names: readonly string[],
+  openNames: readonly string[],
+  text: string,
+): string[] {
+  const query = parseEntry(text).name.toLocaleLowerCase('de');
+  if (query.length === 0) return [];
+  const skip = new Set(openNames.map((name) => name.toLocaleLowerCase('de')));
+  skip.add(query);
+  const unique = new Map<string, string>();
+  for (const name of names) {
+    const key = name.toLocaleLowerCase('de');
+    if (!skip.has(key) && !unique.has(key) && key.includes(query)) unique.set(key, name);
+  }
+  return [...unique.entries()]
+    .sort(([a], [b]) => Number(!a.startsWith(query)) - Number(!b.startsWith(query)))
+    .slice(0, SUGGESTION_MAX)
+    .map(([, name]) => name);
+}

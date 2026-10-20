@@ -2,7 +2,7 @@ import { ChevronRight, Lightbulb } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
-import { t } from '@/shared/i18n/de';
+import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { Card, Meter, SegmentedControl, SelectField, StatTile } from '@/shared/ui';
 import {
   dataStart,
@@ -25,7 +25,7 @@ import { ProgressChart } from './ProgressChart';
 import { TaskMatrix } from './TaskMatrix';
 import type { HabitHistory } from './useHabitHistory';
 
-const ts = t.tasks.stats;
+const ts = tTaskStats;
 const PERIOD_OPTIONS = INSIGHT_PERIODS.map((value) => ({ value, label: ts.periods[value] }));
 const PERIOD_LENGTH: Record<InsightPeriod, number> = { '7d': 7, '30d': 30, '90d': 90, all: 0 };
 type Sort = keyof typeof ts.sorts;

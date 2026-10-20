@@ -5,6 +5,7 @@ import { useFormatters } from '@/modules/settings';
 import { addShoppingLines } from '@/modules/shopping';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tShopping } from '@/shared/i18n/de-shopping';
 import { parseDecimal } from '@/shared/lib/format';
 import {
   Button,
@@ -374,7 +375,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
             <p role="status" className="text-sm text-muted">
               {t.nutrition.recipes.toShoppingDone(shopped)}{' '}
               <Link to="/ernaehrung/einkaufsliste" className="font-semibold text-accent-ink">
-                {t.shopping.title}
+                {tShopping.title}
               </Link>
             </p>
           ) : null}

@@ -811,3 +811,15 @@ Logo und Name am Handy auf jeder Seite links oben (D-286).
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 212 bestanden, 4 übersprungen. `shell.spec.ts`: Logo am Handy auf Heute, Training, Ernährung, Fortschritt und Einstellungen links über der Überschrift, Tipp führt zu „Heute“ |
 | `pnpm check:bundle` | 248,6 KB Startansicht (Grenze 250 KB) |
 | Bilder | Training, Ernährung, Tagesaufgaben; vom Produktinhaber freigegeben („ja passt“) |
+
+### Einkaufsliste · 20.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Einkaufsliste in „Meine Küche“ (D-287), Texte nachgeladener Seiten getrennt (D-288).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 88 Dateien, 752 Tests bestanden. Neu: Mengen-Erkennung (14 Eingaben, auch Unklares wie „7up“, „100% Orangensaft“, „2 3 Äpfel“, „0 Bananen“ bleibt Name), Kategorien (11 Beispiele, „Reis“ nicht „Eis“, „Eistee“ Getränk), Doppelte, „Zuletzt gekauft“; Dienst: anlegen, ungültige Eingaben, bearbeiten, Menge dazurechnen, löschen und wiederherstellen, abhaken, „Gekaufte entfernen“ ohne offene Artikel und Rückgängig, Rezept-Zutaten zusammenrechnen (200 g + 150 g + offene 100 g = 450 g Reis), nichts im Ernährungstagebuch; Oberfläche: mehrere Einträge mit Enter, Fokus bleibt, Doppelte, abhaken, Gekaufte, Rückgängig, bearbeiten, Ansicht nach Kategorie, löschen. Migration v6 → v7 verlustfrei mit Snapshot |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 220 bestanden, 4 übersprungen. Neu `shopping.spec.ts`: über „Meine Küche“, drei Artikel, abhaken, Neuladen, nach Kategorie, offline eintragen, Ernährung bleibt 0 kcal; 320 px ohne Überlauf. Einkaufsliste in `APP_PAGES` (Barrierefreiheit, Netzwerk, Offline-Start) |
+| `pnpm check:bundle` | zuerst 252,0 KB (über 250 KB): Kategorie-Wörter lagen in der Startansicht, und `de.ts` wuchs. Rechnung und Dienst der Einkaufsliste werden nachgeladen, Texte von Einkaufsliste und Aufgaben-Fortschritt liegen in eigenen Dateien (D-288): 249,1 KB |
+| Bilder | Meine Küche, Liste mit Doppelten-Hinweis, nach Kategorie, Bearbeiten (Testeinträge) |

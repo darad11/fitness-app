@@ -2,7 +2,7 @@ import { Check, ChevronDown, Pencil, Plus, RotateCcw } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
 import {
   Button,
@@ -42,7 +42,7 @@ import {
   updateItem,
 } from '../service/shoppingService';
 
-const ts = t.shopping;
+const ts = tShopping;
 const INPUT =
   'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
 type View = 'list' | 'categories';

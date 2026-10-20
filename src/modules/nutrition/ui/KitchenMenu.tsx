@@ -12,6 +12,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { isShoppingItemOpen, useShoppingItems } from '@/modules/shopping';
 import { t } from '@/shared/i18n/de';
+import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
 
@@ -95,8 +96,8 @@ export function KitchenMenu() {
     {
       to: '/ernaehrung/einkaufsliste',
       icon: ShoppingCart,
-      title: t.shopping.title,
-      hint: t.shopping.kitchenHint,
+      title: tShopping.title,
+      hint: tShopping.kitchenHint,
       count: shopping?.filter(isShoppingItemOpen).length,
     },
     {

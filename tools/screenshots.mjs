@@ -142,9 +142,141 @@ async function components() {
   await shot(page.locator('dialog[open]'), 'sheet');
 }
 
+/** Bildschirm wie am Handy (390 × 844 pt). */
+async function screen(name) {
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${OUT}/${name}.png`, animations: 'disabled' });
+  console.log(`${OUT}/${name}.png`);
+}
+
+/** Ganze Seite ohne die schwebende Tab-Leiste (sie hat eigene Bilder). */
+async function fullPage(name) {
+  const style = await page.addStyleTag({ content: '.tabbar { visibility: hidden !important; }' });
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: true, animations: 'disabled' });
+  await style.evaluate((node) => node.remove());
+  console.log(`${OUT}/${name}.png`);
+}
+
+/** Uhrzeit festhalten, damit Gruß, Datum und Dauer in den Bildern stimmen. */
+async function at(iso) {
+  await page.clock.setFixedTime(new Date(iso));
+}
+
+async function quickEntry(slot, name, kcal, protein, carbs, fat) {
+  await open(`/ernaehrung/hinzufuegen?mahlzeit=${slot}`);
+  await page.getByRole('button', { name: 'Schnelleintrag' }).click();
+  const quick = page.getByRole('dialog', { name: 'Schnelleintrag' });
+  await quick.getByLabel('Bezeichnung (optional)').fill(name);
+  await quick.getByLabel('Energie (kcal)').fill(String(kcal));
+  await quick.getByLabel('Eiweiß (g, optional)').fill(String(protein));
+  await quick.getByLabel('Kohlenhydrate (g, optional)').fill(String(carbs));
+  await quick.getByLabel('Fett (g, optional)').fill(String(fat));
+  await quick.getByRole('button', { name: 'Hinzufügen' }).click();
+  await page.getByRole('heading', { level: 1, name: 'Ernährung' }).waitFor();
+}
+
+/** Satz im Player: Gewicht eintragen (Wiederholungen kommen aus dem Ziel) und erledigen. */
+async function completeCurrentSet(weight, reps) {
+  const current = page.locator('li[aria-current="step"]');
+  const field = current.getByLabel(/^Gewicht in kg, /);
+  if ((await field.count()) > 0) await field.fill(String(weight));
+  const repsField = current.getByLabel(/^Wiederholungen, /);
+  if ((await repsField.count()) > 0) await repsField.fill(String(reps));
+  await page.getByRole('button', { name: 'Satz erledigt', exact: true }).click();
+  await page.waitForTimeout(400);
+}
+
+async function screens() {
+  await at('2026-10-22T08:15:00+02:00');
+  // Fortschritt ohne Daten: Leerzustand.
+  await open('/fortschritt');
+  await screen('fortschritt');
+  await open('/mehr');
+  await screen('mehr');
+
+  await setNutritionTarget();
+  await activateProgram();
+  await quickEntry('breakfast', 'Haferflocken mit Banane', 420, 14, 68, 9);
+  await quickEntry('lunch', 'Linsensuppe', 380, 21, 52, 8);
+  await open('/heute');
+  const water = page.getByRole('region', { name: 'Wasser' });
+  await water.getByRole('button', { name: /250 ml hinzufügen/ }).click();
+  await water.getByRole('button', { name: /500 ml hinzufügen/ }).click();
+  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await screen('heute');
+  await fullPage('heute-ganz');
+  await screen('tab-leiste-ausgeklappt');
+  await page.evaluate(() => {
+    globalThis.dispatchEvent(new globalThis.KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    globalThis.scrollBy(0, 500);
+  });
+  await page
+    .getByRole('navigation', { name: 'Hauptnavigation' })
+    .last()
+    .and(page.locator('.minimized'))
+    .waitFor();
+  await page.waitForTimeout(600);
+  await screen('tab-leiste-kreis');
+
+  await open('/training');
+  await screen('training');
+  await open('/training/programme');
+  await screen('training-programme');
+
+  await open('/ernaehrung');
+  await screen('ernaehrung');
+
+  // Aktives Workout: Training von „Heute“ starten, drei Sätze erfassen; die Pause läuft.
+  await open('/heute');
+  await page.getByRole('button', { name: 'Training starten' }).click();
+  await page.getByRole('button', { name: 'Beenden', exact: true }).waitFor();
+  await completeCurrentSet(60, 10);
+  await page.getByRole('button', { name: 'Pause überspringen' }).click();
+  await completeCurrentSet(80, 5);
+  await page.getByRole('button', { name: 'Pause überspringen' }).click();
+  await completeCurrentSet(100, 10);
+  await page.getByRole('button', { name: 'Pause überspringen' }).click();
+  await at('2026-10-22T08:31:24+02:00');
+  await completeCurrentSet(100, 9);
+  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await screen('aktives-workout');
+
+  // Abschluss nach 48 Minuten.
+  await at('2026-10-22T09:03:00+02:00');
+  await page.getByRole('button', { name: 'Beenden', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Training beenden?' })
+    .getByRole('button', { name: 'Training beenden' })
+    .click();
+  await page.getByRole('heading', { level: 1, name: 'Training abgeschlossen' }).waitFor();
+  await screen('abschluss');
+
+  // Übungsdetails mit eigener Notiz als Tipp-Karte.
+  await open('/uebungen');
+  await page.getByLabel('Übungen suchen').fill('Bankdrücken mit Langhantel');
+  await page
+    .getByRole('link', { name: /^Bankdrücken mit Langhantel/ })
+    .first()
+    .click();
+  await page.getByRole('heading', { level: 1, name: 'Bankdrücken mit Langhantel' }).waitFor();
+  await page
+    .getByLabel('Notiz (z. B. Sitzhöhe, Griff)')
+    .fill('Schulterblätter zusammen, Füße fest am Boden.');
+  await page.getByRole('button', { name: 'Speichern' }).click();
+  await page.getByText('Gespeichert').first().waitFor();
+  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await screen('uebungsdetails');
+
+  // Fortschritt mit Daten (nach dem Training).
+  await open('/fortschritt');
+  await screen('fortschritt-mit-daten');
+}
+
 await mkdir(OUT, { recursive: true });
 try {
   if (mode === 'komponenten') await components();
+  else if (mode === 'screens') await screens();
   else throw new Error(`Unbekannter Modus: ${mode}`);
 } finally {
   await browser.close();

@@ -106,7 +106,7 @@ export function ValueInput({
         if (event.key === 'Enter') event.currentTarget.blur();
       }}
       className={cn(
-        'field w-full min-w-0 px-2 text-center text-lg font-semibold placeholder:font-normal disabled:opacity-60',
+        'field w-full min-w-0 px-1 text-center text-lg font-semibold placeholder:font-normal disabled:opacity-60',
       )}
     />
   );

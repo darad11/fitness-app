@@ -13,6 +13,7 @@ export * from './SelectField';
 export * from './Skeleton';
 export * from './Stat';
 export * from './Switch';
+export * from './Tabs';
 export * from './StatusList';
 export * from './Toast';
 export * from './theme';

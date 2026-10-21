@@ -24,11 +24,14 @@ export function StatTile({ label, value, unit, hint, tone = 'surface', className
       )}
     >
       <dt className="eyebrow text-muted">{label}</dt>
-      <dd className="mt-1 flex items-baseline gap-1">
-        <span className="text-2xl font-semibold tabular-nums">{value}</span>
-        {unit ? <span className="text-sm font-medium text-muted">{` ${unit}`}</span> : null}
+      {/* Der Hinweis steht im `dd`: In einer Gruppe von `dl` sind nur `dt` und `dd` erlaubt (axe). */}
+      <dd className="mt-1">
+        <span className="flex items-baseline gap-1">
+          <span className="text-2xl font-semibold tabular-nums">{value}</span>
+          {unit ? <span className="text-sm font-medium text-muted">{` ${unit}`}</span> : null}
+        </span>
+        {hint ? <span className="mt-1 block text-xs text-muted">{hint}</span> : null}
       </dd>
-      {hint ? <p className="mt-1 text-xs text-muted">{hint}</p> : null}
     </div>
   );
 }

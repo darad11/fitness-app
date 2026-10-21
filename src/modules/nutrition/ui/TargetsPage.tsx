@@ -149,11 +149,11 @@ function TargetsForm({
             eyebrow={tNutrition.currentTarget}
             title={`${kcal(fmt, current.kcal)} ${tNutrition.units.kcal}`}
           >
-            <p className="-mt-2 text-on-ink-muted">
+            <p className="-mt-2 text-muted">
               {tNutrition.macros.protein} {current.proteinG} g · {tNutrition.macros.carbs}{' '}
               {current.carbsG} g · {tNutrition.macros.fat} {current.fatG} g
             </p>
-            <p className="mt-2 text-sm text-on-ink-muted">
+            <p className="mt-2 text-sm text-muted">
               {tNutrition.methods[current.method]} ·{' '}
               {tNutrition.since(fmt.weekdayDayMonth(dayDate(current.effectiveFrom)))}
             </p>

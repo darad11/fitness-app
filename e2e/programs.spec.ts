@@ -17,7 +17,7 @@ test('Programm aktivieren, nächsten Tag von „Heute" starten, Zähler (AK-PRG-
   await expect(page.getByText('Heute geplant')).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Tag A' })).toBeVisible();
   await expect(page.getByText('Trainingstag 1 von 32 · Ganzkörper A/B, 4 Tage')).toBeVisible();
-  await page.getByRole('button', { name: 'Trainingstag starten' }).click();
+  await page.getByRole('button', { name: 'Training starten' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\/[0-9a-f-]+$/);
   await expect(
     page.getByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B, 4 Tage' }),
@@ -29,22 +29,29 @@ test('Programm aktivieren, nächsten Tag von „Heute" starten, Zähler (AK-PRG-
     .getByRole('dialog', { name: 'Training beenden?' })
     .getByRole('button', { name: 'Training beenden' })
     .click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Zusammenfassung' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
+  ).toBeVisible();
   await expect(
     page.getByText('Tag A · Ganzkörper A/B, 4 Tage · Trainingstag 1 von 32'),
   ).toBeVisible();
-  const doneLink = page.getByRole('link', { name: 'Fertig' });
+  // Abschluss nennt die nächste Einheit des Programms (FORM, D-315).
+  await expect(page.getByRole('region', { name: 'Nächste Einheit' })).toContainText('Tag B');
+  const doneLink = page.getByRole('link', { name: 'Zur Übersicht' });
+  await expect(doneLink).toHaveAttribute('href', '/heute');
   await doneLink.dispatchEvent('click');
 
-  // Training zählt weiter und bietet den Folgetag an.
-  await expect(page.getByRole('heading', { level: 1, name: 'Training' })).toBeVisible();
-  await expect(page.getByText('Aktives Programm')).toBeVisible();
+  // „Heute“ zählt weiter und bietet den Folgetag an.
+  await expect(page.getByText('Heute geplant')).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: 'Tag B' })).toBeVisible();
   await expect(page.getByText('Trainingstag 2 von 32 · Ganzkörper A/B, 4 Tage')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Anderen Tag wählen' })).toHaveAttribute(
     'href',
     '/training/vorlagen/compound_ab_4',
   );
+  await openPage(page, '/training');
+  await expect(page.getByText('Aktives Programm')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Tag B' })).toBeVisible();
 
   // Liste mit Etikett „Aktiv"; Programm beenden.
   await openPage(page, '/training/programme');

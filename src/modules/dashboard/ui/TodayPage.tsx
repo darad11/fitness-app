@@ -74,7 +74,7 @@ export function TodayPage() {
         </h1>
         <p className="mt-2 text-muted">{formatters.weekdayDayMonth(today)}</p>
       </header>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-stack md:grid-cols-2">
         {active === undefined || program === undefined ? (
           <div aria-busy="true" className="md:col-span-2">
             <Skeleton className="h-44" />
@@ -86,14 +86,14 @@ export function TodayPage() {
             title={active.title}
             className="md:col-span-2"
           >
-            <p className="-mt-2 text-on-ink-muted tabular-nums">
+            <p className="-mt-1 text-muted">
               {t.today.runningText(
                 formatClock(sessionDurationSec(active, now)),
                 t.session.progress(sessionProgress(active).done, sessionProgress(active).total),
               )}
             </p>
             <Meter
-              className="mt-3"
+              className="mt-4"
               label={t.session.progress(
                 sessionProgress(active).done,
                 sessionProgress(active).total,
@@ -104,7 +104,7 @@ export function TodayPage() {
                   : 0
               }
             />
-            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5">
+            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5 w-full">
               <Play aria-hidden="true" className="size-5" />
               {t.training.resume}
             </ButtonLink>
@@ -126,16 +126,14 @@ export function TodayPage() {
             ) : null}
           </div>
         ) : (
-          <Card
-            tone="stage"
-            eyebrow={t.today.heroEyebrow}
-            title={t.today.heroTitle}
-            className="md:col-span-2"
-          >
-            <p className="-mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
-            <div className="mt-5 flex flex-wrap gap-2">
+          // Ohne Plan (FORM, D-315): „Freies Training“ mit Ghost-Knopf und Textlink zur Vorlage.
+          <Card tone="stage" title={t.training.freeTitle} className="md:col-span-2">
+            <p className="-mt-1 max-w-md text-muted">{t.today.heroText}</p>
+            <div className="mt-5 grid gap-2">
               <Button
+                variant="secondary"
                 size="lg"
+                className="w-full"
                 disabled={busy}
                 onClick={() => {
                   void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
@@ -144,12 +142,16 @@ export function TodayPage() {
                 <Play aria-hidden="true" className="size-5" />
                 {t.training.startFree}
               </Button>
-              <ButtonLink to="/training/programme" variant="quiet">
+              <ButtonLink
+                to="/training/programme"
+                variant="quiet"
+                className="-ml-5 justify-self-start"
+              >
                 {t.today.chooseTemplate}
               </ButtonLink>
             </div>
             {error ? (
-              <p role="alert" className="mt-3 text-sm text-on-ink">
+              <p role="alert" className="mt-3 text-sm text-danger">
                 {error.message}
               </p>
             ) : null}
@@ -172,7 +174,7 @@ export function TodayPage() {
         ) : null}
         {last && lastSummary ? (
           <Card eyebrow={t.today.lastTitle} title={last.title}>
-            <p className="-mt-2 text-sm text-muted tabular-nums">
+            <p className="-mt-1 text-sm text-muted">
               {formatters.weekdayDayMonth(new Date(`${last.dayKey}T12:00:00`))} ·{' '}
               {t.history.summary(
                 formatClock(lastSummary.durationSec),
@@ -200,6 +202,7 @@ export function TodayPage() {
         ) : null}
         <Card
           title={t.body.title}
+          titleStyle="label"
           action={
             <Link
               to="/fortschritt/gewicht"

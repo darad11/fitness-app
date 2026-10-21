@@ -42,7 +42,7 @@ export function FoodsPage() {
                   .join(' · ')}
               </span>
             </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
           </Link>
         </li>
       ))}

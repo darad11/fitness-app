@@ -117,10 +117,10 @@ describe('Eigene Programme (AP 2.1 bis 2.4, D-257)', () => {
       within(day).getByText(/1 Übung · 4 Sätze · ca\. \d+ min · Geplant für Montag/),
     ).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Programm aktivieren' }));
-    await screen.findByRole('button', { name: 'Trainingstag starten' });
+    await screen.findByRole('button', { name: 'Training starten' });
     const [program] = await listOwnPrograms(rt.db);
     expect((await loadTrainingState(rt.db)).activeProgramId).toBe(program?.id);
-    await user.click(screen.getByRole('button', { name: 'Trainingstag starten' }));
+    await user.click(screen.getByRole('button', { name: 'Training starten' }));
     await waitFor(() => {
       expect(router.state.location.pathname).toMatch(/^\/training\/einheit\//);
     });

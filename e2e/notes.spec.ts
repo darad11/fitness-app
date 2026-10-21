@@ -39,7 +39,9 @@ test('Notizen zu Übung und Einheit im Player, im Verlauf und beim nächsten Mal
     .getByRole('dialog', { name: 'Training beenden?' })
     .getByRole('button', { name: 'Training beenden' })
     .click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Zusammenfassung' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
+  ).toBeVisible();
 
   // Verlauf zeigt beide Notizen.
   await openPage(page, '/training/verlauf');

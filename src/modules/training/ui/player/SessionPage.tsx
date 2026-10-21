@@ -1,6 +1,7 @@
 import {
   ArrowLeftRight,
   ChevronDown,
+  ChevronLeft,
   ChevronUp,
   Ellipsis,
   Info,
@@ -13,6 +14,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import {
   describeExercise,
   ExercisePicker,
+  MuscleTags,
   useExercisePrefs,
   useExercises,
   type Exercise,
@@ -327,10 +329,19 @@ function Player({ session }: { session: Session }) {
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
       <header className="page-gutters sticky top-0 z-10 -mx-page mb-4 border-b border-line bg-bg pt-2 pb-3 md:-mx-page-md lg:-mx-page-lg">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
+        <div className="flex items-start justify-between gap-2">
+          {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
+          <Link
+            to="/training"
+            aria-label={t.training.title}
+            title={t.training.title}
+            className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
+          >
+            <ChevronLeft aria-hidden="true" className="size-6" />
+          </Link>
+          <div className="min-w-0 flex-1 pt-0.5">
             <p className="eyebrow truncate text-muted">{eyebrow}</p>
-            <h1 className="truncate text-xl font-semibold">{session.title}</h1>
+            <h1 className="line-clamp-2 text-title leading-tight font-semibold">{session.title}</h1>
           </div>
           <Button
             variant="secondary"
@@ -395,10 +406,10 @@ function Player({ session }: { session: Session }) {
       </header>
 
       {!restTimer && current && currentExercise && currentName ? (
-        <section aria-label={t.session.now} className="stage mb-4 rounded-card p-card text-on-ink">
-          <p className="eyebrow text-on-ink-muted">{t.session.now}</p>
+        <section aria-label={t.session.now} className="stage mb-4 rounded-card p-card text-fg">
+          <p className="eyebrow text-muted">{t.session.now}</p>
           <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
-          <p className="mt-1 text-on-ink-muted">
+          <p className="mt-1 text-muted">
             {[
               `${t.session.setTypeLabel[current.type]} · ${t.session.setOf(currentName.index, currentName.total)}`,
               currentTarget ? `${t.session.target} ${currentTarget.text}` : null,
@@ -415,9 +426,9 @@ function Player({ session }: { session: Session }) {
             </p>
           ) : null}
           {currentExercise.notes ? (
-            <p className="mt-2 text-sm text-on-ink-muted">{currentExercise.notes}</p>
+            <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
           ) : null}
-          <p className="mt-3 text-sm text-on-ink-muted">
+          <p className="mt-3 text-sm text-muted">
             {nextExercise
               ? t.session.nextExercise(nextExercise.nameSnapshot)
               : t.session.lastExercise}
@@ -425,11 +436,8 @@ function Player({ session }: { session: Session }) {
         </section>
       ) : null}
       {!restTimer && !current && exercises.length > 0 ? (
-        <section
-          aria-label={t.session.allDone}
-          className="stage mb-4 rounded-card p-card text-on-ink"
-        >
-          <p className="eyebrow text-on-ink-muted">{t.session.now}</p>
+        <section aria-label={t.session.allDone} className="stage mb-4 rounded-card p-card text-fg">
+          <p className="eyebrow text-muted">{t.session.now}</p>
           <p className="mt-1 text-2xl font-semibold">{t.session.allDone}</p>
         </section>
       ) : null}
@@ -452,6 +460,10 @@ function Player({ session }: { session: Session }) {
                   <h2 id={`uebung-${exercise.id}`} className="text-lg font-semibold">
                     {exercise.nameSnapshot}
                   </h2>
+                  <MuscleTags
+                    muscles={library.get(exercise.exerciseId)?.primaryMuscles ?? []}
+                    className="mt-1.5 mb-1"
+                  />
                   <p className="text-sm text-muted">
                     {row
                       ? t.session.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))
@@ -650,6 +662,7 @@ function Player({ session }: { session: Session }) {
         <div className="mx-auto flex max-w-content gap-2">
           {current && currentExercise ? (
             <Button
+              variant="action"
               size="lg"
               className="flex-1"
               onClick={() => {
@@ -815,9 +828,6 @@ function Player({ session }: { session: Session }) {
                 : ''}
         </p>
       </Dialog>
-      <p className="sr-only">
-        <Link to="/training">{t.training.title}</Link>
-      </p>
     </div>
   );
 }

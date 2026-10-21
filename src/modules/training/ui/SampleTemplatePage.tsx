@@ -390,7 +390,7 @@ function ProgramCard({
             : t.programs.finishedTitle
       }
     >
-      <p className="-mt-2 text-on-ink-muted">
+      <p className="-mt-2 text-muted">
         {progress && next
           ? `${next.name}${progress.round > 1 ? ` · ${t.programs.round(progress.round)}` : ''}`
           : progress
@@ -404,14 +404,14 @@ function ProgramCard({
           value={progress.total > 0 ? next.index / progress.total : 0}
         />
       ) : null}
-      <div className="mt-4 text-sm text-on-ink-muted">{description}</div>
+      <div className="mt-4 text-sm text-muted">{description}</div>
       {activeSince ? (
-        <p className="mt-2 text-sm text-on-ink-muted">
+        <p className="mt-2 text-sm text-muted">
           {t.programs.activeSince(fmt.weekdayDayMonth(new Date(activeSince)))}
         </p>
       ) : null}
       {failed ? (
-        <p role="alert" className="mt-3 text-sm text-on-ink">
+        <p role="alert" className="mt-3 text-sm text-fg">
           {t.programs.activateFailed}
         </p>
       ) : null}

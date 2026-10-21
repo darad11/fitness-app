@@ -1,30 +1,38 @@
+import { CalendarDays, ChevronRight, ListChecks } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 import { latestBefore, useBodyWeights } from '@/modules/body';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
-import { Badge, ButtonLink, Card, PageHeader, Skeleton, StatTile } from '@/shared/ui';
+import { Badge, ButtonLink, Card, PageHeader, Skeleton, StatTile, TileIcon } from '@/shared/ui';
+import { useToday } from '@/shared/ui/useToday';
 import { estimateCalories } from '../calc/calories';
 import { formatSetValues } from '../calc/fields';
 import { formatClock } from '../calc/format';
 import { compareWithPrevious } from '../calc/history';
-import { dayNumber } from '../calc/programProgress';
+import { dayNumber, isoWeekday, plannedFor } from '../calc/programProgress';
 import { isNewRecord } from '../calc/records';
 import { bestSet, liveExercises, sessionProgress, sessionVolume } from '../calc/session';
 import { useCompletedSessions, useHistoryRows, useSession } from '../data/useSession';
-import { useProgramById } from './useActiveProgram';
+import { useActiveProgram, useProgramById, type ActiveProgram } from './useActiveProgram';
 
-/** Zusammenfassung nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20 ohne Vergleich) mit „Trainingstag x von n". */
+/**
+ * Abschluss nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20; FORM D-315): „Training abgeschlossen“,
+ * Kacheln Dauer, Übungen und Sätze, Karte mit Gesamtvolumen und geschätzten Kalorien, Vergleich
+ * und beste Sätze, „Details anzeigen“, die nächste Einheit des aktiven Programms und „Zur Übersicht“.
+ */
 export function SummaryPage() {
   const { id = '' } = useParams();
   const session = useSession(id);
   const fmt = useFormatters();
   const template = useProgramById(session?.program?.programId)?.program;
+  const active = useActiveProgram();
   const sessions = useCompletedSessions();
   const rows = useHistoryRows();
   const weights = useBodyWeights();
+  const today = useToday();
   if (session === undefined) {
     return (
-      <div aria-busy="true" className="grid gap-4">
+      <div aria-busy="true" className="grid gap-stack">
         <Skeleton className="h-10 w-2/3" />
         <Skeleton className="h-40" />
       </div>
@@ -56,47 +64,55 @@ export function SummaryPage() {
   const calories = weights ? estimateCalories(session, weight?.weightKg) : null;
   const signed = (value: number, format: (abs: number) => string) =>
     `${value > 0 ? '+' : value < 0 ? '−' : '±'}${format(Math.abs(value))}`;
+  const next = active ? nextSession(active, today) : null;
   return (
     <>
-      <PageHeader eyebrow={t.summary.headline} title={t.summary.title} subtitle={subtitle} />
-      <Card tone="stage" eyebrow={t.summary.duration}>
-        <p className="text-timer font-semibold tabular-nums">
-          {formatClock(session.durationSec ?? 0)}
-        </p>
-        <dl className="mt-5 grid grid-cols-3 gap-3">
-          <StatTile tone="soft" label={t.summary.exercises} value={fmt.number(exercises.length)} />
-          <StatTile tone="soft" label={t.summary.sets} value={fmt.number(progress.done)} />
+      <PageHeader title={t.summary.title} subtitle={subtitle} />
+      <dl className="grid grid-cols-3 gap-stack">
+        <StatTile label={t.summary.duration} value={formatClock(session.durationSec ?? 0)} />
+        <StatTile label={t.summary.exercises} value={fmt.number(exercises.length)} />
+        <StatTile label={t.summary.setsShort} value={fmt.number(progress.done)} />
+      </dl>
+      <Card className="mt-stack">
+        <dl className="grid gap-4 sm:grid-cols-2">
           <StatTile
-            tone="soft"
-            label={t.summary.volume}
+            tone="plain"
+            label={t.summary.totalVolume}
             value={fmt.number(Math.round(sessionVolume(session)))}
             unit="kg"
+            hint={t.summary.volumeHint}
           />
+          <div className="min-w-0">
+            <dt className="eyebrow text-muted">{t.summary.kcal}</dt>
+            <dd className="mt-1">
+              {calories ? (
+                <>
+                  <span className="text-2xl font-semibold">
+                    {t.summary.kcalValue(fmt.number(calories.kcal))}
+                  </span>
+                  <span className="mt-1 block text-xs text-muted">
+                    {t.summary.kcalEstimate}
+                    {calories.uncountedMinutes > 0
+                      ? ` · ${t.summary.kcalCardio(calories.uncountedMinutes)}`
+                      : ''}
+                  </span>
+                </>
+              ) : weights === undefined ? (
+                '…'
+              ) : (
+                <span className="block text-sm text-muted">
+                  {t.summary.kcalNone}{' '}
+                  <Link to="/fortschritt/gewicht" className="font-semibold text-accent-ink">
+                    {t.summary.kcalAdd}
+                  </Link>
+                </span>
+              )}
+            </dd>
+          </div>
         </dl>
-        <p className="mt-3 text-xs text-on-ink-muted">{t.summary.volumeHint}</p>
-        <p className="mt-3 text-sm text-on-ink-muted">
-          <span className="font-semibold text-on-ink">{t.summary.kcal}: </span>
-          {calories ? (
-            <>
-              {t.summary.kcalValue(fmt.number(calories.kcal))} · {t.summary.kcalEstimate}
-              {calories.uncountedMinutes > 0
-                ? ` · ${t.summary.kcalCardio(calories.uncountedMinutes)}`
-                : ''}
-            </>
-          ) : weights === undefined ? (
-            '…'
-          ) : (
-            <>
-              {t.summary.kcalNone}{' '}
-              <Link to="/fortschritt/gewicht" className="font-semibold text-on-ink underline">
-                {t.summary.kcalAdd}
-              </Link>
-            </>
-          )}
-        </p>
       </Card>
       {comparison ? (
-        <Card title={t.summary.compareTitle} className="mt-4">
+        <Card title={t.summary.compareTitle} className="mt-stack">
           <p className="mb-3 text-sm text-muted">
             {t.summary.compareText(fmt.dayMonthYear(new Date(comparison.previous.endedAt ?? '')))}
           </p>
@@ -115,7 +131,7 @@ export function SummaryPage() {
           </dl>
         </Card>
       ) : null}
-      <Card title={t.summary.best} className="mt-4">
+      <Card title={t.summary.best} className="mt-stack">
         <ul className="divide-y divide-line">
           {exercises.map((exercise) => {
             const best = bestSet(exercise);
@@ -135,7 +151,7 @@ export function SummaryPage() {
                     <Badge tone="success">{t.progress.newRecord}</Badge>
                   ) : null}
                 </span>
-                <span className="text-muted tabular-nums">
+                <span className="text-muted">
                   {best
                     ? formatSetValues(
                         best.actual,
@@ -150,9 +166,58 @@ export function SummaryPage() {
           })}
         </ul>
       </Card>
-      <ButtonLink to="/training" className="mt-6 w-full md:w-auto">
+      <Link
+        to={`/training/verlauf/${session.id}`}
+        className="mt-stack flex min-h-14 items-center gap-3 rounded-card bg-surface px-card py-3 shadow-card hover:bg-surface-2"
+      >
+        <TileIcon icon={ListChecks} />
+        <span className="min-w-0 flex-1 font-semibold">{t.summary.details}</span>
+        <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
+      </Link>
+      {next ? (
+        <Card title={t.summary.nextTitle} titleStyle="label" className="mt-stack">
+          <div className="flex items-center gap-3">
+            <TileIcon icon={CalendarDays} />
+            <div className="min-w-0">
+              <p className="font-semibold">{next.name}</p>
+              <p className="text-caption text-muted">
+                {[next.date ? fmt.weekdayDayMonth(next.date) : null, next.detail]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </p>
+            </div>
+          </div>
+        </Card>
+      ) : null}
+      <ButtonLink to="/heute" size="lg" className="mt-6 w-full md:w-auto">
         {t.summary.done}
       </ButtonLink>
     </>
   );
+}
+
+/**
+ * Nächste Einheit des aktiven Programms: Name, Trainingstag und das Datum nur, wenn der Tag einen
+ * Wochentag-Hinweis hat (AK-PRG-09); ohne Hinweis steht kein erfundenes Datum da.
+ */
+function nextSession(
+  active: ActiveProgram,
+  today: Date,
+): { name: string; detail: string; date: Date | null } | null {
+  const next = active.progress.next;
+  if (!next) return null;
+  const hint = active.template.weeks[next.weekIndex]?.days[next.dayIndex]?.weekdayHint;
+  const planned = plannedFor(active.template, next, today);
+  let date: Date | null = null;
+  if (planned.kind === 'weekday') {
+    const ahead = (planned.weekday - isoWeekday(today) + 7) % 7 || 7;
+    date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + ahead, 12);
+  } else if (hint !== undefined) {
+    date = today;
+  }
+  return {
+    name: next.name,
+    detail: `${t.programs.dayOf(next.index + 1, active.progress.total)} · ${active.template.name}`,
+    date,
+  };
 }

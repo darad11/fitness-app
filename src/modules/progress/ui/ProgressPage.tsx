@@ -101,10 +101,14 @@ export function ProgressPage() {
           icon={LineChart}
           title={t.progress.emptyTitle}
           text={t.progress.emptyText}
-          action={<ButtonLink to="/fortschritt/gewicht">{t.body.add}</ButtonLink>}
+          action={
+            <ButtonLink to="/fortschritt/gewicht" variant="secondary">
+              {t.body.add}
+            </ButtonLink>
+          }
         />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-stack">
           <section aria-labelledby="kennzahlen">
             <h2 id="kennzahlen" className="sr-only">
               {t.progress.periodLegend}
@@ -115,7 +119,7 @@ export function ProgressPage() {
               value={period}
               onChange={setPeriod}
             />
-            <dl className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+            <dl className="mt-3 grid grid-cols-2 gap-stack md:grid-cols-4">
               <StatTile label={t.progress.sessions} value={fmt.number(totals.sessions)} />
               <StatTile label={t.progress.minutes} value={fmt.number(totals.minutes)} unit="min" />
               <StatTile label={t.progress.volume} value={fmt.number(totals.volumeKg)} unit="kg" />
@@ -226,7 +230,7 @@ export function ProgressPage() {
                           {fmt.dayMonthYear(new Date(entry.lastAt))}
                         </span>
                       </span>
-                      <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+                      <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
                     </Link>
                   </li>
                 ))}

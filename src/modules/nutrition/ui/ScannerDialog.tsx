@@ -143,7 +143,7 @@ export function ScannerDialog({
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-8 top-1/2 h-24 -translate-y-1/2 rounded-card border-2 border-on-ink"
+              className="pointer-events-none absolute inset-x-8 top-1/2 h-24 -translate-y-1/2 rounded-card border-2 border-fg"
             />
           </div>
         ) : null}

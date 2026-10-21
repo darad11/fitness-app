@@ -65,15 +65,15 @@ export function TrainingPage() {
   return (
     <>
       <PageHeader title={t.training.title} />
-      <div aria-busy={active === undefined || program === undefined} className="mb-4">
+      <div aria-busy={active === undefined || program === undefined} className="mb-stack">
         {active === undefined || program === undefined ? (
           <Skeleton className="h-40" />
         ) : active ? (
           <Card tone="stage" eyebrow={t.training.running} title={active.title}>
-            <p className="-mt-2 text-on-ink-muted">
+            <p className="-mt-1 text-muted">
               {t.training.since(fmt.time(new Date(active.startedAt)))}
             </p>
-            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5">
+            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5 w-full">
               <Play aria-hidden="true" className="size-5" />
               {t.training.resume}
             </ButtonLink>
@@ -99,10 +99,10 @@ export function TrainingPage() {
           </ActiveProgramCard>
         ) : (
           <Card tone="stage" eyebrow={t.training.freeEyebrow} title={t.training.freeTitle}>
-            <p className="-mt-2 max-w-md text-on-ink-muted">{t.training.freeHint}</p>
+            <p className="-mt-1 max-w-md text-muted">{t.training.freeHint}</p>
             <Button
               size="lg"
-              className="mt-5"
+              className="mt-5 w-full"
               disabled={busy}
               onClick={() => {
                 void start({ source: 'free', title: t.training.freeTitle, exercises: [] });

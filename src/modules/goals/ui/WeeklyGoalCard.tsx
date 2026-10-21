@@ -18,7 +18,7 @@ export function WeeklyGoalCard({
 }) {
   if (target === undefined) {
     return (
-      <Card title={t.goals.weeklyTitle} className={className}>
+      <Card title={t.goals.weeklyTitle} titleStyle="label" className={className}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-muted">{t.goals.weeklyCardNone}</p>
           <ButtonLink to="/mehr/profil" size="sm" variant="secondary">
@@ -32,6 +32,7 @@ export function WeeklyGoalCard({
   return (
     <Card
       title={t.goals.weeklyTitle}
+      titleStyle="label"
       className={className}
       action={
         <Link

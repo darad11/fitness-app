@@ -168,5 +168,11 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Tab-Leiste ohne Glas (Konzept: Nacht mit Rand oben) | schwebende Glas-Leiste mit Linse und Kreis beim Scrollen in FORM-Farben | Entscheidung des Produktinhabers (D-312) |
 | Hell/Dunkel-Umschalter | entfällt in den Einstellungen | nur Dunkel wird ausgeliefert (D-308); eine Wahl ohne Wirkung wäre eine Schaltfläche ohne Funktion |
 | Streak-Karte, Hustle-Zeilen, „Tägliche Challenges“, Emojis, Bildkarten, Gradient-Leiste, schräges F | nicht gebaut | Markenleitplanken Abschnitt 2, Regel 10 |
+| Reiter „Heute / Woche / Rezepte“ auf der Ernährungsseite | Datumszeile wie bisher, Rezepte über „Meine Küche“ | Es gibt keine Wochenansicht; ein Reiter ohne Inhalt wäre eine Schaltfläche ohne Funktion (F3, D-315) |
+| Übungsdetails mit „Ausführung“ und nummerierten Schritten | Reiter „Muskeln“ und „Alternativen“, eigene Notiz als Tipp-Karte | Die Bibliothek enthält keine Anleitungen; keine Platzhalter (F3, D-315) |
+| Bild oben in den Übungsdetails, Fotos auf Programmkarten | Fläche `card`, links Symbol in einer Kachel | Keine Fotos und Stockbilder (Leitplanken Regel 9) |
+| Körpergrafiken im aktiven Workout | Muskelgruppen als Etiketten | Keine Grafiken, die es in der App noch nicht gibt (Übergabe Abschnitt 5) |
+| Zitat-Feld im Abschluss | entfällt | Übergabe Abschnitt 5 |
+| Überzogene Pause als Fläche in Lime | Rand und Zahl in Lime | Lime ist Akzent, nie Fläche (Markenassets, Regeln); weiße Schrift auf Lime hätte rund 1:1 |
 
-Weitere Einträge folgen mit den Paketen F3 bis G (Screens).
+Weitere Einträge folgen mit den Paketen C bis G.

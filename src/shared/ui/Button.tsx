@@ -6,8 +6,10 @@ import { cn } from '../lib/cn';
  * Schaltflächen der Marke FORM (D-314): Radius 14, ohne Schatten, gedrückt 92 % Deckkraft.
  * Primär: Lime mit Schrift in Nacht, ein Primärknopf je Seite. Sekundär: Ghost mit Rand `line`
  * und heller Schrift. Leise (tertiär): nur Text in Lime. Destruktiv: Ghost mit Schrift in Rot.
+ * Kachel: Fläche card-2 mit Rand, für Schnellaktionen als Symbol-Knopf. Aktion: Blau, nur im
+ * aktiven Workout („Satz erledigt“, „Überspringen“), damit sich die Trainingsaktion vom Lime abhebt.
  */
-export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger' | 'tile' | 'action';
 /** `lg`: Primärknopf in Karten, 52 px; `icon`: runder Knopf mit nur einem Symbol (Name über `aria-label`). */
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
@@ -26,6 +28,8 @@ const VARIANTS: Record<ButtonVariant, string> = {
   secondary: 'bg-transparent text-fg shadow-[inset_0_0_0_1px_var(--border)] hover:bg-surface-2',
   quiet: 'text-accent-ink hover:bg-surface-2',
   danger: 'bg-transparent text-danger shadow-[inset_0_0_0_1px_var(--border)] hover:bg-danger-soft',
+  tile: 'bg-surface-2 text-fg shadow-[inset_0_0_0_1px_var(--border)] hover:bg-surface',
+  action: 'bg-action text-on-action hover:opacity-92',
 };
 
 export function buttonClasses(

@@ -160,7 +160,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect((await loadTrainingState(rt.db)).activeProgramId).toBe(A);
     const dayA = screen.getByRole('region', { name: 'Tag A' });
     expect(within(dayA).getByText('Als Nächstes')).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Trainingstag starten' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Training starten' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Programm beenden' })).toBeVisible();
   });
 
@@ -184,12 +184,13 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     const router = await renderAt('/training', 'Training');
     expect(await screen.findByText('Aktives Programm')).toBeVisible();
     expect(screen.getByRole('heading', { level: 2, name: 'Tag B' })).toBeVisible();
-    expect(screen.getByText('Trainingstag 2 von 32 · Ganzkörper A/B, 4 Tage')).toBeVisible();
+    // Trainingstag, Programm und Woche (FORM, D-315).
+    expect(screen.getByText(/^Trainingstag 2 von 32 · Ganzkörper A\/B, 4 Tage · /)).toBeVisible();
     expect(screen.getByRole('link', { name: 'Anderen Tag wählen' })).toHaveAttribute(
       'href',
       '/training/vorlagen/compound_ab_4',
     );
-    await user.click(screen.getByRole('button', { name: 'Trainingstag starten' }));
+    await user.click(screen.getByRole('button', { name: 'Training starten' }));
     const active = await waitFor(async () => {
       const found = await findActiveSession(rt.db);
       expect(found).toBeDefined();
@@ -209,7 +210,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     await activateProgram(rt, A);
     await completeDay(1, 0);
     const session = (await rt.db.sessions.toArray())[0]!;
-    await renderAt(`/training/einheit/${session.id}/zusammenfassung`, 'Zusammenfassung');
+    await renderAt(`/training/einheit/${session.id}/zusammenfassung`, 'Training abgeschlossen');
     expect(
       await screen.findByText('Tag A · Ganzkörper A/B, 4 Tage · Trainingstag 5 von 32'),
     ).toBeVisible();

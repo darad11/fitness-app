@@ -1,9 +1,9 @@
-import { ChevronRight, Plus } from 'lucide-react';
+import { ChevronRight, ClipboardList, LayoutList, Plus, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLoaderData, useLocation, useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { Badge, Button, Dialog, PageHeader, Skeleton, Toast } from '@/shared/ui';
+import { Badge, Button, Dialog, PageHeader, Skeleton, TileIcon, Toast } from '@/shared/ui';
 import { describeTemplate } from '../calc/describe';
 import { useOwnPrograms } from '../data/programRepository';
 import { useTrainingState } from '../data/useTrainingState';
@@ -48,13 +48,15 @@ export function ProgramsPage() {
         {own === undefined ? (
           <Skeleton className="h-20" />
         ) : ownPrograms.length === 0 ? (
-          <p className="rounded-card bg-surface-2 p-4 text-muted">{t.programs.ownEmpty}</p>
+          <p className="rounded-card bg-surface p-card text-muted shadow-card">
+            {t.programs.ownEmpty}
+          </p>
         ) : (
           <OwnList
             programs={ownPrograms}
             badge={(program) =>
               program.id === state?.activeProgramId ? (
-                <Badge tone="success">{t.programs.activeBadge}</Badge>
+                <Badge tone="accent">{t.programs.activeBadge}</Badge>
               ) : null
             }
           />
@@ -101,12 +103,13 @@ export function ProgramsPage() {
           templates={programs}
           badge={(template) =>
             template.id === state?.activeProgramId ? (
-              <Badge tone="success">{t.programs.activeBadge}</Badge>
+              <Badge tone="accent">{t.programs.activeBadge}</Badge>
             ) : (
               <Badge tone="neutral">{t.programs.programBadge}</Badge>
             )
           }
           description={(template) => template.description}
+          icon={ClipboardList}
         />
       </section>
       <section aria-labelledby="beispielvorlagen">
@@ -116,12 +119,17 @@ export function ProgramsPage() {
         <p className="mt-2 mb-4 max-w-xl text-muted">{t.programs.samplesIntro}</p>
         <TemplateList
           templates={samples}
-          badge={() => <Badge tone="accent">{t.programs.sampleBadge}</Badge>}
+          badge={() => <Badge tone="neutral">{t.programs.sampleBadge}</Badge>}
+          icon={LayoutList}
         />
       </section>
     </>
   );
 }
+
+/** Karte einer Programmliste (FORM, D-315): Fläche card, Symbol in Kachel links, ohne Bild. */
+const LIST_CARD =
+  'flex min-h-14 items-start gap-3 rounded-card bg-surface p-card shadow-card hover:bg-surface-2';
 
 function OwnList({
   programs,
@@ -131,24 +139,22 @@ function OwnList({
   badge: (program: OwnProgram) => React.ReactNode;
 }) {
   return (
-    <ul className="grid gap-3 md:grid-cols-2">
+    <ul className="grid gap-stack md:grid-cols-2">
       {programs.map((program) => (
         <li key={program.id}>
-          <Link
-            to={`/training/programme/${program.id}`}
-            className="flex min-h-14 items-center gap-3 rounded-card bg-surface p-5 shadow-card hover:bg-surface-2"
-          >
+          <Link to={`/training/programme/${program.id}`} className={LIST_CARD}>
+            <TileIcon icon={program.kind === 'template' ? LayoutList : ClipboardList} />
             <span className="min-w-0 flex-1">
               <span className="flex flex-wrap items-center gap-2">
-                <span className="text-lg font-semibold break-words">{program.name}</span>
+                <span className="font-semibold break-words">{program.name}</span>
                 {badge(program)}
               </span>
-              <span className="mt-1 block text-sm text-muted">{describeOwn(program)}</span>
+              <span className="mt-0.5 block text-caption text-muted">{describeOwn(program)}</span>
               {program.description ? (
-                <span className="mt-2 line-clamp-2 block text-sm">{program.description}</span>
+                <span className="mt-2 line-clamp-2 text-sm">{program.description}</span>
               ) : null}
             </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 self-center text-faint" />
           </Link>
         </li>
       ))}
@@ -293,30 +299,32 @@ function TemplateList({
   templates,
   badge,
   description,
+  icon,
 }: {
   templates: readonly SampleTemplate[];
   badge: (template: SampleTemplate) => React.ReactNode;
   description?: (template: SampleTemplate) => string | undefined;
+  icon: LucideIcon;
 }) {
   return (
-    <ul className="grid gap-3 md:grid-cols-2">
+    <ul className="grid gap-stack md:grid-cols-2">
       {templates.map((template) => (
         <li key={template.id}>
-          <Link
-            to={`/training/vorlagen/${template.key}`}
-            className="flex min-h-14 items-center gap-3 rounded-card bg-surface p-5 shadow-card hover:bg-surface-2"
-          >
+          <Link to={`/training/vorlagen/${template.key}`} className={LIST_CARD}>
+            <TileIcon icon={icon} />
             <span className="min-w-0 flex-1">
               <span className="flex flex-wrap items-center gap-2">
-                <span className="text-lg font-semibold">{template.name}</span>
+                <span className="font-semibold">{template.name}</span>
                 {badge(template)}
               </span>
-              <span className="mt-1 block text-sm text-muted">{describeTemplate(template)}</span>
+              <span className="mt-0.5 block text-caption text-muted">
+                {describeTemplate(template)}
+              </span>
               {description?.(template) ? (
-                <span className="mt-2 line-clamp-3 block text-sm">{description(template)}</span>
+                <span className="mt-2 line-clamp-3 text-sm">{description(template)}</span>
               ) : null}
             </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 self-center text-faint" />
           </Link>
         </li>
       ))}

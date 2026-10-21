@@ -26,6 +26,7 @@ export { exercisesRoutes } from './routes';
 export { coreExerciseId, loadCoreExercises } from './data/coreLibrary';
 export { findAlternatives } from './calc/alternatives';
 export { describeExercise } from './ui/describe';
+export { MuscleTags } from './ui/MuscleTags';
 export {
   EQUIPMENT,
   MUSCLES,

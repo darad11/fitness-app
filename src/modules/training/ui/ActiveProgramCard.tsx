@@ -32,38 +32,38 @@ export function ActiveProgramCard({
   if (!next) {
     return (
       <Card tone="stage" eyebrow={eyebrow} title={t.programs.finishedTitle} className={className}>
-        <p className="-mt-2 max-w-md text-on-ink-muted">
+        <p className="-mt-1 max-w-md text-muted">
           {t.programs.finishedText(template.name, progress.total)}
         </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          <ButtonLink to={templateLink} variant="primary" size="lg">
+        <div className="mt-5 grid gap-2">
+          <ButtonLink to={templateLink} variant="primary" size="lg" className="w-full">
             {t.training.showProgram}
           </ButtonLink>
-          {children}
+          {children ? <div className="-ml-5 flex flex-wrap gap-x-2">{children}</div> : null}
         </div>
       </Card>
     );
   }
   const byId = new Map(exercises.map((exercise) => [exercise.id, exercise]));
+  const week = template.weeks[next.weekIndex];
+  const day = week?.days[next.dayIndex];
   return (
     <Card tone="stage" eyebrow={eyebrow} title={next.name} className={className}>
-      <p className="-mt-2 text-on-ink-muted">
+      {/* Trainingstag, Programm und Woche (FORM, D-315). */}
+      <p className="-mt-1 text-muted">
         {t.programs.dayOf(next.index + 1, progress.total)} · {template.name}
+        {week ? ` · ${week.name}` : ''}
       </p>
-      {(() => {
-        const day = template.weeks[next.weekIndex]?.days[next.dayIndex];
-        return day ? (
-          <p className="mt-1 text-sm text-on-ink-muted">{describeDay(day, restDefaultSec)}</p>
-        ) : null;
-      })()}
+      {day ? <p className="mt-1 text-sm text-muted">{describeDay(day, restDefaultSec)}</p> : null}
       <Meter
-        className="mt-3"
+        className="mt-4"
         label={t.programs.dayOf(next.index + 1, progress.total)}
         value={progress.total > 0 ? next.index / progress.total : 0}
       />
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-5 grid gap-2">
         <Button
           size="lg"
+          className="w-full"
           disabled={busy}
           onClick={() => {
             onStart(
@@ -80,10 +80,12 @@ export function ActiveProgramCard({
           <Play aria-hidden="true" className="size-5" />
           {t.training.startNext}
         </Button>
-        <ButtonLink to={templateLink} variant="quiet">
-          {t.training.chooseOtherDay}
-        </ButtonLink>
-        {children}
+        <div className="-ml-5 flex flex-wrap gap-x-2">
+          <ButtonLink to={templateLink} variant="quiet">
+            {t.training.chooseOtherDay}
+          </ButtonLink>
+          {children}
+        </div>
       </div>
     </Card>
   );

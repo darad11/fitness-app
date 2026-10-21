@@ -147,7 +147,7 @@ export function KitchenMenu() {
         }}
         className={cn(PILL, 'w-full md:w-auto')}
       >
-        <Utensils aria-hidden="true" className="size-5 text-accent-ink" />
+        <Utensils aria-hidden="true" className="size-5" />
         {tk.title}
       </button>
       {open === 'menu' ? (

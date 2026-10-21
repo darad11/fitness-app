@@ -290,7 +290,7 @@ describe('Trainingsplayer (S-07)', () => {
     await finishSession(rt, session.id, { skipOpen: true });
     const router = renderAt(`/training/einheit/${session.id}`);
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Zusammenfassung' }),
+      await screen.findByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
     ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe(`/training/einheit/${session.id}/zusammenfassung`);
     expect(screen.getAllByText('Kein erledigter Satz')).toHaveLength(5);

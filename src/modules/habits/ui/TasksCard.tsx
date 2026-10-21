@@ -62,12 +62,13 @@ export function TasksCard({ className }: { className?: string }) {
   return (
     <Card
       title={t.tasks.title}
+      titleStyle="label"
       className={className}
       action={
         <Link
           to="/heute/aufgaben"
           aria-label={t.tasks.manage}
-          className="-my-2 -mr-2 inline-flex size-11 items-center justify-center rounded-pill text-accent-ink transition-colors duration-120 hover:bg-surface-2"
+          className="-mr-2 inline-flex size-touch items-center justify-center rounded-pill text-muted transition-colors duration-120 hover:bg-surface-2 hover:text-fg"
         >
           <Settings2 aria-hidden="true" className="size-5" />
         </Link>
@@ -82,7 +83,7 @@ export function TasksCard({ className }: { className?: string }) {
       ) : tasks.active.length === 0 ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-muted">{t.tasks.emptyCard}</p>
-          <ButtonLink to="/heute/aufgaben" size="sm" variant="secondary">
+          <ButtonLink to="/heute/aufgaben" size="sm" variant="quiet" className="-ml-4">
             {t.tasks.add}
           </ButtonLink>
         </div>

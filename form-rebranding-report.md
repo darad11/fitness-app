@@ -18,6 +18,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | B Kopfzeile | Kachel-F plus Wortmarke als `<img>` (30 px, Tippfläche 44 px) auf jeder Seite, Seitenleiste mit Kachel-F bzw. Logo, Begrüßung nach Tageszeit ohne Uhr, `app.name` „FORM“ | D-310 | umgesetzt |
 | Antworten des Produktinhabers | nur Dunkel (Q-23), Tab-Leiste mit Glas und Linse in FORM-Farben, breitenunabhängig bauen | D-311 bis D-313 | festgehalten |
 | F2 Komponenten | Maße, Radien, Schrift, Breakpoints und Inhaltsbreite als Tokens; Knopf, Karte, Chip (neu), Ring, Balken, Tab-Leiste (Glas in FORM-Farben), Listenzeile, Eingabe (`field`), Sheet (Griff, wegwischbar), Toast, Leerzustand; Symbole mit 1,75 px; Gewicht 600 | D-314 | umgesetzt, Screenshots in `docs/screens/komponenten/` |
+| F3 Screens | Heute, Training, aktives Workout, Abschluss, Übungsdetails, Ernährung, Fortschritt und Mehr in Aufbau und Hierarchie des Konzepts; nur vorhandene Daten, keine Platzhalter; neue Komponenten `Tabs` und `MuscleTags` | D-315 | umgesetzt, Screenshots in `docs/screens/` (werden mit E erneuert) |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -50,6 +51,17 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Geändert in den Modulen (nur Komponenten, keine Seitenstruktur): 19 lokale Klassen für Eingabefelder durch `field` ersetzt (Ernährung, Training, Wasser, Aufgaben, Ziele, Körper, Schritte, Einkaufsliste, Übungen); Bühnen-Karten `tone="stage"` und Primärknöpfe statt der entfallenen Variante „auf der Bühne“ (Heute, Training, Programm, Zusammenfassung, Ernährung, Ziele); zehn „Rückgängig“-Knöpfe in Hinweisen als leise Knöpfe; Kalorien-Ring auf den FORM-Ring (`MacroRing.tsx`), Makro-Balken als `Meter`; Schnellmengen beim Wasser, Wochentage der Aufgaben, Vorschläge der Einkaufsliste als Chips; „Meine Küche“ mit Ghost-Knöpfen, Symbol-Kacheln und wegwischbarem Blatt; Kopf und Fußleiste des Players und die Leiste „Training läuft“ ohne Glas; Titel und Werte mit Gewicht 600.
 - Nicht geändert: Anordnung und Inhalte der Seiten (F3), Texte (F4), Anmeldung (C).
 
+### F3 Screens
+
+- Neu: `src/shared/ui/Tabs.tsx` (Reiter als Chips, Rollen `tablist`, `tab`, `tabpanel`, Pfeiltasten), `src/modules/exercises/ui/MuscleTags.tsx` (Hauptmuskeln als Etiketten, für Screenreader als ein Satz), Modus `screens` in `tools/screenshots.mjs`, Bilder `docs/screens/*.png` (13 Ansichten).
+- Geändert, Heute: `dashboard/ui/TodayPage.tsx` (Bühne „Heute geplant“, ohne Plan „Freies Training“), `training/ui/ActiveProgramCard.tsx`, Kartentitel als Label in `goals/ui/WeeklyGoalCard.tsx`, `habits/ui/TasksCard.tsx`, `steps/ui/StepsTodayCard.tsx`, `water/ui/WaterCard.tsx`; `nutrition/ui/NutritionPage.tsx` (`NutritionTodayCard` mit Ring und Makro-Zeilen, runde Symbol-Knöpfe).
+- Geändert, Training: `TrainingPage.tsx`, `ProgramsPage.tsx` (Symbol-Kachel, Etiketten, Kürzen der Beschreibung repariert), `SampleTemplatePage.tsx`, `SessionBanner.tsx`, `HistoryPage.tsx`, `programs/ProgramEditPage.tsx` (Chevrons), `player/SessionPage.tsx` (Kopf mit Zurück, Muskel-Etiketten, Fußleiste in Blau), `player/RestStage.tsx` (Chips ±15 s, „Überspringen“ in Blau, überzogene Pause mit Lime-Rand), `player/ValueInput.tsx`, `SummaryPage.tsx` (Abschluss neu aufgebaut, „Nächste Einheit“).
+- Geändert, Ernährung: `NutritionPage.tsx` (Bühne „Gegessen“, Mahlzeiten mit Symbol-Kachel und Anzahl), `KitchenMenu.tsx`, `FoodsPage.tsx`, `RecipesPage.tsx`, `ScannerDialog.tsx` (Farben ohne `on-ink`), `TargetsPage.tsx`.
+- Geändert, Übungen und Fortschritt: `progress/ui/ExerciseDetailPage.tsx` (Aliasse, Etiketten, Reiter „Muskeln“ und „Alternativen“, Tipp-Karte), `progress/ui/ProgressPage.tsx`, `exercises/ui/ExerciseLibraryPage.tsx`, `exercises/index.ts`, `habits/ui/TaskStats.tsx`.
+- Geändert, gemeinsam: `src/shared/ui/Button.tsx` (Varianten `tile` und `action`), `Stat.tsx` (Hinweis im `dd`), `index.ts`; Texte `src/shared/i18n/de.ts` (Abschluss, Reiter der Übungsdetails, „Training starten“; Titel der Bühne ohne Plan entfernt), `de-nutrition.ts` (Anzahl der Einträge).
+- Tests angepasst: `programs-ui.test.tsx`, `programs/own-programs-ui.test.tsx`, `player/player-ui.test.tsx`, `custom-exercises-ui.test.tsx`; E2E `programs.spec.ts`, `session.spec.ts`, `notes.spec.ts` (neue Überschrift, „Zur Übersicht“ führt zu „Heute“).
+- Nicht geändert: Datenmodell, Routen und Funktionen; Texte nach den Leitplanken folgen mit F4, Anmeldung mit C.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -76,6 +88,12 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F2: `pnpm test:coverage`, danach `pnpm test` | 21.10.2026 | 843 Tests in 92 Dateien bestanden (vorher 834 in 91: neu 6 Prüfungen der Tab-Beschriftung auf dem Glas, 3 Breakpoint-Tests); mit `dialog.test.tsx` (Blatt wegwischen, 4 Tests) 847 Tests in 93 Dateien bestanden |
 | F2: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 227,1 KB von 250 KB (gzip) |
 | F2: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026 | 172 bestanden, 4 übersprungen, 0 fehlgeschlagen (5,1 min); nach der letzten Änderung an „Meine Küche“ `nutrition.spec.ts`, `shopping.spec.ts`, `tabbar.spec.ts` wiederholt: 19 bestanden, 3 übersprungen. WebKit läuft in GitHub Actions |
+| CI auf PR #49 nach F2 (`9944f96`) | 21.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 166 bestanden, 10 übersprungen (6,2 min) |
+| F3: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 21.10.2026 | ohne Befund (Prettier formatierte vorher `ProgramsPage.tsx` und `SummaryPage.tsx` nach) |
+| F3: `pnpm test` | 21.10.2026 | 847 Tests in 93 Dateien bestanden |
+| F3: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 227,7 KB von 250 KB (gzip) |
+| F3: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`), erster Lauf | 21.10.2026 | 170 bestanden, 4 übersprungen, 2 fehlgeschlagen (4,3 min): `session.spec.ts` „Training aus einer Vorlage …“ (Desktop und Handy), axe meldet auf dem Abschluss `definition-list: .gap-4`. Ursache: `StatTile` setzte den Hinweis „Gewicht × Wiederholungen ohne Aufwärmsätze“ als `p` in die Definitionsliste (seit Arbeitspaket D1, `e42b474`; auf dem Abschluss erst mit F3 in einer Definitionsliste). Fix: Hinweis im `dd`; Prüfung des Werts in `session.spec.ts` von `toHaveText` auf `toContainText` |
+| F3: `pnpm test:e2e` (Chromium, lokal), zweiter Lauf nach dem Fix | 21.10.2026 | 171 bestanden, 4 übersprungen, 1 fehlgeschlagen (4,4 min): `pwa.spec.ts` „Service Worker übernimmt und alle Bereiche starten offline“ (Handy), `/training/vorlagen/full_body_ab` blieb offline 5 s leer (keine Überschrift, keine Konsolenfehler); im selben Lauf am Desktop grün, im ersten Lauf in beiden Projekten grün. `session.spec.ts` jetzt in beiden Projekten grün. Wiederholung `pwa.spec.ts` mit `--repeat-each=3`: 12 bestanden (52 s). Der Test ist als zeitkritisch bekannt (Kommentar im Test: einmal rot am Handy auf dem CI-Runner) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -89,4 +107,4 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
 ## 6. Stand nach dieser Sitzung
 
-Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: F3, C, D, F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); `brand-tokens.md` wird mit E abgeschlossen; Screenshots der Screens in `docs/screens/` folgen mit E.
+Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: C, D, F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um Anmeldung und Rückkehr-Flow ergänzt.

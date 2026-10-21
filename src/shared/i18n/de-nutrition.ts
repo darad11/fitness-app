@@ -66,6 +66,7 @@ export const tNutrition = {
   },
   myFoods: 'Meine Lebensmittel',
   emptySlot: 'Noch nichts eingetragen.',
+  entryCount: (n: number) => (n === 1 ? '1 Eintrag' : `${n} Einträge`),
   incomplete: (names: string) => `Unvollständig: ${names} fehlt bei mindestens einem Eintrag.`,
   estimatedHint: 'Enthält Schätzungen (Schnelleinträge).',
   entryLabel: (name: string) => `${name} bearbeiten`,

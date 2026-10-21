@@ -65,7 +65,7 @@ export function WaterCard({
 
   if (entries === undefined || goals === undefined) {
     return (
-      <Card title={title} action={action} className={className}>
+      <Card title={title} titleStyle="label" action={action} className={className}>
         <div aria-busy="true">
           <Skeleton className="h-28" />
         </div>
@@ -81,7 +81,7 @@ export function WaterCard({
   const mark = (state.goalMl / scale) * 100;
 
   return (
-    <Card title={title} action={action} className={className}>
+    <Card title={title} titleStyle="label" action={action} className={className}>
       <p className="flex flex-wrap items-baseline gap-x-2" aria-live="polite">
         <span className="text-value font-semibold tabular-nums">
           {formatMl(fmt, state.totalMl)}

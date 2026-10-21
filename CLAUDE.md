@@ -4,12 +4,12 @@ Persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, den Pro
 
 ## Zuerst lesen
 
-- `docs/handover-2026-10-19.md`: letzter Arbeitsstand (Übergabe), offene Punkte beim Produktinhaber, bewährte Arbeitsweise
+- `docs/handover-2026-10-21.md`: letzter Arbeitsstand (Übergabe), offene Punkte beim Produktinhaber, bewährte Arbeitsweise; davor `docs/handover-2026-10-19.md`
 - `docs/implementation-plan.md`: Meilensteine, Arbeitspakete, „Stand" und „Nächste konkrete Schritte"
 - `docs/decisions.md`: Entscheidungen (D-…) und offene Fragen (Q-…)
 - `docs/requirements.md`: Akzeptanzkriterien (AK-…); `docs/testing.md`: Nachweise und Protokolle
 - `docs/evolution-plan.md`: Erweiterungsplan (Schritte A bis H), Programme A, B, C; dazu `docs/winter-arc-reconstruction.md` und `docs/reference-analysis.md`
-- Je nach Aufgabe: `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`, `docs/exercise-library.md`
+- Je nach Aufgabe: `docs/shopping-list.md`, `docs/water-tracker.md`, `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`, `docs/exercise-library.md`
 
 ## Zusammenarbeit
 

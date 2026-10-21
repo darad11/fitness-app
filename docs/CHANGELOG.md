@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.38 · 21.10.2026 · Übergabe
+
+| Datei | Änderung |
+|---|---|
+| `handover-2026-10-21.md` | Neu: Stand nach #37 bis #45, offene Punkte, Arbeitsweise |
+| `implementation-plan.md` | Punkte 53 und 55 gemergt |
+| `CLAUDE.md` | Verweis auf die neue Übergabe, `shopping-list.md` und `water-tracker.md` |
+
 ## Version 0.37 · 21.10.2026 · Wasser
 
 | Datei | Änderung |

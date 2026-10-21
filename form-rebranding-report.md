@@ -15,6 +15,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F0 Platz im Startbündel | Nachladen statt mitliefern: Beschreibungshilfen aus Seiten in `calc`-Dateien, Trainingsdienst erst beim Start, `lazy`-Komponente für Übungseinstellungen, Texte nachgeladener Seiten in `de-nutrition.ts`, `de-sync.ts`, `de-program-editor.ts`; ungenutzter Block `motivation` entfernt | D-307 | umgesetzt, Startansicht 226,9 KB (vorher 249,6 KB) |
 | F1 Tokens | FORM-Farben unter den bestehenden Token-Namen, Dunkel erzwungen, helle Tokens nur angelegt, keine Schatten und kein Glas, Label 13/500, tabellarische Ziffern; `brand-tokens.md` mit Zuordnung alt → neu, Kontrasten und Abweichungen; Einstellung „Darstellung“ entfällt | D-308, Q-23 | umgesetzt |
 | A Icons und Manifest | Assets aus `form-app-assets.zip` unter `public/icons/`, `public/brand/`, `public/splash/`; Manifest „FORM“ mit Nacht-Farben und vier Icons; Favicon-Links; altes Hantel-Motiv und `pnpm icons` entfernt | D-309 | umgesetzt |
+| B Kopfzeile | Kachel-F plus Wortmarke als `<img>` (30 px, Tippfläche 44 px) auf jeder Seite, Seitenleiste mit Kachel-F bzw. Logo, Begrüßung nach Tageszeit ohne Uhr, `app.name` „FORM“ | D-310 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -35,6 +36,11 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Geändert: `vite.config.ts` (Manifest, `includeAssets`, `globIgnores`), `index.html` (Titel, Apple-Titel, Favicon-Links), `e2e/pwa.spec.ts` (Name „FORM“, vier Icons, Farben), `package.json` und `README.md` (ohne `pnpm icons`).
 - Entfernt: `public/favicon.svg`, `public/icons/maskable-512.png`, `tools/generate-icons.mjs`.
 
+### B Kopfzeile
+
+- Geändert: `src/app/layout/AppLayout.tsx` (Kopfzeile 56 px mit `logo-kopfzeile-dunkel.svg`, `alt="FORM – zu Heute"`), `src/app/layout/Sidebar.tsx` (eingeklappt `kachel-f.svg`, ausgeklappt das Logo), `src/app/styles.css` (`.sidebar-tile`), `src/modules/dashboard/ui/TodayPage.tsx` (Begrüßung ab 5, 11 und 18 Uhr; Uhrzeit entfernt), `src/shared/i18n/de.ts` (`app.name` „FORM“, `app.brandLink` „FORM – zu Heute“); Tests `src/app/app.test.tsx`, `e2e/shell.spec.ts` (Selektor auf das Logo-Bild, Höhe 30 px, Tippfläche ≥ 44 px).
+- Nicht geändert: Die Anmeldung zeigt noch das App-Icon (Paket C), die Tab-Leiste und die Komponenten folgen mit F2.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -48,6 +54,10 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F1 und A: `pnpm test` | 21.10.2026 | 834 Tests in 91 Dateien bestanden (F0: 806; `tokens.test.ts` prüft jetzt 180 Paare in beiden Blöcken) |
 | F1 und A: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 226,5 KB von 250 KB (gzip); Service Worker 178 Einträge |
 | F1 und A: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026 | 172 bestanden, 4 übersprungen, 0 fehlgeschlagen, 4,9 min (weniger Tests als vorher, weil die Schleifen über „Hell“ und „Dunkel“ zu einem Lauf wurden, D-308) |
+| B: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 21.10.2026 | ohne Befund |
+| B: `pnpm test` | 21.10.2026 | 834 Tests in 91 Dateien bestanden |
+| B: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 226,5 KB von 250 KB (gzip) |
+| B: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026 | Erster Lauf: 171 bestanden, 4 übersprungen, 1 fehlgeschlagen: `shell.spec.ts` „meldet unbekannte Adressen mit Weg zurück“ (Handy), weil der Selektor „Zu Heute“ auch den neuen Logo-Link „FORM – zu Heute“ traf (Playwright-Strict-Mode, Ursache im Test). Selektor auf `exact: true` gesetzt; Wiederholung von `shell.spec.ts`: 15 bestanden, 1 übersprungen, 0 fehlgeschlagen. WebKit läuft in GitHub Actions auf PR #49 |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -55,4 +65,9 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
 ## 5. Offen beim Produktinhaber
 
-Wird am Ende ergänzt.
+- Q-23: Heller Modus nach dem Rebranding (bleibt er, oder entfällt er mit den `-hell`-Dateien)? Bis dahin nur Dunkel (D-308).
+- Für F2 vorgesehen: Die Tab-Leiste wird die Leiste aus dem Konzept (Nacht, Rand oben, aktiver Tab in Lime, keine Füllfläche). Die Glas-Linse (D-272) und das Schrumpfen zum Kreis beim Scrollen (D-276) passen nicht zu dieser festen Leiste und sollen entfallen; bitte widersprechen, falls das Scroll-Verhalten bleiben soll.
+
+## 6. Stand nach dieser Sitzung
+
+Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: F2, F3, C, D, F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); `brand-tokens.md` liegt als Entwurf vor und wird mit E abgeschlossen; Screenshots in `docs/screens/` folgen mit E.

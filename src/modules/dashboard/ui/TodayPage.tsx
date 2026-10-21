@@ -62,27 +62,17 @@ export function TodayPage() {
       ? changeTone(weightChange, latestWeight.weightKg, goalKg)
       : 'neutral';
   const { start, error, busy } = useStartSession();
-  const clock = new Intl.DateTimeFormat('de-AT', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23',
-    timeZone: formatters.timeZone,
-  });
   const hour = hourIn(now, formatters.timeZone);
 
   return (
     <>
-      {/* Begrüßung wie im Dashboard (D-276): Gruß mit Namen, darunter Datum und Uhr. */}
+      {/* Begrüßung nach Tageszeit (D-276, D-310): Gruß mit Namen, darunter das Datum; ohne Uhr. */}
       <header className="mb-6">
         <h1 className="text-display font-bold">
           <span className="sr-only">{t.today.title}: </span>
           {t.today.greetingLine(greetingFor(hour), profile?.displayName)}
         </h1>
-        <p className="mt-2 flex items-baseline justify-between gap-3 text-muted">
-          <span className="min-w-0">{formatters.weekdayDayMonth(today)}</span>
-          <time className="whitespace-nowrap tabular-nums">{clock.format(now)}</time>
-        </p>
+        <p className="mt-2 text-muted">{formatters.weekdayDayMonth(today)}</p>
       </header>
       <div className="grid gap-4 md:grid-cols-2">
         {active === undefined || program === undefined ? (
@@ -266,9 +256,9 @@ export function TodayPage() {
   );
 }
 
-/** Gruß nach Uhrzeit wie im Dashboard: ab 5 Uhr Morgen, ab 12 Uhr Tag, ab 18 Uhr Abend. */
+/** Gruß nach Uhrzeit (D-310): 5 bis 11 Uhr Morgen, 11 bis 18 Uhr Tag, sonst Abend. */
 function greetingFor(hour: number): string {
-  if (hour >= 5 && hour < 12) return t.today.greetingMorning;
-  if (hour >= 12 && hour < 18) return t.today.greetingDay;
+  if (hour >= 5 && hour < 11) return t.today.greetingMorning;
+  if (hour >= 11 && hour < 18) return t.today.greetingDay;
   return t.today.greetingEvening;
 }

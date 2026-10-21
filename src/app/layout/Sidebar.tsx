@@ -15,9 +15,15 @@ export function Sidebar() {
       aria-label={t.nav.label}
       className="sidebar glass-blur fixed top-3 bottom-3 left-3 z-30 hidden flex-col overflow-hidden px-3 pt-4 pb-4 lg:flex"
     >
-      <div className="mb-5 flex h-11 items-center gap-3 px-1.5">
-        <img src="/icons/icon-192.png" alt="" className="size-9 shrink-0 rounded-[10px]" />
-        <span className="sidebar-label text-lg font-bold">{t.app.name}</span>
+      {/* Eingeklappt nur das F (Kachel), ausgeklappt Symbol plus Wortmarke (D-310). */}
+      <div className="relative mb-5 flex h-11 items-center px-1.5">
+        <img src="/brand/kachel-f.svg" alt="" className="sidebar-tile size-9 shrink-0" />
+        <img
+          src="/brand/logo-kopfzeile-dunkel.svg"
+          alt={t.app.name}
+          height={30}
+          className="sidebar-label absolute left-1.5 h-[30px] w-auto"
+        />
       </div>
       <ul className="space-y-1">
         {VISIBLE_NAV_ITEMS.map((item) => {

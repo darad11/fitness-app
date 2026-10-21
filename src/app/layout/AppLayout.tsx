@@ -41,16 +41,18 @@ export function AppLayout() {
           className="page-gutters mx-auto w-full max-w-[1200px] flex-1 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] outline-none lg:pt-8 lg:pb-10"
         >
           {fullscreen ? null : (
-            // Logo und Name auf jeder Seite (D-286), wie im Dashboard; am Desktop zeigt die
-            // Seitenleiste beides schon. Führt zu „Heute“.
-            <Link
-              to="/heute"
-              aria-label={t.app.brandLink}
-              className="mb-4 flex w-fit items-center gap-2.5 rounded-input lg:hidden"
-            >
-              <img src="/icons/icon-192.png" alt="" className="size-8 shrink-0 rounded-[9px]" />
-              <span className="text-lg font-bold">{t.app.name}</span>
-            </Link>
+            // Kopfzeile (D-286, D-310): Kachel-F plus Wortmarke als Bild aus public/brand, 30 px
+            // hoch, Tippfläche 44 px; am Desktop zeigt die Seitenleiste das Logo. Führt zu „Heute“.
+            <div className="-mt-6 mb-2 flex h-14 items-center lg:hidden">
+              <Link to="/heute" className="flex min-h-11 items-center rounded-input">
+                <img
+                  src="/brand/logo-kopfzeile-dunkel.svg"
+                  alt={t.app.brandLink}
+                  height={30}
+                  className="h-[30px] w-auto"
+                />
+              </Link>
+            </div>
           )}
           <Outlet />
         </main>

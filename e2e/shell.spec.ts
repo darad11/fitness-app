@@ -24,12 +24,12 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   ]);
   await mainNav(page).getByRole('link', { name: 'Mehr' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Mehr' })).toBeVisible();
-  // Ohne den Link „Fitness“ oben links (D-286).
+  // Ohne das Logo oben links (D-286, D-310).
   await expect(
     page
       .getByRole('main')
       .getByRole('link')
-      .filter({ hasNotText: /^Fitness$/ }),
+      .filter({ hasNot: page.getByRole('img', { name: 'FORM – zu Heute' }) }),
   ).toHaveText(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   // Daten, Installieren und Schritte stehen in den Einstellungen (D-280).
   await page.getByRole('main').getByRole('link', { name: 'Einstellungen' }).click();
@@ -71,7 +71,7 @@ test('formatiert nach Gerätesprache de-AT mit „Jänner" (AK-SET-04)', async (
 test('meldet unbekannte Adressen mit Weg zurück', async ({ page }) => {
   await openPage(page, '/gibt-es-nicht');
   await expect(page.getByRole('heading', { level: 1, name: 'Seite nicht gefunden' })).toBeVisible();
-  await page.getByRole('link', { name: 'Zu Heute' }).click();
+  await page.getByRole('link', { name: 'Zu Heute', exact: true }).click();
   await expect(page).toHaveURL(/\/heute$/);
 });
 
@@ -105,7 +105,7 @@ test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-
   await expect(page.getByText(/^Letzter Export: /)).toBeVisible();
 });
 
-test('Logo und Name am Handy auf jeder Seite links oben, führt zu „Heute“ (D-280, D-286)', async ({
+test('Logo am Handy auf jeder Seite links oben, 30 px hoch, führt zu „Heute“ (D-286, D-310)', async ({
   page,
 }, testInfo) => {
   test.skip(!testInfo.project.name.includes('mobile'), 'Am Desktop zeigt die Seitenleiste beides');
@@ -117,13 +117,16 @@ test('Logo und Name am Handy auf jeder Seite links oben, führt zu „Heute“ (
     '/mehr/einstellungen',
   ]) {
     await openPage(page, path);
-    const brand = page.getByRole('main').getByRole('link', { name: 'Fitness, zu „Heute“' });
+    const brand = page.getByRole('main').getByRole('link', { name: 'FORM – zu Heute' });
     await expect(brand).toBeVisible();
+    const image = await brand.getByRole('img').boundingBox();
+    expect(Math.round(image?.height ?? 0)).toBe(30);
     const logo = await brand.boundingBox();
+    expect(logo?.height ?? 0).toBeGreaterThanOrEqual(44);
     const title = await page.getByRole('heading', { level: 1 }).boundingBox();
     expect((logo?.y ?? 0) + (logo?.height ?? 0)).toBeLessThanOrEqual(title?.y ?? 0);
     expect(logo?.x ?? 99).toBeLessThan(30);
   }
-  await page.getByRole('main').getByRole('link', { name: 'Fitness, zu „Heute“' }).click();
+  await page.getByRole('main').getByRole('link', { name: 'FORM – zu Heute' }).click();
   await expect(page).toHaveURL(/\/heute$/);
 });

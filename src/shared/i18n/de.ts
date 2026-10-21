@@ -4,8 +4,8 @@
  */
 export const de = {
   app: {
-    name: 'Fitness',
-    brandLink: 'Fitness, zu „Heute“',
+    name: 'FORM',
+    brandLink: 'FORM – zu Heute',
   },
   common: {
     back: 'Zurück',
@@ -254,7 +254,7 @@ export const de = {
     more: 'Mehr',
   },
   today: {
-    /** Begrüßung wie im Dashboard des Produktinhabers (ab 5, 12 und 18 Uhr). */
+    /** Begrüßung nach Tageszeit (ab 5, 11 und 18 Uhr; D-310), ohne Uhrzeit. */
     greetingMorning: 'Guten Morgen',
     greetingDay: 'Guten Tag',
     greetingEvening: 'Guten Abend',

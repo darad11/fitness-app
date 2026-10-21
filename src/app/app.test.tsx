@@ -130,8 +130,8 @@ describe('App-Shell', () => {
       within(main)
         .getAllByRole('link')
         .map((link) => link.textContent)
-        // Ohne den Link „Fitness“ oben links (D-286).
-        .filter((text) => text !== 'Fitness'),
+        // Ohne das Logo oben links (D-286, D-310); es hat keinen Text, nur ein Bild.
+        .filter((text) => text !== ''),
     ).toEqual(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   });
 

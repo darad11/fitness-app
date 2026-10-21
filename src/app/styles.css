@@ -256,6 +256,14 @@
   .sidebar:focus-within .sidebar-label {
     opacity: 1;
   }
+  /* Kachel-F nur eingeklappt; ausgeklappt steht das ganze Logo an derselben Stelle (D-310). */
+  .sidebar-tile {
+    transition: opacity 0.16s;
+  }
+  .sidebar:hover .sidebar-tile,
+  .sidebar:focus-within .sidebar-tile {
+    opacity: 0;
+  }
   /* Schwebende Ebene: Navigation, Dialoge, Leisten. */
   .glass-blur {
     -webkit-backdrop-filter: var(--glass-blur);

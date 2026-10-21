@@ -729,6 +729,8 @@ export const de = {
       SyncOfflineError: 'Letzter Versuch ohne Verbindung. Sobald Netz da ist, geht es weiter.',
       SessionExpiredError: 'Die Anmeldung ist abgelaufen. Bitte melde dich erneut an.',
       NotSignedInError: 'Nicht angemeldet.',
+      AppOutdatedError:
+        'Ein anderes Gerät nutzt eine neuere Version der App. Der Abgleich wartet, bis diese App aktualisiert ist („Über die App“ › „Nach Update suchen“).',
       other: 'Der letzte Abgleich ist fehlgeschlagen. Er wird automatisch wiederholt.',
     } as Record<string, string>,
     syncNow: 'Jetzt abgleichen',

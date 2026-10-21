@@ -10,8 +10,9 @@ import {
   type StoredDoc,
 } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
+import { getCursor } from '../data/syncState';
 import type { PushDoc, PushResult, RemoteRow } from '../model/sync';
-import { conflictName, resetForUser, syncOnce, type Remote } from './syncEngine';
+import { AppOutdatedError, conflictName, resetForUser, syncOnce, type Remote } from './syncEngine';
 
 /** Server im Arbeitsspeicher mit denselben Regeln wie `push_documents` (jüngerer HLC gewinnt). */
 class FakeServer {
@@ -174,16 +175,58 @@ describe('Abgleich (D-269)', () => {
     expect(onB).toHaveBeenCalledWith(b.db, session.id);
   });
 
-  it('übergeht ungültige oder fremde Zeilen vom Server', async () => {
+  it('übergeht ungültige Zeilen vom Server und rückt den Cursor darüber hinweg', async () => {
     const weight = await insertDoc(a, weightDef, { weightKg: 80 });
     await sync(a);
     const row = server.rows.get(weight.id);
     if (!row) throw new Error('fehlt');
-    server.rows.set('x1', { ...row, doc_id: crypto.randomUUID(), doc_table: 'errorLog', rev: 100 });
-    server.rows.set('x2', { ...row, doc_id: crypto.randomUUID(), rev: 101 }); // id passt nicht
-    server.rows.set('x3', { ...row, doc_id: weight.id, doc_type: 'session', rev: 102 });
+    server.rows.set('x1', { ...row, doc_id: crypto.randomUUID(), rev: 101 }); // id passt nicht
     expect(await sync(b)).toMatchObject({ pulled: 1 });
     expect(await b.db.bodyWeights.count()).toBe(1);
+    expect(await getCursor(b.db)).toBe(101);
+  });
+
+  it('hält vor Dokumenten einer neueren App-Version an, statt sie zu überspringen (D-292)', async () => {
+    const weight = await insertDoc(a, weightDef, { weightKg: 80 });
+    await sync(a);
+    const row = server.rows.get(weight.id);
+    if (!row) throw new Error('fehlt');
+    // Eine neuere Version hat eine unbekannte Tabelle und danach ein weiteres Gewicht geschrieben.
+    const futureId = crypto.randomUUID();
+    server.rows.set('neu', {
+      ...row,
+      doc_id: futureId,
+      doc_table: 'zukunftTabelle',
+      doc_type: 'zukunft',
+      payload: { ...row.payload, id: futureId },
+      rev: 100,
+    });
+    const laterId = crypto.randomUUID();
+    server.rows.set('danach', {
+      ...row,
+      doc_id: laterId,
+      payload: { ...row.payload, id: laterId, weightKg: 81 },
+      rev: 101,
+    });
+    await insertDoc(b, weightDef, { weightKg: 90 });
+    const pushes = server.pushes;
+    await expect(sync(b)).rejects.toBeInstanceOf(AppOutdatedError);
+    // Bis zur unbekannten Zeile ist abgeglichen; der Cursor steht davor; nichts wurde gesendet.
+    expect((await b.db.bodyWeights.get(weight.id))?.weightKg).toBe(80);
+    expect(await b.db.bodyWeights.count()).toBe(2);
+    expect(await getCursor(b.db)).toBe(row.rev);
+    expect(server.pushes).toBe(pushes);
+    await expect(sync(b)).rejects.toBeInstanceOf(AppOutdatedError);
+    expect(await getCursor(b.db)).toBe(row.rev);
+
+    // Nach dem Update kennt die App die Tabelle: beide Zeilen kommen an, dann wird gesendet.
+    const future = server.rows.get('neu');
+    if (!future) throw new Error('fehlt');
+    server.rows.set('neu', { ...future, doc_table: 'bodyWeights', doc_type: 'body_weight' });
+    expect(await sync(b)).toEqual({ pulled: 2, pushed: 1, conflicts: 0 });
+    expect(await b.db.bodyWeights.count()).toBe(4);
+    expect(await getCursor(b.db)).toBe(101);
+    expect(server.pushes).toBe(pushes + 1);
   });
 
   it('setzt Cursor und Basis bei einem anderen Nutzer zurück, ohne Daten zu löschen', async () => {

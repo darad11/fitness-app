@@ -30,13 +30,15 @@ export function EntryDialog({
   const id = useId();
   const shown = entryNameAndBrand(entry, brandOf);
   const byServing = entry.servingSnapshot !== undefined;
-  const [value, setValue] = useState(
+  // Ohne Tausendertrennung, weil parseDecimal keine liest (D-291).
+  const initialText =
     entry.amount === undefined
       ? ''
       : fmt.number(byServing ? (entry.servingSnapshot?.count ?? 1) : entry.amount, {
           maximumFractionDigits: 2,
-        }),
-  );
+          useGrouping: false,
+        });
+  const [value, setValue] = useState(initialText);
   const [slot, setSlot] = useState<MealSlot>(entry.slot);
   const [error, setError] = useState<string | null>(null);
   const unit = t.nutrition.units[entry.basisSnapshot ?? 'g'];
@@ -44,7 +46,9 @@ export function EntryDialog({
   const save = () => {
     setError(null);
     const change: Parameters<typeof changeEntry>[2] = { slot };
-    if (entry.amount !== undefined) {
+    // Eine unveränderte Eingabe bleibt außen vor, sonst würde die gerundete Anzeige
+    // (etwa 0,33 statt eines Drittels) die Menge verschieben (D-291).
+    if (entry.amount !== undefined && value.trim() !== initialText) {
       const parsed = parseDecimal(value);
       if (parsed === null || parsed <= 0) {
         setError(t.nutrition.invalidAmount);

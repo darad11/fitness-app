@@ -12,6 +12,7 @@ import { getSession } from '../../data/sessionRepository';
 import { loadSampleTemplate } from '../../data/sampleTemplates';
 import { trainingRoutes } from '../../routes';
 import {
+  addExercise,
   adjustRest,
   completeSet,
   finishSession,
@@ -85,6 +86,24 @@ describe('Trainingsplayer (S-07)', () => {
       screen.getByLabelText('Zeit in Sekunden, Unterarmstütz (Plank), Arbeitssatz 1'),
     ).toBeInTheDocument();
     expect(screen.getAllByText('Erstes Mal')).toHaveLength(5);
+  });
+
+  it('belegt Distanzen ab 1000 m ohne Tausenderpunkt vor (D-291)', async () => {
+    const session = await startTemplate();
+    const exercises = await loadCoreExercises();
+    const rower = exercises.find((e) => e.id === coreExerciseId('rowing_machine'))!;
+    const withRower = await addExercise(rt, session.id, {
+      exerciseId: rower.id,
+      name: rower.name,
+      trackingMode: 'time_distance',
+      distanceUnit: 'm',
+    });
+    const set = withRower.exercises.at(-1)!.sets[0]!;
+    await setValues(rt, session.id, set.id, { distanceM: 2000 });
+    renderAt(`/training/einheit/${session.id}`);
+    expect(await screen.findByLabelText('Distanz in m, Rudergerät, Arbeitssatz 1')).toHaveValue(
+      '2000',
+    );
   });
 
   it('speichert Eingaben verzögert, erledigt mit ±-Taste und zeigt Fehler am Satz', async () => {

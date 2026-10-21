@@ -90,12 +90,9 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
   const returnTo = params.get('zurueck');
   const back = returnTo?.startsWith('/ernaehrung') ? returnTo : '/ernaehrung/lebensmittel';
   const id = useId();
+  // Ohne Tausendertrennung, weil parseDecimal keine liest (D-291).
   const show = (value: number | undefined) =>
-    value === undefined
-      ? ''
-      : fmt
-          .number(value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })
-          .replace(/\s/g, '');
+    value === undefined ? '' : fmt.number(value, { maximumFractionDigits: 2, useGrouping: false });
   const [name, setName] = useState(food?.name ?? draft?.name ?? '');
   const [brand, setBrand] = useState(food?.brand ?? draft?.brand ?? '');
   const [barcode, setBarcode] = useState(food?.barcode ?? draft?.barcode ?? '');

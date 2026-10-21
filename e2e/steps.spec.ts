@@ -89,8 +89,9 @@ test('Schritte aus dem Dashboard: verbinden, Karte unter Ernährung, trennen (D-
   await expect(card).toContainText(/8\D?420/);
   await expect(card).toContainText('Ziel');
   await expect(card).toContainText(/Jahr \d+ %/);
-  // Die Ernährungskarte wird nachgeladen; erst danach die Reihenfolge lesen.
+  // Ernährungs- und Wasserkarte werden nachgeladen; erst danach die Reihenfolge lesen.
   await expect(page.getByText('Ernährung heute')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Wasser', exact: true })).toBeVisible();
   const order = await page
     .getByRole('main')
     .locator('section')

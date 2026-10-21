@@ -43,9 +43,20 @@ export function conflictName(name: unknown, now: Date): string {
   return `${base.slice(0, 70)} (Konflikt ${day})`;
 }
 
+/**
+ * Der Server enthält Dokumente, deren Tabelle oder Art diese App-Version nicht kennt. Sie stammen
+ * von einer neueren Version; der Abgleich wartet vor ihnen auf das Update (D-292).
+ */
+export class AppOutdatedError extends Error {
+  override name = 'AppOutdatedError';
+}
+
+/** Kennt diese App-Version Tabelle und Art der Zeile? */
+function knownKind(row: RemoteRow): boolean {
+  return isTable(row.doc_table) && EXPORT_TYPES[row.doc_table].includes(row.doc_type);
+}
+
 function validRemote(row: RemoteRow): StoredDoc | null {
-  if (!isTable(row.doc_table)) return null;
-  if (!EXPORT_TYPES[row.doc_table].includes(row.doc_type)) return null;
   const root = rootFieldsSchema.safeParse(row.payload);
   if (!root.success) return null;
   const doc = row.payload as StoredDoc;
@@ -57,7 +68,11 @@ async function persistClock(rt: DbRuntime) {
   await setMetaValue(rt.db, META_KEYS.hlc, rt.clock.snapshot);
 }
 
-/** Holt alle Änderungen seit dem Cursor ab und führt sie mit den lokalen Fassungen zusammen. */
+/**
+ * Holt alle Änderungen seit dem Cursor ab und führt sie mit den lokalen Fassungen zusammen.
+ * Vor der ersten Zeile einer neueren App-Version bleibt der Cursor stehen, und der Abgleich endet
+ * mit `AppOutdatedError`; nach dem Update geht es genau dort weiter (D-292).
+ */
 async function pull(rt: DbRuntime, remote: Remote, options: SyncOptions) {
   const { db } = rt;
   let pulled = 0;
@@ -67,12 +82,21 @@ async function pull(rt: DbRuntime, remote: Remote, options: SyncOptions) {
   for (;;) {
     const rows = await remote.pull(cursor, PULL_PAGE);
     if (rows.length === 0) break;
-    await db.transaction(
+    // Ergebnis der Seite: steht eine Zeile einer neueren App-Version darin?
+    const outdated = await db.transaction(
       'rw',
       [...DOCUMENT_TABLES.map((t) => db.table(t)), db.syncBase, db.meta, db.exerciseHistory],
       async () => {
         let maxHlc: string | undefined;
+        /** `rev` der letzten verarbeiteten Zeile; der Cursor rückt nur bis hierher. */
+        let seen: number | undefined;
+        let stop = false;
         for (const row of rows) {
+          if (!knownKind(row)) {
+            stop = true;
+            break;
+          }
+          seen = row.rev;
           const doc = validRemote(row);
           if (!doc || !isTable(row.doc_table)) continue;
           const table = db.table<StoredDoc, string>(row.doc_table);
@@ -123,10 +147,14 @@ async function pull(rt: DbRuntime, remote: Remote, options: SyncOptions) {
         // Die Uhr läuft danach vor allen gesehenen Stempeln, damit lokale Änderungen jünger sind.
         if (maxHlc) rt.clock.receive(maxHlc);
         await persistClock(rt);
-        cursor = rows[rows.length - 1]?.rev ?? cursor;
-        await setMetaValue(db, SYNC_KEYS.cursor, cursor);
+        if (seen !== undefined) {
+          cursor = seen;
+          await setMetaValue(db, SYNC_KEYS.cursor, cursor);
+        }
+        return stop;
       },
     );
+    if (outdated) throw new AppOutdatedError('Dokumente einer neueren App-Version auf dem Server');
     if (rows.length < PULL_PAGE) break;
   }
   return { pulled, conflicts };
@@ -184,7 +212,8 @@ async function push(rt: DbRuntime, remote: Remote) {
 
 /**
  * Ein Abgleich (D-269): erst abholen und zusammenführen, dann senden. Abholen zuerst, damit
- * Konflikte erkannt werden, bevor eine lokale Fassung den Server erreicht.
+ * Konflikte erkannt werden, bevor eine lokale Fassung den Server erreicht. Bricht das Abholen
+ * wegen einer neueren App-Version ab, wird in diesem Lauf auch nichts gesendet (D-292).
  */
 export async function syncOnce(
   rt: DbRuntime,

@@ -43,7 +43,10 @@ export function HistoryDetailPage() {
       </>
     );
   }
-  const number = (value: number) => fmt.number(value, { maximumFractionDigits: 2 });
+  // Ohne Tausendertrennung: das Bearbeiten belegt die Felder damit vor, und parseDecimal
+  // liest keine (D-291).
+  const number = (value: number) =>
+    fmt.number(value, { maximumFractionDigits: 2, useGrouping: false });
   const summary = summarizeSession(session);
   const ended = new Date(session.endedAt ?? session.startedAt);
   if (editing) {

@@ -55,6 +55,19 @@ describe('createFormatters', () => {
     }
   });
 
+  it('lässt die Tausendertrennung für Eingabefelder weg (D-291)', () => {
+    for (const locale of ['de-DE', 'de-AT', 'de-CH'] as const) {
+      const f = createFormatters(locale);
+      expect(f.number(1500, { useGrouping: false })).toBe('1500');
+      const shown = f.number(1234.5, { maximumFractionDigits: 2, useGrouping: false });
+      expect(shown).toBe('1234,5');
+      // Was ein Eingabefeld vorbelegt, muss parseDecimal unverändert zurücklesen.
+      expect(parseDecimal(shown)).toBe(1234.5);
+      // Anzeigen behalten die Tausendertrennung.
+      expect(f.number(1500)).not.toBe('1500');
+    }
+  });
+
   it('zeigt Lasten bis 0,25 kg genau ohne überflüssige Nullen', () => {
     const f = createFormatters('de-DE');
     expect(f.loadKg(72.5)).toBe(`72,5${NBSP}kg`);

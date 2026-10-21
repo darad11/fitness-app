@@ -308,6 +308,32 @@ describe('Pausentimer (AK-TRN-10, AK-TRN-11)', () => {
 });
 
 describe('Beenden, Verlauf, Verwerfen (AK-TRN-19, AK-TRN-21, AK-TRN-05)', () => {
+  it('beendet eine vergessene Einheit nach über 24 Stunden mit dem letzten erledigten Satz (D-290)', async () => {
+    let s = await startSession(rt, freeInput('bench_press_barbell'), { now: () => T0 });
+    s = await setValues(rt, s.id, st(s, 0, 0).id, { weightKg: 60, reps: 8 });
+    s = await completeSet(rt, s.id, st(s, 0, 0).id, { ...REST, now: at(1500) });
+    // Beenden erst am übernächsten Tag: vorher lehnte das Schema die Dauer ab (nur Verwerfen blieb).
+    const finished = await finishSession(rt, s.id, { skipOpen: true, now: at(25 * 3600) });
+    expect(finished).toMatchObject({
+      status: 'completed',
+      endedAt: at(1500)().toISOString(),
+      durationSec: 1500,
+    });
+    expect(await findActiveSession(rt.db)).toBeUndefined();
+    expect(await latestHistory(rt.db, byKey('bench_press_barbell').id)).toMatchObject({
+      sessionId: s.id,
+    });
+
+    // Ohne erledigten Satz: endet jetzt, Dauer höchstens 24 Stunden.
+    const empty = await startSession(rt, freeInput('bench_press_barbell'), { now: () => T0 });
+    const closed = await finishSession(rt, empty.id, { skipOpen: true, now: at(30 * 3600) });
+    expect(closed).toMatchObject({
+      status: 'completed',
+      endedAt: at(30 * 3600)().toISOString(),
+      durationSec: 24 * 3600,
+    });
+  });
+
   it('fragt bei offenen Sätzen, schließt ab und schreibt die Projektion', async () => {
     let s = await startSession(rt, freeInput('bench_press_barbell'), { now: () => T0 });
     s = await setValues(rt, s.id, st(s, 0, 0).id, { weightKg: 60, reps: 8 });

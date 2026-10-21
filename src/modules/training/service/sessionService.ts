@@ -12,6 +12,7 @@ import { dayKey, localTimeZone } from '@/shared/lib/time';
 import { uuidv4 } from '@/shared/lib/uuid';
 import {
   checkValue,
+  finishEndedAt,
   liveExercises,
   liveSets,
   resolveCompletion,
@@ -790,13 +791,19 @@ export async function finishSession(
           }
         }
       }
-      const endedAt = iso(now);
+      // D-290: Nach mehr als 24 Stunden endet die Einheit mit dem letzten erledigten Satz, und
+      // die Dauer bleibt unter der Schemagrenze; vorher lehnte das Schema den Abschluss ab, und
+      // nur „Verwerfen“ blieb übrig.
+      const endedAt = finishEndedAt(draft, now, LIMITS.durationSec.max);
       draft.pauses = draft.pauses.map((pause) => (pause.end ? pause : { ...pause, end: endedAt }));
       return withIndex({
         ...draft,
         status: 'completed',
         endedAt,
-        durationSec: sessionDurationSec({ ...draft, endedAt }, now),
+        durationSec: Math.min(
+          LIMITS.durationSec.max,
+          sessionDurationSec({ ...draft, endedAt }, now),
+        ),
         restTimer: null,
       });
     });

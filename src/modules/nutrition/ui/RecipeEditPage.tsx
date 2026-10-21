@@ -75,8 +75,9 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
   const fmt = useFormatters();
   const navigate = useNavigate();
   const id = useId();
+  // Ohne Tausendertrennung, weil parseDecimal keine liest (D-291).
   const show = (value: number) =>
-    fmt.number(value, { maximumFractionDigits: 1 }).replace(/\s/g, '');
+    fmt.number(value, { maximumFractionDigits: 1, useGrouping: false });
   const [name, setName] = useState(recipe?.name ?? '');
   const [servingsText, setServingsText] = useState(String(recipe?.servings ?? 1));
   const [rows, setRows] = useState<Row[]>(

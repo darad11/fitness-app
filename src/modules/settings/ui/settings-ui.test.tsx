@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
-import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbProvider, dismissHint, META_KEYS, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
+import { THEME_STORAGE_KEY } from '@/shared/ui/theme';
 import { loadSettings, saveSettings } from '../data/settingsRepository';
 import { InstallPage } from './InstallPage';
 import { SettingsPage } from './SettingsPage';
@@ -82,16 +83,15 @@ describe('Mehr › Installieren (AK-SET-06)', () => {
 
 describe('Mehr › Einstellungen (AK-SET-02, AK-SET-04)', () => {
   it('zeigt beim Laden nur einen Platzhalter und danach gleich die gespeicherte Auswahl', async () => {
-    await saveSettings(rt, { theme: 'dark', locale: 'de-DE' });
+    await saveSettings(rt, { locale: 'de-DE' });
     renderPage(<SettingsPage />);
     // Erstes Bild: Die Einstellungen sind noch nicht gelesen, also auch keine Auswahl sichtbar.
     expect(document.querySelector('[aria-busy="true"]')).not.toBeNull();
-    expect(screen.queryAllByRole('radio')).toHaveLength(0);
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
 
-    expect(await screen.findByRole('radio', { name: 'Dunkel' })).toBeChecked();
-    expect(screen.getByRole('radio', { name: 'Hell' })).not.toBeChecked();
-    expect(screen.getByRole('combobox', { name: 'Datum und Zahlen' })).toHaveValue('de-DE');
+    expect(await screen.findByRole('combobox', { name: 'Datum und Zahlen' })).toHaveValue('de-DE');
+    // Keine Darstellungswahl: ausgeliefert wird nur Dunkel (D-308).
+    expect(screen.queryAllByRole('radio')).toHaveLength(0);
     expect(screen.getByText(/^Beispiel: 17\. Januar 2026 · 21:05/)).toBeInTheDocument();
     expect(document.querySelector('[aria-busy="true"]')).toBeNull();
   });
@@ -122,35 +122,17 @@ describe('Mehr › Einstellungen › Training (AK-SET-02)', () => {
 });
 
 describe('ThemeSync', () => {
-  it('folgt bei „System" Änderungen der Geräteeinstellung', async () => {
-    let listener: (() => void) | undefined;
-    let systemDark = false;
-    vi.spyOn(window, 'matchMedia').mockImplementation(
-      (query) =>
-        ({
-          get matches() {
-            return query === '(prefers-color-scheme: dark)' && systemDark;
-          },
-          media: query,
-          addEventListener: (_type: string, fn: () => void) => {
-            listener = fn;
-          },
-          removeEventListener: () => undefined,
-        }) as unknown as MediaQueryList,
-    );
-    document.head.innerHTML = '<meta name="theme-color" content="#f5f8fd" />';
+  it('wendet immer Dunkel an, auch bei gespeicherter Einstellung „System“ oder „Hell“ (D-308)', async () => {
+    document.head.innerHTML = '<meta name="theme-color" content="#ffffff" />';
     document.documentElement.setAttribute('data-theme', 'light');
     await saveSettings(rt, { theme: 'system' });
     renderPage(<ThemeSync />);
     await waitFor(() => {
-      expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
-    });
-    systemDark = true;
-    act(() => {
-      listener?.();
+      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     });
     expect(document.querySelector('meta[name="theme-color"]')?.getAttribute('content')).toBe(
-      '#212a3f',
+      '#0c1219',
     );
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark');
   });
 });

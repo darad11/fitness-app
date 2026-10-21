@@ -33,14 +33,6 @@ export async function openPage(page: Page, path: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
 }
 
-export async function chooseTheme(page: Page, label: 'Hell' | 'Dunkel' | 'System') {
-  await openPage(page, '/mehr/einstellungen');
-  const radio = page.getByRole('radio', { name: label });
-  await expect(radio).toBeEnabled();
-  await page.getByText(label, { exact: true }).click();
-  await expect(radio).toBeChecked();
-}
-
 /** Alle verfügbaren Seiten; geprüft werden Offline-Start, Netzwerk und Barrierefreiheit. */
 export const APP_PAGES = [
   '/heute',

@@ -1,18 +1,11 @@
-// Setzt das Farbschema vor dem ersten Bild aus der Kopie der Einstellung (src/shared/ui/theme.ts).
-// Quelle der Wahrheit sind die Einstellungen in der Datenbank; ThemeSync gleicht danach ab.
+// Setzt das Farbschema vor dem ersten Bild. Ausgeliefert wird nur Dunkel (D-308, src/shared/ui/theme.ts);
+// die gespeicherte Kopie der Einstellung (localStorage) wirkt erst, wenn ein heller Modus freigegeben ist.
 (function () {
   try {
-    var root = document.documentElement;
-    var preference = localStorage.getItem('fitness.theme');
-    if (preference !== 'dark' && preference !== 'system') preference = 'light';
-    if (preference === 'system') root.removeAttribute('data-theme');
-    else root.setAttribute('data-theme', preference);
-    var dark =
-      preference === 'dark' ||
-      (preference === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.setAttribute('data-theme', 'dark');
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', dark ? '#212a3f' : '#f5f8fd');
+    if (meta) meta.setAttribute('content', '#0c1219');
   } catch (error) {
-    // Ohne localStorage bleibt die Standarddarstellung „Hell".
+    // Das Attribut steht schon in index.html; hier geht nichts verloren.
   }
 })();

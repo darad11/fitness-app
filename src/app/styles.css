@@ -38,9 +38,9 @@
   --text-timer: 4rem;
   --text-timer--line-height: 1;
   --text-timer--letter-spacing: -0.02em;
-  --text-eyebrow: 0.75rem;
+  --text-eyebrow: 0.8125rem;
   --text-eyebrow--line-height: 1.3;
-  --text-eyebrow--letter-spacing: 0.08em;
+  --text-eyebrow--letter-spacing: 0.04em;
 
   --radius-input: 12px;
   --radius-card: 20px;
@@ -50,11 +50,13 @@
 
 @theme inline {
   --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-panel: var(--panel);
   --color-fg: var(--fg);
   --color-muted: var(--fg-muted);
+  --color-faint: var(--fg-faint);
   --color-line: var(--border);
   --color-line-input: var(--border-input);
   --color-accent: var(--accent);
@@ -62,6 +64,8 @@
   --color-on-accent: var(--accent-fg);
   --color-accent-ink: var(--accent-ink);
   --color-focus: var(--focus);
+  --color-action: var(--action);
+  --color-on-action: var(--action-fg);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
@@ -73,19 +77,21 @@
   --color-ink-2: var(--ink-2);
   --color-on-ink: var(--on-ink);
   --color-on-ink-muted: var(--on-ink-muted);
+  --color-tile: var(--tile);
+  --color-tile-border: var(--tile-border);
   --color-meter-track: var(--meter-track);
   --color-scrim: var(--scrim);
   --shadow-card: var(--shadow-card);
   --shadow-float: var(--shadow-float);
 }
 
-/* Vorzeile über Titeln und Kennzahlen (ux-audit.md Abschnitt 2). */
+/* Vorzeile über Titeln und Kennzahlen: Label 13/500 in Versalien mit 4 % Laufweite (brand-tokens.md). */
 @utility eyebrow {
   font-size: var(--text-eyebrow);
   line-height: var(--text-eyebrow--line-height);
   letter-spacing: var(--text-eyebrow--letter-spacing);
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Seitenrand 16 / 24 / 32 px, mindestens so breit wie der sichere Bereich (Querformat am iPhone). */
@@ -111,11 +117,13 @@
     scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
   }
 
-  /* Oberer Verlaufston: iOS färbt die Statusleiste nach dem Seitenhintergrund ein. */
+  /* Nacht als Grundfläche: iOS färbt die Statusleiste nach dem Seitenhintergrund ein. Alle Werte
+     mit tabellarischen Ziffern (brand-tokens.md). */
   body {
     background: var(--bg-top);
     color: var(--fg);
     font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -212,11 +220,10 @@
     left: 55%;
     background: var(--glow-3);
   }
-  /* Wichtigste Karte einer Seite: blaues Glas. */
+  /* Wichtigste Karte einer Seite: eine Stufe heller als die Seite, 1-px-Rand (D-308). */
   .hero-glass {
-    background: linear-gradient(140deg, var(--ink-2) 0%, var(--ink) 80%);
+    background: var(--ink);
     box-shadow: var(--shadow-card);
-    --focus: var(--on-ink);
   }
   /* Seitenleiste ab 1024 px: eingeklappt 4,5 rem, unter Maus oder Fokus 15 rem über dem Inhalt. */
   .sidebar {
@@ -319,9 +326,8 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--login-focus) 40%, transparent);
   }
   .login-button {
-    background: linear-gradient(135deg, var(--login-accent), var(--login-accent-2));
-    color: var(--login-fg);
-    box-shadow: 0 10px 24px color-mix(in srgb, var(--login-accent) 45%, transparent);
+    background: var(--login-accent);
+    color: var(--login-accent-fg);
   }
   .login-button:focus-visible,
   .login-later:focus-visible {

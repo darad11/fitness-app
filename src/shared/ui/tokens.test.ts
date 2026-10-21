@@ -1,14 +1,14 @@
 /**
- * Automatische Kontrastprüfung der Farbtokens (AK-UX-04, design-system.md Abschnitte 2 und 14).
+ * Automatische Kontrastprüfung der Farbtokens (AK-UX-04, brand-tokens.md Abschnitt 2).
  * Liest tokens.css direkt, damit Datei und Prüfung nicht auseinanderlaufen.
  *
- * Glas-Look (D-272): Flächen sind durchscheinend. Geprüft wird deshalb jede sichtbare Mischfarbe:
- * die Seite an Verlauf und Lichtflecken, Glas darauf und Glas auf Glas. Ein Paar besteht nur, wenn
- * es überall den Kontrast erreicht.
+ * Die FORM-Flächen sind deckend (D-308); durchscheinende Töne (z. B. `--accent-soft`) werden auf
+ * jeder Fläche geprüft, auf der sie liegen können. Geprüft werden der ausgelieferte dunkle Block
+ * und der nur angelegte helle Block.
  */
 import { describe, expect, it } from 'vitest';
 import css from './tokens.css?raw';
-import { THEME_BACKGROUND } from './theme';
+import { SHIPPED_THEME, THEME_BACKGROUND } from './theme';
 
 type Tokens = Record<string, string>;
 type Rgb = [number, number, number];
@@ -25,9 +25,8 @@ function parseBlock(source: string, opener: string): Tokens {
   );
 }
 
-const light = parseBlock(css, ':root {');
-const darkMedia = parseBlock(css, ":root:not([data-theme='light']) {");
-const dark = parseBlock(css, ":root[data-theme='dark'] {");
+const dark = parseBlock(css, ':root {');
+const light = parseBlock(css, ":root[data-theme='light'] {");
 
 function rgba(hex: string): [Rgb, number] {
   const n = (i: number) => parseInt(hex.slice(i, i + 2), 16);
@@ -101,17 +100,14 @@ const MODES: [string, Tokens][] = [
 ];
 
 describe('Farbtokens', () => {
-  it('definiert den dunklen Modus in beiden Blöcken gleich', () => {
-    expect(darkMedia).toEqual(dark);
-  });
-
   it('definiert hell und dunkel dieselben Tokens', () => {
     expect(Object.keys(dark).sort()).toEqual(Object.keys(light).sort());
   });
 
-  it('nutzt für theme-color den oberen Hintergrund', () => {
+  it('nutzt für theme-color den oberen Hintergrund; ausgeliefert wird Dunkel (D-308)', () => {
     expect(THEME_BACKGROUND.light).toBe(token(light, 'bg-top'));
     expect(THEME_BACKGROUND.dark).toBe(token(dark, 'bg-top'));
+    expect(THEME_BACKGROUND[SHIPPED_THEME === 'dark' ? 'dark' : 'light']).toBe('#0c1219');
   });
 
   it('mischt durchscheinende Farben richtig', () => {
@@ -130,6 +126,7 @@ describe('Farbtokens', () => {
     it.each([
       ['accent-fg', 'accent'],
       ['accent-fg', 'accent-hover'],
+      ['action-fg', 'action'],
       ['chart-axis', 'surface'],
       ['chart-total', 'surface'],
       ['bg', 'warning'],
@@ -141,13 +138,13 @@ describe('Farbtokens', () => {
       ['on-ink', 'ink-2'],
       ['on-ink-muted', 'ink'],
       ['on-ink-muted', 'ink-2'],
-      ...['login-bg-1', 'login-bg-2', 'login-bg-3'].flatMap((bg) => [
+      ...['login-bg-1', 'login-bg-2', 'login-bg-3', 'login-glass', 'login-input'].flatMap((bg) => [
         ['login-fg', bg],
         ['login-fg-muted', bg],
         ['login-error', bg],
       ]),
-      ['login-fg', 'login-accent'],
-      ['login-fg', 'login-accent-2'],
+      ['login-accent-fg', 'login-accent'],
+      ['login-accent-fg', 'login-accent-2'],
     ])('Text --%s auf --%s erreicht 4,5:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(4.5);
     });
@@ -160,6 +157,10 @@ describe('Farbtokens', () => {
       ['data-1', 'surface'],
       ['accent', 'meter-track'],
       ['accent', 'ink'],
+      ['action', 'surface'],
+      ['action', 'bg'],
+      ['success', 'ink'],
+      ...['macro-protein', 'macro-carbs', 'macro-fat'].map((ring) => [ring, 'surface']),
       ['on-ink', 'ink'],
       ['on-ink', 'ink-2'],
       ...['macro-protein', 'macro-carbs', 'macro-fat'].flatMap((ring) => [
@@ -167,21 +168,21 @@ describe('Farbtokens', () => {
         [ring, 'ink-2'],
       ]),
       ['login-focus', 'login-bg-1'],
+      ['login-input-line', 'login-glass'],
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);
     });
   });
 
-  it('dokumentierte Ausnahme: nur Aqua, Gelb und Magenta liegen hell unter 3:1', () => {
-    const below = Array.from({ length: 8 }, (_, i) => `data-${String(i + 1)}`).filter(
-      (name) => minContrast(light, name, 'surface') < 3,
-    );
-    expect(below).toEqual(['data-3', 'data-4', 'data-5']);
+  it.each(MODES)('alle Datenreihen erreichen %s 3:1', (_mode, tokens) => {
+    for (let i = 1; i <= 8; i++) {
+      expect(minContrast(tokens, `data-${String(i)}`, 'surface')).toBeGreaterThanOrEqual(3);
+    }
   });
 
-  it('alle Datenreihen erreichen dunkel 3:1', () => {
-    for (let i = 1; i <= 8; i++) {
-      expect(minContrast(dark, `data-${String(i)}`, 'surface')).toBeGreaterThanOrEqual(3);
-    }
+  it('Lime ist dunkel Akzent und Text, hell nur Symbol: Text in Grün dunkel', () => {
+    expect(token(dark, 'accent')).toBe('#c7ff46');
+    expect(token(dark, 'accent-ink')).toBe('#c7ff46');
+    expect(token(light, 'accent-ink')).toBe('#4c7a00');
   });
 });

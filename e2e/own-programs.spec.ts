@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
-import { chooseTheme, expect, openPage, test } from './fixtures';
+import { expect, openPage, test } from './fixtures';
 
 async function expectNoAxeViolations(page: Page, label: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
@@ -95,10 +95,9 @@ test('eigenes Programm übernehmen, bearbeiten und nach Neuladen behalten (AK-PR
   await expect(page.getByRole('link', { name: 'Bearbeiten' })).toBeVisible();
 });
 
-for (const theme of ['Hell', 'Dunkel'] as const) {
-  test(`keine axe-Verstöße im Programm-Editor in „${theme}" (AK-UX-04 Basis)`, async ({ page }) => {
+{
+  test(`keine axe-Verstöße im Programm-Editor (AK-UX-04 Basis)`, async ({ page }) => {
     test.slow();
-    await chooseTheme(page, theme);
     const programPath = await adoptSample(page);
     await expectNoAxeViolations(page, programPath);
     await openPage(page, `${programPath}/bearbeiten`);

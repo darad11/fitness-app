@@ -7,26 +7,12 @@ import {
   subscribeWakeLockStatus,
   wakeLockStatus,
 } from '@/shared/lib/wakeLock';
-import {
-  Card,
-  LinkList,
-  PageHeader,
-  SegmentedControl,
-  SelectField,
-  Skeleton,
-  Switch,
-} from '@/shared/ui';
+import { Card, LinkList, PageHeader, SelectField, Skeleton, Switch } from '@/shared/ui';
 import { useSyncExternalStore } from 'react';
 import { saveSettings } from '../data/settingsRepository';
 import { useSettings } from '../data/useSettings';
-import type { LocaleSetting, SettingsData, ThemeSetting } from '../model/settings';
+import type { LocaleSetting, SettingsData } from '../model/settings';
 import { formattersFor } from '../service/formatting';
-
-const THEME_OPTIONS: readonly { value: ThemeSetting; label: string }[] = [
-  { value: 'light', label: t.settings.themeLight },
-  { value: 'dark', label: t.settings.themeDark },
-  { value: 'system', label: t.settings.themeSystem },
-];
 
 const LOCALE_OPTIONS: readonly { value: LocaleSetting; label: string }[] = [
   { value: 'auto', label: t.settings.localeAuto },
@@ -71,9 +57,6 @@ function SettingsSkeleton() {
     <div aria-busy="true" className="space-y-4">
       <Card title={t.settings.training}>
         <Skeleton className="h-40" />
-      </Card>
-      <Card title={t.settings.appearance}>
-        <Skeleton className="h-[52px]" />
       </Card>
       <Card title={t.settings.formatting}>
         <Skeleton className="h-11" />
@@ -179,17 +162,6 @@ function SettingsForm({ settings }: { settings: SettingsData }) {
             }}
           />
         </div>
-      </Card>
-      <Card title={t.settings.appearance}>
-        <SegmentedControl
-          legend={t.settings.themeLabel}
-          options={THEME_OPTIONS}
-          value={settings.theme}
-          onChange={(theme) => {
-            save({ theme });
-          }}
-          hint={t.settings.themeHint}
-        />
       </Card>
       <Card title={t.settings.formatting}>
         <SelectField

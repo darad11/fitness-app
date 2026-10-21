@@ -323,12 +323,6 @@ export const de = {
   settings: {
     more: 'Weiteres',
     title: 'Einstellungen',
-    appearance: 'Darstellung',
-    themeLabel: 'Farbschema',
-    themeLight: 'Hell',
-    themeDark: 'Dunkel',
-    themeSystem: 'System',
-    themeHint: '„System“ folgt der Einstellung deines Geräts.',
     formatting: 'Sprache und Formatierung',
     localeLabel: 'Datum und Zahlen',
     localeAuto: 'Automatisch (Gerät)',

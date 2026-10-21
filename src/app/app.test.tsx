@@ -12,7 +12,6 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, type RouteObject } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { loadSettings } from '@/modules/settings';
 import { DbProvider, listErrorLog, META_KEYS, type DbRuntime } from '@/shared/db';
 import type { PlatformInfo } from '@/shared/lib/platform';
 import { resetPwaState, setUpdateActivator } from '@/shared/pwa/state';
@@ -29,7 +28,7 @@ let rt: DbRuntime;
 beforeEach(async () => {
   rt = await createTestRuntime({ deviceId: 'a1b2c3d4' });
   resetPwaState();
-  document.documentElement.setAttribute('data-theme', 'light');
+  document.documentElement.setAttribute('data-theme', 'dark');
 });
 
 afterEach(async () => {
@@ -136,21 +135,15 @@ describe('App-Shell', () => {
     ).toEqual(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   });
 
-  it('speichert die Darstellung und wendet sie an', async () => {
-    const user = userEvent.setup();
+  it('bietet keine Darstellungswahl an; die App bleibt dunkel (D-308)', async () => {
     renderApp('/mehr/einstellungen');
-    const dark = await screen.findByRole('radio', { name: 'Dunkel' });
+    await screen.findByRole('heading', { level: 1, name: 'Einstellungen' });
     await waitFor(() => {
-      expect(dark).toBeEnabled();
+      expect(screen.getByLabelText('Datum und Zahlen')).toBeEnabled();
     });
-    await user.click(dark);
-    await waitFor(async () => {
-      expect((await loadSettings(rt.db)).theme).toBe('dark');
-    });
-    await waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-    });
-    expect(screen.getByRole('radio', { name: 'Dunkel' })).toBeChecked();
+    expect(screen.queryByRole('radio', { name: 'Dunkel' })).toBeNull();
+    expect(screen.queryByText('Darstellung')).toBeNull();
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
   });
 
   it('formatiert nach gewählter Region: Österreich „Jänner", Deutschland „Januar"', async () => {

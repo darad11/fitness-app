@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
-import { chooseTheme, expect, openPage, test } from './fixtures';
+import { expect, openPage, test } from './fixtures';
 
 async function expectNoAxeViolations(page: Page, label: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
@@ -56,12 +56,9 @@ test('eigene Übung anlegen, Angaben speichern, im Programm verwenden und starte
   ).toBeVisible();
 });
 
-for (const theme of ['Hell', 'Dunkel'] as const) {
-  test(`keine axe-Verstöße bei eigenen Übungen in „${theme}" (AK-UX-04 Basis)`, async ({
-    page,
-  }) => {
+{
+  test(`keine axe-Verstöße bei eigenen Übungen (AK-UX-04 Basis)`, async ({ page }) => {
     test.slow();
-    await chooseTheme(page, theme);
     await createExercise(page, 'Rudermaschine Concept');
     await expectNoAxeViolations(page, 'Detail');
     await page.getByRole('button', { name: 'Bearbeiten' }).click();

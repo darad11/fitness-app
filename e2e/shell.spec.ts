@@ -1,4 +1,4 @@
-import { chooseTheme, expect, mainNav, openPage, test } from './fixtures';
+import { expect, mainNav, openPage, test } from './fixtures';
 
 test('leitet auf „Heute" um und zeigt das Datum ohne Status und „Diese Version“ (D-265)', async ({
   page,
@@ -40,20 +40,23 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   ]);
 });
 
-test('speichert die Darstellung „Dunkel" über einen Neustart (D-212, AK-SET-03 Basis)', async ({
+test('bleibt dunkel, auch nach einem Neustart; keine Darstellungswahl (D-308)', async ({
   page,
 }) => {
-  await chooseTheme(page, 'Dunkel');
+  await openPage(page, '/mehr/einstellungen');
+  await expect(page.getByRole('radio', { name: 'Dunkel' })).toHaveCount(0);
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  // Eine alte Kopie der Einstellung „Hell“ darf die Darstellung nicht mehr umschalten.
+  await page.evaluate(() => {
+    localStorage.setItem('fitness.theme', 'light');
+  });
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Einstellungen' })).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#212a3f');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#0c1219');
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
-    'rgb(33, 42, 63)',
+    'rgb(12, 18, 25)',
   );
-  await chooseTheme(page, 'Hell');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 });
 
 test('formatiert nach Gerätesprache de-AT mit „Jänner" (AK-SET-04)', async ({ page }) => {

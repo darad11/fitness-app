@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
-import { chooseTheme, expect, openPage, test } from './fixtures';
+import { expect, openPage, test } from './fixtures';
 
 const toSec = (text: string | null) => {
   const [m = 0, s = 0] = (text ?? '0:00').split(':').map(Number);
@@ -137,7 +137,7 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
   page,
 }) => {
   test.slow();
-  await chooseTheme(page, 'Dunkel');
+  await openPage(page, '/mehr/einstellungen');
   // Trainingseinstellungen wirken sofort (AK-SET-02): Standardpause 60 s.
   await page.getByRole('combobox', { name: 'Standardpause' }).selectOption('60');
   await expect(page.getByRole('combobox', { name: 'Standardpause' })).toHaveValue('60');

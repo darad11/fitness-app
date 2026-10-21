@@ -58,15 +58,21 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | B: `pnpm test` | 21.10.2026 | 834 Tests in 91 Dateien bestanden |
 | B: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 226,5 KB von 250 KB (gzip) |
 | B: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026 | Erster Lauf: 171 bestanden, 4 übersprungen, 1 fehlgeschlagen: `shell.spec.ts` „meldet unbekannte Adressen mit Weg zurück“ (Handy), weil der Selektor „Zu Heute“ auch den neuen Logo-Link „FORM – zu Heute“ traf (Playwright-Strict-Mode, Ursache im Test). Selektor auf `exact: true` gesetzt; Wiederholung von `shell.spec.ts`: 15 bestanden, 1 übersprungen, 0 fehlgeschlagen. WebKit läuft in GitHub Actions auf PR #49 |
+| CI auf PR #49 nach B (`4029407`, Lauf 39678948616) | 21.10.2026 | Job „Lint, Typen, Unit-Tests, Dokumente, Build“ rot: `custom-exercises-ui.test.tsx` „legt eine Übung an, speichert Angaben und archiviert sie“, Dialog „Eigene Übung anlegen“ nicht innerhalb von 1 s gefunden; E2E (Chromium, WebKit) deshalb übersprungen. Lokal mit `pnpm test:coverage` derselbe Fehlertyp in `habits-ui.test.tsx` (Überschrift „Tagesaufgaben“ nach 1 s nicht da); einzeln laufen beide grün. Ursache: `findBy…` wartet auf nachgeladene Teile nur die Standardzeit von 1 s, unter Volllast mit Coverage reicht das nicht |
+| Fix `ada0da4` (Wartezeit 5 s in `src/test-setup.ts`): `pnpm test:coverage` zweimal | 21.10.2026 | je 834 Tests in 91 Dateien bestanden |
+| `ada0da4`: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | 21.10.2026 | ohne Befund; Startansicht 226,5 KB von 250 KB (gzip) |
+| `ada0da4`: `pnpm test:e2e` (Chromium, lokal) | 21.10.2026 | 171 bestanden, 4 übersprungen, 1 fehlgeschlagen: `network-a11y.spec.ts` „alle Anfragen gehen an die eigene Adresse“ (Handy), `/mehr/daten` zeigte unter Volllast nach 5 s keine Überschrift. Einzeln wiederholt: 2 bestanden (13,6 s) |
+| CI auf PR #49 nach `ada0da4` (Lauf 39685415804) | 21.10.2026 | Checks grün; E2E Chromium: 172 bestanden, 4 übersprungen (3,0 min); E2E WebKit: 166 bestanden, 10 übersprungen (6,4 min); keine Wiederholungen nötig |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
 Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
-## 5. Offen beim Produktinhaber
+## 5. Antworten des Produktinhabers (21.10.2026) und offene Punkte
 
-- Q-23: Heller Modus nach dem Rebranding (bleibt er, oder entfällt er mit den `-hell`-Dateien)? Bis dahin nur Dunkel (D-308).
-- Für F2 vorgesehen: Die Tab-Leiste wird die Leiste aus dem Konzept (Nacht, Rand oben, aktiver Tab in Lime, keine Füllfläche). Die Glas-Linse (D-272) und das Schrumpfen zum Kreis beim Scrollen (D-276) passen nicht zu dieser festen Leiste und sollen entfallen; bitte widersprechen, falls das Scroll-Verhalten bleiben soll.
+- Q-23 heller Modus: zum Start nur Dunkel; die hellen Tokens bleiben angelegt und werden nicht ausgeliefert; neu bewerten, wenn Nutzer danach fragen (D-311).
+- Tab-Leiste: Die schwebende Leiste bleibt mit Glas, Linse und dem Schrumpfen zum runden Knopf beim Scrollen; nur die Farben werden FORM. Das Glas der Tab-Leiste ist die einzige Ausnahme von „kein Glas“ (D-312). Der Plan aus F1, Linse und Schrumpfen entfallen zu lassen, ist damit verworfen.
+- Breitenunabhängig bauen: F2 und F3 ohne feste Pixelbreiten, Abstände und Breiten über Tokens, Breakpoints an einer Stelle, eine größte Inhaltsbreite; mehrspaltige Layouts für breite Bildschirme in einer eigenen Sitzung (D-313).
 
 ## 6. Stand nach dieser Sitzung
 

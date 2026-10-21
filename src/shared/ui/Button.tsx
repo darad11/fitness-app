@@ -7,7 +7,8 @@ import { cn } from '../lib/cn';
  * Tonfläche ohne Rahmen, leise nur Text, destruktiv als Gefahr-Tonfläche; `onInk` für die Bühne.
  */
 export type ButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger' | 'onInk';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+/** `icon`: runder Knopf mit nur einem Symbol, 48 px (Name über `aria-label`). */
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const BASE =
   'inline-flex select-none items-center justify-center gap-2 rounded-pill font-semibold transition-colors duration-120 disabled:cursor-not-allowed disabled:opacity-50';
@@ -16,6 +17,7 @@ const SIZES: Record<ButtonSize, string> = {
   sm: 'min-h-10 px-4 text-sm',
   md: 'min-h-12 px-5 text-base',
   lg: 'min-h-14 px-6 text-lg',
+  icon: 'size-12 shrink-0 text-base',
 };
 
 const VARIANTS: Record<ButtonVariant, string> = {

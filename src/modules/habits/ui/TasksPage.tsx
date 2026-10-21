@@ -2,6 +2,7 @@ import { ChevronDown, ChevronUp, Plus, Settings2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { cn } from '@/shared/lib/cn';
 import { Button, Card, IconButton, PageHeader, Skeleton, Switch, Toast } from '@/shared/ui';
 import { weekdaysOn } from '../calc/streak';
@@ -51,7 +52,7 @@ interface Change {
 /** Kurzinfo unter dem Namen: Wochentage und automatisches Abhaken. */
 function summary(habit: Habit, today: string): string {
   const days = weekdaysOn(habit, today);
-  const names = t.tasks.stats.detail.weekdayNames;
+  const names = tTaskStats.detail.weekdayNames;
   const parts = [
     days ? days.map((day) => names[day - 1] ?? '').join(', ') : null,
     habit.autoDone === 'training' ? t.tasks.autoTrainingShort : null,
@@ -207,7 +208,7 @@ export function TasksPage() {
                             <div className="flex gap-1">
                               {ALL_DAYS.map((day) => {
                                 const on = editing.weekdays.includes(day);
-                                const name = t.tasks.stats.detail.weekdayNames[day - 1] ?? '';
+                                const name = tTaskStats.detail.weekdayNames[day - 1] ?? '';
                                 return (
                                   <button
                                     key={day}

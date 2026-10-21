@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { sumEntries } from '../calc/nutrients';
+import { loadOwnFoodNames } from '../index';
 import { BREAD, OATS } from '../testing/foods';
 import { listDayEntries, listFoods, listTargets, toFoodItem } from '../data/nutritionRepository';
 import {
@@ -82,6 +83,17 @@ describe('Eigene Lebensmittel (NU-10)', () => {
       await reason(createFood(rt, { ...skyr, servings: [{ name: 'Becher', amount: 0 }] })),
     ).toBe('serving');
     expect(await rt.db.foods.count()).toBe(0);
+  });
+});
+
+describe('Vorschläge für die Einkaufsliste (D-287)', () => {
+  it('liefert Namen eigener Lebensmittel ohne archivierte, ohne Tagebuch zu ändern', async () => {
+    const base = { basis: 'g' as const, per100: { kcal: 63, protein: 11, carbs: 4, fat: 0.2 } };
+    await createFood(rt, { ...base, name: 'Skyr natur' });
+    const old = await createFood(rt, { ...base, name: 'Alter Joghurt' });
+    await setFoodArchived(rt, old.id, true);
+    expect(await loadOwnFoodNames(rt.db)).toEqual(['Skyr natur']);
+    expect(await rt.db.foodLog.count()).toBe(0);
   });
 });
 

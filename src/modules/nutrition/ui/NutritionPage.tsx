@@ -1,10 +1,12 @@
 import {
+  Apple,
   BookmarkPlus,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   Plus,
   ScanBarcode,
+  ShoppingCart,
   Target,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -12,6 +14,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tShopping } from '@/shared/i18n/de-shopping';
 import { addDays, dayKey as toDayKey, hourIn, isValidDayKey } from '@/shared/lib/time';
 import { Button, ButtonLink, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
@@ -488,7 +491,7 @@ export function NutritionTodayCard() {
               const goal = target ? macroGoal(target, macro) : undefined;
               const eaten = sums[macro];
               return (
-                <div key={macro} className="min-w-0">
+                <div key={macro} className="min-w-0 text-center">
                   <dt className="truncate text-xs text-muted">
                     <span aria-hidden="true">{t.nutrition.macrosShort[macro]}</span>
                     <span className="sr-only">{t.nutrition.macros[macro]}</span>
@@ -527,14 +530,31 @@ export function NutritionTodayCard() {
           </dl>
         </div>
       </div>
-      <div className="mt-4 flex gap-2">
-        <ButtonLink to={scanTo} size="sm" className="flex-1">
-          <ScanBarcode aria-hidden="true" className="size-5" />
-          {t.nutrition.barcode.scan}
-        </ButtonLink>
-        <ButtonLink to="/ernaehrung" size="sm" variant="secondary">
-          {t.nutrition.toNutrition}
-        </ButtonLink>
+      {/* Drei runde Symbol-Knöpfe, mittig: scannen, Ernährung, Einkaufsliste. */}
+      <div className="mt-4 flex justify-center gap-3">
+        {(
+          [
+            { to: scanTo, label: t.nutrition.barcode.scan, icon: ScanBarcode, primary: true },
+            { to: '/ernaehrung', label: t.nutrition.toNutrition, icon: Apple, primary: false },
+            {
+              to: '/ernaehrung/einkaufsliste',
+              label: tShopping.title,
+              icon: ShoppingCart,
+              primary: false,
+            },
+          ] as const
+        ).map(({ to, label, icon: Icon, primary }) => (
+          <ButtonLink
+            key={label}
+            to={to}
+            aria-label={label}
+            title={label}
+            variant={primary ? 'primary' : 'secondary'}
+            size="icon"
+          >
+            <Icon aria-hidden="true" className="size-5" />
+          </ButtonLink>
+        ))}
       </div>
     </Card>
   );

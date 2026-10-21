@@ -1,11 +1,11 @@
 import { useFormatters } from '@/modules/settings';
-import { t } from '@/shared/i18n/de';
+import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { cn } from '@/shared/lib/cn';
 import { startOfWeek, type DayKey } from '@/shared/lib/time';
 import { habitState, type DayState, type LogIndex } from '../calc/insights';
 import type { Habit } from '../model/habit';
 
-const ts = t.tasks.stats;
+const ts = tTaskStats;
 const td = ts.detail;
 const dateOf = (day: DayKey) => new Date(`${day}T12:00:00`);
 

@@ -63,13 +63,13 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|
 | Original verifiziert (OV) | 49 | 30 | 9 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
-| Eigene Verbesserung (EV) | 45 | 4 | 0 | 49 |
-| Summe | 107 | 47 | 11 | 165 |
+| Eigene Verbesserung (EV) | 46 | 4 | 0 | 50 |
+| Summe | 108 | 47 | 11 | 166 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 107 |
+| R1 | 108 |
 | R2 | 20 |
 | R3 | 1 |
 | R4 | 14 |
@@ -77,14 +77,14 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 65 | 30 | 17 | 11 |
+| Anzahl | 42 | 66 | 30 | 17 | 11 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
 | Analysiert | 39 |
 | Getestet | 3 |
-| Implementiert | 84 |
+| Implementiert | 85 |
 | Noch zu recherchieren | 1 |
 | Spezifiziert | 17 |
 | Verworfen | 1 |
@@ -218,6 +218,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | MVP | R1 · Schritt G | Verbesserung (D-110), vorgezogen (D-261) | Implementiert | AK-NUT-04 |
 | NU-23 | Einheiten und Haushaltsmaße mit Umrechnung | – | – | E | EV | H | NU-09 | M | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert |
 | NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-266): ohne Netz Hinweis, lokale Treffer, „Selbst anlegen“ mit Barcode; „für später merken“ entfällt vorerst | Implementiert | AK-NUT-09 |
+| NU-26 | Einkaufsliste in „Meine Küche“ | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-287 | Wunsch des Produktinhabers (D-287) | Implementiert | AK-NUT-12 |
 | NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-06, AK-NUT-07 |
 
 ## F. Rezepte und Mahlzeitenplanung (RE)

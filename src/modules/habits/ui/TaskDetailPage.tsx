@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
+import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { cn } from '@/shared/lib/cn';
 import { isoWeekday } from '@/shared/lib/time';
 import { Card, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@/shared/ui';
@@ -24,7 +25,7 @@ import { ProgressChart } from './ProgressChart';
 import { statusOf } from './TaskStats';
 import { useHabitHistory } from './useHabitHistory';
 
-const ts = t.tasks.stats;
+const ts = tTaskStats;
 const td = ts.detail;
 const PERIOD_OPTIONS = INSIGHT_PERIODS.map((value) => ({ value, label: ts.periods[value] }));
 const PERIOD_LENGTH: Record<InsightPeriod, number> = { '7d': 7, '30d': 30, '90d': 90, all: 0 };

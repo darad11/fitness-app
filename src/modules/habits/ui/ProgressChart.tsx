@@ -10,10 +10,10 @@ import {
   type RectangleProps,
 } from 'recharts';
 import { useFormatters } from '@/modules/settings';
-import { t } from '@/shared/i18n/de';
+import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import type { Bucket } from '../calc/insights';
 
-const ts = t.tasks.stats;
+const ts = tTaskStats;
 
 interface Row {
   label: string;

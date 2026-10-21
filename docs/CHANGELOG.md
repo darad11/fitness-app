@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.36 · 20.10.2026 · Einkaufsliste
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-287 Einkaufsliste; D-288 Texte nachgeladener Seiten in eigenen Dateien |
+| `requirements.md` | AK-NUT-12 |
+| `data-model.md` | Dexie v7, `shopping_item` |
+| `feature-inventory.md` | NU-26 |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+| `shopping-list.md` | Neu: Analyse, Abgleich mit dem Auftrag, Produktbewertung, Bericht |
+
 ## Version 0.35 · 20.10.2026 · Logo auf jeder Seite
 
 | Datei | Änderung |

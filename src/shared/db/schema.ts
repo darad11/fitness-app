@@ -11,7 +11,7 @@ import Dexie, { type Table } from 'dexie';
 import type { RootFields } from './documents';
 
 export const DB_NAME = 'fitness';
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;
 
 export const STORES_V1 = {
   sessions: 'id, status, dayKey, startedAt, endedAt, *exerciseIds, [program.programId+endedAt]',
@@ -63,7 +63,13 @@ export const STORES_V6 = {
   syncBase: 'id',
 } as const;
 
-export const STORES_CURRENT = STORES_V6;
+/** v7 (D-287): Einkaufsliste; additiv zu v6. */
+export const STORES_V7 = {
+  ...STORES_V6,
+  shoppingItems: 'id, clearedAt',
+} as const;
+
+export const STORES_CURRENT = STORES_V7;
 
 /** Tabellen mit synchronisierbaren Dokumenten (Aggregatwurzeln). */
 export const DOCUMENT_TABLES = [
@@ -81,6 +87,7 @@ export const DOCUMENT_TABLES = [
   'nutritionTargets',
   'recipes',
   'mealTemplates',
+  'shoppingItems',
 ] as const;
 export type DocumentTableName = (typeof DOCUMENT_TABLES)[number];
 
@@ -137,6 +144,7 @@ export class AppDb extends Dexie {
   declare nutritionTargets: Table<StoredDoc, string>;
   declare recipes: Table<StoredDoc, string>;
   declare mealTemplates: Table<StoredDoc, string>;
+  declare shoppingItems: Table<StoredDoc, string>;
   declare syncBase: Table<SyncBaseRow, string>;
   declare exerciseHistory: Table<ExerciseHistoryRow, string>;
   declare sessionUi: Table<SessionUiRow, string>;
@@ -151,5 +159,6 @@ export class AppDb extends Dexie {
     this.version(4).stores(STORES_V4);
     this.version(5).stores(STORES_V5);
     this.version(6).stores(STORES_V6);
+    this.version(7).stores(STORES_V7);
   }
 }

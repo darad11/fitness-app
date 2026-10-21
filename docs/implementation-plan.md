@@ -266,3 +266,4 @@ Nächste Schritte: <Liste>
 52. Erledigt (über #43 gemergt): Logo und Name auf jeder Seite links oben (D-286).
 53. Erledigt (Branch `feat/einkaufsliste`): Einkaufsliste in „Meine Küche“ mit Rezept-Zutaten (D-287). Eigene Lebensmittel werden beim Tippen vorgeschlagen. Abgleich mit dem Auftrag, Bewertung und Bericht: `shopping-list.md`. Später möglich: Favoriten, Kategorien-Reihenfolge, mehrere Listen, Vorlagen.
 54. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
+55. Erledigt (Branch `feat/wasser`, baut auf #44 auf): Wasser auf „Heute“, in der Ernährung und als eigene Seite mit Ziel, Verlauf, Schnellmengen und „mit Wasserziel abhaken“ (D-289). Abgleich mit dem Auftrag, Bewertung und Bericht: `water-tracker.md`. Später möglich: häufige eigene Mengen, Uhrzeit beim Nachtragen, Wasser aus Apple Health.

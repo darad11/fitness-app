@@ -2,11 +2,12 @@ import { Settings2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useCompletedSessions } from '@/modules/training';
+import { loadWaterReached } from '@/modules/water';
 import { logError, useDb } from '@/shared/db';
 import { dayKey, localTimeZone } from '@/shared/lib/time';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
-import { applyAutoDone, setHabitDone } from '../service/habitService';
+import { applyAutoDone, applyWaterAutoDoneToday, setHabitDone } from '../service/habitService';
 import { TaskCheckbox } from './TaskCheckbox';
 import { useTodayTasks } from './useTodayTasks';
 
@@ -40,6 +41,22 @@ export function TasksCard({ className }: { className?: string }) {
       },
     );
   }, [rt, tasks, trainedToday]);
+  // D-289: Aufgaben „mit Wasserziel abhaken“, wenn das Ziel heute schon erreicht ist (z. B. auf
+  // einem anderen Gerät eingetragen). Beim Eintragen selbst hakt der Wasser-Dienst ab.
+  const waterPending =
+    tasks?.active.some(
+      (habit) =>
+        habit.autoDone === 'water' &&
+        !tasks.logs.some((log) => log.habitId === habit.id && log.dayKey === tasks.today),
+    ) ?? false;
+  useEffect(() => {
+    if (!tasks || !waterPending) return;
+    loadWaterReached(rt.db, tasks.today)
+      .then((reached) => (reached ? applyWaterAutoDoneToday(rt, tasks.today) : 0))
+      .catch((error: unknown) => {
+        void logError(rt.db, { area: 'habits', error, route: '/heute' });
+      });
+  }, [rt, tasks, waterPending]);
   const hidden = tasks ? Math.max(0, tasks.active.length - VISIBLE) : 0;
   const shown = tasks ? (expanded ? tasks.active : tasks.active.slice(0, VISIBLE)) : [];
   return (

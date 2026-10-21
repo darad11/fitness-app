@@ -240,3 +240,29 @@ describe('Wochentage (D-285)', () => {
     expect(await screen.findByText('Heute ist keine Aufgabe fällig.')).toBeVisible();
   });
 });
+
+describe('Mit Wasserziel abhaken (D-289)', () => {
+  it('höchstens eine Regel: Wasserziel schaltet Training aus und wird gespeichert', async () => {
+    const user = userEvent.setup();
+    const a = await addHabit(rt, '2 l Wasser');
+    renderRoutes(habitsRoutes, '/heute/aufgaben');
+    const list = await screen.findByRole('region', { name: 'Meine Aufgaben' });
+    await user.click(await within(list).findByRole('button', { name: '2 l Wasser bearbeiten' }));
+    const training = within(list).getByRole('switch', { name: 'Mit Training abhaken' });
+    const water = within(list).getByRole('switch', { name: 'Mit Wasserziel abhaken' });
+    await user.click(training);
+    expect(training).toBeChecked();
+    await user.click(water);
+    expect(water).toBeChecked();
+    expect(training).not.toBeChecked();
+    await user.click(within(list).getByRole('button', { name: 'Speichern' }));
+    await waitFor(async () => {
+      expect((await listHabits(rt.db)).find((habit) => habit.id === a.id)?.autoDone).toBe('water');
+    });
+    expect(
+      await within(list).findByRole('button', { name: '2 l Wasser bearbeiten' }),
+    ).toHaveTextContent('mit Wasserziel');
+    // Noch nichts getrunken: nicht abgehakt.
+    expect(await listHabitLogs(rt.db)).toEqual([]);
+  });
+});

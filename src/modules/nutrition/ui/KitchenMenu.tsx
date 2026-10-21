@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { isShoppingItemOpen, useShoppingItems } from '@/modules/shopping';
+import { useOpenShoppingCount } from '@/modules/shopping';
 import { t } from '@/shared/i18n/de';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
@@ -75,7 +75,7 @@ export function KitchenMenu() {
   const foods = useFoods();
   const recipes = useRecipes();
   const templates = useMealTemplates();
-  const shopping = useShoppingItems();
+  const shoppingOpen = useOpenShoppingCount();
   const tk = t.nutrition.kitchen;
 
   const entries: Entry[] = [
@@ -98,7 +98,7 @@ export function KitchenMenu() {
       icon: ShoppingCart,
       title: tShopping.title,
       hint: tShopping.kitchenHint,
-      count: shopping?.filter(isShoppingItemOpen).length,
+      count: shoppingOpen,
     },
     {
       to: '/ernaehrung/vorlagen',

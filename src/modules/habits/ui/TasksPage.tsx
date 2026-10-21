@@ -3,12 +3,15 @@ import { useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
+import { tWater } from '@/shared/i18n/de-water';
 import { cn } from '@/shared/lib/cn';
 import { Button, Card, IconButton, PageHeader, Skeleton, Switch, Toast } from '@/shared/ui';
 import { weekdaysOn } from '../calc/streak';
-import { HABIT_NAME_MAX, type Habit } from '../model/habit';
+import { loadWaterReached } from '@/modules/water';
+import { HABIT_NAME_MAX, type Habit, type HabitAutoDone } from '../model/habit';
 import {
   addHabit,
+  applyWaterAutoDoneToday,
   endHabit,
   moveHabit,
   removeHabit,
@@ -30,7 +33,7 @@ interface Editing {
   id: string;
   name: string;
   weekdays: number[];
-  auto: boolean;
+  auto: HabitAutoDone | null;
 }
 
 const ALL_DAYS = [1, 2, 3, 4, 5, 6, 7];
@@ -40,7 +43,7 @@ function startEditing(habit: Habit, today: string): Editing {
     id: habit.id,
     name: habit.name,
     weekdays: [...(weekdaysOn(habit, today) ?? ALL_DAYS)],
-    auto: habit.autoDone === 'training',
+    auto: habit.autoDone ?? null,
   };
 }
 
@@ -55,7 +58,11 @@ function summary(habit: Habit, today: string): string {
   const names = tTaskStats.detail.weekdayNames;
   const parts = [
     days ? days.map((day) => names[day - 1] ?? '').join(', ') : null,
-    habit.autoDone === 'training' ? t.tasks.autoTrainingShort : null,
+    habit.autoDone === 'training'
+      ? t.tasks.autoTrainingShort
+      : habit.autoDone === 'water'
+        ? tWater.autoShort
+        : null,
   ].filter((part): part is string => part !== null);
   return parts.join(' · ');
 }
@@ -177,11 +184,14 @@ export function TasksPage() {
                                 await setHabitWeekdays(rt, habit.id, editing.weekdays);
                               }
                               if (editing.auto !== before.auto) {
-                                await setHabitAutoDone(
-                                  rt,
-                                  habit.id,
-                                  editing.auto ? 'training' : null,
-                                );
+                                await setHabitAutoDone(rt, habit.id, editing.auto);
+                                // Ist das Wasserziel heute schon erreicht, gleich abhaken (D-289).
+                                if (
+                                  editing.auto === 'water' &&
+                                  (await loadWaterReached(rt.db, tasks.today))
+                                ) {
+                                  await applyWaterAutoDoneToday(rt, tasks.today);
+                                }
                               }
                               setEditing(null);
                             });
@@ -236,12 +246,21 @@ export function TasksPage() {
                             </div>
                             <p className="mt-1.5 text-sm text-muted">{t.tasks.weekdaysHint}</p>
                           </fieldset>
+                          {/* Höchstens eine Regel: Training oder Wasserziel (D-285, D-289). */}
                           <Switch
                             label={t.tasks.autoTraining}
                             hint={t.tasks.autoTrainingHint}
-                            checked={editing.auto}
+                            checked={editing.auto === 'training'}
                             onChange={(checked) => {
-                              setEditing({ ...editing, auto: checked });
+                              setEditing({ ...editing, auto: checked ? 'training' : null });
+                            }}
+                          />
+                          <Switch
+                            label={tWater.auto}
+                            hint={tWater.autoHint}
+                            checked={editing.auto === 'water'}
+                            onChange={(checked) => {
+                              setEditing({ ...editing, auto: checked ? 'water' : null });
                             }}
                           />
                           <div className="flex flex-wrap items-center gap-2">

@@ -43,7 +43,11 @@ export function GoalsPanel() {
     });
   };
   const formatValue = (kind: GoalKind, value: number) =>
-    kind === 'body_weight' ? fmt.bodyWeightKg(value) : t.goals.perWeek(value);
+    kind === 'body_weight'
+      ? fmt.bodyWeightKg(value)
+      : kind === 'water_daily'
+        ? `${fmt.number(value)} ml`
+        : t.goals.perWeek(value);
 
   return (
     <>

@@ -7,8 +7,15 @@ import {
   type DbRuntime,
 } from '@/shared/db';
 import { dayKey, localTimeZone, type DayKey } from '@/shared/lib/time';
-import { habitDef, habitLogDef, habitLogId, listHabits } from '../data/habitRepository';
-import { HABIT_NAME_MAX, type Habit, type HabitLog } from '../model/habit';
+import { activeOn } from '../calc/streak';
+import {
+  habitDef,
+  habitLogDef,
+  habitLogId,
+  listHabitLogs,
+  listHabits,
+} from '../data/habitRepository';
+import { HABIT_NAME_MAX, type Habit, type HabitAutoDone, type HabitLog } from '../model/habit';
 
 export interface Clock {
   now?: () => Date;
@@ -177,7 +184,7 @@ export async function setHabitWeekdays(
 export function setHabitAutoDone(
   rt: DbRuntime,
   id: string,
-  autoDone: 'training' | null,
+  autoDone: HabitAutoDone | null,
 ): Promise<Habit> {
   return updateDoc(rt, habitDef, id, (current) => {
     const { autoDone: _auto, ...rest } = current;
@@ -196,13 +203,33 @@ export async function applyAutoDone(
   hasLog: (habitId: string) => boolean,
   trainedToday: boolean,
   clock: Clock = {},
+  trigger: HabitAutoDone = 'training',
 ): Promise<number> {
   if (!trainedToday) return 0;
   let count = 0;
   for (const habit of habits) {
-    if (habit.autoDone !== 'training' || hasLog(habit.id)) continue;
+    if (habit.autoDone !== trigger || hasLog(habit.id)) continue;
     await setHabitDone(rt, habit.id, today, true, clock);
     count += 1;
   }
   return count;
+}
+
+/**
+ * Wasserziel heute erreicht (D-289): Aufgaben „mit Wasserziel abhaken“, die heute fällig sind und
+ * noch keinen Eintrag haben, werden abgehakt. Wer selbst zurücknimmt, wird nicht überstimmt.
+ */
+export async function applyWaterAutoDoneToday(
+  rt: DbRuntime,
+  today: DayKey,
+  clock: Clock = {},
+): Promise<number> {
+  const habits = activeOn(await listHabits(rt.db), today);
+  if (!habits.some((habit) => habit.autoDone === 'water')) return 0;
+  const logged = new Set(
+    (await listHabitLogs(rt.db, today))
+      .filter((log) => log.dayKey === today)
+      .map((log) => log.habitId),
+  );
+  return applyAutoDone(rt, habits, today, (id) => logged.has(id), true, clock, 'water');
 }

@@ -13,6 +13,7 @@ import { TasksCard } from '@/modules/habits';
 import { NutritionTodayCard } from '@/modules/nutrition';
 import { useFormatters, useProfile } from '@/modules/settings';
 import { StepsTodayCard } from '@/modules/steps';
+import { WaterCard } from '@/modules/water';
 import {
   ActiveProgramCard,
   compareWithPrevious,
@@ -167,6 +168,9 @@ export function TodayPage() {
         )}
         <Suspense fallback={null}>
           <NutritionTodayCard />
+        </Suspense>
+        <Suspense fallback={null}>
+          <WaterCard day={todayKey} />
         </Suspense>
         <Suspense fallback={null}>
           <StepsTodayCard />

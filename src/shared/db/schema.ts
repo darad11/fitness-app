@@ -1,7 +1,8 @@
 /**
  * Dexie-Schema (data-model.md Abschnitt 6): v1 aus M0, v2 mit den Tabellen für Tagesaufgaben
  * (Schritt F, D-253), v3 mit den Tabellen für die Ernährung (Schritt G, D-261), v4 mit Rezepten
- * (M7, D-267), v5 mit Mahlzeit-Vorlagen (NU-11, D-268), v6 mit der lokalen Sync-Basis (D-269).
+ * (M7, D-267), v5 mit Mahlzeit-Vorlagen (NU-11, D-268), v6 mit der lokalen Sync-Basis (D-269),
+ * v7 mit der Einkaufsliste (D-287), v8 mit Wasser (D-289).
  *
  * Die Tabellen speichern Dokumente generisch; die genauen Typen und Zod-Schemas liegen in den
  * Fachmodulen und werden beim Lesen geprüft. Neue Indizes oder Tabellen erhöhen die Version
@@ -11,7 +12,7 @@ import Dexie, { type Table } from 'dexie';
 import type { RootFields } from './documents';
 
 export const DB_NAME = 'fitness';
-export const DB_VERSION = 7;
+export const DB_VERSION = 8;
 
 export const STORES_V1 = {
   sessions: 'id, status, dayKey, startedAt, endedAt, *exerciseIds, [program.programId+endedAt]',
@@ -69,7 +70,13 @@ export const STORES_V7 = {
   shoppingItems: 'id, clearedAt',
 } as const;
 
-export const STORES_CURRENT = STORES_V7;
+/** v8 (D-289): Wasser, ein Eintrag je Trinkaktion; additiv zu v7. */
+export const STORES_V8 = {
+  ...STORES_V7,
+  waterLog: 'id, dayKey',
+} as const;
+
+export const STORES_CURRENT = STORES_V8;
 
 /** Tabellen mit synchronisierbaren Dokumenten (Aggregatwurzeln). */
 export const DOCUMENT_TABLES = [
@@ -88,6 +95,7 @@ export const DOCUMENT_TABLES = [
   'recipes',
   'mealTemplates',
   'shoppingItems',
+  'waterLog',
 ] as const;
 export type DocumentTableName = (typeof DOCUMENT_TABLES)[number];
 
@@ -145,6 +153,7 @@ export class AppDb extends Dexie {
   declare recipes: Table<StoredDoc, string>;
   declare mealTemplates: Table<StoredDoc, string>;
   declare shoppingItems: Table<StoredDoc, string>;
+  declare waterLog: Table<StoredDoc, string>;
   declare syncBase: Table<SyncBaseRow, string>;
   declare exerciseHistory: Table<ExerciseHistoryRow, string>;
   declare sessionUi: Table<SessionUiRow, string>;
@@ -160,5 +169,6 @@ export class AppDb extends Dexie {
     this.version(5).stores(STORES_V5);
     this.version(6).stores(STORES_V6);
     this.version(7).stores(STORES_V7);
+    this.version(8).stores(STORES_V8);
   }
 }

@@ -96,7 +96,9 @@ test('Schritte aus dem Dashboard: verbinden, Karte unter Ernährung, trennen (D-
     .locator('section')
     .evaluateAll((sections) => sections.map((s) => s.textContent));
   const nutrition = order.findIndex((text) => text.includes('Ernährung heute'));
-  expect(order[nutrition + 1]).toContain('Schritte');
+  // Wasser direkt unter „Ernährung heute“ (D-289), danach die Schritte.
+  expect(order[nutrition + 1]).toMatch(/^Wasser/);
+  expect(order[nutrition + 2]).toContain('Schritte');
   expect(writes).toBe(0);
 
   // Trennen löscht die Anmeldung auf dem Gerät.

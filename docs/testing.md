@@ -830,3 +830,16 @@ Einkaufsliste in „Meine Küche“ (D-287), Texte nachgeladener Seiten getrennt
 | Nachtrag „Ernährung heute“ (runde Knöpfe, Einkaufswagen) | `pnpm test` 88 Dateien, 756 Tests bestanden; neuer E2E-Test: drei Knöpfe je 48 × 48 px mit 20 px Symbol, Einkaufswagen öffnet die Einkaufsliste. `pnpm test:e2e` 221 bestanden, 1 fehlgeschlagen, 4 übersprungen; fehlgeschlagen `network-a11y.spec.ts` „alle Anfragen gehen an die eigene Adresse“ (chromium-mobile, `toBeVisible` nach Zeitüberschreitung), einzeln wiederholt: 110 bestanden (bekannt instabil unter Last). `pnpm check:bundle` 249,4 KB |
 | Nachtrag Knöpfe mittig | `pnpm test` 756 Tests bestanden; E2E prüft gleichen Abstand links und rechts; `pnpm test:e2e` 222 bestanden, 4 übersprungen; `pnpm check:bundle` 249,5 KB |
 | Nachtrag Makros zentriert („Ernährung heute“) | `pnpm test` 756 Tests bestanden; `pnpm test:e2e` 222 bestanden, 4 übersprungen; `pnpm check:bundle` 249,5 KB; Bilder mit und ohne Ziel |
+
+### Wasser · 21.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Wasser auf „Heute“, in der Ernährung und als eigene Seite (D-289); Branch `feat/wasser` auf Basis von `feat/einkaufsliste`.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 91 Dateien, 797 Tests bestanden. Neu: Rechnung (Tagessumme, Rest, über dem Ziel, 9 gültige und 9 ungültige Eingaben, Ziel je Tag mit Wechsel und Ersetzen am selben Tag, Verlauf ohne erfundene Tage, Ø und „Ziel erreicht“ nur über Tage mit Einträgen, Schnellmengen); Dienst (Schnell- und eigene Menge, ungültige Mengen ohne Speichern, bearbeiten, löschen, wiederherstellen, Tageswechsel 23:50/00:10, Nachtragen, Ziel ab heute, erreicht, Schnellmengen, nichts im Tagebuch); Oberfläche (Schnellmenge, eigene Menge, ungültige Eingabe, letzten Eintrag entfernen und zurückholen, Ziel erreicht und darüber, Einträge bearbeiten und löschen, Ziel ändern, Schnellmengen anpassen, früherer Tag mit „nachgetragen am“); Tagesaufgaben (nur fällige mit Regel, manuell zurückgenommen bleibt, Schalter schließen sich aus). Migration v7 → v8 verlustfrei mit Snapshot |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 232 bestanden, 4 übersprungen. Neu `water.spec.ts`: auf „Heute“ eintragen, Neuladen, offline eintragen, nächster Tag beginnt bei 0, Verlauf zeigt gestern, Ernährung bleibt 0 kcal; Tagesaufgabe „mit Wasserziel abhaken“ bei 2 l, manuell zurücknehmen bleibt nach Neuladen; 320 px ohne Überlauf. `/ernaehrung/wasser` in `APP_PAGES`. Erster Lauf: 2 fehlgeschlagen (`steps.spec.ts`: „Schritte“ nicht mehr direkt unter „Ernährung heute“), weil die Wasserkarte dort stand; jetzt unter den Tagesaufgaben |
+| `pnpm check:bundle` | zuerst 250,1 KB (über 250 KB). `goalOn` liegt im Modul Wasser statt in den Zielen, und „Meine Küche“ zählt offene Artikel der Einkaufsliste direkt in der Tabelle statt über Repository und Schema: 249,4 KB |
+| Bilder | Karte auf „Heute“ (offen und Ziel erreicht), Seite „Wasser“, Ernährung (Testeinträge) |
+

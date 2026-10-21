@@ -20,6 +20,8 @@ export const settingsSchema = defineDocSchema('settings', {
   theme: z.enum(THEME_PREFERENCES),
   locale: z.enum(LOCALE_PREFERENCES),
   backupReminderDays: z.number().int().min(0).max(365),
+  /** Eigene Schnellmengen für Wasser in ml (D-289); fehlt, gelten die Standardwerte. */
+  waterQuickMl: z.array(z.number().int().min(10).max(2000)).length(4).optional(),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;

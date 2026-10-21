@@ -30,6 +30,7 @@ export const EXPORT_TYPES: Record<DocumentTableName, readonly string[]> = {
   recipes: ['recipe'],
   mealTemplates: ['meal_template'],
   shoppingItems: ['shopping_item'],
+  waterLog: ['water_entry'],
 };
 
 export interface Backup {

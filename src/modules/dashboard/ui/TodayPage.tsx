@@ -13,6 +13,7 @@ import { TasksCard } from '@/modules/habits';
 import { NutritionTodayCard } from '@/modules/nutrition';
 import { useFormatters, useProfile } from '@/modules/settings';
 import { StepsTodayCard } from '@/modules/steps';
+import { WaterCard } from '@/modules/water';
 import {
   ActiveProgramCard,
   compareWithPrevious,
@@ -173,6 +174,9 @@ export function TodayPage() {
         </Suspense>
         <Suspense fallback={null}>
           <TasksCard />
+        </Suspense>
+        <Suspense fallback={null}>
+          <WaterCard day={todayKey} />
         </Suspense>
         {sessions && goals ? (
           <WeeklyGoalCard sessions={sessions} target={goals.weeklySessions} today={todayKey} />

@@ -10,6 +10,7 @@ import {
   InvalidNameError,
   InvalidWeekdaysError,
   applyAutoDone,
+  applyWaterAutoDoneToday,
   setHabitAutoDone,
   setHabitWeekdays,
   removeHabit,
@@ -182,5 +183,32 @@ describe('Wochentage und automatisch abhaken (D-285)', () => {
     expect((await listHabitLogs(rt.db)).some((l) => l.habitId === b.id)).toBe(false);
     const off = await setHabitAutoDone(rt, a.id, null);
     expect(off).not.toHaveProperty('autoDone');
+  });
+});
+
+describe('Mit Wasserziel abhaken (D-289)', () => {
+  it('hakt nur Aufgaben mit dieser Regel ab, die heute fällig sind und offen', async () => {
+    const day = '2026-10-20'; // Dienstag
+    const clock = at('2026-10-18T10:00:00');
+    const water = await addHabit(rt, '2 l Wasser', clock);
+    const training = await addHabit(rt, 'Training', clock);
+    const notToday = await addHabit(rt, 'Nur Montag', clock);
+    await setHabitAutoDone(rt, water.id, 'water');
+    await setHabitAutoDone(rt, training.id, 'training');
+    await setHabitAutoDone(rt, notToday.id, 'water');
+    await setHabitWeekdays(rt, notToday.id, [1], clock);
+    expect(await applyWaterAutoDoneToday(rt, day)).toBe(1);
+    const logs = await listHabitLogs(rt.db);
+    expect(logs.map((log) => [log.habitId, log.dayKey, log.done])).toEqual([[water.id, day, true]]);
+    // Selbst zurückgenommen: kein erneutes Abhaken.
+    await setHabitDone(rt, water.id, day, false);
+    expect(await applyWaterAutoDoneToday(rt, day)).toBe(0);
+    expect((await listHabitLogs(rt.db)).find((log) => log.habitId === water.id)?.done).toBe(false);
+  });
+
+  it('ohne Aufgabe mit dieser Regel passiert nichts', async () => {
+    await addHabit(rt, 'Lesen', at('2026-10-18T10:00:00'));
+    expect(await applyWaterAutoDoneToday(rt, '2026-10-20')).toBe(0);
+    expect(await listHabitLogs(rt.db)).toEqual([]);
   });
 });

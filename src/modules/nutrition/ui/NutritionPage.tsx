@@ -9,9 +9,10 @@ import {
   ShoppingCart,
   Target,
 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
+import { WaterCard } from '@/modules/water';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { tShopping } from '@/shared/i18n/de-shopping';
@@ -361,6 +362,10 @@ export function NutritionPage() {
               </Card>
             );
           })}
+
+          <Suspense fallback={null}>
+            <WaterCard day={day} />
+          </Suspense>
         </div>
       )}
 

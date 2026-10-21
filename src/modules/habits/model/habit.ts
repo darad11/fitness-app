@@ -12,6 +12,9 @@ export const HABIT_NAME_MAX = 80;
 
 const dayKeySchema = z.string().refine(isValidDayKey, 'Ungültiger Tag');
 
+export const HABIT_AUTO_DONE = ['training', 'water'] as const;
+export type HabitAutoDone = (typeof HABIT_AUTO_DONE)[number];
+
 export const habitSchema = defineDocSchema('habit', {
   name: z.string().trim().min(1).max(HABIT_NAME_MAX),
   position: z.number().int().min(0),
@@ -39,8 +42,11 @@ export const habitSchema = defineDocSchema('habit', {
       }),
     )
     .optional(),
-  /** Automatisch abhaken (D-285): `training` hakt ab, sobald an dem Tag ein Training abgeschlossen ist. */
-  autoDone: z.enum(['training']).optional(),
+  /**
+   * Automatisch abhaken: `training` hakt ab, sobald an dem Tag ein Training abgeschlossen ist
+   * (D-285); `water`, sobald das Wasserziel des Tages erreicht ist (D-289).
+   */
+  autoDone: z.enum(HABIT_AUTO_DONE).optional(),
 });
 
 export const habitLogSchema = defineDocSchema('habit_log', {

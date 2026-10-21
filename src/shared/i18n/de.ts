@@ -183,7 +183,11 @@ export const de = {
     remove: 'Entfernen',
     saveFailed: 'Nicht gespeichert. Bitte versuche es erneut.',
     historyTitle: 'Verlauf der Ziele',
-    kinds: { body_weight: 'Zielgewicht', weekly_sessions: 'Wochenziel' },
+    kinds: {
+      body_weight: 'Zielgewicht',
+      weekly_sessions: 'Wochenziel',
+      water_daily: 'Wasser pro Tag',
+    },
     since: (date: string) => `ab ${date}`,
     until: (date: string) => `bis ${date}`,
     toGoal: (diff: string, goal: string) => `noch ${diff} bis ${goal}`,

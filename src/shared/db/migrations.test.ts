@@ -3,7 +3,7 @@
  * Datenbank der Vorversion als Fixture vor; das Öffnen mit der aktuellen Version muss alle
  * Dokumente erhalten. v1 → v2 (Schritt F) fügt die Tabellen `habits` und `habitLogs` hinzu,
  * v2 → v3 (Schritt G) `foods`, `foodLog` und `nutritionTargets`, v3 → v4 (M7) `recipes`, v4 → v5
- * (NU-11) `mealTemplates`, v5 → v6 (R3) `syncBase`, v6 → v7 (D-287) `shoppingItems`; vor dem Upgrade entsteht ein Snapshot
+ * (NU-11) `mealTemplates`, v5 → v6 (R3) `syncBase`, v6 → v7 (D-287) `shoppingItems`, v7 → v8 (D-289) `waterLog`; vor dem Upgrade entsteht ein Snapshot
  * (AK-DAT-06).
  */
 import Dexie from 'dexie';
@@ -18,6 +18,7 @@ import {
   STORES_V4,
   STORES_V5,
   STORES_V6,
+  STORES_V7,
 } from './schema';
 import { listSnapshots, snapshotBeforeUpgradeIfNeeded } from './snapshots';
 
@@ -57,7 +58,29 @@ afterEach(async () => {
 });
 
 describe('Migration auf Schemaversion ' + String(DB_VERSION), () => {
-  it('sichert eine v6-Datenbank und öffnet sie als v7 verlustfrei', async () => {
+  it('sichert eine v7-Datenbank und öffnet sie als v8 verlustfrei', async () => {
+    await seedLegacyDatabase(DB, 7, STORES_V7, V1_ROWS);
+    expect(await snapshotBeforeUpgradeIfNeeded(DB, DB_VERSION, { snapshotDbName: SNAPSHOTS })).toBe(
+      'created',
+    );
+    expect((await listSnapshots({ snapshotDbName: SNAPSHOTS }))[0]).toMatchObject({
+      reason: 'schema-upgrade',
+      sourceVersion: 7,
+      counts: { sessions: 1, meta: 1 },
+    });
+    const db = new AppDb(DB);
+    await db.open();
+    try {
+      expect(db.verno).toBe(DB_VERSION);
+      expect(await db.waterLog.count()).toBe(0);
+      expect(await db.sessions.count()).toBe(1);
+      expect((await db.meta.get('deviceId'))?.value).toBe('a1b2c3d4');
+    } finally {
+      db.close();
+    }
+  });
+
+  it('sichert eine v6-Datenbank und öffnet sie als aktuelle Version verlustfrei', async () => {
     await seedLegacyDatabase(DB, 6, STORES_V6, V1_ROWS);
     expect(await snapshotBeforeUpgradeIfNeeded(DB, DB_VERSION, { snapshotDbName: SNAPSHOTS })).toBe(
       'created',

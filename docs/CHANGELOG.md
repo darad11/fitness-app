@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.37 · 21.10.2026 · Wasser
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-289 Wasser |
+| `requirements.md` | AK-NUT-13 |
+| `data-model.md` | Dexie v8, `water_entry`, Ziel `water_daily`, `settings.waterQuickMl`, `autoDone: 'water'` |
+| `feature-inventory.md` | NU-27 |
+| `implementation-plan.md` | Stand |
+| `testing.md` | Ergebnisse |
+| `water-tracker.md` | Neu: Analyse, Abgleich mit dem Auftrag, Produktbewertung, Bericht |
+
 ## Version 0.36 · 20.10.2026 · Einkaufsliste
 
 | Datei | Änderung |

@@ -60,6 +60,7 @@ export const APP_PAGES = [
   '/ernaehrung/rezepte/neu',
   '/ernaehrung/vorlagen',
   '/ernaehrung/einkaufsliste',
+  '/ernaehrung/wasser',
   '/fortschritt',
   '/fortschritt/gewicht',
   '/mehr',

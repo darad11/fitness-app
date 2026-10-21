@@ -224,8 +224,8 @@ interface BodyWeight extends Root {
 
 ```ts
 interface Goal extends Root {
-  kind: 'body_weight' | 'weekly_sessions';         // später: 'nutrition' (eigener Typ in R2)
-  value: number;                                   // kg bzw. Einheiten pro Woche
+  kind: 'body_weight' | 'weekly_sessions' | 'water_daily'; // water_daily seit D-289
+  value: number;                                   // kg, Einheiten pro Woche bzw. ml pro Tag (250 bis 8000)
   effectiveFrom: DayKey; endedAt?: string;
 }
 ```
@@ -244,6 +244,7 @@ interface Settings extends Root {                  // feste ID
   theme: 'light' | 'dark' | 'system';   // 'light'
   locale: 'auto' | 'de-AT' | 'de-CH' | 'de-DE';   // 'auto'
   backupReminderDays: number;    // 14
+  waterQuickMl?: number[];       // D-289: vier Schnellmengen in ml (10 bis 2000); fehlt = 150, 250, 500, 750
 }
 interface Profile extends Root { displayName?: string }   // R2 ergänzt Körperdaten für Formeln
 ```
@@ -264,7 +265,7 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 | `body_measurement` | R4 | measuredAt, dayKey, site, valueCm, optional bodyFatPercent mit Methode | – |
 | `progress_photo` | R4 | takenAt, dayKey, pose, blobId (lokal), sha256, width, height, bytes, note | Bild unveränderlich; Blob in lokaler Tabelle `mediaBlob` |
 | `step_entry` | R4 | ID aus dayKey, dayKey, steps, source ('manual'/'shortcut'/'import') | Einer je Tag |
-| `habit`, `habit_log` | R1 (Schritt F, D-253, Tagesaufgaben) | habit: name, position, fromDayKey, toDayKey?, archivedAt?, pauses? (frühere Pausen `{fromDayKey, toDayKey}`, D-283), removedAt? (gelöscht, D-283), schedule? (Wochentage ab Tag `{fromDayKey, weekdays}`, D-285), autoDone? (`training`, D-285); log: ID aus Aufgabe und Tag (UUID v5 aus `habit_log:<habitId>:<dayKey>`), done, doneAt?. Später: frequency, targetValue, unit, value | Einer je Aufgabe und Tag |
+| `habit`, `habit_log` | R1 (Schritt F, D-253, Tagesaufgaben) | habit: name, position, fromDayKey, toDayKey?, archivedAt?, pauses? (frühere Pausen `{fromDayKey, toDayKey}`, D-283), removedAt? (gelöscht, D-283), schedule? (Wochentage ab Tag `{fromDayKey, weekdays}`, D-285), autoDone? (`training` D-285, `water` D-289); log: ID aus Aufgabe und Tag (UUID v5 aus `habit_log:<habitId>:<dayKey>`), done, doneAt?. Später: frequency, targetValue, unit, value | Einer je Aufgabe und Tag |
 | `water_entry`, `daily_note` | R4 | dayKey, ml bzw. text | – |
 
 Umsetzung im Grundausbau (D-261): `food` mit `basis` ('g' | 'ml'), `per100` (fehlende Werte fehlen), `servings[{id, name, amount}]`, `source` ('custom' | 'quick' | 'bls' | 'off' | 'import'), `quality`, optional `brand`, `barcode`, `sourceRef`, `favorite`, `archivedAt`. `food_log_entry` mit `slot` ('breakfast' | 'lunch' | 'dinner' | 'snacks'), `kind` ('food' | 'quick'), `foodId` (eigenes Lebensmittel oder BLS-ID `uuidv5('bls:' + Code)`), `nameSnapshot`, `basisSnapshot`, `amount`, `servingSnapshot{name, count}`, `nutrients` (absolut), `isEstimated`. `nutrition_target` mit `effectiveFrom`, `endedAt`, `kcal`, `proteinG`, `carbsG`, `fatG`, `method`, `inputsSnapshot` (D-262).
@@ -291,6 +292,8 @@ v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedA
 v4 (D-267, M7) ergänzt additiv `recipes: 'id, nameNorm, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v3 → v4. Umsetzung `recipe`: `name`, `nameNorm`, `servings` (ganzzahlig 1 bis 50), `ingredients[{id, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot{name, count}, per100Snapshot}]` (1 bis 40), `steps` (Text), `favorite`, `archivedAt`; ohne Tags, Zeiten und Mahlzeittypen vorerst. `food_log_entry.kind` kennt zusätzlich `'recipe'` (foodId ist dann die Rezept-ID).
 
 v7 (D-287, NU-26) ergänzt additiv `shoppingItems: 'id, clearedAt'`; Snapshot vor dem Upgrade, Migrationstest v6 → v7. `shopping_item`: `name`, `quantity?`, `unit?`, `category?` (produce, meat, dairy, grains, frozen, drinks, supplements, household, other), `note?`, `doneAt?` (gekauft), `clearedAt?` („Gekaufte entfernen“, bleibt für „Zuletzt gekauft“), `position`; ein Dokument je Artikel, damit zwei Geräte gleichzeitig abhaken können. Mehrere Listen sind vorbereitet, aber nicht umgesetzt (später optionales `listId`).
+
+v8 (D-289, NU-27) ergänzt additiv `waterLog: 'id, dayKey'`; Snapshot vor dem Upgrade, Migrationstest v7 → v8. `water_entry`: `dayKey` (lokaler Kalendertag, zu dem die Menge zählt), `tz`, `loggedAt` (Zeitpunkt des Eintragens), `amountMl` (ganze ml, 1 bis 5000); ein Dokument je Trinkaktion, Tagessumme wird gerechnet, nie gespeichert. Löschen ist eine Löschmarkierung (Rückgängig, Sync). Das Tagesziel ist ein datiertes Ziel `goal` mit `kind: 'water_daily'` (Abschnitt 3.6): Eine Änderung gilt ab heute, frühere Tage behalten ihr Ziel; ohne eigenes Ziel gelten 2.000 ml. Kein Bezug zu `food_log_entry`.
 
 v5 (D-268, NU-11) ergänzt additiv `mealTemplates: 'id, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v4 → v5. `meal_template`: `name`, `items[{id, kind, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot, nutrients, isEstimated}]` (1 bis 30), `archivedAt` (vorgesehen, noch nicht genutzt).
 

@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
-import { t } from '@/shared/i18n/de';
+import { tSync } from '@/shared/i18n/de-sync';
 
 const GLOWS = [
   { className: '-top-28 -left-24 size-[420px]', color: 'var(--login-glow-1)', delay: '0s' },
@@ -47,7 +47,7 @@ export function LoginScreen({
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
-  const ts = t.sync;
+  const ts = tSync;
   const signUp = mode === 'signUp';
   const shownError = localError ?? error;
 

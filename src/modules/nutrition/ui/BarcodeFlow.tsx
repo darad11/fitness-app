@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, Dialog } from '@/shared/ui';
 import type { OffDraft } from '../calc/openFoodFacts';
 import { toFoodItem } from '../data/nutritionRepository';
@@ -79,7 +80,7 @@ export function BarcodeFlow({
       <Dialog
         open
         onClose={onClose}
-        title={t.nutrition.barcode.consentTitle}
+        title={tNutrition.barcode.consentTitle}
         closeLabel={t.common.close}
         actions={
           <>
@@ -89,7 +90,7 @@ export function BarcodeFlow({
                 openForm({ draft: { barcode: step.code } });
               }}
             >
-              {t.nutrition.barcode.consentDeny}
+              {tNutrition.barcode.consentDeny}
             </Button>
             <Button
               onClick={() => {
@@ -98,12 +99,12 @@ export function BarcodeFlow({
                 });
               }}
             >
-              {t.nutrition.barcode.consentAllow}
+              {tNutrition.barcode.consentAllow}
             </Button>
           </>
         }
       >
-        <p>{t.nutrition.barcode.consentText}</p>
+        <p>{tNutrition.barcode.consentText}</p>
       </Dialog>
     );
   }
@@ -111,16 +112,16 @@ export function BarcodeFlow({
   const status =
     step.kind === 'searching' ? (
       <p role="status" className="font-semibold">
-        {t.nutrition.barcode.searching(step.code)}
+        {tNutrition.barcode.searching(step.code)}
       </p>
     ) : step.kind === 'result' ? (
       <div role="status" className="grid gap-3 rounded-card bg-surface-2 p-4">
         <p>
           {step.lookup.kind === 'invalid'
-            ? t.nutrition.barcode.invalid
+            ? tNutrition.barcode.invalid
             : step.lookup.kind === 'notFound'
-              ? t.nutrition.barcode.notFound(step.lookup.barcode)
-              : t.nutrition.barcode.unavailable}
+              ? tNutrition.barcode.notFound(step.lookup.barcode)
+              : tNutrition.barcode.unavailable}
         </p>
         {step.lookup.kind !== 'invalid' ? (
           <div className="flex flex-wrap gap-2">
@@ -131,7 +132,7 @@ export function BarcodeFlow({
                 }
               }}
             >
-              {t.nutrition.barcode.createOwn}
+              {tNutrition.barcode.createOwn}
             </Button>
             {step.lookup.kind === 'unavailable' ? (
               <Button
@@ -140,7 +141,7 @@ export function BarcodeFlow({
                   if (step.lookup.kind === 'unavailable') search(step.lookup.barcode);
                 }}
               >
-                {t.nutrition.barcode.retry}
+                {tNutrition.barcode.retry}
               </Button>
             ) : null}
           </div>

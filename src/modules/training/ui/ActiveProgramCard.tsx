@@ -2,10 +2,9 @@ import { Play } from 'lucide-react';
 import { SETTINGS_DEFAULTS, useSettings } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter } from '@/shared/ui';
-import type { StartInput } from '../service/sessionService';
-import { planFromTemplateDay } from '../service/sessionService';
+import { planFromTemplateDay, type StartInput } from '../calc/plan';
 import { plannedFor } from '../calc/programProgress';
-import { describeDay } from './SampleTemplatePage';
+import { describeDay } from '../calc/describe';
 import { programLink, type ActiveProgram } from './useActiveProgram';
 
 export interface ActiveProgramCardProps {

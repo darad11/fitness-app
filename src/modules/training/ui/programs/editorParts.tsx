@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tProgramEditor } from '@/shared/i18n/de-program-editor';
 import { Button, Dialog } from '@/shared/ui';
 import { PlanEditError } from '../../calc/programEdit';
 import type { ProgramPlan, Week } from '../../model/program';
@@ -29,10 +30,10 @@ export function useProgramEdit(programId: string) {
       if (caught instanceof PlanEditError) {
         setError(
           messages[caught.reason] ??
-            (caught.reason === 'limit' ? t.programEditor.limit : t.programs.actionFailed),
+            (caught.reason === 'limit' ? tProgramEditor.limit : t.programs.actionFailed),
         );
       } else if (caught instanceof InvalidProgramError) {
-        setError(caught.reason === 'name' ? t.programs.nameError : t.programEditor.lastDay);
+        setError(caught.reason === 'name' ? t.programs.nameError : tProgramEditor.lastDay);
       } else {
         setError(t.programs.actionFailed);
         void logError(rt.db, { area: 'training', error: caught, route: window.location.pathname });

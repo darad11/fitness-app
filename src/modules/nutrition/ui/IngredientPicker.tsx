@@ -2,6 +2,7 @@ import { ChevronLeft, Plus } from 'lucide-react';
 import { useDeferredValue, useId, useMemo, useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { parseDecimal } from '@/shared/lib/format';
 import { Badge, Button, Dialog, SearchField, SelectField, Skeleton } from '@/shared/ui';
 import { searchFoods } from '../calc/foodSearch';
@@ -54,7 +55,7 @@ export function IngredientPicker({
     setError(null);
   };
 
-  const unit = food ? t.nutrition.units[food.basis] : '';
+  const unit = food ? tNutrition.units[food.basis] : '';
   const serving = food?.servings.find((s) => s.id === unitChoice);
   const parsed = parseDecimal(value);
   const amount = parsed === null ? null : serving ? parsed * serving.amount : parsed;
@@ -63,7 +64,7 @@ export function IngredientPicker({
 
   const add = () => {
     if (!food || parsed === null || parsed <= 0) {
-      setError(t.nutrition.invalidAmount);
+      setError(tNutrition.invalidAmount);
       return;
     }
     const quantity: Quantity = serving
@@ -72,7 +73,7 @@ export function IngredientPicker({
     try {
       onAdd(ingredientFrom(food, quantity));
     } catch (caught) {
-      if (caught instanceof InvalidRecipeError) setError(t.nutrition.recipes.errors.amount);
+      if (caught instanceof InvalidRecipeError) setError(tNutrition.recipes.errors.amount);
       else throw caught;
     }
   };
@@ -81,7 +82,7 @@ export function IngredientPicker({
     <Dialog
       open
       onClose={onClose}
-      title={food ? t.nutrition.recipes.amountTitle(food.name) : t.nutrition.recipes.pickTitle}
+      title={food ? tNutrition.recipes.amountTitle(food.name) : tNutrition.recipes.pickTitle}
       closeLabel={t.common.close}
       variant="sheet"
     >
@@ -103,16 +104,16 @@ export function IngredientPicker({
               }}
             >
               <ChevronLeft aria-hidden="true" className="size-4" />
-              {t.nutrition.recipes.back}
+              {tNutrition.recipes.back}
             </Button>
             {food.servings.length > 0 ? (
               <SelectField
-                label={t.nutrition.quantityLabel}
+                label={tNutrition.quantityLabel}
                 value={unitChoice}
                 options={[
                   ...food.servings.map((s) => ({
                     value: s.id,
-                    label: t.nutrition.servingOption(
+                    label: tNutrition.servingOption(
                       s.name,
                       fmt.number(s.amount, { maximumFractionDigits: 1 }),
                       unit,
@@ -131,7 +132,7 @@ export function IngredientPicker({
                 htmlFor={`${id}-menge`}
                 className="mb-2 block text-sm font-semibold text-muted"
               >
-                {serving ? t.nutrition.servingsLabel : t.nutrition.amountLabel(unit)}
+                {serving ? tNutrition.servingsLabel : tNutrition.amountLabel(unit)}
               </label>
               <input
                 id={`${id}-menge`}
@@ -146,7 +147,7 @@ export function IngredientPicker({
               />
             </div>
             <p role="status" className="font-semibold tabular-nums">
-              {preview !== undefined ? t.nutrition.preview(kcal(fmt, preview)) : '–'}
+              {preview !== undefined ? tNutrition.preview(kcal(fmt, preview)) : '–'}
             </p>
             {error ? (
               <p role="alert" className="text-sm text-danger">
@@ -155,29 +156,29 @@ export function IngredientPicker({
             ) : null}
             <Button type="submit" className="justify-self-start">
               <Plus aria-hidden="true" className="size-5" />
-              {t.nutrition.recipes.add}
+              {tNutrition.recipes.add}
             </Button>
           </form>
         ) : (
           <>
             <SearchField
-              label={t.nutrition.recipes.pickSearch}
-              placeholder={t.nutrition.searchPlaceholder}
+              label={tNutrition.recipes.pickSearch}
+              placeholder={tNutrition.searchPlaceholder}
               clearLabel={t.exercises.clearSearch}
               value={query}
               onChange={setQuery}
             />
             {catalog === undefined ? (
               <div aria-busy="true">
-                <p className="sr-only">{t.nutrition.loadingFoods}</p>
+                <p className="sr-only">{tNutrition.loadingFoods}</p>
                 <Skeleton className="h-32" />
               </div>
             ) : deferred.trim() ? (
               results.length === 0 ? (
-                <p className="text-muted">{t.nutrition.noResults}</p>
+                <p className="text-muted">{tNutrition.noResults}</p>
               ) : (
                 <ul
-                  aria-label={t.nutrition.results(results.length)}
+                  aria-label={tNutrition.results(results.length)}
                   className="divide-y divide-line"
                 >
                   {results.map((item) => (
@@ -197,13 +198,13 @@ export function IngredientPicker({
                             ) : null}
                             <Badge tone="neutral">
                               {item.catalog
-                                ? t.nutrition.catalogBadge[item.catalog]
-                                : t.nutrition.sourceBadge[item.source]}
+                                ? tNutrition.catalogBadge[item.catalog]
+                                : tNutrition.sourceBadge[item.source]}
                             </Badge>
                           </span>
                           <span className="block text-sm text-muted">
-                            {kcal(fmt, item.per100.kcal ?? 0)} {t.nutrition.units.kcal}{' '}
-                            {t.nutrition.per100(t.nutrition.units[item.basis])}
+                            {kcal(fmt, item.per100.kcal ?? 0)} {tNutrition.units.kcal}{' '}
+                            {tNutrition.per100(tNutrition.units[item.basis])}
                           </span>
                         </span>
                         <Plus aria-hidden="true" className="size-5 shrink-0 text-muted" />

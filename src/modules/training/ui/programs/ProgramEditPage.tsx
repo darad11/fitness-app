@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router';
 import { SETTINGS_DEFAULTS, useSettings } from '@/modules/settings';
 import { uuidv4 } from '@/shared/lib/uuid';
 import { t } from '@/shared/i18n/de';
+import { tProgramEditor } from '@/shared/i18n/de-program-editor';
 import { Button, ButtonLink, Card, IconButton, PageHeader, Skeleton, Switch } from '@/shared/ui';
 import {
   addDay,
@@ -18,7 +19,7 @@ import {
 } from '../../calc/programEdit';
 import { useOwnProgram } from '../../data/programRepository';
 import type { Day, OwnProgram, Week } from '../../model/program';
-import { describeDay } from '../SampleTemplatePage';
+import { describeDay } from '../../calc/describe';
 import {
   ConfirmDialog,
   ErrorMessage,
@@ -72,24 +73,24 @@ function Editor({ program }: { program: OwnProgram }) {
   return (
     <>
       <PageHeader
-        eyebrow={t.programEditor.title}
+        eyebrow={tProgramEditor.title}
         title={program.name}
-        back={{ to: `/training/programme/${program.id}`, label: t.programEditor.backToProgram }}
+        back={{ to: `/training/programme/${program.id}`, label: tProgramEditor.backToProgram }}
       />
-      <p className="mb-4 max-w-xl text-sm text-muted">{t.programEditor.autosave}</p>
+      <p className="mb-4 max-w-xl text-sm text-muted">{tProgramEditor.autosave}</p>
       <ErrorMessage error={error} />
       <div className="grid gap-6">
         <DetailsCard program={program} onSave={apply} />
         <section aria-labelledby="wochen" className="grid gap-4">
           <h2 id="wochen" className="eyebrow text-muted">
-            {t.programEditor.weeksTitle}
+            {tProgramEditor.weeksTitle}
           </h2>
           {weeks.map((week, weekIndex) => (
             <Card key={week.id}>
               <div className="flex flex-wrap items-center gap-1">
                 <h3 className="min-w-0 flex-1 text-lg font-semibold break-words">{week.name}</h3>
                 <IconButton
-                  label={t.programEditor.renameItem(week.name)}
+                  label={tProgramEditor.renameItem(week.name)}
                   onClick={() => {
                     setPending({ kind: 'renameWeek', week });
                   }}
@@ -97,21 +98,21 @@ function Editor({ program }: { program: OwnProgram }) {
                   <Pencil aria-hidden="true" className="size-5" />
                 </IconButton>
                 <IconButton
-                  label={t.programEditor.moveUp(week.name)}
+                  label={tProgramEditor.moveUp(week.name)}
                   disabled={weekIndex === 0}
                   onClick={() => void applyWeeks((all) => moveWeek(all, week.id, -1))}
                 >
                   <ArrowUp aria-hidden="true" className="size-5" />
                 </IconButton>
                 <IconButton
-                  label={t.programEditor.moveDown(week.name)}
+                  label={tProgramEditor.moveDown(week.name)}
                   disabled={weekIndex === weeks.length - 1}
                   onClick={() => void applyWeeks((all) => moveWeek(all, week.id, 1))}
                 >
                   <ArrowDown aria-hidden="true" className="size-5" />
                 </IconButton>
                 <IconButton
-                  label={t.programEditor.duplicateItem(week.name)}
+                  label={tProgramEditor.duplicateItem(week.name)}
                   onClick={() =>
                     void applyWeeks((all) =>
                       duplicateWeek(all, week.id, t.programs.copySuffix(week.name), uuidv4),
@@ -121,7 +122,7 @@ function Editor({ program }: { program: OwnProgram }) {
                   <Copy aria-hidden="true" className="size-5" />
                 </IconButton>
                 <IconButton
-                  label={t.programEditor.removeItem(week.name)}
+                  label={tProgramEditor.removeItem(week.name)}
                   disabled={weeks.length <= 1}
                   onClick={() => {
                     setPending({ kind: 'removeWeek', week });
@@ -140,11 +141,11 @@ function Editor({ program }: { program: OwnProgram }) {
                       <span className="min-w-0 flex-1">
                         <span className="block font-medium break-words">
                           {day.name}
-                          <span className="sr-only">{t.programEditor.editDaySuffix}</span>
+                          <span className="sr-only">{tProgramEditor.editDaySuffix}</span>
                         </span>
                         <span className="block text-sm text-muted">
                           {day.exercises.length === 0
-                            ? t.programEditor.noExercises
+                            ? tProgramEditor.noExercises
                             : describeDay(day, restDefaultSec)}
                           {day.weekdayHint
                             ? ` · ${t.programs.weekdays[day.weekdayHint - 1] ?? ''}`
@@ -155,21 +156,21 @@ function Editor({ program }: { program: OwnProgram }) {
                     </Link>
                     <span className="flex">
                       <IconButton
-                        label={t.programEditor.moveUp(day.name)}
+                        label={tProgramEditor.moveUp(day.name)}
                         disabled={dayIndex === 0}
                         onClick={() => void applyWeeks((all) => moveDay(all, day.id, -1))}
                       >
                         <ArrowUp aria-hidden="true" className="size-5" />
                       </IconButton>
                       <IconButton
-                        label={t.programEditor.moveDown(day.name)}
+                        label={tProgramEditor.moveDown(day.name)}
                         disabled={dayIndex === week.days.length - 1}
                         onClick={() => void applyWeeks((all) => moveDay(all, day.id, 1))}
                       >
                         <ArrowDown aria-hidden="true" className="size-5" />
                       </IconButton>
                       <IconButton
-                        label={t.programEditor.duplicateItem(day.name)}
+                        label={tProgramEditor.duplicateItem(day.name)}
                         onClick={() =>
                           void applyWeeks((all) =>
                             duplicateDay(all, day.id, t.programs.copySuffix(day.name), uuidv4),
@@ -179,7 +180,7 @@ function Editor({ program }: { program: OwnProgram }) {
                         <Copy aria-hidden="true" className="size-5" />
                       </IconButton>
                       <IconButton
-                        label={t.programEditor.removeItem(day.name)}
+                        label={tProgramEditor.removeItem(day.name)}
                         disabled={week.days.length <= 1}
                         onClick={() => {
                           setPending({ kind: 'removeDay', day });
@@ -202,7 +203,7 @@ function Editor({ program }: { program: OwnProgram }) {
                 }
               >
                 <Plus aria-hidden="true" className="size-4" />
-                {t.programEditor.addDay}
+                {tProgramEditor.addDay}
               </Button>
             </Card>
           ))}
@@ -220,14 +221,14 @@ function Editor({ program }: { program: OwnProgram }) {
             }
           >
             <Plus aria-hidden="true" className="size-5" />
-            {t.programEditor.addWeek}
+            {tProgramEditor.addWeek}
           </Button>
         </section>
       </div>
 
       {pending?.kind === 'renameWeek' ? (
         <NameDialog
-          title={t.programEditor.renameWeek}
+          title={tProgramEditor.renameWeek}
           label={t.programs.nameLabel}
           initial={pending.week.name}
           onClose={close}
@@ -239,32 +240,32 @@ function Editor({ program }: { program: OwnProgram }) {
       ) : null}
       {pending?.kind === 'removeWeek' ? (
         <ConfirmDialog
-          title={t.programEditor.removeWeekTitle(pending.week.name)}
+          title={tProgramEditor.removeWeekTitle(pending.week.name)}
           confirmLabel={t.programs.delete}
           onClose={close}
           onConfirm={() => {
             close();
             void applyWeeks((all) => removeWeek(all, pending.week.id), {
-              last: t.programEditor.lastWeek,
+              last: tProgramEditor.lastWeek,
             });
           }}
         >
-          {t.programEditor.removeWeekText(pending.week.days.length)}
+          {tProgramEditor.removeWeekText(pending.week.days.length)}
         </ConfirmDialog>
       ) : null}
       {pending?.kind === 'removeDay' ? (
         <ConfirmDialog
-          title={t.programEditor.removeDayTitle(pending.day.name)}
+          title={tProgramEditor.removeDayTitle(pending.day.name)}
           confirmLabel={t.programs.delete}
           onClose={close}
           onConfirm={() => {
             close();
             void applyWeeks((all) => removeDay(all, pending.day.id), {
-              last: t.programEditor.lastDay,
+              last: tProgramEditor.lastDay,
             });
           }}
         >
-          {t.programEditor.removeDayText}
+          {tProgramEditor.removeDayText}
         </ConfirmDialog>
       ) : null}
     </>
@@ -284,7 +285,7 @@ function DetailsCard({
   const [saved, setSaved] = useState(false);
   const dirty = name !== program.name || description !== (program.description ?? '');
   return (
-    <Card title={t.programEditor.details}>
+    <Card title={tProgramEditor.details}>
       <form
         className="grid gap-4"
         onSubmit={(event) => {
@@ -333,15 +334,15 @@ function DetailsCard({
           </Button>
           {saved && !dirty ? (
             <span role="status" className="text-sm text-muted">
-              {t.programEditor.detailsSaved}
+              {tProgramEditor.detailsSaved}
             </span>
           ) : null}
         </div>
       </form>
       <div className="mt-4 border-t border-line pt-2">
         <Switch
-          label={t.programEditor.repeat}
-          hint={t.programEditor.repeatHint}
+          label={tProgramEditor.repeat}
+          hint={tProgramEditor.repeatHint}
           checked={program.repeat}
           onChange={(repeat) => void onSave((plan) => ({ ...plan, repeat }))}
         />

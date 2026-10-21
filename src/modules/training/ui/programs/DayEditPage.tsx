@@ -5,6 +5,7 @@ import { ExercisePicker, type Exercise, type TrackingMode } from '@/modules/exer
 import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/settings';
 import { uuidv4 } from '@/shared/lib/uuid';
 import { t } from '@/shared/i18n/de';
+import { tProgramEditor } from '@/shared/i18n/de-program-editor';
 import {
   Button,
   ButtonLink,
@@ -33,7 +34,7 @@ import {
 import { useOwnProgram } from '../../data/programRepository';
 import type { Day, OwnProgram, PlannedExercise, PlannedSet, Weekday } from '../../model/program';
 import { ValueInput } from '../player/ValueInput';
-import { describeDay } from '../SampleTemplatePage';
+import { describeDay } from '../../calc/describe';
 import { ConfirmDialog, ErrorMessage, INPUT, TEXTAREA, useProgramEdit } from './editorParts';
 import { useLibrary } from './useLibrary';
 
@@ -92,10 +93,10 @@ function DayEditor({
         subtitle={day.exercises.length > 0 ? describeDay(day, restDefaultSec) : undefined}
         back={{
           to: `/training/programme/${program.id}/bearbeiten`,
-          label: t.programEditor.backToEditor,
+          label: tProgramEditor.backToEditor,
         }}
       />
-      <p className="mb-4 max-w-xl text-sm text-muted">{t.programEditor.autosave}</p>
+      <p className="mb-4 max-w-xl text-sm text-muted">{tProgramEditor.autosave}</p>
       <ErrorMessage error={error} />
       <div className="grid gap-6">
         <DayDetails
@@ -104,7 +105,7 @@ function DayEditor({
         />
         <section aria-labelledby="uebungen" className="grid gap-4">
           <h2 id="uebungen" className="eyebrow text-muted">
-            {t.programEditor.exercisesTitle}
+            {tProgramEditor.exercisesTitle}
           </h2>
           {day.exercises.length === 0 ? (
             <p className="rounded-card bg-surface-2 p-4 text-muted">{t.programs.emptyDay}</p>
@@ -134,7 +135,7 @@ function DayEditor({
             }}
           >
             <Plus aria-hidden="true" className="size-5" />
-            {t.programEditor.addExercise}
+            {tProgramEditor.addExercise}
           </Button>
         </section>
       </div>
@@ -145,8 +146,8 @@ function DayEditor({
             open
             title={
               picker.replace
-                ? t.programEditor.replaceTitle(picker.replace.nameSnapshot)
-                : t.programEditor.pickTitle
+                ? tProgramEditor.replaceTitle(picker.replace.nameSnapshot)
+                : tProgramEditor.pickTitle
             }
             alternativesForId={picker.replace?.exerciseId}
             onClose={() => {
@@ -167,8 +168,8 @@ function DayEditor({
       ) : null}
       {pending ? (
         <ConfirmDialog
-          title={t.programEditor.removeExerciseTitle(pending.exercise.nameSnapshot)}
-          confirmLabel={t.programEditor.remove}
+          title={tProgramEditor.removeExerciseTitle(pending.exercise.nameSnapshot)}
+          confirmLabel={tProgramEditor.remove}
           onClose={() => {
             setPending(null);
           }}
@@ -178,7 +179,7 @@ function DayEditor({
             void applyWeeks((all) => removeExercise(all, target.id));
           }}
         >
-          {t.programEditor.removeExerciseText}
+          {tProgramEditor.removeExerciseText}
         </ConfirmDialog>
       ) : null}
     </>
@@ -204,7 +205,7 @@ function DayDetails({
     notes !== (day.notes ?? '');
   const valid = name.trim().length > 0;
   return (
-    <Card title={t.programEditor.dayDetails}>
+    <Card title={tProgramEditor.dayDetails}>
       <form
         className="grid gap-4"
         onSubmit={(event) => {
@@ -237,11 +238,11 @@ function DayDetails({
           />
         </div>
         <SelectField
-          label={t.programEditor.weekdayLabel}
-          hint={t.programEditor.weekdayHint}
+          label={tProgramEditor.weekdayLabel}
+          hint={tProgramEditor.weekdayHint}
           value={weekday}
           options={[
-            { value: '', label: t.programEditor.weekdayNone },
+            { value: '', label: tProgramEditor.weekdayNone },
             ...WEEKDAY_VALUES.map((value, index) => ({
               value,
               label: t.programs.weekdays[index] ?? value,
@@ -254,7 +255,7 @@ function DayDetails({
         />
         <div>
           <label htmlFor="tag-notiz" className="mb-1 block text-sm font-medium">
-            {t.programEditor.dayNotes}
+            {tProgramEditor.dayNotes}
           </label>
           <textarea
             id="tag-notiz"
@@ -274,7 +275,7 @@ function DayDetails({
           </Button>
           {saved && !dirty ? (
             <span role="status" className="text-sm text-muted">
-              {t.programEditor.detailsSaved}
+              {tProgramEditor.detailsSaved}
             </span>
           ) : null}
         </div>
@@ -343,7 +344,7 @@ function ExerciseEditor({
   }
   const patchSet = (set: PlannedSet, patch: SetPatch) =>
     void applyWeeks((all) => updateSet(all, set.id, patch), {
-      invalid: t.programEditor.dropTypeLocked,
+      invalid: tProgramEditor.dropTypeLocked,
     });
   const commit =
     (handler: (value: number | null) => void) => (value: number | null | 'invalid') => {
@@ -384,29 +385,29 @@ function ExerciseEditor({
           <h3 className="text-lg font-semibold break-words">{name}</h3>
         </div>
         <IconButton
-          label={t.programEditor.moveUp(name)}
+          label={tProgramEditor.moveUp(name)}
           disabled={index === 0}
           onClick={() => void applyWeeks((all) => moveExercise(all, exercise.id, -1))}
         >
           <ArrowUp aria-hidden="true" className="size-5" />
         </IconButton>
         <IconButton
-          label={t.programEditor.moveDown(name)}
+          label={tProgramEditor.moveDown(name)}
           disabled={index === count - 1}
           onClick={() => void applyWeeks((all) => moveExercise(all, exercise.id, 1))}
         >
           <ArrowDown aria-hidden="true" className="size-5" />
         </IconButton>
-        <IconButton label={t.programEditor.replace(name)} onClick={onReplace}>
+        <IconButton label={tProgramEditor.replace(name)} onClick={onReplace}>
           <Repeat2 aria-hidden="true" className="size-5" />
         </IconButton>
-        <IconButton label={t.programEditor.removeItem(name)} onClick={onRemove}>
+        <IconButton label={tProgramEditor.removeItem(name)} onClick={onRemove}>
           <Trash2 aria-hidden="true" className="size-5" />
         </IconButton>
       </div>
-      {!info ? <p className="mt-2 text-sm text-danger">{t.programEditor.unknownExercise}</p> : null}
+      {!info ? <p className="mt-2 text-sm text-danger">{tProgramEditor.unknownExercise}</p> : null}
 
-      <h4 className="mt-4 mb-2 text-sm font-semibold text-muted">{t.programEditor.setsTitle}</h4>
+      <h4 className="mt-4 mb-2 text-sm font-semibold text-muted">{tProgramEditor.setsTitle}</h4>
       <ol className="grid gap-3">
         {exercise.sets.map((set, setIndex) => {
           const number = setIndex + 1;
@@ -420,13 +421,13 @@ function ExerciseEditor({
             fields.push(
               {
                 spec: REPS,
-                label: t.programEditor.repsMin,
+                label: tProgramEditor.repsMin,
                 stored: set.repsMin,
                 onCommit: rangeCommit(set, 'reps', 'min'),
               },
               {
                 spec: REPS,
-                label: t.programEditor.repsMax,
+                label: tProgramEditor.repsMax,
                 stored: set.repsMax,
                 onCommit: rangeCommit(set, 'reps', 'max'),
               },
@@ -436,13 +437,13 @@ function ExerciseEditor({
             fields.push(
               {
                 spec: minutes ? MINUTES : SECONDS,
-                label: minutes ? t.programEditor.durationMinMinutes : t.programEditor.durationMin,
+                label: minutes ? tProgramEditor.durationMinMinutes : tProgramEditor.durationMin,
                 stored: set.durationMinSec,
                 onCommit: rangeCommit(set, 'duration', 'min'),
               },
               {
                 spec: minutes ? MINUTES : SECONDS,
-                label: minutes ? t.programEditor.durationMaxMinutes : t.programEditor.durationMax,
+                label: minutes ? tProgramEditor.durationMaxMinutes : tProgramEditor.durationMax,
                 stored: set.durationMaxSec,
                 onCommit: rangeCommit(set, 'duration', 'max'),
               },
@@ -451,7 +452,7 @@ function ExerciseEditor({
           if (mode === 'weight_reps' || mode === 'weight_time') {
             fields.push({
               spec: KG,
-              label: t.programEditor.weight,
+              label: tProgramEditor.weight,
               stored: set.weightKg,
               onCommit: (value) => {
                 patchSet(set, { weightKg: value });
@@ -461,7 +462,7 @@ function ExerciseEditor({
           if (mode === 'assisted_reps') {
             fields.push({
               spec: { ...KG, field: 'assistKg', label: 'assistKg' },
-              label: t.programEditor.assist,
+              label: tProgramEditor.assist,
               stored: set.assistKg,
               onCommit: (value) => {
                 patchSet(set, { assistKg: value });
@@ -472,7 +473,7 @@ function ExerciseEditor({
             const metres = info?.distanceUnit === 'm';
             fields.push({
               spec: metres ? METERS : KM,
-              label: metres ? t.programEditor.distanceM : t.programEditor.distanceKm,
+              label: metres ? tProgramEditor.distanceM : tProgramEditor.distanceKm,
               stored: set.distanceM,
               onCommit: (value) => {
                 patchSet(set, { distanceM: value });
@@ -484,23 +485,21 @@ function ExerciseEditor({
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 {set.type === 'drop' ? (
                   <span className="flex-1 text-sm font-semibold">
-                    {t.programEditor.setLabel(number)} · {t.programEditor.setTypes.drop}
+                    {tProgramEditor.setLabel(number)} · {tProgramEditor.setTypes.drop}
                   </span>
                 ) : (
                   <span className="flex flex-1 items-center gap-2">
-                    <span className="text-sm font-semibold">
-                      {t.programEditor.setLabel(number)}
-                    </span>
+                    <span className="text-sm font-semibold">{tProgramEditor.setLabel(number)}</span>
                     <select
-                      aria-label={t.programEditor.setTypeLabel(number, name)}
+                      aria-label={tProgramEditor.setTypeLabel(number, name)}
                       value={set.type}
                       onChange={(event) => {
                         patchSet(set, { type: event.target.value as 'warmup' | 'working' });
                       }}
                       className="h-10 rounded-input border border-line bg-surface px-2 text-base text-fg"
                     >
-                      <option value="warmup">{t.programEditor.setTypes.warmup}</option>
-                      <option value="working">{t.programEditor.setTypes.working}</option>
+                      <option value="warmup">{tProgramEditor.setTypes.warmup}</option>
+                      <option value="working">{tProgramEditor.setTypes.working}</option>
                     </select>
                   </span>
                 )}
@@ -508,18 +507,18 @@ function ExerciseEditor({
                   <Button
                     variant="quiet"
                     size="sm"
-                    aria-label={t.programEditor.addDropFor(number, name)}
+                    aria-label={tProgramEditor.addDropFor(number, name)}
                     onClick={() => void applyWeeks((all) => addDropSet(all, set.id, uuidv4))}
                   >
                     <Plus aria-hidden="true" className="size-4" />
-                    {t.programEditor.addDrop}
+                    {tProgramEditor.addDrop}
                   </Button>
                 ) : null}
                 <IconButton
-                  label={t.programEditor.removeSet(number, name)}
+                  label={tProgramEditor.removeSet(number, name)}
                   onClick={() =>
                     void applyWeeks((all) => removeSet(all, set.id), {
-                      last: t.programEditor.lastSet,
+                      last: tProgramEditor.lastSet,
                     })
                   }
                 >
@@ -534,7 +533,7 @@ function ExerciseEditor({
                     </span>
                     <ValueInput
                       spec={field.spec}
-                      label={t.programEditor.field(field.label, number, name)}
+                      label={tProgramEditor.field(field.label, number, name)}
                       stored={field.stored}
                       suggestion={undefined}
                       format={format}
@@ -549,39 +548,39 @@ function ExerciseEditor({
       </ol>
       {invalid ? (
         <p role="alert" className="mt-2 text-sm text-danger">
-          {t.programEditor.invalidNumber}
+          {tProgramEditor.invalidNumber}
         </p>
       ) : null}
       <div className="mt-3 flex flex-wrap gap-2">
         <Button
           variant="secondary"
           size="sm"
-          aria-label={t.programEditor.addSetFor(name)}
+          aria-label={tProgramEditor.addSetFor(name)}
           onClick={() => void applyWeeks((all) => addSet(all, exercise.id, 'working', uuidv4))}
         >
           <Plus aria-hidden="true" className="size-4" />
-          {t.programEditor.addWorking}
+          {tProgramEditor.addWorking}
         </Button>
         <Button
           variant="secondary"
           size="sm"
-          aria-label={t.programEditor.addWarmupFor(name)}
+          aria-label={tProgramEditor.addWarmupFor(name)}
           onClick={() => void applyWeeks((all) => addSet(all, exercise.id, 'warmup', uuidv4))}
         >
           <Plus aria-hidden="true" className="size-4" />
-          {t.programEditor.addWarmup}
+          {tProgramEditor.addWarmup}
         </Button>
       </div>
 
       <div className="mt-4 grid gap-4 border-t border-line pt-4 sm:grid-cols-2">
         <SelectField
-          label={t.programEditor.restLabel}
+          label={tProgramEditor.restLabel}
           value={exercise.restSec === undefined ? '' : String(exercise.restSec)}
           options={[
-            { value: '', label: t.programEditor.restDefault(formatRest(restDefaultSec)) },
+            { value: '', label: tProgramEditor.restDefault(formatRest(restDefaultSec)) },
             ...restValues.map((value) => ({
               value: String(value),
-              label: value === 0 ? t.programEditor.restNone : formatRest(value),
+              label: value === 0 ? tProgramEditor.restNone : formatRest(value),
             })),
           ]}
           onChange={(value) =>
@@ -595,7 +594,7 @@ function ExerciseEditor({
             htmlFor={`notiz-${exercise.id}`}
             className="mb-2 block text-sm font-semibold text-muted"
           >
-            {t.programEditor.exerciseNotes}
+            {tProgramEditor.exerciseNotes}
           </label>
           <textarea
             id={`notiz-${exercise.id}`}

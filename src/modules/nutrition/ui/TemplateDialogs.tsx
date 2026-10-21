@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, Dialog } from '@/shared/ui';
 import type { MealTemplate } from '../model/mealTemplate';
 import type { FoodLogEntry, MealSlot } from '../model/nutrition';
@@ -39,12 +40,10 @@ function NameDialog({
     onSave(name).then(onClose, (caught: unknown) => {
       if (caught instanceof InvalidTemplateError) {
         setError(
-          caught.reason === 'name'
-            ? t.nutrition.templates.nameError
-            : t.nutrition.templates.tooMany,
+          caught.reason === 'name' ? tNutrition.templates.nameError : tNutrition.templates.tooMany,
         );
       } else {
-        setError(t.nutrition.saveFailed);
+        setError(tNutrition.saveFailed);
         void logError(db, { area: 'nutrition', error: caught, route: window.location.pathname });
       }
     });
@@ -58,10 +57,10 @@ function NameDialog({
       actions={
         <>
           <Button variant="secondary" onClick={onClose}>
-            {t.nutrition.cancel}
+            {tNutrition.cancel}
           </Button>
           <Button type="submit" form={`${id}-form`}>
-            {t.nutrition.templates.save}
+            {tNutrition.templates.save}
           </Button>
         </>
       }
@@ -74,7 +73,7 @@ function NameDialog({
         }}
       >
         <label htmlFor={`${id}-name`} className="mb-2 block text-sm font-semibold text-muted">
-          {t.nutrition.templates.nameLabel}
+          {tNutrition.templates.nameLabel}
         </label>
         <input
           id={`${id}-name`}
@@ -111,8 +110,8 @@ export function SaveTemplateDialog({
   const rt = useDb();
   return (
     <NameDialog
-      title={t.nutrition.templates.saveTitle}
-      initial={t.nutrition.templates.defaultName(t.nutrition.slots[slot])}
+      title={tNutrition.templates.saveTitle}
+      initial={tNutrition.templates.defaultName(tNutrition.slots[slot])}
       onClose={onClose}
       onSave={(name) => createTemplateFromEntries(rt, name, entries).then(onSaved)}
     />
@@ -129,7 +128,7 @@ export function RenameTemplateDialog({
   const rt = useDb();
   return (
     <NameDialog
-      title={t.nutrition.templates.renameTitle}
+      title={tNutrition.templates.renameTitle}
       initial={template.name}
       onClose={onClose}
       onSave={(name) => renameTemplate(rt, template.id, name)}
@@ -159,12 +158,12 @@ export function ApplyTemplateDialog({
     <Dialog
       open
       onClose={onClose}
-      title={t.nutrition.templates.applyTitle(template.name)}
+      title={tNutrition.templates.applyTitle(template.name)}
       closeLabel={t.common.close}
       actions={
         <>
           <Button variant="secondary" onClick={onClose}>
-            {t.nutrition.cancel}
+            {tNutrition.cancel}
           </Button>
           <Button
             disabled={busy}
@@ -174,7 +173,7 @@ export function ApplyTemplateDialog({
                 onApplied,
                 (caught: unknown) => {
                   setBusy(false);
-                  setError(t.nutrition.saveFailed);
+                  setError(tNutrition.saveFailed);
                   void logError(rt.db, {
                     area: 'nutrition',
                     error: caught,
@@ -184,13 +183,13 @@ export function ApplyTemplateDialog({
               );
             }}
           >
-            {t.nutrition.templates.apply}
+            {tNutrition.templates.apply}
           </Button>
         </>
       }
     >
       <p className="mb-3 text-sm text-muted">
-        {t.nutrition.templates.applyText(t.nutrition.slots[slot])}
+        {tNutrition.templates.applyText(tNutrition.slots[slot])}
       </p>
       <ul className="divide-y divide-line">
         {template.items.map((item) => (
@@ -206,7 +205,7 @@ export function ApplyTemplateDialog({
               </span>
             </span>
             <span className="shrink-0 font-semibold tabular-nums">
-              {kcal(fmt, item.nutrients.kcal ?? 0)} {t.nutrition.units.kcal}
+              {kcal(fmt, item.nutrients.kcal ?? 0)} {tNutrition.units.kcal}
             </span>
           </li>
         ))}

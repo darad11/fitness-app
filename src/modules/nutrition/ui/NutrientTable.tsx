@@ -1,5 +1,5 @@
 import { useFormatters } from '@/modules/settings';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { cn } from '@/shared/lib/cn';
 import type { Nutrient, Nutrients } from '../model/nutrition';
 import { grams, kcal } from './format';
@@ -38,12 +38,12 @@ export function NutrientTable({
 }) {
   const fmt = useFormatters();
   const show = (nutrient: Nutrient, value: number | undefined) => {
-    if (value === undefined) return t.nutrition.noValue;
-    if (nutrient === 'kcal') return `${kcal(fmt, value)} ${t.nutrition.units.kcal}`;
+    if (value === undefined) return tNutrition.noValue;
+    if (nutrient === 'kcal') return `${kcal(fmt, value)} ${tNutrition.units.kcal}`;
     // Salz meist unter 1 g, daher zwei Nachkommastellen.
     const shown =
       nutrient === 'salt' ? fmt.number(value, { maximumFractionDigits: 2 }) : grams(fmt, value);
-    return `${shown} ${t.nutrition.units.g}`;
+    return `${shown} ${tNutrition.units.g}`;
   };
   return (
     <table className={cn('w-full text-sm tabular-nums', className)}>
@@ -74,7 +74,7 @@ export function NutrientTable({
                 SUB.includes(nutrient) && 'pl-4 text-muted',
               )}
             >
-              {t.nutrition.nutrients[nutrient]}
+              {tNutrition.nutrients[nutrient]}
             </th>
             {columns.map((column) => (
               <td key={column.label} className="py-1.5 text-right">

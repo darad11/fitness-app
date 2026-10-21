@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { addShoppingLines } from '@/modules/shopping';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { parseDecimal } from '@/shared/lib/format';
 import {
@@ -53,11 +53,11 @@ export function RecipeEditPage() {
     return (
       <>
         <PageHeader
-          title={t.nutrition.recipes.editTitle}
-          back={{ to: '/ernaehrung/rezepte', label: t.nutrition.recipes.title }}
+          title={tNutrition.recipes.editTitle}
+          back={{ to: '/ernaehrung/rezepte', label: tNutrition.recipes.title }}
         />
-        <p className="mb-4 text-muted">{t.nutrition.recipes.notFound}</p>
-        <ButtonLink to="/ernaehrung/rezepte">{t.nutrition.recipes.title}</ButtonLink>
+        <p className="mb-4 text-muted">{tNutrition.recipes.notFound}</p>
+        <ButtonLink to="/ernaehrung/rezepte">{tNutrition.recipes.title}</ButtonLink>
       </>
     );
   }
@@ -120,7 +120,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
       });
     } catch (caught) {
       if (caught instanceof InvalidRecipeError) {
-        setError(t.nutrition.recipes.errors[caught.reason]);
+        setError(tNutrition.recipes.errors[caught.reason]);
         return;
       }
       throw caught;
@@ -131,9 +131,9 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
       .then(() => navigate('/ernaehrung/rezepte'))
       .catch((caught: unknown) => {
         if (caught instanceof InvalidRecipeError) {
-          setError(t.nutrition.recipes.errors[caught.reason]);
+          setError(tNutrition.recipes.errors[caught.reason]);
         } else {
-          setError(t.nutrition.saveFailed);
+          setError(tNutrition.saveFailed);
           void logError(rt.db, {
             area: 'nutrition',
             error: caught,
@@ -149,8 +149,8 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
   return (
     <>
       <PageHeader
-        title={recipe ? t.nutrition.recipes.editTitle : t.nutrition.recipes.newTitle}
-        back={{ to: '/ernaehrung/rezepte', label: t.nutrition.recipes.title }}
+        title={recipe ? tNutrition.recipes.editTitle : tNutrition.recipes.newTitle}
+        back={{ to: '/ernaehrung/rezepte', label: tNutrition.recipes.title }}
       />
       <form
         className="grid gap-4"
@@ -163,7 +163,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
           <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
             <div>
               <label htmlFor={`${id}-name`} className="mb-2 block text-sm font-semibold text-muted">
-                {t.nutrition.recipes.nameLabel}
+                {tNutrition.recipes.nameLabel}
               </label>
               <input
                 id={`${id}-name`}
@@ -182,7 +182,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                 htmlFor={`${id}-servings`}
                 className="mb-2 block text-sm font-semibold text-muted"
               >
-                {t.nutrition.recipes.servingsLabel}
+                {tNutrition.recipes.servingsLabel}
               </label>
               <input
                 id={`${id}-servings`}
@@ -198,14 +198,14 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
           </div>
         </Card>
 
-        <Card title={t.nutrition.recipes.ingredientsTitle}>
+        <Card title={tNutrition.recipes.ingredientsTitle}>
           {rows.length === 0 ? (
-            <p className="-mt-2 text-sm text-muted">{t.nutrition.recipes.noIngredients}</p>
+            <p className="-mt-2 text-sm text-muted">{tNutrition.recipes.noIngredients}</p>
           ) : (
             <ul className="-mt-2 divide-y divide-line">
               {rows.map((row, index) => {
-                const unit = t.nutrition.units[row.ingredient.basisSnapshot];
-                const label = t.nutrition.recipes.ingredientAmount(
+                const unit = tNutrition.units[row.ingredient.basisSnapshot];
+                const label = tNutrition.recipes.ingredientAmount(
                   row.ingredient.nameSnapshot,
                   unit,
                 );
@@ -240,7 +240,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                       {unit}
                     </span>
                     <IconButton
-                      label={t.nutrition.recipes.removeIngredient(row.ingredient.nameSnapshot)}
+                      label={tNutrition.recipes.removeIngredient(row.ingredient.nameSnapshot)}
                       onClick={() => {
                         setRows((all) => all.filter((_, i) => i !== index));
                       }}
@@ -262,26 +262,26 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
             }}
           >
             <Plus aria-hidden="true" className="size-4" />
-            {t.nutrition.recipes.addIngredient}
+            {tNutrition.recipes.addIngredient}
           </Button>
         </Card>
 
         {totals ? (
           <Card>
             <NutrientTable
-              caption={t.nutrition.recipes.nutrientsTitle}
+              caption={tNutrition.recipes.nutrientsTitle}
               columns={[
-                { label: t.nutrition.recipes.perServing, values: totals.perServing },
-                { label: t.nutrition.recipes.total, values: totals.total },
+                { label: tNutrition.recipes.perServing, values: totals.perServing },
+                { label: tNutrition.recipes.total, values: totals.total },
               ]}
             />
             <p className="mt-3 text-sm text-muted">
-              {t.nutrition.recipes.weightHint(grams(fmt, totals.grams))}
+              {tNutrition.recipes.weightHint(grams(fmt, totals.grams))}
             </p>
             {totals.missing.length > 0 ? (
               <p className="mt-1 text-sm text-muted">
-                {t.nutrition.recipes.missingHint(
-                  totals.missing.map((n) => t.nutrition.nutrientNames[n]).join(', '),
+                {tNutrition.recipes.missingHint(
+                  totals.missing.map((n) => tNutrition.nutrientNames[n]).join(', '),
                 )}
               </p>
             ) : null}
@@ -290,7 +290,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
 
         <Card>
           <label htmlFor={`${id}-steps`} className="mb-2 block text-sm font-semibold text-muted">
-            {t.nutrition.recipes.stepsLabel}
+            {tNutrition.recipes.stepsLabel}
           </label>
           <textarea
             id={`${id}-steps`}
@@ -307,7 +307,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
         {recipe ? (
           <Card>
             <Switch
-              label={t.nutrition.favorite}
+              label={tNutrition.favorite}
               checked={recipe.favorite === true}
               onChange={(checked) => void setRecipeFavorite(rt, recipe.id, checked)}
             />
@@ -316,7 +316,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                 variant="secondary"
                 onClick={() => void setRecipeArchived(rt, recipe.id, !recipe.archivedAt)}
               >
-                {recipe.archivedAt ? t.nutrition.unarchive : t.nutrition.archive}
+                {recipe.archivedAt ? tNutrition.unarchive : tNutrition.archive}
               </Button>
               <Button
                 variant="danger"
@@ -325,7 +325,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                 }}
               >
                 <Trash2 aria-hidden="true" className="size-5" />
-                {t.nutrition.recipes.delete}
+                {tNutrition.recipes.delete}
               </Button>
             </div>
           </Card>
@@ -337,7 +337,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
           </p>
         ) : null}
         <Button type="submit" disabled={busy} className="justify-self-start">
-          {t.nutrition.recipes.save}
+          {tNutrition.recipes.save}
         </Button>
       </form>
 
@@ -359,7 +359,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                   setShopped(added + merged);
                 },
                 (caught: unknown) => {
-                  setError(t.nutrition.saveFailed);
+                  setError(tNutrition.saveFailed);
                   void logError(rt.db, {
                     area: 'nutrition',
                     error: caught,
@@ -370,11 +370,11 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
             }}
           >
             <ShoppingCart aria-hidden="true" className="size-5" />
-            {t.nutrition.recipes.toShopping}
+            {tNutrition.recipes.toShopping}
           </Button>
           {shopped !== null ? (
             <p role="status" className="text-sm text-muted">
-              {t.nutrition.recipes.toShoppingDone(shopped)}{' '}
+              {tNutrition.recipes.toShoppingDone(shopped)}{' '}
               <Link to="/ernaehrung/einkaufsliste" className="font-semibold text-accent-ink">
                 {tShopping.title}
               </Link>
@@ -401,8 +401,8 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
           onClose={() => {
             setConfirmDelete(false);
           }}
-          title={t.nutrition.recipes.deleteTitle}
-          closeLabel={t.nutrition.cancel}
+          title={tNutrition.recipes.deleteTitle}
+          closeLabel={tNutrition.cancel}
           actions={
             <>
               <Button
@@ -411,7 +411,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                   setConfirmDelete(false);
                 }}
               >
-                {t.nutrition.cancel}
+                {tNutrition.cancel}
               </Button>
               <Button
                 variant="danger"
@@ -420,7 +420,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                     () => navigate('/ernaehrung/rezepte'),
                     (caught: unknown) => {
                       setConfirmDelete(false);
-                      setError(t.nutrition.saveFailed);
+                      setError(tNutrition.saveFailed);
                       void logError(rt.db, {
                         area: 'nutrition',
                         error: caught,
@@ -430,12 +430,12 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
                   );
                 }}
               >
-                {t.nutrition.recipes.delete}
+                {tNutrition.recipes.delete}
               </Button>
             </>
           }
         >
-          <p>{t.nutrition.recipes.deleteText}</p>
+          <p>{tNutrition.recipes.deleteText}</p>
         </Dialog>
       ) : null}
     </>

@@ -11,7 +11,10 @@ export type { ExercisePickerProps } from './ui/ExercisePicker';
 export const CustomExerciseDialog = lazy(async () => ({
   default: (await import('./ui/CustomExerciseDialog')).CustomExerciseDialog,
 }));
-export { ExercisePrefsCard } from './ui/ExercisePrefsCard';
+/** Persönliche Angaben zu einer Übung (AK-EXL-04), erst beim Öffnen geladen. */
+export const ExercisePrefsCard = lazy(async () => ({
+  default: (await import('./ui/ExercisePrefsCard')).ExercisePrefsCard,
+}));
 export { loadExercises, useExercisePrefs, useExercises } from './data/customExercises';
 export {
   createCustomExercise,
@@ -22,7 +25,7 @@ export {
 export { exercisesRoutes } from './routes';
 export { coreExerciseId, loadCoreExercises } from './data/coreLibrary';
 export { findAlternatives } from './calc/alternatives';
-export { describeExercise } from './ui/ExerciseLibraryPage';
+export { describeExercise } from './ui/describe';
 export {
   EQUIPMENT,
   MUSCLES,

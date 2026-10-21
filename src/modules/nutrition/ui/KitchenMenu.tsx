@@ -11,7 +11,7 @@ import {
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useOpenShoppingCount } from '@/modules/shopping';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
@@ -76,20 +76,20 @@ export function KitchenMenu() {
   const recipes = useRecipes();
   const templates = useMealTemplates();
   const shoppingOpen = useOpenShoppingCount();
-  const tk = t.nutrition.kitchen;
+  const tk = tNutrition.kitchen;
 
   const entries: Entry[] = [
     {
       to: '/ernaehrung/lebensmittel',
       icon: UtensilsCrossed,
-      title: t.nutrition.myFoods,
+      title: tNutrition.myFoods,
       hint: tk.foodsHint,
       count: foods?.filter((food) => !food.archivedAt).length,
     },
     {
       to: '/ernaehrung/rezepte',
       icon: CookingPot,
-      title: t.nutrition.recipes.title,
+      title: tNutrition.recipes.title,
       hint: tk.recipesHint,
       count: recipes?.filter((recipe) => !recipe.archivedAt).length,
     },
@@ -103,7 +103,7 @@ export function KitchenMenu() {
     {
       to: '/ernaehrung/vorlagen',
       icon: Bookmark,
-      title: t.nutrition.templates.title,
+      title: tNutrition.templates.title,
       hint: tk.templatesHint,
       count: templates?.length,
     },

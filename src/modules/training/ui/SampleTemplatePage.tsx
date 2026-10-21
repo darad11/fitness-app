@@ -6,16 +6,13 @@ import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import type { Exercise } from '@/modules/exercises';
 import { Badge, Button, ButtonLink, Card, Meter, PageHeader } from '@/shared/ui';
-import { estimateDay, roundMinutes } from '../calc/duration';
-import { formatRest, formatTargetRange } from '../calc/format';
 import { programProgress, type ProgramProgress } from '../calc/programProgress';
-import { summarizeSets } from '../calc/sampleTemplates';
+import { describeDay, describeSets, describeTemplate } from '../calc/describe';
 import { useCompletedSessions } from '../data/useSession';
 import { useTrainingState } from '../data/useTrainingState';
-import type { Day, PlannedExercise, PlanTree, SampleTemplate, Week } from '../model/program';
+import type { Day, PlanTree, SampleTemplate, Week } from '../model/program';
 import { activateProgram, copyProgram, deactivateProgram } from '../service/programService';
 import { planFromTemplateDay } from '../service/sessionService';
-import { describeTemplate } from './ProgramsPage';
 import type { AnyProgram } from './useActiveProgram';
 import { useStartSession } from './useStartSession';
 
@@ -445,41 +442,4 @@ function ProgramCard({
       </div>
     </Card>
   );
-}
-
-/** Z. B. „2 Aufwärmsätze, 3 Sätze je Seite · 6–8 Wdh. · Pause 2:30 min". */
-export function describeSets(exercise: PlannedExercise, perSide: boolean): string {
-  const summary = summarizeSets(exercise);
-  const sets = [
-    summary.warmup > 0 ? t.programs.warmupSets(summary.warmup) : null,
-    t.programs.workingSets(summary.working) + (perSide ? ` ${t.programs.perSide}` : ''),
-    summary.drop > 0 ? t.programs.dropSets(summary.drop) : null,
-  ]
-    .filter(Boolean)
-    .join(', ');
-  const range = formatTargetRange(summary.target);
-  const dropRange = summary.dropTarget ? formatTargetRange(summary.dropTarget) : null;
-  const target = range
-    ? (range.kind === 'reps' ? t.programs.reps(range.text) : range.text) +
-      (dropRange
-        ? `, Drop ${dropRange.kind === 'reps' ? t.programs.reps(dropRange.text) : dropRange.text}`
-        : '')
-    : null;
-  const rest =
-    exercise.restSec === undefined
-      ? null
-      : exercise.restSec === 0
-        ? t.programs.noRest
-        : t.programs.rest(formatRest(exercise.restSec));
-  return [sets, target, rest].filter(Boolean).join(' · ');
-}
-
-/** Tagesvorschau: „5 Übungen · 17 Sätze · ca. 50 min" (Schritt D). */
-export function describeDay(day: Pick<Day, 'exercises'>, restDefaultSec: number): string {
-  const estimate = estimateDay(day, restDefaultSec);
-  return [
-    t.programs.exerciseCount(estimate.exercises),
-    t.programs.setCount(estimate.sets),
-    t.programs.estimate(roundMinutes(estimate.seconds)),
-  ].join(' · ');
 }

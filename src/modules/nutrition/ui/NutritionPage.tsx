@@ -14,7 +14,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { WaterCard } from '@/modules/water';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { addDays, dayKey as toDayKey, hourIn, isValidDayKey } from '@/shared/lib/time';
 import { Button, ButtonLink, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
@@ -96,10 +96,10 @@ export function NutritionPage() {
 
   return (
     <>
-      <PageHeader title={t.nutrition.title} />
+      <PageHeader title={tNutrition.title} />
       <div className="mb-4 flex items-center justify-between gap-2">
         <IconButton
-          label={t.nutrition.previousDay}
+          label={tNutrition.previousDay}
           onClick={() => {
             goTo(addDays(day, -1));
           }}
@@ -108,7 +108,7 @@ export function NutritionPage() {
         </IconButton>
         <div className="text-center">
           <p className="font-semibold" aria-live="polite">
-            {day === today ? `${t.nutrition.today} · ${dateLabel}` : dateLabel}
+            {day === today ? `${tNutrition.today} · ${dateLabel}` : dateLabel}
           </p>
           {day !== today ? (
             <button
@@ -118,12 +118,12 @@ export function NutritionPage() {
                 goTo(today);
               }}
             >
-              {t.nutrition.today}
+              {tNutrition.today}
             </button>
           ) : null}
         </div>
         <IconButton
-          label={t.nutrition.nextDay}
+          label={tNutrition.nextDay}
           disabled={day >= today}
           onClick={() => {
             goTo(addDays(day, 1));
@@ -142,17 +142,17 @@ export function NutritionPage() {
         <div className="grid gap-4">
           <Card tone="ink">
             <div className="flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
-              <p className="eyebrow text-on-ink-muted md:hidden">{t.nutrition.eaten}</p>
+              <p className="eyebrow text-on-ink-muted md:hidden">{tNutrition.eaten}</p>
               {target ? (
                 <MacroRing
                   className="self-center md:self-auto"
                   size={176}
                   stroke={18}
                   label={[
-                    t.nutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal)),
+                    tNutrition.kcalOf(kcal(fmt, totals.sums.kcal), kcal(fmt, target.kcal)),
                     ...MACROS.map(
                       (macro) =>
-                        `${t.nutrition.macros[macro]} ${t.nutrition.gramsOf(grams(fmt, totals.sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
+                        `${tNutrition.macros[macro]} ${tNutrition.gramsOf(grams(fmt, totals.sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
                     ),
                   ].join(', ')}
                   value={target.kcal > 0 ? totals.sums.kcal / target.kcal : 0}
@@ -166,22 +166,20 @@ export function NutritionPage() {
                       {kcal(fmt, totals.sums.kcal)}
                     </span>
                     <span className="mt-1 block text-sm text-on-ink-muted tabular-nums">
-                      {t.nutrition.ofKcal(kcal(fmt, target.kcal))}
+                      {tNutrition.ofKcal(kcal(fmt, target.kcal))}
                     </span>
                   </span>
                 </MacroRing>
               ) : (
                 <div>
                   <p className="text-3xl font-bold tabular-nums">
-                    {t.nutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
+                    {tNutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
                   </p>
-                  <p className="mt-1 text-sm text-on-ink-muted">{t.nutrition.noTarget}</p>
+                  <p className="mt-1 text-sm text-on-ink-muted">{tNutrition.noTarget}</p>
                 </div>
               )}
               <div className="min-w-0 flex-1">
-                <p className="eyebrow mb-4 hidden text-on-ink-muted md:block">
-                  {t.nutrition.eaten}
-                </p>
+                <p className="eyebrow mb-4 hidden text-on-ink-muted md:block">{tNutrition.eaten}</p>
                 <dl className="grid grid-cols-3 gap-4 md:gap-6">
                   {MACROS.map((macro) => {
                     const goal = target ? macroGoal(target, macro) : undefined;
@@ -190,18 +188,18 @@ export function NutritionPage() {
                       <div key={macro} className="min-w-0">
                         <dt className="truncate text-sm text-on-ink-muted">
                           <span aria-hidden="true" className="md:hidden">
-                            {t.nutrition.macrosShort[macro]}
+                            {tNutrition.macrosShort[macro]}
                           </span>
-                          <span className="max-md:sr-only">{t.nutrition.macros[macro]}</span>
+                          <span className="max-md:sr-only">{tNutrition.macros[macro]}</span>
                         </dt>
                         <dd className="mt-0.5 tabular-nums">
                           <span className="text-xl font-bold">{grams(fmt, eaten)}</span>
                           {goal !== undefined ? (
                             <span className="text-sm whitespace-nowrap text-on-ink-muted">
-                              {` / ${grams(fmt, goal)} ${t.nutrition.units.g}`}
+                              {` / ${grams(fmt, goal)} ${tNutrition.units.g}`}
                             </span>
                           ) : (
-                            <span className="text-xl font-bold">{` ${t.nutrition.units.g}`}</span>
+                            <span className="text-xl font-bold">{` ${tNutrition.units.g}`}</span>
                           )}
                         </dd>
                         {goal !== undefined ? (
@@ -225,8 +223,8 @@ export function NutritionPage() {
                 {target ? (
                   <p className="mt-3 text-sm text-on-ink-muted">
                     {totals.sums.kcal <= target.kcal
-                      ? t.nutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
-                      : t.nutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
+                      ? tNutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
+                      : tNutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
                   </p>
                 ) : null}
               </div>
@@ -234,8 +232,8 @@ export function NutritionPage() {
             {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
             <details className="group mt-1">
               <summary
-                aria-label={t.nutrition.extrasLabel}
-                title={t.nutrition.extrasLabel}
+                aria-label={tNutrition.extrasLabel}
+                title={tNutrition.extrasLabel}
                 className="mx-auto flex min-h-11 w-16 cursor-pointer list-none items-center justify-center rounded-pill text-on-ink-muted hover:text-on-ink [&::-webkit-details-marker]:hidden"
               >
                 <ChevronDown
@@ -244,16 +242,16 @@ export function NutritionPage() {
                   className="size-6 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
-              <div role="group" aria-label={t.nutrition.extrasLabel}>
+              <div role="group" aria-label={tNutrition.extrasLabel}>
                 <dl className="mt-1 grid grid-flow-row-dense grid-cols-3 gap-x-3 gap-y-2 text-sm">
                   {EXTRAS.map(({ nutrient, column }) => (
                     <div key={nutrient} className={column}>
-                      <dt className="text-on-ink-muted">{t.nutrition.extras[nutrient]}</dt>
+                      <dt className="text-on-ink-muted">{tNutrition.extras[nutrient]}</dt>
                       <dd className="font-semibold tabular-nums">
                         {nutrient === 'salt'
                           ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
                           : grams(fmt, totals.sums[nutrient])}{' '}
-                        {t.nutrition.units.g}
+                        {tNutrition.units.g}
                       </dd>
                     </div>
                   ))}
@@ -262,26 +260,26 @@ export function NutritionPage() {
             </details>
             {totals.incomplete.some((n) => n !== 'kcal') ? (
               <p className="mt-3 text-sm text-on-ink-muted">
-                {t.nutrition.incomplete(
+                {tNutrition.incomplete(
                   totals.incomplete
                     .filter((n) => n !== 'kcal')
-                    .map((n) => t.nutrition.nutrientNames[n])
+                    .map((n) => tNutrition.nutrientNames[n])
                     .join(', '),
                 )}
               </p>
             ) : null}
             {totals.estimated ? (
-              <p className="mt-1 text-sm text-on-ink-muted">{t.nutrition.estimatedHint}</p>
+              <p className="mt-1 text-sm text-on-ink-muted">{tNutrition.estimatedHint}</p>
             ) : null}
           </Card>
 
           <nav
-            aria-label={t.nutrition.shortcuts}
+            aria-label={tNutrition.shortcuts}
             className="my-2 grid grid-cols-2 gap-2 md:relative md:flex md:justify-center md:gap-3"
           >
             <Link to="/ernaehrung/ziele" className={PILL}>
               <Target aria-hidden="true" className="size-5 text-accent-ink" />
-              {t.nutrition.kitchen.target}
+              {tNutrition.kitchen.target}
             </Link>
             <KitchenMenu />
           </nav>
@@ -292,24 +290,24 @@ export function NutritionPage() {
             return (
               <Card
                 key={slot}
-                title={t.nutrition.slots[slot]}
+                title={tNutrition.slots[slot]}
                 action={
                   items.length > 0 ? (
                     <span className="text-sm font-semibold text-muted tabular-nums">
-                      {kcal(fmt, slotKcal)} {t.nutrition.units.kcal}
+                      {kcal(fmt, slotKcal)} {tNutrition.units.kcal}
                     </span>
                   ) : undefined
                 }
               >
                 {items.length === 0 ? (
-                  <p className="-mt-2 text-sm text-muted">{t.nutrition.emptySlot}</p>
+                  <p className="-mt-2 text-sm text-muted">{tNutrition.emptySlot}</p>
                 ) : (
                   <ul className="-mt-2 divide-y divide-line">
                     {items.map((entry) => (
                       <li key={entry.id}>
                         <button
                           type="button"
-                          aria-label={t.nutrition.entryLabel(
+                          aria-label={tNutrition.entryLabel(
                             brandedName(entryNameAndBrand(entry, brandOf)),
                           )}
                           onClick={() => {
@@ -328,7 +326,7 @@ export function NutritionPage() {
                             </span>
                           </span>
                           <span className="shrink-0 font-semibold tabular-nums">
-                            {kcal(fmt, entry.nutrients.kcal ?? 0)} {t.nutrition.units.kcal}
+                            {kcal(fmt, entry.nutrients.kcal ?? 0)} {tNutrition.units.kcal}
                           </span>
                         </button>
                       </li>
@@ -340,22 +338,22 @@ export function NutritionPage() {
                     to={`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`}
                     variant="quiet"
                     size="sm"
-                    aria-label={t.nutrition.addTo(t.nutrition.slots[slot])}
+                    aria-label={tNutrition.addTo(tNutrition.slots[slot])}
                   >
                     <Plus aria-hidden="true" className="size-4" />
-                    {t.nutrition.add}
+                    {tNutrition.add}
                   </ButtonLink>
                   {items.length > 0 ? (
                     <Button
                       variant="quiet"
                       size="sm"
-                      aria-label={t.nutrition.templates.saveFromSlotLabel(t.nutrition.slots[slot])}
+                      aria-label={tNutrition.templates.saveFromSlotLabel(tNutrition.slots[slot])}
                       onClick={() => {
                         setSaving(slot);
                       }}
                     >
                       <BookmarkPlus aria-hidden="true" className="size-4" />
-                      {t.nutrition.templates.saveFromSlot}
+                      {tNutrition.templates.saveFromSlot}
                     </Button>
                   ) : null}
                 </div>
@@ -391,7 +389,7 @@ export function NutritionPage() {
             setSaving(null);
           }}
           onSaved={(template) => {
-            setNotice(t.nutrition.templates.saved(template.name));
+            setNotice(tNutrition.templates.saved(template.name));
           }}
         />
       ) : null}
@@ -408,7 +406,7 @@ export function NutritionPage() {
       {deleted ? (
         <Toast
           key={deleted.id}
-          message={t.nutrition.deleted(entryNameAndBrand(deleted, brandOf).name)}
+          message={tNutrition.deleted(entryNameAndBrand(deleted, brandOf).name)}
           durationMs={10_000}
           onTimeout={() => {
             setDeleted(null);
@@ -429,7 +427,7 @@ export function NutritionPage() {
                 });
               }}
             >
-              {t.nutrition.undo}
+              {tNutrition.undo}
             </Button>
           }
         />
@@ -455,7 +453,7 @@ export function NutritionTodayCard() {
   const hour = hourIn(now, fmt.timeZone);
   const scanTo = `/ernaehrung/hinzufuegen?mahlzeit=${mealSlotAt(hour)}&scan=1&von=heute`;
   return (
-    <Card eyebrow={t.nutrition.todayCard}>
+    <Card eyebrow={tNutrition.todayCard}>
       <div className="flex items-center gap-4">
         {target ? (
           <MacroRing
@@ -463,10 +461,10 @@ export function NutritionTodayCard() {
             size={104}
             stroke={11}
             label={[
-              t.nutrition.kcalOf(kcal(fmt, sums.kcal), kcal(fmt, target.kcal)),
+              tNutrition.kcalOf(kcal(fmt, sums.kcal), kcal(fmt, target.kcal)),
               ...MACROS.map(
                 (macro) =>
-                  `${t.nutrition.macros[macro]} ${t.nutrition.gramsOf(grams(fmt, sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
+                  `${tNutrition.macros[macro]} ${tNutrition.gramsOf(grams(fmt, sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
               ),
             ].join(', ')}
             value={target.kcal > 0 ? sums.kcal / target.kcal : 0}
@@ -480,7 +478,7 @@ export function NutritionTodayCard() {
                 {kcal(fmt, sums.kcal)}
               </span>
               <span className="block text-xs text-muted tabular-nums">
-                {t.nutrition.ofKcal(kcal(fmt, target.kcal))}
+                {tNutrition.ofKcal(kcal(fmt, target.kcal))}
               </span>
             </span>
           </MacroRing>
@@ -488,7 +486,7 @@ export function NutritionTodayCard() {
         <div className="min-w-0 flex-1">
           {target ? null : (
             <p className="mb-3 text-2xl font-bold tabular-nums">
-              {t.nutrition.kcalOnly(kcal(fmt, sums.kcal))}
+              {tNutrition.kcalOnly(kcal(fmt, sums.kcal))}
             </p>
           )}
           <dl className="grid grid-cols-3 gap-3">
@@ -498,20 +496,20 @@ export function NutritionTodayCard() {
               return (
                 <div key={macro} className="min-w-0 text-center">
                   <dt className="truncate text-xs text-muted">
-                    <span aria-hidden="true">{t.nutrition.macrosShort[macro]}</span>
-                    <span className="sr-only">{t.nutrition.macros[macro]}</span>
+                    <span aria-hidden="true">{tNutrition.macrosShort[macro]}</span>
+                    <span className="sr-only">{tNutrition.macros[macro]}</span>
                   </dt>
                   <dd className="tabular-nums">
                     <span className="block text-lg leading-tight font-bold">
                       {grams(fmt, eaten)}
                       {/* Ohne Ziel steht die Einheit neben der Zahl, nicht allein darunter. */}
                       {goal === undefined ? (
-                        <span className="text-xs font-normal text-muted">{` ${t.nutrition.units.g}`}</span>
+                        <span className="text-xs font-normal text-muted">{` ${tNutrition.units.g}`}</span>
                       ) : null}
                     </span>
                     {goal !== undefined ? (
                       <span className="block text-xs whitespace-nowrap text-muted">
-                        {`/ ${grams(fmt, goal)} ${t.nutrition.units.g}`}
+                        {`/ ${grams(fmt, goal)} ${tNutrition.units.g}`}
                       </span>
                     ) : null}
                   </dd>
@@ -539,8 +537,8 @@ export function NutritionTodayCard() {
       <div className="mt-4 flex justify-center gap-3">
         {(
           [
-            { to: scanTo, label: t.nutrition.barcode.scan, icon: ScanBarcode, primary: true },
-            { to: '/ernaehrung', label: t.nutrition.toNutrition, icon: Apple, primary: false },
+            { to: scanTo, label: tNutrition.barcode.scan, icon: ScanBarcode, primary: true },
+            { to: '/ernaehrung', label: tNutrition.toNutrition, icon: Apple, primary: false },
             {
               to: '/ernaehrung/einkaufsliste',
               label: tShopping.title,

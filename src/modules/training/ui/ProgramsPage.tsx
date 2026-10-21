@@ -4,7 +4,7 @@ import { Link, useLoaderData, useLocation, useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { Badge, Button, Dialog, PageHeader, Skeleton, Toast } from '@/shared/ui';
-import { distinctDays } from '../calc/sampleTemplates';
+import { describeTemplate } from '../calc/describe';
 import { useOwnPrograms } from '../data/programRepository';
 import { useTrainingState } from '../data/useTrainingState';
 import type { OwnProgram, SampleTemplate } from '../model/program';
@@ -322,18 +322,4 @@ function TemplateList({
       ))}
     </ul>
   );
-}
-
-export function describeTemplate(template: SampleTemplate): string {
-  const days = template.program
-    ? t.programs.weekCount(template.weeks.length) +
-      ', ' +
-      t.programs.dayCount(template.weeks.reduce((sum, week) => sum + week.days.length, 0))
-    : t.programs.dayCount(distinctDays(template).length);
-  return [
-    t.programs.levels[template.level],
-    t.programs.locations[template.location],
-    t.programs.daysPerWeek(template.daysPerWeek),
-    days,
-  ].join(' · ');
 }

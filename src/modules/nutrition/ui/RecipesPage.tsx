@@ -1,7 +1,7 @@
 import { ChevronRight, Plus, Star } from 'lucide-react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { ButtonLink, PageHeader, Skeleton } from '@/shared/ui';
 import { recipeTotals } from '../calc/recipe';
 import { useRecipes } from '../data/nutritionRepository';
@@ -31,11 +31,11 @@ export function RecipesPage() {
                 <span className="flex flex-wrap items-center gap-2 font-medium">
                   {recipe.name}
                   {recipe.favorite ? (
-                    <Star aria-label={t.nutrition.favorite} className="size-4 text-accent-ink" />
+                    <Star aria-label={tNutrition.favorite} className="size-4 text-accent-ink" />
                   ) : null}
                 </span>
                 <span className="block text-sm text-muted">
-                  {t.nutrition.recipes.summary(
+                  {tNutrition.recipes.summary(
                     recipe.servings,
                     kcal(fmt, totals.perServing.kcal ?? 0),
                   )}
@@ -51,26 +51,26 @@ export function RecipesPage() {
   return (
     <>
       <PageHeader
-        title={t.nutrition.recipes.title}
-        back={{ to: '/ernaehrung', label: t.nutrition.title }}
+        title={tNutrition.recipes.title}
+        back={{ to: '/ernaehrung', label: tNutrition.title }}
       />
       <ButtonLink to="/ernaehrung/rezepte/neu" className="mb-4">
         <Plus aria-hidden="true" className="size-5" />
-        {t.nutrition.recipes.newRecipe}
+        {tNutrition.recipes.newRecipe}
       </ButtonLink>
       {recipes === undefined ? (
         <Skeleton className="h-32" />
       ) : active.length === 0 ? (
-        <p className="rounded-card bg-surface-2 p-4 text-muted">{t.nutrition.recipes.empty}</p>
+        <p className="rounded-card bg-surface-2 p-4 text-muted">{tNutrition.recipes.empty}</p>
       ) : (
-        list(active, t.nutrition.recipes.title)
+        list(active, tNutrition.recipes.title)
       )}
       {archived.length > 0 ? (
         <details className="mt-6">
           <summary className="eyebrow cursor-pointer py-2 text-muted">
-            {t.nutrition.archivedTitle(archived.length)}
+            {tNutrition.archivedTitle(archived.length)}
           </summary>
-          <div className="mt-2">{list(archived, t.nutrition.archivedTitle(archived.length))}</div>
+          <div className="mt-2">{list(archived, tNutrition.archivedTitle(archived.length))}</div>
         </details>
       ) : null}
     </>

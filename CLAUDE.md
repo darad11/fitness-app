@@ -9,7 +9,7 @@ Persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, den Pro
 - `docs/decisions.md`: Entscheidungen (D-…) und offene Fragen (Q-…)
 - `docs/requirements.md`: Akzeptanzkriterien (AK-…); `docs/testing.md`: Nachweise und Protokolle
 - `docs/evolution-plan.md`: Erweiterungsplan (Schritte A bis H), Programme A, B, C; dazu `docs/winter-arc-reconstruction.md` und `docs/reference-analysis.md`
-- Je nach Aufgabe: `docs/shopping-list.md`, `docs/water-tracker.md`, `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`, `docs/exercise-library.md`
+- Je nach Aufgabe: `docs/brand-form.md` (Marke FORM, Q-22), `docs/shopping-list.md`, `docs/water-tracker.md`, `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`, `docs/exercise-library.md`
 
 ## Zusammenarbeit
 

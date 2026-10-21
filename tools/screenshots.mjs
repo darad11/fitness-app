@@ -194,6 +194,15 @@ async function screens() {
   await screen('fortschritt');
   await open('/mehr');
   await screen('mehr');
+  // Anmeldung (C): Logo, Claim und Unterzeile; „Über die App“ mit dem Logo ohne Claim.
+  await open('/mehr/synchronisierung');
+  const login = page.getByRole('dialog', { name: 'FORM' });
+  await login.waitFor();
+  await page.waitForTimeout(400);
+  await screen('anmeldung');
+  await login.getByRole('button', { name: 'Später' }).click();
+  await open('/mehr/ueber');
+  await screen('ueber-die-app');
 
   await setNutritionTarget();
   await activateProgram();

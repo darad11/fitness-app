@@ -71,14 +71,14 @@ test('Anmeldung im Vollbild: „Später“ und Escape führen ohne Anmeldung zur
   page,
 }) => {
   await openPage(page, '/mehr/synchronisierung');
-  const login = page.getByRole('dialog', { name: 'Fitness' });
+  const login = page.getByRole('dialog', { name: 'FORM' });
   await expect(login).toBeVisible();
-  await expect(login.getByRole('heading', { name: 'Fitness' })).toBeFocused();
+  await expect(login.getByRole('heading', { name: 'FORM' })).toBeFocused();
   await login.getByRole('button', { name: 'Später' }).click();
   await expect(page).toHaveURL(/\/mehr$/);
   await openPage(page, '/mehr/synchronisierung');
   // Erst warten, bis das Anmeldefenster offen ist und den Fokus hat (WebKit lädt langsamer).
-  await expect(login.getByRole('heading', { name: 'Fitness' })).toBeFocused();
+  await expect(login.getByRole('heading', { name: 'FORM' })).toBeFocused();
   await page.keyboard.press('Escape');
   await expect(page).toHaveURL(/\/mehr$/);
 });
@@ -109,7 +109,7 @@ test('Registrieren im Anmeldefenster: Bestätigungsmail, danach anmelden (D-273)
     });
   });
   await openPage(page, '/mehr/synchronisierung');
-  const login = page.getByRole('dialog', { name: 'Fitness' });
+  const login = page.getByRole('dialog', { name: 'FORM' });
   await login.getByRole('button', { name: 'Noch kein Konto? Registrieren' }).click();
   await login.getByLabel('E-Mail').fill('neu@example.org');
   await login.getByLabel('Passwort', { exact: true }).fill('langesPasswort');

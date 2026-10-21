@@ -168,6 +168,13 @@ describe('App-Shell', () => {
   it('zeigt Version und Speicher-ID unter „Über die App"', async () => {
     renderApp('/mehr/ueber');
     await screen.findByRole('heading', { level: 1, name: 'Über die App' });
+    // Logo der Marke ohne Claim (D-316).
+    const main = within(screen.getByRole('main'));
+    expect(main.getByRole('img', { name: 'FORM' })).toHaveAttribute(
+      'src',
+      '/brand/logo-anmeldung-dunkel.svg',
+    );
+    expect(main.queryByText('FORM YOURSELF.')).not.toBeInTheDocument();
     expect(screen.getByText('a1b2c3d4')).toBeInTheDocument();
     expect(screen.getByText(/^\d+\.\d+\.\d+$/)).toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole('button', { name: 'Nach Update suchen' }));

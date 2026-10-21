@@ -16,6 +16,10 @@ const CHECK_MESSAGES: Record<Exclude<CheckState, 'idle'>, string> = {
   unavailable: t.about.updateUnavailable,
 };
 
+/**
+ * Über die App (FORM D-316): Logo der Marke ohne Claim, darunter wie bisher Version, Build,
+ * Umgebung (AK-PWA-07), Speicher-ID und die Suche nach Updates.
+ */
 export function AboutPage() {
   const { deviceId } = useDb();
   const formatters = useFormatters();
@@ -42,8 +46,16 @@ export function AboutPage() {
   return (
     <>
       <PageHeader title={t.about.title} back={{ to: '/mehr', label: t.more.title }} />
-      <div className="space-y-4">
+      <div className="grid gap-stack">
         <Card>
+          {/* Logo der Marke ohne Claim (FORM, D-316), darunter Version und Updates wie bisher. */}
+          <img
+            src="/brand/logo-anmeldung-dunkel.svg"
+            alt={t.app.name}
+            width={280}
+            height={67}
+            className="brand-logo mx-auto mt-2 mb-6"
+          />
           <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2">
             {rows.map(([label, value]) => (
               <div key={label} className="contents">

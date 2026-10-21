@@ -10,7 +10,11 @@ export const tSync = {
   password: 'Passwort',
   signIn: 'Anmelden',
   signingIn: 'Wird angemeldet …',
-  loginTitle: 'Fitness',
+  /** Name der Anmeldung: Alternativtext des Logos (FORM, D-316). */
+  loginTitle: 'FORM',
+  /** Claim und Unterzeile der Marke, nur an Markenstellen (form-markenleitplanken.md Regel 4). */
+  claim: 'FORM YOURSELF.',
+  claimSub: 'Werde die Person, die du sein möchtest.',
   loginSubtitle:
     'Melde dich an, damit Training, Ernährung und Fortschritt auf all deinen Geräten gleich sind.',
   later: 'Später',

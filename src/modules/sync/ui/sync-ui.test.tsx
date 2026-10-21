@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -25,6 +25,24 @@ const urlOf = (input: RequestInfo | URL): string =>
   typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
 
 describe('Synchronisierung (D-269)', () => {
+  it('zeigt in der Anmeldung das Logo als Namen, Claim und Unterzeile als Text (FORM, D-316)', async () => {
+    const router = createMemoryRouter(syncRoutes, { initialEntries: ['/mehr/synchronisierung'] });
+    render(
+      <DbProvider runtime={rt}>
+        <RouterProvider router={router} />
+      </DbProvider>,
+    );
+    const login = await screen.findByRole('dialog', { name: 'FORM' }, WAIT);
+    const logo = within(login).getByRole('img', { name: 'FORM' });
+    expect(logo).toHaveAttribute('src', '/brand/logo-anmeldung-dunkel.svg');
+    expect(within(login).getByRole('heading', { name: 'FORM' })).toContainElement(logo);
+    // Claim englisch mit deutscher Unterzeile (form-markenleitplanken.md Regel 4).
+    expect(within(login).getByText('FORM YOURSELF.')).toHaveAttribute('lang', 'en');
+    expect(within(login).getByText('Werde die Person, die du sein möchtest.')).toBeVisible();
+    expect(within(login).getByRole('button', { name: 'Anmelden' })).toBeVisible();
+    expect(within(login).getByRole('button', { name: 'Später' })).toBeVisible();
+  });
+
   it('meldet an, gleicht ab, zeigt den Stand und meldet ab', { timeout: 30_000 }, async () => {
     const calls: string[] = [];
     vi.stubGlobal(

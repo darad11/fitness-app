@@ -73,19 +73,21 @@ Alt = Stand vor dem Rebranding (D-272, Glas-Look, Blau als Akzent). Neu = FORM. 
 | `--meter-track` | #c9dcf5 | #1a3157 | #1a2230 | #e6ecd6 | `card-2` |
 | `--chart-total` | #3a4150 | #c9d0db | #f2f3f4 | #0c1219 | `text` |
 
-### 2.4 Anmeldung (D-270, immer dunkel)
+### 2.4 Anmeldung (D-270; entfallen mit Paket C, D-316)
 
-| Token | Alt | Neu | Marke |
+Die Anmeldung hatte eigene Tokens, damit sie auch im hellen Modus dunkel bleibt. Seit F1 glichen ihre Werte denen der App, und ausgeliefert wird nur Dunkel (D-311). Mit Paket C entfallen sie; die Anmeldung nutzt die Tokens der App und die Komponenten aus F2.
+
+| Token | Alt | F1 | Ab Paket C |
 |---|---|---|---|
-| `--login-bg-1` bis `-3` | #212a3f, #151b2b, #0d1016 (Verlauf) | #0c1219 | `bg` |
-| `--login-glow-1` bis `-3` | Blau, Blau, Grün | transparent | – |
-| `--login-accent`, `--login-accent-2` | #256abf, #1c5cab | #c7ff46 | `accent` |
-| `--login-accent-fg` (neu) | – | #0c1219 | `accent-ink` |
-| `--login-fg`, `--login-fg-muted` | #f5f7fb, #d0d6e2 | #f2f3f4, #aab2be | `text`, `text-muted` |
-| `--login-focus` | #5598e7 | #c7ff46 | `accent` |
-| `--login-error` | #ffb3b8 | #ef6368 | `danger` |
-| `--login-glass`, `--login-glass-line` | Weiß 7 %, Weiß 14 % | #141b25, #232b36 | `card`, `line` |
-| `--login-input`, `--login-input-line` | Weiß 6 %, Weiß 30 % | #1a2230, #6b7482 | `card-2`, Eingaberand |
+| `--login-bg-1` bis `-3` | #212a3f, #151b2b, #0d1016 (Verlauf) | #0c1219 | entfällt, `--bg` |
+| `--login-glow-1` bis `-3` | Blau, Blau, Grün | transparent | entfällt (keine Lichtflecken) |
+| `--login-accent`, `--login-accent-2` | #256abf, #1c5cab | #c7ff46 | entfällt, `--accent` (Primärknopf) |
+| `--login-accent-fg` | – | #0c1219 | entfällt, `--accent-fg` |
+| `--login-fg`, `--login-fg-muted` | #f5f7fb, #d0d6e2 | #f2f3f4, #aab2be | entfällt, `--fg`, `--fg-muted` |
+| `--login-focus` | #5598e7 | #c7ff46 | entfällt, `--accent` (Fokus der Felder) |
+| `--login-error` | #ffb3b8 | #ef6368 | entfällt, `--danger` |
+| `--login-glass`, `--login-glass-line` | Weiß 7 %, Weiß 14 % | #141b25, #232b36 | entfällt (keine Karte, kein Glas) |
+| `--login-input`, `--login-input-line` | Weiß 6 %, Weiß 30 % | #1a2230, #6b7482 | entfällt, `--surface-2`, `--border-input` (`field`) |
 
 ### 2.5 Schatten, Glas, Tab-Leiste
 
@@ -113,11 +115,13 @@ Alle Werte stehen als Tokens in `src/app/styles.css` (`@theme`); Tailwind erzeug
 | Radius Karte / Knopf / Eingabe / Kachel / Sheet / Chip | 20 / 999 / 12 / – / 28 / 999 px | 20 / 14 / 12 / 12 / 24 / 999 px | `--radius-card`, `-button`, `-input`, `-tile`, `-sheet`, `-pill` |
 | Größte Inhaltsbreite | 1200 px (an fünf Stellen) | 75 rem (eine Stelle) | `--container-content` |
 | Dialog / Blatt ab Tablet / Menü / Tab-Leiste | 28 / 36 / 22 / 34 rem | gleich, als Tokens | `--container-dialog`, `-sheet`, `-menu`, `-tabbar` |
+| Logo der Anmeldung und von „Über die App“ (C) | App-Icon 72 px | 64 % der Breite, höchstens 280 px | `--container-logo` (`.brand-logo`) |
 | Breakpoints | Tailwind-Standard, dazu 359 px | 22,5 / 40 / 48 / 64 / 80 rem | `--breakpoint-xs` bis `-xl`, gleich in `breakpoints.ts` (Test) |
 | Headline (Seitentitel) | 40 px, 700 | 28 px, 600 | `--text-headline` |
 | Titel (Karte, Dialog) | 18 bis 28 px, 600 bis 700 | 20 px, 600 | `--text-title` |
 | Untertitel | 14 px | 13 px, 400 | `--text-caption` |
 | Label (`eyebrow`) | 12 px, 600, Versalien, 8 % Laufweite | 13 px, 500, Versalien, 4 % Laufweite | `--text-eyebrow` |
+| Claim der Marke (C) / Unterzeile | – | 17 px, 600, 4 % Laufweite / 13 px, 400 | `--text-claim` (`.form-claim`) / `--text-caption` (`.form-claim-sub`) |
 | Wert groß / Timer | 30 bis 40 px, 700 bis 800 / 64 px, 700 | 40 px / 56 px, 600 | `--text-value`, `--text-timer` |
 | Tab-Beschriftung | 11 px, 600 | 11 px, 500 | `--text-tab` |
 | Ziffern | tabellarisch nur an einzelnen Stellen | tabellarisch in der ganzen App (`body`) | – |
@@ -147,8 +151,8 @@ Aus `tokens.test.ts` bzw. demselben Rechenweg (WCAG 2.1, gerundet). Hintergrund 
 | `--chart-point` auf `--surface` | 3,7 | 3 |
 | `--border` (`line`) auf `--surface` | 1,2 | – (dekorativ) |
 | `--tile-border` auf `--tile` | 1,9 | – (dekorativ) |
-| `--login-fg` / `--login-fg-muted` / `--login-error` auf `--login-bg-1` | 16,9 / 8,8 / 5,6 | 4,5 |
-| `--login-accent-fg` auf `--login-accent` | 15,97 | 4,5 |
+| Anmeldung (C): Claim `--fg` / Unterzeile `--fg-muted` / Fehlertext `--danger` auf `--bg` | 16,9 / 8,8 / 6,0 | 4,5 |
+| Anmeldung (C): Platzhalter `--fg-muted` auf `--surface-2`; Eingaberand `--border-input` auf `--bg` | 7,5; 4,0 | 4,5; 3 |
 | Tab-Beschriftung `--fg-muted` / `--fg` / `--accent-ink` auf `--tabbar-glass`, schlechtester Fall über Seite, Karte, card-2, Weiß und Lime | ≥ 4,5 (Test) | 4,5 |
 
 Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test); Grün dunkel #4C7A00 auf Weiß 5,1.
@@ -174,5 +178,8 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Körpergrafiken im aktiven Workout | Muskelgruppen als Etiketten | Keine Grafiken, die es in der App noch nicht gibt (Übergabe Abschnitt 5) |
 | Zitat-Feld im Abschluss | entfällt | Übergabe Abschnitt 5 |
 | Überzogene Pause als Fläche in Lime | Rand und Zahl in Lime | Lime ist Akzent, nie Fläche (Markenassets, Regeln); weiße Schrift auf Lime hätte rund 1:1 |
+| Claim in Weiß #FFFFFF (`brand.css`) | `--fg` #F2F3F4 | Keine neuen Hex-Werte (Leitplanken Regel 1); 16,9:1 statt 18,8:1 (C, D-316) |
+| Claim in Inter 17/600 (`brand.css`) | Systemschrift 17/600 | wie überall: Inter ist nicht gebündelt (D-203) |
+| Anmeldung als Glas-Karte mit Lichtflecken (D-270) | Logo, Claim und Felder direkt auf der Nacht-Fläche | kein Glas außer der Tab-Leiste (D-312), kein Glow in der App (Markenassets) |
 
-Weitere Einträge folgen mit den Paketen C bis G.
+Weitere Einträge folgen mit den Paketen D bis G.

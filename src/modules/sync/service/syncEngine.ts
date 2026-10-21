@@ -78,21 +78,22 @@ async function pull(rt: DbRuntime, remote: Remote, options: SyncOptions) {
   let pulled = 0;
   let conflicts = 0;
   let cursor = await getCursor(db);
-  let outdated = false;
   const now = (options.now ?? (() => new Date()))();
   for (;;) {
     const rows = await remote.pull(cursor, PULL_PAGE);
     if (rows.length === 0) break;
-    await db.transaction(
+    // Ergebnis der Seite: steht eine Zeile einer neueren App-Version darin?
+    const outdated = await db.transaction(
       'rw',
       [...DOCUMENT_TABLES.map((t) => db.table(t)), db.syncBase, db.meta, db.exerciseHistory],
       async () => {
         let maxHlc: string | undefined;
         /** `rev` der letzten verarbeiteten Zeile; der Cursor rückt nur bis hierher. */
         let seen: number | undefined;
+        let stop = false;
         for (const row of rows) {
           if (!knownKind(row)) {
-            outdated = true;
+            stop = true;
             break;
           }
           seen = row.rev;
@@ -150,6 +151,7 @@ async function pull(rt: DbRuntime, remote: Remote, options: SyncOptions) {
           cursor = seen;
           await setMetaValue(db, SYNC_KEYS.cursor, cursor);
         }
+        return stop;
       },
     );
     if (outdated) throw new AppOutdatedError('Dokumente einer neueren App-Version auf dem Server');

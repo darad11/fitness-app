@@ -170,13 +170,13 @@ export function TodayPage() {
           <NutritionTodayCard />
         </Suspense>
         <Suspense fallback={null}>
+          <WaterCard day={todayKey} />
+        </Suspense>
+        <Suspense fallback={null}>
           <StepsTodayCard />
         </Suspense>
         <Suspense fallback={null}>
           <TasksCard />
-        </Suspense>
-        <Suspense fallback={null}>
-          <WaterCard day={todayKey} />
         </Suspense>
         {sessions && goals ? (
           <WeeklyGoalCard sessions={sessions} target={goals.weeklySessions} today={todayKey} />

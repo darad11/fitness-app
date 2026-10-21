@@ -11,7 +11,7 @@ Stand 21.10.2026, Branch `feat/wasser`. Auftrag: „REFORM — Water Tracker“ 
 | Ernährungsziel | `nutrition_target` verlangt kcal und Makros | Ungeeignet für Wasser, das auch ohne Ernährungserfassung funktionieren soll |
 | Einstellungen | Singleton `settings` | Eigene Schnellmengen als optionales Feld `waterQuickMl` |
 | Tagesaufgaben | `autoDone: 'training'` hakt automatisch ab (D-285) | Zweite Regel `water`, gleiches Verhalten (nur ohne Eintrag, manuell korrigierbar) |
-| Heute | Ernährung, Schritte, Tagesaufgaben stehen auf Wunsch direkt untereinander (D-277, D-283) | Wasser direkt unter den Tagesaufgaben |
+| Heute | Ernährung, Schritte, Tagesaufgaben stehen auf Wunsch untereinander (D-277, D-283) | Wasser direkt unter „Ernährung heute“ (vom Produktinhaber festgelegt), danach Schritte und Tagesaufgaben |
 | Persistenz | Dexie mit Basis-Repository (HLC, Löschmarkierung, Zod), Sync für alle Dokumenttabellen | Tabelle `waterLog` (Dexie v8, additiv, Snapshot, Migrationstest); Sync und Datensicherung ohne Sonderweg |
 | Startansicht | Grenze 250 KB, knapp ausgeschöpft | Karte, Seite, Rechnung und Texte werden nachgeladen (D-288); dafür lädt der Zähler der Einkaufsliste in „Meine Küche“ kein Repository mehr. Ergebnis 249,4 KB |
 

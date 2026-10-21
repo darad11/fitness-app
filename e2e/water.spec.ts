@@ -9,12 +9,14 @@ test('Wasser: auf „Heute“ eintragen, neu laden, offline, nächster Tag, Verl
   await openPage(page, '/heute');
   const card = page.getByRole('region', { name: 'Wasser' });
   await expect(card).toContainText('Noch 2 l bis zum Tagesziel.');
-  // Unter „Tagesaufgaben“ (Ernährung, Schritte und Aufgaben bleiben direkt untereinander).
+  // Direkt unter „Ernährung heute“ (Wunsch des Produktinhabers, D-289).
+  await expect(page.getByText('Ernährung heute')).toBeVisible();
   const order = await page
     .getByRole('main')
     .locator('section')
-    .evaluateAll((sections) => sections.map((s) => s.querySelector('h2')?.textContent));
-  expect(order[order.indexOf('Wasser') - 1]).toBe('Tagesaufgaben');
+    .evaluateAll((sections) => sections.map((s) => s.textContent));
+  const index = order.findIndex((text) => text.startsWith('Wasser'));
+  expect(order[index - 1]).toContain('Ernährung heute');
 
   await card.getByRole('button', { name: '250 ml hinzufügen' }).click();
   await card.getByRole('button', { name: '500 ml hinzufügen' }).click();

@@ -382,7 +382,9 @@ Vorhandene automatische Nachweise (Auszug): Unit und Komponenten `sessionService
 
 ## 9. Offene Fragen und nicht verifizierte Annahmen
 
-An den Produktinhaber:
+Die Fragen 1 bis 6 hat der Produktinhaber am 21.10.2026 beantwortet; die Antworten stehen in Abschnitt 12 und als D-294 bis D-300 in `docs/decisions.md`.
+
+An den Produktinhaber (beantwortet, siehe Abschnitt 12):
 1. **Gerätesprache des iPhones** (C-01): Meldet es `de-AT` (dann war der Fehler bisher nur zufällig maskiert) oder „Deutsch“ ohne Region bzw. ist unter „Mehr › Einstellungen › Datum und Zahlen“ etwas Festes gewählt? Der Fix wirkt in allen drei Sprachen; die Frage klärt nur, ob bereits gespeicherte Mengen betroffen sein können.
 2. **Versionsstand der Geräte** (A-01): Läuft das iPhone noch auf einer älteren Version (v7, vor Wasser), während der Mac auf v8 ist? Dann könnten Wasser-Einträge vom Mac auf dem iPhone bereits übersprungen worden sein und müssten nach dem Fix einmalig nachgeholt werden (Cursor zurücksetzen).
 3. **Laufende Einheit eines anderen Geräts** (A-02): Soll sie überhaupt als „Training läuft“ erscheinen und verwerfbar sein (AK-TRN-22 spricht von „dieses Geräts“)? Der Fix schützt die abgeschlossene Einheit unabhängig davon.
@@ -436,3 +438,35 @@ Der Entwurfs-PR #48 dient nur der CI (WebKit läuft nur in GitHub Actions) und d
 | `affff5d` | C-01: Option `useGrouping` in `src/shared/lib/format.ts`; `useGrouping: false` in `EntryDialog.tsx`, `FoodFormPage.tsx`, `RecipeEditPage.tsx`, `player/SessionPage.tsx`, `HistoryDetailPage.tsx`; `EntryDialog` sendet die Menge nur bei geändertem Text; Tests in `format.test.ts`, `nutrition-ui.test.tsx`, `history-ui.test.tsx`, `player-ui.test.tsx` | D-291 |
 | `edf41c0`, `4cc4973` | A-01: `AppOutdatedError` und `knownKind` in `src/modules/sync/service/syncEngine.ts`; `pull` rückt den Cursor nur bis zur letzten verarbeiteten Zeile; Text `sync.errors.AppOutdatedError` in `de.ts`; Test in `syncEngine.test.ts`; `known-limitations.md` Abschnitt 7 | D-292 |
 | „Sync: Verwerfen einer laufenden Kopie löscht keine abgeschlossene Einheit (D-293)“ | A-02: `deletedFrom` in `MergeDoc`, Regel K-03 in `decide` (`src/modules/sync/calc/merge.ts`); Tests in `merge.test.ts` und `syncEngine.test.ts`; `testing.md` K-03, `known-limitations.md` Abschnitt 7 | D-293 |
+
+## 12. Antworten des Produktinhabers (21.10.2026) und Supabase-Einrichtung
+
+| Frage | Antwort | Entscheidung | Folge |
+|---|---|---|---|
+| 1 Gerätesprache (C-01) | Das iPhone steht auf Deutsch. | D-294 | Die App formatierte dort nach de-DE, der Fehler hätte gewirkt. Keine Korrektur gespeicherter Mengen nötig (Testdaten, D-300); D-291 bleibt wie umgesetzt. |
+| 2 Versionsstand und Sync (A-01) | Die Synchronisierung wurde nie benutzt: im Supabase-Projekt „fitness-app“ 0 Konten und 0 Einträge in `sync_documents` (geprüft 21.10.). | D-295 | Kein Cursor-Reset nötig. Von der Sitzung bestätigt: Das Projekt `eyxqciryeggpjzvaxjvu` (Name „fitness-app“, Region eu-central-1 Frankfurt) ist genau der Host in `src/modules/sync/config.ts` (`SUPABASE_URL`); eine SQL-Abfrage am 21.10. ergab 0 Zeilen in `auth.users` und 0 in `public.sync_documents`. Das zweite Projekt `jbkufpyyfmbxjeswagli` („dashboard“) ist nur für die Schritte freigegeben. |
+| 3 Laufende Einheit eines anderen Geräts (A-02) | Darf verworfen werden, aber nur mit Rückfrage, die Gerät und Startzeit nennt. | D-296 | Umsetzung in Phase B; K-03 (D-293) schützt die abgeschlossene Einheit schon jetzt. |
+| 4 Pausieren/Fortsetzen (B-02) | Als offen führen. | D-297 | Umsetzung in Phase B; Dokumente werden dann an den Stand angeglichen. |
+| 5 Wasser-Aufgabe zurücknehmen (C-10) | Ja, bei automatisch erledigter Aufgabe und Unterschreiten des Ziels durch Löschen; manuell abgehakte bleiben. | D-298 | Umsetzung nach dem Rebranding mit den übrigen P2-Punkten; braucht ein Kennzeichen „automatisch“ am Protokolleintrag. |
+| 6 Supabase | Site URL `https://fitness-app-mu-drab.vercel.app`; Vercel-Vorschau-Adressen als Redirect-URLs; Registrierung geschlossen bis Q-20; eigenes Konto im Dashboard anlegen. | D-299 | Klickpfade unten. |
+| Daten | Die vorhandenen Daten sind Testdaten; die Schutzregeln gelten trotzdem. | D-300 | Keine Datenkorrekturen aus dem Audit nötig. |
+| Tag | Nicht mehr nötig, `backup/vor-form-rebranding` reicht. | D-300 | Erledigt. |
+
+### Supabase-Dashboard: Klickpfade
+
+Alle Schritte im Projekt „fitness-app“ unter https://supabase.com/dashboard/project/eyxqciryeggpjzvaxjvu (Anmeldung mit deinem Supabase-Zugang). Die Bezeichnungen entsprechen dem Dashboard-Stand Oktober 2026; Supabase benennt Menüpunkte gelegentlich um.
+
+1. **Site URL und Redirect-URLs** (Seite „URL Configuration“, direkt: https://supabase.com/dashboard/project/eyxqciryeggpjzvaxjvu/auth/url-configuration)
+   - Linke Leiste: **Authentication** › **URL Configuration**.
+   - Feld **Site URL**: `https://fitness-app-mu-drab.vercel.app` eintragen, **Save** (ersetzt den Standard `http://localhost:3000`).
+   - Abschnitt **Redirect URLs**: **Add URL** › `https://*-dr-b21f.vercel.app/**` eintragen, **Save**. Das Muster deckt alle Vercel-Vorschauen des Teams `dr-b21f` ab (z. B. `fitness-app-git-form-rebranding-dr-b21f.vercel.app`); Supabase empfiehlt genau diese Form `https://*-<team-slug>.vercel.app/**` für Vercel-Previews. Zusätzlich `https://fitness-app-mu-drab.vercel.app/**` eintragen, falls die Site URL allein nicht als Redirect akzeptiert wird (bei „Jetzt anmelden“ nach der Bestätigungsmail nutzt die App `redirectTo` mit der eigenen Adresse).
+2. **Registrierung geschlossen lassen** (direkt: https://supabase.com/dashboard/project/eyxqciryeggpjzvaxjvu/auth/providers)
+   - Linke Leiste: **Authentication** › **Sign In / Providers**.
+   - Abschnitt **User Signups**: Schalter **Allow new users to sign up** ausschalten, **Save**. (Die E-Mail-Anmeldung unter **Auth Providers** › **Email** bleibt eingeschaltet, sonst kann sich niemand anmelden.)
+   - Wirkung: „Registrieren“ in der App meldet danach den allgemeinen Fehler; Anmelden mit vorhandenem Konto funktioniert weiter.
+3. **Eigenes Konto anlegen** (direkt: https://supabase.com/dashboard/project/eyxqciryeggpjzvaxjvu/auth/users)
+   - Linke Leiste: **Authentication** › **Users**.
+   - Rechts oben **Add user** › **Create new user**.
+   - **Email Address** und **Password** (mindestens 8 Zeichen, D-273) eintragen, **Auto Confirm User** einschalten (sonst wartet das Konto auf eine Bestätigungsmail), **Create user**.
+   - Danach in der App: Mehr › Synchronisierung › Anmelden mit dieser E-Mail und diesem Passwort; der erste Abgleich läuft sofort.
+4. **Kontrolle**: Unter **Authentication** › **Users** erscheint genau ein Konto; unter **Table Editor** › `sync_documents` füllen sich nach dem ersten Abgleich die Zeilen. In der App zeigt Mehr › Synchronisierung „Zuletzt abgeglichen“ mit Zählern.

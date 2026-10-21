@@ -9,6 +9,8 @@ import {
   exerciseProgress,
   exerciseReps,
   exerciseVolume,
+  finishEndedAt,
+  lastCompletedAt,
   nextOpenSet,
   resolveCompletion,
   sessionDurationSec,
@@ -202,6 +204,36 @@ describe('Kennzahlen (data-model.md Abschnitt 9)', () => {
     expect(
       bestOneRepMax(exercise('weight_reps', [done('working', { weightKg: 60, reps: 15 })])),
     ).toBeNull();
+  });
+
+  it('Ende beim Beenden: jetzt, nach über 24 Stunden der letzte erledigte Satz (D-290)', () => {
+    const startedAt = '2026-10-18T09:00:00.000Z';
+    const exercises = [
+      exercise('weight_reps', [
+        done('working', { weightKg: 60, reps: 8 }, { completedAt: '2026-10-18T09:20:00.000Z' }),
+        done('working', { weightKg: 60, reps: 8 }, { completedAt: '2026-10-18T09:35:00.000Z' }),
+        set({ type: 'working' }),
+      ]),
+    ];
+    const max = 24 * 3600;
+    expect(lastCompletedAt({ exercises })).toBe('2026-10-18T09:35:00.000Z');
+    expect(lastCompletedAt({ exercises: [exercise('reps', [set({ type: 'working' })])] })).toBe(
+      undefined,
+    );
+    const soon = new Date('2026-10-18T10:00:00.000Z');
+    expect(finishEndedAt({ startedAt, pauses: [], exercises }, soon, max)).toBe(soon.toISOString());
+    const late = new Date('2026-10-20T08:00:00.000Z');
+    expect(finishEndedAt({ startedAt, pauses: [], exercises }, late, max)).toBe(
+      '2026-10-18T09:35:00.000Z',
+    );
+    // Ohne erledigten Satz endet die Einheit jetzt; die Dauer kappt der Dienst.
+    expect(
+      finishEndedAt(
+        { startedAt, pauses: [], exercises: [exercise('reps', [set({ type: 'working' })])] },
+        late,
+        max,
+      ),
+    ).toBe(late.toISOString());
   });
 
   it('rechnet die Dauer ohne Pausen', () => {

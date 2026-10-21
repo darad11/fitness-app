@@ -240,6 +240,34 @@ export function nextOpenSet(
   );
 }
 
+/** Zeitpunkt des zuletzt erledigten Satzes; `undefined`, wenn noch keiner erledigt ist. */
+export function lastCompletedAt(session: Pick<Session, 'exercises'>): string | undefined {
+  let last: string | undefined;
+  for (const exercise of liveExercises(session)) {
+    for (const set of liveSets(exercise)) {
+      if (set.status === 'done' && set.completedAt && (!last || set.completedAt > last)) {
+        last = set.completedAt;
+      }
+    }
+  }
+  return last;
+}
+
+/**
+ * Ende beim Beenden (D-290): Blieb die Einheit länger als die Höchstdauer offen (Beenden
+ * vergessen), endet sie mit dem letzten erledigten Satz; sonst, und ohne erledigten Satz, jetzt.
+ */
+export function finishEndedAt(
+  session: Pick<Session, 'startedAt' | 'pauses' | 'exercises'>,
+  now: Date,
+  maxSec: number,
+): string {
+  const nowIso = now.toISOString();
+  if (sessionDurationSec({ ...session, endedAt: nowIso }, now) <= maxSec) return nowIso;
+  const last = lastCompletedAt(session);
+  return last !== undefined && last > session.startedAt ? last : nowIso;
+}
+
 /** Hervorgehobener Satz: der nächste offene nach dem zuletzt erledigten (freie Reihenfolge). */
 export function currentSet(session: Pick<Session, 'exercises'>): SessionSet | null {
   let last: SessionSet | undefined;

@@ -414,7 +414,16 @@ Wird nach jedem Fix und am Ende der Phase ergänzt.
 | A-01 (`edf41c0`, `4cc4973`, D-292): `pnpm format:check`, `pnpm lint`, `pnpm typecheck`; `pnpm vitest run src/modules/sync` | 21.10.2026 | Erster Commit mit einem Lint-Fehler gepusht (unnötige Bedingung, weil das Ergebnis der Transaktion nicht sichtbar war), im Folge-Commit korrigiert; danach Format, Lint und Typecheck ohne Befund; 26 Tests in 4 Dateien bestanden (inkl. ein neuer, ein angepasster) |
 | A-02 (D-293): `pnpm format:check`, `pnpm lint`, `pnpm typecheck`; `pnpm vitest run src/modules/sync` | 21.10.2026 | Format, Lint und Typecheck ohne Befund; 28 Tests in 4 Dateien bestanden (inkl. zwei neue) |
 
-Noch ausstehend für den Abschluss der Phase: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium lokal; WebKit nur in GitHub Actions über einen Pull Request).
+Abschlusslauf nach dem letzten Fix (Stand `4bfea00`):
+
+| Lauf | Stand | Ergebnis |
+|---|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | 21.10.2026, `4bfea00` | ohne Befund |
+| `pnpm test` | 21.10.2026, `4bfea00` | 806 Tests in 91 Dateien bestanden (Ausgangslage: 797) |
+| `pnpm check:docs` | 21.10.2026, `4bfea00` | ohne Befund (Beispielvorlagen 4, Winter Arc 40 Tage, 71 Übungsnamen, Programme 3, Trainingstage 84) |
+| `pnpm build`, `pnpm check:bundle` | 21.10.2026, `4bfea00` | Build ok; Startansicht 249,6 KB von 250 KB (gzip; Ausgangslage 249,4 KB, plus 0,2 KB durch den Hinweistext zu D-292 und die Option `useGrouping`) |
+| `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026, `4bfea00` | 232 bestanden, 4 übersprungen (Tab-Leiste und Logo nur im Handy- bzw. Seitenleiste nur im Desktop-Projekt, per `test.skip` so vorgesehen), 0 fehlgeschlagen, 6,3 min |
+| GitHub Actions auf Entwurfs-PR #48 (`form-rebranding` → `main`): „Lint, Typen, Unit-Tests, Dokumente, Build“ | 21.10.2026, `4bfea00` | bestanden |
 
 ## 11. Änderungen in dieser Phase
 

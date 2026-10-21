@@ -215,8 +215,10 @@ function Player({ session }: { session: Session }) {
   // Notiz-Dialog: zu einer Übung (Schlüssel der Übung in der Einheit) oder zur ganzen Einheit.
   const [noteFor, setNoteFor] = useState<SessionExercise | 'session' | null>(null);
   const [errors, setErrors] = useState<Record<string, RowError>>({});
+  // Ohne Tausendertrennung: die Eingabefelder werden damit vorbelegt, und parseDecimal
+  // liest keine (D-291).
   const number = useCallback(
-    (value: number) => fmt.number(value, { maximumFractionDigits: 2 }),
+    (value: number) => fmt.number(value, { maximumFractionDigits: 2, useGrouping: false }),
     [fmt],
   );
 

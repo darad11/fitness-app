@@ -46,6 +46,11 @@ export function resolveLocale(
 export interface NumberOptions {
   minimumFractionDigits?: number;
   maximumFractionDigits?: number;
+  /**
+   * `false` für vorbelegte Eingabefelder: `parseDecimal` liest kein Tausendertrennzeichen,
+   * „1.500“ käme sonst als 1,5 zurück (D-291). Anzeigen behalten die Tausendertrennung.
+   */
+  useGrouping?: boolean;
 }
 
 export interface Formatters {
@@ -101,7 +106,9 @@ export function createFormatters(
   const numberFormats = new Map<string, Intl.NumberFormat>();
 
   const formatNumber = (value: number, options: NumberOptions = {}): string => {
-    const key = `${String(options.minimumFractionDigits)}|${String(options.maximumFractionDigits)}`;
+    const key = [options.minimumFractionDigits, options.maximumFractionDigits, options.useGrouping]
+      .map(String)
+      .join('|');
     let format = numberFormats.get(key);
     if (!format) {
       format = new Intl.NumberFormat(locale, options);
@@ -131,7 +138,8 @@ export function createFormatters(
 
 /**
  * Liest eine Dezimalzahl mit Komma oder Punkt („62,5", „62.5"). Tausendertrennzeichen
- * sind nicht erlaubt, weil sie bei Gewichten und Wiederholungen nicht vorkommen.
+ * sind nicht erlaubt, weil sie bei Gewichten und Wiederholungen nicht vorkommen; vorbelegte
+ * Eingabefelder formatieren deshalb mit `useGrouping: false` (D-291).
  * Gibt `null` zurück, wenn die Eingabe keine Zahl ist.
  */
 export function parseDecimal(

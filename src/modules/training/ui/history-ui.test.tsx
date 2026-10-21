@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { loadCoreExercises } from '@/modules/exercises';
+import { coreExerciseId, loadCoreExercises } from '@/modules/exercises';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { loadSampleTemplate } from '../data/sampleTemplates';
@@ -145,6 +145,53 @@ describe('Verlauf bearbeiten und löschen (AK-HIS-03, AK-HIS-04)', () => {
     await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
     await screen.findByRole('heading', { level: 1, name: 'Tag A schwer' });
     expect(await latestHistory(rt.db, squatId)).toMatchObject({ best: null, sets: [] });
+  });
+
+  it('belegt Distanzen ab 1000 m ohne Tausenderpunkt vor (D-291)', async () => {
+    const user = userEvent.setup();
+    const now = new Date('2026-10-15T17:00:00.000Z');
+    const exercises = await loadCoreExercises();
+    const rower = exercises.find((e) => e.id === coreExerciseId('rowing_machine'))!;
+    const started = await startSession(
+      rt,
+      {
+        source: 'free',
+        title: 'Rudern',
+        exercises: [
+          {
+            exerciseId: rower.id,
+            name: rower.name,
+            trackingMode: 'time_distance',
+            distanceUnit: 'm',
+            sets: [{ type: 'working' }],
+          },
+        ],
+      },
+      { now: () => now },
+    );
+    const set = started.exercises[0]!.sets[0]!;
+    await setValues(rt, started.id, set.id, { durationSec: 600, distanceM: 2000 });
+    await completeSet(rt, started.id, set.id, {
+      restDefaultSec: 90,
+      autoStartRest: false,
+      now: () => now,
+    });
+    const session = await finishSession(rt, started.id, {
+      skipOpen: true,
+      now: () => new Date(now.getTime() + 11 * 60_000),
+    });
+    renderAt(`/training/verlauf/${session.id}`);
+    await screen.findByRole('heading', { level: 1, name: 'Rudern' });
+    await user.click(screen.getByRole('button', { name: 'Bearbeiten' }));
+    const distance = await screen.findByLabelText('Distanz in m, Rudergerät, Arbeitssatz 1');
+    expect(distance).toHaveValue('2000');
+    expect(screen.getByLabelText('Zeit in Minuten, Rudergerät, Arbeitssatz 1')).toHaveValue('10');
+    await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: 'Änderungen speichern' })).toBeNull();
+    });
+    const stored = await getSession(rt.db, session.id);
+    expect(stored?.exercises[0]?.sets[0]?.actual).toEqual({ durationSec: 600, distanceM: 2000 });
   });
 
   it('zeigt Fehler beim Bearbeiten und speichert nichts', async () => {

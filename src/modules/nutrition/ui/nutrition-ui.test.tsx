@@ -10,9 +10,16 @@ import { createTestRuntime } from '@/shared/testing/db';
 import { catalogDbName } from '../data/catalogStore';
 import { setOffConsent } from '../data/openFoodFacts';
 import { commitCatalog, prepareCatalog } from '../service/catalogService';
-import { listDayEntries, listFoods, listTargets } from '../data/nutritionRepository';
+import {
+  listDayEntries,
+  listFoods,
+  listRecipes,
+  listTargets,
+  toFoodItem,
+} from '../data/nutritionRepository';
 import { nutritionRoutes } from '../routes';
-import { localDayKey, logQuick } from '../service/nutritionService';
+import { createFood, localDayKey, logFood, logQuick } from '../service/nutritionService';
+import { createRecipe, ingredientFrom } from '../service/recipeService';
 
 const localDay = () => localDayKey(new Date());
 const setOffConsentForTest = () => setOffConsent(rt.db, true);
@@ -586,6 +593,89 @@ describe('Ernährung (Schritt G, D-261)', () => {
       expect(await screen.findByText(/Noch keine Vorlagen/, {}, WAIT)).toBeVisible();
       await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
       expect(await screen.findByText('Mein Frühstück', {}, WAIT)).toBeVisible();
+    },
+  );
+
+  it(
+    'belegt Mengen ab 1000 ohne Tausenderpunkt vor und ändert sie nicht ungewollt (D-291)',
+    { timeout: 60_000 },
+    async () => {
+      const user = userEvent.setup();
+      const food = await createFood(rt, {
+        name: 'Hafermilch',
+        basis: 'ml',
+        per100: { kcal: 46, protein: 1, carbs: 7, fat: 1.5 },
+        servings: [{ name: 'Packung', amount: 1000 }],
+      });
+      const item = toFoodItem(food);
+      const packung = food.servings[0]!;
+      await logFood(rt, {
+        food: item,
+        slot: 'breakfast',
+        dayKey: localDay(),
+        quantity: { kind: 'amount', amount: 1500 },
+      });
+      await logFood(rt, {
+        food: item,
+        slot: 'breakfast',
+        dayKey: localDay(),
+        quantity: { kind: 'serving', servingId: packung.id, count: 1 / 3 },
+      });
+      const recipe = await createRecipe(rt, {
+        name: 'Porridge',
+        servings: 4,
+        ingredients: [ingredientFrom(item, { kind: 'amount', amount: 1200 })],
+      });
+
+      // Eintrag bearbeiten: „1500“ statt „1.500“; nur die Mahlzeit ändern lässt die Menge in Ruhe.
+      await renderAt('/ernaehrung', 'Ernährung');
+      const breakfast = await screen.findByRole('region', { name: 'Frühstück' }, WAIT);
+      const [byAmount] = within(breakfast).getAllByRole('button', {
+        name: 'Hafermilch bearbeiten',
+      });
+      await user.click(byAmount!);
+      const editAmount = screen.getByRole('dialog', { name: 'Hafermilch' });
+      expect(within(editAmount).getByLabelText('Menge in ml')).toHaveValue('1500');
+      await user.selectOptions(within(editAmount).getByLabelText('Mahlzeit'), 'lunch');
+      await user.click(within(editAmount).getByRole('button', { name: 'Speichern' }));
+      const lunch = await screen.findByRole('region', { name: 'Mittagessen' }, WAIT);
+      await within(lunch).findByText('Hafermilch', {}, WAIT);
+
+      // Portion: ein Drittel wird als „0,33“ gezeigt, bleibt beim Speichern aber ein Drittel.
+      const remaining = await screen.findByRole('region', { name: 'Frühstück' }, WAIT);
+      await user.click(within(remaining).getByRole('button', { name: 'Hafermilch bearbeiten' }));
+      const editServing = screen.getByRole('dialog', { name: 'Hafermilch' });
+      expect(within(editServing).getByLabelText('Anzahl (Packung)')).toHaveValue('0,33');
+      await user.selectOptions(within(editServing).getByLabelText('Mahlzeit'), 'lunch');
+      await user.click(within(editServing).getByRole('button', { name: 'Speichern' }));
+      await waitFor(async () => {
+        const entries = await listDayEntries(rt.db, localDay());
+        expect(entries.map((e) => e.slot)).toEqual(['lunch', 'lunch']);
+      }, WAIT);
+      const entries = await listDayEntries(rt.db, localDay());
+      const amountEntry = entries.find((e) => e.servingSnapshot === undefined);
+      const servingEntry = entries.find((e) => e.servingSnapshot !== undefined);
+      expect(amountEntry).toMatchObject({ amount: 1500, nutrients: { kcal: 690 } });
+      expect(servingEntry?.amount).toBe(333.3);
+      expect(servingEntry?.servingSnapshot?.count).toBeCloseTo(1 / 3, 10);
+
+      // Lebensmittel bearbeiten: Portion „1000“ statt „1.000“; Speichern lässt sie bei 1000.
+      cleanup();
+      await renderAt(`/ernaehrung/lebensmittel/${food.id}`, 'Lebensmittel bearbeiten');
+      expect(
+        screen.getByLabelText('Menge in ml', { selector: 'input[id$="-s0-amount"]' }),
+      ).toHaveValue('1000');
+      await user.click(screen.getByRole('button', { name: 'Speichern' }));
+      await screen.findByRole('heading', { level: 1, name: 'Meine Lebensmittel' }, WAIT);
+      expect((await listFoods(rt.db))[0]?.servings[0]?.amount).toBe(1000);
+
+      // Rezept bearbeiten: Zutat „1200“ statt „1.200“; Speichern lässt sie bei 1200.
+      cleanup();
+      await renderAt(`/ernaehrung/rezepte/${recipe.id}`, 'Rezept bearbeiten');
+      expect(screen.getByLabelText('Menge Hafermilch in ml')).toHaveValue('1200');
+      await user.click(screen.getByRole('button', { name: 'Speichern' }));
+      await screen.findByRole('heading', { level: 1, name: 'Rezepte' }, WAIT);
+      expect((await listRecipes(rt.db))[0]?.ingredients[0]?.amount).toBe(1200);
     },
   );
 });

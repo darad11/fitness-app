@@ -428,6 +428,7 @@ Abschlusslauf nach dem letzten Fix (Stand `4bfea00`):
 | GitHub Actions auf Entwurfs-PR #48 (`form-rebranding` → `main`), Lauf 39650205396 | 21.10.2026, `4bfea00` | „Lint, Typen, Unit-Tests, Dokumente, Build“ bestanden; E2E (chromium): Schritt `pnpm test:e2e` bestanden; E2E (webkit): während `pnpm test:e2e` abgebrochen, weil der Report-Commit `ebdb21d` den Lauf über die Concurrency-Regel der CI ersetzt hat |
 | GitHub Actions auf Entwurfs-PR #48, Lauf 39651311308 | 21.10.2026, `ebdb21d` (gleicher Code wie `4bfea00`, nur `audit-report.md` geändert) | alle drei Jobs bestanden: „Lint, Typen, Unit-Tests, Dokumente, Build“ (inkl. `pnpm test:coverage` und `pnpm check:bundle`), E2E (chromium) 4,7 min, E2E (webkit) 13,6 min |
 
+| GitHub Actions auf PR #48, Lauf 39656726669 | 21.10.2026, `286b615` (Code wie `4bfea00`, dazu Entscheidungen und Report) | „Lint, Typen, Unit-Tests, Dokumente, Build“ bestanden; E2E (chromium) fehlgeschlagen: `e2e/steps.spec.ts` las die Reihenfolge der Karten auf „Heute“, bevor die nachgeladene Wasser-Karte gerendert war (231 bestanden, 1 fehlgeschlagen, auch im Wiederholungslauf). Ursache im Test, nicht in der App: der Test wartete nur auf „Ernährung heute“. Behoben, indem der Test auch auf die Wasser-Karte wartet; lokal in Chromium bestätigt, Ergebnis des nächsten CI-Laufs siehe unten |
 Der Entwurfs-PR #48 dient nur der CI (WebKit läuft nur in GitHub Actions) und der Durchsicht; gemergt wird vom Produktinhaber. Er setzt auf #46 und #47 auf.
 
 ## 11. Änderungen in dieser Phase

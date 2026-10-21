@@ -175,6 +175,47 @@ describe('Abgleich (D-269)', () => {
     expect(onB).toHaveBeenCalledWith(b.db, session.id);
   });
 
+  it('löscht beim Verwerfen einer veralteten laufenden Kopie keine abgeschlossene Einheit (K-03)', async () => {
+    const session = await insertDoc(a, sessionDef, { status: 'in_progress', title: 'Push' });
+    await sync(a);
+    await sync(b);
+    await updateDoc(a, sessionDef, session.id, (s) => ({ ...s, status: 'completed' }));
+    await new Promise((r) => setTimeout(r, 5));
+    // B verwirft danach seine laufende Kopie (jüngerer HLC als der Abschluss auf A).
+    await softDeleteDoc(b, sessionDef, session.id, 'in_progress');
+    await sync(a);
+    await sync(b);
+    await sync(a);
+    const onA = await a.db.sessions.get(session.id);
+    const onB = await b.db.sessions.get(session.id);
+    expect(onA).toMatchObject({ status: 'completed', deletedAt: null });
+    expect(onB).toMatchObject({ status: 'completed', deletedAt: null });
+    expect(server.rows.get(session.id)?.payload).toMatchObject({
+      status: 'completed',
+      deletedAt: null,
+    });
+
+    // Umgekehrt: Die Löschmarke erreicht den Server zuerst, A hat lokal abgeschlossen.
+    const second = await insertDoc(a, sessionDef, { status: 'in_progress', title: 'Pull' });
+    await sync(a);
+    await sync(b);
+    await updateDoc(a, sessionDef, second.id, (s) => ({ ...s, status: 'completed' }));
+    await new Promise((r) => setTimeout(r, 5));
+    await softDeleteDoc(b, sessionDef, second.id, 'in_progress');
+    await sync(b);
+    await sync(a);
+    await sync(b);
+    expect(await a.db.sessions.get(second.id)).toMatchObject({
+      status: 'completed',
+      deletedAt: null,
+    });
+    expect(await b.db.sessions.get(second.id)).toMatchObject({
+      status: 'completed',
+      deletedAt: null,
+    });
+    expect(server.rows.get(second.id)?.deleted).toBe(false);
+  });
+
   it('übergeht ungültige Zeilen vom Server und rückt den Cursor darüber hinweg', async () => {
     const weight = await insertDoc(a, weightDef, { weightKg: 80 });
     await sync(a);

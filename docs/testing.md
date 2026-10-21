@@ -88,7 +88,7 @@ Repositories mit Tombstones · Transaktion „Training starten" atomar · „Sat
 |---|---|---|
 | K-01 | Gerät A schließt eine Einheit ab, Gerät B hält eine veraltete laufende Kopie | Ergebnis ist abgeschlossen |
 | K-02 | Beide schließen ab | Endzeit und Dauer der jüngeren Fassung |
-| K-03 | B verwirft die veraltete laufende Kopie, A hat abgeschlossen | Einheit bleibt erhalten |
+| K-03 | B verwirft die veraltete laufende Kopie, A hat abgeschlossen | Einheit bleibt erhalten (automatisiert in `merge.test.ts` und `syncEngine.test.ts`, D-293) |
 | K-04 | A löscht eine abgeschlossene Einheit, B ändert später eine Notiz | Jüngere Änderung gewinnt, Wiederherstellung protokolliert |
 | K-05 | Satz auf A erledigt, auf B gleichzeitig übersprungen | Erledigt |
 | K-06 | Beide erledigen denselben Satz mit verschiedenen Werten | Werte der jüngeren Fassung, nicht gemischt |

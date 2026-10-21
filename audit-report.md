@@ -423,7 +423,10 @@ Abschlusslauf nach dem letzten Fix (Stand `4bfea00`):
 | `pnpm check:docs` | 21.10.2026, `4bfea00` | ohne Befund (Beispielvorlagen 4, Winter Arc 40 Tage, 71 Übungsnamen, Programme 3, Trainingstage 84) |
 | `pnpm build`, `pnpm check:bundle` | 21.10.2026, `4bfea00` | Build ok; Startansicht 249,6 KB von 250 KB (gzip; Ausgangslage 249,4 KB, plus 0,2 KB durch den Hinweistext zu D-292 und die Option `useGrouping`) |
 | `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026, `4bfea00` | 232 bestanden, 4 übersprungen (Tab-Leiste und Logo nur im Handy- bzw. Seitenleiste nur im Desktop-Projekt, per `test.skip` so vorgesehen), 0 fehlgeschlagen, 6,3 min |
-| GitHub Actions auf Entwurfs-PR #48 (`form-rebranding` → `main`): „Lint, Typen, Unit-Tests, Dokumente, Build“ | 21.10.2026, `4bfea00` | bestanden |
+| GitHub Actions auf Entwurfs-PR #48 (`form-rebranding` → `main`), Lauf 39650205396 | 21.10.2026, `4bfea00` | „Lint, Typen, Unit-Tests, Dokumente, Build“ bestanden; E2E (chromium): Schritt `pnpm test:e2e` bestanden; E2E (webkit): während `pnpm test:e2e` abgebrochen, weil der Report-Commit `ebdb21d` den Lauf über die Concurrency-Regel der CI ersetzt hat |
+| GitHub Actions auf Entwurfs-PR #48, Lauf 39651311308 | 21.10.2026, `ebdb21d` (gleicher Code wie `4bfea00`, nur `audit-report.md` geändert) | alle drei Jobs bestanden: „Lint, Typen, Unit-Tests, Dokumente, Build“ (inkl. `pnpm test:coverage` und `pnpm check:bundle`), E2E (chromium) 4,7 min, E2E (webkit) 13,6 min |
+
+Der Entwurfs-PR #48 dient nur der CI (WebKit läuft nur in GitHub Actions) und der Durchsicht; gemergt wird vom Produktinhaber. Er setzt auf #46 und #47 auf.
 
 ## 11. Änderungen in dieser Phase
 

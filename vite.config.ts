@@ -53,11 +53,20 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
-      includeAssets: ['favicon.svg', 'theme-init.js', 'robots.txt', 'icons/apple-touch-icon.png'],
+      // Marke FORM (D-309): Icons aus form-app-assets, Nacht als Hintergrund- und Theme-Farbe.
+      includeAssets: [
+        'theme-init.js',
+        'robots.txt',
+        'icons/favicon.svg',
+        'icons/favicon.ico',
+        'icons/favicon-16.png',
+        'icons/favicon-32.png',
+        'icons/apple-touch-icon.png',
+      ],
       manifest: {
         id: '/',
-        name: 'Fitness',
-        short_name: 'Fitness',
+        name: 'FORM',
+        short_name: 'FORM',
         description: 'Persönliche Fitnessplattform für Training, Körperdaten und Ernährung',
         lang: 'de',
         dir: 'ltr',
@@ -65,13 +74,19 @@ export default defineConfig({
         scope: '/',
         display: 'standalone',
         orientation: 'any',
-        background_color: '#e8eef7',
-        theme_color: '#f5f8fd',
+        background_color: '#0c1219',
+        theme_color: '#0c1219',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
           {
-            src: '/icons/maskable-512.png',
+            src: '/icons/icon-maskable-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: '/icons/icon-maskable-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
@@ -81,6 +96,8 @@ export default defineConfig({
       workbox: {
         // wasm: Barcode-Erkennung auch ohne Netz (D-266, rund 1,1 MB).
         globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}'],
+        // Store-Größe und Rasterfassungen der Logos braucht die App nicht offline (SVGs reichen).
+        globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
       },

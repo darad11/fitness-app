@@ -23,14 +23,20 @@ test('Manifest ist verlinkt, gültig und hat alle Icons (AK-PWA-01, D-221)', asy
   expect(response.ok()).toBe(true);
   const manifest = (await response.json()) as Record<string, unknown> & { icons: ManifestIcon[] };
   expect(manifest).toMatchObject({
-    name: 'Fitness',
-    short_name: 'Fitness',
+    name: 'FORM',
+    short_name: 'FORM',
     start_url: '/heute',
     scope: '/',
     display: 'standalone',
     lang: 'de',
   });
-  expect(manifest.icons.map((icon) => icon.purpose)).toEqual(['any', 'any', 'maskable']);
+  expect(manifest.icons.map((icon) => icon.purpose)).toEqual([
+    'any',
+    'any',
+    'maskable',
+    'maskable',
+  ]);
+  expect(manifest).toMatchObject({ background_color: '#0c1219', theme_color: '#0c1219' });
   for (const icon of manifest.icons) {
     const file = await request.get(icon.src);
     expect(file.headers()['content-type']).toContain('image/png');

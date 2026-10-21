@@ -27,7 +27,6 @@ pnpm test:coverage      # dasselbe mit Abdeckung und Schwellen
 pnpm test:e2e           # Playwright gegen den Build (vorher pnpm build)
 pnpm check:docs         # Querverweise der Dokumente und Funktionsmatrix
 pnpm check:bundle       # Größe der Startansicht (nach pnpm build)
-pnpm icons              # App-Icons neu erzeugen
 ```
 
 Arbeitsregeln für Claude-Sitzungen stehen in `CLAUDE.md`. In Cloud-Sitzungen installiert der Start-Hook `.claude/hooks/session-start.sh` die Abhängigkeiten automatisch und setzt die Variablen für die E2E-Tests (D-238).

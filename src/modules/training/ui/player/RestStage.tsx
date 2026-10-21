@@ -49,7 +49,7 @@ export function RestStage(props: RestStageProps) {
       )}
     >
       <Button
-        variant="onInk"
+        variant="secondary"
         size={size === 'lg' ? 'md' : size}
         aria-label={t.rest.minus}
         onClick={() => {
@@ -60,7 +60,7 @@ export function RestStage(props: RestStageProps) {
         15
       </Button>
       <Button
-        variant="onInk"
+        variant="secondary"
         size={size === 'lg' ? 'md' : size}
         aria-label={t.rest.plus}
         onClick={() => {
@@ -71,7 +71,7 @@ export function RestStage(props: RestStageProps) {
         15
       </Button>
       <Button
-        variant={over ? 'onInk' : 'primary'}
+        variant="primary"
         size={size === 'lg' ? 'md' : size}
         aria-label={t.rest.skip}
         onClick={props.onSkip}
@@ -88,11 +88,11 @@ export function RestStage(props: RestStageProps) {
         aria-label={t.rest.label}
         className={cn(
           'fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center text-on-ink',
-          over ? 'bg-accent' : 'hero-glass',
+          over ? 'bg-accent' : 'stage',
         )}
       >
         <p className="eyebrow text-on-ink-muted">{over ? t.rest.over : t.rest.label}</p>
-        <p role="timer" aria-label={status} className="text-timer font-bold tabular-nums">
+        <p role="timer" aria-label={status} className="text-timer font-semibold tabular-nums">
           {time}
         </p>
         <div className="max-w-md">
@@ -101,8 +101,7 @@ export function RestStage(props: RestStageProps) {
         </div>
         {controls('lg')}
         <Button
-          variant="quiet"
-          className="text-on-ink"
+          variant="secondary"
           onClick={() => {
             setExpanded(false);
           }}
@@ -118,10 +117,10 @@ export function RestStage(props: RestStageProps) {
   return (
     <section
       aria-label={t.rest.label}
-      className={cn('mt-3 rounded-card p-4 text-on-ink', over ? 'bg-accent' : 'hero-glass')}
+      className={cn('mt-3 rounded-card p-card text-on-ink', over ? 'bg-accent' : 'stage')}
     >
       <div className="flex min-h-12 items-center gap-4">
-        <p role="timer" aria-label={status} className="text-4xl font-bold tabular-nums">
+        <p role="timer" aria-label={status} className="text-value font-semibold tabular-nums">
           {time}
         </p>
         <p className="min-w-0 flex-1">
@@ -135,7 +134,6 @@ export function RestStage(props: RestStageProps) {
         </p>
         <IconButton
           label={t.rest.expand}
-          tone="onInk"
           aria-expanded={false}
           className="size-12"
           onClick={() => {

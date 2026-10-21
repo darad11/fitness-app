@@ -2,8 +2,8 @@
  * Farbtokens der Marke FORM (brand-tokens.md, handover-form-rebranding.md Abschnitt 3, D-308).
  * Dunkel ist Standard und wird ausgeliefert (`:root`). Die hellen Tokens sind nur angelegt
  * (`:root[data-theme='light']`); nichts setzt dieses Attribut, bis der Produktinhaber über einen
- * hellen Modus entschieden hat (Q-23). Flächen sind deckend; Trennung über Fläche und 1-px-Rand,
- * keine Schatten, kein Glas. src/shared/ui/tokens.test.ts prüft den Kontrast (WCAG 2.1 AA) in
+ * hellen Modus entschieden hat (D-311). Flächen sind deckend; Trennung über Fläche und 1-px-Rand,
+ * keine Schatten, kein Glas; einzige Ausnahme ist das Glas der Tab-Leiste (D-312). src/shared/ui/tokens.test.ts prüft den Kontrast (WCAG 2.1 AA) in
  * beiden Blöcken und dass beide dieselben Tokens definieren.
  */
 
@@ -12,11 +12,7 @@
   /* Flächen: Nacht, eine Stufe heller für Hero-Karten und Sheets, Karten, Chips und Eingaben. */
   --bg: #0c1219;
   --bg-top: #0c1219;
-  --bg-bottom: #0c1219;
   --bg-elevated: #10161f;
-  --glow-1: #0c121900;
-  --glow-2: #0c121900;
-  --glow-3: #0c121900;
   --surface: #141b25;
   --surface-2: #1a2230;
   --panel: #10161f;
@@ -27,7 +23,6 @@
   /* Ränder: `--border` ist die 1-px-Linie; Eingabefelder brauchen 3:1 (AK-UX-04). */
   --border: #232b36;
   --border-input: #6b7482;
-  --glass-edge: #ffffff00;
   /* Akzent Lime: Primärbutton, aktiver Tab, Ringe, Balken; Schrift darauf in Nacht. */
   --accent: #c7ff46;
   --accent-hover: #c7ff46;
@@ -91,10 +86,13 @@
   /* Keine Schatten: Karten tragen nur den 1-px-Rand. */
   --shadow-card: 0 0 0 1px var(--border);
   --shadow-float: 0 0 0 1px var(--border);
-  --glass-blur: none;
-  /* Tab-Leiste: aktiver Tab ohne Füllfläche (Farbe über Symbol und Beschriftung). */
+  /* Tab-Leiste (D-312): dunkles, getöntes Glas aus der Kartenfläche (85 %), feiner Rand, aktiver
+     Tab ohne Füllfläche (Farbe über Symbol und Beschriftung), Linse ohne Farbfüllung. */
+  --tabbar-glass: #141b25d9;
+  --tabbar-edge: #ffffff1a;
+  --tabbar-blur: blur(20px) saturate(140%);
   --selection-pill: #00000000;
-  --lens-fill: #ffffff06;
+  --lens-fill: #ffffff00;
   --lens-hairline: #ffffff33;
   --lens-specular: #ffffff99;
   --lens-specular-low: #ffffff4d;
@@ -108,16 +106,12 @@
   --lens-b: #0000ff;
 }
 
-/* Heller Modus: nur angelegt, nicht ausgeliefert (Q-23). Lime bleibt Symbol; Flächen und Text in Grün dunkel. */
+/* Heller Modus: nur angelegt, nicht ausgeliefert (D-311). Lime bleibt Symbol; Flächen und Text in Grün dunkel. */
 :root[data-theme='light'] {
   color-scheme: light;
   --bg: #ffffff;
   --bg-top: #ffffff;
-  --bg-bottom: #ffffff;
   --bg-elevated: #f4f6f8;
-  --glow-1: #ffffff00;
-  --glow-2: #ffffff00;
-  --glow-3: #ffffff00;
   --surface: #ffffff;
   --surface-2: #eef1f4;
   --panel: #ffffff;
@@ -126,7 +120,6 @@
   --fg-faint: #8a93a0;
   --border: #e1e5ea;
   --border-input: #6f7886;
-  --glass-edge: #ffffff00;
   --accent: #4c7a00;
   --accent-hover: #4c7a00;
   --accent-fg: #ffffff;
@@ -183,9 +176,11 @@
   --login-input-line: #6b7482;
   --shadow-card: 0 0 0 1px var(--border);
   --shadow-float: 0 0 0 1px var(--border);
-  --glass-blur: none;
+  --tabbar-glass: #fffffff2;
+  --tabbar-edge: #0c12191a;
+  --tabbar-blur: blur(20px) saturate(140%);
   --selection-pill: #00000000;
-  --lens-fill: #ffffff33;
+  --lens-fill: #ffffff00;
   --lens-hairline: #0000001a;
   --lens-specular: #fffffff2;
   --lens-specular-low: #ffffff99;

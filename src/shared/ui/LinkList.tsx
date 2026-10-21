@@ -10,7 +10,10 @@ export interface LinkListItem {
   description?: string;
 }
 
-/** Liste von Einstiegen in einer Karte; Symbol in runder Tonfläche, Zeilen mindestens 56 px. */
+/**
+ * Listenzeilen der Marke FORM (D-314) in einer Karte: Symbol in einer Kachel (40 px, card-2,
+ * Radius 12), Titel 16/600, Untertitel 13 gedämpft, Chevron in `text-faint`; Zeilen mindestens 56 px.
+ */
 export function LinkList({ items, label }: { items: readonly LinkListItem[]; label?: string }) {
   const prefix = useId();
   return (
@@ -20,11 +23,9 @@ export function LinkList({ items, label }: { items: readonly LinkListItem[]; lab
           <Link
             to={to}
             aria-describedby={description ? `${prefix}-${String(index)}` : undefined}
-            className="flex min-h-14 items-center gap-3 px-4 py-3 first:rounded-t-card last:rounded-b-card hover:bg-surface-2"
+            className="flex min-h-14 items-center gap-3 px-card py-3 first:rounded-t-card last:rounded-b-card hover:bg-surface-2"
           >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-pill bg-accent-soft text-accent-ink">
-              <Icon aria-hidden="true" className="size-5" />
-            </span>
+            <TileIcon icon={Icon} />
             <span className="min-w-0 flex-1">
               <span className="block font-semibold">{itemLabel}</span>
               {description ? (
@@ -32,16 +33,27 @@ export function LinkList({ items, label }: { items: readonly LinkListItem[]; lab
                 <span
                   id={`${prefix}-${String(index)}`}
                   aria-hidden="true"
-                  className="block text-sm text-muted"
+                  className="block text-caption text-muted"
                 >
                   {description}
                 </span>
               ) : null}
             </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
           </Link>
         </li>
       ))}
     </ul>
+  );
+}
+
+/** Symbol in einer Kachel (40 px, card-2, Radius 12) für Listenzeilen und Karten. */
+export function TileIcon({ icon: Icon, className }: { icon: LucideIcon; className?: string }) {
+  return (
+    <span
+      className={`flex size-tile shrink-0 items-center justify-center rounded-tile bg-surface-2 text-fg ${className ?? ''}`}
+    >
+      <Icon aria-hidden="true" className="size-5" />
+    </span>
   );
 }

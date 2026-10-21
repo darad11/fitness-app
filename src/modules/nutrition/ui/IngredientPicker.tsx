@@ -14,8 +14,7 @@ import type { Quantity } from '../service/nutritionService';
 import { kcal } from './format';
 import { useFoodCatalog } from './useFoodCatalog';
 
-const INPUT =
-  'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /**
  * Zutat suchen und Menge wählen (D-267): alle Lebensmittel außer Rezepten, wie in „Lebensmittel

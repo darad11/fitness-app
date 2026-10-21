@@ -10,8 +10,7 @@ import { useGoals } from '../data/useGoals';
 import { GOAL_LIMITS, type GoalKind } from '../model/goal';
 import { removeGoal, setGoal } from '../service/goalService';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 const WEEKLY_OPTIONS = [1, 2, 3, 4, 5, 6, 7].map((n) => ({
   value: String(n),
   label: t.goals.perWeek(n),

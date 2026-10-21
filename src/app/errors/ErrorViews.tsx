@@ -53,7 +53,7 @@ export function RouteErrorView() {
 export function RootErrorView() {
   useLoggedRouteError('root');
   return (
-    <main className="page-gutters mx-auto max-w-[1200px] py-10">
+    <main className="page-gutters mx-auto max-w-content py-10">
       <ErrorContent />
     </main>
   );

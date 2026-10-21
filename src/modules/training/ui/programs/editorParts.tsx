@@ -7,10 +7,8 @@ import { PlanEditError } from '../../calc/programEdit';
 import type { ProgramPlan, Week } from '../../model/program';
 import { editProgram, InvalidProgramError } from '../../service/programService';
 
-export const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
-export const TEXTAREA =
-  'w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg';
+export const INPUT = 'field w-full min-w-0';
+export const TEXTAREA = 'field w-full';
 
 type Messages = Partial<Record<PlanEditError['reason'], string>>;
 

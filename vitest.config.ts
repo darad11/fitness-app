@@ -9,8 +9,8 @@ export default mergeConfig(
       environment: 'node',
       setupFiles: ['./src/test-setup.ts'],
       restoreMocks: true,
-      // tokens.css wird im Kontrasttest als Text gelesen; sonst liefert Vitest CSS leer aus.
-      css: { include: [/tokens\.css/] },
+      // tokens.css und styles.css werden in Tests als Text gelesen (Kontrast, Breakpoints); sonst liefert Vitest CSS leer aus.
+      css: { include: [/tokens\.css/, /app\/styles\.css/] },
       coverage: {
         provider: 'v8',
         include: ['src/**/*.{ts,tsx}'],

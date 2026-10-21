@@ -496,7 +496,7 @@ function ExerciseEditor({
                       onChange={(event) => {
                         patchSet(set, { type: event.target.value as 'warmup' | 'working' });
                       }}
-                      className="h-10 rounded-input border border-line bg-surface px-2 text-base text-fg"
+                      className="field min-h-10 py-1 pr-2 pl-2"
                     >
                       <option value="warmup">{tProgramEditor.setTypes.warmup}</option>
                       <option value="working">{tProgramEditor.setTypes.working}</option>

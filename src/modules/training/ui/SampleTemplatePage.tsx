@@ -380,7 +380,7 @@ function ProgramCard({
   const next = progress?.next;
   return (
     <Card
-      tone="ink"
+      tone="stage"
       eyebrow={t.training.activeProgram}
       title={
         !progress
@@ -399,7 +399,6 @@ function ProgramCard({
       </p>
       {progress && next ? (
         <Meter
-          tone="onInk"
           className="mt-3"
           label={t.programs.dayOf(next.index + 1, progress.total)}
           value={progress.total > 0 ? next.index / progress.total : 0}
@@ -419,7 +418,7 @@ function ProgramCard({
       <div className="mt-5 flex flex-wrap gap-2">
         {next ? (
           <Button
-            variant="onInk"
+            size="lg"
             disabled={busy}
             onClick={() => {
               onStartNext(next);
@@ -430,8 +429,7 @@ function ProgramCard({
           </Button>
         ) : null}
         <Button
-          variant="quiet"
-          className="text-on-ink"
+          variant="secondary"
           disabled={saving}
           onClick={() => {
             run(() => deactivateProgram(rt));

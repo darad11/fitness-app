@@ -1,14 +1,15 @@
 # FORM · Design-Tokens der App
 
-Stand: 21.10.2026 · Paket F1 (D-308), wird mit Paket E abgeschlossen · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 21.10.2026 · Pakete F1 (D-308) und F2 (D-314), wird mit Paket E abgeschlossen · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
 ## 1. Grundsätze
 
 - Die Token-Namen der App bleiben (`--bg`, `--surface`, `--accent`, …), damit Tailwind-Klassen und Komponenten unverändert funktionieren. Die Markenbegriffe aus der Übergabe (`bg`, `card`, `card-2`, `line`, `text`, …) stehen in der Spalte „Marke“.
-- Dunkel ist Standard und wird ausgeliefert (`:root`). Die hellen Tokens sind nur angelegt (`:root[data-theme='light']`) und werden erst ausgeliefert, wenn der Produktinhaber Q-23 entscheidet. Lime ist im hellen Modus nur Symbol; Flächen und Text nehmen Grün dunkel `#4C7A00`.
-- Flächen sind deckend. Trennung über Fläche und 1-px-Rand, keine Schatten, kein Glas, keine Lichtflecken, keine Verläufe.
+- Dunkel ist Standard und wird ausgeliefert (`:root`). Die hellen Tokens sind nur angelegt (`:root[data-theme='light']`) und werden nicht ausgeliefert (D-311, beantwortet Q-23; neu bewerten, wenn Nutzer danach fragen). Lime ist im hellen Modus nur Symbol; Flächen und Text nehmen Grün dunkel `#4C7A00`.
+- Flächen sind deckend. Trennung über Fläche und 1-px-Rand, keine Schatten, kein Glas, keine Lichtflecken, keine Verläufe. Einzige Ausnahme ist das Glas der Tab-Leiste (D-312).
+- Maße, Radien und Schriftgrößen sind ebenfalls Tokens (`src/app/styles.css`, `@theme`, Abschnitt 2.6); Komponenten und Seiten nutzen keine festen Pixelbreiten (D-313).
 - Kontrast nach WCAG 2.1 AA: Text 4,5:1, Bedienelemente und Linien 3:1, geprüft in beiden Blöcken auf jeder Fläche, auf der ein Token liegen kann (`tokens.test.ts`).
 
 ## 2. Zuordnung alt → neu je Token
@@ -20,9 +21,10 @@ Alt = Stand vor dem Rebranding (D-272, Glas-Look, Blau als Akzent). Neu = FORM. 
 | Token | Alt hell | Alt dunkel | Neu dunkel (ausgeliefert) | Hell (angelegt) | Marke | Verwendung |
 |---|---|---|---|---|---|---|
 | `--bg` | #e8eef7 | #151b2b | #0c1219 | #ffffff | `bg` Nacht | App-Hintergrund, Tab-Bar, Kopfzeile |
-| `--bg-top`, `--bg-bottom` | #f5f8fd, #dce4f0 | #212a3f, #0d1016 | #0c1219 | #ffffff | `bg` | früher Verlauf; jetzt eine Fläche; `--bg-top` ist die Farbe der Statusleiste (`theme-color`) |
+| `--bg-top` | #f5f8fd | #212a3f | #0c1219 | #ffffff | `bg` | Farbe der Statusleiste (`theme-color`) und des `body` |
+| `--bg-bottom` | #dce4f0 | #0d1016 | entfällt (F2) | entfällt | – | früher Ende des Verlaufs |
 | `--bg-elevated` (neu) | – | – | #10161f | #f4f6f8 | `bg-elevated` | Hero-Karten, Sheets |
-| `--glow-1` bis `--glow-3` | Blau-, Blau-, Grünfleck | dto. | transparent | transparent | – | Lichtflecken entfallen |
+| `--glow-1` bis `--glow-3` | Blau-, Blau-, Grünfleck | dto. | entfällt (F2) | entfällt | – | Lichtflecken und die Hintergrundebene `.app-backdrop` entfallen |
 | `--surface` | #ffffffa6 (Glas) | #ffffff0f (Glas) | #141b25 | #ffffff | `card` | Karten, Listenzeilen |
 | `--surface-2` | #ffffff73 | #ffffff0d | #1a2230 | #eef1f4 | `card-2` | Chips inaktiv, Eingabefelder, Spur von Ringen und Balken |
 | `--panel` | #f8fafdeb | #1a2133eb | #10161f | #ffffff | `bg-elevated` | Dialoge, Sheets |
@@ -31,7 +33,7 @@ Alt = Stand vor dem Rebranding (D-272, Glas-Look, Blau als Akzent). Neu = FORM. 
 | `--fg-faint` (neu) | – | – | #5b6470 | #8a93a0 | `text-faint` | Platzhalter, deaktiviert, Chevrons |
 | `--border` | #0f1c3a1f | #ffffff24 | #232b36 | #e1e5ea | `line` | 1-px-Ränder, Trenner, Gitterlinien |
 | `--border-input` | #5f6878 | #99a2b2 | #6b7482 | #6f7886 | – (Abweichung) | Rand von Eingabefeldern, 3:1 |
-| `--glass-edge` | #ffffffcc | #ffffff2e | transparent | transparent | – | Lichtkante entfällt |
+| `--glass-edge` | #ffffffcc | #ffffff2e | entfällt (F2) | entfällt | – | Lichtkante entfällt |
 | `--scrim` | rgb(18 21 28 / 0.45) | rgb(0 0 0 / 0.6) | rgb(0 0 0 / 0.6) | rgb(12 18 25 / 0.45) | – | Hintergrund von Dialogen |
 
 ### 2.2 Akzent und Status
@@ -90,19 +92,37 @@ Alt = Stand vor dem Rebranding (D-272, Glas-Look, Blau als Akzent). Neu = FORM. 
 | Token | Alt | Neu |
 |---|---|---|
 | `--shadow-card`, `--shadow-float` | Lichtkante, Haarlinie, weicher Schatten | nur der 1-px-Rand (`0 0 0 1px var(--border)`) |
-| `--glass-blur` | `blur(24px) saturate(160%)` | `none` |
+| `--glass-blur` | `blur(24px) saturate(160%)` | entfällt (F2); kein Glas außer der Tab-Leiste |
+| `--tabbar-glass` (neu, F2) | – | #141b25d9: Kartenfläche mit 85 % Deckkraft, darüber Weichzeichnung (D-312); hell (angelegt) #fffffff2 |
+| `--tabbar-edge` (neu, F2) | – | #ffffff1a: feiner Rand der Leiste (Weiß 10 %); hell #0c12191a |
+| `--tabbar-blur` (neu, F2) | – | `blur(20px) saturate(140%)`; mit „Transparenz reduzieren“ deckend `--panel` |
 | `--selection-pill` | Blau 14 % / Schwarz 35 % | transparent (aktiver Tab ohne Füllfläche) |
-| `--lens-*` | Glas-Linse der Tab-Leiste (D-272) | bleiben bis Paket F2 definiert; die Linse entfällt mit der neuen Tab-Leiste |
+| `--lens-*` | Glas-Linse der Tab-Leiste (D-272) | bleiben (D-312): Linse, Lichtkante und Farbsaum am Rand; `--lens-fill` transparent (ohne Farbfüllung) |
 
-### 2.6 Maße und Typografie
+### 2.6 Maße und Typografie (F2, D-314)
 
-| Größe | Alt | Neu (Marke) |
-|---|---|---|
-| Radius Karte / Eingabe / Chip / Sheet | 20 / 12 / 999 / 28 px | 20 / 12 / 999 / 24 px (Sheet ab F2) |
-| Radius Button | 999 px (Pille) | 14 px (ab F2) |
-| Label (`eyebrow`) | 12 px, 600, Versalien, 8 % Laufweite | 13 px, 500, Versalien, 4 % Laufweite |
-| Ziffern | tabellarisch nur an einzelnen Stellen | tabellarisch in der ganzen App (`body`) |
-| Schrift | Systemschrift | Systemschrift (Inter ist nicht gebündelt; keine Schrift von Dritten, D-203) |
+Alle Werte stehen als Tokens in `src/app/styles.css` (`@theme`); Tailwind erzeugt daraus Klassen wie `p-card`, `min-h-button`, `rounded-button`, `text-headline`, `max-w-content`.
+
+| Größe | Alt | Neu (Marke) | Token |
+|---|---|---|---|
+| Seitenrand Handy / Tablet / Desktop | 16 / 24 / 32 px | 20 / 24 / 32 px | `--spacing-page`, `-page-md`, `-page-lg` |
+| Innenabstand Karte / Abstand zwischen Karten | 20 / 16 px | 16 / 12 px | `--spacing-card`, `--spacing-stack` |
+| Kopfzeile / Logo | 56 / 30 px | 56 / 30 px | `--spacing-header`, `--spacing-logo` |
+| Tab-Leiste (ohne Safe-Area) | 64 px | 64 px | `--spacing-tabbar` |
+| Eingabe / Primärknopf / Chip / Symbol-Kachel / Tippfläche | 48 / 48 / – / – / 44 px | 48 / 52 / 36 / 40 / 44 px | `--spacing-control`, `-button`, `-chip`, `-tile`, `-touch` |
+| Radius Karte / Knopf / Eingabe / Kachel / Sheet / Chip | 20 / 999 / 12 / – / 28 / 999 px | 20 / 14 / 12 / 12 / 24 / 999 px | `--radius-card`, `-button`, `-input`, `-tile`, `-sheet`, `-pill` |
+| Größte Inhaltsbreite | 1200 px (an fünf Stellen) | 75 rem (eine Stelle) | `--container-content` |
+| Dialog / Blatt ab Tablet / Menü / Tab-Leiste | 28 / 36 / 22 / 34 rem | gleich, als Tokens | `--container-dialog`, `-sheet`, `-menu`, `-tabbar` |
+| Breakpoints | Tailwind-Standard, dazu 359 px | 22,5 / 40 / 48 / 64 / 80 rem | `--breakpoint-xs` bis `-xl`, gleich in `breakpoints.ts` (Test) |
+| Headline (Seitentitel) | 40 px, 700 | 28 px, 600 | `--text-headline` |
+| Titel (Karte, Dialog) | 18 bis 28 px, 600 bis 700 | 20 px, 600 | `--text-title` |
+| Untertitel | 14 px | 13 px, 400 | `--text-caption` |
+| Label (`eyebrow`) | 12 px, 600, Versalien, 8 % Laufweite | 13 px, 500, Versalien, 4 % Laufweite | `--text-eyebrow` |
+| Wert groß / Timer | 30 bis 40 px, 700 bis 800 / 64 px, 700 | 40 px / 56 px, 600 | `--text-value`, `--text-timer` |
+| Tab-Beschriftung | 11 px, 600 | 11 px, 500 | `--text-tab` |
+| Ziffern | tabellarisch nur an einzelnen Stellen | tabellarisch in der ganzen App (`body`) | – |
+| Symbole | Lucide, Strich 2 px | Lucide, Strich 1,75 px | `svg.lucide` in `styles.css` |
+| Schrift | Systemschrift | Systemschrift (Inter ist nicht gebündelt; keine Schrift von Dritten, D-203) | `--font-sans` |
 
 ## 3. Gemessene Kontraste (dunkel, ausgeliefert)
 
@@ -129,6 +149,7 @@ Aus `tokens.test.ts` bzw. demselben Rechenweg (WCAG 2.1, gerundet). Hintergrund 
 | `--tile-border` auf `--tile` | 1,9 | – (dekorativ) |
 | `--login-fg` / `--login-fg-muted` / `--login-error` auf `--login-bg-1` | 16,9 / 8,8 / 5,6 | 4,5 |
 | `--login-accent-fg` auf `--login-accent` | 15,97 | 4,5 |
+| Tab-Beschriftung `--fg-muted` / `--fg` / `--accent-ink` auf `--tabbar-glass`, schlechtester Fall über Seite, Karte, card-2, Weiß und Lime | ≥ 4,5 (Test) | 4,5 |
 
 Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test); Grün dunkel #4C7A00 auf Weiß 5,1.
 
@@ -142,7 +163,10 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | `--chart-point` in `text-faint` | #6B7482 | Messpunkte sind Information, 3:1 |
 | Eine Diagrammfarbe | `--data-1` Lime, `--data-2` bis `-8` aus der Markenpalette | Diagramme mit mehreren Reihen (Tagesaufgaben je Aufgabe, Makros) brauchen unterscheidbare Reihen |
 | Inter | Systemschrift | nicht gebündelt; Schrift von Dritten wäre eine Anfrage an Dritte (keine Nutzdaten an Dritte, D-203) |
+| Platzhalter in `text-faint` | `text-muted` | Platzhalter sind Text und brauchen 4,5:1; `text-faint` erreicht auf card-2 nur 2,7 |
+| Griff des Sheets in `line` | `text-faint` | `line` auf `bg-elevated` hat 1,3:1, der Griff wäre kaum zu sehen; `text-faint` hat 3,0:1 |
+| Tab-Leiste ohne Glas (Konzept: Nacht mit Rand oben) | schwebende Glas-Leiste mit Linse und Kreis beim Scrollen in FORM-Farben | Entscheidung des Produktinhabers (D-312) |
 | Hell/Dunkel-Umschalter | entfällt in den Einstellungen | nur Dunkel wird ausgeliefert (D-308); eine Wahl ohne Wirkung wäre eine Schaltfläche ohne Funktion |
 | Streak-Karte, Hustle-Zeilen, „Tägliche Challenges“, Emojis, Bildkarten, Gradient-Leiste, schräges F | nicht gebaut | Markenleitplanken Abschnitt 2, Regel 10 |
 
-Weitere Einträge folgen mit den Paketen F2 bis G (Komponenten und Screens).
+Weitere Einträge folgen mit den Paketen F3 bis G (Screens).

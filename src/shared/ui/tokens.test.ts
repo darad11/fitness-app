@@ -60,13 +60,21 @@ function token(tokens: Tokens, name: string): string {
 
 const opaque = (hex: string): Rgb => rgba(hex)[0];
 
-/** Sichtbare Seitenfarben: Verlauf und jeder Lichtfleck in voller Stärke darüber. */
+/** Sichtbare Seitenfarben: Grundfläche und oberer Rand (Statusleiste); keine Verläufe, keine Lichtflecken. */
 function pagePoints(tokens: Tokens): Rgb[] {
-  const base = ['bg-top', 'bg', 'bg-bottom'].map((name) => opaque(token(tokens, name)));
-  const glows = ['glow-1', 'glow-2', 'glow-3'].flatMap((glow) =>
-    base.map((below) => over(token(tokens, glow), below)),
-  );
-  return [...base, ...glows];
+  return ['bg-top', 'bg'].map((name) => opaque(token(tokens, name)));
+}
+
+/**
+ * Glas der Tab-Leiste (D-312): liegt über der Seite, über Karten und beim Scrollen auch über den
+ * hellsten Inhalten (Text, Lime-Knopf). Die Weichzeichnung mischt nur; geprüft wird die volle Fläche.
+ */
+function glassPoints(tokens: Tokens): Rgb[] {
+  const behind = [
+    ...pagePoints(tokens),
+    ...['surface', 'surface-2', 'fg', 'accent'].map((name) => opaque(token(tokens, name))),
+  ];
+  return behind.map((below) => over(token(tokens, 'tabbar-glass'), below));
 }
 
 /** Alle Mischfarben, auf denen eine Fläche liegen kann. */
@@ -172,6 +180,17 @@ describe('Farbtokens', () => {
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);
     });
+  });
+
+  it.each(
+    MODES.flatMap(([mode, tokens]) =>
+      ['fg-muted', 'fg', 'accent-ink'].map((fg) => [mode, fg, tokens] as const),
+    ),
+  )('%s: Tab-Beschriftung --%s auf dem Glas der Tab-Leiste erreicht 4,5:1', (_mode, fg, tokens) => {
+    const worst = Math.min(
+      ...glassPoints(tokens).map((below) => ratio(opaque(token(tokens, fg)), below)),
+    );
+    expect(worst).toBeGreaterThanOrEqual(4.5);
   });
 
   it.each(MODES)('alle Datenreihen erreichen %s 3:1', (_mode, tokens) => {

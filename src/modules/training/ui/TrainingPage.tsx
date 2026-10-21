@@ -69,11 +69,11 @@ export function TrainingPage() {
         {active === undefined || program === undefined ? (
           <Skeleton className="h-40" />
         ) : active ? (
-          <Card tone="ink" eyebrow={t.training.running} title={active.title}>
+          <Card tone="stage" eyebrow={t.training.running} title={active.title}>
             <p className="-mt-2 text-on-ink-muted">
               {t.training.since(fmt.time(new Date(active.startedAt)))}
             </p>
-            <ButtonLink to={`/training/einheit/${active.id}`} variant="onInk" className="mt-5">
+            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5">
               <Play aria-hidden="true" className="size-5" />
               {t.training.resume}
             </ButtonLink>
@@ -89,7 +89,6 @@ export function TrainingPage() {
           >
             <Button
               variant="quiet"
-              className="text-on-ink"
               disabled={busy}
               onClick={() => {
                 void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
@@ -99,10 +98,10 @@ export function TrainingPage() {
             </Button>
           </ActiveProgramCard>
         ) : (
-          <Card tone="ink" eyebrow={t.training.freeEyebrow} title={t.training.freeTitle}>
+          <Card tone="stage" eyebrow={t.training.freeEyebrow} title={t.training.freeTitle}>
             <p className="-mt-2 max-w-md text-on-ink-muted">{t.training.freeHint}</p>
             <Button
-              variant="onInk"
+              size="lg"
               className="mt-5"
               disabled={busy}
               onClick={() => {
@@ -130,7 +129,7 @@ export function TrainingPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 setUndoVisible(false);

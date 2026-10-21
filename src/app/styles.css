@@ -2,8 +2,10 @@
 @import '../shared/ui/tokens.css';
 
 /*
- * Tailwind liest nur die eigenen Tokens (design-system.md Abschnitte 2 bis 4).
+ * Tailwind liest nur die eigenen Tokens (design-system.md, brand-tokens.md).
  * Die Standardpaletten sind abgeschaltet, damit keine Farben außerhalb des Designsystems entstehen.
+ * Maße der Marke FORM (handover-form-rebranding.md Abschnitt 3) stehen hier als Tokens; Komponenten
+ * und Seiten nutzen sie statt fester Pixelwerte (D-313).
  */
 @theme {
   --color-*: initial;
@@ -11,9 +13,50 @@
   --text-*: initial;
   --radius-*: initial;
   --shadow-*: initial;
+  --breakpoint-*: initial;
 
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
+  /*
+   * Breakpoints (D-313): die einzige Stelle im CSS; eigene Regeln nutzen sie über `@variant`.
+   * `src/shared/ui/breakpoints.ts` nennt dieselben Werte für Abfragen im Code, der Test dort
+   * vergleicht beide.
+   */
+  --breakpoint-xs: 22.5rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+
+  /* Breiten (D-313): größte Inhaltsbreite und Breiten schwebender Flächen. */
+  --container-content: 75rem;
+  --container-dialog: 28rem;
+  --container-sheet: 36rem;
+  --container-menu: 22rem;
+  --container-tabbar: 34rem;
+
+  /* Abstände (FORM): Seitenrand am Handy, Innenabstand der Karte, Abstand zwischen Karten. */
+  --spacing-page: 1.25rem;
+  --spacing-page-md: 1.5rem;
+  --spacing-page-lg: 2rem;
+  --spacing-card: 1rem;
+  --spacing-stack: 0.75rem;
+  /* Höhen (FORM): Kopfzeile 56, Logo 30, Tab-Leiste 64, Eingabe 48, Primärknopf 52, Chip 36,
+     Symbol-Kachel 40, kleinste Tippfläche 44 px. */
+  --spacing-header: 3.5rem;
+  --spacing-logo: 1.875rem;
+  --spacing-tabbar: 4rem;
+  --spacing-control: 3rem;
+  --spacing-button: 3.25rem;
+  --spacing-chip: 2.25rem;
+  --spacing-tile: 2.5rem;
+  --spacing-touch: 2.75rem;
+  /* Seitenleiste ab 1024 px: eingeklappt nur Symbole, ausgeklappt mit Namen. */
+  --spacing-sidebar: 4.5rem;
+  --spacing-sidebar-open: 15rem;
+
+  /* Schrift (FORM): Headline 28/600, Titel 20/600, Text 16/400, Untertitel 13/400, Label 13/500
+     mit 4 % Laufweite (`eyebrow`), Wert groß 40 bis 56/600, Tab 11/500. */
   --text-xs: 0.75rem;
   --text-xs--line-height: 1.4;
   --text-sm: 0.875rem;
@@ -32,25 +75,37 @@
   --text-4xl--line-height: 1.1;
   --text-5xl: 3.5rem;
   --text-5xl--line-height: 1.1;
-  --text-display: 2.5rem;
-  --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.02em;
-  --text-timer: 4rem;
+  --text-headline: 1.75rem;
+  --text-headline--line-height: 1.2;
+  --text-headline--letter-spacing: -0.01em;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.3;
+  --text-value: 2.5rem;
+  --text-value--line-height: 1.05;
+  --text-value--letter-spacing: -0.02em;
+  --text-timer: 3.5rem;
   --text-timer--line-height: 1;
   --text-timer--letter-spacing: -0.02em;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.35;
   --text-eyebrow: 0.8125rem;
   --text-eyebrow--line-height: 1.3;
   --text-eyebrow--letter-spacing: 0.04em;
+  --text-tab: 0.6875rem;
+  --text-tab--line-height: 1.15;
 
-  --radius-input: 12px;
-  --radius-card: 20px;
-  --radius-sheet: 28px;
+  /* Radien (FORM): Karte 20, Knopf 14, Eingabe und Symbol-Kachel 12, Sheet 24, Chip rund. */
+  --radius-input: 0.75rem;
+  --radius-tile: 0.75rem;
+  --radius-button: 0.875rem;
+  --radius-card: 1.25rem;
+  --radius-sheet: 1.5rem;
   --radius-pill: 999px;
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-bg-elevated: var(--bg-elevated);
+  --color-elevated: var(--bg-elevated);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-panel: var(--panel);
@@ -85,7 +140,7 @@
   --shadow-float: var(--shadow-float);
 }
 
-/* Vorzeile über Titeln und Kennzahlen: Label 13/500 in Versalien mit 4 % Laufweite (brand-tokens.md). */
+/* Vorzeile und Label über Titeln und Kennzahlen: 13/500 in Versalien mit 4 % Laufweite. */
 @utility eyebrow {
   font-size: var(--text-eyebrow);
   line-height: var(--text-eyebrow--line-height);
@@ -94,16 +149,48 @@
   font-weight: 500;
 }
 
-/* Seitenrand 16 / 24 / 32 px, mindestens so breit wie der sichere Bereich (Querformat am iPhone). */
+/* Seitenrand 20 / 24 / 32 px (Tokens), mindestens so breit wie der sichere Bereich (Querformat am iPhone). */
 @utility page-gutters {
-  --gutter: 1rem;
+  --gutter: var(--spacing-page);
   padding-left: max(var(--gutter), env(safe-area-inset-left));
   padding-right: max(var(--gutter), env(safe-area-inset-right));
-  @media (width >= 48rem) {
-    --gutter: 1.5rem;
+  @variant md {
+    --gutter: var(--spacing-page-md);
   }
-  @media (width >= 64rem) {
-    --gutter: 2rem;
+  @variant lg {
+    --gutter: var(--spacing-page-lg);
+  }
+}
+
+/*
+ * Eingabefeld (FORM): Fläche card-2, Rand 3:1 (`--border-input`, Abweichung von `line`, siehe
+ * brand-tokens.md), Radius 12, mindestens 48 hoch, Fokus-Rand Lime. Schrift 16 px, damit iOS beim
+ * Antippen nicht zoomt. Breite und Ausrichtung setzt die Stelle, an der das Feld steht.
+ */
+@utility field {
+  min-height: var(--spacing-control);
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-input);
+  background-color: var(--surface-2);
+  color: var(--fg);
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  &::placeholder {
+    color: var(--fg-muted);
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  &[aria-invalid='true'] {
+    border-color: var(--danger);
   }
 }
 
@@ -150,6 +237,11 @@
     outline-offset: 2px;
   }
 
+  /* Ein Symbolsatz (Lucide) in Linie mit 1,75 px Strich (FORM, D-314). */
+  svg.lucide {
+    stroke-width: 1.75;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     ::before,
@@ -163,88 +255,37 @@
 }
 
 /*
- * Glas-Look (D-272): ruhiger Verlauf mit drei weichen Lichtflecken hinter der ganzen App. Die
- * Flecken bewegen sich nicht (Akku); Karten sind durchscheinendes Glas (Tokens), schwebende
- * Leisten und Dialoge zusätzlich weichgezeichnet.
+ * Flächen der Marke FORM (D-308): deckend, Trennung über Fläche und 1-px-Rand, keine Schatten und
+ * kein Glas. Einzige Ausnahme ist das Glas der Tab-Leiste (D-312, Abschnitt Tab-Leiste unten).
  */
 @layer components {
-  .app-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-    pointer-events: none;
-    background: radial-gradient(
-      120% 90% at 50% 0%,
-      var(--bg-top) 0%,
-      var(--bg) 55%,
-      var(--bg-bottom) 100%
-    );
-  }
-  /* Oberer Rand einheitlich (Statusleiste), die Lichtflecken blenden erst darunter ein. */
-  .app-backdrop::after {
-    content: '';
-    position: absolute;
-    inset: 0 0 auto;
-    height: calc(env(safe-area-inset-top) + 5rem);
-    background: linear-gradient(
-      180deg,
-      var(--bg-top) 0,
-      var(--bg-top) env(safe-area-inset-top),
-      transparent 100%
-    );
-  }
-  .app-backdrop > span {
-    position: absolute;
-    border-radius: 9999px;
-    filter: blur(80px);
-  }
-  .app-backdrop > span:nth-child(1) {
-    width: 32rem;
-    height: 32rem;
-    top: -10rem;
-    left: -8rem;
-    background: var(--glow-1);
-  }
-  .app-backdrop > span:nth-child(2) {
-    width: 28rem;
-    height: 28rem;
-    right: -8rem;
-    bottom: -10rem;
-    background: var(--glow-2);
-  }
-  .app-backdrop > span:nth-child(3) {
-    width: 20rem;
-    height: 20rem;
-    top: 45%;
-    left: 55%;
-    background: var(--glow-3);
-  }
-  /* Wichtigste Karte einer Seite: eine Stufe heller als die Seite, 1-px-Rand (D-308). */
-  .hero-glass {
-    background: var(--ink);
+  /* Bühne: die wichtigste Karte einer Seite, eine Stufe heller als die Seite (bg-elevated). */
+  .stage {
+    background: var(--bg-elevated);
     box-shadow: var(--shadow-card);
   }
-  /* Seitenleiste ab 1024 px: eingeklappt 4,5 rem, unter Maus oder Fokus 15 rem über dem Inhalt. */
+  /* Seitenleiste ab 1024 px: eingeklappt nur Symbole, unter Maus oder Fokus über dem Inhalt. */
   .sidebar {
-    width: 4.5rem;
+    width: var(--spacing-sidebar);
     border-radius: var(--radius-sheet);
-    background: color-mix(in srgb, var(--panel) 90%, transparent);
+    background: var(--panel);
     box-shadow: var(--shadow-float);
     transition: width 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .sidebar:hover,
   .sidebar:focus-within {
-    width: 15rem;
+    width: var(--spacing-sidebar-open);
   }
   /* Inhalt rückt beim Ausklappen im gleichen Tempo mit, statt verdeckt zu werden. */
-  @media (width >= 64rem) {
-    .app-content {
-      padding-left: 5.5rem;
+  .app-content {
+    @variant lg {
+      padding-left: calc(var(--spacing-sidebar) + 1rem);
       transition: padding-left 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    .app-shell:has(.sidebar:hover, .sidebar:focus-within) .app-content {
-      padding-left: 16.5rem;
+  }
+  .app-shell:has(.sidebar:hover, .sidebar:focus-within) .app-content {
+    @variant lg {
+      padding-left: calc(var(--spacing-sidebar-open) + 1.5rem);
     }
   }
   .sidebar-label {
@@ -263,21 +304,6 @@
   .sidebar:hover .sidebar-tile,
   .sidebar:focus-within .sidebar-tile {
     opacity: 0;
-  }
-  /* Schwebende Ebene: Navigation, Dialoge, Leisten. */
-  .glass-blur {
-    -webkit-backdrop-filter: var(--glass-blur);
-    backdrop-filter: var(--glass-blur);
-  }
-  @media (prefers-reduced-transparency: reduce) {
-    .app-backdrop > span {
-      display: none;
-    }
-    .glass-blur {
-      -webkit-backdrop-filter: none;
-      backdrop-filter: none;
-      background: var(--panel);
-    }
   }
 }
 
@@ -353,19 +379,23 @@
 /*
  * Tab-Leiste mit Glas-Linse (D-272, src/app/layout/tabLens.ts), nach der iOS-26-Tab-Leiste und
  * dem Dashboard des Produktinhabers: schwebende Glas-Kapsel, gleitende Auswahl; unter dem Finger
- * eine klare Linse, die vergrößert und am Rand die Farben aufbricht.
+ * eine klare Linse, die vergrößert und am Rand die Farben aufbricht. Farben der Marke FORM (D-312):
+ * dunkles, getöntes Glas auf Basis der Kartenfläche (`--tabbar-glass`), feiner Rand, aktiver Tab
+ * in Lime, die Linse neutral ohne Farbfüllung. Das Glas ist die einzige Ausnahme von „kein Glas“.
  */
 @layer components {
   .tabbar {
     position: relative;
     display: flex;
     align-items: stretch;
-    width: min(100%, 34rem);
-    height: 4rem;
+    width: min(100%, var(--container-tabbar));
+    height: var(--spacing-tabbar);
     padding: 4px;
     border-radius: 9999px;
-    background: color-mix(in srgb, var(--panel) 90%, transparent);
-    box-shadow: var(--shadow-float);
+    background: var(--tabbar-glass);
+    -webkit-backdrop-filter: var(--tabbar-blur);
+    backdrop-filter: var(--tabbar-blur);
+    box-shadow: 0 0 0 1px var(--tabbar-edge);
     transform-origin: 50% 50%;
     touch-action: none;
     -webkit-user-select: none;
@@ -479,10 +509,10 @@
     gap: 2px;
     padding: 0 2px;
     border-radius: 9999px;
-    color: var(--fg);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    line-height: 1.15;
+    color: var(--fg-muted);
+    font-size: var(--text-tab);
+    font-weight: 500;
+    line-height: var(--text-tab--line-height);
     text-decoration: none;
     transition: color 0.2s;
   }
@@ -525,7 +555,7 @@
     transition: none;
   }
   .tabbar.lens-active .tabbar-tab.active {
-    color: var(--fg);
+    color: var(--fg-muted);
   }
   .tabbar.lens-active .tabbar-tab,
   .tabbar.lens-settling .tabbar-tab {
@@ -695,6 +725,8 @@
   @media (prefers-reduced-transparency: reduce) {
     .tabbar {
       background: var(--panel);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
     }
     .tabbar-lens-fill {
       background: var(--panel);

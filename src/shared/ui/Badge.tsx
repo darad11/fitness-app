@@ -1,16 +1,18 @@
 import { cn } from '../lib/cn';
 
-export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'onInk';
+export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning';
 
 const TONES: Record<BadgeTone, string> = {
   neutral: 'bg-surface-2 text-fg',
   accent: 'bg-accent-soft text-accent-ink',
   success: 'bg-success-soft text-success',
   warning: 'bg-warning-soft text-warning',
-  onInk: 'bg-on-ink/15 text-on-ink',
 };
 
-/** Kleines Etikett als Tonfläche, z. B. „Beispiel" (ux-audit.md Abschnitt 2). Die Farbe trägt keine Bedeutung allein. */
+/**
+ * Kleines Etikett als Tonfläche, z. B. „Beispiel" oder „Aktiv" (Lime-Ton mit Lime-Schrift, D-314).
+ * Die Farbe trägt keine Bedeutung allein.
+ */
 export function Badge({
   children,
   tone = 'neutral',

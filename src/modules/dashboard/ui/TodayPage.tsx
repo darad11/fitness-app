@@ -68,7 +68,7 @@ export function TodayPage() {
     <>
       {/* Begrüßung nach Tageszeit (D-276, D-310): Gruß mit Namen, darunter das Datum; ohne Uhr. */}
       <header className="mb-6">
-        <h1 className="text-display font-bold">
+        <h1 className="text-headline font-semibold">
           <span className="sr-only">{t.today.title}: </span>
           {t.today.greetingLine(greetingFor(hour), profile?.displayName)}
         </h1>
@@ -81,7 +81,7 @@ export function TodayPage() {
           </div>
         ) : active ? (
           <Card
-            tone="ink"
+            tone="stage"
             eyebrow={t.training.running}
             title={active.title}
             className="md:col-span-2"
@@ -93,7 +93,6 @@ export function TodayPage() {
               )}
             </p>
             <Meter
-              tone="onInk"
               className="mt-3"
               label={t.session.progress(
                 sessionProgress(active).done,
@@ -105,7 +104,7 @@ export function TodayPage() {
                   : 0
               }
             />
-            <ButtonLink to={`/training/einheit/${active.id}`} variant="onInk" className="mt-5">
+            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5">
               <Play aria-hidden="true" className="size-5" />
               {t.training.resume}
             </ButtonLink>
@@ -128,7 +127,7 @@ export function TodayPage() {
           </div>
         ) : (
           <Card
-            tone="ink"
+            tone="stage"
             eyebrow={t.today.heroEyebrow}
             title={t.today.heroTitle}
             className="md:col-span-2"
@@ -136,7 +135,7 @@ export function TodayPage() {
             <p className="-mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
             <div className="mt-5 flex flex-wrap gap-2">
               <Button
-                variant="onInk"
+                size="lg"
                 disabled={busy}
                 onClick={() => {
                   void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
@@ -145,7 +144,7 @@ export function TodayPage() {
                 <Play aria-hidden="true" className="size-5" />
                 {t.training.startFree}
               </Button>
-              <ButtonLink to="/training/programme" variant="quiet" className="text-on-ink">
+              <ButtonLink to="/training/programme" variant="quiet">
                 {t.today.chooseTemplate}
               </ButtonLink>
             </div>
@@ -213,7 +212,7 @@ export function TodayPage() {
           {latestWeight ? (
             <div>
               <div>
-                <p className="text-2xl font-bold tabular-nums">
+                <p className="text-2xl font-semibold tabular-nums">
                   {formatters.bodyWeightKg(latestWeight.weightKg)}
                 </p>
                 <p className="text-sm text-muted">

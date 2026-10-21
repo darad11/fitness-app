@@ -88,7 +88,7 @@ export function SessionPage() {
   if (session === null) {
     return (
       <div>
-        <h1 className="mb-2 text-display font-bold">{t.training.title}</h1>
+        <h1 className="mb-2 text-headline font-semibold">{t.training.title}</h1>
         <p className="mb-6 text-muted">{t.session.notFound}</p>
         <ButtonLink to="/training">{t.training.title}</ButtonLink>
       </div>
@@ -326,11 +326,11 @@ function Player({ session }: { session: Session }) {
       onPointerDownCapture={settings.restSound ? unlockSound : undefined}
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
-      <header className="sticky top-0 z-10 -mx-4 mb-4 glass-blur bg-panel/80 px-4 pt-2 pb-3 md:-mx-6 md:px-6">
+      <header className="page-gutters sticky top-0 z-10 -mx-page mb-4 border-b border-line bg-bg pt-2 pb-3 md:-mx-page-md lg:-mx-page-lg">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="eyebrow truncate text-muted">{eyebrow}</p>
-            <h1 className="truncate text-xl font-bold">{session.title}</h1>
+            <h1 className="truncate text-xl font-semibold">{session.title}</h1>
           </div>
           <Button
             variant="secondary"
@@ -395,12 +395,9 @@ function Player({ session }: { session: Session }) {
       </header>
 
       {!restTimer && current && currentExercise && currentName ? (
-        <section
-          aria-label={t.session.now}
-          className="hero-glass mb-4 rounded-card p-5 text-on-ink"
-        >
+        <section aria-label={t.session.now} className="stage mb-4 rounded-card p-card text-on-ink">
           <p className="eyebrow text-on-ink-muted">{t.session.now}</p>
-          <p className="mt-1 text-2xl font-bold">{currentExercise.nameSnapshot}</p>
+          <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
           <p className="mt-1 text-on-ink-muted">
             {[
               `${t.session.setTypeLabel[current.type]} · ${t.session.setOf(currentName.index, currentName.total)}`,
@@ -413,7 +410,7 @@ function Player({ session }: { session: Session }) {
               .join(' · ')}
           </p>
           {setTimer?.setId === current.id ? (
-            <p className="mt-2 text-timer font-bold tabular-nums" role="timer">
+            <p className="mt-2 text-timer font-semibold tabular-nums" role="timer">
               {formatClock(timerElapsed)}
             </p>
           ) : null}
@@ -430,10 +427,10 @@ function Player({ session }: { session: Session }) {
       {!restTimer && !current && exercises.length > 0 ? (
         <section
           aria-label={t.session.allDone}
-          className="hero-glass mb-4 rounded-card p-5 text-on-ink"
+          className="stage mb-4 rounded-card p-card text-on-ink"
         >
           <p className="eyebrow text-on-ink-muted">{t.session.now}</p>
-          <p className="mt-1 text-2xl font-bold">{t.session.allDone}</p>
+          <p className="mt-1 text-2xl font-semibold">{t.session.allDone}</p>
         </section>
       ) : null}
 
@@ -452,7 +449,7 @@ function Player({ session }: { session: Session }) {
             >
               <div className="mb-2 flex items-start gap-1 px-1">
                 <div className="min-w-0 flex-1">
-                  <h2 id={`uebung-${exercise.id}`} className="text-lg font-bold">
+                  <h2 id={`uebung-${exercise.id}`} className="text-lg font-semibold">
                     {exercise.nameSnapshot}
                   </h2>
                   <p className="text-sm text-muted">
@@ -649,8 +646,8 @@ function Player({ session }: { session: Session }) {
         </Button>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 glass-blur border-t border-line bg-panel px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
-        <div className="mx-auto flex max-w-[1200px] gap-2">
+      <div className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+        <div className="mx-auto flex max-w-content gap-2">
           {current && currentExercise ? (
             <Button
               size="lg"

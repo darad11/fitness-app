@@ -1,9 +1,10 @@
 # Designsystem, Sitemap und Screen-Katalog
 
-Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens umgesetzt und automatisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
+Stand: 21.10.2026 · Version 0.5 (Marke FORM, Rebranding F1 und F2) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens umgesetzt und automatisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
 
 ## Änderungen gegenüber Version 0.1
 
+- Version 0.5 (Marke FORM, Rebranding F1 und F2): Farben nach D-308, Komponenten, Maße und Schrift nach D-314, Breakpoints und Inhaltsbreite an einer Stelle (D-313), Tab-Leiste mit Glas in FORM-Farben (D-312). Werte, Kontraste und Abweichungen in `brand-tokens.md`; die Abschnitte 3 bis 5 sind angepasst, die Farbtabellen in Abschnitt 2 zeigen einen älteren Stand.
 - Farbtokens rechnerisch geprüft (WCAG-Kontrast und Diagrammpalette). Geändert: heller Akzent `#1F6FEB` → `#256abf`, Erfolgstext `#1B8A5A` → `#13794D`, Warntext `#B7791F` → `#976200`; im dunklen Modus getrennte Tokens für Akzentfläche und Akzenttext. Neu: Rahmen für Eingabefelder mit mindestens 3:1.
 - Diagrammregeln neu nach einer validierten Methode (Abschnitt 8).
 - Navigation im MVP ohne Ernährung (D-211); Sitemap und Screen-Katalog mit Ausbaustufen, Routen, Zuständen und AK-Verweisen.
@@ -22,7 +23,7 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Status: Sitemap und Screen-Ka
 
 ## 2. Farbtokens
 
-Glas-Look (D-272): `--surface`, `--surface-2`, `--border`, `--accent-soft` und die übrigen „-soft“-Töne sind durchscheinend (`#rrggbbaa`) und liegen auf einem Verlauf `--bg-top` → `--bg` → `--bg-bottom` mit den Lichtflecken `--glow-1` bis `--glow-3`. `--panel` ist die fast deckende Fläche für Dialoge und schwebende Leisten, `--glass-edge` die Lichtkante, `--ink` und `--ink-2` bilden das blaue Glas der wichtigsten Karte, `--selection-pill` und `--lens-*` die Tab-Leiste. Die Werte stehen in `src/shared/ui/tokens.css`; `tokens.test.ts` prüft den Kontrast auf jeder sichtbaren Mischfarbe. Die Tabellen unten zeigen den Stand vor D-272 und gelten für Namen und Verwendung weiter.
+Marke FORM (D-308, D-314): Die Werte stehen in `src/shared/ui/tokens.css`, die Zuordnung alt → neu, die gemessenen Kontraste und die bewussten Abweichungen in `brand-tokens.md`. Flächen sind deckend: Nacht `--bg`, Bühne und Sheets `--bg-elevated` (`--ink`, `--panel`), Karten `--surface`, Chips und Eingaben `--surface-2`; Trennung über den 1-px-Rand `--border`, keine Schatten, keine Verläufe. Glas gibt es nur in der Tab-Leiste (`--tabbar-glass`, D-312). Lime (`--accent`) ist der einzige Akzent; Blau (`--action`) nur im aktiven Workout. `tokens.test.ts` prüft den Kontrast. Die Tabellen unten zeigen den Stand vor D-272 und gelten nur noch für Namen und Verwendung.
 
 ### 2.1 Oberfläche
 
@@ -81,35 +82,35 @@ Weitere Diagramm-Tokens:
 
 ### 2.3 Umsetzung
 
-Tokens als CSS-Variablen auf `:root`; Tailwind liest sie über `@theme`. Der dunkle Modus gilt bei `@media (prefers-color-scheme: dark)` für `:root:not([data-theme="light"])` und immer bei `:root[data-theme="dark"]`, damit die manuelle Wahl in beide Richtungen gewinnt. Der `body` erhält ausdrücklich eine Hintergrundfarbe (`--bg-bottom`); darüber liegt fest die Ebene `.app-backdrop` mit Verlauf und Lichtflecken (D-272).
+Tokens als CSS-Variablen auf `:root` (dunkel, ausgeliefert); die hellen Werte stehen unter `:root[data-theme='light']` und werden nicht ausgeliefert (D-311). Tailwind liest Farben, Maße, Radien, Schriftgrößen und Breakpoints über `@theme` in `src/app/styles.css`. Der `body` trägt `--bg-top` als Hintergrund (Farbe der Statusleiste); eine eigene Hintergrundebene mit Lichtflecken gibt es nicht mehr (D-314).
 
 ## 3. Typografie
 
-- Systemschrift: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` (San Francisco auf Apple-Geräten).
-- Skala: 12 (Hilfstext und Vorzeile `eyebrow`: Versalien, Laufweite 0,08 em, 600), 14 (Sekundär), 16 (Fließtext, Mindestgröße für Eingabefelder, damit iOS nicht zoomt), 18 (Listentitel), 22 (Abschnitt), 28 (Kennzahl), 40 (Display: Seitentitel, Laufweite −0,02 em, 700), 64 (Timer, Laufweite −0,02 em, 700).
-- Ziffern: Tabellenziffern (`tabular-nums`) in Satzzeilen, Tabellen, Achsen und im Timer, damit sich wechselnde Ziffern nicht verschieben; proportionale Ziffern für große, stehende Kennzahlen auf dem Dashboard.
-- Zeilenhöhe 1,4 für Text, 1,1 für große Zahlen. Gewicht 600 für Kennzahlen und Titel, 400 für Text.
+- Systemschrift: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif` (San Francisco auf Apple-Geräten); Inter ist nicht gebündelt (D-203).
+- Skala der Marke FORM (D-314): Headline 28/600 (`text-headline`, Seitentitel), Titel 20/600 (`text-title`, Karten und Dialoge), Text 16/400, Untertitel 13/400 (`text-caption`), Label 13/500 in Versalien mit 4 % Laufweite (`eyebrow`), Wert groß 40/600 (`text-value`), Timer 56/600 (`text-timer`), Tab-Beschriftung 11/500 (`text-tab`). Eingabefelder mindestens 16 px, damit iOS nicht zoomt.
+- Ziffern: Tabellenziffern in der ganzen App (`body`), damit sich wechselnde Ziffern nicht verschieben.
+- Zeilenhöhe 1,4 für Text, 1,05 bis 1,2 für große Zahlen und Titel. Gewicht 600 für Kennzahlen und Titel, 400 für Text, 500 für Labels.
 
 ## 4. Abstände, Radien, Schatten, Bewegung
 
-- 4-pt-Raster: 4, 8, 12, 16, 24, 32, 48. Seitenrand mobil 16, Tablet 24, Desktop 32.
-- Radien 12 (Eingaben), 20 (Karten), 28 (Sheets), Pille (Schaltflächen, Chips, Etiketten).
-- Schatten: Karten eine weiche Stufe (`--shadow-card`) statt Rahmen; schwebende Elemente (Sheet, Toast, Menü) eine kräftigere (`--shadow-float`).
-- Bewegung: 120 ms für Zustandswechsel, 240 ms für Sheets; bei `prefers-reduced-motion` nur Überblendungen.
+- Tokens statt fester Pixel (D-313, D-314): Seitenrand 20 (Handy), 24 (ab 48 rem), 32 (ab 64 rem); Innenabstand der Karte 16; Abstand zwischen Karten 12; Kopfzeile 56, Logo 30, Tab-Leiste 64, Eingabe 48, Primärknopf 52, Chip 36, Symbol-Kachel 40, kleinste Tippfläche 44. Größte Inhaltsbreite 75 rem (`max-w-content`). Breakpoints `xs` 22,5, `sm` 40, `md` 48, `lg` 64, `xl` 80 rem an einer Stelle (`@theme`), im Code über `src/shared/ui/breakpoints.ts`.
+- Radien 12 (Eingaben, Symbol-Kacheln), 14 (Knöpfe), 20 (Karten), 24 (Sheets und Dialoge), rund (Chips, Etiketten, runde Symbol-Knöpfe).
+- Keine Schatten: Karten, Sheets, Toasts und Menüs tragen den 1-px-Rand (`--shadow-card`, `--shadow-float` sind nur dieser Rand). Kein Glas außer der Tab-Leiste (D-312).
+- Bewegung: 120 ms für Zustandswechsel, 240 ms für Sheets; gedrückte Knöpfe 92 % Deckkraft; bei `prefers-reduced-motion` ohne Animation.
 - Sichere Bereiche: `env(safe-area-inset-*)` für Tab-Leiste, Aktionsleiste des Trainings und Sheets.
 
 ## 5. Komponenten (MVP)
 
 | Ebene | Komponenten |
 |---|---|
-| Basis | Button (primär, sekundär, leise, destruktiv, auf der Bühne), IconButton, Input, NumberField (Dezimalkomma, ±-Schritte), DurationField, Select, SegmentedControl, Switch, Checkbox, Tag, Badge („Beispiel", „Vorschau"), Tooltip, Skeleton |
-| Struktur | Card, Section mit Titel und Aktion, List und ListItem, Table (Desktop und Tabellenansicht der Diagramme), Sheet (mobil, unten) und Dialog (Desktop), Tabs, Accordion, Toast mit „Rückgängig", Banner (global) |
-| Navigation | TabBar (mobil), Sidebar (Desktop), TopBar mit Titel und Aktionen, Back-Navigation |
+| Basis | Button (primär Lime, sekundär Ghost mit Rand, leise als Text in Lime, destruktiv als Ghost in Rot; Größen 40, 48, 52 px), IconButton (rund, 44 px, optional in einer Kachel card-2), Eingabe `field` (card-2, Rand 3:1, Radius 12, Fokus-Rand Lime), NumberField (Dezimalkomma, ±-Schritte), DurationField, Select, SegmentedControl (als Chips), Switch, Checkbox, Chip (36 px, aktiv Lime), Tag, Badge („Beispiel", „Aktiv"), Tooltip, Skeleton |
+| Struktur | Card (Fläche, 1-px-Rand, Titel oder Label), Bühne (`bg-elevated`), Section mit Titel und Aktion, List und ListItem (Listenzeile mit Symbol-Kachel 40 px), Table (Desktop und Tabellenansicht der Diagramme), Sheet (mobil, unten, Griff, wegwischbar) und Dialog (Desktop), Tabs, Accordion, Toast mit „Rückgängig", Banner (global) |
+| Navigation | TabBar (mobil, Glas mit Linse, beim Scrollen ein Kreis rechts), Sidebar (Desktop, deckend), Kopfzeile mit Kachel-F und Wortmarke, Back-Navigation |
 | Training | SetRow (Typ, Vorwert, Gewicht, Wiederholungen oder Zeit, Status), ExerciseBlock, RestTimerBar und RestTimerFull, SessionHeader (Dauer, Fortschritt), SessionBanner („Training läuft"), ExercisePicker, ReplaceSheet, ProgramWeekView, DayEditor, SetSchemeEditor |
-| Fortschritt | StatTile (mit Vorzeile, auch auf der Bühne), Meter, ProgressRing, Sparkline, WeightChart, ExerciseProgressChart, ChartTable |
-| System | EmptyState, ErrorState, RecoveryScreen, UpdateBanner, InstallGuide, PreviewBadge, StorageStatus, ImportWizard |
+| Fortschritt | StatTile (Label und Wert), Meter (Balken 6 px), ProgressRing (SVG, Strich 10 px, Lime auf card-2), Sparkline, WeightChart, ExerciseProgressChart, ChartTable |
+| System | EmptyState (Symbol in `text-faint`, ein Satz, eine Aktion), ErrorState, RecoveryScreen, UpdateBanner, InstallGuide, PreviewBadge, StorageStatus, ImportWizard |
 
-Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, gedrückt, deaktiviert, Laden, Fehler.
+Jede Komponente hat definierte Zustände: Standard, Hover (nur Zeiger), Fokus, gedrückt, deaktiviert, Laden, Fehler. Screenshots je Komponente: `docs/screens/komponenten/` (erzeugt mit `node tools/screenshots.mjs komponenten`).
 
 ## 6. Touch und Desktop
 

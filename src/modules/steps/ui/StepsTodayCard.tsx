@@ -96,7 +96,7 @@ export function StepsTodayCard() {
       {summary ? (
         <>
           <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-            <p className="text-3xl font-bold tracking-tight tabular-nums">
+            <p className="text-value font-semibold tabular-nums">
               {steps(summary.todaySteps)}
               <span className="text-base font-medium tracking-normal text-muted">
                 {` ${t.steps.unit}`}

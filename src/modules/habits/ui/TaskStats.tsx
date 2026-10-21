@@ -110,7 +110,7 @@ export function TaskStats({
 
   return (
     <section aria-labelledby="aufgaben-fortschritt" className="grid grid-cols-1 gap-4">
-      <h2 id="aufgaben-fortschritt" className="mt-2 text-xl font-bold">
+      <h2 id="aufgaben-fortschritt" className="mt-2 text-xl font-semibold">
         {ts.title}
       </h2>
       <SegmentedControl

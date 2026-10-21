@@ -31,8 +31,7 @@ import { NutrientTable } from './NutrientTable';
 import { ApplyTemplateDialog, templateKcal } from './TemplateDialogs';
 import { useFoodCatalog } from './useFoodCatalog';
 
-const INPUT =
-  'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 const RECENT_DAYS = 30;
 const RECENT_LIMIT = 12;
 

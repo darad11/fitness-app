@@ -279,7 +279,7 @@ export function BodyWeightPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const id = deleted;

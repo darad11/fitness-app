@@ -33,8 +33,7 @@ import { grams } from './format';
 import { IngredientPicker } from './IngredientPicker';
 import { NutrientTable } from './NutrientTable';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Rezept anlegen oder bearbeiten (M7, D-267). */
 export function RecipeEditPage() {
@@ -300,7 +299,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
             onChange={(event) => {
               setSteps(event.target.value);
             }}
-            className="w-full rounded-input border border-line bg-surface p-3 text-base text-fg"
+            className="field w-full p-3"
           />
         </Card>
 

@@ -10,8 +10,7 @@ import { NOTE_MAX, type Session, type SetValues } from '../model/session';
 import { editCompletedSession, InvalidEditError } from '../service/historyService';
 import { InvalidValueError } from '../service/sessionService';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 function toLocalInput(iso: string): string {
   const date = new Date(iso);
@@ -166,7 +165,7 @@ export function HistoryEditForm({
               onChange={(e) => {
                 setNotes(e.target.value);
               }}
-              className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+              className="field w-full"
             />
           </Labeled>
         </div>
@@ -189,7 +188,7 @@ export function HistoryEditForm({
                 onChange={(event) => {
                   setExerciseNotes((all) => ({ ...all, [exercise.id]: event.target.value }));
                 }}
-                className="mb-3 w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+                className="field mb-3 w-full"
               />
             </Labeled>
             <ol className="grid gap-2">

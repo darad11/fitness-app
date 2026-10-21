@@ -36,8 +36,7 @@ import {
   updateFood,
 } from '../service/nutritionService';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Eigenes Lebensmittel anlegen oder bearbeiten (S-19, NU-10, NU-19, NU-22, NU-23). */
 /** Vorbelegung aus dem Scan (Navigation mit `state`), geprüft, weil der Verlauf sie speichert. */

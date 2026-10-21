@@ -114,7 +114,7 @@ export function TemplatesPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const template = deleted;

@@ -16,14 +16,9 @@ export function AppLayout() {
   );
   return (
     <div className="app-shell min-h-dvh lg:flex">
-      <div aria-hidden="true" className="app-backdrop">
-        <span />
-        <span />
-        <span />
-      </div>
       <a
         href="#inhalt"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-pill focus:bg-surface focus:shadow-float focus:px-4 focus:py-3"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-button focus:bg-surface focus:shadow-float focus:px-4 focus:py-3"
       >
         {t.nav.skipToContent}
       </a>
@@ -38,18 +33,18 @@ export function AppLayout() {
         <main
           id="inhalt"
           tabIndex={-1}
-          className="page-gutters mx-auto w-full max-w-[1200px] flex-1 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] outline-none lg:pt-8 lg:pb-10"
+          className="page-gutters mx-auto w-full max-w-content flex-1 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] outline-none lg:pt-8 lg:pb-10"
         >
           {fullscreen ? null : (
             // Kopfzeile (D-286, D-310): Kachel-F plus Wortmarke als Bild aus public/brand, 30 px
             // hoch, Tippfläche 44 px; am Desktop zeigt die Seitenleiste das Logo. Führt zu „Heute“.
-            <div className="-mt-6 mb-2 flex h-14 items-center lg:hidden">
-              <Link to="/heute" className="flex min-h-11 items-center rounded-input">
+            <div className="-mt-6 mb-2 flex h-header items-center lg:hidden">
+              <Link to="/heute" className="flex min-h-touch items-center rounded-input">
                 <img
                   src="/brand/logo-kopfzeile-dunkel.svg"
                   alt={t.app.brandLink}
                   height={30}
-                  className="h-[30px] w-auto"
+                  className="h-logo w-auto"
                 />
               </Link>
             </div>

@@ -10,8 +10,7 @@ import { changeEntry, deleteEntry } from '../service/nutritionService';
 import { describeAmount, entryNameAndBrand } from './format';
 import { NutrientTable } from './NutrientTable';
 
-const INPUT =
-  'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Eintrag bearbeiten (NU-15): Menge bzw. Portionen, Mahlzeit, Löschen. */
 export function EntryDialog({

@@ -8,6 +8,7 @@ import { cn } from '@/shared/lib/cn';
 import {
   Button,
   Card,
+  chipClasses,
   IconButton,
   Meter,
   PageHeader,
@@ -45,8 +46,7 @@ import {
 } from '../service/shoppingService';
 
 const ts = tShopping;
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
+const INPUT = 'field w-full min-w-0';
 type View = 'list' | 'categories';
 const VIEW_OPTIONS = (['list', 'categories'] as const).map((value) => ({
   value,
@@ -309,7 +309,7 @@ export function ShoppingListPage() {
                     onClick={() => {
                       submit(name);
                     }}
-                    className="flex min-h-10 items-center gap-1 rounded-pill border border-line bg-surface-2 px-3 text-sm text-fg"
+                    className={chipClasses(false, 'gap-1 px-3 font-medium')}
                   >
                     <Plus aria-hidden="true" className="size-3.5" />
                     {name}
@@ -405,7 +405,7 @@ export function ShoppingListPage() {
                       onClick={() => {
                         run(() => addItem(rt, entry));
                       }}
-                      className="inline-flex min-h-10 items-center gap-1 rounded-pill border border-line-input px-3 text-sm font-medium hover:bg-surface-2"
+                      className={chipClasses(false, 'gap-1 px-3 font-medium')}
                     >
                       <Plus aria-hidden="true" className="size-4 text-muted" />
                       {entry.name}
@@ -501,7 +501,7 @@ export function ShoppingListPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const current = notice;

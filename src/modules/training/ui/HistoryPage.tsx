@@ -34,7 +34,7 @@ export function HistoryPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 setUndoVisible(false);

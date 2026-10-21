@@ -14,17 +14,11 @@ import { useOpenShoppingCount } from '@/modules/shopping';
 import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
+import { buttonClasses, isAtLeast, TileIcon, useSwipeToClose } from '@/shared/ui';
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
 
-const WIDE = '(min-width: 48rem)';
-
-function isWide(): boolean {
-  return typeof window.matchMedia === 'function' && window.matchMedia(WIDE).matches;
-}
-
-/** Pille unter „Gegessen“ (D-272): gleich für „Ziel“ und „Meine Küche“. */
-export const PILL =
-  'inline-flex min-h-11 items-center justify-center gap-2 rounded-pill bg-surface-2 px-5 text-[15px] font-semibold text-fg shadow-[inset_0_0_0_1px_var(--border),inset_0_1px_0_var(--glass-edge)] transition-colors duration-120 hover:bg-surface';
+/** Knopf unter „Gegessen“: Sekundärknopf (Ghost) der Marke FORM, gleich für „Ziel“ und „Meine Küche“ (D-314). */
+export const PILL = buttonClasses('secondary', 'md');
 
 interface Entry {
   to: string;
@@ -42,11 +36,9 @@ function Entries({ entries, onPick }: { entries: readonly Entry[]; onPick: () =>
           <Link
             to={to}
             onClick={onPick}
-            className="flex min-h-14 items-center gap-3 rounded-[14px] px-2.5 py-2 hover:bg-surface-2 focus-visible:bg-surface-2"
+            className="flex min-h-14 items-center gap-3 rounded-button px-2.5 py-2 hover:bg-surface-2 focus-visible:bg-surface-2"
           >
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-[12px] bg-accent-soft text-accent-ink shadow-[inset_0_0_0_1px_var(--border)]">
-              <Icon aria-hidden="true" className="size-5" />
-            </span>
+            <TileIcon icon={Icon} />
             <span className="min-w-0 flex-1">
               <span className="block font-semibold">{title}</span>
               <span className="block text-sm text-muted">{hint}</span>
@@ -54,7 +46,7 @@ function Entries({ entries, onPick }: { entries: readonly Entry[]; onPick: () =>
             {count !== undefined ? (
               <span className="text-sm text-muted tabular-nums">{count}</span>
             ) : null}
-            <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-muted" />
+            <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-faint" />
           </Link>
         </li>
       ))}
@@ -112,6 +104,8 @@ export function KitchenMenu() {
   const close = () => {
     setOpen(null);
   };
+  // Am Griff und am Kopf nach unten wegwischen (D-314); Tipp daneben und Escape schließen weiter.
+  const swipe = useSwipeToClose(close);
 
   // Menü: schließt bei Klick daneben und mit Escape, Fokus zurück auf den Knopf.
   useEffect(() => {
@@ -149,7 +143,7 @@ export function KitchenMenu() {
         aria-expanded={open !== null}
         aria-controls={`${id}-panel`}
         onClick={() => {
-          setOpen((current) => (current ? null : isWide() ? 'menu' : 'sheet'));
+          setOpen((current) => (current ? null : isAtLeast('md') ? 'menu' : 'sheet'));
         }}
         className={cn(PILL, 'w-full md:w-auto')}
       >
@@ -161,7 +155,7 @@ export function KitchenMenu() {
           id={`${id}-panel`}
           role="group"
           aria-label={tk.title}
-          className="glass-blur absolute top-full left-1/2 z-20 mt-2 w-[22rem] -translate-x-1/2 rounded-[22px] bg-panel p-2 shadow-float"
+          className="absolute top-full left-1/2 z-20 mt-2 w-menu max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-card bg-panel p-2 shadow-float"
         >
           <Entries entries={entries} onPick={close} />
         </div>
@@ -178,23 +172,25 @@ export function KitchenMenu() {
           // Tipp auf den abgedunkelten Rand schließt.
           if (event.target === event.currentTarget) close();
         }}
-        className="glass-blur mt-auto mb-0 w-full max-w-none rounded-t-sheet bg-panel p-0 text-fg shadow-float backdrop:bg-scrim"
+        className="mt-auto mb-0 w-full max-w-none rounded-t-sheet bg-panel p-0 text-fg shadow-float transition-transform duration-240 backdrop:bg-scrim"
       >
         {open === 'sheet' ? (
           <div className="px-4 pt-2.5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)]">
-            <div aria-hidden="true" className="mx-auto mb-3 h-1.5 w-10 rounded-pill bg-line" />
-            <h2 id={`${id}-title`} className="text-xl font-bold">
-              {tk.title}
-            </h2>
-            <p className="mb-3 text-sm text-muted">{tk.subtitle}</p>
-            <div className="rounded-card bg-surface-2 p-1.5 shadow-[inset_0_0_0_1px_var(--border)]">
+            <div {...swipe} className="touch-none select-none">
+              <div aria-hidden="true" className="mx-auto mb-3 h-1 w-9 rounded-pill bg-faint" />
+              <h2 id={`${id}-title`} className="text-title font-semibold">
+                {tk.title}
+              </h2>
+              <p className="mb-3 text-sm text-muted">{tk.subtitle}</p>
+            </div>
+            <div className="rounded-card bg-surface p-1.5 shadow-card">
               <Entries entries={entries} onPick={close} />
             </div>
             <div className="mt-3 grid grid-cols-2 gap-2">
               <Link
                 to="/ernaehrung/lebensmittel/neu"
                 onClick={close}
-                className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-pill bg-accent px-4 font-semibold text-on-accent"
+                className={buttonClasses('primary', 'md', 'gap-1.5 px-4')}
               >
                 <Plus aria-hidden="true" className="size-4" />
                 {tk.newFood}

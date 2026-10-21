@@ -14,7 +14,7 @@ import {
 } from '../service/mealTemplateService';
 import { describeAmount, kcal } from './format';
 
-const INPUT = 'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg';
+const INPUT = 'field w-full min-w-0';
 
 export function templateKcal(template: MealTemplate): number {
   return template.items.reduce((sum, item) => sum + (item.nutrients.kcal ?? 0), 0);

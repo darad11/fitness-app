@@ -16,6 +16,8 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F1 Tokens | FORM-Farben unter den bestehenden Token-Namen, Dunkel erzwungen, helle Tokens nur angelegt, keine Schatten und kein Glas, Label 13/500, tabellarische Ziffern; `brand-tokens.md` mit Zuordnung alt → neu, Kontrasten und Abweichungen; Einstellung „Darstellung“ entfällt | D-308, Q-23 | umgesetzt |
 | A Icons und Manifest | Assets aus `form-app-assets.zip` unter `public/icons/`, `public/brand/`, `public/splash/`; Manifest „FORM“ mit Nacht-Farben und vier Icons; Favicon-Links; altes Hantel-Motiv und `pnpm icons` entfernt | D-309 | umgesetzt |
 | B Kopfzeile | Kachel-F plus Wortmarke als `<img>` (30 px, Tippfläche 44 px) auf jeder Seite, Seitenleiste mit Kachel-F bzw. Logo, Begrüßung nach Tageszeit ohne Uhr, `app.name` „FORM“ | D-310 | umgesetzt |
+| Antworten des Produktinhabers | nur Dunkel (Q-23), Tab-Leiste mit Glas und Linse in FORM-Farben, breitenunabhängig bauen | D-311 bis D-313 | festgehalten |
+| F2 Komponenten | Maße, Radien, Schrift, Breakpoints und Inhaltsbreite als Tokens; Knopf, Karte, Chip (neu), Ring, Balken, Tab-Leiste (Glas in FORM-Farben), Listenzeile, Eingabe (`field`), Sheet (Griff, wegwischbar), Toast, Leerzustand; Symbole mit 1,75 px; Gewicht 600 | D-314 | umgesetzt, Screenshots in `docs/screens/komponenten/` |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -41,6 +43,13 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Geändert: `src/app/layout/AppLayout.tsx` (Kopfzeile 56 px mit `logo-kopfzeile-dunkel.svg`, `alt="FORM – zu Heute"`), `src/app/layout/Sidebar.tsx` (eingeklappt `kachel-f.svg`, ausgeklappt das Logo), `src/app/styles.css` (`.sidebar-tile`), `src/modules/dashboard/ui/TodayPage.tsx` (Begrüßung ab 5, 11 und 18 Uhr; Uhrzeit entfernt), `src/shared/i18n/de.ts` (`app.name` „FORM“, `app.brandLink` „FORM – zu Heute“); Tests `src/app/app.test.tsx`, `e2e/shell.spec.ts` (Selektor auf das Logo-Bild, Höhe 30 px, Tippfläche ≥ 44 px).
 - Nicht geändert: Die Anmeldung zeigt noch das App-Icon (Paket C), die Tab-Leiste und die Komponenten folgen mit F2.
 
+### F2 Komponenten
+
+- Neu: `src/shared/ui/Chip.tsx` (`Chip`, `chipClasses`, `tagClasses`), `src/shared/ui/breakpoints.ts` (`BREAKPOINTS`, `minWidth`, `isAtLeast`), Tests `src/app/breakpoints.test.ts` (CSS und Code nennen dieselben Breakpoints, keine festen Breakpoints neben dem Theme) und `src/shared/ui/dialog.test.tsx` (Blatt wegwischen), `tools/screenshots.mjs` (Screenshots je Komponente, später der Screens), Bilder `docs/screens/komponenten/*.png`.
+- Geändert, gemeinsam: `src/app/styles.css` (Tokens für Breakpoints, Breiten, Abstände, Höhen, Schrift, Radien; Klasse `field`; `.stage` statt `.hero-glass`; Hintergrundebene, `.glass-blur` und Lichtflecken entfernt; Seitenleiste deckend; Tab-Leiste mit eigenem Glas), `src/shared/ui/tokens.css` (`--tabbar-glass`, `--tabbar-edge`, `--tabbar-blur`; `--lens-fill` transparent; `--bg-bottom`, `--glow-*`, `--glass-edge`, `--glass-blur` entfernt), `tokens.test.ts` (Tab-Beschriftung auf dem Glas), `Button.tsx`, `Card.tsx`, `Badge.tsx`, `Banner.tsx`, `Dialog.tsx`, `EmptyState.tsx`, `LinkList.tsx` (`TileIcon`), `PageHeader.tsx`, `SearchField.tsx`, `SegmentedControl.tsx`, `SelectField.tsx`, `Stat.tsx` (`StatTile`, `Meter`, `ProgressRing`), `Toast.tsx`, `index.ts`; `vitest.config.ts` (liest `styles.css` als Text); `src/app/layout/AppLayout.tsx`, `Sidebar.tsx`, `TabBar.tsx`, `src/app/errors/ErrorViews.tsx`.
+- Geändert in den Modulen (nur Komponenten, keine Seitenstruktur): 19 lokale Klassen für Eingabefelder durch `field` ersetzt (Ernährung, Training, Wasser, Aufgaben, Ziele, Körper, Schritte, Einkaufsliste, Übungen); Bühnen-Karten `tone="stage"` und Primärknöpfe statt der entfallenen Variante „auf der Bühne“ (Heute, Training, Programm, Zusammenfassung, Ernährung, Ziele); zehn „Rückgängig“-Knöpfe in Hinweisen als leise Knöpfe; Kalorien-Ring auf den FORM-Ring (`MacroRing.tsx`), Makro-Balken als `Meter`; Schnellmengen beim Wasser, Wochentage der Aufgaben, Vorschläge der Einkaufsliste als Chips; „Meine Küche“ mit Ghost-Knöpfen, Symbol-Kacheln und wegwischbarem Blatt; Kopf und Fußleiste des Players und die Leiste „Training läuft“ ohne Glas; Titel und Werte mit Gewicht 600.
+- Nicht geändert: Anordnung und Inhalte der Seiten (F3), Texte (F4), Anmeldung (C).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -63,6 +72,10 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | `ada0da4`: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | 21.10.2026 | ohne Befund; Startansicht 226,5 KB von 250 KB (gzip) |
 | `ada0da4`: `pnpm test:e2e` (Chromium, lokal) | 21.10.2026 | 171 bestanden, 4 übersprungen, 1 fehlgeschlagen: `network-a11y.spec.ts` „alle Anfragen gehen an die eigene Adresse“ (Handy), `/mehr/daten` zeigte unter Volllast nach 5 s keine Überschrift. Einzeln wiederholt: 2 bestanden (13,6 s) |
 | CI auf PR #49 nach `ada0da4` (Lauf 39685415804) | 21.10.2026 | Checks grün; E2E Chromium: 172 bestanden, 4 übersprungen (3,0 min); E2E WebKit: 166 bestanden, 10 übersprungen (6,4 min); keine Wiederholungen nötig |
+| F2: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 21.10.2026 | ohne Befund |
+| F2: `pnpm test:coverage`, danach `pnpm test` | 21.10.2026 | 843 Tests in 92 Dateien bestanden (vorher 834 in 91: neu 6 Prüfungen der Tab-Beschriftung auf dem Glas, 3 Breakpoint-Tests); mit `dialog.test.tsx` (Blatt wegwischen, 4 Tests) 847 Tests in 93 Dateien bestanden |
+| F2: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 227,1 KB von 250 KB (gzip) |
+| F2: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026 | 172 bestanden, 4 übersprungen, 0 fehlgeschlagen (5,1 min); nach der letzten Änderung an „Meine Küche“ `nutrition.spec.ts`, `shopping.spec.ts`, `tabbar.spec.ts` wiederholt: 19 bestanden, 3 übersprungen. WebKit läuft in GitHub Actions |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -76,4 +89,4 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
 ## 6. Stand nach dieser Sitzung
 
-Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: F2, F3, C, D, F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); `brand-tokens.md` liegt als Entwurf vor und wird mit E abgeschlossen; Screenshots in `docs/screens/` folgen mit E.
+Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: F3, C, D, F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); `brand-tokens.md` wird mit E abgeschlossen; Screenshots der Screens in `docs/screens/` folgen mit E.

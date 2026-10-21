@@ -42,7 +42,7 @@ export function WeeklyGoalCard({
         </Link>
       }
     >
-      <p className="text-2xl font-bold tabular-nums">
+      <p className="text-2xl font-semibold tabular-nums">
         {t.goals.weeklyProgress(progress.done, progress.target)}
       </p>
       <Meter

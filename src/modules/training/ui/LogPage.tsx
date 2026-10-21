@@ -12,8 +12,7 @@ import { InvalidLogError, logActivity, logStrength } from '../service/logService
 
 type Mode = 'strength' | 'activity';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 function toLocalInput(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');
@@ -165,7 +164,7 @@ function ActivityForm() {
             onChange={(e) => {
               setNotes(e.target.value);
             }}
-            className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+            className="field w-full"
           />
         </Field>
         {error ? (
@@ -318,7 +317,7 @@ function StrengthForm() {
               onChange={(e) => {
                 setNotes(e.target.value);
               }}
-              className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+              className="field w-full"
             />
           </Field>
         </div>

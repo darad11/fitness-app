@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type PointerEvent, type ReactNode } from 'react';
 import { cn } from '../lib/cn';
 
 export interface DialogProps {
@@ -14,9 +14,18 @@ export interface DialogProps {
   variant?: 'confirm' | 'sheet';
 }
 
+/** Ab dieser Strecke nach unten schließt das Wegwischen das Blatt. */
+const SWIPE_CLOSE_PX = 80;
+/** Erst ab dieser Bewegung gilt eine Berührung als Wischen (ein Tipp bleibt ein Tipp). */
+const SWIPE_SLOP_PX = 6;
+
 /**
  * Modaler Dialog über das native `<dialog>`: Fokusfalle, Escape und Hintergrund-Sperre liefert
  * der Browser (Safari ab 15.4). Der Titel benennt den Dialog für Screenreader.
+ *
+ * Marke FORM (D-314): Fläche `bg-elevated`, ohne Glas und Schatten, 1-px-Rand. Das Blatt hat oben
+ * Radius 24 und einen Griff (36 × 4); am Griff und am Kopf lässt es sich nach unten wegwischen.
+ * Wischen ist nie der einzige Weg: Schließen-Knopf und Escape bleiben (design-system.md Abschnitt 6).
  */
 export function Dialog({
   open,
@@ -29,12 +38,14 @@ export function Dialog({
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const swipe = useSwipeToClose(onClose);
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
     if (open && !dialog.open) dialog.showModal();
     if (!open && dialog.open) dialog.close();
   }, [open]);
+  const sheet = variant === 'sheet';
   return (
     <dialog
       ref={ref}
@@ -44,37 +55,39 @@ export function Dialog({
         onClose();
       }}
       className={cn(
-        'glass-blur bg-panel text-fg shadow-float backdrop:bg-scrim',
-        variant === 'sheet'
-          ? 'mt-auto mb-0 h-[85dvh] w-full max-w-none rounded-t-sheet p-0 md:m-auto md:h-[80dvh] md:max-w-xl md:rounded-sheet'
-          : 'm-auto w-[min(28rem,calc(100%-2rem))] rounded-sheet p-5',
+        'bg-panel text-fg shadow-float backdrop:bg-scrim',
+        sheet
+          ? 'mt-auto mb-0 h-[85dvh] w-full max-w-none rounded-t-sheet p-0 transition-transform duration-240 md:m-auto md:h-[80dvh] md:max-w-sheet md:rounded-sheet'
+          : 'm-auto w-[calc(100%-2rem)] max-w-dialog rounded-sheet p-page',
       )}
     >
       {open ? (
-        <div className={cn('flex flex-col', variant === 'sheet' && 'h-full')}>
+        <div className={cn('flex flex-col', sheet && 'h-full')}>
           <div
+            {...(sheet ? swipe : {})}
             className={cn(
-              'flex items-start gap-3',
-              variant === 'sheet' && 'border-b border-line px-4 pt-4 pb-3',
+              'flex flex-col',
+              sheet && 'touch-none border-b border-line px-card pt-2 pb-3 select-none',
             )}
           >
-            <h2 id={titleId} className="flex-1 pt-2 text-lg font-semibold">
-              {title}
-            </h2>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label={closeLabel}
-              className="-mr-2 flex size-11 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2"
-            >
-              <X aria-hidden="true" className="size-5" />
-            </button>
+            {sheet ? (
+              <span aria-hidden="true" className="mx-auto mb-2 h-1 w-9 rounded-pill bg-faint" />
+            ) : null}
+            <div className="flex items-start gap-3">
+              <h2 id={titleId} className="flex-1 pt-2 text-title font-semibold">
+                {title}
+              </h2>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label={closeLabel}
+                className="-mr-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2"
+              >
+                <X aria-hidden="true" className="size-5" />
+              </button>
+            </div>
           </div>
-          <div
-            className={cn(
-              variant === 'sheet' ? 'min-h-0 flex-1 overflow-y-auto px-4 py-4' : 'mt-2',
-            )}
-          >
+          <div className={cn(sheet ? 'min-h-0 flex-1 overflow-y-auto px-card py-4' : 'mt-2')}>
             {children}
           </div>
           {actions ? <div className="mt-5 flex flex-wrap justify-end gap-2">{actions}</div> : null}
@@ -82,4 +95,61 @@ export function Dialog({
       ) : null}
     </dialog>
   );
+}
+
+/**
+ * Wegwischen eines Blatts nach unten: Das Blatt (das umgebende `<dialog>`) folgt dem Finger; ab
+ * {@link SWIPE_CLOSE_PX} schließt es, sonst gleitet es zurück. Der Zeiger wird erst ab
+ * {@link SWIPE_SLOP_PX} gefangen, damit ein Tipp auf „Schließen“ ein Klick bleibt.
+ */
+export function useSwipeToClose(onClose: () => void): {
+  onPointerDown: (event: PointerEvent<HTMLElement>) => void;
+  onPointerMove: (event: PointerEvent<HTMLElement>) => void;
+  onPointerUp: (event: PointerEvent<HTMLElement>) => void;
+  onPointerCancel: (event: PointerEvent<HTMLElement>) => void;
+} {
+  const drag = useRef<{ id: number; startY: number; dy: number; captured: boolean } | null>(null);
+  const sheetOf = (event: PointerEvent<HTMLElement>) => event.currentTarget.closest('dialog');
+  const reset = (event: PointerEvent<HTMLElement>) => {
+    const sheet = sheetOf(event);
+    if (sheet) {
+      // Übergang und Lage zusammen zurücksetzen: Das Blatt gleitet animiert an seinen Platz.
+      sheet.style.removeProperty('transition');
+      sheet.style.removeProperty('transform');
+    }
+    drag.current = null;
+  };
+  return {
+    onPointerDown: (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      drag.current = { id: event.pointerId, startY: event.clientY, dy: 0, captured: false };
+    },
+    onPointerMove: (event) => {
+      const current = drag.current;
+      const sheet = sheetOf(event);
+      if (current?.id !== event.pointerId || !sheet) return;
+      current.dy = Math.max(0, event.clientY - current.startY);
+      if (!current.captured && current.dy > SWIPE_SLOP_PX) {
+        current.captured = true;
+        // Während des Wischens folgt das Blatt dem Finger ohne Verzögerung.
+        sheet.style.transition = 'none';
+        try {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        } catch {
+          // Zeiger schon weg
+        }
+      }
+      if (current.captured) sheet.style.transform = `translateY(${String(current.dy)}px)`;
+    },
+    onPointerUp: (event) => {
+      const current = drag.current;
+      if (current?.id !== event.pointerId) return;
+      const close = current.captured && current.dy > SWIPE_CLOSE_PX;
+      reset(event);
+      if (close) onClose();
+    },
+    onPointerCancel: (event) => {
+      reset(event);
+    },
+  };
 }

@@ -22,8 +22,7 @@ import {
 import { InvalidTargetError, setNutritionTarget } from '../service/nutritionService';
 import { dayDate, kcal } from './format';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Tagesziele (S-26, NU-01, NU-17, D-262): selbst festlegen oder Vorschlag übernehmen. */
 export function TargetsPage() {
@@ -146,7 +145,7 @@ function TargetsForm({
       <div className="grid gap-4">
         {current ? (
           <Card
-            tone="ink"
+            tone="stage"
             eyebrow={tNutrition.currentTarget}
             title={`${kcal(fmt, current.kcal)} ${tNutrition.units.kcal}`}
           >
@@ -272,7 +271,7 @@ function TargetsForm({
           {suggestion ? (
             <div className="mt-4 rounded-card bg-surface-2 p-4">
               <p className="eyebrow text-muted">{tNutrition.suggestion}</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums">
+              <p className="mt-1 text-2xl font-semibold tabular-nums">
                 {kcal(fmt, suggestion.values.kcal)} {tNutrition.units.kcal}
               </p>
               <p className="text-muted">

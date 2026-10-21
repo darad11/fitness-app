@@ -65,7 +65,7 @@ export function SetRow(props: SetRowProps) {
         <span
           aria-hidden="true"
           className={cn(
-            'flex size-8 shrink-0 items-center justify-center rounded-pill text-sm font-bold tabular-nums',
+            'flex size-8 shrink-0 items-center justify-center rounded-pill text-sm font-semibold tabular-nums',
             done
               ? 'bg-success-soft text-success'
               : set.type === 'warmup'

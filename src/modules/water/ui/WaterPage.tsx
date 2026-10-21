@@ -31,8 +31,7 @@ import { WaterCard } from './WaterCard';
 import { WaterChart } from './WaterChart';
 
 const tw = tWater;
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 type Period = '7' | '30';
 const PERIOD_OPTIONS = (['7', '30'] as const).map((value) => ({
   value,
@@ -349,7 +348,7 @@ export function WaterPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const entry = removed;

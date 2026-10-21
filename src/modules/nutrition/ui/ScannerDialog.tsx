@@ -5,8 +5,7 @@ import { Button, Dialog } from '@/shared/ui';
 import { normalizeBarcode } from '../calc/barcode';
 import { createDetector } from './barcodeDetector';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 type Camera = 'starting' | 'running' | 'denied' | 'unsupported' | 'error';
 

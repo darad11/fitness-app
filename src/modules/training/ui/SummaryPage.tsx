@@ -59,13 +59,15 @@ export function SummaryPage() {
   return (
     <>
       <PageHeader eyebrow={t.summary.headline} title={t.summary.title} subtitle={subtitle} />
-      <Card tone="ink" eyebrow={t.summary.duration}>
-        <p className="text-timer font-bold tabular-nums">{formatClock(session.durationSec ?? 0)}</p>
+      <Card tone="stage" eyebrow={t.summary.duration}>
+        <p className="text-timer font-semibold tabular-nums">
+          {formatClock(session.durationSec ?? 0)}
+        </p>
         <dl className="mt-5 grid grid-cols-3 gap-3">
-          <StatTile tone="ink" label={t.summary.exercises} value={fmt.number(exercises.length)} />
-          <StatTile tone="ink" label={t.summary.sets} value={fmt.number(progress.done)} />
+          <StatTile tone="soft" label={t.summary.exercises} value={fmt.number(exercises.length)} />
+          <StatTile tone="soft" label={t.summary.sets} value={fmt.number(progress.done)} />
           <StatTile
-            tone="ink"
+            tone="soft"
             label={t.summary.volume}
             value={fmt.number(Math.round(sessionVolume(session)))}
             unit="kg"

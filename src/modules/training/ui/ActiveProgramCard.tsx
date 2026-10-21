@@ -31,12 +31,12 @@ export function ActiveProgramCard({
   const templateLink = programLink(template);
   if (!next) {
     return (
-      <Card tone="ink" eyebrow={eyebrow} title={t.programs.finishedTitle} className={className}>
+      <Card tone="stage" eyebrow={eyebrow} title={t.programs.finishedTitle} className={className}>
         <p className="-mt-2 max-w-md text-on-ink-muted">
           {t.programs.finishedText(template.name, progress.total)}
         </p>
         <div className="mt-5 flex flex-wrap gap-2">
-          <ButtonLink to={templateLink} variant="onInk">
+          <ButtonLink to={templateLink} variant="primary" size="lg">
             {t.training.showProgram}
           </ButtonLink>
           {children}
@@ -46,7 +46,7 @@ export function ActiveProgramCard({
   }
   const byId = new Map(exercises.map((exercise) => [exercise.id, exercise]));
   return (
-    <Card tone="ink" eyebrow={eyebrow} title={next.name} className={className}>
+    <Card tone="stage" eyebrow={eyebrow} title={next.name} className={className}>
       <p className="-mt-2 text-on-ink-muted">
         {t.programs.dayOf(next.index + 1, progress.total)} · {template.name}
       </p>
@@ -57,14 +57,13 @@ export function ActiveProgramCard({
         ) : null;
       })()}
       <Meter
-        tone="onInk"
         className="mt-3"
         label={t.programs.dayOf(next.index + 1, progress.total)}
         value={progress.total > 0 ? next.index / progress.total : 0}
       />
       <div className="mt-5 flex flex-wrap gap-2">
         <Button
-          variant="onInk"
+          size="lg"
           disabled={busy}
           onClick={() => {
             onStart(
@@ -81,7 +80,7 @@ export function ActiveProgramCard({
           <Play aria-hidden="true" className="size-5" />
           {t.training.startNext}
         </Button>
-        <ButtonLink to={templateLink} variant="quiet" className="text-on-ink">
+        <ButtonLink to={templateLink} variant="quiet">
           {t.training.chooseOtherDay}
         </ButtonLink>
         {children}

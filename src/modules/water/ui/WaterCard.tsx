@@ -6,7 +6,7 @@ import { logError, useDb } from '@/shared/db';
 import { tWater } from '@/shared/i18n/de-water';
 import { cn } from '@/shared/lib/cn';
 import type { DayKey } from '@/shared/lib/time';
-import { Button, Card, IconButton, Skeleton, Toast } from '@/shared/ui';
+import { Button, Card, chipClasses, IconButton, Skeleton, Toast } from '@/shared/ui';
 import { dayTotal, entriesOf, parseAmount, progress } from '../calc/water';
 import { useQuickAmounts, useWaterEntries, useWaterGoals } from '../data/useWater';
 import type { WaterEntry } from '../model/waterEntry';
@@ -14,10 +14,9 @@ import { addWater, deleteWater, restoreWater } from '../service/waterService';
 import { formatMl } from './format';
 
 const tw = tWater;
-const QUICK =
-  'flex min-h-12 min-w-0 items-center justify-center rounded-pill bg-surface-2 text-sm font-semibold text-fg tabular-nums shadow-[inset_0_0_0_1px_var(--border),inset_0_1px_0_var(--glass-edge)] transition-colors duration-120 hover:bg-surface active:bg-surface';
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+/** Schnellmengen als Chips (D-314); beim Antippen kurz Lime. */
+const QUICK = chipClasses(false, 'w-full px-2 active:bg-accent active:text-on-accent');
+const INPUT = 'field w-full min-w-0';
 
 /**
  * Wasser eines Tages (D-289): Menge, Ziel, Rest, Balken mit Zielmarke, vier Schnellmengen mit
@@ -58,7 +57,7 @@ export function WaterCard({
       to={`/ernaehrung/wasser?tag=${day}`}
       aria-label={tw.details}
       title={tw.details}
-      className="inline-flex size-11 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
+      className="inline-flex size-touch items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
     >
       <ChevronRight aria-hidden="true" className="size-5" />
     </Link>
@@ -84,7 +83,7 @@ export function WaterCard({
   return (
     <Card title={title} action={action} className={className}>
       <p className="flex flex-wrap items-baseline gap-x-2" aria-live="polite">
-        <span className="text-3xl font-extrabold tracking-tight tabular-nums">
+        <span className="text-value font-semibold tabular-nums">
           {formatMl(fmt, state.totalMl)}
         </span>
         <span className="text-muted tabular-nums">{tw.ofGoal(formatMl(fmt, state.goalMl))}</span>
@@ -109,7 +108,7 @@ export function WaterCard({
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.min(100, Math.round(state.ratio * 100))}
-        className="relative mt-4 h-3"
+        className="relative mt-4 h-1.5"
       >
         <div className="h-full overflow-hidden rounded-pill bg-meter-track">
           <div
@@ -123,7 +122,7 @@ export function WaterCard({
         {/* Zielmarke: am Ende, solange das Ziel offen ist; danach mittendrin. */}
         <span
           aria-hidden="true"
-          className="absolute -top-1 h-5 w-0.5 -translate-x-1/2 rounded-pill bg-fg/60"
+          className="absolute -top-1 h-3.5 w-0.5 -translate-x-1/2 rounded-pill bg-fg/60"
           style={{ left: `${String(Math.min(mark, 99.5))}%` }}
         />
       </div>
@@ -238,7 +237,7 @@ export function WaterCard({
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const entry = removed;

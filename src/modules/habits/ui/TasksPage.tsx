@@ -4,8 +4,16 @@ import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { tWater } from '@/shared/i18n/de-water';
-import { cn } from '@/shared/lib/cn';
-import { Button, Card, IconButton, PageHeader, Skeleton, Switch, Toast } from '@/shared/ui';
+import {
+  Button,
+  Card,
+  chipClasses,
+  IconButton,
+  PageHeader,
+  Skeleton,
+  Switch,
+  Toast,
+} from '@/shared/ui';
 import { weekdaysOn } from '../calc/streak';
 import { loadWaterReached } from '@/modules/water';
 import { HABIT_NAME_MAX, type Habit, type HabitAutoDone } from '../model/habit';
@@ -26,8 +34,7 @@ import { useHabitHistory } from './useHabitHistory';
 import { useTodayTasks } from './useTodayTasks';
 import type { InsightPeriod } from '../calc/insights';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
+const INPUT = 'field w-full min-w-0';
 
 interface Editing {
   id: string;
@@ -232,12 +239,7 @@ export function TasksPage() {
                                       if (next.length === 0) return;
                                       setEditing({ ...editing, weekdays: next });
                                     }}
-                                    className={cn(
-                                      'flex h-10 min-w-0 flex-1 items-center justify-center rounded-pill text-sm font-semibold transition-colors duration-120',
-                                      on
-                                        ? 'bg-accent text-on-accent'
-                                        : 'border border-line-input text-muted',
-                                    )}
+                                    className={chipClasses(on, 'flex-1 px-0')}
                                   >
                                     {name}
                                   </button>
@@ -416,7 +418,7 @@ export function TasksPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const before = change.before;

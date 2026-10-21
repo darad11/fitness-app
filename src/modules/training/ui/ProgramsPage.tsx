@@ -173,7 +173,7 @@ function DeletedToast() {
       }}
       action={
         <Button
-          variant="onInk"
+          variant="quiet"
           size="sm"
           onClick={() => {
             setVisible(false);
@@ -261,7 +261,7 @@ function NewProgramDialog({ onClose }: { onClose: () => void }) {
             onChange={(event) => {
               setName(event.target.value);
             }}
-            className="h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg"
+            className="field w-full"
           />
         </div>
         <div>
@@ -276,7 +276,7 @@ function NewProgramDialog({ onClose }: { onClose: () => void }) {
             onChange={(event) => {
               setDescription(event.target.value);
             }}
-            className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+            className="field w-full"
           />
         </div>
         {error ? (

@@ -10,8 +10,8 @@ export interface SearchFieldProps {
 }
 
 /**
- * Suchfeld mit sichtbarer Beschriftung und Knopf zum Leeren. Schrift 16 px, damit iOS nicht
- * zoomt; ohne Autokorrektur, weil Übungsnamen oft englisch oder abgekürzt sind.
+ * Suchfeld als Eingabefeld der Marke FORM (`field`) mit Lupe und Knopf zum Leeren. Schrift 16 px,
+ * damit iOS nicht zoomt; ohne Autokorrektur, weil Übungsnamen oft englisch oder abgekürzt sind.
  */
 export function SearchField({ label, value, onChange, placeholder, clearLabel }: SearchFieldProps) {
   const id = useId();
@@ -24,7 +24,7 @@ export function SearchField({ label, value, onChange, placeholder, clearLabel }:
       <div className="relative">
         <Search
           aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted"
+          className="pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2 text-muted"
         />
         <input
           ref={input}
@@ -40,7 +40,7 @@ export function SearchField({ label, value, onChange, placeholder, clearLabel }:
           onChange={(event) => {
             onChange(event.target.value);
           }}
-          className="min-h-12 w-full appearance-none rounded-pill bg-surface-2 pr-12 pl-11 text-base text-fg placeholder:text-muted [&::-webkit-search-cancel-button]:hidden"
+          className="field w-full appearance-none pr-12 pl-11 [&::-webkit-search-cancel-button]:hidden"
         />
         {value ? (
           <button
@@ -50,7 +50,7 @@ export function SearchField({ label, value, onChange, placeholder, clearLabel }:
               onChange('');
               input.current?.focus();
             }}
-            className="absolute top-0.5 right-0.5 flex size-11 items-center justify-center rounded-pill text-muted hover:text-fg"
+            className="absolute top-0.5 right-0.5 flex size-touch items-center justify-center rounded-input text-muted hover:text-fg"
           >
             <X aria-hidden="true" className="size-5" />
           </button>

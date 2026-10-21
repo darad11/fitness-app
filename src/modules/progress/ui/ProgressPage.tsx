@@ -155,7 +155,7 @@ export function ProgressPage() {
             {latestWeight && weightText ? (
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-2xl font-bold tabular-nums">{weightText}</p>
+                  <p className="text-2xl font-semibold tabular-nums">{weightText}</p>
                   <p className="text-sm text-muted">
                     {t.body.lastMeasured(fmt.dateTimeShort(new Date(latestWeight.measuredAt)))}
                     {changeText ? ` · ${changeText} ${t.body.periods['30d']}` : ''}

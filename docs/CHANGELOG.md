@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.39 · 21.10.2026 · Markenstrategie FORM
+
+| Datei | Änderung |
+|---|---|
+| `brand-form.md` | Neu: Markenstrategie mit Positionierung, Geschichte, Werten, Ton, Manifest, Claims, Erscheinungsbild, Logo-Entwürfen, Weg zur Community und kritischer Prüfung |
+| `brand/` | Neu: drei Logo-Entwürfe als SVG |
+| `decisions.md` | Q-22 Markenname und Logo |
+| `implementation-plan.md` | Punkt 56 |
+| `CLAUDE.md` | Verweis auf `brand-form.md` |
+
 ## Version 0.38 · 21.10.2026 · Übergabe
 
 | Datei | Änderung |

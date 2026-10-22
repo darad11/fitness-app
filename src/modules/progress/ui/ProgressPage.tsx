@@ -119,25 +119,36 @@ export function ProgressPage() {
               value={period}
               onChange={setPeriod}
             />
-            <dl className="mt-3 grid grid-cols-2 gap-stack md:grid-cols-4">
-              <StatTile label={t.progress.sessions} value={fmt.number(totals.sessions)} />
-              <StatTile label={t.progress.minutes} value={fmt.number(totals.minutes)} unit="min" />
-              <StatTile label={t.progress.volume} value={fmt.number(totals.volumeKg)} unit="kg" />
-              <StatTile
-                label={t.progress.kcal}
-                value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
-                unit={totals.kcal === null ? undefined : 'kcal'}
-                hint={
-                  totals.kcal === null
-                    ? totals.sessions > 0
-                      ? t.progress.kcalNone
-                      : undefined
-                    : totals.withoutKcal > 0
-                      ? t.progress.kcalPartial(totals.withoutKcal)
-                      : t.progress.kcalHint
-                }
-              />
-            </dl>
+            {/* Zeitraum ohne Training: „Pause“ statt Nullwerten (D-319). */}
+            {totals.sessions === 0 ? (
+              <dl className="mt-3">
+                <StatTile label={t.progress.sessions} value={t.progress.pause} />
+              </dl>
+            ) : (
+              <dl className="mt-3 grid grid-cols-2 gap-stack md:grid-cols-4">
+                <StatTile label={t.progress.sessions} value={fmt.number(totals.sessions)} />
+                <StatTile
+                  label={t.progress.minutes}
+                  value={fmt.number(totals.minutes)}
+                  unit="min"
+                />
+                <StatTile label={t.progress.volume} value={fmt.number(totals.volumeKg)} unit="kg" />
+                <StatTile
+                  label={t.progress.kcal}
+                  value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
+                  unit={totals.kcal === null ? undefined : 'kcal'}
+                  hint={
+                    totals.kcal === null
+                      ? totals.sessions > 0
+                        ? t.progress.kcalNone
+                        : undefined
+                      : totals.withoutKcal > 0
+                        ? t.progress.kcalPartial(totals.withoutKcal)
+                        : t.progress.kcalHint
+                  }
+                />
+              </dl>
+            )}
           </section>
 
           <Card

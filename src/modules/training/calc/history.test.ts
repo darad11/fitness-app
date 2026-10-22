@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { Session, SessionExercise, SessionSet } from '../model/session';
-import { buildHistoryRows, groupByWeek, previousValues, summarizeSession } from './history';
+import {
+  buildHistoryRows,
+  groupByWeek,
+  pauseAfterGroup,
+  previousValues,
+  summarizeSession,
+} from './history';
 
 const HLC = '2026-10-18T09:00:00.000Z-0000-a1b2c3d4';
 const EX = '11111111-1111-4111-8111-111111111111';
@@ -96,6 +102,17 @@ describe('Verlauf: Wochen und Kennzahlen (AK-HIS-01)', () => {
       ['2026-10-05', 1],
     ]);
     expect(groupByWeek([])).toEqual([]);
+  });
+
+  it('beschriftet eine Lücke ab 14 Tagen ohne Training als Pause (D-319)', () => {
+    const groups = groupByWeek([
+      { dayKey: '2026-11-02' },
+      { dayKey: '2026-10-19' }, // 14 Tage davor: Pause
+      { dayKey: '2026-10-12' }, // 7 Tage davor: keine Pause
+    ]);
+    expect(groups.map((_, i) => pauseAfterGroup(groups, i))).toEqual([true, false, false]);
+    const close = groupByWeek([{ dayKey: '2026-11-01' }, { dayKey: '2026-10-19' }]); // 13 Tage
+    expect(pauseAfterGroup(close, 0)).toBe(false);
   });
 
   it('fasst Dauer, Übungen, erledigte Sätze und Volumen ohne Aufwärmsätze zusammen', () => {

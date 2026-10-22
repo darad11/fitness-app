@@ -198,6 +198,7 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-DSH-06 | „Körpergewicht" zeigt den letzten Wert mit Datum, ab drei Einträgen einen Mini-Verlauf und, falls gesetzt, den Abstand zum Zielgewicht; ohne Daten erscheint „Gewicht erfassen" | BP-06, ON-18 | E | M3 |
 | AK-DSH-07 | Jede Zahl stammt aus gespeicherten Daten; fehlende Daten erzeugen einen Leerzustand mit passender Aktion, nie einen Platzhalterwert | CH-06 | E | M3 |
 | AK-DSH-08 | „Gewicht erfassen", „Training nachtragen" und „Training starten" sind mit höchstens zwei Tipps erreichbar | CH-07 | E | M3 |
+| AK-DSH-09 | Rückkehr-Flow nach D-319: Liegt der letzte Eintrag (Training, Tagesaufgabe, Ernährung, Wasser, Körpergewicht, Schritte) mindestens 14 Tage zurück, zeigt „Heute“ einmal je Rückkehr das Blatt „Schön, dass du da bist.“ mit „Ein Spaziergang“ (hebt die Schritte hervor), „Ein leichtes Training“ (geplantes oder freies Training mit dem Hinweis „Weniger Sätze sind heute in Ordnung.“) und „Nur reinschauen“; wegwischbar; kein Text nennt die Zahl der Tage; Verlauf und Fortschritt zeigen die Lücke als „Pause“ | – | U, E | Rebranding G |
 
 ### 6.9 Ziele, Profil, Einstellungen (AK-SET)
 

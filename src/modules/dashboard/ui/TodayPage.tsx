@@ -1,6 +1,6 @@
 import { Play } from 'lucide-react';
-import { Suspense } from 'react';
-import { Link } from 'react-router';
+import { Suspense, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import {
   changeInPeriod,
   inPeriod,
@@ -18,6 +18,8 @@ import {
   ActiveProgramCard,
   compareWithPrevious,
   formatClock,
+  LIGHT_QUERY,
+  nextDayInput,
   sessionDurationSec,
   sessionProgress,
   summarizeSession,
@@ -29,14 +31,17 @@ import {
   useStartSession,
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
+import { cn } from '@/shared/lib/cn';
 import { dayKey, hourIn } from '@/shared/lib/time';
 import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
+import { ReturnSheet, useReturnFlow, type ReturnChoice } from './ReturnFlow';
 
 /**
  * „Heute" (S-01): Bühne mit der laufenden Einheit, sonst „Heute geplant" aus dem aktiven
  * Programm (AK-DSH-02), sonst dem freien Einstieg; darunter Aufgaben, Ernährung, letztes
- * Training, Wochenziel und Gewicht. Status und „Diese Version“ entfallen (D-265).
+ * Training, Wochenziel und Gewicht. Status und „Diese Version“ entfallen (D-265). Nach einer
+ * Pause von 14 Tagen der Rückkehr-Flow (D-319), beim ersten Start ein Satz unter dem Gruß.
  */
 export function TodayPage() {
   const formatters = useFormatters();
@@ -64,6 +69,32 @@ export function TodayPage() {
       : 'neutral';
   const { start, error, busy } = useStartSession();
   const hour = hourIn(now, formatters.timeZone);
+  const navigate = useNavigate();
+  const flow = useReturnFlow(todayKey);
+  const steps = useRef<HTMLDivElement>(null);
+  const [stepsHighlighted, setStepsHighlighted] = useState(false);
+  const choose = (choice: ReturnChoice) => {
+    flow.close();
+    if (choice === 'walk') {
+      // Schritte-Karte zeigen und hervorheben; der Fokus folgt für Tastatur und Screenreader.
+      setStepsHighlighted(true);
+      requestAnimationFrame(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        steps.current?.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+        steps.current?.focus({ preventScroll: true });
+      });
+    } else if (choice === 'light') {
+      // Das geplante Training mit dem Hinweis „Weniger Sätze …“; ohne Plan ein freies Training.
+      if (active) {
+        void navigate(`/training/einheit/${active.id}${LIGHT_QUERY}`);
+      } else {
+        const input = program ? nextDayInput(program) : null;
+        void start(input ?? { source: 'free', title: t.training.freeTitle, exercises: [] }, {
+          light: true,
+        });
+      }
+    }
+  };
 
   return (
     <>
@@ -74,7 +105,9 @@ export function TodayPage() {
           {t.today.greetingLine(greetingFor(hour), profile?.displayName)}
         </h1>
         <p className="mt-2 text-muted">{formatters.weekdayDayMonth(today)}</p>
+        {flow.firstStart ? <p className="mt-3 text-lg">{t.today.firstStart}</p> : null}
       </header>
+      <ReturnSheet open={flow.open} onChoose={choose} />
       <div className="grid gap-stack md:grid-cols-2">
         {active === undefined || program === undefined ? (
           <div aria-busy="true" className="md:col-span-2">
@@ -165,9 +198,19 @@ export function TodayPage() {
         <Suspense fallback={null}>
           <WaterCard day={todayKey} />
         </Suspense>
-        <Suspense fallback={null}>
-          <StepsTodayCard />
-        </Suspense>
+        <div
+          ref={steps}
+          tabIndex={-1}
+          data-highlighted={stepsHighlighted || undefined}
+          className={cn(
+            'rounded-card',
+            stepsHighlighted && 'outline-2 outline-offset-4 outline-accent',
+          )}
+        >
+          <Suspense fallback={null}>
+            <StepsTodayCard />
+          </Suspense>
+        </div>
         <Suspense fallback={null}>
           <TasksCard />
         </Suspense>

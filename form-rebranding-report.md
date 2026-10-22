@@ -22,6 +22,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | C Anmeldung und Über die App | Anmeldung mit `logo-anmeldung-dunkel.svg`, Claim „FORM YOURSELF.“ und Unterzeile als Text, Felder und Knöpfe aus F2, ohne Karte, Glas und Lichtflecken; die eigenen Tokens der Anmeldung entfallen; „Über die App“ mit dem Logo ohne Claim | D-316 | umgesetzt, Screenshots `docs/screens/anmeldung.png` und `ueber-die-app.png` |
 | D Startbild | `apple-touch-startup-image` für 20 Bildschirmmaße von iPhone und iPad, je hochkant und quer: drei Bilder unverändert aus dem Markenpaket, 37 nach derselben Regel erzeugt (`tools/splash.mjs`); nicht im Vorab-Speicher des Service Workers; Manifest-Farben #0C1219 seit A | D-317 | umgesetzt; Kaltstart ohne weißen Blitz nur am Gerät prüfbar (T-IPH-M0 Schritt 5, steht aus) |
 | F4 Texte | Mikrotexte aus den Leitplanken (Abschluss „… Das warst du.“, Leerzustände Fortschritt und Verlauf, Ruhetag, Schritte-Ziel); keine Serie mehr in der Auswertung der Tagesaufgaben, dafür „Diese Woche x von y“; Programm „Winterprogramm 2026 (Nachbau)“ statt „Winter Arc“; Datenschutztext richtiggestellt; automatische Wortfeld-Prüfung | D-318 | umgesetzt |
+| G Rückkehr-Flow | Nach 14 Tagen ohne Eintrag einmal je Rückkehr das Blatt „Schön, dass du da bist.“ mit „Ein Spaziergang“, „Ein leichtes Training“ (Hinweis im Player) und „Nur reinschauen“; „Pause“ im Verlauf und im Fortschritt; Satz zum ersten Start | D-319 | umgesetzt; Push nach 21 Tagen nicht gebaut (keine Push-Infrastruktur) |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -87,6 +88,12 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Neu: `src/app/wording.test.ts` (Wortfeld-Prüfung), `training/ui/active-program-card.test.tsx` (Ruhetag). Angepasst: `insights.test.ts`, `days.test.ts`, `habitService.test.ts`, `task-stats.test.tsx`, `programProgress.test.ts`, `progress-ui.test.tsx`, `history-ui.test.tsx`, `player-ui.test.tsx`, `programs-ui.test.tsx`; E2E `session.spec.ts` (Abschlusszeile).
 - Dokumente: `docs/requirements.md` (AK-HAB-03, AK-HAB-04), `docs/feature-inventory.md` mit `feature-inventory.csv` (TH-04 ausgeschlossen).
 
+### G Rückkehr-Flow
+
+- Neu: `src/shared/lib/pause.ts` (`PAUSE_DAYS` = 14, `isPause`), `src/shared/db/activity.ts` (`lastEntryDay`: letzter Tag mit Eintrag in Training, Tagesaufgaben, Ernährung, Wasser, Körpergewicht), `src/modules/dashboard/calc/returnFlow.ts` (`shouldShowReturn`, `laterDay`), `src/modules/dashboard/ui/ReturnFlow.tsx` (`useReturnFlow`, `ReturnSheet`); Tests `activity.test.ts`, `returnFlow.test.ts`, E2E `e2e/return.spec.ts`.
+- Geändert: `dashboard/ui/TodayPage.tsx` (Blatt, Hervorhebung der Schritte, leichtes Training, Satz zum ersten Start), `steps/index.ts` (`lastStepsDay`, lädt den Zwischenspeicher erst bei Bedarf), `training/ui/useStartSession.ts` (`light`, `LIGHT_QUERY`), `training/ui/ActiveProgramCard.tsx` (`nextDayInput`), `training/ui/player/SessionPage.tsx` (Hinweis „Weniger Sätze sind heute in Ordnung.“), `training/calc/history.ts` (`pauseAfterGroup`) mit `HistoryPage.tsx` („Pause“ zwischen Wochen), `progress/ui/ProgressPage.tsx` („Pause“ statt Nullwerten), `src/shared/ui/Dialog.tsx` (Blatt nach Inhalt `fit`, Startfokus auf dem Titel `focusTitle`), `src/shared/i18n/de.ts` (Texte `returnFlow`, `today.firstStart`, `history.pause`, `progress.pause`), `tools/screenshots.mjs` (Rückkehr-Flow), Tests `history.test.ts`, `progress-ui.test.tsx`; `docs/requirements.md` (AK-DSH-09).
+- Nicht geändert: Daten der Tagesaufgaben (pausierte bleiben pausiert), Pläne und Sätze; kein neues Feld in der Datenbank (der Vermerk liegt in `meta`).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -135,6 +142,12 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F4: `pnpm test` | 22.10.2026 | 838 Tests in 96 Dateien bestanden (D: 814 in 94; neu `wording.test.ts` mit 25 und `active-program-card.test.tsx` mit 2 Tests, Wochenbild statt Serie in `insights.test.ts`, Ruhetag in `programProgress.test.ts`; entfallen die Tests der Serie, von `recentDays` und `pickDaily`). Gegenprobe der Wortfeld-Prüfung: mit dem alten Programmnamen schlägt „kein Text enthält „Winter Arc““ fehl |
 | F4: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Startansicht 227,3 KB von 250 KB (gzip) |
 | F4: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 173 bestanden, 4 übersprungen, 1 fehlgeschlagen (4,4 min): wieder `pwa.spec.ts` „… alle Bereiche starten offline“ (Handy), wieder `/training/vorlagen/full_body_ab` leer. Laut Trace scheiterte offline die Anfrage nach `assets/uuid-*.js` (Status -1), die übrigen Module kamen aus dem Service Worker; ohne dieses Modul startet die App nicht. Das ist dieselbe Stelle wie bei F3 und unabhängig von F4. Wiederholung `--repeat-each=3`: 18 bestanden. Ursachensuche als eigene Aufgabe vorgeschlagen; `session.spec.ts` mit der Abschlusszeile in beiden Projekten grün |
+| CI auf PR #49 nach F4 (`abf29b6`, Lauf 39699806899) | 22.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 168 bestanden, 10 übersprungen (4,8 min), die Abschlusszeile auch in WebKit grün |
+| G: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 22.10.2026 | ohne Befund |
+| G: `pnpm test` | 22.10.2026 | 846 Tests in 98 Dateien bestanden (F4: 838 in 96; neu `activity.test.ts` mit 3 und `returnFlow.test.ts` mit 4 Tests, „Pause“ in `history.test.ts` und `progress-ui.test.tsx`) |
+| G: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Service Worker 178 Einträge; Startansicht 228,7 KB von 250 KB (gzip; F4: 227,3 KB) |
+| G: `pnpm exec playwright test e2e/return.spec.ts` (neu) | 22.10.2026 | 6 bestanden: Blatt erst nach 14 Tagen, genau einmal, ohne Ziffern im Text, ohne axe-Verstöße; „Nur reinschauen“, „Ein Spaziergang“ (Schritte-Karte hervorgehoben und fokussiert), „Ein leichtes Training“ (Player mit Hinweis), erneutes Blatt erst nach neuem Eintrag und neuer Pause; „Pause“ im Verlauf |
+| G: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 179 bestanden, 4 übersprungen, 1 fehlgeschlagen (4,9 min): wieder `pwa.spec.ts` „… alle Bereiche starten offline“ (Handy), diesmal `/mehr/profil`; laut Trace scheiterte offline das Einstiegsmodul `assets/index-*.js` (Status -1). Damit ist es kein bestimmtes Modul und keine bestimmte Seite, sondern ein zufälliges Modul aus dem Service Worker unter Volllast. Wiederholung von `pwa.spec.ts` und `return.spec.ts` mit `--repeat-each=2`: 24 bestanden. In der CI war der Test in allen Läufen dieser Sitzung grün |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -148,4 +161,4 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
 ## 6. Stand nach dieser Sitzung
 
-Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: G, E (Reihenfolge laut Übergabe Abschnitt 6); Gerätetest T-IPH-M0 Schritt 5 (Startbild) beim Produktinhaber; `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt.
+Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: E (Reihenfolge laut Übergabe Abschnitt 6); Gerätetest T-IPH-M0 Schritt 5 (Startbild) beim Produktinhaber; `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt (Skript `tools/screenshots.mjs` kennt ihn schon).

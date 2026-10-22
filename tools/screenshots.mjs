@@ -280,6 +280,17 @@ async function screens() {
   // Fortschritt mit Daten (nach dem Training).
   await open('/fortschritt');
   await screen('fortschritt-mit-daten');
+
+  // Rückkehr-Flow (G): 19 Tage nach dem letzten Eintrag; danach „Ein leichtes Training“.
+  await at('2026-11-10T08:15:00+01:00');
+  await open('/heute');
+  const back = page.getByRole('dialog', { name: 'Schön, dass du da bist.' });
+  await back.waitFor();
+  await page.waitForTimeout(400);
+  await screen('rueckkehr-flow');
+  await back.getByRole('button', { name: 'Ein leichtes Training' }).click();
+  await page.getByRole('note').waitFor();
+  await screen('rueckkehr-leichtes-training');
 }
 
 await mkdir(OUT, { recursive: true });

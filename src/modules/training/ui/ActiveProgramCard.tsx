@@ -28,7 +28,7 @@ export function ActiveProgramCard({
   className,
   children,
 }: ActiveProgramCardProps) {
-  const { template, exercises, progress } = program;
+  const { template, progress } = program;
   const next = progress.next;
   const restDefaultSec = (useSettings() ?? SETTINGS_DEFAULTS).restDefaultSec;
   const templateLink = programLink(template);
@@ -47,7 +47,6 @@ export function ActiveProgramCard({
       </Card>
     );
   }
-  const byId = new Map(exercises.map((exercise) => [exercise.id, exercise]));
   const week = template.weeks[next.weekIndex];
   const day = week?.days[next.dayIndex];
   return (
@@ -71,15 +70,8 @@ export function ActiveProgramCard({
           className="w-full"
           disabled={busy}
           onClick={() => {
-            onStart(
-              planFromTemplateDay(
-                template,
-                next.weekIndex,
-                next.dayIndex,
-                (id) => byId.get(id),
-                'program',
-              ),
-            );
+            const input = nextDayInput(program);
+            if (input) onStart(input);
           }}
         >
           <Play aria-hidden="true" className="size-5" />
@@ -113,4 +105,18 @@ export function plannedEyebrow(program: ActiveProgram, now: Date): string {
 export function plannedRest(program: ActiveProgram, now: Date): boolean {
   const next = program.progress.next;
   return next ? isPlannedRest(program.template, next, now) : false;
+}
+
+/** Startdaten für den nächsten Trainingstag des aktiven Programms; `null`, wenn es keinen gibt. */
+export function nextDayInput(program: ActiveProgram): StartInput | null {
+  const next = program.progress.next;
+  if (!next) return null;
+  const byId = new Map(program.exercises.map((exercise) => [exercise.id, exercise]));
+  return planFromTemplateDay(
+    program.template,
+    next.weekIndex,
+    next.dayIndex,
+    (id) => byId.get(id),
+    'program',
+  );
 }

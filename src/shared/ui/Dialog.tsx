@@ -12,6 +12,10 @@ export interface DialogProps {
   actions?: ReactNode;
   /** Als Blatt von unten (z. B. Übungsauswahl) statt als Rückfrage in der Mitte. */
   variant?: 'confirm' | 'sheet';
+  /** Blatt nur so hoch wie sein Inhalt (höchstens 85 % der Höhe), z. B. für kurze Auswahl. */
+  fit?: boolean;
+  /** Startfokus auf dem Titel statt auf „Schließen“, z. B. für eine Begrüßung (D-319). */
+  focusTitle?: boolean;
 }
 
 /** Ab dieser Strecke nach unten schließt das Wegwischen das Blatt. */
@@ -35,16 +39,22 @@ export function Dialog({
   children,
   actions,
   variant = 'confirm',
+  fit = false,
+  focusTitle = false,
 }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const titleId = useId();
   const swipe = useSwipeToClose(onClose);
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
+    if (open && !dialog.open) {
+      dialog.showModal();
+      if (focusTitle) titleRef.current?.focus();
+    }
     if (!open && dialog.open) dialog.close();
-  }, [open]);
+  }, [open, focusTitle]);
   const sheet = variant === 'sheet';
   return (
     <dialog
@@ -57,7 +67,10 @@ export function Dialog({
       className={cn(
         'bg-panel text-fg shadow-float backdrop:bg-scrim',
         sheet
-          ? 'mt-auto mb-0 h-[85dvh] w-full max-w-none rounded-t-sheet p-0 transition-transform duration-240 md:m-auto md:h-[80dvh] md:max-w-sheet md:rounded-sheet'
+          ? cn(
+              'mt-auto mb-0 w-full max-w-none rounded-t-sheet p-0 transition-transform duration-240 md:m-auto md:max-w-sheet md:rounded-sheet',
+              fit ? 'h-fit max-h-[85dvh] md:max-h-[80dvh]' : 'h-[85dvh] md:h-[80dvh]',
+            )
           : 'm-auto w-[calc(100%-2rem)] max-w-dialog rounded-sheet p-page',
       )}
     >
@@ -74,7 +87,12 @@ export function Dialog({
               <span aria-hidden="true" className="mx-auto mb-2 h-1 w-9 rounded-pill bg-faint" />
             ) : null}
             <div className="flex items-start gap-3">
-              <h2 id={titleId} className="flex-1 pt-2 text-title font-semibold">
+              <h2
+                id={titleId}
+                ref={titleRef}
+                tabIndex={focusTitle ? -1 : undefined}
+                className={cn('flex-1 pt-2 text-title font-semibold', focusTitle && 'outline-none')}
+              >
                 {title}
               </h2>
               <button
@@ -87,7 +105,12 @@ export function Dialog({
               </button>
             </div>
           </div>
-          <div className={cn(sheet ? 'min-h-0 flex-1 overflow-y-auto px-card py-4' : 'mt-2')}>
+          <div
+            className={cn(
+              sheet ? 'min-h-0 flex-1 overflow-y-auto px-card py-4' : 'mt-2',
+              sheet && fit && 'pb-[calc(env(safe-area-inset-bottom)+1rem)]',
+            )}
+          >
             {children}
           </div>
           {actions ? <div className="mt-5 flex flex-wrap justify-end gap-2">{actions}</div> : null}

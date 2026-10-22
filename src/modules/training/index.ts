@@ -1,10 +1,15 @@
 // Öffentliche Schnittstelle des Moduls „training".
 export { trainingRoutes } from './routes';
 export { SessionBanner } from './ui/SessionBanner';
-export { ActiveProgramCard, plannedEyebrow, plannedRest } from './ui/ActiveProgramCard';
+export {
+  ActiveProgramCard,
+  nextDayInput,
+  plannedEyebrow,
+  plannedRest,
+} from './ui/ActiveProgramCard';
 export { useActiveProgram } from './ui/useActiveProgram';
 export { useActiveSession, useCompletedSessions, useHistoryRows } from './data/useSession';
-export { useStartSession } from './ui/useStartSession';
+export { LIGHT_QUERY, useStartSession } from './ui/useStartSession';
 export { sessionDurationSec, sessionProgress } from './calc/session';
 export { formatClock } from './calc/format';
 export { summarizeSession, type SessionSummary } from './calc/history';

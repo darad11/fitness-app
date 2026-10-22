@@ -59,6 +59,8 @@ export const de = {
     periodLegend: 'Zeitraum',
     periods: { week: 'Woche', month: 'Monat', '3m': '3 Monate', year: 'Jahr', all: 'Gesamt' },
     sessions: 'Trainings',
+    /** Zeitraum ohne Training (D-319): „Pause“ statt Nullwerten. */
+    pause: 'Pause',
     minutes: 'Minuten',
     volume: 'Volumen',
     kcal: 'Kalorien (Schätzung)',
@@ -263,6 +265,8 @@ export const de = {
     heroText: 'Starte ein freies Training oder wähle eine Vorlage.',
     /** Ruhetag laut Plan (Leitplanken Regel 6): als geplant, nicht als Lücke. */
     restPlanned: 'Heute ist Pause eingeplant.',
+    /** Erster Start ohne jeden Eintrag (Leitplanken, Mikrotexte; D-319). */
+    firstStart: 'Schön, dass du da bist. Wo fangen wir an?',
     startLink: 'Zum Training',
     chooseTemplate: 'Vorlage wählen',
     plannedEyebrow: 'Heute geplant',
@@ -273,6 +277,15 @@ export const de = {
     weightOpen: 'Verlauf',
     weightNone: 'Noch kein Gewicht erfasst. Trag es ein, dann siehst du hier den Trend.',
     runningText: (duration: string, progress: string) => `Seit ${duration} · ${progress}`,
+  },
+  /** Rückkehr-Flow (form-markenleitplanken.md Abschnitt 3, Texte final; D-319). */
+  returnFlow: {
+    title: 'Schön, dass du da bist.',
+    text: 'Eine Pause gehört dazu. Was ist dir heute möglich?',
+    walk: 'Ein Spaziergang',
+    light: 'Ein leichtes Training',
+    look: 'Nur reinschauen',
+    lightHint: 'Weniger Sätze sind heute in Ordnung.',
   },
   more: {
     title: 'Mehr',
@@ -387,6 +400,8 @@ export const de = {
     emptyText: 'Starte mit einer Vorlage oder einem freien Training.',
     chooseTemplate: 'Vorlage wählen',
     weekOf: (date: string) => `Woche ab ${date}`,
+    /** Lücke ab 14 Tagen ohne Training (D-319): „Pause“, ohne Zahl der Tage. */
+    pause: 'Pause',
     summary: (duration: string, sets: string, volume: string) =>
       `${duration} · ${sets} · ${volume}`,
     sets: (n: number) => (n === 1 ? '1 Satz' : `${n} Sätze`),

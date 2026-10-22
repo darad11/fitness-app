@@ -10,7 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import {
   describeExercise,
   ExercisePicker,
@@ -78,6 +78,9 @@ import { SetHeader, SetRow } from './SetRow';
 /** Trainingsplayer (S-07) unter `/training/einheit/:id`. */
 export function SessionPage() {
   const { id = '' } = useParams();
+  // Leichtes Training aus dem Rückkehr-Flow (D-319): nur ein Hinweis, Plan und Sätze bleiben.
+  const [search] = useSearchParams();
+  const light = search.get('leicht') === '1';
   const session = useSession(id);
   if (session === undefined) {
     return (
@@ -99,7 +102,7 @@ export function SessionPage() {
   if (session.status === 'completed') {
     return <Navigate to={`/training/einheit/${session.id}/zusammenfassung`} replace />;
   }
-  return <Player session={session} />;
+  return <Player session={session} light={light} />;
 }
 
 type Confirm =
@@ -195,7 +198,7 @@ function useLibrary(): ReadonlyMap<string, Exercise> {
   );
 }
 
-function Player({ session }: { session: Session }) {
+function Player({ session, light }: { session: Session; light: boolean }) {
   const rt = useDb();
   const navigate = useNavigate();
   const settings = useSettings() ?? SETTINGS_DEFAULTS;
@@ -404,6 +407,11 @@ function Player({ session }: { session: Session }) {
           />
         ) : null}
       </header>
+      {light ? (
+        <p role="note" className="mb-4 rounded-card bg-surface p-card shadow-card">
+          {t.returnFlow.lightHint}
+        </p>
+      ) : null}
 
       {!restTimer && current && currentExercise && currentName ? (
         <section aria-label={t.session.now} className="stage mb-4 rounded-card p-card text-fg">

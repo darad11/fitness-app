@@ -154,6 +154,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | E: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Startansicht 228,7 KB von 250 KB (gzip) |
 | E: `node tools/screenshots.mjs komponenten` und `screens` | 22.10.2026 | 11 Komponenten- und 17 Screen-Bilder erneuert, darunter neu `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`; durchgesehen |
 | E: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 180 bestanden, 4 übersprungen, 0 fehlgeschlagen (4,8 min) |
+| CI auf PR #49 nach E (`9e46ec3`, Lauf 39703722166) | 22.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 174 bestanden (4,2 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -177,7 +178,7 @@ Offen beim Produktinhaber:
 
 ## 6. Stand nach dieser Sitzung
 
-Alle Pakete der Übergabe sind umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G (`a91b255`) und E (Token-Abgleich, Screenshots, dieser Bericht). Entscheidungen D-307 bis D-320 in `docs/decisions.md`.
+Alle Pakete der Übergabe sind umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G (`a91b255`) und E (`9e46ec3`, Token-Abgleich, Screenshots, dieser Bericht). Entscheidungen D-307 bis D-320 in `docs/decisions.md`.
 
 Ergebnisse wie vorgesehen:
 

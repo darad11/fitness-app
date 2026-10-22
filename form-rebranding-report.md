@@ -148,10 +148,16 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | G: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Service Worker 178 Einträge; Startansicht 228,7 KB von 250 KB (gzip; F4: 227,3 KB) |
 | G: `pnpm exec playwright test e2e/return.spec.ts` (neu) | 22.10.2026 | 6 bestanden: Blatt erst nach 14 Tagen, genau einmal, ohne Ziffern im Text, ohne axe-Verstöße; „Nur reinschauen“, „Ein Spaziergang“ (Schritte-Karte hervorgehoben und fokussiert), „Ein leichtes Training“ (Player mit Hinweis), erneutes Blatt erst nach neuem Eintrag und neuer Pause; „Pause“ im Verlauf |
 | G: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 179 bestanden, 4 übersprungen, 1 fehlgeschlagen (4,9 min): wieder `pwa.spec.ts` „… alle Bereiche starten offline“ (Handy), diesmal `/mehr/profil`; laut Trace scheiterte offline das Einstiegsmodul `assets/index-*.js` (Status -1). Damit ist es kein bestimmtes Modul und keine bestimmte Seite, sondern ein zufälliges Modul aus dem Service Worker unter Volllast. Wiederholung von `pwa.spec.ts` und `return.spec.ts` mit `--repeat-each=2`: 24 bestanden. In der CI war der Test in allen Läufen dieser Sitzung grün |
+| CI auf PR #49 nach G (`a91b255`, Lauf 39702602270) | 22.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 174 bestanden, 10 übersprungen (6,1 min), darunter die 6 Tests des Rückkehr-Flows |
+| E: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 22.10.2026 | ohne Befund |
+| E: `pnpm test` | 22.10.2026 | 822 Tests in 98 Dateien bestanden (G: 846; 24 Kontrastprüfungen der entfallenen Tokens `--ink-2`, `--on-ink`, `--on-ink-muted` fallen weg, 12 je Modus) |
+| E: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Startansicht 228,7 KB von 250 KB (gzip) |
+| E: `node tools/screenshots.mjs komponenten` und `screens` | 22.10.2026 | 11 Komponenten- und 17 Screen-Bilder erneuert, darunter neu `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`; durchgesehen |
+| E: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 180 bestanden, 4 übersprungen, 0 fehlgeschlagen (4,8 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
-Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
+Keiner. Die P2-Befunde aus `audit-report.md` Abschnitt 5 betreffen Daten, Abgleich und Logik, nicht das Erscheinungsbild; sie bleiben offen und unangetastet. Berührt, aber nicht behoben: B-07 (Start aus einem Programm ohne Fehlerbehandlung im Klick); die Startdaten kommen jetzt aus einer Funktion (`nextDayInput`, G), die Fehlerbehandlung fehlt weiter. Aus P3 A-12 (toter Code) entfielen nebenbei `streak()`, `recentDays()` und `pickDaily()` (F4) sowie ungenutzte Tokens (C, E); die dort genannten Stellen (`sessionUi`, `listDocs` …) bleiben.
 
 ## 5. Antworten des Produktinhabers (21.10.2026) und offene Punkte
 
@@ -159,6 +165,24 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 - Tab-Leiste: Die schwebende Leiste bleibt mit Glas, Linse und dem Schrumpfen zum runden Knopf beim Scrollen; nur die Farben werden FORM. Das Glas der Tab-Leiste ist die einzige Ausnahme von „kein Glas“ (D-312). Der Plan aus F1, Linse und Schrumpfen entfallen zu lassen, ist damit verworfen.
 - Breitenunabhängig bauen: F2 und F3 ohne feste Pixelbreiten, Abstände und Breiten über Tokens, Breakpoints an einer Stelle, eine größte Inhaltsbreite; mehrspaltige Layouts für breite Bildschirme in einer eigenen Sitzung (D-313).
 
+Offen beim Produktinhaber:
+
+1. Durchsicht und Merge von PR #49 (`form-rebranding` → `main`).
+2. Name von Programm C: „Winterprogramm 2026 (Nachbau)“ statt „Winter Arc 2026 (Nachbau)“, weil „Winter Arc“ zu den gestrichenen Wörtern gehört (D-318). Bestätigen oder einen anderen Namen nennen.
+3. Serie in der Auswertung der Tagesaufgaben entfernt, „Diese Woche x von y“ stattdessen (D-318, ändert D-284). Die Leitplanken verlangen es ausdrücklich; die Entscheidung ist leicht umkehrbar, die Rechnung ist aber entfernt.
+4. Gerätetest T-IPH-M0 Schritt 5: App neu zum Home-Bildschirm hinzufügen, Kaltstart hochkant und quer, kein weißer Blitz (D-317).
+5. `brand-tokens.md` Abschnitt 5: App-Farben an die Markenfarben angleichen? Empfehlung: so lassen; Grundfläche, Akzent und Kachel sind schon gleich.
+6. Push nach 21 Tagen Pause ist nicht gebaut (keine Push-Infrastruktur, D-319).
+7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als eigene Aufgabe vorgeschlagen.
+
 ## 6. Stand nach dieser Sitzung
 
-Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: E (Reihenfolge laut Übergabe Abschnitt 6); Gerätetest T-IPH-M0 Schritt 5 (Startbild) beim Produktinhaber; `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt (Skript `tools/screenshots.mjs` kennt ihn schon).
+Alle Pakete der Übergabe sind umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G (`a91b255`) und E (Token-Abgleich, Screenshots, dieser Bericht). Entscheidungen D-307 bis D-320 in `docs/decisions.md`.
+
+Ergebnisse wie vorgesehen:
+
+- `brand-tokens.md` final: Abgleich mit `brand.css`, Zuordnung alt → neu je Token, nachgerechnete Kontraste, bewusste Abweichungen vom Konzept, offene Punkte (D-320).
+- Screenshots in `docs/screens/`: Heute, Training (mit Programmliste), aktives Workout, Abschluss, Übungsdetails, Ernährung, Fortschritt (leer und mit Daten), Mehr, Anmeldung, Über die App, Rückkehr-Flow (Blatt und leichtes Training), Tab-Leiste ausgeklappt und als runder Knopf; Komponenten in `docs/screens/komponenten/`.
+- Entwurfs-PR #49 (`form-rebranding` → `main`) mit CI für jeden Paket-Commit; gemergt wird erst nach Freigabe durch den Produktinhaber.
+
+Testergebnisse je Paket stehen wörtlich in Abschnitt 3. Nicht hier prüfbar und deshalb offen: Gerätetests am iPhone (Startbild, Anmeldung, Rückkehr-Flow am Gerät).

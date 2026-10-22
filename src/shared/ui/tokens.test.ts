@@ -142,10 +142,6 @@ describe('Farbtokens', () => {
       ['success', 'success-soft'],
       ['warning', 'warning-soft'],
       ['danger', 'danger-soft'],
-      ['on-ink', 'ink'],
-      ['on-ink', 'ink-2'],
-      ['on-ink-muted', 'ink'],
-      ['on-ink-muted', 'ink-2'],
     ])('Text --%s auf --%s erreicht 4,5:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(4.5);
     });
@@ -162,12 +158,6 @@ describe('Farbtokens', () => {
       ['action', 'bg'],
       ['success', 'ink'],
       ...['macro-protein', 'macro-carbs', 'macro-fat'].map((ring) => [ring, 'surface']),
-      ['on-ink', 'ink'],
-      ['on-ink', 'ink-2'],
-      ...['macro-protein', 'macro-carbs', 'macro-fat'].flatMap((ring) => [
-        [ring, 'ink'],
-        [ring, 'ink-2'],
-      ]),
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);
     });

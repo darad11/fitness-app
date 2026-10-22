@@ -1,9 +1,10 @@
 # Designsystem, Sitemap und Screen-Katalog
 
-Stand: 21.10.2026 · Version 0.5 (Marke FORM, Rebranding F1 und F2) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens umgesetzt und automatisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
+Stand: 22.10.2026 · Version 0.6 (Marke FORM, Rebranding abgeschlossen) · Status: Sitemap und Screen-Katalog für den MVP final (vorläufig freigegeben); Tokens umgesetzt und automatisch geprüft · Vorgänger: `archive/v0.1-phase-1/design-system.md`
 
 ## Änderungen gegenüber Version 0.1
 
+- Version 0.6 (Marke FORM, Rebranding F3 bis G und E, 22.10.2026): Screens nach dem Konzept (D-315), Anmeldung mit Logo und Claim (D-316), Startbilder (D-317), Texte nach den Leitplanken mit Wortfeld-Prüfung (D-318), Rückkehr-Flow (D-319), `brand-tokens.md` final (D-320). Neu in den Komponenten: `Tabs`, `MuscleTags`, Blatt nach Inhalt (`Dialog` mit `fit`) und Startfokus auf dem Titel (`focusTitle`). Entfallen: die Tokens der Anmeldung (`--login-*`, C) und `--ink-2`, `--on-ink`, `--on-ink-muted` (E). Ausgeliefert wird nur Dunkel (D-311).
 - Version 0.5 (Marke FORM, Rebranding F1 und F2): Farben nach D-308, Komponenten, Maße und Schrift nach D-314, Breakpoints und Inhaltsbreite an einer Stelle (D-313), Tab-Leiste mit Glas in FORM-Farben (D-312). Werte, Kontraste und Abweichungen in `brand-tokens.md`; die Abschnitte 3 bis 5 sind angepasst, die Farbtabellen in Abschnitt 2 zeigen einen älteren Stand.
 - Farbtokens rechnerisch geprüft (WCAG-Kontrast und Diagrammpalette). Geändert: heller Akzent `#1F6FEB` → `#256abf`, Erfolgstext `#1B8A5A` → `#13794D`, Warntext `#B7791F` → `#976200`; im dunklen Modus getrennte Tokens für Akzentfläche und Akzenttext. Neu: Rahmen für Eingabefelder mit mindestens 3:1.
 - Diagrammregeln neu nach einer validierten Methode (Abschnitt 8).
@@ -19,7 +20,7 @@ Stand: 21.10.2026 · Version 0.5 (Marke FORM, Rebranding F1 und F2) · Status: S
 3. **Ruhig und hochwertig.** Wenige Farben, ein Akzent, viel Weißraum, Hierarchie über Typografie und Abstand statt über Rahmen und Schatten. Kein Kachel-Dashboard mit gleich lauten Karten.
 4. **Ehrliche Daten.** Leere Zustände nennen den nächsten Schritt; keine Platzhalterwerte; Schätzungen sichtbar markiert; Trends erst ab ausreichender Datenlage.
 5. **Gleiche Sorgfalt auf dem Mac.** Seitenleiste, zweispaltige Ansichten, Tastaturkürzel, Hover als Ergänzung.
-6. **Hell als Standard, Dunkel gleichwertig.** Jedes Token ist für beide Modi definiert und geprüft.
+6. **Dunkel als Standard (D-311).** Ausgeliefert wird Dunkel; jedes Token ist für beide Modi definiert und geprüft, Hell bleibt angelegt.
 
 ## 2. Farbtokens
 
@@ -47,8 +48,7 @@ Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,
 | `--warning` | `#976200` | `#E0A943` | Hinweise, „geschätzt", Speicherwarnung | 5,2 / 8,2 |
 | `--danger` | `#C53030` | `#F26D6D` | Löschen, Fehler | 5,5 / 6,0 |
 | `--accent-soft`, `--success-soft`, `--warning-soft`, `--danger-soft` | `#e6edf9`, `#e2f3ea`, `#fbf0da`, `#fbe7e7` | `#15263f`, `#10302a`, `#33290f`, `#3a1c1f` | Tonflächen für Chips, Etiketten, Hinweise, aktiven Tab; Text darauf in der Vollfarbe | je ≥ 4,5 (Test) |
-| `--ink`, `--ink-2` | `#151b2b`, `#212a3f` | `#1a2030`, `#242c40` | Bühne: eine Karte je Seite für die wichtigste Information (laufendes Training, „Jetzt“, Pause, Abschluss); `--ink-2` für Kacheln auf der Bühne | – |
-| `--on-ink`, `--on-ink-muted` | `#f5f7fb`, `#aab3c5` | `#f1f3f8`, `#aab3c5` | Text auf der Bühne | ≥ 4,5 auf `--ink` und `--ink-2` (Test) |
+| `--ink` | `#151b2b` | `#1a2030` | früher Bühne; seit FORM nur noch Fläche hinter dem Kamerabild des Scanners (die Bühne nutzt `--bg-elevated`); `--ink-2`, `--on-ink` und `--on-ink-muted` entfallen (D-320) | – |
 | `--shadow-card`, `--shadow-float` | weich, 4 bis 6 % | 25 bis 45 % | Karten; schwebende Elemente (Sheet, Toast, Menü) | – |
 
 Statusfarben erscheinen nie allein: immer mit Symbol und Text.

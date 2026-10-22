@@ -1,6 +1,6 @@
 # FORM · Design-Tokens der App
 
-Stand: 21.10.2026 · Pakete F1 (D-308) und F2 (D-314), wird mit Paket E abgeschlossen · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 22.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
@@ -15,6 +15,24 @@ Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welc
 ## 2. Zuordnung alt → neu je Token
 
 Alt = Stand vor dem Rebranding (D-272, Glas-Look, Blau als Akzent). Neu = FORM. „Hell (angelegt)“ wird nicht ausgeliefert.
+
+### 2.0 Markenfarben aus `brand.css` und ihre App-Tokens
+
+Abgleich nach `handover-markenassets.md` Paket E: Die Variablen aus `form-app-assets/snippets/brand.css` stehen nicht doppelt im Code; die App nutzt ihre eigenen Token-Namen mit denselben Werten. Nichts wurde umgefärbt, um diese Tabelle zu erfüllen.
+
+| `brand.css` | Wert | App-Token (dunkel, ausgeliefert) | Wert in der App | Stand |
+|---|---|---|---|---|
+| `--form-green` | #C7FF46 | `--accent`, `--accent-ink`, `--focus`, `--macro-protein`, `--data-1` | #c7ff46 | gleich |
+| `--form-green-dark` | #4C7A00 | `--macro-carbs`, `--data-6`; hell (angelegt) `--accent`, `--accent-ink` | #4c7a00 | gleich |
+| `--form-ink` | #0C1219 | `--bg`, `--bg-top`, `--accent-fg`, `--action-fg`, `theme-color`, Manifest | #0c1219 | gleich |
+| `--form-tile` | #0D1118 | `--tile` | #0d1118 | gleich |
+| `--form-tile-border` | #3C424E | `--tile-border` | #3c424e | gleich |
+| `--form-white` | #FFFFFF | `--fg` (Text, Claim) | #f2f3f4 | Abweichung: Text in `text` #F2F3F4 aus der Übergabe Abschnitt 3; Weiß nur in den Logo-Dateien |
+| `.form-claim-sub` (Farbe) | #AAB2BE | `--fg-muted` | #aab2be | gleich |
+| `.form-claim` / `.form-claim-sub` | Inter 17/600, 13/400 | `.form-claim`, `.form-claim-sub` in `src/app/styles.css` | Systemschrift 17/600 mit 4 % Laufweite, 13/400 | Abweichung nur in der Schrift (Inter nicht gebündelt, D-203) |
+| `.form-logo-header` | Höhe 30 px | `--spacing-logo` (Kopfzeile) | 1,875 rem = 30 px | gleich |
+
+Grundfläche, Akzent und Kachel der App entsprechen damit den Markenfarben. Abweichungen gibt es nur bei Textweiß (#F2F3F4 statt #FFFFFF) und, aus Kontrastgründen, bei `danger`, `--border-input` und `--action-fg` (Abschnitt 4).
 
 ### 2.1 Flächen, Text, Ränder
 
@@ -54,8 +72,8 @@ Alt = Stand vor dem Rebranding (D-272, Glas-Look, Blau als Akzent). Neu = FORM. 
 | `--warning-soft` | #9762001c | #e0a94317 | #e0a33a1f | #e0a33a26 | – | Tonfläche |
 | `--danger` | #9a2121 | #ffb9b9 | #ef6368 | #bb292f | `danger` (Abweichung) | Löschen, Fehler |
 | `--danger-soft` | #c5303014 | #f26d6d17 | #e5484d10 | #e5484d0f | – | Tonfläche |
-| `--ink`, `--ink-2` | #0f1d3c, #1f56a0 | #142a4f, #1f4f8f | #10161f | #0c1219 | `bg-elevated` | Bühne (Hero-Karte); vorher Navy-Verlauf |
-| `--on-ink`, `--on-ink-muted` | #f5f7fb, #dfe7f4 | #f5f7fb, #c9d4e6 | #f2f3f4, #aab2be | #f2f3f4, #aab2be | `text`, `text-muted` | Text auf der Bühne |
+| `--ink` | #0f1d3c | #142a4f | #10161f | #0c1219 | `bg-elevated` | nur noch Fläche hinter dem Kamerabild des Scanners; die Bühne nutzt `--bg-elevated` (F2) |
+| `--ink-2`, `--on-ink`, `--on-ink-muted` | Navy-Verlauf und Text darauf | dto. | entfallen (E, D-320) | entfallen | – | seit F2 und F3 ohne Verwendung |
 | `--tile`, `--tile-border` (neu) | – | – | #0d1118, #3c424e | #0d1118, #3c424e | `tile`, `tile-border` | Kachel hinter dem F |
 
 ### 2.3 Makros und Diagramme
@@ -140,11 +158,11 @@ Aus `tokens.test.ts` bzw. demselben Rechenweg (WCAG 2.1, gerundet). Hintergrund 
 | `--accent-ink` (Lime) auf `--bg` / `--surface` | 16,0 / 14,7 | 4,5 |
 | `--accent-fg` (Nacht) auf `--accent` (Lime) | 15,97 | 4,5 |
 | `--action-fg` (Nacht) auf `--action` (Blau) | 4,8 | 4,5 |
-| `--success` / `--warning` / `--danger` auf `--surface` | 6,3 / 7,8 / 5,7 | 4,5 |
-| `--on-ink` / `--on-ink-muted` auf `--ink` | 16,3 / 8,5 | 4,5 |
+| `--success` / `--warning` / `--danger` auf `--surface` | 6,3 / 7,8 / 5,5 | 4,5 |
+| `--danger` auf `--surface-2` / `--bg` | 5,1 / 6,0 | 4,5 |
 | `--accent-ink` auf `--accent-soft` (über `--surface-2`) | 9,7 | 4,5 |
 | `--success` auf `--success-soft`, `--danger` auf `--danger-soft` (über `--surface-2`) | 4,8 / 4,8 | 4,5 |
-| `--accent` (Lime) auf `--bg` / `--surface` / `--meter-track` | 16,0 / 14,7 / 13,0 | 3 |
+| `--accent` (Lime) auf `--bg` / `--surface` / `--meter-track` | 16,0 / 14,7 / 13,6 | 3 |
 | `--action` auf `--surface` | 4,4 | 3 |
 | `--border-input` auf `--surface-2` | 3,4 | 3 |
 | `--macro-protein` / `--macro-carbs` / `--macro-fat` auf `--surface` | 14,7 / 3,4 / 7,8 | 3 |
@@ -182,4 +200,21 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Claim in Inter 17/600 (`brand.css`) | Systemschrift 17/600 | wie überall: Inter ist nicht gebündelt (D-203) |
 | Anmeldung als Glas-Karte mit Lichtflecken (D-270) | Logo, Claim und Felder direkt auf der Nacht-Fläche | kein Glas außer der Tab-Leiste (D-312), kein Glow in der App (Markenassets) |
 
-Weitere Einträge folgen mit den Paketen D bis G.
+| Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad) | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach derselben Regel | iOS zeigt ein Startbild nur bei genau passendem Bildschirm; das iPhone-Modell ist nicht bekannt (D-317) |
+| Mikrotext „Woche abgeschlossen: Diese Woche 3 von 4.“ | „x von y Trainings diese Woche“ | Formulierung aus AK-DSH-05 bleibt; der Sinn ist derselbe (F4, D-318) |
+| Mikrotext „Nutzer überzieht“ | nicht verwendet | Die App misst keine Belastung; ohne Grundlage keine Aussage (Leitplanken Regel 5) |
+| Push nach 21 Tagen Pause | nicht gebaut | Keine Push-Infrastruktur; Web Push braucht einen Server (D-319, `known-limitations.md`) |
+
+## 5. Offen beim Produktinhaber
+
+1. App-Farben an die Markenfarben angleichen? Grundfläche, Akzent und Kachel sind schon gleich (Abschnitt 2.0); offen sind nur Textweiß (#F2F3F4 statt #FFFFFF) und die Abweichungen aus Kontrastgründen in Abschnitt 4. Empfehlung: so lassen.
+2. Heller Modus: nicht ausgeliefert (D-311); die hellen Tokens und die `-hell`-Logos bleiben angelegt. Neu bewerten, wenn Nutzer danach fragen.
+3. Programm C heißt jetzt „Winterprogramm 2026 (Nachbau)“ (D-318), weil „Winter Arc“ zu den gestrichenen Wörtern gehört; die Quelle steht weiter in der Beschreibung. Bitte bestätigen oder einen anderen Namen nennen.
+4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App ohne weißen Blitz, hochkant und quer (D-317).
+
+## 6. Screenshots
+
+Alle Bilder dunkel, Handy 390 × 844 pt, erzeugt mit `node tools/screenshots.mjs screens` bzw. `komponenten` aus der gebauten App mit Testdaten im frischen Browserprofil (nie aus echten Daten).
+
+- Screens in `docs/screens/`: `heute.png` (und `heute-ganz.png`), `training.png`, `training-programme.png`, `aktives-workout.png`, `abschluss.png`, `uebungsdetails.png`, `ernaehrung.png`, `fortschritt.png` (leer) und `fortschritt-mit-daten.png`, `mehr.png`, `anmeldung.png`, `ueber-die-app.png`, `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`, Tab-Leiste `tab-leiste-ausgeklappt.png` und `tab-leiste-kreis.png`.
+- Komponenten in `docs/screens/komponenten/`: Knopf, Ring, Chip und Balken, Toast, Karte, Tab-Leiste ausgeklappt und als Kreis, Listenzeile, Eingabe, Leerzustand, Sheet.

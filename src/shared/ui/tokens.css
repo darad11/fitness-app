@@ -39,11 +39,8 @@
   --warning-soft: #e0a33a1f;
   --danger: #ef6368;
   --danger-soft: #e5484d10;
-  /* Bühne (wichtigste Karte einer Seite): eine Stufe heller als die Seite. */
+  /* Dunkle Fläche hinter dem Kamerabild des Scanners. Die Bühne nutzt `--bg-elevated`. */
   --ink: #10161f;
-  --ink-2: #10161f;
-  --on-ink: #f2f3f4;
-  --on-ink-muted: #aab2be;
   /* Kachel hinter dem F in der Kopfzeile. */
   --tile: #0d1118;
   --tile-border: #3c424e;
@@ -117,9 +114,6 @@
   --danger: #bb292f;
   --danger-soft: #e5484d0f;
   --ink: #0c1219;
-  --ink-2: #0c1219;
-  --on-ink: #f2f3f4;
-  --on-ink-muted: #aab2be;
   --tile: #0d1118;
   --tile-border: #3c424e;
   --macro-protein: #4c7a00;

@@ -135,9 +135,6 @@
   --color-warning-soft: var(--warning-soft);
   --color-danger-soft: var(--danger-soft);
   --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-on-ink: var(--on-ink);
-  --color-on-ink-muted: var(--on-ink-muted);
   --color-tile: var(--tile);
   --color-tile-border: var(--tile-border);
   --color-meter-track: var(--meter-track);

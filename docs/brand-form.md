@@ -228,7 +228,7 @@ Drei Entwürfe, als SVG unter `docs/brand/` und als Bild im Chat gezeigt:
 
 Meine Empfehlung: **Entwurf 1 für das App-Symbol und die Wortmarke**, weil der Name das Stärkste ist, was FORM hat, und weil ein Buchstabenblock auf einem Home-Bildschirm neben Dutzenden Piktogrammen auffällt. Entwurf 2 als Zweitzeichen für Kleidung und Stickerei, wenn die Wortmarke zu groß wäre. Entwurf 3 nicht weiterverfolgen.
 
-Umstellung in der App (erst nach Freigabe, Q-22, eigenes Paket): Name in Manifest, Titel, Kopfzeile und Anmeldebildschirm (`de.ts` `app.name`, `app.brandLink`, `loginTitle`); Symbol über `tools/generate-icons.mjs`; Seite „Über die App“. Der Name auf dem Home-Bildschirm ändert sich erst bei einer Neuinstallation (D-222). Datenbank, Adresse und Daten bleiben unberührt.
+Umstellung in der App (erst nach Freigabe, Q-22, eigenes Paket): Name in Manifest, Titel, Kopfzeile und Anmeldebildschirm (`de.ts` `app.name`, `app.brandLink`, `loginTitle`); Symbol über `tools/generate-icons.mjs`; Seite „Über die App“. Der Name auf dem Home-Bildschirm ändert sich erst bei einer Neuinstallation (D-222). Datenbank, Adresse und Daten bleiben unberührt. Vorsicht bei der Neuinstallation: Beim Entfernen der alten App vom Home-Bildschirm kann iOS deren Daten löschen; vorher die Synchronisierung abgleichen, weil sich ein Export noch nicht einspielen lässt (D-321).
 
 ## 11. Verbindung zwischen Marke und App
 

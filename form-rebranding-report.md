@@ -1,6 +1,6 @@
 # Rebranding zu FORM – Bericht
 
-Stand: 21.10.2026 · Branch `form-rebranding` (Basis `1891e68`, `main` nach PR #48) · Auftrag: `handover-form-rebranding.md`, `handover-markenassets.md`, `form-markenleitplanken.md`. Aufbau wie der Bericht der Audit-Phase A (`audit-report.md`).
+Stand: 22.10.2026 · Branch `form-rebranding` (Basis `1891e68`, `main` nach PR #48) · Auftrag: `handover-form-rebranding.md`, `handover-markenassets.md`, `form-markenleitplanken.md`. Aufbau wie der Bericht der Audit-Phase A (`audit-report.md`).
 
 Regeln: Jeder Screen, jede Funktion und jeder Datenfluss bleibt; die App bekommt den Look des FORM-Konzepts. Texte kommen aus den Leitplanken, nicht aus dem Konzeptbild. Keine Streak-, Serien- oder Challenge-Zähler. Dark ist Standard; helle Tokens werden nur angelegt. Ein Commit je Paket mit D-Nummer in `docs/decisions.md`; nach jedem Paket `pnpm check:bundle` und E2E (Chromium lokal, WebKit in GitHub Actions).
 
@@ -23,6 +23,8 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | D Startbild | `apple-touch-startup-image` für 20 Bildschirmmaße von iPhone und iPad, je hochkant und quer: drei Bilder unverändert aus dem Markenpaket, 37 nach derselben Regel erzeugt (`tools/splash.mjs`); nicht im Vorab-Speicher des Service Workers; Manifest-Farben #0C1219 seit A | D-317 | umgesetzt; Kaltstart ohne weißen Blitz nur am Gerät prüfbar (T-IPH-M0 Schritt 5, steht aus) |
 | F4 Texte | Mikrotexte aus den Leitplanken (Abschluss „… Das warst du.“, Leerzustände Fortschritt und Verlauf, Ruhetag, Schritte-Ziel); keine Serie mehr in der Auswertung der Tagesaufgaben, dafür „Diese Woche x von y“; Programm „Winterprogramm 2026 (Nachbau)“ statt „Winter Arc“; Datenschutztext richtiggestellt; automatische Wortfeld-Prüfung | D-318 | umgesetzt |
 | G Rückkehr-Flow | Nach 14 Tagen ohne Eintrag einmal je Rückkehr das Blatt „Schön, dass du da bist.“ mit „Ein Spaziergang“, „Ein leichtes Training“ (Hinweis im Player) und „Nur reinschauen“; „Pause“ im Verlauf und im Fortschritt; Satz zum ersten Start | D-319 | umgesetzt; Push nach 21 Tagen nicht gebaut (keine Push-Infrastruktur) |
+| E Token-Abgleich | `brand-tokens.md` final: Abgleich mit `brand.css`, Zuordnung alt → neu, nachgerechnete Kontraste, Abweichungen, offene Punkte; ungenutzte Tokens `--ink-2`, `--on-ink`, `--on-ink-muted` entfernt; Screenshots aller Screens und Komponenten erneuert; dieser Bericht | D-320 | umgesetzt |
+| Übergabe Marken-Chat | Alle Screenshots auf einem Bild (`docs/screens/uebersicht.png`) und als Archiv (`docs/screens.zip`), erzeugt mit `tools/screens-overview.mjs` | D-321 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -94,6 +96,19 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Geändert: `dashboard/ui/TodayPage.tsx` (Blatt, Hervorhebung der Schritte, leichtes Training, Satz zum ersten Start), `steps/index.ts` (`lastStepsDay`, lädt den Zwischenspeicher erst bei Bedarf), `training/ui/useStartSession.ts` (`light`, `LIGHT_QUERY`), `training/ui/ActiveProgramCard.tsx` (`nextDayInput`), `training/ui/player/SessionPage.tsx` (Hinweis „Weniger Sätze sind heute in Ordnung.“), `training/calc/history.ts` (`pauseAfterGroup`) mit `HistoryPage.tsx` („Pause“ zwischen Wochen), `progress/ui/ProgressPage.tsx` („Pause“ statt Nullwerten), `src/shared/ui/Dialog.tsx` (Blatt nach Inhalt `fit`, Startfokus auf dem Titel `focusTitle`), `src/shared/i18n/de.ts` (Texte `returnFlow`, `today.firstStart`, `history.pause`, `progress.pause`), `tools/screenshots.mjs` (Rückkehr-Flow), Tests `history.test.ts`, `progress-ui.test.tsx`; `docs/requirements.md` (AK-DSH-09).
 - Nicht geändert: Daten der Tagesaufgaben (pausierte bleiben pausiert), Pläne und Sätze; kein neues Feld in der Datenbank (der Vermerk liegt in `meta`).
 
+### E Token-Abgleich
+
+- Geändert: `brand-tokens.md` (Abschnitt 2.0 Abgleich mit `brand.css`, Kontraste nachgerechnet, Abschnitte 4 bis 6), `src/shared/ui/tokens.css` und `tokens.test.ts` (`--ink-2`, `--on-ink`, `--on-ink-muted` entfernt, in beiden Blöcken), `src/app/styles.css` (deren Tailwind-Zuordnung entfernt), `docs/design-system.md` (Version 0.6, Dunkel als Standard), `docs/decisions.md` (D-320 mit Korrektur zu D-308), `docs/implementation-plan.md` (Punkte 56 und 57), dieser Bericht.
+- Bilder: 11 Komponenten und 17 Screens in `docs/screens/` erneuert, neu `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`.
+- Nicht geändert: Farbwerte; nichts wurde umgefärbt.
+
+### Übergabe Marken-Chat
+
+- Neu: `tools/screens-overview.mjs` (baut Übersicht und Archiv aus den vorhandenen Bildern, ohne Server; gleiche Bilder werden in der Beschriftung markiert; ZIP über `node:zlib`, ohne neue Abhängigkeit), `docs/screens/uebersicht.png` (alle 28 Bilder mit Titel und Dateiname, 2300 × 4064 px), `docs/screens.zip` (29 Dateien: 28 Bilder und die Übersicht).
+- Geändert: `brand-tokens.md` (Abschnitt 6 nennt Übersicht und Archiv; Leerzeile in der Tabelle von Abschnitt 4 entfernt, sie trennte die letzten vier Zeilen ab; Warnung in Abschnitt 5), `docs/decisions.md` (D-321), `docs/implementation-plan.md` (Punkt 57), dieser Bericht.
+- Warnung vor Datenverlust beim Gerätetest (Nachtrag zu D-317): `docs/testing.md` (T-IPH-M0 Schritt 5), `docs/known-limitations.md` (Zeile „Startbild“), `docs/brand-form.md` (Neuinstallation). Beim Entfernen der App vom Home-Bildschirm kann iOS ihre Daten löschen, und ein Export lässt sich noch nicht einspielen.
+- Nicht geändert: App, Tests und die Screenshots selbst.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -155,6 +170,11 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | E: `node tools/screenshots.mjs komponenten` und `screens` | 22.10.2026 | 11 Komponenten- und 17 Screen-Bilder erneuert, darunter neu `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`; durchgesehen |
 | E: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 180 bestanden, 4 übersprungen, 0 fehlgeschlagen (4,8 min) |
 | CI auf PR #49 nach E (`9e46ec3`, Lauf 39703722166) | 22.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 174 bestanden (4,2 min) |
+| Übergabe: `node tools/screens-overview.mjs` | 22.10.2026 | Übersicht mit 28 Bildern (2300 × 4064 px, 1,5 MB), Archiv mit 29 Dateien (4,3 MB); `unzip -t` ohne Fehler; Gegenprobe mit Python `zipfile`: alle 29 Einträge byte-gleich mit den Dateien in `docs/screens/`; Übersicht in Originalgröße durchgesehen |
+| Übergabe: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 22.10.2026 | ohne Befund |
+| Übergabe: `pnpm test` | 22.10.2026 | 822 Tests in 98 Dateien bestanden (wie E) |
+| Übergabe: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Service Worker 178 Einträge (die neuen Dateien liegen in `docs/`, nicht in `public/`); Startansicht 228,7 KB von 250 KB (gzip) |
+| Übergabe: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 180 bestanden, 4 übersprungen, 0 fehlgeschlagen (5,2 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -171,19 +191,20 @@ Offen beim Produktinhaber:
 1. Durchsicht und Merge von PR #49 (`form-rebranding` → `main`).
 2. Name von Programm C: „Winterprogramm 2026 (Nachbau)“ statt „Winter Arc 2026 (Nachbau)“, weil „Winter Arc“ zu den gestrichenen Wörtern gehört (D-318). Bestätigen oder einen anderen Namen nennen.
 3. Serie in der Auswertung der Tagesaufgaben entfernt, „Diese Woche x von y“ stattdessen (D-318, ändert D-284). Die Leitplanken verlangen es ausdrücklich; die Entscheidung ist leicht umkehrbar, die Rechnung ist aber entfernt.
-4. Gerätetest T-IPH-M0 Schritt 5: App neu zum Home-Bildschirm hinzufügen, Kaltstart hochkant und quer, kein weißer Blitz (D-317).
+4. Gerätetest T-IPH-M0 Schritt 5: App neu zum Home-Bildschirm hinzufügen, Kaltstart hochkant und quer, kein weißer Blitz (D-317). Vorsicht: Beim Entfernen der alten App kann iOS deren Daten löschen, und ein Export lässt sich noch nicht einspielen; deshalb erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
 5. `brand-tokens.md` Abschnitt 5: App-Farben an die Markenfarben angleichen? Empfehlung: so lassen; Grundfläche, Akzent und Kachel sind schon gleich.
 6. Push nach 21 Tagen Pause ist nicht gebaut (keine Push-Infrastruktur, D-319).
 7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als eigene Aufgabe vorgeschlagen.
 
 ## 6. Stand nach dieser Sitzung
 
-Alle Pakete der Übergabe sind umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G (`a91b255`) und E (`9e46ec3`, Token-Abgleich, Screenshots, dieser Bericht). Entscheidungen D-307 bis D-320 in `docs/decisions.md`.
+Alle Pakete der Übergabe sind umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4 (`abf29b6`), G (`a91b255`) und E (`9e46ec3`, Token-Abgleich, Screenshots, dieser Bericht), danach das CI-Ergebnis nach E im Bericht (`66c4a06`) und die Übergabe in den Marken-Chat (Übersicht und Archiv der Screenshots). Entscheidungen D-307 bis D-321 in `docs/decisions.md`.
 
 Ergebnisse wie vorgesehen:
 
 - `brand-tokens.md` final: Abgleich mit `brand.css`, Zuordnung alt → neu je Token, nachgerechnete Kontraste, bewusste Abweichungen vom Konzept, offene Punkte (D-320).
 - Screenshots in `docs/screens/`: Heute, Training (mit Programmliste), aktives Workout, Abschluss, Übungsdetails, Ernährung, Fortschritt (leer und mit Daten), Mehr, Anmeldung, Über die App, Rückkehr-Flow (Blatt und leichtes Training), Tab-Leiste ausgeklappt und als runder Knopf; Komponenten in `docs/screens/komponenten/`.
+- Für die Übergabe in den Marken-Chat: alle 28 Bilder auf einem Bild in `docs/screens/uebersicht.png` und in voller Auflösung als Archiv `docs/screens.zip` (D-321).
 - Entwurfs-PR #49 (`form-rebranding` → `main`) mit CI für jeden Paket-Commit; gemergt wird erst nach Freigabe durch den Produktinhaber.
 
 Testergebnisse je Paket stehen wörtlich in Abschnitt 3. Nicht hier prüfbar und deshalb offen: Gerätetests am iPhone (Startbild, Anmeldung, Rückkehr-Flow am Gerät).

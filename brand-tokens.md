@@ -199,7 +199,6 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Claim in Weiß #FFFFFF (`brand.css`) | `--fg` #F2F3F4 | Keine neuen Hex-Werte (Leitplanken Regel 1); 16,9:1 statt 18,8:1 (C, D-316) |
 | Claim in Inter 17/600 (`brand.css`) | Systemschrift 17/600 | wie überall: Inter ist nicht gebündelt (D-203) |
 | Anmeldung als Glas-Karte mit Lichtflecken (D-270) | Logo, Claim und Felder direkt auf der Nacht-Fläche | kein Glas außer der Tab-Leiste (D-312), kein Glow in der App (Markenassets) |
-
 | Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad) | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach derselben Regel | iOS zeigt ein Startbild nur bei genau passendem Bildschirm; das iPhone-Modell ist nicht bekannt (D-317) |
 | Mikrotext „Woche abgeschlossen: Diese Woche 3 von 4.“ | „x von y Trainings diese Woche“ | Formulierung aus AK-DSH-05 bleibt; der Sinn ist derselbe (F4, D-318) |
 | Mikrotext „Nutzer überzieht“ | nicht verwendet | Die App misst keine Belastung; ohne Grundlage keine Aussage (Leitplanken Regel 5) |
@@ -210,11 +209,12 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 1. App-Farben an die Markenfarben angleichen? Grundfläche, Akzent und Kachel sind schon gleich (Abschnitt 2.0); offen sind nur Textweiß (#F2F3F4 statt #FFFFFF) und die Abweichungen aus Kontrastgründen in Abschnitt 4. Empfehlung: so lassen.
 2. Heller Modus: nicht ausgeliefert (D-311); die hellen Tokens und die `-hell`-Logos bleiben angelegt. Neu bewerten, wenn Nutzer danach fragen.
 3. Programm C heißt jetzt „Winterprogramm 2026 (Nachbau)“ (D-318), weil „Winter Arc“ zu den gestrichenen Wörtern gehört; die Quelle steht weiter in der Beschreibung. Bitte bestätigen oder einen anderen Namen nennen.
-4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App ohne weißen Blitz, hochkant und quer (D-317).
+4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App ohne weißen Blitz, hochkant und quer (D-317). Vorsicht: Beim Entfernen der alten App vom Home-Bildschirm kann iOS deren Daten löschen; erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
 
 ## 6. Screenshots
 
 Alle Bilder dunkel, Handy 390 × 844 pt, erzeugt mit `node tools/screenshots.mjs screens` bzw. `komponenten` aus der gebauten App mit Testdaten im frischen Browserprofil (nie aus echten Daten).
 
-- Screens in `docs/screens/`: `heute.png` (und `heute-ganz.png`), `training.png`, `training-programme.png`, `aktives-workout.png`, `abschluss.png`, `uebungsdetails.png`, `ernaehrung.png`, `fortschritt.png` (leer) und `fortschritt-mit-daten.png`, `mehr.png`, `anmeldung.png`, `ueber-die-app.png`, `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`, Tab-Leiste `tab-leiste-ausgeklappt.png` und `tab-leiste-kreis.png`.
+- Screens in `docs/screens/`: `heute.png` (und `heute-ganz.png`), `training.png`, `training-programme.png`, `aktives-workout.png`, `abschluss.png`, `uebungsdetails.png`, `ernaehrung.png`, `fortschritt.png` (leer) und `fortschritt-mit-daten.png`, `mehr.png`, `anmeldung.png`, `ueber-die-app.png`, `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`, Tab-Leiste `tab-leiste-ausgeklappt.png` (dasselbe Bild wie `heute.png`: oben auf „Heute“ ist die Leiste ausgeklappt) und `tab-leiste-kreis.png`.
 - Komponenten in `docs/screens/komponenten/`: Knopf, Ring, Chip und Balken, Toast, Karte, Tab-Leiste ausgeklappt und als Kreis, Listenzeile, Eingabe, Leerzustand, Sheet.
+- Für die Übergabe (D-321): `docs/screens/uebersicht.png` zeigt alle 28 Bilder verkleinert auf einem Bild, je mit Titel und Dateiname. `docs/screens.zip` enthält alle Bilder in voller Auflösung und die Übersicht (Ordner `screens/`). Beides erzeugt `node tools/screens-overview.mjs` aus den vorhandenen Bildern; nach neuen Screenshots erneut ausführen.

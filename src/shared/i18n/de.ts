@@ -262,13 +262,11 @@ export const de = {
     greetingLine: (greeting: string, name: string | undefined) =>
       name ? `${greeting}, ${name}.` : `${greeting}.`,
     title: 'Heute',
-    heroText: 'Starte ein freies Training oder wähle eine Vorlage.',
     /** Ruhetag laut Plan (Leitplanken Regel 6): als geplant, nicht als Lücke. */
     restPlanned: 'Heute ist Pause eingeplant.',
     /** Erster Start ohne jeden Eintrag (Leitplanken, Mikrotexte; D-319). */
     firstStart: 'Schön, dass du da bist. Wo fangen wir an?',
     startLink: 'Zum Training',
-    chooseTemplate: 'Vorlage wählen',
     plannedEyebrow: 'Heute geplant',
     lastTitle: 'Letztes Training',
     lastOpen: 'Im Verlauf öffnen',
@@ -488,8 +486,11 @@ export const de = {
     running: 'Training läuft',
     runningSince: (title: string, time: string) => `${title} · seit ${time}`,
     since: (time: string) => `Seit ${time}`,
-    freeEyebrow: 'Ohne Vorlage',
-    freeHint: 'Leere Einheit; Übungen kommen aus der Bibliothek dazu.',
+    /** Ohne laufendes Training und ohne aktives Programm (F5, D-324). */
+    readyEyebrow: 'Training',
+    readyTitle: 'Bereit für dein Training?',
+    readyText: 'Starte ein freies Training oder wähle eine Vorlage.',
+    chooseTemplate: 'Vorlage wählen',
     programsHint: 'Programme A, B, C und Beispielvorlagen',
     activeProgram: 'Aktives Programm',
     startNext: 'Training starten',

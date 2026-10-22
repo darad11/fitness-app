@@ -27,6 +27,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | Übergabe Marken-Chat | Alle Screenshots auf einem Bild (`docs/screens/uebersicht.png`) und als Archiv (`docs/screens.zip`), erzeugt mit `tools/screens-overview.mjs` | D-321 | umgesetzt |
 | F5 §1 Bedienelemente | Schalter reagieren auf einen Tipp auf den Schalter selbst (alle elf); widersprüchliche Klassen an Chips und Knöpfen durch Varianten ersetzt, Schutztest; Wochentage der Tagesaufgabe in einer Zeile innerhalb der Karte; Wochenziel mit dem gespeicherten Wert vorbelegt; „Als Tabelle“ bleibt nach Neuladen | D-322 | umgesetzt |
 | F5 §2 Aktives Training | Kein Sprung nach dem Erledigen eines Satzes: Verschiebungen über dem aktiven Satz werden vor dem Zeichnen ausgeglichen, der nächste Satz steht unter Kopf und Pausenkarte; beim Tippen bewegt sich nichts. Kopf: „Programm · Woche“ klein, Titel nur der Trainingstag, einzeilig | D-323 | umgesetzt; Verhalten der iOS-Tastatur nur am Gerät prüfbar |
+| F5 §3 Programme und Training | Neue Seiten beginnen oben, Zurück stellt die Liste wieder her; Etiketten der Programmkarten oben rechts, Titel bricht davor um, Chevron rechts mittig; „Bereit für dein Training?“ auf „Heute“ und „Training“ ohne Training und ohne Programm | D-324 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -127,6 +128,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `e2e/training-scroll.spec.ts` (ganzes Training mit 17 Sätzen im Handy-Format, abwechselnd mit Enter und direkt mit „Satz erledigt“, jeder dritte Satz mit „Pause überspringen“); angepasst `player-ui.test.tsx`, `session.spec.ts`, `player.spec.ts`, `programs.spec.ts` (Titel „Tag A“, Programm und Woche darüber).
 - Dokumente: `docs/decisions.md` (D-323), `docs/testing.md` (T-IPH-M1 Schritt 14).
 
+### F5 §3 Programme und Training
+
+- Gefunden: Keine Scroll-Wiederherstellung; eine neu geöffnete Seite behielt die Scrollposition der Liste (Gegenprobe im Test: „Oberkörper/Unterkörper“ beginnt nicht oben). Etiketten standen in einer umbrechenden Zeile mit dem Titel und rutschten bei langen Titeln darunter. Ohne Programm zeigte „Heute“ seit F3 die Karte „Freies Training“ mit Ghost-Knopf statt „Bereit für dein Training?“.
+- Geändert: neu `src/app/layout/ScrollManager.tsx` (in `AppLayout.tsx`), neu `training/ui/ReadyCard.tsx` (über `training/index.ts`), `training/ui/ProgramsPage.tsx` (`ProgramCard` für eigene Programme, Programme und Beispielvorlagen), `training/ui/TrainingPage.tsx` und `dashboard/ui/TodayPage.tsx` (`ReadyCard`), `src/shared/i18n/de.ts` (`training.readyEyebrow`, `readyTitle`, `readyText`, `chooseTemplate`; entfallen `training.freeEyebrow`, `freeHint`, `today.heroText`, `today.chooseTemplate`).
+- Tests: neu `e2e/program-list.spec.ts` (drei Programme nacheinander öffnen, Seitenanfang, Zurück an die alte Stelle, wieder öffnen; Etikett und Chevron auf 360, 390 und 768 pt; „Bereit für dein Training?“ auf beiden Seiten, „Heute geplant“ mit Programm, „Training läuft“ beim Training).
+- Dokumente: `docs/decisions.md` (D-324).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -203,6 +211,11 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §2: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 229,0 KB von 250 KB (gzip) |
 | F5 §2: `pnpm exec playwright test e2e/training-scroll.spec.ts` (neu, Handy) | 23.10.2026 | 1 bestanden (17 Sätze, 20 s). Erster Lauf rot, weil Arbeitssätze mit Bereich 6–8 ohne Wiederholungen nicht erledigt werden („Trag zuerst die Werte ein“, richtig so); der Test füllt jetzt alle Felder. Gegenprobe ohne `useStableSetView`: „verdeckt vom Kopf (160 px)“ nach dem ersten Satz |
 | F5 §2: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 219 bestanden, 7 übersprungen, 0 fehlgeschlagen (5,4 min) |
+| F5 §3: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund (ESLint verlangte zuerst den Vergleich mit `NavigationType.Pop` statt `'POP'`) |
+| F5 §3: `pnpm test` | 23.10.2026 | 826 Tests in 99 Dateien bestanden |
+| F5 §3: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 229,5 KB von 250 KB (gzip) |
+| F5 §3: `pnpm exec playwright test e2e/program-list.spec.ts` (neu) | 23.10.2026 | Erste Läufe rot: Zurück landete 24 px daneben (Platzhalter über der Liste änderten nach dem Wiederherstellen noch ihre Höhe), dann 582 px (das Festhalten kämpfte gegen ein Scrollen, das nicht von ihm kam), dann 40 px (der Test las die Stelle vor dem Klick, Playwright scrollte die Karte vor dem Klick selbst ins Bild; die App stellt die Stelle beim Klick wieder her, das ist richtig). Danach mit `--repeat-each=3`: 24 bestanden, 6 übersprungen. Gegenprobe ohne die Änderungen (Handy): alle 5 Tests fehlgeschlagen |
+| F5 §3: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 227 bestanden, 9 übersprungen, 0 fehlgeschlagen (5,5 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

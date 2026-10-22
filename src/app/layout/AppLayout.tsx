@@ -5,6 +5,7 @@ import { SyncRunner } from '@/modules/sync';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { GlobalBanners } from '../banners/GlobalBanners';
+import { ScrollManager } from './ScrollManager';
 import { Sidebar } from './Sidebar';
 import { TabBar } from './TabBar';
 
@@ -53,6 +54,7 @@ export function AppLayout() {
         </main>
       </div>
       {fullscreen ? null : <TabBar />}
+      <ScrollManager />
       <ThemeSync />
       <Suspense fallback={null}>
         <SyncRunner />

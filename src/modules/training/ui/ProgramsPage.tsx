@@ -127,9 +127,50 @@ export function ProgramsPage() {
   );
 }
 
-/** Karte einer Programmliste (FORM, D-315): Fläche card, Symbol in Kachel links, ohne Bild. */
-const LIST_CARD =
-  'flex min-h-14 items-start gap-3 rounded-card bg-surface p-card shadow-card hover:bg-surface-2';
+/**
+ * Karte einer Programmliste (FORM, D-315; Etikett F5, D-324): Symbol links, rechts daneben der
+ * Titel mit dem Etikett oben rechts (der Titel bricht vorher um), darunter Angaben über die ganze
+ * Breite, der Chevron rechts mittig. Grid und Flexbox, keine festen Positionen.
+ */
+function ProgramCard({
+  to,
+  icon,
+  title,
+  badge,
+  meta,
+  description,
+  lines,
+}: {
+  to: string;
+  icon: LucideIcon;
+  title: string;
+  badge: React.ReactNode;
+  meta: string;
+  description?: string | undefined;
+  lines: 2 | 3;
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex min-h-14 items-start gap-3 rounded-card bg-surface p-card shadow-card hover:bg-surface-2"
+    >
+      <TileIcon icon={icon} />
+      <span className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
+        <span className="font-semibold break-words">{title}</span>
+        {badge ? <span className="mt-0.5 shrink-0 whitespace-nowrap">{badge}</span> : <span />}
+        <span className="col-span-2 mt-0.5 block text-caption text-muted">{meta}</span>
+        {description ? (
+          <span
+            className={`col-span-2 mt-2 text-sm ${lines === 3 ? 'line-clamp-3' : 'line-clamp-2'}`}
+          >
+            {description}
+          </span>
+        ) : null}
+      </span>
+      <ChevronRight aria-hidden="true" className="size-5 shrink-0 self-center text-faint" />
+    </Link>
+  );
+}
 
 function OwnList({
   programs,
@@ -142,20 +183,15 @@ function OwnList({
     <ul className="grid gap-stack md:grid-cols-2">
       {programs.map((program) => (
         <li key={program.id}>
-          <Link to={`/training/programme/${program.id}`} className={LIST_CARD}>
-            <TileIcon icon={program.kind === 'template' ? LayoutList : ClipboardList} />
-            <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold break-words">{program.name}</span>
-                {badge(program)}
-              </span>
-              <span className="mt-0.5 block text-caption text-muted">{describeOwn(program)}</span>
-              {program.description ? (
-                <span className="mt-2 line-clamp-2 text-sm">{program.description}</span>
-              ) : null}
-            </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 self-center text-faint" />
-          </Link>
+          <ProgramCard
+            to={`/training/programme/${program.id}`}
+            icon={program.kind === 'template' ? LayoutList : ClipboardList}
+            title={program.name}
+            badge={badge(program)}
+            meta={describeOwn(program)}
+            description={program.description}
+            lines={2}
+          />
         </li>
       ))}
     </ul>
@@ -310,22 +346,15 @@ function TemplateList({
     <ul className="grid gap-stack md:grid-cols-2">
       {templates.map((template) => (
         <li key={template.id}>
-          <Link to={`/training/vorlagen/${template.key}`} className={LIST_CARD}>
-            <TileIcon icon={icon} />
-            <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-center gap-2">
-                <span className="font-semibold">{template.name}</span>
-                {badge(template)}
-              </span>
-              <span className="mt-0.5 block text-caption text-muted">
-                {describeTemplate(template)}
-              </span>
-              {description?.(template) ? (
-                <span className="mt-2 line-clamp-3 text-sm">{description(template)}</span>
-              ) : null}
-            </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 self-center text-faint" />
-          </Link>
+          <ProgramCard
+            to={`/training/vorlagen/${template.key}`}
+            icon={icon}
+            title={template.name}
+            badge={badge(template)}
+            meta={describeTemplate(template)}
+            description={description?.(template)}
+            lines={3}
+          />
         </li>
       ))}
     </ul>

@@ -892,3 +892,15 @@ Kein Sprung nach dem Erledigen eines Satzes, Kopf mit dem Trainingstag (D-323); 
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 219 bestanden, 7 übersprungen, 0 fehlgeschlagen (5,4 min) |
 | `pnpm check:bundle` | 229,0 KB von 250 KB |
 
+### F5 §3 Programme und Training · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Seitenanfang und Zurück, Etiketten der Programmkarten, „Bereit für dein Training?“ (D-324).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 99 Dateien, 826 Tests bestanden |
+| `pnpm exec playwright test e2e/program-list.spec.ts --repeat-each=3` | 24 bestanden, 6 übersprungen (schmale Breiten nur im Handy-Projekt). Gegenprobe ohne die Änderungen: alle 5 Handy-Tests fehlgeschlagen |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 227 bestanden, 9 übersprungen, 0 fehlgeschlagen (5,5 min) |
+| `pnpm check:bundle` | 229,5 KB von 250 KB |
+

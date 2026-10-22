@@ -17,6 +17,7 @@ import {
 import { useActiveSession } from '../data/useSession';
 import { restoreSession } from '../service/sessionService';
 import { ActiveProgramCard } from './ActiveProgramCard';
+import { ReadyCard } from './ReadyCard';
 import { useActiveProgram } from './useActiveProgram';
 import { useStartSession } from './useStartSession';
 
@@ -98,20 +99,12 @@ export function TrainingPage() {
             </Button>
           </ActiveProgramCard>
         ) : (
-          <Card tone="stage" eyebrow={t.training.freeEyebrow} title={t.training.freeTitle}>
-            <p className="-mt-1 max-w-md text-muted">{t.training.freeHint}</p>
-            <Button
-              size="lg"
-              className="mt-5 w-full"
-              disabled={busy}
-              onClick={() => {
-                void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
-              }}
-            >
-              <Play aria-hidden="true" className="size-5" />
-              {t.training.startFree}
-            </Button>
-          </Card>
+          <ReadyCard
+            busy={busy}
+            onStartFree={() => {
+              void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
+            }}
+          />
         )}
         {error ? (
           <p role="alert" className="mt-3 text-danger">

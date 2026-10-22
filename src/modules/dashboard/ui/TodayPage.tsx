@@ -25,6 +25,7 @@ import {
   summarizeSession,
   plannedEyebrow,
   plannedRest,
+  ReadyCard,
   useActiveProgram,
   useActiveSession,
   useCompletedSessions,
@@ -33,7 +34,7 @@ import {
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { dayKey, hourIn } from '@/shared/lib/time';
-import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
+import { ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import { ReturnSheet, useReturnFlow, type ReturnChoice } from './ReturnFlow';
 
@@ -161,36 +162,20 @@ export function TodayPage() {
             ) : null}
           </div>
         ) : (
-          // Ohne Plan (FORM, D-315): „Freies Training“ mit Ghost-Knopf und Textlink zur Vorlage.
-          <Card tone="stage" title={t.training.freeTitle} className="md:col-span-2">
-            <p className="-mt-1 max-w-md text-muted">{t.today.heroText}</p>
-            <div className="mt-5 grid gap-2">
-              <Button
-                variant="secondary"
-                size="lg"
-                className="w-full"
-                disabled={busy}
-                onClick={() => {
-                  void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
-                }}
-              >
-                <Play aria-hidden="true" className="size-5" />
-                {t.training.startFree}
-              </Button>
-              <ButtonLink
-                to="/training/programme"
-                variant="quiet"
-                className="-ml-5 justify-self-start"
-              >
-                {t.today.chooseTemplate}
-              </ButtonLink>
-            </div>
+          // Ohne Training und ohne Programm (F5, D-324): „Bereit für dein Training?“.
+          <ReadyCard
+            className="md:col-span-2"
+            busy={busy}
+            onStartFree={() => {
+              void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
+            }}
+          >
             {error ? (
               <p role="alert" className="mt-3 text-sm text-danger">
                 {error.message}
               </p>
             ) : null}
-          </Card>
+          </ReadyCard>
         )}
         <Suspense fallback={null}>
           <NutritionTodayCard />

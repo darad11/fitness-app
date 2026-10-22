@@ -14,7 +14,7 @@ import {
   Switch,
   Toast,
 } from '@/shared/ui';
-import { weekdaysOn } from '../calc/streak';
+import { weekdaysOn } from '../calc/days';
 import { loadWaterReached } from '@/modules/water';
 import { HABIT_NAME_MAX, type Habit, type HabitAutoDone } from '../model/habit';
 import {

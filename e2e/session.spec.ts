@@ -97,6 +97,12 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await expect(
     page.getByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
   ).toBeVisible();
+  // Zeile aus der Mikrotext-Tabelle (F4, D-318); die Dauer hängt vom Tempo des Testlaufs ab.
+  await expect(
+    page.getByText(
+      /^(Weniger als eine Minute|1 Minute|\d+ Minuten), 5 Übungen, 2 Sätze\. Das warst du\.$/,
+    ),
+  ).toBeVisible();
   // Kacheln Dauer, Übungen, Sätze; danach Gesamtvolumen (FORM, D-315).
   await expect(page.getByText('Sätze', { exact: true })).toBeVisible();
   await expect(page.getByRole('definition').nth(2)).toHaveText('2');

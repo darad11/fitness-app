@@ -22,6 +22,7 @@ import {
   sessionProgress,
   summarizeSession,
   plannedEyebrow,
+  plannedRest,
   useActiveProgram,
   useActiveSession,
   useCompletedSessions,
@@ -114,6 +115,7 @@ export function TodayPage() {
             <ActiveProgramCard
               program={program}
               eyebrow={plannedEyebrow(program, today)}
+              rest={plannedRest(program, today)}
               busy={busy}
               onStart={(input) => {
                 void start(input);

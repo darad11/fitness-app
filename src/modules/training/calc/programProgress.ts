@@ -135,3 +135,18 @@ export function plannedFor(
   if (hint === undefined || hint === isoWeekday(now)) return { kind: 'today' };
   return { kind: 'weekday', weekday: hint };
 }
+
+/**
+ * Ruhetag laut Plan (Leitplanken Regel 6, F4 D-318): Jeder Tag in der Woche des nächsten Tages hat
+ * einen Wochentag-Hinweis, und keiner davon ist heute. Fehlt einem Tag der Hinweis, kann er an
+ * jedem Tag trainiert werden; dann gibt es keinen festen Ruhetag.
+ */
+export function isPlannedRest(
+  template: PlanTree,
+  next: Pick<ProgramDayRef, 'weekIndex'>,
+  now: Date,
+): boolean {
+  const days = template.weeks[next.weekIndex]?.days ?? [];
+  if (days.length === 0 || days.some((day) => day.weekdayHint === undefined)) return false;
+  return !days.some((day) => day.weekdayHint === isoWeekday(now));
+}

@@ -4,6 +4,7 @@ import {
   dayNumber,
   flattenDays,
   isoWeekday,
+  isPlannedRest,
   plannedFor,
   programProgress,
   type ProgramSessionLike,
@@ -168,5 +169,25 @@ describe('Wochentag-Hinweis (AK-PRG-09)', () => {
       weekday: 1,
     });
     expect(plannedFor(plan, { weekIndex: 0, dayIndex: 1 }, thursday)).toEqual({ kind: 'today' });
+  });
+
+  it('erkennt einen Ruhetag nur, wenn jeder Tag der Woche einen anderen Wochentag hat (D-318)', () => {
+    // Tag B ohne Hinweis: an jedem Tag möglich, also kein fester Ruhetag.
+    expect(isPlannedRest(plan, { weekIndex: 0 }, thursday)).toBe(false);
+    const fixed = {
+      ...plan,
+      weeks: [
+        {
+          ...plan.weeks[0]!,
+          days: [
+            { id: 'a', position: 0, name: 'A', weekdayHint: 1 as const, exercises: [] },
+            { id: 'b', position: 1, name: 'B', weekdayHint: 3 as const, exercises: [] },
+          ],
+        },
+      ],
+    };
+    expect(isPlannedRest(fixed, { weekIndex: 0 }, monday)).toBe(false);
+    expect(isPlannedRest(fixed, { weekIndex: 0 }, thursday)).toBe(true);
+    expect(isPlannedRest(fixed, { weekIndex: 5 }, thursday)).toBe(false);
   });
 });

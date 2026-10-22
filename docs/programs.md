@@ -85,7 +85,7 @@ Niveau intermediate · Ort gym · 4 Tage pro Woche · 3 Wochen, 12 Trainingstage
 | Wadenheben sitzend | 3 | 12–15 | 60 s |  |
 | Beinheben hängend | 3 | 10–15 | 60 s |  |
 
-## Winter Arc 2026 (Nachbau) (`winter_arc_2026`)
+## Winterprogramm 2026 (Nachbau) (`winter_arc_2026`)
 
 Nachbau des Xeela-Programms „2026 Winter Arc“ aus der Aufnahme des Produktinhabers: 8 Wochen, 40 Trainingstage, 5 Tage je Woche mit zwei frei wählbaren Ruhetagen. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.
 

@@ -49,7 +49,7 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
       'Ganzkörper A/B, 4 TageProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
     );
     expect(cards[0]).toHaveTextContent('Wiedereinstieg nach längerer Pause');
-    expect(cards[2]).toHaveTextContent('Winter Arc 2026 (Nachbau)Programm');
+    expect(cards[2]).toHaveTextContent('Winterprogramm 2026 (Nachbau)Programm');
     expect(cards[3]).toHaveTextContent(
       'Ganzkörper A/BBeispielEinsteiger · Studio · 3 Tage pro Woche · 2 Trainingstage',
     );
@@ -245,7 +245,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
       planFromTemplateDay(template!, 0, 0, (id) => byId.get(id), 'program'),
     );
     await finishSession(rt, session.id, { skipOpen: true });
-    await renderAt('/training/vorlagen/winter_arc_2026', 'Winter Arc 2026 (Nachbau)');
+    await renderAt('/training/vorlagen/winter_arc_2026', 'Winterprogramm 2026 (Nachbau)');
     // 40 Tage mit rund 280 Übungen: in jsdom auf langsamen CI-Runnern deutlich über 1 s.
     expect(
       await screen.findByRole(

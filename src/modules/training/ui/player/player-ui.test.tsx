@@ -294,6 +294,8 @@ describe('Trainingsplayer (S-07)', () => {
     ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe(`/training/einheit/${session.id}/zusammenfassung`);
     expect(screen.getAllByText('Kein erledigter Satz')).toHaveLength(5);
+    // Ohne erledigten Satz keine Zeile „… Das warst du.“ (D-318).
+    expect(screen.queryByText(/Das warst du/)).toBeNull();
   });
 
   it('zeigt die Zusammenfassung nur für abgeschlossene Einheiten', async () => {

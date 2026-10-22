@@ -17,7 +17,7 @@ import { useActiveProgram, useProgramById, type ActiveProgram } from './useActiv
 
 /**
  * Abschluss nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20; FORM D-315): „Training abgeschlossen“,
- * Kacheln Dauer, Übungen und Sätze, Karte mit Gesamtvolumen und geschätzten Kalorien, Vergleich
+ * die Zeile „… Minuten, … Übungen, … Sätze. Das warst du.“ (D-318), Kacheln Dauer, Übungen und Sätze, Karte mit Gesamtvolumen und geschätzten Kalorien, Vergleich
  * und beste Sätze, „Details anzeigen“, die nächste Einheit des aktiven Programms und „Zur Übersicht“.
  */
 export function SummaryPage() {
@@ -68,6 +68,16 @@ export function SummaryPage() {
   return (
     <>
       <PageHeader title={t.summary.title} subtitle={subtitle} />
+      {/* Zeile aus der Mikrotext-Tabelle (F4, D-318); ohne erledigten Satz gibt es nichts zu sagen. */}
+      {progress.done > 0 ? (
+        <p className="-mt-2 mb-5 text-lg font-medium">
+          {t.summary.doneLine(
+            Math.floor((session.durationSec ?? 0) / 60),
+            exercises.length,
+            progress.done,
+          )}
+        </p>
+      ) : null}
       <dl className="grid grid-cols-3 gap-stack">
         <StatTile label={t.summary.duration} value={formatClock(session.durationSec ?? 0)} />
         <StatTile label={t.summary.exercises} value={fmt.number(exercises.length)} />

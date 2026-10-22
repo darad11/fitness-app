@@ -7,11 +7,10 @@ import { Card, Meter, SegmentedControl, SelectField, StatTile } from '@/shared/u
 import {
   dataStart,
   habitRate,
-  habitStreaks,
   INSIGHT_PERIODS,
   insights,
   overallRate,
-  overallStreaks,
+  overallWeek,
   periodDays,
   previousDays,
   progressBuckets,
@@ -19,7 +18,7 @@ import {
   type InsightPeriod,
   type Insight,
 } from '../calc/insights';
-import { activeOn, dayStatus } from '../calc/streak';
+import { activeOn, dayStatus } from '../calc/days';
 import type { Habit } from '../model/habit';
 import { ProgressChart } from './ProgressChart';
 import { TaskMatrix } from './TaskMatrix';
@@ -38,8 +37,8 @@ export function statusOf(habit: Habit, today: string): 'paused' | 'removed' | nu
 
 /**
  * Fortschritt unter der Verwaltung (D-284): Kennzahlen, Verlauf, je Aufgabe, Hinweise. Alle Zahlen
- * aus `calc/insights.ts`; der Zeitraum gilt für alles außer Serie (ganze Geschichte) und Hinweise
- * (immer 30 Tage).
+ * aus `calc/insights.ts`; der Zeitraum gilt für alles außer „Diese Woche“ (Wochenbild statt
+ * Serie, D-318) und Hinweise (immer 30 Tage).
  */
 export function TaskStats({
   history,
@@ -69,7 +68,7 @@ export function TaskStats({
     (habit) => index.byDay.get(today)?.get(habit.id) === true,
   ).length;
   const rate = overallRate(habits, days, index, today);
-  const streaks = overallStreaks(habits, index, today);
+  const week = overallWeek(habits, index, today);
   const chart = progressBuckets(habits, days, index, today);
   const clipped = period !== 'all' && days.length < PERIOD_LENGTH[period];
 
@@ -80,7 +79,7 @@ export function TaskStats({
         period === 'all'
           ? null
           : rateChange(r, habitRate(habit, before, index, today), PERIOD_LENGTH[period]);
-      return { habit, rate: r, change, streak: habitStreaks(habit, index, today).current };
+      return { habit, rate: r, change };
     })
     // Gelöschte und pausierte nur, wenn sie im Zeitraum fällig waren.
     .filter((row) => statusOf(row.habit, today) === null || row.rate.due > 0);
@@ -130,10 +129,9 @@ export function TaskStats({
           hint={rate.rate === null ? ts.rateNone : ts.rateHint}
         />
         <StatTile
-          label={ts.streak}
-          value={fmt.number(streaks.current)}
-          unit={ts.days(streaks.current)}
-          hint={ts.streakHint(fmt.number(streaks.best))}
+          label={ts.week}
+          value={week.due === 0 ? '–' : ts.weekValue(fmt.number(week.done), fmt.number(week.due))}
+          hint={ts.weekHint}
         />
         <StatTile
           label={ts.active}
@@ -173,7 +171,7 @@ export function TaskStats({
           </div>
         ) : null}
         <ul className="mt-2 divide-y divide-line">
-          {sorted.map(({ habit, rate: r, change, streak }) => {
+          {sorted.map(({ habit, rate: r, change }) => {
             const status = statusOf(habit, today);
             return (
               <li key={habit.id}>
@@ -197,7 +195,6 @@ export function TaskStats({
                     <Meter className="mt-2 h-1.5" label={habit.name} value={r.rate ?? 0} />
                     <span className="mt-1 block text-sm text-muted tabular-nums">
                       {r.due === 0 ? ts.taskNone : ts.taskLine(r.done, r.due)}
-                      {streak > 0 ? ` · ${ts.taskStreak(streak)}` : ''}
                       {change !== null && (activeSort === 'up' || activeSort === 'down')
                         ? ` · ${ts.change(change)}`
                         : ''}

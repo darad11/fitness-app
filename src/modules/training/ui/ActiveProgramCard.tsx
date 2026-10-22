@@ -3,7 +3,7 @@ import { SETTINGS_DEFAULTS, useSettings } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter } from '@/shared/ui';
 import { planFromTemplateDay, type StartInput } from '../calc/plan';
-import { plannedFor } from '../calc/programProgress';
+import { isPlannedRest, plannedFor } from '../calc/programProgress';
 import { describeDay } from '../calc/describe';
 import { programLink, type ActiveProgram } from './useActiveProgram';
 
@@ -12,6 +12,8 @@ export interface ActiveProgramCardProps {
   eyebrow: string;
   onStart: (input: StartInput) => void;
   busy: boolean;
+  /** Ruhetag laut Plan (nur auf „Heute“): Satz „Heute ist Pause eingeplant.“, Start als Ghost-Knopf. */
+  rest?: boolean;
   className?: string;
   children?: React.ReactNode;
 }
@@ -22,6 +24,7 @@ export function ActiveProgramCard({
   eyebrow,
   onStart,
   busy,
+  rest = false,
   className,
   children,
 }: ActiveProgramCardProps) {
@@ -55,6 +58,7 @@ export function ActiveProgramCard({
         {week ? ` · ${week.name}` : ''}
       </p>
       {day ? <p className="mt-1 text-sm text-muted">{describeDay(day, restDefaultSec)}</p> : null}
+      {rest ? <p className="mt-3 font-medium">{t.today.restPlanned}</p> : null}
       <Meter
         className="mt-4"
         label={t.programs.dayOf(next.index + 1, progress.total)}
@@ -62,6 +66,7 @@ export function ActiveProgramCard({
       />
       <div className="mt-5 grid gap-2">
         <Button
+          variant={rest ? 'secondary' : 'primary'}
           size="lg"
           className="w-full"
           disabled={busy}
@@ -102,4 +107,10 @@ export function plannedEyebrow(program: ActiveProgram, now: Date): string {
   return planned.kind === 'today'
     ? t.today.plannedEyebrow
     : t.programs.plannedWeekday(t.programs.weekdays[planned.weekday - 1] ?? '');
+}
+
+/** Ruhetag laut Plan für „Heute“ (Leitplanken Regel 6, D-318). */
+export function plannedRest(program: ActiveProgram, now: Date): boolean {
+  const next = program.progress.next;
+  return next ? isPlannedRest(program.template, next, now) : false;
 }

@@ -63,7 +63,11 @@ export function HistoryPage() {
           icon={History}
           title={t.history.emptyTitle}
           text={t.history.emptyText}
-          action={<ButtonLink to="/training/programme">{t.history.chooseTemplate}</ButtonLink>}
+          action={
+            <ButtonLink to="/training/programme" variant="secondary">
+              {t.history.chooseTemplate}
+            </ButtonLink>
+          }
         />
       ) : (
         <div className="grid gap-6">

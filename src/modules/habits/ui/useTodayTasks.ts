@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { addDays, dayKey, localTimeZone } from '@/shared/lib/time';
 import { useToday } from '@/shared/ui/useToday';
-import { activeOn, dayStatus } from '../calc/streak';
+import { activeOn, dayStatus } from '../calc/days';
 import { useHabitLogs, useHabits } from '../data/useHabits';
 import type { Habit, HabitLog } from '../model/habit';
 

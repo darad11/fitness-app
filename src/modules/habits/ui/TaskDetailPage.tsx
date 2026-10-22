@@ -10,7 +10,7 @@ import { Card, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@
 import {
   habitRate,
   habitState,
-  habitStreaks,
+  habitWeek,
   INSIGHT_PERIODS,
   periodDays,
   previousDays,
@@ -31,7 +31,10 @@ const PERIOD_OPTIONS = INSIGHT_PERIODS.map((value) => ({ value, label: ts.period
 const PERIOD_LENGTH: Record<InsightPeriod, number> = { '7d': 7, '30d': 30, '90d': 90, all: 0 };
 const CALENDAR_MAX = 90;
 
-/** Auswertung einer Aufgabe (D-284): Quote, Serien, Vergleich, Verlauf, Kalender, Wochentage. */
+/**
+ * Auswertung einer Aufgabe (D-284): Quote, erledigte Tage, diese Woche (Wochenbild statt Serie,
+ * D-318), Vergleich, Verlauf, Kalender, Wochentage.
+ */
 export function TaskDetailPage() {
   const { id } = useParams();
   const fmt = useFormatters();
@@ -63,7 +66,7 @@ export function TaskDetailPage() {
   const pct = (value: number) => `${fmt.number(Math.round(value * 100))} %`;
   const days = periodDays(period, [habit], today);
   const rate = habitRate(habit, days, index, today);
-  const streaks = habitStreaks(habit, index, today);
+  const week = habitWeek(habit, index, today);
   const status = statusOf(habit, today);
   const previous =
     period === 'all' ? null : habitRate(habit, previousDays(period, [habit], today), index, today);
@@ -87,7 +90,7 @@ export function TaskDetailPage() {
           value={period}
           onChange={setPeriod}
         />
-        <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-3 md:grid-cols-3">
           <StatTile
             label={ts.rate}
             value={rate.rate === null ? '–' : pct(rate.rate)}
@@ -99,11 +102,10 @@ export function TaskDetailPage() {
             hint={td.doneHint}
           />
           <StatTile
-            label={td.current}
-            value={fmt.number(streaks.current)}
-            unit={ts.days(streaks.current)}
+            label={td.week}
+            value={week.due === 0 ? '–' : ts.weekValue(fmt.number(week.done), fmt.number(week.due))}
+            hint={td.weekHint}
           />
-          <StatTile label={td.best} value={fmt.number(streaks.best)} unit={ts.days(streaks.best)} />
         </dl>
         <p className="-mt-1 text-sm text-muted">
           {period === 'all'

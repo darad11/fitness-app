@@ -79,9 +79,9 @@ export const de = {
     exercisesTitle: 'Übungsverläufe',
     exercisesEmpty: 'Nach dem ersten Training siehst du hier den Verlauf je Übung.',
     sessionCount: (n: number) => (n === 1 ? '1 Einheit' : `${n} Einheiten`),
-    emptyTitle: 'Noch keine Daten',
-    emptyText:
-      'Schließ ein Training ab oder trag dein Gewicht ein. Hier erscheinen nur gespeicherte Werte.',
+    /** Leerzustand nach den Leitplanken (F4, D-318). */
+    emptyTitle: 'Fortschritt braucht ein paar Tage.',
+    emptyText: 'Er zeigt dich gegen dich, nicht gegen andere.',
     exercise: {
       metricLegend: 'Kennzahl',
       best: 'Bester Satz',
@@ -184,7 +184,6 @@ export const de = {
     nameHint: 'Ohne Konto, ohne Pflichtangaben. Der Name erscheint nur auf „Heute“.',
     save: 'Speichern',
     saved: 'Gespeichert.',
-    greeting: (name: string) => `Hallo ${name}!`,
   },
   log: {
     title: 'Nachtragen',
@@ -261,8 +260,9 @@ export const de = {
     greetingLine: (greeting: string, name: string | undefined) =>
       name ? `${greeting}, ${name}.` : `${greeting}.`,
     title: 'Heute',
-    heroText:
-      'Starte ein freies Training oder wähle eine Vorlage. Dein Fortschritt bleibt auf diesem Gerät.',
+    heroText: 'Starte ein freies Training oder wähle eine Vorlage.',
+    /** Ruhetag laut Plan (Leitplanken Regel 6): als geplant, nicht als Lücke. */
+    restPlanned: 'Heute ist Pause eingeplant.',
     startLink: 'Zum Training',
     chooseTemplate: 'Vorlage wählen',
     plannedEyebrow: 'Heute geplant',
@@ -312,7 +312,7 @@ export const de = {
     unit: 'Schritte',
     target: (n: string) => `Ziel ${n}`,
     toGo: (n: string) => `noch ${n}`,
-    targetReached: 'Tagesziel erreicht',
+    targetReached: 'Ziel erreicht. Das warst du.',
     notLogged: 'Heute noch nichts übertragen',
     year: (percent: string, ytd: string, goal: string) => `Jahr ${percent} % · ${ytd} von ${goal}`,
     stale: (time: string) => `Stand ${time}`,
@@ -383,9 +383,8 @@ export const de = {
   },
   history: {
     title: 'Verlauf',
-    emptyTitle: 'Noch kein Training gespeichert',
-    emptyText:
-      'Starte mit einer Vorlage oder einem freien Training. Abgeschlossene Trainings erscheinen hier.',
+    emptyTitle: 'Hier erscheint dein erstes Training.',
+    emptyText: 'Starte mit einer Vorlage oder einem freien Training.',
     chooseTemplate: 'Vorlage wählen',
     weekOf: (date: string) => `Woche ab ${date}`,
     summary: (duration: string, sets: string, volume: string) =>
@@ -453,7 +452,7 @@ export const de = {
     updateUnavailable: 'In dieser Umgebung gibt es keine automatischen Updates.',
     privacyTitle: 'Daten und Datenschutz',
     privacyText:
-      'Keine Anmeldung, keine Werbung, keine Analyse. Alle Daten bleiben auf diesem Gerät; die App lädt nur ihre eigenen Dateien von der eigenen Adresse.',
+      'Keine Werbung, keine Analyse. Deine Daten bleiben auf diesem Gerät, solange du dich nicht anmeldest; angemeldet gleicht die App sie mit deinem eigenen Speicher bei Supabase ab. Andere Dienste fragt sie nur, wenn du sie selbst einschaltest: Open Food Facts beim Scannen und die Schritte aus dem Dashboard.',
   },
   banners: {
     updateAvailable: 'Neue Version verfügbar',
@@ -628,6 +627,13 @@ export const de = {
   },
   summary: {
     title: 'Training abgeschlossen',
+    /** „48 Minuten, 5 Übungen, 18 Sätze. Das warst du.“ (Leitplanken, Mikrotexte; F4, D-318). */
+    doneLine: (minutes: number, exercises: number, sets: number) =>
+      `${
+        minutes < 1 ? 'Weniger als eine Minute' : minutes === 1 ? '1 Minute' : `${minutes} Minuten`
+      }, ${exercises === 1 ? '1 Übung' : `${exercises} Übungen`}, ${
+        sets === 1 ? '1 Satz' : `${sets} Sätze`
+      }. Das warst du.`,
     duration: 'Dauer',
     exercises: 'Übungen',
     sets: 'Erledigte Sätze',

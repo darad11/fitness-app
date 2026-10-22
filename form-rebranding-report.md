@@ -21,6 +21,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F3 Screens | Heute, Training, aktives Workout, Abschluss, Übungsdetails, Ernährung, Fortschritt und Mehr in Aufbau und Hierarchie des Konzepts; nur vorhandene Daten, keine Platzhalter; neue Komponenten `Tabs` und `MuscleTags` | D-315 | umgesetzt, Screenshots in `docs/screens/` (werden mit E erneuert) |
 | C Anmeldung und Über die App | Anmeldung mit `logo-anmeldung-dunkel.svg`, Claim „FORM YOURSELF.“ und Unterzeile als Text, Felder und Knöpfe aus F2, ohne Karte, Glas und Lichtflecken; die eigenen Tokens der Anmeldung entfallen; „Über die App“ mit dem Logo ohne Claim | D-316 | umgesetzt, Screenshots `docs/screens/anmeldung.png` und `ueber-die-app.png` |
 | D Startbild | `apple-touch-startup-image` für 20 Bildschirmmaße von iPhone und iPad, je hochkant und quer: drei Bilder unverändert aus dem Markenpaket, 37 nach derselben Regel erzeugt (`tools/splash.mjs`); nicht im Vorab-Speicher des Service Workers; Manifest-Farben #0C1219 seit A | D-317 | umgesetzt; Kaltstart ohne weißen Blitz nur am Gerät prüfbar (T-IPH-M0 Schritt 5, steht aus) |
+| F4 Texte | Mikrotexte aus den Leitplanken (Abschluss „… Das warst du.“, Leerzustände Fortschritt und Verlauf, Ruhetag, Schritte-Ziel); keine Serie mehr in der Auswertung der Tagesaufgaben, dafür „Diese Woche x von y“; Programm „Winterprogramm 2026 (Nachbau)“ statt „Winter Arc“; Datenschutztext richtiggestellt; automatische Wortfeld-Prüfung | D-318 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -77,6 +78,15 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Geändert: `index.html` (40 Zeilen `apple-touch-startup-image`), `vite.config.ts` (`globIgnores` um `**/splash/*.png` ergänzt), `e2e/pwa.spec.ts` (neuer Test: alle 40 Startbilder werden als PNG in passender Größe ausgeliefert), `docs/testing.md` (T-IPH-M0 Schritt 5: Kaltstart hochkant und quer), `docs/known-limitations.md` (Zeile „Startbild“).
 - Nicht geändert: die drei Bilder aus dem Markenpaket, Manifest (Farben seit Paket A), `theme-color`.
 
+### F4 Texte
+
+- Texte: `src/shared/i18n/de.ts` (Abschlusszeile `summary.doneLine`, Leerzustände `progress.empty*` und `history.empty*`, `today.restPlanned`, `today.heroText` ohne Speicherversprechen, `steps.targetReached`, `about.privacyText` richtiggestellt, `profile.greeting` entfernt), `de-task-stats.ts` (Serie durch „Diese Woche“ ersetzt, „Weiter so“ entfernt).
+- Abschluss: `training/ui/SummaryPage.tsx` (Zeile nur mit erledigtem Satz). Verlauf: `HistoryPage.tsx` (Leerzustand mit Sekundärknopf). Ruhetag: `calc/programProgress.ts` (`isPlannedRest`), `ui/ActiveProgramCard.tsx` (`rest`, `plannedRest`), `training/index.ts`, `dashboard/ui/TodayPage.tsx`.
+- Tagesaufgaben ohne Serie: `habits/calc/insights.ts` (`overallWeek`, `habitWeek` statt `overallStreaks`, `habitStreaks`), `habits/calc/streak.ts` umbenannt in `days.ts` (ohne `streak`, `recentDays`, `pickDaily`), `ui/TaskStats.tsx`, `ui/TaskDetailPage.tsx`, Importe in `TasksPage.tsx`, `useTodayTasks.ts`, `habitService.ts`.
+- Programm C umbenannt: `tools/data/programs.source.json`, daraus `programs.v1.json` und `docs/programs.md` (`python3 tools/programs_build.py`).
+- Neu: `src/app/wording.test.ts` (Wortfeld-Prüfung), `training/ui/active-program-card.test.tsx` (Ruhetag). Angepasst: `insights.test.ts`, `days.test.ts`, `habitService.test.ts`, `task-stats.test.tsx`, `programProgress.test.ts`, `progress-ui.test.tsx`, `history-ui.test.tsx`, `player-ui.test.tsx`, `programs-ui.test.tsx`; E2E `session.spec.ts` (Abschlusszeile).
+- Dokumente: `docs/requirements.md` (AK-HAB-03, AK-HAB-04), `docs/feature-inventory.md` mit `feature-inventory.csv` (TH-04 ausgeschlossen).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -120,6 +130,11 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | D: `pnpm test` | 22.10.2026 | 814 Tests in 94 Dateien bestanden (neu `splash.test.ts` mit 4 Tests; Gegenprobe: ein vertauschter Dateiname lässt 2 davon fehlschlagen) |
 | D: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Service Worker 177 Einträge (2785 KiB) ohne Startbilder; Startansicht 227,1 KB von 250 KB (gzip) |
 | D: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 174 bestanden, 4 übersprungen, 0 fehlgeschlagen (4,4 min); neu je Projekt „Startbilder für iPhone und iPad werden ausgeliefert“ |
+| CI auf PR #49 nach D (`de10a84`, Lauf 39697634270) | 22.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 168 bestanden, 10 übersprungen (4,1 min), die Startbild-Tests auch in WebKit grün |
+| F4: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 22.10.2026 | ohne Befund (Prettier formatierte vorher `history-ui.test.tsx` nach) |
+| F4: `pnpm test` | 22.10.2026 | 838 Tests in 96 Dateien bestanden (D: 814 in 94; neu `wording.test.ts` mit 25 und `active-program-card.test.tsx` mit 2 Tests, Wochenbild statt Serie in `insights.test.ts`, Ruhetag in `programProgress.test.ts`; entfallen die Tests der Serie, von `recentDays` und `pickDaily`). Gegenprobe der Wortfeld-Prüfung: mit dem alten Programmnamen schlägt „kein Text enthält „Winter Arc““ fehl |
+| F4: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Startansicht 227,3 KB von 250 KB (gzip) |
+| F4: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 173 bestanden, 4 übersprungen, 1 fehlgeschlagen (4,4 min): wieder `pwa.spec.ts` „… alle Bereiche starten offline“ (Handy), wieder `/training/vorlagen/full_body_ab` leer. Laut Trace scheiterte offline die Anfrage nach `assets/uuid-*.js` (Status -1), die übrigen Module kamen aus dem Service Worker; ohne dieses Modul startet die App nicht. Das ist dieselbe Stelle wie bei F3 und unabhängig von F4. Wiederholung `--repeat-each=3`: 18 bestanden. Ursachensuche als eigene Aufgabe vorgeschlagen; `session.spec.ts` mit der Abschlusszeile in beiden Projekten grün |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -133,4 +148,4 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
 ## 6. Stand nach dieser Sitzung
 
-Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); Gerätetest T-IPH-M0 Schritt 5 (Startbild) beim Produktinhaber; `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt.
+Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D (`de10a84`), F4. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: G, E (Reihenfolge laut Übergabe Abschnitt 6); Gerätetest T-IPH-M0 Schritt 5 (Startbild) beim Produktinhaber; `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt.

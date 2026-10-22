@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
 - Version 0.7 (Ernährung Grundausbau, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): NU-01 (Zielvorschlag), NU-02, NU-03 (vier feste Mahlzeiten), NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21 (BLS 4.0 mit österreichischen Suchbegriffen), NU-22, NU-25 (D-261, D-262). Teilweise und deshalb noch nicht umgestellt: NU-08 (nur lokale Suche), NU-11 (Favoriten und Zuletzt, ohne Mahlzeitvorlagen), NU-12 (jeder Tag aufrufbar, ohne Wochendurchschnitt), NU-16, NU-19, NU-23 (g, ml und Portionen, ohne Umrechnung ml in g). Barcode und Open Food Facts (NU-07, NU-24) folgen als eigenes Paket.
 - Version 0.8 (Lebensmitteldaten importieren, 19.10.2026): NU-25 zusätzlich mit AK-NUT-07 (lokaler Import der ÖNWT-Daten aus der BLS-Recherche, Herkunft in der Suche, D-263). NU-08 bleibt teilweise, bis die Online-Suche (M6) folgt.
 - Version 0.9 (Nährwerte anzeigen, 19.10.2026): NU-16 vorgezogen und „Implementiert“ (AK-NUT-08, D-264).
@@ -61,10 +62,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 49 | 30 | 9 | 88 |
+| Original verifiziert (OV) | 49 | 29 | 10 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
 | Eigene Verbesserung (EV) | 47 | 4 | 0 | 51 |
-| Summe | 109 | 47 | 11 | 167 |
+| Summe | 109 | 46 | 12 | 167 |
 
 | Release | Funktionen |
 |---|---|
@@ -72,22 +73,22 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | R1 | 109 |
 | R2 | 20 |
 | R3 | 1 |
-| R4 | 14 |
+| R4 | 13 |
 | R5 | 5 |
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 67 | 30 | 17 | 11 |
+| Anzahl | 42 | 67 | 30 | 16 | 12 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
-| Analysiert | 39 |
+| Analysiert | 38 |
 | Getestet | 3 |
 | Implementiert | 86 |
 | Noch zu recherchieren | 1 |
 | Spezifiziert | 17 |
-| Verworfen | 1 |
+| Verworfen | 2 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
@@ -184,7 +185,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | TH-01 | Verlauf mit Detail, Bearbeiten und Löschen | Historie wird gespeichert | HC-G | V | OV | H | TS-14 | M | P0 | MVP | R1 · M1/M2 | Übernehmen | Implementiert | AK-HIS-01 bis AK-HIS-04 |
 | TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Implementiert | AK-EXL-05, AK-HIS-05 |
 | TH-03 | Trainingskalender | Nicht belegt | – | P | ON | M | AH-08 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monatsansicht mit geplanten und absolvierten Einheiten |
-| TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | P3 | Später | R4 · M11 | Später (D-027) | Analysiert | Regel dokumentiert und getestet; Ruhetage unterbrechen nicht |
+| TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | – | Ausgeschlossen | – | Ausschließen: keine Serien-Zähler, Konsistenz als Wochenbild (Markenleitplanken Regel 2, D-318) | Verworfen | Entfällt |
 | TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-07 |
 | TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-06 |
 | TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-TRN-20, AK-DSH-04 |

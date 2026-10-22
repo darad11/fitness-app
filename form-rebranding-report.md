@@ -20,6 +20,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F2 Komponenten | Maße, Radien, Schrift, Breakpoints und Inhaltsbreite als Tokens; Knopf, Karte, Chip (neu), Ring, Balken, Tab-Leiste (Glas in FORM-Farben), Listenzeile, Eingabe (`field`), Sheet (Griff, wegwischbar), Toast, Leerzustand; Symbole mit 1,75 px; Gewicht 600 | D-314 | umgesetzt, Screenshots in `docs/screens/komponenten/` |
 | F3 Screens | Heute, Training, aktives Workout, Abschluss, Übungsdetails, Ernährung, Fortschritt und Mehr in Aufbau und Hierarchie des Konzepts; nur vorhandene Daten, keine Platzhalter; neue Komponenten `Tabs` und `MuscleTags` | D-315 | umgesetzt, Screenshots in `docs/screens/` (werden mit E erneuert) |
 | C Anmeldung und Über die App | Anmeldung mit `logo-anmeldung-dunkel.svg`, Claim „FORM YOURSELF.“ und Unterzeile als Text, Felder und Knöpfe aus F2, ohne Karte, Glas und Lichtflecken; die eigenen Tokens der Anmeldung entfallen; „Über die App“ mit dem Logo ohne Claim | D-316 | umgesetzt, Screenshots `docs/screens/anmeldung.png` und `ueber-die-app.png` |
+| D Startbild | `apple-touch-startup-image` für 20 Bildschirmmaße von iPhone und iPad, je hochkant und quer: drei Bilder unverändert aus dem Markenpaket, 37 nach derselben Regel erzeugt (`tools/splash.mjs`); nicht im Vorab-Speicher des Service Workers; Manifest-Farben #0C1219 seit A | D-317 | umgesetzt; Kaltstart ohne weißen Blitz nur am Gerät prüfbar (T-IPH-M0 Schritt 5, steht aus) |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -70,6 +71,12 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Screenshots: `tools/screenshots.mjs` (Anmeldung, Über die App), Bilder `docs/screens/anmeldung.png` und `docs/screens/ueber-die-app.png`.
 - Nicht geändert: Ablauf von Anmelden, Registrieren, Bestätigungsmail und Abgleich (D-269, D-273); Texte außer Name und Claim.
 
+### D Startbild
+
+- Neu: `tools/splash.mjs` (erzeugt Startbilder aus `public/splash/splash.svg`: Nacht, Symbol mittig, 24 % der kurzen Seite, Mitte bei 47 % der Höhe; prüft die Regel vorher gegen die drei Bilder des Markenpakets und gibt die Zeilen für `index.html` aus), 37 Bilder `public/splash/splash-<Breite>x<Höhe>.png`, `src/app/splash.test.ts` (je Zeile Datei und Pixelmaß, beide Lagen je Gerät, jedes Bild verlinkt, die drei Bilder des Markenpakets dabei).
+- Geändert: `index.html` (40 Zeilen `apple-touch-startup-image`), `vite.config.ts` (`globIgnores` um `**/splash/*.png` ergänzt), `e2e/pwa.spec.ts` (neuer Test: alle 40 Startbilder werden als PNG in passender Größe ausgeliefert), `docs/testing.md` (T-IPH-M0 Schritt 5: Kaltstart hochkant und quer), `docs/known-limitations.md` (Zeile „Startbild“).
+- Nicht geändert: die drei Bilder aus dem Markenpaket, Manifest (Farben seit Paket A), `theme-color`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -107,6 +114,12 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | C: `pnpm test` | 21.10.2026 | 810 Tests in 93 Dateien bestanden (F3: 847; 38 Kontrastprüfungen der entfallenen Tokens `--login-*` fallen weg, 19 je Modus; neu 1 Test der Anmeldung) |
 | C: `pnpm build`, `pnpm check:bundle` | 21.10.2026 | Build ok; Startansicht 227,1 KB von 250 KB (gzip; F3: 227,7 KB, die Regeln für Glas und Lichtflecken der Anmeldung entfallen) |
 | C: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 21.10.2026 | 172 bestanden, 4 übersprungen, 0 fehlgeschlagen (4,4 min); axe prüft `/mehr/synchronisierung` mit offener Anmeldung und `/mehr/ueber` (`network-a11y.spec.ts`) |
+| CI auf PR #49 nach C (`d444b74`, Lauf 39696479837) | 22.10.2026 | Checks grün; E2E Chromium grün; E2E WebKit: 166 bestanden, 10 übersprungen (4,6 min) |
+| D: `node tools/splash.mjs --check` | 22.10.2026 | Regel gegen die drei Bilder des Markenpakets: mittlere Abweichung 0,226 (1170 × 2532), 0,214 (1290 × 2796), 0,225 (2048 × 2732) von 255 |
+| D: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 22.10.2026 | ohne Befund |
+| D: `pnpm test` | 22.10.2026 | 814 Tests in 94 Dateien bestanden (neu `splash.test.ts` mit 4 Tests; Gegenprobe: ein vertauschter Dateiname lässt 2 davon fehlschlagen) |
+| D: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Service Worker 177 Einträge (2785 KiB) ohne Startbilder; Startansicht 227,1 KB von 250 KB (gzip) |
+| D: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 174 bestanden, 4 übersprungen, 0 fehlgeschlagen (4,4 min); neu je Projekt „Startbilder für iPhone und iPad werden ausgeliefert“ |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -120,4 +133,4 @@ Wird je Paket ergänzt; andere P2-Punkte bleiben unangetastet.
 
 ## 6. Stand nach dieser Sitzung
 
-Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: D, F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt.
+Umgesetzt, committet und gepusht: F0 (`1d5b6c8`), F1 (`196d00b`), A (`b031664`), B (`4029407`), Test-Fix für die CI (`ada0da4`), Entscheidungen D-311 bis D-313 (`10fa638`), F2 (`9944f96`), F3 (`007d1c4`), C (`d444b74`), D. Entwurfs-PR #49 (`form-rebranding` → `main`) für die CI; gemergt wird erst nach Freigabe. Offen: F4, G, E (Reihenfolge laut Übergabe Abschnitt 6); Gerätetest T-IPH-M0 Schritt 5 (Startbild) beim Produktinhaber; `brand-tokens.md` wird mit E abgeschlossen; die Screenshots in `docs/screens/` werden mit E erneuert und um den Rückkehr-Flow ergänzt.

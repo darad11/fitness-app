@@ -37,6 +37,7 @@ Auf iOS und iPadOS nutzen alle Browser WebKit. Maßgeblich ist, was Safari und i
 | Kamera | `getUserMedia` funktioniert auch in installierten Apps; ob die Berechtigung wiederholt abgefragt wird, ist im Prüfspike zu klären | Allgemein dokumentiert; Rest im Spike | Barcode-Scan möglich | R2, Prüfspike S-3 |
 | Dateien | Keine File System Access API; Export über Teilen-Menü oder Download, Import über Dateiauswahl | Allgemein dokumentiert | Kein direkter Ordnerzugriff | AK-DAT-01, AK-DAT-02 |
 | Apple Health, Apple Watch | Keine Web-Schnittstelle | Allgemein dokumentiert | Keine automatische Übernahme | Ausgeschlossen (D-116); native Option in Abschnitt 9 |
+| Startbild | iOS zeigt ein `apple-touch-startup-image` nur, wenn die `media`-Abfrage genau zu Bildschirmgröße, Pixeldichte und Ausrichtung passt, und lädt die Bilder nur beim Hinzufügen zum Home-Bildschirm | Apple-Dokumentation zu Web-Apps; allgemein dokumentiert | Ein neues Gerätemaß ohne Bild startet ohne Startbild; geänderte Startbilder erscheinen erst nach erneutem Hinzufügen | Bilder für 20 aktuelle iPhone- und iPad-Maße, hochkant und quer (D-317); neue Geräte in `tools/splash.mjs` ergänzen; Gerätetest T-IPH-M0 Schritt 5 |
 | Kurzbefehle | Ein aus Kurzbefehle geöffneter Link öffnet Safari, nicht die installierte App; wegen der Speichertrennung kommen so übergebene Daten nicht in der App an | Ableitung aus der Speichertrennung; im Spike zu bestätigen | Kein Import per Link | R4: Import über Datei oder Zwischenablage; R5: Kurzbefehl sendet an Supabase |
 
 ## 3. Timer und Signale im MVP

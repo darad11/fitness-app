@@ -127,6 +127,7 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 2. „Teilen › Zum Home-Bildschirm" ausführen, App vom Home-Bildschirm starten. Erwartung: Vollbild ohne Browserleiste, Name und Icon korrekt.
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
+5. Startbild (D-317): App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Nacht-Fläche mit dem grünen F in der Mitte, kein weißer Blitz; danach „Heute“ ohne hellen Zwischenschritt. Zu notieren: iPhone-Modell.
 
 ### T-IPH-M1 · iPhone, Training unter Alltagsbedingungen
 

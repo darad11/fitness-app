@@ -97,7 +97,8 @@ export default defineConfig({
         // wasm: Barcode-Erkennung auch ohne Netz (D-266, rund 1,1 MB).
         globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}'],
         // Store-Größe und Rasterfassungen der Logos braucht die App nicht offline (SVGs reichen).
-        globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png'],
+        // Startbilder lädt iOS selbst beim Hinzufügen zum Home-Bildschirm (D-317).
+        globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png', '**/splash/*.png'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
       },

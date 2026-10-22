@@ -26,9 +26,7 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await openPage(page, '/training/vorlagen/full_body_ab');
   await page.getByRole('button', { name: 'Tag A heute trainieren' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\/[0-9a-f-]+$/);
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Tag A', exact: true })).toBeVisible();
   await expect(page.getByText('0 von 17 Sätzen')).toBeVisible();
   // Vollbild: keine Hauptnavigation im Player.
   await expect(page.getByRole('navigation', { name: 'Hauptnavigation' })).toHaveCount(0);

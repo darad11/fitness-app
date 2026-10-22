@@ -170,6 +170,7 @@ Vorbereitung: iOS-Version notieren; App installiert und einmal online gestartet;
 | 11 | Zweite Einheit mit derselben Übung starten | Vorherige Werte mit Datum sichtbar | – |
 | 12 | Mehr › Daten › Exportieren, „In Dateien sichern" | Datei mit Datum im Namen in der Dateien-App | – |
 | 13 | Mehr › Daten | Status des dauerhaften Speichers und Verbrauch sichtbar | Status „dauerhaft" ja oder nein |
+| 14 | Programmtag starten, nach unten scrollen, bis der aktive Satz direkt unter dem Kopf liegt; Gewicht und Wiederholungen eingeben, mit dem Häkchen der Tastaturleiste bestätigen, „Satz erledigt“; danach einen Satz bei offener Tastatur direkt mit „Satz erledigt“ (D-323) | Beim Tippen bewegt sich nichts; nach jedem Satz steht der nächste Satz sichtbar unter Kopf und Pausenkarte | Sprang die Ansicht beim Schließen der Tastatur? |
 
 ### T-IPH-M4 · iPhone, Regression und MVP
 
@@ -878,4 +879,16 @@ Schalter, widersprüchliche Klassen, Wochenziel, Tabellenansicht (D-322); Liste 
 | `pnpm exec playwright test e2e/switches.spec.ts` | 38 bestanden, 2 übersprungen. Gegenprobe mit dem alten Schalter und Formular: 13 von 13 Handy-Tests fehlgeschlagen |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 218 bestanden, 6 übersprungen, 0 fehlgeschlagen (5,1 min) |
 | `pnpm check:bundle` | 229,1 KB von 250 KB |
+
+### F5 §2 Aktives Training · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kein Sprung nach dem Erledigen eines Satzes, Kopf mit dem Trainingstag (D-323); Gerätetest T-IPH-M1 Schritt 14 steht aus.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 99 Dateien, 826 Tests bestanden |
+| `pnpm exec playwright test e2e/training-scroll.spec.ts` (Pixel 7) | 1 bestanden: 17 Sätze, abwechselnd mit Enter und direkt mit „Satz erledigt“, jeder dritte mit „Pause überspringen“; beim Tippen keine Bewegung, danach der nächste Satz ganz zwischen Kopf und Fußleiste. Gegenprobe ohne den Ausgleich: „verdeckt vom Kopf (160 px)“ nach dem ersten Satz |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 219 bestanden, 7 übersprungen, 0 fehlgeschlagen (5,4 min) |
+| `pnpm check:bundle` | 229,0 KB von 250 KB |
 

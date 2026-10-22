@@ -53,9 +53,11 @@ export function SetRow(props: SetRowProps) {
     <li
       aria-label={props.name}
       aria-current={current ? 'step' : undefined}
+      data-set-id={set.id}
       className={cn(
-        // Scroll-Abstand zum klebenden Kopf mit Pause und zur Aktionsleiste (Fokus, Tests).
-        'scroll-mt-[21rem] scroll-mb-32 rounded-input px-2 py-1.5',
+        // Scroll-Abstand zum klebenden Kopf mit Pause (gemessen, `useStableSetView`) und zur
+        // Fußleiste: Fokus und Tastatur scrollen ein Feld nie hinter den Kopf (F5, D-323).
+        'scroll-mt-[calc(var(--player-head,0px)+0.75rem)] scroll-mb-32 rounded-input px-2 py-1.5',
         set.type === 'drop' && 'ml-6',
         current && 'bg-accent-soft',
         skipped && 'opacity-70',

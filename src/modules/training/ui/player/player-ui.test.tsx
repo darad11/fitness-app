@@ -68,9 +68,9 @@ describe('Trainingsplayer (S-07)', () => {
   it('zeigt Kopf, Übungen, Satzzeilen und den hervorgehobenen Satz', async () => {
     const session = await startTemplate();
     renderAt(`/training/einheit/${session.id}`);
-    expect(
-      await screen.findByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' }),
-    ).toBeInTheDocument();
+    // Kopf: Programm und Woche klein darüber, als Titel nur der Trainingstag (F5, D-323).
+    expect(await screen.findByRole('heading', { level: 1, name: 'Tag A' })).toBeInTheDocument();
+    expect(screen.getByText('Ganzkörper A/B · Woche 1')).toBeInTheDocument();
     expect(screen.getByText(/0 von 17 Sätzen/)).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'Kniebeuge mit Langhantel',

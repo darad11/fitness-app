@@ -74,6 +74,7 @@ import {
 } from '../../service/sessionService';
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
+import { useStableSetView } from './useStableSetView';
 
 /** Trainingsplayer (S-07) unter `/training/einheit/:id`. */
 export function SessionPage() {
@@ -230,6 +231,10 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const exercises = liveExercises(session);
   const progress = sessionProgress(session);
   const current = currentSet(session);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLElement>(null);
+  const footRef = useRef<HTMLDivElement>(null);
+  useStableSetView(rootRef, headRef, footRef, current?.id ?? null);
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
   const afterRest = restTimer ? nextOpenSet(session, restTimer.afterSetId) : null;
@@ -321,17 +326,25 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const afterCurrent = lastOfCurrent ? nextOpenSet(session, lastOfCurrent.id) : null;
   const nextExercise =
     afterCurrent && afterCurrent.exercise.id !== currentExercise?.id ? afterCurrent.exercise : null;
+  // Oben klein Programm und Woche, als Titel nur der Trainingstag; nichts doppelt (F5, D-323).
+  const heading = session.program ? session.program.dayName : session.title;
   const eyebrow = session.program
     ? `${session.program.programName} · ${session.program.weekName}`
-    : t.session.freeSource;
+    : heading === t.session.freeSource
+      ? null
+      : t.session.freeSource;
 
   return (
     <div
+      ref={rootRef}
       className={restTimer ? 'pb-32' : 'pb-28'}
       onPointerDownCapture={settings.restSound ? unlockSound : undefined}
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
-      <header className="page-gutters sticky top-0 z-10 -mx-page mb-4 border-b border-line bg-bg pt-2 pb-3 md:-mx-page-md lg:-mx-page-lg">
+      <header
+        ref={headRef}
+        className="page-gutters sticky top-0 z-10 -mx-page mb-4 border-b border-line bg-bg pt-2 pb-3 md:-mx-page-md lg:-mx-page-lg"
+      >
         <div className="flex items-start justify-between gap-2">
           {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
           <Link
@@ -343,8 +356,8 @@ function Player({ session, light }: { session: Session; light: boolean }) {
             <ChevronLeft aria-hidden="true" className="size-6" />
           </Link>
           <div className="min-w-0 flex-1 pt-0.5">
-            <p className="eyebrow truncate text-muted">{eyebrow}</p>
-            <h1 className="line-clamp-2 text-title leading-tight font-semibold">{session.title}</h1>
+            {eyebrow ? <p className="eyebrow truncate text-muted">{eyebrow}</p> : null}
+            <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
           </div>
           <Button
             variant="secondary"
@@ -665,7 +678,10 @@ function Player({ session, light }: { session: Session; light: boolean }) {
         </Button>
       </div>
 
-      <div className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+      <div
+        ref={footRef}
+        className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
+      >
         <div className="mx-auto flex max-w-content gap-2">
           {current && currentExercise ? (
             <Button

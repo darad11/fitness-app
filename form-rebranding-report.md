@@ -26,6 +26,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | E Token-Abgleich | `brand-tokens.md` final: Abgleich mit `brand.css`, Zuordnung alt → neu, nachgerechnete Kontraste, Abweichungen, offene Punkte; ungenutzte Tokens `--ink-2`, `--on-ink`, `--on-ink-muted` entfernt; Screenshots aller Screens und Komponenten erneuert; dieser Bericht | D-320 | umgesetzt |
 | Übergabe Marken-Chat | Alle Screenshots auf einem Bild (`docs/screens/uebersicht.png`) und als Archiv (`docs/screens.zip`), erzeugt mit `tools/screens-overview.mjs` | D-321 | umgesetzt |
 | F5 §1 Bedienelemente | Schalter reagieren auf einen Tipp auf den Schalter selbst (alle elf); widersprüchliche Klassen an Chips und Knöpfen durch Varianten ersetzt, Schutztest; Wochentage der Tagesaufgabe in einer Zeile innerhalb der Karte; Wochenziel mit dem gespeicherten Wert vorbelegt; „Als Tabelle“ bleibt nach Neuladen | D-322 | umgesetzt |
+| F5 §2 Aktives Training | Kein Sprung nach dem Erledigen eines Satzes: Verschiebungen über dem aktiven Satz werden vor dem Zeichnen ausgeglichen, der nächste Satz steht unter Kopf und Pausenkarte; beim Tippen bewegt sich nichts. Kopf: „Programm · Woche“ klein, Titel nur der Trainingstag, einzeilig | D-323 | umgesetzt; Verhalten der iOS-Tastatur nur am Gerät prüfbar |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -119,6 +120,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `src/app/class-conflicts.test.ts` (Schutz vor stillen Überschreibungen), `e2e/switches.spec.ts` (jeder Schalter per Tipp auf die Fläche, Tippfläche ≥ 44 × 44, Speichern nach Neuladen; Formular der Tagesaufgabe auf 360 und 390 pt in der Karte; jede Einfachauswahl per Tipp); erweitert `goals-ui.test.tsx` (Wochenziel 4 → 5 → 3 → 4).
 - Dokumente: `docs/decisions.md` (D-322), `docs/testing.md` (Abschnitt 4.5 Liste aller Schalter und Umschalter), `docs/design-system.md`, `docs/data-model.md` (`meta`).
 
+### F5 §2 Aktives Training
+
+- Gefunden: Beim Erledigen eines Satzes startet die Pause; die Karte „Jetzt“ über der Liste entfällt, oben im klebenden Kopf erscheint die Pausenkarte. Die Liste rutschte um die Höhe der Karte „Jetzt“ nach oben, die Sätze lagen hinter Kopf und Pausenkarte (Gegenprobe im Test: „verdeckt vom Kopf (160 px)“ schon nach dem ersten Satz). Kein Auto-Scroll, keine wechselnden Schlüssel, keine neu gemounteten Zeilen. Das Häkchen der Tastaturleiste löst Enter aus und speichert den Wert; erledigt wird der Satz über „Satz erledigt“, das auf dem iPhone direkt hinter der Tastaturleiste liegt. Im Kopf stand der Programmname doppelt (Titel der Einheit „Tag · Programm“).
+- Geändert: neu `training/ui/player/useStableSetView.ts` (Ausgleich vor dem Zeichnen, Satz zeigen nach einem Wechsel, `--player-head`); `SessionPage.tsx` (Refs auf Wurzel, Kopf und Fußleiste; Titel `program.dayName`, einzeilig; keine doppelte Zeile beim freien Training); `SetRow.tsx` (`data-set-id`, `scroll-margin-top` aus der gemessenen Kopfhöhe statt 21 rem).
+- Tests: neu `e2e/training-scroll.spec.ts` (ganzes Training mit 17 Sätzen im Handy-Format, abwechselnd mit Enter und direkt mit „Satz erledigt“, jeder dritte Satz mit „Pause überspringen“); angepasst `player-ui.test.tsx`, `session.spec.ts`, `player.spec.ts`, `programs.spec.ts` (Titel „Tag A“, Programm und Woche darüber).
+- Dokumente: `docs/decisions.md` (D-323), `docs/testing.md` (T-IPH-M1 Schritt 14).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -190,6 +198,11 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §1: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 229,1 KB von 250 KB (gzip; E: 228,7 KB) |
 | F5 §1: `pnpm exec playwright test e2e/switches.spec.ts` (neu) | 23.10.2026 | 38 bestanden, 2 übersprungen (die Breiten 360 und 390 pt nur im Handy-Projekt). Gegenprobe mit dem alten `Switch.tsx` und `TasksPage.tsx` im Handy-Projekt: alle 13 Tests zu Schaltern und Formular fehlgeschlagen |
 | F5 §1: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 218 bestanden, 6 übersprungen, 0 fehlgeschlagen (5,1 min) |
+| F5 §2: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F5 §2: `pnpm test` | 23.10.2026 | 826 Tests in 99 Dateien bestanden (`player-ui.test.tsx` prüft Titel „Tag A“ und „Ganzkörper A/B · Woche 1“; zuerst schlug der Test mit dem alten Titel fehl, und jsdom kennt kein `ResizeObserver`, der Hook ist dafür abgesichert) |
+| F5 §2: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 229,0 KB von 250 KB (gzip) |
+| F5 §2: `pnpm exec playwright test e2e/training-scroll.spec.ts` (neu, Handy) | 23.10.2026 | 1 bestanden (17 Sätze, 20 s). Erster Lauf rot, weil Arbeitssätze mit Bereich 6–8 ohne Wiederholungen nicht erledigt werden („Trag zuerst die Werte ein“, richtig so); der Test füllt jetzt alle Felder. Gegenprobe ohne `useStableSetView`: „verdeckt vom Kopf (160 px)“ nach dem ersten Satz |
+| F5 §2: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 219 bestanden, 7 übersprungen, 0 fehlgeschlagen (5,4 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

@@ -19,9 +19,8 @@ test('Programm aktivieren, nächsten Tag von „Heute" starten, Zähler (AK-PRG-
   await expect(page.getByText('Trainingstag 1 von 32 · Ganzkörper A/B, 4 Tage')).toBeVisible();
   await page.getByRole('button', { name: 'Training starten' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\/[0-9a-f-]+$/);
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B, 4 Tage' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Tag A', exact: true })).toBeVisible();
+  await expect(page.getByText('Ganzkörper A/B, 4 Tage · Woche 1', { exact: true })).toBeVisible();
   await expect(page.getByText('Beinpresse').first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Beenden', exact: true }).click();

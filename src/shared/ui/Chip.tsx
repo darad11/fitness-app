@@ -5,14 +5,36 @@ import { cn } from '../lib/cn';
  * Chip der Marke FORM (D-314): 36 px hoch, rund, Fläche card-2 mit 1-px-Rand; aktiv Lime mit
  * Schrift in Nacht. Die Tippfläche reicht unsichtbar auf 44 px (`before`), damit kleine Chips gut
  * zu treffen sind. Für Links und Etiketten gibt es dieselben Klassen über `chipClasses`.
+ *
+ * `cn` löst widersprüchliche Klassen nicht auf (clsx): Was sich je Aufruf ändert (Innenmaß,
+ * Breite), kommt deshalb über `fill`, nicht über `className` (F5, D-322). `class-conflicts.test.ts`
+ * prüft alle Aufrufe.
  */
-export function chipClasses(selected = false, className?: string): string {
+export const CHIP_BASE =
+  'relative inline-flex h-chip min-w-0 select-none items-center justify-center gap-1.5 rounded-pill text-sm font-semibold whitespace-nowrap transition-[background-color,color,opacity] duration-120 before:absolute before:-inset-y-1 before:content-[""]';
+export const CHIP_SELECTED = 'bg-accent text-on-accent';
+export const CHIP_IDLE =
+  'bg-surface-2 text-fg shadow-[inset_0_0_0_1px_var(--border)] hover:bg-surface';
+/** Größe nach Inhalt oder als Zelle eines Rasters (volle Breite, Tippfläche bis an den Nachbarn). */
+export const CHIP_SIZES = {
+  content: 'px-4 before:inset-x-0',
+  fill: 'w-full px-1 before:-inset-x-0.5',
+} as const;
+
+export interface ChipOptions {
+  /** Füllt eine Zelle (z. B. sieben Wochentage in einer Zeile) statt sich nach dem Inhalt zu richten. */
+  fill?: boolean;
+}
+
+export function chipClasses(
+  selected = false,
+  className?: string,
+  { fill = false }: ChipOptions = {},
+): string {
   return cn(
-    'relative inline-flex h-chip min-w-0 select-none items-center justify-center gap-1.5 rounded-pill px-4 text-sm font-semibold whitespace-nowrap transition-[background-color,color,opacity] duration-120',
-    'before:absolute before:inset-x-0 before:-inset-y-1 before:content-[""]',
-    selected
-      ? 'bg-accent text-on-accent'
-      : 'bg-surface-2 text-fg shadow-[inset_0_0_0_1px_var(--border)] hover:bg-surface',
+    CHIP_BASE,
+    fill ? CHIP_SIZES.fill : CHIP_SIZES.content,
+    selected ? CHIP_SELECTED : CHIP_IDLE,
     className,
   );
 }
@@ -30,15 +52,17 @@ export interface ChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
   /** Setzt `aria-pressed`, wenn der Chip einen Zustand umschaltet. */
   pressed?: boolean;
+  /** Zelle eines Rasters, siehe `ChipOptions`. */
+  fill?: boolean;
 }
 
-export function Chip({ selected, pressed, className, type = 'button', ...props }: ChipProps) {
+export function Chip({ selected, pressed, fill, className, type = 'button', ...props }: ChipProps) {
   return (
     <button
       type={type}
       aria-pressed={pressed}
       className={cn(
-        chipClasses(selected ?? pressed ?? false, className),
+        chipClasses(selected ?? pressed ?? false, className, { fill }),
         'active:opacity-92 disabled:cursor-not-allowed disabled:opacity-50',
       )}
       {...props}

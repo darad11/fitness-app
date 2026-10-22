@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import { useExercises, type Exercise } from '@/modules/exercises';
 import { useFormatters } from '@/modules/settings';
 import { formatSetValues, useHistoryRows } from '@/modules/training';
+import { META_KEYS, useMetaFlag } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { ButtonLink, Card, PageHeader, SegmentedControl, Skeleton, Switch } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
@@ -55,7 +56,7 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
   const now = useToday();
   const [metric, setMetric] = useState<ExerciseMetric>('best');
   const [period, setPeriod] = useState<ExercisePeriod>('1y');
-  const [table, setTable] = useState(false);
+  const [table, setTable] = useMetaFlag(META_KEYS.exerciseTable);
   const number = (value: number) => fmt.number(value, { maximumFractionDigits: 2 });
   const canOrm = exercise.trackingMode === 'weight_reps';
   const points = rows

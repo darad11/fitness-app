@@ -143,7 +143,6 @@ export function RestStage(props: RestStageProps) {
         <IconButton
           label={t.rest.expand}
           aria-expanded={false}
-          className="size-12"
           onClick={() => {
             setExpanded(true);
           }}

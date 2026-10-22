@@ -309,7 +309,7 @@ export function ShoppingListPage() {
                     onClick={() => {
                       submit(name);
                     }}
-                    className={chipClasses(false, 'gap-1 px-3 font-medium')}
+                    className={chipClasses(false)}
                   >
                     <Plus aria-hidden="true" className="size-3.5" />
                     {name}
@@ -405,7 +405,7 @@ export function ShoppingListPage() {
                       onClick={() => {
                         run(() => addItem(rt, entry));
                       }}
-                      className={chipClasses(false, 'gap-1 px-3 font-medium')}
+                      className={chipClasses(false)}
                     >
                       <Plus aria-hidden="true" className="size-4 text-muted" />
                       {entry.name}
@@ -679,7 +679,7 @@ function EditItem({
           {ts.cancel}
         </Button>
         <span className="flex-1" />
-        <Button type="button" size="sm" variant="quiet" className="text-danger" onClick={onDelete}>
+        <Button type="button" size="sm" variant="quietDanger" onClick={onDelete}>
           {ts.delete}
         </Button>
       </div>

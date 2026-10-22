@@ -656,8 +656,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
 
       <div className="mt-8 flex justify-center">
         <Button
-          variant="quiet"
-          className="text-danger"
+          variant="quietDanger"
           onClick={() => {
             setConfirm({ kind: 'discard' });
           }}

@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { loadProfile } from '@/modules/settings';
 import { DbProvider, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
+import { activeGoal } from '../calc/goals';
 import { listGoals } from '../data/goalRepository';
 import { goalsRoutes } from '../routes';
 import { setGoal } from '../service/goalService';
@@ -60,6 +61,29 @@ describe('Profil und Ziele (S-33, AK-SET-01, AK-SET-05)', () => {
       true,
     );
     expect(await listGoals(rt.db)).toHaveLength(2);
+  });
+
+  it('belegt das Auswahlfeld mit dem gespeicherten Wochenziel vor und speichert genau den gewählten Wert (F5, D-322)', async () => {
+    const user = userEvent.setup();
+    await setGoal(rt, 'weekly_sessions', 4);
+    renderRoutes(goalsRoutes, '/mehr/profil');
+    const weekly = await screen.findByRole('region', { name: 'Wochenziel' });
+    const select = within(weekly).getByLabelText<HTMLSelectElement>('Trainings pro Woche');
+    expect(within(weekly).getByText('Aktuell: 4 Trainings pro Woche')).toBeVisible();
+    expect(select.value).toBe('4');
+    for (const value of ['5', '3', '4']) {
+      await user.selectOptions(select, value);
+      await user.click(within(weekly).getByRole('button', { name: 'Ändern' }));
+      expect(
+        await within(weekly).findByText(`Aktuell: ${value} Trainings pro Woche`),
+      ).toBeVisible();
+      expect(select.value).toBe(value);
+    }
+    expect(activeGoal(await listGoals(rt.db), 'weekly_sessions')?.value).toBe(4);
+    // Ohne Wochenziel schlägt das Feld 3 vor.
+    await user.click(within(weekly).getByRole('button', { name: 'Entfernen' }));
+    expect(await within(weekly).findByText('Kein Wochenziel gesetzt.')).toBeVisible();
+    expect(select.value).toBe('3');
   });
 
   it('speichert den optionalen Anzeigenamen', async () => {

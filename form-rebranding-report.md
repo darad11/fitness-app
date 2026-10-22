@@ -25,6 +25,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | G Rückkehr-Flow | Nach 14 Tagen ohne Eintrag einmal je Rückkehr das Blatt „Schön, dass du da bist.“ mit „Ein Spaziergang“, „Ein leichtes Training“ (Hinweis im Player) und „Nur reinschauen“; „Pause“ im Verlauf und im Fortschritt; Satz zum ersten Start | D-319 | umgesetzt; Push nach 21 Tagen nicht gebaut (keine Push-Infrastruktur) |
 | E Token-Abgleich | `brand-tokens.md` final: Abgleich mit `brand.css`, Zuordnung alt → neu, nachgerechnete Kontraste, Abweichungen, offene Punkte; ungenutzte Tokens `--ink-2`, `--on-ink`, `--on-ink-muted` entfernt; Screenshots aller Screens und Komponenten erneuert; dieser Bericht | D-320 | umgesetzt |
 | Übergabe Marken-Chat | Alle Screenshots auf einem Bild (`docs/screens/uebersicht.png`) und als Archiv (`docs/screens.zip`), erzeugt mit `tools/screens-overview.mjs` | D-321 | umgesetzt |
+| F5 §1 Bedienelemente | Schalter reagieren auf einen Tipp auf den Schalter selbst (alle elf); widersprüchliche Klassen an Chips und Knöpfen durch Varianten ersetzt, Schutztest; Wochentage der Tagesaufgabe in einer Zeile innerhalb der Karte; Wochenziel mit dem gespeicherten Wert vorbelegt; „Als Tabelle“ bleibt nach Neuladen | D-322 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -109,6 +110,15 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 - Warnung vor Datenverlust beim Gerätetest (Nachtrag zu D-317): `docs/testing.md` (T-IPH-M0 Schritt 5), `docs/known-limitations.md` (Zeile „Startbild“), `docs/brand-form.md` (Neuinstallation). Beim Entfernen der App vom Home-Bildschirm kann iOS ihre Daten löschen, und ein Export lässt sich noch nicht einspielen.
 - Nicht geändert: App, Tests und die Screenshots selbst.
 
+### F5 §1 Bedienelemente
+
+Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
+
+- Gefunden: (1) Bei allen elf Schaltern war nur die Beschriftung mit dem Kontrollkästchen verbunden; die Schalterfläche selbst reagierte nicht (seit dem ersten Schalter, also auch vor dem Rebranding; die Tests tippten auf die Beschriftung). Das erklärt 1.1 und 1.2. (2) `cn` löst widersprüchliche Klassen nicht auf; seit F2 überstimmten die Grundklassen von Chip, Knopf und Symbol-Knopf an 18 Stellen die Klassen der Aufrufer, darunter `px-0` der Wochentage (Formular lief aus der Karte), `text-danger` an „Löschen“ im Verlauf (weiß) und am Löschsymbol pausierter Aufgaben (grau), `size-12` der Pausenkarte (44 statt 48 px). (3) Das Wochenziel startete im Auswahlfeld immer mit 3.
+- Geändert: `src/shared/ui/Switch.tsx` (Kontrollkästchen über der ganzen Schalterfläche, 44 × 56 px), `Chip.tsx` (`fill`, Grundklassen exportiert), `Button.tsx` (Variante `quietDanger`, `IconButton` mit `tone` `danger`, Grundklassen exportiert), `src/shared/db/useMetaFlag.ts` (neu) und `meta.ts` (`view.bodyWeightTable`, `view.exerciseTable`); Aufrufer `habits/ui/TasksPage.tsx` (Wochentage als Raster mit `Chip fill`, Formular `grid-cols-1`, Töne statt Klassen), `shopping/ui/ShoppingListPage.tsx`, `training/ui/HistoryDetailPage.tsx`, `training/ui/player/SessionPage.tsx`, `SetRow.tsx`, `RestStage.tsx`, `water/ui/WaterCard.tsx`, `nutrition/ui/KitchenMenu.tsx`, `goals/ui/GoalsPanel.tsx` (Entwurf statt fester 3), `body/ui/BodyWeightPage.tsx` und `progress/ui/ExerciseProgressPage.tsx` (`useMetaFlag`).
+- Tests: neu `src/app/class-conflicts.test.ts` (Schutz vor stillen Überschreibungen), `e2e/switches.spec.ts` (jeder Schalter per Tipp auf die Fläche, Tippfläche ≥ 44 × 44, Speichern nach Neuladen; Formular der Tagesaufgabe auf 360 und 390 pt in der Karte; jede Einfachauswahl per Tipp); erweitert `goals-ui.test.tsx` (Wochenziel 4 → 5 → 3 → 4).
+- Dokumente: `docs/decisions.md` (D-322), `docs/testing.md` (Abschnitt 4.5 Liste aller Schalter und Umschalter), `docs/design-system.md`, `docs/data-model.md` (`meta`).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -175,6 +185,11 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | Übergabe: `pnpm test` | 22.10.2026 | 822 Tests in 98 Dateien bestanden (wie E) |
 | Übergabe: `pnpm build`, `pnpm check:bundle` | 22.10.2026 | Build ok; Service Worker 178 Einträge (die neuen Dateien liegen in `docs/`, nicht in `public/`); Startansicht 228,7 KB von 250 KB (gzip) |
 | Übergabe: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 22.10.2026 | 180 bestanden, 4 übersprungen, 0 fehlgeschlagen (5,2 min) |
+| F5 §1: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund (Prettier formatierte vorher `Button.tsx`, `TasksPage.tsx` und `goals-ui.test.tsx` nach) |
+| F5 §1: `pnpm test` | 23.10.2026 | 826 Tests in 99 Dateien bestanden (E: 822 in 98; neu `class-conflicts.test.ts` mit 3 Tests, Wochenziel in `goals-ui.test.tsx`). Gegenproben: Ohne die Korrekturen an den Aufrufern meldet `class-conflicts.test.ts` 18 Stellen; ohne die Korrektur in `GoalsPanel.tsx` schlägt der Wochenziel-Test fehl („expected '3' to be '4'“) |
+| F5 §1: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 229,1 KB von 250 KB (gzip; E: 228,7 KB) |
+| F5 §1: `pnpm exec playwright test e2e/switches.spec.ts` (neu) | 23.10.2026 | 38 bestanden, 2 übersprungen (die Breiten 360 und 390 pt nur im Handy-Projekt). Gegenprobe mit dem alten `Switch.tsx` und `TasksPage.tsx` im Handy-Projekt: alle 13 Tests zu Schaltern und Formular fehlgeschlagen |
+| F5 §1: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 218 bestanden, 6 übersprungen, 0 fehlgeschlagen (5,1 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

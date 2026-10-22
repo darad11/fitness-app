@@ -8,6 +8,9 @@ export const META_KEYS = {
   hlc: 'hlc',
   dismissedHints: 'hints.dismissed',
   lastExportAt: 'export.lastAt',
+  /** Ansicht „Als Tabelle“ statt Diagramm, je Seite gerätelokal (F5, D-322). */
+  bodyWeightTable: 'view.bodyWeightTable',
+  exerciseTable: 'view.exerciseTable',
 } as const;
 
 export type HintId = 'ios-install';

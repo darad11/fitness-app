@@ -190,7 +190,7 @@ export function KitchenMenu() {
               <Link
                 to="/ernaehrung/lebensmittel/neu"
                 onClick={close}
-                className={buttonClasses('primary', 'md', 'gap-1.5 px-4')}
+                className={buttonClasses('primary', 'md')}
               >
                 <Plus aria-hidden="true" className="size-4" />
                 {tk.newFood}

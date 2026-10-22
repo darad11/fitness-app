@@ -9,7 +9,12 @@ export interface SwitchProps {
   disabled?: boolean;
 }
 
-/** Schalter als natives Kontrollkästchen mit Rolle „switch“; Zustand über Fläche und Position. */
+/**
+ * Schalter als natives Kontrollkästchen mit Rolle „switch“; Zustand über Fläche und Position.
+ * Das Kontrollkästchen liegt unsichtbar über der ganzen Schalterfläche (44 × 56 px), damit ein
+ * Tipp auf den Schalter selbst wirkt, nicht nur auf die Beschriftung (F5, D-322). Die Fläche
+ * ragt oben und unten je 6 px über den sichtbaren Schalter hinaus, ohne die Zeile zu erhöhen.
+ */
 export function Switch({ label, checked, onChange, hint, disabled }: SwitchProps) {
   const id = useId();
   const hintId = useId();
@@ -25,7 +30,7 @@ export function Switch({ label, checked, onChange, hint, disabled }: SwitchProps
           </p>
         ) : null}
       </div>
-      <span className="relative inline-flex shrink-0 items-center">
+      <span className="relative -my-1.5 inline-flex h-touch w-14 shrink-0 items-center">
         <input
           id={id}
           type="checkbox"
@@ -37,7 +42,7 @@ export function Switch({ label, checked, onChange, hint, disabled }: SwitchProps
           onChange={(event) => {
             onChange(event.target.checked);
           }}
-          className="peer sr-only"
+          className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer appearance-none opacity-0 disabled:cursor-not-allowed"
         />
         <span
           aria-hidden="true"
@@ -49,7 +54,7 @@ export function Switch({ label, checked, onChange, hint, disabled }: SwitchProps
         <span
           aria-hidden="true"
           className={cn(
-            'absolute top-1 left-1 size-6 rounded-pill bg-surface shadow-card transition-transform duration-120',
+            'absolute top-1/2 left-1 size-6 -translate-y-1/2 rounded-pill bg-surface shadow-card transition-transform duration-120',
             checked && 'translate-x-6',
           )}
         />

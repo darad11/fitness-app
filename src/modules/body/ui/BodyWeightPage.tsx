@@ -2,7 +2,7 @@ import { Plus, Scale } from 'lucide-react';
 import { lazy, Suspense, useMemo, useState } from 'react';
 import { changeTone, useActiveGoals, weightToGoal } from '@/modules/goals';
 import { useFormatters } from '@/modules/settings';
-import { logError, useDb } from '@/shared/db';
+import { logError, META_KEYS, useDb, useMetaFlag } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import {
   Button,
@@ -46,7 +46,7 @@ export function BodyWeightPage() {
   const goals = useActiveGoals();
   const now = useToday();
   const [period, setPeriod] = useState<WeightPeriod>('90d');
-  const [table, setTable] = useState(false);
+  const [table, setTable] = useMetaFlag(META_KEYS.bodyWeightTable);
   const [sheet, setSheet] = useState<{ entry?: BodyWeight } | null>(null);
   const [deleted, setDeleted] = useState<string | null>(null);
 

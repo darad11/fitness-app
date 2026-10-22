@@ -102,6 +102,28 @@ Repositories mit Tombstones · Transaktion „Training starten" atomar · „Sat
 | K-14 | Eigene Übung auf beiden geändert | Feldweise, jüngere bei gleichem Feld |
 | K-15 bis K-21 | Regeln für R2 bis R4 aus `data-model.md` Abschnitt 7.2 | Werden mit der jeweiligen Stufe umgesetzt |
 
+### 4.5 Schalter und Umschalter (F5, D-322)
+
+Ein-/Aus-Schalter (`Switch`, Rolle „switch“). Getestet in `e2e/switches.spec.ts` mit einem Tipp auf die Schalterfläche selbst (Handy: Touch, Desktop: Maus; eine Aufgabe zusätzlich mit der Leertaste), Tippfläche mindestens 44 × 44, Zustand sofort sichtbar und nach dem Neuladen unverändert.
+
+| Schalter | Ort | Gespeichert |
+|---|---|---|
+| Mit Training abhaken | Tagesaufgaben › Aufgabe bearbeiten | mit „Speichern“ an der Aufgabe (D-285) |
+| Mit Wasserziel abhaken | Tagesaufgaben › Aufgabe bearbeiten | mit „Speichern“; höchstens eine Regel je Aufgabe (D-289) |
+| Als Tabelle | Fortschritt › Körpergewicht | sofort, gerätelokal `view.bodyWeightTable` |
+| Als Tabelle | Fortschritt › Übung | sofort, gerätelokal `view.exerciseTable` |
+| Pause nach „erledigt“ automatisch starten | Mehr › Einstellungen | sofort in den Einstellungen |
+| Ton bei Pausenende | Mehr › Einstellungen | sofort in den Einstellungen |
+| Bildschirm im Training aktiv halten | Mehr › Einstellungen | sofort in den Einstellungen |
+| Je Seite | Übungen › Eigene Übung anlegen bzw. bearbeiten | mit „Anlegen“ bzw. „Speichern“ |
+| Nach der letzten Woche von vorn beginnen | Programm bearbeiten | sofort am Programm |
+| Favorit | Lebensmittel bearbeiten | sofort |
+| Favorit | Rezept bearbeiten | sofort |
+
+Umschalter mit mehreren Werten. Die Einfachauswahl (`SegmentedControl`) besteht aus Optionsfeldern in ihrem `label`, ein Tipp auf den ganzen Chip wirkt; `e2e/switches.spec.ts` tippt jede Option an: Zeitraum in Fortschritt, Körpergewicht, Wasser und Tagesaufgaben, Art beim Nachtragen, „Nährwerte je“ beim Lebensmittel, Ansicht der Einkaufsliste. Weitere: Kennzahl und Zeitraum im Übungsfortschritt sowie Zeitraum der Auswertung einer Aufgabe (dieselbe Komponente), Reiter „Muskeln“ und „Alternativen“ in den Übungsdetails (`Tabs`, `exercises.spec.ts`), Wochentage einer Aufgabe (Chips mit `aria-pressed`, `tasks.spec.ts`, `switches.spec.ts`), Abhaken von Aufgaben und Einkäufen (Kontrollkästchen im `label`, `tasks.spec.ts`, `shopping.spec.ts`), „Satz erledigt“ im Player (Knopf mit `aria-pressed`, `session.spec.ts`, `player.spec.ts`). Aufklapper mit `aria-expanded` (pausierte Aufgaben, erledigte Einkäufe, Pausenkarte, Aktionen eines Satzes, Meine Küche) sind Knöpfe.
+
+Gegen Regressionen an der gemeinsamen Stelle: `src/app/class-conflicts.test.ts` meldet jede Klasse, die einer gemeinsamen Komponente (Chip, Knopf, Symbol-Knopf) eine eigene Eigenschaft überschreibt.
+
 ## 5. CI-Gates
 
 Jeder Pull Request und jeder Push auf `main` (Arbeitszweige laufen über ihren Pull Request, damit nichts doppelt läuft): Lint, Typprüfung, Unit- und Integrationstests mit Abdeckung (`calc/` ≥ 95 %, `service/` und `data/` ≥ 85 % Zeilen), E2E in Chromium und WebKit, Build, PWA-Prüfungen aus Abschnitt 3, Bündelgröße der Startansicht unter 250 KB komprimiert, Kontrasttest der Tokens. Ein roter Lauf blockiert Merge und Auslieferung.
@@ -844,3 +866,16 @@ Wasser auf „Heute“, in der Ernährung und als eigene Seite (D-289); Branch `
 | `pnpm check:bundle` | zuerst 250,1 KB (über 250 KB). `goalOn` liegt im Modul Wasser statt in den Zielen, und „Meine Küche“ zählt offene Artikel der Einkaufsliste direkt in der Tabelle statt über Repository und Schema: 249,4 KB |
 | Bilder | Karte auf „Heute“ (offen und Ziel erreicht), Seite „Wasser“, Ernährung (Testeinträge) |
 | Nachtrag Platz auf „Heute“ (Wunsch des Produktinhabers: Wasser unter „Ernährung heute“) | `steps.spec.ts` und `water.spec.ts` prüfen die neue Reihenfolge (Ernährung heute, Wasser, Schritte, Tagesaufgaben). `pnpm lint`, `typecheck`, `check:docs` ohne Befund; `pnpm test` 91 Dateien, 797 Tests bestanden; `pnpm test:e2e` 232 bestanden, 4 übersprungen; `pnpm check:bundle` 249,4 KB |
+
+### F5 §1 Bedienelemente · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Schalter, widersprüchliche Klassen, Wochenziel, Tabellenansicht (D-322); Liste der Schalter in Abschnitt 4.5.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 99 Dateien, 826 Tests bestanden. Neu `class-conflicts.test.ts` (meldet ohne die Korrekturen 18 Stellen), Wochenziel 4 → 5 → 3 → 4 in `goals-ui.test.tsx` (ohne die Korrektur: „expected '3' to be '4'“) |
+| `pnpm exec playwright test e2e/switches.spec.ts` | 38 bestanden, 2 übersprungen. Gegenprobe mit dem alten Schalter und Formular: 13 von 13 Handy-Tests fehlgeschlagen |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 218 bestanden, 6 übersprungen, 0 fehlgeschlagen (5,1 min) |
+| `pnpm check:bundle` | 229,1 KB von 250 KB |
+

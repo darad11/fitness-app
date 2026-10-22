@@ -15,7 +15,7 @@ import { formatMl } from './format';
 
 const tw = tWater;
 /** Schnellmengen als Chips (D-314); beim Antippen kurz Lime. */
-const QUICK = chipClasses(false, 'w-full px-2 active:bg-accent active:text-on-accent');
+const QUICK = chipClasses(false, 'active:bg-accent active:text-on-accent', { fill: true });
 const INPUT = 'field w-full min-w-0';
 
 /**

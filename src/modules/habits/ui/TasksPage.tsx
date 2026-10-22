@@ -4,16 +4,7 @@ import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { tWater } from '@/shared/i18n/de-water';
-import {
-  Button,
-  Card,
-  chipClasses,
-  IconButton,
-  PageHeader,
-  Skeleton,
-  Switch,
-  Toast,
-} from '@/shared/ui';
+import { Button, Card, Chip, IconButton, PageHeader, Skeleton, Switch, Toast } from '@/shared/ui';
 import { weekdaysOn } from '../calc/days';
 import { loadWaterReached } from '@/modules/water';
 import { HABIT_NAME_MAX, type Habit, type HabitAutoDone } from '../model/habit';
@@ -126,7 +117,7 @@ export function TasksPage() {
                 label={t.tasks.pausedToggle(paused.length)}
                 aria-expanded={showPaused}
                 aria-controls="pausierte-aufgaben"
-                className={showPaused ? 'bg-surface-2 text-fg' : undefined}
+                tone={showPaused ? 'tile' : 'default'}
                 onClick={() => {
                   setShowPaused((open) => !open);
                 }}
@@ -176,7 +167,7 @@ export function TasksPage() {
                     <li key={habit.id}>
                       {editing?.id === habit.id ? (
                         <form
-                          className="grid gap-2 py-3"
+                          className="grid grid-cols-1 gap-2 py-3"
                           onSubmit={(event) => {
                             event.preventDefault();
                             const next = editing.name.trim();
@@ -222,15 +213,15 @@ export function TasksPage() {
                             <legend className="mb-1.5 text-sm font-semibold text-muted">
                               {t.tasks.weekdaysLegend}
                             </legend>
-                            <div className="flex gap-1">
+                            <div className="grid grid-cols-7 gap-1">
                               {ALL_DAYS.map((day) => {
                                 const on = editing.weekdays.includes(day);
                                 const name = tTaskStats.detail.weekdayNames[day - 1] ?? '';
                                 return (
-                                  <button
+                                  <Chip
                                     key={day}
-                                    type="button"
-                                    aria-pressed={on}
+                                    pressed={on}
+                                    fill
                                     aria-label={t.tasks.weekdayToggle(name)}
                                     onClick={() => {
                                       const next = on
@@ -239,10 +230,9 @@ export function TasksPage() {
                                       if (next.length === 0) return;
                                       setEditing({ ...editing, weekdays: next });
                                     }}
-                                    className={chipClasses(on, 'flex-1 px-0')}
                                   >
                                     {name}
-                                  </button>
+                                  </Chip>
                                 );
                               })}
                             </div>
@@ -297,8 +287,7 @@ export function TasksPage() {
                             <Button
                               type="button"
                               size="sm"
-                              variant="quiet"
-                              className="text-danger"
+                              variant="quietDanger"
                               onClick={() => {
                                 run(async () => {
                                   await removeHabit(rt, habit.id);
@@ -332,7 +321,6 @@ export function TasksPage() {
                           <IconButton
                             label={`${t.session.moveUp}, ${habit.name}`}
                             disabled={index === 0}
-                            className="disabled:opacity-30"
                             onClick={() => {
                               run(() => moveHabit(rt, habit.id, -1));
                             }}
@@ -342,7 +330,6 @@ export function TasksPage() {
                           <IconButton
                             label={`${t.session.moveDown}, ${habit.name}`}
                             disabled={index === tasks.listed.length - 1}
-                            className="disabled:opacity-30"
                             onClick={() => {
                               run(() => moveHabit(rt, habit.id, 1));
                             }}
@@ -383,7 +370,7 @@ export function TasksPage() {
                           </Button>
                           <IconButton
                             label={`${t.tasks.remove}, ${habit.name}`}
-                            className="text-danger"
+                            tone="danger"
                             onClick={() => {
                               run(async () => {
                                 await removeHabit(rt, habit.id);

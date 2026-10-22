@@ -155,7 +155,7 @@ export function SetRow(props: SetRowProps) {
         >
           {error}
           {props.onRetry ? (
-            <Button variant="quiet" size="sm" className="px-2" onClick={props.onRetry}>
+            <Button variant="quiet" size="sm" onClick={props.onRetry}>
               {t.session.retry}
             </Button>
           ) : null}
@@ -167,7 +167,7 @@ export function SetRow(props: SetRowProps) {
             <Button
               variant={timer.running ? 'primary' : 'secondary'}
               size="sm"
-              className={timer.running ? 'tabular-nums' : 'bg-surface shadow-card'}
+              className={timer.running ? 'tabular-nums' : undefined}
               aria-label={`${timer.running ? t.session.stopTimer : t.session.startTimer}, ${props.name}`}
               onClick={timer.onToggle}
             >
@@ -186,7 +186,6 @@ export function SetRow(props: SetRowProps) {
               <Button
                 variant="secondary"
                 size="sm"
-                className="bg-surface shadow-card"
                 onClick={() => {
                   stepValue(-1);
                 }}
@@ -198,7 +197,6 @@ export function SetRow(props: SetRowProps) {
               <Button
                 variant="secondary"
                 size="sm"
-                className="bg-surface shadow-card"
                 onClick={() => {
                   stepValue(1);
                 }}

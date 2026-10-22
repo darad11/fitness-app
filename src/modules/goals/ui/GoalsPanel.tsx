@@ -11,6 +11,8 @@ import { GOAL_LIMITS, type GoalKind } from '../model/goal';
 import { removeGoal, setGoal } from '../service/goalService';
 
 const INPUT = 'field w-full min-w-0';
+/** Vorschlag im Auswahlfeld, solange es kein Wochenziel gibt. */
+const DEFAULT_WEEKLY = 3;
 const WEEKLY_OPTIONS = [1, 2, 3, 4, 5, 6, 7].map((n) => ({
   value: String(n),
   label: t.goals.perWeek(n),
@@ -24,7 +26,8 @@ export function GoalsPanel() {
   const weights = useBodyWeights();
   const latestWeight = weights?.[0];
   const [weightInput, setWeightInput] = useState('');
-  const [weekly, setWeekly] = useState('3');
+  // Entwurf nur, solange der Nutzer das Auswahlfeld ändert; sonst zeigt es das gespeicherte Ziel (F5, D-322).
+  const [weeklyDraft, setWeeklyDraft] = useState<string | null>(null);
   const [error, setError] = useState<{ kind: GoalKind; message: string } | null>(null);
   if (!goals) {
     return (
@@ -35,6 +38,7 @@ export function GoalsPanel() {
   }
   const weightGoal = activeGoal(goals, 'body_weight');
   const weeklyGoal = activeGoal(goals, 'weekly_sessions');
+  const weekly = weeklyDraft ?? String(weeklyGoal?.value ?? DEFAULT_WEEKLY);
   const run = (kind: GoalKind, action: () => Promise<unknown>) => {
     action().catch((caught: unknown) => {
       void logError(rt.db, { area: 'goals', error: caught, route: '/mehr/profil' });
@@ -124,7 +128,10 @@ export function GoalsPanel() {
           onSubmit={(event) => {
             event.preventDefault();
             setError(null);
-            run('weekly_sessions', () => setGoal(rt, 'weekly_sessions', Number(weekly)));
+            run('weekly_sessions', async () => {
+              await setGoal(rt, 'weekly_sessions', Number(weekly));
+              setWeeklyDraft(null);
+            });
           }}
         >
           <div className="min-w-48">
@@ -132,7 +139,7 @@ export function GoalsPanel() {
               label={t.goals.weeklyLabel}
               options={WEEKLY_OPTIONS}
               value={weekly}
-              onChange={setWeekly}
+              onChange={setWeeklyDraft}
             />
           </div>
           <Button type="submit">{weeklyGoal ? t.goals.change : t.goals.set}</Button>
@@ -141,7 +148,10 @@ export function GoalsPanel() {
               type="button"
               variant="secondary"
               onClick={() => {
-                run('weekly_sessions', () => removeGoal(rt, 'weekly_sessions'));
+                run('weekly_sessions', async () => {
+                  await removeGoal(rt, 'weekly_sessions');
+                  setWeeklyDraft(null);
+                });
               }}
             >
               {t.goals.remove}

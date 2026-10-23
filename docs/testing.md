@@ -1067,3 +1067,16 @@ Befund der CI zu `e2e/header-logo.spec.ts` im Projekt `webkit-mobile` (D-332). N
 | derselbe Aufbau, neuer Test | erst 1 von 6 Läufen fehlgeschlagen (Seitenwechsel vor dem Speichern von „Programm aktivieren“, freies Training ohne Übungen); nach der Korrektur 10 Wiederholungen: 40 bestanden |
 | `pnpm exec playwright test e2e/header-logo.spec.ts --repeat-each=5` (Desktop, Pixel 7) | 25 bestanden, 15 übersprungen |
 | WebKit | prüft die CI |
+
+### F6 §7 Trainingskopf · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+„Woche n“ bleibt sichtbar, der Programmname kürzt sich (D-338).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/session-head.spec.ts` | 4 bestanden, 2 übersprungen. Gegenprobe gegen `4146fad`: 2 von 3 Handy-Fällen fehlgeschlagen (360 und 390 pt) |
+| `player-ui.test.tsx` | 15 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 888 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | erster Lauf: 302 bestanden, 41 übersprungen, 1 fehlgeschlagen (`switches.spec.ts`, Schalter per Tastatur, nicht nachgestellt); zweiter Lauf: 303 bestanden, 41 übersprungen, 0 fehlgeschlagen |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |

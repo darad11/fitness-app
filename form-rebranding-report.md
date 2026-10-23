@@ -41,6 +41,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F6 §4 Aufgaben bearbeitbar (V1) | Zeile wie V1 auf „Heute“ und „Tagesaufgaben“: Abhakfeld links (20 px, Tippfläche 44 px), Rest der Zeile öffnet die Detailansicht, Chevron rechts, Rhythmus unter dem Namen, erledigt gedämpft; Einstellungen in der Detailansicht, Reihenfolge über „Reihenfolge ändern“ | D-335 | umgesetzt |
 | F6 §5 Karte V2c | „Bereit für dein Training?“ deckend grün (#283E18, Rand #405A28), Label und Text hell grüngrau, Titel und Link in `--fg`, weißer Primärknopf mit Play-Symbol; Tokens `--stage-tint-…`; Ausnahme in `brand-tokens.md` | D-336 | umgesetzt |
 | F6 §6 Startbild länger | Beim Kaltstart bleibt die Startfläche ab dem ersten Bild mindestens 1,0 s (Ladezeit eingerechnet), dann 300 ms Ausblenden; länger, bis die erste Ansicht steht; bei „Bewegung reduzieren“ ohne Ausblenden, Mindestzeit bleibt; nicht nach Hintergrund oder Navigation | D-337 | umgesetzt; Kaltstart am Gerät prüfbar (T-IPH-M0 Schritt 5) |
+| F6 §7 Trainingskopf | „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich nur der Programmname mit Auslassungspunkten („Winterprogramm 20… · Woche 3“) | D-338 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -197,7 +198,7 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
   - Programm bearbeiten auf 360 pt: Fünf Symbolknöpfe drückten den Wochennamen zusammen, „Woche“ wurde getrennt.
   - CI (WebKit, Lauf zu Abschnitt 6): Der Test „Seitenende“ aus Abschnitt 4 maß auf `/mehr/synchronisierung` den Inhalt der Anmeldung im Vollbild gegen die Tab-Leiste, die der modale Dialog verdeckt; in WebKit reicht der Inhalt tiefer als in Chromium.
 - Geändert: `training/ui/ProgramsPage.tsx` (Titel mindestens so breit wie das längste Wort, Umbruch nach Schrägstrichen, Etikett sonst über dem Titel), `src/shared/ui/Button.tsx` (Größe `row`), `nutrition/ui/KitchenMenu.tsx` und `NutritionPage.tsx` (Größe `row` für „Ziel“, „Meine Küche“ und die Knöpfe im Blatt; die Spalten sind mindestens so breit wie der Knopfinhalt, sonst gleich breit), `training/ui/SampleTemplatePage.tsx` und `src/shared/i18n/de.ts` („Heute trainieren“ mit Namen „Tag … heute trainieren“, „Übernehmen und anpassen“), `nutrition/ui/AddFoodPage.tsx` (Spalten des Schnelleintrags), `training/ui/programs/ProgramEditPage.tsx` (Knöpfe der Woche als Gruppe), `training/service/programService.ts` (Kommentar).
-- Bewusst so gelassen: die Kürzung mit „…“ in der Unterzeile des Trainingskopfs (Vorgabe aus Abschnitt 2; bei langen Programmnamen fällt „Woche n“ weg) und bei langen Aufgabennamen in der Übersicht „Je Aufgabe“, zweizeilige Seitentitel, das Menü „Meine Küche“ ab 768 pt über dem Inhalt.
+- Bewusst so gelassen: die Kürzung mit „…“ in der Unterzeile des Trainingskopfs (Vorgabe aus Abschnitt 2; bei langen Programmnamen fällt „Woche n“ weg; in F6 §7 geändert, D-338) und bei langen Aufgabennamen in der Übersicht „Je Aufgabe“, zweizeilige Seitentitel, das Menü „Meine Küche“ ab 768 pt über dem Inhalt.
 - Tests: neu `e2e/narrow-layout.spec.ts` (Knöpfe einzeilig, Schnelleintrag, Programm bearbeiten; 360, 390, 768 pt); `e2e/program-list.spec.ts` prüft, dass kein Wort im Titel getrennt wird und das Etikett auf 390 und 768 pt neben dem Titel steht; `e2e/marks.spec.ts` (modaler Dialog); angepasst `programs-ui.test.tsx`, `own-programs-ui.test.tsx`, `e2e/own-programs.spec.ts`, `e2e/switches.spec.ts` (neuer Knopftext).
 - Screenshots: `node tools/screenshots.mjs komponenten` und `screens` erneuert (18 Bilder geändert, darunter Heute, Training, Programme, Ernährung, aktives Workout, Ring), danach `node tools/screens-overview.mjs` („docs/screens/uebersicht.png: 28 Bilder“, „docs/screens.zip: 29 Bilder“).
 - Dokumente: `docs/decisions.md` (D-331), `docs/design-system.md`.
@@ -266,6 +267,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Geändert: `src/app/startSurface.ts`, `tools/splash.mjs` und `index.html` (Ausblenden 300 statt 250 ms; `node tools/splash.mjs --check`: „Bilder, Vorlage und Startfläche passen zur Regel“).
 - Tests: `src/app/startSurface.test.ts` (neu geschrieben), `src/app/splash.test.ts` (Ausblendzeit wie im Code), `e2e/start-surface.spec.ts` (Zeiten in der Seite gemessen; neu: schneller Start, langsamer Start, Hintergrund und Navigation).
 - Dokumente: `docs/decisions.md` (D-337), `docs/testing.md` (T-IPH-M0 Schritt 5, Protokoll).
+
+### F6 §7 Trainingskopf
+
+- Gefunden: Die Zeile „Programm · Woche“ über dem Trainingstag war ein einziger Text mit Kürzung am Ende; auf 360 und 390 pt fiel beim Winterprogramm 2026 „Woche 3“ weg (Empfehlung 3 im Abschluss F5).
+- Geändert: `src/modules/training/ui/player/SessionPage.tsx`: Programmname und Woche als zwei Teile einer Zeile; nur der Name kürzt sich, die Woche schrumpft nicht. Text, Reihenfolge und Vorlesen bleiben.
+- Tests: neu `e2e/session-head.spec.ts`; angepasst `src/modules/training/ui/player/player-ui.test.tsx`.
+- Dokumente: `docs/decisions.md` (D-338), `docs/testing.md` (Protokoll); Empfehlung 3 in Abschnitt 7 als erledigt vermerkt.
 
 ## 3. Tests
 
@@ -417,6 +425,12 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §6: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 299 bestanden, 39 übersprungen, 0 fehlgeschlagen (7,8 min) |
 | F6 §1, Befund der CI: `e2e/header-logo.spec.ts` in WebKit | 23.10.2026 | In der CI zu `6f99fc6`, `8271179`, `3f5b833`, `4852076` und `6f77dbe` jeweils dieselben 4 Fälle im Projekt `webkit-mobile` (iPhone 15) fehlgeschlagen; Chromium sowie Lint, Typen, Unit-Tests, Dokumente und Build bestanden (WebKit zu `6f77dbe`: 286 bestanden, 42 übersprungen, 4 fehlgeschlagen). Meldungen: „/heute bei 0: y 142.1875“ bzw. „y 181.375“ (Logo nicht auf ganzen Gerätepixeln) und „Expected: 14, Received: 181.375“. Ursache im Test, nicht in der App: Mit der Kennung eines iPhones zeigt die App im Safari-Tab den Hinweis zur Installation über der Kopfzeile (AK-PWA-04), das Logo rückt um dessen Höhe nach unten. Lokal nachgestellt mit Chromium und der Kennung des iPhone 15: alter Test 4 von 4 fehlgeschlagen, mit denselben Werten |
 | F6 §1, Korrektur des Tests | 23.10.2026 | Bei iPhone- und iPad-Kennung wartet der Test auf den Hinweis und blendet ihn einmal aus; die erwartete Lage des Logos rechnet den Abstand ein, den die Seite selbst anwendet. Danach zeigte sich im selben Test ein Wettlauf (1 von 6 Läufen, „Expected: 0, Received: 24“): Der Seitenwechsel nach „Programm aktivieren“ kam dem Speichern zuvor, „Heute“ startete ein freies Training ohne Übungen, und die Seite war zum Scrollen zu kurz. Der Test wartet jetzt, bis der Knopf verschwindet, und scrollt erneut, bis der Kopf oben klebt. Mit iPhone-Kennung 10 Wiederholungen: 40 bestanden; Desktop und Pixel 7 mit 5 Wiederholungen: 25 bestanden, 15 übersprungen. In WebKit selbst prüft das die CI |
+| F6 §7: `e2e/session-head.spec.ts` (neu) | 23.10.2026 | erster Lauf: 4 fehlgeschlagen; der Test startete „Tag 14“, der in Woche 2 liegt („Expected: "Winterprogramm 2026 · Woche 3", Received: "Winterprogramm 2026 · Woche 2"“), auf „Tag 21“ geändert. Danach misst der Test am Text selbst statt am Aufbau der Zeile; 4 bestanden, 2 übersprungen. Gegenprobe gegen `4146fad`: 2 von 3 Handy-Fällen fehlgeschlagen (360 und 390 pt: „„Woche 3“ ganz sichtbar … Expected: true, Received: false“); 768 pt bestanden, dort passt alles |
+| F6 §7: `player-ui.test.tsx` | 23.10.2026 | 15 bestanden |
+| F6 §7: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §7: `pnpm test` | 23.10.2026 | 888 Tests in 105 Dateien bestanden |
+| F6 §7: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
+| F6 §7: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | erster Lauf: 302 bestanden, 41 übersprungen, 1 fehlgeschlagen (7,3 min): `switches.spec.ts` „Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur …“ (Handy), nach der zweiten Leertaste blieb der Schalter aus („Expected: checked, Received: unchecked“). Nicht nachgestellt: 20 Wiederholungen des Tests, dazu eine Kopie mit Aufzeichnung von Fokus und Änderungen am Dokument, 60 Wiederholungen mit 8 Workern und 40 mit 8-facher CPU-Drosselung, alle bestanden. Zweiter Lauf: 303 bestanden, 41 übersprungen, 0 fehlgeschlagen (7,6 min). Ursache offen, siehe Abschluss F6 |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -479,6 +493,6 @@ Empfehlungen:
 
 1. Zuerst die Ursache des Offline-Tests klären (E-16, hohe Priorität), dann „Wiederherstellen aus dem Export“ (A-14), beides vor echten Nutzern. Für E-16 spricht auch die CI zu `81f230e`: In WebKit ließ sich ein Modul der App sogar mit Netz einmal nicht laden („Importing a module script failed“).
 2. Der Test „Ziehen mit der Linse …“ der Tab-Leiste bestand in WebKit einmal erst im zweiten Versuch (CI zu §6); F5 hat die Tab-Leiste nicht verändert. Ursache als kleine eigene Aufgabe klären (Zustand der Linse nach dem Loslassen).
-3. Trainingskopf: Bei langen Programmnamen fällt „Woche n“ auf 360 und 390 pt der Kürzung zum Opfer. Wenn die Woche wichtiger ist als der volle Programmname, „Woche n · Programmname“ oder die Woche an eigener Stelle; das ändert die Vorgabe aus §2 und braucht deine Entscheidung.
+3. Trainingskopf: Bei langen Programmnamen fällt „Woche n“ auf 360 und 390 pt der Kürzung zum Opfer. Wenn die Woche wichtiger ist als der volle Programmname, „Woche n · Programmname“ oder die Woche an eigener Stelle; das ändert die Vorgabe aus §2 und braucht deine Entscheidung. Erledigt in F6 §7 (D-338): Die Woche bleibt, der Programmname kürzt sich.
 4. Die Prüfung „kein Wort getrennt“ aus `e2e/narrow-layout.spec.ts` lässt sich mit wenig Aufwand für alle Seiten auf 360 pt in die E2E-Tests übernehmen, damit neue Seiten nicht wieder mitten im Wort brechen.
 5. Programm C vor einer öffentlichen Öffnung durch ein eigenes Programm ersetzen (`known-limitations.md`).

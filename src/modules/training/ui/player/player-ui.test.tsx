@@ -70,7 +70,13 @@ describe('Trainingsplayer (S-07)', () => {
     renderAt(`/training/einheit/${session.id}`);
     // Kopf: Programm und Woche klein darüber, als Titel nur der Trainingstag (F5, D-323).
     expect(await screen.findByRole('heading', { level: 1, name: 'Tag A' })).toBeInTheDocument();
-    expect(screen.getByText('Ganzkörper A/B · Woche 1')).toBeInTheDocument();
+    // Programmname und Woche in zwei Teilen, damit die Woche beim Kürzen bleibt (F6, D-338).
+    expect(
+      screen.getByText(
+        (_, element) =>
+          element?.tagName === 'P' && element.textContent === 'Ganzkörper A/B · Woche 1',
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText(/0 von 17 Sätzen/)).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'Kniebeuge mit Langhantel',

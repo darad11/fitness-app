@@ -328,8 +328,9 @@ function Player({ session, light }: { session: Session; light: boolean }) {
     afterCurrent && afterCurrent.exercise.id !== currentExercise?.id ? afterCurrent.exercise : null;
   // Oben klein Programm und Woche, als Titel nur der Trainingstag; nichts doppelt (F5, D-323).
   const heading = session.program ? session.program.dayName : session.title;
+  // Ohne Programm: „Freies Training“, außer der Titel sagt es schon (D-323).
   const eyebrow = session.program
-    ? `${session.program.programName} · ${session.program.weekName}`
+    ? null
     : heading === t.session.freeSource
       ? null
       : t.session.freeSource;
@@ -358,7 +359,16 @@ function Player({ session, light }: { session: Session; light: boolean }) {
             <ChevronLeft aria-hidden="true" className="size-6" />
           </Link>
           <div className="min-w-0 flex-1 pt-0.5">
-            {eyebrow ? <p className="eyebrow truncate text-muted">{eyebrow}</p> : null}
+            {session.program ? (
+              // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
+              // (F6, D-338): „Winterprogramm 20… · Woche 3“.
+              <p className="eyebrow flex min-w-0 text-muted">
+                <span className="min-w-0 truncate">{session.program.programName}</span>
+                <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
+              </p>
+            ) : eyebrow ? (
+              <p className="eyebrow truncate text-muted">{eyebrow}</p>
+            ) : null}
             <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
           </div>
           <Button

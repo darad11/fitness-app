@@ -77,7 +77,7 @@ test('Ring mit Makros: Spur bei 0, Abschnitte nach Anteil, Grau ab 5 %, voll üb
   expect(await parts(page)).toEqual(['protein', 'carbs', 'fat', 'other']);
   await expect(
     page.getByText(
-      'Bei mindestens einem Eintrag fehlen Angaben zu Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe und Salz.',
+      'Bei mindestens einem Eintrag fehlen Werte für Eiweiß, Kohlenhydrate, Zucker, Fett, gesättigte Fettsäuren, Ballaststoffe und Salz.',
     ),
   ).toBeVisible();
 

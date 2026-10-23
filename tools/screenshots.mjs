@@ -288,13 +288,17 @@ async function screens() {
   await screen('ueber-die-app');
 
   await setNutritionTarget();
-  await activateProgram();
   await quickEntry('breakfast', 'Haferflocken mit Banane', 420, 14, 68, 9);
   await quickEntry('lunch', 'Linsensuppe', 380, 21, 52, 8);
   await open('/heute');
   const water = page.getByRole('region', { name: 'Wasser' });
   await water.getByRole('button', { name: /250 ml hinzufügen/ }).click();
   await water.getByRole('button', { name: /500 ml hinzufügen/ }).click();
+  // Ohne aktives Programm steht oben die Karte „Bereit für dein Training?“ (V2c, D-336).
+  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await screen('heute-ohne-programm');
+  await activateProgram();
+  await open('/heute');
   await page.evaluate(() => globalThis.scrollTo(0, 0));
   await screen('heute');
   await fullPage('heute-ganz');
@@ -374,6 +378,103 @@ async function screens() {
   await back.getByRole('button', { name: 'Ein leichtes Training' }).click();
   await page.getByRole('note').waitFor();
   await screen('rueckkehr-leichtes-training');
+
+  await tasksScreen();
+  await startSurfaceScreen();
+}
+
+/** Eigener Kontext wie am Handy, damit die Daten nicht in den übrigen Bildern stehen. */
+function freshContext() {
+  return browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
+    locale: 'de-AT',
+    timezoneId: 'Europe/Vienna',
+    colorScheme: 'dark',
+    reducedMotion: 'reduce',
+  });
+}
+
+/**
+ * „Tagesaufgaben“ mit drei Einträgen nach Vorlage V1 (F6, D-335): täglich und erledigt, täglich
+ * mit Wasserziel, an Wochentagen (Mo, Mi, Fr; am Donnerstag nicht fällig).
+ */
+async function tasksScreen() {
+  const ctx = await freshContext();
+  const tab = await ctx.newPage();
+  await tab.clock.setFixedTime(new Date('2026-10-22T08:15:00+02:00'));
+  const go = async (path) => {
+    await tab.goto(`${BASE}${path}`);
+    await tab.getByRole('heading', { level: 1 }).first().waitFor();
+    await tab.waitForTimeout(300);
+  };
+  const edit = async (name) => {
+    await go('/heute/aufgaben');
+    await tab.getByRole('link', { name: `${name} bearbeiten` }).click();
+    await tab.getByRole('heading', { level: 1, name }).waitFor();
+    return tab.getByRole('region', { name: 'Einstellungen' });
+  };
+  const save = async (settings) => {
+    await settings.getByRole('button', { name: 'Speichern' }).click();
+    await settings.getByText('Gespeichert.').waitFor();
+  };
+  await go('/heute/aufgaben');
+  for (const name of ['Spaziergang', '2 Liter Wasser', 'Dehnen, 10 Minuten']) {
+    await tab.getByLabel('Name der Aufgabe').fill(name);
+    await tab.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
+    await tab.getByRole('link', { name: `${name} bearbeiten` }).waitFor();
+  }
+  const water = await edit('2 Liter Wasser');
+  await water.getByRole('switch', { name: 'Mit Wasserziel abhaken' }).click();
+  await save(water);
+  const stretch = await edit('Dehnen, 10 Minuten');
+  for (const day of ['Di', 'Do', 'Sa', 'So']) {
+    await stretch.getByRole('button', { name: `${day} fällig` }).click();
+  }
+  await save(stretch);
+  await go('/heute/aufgaben');
+  // Das Abhakfeld folgt dem gespeicherten Wert, also kurz auf ihn warten.
+  const walk = tab.getByRole('checkbox', { name: 'Spaziergang abhaken' });
+  await walk.click();
+  for (let i = 0; i < 50 && !(await walk.isChecked()); i += 1) await tab.waitForTimeout(100);
+  await tab.evaluate(() => globalThis.scrollTo(0, 0));
+  await tab.waitForTimeout(300);
+  await tab.screenshot({ path: `${OUT}/tagesaufgaben.png`, animations: 'disabled' });
+  console.log(`${OUT}/tagesaufgaben.png`);
+  await ctx.close();
+}
+
+/**
+ * Startfläche der installierten App (D-325, D-337). Im Browser-Tab ist sie unsichtbar; wie in
+ * `e2e/start-surface.spec.ts` gilt die Abfrage aus index.html hier für alle, und „Heute“ lädt erst
+ * nach der Aufnahme. Ohne `animations: 'disabled'`: Das würde die Sicherheits-Animation der Fläche
+ * (nach 10 s unsichtbar) vorspulen.
+ */
+async function startSurfaceScreen() {
+  const ctx = await freshContext();
+  const tab = await ctx.newPage();
+  let release = () => undefined;
+  const held = new Promise((resolve) => {
+    release = resolve;
+  });
+  await tab.route(/\/(heute)?$/, async (route) => {
+    const response = await route.fetch();
+    const body = (await response.text()).replace('@media (display-mode:standalone)', '@media all');
+    await route.fulfill({ response, body });
+  });
+  await tab.route(/\/assets\/TodayPage-[^/]+\.js$/, async (route) => {
+    await held;
+    await route.continue();
+  });
+  await tab.goto(`${BASE}/heute`, { waitUntil: 'commit' });
+  await tab.locator('#startflaeche').waitFor();
+  await tab.waitForTimeout(300);
+  await tab.screenshot({ path: `${OUT}/startflaeche.png` });
+  console.log(`${OUT}/startflaeche.png`);
+  release();
+  await ctx.close();
 }
 
 await mkdir(OUT, { recursive: true });

@@ -26,8 +26,11 @@ const ARCHIVE = 'docs/screens.zip';
 
 /** Screens in der Reihenfolge der App, Titel wie in `brand-tokens.md` Abschnitt 6. */
 const SCREENS = [
+  ['startflaeche.png', 'Startfläche'],
   ['heute-ganz.png', 'Heute, ganze Seite'],
   ['heute.png', 'Heute'],
+  ['heute-ohne-programm.png', 'Heute ohne Programm, Karte V2c'],
+  ['tagesaufgaben.png', 'Tagesaufgaben'],
   ['tab-leiste-ausgeklappt.png', 'Tab-Leiste ausgeklappt'],
   ['tab-leiste-kreis.png', 'Tab-Leiste als Kreis'],
   ['training.png', 'Training'],

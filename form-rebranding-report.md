@@ -557,3 +557,20 @@ Empfehlungen:
 2. Den einmaligen Fehlschlag im Schaltertest beobachten: Die neue Fokusprüfung zeigt beim nächsten Mal, ob der Fokus verloren ging; `test-results` vor dem nächsten Lauf sichern, sonst geht die Aufzeichnung verloren.
 3. Erledigt im Nachtrag: In `e2e/program-list.spec.ts` folgte an zwei Stellen ein Seitenwechsel direkt auf „Programm aktivieren“; die CI zu `6782756` zeigte genau dort einmal den Fehler. Beide Stellen warten jetzt auf das Speichern. Weitere Stellen mit „Programm aktivieren“ und direktem Seitenwechsel gibt es in `e2e/` nicht; andere Schreibvorgänge direkt vor einem Seitenwechsel habe ich nicht durchgesehen.
 4. Aus F5 weiter offen: E-16 (Offline-Test) und A-14 (Wiederherstellen aus dem Export) vor echten Nutzern.
+
+## 9. Vor dem Merge (23.10.2026)
+
+Auf Nachricht des Produktinhabers ein letzter Commit vor dem Merge (D-341):
+
+- Ernährung, Hinweis auf fehlende Nährwerte: „Bei mindestens einem Eintrag fehlen Werte für Zucker, gesättigte Fettsäuren, Ballaststoffe und Salz.“ statt „Angaben zu …“; „für“ passt zu jeder Auswahl an Nährstoffen. Ebenso im Rezept („Bei mindestens einer Zutat fehlen Werte für …“), weil dort derselbe Satzbau denselben Fehler hatte. Geändert: `src/shared/i18n/de-nutrition.ts`.
+- Drei Screenshots neu und in Übersicht und Zip: `heute-ohne-programm.png` („Heute“ ohne aktives Programm mit der Karte V2c), `tagesaufgaben.png` (drei Einträge nach V1: erledigt, mit Wasserziel, an Wochentagen und heute nicht fällig) und `startflaeche.png` (Startfläche der installierten App). Geändert: `tools/screenshots.mjs` (das Programm wird erst nach dem Bild ohne Programm aktiviert; Tagesaufgaben und Startfläche in eigenem Browserprofil; die Startfläche ohne `animations: 'disabled'`, weil das ihre Sicherheits-Animation vorspulen würde), `tools/screens-overview.mjs` (Titel). Dazu `ernaehrung.png` mit dem neuen Satz; „Über die App“ unverändert gelassen (nur Uhrzeit des Builds und Speicher-ID wären neu).
+- Tests: neu `src/shared/i18n/de-nutrition.test.ts` (beide Sätze), angepasst `e2e/nutrition-ring.spec.ts`.
+
+| Lauf | Stand | Ergebnis |
+|---|---|---|
+| `de-nutrition.test.ts` | 23.10.2026 | am alten Text 2 von 2 fehlgeschlagen („Received: "Bei mindestens einem Eintrag fehlen Angaben zu …"“), danach bestanden; mit `wording.test.ts` 29 bestanden |
+| `node tools/screenshots.mjs screens` und `komponenten`, `node tools/screens-overview.mjs` | 23.10.2026 | Bilder erzeugt; „docs/screens/uebersicht.png: 32 Bilder“, „docs/screens.zip: 33 Bilder“ |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| `pnpm test` | 23.10.2026 | 892 Tests in 106 Dateien bestanden |
+| `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
+| `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 302 bestanden, 42 übersprungen, 2 fehlgeschlagen (8,4 min): `pwa.spec.ts` „Service Worker übernimmt und alle Bereiche starten offline“ in beiden Projekten; offline brachen zwei Modul-Anfragen ab (`clsx-….js`, `ui-….js`, „net::ERR_ABORTED“), die App startete auf `/training/vorlagen/full_body_ab` nicht. Das ist der offene Befund E-16 aus F5 (`audit-report.md`), unabhängig vom Hinweistext. Einzeln wiederholt (4 Mal je Projekt): 1 von 8 fehlgeschlagen. Alle übrigen Tests bestanden |

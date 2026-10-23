@@ -71,7 +71,7 @@ export const tNutrition = {
   emptySlot: 'Noch nichts eingetragen.',
   entryCount: (n: number) => (n === 1 ? '1 Eintrag' : `${n} Einträge`),
   incomplete: (names: readonly string[]) =>
-    `Bei mindestens einem Eintrag fehlen Angaben zu ${listDe(names)}.`,
+    `Bei mindestens einem Eintrag fehlen Werte für ${listDe(names)}.`,
   estimatedHint: 'Enthält Schätzungen (Schnelleinträge).',
   entryLabel: (name: string) => `${name} bearbeiten`,
   entryTitle: 'Eintrag bearbeiten',
@@ -260,7 +260,7 @@ export const tNutrition = {
     perServing: 'je Portion',
     total: 'gesamt',
     missingHint: (names: readonly string[]) =>
-      `Bei mindestens einer Zutat fehlen Angaben zu ${listDe(names)}. In der Summe fehlen sie deshalb.`,
+      `Bei mindestens einer Zutat fehlen Werte für ${listDe(names)}. In der Summe fehlen sie deshalb.`,
     weightHint: (grams: string) =>
       `Zutaten zusammen ${grams} g (Milliliter zählen wie Gramm). Eine Portion trägst du als „Portion“ ein.`,
     stepsLabel: 'Zubereitung (optional)',

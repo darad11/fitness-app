@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.43 · 23.10.2026 · Vor dem Merge
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-341: Hinweis „Werte für“ statt „Angaben zu“, drei Screenshots |
+| `testing.md` | Protokoll „Vor dem Merge“ |
+| `screens/` | Neu `heute-ohne-programm.png`, `tagesaufgaben.png`, `startflaeche.png`; Übersicht und Zip erneuert |
+
 ## Version 0.42 · 23.10.2026 · Feinschliff F6
 
 | Datei | Änderung |

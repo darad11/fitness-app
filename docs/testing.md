@@ -1116,3 +1116,16 @@ Breiten, Knopfzeile der Einstellungen, Screenshots (D-340).
 | CI zu `6782756` | alle Jobs bestanden. Chromium 303 bestanden, 42 übersprungen, 1 flaky (`program-list.spec.ts`, „Heute geplant“ direkt nach „Programm aktivieren“ und dem Seitenwechsel nicht gefunden, im zweiten Versuch bestanden). WebKit nach einem Neustart des Jobs (der erste hing 24 Minuten in `playwright install --with-deps webkit`): 298 bestanden, 48 übersprungen, 0 fehlgeschlagen |
 | `pnpm exec playwright test e2e/program-list.spec.ts --repeat-each=5` (nach der Korrektur) | 50 bestanden, 10 übersprungen |
 | Gegenprobe | lokal nicht nachstellbar (20 Läufe mit 20-facher CPU-Drosselung, alter Ablauf bestanden) |
+
+### Vor dem Merge · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Hinweistext „Werte für“ und drei Screenshots (D-341).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/shared/i18n/de-nutrition.test.ts` (neu) | am alten Text 2 von 2 fehlgeschlagen, danach bestanden |
+| `node tools/screenshots.mjs screens` und `komponenten`, `node tools/screens-overview.mjs` | Übersicht 32 Bilder, Archiv 33 Bilder |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 106 Dateien, 892 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 302 bestanden, 42 übersprungen, 2 fehlgeschlagen: Offline-Test `pwa.spec.ts` in beiden Projekten (E-16; zwei Modul-Anfragen offline abgebrochen); einzeln 4 Wiederholungen je Projekt: 1 von 8 fehlgeschlagen |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |

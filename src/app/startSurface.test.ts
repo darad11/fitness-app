@@ -45,6 +45,7 @@ const present = () => document.getElementById('startflaeche') !== null;
 describe('Startfläche beim Kaltstart (D-325, D-337)', () => {
   afterEach(() => {
     document.body.innerHTML = '';
+    delete (window as Window & { __startFrame?: number }).__startFrame;
     vi.restoreAllMocks();
     vi.useRealTimers();
   });
@@ -80,6 +81,27 @@ describe('Startfläche beim Kaltstart (D-325, D-337)', () => {
     const surface = mountSurface();
     hideStartSurface();
     vi.advanceTimersByTime(0);
+    expect(surface.classList.contains('weg')).toBe(true);
+  });
+
+  it('Safari, langsamer Start: ohne Paint-Eintrag für die Fläche zählt das Bild aus theme-init.js', () => {
+    // Safari meldet erst den Text der App (1.800 ms), die Fläche steht seit 120 ms (D-337).
+    setup({ now: 1830, paintedAt: 1800 });
+    (window as Window & { __startFrame?: number }).__startFrame = 120;
+    const surface = mountSurface();
+    hideStartSurface();
+    vi.advanceTimersByTime(0);
+    expect(surface.classList.contains('weg')).toBe(true);
+  });
+
+  it('Safari, schneller Start: 1,0 s ab dem Bild aus theme-init.js, nicht ab dem Text der App', () => {
+    setup({ now: 500, paintedAt: 480 });
+    (window as Window & { __startFrame?: number }).__startFrame = 100;
+    const surface = mountSurface();
+    hideStartSurface();
+    vi.advanceTimersByTime(599);
+    expect(surface.classList.contains('weg')).toBe(false);
+    vi.advanceTimersByTime(1);
     expect(surface.classList.contains('weg')).toBe(true);
   });
 

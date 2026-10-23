@@ -1046,7 +1046,7 @@ Startfläche beim Kaltstart mindestens 1,0 s ab dem ersten Bild, dann 300 ms Aus
 
 | Nachweis | Ergebnis |
 |---|---|
-| `src/app/startSurface.test.ts`, `src/app/splash.test.ts` | 7 und 17 bestanden (erster Lauf: 1 von 7 fehlgeschlagen, der Test prüfte eine Millisekunde zu spät; behoben) |
+| `src/app/startSurface.test.ts`, `src/app/splash.test.ts` | 7 und 10 bestanden (erster Lauf: 1 von 7 fehlgeschlagen, der Test prüfte eine Millisekunde zu spät; behoben) |
 | `pnpm exec playwright test e2e/start-surface.spec.ts` | 8 bestanden, 6 übersprungen; 3 Wiederholungen: 24 bestanden. Gegenprobe gegen `6f77dbe`: 3 von 7 fehlgeschlagen |
 | `node tools/splash.mjs --check` | Bilder, Vorlage und Startfläche passen zur Regel |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
@@ -1080,3 +1080,16 @@ Befund der CI zu `e2e/header-logo.spec.ts` im Projekt `webkit-mobile` (D-332). N
 | `pnpm test` | 105 Dateien, 888 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | erster Lauf: 302 bestanden, 41 übersprungen, 1 fehlgeschlagen (`switches.spec.ts`, Schalter per Tastatur, nicht nachgestellt); zweiter Lauf: 303 bestanden, 41 übersprungen, 0 fehlgeschlagen |
 | `pnpm check:bundle` | 237,6 KB von 250 KB |
+
+### F6 §6 Nachtrag: Startfläche in WebKit · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Befund der CI zu `2a1990a` im Projekt `webkit-mobile` (D-337, Nachtrag).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `2a1990a`, WebKit | 296 bestanden, 47 übersprungen, 1 fehlgeschlagen: „Startfläche beim langsamen Start …“ („Expected: > 2812, Received: 1827“), auch im zweiten Versuch; Logo-Tests bestanden |
+| Ursache | Kein Paint-Eintrag für die Fläche ohne Text, erst für den Text der App; die App zählte ab dort |
+| `startSurface.test.ts` | am alten Stand 2 von 9 fehlgeschlagen (Fälle wie in Safari), danach 9 bestanden |
+| `pnpm exec playwright test e2e/start-surface.spec.ts` | 9 bestanden, 7 übersprungen; 3 Wiederholungen 27 bestanden. Gegenprobe gegen `2a1990a`: der Fall ohne Paint-Eintrag fehlgeschlagen (1025 ms statt höchstens 400 ms nach „bereit“) |
+| `node tools/splash.mjs --check` | Bilder, Vorlage und Startfläche passen zur Regel |
+| WebKit | prüft die CI |

@@ -14,10 +14,18 @@ export const START_MIN_MS = 1000;
 /** Ausblenden (CSS in `index.html`, aus `tools/splash.mjs`). */
 export const START_FADE_MS = 300;
 
-/** Zeit des ersten Bildes seit Beginn der Navigation; `null`, solange noch nichts gezeichnet ist. */
+/**
+ * Zeit des ersten Bildes seit Beginn der Navigation; `null`, solange noch nichts gezeichnet ist.
+ * Chromium meldet die Fläche als ersten Paint-Eintrag. Safari meldet für die Fläche ohne Text
+ * keinen, sondern erst den Text der App; deshalb zählt auch das erste Bild, das
+ * `public/theme-init.js` vor dem Start der App vermerkt (`__startFrame`, D-337). Es gilt der
+ * frühere Zeitpunkt.
+ */
 function firstFrame(view: Window): number | null {
-  const paints = view.performance.getEntriesByType('paint');
-  return paints.length > 0 ? Math.min(...paints.map((entry) => entry.startTime)) : null;
+  const times = view.performance.getEntriesByType('paint').map((entry) => entry.startTime);
+  const noted = (view as Window & { __startFrame?: unknown }).__startFrame;
+  if (typeof noted === 'number' && Number.isFinite(noted)) times.push(noted);
+  return times.length > 0 ? Math.min(...times) : null;
 }
 
 export function hideStartSurface(doc: Document = document): void {

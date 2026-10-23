@@ -7,12 +7,14 @@ import { expect, test } from './fixtures';
  * `display-mode: standalone` nicht; der Test schaltet die Fläche wie in der installierten App
  * ein, indem er die Abfrage in index.html auf `all` setzt. Die Seite „Heute“ kommt auf Zeichen,
  * damit sich schneller und langsamer Start nachstellen lassen. Gemessen wird in der Seite: erstes
- * Bild (Paint Timing), „bereit“ (die erste Ansicht ruft `hideStartSurface`), „weg“ (Ausblenden
- * beginnt) und „entfernt“.
+ * Bild (früher von Paint Timing und dem ersten Bildwechsel; Safari meldet für die Fläche ohne Text
+ * keinen Paint-Eintrag, D-337), „bereit“ (die erste Ansicht ruft `hideStartSurface`), „weg“
+ * (Ausblenden beginnt) und „entfernt“. Mit `safari` liefert die Seite gar keine Paint-Einträge,
+ * wie Safari bis zum Text der App.
  */
 async function installedStart(
   browser: Browser,
-  options: { reducedMotion?: 'reduce'; landscape?: boolean } = {},
+  options: { reducedMotion?: 'reduce'; landscape?: boolean; safari?: boolean } = {},
 ) {
   const context = await browser.newContext({
     viewport: options.landscape ? { width: 844, height: 390 } : { width: 390, height: 844 },
@@ -38,10 +40,20 @@ async function installedStart(
     await held;
     await route.continue();
   });
+  if (options.safari) {
+    await page.addInitScript(() => {
+      const original = performance.getEntriesByType.bind(performance);
+      performance.getEntriesByType = (type: string) => (type === 'paint' ? [] : original(type));
+    });
+  }
   // Zeitpunkte rund um die Fläche, gemessen ab Beginn der Navigation.
   await page.addInitScript(() => {
     const log: { e: string; t: number }[] = [];
     (window as unknown as { startLog: typeof log }).startLog = log;
+    // Erster Bildwechsel der Seite, unabhängig von der App gemessen.
+    requestAnimationFrame((time) => {
+      (window as unknown as { testFirstFrame: number }).testFirstFrame = time;
+    });
     new MutationObserver((records) => {
       for (const record of records) {
         const target = record.target as Element;
@@ -69,8 +81,10 @@ async function installedStart(
 async function timeline(page: Page) {
   await expect(page.locator('#startflaeche')).toHaveCount(0, { timeout: 10_000 });
   return page.evaluate(() => {
-    // Ohne Paint Timing zählt der Beginn der Navigation (früher als das erste Bild).
+    // Erstes Bild: der frühere von Paint-Eintrag und erstem Bildwechsel.
     const paints = performance.getEntriesByType('paint').map((entry) => entry.startTime);
+    const frame = (window as unknown as { testFirstFrame?: number }).testFirstFrame;
+    if (frame !== undefined) paints.push(frame);
     const log = (window as unknown as { startLog: { e: string; t: number }[] }).startLog;
     const at = (e: string) => log.find((entry) => entry.e === e)?.t ?? null;
     return {
@@ -184,6 +198,24 @@ test('Startfläche beim langsamen Start: bleibt, bis „Heute“ steht, dann sof
   await expect(heading(page)).toBeVisible();
   const times = await timeline(page);
   expect(times.ready ?? 0).toBeGreaterThan(times.paint + 1000);
+  expect((times.weg ?? 0) - (times.ready ?? 0)).toBeLessThanOrEqual(400);
+  await context.close();
+});
+
+test('Startfläche wie in Safari ohne Paint-Eintrag: langsamer Start, nach „Heute“ sofort ausblenden (D-337)', async ({
+  browser,
+}, testInfo) => {
+  test.skip(!testInfo.project.name.includes('mobile'), 'Startbild nur am iPhone');
+  const { context, page, release } = await installedStart(browser, { safari: true });
+  await page.goto('/heute', { waitUntil: 'commit' });
+  await expect(page.locator('#startflaeche')).toBeVisible();
+  await page.waitForTimeout(1500);
+  await expect(page.locator('#startflaeche')).not.toHaveClass(/weg/);
+  release();
+  await expect(heading(page)).toBeVisible();
+  const times = await timeline(page);
+  expect(times.ready ?? 0).toBeGreaterThan(times.paint + 1000);
+  // Vorher zählte die App ohne Paint-Eintrag ab „bereit“ und blieb noch eine Sekunde stehen.
   expect((times.weg ?? 0) - (times.ready ?? 0)).toBeLessThanOrEqual(400);
   await context.close();
 });

@@ -9,3 +9,15 @@
     // Das Attribut steht schon in index.html; hier geht nichts verloren.
   }
 })();
+
+// Merkt sich das erste Bild der Seite für die Startfläche (D-337): Safari meldet für die
+// Fläche ohne Text keinen Paint-Eintrag; src/app/startSurface.ts zählt die Mindestzeit auch ab hier.
+(function () {
+  try {
+    requestAnimationFrame(function (time) {
+      window.__startFrame = time;
+    });
+  } catch (error) {
+    // Ohne den Zeitpunkt zählt die Startfläche ab dem ersten Paint-Eintrag.
+  }
+})();

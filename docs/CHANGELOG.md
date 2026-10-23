@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.53 · 23.10.2026 · Phase Stabilität, Abschnitt 6 (Tests und Abschluss)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-348: Abschluss der Phase; D-344 mit dem Ergebnis der Gegenprobe und der Wiederholung, Laufzeit der Wiederholung berichtigt, Zahl für WebKit berichtigt (40 von 220 statt 320) |
+| `known-limitations.md` | Dauerhafter Speicher nach D-346; Vorladen in WebKit in der CI belegt; Testwerkzeuge: Image der CI, „flaky“ als Befund, Wiederholung auf Abruf |
+| `testing.md` | Abschnitte 3 und 5 nachgezogen (Image von Playwright, Vorab-Liste, Wiederholung); Ergebnisse der CI zu §1, §2, §4 und §5; Protokoll „Stabilität §6“ |
+| `implementation-plan.md` | Punkt 66: Phase abgeschlossen, wartet auf Freigabe |
+| `form-stabilitaet-report.md` | Abschnitt 7 (Abschluss), Ergebnisse der CI und der Wiederholung in den Abschnitten 1 bis 6 |
+| `.github/workflows/repeat.yml` | Kommentar: Laufzeit rund 12 min |
+
 ## Version 0.52 · 23.10.2026 · Phase Stabilität, Abschnitt 5 (Startansicht höchstens 235 KB)
 
 | Datei | Änderung |

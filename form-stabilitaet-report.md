@@ -10,11 +10,12 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 
 | Abschnitt | Ergebnis | Entscheidung | Stand |
 |---|---|---|---|
-| §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
-| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt; Nachträge: Seitenende auf `/ernaehrung`, Startwächter in WebKit (kein Vorladen in index.html, Bestätigung in der CI) |
+| §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt; in WebKit grün seit `9517f73` (der Startwächter brauchte den Nachtrag 2 zu §2) |
+| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt; Nachträge: Seitenende auf `/ernaehrung`, Startwächter in WebKit (kein Vorladen in index.html). 20 Wiederholungen in der CI zu `9517f73`: Chromium 260 von 260, WebKit 220 von 220 |
 | §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest ausstehend |
-| §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt, WebKit in der CI |
-| §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt, WebKit in der CI |
+| §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `aa936d2`) |
+| §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `86d4841`) |
+| §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -84,7 +85,7 @@ Die CI zu `5a1db80` (Lauf 39990720590) war in Chromium grün. WebKit: 299 bestan
 | `start-watch.spec.ts` Fall 1 (Desktop und Handy): App startete nach dem Neuladen nicht | Fall 2 (Neuladen, dann Hinweis) bestand, der Wächter lädt also neu. Vermutlich kam das Ereignis `request` des zweiten Dokuments erst nach dessen Modul-Anfrage an, und der Test brach das Modul auch dort ab. Nicht nachgestellt, weil WebKit hier nicht läuft | Der Test zählt Dokumente über ihre Route: Ein Dokument fragt seine Module erst an, nachdem die Route es durchgelassen hat. Seine Meldungen nennen die Reihenfolge von Dokumenten und Modul-Anfragen |
 | `barcode.spec.ts` wackelnd: Anfrage an Open Food Facts mit 404 | Seit `clientsClaim` steuert der Service Worker die Seite schon beim ersten Aufruf; in WebKit umgehen ihre Anfragen dann `page.route` (bekannt aus `sync.spec.ts`), die Anfrage ging ans echte Netz | Der Test läuft ohne Service Worker wie die übrigen mit `page.route` |
 
-Tests: `chunkRecovery.test.ts` 24 bestanden, die drei neuen Fälle am alten Stand 3 von 3 fehlgeschlagen; `start-watch`, `barcode`, `sync`, `update` und `switches` in Chromium (Desktop und Pixel 7): 59 bestanden, 9 übersprungen; `pnpm test` 107 Dateien, 924 Tests bestanden; `pnpm test:e2e` in Chromium: 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min); Startansicht 239,0 KB. WebKit: in der CI zum Nachtrag.
+Tests: `chunkRecovery.test.ts` 24 bestanden, die drei neuen Fälle am alten Stand 3 von 3 fehlgeschlagen; `start-watch`, `barcode`, `sync`, `update` und `switches` in Chromium (Desktop und Pixel 7): 59 bestanden, 9 übersprungen; `pnpm test` 107 Dateien, 924 Tests bestanden; `pnpm test:e2e` in Chromium: 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min); Startansicht 239,0 KB. WebKit: In der CI zu `0f50be6` liefen keine E2E-Tests, weil ein wackelnder Unit-Test die Prüfungen stoppte (Ursache in Abschnitt 3). In der CI zu `63d9428` bestanden `sync.spec.ts`, `barcode.spec.ts` und die Fälle ohne Service Worker aus `update.spec.ts`; der Startwächter Fall 1 blieb rot, bis index.html nichts mehr vorlud (Abschnitt 3, Nachtrag 2; CI zu `9517f73` bestanden).
 
 ### Offen
 
@@ -140,9 +141,32 @@ Dateien: `e2e/marks.spec.ts`, neu und vorübergehend `e2e/diagnose-start-watch.s
 
 Nachtrag 2 (Startwächter in WebKit): `vite.config.ts` (`build.modulePreload`), `e2e/diagnose-start-watch.spec.ts` als Gegenprobe, `docs/known-limitations.md`. Kosten: Beim ersten Aufruf ohne Service Worker fragt der Browser die Startmodule erst an, wenn er den Einstieg gelesen hat (eine Runde mehr); mit Service Worker kommen sie aus dem Zwischenspeicher. index.html wird 0,5 KB kleiner.
 
+Bestätigung in der CI zu `9517f73` (Lauf 40015267772): WebKit 312 bestanden, 60 übersprungen, 0 fehlgeschlagen. Die Gegenprobe lud dieselbe App einmal wie jetzt und einmal mit den früheren 31 Vorlade-Links; auf Desktop und Handy gleich:
+
+| Fassung | Ergebnis in WebKit |
+|---|---|
+| ohne Vorladen (neu) | `gestartet=true`, „Heute: Guten Abend.“; das zweite Dokument fragte `ui-…js` an |
+| mit Vorladen (alter Aufbau) | `gestartet=false`, „FORM ließ sich nicht starten“; das zweite Dokument fragte `ui-…js` nicht an |
+
+### Ergebnis: 20 Wiederholungen in der CI
+
+Jeder früher wackelnde Test 20-mal hintereinander, ohne Wiederholung bei Fehlschlag, im Image der CI (`repeat.yml`, Playwright 1.64.1). Erster Lauf zu `63d9428` (Lauf 40005209039): Chromium 1 von 260 rot, WebKit 40 von 220 rot; beides behoben in den Nachträgen oben. Zweiter Lauf zu `9517f73` (Lauf 40017391070):
+
+| Test | Chromium Desktop | Chromium Pixel 7 | WebKit Desktop | WebKit Handy |
+|---|---|---|---|---|
+| Linse: „Ziehen mit der Linse …“ | – | 20 von 20 | – | 20 von 20 |
+| Linse: „… bei zwei Bildern je Sekunde …“ (neu) | – | 20 von 20 | – | 20 von 20 |
+| Wasser-Schalter „per Tipp und Tastatur“ | 20 von 20 | 20 von 20 | 20 von 20 | 20 von 20 |
+| „Seitenende: …“ | – | 20 von 20 | – | 20 von 20 |
+| Offline-Start (E-16) | 20 von 20 | 20 von 20 | – | – |
+| Barcode | 20 von 20 | 20 von 20 | 20 von 20 | 20 von 20 |
+| Startwächter Fall 1 | 20 von 20 | 20 von 20 | 20 von 20 | 20 von 20 |
+| Startwächter Fall 2 | 20 von 20 | 20 von 20 | 20 von 20 | 20 von 20 |
+
+„–“: Der Test läuft dort nicht (nur auf dem Handy, der Offline-Start nur in Chromium mit Service Worker). Summen: Chromium 260 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,4 min); WebKit 220 bestanden, 100 übersprungen, 0 fehlgeschlagen (11,6 min). Den wackelnden Unit-Test (Ernährungseinträge derselben Millisekunde) zeigt Abschnitt 7.
+
 ### Offen
 
-- Startwächter in WebKit: Bestätigung der Behebung in der CI (Nachtrag 2).
 - Nachgeladene Bereiche laden weiter vor; ob das einmalige Neuladen dort in WebKit bei einem Netzfehler hilft, ist nicht geprüft (`known-limitations.md`).
 
 ## 4. §3 Wiederherstellen aus dem Export
@@ -240,7 +264,7 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §4“.
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm check:bundle` | Startansicht 239,5 KB von 250 KB |
 | `pnpm test:e2e` (Chromium) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen |
-| WebKit | in der CI zu diesem Abschnitt |
+| WebKit (CI zu `aa936d2`) | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen; `persist.spec.ts` bestanden |
 
 ### Offen
 
@@ -283,9 +307,96 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §5“.
 | `pnpm check:bundle` | 234,3 KB von 250 KB |
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm test:e2e` (Chromium) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen |
-| WebKit | in der CI zu diesem Abschnitt |
+| WebKit (CI zu `86d4841`) | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen |
 
 ### Offen
 
 - Abstand zum Ziel 0,7 KB. Weitere Kandidaten ohne neue Abhängigkeit: die Abschnitte `programs` und `exercises` im Katalog (zusammen rund 11 KB roh), von denen die Startansicht nur wenige Schlüssel braucht, und die Linse der Tab-Leiste (2,5 KB), die erst bei der ersten Berührung gebraucht wird.
 
+## 7. §6 Tests und Abschluss (23.10.2026)
+
+Auftrag: `docs/prompts/stabilitaet-FORM.md`. Je Abschnitt ein Commit mit eigener Entscheidung, sofort gepusht: §1 `5a1db80` (D-343), Nachtrag zu §1 aus der CI `0f50be6` (D-343), §2 `63d9428` (D-344), §3 `cc7c86b` (D-345), Nachträge zu §2 aus der Wiederholung `505cc1a` und `9517f73` (D-344), §4 `aa936d2` (D-346), §5 `86d4841` (D-347), §6 mit diesem Bericht (D-348). Ursachen, Änderungen, Dateien und Tests stehen je Abschnitt oben, alle Testergebnisse wörtlich in `docs/testing.md` (Protokolle „Stabilität §1“ bis „§6“).
+
+### Ursachen
+
+| Abschnitt | Ursache |
+|---|---|
+| §1 E-16 | Chromium verwendet unter einem Service Worker vorgeladene Module nicht und lädt sie ein zweites Mal; unter Last brach dabei ein Block von Modul-Anfragen ab, und die App startete ohne Meldung nicht. Daneben: Ohne `clientsClaim` lief die erste Sitzung ohne Service Worker (E-05); ohne Service Worker fehlten einer offenen Seite nach einem Deployment die alten Teile |
+| §1 Nachtrag | WebKit meldet ein als `text/html` geliefertes Modul mit eigenem Text; WebKit bricht Importe schon zu Beginn einer Navigation ab; unter dem Service Worker umgehen Anfragen in WebKit `page.route` |
+| §2 | Linse an die Bildrate gebunden; Leertaste fiel in Chromium in das Ende eines Tipps; Messung am Seitenende vor dem Dialog der Anmeldung; Ernährungseinträge derselben Millisekunde ohne feste Reihenfolge; WebKit-Systempakete per apt bei jedem Lauf |
+| §2 Nachträge | Wasser-Karte ohne Platzhalter zwischen Prüfung und Messung am Seitenende; WebKit behält ein fehlgeschlagenes Vorladen, solange die alte Seite lebt, und die neu geladene Seite übernimmt es |
+| §3 | Eine Exportdatei ließ sich nicht wieder einspielen (A-14) |
+| §4 | je Befund in Abschnitt 5 |
+| §5 | Der Textkatalog lud alle Texte mit der Startansicht, auch die nachgeladener Seiten (11,6 KB) |
+
+### Änderungen in §6
+
+- `e2e/diagnose-start-watch.spec.ts` entfernt: Die CI zu `9517f73` hat die Ursache bestätigt (ohne Vorladen gestartet, mit dem früheren Vorladen nicht); den Startwächter prüft weiter `e2e/start-watch.spec.ts` in beiden Engines.
+- `.github/workflows/repeat.yml`: Der Kommentar nennt die gemessene Laufzeit (rund 12 statt 30 min).
+- Unterlagen nachgezogen: `known-limitations.md` (dauerhafter Speicher nach D-346, Vorladen in WebKit in der CI belegt, Testwerkzeuge), `testing.md` (Umgebung und CI-Gates: Image von Playwright, Vorab-Liste, Wiederholung; Ergebnisse der CI zu jedem Abschnitt; Protokoll „Stabilität §6“), `decisions.md` (D-344 mit Ergebnis, Laufzeit und berichtigter Zahl für WebKit; D-348), dieser Bericht, `CHANGELOG.md`, Plan Punkt 66.
+
+### Geänderte Dateien (§6)
+
+- Entfernt: `e2e/diagnose-start-watch.spec.ts`
+- Geändert: `.github/workflows/repeat.yml` (Kommentar)
+- Dokumente: `docs/decisions.md` (D-344, D-348), `docs/known-limitations.md`, `docs/testing.md`, `docs/implementation-plan.md` (Punkt 66), `docs/CHANGELOG.md`, `form-stabilitaet-report.md`
+
+### Tests mit Ergebnis
+
+Abschluss auf dem Stand dieses Commits (Cloud-Umgebung, Node 22.22, Chromium 1243):
+
+| Lauf | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm test:coverage` | 116 Dateien, 984 Tests bestanden; Schwellen der Abdeckung erreicht |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB (Ziel aus §5: höchstens 235 KB); Vorab-Liste 173 von 232 Dateien, die übrigen bewusst ausgenommen; kein Vorlade-Link in `dist/index.html` |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min); 4 weniger als in §5, weil die Gegenprobe (2 Tests × 2 Projekte) entfällt |
+| Wackelnder Unit-Test aus §2, je 20-mal: „belegt Mengen ab 1000 …“ (`nutrition-ui.test.tsx`) und „Einträge mit gleicher Uhrzeit …“ (`nutritionService.test.ts`) | je 20 von 20 bestanden (jeder Lauf ein eigener Prozess, gezählt nur mit „1 passed“) |
+| WebKit | CI zu `86d4841`, derselbe Code der App wie in diesem Commit (§6 entfernt nur die Gegenprobe und ändert Unterlagen und einen Kommentar): 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min). Zum Commit mit diesem Bericht steht das Ergebnis beim Schreiben aus |
+
+Ergebnisse der CI je Commit (E2E; die Prüfungen davor waren außer bei `0f50be6` grün):
+
+| Commit | Chromium | WebKit |
+|---|---|---|
+| `5a1db80` §1 | bestanden | 299 bestanden, 59 übersprungen, 5 fehlgeschlagen, 1 wackelnd; behoben im Nachtrag, der Startwächter Fall 1 erst mit `9517f73` |
+| `0f50be6` §1, Nachtrag | nicht gelaufen | nicht gelaufen: Unit-Test „belegt Mengen ab 1000 …“ rot, Ursache in §2 behoben |
+| `63d9428` §2 | bestanden | 304 bestanden, 60 übersprungen, 2 fehlgeschlagen (Startwächter Fall 1) |
+| `cc7c86b` §3 | bestanden | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (Startwächter Fall 1) |
+| `505cc1a` §2, Nachtrag | bestanden | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (Startwächter Fall 1, Diagnose) |
+| `9517f73` §2, Nachtrag 2 | bestanden | 312 bestanden, 60 übersprungen, 0 fehlgeschlagen |
+| `aa936d2` §4 | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen |
+| `86d4841` §5 | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen |
+
+Die 20 Wiederholungen der früher wackelnden Tests zeigt Abschnitt 3: Chromium 260 von 260, WebKit 220 von 220.
+
+### Offen
+
+Beim Produktinhaber:
+
+- Durchsicht und Merge von PR #50.
+- Gerätetests am iPhone, am besten an der Vorschau des Branches vor dem Merge: T-IPH-M0 Schritt 4 (Update) für diese Fassung; Wiederherstellen mit Dateien-App und Teilen-Menü (§3).
+- A-05: Die Sperre je Nutzer in `push_documents` ändert die Datenbank des Servers; das SQL liegt nicht im Repository. Nur mit deiner Zustimmung.
+
+Zu groß für diese Sitzung oder nicht Teil des Auftrags, mit Grund:
+
+- Zusammenführen beim Import (AK-DAT-03): eine neue Funktion.
+- A-03 Rest (strikte Kindschemas, neue Aufzählungswerte): ein eigenes Paket zusammen mit A-01, vor der nächsten Erweiterung eines Schemas.
+- A-06 und Rest von E-03 (Snapshot in der App zurückspielen, Export und Fehlerprotokoll im Wiederherstellungsbildschirm): ein eigenes Paket; den Gerätewechsel deckt §3 ab.
+- C-04 Rest (jede Seite mit Suche liest den Katalog aus IndexedDB): Die Abhilfe bräuchte eine Änderung am Datenmodell mit Migrations- und Rückfallplan.
+- B-02 (Pausieren): bis Phase B (D-297).
+- Kleinere Reste aus §4 (Abschnitt 5, „Offen“).
+
+Nicht hier prüfbar:
+
+- Alles am iPhone: Safari unter dem Service Worker (ob es Modul-Anfragen abbricht wie Chromium), Home-Bildschirm, Update, Dateien-App. Playwright-WebKit ist nicht Safari auf iOS.
+- Ob das einmalige Neuladen in nachgeladenen Bereichen in WebKit bei einem Netzfehler hilft (`known-limitations.md`, „Fehlgeschlagenes Vorladen in WebKit“).
+- WebKit läuft nur in der CI; das Ergebnis zum Commit mit diesem Bericht steht beim Schreiben aus.
+
+Empfehlungen:
+
+1. Vor dem Merge die beiden Gerätetests an der Vorschau.
+2. Als nächstes Paket A-06 mit dem Rest von E-03: Damit ist ein Snapshot nicht nur angelegt, sondern auch wiederherstellbar.
+3. Vor der nächsten Erweiterung eines Schemas A-01 und den Rest von A-03, damit ältere Geräte neuere Daten nicht ablehnen oder verlieren.
+4. Braucht eine neue Funktion Platz in der Startansicht: die Abschnitte `programs` und `exercises` des Katalogs und die Linse der Tab-Leiste (Abschnitt 6).
+5. Bei einem neuen Verdacht auf einen wackelnden Test das Label „wiederholen“ setzen; die Liste der Tests steht in `repeat.yml`.

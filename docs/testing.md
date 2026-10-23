@@ -31,8 +31,8 @@ Ergänzend: Testing Library für Komponenten, axe-core in Playwright für Barrie
 
 ## 3. Testumgebungen und Grenzen
 
-- **Diese Cloud-Umgebung:** Node 22.22; Chromium (Playwright-Build 1194) unter `/opt/pw-browsers` vorinstalliert; WebKit fehlt. `playwright install` darf hier nicht laufen. Lokale E2E-Läufe nutzen Chromium über `executablePath`.
-- **GitHub Actions:** Node 24; `npx playwright install --with-deps chromium webkit`; alle E2E-Tests in beiden Engines (D-210).
+- **Diese Cloud-Umgebung:** Node 22.22; Chromium (Playwright-Build 1243, bis F6 1194) unter `/opt/pw-browsers` vorinstalliert; WebKit fehlt. `playwright install` darf hier nicht laufen. Lokale E2E-Läufe nutzen Chromium über `executablePath`.
+- **GitHub Actions:** Node 24; die E2E-Jobs laufen im offiziellen Image von Playwright (`mcr.microsoft.com/playwright:v<Version>-noble`, Version aus dem Lockfile), ohne `playwright install` (D-344); alle E2E-Tests in beiden Engines (D-210). Die früher wackelnden Tests laufen auf Abruf 20-mal ohne Wiederholung (`repeat.yml`, Label „wiederholen“ oder von Hand).
 - **Playwright-WebKit ist nicht Safari auf iOS.** Es deckt Rendering und Standardverhalten von WebKit ab, nicht aber Home-Bildschirm-Modus, Speicherisolation, Anhalten im Hintergrund, Wake Lock, Audio-Session oder Installation. Diese Punkte prüfen nur die Geräteprotokolle.
 - **Lighthouse** hat die PWA-Kategorie entfernt. Stattdessen prüft Playwright: Manifest gültig und verlinkt; Service Worker registriert und kontrolliert die Seite nach Reload; jede MVP-Route lädt offline (Netzwerk im Browserkontext abgeschaltet).
 - **Produktionsnahe E2E-Läufe:** Playwright testet den Build über `vite preview`. Die Vorschau sendet dieselben Sicherheits-Header wie Vercel, gelesen aus `vercel.json` (D-237). Jeder Test schlägt fehl, sobald der Browser einen Konsolenfehler meldet; so fallen auch CSP-Verstöße auf.
@@ -136,8 +136,9 @@ Umsetzung (M0) in `.github/workflows/ci.yml`:
 | Unit-, Integrations- und Komponententests mit Abdeckungsschwellen | `pnpm test:coverage` (Schwellen in `vitest.config.ts`: `shared/lib` und `calc/` ≥ 95 %, `shared/db`, `data/` und `service/` ≥ 85 % Zeilen) | Umgesetzt |
 | Kontrasttest der Tokens | Teil von `pnpm test:coverage` (`tokens.test.ts`) | Umgesetzt |
 | Dokumentprüfungen | `pnpm check:docs` | Umgesetzt |
-| Build und Bündelgröße der Startansicht | `pnpm build`, `pnpm check:bundle` (Grenze 250 KB gzip) | Umgesetzt |
-| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt. In der CI wird ein fehlgeschlagener Test einmal wiederholt; Fehler erscheinen zusätzlich als GitHub-Annotationen (Reporter `github`), weil die Logdateien aus der Cloud-Umgebung nicht abrufbar sind. `openPage` wartet, bis die Überschrift sichtbar ist und kein Bereich mehr `aria-busy` trägt |
+| Build und Bündelgröße der Startansicht | `pnpm build`, `pnpm check:bundle` (Grenze 250 KB gzip; dazu `tools/check-precache.mjs`: jede Datei der App steht in der Vorab-Liste des Service Workers oder ist bewusst ausgenommen, D-343) | Umgesetzt |
+| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt. In der CI wird ein fehlgeschlagener Test einmal wiederholt; Fehler erscheinen zusätzlich als GitHub-Annotationen (Reporter `github`), weil die Logdateien aus der Cloud-Umgebung nicht abrufbar sind. `openPage` wartet, bis die Überschrift sichtbar ist und kein Bereich mehr `aria-busy` trägt. Die Jobs laufen im Image von Playwright, Zeitgrenze 30 min je Job (D-344) |
+| Wiederholung der früher wackelnden Tests | `.github/workflows/repeat.yml`: 20-mal hintereinander, ohne Wiederholung bei Fehlschlag, Chromium und WebKit | Umgesetzt, auf Abruf (Label „wiederholen“ am Pull Request oder von Hand), kein Gate (D-344) |
 
 ## 6. Geräteprotokolle
 
@@ -1171,7 +1172,7 @@ Ursache des Offline-Tests (E-16), Startwächter, einmal neu laden, Update-Strate
 | Nachtrag: `pnpm test` | 107 Dateien, 924 Tests bestanden |
 | Nachtrag: `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
 | Nachtrag: `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min) |
-| Nachtrag: WebKit | in der CI zum Nachtrag |
+| Nachtrag: WebKit | CI zu `0f50be6` (Lauf 40000437469): E2E nicht gelaufen, weil die Prüfungen am wackelnden Unit-Test „belegt Mengen ab 1000 …“ scheiterten (Ursache und Behebung in §2). In der CI zu `63d9428` (Lauf 40005195222) bestanden `sync.spec.ts` und `barcode.spec.ts` auf Desktop und Handy und die Fälle ohne Service Worker aus `update.spec.ts` (Handy, darunter „Während eines Trainings …“); `start-watch.spec.ts` Fall 1 blieb rot, behoben im Nachtrag 2 zu §2 (CI zu `9517f73`: bestanden) |
 
 
 ### Stabilität §2: Wackelnde Tests und CI · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
@@ -1206,7 +1207,10 @@ Linse der Tab-Leiste, Wasser-Schalter per Tastatur, Seitenende auf `/mehr/synchr
 | Nachtrag 2: kein Vorladen in index.html, `pnpm build`, `pnpm check:bundle` | 0 Vorlade-Links in `dist/index.html`; Startansicht 238,9 KB von 250 KB (vorher 239,4 KB; index.html 5,6 statt 6,1 KB); Vorab-Liste 170 von 229 Dateien |
 | Nachtrag 2: `start-watch`, `diagnose-start-watch`, `pwa`, `update`, `start-surface`, `shell`, `resilience` (Chromium Desktop und Pixel 7) | 49 bestanden, 15 übersprungen |
 | Nachtrag 2: `start-watch.spec.ts` und Gegenprobe `diagnose-start-watch.spec.ts` (Chromium Desktop und Pixel 7) | 8 bestanden; in Chromium startet die App mit und ohne das frühere Vorladen (31 Vorlade-Links nachgebildet) |
-| Nachtrag 2: WebKit | in der CI zum Nachtrag 2 |
+| Nachtrag 2: WebKit, CI zu `9517f73` (Lauf 40015267772) | 312 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,9 min); `start-watch.spec.ts` Fall 1 und 2 bestanden. Chromium: bestanden |
+| Nachtrag 2: Gegenprobe `diagnose-start-watch.spec.ts` in der CI (WebKit Desktop und Handy, Protokoll im Testlauf) | „ohne Vorladen (neu)“: `gestartet=true Dokumente=2 h1=["Heute: Guten Abend."]`, „Vorladen im Dokument: 0“, das zweite Dokument fragte `ui-…js` an („ui durchgelassen“). „mit Vorladen (alter Aufbau)“: `gestartet=false Dokumente=2 h1=["FORM ließ sich nicht starten"]`, „Vorladen im Dokument: 31“, das zweite Dokument fragte `ui-…js` nicht an. Auf beiden Geräten gleich |
+| Nachtrag 2: 20 Wiederholungen in der CI zu `9517f73` (`repeat.yml`, Lauf 40017391070), Chromium | 260 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,4 min): Linse 20 und 20 (Pixel 7, neuer und alter Test), Seitenende 20 (Pixel 7), Wasser-Schalter 40, Offline-Start (E-16) 40, Barcode 40, Startwächter 80; übersprungen sind die Fälle nur für das Handy auf dem Desktop |
+| Nachtrag 2: 20 Wiederholungen in der CI, WebKit | 220 bestanden, 100 übersprungen, 0 fehlgeschlagen (11,6 min): Linse 20 und 20 (Handy), Seitenende 20 (Handy), Wasser-Schalter 40, Barcode 40, Startwächter 80 (Fall 1 im ersten Lauf 40 von 40 rot); der Offline-Start läuft nur in Chromium |
 
 ### Stabilität §3: Wiederherstellen aus dem Export · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1249,7 +1253,7 @@ Befunde aus `audit-report.md` Abschnitt 5 nach Priorität, dazu B-07 (D-346). Be
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 239,5 KB von 250 KB (vorher 238,9 KB); Vorab-Liste 170 von 229 Dateien |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min) |
-| WebKit | in der CI zu diesem Abschnitt |
+| WebKit, CI zu `aa936d2` (Lauf 40018756552) | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min); `persist.spec.ts`, `restore.spec.ts` und `start-watch.spec.ts` auf Desktop und Handy bestanden. Chromium: 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,7 min) |
 
 ### Stabilität §5: Startansicht höchstens 235 KB · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1266,5 +1270,20 @@ Ziel aus dem Auftrag: höchstens 235 KB (gzip), vorher 239,5 KB (D-347). Bericht
 | `pnpm format:check`, `pnpm lint`, `pnpm check:docs` | ohne Befund |
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,6 min) |
-| WebKit | in der CI zu diesem Abschnitt |
+| WebKit, CI zu `86d4841` (Lauf 40021792538) | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min). Chromium: 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,1 min) |
+
+### Stabilität §6: Tests und Abschluss · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Alle Prüfungen auf dem Stand des Abschlusses; die vorübergehende Gegenprobe `e2e/diagnose-start-watch.spec.ts` ist entfernt (D-348). Bericht: `form-stabilitaet-report.md` Abschnitt 7.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm test:coverage` | 116 Dateien, 984 Tests bestanden; Schwellen der Abdeckung erreicht |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB; Vorab-Liste 173 von 232 Dateien; 0 Vorlade-Links in `dist/index.html`. Die Summe schwankt von Build zu Build um 0,1 KB (gemessen 234,2 und 234,3 KB), weil `db-….js` in der Startansicht die Uhrzeit des Builds enthält |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min); 4 weniger als in §5, weil die Gegenprobe (2 Tests × 2 Projekte) entfällt |
+| Wackelnder Unit-Test aus §2 (Einträge derselben Millisekunde), je 20-mal hintereinander: „belegt Mengen ab 1000 …“ (`nutrition-ui.test.tsx`), „Einträge mit gleicher Uhrzeit …“ (`nutritionService.test.ts`) | je 20 von 20 bestanden (jeder Lauf ein eigener Prozess, gezählt nur mit „1 passed“) |
+| CI zu `86d4841` (Lauf 40021792538) | Prüfungen bestanden; Chromium 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,1 min); WebKit 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min) |
+| WebKit zum Commit des Abschlusses | steht beim Schreiben aus |
 

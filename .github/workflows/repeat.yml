@@ -2,7 +2,7 @@ name: Wiederholung
 
 # Die früher wackelnden Tests 20-mal hintereinander, ohne Wiederholung bei Fehlschlag, im selben
 # Image wie die CI (Stabilität §2, D-344). Auslöser: Label „wiederholen“ am Pull Request oder von
-# Hand unter „Actions“. Läuft nicht bei jedem Push, weil ein Lauf je Engine rund 30 min braucht.
+# Hand unter „Actions“. Läuft nicht bei jedem Push, weil ein Lauf je Engine rund 12 min braucht.
 on:
   pull_request:
     types: [labeled]

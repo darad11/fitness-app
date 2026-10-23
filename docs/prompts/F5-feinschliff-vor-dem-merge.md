@@ -1,5 +1,7 @@
 # FORM · Paket F5 – Fehler und Feinschliff vor dem Merge
 
+> Kopie des Auftrags. Gemäß Abschnitt 7.1 sind hier der Name der fremden App, ihr Programmname und das Wort für eine Kopie durch Platzhalter in eckigen Klammern ersetzt; sonst unverändert.
+
 Branch `form-rebranding`, PR #49. Es gelten `CLAUDE.md`, `form-markenleitplanken.md` und `brand-tokens.md`. Dieses Paket schließt das Rebranding ab; danach wird gemergt.
 
 **Anhänge zu dieser Nachricht**
@@ -94,7 +96,7 @@ Anhang `form-aufnahme-training-sprung.png`: Gewicht eingeben, über das Häkchen
 
 ## 7. Texte und Marke
 
-**7.1 Keine Hinweise auf Xeela.** Programm C heißt „Winterprogramm 2026“, die Beschreibung wird neutral (z. B. „8 Wochen, 40 Trainingstage, fünf Einheiten pro Woche im Studio.“), ohne „Nachbau“, „Aufnahme des Produktinhabers“ oder den alten Namen. Das ersetzt die Entscheidung von vorhin, die Quelle in der Beschreibung zu behalten. Globale Suche nach „Xeela“, „Nachbau“ und „Winter Arc“ in Code, Programmdaten, Texten, README und Dokumentation; nimm alle drei in die Wortfeld-Prüfung auf, auch für die Programmdaten. Einzige Ausnahme: ein interner Vermerk in `docs/known-limitations.md`, ohne Namen, dass Programm C auf einer fremden Vorlage beruht und vor einer öffentlichen Öffnung durch ein eigenes Programm ersetzt wird. Technisch nötige Treffer, falls es welche gibt, dokumentieren statt blind löschen.
+**7.1 Keine Hinweise auf [die fremde App].** Programm C heißt „Winterprogramm 2026“, die Beschreibung wird neutral (z. B. „8 Wochen, 40 Trainingstage, fünf Einheiten pro Woche im Studio.“), ohne „[Wort für Kopie]“, „Aufnahme des Produktinhabers“ oder den alten Namen. Das ersetzt die Entscheidung von vorhin, die Quelle in der Beschreibung zu behalten. Globale Suche nach „[Name der fremden App]“, „[Wort für Kopie]“ und „[alter Programmname]“ in Code, Programmdaten, Texten, README und Dokumentation; nimm alle drei in die Wortfeld-Prüfung auf, auch für die Programmdaten. Einzige Ausnahme: ein interner Vermerk in `docs/known-limitations.md`, ohne Namen, dass Programm C auf einer fremden Vorlage beruht und vor einer öffentlichen Öffnung durch ein eigenes Programm ersetzt wird. Technisch nötige Treffer, falls es welche gibt, dokumentieren statt blind löschen.
 
 **7.2 Anmeldung:** Der Text „Noch kein Konto? Registrieren“ bleibt, die Registrierung bleibt offen. Passe die bisherige Entscheidung, die Registrierung in Supabase zu schließen, in `docs/decisions.md` und im Audit-Report an.
 
@@ -119,7 +121,7 @@ Diese Wünsche kommen in eigene Sitzungen nach dem Merge – nur in `docs/implem
 
 ## 9. Tests und Abschluss
 
-- Je behobenem Fehler ein Test, der ohne den Fix fehlschlägt (Schalter, Wochenziel, Seitenanfang, Sprung im Training, Xeela-frei).
+- Je behobenem Fehler ein Test, der ohne den Fix fehlschlägt (Schalter, Wochenziel, Seitenanfang, Sprung im Training, frei vom Namen der fremden App).
 - Betroffene Screens auf 360, 390 und 768 pt Breite prüfen: keine Überlappung, keine abgeschnittenen Knöpfe, keine ungewollten Umbrüche.
 - Screenshots der geänderten Screens erneuern, `node tools/screens-overview.mjs` ausführen.
 - `pnpm format:check`, `lint`, `typecheck`, `check:docs`, `test`, `build`, `check:bundle` (Startansicht unter 250 KB), E2E Chromium lokal, WebKit in der CI.

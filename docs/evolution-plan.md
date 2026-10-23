@@ -29,8 +29,8 @@ Nicht geprüft: Verhalten auf dem iPhone seit AP 1.4 (Gerätetest T-IPH-M1 steht
 
 ## 2. Ergebnisse der Referenzanalyse
 
-- **Winter Arc vollständig rekonstruiert:** 8 Wochen, 40 Trainingstage, 278 Übungseinträge, 71 Übungsnamen, Pausen und Wiederholungen je Satz, Quelle je Tag; 8 offene Punkte (`winter-arc-reconstruction.md` Abschnitt 4). Keine öffentliche Quelle; nichts erfunden.
-- **Übungsabgleich:** 28 Namen vorhanden, 19 Varianten vorhandener Übungen, 19 fehlen (18 neue Übungen vorgeschlagen), 5 unklar (`winter-arc-reconstruction.md` Abschnitt 5).
+- **Programm C vollständig erfasst:** 8 Wochen, 40 Trainingstage, 278 Übungseinträge, 71 Übungsnamen, Pausen und Wiederholungen je Satz, Quelle je Tag; 8 offene Punkte (`winterprogramm-2026.md` Abschnitt 4). Keine öffentliche Quelle; nichts erfunden.
+- **Übungsabgleich:** 28 Namen vorhanden, 19 Varianten vorhandener Übungen, 19 fehlen (18 neue Übungen vorgeschlagen), 5 unklar (`winterprogramm-2026.md` Abschnitt 5).
 - **Referenzmatrix** für V1 bis V3, T1 bis T8, S1 und S2 mit Stufen G, O, A, E, U (`reference-analysis.md` Abschnitt 2), Abgleich mit der eigenen App und zehn Verbesserungen (Abschnitte 3 und 4).
 - **Recherche (18.10.2026):** Ergänzungen zu Open Food Facts, MET-Werten, Übungsdatenquellen und Nutzerfeedback in `product-research.md` Abschnitt 13 und `data-sources.md`; gesperrte Hosts dieser Sitzung dort vermerkt.
 
@@ -39,7 +39,7 @@ Nicht geprüft: Verhalten auf dem iPhone seit AP 1.4 (Gerätetest T-IPH-M1 steht
 - `main` bleibt produktiv; jede Änderung per Pull Request mit grüner CI, gemergt vom Produktinhaber.
 - Keine Nutzdaten an Dritte, keine Telemetrie; Open Food Facts nur nach Einwilligung (Q-08), Supabase erst R3 und nur nach ausdrücklicher Freigabe.
 - Keine destruktiven Migrationen; jede neue Dexie-Version mit Snapshot und Migrationstest (AK-DAT-06, AK-DAT-07).
-- Keine Xeela-Videos, -Bilder, -Texte oder erfundenen Bild-Adressen; Übungsabbildungen später nur aus gemeinfreien Quellen (D-304).
+- Keine Videos, Bilder oder Texte der Referenz-App und keine erfundenen Bild-Adressen; Übungsabbildungen später nur aus gemeinfreien Quellen (D-304).
 - Keine Platzhalterdaten, keine Schaltflächen ohne Funktion (AK-UX-01); Kalorien nur als gekennzeichnete Schätzung.
 - Keine Zusagen, die das iPhone nicht hält (`known-limitations.md` Abschnitt 3): kein Ton bei gesperrtem Bildschirm, keine Push-Erinnerung im MVP.
 
@@ -62,9 +62,9 @@ Dauer 8 Wochen, Reihenfolge-Modus (AK-PRG-08), keine festen Wochentage. Progress
 
 Zweck: Nach Programm A. Drei Trainingstage Push, Pull, Beine laufen über vier Trainingstage je Woche weiter, die Folge wird nicht zurückgesetzt: Woche 1 Push, Pull, Beine, Push; Woche 2 Pull, Beine, Push, Pull; Woche 3 Beine, Push, Pull, Beine; danach von vorn. **Eigener Vorschlag (E), bestätigt am 18.10.2026 (Q-15); Klimmzüge an der Maschine mit Gegengewicht.** Übungen aus der vorhandenen Beispielvorlage „Push/Pull/Beine“ (`sample-templates.md`), 3 × 6–10 Grundübungen, 3 × 10–15 Isolation; 12 Wochen. Technisch: Vorlage mit drei Tagen und `weeks` als Rotation von 3 Wochen, `repeat: true`.
 
-### 4.3 Programm C: Winter Arc 2026 (Nachbau)
+### 4.3 Programm C: Winterprogramm 2026
 
-Exakt nach `winter-arc-reconstruction.md`: 8 Wochen, 40 Tage, Übungen nach Abschnitt 5 zugeordnet, Sätze, Wiederholungen, Dauer und Pausen wie gesehen. Offene Punkte U-1 bis U-8 werden markiert, nicht geraten: Tag 14 Laufband nach Antwort auf Q-13; unklare Übungen erhalten den Hinweis „Zuordnung unsicher“ im Programmtext, bis der Produktinhaber sie bestätigt. Eigener Programmtext (keine Xeela-Beschreibung), Name „Winter Arc 2026 (Nachbau)“, Quelle im Text genannt. Ruhetage als Wocheneigenschaft (zwei Ruhetage je Woche, Lage frei), Start datumsunabhängig.
+Exakt nach `winterprogramm-2026.md`: 8 Wochen, 40 Tage, Übungen nach Abschnitt 5 zugeordnet, Sätze, Wiederholungen, Dauer und Pausen wie gesehen. Offene Punkte U-1 bis U-8 werden markiert, nicht geraten: Tag 14 Laufband nach Antwort auf Q-13; unklare Übungen erhalten den Hinweis „Zuordnung unsicher“ im Programmtext, bis der Produktinhaber sie bestätigt. Eigener Programmtext (keine Beschreibung der Vorlage), Name „Winterprogramm 2026“, ohne Quellenangabe in der App (F5, D-328). Ruhetage als Wocheneigenschaft (zwei Ruhetage je Woche, Lage frei), Start datumsunabhängig.
 
 ## 5. Priorisierter Umsetzungsplan
 

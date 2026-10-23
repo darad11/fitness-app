@@ -30,7 +30,7 @@ const CATALOGS = {
   tWater,
 };
 
-/** Texte der Stammdaten, die die App anzeigt. */
+/** Texte der Stammdaten, die die App anzeigt (der Teil der Adresse `slug` eingeschlossen). */
 const DATA_TEXT_KEYS = new Set([
   'name',
   'description',
@@ -38,6 +38,7 @@ const DATA_TEXT_KEYS = new Set([
   'note',
   'originalName',
   'aliases',
+  'slug',
 ]);
 
 function catalogTexts(value: unknown, path: string, out: Entry[] = []): Entry[] {
@@ -81,9 +82,9 @@ const ALL: Entry[] = [
 
 /**
  * Eigennamen, die stehen bleiben: der Name der Schrittzählung im Dashboard des Produktinhabers
- * (Datenquelle, D-277) und der Originalname des nachgebauten Xeela-Programms als Quellenangabe.
+ * (Datenquelle, D-277). Programm C nennt keine Quelle mehr (F5, D-328).
  */
-const PROPER_NAMES = ['Step Challenge', '„2026 Winter Arc“'];
+const PROPER_NAMES = ['Step Challenge'];
 
 /** Regel und Beispiel aus den Leitplanken. */
 const RULES: readonly (readonly [string, RegExp])[] = [
@@ -91,7 +92,10 @@ const RULES: readonly (readonly [string, RegExp])[] = [
   ['Emoji', /\p{Extended_Pictographic}/u],
   ['Beast Mode', /beast\s*mode/i],
   ['Grind', /\bgrind/i],
-  ['Winter Arc', /winter\s*arc/i],
+  ['Winter Arc', /winter[\s_-]*arc/i],
+  // Keine Hinweise auf die fremde App, deren Programm Vorlage für Programm C war (F5, D-328).
+  ['Name der fremden App', /xeela/i],
+  ['Nachbau', /nachbau/i],
   ['Challenge', /challenge/i],
   ['Bestform', /bestform/i],
   ['Cheat Day', /cheat\s*day/i],

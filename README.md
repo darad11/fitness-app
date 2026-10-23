@@ -1,6 +1,6 @@
 # Persönliche Fitnessplattform (Arbeitstitel „Fitness")
 
-Eigenständige, local-first Web-App für Trainingsplanung, Trainingsdurchführung, Körperdaten und später Ernährung, Rezepte, Wochenmenü, Einkaufsliste, Aktivität und Gewohnheiten. Funktional orientiert an Xeela, ohne Übernahme geschützter Inhalte. Zielgeräte: iPhone, iPad und Mac als installierbare Web-App; optional synchronisiert über Supabase.
+Eigenständige, local-first Web-App für Trainingsplanung, Trainingsdurchführung, Körperdaten und später Ernährung, Rezepte, Wochenmenü, Einkaufsliste, Aktivität und Gewohnheiten. Funktional orientiert an einer Referenz-App, ohne Übernahme geschützter Inhalte. Zielgeräte: iPhone, iPad und Mac als installierbare Web-App; optional synchronisiert über Supabase.
 
 ## Status
 
@@ -51,7 +51,7 @@ WebKit läuft in GitHub Actions (`.github/workflows/ci.yml`).
 
 | Datei | Inhalt |
 |---|---|
-| `docs/product-research.md` | Recherche zu Xeela: Quellen, belegte und nicht belegte Funktionen, Versionshistorie, gewünschte Screenshots |
+| `docs/product-research.md` | Recherche zur Referenz-App: Quellen, belegte und nicht belegte Funktionen, Versionshistorie, gewünschte Screenshots |
 | `docs/feature-inventory.md` | Funktionsmatrix mit 165 Funktionen: Herkunft, Umfang, Release, Entscheidung, Status, Akzeptanzkriterien |
 | `docs/feature-inventory.csv` | Dieselbe Matrix für Tabellenkalkulation (Semikolon, UTF-8) |
 | `docs/requirements.md` | Anforderungen, MVP-Umfang und 101 MVP-Akzeptanzkriterien |
@@ -65,7 +65,7 @@ WebKit läuft in GitHub Actions (`.github/workflows/ci.yml`).
 | `docs/decisions.md` | Entscheidungsprotokoll und offene Fragen |
 | `docs/known-limitations.md` | Grenzen der Analyse, iOS- und Browser-Einschränkungen mit Quellen, Stand M0 |
 | `docs/CHANGELOG.md` | Änderungen je Dokumentversion |
-| `docs/archive/v0.1-phase-1/` | Unveränderter Stand von Phase 1 mit Prüfsummen |
+| `docs/archive/v0.1-phase-1/` | Stand von Phase 1 mit Prüfsummen; Fremdbezüge am 23.10.2026 neutral gefasst, Prüfsummen erneuert (D-328) |
 
 ## Nächste Schritte
 

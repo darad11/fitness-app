@@ -1,11 +1,11 @@
-# Rekonstruktion „2026 Winter Arc“ (Xeela)
+# Programm C: Winterprogramm 2026
 
-Version 1.0 · 18.10.2026 · Quelle für Programm C in `evolution-plan.md`. Die Abschnitte 5 und 6 erzeugt `tools/winter_arc_to_md.py` aus `tools/data/winter-arc-2026.source.json` und `tools/data/winter-arc-exercise-map.json`; `pnpm check:docs` prüft sie.
+Version 1.1 · 23.10.2026 (neutral gefasst, ohne Namen der Vorlage, D-328; Fassung 1.0 vom 18.10.2026) · Quelle für Programm C in `evolution-plan.md`. Die Abschnitte 5 und 6 erzeugt `tools/winterprogramm_to_md.py` aus `tools/data/winterprogramm-2026.source.json` und `tools/data/winterprogramm-2026-uebungen.json`; `pnpm check:docs` prüft sie.
 
 ## 1. Zweck und Grenzen
 
-- Das Programm wird nachgebaut, damit der Produktinhaber es in der eigenen App mit eigenen Daten trainieren kann. Es ist ein Trainingsplan aus Übungsnamen, Sätzen, Wiederholungen und Pausen; Videos, Bilder, Texte und Gestaltung von Xeela werden nicht übernommen (nur der Beschreibungstext ist hier als Beleg zitiert).
-- Einzige Quelle ist die Bildschirmaufnahme des Produktinhabers aus seiner Xeela-App (acht Teile, 18.10.2026) und das Player-Video desselben Tages. Eine öffentliche Quelle für die Inhalte des Programms gibt es nicht; Websuche am 18.10.2026 nach „Xeela Winter Arc“ fand nur Marketingseiten und Challenge-Bedingungen ohne Übungslisten.
+- Programm C ist ein Trainingsplan aus Übungsnamen, Sätzen, Wiederholungen und Pausen, damit der Produktinhaber ihn in der eigenen App mit eigenen Daten trainieren kann. Videos, Bilder, Texte und Gestaltung der Vorlage werden nicht übernommen.
+- Einzige Quelle ist eine Bildschirmaufnahme der Vorlage (acht Teile, 18.10.2026) und ein Player-Video desselben Tages. Eine öffentliche Quelle für die Inhalte gibt es nicht. Die Vorlage ist fremd; vor einer öffentlichen Öffnung der App wird Programm C durch ein eigenes Programm ersetzt (`known-limitations.md`).
 - Kein Wert ist geschätzt oder ergänzt. Wo die Aufnahme etwas nicht zeigt, steht es in Abschnitt 4 als offen. Gewichte gibt das Programm nicht vor; die App zeigt dem Nutzer wie bisher seinen Vorwert (AK-TRN-05).
 
 ## 2. Vorgehen
@@ -16,35 +16,32 @@ Version 1.0 · 18.10.2026 · Quelle für Programm C in `evolution-plan.md`. Die 
 | 2 | Jede Tafel gelesen, Übungen mit Satz, Wiederholungen und Pause übertragen; Teilgrenzen auf Anschluss geprüft (z. B. Teil 2 endet bei Woche 2 Tag 12 Übung 1, Teil 3 beginnt dort) | `source` je Tag in der Datendatei |
 | 3 | Lücken (schnelles Scrollen in Woche 5 bis 8, Seitenübergänge) mit 6 Bildern je Sekunde erneut gelesen | Zeitstempel mit „Lücke … geschlossen“ |
 | 4 | Tag 1 zusätzlich gegen das Player-Video geprüft (Übungen, Sätze, Pausen stimmen überein) | `player 00:00–00:02` |
-| 5 | Plausibilität: Anzahl Übungen und Sätze je Tag gegen die Kopfzeile der Tagesansicht; Summe 40 Tage, 8 Wochen, 5 Tage je Woche | `tools/winter_arc_to_md.py --check` |
+| 5 | Plausibilität: Anzahl Übungen und Sätze je Tag gegen die Kopfzeile der Tagesansicht; Summe 40 Tage, 8 Wochen, 5 Tage je Woche | `tools/winterprogramm_to_md.py --check` |
 
-Kennzeichnung der Aussagen in diesem Dokument: **gesehen** (in der Aufnahme), **abgeleitet** (aus Gesehenem gefolgert, als solches markiert), **offen** (nicht erkennbar). Offiziell bestätigt ist nichts, weil Xeela keine Programmlisten veröffentlicht.
+Kennzeichnung der Aussagen in diesem Dokument: **gesehen** (in der Aufnahme), **abgeleitet** (aus Gesehenem gefolgert, als solches markiert), **offen** (nicht erkennbar). Offiziell bestätigt ist nichts, weil die Vorlage keine Programmlisten veröffentlicht.
 
 ## 3. Programmstruktur (gesehen)
 
 | Angabe | Wert | Quelle |
 |---|---|---|
-| Name, Trainer | „2026 Winter Arc“, „Ilya \| Xeela Trainer“ | T1 00:00–00:07 |
 | Dauer | 8 Wochen, 40 Einheiten, 5 Trainingstage je Woche | T1 00:00–00:07 |
-| Angaben je Tag in Xeela | ca. 525 kcal, ca. 75 min, 12 Muskelgruppen | T1 00:00–00:07; Player-Abschluss „525 cal“ |
-| Beschreibung (Zitat) | „Winter Arc is an 8-week challenge inside Xeela built for people who refuse to get soft when the year slows down. You train five days a week for eight weeks, forty sessions total, all programmed in the app so you never have to guess what to do. This is not a casual plan and it is not a participation trophy. One person who stays consistent, checks in, and shows real change wins $10,000. If you want winter to be a build season instead of a fade, this is the lock-in.“ | T1 00:00–00:07 |
-| „Key Benefits“ (Zitat) | Enhanced Muscle Definition; Increased Strength; Improved Metabolism; Boosted Confidence | T1 00:00–00:07 |
+| Angaben je Tag in der Vorlage | ca. 525 kcal, ca. 75 min, 12 Muskelgruppen | T1 00:00–00:07; Player-Abschluss „525 cal“ |
 | Wochenaufbau | Tag A „Chest and Back“ (6 Übungen, 16 Sätze), B „Shoulders and Arms“ (7, 19), C „Legs and Abs“ (8, 22), D „Upper Body“ (6, 16), E „Lower Body and Abs“ (8, 22); Ausnahmen Tag 12 (7, 21) und Tag 14 (8, 24) | Kopfzeilen der Tagesansichten |
 | Ruhetage | Woche 1: Tag 2 und 3; Woche 2 bis 8: die ersten beiden Tage der Woche (Tag 8 und 9, 15 und 16 usw.) | Kalenderleiste in T1 bis T8 |
 | Pausen | 90 s nach Grundübungen, 75 s bei den meisten, 60 s bei Isolation und Waden, 45 s bei Bauch, 0 s nach dem Laufband | Satzzeilen; Verteilung: 90 s × 59, 75 s × 108, 60 s × 40, 45 s × 32, 0 s × 39 |
 | Abschluss | Laufband 30:00 min als letzte Übung fast jedes Tages | Satzzeilen |
 | Kalender (abgeleitet) | In der Aufnahme beginnt Woche 1 am Sonntag, 18.10.2026 (Tag 1), Ruhetage Montag und Dienstag; ab Woche 2 Ruhetage Sonntag und Montag, Training Dienstag bis Samstag. Das Programm selbst ist datumsunabhängig | Kalenderleiste |
 
-Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „279 Exercises“ in der Fortschrittsansicht; Differenz siehe Abschnitt 4).
+Insgesamt 278 Übungseinträge mit 71 verschiedenen Übungsnamen (die Vorlage nennt „279 Exercises“ in der Fortschrittsansicht; Differenz siehe Abschnitt 4).
 
 ## 4. Unsicherheiten und offene Punkte
 
 | Nr. | Punkt | Stand | Umgang |
 |---|---|---|---|
 | U-1 | Orangefarbene Sternmarkierung an einzelnen Übungen (z. B. Tag 17 Übung 4, Tag 32 Übung 1, Tag 46 Übung 5, Tag 52 bis 55 jeweils erste oder zweite Übung) | gesehen; laut Produktinhaber (Q-13, 18.10.2026) ein **Dropset**: schwer beginnen, nach jedem Satz das Gewicht um 30 % senken, keine Pause dazwischen | Umgesetzt (Schritt C, D-249): die 12 in den Notizen belegten Sterne stehen in `tools/data/programs.source.json` (`dropsets.items`, Kalendertag und Position) und werden als Arbeitssatz plus Drop-Sätze ohne Pause abgebildet (AK-TRN-03); keine Gewichte. **Offen:** Die Liste ist noch nicht gegen alle 40 Tage geprüft; weitere Sterne meldet der Produktinhaber als „Tag x, Übung y“ und das Skript nimmt sie auf |
-| U-2 | Tag 14: Laufband mit „3 Sets • 30:00“, Kopfzeile 24 Sätze | gesehen; wahrscheinlich Datenfehler in Xeela | In der Datendatei wie angezeigt; in Programm C als 1 × 30 min (Q-13, beantwortet 18.10.2026) |
+| U-2 | Tag 14: Laufband mit „3 Sets • 30:00“, Kopfzeile 24 Sätze | gesehen; wahrscheinlich Datenfehler in der Vorlage | In der Datendatei wie angezeigt; in Programm C als 1 × 30 min (Q-13, beantwortet 18.10.2026) |
 | U-3 | „279 Exercises“ in der Fortschrittsansicht gegen 278 gezählte Einträge | gesehen | Differenz vermutlich durch U-2 oder eine Zählung je Satzgruppe; kein Tag fehlt (40 Tage, Kopfzeilen stimmen) |
-| U-4 | Tippfehler in Xeela („Quad Extentions“, „Leg press Calf Raise“, „Overhead Cable Tricep Extention“, „Flat Dumbbell Bench Press (chest)“) | gesehen | Wörtlich beibehalten; deutsche Namen im Abgleich |
+| U-4 | Tippfehler in der Vorlage („Quad Extentions“, „Leg press Calf Raise“, „Overhead Cable Tricep Extention“, „Flat Dumbbell Bench Press (chest)“) | gesehen | Wörtlich beibehalten; deutsche Namen im Abgleich |
 | U-5 | Ausführung einzelner Übungen | vom Produktinhaber am 18.10.2026 nachgesehen: Frontheben sitzend, Knieheben stehend, Beinheben liegend, Wadenheben sitzend, Klimmzüge an der Maschine; nur „Chest Fly With Push“ bleibt unklar | Abgleich in Abschnitt 5 aktualisiert; Klimmzüge mit Entlastung × Wiederholungen |
 | U-6 | Gewichte, Tempo außer „3-Second Eccentric“, Aufwärmsätze | nicht Teil des Programms | Nicht erfunden; Aufwärmsätze nach den Regeln der App optional |
 | U-7 | Kalorien „525 cal“ und „75 min“ je Tag | gesehen, Berechnung unbekannt | Nicht übernommen; eigene Schätzung nach MET mit Kennzeichnung (`evolution-plan.md`) |
@@ -52,18 +49,18 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 
 ## 5. Übungsabgleich
 
-71 Xeela-Namen: 50 vorhanden, 20 Varianten vorhandener Übungen, 0 fehlen (0 neue Übungen vorgeschlagen), 1 unklar. Erzeugt aus `tools/data/winter-arc-exercise-map.json`; Status und Konfidenz beziehen sich auf die Zuordnung, nicht auf die Satzwerte. Varianten werden als Ausführungshinweis im Programm und als Alias in der Bibliothek geführt, nicht als eigene Übung (`exercise-library.md` Abschnitt 2). Quelle je Übung: erstes Vorkommen im Programm.
+71 Übungsnamen der Vorlage: 50 vorhanden, 20 Varianten vorhandener Übungen, 0 fehlen (0 neue Übungen vorgeschlagen), 1 unklar. Erzeugt aus `tools/data/winterprogramm-2026-uebungen.json`; Status und Konfidenz beziehen sich auf die Zuordnung, nicht auf die Satzwerte. Varianten werden als Ausführungshinweis im Programm und als Alias in der Bibliothek geführt, nicht als eigene Übung (`exercise-library.md` Abschnitt 2). Quelle je Übung: erstes Vorkommen im Programm.
 
-| Xeela-Name | Deutscher Name | Schlüssel | Status | Ergänzung | Quelle | Konfidenz |
+| Name in der Vorlage | Deutscher Name | Schlüssel | Status | Ergänzung | Quelle | Konfidenz |
 |---|---|---|---|---|---|---|
 | Alternating Dumbbell Lunges | Ausfallschritte mit Kurzhanteln | `lunge_dumbbell` | Vorhanden | Hinweis „wechselseitig“ | W1 T7, T2 00:12–00:20 | hoch |
 | Alternating Flat Dumbbell Press | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Variante | Hinweis „wechselseitig“; Alias „Alternating Dumbbell Press“ | W1 T1, player 00:00–00:02; T1 Liste | hoch |
-| Flat Dumbbell Bench Press (chest) | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Vorhanden | Klammer „(chest)“ stammt aus Xeela | W3 T17, T3 00:28–00:34 | hoch |
+| Flat Dumbbell Bench Press (chest) | Bankdrücken mit Kurzhanteln | `bench_press_dumbbell` | Vorhanden | Klammer „(chest)“ stammt aus der Vorlage | W3 T17, T3 00:28–00:34 | hoch |
 | Lying Hamstring Curls | Beinbeuger liegend | `lying_leg_curl` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Leg Raises | Beinheben liegend | `lying_leg_raise` | Vorhanden | Laut Produktinhaber (18.10.2026) liegend | W2 T14, T3 00:18–00:22 | hoch |
 | Leg Press Machine | Beinpresse | `leg_press` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Single Leg Press Machine | Beinpresse, einbeinig | `leg_press_single_leg` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung) | W1 T7, T2 00:12–00:20 | mittel |
-| Quad Extentions | Beinstrecker | `leg_extension` | Vorhanden | Tippfehler „Extentions“ stammt aus Xeela | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
+| Quad Extentions | Beinstrecker | `leg_extension` | Vorhanden | Tippfehler „Extentions“ stammt aus der Vorlage | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Single-Leg Quad Extension | Beinstrecker | `leg_extension` | Variante | Hinweis „einbeinig“ | W2 T14, T3 00:18–00:22 | mittel |
 | Bicycles | Bicycle Crunches | `bicycle_crunch` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen | W1 T5, T1 00:31–00:42 | hoch |
 | Cable Bayesian Curl | Bizepscurls am Kabel | `biceps_curl_cable` | Variante | Hinweis „Bayesian: Zug hinter dem Körper, einarmig“; Alias „Bayesian Curl“ | W1 T4, T1 00:19–00:27 | mittel |
@@ -73,7 +70,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Crunches | Crunches | `crunch` | Vorhanden | – | W1 T5, T1 00:31–00:42 | hoch |
 | Dead Bugs | Dead Bug | `dead_bug` | Vorhanden | – | W1 T7, T2 00:12–00:20 | hoch |
 | Kneeling Single-Arm Lat Pulldown | Einarmiges Latziehen am Kabel, kniend | `lat_pulldown_single_arm` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Latissimus, Kabel, je Seite, Gewicht × Wiederholungen | W1 T6, T2 00:01–00:08 | mittel |
-| Close Grip Bench Press | Enges Bankdrücken | `close_grip_bench_press` | Vorhanden | Xeela führt die Übung unter Brust, die Bibliothek unter Trizeps | W1 T4, T1 00:19–00:27 | hoch |
+| Close Grip Bench Press | Enges Bankdrücken | `close_grip_bench_press` | Vorhanden | Die Vorlage führt die Übung unter Brust, die Bibliothek unter Trizeps | W1 T4, T1 00:19–00:27 | hoch |
 | Chest Fly With Push | Fliegende am Kabel | `cable_fly` | Unklar | Produktinhaber konnte die Ausführung nicht einordnen (18.10.2026); bleibt Fliegende am Kabel mit Hinweis „Zuordnung unsicher“ | W1 T6, T2 00:01–00:08 | niedrig |
 | Decline Cable Fly | Fliegende am Kabel | `cable_fly` | Variante | Hinweis „von oben nach unten“; Alias „Decline Cable Fly“ | W2 T10, T2 00:28–00:33 | hoch |
 | Incline Cable Fly | Fliegende am Kabel | `cable_fly` | Variante | Hinweis „von unten nach oben“; Alias „Incline Cable Fly“ | W3 T17, T3 00:28–00:34 | hoch |
@@ -109,7 +106,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Machine Shoulder Press | Schulterdrücken an der Maschine | `shoulder_press_machine` | Vorhanden | – | W1 T4, T1 00:19–00:27 | hoch |
 | Standing Alternating Shoulder Press | Schulterdrücken mit Kurzhanteln, stehend | `shoulder_press_dumbbell_standing` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“ | W4 T25, T4 00:45; T5 00:00–00:02 | mittel |
 | Dual Dumbbell Preacher Curls | Scottcurls mit Kurzhanteln | `preacher_curl_dumbbell` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange) | W2 T11, T2 00:36–00:41 | mittel |
-| Arm Cable Lateral Raise | Seitheben am Kabel | `lateral_raise_cable` | Vorhanden | Name in Xeela vermutlich abgeschnitten („Single-Arm …“); einarmig ist die übliche Ausführung | W1 T4, T1 00:19–00:27 | hoch |
+| Arm Cable Lateral Raise | Seitheben am Kabel | `lateral_raise_cable` | Vorhanden | Name in der Vorlage vermutlich abgeschnitten („Single-Arm …“); einarmig ist die übliche Ausführung | W1 T4, T1 00:19–00:27 | hoch |
 | Seated Dumbbell Lateral Raise (with hold) | Seitheben mit Kurzhanteln | `lateral_raise_dumbbell` | Variante | Hinweis „sitzend, mit Halten“ | W5 T32, T5 00:36–00:39 | hoch |
 | Spider Dumbbell Lateral Raise | Seitheben mit Kurzhanteln | `lateral_raise_dumbbell` | Variante | Hinweis „Brust auf der Schrägbank aufgelegt“; Alias „Spider Lateral Raise“ | W1 T6, T2 00:01–00:08 | mittel |
 | Sit-Ups | Sit-ups | `sit_up` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen | W3 T19, T4 00:11–00:15 | hoch |
@@ -118,7 +115,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 | Single Arm Cable Tricep Extension | Trizepsdrücken am Kabel | `triceps_pushdown_cable` | Variante | Hinweis „einarmig“ | W3 T18, T3 00:38–00:41; T4 00:00–00:04 | mittel |
 | Cross-Body Cable Extensions | Trizepsdrücken am Kabel, über Kreuz | `triceps_extension_cable_cross_body` | Vorhanden | Aufgenommen in Schritt B (18.10.2026): Trizeps, Kabel, je Seite | W2 T11, T2 00:36–00:41 | mittel |
 | Single-Arm Cross-Body Cable Extension | Trizepsdrücken am Kabel, über Kreuz | `triceps_extension_cable_cross_body` | Vorhanden | Aufgenommen in Schritt B (18.10.2026). Gleiche neue Übung wie „Cross-Body Cable Extensions“ | W6 T41, T7 00:03–00:06 (Übungen 2, 3 mit 6 B/s bestätigt) | mittel |
-| Overhead Cable Tricep Extention | Trizepsstrecken über Kopf am Kabel | `overhead_extension_cable` | Vorhanden | Tippfehler „Extention“ stammt aus Xeela | W3 T20, T4 00:20–00:23 | hoch |
+| Overhead Cable Tricep Extention | Trizepsstrecken über Kopf am Kabel | `overhead_extension_cable` | Vorhanden | Tippfehler „Extention“ stammt aus der Vorlage | W3 T20, T4 00:20–00:23 | hoch |
 | Seated Single-Arm Dumbbell Extensions | Trizepsstrecken über Kopf mit Kurzhantel | `overhead_extension_dumbbell` | Variante | Hinweis „sitzend, einarmig“ | W4 T25, T4 00:45; T5 00:00–00:02 | hoch |
 | Plank | Unterarmstütz (Plank) | `plank` | Vorhanden | Dauer (Erfassungsart Zeit) | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
 | Leg press Calf Raise | Wadenheben an der Beinpresse | `calf_press_leg_press` | Vorhanden | – | W2 T12, T2 00:45; T3 00:00–00:04 | hoch |
@@ -130,7 +127,7 @@ Insgesamt 278 Übungseinträge mit 71 verschiedenen Xeela-Namen (Xeela nennt „
 
 ## 6. Trainingstage
 
-Je Tag: Muskelgruppe und Name wie in Xeela angezeigt, Sätze × Wiederholungen oder Dauer, Pause nach dem Satz in Sekunden. „Quelle“ nennt Teil und Zeitstempel der Aufnahme, an dem die Werte gelesen wurden (T1 bis T8; „player“ ist das Player-Video). Ruhetage je Woche aus `restDaysByWeek`.
+Je Tag: Muskelgruppe und Name wie in der Vorlage angezeigt, Sätze × Wiederholungen oder Dauer, Pause nach dem Satz in Sekunden. „Quelle“ nennt Teil und Zeitstempel der Aufnahme, an dem die Werte gelesen wurden (T1 bis T8; „player“ ist das Player-Video). Ruhetage je Woche aus `restDaysByWeek`.
 
 ### Woche 1
 
@@ -138,7 +135,7 @@ Ruhetage: Tag 2, 3. Trainingstage: 1, 4, 5, 6, 7.
 
 **Tag 1 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: player 00:00–00:02; T1 Liste
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Alternating Flat Dumbbell Press | 3 | 10 | 90 |
 | 2 | Latissimus | T-Bar Row | 3 | 10 | 90 |
@@ -149,7 +146,7 @@ Ruhetage: Tag 2, 3. Trainingstage: 1, 4, 5, 6, 7.
 
 **Tag 4 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T1 00:19–00:27
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Machine Shoulder Press | 3 | 10 | 90 |
 | 2 | Schultern | Arm Cable Lateral Raise | 3 | 15 | 60 |
@@ -161,7 +158,7 @@ Ruhetage: Tag 2, 3. Trainingstage: 1, 4, 5, 6, 7.
 
 **Tag 5 · Legs and Abs (Beine und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T1 00:31–00:42
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Barbell Back Squats | 3 | 10 | 90 |
 | 2 | Oberschenkel hinten | Barbell Romanian Deadlift | 3 | 10 | 90 |
@@ -174,7 +171,7 @@ Ruhetage: Tag 2, 3. Trainingstage: 1, 4, 5, 6, 7.
 
 **Tag 6 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T2 00:01–00:08
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Latissimus | Kneeling Single-Arm Lat Pulldown | 3 | 10 | 75 |
 | 2 | Brust | Chest Fly With Push | 3 | 12 | 75 |
@@ -185,7 +182,7 @@ Ruhetage: Tag 2, 3. Trainingstage: 1, 4, 5, 6, 7.
 
 **Tag 7 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T2 00:12–00:20
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel hinten | Dumbbell Romanian Deadlifts | 3 | 12 | 90 |
 | 2 | Oberschenkel vorne | Alternating Dumbbell Lunges | 3 | 12 | 90 |
@@ -202,7 +199,7 @@ Ruhetage: Tag 8, 9. Trainingstage: 10, 11, 12, 13, 14.
 
 **Tag 10 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T2 00:28–00:33
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Incline Cable Chest Press | 3 | 10 | 90 |
 | 2 | Latissimus | Pull-Ups | 3 | 10 | 90 |
@@ -213,7 +210,7 @@ Ruhetage: Tag 8, 9. Trainingstage: 10, 11, 12, 13, 14.
 
 **Tag 11 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T2 00:36–00:41
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Seated Front Lateral Raise | 3 | 10 | 90 |
 | 2 | Schultern | Bent-Over Dumbbell Rear Delt Fly | 3 | 15 | 75 |
@@ -225,7 +222,7 @@ Ruhetage: Tag 8, 9. Trainingstage: 10, 11, 12, 13, 14.
 
 **Tag 12 · Legs and Abs (Beine und Bauch)** · 7 Übungen, 21 Sätze · Quelle: T2 00:45; T3 00:00–00:04
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Leg Press Machine | 3 | 12 | 90 |
 | 2 | Waden | Leg press Calf Raise | 3 | 15 | 60 |
@@ -237,7 +234,7 @@ Ruhetage: Tag 8, 9. Trainingstage: 10, 11, 12, 13, 14.
 
 **Tag 13 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T3 00:08–00:12
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Alternating Incline Dumbbell Press | 3 | 10 | 90 |
 | 2 | Latissimus | T-Bar Row | 3 | 10 | 90 |
@@ -248,7 +245,7 @@ Ruhetage: Tag 8, 9. Trainingstage: 10, 11, 12, 13, 14.
 
 **Tag 14 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 24 Sätze · Quelle: T3 00:18–00:22
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel hinten | Barbell Romanian Deadlift | 3 | 10 | 90 |
 | 2 | Oberschenkel vorne | Single-Leg Quad Extension | 3 | 15 | 75 |
@@ -265,7 +262,7 @@ Ruhetage: Tag 15, 16. Trainingstage: 17, 18, 19, 20, 21.
 
 **Tag 17 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T3 00:28–00:34
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Flat Dumbbell Bench Press (chest) | 3 | 10 | 90 |
 | 2 | Latissimus | Straight-Arm Lat Pulldown | 3 | 12 | 75 |
@@ -276,7 +273,7 @@ Ruhetage: Tag 15, 16. Trainingstage: 17, 18, 19, 20, 21.
 
 **Tag 18 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T3 00:38–00:41; T4 00:00–00:04
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Machine Shoulder Press | 3 | 10 | 90 |
 | 2 | Schultern | Spider Dumbbell Lateral Raise | 3 | 15 | 75 |
@@ -288,7 +285,7 @@ Ruhetage: Tag 15, 16. Trainingstage: 17, 18, 19, 20, 21.
 
 **Tag 19 · Legs and Abs (Beine und Bauch)** · 7 Übungen, 19 Sätze · Quelle: T4 00:11–00:15
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Alternating Dumbbell Lunges | 3 | 10 | 75 |
 | 2 | Oberschenkel hinten | Dumbbell Romanian Deadlifts | 3 | 12 | 90 |
@@ -300,7 +297,7 @@ Ruhetage: Tag 15, 16. Trainingstage: 17, 18, 19, 20, 21.
 
 **Tag 20 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T4 00:20–00:23
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Incline Cable Chest Press | 3 | 10 | 90 |
 | 2 | Latissimus | Wide Grip Cable Rows | 3 | 15 | 75 |
@@ -311,7 +308,7 @@ Ruhetage: Tag 15, 16. Trainingstage: 17, 18, 19, 20, 21.
 
 **Tag 21 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T4 00:27–00:30
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Gesäß | Dumbbell Hip Thrust | 3 | 15 | 90 |
 | 2 | Oberschenkel vorne | Single Leg Press Machine | 3 | 15 | 75 |
@@ -328,7 +325,7 @@ Ruhetage: Tag 22, 23. Trainingstage: 24, 25, 26, 27, 28.
 
 **Tag 24 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T4 00:39–00:41 (Lücke 00:40 mit 6 B/s geschlossen)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Latissimus | Smith Machine Row | 3 | 10 | 90 |
 | 2 | Brust | Alternating Incline Dumbbell Press | 3 | 8 | 75 |
@@ -339,7 +336,7 @@ Ruhetage: Tag 22, 23. Trainingstage: 24, 25, 26, 27, 28.
 
 **Tag 25 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T4 00:45; T5 00:00–00:02
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Standing Alternating Shoulder Press | 3 | 10 | 90 |
 | 2 | Schultern | Arm Cable Lateral Raise | 3 | 15 | 60 |
@@ -351,7 +348,7 @@ Ruhetage: Tag 22, 23. Trainingstage: 24, 25, 26, 27, 28.
 
 **Tag 26 · Legs and Abs (Beine und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T5 00:06–00:11
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Leg Press Machine | 3 | 10 | 90 |
 | 2 | Waden | Leg press Calf Raise | 3 | 15 | 60 |
@@ -364,7 +361,7 @@ Ruhetage: Tag 22, 23. Trainingstage: 24, 25, 26, 27, 28.
 
 **Tag 27 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T5 00:15–00:17 (Titel und Übung 3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Flat Dumbbell Bench Press (chest) | 3 | 10 | 90 |
 | 2 | Latissimus | Close Grip Lat Pulldown | 3 | 10 | 90 |
@@ -375,7 +372,7 @@ Ruhetage: Tag 22, 23. Trainingstage: 24, 25, 26, 27, 28.
 
 **Tag 28 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T5 00:20–00:22 (Übungen 2, 5, 6 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel hinten | Dumbbell Romanian Deadlifts | 3 | 15 | 90 |
 | 2 | Oberschenkel vorne | Single-Leg Quad Extension | 3 | 15 | 75 |
@@ -392,7 +389,7 @@ Ruhetage: Tag 29, 30. Trainingstage: 31, 32, 33, 34, 35.
 
 **Tag 31 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T5 00:30–00:33 (Übungen 3, 4 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Incline Cable Chest Press | 3 | 12 | 90 |
 | 2 | Latissimus | T-Bar Row | 3 | 10 | 90 |
@@ -403,7 +400,7 @@ Ruhetage: Tag 29, 30. Trainingstage: 31, 32, 33, 34, 35.
 
 **Tag 32 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T5 00:36–00:39
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Machine Shoulder Press | 3 | 10 | 90 |
 | 2 | Schultern | Seated Dumbbell Lateral Raise (with hold) | 3 | 15 | 75 |
@@ -415,7 +412,7 @@ Ruhetage: Tag 29, 30. Trainingstage: 31, 32, 33, 34, 35.
 
 **Tag 33 · Legs and Abs (Beine und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T6 00:00–00:03
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Barbell Back Squats | 3 | 10 | 90 |
 | 2 | Oberschenkel hinten | Lying Hamstring Curls | 3 | 15 | 75 |
@@ -428,7 +425,7 @@ Ruhetage: Tag 29, 30. Trainingstage: 31, 32, 33, 34, 35.
 
 **Tag 34 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T6 00:09–00:11
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Alternating Flat Dumbbell Press | 3 | 10 | 90 |
 | 2 | Latissimus | Smith Machine Row | 3 | 12 | 90 |
@@ -439,7 +436,7 @@ Ruhetage: Tag 29, 30. Trainingstage: 31, 32, 33, 34, 35.
 
 **Tag 35 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T6 00:14–00:16 (Übungen 2, 3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel hinten | Barbell Romanian Deadlift | 3 | 12 | 90 |
 | 2 | Oberschenkel vorne | Alternating Dumbbell Lunges | 3 | 12 | 75 |
@@ -456,7 +453,7 @@ Ruhetage: Tag 36, 37. Trainingstage: 38, 39, 40, 41, 42.
 
 **Tag 38 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T6 00:25–00:28
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Alternating Flat Dumbbell Press | 3 | 8 | 90 |
 | 2 | Latissimus | Underhand Cable Rows | 3 | 12 | 75 |
@@ -467,7 +464,7 @@ Ruhetage: Tag 36, 37. Trainingstage: 38, 39, 40, 41, 42.
 
 **Tag 39 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T6 00:32–00:38
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Seated Front Lateral Raise | 3 | 10 | 90 |
 | 2 | Schultern | Bent-Over Dumbbell Rear Delt Fly | 3 | 15 | 75 |
@@ -479,7 +476,7 @@ Ruhetage: Tag 36, 37. Trainingstage: 38, 39, 40, 41, 42.
 
 **Tag 40 · Legs and Abs (Beine und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T6 00:42–00:45 (Titel mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Leg Press Machine | 3 | 15 | 90 |
 | 2 | Oberschenkel hinten | Dumbbell Romanian Deadlifts | 3 | 10 | 90 |
@@ -492,7 +489,7 @@ Ruhetage: Tag 36, 37. Trainingstage: 38, 39, 40, 41, 42.
 
 **Tag 41 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T7 00:03–00:06 (Übungen 2, 3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Latissimus | Smith Machine Row | 3 | 10 | 75 |
 | 2 | Brust | Chest Fly Machine | 3 | 15 | 75 |
@@ -503,7 +500,7 @@ Ruhetage: Tag 36, 37. Trainingstage: 38, 39, 40, 41, 42.
 
 **Tag 42 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T7 00:08–00:11 (Titel und Übungen 1, 5, 6 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Alternating Dumbbell Lunges | 3 | 15 | 90 |
 | 2 | Oberschenkel hinten | Lying Hamstring Curls | 3 | 15 | 75 |
@@ -520,7 +517,7 @@ Ruhetage: Tag 43, 44. Trainingstage: 45, 46, 47, 48, 49.
 
 **Tag 45 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T7 00:18–00:21 (Übung 4 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Alternating Incline Dumbbell Press | 3 | 10 | 90 |
 | 2 | Brust | Push-Ups | 3 | 15 | 75 |
@@ -531,7 +528,7 @@ Ruhetage: Tag 43, 44. Trainingstage: 45, 46, 47, 48, 49.
 
 **Tag 46 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T7 00:25–00:27 (Titel und Übungen 1, 5 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Spider Cable Front Raise | 3 | 12 | 75 |
 | 2 | Schultern | Bent-Over Dumbbell Rear Delt Fly | 3 | 15 | 75 |
@@ -543,7 +540,7 @@ Ruhetage: Tag 43, 44. Trainingstage: 45, 46, 47, 48, 49.
 
 **Tag 47 · Legs and Abs (Beine und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T7 00:31–00:34 (Übungen 2–4 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Barbell Back Squats | 3 | 12 | 90 |
 | 2 | Oberschenkel hinten | Cable Hip Hinge Pull-Throughs | 3 | 12 | 75 |
@@ -556,7 +553,7 @@ Ruhetage: Tag 43, 44. Trainingstage: 45, 46, 47, 48, 49.
 
 **Tag 48 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T7 00:39–00:40; T8 00:01–00:04
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Incline Cable Chest Press | 3 | 10 | 90 |
 | 2 | Latissimus | Smith Machine Row | 3 | 12 | 90 |
@@ -567,7 +564,7 @@ Ruhetage: Tag 43, 44. Trainingstage: 45, 46, 47, 48, 49.
 
 **Tag 49 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T8 00:07–00:10 (Titel und Übungen 1, 5 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel hinten | Dumbbell Romanian Deadlifts | 3 | 10 | 90 |
 | 2 | Oberschenkel vorne | Alternating Dumbbell Lunges | 3 | 15 | 90 |
@@ -584,7 +581,7 @@ Ruhetage: Tag 50, 51. Trainingstage: 52, 53, 54, 55, 56.
 
 **Tag 52 · Chest and Back (Brust und Rücken)** · 6 Übungen, 16 Sätze · Quelle: T8 00:18–00:21 (Übungen 2, 3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Brust | Flat Dumbbell Bench Press (chest) | 3 | 8 | 90 |
 | 2 | Latissimus | Close Grip Lat Pulldown | 3 | 12 | 75 |
@@ -595,7 +592,7 @@ Ruhetage: Tag 50, 51. Trainingstage: 52, 53, 54, 55, 56.
 
 **Tag 53 · Shoulders and Arms (Schultern und Arme)** · 7 Übungen, 19 Sätze · Quelle: T8 00:23–00:26 (Übung 3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Schultern | Machine Shoulder Press | 3 | 8 | 90 |
 | 2 | Schultern | Arm Cable Lateral Raise | 3 | 15 | 75 |
@@ -607,7 +604,7 @@ Ruhetage: Tag 50, 51. Trainingstage: 52, 53, 54, 55, 56.
 
 **Tag 54 · Legs and Abs (Beine und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T8 00:29–00:31 (Titel und Übungen 4–6 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Heel-Elevated Goblet Squats | 3 | 10 | 90 |
 | 2 | Oberschenkel hinten | Barbell Romanian Deadlift | 3 | 12 | 90 |
@@ -620,7 +617,7 @@ Ruhetage: Tag 50, 51. Trainingstage: 52, 53, 54, 55, 56.
 
 **Tag 55 · Upper Body (Oberkörper)** · 6 Übungen, 16 Sätze · Quelle: T8 00:35–00:38 (Übungen 2, 3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Latissimus | Kneeling Single-Arm Lat Pulldown | 3 | 12 | 75 |
 | 2 | Brust | Chest Fly Machine | 3 | 10 | 90 |
@@ -631,7 +628,7 @@ Ruhetage: Tag 50, 51. Trainingstage: 52, 53, 54, 55, 56.
 
 **Tag 56 · Lower Body and Abs (Unterkörper und Bauch)** · 8 Übungen, 22 Sätze · Quelle: T8 00:41–00:44 (Titel und Übungen 1–3 mit 6 B/s bestätigt)
 
-| # | Muskel | Übung (Xeela) | Sätze | Wdh. / Dauer | Pause s |
+| # | Muskel | Übung (Vorlage) | Sätze | Wdh. / Dauer | Pause s |
 |---|---|---|---|---|---|
 | 1 | Oberschenkel vorne | Barbell Back Squats | 3 | 12 | 90 |
 | 2 | Oberschenkel hinten | Lying Hamstring Curls | 3 | 15 | 75 |

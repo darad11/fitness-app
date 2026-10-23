@@ -41,7 +41,7 @@ export const APP_PAGES = [
   '/training/programme',
   '/training/nachtragen',
   '/training/vorlagen/full_body_ab',
-  '/training/vorlagen/winter_arc_2026',
+  '/training/vorlagen/winterprogramm-2026',
   '/uebungen',
   '/ernaehrung',
   '/ernaehrung/hinzufuegen',

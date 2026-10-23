@@ -61,16 +61,19 @@ test('Programm aktivieren, nächsten Tag von „Heute" starten, Zähler (AK-PRG-
   await expect(page.getByText('Als Nächstes')).toHaveCount(0);
 });
 
-test('Winter Arc: Wochen, Hinweise und Dropsets ohne Pause sind sichtbar (Programm C)', async ({
-  page,
-}) => {
-  await openPage(page, '/training/vorlagen/winter_arc_2026');
+test('Programm C: Wochen, Hinweise und Dropsets ohne Pause sind sichtbar', async ({ page }) => {
+  await openPage(page, '/training/vorlagen/winterprogramm-2026');
   await expect(page.getByRole('heading', { level: 2, name: /^Woche \d$/ })).toHaveCount(8);
-  await expect(page.getByText(/^Quelle: Rekonstruktion/)).toBeVisible();
+  // Neutraler Name und Beschreibung, keine Quellenangabe (F5, D-328).
+  await expect(page.getByRole('heading', { level: 1, name: 'Winterprogramm 2026' })).toBeVisible();
+  await expect(
+    page.getByText(/^8 Wochen, 40 Trainingstage, fünf Einheiten pro Woche im Studio/),
+  ).toBeVisible();
+  await expect(page.getByText(/^Quelle: /)).toHaveCount(0);
   const day17 = page.getByRole('region', { name: /^Tag 17 · / });
   await expect(day17.getByRole('listitem').nth(3)).toContainText('1 Satz, 2 Drop-Sätze');
   await expect(day17.getByRole('listitem').nth(3)).toContainText(/Dropset: schwer beginnen/);
-  await expect(day17.getByRole('listitem').nth(3)).toContainText(/Xeela: /);
+  await expect(day17.getByRole('listitem').nth(3)).toContainText(/Englisch: /);
   const day14 = page.getByRole('region', { name: /^Tag 14 · / });
   await expect(day14.getByRole('listitem').last()).toContainText(
     /Laufband1 Satz · 30:00 min · ohne Pause/,

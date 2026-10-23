@@ -1,8 +1,8 @@
 {
-  "$comment": "Programme A und B (evolution-plan.md Abschnitt 4, Q-14 und Q-15). Programm C entsteht aus tools/data/winter-arc-2026.source.json. tools/programs_build.py erzeugt daraus src/modules/training/data/programs.v1.json und docs/programs.md. Keine Gewichte: Der Player zeigt den Vorwert.",
+  "$comment": "Programme A und B (evolution-plan.md Abschnitt 4, Q-14 und Q-15). Programm C entsteht aus tools/data/winterprogramm-2026.source.json. tools/programs_build.py erzeugt daraus src/modules/training/data/programs.v1.json und docs/programs.md. Keine Gewichte: Der Player zeigt den Vorwert.",
   "version": 1,
   "dropsets": {
-    "$comment": "Dropset-Markierungen (orangefarbener Stern) im Winter Arc nach den Notizen zur Aufnahme; [Kalendertag, Position]. Die Liste ist aus den Notizen und noch nicht vollständig gegen alle 40 Tage geprüft (winter-arc-reconstruction.md U-1).",
+    "$comment": "Dropset-Markierungen (orangefarbener Stern) in Programm C nach den Notizen zur Aufnahme; [Kalendertag, Position]. Die Liste ist aus den Notizen und noch nicht vollständig gegen alle 40 Tage geprüft (winterprogramm-2026.md U-1).",
     "items": [
       [17, 4],
       [18, 3],
@@ -18,10 +18,11 @@
       [55, 2]
     ]
   },
-  "winterArc": {
+  "programC": {
     "key": "winter_arc_2026",
-    "name": "Winterprogramm 2026 (Nachbau)",
-    "description": "Nachbau des Xeela-Programms „2026 Winter Arc“ aus der Aufnahme des Produktinhabers: 8 Wochen, 40 Trainingstage, 5 Tage je Woche mit zwei frei wählbaren Ruhetagen. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.",
+    "slug": "winterprogramm-2026",
+    "name": "Winterprogramm 2026",
+    "description": "8 Wochen, 40 Trainingstage, fünf Einheiten pro Woche im Studio, die zwei Ruhetage legst du selbst. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.",
     "level": "intermediate",
     "location": "gym",
     "daysPerWeek": "5",

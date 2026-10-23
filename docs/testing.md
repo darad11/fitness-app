@@ -365,7 +365,7 @@ Neu: Verlauf `/training/verlauf` mit Wochen (Montag bis Sonntag), Name, Datum, D
 
 Neu: JSON-Export nach `data-model.md` Abschnitt 11 (`export.ts`: alle Aggregattabellen inklusive Löschmarkierungen, ohne Projektionen; Dateiname mit Datum und Uhrzeit; Teilen-Menü, wenn der Browser Dateien teilen kann, sonst Download; Zeitpunkt des letzten Exports in `meta`, AK-DAT-01) und die Seite „Mehr › Daten und Sicherung“ (S-35) mit Speicherstatus und belegtem Speicher (AK-PWA-05), Export und der Liste der Snapshots (AK-DAT-06, nur Anzeige; Wiederherstellen und Import folgen mit M2 und M4). Migrationstest-Gerüst (`migrations.test.ts`, `testing/legacyDb.ts`): eine Datenbank in Schemaversion 1 wird angelegt, mit der aktuellen Version verlustfrei geöffnet, und vor einem höheren Ziel entsteht ein Snapshot (AK-DAT-07). Nachweise: `export.test.ts` (Tabellen, Typen, Löschmarkierungen, keine Projektionen, Dateiname, Teilen/Download/Abbruch mit Zeitpunkt), `bundle-versions.test.ts` (Versionen der Stammdaten), E2E in `shell.spec.ts` (Seite ohne axe-Verstöße in beiden Modi über die Seitenliste; Export erzeugt eine Datei `fitness-sicherung-…json` mit Format und Daten; Hinweis „Letzter Export“). Der Weg über das Teilen-Menü auf dem iPhone ist Teil des Gerätetests T-IPH-M1.
 
-Der Produktinhaber hat am 18.10.2026 die unklaren Winter-Arc-Übungen nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
+Der Produktinhaber hat am 18.10.2026 die unklaren Übungen von Programm C nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
 
 ### M1 · AP 1.9 Tests · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
@@ -381,7 +381,7 @@ Aus der CI: Der Chromium-Lauf mit Pixel-7-Emulation scheiterte zweimal am Zeiger
 
 ### Schritt B · Bibliothek erweitert · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
-19 neue Übungen und englische Alias-Namen für Varianten (D-248); `exercise-library.md` Abschnitte 4 und 5 neu erzeugt, Abgleich in `winter-arc-reconstruction.md` auf „vorhanden“ gesetzt. Zod-Prüfung der Daten, Suche, Filter und Bibliotheksansicht mit 124 Übungen bestanden (`coreLibrary.test.ts`, `search.test.ts`, `exercise-library.test.tsx`, E2E `exercises.spec.ts`); vier Sucherwartungen an die größeren Treffermengen angepasst (z. B. findet „t bar“ jetzt auch Alias-Namen mit „Barbell“, der Namenstreffer bleibt vorn).
+19 neue Übungen und englische Alias-Namen für Varianten (D-248); `exercise-library.md` Abschnitte 4 und 5 neu erzeugt, Abgleich in `winterprogramm-2026.md` auf „vorhanden“ gesetzt. Zod-Prüfung der Daten, Suche, Filter und Bibliotheksansicht mit 124 Übungen bestanden (`coreLibrary.test.ts`, `search.test.ts`, `exercise-library.test.tsx`, E2E `exercises.spec.ts`); vier Sucherwartungen an die größeren Treffermengen angepasst (z. B. findet „t bar“ jetzt auch Alias-Namen mit „Barbell“, der Namenstreffer bleibt vorn).
 
 ### Schritt C · Programme A, B, C und aktives Programm · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
@@ -391,10 +391,10 @@ Programme als gebündelte Vorlagen (`programs.v1.json`, 3 Programme, 84 Training
 |---|---|
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
 | `pnpm check:docs` (mit `programs_build.py --check`) | bestanden: Programme 3, Trainingstage 84; `programs.v1.json` steht in `.prettierignore`, weil Prettier die erzeugte Datei sonst umformatiert |
-| `pnpm test` | 42 Dateien, 402 Tests bestanden. Neu: `programProgress.test.ts` (Folge, nächster Tag, Durchläufe, Wiederholung, Abschluss, frei gewählter Tag), `programs.test.ts` (Inhalt A, B, C: Beinpresse, 3 Sätze, Rotation, Laufband Tag 14 einmal 30 min, Dropsets ohne Pause, Xeela-Namen), `programService.test.ts` (aktivieren, Wechsel, beenden, ungültige ID), `programs-ui.test.tsx` (6 neue Fälle: aktivieren, Zähler, Folgetag, Start von Training als `source: 'program'`, Zusammenfassung, Etikett „Aktiv“, beenden, Winter Arc mit Wochen und „Erledigt“); `format.test.ts` (Dauerziele ab einer Minute als „30:00 min“) |
+| `pnpm test` | 42 Dateien, 402 Tests bestanden. Neu: `programProgress.test.ts` (Folge, nächster Tag, Durchläufe, Wiederholung, Abschluss, frei gewählter Tag), `programs.test.ts` (Inhalt A, B, C: Beinpresse, 3 Sätze, Rotation, Laufband Tag 14 einmal 30 min, Dropsets ohne Pause, englische Namen), `programService.test.ts` (aktivieren, Wechsel, beenden, ungültige ID), `programs-ui.test.tsx` (6 neue Fälle: aktivieren, Zähler, Folgetag, Start von Training als `source: 'program'`, Zusammenfassung, Etikett „Aktiv“, beenden, Programm C mit Wochen und „Erledigt“); `format.test.ts` (Dauerziele ab einer Minute als „30:00 min“) |
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 89,4 %, Zweige 81,9 %, Funktionen 87,5 %, Zeilen 90,2 %) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 199,2 KB gzip (Grenze 250 KB); Programme werden wie die Vorlagen erst bei Bedarf geladen |
-| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 44 Tests bestanden, zweimal hintereinander. Neu `programs.spec.ts`: Programm A aktivieren, „Als Nächstes“, Start aus „Heute geplant“, Beenden, Zusammenfassung „Trainingstag 1 von 32“, Training zeigt „Trainingstag 2 von 32 · Tag B“, Etikett „Aktiv“, Programm beenden; Winter Arc mit 8 Wochen, Dropset-Hinweis, Xeela-Name, Laufband „1 Satz · 30:00 min · ohne Pause“. `templates.spec.ts` auf 7 Einträge angepasst. Die Programmseite Winter Arc gehört jetzt zu den Seiten der axe-Prüfung |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 44 Tests bestanden, zweimal hintereinander. Neu `programs.spec.ts`: Programm A aktivieren, „Als Nächstes“, Start aus „Heute geplant“, Beenden, Zusammenfassung „Trainingstag 1 von 32“, Training zeigt „Trainingstag 2 von 32 · Tag B“, Etikett „Aktiv“, Programm beenden; Programm C mit 8 Wochen, Dropset-Hinweis, englischer Name, Laufband „1 Satz · 30:00 min · ohne Pause“. `templates.spec.ts` auf 7 Einträge angepasst. Die Seite von Programm C gehört jetzt zu den Seiten der axe-Prüfung |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions (steht aus); Gerätetest T-IPH-M1 steht aus |
 
 Befunde: Dauerziele ab einer Minute wurden in der Vorlagenansicht und im Player als „1800 s“ angezeigt; jetzt „30:00 min“. Eine Pause von 0 s erscheint als „ohne Pause“.
@@ -478,7 +478,7 @@ Detail einer abgeschlossenen Einheit mit „Bearbeiten“ (Titel, Beginn, Dauer,
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90,03 %, Zweige 80,43 %, Funktionen 87,9 %, Zeilen 90,94 %) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 220,8 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 56 Tests bestanden. Neu `history-edit.spec.ts`: Aktivität nachtragen, Titel, Dauer und Notiz ändern, löschen, „Rückgängig“ |
-| Befund aus der CI von #12 | Der Winter-Arc-Komponententest fand „Trainingstag 2 von 40“ nicht innerhalb von 1 s, weil die Seite mit 40 Tagen in jsdom auf dem Runner langsamer rendert; zugleich zeigte die Programmkarte während des Ladens fälschlich „Programm abgeschlossen“. Behoben in #12: Ladetext statt „abgeschlossen“, Wartezeit 10 s, Testzeit 20 s |
+| Befund aus der CI von #12 | Der Komponententest zu Programm C fand „Trainingstag 2 von 40“ nicht innerhalb von 1 s, weil die Seite mit 40 Tagen in jsdom auf dem Runner langsamer rendert; zugleich zeigte die Programmkarte während des Ladens fälschlich „Programm abgeschlossen“. Behoben in #12: Ladetext statt „abgeschlossen“, Wartezeit 10 s, Testzeit 20 s |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
 
 ### Eigene Programme und Vorlagen (AP 2.1 bis 2.4) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
@@ -488,7 +488,7 @@ Eigene Programme anlegen, übernehmen, bearbeiten (Wochen, Tage, Übungen, Sätz
 | Nachweis | Ergebnis |
 |---|---|
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
-| `pnpm test` | 63 Dateien, 519 Tests bestanden. Neu: `programTree.test.ts` (Stempel nur für geänderte und verschobene Elemente, Tombstones, Anzeigeform, Kopie mit neuen IDs und verknüpften Drops), `programEdit.test.ts` (Wochen, Tage, Übungen, Sätze; Grenzen „letzte Woche“, „letzter Tag“, „letzter Arbeitssatz“, Höchstzahl; Ersetzen mit Anpassung an die Erfassungsart; Original bleibt unverändert), sechs Fälle in `programService.test.ts` (Anlegen, Namensprüfung, Übernahme Winter Arc mit neuen IDs, Duplizieren und Vorlagen, AK-PRG-10 laufende Einheit behält ihre Ziele, ungültige Struktur ohne Speichern, Archivieren und Löschen beenden ein aktives Programm, Wiederherstellen ohne erneute Aktivierung), Wochentag-Hinweis in `programProgress.test.ts`, vier Fälle in `own-programs-ui.test.tsx` (Anlegen bis Start mit Zielgewicht; Übernehmen; Löschen mit Rückgängig; Duplizieren und Archiv) |
+| `pnpm test` | 63 Dateien, 519 Tests bestanden. Neu: `programTree.test.ts` (Stempel nur für geänderte und verschobene Elemente, Tombstones, Anzeigeform, Kopie mit neuen IDs und verknüpften Drops), `programEdit.test.ts` (Wochen, Tage, Übungen, Sätze; Grenzen „letzte Woche“, „letzter Tag“, „letzter Arbeitssatz“, Höchstzahl; Ersetzen mit Anpassung an die Erfassungsart; Original bleibt unverändert), sechs Fälle in `programService.test.ts` (Anlegen, Namensprüfung, Übernahme von Programm C mit neuen IDs, Duplizieren und Vorlagen, AK-PRG-10 laufende Einheit behält ihre Ziele, ungültige Struktur ohne Speichern, Archivieren und Löschen beenden ein aktives Programm, Wiederherstellen ohne erneute Aktivierung), Wochentag-Hinweis in `programProgress.test.ts`, vier Fälle in `own-programs-ui.test.tsx` (Anlegen bis Start mit Zielgewicht; Übernehmen; Löschen mit Rückgängig; Duplizieren und Archiv) |
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,69 %, Zweige 79,43 %, Funktionen 86,25 %, Zeilen 89,83 %; leicht gesunken, weil der Tag-Editor in jsdom nicht jede Erfassungsart durchläuft) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 227,3 KB gzip (Grenze 250 KB; +6,5 KB, weil „Heute“ für das aktive Programm jetzt auch eigene Programme liest) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 122 Tests bestanden. Neu `own-programs.spec.ts`: „Ganzkörper A/B“ übernehmen, Plank nach oben, Wdh. bis 10, nach Neuladen erhalten, Original unverändert; axe ohne Verstöße auf Programmseite, Editor, Tag-Editor und Liste in „Hell“ und „Dunkel“ |
@@ -942,4 +942,16 @@ Zeitraum-Auswahl in einer Zeile (D-327).
 | `pnpm exec playwright test e2e/period-row.spec.ts` (neu) | 16 bestanden, 8 übersprungen (schmale Breiten nur im Handy-Projekt): Fortschritt, Körpergewicht, Tagesaufgaben und Wasser auf 360, 390 und 768 pt in einer Zeile, kein Wort gekürzt, Chips 36 px, jede Option per Tipp. Erster Lauf rot, weil der Test die absichtlich überstehende Tippfläche als Kürzung las; er misst jetzt den Text. Gegenprobe gegen den Stand vor Abschnitt 6 (Handy): Fortschritt und Körpergewicht auf 360 und 390 pt fehlgeschlagen (4 Tests), Tagesaufgaben und Wasser passten schon |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 263 bestanden, 23 übersprungen, 0 fehlgeschlagen (6,1 min) |
 | `pnpm check:bundle` | 235,9 KB von 250 KB |
+
+### F5 §7 Texte und Marke · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Programm C neutral, keine Hinweise auf die fremde App, Registrierung offen, persönliche Angaben (D-328).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund; neu in `check:docs`: `tools/check_names.py` („Namen geprüft: 5 dokumentierte Ausnahmen, sonst keine Treffer“) |
+| `pnpm test` | 104 Dateien, 860 Tests bestanden (neu: drei Regeln in `wording.test.ts`, Adresse von Programm C in `programs.test.ts`) |
+| Gegenprobe gegen den Stand vor Abschnitt 7 (`687d0bf`) | Neue `wording.test.ts` mit den Texten von damals: 3 von 27 Tests fehlgeschlagen (je Begriff einer). `check_names.py`: Exit-Code 1, „757 Probleme“ in 50 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 261 bestanden, 23 übersprungen, 2 fehlgeschlagen (6,4 min): `programs.spec.ts` erwartete noch die Quellenzeile von Programm C. Nach der Anpassung `e2e/programs.spec.ts`: 4 bestanden |
+| `pnpm check:bundle` | 236,0 KB von 250 KB |
 

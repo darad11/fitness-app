@@ -412,10 +412,10 @@
     },
     {
       "key": "winter_arc_2026",
+      "slug": "winterprogramm-2026",
       "program": true,
-      "name": "Winterprogramm 2026 (Nachbau)",
-      "description": "Nachbau des Xeela-Programms „2026 Winter Arc“ aus der Aufnahme des Produktinhabers: 8 Wochen, 40 Trainingstage, 5 Tage je Woche mit zwei frei wählbaren Ruhetagen. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.",
-      "source": "Rekonstruktion aus der Aufnahme des Produktinhabers (docs/winter-arc-reconstruction.md)",
+      "name": "Winterprogramm 2026",
+      "description": "8 Wochen, 40 Trainingstage, fünf Einheiten pro Woche im Studio, die zwei Ruhetage legst du selbst. Laufband 30 Minuten als Abschluss fast jedes Tages. Dropsets: schwer beginnen, nach jedem Satz das Gewicht um etwa 30 % senken, keine Pause dazwischen. Gewichte gibt das Programm nicht vor.",
       "level": "intermediate",
       "location": "gym",
       "daysPerWeek": "5",

@@ -82,7 +82,7 @@ Version 7.1 mit 1.246 generischen Lebensmitteln in 19 Ober- und 106 Unterkategor
 ## 6. Übungsdaten
 
 - **MVP:** eigene Basisbibliothek mit etwa 100 Übungen, deutschen Namen, englischen Alias-Namen für die Suche, Muskelgruppen, Geräten und Erfassungsart. Gebündelt und versioniert, IDs deterministisch aus einem stabilen Schlüssel (D-207, D-213, D-230). Umfang und Struktur in `sample-templates.md` Abschnitt 6.
-- **Erweiterung (Schritt B in `evolution-plan.md`):** 18 weitere Übungen aus dem Abgleich mit dem Programm „Winter Arc“ (`winter-arc-reconstruction.md` Abschnitt 5), weiterhin eigene Daten ohne Fremdinhalte.
+- **Erweiterung (Schritt B in `evolution-plan.md`):** 18 weitere Übungen aus dem Abgleich mit Programm C (`winterprogramm-2026.md` Abschnitt 5), weiterhin eigene Daten ohne Fremdinhalte.
 - **Übungsabbildungen (Backlog):** free-exercise-db (yuhonas, GitHub) steht laut Websuche vom 18.10.2026 unter der Unlicense (gemeinfrei) mit über 800 Übungen und Bildern über `raw.githubusercontent.com`; vor einer Nutzung Lizenzdatei im Repository prüfen und Bilder gebündelt ausliefern, nie zur Laufzeit von GitHub laden (keine Datenübertragung an Dritte).
 - **Kalorienschätzung (Schritt E):** MET-Werte aus dem Adult Compendium of Physical Activities 2024 (`evolution-plan.md` Abschnitt 7); die Website `pacompendium.com` war aus der Cloud-Umgebung nicht erreichbar, die Werte stammen aus Suchausschnitten und werden vor der Umsetzung geprüft.
 - **Später (Backlog):** optionaler Import aus wger mit deutschen Übersetzungen. Die Lizenz ist je Übung zu prüfen (CC BY-SA 3.0 bzw. Angabe pro Übung) und erfordert Namensnennung sowie Share-Alike für die abgeleiteten Daten. Bilder aus free-exercise-db (gemeinfrei) sind eine Option für Übungsabbildungen.

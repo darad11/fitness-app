@@ -29,6 +29,7 @@ export function expandSampleTemplate(
   return {
     id: stableId(base),
     key: source.key,
+    ...(source.slug ? { slug: source.slug } : {}),
     name: source.name,
     ...(source.description ? { description: source.description } : {}),
     ...(source.program ? { program: true } : {}),

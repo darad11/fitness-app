@@ -22,6 +22,7 @@ import {
 } from './programService';
 import { planFromTemplateDay, startSession } from './sessionService';
 import { sessionDef } from '../data/sessionRepository';
+import { PROGRAM_C_KEY } from '../data/programC';
 
 let rt: DbRuntime;
 const A = stableId('sample-template:compound_ab_4');
@@ -125,12 +126,12 @@ describe('Eigene Programme (AK-PRG-01 bis AK-PRG-06, AK-PRG-10, AK-PRG-11, D-257
   });
 
   it('übernimmt ein gebündeltes Programm als unabhängige Kopie (AK-PRG-06)', async () => {
-    const sample = await loadSampleTemplate('winter_arc_2026');
-    if (!sample) throw new Error('Winter Arc fehlt');
+    const sample = await loadSampleTemplate(PROGRAM_C_KEY);
+    if (!sample) throw new Error('Programm C fehlt');
     const copy = await copyProgram(rt, sample, { name: sample.name, kind: 'program' });
     expect(copy).toMatchObject({
       origin: 'sample-copy',
-      sampleKey: 'winter_arc_2026',
+      sampleKey: PROGRAM_C_KEY,
       name: sample.name,
       repeat: sample.repeat,
       level: sample.level,
@@ -145,7 +146,7 @@ describe('Eigene Programme (AK-PRG-01 bis AK-PRG-06, AK-PRG-10, AK-PRG-11, D-257
     expect(copy.weeks.flatMap((w) => w.days).length).toBe(
       sample.weeks.flatMap((w) => w.days).length,
     );
-    // Notizen und Xeela-Namen bleiben erhalten.
+    // Notizen und englische Namen bleiben erhalten.
     const firstExercise = copy.weeks[0]?.days[0]?.exercises[0];
     expect(firstExercise?.originalName).toBe(sample.weeks[0]?.days[0]?.exercises[0]?.originalName);
   });

@@ -15,7 +15,7 @@ export type AnyProgram = SampleTemplate | OwnProgram;
 /** Seite eines Programms: eigene unter /training/programme, gebündelte unter /training/vorlagen. */
 export function programLink(program: AnyProgram): string {
   return 'key' in program
-    ? `/training/vorlagen/${program.key}`
+    ? `/training/vorlagen/${program.slug ?? program.key}`
     : `/training/programme/${program.id}`;
 }
 

@@ -2,15 +2,15 @@
 
 Stand: 17.10.2026 · Phase 1 · Status: Vorläufig, Entscheidungen offen
 
-Dieses Inventar listet alle identifizierbaren Xeela-Funktionen sowie die aus dem Auftrag abgeleiteten Systemanforderungen. Jede Zeile ist eine Funktion mit stabiler ID. Die Spalte **Entscheidung** ist überall „Offen", ergänzt um meinen Vorschlag in Klammern. Endgültige Entscheidungen trifft der Produktinhaber nach Prüfung.
+Dieses Inventar listet alle identifizierbaren Funktionen der Referenz-App sowie die aus dem Auftrag abgeleiteten Systemanforderungen. Jede Zeile ist eine Funktion mit stabiler ID. Die Spalte **Entscheidung** ist überall „Offen", ergänzt um meinen Vorschlag in Klammern. Endgültige Entscheidungen trifft der Produktinhaber nach Prüfung.
 
 Eine maschinenlesbare Fassung liegt in `feature-inventory.csv` (erzeugt mit `python3 tools/feature_inventory_to_csv.py`). Quelle der Wahrheit ist diese Markdown-Datei.
 
 ## Legende
 
-**Spalten**: ID · Funktion (Beschreibung) · Originalverhalten (Xeela) · Evidenz (Quellenkürzel aus `product-research.md`, Abschnitt 2.1) · Konfidenz · Nutzen · Abhängigkeiten · Aufwand · Prio · Entscheidung · Status · Akzeptanzkriterien. Das Modul ergibt sich aus dem Abschnitt und dem ID-Präfix.
+**Spalten**: ID · Funktion (Beschreibung) · Originalverhalten (Referenz-App) · Evidenz (Quellenkürzel aus `product-research.md`, Abschnitt 2.1) · Konfidenz · Nutzen · Abhängigkeiten · Aufwand · Prio · Entscheidung · Status · Akzeptanzkriterien. Das Modul ergibt sich aus dem Abschnitt und dem ID-Präfix.
 
-**Konfidenz**: V = verifiziert (offizielle Quelle oder Videoanalyse) · V-R = verifiziert nur über Nutzerrezensionen · H = historisch, ggf. veraltet · P = plausibel, nicht bestätigt · N = nicht verifiziert (nur Drittquelle) · VF = verifiziert als fehlend oder eingeschränkt (Stand der Quelle) · E = eigener Vorschlag, kein Xeela-Beleg.
+**Konfidenz**: V = verifiziert (offizielle Quelle oder Videoanalyse) · V-R = verifiziert nur über Nutzerrezensionen · H = historisch, ggf. veraltet · P = plausibel, nicht bestätigt · N = nicht verifiziert (nur Drittquelle) · VF = verifiziert als fehlend oder eingeschränkt (Stand der Quelle) · E = eigener Vorschlag, kein Beleg aus der Referenz-App.
 
 **Nutzen** (für die persönliche Nutzung): H = hoch · M = mittel · N = niedrig.
 
@@ -18,11 +18,11 @@ Eine maschinenlesbare Fassung liegt in `feature-inventory.csv` (erzeugt mit `pyt
 
 **Prio** (Vorschlag): P0 kritische Grundlagen · P1 Kernfunktionen · P2 Erweiterungen · P3 optional. „–" = nicht vorgesehen.
 
-**Entscheidung**: Offen (Ü) = Vorschlag übernehmen · Offen (A) = Vorschlag anpassen oder verbessern · Offen (E) = Vorschlag ergänzen (nicht in Xeela belegt) · Offen (S) = Vorschlag später · Offen (X) = Vorschlag verwerfen.
+**Entscheidung**: Offen (Ü) = Vorschlag übernehmen · Offen (A) = Vorschlag anpassen oder verbessern · Offen (E) = Vorschlag ergänzen (nicht in der Referenz-App belegt) · Offen (S) = Vorschlag später · Offen (X) = Vorschlag verwerfen.
 
 **Status**: Noch zu recherchieren · Analysiert · Spezifiziert · Zur Umsetzung ausgewählt · Implementiert · Getestet · Abgenommen. In Phase 1 sind nur die ersten beiden Werte vergeben.
 
-**Evidenz-Kürzel**: AS App Store (mit Versionsnummer bei Release Notes) · GP Google Play · WEB xeelafitness.com · HC-G Hilfecenter Gorgias · HC-Z Hilfecenter Zendesk · TC Challenge-Bedingungen · SD screensdesign-Videoanalyse (Zeitmarke) · DT devteam.inc · MWM mwm.ai · REV Rezensionen · DC Discord.
+**Evidenz-Kürzel**: AS App Store (mit Versionsnummer bei Release Notes) · GP Google Play · WEB Website der Referenz-App · HC-G Hilfecenter Gorgias · HC-Z Hilfecenter Zendesk · TC Challenge-Bedingungen · SD screensdesign-Videoanalyse (Zeitmarke) · DT Fallstudie der Entwicklungsagentur · MWM mwm.ai · REV Rezensionen · DC Discord.
 
 ## Überblick in Zahlen
 
@@ -42,7 +42,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## A. Onboarding und Profil (ON)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | ON-01 | Lokales Profil anlegen (Name optional, Geburtsdatum, Geschlecht für Formeln, Größe, Gewicht) | Pflicht-Registrierung mit E-Mail vor dem Quiz | SD 00:39; HC-G | V | H | SY-01 | S | P0 | Offen (A: kein Pflichtkonto, Konto nur für Sync) | Analysiert | Profil ohne Internet anlegbar; Pflichtfelder validiert; nach Browser-Neustart vorhanden |
 | ON-02 | Geführte Ersteinrichtung | Quiz mit 19 Schritten, danach Paywall | SD 01:12; GP | V | M | ON-03 bis ON-09 | M | P1 | Offen (A: kurz, überspringbar, später änderbar) | Analysiert | Höchstens 8 Schritte; jeder Schritt überspringbar; Abbruch ohne Datenverlust; später erneut aufrufbar |
@@ -60,13 +60,13 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 | ON-14 | Ziel oder Programm wechseln | Menü, „Change workout plan", neues Ziel, Programm wählen | HC-Z | V | H | TP-01; TP-19 | S | P1 | Offen (Ü) | Analysiert | Wechsel beendet aktuelle Einschreibung mit Datum; vergangene Einheiten unverändert |
 | ON-15 | Konto und Daten löschen | Permanente Löschung laut Datenschutzseite | WEB; REV | V | H | SY-03 | M | P1 | Offen (Ü) | Analysiert | Lokale Daten vollständig löschbar; bei Sync auch Cloud-Daten und Fotos; Bestätigung mit Export-Angebot |
 | ON-16 | Abo, Testphase, Paywall | 7 Tage Testphase, harte Paywall nach Quiz | AS; SD 02:38 | V | N | – | – | – | Offen (X) | Analysiert | Entfällt |
-| ON-17 | Referral-Programm und Sweat Equity | Credits durch Nutzung, anrechenbar auf Mitgliedschaft | AS 3.4.0; AS 3.4.2 | V | N | – | – | – | Offen (X) | Analysiert | Entfällt |
+| ON-17 | Referral-Programm und Guthabenpunkte | Credits durch Nutzung, anrechenbar auf Mitgliedschaft | AS 3.4.0; AS 3.4.2 | V | N | – | – | – | Offen (X) | Analysiert | Entfällt |
 
 ## B. Trainingsplanung (TP)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| TP-01 | Programme und Vorlagen (Katalog) | Benannte Trainerprogramme mit Level, Wochen, Minuten, Sätzen; Home und Gym | WEB; HC-Z | V | H | TP-02 bis TP-04 | L | P1 | Offen (A: eigene Vorlagen, keine Xeela-Inhalte) | Analysiert | Mindestens drei Startvorlagen (Ganzkörper, Ober/Unter, Push/Pull/Legs); Metadaten Level, Dauer, Tage pro Woche; filterbar |
+| TP-01 | Programme und Vorlagen (Katalog) | Benannte Trainerprogramme mit Level, Wochen, Minuten, Sätzen; Home und Gym | WEB; HC-Z | V | H | TP-02 bis TP-04 | L | P1 | Offen (A: eigene Vorlagen, keine Inhalte der Referenz-App) | Analysiert | Mindestens drei Startvorlagen (Ganzkörper, Ober/Unter, Push/Pull/Legs); Metadaten Level, Dauer, Tage pro Woche; filterbar |
 | TP-02 | Programmdetailseite | Vorhanden, 2025 überarbeitet | AS 3.1.5 | V | M | TP-01 | S | P1 | Offen (Ü) | Analysiert | Zeigt Wochenstruktur, Tage, Übungen, Satzschema, geschätzte Dauer; Start-Aktion |
 | TP-03 | Wochenstruktur mit Trainings- und Ruhetagen | Fest vorgegeben; Ruhetage nicht wählbar (Stand 2025) | REV | V-R | H | TP-01 | M | P0 | Offen (A: frei konfigurierbar) | Analysiert | Wochentage je Trainingstag zuweisbar; Ruhetage verschiebbar; Änderungen wirken nur auf zukünftige Tage |
 | TP-04 | Trainingstag mit Übungsreihenfolge | Reihenfolge erzwungen | REV | V-R | H | TP-06 | M | P0 | Offen (A: änderbar, nicht erzwungen) | Analysiert | Übungen sortierbar; im Training frei wählbar; Reihenfolge wird mit der Einheit gespeichert |
@@ -89,7 +89,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## C. Aktive Trainingseinheit (TS)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | TS-01 | Training starten (geplant oder frei) | Von Home: Workout des Tages, „View all" | HC-G; SD | V | H | TP-03 | M | P0 | Offen (Ü) | Analysiert | Start aus Heute, Training und Plan; freie Einheit ohne Plan möglich; Startzeit gespeichert |
 | TS-02 | Übungsansicht mit Satzliste | Video, Satzliste, Eingaben | SD 13:04 | V | H | TP-07 | M | P0 | Offen (Ü) | Analysiert | Zielwerte je Satz sichtbar; große Tap-Flächen; Tastaturbedienung am Desktop |
@@ -116,7 +116,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## D. Trainingshistorie und Analyse (TH)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | TH-01 | Verlauf vergangener Einheiten mit Detail | Historie wird gespeichert | HC-G | V | H | TS-14 | M | P0 | Offen (Ü) | Analysiert | Liste mit Datum, Dauer, Volumen; Detail mit allen Sätzen; nachträglich editierbar mit Änderungsvermerk |
 | TH-02 | Verlauf pro Übung (Gewicht, Reps, e1RM, Volumen) | Anspruch vorhanden; Nutzer vermissen Graphen | AS; REV | V | H | TH-01 | M | P1 | Offen (A: echte Diagramme) | Analysiert | Diagramm aus gespeicherten Sätzen; Zeiträume 30 und 90 Tage, gesamt; unter 3 Datenpunkten kein Trend |
@@ -129,7 +129,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## E. Ernährung (NU)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | NU-01 | Kalorien- und Makroziele berechnen | Aus Präferenzen, Alter, Gewicht, Ziel; Formel unbekannt | HC-G; GP; HC-Z | V | H | ON-03; ON-09 | M | P1 | Offen (A: dokumentierte Formel, manuell überschreibbar) | Analysiert | Mifflin-St Jeor, Aktivitätsfaktor, Zielanpassung; Protein in g/kg einstellbar; Ziele versioniert nach Gültigkeitsdatum |
 | NU-02 | Tagesübersicht mit Zielfortschritt | Kalorien-Widget, klarere Tagesziele | AS 3.1.5; AS 3.5.0 | V | H | NU-05 | M | P1 | Offen (Ü) | Analysiert | Kalorien, Protein, Kohlenhydrate, Fett als Summe aller Einträge; Restwerte; Tageswechsel nach lokaler Zeitzone |
@@ -154,14 +154,14 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## F. Rezepte und Mahlzeitenplanung (RE)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | RE-01 | Rezeptkatalog mit Filtern | Nach Mahlzeit, Küche, Schwierigkeit | AS 3.5.0 | V | H | RE-02 | M | P2 | Offen (A: eigene Rezepte) | Analysiert | Filter Mahlzeit, Tags, Dauer, Kalorien pro Portion; Volltextsuche |
 | RE-02 | Rezept mit Zutaten, Schritten, Nährwerten pro Portion | Rezepte und Anleitungen vorhanden | AS; REV | V | H | NU-10 | M | P2 | Offen (Ü) | Analysiert | Zutaten mit Menge und Lebensmittelreferenz; Nährwerte aus Zutaten berechnet; Portionen; Schritte |
 | RE-03 | Wochenplan um Kalorienziel generieren | „weekly meal plan built around your calorie target" | AS 3.5.0 | V | M | RE-01; NU-01 | L | P2 | Offen (A: Vorschlag aus eigenem Katalog, manuell planbar) | Analysiert | Woche mit Slots; Vorschlag erfüllt Tagesziel ±10 %; manuell übersteuerbar |
 | RE-04 | Rezepte im Plan tauschen | „swap recipes" | AS 3.5.0 | V | H | RE-03 | S | P2 | Offen (Ü) | Analysiert | Tausch pro Slot; Nährwerte und Einkaufsliste aktualisieren sich |
 | RE-05 | Kochtage und Reste | „pick your cooking days" | AS 3.5.0 | V | M | RE-03 | M | P3 | Offen (S) | Analysiert | Kochtage markierbar; Reste auf Folgetage verteilbar |
-| RE-06 | Auswahl, welche Mahlzeiten geplant werden | „choose which meals Xeela plans" | AS 3.5.0 | V | M | RE-03 | S | P2 | Offen (Ü) | Analysiert | Slots pro Tag ein- und ausschaltbar |
+| RE-06 | Auswahl, welche Mahlzeiten geplant werden | „choose which meals [die Referenz-App] plans" | AS 3.5.0 | V | M | RE-03 | S | P2 | Offen (Ü) | Analysiert | Slots pro Tag ein- und ausschaltbar |
 | RE-07 | Woche bestätigen | „confirmed week" | AS 3.5.0 | V | M | RE-03 | S | P2 | Offen (Ü) | Analysiert | Bestätigte Woche erzeugt Einkaufsliste; spätere Änderungen markieren Liste als veraltet |
 | RE-08 | Einkaufsliste aus bestätigter Woche | Vorhanden | AS 3.5.0 | V | H | RE-07 | M | P2 | Offen (Ü) | Analysiert | Liste aus allen geplanten Rezepten × Portionen; reproduzierbar; Test mit Beispielwoche |
 | RE-09 | Einkaufsliste nach Kategorien | „easier to read and shop from" | AS 3.5.1 | V | H | RE-08 | S | P2 | Offen (Ü) | Analysiert | Gruppierung nach Lebensmittelkategorie; Sortierung anpassbar |
@@ -174,7 +174,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## G. Körper und Fortschritt (BP)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | BP-01 | Körpergewicht protokollieren | Gewicht im Onboarding; Verlauf nur Drittquelle | GP; MWM | V | H | – | S | P1 | Offen (E) | Analysiert | Eintrag mit Datum und Zeit, kg auf 0,1; mehrere pro Tag erlaubt; Notiz |
 | BP-02 | Gewichtsverlauf mit Trend | Nur Drittquelle | MWM | N | H | BP-01 | M | P1 | Offen (E) | Noch zu recherchieren | Diagramm 7, 30, 90 Tage und gesamt; gleitender Durchschnitt; unter 3 Punkten kein Trend; Zielgewicht als Linie |
@@ -187,7 +187,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## H. Aktivität und Gewohnheiten (AH)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | AH-01 | Schritte erfassen | Beworben; Datenquelle unklar | WEB; DT | V | M | Keine Browser-API | S | P2 | Offen (A: manuell, Import per iOS-Kurzbefehl, später nativ) | Analysiert | Manueller Tageswert; CSV- oder Kurzbefehl-Import; keine Behauptung automatischer Messung |
 | AH-02 | Aktivitätsziele | Nicht belegt | – | P | M | AH-01 | S | P2 | Offen (E) | Noch zu recherchieren | Tagesziel mit Fortschritt im Dashboard |
@@ -201,7 +201,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## I. Challenges, Community, Dashboard (CH)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | CH-01 | Persönliche Challenges mit Tagesaufgaben | Zeitlich begrenzte Programme mit Aufgaben, Fotos, Gewinnern | TC | V | M | AH-03; BP-05 | M | P3 | Offen (A: nur persönlich, ohne Wettbewerb) | Analysiert | Challenge mit Dauer, Aufgabenset, Fortschritt in Prozent; Abbruch ohne Datenverlust |
 | CH-02 | Wettbewerb, Rangliste, Preise | Gewinnerauswahl; „top 5" | TC; REV | V | N | Multi-User | – | – | Offen (X) | Analysiert | Entfällt |
@@ -215,7 +215,7 @@ Hinweis: „V" bedeutet, dass die Existenz der Funktion belegt ist, nicht, dass 
 
 ## J. System, Daten und Synchronisierung (SY)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Nutzen | Abhängigkeiten | Aufwand | Prio | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | SY-01 | Lokale Datenbank (IndexedDB über Dexie) als führender Speicher | Server-Backend | DT | E | H | – | M | P0 | Offen (E) | Analysiert | Alle Fachdaten in IndexedDB; Schema versioniert mit Migrationen; localStorage nur für UI-Präferenzen |
 | SY-02 | PWA: Installation, Offline-Shell, Caching | Native App | – | E | H | SY-01 | M | P1 | Offen (E) | Analysiert | Installierbar auf iPhone, iPad, Mac; Kernfunktionen offline; Update-Hinweis statt Zwangsreload |

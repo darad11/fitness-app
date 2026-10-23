@@ -4,8 +4,8 @@ Stand: 17.10.2026 · Phase 1
 
 ## 1. Grenzen dieser Analyse
 
-- Kein Zugriff auf die installierte Xeela-App; keine eigenen Screenshots oder Bildschirmaufnahmen.
-- Direkter Webzugriff auf App Store, Google Play, xeelafitness.com, beide Hilfecenter und Drittseiten wurde von der Netzwerkrichtlinie der Umgebung blockiert. Grundlage sind Suchausschnitte und Zitate. Vollständige Store-Texte, Screenshots und die komplette Versionshistorie fehlen.
+- Kein Zugriff auf die installierte Referenz-App; keine eigenen Screenshots oder Bildschirmaufnahmen.
+- Direkter Webzugriff auf App Store, Google Play, die Website der Referenz-App, beide Hilfecenter und Drittseiten wurde von der Netzwerkrichtlinie der Umgebung blockiert. Grundlage sind Suchausschnitte und Zitate. Vollständige Store-Texte, Screenshots und die komplette Versionshistorie fehlen.
 - Nutzerrezensionen sind zeitlich gestreut (2024 bis 2026); einzelne Einschränkungen können inzwischen behoben sein.
 - Die Funktionsmatrix enthält 27 Positionen mit Status „Noch zu recherchieren". Sie lassen sich am schnellsten mit den in `product-research.md` gelisteten Screenshots klären.
 
@@ -57,7 +57,7 @@ Auf iOS und iPadOS laufen alle Browser mit der WebKit-Engine. Entscheidend ist d
 - **USDA FoodData Central**: Public Domain, englische Bezeichnungen, gute Qualität für Grundnahrungsmittel.
 - **Deutschsprachige Nährwertdatenbanken** (z. B. Bundeslebensmittelschlüssel) sind lizenzpflichtig und nicht vorgesehen.
 - **Übungsbibliotheken**: free-exercise-db (Public Domain, Bilder enthalten), wger (CC-BY-SA, Namensnennung). Keine Videos; eigene Videolinks möglich.
-- **Xeela-Inhalte** (Programme, Rezepte, Videos, Texte) sind proprietär und werden nicht übernommen. Programme müssen als eigene Vorlagen formuliert werden.
+- **Inhalte der Referenz-App** (Programme, Rezepte, Videos, Texte) sind proprietär und werden nicht übernommen. Programme müssen als eigene Vorlagen formuliert werden.
 
 ## 6. Funktionen, die eine native Erweiterung benötigen (spätere Option)
 

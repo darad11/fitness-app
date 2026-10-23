@@ -11,9 +11,10 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Vorgänger: `archive/v0.1-pha
 
 ## 1. Grenzen der Analyse
 
-- Die Xeela-App wurde nicht bedient. Grundlage sind öffentliche Quellen (`product-research.md`).
+- Die Referenz-App wurde nicht bedient. Grundlage sind öffentliche Quellen (`product-research.md`).
 - Direkter Abruf vieler Hosts ist aus dieser Cloud-Umgebung durch die Netzwerkrichtlinie gesperrt. Die Recherche in Phase 2 stützt sich auf Websuche mit Zitaten. Punkte mit Restunsicherheit tragen den Vermerk „im Gerätetest prüfen" oder „im Prüfspike prüfen".
-- Rezensionen stammen überwiegend aus 2024 und 2025. Dort genannte Schwächen sind Erkenntnisse aus dieser Zeit, nicht automatisch der heutige Stand von Xeela (D-118).
+- Rezensionen stammen überwiegend aus 2024 und 2025. Dort genannte Schwächen sind Erkenntnisse aus dieser Zeit, nicht automatisch der heutige Stand der Referenz-App (D-118).
+- Interner Vermerk: Programm C („Winterprogramm 2026“) beruht auf einer fremden Vorlage. Vor einer öffentlichen Öffnung der App wird es durch ein eigenes Programm ersetzt (D-328).
 
 ## 2. iPhone und iPad
 
@@ -154,5 +155,6 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 
 ## Registrieren (D-273)
 
+- Die Registrierung ist offen (D-328): Jede Person, die die App-Adresse kennt, kann ein Konto anlegen und Daten im Supabase-Projekt speichern. Die Zeilen sind je Konto getrennt (RLS). Noch offen sind die Punkte aus Q-20: Kontowechsel auf einem Gerät absichern (heute lädt die App nach einem Kontowechsel die lokalen Daten in das neue Konto hoch), Grenzen oder CAPTCHA für Registrierungen, Datenschutzerklärung. Bis dahin auf eigenen Geräten nur mit dem eigenen Konto anmelden.
 - Der Link in der Bestätigungsmail öffnet am iPhone Safari, nicht die installierte App. Beide haben getrennte Speicher; deshalb meldet man sich nach dem Bestätigen in der App selbst mit E-Mail und Passwort an.
 - Der Link führt nur dann zurück in die App, wenn in Supabase unter Authentication › URL Configuration die Adresse der App als „Site URL“ bzw. unter „Redirect URLs“ eingetragen ist; sonst landet er auf der voreingestellten Adresse.

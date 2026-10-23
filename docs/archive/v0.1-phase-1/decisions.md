@@ -12,7 +12,7 @@ Format: ID · Titel · Status (Festgelegt durch Auftrag, Vorgeschlagen, Entschie
 | D-002 | React, TypeScript, Vite | Stack in `architecture.md` |
 | D-003 | Local-first mit lokaler Datenbank; localStorage nur für UI-Präferenzen | IndexedDB ist führend |
 | D-004 | Supabase für optionale Sync und Auth, sofern bestätigt | Postgres mit RLS; eigene Engine |
-| D-005 | Ein Nutzer, keine Multi-User-Plattform, keine kommerziellen Funktionen | Xeela-Funktionen Abo, Paywall, Referral, Sweat Equity, Shop, Wettbewerb entfallen |
+| D-005 | Ein Nutzer, keine Multi-User-Plattform, keine kommerziellen Funktionen | Funktionen der Referenz-App (Abo, Paywall, Referral, Guthabenpunkte, Shop, Wettbewerb) entfallen |
 | D-006 | Eigenständiger Code und eigenständiges Design; keine geschützten Inhalte | Eigene Programme, offene Übungs- und Lebensmitteldaten |
 | D-007 | Keine Microservices, keine unnötigen Abstraktionen | Modularer Monolith im Client |
 
@@ -33,9 +33,9 @@ Format: ID · Titel · Status (Festgelegt durch Auftrag, Vorgeschlagen, Entschie
 | D-020 | pnpm, ESLint, Prettier, GitHub Actions | Standard | npm, Biome |
 | D-021 | Statisches Hosting mit HTTPS | PWA-Voraussetzung | Eigenes Hosting |
 | D-022 | Vitest, Testing Library, fake-indexeddb, Playwright mit Chromium und WebKit | WebKit deckt Safari-Verhalten ab | Cypress |
-| D-023 | Navigation: Heute, Training, Ernährung, Fortschritt, Mehr; Schnellaktion „+" | Kurze Wege für tägliche Aufgaben; Xeela-Muster bestätigt | Planung als fünfter Tab statt Mehr |
+| D-023 | Navigation: Heute, Training, Ernährung, Fortschritt, Mehr; Schnellaktion „+" | Kurze Wege für tägliche Aufgaben; Muster der Referenz-App bestätigt | Planung als fünfter Tab statt Mehr |
 | D-024 | Formeln: Mifflin-St Jeor plus Aktivitätsfaktor; Epley für e1RM; Double Progression als Progressionsregel | Dokumentiert, nachvollziehbar, einstellbar | Harris-Benedict, Brzycki, feste Prozentschritte |
-| D-025 | Kommerzielle und soziale Xeela-Funktionen verwerfen (ON-16, ON-17, CH-02, CH-03, CH-05, CH-09) | Nicht relevant für persönliche Nutzung | Social Sharing optional als P3 |
+| D-025 | Kommerzielle und soziale Funktionen der Referenz-App verwerfen (ON-16, ON-17, CH-02, CH-03, CH-05, CH-09) | Nicht relevant für persönliche Nutzung | Social Sharing optional als P3 |
 | D-026 | Fortschrittsfotos zuerst lokal; Cloud-Upload erst mit Phase 8 und nur nach Zustimmung | Speicher, Kosten, Datenschutz | Von Anfang an Cloud |
 | D-027 | Streak-Regel: aufeinanderfolgende geplante Trainingstage mit abgeschlossener Einheit; Ruhetage unterbrechen nicht | Vorhersagbar, entspricht Ziel „Konsistenz" | Wochenziel-Streak (x Einheiten pro Woche) |
 | D-028 | Intern metrische Einheiten; imperial nur in der Anzeige | Eindeutige Speicherung | Einheit pro Datensatz speichern |
@@ -48,7 +48,7 @@ Zu jeder Frage steht eine Empfehlung. Die Antworten fließen in die Spalte Entsc
 
 | Nr. | Frage | Optionen | Empfehlung |
 |---|---|---|---|
-| F-01 | Sollen Xeela-ähnliche vorgefertigte Programme nachgebaut werden oder liegt der Schwerpunkt auf einem flexiblen Programm-Builder mit wenigen Startvorlagen? | (a) Nur Builder, (b) Builder plus drei bis fünf generische Vorlagen, (c) eigene Programme des Produktinhabers als Vorlagen erfassen | (b), ergänzt um (c), falls eigene Pläne vorliegen |
+| F-01 | Sollen vorgefertigte Programme ähnlich denen der Referenz-App angeboten werden oder liegt der Schwerpunkt auf einem flexiblen Programm-Builder mit wenigen Startvorlagen? | (a) Nur Builder, (b) Builder plus drei bis fünf generische Vorlagen, (c) eigene Programme des Produktinhabers als Vorlagen erfassen | (b), ergänzt um (c), falls eigene Pläne vorliegen |
 | F-02 | Welche Übungsquelle ist akzeptabel: offene Datenbank mit Bildern (Public Domain oder CC-BY-SA), eigene Übungsliste oder beides? | (a) free-exercise-db, (b) wger, (c) nur eigene | (a) mit Möglichkeit eigener Übungen und optionaler Videolinks |
 | F-03 | Lebensmitteldaten: Open Food Facts online (Barcode, Marken) plus eigene Einträge, oder ausschließlich eigene Einträge ohne externe Abfragen? | (a) OFF plus eigene, (b) nur eigene, (c) zusätzlich USDA-Import | (a), USDA optional später |
 | F-04 | Trainieren Sie mit Supersätzen, Drop-Sets, Aufwärmsätzen, RPE? Welche davon braucht der Player ab Phase 4? | Beliebige Kombination | Aufwärmsätze und Drop-Sets früh (klein), Supersätze Phase 6, RPE optional |
@@ -62,9 +62,9 @@ Zu jeder Frage steht eine Empfehlung. Die Antworten fließen in die Spalte Entsc
 | F-12 | Zielgeräte und Browser: iOS-Version, iPad-Modell, macOS-Browser (Safari oder Chrome)? | – | Mindestens iOS 16.4 für Web Push; Safari als Referenz |
 | F-13 | Hosting: Cloudflare Pages, Netlify, Vercel, GitHub Pages oder eigener Server? Eigene Domain? | – | Cloudflare Pages oder Netlify mit eigener Domain |
 | F-14 | Repository: lokal hier anlegen und auf GitHub veröffentlichen (privat)? | – | Privates GitHub-Repository |
-| F-15 | Welche Xeela-Funktionen nutzen Sie heute tatsächlich täglich, welche nie? | Freitext | Dient der Prioritätsprüfung |
+| F-15 | Welche Funktionen der Referenz-App nutzen Sie heute tatsächlich täglich, welche nie? | Freitext | Dient der Prioritätsprüfung |
 | F-16 | Können Sie Screenshots oder Aufnahmen gemäß `product-research.md`, Abschnitt 11, bereitstellen? | – | Priorität A reicht für Phase 2 |
-| F-17 | Designrichtung: Farbakzent, Vorbilder (nicht Xeela), bevorzugte Typografie, Dark Mode als Standard? | – | Neutrale Basis mit einem Akzent; Systemschrift; Light Standard, Dark optional |
+| F-17 | Designrichtung: Farbakzent, Vorbilder (nicht die Referenz-App), bevorzugte Typografie, Dark Mode als Standard? | – | Neutrale Basis mit einem Akzent; Systemschrift; Light Standard, Dark optional |
 | F-18 | Soll die App einen Namen bekommen (Arbeitstitel fehlt)? | Freitext | Benötigt für Manifest und Icon |
 | F-19 | Kalorienziel: Standardanpassung (−500/+300 kcal) und Proteinwert (1,8 g/kg) akzeptabel? | Werte | Standard übernehmen, einstellbar |
 | F-20 | Streak-Regel laut D-027 akzeptabel? | (a) Ja, (b) Wochenziel | (a) |

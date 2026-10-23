@@ -6,7 +6,7 @@ Stand: 21.10.2026 · Für die nächste Claude-Code-Sitzung · Verbindlich bleibe
 
 Die bestehende App behält jeden Screen, jede Funktion und jeden Datenfluss – und bekommt den Look des FORM-Konzepts: dunkle Fläche, Lime als Akzent, ruhige Karten, das F als Zeichen. Kein Feature wird neu gebaut außer dem Rückkehr-Flow; nichts wird entfernt.
 
-**Was „Look aus dem Konzept“ heißt.** Das Konzeptbild (sechs Screens: Home, Programme, aktives Workout, Abschluss, Übungsdetails, Ernährung) ist Vorlage für Farben, Flächen, Radien, Typografie, Karten, Buttons, Tab-Bar und Progress-Ringe. Es ist **nicht** Vorlage für Texte und Features: „Winter Arc 2026“, „Disziplin heute, Ergebnisse morgen“, „Konstanz schlägt Motivation“, „Starke Leistung!“, Konfetti-Emoji und „Tägliche Challenges“ als Zähler widersprechen den Markenleitplanken und werden nicht übernommen. Texte kommen aus `form-markenleitplanken.md`, Abschnitt 4, und dem Textdokument.
+**Was „Look aus dem Konzept“ heißt.** Das Konzeptbild (sechs Screens: Home, Programme, aktives Workout, Abschluss, Übungsdetails, Ernährung) ist Vorlage für Farben, Flächen, Radien, Typografie, Karten, Buttons, Tab-Bar und Progress-Ringe. Es ist **nicht** Vorlage für Texte und Features: der Programmname im Konzeptbild, „Disziplin heute, Ergebnisse morgen“, „Konstanz schlägt Motivation“, „Starke Leistung!“, Konfetti-Emoji und „Tägliche Challenges“ als Zähler widersprechen den Markenleitplanken und werden nicht übernommen. Texte kommen aus `form-markenleitplanken.md`, Abschnitt 4, und dem Textdokument.
 
 **Was gleich bleibt.** Navigation (Heute, Training, Ernährung, Fortschritt, Mehr), alle Unterseiten, Datenmodell, Offline-Verhalten, Synchronisation, Tests. Keine Umbenennung von Routen oder Komponenten, nur deren Darstellung.
 

@@ -347,7 +347,7 @@ function TemplateList({
       {templates.map((template) => (
         <li key={template.id}>
           <ProgramCard
-            to={`/training/vorlagen/${template.key}`}
+            to={`/training/vorlagen/${template.slug ?? template.key}`}
             icon={icon}
             title={template.name}
             badge={badge(template)}

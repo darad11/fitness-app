@@ -732,7 +732,7 @@ export const de = {
     finishedText: (name: string, n: number) =>
       `Alle ${n} Trainingstage von „${name}“ sind erledigt. Du kannst einzelne Tage erneut trainieren oder ein anderes Programm aktivieren.`,
     source: (text: string) => `Quelle: ${text}`,
-    originalName: (name: string) => `Xeela: ${name}`,
+    originalName: (name: string) => `Englisch: ${name}`,
     programHint:
       'Eigene Zusammenstellung ohne Gewichtsvorgaben – keine individuelle Trainingsempfehlung. Bei gesundheitlichen Fragen hol dir ärztlichen Rat.',
     // Eigene Programme (AP 2.1 bis 2.4, D-257)

@@ -210,7 +210,7 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 
 1. App-Farben an die Markenfarben angleichen? Grundfläche, Akzent und Kachel sind schon gleich (Abschnitt 2.0); offen sind nur Textweiß (#F2F3F4 statt #FFFFFF) und die Abweichungen aus Kontrastgründen in Abschnitt 4. Empfehlung: so lassen.
 2. Heller Modus: nicht ausgeliefert (D-311); die hellen Tokens und die `-hell`-Logos bleiben angelegt. Neu bewerten, wenn Nutzer danach fragen.
-3. Programm C heißt jetzt „Winterprogramm 2026 (Nachbau)“ (D-318), weil „Winter Arc“ zu den gestrichenen Wörtern gehört; die Quelle steht weiter in der Beschreibung. Bitte bestätigen oder einen anderen Namen nennen.
+3. Name von Programm C: entschieden, „Winterprogramm 2026“ mit neutraler Beschreibung (F5, D-328).
 4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App mit dem Startbild C3 ohne weißen Blitz und ohne Sprung zur Startfläche, hochkant und quer (D-317, D-325). Vorsicht: Beim Entfernen der alten App vom Home-Bildschirm kann iOS deren Daten löschen; erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
 
 ## 6. Screenshots

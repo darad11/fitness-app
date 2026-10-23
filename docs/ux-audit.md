@@ -1,6 +1,6 @@
 # UX-/UI-Audit und Designsystem 2.0
 
-Version 1.0 · 18.10.2026 · Grundlage: Bildschirmfotos aller Seiten der App (Stand `m1-training`, hell und dunkel, iPhone-Breite 390 pt) gegen die Xeela-Referenzen (`reference-analysis.md`) und die Vorgaben des Master-Prompts (Abschnitte 5 und 9: ruhig, modern, hochwertig, kein generisches Admin-Dashboard, Premium-Player). Die Bildschirmfotos liegen im Sitzungsverzeichnis, nicht im Repository.
+Version 1.0 · 18.10.2026 · Grundlage: Bildschirmfotos aller Seiten der App (Stand `m1-training`, hell und dunkel, iPhone-Breite 390 pt) gegen die Aufnahmen der Referenz-App (`reference-analysis.md`) und die Vorgaben des Master-Prompts (Abschnitte 5 und 9: ruhig, modern, hochwertig, kein generisches Admin-Dashboard, Premium-Player). Die Bildschirmfotos liegen im Sitzungsverzeichnis, nicht im Repository.
 
 ## 1. Befunde
 
@@ -9,7 +9,7 @@ Priorität: P0 behindert die Nutzung im Training, P1 prägt den Gesamteindruck, 
 | Nr. | Seite | Problem | Prio |
 |---|---|---|---|
 | A-01 | Alle | Jede Karte hat einen sichtbaren 1-px-Rahmen auf nahezu gleich hellem Grund; Hierarchie entsteht nur über die Überschrift. Wirkt wie ein Formular, nicht wie ein Produkt | P1 |
-| A-02 | Alle | Seitentitel 28 px halbfett ohne Vorzeile; keine Einordnung (Datum, Bereich, Programm) über dem Titel. Xeela setzt eine kleine Vorzeile und einen großen Titel | P1 |
+| A-02 | Alle | Seitentitel 28 px halbfett ohne Vorzeile; keine Einordnung (Datum, Bereich, Programm) über dem Titel. Die Referenz-App setzt eine kleine Vorzeile und einen großen Titel | P1 |
 | A-03 | Alle | Nur eine Abstufung für Flächen (Seite, Karte); keine „Bühne“ für die wichtigste Information (laufendes Training, heutiger Tag, Restzeit) | P1 |
 | A-04 | Alle | Schaltflächen rechteckig mit 8 px Radius, sekundäre mit dunklem Rahmen; Primäraktion und Nebenaktion sehen gleich schwer aus | P1 |
 | A-05 | Tab-Leiste | Aktiver Tab nur über einen 2-px-Strich oben und blaue Farbe erkennbar; wenig Anfassbarkeit | P2 |
@@ -31,7 +31,7 @@ Was gut ist und bleibt: Bedienziele mindestens 44 pt, Kontraste geprüft, Tabell
 
 ## 2. Designsystem 2.0: Richtung
 
-Eigenständig, von Xeela nur die Informationshierarchie inspiriert (Vorzeile, großer Titel, Bühne für die aktuelle Aktion, ruhige Listen, kräftige Primäraktion unten). Keine Kopie von Farben, Symbolen oder Layouts.
+Eigenständig, von der Referenz-App nur die Informationshierarchie inspiriert (Vorzeile, großer Titel, Bühne für die aktuelle Aktion, ruhige Listen, kräftige Primäraktion unten). Keine Kopie von Farben, Symbolen oder Layouts.
 
 | Thema | Entscheidung |
 |---|---|

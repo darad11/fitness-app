@@ -6,6 +6,7 @@ import { liveExercises, liveSets } from '../calc/session';
 import { loadSampleTemplate } from '../data/sampleTemplates';
 import { getSession } from '../data/sessionRepository';
 import type { Session } from '../model/session';
+import { PROGRAM_C_KEY } from '../data/programC';
 import {
   completeSet,
   moveExercise,
@@ -208,7 +209,7 @@ describe('Übungstimer (AK-TRN-14)', () => {
 
 describe('Hinweise aus dem Programm', () => {
   it('übernimmt den Ausführungshinweis je Übung in die Einheit', async () => {
-    const template = (await loadSampleTemplate('winter_arc_2026'))!;
+    const template = (await loadSampleTemplate(PROGRAM_C_KEY))!;
     const input = planFromTemplateDay(template, 3, 1, (id) => exercises.find((e) => e.id === id));
     const noted = input.exercises.find((e) => e.notes?.startsWith('Dropset'));
     expect(noted).toBeDefined();

@@ -70,7 +70,7 @@ export interface PlannedExercise {
   restSec?: number;
   /** Ausführungshinweis, z. B. „wechselseitig“ oder die Dropset-Regel. */
   notes?: string;
-  /** Name in der Quelle des Programms, z. B. der Xeela-Name beim Winter Arc. */
+  /** Englischer Name der Übung in der Vorlage eines Programms, z. B. bei Programm C. */
   originalName?: string;
   sets: PlannedSet[];
 }
@@ -107,10 +107,13 @@ export interface PlanTree {
 
 /** Gebündelte, schreibgeschützte Beispielvorlage (sample-templates.md). */
 export interface SampleTemplate extends PlanTree {
+  /** Fester Schlüssel; aus ihm entstehen die IDs der Vorlage, auch in gespeicherten Daten. */
   key: string;
+  /** Teil der Adresse, wenn er vom Schlüssel abweichen soll (F5, D-328); sonst der Schlüssel. */
+  slug?: string;
   /** Vollständiges Programm (A, B, C) statt kurzer Beispielvorlage. */
   program?: boolean;
-  /** Herkunft, z. B. die Rekonstruktion aus einer Aufnahme. */
+  /** Herkunft als kurze Angabe, wenn es eine gibt. */
   source?: string;
   level: Level;
   location: Location;
@@ -141,6 +144,10 @@ export const sampleTemplateSourceSchema = z
         z
           .strictObject({
             key: z.string().regex(/^[a-z0-9]+(?:_[a-z0-9]+)*$/),
+            slug: z
+              .string()
+              .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+              .optional(),
             name: z.string().min(1),
             description: z.string().min(1).optional(),
             program: z.literal(true).optional(),

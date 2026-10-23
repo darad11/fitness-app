@@ -15,6 +15,7 @@ import { finishSession, startSession } from '../service/sessionService';
 import { loadSampleTemplate } from '../data/sampleTemplates';
 import { loadCoreExercises } from '@/modules/exercises';
 import { planFromTemplateDay } from '../service/sessionService';
+import { PROGRAM_C_KEY, PROGRAM_C_SLUG } from '../data/programC';
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -49,7 +50,7 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
       'Ganzkörper A/B, 4 TageProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
     );
     expect(cards[0]).toHaveTextContent('Wiedereinstieg nach längerer Pause');
-    expect(cards[2]).toHaveTextContent('Winterprogramm 2026 (Nachbau)Programm');
+    expect(cards[2]).toHaveTextContent('Winterprogramm 2026Programm');
     expect(cards[3]).toHaveTextContent(
       'Ganzkörper A/BBeispielEinsteiger · Studio · 3 Tage pro Woche · 2 Trainingstage',
     );
@@ -233,10 +234,10 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect(screen.queryByText('Als Nächstes')).toBeNull();
   });
 
-  it('Winter Arc: Wochenüberschriften, Hinweise, Xeela-Namen und „Erledigt" je Tag', async () => {
-    await activateProgram(rt, stableId('sample-template:winter_arc_2026'));
+  it('Programm C: Wochenüberschriften, Hinweise, englische Namen und „Erledigt" je Tag', async () => {
+    await activateProgram(rt, stableId(`sample-template:${PROGRAM_C_KEY}`));
     const [template, exercises] = await Promise.all([
-      loadSampleTemplate('winter_arc_2026'),
+      loadSampleTemplate(PROGRAM_C_KEY),
       loadCoreExercises(),
     ]);
     const byId = new Map(exercises.map((e) => [e.id, e]));
@@ -245,7 +246,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
       planFromTemplateDay(template!, 0, 0, (id) => byId.get(id), 'program'),
     );
     await finishSession(rt, session.id, { skipOpen: true });
-    await renderAt('/training/vorlagen/winter_arc_2026', 'Winterprogramm 2026 (Nachbau)');
+    await renderAt(`/training/vorlagen/${PROGRAM_C_SLUG}`, 'Winterprogramm 2026');
     // 40 Tage mit rund 280 Übungen: in jsdom auf langsamen CI-Runnern deutlich über 1 s.
     expect(
       await screen.findByRole(
@@ -262,8 +263,8 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect(within(day1).getByText('Erledigt')).toBeVisible();
     const day2 = screen.getByRole('region', { name: /^Tag 4 · / });
     expect(within(day2).getByText('Als Nächstes')).toBeVisible();
-    expect(screen.getAllByText(/^Xeela: /).length).toBeGreaterThan(100);
+    expect(screen.getAllByText(/^Englisch: /).length).toBeGreaterThan(100);
     expect(screen.getAllByText(/^Dropset: schwer beginnen/).length).toBeGreaterThan(5);
-    expect(screen.getByText(/^Quelle: Rekonstruktion/)).toBeVisible();
+    expect(screen.queryByText(/^Quelle: /)).toBeNull();
   }, 20_000);
 });

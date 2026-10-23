@@ -131,7 +131,7 @@ export function ProgramDetail({
   const active = isProgram && state?.activeProgramId === template.id;
   const progress =
     active && sessions ? programProgress(template, sessions, state.activeSince) : undefined;
-  // Erledigte Tage nur markieren, wenn jeder Tag genau einmal vorkommt (z. B. Winter Arc);
+  // Erledigte Tage nur markieren, wenn jeder Tag genau einmal vorkommt (z. B. Programm C);
   // bei wiederholten Tagen (A, B, A, B) wäre die Markierung mehrdeutig.
   const markDone = progress?.total === groups.reduce((sum, group) => sum + group.days.length, 0);
 

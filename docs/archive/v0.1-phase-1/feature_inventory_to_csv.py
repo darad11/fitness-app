@@ -19,7 +19,7 @@ SRC = ROOT / "docs" / "feature-inventory.md"
 DST = ROOT / "docs" / "feature-inventory.csv"
 
 COLUMNS = [
-    "ID", "Funktion", "Originalverhalten (Xeela)", "Evidenz", "Konfidenz",
+    "ID", "Funktion", "Originalverhalten (Referenz-App)", "Evidenz", "Konfidenz",
     "Nutzen", "Abhängigkeiten", "Aufwand", "Prio", "Entscheidung", "Status",
     "Akzeptanzkriterien",
 ]

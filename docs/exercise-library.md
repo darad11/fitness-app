@@ -13,7 +13,7 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 ## 1. Zweck
 
 - Die Liste ist die Basisbibliothek der App. Quelle sind die gebündelten Daten `src/modules/exercises/data/core-exercises.v1.json`; Abschnitt 5 wird daraus erzeugt.
-- 124 Übungen (105 aus Q-05, 19 aus dem Winter-Arc-Abgleich in Schritt B, D-248) mit deutschem Namen, Alias-Namen für die Suche (auch englisch), Haupt- und Nebenmuskeln, Gerät und Erfassungsart. Alle 39 Übungen der Beispielvorlagen sind enthalten (Spalte „Vorlage").
+- 124 Übungen (105 aus Q-05, 19 aus dem Abgleich für Programm C in Schritt B, D-248) mit deutschem Namen, Alias-Namen für die Suche (auch englisch), Haupt- und Nebenmuskeln, Gerät und Erfassungsart. Alle 39 Übungen der Beispielvorlagen sind enthalten (Spalte „Vorlage").
 - Muskel- und Geräteschlüssel sowie Erfassungsarten wie in `sample-templates.md` Abschnitt 5.2.
 
 ## 2. Regeln

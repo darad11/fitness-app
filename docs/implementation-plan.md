@@ -222,14 +222,14 @@ Nächste Schritte: <Liste>
 8. Erledigt: AP 1.2 Beispielvorlagen (ohne „Nur heute trainieren", das mit AP 1.3 und 1.4 folgt).
 9. Erledigt: AP 1.3 Trainings-Domain.
 10. Erledigt: AP 1.4 Trainingsplayer (ohne Pausenleiste).
-11. Zur Freigabe: Erweiterungsplan `evolution-plan.md` mit Rekonstruktion „Winter Arc“ (`winter-arc-reconstruction.md`), Referenzanalyse (`reference-analysis.md`) und Rückfragen Q-13 bis Q-18 (Branch `evolution-plan`, Pull Request als Entwurf).
+11. Zur Freigabe: Erweiterungsplan `evolution-plan.md` mit der Erfassung von Programm C (`winterprogramm-2026.md`), Referenzanalyse (`reference-analysis.md`) und Rückfragen Q-13 bis Q-18 (Branch `evolution-plan`, Pull Request als Entwurf).
 12. Erledigt: Q-18 beantwortet (ja); Vorgabe des Produktinhabers, ab jetzt alles nach dem Master-Prompt zu gestalten. Darauf Designsystem 2.0 (AP D1) und Premium-Player mit Pause, Ton und Wake Lock (AP D2, ersetzt AP 1.5), siehe `ux-audit.md`, D-246, D-247.
 13. Erledigt: AP 1.6 Persistenz und Wiederaufnahme.
 14. Erledigt: AP 1.7 Verlauf, Dashboard-Basis, Trainingseinstellungen.
 15. Erledigt: AP 1.8 Datensicherung.
 16. Erledigt: AP 1.9 E2E-Tests. Offen: Gerätetest T-IPH-M1 durch den Produktinhaber, Auswertung in `known-limitations.md`.
-17. Erledigt (Branch `evolution-programs`): Schritt B, Bibliothek um 19 Übungen aus dem Winter-Arc-Abgleich erweitert (D-248).
-18. Erledigt (Branch `evolution-programs`): Schritt C, Programme A, B, C als Stammdaten (`programs.md`) und aktives Programm mit nächstem Tag, Zähler und „Heute geplant“ (D-249). Offen: weitere Dropset-Sterne des Winter Arc vom Produktinhaber (U-1).
+17. Erledigt (Branch `evolution-programs`): Schritt B, Bibliothek um 19 Übungen aus dem Abgleich für Programm C erweitert (D-248).
+18. Erledigt (Branch `evolution-programs`): Schritt C, Programme A, B, C als Stammdaten (`programs.md`) und aktives Programm mit nächstem Tag, Zähler und „Heute geplant“ (D-249). Offen: weitere Dropset-Sterne von Programm C vom Produktinhaber (U-1).
 19. Produktinhaber führt T-IPH-M1 durch; ich werte aus und dokumentiere; danach Pull Requests #5 und `evolution-programs` zur Freigabe.
 20. Erledigt (Branch `evolution-player`): Schritt D, Player ausgebaut (D-250).
 21. Erledigt: #5, #7 und #8 nach `main` gemergt (Freigabe des Produktinhabers am 18.10.2026 ohne ausführlichen Test; Befunde meldet er nach).
@@ -268,4 +268,4 @@ Nächste Schritte: <Liste>
 54. Ich: Datensicherung einspielen (AP 2.8) entfällt vorerst auf Wunsch des Produktinhabers. Später: feldweise Zusammenführung und Aufräumen alter Löschmarkierungen (D-269).
 55. Erledigt (über #45 gemergt): Wasser auf „Heute“, in der Ernährung und als eigene Seite mit Ziel, Verlauf, Schnellmengen und „mit Wasserziel abhaken“ (D-289). Abgleich mit dem Auftrag, Bewertung und Bericht: `water-tracker.md`. Später möglich: häufige eigene Mengen, Uhrzeit beim Nachtragen, Wasser aus Apple Health.
 56. Beantwortet (Q-22), umgesetzt mit Punkt 57: Markenstrategie FORM liegt in `brand-form.md` mit drei Logo-Entwürfen. Nach Antwort des Produktinhabers: eigenes Paket für Name, Symbol, Kopfzeile, Anmeldebildschirm und „Über die App“, mit Bildern vorher; Home-Bildschirm-Name ändert sich erst bei Neuinstallation (D-222).
-57. Zur Freigabe (Branch `form-rebranding`, Entwurfs-PR #49): Rebranding zur Marke FORM mit den Paketen F0, F1, A, B, F2, F3, C, D, F4, G und E (D-307 bis D-320), dazu die Übergabe in den Marken-Chat (D-321). Bericht mit Testergebnissen: `form-rebranding-report.md`; Tokens, Kontraste und Abweichungen: `brand-tokens.md`; Bilder: `docs/screens/`, alle auf einem Bild in `docs/screens/uebersicht.png`, als Archiv `docs/screens.zip`. Offen beim Produktinhaber: Durchsicht und Merge, Name von Programm C („Winterprogramm 2026 (Nachbau)“), Gerätetest T-IPH-M0 Schritt 5 (Startbild). Danach: mehrspaltige Layouts für breite Bildschirme in einer eigenen Sitzung (D-313).
+57. Zur Freigabe (Branch `form-rebranding`, Entwurfs-PR #49): Rebranding zur Marke FORM mit den Paketen F0, F1, A, B, F2, F3, C, D, F4, G und E (D-307 bis D-320), dazu die Übergabe in den Marken-Chat (D-321). Bericht mit Testergebnissen: `form-rebranding-report.md`; Tokens, Kontraste und Abweichungen: `brand-tokens.md`; Bilder: `docs/screens/`, alle auf einem Bild in `docs/screens/uebersicht.png`, als Archiv `docs/screens.zip`. Offen beim Produktinhaber: Durchsicht und Merge, Name von Programm C (seit F5 „Winterprogramm 2026“, D-328), Gerätetest T-IPH-M0 Schritt 5 (Startbild). Danach: mehrspaltige Layouts für breite Bildschirme in einer eigenen Sitzung (D-313).

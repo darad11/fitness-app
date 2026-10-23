@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.40 · 23.10.2026 · Texte und Marke (F5 Abschnitt 7)
+
+| Datei | Änderung |
+|---|---|
+| `winterprogramm-2026.md` | Neu benannt und neutral gefasst (Version 1.1), Programm C heißt „Winterprogramm 2026“ |
+| `decisions.md` | D-328; D-299 (Registrierung bleibt offen) und D-318 angepasst; ältere Einträge ohne Namen der Referenz-App |
+| `known-limitations.md` | Interner Vermerk zu Programm C, offene Registrierung |
+| `product-research.md`, `reference-analysis.md`, `ux-audit.md`, `feature-inventory.md` | Ohne Namen und Erkennungsmerkmale der Referenz-App, ohne Werte des Kontos |
+| `archive/v0.1-phase-1/` | Ebenso neutral gefasst; Prüfsummen in `SHA256SUMS` erneuert, die alte Fassung steht in der Git-Historie |
+| übrige Dokumente | Verweise auf das umbenannte Dokument, neutrale Bezeichnungen |
+
 ## Version 0.39 · 21.10.2026 · Markenstrategie FORM
 
 | Datei | Änderung |
@@ -322,7 +333,7 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 |---|---|
 | `programs.md` | Neu, erzeugt: Programme A, B, C mit Wochen, Tagen, Sätzen, Zielen, Pausen und Hinweisen |
 | `exercise-library.md` | 124 Übungen (19 neu, D-248) |
-| `winter-arc-reconstruction.md` | Zuordnung nach Antworten; U-1 Dropset-Liste (12 Sterne, Rest offen) |
+| `winterprogramm-2026.md` | Zuordnung nach Antworten; U-1 Dropset-Liste (12 Sterne, Rest offen) |
 | `decisions.md` | D-248 Bibliothek, D-249 Programme und aktives Programm; Q-13 bis Q-17 beantwortet |
 | `evolution-plan.md` | Schritte B und C als umgesetzt; Programme A und B bestätigt |
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
@@ -356,7 +367,7 @@ Grundlage: Master-Prompt „Fitness App Evolution“ des Produktinhabers, Freiga
 
 | Datei | Änderung |
 |---|---|
-| `evolution-plan.md`, `winter-arc-reconstruction.md`, `reference-analysis.md` | Neu: Erweiterungsplan, Rekonstruktion „Winter Arc“, Referenzanalyse (Branch `evolution-plan`, in `m1-training` übernommen) |
+| `evolution-plan.md`, `winterprogramm-2026.md`, `reference-analysis.md` | Neu: Erweiterungsplan, Erfassung von Programm C, Referenzanalyse (Branch `evolution-plan`, in `m1-training` übernommen) |
 | `ux-audit.md` | Neu: Befunde A-01 bis A-18, Richtung Designsystem 2.0, Kriterien DS-1 bis DS-8 |
 | `design-system.md` | Version 0.4: Tonflächen, Bühne, Schatten, Radien, Typografie, Komponenten, Player |
 | `decisions.md` | D-246 Designsystem 2.0, D-247 Premium-Player; Q-13 bis Q-18 |

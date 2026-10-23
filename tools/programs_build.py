@@ -2,9 +2,9 @@
 """Erzeugt die gebündelten Programme A, B und C und docs/programs.md.
 
 Quellen: tools/data/programs.source.json (A und B, Dropset-Liste, Metadaten für C),
-tools/data/winter-arc-2026.source.json und tools/data/winter-arc-exercise-map.json (C).
+tools/data/winterprogramm-2026.source.json und tools/data/winterprogramm-2026-uebungen.json (C).
 Ziel: src/modules/training/data/programs.v1.json im Format der Beispielvorlagen
-(sample-templates.v1.json, erweitert um description, program, note, originalName).
+(sample-templates.v1.json, erweitert um description, program, slug, note, originalName).
 
   python3 tools/programs_build.py           schreibt JSON und Dokument neu
   python3 tools/programs_build.py --check   prüft nur (Exit-Code 1 bei Abweichung)
@@ -18,8 +18,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "tools/data/programs.source.json"
-ARC = ROOT / "tools/data/winter-arc-2026.source.json"
-MAP = ROOT / "tools/data/winter-arc-exercise-map.json"
+PROGRAM_C = ROOT / "tools/data/winterprogramm-2026.source.json"
+MAP = ROOT / "tools/data/winterprogramm-2026-uebungen.json"
 CORE = ROOT / "src/modules/exercises/data/core-exercises.v1.json"
 OUT = ROOT / "src/modules/training/data/programs.v1.json"
 DOC = ROOT / "docs/programs.md"
@@ -54,14 +54,14 @@ def hint_from_addition(addition: str) -> str | None:
     return "; ".join(hints) if hints else None
 
 
-def build_winter_arc(source: dict, arc: dict, mapping: dict, core: dict) -> dict:
-    meta = source["winterArc"]
-    by_name = {e["xeela"]: e for e in mapping["entries"]}
+def build_program_c(source: dict, plan: dict, mapping: dict, core: dict) -> dict:
+    meta = source["programC"]
+    by_name = {e["original"]: e for e in mapping["entries"]}
     keys = {e["key"] for e in core["exercises"]}
     dropsets = {tuple(item) for item in source["dropsets"]["items"]}
     days = []
     weeks: dict[int, list[str]] = {}
-    for day in arc["days"]:
+    for day in plan["days"]:
         name = f"Tag {day['day']} · {DAY_NAMES[day['name']]}"
         exercises = []
         for position, item in enumerate(day["items"], 1):
@@ -70,7 +70,7 @@ def build_winter_arc(source: dict, arc: dict, mapping: dict, core: dict) -> dict
             if entry["key"] not in keys:
                 raise ValueError(f"Übung fehlt in der Bibliothek: {entry['key']}")
             target = parse_target(target_text)
-            # Tag 14: Laufband „3 Sets • 30:00" ist ein Datenfehler in Xeela; 1 × 30 min (Q-13).
+            # Tag 14: Laufband „3 Sets • 30:00" ist ein Datenfehler der Vorlage; 1 × 30 min (Q-13).
             if original == "Cardio Treadmill" and sets > 1:
                 sets = 1
             notes = []
@@ -101,10 +101,10 @@ def build_winter_arc(source: dict, arc: dict, mapping: dict, core: dict) -> dict
         weeks.setdefault(day["week"], []).append(name)
     return {
         "key": meta["key"],
+        "slug": meta["slug"],
         "program": True,
         "name": meta["name"],
         "description": meta["description"],
-        "source": "Rekonstruktion aus der Aufnahme des Produktinhabers (docs/winter-arc-reconstruction.md)",
         "level": meta["level"],
         "location": meta["location"],
         "daysPerWeek": meta["daysPerWeek"],
@@ -159,13 +159,13 @@ def render_doc(templates: list[dict], core: dict) -> str:
     names = {e["key"]: e["name"] for e in core["exercises"]}
     out = [
         "# Programme A, B und C\n\n",
-        "Erzeugt von `tools/programs_build.py` aus `tools/data/programs.source.json` und der Winter-Arc-Rekonstruktion; ",
+        "Erzeugt von `tools/programs_build.py` aus `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; ",
         "`pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15. ",
         "Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.\n\n",
     ]
     for t in templates:
         total = sum(len(w) for w in t["weeks"])
-        out.append(f"## {t['name']} (`{t['key']}`)\n\n")
+        out.append(f"## {t['name']} (`{t.get('slug', t['key'])}`)\n\n")
         out.append(f"{t['description']}\n\n")
         out.append(
             f"Niveau {t['level']} · Ort {t['location']} · {t['daysPerWeek']} Tage pro Woche · "
@@ -183,7 +183,7 @@ def render_doc(templates: list[dict], core: dict) -> str:
             for e in d["exercises"]:
                 hint = e.get("note", "")
                 if e.get("originalName"):
-                    hint = f"{hint} (Xeela: {e['originalName']})" if hint else f"Xeela: {e['originalName']}"
+                    hint = f"{hint} (Englisch: {e['originalName']})" if hint else f"Englisch: {e['originalName']}"
                 out.append(
                     f"| {names[e['exercise']]} | {describe_sets(e)} | {describe_target(e['target'])} | "
                     f"{e['restSec']} s | {hint.replace('|', '/')} |\n"
@@ -194,8 +194,8 @@ def render_doc(templates: list[dict], core: dict) -> str:
 
 def main() -> int:
     check = "--check" in sys.argv
-    source, arc, mapping, core = load(SOURCE), load(ARC), load(MAP), load(CORE)
-    templates = [*source["templates"], build_winter_arc(source, arc, mapping, core)]
+    source, plan, mapping, core = load(SOURCE), load(PROGRAM_C), load(MAP), load(CORE)
+    templates = [*source["templates"], build_program_c(source, plan, mapping, core)]
     errors = validate(templates, core)
     if errors:
         print(f"{len(errors)} Probleme:")

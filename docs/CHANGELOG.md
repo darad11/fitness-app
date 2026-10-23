@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.50 · 23.10.2026 · Phase Stabilität, Nachtrag 2 zu Abschnitt 2 (Startwächter in WebKit)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-344: Ursache und Behebung des Startwächters in WebKit (kein Vorladen in index.html) |
+| `known-limitations.md` | Neu „Fehlgeschlagenes Vorladen in WebKit“; Chromium-Punkt und Wiederherstellen (WebKit bestanden) nachgezogen |
+| `testing.md` | Protokoll „Stabilität §2“: Diagnose in der CI, Nachtrag 2 |
+| `form-stabilitaet-report.md` | Abschnitt 3: Nachtrag mit Ursache und Behebung |
+| `implementation-plan.md` | Punkt 66 nachgezogen |
+
 ## Version 0.49 · 23.10.2026 · Phase Stabilität, Nachtrag zu Abschnitt 2 (Wiederholung in der CI)
 
 | Datei | Änderung |

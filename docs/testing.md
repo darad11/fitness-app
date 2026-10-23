@@ -1201,7 +1201,12 @@ Linse der Tab-Leiste, Wasser-Schalter per Tastatur, Seitenende auf `/mehr/synchr
 | Nachtrag: Seitenende auf `/ernaehrung` nachgestellt, Wasser-Karte um 300 bis 1500 ms verzögert (61 Stufen zu 20 ms, Pixel 7, ohne Service Worker) | alter Ablauf zweimal je 5 von 61 fehlgeschlagen, mit 807,05 (wie in der CI) und 802,64; neuer Ablauf 61 von 61 bestanden |
 | Nachtrag: `marks.spec.ts` (Chromium Desktop und Pixel 7) | 9 bestanden, 1 übersprungen |
 | Nachtrag: `e2e/diagnose-start-watch.spec.ts` (vorübergehend, Chromium Desktop) | 4 bestanden; in allen vier Fassungen startet die App nach dem Neuladen (Protokoll im Testlauf) |
-| Nachtrag: WebKit | Diagnose in der CI zum Nachtrag |
+| Nachtrag: CI zu `505cc1a` (Lauf 40010891575), WebKit | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (nur `start-watch.spec.ts` Fall 1); `marks.spec.ts` bestanden. Chromium: bestanden |
+| Nachtrag: Diagnose Startwächter in der CI (WebKit Desktop und Handy, je vier Fassungen: sofort, nach `load`, nach 1 s, `location.replace`) | in allen acht Läufen startete die App nicht; das zweite Dokument fragte `ui-…js` nicht an und zeigte „FORM ließ sich nicht starten“; nach dem Laden meldete WebKit „… was preloaded using link preload but not used within a few seconds …“. Chromium: alle acht gestartet |
+| Nachtrag 2: kein Vorladen in index.html, `pnpm build`, `pnpm check:bundle` | 0 Vorlade-Links in `dist/index.html`; Startansicht 238,9 KB von 250 KB (vorher 239,4 KB; index.html 5,6 statt 6,1 KB); Vorab-Liste 170 von 229 Dateien |
+| Nachtrag 2: `start-watch`, `diagnose-start-watch`, `pwa`, `update`, `start-surface`, `shell`, `resilience` (Chromium Desktop und Pixel 7) | 49 bestanden, 15 übersprungen |
+| Nachtrag 2: `start-watch.spec.ts` und Gegenprobe `diagnose-start-watch.spec.ts` (Chromium Desktop und Pixel 7) | 8 bestanden; in Chromium startet die App mit und ohne das frühere Vorladen (31 Vorlade-Links nachgebildet) |
+| Nachtrag 2: WebKit | in der CI zum Nachtrag 2 |
 
 ### Stabilität §3: Wiederherstellen aus dem Export · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 

@@ -11,7 +11,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | Abschnitt | Ergebnis | Entscheidung | Stand |
 |---|---|---|---|
 | §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
-| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt bis auf den Startwächter in WebKit (Diagnose in der CI); Seitenende auf `/ernaehrung` nachgetragen |
+| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt; Nachträge: Seitenende auf `/ernaehrung`, Startwächter in WebKit (kein Vorladen in index.html, Bestätigung in der CI) |
 | §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
@@ -132,13 +132,16 @@ Die 20 Wiederholungen in der CI (Lauf 40005209039): Chromium 259 bestanden, 60 �
 | Test | Befund | Ursache | Behebung |
 |---|---|---|---|
 | „Seitenende: …“ auf `/ernaehrung` (Chromium, Pixel 7) | 1 von 20 rot: 807 statt höchstens 762,9; tiefster Inhalt war der Link der Wasser-Karte | Die Wasser-Karte lädt nach und hat keinen Platzhalter. Erschien sie zwischen der Prüfung „am Seitenende“ und der Messung, stand die Seite nicht mehr am Ende. Nachgestellt mit verzögerter Karte: zweimal je 5 von 61 Verzögerungen rot, einmal mit genau 807,05 | Prüfen und Messen in einem Schritt, erst wenn die Seite zweimal hintereinander gleich hoch ist; nachgestellt 61 von 61 grün |
-| `start-watch.spec.ts` Fall 1 (WebKit, Desktop und Handy) | in der CI 2 von 2, in der Wiederholung 40 von 40 rot: Nach dem automatischen Neuladen startet die App nicht; Fall 2 (Neuladen per Knopf) grün | noch offen: Die Zählung über die Route zeigt, dass der Wächter neu lädt; die Vermutung aus dem Nachtrag zu §1 erklärt den Fehlschlag nicht | Diagnose in der CI: `e2e/diagnose-start-watch.spec.ts` (vorübergehend) spielt vier Fassungen des Neuladens durch und schreibt auf, was die Seite lädt und zeigt |
+| `start-watch.spec.ts` Fall 1 (WebKit, Desktop und Handy) | in der CI 2 von 2, in der Wiederholung 40 von 40 rot: Nach dem automatischen Neuladen startet die App nicht; Fall 2 (Neuladen per Knopf) grün | Diagnose in der CI (vier Fassungen des Neuladens, alle acht Läufe rot): Das zweite Dokument fragte den abgebrochenen Teil gar nicht erst an. WebKit behält ein fehlgeschlagenes Vorladen (`<link rel="modulepreload">`) im Speicher, solange die alte Seite lebt, und das neue Dokument übernimmt es; beim Knopf lag die alte Seite schon länger zurück | index.html lädt keine Module mehr vor; nachgeladene Bereiche weiter. Gegenprobe mit und ohne früheres Vorladen in der CI |
 
 Dateien: `e2e/marks.spec.ts`, neu und vorübergehend `e2e/diagnose-start-watch.spec.ts`; `docs/decisions.md` (D-344, Nachtrag), `docs/testing.md`, `docs/implementation-plan.md`, `docs/CHANGELOG.md`.
 
+Nachtrag 2 (Startwächter in WebKit): `vite.config.ts` (`build.modulePreload`), `e2e/diagnose-start-watch.spec.ts` als Gegenprobe, `docs/known-limitations.md`. Kosten: Beim ersten Aufruf ohne Service Worker fragt der Browser die Startmodule erst an, wenn er den Einstieg gelesen hat (eine Runde mehr); mit Service Worker kommen sie aus dem Zwischenspeicher. index.html wird 0,5 KB kleiner.
+
 ### Offen
 
-- Startwächter in WebKit: Ursache und Behebung nach der Diagnose in der CI.
+- Startwächter in WebKit: Bestätigung der Behebung in der CI (Nachtrag 2).
+- Nachgeladene Bereiche laden weiter vor; ob das einmalige Neuladen dort in WebKit bei einem Netzfehler hilft, ist nicht geprüft (`known-limitations.md`).
 
 ## 4. §3 Wiederherstellen aus dem Export
 

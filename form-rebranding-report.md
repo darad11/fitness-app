@@ -33,6 +33,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §6 Fortschritt | Zeitraum-Auswahl in einer Zeile (Fortschritt, Körpergewicht, Übung, Wasser, Tagesaufgaben), die Chips teilen sich die Breite | D-327 | umgesetzt |
 | F5 §7 Texte und Marke | Programm C heißt „Winterprogramm 2026“ mit neutraler Beschreibung und eigener Adresse; keine Hinweise auf die fremde App in Code, Daten und Dokumenten, zwei Prüfungen dagegen; Registrierung bleibt offen; Werte des Kontos aus der Referenzanalyse entfernt | D-328 | umgesetzt |
 | F5 §7a Entscheidungen | Serie bleibt entfernt; Gerätetest des Startbilds zuerst an der Vorschau, die Daten sind Testdaten; kein Push nach langer Pause; zwei neue P2-Punkte (Wiederherstellen aus dem Export, Ursache des Offline-Tests) | D-329 | festgehalten |
+| F5 §8 Nächste Schritte | Nährstoffe mit Referenzwerten, Grundnahrungsmittel und Suche, eigene Workouts, Ausführungsanleitungen als Punkte 58 bis 61 im Plan; nicht begonnen | D-330 | eingetragen |
 
 ## 2. Geänderte Dateien je Paket
 

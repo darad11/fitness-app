@@ -11,6 +11,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | Abschnitt | Ergebnis | Entscheidung | Stand |
 |---|---|---|---|
 | §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
+| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt, Wiederholung in der CI ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -87,3 +88,43 @@ Tests: `chunkRecovery.test.ts` 24 bestanden, die drei neuen Fälle am alten Stan
 - WebKit: Die Fälle mit Service Worker laufen nur in Chromium (wie der bisherige Offline-Test); die Fälle ohne Service Worker und der Startwächter laufen in der CI auch in WebKit. Ob Safari unter dem Service Worker ebenfalls Modul-Anfragen abbricht, ist nicht geprüft; die Erholung greift dort genauso, sobald Safari einen Ladefehler meldet.
 - Gerätetest T-IPH-M0 Schritt 4 (Update am iPhone) für diese Fassung.
 - Hängt eine Modul-Anfrage, ohne zu scheitern, greift der Startwächter nicht; die Startfläche blendet sich nach 10 s trotzdem aus (D-325). In den Traces kam das nicht vor.
+
+## 3. §2 Wackelnde Tests und CI
+
+### Ursachen
+
+| Test | Befund | Ursache |
+|---|---|---|
+| „Tab-Leiste: Ziehen mit der Linse …“ (WebKit) | zweimal erst im zweiten Versuch grün, bei `687d0bf` in beiden Versuchen rot: Die Klasse `lens-active` blieb | Die Feder rechnete je Bild höchstens 50 ms weiter und brauchte zum Ablegen rund neun Bilder. Bei wenigen Bildern je Sekunde dauerte das Sekunden: in Chromium mit 20-facher CPU-Drosselung 3,96 s, bei zwei Bildern je Sekunde 2,5 s. In der CI lag die Linse nach 5 s noch nicht; wie wenige Bilder WebKit dort lieferte, ist nicht gemessen, der Befund passt aber dazu |
+| „Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur …“ (Chromium, Handy) | einmal rot in F6 §7: Nach der zweiten Leertaste blieb der Schalter aus | Chromium hält ein angetipptes Element bis zu 150 ms „aktiv“ und hebt das per Zeitgeber auf. Die Leertaste schaltet beim Loslassen nur, wenn das Element dann noch „aktiv“ ist. Fällt das Ende des Tipps zwischen Drücken und Loslassen, löst die Taste nichts aus. Der Test tippte und drückte gleich danach die Leertaste. Nachgewiesen mit gehaltener Taste (siehe Tests) |
+| „Seitenende: …“ auf `/mehr/synchronisierung` (WebKit) | bei `ef8b18e` wackelnd, bei `687d0bf` rot: 623 statt höchstens 579 | Die Anmeldung öffnet sich erst nach dem Laden als Vollbild-Dialog. Der Test fragte den Dialog ab, bevor er sich öffnete, und maß danach; die Knöpfe der Anmeldung zählten dann als Inhalt der Seite. Der Platzhalter der Seite war nicht als beschäftigt markiert, `openPage` wartete deshalb nicht auf das Laden |
+| Unit-Test „belegt Mengen ab 1000 …“ (`nutrition-ui.test.tsx`) | in der CI zu `0f50be6` rot: Die Bearbeitung zeigte „Anzahl (Packung)“ statt „Menge in ml“ | Die beiden Einträge des Tests entstehen in derselben Millisekunde. `listDayEntries` sortierte nur nach der Uhrzeit; bei Gleichstand entschied die zufällige ID, und der Test öffnete den falschen Eintrag |
+| Installation von WebKit in der CI | einmal 37 min 47 s für 117 MB Systempakete per apt (51,6 kB/s) | `playwright install --with-deps` lädt die Systempakete bei jedem Lauf per apt; ist der Spiegel langsam, wartet der Job |
+
+Der E-16-Offline-Test (§1) und der Barcode-Test (Nachtrag §1) sind in Abschnitt 2 beschrieben; sie laufen in der Wiederholung mit.
+
+### Änderungen
+
+1. **Linse** (`src/app/layout/tabLens.ts`): bis 250 ms je Bild statt 50 ms, weiter in Teilschritten von 1/240 s, damit die Feder stabil bleibt. Spätestens 900 ms nach dem Loslassen liegt die Linse; kommt gar kein Bild mehr, legt ein Zeitgeber sie nach 1,2 s ab. Neuer Test mit nur zwei Bildern je Sekunde.
+2. **Wasser-Schalter** (`e2e/switches.spec.ts`): Der Test wartet nach dem Tipp, bis der Schalter nicht mehr „aktiv“ ist, und nutzt erst dann die Tastatur. In der App spielt das keine Rolle; dafür müssten Tipp und Tastatur binnen 150 ms kommen.
+3. **Reihenfolge der Ernährungseinträge** (`src/modules/nutrition/data/nutritionRepository.ts`): bei gleicher Uhrzeit nach dem Änderungsstempel, also in der Reihenfolge des Eintragens. Das gilt auch in der App, z. B. für eine Vorlage, die mehrere Einträge auf einmal anlegt.
+4. **Seitenende** (`e2e/marks.spec.ts`, `src/modules/sync/ui/SyncPage.tsx`): Abfrage des Dialogs und Messung in einem Schritt; der Platzhalter der Seite „Synchronisierung“ ist als beschäftigt markiert (`aria-busy`) wie auf allen anderen Seiten.
+5. **CI** (`.github/workflows/ci.yml`): E2E-Jobs im offiziellen Image von Playwright (`mcr.microsoft.com/playwright:v<Version>-noble`); die Version kommt aus dem Lockfile über eine Ausgabe des ersten Jobs. `playwright install` entfällt. Zeitgrenzen 20 min für die Prüfungen und 30 min je E2E-Job, vorher 6 Stunden.
+6. **Wiederholung auf Abruf** (`.github/workflows/repeat.yml`): die früher wackelnden Tests 20-mal hintereinander, ohne Wiederholung bei Fehlschlag, in Chromium und WebKit im selben Image. Auslöser: Label „wiederholen“ am Pull Request oder Start von Hand.
+
+Keine Wiederholungen erhöht (`retries` bleibt 1 in der CI, 0 lokal).
+
+### Geänderte Dateien
+
+- Neu: `.github/workflows/repeat.yml`
+- Geändert: `src/app/layout/tabLens.ts`, `src/modules/sync/ui/SyncPage.tsx`, `src/modules/nutrition/data/nutritionRepository.ts`, `.github/workflows/ci.yml`; Tests `e2e/tabbar.spec.ts`, `e2e/switches.spec.ts`, `e2e/marks.spec.ts`, `src/modules/nutrition/service/nutritionService.test.ts`
+- Dokumente: `docs/decisions.md` (D-344), `docs/testing.md`, `docs/implementation-plan.md` (Punkt 66), `docs/CHANGELOG.md`; zum Nachtrag D-343 `docs/architecture.md` und `docs/known-limitations.md`
+
+### Tests mit Ergebnis
+
+Siehe `docs/testing.md`, Protokoll „Stabilität §2“.
+
+### Offen
+
+- Ergebnis der 20 Wiederholungen in der CI (Chromium und WebKit).
+

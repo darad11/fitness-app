@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.47 · 23.10.2026 · Phase Stabilität, Abschnitt 2 (wackelnde Tests und CI)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-344: Linse, Wasser-Schalter, Seitenende, Reihenfolge gleichzeitiger Ernährungseinträge, E2E im Image von Playwright, Wiederholung auf Abruf |
+| `testing.md` | Protokoll „Stabilität §2“ |
+| `form-stabilitaet-report.md` | Abschnitt 3 |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `architecture.md`, `known-limitations.md` | Nachtrag D-343: `beforeunload` nur als Zeichen für das Verlassen der Seite; Verhalten von WebKit beim Verlassen |
+
 ## Version 0.46 · 23.10.2026 · Phase Stabilität, Nachtrag zu Abschnitt 1 (CI in WebKit)
 
 | Datei | Änderung |

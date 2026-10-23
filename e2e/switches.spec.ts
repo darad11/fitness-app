@@ -70,6 +70,10 @@ test('Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur, nur eine
   await expect(list.getByRole('switch', { name: 'Mit Training abhaken' })).not.toBeChecked();
   // Tastatur: Leertaste schaltet aus und wieder ein.
   const water = list.getByRole('switch', { name: 'Mit Wasserziel abhaken' });
+  // Chromium hält ein angetipptes Element bis zu 150 ms „aktiv“ und hebt das per Zeitgeber auf.
+  // Fiel das zwischen Drücken und Loslassen der Leertaste, löste die Taste nichts aus: der
+  // einmalige Fehlschlag aus F6 §7 (Stabilität §2, D-344). Erst nach dem Tipp weiter.
+  await expect.poll(() => water.evaluate((element) => element.matches(':active'))).toBe(false);
   await water.focus();
   await page.keyboard.press('Space');
   await expect(water).not.toBeChecked();

@@ -25,6 +25,37 @@ test('Tab-Leiste: Ziehen mit der Linse wählt beim Loslassen, Tippen wie gewohnt
   await expect(page).toHaveURL(/\/training$/);
 });
 
+test('Tab-Leiste: Die Linse legt sich auch bei zwei Bildern je Sekunde binnen 2 s ab (D-344)', async ({
+  page,
+}, testInfo) => {
+  test.skip(!testInfo.project.name.includes('mobile'), 'Tab-Leiste nur unter 1024 px');
+  // Wie ein ausgelasteter Rechner oder ein älteres Gerät: nur alle 500 ms ein Bild.
+  await page.addInitScript(() => {
+    window.requestAnimationFrame = (callback) =>
+      window.setTimeout(() => {
+        callback(performance.now());
+      }, 500);
+    window.cancelAnimationFrame = (handle) => {
+      window.clearTimeout(handle);
+    };
+  });
+  await openPage(page, '/heute');
+  const bar = page.getByRole('navigation', { name: 'Hauptnavigation' }).last();
+  const from = await bar.getByRole('link', { name: 'Heute' }).boundingBox();
+  const to = await bar.getByRole('link', { name: 'Ernährung' }).boundingBox();
+  if (!from || !to) throw new Error('Leiste fehlt');
+  const y = from.y + from.height / 2;
+  await page.mouse.move(from.x + from.width / 2, y);
+  await page.mouse.down();
+  await expect(bar).toHaveClass(/lens-active/);
+  await page.mouse.move(to.x + to.width / 2, y, { steps: 12 });
+  const released = Date.now();
+  await page.mouse.up();
+  await expect(bar).not.toHaveClass(/lens-active/, { timeout: 10_000 });
+  expect(Date.now() - released).toBeLessThan(2000);
+  await expect(page).toHaveURL(/\/ernaehrung$/);
+});
+
 test('Seitenleiste: klappt unter der Maus aus, der Inhalt rückt mit (D-272)', async ({
   page,
 }, testInfo) => {

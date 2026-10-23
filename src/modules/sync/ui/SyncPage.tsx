@@ -101,7 +101,10 @@ export function SyncPage() {
           <p className="mt-2 text-sm text-muted">{ts.notSynced}</p>
         </Card>
         {view === undefined ? (
-          <Skeleton className="h-40" />
+          // Beim Laden als beschäftigt markiert, wie die übrigen Seiten (D-344).
+          <div aria-busy="true">
+            <Skeleton className="h-40" />
+          </div>
         ) : view.auth ? (
           <Card title={ts.signedInAs(view.auth.email)}>
             <p role="status" aria-live="polite">

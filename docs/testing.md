@@ -1173,3 +1173,26 @@ Ursache des Offline-Tests (E-16), Startwächter, einmal neu laden, Update-Strate
 | Nachtrag: `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min) |
 | Nachtrag: WebKit | in der CI zum Nachtrag |
 
+
+### Stabilität §2: Wackelnde Tests und CI · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Linse der Tab-Leiste, Wasser-Schalter per Tastatur, Seitenende auf `/mehr/synchronisierung`, Installation von WebKit in der CI (D-344). Bericht: `form-stabilitaet-report.md` Abschnitt 3.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ausgangslage aus der CI: „Ziehen mit der Linse …“ (WebKit) | zweimal erst im zweiten Versuch grün; bei `687d0bf` (Lauf 39881545035) in beiden Versuchen rot: „Received string: "tabbar pointer-events-auto lens-ready lens-active"“ |
+| Ausgangslage aus der CI: „Seitenende: …“ (WebKit, `/mehr/synchronisierung`) | bei `ef8b18e` wackelnd, bei `687d0bf` in beiden Versuchen rot: „Expected: <= 579, Received: 623.359375“ |
+| Ausgangslage aus der CI: Installation von WebKit (Lauf 39962966451, Job 120451347827, Versuch 2) | 13:51:46 bis 14:29:56, „Fetched 117 MB in 37min 47s (51.6 kB/s)“ |
+| Linse, Dauer bis zum Ablegen nach dem Loslassen in Chromium, ohne und mit 6-, 12-, 20-facher CPU-Drosselung | alter Stand 444 ms (27 Bilder), 837 ms (9), 1944 ms (9), 3964 ms (8); neuer Stand 518 ms (24), 613 ms (7), 1326 ms (6), 1450 ms (5) |
+| Neuer Test „Die Linse legt sich auch bei zwei Bildern je Sekunde binnen 2 s ab“ | neuer Stand bestanden; Gegenprobe am alten Stand: 2528 ms, fehlgeschlagen |
+| Wasser-Schalter: Leertaste gehalten, gedrückt nach dem Tipp (Pixel 7) | gedrückt nach 65 und 104 ms: keine Wirkung (der Schalter war beim Drücken noch „aktiv“ vom Tipp, beim Loslassen nicht mehr); gedrückt nach 162, 167, 193, 197, 212, 244 und 345 ms: jedes Mal umgeschaltet |
+| Wasser-Schalter: Gegenprobe, Leertaste direkt nach dem Tipp 250 ms gehalten, 2 × 10 Läufe mit 2 Workern | alter Ablauf 16 von 20 fehlgeschlagen; mit Warten auf das Ende des Tipps 20 von 20 bestanden |
+| Wasser-Schalter: breiter Belastungslauf vor der Ursache (`switches`, `tasks`, `task-rows`, `water`, `network-a11y`, je 6 Wiederholungen, 6 Worker) | 732 bestanden, 36 übersprungen, 0 fehlgeschlagen (21,7 min); dazu 80 von 80 Läufen des Tests mit 8 Workern; nicht nachgestellt, bis die Ursache gezielt geprüft wurde |
+| 20 Wiederholungen der früher wackelnden Tests, Chromium Desktop und Pixel 7, 2 Worker, ohne Wiederholung bei Fehlschlag (`--repeat-each=20 --retries=0`) | 260 bestanden, 60 übersprungen (Fälle nur für das Handy, auf dem Desktop), 0 fehlgeschlagen (17,5 min): Linse 20 und 20 (neuer Test), Seitenende 20, Wasser-Schalter 40, Offline-Start (E-16) 40, Barcode 40, Startwächter 80 |
+| Ausgangslage aus der CI zu `0f50be6` (Lauf 40000437469): `nutrition-ui.test.tsx` „belegt Mengen ab 1000 …“ | rot: „Unable to find a label with the text of: Menge in ml“; die Bearbeitung zeigte „Anzahl (Packung)“, also den anderen der beiden Einträge |
+| Neuer Test „Einträge mit gleicher Uhrzeit in der Reihenfolge des Eintragens“ (acht Einträge zur selben Zeit) | neuer Stand bestanden; Gegenprobe am alten Stand 3 von 3 fehlgeschlagen, jedes Mal eine andere Reihenfolge (z. B. 30, 80, 70, 10, 40, 50, 20, 60) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` und `pnpm test:coverage` | je 107 Dateien, 925 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 316 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,6 min) |
+| 20 Wiederholungen in der CI (`repeat.yml`, Chromium und WebKit im Image) | nach dem Push |

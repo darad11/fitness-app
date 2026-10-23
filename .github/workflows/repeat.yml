@@ -1,0 +1,60 @@
+name: Wiederholung
+
+# Die früher wackelnden Tests 20-mal hintereinander, ohne Wiederholung bei Fehlschlag, im selben
+# Image wie die CI (Stabilität §2, D-344). Auslöser: Label „wiederholen“ am Pull Request oder von
+# Hand unter „Actions“. Läuft nicht bei jedem Push, weil ein Lauf je Engine rund 30 min braucht.
+on:
+  pull_request:
+    types: [labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'wiederholen'
+    name: Version von Playwright
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      playwright: ${{ steps.playwright.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - id: playwright
+        run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+  repeat:
+    name: 20 Wiederholungen (${{ matrix.engine }})
+    needs: version
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.version.outputs.playwright }}-noble
+      options: --ipc=host
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # Linse (WebKit), Wasser-Schalter per Tastatur, Seitenende (WebKit), Offline-Start (E-16),
+      # Barcode und Startwächter (CI zu D-343).
+      - run: >-
+          pnpm exec playwright test --repeat-each=20 --retries=0 --reporter=list
+          --grep "Linse|per Tipp und Tastatur|Seitenende: weder|alle Bereiche starten offline|Barcode: Einwilligung|Teil beim Start ab|Teil auch danach ab"
+        env:
+          E2E_ENGINES: ${{ matrix.engine }}

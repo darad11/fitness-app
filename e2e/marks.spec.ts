@@ -229,25 +229,33 @@ test('Abhakfeld in Listen (F6): Quadrat 20 px, Haken 60 %, Tippfläche 44 px, mi
   expect((await box(item)).height).toBeGreaterThanOrEqual(44);
 });
 
-/** Tiefster sichtbarer Inhalt in `main` (Text, Knöpfe, Felder) im Viewport, mit Beschreibung. */
+/**
+ * Tiefster sichtbarer Inhalt in `main` (Text, Knöpfe, Felder) im Viewport, mit Beschreibung, und,
+ * falls offen, der modale Dialog. Beides in einem
+ * Schritt: Öffnet sich die Anmeldung erst nach dem Laden (`/mehr/synchronisierung`), sähe eine
+ * spätere Messung sonst ihre Knöpfe als Inhalt der Seite (wackelte in WebKit, D-344).
+ */
 function contentBottom(page: Page) {
   return page.evaluate(() => {
+    const dialog = document.querySelector('dialog:modal');
+    const rect = dialog?.getBoundingClientRect();
+    const modal = rect ? { width: rect.width, height: rect.height, innerWidth, innerHeight } : null;
     let bottom = 0;
     let what = '';
     for (const element of document.querySelectorAll<HTMLElement>(
       'main :is(p, h1, h2, h3, li, label, button, a, input, select, textarea, dt, dd, th, td, svg, img, [role="img"], [role="progressbar"])',
     )) {
-      const rect = element.getBoundingClientRect();
-      if (rect.width < 2 || rect.height < 2) continue;
-      if (rect.bottom > window.innerHeight + 1 || rect.bottom < 0) continue;
+      const box = element.getBoundingClientRect();
+      if (box.width < 2 || box.height < 2) continue;
+      if (box.bottom > window.innerHeight + 1 || box.bottom < 0) continue;
       const style = getComputedStyle(element);
       if (style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
-      if (rect.bottom > bottom) {
-        bottom = rect.bottom;
+      if (box.bottom > bottom) {
+        bottom = box.bottom;
         what = element.outerHTML.slice(0, 160);
       }
     }
-    return { bottom, what };
+    return { bottom, what, modal };
   });
 }
 
@@ -263,28 +271,26 @@ async function userScroll(page: Page, dy: number) {
 
 async function checkPageEnd(page: Page, label: string) {
   const bar = page.getByRole('navigation', { name: 'Hauptnavigation' }).last();
+  const expanded = await box(bar);
   // Ein modaler Dialog über der ganzen Seite (Anmeldung im Vollbild, D-270) liegt auch über der
   // Leiste; dann gibt es keinen Inhalt unter der Leiste. Geprüft wird nur, dass er sie verdeckt.
-  const modal = await page.evaluate(() => {
-    const dialog = document.querySelector('dialog:modal');
-    if (!dialog) return null;
-    const rect = dialog.getBoundingClientRect();
-    return { width: rect.width, height: rect.height, innerWidth, innerHeight };
-  });
-  if (modal) {
+  const covers = (modal: NonNullable<Awaited<ReturnType<typeof contentBottom>>['modal']>) => {
     expect(modal.width, `${label}: Dialog über die ganze Breite`).toBeGreaterThanOrEqual(
       modal.innerWidth - 1,
     );
     expect(modal.height, `${label}: Dialog über die ganze Höhe`).toBeGreaterThanOrEqual(
       modal.innerHeight - 1,
     );
+  };
+  const first = await contentBottom(page);
+  if (first.modal) {
+    covers(first.modal);
     return;
   }
-  const expanded = await box(bar);
   const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
   if (max < 40) {
     // Seite passt ganz in den Viewport: nichts darf unter die ausgeklappte Leiste reichen.
-    const { bottom, what } = await contentBottom(page);
+    const { bottom, what } = first;
     expect(bottom, `${label}: über der Leiste (${what})`).toBeLessThanOrEqual(expanded.y - 8);
     return;
   }
@@ -305,7 +311,11 @@ async function checkPageEnd(page: Page, label: string) {
     )
     .toBe(true);
   const circle = await box(bar);
-  const { bottom, what } = await contentBottom(page);
+  const { bottom, what, modal } = await contentBottom(page);
+  if (modal) {
+    covers(modal);
+    return;
+  }
   // Am Seitenende: Inhalt mit Abstand über dem Kreis und über der ausgeklappten Leiste.
   expect(bottom, `${label}: über dem Kreis (${what})`).toBeLessThanOrEqual(circle.y - 8);
   expect(bottom, `${label}: über der ausgeklappten Leiste (${what})`).toBeLessThanOrEqual(

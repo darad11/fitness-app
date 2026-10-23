@@ -1129,3 +1129,15 @@ Hinweistext „Werte für“ und drei Screenshots (D-341).
 | `pnpm test` | 106 Dateien, 892 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 302 bestanden, 42 übersprungen, 2 fehlgeschlagen: Offline-Test `pwa.spec.ts` in beiden Projekten (E-16; zwei Modul-Anfragen offline abgebrochen); einzeln 4 Wiederholungen je Projekt: 1 von 8 fehlgeschlagen |
 | `pnpm check:bundle` | 237,6 KB von 250 KB |
+
+### Nach dem Merge · 23.10.2026, Cloud-Umgebung (Node 22.22)
+
+Merge von PR #49 (`1dc1dd7`), Auslieferung und Branch je Phase (D-342).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vercel zu `1dc1dd7` | „Deployment has completed“ |
+| CI auf `main` zu `1dc1dd7` | „Lint, Typen, Unit-Tests, Dokumente, Build“ bestanden; E2E lief beim Commit noch. Gleicher Inhalt wie `ef8b18e` (Tree `67769bd`), dort CI grün |
+| Live-Adresse https://fitness-app-mu-drab.vercel.app | aus der Cloud-Umgebung nicht erreichbar („CONNECT tunnel failed, response 403“), nicht geprüft |
+| `pnpm build` von `1dc1dd7` | Manifest „FORM“ (Name und Kurzname), vier Icons und `apple-touch-icon.png` vorhanden, 40 von 40 Startbildern vorhanden, Startfläche mit `theme-init.js`, Titel „FORM“ |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (Commit auf `form-stabilitaet`) | ohne Befund; Startansicht 237,6 KB von 250 KB |

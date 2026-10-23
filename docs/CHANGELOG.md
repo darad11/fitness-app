@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.44 · 23.10.2026 · Nach dem Merge
+
+| Datei | Änderung |
+|---|---|
+| `CLAUDE.md` | Branch je Phase von `main` mit Entwurfs-PR für die CI, aktuelle Phase `form-stabilitaet` |
+| `decisions.md` | D-342: ein Branch je Phase |
+| `implementation-plan.md` | Punkt 57 erledigt (über #49 gemergt); neu Punkt 65 |
+| `testing.md` | Protokoll „Nach dem Merge“ |
+| `form-rebranding-report.md` | Abschnitt 10 „Nach dem Merge“ |
+
 ## Version 0.43 · 23.10.2026 · Vor dem Merge
 
 | Datei | Änderung |

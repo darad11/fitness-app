@@ -11,8 +11,8 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | Abschnitt | Ergebnis | Entscheidung | Stand |
 |---|---|---|---|
 | §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
-| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt, Wiederholung in der CI ausstehend |
-| §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, WebKit in der CI und Gerätetest ausstehend |
+| §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt bis auf den Startwächter in WebKit (Diagnose in der CI); Seitenende auf `/ernaehrung` nachgetragen |
+| §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -125,9 +125,20 @@ Keine Wiederholungen erhöht (`retries` bleibt 1 in der CI, 0 lokal).
 
 Siehe `docs/testing.md`, Protokoll „Stabilität §2“.
 
+### Nachtrag: Befunde der CI zu `63d9428`
+
+Die 20 Wiederholungen in der CI (Lauf 40005209039): Chromium 259 bestanden, 60 übersprungen, 1 fehlgeschlagen; WebKit 180 bestanden, 100 übersprungen, 40 fehlgeschlagen. Der E2E-Job in WebKit: 304 bestanden, 60 übersprungen, 2 fehlgeschlagen. Linse, Wasser-Schalter, Offline-Start und Barcode liefen in beiden Engines 20-mal ohne Fehlschlag.
+
+| Test | Befund | Ursache | Behebung |
+|---|---|---|---|
+| „Seitenende: …“ auf `/ernaehrung` (Chromium, Pixel 7) | 1 von 20 rot: 807 statt höchstens 762,9; tiefster Inhalt war der Link der Wasser-Karte | Die Wasser-Karte lädt nach und hat keinen Platzhalter. Erschien sie zwischen der Prüfung „am Seitenende“ und der Messung, stand die Seite nicht mehr am Ende. Nachgestellt mit verzögerter Karte: zweimal je 5 von 61 Verzögerungen rot, einmal mit genau 807,05 | Prüfen und Messen in einem Schritt, erst wenn die Seite zweimal hintereinander gleich hoch ist; nachgestellt 61 von 61 grün |
+| `start-watch.spec.ts` Fall 1 (WebKit, Desktop und Handy) | in der CI 2 von 2, in der Wiederholung 40 von 40 rot: Nach dem automatischen Neuladen startet die App nicht; Fall 2 (Neuladen per Knopf) grün | noch offen: Die Zählung über die Route zeigt, dass der Wächter neu lädt; die Vermutung aus dem Nachtrag zu §1 erklärt den Fehlschlag nicht | Diagnose in der CI: `e2e/diagnose-start-watch.spec.ts` (vorübergehend) spielt vier Fassungen des Neuladens durch und schreibt auf, was die Seite lädt und zeigt |
+
+Dateien: `e2e/marks.spec.ts`, neu und vorübergehend `e2e/diagnose-start-watch.spec.ts`; `docs/decisions.md` (D-344, Nachtrag), `docs/testing.md`, `docs/implementation-plan.md`, `docs/CHANGELOG.md`.
+
 ### Offen
 
-- Ergebnis der 20 Wiederholungen in der CI (Chromium und WebKit).
+- Startwächter in WebKit: Ursache und Behebung nach der Diagnose in der CI.
 
 ## 4. §3 Wiederherstellen aus dem Export
 
@@ -176,7 +187,7 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §3“.
 | `pnpm test` | 109 Dateien, 952 Tests bestanden |
 | `pnpm test:e2e` (Chromium) | 318 bestanden, 50 übersprungen, 0 fehlgeschlagen |
 | `pnpm check:bundle` | Startansicht 239,4 KB von 250 KB |
-| WebKit | in der CI zu diesem Abschnitt |
+| WebKit (CI zu `cc7c86b`) | `restore.spec.ts` bestanden; insgesamt 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (nur der Startwächter, siehe Abschnitt 3) |
 
 ### Offen
 

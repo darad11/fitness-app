@@ -1,5 +1,14 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.49 · 23.10.2026 · Phase Stabilität, Nachtrag zu Abschnitt 2 (Wiederholung in der CI)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-344: Nachtrag mit dem Ergebnis der 20 Wiederholungen, Seitenende auf `/ernaehrung`, Diagnose des Startwächters in WebKit |
+| `testing.md` | Protokoll „Stabilität §2“: Ergebnisse der CI zu `63d9428`, Nachtrag; „Stabilität §3“: Ergebnis in WebKit |
+| `form-stabilitaet-report.md` | Abschnitt 3: Nachtrag „Befunde der CI zu `63d9428`“; Abschnitt 4: Ergebnis in WebKit |
+| `implementation-plan.md` | Punkt 66 nachgezogen |
+
 ## Version 0.48 · 23.10.2026 · Phase Stabilität, Abschnitt 3 (Wiederherstellen aus dem Export)
 
 | Datei | Änderung |

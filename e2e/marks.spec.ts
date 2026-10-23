@@ -231,12 +231,17 @@ test('Abhakfeld in Listen (F6): Quadrat 20 px, Haken 60 %, Tippfläche 44 px, mi
 
 /**
  * Tiefster sichtbarer Inhalt in `main` (Text, Knöpfe, Felder) im Viewport, mit Beschreibung, und,
- * falls offen, der modale Dialog. Beides in einem
- * Schritt: Öffnet sich die Anmeldung erst nach dem Laden (`/mehr/synchronisierung`), sähe eine
- * spätere Messung sonst ihre Knöpfe als Inhalt der Seite (wackelte in WebKit, D-344).
+ * falls offen, der modale Dialog; mit `toEnd` rollt sie vorher ans Seitenende. Alles in einem
+ * Schritt: Öffnet sich die Anmeldung erst nach dem Laden (`/mehr/synchronisierung`, wackelte in
+ * WebKit) oder kommt eine nachgeladene Karte zwischen Prüfen und Messen dazu (Wasser auf
+ * `/ernaehrung`, wackelte in Chromium), sähe eine spätere Messung eine andere Seite (D-344).
  */
-function contentBottom(page: Page) {
-  return page.evaluate(() => {
+function measure(page: Page, toEnd: boolean) {
+  return page.evaluate((scroll) => {
+    const height = document.documentElement.scrollHeight;
+    const end = height - window.innerHeight;
+    if (scroll && window.scrollY < end - 1) window.scrollTo(0, end);
+    const atEnd = window.scrollY >= end - 1;
     const dialog = document.querySelector('dialog:modal');
     const rect = dialog?.getBoundingClientRect();
     const modal = rect ? { width: rect.width, height: rect.height, innerWidth, innerHeight } : null;
@@ -255,8 +260,27 @@ function contentBottom(page: Page) {
         what = element.outerHTML.slice(0, 160);
       }
     }
-    return { bottom, what, modal };
-  });
+    return { height, end, atEnd, bottom, what, modal };
+  }, toEnd);
+}
+
+/**
+ * Misst, sobald die Seite zweimal hintereinander gleich hoch ist und, mit `toEnd`, am Ende steht.
+ * Nachgeladene Karten ohne Platzhalter (Wasser, Ernährung, Schritte) erscheinen nach `openPage`.
+ */
+async function settled(page: Page, toEnd: boolean) {
+  const seen: Awaited<ReturnType<typeof measure>>[] = [];
+  await expect
+    .poll(async () => {
+      const current = await measure(page, toEnd);
+      const stable = current.height === seen.at(-1)?.height;
+      seen.push(current);
+      return stable && (!toEnd || current.atEnd);
+    })
+    .toBe(true);
+  const last = seen.at(-1);
+  if (!last) throw new Error('keine Messung');
+  return last;
 }
 
 /** Wie ein Finger oder das Mausrad: Taste, dann Bewegung (siehe tabbar.spec.ts). */
@@ -274,7 +298,7 @@ async function checkPageEnd(page: Page, label: string) {
   const expanded = await box(bar);
   // Ein modaler Dialog über der ganzen Seite (Anmeldung im Vollbild, D-270) liegt auch über der
   // Leiste; dann gibt es keinen Inhalt unter der Leiste. Geprüft wird nur, dass er sie verdeckt.
-  const covers = (modal: NonNullable<Awaited<ReturnType<typeof contentBottom>>['modal']>) => {
+  const covers = (modal: NonNullable<Awaited<ReturnType<typeof measure>>['modal']>) => {
     expect(modal.width, `${label}: Dialog über die ganze Breite`).toBeGreaterThanOrEqual(
       modal.innerWidth - 1,
     );
@@ -282,36 +306,27 @@ async function checkPageEnd(page: Page, label: string) {
       modal.innerHeight - 1,
     );
   };
-  const first = await contentBottom(page);
+  const first = await settled(page, false);
   if (first.modal) {
     covers(first.modal);
     return;
   }
-  const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
-  if (max < 40) {
+  if (first.end < 40) {
     // Seite passt ganz in den Viewport: nichts darf unter die ausgeklappte Leiste reichen.
-    const { bottom, what } = first;
-    expect(bottom, `${label}: über der Leiste (${what})`).toBeLessThanOrEqual(expanded.y - 8);
+    expect(first.bottom, `${label}: über der Leiste (${first.what})`).toBeLessThanOrEqual(
+      expanded.y - 8,
+    );
     return;
   }
   await page.evaluate((y) => {
     window.scrollTo(0, y);
-  }, max - 300);
+  }, first.end - 300);
   await userScroll(page, 300);
   await expect(bar).toHaveClass(/minimized/);
   await expect.poll(async () => (await box(bar)).width).toBeLessThan(80);
-  // Wirklich am Ende: Karten können nach dem ersten Bild noch wachsen.
-  await expect
-    .poll(() =>
-      page.evaluate(() => {
-        const end = document.documentElement.scrollHeight - window.innerHeight;
-        if (window.scrollY < end - 1) window.scrollTo(0, end);
-        return window.scrollY >= end - 1;
-      }),
-    )
-    .toBe(true);
+  // Wirklich am Ende und im selben Schritt gemessen: Karten können nach dem ersten Bild wachsen.
+  const { bottom, what, modal } = await settled(page, true);
   const circle = await box(bar);
-  const { bottom, what, modal } = await contentBottom(page);
   if (modal) {
     covers(modal);
     return;

@@ -1195,7 +1195,13 @@ Linse der Tab-Leiste, Wasser-Schalter per Tastatur, Seitenende auf `/mehr/synchr
 | `pnpm test` und `pnpm test:coverage` | je 107 Dateien, 925 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 316 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,6 min) |
-| 20 Wiederholungen in der CI (`repeat.yml`, Chromium und WebKit im Image) | nach dem Push |
+| WebKit, CI zu `63d9428` (Lauf 40005195222) | 304 bestanden, 60 übersprungen, 2 fehlgeschlagen (11,1 min): `start-watch.spec.ts` Fall 1 auf Desktop und Handy, auch im zweiten Versuch („App gestartet (Dokument 1, ui abgebrochen, Dokument 2)“, keine Überschrift „Heute“ binnen 5 s). Chromium: bestanden |
+| 20 Wiederholungen in der CI (`repeat.yml`, Lauf 40005209039), Chromium | 259 bestanden, 60 übersprungen, 1 fehlgeschlagen (10,9 min): „Seitenende: …“ auf `/ernaehrung` (Pixel 7), „über dem Kreis (<a aria-label="Wasser: Einträge, Ziel und Verlauf" …)“, Expected: <= 762.93, Received: 807.05; alle übrigen bestanden |
+| 20 Wiederholungen in der CI, WebKit | 180 bestanden, 100 übersprungen, 40 fehlgeschlagen (12,7 min): alle 40 Fehlschläge `start-watch.spec.ts` Fall 1 (20 von 20 auf Desktop und Handy); Linse, Seitenende, Offline-Start, Barcode und Startwächter Fall 2 ohne Fehlschlag |
+| Nachtrag: Seitenende auf `/ernaehrung` nachgestellt, Wasser-Karte um 300 bis 1500 ms verzögert (61 Stufen zu 20 ms, Pixel 7, ohne Service Worker) | alter Ablauf zweimal je 5 von 61 fehlgeschlagen, mit 807,05 (wie in der CI) und 802,64; neuer Ablauf 61 von 61 bestanden |
+| Nachtrag: `marks.spec.ts` (Chromium Desktop und Pixel 7) | 9 bestanden, 1 übersprungen |
+| Nachtrag: `e2e/diagnose-start-watch.spec.ts` (vorübergehend, Chromium Desktop) | 4 bestanden; in allen vier Fassungen startet die App nach dem Neuladen (Protokoll im Testlauf) |
+| Nachtrag: WebKit | Diagnose in der CI zum Nachtrag |
 
 ### Stabilität §3: Wiederherstellen aus dem Export · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1211,4 +1217,4 @@ Prüfung, Zusammenfassung, Ersetzen, Regeln für die Synchronisierung (A-14, D-3
 | `pnpm test` | 109 Dateien, 952 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 239,4 KB von 250 KB (die Karte und ihre Texte laden mit der Seite „Daten und Sicherung“); Vorab-Liste 170 von 229 Dateien |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 318 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,3 min) |
-| WebKit | in der CI zu diesem Abschnitt |
+| WebKit, CI zu `cc7c86b` (Lauf 40008767361) | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (11,0 min): nur `start-watch.spec.ts` Fall 1 auf Desktop und Handy (bekannt, Nachtrag zu D-344); `restore.spec.ts` bestanden. Chromium: bestanden |

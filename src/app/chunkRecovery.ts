@@ -15,9 +15,13 @@
 import { useEffect, useState } from 'react';
 
 const CHUNK_ERROR =
-  /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module|Unable to preload CSS/i;
+  /Failed to fetch dynamically imported module|Importing a module script failed|is not a valid JavaScript MIME type|error loading dynamically imported module|Unable to preload CSS/i;
 
-/** Chromium, WebKit, Firefox und der Lade-Helfer von Vite melden den Fehlschlag verschieden. */
+/**
+ * Chromium, WebKit, Firefox und der Lade-Helfer von Vite melden den Fehlschlag verschieden. WebKit
+ * meldet eine als `text/html` gelieferte Datei mit „'text/html' is not a valid JavaScript MIME type
+ * for module script …“ (CI zu D-343).
+ */
 export function isChunkLoadError(error: unknown): boolean {
   if (typeof error !== 'object' || error === null) return false;
   const message = (error as { message?: unknown }).message;
@@ -80,6 +84,7 @@ function browserEnv(trainingRunning: () => Promise<boolean>): RecoveryEnv {
     controlled: () =>
       Boolean((navigator.serviceWorker as ServiceWorkerContainer | undefined)?.controller),
     reachable: async () => {
+      if (!navigator.onLine) return false;
       try {
         const response = await fetch(window.location.href, { method: 'HEAD', cache: 'no-store' });
         return response.ok;
@@ -118,13 +123,23 @@ function writeMarker(storage: RecoveryEnv['storage'], value: number): boolean {
   }
 }
 
+/** Verlässt die Seite sich gerade selbst, entscheidet sie nichts mehr: kein Neuladen, keine Anfrage. */
+const LEAVING: RecoveryDecision = { action: 'manual', reason: 'repeated' };
+
+/** Frisch gelesen: Nach jedem `await` kann eine Navigation begonnen haben. */
+function leaving(): boolean {
+  return unloading;
+}
+
 async function decide(current: RecoveryEnv): Promise<RecoveryDecision> {
+  if (leaving()) return LEAVING;
   let trainingRunning = true;
   try {
     trainingRunning = await current.trainingRunning();
   } catch {
     // Ohne Antwort der Datenbank lieber nicht automatisch neu laden.
   }
+  if (leaving()) return LEAVING;
   const now = current.now();
   const decision = decideRecovery({
     now,
@@ -134,8 +149,7 @@ async function decide(current: RecoveryEnv): Promise<RecoveryDecision> {
     canLoad: current.controlled() || (await current.reachable()),
   });
   if (decision.action !== 'reload') return decision;
-  if (unloading || !writeMarker(current.storage, now))
-    return { action: 'manual', reason: 'repeated' };
+  if (leaving() || !writeMarker(current.storage, now)) return LEAVING;
   // Erst nach dem aktuellen Ereignis neu laden; verlässt die Seite sich gerade selbst, entfällt es.
   window.setTimeout(() => {
     if (!unloading) current.reload();
@@ -172,9 +186,14 @@ export function installChunkRecovery(
   pending = null;
   if (listening) return;
   listening = true;
-  window.addEventListener('pagehide', () => {
+  // WebKit bricht schon zu Beginn einer Navigation alle laufenden Importe ab (vor `pagehide`).
+  // Ein Neuladen überholte dann die Navigation, eine Anfrage an den Server meldete WebKit als
+  // Fehler. `beforeunload` kommt vorher; iOS kennt es nicht, dort bleibt `pagehide` (CI zu D-343).
+  const leave = () => {
     unloading = true;
-  });
+  };
+  window.addEventListener('beforeunload', leave);
+  window.addEventListener('pagehide', leave);
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) unloading = false;
   });

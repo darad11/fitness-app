@@ -1,5 +1,14 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.46 · 23.10.2026 · Phase Stabilität, Nachtrag zu Abschnitt 1 (CI in WebKit)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-343: Nachtrag mit vier Befunden der CI in WebKit |
+| `testing.md` | Protokoll „Stabilität §1“: Ergebnis der CI in WebKit, Nachtrag |
+| `form-stabilitaet-report.md` | Abschnitt 2: Nachtrag „Befunde der CI in WebKit“ |
+| `implementation-plan.md` | Punkt 66 nachgezogen |
+
 ## Version 0.45 · 23.10.2026 · Phase Stabilität, Abschnitt 1 (E-16)
 
 | Datei | Änderung |

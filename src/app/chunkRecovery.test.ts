@@ -16,6 +16,8 @@ describe('isChunkLoadError', () => {
   it.each([
     'Failed to fetch dynamically imported module: https://x/assets/TodayPage-abc.js',
     'Importing a module script failed.',
+    // WebKit, wenn statt der Datei `index.html` kommt (Vercel bei fehlenden Dateien).
+    "'text/html' is not a valid JavaScript MIME type for module script 'https://x/assets/a.js'.",
     'error loading dynamically imported module: https://x/assets/a.js',
     'Unable to preload CSS for /assets/index-abc.css',
   ])('erkennt „%s“', (message) => {
@@ -156,6 +158,35 @@ describe('recoverFromChunkError', () => {
     window.dispatchEvent(new Event('pagehide'));
     expect(await recoverFromChunkError()).toEqual({ action: 'manual', reason: 'repeated' });
     vi.runAllTimers();
+    expect(reload).not.toHaveBeenCalled();
+  });
+
+  it('beginnt eine Navigation (beforeunload), fragt es weder Datenbank noch Server', async () => {
+    const trainingRunning = vi.fn(() => Promise.resolve(false));
+    const reachable = vi.fn(() => Promise.resolve(true));
+    install({ trainingRunning, reachable, controlled: () => false });
+    window.dispatchEvent(new Event('beforeunload'));
+    expect(await recoverFromChunkError()).toEqual({ action: 'manual', reason: 'repeated' });
+    vi.runAllTimers();
+    expect(trainingRunning).not.toHaveBeenCalled();
+    expect(reachable).not.toHaveBeenCalled();
+    expect(reload).not.toHaveBeenCalled();
+    expect(store.has(RELOAD_MARKER_KEY)).toBe(false);
+  });
+
+  it('beginnt die Navigation während der Prüfung, bleibt es beim Hinweis', async () => {
+    const reachable = vi.fn(() => Promise.resolve(true));
+    install({
+      controlled: () => false,
+      reachable,
+      trainingRunning: () => {
+        window.dispatchEvent(new Event('beforeunload'));
+        return Promise.resolve(false);
+      },
+    });
+    expect(await recoverFromChunkError()).toEqual({ action: 'manual', reason: 'repeated' });
+    vi.runAllTimers();
+    expect(reachable).not.toHaveBeenCalled();
     expect(reload).not.toHaveBeenCalled();
   });
 

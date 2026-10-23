@@ -10,7 +10,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 
 | Abschnitt | Ergebnis | Entscheidung | Stand |
 |---|---|---|---|
-| §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds | D-343 | erledigt |
+| §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -68,6 +68,19 @@ Dabei gefunden, ohne Ursache des Tests zu sein: Ohne `clientsClaim` lief die ers
 | `chunkRecovery.test.ts` (21), `pwa.test.ts` (11), `app.test.tsx`, `wording.test.ts` (29) | bestanden. Gegenprobe „kein Hinweis während des Trainings“ in `app.test.tsx` mit der alten Regel im Banner: 1 von 1 fehlgeschlagen, danach bestanden |
 | `pnpm test` | 107 Dateien, 921 Tests bestanden |
 | `pnpm check:bundle` | Startansicht 238,9 KB von 250 KB (vorher 237,6 KB); Vorab-Liste 168 von 227 Dateien, die übrigen bewusst ausgenommen. Negativprobe: eine zusätzliche Datei in `dist/assets` lässt die Prüfung scheitern |
+
+### Nachtrag: Befunde der CI in WebKit
+
+Die CI zu `5a1db80` (Lauf 39990720590) war in Chromium grün. WebKit: 299 bestanden, 59 übersprungen, 5 fehlgeschlagen, 1 wackelnd. Alle sechs gehen auf diesen Abschnitt zurück:
+
+| Befund | Ursache | Änderung |
+|---|---|---|
+| `update.spec.ts` „Während eines Trainings …“ ohne Service Worker: allgemeine Fehleransicht statt „Dein Training ist gespeichert …“ | WebKit meldet eine als `text/html` gelieferte Datei mit „'text/html' is not a valid JavaScript MIME type for module script …“; die Erkennung kannte nur die Meldungen von Chromium und Firefox. Das hätte das iPhone genauso getroffen | `isChunkLoadError` erkennt den Text |
+| `sync.spec.ts`, zwei Fälle: Konsolenfehler „… due to access control checks.“ | WebKit bricht zu Beginn einer Navigation alle laufenden Importe ab, schon vor `pagehide`. Die Wiederherstellung fragte dann beim Server nach, und WebKit meldete die abgebrochene Anfrage. Ohne Service Worker hätte sie die Navigation sogar mit einem Neuladen überholen können | Ab `beforeunload` entscheidet die Wiederherstellung nichts mehr; ohne Netz (`navigator.onLine`) fragt sie nicht nach. iOS kennt `beforeunload` nicht, dort bleibt `pagehide` |
+| `start-watch.spec.ts` Fall 1 (Desktop und Handy): App startete nach dem Neuladen nicht | Fall 2 (Neuladen, dann Hinweis) bestand, der Wächter lädt also neu. Vermutlich kam das Ereignis `request` des zweiten Dokuments erst nach dessen Modul-Anfrage an, und der Test brach das Modul auch dort ab. Nicht nachgestellt, weil WebKit hier nicht läuft | Der Test zählt Dokumente über ihre Route: Ein Dokument fragt seine Module erst an, nachdem die Route es durchgelassen hat. Seine Meldungen nennen die Reihenfolge von Dokumenten und Modul-Anfragen |
+| `barcode.spec.ts` wackelnd: Anfrage an Open Food Facts mit 404 | Seit `clientsClaim` steuert der Service Worker die Seite schon beim ersten Aufruf; in WebKit umgehen ihre Anfragen dann `page.route` (bekannt aus `sync.spec.ts`), die Anfrage ging ans echte Netz | Der Test läuft ohne Service Worker wie die übrigen mit `page.route` |
+
+Tests: `chunkRecovery.test.ts` 24 bestanden, die drei neuen Fälle am alten Stand 3 von 3 fehlgeschlagen; `start-watch`, `barcode`, `sync`, `update` und `switches` in Chromium (Desktop und Pixel 7): 59 bestanden, 9 übersprungen; `pnpm test` 107 Dateien, 924 Tests bestanden; `pnpm test:e2e` in Chromium: 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min); Startansicht 239,0 KB. WebKit: in der CI zum Nachtrag.
 
 ### Offen
 

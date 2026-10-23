@@ -1165,5 +1165,11 @@ Ursache des Offline-Tests (E-16), Startwächter, einmal neu laden, Update-Strate
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm test` | 107 Dateien, 921 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 238,9 KB von 250 KB (vorher 237,6 KB) |
-| WebKit | in der CI zu diesem Commit |
+| WebKit, CI zu `5a1db80` (Lauf 39990720590) | 299 bestanden, 59 übersprungen, 5 fehlgeschlagen, 1 wackelnd (11,2 min): `start-watch.spec.ts` Fall 1 auf Desktop und Handy (App startete nach dem Neuladen nicht); `sync.spec.ts` „anmelden, Gewicht senden …“ und „Registrieren …“ (Konsolenfehler „… due to access control checks.“ beim Neuladen); `update.spec.ts` „Während eines Trainings …“ ohne Service Worker (WebKit-Meldung „'text/html' is not a valid JavaScript MIME type …“ nicht erkannt); wackelnd `barcode.spec.ts` (Anfrage an Open Food Facts am Service Worker vorbei, 404). Chromium: bestanden |
+| Nachtrag (D-343): `chunkRecovery.test.ts` | 24 bestanden; die drei neuen Fälle (WebKit-Meldung, Navigation ab `beforeunload`, Navigation während der Prüfung) am alten Stand 3 von 3 fehlgeschlagen |
+| Nachtrag: `start-watch`, `barcode`, `sync`, `update`, `switches` (Chromium Desktop und Pixel 7) | 59 bestanden, 9 übersprungen |
+| Nachtrag: `pnpm test` | 107 Dateien, 924 Tests bestanden |
+| Nachtrag: `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
+| Nachtrag: `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min) |
+| Nachtrag: WebKit | in der CI zum Nachtrag |
 

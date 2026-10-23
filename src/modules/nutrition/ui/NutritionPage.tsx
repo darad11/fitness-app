@@ -260,9 +260,11 @@ export function NutritionPage() {
             ) : null}
           </Card>
 
+          {/* Zwei gleich breite Knöpfe; braucht einer mehr Platz (breitere Schrift), wird seine
+              Spalte breiter, statt dass der Text umbricht (F5 Abschnitt 9, D-331). */}
           <nav
             aria-label={tNutrition.shortcuts}
-            className="my-2 grid grid-cols-2 gap-2 md:relative md:flex md:justify-center md:gap-3"
+            className="my-2 grid grid-cols-[repeat(2,minmax(max-content,1fr))] gap-2 md:relative md:flex md:justify-center md:gap-3"
           >
             <Link to="/ernaehrung/ziele" className={PILL}>
               <Target aria-hidden="true" className="size-5" />

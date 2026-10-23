@@ -186,7 +186,7 @@ export function KitchenMenu() {
             <div className="rounded-card bg-surface p-1.5 shadow-card">
               <Entries entries={entries} onPick={close} />
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-3 grid grid-cols-[repeat(2,minmax(max-content,1fr))] gap-2">
               <Link
                 to="/ernaehrung/lebensmittel/neu"
                 onClick={close}

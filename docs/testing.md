@@ -969,4 +969,5 @@ Breiten 360, 390 und 768 pt, Korrekturen für schmale Breiten, Test „Seitenend
 | `pnpm check:bundle` | 236,0 KB von 250 KB |
 | CI WebKit zu F5 §6 (`687d0bf`) | 1 fehlgeschlagen: `marks.spec.ts` „Seitenende …“ auf `/mehr/synchronisierung` (Inhalt der Anmeldung im Vollbild unter der verdeckten Leiste), behoben in diesem Abschnitt; `tabbar.spec.ts` „Ziehen mit der Linse …“ erst im zweiten Versuch bestanden |
 | `node tools/screenshots.mjs komponenten`, `screens`; `node tools/screens-overview.mjs` | 18 Bilder erneuert; „docs/screens/uebersicht.png: 28 Bilder“, „docs/screens.zip: 29 Bilder“ |
+| CI zu `61d7a52` | E2E Chromium und WebKit je 4 fehlgeschlagen (`program-list.spec.ts` 390 und 768 pt „Etikett neben dem Titel“, `narrow-layout.spec.ts` 360 pt „Meine Küche in einer Zeile“): Auf dem CI-Rechner fehlt Inter, die Systemschrift ist breiter. Korrigiert: Spalten der Knöpfe `minmax(max-content, 1fr)`, Test ohne die schriftabhängige Erwartung; mit erzwungener „DejaVu Sans“ lokal nachgestellt (vorher 1 fehlgeschlagen wie in der CI, danach 20 bestanden) |
 

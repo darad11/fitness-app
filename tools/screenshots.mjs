@@ -182,8 +182,11 @@ async function markings() {
     await go('/heute');
     const card = tab.getByRole('region', { name: 'Tagesaufgaben' });
     for (const name of names) {
-      await card.getByText(name, { exact: true }).click();
-      await tab.waitForTimeout(150);
+      // Abhaken über das Abhakfeld; ein Tipp auf den Namen öffnet die Detailansicht (D-335).
+      // Das Feld folgt dem gespeicherten Wert, also kurz auf ihn warten.
+      const box = card.getByRole('checkbox', { name: `${name} abhaken` });
+      await box.click();
+      for (let i = 0; i < 50 && !(await box.isChecked()); i += 1) await tab.waitForTimeout(100);
     }
   }
   await go('/heute/aufgaben');

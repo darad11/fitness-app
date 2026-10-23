@@ -73,6 +73,9 @@ test('Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur, nur eine
   await water.focus();
   await page.keyboard.press('Space');
   await expect(water).not.toBeChecked();
+  // Der Fokus bleibt am Schalter. Schlug einmal fehl, ohne dass sich das nachstellen ließ
+  // (Bericht F6 §7); diese Prüfung zeigt dann, ob der Fokus verloren ging.
+  await expect(water).toBeFocused();
   await page.keyboard.press('Space');
   await expect(water).toBeChecked();
   await list.getByRole('button', { name: 'Speichern' }).click();
@@ -114,6 +117,16 @@ for (const width of [360, 390]) {
     for (const name of ['Mit Training abhaken', 'Mit Wasserziel abhaken']) {
       await inside(list.getByRole('switch', { name }), name);
     }
+    // „Pausieren“ und „Löschen“ als Paar in einer Zeile, nicht auf zwei Zeilen verteilt (F6 §9).
+    const pause = list.getByRole('button', { name: 'Pausieren' });
+    const remove = list.getByRole('button', { name: 'Löschen' });
+    await inside(list.getByRole('button', { name: 'Speichern' }), 'Speichern');
+    await inside(pause, 'Pausieren');
+    await inside(remove, 'Löschen');
+    expect(
+      Math.round((await pause.boundingBox())?.y ?? -1),
+      'Pausieren und Löschen in einer Zeile',
+    ).toBe(Math.round((await remove.boundingBox())?.y ?? -2));
     // Kein waagrechtes Scrollen der Seite.
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       width,

@@ -164,33 +164,36 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
           <p role="status" className="text-sm text-muted">
             {saved ? t.tasks.saved : ''}
           </p>
-          <span className="flex-1" />
-          <Button
-            type="button"
-            size="sm"
-            variant="quiet"
-            onClick={() => {
-              run(async () => {
-                await endHabit(rt, habit.id);
-                leave({ kind: 'paused', before: habit });
-              });
-            }}
-          >
-            {t.tasks.pause}
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="quietDanger"
-            onClick={() => {
-              run(async () => {
-                await removeHabit(rt, habit.id);
-                leave({ kind: 'removed', before: habit });
-              });
-            }}
-          >
-            {t.tasks.remove}
-          </Button>
+          {/* Pausieren und Löschen bleiben zusammen, rechtsbündig; ist die Zeile zu schmal,
+              rücken beide gemeinsam in die nächste (F6 §9). */}
+          <div className="ml-auto flex gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="quiet"
+              onClick={() => {
+                run(async () => {
+                  await endHabit(rt, habit.id);
+                  leave({ kind: 'paused', before: habit });
+                });
+              }}
+            >
+              {t.tasks.pause}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="quietDanger"
+              onClick={() => {
+                run(async () => {
+                  await removeHabit(rt, habit.id);
+                  leave({ kind: 'removed', before: habit });
+                });
+              }}
+            >
+              {t.tasks.remove}
+            </Button>
+          </div>
         </div>
         <p className="text-sm text-muted">{t.tasks.removeHint}</p>
       </form>

@@ -43,6 +43,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F6 §6 Startbild länger | Beim Kaltstart bleibt die Startfläche ab dem ersten Bild mindestens 1,0 s (Ladezeit eingerechnet), dann 300 ms Ausblenden; länger, bis die erste Ansicht steht; bei „Bewegung reduzieren“ ohne Ausblenden, Mindestzeit bleibt; nicht nach Hintergrund oder Navigation | D-337 | umgesetzt; Kaltstart am Gerät prüfbar (T-IPH-M0 Schritt 5) |
 | F6 §7 Trainingskopf | „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich nur der Programmname mit Auslassungspunkten („Winterprogramm 20… · Woche 3“) | D-338 | umgesetzt |
 | F6 §8 Nächste Schritte | Karte „Aktivitäten“, Rückblicke „Das warst du heute“ und „Das warst du diese Woche“, Wischen zum Löschen in der Einkaufsliste als Punkte 62 bis 64 in `docs/implementation-plan.md`, nicht begonnen | D-339 | eingetragen |
+| F6 §9 Abschluss | Betroffene Ansichten auf 360, 390 und 768 pt geprüft; in den Einstellungen einer Aufgabe bleiben „Pausieren“ und „Löschen“ als Paar zusammen; Werkzeug für die Bilder angepasst; Screenshots, Übersicht und Archiv erneuert; Befunde der CI zu §1 und §6 behoben | D-340 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -277,6 +278,17 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `e2e/session-head.spec.ts`; angepasst `src/modules/training/ui/player/player-ui.test.tsx`.
 - Dokumente: `docs/decisions.md` (D-338), `docs/testing.md` (Protokoll); Empfehlung 3 in Abschnitt 7 als erledigt vermerkt.
 
+### F6 §9 Abschluss
+
+- Geprüft: Ein vorübergehendes Skript (nur im Arbeitsordner, nicht im Repository; Grundlage war das Skript aus F5 §9) öffnete 96 Ansichten auf 360, 390 und 768 pt mit Testdaten im frischen Browserprofil: alle Seiten der App, dazu eine erledigte Aufgabe, ihre Detailansicht, die Einkaufsliste mit Einträgen, das laufende Training mit „Ganzkörper A/B, 4 Tage“ und mit dem Winterprogramm in Woche 3, Zusammenfassung, Blätter und Dialoge. Gesucht wurde wie in F5 nach waagrechtem Überlauf, Bedienelementen außerhalb des Bildschirms, gekürztem oder herausragendem Text, überlappenden Bedienelementen, getrennten Wörtern und Elementen unter einer festen Leiste. Dazu Sichtprüfung der Bilder von Heute, Tagesaufgaben, Detailansicht, Einkaufsliste und Trainingskopf.
+- Ergebnis: keine Konsolenfehler, kein Überlauf, nichts außerhalb, keine getrennten Wörter. Gemeldet und so gewollt: der gekürzte Programmname im Trainingskopf auf 360 und 390 pt (§7), der gekürzte Trainingstag dort (D-323), ein langer Aufgabenname in der Auswertung auf 360 pt und das Menü „Meine Küche“ ab 768 pt über dem Inhalt (beides seit F5 §9 so).
+- Gefunden und geändert: In den Einstellungen einer Aufgabe stand auf 360 und 390 pt „Pausieren“ rechts in der ersten Zeile und „Löschen“ allein links darunter. Jetzt bleiben beide als Paar zusammen und rücken gemeinsam rechtsbündig in die nächste Zeile (`habits/ui/TaskSettings.tsx`).
+- Werkzeug: `node tools/screenshots.mjs komponenten` brach beim Bild der Markierungen ab („locator.click: Timeout 30000ms exceeded“), weil es Aufgaben über einen Tipp auf den Namen abhakte; seit §4 öffnet dieser Tipp die Detailansicht. Jetzt über das Abhakfeld (`tools/screenshots.mjs`).
+- Kein Fehler der App: In ganzseitigen Aufnahmen fehlt der klebende Kopf im Training; im Fenster und in einem 4.000 px hohen Fenster ist er zu sehen.
+- Screenshots: `node tools/screenshots.mjs komponenten` und `screens` erneuert (17 Bilder geändert, darunter Heute, Training, aktives Workout, Ernährung und die Markierungen; in „Über die App“ ändern sich außerdem Uhrzeit des Builds und Speicher-ID), danach `node tools/screens-overview.mjs` („docs/screens/uebersicht.png: 29 Bilder“, „docs/screens.zip: 30 Bilder“).
+- Tests: `e2e/switches.spec.ts` (Pausieren und Löschen in einer Zeile und in der Karte; im Tastaturtest „Mit Wasserziel abhaken“ eine Prüfung, dass der Fokus vor der zweiten Leertaste am Schalter bleibt).
+- Dokumente: `docs/decisions.md` (D-340), `docs/testing.md`, `docs/design-system.md`, `docs/implementation-plan.md` (Punkt 57), `docs/CHANGELOG.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -435,6 +447,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §7: `pnpm test` | 23.10.2026 | 888 Tests in 105 Dateien bestanden |
 | F6 §7: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
 | F6 §7: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | erster Lauf: 302 bestanden, 41 übersprungen, 1 fehlgeschlagen (7,3 min): `switches.spec.ts` „Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur …“ (Handy), nach der zweiten Leertaste blieb der Schalter aus („Expected: checked, Received: unchecked“). Nicht nachgestellt: 20 Wiederholungen des Tests, dazu eine Kopie mit Aufzeichnung von Fokus und Änderungen am Dokument, 60 Wiederholungen mit 8 Workern und 40 mit 8-facher CPU-Drosselung, alle bestanden. Zweiter Lauf: 303 bestanden, 41 übersprungen, 0 fehlgeschlagen (7,6 min). Ursache offen, siehe Abschluss F6 |
+| F6 §9: Breitenprüfung (Skript im Arbeitsordner) | 23.10.2026 | 96 Ansichten: keine Konsolenfehler, kein Überlauf, nichts außerhalb, keine getrennten Wörter; gemeldet nur die gewollten Kürzungen und das Menü „Meine Küche“ ab 768 pt. Der erste Lauf brach im Skript ab („Clicking the checkbox did not change its state“: das Abhakfeld folgt dem gespeicherten Wert), im zweiten zeigte die „Detailansicht“ noch die Liste (das Skript las die Adresse vor dem Seitenwechsel); beides im Skript behoben |
+| F6 §9: `e2e/switches.spec.ts`, `task-rows.spec.ts`, `tasks.spec.ts` | 23.10.2026 | 58 bestanden, 6 übersprungen. Gegenprobe gegen `2a1990a` mit dem neuen Test: 2 von 2 fehlgeschlagen („Pausieren und Löschen in einer Zeile“, 732 statt 780 bzw. 712 statt 760) |
+| F6 §9: `node tools/screenshots.mjs komponenten` und `screens`, `node tools/screens-overview.mjs` | 23.10.2026 | erster Lauf der Komponenten abgebrochen („locator.click: Timeout 30000ms exceeded“ beim Abhaken über den Namen), Werkzeug angepasst, danach alle Bilder erzeugt; „docs/screens/uebersicht.png: 29 Bilder“, „docs/screens.zip: 30 Bilder“ |
+| F6 §9: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §9: `pnpm test` | 23.10.2026 | 890 Tests in 105 Dateien bestanden |
+| F6 §9: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
+| F6 §9: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (7,1 min); Stand mit den Nachträgen zu §1 und §6 und den Änderungen aus §9 |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -454,7 +473,7 @@ Offen beim Produktinhaber:
 4. Gerätetest T-IPH-M0 Schritt 5: App neu zum Home-Bildschirm hinzufügen, Kaltstart hochkant und quer, kein weißer Blitz (D-317). Ablauf entschieden (D-329): zuerst an der Vorschau, nach dem Merge an der Produktivadresse; die Daten sind Testdaten. Der Test selbst steht aus.
 5. `brand-tokens.md` Abschnitt 5: App-Farben an die Markenfarben angleichen? Empfehlung: so lassen; Grundfläche, Akzent und Kachel sind schon gleich.
 6. Push nach 21 Tagen Pause: entschieden, entfällt (D-329).
-7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als P2-Punkt E-16 mit hoher Priorität in `audit-report.md` (D-329). In den vollen Läufen zu F5 Abschnitt 1 bis 7 lief er lokal ohne Fehler; die Ursache der früheren Fehlschläge ist damit nicht geklärt.
+7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als P2-Punkt E-16 mit hoher Priorität in `audit-report.md` (D-329). In den vollen Läufen zu F5 Abschnitt 1 bis 7 lief er lokal ohne Fehler; die Ursache der früheren Fehlschläge ist damit nicht geklärt. Auch in allen vollen Läufen zu F6 lief er lokal ohne Fehler.
 8. Registrierung bleibt offen (D-328): Falls „Allow new users to sign up“ in Supabase nach D-299 ausgeschaltet wurde, wieder einschalten (`audit-report.md` Abschnitt 12, Klickpfad Schritt 2). Von hier aus nicht prüfbar.
 
 ## 6. Stand nach dieser Sitzung
@@ -500,3 +519,39 @@ Empfehlungen:
 3. Trainingskopf: Bei langen Programmnamen fällt „Woche n“ auf 360 und 390 pt der Kürzung zum Opfer. Wenn die Woche wichtiger ist als der volle Programmname, „Woche n · Programmname“ oder die Woche an eigener Stelle; das ändert die Vorgabe aus §2 und braucht deine Entscheidung. Erledigt in F6 §7 (D-338): Die Woche bleibt, der Programmname kürzt sich.
 4. Die Prüfung „kein Wort getrennt“ aus `e2e/narrow-layout.spec.ts` lässt sich mit wenig Aufwand für alle Seiten auf 360 pt in die E2E-Tests übernehmen, damit neue Seiten nicht wieder mitten im Wort brechen.
 5. Programm C vor einer öffentlichen Öffnung durch ein eigenes Programm ersetzen (`known-limitations.md`).
+
+## 8. Abschluss F6 (23.10.2026)
+
+Auftrag: `docs/prompts/F6-feinschliff-vor-dem-merge.md` mit dem Bild im Anhang (Ring V2, Aufgaben V1, Karten V2a bis V2d; gewählt V2c). Je Abschnitt ein Commit mit eigener Entscheidung, sofort gepusht: §1 `6f99fc6` (D-332), §2 `8271179` (D-333), §3 `3f5b833` (D-334), §4 `4852076` (D-335), §5 `6f77dbe` (D-336), §6 `c807dc0` (D-337), Nachtrag zu §1 aus der CI `4146fad` (D-332), §7 `1a9c9b9` (D-338), §8 `2a1990a` (D-339), Nachtrag zu §6 aus der CI `3ce4784` (D-337), §9 mit diesem Bericht (D-340). Gefundene Probleme, Ursachen, Änderungen und Dateien stehen je Abschnitt in Abschnitt 2, die Testergebnisse wörtlich in Abschnitt 3. Den Vergleich der Markierungen zeigt `docs/screens/komponenten/markierungen.png`.
+
+Tests je Änderung, jeweils mit Gegenprobe gegen den Stand davor:
+
+| Änderung | Test | Gegenprobe |
+|---|---|---|
+| §1 Logo scharf, Abstand unter der Unschärfe | `e2e/header-logo.spec.ts`, `edge-clear.test.ts` | 4 fehlgeschlagen („Datei in Anzeigegröße“ 5273 × 1400, „Expected: 46, Received: 14“) |
+| §1 Nachtrag: Logo-Test in WebKit | `e2e/header-logo.spec.ts` mit der Kennung des iPhone 15 in Chromium | alter Test 4 von 4 fehlgeschlagen, mit denselben Werten wie in der CI |
+| §2 Ring V2 | `e2e/nutrition-ring.spec.ts` „Ring V2 …“, `ring.test.ts`, `macro-ring.test.tsx` | E2E fehlgeschlagen (alte Farben), 6 Unit-Tests fehlgeschlagen |
+| §3 Erledigt-Markierungen | `e2e/marks.spec.ts` | 3 von 3 fehlgeschlagen |
+| §4 Aufgaben nach V1 | `e2e/task-rows.spec.ts`, `habits-ui.test.tsx` | 10 von 10 Fällen fehlgeschlagen |
+| §5 Karte V2c | `e2e/program-list.spec.ts`, `tokens.test.ts` | 2 von 2 fehlgeschlagen |
+| §6 Startfläche mindestens 1,0 s | `startSurface.test.ts`, `e2e/start-surface.spec.ts` | 3 von 7 fehlgeschlagen |
+| §6 Nachtrag: Startfläche in Safari | `startSurface.test.ts`, `e2e/start-surface.spec.ts` (ohne Paint-Eintrag) | 2 Unit-Fälle und 1 E2E-Fall fehlgeschlagen (1025 ms statt höchstens 400 ms nach „bereit“) |
+| §7 Woche im Trainingskopf | `e2e/session-head.spec.ts` | 2 von 3 fehlgeschlagen (360 und 390 pt) |
+| §9 Pausieren und Löschen als Paar | `e2e/switches.spec.ts` | 2 von 2 fehlgeschlagen |
+
+Befunde der CI: Der Logo-Test aus §1 schlug in WebKit fehl, weil die App mit der Kennung eines iPhones im Safari-Tab den Hinweis zur Installation über der Kopfzeile zeigt; der Test blendet ihn jetzt aus (`4146fad`). Danach zeigte die CI zu `2a1990a` einen Fehler der App: WebKit meldet für die Startfläche keinen Paint-Eintrag, die App hätte nach einem langsamen Start noch eine Sekunde gewartet, auch auf dem iPhone; behoben in `3ce4784`.
+
+Offen beim Produktinhaber: Durchsicht und Merge von PR #49; Gerätetest T-IPH-M0 Schritt 5 (Startfläche mindestens 1 s, kein weißer Blitz) und Schritt 6 (Logo scharf, Abstand unter der Statusleiste) an der Vorschau; aus F5 der Schalter „Allow new users to sign up“ in Supabase.
+
+Nicht hier prüfbar:
+
+- Alles am iPhone: ob das Logo unter der Unschärfe von iOS scharf wirkt und der Abstand von 2 rem passt, wie lange die Startfläche am Gerät steht (die Unschärfe und das Startbild von iOS lassen sich nicht nachstellen), Schriftbreiten von iOS Safari bei der Kürzung im Trainingskopf.
+- WebKit läuft nur in der CI. Zu `2a1990a` war WebKit bis auf die Startfläche grün (296 bestanden, 47 übersprungen, 1 fehlgeschlagen); das Ergebnis zu `3ce4784` und zum Commit mit diesem Bericht steht beim Schreiben noch aus.
+- Ein einmaliger Fehlschlag im Test „Mit Wasserziel abhaken … per Tastatur“ (erster Volllauf zu §7): Ursache nicht gefunden; nicht wieder aufgetreten in 20 Wiederholungen des Tests, 100 Wiederholungen einer Kopie mit Aufzeichnung von Fokus und Änderungen am Dokument (davon 40 mit 8-facher CPU-Drosselung) und zwei weiteren Vollläufen. Ausgeschlossen: ein neues Einhängen der Einstellungen (dieselbe ID `_r_c_` wie in bestandenen Läufen), ein Zurücksetzen durch die Datenabfragen und Tastatur-Handler der App.
+
+Empfehlungen:
+
+1. Gerätetest T-IPH-M0 Schritte 5 und 6 an der Vorschau vor dem Merge; bei Schritt 6 notieren, ob der Abstand oben zu groß wirkt.
+2. Den einmaligen Fehlschlag im Schaltertest beobachten: Die neue Fokusprüfung zeigt beim nächsten Mal, ob der Fokus verloren ging; `test-results` vor dem nächsten Lauf sichern, sonst geht die Aufzeichnung verloren.
+3. In `e2e/program-list.spec.ts` folgt an zwei Stellen ein Seitenwechsel direkt auf „Programm aktivieren“; dasselbe Muster startete im Logo-Test ein freies Training ohne Übungen. Als kleine eigene Aufgabe auf das Speichern warten lassen.
+4. Aus F5 weiter offen: E-16 (Offline-Test) und A-14 (Wiederherstellen aus dem Export) vor echten Nutzern.

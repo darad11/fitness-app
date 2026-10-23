@@ -1093,3 +1093,18 @@ Befund der CI zu `2a1990a` im Projekt `webkit-mobile` (D-337, Nachtrag).
 | `pnpm exec playwright test e2e/start-surface.spec.ts` | 9 bestanden, 7 übersprungen; 3 Wiederholungen 27 bestanden. Gegenprobe gegen `2a1990a`: der Fall ohne Paint-Eintrag fehlgeschlagen (1025 ms statt höchstens 400 ms nach „bereit“) |
 | `node tools/splash.mjs --check` | Bilder, Vorlage und Startfläche passen zur Regel |
 | WebKit | prüft die CI |
+
+### F6 §9 Abschluss · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Breiten, Knopfzeile der Einstellungen, Screenshots (D-340).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Breitenprüfung, 96 Ansichten auf 360, 390 und 768 pt | keine Konsolenfehler, kein Überlauf, nichts außerhalb, keine getrennten Wörter; gemeldet nur gewollte Kürzungen und das Menü „Meine Küche“ ab 768 pt |
+| `pnpm exec playwright test e2e/switches.spec.ts e2e/task-rows.spec.ts e2e/tasks.spec.ts` | 58 bestanden, 6 übersprungen. Gegenprobe gegen `2a1990a`: 2 von 2 fehlgeschlagen („Pausieren und Löschen in einer Zeile“) |
+| `node tools/screenshots.mjs komponenten` und `screens`, `node tools/screens-overview.mjs` | erster Lauf der Komponenten abgebrochen (Abhaken über den Namen), Werkzeug angepasst; danach alle Bilder, Übersicht 29 Bilder, Archiv 30 Bilder |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 890 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (7,1 min) |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |
+| Am Gerät | offen: T-IPH-M0 Schritte 5 und 6 |

@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.42 · 23.10.2026 · Feinschliff F6
+
+| Datei | Änderung |
+|---|---|
+| `prompts/F6-feinschliff-vor-dem-merge.md` | Neu: Auftrag F6 |
+| `decisions.md` | D-332 bis D-340; Nachträge aus der CI bei D-332 (Logo-Test in WebKit) und D-337 (Startfläche in Safari) |
+| `testing.md` | Protokolle F6 §1 bis §9 mit den Nachträgen aus der CI; T-IPH-M0 Schritt 5 (Startfläche 1,0 s) und neu Schritt 6 (Logo der Kopfzeile) |
+| `implementation-plan.md` | Punkt 57 um F6 ergänzt; neu Punkte 62 bis 64 |
+| `design-system.md` | Logo und Abstand oben, Makrofarben, `Mark`, `TaskRow`, Karte `tint`, Startfläche, Trainingskopf, Knopfzeile der Einstellungen |
+| `known-limitations.md` | Unschärfe von iOS am oberen Rand |
+
 ## Version 0.41 · 23.10.2026 · Abschluss F5 (Abschnitte 7a bis 9)
 
 | Datei | Änderung |

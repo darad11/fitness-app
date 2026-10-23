@@ -9,6 +9,7 @@ import { tShopping } from '@/shared/i18n/de-shopping';
 import { tSync } from '@/shared/i18n/de-sync';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { tWater } from '@/shared/i18n/de-water';
+import script from '../../public/theme-init.js?raw';
 
 /**
  * Wortfeld-Prüfung (Rebranding F4, D-318) nach `form-markenleitplanken.md` Regel 2 und 4 und den
@@ -144,5 +145,24 @@ describe('Mikrotexte aus den Leitplanken (Abschnitt 4)', () => {
     expect(de.history.emptyTitle).toBe('Hier erscheint dein erstes Training.');
     expect(de.today.restPlanned).toBe('Heute ist Pause eingeplant.');
     expect(de.steps.targetReached).toBe('Ziel erreicht. Das warst du.');
+  });
+});
+
+describe('Startwächter in public/theme-init.js (E-16, D-343)', () => {
+  // Das Skript läuft vor dem Bündel und kann den Textkatalog nicht laden; die Texte stehen dort
+  // gleich lautend und werden hier verglichen.
+  const text = (name: string) => new RegExp(`var ${name} = '([^']*)';`).exec(script)?.[1];
+
+  it('nutzt dieselben Texte wie die App', () => {
+    expect(text('TITLE')).toBe(de.errors.startTitle);
+    expect(text('TEXT')).toBe(de.errors.chunkText);
+    expect(text('BUTTON')).toBe(de.common.reload);
+  });
+
+  it('hält die Leitplanken ein', () => {
+    for (const value of [text('TITLE'), text('TEXT'), text('BUTTON')]) {
+      expect(value).toBeDefined();
+      expect(value).not.toMatch(/!|\p{Extended_Pictographic}/u);
+    }
   });
 });

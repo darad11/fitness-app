@@ -129,7 +129,7 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - **Safari-Hinweis:** Die Erkennung nutzt Browserkennung, Touch-Unterstützung und `display-mode`. Eingebettete Browser anderer Apps können wie Safari erscheinen. Die Anleitung ist bewusst allgemein formuliert, weil sich die Lage von „Teilen" je nach iOS-Version unterscheidet.
 - **Installationsknopf** gibt es nur in Chromium-Browsern (`beforeinstallprompt`); Safari bietet keinen solchen Dialog, dort hilft nur die Anleitung.
 - **Offline-Status:** Beim allerersten Aufruf zeigt „Heute" „Wird für die Offline-Nutzung vorbereitet", bis der Service Worker alle Dateien gespeichert hat. Im Entwicklungsmodus (`pnpm dev`) gibt es keinen Service Worker.
-- **Updates:** Die App fragt beim Start und höchstens einmal pro Stunde bei Rückkehr in den Vordergrund nach einer neuen Version, außerdem über „Nach Update suchen". Die Sperre des Update-Hinweises während eines Trainings folgt mit M4 (AK-PWA-03), weil es in M0 noch kein Training gibt.
+- **Updates:** Die App fragt beim Start und höchstens einmal pro Stunde bei Rückkehr in den Vordergrund nach einer neuen Version, außerdem über „Nach Update suchen". Seit D-343 erscheint der Hinweis während eines Trainings erst nach dem Beenden (AK-PWA-03); Einzelheiten im Abschnitt „Updates und Start“.
 - **Snapshots und Wiederherstellung:** Snapshots lassen sich anlegen und lesen; das Wiederherstellen folgt mit M1 und M4. Der Wiederherstellungsbildschirm bietet in M0 nur Ursache, „Erneut versuchen" und gegebenenfalls „Jetzt aktualisieren".
 - **Formatierung de-CH:** Schweizer Tausendertrennzeichen mit Dezimalkomma (D-233); das weicht von der üblichen Schweizer Schreibweise mit Punkt ab. Das Tausendertrennzeichen hängt von den Sprachdaten des Geräts ab („’“ oder „'“).
 - **Build-Manifest:** `dist/.vite/manifest.json` wird mit ausgeliefert, weil die Prüfung der Bündelgröße es braucht. Es enthält nur Dateinamen und keine Daten.
@@ -153,6 +153,16 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - GitHub Pages und private Repositories: https://github.com/orgs/community/discussions/22817
 - Cloudflare-Pages-Limits: https://developers.cloudflare.com/pages/platform/limits/
 - Supabase-Limits (Sekundärquelle): https://www.jetadmin.io/blog/supabase-pricing-2026-guide-to-plans-limits-and-real-world-costs/
+
+## Updates und Start (D-343)
+
+- **Wann eine neue Version übernimmt:** Nach „Jetzt aktualisieren“ oder beim nächsten Start der App, wenn kein Fenster der alten Version mehr offen ist. Am iPhone reicht dafür, die App ganz zu schließen; wann iOS eine App im Hintergrund wirklich beendet, bestimmt iOS. Startet die App so mitten in einem Training neu, läuft das Training mit der neuen Version weiter; es ist gespeichert.
+- **Hinweis während eines Trainings:** „Neue Version verfügbar“ erscheint erst nach dem Beenden. „Mehr › Über die App“ sagt in dieser Zeit, dass eine neue Version bereitliegt.
+- **Abgebrochene Modul-Anfragen in Chromium:** Unter einem Service Worker verwendet Chromium vorgeladene Module nicht und lädt sie ein zweites Mal; unter Last bricht dabei gelegentlich ein Teil ab. Die App lädt dann einmal neu (beim Start der Startwächter, später die Erholung beim Nachladen). Ob Safari dasselbe tut, ist nicht geprüft; die Erholung greift dort genauso, sobald der Browser einen Ladefehler meldet. Hängt eine Anfrage, ohne zu scheitern, hilft sie nicht; beim Start blendet sich die Startfläche nach 10 s trotzdem aus (D-325).
+- **Ohne Service Worker** (Safari-Tab im privaten Modus, geräumter Speicher, erster Aufruf ohne Unterstützung): Nach einem Deployment fehlen der offenen Seite die Dateien der alten Version; Vercel liefert dann `index.html`, und die App lädt einmal neu. Ohne Netz lädt sie nicht neu, sondern zeigt „Ohne Verbindung lässt sich dieser Bereich gerade nicht laden.“
+- **Schleifenschutz:** Höchstens ein automatisches Neuladen je fünf Minuten und Tab (`sessionStorage`); ohne `sessionStorage` gar keins. Danach bleibt der Hinweis mit „Neu laden“.
+- **Nicht gespeicherte Eingaben:** Fehlt genau der Teil, den eine offene Ansicht nachlädt, ersetzt der Hinweis die Ansicht; was dort ungespeichert eingegeben war, geht verloren. Gespeicherte Daten bleiben immer erhalten.
+- **Tests:** Service Worker, Offline und Updates prüft Playwright in Chromium; die Fälle ohne Service Worker und den Startwächter auch in WebKit. Safari auf dem iPhone prüft der Gerätetest T-IPH-M0 Schritt 4.
 
 ## Registrieren (D-273)
 

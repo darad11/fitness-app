@@ -101,6 +101,10 @@ export default defineConfig({
         globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png', '**/splash/*.png'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
+        // Beim allerersten Start übernimmt der Service Worker die offene Seite sofort; sonst
+        // kämen nachgeladene Teile bis zum Neuladen nur über das Netz (E-05, E-16, D-343).
+        // Neue Versionen übernehmen weiter erst nach Bestätigung (registerType 'prompt').
+        clientsClaim: true,
       },
       devOptions: { enabled: false },
     }),

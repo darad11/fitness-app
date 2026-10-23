@@ -24,6 +24,15 @@ export async function findActiveSession(db: AppDb): Promise<Session | undefined>
   return first ? getSession(db, first.id) : undefined;
 }
 
+/**
+ * Läuft gerade ein Training? Leichte Abfrage über den Index ohne Schemaprüfung, damit sie auch bei
+ * einem ungültigen Dokument antwortet (Schutz vor automatischem Neuladen, E-16, D-343).
+ */
+export async function hasActiveSession(db: AppDb): Promise<boolean> {
+  const rows = await db.sessions.where('status').equals('in_progress').toArray();
+  return rows.some((row) => row.type === 'session' && row.deletedAt === null);
+}
+
 /** Abgeschlossene Einheiten, neueste zuerst (AK-HIS-01); ungültige Dokumente werden übergangen. */
 export async function listCompletedSessions(db: AppDb): Promise<Session[]> {
   const rows = await db.sessions.where('status').equals('completed').toArray();

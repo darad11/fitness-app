@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.15 (Phase Stabilität, Abschnitt 1, 23.10.2026): SY-02 „Implementiert“ mit der Update-Strategie aus D-343 (Übernahme beim ersten Start, Hinweis nicht während eines Trainings, einmal neu laden bei fehlenden nachgeladenen Teilen, Startwächter). Geprüft in Chromium mit zwei Builds nacheinander (`e2e/update.spec.ts`); die Fälle ohne Service Worker und der Startwächter laufen auch in WebKit in der CI; Gerätetest T-IPH-M0 Schritt 4 auf dem iPhone steht für diese Fassung aus.
 - Version 0.7 (Ernährung Grundausbau, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): NU-01 (Zielvorschlag), NU-02, NU-03 (vier feste Mahlzeiten), NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21 (BLS 4.0 mit österreichischen Suchbegriffen), NU-22, NU-25 (D-261, D-262). Teilweise und deshalb noch nicht umgestellt: NU-08 (nur lokale Suche), NU-11 (Favoriten und Zuletzt, ohne Mahlzeitvorlagen), NU-12 (jeder Tag aufrufbar, ohne Wochendurchschnitt), NU-16, NU-19, NU-23 (g, ml und Portionen, ohne Umrechnung ml in g). Barcode und Open Food Facts (NU-07, NU-24) folgen als eigenes Paket.
 - Version 0.8 (Lebensmitteldaten importieren, 19.10.2026): NU-25 zusätzlich mit AK-NUT-07 (lokaler Import der ÖNWT-Daten aus der BLS-Recherche, Herkunft in der Suche, D-263). NU-08 bleibt teilweise, bis die Online-Suche (M6) folgt.
 - Version 0.9 (Nährwerte anzeigen, 19.10.2026): NU-16 vorgezogen und „Implementiert“ (AK-NUT-08, D-264).
@@ -85,11 +86,11 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 86 |
+| Implementiert | 87 |
 | Noch zu recherchieren | 1 |
 | Spezifiziert | 17 |
 | Verworfen | 2 |
-| Zur Umsetzung ausgewählt | 19 |
+| Zur Umsetzung ausgewählt | 18 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
@@ -289,7 +290,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | SY-01 | Lokale Datenbank (Dexie, IndexedDB) als führender Speicher | Server-Backend | DT | E | EV | H | – | M | P0 | MVP | R1 · M0 | Verbesserung (D-113, D-204) | Implementiert | AK-DAT-07, AK-DAT-11, AK-UX-06 |
-| SY-02 | PWA mit Installation, Offline-Betrieb, Update-Hinweis | Native App | – | E | EV | H | SY-15 | M | P0 | MVP | R1 · M0/M4 | Verbesserung (D-101) | Zur Umsetzung ausgewählt | AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02 |
+| SY-02 | PWA mit Installation, Offline-Betrieb, Update-Hinweis | Native App | – | E | EV | H | SY-15 | M | P0 | MVP | R1 · M0/M4 | Verbesserung (D-101); Update-Strategie und Start nach Updates (D-343) | Implementiert | AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02 |
 | SY-03 | Cloud-Synchronisierung | Server-Backend | DT | E | EV | H | SY-09; SY-17 | XL | P1 | MVP | R1 · M9 | Verbesserung (D-205), erste Stufe vorgezogen (D-269): ganze Dokumente, jüngerer HLC, Regeln K-01 und Konfliktkopie | Implementiert | AK-SYN-02, AK-SYN-03 |
 | SY-04 | Export und Import | Nicht belegt | – | E | EV | H | SY-01 | M | P0 | MVP | R1 · M1/M2/M4 | Verbesserung (D-218) | Zur Umsetzung ausgewählt | AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05 |
 | SY-05 | Backup und Wiederherstellung | – | – | E | EV | H | SY-04; SY-11 | M | P1 | MVP | R1 · M2/M4 (Cloud R3) | Verbesserung | Zur Umsetzung ausgewählt | AK-DAT-02, AK-DAT-12 |

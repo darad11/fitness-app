@@ -12,6 +12,11 @@ export interface PwaState {
   readonly offlineReady: boolean;
   /** Eine neue Version ist geladen und wartet auf Bestätigung. */
   readonly updateAvailable: boolean;
+  /**
+   * Die neue Version hat schon übernommen (in einem anderen Fenster bestätigt), diese Seite läuft
+   * noch mit der alten; sie lädt neu, sobald kein Training läuft (E-16, D-343).
+   */
+  readonly reloadPending: boolean;
   readonly registered: boolean;
 }
 
@@ -19,6 +24,7 @@ const initialState: PwaState = {
   supported: typeof navigator !== 'undefined' && 'serviceWorker' in navigator,
   offlineReady: false,
   updateAvailable: false,
+  reloadPending: false,
   registered: false,
 };
 
@@ -33,6 +39,7 @@ export function setPwaState(patch: Partial<PwaState>): void {
     next.supported === state.supported &&
     next.offlineReady === state.offlineReady &&
     next.updateAvailable === state.updateAvailable &&
+    next.reloadPending === state.reloadPending &&
     next.registered === state.registered
   ) {
     return;
@@ -56,9 +63,53 @@ export function setUpdateActivator(fn: () => Promise<void>): void {
   activateUpdate = fn;
 }
 
-/** Aktiviert die wartende Version; die Seite lädt danach neu. */
+const defaultReloader = () => {
+  window.location.reload();
+};
+let reloader: () => void = defaultReloader;
+
+/** Nur für Tests: ersetzt das Neuladen der Seite. */
+export function setReloader(fn: () => void): void {
+  reloader = fn;
+}
+
+/**
+ * Aktiviert die wartende Version; die Seite lädt danach neu. Hat die neue Version schon
+ * übernommen (`reloadPending`), lädt die Seite nur neu.
+ */
 export async function applyUpdate(): Promise<void> {
+  if (state.reloadPending) {
+    reloader();
+    return;
+  }
   await activateUpdate?.();
+}
+
+/**
+ * Wechsel des steuernden Service Workers (`controllerchange`, E-16, D-343). Der erste Wechsel einer
+ * Seite, die ohne Service Worker geladen wurde, ist die Übernahme beim allerersten Start
+ * (`clientsClaim`) mit derselben Version: kein Neuladen. Jeder weitere Wechsel bringt eine neue
+ * Version: neu laden, außer `canReload` verneint (laufendes Training); dann merkt sich die App
+ * `reloadPending`, und der Hinweis erscheint nach dem Training.
+ */
+export function createControllerWatcher(
+  initiallyControlled: boolean,
+  canReload: () => Promise<boolean>,
+): () => Promise<'claimed' | 'reload' | 'pending'> {
+  let controlled = initiallyControlled;
+  return async () => {
+    if (!controlled) {
+      controlled = true;
+      return 'claimed';
+    }
+    const ok = await canReload().catch(() => false);
+    if (ok) {
+      reloader();
+      return 'reload';
+    }
+    setPwaState({ updateAvailable: false, reloadPending: true });
+    return 'pending';
+  };
 }
 
 export type UpdateCheckResult = 'update-available' | 'up-to-date' | 'unavailable' | 'failed';
@@ -82,6 +133,7 @@ export function resetPwaState(patch: Partial<PwaState> = {}): void {
   state = { ...initialState, ...patch };
   registration = null;
   activateUpdate = null;
+  reloader = defaultReloader;
   listeners.forEach((listener) => {
     listener();
   });

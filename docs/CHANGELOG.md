@@ -1,5 +1,19 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.45 · 23.10.2026 · Phase Stabilität, Abschnitt 1 (E-16)
+
+| Datei | Änderung |
+|---|---|
+| `prompts/stabilitaet-FORM.md` | Neu: Auftrag der Phase Stabilität |
+| `decisions.md` | D-343: Ursache des Offline-Tests, Startwächter, einmal neu laden, Update-Strategie |
+| `architecture.md` | Abschnitt 9: Update-Strategie, fehlgeschlagenes Nachladen, Prüfung der Vorab-Liste |
+| `known-limitations.md` | Neuer Abschnitt „Updates und Start“; Abschnitt 12 „Updates“ nachgezogen |
+| `testing.md` | Protokoll „Stabilität §1“ |
+| `feature-inventory.md` | Version 0.15: SY-02 „Implementiert“ |
+| `implementation-plan.md` | Punkt 66 |
+| `audit-report.md` | E-16, E-01, E-04, E-05 behoben |
+| `form-stabilitaet-report.md` | Neu: Bericht der Phase, Abschnitt 1 |
+
 ## Version 0.44 · 23.10.2026 · Nach dem Merge
 
 | Datei | Änderung |

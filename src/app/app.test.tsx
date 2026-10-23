@@ -14,7 +14,8 @@ import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbProvider, listErrorLog, META_KEYS, type DbRuntime } from '@/shared/db';
 import type { PlatformInfo } from '@/shared/lib/platform';
-import { resetPwaState, setUpdateActivator } from '@/shared/pwa/state';
+import { finishSession, hasActiveSession, startSession } from '@/modules/training';
+import { resetPwaState, setReloader, setUpdateActivator } from '@/shared/pwa/state';
 import { createTestRuntime } from '@/shared/testing/db';
 import { App } from './App';
 import { InstallHintBanner, UpdateBanner } from './banners/GlobalBanners';
@@ -267,16 +268,57 @@ describe('Hinweisleisten', () => {
   it('aktiviert eine neue Version erst nach Bestätigung (AK-PWA-03)', async () => {
     const activate = vi.fn(() => Promise.resolve());
     setUpdateActivator(activate);
-    render(<UpdateBanner />);
+    renderWithDb(
+      <>
+        <UpdateBanner />
+        <p>geladen</p>
+      </>,
+    );
+    await screen.findByText('geladen');
     expect(screen.queryByText('Neue Version verfügbar')).not.toBeInTheDocument();
     act(() => {
       resetPwaState({ updateAvailable: true });
       setUpdateActivator(activate);
     });
-    expect(screen.getByText('Neue Version verfügbar')).toBeInTheDocument();
+    expect(await screen.findByText('Neue Version verfügbar')).toBeInTheDocument();
     expect(activate).not.toHaveBeenCalled();
     await userEvent.setup().click(screen.getByRole('button', { name: 'Jetzt aktualisieren' }));
     expect(activate).toHaveBeenCalledOnce();
+  });
+
+  it('zeigt den Hinweis auf eine neue Version nicht während eines Trainings (E-01, D-343)', async () => {
+    const session = await startSession(rt, { source: 'free', title: 'Frei', exercises: [] });
+    resetPwaState({ updateAvailable: true });
+    renderWithDb(
+      <>
+        <UpdateBanner />
+        <p>geladen</p>
+      </>,
+    );
+    await screen.findByText('geladen');
+    // Die laufende Einheit ist geladen, der Hinweis bleibt aus.
+    await waitFor(async () => {
+      expect(await hasActiveSession(rt.db)).toBe(true);
+    });
+    expect(screen.queryByText('Neue Version verfügbar')).not.toBeInTheDocument();
+    await act(async () => {
+      await finishSession(rt, session.id, { skipOpen: true });
+    });
+    expect(await screen.findByText('Neue Version verfügbar')).toBeInTheDocument();
+  });
+
+  it('lädt nur neu, wenn die neue Version schon übernommen hat (D-343)', async () => {
+    const activate = vi.fn(() => Promise.resolve());
+    const reload = vi.fn();
+    resetPwaState({ reloadPending: true });
+    setUpdateActivator(activate);
+    setReloader(reload);
+    renderWithDb(<UpdateBanner />);
+    await userEvent
+      .setup()
+      .click(await screen.findByRole('button', { name: 'Jetzt aktualisieren' }));
+    expect(reload).toHaveBeenCalledOnce();
+    expect(activate).not.toHaveBeenCalled();
   });
 });
 

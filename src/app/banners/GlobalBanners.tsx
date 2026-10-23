@@ -13,7 +13,7 @@ import {
 import { t } from '@/shared/i18n/de';
 import { currentPlatform, type PlatformInfo } from '@/shared/lib/platform';
 import { applyUpdate, usePwaState } from '@/shared/pwa/state';
-import { SessionBanner } from '@/modules/training';
+import { SessionBanner, useActiveSession } from '@/modules/training';
 import { Banner, Button, ButtonLink } from '@/shared/ui';
 
 /** Anderes Fenster hat die Datenbank auf eine neuere Version gebracht. */
@@ -40,10 +40,17 @@ export function ConnectionBanner() {
   );
 }
 
-/** Neue Version geladen; aktiv erst nach Bestätigung (AK-PWA-03). */
+/**
+ * Neue Version geladen; aktiv erst nach Bestätigung (AK-PWA-03). Nie während eines laufenden
+ * Trainings (E-01): Der Hinweis erscheint nach dem Beenden. Hat die neue Version in einem anderen
+ * Fenster schon übernommen, lädt der Knopf nur neu (D-343).
+ */
 export function UpdateBanner() {
-  const { updateAvailable } = usePwaState();
-  if (!updateAvailable) return null;
+  const { updateAvailable, reloadPending } = usePwaState();
+  // `undefined` beim Laden, `null` ohne laufendes Training.
+  const active = useActiveSession();
+  if (!updateAvailable && !reloadPending) return null;
+  if (active !== null) return null;
   return (
     <Banner
       icon={RefreshCw}

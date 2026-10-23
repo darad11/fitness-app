@@ -472,6 +472,9 @@ export const de = {
     upToDate: 'Du verwendest die aktuelle Version.',
     updateFound:
       'Eine neue Version wurde gefunden. Sobald sie geladen ist, erscheint „Jetzt aktualisieren“.',
+    // Während eines Trainings bleibt der Hinweis aus (E-01, D-343).
+    updateAfterTraining:
+      'Eine neue Version ist bereit. „Jetzt aktualisieren“ erscheint, wenn dein Training beendet ist.',
     updateFailed:
       'Die Suche hat nicht geklappt. Prüfe die Internetverbindung und versuche es erneut.',
     updateUnavailable: 'In dieser Umgebung gibt es keine automatischen Updates.',
@@ -945,6 +948,16 @@ export const de = {
     notFoundTitle: 'Seite nicht gefunden',
     notFoundText: 'Diese Adresse gibt es in der App nicht.',
     toToday: 'Zu Heute',
+    // Nachgeladener Teil fehlt (E-16, D-343)
+    chunkTitle: 'Dieser Bereich ließ sich nicht laden',
+    // Steht gleich in public/theme-init.js (Startwächter), geprüft in wording.test.ts.
+    startTitle: 'FORM ließ sich nicht starten',
+    chunkText: 'Lade die App neu. Deine Daten bleiben erhalten.',
+    chunkTraining:
+      'Dein Training ist gespeichert. Nach dem Neuladen geht es an derselben Stelle weiter.',
+    chunkOffline:
+      'Ohne Verbindung lässt sich dieser Bereich gerade nicht laden. Versuch es wieder, wenn du online bist.',
+    reloading: 'Die App wird neu geladen.',
   },
   recovery: {
     title: 'Die Daten lassen sich gerade nicht öffnen',

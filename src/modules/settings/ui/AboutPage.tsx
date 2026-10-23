@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useActiveSession } from '@/modules/training';
 import { useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { appInfo } from '@/shared/lib/env';
@@ -29,9 +30,13 @@ export function AboutPage() {
   const buildLabel = Number.isNaN(buildTime.getTime())
     ? appInfo.buildSha
     : `${appInfo.buildSha} · ${formatters.dateTimeShort(buildTime)}`;
+  const training = useActiveSession() !== null;
+  const waiting = pwa.updateAvailable || pwa.reloadPending;
   const message =
-    check === 'idle' && pwa.updateAvailable
-      ? t.about.updateFound
+    check === 'idle' && waiting
+      ? training
+        ? t.about.updateAfterTraining
+        : t.about.updateFound
       : check === 'idle'
         ? ''
         : CHECK_MESSAGES[check];

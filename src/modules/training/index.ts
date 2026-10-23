@@ -41,4 +41,4 @@ export async function finishSession(
 }
 export { loadSampleTemplate } from './data/sampleTemplates';
 export { liveExercises, liveSets } from './calc/session';
-export { refreshSessionProjection } from './data/sessionRepository';
+export { hasActiveSession, refreshSessionProjection } from './data/sessionRepository';

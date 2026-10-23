@@ -1141,3 +1141,29 @@ Merge von PR #49 (`1dc1dd7`), Auslieferung und Branch je Phase (D-342).
 | Live-Adresse https://fitness-app-mu-drab.vercel.app | aus der Cloud-Umgebung nicht erreichbar („CONNECT tunnel failed, response 403“), nicht geprüft |
 | `pnpm build` von `1dc1dd7` | Manifest „FORM“ (Name und Kurzname), vier Icons und `apple-touch-icon.png` vorhanden, 40 von 40 Startbildern vorhanden, Startfläche mit `theme-init.js`, Titel „FORM“ |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (Commit auf `form-stabilitaet`) | ohne Befund; Startansicht 237,6 KB von 250 KB |
+
+### Stabilität §1: Start nach Updates und ohne Netz · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ursache des Offline-Tests (E-16), Startwächter, einmal neu laden, Update-Strategie (D-343). Bericht: `form-stabilitaet-report.md` Abschnitt 2.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ausgangslage am alten Stand: `pwa.spec.ts` „… alle Bereiche starten offline“ einzeln, 8 Wiederholungen je Projekt, 4 Worker | 16 bestanden |
+| Ausgangslage: `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (10,7 min) |
+| Nachstellen: derselbe Test mit 8 Workern auf 4 Kernen, 24 Läufe | 6 fehlgeschlagen, 18 bestanden; in allen sechs Traces ein Block vorgeladener Startmodule mit `net::ERR_ABORTED`, keine Konsolenfehler, Warnung „… is found, but is not used because it is a cross-world service worker resource mismatch.“ |
+| Gegenprobe online mit Service Worker / ohne Service Worker / ohne `modulepreload`, je 24 Läufe mit 8 Workern | 5 / 0 / 1 fehlgeschlagen |
+| `e2e/update.spec.ts` (neu, Chromium Desktop) | 7 bestanden; Gegenprobe am alten Stand: 7 von 7 fehlgeschlagen |
+| `e2e/start-watch.spec.ts` (neu, Chromium Desktop und Pixel 7) | 4 bestanden; Gegenprobe am alten Stand: 2 von 2 fehlgeschlagen |
+| Offline-Test mit 8 Workern, 24 Läufe, neuer Stand | 24 bestanden |
+| Rundgang mit Zählung des Neuladens, 8 Worker, 24 Läufe, neuer Stand | 24 bestanden, 1 Lauf mit genau einem automatischen Neuladen |
+| `e2e/update.spec.ts`, `start-watch.spec.ts`, `pwa.spec.ts`, `shell.spec.ts`, `resilience.spec.ts`, `session.spec.ts` | 40 bestanden, 8 übersprungen |
+| `src/app/chunkRecovery.test.ts` (neu) | 21 bestanden |
+| `src/shared/pwa/pwa.test.ts` | 11 bestanden (4 neu zum Wechsel des Service Workers) |
+| `src/app/app.test.tsx` „kein Hinweis während eines Trainings“ | mit der alten Regel 1 von 1 fehlgeschlagen, danach bestanden |
+| Chromium: zweiter Import einer Datei nach einem Fehlschlag | keine zweite Anfrage, derselbe Fehler (Grund für das Neuladen) |
+| `node tools/check-precache.mjs` | 168 von 227 Dateien vorab gespeichert, die übrigen bewusst ausgenommen; mit einer zusätzlichen Datei in `dist/assets` Exit-Code 1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 107 Dateien, 921 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 238,9 KB von 250 KB (vorher 237,6 KB) |
+| WebKit | in der CI zu diesem Commit |
+

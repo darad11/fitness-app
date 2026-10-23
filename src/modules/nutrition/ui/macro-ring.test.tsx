@@ -23,7 +23,7 @@ function draw(sums: { kcal: number; protein: number; carbs: number; fat: number 
     model,
     svg,
     parts: [...svg.querySelectorAll('circle[data-part]')].map((c) => c.getAttribute('data-part')),
-    blends: [...svg.querySelectorAll('path[data-blend]')].map((p) => p.getAttribute('data-blend')),
+    blends: [...svg.querySelectorAll('[data-blend]')].map((g) => g.getAttribute('data-blend')),
     caps: [...svg.querySelectorAll('circle[data-cap]')].map((c) => c.getAttribute('data-cap')),
     circle,
     /** Länge eines Abschnitts als Anteil am Umfang. */
@@ -85,6 +85,26 @@ describe('Ring mit Makros (D-326)', () => {
     expect(ring.blends).toEqual(['protein-carbs', 'carbs-fat', 'fat-protein']);
     const total = ring.length('protein') + ring.length('carbs') + ring.length('fat');
     expect(total).toBeCloseTo(1, 6);
+  });
+
+  it('Übergang aus feinen Schritten über 2 × 18°, Mischfarben in OKLab (F6, D-333)', () => {
+    // 600 kcal von 1.000 zu gleichen Teilen: Abschnitte von 72°, Nähte bei 72° und 144°.
+    const ring = draw({ kcal: 600, protein: 50, carbs: 50, fat: 22.2222 }, 1000);
+    const blend = ring.svg.querySelector('[data-blend="protein-carbs"]');
+    expect([blend?.getAttribute('data-start'), blend?.getAttribute('data-end')]).toEqual([
+      '54',
+      '90',
+    ]);
+    const steps = [...(blend?.querySelectorAll('path') ?? [])];
+    expect(steps).toHaveLength(36);
+    expect(steps[0]?.style.stroke).toBe(
+      'color-mix(in oklab, var(--macro-carbs) 1.4%, var(--macro-protein))',
+    );
+    expect(steps[35]?.style.stroke).toBe(
+      'color-mix(in oklab, var(--macro-carbs) 98.6%, var(--macro-protein))',
+    );
+    // Keine Verläufe in RGB mehr.
+    expect(ring.svg.querySelectorAll('linearGradient')).toHaveLength(0);
   });
 
   it('ein einziger Abschnitt: runde Enden in seiner Farbe, kein Übergang', () => {

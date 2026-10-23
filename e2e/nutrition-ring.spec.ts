@@ -138,3 +138,121 @@ test('„Aktuelles Ziel“ ohne Datum, Text folgt der Art des Ziels', async ({ p
   await expect(current).toContainText('Aus Vorschlag übernommen');
   await expect(current).not.toContainText('Seit');
 });
+
+/** Farbe in OKLab (F6, D-333); versteht rgb(), color(srgb …), oklab() und oklch(). */
+function lab(css: string): [number, number, number] {
+  const num = String.raw`(-?[\d.]+)(%?)`;
+  const ok = new RegExp(String.raw`^(oklab|oklch)\(\s*${num}\s+${num}\s+${num}`).exec(css);
+  if (ok) {
+    const l = Number(ok[2]) / (ok[3] ? 100 : 1);
+    if (ok[1] === 'oklab') return [l, Number(ok[4]), Number(ok[6])];
+    const h = (Number(ok[6]) * Math.PI) / 180;
+    return [l, Number(ok[4]) * Math.cos(h), Number(ok[4]) * Math.sin(h)];
+  }
+  const rgb = /rgba?\(\s*([\d.]+),\s*([\d.]+),\s*([\d.]+)/.exec(css);
+  const srgb = /color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/.exec(css);
+  const values = rgb
+    ? [rgb[1], rgb[2], rgb[3]].map((v) => Number(v) / 255)
+    : srgb
+      ? [srgb[1], srgb[2], srgb[3]].map(Number)
+      : null;
+  if (!values) throw new Error(`Farbe nicht lesbar: ${css}`);
+  const [r = 0, g = 0, b = 0] = values.map((v) =>
+    v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4,
+  );
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+  return [
+    0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+    1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+    0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+  ];
+}
+
+/** Buntheit und Farbton (OKLCH) und wie weit die Farbe außerhalb von sRGB liegt (0 = darin). */
+function describe(css: string) {
+  const [l, a, b] = lab(css);
+  const lms = [
+    (l + 0.3963377774 * a + 0.2158037573 * b) ** 3,
+    (l - 0.1055613458 * a - 0.0638541728 * b) ** 3,
+    (l - 0.0894841775 * a - 1.291485548 * b) ** 3,
+  ] as const;
+  const linear = [
+    4.0767416621 * lms[0] - 3.3077115913 * lms[1] + 0.2309699292 * lms[2],
+    -1.2684380046 * lms[0] + 2.6097574011 * lms[1] - 0.3413193965 * lms[2],
+    -0.0041960863 * lms[0] - 0.7034186147 * lms[1] + 1.707614701 * lms[2],
+  ];
+  const outside = Math.max(0, ...linear.map((v) => Math.max(-v, v - 1)));
+  const h = (Math.atan2(b, a) * 180) / Math.PI;
+  return { c: Math.hypot(a, b), h: (h + 360) % 360, outside };
+}
+
+const MACRO_RGB = {
+  protein: 'rgb(52, 214, 192)',
+  carbs: 'rgb(90, 146, 255)',
+  fat: 'rgb(176, 140, 255)',
+} as const;
+
+test('Ring V2: Türkis, Blau, Violett in Ring, Balken und auf „Heute“; Übergang über den Farbton (F6)', async ({
+  page,
+}) => {
+  await page.clock.install({ time: new Date('2026-10-22T09:00:00+02:00') });
+  await setTarget(page);
+  // 1.500 kcal zu fast gleichen Teilen: Abschnitte von rund 75°, der Übergang reicht 18° weit.
+  await quickEntry(page, '1500', ['125', '125', '55']);
+  for (const path of ['/ernaehrung', '/heute']) {
+    await openPage(page, path);
+    const card =
+      path === '/heute'
+        ? page.getByRole('region', { name: 'Ernährung heute' })
+        : page.getByRole('region', { name: 'Gegessen' });
+    const view = card.getByRole('img', { name: /kcal/ });
+    const colors = await view
+      .locator('circle[data-part]')
+      .evaluateAll((circles) =>
+        circles.map((c) => [c.getAttribute('data-part'), getComputedStyle(c).stroke]),
+      );
+    expect(colors, `${path}: Ring`).toEqual(Object.entries(MACRO_RGB));
+    // Balken unter bzw. neben dem Ring in denselben Farben.
+    const bars = await card
+      .locator('dl')
+      .first()
+      .locator('.bg-meter-track > div')
+      .evaluateAll((fills) => fills.map((f) => getComputedStyle(f).backgroundColor));
+    expect(bars, `${path}: Balken`).toEqual(Object.values(MACRO_RGB));
+
+    const blends = await view.locator('[data-blend]').evaluateAll((groups) =>
+      groups.map((g) => ({
+        name: g.getAttribute('data-blend') ?? '',
+        width: Number(g.getAttribute('data-end')) - Number(g.getAttribute('data-start')),
+        steps: [...g.querySelectorAll('path')].map((p) => getComputedStyle(p).stroke),
+      })),
+    );
+    expect(blends.map((b) => b.name)).toEqual(['protein-carbs', 'carbs-fat']);
+    for (const blend of blends) {
+      const [from, to] = blend.name.split('-') as [keyof typeof MACRO_RGB, keyof typeof MACRO_RGB];
+      const [a, b] = [describe(MACRO_RGB[from]), describe(MACRO_RGB[to])];
+      expect(blend.width, `${path} ${blend.name}: 2 × 18°`).toBeCloseTo(36, 2);
+      expect(blend.steps).toHaveLength(36);
+      // Jeder Schritt liegt im Farbton zwischen den beiden Abschnitten, der Farbton wandert
+      // gleichmäßig; die Buntheit fällt kaum ab (kein trübes Grau) und steigt nicht über die der
+      // Abschnitte (kein greller Mischton), jede Mischfarbe ist darstellbar.
+      let previous = a.h;
+      for (const step of blend.steps) {
+        const color = describe(step);
+        expect(color.h).toBeGreaterThanOrEqual(Math.min(a.h, b.h) - 1);
+        expect(color.h).toBeLessThanOrEqual(Math.max(a.h, b.h) + 1);
+        expect(color.h).toBeGreaterThanOrEqual(previous - 0.5);
+        expect(color.c, `${blend.name}: nicht trüb`).toBeGreaterThanOrEqual(
+          Math.min(a.c, b.c) * 0.8,
+        );
+        expect(color.c, `${blend.name}: nicht greller als die Abschnitte`).toBeLessThanOrEqual(
+          Math.max(a.c, b.c) + 0.005,
+        );
+        expect(color.outside, `${blend.name}: darstellbar (${step})`).toBeLessThan(0.002);
+        previous = color.h;
+      }
+    }
+  }
+});

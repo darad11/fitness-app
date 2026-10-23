@@ -173,7 +173,7 @@ Stand Schritt E (18.10.2026): C-01, C-02 und C-03 umgesetzt (`src/shared/charts/
 
 ### 8.4 Ausblick R2
 
-Makronährstoffe tragen feste Farben über alle Ansichten: Protein `--data-1`, Kohlenhydrate `--data-2`, Fett `--data-3`; Kalorien neutral `--chart-total`. Weil Aqua im hellen Modus unter 3:1 liegt, zeigen Makro-Balken immer den Wert als Text daneben. Über- und Unterschreitung des Ziels erscheinen mit Symbol und Text, nicht nur farbig.
+Makronährstoffe tragen feste Farben über alle Ansichten (F6, D-333): Eiweiß `--macro-protein` (Türkis), Kohlenhydrate `--macro-carbs` (Blau), Fett `--macro-fat` (Violett), kcal ohne Makro `--macro-other` (Grau); Kalorien neutral `--chart-total`. Das gilt für Ring, Legende, Balken, die kompakte Fassung auf „Heute“ und Diagramme mit Makros; `--data-*` bleibt für andere Reihen. Alle Makrofarben erreichen 3:1 auf `--surface` und `--surface-2`; Makro-Balken zeigen trotzdem immer den Wert als Text daneben. Über- und Unterschreitung des Ziels erscheinen mit Symbol und Text, nicht nur farbig.
 
 ## 9. Navigation und Sitemap
 

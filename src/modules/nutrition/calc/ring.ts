@@ -75,3 +75,84 @@ export function macroRing(
     over: Math.max(0, eaten - target),
   };
 }
+
+/**
+ * Übergang an einer Naht zweier Abschnitte (F6 Abschnitt 2, D-333): etwa 18° Bogen in jeden der
+ * beiden Abschnitte, höchstens ein Drittel des kürzeren, damit die Anteile erkennbar bleiben.
+ */
+export const SEAM_HALF_DEG = 18;
+export const SEAM_MAX_SHARE = 1 / 3;
+/** Der Übergang besteht aus feinen Schritten von höchstens 1° Bogen. */
+export const SEAM_STEP_DEG = 1;
+
+export interface RingArc {
+  part: RingPart;
+  /** Beginn und Länge in Grad, im Uhrzeigersinn ab 12 Uhr. */
+  start: number;
+  sweep: number;
+}
+
+export interface RingSeam {
+  from: RingPart;
+  to: RingPart;
+  /** Lage der Naht in Grad ab 12 Uhr; beim vollen Ring liegt die letzte bei 360°. */
+  at: number;
+  /** So weit reicht der Übergang in jeden der beiden Abschnitte, in Grad. */
+  half: number;
+}
+
+export interface RingGeometry {
+  arcs: RingArc[];
+  seams: RingSeam[];
+  /** Runde Enden am Anfang und am Ende des Bogens; beim vollen Ring keine. */
+  caps: { part: RingPart; deg: number }[];
+}
+
+/**
+ * Lage der Abschnitte, Nähte und runden Enden. Der Übergang liegt symmetrisch um die Naht, so
+ * bleibt die sichtbare Grenze an der richtigen Stelle; beim vollen Ring (über dem Ziel) auch vom
+ * letzten zum ersten Abschnitt, dann ohne Enden.
+ */
+export function ringGeometry(model: MacroRingModel): RingGeometry {
+  const full = model.fill >= 1;
+  const arcs: RingArc[] = [];
+  let at = 0;
+  for (const { part, share } of model.segments) {
+    const sweep = model.fill * 360 * share;
+    arcs.push({ part, start: at, sweep });
+    at += sweep;
+  }
+  const seams = arcs.flatMap((a, i): RingSeam[] => {
+    const b = arcs[i + 1] ?? (full && arcs.length > 1 ? arcs[0] : undefined);
+    if (!b) return [];
+    const half = Math.min(SEAM_HALF_DEG, a.sweep * SEAM_MAX_SHARE, b.sweep * SEAM_MAX_SHARE);
+    return [{ from: a.part, to: b.part, at: a.start + a.sweep, half }];
+  });
+  const first = arcs[0];
+  const last = arcs[arcs.length - 1];
+  const caps =
+    first && last && !full
+      ? [
+          { part: first.part, deg: 0 },
+          { part: last.part, deg: last.start + last.sweep },
+        ]
+      : [];
+  return { arcs, seams, caps };
+}
+
+/**
+ * Feine Schritte eines Übergangs: gleich lange Bögen von höchstens `SEAM_STEP_DEG`, je mit dem
+ * Anteil `t` des zweiten Abschnitts an der Mischfarbe (0 bis 1, gemessen in der Mitte des Schritts).
+ */
+export function seamSteps(seam: RingSeam): { start: number; end: number; t: number }[] {
+  const width = 2 * seam.half;
+  if (width <= 0) return [];
+  const count = Math.max(1, Math.ceil(width / SEAM_STEP_DEG - 1e-9));
+  const step = width / count;
+  const begin = seam.at - seam.half;
+  return Array.from({ length: count }, (_, k) => ({
+    start: begin + k * step,
+    end: begin + (k + 1) * step,
+    t: (k + 0.5) / count,
+  }));
+}

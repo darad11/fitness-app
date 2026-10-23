@@ -36,6 +36,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §8 Nächste Schritte | Nährstoffe mit Referenzwerten, Grundnahrungsmittel und Suche, eigene Workouts, Ausführungsanleitungen als Punkte 58 bis 61 im Plan; nicht begonnen | D-330 | eingetragen |
 | F5 §9 Abschluss | Prüfung auf 360, 390 und 768 pt (39 Ansichten), fünf Korrekturen für schmale Breiten, Test „Seitenende“ mit modalem Dialog, Screenshots, Übersicht und Archiv erneuert | D-331 | umgesetzt |
 | F6 §1 Logo der Kopfzeile | Ursache der Unschärfe: iOS legt über die obersten rund 40 pt eine eigene Unschärfe, das Logo lag darin; auf iPhone und iPad beginnt alles, was oben ruht, 2 rem tiefer (Logo bei 46 pt). Dazu Logo-Datei in Anzeigegröße 106 × 28 auf ganzen Pixeln; in der App kein Filter, kein Glas und nichts über dem Logo | D-332 | umgesetzt; Wirkung am iPhone nur am Gerät prüfbar (T-IPH-M0 Schritt 6) |
+| F6 §2 Makro-Ring V2 | Eiweiß Türkis, Kohlenhydrate Blau, Fett Violett in Ring, Balken und auf „Heute“; weiche Übergänge über 2 × 18° (höchstens ein Drittel des kürzeren Abschnitts) aus feinen Schritten, Mischfarben in OKLab ohne grelle oder trübe Töne; Kontrast 3:1 auf `--surface` und `--surface-2` | D-333 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -209,6 +210,15 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `e2e/header-logo.spec.ts` (dreifache Pixeldichte, 360, 390, 768 pt, oben, angescrollt, gescrollt und zurück; dazu der Abstand mit gesetztem Token für Logo, „Später“ und klebenden Kopf) und `src/app/edge-clear.test.ts`; angepasst `e2e/shell.spec.ts` (Breite 106).
 - Dokumente: `docs/decisions.md` (D-332), `docs/known-limitations.md` (Unschärfe am oberen Rand), `docs/testing.md` (T-IPH-M0 Schritt 6, Protokoll), `brand-tokens.md` (Abschnitt 2.6).
 
+### F6 §2 Makro-Ring V2
+
+- Farben: `--macro-protein` #34D6C0, `--macro-carbs` #5A92FF, `--macro-fat` #B08CFF (dunkel, ausgeliefert); hell (angelegt) #0E9685, #2F6FE0, #7B5CE0. Der Vorschlag #0F9E8C für Türkis hell erreichte auf `--surface-2` nur 2,95:1 und ist deshalb etwas dunkler. Lime bleibt für Bedienung und Fortschritt.
+- Überall gleich: Ring und Balken auf „Ernährung“ und auf „Heute“; die Balken nehmen die Farben aus `RING_COLORS`, eine zweite Liste entfällt. Diagramme mit Makros gibt es noch nicht, die Regel dafür steht in `design-system.md` Abschnitt 8.4.
+- Übergänge: je Naht etwa 18° in jeden Abschnitt, höchstens ein Drittel des kürzeren (vorher 3° insgesamt), aus feinen Schritten von höchstens 1° mit eigener Mischfarbe. Gemischt wird in OKLab. Wörtlich „über den Farbton“ in OKLCH lag die Mitte zwischen Türkis und Blau außerhalb des darstellbaren Bereichs und erschien als greller Cyan-Ton (#00BCEC); in OKLab wandert der Farbton ebenso gleichmäßig, bleibt darstellbar und behält mindestens 85 % der Buntheit. Runde Enden, 0 kcal und Überschreitung wie in F5.
+- Geändert: `src/shared/ui/tokens.css` (Makrofarben), `nutrition/calc/ring.ts` (`ringGeometry`, `seamSteps`), `nutrition/ui/MacroRing.tsx` (feine Schritte, `ringMix`, ohne SVG-Verläufe), `nutrition/ui/NutritionPage.tsx` (Balken aus `RING_COLORS`).
+- Tests: `calc/ring.test.ts`, `ui/macro-ring.test.tsx`, `src/shared/ui/tokens.test.ts` (3:1 auch auf `--surface-2`), `e2e/nutrition-ring.spec.ts` („Ring V2 …“).
+- Dokumente: `docs/decisions.md` (D-333), `brand-tokens.md` (Abschnitte 2.0, 2.3 und 3), `docs/design-system.md` (Abschnitt 8.4), `docs/testing.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -326,6 +336,12 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §1: `pnpm test` | 23.10.2026 | 862 Tests in 105 Dateien bestanden |
 | F6 §1: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,3 KB von 250 KB (gzip) |
 | F6 §1: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 280 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
+| F6 §2: `e2e/nutrition-ring.spec.ts`, `calc/ring.test.ts`, `ui/macro-ring.test.tsx`, `tokens.test.ts` | 23.10.2026 | E2E 10 bestanden, 2 übersprungen; Unit-Tests bestanden. Gegenprobe gegen `6f99fc6` mit den neuen Tests: E2E „Ring V2 …“ fehlgeschlagen („/ernaehrung: Ring“, alte Farben), 6 Unit-Tests fehlgeschlagen („ringGeometry is not a function“ und die Schritte im Ring); `tokens.test.ts` auch mit den alten Farben bestanden (Schutz, kein Fehlernachweis) |
+| F6 §2: erster Entwurf mit Mischfarben in OKLCH | 23.10.2026 | Bild bei dreifacher Dichte: an der Naht Türkis–Blau ein greller Cyan-Ton. Nachgerechnet: die Mitte liegt außerhalb von sRGB (Rot −0,23), abgeschnitten #00BCEC. Umgestellt auf OKLab; der E2E-Test prüft seitdem auch Darstellbarkeit und Buntheit |
+| F6 §2: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §2: `pnpm test` | 23.10.2026 | 876 Tests in 105 Dateien bestanden |
+| F6 §2: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,3 KB von 250 KB (gzip) |
+| F6 §2: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 282 bestanden, 32 übersprungen, 0 fehlgeschlagen (7,0 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

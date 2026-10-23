@@ -44,9 +44,11 @@
   /* Kachel hinter dem F in der Kopfzeile. */
   --tile: #0d1118;
   --tile-border: #3c424e;
-  --macro-protein: #c7ff46;
-  --macro-carbs: #4c7a00;
-  --macro-fat: #e0a33a;
+  /* Makros (F6, D-333): eigene kühle Familie Türkis, Blau, Violett; Lime bleibt Bedienung und
+     Fortschritt. Ring, Balken, Legenden und Diagramme mit Makros nutzen nur diese Tokens. */
+  --macro-protein: #34d6c0;
+  --macro-carbs: #5a92ff;
+  --macro-fat: #b08cff;
   /* kcal ohne Makro im Ring der Ernährung (D-326): neutrales Grau wie `--data-8`. */
   --macro-other: #8d96a3;
   /* Diagramme: eine Reihe in Lime; weitere Reihen in fester Reihenfolge. */
@@ -118,9 +120,10 @@
   --ink: #0c1219;
   --tile: #0d1118;
   --tile-border: #3c424e;
-  --macro-protein: #4c7a00;
-  --macro-carbs: #2b7446;
-  --macro-fat: #b56f00;
+  /* Hell (angelegt): Vorschlag aus F6, Türkis etwas dunkler für 3:1 auf surface-2 und der Spur. */
+  --macro-protein: #0e9685;
+  --macro-carbs: #2f6fe0;
+  --macro-fat: #7b5ce0;
   --macro-other: #6f7886;
   --data-1: #4c7a00;
   --data-2: #b56f00;

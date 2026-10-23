@@ -1,6 +1,6 @@
 # FORM · Design-Tokens der App
 
-Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326); F6 (Logo auf ganzen Pixeln, Abstand am oberen Rand: D-332; Makros Türkis, Blau, Violett: D-333) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
@@ -22,8 +22,8 @@ Abgleich nach `handover-markenassets.md` Paket E: Die Variablen aus `form-app-as
 
 | `brand.css` | Wert | App-Token (dunkel, ausgeliefert) | Wert in der App | Stand |
 |---|---|---|---|---|
-| `--form-green` | #C7FF46 | `--accent`, `--accent-ink`, `--focus`, `--macro-protein`, `--data-1` | #c7ff46 | gleich |
-| `--form-green-dark` | #4C7A00 | `--macro-carbs`, `--data-6`; hell (angelegt) `--accent`, `--accent-ink` | #4c7a00 | gleich |
+| `--form-green` | #C7FF46 | `--accent`, `--accent-ink`, `--focus`, `--data-1` | #c7ff46 | gleich |
+| `--form-green-dark` | #4C7A00 | `--data-6`; hell (angelegt) `--accent`, `--accent-ink` | #4c7a00 | gleich |
 | `--form-ink` | #0C1219 | `--bg`, `--bg-top`, `--accent-fg`, `--action-fg`, `theme-color`, Manifest | #0c1219 | gleich |
 | `--form-tile` | #0D1118 | `--tile` | #0d1118 | gleich |
 | `--form-tile-border` | #3C424E | `--tile-border` | #3c424e | gleich |
@@ -80,9 +80,9 @@ Grundfläche, Akzent und Kachel der App entsprechen damit den Markenfarben. Abwe
 
 | Token | Alt hell | Alt dunkel | Neu dunkel | Hell (angelegt) | Marke |
 |---|---|---|---|---|---|
-| `--macro-protein` | #78aff2 | #78aff2 | #c7ff46 | #4c7a00 | `protein` |
-| `--macro-carbs` | #4fbf86 | #4fbf86 | #4c7a00 | #2b7446 | `carbs` |
-| `--macro-fat` | #e5a947 | #e5a947 | #e0a33a | #b56f00 | `fat` |
+| `--macro-protein` | #78aff2 | #78aff2 | #34d6c0 Türkis (F6, D-333; F5: #c7ff46) | #0e9685 (Vorschlag #0F9E8C etwas dunkler, für 3:1 auf `--surface-2`) | – (eigene kühle Familie; Lime bleibt Bedienung und Fortschritt) |
+| `--macro-carbs` | #4fbf86 | #4fbf86 | #5a92ff Blau (F6, D-333; F5: #4c7a00) | #2f6fe0 | – (eigene kühle Familie) |
+| `--macro-fat` | #e5a947 | #e5a947 | #b08cff Violett (F6, D-333; F5: #e0a33a) | #7b5ce0 | – (eigene kühle Familie) |
 | `--macro-other` (neu, F5) | – | – | #8d96a3 (wie `--data-8`) | #6f7886 (wie `--data-8`) | – (neutrales Grau für kcal ohne Makro im Ring, D-326) |
 | `--data-1` | #2a78d6 | #4b94ea | #c7ff46 | #4c7a00 | `accent` (eine Reihe) |
 | `--data-2` bis `--data-8` | Orange, Aqua, Gelb, Magenta, Grün, Violett, Rot | dto. | #e0a33a, #4caf6e, #2f7cf6, #aab2be, #4c7a00, #ef6368, #8d96a3 | #b56f00, #2b7446, #1d5fcc, #4e5867, #6b8f00, #bb292f, #6f7886 | aus der Markenpalette (Abweichung: mehrere Reihen) |
@@ -91,6 +91,8 @@ Grundfläche, Akzent und Kachel der App entsprechen damit den Markenfarben. Abwe
 | `--chart-point` | #7a8394 | #8f98a9 | #6b7482 | #6f7886 | – (Abweichung, 3:1) |
 | `--meter-track` | #c9dcf5 | #1a3157 | #1a2230 | #e6ecd6 | `card-2` |
 | `--chart-total` | #3a4150 | #c9d0db | #f2f3f4 | #0c1219 | `text` |
+
+Makros (F6, D-333): Eiweiß, Kohlenhydrate und Fett haben eine eigene kühle Farbfamilie, Türkis, Blau, Violett; Lime bleibt das Signal für Bedienung und Fortschritt. Ring, Legende, Balken, die kompakte Fassung auf „Heute“, Makro-Karten und Diagramme mit Makros nutzen nur `--macro-*`, nie `--data-*` (im Code eine Quelle: `RING_COLORS` in `MacroRing.tsx`). Übergänge im Ring: je Naht etwa 18° in jeden Abschnitt, höchstens ein Drittel des kürzeren, Mischfarben in OKLab (in OKLCH lag die Mitte zwischen Türkis und Blau außerhalb des darstellbaren Bereichs und wirkte grell).
 
 ### 2.4 Anmeldung (D-270; entfallen mit Paket C, D-316)
 
@@ -168,7 +170,7 @@ Aus `tokens.test.ts` bzw. demselben Rechenweg (WCAG 2.1, gerundet). Hintergrund 
 | `--accent` (Lime) auf `--bg` / `--surface` / `--meter-track` | 16,0 / 14,7 / 13,6 | 3 |
 | `--action` auf `--surface` | 4,4 | 3 |
 | `--border-input` auf `--surface-2` | 3,4 | 3 |
-| `--macro-protein` / `--macro-carbs` / `--macro-fat` / `--macro-other` auf `--surface` | 14,7 / 3,4 / 7,8 / 5,8 | 3 |
+| `--macro-protein` / `--macro-carbs` / `--macro-fat` / `--macro-other` auf `--surface` / `--surface-2` (F6, D-333) | 9,5 / 5,8 / 6,6 / 5,8 und 8,8 / 5,3 / 6,1 / 5,3 (hell, angelegt: 3,7 / 4,7 / 4,7 / 4,5 und 3,2 / 4,1 / 4,2 / 3,9) | 3 |
 | `--chart-point` auf `--surface` | 3,7 | 3 |
 | `--border` (`line`) auf `--surface` | 1,2 | – (dekorativ) |
 | `--tile-border` auf `--tile` | 1,9 | – (dekorativ) |

@@ -986,3 +986,17 @@ Logo in Anzeigegröße auf ganzen Pixeln, Abstand unter der Unschärfe von iOS a
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 280 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
 | `pnpm check:bundle` | 236,3 KB von 250 KB |
 | Gerätetest | steht aus: T-IPH-M0 Schritt 6 (Safari-Tab und installierte App) |
+
+### F6 §2 Makro-Ring V2 · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Makros Türkis, Blau, Violett überall gleich; Übergänge über 2 × 18° aus feinen Schritten, Mischfarben in OKLab (D-333).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/nutrition-ring.spec.ts` | 10 bestanden, 2 übersprungen. Gegenprobe gegen `6f99fc6`: „Ring V2 …“ fehlgeschlagen |
+| `calc/ring.test.ts`, `ui/macro-ring.test.tsx` | bestanden; am alten Stand 6 fehlgeschlagen |
+| Bildprüfung bei dreifacher Dichte (Ring auf „Ernährung“, „Heute“, über dem Ziel) | erster Entwurf in OKLCH mit grellem Cyan an der Naht Türkis–Blau (#00BCEC, außerhalb von sRGB); in OKLab weich, ohne Kanten zwischen den Schritten |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 876 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 282 bestanden, 32 übersprungen, 0 fehlgeschlagen (7,0 min) |
+| `pnpm check:bundle` | 236,3 KB von 250 KB |

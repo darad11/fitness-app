@@ -43,7 +43,7 @@ import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
 import { KitchenMenu, PILL } from './KitchenMenu';
-import { MacroRing, ringLabel } from './MacroRing';
+import { MacroRing, RING_COLORS, ringLabel } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
 import { brandedName, dayDate, describeAmount, entryNameAndBrand, grams, kcal } from './format';
 
@@ -59,11 +59,11 @@ const SLOT_ICONS: Record<MealSlot, LucideIcon> = {
 const MACROS = ['protein', 'carbs', 'fat'] as const;
 type Macro = (typeof MACROS)[number];
 
-/** Farben der Makro-Balken: Lime, Grün dunkel, Orange gedämpft (Tokens, Kontrast in tokens.test.ts). */
+/** Farben der Makro-Balken: dieselben wie im Ring, Türkis, Blau, Violett (D-333). */
 const MACRO_COLORS: Record<Macro, string> = {
-  protein: 'var(--macro-protein)',
-  carbs: 'var(--macro-carbs)',
-  fat: 'var(--macro-fat)',
+  protein: RING_COLORS.protein,
+  carbs: RING_COLORS.carbs,
+  fat: RING_COLORS.fat,
 };
 
 function macroGoal(

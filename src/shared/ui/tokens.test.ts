@@ -157,9 +157,10 @@ describe('Farbtokens', () => {
       ['action', 'surface'],
       ['action', 'bg'],
       ['success', 'ink'],
-      ...['macro-protein', 'macro-carbs', 'macro-fat', 'macro-other'].map((ring) => [
-        ring,
-        'surface',
+      // Makros (F6, D-333): Ring, Balken und Legende auf Karte und card-2.
+      ...['macro-protein', 'macro-carbs', 'macro-fat', 'macro-other'].flatMap((macro) => [
+        [macro, 'surface'],
+        [macro, 'surface-2'],
       ]),
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);

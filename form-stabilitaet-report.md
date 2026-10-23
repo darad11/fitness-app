@@ -12,6 +12,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 |---|---|---|---|
 | §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
 | §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt, Wiederholung in der CI ausstehend |
+| §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, WebKit in der CI und Gerätetest ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -127,4 +128,59 @@ Siehe `docs/testing.md`, Protokoll „Stabilität §2“.
 ### Offen
 
 - Ergebnis der 20 Wiederholungen in der CI (Chromium und WebKit).
+
+## 4. §3 Wiederherstellen aus dem Export
+
+### Ausgangslage
+
+Eine Exportdatei ließ sich nicht wieder einspielen (A-14). Wer die App vom Home-Bildschirm entfernt, das Gerät wechselt oder Speicher verliert, kam ohne Synchronisierung nicht an seine Daten.
+
+### Ablauf
+
+1. Mehr › Daten und Sicherung › „Sicherung wählen“.
+2. FORM prüft die Datei. Bei einem Fehler nennt es den Grund und sagt: „An deinen Daten hat sich nichts geändert.“ Gründe: nicht lesbar, zu groß, keine Sicherung von FORM, beschädigt, von einer neueren Version, ungültiger Eintrag (mit seiner Art, nie mit Inhalt).
+3. Zusammenfassung „In dieser Sicherung“: Stand, Zeitraum, Trainings, Ernährungseinträge, Aufgaben. Dazu der Hinweis, dass FORM alle Daten dieses Geräts ersetzt und vorher den aktuellen Stand als Datei sichert; mit Synchronisierung: „Beim nächsten Abgleich übernehmen deine anderen Geräte den wiederhergestellten Stand.“
+4. „Wiederherstellen“, dann die Rückfrage „Daten ersetzen?“ mit „Sichern und ersetzen“. Auf einem leeren Gerät heißt sie „Sicherung übernehmen?“ mit „Übernehmen“; es gibt dann nichts vorher zu sichern.
+5. FORM legt die Datei `fitness-sicherung-vor-wiederherstellung-…json` an (Teilen-Menü bzw. Download). Bricht man ab, ersetzt es nichts. Dann ein Snapshot, dann das Ersetzen in einer Transaktion. Während eines Trainings ist das gesperrt.
+
+### Regeln
+
+- **Alles oder nichts:** Schon ein ungültiger Eintrag lehnt die ganze Datei ab. Scheitert das Ersetzen mitten drin, ist nichts geändert.
+- **Ältere Fassungen:** Schritte je Format und Dokumentart (bisher keine, weil es nur Format 1 und Schemaversion 1 gibt). Sicherungen älterer Datenbankversionen werden angenommen; Arten, die sie noch nicht kannten, gelten als leer.
+- **Ersetzen:** Jedes Dokument der Sicherung bekommt einen neuen Stempel dieses Geräts; Löschmarken bleiben Löschmarken. Was nur lokal lag, bekommt eine Löschmarke. Ein abgeschlossenes Training dieses Geräts bleibt, wenn die Sicherung es noch laufend oder verworfen enthält (K-01, K-03). Die Projektion der Trainings wird neu geschrieben.
+- **Synchronisierung:** Der eingespielte Stand ist die jüngste Änderung und geht an die anderen Geräte. Es bleiben die Regeln aus `data-model.md` 7.2: geänderte Programme und Rezepte eines anderen Geräts werden zur Konfliktkopie (K-09, K-17), ein dort abgeschlossenes Training gewinnt (K-01), dort neu Angelegtes bleibt. Einzelheiten: `data-model.md` 7.5 und D-345.
+
+### Änderungen
+
+- Neues Modul `src/modules/backup`: `model/backup.ts` (Hülle, Gründe, Zusammenfassung), `calc/check.ts` (Prüfung), `calc/migrate.ts` (Schritte für ältere Fassungen), `calc/summary.ts`, `calc/keep.ts` (K-01, K-03), `data/kinds.ts` (Dokumentarten aller Module), `service/restoreService.ts` (Lesen, Ersetzen), `ui/RestoreCard.tsx`.
+- `src/shared/db/restore.ts`: `replaceDocuments`, eine Transaktion über alle Dokumenttabellen, Uhr und Projektion.
+- Jedes Modul nennt seine Dokumentarten über `…DocDefs()` in seiner `index.ts`; sie laden erst bei Bedarf. `src/modules/sync/index.ts`: `loadSyncSignedIn` für den Hinweis.
+- Texte in `src/shared/i18n/de-backup.ts` (eigene Datei, lädt mit der Seite).
+- `src/modules/settings/ui/DataPage.tsx`: Karte unter „Daten exportieren“.
+
+### Geänderte Dateien
+
+- Neu: `src/modules/backup/` (wie oben, dazu `index.ts`, `backup.test.ts`, `ui/restore-card.test.tsx`), `src/shared/db/restore.ts`, `src/shared/i18n/de-backup.ts`, `e2e/restore.spec.ts`
+- Geändert: `src/shared/db/index.ts`, `src/modules/{training,exercises,body,goals,settings,habits,nutrition,shopping,water,sync}/index.ts`, `src/modules/settings/ui/DataPage.tsx`
+- Dokumente: `docs/decisions.md` (D-345), `docs/data-model.md` (7.4, 7.5, 11), `docs/architecture.md` (Modulstruktur), `docs/known-limitations.md`, `docs/testing.md`, `docs/feature-inventory.md` und CSV (SY-04), `docs/implementation-plan.md` (Punkt 66), `docs/CHANGELOG.md`, `audit-report.md` (A-14)
+
+### Tests mit Ergebnis
+
+Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §3“.
+
+| Test | Ergebnis |
+|---|---|
+| `backup.test.ts` (neu) | 23 bestanden; Gegenprobe K-01/K-03 mit abgeschalteter Regel 1 von 1 fehlgeschlagen |
+| `restore-card.test.tsx` (neu) | 4 bestanden |
+| `e2e/restore.spec.ts` (neu, Chromium Desktop und Pixel 7) | 2 bestanden |
+| `pnpm test` | 109 Dateien, 952 Tests bestanden |
+| `pnpm test:e2e` (Chromium) | 318 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| `pnpm check:bundle` | Startansicht 239,4 KB von 250 KB |
+| WebKit | in der CI zu diesem Abschnitt |
+
+### Offen
+
+- „Zusammenführen“ (AK-DAT-03): eine neue Funktion, nicht Teil dieses Auftrags.
+- Snapshots über die App wiederherstellen (A-06).
+- Gerätetest am iPhone (Dateien-App, Teilen-Menü).
 

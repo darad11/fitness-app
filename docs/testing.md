@@ -1196,3 +1196,19 @@ Linse der Tab-Leiste, Wasser-Schalter per Tastatur, Seitenende auf `/mehr/synchr
 | `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 316 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,6 min) |
 | 20 Wiederholungen in der CI (`repeat.yml`, Chromium und WebKit im Image) | nach dem Push |
+
+### Stabilität §3: Wiederherstellen aus dem Export · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Prüfung, Zusammenfassung, Ersetzen, Regeln für die Synchronisierung (A-14, D-345). Bericht: `form-stabilitaet-report.md` Abschnitt 4.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/backup/backup.test.ts` (neu) | 23 bestanden: Dokumentarten gleich `EXPORT_TYPES`; Export angenommen, Zusammenfassung; ältere Sicherung ohne neuere Arten angenommen; fremde, beschädigte, neuere und ungültige Dateien mit Grund abgelehnt (13 Fälle, darunter doppelte ID, falsche Art, Wert außerhalb des Schemas, Stand in der Zukunft, zu viele Dokumente); Migration Schritt für Schritt, ohne Schritt abgelehnt; keine JSON-Datei und zu große Datei; abgelehnte Dateien ändern weder Daten noch Uhr; Export, Änderungen, Import: fachlich derselbe Stand, nur lokal Liegendes gelöscht markiert, neue Stempel dieses Geräts, Projektion neu; in eine leere Datenbank (AK-DAT-02) ohne Sicherung vorher; zweimal eingespielt unverändert; während eines Trainings nichts gesichert und nichts ersetzt; abgebrochene Sicherung des aktuellen Stands ersetzt nichts; Fehler mitten in der Transaktion (Uhr nicht speicherbar) lässt alles wie vorher; K-01 und K-03 (fünf Fälle) |
+| Gegenprobe K-01/K-03: Regel abgeschaltet (`keep: () => false`) | 1 von 1 fehlgeschlagen (das abgeschlossene Training wurde durch die laufende Fassung ersetzt) |
+| `src/modules/backup/ui/restore-card.test.tsx` (neu) | 4 bestanden: fremde Datei mit Grund abgelehnt; Zusammenfassung, Rückfrage „Daten ersetzen?“, vorher eine Datei `fitness-sicherung-vor-wiederherstellung-…`, danach nur das Gewicht der Sicherung; leeres Gerät: „Sicherung übernehmen?“ ohne Datei vorher; während eines Trainings gesperrt |
+| `e2e/restore.spec.ts` (neu, Chromium Desktop und Pixel 7) | 2 bestanden: Gewicht erfassen, exportieren, ändern; fremde, neuere und abgeschnittene Datei abgelehnt, Gewicht unverändert; echte Sicherung: Zusammenfassung, zweimal bestätigt, Download der Sicherung vorher, „Die Sicherung vom … ist wiederhergestellt.“, Gewicht wie in der Sicherung, auch nach Neuladen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 109 Dateien, 952 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 239,4 KB von 250 KB (die Karte und ihre Texte laden mit der Seite „Daten und Sicherung“); Vorab-Liste 170 von 229 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 318 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,3 min) |
+| WebKit | in der CI zu diesem Abschnitt |

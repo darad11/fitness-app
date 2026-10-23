@@ -1,5 +1,19 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.48 · 23.10.2026 · Phase Stabilität, Abschnitt 3 (Wiederherstellen aus dem Export)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-345: Prüfung, Zusammenfassung, Ersetzen, Regeln für die Synchronisierung |
+| `data-model.md` | Abschnitt 7.5 neu; 7.4 und 11 nachgezogen |
+| `architecture.md` | Modulstruktur: `backup/` |
+| `known-limitations.md` | Neuer Abschnitt „Wiederherstellen aus dem Export“; Startbild-Zeile nachgezogen |
+| `testing.md` | Protokoll „Stabilität §3“ |
+| `feature-inventory.md` | Version 0.16: SY-04 „Implementiert“ |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `audit-report.md` | A-14 behoben (Ersetzen) |
+| `form-stabilitaet-report.md` | Abschnitt 4 |
+
 ## Version 0.47 · 23.10.2026 · Phase Stabilität, Abschnitt 2 (wackelnde Tests und CI)
 
 | Datei | Änderung |

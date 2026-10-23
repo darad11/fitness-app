@@ -395,6 +395,18 @@ Für den Import (R1) fehlt die Basis. Dann gilt der **2-Wege-Merge** aus Abschni
 5. Tombstones aus der Datei löschen lokal nur, wenn sie jünger sind als die lokale Fassung; für Trainingseinheiten gilt zusätzlich K-03.
 6. Die Zusammenfassung nennt je Typ: neu, aktualisiert, unverändert, gelöscht.
 
+Der Import mit Zusammenführen (AK-DAT-03) ist noch nicht umgesetzt; umgesetzt ist das Ersetzen nach Abschnitt 7.5.
+
+### 7.5 Wiederherstellen aus dem Export (Ersetzen, D-345)
+
+1. **Prüfen, ohne etwas zu ändern:** lesbares JSON bis 50 MB, Kennung `fitness-app-backup`, Hülle nach Abschnitt 11, Format und Datenbankversion nicht neuer als die App, Stand höchstens einen Tag in der Zukunft, höchstens 500.000 Dokumente, nur bekannte Arten. Je Dokument: Basisfelder, Art passend zur Liste, keine doppelte ID je Tabelle, Schemaversion nicht neuer als die der App, dann das Zod-Schema des zuständigen Moduls. Ein einziger Fehler lehnt die ganze Datei ab; die Meldung nennt den Grund und bei einem ungültigen Eintrag dessen Art, nie den Inhalt.
+2. **Ältere Fassungen:** Für Format und Dokumentarten gibt es Schritte von Version `n` nach `n + 1` (`src/modules/backup/calc/migrate.ts`); bisher keine, weil es nur Format 1 und Schemaversion 1 gibt. Ältere Datenbankversionen werden angenommen; Arten, die sie noch nicht kannten (z. B. Wasser vor v8), gelten als leer.
+3. **Zusammenfassung:** Stand der Sicherung, Zeitraum der Einträge (`dayKey` von Training, Ernährung, Gewicht, Aufgaben-Einträgen, Wasser), Zahl der abgeschlossenen Trainings, der Ernährungseinträge und der Aufgaben; gezählt wird, was nicht gelöscht ist.
+4. **Vorher:** kein laufendes Training (vorher und in der Transaktion geprüft). Liegt auf dem Gerät etwas, das nicht gelöscht ist, sichert die App den aktuellen Stand als Datei `fitness-sicherung-vor-wiederherstellung-JJJJ-MM-TT-HHMM.json`; bricht das ab, ersetzt sie nichts. Danach ein Snapshot (Anlass „Import“).
+5. **Ersetzen in einer Transaktion** über alle Dokumenttabellen, `meta` (Uhr) und `exerciseHistory`: Jedes Dokument der Sicherung erhält einen neuen HLC dieses Geräts und dessen Geräte-ID; Löschmarken der Datei bleiben Löschmarken. Was nur lokal liegt, bekommt eine Löschmarke (Trainings mit `deletedFrom`). Ein abgeschlossenes, nicht gelöschtes Training dieses Geräts bleibt, wenn die Sicherung es noch laufend oder als verworfene laufende Kopie enthält (K-01, K-03). Die Projektion wird für alle betroffenen Trainings neu geschrieben. Scheitert ein Schritt, ist nichts geändert.
+6. **Unberührt:** Fehlerprotokoll, Anmeldungen (Synchronisierung, Schritte), `syncBase`, Cursor der Synchronisierung, Anzeigeeinstellungen in `meta`, importierte Lebensmitteldaten.
+7. **Synchronisierung:** Der eingespielte Stand ist die jüngste Änderung; beim nächsten Abgleich geht er an den Server, und die anderen Geräte übernehmen ihn, auch die Löschmarken. Nach den Regeln aus 7.2 bleiben Ausnahmen: Hat ein anderes Gerät seit dem letzten Abgleich dieses Geräts ein Programm oder Rezept geändert, gilt dessen Fassung, und die eingespielte bleibt als Konfliktkopie (K-09, K-17). Ein dort abgeschlossenes Training schlägt eine eingespielte laufende Fassung (K-01). Was ein anderes Gerät nach dem letzten Abgleich dieses Geräts neu angelegt hat, kennt das Wiederherstellen nicht; es bleibt und erscheint beim nächsten Abgleich.
+
 ## 8. Integritätsregeln
 
 | Bereich | Regel | Durchsetzung |
@@ -464,7 +476,7 @@ Alle Formeln liegen als reine Funktionen in `calc/` und sind ohne Oberfläche ge
 }
 ```
 
-Tombstones sind enthalten, Projektionen nicht (sie werden neu aufgebaut). Eine Programmdatei (AK-PRG-13) nutzt dasselbe Format mit genau einem Programm. Der Import validiert jedes Dokument mit Zod und lehnt die Datei bei Fehlern vollständig ab (AK-DAT-05).
+Tombstones sind enthalten, Projektionen nicht (sie werden neu aufgebaut). Eine Programmdatei (AK-PRG-13) nutzt dasselbe Format mit genau einem Programm. Das Wiederherstellen (Abschnitt 7.5, D-345) prüft jedes Dokument mit Zod und lehnt die Datei bei Fehlern vollständig ab (AK-DAT-05). `schemaVersion` der Hülle ist die Version der Datenbank beim Export; fehlt eine Art, gilt sie als leer.
 
 ## 12. Serverschema (R3, Entwurf)
 

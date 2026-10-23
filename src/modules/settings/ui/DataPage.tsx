@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Download, HardDrive } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { RestoreCard } from '@/modules/backup';
 import {
   backupFileName,
   buildBackup,
@@ -41,9 +42,10 @@ function formatBytes(bytes: number, number: (value: number, digits: number) => s
 }
 
 /**
- * Daten und Sicherung (S-35, AP 1.8): Speicherstatus (AK-PWA-05), JSON-Export (AK-DAT-01) und
- * die vorhandenen Snapshots (AK-DAT-06, nur Anzeige). Import, Wiederherstellen und Löschen
- * folgen mit M2 und M4 (AK-UX-01: keine Knöpfe ohne Funktion).
+ * Daten und Sicherung (S-35, AP 1.8): Speicherstatus (AK-PWA-05), JSON-Export (AK-DAT-01),
+ * Wiederherstellen aus dem Export (A-14, D-345) und die vorhandenen Snapshots (AK-DAT-06, nur
+ * Anzeige). Zusammenführen, Wiederherstellen eines Snapshots und Löschen folgen später
+ * (AK-UX-01: keine Knöpfe ohne Funktion).
  */
 export function DataPage() {
   const rt = useDb();
@@ -141,6 +143,7 @@ export function DataPage() {
               : t.data.exportResult[exportState]}
           </p>
         </Card>
+        <RestoreCard />
         <Card title={t.data.storageTitle}>
           <div aria-busy={storage === null}>
             {storage ? <StatusList items={storageItems} /> : <p className="text-muted">…</p>}

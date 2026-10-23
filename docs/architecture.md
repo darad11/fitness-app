@@ -90,7 +90,7 @@ src/
     body/         Körpergewicht (Schritt E); R4: Maße, Fotos
     goals/        Wochenziel, Zielgewicht
     settings/     Einstellungen, Profil, Installation, Über
-    data/         Export, Import, Snapshots, Speicherstatus, Wiederherstellung
+    backup/       Wiederherstellen aus dem Export: Prüfung, Zusammenfassung, Ersetzen (D-345)
     nutrition/    R2
     recipes/      R2 (Rezepte, Wochenmenü, Einkaufsliste)
     habits/       Tagesaufgaben mit Serie (Schritt F)

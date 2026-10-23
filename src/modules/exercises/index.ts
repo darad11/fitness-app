@@ -1,4 +1,5 @@
 // Öffentliche Schnittstelle des Moduls „exercises" (Basisbibliothek, Suche).
+import type { DocDef, RootFields } from '@/shared/db';
 import { lazy } from 'react';
 
 /** Übungsauswahl (S-39), erst beim Öffnen geladen, damit sie den Start nicht verlangsamt. */
@@ -41,3 +42,12 @@ export {
   type Muscle,
   type TrackingMode,
 } from './model/exercise';
+
+/**
+ * Dokumentarten für das Wiederherstellen aus dem Export (D-345): eigene Übungen, persönliche
+ * Angaben. Erst bei Bedarf geladen, damit die Startansicht nicht wächst.
+ */
+export async function exerciseDocDefs(): Promise<readonly DocDef<RootFields>[]> {
+  const m0 = await import('./data/customExercises');
+  return [m0.customExerciseDef, m0.exercisePrefDef];
+}

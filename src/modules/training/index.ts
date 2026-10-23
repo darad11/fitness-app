@@ -1,4 +1,5 @@
 // Öffentliche Schnittstelle des Moduls „training".
+import type { DocDef, RootFields } from '@/shared/db';
 export { trainingRoutes } from './routes';
 export { SessionBanner } from './ui/SessionBanner';
 export {
@@ -42,3 +43,16 @@ export async function finishSession(
 export { loadSampleTemplate } from './data/sampleTemplates';
 export { liveExercises, liveSets } from './calc/session';
 export { hasActiveSession, refreshSessionProjection } from './data/sessionRepository';
+
+/**
+ * Dokumentarten für das Wiederherstellen aus dem Export (D-345): Training, Programme,
+ * Trainingszustand. Erst bei Bedarf geladen, damit die Startansicht nicht wächst.
+ */
+export async function trainingDocDefs(): Promise<readonly DocDef<RootFields>[]> {
+  const [m0, m1, m2] = await Promise.all([
+    import('./data/sessionRepository'),
+    import('./data/programRepository'),
+    import('./data/trainingStateRepository'),
+  ]);
+  return [m0.sessionDef, m1.programDef, m2.trainingStateDef];
+}

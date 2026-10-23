@@ -8,6 +8,7 @@ import { cn } from '@/shared/lib/cn';
 import {
   Button,
   Card,
+  CheckMark,
   chipClasses,
   IconButton,
   Meter,
@@ -217,17 +218,7 @@ export function ShoppingListPage() {
             }}
             className="peer sr-only"
           />
-          <span
-            aria-hidden="true"
-            className={cn(
-              'flex size-7 shrink-0 items-center justify-center rounded-pill border-2 transition-colors duration-120 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus',
-              item.doneAt !== undefined
-                ? 'border-success bg-success text-on-accent'
-                : 'border-line-input bg-surface',
-            )}
-          >
-            {item.doneAt !== undefined ? <Check className="size-4" /> : null}
-          </span>
+          <CheckMark checked={item.doneAt !== undefined} />
           <span className="min-w-0 flex-1">
             <span className={cn('block', item.doneAt !== undefined && 'text-muted line-through')}>
               {item.name}

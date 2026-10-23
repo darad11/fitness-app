@@ -1,12 +1,10 @@
-import { Settings2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
 import { useCompletedSessions } from '@/modules/training';
 import { loadWaterReached } from '@/modules/water';
 import { logError, useDb } from '@/shared/db';
 import { dayKey, localTimeZone } from '@/shared/lib/time';
 import { t } from '@/shared/i18n/de';
-import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
+import { Button, ButtonLink, Card, Meter, SettingsLink, Skeleton } from '@/shared/ui';
 import { applyAutoDone, applyWaterAutoDoneToday, setHabitDone } from '../service/habitService';
 import { TaskCheckbox } from './TaskCheckbox';
 import { useTodayTasks } from './useTodayTasks';
@@ -64,15 +62,7 @@ export function TasksCard({ className }: { className?: string }) {
       title={t.tasks.title}
       titleStyle="label"
       className={className}
-      action={
-        <Link
-          to="/heute/aufgaben"
-          aria-label={t.tasks.manage}
-          className="-mr-2 inline-flex size-touch items-center justify-center rounded-pill text-muted transition-colors duration-120 hover:bg-surface-2 hover:text-fg"
-        >
-          <Settings2 aria-hidden="true" className="size-5" />
-        </Link>
-      }
+      action={<SettingsLink to="/heute/aufgaben" label={t.tasks.manage} />}
     >
       {tasks === undefined ? (
         <div aria-busy="true">

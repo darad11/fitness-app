@@ -4,6 +4,7 @@ import { isRouteErrorResponse, useRouteError } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, PageHeader } from '@/shared/ui';
+import { hideStartSurface } from '../startSurface';
 
 export function NotFoundPage() {
   return (
@@ -52,6 +53,9 @@ export function RouteErrorView() {
 /** Fehlergrenze des Rahmens, falls die Shell selbst ausfällt. */
 export function RootErrorView() {
   useLoggedRouteError('root');
+  useEffect(() => {
+    hideStartSurface();
+  }, []);
   return (
     <main className="page-gutters mx-auto max-w-content py-10">
       <ErrorContent />

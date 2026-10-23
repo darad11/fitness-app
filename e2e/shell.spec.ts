@@ -105,7 +105,7 @@ test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-
   await expect(page.getByText(/^Letzter Export: /)).toBeVisible();
 });
 
-test('Logo am Handy auf jeder Seite links oben, 30 px hoch, führt zu „Heute“ (D-286, D-310)', async ({
+test('Logo am Handy auf jeder Seite links oben, grüne Kachel 28 px hoch, führt zu „Heute“ (D-286, D-310, D-325)', async ({
   page,
 }, testInfo) => {
   test.skip(!testInfo.project.name.includes('mobile'), 'Am Desktop zeigt die Seitenleiste beides');
@@ -119,8 +119,12 @@ test('Logo am Handy auf jeder Seite links oben, 30 px hoch, führt zu „Heute�
     await openPage(page, path);
     const brand = page.getByRole('main').getByRole('link', { name: 'FORM – zu Heute' });
     await expect(brand).toBeVisible();
-    const image = await brand.getByRole('img').boundingBox();
-    expect(Math.round(image?.height ?? 0)).toBe(30);
+    const img = brand.getByRole('img');
+    await expect(img).toHaveAttribute('src', '/brand/logo-kopfzeile-kompakt.svg');
+    const image = await img.boundingBox();
+    expect(Math.round(image?.height ?? 0)).toBe(28);
+    // Breite aus dem Seitenverhältnis der Datei: Kachel 28, Abstand 10, Wortmarke etwa 67,5.
+    expect(Math.round(image?.width ?? 0)).toBe(105);
     const logo = await brand.boundingBox();
     expect(logo?.height ?? 0).toBeGreaterThanOrEqual(44);
     const title = await page.getByRole('heading', { level: 1 }).boundingBox();

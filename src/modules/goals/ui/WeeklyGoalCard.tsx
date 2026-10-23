@@ -1,7 +1,6 @@
 import { CircleCheck } from 'lucide-react';
-import { Link } from 'react-router';
 import { t } from '@/shared/i18n/de';
-import { ButtonLink, Card, Meter } from '@/shared/ui';
+import { ButtonLink, Card, Meter, SettingsLink } from '@/shared/ui';
 import { weeklyProgress } from '../calc/goals';
 
 /** Karte „Wochenziel“ auf „Heute“ (AK-DSH-05): „x von y Trainings diese Woche“ mit Balken. */
@@ -34,14 +33,7 @@ export function WeeklyGoalCard({
       title={t.goals.weeklyTitle}
       titleStyle="label"
       className={className}
-      action={
-        <Link
-          to="/mehr/profil"
-          className="inline-flex min-h-11 items-center font-semibold text-accent-ink"
-        >
-          {t.goals.change}
-        </Link>
-      }
+      action={<SettingsLink to="/mehr/profil" label={t.goals.weeklyManage} />}
     >
       <p className="text-2xl font-semibold tabular-nums">
         {t.goals.weeklyProgress(progress.done, progress.target)}

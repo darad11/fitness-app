@@ -1,7 +1,7 @@
-import { Check } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
+import { CheckMark } from '@/shared/ui';
 
-/** Abhaken einer Aufgabe: natives Kontrollkästchen, 48 px Bedienziel, Haken als Tonfläche. */
+/** Abhaken einer Aufgabe: natives Kontrollkästchen, die ganze Zeile (48 px) als Bedienziel, Kreis 20 px (D-325). */
 export function TaskCheckbox({
   label,
   checked,
@@ -24,15 +24,7 @@ export function TaskCheckbox({
         }}
         className="peer sr-only"
       />
-      <span
-        aria-hidden="true"
-        className={cn(
-          'flex size-7 shrink-0 items-center justify-center rounded-pill border-2 transition-colors duration-120 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus',
-          checked ? 'border-success bg-success text-on-accent' : 'border-line-input bg-surface',
-        )}
-      >
-        {checked ? <Check className="size-4" /> : null}
-      </span>
+      <CheckMark checked={checked} />
       <span className={cn('min-w-0 flex-1', checked && 'text-muted line-through')}>{label}</span>
     </label>
   );

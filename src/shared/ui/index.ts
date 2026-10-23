@@ -2,6 +2,7 @@ export * from './Badge';
 export * from './Banner';
 export * from './Button';
 export * from './Card';
+export * from './CheckMark';
 export * from './Chip';
 export * from './Dialog';
 export * from './EmptyState';

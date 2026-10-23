@@ -159,6 +159,7 @@ export const de = {
     weeklyLabel: 'Trainings pro Woche',
     weeklyCardNone: 'Leg fest, wie oft du pro Woche trainieren willst.',
     weeklySet: 'Wochenziel festlegen',
+    weeklyManage: 'Wochenziel ändern',
     weeklyProgress: (done: number, target: number) => `${done} von ${target} Trainings diese Woche`,
     weeklyReached: 'Wochenziel erreicht',
     perWeek: (n: number) => (n === 1 ? '1 Training pro Woche' : `${n} Trainings pro Woche`),

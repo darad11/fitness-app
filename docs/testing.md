@@ -149,7 +149,7 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 2. „Teilen › Zum Home-Bildschirm" ausführen, App vom Home-Bildschirm starten. Erwartung: Vollbild ohne Browserleiste, Name und Icon korrekt.
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
-5. Startbild (D-317): Vorsicht, beim Entfernen vom Home-Bildschirm kann iOS die Daten der installierten App löschen, und eine Exportdatei lässt sich noch nicht wieder einspielen (AP 2.8 zurückgestellt). Deshalb vorher prüfen, dass die Synchronisierung angemeldet und abgeglichen ist, oder den Schritt an einer zweiten Adresse machen, z. B. der Vorschau von Vercel zum Pull Request (eigene Adresse, eigene leere App, D-321). Dann App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Nacht-Fläche mit dem grünen F in der Mitte, kein weißer Blitz; danach „Heute“ ohne hellen Zwischenschritt. Zu notieren: iPhone-Modell.
+5. Startbild (D-317): Vorsicht, beim Entfernen vom Home-Bildschirm kann iOS die Daten der installierten App löschen, und eine Exportdatei lässt sich noch nicht wieder einspielen (AP 2.8 zurückgestellt). Deshalb vorher prüfen, dass die Synchronisierung angemeldet und abgeglichen ist, oder den Schritt an einer zweiten Adresse machen, z. B. der Vorschau von Vercel zum Pull Request (eigene Adresse, eigene leere App, D-321). Dann App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Startbild C3 (D-325): grünes F über der Wortmarke FORM, Mitte leicht über der Bildschirmmitte, unten „FORM YOURSELF.“; kein weißer Blitz; die Startfläche der App übernimmt ohne Sprung und blendet in etwa 250 ms zu „Heute“ über, ohne hellen Zwischenschritt; der Start dauert nicht spürbar länger als vorher. Zu notieren: iPhone-Modell.
 
 ### T-IPH-M1 · iPhone, Training unter Alltagsbedingungen
 
@@ -903,4 +903,18 @@ Seitenanfang und Zurück, Etiketten der Programmkarten, „Bereit für dein Trai
 | `pnpm exec playwright test e2e/program-list.spec.ts --repeat-each=3` | 24 bestanden, 6 übersprungen (schmale Breiten nur im Handy-Projekt). Gegenprobe ohne die Änderungen: alle 5 Handy-Tests fehlgeschlagen |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 227 bestanden, 9 übersprungen, 0 fehlgeschlagen (5,5 min) |
 | `pnpm check:bundle` | 229,5 KB von 250 KB |
+
+### F5 §4 Kopfzeile, Icons, Markierungen, Startbild · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kompaktes Logo, Regler-Symbol, Kalender und Erledigt-Kreis, Seitenende, Startbild C3 und Startfläche (D-325); Gerätetest T-IPH-M0 Schritt 5 steht aus.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund (vorher: Typ von `Blob` im PNG-Leser, zwei Regeln von ESLint in den neuen Tests) |
+| `pnpm test` | 101 Dateien, 840 Tests bestanden. Gegenproben: `theme-classes.test.ts` meldet `rounded-md` („key: md“); mit den alten Startbildern schlagen 6 von 10 Tests in `splash.test.ts` fehl |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“ |
+| `pnpm exec playwright test e2e/marks.spec.ts --project=chromium-mobile --repeat-each=3` | 12 bestanden. Gegenprobe gegen den Stand vor Abschnitt 4: Regler-Symbol, Kalender und Erledigt-Kreis fehlgeschlagen, Seitenende bestanden (dort war kein Fehler). Erster Lauf einmal rot: „/heute: über dem Kreis“, weil Karten nach dem Scrollen noch wuchsen; der Test scrollt jetzt bis zum wirklichen Ende |
+| `pnpm exec playwright test e2e/start-surface.spec.ts` | 5 bestanden, 3 übersprungen (Startbild nur im Handy-Projekt). Startfläche gegen `splash-1170x2532.png`: mittlere Abweichung 0,003 von 255, kein Pixel über 64 (zuerst 1 Gerätepixel Versatz, weil Chromium eingebettete SVG-Flächen auf ganze Pixel rückt; seitdem eine SVG über den ganzen Bildschirm) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 239 bestanden, 13 übersprungen, 0 fehlgeschlagen (5,7 min) |
+| `pnpm check:bundle` | 236,0 KB von 250 KB, jetzt mit `index.html` (6,1 KB) |
 

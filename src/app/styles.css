@@ -43,10 +43,10 @@
   --spacing-page-lg: 2rem;
   --spacing-card: 1rem;
   --spacing-stack: 0.75rem;
-  /* Höhen (FORM): Kopfzeile 56, Logo 30, Tab-Leiste 64, Eingabe 48, Primärknopf 52, Chip 36,
-     Symbol-Kachel 40, kleinste Tippfläche 44 px. */
+  /* Höhen (FORM): Kopfzeile 56, Logo 28 (D-325), Tab-Leiste 64, Eingabe 48, Primärknopf 52,
+     Chip 36, Symbol-Kachel 40, kleinste Tippfläche 44 px. */
   --spacing-header: 3.5rem;
-  --spacing-logo: 1.875rem;
+  --spacing-logo: 1.75rem;
   --spacing-tabbar: 4rem;
   --spacing-control: 3rem;
   --spacing-button: 3.25rem;
@@ -100,7 +100,9 @@
   --text-tab: 0.6875rem;
   --text-tab--line-height: 1.15;
 
-  /* Radien (FORM): Karte 20, Knopf 14, Eingabe und Symbol-Kachel 12, Sheet 24, Chip rund. */
+  /* Radien (FORM): Karte 20, Knopf 14, Eingabe und Symbol-Kachel 12, Sheet 24, Chip rund;
+     Markierung (Kalenderzelle) 22,5 % ihrer Seite wie die Kachel des App-Icons (D-325). */
+  --radius-mark: 22.5%;
   --radius-input: 0.75rem;
   --radius-tile: 0.75rem;
   --radius-button: 0.875rem;
@@ -299,14 +301,6 @@
   .sidebar:hover .sidebar-label,
   .sidebar:focus-within .sidebar-label {
     opacity: 1;
-  }
-  /* Kachel-F nur eingeklappt; ausgeklappt steht das ganze Logo an derselben Stelle (D-310). */
-  .sidebar-tile {
-    transition: opacity 0.16s;
-  }
-  .sidebar:hover .sidebar-tile,
-  .sidebar:focus-within .sidebar-tile {
-    opacity: 0;
   }
 }
 

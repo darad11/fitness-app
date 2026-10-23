@@ -16,14 +16,22 @@ export function Sidebar() {
       aria-label={t.nav.label}
       className="sidebar fixed top-3 bottom-3 left-3 z-30 hidden flex-col overflow-hidden px-3 pt-4 pb-4 lg:flex"
     >
-      {/* Eingeklappt nur das F (Kachel), ausgeklappt Symbol plus Wortmarke (D-310). */}
-      <div className="relative mb-5 flex h-11 items-center px-1.5">
-        <img src="/brand/kachel-f.svg" alt="" className="sidebar-tile size-9 shrink-0" />
+      {/* Eingeklappt nur die grüne Kachel, mittig über den Symbolen; ausgeklappt blendet darüber
+          das ganze Logo ein, dessen Kachel genau auf dieser liegt (D-310, D-325). */}
+      <div className="relative mb-5 flex h-11 items-center px-2.5">
         <img
-          src="/brand/logo-kopfzeile-dunkel.svg"
+          src="/brand/kachel-kompakt.svg"
+          alt=""
+          width={28}
+          height={28}
+          className="size-logo shrink-0"
+        />
+        <img
+          src="/brand/logo-kopfzeile-kompakt.svg"
           alt={t.app.name}
-          height={30}
-          className="sidebar-label absolute left-1.5 h-logo w-auto"
+          width={105}
+          height={28}
+          className="sidebar-label absolute left-2.5 h-logo w-auto"
         />
       </div>
       <ul className="space-y-1">

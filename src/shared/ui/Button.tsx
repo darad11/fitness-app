@@ -1,3 +1,4 @@
+import { Settings2 } from 'lucide-react';
 import type { ButtonHTMLAttributes } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import { cn } from '../lib/cn';
@@ -102,5 +103,23 @@ export function IconButton({ label, tone = 'default', className, ...props }: Ico
       className={cn(ICON_BUTTON_BASE, ICON_BUTTON_TONES[tone], className)}
       {...props}
     />
+  );
+}
+
+/**
+ * Regler-Symbol oben rechts in einer Karte, führt zur Verwaltung (F5, D-325): rund wie
+ * `IconButton`, 44 px Tippfläche, Symbol 20 px; `-mr-2` rückt das Symbol an die Innenkante der
+ * Karte. Eine Komponente für „Tagesaufgaben“ und „Wochenziel“, damit Größe, Strichstärke und
+ * Lage gleich bleiben.
+ */
+export function SettingsLink({ to, label }: { to: string; label: string }) {
+  return (
+    <Link
+      to={to}
+      aria-label={label}
+      className={cn(ICON_BUTTON_BASE, ICON_BUTTON_TONES.default, '-mr-2')}
+    >
+      <Settings2 aria-hidden="true" className="size-5" />
+    </Link>
   );
 }

@@ -131,7 +131,7 @@ export function TaskDetailPage() {
 
         <Card title={td.calendar}>
           <ol
-            className="grid max-w-60 grid-cols-7 gap-1"
+            className="grid w-max grid-cols-7 gap-1.5"
             aria-label={`${td.calendar}, ${td.calendarHint}`}
           >
             {Array.from({ length: lead }, (_, i) => (
@@ -157,6 +157,10 @@ export function TaskDetailPage() {
                 {td.states[state]}
               </li>
             ))}
+            <li className="flex items-center gap-1.5">
+              <CalendarCell state="open" today small />
+              {td.states.today}
+            </li>
           </ul>
           {days.length > CALENDAR_MAX ? (
             <p className="mt-2 text-sm text-muted">{td.calendarLimited}</p>
@@ -194,7 +198,11 @@ export function TaskDetailPage() {
   );
 }
 
-/** Ein Tag im Kalender; Zustand nicht nur über Farbe (Haken, Strich, Punkt). */
+/**
+ * Ein Tag im Kalender, 28 px (F5, D-325); Zustand nicht nur über Farbe (Haken, Strich, Zahl).
+ * Heute trägt einen dünnen Rahmen in Lime mit 1 px Abstand. `small`: Muster der Legende, 14 px,
+ * mit denselben Flächen und Rändern.
+ */
 function CalendarCell({
   state,
   today = false,
@@ -210,19 +218,21 @@ function CalendarCell({
     <span
       aria-hidden="true"
       className={cn(
-        'flex items-center justify-center rounded-md text-xs font-semibold tabular-nums',
-        small ? 'size-4' : 'aspect-square w-full',
+        'flex shrink-0 items-center justify-center text-xs font-semibold tabular-nums',
+        'rounded-mark',
+        small ? 'size-3.5' : 'size-7',
         state === 'done' && 'bg-success text-on-accent',
-        state === 'open' && 'border-2 border-line-input text-fg',
+        state === 'open' && 'border-line-input text-fg',
+        state === 'open' && (small ? 'border-[1.5px]' : 'border-2'),
         state === 'notDue' && 'bg-surface-2 text-muted',
         state === 'noData' && 'border border-dashed border-line-input text-muted',
-        today && 'ring-2 ring-focus ring-offset-1 ring-offset-surface',
+        today && 'ring-1 ring-accent ring-offset-1 ring-offset-surface',
       )}
     >
       {small ? null : state === 'done' ? (
-        <Check className="size-4" />
+        <Check className="size-3.5" strokeWidth={3} />
       ) : state === 'noData' ? (
-        <Minus className="size-3.5" />
+        <Minus className="size-3" />
       ) : (
         day
       )}

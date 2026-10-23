@@ -1,6 +1,6 @@
 # FORM · Design-Tokens der App
 
-Stand: 22.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
@@ -30,7 +30,7 @@ Abgleich nach `handover-markenassets.md` Paket E: Die Variablen aus `form-app-as
 | `--form-white` | #FFFFFF | `--fg` (Text, Claim) | #f2f3f4 | Abweichung: Text in `text` #F2F3F4 aus der Übergabe Abschnitt 3; Weiß nur in den Logo-Dateien |
 | `.form-claim-sub` (Farbe) | #AAB2BE | `--fg-muted` | #aab2be | gleich |
 | `.form-claim` / `.form-claim-sub` | Inter 17/600, 13/400 | `.form-claim`, `.form-claim-sub` in `src/app/styles.css` | Systemschrift 17/600 mit 4 % Laufweite, 13/400 | Abweichung nur in der Schrift (Inter nicht gebündelt, D-203) |
-| `.form-logo-header` | Höhe 30 px | `--spacing-logo` (Kopfzeile) | 1,875 rem = 30 px | gleich |
+| `.form-logo-header` | Höhe 30 px | `--spacing-logo` (Kopfzeile) | 1,75 rem = 28 px, kompaktes Logo mit grüner Kachel (`logo-kopfzeile-kompakt.svg`) | Abweichung auf Wunsch des Produktinhabers (F5, D-325): kleiner, Kachel in `--accent` wie die Primärknöpfe |
 
 Grundfläche, Akzent und Kachel der App entsprechen damit den Markenfarben. Abweichungen gibt es nur bei Textweiß (#F2F3F4 statt #FFFFFF) und, aus Kontrastgründen, bei `danger`, `--border-input` und `--action-fg` (Abschnitt 4).
 
@@ -127,10 +127,11 @@ Alle Werte stehen als Tokens in `src/app/styles.css` (`@theme`); Tailwind erzeug
 |---|---|---|---|
 | Seitenrand Handy / Tablet / Desktop | 16 / 24 / 32 px | 20 / 24 / 32 px | `--spacing-page`, `-page-md`, `-page-lg` |
 | Innenabstand Karte / Abstand zwischen Karten | 20 / 16 px | 16 / 12 px | `--spacing-card`, `--spacing-stack` |
-| Kopfzeile / Logo | 56 / 30 px | 56 / 30 px | `--spacing-header`, `--spacing-logo` |
+| Kopfzeile / Logo | 56 / 30 px | 56 / 28 px (Kachel 28 mit Radius 22,5 %, Versalhöhe der Wortmarke 12,5, Abstand 10; F5, D-325) | `--spacing-header`, `--spacing-logo` |
 | Tab-Leiste (ohne Safe-Area) | 64 px | 64 px | `--spacing-tabbar` |
 | Eingabe / Primärknopf / Chip / Symbol-Kachel / Tippfläche | 48 / 48 / – / – / 44 px | 48 / 52 / 36 / 40 / 44 px | `--spacing-control`, `-button`, `-chip`, `-tile`, `-touch` |
 | Radius Karte / Knopf / Eingabe / Kachel / Sheet / Chip | 20 / 999 / 12 / – / 28 / 999 px | 20 / 14 / 12 / 12 / 24 / 999 px | `--radius-card`, `-button`, `-input`, `-tile`, `-sheet`, `-pill` |
+| Radius Markierung (Kalenderzelle 28 px, Legende 14 px) | – (Klasse ohne Wirkung) | 22,5 % der Seite wie die Kachel des App-Icons (F5, D-325) | `--radius-mark` |
 | Größte Inhaltsbreite | 1200 px (an fünf Stellen) | 75 rem (eine Stelle) | `--container-content` |
 | Dialog / Blatt ab Tablet / Menü / Tab-Leiste | 28 / 36 / 22 / 34 rem | gleich, als Tokens | `--container-dialog`, `-sheet`, `-menu`, `-tabbar` |
 | Logo der Anmeldung und von „Über die App“ (C) | App-Icon 72 px | 64 % der Breite, höchstens 280 px | `--container-logo` (`.brand-logo`) |
@@ -199,7 +200,7 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Claim in Weiß #FFFFFF (`brand.css`) | `--fg` #F2F3F4 | Keine neuen Hex-Werte (Leitplanken Regel 1); 16,9:1 statt 18,8:1 (C, D-316) |
 | Claim in Inter 17/600 (`brand.css`) | Systemschrift 17/600 | wie überall: Inter ist nicht gebündelt (D-203) |
 | Anmeldung als Glas-Karte mit Lichtflecken (D-270) | Logo, Claim und Felder direkt auf der Nacht-Fläche | kein Glas außer der Tab-Leiste (D-312), kein Glow in der App (Markenassets) |
-| Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad) | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach derselben Regel | iOS zeigt ein Startbild nur bei genau passendem Bildschirm; das iPhone-Modell ist nicht bekannt (D-317) |
+| Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad), nur das Symbol | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach Variante C3: Logo vertikal mittig bei 47 %, „FORM YOURSELF.“ als Fußzeile; dieselbe Regel als Startfläche in der App | iOS zeigt ein Startbild nur bei genau passendem Bildschirm (D-317); C3 nach Wahl des Produktinhabers (F5, D-325); Schriftgröße des Claims quer aus der kurzen Seite statt der Breite |
 | Mikrotext „Woche abgeschlossen: Diese Woche 3 von 4.“ | „x von y Trainings diese Woche“ | Formulierung aus AK-DSH-05 bleibt; der Sinn ist derselbe (F4, D-318) |
 | Mikrotext „Nutzer überzieht“ | nicht verwendet | Die App misst keine Belastung; ohne Grundlage keine Aussage (Leitplanken Regel 5) |
 | Push nach 21 Tagen Pause | nicht gebaut | Keine Push-Infrastruktur; Web Push braucht einen Server (D-319, `known-limitations.md`) |
@@ -209,7 +210,7 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 1. App-Farben an die Markenfarben angleichen? Grundfläche, Akzent und Kachel sind schon gleich (Abschnitt 2.0); offen sind nur Textweiß (#F2F3F4 statt #FFFFFF) und die Abweichungen aus Kontrastgründen in Abschnitt 4. Empfehlung: so lassen.
 2. Heller Modus: nicht ausgeliefert (D-311); die hellen Tokens und die `-hell`-Logos bleiben angelegt. Neu bewerten, wenn Nutzer danach fragen.
 3. Programm C heißt jetzt „Winterprogramm 2026 (Nachbau)“ (D-318), weil „Winter Arc“ zu den gestrichenen Wörtern gehört; die Quelle steht weiter in der Beschreibung. Bitte bestätigen oder einen anderen Namen nennen.
-4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App ohne weißen Blitz, hochkant und quer (D-317). Vorsicht: Beim Entfernen der alten App vom Home-Bildschirm kann iOS deren Daten löschen; erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
+4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App mit dem Startbild C3 ohne weißen Blitz und ohne Sprung zur Startfläche, hochkant und quer (D-317, D-325). Vorsicht: Beim Entfernen der alten App vom Home-Bildschirm kann iOS deren Daten löschen; erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
 
 ## 6. Screenshots
 

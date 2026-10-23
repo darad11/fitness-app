@@ -1,10 +1,11 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { Link, Outlet, useMatches } from 'react-router';
 import { ThemeSync } from '@/modules/settings';
 import { SyncRunner } from '@/modules/sync';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { GlobalBanners } from '../banners/GlobalBanners';
+import { hideStartSurface } from '../startSurface';
 import { ScrollManager } from './ScrollManager';
 import { Sidebar } from './Sidebar';
 import { TabBar } from './TabBar';
@@ -15,6 +16,10 @@ export function AppLayout() {
   const fullscreen = useMatches().some(
     (match) => (match.handle as { fullscreen?: boolean } | undefined)?.fullscreen === true,
   );
+  // Die erste Ansicht steht: Startfläche aus index.html ausblenden (D-325).
+  useEffect(() => {
+    hideStartSurface();
+  }, []);
   return (
     <div className="app-shell min-h-dvh lg:flex">
       <a
@@ -37,14 +42,16 @@ export function AppLayout() {
           className="page-gutters mx-auto w-full max-w-content flex-1 pt-6 pb-[calc(env(safe-area-inset-bottom)+6rem)] outline-none lg:pt-8 lg:pb-10"
         >
           {fullscreen ? null : (
-            // Kopfzeile (D-286, D-310): Kachel-F plus Wortmarke als Bild aus public/brand, 30 px
-            // hoch, Tippfläche 44 px; am Desktop zeigt die Seitenleiste das Logo. Führt zu „Heute“.
+            // Kopfzeile (D-286, D-310, D-325): grüne Kachel mit F plus Wortmarke als Bild aus
+            // public/brand, 28 px hoch, Tippfläche 44 px; am Desktop zeigt die Seitenleiste das
+            // Logo. Führt zu „Heute“.
             <div className="-mt-6 mb-2 flex h-header items-center lg:hidden">
               <Link to="/heute" className="flex min-h-touch items-center rounded-input">
                 <img
-                  src="/brand/logo-kopfzeile-dunkel.svg"
+                  src="/brand/logo-kopfzeile-kompakt.svg"
                   alt={t.app.brandLink}
-                  height={30}
+                  width={105}
+                  height={28}
                   className="h-logo w-auto"
                 />
               </Link>

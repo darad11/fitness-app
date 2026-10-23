@@ -9,8 +9,7 @@ import { DashboardAuthError, DashboardOfflineError } from '../data/dashboardRemo
 import { useStepsView } from '../data/stepsState';
 import { connectDashboard, disconnectDashboard, refreshSteps } from '../service/stepsService';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
+const INPUT = 'field w-full min-w-0';
 
 /** Schritte aus dem Dashboard (D-277): verbinden, abholen, trennen. */
 export function StepsPage() {

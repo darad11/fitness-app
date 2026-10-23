@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button, Dialog, SelectField } from '@/shared/ui';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
@@ -9,8 +10,7 @@ import { changeEntry, deleteEntry } from '../service/nutritionService';
 import { describeAmount, entryNameAndBrand } from './format';
 import { NutrientTable } from './NutrientTable';
 
-const INPUT =
-  'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Eintrag bearbeiten (NU-15): Menge bzw. Portionen, Mahlzeit, Löschen. */
 export function EntryDialog({
@@ -41,7 +41,7 @@ export function EntryDialog({
   const [value, setValue] = useState(initialText);
   const [slot, setSlot] = useState<MealSlot>(entry.slot);
   const [error, setError] = useState<string | null>(null);
-  const unit = t.nutrition.units[entry.basisSnapshot ?? 'g'];
+  const unit = tNutrition.units[entry.basisSnapshot ?? 'g'];
 
   const save = () => {
     setError(null);
@@ -51,14 +51,14 @@ export function EntryDialog({
     if (entry.amount !== undefined && value.trim() !== initialText) {
       const parsed = parseDecimal(value);
       if (parsed === null || parsed <= 0) {
-        setError(t.nutrition.invalidAmount);
+        setError(tNutrition.invalidAmount);
         return;
       }
       if (byServing) change.servingCount = parsed;
       else change.amount = parsed;
     }
     changeEntry(rt, entry.id, change).then(onClose, (caught: unknown) => {
-      setError(t.nutrition.saveFailed);
+      setError(tNutrition.saveFailed);
       void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
     });
   };
@@ -79,7 +79,7 @@ export function EntryDialog({
                   onDeleted(entry);
                 },
                 (caught: unknown) => {
-                  setError(t.nutrition.saveFailed);
+                  setError(tNutrition.saveFailed);
                   void logError(rt.db, {
                     area: 'nutrition',
                     error: caught,
@@ -89,13 +89,13 @@ export function EntryDialog({
               );
             }}
           >
-            {t.nutrition.delete}
+            {tNutrition.delete}
           </Button>
           <Button variant="secondary" onClick={onClose}>
-            {t.nutrition.cancel}
+            {tNutrition.cancel}
           </Button>
           <Button type="submit" form={`${id}-form`}>
-            {t.nutrition.save}
+            {tNutrition.save}
           </Button>
         </>
       }
@@ -113,8 +113,8 @@ export function EntryDialog({
           <div>
             <label htmlFor={`${id}-menge`} className="mb-2 block text-sm font-semibold text-muted">
               {byServing
-                ? `${t.nutrition.servingsLabel} (${entry.servingSnapshot?.name ?? ''})`
-                : t.nutrition.amountLabel(unit)}
+                ? `${tNutrition.servingsLabel} (${entry.servingSnapshot?.name ?? ''})`
+                : tNutrition.amountLabel(unit)}
             </label>
             <input
               id={`${id}-menge`}
@@ -129,18 +129,18 @@ export function EntryDialog({
           </div>
         ) : null}
         <SelectField
-          label={t.nutrition.slotLabel}
+          label={tNutrition.slotLabel}
           value={slot}
-          options={MEAL_SLOTS.map((s) => ({ value: s, label: t.nutrition.slots[s] }))}
+          options={MEAL_SLOTS.map((s) => ({ value: s, label: tNutrition.slots[s] }))}
           onChange={setSlot}
         />
         <NutrientTable
           caption={
             entry.amount === undefined
-              ? t.nutrition.nutrientsTitle
-              : `${t.nutrition.nutrientsTitle} ${t.nutrition.forAmount(describeAmount(fmt, entry))}`
+              ? tNutrition.nutrientsTitle
+              : `${tNutrition.nutrientsTitle} ${tNutrition.forAmount(describeAmount(fmt, entry))}`
           }
-          columns={[{ label: t.nutrition.nutrientsTitle, values: entry.nutrients }]}
+          columns={[{ label: tNutrition.nutrientsTitle, values: entry.nutrients }]}
         />
         {error ? (
           <p role="alert" className="text-sm text-danger">

@@ -1,6 +1,7 @@
 import {
   ArrowLeftRight,
   ChevronDown,
+  ChevronLeft,
   ChevronUp,
   Ellipsis,
   Info,
@@ -9,10 +10,11 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import {
   describeExercise,
   ExercisePicker,
+  MuscleTags,
   useExercisePrefs,
   useExercises,
   type Exercise,
@@ -72,10 +74,14 @@ import {
 } from '../../service/sessionService';
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
+import { useStableSetView } from './useStableSetView';
 
 /** Trainingsplayer (S-07) unter `/training/einheit/:id`. */
 export function SessionPage() {
   const { id = '' } = useParams();
+  // Leichtes Training aus dem Rückkehr-Flow (D-319): nur ein Hinweis, Plan und Sätze bleiben.
+  const [search] = useSearchParams();
+  const light = search.get('leicht') === '1';
   const session = useSession(id);
   if (session === undefined) {
     return (
@@ -88,7 +94,7 @@ export function SessionPage() {
   if (session === null) {
     return (
       <div>
-        <h1 className="mb-2 text-display font-bold">{t.training.title}</h1>
+        <h1 className="mb-2 text-headline font-semibold">{t.training.title}</h1>
         <p className="mb-6 text-muted">{t.session.notFound}</p>
         <ButtonLink to="/training">{t.training.title}</ButtonLink>
       </div>
@@ -97,7 +103,7 @@ export function SessionPage() {
   if (session.status === 'completed') {
     return <Navigate to={`/training/einheit/${session.id}/zusammenfassung`} replace />;
   }
-  return <Player session={session} />;
+  return <Player session={session} light={light} />;
 }
 
 type Confirm =
@@ -193,7 +199,7 @@ function useLibrary(): ReadonlyMap<string, Exercise> {
   );
 }
 
-function Player({ session }: { session: Session }) {
+function Player({ session, light }: { session: Session; light: boolean }) {
   const rt = useDb();
   const navigate = useNavigate();
   const settings = useSettings() ?? SETTINGS_DEFAULTS;
@@ -225,6 +231,10 @@ function Player({ session }: { session: Session }) {
   const exercises = liveExercises(session);
   const progress = sessionProgress(session);
   const current = currentSet(session);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLElement>(null);
+  const footRef = useRef<HTMLDivElement>(null);
+  useStableSetView(rootRef, headRef, footRef, current?.id ?? null);
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
   const afterRest = restTimer ? nextOpenSet(session, restTimer.afterSetId) : null;
@@ -316,21 +326,50 @@ function Player({ session }: { session: Session }) {
   const afterCurrent = lastOfCurrent ? nextOpenSet(session, lastOfCurrent.id) : null;
   const nextExercise =
     afterCurrent && afterCurrent.exercise.id !== currentExercise?.id ? afterCurrent.exercise : null;
+  // Oben klein Programm und Woche, als Titel nur der Trainingstag; nichts doppelt (F5, D-323).
+  const heading = session.program ? session.program.dayName : session.title;
+  // Ohne Programm: „Freies Training“, außer der Titel sagt es schon (D-323).
   const eyebrow = session.program
-    ? `${session.program.programName} · ${session.program.weekName}`
-    : t.session.freeSource;
+    ? null
+    : heading === t.session.freeSource
+      ? null
+      : t.session.freeSource;
 
   return (
     <div
+      ref={rootRef}
       className={restTimer ? 'pb-32' : 'pb-28'}
       onPointerDownCapture={settings.restSound ? unlockSound : undefined}
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
-      <header className="sticky top-0 z-10 -mx-4 mb-4 glass-blur bg-panel/80 px-4 pt-2 pb-3 md:-mx-6 md:px-6">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="eyebrow truncate text-muted">{eyebrow}</p>
-            <h1 className="truncate text-xl font-bold">{session.title}</h1>
+      {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
+          (D-332). Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. */}
+      <header
+        ref={headRef}
+        className="page-gutters sticky top-0 z-10 -mx-page -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3 md:-mx-page-md lg:-mx-page-lg"
+      >
+        <div className="flex items-start justify-between gap-2">
+          {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
+          <Link
+            to="/training"
+            aria-label={t.training.title}
+            title={t.training.title}
+            className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
+          >
+            <ChevronLeft aria-hidden="true" className="size-6" />
+          </Link>
+          <div className="min-w-0 flex-1 pt-0.5">
+            {session.program ? (
+              // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
+              // (F6, D-338): „Winterprogramm 20… · Woche 3“.
+              <p className="eyebrow flex min-w-0 text-muted">
+                <span className="min-w-0 truncate">{session.program.programName}</span>
+                <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
+              </p>
+            ) : eyebrow ? (
+              <p className="eyebrow truncate text-muted">{eyebrow}</p>
+            ) : null}
+            <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
           </div>
           <Button
             variant="secondary"
@@ -393,15 +432,17 @@ function Player({ session }: { session: Session }) {
           />
         ) : null}
       </header>
+      {light ? (
+        <p role="note" className="mb-4 rounded-card bg-surface p-card shadow-card">
+          {t.returnFlow.lightHint}
+        </p>
+      ) : null}
 
       {!restTimer && current && currentExercise && currentName ? (
-        <section
-          aria-label={t.session.now}
-          className="hero-glass mb-4 rounded-card p-5 text-on-ink"
-        >
-          <p className="eyebrow text-on-ink-muted">{t.session.now}</p>
-          <p className="mt-1 text-2xl font-bold">{currentExercise.nameSnapshot}</p>
-          <p className="mt-1 text-on-ink-muted">
+        <section aria-label={t.session.now} className="stage mb-4 rounded-card p-card text-fg">
+          <p className="eyebrow text-muted">{t.session.now}</p>
+          <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
+          <p className="mt-1 text-muted">
             {[
               `${t.session.setTypeLabel[current.type]} · ${t.session.setOf(currentName.index, currentName.total)}`,
               currentTarget ? `${t.session.target} ${currentTarget.text}` : null,
@@ -413,14 +454,14 @@ function Player({ session }: { session: Session }) {
               .join(' · ')}
           </p>
           {setTimer?.setId === current.id ? (
-            <p className="mt-2 text-timer font-bold tabular-nums" role="timer">
+            <p className="mt-2 text-timer font-semibold tabular-nums" role="timer">
               {formatClock(timerElapsed)}
             </p>
           ) : null}
           {currentExercise.notes ? (
-            <p className="mt-2 text-sm text-on-ink-muted">{currentExercise.notes}</p>
+            <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
           ) : null}
-          <p className="mt-3 text-sm text-on-ink-muted">
+          <p className="mt-3 text-sm text-muted">
             {nextExercise
               ? t.session.nextExercise(nextExercise.nameSnapshot)
               : t.session.lastExercise}
@@ -428,12 +469,9 @@ function Player({ session }: { session: Session }) {
         </section>
       ) : null}
       {!restTimer && !current && exercises.length > 0 ? (
-        <section
-          aria-label={t.session.allDone}
-          className="hero-glass mb-4 rounded-card p-5 text-on-ink"
-        >
-          <p className="eyebrow text-on-ink-muted">{t.session.now}</p>
-          <p className="mt-1 text-2xl font-bold">{t.session.allDone}</p>
+        <section aria-label={t.session.allDone} className="stage mb-4 rounded-card p-card text-fg">
+          <p className="eyebrow text-muted">{t.session.now}</p>
+          <p className="mt-1 text-2xl font-semibold">{t.session.allDone}</p>
         </section>
       ) : null}
 
@@ -452,9 +490,13 @@ function Player({ session }: { session: Session }) {
             >
               <div className="mb-2 flex items-start gap-1 px-1">
                 <div className="min-w-0 flex-1">
-                  <h2 id={`uebung-${exercise.id}`} className="text-lg font-bold">
+                  <h2 id={`uebung-${exercise.id}`} className="text-lg font-semibold">
                     {exercise.nameSnapshot}
                   </h2>
+                  <MuscleTags
+                    muscles={library.get(exercise.exerciseId)?.primaryMuscles ?? []}
+                    className="mt-1.5 mb-1"
+                  />
                   <p className="text-sm text-muted">
                     {row
                       ? t.session.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))
@@ -639,8 +681,7 @@ function Player({ session }: { session: Session }) {
 
       <div className="mt-8 flex justify-center">
         <Button
-          variant="quiet"
-          className="text-danger"
+          variant="quietDanger"
           onClick={() => {
             setConfirm({ kind: 'discard' });
           }}
@@ -649,10 +690,14 @@ function Player({ session }: { session: Session }) {
         </Button>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-20 glass-blur border-t border-line bg-panel px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
-        <div className="mx-auto flex max-w-[1200px] gap-2">
+      <div
+        ref={footRef}
+        className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
+      >
+        <div className="mx-auto flex max-w-content gap-2">
           {current && currentExercise ? (
             <Button
+              variant="action"
               size="lg"
               className="flex-1"
               onClick={() => {
@@ -818,9 +863,6 @@ function Player({ session }: { session: Session }) {
                 : ''}
         </p>
       </Dialog>
-      <p className="sr-only">
-        <Link to="/training">{t.training.title}</Link>
-      </p>
     </div>
   );
 }

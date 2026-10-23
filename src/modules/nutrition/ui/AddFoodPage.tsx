@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { parseDecimal } from '@/shared/lib/format';
 import { addDays, dayKey as toDayKey, isValidDayKey } from '@/shared/lib/time';
 import {
@@ -30,8 +31,7 @@ import { NutrientTable } from './NutrientTable';
 import { ApplyTemplateDialog, templateKcal } from './TemplateDialogs';
 import { useFoodCatalog } from './useFoodCatalog';
 
-const INPUT =
-  'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 const RECENT_DAYS = 30;
 const RECENT_LIMIT = 12;
 
@@ -103,13 +103,13 @@ export function AddFoodPage() {
                 {food.brand ? <span className="text-sm text-muted">{food.brand}</span> : null}
                 <Badge tone={food.source === 'bls' || food.catalog ? 'neutral' : 'accent'}>
                   {food.catalog
-                    ? t.nutrition.catalogBadge[food.catalog]
-                    : t.nutrition.sourceBadge[food.source]}
+                    ? tNutrition.catalogBadge[food.catalog]
+                    : tNutrition.sourceBadge[food.source]}
                 </Badge>
               </span>
               <span className="block text-sm text-muted">
-                {kcal(fmt, food.per100.kcal ?? 0)} {t.nutrition.units.kcal}{' '}
-                {t.nutrition.per100(t.nutrition.units[food.basis])}
+                {kcal(fmt, food.per100.kcal ?? 0)} {tNutrition.units.kcal}{' '}
+                {tNutrition.per100(tNutrition.units[food.basis])}
               </span>
             </span>
             <Plus aria-hidden="true" className="size-5 shrink-0 text-muted" />
@@ -122,15 +122,15 @@ export function AddFoodPage() {
   return (
     <>
       <PageHeader
-        eyebrow={t.nutrition.slots[slot]}
-        title={t.nutrition.addTitle}
-        back={{ to: back, label: fromToday ? t.today.title : t.nutrition.backToDay }}
+        eyebrow={tNutrition.slots[slot]}
+        title={tNutrition.addTitle}
+        back={{ to: back, label: fromToday ? t.today.title : tNutrition.backToDay }}
       />
       <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
         <SelectField
-          label={t.nutrition.slotLabel}
+          label={tNutrition.slotLabel}
           value={slot}
-          options={MEAL_SLOTS.map((s) => ({ value: s, label: t.nutrition.slots[s] }))}
+          options={MEAL_SLOTS.map((s) => ({ value: s, label: tNutrition.slots[s] }))}
           onChange={setSlot}
         />
         <div className="flex flex-wrap gap-2">
@@ -141,7 +141,7 @@ export function AddFoodPage() {
             }}
           >
             <ScanBarcode aria-hidden="true" className="size-5" />
-            {t.nutrition.barcode.scan}
+            {tNutrition.barcode.scan}
           </Button>
           <Button
             variant="secondary"
@@ -150,41 +150,41 @@ export function AddFoodPage() {
             }}
           >
             <Zap aria-hidden="true" className="size-5" />
-            {t.nutrition.quick}
+            {tNutrition.quick}
           </Button>
           <ButtonLink
             variant="secondary"
             to={`/ernaehrung/lebensmittel/neu?zurueck=${encodeURIComponent(`/ernaehrung/hinzufuegen?tag=${day}&mahlzeit=${slot}`)}`}
           >
             <Plus aria-hidden="true" className="size-5" />
-            {t.nutrition.newFood}
+            {tNutrition.newFood}
           </ButtonLink>
         </div>
       </div>
       <div role="search" className="mb-2">
         <SearchField
-          label={t.nutrition.searchLabel}
-          placeholder={t.nutrition.searchPlaceholder}
+          label={tNutrition.searchLabel}
+          placeholder={tNutrition.searchPlaceholder}
           clearLabel={t.exercises.clearSearch}
           value={query}
           onChange={setQuery}
         />
       </div>
-      <p className="mb-4 text-sm text-muted">{t.nutrition.searchHint}</p>
+      <p className="mb-4 text-sm text-muted">{tNutrition.searchHint}</p>
       {catalog === undefined ? (
         <div aria-busy="true">
-          <p className="sr-only">{t.nutrition.loadingFoods}</p>
+          <p className="sr-only">{tNutrition.loadingFoods}</p>
           <Skeleton className="h-40" />
         </div>
       ) : query.trim() ? (
-        <section aria-label={t.nutrition.results(results.length)}>
+        <section aria-label={tNutrition.results(results.length)}>
           <p role="status" className="mb-2 text-sm text-muted">
-            {t.nutrition.results(results.length)}
+            {tNutrition.results(results.length)}
           </p>
           {results.length > 0 ? (
-            list(results, t.nutrition.results(results.length))
+            list(results, tNutrition.results(results.length))
           ) : (
-            <p className="rounded-card bg-surface-2 p-4 text-muted">{t.nutrition.noResults}</p>
+            <p className="rounded-card bg-surface-2 p-4 text-muted">{tNutrition.noResults}</p>
           )}
         </section>
       ) : (
@@ -193,10 +193,10 @@ export function AddFoodPage() {
             <section aria-labelledby="vorlagen">
               <h2 id="vorlagen" className="eyebrow mb-2 flex items-center gap-1 text-muted">
                 <Bookmark aria-hidden="true" className="size-4" />
-                {t.nutrition.templates.title}
+                {tNutrition.templates.title}
               </h2>
               <ul
-                aria-label={t.nutrition.templates.title}
+                aria-label={tNutrition.templates.title}
                 className="divide-y divide-line overflow-hidden rounded-card bg-surface shadow-card"
               >
                 {templates.map((template) => (
@@ -211,7 +211,7 @@ export function AddFoodPage() {
                       <span className="min-w-0 flex-1">
                         <span className="block font-medium break-words">{template.name}</span>
                         <span className="block text-sm text-muted">
-                          {t.nutrition.templates.summary(
+                          {tNutrition.templates.summary(
                             template.items.length,
                             kcal(fmt, templateKcal(template)),
                           )}
@@ -228,17 +228,17 @@ export function AddFoodPage() {
             <section aria-labelledby="favoriten">
               <h2 id="favoriten" className="eyebrow mb-2 flex items-center gap-1 text-muted">
                 <Star aria-hidden="true" className="size-4" />
-                {t.nutrition.favorites}
+                {tNutrition.favorites}
               </h2>
-              {list(favorites, t.nutrition.favorites)}
+              {list(favorites, tNutrition.favorites)}
             </section>
           ) : null}
           {recent.length > 0 ? (
             <section aria-labelledby="zuletzt">
               <h2 id="zuletzt" className="eyebrow mb-2 text-muted">
-                {t.nutrition.recent}
+                {tNutrition.recent}
               </h2>
-              {list(recent, t.nutrition.recent)}
+              {list(recent, tNutrition.recent)}
             </section>
           ) : null}
         </div>
@@ -323,7 +323,7 @@ function LogDialog({
   const rt = useDb();
   const fmt = useFormatters();
   const id = useId();
-  const unit = t.nutrition.units[food.basis];
+  const unit = tNutrition.units[food.basis];
   // Einheit: Gramm bzw. Milliliter oder eine Portion des Lebensmittels (NU-09).
   const [unitChoice, setUnitChoice] = useState<string>(food.servings[0]?.id ?? 'basis');
   const serving = food.servings.find((s) => s.id === unitChoice);
@@ -336,14 +336,14 @@ function LogDialog({
 
   const submit = () => {
     if (parsed === null || parsed <= 0) {
-      setError(t.nutrition.invalidAmount);
+      setError(tNutrition.invalidAmount);
       return;
     }
     const quantity: Quantity = serving
       ? { kind: 'serving', servingId: serving.id, count: parsed }
       : { kind: 'amount', amount: parsed };
     logFood(rt, { food, slot, dayKey: day, quantity }).then(onLogged, (caught: unknown) => {
-      setError(t.nutrition.saveFailed);
+      setError(tNutrition.saveFailed);
       void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
     });
   };
@@ -352,15 +352,15 @@ function LogDialog({
     <Dialog
       open
       onClose={onClose}
-      title={t.nutrition.logTitle(food.name)}
+      title={tNutrition.logTitle(food.name)}
       closeLabel={t.common.close}
       actions={
         <>
           <Button variant="secondary" onClick={onClose}>
-            {t.nutrition.cancel}
+            {tNutrition.cancel}
           </Button>
           <Button type="submit" form={`${id}-form`}>
-            {t.nutrition.add}
+            {tNutrition.add}
           </Button>
         </>
       }
@@ -376,12 +376,12 @@ function LogDialog({
         {food.brand ? <p className="-mt-2 text-muted">{food.brand}</p> : null}
         {food.servings.length > 0 ? (
           <SelectField
-            label={t.nutrition.quantityLabel}
+            label={tNutrition.quantityLabel}
             value={unitChoice}
             options={[
               ...food.servings.map((s) => ({
                 value: s.id,
-                label: t.nutrition.servingOption(
+                label: tNutrition.servingOption(
                   s.name,
                   fmt.number(s.amount, { maximumFractionDigits: 1 }),
                   unit,
@@ -397,7 +397,7 @@ function LogDialog({
         ) : null}
         <div>
           <label htmlFor={`${id}-menge`} className="mb-2 block text-sm font-semibold text-muted">
-            {serving ? t.nutrition.servingsLabel : t.nutrition.amountLabel(unit)}
+            {serving ? tNutrition.servingsLabel : tNutrition.amountLabel(unit)}
           </label>
           <input
             id={`${id}-menge`}
@@ -412,24 +412,24 @@ function LogDialog({
           />
         </div>
         <p role="status" className="text-lg font-semibold tabular-nums">
-          {preview !== null ? t.nutrition.preview(kcal(fmt, preview)) : '–'}
+          {preview !== null ? tNutrition.preview(kcal(fmt, preview)) : '–'}
         </p>
         {savedNotice ? (
           <p className="rounded-card bg-surface-2 p-3 text-sm">
-            {t.nutrition.barcode.saved(food.name)}
+            {tNutrition.barcode.saved(food.name)}
           </p>
         ) : null}
         {food.source === 'off' ? (
-          <p className="text-sm text-muted">{t.nutrition.barcode.fromOff}</p>
+          <p className="text-sm text-muted">{tNutrition.barcode.fromOff}</p>
         ) : null}
         <NutrientTable
-          caption={t.nutrition.nutrientsTitle}
+          caption={tNutrition.nutrientsTitle}
           columns={[
-            { label: t.nutrition.per100(unit), values: food.per100 },
+            { label: tNutrition.per100(unit), values: food.per100 },
             ...(scaled && amount !== null
               ? [
                   {
-                    label: t.nutrition.forAmount(
+                    label: tNutrition.forAmount(
                       `${fmt.number(amount, { maximumFractionDigits: 1 })} ${unit}`,
                     ),
                     values: scaled,
@@ -488,7 +488,7 @@ function QuickDialog({
     const carbs = optional(fields.carbs);
     const fat = optional(fields.fat);
     if (kcalValue === null || protein === null || carbs === null || fat === null) {
-      setError(t.nutrition.errors.number);
+      setError(tNutrition.errors.number);
       return;
     }
     logQuick(rt, {
@@ -500,7 +500,7 @@ function QuickDialog({
       ...(carbs !== undefined ? { carbs } : {}),
       ...(fat !== undefined ? { fat } : {}),
     }).then(onLogged, (caught: unknown) => {
-      setError(t.nutrition.saveFailed);
+      setError(tNutrition.saveFailed);
       void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
     });
   };
@@ -508,15 +508,15 @@ function QuickDialog({
     <Dialog
       open
       onClose={onClose}
-      title={t.nutrition.quickTitle}
+      title={tNutrition.quickTitle}
       closeLabel={t.common.close}
       actions={
         <>
           <Button variant="secondary" onClick={onClose}>
-            {t.nutrition.cancel}
+            {tNutrition.cancel}
           </Button>
           <Button type="submit" form={`${id}-form`}>
-            {t.nutrition.add}
+            {tNutrition.add}
           </Button>
         </>
       }
@@ -529,13 +529,15 @@ function QuickDialog({
           submit();
         }}
       >
-        <p className="text-sm text-muted">{t.nutrition.quickHint}</p>
-        {field('name', t.nutrition.quickName, false)}
-        {field('kcal', t.nutrition.quickKcal)}
-        <div className="grid grid-cols-3 gap-2">
-          {field('protein', t.nutrition.quickProtein)}
-          {field('carbs', t.nutrition.quickCarbs)}
-          {field('fat', t.nutrition.quickFat)}
+        <p className="text-sm text-muted">{tNutrition.quickHint}</p>
+        {field('name', tNutrition.quickName, false)}
+        {field('kcal', tNutrition.quickKcal)}
+        {/* Jede Spalte mindestens so breit wie ihr längstes Wort („Kohlenhydrate“), sonst gleich
+            breit (F5 Abschnitt 9, D-331). */}
+        <div className="grid grid-cols-[repeat(3,minmax(min-content,1fr))] gap-2">
+          {field('protein', tNutrition.quickProtein)}
+          {field('carbs', tNutrition.quickCarbs)}
+          {field('fat', tNutrition.quickFat)}
         </div>
         {error ? (
           <p role="alert" className="text-sm text-danger">

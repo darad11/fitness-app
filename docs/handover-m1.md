@@ -26,7 +26,7 @@ Stand: 18.10.2026, 16:30 UTC · Für die nächste Claude-Sitzung (D-238) · Verb
 
 ## 3. Neu seit der Übergabe: Erweiterungsplan, Designsystem 2.0, Premium-Player
 
-- Der Produktinhaber hat den Master-Prompt „Fitness App Evolution“ gegeben und den Erweiterungsplan freigegeben (Q-18). Verbindlich: `evolution-plan.md` (Schritte A bis H), `ux-audit.md`, `reference-analysis.md`, `winter-arc-reconstruction.md`. Seine Vorgabe: Alles Weitere folgt dem neuen Prompt, nicht dem alten Erscheinungsbild.
+- Der Produktinhaber hat den Master-Prompt „Fitness App Evolution“ gegeben und den Erweiterungsplan freigegeben (Q-18). Verbindlich: `evolution-plan.md` (Schritte A bis H), `ux-audit.md`, `reference-analysis.md`, `winterprogramm-2026.md`. Seine Vorgabe: Alles Weitere folgt dem neuen Prompt, nicht dem alten Erscheinungsbild.
 - AP D1 Designsystem 2.0 (D-246) und AP D2 Premium-Player mit Pause, Ton und Wake Lock (D-247, ersetzt AP 1.5) sind umgesetzt. Der frühere WIP-Branch `m1-training-wip-ap15` ist übernommen und kann gelöscht werden.
 - Pull Request darad11/fitness-app#6 (Planung) ist in `m1-training` enthalten und kann geschlossen werden.
 

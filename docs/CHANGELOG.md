@@ -1,5 +1,46 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.43 · 23.10.2026 · Vor dem Merge
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-341: Hinweis „Werte für“ statt „Angaben zu“, drei Screenshots |
+| `testing.md` | Protokoll „Vor dem Merge“ |
+| `screens/` | Neu `heute-ohne-programm.png`, `tagesaufgaben.png`, `startflaeche.png`; Übersicht und Zip erneuert |
+
+## Version 0.42 · 23.10.2026 · Feinschliff F6
+
+| Datei | Änderung |
+|---|---|
+| `prompts/F6-feinschliff-vor-dem-merge.md` | Neu: Auftrag F6 |
+| `decisions.md` | D-332 bis D-340; Nachträge aus der CI bei D-332 (Logo-Test in WebKit) und D-337 (Startfläche in Safari) |
+| `testing.md` | Protokolle F6 §1 bis §9 mit den Nachträgen aus der CI; T-IPH-M0 Schritt 5 (Startfläche 1,0 s) und neu Schritt 6 (Logo der Kopfzeile) |
+| `implementation-plan.md` | Punkt 57 um F6 ergänzt; neu Punkte 62 bis 64 |
+| `design-system.md` | Logo und Abstand oben, Makrofarben, `Mark`, `TaskRow`, Karte `tint`, Startfläche, Trainingskopf, Knopfzeile der Einstellungen |
+| `known-limitations.md` | Unschärfe von iOS am oberen Rand |
+
+## Version 0.41 · 23.10.2026 · Abschluss F5 (Abschnitte 7a bis 9)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-329 Entscheidungen zu den offenen Punkten, D-330 nächste Schritte, D-331 schmale Breiten |
+| `audit-report.md` | P2-Punkte A-14 (Wiederherstellen aus dem Export) und E-16 (Ursache des Offline-Tests, hohe Priorität) |
+| `implementation-plan.md` | Punkte 57 bis 61 |
+| `testing.md` | Gerätetest T-IPH-M0 Schritt 5 an der Vorschau; Protokoll F5 §9 |
+| `design-system.md` | Knopfgröße `row`, Programmkarten auf schmalen Breiten |
+| `known-limitations.md`, `brand-form.md` | Hinweis zum Gerätetest |
+
+## Version 0.40 · 23.10.2026 · Texte und Marke (F5 Abschnitt 7)
+
+| Datei | Änderung |
+|---|---|
+| `winterprogramm-2026.md` | Neu benannt und neutral gefasst (Version 1.1), Programm C heißt „Winterprogramm 2026“ |
+| `decisions.md` | D-328; D-299 (Registrierung bleibt offen) und D-318 angepasst; ältere Einträge ohne Namen der Referenz-App |
+| `known-limitations.md` | Interner Vermerk zu Programm C, offene Registrierung |
+| `product-research.md`, `reference-analysis.md`, `ux-audit.md`, `feature-inventory.md` | Ohne Namen und Erkennungsmerkmale der Referenz-App, ohne Werte des Kontos |
+| `archive/v0.1-phase-1/` | Ebenso neutral gefasst; Prüfsummen in `SHA256SUMS` erneuert, die alte Fassung steht in der Git-Historie |
+| übrige Dokumente | Verweise auf das umbenannte Dokument, neutrale Bezeichnungen |
+
 ## Version 0.39 · 21.10.2026 · Markenstrategie FORM
 
 | Datei | Änderung |
@@ -322,7 +363,7 @@ Grundlage: Antworten des Produktinhabers auf Q-13 bis Q-17 (Dropset-Regel, Laufb
 |---|---|
 | `programs.md` | Neu, erzeugt: Programme A, B, C mit Wochen, Tagen, Sätzen, Zielen, Pausen und Hinweisen |
 | `exercise-library.md` | 124 Übungen (19 neu, D-248) |
-| `winter-arc-reconstruction.md` | Zuordnung nach Antworten; U-1 Dropset-Liste (12 Sterne, Rest offen) |
+| `winterprogramm-2026.md` | Zuordnung nach Antworten; U-1 Dropset-Liste (12 Sterne, Rest offen) |
 | `decisions.md` | D-248 Bibliothek, D-249 Programme und aktives Programm; Q-13 bis Q-17 beantwortet |
 | `evolution-plan.md` | Schritte B und C als umgesetzt; Programme A und B bestätigt |
 | `data-model.md`, `sample-templates.md` | Programme als Vorlagen mit Zusatzfeldern; Fortschritt berechnet statt gespeichert |
@@ -356,7 +397,7 @@ Grundlage: Master-Prompt „Fitness App Evolution“ des Produktinhabers, Freiga
 
 | Datei | Änderung |
 |---|---|
-| `evolution-plan.md`, `winter-arc-reconstruction.md`, `reference-analysis.md` | Neu: Erweiterungsplan, Rekonstruktion „Winter Arc“, Referenzanalyse (Branch `evolution-plan`, in `m1-training` übernommen) |
+| `evolution-plan.md`, `winterprogramm-2026.md`, `reference-analysis.md` | Neu: Erweiterungsplan, Erfassung von Programm C, Referenzanalyse (Branch `evolution-plan`, in `m1-training` übernommen) |
 | `ux-audit.md` | Neu: Befunde A-01 bis A-18, Richtung Designsystem 2.0, Kriterien DS-1 bis DS-8 |
 | `design-system.md` | Version 0.4: Tonflächen, Bühne, Schatten, Radien, Typografie, Komponenten, Player |
 | `decisions.md` | D-246 Designsystem 2.0, D-247 Premium-Player; Q-13 bis Q-18 |

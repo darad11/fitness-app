@@ -1,3 +1,4 @@
+export * from './activity';
 export * from './connection';
 export * from './DbProvider';
 export * from './documents';
@@ -10,3 +11,4 @@ export * from './runtime';
 export * from './schema';
 export * from './snapshots';
 export * from './storage';
+export * from './useMetaFlag';

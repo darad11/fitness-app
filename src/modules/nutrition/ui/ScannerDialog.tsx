@@ -1,11 +1,11 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, Dialog } from '@/shared/ui';
 import { normalizeBarcode } from '../calc/barcode';
 import { createDetector } from './barcodeDetector';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 type Camera = 'starting' | 'running' | 'denied' | 'unsupported' | 'error';
 
@@ -108,7 +108,7 @@ export function ScannerDialog({
   const submitManual = () => {
     const code = normalizeBarcode(manual);
     if (!code) {
-      setError(t.nutrition.barcode.invalid);
+      setError(tNutrition.barcode.invalid);
       return;
     }
     setError(null);
@@ -117,17 +117,17 @@ export function ScannerDialog({
   };
 
   const cameraText: Record<Exclude<Camera, 'running'>, string> = {
-    starting: t.nutrition.barcode.starting,
-    denied: t.nutrition.barcode.denied,
-    unsupported: t.nutrition.barcode.unsupported,
-    error: t.nutrition.barcode.cameraError,
+    starting: tNutrition.barcode.starting,
+    denied: tNutrition.barcode.denied,
+    unsupported: tNutrition.barcode.unsupported,
+    error: tNutrition.barcode.cameraError,
   };
 
   return (
     <Dialog
       open
       onClose={onClose}
-      title={t.nutrition.barcode.title}
+      title={tNutrition.barcode.title}
       closeLabel={t.common.close}
       variant="sheet"
     >
@@ -138,18 +138,18 @@ export function ScannerDialog({
               ref={video}
               playsInline
               muted
-              aria-label={t.nutrition.barcode.hint}
+              aria-label={tNutrition.barcode.hint}
               className="aspect-[4/3] w-full object-cover"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-8 top-1/2 h-24 -translate-y-1/2 rounded-card border-2 border-on-ink"
+              className="pointer-events-none absolute inset-x-8 top-1/2 h-24 -translate-y-1/2 rounded-card border-2 border-fg"
             />
           </div>
         ) : null}
         {!found ? (
           <p role="status" className="text-sm text-muted">
-            {camera === 'running' ? t.nutrition.barcode.hint : cameraText[camera]}
+            {camera === 'running' ? tNutrition.barcode.hint : cameraText[camera]}
           </p>
         ) : null}
         {status}
@@ -161,7 +161,7 @@ export function ScannerDialog({
           }}
         >
           <label htmlFor={`${id}-code`} className="text-sm font-semibold text-muted">
-            {t.nutrition.barcode.manualLabel}
+            {tNutrition.barcode.manualLabel}
           </label>
           <div className="flex gap-2">
             <input
@@ -177,11 +177,11 @@ export function ScannerDialog({
               className={INPUT}
             />
             <Button type="submit" variant="secondary">
-              {t.nutrition.barcode.search}
+              {tNutrition.barcode.search}
             </Button>
           </div>
           <p id={`${id}-hint`} className="text-xs text-muted">
-            {t.nutrition.barcode.manualHint}
+            {tNutrition.barcode.manualHint}
           </p>
           {error ? (
             <p role="alert" className="text-sm text-danger">

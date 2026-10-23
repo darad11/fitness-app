@@ -30,11 +30,31 @@ test('Seitenleiste: klappt unter der Maus aus, der Inhalt rückt mit (D-272)', a
 }, testInfo) => {
   test.skip(!testInfo.project.name.includes('desktop'), 'Seitenleiste ab 1024 px');
   await openPage(page, '/heute');
+  const nav = page.getByRole('navigation', { name: 'Hauptnavigation' }).first();
+  // Eingeklappt: nur die grüne Kachel, 28 px, mittig über den Symbolen (D-325).
+  const tile = nav.locator('img[src="/brand/kachel-kompakt.svg"]');
+  const logo = nav.getByRole('img', { name: 'FORM' });
+  await expect(tile).toBeVisible();
+  await expect(logo).toHaveCSS('opacity', '0');
+  const [tileBox, iconBox] = [
+    await tile.boundingBox(),
+    await nav.getByRole('link', { name: 'Heute' }).locator('svg').boundingBox(),
+  ];
+  expect(Math.round(tileBox?.height ?? 0)).toBe(28);
+  expect(
+    Math.abs((tileBox?.x ?? 0) + (tileBox?.width ?? 0) / 2 - (iconBox?.x ?? 0) - 10),
+  ).toBeLessThanOrEqual(1);
   const title = page.getByRole('heading', { level: 1, name: 'Heute' });
   const before = (await title.boundingBox())?.x ?? 0;
-  await page.getByRole('navigation', { name: 'Hauptnavigation' }).first().hover();
+  await nav.hover();
   await expect.poll(async () => (await title.boundingBox())?.x ?? 0).toBeGreaterThan(before + 150);
   await expect(page.getByText('Ernährung', { exact: true }).first()).toBeVisible();
+  // Ausgeklappt: das ganze Logo, seine Kachel liegt genau auf der eingeklappten.
+  await expect(logo).toHaveCSS('opacity', '1');
+  const logoBox = await logo.boundingBox();
+  expect(Math.abs((logoBox?.x ?? 0) - (tileBox?.x ?? 0))).toBeLessThanOrEqual(0.5);
+  expect(Math.abs((logoBox?.y ?? 0) - (tileBox?.y ?? 0))).toBeLessThanOrEqual(0.5);
+  expect(Math.round(logoBox?.height ?? 0)).toBe(28);
 });
 
 test('Tab-Leiste: beim Runterscrollen ein Kreis rechts, zurück beim Hochscrollen und per Tipp (D-276)', async ({

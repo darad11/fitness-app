@@ -10,10 +10,11 @@ export const tTaskStats = {
   rate: 'Erfüllt',
   rateHint: 'der fälligen Aufgaben, ohne heute',
   rateNone: 'Noch nichts auswertbar',
-  streak: 'Serie',
-  streakHint: (best: string) => `Tage mit allem erledigt · beste: ${best}`,
+  /** Wochenbild statt Serie (Leitplanken Regel 2; F4, D-318). */
+  week: 'Diese Woche',
+  weekValue: (done: string, due: string) => `${done} von ${due}`,
+  weekHint: 'Tage mit allem erledigt, ab Montag',
   active: 'Aktive Aufgaben',
-  days: (n: number) => (n === 1 ? 'Tag' : 'Tage'),
   since: (date: string) => `Daten seit ${date}; davor gibt es nichts zu werten.`,
   noDataDays: (n: number) =>
     n === 1
@@ -21,7 +22,9 @@ export const tTaskStats = {
       : `An ${n} Tagen gab es keinen Eintrag; sie zählen nicht mit.`,
   empty: 'Sobald du Aufgaben abhakst, siehst du hier deinen Fortschritt.',
   chartTitle: 'Verlauf',
-  chartHintDay: 'Erledigte Aufgaben je Tag; grün: alles erledigt.',
+  chartHintDay: 'Erledigte Aufgaben je Tag;',
+  /** Neben der Markierung unter dem Verlauf (D-334). */
+  chartComplete: 'alles erledigt.',
   chartHintWeek: 'Erfüllt je Woche in Prozent.',
   chartAria: (n: number, unit: 'day' | 'week') =>
     `Balkendiagramm, ${n} ${unit === 'day' ? 'Tage' : 'Wochen'}; die Werte stehen in der Liste darunter.`,
@@ -50,7 +53,6 @@ export const tTaskStats = {
   taskLine: (done: number, due: number) =>
     due === 1 ? `an ${done} von 1 fälligen Tag` : `an ${done} von ${due} fälligen Tagen`,
   taskNone: 'noch nichts zu werten; heute zählt ab morgen mit',
-  taskStreak: (n: number) => `Serie ${n}`,
   change: (points: number) =>
     points === 0 ? '± 0 Punkte' : `${points > 0 ? '+' : '−'}${Math.abs(points)} Punkte`,
   paused: 'pausiert',
@@ -69,7 +71,7 @@ export const tTaskStats = {
     weekendTip: 'Ein fester Zeitpunkt am Wochenende kann helfen.',
     improving: (name: string, points: number) =>
       `„${name}“ liegt in den letzten 30 Tagen ${points} Punkte über den 30 Tagen davor.`,
-    improvingTip: 'Weiter so; das ist auf dem Weg zur Gewohnheit.',
+    improvingTip: 'Das ist auf dem Weg zur Gewohnheit.',
     stabilize: (added: number, points: number) =>
       `Seit ${added} neue Aufgaben dazugekommen sind, liegt die Quote ${Math.abs(points)} Punkte unter den 30 Tagen davor.`,
     stabilizeTip:
@@ -80,8 +82,8 @@ export const tTaskStats = {
     done: 'Erledigt',
     doneValue: (done: string, due: string) => `${done} / ${due}`,
     doneHint: 'fällige Tage, ohne heute',
-    current: 'Aktuelle Serie',
-    best: 'Beste Serie',
+    week: 'Diese Woche',
+    weekHint: 'fällige Tage erledigt, ab Montag',
     compare: (label: string, before: string, now: string, change: string) =>
       `${label} davor: ${before}, jetzt ${now} (${change}).`,
     compareNone: 'Kein Vergleich: Im Zeitraum davor gibt es zu wenig Daten.',

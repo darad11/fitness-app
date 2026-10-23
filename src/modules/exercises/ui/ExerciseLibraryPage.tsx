@@ -2,40 +2,22 @@ import { ChevronRight, Plus } from 'lucide-react';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { t } from '@/shared/i18n/de';
-import {
-  Badge,
-  Button,
-  PageHeader,
-  SearchField,
-  SelectField,
-  Skeleton,
-  type SelectOption,
-} from '@/shared/ui';
+import { Badge, Button, PageHeader, SearchField, SelectField, Skeleton } from '@/shared/ui';
 import { buildSearchIndex, compareExerciseNames, searchExercises } from '../calc/search';
 import { useExercises } from '../data/customExercises';
+import { describeExercise, EQUIPMENT_OPTIONS, MUSCLE_OPTIONS } from './describe';
 
 const CustomExerciseDialog = lazy(async () => ({
   default: (await import('./CustomExerciseDialog')).CustomExerciseDialog,
 }));
 import {
-  EQUIPMENT,
   EXERCISE_GROUPS,
-  MUSCLES,
   equipmentSchema,
   muscleSchema,
   type Equipment,
   type Exercise,
   type Muscle,
 } from '../model/exercise';
-
-export const MUSCLE_OPTIONS: readonly SelectOption<Muscle | ''>[] = [
-  { value: '', label: t.exercises.all },
-  ...MUSCLES.map((muscle) => ({ value: muscle, label: t.exercises.muscles[muscle] })),
-];
-export const EQUIPMENT_OPTIONS: readonly SelectOption<Equipment | ''>[] = [
-  { value: '', label: t.exercises.all },
-  ...EQUIPMENT.map((item) => ({ value: item, label: t.exercises.equipment[item] })),
-];
 
 /** Suche und Filter stehen in der Adresse, damit „Zurück" und Neuladen sie erhalten (D-242). */
 const PARAM = { query: 'q', muscle: 'muskel', equipment: 'geraet' } as const;
@@ -279,18 +261,10 @@ function ExerciseList({ exercises, label }: { exercises: readonly Exercise[]; la
               </span>
               <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
             </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
           </Link>
         </li>
       ))}
     </ul>
   );
-}
-
-export function describeExercise(exercise: Exercise): string {
-  const muscles = exercise.primaryMuscles.map((m) => t.exercises.muscles[m]).join(', ');
-  const equipment = exercise.equipment.map((e) => t.exercises.equipment[e]).join(', ');
-  const parts = [muscles, equipment];
-  if (exercise.isUnilateral) parts.push(t.exercises.unilateral);
-  return parts.join(' · ');
 }

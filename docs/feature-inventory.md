@@ -10,6 +10,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Die Spalte **Entscheidung** enthält jetzt die vorläufig freigegebene Entscheidung mit Verweis auf `decisions.md`.
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
+- Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
 - Version 0.7 (Ernährung Grundausbau, 19.10.2026): „Implementiert" (Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest stehen aus): NU-01 (Zielvorschlag), NU-02, NU-03 (vier feste Mahlzeiten), NU-05, NU-09, NU-10, NU-15, NU-17, NU-20, NU-21 (BLS 4.0 mit österreichischen Suchbegriffen), NU-22, NU-25 (D-261, D-262). Teilweise und deshalb noch nicht umgestellt: NU-08 (nur lokale Suche), NU-11 (Favoriten und Zuletzt, ohne Mahlzeitvorlagen), NU-12 (jeder Tag aufrufbar, ohne Wochendurchschnitt), NU-16, NU-19, NU-23 (g, ml und Portionen, ohne Umrechnung ml in g). Barcode und Open Food Facts (NU-07, NU-24) folgen als eigenes Paket.
 - Version 0.8 (Lebensmitteldaten importieren, 19.10.2026): NU-25 zusätzlich mit AK-NUT-07 (lokaler Import der ÖNWT-Daten aus der BLS-Recherche, Herkunft in der Suche, D-263). NU-08 bleibt teilweise, bis die Online-Suche (M6) folgt.
 - Version 0.9 (Nährwerte anzeigen, 19.10.2026): NU-16 vorgezogen und „Implementiert“ (AK-NUT-08, D-264).
@@ -34,15 +35,15 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - Version 0.3 (M0): Status nur dort geändert, wo der Nachweis vorliegt. „Getestet": SY-16 (Nachweis U bestanden) und SY-10 (E2E in Chromium und WebKit bestanden). „Implementiert": SY-01, SY-06, SY-08, SY-15, SY-17 (Gerätetest bzw. spätere Nachweise stehen aus). „Abgenommen": SY-14 (Gerätetest T-IPH-M0 mit iOS 27.0.1 bestanden). Teilweise umgesetzte Funktionen (SY-02, SY-11, SY-13, CH-08) bleiben „Zur Umsetzung ausgewählt"; ihr Stand steht in `implementation-plan.md` (Stand M0).
 - Version 0.4 (M1, AP 1.1 und 1.2): TP-06 „Getestet" (Unit-, Komponenten- und E2E-Tests in Chromium und WebKit bestanden; der Gerätetest steht aus). TP-24 bleibt „Zur Umsetzung ausgewählt", bis „Vorlage verwenden" (M2) umgesetzt ist; „Nur heute trainieren" gibt es seit AP 1.4.
 - Version 0.4 (M1, AP 1.4): „Implementiert" (Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI und Gerätetest T-IPH-M1 stehen aus): TS-02, TS-03, TS-04, TS-05, TS-06, TS-11, TS-14, TS-22, TS-23, TS-24, TS-26, TS-27. Teilweise umgesetzt und deshalb unverändert: TS-01 (Start aus Programm folgt in M2), TS-12 und TS-13 (AP 1.6), TS-15 (Vergleich in M3), TS-07, TS-09 und TS-21 (AP 1.5), TS-25 (AP 1.6).
-- Funktionen, die Xeela laut Rezensionen fehlen, sind als Stand der Rezensionen (2024/2025) formuliert, nicht als aktueller Zustand der App (D-118).
+- Funktionen, die der Referenz-App laut Rezensionen fehlen, sind als Stand der Rezensionen (2024/2025) formuliert, nicht als aktueller Zustand der App (D-118).
 
 ## Legende
 
-**Spalten:** ID · Funktion · Originalverhalten (Xeela) · Evidenz · Konfidenz · Herkunft · Nutzen · Abhängigkeiten · Aufwand · Prio · Umfang · Release · Entscheidung · Status · Akzeptanzkriterien. Das Modul ergibt sich aus Abschnitt und ID-Präfix.
+**Spalten:** ID · Funktion · Originalverhalten (Referenz-App) · Evidenz · Konfidenz · Herkunft · Nutzen · Abhängigkeiten · Aufwand · Prio · Umfang · Release · Entscheidung · Status · Akzeptanzkriterien. Das Modul ergibt sich aus Abschnitt und ID-Präfix.
 
-**Konfidenz** (Beleglage zu Xeela): V verifiziert (offizielle Quelle oder Videoanalyse) · V-R nur über Nutzerrezensionen belegt · P plausibel, nicht bestätigt · N nur Drittquelle · VF laut Rezensionen fehlend oder eingeschränkt (Stand der Rezension; aktueller Stand nicht geprüft) · E eigener Vorschlag ohne Xeela-Bezug.
+**Konfidenz** (Beleglage zur Referenz-App): V verifiziert (offizielle Quelle oder Videoanalyse) · V-R nur über Nutzerrezensionen belegt · P plausibel, nicht bestätigt · N nur Drittquelle · VF laut Rezensionen fehlend oder eingeschränkt (Stand der Rezension; aktueller Stand nicht geprüft) · E eigener Vorschlag ohne Bezug zur Referenz-App.
 
-**Herkunft:** OV Verifizierte Originalfunktion (Konfidenz V oder V-R) · ON Nicht verifizierte Originalfunktion (Konfidenz P oder N) · EV Eigene Verbesserung (Konfidenz VF oder E; Funktion geht über den belegten Xeela-Stand hinaus).
+**Herkunft:** OV Verifizierte Originalfunktion (Konfidenz V oder V-R) · ON Nicht verifizierte Originalfunktion (Konfidenz P oder N) · EV Eigene Verbesserung (Konfidenz VF oder E; Funktion geht über den belegten Stand der Referenz-App hinaus).
 
 **Umfang:** MVP (für R1 ausgewählt) · Später (für eine spätere Ausbaustufe vorgesehen) · Ausgeschlossen (bewusst nicht geplant).
 
@@ -52,7 +53,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 
 **Status:** Noch zu recherchieren · Analysiert · Spezifiziert · Zur Umsetzung ausgewählt · Implementiert · Getestet · Abgenommen. MVP-Zeilen stehen auf „Zur Umsetzung ausgewählt", spätere Zeilen mit konkreten Kriterien auf „Spezifiziert".
 
-**Evidenz:** AS App Store (mit Version bei Release Notes) · GP Google Play · WEB xeelafitness.com · HC-G Hilfecenter Gorgias · HC-Z Hilfecenter Zendesk · TC Challenge-Bedingungen · SD screensdesign-Videoanalyse (Zeitmarke) · DT devteam.inc · MWM mwm.ai · REV Rezensionen · DC Discord. Details in `product-research.md`.
+**Evidenz:** AS App Store (mit Version bei Release Notes) · GP Google Play · WEB Website der Referenz-App · HC-G Hilfecenter Gorgias · HC-Z Hilfecenter Zendesk · TC Challenge-Bedingungen · SD screensdesign-Videoanalyse (Zeitmarke) · DT Fallstudie der Entwicklungsagentur · MWM mwm.ai · REV Rezensionen · DC Discord. Details in `product-research.md`.
 
 <!-- STATS-BEGIN -->
 ## Überblick in Zahlen
@@ -61,10 +62,10 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 49 | 30 | 9 | 88 |
+| Original verifiziert (OV) | 49 | 29 | 10 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
 | Eigene Verbesserung (EV) | 47 | 4 | 0 | 51 |
-| Summe | 109 | 47 | 11 | 167 |
+| Summe | 109 | 46 | 12 | 167 |
 
 | Release | Funktionen |
 |---|---|
@@ -72,28 +73,28 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | R1 | 109 |
 | R2 | 20 |
 | R3 | 1 |
-| R4 | 14 |
+| R4 | 13 |
 | R5 | 5 |
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 67 | 30 | 17 | 11 |
+| Anzahl | 42 | 67 | 30 | 16 | 12 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
-| Analysiert | 39 |
+| Analysiert | 38 |
 | Getestet | 3 |
 | Implementiert | 86 |
 | Noch zu recherchieren | 1 |
 | Spezifiziert | 17 |
-| Verworfen | 1 |
+| Verworfen | 2 |
 | Zur Umsetzung ausgewählt | 19 |
 <!-- STATS-END -->
 
 ## A. Onboarding, Profil, Ziele (ON)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | ON-01 | Nutzung ohne Konto; lokales Profil mit optionalem Anzeigenamen | Pflicht-Registrierung mit E-Mail vor dem Quiz | SD 00:39; HC-G | V | OV | H | SY-01 | S | P0 | MVP | R1 · M3 | Anpassen: kein Konto; Anmeldung nur für Sync (D-113) | Implementiert | AK-SET-05 |
 | ON-02 | Kurze Ersteinrichtung | Quiz mit 19 Schritten, danach Paywall | SD 01:12; GP | V | OV | M | ON-07; ON-18; TP-24; SY-14 | S | P1 | MVP | R1 · M3 | Anpassen: höchstens vier Schritte, alles überspringbar | Zur Umsetzung ausgewählt | AK-ONB-01 |
@@ -111,14 +112,14 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | ON-14 | Programm wechseln, Ziel ändern | Menü, „Change workout plan", neues Ziel, Programm wählen | HC-Z | V | OV | H | TP-19; ON-18 | S | P1 | MVP | R1 · M2 | Übernehmen | Zur Umsetzung ausgewählt | AK-PRG-07, AK-SET-01 |
 | ON-15 | Alle Daten löschen | Konto löschen ist permanent | WEB; REV | V | OV | H | SY-11 | S | P1 | MVP | R1 · M4 | Anpassen: lokal im MVP, Cloud-Daten ab R3 | Zur Umsetzung ausgewählt | AK-DAT-10 |
 | ON-16 | Abo, Testphase, Paywall | 7 Tage Testphase, harte Paywall nach dem Quiz | AS; SD 02:38 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
-| ON-17 | Referral-Programm und Sweat Equity | Credits durch Nutzung, anrechenbar auf die Mitgliedschaft | AS 3.4.0; AS 3.4.2 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
+| ON-17 | Referral-Programm und Guthabenpunkte | Credits durch Nutzung, anrechenbar auf die Mitgliedschaft | AS 3.4.0; AS 3.4.2 | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
 | ON-18 | Zielgewicht festlegen | Zielgewicht im Quiz mit Warnung | SD 01:58 | V | OV | H | BP-01 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-SET-01, AK-DSH-06, AK-BW-05 |
 
 ## B. Trainingsplanung (TP)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| TP-01 | Programme und Vorlagen | Benannte Trainerprogramme mit Level, Wochen, Minuten, Sätzen; Home und Gym | WEB; HC-Z | V | OV | H | TP-03; TP-24 | M | P0 | MVP | R1 · M1/M2 | Anpassen: eigene Programme, eigene Vorlagen, Beispielvorlagen; keine Xeela-Inhalte (D-106) | Implementiert | AK-PRG-01, AK-PRG-06, AK-PRG-11 |
+| TP-01 | Programme und Vorlagen | Benannte Trainerprogramme mit Level, Wochen, Minuten, Sätzen; Home und Gym | WEB; HC-Z | V | OV | H | TP-03; TP-24 | M | P0 | MVP | R1 · M1/M2 | Anpassen: eigene Programme, eigene Vorlagen, Beispielvorlagen; keine Inhalte der Referenz-App (D-106) | Implementiert | AK-PRG-01, AK-PRG-06, AK-PRG-11 |
 | TP-02 | Programmdetailseite | Vorhanden, 2025 überarbeitet | AS 3.1.5 | V | OV | M | TP-01 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-PRG-12 |
 | TP-03 | Programmstruktur aus Wochen und Trainingstagen | Feste Wochenstruktur mit festen Ruhetagen (laut Rezensionen 2024/2025) | REV | V-R | OV | H | – | M | P0 | MVP | R1 · M2 | Anpassen: Wochen frei definierbar, keine festen Ruhetage (D-214) | Implementiert | AK-PRG-01, AK-PRG-02 |
 | TP-04 | Übungsreihenfolge im Plan festlegen | Reihenfolge im Training erzwungen (laut Rezensionen) | REV | V-R | OV | H | TP-06 | M | P0 | MVP | R1 · M2 | Anpassen: sortierbar; im Training nicht erzwungen | Implementiert | AK-PRG-03, AK-TRN-08 |
@@ -147,7 +148,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## C. Aktive Trainingseinheit (TS)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | TS-01 | Training starten: aus Programm, Vorlage oder frei | Start des Tagestrainings von Home | HC-G; SD | V | OV | H | TP-21 | M | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-01, AK-TRN-02, AK-TRN-22 |
 | TS-02 | Übungsliste mit Sätzen | Video, Satzliste, Eingaben je Übung | SD 13:04 | V | OV | H | TP-06 | M | P0 | MVP | R1 · M1 | Anpassen: alle Übungen in einer Liste | Implementiert | AK-TRN-08, AK-UX-03 |
@@ -179,12 +180,12 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## D. Trainingshistorie und Analyse (TH)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | TH-01 | Verlauf mit Detail, Bearbeiten und Löschen | Historie wird gespeichert | HC-G | V | OV | H | TS-14 | M | P0 | MVP | R1 · M1/M2 | Übernehmen | Implementiert | AK-HIS-01 bis AK-HIS-04 |
 | TH-02 | Übungsverlauf als Liste und Diagramm | Anspruch „visualize your rep & weight progress"; Nutzer vermissen Verlaufsgraphen (Rezensionen) | AS; REV | V | OV | H | SY-18; Recharts | M | P1 | MVP | R1 · M2/M3 | Anpassen: Diagramm aus echten Daten als Verbesserungsziel | Implementiert | AK-EXL-05, AK-HIS-05 |
 | TH-03 | Trainingskalender | Nicht belegt | – | P | ON | M | AH-08 | M | P2 | Später | R4 · M11 | Später | Analysiert | Monatsansicht mit geplanten und absolvierten Einheiten |
-| TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | P3 | Später | R4 · M11 | Später (D-027) | Analysiert | Regel dokumentiert und getestet; Ruhetage unterbrechen nicht |
+| TH-04 | Streaks | „New streak feature" seit 3.2.0; Regeln unbekannt | AS 3.2.0 | V | OV | N | TH-01 | S | – | Ausgeschlossen | – | Ausschließen: keine Serien-Zähler, Konsistenz als Wochenbild (Markenleitplanken Regel 2, D-318) | Verworfen | Entfällt |
 | TH-05 | Persönliche Bestleistungen | Nicht belegt | – | P | ON | H | SY-18 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-07 |
 | TH-06 | Statistik zu Frequenz, Dauer, Volumen | Nicht belegt | – | P | ON | M | TH-01 | M | P2 | MVP | R1 · Schritt E | Vorgezogen mit Schritt E (D-252) | Implementiert | AK-HIS-06 |
 | TH-07 | Vergleich mit der vorherigen Einheit | Vorherige Wiederholungen sichtbar | REV | V | OV | M | TS-03 | S | P1 | MVP | R1 · M3 | Übernehmen | Implementiert | AK-TRN-20, AK-DSH-04 |
@@ -192,7 +193,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## E. Ernährung (NU)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | NU-01 | Kalorien- und Makroziele berechnen | Aus Präferenzen, Alter, Gewicht, Ziel; Formel unbekannt | HC-G; GP; HC-Z | V | OV | H | ON-09 | M | P1 | MVP | R1 · Schritt G | Anpassen: dokumentierte Formel, überschreibbar, vorgezogen (D-261) | Implementiert | AK-NUT-05 |
 | NU-02 | Tagesübersicht mit Zielfortschritt | Kalorien-Widget, „clearer daily targets" | AS 3.1.5; AS 3.5.0 | V | OV | H | NU-05 | M | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
@@ -224,14 +225,14 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## F. Rezepte und Mahlzeitenplanung (RE)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | RE-01 | Rezeptkatalog mit Filtern | Nach Mahlzeit, Küche, Schwierigkeit | AS 3.5.0 | V | OV | H | RE-02 | M | P2 | Später | R2 · M7 | Anpassen: eigene Rezepte | Spezifiziert | Filter nach Mahlzeit, Tags, Dauer, kcal pro Portion; Volltextsuche |
 | RE-02 | Rezept mit Zutaten, Schritten, Nährwerten pro Portion | Rezepte und Anleitungen vorhanden | AS; REV | V | OV | H | NU-10 | M | P1 | MVP | R1 · M7 | Übernehmen, vorgezogen (D-267) | Implementiert | AK-NUT-10 |
 | RE-03 | Wochenmenü erstellen, manuell oder per Vorschlag | Generiert um das Kalorienziel | AS 3.5.0 | V | OV | M | RE-01; NU-01 | L | P2 | Später | R2 · M8 | Anpassen: manuelle Planung zuerst; Vorschlag aus eigenem Katalog nachrangig | Spezifiziert | Woche × Slots; Tagessummen sichtbar |
 | RE-04 | Rezepte im Plan tauschen | „swap recipes" | AS 3.5.0 | V | OV | H | RE-03 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Tausch aktualisiert Summen und Einkaufsliste |
 | RE-05 | Kochtage und Reste | „pick your cooking days" | AS 3.5.0 | V | OV | M | RE-03 | M | P3 | Später | Backlog | Später | Analysiert | Kochtage markierbar; Reste auf Folgetage verteilbar |
-| RE-06 | Auswahl der geplanten Mahlzeiten | „choose which meals Xeela plans" | AS 3.5.0 | V | OV | M | RE-03 | S | P2 | Später | R2 · M8 | Übernehmen | Spezifiziert | Slots pro Woche ein- und ausschaltbar |
+| RE-06 | Auswahl der geplanten Mahlzeiten | „choose which meals [the app] plans" | AS 3.5.0 | V | OV | M | RE-03 | S | P2 | Später | R2 · M8 | Übernehmen | Spezifiziert | Slots pro Woche ein- und ausschaltbar |
 | RE-07 | Woche bestätigen | „confirmed week" | AS 3.5.0 | V | OV | M | RE-03 | S | P2 | Später | R2 · M8 | Übernehmen | Spezifiziert | Bestätigung erzeugt die Einkaufsliste; spätere Änderung markiert sie als veraltet |
 | RE-08 | Einkaufsliste aus der bestätigten Woche | Vorhanden | AS 3.5.0 | V | OV | H | RE-07 | M | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Aus Rezepten × Portionen; reproduzierbar |
 | RE-09 | Einkaufsliste nach Kategorien | „easier to read and shop from" | AS 3.5.1 | V | OV | H | RE-08 | S | P1 | Später | R2 · M8 | Übernehmen | Spezifiziert | Gruppierung nach Lebensmittelkategorie |
@@ -244,7 +245,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## G. Körper und Fortschritt (BP)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | BP-01 | Körpergewicht erfassen, bearbeiten, löschen, als Liste | Gewicht im Onboarding; ein Verlauf ist nur in einer Drittquelle genannt | GP; MWM | V | OV | H | – | S | P0 | MVP | R1 · M3 | Übernehmen (D-111) | Implementiert | AK-BW-01 bis AK-BW-04 |
 | BP-02 | Gewichtsverlauf mit Trend | Nur in einer Drittquelle genannt | MWM | N | ON | H | BP-01; Recharts | M | P1 | MVP | R1 · M3 | Übernehmen (D-111) | Implementiert | AK-BW-05, AK-BW-06 |
@@ -257,7 +258,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## H. Aktivität und Gewohnheiten (AH)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | AH-01 | Schritte erfassen, manuell oder per Kurzbefehl | Schritte beworben; Datenquelle unklar | WEB; DT | V | OV | M | – | M | P2 | Später | R4 · M13 (automatisch R5) | Anpassen: manuell sowie Kurzbefehl über Datei oder Zwischenablage; automatisch erst über Server in R5 (D-115) | Noch zu recherchieren | Tageswert; Import; keine Behauptung automatischer Messung |
 | AH-02 | Aktivitätsziele | Nicht belegt | – | P | ON | M | AH-01 | S | P3 | Später | R4 · M13 | Später | Analysiert | Tagesziel mit Fortschritt |
@@ -271,7 +272,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## I. Challenges, Community, Dashboard (CH)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | CH-01 | Persönliche Challenges mit Tagesaufgaben | Zeitlich begrenzte Programme mit Aufgaben, Fotos, Gewinnern | TC | V | OV | N | AH-04 | M | P3 | Später | Backlog | Später: nur persönlich, ohne Wettbewerb | Analysiert | Dauer, Aufgaben, Fortschritt in Prozent |
 | CH-02 | Wettbewerb, Rangliste, Preise | Gewinnerauswahl; „top 5" | TC; REV | V | OV | N | – | – | – | Ausgeschlossen | – | Ausschließen (D-005) | Analysiert | Entfällt |
@@ -285,7 +286,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 ## J. System, Daten, Synchronisierung (SY)
 
-| ID | Funktion | Originalverhalten (Xeela) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
+| ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | SY-01 | Lokale Datenbank (Dexie, IndexedDB) als führender Speicher | Server-Backend | DT | E | EV | H | – | M | P0 | MVP | R1 · M0 | Verbesserung (D-113, D-204) | Implementiert | AK-DAT-07, AK-DAT-11, AK-UX-06 |
 | SY-02 | PWA mit Installation, Offline-Betrieb, Update-Hinweis | Native App | – | E | EV | H | SY-15 | M | P0 | MVP | R1 · M0/M4 | Verbesserung (D-101) | Zur Umsetzung ausgewählt | AK-PWA-01 bis AK-PWA-03, AK-DEV-01, AK-DEV-02 |

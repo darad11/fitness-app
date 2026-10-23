@@ -1,6 +1,19 @@
 # Arbeitsregeln für Claude-Sitzungen
 
-Persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, den Produktinhaber. Stand, Entscheidungen und Pläne stehen im Repository, nicht im Chat einer früheren Sitzung.
+FORM, persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, den Produktinhaber. Stand, Entscheidungen und Pläne stehen im Repository, nicht im Chat einer früheren Sitzung.
+
+## Dauerhafte Anweisungen des Produktinhabers
+
+Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
+
+- Branch: immer auf `form-rebranding` arbeiten, nie direkt auf `main`. Nach jedem Commit sofort pushen.
+- Zu Beginn jeder Aufgabe lesen: `CLAUDE.md`, `docs/decisions.md`, `audit-report.md`, `form-markenleitplanken.md`; ab dem Rebranding zusätzlich `brand-tokens.md`.
+- Ein Commit pro Paket. Jedes Paket bekommt eine D-Nummer in `docs/decisions.md`.
+- Nach jedem Paket: `pnpm check:bundle` (Startansicht unter 250 KB) und E2E inklusive WebKit.
+- Keine Änderungen an Datenmodellen ohne Migrations- und Rückfallplan.
+- Texte in der App nach `form-markenleitplanken.md`: Du-Form, keine Ausrufezeichen, keine Emojis, keine Streaks oder Challenge-Zähler.
+- Gemergt wird nur nach Freigabe des Produktinhabers.
+- Rückfragen nur, wenn eine Entscheidung die Richtung ändert; alles andere selbst entscheiden und begründen.
 
 ## Zuerst lesen
 
@@ -8,14 +21,14 @@ Persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, den Pro
 - `docs/implementation-plan.md`: Meilensteine, Arbeitspakete, „Stand" und „Nächste konkrete Schritte"
 - `docs/decisions.md`: Entscheidungen (D-…) und offene Fragen (Q-…)
 - `docs/requirements.md`: Akzeptanzkriterien (AK-…); `docs/testing.md`: Nachweise und Protokolle
-- `docs/evolution-plan.md`: Erweiterungsplan (Schritte A bis H), Programme A, B, C; dazu `docs/winter-arc-reconstruction.md` und `docs/reference-analysis.md`
+- `docs/evolution-plan.md`: Erweiterungsplan (Schritte A bis H), Programme A, B, C; dazu `docs/winterprogramm-2026.md` und `docs/reference-analysis.md`
 - Je nach Aufgabe: `docs/brand-form.md` (Marke FORM, Q-22), `docs/shopping-list.md`, `docs/water-tracker.md`, `docs/data-model.md`, `docs/architecture.md`, `docs/design-system.md`, `docs/sample-templates.md`, `docs/exercise-library.md`
 
 ## Zusammenarbeit
 
 - Sprache Deutsch, Anrede „du", kurze Sätze ohne Fachjargon. Texte der App gehören in `src/shared/i18n/de.ts`.
-- Je Meilenstein oder Arbeitspaket ein Branch und ein Pull Request nach `main`. `main` ist die Produktivadresse https://fitness-app-mu-drab.vercel.app und ändert sich nur per Pull Request mit grüner CI. Gemergt wird vom Produktinhaber.
-- Produktentscheidungen, die noch nicht bestätigt sind, als Rückfrage stellen; kleine Details mit Begründung in `docs/decisions.md` festhalten.
+- Arbeitsbranch ist `form-rebranding` (siehe oben); Änderungen gehen per Pull Request nach `main`. `main` ist die Produktivadresse https://fitness-app-mu-drab.vercel.app und ändert sich nur per Pull Request mit grüner CI. Gemergt wird vom Produktinhaber nach seiner Freigabe.
+- Rückfragen nur bei Entscheidungen, die die Richtung ändern; alle anderen Entscheidungen mit Begründung in `docs/decisions.md` festhalten.
 - Nach jedem Arbeitspaket ein Bericht nach `docs/implementation-plan.md` Abschnitt 8; Stand, Testergebnisse und Status in der Funktionsmatrix nachtragen.
 
 ## Ehrlichkeit und Qualität

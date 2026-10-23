@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
-import { chooseTheme, expect, openPage, test } from './fixtures';
+import { expect, openPage, test } from './fixtures';
 
 async function expectNoAxeViolations(page: Page, label: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
@@ -17,7 +17,7 @@ async function expectNoAxeViolations(page: Page, label: string) {
 /** Übernimmt „Ganzkörper A/B" und öffnet den Editor; liefert die Adresse des Programms. */
 async function adoptSample(page: Page): Promise<string> {
   await openPage(page, '/training/vorlagen/full_body_ab');
-  await page.getByRole('button', { name: 'Als eigenes Programm übernehmen' }).click();
+  await page.getByRole('button', { name: 'Übernehmen und anpassen' }).click();
   await expect(page.getByText('Eigenes Programm', { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/training\/programme\/[0-9a-f-]+$/);
   return new URL(page.url()).pathname;
@@ -95,10 +95,9 @@ test('eigenes Programm übernehmen, bearbeiten und nach Neuladen behalten (AK-PR
   await expect(page.getByRole('link', { name: 'Bearbeiten' })).toBeVisible();
 });
 
-for (const theme of ['Hell', 'Dunkel'] as const) {
-  test(`keine axe-Verstöße im Programm-Editor in „${theme}" (AK-UX-04 Basis)`, async ({ page }) => {
+{
+  test(`keine axe-Verstöße im Programm-Editor (AK-UX-04 Basis)`, async ({ page }) => {
     test.slow();
-    await chooseTheme(page, theme);
     const programPath = await adoptSample(page);
     await expectNoAxeViolations(page, programPath);
     await openPage(page, `${programPath}/bearbeiten`);

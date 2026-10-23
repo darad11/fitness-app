@@ -42,6 +42,18 @@ describe('createFormatters', () => {
     expect(f.dateTimeShort(oct18Evening)).toBe('18.10.2026, 21:05');
   });
 
+  it('kurze Datumszeile „So., 18. Okt.“ für eine Zeile auf dem Handy (D-326)', () => {
+    expect(createFormatters('de-AT', 'Europe/Vienna').weekdayDayMonthShort(oct18Evening)).toBe(
+      'So., 18. Okt.',
+    );
+    expect(createFormatters('de-AT', 'Europe/Vienna').weekdayDayMonthShort(jan17)).toBe(
+      'Sa., 17. Jän.',
+    );
+    expect(createFormatters('de-DE', 'Europe/Berlin').weekdayDayMonthShort(jan17)).toBe(
+      'Sa., 17. Jan.',
+    );
+  });
+
   it('nutzt die Tausendertrennung der Gerätesprache und immer ein Dezimalkomma', () => {
     // Das Trennzeichen kommt aus den Sprachdaten (ICU) und unterscheidet sich je nach Version:
     // de-CH liefert mit ICU 77 „’", mit ICU 78 „'". Geprüft wird deshalb die Art des Zeichens.

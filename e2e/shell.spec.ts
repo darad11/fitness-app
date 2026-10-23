@@ -1,4 +1,4 @@
-import { chooseTheme, expect, mainNav, openPage, test } from './fixtures';
+import { expect, mainNav, openPage, test } from './fixtures';
 
 test('leitet auf „Heute" um und zeigt das Datum ohne Status und „Diese Version“ (D-265)', async ({
   page,
@@ -24,12 +24,12 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   ]);
   await mainNav(page).getByRole('link', { name: 'Mehr' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Mehr' })).toBeVisible();
-  // Ohne den Link „Fitness“ oben links (D-286).
+  // Ohne das Logo oben links (D-286, D-310).
   await expect(
     page
       .getByRole('main')
       .getByRole('link')
-      .filter({ hasNotText: /^Fitness$/ }),
+      .filter({ hasNot: page.getByRole('img', { name: 'FORM – zu Heute' }) }),
   ).toHaveText(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   // Daten, Installieren und Schritte stehen in den Einstellungen (D-280).
   await page.getByRole('main').getByRole('link', { name: 'Einstellungen' }).click();
@@ -40,20 +40,23 @@ test('zeigt in der Navigation nur verfügbare Bereiche (AK-UX-01)', async ({ pag
   ]);
 });
 
-test('speichert die Darstellung „Dunkel" über einen Neustart (D-212, AK-SET-03 Basis)', async ({
+test('bleibt dunkel, auch nach einem Neustart; keine Darstellungswahl (D-308)', async ({
   page,
 }) => {
-  await chooseTheme(page, 'Dunkel');
+  await openPage(page, '/mehr/einstellungen');
+  await expect(page.getByRole('radio', { name: 'Dunkel' })).toHaveCount(0);
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  // Eine alte Kopie der Einstellung „Hell“ darf die Darstellung nicht mehr umschalten.
+  await page.evaluate(() => {
+    localStorage.setItem('fitness.theme', 'light');
+  });
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Einstellungen' })).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#212a3f');
+  await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#0c1219');
   expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe(
-    'rgb(33, 42, 63)',
+    'rgb(12, 18, 25)',
   );
-  await chooseTheme(page, 'Hell');
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
 });
 
 test('formatiert nach Gerätesprache de-AT mit „Jänner" (AK-SET-04)', async ({ page }) => {
@@ -68,7 +71,7 @@ test('formatiert nach Gerätesprache de-AT mit „Jänner" (AK-SET-04)', async (
 test('meldet unbekannte Adressen mit Weg zurück', async ({ page }) => {
   await openPage(page, '/gibt-es-nicht');
   await expect(page.getByRole('heading', { level: 1, name: 'Seite nicht gefunden' })).toBeVisible();
-  await page.getByRole('link', { name: 'Zu Heute' }).click();
+  await page.getByRole('link', { name: 'Zu Heute', exact: true }).click();
   await expect(page).toHaveURL(/\/heute$/);
 });
 
@@ -102,7 +105,7 @@ test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-
   await expect(page.getByText(/^Letzter Export: /)).toBeVisible();
 });
 
-test('Logo und Name am Handy auf jeder Seite links oben, führt zu „Heute“ (D-280, D-286)', async ({
+test('Logo am Handy auf jeder Seite links oben, grüne Kachel 28 px hoch, führt zu „Heute“ (D-286, D-310, D-325)', async ({
   page,
 }, testInfo) => {
   test.skip(!testInfo.project.name.includes('mobile'), 'Am Desktop zeigt die Seitenleiste beides');
@@ -114,13 +117,20 @@ test('Logo und Name am Handy auf jeder Seite links oben, führt zu „Heute“ (
     '/mehr/einstellungen',
   ]) {
     await openPage(page, path);
-    const brand = page.getByRole('main').getByRole('link', { name: 'Fitness, zu „Heute“' });
+    const brand = page.getByRole('main').getByRole('link', { name: 'FORM – zu Heute' });
     await expect(brand).toBeVisible();
+    const img = brand.getByRole('img');
+    await expect(img).toHaveAttribute('src', '/brand/logo-kopfzeile-kompakt.svg');
+    const image = await img.boundingBox();
+    expect(Math.round(image?.height ?? 0)).toBe(28);
+    // Breite wie die Datei: Kachel 28, Abstand 10, Wortmarke etwa 67,5, auf ganze Pixel (D-332).
+    expect(image?.width).toBe(106);
     const logo = await brand.boundingBox();
+    expect(logo?.height ?? 0).toBeGreaterThanOrEqual(44);
     const title = await page.getByRole('heading', { level: 1 }).boundingBox();
     expect((logo?.y ?? 0) + (logo?.height ?? 0)).toBeLessThanOrEqual(title?.y ?? 0);
     expect(logo?.x ?? 99).toBeLessThan(30);
   }
-  await page.getByRole('main').getByRole('link', { name: 'Fitness, zu „Heute“' }).click();
+  await page.getByRole('main').getByRole('link', { name: 'FORM – zu Heute' }).click();
   await expect(page).toHaveURL(/\/heute$/);
 });

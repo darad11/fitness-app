@@ -61,8 +61,11 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
     const [created] = await listCustomExercises(rt.db);
     expect(router.state.location.pathname).toBe(`/uebungen/${created?.id ?? ''}`);
     expect(screen.getByText('Eigene Übung')).toBeVisible();
-    expect(screen.getByText('Brust')).toBeVisible();
-    expect(screen.getByText('Trizeps')).toBeVisible();
+    // Muskeln als Chip unter dem Titel und im Reiter „Muskeln“ (FORM, D-315).
+    expect(screen.getByText('Hauptmuskeln: Brust')).toBeInTheDocument();
+    const muscles = screen.getByRole('tabpanel', { name: 'Muskeln' });
+    expect(within(muscles).getByText('Brust')).toBeVisible();
+    expect(within(muscles).getByText('Trizeps')).toBeVisible();
     expect(await screen.findByText('Mit dieser Übung hast du noch nicht trainiert.')).toBeVisible();
 
     // Persönliche Angaben.

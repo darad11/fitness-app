@@ -2,7 +2,7 @@ import { useId, useState } from 'react';
 import { useBodyWeights } from '@/modules/body';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button, Card, PageHeader, SelectField, Skeleton } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
@@ -20,10 +20,9 @@ import {
   type TargetInputs,
 } from '../model/nutrition';
 import { InvalidTargetError, setNutritionTarget } from '../service/nutritionService';
-import { dayDate, kcal } from './format';
+import { kcal } from './format';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Tagesziele (S-26, NU-01, NU-17, D-262): selbst festlegen oder Vorschlag übernehmen. */
 export function TargetsPage() {
@@ -90,13 +89,13 @@ function TargetsForm({
     setMessage(null);
     setNutritionTarget(rt, values, { method, ...(inputs ? { inputs } : {}) }).then(
       () => {
-        setMessage({ kind: 'ok', text: t.nutrition.targetSaved });
+        setMessage({ kind: 'ok', text: tNutrition.targetSaved });
       },
       (caught: unknown) => {
         if (caught instanceof InvalidTargetError) {
-          setMessage({ kind: 'error', text: t.nutrition.targetError });
+          setMessage({ kind: 'error', text: tNutrition.targetError });
         } else {
-          setMessage({ kind: 'error', text: t.nutrition.saveFailed });
+          setMessage({ kind: 'error', text: tNutrition.saveFailed });
           void logError(rt.db, {
             area: 'nutrition',
             error: caught,
@@ -140,24 +139,22 @@ function TargetsForm({
   return (
     <>
       <PageHeader
-        title={t.nutrition.targetsTitle}
-        back={{ to: '/ernaehrung', label: t.nutrition.title }}
+        title={tNutrition.targetsTitle}
+        back={{ to: '/ernaehrung', label: tNutrition.title }}
       />
       <div className="grid gap-4">
         {current ? (
           <Card
-            tone="ink"
-            eyebrow={t.nutrition.currentTarget}
-            title={`${kcal(fmt, current.kcal)} ${t.nutrition.units.kcal}`}
+            tone="stage"
+            eyebrow={tNutrition.currentTarget}
+            title={`${kcal(fmt, current.kcal)} ${tNutrition.units.kcal}`}
           >
-            <p className="-mt-2 text-on-ink-muted">
-              {t.nutrition.macros.protein} {current.proteinG} g · {t.nutrition.macros.carbs}{' '}
-              {current.carbsG} g · {t.nutrition.macros.fat} {current.fatG} g
+            <p className="-mt-2 text-muted">
+              {tNutrition.macros.protein} {current.proteinG} g · {tNutrition.macros.carbs}{' '}
+              {current.carbsG} g · {tNutrition.macros.fat} {current.fatG} g
             </p>
-            <p className="mt-2 text-sm text-on-ink-muted">
-              {t.nutrition.methods[current.method]} ·{' '}
-              {t.nutrition.since(fmt.weekdayDayMonth(dayDate(current.effectiveFrom)))}
-            </p>
+            {/* Wie das Ziel entstand, ohne Datum (F5, D-326); ändert sich mit dem nächsten Ziel. */}
+            <p className="mt-2 text-sm text-muted">{tNutrition.methods[current.method]}</p>
           </Card>
         ) : null}
         {message ? (
@@ -169,7 +166,7 @@ function TargetsForm({
           </p>
         ) : null}
 
-        <Card title={t.nutrition.manualTitle}>
+        <Card title={tNutrition.manualTitle}>
           <form
             className="grid gap-3"
             onSubmit={(event) => {
@@ -181,34 +178,34 @@ function TargetsForm({
                 fatG: parseDecimal(manual.fatG),
               };
               if (Object.values(values).some((v) => v === null)) {
-                setMessage({ kind: 'error', text: t.nutrition.targetError });
+                setMessage({ kind: 'error', text: tNutrition.targetError });
                 return;
               }
               save(values as TargetValues, 'manual');
             }}
           >
             <div className="grid grid-cols-2 gap-3">
-              {numberField('kcal', t.nutrition.kcalLabel, manual.kcal, (v) => {
+              {numberField('kcal', tNutrition.kcalLabel, manual.kcal, (v) => {
                 setManual((m) => ({ ...m, kcal: v }));
               })}
-              {numberField('protein', t.nutrition.proteinLabel, manual.proteinG, (v) => {
+              {numberField('protein', tNutrition.proteinLabel, manual.proteinG, (v) => {
                 setManual((m) => ({ ...m, proteinG: v }));
               })}
-              {numberField('carbs', t.nutrition.carbsLabel, manual.carbsG, (v) => {
+              {numberField('carbs', tNutrition.carbsLabel, manual.carbsG, (v) => {
                 setManual((m) => ({ ...m, carbsG: v }));
               })}
-              {numberField('fat', t.nutrition.fatLabel, manual.fatG, (v) => {
+              {numberField('fat', tNutrition.fatLabel, manual.fatG, (v) => {
                 setManual((m) => ({ ...m, fatG: v }));
               })}
             </div>
             <Button type="submit" className="justify-self-start">
-              {t.nutrition.saveTarget}
+              {tNutrition.saveTarget}
             </Button>
           </form>
         </Card>
 
-        <Card title={t.nutrition.suggestTitle}>
-          <p className="-mt-2 mb-4 text-sm text-muted">{t.nutrition.suggestHint}</p>
+        <Card title={tNutrition.suggestTitle}>
+          <p className="-mt-2 mb-4 text-sm text-muted">{tNutrition.suggestHint}</p>
           <form
             className="grid gap-3"
             onSubmit={(event) => {
@@ -223,7 +220,7 @@ function TargetsForm({
               });
               if (!parsed.success || parsed.data.birthYear > now.getFullYear() - 14) {
                 setSuggestion(null);
-                setMessage({ kind: 'error', text: t.nutrition.inputError });
+                setMessage({ kind: 'error', text: tNutrition.inputError });
                 return;
               }
               setMessage(null);
@@ -232,52 +229,52 @@ function TargetsForm({
           >
             <div className="grid gap-3 sm:grid-cols-2">
               <SelectField
-                label={t.nutrition.sexLabel}
+                label={tNutrition.sexLabel}
                 value={sex}
-                options={SEXES.map((value) => ({ value, label: t.nutrition.sexes[value] }))}
+                options={SEXES.map((value) => ({ value, label: tNutrition.sexes[value] }))}
                 onChange={setSex}
               />
-              {numberField('birthYear', t.nutrition.birthYearLabel, birthYear, setBirthYear)}
-              {numberField('height', t.nutrition.heightLabel, height, setHeight)}
+              {numberField('birthYear', tNutrition.birthYearLabel, birthYear, setBirthYear)}
+              {numberField('height', tNutrition.heightLabel, height, setHeight)}
               {numberField(
                 'weight',
-                t.nutrition.weightLabel,
+                tNutrition.weightLabel,
                 weight,
                 setWeight,
-                latestWeight !== undefined ? t.nutrition.weightHint : undefined,
+                latestWeight !== undefined ? tNutrition.weightHint : undefined,
               )}
               <SelectField
-                label={t.nutrition.activityLabel}
+                label={tNutrition.activityLabel}
                 value={activity}
                 options={ACTIVITY_LEVELS.map((value) => ({
                   value,
-                  label: t.nutrition.activities[value],
+                  label: tNutrition.activities[value],
                 }))}
                 onChange={setActivity}
               />
               <SelectField
-                label={t.nutrition.directionLabel}
+                label={tNutrition.directionLabel}
                 value={direction}
                 options={DIRECTIONS.map((value) => ({
                   value,
-                  label: t.nutrition.directions[value],
+                  label: tNutrition.directions[value],
                 }))}
                 onChange={setDirection}
               />
             </div>
             <Button type="submit" variant="secondary" className="justify-self-start">
-              {t.nutrition.calculate}
+              {tNutrition.calculate}
             </Button>
           </form>
           {suggestion ? (
             <div className="mt-4 rounded-card bg-surface-2 p-4">
-              <p className="eyebrow text-muted">{t.nutrition.suggestion}</p>
-              <p className="mt-1 text-2xl font-bold tabular-nums">
-                {kcal(fmt, suggestion.values.kcal)} {t.nutrition.units.kcal}
+              <p className="eyebrow text-muted">{tNutrition.suggestion}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums">
+                {kcal(fmt, suggestion.values.kcal)} {tNutrition.units.kcal}
               </p>
               <p className="text-muted">
-                {t.nutrition.macros.protein} {suggestion.values.proteinG} g ·{' '}
-                {t.nutrition.macros.carbs} {suggestion.values.carbsG} g · {t.nutrition.macros.fat}{' '}
+                {tNutrition.macros.protein} {suggestion.values.proteinG} g ·{' '}
+                {tNutrition.macros.carbs} {suggestion.values.carbsG} g · {tNutrition.macros.fat}{' '}
                 {suggestion.values.fatG} g
               </p>
               <Button
@@ -286,7 +283,7 @@ function TargetsForm({
                   save(suggestion.values, 'computed', suggestion.inputs);
                 }}
               >
-                {t.nutrition.useSuggestion}
+                {tNutrition.useSuggestion}
               </Button>
             </div>
           ) : null}

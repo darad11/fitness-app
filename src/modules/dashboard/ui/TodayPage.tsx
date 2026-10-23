@@ -1,6 +1,6 @@
 import { Play } from 'lucide-react';
-import { Suspense } from 'react';
-import { Link } from 'react-router';
+import { Suspense, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import {
   changeInPeriod,
   inPeriod,
@@ -18,24 +18,31 @@ import {
   ActiveProgramCard,
   compareWithPrevious,
   formatClock,
+  LIGHT_QUERY,
+  nextDayInput,
   sessionDurationSec,
   sessionProgress,
   summarizeSession,
   plannedEyebrow,
+  plannedRest,
+  ReadyCard,
   useActiveProgram,
   useActiveSession,
   useCompletedSessions,
   useStartSession,
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
+import { cn } from '@/shared/lib/cn';
 import { dayKey, hourIn } from '@/shared/lib/time';
-import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
+import { ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
+import { ReturnSheet, useReturnFlow, type ReturnChoice } from './ReturnFlow';
 
 /**
  * „Heute" (S-01): Bühne mit der laufenden Einheit, sonst „Heute geplant" aus dem aktiven
  * Programm (AK-DSH-02), sonst dem freien Einstieg; darunter Aufgaben, Ernährung, letztes
- * Training, Wochenziel und Gewicht. Status und „Diese Version“ entfallen (D-265).
+ * Training, Wochenziel und Gewicht. Status und „Diese Version“ entfallen (D-265). Nach einer
+ * Pause von 14 Tagen der Rückkehr-Flow (D-319), beim ersten Start ein Satz unter dem Gruß.
  */
 export function TodayPage() {
   const formatters = useFormatters();
@@ -62,49 +69,66 @@ export function TodayPage() {
       ? changeTone(weightChange, latestWeight.weightKg, goalKg)
       : 'neutral';
   const { start, error, busy } = useStartSession();
-  const clock = new Intl.DateTimeFormat('de-AT', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23',
-    timeZone: formatters.timeZone,
-  });
   const hour = hourIn(now, formatters.timeZone);
+  const navigate = useNavigate();
+  const flow = useReturnFlow(todayKey);
+  const steps = useRef<HTMLDivElement>(null);
+  const [stepsHighlighted, setStepsHighlighted] = useState(false);
+  const choose = (choice: ReturnChoice) => {
+    flow.close();
+    if (choice === 'walk') {
+      // Schritte-Karte zeigen und hervorheben; der Fokus folgt für Tastatur und Screenreader.
+      setStepsHighlighted(true);
+      requestAnimationFrame(() => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        steps.current?.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+        steps.current?.focus({ preventScroll: true });
+      });
+    } else if (choice === 'light') {
+      // Das geplante Training mit dem Hinweis „Weniger Sätze …“; ohne Plan ein freies Training.
+      if (active) {
+        void navigate(`/training/einheit/${active.id}${LIGHT_QUERY}`);
+      } else {
+        const input = program ? nextDayInput(program) : null;
+        void start(input ?? { source: 'free', title: t.training.freeTitle, exercises: [] }, {
+          light: true,
+        });
+      }
+    }
+  };
 
   return (
     <>
-      {/* Begrüßung wie im Dashboard (D-276): Gruß mit Namen, darunter Datum und Uhr. */}
+      {/* Begrüßung nach Tageszeit (D-276, D-310): Gruß mit Namen, darunter das Datum; ohne Uhr. */}
       <header className="mb-6">
-        <h1 className="text-display font-bold">
+        <h1 className="text-headline font-semibold">
           <span className="sr-only">{t.today.title}: </span>
           {t.today.greetingLine(greetingFor(hour), profile?.displayName)}
         </h1>
-        <p className="mt-2 flex items-baseline justify-between gap-3 text-muted">
-          <span className="min-w-0">{formatters.weekdayDayMonth(today)}</span>
-          <time className="whitespace-nowrap tabular-nums">{clock.format(now)}</time>
-        </p>
+        <p className="mt-2 text-muted">{formatters.weekdayDayMonth(today)}</p>
+        {flow.firstStart ? <p className="mt-3 text-lg">{t.today.firstStart}</p> : null}
       </header>
-      <div className="grid gap-4 md:grid-cols-2">
+      <ReturnSheet open={flow.open} onChoose={choose} />
+      <div className="grid gap-stack md:grid-cols-2">
         {active === undefined || program === undefined ? (
           <div aria-busy="true" className="md:col-span-2">
             <Skeleton className="h-44" />
           </div>
         ) : active ? (
           <Card
-            tone="ink"
+            tone="stage"
             eyebrow={t.training.running}
             title={active.title}
             className="md:col-span-2"
           >
-            <p className="-mt-2 text-on-ink-muted tabular-nums">
+            <p className="-mt-1 text-muted">
               {t.today.runningText(
                 formatClock(sessionDurationSec(active, now)),
                 t.session.progress(sessionProgress(active).done, sessionProgress(active).total),
               )}
             </p>
             <Meter
-              tone="onInk"
-              className="mt-3"
+              className="mt-4"
               label={t.session.progress(
                 sessionProgress(active).done,
                 sessionProgress(active).total,
@@ -115,7 +139,7 @@ export function TodayPage() {
                   : 0
               }
             />
-            <ButtonLink to={`/training/einheit/${active.id}`} variant="onInk" className="mt-5">
+            <ButtonLink to={`/training/einheit/${active.id}`} size="lg" className="mt-5 w-full">
               <Play aria-hidden="true" className="size-5" />
               {t.training.resume}
             </ButtonLink>
@@ -125,6 +149,7 @@ export function TodayPage() {
             <ActiveProgramCard
               program={program}
               eyebrow={plannedEyebrow(program, today)}
+              rest={plannedRest(program, today)}
               busy={busy}
               onStart={(input) => {
                 void start(input);
@@ -137,34 +162,15 @@ export function TodayPage() {
             ) : null}
           </div>
         ) : (
-          <Card
-            tone="ink"
-            eyebrow={t.today.heroEyebrow}
-            title={t.today.heroTitle}
+          // Ohne Training und ohne Programm (F5, D-324): „Bereit für dein Training?“.
+          <ReadyCard
             className="md:col-span-2"
-          >
-            <p className="-mt-2 max-w-md text-on-ink-muted">{t.today.heroText}</p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Button
-                variant="onInk"
-                disabled={busy}
-                onClick={() => {
-                  void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
-                }}
-              >
-                <Play aria-hidden="true" className="size-5" />
-                {t.training.startFree}
-              </Button>
-              <ButtonLink to="/training/programme" variant="quiet" className="text-on-ink">
-                {t.today.chooseTemplate}
-              </ButtonLink>
-            </div>
-            {error ? (
-              <p role="alert" className="mt-3 text-sm text-on-ink">
-                {error.message}
-              </p>
-            ) : null}
-          </Card>
+            busy={busy}
+            onStartFree={() => {
+              void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
+            }}
+            error={error?.message}
+          />
         )}
         <Suspense fallback={null}>
           <NutritionTodayCard />
@@ -172,9 +178,19 @@ export function TodayPage() {
         <Suspense fallback={null}>
           <WaterCard day={todayKey} />
         </Suspense>
-        <Suspense fallback={null}>
-          <StepsTodayCard />
-        </Suspense>
+        <div
+          ref={steps}
+          tabIndex={-1}
+          data-highlighted={stepsHighlighted || undefined}
+          className={cn(
+            'rounded-card',
+            stepsHighlighted && 'outline-2 outline-offset-4 outline-accent',
+          )}
+        >
+          <Suspense fallback={null}>
+            <StepsTodayCard />
+          </Suspense>
+        </div>
         <Suspense fallback={null}>
           <TasksCard />
         </Suspense>
@@ -183,7 +199,7 @@ export function TodayPage() {
         ) : null}
         {last && lastSummary ? (
           <Card eyebrow={t.today.lastTitle} title={last.title}>
-            <p className="-mt-2 text-sm text-muted tabular-nums">
+            <p className="-mt-1 text-sm text-muted">
               {formatters.weekdayDayMonth(new Date(`${last.dayKey}T12:00:00`))} ·{' '}
               {t.history.summary(
                 formatClock(lastSummary.durationSec),
@@ -211,6 +227,7 @@ export function TodayPage() {
         ) : null}
         <Card
           title={t.body.title}
+          titleStyle="label"
           action={
             <Link
               to="/fortschritt/gewicht"
@@ -223,7 +240,7 @@ export function TodayPage() {
           {latestWeight ? (
             <div>
               <div>
-                <p className="text-2xl font-bold tabular-nums">
+                <p className="text-2xl font-semibold tabular-nums">
                   {formatters.bodyWeightKg(latestWeight.weightKg)}
                 </p>
                 <p className="text-sm text-muted">
@@ -266,9 +283,9 @@ export function TodayPage() {
   );
 }
 
-/** Gruß nach Uhrzeit wie im Dashboard: ab 5 Uhr Morgen, ab 12 Uhr Tag, ab 18 Uhr Abend. */
+/** Gruß nach Uhrzeit (D-310): 5 bis 11 Uhr Morgen, 11 bis 18 Uhr Tag, sonst Abend. */
 function greetingFor(hour: number): string {
-  if (hour >= 5 && hour < 12) return t.today.greetingMorning;
-  if (hour >= 12 && hour < 18) return t.today.greetingDay;
+  if (hour >= 5 && hour < 11) return t.today.greetingMorning;
+  if (hour >= 11 && hour < 18) return t.today.greetingDay;
   return t.today.greetingEvening;
 }

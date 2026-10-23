@@ -58,6 +58,8 @@ export interface Formatters {
   readonly timeZone: string;
   /** „Samstag, 18. Oktober" */
   weekdayDayMonth(date: Date): string;
+  /** „Sa., 18. Okt." (kurze Datumszeile, F5 D-326) */
+  weekdayDayMonthShort(date: Date): string;
   /** „17. Jänner 2026" bzw. „17. Januar 2026" */
   dayMonthYear(date: Date): string;
   /** „18.10.2026, 09:15" */
@@ -85,6 +87,12 @@ export function createFormatters(
     weekday: 'long',
     day: 'numeric',
     month: 'long',
+  });
+  const weekdayDayMonthShort = new Intl.DateTimeFormat(locale, {
+    ...base,
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
   });
   const dayMonthYear = new Intl.DateTimeFormat(locale, {
     ...base,
@@ -124,6 +132,7 @@ export function createFormatters(
     locale,
     timeZone,
     weekdayDayMonth: (date) => weekdayDayMonth.format(date),
+    weekdayDayMonthShort: (date) => weekdayDayMonthShort.format(date),
     dayMonthYear: (date) => dayMonthYear.format(date),
     dateTimeShort: (date) => dateTimeShort.format(date),
     time: (date) => time.format(date),

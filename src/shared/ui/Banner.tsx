@@ -35,7 +35,7 @@ export function Banner({
 }: BannerProps) {
   return (
     <div role={role} className="border-b border-line bg-surface text-sm">
-      <div className="page-gutters mx-auto flex max-w-[1200px] items-start gap-3 py-2">
+      <div className="page-gutters mx-auto flex max-w-content items-start gap-3 py-2">
         {Icon ? (
           <Icon aria-hidden="true" className={cn('mt-2.5 size-5 shrink-0', ICON_TONE[tone])} />
         ) : null}
@@ -48,7 +48,7 @@ export function Banner({
             type="button"
             onClick={onDismiss}
             aria-label={dismissLabel}
-            className="-mr-2 inline-flex size-11 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2"
+            className="-mr-2 inline-flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2"
           >
             <X aria-hidden="true" className="size-5" />
           </button>

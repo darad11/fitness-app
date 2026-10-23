@@ -2,7 +2,7 @@ import { FileUp, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, buttonClasses, Card, Dialog, Skeleton } from '@/shared/ui';
 import { useImportedCatalog } from '../data/catalogStore';
 import {
@@ -31,7 +31,7 @@ export function CatalogCard() {
   const [error, setError] = useState<string>();
   const [done, setDone] = useState<string>();
   const n = (value: number) => fmt.number(value);
-  const tc = t.nutrition.catalog;
+  const tc = tNutrition.catalog;
 
   const pick = async (file: File | undefined) => {
     if (input.current) input.current.value = '';
@@ -157,7 +157,7 @@ export function CatalogCard() {
           if (busy !== 'saving') setPreview(undefined);
         }}
         title={preview?.kind === 'brands' ? tc.brandsPreviewTitle : tc.previewTitle}
-        closeLabel={t.nutrition.cancel}
+        closeLabel={tNutrition.cancel}
         actions={
           <>
             <Button
@@ -167,7 +167,7 @@ export function CatalogCard() {
                 setPreview(undefined);
               }}
             >
-              {t.nutrition.cancel}
+              {tNutrition.cancel}
             </Button>
             <Button disabled={busy === 'saving'} onClick={() => void save()}>
               {busy === 'saving' ? tc.saving : tc.confirm}
@@ -209,7 +209,7 @@ export function CatalogCard() {
           setConfirmRemove(false);
         }}
         title={tc.removeTitle}
-        closeLabel={t.nutrition.cancel}
+        closeLabel={tNutrition.cancel}
         actions={
           <>
             <Button
@@ -218,7 +218,7 @@ export function CatalogCard() {
                 setConfirmRemove(false);
               }}
             >
-              {t.nutrition.cancel}
+              {tNutrition.cancel}
             </Button>
             <Button variant="danger" disabled={busy === 'removing'} onClick={() => void remove()}>
               {tc.remove}

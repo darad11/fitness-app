@@ -68,8 +68,14 @@ describe('Trainingsplayer (S-07)', () => {
   it('zeigt Kopf, Übungen, Satzzeilen und den hervorgehobenen Satz', async () => {
     const session = await startTemplate();
     renderAt(`/training/einheit/${session.id}`);
+    // Kopf: Programm und Woche klein darüber, als Titel nur der Trainingstag (F5, D-323).
+    expect(await screen.findByRole('heading', { level: 1, name: 'Tag A' })).toBeInTheDocument();
+    // Programmname und Woche in zwei Teilen, damit die Woche beim Kürzen bleibt (F6, D-338).
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' }),
+      screen.getByText(
+        (_, element) =>
+          element?.tagName === 'P' && element.textContent === 'Ganzkörper A/B · Woche 1',
+      ),
     ).toBeInTheDocument();
     expect(screen.getByText(/0 von 17 Sätzen/)).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
@@ -290,10 +296,12 @@ describe('Trainingsplayer (S-07)', () => {
     await finishSession(rt, session.id, { skipOpen: true });
     const router = renderAt(`/training/einheit/${session.id}`);
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Zusammenfassung' }),
+      await screen.findByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
     ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe(`/training/einheit/${session.id}/zusammenfassung`);
     expect(screen.getAllByText('Kein erledigter Satz')).toHaveLength(5);
+    // Ohne erledigten Satz keine Zeile „… Das warst du.“ (D-318).
+    expect(screen.queryByText(/Das warst du/)).toBeNull();
   });
 
   it('zeigt die Zusammenfassung nur für abgeschlossene Einheiten', async () => {

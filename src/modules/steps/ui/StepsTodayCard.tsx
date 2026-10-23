@@ -50,7 +50,7 @@ export function StepsTodayCard() {
 
   if (!view.email) {
     return (
-      <Card title={t.steps.title}>
+      <Card title={t.steps.title} titleStyle="label">
         <p className="text-muted">{t.steps.connectHint}</p>
         <Link
           to="/mehr/schritte"
@@ -83,6 +83,7 @@ export function StepsTodayCard() {
   return (
     <Card
       title={t.steps.title}
+      titleStyle="label"
       action={
         summary?.target != null ? (
           <span className="text-sm text-muted tabular-nums">
@@ -96,7 +97,7 @@ export function StepsTodayCard() {
       {summary ? (
         <>
           <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-            <p className="text-3xl font-bold tracking-tight tabular-nums">
+            <p className="text-value font-semibold tabular-nums">
               {steps(summary.todaySteps)}
               <span className="text-base font-medium tracking-normal text-muted">
                 {` ${t.steps.unit}`}

@@ -2,7 +2,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { useMealTemplates } from '../data/nutritionRepository';
 import type { MealTemplate } from '../model/mealTemplate';
@@ -32,15 +32,15 @@ export function TemplatesPage() {
   return (
     <>
       <PageHeader
-        title={t.nutrition.templates.title}
-        back={{ to: '/ernaehrung', label: t.nutrition.title }}
+        title={tNutrition.templates.title}
+        back={{ to: '/ernaehrung', label: tNutrition.title }}
       />
       {templates === undefined ? (
         <Skeleton className="h-32" />
       ) : templates.length === 0 ? (
-        <p className="rounded-card bg-surface-2 p-4 text-muted">{t.nutrition.templates.empty}</p>
+        <p className="rounded-card bg-surface-2 p-4 text-muted">{tNutrition.templates.empty}</p>
       ) : (
-        <ul aria-label={t.nutrition.templates.title} className="grid gap-3">
+        <ul aria-label={tNutrition.templates.title} className="grid gap-3">
           {templates.map((template) => (
             <li key={template.id} className="rounded-card bg-surface p-4 shadow-card">
               <div className="flex items-start gap-2">
@@ -48,7 +48,7 @@ export function TemplatesPage() {
                   <summary className="cursor-pointer">
                     <span className="font-medium break-words">{template.name}</span>
                     <span className="block text-sm text-muted">
-                      {t.nutrition.templates.summary(
+                      {tNutrition.templates.summary(
                         template.items.length,
                         kcal(fmt, templateKcal(template)),
                       )}
@@ -68,14 +68,14 @@ export function TemplatesPage() {
                           </span>
                         </span>
                         <span className="shrink-0 tabular-nums">
-                          {kcal(fmt, item.nutrients.kcal ?? 0)} {t.nutrition.units.kcal}
+                          {kcal(fmt, item.nutrients.kcal ?? 0)} {tNutrition.units.kcal}
                         </span>
                       </li>
                     ))}
                   </ul>
                 </details>
                 <IconButton
-                  label={t.nutrition.templates.renameLabel(template.name)}
+                  label={tNutrition.templates.renameLabel(template.name)}
                   onClick={() => {
                     setRenaming(template);
                   }}
@@ -83,7 +83,7 @@ export function TemplatesPage() {
                   <Pencil aria-hidden="true" className="size-5" />
                 </IconButton>
                 <IconButton
-                  label={t.nutrition.templates.deleteLabel(template.name)}
+                  label={tNutrition.templates.deleteLabel(template.name)}
                   onClick={() => {
                     remove(template);
                   }}
@@ -107,14 +107,14 @@ export function TemplatesPage() {
       {deleted ? (
         <Toast
           key={deleted.id}
-          message={t.nutrition.templates.deleted(deleted.name)}
+          message={tNutrition.templates.deleted(deleted.name)}
           durationMs={10_000}
           onTimeout={() => {
             setDeleted(null);
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const template = deleted;
@@ -128,7 +128,7 @@ export function TemplatesPage() {
                 });
               }}
             >
-              {t.nutrition.undo}
+              {tNutrition.undo}
             </Button>
           }
         />

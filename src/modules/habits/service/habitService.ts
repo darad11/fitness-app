@@ -7,7 +7,7 @@ import {
   type DbRuntime,
 } from '@/shared/db';
 import { dayKey, localTimeZone, type DayKey } from '@/shared/lib/time';
-import { activeOn } from '../calc/streak';
+import { activeOn } from '../calc/days';
 import {
   habitDef,
   habitLogDef,

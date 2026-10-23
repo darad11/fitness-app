@@ -117,7 +117,7 @@ export type CopySource = PlanTree &
 
 /**
  * Kopie mit neuen IDs (AK-PRG-05, AK-PRG-06): „Vorlage verwenden", „Duplizieren", „Als Vorlage
- * speichern" und „Als eigenes Programm übernehmen" bei gebündelten Programmen. Die Kopie ist
+ * speichern" und „Übernehmen und anpassen" bei gebündelten Programmen. Die Kopie ist
  * unabhängig vom Original.
  */
 export async function copyProgram(

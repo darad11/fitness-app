@@ -1,5 +1,5 @@
 import type { Formatters } from '@/shared/lib/format';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import type { FoodLogEntry } from '../model/nutrition';
 
 export const kcal = (fmt: Formatters, value: number) =>
@@ -13,8 +13,8 @@ export function describeAmount(
   fmt: Formatters,
   entry: Pick<FoodLogEntry, 'amount' | 'basisSnapshot' | 'servingSnapshot'>,
 ): string {
-  if (entry.amount === undefined) return t.nutrition.quick;
-  const unit = t.nutrition.units[entry.basisSnapshot ?? 'g'];
+  if (entry.amount === undefined) return tNutrition.quick;
+  const unit = tNutrition.units[entry.basisSnapshot ?? 'g'];
   const amount = `${fmt.number(entry.amount, { maximumFractionDigits: 1 })} ${unit}`;
   if (!entry.servingSnapshot) return amount;
   const count = fmt.number(entry.servingSnapshot.count, { maximumFractionDigits: 2 });

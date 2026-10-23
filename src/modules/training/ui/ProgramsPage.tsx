@@ -1,10 +1,10 @@
-import { ChevronRight, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronRight, ClipboardList, LayoutList, Plus, type LucideIcon } from 'lucide-react';
+import { Fragment, useState } from 'react';
 import { Link, useLoaderData, useLocation, useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { Badge, Button, Dialog, PageHeader, Skeleton, Toast } from '@/shared/ui';
-import { distinctDays } from '../calc/sampleTemplates';
+import { Badge, Button, Dialog, PageHeader, Skeleton, TileIcon, Toast } from '@/shared/ui';
+import { describeTemplate } from '../calc/describe';
 import { useOwnPrograms } from '../data/programRepository';
 import { useTrainingState } from '../data/useTrainingState';
 import type { OwnProgram, SampleTemplate } from '../model/program';
@@ -48,13 +48,15 @@ export function ProgramsPage() {
         {own === undefined ? (
           <Skeleton className="h-20" />
         ) : ownPrograms.length === 0 ? (
-          <p className="rounded-card bg-surface-2 p-4 text-muted">{t.programs.ownEmpty}</p>
+          <p className="rounded-card bg-surface p-card text-muted shadow-card">
+            {t.programs.ownEmpty}
+          </p>
         ) : (
           <OwnList
             programs={ownPrograms}
             badge={(program) =>
               program.id === state?.activeProgramId ? (
-                <Badge tone="success">{t.programs.activeBadge}</Badge>
+                <Badge tone="accent">{t.programs.activeBadge}</Badge>
               ) : null
             }
           />
@@ -101,12 +103,13 @@ export function ProgramsPage() {
           templates={programs}
           badge={(template) =>
             template.id === state?.activeProgramId ? (
-              <Badge tone="success">{t.programs.activeBadge}</Badge>
+              <Badge tone="accent">{t.programs.activeBadge}</Badge>
             ) : (
               <Badge tone="neutral">{t.programs.programBadge}</Badge>
             )
           }
           description={(template) => template.description}
+          icon={ClipboardList}
         />
       </section>
       <section aria-labelledby="beispielvorlagen">
@@ -116,10 +119,76 @@ export function ProgramsPage() {
         <p className="mt-2 mb-4 max-w-xl text-muted">{t.programs.samplesIntro}</p>
         <TemplateList
           templates={samples}
-          badge={() => <Badge tone="accent">{t.programs.sampleBadge}</Badge>}
+          badge={() => <Badge tone="neutral">{t.programs.sampleBadge}</Badge>}
+          icon={LayoutList}
         />
       </section>
     </>
+  );
+}
+
+/** Titel mit Umbruchstelle nach jedem Schrägstrich („Oberkörper/“ „Unterkörper“). */
+function breakAfterSlash(text: string): React.ReactNode {
+  const parts = text.split('/');
+  return parts.map((part, index) =>
+    index < parts.length - 1 ? (
+      <Fragment key={index}>
+        {part}/<wbr />
+      </Fragment>
+    ) : (
+      part
+    ),
+  );
+}
+
+/**
+ * Karte einer Programmliste (FORM, D-315; Etikett F5, D-324): Symbol links, rechts daneben der
+ * Titel mit dem Etikett oben rechts (der Titel bricht vorher um), darunter Angaben über die ganze
+ * Breite, der Chevron rechts mittig. Flexbox, keine festen Positionen.
+ *
+ * Schmale Breiten (F5 Abschnitt 9, D-331): Der Titel ist mindestens so breit wie sein längstes
+ * Wort (`w-min`, nach Schrägstrichen darf er umbrechen). Passt dieses Wort nicht neben das
+ * Etikett, rückt das Etikett über den Titel (`flex-wrap-reverse`), statt das Wort zu trennen.
+ */
+function ProgramCard({
+  to,
+  icon,
+  title,
+  badge,
+  meta,
+  description,
+  lines,
+}: {
+  to: string;
+  icon: LucideIcon;
+  title: string;
+  badge: React.ReactNode;
+  meta: string;
+  description?: string | undefined;
+  lines: 2 | 3;
+}) {
+  return (
+    <Link
+      to={to}
+      className="flex min-h-14 items-start gap-3 rounded-card bg-surface p-card shadow-card hover:bg-surface-2"
+    >
+      <TileIcon icon={icon} />
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="flex flex-wrap-reverse items-end justify-end gap-x-3 gap-y-1">
+          <span className="w-min min-w-0 grow font-semibold break-words">
+            {breakAfterSlash(title)}
+          </span>
+          {badge ? <span className="mt-0.5 shrink-0 whitespace-nowrap">{badge}</span> : null}
+        </span>
+        <span className="mt-0.5 block text-caption text-muted">{meta}</span>
+        {description ? (
+          <span className={`mt-2 text-sm ${lines === 3 ? 'line-clamp-3' : 'line-clamp-2'}`}>
+            {description}
+          </span>
+        ) : null}
+      </span>
+      <ChevronRight aria-hidden="true" className="size-5 shrink-0 self-center text-faint" />
+    </Link>
   );
 }
 
@@ -131,25 +200,18 @@ function OwnList({
   badge: (program: OwnProgram) => React.ReactNode;
 }) {
   return (
-    <ul className="grid gap-3 md:grid-cols-2">
+    <ul className="grid gap-stack md:grid-cols-2">
       {programs.map((program) => (
         <li key={program.id}>
-          <Link
+          <ProgramCard
             to={`/training/programme/${program.id}`}
-            className="flex min-h-14 items-center gap-3 rounded-card bg-surface p-5 shadow-card hover:bg-surface-2"
-          >
-            <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-center gap-2">
-                <span className="text-lg font-semibold break-words">{program.name}</span>
-                {badge(program)}
-              </span>
-              <span className="mt-1 block text-sm text-muted">{describeOwn(program)}</span>
-              {program.description ? (
-                <span className="mt-2 line-clamp-2 block text-sm">{program.description}</span>
-              ) : null}
-            </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
-          </Link>
+            icon={program.kind === 'template' ? LayoutList : ClipboardList}
+            title={program.name}
+            badge={badge(program)}
+            meta={describeOwn(program)}
+            description={program.description}
+            lines={2}
+          />
         </li>
       ))}
     </ul>
@@ -173,7 +235,7 @@ function DeletedToast() {
       }}
       action={
         <Button
-          variant="onInk"
+          variant="quiet"
           size="sm"
           onClick={() => {
             setVisible(false);
@@ -261,7 +323,7 @@ function NewProgramDialog({ onClose }: { onClose: () => void }) {
             onChange={(event) => {
               setName(event.target.value);
             }}
-            className="h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg"
+            className="field w-full"
           />
         </div>
         <div>
@@ -276,7 +338,7 @@ function NewProgramDialog({ onClose }: { onClose: () => void }) {
             onChange={(event) => {
               setDescription(event.target.value);
             }}
-            className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+            className="field w-full"
           />
         </div>
         {error ? (
@@ -293,47 +355,28 @@ function TemplateList({
   templates,
   badge,
   description,
+  icon,
 }: {
   templates: readonly SampleTemplate[];
   badge: (template: SampleTemplate) => React.ReactNode;
   description?: (template: SampleTemplate) => string | undefined;
+  icon: LucideIcon;
 }) {
   return (
-    <ul className="grid gap-3 md:grid-cols-2">
+    <ul className="grid gap-stack md:grid-cols-2">
       {templates.map((template) => (
         <li key={template.id}>
-          <Link
-            to={`/training/vorlagen/${template.key}`}
-            className="flex min-h-14 items-center gap-3 rounded-card bg-surface p-5 shadow-card hover:bg-surface-2"
-          >
-            <span className="min-w-0 flex-1">
-              <span className="flex flex-wrap items-center gap-2">
-                <span className="text-lg font-semibold">{template.name}</span>
-                {badge(template)}
-              </span>
-              <span className="mt-1 block text-sm text-muted">{describeTemplate(template)}</span>
-              {description?.(template) ? (
-                <span className="mt-2 line-clamp-3 block text-sm">{description(template)}</span>
-              ) : null}
-            </span>
-            <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
-          </Link>
+          <ProgramCard
+            to={`/training/vorlagen/${template.slug ?? template.key}`}
+            icon={icon}
+            title={template.name}
+            badge={badge(template)}
+            meta={describeTemplate(template)}
+            description={description?.(template)}
+            lines={3}
+          />
         </li>
       ))}
     </ul>
   );
-}
-
-export function describeTemplate(template: SampleTemplate): string {
-  const days = template.program
-    ? t.programs.weekCount(template.weeks.length) +
-      ', ' +
-      t.programs.dayCount(template.weeks.reduce((sum, week) => sum + week.days.length, 0))
-    : t.programs.dayCount(distinctDays(template).length);
-  return [
-    t.programs.levels[template.level],
-    t.programs.locations[template.location],
-    t.programs.daysPerWeek(template.daysPerWeek),
-    days,
-  ].join(' · ');
 }

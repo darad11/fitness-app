@@ -7,7 +7,7 @@ import { buildSearchIndex, searchExercises } from '../calc/search';
 import { useExercises } from '../data/customExercises';
 import { CustomExerciseDialog } from './CustomExerciseDialog';
 import type { Equipment, Exercise, Muscle } from '../model/exercise';
-import { EQUIPMENT_OPTIONS, MUSCLE_OPTIONS, describeExercise } from './ExerciseLibraryPage';
+import { EQUIPMENT_OPTIONS, MUSCLE_OPTIONS, describeExercise } from './describe';
 
 export interface ExercisePickerProps {
   open: boolean;

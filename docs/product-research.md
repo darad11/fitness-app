@@ -1,20 +1,20 @@
-# Produktrecherche: Xeela als Referenzprodukt
+# Produktrecherche: Referenz-App
 
 Stand: 17.10.2026 · Phase 1 (Produktanalyse) · Status: Entwurf zur Prüfung
 
-> **Hinweis zu Version 0.2 (18.10.2026):** Inhalt unverändert. Die Produktentscheidungen aus Phase 2 stehen in `decisions.md`, die Prüfung der Datenquellen in `data-sources.md`. Die in Abschnitt 9 genannten Schwächen sind Erkenntnisse aus Rezensionen (überwiegend 2024 und 2025), nicht zwingend der heutige Stand von Xeela (D-118).
+> **Hinweis zu Version 0.2 (18.10.2026):** Inhalt unverändert. Die Produktentscheidungen aus Phase 2 stehen in `decisions.md`, die Prüfung der Datenquellen in `data-sources.md`. Die in Abschnitt 9 genannten Schwächen sind Erkenntnisse aus Rezensionen (überwiegend 2024 und 2025), nicht zwingend der heutige Stand der Referenz-App (D-118).
 
 ## 1. Zweck und Einordnung
 
-Dieses Dokument fasst zusammen, was sich über den Funktionsumfang der Xeela-App („Xeela: Train, Fuel, Transform", in manchen Storefronts „Xeela: Weight Loss & Fitness", Anbieter XEELA LLC) aus öffentlich zugänglichen Quellen belegen lässt. Es ist die Grundlage für die Funktionsmatrix in `feature-inventory.md`.
+Dieses Dokument fasst zusammen, was sich über den Funktionsumfang der Referenz-App aus öffentlich zugänglichen Quellen belegen lässt. Es ist die Grundlage für die Funktionsmatrix in `feature-inventory.md`.
 
-Die Anwendung, die wir bauen, ist eine eigenständige persönliche Plattform. Es werden keine Inhalte, Medien, Programme, Designs oder Schnittstellen von Xeela übernommen. Xeela dient ausschließlich als funktionale Orientierung.
+Die Anwendung, die wir bauen, ist eine eigenständige persönliche Plattform. Es werden keine Inhalte, Medien, Programme, Designs oder Schnittstellen von der Referenz-App übernommen. Die Referenz-App dient ausschließlich als funktionale Orientierung.
 
 ## 2. Methodik und Quellenlage (wichtig)
 
-**Kein Zugriff auf die installierte App.** Ich habe die Xeela-App nicht bedienen können. Alle Aussagen stammen aus Sekundärquellen.
+**Kein Zugriff auf die installierte App.** Ich habe die Referenz-App nicht bedienen können. Alle Aussagen stammen aus Sekundärquellen.
 
-**Direkter Webzugriff war blockiert.** Die Netzwerkrichtlinie dieser Cloud-Umgebung hat jeden direkten Abruf der Quellseiten verweigert (CONNECT 403 am Proxy), darunter `apps.apple.com`, `play.google.com`, `xeelafitness.com`, `xeela-help-center.gorgias.help`, `xeelafitness.zendesk.com`, `screensdesign.com`, `web.archive.org`. Verfügbar war nur die serverseitige Websuche, die Seitenausschnitte und Zitate liefert. Folgen:
+**Direkter Webzugriff war blockiert.** Die Netzwerkrichtlinie dieser Cloud-Umgebung hat jeden direkten Abruf der Quellseiten verweigert (CONNECT 403 am Proxy), darunter `apps.apple.com`, `play.google.com`, die Website der Referenz-App, ihre Hilfecenter bei Gorgias und Zendesk, `screensdesign.com`, `web.archive.org`. Verfügbar war nur die serverseitige Websuche, die Seitenausschnitte und Zitate liefert. Folgen:
 
 - Ich konnte keine Screenshots, keine vollständigen Store-Beschreibungen und keine vollständige Versionshistorie einsehen.
 - Zitate sind Ausschnitte, die die Suche zurückgegeben hat. Sie sind wörtlich wiedergegeben, aber ohne vollständigen Kontext.
@@ -26,18 +26,18 @@ Wenn der Netzwerkzugriff für die genannten Hosts freigegeben wird (Einstellunge
 
 | Kürzel | Quelle | Art | Verlässlichkeit |
 |---|---|---|---|
-| AS | App Store Listing, mehrere Storefronts (US, AT, AU, DK, BM, UZ u. a.), inkl. Versionshistorie und Rezensionen. ID 6468574624 | Offiziell (Anbietertext), Rezensionen Nutzer | Hoch für Anbietertext, mittel für Rezensionen |
-| GP | Google Play Listing `com.xeelafitness.xeelafitness` (en_US, en_AU, en_IN, en_GB u. a.) | Offiziell | Hoch |
-| WEB | xeelafitness.com: `/pages/home`, `/pages/xeela-app-landing-page`, `/pages/get-fit`, Produkt- und Challenge-Seiten | Offiziell (Marketing) | Mittel bis hoch, teils veraltet |
-| HC-G | Xeela Help Center (Gorgias), Kategorien Workouts, Nutrition, Subscription and Payment, Settings | Offiziell (Support), teils „updated 2 years ago" | Hoch, aber potenziell veraltet |
-| HC-Z | Xeela Fitness Help Center (Zendesk), Artikel zuletzt Oktober 2025 aktualisiert | Offiziell (Support) | Hoch |
-| TC | Teilnahmebedingungen der Challenges (30 Day Reset, 75 Day Challenge, Alex's 90 Day Challenge) auf xeelafitness.com | Offiziell (rechtlich) | Hoch |
-| SD | screensdesign.com „Xeela: Train, Fuel, Transform UI Breakdown" (Analyse eines Bedienvideos mit Zeitmarken) | Drittquelle, videobasiert | Mittel bis hoch |
-| DT | devteam.inc Portfolio-Fallstudie „Xeela Fitness" (Entwicklungsagentur) | Drittquelle (Eigenaussage Agentur) | Mittel |
+| AS | App Store Listing, mehrere Storefronts (US, AT, AU, DK, BM, UZ u. a.), inkl. Versionshistorie und Rezensionen | Offiziell (Anbietertext), Rezensionen Nutzer | Hoch für Anbietertext, mittel für Rezensionen |
+| GP | Google Play Listing der Referenz-App (en_US, en_AU, en_IN, en_GB u. a.) | Offiziell | Hoch |
+| WEB | Website der Referenz-App: `/pages/home`, App-Landingpage, `/pages/get-fit`, Produkt- und Challenge-Seiten | Offiziell (Marketing) | Mittel bis hoch, teils veraltet |
+| HC-G | Hilfecenter der Referenz-App (Gorgias), Kategorien Workouts, Nutrition, Subscription and Payment, Settings | Offiziell (Support), teils „updated 2 years ago" | Hoch, aber potenziell veraltet |
+| HC-Z | Hilfecenter der Referenz-App (Zendesk), Artikel zuletzt Oktober 2025 aktualisiert | Offiziell (Support) | Hoch |
+| TC | Teilnahmebedingungen der Challenges (30 Day Reset, 75 Day Challenge, 90 Day Challenge) auf der Website der Referenz-App | Offiziell (rechtlich) | Hoch |
+| SD | screensdesign.com „UI Breakdown" der Referenz-App (Analyse eines Bedienvideos mit Zeitmarken) | Drittquelle, videobasiert | Mittel bis hoch |
+| DT | Portfolio-Fallstudie der Entwicklungsagentur zur Referenz-App | Drittquelle (Eigenaussage Agentur) | Mittel |
 | MWM | mwm.ai App-Verzeichnis (Drittlisting mit FAQ) | Drittquelle, unklare Herkunft der Texte | Niedrig |
 | REV | Nutzerrezensionen (App Store, Google Play, justuseapp.com, worldsapps.com) | Nutzeraussagen, teils 2024/2025 | Niedrig bis mittel, zeitabhängig |
 | AB | appbrain.com, apkpure.com, apptopia.com | Drittlistings (Metadaten) | Niedrig bis mittel |
-| DC | Discord-Einladungsseite „Xeela Fitness" | Offiziell (Community) | Hoch für Existenz |
+| DC | Einladungsseite zum Discord-Server der Referenz-App | Offiziell (Community) | Hoch für Existenz |
 
 ### 2.2 Konfidenzstufen in diesem Dokument und in der Matrix
 
@@ -47,20 +47,20 @@ Wenn der Netzwerkzugriff für die genannten Hosts freigegeben wird (Einstellunge
 - **Plausibel**: aus Kontext naheliegend, nicht belegt.
 - **Nicht verifiziert (Drittquelle)**: nur in MWM oder ähnlichen Listings genannt.
 - **Verifiziert als fehlend**: Rezensionen oder SD benennen das Fehlen ausdrücklich (Stand der Quelle).
-- **Eigener Vorschlag**: nicht Teil von Xeela.
+- **Eigener Vorschlag**: nicht Teil der Referenz-App.
 
-## 3. Produktsteckbrief Xeela (belegt)
+## 3. Produktsteckbrief der Referenz-App (belegt)
 
 | Merkmal | Befund | Quelle |
 |---|---|---|
-| Name | „Xeela: Train, Fuel, Transform", je nach Storefront auch „Xeela: Weight Loss & Fitness", historisch „Xeela: The Transformation App", „Xeela Fitness" | AS, GP, AB |
-| Anbieter | XEELA LLC; Kategorie Health & Fitness | AS |
+| Name | Name der Referenz-App mit Untertitel; je nach Storefront ein anderer Untertitel, historisch zwei weitere Bezeichnungen | AS, GP, AB |
+| Anbieter | eine LLC; Kategorie Health & Fitness | AS |
 | Plattformen | iOS (ab iOS 15.0, ca. 88,4 MB), Android (ab 8.0) | AS, AB |
 | Preismodell | Kostenloser Download, Abo mit 7 Tagen Testphase, harte Paywall nach dem Onboarding-Quiz; Hilfecenter nennt 23,99 USD/Monat bzw. 172,73 USD/Jahr; Store-IAP je nach Region ca. 19,99 bis 132,99 USD; ein Drittlisting nennt deutlich höhere Preise | HC-G, AS, SD, AB |
 | Bewertungen | App Store US ca. 4,7 bis 4,8 bei ca. 1,7 bis 2,4 Tsd. Bewertungen (je nach Zeitpunkt); Google Play ca. 4,3 bis 4,7; Downloads laut Play „50K+" | AS, GP, AB |
-| Support | app@xeelafitness.com (Play), customercare@xeelafitness.com (Entwicklerantworten) | GP, AS |
-| Community | Discord-Server „Xeela Fitness", ca. 3.200 Mitglieder; Zugang zum Head Trainer über Discord beworben | DC, WEB |
-| Technik (Drittquelle) | Ursprünglich FlutterFlow + Firebase; Neuaufbau in Flutter mit AWS (Postgres RDS, NestJS-API) durch Dev Team Inc. | DT |
+| Support | zwei Support-Adressen des Anbieters (eine im Play-Eintrag, eine aus Entwicklerantworten) | GP, AS |
+| Community | Discord-Server der Referenz-App, ca. 3.200 Mitglieder; Zugang zum Head Trainer über Discord beworben | DC, WEB |
+| Technik (Drittquelle) | Ursprünglich FlutterFlow + Firebase; Neuaufbau in Flutter mit AWS (Postgres RDS, NestJS-API) durch die Entwicklungsagentur | DT |
 | Datenschutz-Label (US App Store) | „Data Linked to You": Kontaktdaten, Identifier, Nutzungsdaten, Diagnose; „Data Used to Track You": Identifier, Nutzungsdaten. Play: keine Weitergabe an Dritte, Verschlüsselung bei Übertragung | AS, GP |
 
 ## 4. Versionshistorie (rekonstruiert)
@@ -77,7 +77,7 @@ Die Einträge stammen aus Suchausschnitten der App-Store-Versionshistorie. Daten
 | 3.2.0 | 05.09.2025 | „New streak feature" | Verifiziert |
 | 3.2.1 | Sep 2025 | Neues App-Icon, Verbesserungen beim Teilen | Verifiziert |
 | 3.3.x | Herbst 2025 | Keine Inhalte gefunden | Lücke |
-| 3.4.0 | 17.12.2025 | „Xeela Sweat Equity" (Credits durch Workouts und protokollierte Aktivität, anrechenbar auf die Mitgliedschaft) | Verifiziert |
+| 3.4.0 | 17.12.2025 | Guthaben-Programm der Referenz-App (Credits durch Workouts und protokollierte Aktivität, anrechenbar auf die Mitgliedschaft) | Verifiziert |
 | 3.4.2 | 30.12.2025 | Referral-System; „Bring back exercises page - find it in the plus zone or settings" | Verifiziert |
 | 3.4.5 | Anfang 2026 | „Home UI updates" | Verifiziert |
 | 3.4.6 | 2026 | Fix für Teilen unter iOS 26 | Verifiziert |
@@ -101,11 +101,11 @@ Die Belegzitate sind englische Originalausschnitte aus den Quellen.
 - **Profil und Einstellungen**: Home, Profil oben links, „Profile & settings", Tab „Settings"; Zeile „Units" mit metrisch/imperial (HC-G). Verifiziert, historisch (Layout seit 3.4.5 ggf. verändert).
 - **Benachrichtigungen**: Workout-Reminder und Benachrichtigungs-Einstellungsseite (AS 3.1.4); Website bewirbt „daily notifications and motivational messages". Verifiziert.
 - **Konto löschen**: Datenschutzseite beschreibt permanente Löschung; Rezensionen: Löschung kündigt das Abo nicht. Verifiziert.
-- **Kommerziell**: Abo, Paywall, Referral-Programm, Sweat Equity, 20 % Supplement-Rabatt für Abonnenten (HC-G, AS). Verifiziert, für unser Produkt nicht relevant.
+- **Kommerziell**: Abo, Paywall, Referral-Programm, Guthabenpunkte, 20 % Supplement-Rabatt für Abonnenten (HC-G, AS). Verifiziert, für unser Produkt nicht relevant.
 
 ### B. Trainingsplanung
 
-- **Programmkatalog** mit benannten Programmen und Metadaten: Level (Beginner bis Advanced, auch kombiniert), Dauer in Wochen, Minuten pro Einheit, Sätze pro Einheit. Beispiele von der Website: Beginner 11 Wochen 60 Min 20 Sätze; Advanced 16 Wochen 40 Min 20 Sätze; Advanced 12 Wochen 75 Min 32 Sätze; „Bulk Up" 13 Wochen 60 Min 32 Sätze; „At Home Sculpt" 19 Wochen Beginner 60 Min 26 Sätze; „60 Day Summer Shred"; „David's 75 Day Challenge"; „Noah Boat's Fitness Formula". Ziele „from weight loss and muscle building to yoga and flexibility" (WEB, REV). Verifiziert. Die konkrete Programmstruktur (Split, Tage pro Woche) ist nicht belegt.
+- **Programmkatalog** mit benannten Programmen und Metadaten: Level (Beginner bis Advanced, auch kombiniert), Dauer in Wochen, Minuten pro Einheit, Sätze pro Einheit. Beispiele von der Website: Beginner 11 Wochen 60 Min 20 Sätze; Advanced 16 Wochen 40 Min 20 Sätze; Advanced 12 Wochen 75 Min 32 Sätze; „Bulk Up" 13 Wochen 60 Min 32 Sätze; „At Home Sculpt" 19 Wochen Beginner 60 Min 26 Sätze; „60 Day Summer Shred"; zwei nach Trainern benannte Programme. Ziele „from weight loss and muscle building to yoga and flexibility" (WEB, REV). Verifiziert. Die konkrete Programmstruktur (Split, Tage pro Woche) ist nicht belegt.
 - **Programmdetailseite** (AS 3.1.5 „updated program details page"). Verifiziert.
 - **Home- und Gym-Varianten**, „no equipment needed to start" (GP, WEB). Verifiziert.
 - **Feste Wochenstruktur mit festen Ruhetagen**: „you cannot pick your rest days"; Ruhetag kann nicht in Trainingstag getauscht werden; nächster Tag erst am Tag selbst sichtbar; verpasste Workouts nicht nachholbar ohne Reset (REV, 2024/2025). Verifiziert (Rezensionen), Stand unsicher.
@@ -154,7 +154,7 @@ Die Belegzitate sind englische Originalausschnitte aus den Quellen.
 
 ### F. Rezepte und Mahlzeitenplanung (ab 3.5.0)
 
-- „Answer a few quick questions and get a weekly meal plan built around your calorie target - Make it yours: swap recipes, pick your cooking days, and choose which meals Xeela plans - Get a grocery list generated from your confirmed week" (AS 3.5.0). Verifiziert.
+- „Answer a few quick questions and get a weekly meal plan built around your calorie target - Make it yours: swap recipes, pick your cooking days, and choose which meals [die Referenz-App] plans - Get a grocery list generated from your confirmed week" (AS 3.5.0). Verifiziert.
 - „browse the new recipe catalog by meal time, cuisine, difficulty and more" (AS 3.5.0). Verifiziert.
 - Rezepte mit Anleitung: „all of the recipes and instructions" (AS), „meals and how to cook them" (REV). Verifiziert. Felder wie Portionen, Zubereitungszeit nicht belegt.
 - Einkaufsliste „easier to read and shop from" (AS 3.5.1). Kategorien, Abhaken, manuelle Bearbeitung, Mengenaggregation: nicht belegt.
@@ -169,7 +169,7 @@ Die Belegzitate sind englische Originalausschnitte aus den Quellen.
 ### H. Aktivität und Gewohnheiten
 
 - **Schritte**: Website „Track workouts, steps, calories, and overall fitness progress" (WEB). Quelle der Schrittdaten (Health-Integration oder manuell) nicht belegt. Agentur-Fallstudie: „integrated with your wearable devices" (DT). Rezension: andere Apps „sync with your Apple Watch or sync with your health fitness app" seien einfacher, Entwickler „working on better integrations". Status unklar.
-- **Tägliche Aufgaben in Challenges**: „The Xeela app also helps keep track of tasks to be done daily while doing the challenge, such as drinking enough water, reading a book, walking enough steps, and following your suggested diet" (TC). Verifiziert, aber an Challenges gebunden.
+- **Tägliche Aufgaben in Challenges**: „[Die Referenz-App] also helps keep track of tasks to be done daily while doing the challenge, such as drinking enough water, reading a book, walking enough steps, and following your suggested diet" (TC). Verifiziert, aber an Challenges gebunden.
 - **Streaks** (siehe D). Verifiziert.
 - **Erinnerungen** (siehe A). Verifiziert.
 - **Gewohnheiten außerhalb von Challenges, Kalender, Aktivitätsziele**: nicht belegt.
@@ -180,7 +180,7 @@ Die Belegzitate sind englische Originalausschnitte aus den Quellen.
 - **Home-Dashboard**: Workout-Karte des Tages (z. B. „back and biceps") und Kalorienziel-Tracker (SD); blaue „+"-Schaltfläche unten Mitte als Schnellzugriff („plus zone") für Lebensmittel und Übungsseite (HC-G, AS 3.4.2). Verifiziert.
 - **Navigation**: „4 main screens" mit unterer Tab-Leiste, historisch ein „Exercises"-Tab (HC-G). Aktuelle Tab-Namen nicht belegt.
 - **Community** über Discord, extern (DC, REV). Verifiziert.
-- **Shop, Supplements, Coaching-Produkte, PDF-Guides**: Teil des Xeela-Geschäftsmodells (WEB). Verifiziert, nicht relevant.
+- **Shop, Supplements, Coaching-Produkte, PDF-Guides**: Teil des Geschäftsmodells der Referenz-App (WEB). Verifiziert, nicht relevant.
 
 ## 6. Historische oder möglicherweise veraltete Befunde
 
@@ -214,7 +214,7 @@ Die Belegzitate sind englische Originalausschnitte aus den Quellen.
 
 ## 9. Muster aus Nutzerfeedback und Konsequenzen für unser Produkt
 
-Die Beobachtungen geben den Stand der jeweiligen Rezension wieder. Sie werden als Verbesserungsziele genutzt, nicht als Behauptung über die aktuelle Version von Xeela.
+Die Beobachtungen geben den Stand der jeweiligen Rezension wieder. Sie werden als Verbesserungsziele genutzt, nicht als Behauptung über die aktuelle Version der Referenz-App.
 
 | Beobachtung (REV) | Konsequenz für unsere Anforderungen |
 |---|---|
@@ -230,8 +230,8 @@ Die Beobachtungen geben den Stand der jeweiligen Rezension wieder. Sie werden al
 
 ## 10. Technische Erkenntnisse aus der Recherche
 
-- Xeela ist eine native Flutter-App mit eigenem Backend (Postgres, NestJS, AWS). Funktionen wie Hintergrund-Timer, Push-Erinnerungen, Kamera-Barcode und Social Sharing sind nativ gelöst. Unsere Web-App muss diese Punkte im Rahmen der Browser-Möglichkeiten lösen (siehe `known-limitations.md`).
-- Xeelas Inhalte (Programme, Videos, Rezepte, Lebensmitteldaten) sind proprietär. Wir benötigen eigene oder offen lizenzierte Quellen: Übungsdaten (z. B. free-exercise-db, Public Domain; wger, CC-BY-SA), Lebensmittel (Open Food Facts, ODbL; USDA FoodData Central, Public Domain), eigene Rezepte und Pläne.
+- Die Referenz-App ist eine native Flutter-App mit eigenem Backend (Postgres, NestJS, AWS). Funktionen wie Hintergrund-Timer, Push-Erinnerungen, Kamera-Barcode und Social Sharing sind nativ gelöst. Unsere Web-App muss diese Punkte im Rahmen der Browser-Möglichkeiten lösen (siehe `known-limitations.md`).
+- Die Inhalte der Referenz-App (Programme, Videos, Rezepte, Lebensmitteldaten) sind proprietär. Wir benötigen eigene oder offen lizenzierte Quellen: Übungsdaten (z. B. free-exercise-db, Public Domain; wger, CC-BY-SA), Lebensmittel (Open Food Facts, ODbL; USDA FoodData Central, Public Domain), eigene Rezepte und Pläne.
 
 ## 11. Benötigte Screenshots und Bildschirmaufnahmen
 
@@ -273,14 +273,14 @@ Siehe `decisions.md`, Abschnitt „Offene Produktentscheidungen". Die wichtigste
 
 ## 13. Nachtrag 18.10.2026: Primärmaterial des Produktinhabers und ergänzende Recherche
 
-**Primärmaterial.** Der Produktinhaber hat am 18.10.2026 drei Bildschirmaufnahmen seiner Xeela-App (Fortschritt, Ernährung, Trainingsplayer), acht Aufnahmen des Programms „2026 Winter Arc“ und zwei Screenshots (Daily Challenges, Program Progress) bereitgestellt. Auswertung mit Zeitstempeln in `reference-analysis.md`; das Programm in `winter-arc-reconstruction.md`. Damit sind die Abläufe des Players, der Ernährungs-Tagesansicht und der Fortschrittsseite erstmals aus erster Hand belegt (Stufe „gesehen“); frühere Angaben in den Abschnitten 5 bis 8 bleiben als Sekundärbelege stehen.
+**Primärmaterial.** Der Produktinhaber hat am 18.10.2026 drei Bildschirmaufnahmen seiner Referenz-App (Fortschritt, Ernährung, Trainingsplayer), acht Aufnahmen von Programm C und zwei Screenshots (Daily Challenges, Program Progress) bereitgestellt. Auswertung mit Zeitstempeln in `reference-analysis.md`; das Programm in `winterprogramm-2026.md`. Damit sind die Abläufe des Players, der Ernährungs-Tagesansicht und der Fortschrittsseite erstmals aus erster Hand belegt (Stufe „gesehen“); frühere Angaben in den Abschnitten 5 bis 8 bleiben als Sekundärbelege stehen.
 
-**Ergänzende Websuche (Abruf 18.10.2026).** Direkte Seitenabrufe scheiterten in dieser Sitzung an der Namensauflösung (`apps.apple.com`, `play.google.com`, `xeelafitness.com`, `openfoodfacts.github.io`, `pacompendium.com`); verfügbar waren nur Suchausschnitte. Kennzeichnung: **O** offiziell bestätigt (Ausschnitt einer offiziellen Seite), **U** unverifiziert, **A** abgeleitet, **E** eigener Vorschlag.
+**Ergänzende Websuche (Abruf 18.10.2026).** Direkte Seitenabrufe scheiterten in dieser Sitzung an der Namensauflösung (`apps.apple.com`, `play.google.com`, Website der Referenz-App, `openfoodfacts.github.io`, `pacompendium.com`); verfügbar waren nur Suchausschnitte. Kennzeichnung: **O** offiziell bestätigt (Ausschnitt einer offiziellen Seite), **U** unverifiziert, **A** abgeleitet, **E** eigener Vorschlag.
 
 | Thema | Befund | Quelle (Websuche, 18.10.2026) | Stufe |
 |---|---|---|---|
-| Winter Arc | Keine öffentliche Seite mit Übungsliste, Satzschema oder Trainingstagen; Treffer nur zu Marketing und Challenge-Bedingungen | Suche „Xeela Winter Arc 2026“ | A: die Aufnahme ist die einzige Quelle |
-| Xeela Nutzerfeedback | Rezensionsaggregatoren berichten weiterhin Abstürze und verlorene Trainingsdaten | Rezensionsseiten (REV) | U: zeitabhängig, nicht nachprüfbar |
+| Programm C | Keine öffentliche Seite mit Übungsliste, Satzschema oder Trainingstagen; Treffer nur zu Marketing und Challenge-Bedingungen | Suche „Name der Referenz-App und des Programms“ | A: die Aufnahme ist die einzige Quelle |
+| Nutzerfeedback zur Referenz-App | Rezensionsaggregatoren berichten weiterhin Abstürze und verlorene Trainingsdaten | Rezensionsseiten (REV) | U: zeitabhängig, nicht nachprüfbar |
 | Open Food Facts Limits | 15 Produktabfragen und 10 Suchanfragen je Minute und IP; eigener User-Agent erbeten; Lizenz ODbL mit Namensnennung und Share-Alike | API-Dokumentation (Ausschnitte) | O: deckt sich mit `data-sources.md` Abschnitt 3.1 |
 | MET-Werte | Adult Compendium 2024: 02050 Krafttraining kräftig 6,0; 02052 Kniebeuge/Kreuzheben 5,0; 02054 mehrere Übungen 8–15 Wdh. 3,5; 02056 Körpergewicht allgemein 3,0; 02057 hochintensiv 6,5 | Suchausschnitte zu pacompendium.com | O mit Vorbehalt: Seite nicht abrufbar, vor Umsetzung prüfen |
 | free-exercise-db | Unlicense, über 800 Übungen mit Bildern (JSON auf GitHub) | GitHub-Suchausschnitt | O mit Vorbehalt: Lizenzdatei prüfen |

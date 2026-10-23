@@ -11,9 +11,10 @@ Stand: 18.10.2026 · Version 0.3 (M0 umgesetzt) · Vorgänger: `archive/v0.1-pha
 
 ## 1. Grenzen der Analyse
 
-- Die Xeela-App wurde nicht bedient. Grundlage sind öffentliche Quellen (`product-research.md`).
+- Die Referenz-App wurde nicht bedient. Grundlage sind öffentliche Quellen (`product-research.md`).
 - Direkter Abruf vieler Hosts ist aus dieser Cloud-Umgebung durch die Netzwerkrichtlinie gesperrt. Die Recherche in Phase 2 stützt sich auf Websuche mit Zitaten. Punkte mit Restunsicherheit tragen den Vermerk „im Gerätetest prüfen" oder „im Prüfspike prüfen".
-- Rezensionen stammen überwiegend aus 2024 und 2025. Dort genannte Schwächen sind Erkenntnisse aus dieser Zeit, nicht automatisch der heutige Stand von Xeela (D-118).
+- Rezensionen stammen überwiegend aus 2024 und 2025. Dort genannte Schwächen sind Erkenntnisse aus dieser Zeit, nicht automatisch der heutige Stand der Referenz-App (D-118).
+- Interner Vermerk: Programm C („Winterprogramm 2026“) beruht auf einer fremden Vorlage. Vor einer öffentlichen Öffnung der App wird es durch ein eigenes Programm ersetzt (D-328).
 
 ## 2. iPhone und iPad
 
@@ -37,6 +38,8 @@ Auf iOS und iPadOS nutzen alle Browser WebKit. Maßgeblich ist, was Safari und i
 | Kamera | `getUserMedia` funktioniert auch in installierten Apps; ob die Berechtigung wiederholt abgefragt wird, ist im Prüfspike zu klären | Allgemein dokumentiert; Rest im Spike | Barcode-Scan möglich | R2, Prüfspike S-3 |
 | Dateien | Keine File System Access API; Export über Teilen-Menü oder Download, Import über Dateiauswahl | Allgemein dokumentiert | Kein direkter Ordnerzugriff | AK-DAT-01, AK-DAT-02 |
 | Apple Health, Apple Watch | Keine Web-Schnittstelle | Allgemein dokumentiert | Keine automatische Übernahme | Ausgeschlossen (D-116); native Option in Abschnitt 9 |
+| Startbild | iOS zeigt ein `apple-touch-startup-image` nur, wenn die `media`-Abfrage genau zu Bildschirmgröße, Pixeldichte und Ausrichtung passt, und lädt die Bilder nur beim Hinzufügen zum Home-Bildschirm | Apple-Dokumentation zu Web-Apps; allgemein dokumentiert | Ein neues Gerätemaß ohne Bild startet ohne Startbild; geänderte Startbilder, Name und Icon erscheinen erst nach erneutem Hinzufügen, und beim Entfernen der alten App kann iOS deren Daten löschen | Bilder für 20 aktuelle iPhone- und iPad-Maße, hochkant und quer (D-317), seit F5 nach Variante C3 und mit einer Startfläche in der App aus derselben Regel, die nur in der installierten App erscheint (D-325); neue Geräte in `tools/splash.mjs` ergänzen; Gerätetest T-IPH-M0 Schritt 5 zuerst an der Vorschau, nach dem Merge an der Produktivadresse; mit Testdaten ohne Risiko (D-329). Für echte Nutzer erst unkritisch, wenn sich ein Export wieder einspielen lässt (`audit-report.md` A-14) |
+| Unschärfe am oberen Rand | iOS legt ab Version 26 über die obersten rund 40 pt einer Seite eine weiche Unschärfe (Liquid Glass), im Safari-Tab und in der installierten App; keine CSS-Regel und kein Meta-Tag schaltet sie ab | Berichte mehrerer Web-Apps (2026), keine Dokumentation von Apple; hier nicht nachstellbar | Was dort ruht, wirkt unscharf, etwa das Logo der Kopfzeile | Auf iPhone und iPad beginnt der Inhalt 2 rem tiefer (`--spacing-edge-clear`, D-332); Gerätetest T-IPH-M0 Schritt 6 |
 | Kurzbefehle | Ein aus Kurzbefehle geöffneter Link öffnet Safari, nicht die installierte App; wegen der Speichertrennung kommen so übergebene Daten nicht in der App an | Ableitung aus der Speichertrennung; im Spike zu bestätigen | Kein Import per Link | R4: Import über Datei oder Zwischenablage; R5: Kurzbefehl sendet an Supabase |
 
 ## 3. Timer und Signale im MVP
@@ -153,5 +156,6 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 
 ## Registrieren (D-273)
 
+- Die Registrierung ist offen (D-328): Jede Person, die die App-Adresse kennt, kann ein Konto anlegen und Daten im Supabase-Projekt speichern. Die Zeilen sind je Konto getrennt (RLS). Noch offen sind die Punkte aus Q-20: Kontowechsel auf einem Gerät absichern (heute lädt die App nach einem Kontowechsel die lokalen Daten in das neue Konto hoch), Grenzen oder CAPTCHA für Registrierungen, Datenschutzerklärung. Bis dahin auf eigenen Geräten nur mit dem eigenen Konto anmelden.
 - Der Link in der Bestätigungsmail öffnet am iPhone Safari, nicht die installierte App. Beide haben getrennte Speicher; deshalb meldet man sich nach dem Bestätigen in der App selbst mit E-Mail und Passwort an.
 - Der Link führt nur dann zurück in die App, wenn in Supabase unter Authentication › URL Configuration die Adresse der App als „Site URL“ bzw. unter „Redirect URLs“ eingetragen ist; sonst landet er auf der voreingestellten Adresse.

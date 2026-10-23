@@ -58,7 +58,7 @@ export function ProfilePage() {
                     setDraft(event.target.value);
                     setSaved(false);
                   }}
-                  className="h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg"
+                  className="field w-full"
                 />
               </div>
               <Button type="submit" disabled={draft === null}>

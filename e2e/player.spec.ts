@@ -9,9 +9,7 @@ test('Player: Vorschau, Übungsinfo, Ersetzen mit Alternativen, Umsortieren, Üb
   const dayA = page.getByRole('region', { name: 'Tag A' });
   await expect(dayA.getByText(/^5 Übungen · 17 Sätze · ca\. \d+ min$/)).toBeVisible();
   await page.getByRole('button', { name: 'Tag A heute trainieren' }).click();
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Tag A', exact: true })).toBeVisible();
 
   // Übungsinfo.
   await page.getByRole('button', { name: 'Übungsinfo, Kniebeuge mit Langhantel' }).click();

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSync } from '@/shared/i18n/de-sync';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { InvalidCredentialsError, SignUpError, SyncOfflineError } from '../data/remote';
 import { useSyncView } from '../data/syncState';
@@ -27,10 +28,10 @@ export function SyncPage() {
     return null;
   });
   const [notice, setNotice] = useState<string | null>(
-    returned === 'failed' ? t.sync.confirmFailed : returned ? t.sync.confirmed : null,
+    returned === 'failed' ? tSync.confirmFailed : returned ? tSync.confirmed : null,
   );
   const [mode, setMode] = useState<LoginMode>('signIn');
-  const ts = t.sync;
+  const ts = tSync;
 
   useEffect(() => {
     if (returned) {

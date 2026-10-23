@@ -11,9 +11,15 @@ export const THEME_STORAGE_KEY = 'fitness.theme';
 
 /** Oberer Seitenhintergrund `--bg-top` je Modus (Farbe der Statusleiste); für `<meta name="theme-color">`. Test: tokens.test.ts */
 export const THEME_BACKGROUND: Record<EffectiveTheme, string> = {
-  light: '#f5f8fd',
-  dark: '#212a3f',
+  light: '#ffffff',
+  dark: '#0c1219',
 };
+
+/**
+ * Ausgelieferte Darstellung (D-308): Dunkel, unabhängig von der gespeicherten Einstellung. Die
+ * hellen Tokens sind nur angelegt; `ThemeSync` und `public/theme-init.js` wenden diesen Wert an.
+ */
+export const SHIPPED_THEME: ThemePreference = 'dark';
 
 export function resolveTheme(
   preference: ThemePreference,

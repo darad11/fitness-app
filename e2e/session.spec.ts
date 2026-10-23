@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
-import { chooseTheme, expect, openPage, test } from './fixtures';
+import { expect, openPage, test } from './fixtures';
 
 const toSec = (text: string | null) => {
   const [m = 0, s = 0] = (text ?? '0:00').split(':').map(Number);
@@ -26,9 +26,7 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await openPage(page, '/training/vorlagen/full_body_ab');
   await page.getByRole('button', { name: 'Tag A heute trainieren' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\/[0-9a-f-]+$/);
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Tag A · Ganzkörper A/B' }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Tag A', exact: true })).toBeVisible();
   await expect(page.getByText('0 von 17 Sätzen')).toBeVisible();
   // Vollbild: keine Hauptnavigation im Player.
   await expect(page.getByRole('navigation', { name: 'Hauptnavigation' })).toHaveCount(0);
@@ -94,20 +92,31 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await expectNoAxeViolations(page, 'Dialog');
   await dialog.getByRole('button', { name: 'Training beenden' }).click();
 
-  await expect(page.getByRole('heading', { level: 1, name: 'Zusammenfassung' })).toBeVisible();
-  await expect(page.getByText('Erledigte Sätze')).toBeVisible();
-  await expect(page.getByRole('definition').nth(1)).toHaveText('2');
-  await expect(page.getByRole('definition').nth(2)).toHaveText('500 kg');
-  await expectNoAxeViolations(page, 'Zusammenfassung');
-  // „Fertig" per Ereignis statt Zeigerklick: Im CI-Chromium (Pixel-7-Emulation) meldet die
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
+  ).toBeVisible();
+  // Zeile aus der Mikrotext-Tabelle (F4, D-318); die Dauer hängt vom Tempo des Testlaufs ab.
+  await expect(
+    page.getByText(
+      /^(Weniger als eine Minute|1 Minute|\d+ Minuten), 5 Übungen, 2 Sätze\. Das warst du\.$/,
+    ),
+  ).toBeVisible();
+  // Kacheln Dauer, Übungen, Sätze; danach Gesamtvolumen (FORM, D-315).
+  await expect(page.getByText('Sätze', { exact: true })).toBeVisible();
+  await expect(page.getByRole('definition').nth(2)).toHaveText('2');
+  // Im Wert steht danach der Hinweis „Gewicht × Wiederholungen ohne Aufwärmsätze“.
+  await expect(page.getByRole('definition').nth(3)).toContainText('500 kg');
+  await expectNoAxeViolations(page, 'Abschluss');
+  // „Zur Übersicht" per Ereignis statt Zeigerklick: Im CI-Chromium (Pixel-7-Emulation) meldet die
   // Treffererkennung an dieser Stelle fälschlich <main>; lokal und in WebKit klappt der Klick.
-  const doneLink = page.getByRole('link', { name: 'Fertig' });
-  await expect(doneLink).toHaveAttribute('href', '/training');
+  const doneLink = page.getByRole('link', { name: 'Zur Übersicht' });
+  await expect(doneLink).toHaveAttribute('href', '/heute');
   await doneLink.dispatchEvent('click');
   await expect(page.getByRole('button', { name: 'Freies Training starten' })).toBeVisible();
 
   // Verlauf mit Liste nach Woche und Detail (AK-HIS-01, AK-HIS-02).
-  await page.getByRole('link', { name: 'Verlauf' }).click();
+  await openPage(page, '/training');
+  await page.getByRole('main').getByRole('link', { name: 'Verlauf' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Verlauf' })).toBeVisible();
   await expect(page.getByRole('heading', { level: 2, name: /^Woche ab/ })).toBeVisible();
   const entry = page.getByRole('link', { name: /Tag A · Ganzkörper A\/B/ });
@@ -137,7 +146,7 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
   page,
 }) => {
   test.slow();
-  await chooseTheme(page, 'Dunkel');
+  await openPage(page, '/mehr/einstellungen');
   // Trainingseinstellungen wirken sofort (AK-SET-02): Standardpause 60 s.
   await page.getByRole('combobox', { name: 'Standardpause' }).selectOption('60');
   await expect(page.getByRole('combobox', { name: 'Standardpause' })).toHaveValue('60');

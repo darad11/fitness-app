@@ -40,6 +40,9 @@ export function loadSampleTemplates(): Promise<readonly SampleTemplate[]> {
   return pending;
 }
 
+/** Vorlage zur Adresse: ihr Teil der Adresse (`slug`) oder, für alte Links, ihr Schlüssel. */
 export async function loadSampleTemplate(key: string): Promise<SampleTemplate | undefined> {
-  return (await loadSampleTemplates()).find((template) => template.key === key);
+  return (await loadSampleTemplates()).find(
+    (template) => template.slug === key || template.key === key,
+  );
 }

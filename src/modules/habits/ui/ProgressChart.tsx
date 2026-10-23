@@ -11,6 +11,7 @@ import {
 } from 'recharts';
 import { useFormatters } from '@/modules/settings';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
+import { Mark } from '@/shared/ui';
 import type { Bucket } from '../calc/insights';
 
 const ts = tTaskStats;
@@ -29,9 +30,18 @@ interface Row {
 const dateOf = (day: string) => new Date(`${day}T12:00:00`);
 
 /**
- * Verlauf der Tagesaufgaben (D-284): bis 31 Tage gestapelte Balken „erledigt“ und „offen“ je Tag
- * (grün: alles erledigt), darüber Prozent je Woche. Tage ohne Eintrag bleiben leer, nicht null.
- * Die Werte stehen zusätzlich als Liste für Screenreader darunter.
+ * Rand der Zeichenfläche: links Rand plus Breite der y-Achse, rechts der Rand. Die Zeile mit den
+ * Markierungen darunter nutzt dieselben Werte, damit jede Markierung mittig unter ihrem Balken steht.
+ */
+const MARGIN = { top: 8, right: 4, bottom: 0, left: -16 };
+const Y_AXIS = 40;
+
+/**
+ * Verlauf der Tagesaufgaben (D-284): bis 31 Tage gestapelte Balken „erledigt“ und „offen“ je Tag,
+ * darüber Prozent je Woche. Ein Tag mit allem erledigt trägt unter seinem Balken die Markierung in
+ * Basisgröße (14 px, in schmalen Spalten schmaler; F6, D-334), der Balken bleibt in Lime wie die
+ * anderen. Tage ohne Eintrag bleiben leer, nicht null. Die Werte stehen zusätzlich als Liste für
+ * Screenreader darunter.
  */
 export function ProgressChart({
   unit,
@@ -78,7 +88,7 @@ export function ProgressChart({
     <>
       <div role="img" aria-label={ts.chartAria(rows.length, unit)} className="w-full">
         <ResponsiveContainer width="100%" height={180}>
-          <BarChart data={rows} margin={{ top: 8, right: 4, bottom: 0, left: -16 }}>
+          <BarChart data={rows} margin={MARGIN}>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis
               dataKey="label"
@@ -94,7 +104,7 @@ export function ProgressChart({
               tick={axisTick}
               axisLine={false}
               tickLine={false}
-              width={40}
+              width={Y_AXIS}
               tickFormatter={(value: number) => (unit === 'week' ? `${value} %` : String(value))}
             />
             <Tooltip
@@ -120,9 +130,7 @@ export function ProgressChart({
                 return (
                   <Rectangle
                     {...bar}
-                    fill={
-                      bar.payload.complete && unit === 'day' ? 'var(--success)' : 'var(--data-1)'
-                    }
+                    fill="var(--data-1)"
                     fillOpacity={bar.payload.bucket.today ? 0.6 : 1}
                   />
                 );
@@ -137,6 +145,24 @@ export function ProgressChart({
             />
           </BarChart>
         </ResponsiveContainer>
+        {unit === 'day' && rows.some((row) => row.complete) ? (
+          <div
+            aria-hidden="true"
+            data-complete-row
+            className="mt-1 grid"
+            style={{
+              gridTemplateColumns: `repeat(${String(rows.length)}, minmax(0, 1fr))`,
+              marginLeft: MARGIN.left + Y_AXIS,
+              marginRight: MARGIN.right,
+            }}
+          >
+            {rows.map((row) => (
+              <span key={row.bucket.start} className="flex justify-center px-px">
+                {row.complete ? <Mark state="done" stretch /> : null}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
       <ul className="sr-only">
         {rows.map((row) => (

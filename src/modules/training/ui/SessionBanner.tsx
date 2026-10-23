@@ -48,10 +48,10 @@ export function SessionBanner() {
   if (!active || hiddenOn(pathname, active.id)) return null;
   const progress = sessionProgress(active);
   return (
-    <div role="status" className="hero-glass text-on-ink">
-      <div className="page-gutters mx-auto flex max-w-[1200px] items-center gap-3 py-2">
+    <div role="status" className="border-b border-line bg-elevated text-fg">
+      <div className="page-gutters mx-auto flex max-w-content items-center gap-3 py-2">
         <div className="min-w-0 flex-1">
-          <p className="eyebrow text-on-ink-muted">{t.training.running}</p>
+          <p className="eyebrow text-muted">{t.training.running}</p>
           <p className="truncate text-sm font-semibold tabular-nums">
             {active.title} · {formatClock(sessionDurationSec(active, now))} ·{' '}
             {t.session.progress(progress.done, progress.total)}
@@ -59,7 +59,7 @@ export function SessionBanner() {
         </div>
         <Link
           to={`/training/einheit/${active.id}`}
-          className={buttonClasses('onInk', 'sm', 'shrink-0')}
+          className={buttonClasses('primary', 'sm', 'shrink-0')}
         >
           <Play aria-hidden="true" className="size-4" />
           {t.training.resume}

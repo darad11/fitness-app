@@ -48,7 +48,7 @@ export function NoteDialog({ title, hint, initial, maxLength, onSave, onClose }:
         onChange={(event) => {
           setText(event.target.value);
         }}
-        className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+        className="field w-full"
       />
       <p id={`${id}-hint`} className="mt-1 text-sm text-muted">
         {hint}

@@ -4,7 +4,7 @@ Stand: 18.10.2026 · Version 0.2 (neu in Phase 2) · Status: Entwurf zur Durchsi
 
 ## 1. Zweck und Kennzeichnung
 
-- Die Vorlagen sind **Beispieldaten**. Sie bilden allgemein verbreitete Trainingsstrukturen ab (Ganzkörper, Ober- und Unterkörper, Push/Pull/Beine, Training zu Hause). Sie enthalten keine Inhalte aus Xeela und geben nicht vor, Originalprogramme zu sein.
+- Die Vorlagen sind **Beispieldaten**. Sie bilden allgemein verbreitete Trainingsstrukturen ab (Ganzkörper, Ober- und Unterkörper, Push/Pull/Beine, Training zu Hause). Sie enthalten keine Inhalte aus der Referenz-App und geben nicht vor, Originalprogramme zu sein.
 - Sie sind keine individuelle Trainingsempfehlung. Zielgewichte sind bewusst leer, weil die Leistungsfähigkeit unbekannt ist.
 - In der App trägt jede Beispielvorlage das Etikett „Beispiel". Die Detailansicht zeigt: „Beispieldaten – keine individuelle Trainingsempfehlung. Passe Übungen, Sätze und Gewichte an dich an. Bei gesundheitlichen Fragen hol dir ärztlichen Rat."
 - Beispielvorlagen sind schreibgeschützt. „Vorlage verwenden" erzeugt ein eigenes Programm als Kopie, das frei bearbeitbar ist (AK-PRG-06).

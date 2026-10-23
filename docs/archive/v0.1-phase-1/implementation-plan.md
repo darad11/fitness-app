@@ -30,7 +30,7 @@ Ergebnis: `product-research.md`, `feature-inventory.md` (138 Positionen), Archit
 | 2.2 | Prioritäten bestätigen, MVP-Umfang festlegen | Status „Zur Umsetzung ausgewählt" für Phase 3 und 4 |
 | 2.3 | Sitemap und Screen-Katalog finalisieren (`design-system.md`) | Screens mit IDs, Navigationsentscheidung |
 | 2.4 | Akzeptanzkriterien der P0-Funktionen schärfen | `requirements.md` auf Stand „Spezifiziert" für P0 |
-| 2.5 | Screenshots und Aufnahmen aus Xeela auswerten (falls bereitgestellt) | Matrix-Positionen „Noch zu recherchieren" geklärt |
+| 2.5 | Screenshots und Aufnahmen aus der Referenz-App auswerten (falls bereitgestellt) | Matrix-Positionen „Noch zu recherchieren" geklärt |
 
 Gate: Produktinhaber bestätigt MVP-Umfang und Architektur.
 

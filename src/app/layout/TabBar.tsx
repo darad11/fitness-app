@@ -15,7 +15,8 @@ function activeKey(pathname: string): string | undefined {
 
 /**
  * Tab-Leiste auf iPhone und iPad hoch (unter 1024 px): schwebende Glas-Kapsel mit gleitender
- * Auswahl und Glas-Linse unter dem Finger (D-272, tabLens.ts).
+ * Auswahl und Glas-Linse unter dem Finger (D-272, tabLens.ts), beim Runterscrollen ein Kreis rechts
+ * (D-276, tabMinimize.ts). Farben der Marke FORM (D-312): getöntes Glas, aktiver Tab in Lime.
  */
 export function TabBar() {
   const { pathname } = useLocation();
@@ -86,7 +87,7 @@ export function TabBar() {
       ref={wrapper}
       className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center px-3 lg:hidden"
     >
-      <nav ref={bar} aria-label={t.nav.label} className="tabbar glass-blur pointer-events-auto">
+      <nav ref={bar} aria-label={t.nav.label} className="tabbar pointer-events-auto">
         <span ref={indicator} aria-hidden="true" className="tabbar-indicator" />
         <ul className="tabbar-items">
           {VISIBLE_NAV_ITEMS.map((item) => {

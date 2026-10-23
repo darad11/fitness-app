@@ -29,7 +29,7 @@ REQ = ROOT / "docs" / "requirements.md"
 DST = ROOT / "docs" / "feature-inventory.csv"
 
 COLUMNS = [
-    "ID", "Funktion", "Originalverhalten (Xeela)", "Evidenz", "Konfidenz",
+    "ID", "Funktion", "Originalverhalten (Referenz-App)", "Evidenz", "Konfidenz",
     "Herkunft", "Nutzen", "Abhängigkeiten", "Aufwand", "Prio", "Umfang",
     "Release", "Entscheidung", "Status", "Akzeptanzkriterien",
 ]

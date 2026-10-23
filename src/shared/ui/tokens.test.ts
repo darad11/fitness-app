@@ -1,14 +1,14 @@
 /**
- * Automatische Kontrastprüfung der Farbtokens (AK-UX-04, design-system.md Abschnitte 2 und 14).
+ * Automatische Kontrastprüfung der Farbtokens (AK-UX-04, brand-tokens.md Abschnitt 2).
  * Liest tokens.css direkt, damit Datei und Prüfung nicht auseinanderlaufen.
  *
- * Glas-Look (D-272): Flächen sind durchscheinend. Geprüft wird deshalb jede sichtbare Mischfarbe:
- * die Seite an Verlauf und Lichtflecken, Glas darauf und Glas auf Glas. Ein Paar besteht nur, wenn
- * es überall den Kontrast erreicht.
+ * Die FORM-Flächen sind deckend (D-308); durchscheinende Töne (z. B. `--accent-soft`) werden auf
+ * jeder Fläche geprüft, auf der sie liegen können. Geprüft werden der ausgelieferte dunkle Block
+ * und der nur angelegte helle Block.
  */
 import { describe, expect, it } from 'vitest';
 import css from './tokens.css?raw';
-import { THEME_BACKGROUND } from './theme';
+import { SHIPPED_THEME, THEME_BACKGROUND } from './theme';
 
 type Tokens = Record<string, string>;
 type Rgb = [number, number, number];
@@ -25,9 +25,8 @@ function parseBlock(source: string, opener: string): Tokens {
   );
 }
 
-const light = parseBlock(css, ':root {');
-const darkMedia = parseBlock(css, ":root:not([data-theme='light']) {");
-const dark = parseBlock(css, ":root[data-theme='dark'] {");
+const dark = parseBlock(css, ':root {');
+const light = parseBlock(css, ":root[data-theme='light'] {");
 
 function rgba(hex: string): [Rgb, number] {
   const n = (i: number) => parseInt(hex.slice(i, i + 2), 16);
@@ -61,13 +60,21 @@ function token(tokens: Tokens, name: string): string {
 
 const opaque = (hex: string): Rgb => rgba(hex)[0];
 
-/** Sichtbare Seitenfarben: Verlauf und jeder Lichtfleck in voller Stärke darüber. */
+/** Sichtbare Seitenfarben: Grundfläche und oberer Rand (Statusleiste); keine Verläufe, keine Lichtflecken. */
 function pagePoints(tokens: Tokens): Rgb[] {
-  const base = ['bg-top', 'bg', 'bg-bottom'].map((name) => opaque(token(tokens, name)));
-  const glows = ['glow-1', 'glow-2', 'glow-3'].flatMap((glow) =>
-    base.map((below) => over(token(tokens, glow), below)),
-  );
-  return [...base, ...glows];
+  return ['bg-top', 'bg'].map((name) => opaque(token(tokens, name)));
+}
+
+/**
+ * Glas der Tab-Leiste (D-312): liegt über der Seite, über Karten und beim Scrollen auch über den
+ * hellsten Inhalten (Text, Lime-Knopf). Die Weichzeichnung mischt nur; geprüft wird die volle Fläche.
+ */
+function glassPoints(tokens: Tokens): Rgb[] {
+  const behind = [
+    ...pagePoints(tokens),
+    ...['surface', 'surface-2', 'fg', 'accent'].map((name) => opaque(token(tokens, name))),
+  ];
+  return behind.map((below) => over(token(tokens, 'tabbar-glass'), below));
 }
 
 /** Alle Mischfarben, auf denen eine Fläche liegen kann. */
@@ -101,17 +108,14 @@ const MODES: [string, Tokens][] = [
 ];
 
 describe('Farbtokens', () => {
-  it('definiert den dunklen Modus in beiden Blöcken gleich', () => {
-    expect(darkMedia).toEqual(dark);
-  });
-
   it('definiert hell und dunkel dieselben Tokens', () => {
     expect(Object.keys(dark).sort()).toEqual(Object.keys(light).sort());
   });
 
-  it('nutzt für theme-color den oberen Hintergrund', () => {
+  it('nutzt für theme-color den oberen Hintergrund; ausgeliefert wird Dunkel (D-308)', () => {
     expect(THEME_BACKGROUND.light).toBe(token(light, 'bg-top'));
     expect(THEME_BACKGROUND.dark).toBe(token(dark, 'bg-top'));
+    expect(THEME_BACKGROUND[SHIPPED_THEME === 'dark' ? 'dark' : 'light']).toBe('#0c1219');
   });
 
   it('mischt durchscheinende Farben richtig', () => {
@@ -128,8 +132,13 @@ describe('Farbtokens', () => {
     );
 
     it.each([
+      // Grüne Karte „Bereit für dein Training?“ (F6, D-336, V2c).
+      ['stage-tint-fg', 'stage-tint-bg'],
+      ['stage-tint-muted', 'stage-tint-bg'],
+      ['stage-tint-button-fg', 'stage-tint-button'],
       ['accent-fg', 'accent'],
       ['accent-fg', 'accent-hover'],
+      ['action-fg', 'action'],
       ['chart-axis', 'surface'],
       ['chart-total', 'surface'],
       ['bg', 'warning'],
@@ -137,17 +146,6 @@ describe('Farbtokens', () => {
       ['success', 'success-soft'],
       ['warning', 'warning-soft'],
       ['danger', 'danger-soft'],
-      ['on-ink', 'ink'],
-      ['on-ink', 'ink-2'],
-      ['on-ink-muted', 'ink'],
-      ['on-ink-muted', 'ink-2'],
-      ...['login-bg-1', 'login-bg-2', 'login-bg-3'].flatMap((bg) => [
-        ['login-fg', bg],
-        ['login-fg-muted', bg],
-        ['login-error', bg],
-      ]),
-      ['login-fg', 'login-accent'],
-      ['login-fg', 'login-accent-2'],
     ])('Text --%s auf --%s erreicht 4,5:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(4.5);
     });
@@ -160,28 +158,40 @@ describe('Farbtokens', () => {
       ['data-1', 'surface'],
       ['accent', 'meter-track'],
       ['accent', 'ink'],
-      ['on-ink', 'ink'],
-      ['on-ink', 'ink-2'],
-      ...['macro-protein', 'macro-carbs', 'macro-fat'].flatMap((ring) => [
-        [ring, 'ink'],
-        [ring, 'ink-2'],
+      ['action', 'surface'],
+      ['action', 'bg'],
+      ['stage-tint-button', 'stage-tint-bg'],
+      ['success', 'ink'],
+      // Makros (F6, D-333): Ring, Balken und Legende auf Karte und card-2.
+      ...['macro-protein', 'macro-carbs', 'macro-fat', 'macro-other'].flatMap((macro) => [
+        [macro, 'surface'],
+        [macro, 'surface-2'],
       ]),
-      ['login-focus', 'login-bg-1'],
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);
     });
   });
 
-  it('dokumentierte Ausnahme: nur Aqua, Gelb und Magenta liegen hell unter 3:1', () => {
-    const below = Array.from({ length: 8 }, (_, i) => `data-${String(i + 1)}`).filter(
-      (name) => minContrast(light, name, 'surface') < 3,
+  it.each(
+    MODES.flatMap(([mode, tokens]) =>
+      ['fg-muted', 'fg', 'accent-ink'].map((fg) => [mode, fg, tokens] as const),
+    ),
+  )('%s: Tab-Beschriftung --%s auf dem Glas der Tab-Leiste erreicht 4,5:1', (_mode, fg, tokens) => {
+    const worst = Math.min(
+      ...glassPoints(tokens).map((below) => ratio(opaque(token(tokens, fg)), below)),
     );
-    expect(below).toEqual(['data-3', 'data-4', 'data-5']);
+    expect(worst).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('alle Datenreihen erreichen dunkel 3:1', () => {
+  it.each(MODES)('alle Datenreihen erreichen %s 3:1', (_mode, tokens) => {
     for (let i = 1; i <= 8; i++) {
-      expect(minContrast(dark, `data-${String(i)}`, 'surface')).toBeGreaterThanOrEqual(3);
+      expect(minContrast(tokens, `data-${String(i)}`, 'surface')).toBeGreaterThanOrEqual(3);
     }
+  });
+
+  it('Lime ist dunkel Akzent und Text, hell nur Symbol: Text in Grün dunkel', () => {
+    expect(token(dark, 'accent')).toBe('#c7ff46');
+    expect(token(dark, 'accent-ink')).toBe('#c7ff46');
+    expect(token(light, 'accent-ink')).toBe('#4c7a00');
   });
 });

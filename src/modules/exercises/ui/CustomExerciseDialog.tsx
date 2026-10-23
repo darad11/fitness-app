@@ -130,7 +130,7 @@ export function CustomExerciseDialog({
             onChange={(event) => {
               setName(event.target.value);
             }}
-            className="h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg"
+            className="field w-full"
           />
           {same ? (
             <p role="status" className="mt-2 text-sm text-muted">

@@ -1,5 +1,5 @@
 import { addDays, isoWeekday, startOfWeek, type DayKey } from '@/shared/lib/time';
-import { activeOn, type HabitLike, type LogLike } from './streak';
+import { activeOn, type HabitLike, type LogLike } from './days';
 
 /**
  * Auswertung der Tagesaufgaben (D-284). Eine Rechnung für alle Ansichten.
@@ -7,7 +7,7 @@ import { activeOn, type HabitLike, type LogLike } from './streak';
  * Zustand einer Aufgabe an einem Tag:
  * - `notDue`: galt an dem Tag nicht (vor dem Anlegen, pausiert, gelöscht).
  * - `noData`: galt, aber an dem Tag wurde gar nichts abgehakt oder zurückgenommen (App nicht
- *   benutzt). Zählt weder als erledigt noch als offen und unterbricht eine Serie.
+ *   benutzt). Zählt weder als erledigt noch als offen (Leitplanken: kein Tag gilt als verfehlt).
  * - `done` / `open`: erledigt bzw. an einem Tag mit Einträgen nicht erledigt.
  * Heute zählt nie als `noData`, aber in Quoten nicht mit, weil der Tag noch läuft.
  */
@@ -178,54 +178,41 @@ export function habitRate(
   return rateOf(done, due, noDataDays);
 }
 
-export interface Streaks {
-  current: number;
-  best: number;
-}
-
 /**
- * Serien über die ganze Geschichte. `step` sagt je Tag: zählt (`hit`), unterbricht (`miss`) oder
- * bleibt neutral (`skip`, nichts fällig). Die aktuelle Serie endet heute, wenn heute schon
- * erfüllt ist, sonst gestern; heute offen unterbricht sie nicht.
+ * Wochenbild statt Serie (Leitplanken Regel 2; F4, D-318): diese Woche ab Montag, „x von y“.
+ * `due` zählt nur auswertbare Tage: Tage ohne Eintrag zählen nicht als verfehlt (D-284), heute
+ * zählt erst, wenn alles erledigt ist, weil der Tag noch läuft.
  */
-function streaksOf(
-  start: DayKey | null,
-  today: DayKey,
-  step: (day: DayKey) => 'hit' | 'miss' | 'skip',
-): Streaks {
-  if (start === null || start > today) return { current: 0, best: 0 };
-  let best = 0;
-  let run = 0;
-  for (let day = start; day <= today; day = addDays(day, 1)) {
-    const result = step(day);
-    if (result === 'hit') {
-      run += 1;
-      if (run > best) best = run;
-    } else if (result === 'miss' && day !== today) run = 0;
-  }
-  return { current: run, best };
+export interface Week {
+  done: number;
+  due: number;
 }
 
-/** Serie vollständig abgehakter Tage (alle fälligen Aufgaben erledigt). */
-export function overallStreaks(
-  habits: readonly HabitLike[],
-  index: LogIndex,
-  today: DayKey,
-): Streaks {
-  return streaksOf(dataStart(habits), today, (day) => {
+/** Tage dieser Woche, an denen alle fälligen Aufgaben erledigt waren. */
+export function overallWeek(habits: readonly HabitLike[], index: LogIndex, today: DayKey): Week {
+  let done = 0;
+  let due = 0;
+  for (const day of daysFrom(startOfWeek(today), today)) {
     const totals = dayTotals(habits, day, index, today);
-    if (totals.due === 0) return 'skip';
-    if (totals.noData) return 'miss';
-    return totals.done === totals.due ? 'hit' : 'miss';
-  });
+    const full = totals.due > 0 && totals.done === totals.due;
+    if (totals.due === 0 || totals.noData || (day === today && !full)) continue;
+    due += 1;
+    if (full) done += 1;
+  }
+  return { done, due };
 }
 
-export function habitStreaks(habit: HabitLike, index: LogIndex, today: DayKey): Streaks {
-  return streaksOf(habit.fromDayKey, today, (day) => {
+/** Fällige Tage einer Aufgabe in dieser Woche und davon erledigte. */
+export function habitWeek(habit: HabitLike, index: LogIndex, today: DayKey): Week {
+  let done = 0;
+  let due = 0;
+  for (const day of daysFrom(startOfWeek(today), today)) {
     const state = habitState(habit, day, index, today);
-    if (state === 'notDue') return 'skip';
-    return state === 'done' ? 'hit' : 'miss';
-  });
+    if (state === 'notDue' || state === 'noData' || (day === today && state !== 'done')) continue;
+    due += 1;
+    if (state === 'done') done += 1;
+  }
+  return { done, due };
 }
 
 /** Mindestens so viele auswertbare fällige Tage braucht ein Vergleich je Zeitraum. */

@@ -12,14 +12,17 @@ export interface PageHeaderProps {
   action?: ReactNode;
 }
 
-/** Seitenkopf (ux-audit.md Abschnitt 2): Rücksprung, Vorzeile, großer Titel, Untertitel. */
+/**
+ * Seitenkopf der Marke FORM (D-314): Rücksprung in heller Schrift, Vorzeile als Label,
+ * Headline 28/600, Untertitel gedämpft.
+ */
 export function PageHeader({ title, eyebrow, subtitle, back, action }: PageHeaderProps) {
   return (
-    <header className="mb-6">
+    <header className="mb-5">
       {back ? (
         <Link
           to={back.to}
-          className="-ml-2 mb-2 inline-flex min-h-11 items-center gap-1 rounded-pill px-2 text-sm font-semibold text-accent-ink hover:bg-surface-2"
+          className="-ml-2 mb-1 inline-flex min-h-touch items-center gap-1 rounded-button px-2 text-sm font-semibold text-muted hover:bg-surface-2 hover:text-fg"
         >
           <ChevronLeft aria-hidden="true" className="size-5" />
           {back.label}
@@ -28,10 +31,10 @@ export function PageHeader({ title, eyebrow, subtitle, back, action }: PageHeade
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           {eyebrow ? <p className="eyebrow mb-1 text-muted">{eyebrow}</p> : null}
-          <h1 className="text-display font-bold hyphens-auto [overflow-wrap:anywhere] max-[359px]:text-[clamp(1.75rem,10.5vw,2.5rem)]">
+          <h1 className="text-headline font-semibold hyphens-auto [overflow-wrap:anywhere]">
             {title}
           </h1>
-          {subtitle ? <p className="mt-2 text-muted">{subtitle}</p> : null}
+          {subtitle ? <p className="mt-1 text-muted">{subtitle}</p> : null}
         </div>
         {action ? <div className="shrink-0">{action}</div> : null}
       </div>

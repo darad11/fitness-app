@@ -5,7 +5,7 @@ import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbProvider, type DbRuntime } from '@/shared/db';
-import { addDays, dayKey, localTimeZone } from '@/shared/lib/time';
+import { addDays, dayKey, isoWeekday, localTimeZone } from '@/shared/lib/time';
 import { createTestRuntime } from '@/shared/testing/db';
 import { habitsRoutes } from '../routes';
 import { addHabit, setHabitDone } from '../service/habitService';
@@ -58,7 +58,11 @@ describe('Fortschritt der Tagesaufgaben (D-284)', () => {
     expect(tiles[0]).toHaveTextContent('1 / 2');
     // Fällig mit Daten (ohne heute): Wasser 9 Tage (8 erledigt), Lesen 3 Tage (1 erledigt) → 9/12.
     expect(tiles[1]).toHaveTextContent('75 %');
+    // Wochenbild statt Serie (D-318); der Wert hängt vom Wochentag des Testlaufs ab.
+    expect(within(stats).getAllByRole('term')[2]).toHaveTextContent('Diese Woche');
+    expect(tiles[2]).toHaveTextContent(/^(\d+ von \d+|–)/);
     expect(tiles[3]).toHaveTextContent('2');
+    expect(screen.queryByText(/Serie/)).toBeNull();
     expect(within(stats).getByText(/An 1 Tag gab es keinen Eintrag/)).toBeVisible();
 
     const perTask = within(stats).getByRole('region', { name: 'Je Aufgabe' });
@@ -91,7 +95,7 @@ describe('Fortschritt der Tagesaufgaben (D-284)', () => {
     expect(within(perTask).getByText(/an 4 von 5 fälligen Tagen/)).toBeVisible();
   });
 
-  it('öffnet die Auswertung einer Aufgabe mit Serie und Kalender', async () => {
+  it('öffnet die Auswertung einer Aufgabe mit Wochenbild und Kalender', async () => {
     const user = userEvent.setup();
     await seed();
     renderAt('/heute/aufgaben');
@@ -100,8 +104,12 @@ describe('Fortschritt der Tagesaufgaben (D-284)', () => {
     const tiles = screen.getAllByRole('definition');
     expect(tiles[0]).toHaveTextContent('89 %');
     expect(tiles[1]).toHaveTextContent('8 / 9');
-    // Serie: -3, -2, -1 und heute erledigt; -4 nicht.
-    expect(tiles[2]).toHaveTextContent('4');
+    // Diese Woche ab Montag: -4 offen, -6 ohne Eintrag (zählt nicht), sonst erledigt; heute erledigt.
+    const back = Array.from({ length: isoWeekday(today()) }, (_, i) => i);
+    const due = back.filter((i) => i !== 6).length;
+    const done = back.filter((i) => i !== 6 && i !== 4).length;
+    expect(tiles[2]).toHaveTextContent(`${String(done)} von ${String(due)}`);
+    expect(screen.queryByText(/Serie/)).toBeNull();
     expect(screen.getByText(/Kein Vergleich/)).toBeVisible();
     const calendar = screen.getByRole('list', { name: /Kalender/ });
     expect(

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
-import { Button, IconButton } from '@/shared/ui';
+import { Button, Chip, IconButton } from '@/shared/ui';
 import { formatRestRemaining, formatTargetRange, restRemainingSec } from '../../calc/format';
 import type { Session, SessionExercise, SessionSet } from '../../model/session';
 
@@ -21,8 +21,8 @@ export interface RestStageProps {
 
 /**
  * Pause als Bühne im Player (ux-audit.md DS-6, AK-TRN-10 bis AK-TRN-12): Restzeit aus dem
- * gespeicherten Endzeitpunkt, Überziehung als „+0:42" mit Akzentfläche, nächster Satz, ±15 s,
- * Überspringen; antippen öffnet die Vollansicht mit großem Timer.
+ * gespeicherten Endzeitpunkt, Überziehung als „+0:42" mit Rand und Zahl in Lime, nächster Satz,
+ * ±15 s als Chips, „Überspringen“ in Blau (FORM, D-315); antippen öffnet die Vollansicht mit großem Timer.
  */
 export function RestStage(props: RestStageProps) {
   const [expanded, setExpanded] = useState(false);
@@ -44,35 +44,34 @@ export function RestStage(props: RestStageProps) {
   const controls = (size: 'sm' | 'lg') => (
     <div
       className={cn(
-        'grid gap-2',
+        'grid items-center gap-2',
         size === 'lg' ? 'w-full max-w-md grid-cols-[1fr_1fr_1.6fr]' : 'grid-cols-[1fr_1fr_1.5fr]',
       )}
     >
-      <Button
-        variant="onInk"
-        size={size === 'lg' ? 'md' : size}
+      {/* ±15 s als Chips, „Überspringen“ in Blau: Trainingsaktion im aktiven Workout (D-315). */}
+      <Chip
         aria-label={t.rest.minus}
+        className="w-full"
         onClick={() => {
           props.onAdjust(-REST_STEP_SEC);
         }}
       >
         <Minus aria-hidden="true" className="size-4" />
-        15
-      </Button>
-      <Button
-        variant="onInk"
-        size={size === 'lg' ? 'md' : size}
+        15 s
+      </Chip>
+      <Chip
         aria-label={t.rest.plus}
+        className="w-full"
         onClick={() => {
           props.onAdjust(REST_STEP_SEC);
         }}
       >
         <Plus aria-hidden="true" className="size-4" />
-        15
-      </Button>
+        15 s
+      </Chip>
       <Button
-        variant={over ? 'onInk' : 'primary'}
-        size={size === 'lg' ? 'md' : size}
+        variant="action"
+        size={size === 'lg' ? 'md' : 'sm'}
         aria-label={t.rest.skip}
         onClick={props.onSkip}
       >
@@ -81,28 +80,34 @@ export function RestStage(props: RestStageProps) {
     </div>
   );
 
+  // Überzogen: Rand und Zahl in Lime; Lime ist Akzent, nie Fläche (Markenassets, Regeln).
+  const overClass = over ? 'shadow-[0_0_0_1px_var(--accent)]' : '';
+
   if (expanded) {
-    // Als Portal, weil die Kopfzeile mit Weichzeichner sonst den Bezugsrahmen für `fixed` bildet.
+    // Als Portal, damit `fixed` sich auf das Fenster bezieht und nicht auf den klebenden Kopf.
     return createPortal(
       <section
         aria-label={t.rest.label}
         className={cn(
-          'fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 px-6 text-center text-on-ink',
-          over ? 'bg-accent' : 'hero-glass',
+          'stage fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 px-page text-center text-fg',
+          overClass,
         )}
       >
-        <p className="eyebrow text-on-ink-muted">{over ? t.rest.over : t.rest.label}</p>
-        <p role="timer" aria-label={status} className="text-timer font-bold tabular-nums">
+        <p className="eyebrow text-muted">{over ? t.rest.over : t.rest.label}</p>
+        <p
+          role="timer"
+          aria-label={status}
+          className={cn('text-timer font-semibold', over && 'text-accent-ink')}
+        >
           {time}
         </p>
         <div className="max-w-md">
-          <p className="eyebrow text-on-ink-muted">{t.rest.next}</p>
+          <p className="eyebrow text-muted">{t.rest.next}</p>
           <p className="mt-1 text-lg">{nextText}</p>
         </div>
         {controls('lg')}
         <Button
-          variant="quiet"
-          className="text-on-ink"
+          variant="secondary"
           onClick={() => {
             setExpanded(false);
           }}
@@ -118,26 +123,26 @@ export function RestStage(props: RestStageProps) {
   return (
     <section
       aria-label={t.rest.label}
-      className={cn('mt-3 rounded-card p-4 text-on-ink', over ? 'bg-accent' : 'hero-glass')}
+      className={cn('stage mt-3 rounded-card p-card text-fg', overClass)}
     >
       <div className="flex min-h-12 items-center gap-4">
-        <p role="timer" aria-label={status} className="text-4xl font-bold tabular-nums">
+        <p
+          role="timer"
+          aria-label={status}
+          className={cn('text-value font-semibold', over && 'text-accent-ink')}
+        >
           {time}
         </p>
         <p className="min-w-0 flex-1">
-          <span className="eyebrow block text-on-ink-muted">
-            {over ? t.rest.over : t.rest.label}
-          </span>
-          <span className="mt-0.5 line-clamp-2 block text-sm">
+          <span className="eyebrow block text-muted">{over ? t.rest.over : t.rest.label}</span>
+          <span className="mt-0.5 line-clamp-2 text-sm">
             <span className="font-semibold">{t.rest.next}: </span>
             {nextText}
           </span>
         </p>
         <IconButton
           label={t.rest.expand}
-          tone="onInk"
           aria-expanded={false}
-          className="size-12"
           onClick={() => {
             setExpanded(true);
           }}

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
-import { dayStatus, streak } from '../calc/streak';
+import { dayStatus } from '../calc/days';
 import { habitLogId, listHabitLogs, listHabits } from '../data/habitRepository';
 import {
   addHabit,
@@ -68,7 +68,7 @@ describe('Tagesaufgaben anlegen, ordnen, beenden (AH-03, D-253)', () => {
 });
 
 describe('Abhaken je Tag', () => {
-  it('schreibt genau ein Dokument je Aufgabe und Tag und zählt die Serie', async () => {
+  it('schreibt genau ein Dokument je Aufgabe und Tag und zählt erledigte Tage', async () => {
     const a = await addHabit(rt, 'A', at('2026-10-15T10:00:00.000Z'));
     await setHabitDone(rt, a.id, '2026-10-16', true, at('2026-10-16T08:00:00.000Z'));
     await setHabitDone(rt, a.id, '2026-10-17', true, at('2026-10-17T08:00:00.000Z'));
@@ -81,10 +81,9 @@ describe('Abhaken je Tag', () => {
       done: true,
       doneAt: '2026-10-17T10:00:00.000Z',
     });
-    expect(streak(await listHabits(rt.db), logs, '2026-10-17')).toEqual({
-      days: 2,
-      includesToday: true,
-    });
+    const habits = await listHabits(rt.db);
+    expect(dayStatus(habits, logs, '2026-10-16').complete).toBe(true);
+    expect(dayStatus(habits, logs, '2026-10-17')).toEqual({ total: 1, done: 1, complete: true });
     expect(await listHabitLogs(rt.db, '2026-10-17')).toHaveLength(1);
   });
 });

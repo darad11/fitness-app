@@ -97,7 +97,7 @@ test.describe('Schnell-Eintrag von „Heute“', () => {
     await expect(page.getByText(/^2\D?200 kcal$/)).toBeVisible();
 
     await openPage(page, '/heute');
-    await expect(page.getByRole('img', { name: /^0 \/ 2\D?200 kcal, Eiweiß/ })).toBeVisible();
+    await expect(page.getByRole('img', { name: /^0 von 2\D?200 kcal$/ })).toBeVisible();
     await page.getByRole('link', { name: 'Barcode scannen' }).click();
     await expect(page).toHaveURL(/scan=1&von=heute/);
     const scanner = page.getByRole('dialog', { name: 'Barcode scannen' });
@@ -113,6 +113,8 @@ test.describe('Schnell-Eintrag von „Heute“', () => {
       .getByRole('button', { name: 'Hinzufügen' })
       .click();
     await expect(page.getByRole('heading', { level: 1, name: 'Heute' })).toBeVisible();
-    await expect(page.getByRole('img', { name: /^9\d \/ 2\D?200 kcal, Eiweiß/ })).toBeVisible();
+    await expect(
+      page.getByRole('img', { name: /^9\d von 2\D?200 kcal, davon Eiweiß \d+, Kohlenhydrate/ }),
+    ).toBeVisible();
   });
 });

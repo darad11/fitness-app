@@ -101,39 +101,55 @@ export function ProgressPage() {
           icon={LineChart}
           title={t.progress.emptyTitle}
           text={t.progress.emptyText}
-          action={<ButtonLink to="/fortschritt/gewicht">{t.body.add}</ButtonLink>}
+          action={
+            <ButtonLink to="/fortschritt/gewicht" variant="secondary">
+              {t.body.add}
+            </ButtonLink>
+          }
         />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-stack">
           <section aria-labelledby="kennzahlen">
             <h2 id="kennzahlen" className="sr-only">
               {t.progress.periodLegend}
             </h2>
             <SegmentedControl
+              row
               legend={t.progress.periodLegend}
               options={PERIOD_OPTIONS}
               value={period}
               onChange={setPeriod}
             />
-            <dl className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-              <StatTile label={t.progress.sessions} value={fmt.number(totals.sessions)} />
-              <StatTile label={t.progress.minutes} value={fmt.number(totals.minutes)} unit="min" />
-              <StatTile label={t.progress.volume} value={fmt.number(totals.volumeKg)} unit="kg" />
-              <StatTile
-                label={t.progress.kcal}
-                value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
-                unit={totals.kcal === null ? undefined : 'kcal'}
-                hint={
-                  totals.kcal === null
-                    ? totals.sessions > 0
-                      ? t.progress.kcalNone
-                      : undefined
-                    : totals.withoutKcal > 0
-                      ? t.progress.kcalPartial(totals.withoutKcal)
-                      : t.progress.kcalHint
-                }
-              />
-            </dl>
+            {/* Zeitraum ohne Training: „Pause“ statt Nullwerten (D-319). */}
+            {totals.sessions === 0 ? (
+              <dl className="mt-3">
+                <StatTile label={t.progress.sessions} value={t.progress.pause} />
+              </dl>
+            ) : (
+              <dl className="mt-3 grid grid-cols-2 gap-stack md:grid-cols-4">
+                <StatTile label={t.progress.sessions} value={fmt.number(totals.sessions)} />
+                <StatTile
+                  label={t.progress.minutes}
+                  value={fmt.number(totals.minutes)}
+                  unit="min"
+                />
+                <StatTile label={t.progress.volume} value={fmt.number(totals.volumeKg)} unit="kg" />
+                <StatTile
+                  label={t.progress.kcal}
+                  value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
+                  unit={totals.kcal === null ? undefined : 'kcal'}
+                  hint={
+                    totals.kcal === null
+                      ? totals.sessions > 0
+                        ? t.progress.kcalNone
+                        : undefined
+                      : totals.withoutKcal > 0
+                        ? t.progress.kcalPartial(totals.withoutKcal)
+                        : t.progress.kcalHint
+                  }
+                />
+              </dl>
+            )}
           </section>
 
           <Card
@@ -155,7 +171,7 @@ export function ProgressPage() {
             {latestWeight && weightText ? (
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-2xl font-bold tabular-nums">{weightText}</p>
+                  <p className="text-2xl font-semibold tabular-nums">{weightText}</p>
                   <p className="text-sm text-muted">
                     {t.body.lastMeasured(fmt.dateTimeShort(new Date(latestWeight.measuredAt)))}
                     {changeText ? ` · ${changeText} ${t.body.periods['30d']}` : ''}
@@ -226,7 +242,7 @@ export function ProgressPage() {
                           {fmt.dayMonthYear(new Date(entry.lastAt))}
                         </span>
                       </span>
-                      <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted" />
+                      <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
                     </Link>
                   </li>
                 ))}

@@ -33,14 +33,6 @@ export async function openPage(page: Page, path: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
 }
 
-export async function chooseTheme(page: Page, label: 'Hell' | 'Dunkel' | 'System') {
-  await openPage(page, '/mehr/einstellungen');
-  const radio = page.getByRole('radio', { name: label });
-  await expect(radio).toBeEnabled();
-  await page.getByText(label, { exact: true }).click();
-  await expect(radio).toBeChecked();
-}
-
 /** Alle verfügbaren Seiten; geprüft werden Offline-Start, Netzwerk und Barrierefreiheit. */
 export const APP_PAGES = [
   '/heute',
@@ -49,7 +41,7 @@ export const APP_PAGES = [
   '/training/programme',
   '/training/nachtragen',
   '/training/vorlagen/full_body_ab',
-  '/training/vorlagen/winter_arc_2026',
+  '/training/vorlagen/winterprogramm-2026',
   '/uebungen',
   '/ernaehrung',
   '/ernaehrung/hinzufuegen',

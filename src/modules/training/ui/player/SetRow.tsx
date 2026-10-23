@@ -53,9 +53,11 @@ export function SetRow(props: SetRowProps) {
     <li
       aria-label={props.name}
       aria-current={current ? 'step' : undefined}
+      data-set-id={set.id}
       className={cn(
-        // Scroll-Abstand zum klebenden Kopf mit Pause und zur Aktionsleiste (Fokus, Tests).
-        'scroll-mt-[21rem] scroll-mb-32 rounded-input px-2 py-1.5',
+        // Scroll-Abstand zum klebenden Kopf mit Pause (gemessen, `useStableSetView`) und zur
+        // Fußleiste: Fokus und Tastatur scrollen ein Feld nie hinter den Kopf (F5, D-323).
+        'scroll-mt-[calc(var(--player-head,0px)+0.75rem)] scroll-mb-32 rounded-input px-2 py-1.5',
         set.type === 'drop' && 'ml-6',
         current && 'bg-accent-soft',
         skipped && 'opacity-70',
@@ -65,7 +67,7 @@ export function SetRow(props: SetRowProps) {
         <span
           aria-hidden="true"
           className={cn(
-            'flex size-8 shrink-0 items-center justify-center rounded-pill text-sm font-bold tabular-nums',
+            'flex size-8 shrink-0 items-center justify-center rounded-pill text-sm font-semibold tabular-nums',
             done
               ? 'bg-success-soft text-success'
               : set.type === 'warmup'
@@ -155,7 +157,7 @@ export function SetRow(props: SetRowProps) {
         >
           {error}
           {props.onRetry ? (
-            <Button variant="quiet" size="sm" className="px-2" onClick={props.onRetry}>
+            <Button variant="quiet" size="sm" onClick={props.onRetry}>
               {t.session.retry}
             </Button>
           ) : null}
@@ -167,7 +169,7 @@ export function SetRow(props: SetRowProps) {
             <Button
               variant={timer.running ? 'primary' : 'secondary'}
               size="sm"
-              className={timer.running ? 'tabular-nums' : 'bg-surface shadow-card'}
+              className={timer.running ? 'tabular-nums' : undefined}
               aria-label={`${timer.running ? t.session.stopTimer : t.session.startTimer}, ${props.name}`}
               onClick={timer.onToggle}
             >
@@ -186,7 +188,6 @@ export function SetRow(props: SetRowProps) {
               <Button
                 variant="secondary"
                 size="sm"
-                className="bg-surface shadow-card"
                 onClick={() => {
                   stepValue(-1);
                 }}
@@ -198,7 +199,6 @@ export function SetRow(props: SetRowProps) {
               <Button
                 variant="secondary"
                 size="sm"
-                className="bg-surface shadow-card"
                 onClick={() => {
                   stepValue(1);
                 }}

@@ -1,6 +1,7 @@
 // Prüft die komprimierte Größe der Startansicht (testing.md Abschnitt 5: unter 250 KB gzip).
-// Startansicht = Einstieg aus index.html mit allen statischen Importen und CSS
-// plus die nachgeladene Seite „Heute" mit ihren Importen. Voraussetzung: `pnpm build`.
+// Startansicht = index.html selbst (mit der Startfläche, D-325), der Einstieg mit allen
+// statischen Importen und CSS plus die nachgeladene Seite „Heute" mit ihren Importen.
+// Voraussetzung: `pnpm build`.
 import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 
@@ -9,7 +10,7 @@ const START_PAGE = 'src/modules/dashboard/ui/TodayPage.tsx';
 const dist = new URL('../dist/', import.meta.url);
 const manifest = JSON.parse(readFileSync(new URL('.vite/manifest.json', dist), 'utf8'));
 
-const files = new Set();
+const files = new Set(['index.html']);
 function collect(key) {
   const chunk = manifest[key];
   if (!chunk) throw new Error(`Eintrag fehlt im Vite-Manifest: ${key}`);

@@ -1,6 +1,12 @@
 // Gemeinsame Testumgebung für Vitest (Node und jsdom).
 import 'fake-indexeddb/auto';
 import '@testing-library/jest-dom/vitest';
+import { configure } from '@testing-library/dom';
+
+// Seiten, Dialoge und Karten laden nach (`lazy`). Läuft die ganze Suite parallel mit Coverage
+// (CI), dauert das erste Laden eines Moduls oft länger als die Standardwartezeit von 1 s;
+// `findBy…` und `waitFor` warten deshalb bis zu 5 s. Ein echter Fehler scheitert weiterhin.
+configure({ asyncUtilTimeout: 5000 });
 
 // jsdom kennt matchMedia nicht; Komponenten fragen damit Darstellung und Startart ab.
 if (typeof window !== 'undefined' && typeof window.matchMedia !== 'function') {

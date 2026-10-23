@@ -4,20 +4,35 @@ import { cn } from '@/shared/lib/cn';
 import { inSection, VISIBLE_NAV_ITEMS } from './nav';
 
 /**
- * Seitenleiste am Mac und auf dem iPad quer (ab 1024 px), schwebendes Glas (D-272): eingeklappt
- * nur Symbole, damit der Inhalt fast die ganze Breite hat; unter dem Mauszeiger oder mit dem
- * Tastaturfokus klappt sie über den Inhalt aus und zeigt die Namen.
+ * Seitenleiste am Mac und auf dem iPad quer (ab 1024 px): eingeklappt nur Symbole, damit der Inhalt
+ * fast die ganze Breite hat; unter dem Mauszeiger oder mit dem Tastaturfokus klappt sie über den
+ * Inhalt aus und zeigt die Namen (D-272). Marke FORM: deckende Fläche mit 1-px-Rand, ohne Glas;
+ * aktiver Bereich mit Symbol und Namen in Lime, ohne Füllfläche (D-314).
  */
 export function Sidebar() {
   const { pathname } = useLocation();
   return (
     <nav
       aria-label={t.nav.label}
-      className="sidebar glass-blur fixed top-3 bottom-3 left-3 z-30 hidden flex-col overflow-hidden px-3 pt-4 pb-4 lg:flex"
+      className="sidebar fixed top-[calc(0.75rem+var(--spacing-edge-clear))] bottom-3 left-3 z-30 hidden flex-col overflow-hidden px-3 pt-4 pb-4 lg:flex"
     >
-      <div className="mb-5 flex h-11 items-center gap-3 px-1.5">
-        <img src="/icons/icon-192.png" alt="" className="size-9 shrink-0 rounded-[10px]" />
-        <span className="sidebar-label text-lg font-bold">{t.app.name}</span>
+      {/* Eingeklappt nur die grüne Kachel, mittig über den Symbolen; ausgeklappt blendet darüber
+          das ganze Logo ein, dessen Kachel genau auf dieser liegt (D-310, D-325). */}
+      <div className="relative mb-5 flex h-11 items-center px-2.5">
+        <img
+          src="/brand/kachel-kompakt.svg"
+          alt=""
+          width={28}
+          height={28}
+          className="size-logo shrink-0"
+        />
+        <img
+          src="/brand/logo-kopfzeile-kompakt.svg"
+          alt={t.app.name}
+          width={106}
+          height={28}
+          className="sidebar-label absolute left-2.5 h-logo w-auto"
+        />
       </div>
       <ul className="space-y-1">
         {VISIBLE_NAV_ITEMS.map((item) => {
@@ -30,9 +45,9 @@ export function Sidebar() {
                 title={label}
                 className={({ isActive }) =>
                   cn(
-                    'flex min-h-12 items-center gap-3 rounded-[14px] px-3.5',
+                    'flex min-h-12 items-center gap-3 rounded-button px-3.5',
                     isActive || section
-                      ? 'bg-[var(--selection-pill)] font-semibold text-accent-ink shadow-[inset_0_0_0_1px_var(--border)]'
+                      ? 'font-semibold text-accent-ink'
                       : 'text-muted hover:bg-surface-2 hover:text-fg',
                   )
                 }

@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { parseDecimal } from '@/shared/lib/format';
 import {
   Button,
@@ -35,8 +36,7 @@ import {
   updateFood,
 } from '../service/nutritionService';
 
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Eigenes Lebensmittel anlegen oder bearbeiten (S-19, NU-10, NU-19, NU-22, NU-23). */
 /** Vorbelegung aus dem Scan (Navigation mit `state`), geprüft, weil der Verlauf sie speichert. */
@@ -69,11 +69,11 @@ export function FoodFormPage() {
     return (
       <>
         <PageHeader
-          title={t.nutrition.editFoodTitle}
-          back={{ to: '/ernaehrung/lebensmittel', label: t.nutrition.foodsTitle }}
+          title={tNutrition.editFoodTitle}
+          back={{ to: '/ernaehrung/lebensmittel', label: tNutrition.foodsTitle }}
         />
-        <p className="mb-4 text-muted">{t.nutrition.foodNotFound}</p>
-        <ButtonLink to="/ernaehrung/lebensmittel">{t.nutrition.foodsTitle}</ButtonLink>
+        <p className="mb-4 text-muted">{tNutrition.foodNotFound}</p>
+        <ButtonLink to="/ernaehrung/lebensmittel">{tNutrition.foodsTitle}</ButtonLink>
       </>
     );
   }
@@ -111,7 +111,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
   );
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const unit = t.nutrition.units[basis];
+  const unit = tNutrition.units[basis];
 
   const parsedPer100 = (): Nutrients | null => {
     const result: Nutrients = {};
@@ -133,7 +133,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
       .filter((s) => s.name.trim() || s.amount.trim())
       .map((s) => ({ name: s.name, amount: parseDecimal(s.amount) ?? -1 }));
     if (!per100) {
-      setError(t.nutrition.errors.number);
+      setError(tNutrition.errors.number);
       return;
     }
     setBusy(true);
@@ -147,9 +147,9 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
     )
       .then(() => navigate(back))
       .catch((caught: unknown) => {
-        if (caught instanceof InvalidFoodError) setError(t.nutrition.errors[caught.reason]);
+        if (caught instanceof InvalidFoodError) setError(tNutrition.errors[caught.reason]);
         else {
-          setError(t.nutrition.saveFailed);
+          setError(tNutrition.saveFailed);
           void logError(rt.db, {
             area: 'nutrition',
             error: caught,
@@ -165,8 +165,8 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
   return (
     <>
       <PageHeader
-        title={food ? t.nutrition.editFoodTitle : t.nutrition.newFoodTitle}
-        back={{ to: back, label: food ? t.nutrition.foodsTitle : t.common.back }}
+        title={food ? tNutrition.editFoodTitle : tNutrition.newFoodTitle}
+        back={{ to: back, label: food ? tNutrition.foodsTitle : t.common.back }}
       />
       <form
         className="grid gap-4"
@@ -177,14 +177,14 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
       >
         {fromOff ? (
           <p role="status" className="rounded-card bg-surface-2 p-4">
-            {t.nutrition.barcode.incomplete}
+            {tNutrition.barcode.incomplete}
           </p>
         ) : null}
         <Card>
           <div className="grid gap-4">
             <div>
               <label htmlFor={`${id}-name`} className="mb-2 block text-sm font-semibold text-muted">
-                {t.nutrition.nameLabel}
+                {tNutrition.nameLabel}
               </label>
               <input
                 id={`${id}-name`}
@@ -203,7 +203,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
                 htmlFor={`${id}-brand`}
                 className="mb-2 block text-sm font-semibold text-muted"
               >
-                {t.nutrition.brandLabel}
+                {tNutrition.brandLabel}
               </label>
               <input
                 id={`${id}-brand`}
@@ -221,7 +221,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
                 htmlFor={`${id}-barcode`}
                 className="mb-2 block text-sm font-semibold text-muted"
               >
-                {t.nutrition.barcode.barcodeLabel}
+                {tNutrition.barcode.barcodeLabel}
               </label>
               <input
                 id={`${id}-barcode`}
@@ -236,17 +236,17 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
               />
             </div>
             <SegmentedControl
-              legend={t.nutrition.basisLabel}
+              legend={tNutrition.basisLabel}
               options={[
-                { value: 'g', label: t.nutrition.basis.g },
-                { value: 'ml', label: t.nutrition.basis.ml },
+                { value: 'g', label: tNutrition.basis.g },
+                { value: 'ml', label: tNutrition.basis.ml },
               ]}
               value={basis}
               onChange={setBasis}
             />
           </div>
         </Card>
-        <Card title={t.nutrition.per100Title(unit)}>
+        <Card title={tNutrition.per100Title(unit)}>
           <div className="grid grid-cols-2 gap-3">
             {NUTRIENTS.map((n) => {
               const required = (CORE_NUTRIENTS as readonly string[]).includes(n);
@@ -256,9 +256,9 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
                     htmlFor={`${id}-${n}`}
                     className="mb-1 block text-sm font-semibold text-muted"
                   >
-                    {t.nutrition.nutrients[n]} (
-                    {n === 'kcal' ? t.nutrition.units.kcal : t.nutrition.units.g})
-                    {required ? '' : `, ${t.nutrition.optional}`}
+                    {tNutrition.nutrients[n]} (
+                    {n === 'kcal' ? tNutrition.units.kcal : tNutrition.units.g})
+                    {required ? '' : `, ${tNutrition.optional}`}
                   </label>
                   <input
                     id={`${id}-${n}`}
@@ -277,11 +277,11 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
           </div>
           {mismatch !== null ? (
             <p role="status" className="mt-3 text-sm text-muted">
-              {t.nutrition.kcalCheck(fmt.number(mismatch))}
+              {tNutrition.kcalCheck(fmt.number(mismatch))}
             </p>
           ) : null}
         </Card>
-        <Card title={t.nutrition.servingsTitle}>
+        <Card title={tNutrition.servingsTitle}>
           <ul className="grid gap-2">
             {servings.map((serving, index) => (
               <li key={index} className="flex items-end gap-2">
@@ -290,7 +290,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
                     htmlFor={`${id}-s${String(index)}-name`}
                     className="mb-1 block text-sm text-muted"
                   >
-                    {t.nutrition.servingName}
+                    {tNutrition.servingName}
                   </label>
                   <input
                     id={`${id}-s${String(index)}-name`}
@@ -310,7 +310,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
                     htmlFor={`${id}-s${String(index)}-amount`}
                     className="mb-1 block text-sm text-muted"
                   >
-                    {t.nutrition.servingAmount(unit)}
+                    {tNutrition.servingAmount(unit)}
                   </label>
                   <input
                     id={`${id}-s${String(index)}-amount`}
@@ -326,7 +326,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
                   />
                 </div>
                 <IconButton
-                  label={t.nutrition.removeServing(serving.name || String(index + 1))}
+                  label={tNutrition.removeServing(serving.name || String(index + 1))}
                   onClick={() => {
                     setServings((all) => all.filter((_, i) => i !== index));
                   }}
@@ -346,14 +346,14 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
               }}
             >
               <Plus aria-hidden="true" className="size-4" />
-              {t.nutrition.addServing}
+              {tNutrition.addServing}
             </Button>
           ) : null}
         </Card>
         {food ? (
           <Card>
             <Switch
-              label={t.nutrition.favorite}
+              label={tNutrition.favorite}
               checked={food.favorite === true}
               onChange={(checked) => void setFoodFavorite(rt, food.id, checked)}
             />
@@ -362,7 +362,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
               className="mt-3"
               onClick={() => void setFoodArchived(rt, food.id, !food.archivedAt)}
             >
-              {food.archivedAt ? t.nutrition.unarchive : t.nutrition.archive}
+              {food.archivedAt ? tNutrition.unarchive : tNutrition.archive}
             </Button>
           </Card>
         ) : null}
@@ -372,7 +372,7 @@ function FoodForm({ food, draft: draftState }: { food?: Food; draft?: FoodDraftS
           </p>
         ) : null}
         <Button type="submit" disabled={busy} className="justify-self-start">
-          {t.nutrition.save}
+          {tNutrition.save}
         </Button>
       </form>
     </>

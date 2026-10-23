@@ -1,7 +1,9 @@
 import { DatabaseZap } from 'lucide-react';
+import { useEffect } from 'react';
 import { t } from '@/shared/i18n/de';
 import { applyUpdate, usePwaState } from '@/shared/pwa/state';
 import { Button } from '@/shared/ui';
+import { hideStartSurface } from './startSurface';
 
 function errorNames(error: unknown): string[] {
   if (!(error instanceof Error)) return [];
@@ -28,6 +30,9 @@ export function recoveryCause(error: unknown): string {
  */
 export function RecoveryScreen({ error }: { error: unknown }) {
   const { updateAvailable } = usePwaState();
+  useEffect(() => {
+    hideStartSurface();
+  }, []);
   return (
     <main className="page-gutters mx-auto max-w-xl py-12">
       <DatabaseZap aria-hidden="true" className="mb-4 size-10 text-warning" />

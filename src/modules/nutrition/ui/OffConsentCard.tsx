@@ -1,6 +1,6 @@
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, Card, Skeleton } from '@/shared/ui';
 import { setOffConsent, useOffConsent } from '../data/openFoodFacts';
 
@@ -9,7 +9,7 @@ export function OffConsentCard() {
   const { db } = useDb();
   const fmt = useFormatters();
   const consent = useOffConsent();
-  const tb = t.nutrition.barcode;
+  const tb = tNutrition.barcode;
   return (
     <Card title={tb.offTitle} className="mt-6">
       {consent === undefined ? (

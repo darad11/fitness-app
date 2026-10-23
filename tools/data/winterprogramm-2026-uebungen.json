@@ -1,0 +1,574 @@
+{
+  "$comment": "Abgleich der Übungen von Programm C (Namen wörtlich aus der Vorlage) mit der Basisbibliothek core-exercises.v1.json. status: vorhanden = gleiche Übung; variante = gleiche Übung, abweichende Ausführung (als Ausführungshinweis im Programm, Alias in der Bibliothek); neu = fehlt, Vorschlag mit Schlüssel; unklar = Ausführung aus dem Namen nicht eindeutig. Konfidenz bezieht sich auf die Zuordnung, nicht auf die Werte. Quelle: docs/winterprogramm-2026.md.",
+  "version": 1,
+  "entries": [
+    {
+      "original": "Alternating Flat Dumbbell Press",
+      "de": "Bankdrücken mit Kurzhanteln",
+      "key": "bench_press_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „wechselseitig“; Alias „Alternating Dumbbell Press“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Incline Cable Chest Press",
+      "de": "Schrägbankdrücken am Kabel",
+      "key": "incline_press_cable",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Brust, Kabel und Bank, Gewicht × Wiederholungen; Alias „Incline Cable Press“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Chest Fly Machine",
+      "de": "Butterfly an der Maschine",
+      "key": "pec_deck",
+      "status": "vorhanden",
+      "addition": "Alias „Chest Fly Machine“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Close Grip Bench Press",
+      "de": "Enges Bankdrücken",
+      "key": "close_grip_bench_press",
+      "status": "vorhanden",
+      "addition": "Die Vorlage führt die Übung unter Brust, die Bibliothek unter Trizeps",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Chest Fly With Push",
+      "de": "Fliegende am Kabel",
+      "key": "cable_fly",
+      "status": "unklar",
+      "addition": "Produktinhaber konnte die Ausführung nicht einordnen (18.10.2026); bleibt Fliegende am Kabel mit Hinweis „Zuordnung unsicher“",
+      "confidence": "niedrig"
+    },
+    {
+      "original": "Decline Cable Fly",
+      "de": "Fliegende am Kabel",
+      "key": "cable_fly",
+      "status": "variante",
+      "addition": "Hinweis „von oben nach unten“; Alias „Decline Cable Fly“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Alternating Incline Dumbbell Press",
+      "de": "Schrägbankdrücken mit Kurzhanteln",
+      "key": "incline_bench_press_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „wechselseitig“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Flat Dumbbell Bench Press (chest)",
+      "de": "Bankdrücken mit Kurzhanteln",
+      "key": "bench_press_dumbbell",
+      "status": "vorhanden",
+      "addition": "Klammer „(chest)“ stammt aus der Vorlage",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Push-Ups",
+      "de": "Liegestütze",
+      "key": "push_up",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Incline Cable Fly",
+      "de": "Fliegende am Kabel",
+      "key": "cable_fly",
+      "status": "variante",
+      "addition": "Hinweis „von unten nach oben“; Alias „Incline Cable Fly“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "T-Bar Row",
+      "de": "T-Bar-Rudern",
+      "key": "t_bar_row",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Close Grip Lat Pulldown",
+      "de": "Latziehen, enger Griff",
+      "key": "lat_pulldown_close",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Kneeling Single-Arm Lat Pulldown",
+      "de": "Einarmiges Latziehen am Kabel, kniend",
+      "key": "lat_pulldown_single_arm",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Latissimus, Kabel, je Seite, Gewicht × Wiederholungen",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Pull-Ups",
+      "de": "Klimmzüge mit Unterstützung",
+      "key": "assisted_pull_up",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) an der Maschine mit Gegengewicht (Entlastung × Wiederholungen, D-241)",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Smith Machine Row",
+      "de": "Rudern an der Multipresse, vorgebeugt",
+      "key": "bent_over_row_smith",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Oberer Rücken und Latissimus, Multipresse (Regel: jede Gerätevariante eigene Übung)",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Single-Arm Cable Pullover",
+      "de": "Überzüge am Kabel",
+      "key": "straight_arm_pulldown",
+      "status": "variante",
+      "addition": "Hinweis „einarmig“; Alias „Cable Pullover“. Eigene Übung, falls der Verlauf getrennt sein soll (offene Frage)",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Straight-Arm Lat Pulldown",
+      "de": "Überzüge am Kabel",
+      "key": "straight_arm_pulldown",
+      "status": "vorhanden",
+      "addition": "Alias „Straight-Arm Pulldown“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Underhand Cable Rows",
+      "de": "Rudern am Kabel, sitzend",
+      "key": "seated_cable_row",
+      "status": "variante",
+      "addition": "Hinweis „Untergriff“; Alias „Underhand Cable Row“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Wide Grip Cable Rows",
+      "de": "Rudern am Kabel, sitzend",
+      "key": "seated_cable_row",
+      "status": "variante",
+      "addition": "Hinweis „weiter Griff“; Alias „Wide Grip Cable Row“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Wide Grip Lat Pulldown",
+      "de": "Latziehen",
+      "key": "lat_pulldown",
+      "status": "vorhanden",
+      "addition": "Weiter Griff ist die Standardausführung; Alias „Wide Grip Lat Pulldown“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Machine Shoulder Press",
+      "de": "Schulterdrücken an der Maschine",
+      "key": "shoulder_press_machine",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Arm Cable Lateral Raise",
+      "de": "Seitheben am Kabel",
+      "key": "lateral_raise_cable",
+      "status": "vorhanden",
+      "addition": "Name in der Vorlage vermutlich abgeschnitten („Single-Arm …“); einarmig ist die übliche Ausführung",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Spider Dumbbell Lateral Raise",
+      "de": "Seitheben mit Kurzhanteln",
+      "key": "lateral_raise_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „Brust auf der Schrägbank aufgelegt“; Alias „Spider Lateral Raise“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Seated Front Lateral Raise",
+      "de": "Frontheben mit Kurzhanteln",
+      "key": "front_raise_dumbbell",
+      "status": "variante",
+      "addition": "Laut Produktinhaber (18.10.2026) Frontheben; Hinweis „sitzend“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Bent-Over Dumbbell Rear Delt Fly",
+      "de": "Reverse Flys mit Kurzhanteln",
+      "key": "reverse_fly_dumbbell",
+      "status": "vorhanden",
+      "addition": "Alias „Rear Delt Fly“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Spider Cable Front Raise",
+      "de": "Frontheben am Kabel",
+      "key": "front_raise_cable",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kabel; Hinweis „Brust auf der Schrägbank aufgelegt“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Standing Alternating Shoulder Press",
+      "de": "Schulterdrücken mit Kurzhanteln, stehend",
+      "key": "shoulder_press_dumbbell_standing",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Vordere Schulter, Kurzhanteln (Bibliothek hat nur „sitzend“); Hinweis „wechselseitig“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Seated Dumbbell Lateral Raise (with hold)",
+      "de": "Seitheben mit Kurzhanteln",
+      "key": "lateral_raise_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „sitzend, mit Halten“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Alternating Dumbbell Curl With Hold",
+      "de": "Bizepscurls mit Kurzhanteln",
+      "key": "biceps_curl_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „wechselseitig, mit Halten“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Cable Bayesian Curl",
+      "de": "Bizepscurls am Kabel",
+      "key": "biceps_curl_cable",
+      "status": "variante",
+      "addition": "Hinweis „Bayesian: Zug hinter dem Körper, einarmig“; Alias „Bayesian Curl“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Rope Hammer Curl",
+      "de": "Hammercurls am Kabel mit Seil",
+      "key": "hammer_curl_cable",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Bizeps und Unterarme, Kabel",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Dual Dumbbell Preacher Curls",
+      "de": "Scottcurls mit Kurzhanteln",
+      "key": "preacher_curl_dumbbell",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Bizeps, Kurzhanteln und Bank (Bibliothek hat nur SZ-Stange)",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Incline Dumbbell Curls",
+      "de": "Schrägbank-Curls mit Kurzhanteln",
+      "key": "incline_curl_dumbbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Reverse Grip EZ Bar Curls",
+      "de": "Reverse Curls mit SZ-Stange",
+      "key": "reverse_curl_ez_bar",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Unterarme und Bizeps, SZ-Stange",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Single-Arm High Cable Curls",
+      "de": "Bizepscurls am Kabel",
+      "key": "biceps_curl_cable",
+      "status": "variante",
+      "addition": "Hinweis „hoher Zug, einarmig“; Alias „High Cable Curl“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Cable Tricep Pushdown (3-Second Eccentric)",
+      "de": "Trizepsdrücken am Kabel",
+      "key": "triceps_pushdown_cable",
+      "status": "variante",
+      "addition": "Hinweis „3 s senken“ (Tempo, TS-20 ist später vorgesehen; bis dahin Text im Programm)",
+      "confidence": "hoch"
+    },
+    {
+      "original": "EZ Bar Skull Crushers",
+      "de": "French Press mit SZ-Stange",
+      "key": "skull_crusher",
+      "status": "vorhanden",
+      "addition": "Alias „Skull Crusher“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Cross-Body Cable Extensions",
+      "de": "Trizepsdrücken am Kabel, über Kreuz",
+      "key": "triceps_extension_cable_cross_body",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Trizeps, Kabel, je Seite",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Incline EZ Bar Skull Crushers",
+      "de": "French Press mit SZ-Stange",
+      "key": "skull_crusher",
+      "status": "variante",
+      "addition": "Hinweis „auf der Schrägbank“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Incline Dumbbell Skull Crushers",
+      "de": "French Press mit Kurzhanteln",
+      "key": "skull_crusher_dumbbell",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Trizeps, Kurzhanteln und Bank; Hinweis „auf der Schrägbank“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Single Arm Cable Tricep Extension",
+      "de": "Trizepsdrücken am Kabel",
+      "key": "triceps_pushdown_cable",
+      "status": "variante",
+      "addition": "Hinweis „einarmig“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Overhead Cable Tricep Extention",
+      "de": "Trizepsstrecken über Kopf am Kabel",
+      "key": "overhead_extension_cable",
+      "status": "vorhanden",
+      "addition": "Tippfehler „Extention“ stammt aus der Vorlage",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Seated Single-Arm Dumbbell Extensions",
+      "de": "Trizepsstrecken über Kopf mit Kurzhantel",
+      "key": "overhead_extension_dumbbell",
+      "status": "variante",
+      "addition": "Hinweis „sitzend, einarmig“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Single-Arm Cross-Body Cable Extension",
+      "de": "Trizepsdrücken am Kabel, über Kreuz",
+      "key": "triceps_extension_cable_cross_body",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026). Gleiche neue Übung wie „Cross-Body Cable Extensions“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Close Grip Push-Up",
+      "de": "Liegestütze",
+      "key": "push_up",
+      "status": "variante",
+      "addition": "Hinweis „enge Handstellung“; Alias „Close Grip Push-Up“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Barbell Back Squats",
+      "de": "Kniebeuge mit Langhantel",
+      "key": "back_squat_barbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Barbell Romanian Deadlift",
+      "de": "Rumänisches Kreuzheben mit Langhantel",
+      "key": "romanian_deadlift_barbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Heel-Elevated Goblet Squats",
+      "de": "Goblet Squat",
+      "key": "goblet_squat",
+      "status": "variante",
+      "addition": "Hinweis „Fersen erhöht“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Cable Hip Hinge Pull-Throughs",
+      "de": "Pull-Throughs am Kabel",
+      "key": "cable_pull_through",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Gesäß und Oberschenkel hinten, Kabel",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Calf Raise Machine",
+      "de": "Wadenheben sitzend",
+      "key": "seated_calf_raise",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) sitzend",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Dumbbell Romanian Deadlifts",
+      "de": "Rumänisches Kreuzheben mit Kurzhanteln",
+      "key": "romanian_deadlift_dumbbell",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Alternating Dumbbell Lunges",
+      "de": "Ausfallschritte mit Kurzhanteln",
+      "key": "lunge_dumbbell",
+      "status": "vorhanden",
+      "addition": "Hinweis „wechselseitig“",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Dumbbell Hip Thrust",
+      "de": "Hip Thrust mit Kurzhantel",
+      "key": "hip_thrust_dumbbell",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Gesäß, Kurzhantel und Bank (Bibliothek hat Langhantel und Maschine)",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Single Leg Press Machine",
+      "de": "Beinpresse, einbeinig",
+      "key": "leg_press_single_leg",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Oberschenkel vorne und Gesäß, Maschine, je Seite (wie „Einbeiniges Rumänisches Kreuzheben“ eigene Übung)",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Dumbbell Calf Raises",
+      "de": "Wadenheben mit Kurzhanteln",
+      "key": "calf_raise_dumbbell",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Waden, Kurzhanteln",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Leg Press Machine",
+      "de": "Beinpresse",
+      "key": "leg_press",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Leg press Calf Raise",
+      "de": "Wadenheben an der Beinpresse",
+      "key": "calf_press_leg_press",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Quad Extentions",
+      "de": "Beinstrecker",
+      "key": "leg_extension",
+      "status": "vorhanden",
+      "addition": "Tippfehler „Extentions“ stammt aus der Vorlage",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Lying Hamstring Curls",
+      "de": "Beinbeuger liegend",
+      "key": "lying_leg_curl",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Single-Leg Quad Extension",
+      "de": "Beinstrecker",
+      "key": "leg_extension",
+      "status": "variante",
+      "addition": "Hinweis „einbeinig“",
+      "confidence": "mittel"
+    },
+    {
+      "original": "Bicycles",
+      "de": "Bicycle Crunches",
+      "key": "bicycle_crunch",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Crunches",
+      "de": "Crunches",
+      "key": "crunch",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Dead Bugs",
+      "de": "Dead Bug",
+      "key": "dead_bug",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Heel Taps",
+      "de": "Heel Taps",
+      "key": "heel_tap",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Knee Raises",
+      "de": "Knieheben stehend",
+      "key": "standing_knee_raise",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026). Laut Produktinhaber (18.10.2026) stehend; neu: Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Plank",
+      "de": "Unterarmstütz (Plank)",
+      "key": "plank",
+      "status": "vorhanden",
+      "addition": "Dauer (Erfassungsart Zeit)",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Leg Raises",
+      "de": "Beinheben liegend",
+      "key": "lying_leg_raise",
+      "status": "vorhanden",
+      "addition": "Laut Produktinhaber (18.10.2026) liegend",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Russian Twists",
+      "de": "Russian Twist",
+      "key": "russian_twist",
+      "status": "vorhanden",
+      "addition": "",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Sit-Ups",
+      "de": "Sit-ups",
+      "key": "sit_up",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf, Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Windshield Wipers",
+      "de": "Windshield Wipers",
+      "key": "windshield_wiper",
+      "status": "vorhanden",
+      "addition": "Aufgenommen in Schritt B (18.10.2026): Rumpf (seitlich), Körpergewicht, nur Wiederholungen",
+      "confidence": "hoch"
+    },
+    {
+      "original": "Cardio Treadmill",
+      "de": "Laufband",
+      "key": "treadmill",
+      "status": "vorhanden",
+      "addition": "Dauer und Distanz (D-241); im Programm nur die Dauer 30 min vorgegeben",
+      "confidence": "hoch"
+    }
+  ]
+}

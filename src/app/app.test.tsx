@@ -12,7 +12,6 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, type RouteObject } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { loadSettings } from '@/modules/settings';
 import { DbProvider, listErrorLog, META_KEYS, type DbRuntime } from '@/shared/db';
 import type { PlatformInfo } from '@/shared/lib/platform';
 import { resetPwaState, setUpdateActivator } from '@/shared/pwa/state';
@@ -29,7 +28,7 @@ let rt: DbRuntime;
 beforeEach(async () => {
   rt = await createTestRuntime({ deviceId: 'a1b2c3d4' });
   resetPwaState();
-  document.documentElement.setAttribute('data-theme', 'light');
+  document.documentElement.setAttribute('data-theme', 'dark');
 });
 
 afterEach(async () => {
@@ -131,26 +130,20 @@ describe('App-Shell', () => {
       within(main)
         .getAllByRole('link')
         .map((link) => link.textContent)
-        // Ohne den Link „Fitness“ oben links (D-286).
-        .filter((text) => text !== 'Fitness'),
+        // Ohne das Logo oben links (D-286, D-310); es hat keinen Text, nur ein Bild.
+        .filter((text) => text !== ''),
     ).toEqual(['Profil und Ziele', 'Einstellungen', 'Synchronisierung', 'Über die App']);
   });
 
-  it('speichert die Darstellung und wendet sie an', async () => {
-    const user = userEvent.setup();
+  it('bietet keine Darstellungswahl an; die App bleibt dunkel (D-308)', async () => {
     renderApp('/mehr/einstellungen');
-    const dark = await screen.findByRole('radio', { name: 'Dunkel' });
+    await screen.findByRole('heading', { level: 1, name: 'Einstellungen' });
     await waitFor(() => {
-      expect(dark).toBeEnabled();
+      expect(screen.getByLabelText('Datum und Zahlen')).toBeEnabled();
     });
-    await user.click(dark);
-    await waitFor(async () => {
-      expect((await loadSettings(rt.db)).theme).toBe('dark');
-    });
-    await waitFor(() => {
-      expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-    });
-    expect(screen.getByRole('radio', { name: 'Dunkel' })).toBeChecked();
+    expect(screen.queryByRole('radio', { name: 'Dunkel' })).toBeNull();
+    expect(screen.queryByText('Darstellung')).toBeNull();
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
   });
 
   it('formatiert nach gewählter Region: Österreich „Jänner", Deutschland „Januar"', async () => {
@@ -175,6 +168,13 @@ describe('App-Shell', () => {
   it('zeigt Version und Speicher-ID unter „Über die App"', async () => {
     renderApp('/mehr/ueber');
     await screen.findByRole('heading', { level: 1, name: 'Über die App' });
+    // Logo der Marke ohne Claim (D-316).
+    const main = within(screen.getByRole('main'));
+    expect(main.getByRole('img', { name: 'FORM' })).toHaveAttribute(
+      'src',
+      '/brand/logo-anmeldung-dunkel.svg',
+    );
+    expect(main.queryByText('FORM YOURSELF.')).not.toBeInTheDocument();
     expect(screen.getByText('a1b2c3d4')).toBeInTheDocument();
     expect(screen.getByText(/^\d+\.\d+\.\d+$/)).toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole('button', { name: 'Nach Update suchen' }));

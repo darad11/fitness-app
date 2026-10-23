@@ -1,16 +1,14 @@
-import { Check, Minus } from 'lucide-react';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
-import { cn } from '@/shared/lib/cn';
 import { isoWeekday } from '@/shared/lib/time';
-import { Card, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@/shared/ui';
+import { Card, Mark, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@/shared/ui';
 import {
   habitRate,
   habitState,
-  habitStreaks,
+  habitWeek,
   INSIGHT_PERIODS,
   periodDays,
   previousDays,
@@ -18,10 +16,10 @@ import {
   rateChange,
   WEEKDAY_MIN_DUE,
   weekdayRates,
-  type DayState,
   type InsightPeriod,
 } from '../calc/insights';
 import { ProgressChart } from './ProgressChart';
+import { TaskSettings } from './TaskSettings';
 import { statusOf } from './TaskStats';
 import { useHabitHistory } from './useHabitHistory';
 
@@ -31,13 +29,22 @@ const PERIOD_OPTIONS = INSIGHT_PERIODS.map((value) => ({ value, label: ts.period
 const PERIOD_LENGTH: Record<InsightPeriod, number> = { '7d': 7, '30d': 30, '90d': 90, all: 0 };
 const CALENDAR_MAX = 90;
 
-/** Auswertung einer Aufgabe (D-284): Quote, Serien, Vergleich, Verlauf, Kalender, Wochentage. */
+/**
+ * Detailansicht einer Aufgabe (F6, D-335): oben die Einstellungen (Name, Wochentage, Regel zum
+ * Abhaken, pausieren, löschen), darunter die Auswertung (D-284): Quote, erledigte Tage, diese
+ * Woche (Wochenbild statt Serie, D-318), Vergleich, Verlauf, Kalender, Wochentage. Zurück führt
+ * dorthin, wo die Zeile angetippt wurde („Heute“ oder „Tagesaufgaben“).
+ */
 export function TaskDetailPage() {
   const { id } = useParams();
   const fmt = useFormatters();
   const history = useHabitHistory();
   const [period, setPeriod] = useState<InsightPeriod>('30d');
-  const back = { to: '/heute/aufgaben', label: td.back };
+  const from = (useLocation().state as { back?: string } | null)?.back;
+  const back =
+    from === '/heute'
+      ? { to: '/heute', label: t.nav.today }
+      : { to: '/heute/aufgaben', label: td.back };
 
   if (history === undefined) {
     return (
@@ -63,7 +70,7 @@ export function TaskDetailPage() {
   const pct = (value: number) => `${fmt.number(Math.round(value * 100))} %`;
   const days = periodDays(period, [habit], today);
   const rate = habitRate(habit, days, index, today);
-  const streaks = habitStreaks(habit, index, today);
+  const week = habitWeek(habit, index, today);
   const status = statusOf(habit, today);
   const previous =
     period === 'all' ? null : habitRate(habit, previousDays(period, [habit], today), index, today);
@@ -81,13 +88,16 @@ export function TaskDetailPage() {
       <PageHeader title={habit.name} back={back} />
       <div className="grid grid-cols-1 gap-4">
         {status ? <p className="text-muted">{td.status(status)}</p> : null}
+        {status === null ? <TaskSettings key={habit.id} habit={habit} today={today} /> : null}
+        <h2 className="mt-2 text-xl font-semibold">{t.tasks.statsTitle}</h2>
         <SegmentedControl
+          row
           legend={ts.periodLegend}
           options={PERIOD_OPTIONS}
           value={period}
           onChange={setPeriod}
         />
-        <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-3 md:grid-cols-3">
           <StatTile
             label={ts.rate}
             value={rate.rate === null ? '–' : pct(rate.rate)}
@@ -99,11 +109,10 @@ export function TaskDetailPage() {
             hint={td.doneHint}
           />
           <StatTile
-            label={td.current}
-            value={fmt.number(streaks.current)}
-            unit={ts.days(streaks.current)}
+            label={td.week}
+            value={week.due === 0 ? '–' : ts.weekValue(fmt.number(week.done), fmt.number(week.due))}
+            hint={td.weekHint}
           />
-          <StatTile label={td.best} value={fmt.number(streaks.best)} unit={ts.days(streaks.best)} />
         </dl>
         <p className="-mt-1 text-sm text-muted">
           {period === 'all'
@@ -128,8 +137,17 @@ export function TaskDetailPage() {
         ) : null}
 
         <Card title={td.calendar}>
+          {/* Kompakte Zellen in sieben Spalten, Wochentage darüber; Markierung 16 px (D-334). */}
+          <ul
+            aria-hidden="true"
+            className="grid w-max grid-cols-[repeat(7,1.75rem)] text-center text-[10px] font-medium text-muted"
+          >
+            {td.weekdayNames.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
           <ol
-            className="grid max-w-60 grid-cols-7 gap-1"
+            className="mt-1 grid w-max grid-cols-[repeat(7,1.75rem)] gap-y-1.5"
             aria-label={`${td.calendar}, ${td.calendarHint}`}
           >
             {Array.from({ length: lead }, (_, i) => (
@@ -141,9 +159,11 @@ export function TaskDetailPage() {
                 day === today && state === 'open' ? td.states.today : td.states[state]
               }`;
               return (
-                <li key={day} title={label}>
+                <li key={day} title={label} className="flex justify-center">
                   <span className="sr-only">{label}</span>
-                  <CalendarCell state={state} today={day === today} day={Number(day.slice(8))} />
+                  <Mark state={state} size="md" today={day === today} dash>
+                    {Number(day.slice(8))}
+                  </Mark>
                 </li>
               );
             })}
@@ -151,10 +171,14 @@ export function TaskDetailPage() {
           <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted" aria-hidden="true">
             {(['done', 'open', 'notDue', 'noData'] as const).map((state) => (
               <li key={state} className="flex items-center gap-1.5">
-                <CalendarCell state={state} small />
+                <Mark state={state} />
                 {td.states[state]}
               </li>
             ))}
+            <li className="flex items-center gap-1.5">
+              <Mark state="open" today />
+              {td.states.today}
+            </li>
           </ul>
           {days.length > CALENDAR_MAX ? (
             <p className="mt-2 text-sm text-muted">{td.calendarLimited}</p>
@@ -189,41 +213,5 @@ export function TaskDetailPage() {
         </Card>
       </div>
     </>
-  );
-}
-
-/** Ein Tag im Kalender; Zustand nicht nur über Farbe (Haken, Strich, Punkt). */
-function CalendarCell({
-  state,
-  today = false,
-  day,
-  small = false,
-}: {
-  state: DayState;
-  today?: boolean;
-  day?: number;
-  small?: boolean;
-}) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        'flex items-center justify-center rounded-md text-xs font-semibold tabular-nums',
-        small ? 'size-4' : 'aspect-square w-full',
-        state === 'done' && 'bg-success text-on-accent',
-        state === 'open' && 'border-2 border-line-input text-fg',
-        state === 'notDue' && 'bg-surface-2 text-muted',
-        state === 'noData' && 'border border-dashed border-line-input text-muted',
-        today && 'ring-2 ring-focus ring-offset-1 ring-offset-surface',
-      )}
-    >
-      {small ? null : state === 'done' ? (
-        <Check className="size-4" />
-      ) : state === 'noData' ? (
-        <Minus className="size-3.5" />
-      ) : (
-        day
-      )}
-    </span>
   );
 }

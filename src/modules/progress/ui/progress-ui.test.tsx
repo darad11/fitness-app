@@ -69,7 +69,9 @@ async function renderAt(path: string, heading: string) {
 describe('Fortschritt (S-27, TH-05, TH-06)', () => {
   it('zeigt den Leerzustand ohne Daten', async () => {
     await renderAt('/fortschritt', 'Fortschritt');
-    expect(await screen.findByText('Noch keine Daten')).toBeVisible();
+    // Leerzustand aus den Leitplanken (F4, D-318).
+    expect(await screen.findByText('Fortschritt braucht ein paar Tage.')).toBeVisible();
+    expect(screen.getByText('Er zeigt dich gegen dich, nicht gegen andere.')).toBeVisible();
     expect(screen.getByRole('link', { name: 'Gewicht erfassen' })).toHaveAttribute(
       'href',
       '/fortschritt/gewicht',
@@ -90,6 +92,11 @@ describe('Fortschritt (S-27, TH-05, TH-06)', () => {
     // Die erste Einheit liegt vor dem Gewichtseintrag: eine Schätzung fehlt.
     expect(tiles[3]).toHaveTextContent('kcal');
     expect(screen.getByText('1 Training ohne Schätzung (kein Körpergewicht)')).toBeVisible();
+    // Zeitraum ohne Training (die Einheiten liegen im Oktober 2026): „Pause“ statt Nullwerten.
+    await user.click(screen.getByRole('radio', { name: 'Woche' }));
+    expect(screen.getAllByRole('definition')).toHaveLength(1);
+    expect(screen.getByRole('definition')).toHaveTextContent('Pause');
+    await user.click(screen.getByRole('radio', { name: 'Gesamt' }));
 
     const records = screen.getByRole('region', { name: 'Bestleistungen' });
     expect(within(records).getByText('Kniebeuge mit Langhantel')).toBeVisible();

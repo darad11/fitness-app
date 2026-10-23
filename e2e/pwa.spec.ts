@@ -23,14 +23,20 @@ test('Manifest ist verlinkt, gültig und hat alle Icons (AK-PWA-01, D-221)', asy
   expect(response.ok()).toBe(true);
   const manifest = (await response.json()) as Record<string, unknown> & { icons: ManifestIcon[] };
   expect(manifest).toMatchObject({
-    name: 'Fitness',
-    short_name: 'Fitness',
+    name: 'FORM',
+    short_name: 'FORM',
     start_url: '/heute',
     scope: '/',
     display: 'standalone',
     lang: 'de',
   });
-  expect(manifest.icons.map((icon) => icon.purpose)).toEqual(['any', 'any', 'maskable']);
+  expect(manifest.icons.map((icon) => icon.purpose)).toEqual([
+    'any',
+    'any',
+    'maskable',
+    'maskable',
+  ]);
+  expect(manifest).toMatchObject({ background_color: '#0c1219', theme_color: '#0c1219' });
   for (const icon of manifest.icons) {
     const file = await request.get(icon.src);
     expect(file.headers()['content-type']).toContain('image/png');
@@ -38,6 +44,32 @@ test('Manifest ist verlinkt, gültig und hat alle Icons (AK-PWA-01, D-221)', asy
   }
   const appleIcon = await page.locator('link[rel="apple-touch-icon"]').getAttribute('href');
   expect(pngSize(await (await request.get(appleIcon ?? '')).body())).toBe('180x180');
+});
+
+test('Startbilder für iPhone und iPad werden ausgeliefert, je Lage in passender Größe (D-317)', async ({
+  page,
+  request,
+}) => {
+  await openPage(page, '/heute');
+  const links = await page
+    .locator('link[rel="apple-touch-startup-image"]')
+    .evaluateAll((nodes) =>
+      nodes.map((node) => [node.getAttribute('media') ?? '', node.getAttribute('href') ?? '']),
+    );
+  expect(links).toHaveLength(40);
+  for (const [media, href] of links) {
+    const [, w, h, ratio, orientation] =
+      /device-width: (\d+)px\) and \(device-height: (\d+)px\) and \(-webkit-device-pixel-ratio: (\d)\) and \(orientation: (\w+)\)/.exec(
+        media ?? '',
+      ) ?? [];
+    const [pw, ph] = [Number(w) * Number(ratio), Number(h) * Number(ratio)];
+    const response = await request.get(href ?? '');
+    expect(response.ok(), href).toBe(true);
+    expect(response.headers()['content-type']).toContain('image/png');
+    expect(pngSize(await response.body())).toBe(
+      orientation === 'portrait' ? `${String(pw)}x${String(ph)}` : `${String(ph)}x${String(pw)}`,
+    );
+  }
 });
 
 test('Service Worker übernimmt und alle Bereiche starten offline (AK-PWA-02 Shell)', async ({

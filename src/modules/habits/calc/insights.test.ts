@@ -4,11 +4,11 @@ import {
   dayTotals,
   habitRate,
   habitState,
-  habitStreaks,
+  habitWeek,
   indexLogs,
   insights,
   overallRate,
-  overallStreaks,
+  overallWeek,
   periodDays,
   previousDays,
   progressBuckets,
@@ -16,7 +16,7 @@ import {
   weekdayRates,
   type HabitInfo,
 } from './insights';
-import type { LogLike } from './streak';
+import type { LogLike } from './days';
 
 // Dienstag, 20.10.2026; alle Tage sind lokale Kalendertage (dayKey), keine Uhrzeiten.
 const TODAY = '2026-10-20';
@@ -124,31 +124,37 @@ describe('Erfüllungsquote', () => {
   });
 });
 
-describe('Serien', () => {
-  it('aktuelle und beste Serie; heute offen unterbricht nicht, ohne Daten schon', () => {
-    const a = habit('a', d(-12));
-    const b = habit('b', d(-12));
-    const logs: LogLike[] = [];
-    const full = (i: number) => {
-      logs.push(log('a', d(i)), log('b', d(i)));
-    };
-    [-12, -11, -10, -9].forEach(full); // 4 Tage am Stück
-    logs.push(log('a', d(-8))); // -8 nur halb
-    full(-7);
-    // -6 ohne Daten unterbricht
-    [-5, -4, -3, -2, -1].forEach(full); // 5 Tage bis gestern
-    const index = indexLogs(logs);
-    expect(overallStreaks([a, b], index, TODAY)).toEqual({ current: 5, best: 5 });
-    logs.push(log('a', TODAY), log('b', TODAY));
-    expect(overallStreaks([a, b], indexLogs(logs), TODAY)).toEqual({ current: 6, best: 6 });
-    expect(habitStreaks(a, indexLogs(logs), TODAY)).toEqual({ current: 6, best: 6 });
+describe('Wochenbild statt Serie (Leitplanken Regel 2, D-318)', () => {
+  // TODAY ist Dienstag, 20.10.; die Woche beginnt am Montag, 19.10. (d(-1)).
+  const a = habit('a', d(-12));
+  const b = habit('b', d(-12));
+
+  it('zählt Tage dieser Woche mit allem erledigt; heute erst, wenn alles erledigt ist', () => {
+    const logs = [log('a', d(-2)), log('b', d(-2)), log('a', d(-1)), log('b', d(-1))];
+    // Sonntag gehört zur Vorwoche, Montag zählt, heute ist noch offen.
+    expect(overallWeek([a, b], indexLogs([...logs, log('a', TODAY)]), TODAY)).toEqual({
+      done: 1,
+      due: 1,
+    });
+    expect(
+      overallWeek([a, b], indexLogs([...logs, log('a', TODAY), log('b', TODAY)]), TODAY),
+    ).toEqual({ done: 2, due: 2 });
   });
 
-  it('Tage ohne fällige Aufgabe (Pause) sind neutral', () => {
-    const a = habit('a', d(-6), { pauses: [{ fromDayKey: d(-4), toDayKey: d(-2) }] });
-    const index = indexLogs([log('a', d(-6)), log('a', d(-5)), log('a', d(-2)), log('a', d(-1))]);
-    expect(habitStreaks(a, index, TODAY)).toEqual({ current: 4, best: 4 });
-    expect(overallStreaks([a], index, TODAY)).toEqual({ current: 4, best: 4 });
+  it('ein Tag ohne Eintrag zählt nicht als verfehlt, ein halber Tag schon als offen', () => {
+    expect(overallWeek([a, b], indexLogs([]), TODAY)).toEqual({ done: 0, due: 0 });
+    expect(overallWeek([a, b], indexLogs([log('a', d(-1))]), TODAY)).toEqual({
+      done: 0,
+      due: 1,
+    });
+  });
+
+  it('je Aufgabe nur fällige Tage; pausiert zählt nicht', () => {
+    const paused = habit('p', d(-12), { pauses: [{ fromDayKey: d(-1), toDayKey: TODAY }] });
+    const index = indexLogs([log('x', d(-1)), log('a', TODAY), log('p', TODAY)]);
+    expect(habitWeek(a, index, TODAY)).toEqual({ done: 1, due: 2 }); // Montag offen, heute erledigt
+    expect(habitWeek(paused, index, TODAY)).toEqual({ done: 1, due: 1 });
+    expect(habitWeek(b, index, TODAY)).toEqual({ done: 0, due: 1 }); // heute offen zählt nicht
   });
 });
 
@@ -225,7 +231,7 @@ describe('Wochentage (D-285)', () => {
     expect(habitState(training, TODAY, index, TODAY)).toBe('open'); // Di
   });
 
-  it('Quote und Serie nur über fällige Tage', () => {
+  it('Quote und Wochenbild nur über fällige Tage', () => {
     // Mo -15? -15 ist Montag 5.10.; fällig: 5., 7., 9., 12., 14., 16. Oktober, dann heute.
     const logs = [d(-15), d(-13), d(-11), d(-8), d(-6), d(-4)].map((day) => log('t', day));
     const index = indexLogs(logs);
@@ -234,6 +240,11 @@ describe('Wochentage (D-285)', () => {
       due: 6,
       noDataDays: 0,
     });
-    expect(habitStreaks(training, index, TODAY)).toEqual({ current: 6, best: 6 });
+    // Diese Woche: Montag nicht fällig (Di/Do), heute fällig und noch offen.
+    expect(habitWeek(training, index, TODAY)).toEqual({ done: 0, due: 0 });
+    expect(habitWeek(training, indexLogs([...logs, log('t', TODAY)]), TODAY)).toEqual({
+      done: 1,
+      due: 1,
+    });
   });
 });

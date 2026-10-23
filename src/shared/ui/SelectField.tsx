@@ -14,7 +14,7 @@ export interface SelectFieldProps<T extends string> {
   disabled?: boolean;
 }
 
-/** Natives Auswahlfeld; Schrift 16 px, damit iOS beim Antippen nicht zoomt. */
+/** Natives Auswahlfeld im Stil der Eingabefelder (`field`); Schrift 16 px, damit iOS nicht zoomt. */
 export function SelectField<T extends string>({
   label,
   options,
@@ -39,7 +39,7 @@ export function SelectField<T extends string>({
           const next = options.find((option) => option.value === event.target.value);
           if (next) onChange(next.value);
         }}
-        className="min-h-12 w-full rounded-input bg-surface-2 px-4 text-base font-medium text-fg disabled:opacity-50"
+        className="field w-full font-medium"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

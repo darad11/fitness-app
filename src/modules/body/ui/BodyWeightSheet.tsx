@@ -23,8 +23,7 @@ function toLocalInput(date: Date): string {
   return `${String(date.getFullYear())}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-const INPUT =
-  'h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg tabular-nums';
+const INPUT = 'field w-full min-w-0';
 
 /** Gewicht erfassen oder bearbeiten (S-28, AK-BW-01, AK-BW-02). */
 export function BodyWeightSheet(props: BodyWeightSheetProps) {
@@ -140,7 +139,7 @@ export function BodyWeightSheet(props: BodyWeightSheetProps) {
             onChange={(event) => {
               setNote(event.target.value);
             }}
-            className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+            className="field w-full"
           />
         </div>
         {error ? (

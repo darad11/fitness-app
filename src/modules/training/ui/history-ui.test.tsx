@@ -66,7 +66,10 @@ describe('Verlauf (S-11, AK-HIS-01, AK-HIS-02)', () => {
   it('zeigt ohne Einheiten einen Leerzustand mit Aktion', async () => {
     renderAt('/training/verlauf');
     expect(
-      await screen.findByRole('heading', { level: 2, name: 'Noch kein Training gespeichert' }),
+      await screen.findByRole('heading', {
+        level: 2,
+        name: 'Hier erscheint dein erstes Training.',
+      }),
     ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Vorlage wählen' })).toHaveAttribute(
       'href',

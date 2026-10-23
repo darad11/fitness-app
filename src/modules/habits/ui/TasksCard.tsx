@@ -1,22 +1,21 @@
-import { Settings2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
 import { useCompletedSessions } from '@/modules/training';
 import { loadWaterReached } from '@/modules/water';
 import { logError, useDb } from '@/shared/db';
 import { dayKey, localTimeZone } from '@/shared/lib/time';
 import { t } from '@/shared/i18n/de';
-import { Button, ButtonLink, Card, Meter, Skeleton } from '@/shared/ui';
+import { Button, ButtonLink, Card, Meter, SettingsLink, Skeleton } from '@/shared/ui';
 import { applyAutoDone, applyWaterAutoDoneToday, setHabitDone } from '../service/habitService';
-import { TaskCheckbox } from './TaskCheckbox';
+import { TaskRow } from './TaskRow';
 import { useTodayTasks } from './useTodayTasks';
 
 /** So viele Aufgaben zeigt die Karte zuerst; der Rest per „weitere anzeigen“. */
 const VISIBLE = 6;
 
 /**
- * Karte „Tagesaufgaben“ auf „Heute“ (AH-03, D-283): schlichte Liste zum Abhaken, jeden Tag neu,
- * darunter ein schmaler Balken mit „x von y erledigt“; Weg zur Verwaltung.
+ * Karte „Tagesaufgaben“ auf „Heute“ (AH-03, D-283): Liste zum Abhaken, jeden Tag neu, darunter
+ * ein schmaler Balken mit „x von y erledigt“; Weg zur Verwaltung. Zeilen wie auf „Tagesaufgaben“
+ * (F6, D-335): Abhakfeld links, der Rest der Zeile öffnet die Detailansicht.
  */
 export function TasksCard({ className }: { className?: string }) {
   const rt = useDb();
@@ -62,16 +61,9 @@ export function TasksCard({ className }: { className?: string }) {
   return (
     <Card
       title={t.tasks.title}
+      titleStyle="label"
       className={className}
-      action={
-        <Link
-          to="/heute/aufgaben"
-          aria-label={t.tasks.manage}
-          className="-my-2 -mr-2 inline-flex size-11 items-center justify-center rounded-pill text-accent-ink transition-colors duration-120 hover:bg-surface-2"
-        >
-          <Settings2 aria-hidden="true" className="size-5" />
-        </Link>
-      }
+      action={<SettingsLink to="/heute/aufgaben" label={t.tasks.manage} />}
     >
       {tasks === undefined ? (
         <div aria-busy="true">
@@ -82,7 +74,7 @@ export function TasksCard({ className }: { className?: string }) {
       ) : tasks.active.length === 0 ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-muted">{t.tasks.emptyCard}</p>
-          <ButtonLink to="/heute/aufgaben" size="sm" variant="secondary">
+          <ButtonLink to="/heute/aufgaben" size="sm" variant="quiet" className="-ml-4">
             {t.tasks.add}
           </ButtonLink>
         </div>
@@ -91,8 +83,9 @@ export function TasksCard({ className }: { className?: string }) {
           <ul className="divide-y divide-line">
             {shown.map((habit) => (
               <li key={habit.id}>
-                <TaskCheckbox
-                  label={habit.name}
+                <TaskRow
+                  habit={habit}
+                  today={tasks.today}
                   checked={tasks.doneIds.has(habit.id)}
                   onChange={(checked) => {
                     setHabitDone(rt, habit.id, tasks.today, checked).catch((error: unknown) => {

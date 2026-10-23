@@ -15,6 +15,7 @@ import { finishSession, startSession } from '../service/sessionService';
 import { loadSampleTemplate } from '../data/sampleTemplates';
 import { loadCoreExercises } from '@/modules/exercises';
 import { planFromTemplateDay } from '../service/sessionService';
+import { PROGRAM_C_KEY, PROGRAM_C_SLUG } from '../data/programC';
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -49,7 +50,7 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
       'Ganzkörper A/B, 4 TageProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
     );
     expect(cards[0]).toHaveTextContent('Wiedereinstieg nach längerer Pause');
-    expect(cards[2]).toHaveTextContent('Winter Arc 2026 (Nachbau)Programm');
+    expect(cards[2]).toHaveTextContent('Winterprogramm 2026Programm');
     expect(cards[3]).toHaveTextContent(
       'Ganzkörper A/BBeispielEinsteiger · Studio · 3 Tage pro Woche · 2 Trainingstage',
     );
@@ -89,10 +90,13 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     // Keine Bearbeitung: Beispielvorlagen sind schreibgeschützt; nur übernehmen (als Kopie)
     // und „heute trainieren".
     expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual([
-      'Als eigenes Programm übernehmen',
-      'Tag A heute trainieren',
-      'Tag B heute trainieren',
+      'Übernehmen und anpassen',
+      'Heute trainieren',
+      'Heute trainieren',
     ]);
+    // Sichtbar kurz, der Name nennt den Tag (F5 §9, D-331).
+    expect(screen.getByRole('button', { name: 'Tag A heute trainieren' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Tag B heute trainieren' })).toBeVisible();
   });
 
   it('zeigt Drop-Sätze mit eigenem Bereich', async () => {
@@ -160,7 +164,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect((await loadTrainingState(rt.db)).activeProgramId).toBe(A);
     const dayA = screen.getByRole('region', { name: 'Tag A' });
     expect(within(dayA).getByText('Als Nächstes')).toBeVisible();
-    expect(screen.getByRole('button', { name: 'Trainingstag starten' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Training starten' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Programm beenden' })).toBeVisible();
   });
 
@@ -184,12 +188,13 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     const router = await renderAt('/training', 'Training');
     expect(await screen.findByText('Aktives Programm')).toBeVisible();
     expect(screen.getByRole('heading', { level: 2, name: 'Tag B' })).toBeVisible();
-    expect(screen.getByText('Trainingstag 2 von 32 · Ganzkörper A/B, 4 Tage')).toBeVisible();
+    // Trainingstag, Programm und Woche (FORM, D-315).
+    expect(screen.getByText(/^Trainingstag 2 von 32 · Ganzkörper A\/B, 4 Tage · /)).toBeVisible();
     expect(screen.getByRole('link', { name: 'Anderen Tag wählen' })).toHaveAttribute(
       'href',
       '/training/vorlagen/compound_ab_4',
     );
-    await user.click(screen.getByRole('button', { name: 'Trainingstag starten' }));
+    await user.click(screen.getByRole('button', { name: 'Training starten' }));
     const active = await waitFor(async () => {
       const found = await findActiveSession(rt.db);
       expect(found).toBeDefined();
@@ -209,7 +214,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     await activateProgram(rt, A);
     await completeDay(1, 0);
     const session = (await rt.db.sessions.toArray())[0]!;
-    await renderAt(`/training/einheit/${session.id}/zusammenfassung`, 'Zusammenfassung');
+    await renderAt(`/training/einheit/${session.id}/zusammenfassung`, 'Training abgeschlossen');
     expect(
       await screen.findByText('Tag A · Ganzkörper A/B, 4 Tage · Trainingstag 5 von 32'),
     ).toBeVisible();
@@ -232,10 +237,10 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect(screen.queryByText('Als Nächstes')).toBeNull();
   });
 
-  it('Winter Arc: Wochenüberschriften, Hinweise, Xeela-Namen und „Erledigt" je Tag', async () => {
-    await activateProgram(rt, stableId('sample-template:winter_arc_2026'));
+  it('Programm C: Wochenüberschriften, Hinweise, englische Namen und „Erledigt" je Tag', async () => {
+    await activateProgram(rt, stableId(`sample-template:${PROGRAM_C_KEY}`));
     const [template, exercises] = await Promise.all([
-      loadSampleTemplate('winter_arc_2026'),
+      loadSampleTemplate(PROGRAM_C_KEY),
       loadCoreExercises(),
     ]);
     const byId = new Map(exercises.map((e) => [e.id, e]));
@@ -244,7 +249,7 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
       planFromTemplateDay(template!, 0, 0, (id) => byId.get(id), 'program'),
     );
     await finishSession(rt, session.id, { skipOpen: true });
-    await renderAt('/training/vorlagen/winter_arc_2026', 'Winter Arc 2026 (Nachbau)');
+    await renderAt(`/training/vorlagen/${PROGRAM_C_SLUG}`, 'Winterprogramm 2026');
     // 40 Tage mit rund 280 Übungen: in jsdom auf langsamen CI-Runnern deutlich über 1 s.
     expect(
       await screen.findByRole(
@@ -261,8 +266,8 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect(within(day1).getByText('Erledigt')).toBeVisible();
     const day2 = screen.getByRole('region', { name: /^Tag 4 · / });
     expect(within(day2).getByText('Als Nächstes')).toBeVisible();
-    expect(screen.getAllByText(/^Xeela: /).length).toBeGreaterThan(100);
+    expect(screen.getAllByText(/^Englisch: /).length).toBeGreaterThan(100);
     expect(screen.getAllByText(/^Dropset: schwer beginnen/).length).toBeGreaterThan(5);
-    expect(screen.getByText(/^Quelle: Rekonstruktion/)).toBeVisible();
+    expect(screen.queryByText(/^Quelle: /)).toBeNull();
   }, 20_000);
 });

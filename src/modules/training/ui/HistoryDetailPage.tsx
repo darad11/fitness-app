@@ -80,9 +80,8 @@ export function HistoryDetailPage() {
         {t.historyEdit.edit}
       </Button>
       <Button
-        variant="secondary"
+        variant="danger"
         size="sm"
-        className="text-danger"
         onClick={() => {
           setConfirmDelete(true);
         }}

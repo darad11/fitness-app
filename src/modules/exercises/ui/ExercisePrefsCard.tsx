@@ -2,7 +2,7 @@ import { ExternalLink } from 'lucide-react';
 import { useId, useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
-import { Button, Card, SelectField } from '@/shared/ui';
+import { Button, buttonClasses, Card, SelectField } from '@/shared/ui';
 import type { ExercisePref } from '../model/exercise';
 import { InvalidExerciseError, savePrefs } from '../service/exerciseService';
 
@@ -112,7 +112,7 @@ export function ExercisePrefsCard({
               setNotes(event.target.value);
               setSaved(false);
             }}
-            className="w-full rounded-input border border-line bg-surface px-3 py-2 text-base text-fg"
+            className="field w-full"
           />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -162,7 +162,7 @@ export function ExercisePrefsCard({
               setSaved(false);
             }}
             aria-describedby={`${ids.video}-hint`}
-            className="h-12 w-full rounded-input border border-line bg-surface px-3 text-base text-fg"
+            className="field w-full"
           />
           <p id={`${ids.video}-hint`} className="mt-1 text-sm text-muted">
             {t.exercises.videoHint}
@@ -187,7 +187,7 @@ export function ExercisePrefsCard({
               href={pref.videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-10 items-center gap-2 rounded-pill px-4 text-sm font-semibold text-accent-ink hover:bg-surface-2"
+              className={buttonClasses('quiet', 'sm')}
             >
               <ExternalLink aria-hidden="true" className="size-4" />
               {t.exercises.videoOpen}

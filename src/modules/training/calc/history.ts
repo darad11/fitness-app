@@ -1,3 +1,4 @@
+import { isPause } from '@/shared/lib/pause';
 import { startOfWeek, type DayKey } from '@/shared/lib/time';
 import type { HistoryRow } from '../model/history';
 import { HISTORY_VERSION } from '../model/history';
@@ -47,6 +48,24 @@ export function groupByWeek<T extends { dayKey: string }>(items: readonly T[]): 
     else groups.push({ weekStart, items: [item] });
   }
   return groups;
+}
+
+/**
+ * Liegt zwischen dieser Woche und der nächstälteren eine Pause von mindestens 14 Tagen ohne
+ * Training? Der Verlauf beschriftet sie mit „Pause“ statt einer leeren Strecke (D-319).
+ * Erwartet die Gruppen wie `groupByWeek` aus einer Liste, die mit dem neuesten Eintrag beginnt.
+ */
+export function pauseAfterGroup<T extends { dayKey: string }>(
+  groups: readonly WeekGroup<T>[],
+  index: number,
+): boolean {
+  const oldestHere = groups[index]?.items.at(-1);
+  const newestOlder = groups[index + 1]?.items[0];
+  return (
+    oldestHere !== undefined &&
+    newestOlder !== undefined &&
+    isPause(newestOlder.dayKey, oldestHere.dayKey)
+  );
 }
 
 /**

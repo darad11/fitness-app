@@ -102,6 +102,28 @@ Repositories mit Tombstones · Transaktion „Training starten" atomar · „Sat
 | K-14 | Eigene Übung auf beiden geändert | Feldweise, jüngere bei gleichem Feld |
 | K-15 bis K-21 | Regeln für R2 bis R4 aus `data-model.md` Abschnitt 7.2 | Werden mit der jeweiligen Stufe umgesetzt |
 
+### 4.5 Schalter und Umschalter (F5, D-322)
+
+Ein-/Aus-Schalter (`Switch`, Rolle „switch“). Getestet in `e2e/switches.spec.ts` mit einem Tipp auf die Schalterfläche selbst (Handy: Touch, Desktop: Maus; eine Aufgabe zusätzlich mit der Leertaste), Tippfläche mindestens 44 × 44, Zustand sofort sichtbar und nach dem Neuladen unverändert.
+
+| Schalter | Ort | Gespeichert |
+|---|---|---|
+| Mit Training abhaken | Tagesaufgaben › Aufgabe bearbeiten | mit „Speichern“ an der Aufgabe (D-285) |
+| Mit Wasserziel abhaken | Tagesaufgaben › Aufgabe bearbeiten | mit „Speichern“; höchstens eine Regel je Aufgabe (D-289) |
+| Als Tabelle | Fortschritt › Körpergewicht | sofort, gerätelokal `view.bodyWeightTable` |
+| Als Tabelle | Fortschritt › Übung | sofort, gerätelokal `view.exerciseTable` |
+| Pause nach „erledigt“ automatisch starten | Mehr › Einstellungen | sofort in den Einstellungen |
+| Ton bei Pausenende | Mehr › Einstellungen | sofort in den Einstellungen |
+| Bildschirm im Training aktiv halten | Mehr › Einstellungen | sofort in den Einstellungen |
+| Je Seite | Übungen › Eigene Übung anlegen bzw. bearbeiten | mit „Anlegen“ bzw. „Speichern“ |
+| Nach der letzten Woche von vorn beginnen | Programm bearbeiten | sofort am Programm |
+| Favorit | Lebensmittel bearbeiten | sofort |
+| Favorit | Rezept bearbeiten | sofort |
+
+Umschalter mit mehreren Werten. Die Einfachauswahl (`SegmentedControl`) besteht aus Optionsfeldern in ihrem `label`, ein Tipp auf den ganzen Chip wirkt; `e2e/switches.spec.ts` tippt jede Option an: Zeitraum in Fortschritt, Körpergewicht, Wasser und Tagesaufgaben, Art beim Nachtragen, „Nährwerte je“ beim Lebensmittel, Ansicht der Einkaufsliste. Weitere: Kennzahl und Zeitraum im Übungsfortschritt sowie Zeitraum der Auswertung einer Aufgabe (dieselbe Komponente), Reiter „Muskeln“ und „Alternativen“ in den Übungsdetails (`Tabs`, `exercises.spec.ts`), Wochentage einer Aufgabe (Chips mit `aria-pressed`, `tasks.spec.ts`, `switches.spec.ts`), Abhaken von Aufgaben und Einkäufen (Kontrollkästchen im `label`, `tasks.spec.ts`, `shopping.spec.ts`), „Satz erledigt“ im Player (Knopf mit `aria-pressed`, `session.spec.ts`, `player.spec.ts`). Aufklapper mit `aria-expanded` (pausierte Aufgaben, erledigte Einkäufe, Pausenkarte, Aktionen eines Satzes, Meine Küche) sind Knöpfe.
+
+Gegen Regressionen an der gemeinsamen Stelle: `src/app/class-conflicts.test.ts` meldet jede Klasse, die einer gemeinsamen Komponente (Chip, Knopf, Symbol-Knopf) eine eigene Eigenschaft überschreibt.
+
 ## 5. CI-Gates
 
 Jeder Pull Request und jeder Push auf `main` (Arbeitszweige laufen über ihren Pull Request, damit nichts doppelt läuft): Lint, Typprüfung, Unit- und Integrationstests mit Abdeckung (`calc/` ≥ 95 %, `service/` und `data/` ≥ 85 % Zeilen), E2E in Chromium und WebKit, Build, PWA-Prüfungen aus Abschnitt 3, Bündelgröße der Startansicht unter 250 KB komprimiert, Kontrasttest der Tokens. Ein roter Lauf blockiert Merge und Auslieferung.
@@ -127,6 +149,8 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 2. „Teilen › Zum Home-Bildschirm" ausführen, App vom Home-Bildschirm starten. Erwartung: Vollbild ohne Browserleiste, Name und Icon korrekt.
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
+5. Startbild (D-317): Ablauf (D-329): zuerst an der Vorschau von Vercel zum Pull Request (eigene Adresse, eigene App), nach dem Merge an der Produktivadresse. Die Daten in der App sind Testdaten; dass iOS beim Entfernen die Daten der installierten App löschen kann, spielt hier keine Rolle. Für echte Nutzer gilt die Warnung weiter, bis sich ein Export wieder einspielen lässt (`audit-report.md` A-14). App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Startbild C3 (D-325): grünes F über der Wortmarke FORM, Mitte leicht über der Bildschirmmitte, unten „FORM YOURSELF.“; kein weißer Blitz; die Startfläche der App übernimmt ohne Sprung, bleibt ab dem ersten Bild mindestens 1 Sekunde stehen und blendet dann in etwa 300 ms zu „Heute“ über, ohne hellen Zwischenschritt (D-337); nach der Rückkehr aus dem Hintergrund und beim Wechsel der Ansicht erscheint sie nicht. Zu notieren: iPhone-Modell.
+6. Logo der Kopfzeile (D-332): „Heute“ im Safari-Tab der Vorschau und in der installierten App öffnen, oben und nach kurzem Scrollen. Erwartung: Kachel und Wortmarke gestochen scharf, kein Schleier über dem Logo; über der Kopfzeile ein ruhiger Abstand von etwa 2 Fingerbreiten unter der Statusleiste. Zu notieren: Wirkt der Abstand zu groß, ob das Logo auch mit weniger Abstand scharf bleibt (Wert `--spacing-edge-clear`).
 
 ### T-IPH-M1 · iPhone, Training unter Alltagsbedingungen
 
@@ -147,6 +171,7 @@ Vorbereitung: iOS-Version notieren; App installiert und einmal online gestartet;
 | 11 | Zweite Einheit mit derselben Übung starten | Vorherige Werte mit Datum sichtbar | – |
 | 12 | Mehr › Daten › Exportieren, „In Dateien sichern" | Datei mit Datum im Namen in der Dateien-App | – |
 | 13 | Mehr › Daten | Status des dauerhaften Speichers und Verbrauch sichtbar | Status „dauerhaft" ja oder nein |
+| 14 | Programmtag starten, nach unten scrollen, bis der aktive Satz direkt unter dem Kopf liegt; Gewicht und Wiederholungen eingeben, mit dem Häkchen der Tastaturleiste bestätigen, „Satz erledigt“; danach einen Satz bei offener Tastatur direkt mit „Satz erledigt“ (D-323) | Beim Tippen bewegt sich nichts; nach jedem Satz steht der nächste Satz sichtbar unter Kopf und Pausenkarte | Sprang die Ansicht beim Schließen der Tastatur? |
 
 ### T-IPH-M4 · iPhone, Regression und MVP
 
@@ -341,7 +366,7 @@ Neu: Verlauf `/training/verlauf` mit Wochen (Montag bis Sonntag), Name, Datum, D
 
 Neu: JSON-Export nach `data-model.md` Abschnitt 11 (`export.ts`: alle Aggregattabellen inklusive Löschmarkierungen, ohne Projektionen; Dateiname mit Datum und Uhrzeit; Teilen-Menü, wenn der Browser Dateien teilen kann, sonst Download; Zeitpunkt des letzten Exports in `meta`, AK-DAT-01) und die Seite „Mehr › Daten und Sicherung“ (S-35) mit Speicherstatus und belegtem Speicher (AK-PWA-05), Export und der Liste der Snapshots (AK-DAT-06, nur Anzeige; Wiederherstellen und Import folgen mit M2 und M4). Migrationstest-Gerüst (`migrations.test.ts`, `testing/legacyDb.ts`): eine Datenbank in Schemaversion 1 wird angelegt, mit der aktuellen Version verlustfrei geöffnet, und vor einem höheren Ziel entsteht ein Snapshot (AK-DAT-07). Nachweise: `export.test.ts` (Tabellen, Typen, Löschmarkierungen, keine Projektionen, Dateiname, Teilen/Download/Abbruch mit Zeitpunkt), `bundle-versions.test.ts` (Versionen der Stammdaten), E2E in `shell.spec.ts` (Seite ohne axe-Verstöße in beiden Modi über die Seitenliste; Export erzeugt eine Datei `fitness-sicherung-…json` mit Format und Daten; Hinweis „Letzter Export“). Der Weg über das Teilen-Menü auf dem iPhone ist Teil des Gerätetests T-IPH-M1.
 
-Der Produktinhaber hat am 18.10.2026 die unklaren Winter-Arc-Übungen nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
+Der Produktinhaber hat am 18.10.2026 die unklaren Übungen von Programm C nachgesehen (Q-13); Abgleich und Rekonstruktion sind aktualisiert.
 
 ### M1 · AP 1.9 Tests · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
@@ -357,7 +382,7 @@ Aus der CI: Der Chromium-Lauf mit Pixel-7-Emulation scheiterte zweimal am Zeiger
 
 ### Schritt B · Bibliothek erweitert · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
-19 neue Übungen und englische Alias-Namen für Varianten (D-248); `exercise-library.md` Abschnitte 4 und 5 neu erzeugt, Abgleich in `winter-arc-reconstruction.md` auf „vorhanden“ gesetzt. Zod-Prüfung der Daten, Suche, Filter und Bibliotheksansicht mit 124 Übungen bestanden (`coreLibrary.test.ts`, `search.test.ts`, `exercise-library.test.tsx`, E2E `exercises.spec.ts`); vier Sucherwartungen an die größeren Treffermengen angepasst (z. B. findet „t bar“ jetzt auch Alias-Namen mit „Barbell“, der Namenstreffer bleibt vorn).
+19 neue Übungen und englische Alias-Namen für Varianten (D-248); `exercise-library.md` Abschnitte 4 und 5 neu erzeugt, Abgleich in `winterprogramm-2026.md` auf „vorhanden“ gesetzt. Zod-Prüfung der Daten, Suche, Filter und Bibliotheksansicht mit 124 Übungen bestanden (`coreLibrary.test.ts`, `search.test.ts`, `exercise-library.test.tsx`, E2E `exercises.spec.ts`); vier Sucherwartungen an die größeren Treffermengen angepasst (z. B. findet „t bar“ jetzt auch Alias-Namen mit „Barbell“, der Namenstreffer bleibt vorn).
 
 ### Schritt C · Programme A, B, C und aktives Programm · 18.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
 
@@ -367,10 +392,10 @@ Programme als gebündelte Vorlagen (`programs.v1.json`, 3 Programme, 84 Training
 |---|---|
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
 | `pnpm check:docs` (mit `programs_build.py --check`) | bestanden: Programme 3, Trainingstage 84; `programs.v1.json` steht in `.prettierignore`, weil Prettier die erzeugte Datei sonst umformatiert |
-| `pnpm test` | 42 Dateien, 402 Tests bestanden. Neu: `programProgress.test.ts` (Folge, nächster Tag, Durchläufe, Wiederholung, Abschluss, frei gewählter Tag), `programs.test.ts` (Inhalt A, B, C: Beinpresse, 3 Sätze, Rotation, Laufband Tag 14 einmal 30 min, Dropsets ohne Pause, Xeela-Namen), `programService.test.ts` (aktivieren, Wechsel, beenden, ungültige ID), `programs-ui.test.tsx` (6 neue Fälle: aktivieren, Zähler, Folgetag, Start von Training als `source: 'program'`, Zusammenfassung, Etikett „Aktiv“, beenden, Winter Arc mit Wochen und „Erledigt“); `format.test.ts` (Dauerziele ab einer Minute als „30:00 min“) |
+| `pnpm test` | 42 Dateien, 402 Tests bestanden. Neu: `programProgress.test.ts` (Folge, nächster Tag, Durchläufe, Wiederholung, Abschluss, frei gewählter Tag), `programs.test.ts` (Inhalt A, B, C: Beinpresse, 3 Sätze, Rotation, Laufband Tag 14 einmal 30 min, Dropsets ohne Pause, englische Namen), `programService.test.ts` (aktivieren, Wechsel, beenden, ungültige ID), `programs-ui.test.tsx` (6 neue Fälle: aktivieren, Zähler, Folgetag, Start von Training als `source: 'program'`, Zusammenfassung, Etikett „Aktiv“, beenden, Programm C mit Wochen und „Erledigt“); `format.test.ts` (Dauerziele ab einer Minute als „30:00 min“) |
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 89,4 %, Zweige 81,9 %, Funktionen 87,5 %, Zeilen 90,2 %) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 199,2 KB gzip (Grenze 250 KB); Programme werden wie die Vorlagen erst bei Bedarf geladen |
-| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 44 Tests bestanden, zweimal hintereinander. Neu `programs.spec.ts`: Programm A aktivieren, „Als Nächstes“, Start aus „Heute geplant“, Beenden, Zusammenfassung „Trainingstag 1 von 32“, Training zeigt „Trainingstag 2 von 32 · Tag B“, Etikett „Aktiv“, Programm beenden; Winter Arc mit 8 Wochen, Dropset-Hinweis, Xeela-Name, Laufband „1 Satz · 30:00 min · ohne Pause“. `templates.spec.ts` auf 7 Einträge angepasst. Die Programmseite Winter Arc gehört jetzt zu den Seiten der axe-Prüfung |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 44 Tests bestanden, zweimal hintereinander. Neu `programs.spec.ts`: Programm A aktivieren, „Als Nächstes“, Start aus „Heute geplant“, Beenden, Zusammenfassung „Trainingstag 1 von 32“, Training zeigt „Trainingstag 2 von 32 · Tag B“, Etikett „Aktiv“, Programm beenden; Programm C mit 8 Wochen, Dropset-Hinweis, englischer Name, Laufband „1 Satz · 30:00 min · ohne Pause“. `templates.spec.ts` auf 7 Einträge angepasst. Die Seite von Programm C gehört jetzt zu den Seiten der axe-Prüfung |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions (steht aus); Gerätetest T-IPH-M1 steht aus |
 
 Befunde: Dauerziele ab einer Minute wurden in der Vorlagenansicht und im Player als „1800 s“ angezeigt; jetzt „30:00 min“. Eine Pause von 0 s erscheint als „ohne Pause“.
@@ -454,7 +479,7 @@ Detail einer abgeschlossenen Einheit mit „Bearbeiten“ (Titel, Beginn, Dauer,
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 90,03 %, Zweige 80,43 %, Funktionen 87,9 %, Zeilen 90,94 %) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 220,8 KB gzip (Grenze 250 KB) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 56 Tests bestanden. Neu `history-edit.spec.ts`: Aktivität nachtragen, Titel, Dauer und Notiz ändern, löschen, „Rückgängig“ |
-| Befund aus der CI von #12 | Der Winter-Arc-Komponententest fand „Trainingstag 2 von 40“ nicht innerhalb von 1 s, weil die Seite mit 40 Tagen in jsdom auf dem Runner langsamer rendert; zugleich zeigte die Programmkarte während des Ladens fälschlich „Programm abgeschlossen“. Behoben in #12: Ladetext statt „abgeschlossen“, Wartezeit 10 s, Testzeit 20 s |
+| Befund aus der CI von #12 | Der Komponententest zu Programm C fand „Trainingstag 2 von 40“ nicht innerhalb von 1 s, weil die Seite mit 40 Tagen in jsdom auf dem Runner langsamer rendert; zugleich zeigte die Programmkarte während des Ladens fälschlich „Programm abgeschlossen“. Behoben in #12: Ladetext statt „abgeschlossen“, Wartezeit 10 s, Testzeit 20 s |
 | WebKit, Gerätetest | WebKit läuft in GitHub Actions; Gerätetest steht aus |
 
 ### Eigene Programme und Vorlagen (AP 2.1 bis 2.4) · 19.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
@@ -464,7 +489,7 @@ Eigene Programme anlegen, übernehmen, bearbeiten (Wochen, Tage, Übungen, Sätz
 | Nachweis | Ergebnis |
 |---|---|
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
-| `pnpm test` | 63 Dateien, 519 Tests bestanden. Neu: `programTree.test.ts` (Stempel nur für geänderte und verschobene Elemente, Tombstones, Anzeigeform, Kopie mit neuen IDs und verknüpften Drops), `programEdit.test.ts` (Wochen, Tage, Übungen, Sätze; Grenzen „letzte Woche“, „letzter Tag“, „letzter Arbeitssatz“, Höchstzahl; Ersetzen mit Anpassung an die Erfassungsart; Original bleibt unverändert), sechs Fälle in `programService.test.ts` (Anlegen, Namensprüfung, Übernahme Winter Arc mit neuen IDs, Duplizieren und Vorlagen, AK-PRG-10 laufende Einheit behält ihre Ziele, ungültige Struktur ohne Speichern, Archivieren und Löschen beenden ein aktives Programm, Wiederherstellen ohne erneute Aktivierung), Wochentag-Hinweis in `programProgress.test.ts`, vier Fälle in `own-programs-ui.test.tsx` (Anlegen bis Start mit Zielgewicht; Übernehmen; Löschen mit Rückgängig; Duplizieren und Archiv) |
+| `pnpm test` | 63 Dateien, 519 Tests bestanden. Neu: `programTree.test.ts` (Stempel nur für geänderte und verschobene Elemente, Tombstones, Anzeigeform, Kopie mit neuen IDs und verknüpften Drops), `programEdit.test.ts` (Wochen, Tage, Übungen, Sätze; Grenzen „letzte Woche“, „letzter Tag“, „letzter Arbeitssatz“, Höchstzahl; Ersetzen mit Anpassung an die Erfassungsart; Original bleibt unverändert), sechs Fälle in `programService.test.ts` (Anlegen, Namensprüfung, Übernahme von Programm C mit neuen IDs, Duplizieren und Vorlagen, AK-PRG-10 laufende Einheit behält ihre Ziele, ungültige Struktur ohne Speichern, Archivieren und Löschen beenden ein aktives Programm, Wiederherstellen ohne erneute Aktivierung), Wochentag-Hinweis in `programProgress.test.ts`, vier Fälle in `own-programs-ui.test.tsx` (Anlegen bis Start mit Zielgewicht; Übernehmen; Löschen mit Rückgängig; Duplizieren und Archiv) |
 | `pnpm test:coverage` | Schwellen eingehalten (gesamt: Anweisungen 88,69 %, Zweige 79,43 %, Funktionen 86,25 %, Zeilen 89,83 %; leicht gesunken, weil der Tag-Editor in jsdom nicht jede Erfassungsart durchläuft) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 227,3 KB gzip (Grenze 250 KB; +6,5 KB, weil „Heute“ für das aktive Programm jetzt auch eigene Programme liest) |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 122 Tests bestanden. Neu `own-programs.spec.ts`: „Ganzkörper A/B“ übernehmen, Plank nach oben, Wdh. bis 10, nach Neuladen erhalten, Original unverändert; axe ohne Verstöße auf Programmseite, Editor, Tag-Editor und Liste in „Hell“ und „Dunkel“ |
@@ -843,3 +868,264 @@ Wasser auf „Heute“, in der Ernährung und als eigene Seite (D-289); Branch `
 | `pnpm check:bundle` | zuerst 250,1 KB (über 250 KB). `goalOn` liegt im Modul Wasser statt in den Zielen, und „Meine Küche“ zählt offene Artikel der Einkaufsliste direkt in der Tabelle statt über Repository und Schema: 249,4 KB |
 | Bilder | Karte auf „Heute“ (offen und Ziel erreicht), Seite „Wasser“, Ernährung (Testeinträge) |
 | Nachtrag Platz auf „Heute“ (Wunsch des Produktinhabers: Wasser unter „Ernährung heute“) | `steps.spec.ts` und `water.spec.ts` prüfen die neue Reihenfolge (Ernährung heute, Wasser, Schritte, Tagesaufgaben). `pnpm lint`, `typecheck`, `check:docs` ohne Befund; `pnpm test` 91 Dateien, 797 Tests bestanden; `pnpm test:e2e` 232 bestanden, 4 übersprungen; `pnpm check:bundle` 249,4 KB |
+
+### F5 §1 Bedienelemente · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Schalter, widersprüchliche Klassen, Wochenziel, Tabellenansicht (D-322); Liste der Schalter in Abschnitt 4.5.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 99 Dateien, 826 Tests bestanden. Neu `class-conflicts.test.ts` (meldet ohne die Korrekturen 18 Stellen), Wochenziel 4 → 5 → 3 → 4 in `goals-ui.test.tsx` (ohne die Korrektur: „expected '3' to be '4'“) |
+| `pnpm exec playwright test e2e/switches.spec.ts` | 38 bestanden, 2 übersprungen. Gegenprobe mit dem alten Schalter und Formular: 13 von 13 Handy-Tests fehlgeschlagen |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 218 bestanden, 6 übersprungen, 0 fehlgeschlagen (5,1 min) |
+| `pnpm check:bundle` | 229,1 KB von 250 KB |
+
+### F5 §2 Aktives Training · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kein Sprung nach dem Erledigen eines Satzes, Kopf mit dem Trainingstag (D-323); Gerätetest T-IPH-M1 Schritt 14 steht aus.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 99 Dateien, 826 Tests bestanden |
+| `pnpm exec playwright test e2e/training-scroll.spec.ts` (Pixel 7) | 1 bestanden: 17 Sätze, abwechselnd mit Enter und direkt mit „Satz erledigt“, jeder dritte mit „Pause überspringen“; beim Tippen keine Bewegung, danach der nächste Satz ganz zwischen Kopf und Fußleiste. Gegenprobe ohne den Ausgleich: „verdeckt vom Kopf (160 px)“ nach dem ersten Satz |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 219 bestanden, 7 übersprungen, 0 fehlgeschlagen (5,4 min) |
+| `pnpm check:bundle` | 229,0 KB von 250 KB |
+
+### F5 §3 Programme und Training · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Seitenanfang und Zurück, Etiketten der Programmkarten, „Bereit für dein Training?“ (D-324).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 99 Dateien, 826 Tests bestanden |
+| `pnpm exec playwright test e2e/program-list.spec.ts --repeat-each=3` | 24 bestanden, 6 übersprungen (schmale Breiten nur im Handy-Projekt). Gegenprobe ohne die Änderungen: alle 5 Handy-Tests fehlgeschlagen |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 227 bestanden, 9 übersprungen, 0 fehlgeschlagen (5,5 min) |
+| `pnpm check:bundle` | 229,5 KB von 250 KB |
+
+### F5 §4 Kopfzeile, Icons, Markierungen, Startbild · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Kompaktes Logo, Regler-Symbol, Kalender und Erledigt-Kreis, Seitenende, Startbild C3 und Startfläche (D-325); Gerätetest T-IPH-M0 Schritt 5 steht aus.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund (vorher: Typ von `Blob` im PNG-Leser, zwei Regeln von ESLint in den neuen Tests) |
+| `pnpm test` | 101 Dateien, 840 Tests bestanden. Gegenproben: `theme-classes.test.ts` meldet `rounded-md` („key: md“); mit den alten Startbildern schlagen 6 von 10 Tests in `splash.test.ts` fehl |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“ |
+| `pnpm exec playwright test e2e/marks.spec.ts --project=chromium-mobile --repeat-each=3` | 12 bestanden. Gegenprobe gegen den Stand vor Abschnitt 4: Regler-Symbol, Kalender und Erledigt-Kreis fehlgeschlagen, Seitenende bestanden (dort war kein Fehler). Erster Lauf einmal rot: „/heute: über dem Kreis“, weil Karten nach dem Scrollen noch wuchsen; der Test scrollt jetzt bis zum wirklichen Ende |
+| `pnpm exec playwright test e2e/start-surface.spec.ts` | 5 bestanden, 3 übersprungen (Startbild nur im Handy-Projekt). Startfläche gegen `splash-1170x2532.png`: mittlere Abweichung 0,003 von 255, kein Pixel über 64 (zuerst 1 Gerätepixel Versatz, weil Chromium eingebettete SVG-Flächen auf ganze Pixel rückt; seitdem eine SVG über den ganzen Bildschirm) |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 239 bestanden, 13 übersprungen, 0 fehlgeschlagen (5,7 min) |
+| `pnpm check:bundle` | 236,0 KB von 250 KB, jetzt mit `index.html` (6,1 KB) |
+
+### F5 §5 Ernährung · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Ring mit Makros, Karte „Gegessen“, kurze Datumszeile, Hinweis mit Aufzählung, „Aktuelles Ziel“ ohne Datum (D-326).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 104 Dateien, 857 Tests bestanden (neu `ring.test.ts` mit 8, `macro-ring.test.tsx` mit 5, `list.test.ts` mit 1 Test; kurzes Datum in `format.test.ts`, `--macro-other` in `tokens.test.ts`). Erster Lauf von `macro-ring.test.tsx` rot: de-AT trennt Tausender mit schmalem Leerzeichen, der Test nutzt jetzt de-DE |
+| `pnpm exec playwright test e2e/nutrition-ring.spec.ts e2e/barcode.spec.ts e2e/nutrition.spec.ts` | 22 bestanden, 2 übersprungen. Gegenprobe von `nutrition-ring.spec.ts` gegen den Stand vor Abschnitt 5 (Handy): alle 5 Tests fehlgeschlagen |
+| Sichtprüfung 360 und 390 pt (Bilder aus dem Browser) | Ring mit Abschnitten, Übergängen und runden Enden; über dem Ziel voll mit neutralem Text; drei Spalten ohne Überlauf; auf „Heute“ wurde „Kohlenhydrate“ auf 360 pt abgeschnitten, jetzt Kurzform „Kohlenh.“ |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 247 bestanden, 15 übersprungen, 0 fehlgeschlagen (6,4 min) |
+| `pnpm check:bundle` | 235,8 KB von 250 KB |
+
+### F5 §6 Fortschritt · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Zeitraum-Auswahl in einer Zeile (D-327).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 104 Dateien, 857 Tests bestanden |
+| `pnpm exec playwright test e2e/period-row.spec.ts` (neu) | 16 bestanden, 8 übersprungen (schmale Breiten nur im Handy-Projekt): Fortschritt, Körpergewicht, Tagesaufgaben und Wasser auf 360, 390 und 768 pt in einer Zeile, kein Wort gekürzt, Chips 36 px, jede Option per Tipp. Erster Lauf rot, weil der Test die absichtlich überstehende Tippfläche als Kürzung las; er misst jetzt den Text. Gegenprobe gegen den Stand vor Abschnitt 6 (Handy): Fortschritt und Körpergewicht auf 360 und 390 pt fehlgeschlagen (4 Tests), Tagesaufgaben und Wasser passten schon |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 263 bestanden, 23 übersprungen, 0 fehlgeschlagen (6,1 min) |
+| `pnpm check:bundle` | 235,9 KB von 250 KB |
+
+### F5 §7 Texte und Marke · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Programm C neutral, keine Hinweise auf die fremde App, Registrierung offen, persönliche Angaben (D-328).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund; neu in `check:docs`: `tools/check_names.py` („Namen geprüft: 5 dokumentierte Ausnahmen, sonst keine Treffer“) |
+| `pnpm test` | 104 Dateien, 860 Tests bestanden (neu: drei Regeln in `wording.test.ts`, Adresse von Programm C in `programs.test.ts`) |
+| Gegenprobe gegen den Stand vor Abschnitt 7 (`687d0bf`) | Neue `wording.test.ts` mit den Texten von damals: 3 von 27 Tests fehlgeschlagen (je Begriff einer). `check_names.py`: Exit-Code 1, „757 Probleme“ in 50 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 261 bestanden, 23 übersprungen, 2 fehlgeschlagen (6,4 min): `programs.spec.ts` erwartete noch die Quellenzeile von Programm C. Nach der Anpassung `e2e/programs.spec.ts`: 4 bestanden |
+| `pnpm check:bundle` | 236,0 KB von 250 KB |
+
+### F5 §9 Abschluss · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Breiten 360, 390 und 768 pt, Korrekturen für schmale Breiten, Test „Seitenende“ mit modalem Dialog (D-331).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Breitenprüfung mit einem vorübergehenden Skript (39 Ansichten × drei Breiten, Testdaten im frischen Browserprofil) | Keine Seite breiter als der Bildschirm, keine Konsolenfehler. Gefunden: getrennte Wörter in Programmkarten (360 pt; „Oberkörper/Unterkörper“ auch 390 und 768 pt) und im Programm-Editor („Woche“, 360 pt), „Meine Küche“, „Als eigenes Programm übernehmen“ (360 pt) und „Tag … heute trainieren“ (360 und 390 pt) zweizeilig, „Kohlenhydrate“ im Schnelleintrag in der Nachbarspalte (360 pt). Nach den Korrekturen keine Befunde außer den bewusst gelassenen Kürzungen (D-331) |
+| `pnpm exec playwright test e2e/narrow-layout.spec.ts e2e/program-list.spec.ts` | 20 bestanden, 8 übersprungen. Gegenprobe gegen `273d608` mit dem alten Knopftext: 10 fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 104 Dateien, 860 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 275 bestanden, 29 übersprungen, 0 fehlgeschlagen (6,3 min) |
+| `pnpm check:bundle` | 236,0 KB von 250 KB |
+| CI WebKit zu F5 §6 (`687d0bf`) | 1 fehlgeschlagen: `marks.spec.ts` „Seitenende …“ auf `/mehr/synchronisierung` (Inhalt der Anmeldung im Vollbild unter der verdeckten Leiste), behoben in diesem Abschnitt; `tabbar.spec.ts` „Ziehen mit der Linse …“ erst im zweiten Versuch bestanden |
+| `node tools/screenshots.mjs komponenten`, `screens`; `node tools/screens-overview.mjs` | 18 Bilder erneuert; „docs/screens/uebersicht.png: 28 Bilder“, „docs/screens.zip: 29 Bilder“ |
+| CI zu `61d7a52` | E2E Chromium und WebKit je 4 fehlgeschlagen (`program-list.spec.ts` 390 und 768 pt „Etikett neben dem Titel“, `narrow-layout.spec.ts` 360 pt „Meine Küche in einer Zeile“): Auf dem CI-Rechner fehlt Inter, die Systemschrift ist breiter. Korrigiert: Spalten der Knöpfe `minmax(max-content, 1fr)`, Test ohne die schriftabhängige Erwartung; mit erzwungener „DejaVu Sans“ lokal nachgestellt (vorher 1 fehlgeschlagen wie in der CI, danach 20 bestanden) |
+| CI zu `81f230e` | Lint bis Build grün; E2E Chromium 275 bestanden, 29 übersprungen; E2E WebKit 268 bestanden, 35 übersprungen, 1 erst im zweiten Versuch (`nutrition-ring.spec.ts`, „TypeError: Importing a module script failed.“ beim Seitenwechsel; vermerkt bei E-16) |
+
+### F6 §1 Logo der Kopfzeile · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Logo in Anzeigegröße auf ganzen Pixeln, Abstand unter der Unschärfe von iOS am oberen Rand (D-332). Auftrag: `docs/prompts/F6-feinschliff-vor-dem-merge.md`.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ursachensuche (Logo, Vorfahren, Pseudo-Elemente, überlagernde Flächen, Glas) | In der App nichts am Logo. Ursachen: die Unschärfe von iOS über den obersten rund 40 pt (das Logo lag 14 bis 42 pt unter dem Rand) und die Datei mit 5273 × 1400 als Größe (Anzeige 105,46 px breit) |
+| `pnpm exec playwright test e2e/header-logo.spec.ts e2e/shell.spec.ts` | 20 bestanden, 4 übersprungen. Gegenprobe gegen `eee9bf9` (Handy): 4 fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 862 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 280 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
+| `pnpm check:bundle` | 236,3 KB von 250 KB |
+| Gerätetest | steht aus: T-IPH-M0 Schritt 6 (Safari-Tab und installierte App) |
+
+### F6 §2 Makro-Ring V2 · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Makros Türkis, Blau, Violett überall gleich; Übergänge über 2 × 18° aus feinen Schritten, Mischfarben in OKLab (D-333).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/nutrition-ring.spec.ts` | 10 bestanden, 2 übersprungen. Gegenprobe gegen `6f99fc6`: „Ring V2 …“ fehlgeschlagen |
+| `calc/ring.test.ts`, `ui/macro-ring.test.tsx` | bestanden; am alten Stand 6 fehlgeschlagen |
+| Bildprüfung bei dreifacher Dichte (Ring auf „Ernährung“, „Heute“, über dem Ziel) | erster Entwurf in OKLCH mit grellem Cyan an der Naht Türkis–Blau (#00BCEC, außerhalb von sRGB); in OKLab weich, ohne Kanten zwischen den Schritten |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 876 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 282 bestanden, 32 übersprungen, 0 fehlgeschlagen (7,0 min) |
+| `pnpm check:bundle` | 236,3 KB von 250 KB |
+
+### F6 §3 Erledigt-Markierungen · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Eine Komponente `Mark` mit 14, 16 und 20 px; Verlauf, Je Aufgabe, Kalender und Abhakfeld (D-334).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/marks.spec.ts` | 9 bestanden, 1 übersprungen. Gegenprobe gegen `8271179` (Handy): 3 von 3 neuen Tests fehlgeschlagen |
+| Vergleichsbild `docs/screens/komponenten/markierungen.png` | Verlauf 14 px unter dem Balken, Je Aufgabe 16 px, Kalender 16 px mit Wochentagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 876 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 284 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
+| `pnpm check:bundle` | 236,5 KB von 250 KB |
+
+### F6 §4 Aufgaben bearbeitbar (V1) · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Zeile mit Abhakfeld links und Link in die Detailansicht, Einstellungen in der Detailansicht, Reihenfolge als eigener Schritt (D-335).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/task-rows.spec.ts e2e/tasks.spec.ts e2e/marks.spec.ts e2e/switches.spec.ts e2e/water.spec.ts e2e/period-row.spec.ts` | erster Lauf 87 bestanden, 2 fehlgeschlagen (Locator im Test), danach bestanden. Gegenprobe gegen `3f5b833`: 10 von 10 Fällen der neuen Datei fehlgeschlagen |
+| Tipp aufs Abhakfeld, Tipp auf die Zeile, Tastatur (Tab, Leertaste, Enter) | auf „Heute“ und „Tagesaufgaben“ geprüft; das Abhakfeld öffnet nie die Details |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 878 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 293 bestanden, 36 übersprungen, 1 fehlgeschlagen: Wettlauf im Test „Ring V2 …“ (§2) auf „Heute“, behoben; 5 Wiederholungen bestanden |
+| `pnpm check:bundle` | 236,7 KB von 250 KB |
+
+### F6 §5 Karte V2c · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+„Bereit für dein Training?“ als grüne Karte mit weißem Primärknopf (D-336).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/program-list.spec.ts` | 10 bestanden, 2 übersprungen. Gegenprobe gegen `4852076`: 2 von 2 fehlgeschlagen |
+| Kontraste (`tokens.test.ts`) | Label und Text 7,9:1, Titel und Link 10,6:1, Schrift auf dem Knopf 16,9:1, Knopf zur Fläche 10,6:1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 886 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 296 bestanden, 36 übersprungen, 0 fehlgeschlagen (7,7 min) |
+| `pnpm check:bundle` | 237,5 KB von 250 KB |
+
+### F6 §6 Startbild länger · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Startfläche beim Kaltstart mindestens 1,0 s ab dem ersten Bild, dann 300 ms Ausblenden (D-337).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/app/startSurface.test.ts`, `src/app/splash.test.ts` | 7 und 10 bestanden (erster Lauf: 1 von 7 fehlgeschlagen, der Test prüfte eine Millisekunde zu spät; behoben) |
+| `pnpm exec playwright test e2e/start-surface.spec.ts` | 8 bestanden, 6 übersprungen; 3 Wiederholungen: 24 bestanden. Gegenprobe gegen `6f77dbe`: 3 von 7 fehlgeschlagen |
+| `node tools/splash.mjs --check` | Bilder, Vorlage und Startfläche passen zur Regel |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 888 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 299 bestanden, 39 übersprungen, 0 fehlgeschlagen (7,8 min) |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |
+| Am Gerät | offen: T-IPH-M0 Schritt 5 (Kaltstart der installierten App) |
+
+### F6 §1 Nachtrag: Logo-Test in WebKit · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Befund der CI zu `e2e/header-logo.spec.ts` im Projekt `webkit-mobile` (D-332). Nur der Test geändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `6f99fc6`, `8271179`, `3f5b833`, `4852076`, `6f77dbe` | jeweils dieselben 4 Fälle in `webkit-mobile` fehlgeschlagen („y 142.1875“, „y 181.375“, „Expected: 14, Received: 181.375“), alle anderen Jobs bestanden |
+| Ursache | Mit der Kennung eines iPhones zeigt die App im Safari-Tab den Hinweis zur Installation über der Kopfzeile (AK-PWA-04) |
+| Chromium mit der Kennung des iPhone 15, alter Test | 4 von 4 fehlgeschlagen, dieselben Werte wie in der CI |
+| derselbe Aufbau, neuer Test | erst 1 von 6 Läufen fehlgeschlagen (Seitenwechsel vor dem Speichern von „Programm aktivieren“, freies Training ohne Übungen); nach der Korrektur 10 Wiederholungen: 40 bestanden |
+| `pnpm exec playwright test e2e/header-logo.spec.ts --repeat-each=5` (Desktop, Pixel 7) | 25 bestanden, 15 übersprungen |
+| WebKit | prüft die CI |
+
+### F6 §7 Trainingskopf · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+„Woche n“ bleibt sichtbar, der Programmname kürzt sich (D-338).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/session-head.spec.ts` | 4 bestanden, 2 übersprungen. Gegenprobe gegen `4146fad`: 2 von 3 Handy-Fällen fehlgeschlagen (360 und 390 pt) |
+| `player-ui.test.tsx` | 15 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 888 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | erster Lauf: 302 bestanden, 41 übersprungen, 1 fehlgeschlagen (`switches.spec.ts`, Schalter per Tastatur, nicht nachgestellt); zweiter Lauf: 303 bestanden, 41 übersprungen, 0 fehlgeschlagen |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |
+
+### F6 §6 Nachtrag: Startfläche in WebKit · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Befund der CI zu `2a1990a` im Projekt `webkit-mobile` (D-337, Nachtrag).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `2a1990a`, WebKit | 296 bestanden, 47 übersprungen, 1 fehlgeschlagen: „Startfläche beim langsamen Start …“ („Expected: > 2812, Received: 1827“), auch im zweiten Versuch; Logo-Tests bestanden |
+| Ursache | Kein Paint-Eintrag für die Fläche ohne Text, erst für den Text der App; die App zählte ab dort |
+| `startSurface.test.ts` | am alten Stand 2 von 9 fehlgeschlagen (Fälle wie in Safari), danach 9 bestanden |
+| `pnpm exec playwright test e2e/start-surface.spec.ts` | 9 bestanden, 7 übersprungen; 3 Wiederholungen 27 bestanden. Gegenprobe gegen `2a1990a`: der Fall ohne Paint-Eintrag fehlgeschlagen (1025 ms statt höchstens 400 ms nach „bereit“) |
+| `node tools/splash.mjs --check` | Bilder, Vorlage und Startfläche passen zur Regel |
+| WebKit | prüft die CI |
+
+### F6 §9 Abschluss · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Breiten, Knopfzeile der Einstellungen, Screenshots (D-340).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Breitenprüfung, 96 Ansichten auf 360, 390 und 768 pt | keine Konsolenfehler, kein Überlauf, nichts außerhalb, keine getrennten Wörter; gemeldet nur gewollte Kürzungen und das Menü „Meine Küche“ ab 768 pt |
+| `pnpm exec playwright test e2e/switches.spec.ts e2e/task-rows.spec.ts e2e/tasks.spec.ts` | 58 bestanden, 6 übersprungen. Gegenprobe gegen `2a1990a`: 2 von 2 fehlgeschlagen („Pausieren und Löschen in einer Zeile“) |
+| `node tools/screenshots.mjs komponenten` und `screens`, `node tools/screens-overview.mjs` | erster Lauf der Komponenten abgebrochen (Abhaken über den Namen), Werkzeug angepasst; danach alle Bilder, Übersicht 29 Bilder, Archiv 30 Bilder |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 890 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (7,1 min) |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |
+| Am Gerät | offen: T-IPH-M0 Schritte 5 und 6 |
+
+### F6 §9 Nachtrag: CI zu `6782756` · 23.10.2026
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `6782756` | alle Jobs bestanden. Chromium 303 bestanden, 42 übersprungen, 1 flaky (`program-list.spec.ts`, „Heute geplant“ direkt nach „Programm aktivieren“ und dem Seitenwechsel nicht gefunden, im zweiten Versuch bestanden). WebKit nach einem Neustart des Jobs (der erste hing 24 Minuten in `playwright install --with-deps webkit`): 298 bestanden, 48 übersprungen, 0 fehlgeschlagen |
+| `pnpm exec playwright test e2e/program-list.spec.ts --repeat-each=5` (nach der Korrektur) | 50 bestanden, 10 übersprungen |
+| Gegenprobe | lokal nicht nachstellbar (20 Läufe mit 20-facher CPU-Drosselung, alter Ablauf bestanden) |
+
+### Vor dem Merge · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Hinweistext „Werte für“ und drei Screenshots (D-341).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/shared/i18n/de-nutrition.test.ts` (neu) | am alten Text 2 von 2 fehlgeschlagen, danach bestanden |
+| `node tools/screenshots.mjs screens` und `komponenten`, `node tools/screens-overview.mjs` | Übersicht 32 Bilder, Archiv 33 Bilder |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 106 Dateien, 892 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 302 bestanden, 42 übersprungen, 2 fehlgeschlagen: Offline-Test `pwa.spec.ts` in beiden Projekten (E-16; zwei Modul-Anfragen offline abgebrochen); einzeln 4 Wiederholungen je Projekt: 1 von 8 fehlgeschlagen |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |

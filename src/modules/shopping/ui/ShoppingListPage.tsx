@@ -8,7 +8,9 @@ import { cn } from '@/shared/lib/cn';
 import {
   Button,
   Card,
+  chipClasses,
   IconButton,
+  Mark,
   Meter,
   PageHeader,
   SegmentedControl,
@@ -45,8 +47,7 @@ import {
 } from '../service/shoppingService';
 
 const ts = tShopping;
-const INPUT =
-  'h-12 w-full min-w-0 rounded-input border border-line bg-surface px-3 text-base text-fg';
+const INPUT = 'field w-full min-w-0';
 type View = 'list' | 'categories';
 const VIEW_OPTIONS = (['list', 'categories'] as const).map((value) => ({
   value,
@@ -217,17 +218,7 @@ export function ShoppingListPage() {
             }}
             className="peer sr-only"
           />
-          <span
-            aria-hidden="true"
-            className={cn(
-              'flex size-7 shrink-0 items-center justify-center rounded-pill border-2 transition-colors duration-120 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus',
-              item.doneAt !== undefined
-                ? 'border-success bg-success text-on-accent'
-                : 'border-line-input bg-surface',
-            )}
-          >
-            {item.doneAt !== undefined ? <Check className="size-4" /> : null}
-          </span>
+          <Mark state={item.doneAt !== undefined ? 'done' : 'open'} size="lg" peer />
           <span className="min-w-0 flex-1">
             <span className={cn('block', item.doneAt !== undefined && 'text-muted line-through')}>
               {item.name}
@@ -309,7 +300,7 @@ export function ShoppingListPage() {
                     onClick={() => {
                       submit(name);
                     }}
-                    className="flex min-h-10 items-center gap-1 rounded-pill border border-line bg-surface-2 px-3 text-sm text-fg"
+                    className={chipClasses(false)}
                   >
                     <Plus aria-hidden="true" className="size-3.5" />
                     {name}
@@ -405,7 +396,7 @@ export function ShoppingListPage() {
                       onClick={() => {
                         run(() => addItem(rt, entry));
                       }}
-                      className="inline-flex min-h-10 items-center gap-1 rounded-pill border border-line-input px-3 text-sm font-medium hover:bg-surface-2"
+                      className={chipClasses(false)}
                     >
                       <Plus aria-hidden="true" className="size-4 text-muted" />
                       {entry.name}
@@ -501,7 +492,7 @@ export function ShoppingListPage() {
           }}
           action={
             <Button
-              variant="onInk"
+              variant="quiet"
               size="sm"
               onClick={() => {
                 const current = notice;
@@ -679,7 +670,7 @@ function EditItem({
           {ts.cancel}
         </Button>
         <span className="flex-1" />
-        <Button type="button" size="sm" variant="quiet" className="text-danger" onClick={onDelete}>
+        <Button type="button" size="sm" variant="quietDanger" onClick={onDelete}>
           {ts.delete}
         </Button>
       </div>

@@ -64,4 +64,6 @@ export const tWater = {
   autoHint:
     'Ist dein Wasserziel an dem Tag erreicht, hakt die App die Aufgabe ab. Du kannst es zurücknehmen; die getrunkene Menge ändert sich dadurch nicht.',
   autoShort: 'mit Wasserziel',
+  /** Im Rhythmus unter dem Namen einer Tagesaufgabe (D-335). */
+  autoRhythm: 'mit Wasserziel abhaken',
 } as const;

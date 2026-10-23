@@ -1013,3 +1013,16 @@ Eine Komponente `Mark` mit 14, 16 und 20 px; Verlauf, Je Aufgabe, Kalender und A
 | `pnpm test` | 105 Dateien, 876 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 284 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
 | `pnpm check:bundle` | 236,5 KB von 250 KB |
+
+### F6 §4 Aufgaben bearbeitbar (V1) · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Zeile mit Abhakfeld links und Link in die Detailansicht, Einstellungen in der Detailansicht, Reihenfolge als eigener Schritt (D-335).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/task-rows.spec.ts e2e/tasks.spec.ts e2e/marks.spec.ts e2e/switches.spec.ts e2e/water.spec.ts e2e/period-row.spec.ts` | erster Lauf 87 bestanden, 2 fehlgeschlagen (Locator im Test), danach bestanden. Gegenprobe gegen `3f5b833`: 10 von 10 Fällen der neuen Datei fehlgeschlagen |
+| Tipp aufs Abhakfeld, Tipp auf die Zeile, Tastatur (Tab, Leertaste, Enter) | auf „Heute“ und „Tagesaufgaben“ geprüft; das Abhakfeld öffnet nie die Details |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 878 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 293 bestanden, 36 übersprungen, 1 fehlgeschlagen: Wettlauf im Test „Ring V2 …“ (§2) auf „Heute“, behoben; 5 Wiederholungen bestanden |
+| `pnpm check:bundle` | 236,7 KB von 250 KB |

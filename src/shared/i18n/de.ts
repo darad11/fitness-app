@@ -113,6 +113,17 @@ export const de = {
     save: 'Speichern',
     cancel: 'Abbrechen',
     editLabel: (name: string) => `${name} bearbeiten`,
+    /** Abhakfeld links in der Zeile (D-335); die Zeile selbst heißt „… bearbeiten“. */
+    checkLabel: (name: string) => `${name} abhaken`,
+    checkLabelNotDue: (name: string) => `${name} abhaken, heute nicht fällig`,
+    /** Rhythmus unter dem Namen: „Täglich“ oder „Mo · Mi · Fr“, dazu die Regel. */
+    rhythmDaily: 'Täglich',
+    rhythmTraining: 'mit Training abhaken',
+    settingsTitle: 'Einstellungen',
+    saved: 'Gespeichert.',
+    statsTitle: 'Auswertung',
+    reorder: 'Reihenfolge ändern',
+    reorderDone: 'Fertig',
     pause: 'Pausieren',
     weekdaysLegend: 'Fällig an',
     weekdayToggle: (day: string) => `${day} fällig`,

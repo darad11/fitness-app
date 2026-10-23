@@ -13,7 +13,7 @@ async function addTask(page: Page, name: string) {
   await openPage(page, '/heute/aufgaben');
   await page.getByLabel('Name der Aufgabe').fill(name);
   await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-  await expect(page.getByRole('button', { name: `${name} bearbeiten` })).toBeVisible();
+  await expect(page.getByRole('link', { name: `${name} bearbeiten` })).toBeVisible();
 }
 
 test('„Wochenziel“ zeigt dasselbe Regler-Symbol wie „Tagesaufgaben“, an derselben Stelle', async ({
@@ -68,8 +68,9 @@ async function threeDays(page: Page) {
     const card = page.getByRole('region', { name: 'Tagesaufgaben' });
     const names = day === '2026-10-20' ? ['Lesen'] : ['Lesen', 'Dehnen'];
     for (const name of names) {
-      await card.getByText(name, { exact: true }).click();
-      await expect(card.getByRole('checkbox', { name })).toBeChecked();
+      const check = card.getByRole('checkbox', { name: `${name} abhaken` });
+      await check.click();
+      await expect(check).toBeChecked();
     }
   }
 }
@@ -190,24 +191,27 @@ test('Markierungen (F6): Je Aufgabe 16 px, Verlauf mit 14 px unter dem Balken st
   expect([hintMark.width, hintMark.height]).toEqual([14, 14]);
 });
 
-test('Abhakfeld in Listen (F6): Quadrat 20 px, Haken 60 %, mittig zum Text, Tippfläche ab 44 px', async ({
+test('Abhakfeld in Listen (F6): Quadrat 20 px, Haken 60 %, Tippfläche 44 px, mittig zur Zeile', async ({
   page,
 }) => {
   await addTask(page, 'Dehnen');
   await openPage(page, '/heute');
   const card = page.getByRole('region', { name: 'Tagesaufgaben' });
-  const row = card.locator('label', { hasText: 'Dehnen' });
-  const mark = row.locator('span[aria-hidden="true"]').first();
-  const text = row.getByText('Dehnen', { exact: true });
+  const check = card.getByRole('checkbox', { name: 'Dehnen abhaken' });
+  const mark = check.locator('xpath=following-sibling::span[1]');
+  const row = card
+    .locator('li')
+    .filter({ has: page.getByRole('checkbox', { name: 'Dehnen abhaken' }) });
   for (const checked of [false, true]) {
-    const [r, m, tx] = [await box(row), await box(mark), await box(text)];
+    const [tap, m, r] = [await box(check), await box(mark), await box(row)];
     expect([m.width, m.height]).toEqual([20, 20]);
     expect(await radius(mark)).toBe('22.5%');
-    expect(Math.round(r.height)).toBe(48);
-    expect(Math.abs(m.y + m.height / 2 - (tx.y + tx.height / 2))).toBeLessThanOrEqual(1);
+    expect([tap.width, tap.height], 'Tippfläche').toEqual([44, 44]);
+    expect(r.height, 'Zeile mit Rhythmus').toBeGreaterThanOrEqual(56);
+    expect(Math.abs(center(m).y - center(r).y), 'mittig zur Zeile').toBeLessThanOrEqual(1);
     if (!checked) {
-      await text.click();
-      await expect(card.getByRole('checkbox', { name: 'Dehnen' })).toBeChecked();
+      await check.click();
+      await expect(check).toBeChecked();
       expect(Math.abs((await box(mark.locator('svg'))).width - 12)).toBeLessThanOrEqual(0.5);
     }
   }
@@ -314,11 +318,11 @@ test('Seitenende: weder die ausgeklappte Leiste noch der Kreis verdecken Inhalt'
 }, testInfo) => {
   test.skip(!testInfo.project.name.includes('mobile'), 'Tab-Leiste nur unter 1024 px');
   test.slow();
-  // Der Fall aus dem Bericht: offenes Bearbeiten einer Tagesaufgabe am Ende der Karte.
+  // Der Fall aus dem Bericht (F5): Bearbeiten einer Tagesaufgabe, seit F6 in der Detailansicht.
   await addTask(page, 'steps');
-  await page.getByRole('button', { name: 'steps bearbeiten' }).click();
+  await page.getByRole('link', { name: 'steps bearbeiten' }).click();
   await expect(page.getByText(/Löschen nimmt die Aufgabe ab heute/)).toBeVisible();
-  await checkPageEnd(page, '/heute/aufgaben (Bearbeiten)');
+  await checkPageEnd(page, '/heute/aufgaben/… (Einstellungen)');
   for (const path of APP_PAGES) {
     await openPage(page, path);
     await checkPageEnd(page, path);

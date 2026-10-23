@@ -61,28 +61,32 @@ test('Wasser: Tagesaufgabe „mit Wasserziel abhaken“ (D-289)', async ({ page 
   await page.getByLabel('Name der Aufgabe').fill('2 l Wasser');
   await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
   const list = page.getByRole('region', { name: 'Meine Aufgaben' });
-  await list.getByRole('button', { name: '2 l Wasser bearbeiten' }).click();
-  await list.getByText('Mit Wasserziel abhaken', { exact: true }).click();
-  await list.getByRole('button', { name: 'Speichern' }).click();
-  await expect(list.getByRole('button', { name: '2 l Wasser bearbeiten' })).toContainText(
-    'mit Wasserziel',
-  );
+  // Die Regel steht in der Detailansicht der Aufgabe (D-335).
+  await list.getByRole('link', { name: '2 l Wasser bearbeiten' }).click();
+  const settings = page.getByRole('region', { name: 'Einstellungen' });
+  await settings.getByText('Mit Wasserziel abhaken', { exact: true }).click();
+  await settings.getByRole('button', { name: 'Speichern' }).click();
+  await expect(settings.getByText('Gespeichert.')).toBeVisible();
+  await page.getByRole('link', { name: 'Tagesaufgaben', exact: true }).click();
+  await expect(
+    list.getByRole('link', { name: '2 l Wasser bearbeiten' }),
+  ).toHaveAccessibleDescription('Täglich · mit Wasserziel abhaken');
 
   await openPage(page, '/heute');
   const tasks = page.getByRole('region', { name: 'Tagesaufgaben' });
   const water = page.getByRole('region', { name: 'Wasser' });
-  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser' })).not.toBeChecked();
+  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser abhaken' })).not.toBeChecked();
   await water.getByRole('button', { name: '750 ml hinzufügen' }).click();
   await water.getByRole('button', { name: '750 ml hinzufügen' }).click();
-  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser' })).not.toBeChecked();
+  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser abhaken' })).not.toBeChecked();
   await water.getByRole('button', { name: '500 ml hinzufügen' }).click();
-  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser' })).toBeChecked();
+  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser abhaken' })).toBeChecked();
   // Von Hand zurücknehmen bleibt möglich und ändert die Wassermenge nicht.
-  await tasks.getByText('2 l Wasser').click();
-  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser' })).not.toBeChecked();
+  await tasks.getByRole('checkbox', { name: '2 l Wasser abhaken' }).click();
+  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser abhaken' })).not.toBeChecked();
   await expect(water).toContainText('2 l');
   await page.reload();
-  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser' })).not.toBeChecked();
+  await expect(tasks.getByRole('checkbox', { name: '2 l Wasser abhaken' })).not.toBeChecked();
 });
 
 test('Wasser: kleiner Bildschirm ohne Überlauf (D-289)', async ({ page }) => {

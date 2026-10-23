@@ -38,7 +38,7 @@ const PAGES: readonly { path: string; options: string[]; setup?: (page: Page) =>
         await openPage(page, '/heute/aufgaben');
         await page.getByLabel('Name der Aufgabe').fill('Dehnen');
         await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-        await expect(page.getByRole('button', { name: 'Dehnen bearbeiten' })).toBeVisible();
+        await expect(page.getByRole('link', { name: 'Dehnen bearbeiten' })).toBeVisible();
       },
     },
     { path: '/ernaehrung/wasser', options: ['7 Tage', '30 Tage'] },

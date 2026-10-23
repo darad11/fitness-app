@@ -1,4 +1,13 @@
+import type { Locator } from '@playwright/test';
 import { expect, openPage, test } from './fixtures';
+
+/** Namen der Zeilen in der Reihenfolge der Liste (Link „… bearbeiten“, D-335). */
+const rowNames = (list: Locator) =>
+  list
+    .getByRole('link', { name: / bearbeiten$/ })
+    .evaluateAll((links) =>
+      links.map((link) => (link.getAttribute('aria-label') ?? '').replace(/ bearbeiten$/, '')),
+    );
 
 test('Tagesaufgaben: hinzufügen, abhaken, neu laden, nächster Tag wieder offen (AH-03, D-283)', async ({
   page,
@@ -17,16 +26,14 @@ test('Tagesaufgaben: hinzufügen, abhaken, neu laden, nächster Tag wieder offen
     // sonst leerte das Zurücksetzen nach dem Speichern manchmal den neuen Namen (WebKit).
     await page.getByLabel('Name der Aufgabe').fill(name);
     await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-    await expect(list.getByRole('button', { name: / bearbeiten$/ })).toHaveCount(index + 1);
+    await expect(list.getByRole('link', { name: / bearbeiten$/ })).toHaveCount(index + 1);
     await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
   }
-  // Reihenfolge: „Lesen“ nach oben.
+  // Reihenfolge: „Lesen“ nach oben, über „Reihenfolge ändern“ (D-335).
+  await list.getByRole('button', { name: 'Reihenfolge ändern' }).click();
   await list.getByRole('button', { name: 'Nach oben, Lesen' }).click();
-  await expect(list.getByRole('button', { name: / bearbeiten$/ })).toHaveText([
-    '30 min Cardio',
-    'Lesen',
-    '2 l Wasser',
-  ]);
+  await list.getByRole('button', { name: 'Fertig' }).click();
+  await expect.poll(() => rowNames(list)).toEqual(['30 min Cardio', 'Lesen', '2 l Wasser']);
 
   await openPage(page, '/heute');
   const card = page.getByRole('region', { name: 'Tagesaufgaben' });
@@ -44,22 +51,22 @@ test('Tagesaufgaben: hinzufügen, abhaken, neu laden, nächster Tag wieder offen
     'href',
     '/heute/aufgaben',
   );
-  await card.getByText('30 min Cardio').click();
+  await card.getByRole('checkbox', { name: '30 min Cardio abhaken' }).click();
   await expect(card).toContainText('1 von 3 erledigt');
-  await card.getByText('2 l Wasser').click();
+  await card.getByRole('checkbox', { name: '2 l Wasser abhaken' }).click();
   await expect(card).toContainText('2 von 3 erledigt');
   await expect(card).not.toContainText('Serie');
 
   // Neu laden am selben Tag setzt nichts zurück.
   await page.reload();
-  await expect(card.getByRole('checkbox', { name: '30 min Cardio' })).toBeChecked();
+  await expect(card.getByRole('checkbox', { name: '30 min Cardio abhaken' })).toBeChecked();
   await expect(card).toContainText('2 von 3 erledigt');
 
   // Nächster Tag: alles offen, ohne dass gestern verloren geht.
   await page.clock.setSystemTime(new Date('2026-10-21T08:00:00+02:00'));
   await page.reload();
   await expect(card.getByRole('checkbox')).toHaveCount(3);
-  await expect(card.getByRole('checkbox', { name: '30 min Cardio' })).not.toBeChecked();
+  await expect(card.getByRole('checkbox', { name: '30 min Cardio abhaken' })).not.toBeChecked();
   await expect(card).toContainText('0 von 3 erledigt');
   const yesterday = await page.evaluate(
     () =>
@@ -93,7 +100,7 @@ test('Tagesaufgaben: kleiner Bildschirm, nichts ragt über den Rand (D-283)', as
   ].entries()) {
     await page.getByLabel('Name der Aufgabe').fill(name);
     await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-    await expect(list.getByRole('button', { name: / bearbeiten$/ })).toHaveCount(index + 1);
+    await expect(list.getByRole('link', { name: / bearbeiten$/ })).toHaveCount(index + 1);
     await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
   }
   const overflow = () =>
@@ -115,7 +122,7 @@ test('Tagesaufgaben: abhaken ohne Netz, bleibt nach dem Neuladen (D-283)', async
   await openPage(page, '/heute/aufgaben');
   await page.getByLabel('Name der Aufgabe').fill('Wasser');
   await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-  await expect(page.getByRole('button', { name: 'Wasser bearbeiten' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Wasser bearbeiten' })).toBeVisible();
   await openPage(page, '/heute');
   // Wie in resilience.spec.ts: erst wenn der Service Worker die Seite steuert, lädt sie offline
   // nachgeladene Teile aus dem Cache (sonst meldet WebKit einen Ladefehler).
@@ -127,13 +134,13 @@ test('Tagesaufgaben: abhaken ohne Netz, bleibt nach dem Neuladen (D-283)', async
     .poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null))
     .toBe(true);
   const card = page.getByRole('region', { name: 'Tagesaufgaben' });
-  await expect(card.getByRole('checkbox', { name: 'Wasser' })).toBeVisible();
+  await expect(card.getByRole('checkbox', { name: 'Wasser abhaken' })).toBeVisible();
   await context.setOffline(true);
-  await card.getByText('Wasser').click();
+  await card.getByRole('checkbox', { name: 'Wasser abhaken' }).click();
   await expect(card).toContainText('Alles erledigt');
   await context.setOffline(false);
   await page.reload();
-  await expect(card.getByRole('checkbox', { name: 'Wasser' })).toBeChecked();
+  await expect(card.getByRole('checkbox', { name: 'Wasser abhaken' })).toBeChecked();
 });
 
 test('Tagesaufgaben: Fortschritt über drei Tage, Übersicht und Auswertung (D-284)', async ({
@@ -147,7 +154,7 @@ test('Tagesaufgaben: Fortschritt über drei Tage, Übersicht und Auswertung (D-2
   for (const [index, name] of ['Wasser', 'Lesen'].entries()) {
     await page.getByLabel('Name der Aufgabe').fill(name);
     await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-    await expect(list.getByRole('button', { name: / bearbeiten$/ })).toHaveCount(index + 1);
+    await expect(list.getByRole('link', { name: / bearbeiten$/ })).toHaveCount(index + 1);
     await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
   }
   // Tag 1: beides, Tag 2: nur Wasser, Tag 3 (heute): Wasser.
@@ -155,8 +162,9 @@ test('Tagesaufgaben: Fortschritt über drei Tage, Übersicht und Auswertung (D-2
     await openPage(page, '/heute');
     const card = page.getByRole('region', { name: 'Tagesaufgaben' });
     for (const name of names) {
-      await card.getByText(name, { exact: true }).click();
-      await expect(card.getByRole('checkbox', { name })).toBeChecked();
+      const box = card.getByRole('checkbox', { name: `${name} abhaken` });
+      await box.click();
+      await expect(box).toBeChecked();
     }
   };
   await tick(['Wasser', 'Lesen']);
@@ -199,22 +207,26 @@ test('Tagesaufgaben: nur an Wochentagen fällig, mit Training abhaken (D-285)', 
   for (const [index, name] of ['Training', 'Wasser'].entries()) {
     await page.getByLabel('Name der Aufgabe').fill(name);
     await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-    await expect(list.getByRole('button', { name: / bearbeiten$/ })).toHaveCount(index + 1);
+    await expect(list.getByRole('link', { name: / bearbeiten$/ })).toHaveCount(index + 1);
     await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
   }
-  await list.getByRole('button', { name: 'Training bearbeiten' }).click();
+  // Wochentage und Regel in der Detailansicht (D-335).
+  await list.getByRole('link', { name: 'Training bearbeiten' }).click();
+  const settings = page.getByRole('region', { name: 'Einstellungen' });
   for (const day of ['Di', 'Do', 'Sa', 'So']) {
-    await list.getByRole('button', { name: `${day} fällig` }).click();
+    await settings.getByRole('button', { name: `${day} fällig` }).click();
   }
-  await expect(list.getByRole('button', { name: 'Di fällig' })).toHaveAttribute(
+  await expect(settings.getByRole('button', { name: 'Di fällig' })).toHaveAttribute(
     'aria-pressed',
     'false',
   );
-  await list.getByText('Mit Training abhaken').click();
-  await expect(list.getByRole('switch', { name: 'Mit Training abhaken' })).toBeChecked();
-  await list.getByRole('button', { name: 'Speichern' }).click();
-  await expect(list.getByRole('button', { name: 'Training bearbeiten' })).toContainText(
-    'Mo, Mi, Fr · mit Training',
+  await settings.getByText('Mit Training abhaken').click();
+  await expect(settings.getByRole('switch', { name: 'Mit Training abhaken' })).toBeChecked();
+  await settings.getByRole('button', { name: 'Speichern' }).click();
+  await expect(settings.getByText('Gespeichert.')).toBeVisible();
+  await page.getByRole('link', { name: 'Tagesaufgaben', exact: true }).click();
+  await expect(list.getByRole('link', { name: 'Training bearbeiten' })).toHaveAccessibleDescription(
+    'Mo · Mi · Fr · mit Training abhaken',
   );
 
   // Dienstag: Training nicht fällig.
@@ -222,12 +234,12 @@ test('Tagesaufgaben: nur an Wochentagen fällig, mit Training abhaken (D-285)', 
   await openPage(page, '/heute');
   const card = page.getByRole('region', { name: 'Tagesaufgaben' });
   await expect(card.getByRole('checkbox')).toHaveCount(1);
-  await expect(card.getByRole('checkbox', { name: 'Wasser' })).toBeVisible();
+  await expect(card.getByRole('checkbox', { name: 'Wasser abhaken' })).toBeVisible();
 
   // Mittwoch: fällig; eine nachgetragene Aktivität hakt es ab.
   await page.clock.setSystemTime(new Date('2026-10-21T09:00:00+02:00'));
   await openPage(page, '/heute');
-  await expect(card.getByRole('checkbox', { name: 'Training' })).not.toBeChecked();
+  await expect(card.getByRole('checkbox', { name: 'Training abhaken' })).not.toBeChecked();
   await openPage(page, '/training/nachtragen');
   await page.getByText('Aktivität', { exact: true }).first().click();
   await page.getByLabel('Art der Aktivität').selectOption('walk');
@@ -235,11 +247,11 @@ test('Tagesaufgaben: nur an Wochentagen fällig, mit Training abhaken (D-285)', 
   await page.getByRole('button', { name: 'Speichern' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Gehen' })).toBeVisible();
   await openPage(page, '/heute');
-  await expect(card.getByRole('checkbox', { name: 'Training' })).toBeChecked();
+  await expect(card.getByRole('checkbox', { name: 'Training abhaken' })).toBeChecked();
   // Zurücknehmen bleibt zurückgenommen.
-  await card.getByText('Training', { exact: true }).click();
-  await expect(card.getByRole('checkbox', { name: 'Training' })).not.toBeChecked();
+  await card.getByRole('checkbox', { name: 'Training abhaken' }).click();
+  await expect(card.getByRole('checkbox', { name: 'Training abhaken' })).not.toBeChecked();
   await page.reload();
-  await expect(card.getByRole('checkbox', { name: 'Wasser' })).toBeVisible();
-  await expect(card.getByRole('checkbox', { name: 'Training' })).not.toBeChecked();
+  await expect(card.getByRole('checkbox', { name: 'Wasser abhaken' })).toBeVisible();
+  await expect(card.getByRole('checkbox', { name: 'Training abhaken' })).not.toBeChecked();
 });

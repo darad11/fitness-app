@@ -38,6 +38,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F6 §1 Logo der Kopfzeile | Ursache der Unschärfe: iOS legt über die obersten rund 40 pt eine eigene Unschärfe, das Logo lag darin; auf iPhone und iPad beginnt alles, was oben ruht, 2 rem tiefer (Logo bei 46 pt). Dazu Logo-Datei in Anzeigegröße 106 × 28 auf ganzen Pixeln; in der App kein Filter, kein Glas und nichts über dem Logo | D-332 | umgesetzt; Wirkung am iPhone nur am Gerät prüfbar (T-IPH-M0 Schritt 6) |
 | F6 §2 Makro-Ring V2 | Eiweiß Türkis, Kohlenhydrate Blau, Fett Violett in Ring, Balken und auf „Heute“; weiche Übergänge über 2 × 18° (höchstens ein Drittel des kürzeren Abschnitts) aus feinen Schritten, Mischfarben in OKLab ohne grelle oder trübe Töne; Kontrast 3:1 auf `--surface` und `--surface-2` | D-333 | umgesetzt |
 | F6 §3 Erledigt-Markierungen | Eine Komponente `Mark` mit drei Größen: Verlauf 14 px unter dem Balken statt grüner Balken, „Je Aufgabe“ 16 px statt bis 40 px, Kalender kompakt in sieben Spalten mit Wochentagen und 16 px statt 28 px; Haken 60 %, Radius 22,5 %; Abhakfeld in Listen als Quadrat 20 px | D-334 | umgesetzt, Vergleich in `docs/screens/komponenten/markierungen.png` |
+| F6 §4 Aufgaben bearbeitbar (V1) | Zeile wie V1 auf „Heute“ und „Tagesaufgaben“: Abhakfeld links (20 px, Tippfläche 44 px), Rest der Zeile öffnet die Detailansicht, Chevron rechts, Rhythmus unter dem Namen, erledigt gedämpft; Einstellungen in der Detailansicht, Reihenfolge über „Reihenfolge ändern“ | D-335 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -235,6 +236,16 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: `e2e/marks.spec.ts` (drei neue Tests für Kalender, „Je Aufgabe“ mit Verlauf und das Abhakfeld; ersetzen die beiden Tests aus F5).
 - Dokumente: `docs/decisions.md` (D-334), `brand-tokens.md` (Abschnitte 2.6 und 6), `docs/design-system.md` (Komponenten), `docs/testing.md`.
 
+### F6 §4 Aufgaben bearbeitbar (V1)
+
+- Zeile `TaskRow` (neu) auf „Heute“ und „Tagesaufgaben“: links das Abhakfeld, sichtbar 20 px, Tippfläche 44 px (unsichtbares Kontrollkästchen darüber wie beim Schalter); ein Tipp hakt nur ab. Der Rest der Zeile öffnet die Detailansicht; rechts ein Chevron in `--fg-faint`. Unter dem Namen der Rhythmus („Täglich“, „Mo · Mi · Fr“, dazu „mit Training abhaken“ bzw. „mit Wasserziel abhaken“). Erledigt: Name gedämpft, nicht durchgestrichen.
+- Screenreader: „Spaziergang abhaken“ und „Spaziergang bearbeiten“; der Rhythmus beschreibt den Link.
+- Detailansicht: oben „Einstellungen“ (`TaskSettings`, neu: Name, Wochentage, Regel, Speichern, Pausieren, Löschen; vorher klappte das Formular in der Liste auf), darunter „Auswertung“. „Zurück“ führt dorthin, wo die Zeile angetippt wurde. Nach Pausieren oder Löschen zurück zu „Tagesaufgaben“ mit „Rückgängig“.
+- Auf „Tagesaufgaben“ lässt sich jetzt auch abhaken; heute nicht fällige Aufgaben zeigen das blasse Feld und lassen sich nicht abhaken. Die Reihenfolge ändert man über „Reihenfolge ändern“ (je Zeile nach oben, nach unten, „Fertig“), damit die Zeilen gleich bleiben wie auf „Heute“.
+- Geändert: neu `habits/ui/TaskRow.tsx` und `TaskSettings.tsx`, entfernt `TaskCheckbox.tsx`; `TasksCard.tsx`, `TasksPage.tsx`, `TaskDetailPage.tsx`; `src/shared/i18n/de.ts` und `de-water.ts` (Namen, Rhythmus, Einstellungen).
+- Tests: neu `e2e/task-rows.spec.ts`; `habits-ui.test.tsx` neu geschrieben; angepasst `e2e/tasks.spec.ts`, `switches.spec.ts`, `water.spec.ts`, `marks.spec.ts`, `period-row.spec.ts`.
+- Dokumente: `docs/decisions.md` (D-335), `docs/testing.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -364,6 +375,12 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §3: `pnpm test` | 23.10.2026 | 876 Tests in 105 Dateien bestanden |
 | F6 §3: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,5 KB von 250 KB (gzip) |
 | F6 §3: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 284 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
+| F6 §4: `e2e/task-rows.spec.ts` (neu) und die angepassten `tasks`, `marks`, `switches`, `water`, `period-row` | 23.10.2026 | 87 bestanden, 15 übersprungen, 2 fehlgeschlagen im ersten Lauf: `marks.spec.ts` „Abhakfeld in Listen …“ (Locator der Zeile im Test falsch verschachtelt, behoben), danach bestanden. Gegenprobe gegen `3f5b833` mit der neuen Datei: 10 von 10 Fällen fehlgeschlagen, 4 übersprungen |
+| F6 §4: `habits-ui.test.tsx` | 23.10.2026 | nach dem Umbau 7 Tests fehlgeschlagen (alter Ablauf), neu geschrieben; 11 bestanden |
+| F6 §4: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §4: `pnpm test` | 23.10.2026 | 878 Tests in 105 Dateien bestanden |
+| F6 §4: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,7 KB von 250 KB (gzip) |
+| F6 §4: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 293 bestanden, 36 übersprungen, 1 fehlgeschlagen (7,3 min): `nutrition-ring.spec.ts` „Ring V2 …“ (Desktop) las auf „Heute“ den Ring, bevor die Einträge geladen waren (Wettlauf im Test aus §2). Der Test wartet jetzt auf die drei Abschnitte; danach 5 Wiederholungen in beiden Projekten bestanden (10 von 10) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

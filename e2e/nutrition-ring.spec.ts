@@ -208,6 +208,8 @@ test('Ring V2: Türkis, Blau, Violett in Ring, Balken und auf „Heute“; Über
         ? page.getByRole('region', { name: 'Ernährung heute' })
         : page.getByRole('region', { name: 'Gegessen' });
     const view = card.getByRole('img', { name: /kcal/ });
+    // Erst wenn die Einträge geladen sind, hat der Ring seine drei Abschnitte.
+    await expect(view.locator('circle[data-part]')).toHaveCount(3);
     const colors = await view
       .locator('circle[data-part]')
       .evaluateAll((circles) =>

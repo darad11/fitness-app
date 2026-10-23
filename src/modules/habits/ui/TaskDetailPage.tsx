@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
@@ -19,6 +19,7 @@ import {
   type InsightPeriod,
 } from '../calc/insights';
 import { ProgressChart } from './ProgressChart';
+import { TaskSettings } from './TaskSettings';
 import { statusOf } from './TaskStats';
 import { useHabitHistory } from './useHabitHistory';
 
@@ -29,15 +30,21 @@ const PERIOD_LENGTH: Record<InsightPeriod, number> = { '7d': 7, '30d': 30, '90d'
 const CALENDAR_MAX = 90;
 
 /**
- * Auswertung einer Aufgabe (D-284): Quote, erledigte Tage, diese Woche (Wochenbild statt Serie,
- * D-318), Vergleich, Verlauf, Kalender, Wochentage.
+ * Detailansicht einer Aufgabe (F6, D-335): oben die Einstellungen (Name, Wochentage, Regel zum
+ * Abhaken, pausieren, löschen), darunter die Auswertung (D-284): Quote, erledigte Tage, diese
+ * Woche (Wochenbild statt Serie, D-318), Vergleich, Verlauf, Kalender, Wochentage. Zurück führt
+ * dorthin, wo die Zeile angetippt wurde („Heute“ oder „Tagesaufgaben“).
  */
 export function TaskDetailPage() {
   const { id } = useParams();
   const fmt = useFormatters();
   const history = useHabitHistory();
   const [period, setPeriod] = useState<InsightPeriod>('30d');
-  const back = { to: '/heute/aufgaben', label: td.back };
+  const from = (useLocation().state as { back?: string } | null)?.back;
+  const back =
+    from === '/heute'
+      ? { to: '/heute', label: t.nav.today }
+      : { to: '/heute/aufgaben', label: td.back };
 
   if (history === undefined) {
     return (
@@ -81,6 +88,8 @@ export function TaskDetailPage() {
       <PageHeader title={habit.name} back={back} />
       <div className="grid grid-cols-1 gap-4">
         {status ? <p className="text-muted">{td.status(status)}</p> : null}
+        {status === null ? <TaskSettings key={habit.id} habit={habit} today={today} /> : null}
+        <h2 className="mt-2 text-xl font-semibold">{t.tasks.statsTitle}</h2>
         <SegmentedControl
           row
           legend={ts.periodLegend}

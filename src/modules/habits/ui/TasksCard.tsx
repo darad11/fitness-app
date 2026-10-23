@@ -6,15 +6,16 @@ import { dayKey, localTimeZone } from '@/shared/lib/time';
 import { t } from '@/shared/i18n/de';
 import { Button, ButtonLink, Card, Meter, SettingsLink, Skeleton } from '@/shared/ui';
 import { applyAutoDone, applyWaterAutoDoneToday, setHabitDone } from '../service/habitService';
-import { TaskCheckbox } from './TaskCheckbox';
+import { TaskRow } from './TaskRow';
 import { useTodayTasks } from './useTodayTasks';
 
 /** So viele Aufgaben zeigt die Karte zuerst; der Rest per „weitere anzeigen“. */
 const VISIBLE = 6;
 
 /**
- * Karte „Tagesaufgaben“ auf „Heute“ (AH-03, D-283): schlichte Liste zum Abhaken, jeden Tag neu,
- * darunter ein schmaler Balken mit „x von y erledigt“; Weg zur Verwaltung.
+ * Karte „Tagesaufgaben“ auf „Heute“ (AH-03, D-283): Liste zum Abhaken, jeden Tag neu, darunter
+ * ein schmaler Balken mit „x von y erledigt“; Weg zur Verwaltung. Zeilen wie auf „Tagesaufgaben“
+ * (F6, D-335): Abhakfeld links, der Rest der Zeile öffnet die Detailansicht.
  */
 export function TasksCard({ className }: { className?: string }) {
   const rt = useDb();
@@ -82,8 +83,9 @@ export function TasksCard({ className }: { className?: string }) {
           <ul className="divide-y divide-line">
             {shown.map((habit) => (
               <li key={habit.id}>
-                <TaskCheckbox
-                  label={habit.name}
+                <TaskRow
+                  habit={habit}
+                  today={tasks.today}
                   checked={tasks.doneIds.has(habit.id)}
                   onChange={(checked) => {
                     setHabitDone(rt, habit.id, tasks.today, checked).catch((error: unknown) => {

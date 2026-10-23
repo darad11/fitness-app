@@ -20,38 +20,50 @@ async function tapSwitch(scope: Page | Locator, name: string, touch: boolean) {
   else await control.click();
 }
 
+/** Neue Aufgabe anlegen und ihre Detailansicht öffnen (Einstellungen, D-335). */
 async function addTask(page: Page, name: string) {
   await openPage(page, '/heute/aufgaben');
   await page.getByLabel('Name der Aufgabe').fill(name);
   await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-  const list = page.getByRole('region', { name: 'Meine Aufgaben' });
-  await list.getByRole('button', { name: `${name} bearbeiten` }).click();
-  return list;
+  await page
+    .getByRole('region', { name: 'Meine Aufgaben' })
+    .getByRole('link', { name: `${name} bearbeiten` })
+    .click();
+  return settingsOf(page);
+}
+
+/** Einstellungen in der Detailansicht der Aufgabe. */
+function settingsOf(page: Page) {
+  return page.getByRole('region', { name: 'Einstellungen' });
 }
 
 test('Tagesaufgabe: „Mit Training abhaken“ per Tipp auf den Schalter, gespeichert nach Neuladen', async ({
   page,
   hasTouch,
 }) => {
-  let list = await addTask(page, 'Lesen');
-  await tapSwitch(list, 'Mit Training abhaken', hasTouch);
-  await expect(list.getByRole('switch', { name: 'Mit Training abhaken' })).toBeChecked();
-  await list.getByRole('button', { name: 'Speichern' }).click();
-  await expect(list.getByRole('button', { name: 'Lesen bearbeiten' })).toContainText(
-    'mit Training',
-  );
+  const settings = await addTask(page, 'Lesen');
+  await tapSwitch(settings, 'Mit Training abhaken', hasTouch);
+  await expect(settings.getByRole('switch', { name: 'Mit Training abhaken' })).toBeChecked();
+  await settings.getByRole('button', { name: 'Speichern' }).click();
+  await expect(settings.getByText('Gespeichert.')).toBeVisible();
   await page.reload();
-  list = page.getByRole('region', { name: 'Meine Aufgaben' });
-  await list.getByRole('button', { name: 'Lesen bearbeiten' }).click();
-  await expect(list.getByRole('switch', { name: 'Mit Training abhaken' })).toBeChecked();
-  await expect(list.getByRole('switch', { name: 'Mit Wasserziel abhaken' })).not.toBeChecked();
+  await expect(
+    settingsOf(page).getByRole('switch', { name: 'Mit Training abhaken' }),
+  ).toBeChecked();
+  await expect(
+    settingsOf(page).getByRole('switch', { name: 'Mit Wasserziel abhaken' }),
+  ).not.toBeChecked();
+  await openPage(page, '/heute/aufgaben');
+  await expect(page.getByRole('link', { name: 'Lesen bearbeiten' })).toHaveAccessibleDescription(
+    'Täglich · mit Training abhaken',
+  );
 });
 
 test('Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur, nur eine Regel zugleich', async ({
   page,
   hasTouch,
 }) => {
-  let list = await addTask(page, 'Trinken');
+  const list = await addTask(page, 'Trinken');
   await tapSwitch(list, 'Mit Training abhaken', hasTouch);
   await tapSwitch(list, 'Mit Wasserziel abhaken', hasTouch);
   await expect(list.getByRole('switch', { name: 'Mit Wasserziel abhaken' })).toBeChecked();
@@ -64,14 +76,15 @@ test('Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur, nur eine
   await page.keyboard.press('Space');
   await expect(water).toBeChecked();
   await list.getByRole('button', { name: 'Speichern' }).click();
+  await expect(list.getByText('Gespeichert.')).toBeVisible();
   await page.reload();
-  list = page.getByRole('region', { name: 'Meine Aufgaben' });
-  await list.getByRole('button', { name: 'Trinken bearbeiten' }).click();
-  await expect(list.getByRole('switch', { name: 'Mit Wasserziel abhaken' })).toBeChecked();
+  await expect(
+    settingsOf(page).getByRole('switch', { name: 'Mit Wasserziel abhaken' }),
+  ).toBeChecked();
 });
 
 for (const width of [360, 390]) {
-  test(`Tagesaufgabe bearbeiten: Feld, sieben Wochentage und Schalter bleiben in der Karte (${String(width)} pt)`, async ({
+  test(`Tagesaufgabe bearbeiten: Feld, sieben Wochentage und Schalter bleiben in der Karte „Einstellungen“ (${String(width)} pt)`, async ({
     page,
     isMobile,
   }) => {
@@ -88,7 +101,7 @@ for (const width of [360, 390]) {
       expect(box.x, `${label} links`).toBeGreaterThanOrEqual(card.x);
       expect(box.x + box.width, `${label} rechts`).toBeLessThanOrEqual(card.x + card.width + 0.5);
     };
-    await inside(list.locator('input[id^="umbenennen-"]'), 'Namensfeld');
+    await inside(list.getByLabel('Name der Aufgabe'), 'Namensfeld');
     const days = list.getByRole('button', { name: / fällig$/ });
     await expect(days).toHaveCount(7);
     const tops = new Set<number>();
@@ -293,7 +306,7 @@ const CHOICE_PAGES: readonly { path: string; setup?: (page: Page) => Promise<voi
     setup: async (page) => {
       await page.getByLabel('Name der Aufgabe').fill('Dehnen');
       await page.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
-      await expect(page.getByRole('button', { name: 'Dehnen bearbeiten' })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Dehnen bearbeiten' })).toBeVisible();
     },
   },
   {

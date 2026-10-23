@@ -22,7 +22,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | C Anmeldung und Über die App | Anmeldung mit `logo-anmeldung-dunkel.svg`, Claim „FORM YOURSELF.“ und Unterzeile als Text, Felder und Knöpfe aus F2, ohne Karte, Glas und Lichtflecken; die eigenen Tokens der Anmeldung entfallen; „Über die App“ mit dem Logo ohne Claim | D-316 | umgesetzt, Screenshots `docs/screens/anmeldung.png` und `ueber-die-app.png` |
 | D Startbild | `apple-touch-startup-image` für 20 Bildschirmmaße von iPhone und iPad, je hochkant und quer: drei Bilder unverändert aus dem Markenpaket, 37 nach derselben Regel erzeugt (`tools/splash.mjs`); nicht im Vorab-Speicher des Service Workers; Manifest-Farben #0C1219 seit A | D-317 | umgesetzt; Kaltstart ohne weißen Blitz nur am Gerät prüfbar (T-IPH-M0 Schritt 5, steht aus) |
 | F4 Texte | Mikrotexte aus den Leitplanken (Abschluss „… Das warst du.“, Leerzustände Fortschritt und Verlauf, Ruhetag, Schritte-Ziel); keine Serie mehr in der Auswertung der Tagesaufgaben, dafür „Diese Woche x von y“; neuer Anzeigename für Programm C (seit F5 „Winterprogramm 2026“, D-328); Datenschutztext richtiggestellt; automatische Wortfeld-Prüfung | D-318 | umgesetzt |
-| G Rückkehr-Flow | Nach 14 Tagen ohne Eintrag einmal je Rückkehr das Blatt „Schön, dass du da bist.“ mit „Ein Spaziergang“, „Ein leichtes Training“ (Hinweis im Player) und „Nur reinschauen“; „Pause“ im Verlauf und im Fortschritt; Satz zum ersten Start | D-319 | umgesetzt; Push nach 21 Tagen nicht gebaut (keine Push-Infrastruktur) |
+| G Rückkehr-Flow | Nach 14 Tagen ohne Eintrag einmal je Rückkehr das Blatt „Schön, dass du da bist.“ mit „Ein Spaziergang“, „Ein leichtes Training“ (Hinweis im Player) und „Nur reinschauen“; „Pause“ im Verlauf und im Fortschritt; Satz zum ersten Start | D-319 | umgesetzt; Push nach 21 Tagen entfällt (D-329) |
 | E Token-Abgleich | `brand-tokens.md` final: Abgleich mit `brand.css`, Zuordnung alt → neu, nachgerechnete Kontraste, Abweichungen, offene Punkte; ungenutzte Tokens `--ink-2`, `--on-ink`, `--on-ink-muted` entfernt; Screenshots aller Screens und Komponenten erneuert; dieser Bericht | D-320 | umgesetzt |
 | Übergabe Marken-Chat | Alle Screenshots auf einem Bild (`docs/screens/uebersicht.png`) und als Archiv (`docs/screens.zip`), erzeugt mit `tools/screens-overview.mjs` | D-321 | umgesetzt |
 | F5 §1 Bedienelemente | Schalter reagieren auf einen Tipp auf den Schalter selbst (alle elf); widersprüchliche Klassen an Chips und Knöpfen durch Varianten ersetzt, Schutztest; Wochentage der Tagesaufgabe in einer Zeile innerhalb der Karte; Wochenziel mit dem gespeicherten Wert vorbelegt; „Als Tabelle“ bleibt nach Neuladen | D-322 | umgesetzt |
@@ -32,6 +32,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §5 Ernährung | Ring mit Abschnitten nach Makros (Eiweiß, Kohlenhydrate, Fett, ab 5 % nicht zugeordnete kcal in Grau), Karte „Gegessen“ wie in der bisherigen App, derselbe Ring auf „Heute“; Datumszeile „Heute · Do., 22. Okt.“ einzeilig; Hinweis „Bei mindestens einem Eintrag fehlen Angaben zu …“ mit richtiger Aufzählung; „Aktuelles Ziel“ ohne Datum | D-326 | umgesetzt |
 | F5 §6 Fortschritt | Zeitraum-Auswahl in einer Zeile (Fortschritt, Körpergewicht, Übung, Wasser, Tagesaufgaben), die Chips teilen sich die Breite | D-327 | umgesetzt |
 | F5 §7 Texte und Marke | Programm C heißt „Winterprogramm 2026“ mit neutraler Beschreibung und eigener Adresse; keine Hinweise auf die fremde App in Code, Daten und Dokumenten, zwei Prüfungen dagegen; Registrierung bleibt offen; Werte des Kontos aus der Referenzanalyse entfernt | D-328 | umgesetzt |
+| F5 §7a Entscheidungen | Serie bleibt entfernt; Gerätetest des Startbilds zuerst an der Vorschau, die Daten sind Testdaten; kein Push nach langer Pause; zwei neue P2-Punkte (Wiederherstellen aus dem Export, Ursache des Offline-Tests) | D-329 | festgehalten |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -170,6 +171,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: `src/app/wording.test.ts` (drei neue Regeln, auch für das Feld `slug`), `training/calc/programs.test.ts` (Name, Beschreibung ohne Quelle, Adresse von Programm C), `training/ui/programs-ui.test.tsx`, `programService.test.ts`, `playerService.test.ts`, `e2e/programs.spec.ts`, `e2e/fixtures.ts` (Adresse in der Liste aller Seiten).
 - Dokumente: `docs/decisions.md` (D-328; D-299 und D-318 angepasst), `docs/CHANGELOG.md` (Version 0.40), `brand-tokens.md` Abschnitt 5 Punkt 3.
 
+### F5 §7a Entscheidungen
+
+- Festgehalten in `docs/decisions.md` (D-329): Die Serie in der Auswertung der Tagesaufgaben bleibt entfernt, „Diese Woche x von y“ bleibt. Gerätetest des Startbilds zuerst an der Vorschau, nach dem Merge an der Produktivadresse; die Daten sind Testdaten, der Hinweis auf möglichen Datenverlust gilt für den Produktinhaber nicht. Kein Push nach längerer Pause. Name von Programm C wie in D-328.
+- Neue P2-Punkte in `audit-report.md` Abschnitt 5: A-14 „Wiederherstellen aus dem Export“ (muss vor echten Nutzern da sein) und E-16 Ursachensuche für den Test „Service Worker übernimmt und alle Bereiche starten offline“, mit hoher Priorität; Zusammenfassung auf 18 P2-Punkte.
+- Angepasst: `docs/testing.md` (T-IPH-M0 Schritt 5), `docs/known-limitations.md` (Zeile „Startbild“), `brand-tokens.md` (Abschnitt 4 Push, Abschnitt 5 Punkt 4), `docs/brand-form.md` (Hinweis zur Neuinstallation, nicht die Gründergeschichte), dieser Bericht (Abschnitt 5).
+- Keine Codeänderung.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -271,6 +279,7 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §7: Gegenprobe gegen den Stand vor Abschnitt 7 (`687d0bf`) | 23.10.2026 | Die neue `wording.test.ts` mit den Texten von damals: 3 von 27 Tests fehlgeschlagen (je Begriff einer). `check_names.py`: Exit-Code 1, „757 Probleme“ in 50 Dateien |
 | F5 §7: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,0 KB von 250 KB (gzip) |
 | F5 §7: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 261 bestanden, 23 übersprungen, 2 fehlgeschlagen (6,4 min): `programs.spec.ts` „Programm C: Wochen, Hinweise und Dropsets ohne Pause sind sichtbar“ (Desktop und Handy) erwartete noch die Zeile „Quelle: Rekonstruktion“. Test angepasst (Name, neutrale Beschreibung, keine Quellenzeile); danach `e2e/programs.spec.ts`: 4 bestanden |
+| F5 §7a: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm test` | 23.10.2026 | ohne Befund; 860 Tests in 104 Dateien bestanden. Nur Dokumente geändert, kein Build und kein E2E-Lauf nötig; die CI läuft trotzdem vollständig |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -286,11 +295,11 @@ Offen beim Produktinhaber:
 
 1. Durchsicht und Merge von PR #49 (`form-rebranding` → `main`).
 2. Name von Programm C: entschieden, „Winterprogramm 2026“ mit neutraler Beschreibung (F5, D-328).
-3. Serie in der Auswertung der Tagesaufgaben entfernt, „Diese Woche x von y“ stattdessen (D-318, ändert D-284). Die Leitplanken verlangen es ausdrücklich; die Entscheidung ist leicht umkehrbar, die Rechnung ist aber entfernt.
-4. Gerätetest T-IPH-M0 Schritt 5: App neu zum Home-Bildschirm hinzufügen, Kaltstart hochkant und quer, kein weißer Blitz (D-317). Vorsicht: Beim Entfernen der alten App kann iOS deren Daten löschen, und ein Export lässt sich noch nicht einspielen; deshalb erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
+3. Serie in der Auswertung der Tagesaufgaben: entschieden, sie bleibt entfernt, „Diese Woche x von y“ bleibt (D-318, D-329).
+4. Gerätetest T-IPH-M0 Schritt 5: App neu zum Home-Bildschirm hinzufügen, Kaltstart hochkant und quer, kein weißer Blitz (D-317). Ablauf entschieden (D-329): zuerst an der Vorschau, nach dem Merge an der Produktivadresse; die Daten sind Testdaten. Der Test selbst steht aus.
 5. `brand-tokens.md` Abschnitt 5: App-Farben an die Markenfarben angleichen? Empfehlung: so lassen; Grundfläche, Akzent und Kachel sind schon gleich.
-6. Push nach 21 Tagen Pause ist nicht gebaut (keine Push-Infrastruktur, D-319).
-7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als eigene Aufgabe vorgeschlagen.
+6. Push nach 21 Tagen Pause: entschieden, entfällt (D-329).
+7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als P2-Punkt E-16 mit hoher Priorität in `audit-report.md` (D-329). In den vollen Läufen zu F5 Abschnitt 1 bis 7 lief er lokal ohne Fehler; die Ursache der früheren Fehlschläge ist damit nicht geklärt.
 
 ## 6. Stand nach dieser Sitzung
 

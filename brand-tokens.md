@@ -204,14 +204,14 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad), nur das Symbol | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach Variante C3: Logo vertikal mittig bei 47 %, „FORM YOURSELF.“ als Fußzeile; dieselbe Regel als Startfläche in der App | iOS zeigt ein Startbild nur bei genau passendem Bildschirm (D-317); C3 nach Wahl des Produktinhabers (F5, D-325); Schriftgröße des Claims quer aus der kurzen Seite statt der Breite |
 | Mikrotext „Woche abgeschlossen: Diese Woche 3 von 4.“ | „x von y Trainings diese Woche“ | Formulierung aus AK-DSH-05 bleibt; der Sinn ist derselbe (F4, D-318) |
 | Mikrotext „Nutzer überzieht“ | nicht verwendet | Die App misst keine Belastung; ohne Grundlage keine Aussage (Leitplanken Regel 5) |
-| Push nach 21 Tagen Pause | nicht gebaut | Keine Push-Infrastruktur; Web Push braucht einen Server (D-319, `known-limitations.md`) |
+| Push nach 21 Tagen Pause | entfällt | Entscheidung des Produktinhabers (D-329); dafür gäbe es auch keine Push-Infrastruktur, Web Push braucht einen Server (D-319) |
 
 ## 5. Offen beim Produktinhaber
 
 1. App-Farben an die Markenfarben angleichen? Grundfläche, Akzent und Kachel sind schon gleich (Abschnitt 2.0); offen sind nur Textweiß (#F2F3F4 statt #FFFFFF) und die Abweichungen aus Kontrastgründen in Abschnitt 4. Empfehlung: so lassen.
 2. Heller Modus: nicht ausgeliefert (D-311); die hellen Tokens und die `-hell`-Logos bleiben angelegt. Neu bewerten, wenn Nutzer danach fragen.
 3. Name von Programm C: entschieden, „Winterprogramm 2026“ mit neutraler Beschreibung (F5, D-328).
-4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App mit dem Startbild C3 ohne weißen Blitz und ohne Sprung zur Startfläche, hochkant und quer (D-317, D-325). Vorsicht: Beim Entfernen der alten App vom Home-Bildschirm kann iOS deren Daten löschen; erst nach abgeglichener Synchronisierung oder an einer zweiten Adresse testen (D-321).
+4. Gerätetest T-IPH-M0 Schritt 5: Kaltstart der installierten App mit dem Startbild C3 ohne weißen Blitz und ohne Sprung zur Startfläche, hochkant und quer (D-317, D-325). Ablauf (D-329): zuerst an der Vorschau, nach dem Merge die App an der Produktivadresse neu hinzufügen; die Daten sind Testdaten, der Hinweis auf möglichen Datenverlust gilt hier nicht.
 
 ## 6. Screenshots
 

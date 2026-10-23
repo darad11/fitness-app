@@ -454,6 +454,8 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §9: `pnpm test` | 23.10.2026 | 890 Tests in 105 Dateien bestanden |
 | F6 §9: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
 | F6 §9: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (7,1 min); Stand mit den Nachträgen zu §1 und §6 und den Änderungen aus §9 |
+| F6 §9: CI zu `6782756` | 23.10.2026 | alle Jobs bestanden. Lint, Typen, Unit-Tests, Dokumente, Build bestanden. Chromium: 303 bestanden, 42 übersprungen, 1 flaky: `program-list.spec.ts` „„Bereit für dein Training?“ auf Heute und Training …“ (Desktop) fand im ersten Versuch „Heute geplant“ nicht (Zeile 141, direkt nach „Programm aktivieren“ und dem Seitenwechsel), im zweiten bestanden. WebKit: der erste Versuch hing 24 Minuten in `playwright install --with-deps webkit`, also vor jedem Test; Lauf abgebrochen, Job einmal neu gestartet: 298 bestanden, 48 übersprungen, 0 fehlgeschlagen (7,3 min). Der Lauf zu `3ce4784` wurde durch den nächsten Push abgebrochen (`cancel-in-progress`) |
+| F6 §9, Nachtrag: `e2e/program-list.spec.ts` | 23.10.2026 | Ursache wie im Logo-Test (§1): Der Seitenwechsel kam dem Speichern von „Programm aktivieren“ zuvor. Beide Stellen der Datei warten jetzt, bis der Knopf verschwindet. 5 Wiederholungen: 50 bestanden, 10 übersprungen. Gezielt nachstellen ließ sich der Wettlauf lokal nicht (20 Läufe mit 20-facher CPU-Drosselung, alter und neuer Ablauf je 10 bestanden) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -522,7 +524,7 @@ Empfehlungen:
 
 ## 8. Abschluss F6 (23.10.2026)
 
-Auftrag: `docs/prompts/F6-feinschliff-vor-dem-merge.md` mit dem Bild im Anhang (Ring V2, Aufgaben V1, Karten V2a bis V2d; gewählt V2c). Je Abschnitt ein Commit mit eigener Entscheidung, sofort gepusht: §1 `6f99fc6` (D-332), §2 `8271179` (D-333), §3 `3f5b833` (D-334), §4 `4852076` (D-335), §5 `6f77dbe` (D-336), §6 `c807dc0` (D-337), Nachtrag zu §1 aus der CI `4146fad` (D-332), §7 `1a9c9b9` (D-338), §8 `2a1990a` (D-339), Nachtrag zu §6 aus der CI `3ce4784` (D-337), §9 mit diesem Bericht (D-340). Gefundene Probleme, Ursachen, Änderungen und Dateien stehen je Abschnitt in Abschnitt 2, die Testergebnisse wörtlich in Abschnitt 3. Den Vergleich der Markierungen zeigt `docs/screens/komponenten/markierungen.png`.
+Auftrag: `docs/prompts/F6-feinschliff-vor-dem-merge.md` mit dem Bild im Anhang (Ring V2, Aufgaben V1, Karten V2a bis V2d; gewählt V2c). Je Abschnitt ein Commit mit eigener Entscheidung, sofort gepusht: §1 `6f99fc6` (D-332), §2 `8271179` (D-333), §3 `3f5b833` (D-334), §4 `4852076` (D-335), §5 `6f77dbe` (D-336), §6 `c807dc0` (D-337), Nachtrag zu §1 aus der CI `4146fad` (D-332), §7 `1a9c9b9` (D-338), §8 `2a1990a` (D-339), Nachtrag zu §6 aus der CI `3ce4784` (D-337), §9 `6782756` (D-340), danach das CI-Ergebnis zu `6782756` und die Korrektur in `e2e/program-list.spec.ts` (D-340). Gefundene Probleme, Ursachen, Änderungen und Dateien stehen je Abschnitt in Abschnitt 2, die Testergebnisse wörtlich in Abschnitt 3. Den Vergleich der Markierungen zeigt `docs/screens/komponenten/markierungen.png`.
 
 Tests je Änderung, jeweils mit Gegenprobe gegen den Stand davor:
 
@@ -546,12 +548,12 @@ Offen beim Produktinhaber: Durchsicht und Merge von PR #49; Gerätetest T-IPH-M0
 Nicht hier prüfbar:
 
 - Alles am iPhone: ob das Logo unter der Unschärfe von iOS scharf wirkt und der Abstand von 2 rem passt, wie lange die Startfläche am Gerät steht (die Unschärfe und das Startbild von iOS lassen sich nicht nachstellen), Schriftbreiten von iOS Safari bei der Kürzung im Trainingskopf.
-- WebKit läuft nur in der CI. Zu `2a1990a` war WebKit bis auf die Startfläche grün (296 bestanden, 47 übersprungen, 1 fehlgeschlagen); das Ergebnis zu `3ce4784` und zum Commit mit diesem Bericht steht beim Schreiben noch aus.
+- WebKit läuft nur in der CI. Zu `6782756` bestanden alle Jobs: WebKit 298 bestanden, 48 übersprungen, 0 fehlgeschlagen (nach einem Neustart des Jobs, der zuvor in der Installation hing), Chromium 303 bestanden mit 1 flaky in `program-list.spec.ts`, inzwischen behoben. Das Ergebnis zum Commit mit diesem Nachtrag steht beim Schreiben noch aus.
 - Ein einmaliger Fehlschlag im Test „Mit Wasserziel abhaken … per Tastatur“ (erster Volllauf zu §7): Ursache nicht gefunden; nicht wieder aufgetreten in 20 Wiederholungen des Tests, 100 Wiederholungen einer Kopie mit Aufzeichnung von Fokus und Änderungen am Dokument (davon 40 mit 8-facher CPU-Drosselung) und zwei weiteren Vollläufen. Ausgeschlossen: ein neues Einhängen der Einstellungen (dieselbe ID `_r_c_` wie in bestandenen Läufen), ein Zurücksetzen durch die Datenabfragen und Tastatur-Handler der App.
 
 Empfehlungen:
 
 1. Gerätetest T-IPH-M0 Schritte 5 und 6 an der Vorschau vor dem Merge; bei Schritt 6 notieren, ob der Abstand oben zu groß wirkt.
 2. Den einmaligen Fehlschlag im Schaltertest beobachten: Die neue Fokusprüfung zeigt beim nächsten Mal, ob der Fokus verloren ging; `test-results` vor dem nächsten Lauf sichern, sonst geht die Aufzeichnung verloren.
-3. In `e2e/program-list.spec.ts` folgt an zwei Stellen ein Seitenwechsel direkt auf „Programm aktivieren“; dasselbe Muster startete im Logo-Test ein freies Training ohne Übungen. Als kleine eigene Aufgabe auf das Speichern warten lassen.
+3. Erledigt im Nachtrag: In `e2e/program-list.spec.ts` folgte an zwei Stellen ein Seitenwechsel direkt auf „Programm aktivieren“; die CI zu `6782756` zeigte genau dort einmal den Fehler. Beide Stellen warten jetzt auf das Speichern. Weitere Stellen mit „Programm aktivieren“ und direktem Seitenwechsel gibt es in `e2e/` nicht; andere Schreibvorgänge direkt vor einem Seitenwechsel habe ich nicht durchgesehen.
 4. Aus F5 weiter offen: E-16 (Offline-Test) und A-14 (Wiederherstellen aus dem Export) vor echten Nutzern.

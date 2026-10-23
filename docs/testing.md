@@ -1108,3 +1108,11 @@ Breiten, Knopfzeile der Einstellungen, Screenshots (D-340).
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (7,1 min) |
 | `pnpm check:bundle` | 237,6 KB von 250 KB |
 | Am Gerät | offen: T-IPH-M0 Schritte 5 und 6 |
+
+### F6 §9 Nachtrag: CI zu `6782756` · 23.10.2026
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `6782756` | alle Jobs bestanden. Chromium 303 bestanden, 42 übersprungen, 1 flaky (`program-list.spec.ts`, „Heute geplant“ direkt nach „Programm aktivieren“ und dem Seitenwechsel nicht gefunden, im zweiten Versuch bestanden). WebKit nach einem Neustart des Jobs (der erste hing 24 Minuten in `playwright install --with-deps webkit`): 298 bestanden, 48 übersprungen, 0 fehlgeschlagen |
+| `pnpm exec playwright test e2e/program-list.spec.ts --repeat-each=5` (nach der Korrektur) | 50 bestanden, 10 übersprungen |
+| Gegenprobe | lokal nicht nachstellbar (20 Läufe mit 20-facher CPU-Drosselung, alter Ablauf bestanden) |

@@ -5,6 +5,17 @@ import { expect, openPage, test } from './fixtures';
 
 const scrollY = (page: Page) => page.evaluate(() => window.scrollY);
 
+/**
+ * „Programm aktivieren“ und warten, bis es gespeichert ist: Der Knopf verschwindet erst dann.
+ * Ein Seitenwechsel direkt nach dem Klick kann dem Speichern zuvorkommen; dann fehlt auf „Heute“
+ * das geplante Training (in der CI zu 6782756 einmal so, D-340).
+ */
+async function activateProgram(page: Page) {
+  const activate = page.getByRole('button', { name: 'Programm aktivieren' });
+  await activate.click();
+  await expect(activate).toHaveCount(0);
+}
+
 test('Programme: Detailseite beginnt oben, Zurück behält die Position der Liste', async ({
   page,
 }) => {
@@ -58,7 +69,7 @@ for (const width of [360, 390, 768]) {
     await page.setViewportSize({ width, height: 900 });
     // Ein aktives Programm, damit auch „Aktiv“ vorkommt.
     await openPage(page, '/training/vorlagen/compound_ab_4');
-    await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+    await activateProgram(page);
     await openPage(page, '/training/programme');
     const cards = page.locator('main ul li > a');
     const count = await cards.count();
@@ -136,7 +147,7 @@ test('„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuf
   }
   // Mit aktivem Programm: „Heute geplant“ statt der Frage.
   await openPage(page, '/training/vorlagen/compound_ab_4');
-  await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+  await activateProgram(page);
   await openPage(page, '/heute');
   await expect(page.getByText('Heute geplant', { exact: true })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Bereit für dein Training?' })).toHaveCount(0);

@@ -931,3 +931,15 @@ Ring mit Makros, Karte „Gegessen“, kurze Datumszeile, Hinweis mit Aufzählun
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 247 bestanden, 15 übersprungen, 0 fehlgeschlagen (6,4 min) |
 | `pnpm check:bundle` | 235,8 KB von 250 KB |
 
+### F5 §6 Fortschritt · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Zeitraum-Auswahl in einer Zeile (D-327).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 104 Dateien, 857 Tests bestanden |
+| `pnpm exec playwright test e2e/period-row.spec.ts` (neu) | 16 bestanden, 8 übersprungen (schmale Breiten nur im Handy-Projekt): Fortschritt, Körpergewicht, Tagesaufgaben und Wasser auf 360, 390 und 768 pt in einer Zeile, kein Wort gekürzt, Chips 36 px, jede Option per Tipp. Erster Lauf rot, weil der Test die absichtlich überstehende Tippfläche als Kürzung las; er misst jetzt den Text. Gegenprobe gegen den Stand vor Abschnitt 6 (Handy): Fortschritt und Körpergewicht auf 360 und 390 pt fehlgeschlagen (4 Tests), Tagesaufgaben und Wasser passten schon |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 263 bestanden, 23 übersprungen, 0 fehlgeschlagen (6,1 min) |
+| `pnpm check:bundle` | 235,9 KB von 250 KB |
+

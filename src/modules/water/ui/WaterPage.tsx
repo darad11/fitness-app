@@ -249,6 +249,7 @@ export function WaterPage() {
 
         <Card title={tw.historyTitle}>
           <SegmentedControl
+            row
             legend={tw.periodLegend}
             options={PERIOD_OPTIONS}
             value={period}

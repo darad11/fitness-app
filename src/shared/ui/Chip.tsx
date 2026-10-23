@@ -15,25 +15,34 @@ export const CHIP_BASE =
 export const CHIP_SELECTED = 'bg-accent text-on-accent';
 export const CHIP_IDLE =
   'bg-surface-2 text-fg shadow-[inset_0_0_0_1px_var(--border)] hover:bg-surface';
-/** Größe nach Inhalt oder als Zelle eines Rasters (volle Breite, Tippfläche bis an den Nachbarn). */
+/**
+ * Größe nach Inhalt, als Zelle eines Rasters (volle Breite, Tippfläche bis an den Nachbarn) oder
+ * als Teil einer Zeile, die sich die Breite teilt (`row`, F5 D-327: wächst vom Inhalt aus, damit
+ * z. B. fünf Zeiträume auf 360 pt in eine Zeile passen; ab 48 rem wieder nach Inhalt).
+ */
 export const CHIP_SIZES = {
   content: 'px-4 before:inset-x-0',
   fill: 'w-full px-1 before:-inset-x-0.5',
+  row: 'w-full px-1 before:-inset-x-0.5 md:px-4 md:before:inset-x-0',
 } as const;
+
+export type ChipSize = keyof typeof CHIP_SIZES;
 
 export interface ChipOptions {
   /** Füllt eine Zelle (z. B. sieben Wochentage in einer Zeile) statt sich nach dem Inhalt zu richten. */
   fill?: boolean;
+  /** Größe ausdrücklich; geht `fill` vor. */
+  size?: ChipSize;
 }
 
 export function chipClasses(
   selected = false,
   className?: string,
-  { fill = false }: ChipOptions = {},
+  { fill = false, size }: ChipOptions = {},
 ): string {
   return cn(
     CHIP_BASE,
-    fill ? CHIP_SIZES.fill : CHIP_SIZES.content,
+    CHIP_SIZES[size ?? (fill ? 'fill' : 'content')],
     selected ? CHIP_SELECTED : CHIP_IDLE,
     className,
   );

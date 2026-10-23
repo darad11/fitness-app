@@ -30,6 +30,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §3 Programme und Training | Neue Seiten beginnen oben, Zurück stellt die Liste wieder her; Etiketten der Programmkarten oben rechts, Titel bricht davor um, Chevron rechts mittig; „Bereit für dein Training?“ auf „Heute“ und „Training“ ohne Training und ohne Programm | D-324 | umgesetzt |
 | F5 §4 Kopfzeile, Icons, Markierungen, Startbild | Kopfzeilen-Logo mit grüner Kachel, 28 px, dieselbe Kachel in der Seitenleiste; ein Regler-Symbol für „Tagesaufgaben“ und „Wochenziel“; Kalenderzellen 28 px, abgerundet, Lime-Rahmen dünn und nur heute; Erledigt-Kreis 20 px; Seitenende geprüft (kein Fehler, neuer Test); Startbild C3 in 40 Größen und eine gleiche Startfläche in der installierten App | D-325 | umgesetzt; Kaltstart nur am Gerät prüfbar (T-IPH-M0 Schritt 5) |
 | F5 §5 Ernährung | Ring mit Abschnitten nach Makros (Eiweiß, Kohlenhydrate, Fett, ab 5 % nicht zugeordnete kcal in Grau), Karte „Gegessen“ wie in der bisherigen App, derselbe Ring auf „Heute“; Datumszeile „Heute · Do., 22. Okt.“ einzeilig; Hinweis „Bei mindestens einem Eintrag fehlen Angaben zu …“ mit richtiger Aufzählung; „Aktuelles Ziel“ ohne Datum | D-326 | umgesetzt |
+| F5 §6 Fortschritt | Zeitraum-Auswahl in einer Zeile (Fortschritt, Körpergewicht, Übung, Wasser, Tagesaufgaben), die Chips teilen sich die Breite | D-327 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -151,6 +152,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `nutrition/calc/ring.test.ts`, `nutrition/ui/macro-ring.test.tsx`, `src/shared/lib/list.test.ts`, `e2e/nutrition-ring.spec.ts` (Spur bei 0 kcal, Abschnitte und Vorlesetext mit dem Beispiel aus dem Auftrag, grauer Abschnitt ab 5 %, voll über dem Ziel mit neutralem Text, „Heute“ mit derselben Komponente; Datumszeile einzeilig auf 360, 390 und 768 pt; „Aktuelles Ziel“ ohne Datum vor und nach dem Übernehmen eines Vorschlags); erweitert `format.test.ts` (kurzes Datum, de-AT „Jän.“), `tokens.test.ts` (`--macro-other` 3:1); angepasst `e2e/barcode.spec.ts` (neuer Vorlesetext des Rings).
 - Dokumente: `docs/decisions.md` (D-326), `brand-tokens.md` (Abschnitt 2.3 und Kontraste), `docs/design-system.md`.
 
+### F5 §6 Fortschritt
+
+- Gefunden: Die Einfachauswahl setzt ihre Chips mit 16 px Innenmaß nach Inhalt und bricht um; die fünf Zeiträume im Fortschritt und die vier beim Körpergewicht brauchten auf 390 pt zwei Zeilen.
+- Geändert: `src/shared/ui/Chip.tsx` (Größe `row`, Option `size`), `src/shared/ui/SegmentedControl.tsx` (Eigenschaft `row`); Zeiträume mit `row` in `progress/ui/ProgressPage.tsx`, `ExerciseProgressPage.tsx`, `body/ui/BodyWeightPage.tsx`, `water/ui/WaterPage.tsx`, `habits/ui/TaskStats.tsx`, `TaskDetailPage.tsx`.
+- Tests: neu `e2e/period-row.spec.ts` (vier Seiten auf 360, 390 und 768 pt).
+- Dokumente: `docs/decisions.md` (D-327), `docs/design-system.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -243,6 +251,10 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §5: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 235,8 KB von 250 KB (gzip) |
 | F5 §5: `e2e/nutrition-ring.spec.ts` (neu), `barcode.spec.ts`, `nutrition.spec.ts` | 23.10.2026 | 22 bestanden, 2 übersprungen. Gegenprobe gegen den Stand vor Abschnitt 5 (Handy): alle 5 neuen Tests fehlgeschlagen |
 | F5 §5: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 247 bestanden, 15 übersprungen, 0 fehlgeschlagen (6,4 min) |
+| F5 §6: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm test` | 23.10.2026 | ohne Befund; 857 Tests in 104 Dateien bestanden |
+| F5 §6: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 235,9 KB von 250 KB (gzip) |
+| F5 §6: `e2e/period-row.spec.ts` (neu) | 23.10.2026 | 16 bestanden, 8 übersprungen. Gegenprobe gegen den Stand vor Abschnitt 6 (Handy): 4 Tests fehlgeschlagen (Fortschritt und Körpergewicht auf 360 und 390 pt) |
+| F5 §6: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 263 bestanden, 23 übersprungen, 0 fehlgeschlagen (6,1 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

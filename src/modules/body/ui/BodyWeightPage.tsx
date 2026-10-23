@@ -160,6 +160,7 @@ export function BodyWeightPage() {
           <Card title={t.body.chartTitle}>
             <div className="mb-3 grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
               <SegmentedControl
+                row
                 legend={t.body.periodLegend}
                 options={PERIOD_OPTIONS}
                 value={period}

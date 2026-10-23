@@ -103,6 +103,7 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
               ) : null}
               <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
                 <SegmentedControl
+                  row
                   legend={t.progress.periodLegend}
                   options={PERIOD_OPTIONS}
                   value={period}

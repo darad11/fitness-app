@@ -13,6 +13,11 @@ export interface SegmentedControlProps<T extends string> {
   onChange: (value: T) => void;
   hint?: string;
   disabled?: boolean;
+  /**
+   * Alle Optionen in einer Zeile, die Chips teilen sich die Breite (F5, D-327), z. B. Zeiträume;
+   * sonst brechen die Chips nach Inhalt um.
+   */
+  row?: boolean;
 }
 
 /**
@@ -26,15 +31,19 @@ export function SegmentedControl<T extends string>({
   onChange,
   hint,
   disabled,
+  row = false,
 }: SegmentedControlProps<T>) {
   const name = useId();
   const hintId = useId();
   return (
     <fieldset disabled={disabled} aria-describedby={hint ? hintId : undefined}>
       <legend className="mb-2 text-sm font-semibold text-muted">{legend}</legend>
-      <div className="flex flex-wrap gap-2">
+      <div className={row ? 'flex gap-1 md:gap-2' : 'flex flex-wrap gap-2'}>
         {options.map((option) => (
-          <label key={option.value} className="relative min-w-0">
+          <label
+            key={option.value}
+            className={row ? 'relative flex min-w-0 flex-auto md:flex-none' : 'relative min-w-0'}
+          >
             <input
               type="radio"
               name={name}
@@ -49,6 +58,7 @@ export function SegmentedControl<T extends string>({
               className={chipClasses(
                 value === option.value,
                 'cursor-pointer peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus peer-disabled:cursor-not-allowed peer-disabled:opacity-50',
+                { size: row ? 'row' : 'content' },
               )}
             >
               {option.label}

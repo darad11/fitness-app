@@ -85,6 +85,7 @@ export function TaskDetailPage() {
       <div className="grid grid-cols-1 gap-4">
         {status ? <p className="text-muted">{td.status(status)}</p> : null}
         <SegmentedControl
+          row
           legend={ts.periodLegend}
           options={PERIOD_OPTIONS}
           value={period}

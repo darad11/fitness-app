@@ -113,6 +113,7 @@ export function TaskStats({
         {ts.title}
       </h2>
       <SegmentedControl
+        row
         legend={ts.periodLegend}
         options={PERIOD_OPTIONS}
         value={period}

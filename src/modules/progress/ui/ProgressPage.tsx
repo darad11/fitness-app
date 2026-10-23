@@ -114,6 +114,7 @@ export function ProgressPage() {
               {t.progress.periodLegend}
             </h2>
             <SegmentedControl
+              row
               legend={t.progress.periodLegend}
               options={PERIOD_OPTIONS}
               value={period}

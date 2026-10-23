@@ -149,7 +149,7 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 2. „Teilen › Zum Home-Bildschirm" ausführen, App vom Home-Bildschirm starten. Erwartung: Vollbild ohne Browserleiste, Name und Icon korrekt.
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
-5. Startbild (D-317): Ablauf (D-329): zuerst an der Vorschau von Vercel zum Pull Request (eigene Adresse, eigene App), nach dem Merge an der Produktivadresse. Die Daten in der App sind Testdaten; dass iOS beim Entfernen die Daten der installierten App löschen kann, spielt hier keine Rolle. Für echte Nutzer gilt die Warnung weiter, bis sich ein Export wieder einspielen lässt (`audit-report.md` A-14). App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Startbild C3 (D-325): grünes F über der Wortmarke FORM, Mitte leicht über der Bildschirmmitte, unten „FORM YOURSELF.“; kein weißer Blitz; die Startfläche der App übernimmt ohne Sprung und blendet in etwa 250 ms zu „Heute“ über, ohne hellen Zwischenschritt; der Start dauert nicht spürbar länger als vorher. Zu notieren: iPhone-Modell.
+5. Startbild (D-317): Ablauf (D-329): zuerst an der Vorschau von Vercel zum Pull Request (eigene Adresse, eigene App), nach dem Merge an der Produktivadresse. Die Daten in der App sind Testdaten; dass iOS beim Entfernen die Daten der installierten App löschen kann, spielt hier keine Rolle. Für echte Nutzer gilt die Warnung weiter, bis sich ein Export wieder einspielen lässt (`audit-report.md` A-14). App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Startbild C3 (D-325): grünes F über der Wortmarke FORM, Mitte leicht über der Bildschirmmitte, unten „FORM YOURSELF.“; kein weißer Blitz; die Startfläche der App übernimmt ohne Sprung, bleibt ab dem ersten Bild mindestens 1 Sekunde stehen und blendet dann in etwa 300 ms zu „Heute“ über, ohne hellen Zwischenschritt (D-337); nach der Rückkehr aus dem Hintergrund und beim Wechsel der Ansicht erscheint sie nicht. Zu notieren: iPhone-Modell.
 6. Logo der Kopfzeile (D-332): „Heute“ im Safari-Tab der Vorschau und in der installierten App öffnen, oben und nach kurzem Scrollen. Erwartung: Kachel und Wortmarke gestochen scharf, kein Schleier über dem Logo; über der Kopfzeile ein ruhiger Abstand von etwa 2 Fingerbreiten unter der Statusleiste. Zu notieren: Wirkt der Abstand zu groß, ob das Logo auch mit weniger Abstand scharf bleibt (Wert `--spacing-edge-clear`).
 
 ### T-IPH-M1 · iPhone, Training unter Alltagsbedingungen
@@ -1039,3 +1039,18 @@ Zeile mit Abhakfeld links und Link in die Detailansicht, Einstellungen in der De
 | `pnpm test` | 105 Dateien, 886 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 296 bestanden, 36 übersprungen, 0 fehlgeschlagen (7,7 min) |
 | `pnpm check:bundle` | 237,5 KB von 250 KB |
+
+### F6 §6 Startbild länger · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Startfläche beim Kaltstart mindestens 1,0 s ab dem ersten Bild, dann 300 ms Ausblenden (D-337).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/app/startSurface.test.ts`, `src/app/splash.test.ts` | 7 und 17 bestanden (erster Lauf: 1 von 7 fehlgeschlagen, der Test prüfte eine Millisekunde zu spät; behoben) |
+| `pnpm exec playwright test e2e/start-surface.spec.ts` | 8 bestanden, 6 übersprungen; 3 Wiederholungen: 24 bestanden. Gegenprobe gegen `6f77dbe`: 3 von 7 fehlgeschlagen |
+| `node tools/splash.mjs --check` | Bilder, Vorlage und Startfläche passen zur Regel |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 888 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 299 bestanden, 39 übersprungen, 0 fehlgeschlagen (7,8 min) |
+| `pnpm check:bundle` | 237,6 KB von 250 KB |
+| Am Gerät | offen: T-IPH-M0 Schritt 5 (Kaltstart der installierten App) |

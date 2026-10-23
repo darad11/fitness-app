@@ -40,6 +40,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F6 §3 Erledigt-Markierungen | Eine Komponente `Mark` mit drei Größen: Verlauf 14 px unter dem Balken statt grüner Balken, „Je Aufgabe“ 16 px statt bis 40 px, Kalender kompakt in sieben Spalten mit Wochentagen und 16 px statt 28 px; Haken 60 %, Radius 22,5 %; Abhakfeld in Listen als Quadrat 20 px | D-334 | umgesetzt, Vergleich in `docs/screens/komponenten/markierungen.png` |
 | F6 §4 Aufgaben bearbeitbar (V1) | Zeile wie V1 auf „Heute“ und „Tagesaufgaben“: Abhakfeld links (20 px, Tippfläche 44 px), Rest der Zeile öffnet die Detailansicht, Chevron rechts, Rhythmus unter dem Namen, erledigt gedämpft; Einstellungen in der Detailansicht, Reihenfolge über „Reihenfolge ändern“ | D-335 | umgesetzt |
 | F6 §5 Karte V2c | „Bereit für dein Training?“ deckend grün (#283E18, Rand #405A28), Label und Text hell grüngrau, Titel und Link in `--fg`, weißer Primärknopf mit Play-Symbol; Tokens `--stage-tint-…`; Ausnahme in `brand-tokens.md` | D-336 | umgesetzt |
+| F6 §6 Startbild länger | Beim Kaltstart bleibt die Startfläche ab dem ersten Bild mindestens 1,0 s (Ladezeit eingerechnet), dann 300 ms Ausblenden; länger, bis die erste Ansicht steht; bei „Bewegung reduzieren“ ohne Ausblenden, Mindestzeit bleibt; nicht nach Hintergrund oder Navigation | D-337 | umgesetzt; Kaltstart am Gerät prüfbar (T-IPH-M0 Schritt 5) |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -256,6 +257,15 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: `src/shared/ui/tokens.test.ts`, `e2e/program-list.spec.ts` (neuer Test „… grüne Karte V2c …“).
 - Dokumente: `docs/decisions.md` (D-336), `brand-tokens.md` (Abschnitt 2.5a, Ausnahme in Abschnitt 4), `docs/testing.md`.
 
+### F6 §6 Startbild länger
+
+- `src/app/startSurface.ts`: Mindestzeit 1,0 s ab dem ersten Bild (Paint Timing; ist noch nichts gezeichnet, ab dem nächsten Bildwechsel), die Ladezeit eingerechnet; danach 300 ms Ausblenden. Dauert das Laden länger, beginnt das Ausblenden, sobald die erste Ansicht steht. Bei „Bewegung reduzieren“ entfällt das Ausblenden, die Mindestzeit bleibt. Im Browser-Tab bleibt die Fläche unsichtbar und wird sofort entfernt.
+- Die Fläche gibt es nur beim Laden der Seite; nach der Rückkehr aus dem Hintergrund und beim Wechsel der Ansicht erscheint sie nicht (geprüft).
+- Ersetzt für den Kaltstart die Regel „keine künstliche Wartezeit“ aus F5 (D-325), festgehalten in D-337.
+- Geändert: `src/app/startSurface.ts`, `tools/splash.mjs` und `index.html` (Ausblenden 300 statt 250 ms; `node tools/splash.mjs --check`: „Bilder, Vorlage und Startfläche passen zur Regel“).
+- Tests: `src/app/startSurface.test.ts` (neu geschrieben), `src/app/splash.test.ts` (Ausblendzeit wie im Code), `e2e/start-surface.spec.ts` (Zeiten in der Seite gemessen; neu: schneller Start, langsamer Start, Hintergrund und Navigation).
+- Dokumente: `docs/decisions.md` (D-337), `docs/testing.md` (T-IPH-M0 Schritt 5, Protokoll).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -397,6 +407,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §5: `pnpm test` | 23.10.2026 | 886 Tests in 105 Dateien bestanden |
 | F6 §5: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,5 KB von 250 KB (gzip) |
 | F6 §5: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 296 bestanden, 36 übersprungen, 0 fehlgeschlagen (7,7 min) |
+| F6 §6: `startSurface.test.ts` (neu geschrieben), `splash.test.ts` | 23.10.2026 | erster Lauf: 1 von 7 fehlgeschlagen („noch nichts gezeichnet: zählt ab dem nächsten Bild“; der Test prüfte eine Millisekunde zu spät), behoben; danach 7 und 17 bestanden |
+| F6 §6: `e2e/start-surface.spec.ts` | 23.10.2026 | 8 bestanden, 6 übersprungen (Startfläche nur im Handy-Projekt). Danach die oberen Zeitgrenzen auf 400 ms erweitert, weil Zeitgeber auf einem ausgelasteten Rechner später laufen; 3 Wiederholungen: 24 bestanden. Gegenprobe gegen `6f77dbe` (Handy): 3 von 7 fehlgeschlagen (Startbild mit Zeiten, schneller Start, „Bewegung reduzieren“; jeweils „expect(received).toBeGreaterThanOrEqual(expected)“, die Fläche ging vor der Mindestzeit); langsamer Start, Hintergrund und Navigation, quer und Browser-Tab bestanden, dort ändert sich nichts |
+| F6 §6: `node tools/splash.mjs --check` | 23.10.2026 | „Bilder, Vorlage und Startfläche passen zur Regel“ |
+| F6 §6: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §6: `pnpm test` | 23.10.2026 | 888 Tests in 105 Dateien bestanden |
+| F6 §6: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
+| F6 §6: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 299 bestanden, 39 übersprungen, 0 fehlgeschlagen (7,8 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

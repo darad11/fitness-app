@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import html from '../../index.html?raw';
 import template from '../../public/splash/splash.svg?raw';
+import { START_FADE_MS } from './startSurface';
 
 /** Startbilder als Data-URL (nur für den Test; die App lädt sie nicht). */
 const files = import.meta.glob<string>('../../public/splash/splash-*x*.png', {
@@ -289,7 +290,10 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
   it('die Startfläche setzt die Regel in Prozent des Bildschirms und zeigt sich nur in der installierten App', () => {
     expect(style).toContain('@media (display-mode:standalone){#startflaeche{display:block;');
     expect(style).toContain('background:#0C1219');
-    expect(style).toContain('#startflaeche.weg{opacity:0;transition:opacity 250ms ease-out}');
+    // Ausblenden so lang wie in startSurface.ts (F6, D-337: 300 ms).
+    expect(style).toContain(
+      `#startflaeche.weg{opacity:0;transition:opacity ${String(START_FADE_MS)}ms ease-out}`,
+    );
     expect(style).toContain(
       '@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}',
     );

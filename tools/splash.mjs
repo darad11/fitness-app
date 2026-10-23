@@ -238,7 +238,7 @@ function surface(p) {
     '@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;background:' +
       RULE.night +
       ';pointer-events:none;animation:startflaeche-netz 0s 10s forwards}}',
-    '#startflaeche.weg{opacity:0;transition:opacity 250ms ease-out}',
+    '#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}',
     '@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}',
     '@keyframes startflaeche-netz{to{visibility:hidden}}',
     '#startflaeche>svg{display:block;width:100%;height:100%}',

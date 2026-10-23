@@ -132,6 +132,10 @@ describe('Farbtokens', () => {
     );
 
     it.each([
+      // Grüne Karte „Bereit für dein Training?“ (F6, D-336, V2c).
+      ['stage-tint-fg', 'stage-tint-bg'],
+      ['stage-tint-muted', 'stage-tint-bg'],
+      ['stage-tint-button-fg', 'stage-tint-button'],
       ['accent-fg', 'accent'],
       ['accent-fg', 'accent-hover'],
       ['action-fg', 'action'],
@@ -156,6 +160,7 @@ describe('Farbtokens', () => {
       ['accent', 'ink'],
       ['action', 'surface'],
       ['action', 'bg'],
+      ['stage-tint-button', 'stage-tint-bg'],
       ['success', 'ink'],
       // Makros (F6, D-333): Ring, Balken und Legende auf Karte und card-2.
       ...['macro-protein', 'macro-carbs', 'macro-fat', 'macro-other'].flatMap((macro) => [

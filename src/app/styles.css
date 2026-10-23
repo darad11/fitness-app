@@ -151,6 +151,12 @@
   --color-scrim: var(--scrim);
   --shadow-card: var(--shadow-card);
   --shadow-float: var(--shadow-float);
+  --color-stage-tint: var(--stage-tint-bg);
+  --color-stage-tint-fg: var(--stage-tint-fg);
+  --color-stage-tint-muted: var(--stage-tint-muted);
+  --color-stage-tint-button: var(--stage-tint-button);
+  --color-stage-tint-button-fg: var(--stage-tint-button-fg);
+  --shadow-tint: var(--shadow-tint);
 }
 
 /* Vorzeile und Label über Titeln und Kennzahlen: 13/500 in Versalien mit 4 % Laufweite. */

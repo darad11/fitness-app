@@ -1,6 +1,6 @@
 # FORM · Design-Tokens der App
 
-Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326); F6 (Logo auf ganzen Pixeln, Abstand am oberen Rand: D-332; Makros Türkis, Blau, Violett: D-333; Erledigt-Markierungen: D-334) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326); F6 (Logo auf ganzen Pixeln, Abstand am oberen Rand: D-332; Makros Türkis, Blau, Violett: D-333; Erledigt-Markierungen: D-334; grüne Karte V2c: D-336) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
@@ -122,6 +122,18 @@ Die Anmeldung hatte eigene Tokens, damit sie auch im hellen Modus dunkel bleibt.
 | `--selection-pill` | Blau 14 % / Schwarz 35 % | transparent (aktiver Tab ohne Füllfläche) |
 | `--lens-*` | Glas-Linse der Tab-Leiste (D-272) | bleiben (D-312): Linse, Lichtkante und Farbsaum am Rand; `--lens-fill` transparent (ohne Farbfüllung) |
 
+### 2.5a Grüne Karte „Bereit für dein Training?“ (F6, D-336, Variante V2c)
+
+| Token | Dunkel (ausgeliefert) | Hell (angelegt) | Verwendung |
+|---|---|---|---|
+| `--stage-tint-bg` | #283e18 | #283e18 | deckende Fläche, kein Verlauf |
+| `--stage-tint-border` | #405a28 | #405a28 | Rand 1 px (`--shadow-tint`) |
+| `--stage-tint-fg` | #f2f3f4 (= `--fg`) | #f2f3f4 | Titel, Link „Vorlage wählen“ halbfett |
+| `--stage-tint-muted` | #ced8c4 | #ced8c4 | Label „Training“ und Beschreibung (7,9:1) |
+| `--stage-tint-button` / `--stage-tint-button-fg` | #f2f3f4 / #0c1219 (= `--accent-fg`) | #f2f3f4 / #0c1219 | Primärknopf mit Play-Symbol, Radius 14, volle Breite (16,9:1) |
+
+Bewusste Ausnahme: **Auf der grünen Karte ist der Primärknopf weiß** (sonst Lime). Auf der Karte gibt es keinen weiteren Lime-Akzent; nur der Fokusrahmen bleibt Lime (9,9:1 auf der Fläche). Fehler beim Start stehen auf der Karte in ihrer hellen Schrift mit Symbol, weil Rot auf der Fläche nur 3,7:1 erreicht. Hell (angelegt) übernimmt dieselbe dunkelgrüne Karte mit heller Schrift.
+
 ### 2.6 Maße und Typografie (F2, D-314)
 
 Alle Werte stehen als Tokens in `src/app/styles.css` (`@theme`); Tailwind erzeugt daraus Klassen wie `p-card`, `min-h-button`, `rounded-button`, `text-headline`, `max-w-content`.
@@ -208,6 +220,7 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad), nur das Symbol | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach Variante C3: Logo vertikal mittig bei 47 %, „FORM YOURSELF.“ als Fußzeile; dieselbe Regel als Startfläche in der App | iOS zeigt ein Startbild nur bei genau passendem Bildschirm (D-317); C3 nach Wahl des Produktinhabers (F5, D-325); Schriftgröße des Claims quer aus der kurzen Seite statt der Breite |
 | Mikrotext „Woche abgeschlossen: Diese Woche 3 von 4.“ | „x von y Trainings diese Woche“ | Formulierung aus AK-DSH-05 bleibt; der Sinn ist derselbe (F4, D-318) |
 | Mikrotext „Nutzer überzieht“ | nicht verwendet | Die App misst keine Belastung; ohne Grundlage keine Aussage (Leitplanken Regel 5) |
+| Primärknopf immer Lime | auf der grünen Karte „Bereit für dein Training?“ weiß mit Schrift in Nacht | Variante V2c des Produktinhabers (F6, D-336); Lime auf Grün hebt sich kaum ab, kein weiterer Lime-Akzent auf der Karte |
 | Push nach 21 Tagen Pause | entfällt | Entscheidung des Produktinhabers (D-329); dafür gäbe es auch keine Push-Infrastruktur, Web Push braucht einen Server (D-319) |
 
 ## 5. Offen beim Produktinhaber

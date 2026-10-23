@@ -1026,3 +1026,16 @@ Zeile mit Abhakfeld links und Link in die Detailansicht, Einstellungen in der De
 | `pnpm test` | 105 Dateien, 878 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 293 bestanden, 36 übersprungen, 1 fehlgeschlagen: Wettlauf im Test „Ring V2 …“ (§2) auf „Heute“, behoben; 5 Wiederholungen bestanden |
 | `pnpm check:bundle` | 236,7 KB von 250 KB |
+
+### F6 §5 Karte V2c · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+„Bereit für dein Training?“ als grüne Karte mit weißem Primärknopf (D-336).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/program-list.spec.ts` | 10 bestanden, 2 übersprungen. Gegenprobe gegen `4852076`: 2 von 2 fehlgeschlagen |
+| Kontraste (`tokens.test.ts`) | Label und Text 7,9:1, Titel und Link 10,6:1, Schrift auf dem Knopf 16,9:1, Knopf zur Fläche 10,6:1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 886 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 296 bestanden, 36 übersprungen, 0 fehlgeschlagen (7,7 min) |
+| `pnpm check:bundle` | 237,5 KB von 250 KB |

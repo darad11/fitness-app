@@ -169,13 +169,8 @@ export function TodayPage() {
             onStartFree={() => {
               void start({ source: 'free', title: t.training.freeTitle, exercises: [] });
             }}
-          >
-            {error ? (
-              <p role="alert" className="mt-3 text-sm text-danger">
-                {error.message}
-              </p>
-            ) : null}
-          </ReadyCard>
+            error={error?.message}
+          />
         )}
         <Suspense fallback={null}>
           <NutritionTodayCard />

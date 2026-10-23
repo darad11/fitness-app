@@ -39,6 +39,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F6 §2 Makro-Ring V2 | Eiweiß Türkis, Kohlenhydrate Blau, Fett Violett in Ring, Balken und auf „Heute“; weiche Übergänge über 2 × 18° (höchstens ein Drittel des kürzeren Abschnitts) aus feinen Schritten, Mischfarben in OKLab ohne grelle oder trübe Töne; Kontrast 3:1 auf `--surface` und `--surface-2` | D-333 | umgesetzt |
 | F6 §3 Erledigt-Markierungen | Eine Komponente `Mark` mit drei Größen: Verlauf 14 px unter dem Balken statt grüner Balken, „Je Aufgabe“ 16 px statt bis 40 px, Kalender kompakt in sieben Spalten mit Wochentagen und 16 px statt 28 px; Haken 60 %, Radius 22,5 %; Abhakfeld in Listen als Quadrat 20 px | D-334 | umgesetzt, Vergleich in `docs/screens/komponenten/markierungen.png` |
 | F6 §4 Aufgaben bearbeitbar (V1) | Zeile wie V1 auf „Heute“ und „Tagesaufgaben“: Abhakfeld links (20 px, Tippfläche 44 px), Rest der Zeile öffnet die Detailansicht, Chevron rechts, Rhythmus unter dem Namen, erledigt gedämpft; Einstellungen in der Detailansicht, Reihenfolge über „Reihenfolge ändern“ | D-335 | umgesetzt |
+| F6 §5 Karte V2c | „Bereit für dein Training?“ deckend grün (#283E18, Rand #405A28), Label und Text hell grüngrau, Titel und Link in `--fg`, weißer Primärknopf mit Play-Symbol; Tokens `--stage-tint-…`; Ausnahme in `brand-tokens.md` | D-336 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -246,6 +247,15 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `e2e/task-rows.spec.ts`; `habits-ui.test.tsx` neu geschrieben; angepasst `e2e/tasks.spec.ts`, `switches.spec.ts`, `water.spec.ts`, `marks.spec.ts`, `period-row.spec.ts`.
 - Dokumente: `docs/decisions.md` (D-335), `docs/testing.md`.
 
+### F6 §5 Karte V2c
+
+- Variante laut Nachricht des Produktinhabers: V2c, komplett grün, flach. Fläche #283E18, Rand 1 px #405A28, kein Verlauf; Label „Training“ und Beschreibung #CED8C4 (7,9:1), Titel in `--fg`; Knopf weiß #F2F3F4 mit Schrift in Nacht und Play-Symbol, Radius 14, volle Breite; „Vorlage wählen“ in `--fg`, halbfett. Kein Lime auf der Karte.
+- Tokens `--stage-tint-bg`, `-border`, `-fg`, `-muted`, `-button`, `-button-fg`, `--shadow-tint`; Karte als Ton `tint`, Knopf als Varianten `onTint` und `tintLink`.
+- Nebenbei: Ein Fehler beim Start stand auf „Heute“ in Rot auf der Karte; auf Grün hätte Rot nur 3,7:1. Er steht jetzt in der hellen Schrift der Karte mit Warnsymbol.
+- Geändert: `src/shared/ui/tokens.css`, `src/app/styles.css` (Zuordnung), `src/shared/ui/Card.tsx` (Ton `tint`), `Button.tsx` (Varianten), `training/ui/ReadyCard.tsx`, `dashboard/ui/TodayPage.tsx` (Fehler als Eigenschaft).
+- Tests: `src/shared/ui/tokens.test.ts`, `e2e/program-list.spec.ts` (neuer Test „… grüne Karte V2c …“).
+- Dokumente: `docs/decisions.md` (D-336), `brand-tokens.md` (Abschnitt 2.5a, Ausnahme in Abschnitt 4), `docs/testing.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -381,6 +391,12 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §4: `pnpm test` | 23.10.2026 | 878 Tests in 105 Dateien bestanden |
 | F6 §4: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,7 KB von 250 KB (gzip) |
 | F6 §4: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 293 bestanden, 36 übersprungen, 1 fehlgeschlagen (7,3 min): `nutrition-ring.spec.ts` „Ring V2 …“ (Desktop) las auf „Heute“ den Ring, bevor die Einträge geladen waren (Wettlauf im Test aus §2). Der Test wartet jetzt auf die drei Abschnitte; danach 5 Wiederholungen in beiden Projekten bestanden (10 von 10) |
+| F6 §5: `e2e/program-list.spec.ts` | 23.10.2026 | erster Lauf: der neue Test meldete den Rand als Liste mit leeren Schatten-Ebenen von Tailwind (Prüfung angepasst, der Rand selbst war richtig); danach 10 bestanden, 2 übersprungen. Gegenprobe gegen `4852076`: 2 von 2 fehlgeschlagen („Expected: rgb(40, 62, 24), Received: rgb(16, 22, 31)“) |
+| F6 §5: `tokens.test.ts` | 23.10.2026 | erster Lauf: „--accent-fg auf --stage-tint-button“ im hellen Modus fehlgeschlagen (`--accent-fg` ist dort weiß); eigenes Token `--stage-tint-button-fg`, danach 142 bestanden |
+| F6 §5: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §5: `pnpm test` | 23.10.2026 | 886 Tests in 105 Dateien bestanden |
+| F6 §5: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,5 KB von 250 KB (gzip) |
+| F6 §5: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 296 bestanden, 36 übersprungen, 0 fehlgeschlagen (7,7 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

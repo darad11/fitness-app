@@ -69,6 +69,16 @@
   /* Keine Schatten: Karten tragen nur den 1-px-Rand. */
   --shadow-card: 0 0 0 1px var(--border);
   --shadow-float: 0 0 0 1px var(--border);
+  /* Grüne Karte „Bereit für dein Training?“ (F6, D-336, Variante V2c): deckende Fläche mit 1-px-
+     Rand, Label und Text in hellem Grüngrau, Titel und Link in `--fg`; der Primärknopf ist hier
+     weiß mit Schrift in `--accent-fg` (Nacht; bewusste Ausnahme, brand-tokens.md). Kein Lime. */
+  --stage-tint-bg: #283e18;
+  --stage-tint-border: #405a28;
+  --stage-tint-fg: #f2f3f4;
+  --stage-tint-muted: #ced8c4;
+  --stage-tint-button: #f2f3f4;
+  --stage-tint-button-fg: #0c1219;
+  --shadow-tint: 0 0 0 1px var(--stage-tint-border);
   /* Tab-Leiste (D-312): dunkles, getöntes Glas aus der Kartenfläche (85 %), feiner Rand, aktiver
      Tab ohne Füllfläche (Farbe über Symbol und Beschriftung), Linse ohne Farbfüllung. */
   --tabbar-glass: #141b25d9;
@@ -141,6 +151,14 @@
   --scrim: rgb(12 18 25 / 0.45);
   --shadow-card: 0 0 0 1px var(--border);
   --shadow-float: 0 0 0 1px var(--border);
+  /* Hell (angelegt): dieselbe dunkelgrüne Karte, Schrift hell wie im Dunkelmodus. */
+  --stage-tint-bg: #283e18;
+  --stage-tint-border: #405a28;
+  --stage-tint-fg: #f2f3f4;
+  --stage-tint-muted: #ced8c4;
+  --stage-tint-button: #f2f3f4;
+  --stage-tint-button-fg: #0c1219;
+  --shadow-tint: 0 0 0 1px var(--stage-tint-border);
   --tabbar-glass: #fffffff2;
   --tabbar-edge: #0c12191a;
   --tabbar-blur: blur(20px) saturate(140%);

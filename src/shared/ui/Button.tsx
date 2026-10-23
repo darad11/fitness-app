@@ -9,14 +9,23 @@ import { cn } from '../lib/cn';
  * und heller Schrift. Leise (tertiär): nur Text in Lime. Destruktiv: Ghost mit Schrift in Rot.
  * Leise destruktiv: nur Text in Rot, z. B. „Löschen“ neben „Speichern“. Kachel: Fläche card-2
  * mit Rand, für Schnellaktionen als Symbol-Knopf. Aktion: Blau, nur im aktiven Workout („Satz
- * erledigt“, „Überspringen“), damit sich die Trainingsaktion vom Lime abhebt.
+ * erledigt“, „Überspringen“), damit sich die Trainingsaktion vom Lime abhebt. Auf der grünen
+ * Karte (F6, D-336): Primärknopf weiß mit Schrift in Nacht (`onTint`), Textlink hell (`tintLink`).
  *
  * `cn` löst widersprüchliche Klassen nicht auf (clsx): Farbe, Größe und Innenmaß kommen über
  * `variant`, `size` und `tone`, nicht über `className` (F5, D-322). `class-conflicts.test.ts`
  * prüft alle Aufrufe.
  */
 export type ButtonVariant =
-  'primary' | 'secondary' | 'quiet' | 'quietDanger' | 'danger' | 'tile' | 'action';
+  | 'primary'
+  | 'secondary'
+  | 'quiet'
+  | 'quietDanger'
+  | 'danger'
+  | 'tile'
+  | 'action'
+  | 'onTint'
+  | 'tintLink';
 /**
  * `lg`: Primärknopf in Karten, 52 px; `icon`: runder Knopf mit nur einem Symbol (Name über
  * `aria-label`); `row`: wie `md`, auf schmalen Breiten mit 12 px Innenmaß, für Knöpfe, die sich
@@ -43,6 +52,8 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   danger: 'bg-transparent text-danger shadow-[inset_0_0_0_1px_var(--border)] hover:bg-danger-soft',
   tile: 'bg-surface-2 text-fg shadow-[inset_0_0_0_1px_var(--border)] hover:bg-surface',
   action: 'bg-action text-on-action hover:opacity-92',
+  onTint: 'bg-stage-tint-button text-stage-tint-button-fg hover:opacity-92',
+  tintLink: 'text-stage-tint-fg hover:underline',
 };
 
 export function buttonClasses(

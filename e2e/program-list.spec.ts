@@ -147,3 +147,69 @@ test('„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuf
   await expect(page.getByText('Training läuft', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('region', { name: 'Bereit für dein Training?' })).toHaveCount(0);
 });
+
+test('„Bereit für dein Training?“ als grüne Karte V2c: Flächen, Schrift, weißer Knopf, kein Lime (F6)', async ({
+  page,
+}) => {
+  for (const path of ['/heute', '/training']) {
+    await openPage(page, path);
+    const card = page.getByRole('region', { name: 'Bereit für dein Training?' });
+    await expect(card).toBeVisible();
+    const style = (locator: Locator) =>
+      locator.evaluate((element) => {
+        const s = getComputedStyle(element);
+        return {
+          color: s.color,
+          background: s.backgroundColor,
+          image: s.backgroundImage,
+          shadow: s.boxShadow,
+          radius: s.borderRadius,
+          weight: s.fontWeight,
+        };
+      });
+    const surface = await style(card);
+    expect(surface.background, `${path}: deckend grün`).toBe('rgb(40, 62, 24)');
+    expect(surface.image, `${path}: ohne Verlauf`).toBe('none');
+    // Rand 1 px (Tailwind stellt leere Schatten-Ebenen davor).
+    expect(surface.shadow, `${path}: Rand 1 px`).toContain('rgb(64, 90, 40) 0px 0px 0px 1px');
+    expect(surface.shadow.replace(/rgba\(0, 0, 0, 0\) 0px 0px 0px 0px, /g, '')).toBe(
+      'rgb(64, 90, 40) 0px 0px 0px 1px',
+    );
+    // Label und Beschreibung hell grüngrau, Titel in --fg.
+    expect((await style(card.getByText('Training', { exact: true }))).color).toBe(
+      'rgb(206, 216, 196)',
+    );
+    expect(
+      (await style(card.getByText('Starte ein freies Training oder wähle eine Vorlage.'))).color,
+    ).toBe('rgb(206, 216, 196)');
+    expect(
+      (await style(card.getByRole('heading', { name: 'Bereit für dein Training?' }))).color,
+    ).toBe('rgb(242, 243, 244)');
+    // Knopf weiß mit Schrift in Nacht und Play-Symbol, Radius 14, volle Breite.
+    const start = card.getByRole('button', { name: 'Freies Training starten' });
+    const button = await style(start);
+    expect([button.background, button.color, button.radius]).toEqual([
+      'rgb(242, 243, 244)',
+      'rgb(12, 18, 25)',
+      '14px',
+    ]);
+    await expect(start.locator('svg.lucide-play')).toBeVisible();
+    const [cardBox, startBox] = [await box(card), await box(start)];
+    expect(startBox.width).toBeGreaterThan(cardBox.width - 40);
+    // Link in --fg, halbfett.
+    const link = await style(card.getByRole('link', { name: 'Vorlage wählen' }));
+    expect([link.color, link.weight]).toEqual(['rgb(242, 243, 244)', '600']);
+    // Kein Lime auf der Karte.
+    const lime = await card.evaluate((root) => {
+      const found: string[] = [];
+      for (const element of [root, ...root.querySelectorAll('*')]) {
+        const s = getComputedStyle(element);
+        for (const value of [s.color, s.backgroundColor, s.borderTopColor, s.fill, s.stroke]) {
+          if (value.includes('199, 255, 70')) found.push(`${element.tagName}: ${value}`);
+        }
+      }
+      return found;
+    });
+    expect(lime, `${path}: kein Lime`).toEqual([]);
+  }
+});

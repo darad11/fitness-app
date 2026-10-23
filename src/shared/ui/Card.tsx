@@ -3,14 +3,16 @@ import { cn } from '../lib/cn';
 
 /**
  * `surface`: Karte; `stage`: Bühne für die wichtigste Information einer Seite (eine Stufe heller,
- * `bg-elevated`); `soft`: Fläche card-2 ohne Rand, z. B. innerhalb einer Karte.
+ * `bg-elevated`); `soft`: Fläche card-2 ohne Rand, z. B. innerhalb einer Karte; `tint`: grüne
+ * Karte „Bereit für dein Training?“ (F6, D-336, V2c), Vorzeile in hellem Grüngrau.
  */
-export type CardTone = 'surface' | 'stage' | 'soft';
+export type CardTone = 'surface' | 'stage' | 'soft' | 'tint';
 
 const TONES: Record<CardTone, string> = {
   surface: 'bg-surface text-fg shadow-card',
   stage: 'stage text-fg',
   soft: 'bg-surface-2 text-fg',
+  tint: 'bg-stage-tint text-stage-tint-fg shadow-tint',
 };
 
 export interface CardProps {
@@ -53,7 +55,16 @@ export function Card({
       {title || eyebrow ? (
         <div className="mb-3 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            {eyebrow ? <p className="eyebrow mb-1 text-muted">{eyebrow}</p> : null}
+            {eyebrow ? (
+              <p
+                className={cn(
+                  'eyebrow mb-1',
+                  tone === 'tint' ? 'text-stage-tint-muted' : 'text-muted',
+                )}
+              >
+                {eyebrow}
+              </p>
+            ) : null}
             {title ? (
               <h2
                 id={titleId}

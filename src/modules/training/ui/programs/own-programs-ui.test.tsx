@@ -136,7 +136,7 @@ describe('Eigene Programme (AP 2.1 bis 2.4, D-257)', () => {
   it('übernimmt ein gebündeltes Programm als eigenes', { timeout: 20_000 }, async () => {
     const user = userEvent.setup();
     const router = await renderAt('/training/vorlagen/full_body_ab', 'Ganzkörper A/B');
-    await user.click(screen.getByRole('button', { name: 'Als eigenes Programm übernehmen' }));
+    await user.click(screen.getByRole('button', { name: 'Übernehmen und anpassen' }));
     await screen.findByText('Eigenes Programm', {}, { timeout: 10_000 });
     expect(router.state.location.pathname).toMatch(/^\/training\/programme\/[0-9a-f-]+$/);
     expect(screen.getByRole('link', { name: 'Bearbeiten' })).toBeVisible();

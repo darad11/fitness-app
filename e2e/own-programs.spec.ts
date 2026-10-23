@@ -17,7 +17,7 @@ async function expectNoAxeViolations(page: Page, label: string) {
 /** Übernimmt „Ganzkörper A/B" und öffnet den Editor; liefert die Adresse des Programms. */
 async function adoptSample(page: Page): Promise<string> {
   await openPage(page, '/training/vorlagen/full_body_ab');
-  await page.getByRole('button', { name: 'Als eigenes Programm übernehmen' }).click();
+  await page.getByRole('button', { name: 'Übernehmen und anpassen' }).click();
   await expect(page.getByText('Eigenes Programm', { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/training\/programme\/[0-9a-f-]+$/);
   return new URL(page.url()).pathname;

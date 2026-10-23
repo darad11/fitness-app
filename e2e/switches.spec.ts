@@ -199,7 +199,7 @@ test('Eigenes Programm: „Nach der letzten Woche von vorn beginnen“ speichert
   hasTouch,
 }) => {
   await openPage(page, '/training/vorlagen/full_body_ab');
-  await page.getByRole('button', { name: 'Als eigenes Programm übernehmen' }).click();
+  await page.getByRole('button', { name: 'Übernehmen und anpassen' }).click();
   await expect(page).toHaveURL(/\/training\/programme\/[0-9a-f-]+$/);
   await page.getByRole('link', { name: 'Bearbeiten' }).click();
   const name = 'Nach der letzten Woche von vorn beginnen';

@@ -87,49 +87,53 @@ function Editor({ program }: { program: OwnProgram }) {
           </h2>
           {weeks.map((week, weekIndex) => (
             <Card key={week.id}>
-              <div className="flex flex-wrap items-center gap-1">
-                <h3 className="min-w-0 flex-1 text-lg font-semibold break-words">{week.name}</h3>
-                <IconButton
-                  label={tProgramEditor.renameItem(week.name)}
-                  onClick={() => {
-                    setPending({ kind: 'renameWeek', week });
-                  }}
-                >
-                  <Pencil aria-hidden="true" className="size-5" />
-                </IconButton>
-                <IconButton
-                  label={tProgramEditor.moveUp(week.name)}
-                  disabled={weekIndex === 0}
-                  onClick={() => void applyWeeks((all) => moveWeek(all, week.id, -1))}
-                >
-                  <ArrowUp aria-hidden="true" className="size-5" />
-                </IconButton>
-                <IconButton
-                  label={tProgramEditor.moveDown(week.name)}
-                  disabled={weekIndex === weeks.length - 1}
-                  onClick={() => void applyWeeks((all) => moveWeek(all, week.id, 1))}
-                >
-                  <ArrowDown aria-hidden="true" className="size-5" />
-                </IconButton>
-                <IconButton
-                  label={tProgramEditor.duplicateItem(week.name)}
-                  onClick={() =>
-                    void applyWeeks((all) =>
-                      duplicateWeek(all, week.id, t.programs.copySuffix(week.name), uuidv4),
-                    )
-                  }
-                >
-                  <Copy aria-hidden="true" className="size-5" />
-                </IconButton>
-                <IconButton
-                  label={tProgramEditor.removeItem(week.name)}
-                  disabled={weeks.length <= 1}
-                  onClick={() => {
-                    setPending({ kind: 'removeWeek', week });
-                  }}
-                >
-                  <Trash2 aria-hidden="true" className="size-5" />
-                </IconButton>
+              {/* Passt der Name nicht neben die Knöpfe, rücken die Knöpfe gemeinsam in die nächste
+                  Zeile, statt das Wort zu trennen (F5 Abschnitt 9, D-331). */}
+              <div className="flex flex-wrap items-center justify-end gap-1">
+                <h3 className="min-w-0 grow text-lg font-semibold break-words">{week.name}</h3>
+                <div className="flex gap-1">
+                  <IconButton
+                    label={tProgramEditor.renameItem(week.name)}
+                    onClick={() => {
+                      setPending({ kind: 'renameWeek', week });
+                    }}
+                  >
+                    <Pencil aria-hidden="true" className="size-5" />
+                  </IconButton>
+                  <IconButton
+                    label={tProgramEditor.moveUp(week.name)}
+                    disabled={weekIndex === 0}
+                    onClick={() => void applyWeeks((all) => moveWeek(all, week.id, -1))}
+                  >
+                    <ArrowUp aria-hidden="true" className="size-5" />
+                  </IconButton>
+                  <IconButton
+                    label={tProgramEditor.moveDown(week.name)}
+                    disabled={weekIndex === weeks.length - 1}
+                    onClick={() => void applyWeeks((all) => moveWeek(all, week.id, 1))}
+                  >
+                    <ArrowDown aria-hidden="true" className="size-5" />
+                  </IconButton>
+                  <IconButton
+                    label={tProgramEditor.duplicateItem(week.name)}
+                    onClick={() =>
+                      void applyWeeks((all) =>
+                        duplicateWeek(all, week.id, t.programs.copySuffix(week.name), uuidv4),
+                      )
+                    }
+                  >
+                    <Copy aria-hidden="true" className="size-5" />
+                  </IconButton>
+                  <IconButton
+                    label={tProgramEditor.removeItem(week.name)}
+                    disabled={weeks.length <= 1}
+                    onClick={() => {
+                      setPending({ kind: 'removeWeek', week });
+                    }}
+                  >
+                    <Trash2 aria-hidden="true" className="size-5" />
+                  </IconButton>
+                </div>
               </div>
               <ul className="mt-3 divide-y divide-line">
                 {week.days.map((day, dayIndex) => (

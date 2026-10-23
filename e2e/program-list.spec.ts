@@ -70,13 +70,36 @@ for (const width of [360, 390, 768]) {
       const chevron = card.locator('svg.lucide-chevron-right');
       const label = (await title.textContent()) ?? String(i);
       const [c, b, tl, ch] = await Promise.all([box(card), box(badge), box(title), box(chevron)]);
-      // Etikett oben: auf Höhe der ersten Titelzeile, rechts neben dem Titel.
-      expect(Math.abs(b.y - tl.y), `${label}: Etikett oben`).toBeLessThanOrEqual(6);
-      expect(tl.x + tl.width, `${label}: Titel endet vor dem Etikett`).toBeLessThanOrEqual(
-        b.x + 0.5,
-      );
+      // Etikett oben: auf Höhe der ersten Titelzeile, rechts neben dem Titel. Passt das längste
+      // Wort des Titels nicht daneben, steht das Etikett über dem Titel (nur auf schmalen Breiten).
+      const beside = Math.abs(b.y - tl.y) <= 6;
+      if (width >= 390) expect(beside, `${label}: Etikett neben dem Titel`).toBe(true);
+      if (beside) {
+        expect(tl.x + tl.width, `${label}: Titel endet vor dem Etikett`).toBeLessThanOrEqual(
+          b.x + 0.5,
+        );
+      } else {
+        expect(b.y + b.height, `${label}: Etikett über dem Titel`).toBeLessThanOrEqual(tl.y + 1);
+      }
       // Etikett ganz rechts im Textbereich, vor dem Chevron.
       expect(b.x + b.width, `${label}: Etikett vor dem Chevron`).toBeLessThanOrEqual(ch.x);
+      expect(ch.x - (b.x + b.width), `${label}: Etikett ganz rechts`).toBeLessThanOrEqual(13);
+      // Kein Wort getrennt: Umbrüche nur an Leerzeichen und nach Schrägstrichen (F5 §9, D-331).
+      const split = await title.evaluate((element) => {
+        const found: string[] = [];
+        const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+          for (const match of (node.textContent ?? '').matchAll(/[^\s/]+\/?/g)) {
+            const range = document.createRange();
+            range.setStart(node, match.index);
+            range.setEnd(node, match.index + match[0].length);
+            const lines = new Set([...range.getClientRects()].map((r) => Math.round(r.top)));
+            if (lines.size > 1) found.push(match[0]);
+          }
+        }
+        return found;
+      });
+      expect(split, `${label}: kein Wort getrennt`).toEqual([]);
       expect(ch.x + ch.width, `${label}: Chevron in der Karte`).toBeLessThanOrEqual(c.x + c.width);
       // Chevron rechts mittig.
       const middle = c.y + c.height / 2;

@@ -18,7 +18,7 @@ import { buttonClasses, isAtLeast, TileIcon, useSwipeToClose } from '@/shared/ui
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
 
 /** Knopf unter „Gegessen“: Sekundärknopf (Ghost) der Marke FORM, gleich für „Ziel“ und „Meine Küche“ (D-314). */
-export const PILL = buttonClasses('secondary', 'md');
+export const PILL = buttonClasses('secondary', 'row');
 
 interface Entry {
   to: string;
@@ -190,7 +190,7 @@ export function KitchenMenu() {
               <Link
                 to="/ernaehrung/lebensmittel/neu"
                 onClick={close}
-                className={buttonClasses('primary', 'md')}
+                className={buttonClasses('primary', 'row')}
               >
                 <Plus aria-hidden="true" className="size-4" />
                 {tk.newFood}

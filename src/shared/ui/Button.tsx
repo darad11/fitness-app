@@ -17,8 +17,12 @@ import { cn } from '../lib/cn';
  */
 export type ButtonVariant =
   'primary' | 'secondary' | 'quiet' | 'quietDanger' | 'danger' | 'tile' | 'action';
-/** `lg`: Primärknopf in Karten, 52 px; `icon`: runder Knopf mit nur einem Symbol (Name über `aria-label`). */
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
+/**
+ * `lg`: Primärknopf in Karten, 52 px; `icon`: runder Knopf mit nur einem Symbol (Name über
+ * `aria-label`); `row`: wie `md`, auf schmalen Breiten mit 12 px Innenmaß, für Knöpfe, die sich
+ * eine Zeile teilen (F5 Abschnitt 9, D-331).
+ */
+export type ButtonSize = 'sm' | 'md' | 'row' | 'lg' | 'icon';
 
 export const BUTTON_BASE =
   'inline-flex select-none items-center justify-center gap-2 rounded-button font-semibold transition-[background-color,color,opacity] duration-120 active:opacity-92 disabled:cursor-not-allowed disabled:opacity-50';
@@ -26,6 +30,7 @@ export const BUTTON_BASE =
 export const BUTTON_SIZES: Record<ButtonSize, string> = {
   sm: 'min-h-10 px-4 text-sm',
   md: 'min-h-12 px-5 text-base',
+  row: 'min-h-12 px-3 text-base md:px-5',
   lg: 'min-h-button px-6 text-base',
   icon: 'size-12 shrink-0 rounded-pill text-base',
 };

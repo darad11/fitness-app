@@ -90,10 +90,13 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     // Keine Bearbeitung: Beispielvorlagen sind schreibgeschützt; nur übernehmen (als Kopie)
     // und „heute trainieren".
     expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual([
-      'Als eigenes Programm übernehmen',
-      'Tag A heute trainieren',
-      'Tag B heute trainieren',
+      'Übernehmen und anpassen',
+      'Heute trainieren',
+      'Heute trainieren',
     ]);
+    // Sichtbar kurz, der Name nennt den Tag (F5 §9, D-331).
+    expect(screen.getByRole('button', { name: 'Tag A heute trainieren' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Tag B heute trainieren' })).toBeVisible();
   });
 
   it('zeigt Drop-Sätze mit eigenem Bereich', async () => {

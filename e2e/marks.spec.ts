@@ -177,6 +177,23 @@ async function userScroll(page: Page, dy: number) {
 
 async function checkPageEnd(page: Page, label: string) {
   const bar = page.getByRole('navigation', { name: 'Hauptnavigation' }).last();
+  // Ein modaler Dialog über der ganzen Seite (Anmeldung im Vollbild, D-270) liegt auch über der
+  // Leiste; dann gibt es keinen Inhalt unter der Leiste. Geprüft wird nur, dass er sie verdeckt.
+  const modal = await page.evaluate(() => {
+    const dialog = document.querySelector('dialog:modal');
+    if (!dialog) return null;
+    const rect = dialog.getBoundingClientRect();
+    return { width: rect.width, height: rect.height, innerWidth, innerHeight };
+  });
+  if (modal) {
+    expect(modal.width, `${label}: Dialog über die ganze Breite`).toBeGreaterThanOrEqual(
+      modal.innerWidth - 1,
+    );
+    expect(modal.height, `${label}: Dialog über die ganze Höhe`).toBeGreaterThanOrEqual(
+      modal.innerHeight - 1,
+    );
+    return;
+  }
   const expanded = await box(bar);
   const max = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
   if (max < 40) {

@@ -532,7 +532,9 @@ function QuickDialog({
         <p className="text-sm text-muted">{tNutrition.quickHint}</p>
         {field('name', tNutrition.quickName, false)}
         {field('kcal', tNutrition.quickKcal)}
-        <div className="grid grid-cols-3 gap-2">
+        {/* Jede Spalte mindestens so breit wie ihr längstes Wort („Kohlenhydrate“), sonst gleich
+            breit (F5 Abschnitt 9, D-331). */}
+        <div className="grid grid-cols-[repeat(3,minmax(min-content,1fr))] gap-2">
           {field('protein', tNutrition.quickProtein)}
           {field('carbs', tNutrition.quickCarbs)}
           {field('fat', tNutrition.quickFat)}

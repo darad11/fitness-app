@@ -500,6 +500,7 @@ export const de = {
     historyHint: 'Abgeschlossene Trainings nach Wochen',
     exercisesHint: 'Bibliothek mit Suche und Filtern',
     startDay: (day: string) => `${day} heute trainieren`,
+    startDayShort: 'Heute trainieren',
     startDayHint: 'Startet ein Training mit diesem Tag, ohne die Vorlage zu kopieren.',
     activeExists: 'Es läuft bereits ein Training. Beende es zuerst oder setze es fort.',
     startFailed: 'Das Training ließ sich nicht starten. Bitte versuche es erneut.',
@@ -763,7 +764,7 @@ export const de = {
     duplicate: 'Duplizieren',
     saveAsTemplate: 'Als Vorlage speichern',
     useTemplate: 'Vorlage verwenden',
-    adopt: 'Als eigenes Programm übernehmen',
+    adopt: 'Übernehmen und anpassen',
     adoptHint:
       'Legt eine bearbeitbare Kopie unter „Meine Programme“ an. Das Original bleibt unverändert.',
     archive: 'Archivieren',

@@ -1,5 +1,16 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.41 · 23.10.2026 · Abschluss F5 (Abschnitte 7a bis 9)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-329 Entscheidungen zu den offenen Punkten, D-330 nächste Schritte, D-331 schmale Breiten |
+| `audit-report.md` | P2-Punkte A-14 (Wiederherstellen aus dem Export) und E-16 (Ursache des Offline-Tests, hohe Priorität) |
+| `implementation-plan.md` | Punkte 57 bis 61 |
+| `testing.md` | Gerätetest T-IPH-M0 Schritt 5 an der Vorschau; Protokoll F5 §9 |
+| `design-system.md` | Knopfgröße `row`, Programmkarten auf schmalen Breiten |
+| `known-limitations.md`, `brand-form.md` | Hinweis zum Gerätetest |
+
 ## Version 0.40 · 23.10.2026 · Texte und Marke (F5 Abschnitt 7)
 
 | Datei | Änderung |

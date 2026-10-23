@@ -245,16 +245,18 @@ export function ProgramDetail({
                         ))}
                       </ol>
                     )}
+                    {/* Sichtbar kurz, weil der Tag darüber steht; der Name nennt den Tag (F5 §9, D-331). */}
                     <Button
                       variant={isNext ? 'primary' : 'secondary'}
                       className="mt-5 w-full md:w-auto"
+                      aria-label={t.training.startDay(day.name)}
                       disabled={busy || day.exercises.length === 0}
                       onClick={() => {
                         startDay(weekIndex, dayIndex);
                       }}
                     >
                       <Play aria-hidden="true" className="size-5" />
-                      {t.training.startDay(day.name)}
+                      {t.training.startDayShort}
                     </Button>
                   </Card>
                 );

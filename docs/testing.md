@@ -955,3 +955,18 @@ Programm C neutral, keine Hinweise auf die fremde App, Registrierung offen, pers
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 261 bestanden, 23 übersprungen, 2 fehlgeschlagen (6,4 min): `programs.spec.ts` erwartete noch die Quellenzeile von Programm C. Nach der Anpassung `e2e/programs.spec.ts`: 4 bestanden |
 | `pnpm check:bundle` | 236,0 KB von 250 KB |
 
+### F5 §9 Abschluss · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Breiten 360, 390 und 768 pt, Korrekturen für schmale Breiten, Test „Seitenende“ mit modalem Dialog (D-331).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Breitenprüfung mit einem vorübergehenden Skript (39 Ansichten × drei Breiten, Testdaten im frischen Browserprofil) | Keine Seite breiter als der Bildschirm, keine Konsolenfehler. Gefunden: getrennte Wörter in Programmkarten (360 pt; „Oberkörper/Unterkörper“ auch 390 und 768 pt) und im Programm-Editor („Woche“, 360 pt), „Meine Küche“, „Als eigenes Programm übernehmen“ (360 pt) und „Tag … heute trainieren“ (360 und 390 pt) zweizeilig, „Kohlenhydrate“ im Schnelleintrag in der Nachbarspalte (360 pt). Nach den Korrekturen keine Befunde außer den bewusst gelassenen Kürzungen (D-331) |
+| `pnpm exec playwright test e2e/narrow-layout.spec.ts e2e/program-list.spec.ts` | 20 bestanden, 8 übersprungen. Gegenprobe gegen `273d608` mit dem alten Knopftext: 10 fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 104 Dateien, 860 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 275 bestanden, 29 übersprungen, 0 fehlgeschlagen (6,3 min) |
+| `pnpm check:bundle` | 236,0 KB von 250 KB |
+| CI WebKit zu F5 §6 (`687d0bf`) | 1 fehlgeschlagen: `marks.spec.ts` „Seitenende …“ auf `/mehr/synchronisierung` (Inhalt der Anmeldung im Vollbild unter der verdeckten Leiste), behoben in diesem Abschnitt; `tabbar.spec.ts` „Ziehen mit der Linse …“ erst im zweiten Versuch bestanden |
+| `node tools/screenshots.mjs komponenten`, `screens`; `node tools/screens-overview.mjs` | 18 Bilder erneuert; „docs/screens/uebersicht.png: 28 Bilder“, „docs/screens.zip: 29 Bilder“ |
+

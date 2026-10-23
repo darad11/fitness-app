@@ -1,5 +1,5 @@
 import { ChevronRight, ClipboardList, LayoutList, Plus, type LucideIcon } from 'lucide-react';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Link, useLoaderData, useLocation, useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -127,10 +127,28 @@ export function ProgramsPage() {
   );
 }
 
+/** Titel mit Umbruchstelle nach jedem Schrägstrich („Oberkörper/“ „Unterkörper“). */
+function breakAfterSlash(text: string): React.ReactNode {
+  const parts = text.split('/');
+  return parts.map((part, index) =>
+    index < parts.length - 1 ? (
+      <Fragment key={index}>
+        {part}/<wbr />
+      </Fragment>
+    ) : (
+      part
+    ),
+  );
+}
+
 /**
  * Karte einer Programmliste (FORM, D-315; Etikett F5, D-324): Symbol links, rechts daneben der
  * Titel mit dem Etikett oben rechts (der Titel bricht vorher um), darunter Angaben über die ganze
- * Breite, der Chevron rechts mittig. Grid und Flexbox, keine festen Positionen.
+ * Breite, der Chevron rechts mittig. Flexbox, keine festen Positionen.
+ *
+ * Schmale Breiten (F5 Abschnitt 9, D-331): Der Titel ist mindestens so breit wie sein längstes
+ * Wort (`w-min`, nach Schrägstrichen darf er umbrechen). Passt dieses Wort nicht neben das
+ * Etikett, rückt das Etikett über den Titel (`flex-wrap-reverse`), statt das Wort zu trennen.
  */
 function ProgramCard({
   to,
@@ -155,14 +173,16 @@ function ProgramCard({
       className="flex min-h-14 items-start gap-3 rounded-card bg-surface p-card shadow-card hover:bg-surface-2"
     >
       <TileIcon icon={icon} />
-      <span className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
-        <span className="font-semibold break-words">{title}</span>
-        {badge ? <span className="mt-0.5 shrink-0 whitespace-nowrap">{badge}</span> : <span />}
-        <span className="col-span-2 mt-0.5 block text-caption text-muted">{meta}</span>
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="flex flex-wrap-reverse items-end justify-end gap-x-3 gap-y-1">
+          <span className="w-min min-w-0 grow font-semibold break-words">
+            {breakAfterSlash(title)}
+          </span>
+          {badge ? <span className="mt-0.5 shrink-0 whitespace-nowrap">{badge}</span> : null}
+        </span>
+        <span className="mt-0.5 block text-caption text-muted">{meta}</span>
         {description ? (
-          <span
-            className={`col-span-2 mt-2 text-sm ${lines === 3 ? 'line-clamp-3' : 'line-clamp-2'}`}
-          >
+          <span className={`mt-2 text-sm ${lines === 3 ? 'line-clamp-3' : 'line-clamp-2'}`}>
             {description}
           </span>
         ) : null}

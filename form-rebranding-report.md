@@ -34,6 +34,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §7 Texte und Marke | Programm C heißt „Winterprogramm 2026“ mit neutraler Beschreibung und eigener Adresse; keine Hinweise auf die fremde App in Code, Daten und Dokumenten, zwei Prüfungen dagegen; Registrierung bleibt offen; Werte des Kontos aus der Referenzanalyse entfernt | D-328 | umgesetzt |
 | F5 §7a Entscheidungen | Serie bleibt entfernt; Gerätetest des Startbilds zuerst an der Vorschau, die Daten sind Testdaten; kein Push nach langer Pause; zwei neue P2-Punkte (Wiederherstellen aus dem Export, Ursache des Offline-Tests) | D-329 | festgehalten |
 | F5 §8 Nächste Schritte | Nährstoffe mit Referenzwerten, Grundnahrungsmittel und Suche, eigene Workouts, Ausführungsanleitungen als Punkte 58 bis 61 im Plan; nicht begonnen | D-330 | eingetragen |
+| F5 §9 Abschluss | Prüfung auf 360, 390 und 768 pt (39 Ansichten), fünf Korrekturen für schmale Breiten, Test „Seitenende“ mit modalem Dialog, Screenshots, Übersicht und Archiv erneuert | D-331 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -179,6 +180,22 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Angepasst: `docs/testing.md` (T-IPH-M0 Schritt 5), `docs/known-limitations.md` (Zeile „Startbild“), `brand-tokens.md` (Abschnitt 4 Push, Abschnitt 5 Punkt 4), `docs/brand-form.md` (Hinweis zur Neuinstallation, nicht die Gründergeschichte), dieser Bericht (Abschnitt 5).
 - Keine Codeänderung.
 
+### F5 §9 Abschluss
+
+- Geprüft: Ein vorübergehendes Skript (gelöscht, nicht im Repository) öffnete 39 Ansichten auf 360, 390 und 768 pt, mit Testdaten im frischen Browserprofil: alle Seiten der App, ein eigenes Programm mit „Bearbeiten“, das laufende Training, Zusammenfassung, Übungsfortschritt, die Auswertung einer Tagesaufgabe, die Blätter „Meine Küche“ und „Gewicht erfassen“ und den Dialog „Schnelleintrag“. Gesucht wurde nach waagrechtem Überlauf, Bedienelementen außerhalb des Bildschirms, abgeschnittenem oder herausragendem Text, überlappenden Bedienelementen, getrennten Wörtern und Elementen, die eine feste Leiste am Seitenende verdeckt. Dazu Sichtprüfung der Bilder.
+- Gefunden und Ursache:
+  - Programmkarten: „Winterprogra-mm“, „Push/Pull/Bei-ne“ und „Oberkörper/Unt-erkörper“ auf 360 pt, „Oberkörper/Unterkörper“ auch auf 390 und 768 pt. Die Titelspalte durfte schmaler werden als ihr längstes Wort, und nach einem Schrägstrich gab es keine Umbruchstelle.
+  - „Meine Küche“ in der Ernährung zweizeilig auf 360 pt (und 375 pt): Symbol, Text und 20 px Innenmaß je Seite brauchen 169 px, die halbe Zeile hat 156 px.
+  - „Als eigenes Programm übernehmen“ zweizeilig auf 360 pt (345 von 320 px), die Knöpfe „Tag … heute trainieren“ zweizeilig auf 360 und 390 pt (bis 442 von 288 px), weil der Tagesname im Knopf wiederholt wurde.
+  - Schnelleintrag auf 360 pt: „Kohlenhydrate“ ist breiter als ein Drittel der Zeile und lief in die Spalte „Fett“.
+  - Programm bearbeiten auf 360 pt: Fünf Symbolknöpfe drückten den Wochennamen zusammen, „Woche“ wurde getrennt.
+  - CI (WebKit, Lauf zu Abschnitt 6): Der Test „Seitenende“ aus Abschnitt 4 maß auf `/mehr/synchronisierung` den Inhalt der Anmeldung im Vollbild gegen die Tab-Leiste, die der modale Dialog verdeckt; in WebKit reicht der Inhalt tiefer als in Chromium.
+- Geändert: `training/ui/ProgramsPage.tsx` (Titel mindestens so breit wie das längste Wort, Umbruch nach Schrägstrichen, Etikett sonst über dem Titel), `src/shared/ui/Button.tsx` (Größe `row`), `nutrition/ui/KitchenMenu.tsx` (Größe `row` für „Ziel“, „Meine Küche“ und die Knöpfe im Blatt), `training/ui/SampleTemplatePage.tsx` und `src/shared/i18n/de.ts` („Heute trainieren“ mit Namen „Tag … heute trainieren“, „Übernehmen und anpassen“), `nutrition/ui/AddFoodPage.tsx` (Spalten des Schnelleintrags), `training/ui/programs/ProgramEditPage.tsx` (Knöpfe der Woche als Gruppe), `training/service/programService.ts` (Kommentar).
+- Bewusst so gelassen: die Kürzung mit „…“ in der Unterzeile des Trainingskopfs (Vorgabe aus Abschnitt 2; bei langen Programmnamen fällt „Woche n“ weg) und bei langen Aufgabennamen in der Übersicht „Je Aufgabe“, zweizeilige Seitentitel, das Menü „Meine Küche“ ab 768 pt über dem Inhalt.
+- Tests: neu `e2e/narrow-layout.spec.ts` (Knöpfe einzeilig, Schnelleintrag, Programm bearbeiten; 360, 390, 768 pt); `e2e/program-list.spec.ts` prüft, dass kein Wort im Titel getrennt wird und das Etikett auf 390 und 768 pt neben dem Titel steht; `e2e/marks.spec.ts` (modaler Dialog); angepasst `programs-ui.test.tsx`, `own-programs-ui.test.tsx`, `e2e/own-programs.spec.ts`, `e2e/switches.spec.ts` (neuer Knopftext).
+- Screenshots: `node tools/screenshots.mjs komponenten` und `screens` erneuert (18 Bilder geändert, darunter Heute, Training, Programme, Ernährung, aktives Workout, Ring), danach `node tools/screens-overview.mjs` („docs/screens/uebersicht.png: 28 Bilder“, „docs/screens.zip: 29 Bilder“).
+- Dokumente: `docs/decisions.md` (D-331), `docs/design-system.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -281,6 +298,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §7: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,0 KB von 250 KB (gzip) |
 | F5 §7: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 261 bestanden, 23 übersprungen, 2 fehlgeschlagen (6,4 min): `programs.spec.ts` „Programm C: Wochen, Hinweise und Dropsets ohne Pause sind sichtbar“ (Desktop und Handy) erwartete noch die Zeile „Quelle: Rekonstruktion“. Test angepasst (Name, neutrale Beschreibung, keine Quellenzeile); danach `e2e/programs.spec.ts`: 4 bestanden |
 | F5 §7a: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm test` | 23.10.2026 | ohne Befund; 860 Tests in 104 Dateien bestanden. Nur Dokumente geändert, kein Build und kein E2E-Lauf nötig; die CI läuft trotzdem vollständig |
+| F5 §9: Breitenprüfung (vorübergehendes Skript, 39 Ansichten × 360, 390, 768 pt) | 23.10.2026 | Erster Lauf: keine Seite breiter als der Bildschirm, keine Konsolenfehler; gefunden die fünf Fehler aus Abschnitt 2 (F5 §9). Letzter Lauf nach den Korrekturen: kein getrenntes Wort, nichts außerhalb, keine Überlappung im Fluss, nichts am Seitenende verdeckt; übrig nur die bewusst gelassenen Kürzungen und das Menü ab 768 pt |
+| F5 §9: `e2e/narrow-layout.spec.ts` (neu), `e2e/program-list.spec.ts` | 23.10.2026 | 20 bestanden, 8 übersprungen (schmale Breiten nur im Handy-Projekt). Gegenprobe gegen `273d608` (im kopierten Test mit dem alten Knopftext): 10 fehlgeschlagen, darunter Programmkarten auf 360 pt (drei Titel getrennt) und auf 390 und 768 pt („Oberkörper/Unterkörper“), „Meine Küche“ und Schnelleintrag auf 360 pt, „Woche“ auf 360 pt, „Heute trainieren“ auf allen Breiten |
+| F5 §9: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund (erster Lauf: `check:docs` meldete „unbekannter Verweis D-331“, bevor D-331 eingetragen war) |
+| F5 §9: `pnpm test` | 23.10.2026 | 860 Tests in 104 Dateien bestanden |
+| F5 §9: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,0 KB von 250 KB (gzip) |
+| F5 §9: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 275 bestanden, 29 übersprungen, 0 fehlgeschlagen (6,3 min); kein Test erst im zweiten Versuch; „… alle Bereiche starten offline“ auf Desktop und Handy bestanden |
+| CI zu F5 §1 bis §8 (GitHub Actions) | 23.10.2026 | §1 (`43fc44f`) grün; §3 (`d0bc709`) grün, WebKit 221 bestanden, 15 übersprungen; §2, §4, §5, §7 und §7a abgebrochen, weil der nächste Push kam; §6 (`687d0bf`) rot: WebKit 1 fehlgeschlagen (`marks.spec.ts` „Seitenende …“ auf `/mehr/synchronisierung`, in beiden Versuchen; behoben in F5 §9), 1 erst im zweiten Versuch bestanden (`tabbar.spec.ts` „Ziehen mit der Linse …“), 255 bestanden; §8 (`273d608`): Lint bis Build und E2E Chromium grün, WebKit lief beim Schreiben noch |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 
@@ -301,6 +325,7 @@ Offen beim Produktinhaber:
 5. `brand-tokens.md` Abschnitt 5: App-Farben an die Markenfarben angleichen? Empfehlung: so lassen; Grundfläche, Akzent und Kachel sind schon gleich.
 6. Push nach 21 Tagen Pause: entschieden, entfällt (D-329).
 7. Der E2E-Test „Service Worker übernimmt und alle Bereiche starten offline“ ist lokal im vollen Lauf am Handy wiederholt rot (ein zufälliges Modul kommt offline nicht aus dem Service Worker, Abschnitt 3); in der CI war er in allen Läufen grün. Ursachensuche als P2-Punkt E-16 mit hoher Priorität in `audit-report.md` (D-329). In den vollen Läufen zu F5 Abschnitt 1 bis 7 lief er lokal ohne Fehler; die Ursache der früheren Fehlschläge ist damit nicht geklärt.
+8. Registrierung bleibt offen (D-328): Falls „Allow new users to sign up“ in Supabase nach D-299 ausgeschaltet wurde, wieder einschalten (`audit-report.md` Abschnitt 12, Klickpfad Schritt 2). Von hier aus nicht prüfbar.
 
 ## 6. Stand nach dieser Sitzung
 
@@ -314,3 +339,34 @@ Ergebnisse wie vorgesehen:
 - Entwurfs-PR #49 (`form-rebranding` → `main`) mit CI für jeden Paket-Commit; gemergt wird erst nach Freigabe durch den Produktinhaber.
 
 Testergebnisse je Paket stehen wörtlich in Abschnitt 3. Nicht hier prüfbar und deshalb offen: Gerätetests am iPhone (Startbild, Anmeldung, Rückkehr-Flow am Gerät).
+
+## 7. Abschluss F5 (23.10.2026)
+
+Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md`. Je Abschnitt ein Commit mit eigener Entscheidung, sofort gepusht: §1 `43fc44f` (D-322), §2 `ba53daa` (D-323), §3 `d0bc709` (D-324), §4 `beceb4a` (D-325), §5 `df5f575` (D-326), §6 `687d0bf` (D-327), §7 `779f62a` (D-328), §7a `77a8487` (D-329), §8 `273d608` (D-330), §9 mit diesem Bericht (D-331). Gefundene Probleme, Ursachen, Änderungen und Dateien stehen je Abschnitt in Abschnitt 2, die Testergebnisse wörtlich in Abschnitt 3.
+
+Tests je behobenem Fehler, jeweils mit Gegenprobe gegen den Stand davor:
+
+| Fehler | Test | Gegenprobe |
+|---|---|---|
+| Schalter reagierten nicht auf einen Tipp | `e2e/switches.spec.ts`, `class-conflicts.test.ts` | mit dem alten `Switch.tsx` alle 13 Tests zu Schaltern und Formular fehlgeschlagen; ohne die Korrekturen 18 Stellen gemeldet |
+| Wochenziel nicht vorbelegt | `goals-ui.test.tsx` | „expected '3' to be '4'“ |
+| Seitenanfang und Zurück | `e2e/program-list.spec.ts` | „Oberkörper/Unterkörper“ beginnt nicht oben |
+| Sprung im Training | `e2e/training-scroll.spec.ts` | „verdeckt vom Kopf (160 px)“ nach dem ersten Satz |
+| Name der fremden App | `src/app/wording.test.ts`, `tools/check_names.py` | 3 von 27 Tests fehlgeschlagen; 757 Probleme in 50 Dateien |
+| Wörter getrennt, Knöpfe zweizeilig, Text in der Nachbarspalte | `e2e/narrow-layout.spec.ts`, `e2e/program-list.spec.ts` | 10 Tests fehlgeschlagen |
+
+Offen beim Produktinhaber (Abschnitt 5): Durchsicht und Merge von PR #49, Gerätetest T-IPH-M0 Schritt 5 an der Vorschau, Schalter „Allow new users to sign up“ prüfen, Farben nach `brand-tokens.md` Abschnitt 5.
+
+Nicht hier prüfbar:
+
+- Alles am iPhone: Startbild C3 und Startfläche beim Kaltstart, Häkchen der iOS-Tastatur im Training, Schriftbreiten von iOS Safari auf schmalen Breiten. Die Breiten sind in Chromium gemessen; WebKit prüft die neuen Tests erst die CI.
+- WebKit läuft nur in der CI. Das Ergebnis zum letzten Commit steht beim Schreiben noch aus.
+- Einstellungen im Supabase-Dashboard (Registrierung).
+
+Empfehlungen:
+
+1. Zuerst die Ursache des Offline-Tests klären (E-16, hohe Priorität), dann „Wiederherstellen aus dem Export“ (A-14), beides vor echten Nutzern.
+2. Der Test „Ziehen mit der Linse …“ der Tab-Leiste bestand in WebKit einmal erst im zweiten Versuch (CI zu §6); F5 hat die Tab-Leiste nicht verändert. Ursache als kleine eigene Aufgabe klären (Zustand der Linse nach dem Loslassen).
+3. Trainingskopf: Bei langen Programmnamen fällt „Woche n“ auf 360 und 390 pt der Kürzung zum Opfer. Wenn die Woche wichtiger ist als der volle Programmname, „Woche n · Programmname“ oder die Woche an eigener Stelle; das ändert die Vorgabe aus §2 und braucht deine Entscheidung.
+4. Die Prüfung „kein Wort getrennt“ aus `e2e/narrow-layout.spec.ts` lässt sich mit wenig Aufwand für alle Seiten auf 360 pt in die E2E-Tests übernehmen, damit neue Seiten nicht wieder mitten im Wort brechen.
+5. Programm C vor einer öffentlichen Öffnung durch ein eigenes Programm ersetzen (`known-limitations.md`).

@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import { useId } from 'react';
 import { Link, useLocation } from 'react-router';
-import { t } from '@/shared/i18n/de';
+import { tTasks } from '@/shared/i18n/de-tasks';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { tWater } from '@/shared/i18n/de-water';
 import { cn } from '@/shared/lib/cn';
@@ -16,9 +16,9 @@ export function rhythm(habit: Habit, today: string): string {
   const parts = [
     days && days.length < 7
       ? days.map((day) => names[day - 1] ?? '').join(' · ')
-      : t.tasks.rhythmDaily,
+      : tTasks.tasks.rhythmDaily,
     habit.autoDone === 'training'
-      ? t.tasks.rhythmTraining
+      ? tTasks.tasks.rhythmTraining
       : habit.autoDone === 'water'
         ? tWater.autoRhythm
         : null,
@@ -57,7 +57,9 @@ export function TaskRow({
       <span className="relative -ml-3 flex size-touch shrink-0 items-center justify-center">
         <input
           type="checkbox"
-          aria-label={due ? t.tasks.checkLabel(habit.name) : t.tasks.checkLabelNotDue(habit.name)}
+          aria-label={
+            due ? tTasks.tasks.checkLabel(habit.name) : tTasks.tasks.checkLabelNotDue(habit.name)
+          }
           checked={checked}
           disabled={!due}
           onChange={(event) => {
@@ -70,7 +72,7 @@ export function TaskRow({
       <Link
         to={`/heute/aufgaben/${habit.id}`}
         state={{ back: pathname }}
-        aria-label={t.tasks.editLabel(habit.name)}
+        aria-label={tTasks.tasks.editLabel(habit.name)}
         aria-describedby={`${id}-rhythmus`}
         className="-mr-2 ml-1 flex min-h-14 min-w-0 flex-1 items-center gap-2 rounded-input py-2 pr-2"
       >

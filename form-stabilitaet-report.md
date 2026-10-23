@@ -14,6 +14,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt; Nachträge: Seitenende auf `/ernaehrung`, Startwächter in WebKit (kein Vorladen in index.html, Bestätigung in der CI) |
 | §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest ausstehend |
 | §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt, WebKit in der CI |
+| §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt, WebKit in der CI |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -249,4 +250,42 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §4“.
 - **C-04 Rest:** Jede Seite mit Suche liest den Katalog aus IndexedDB (rund 0,6 MB). Ohne Messung am Gerät; die Abhilfe bräuchte einen eigenen kleinen Eintrag für den Stand des Imports, also eine Änderung am Datenmodell.
 - **B-02:** Pausieren bleibt bis Phase B offen (D-297).
 - Kleinere Reste: D-01 `compareNone` nach Grund, D-02 Erneuern vor dem Abmelden beim Dashboard, B-07 fehlende Übungen im Programm-Detail markieren, C-03 erneutes Scannen nach Treffer (P3).
+
+## 6. §5 Startansicht höchstens 235 KB
+
+### Ausgangslage
+
+239,5 KB (gzip) nach §4, Ziel höchstens 235 KB. Aufteilung nach Quelldateien (Sourcemaps): react-dom 63,7 KB, Dexie 30,9 KB, React Router rund 28 KB, Zod rund 23 KB, Textkatalog `de.ts` 11,6 KB, Linse der Tab-Leiste 2,5 KB, sonst je Datei unter 2 KB. Der Katalog war der größte Teil aus dem eigenen Code; er lud mit der Startansicht, obwohl die meisten Texte zu nachgeladenen Seiten gehören.
+
+### Änderungen
+
+- Neue Kataloge nach dem Muster von D-288: `de-more.ts` (Mehr, Profil, Einstellungen, Daten, Installieren, Über die App, Schritte), `de-training-pages.ts` (Nachtragen, Verlauf, Zusammenfassung, Fortschritt, Pausenanzeige), `de-tasks.ts` (Tagesaufgaben), `de-session.ts` (Player). `t.session` behält nur Fortschritt der Sätze und Muskeln für die Startansicht.
+- Die Aufrufer nutzen den neuen Katalog (`tMore.settings…` statt `t.settings…`); die Typprüfung findet jeden.
+- `wording.test.ts` prüft alle Kataloge, dazu `de-backup.ts` aus §3, das dort fehlte.
+- Verworfen: `"sideEffects"` in `package.json` (240,2 KB).
+
+### Ergebnis
+
+234,3 KB von 250 KB; der Katalog in der Startansicht 6,2 statt 11,6 KB. Keine neue Abhängigkeit, kein geänderter Ablauf.
+
+### Geänderte Dateien
+
+- Neu: `src/shared/i18n/{de-more,de-training-pages,de-tasks,de-session}.ts`
+- Geändert: `src/shared/i18n/de.ts`, die Aufrufer in `src/modules/{goals,training,progress,settings,sync,steps,habits,exercises,body}/ui/…`, `src/app/wording.test.ts`
+- Dokumente: `docs/decisions.md` (D-347), `docs/architecture.md`, `docs/testing.md`, `docs/implementation-plan.md`, `docs/CHANGELOG.md`
+
+### Tests mit Ergebnis
+
+Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §5“.
+
+| Test | Ergebnis |
+|---|---|
+| `pnpm check:bundle` | 234,3 KB von 250 KB |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm test:e2e` (Chromium) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI zu diesem Abschnitt |
+
+### Offen
+
+- Abstand zum Ziel 0,7 KB. Weitere Kandidaten ohne neue Abhängigkeit: die Abschnitte `programs` und `exercises` im Katalog (zusammen rund 11 KB roh), von denen die Startansicht nur wenige Schlüssel braucht, und die Linse der Tab-Leiste (2,5 KB), die erst bei der ersten Berührung gebraucht wird.
 

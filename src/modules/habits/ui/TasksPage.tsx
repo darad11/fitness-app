@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTasks } from '@/shared/i18n/de-tasks';
 import { Button, Card, IconButton, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { HABIT_NAME_MAX } from '../model/habit';
 import {
@@ -44,13 +46,13 @@ export function TasksPage() {
   const run = (action: () => Promise<unknown>) => {
     action().catch((caught: unknown) => {
       void logError(rt.db, { area: 'habits', error: caught, route: '/heute/aufgaben' });
-      setError(t.tasks.saveFailed);
+      setError(tTasks.tasks.saveFailed);
     });
   };
   const add = () => {
     const trimmed = name.trim();
     if (trimmed.length === 0) {
-      setError(t.tasks.nameMissing);
+      setError(tTasks.tasks.nameMissing);
       return;
     }
     setError(null);
@@ -68,7 +70,7 @@ export function TasksPage() {
 
   return (
     <>
-      <PageHeader title={t.tasks.title} back={{ to: '/heute', label: t.nav.today }} />
+      <PageHeader title={tTasks.tasks.title} back={{ to: '/heute', label: t.nav.today }} />
       {tasks === undefined ? (
         <div aria-busy="true" className="grid gap-4">
           <Skeleton className="h-40" />
@@ -77,10 +79,10 @@ export function TasksPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           <Card
-            title={t.tasks.listTitle}
+            title={tTasks.tasks.listTitle}
             action={
               <IconButton
-                label={t.tasks.pausedToggle(paused.length)}
+                label={tTasks.tasks.pausedToggle(paused.length)}
                 aria-expanded={showPaused}
                 aria-controls="pausierte-aufgaben"
                 tone={showPaused ? 'tile' : 'default'}
@@ -100,23 +102,23 @@ export function TasksPage() {
               }}
             >
               <label htmlFor="aufgabe-name" className="sr-only">
-                {t.tasks.nameLabel}
+                {tTasks.tasks.nameLabel}
               </label>
               <input
                 id="aufgabe-name"
                 type="text"
                 value={name}
                 maxLength={HABIT_NAME_MAX}
-                placeholder={t.tasks.namePlaceholder}
+                placeholder={tTasks.tasks.namePlaceholder}
                 autoComplete="off"
                 onChange={(event) => {
                   setName(event.target.value);
                 }}
                 className={INPUT}
               />
-              <Button type="submit" aria-label={t.tasks.add}>
+              <Button type="submit" aria-label={tTasks.tasks.add}>
                 <Plus aria-hidden="true" className="size-5" />
-                <span className="hidden sm:inline">{t.tasks.addShort}</span>
+                <span className="hidden sm:inline">{tTasks.tasks.addShort}</span>
               </Button>
             </form>
             {error ? (
@@ -125,7 +127,7 @@ export function TasksPage() {
               </p>
             ) : null}
             {tasks.listed.length === 0 ? (
-              <p className="mt-4 text-muted">{t.tasks.emptyList}</p>
+              <p className="mt-4 text-muted">{tTasks.tasks.emptyList}</p>
             ) : (
               <>
                 <ul className="mt-3 divide-y divide-line">
@@ -135,7 +137,7 @@ export function TasksPage() {
                         <div className="flex min-h-14 items-center gap-1">
                           <span className="min-w-0 flex-1 py-2 break-words">{habit.name}</span>
                           <IconButton
-                            label={`${t.session.moveUp}, ${habit.name}`}
+                            label={`${tSession.moveUp}, ${habit.name}`}
                             disabled={index === 0}
                             onClick={() => {
                               run(() => moveHabit(rt, habit.id, -1));
@@ -144,7 +146,7 @@ export function TasksPage() {
                             <ChevronUp aria-hidden="true" className="size-5" />
                           </IconButton>
                           <IconButton
-                            label={`${t.session.moveDown}, ${habit.name}`}
+                            label={`${tSession.moveDown}, ${habit.name}`}
                             disabled={index === tasks.listed.length - 1}
                             onClick={() => {
                               run(() => moveHabit(rt, habit.id, 1));
@@ -176,7 +178,7 @@ export function TasksPage() {
                       setOrdering((on) => !on);
                     }}
                   >
-                    {ordering ? t.tasks.reorderDone : t.tasks.reorder}
+                    {ordering ? tTasks.tasks.reorderDone : tTasks.tasks.reorder}
                   </Button>
                 ) : null}
               </>
@@ -184,12 +186,12 @@ export function TasksPage() {
             {showPaused ? (
               <section
                 id="pausierte-aufgaben"
-                aria-label={t.tasks.pausedTitle}
+                aria-label={tTasks.tasks.pausedTitle}
                 className="mt-4 rounded-input bg-surface-2 px-3 py-2"
               >
-                <h3 className="pt-1 text-sm font-semibold">{t.tasks.pausedTitle}</h3>
+                <h3 className="pt-1 text-sm font-semibold">{tTasks.tasks.pausedTitle}</h3>
                 {paused.length === 0 ? (
-                  <p className="py-2 text-sm text-muted">{t.tasks.pausedEmpty}</p>
+                  <p className="py-2 text-sm text-muted">{tTasks.tasks.pausedEmpty}</p>
                 ) : (
                   <>
                     <ul className="divide-y divide-line">
@@ -199,15 +201,15 @@ export function TasksPage() {
                           <Button
                             size="sm"
                             variant="secondary"
-                            aria-label={`${t.tasks.reopen}, ${habit.name}`}
+                            aria-label={`${tTasks.tasks.reopen}, ${habit.name}`}
                             onClick={() => {
                               run(() => reopenHabit(rt, habit.id));
                             }}
                           >
-                            {t.tasks.reopenShort}
+                            {tTasks.tasks.reopenShort}
                           </Button>
                           <IconButton
-                            label={`${t.tasks.remove}, ${habit.name}`}
+                            label={`${tTasks.tasks.remove}, ${habit.name}`}
                             tone="danger"
                             onClick={() => {
                               run(async () => {
@@ -221,7 +223,7 @@ export function TasksPage() {
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-sm text-muted">{t.tasks.pausedHint}</p>
+                    <p className="mt-2 text-sm text-muted">{tTasks.tasks.pausedHint}</p>
                   </>
                 )}
               </section>
@@ -234,8 +236,8 @@ export function TasksPage() {
         <Toast
           message={
             change.kind === 'paused'
-              ? t.tasks.paused(change.before.name)
-              : t.tasks.removed(change.before.name)
+              ? tTasks.tasks.paused(change.before.name)
+              : tTasks.tasks.removed(change.before.name)
           }
           durationMs={10_000}
           onTimeout={() => {
@@ -251,7 +253,7 @@ export function TasksPage() {
                 run(() => undoHabitChange(rt, before));
               }}
             >
-              {t.session.undoDiscard}
+              {tSession.undoDiscard}
             </Button>
           }
         />

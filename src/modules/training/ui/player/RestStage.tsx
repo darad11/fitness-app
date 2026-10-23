@@ -1,7 +1,8 @@
 import { ChevronDown, ChevronUp, Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { cn } from '@/shared/lib/cn';
 import { Button, Chip, IconButton } from '@/shared/ui';
 import { formatRestRemaining, formatTargetRange, restRemainingSec } from '../../calc/format';
@@ -29,17 +30,19 @@ export function RestStage(props: RestStageProps) {
   const remaining = restRemainingSec(props.timer.endsAt, props.now);
   const over = remaining <= 0;
   const time = formatRestRemaining(remaining);
-  const status = over ? t.rest.overBy(time.slice(1)) : `${t.rest.remaining} ${time}`;
+  const status = over
+    ? tTrainingPages.rest.overBy(time.slice(1))
+    : `${tTrainingPages.rest.remaining} ${time}`;
   const target = props.next?.set.target ? formatTargetRange(props.next.set.target) : null;
   const nextText = props.next
     ? [
         props.next.name,
-        target ? `${t.rest.target} ${target.text}` : null,
-        props.previous ? `${t.session.previous} ${props.previous}` : null,
+        target ? `${tTrainingPages.rest.target} ${target.text}` : null,
+        props.previous ? `${tSession.previous} ${props.previous}` : null,
       ]
         .filter(Boolean)
         .join(' · ')
-    : t.rest.noNext;
+    : tTrainingPages.rest.noNext;
 
   const controls = (size: 'sm' | 'lg') => (
     <div
@@ -50,7 +53,7 @@ export function RestStage(props: RestStageProps) {
     >
       {/* ±15 s als Chips, „Überspringen“ in Blau: Trainingsaktion im aktiven Workout (D-315). */}
       <Chip
-        aria-label={t.rest.minus}
+        aria-label={tTrainingPages.rest.minus}
         className="w-full"
         onClick={() => {
           props.onAdjust(-REST_STEP_SEC);
@@ -60,7 +63,7 @@ export function RestStage(props: RestStageProps) {
         15 s
       </Chip>
       <Chip
-        aria-label={t.rest.plus}
+        aria-label={tTrainingPages.rest.plus}
         className="w-full"
         onClick={() => {
           props.onAdjust(REST_STEP_SEC);
@@ -72,10 +75,10 @@ export function RestStage(props: RestStageProps) {
       <Button
         variant="action"
         size={size === 'lg' ? 'md' : 'sm'}
-        aria-label={t.rest.skip}
+        aria-label={tTrainingPages.rest.skip}
         onClick={props.onSkip}
       >
-        {t.rest.skipShort}
+        {tTrainingPages.rest.skipShort}
       </Button>
     </div>
   );
@@ -87,13 +90,15 @@ export function RestStage(props: RestStageProps) {
     // Als Portal, damit `fixed` sich auf das Fenster bezieht und nicht auf den klebenden Kopf.
     return createPortal(
       <section
-        aria-label={t.rest.label}
+        aria-label={tTrainingPages.rest.label}
         className={cn(
           'stage fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 px-page text-center text-fg',
           overClass,
         )}
       >
-        <p className="eyebrow text-muted">{over ? t.rest.over : t.rest.label}</p>
+        <p className="eyebrow text-muted">
+          {over ? tTrainingPages.rest.over : tTrainingPages.rest.label}
+        </p>
         <p
           role="timer"
           aria-label={status}
@@ -102,7 +107,7 @@ export function RestStage(props: RestStageProps) {
           {time}
         </p>
         <div className="max-w-md">
-          <p className="eyebrow text-muted">{t.rest.next}</p>
+          <p className="eyebrow text-muted">{tTrainingPages.rest.next}</p>
           <p className="mt-1 text-lg">{nextText}</p>
         </div>
         {controls('lg')}
@@ -113,7 +118,7 @@ export function RestStage(props: RestStageProps) {
           }}
         >
           <ChevronDown aria-hidden="true" className="size-5" />
-          {t.rest.collapse}
+          {tTrainingPages.rest.collapse}
         </Button>
       </section>,
       document.body,
@@ -122,7 +127,7 @@ export function RestStage(props: RestStageProps) {
 
   return (
     <section
-      aria-label={t.rest.label}
+      aria-label={tTrainingPages.rest.label}
       className={cn('stage mt-3 rounded-card p-card text-fg', overClass)}
     >
       <div className="flex min-h-12 items-center gap-4">
@@ -134,14 +139,16 @@ export function RestStage(props: RestStageProps) {
           {time}
         </p>
         <p className="min-w-0 flex-1">
-          <span className="eyebrow block text-muted">{over ? t.rest.over : t.rest.label}</span>
+          <span className="eyebrow block text-muted">
+            {over ? tTrainingPages.rest.over : tTrainingPages.rest.label}
+          </span>
           <span className="mt-0.5 line-clamp-2 text-sm">
-            <span className="font-semibold">{t.rest.next}: </span>
+            <span className="font-semibold">{tTrainingPages.rest.next}: </span>
             {nextText}
           </span>
         </p>
         <IconButton
-          label={t.rest.expand}
+          label={tTrainingPages.rest.expand}
           aria-expanded={false}
           onClick={() => {
             setExpanded(true);

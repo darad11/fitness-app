@@ -4,6 +4,8 @@ import { Link, useLocation } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { Button, ButtonLink, EmptyState, PageHeader, Skeleton, Toast } from '@/shared/ui';
 import { formatClock } from '../calc/format';
 import { groupByWeek, pauseAfterGroup, summarizeSession } from '../calc/history';
@@ -27,7 +29,7 @@ export function HistoryPage() {
     <>
       {deleted && undoVisible ? (
         <Toast
-          message={t.historyEdit.deleted}
+          message={tTrainingPages.historyEdit.deleted}
           durationMs={10_000}
           onTimeout={() => {
             setUndoVisible(false);
@@ -47,7 +49,7 @@ export function HistoryPage() {
                 });
               }}
             >
-              {t.session.undoDiscard}
+              {tSession.undoDiscard}
             </Button>
           }
         />
@@ -91,7 +93,7 @@ export function HistoryPage() {
                             <span className="block text-sm text-muted tabular-nums">
                               {fmt.weekdayDayMonth(dateOf(session.dayKey))} ·{' '}
                               {session.activity
-                                ? t.log.activitySummary(
+                                ? tTrainingPages.log.activitySummary(
                                     formatClock(summary.durationSec),
                                     session.activity.distanceM !== undefined
                                       ? `${fmt.number(session.activity.distanceM / 1000, { maximumFractionDigits: 2 })} km`

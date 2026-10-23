@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { cn } from '@/shared/lib/cn';
 import { Button, ButtonLink, Card, Dialog, PageHeader, Skeleton, StatTile } from '@/shared/ui';
 import { formatSetValues } from '../calc/fields';
@@ -77,7 +79,7 @@ export function HistoryDetailPage() {
         }}
       >
         <Pencil aria-hidden="true" className="size-4" />
-        {t.historyEdit.edit}
+        {tTrainingPages.historyEdit.edit}
       </Button>
       <Button
         variant="danger"
@@ -87,24 +89,27 @@ export function HistoryDetailPage() {
         }}
       >
         <Trash2 aria-hidden="true" className="size-4" />
-        {t.historyEdit.delete}
+        {tTrainingPages.historyEdit.delete}
       </Button>
     </div>
   );
   return (
     <>
       <PageHeader
-        eyebrow={session.activity ? t.log.activityEyebrow : t.history.detailEyebrow}
+        eyebrow={session.activity ? tTrainingPages.log.activityEyebrow : t.history.detailEyebrow}
         title={session.title}
-        subtitle={`${fmt.weekdayDayMonth(ended)} · ${fmt.time(ended)}${session.source === 'manual' ? ` · ${t.log.manualBadge}` : ''}`}
+        subtitle={`${fmt.weekdayDayMonth(ended)} · ${fmt.time(ended)}${session.source === 'manual' ? ` · ${tTrainingPages.log.manualBadge}` : ''}`}
         back={{ to: '/training/verlauf', label: t.history.title }}
         action={actions}
       />
       {session.activity ? (
         <dl className="mb-4 grid grid-cols-2 gap-3">
-          <StatTile label={t.summary.duration} value={formatClock(summary.durationSec)} />
           <StatTile
-            label={t.log.distance}
+            label={tTrainingPages.summary.duration}
+            value={formatClock(summary.durationSec)}
+          />
+          <StatTile
+            label={tTrainingPages.log.distance}
             value={
               session.activity.distanceM === undefined
                 ? '–'
@@ -115,10 +120,20 @@ export function HistoryDetailPage() {
         </dl>
       ) : (
         <dl className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <StatTile label={t.summary.duration} value={formatClock(summary.durationSec)} />
-          <StatTile label={t.summary.exercises} value={fmt.number(summary.exercises)} />
-          <StatTile label={t.summary.sets} value={fmt.number(summary.doneSets)} />
-          <StatTile label={t.summary.volume} value={fmt.number(summary.volumeKg)} unit="kg" />
+          <StatTile
+            label={tTrainingPages.summary.duration}
+            value={formatClock(summary.durationSec)}
+          />
+          <StatTile
+            label={tTrainingPages.summary.exercises}
+            value={fmt.number(summary.exercises)}
+          />
+          <StatTile label={tTrainingPages.summary.sets} value={fmt.number(summary.doneSets)} />
+          <StatTile
+            label={tTrainingPages.summary.volume}
+            value={fmt.number(summary.volumeKg)}
+            unit="kg"
+          />
         </dl>
       )}
       {session.notes ? (
@@ -138,7 +153,7 @@ export function HistoryDetailPage() {
               ) : null}
               {exercise.note ? (
                 <p className="mb-3 text-sm whitespace-pre-line">
-                  <span className="font-semibold">{t.session.yourNote}: </span>
+                  <span className="font-semibold">{tSession.yourNote}: </span>
                   {exercise.note}
                 </p>
               ) : null}
@@ -146,7 +161,7 @@ export function HistoryDetailPage() {
                 {liveSets(exercise).map((set) => {
                   const ordinal =
                     set.type === 'working' ? ++working : set.type === 'warmup' ? ++warmup : ++drop;
-                  const name = t.session.setLabel(t.session.setTypeLabel[set.type], ordinal);
+                  const name = tSession.setLabel(tSession.setTypeLabel[set.type], ordinal);
                   return (
                     <li
                       key={set.id}
@@ -188,7 +203,7 @@ export function HistoryDetailPage() {
         onClose={() => {
           setConfirmDelete(false);
         }}
-        title={t.historyEdit.deleteTitle}
+        title={tTrainingPages.historyEdit.deleteTitle}
         closeLabel={t.common.close}
         actions={
           <>
@@ -198,7 +213,7 @@ export function HistoryDetailPage() {
                 setConfirmDelete(false);
               }}
             >
-              {t.session.cancel}
+              {tSession.cancel}
             </Button>
             <Button
               variant="danger"
@@ -216,12 +231,12 @@ export function HistoryDetailPage() {
                 );
               }}
             >
-              {t.historyEdit.deleteConfirm}
+              {tTrainingPages.historyEdit.deleteConfirm}
             </Button>
           </>
         }
       >
-        <p>{t.historyEdit.deleteText}</p>
+        <p>{tTrainingPages.historyEdit.deleteText}</p>
       </Dialog>
     </>
   );

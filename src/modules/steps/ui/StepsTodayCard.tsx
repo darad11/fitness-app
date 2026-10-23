@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { dayKey } from '@/shared/lib/time';
 import { Card, Meter } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
@@ -50,13 +50,13 @@ export function StepsTodayCard() {
 
   if (!view.email) {
     return (
-      <Card title={t.steps.title} titleStyle="label">
-        <p className="text-muted">{t.steps.connectHint}</p>
+      <Card title={tMore.steps.title} titleStyle="label">
+        <p className="text-muted">{tMore.steps.connectHint}</p>
         <Link
           to="/mehr/schritte"
           className="mt-3 inline-flex min-h-11 items-center gap-1 font-semibold text-accent-ink"
         >
-          {t.steps.connectLink}
+          {tMore.steps.connectLink}
           <ChevronRight aria-hidden="true" className="size-5" />
         </Link>
       </Card>
@@ -71,53 +71,53 @@ export function StepsTodayCard() {
       : null;
   const stale =
     view.status.lastError && cache
-      ? t.steps.stale(fmt.dateTimeShort(new Date(cache.fetchedAt)))
+      ? tMore.steps.stale(fmt.dateTimeShort(new Date(cache.fetchedAt)))
       : null;
   const problem =
     view.status.lastError === 'auth'
-      ? t.steps.authExpired
+      ? tMore.steps.authExpired
       : view.status.lastError && !cache
-        ? t.steps.offline
+        ? tMore.steps.offline
         : null;
 
   return (
     <Card
-      title={t.steps.title}
+      title={tMore.steps.title}
       titleStyle="label"
       action={
         summary?.target != null ? (
           <span className="text-sm text-muted tabular-nums">
-            {t.steps.target(steps(summary.target))}
+            {tMore.steps.target(steps(summary.target))}
           </span>
         ) : undefined
       }
     >
       {problem ? <p className="mb-2 text-sm text-danger">{problem}</p> : null}
-      {cache && !cache.config ? <p className="text-muted">{t.steps.notSetUp}</p> : null}
+      {cache && !cache.config ? <p className="text-muted">{tMore.steps.notSetUp}</p> : null}
       {summary ? (
         <>
           <div className="flex flex-wrap items-baseline justify-between gap-x-3">
             <p className="text-value font-semibold tabular-nums">
               {steps(summary.todaySteps)}
               <span className="text-base font-medium tracking-normal text-muted">
-                {` ${t.steps.unit}`}
+                {` ${tMore.steps.unit}`}
               </span>
             </p>
             <p className="text-muted tabular-nums">
               {summary.todaySteps === null
-                ? t.steps.notLogged
+                ? tMore.steps.notLogged
                 : summary.remaining === 0
-                  ? t.steps.targetReached
+                  ? tMore.steps.targetReached
                   : summary.remaining !== null
-                    ? t.steps.toGo(steps(summary.remaining))
+                    ? tMore.steps.toGo(steps(summary.remaining))
                     : ''}
             </p>
           </div>
           {summary.percent !== null ? (
-            <Meter className="mt-3" label={t.steps.meterLabel} value={summary.percent / 100} />
+            <Meter className="mt-3" label={tMore.steps.meterLabel} value={summary.percent / 100} />
           ) : null}
           <p className="mt-2 text-sm text-muted tabular-nums">
-            {t.steps.year(String(summary.yearPercent), steps(summary.ytd), steps(summary.goal))}
+            {tMore.steps.year(String(summary.yearPercent), steps(summary.ytd), steps(summary.goal))}
             {stale ? ` · ${stale}` : ''}
           </p>
         </>

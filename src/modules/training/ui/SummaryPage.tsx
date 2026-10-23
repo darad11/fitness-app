@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router';
 import { latestBefore, useBodyWeights } from '@/modules/body';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { Badge, ButtonLink, Card, PageHeader, Skeleton, StatTile, TileIcon } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import { estimateCalories } from '../calc/calories';
@@ -41,8 +43,8 @@ export function SummaryPage() {
   if (session?.status !== 'completed') {
     return (
       <>
-        <PageHeader title={t.summary.title} />
-        <p className="mb-6 text-muted">{t.session.notFound}</p>
+        <PageHeader title={tTrainingPages.summary.title} />
+        <p className="mb-6 text-muted">{tSession.notFound}</p>
         <ButtonLink to="/training">{t.training.title}</ButtonLink>
       </>
     );
@@ -64,11 +66,11 @@ export function SummaryPage() {
   const next = active ? nextSession(active, today) : null;
   return (
     <>
-      <PageHeader title={t.summary.title} subtitle={subtitle} />
+      <PageHeader title={tTrainingPages.summary.title} subtitle={subtitle} />
       {/* Zeile aus der Mikrotext-Tabelle (F4, D-318); ohne erledigten Satz gibt es nichts zu sagen. */}
       {progress.done > 0 ? (
         <p className="-mt-2 mb-5 text-lg font-medium">
-          {t.summary.doneLine(
+          {tTrainingPages.summary.doneLine(
             Math.floor((session.durationSec ?? 0) / 60),
             exercises.length,
             progress.done,
@@ -76,31 +78,34 @@ export function SummaryPage() {
         </p>
       ) : null}
       <dl className="grid grid-cols-3 gap-stack">
-        <StatTile label={t.summary.duration} value={formatClock(session.durationSec ?? 0)} />
-        <StatTile label={t.summary.exercises} value={fmt.number(exercises.length)} />
-        <StatTile label={t.summary.setsShort} value={fmt.number(progress.done)} />
+        <StatTile
+          label={tTrainingPages.summary.duration}
+          value={formatClock(session.durationSec ?? 0)}
+        />
+        <StatTile label={tTrainingPages.summary.exercises} value={fmt.number(exercises.length)} />
+        <StatTile label={tTrainingPages.summary.setsShort} value={fmt.number(progress.done)} />
       </dl>
       <Card className="mt-stack">
         <dl className="grid gap-4 sm:grid-cols-2">
           <StatTile
             tone="plain"
-            label={t.summary.totalVolume}
+            label={tTrainingPages.summary.totalVolume}
             value={fmt.number(Math.round(sessionVolume(session)))}
             unit="kg"
-            hint={t.summary.volumeHint}
+            hint={tTrainingPages.summary.volumeHint}
           />
           <div className="min-w-0">
-            <dt className="eyebrow text-muted">{t.summary.kcal}</dt>
+            <dt className="eyebrow text-muted">{tTrainingPages.summary.kcal}</dt>
             <dd className="mt-1">
               {calories ? (
                 <>
                   <span className="text-2xl font-semibold">
-                    {t.summary.kcalValue(fmt.number(calories.kcal))}
+                    {tTrainingPages.summary.kcalValue(fmt.number(calories.kcal))}
                   </span>
                   <span className="mt-1 block text-xs text-muted">
-                    {t.summary.kcalEstimate}
+                    {tTrainingPages.summary.kcalEstimate}
                     {calories.uncountedMinutes > 0
-                      ? ` · ${t.summary.kcalCardio(calories.uncountedMinutes)}`
+                      ? ` · ${tTrainingPages.summary.kcalCardio(calories.uncountedMinutes)}`
                       : ''}
                   </span>
                 </>
@@ -108,9 +113,9 @@ export function SummaryPage() {
                 '…'
               ) : (
                 <span className="block text-sm text-muted">
-                  {t.summary.kcalNone}{' '}
+                  {tTrainingPages.summary.kcalNone}{' '}
                   <Link to="/fortschritt/gewicht" className="font-semibold text-accent-ink">
-                    {t.summary.kcalAdd}
+                    {tTrainingPages.summary.kcalAdd}
                   </Link>
                 </span>
               )}
@@ -119,26 +124,28 @@ export function SummaryPage() {
         </dl>
       </Card>
       {comparison ? (
-        <Card title={t.summary.compareTitle} className="mt-stack">
+        <Card title={tTrainingPages.summary.compareTitle} className="mt-stack">
           <p className="mb-3 text-sm text-muted">
-            {t.summary.compareText(fmt.dayMonthYear(new Date(comparison.previous.endedAt ?? '')))}
+            {tTrainingPages.summary.compareText(
+              fmt.dayMonthYear(new Date(comparison.previous.endedAt ?? '')),
+            )}
           </p>
           <dl className="grid grid-cols-2 gap-3">
             <StatTile
               tone="plain"
-              label={t.summary.compareVolume}
+              label={tTrainingPages.summary.compareVolume}
               value={signed(comparison.volumeDiffKg, (abs) => fmt.number(abs))}
               unit="kg"
             />
             <StatTile
               tone="plain"
-              label={t.summary.compareSets}
+              label={tTrainingPages.summary.compareSets}
               value={signed(comparison.doneSetsDiff, (abs) => fmt.number(abs))}
             />
           </dl>
         </Card>
       ) : null}
-      <Card title={t.summary.best} className="mt-stack">
+      <Card title={tTrainingPages.summary.best} className="mt-stack">
         <ul className="divide-y divide-line">
           {exercises.map((exercise) => {
             const best = bestSet(exercise);
@@ -155,7 +162,7 @@ export function SummaryPage() {
                     best.actual,
                     session.id,
                   ) ? (
-                    <Badge tone="success">{t.progress.newRecord}</Badge>
+                    <Badge tone="success">{tTrainingPages.progress.newRecord}</Badge>
                   ) : null}
                 </span>
                 <span className="text-muted">
@@ -166,7 +173,7 @@ export function SummaryPage() {
                         exercise.distanceUnit,
                         number,
                       )
-                    : t.summary.noBest}
+                    : tTrainingPages.summary.noBest}
                 </span>
               </li>
             );
@@ -178,11 +185,11 @@ export function SummaryPage() {
         className="mt-stack flex min-h-14 items-center gap-3 rounded-card bg-surface px-card py-3 shadow-card hover:bg-surface-2"
       >
         <TileIcon icon={ListChecks} />
-        <span className="min-w-0 flex-1 font-semibold">{t.summary.details}</span>
+        <span className="min-w-0 flex-1 font-semibold">{tTrainingPages.summary.details}</span>
         <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
       </Link>
       {next ? (
-        <Card title={t.summary.nextTitle} titleStyle="label" className="mt-stack">
+        <Card title={tTrainingPages.summary.nextTitle} titleStyle="label" className="mt-stack">
           <div className="flex items-center gap-3">
             <TileIcon icon={CalendarDays} />
             <div className="min-w-0">
@@ -197,7 +204,7 @@ export function SummaryPage() {
         </Card>
       ) : null}
       <ButtonLink to="/heute" size="lg" className="mt-6 w-full md:w-auto">
-        {t.summary.done}
+        {tTrainingPages.summary.done}
       </ButtonLink>
     </>
   );

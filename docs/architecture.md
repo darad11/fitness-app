@@ -102,7 +102,8 @@ src/
     lib/          HLC, IDs, Datum (dayKey), Einheiten, Formatierung, Textnormalisierung
     db/           Dexie-Datenbank, Basis-Repository, Snapshots, Gesundheitsprüfung, Fehlerprotokoll
     pwa/          Service Worker, Update-Zustand, Installationsdialog (Chromium)
-    i18n/         Typisierter deutscher Textkatalog
+    i18n/         Typisierter deutscher Textkatalog: de.ts lädt mit der Startansicht, Texte nur
+                  nachgeladener Teile in eigenen Dateien de-*.ts (D-288, D-347)
     testing/      Fixtures, Datengenerator, fake-indexeddb-Setup
 public/           Manifest, Icons
 e2e/              Playwright-Tests

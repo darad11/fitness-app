@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tTasks } from '@/shared/i18n/de-tasks';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { tWater } from '@/shared/i18n/de-water';
 import { loadWaterReached } from '@/modules/water';
@@ -54,7 +54,7 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
     setError(null);
     action().catch((caught: unknown) => {
       void logError(rt.db, { area: 'habits', error: caught, route: '/heute/aufgaben' });
-      setError(t.tasks.saveFailed);
+      setError(tTasks.tasks.saveFailed);
     });
   };
   const edit = (next: Draft) => {
@@ -66,14 +66,14 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
   };
 
   return (
-    <Card title={t.tasks.settingsTitle}>
+    <Card title={tTasks.tasks.settingsTitle}>
       <form
         className="grid grid-cols-1 gap-3"
         onSubmit={(event) => {
           event.preventDefault();
           const next = draft.name.trim();
           if (next.length === 0) {
-            setError(t.tasks.nameMissing);
+            setError(tTasks.tasks.nameMissing);
             return;
           }
           const before = draftOf(habit, today);
@@ -94,7 +94,7 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
         }}
       >
         <label className="grid gap-1.5">
-          <span className="text-sm font-semibold text-muted">{t.tasks.nameLabel}</span>
+          <span className="text-sm font-semibold text-muted">{tTasks.tasks.nameLabel}</span>
           <input
             type="text"
             value={draft.name}
@@ -108,7 +108,7 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
         </label>
         <fieldset>
           <legend className="mb-1.5 text-sm font-semibold text-muted">
-            {t.tasks.weekdaysLegend}
+            {tTasks.tasks.weekdaysLegend}
           </legend>
           <div className="grid grid-cols-7 gap-1">
             {ALL_DAYS.map((day) => {
@@ -119,7 +119,7 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
                   key={day}
                   pressed={on}
                   fill
-                  aria-label={t.tasks.weekdayToggle(name)}
+                  aria-label={tTasks.tasks.weekdayToggle(name)}
                   onClick={() => {
                     const next = on
                       ? draft.weekdays.filter((d) => d !== day)
@@ -133,12 +133,12 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
               );
             })}
           </div>
-          <p className="mt-1.5 text-sm text-muted">{t.tasks.weekdaysHint}</p>
+          <p className="mt-1.5 text-sm text-muted">{tTasks.tasks.weekdaysHint}</p>
         </fieldset>
         {/* Höchstens eine Regel: Training oder Wasserziel (D-285, D-289). */}
         <Switch
-          label={t.tasks.autoTraining}
-          hint={t.tasks.autoTrainingHint}
+          label={tTasks.tasks.autoTraining}
+          hint={tTasks.tasks.autoTrainingHint}
           checked={draft.auto === 'training'}
           onChange={(checked) => {
             edit({ ...draft, auto: checked ? 'training' : null });
@@ -159,10 +159,10 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
         ) : null}
         <div className="flex flex-wrap items-center gap-2">
           <Button type="submit" size="sm">
-            {t.tasks.save}
+            {tTasks.tasks.save}
           </Button>
           <p role="status" className="text-sm text-muted">
-            {saved ? t.tasks.saved : ''}
+            {saved ? tTasks.tasks.saved : ''}
           </p>
           {/* Pausieren und Löschen bleiben zusammen, rechtsbündig; ist die Zeile zu schmal,
               rücken beide gemeinsam in die nächste (F6 §9). */}
@@ -178,7 +178,7 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
                 });
               }}
             >
-              {t.tasks.pause}
+              {tTasks.tasks.pause}
             </Button>
             <Button
               type="button"
@@ -191,11 +191,11 @@ export function TaskSettings({ habit, today }: { habit: Habit; today: string }) 
                 });
               }}
             >
-              {t.tasks.remove}
+              {tTasks.tasks.remove}
             </Button>
           </div>
         </div>
-        <p className="text-sm text-muted">{t.tasks.removeHint}</p>
+        <p className="text-sm text-muted">{tTasks.tasks.removeHint}</p>
       </form>
     </Card>
   );

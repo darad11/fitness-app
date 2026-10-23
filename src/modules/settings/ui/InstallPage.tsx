@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { CircleCheck, MonitorSmartphone } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { META_KEYS, getMetaValue, parseDismissedHints, restoreHint, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { currentPlatform, type PlatformInfo } from '@/shared/lib/platform';
 import { promptInstall, useInstallPrompt, type InstallOutcome } from '@/shared/pwa/installPrompt';
 import { Button, Card, PageHeader, StatusList } from '@/shared/ui';
@@ -10,9 +10,9 @@ import { Button, Card, PageHeader, StatusList } from '@/shared/ui';
 type GuideId = 'iphone' | 'ipad' | 'mac';
 
 const GUIDES: Record<GuideId, { title: string; steps: readonly string[] }> = {
-  iphone: { title: t.install.iphoneTitle, steps: t.install.iphoneSteps },
-  ipad: { title: t.install.ipadTitle, steps: t.install.ipadSteps },
-  mac: { title: t.install.macTitle, steps: t.install.macSteps },
+  iphone: { title: tMore.install.iphoneTitle, steps: tMore.install.iphoneSteps },
+  ipad: { title: tMore.install.ipadTitle, steps: tMore.install.ipadSteps },
+  mac: { title: tMore.install.macTitle, steps: tMore.install.macSteps },
 };
 
 /** Die Anleitung des erkannten Geräts steht oben. */
@@ -37,8 +37,8 @@ export function InstallPage() {
   return (
     <>
       <PageHeader
-        title={t.install.title}
-        back={{ to: '/mehr/einstellungen', label: t.settings.title }}
+        title={tMore.install.title}
+        back={{ to: '/mehr/einstellungen', label: tMore.settings.title }}
       />
       <div className="space-y-4">
         <Card>
@@ -48,11 +48,13 @@ export function InstallPage() {
                 id: 'mode',
                 icon: installed ? CircleCheck : MonitorSmartphone,
                 tone: installed ? 'success' : 'neutral',
-                content: installed ? t.install.statusInstalled : t.install.statusBrowser,
+                content: installed ? tMore.install.statusInstalled : tMore.install.statusBrowser,
               },
             ]}
           />
-          {installed ? null : <p className="mt-2 text-sm text-muted">{t.install.dataSeparation}</p>}
+          {installed ? null : (
+            <p className="mt-2 text-sm text-muted">{tMore.install.dataSeparation}</p>
+          )}
           {canPrompt ? (
             <Button
               className="mt-4"
@@ -60,24 +62,24 @@ export function InstallPage() {
                 void promptInstall().then(setOutcome);
               }}
             >
-              {t.install.promptButton}
+              {tMore.install.promptButton}
             </Button>
           ) : null}
           {outcome === 'accepted' ? (
             <p role="status" className="mt-3">
-              {t.install.promptAccepted}
+              {tMore.install.promptAccepted}
             </p>
           ) : null}
           {hintHidden ? (
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <p className="text-sm text-muted">{t.install.hintHidden}</p>
+              <p className="text-sm text-muted">{tMore.install.hintHidden}</p>
               <Button
                 variant="secondary"
                 onClick={() => {
                   void restoreHint(rt.db, 'ios-install');
                 }}
               >
-                {t.install.showHintAgain}
+                {tMore.install.showHintAgain}
               </Button>
             </div>
           ) : null}
@@ -91,7 +93,7 @@ export function InstallPage() {
             </ol>
           </Card>
         ))}
-        <p className="text-sm text-muted">{t.install.offlineNote}</p>
+        <p className="text-sm text-muted">{tMore.install.offlineNote}</p>
       </div>
     </>
   );

@@ -1251,3 +1251,20 @@ Befunde aus `audit-report.md` Abschnitt 5 nach Priorität, dazu B-07 (D-346). Be
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min) |
 | WebKit | in der CI zu diesem Abschnitt |
 
+### Stabilität §5: Startansicht höchstens 235 KB · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ziel aus dem Auftrag: höchstens 235 KB (gzip), vorher 239,5 KB (D-347). Bericht: `form-stabilitaet-report.md` Abschnitt 6.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Aufteilung der Startansicht nach Quelldateien (Build mit Sourcemaps, Anteil am gzip je Datei geschätzt) | react-dom 63,7 KB, Dexie 30,9 KB, React Router rund 28 KB, Zod rund 23 KB, Textkatalog `de.ts` 11,6 KB, Linse der Tab-Leiste 2,5 KB, der Rest unter 2 KB je Datei |
+| Versuch `"sideEffects": ["**/*.css"]` in `package.json` | 240,2 KB, verworfen |
+| Texte von „Mehr“, Nachtragen, Verlauf, Zusammenfassung, Fortschritt, Pausenanzeige und Tagesaufgaben in eigenen Dateien | 235,2 KB; Katalog in der Startansicht 7,2 KB |
+| dazu die Texte des Players (`de-session.ts`, 76 Schlüssel; `t.session` behält Fortschritt und Muskeln) | 234,3 KB von 250 KB; Katalog in der Startansicht 6,2 KB; Vorab-Liste 173 von 232 Dateien |
+| `pnpm typecheck` | ohne Befund; die Typprüfung fand jeden geänderten Aufrufer |
+| `src/app/wording.test.ts` (alle Kataloge, neu dazu `tMore`, `tTrainingPages`, `tTasks`, `tSession` und `tBackup`) | 29 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,6 min) |
+| WebKit | in der CI zu diesem Abschnitt |
+

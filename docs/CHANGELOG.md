@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.52 · 23.10.2026 · Phase Stabilität, Abschnitt 5 (Startansicht höchstens 235 KB)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-347: Textkatalog aufgeteilt, Startansicht 234,3 KB |
+| `architecture.md` | Ordner `i18n/`: getrennte Kataloge für nachgeladene Teile |
+| `testing.md` | Protokoll „Stabilität §5“ |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `form-stabilitaet-report.md` | Abschnitt 6 |
+
 ## Version 0.51 · 23.10.2026 · Phase Stabilität, Abschnitt 4 (weitere P2-Befunde und B-07)
 
 | Datei | Änderung |

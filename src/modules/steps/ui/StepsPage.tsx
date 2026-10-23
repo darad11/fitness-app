@@ -1,7 +1,7 @@
 import { useId, useState } from 'react';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { dayKey } from '@/shared/lib/time';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
@@ -23,12 +23,12 @@ export function StepsPage() {
   const [busy, setBusy] = useState<'connect' | 'refresh' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const year = Number(dayKey(now, fmt.timeZone).slice(0, 4));
-  const ts = t.steps;
+  const ts = tMore.steps;
 
   const header = (
     <PageHeader
       title={ts.pageTitle}
-      back={{ to: '/mehr/einstellungen', label: t.settings.title }}
+      back={{ to: '/mehr/einstellungen', label: tMore.settings.title }}
     />
   );
   if (view === undefined) {

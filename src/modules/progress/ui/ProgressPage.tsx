@@ -19,6 +19,7 @@ import {
   useHistoryRows,
 } from '@/modules/training';
 import { t } from '@/shared/i18n/de';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import {
   ButtonLink,
   Card,
@@ -37,7 +38,10 @@ import {
   type StatPeriod,
 } from '../calc/stats';
 
-const PERIOD_OPTIONS = STAT_PERIODS.map((value) => ({ value, label: t.progress.periods[value] }));
+const PERIOD_OPTIONS = STAT_PERIODS.map((value) => ({
+  value,
+  label: tTrainingPages.progress.periods[value],
+}));
 
 /** Fortschritt (S-27): Kennzahlen mit Zeitraum, Körpergewicht, Bestleistungen, Übungsverläufe. */
 export function ProgressPage() {
@@ -59,7 +63,7 @@ export function ProgressPage() {
   ) {
     return (
       <>
-        <PageHeader title={t.progress.title} />
+        <PageHeader title={tTrainingPages.progress.title} />
         <div aria-busy="true" className="grid gap-4">
           <Skeleton className="h-24" />
           <Skeleton className="h-40" />
@@ -95,12 +99,12 @@ export function ProgressPage() {
 
   return (
     <>
-      <PageHeader title={t.progress.title} />
+      <PageHeader title={tTrainingPages.progress.title} />
       {sessions.length === 0 && weights.length === 0 ? (
         <EmptyState
           icon={LineChart}
-          title={t.progress.emptyTitle}
-          text={t.progress.emptyText}
+          title={tTrainingPages.progress.emptyTitle}
+          text={tTrainingPages.progress.emptyText}
           action={
             <ButtonLink to="/fortschritt/gewicht" variant="secondary">
               {t.body.add}
@@ -111,11 +115,11 @@ export function ProgressPage() {
         <div className="grid gap-stack">
           <section aria-labelledby="kennzahlen">
             <h2 id="kennzahlen" className="sr-only">
-              {t.progress.periodLegend}
+              {tTrainingPages.progress.periodLegend}
             </h2>
             <SegmentedControl
               row
-              legend={t.progress.periodLegend}
+              legend={tTrainingPages.progress.periodLegend}
               options={PERIOD_OPTIONS}
               value={period}
               onChange={setPeriod}
@@ -123,29 +127,39 @@ export function ProgressPage() {
             {/* Zeitraum ohne Training: „Pause“ statt Nullwerten (D-319). */}
             {totals.sessions === 0 ? (
               <dl className="mt-3">
-                <StatTile label={t.progress.sessions} value={t.progress.pause} />
+                <StatTile
+                  label={tTrainingPages.progress.sessions}
+                  value={tTrainingPages.progress.pause}
+                />
               </dl>
             ) : (
               <dl className="mt-3 grid grid-cols-2 gap-stack md:grid-cols-4">
-                <StatTile label={t.progress.sessions} value={fmt.number(totals.sessions)} />
                 <StatTile
-                  label={t.progress.minutes}
+                  label={tTrainingPages.progress.sessions}
+                  value={fmt.number(totals.sessions)}
+                />
+                <StatTile
+                  label={tTrainingPages.progress.minutes}
                   value={fmt.number(totals.minutes)}
                   unit="min"
                 />
-                <StatTile label={t.progress.volume} value={fmt.number(totals.volumeKg)} unit="kg" />
                 <StatTile
-                  label={t.progress.kcal}
+                  label={tTrainingPages.progress.volume}
+                  value={fmt.number(totals.volumeKg)}
+                  unit="kg"
+                />
+                <StatTile
+                  label={tTrainingPages.progress.kcal}
                   value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
                   unit={totals.kcal === null ? undefined : 'kcal'}
                   hint={
                     totals.kcal === null
                       ? totals.sessions > 0
-                        ? t.progress.kcalNone
+                        ? tTrainingPages.progress.kcalNone
                         : undefined
                       : totals.withoutKcal > 0
-                        ? t.progress.kcalPartial(totals.withoutKcal)
-                        : t.progress.kcalHint
+                        ? tTrainingPages.progress.kcalPartial(totals.withoutKcal)
+                        : tTrainingPages.progress.kcalHint
                   }
                 />
               </dl>
@@ -153,13 +167,13 @@ export function ProgressPage() {
           </section>
 
           <Card
-            title={t.progress.weightTitle}
+            title={tTrainingPages.progress.weightTitle}
             action={
               // Ohne Gewicht genügt der Knopf „Gewicht erfassen“ in der Karte.
               latestWeight ? (
                 <Link
                   to="/fortschritt/gewicht"
-                  aria-label={t.progress.weightOpen}
+                  aria-label={tTrainingPages.progress.weightOpen}
                   className="inline-flex min-h-11 items-center gap-1 font-semibold text-accent-ink"
                 >
                   {t.body.title}
@@ -182,7 +196,7 @@ export function ProgressPage() {
               </div>
             ) : (
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="text-muted">{t.progress.weightNone}</p>
+                <p className="text-muted">{tTrainingPages.progress.weightNone}</p>
                 <ButtonLink to="/fortschritt/gewicht" size="sm" variant="secondary">
                   <Scale aria-hidden="true" className="size-4" />
                   {t.body.add}
@@ -191,9 +205,9 @@ export function ProgressPage() {
             )}
           </Card>
 
-          <Card title={t.progress.recordsTitle}>
+          <Card title={tTrainingPages.progress.recordsTitle}>
             {records.length === 0 ? (
-              <p className="text-muted">{t.progress.recordsEmpty}</p>
+              <p className="text-muted">{tTrainingPages.progress.recordsEmpty}</p>
             ) : (
               <ul className="divide-y divide-line">
                 {records.map((record) => (
@@ -209,7 +223,7 @@ export function ProgressPage() {
                       <span className="block text-sm text-muted tabular-nums">
                         {fmt.dayMonthYear(new Date(record.row.completedAt))}
                         {record.oneRepMax !== null
-                          ? ` · ${t.progress.oneRepMax(fmt.loadKg(Math.round(record.oneRepMax)))}`
+                          ? ` · ${tTrainingPages.progress.oneRepMax(fmt.loadKg(Math.round(record.oneRepMax)))}`
                           : ''}
                       </span>
                     </span>
@@ -222,9 +236,9 @@ export function ProgressPage() {
             )}
           </Card>
 
-          <Card title={t.progress.exercisesTitle}>
+          <Card title={tTrainingPages.progress.exercisesTitle}>
             {frequent.length === 0 ? (
-              <p className="text-muted">{t.progress.exercisesEmpty}</p>
+              <p className="text-muted">{tTrainingPages.progress.exercisesEmpty}</p>
             ) : (
               <ul className="divide-y divide-line">
                 {frequent.map((entry) => (
@@ -235,10 +249,10 @@ export function ProgressPage() {
                     >
                       <span className="min-w-0 flex-1">
                         <span className="block font-medium">
-                          {names.get(entry.exerciseId) ?? t.progress.exercisesTitle}
+                          {names.get(entry.exerciseId) ?? tTrainingPages.progress.exercisesTitle}
                         </span>
                         <span className="block text-sm text-muted">
-                          {t.progress.sessionCount(entry.count)} ·{' '}
+                          {tTrainingPages.progress.sessionCount(entry.count)} ·{' '}
                           {fmt.dayMonthYear(new Date(entry.lastAt))}
                         </span>
                       </span>

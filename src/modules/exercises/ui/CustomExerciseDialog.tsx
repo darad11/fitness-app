@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import { Button, Dialog, SelectField, Switch } from '@/shared/ui';
 import { findSameName } from '../calc/names';
 import { useExercises } from '../data/customExercises';
@@ -37,7 +38,7 @@ const EQUIPMENT_CHOICES = EQUIPMENT.map((value) => ({
 }));
 const TRACKING_CHOICES = TRACKING_MODES.map((value) => ({
   value,
-  label: t.session.trackingModes[value],
+  label: tSession.trackingModes[value],
 }));
 
 /** Eigene Übung anlegen oder bearbeiten (S-14, AK-EXL-03, D-258). */

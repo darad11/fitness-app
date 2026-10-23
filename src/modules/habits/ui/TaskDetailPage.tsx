@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
+import { tTasks } from '@/shared/i18n/de-tasks';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { isoWeekday } from '@/shared/lib/time';
 import { Card, Mark, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@/shared/ui';
@@ -50,7 +51,7 @@ export function TaskDetailPage() {
   if (history === undefined) {
     return (
       <>
-        <PageHeader title={t.tasks.title} back={back} />
+        <PageHeader title={tTasks.tasks.title} back={back} />
         <div aria-busy="true" className="grid gap-4">
           <Skeleton className="h-24" />
           <Skeleton className="h-40" />
@@ -62,7 +63,7 @@ export function TaskDetailPage() {
   if (!habit) {
     return (
       <>
-        <PageHeader title={t.tasks.title} back={back} />
+        <PageHeader title={tTasks.tasks.title} back={back} />
         <p className="text-muted">{td.notFound}</p>
       </>
     );
@@ -92,7 +93,7 @@ export function TaskDetailPage() {
       <div className="grid grid-cols-1 gap-4">
         {status ? <p className="text-muted">{td.status(status)}</p> : null}
         {status === null ? <TaskSettings key={habit.id} habit={habit} today={today} /> : null}
-        <h2 className="mt-2 text-xl font-semibold">{t.tasks.statsTitle}</h2>
+        <h2 className="mt-2 text-xl font-semibold">{tTasks.tasks.statsTitle}</h2>
         <SegmentedControl
           row
           legend={ts.periodLegend}

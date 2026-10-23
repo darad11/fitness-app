@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DISPLAY_NAME_MAX, saveProfile, useProfile } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { GoalsPanel } from './GoalsPanel';
 
@@ -15,9 +16,9 @@ export function ProfilePage() {
   const value = draft ?? profile?.displayName ?? '';
   return (
     <>
-      <PageHeader title={t.more.profile} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader title={tMore.more.profile} back={{ to: '/mehr', label: tMore.more.title }} />
       <div className="grid gap-4">
-        <Card title={t.profile.title}>
+        <Card title={tMore.profile.title}>
           {profile === undefined ? (
             <div aria-busy="true">
               <Skeleton className="h-12" />
@@ -46,7 +47,7 @@ export function ProfilePage() {
             >
               <div className="min-w-0 flex-1">
                 <label htmlFor="anzeigename" className="mb-1 block text-sm font-medium">
-                  {t.profile.nameLabel}
+                  {tMore.profile.nameLabel}
                 </label>
                 <input
                   id="anzeigename"
@@ -62,14 +63,14 @@ export function ProfilePage() {
                 />
               </div>
               <Button type="submit" disabled={draft === null}>
-                {t.profile.save}
+                {tMore.profile.save}
               </Button>
             </form>
           )}
-          <p className="mt-2 text-sm text-muted">{t.profile.nameHint}</p>
+          <p className="mt-2 text-sm text-muted">{tMore.profile.nameHint}</p>
           {saved ? (
             <p role="status" className="mt-1 text-sm text-success">
-              {t.profile.saved}
+              {tMore.profile.saved}
             </p>
           ) : null}
           {error ? (

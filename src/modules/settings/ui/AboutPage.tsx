@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useActiveSession } from '@/modules/training';
 import { useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { appInfo } from '@/shared/lib/env';
 import { checkForUpdate, usePwaState, type UpdateCheckResult } from '@/shared/pwa/state';
 import { Button, Card, PageHeader } from '@/shared/ui';
@@ -10,11 +11,11 @@ import { useFormatters } from '../service/formatting';
 type CheckState = 'idle' | 'checking' | UpdateCheckResult;
 
 const CHECK_MESSAGES: Record<Exclude<CheckState, 'idle'>, string> = {
-  checking: t.about.checking,
-  'update-available': t.about.updateFound,
-  'up-to-date': t.about.upToDate,
-  failed: t.about.updateFailed,
-  unavailable: t.about.updateUnavailable,
+  checking: tMore.about.checking,
+  'update-available': tMore.about.updateFound,
+  'up-to-date': tMore.about.upToDate,
+  failed: tMore.about.updateFailed,
+  unavailable: tMore.about.updateUnavailable,
 };
 
 /**
@@ -35,22 +36,22 @@ export function AboutPage() {
   const message =
     check === 'idle' && waiting
       ? training
-        ? t.about.updateAfterTraining
-        : t.about.updateFound
+        ? tMore.about.updateAfterTraining
+        : tMore.about.updateFound
       : check === 'idle'
         ? ''
         : CHECK_MESSAGES[check];
 
   const rows: readonly [string, string][] = [
-    [t.about.version, appInfo.version],
-    [t.about.build, buildLabel],
-    [t.about.environment, t.about.environments[appInfo.env]],
-    [t.about.storageId, deviceId],
+    [tMore.about.version, appInfo.version],
+    [tMore.about.build, buildLabel],
+    [tMore.about.environment, tMore.about.environments[appInfo.env]],
+    [tMore.about.storageId, deviceId],
   ];
 
   return (
     <>
-      <PageHeader title={t.about.title} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader title={tMore.about.title} back={{ to: '/mehr', label: tMore.more.title }} />
       <div className="grid gap-stack">
         <Card>
           {/* Logo der Marke ohne Claim (FORM, D-316), darunter Version und Updates wie bisher. */}
@@ -69,7 +70,7 @@ export function AboutPage() {
               </div>
             ))}
           </dl>
-          <p className="mt-3 text-sm text-muted">{t.about.storageIdHint}</p>
+          <p className="mt-3 text-sm text-muted">{tMore.about.storageIdHint}</p>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <Button
               variant="secondary"
@@ -79,15 +80,15 @@ export function AboutPage() {
                 void checkForUpdate().then(setCheck);
               }}
             >
-              {t.about.checkUpdate}
+              {tMore.about.checkUpdate}
             </Button>
             <p aria-live="polite" className="text-sm">
               {message}
             </p>
           </div>
         </Card>
-        <Card title={t.about.privacyTitle}>
-          <p>{t.about.privacyText}</p>
+        <Card title={tMore.about.privacyTitle}>
+          <p>{tMore.about.privacyText}</p>
         </Card>
       </div>
     </>

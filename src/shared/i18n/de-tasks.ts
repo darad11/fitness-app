@@ -1,0 +1,57 @@
+// Texte, die nur nachgeladene Teile brauchen (D-347): Tagesaufgaben. Gehören zu `de.ts`, liegen
+// aber getrennt, damit sie nicht in die Startansicht geladen werden.
+export const tTasks = {
+  tasks: {
+    title: 'Tagesaufgaben',
+    manage: 'Tagesaufgaben verwalten',
+    add: 'Aufgabe hinzufügen',
+    addShort: 'Hinzufügen',
+    nameLabel: 'Name der Aufgabe',
+    namePlaceholder: 'z. B. 30 min Cardio, 2 l Wasser',
+    nameMissing: 'Gib der Aufgabe einen Namen.',
+    save: 'Speichern',
+    cancel: 'Abbrechen',
+    editLabel: (name: string) => `${name} bearbeiten`,
+    /** Abhakfeld links in der Zeile (D-335); die Zeile selbst heißt „… bearbeiten“. */
+    checkLabel: (name: string) => `${name} abhaken`,
+    checkLabelNotDue: (name: string) => `${name} abhaken, heute nicht fällig`,
+    /** Rhythmus unter dem Namen: „Täglich“ oder „Mo · Mi · Fr“, dazu die Regel. */
+    rhythmDaily: 'Täglich',
+    rhythmTraining: 'mit Training abhaken',
+    settingsTitle: 'Einstellungen',
+    saved: 'Gespeichert.',
+    statsTitle: 'Auswertung',
+    reorder: 'Reihenfolge ändern',
+    reorderDone: 'Fertig',
+    pause: 'Pausieren',
+    weekdaysLegend: 'Fällig an',
+    weekdayToggle: (day: string) => `${day} fällig`,
+    weekdaysHint: 'Änderungen gelten ab heute; frühere Tage bleiben, wie sie waren.',
+    autoTraining: 'Mit Training abhaken',
+    autoTrainingHint:
+      'Ist an dem Tag ein Training oder eine Aktivität abgeschlossen, hakt die App die Aufgabe ab. Du kannst es zurücknehmen.',
+    autoTrainingShort: 'mit Training',
+    noneDueToday: 'Heute ist keine Aufgabe fällig.',
+    paused: (name: string) => `„${name}“ pausiert`,
+    remove: 'Löschen',
+    removed: (name: string) => `„${name}“ gelöscht`,
+    removeHint:
+      'Löschen nimmt die Aufgabe ab heute aus der Liste. Vergangene Tage bleiben, wie sie waren.',
+    reopen: 'Wieder aufnehmen',
+    reopenShort: 'Aufnehmen',
+    pausedTitle: 'Pausiert',
+    pausedToggle: (count: number) =>
+      count === 0 ? 'Pausierte Aufgaben' : `Pausierte Aufgaben (${String(count)})`,
+    pausedEmpty: 'Keine pausierte Aufgabe.',
+    pausedHint: 'Pausierte Aufgaben erscheinen nicht auf „Heute“, bis du sie wieder aufnimmst.',
+    listTitle: 'Meine Aufgaben',
+    emptyList: 'Noch keine Aufgabe. Leg oben eine an.',
+    emptyCard: 'Leg dir eigene Aufgaben für jeden Tag an, z. B. „30 min Cardio“ oder „2 l Wasser“.',
+    saveFailed: 'Nicht gespeichert. Bitte versuche es erneut.',
+    progressLabel: 'Heute erledigt',
+    todayDone: 'Alles erledigt',
+    todayProgress: (done: number, total: number) => `${done} von ${total} erledigt`,
+    showMore: (n: number) => `${n} weitere anzeigen`,
+    showLess: 'Weniger anzeigen',
+  },
+} as const;

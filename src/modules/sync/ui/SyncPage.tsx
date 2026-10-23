@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { tSync } from '@/shared/i18n/de-sync';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { InvalidCredentialsError, SignUpError, SyncOfflineError } from '../data/remote';
@@ -103,7 +103,7 @@ export function SyncPage() {
 
   return (
     <>
-      <PageHeader title={ts.title} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader title={ts.title} back={{ to: '/mehr', label: tMore.more.title }} />
       <div className="grid gap-4">
         <Card>
           <p>{ts.intro}</p>

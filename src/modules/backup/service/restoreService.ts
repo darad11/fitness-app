@@ -11,6 +11,7 @@ import {
   createSnapshot,
   DOCUMENT_TABLES,
   replaceDocuments,
+  requestPersistentStorage,
   type AppDb,
   type Backup,
   type DbRuntime,
@@ -138,5 +139,7 @@ export async function restoreBackup(
     keep: (table, local, incoming) => table === 'sessions' && keepLocalSession(local, incoming),
     onSessionChanged: refreshSessionProjection,
   });
+  // Die Daten der Sicherung liegen jetzt auf diesem Gerät (AK-PWA-05, A-07).
+  void requestPersistentStorage();
   return { ...counts, saved };
 }

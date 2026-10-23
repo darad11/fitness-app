@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { dayTotal } from '../calc/water';
-import { listWaterEntries } from '../data/waterRepository';
+import { listWaterDay, listWaterEntries } from '../data/waterRepository';
 import {
   addWater,
   deleteWater,
@@ -109,4 +109,14 @@ describe('Schnellmengen', () => {
     await saveQuickAmounts(rt, null);
     expect((await rt.db.singletons.toArray())[0]?.waterQuickMl).toBeUndefined();
   });
+});
+
+it('lädt für einen Tag nur dessen Einträge, nicht alle ab dem Tag (C-04)', async () => {
+  await addWater(rt, 250, { clock: at(`${MONDAY}T08:00:00`) });
+  await addWater(rt, 330, { clock: at(`${TUESDAY}T08:00:00`) });
+  await addWater(rt, 500, { clock: at(`${TUESDAY}T12:00:00`) });
+  expect((await listWaterDay(rt.db, MONDAY)).map((e) => e.amountMl)).toEqual([250]);
+  expect((await listWaterDay(rt.db, TUESDAY)).map((e) => e.amountMl)).toEqual([330, 500]);
+  // Ab Montag gehören auch die Einträge vom Dienstag dazu; das braucht nur der Verlauf.
+  expect(await listWaterEntries(rt.db, MONDAY)).toHaveLength(3);
 });

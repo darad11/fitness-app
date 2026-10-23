@@ -13,6 +13,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt, WebKit zum Nachtrag in der CI |
 | §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt; Nachträge: Seitenende auf `/ernaehrung`, Startwächter in WebKit (kein Vorladen in index.html, Bestätigung in der CI) |
 | §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest ausstehend |
+| §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt, WebKit in der CI |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -197,4 +198,55 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §3“.
 - „Zusammenführen“ (AK-DAT-03): eine neue Funktion, nicht Teil dieses Auftrags.
 - Snapshots über die App wiederherstellen (A-06).
 - Gerätetest am iPhone (Dateien-App, Teilen-Menü).
+
+## 5. §4 Weitere P2-Befunde und B-07
+
+Reihenfolge wie in `audit-report.md` Abschnitt 5. Jede Behebung hat einen Test, der am alten Stand fehlschlägt (Gegenprobe in `docs/testing.md`, Protokoll „Stabilität §4“).
+
+### Befunde und Behebung
+
+| Befund | Ursache | Behebung | Test |
+|---|---|---|---|
+| A-03 Singletons verlieren Felder neuerer Versionen | Einstellungen, Profil und Trainingszustand bauten das Dokument beim Speichern aus den geprüften Feldern neu auf; was das Schema nicht kannte, fiel weg | `unknownFields` hängt sie wieder an; ein bekanntes Feld, das eine Änderung entfernt, bleibt entfernt | 3 neue Fälle, Gegenprobe 3 rot |
+| A-04 Konfliktkopie mit zu langem Namen | `conflictName` kürzte auf 70 Zeichen und hängte 22 an; Programme erlauben 80 | Kürzung auf 80 Zeichen samt Zusatz (`CONFLICT_NAME_MAX`) | Grenzfälle 58 bis 80 Zeichen gegen die Schemas, Gegenprobe rot (81 > 80) |
+| A-07/E-02 Dauerhafter Speicher nur im Training | Einziger Aufruf in der Leiste „Training läuft“ | Nach dem ersten gespeicherten Dokument (über `onDocumentWritten` der Laufzeit), nach einem Abgleich mit abgeholten Daten und nach dem Wiederherstellen | Unit-Test und `e2e/persist.spec.ts`, Gegenprobe rot |
+| A-08 Kontowechsel mischt Daten | Anmeldung mit einem anderen Konto setzte nur Cursor und Basis zurück; danach gingen alle lokalen Daten an das neue Konto | Abbruch mit Hinweis, solange Daten auf dem Gerät liegen; die neue Anmeldung wird beendet | 3 neue Fälle, Gegenprobe 2 rot |
+| B-03 Fortschritt an Positionen | Zuordnung der Einheiten über Woche und Tag als Position | Über die ID des Tages, nur ohne ID über die Position; ebenso die Nummer des Tages | 4 neue Fälle, Gegenprobe rot |
+| B-04 Ein ungültiges Training legt die App lahm | `findActiveSession` prüfte streng; der Fehler landete über die Leiste in der Fehleransicht der App | Ungültige laufende Einheiten übergehen und einmal protokollieren; jede Leiste mit eigener Fehlergrenze | 3 neue Fälle, Gegenprobe 3 rot |
+| B-05 „Übung ersetzen“ scheitert | Ein offener Drop-Satz wanderte ohne seinen übersprungenen Arbeitssatz und verlor den Bezug | Drop-Satz nur mit seinem Arbeitssatz | Gegenprobe rot (ZodError) |
+| B-07 Start aus Programm ohne Meldung | Plan im Klick-Handler außerhalb der Fehlerbehandlung | Plan entsteht in `useStartSession`; Meldung, Protokoll, Knopf bleibt bedienbar | Gegenprobe rot |
+| C-02 Doppeltipp speichert doppelt | Kein Sperrzustand in drei Dialogen | `useSubmitOnce` | 2 Fälle, Gegenprobe rot (2 statt 1) |
+| C-03 Scanner: spätes Ergebnis nach „Schließen“ | Kein Abbruch-Kennzeichen | Ergebnis nach „Schließen“ ignoriert | Gegenprobe rot |
+| C-04 Doppelte Arbeit beim Laden | Suchindex je Seite neu; Wassertag lud alle Einträge ab dem Tag | Index einmal je Import; Tag mit `equals(day)` | 2 Fälle; keine fachliche Gegenprobe, das Verhalten ist gleich |
+| D-01 Kein Vergleich für Aufgaben an Wochentagen | Schwelle relativ zur Länge des Zeitraums; Hinweise nur für heute fällige Aufgaben | Schwellen anteilig zu den Wochentagen; Hinweise für alle laufenden Aufgaben | 2 Fälle, Gegenprobe rot |
+| D-02 Zugänge in Snapshots | Snapshot kopierte `meta` vollständig | `sync.auth` und `steps.…` bleiben draußen | Gegenprobe rot |
+| E-03 Voller Speicher blockiert das Upgrade | Snapshot fügte erst ein und kürzte danach; „Speicher voll“ unbekannt | Erst kürzen; bei vollem Speicher einmal den ältesten löschen; Ursache im Wiederherstellungsbildschirm | Gegenprobe rot |
+
+### Geänderte Dateien
+
+- Neu: `src/modules/nutrition/ui/useSubmitOnce.ts`; Tests `src/modules/training/data/trainingStateRepository.test.ts`, `src/modules/training/data/sessionRepository.test.ts`, `src/modules/training/ui/start-from-program.test.tsx`, `src/app/banners/banner-boundary.test.tsx`, `src/modules/nutrition/ui/barcode-flow.test.tsx`, `src/modules/nutrition/ui/use-food-catalog.test.ts`, `src/modules/steps/data/stepsState.test.ts`, `e2e/persist.spec.ts`
+- Geändert: `src/shared/db/{documents,repository,runtime,snapshots,meta}.ts`, `src/main.tsx`, `src/app/RecoveryScreen.tsx`, `src/app/banners/GlobalBanners.tsx`, `src/shared/i18n/{de,de-sync}.ts`; `src/modules/settings/data/{settingsRepository,profileRepository}.ts`; `src/modules/training/{calc/programProgress,data/trainingStateRepository,data/sessionRepository,service/sessionService,ui/useStartSession,ui/ActiveProgramCard,ui/SampleTemplatePage,ui/SummaryPage}.ts(x)`; `src/modules/dashboard/ui/TodayPage.tsx`; `src/modules/sync/{service/syncEngine,service/syncService,ui/SyncPage}.ts(x)`; `src/modules/backup/service/restoreService.ts`; `src/modules/nutrition/ui/{AddFoodPage,TemplateDialogs,BarcodeFlow,useFoodCatalog}.ts(x)`; `src/modules/habits/{calc/days,calc/insights,ui/TaskStats,ui/TaskDetailPage}.ts(x)`; `src/modules/water/{data/waterRepository,data/useWater,service/waterService,ui/WaterCard,ui/WaterPage}.ts(x)`; bestehende Tests ergänzt
+- Werkzeug: `tools/check_docs.py` (Verweise `C-…` gelten auch für Befunde aus `audit-report.md`)
+- Dokumente: `docs/decisions.md` (D-346), `audit-report.md` (Status), `docs/testing.md`, `docs/known-limitations.md`, `docs/architecture.md`, `docs/data-model.md`, `docs/requirements.md` und `docs/implementation-plan.md` (B-02 vermerkt, Punkt 66), `docs/CHANGELOG.md`
+
+### Tests mit Ergebnis
+
+Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §4“.
+
+| Test | Ergebnis |
+|---|---|
+| neue und ergänzte Unit-Tests | alle bestanden; Gegenprobe je Befund rot (außer C-04, siehe oben) |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm check:bundle` | Startansicht 239,5 KB von 250 KB |
+| `pnpm test:e2e` (Chromium) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI zu diesem Abschnitt |
+
+### Offen
+
+- **A-03 Rest:** strikte Kindschemas und neue Aufzählungswerte. Betrifft erst die nächste Schemaerweiterung; tolerante Leseschemas und eine Prüfung von `schema_version` im Abgleich sind ein eigenes Paket (verwandt mit A-01).
+- **A-05:** Das SQL des Servers (`push_documents`) liegt nicht im Repository; eine Sperre je Nutzer wäre eine Änderung an der Datenbank des Servers und braucht deine Zustimmung.
+- **A-06 und Rest von E-03:** Snapshot über die App wiederherstellen, Export und Fehlerprotokoll im Wiederherstellungsbildschirm. Eigenes Paket; das Wiederherstellen aus dem Export (§3) deckt den Gerätewechsel ab.
+- **C-04 Rest:** Jede Seite mit Suche liest den Katalog aus IndexedDB (rund 0,6 MB). Ohne Messung am Gerät; die Abhilfe bräuchte einen eigenen kleinen Eintrag für den Stand des Imports, also eine Änderung am Datenmodell.
+- **B-02:** Pausieren bleibt bis Phase B offen (D-297).
+- Kleinere Reste: D-01 `compareNone` nach Grund, D-02 Erneuern vor dem Abmelden beim Dashboard, B-07 fehlende Übungen im Programm-Detail markieren, C-03 erneutes Scannen nach Treffer (P3).
 

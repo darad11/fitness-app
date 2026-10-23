@@ -33,6 +33,8 @@ def main() -> int:
         "C": defined("docs/design-system.md", r"^\| (C-\d{2}) \|"),
         "MX": defined("docs/feature-inventory.md", r"^\| ([A-Z]{2}-\d{2}) \|"),
     }
+    # C-… steht auch für Befunde aus audit-report.md (Bereich Ernährung, z. B. C-04 in D-346).
+    defs["C"] |= defined("audit-report.md", r"^\| (C-\d{2}) \|")
     # Spätere Screens, die nur als Bereich gelistet sind
     defs["S"] |= {f"S-{n:02d}" for n in list(range(15, 27)) + [29, 30, 31, 32, 36, 47]}
     patterns = {

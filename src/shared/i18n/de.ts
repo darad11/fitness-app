@@ -967,6 +967,8 @@ export const de = {
     causeNewerVersion:
       'Die Daten stammen von einer neueren Version der App. Lade die App neu, um die neue Version zu verwenden.',
     causeConnectionLost: 'Die Verbindung zur lokalen Datenbank ist wiederholt abgebrochen.',
+    causeStorageFull:
+      'Der Speicher des Geräts ist voll. Gib etwas Platz frei und versuche es dann erneut.',
     causeUnknown: 'Unbekannte Ursache.',
     causeLabel: 'Ursache',
   },

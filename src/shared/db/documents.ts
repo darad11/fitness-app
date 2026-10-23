@@ -39,6 +39,19 @@ export const ROOT_FIELD_MASK = {
   deviceId: true,
 } as const satisfies Record<keyof RootFields, true>;
 
+/**
+ * Felder eines Dokuments, die weder Basisfeld sind noch im fachlichen Schema stehen, z. B. von
+ * einer neueren App-Version (D-234). Wer ein Dokument aus seinen geprüften Feldern neu aufbaut,
+ * hängt sie wieder an, damit sie nicht verloren gehen (A-03).
+ */
+export function unknownFields(
+  doc: Record<string, unknown>,
+  known: { readonly shape: Record<string, unknown> },
+): Record<string, unknown> {
+  const keys = new Set([...Object.keys(known.shape), ...Object.keys(ROOT_FIELD_MASK)]);
+  return Object.fromEntries(Object.entries(doc).filter(([key]) => !keys.has(key)));
+}
+
 export const childFieldsSchema = z.object({
   id: z.uuid(),
   hlc: hlcSchema,

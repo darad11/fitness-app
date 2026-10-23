@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -42,6 +42,20 @@ export function BarcodeFlow({
   const rt = useDb();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>({ kind: 'scan' });
+  // Nach „Schließen“ oder beim Verlassen zählt ein spätes Ergebnis nicht mehr (C-03): vorher
+  // öffnete es bis zu 10 s danach unvermittelt „Eintragen“ oder das Formular.
+  const open = useRef(true);
+  useEffect(() => {
+    // Auch nach dem zweiten Einhängen im StrictMode wieder offen.
+    open.current = true;
+    return () => {
+      open.current = false;
+    };
+  }, []);
+  const close = () => {
+    open.current = false;
+    onClose();
+  };
 
   const openForm = (state: FoodDraftState) => {
     void navigate(`/ernaehrung/lebensmittel/neu?zurueck=${encodeURIComponent(returnTo)}`, {
@@ -53,6 +67,7 @@ export function BarcodeFlow({
     setStep({ kind: 'searching', code });
     lookupBarcode(rt, code).then(
       (lookup) => {
+        if (!open.current) return;
         switch (lookup.kind) {
           case 'local':
           case 'saved':
@@ -69,8 +84,9 @@ export function BarcodeFlow({
         }
       },
       (error: unknown) => {
-        setStep({ kind: 'result', lookup: { kind: 'unavailable', barcode: code } });
         void logError(rt.db, { area: 'nutrition', error, route: window.location.pathname });
+        if (!open.current) return;
+        setStep({ kind: 'result', lookup: { kind: 'unavailable', barcode: code } });
       },
     );
   };
@@ -79,7 +95,7 @@ export function BarcodeFlow({
     return (
       <Dialog
         open
-        onClose={onClose}
+        onClose={close}
         title={tNutrition.barcode.consentTitle}
         closeLabel={t.common.close}
         actions={
@@ -149,5 +165,5 @@ export function BarcodeFlow({
       </div>
     ) : undefined;
 
-  return <ScannerDialog onClose={onClose} onCode={search} status={status} />;
+  return <ScannerDialog onClose={close} onCode={search} status={status} />;
 }

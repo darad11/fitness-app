@@ -1,4 +1,11 @@
-import { getDoc, upsertDoc, type AppDb, type DbRuntime, type DocDef } from '@/shared/db';
+import {
+  getDoc,
+  unknownFields,
+  upsertDoc,
+  type AppDb,
+  type DbRuntime,
+  type DocDef,
+} from '@/shared/db';
 import { stableId } from '@/shared/lib/uuid';
 import {
   SETTINGS_DEFAULTS,
@@ -32,7 +39,10 @@ export async function saveSettings(
 ): Promise<SettingsData> {
   const doc = await upsertDoc(rt, settingsDef, SETTINGS_ID, (current) => ({
     ...SETTINGS_DEFAULTS,
-    ...(current ? settingsDataSchema.parse(current) : {}),
+    // Felder einer neueren App-Version bleiben erhalten (A-03).
+    ...(current
+      ? { ...unknownFields(current, settingsDataSchema), ...settingsDataSchema.parse(current) }
+      : {}),
     ...patch,
   }));
   return settingsDataSchema.parse(doc);

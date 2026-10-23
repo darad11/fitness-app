@@ -102,7 +102,7 @@ interface Session extends Root {
   };
   dayKey: DayKey; tz: string;
   startedAt: string; endedAt?: string;
-  pauses: { start: string; end?: string }[];       // Pausieren/Fortsetzen
+  pauses: { start: string; end?: string }[];       // Pausieren/Fortsetzen (noch nicht umgesetzt, bleibt leer; D-297)
   durationSec?: number;                            // bei Abschluss gespeichert, ohne Pausen
   bodyweightKg?: number;                           // Snapshot des letzten Gewichtseintrags
   notes?: string;
@@ -435,7 +435,7 @@ Alle Formeln liegen als reine Funktionen in `calc/` und sind ohne Oberfläche ge
 | Bester Satz | Höchstes Gewicht, bei Gleichstand mehr Wiederholungen; bei `reps` die meisten Wiederholungen; bei `time` die längste Dauer |
 | Geschätztes 1RM | Bei 1 Wiederholung das Gewicht; bei 2 bis 10 Wiederholungen Epley: Gewicht × (1 + Wiederholungen / 30); darüber keine Schätzung (D-224) |
 | Vorherige Werte | Letzte abgeschlossene Einheit mit derselben Übung aus `exerciseHistory`; Zuordnung je Satztyp und Position innerhalb des Typs; Drop-Sätze über Position des Arbeitssatzes und Position in der Kette |
-| Dauer | (Ende oder jetzt) − Start − Summe der Pausen |
+| Dauer | (Ende oder jetzt) − Start − Summe der Pausen (Pausen gibt es noch nicht, D-297: die Dauer enthält jede Unterbrechung) |
 | Nächster Trainingstag | Tage aller Wochen in Reihenfolge als Liste. Letzte abgeschlossene Einheit dieses Programms seit der Aktivierung bestimmt die Position; der nächste Tag folgt darauf. Am Ende: Neubeginn, wenn `repeat`, sonst „Programm abgeschlossen". Fehlt der letzte Tag (gelöscht), beginnt die Folge beim ersten Tag mit Hinweis |
 | Heute geplant | Hat ein Tag des aktiven Programms den heutigen Wochentag als Hinweis, ist er „heute geplant"; sonst gilt der nächste Tag der Reihenfolge |
 | Wochenziel | Zahl der abgeschlossenen, nicht gelöschten Einheiten (Krafttraining und Aktivität) mit `dayKey` von Montag bis Sonntag der laufenden Woche |

@@ -11,6 +11,11 @@ export interface DbRuntime {
   /** Zufällige Kennung dieses Speichers (8 hex). Browser-Tab und installierte App haben je eine eigene. */
   readonly deviceId: string;
   readonly clock: HybridClock;
+  /**
+   * Nach jedem über das Basis-Repository gespeicherten Dokument, in einer eigenen Aufgabe
+   * (außerhalb der Transaktion). Die App fordert damit dauerhaften Speicher an (A-07).
+   */
+  readonly onDocumentWritten?: () => void;
 }
 
 export interface OpenRuntimeOptions {
@@ -18,6 +23,7 @@ export interface OpenRuntimeOptions {
   snapshotDbName?: string;
   createDeviceId?: () => string;
   onVersionChange?: () => void;
+  onDocumentWritten?: () => void;
 }
 
 export function generateDeviceId(): string {
@@ -50,5 +56,10 @@ export async function openRuntime(options: OpenRuntimeOptions = {}): Promise<DbR
 
   const clock = new HybridClock(deviceId);
   clock.observe(await getMetaValue(db, META_KEYS.hlc));
-  return { db, deviceId, clock };
+  return {
+    db,
+    deviceId,
+    clock,
+    ...(options.onDocumentWritten ? { onDocumentWritten: options.onDocumentWritten } : {}),
+  };
 }

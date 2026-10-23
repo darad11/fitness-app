@@ -8,7 +8,7 @@ import { cn } from '@/shared/lib/cn';
 import type { DayKey } from '@/shared/lib/time';
 import { Button, Card, chipClasses, IconButton, Skeleton, Toast } from '@/shared/ui';
 import { dayTotal, entriesOf, parseAmount, progress } from '../calc/water';
-import { useQuickAmounts, useWaterEntries, useWaterGoals } from '../data/useWater';
+import { useQuickAmounts, useWaterDay, useWaterGoals } from '../data/useWater';
 import type { WaterEntry } from '../model/waterEntry';
 import { addWater, deleteWater, restoreWater } from '../service/waterService';
 import { formatMl } from './format';
@@ -36,7 +36,7 @@ export function WaterCard({
 }) {
   const rt = useDb();
   const fmt = useFormatters();
-  const entries = useWaterEntries(day);
+  const entries = useWaterDay(day);
   const goals = useWaterGoals();
   const quick = useQuickAmounts();
   const [customOpen, setCustomOpen] = useState(false);

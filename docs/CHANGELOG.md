@@ -1,5 +1,19 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.51 · 23.10.2026 · Phase Stabilität, Abschnitt 4 (weitere P2-Befunde und B-07)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-346: A-03 (teilweise), A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, C-04 (teilweise), D-01, D-02, E-03 (teilweise); Offenes mit Grund |
+| `audit-report.md` | Status der Befunde nachgezogen |
+| `testing.md` | Protokoll „Stabilität §4“ mit Gegenproben |
+| `known-limitations.md` | Kontowechsel abgesichert; Snapshots ohne Zugänge, voller Speicher |
+| `architecture.md` | Dauerhafter Speicher über `onDocumentWritten`; Fehlergrenze je Hinweisleiste |
+| `architecture.md`, `data-model.md`, `requirements.md`, `testing.md`, `implementation-plan.md` | Pausieren als nicht umgesetzt vermerkt (B-02, D-297) |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `form-stabilitaet-report.md` | Abschnitt 5 |
+| `tools/check_docs.py` | Verweise `C-…` gelten auch für Befunde aus `audit-report.md` |
+
 ## Version 0.50 · 23.10.2026 · Phase Stabilität, Nachtrag 2 zu Abschnitt 2 (Startwächter in WebKit)
 
 | Datei | Änderung |

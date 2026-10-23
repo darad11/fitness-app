@@ -1,5 +1,5 @@
 import { addDays, isoWeekday, startOfWeek, type DayKey } from '@/shared/lib/time';
-import { activeOn, type HabitLike, type LogLike } from './days';
+import { activeOn, runningOn, weekdaysOn, type HabitLike, type LogLike } from './days';
 
 /**
  * Auswertung der Tagesaufgaben (D-284). Eine Rechnung für alle Ansichten.
@@ -215,17 +215,32 @@ export function habitWeek(habit: HabitLike, index: LogIndex, today: DayKey): Wee
   return { done, due };
 }
 
-/** Mindestens so viele auswertbare fällige Tage braucht ein Vergleich je Zeitraum. */
-export function minComparableDue(days: number): number {
-  return Math.max(5, Math.ceil(days / 2));
+/** Wochentage, an denen die Aufgabe heute fällig ist; ohne Wochentage täglich (7). */
+export function weekdaysPerWeek(habit: HabitLike, today: DayKey): number {
+  return weekdaysOn(habit, today)?.length ?? 7;
+}
+
+/**
+ * Mindestens so viele auswertbare fällige Tage braucht ein Vergleich je Zeitraum: die Hälfte der
+ * geplanten Tage, wenigstens fünf je Woche. Bei Aufgaben an weniger Wochentagen entsprechend
+ * weniger (D-01): Vorher brauchte auch eine Aufgabe für Mo/Mi/Fr 15 von 30 Tagen und wurde nie
+ * verglichen. Für tägliche Aufgaben bleibt die Schwelle gleich.
+ */
+export function minComparableDue(days: number, weekdays = 7): number {
+  return Math.max(Math.ceil((5 * weekdays) / 7), Math.ceil((days * weekdays) / 14));
 }
 
 /**
  * Veränderung der Quote gegenüber dem Zeitraum davor in Prozentpunkten; `null`, wenn einer der
  * beiden Zeiträume zu wenig auswertbare Tage hat (z. B. neue Aufgabe).
  */
-export function rateChange(current: Rate, previous: Rate, periodLength: number): number | null {
-  const min = minComparableDue(periodLength);
+export function rateChange(
+  current: Rate,
+  previous: Rate,
+  periodLength: number,
+  weekdays = 7,
+): number | null {
+  const min = minComparableDue(periodLength, weekdays);
   if (current.rate === null || previous.rate === null) return null;
   if (current.due < min || previous.due < min) return null;
   return Math.round((current.rate - previous.rate) * 100);
@@ -315,16 +330,19 @@ export const INSIGHT_MIN_DUE = 14;
 export function insights(habits: readonly HabitInfo[], index: LogIndex, today: DayKey): Insight[] {
   const days = periodDays('30d', habits, today);
   const before = previousDays('30d', habits, today);
-  const current = activeOn(habits, today);
+  // Alle laufenden Aufgaben, auch wenn heute nicht ihr Wochentag ist (D-01).
+  const current = runningOn(habits, today);
   const found: Insight[] = [];
   for (const habit of current) {
     const rate = habitRate(habit, days, index, today);
-    if (rate.rate === null || rate.due < INSIGHT_MIN_DUE) continue;
+    const weekdays = weekdaysPerWeek(habit, today);
+    // Bei Aufgaben an weniger Wochentagen entsprechend weniger Tage (D-01).
+    if (rate.rate === null || rate.due < Math.ceil((INSIGHT_MIN_DUE * weekdays) / 7)) continue;
     if (rate.rate < 0.5) {
       found.push({ kind: 'oftenSkipped', habitId: habit.id, rate: rate.rate, due: rate.due });
       continue;
     }
-    const change = rateChange(rate, habitRate(habit, before, index, today), 30);
+    const change = rateChange(rate, habitRate(habit, before, index, today), 30, weekdays);
     if (change !== null && change >= 20) {
       found.push({ kind: 'improving', habitId: habit.id, change });
       continue;

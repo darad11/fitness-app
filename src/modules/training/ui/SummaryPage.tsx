@@ -50,10 +50,7 @@ export function SummaryPage() {
   const number = (value: number) => fmt.number(value, { maximumFractionDigits: 2 });
   const exercises = liveExercises(session);
   const progress = sessionProgress(session);
-  const number_ =
-    session.program && template
-      ? dayNumber(template, session.program.weekIndex, session.program.dayIndex)
-      : undefined;
+  const number_ = session.program && template ? dayNumber(template, session.program) : undefined;
   const total = template ? template.weeks.reduce((sum, week) => sum + week.days.length, 0) : 0;
   const subtitle =
     number_ !== undefined

@@ -1,4 +1,11 @@
-import { getDoc, upsertDoc, type AppDb, type DbRuntime, type DocDef } from '@/shared/db';
+import {
+  getDoc,
+  unknownFields,
+  upsertDoc,
+  type AppDb,
+  type DbRuntime,
+  type DocDef,
+} from '@/shared/db';
 import { stableId } from '@/shared/lib/uuid';
 import {
   PROFILE_DEFAULTS,
@@ -30,7 +37,10 @@ export async function saveProfile(
 ): Promise<ProfileData> {
   const name = patch.displayName?.trim();
   const doc = await upsertDoc(rt, profileDef, PROFILE_ID, (current) => {
-    const base = current ? profileDataSchema.parse(current) : PROFILE_DEFAULTS;
+    // Felder einer neueren App-Version bleiben erhalten (A-03).
+    const base = current
+      ? { ...unknownFields(current, profileDataSchema), ...profileDataSchema.parse(current) }
+      : PROFILE_DEFAULTS;
     const { displayName: _old, ...rest } = base;
     return { ...rest, ...(name ? { displayName: name } : {}) };
   });

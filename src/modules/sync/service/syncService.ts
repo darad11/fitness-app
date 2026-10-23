@@ -1,4 +1,10 @@
-import type { AppDb, DbRuntime } from '@/shared/db';
+import {
+  DOCUMENT_TABLES,
+  getMetaValue,
+  requestPersistentStorage,
+  type AppDb,
+  type DbRuntime,
+} from '@/shared/db';
 import { refreshSessionProjection } from '@/modules/training';
 import {
   pullRows,
@@ -10,7 +16,7 @@ import {
   SyncHttpError,
   type SignUpResult,
 } from '../data/remote';
-import { getAuth, getStatus, setAuth, setStatus } from '../data/syncState';
+import { getAuth, getStatus, setAuth, setStatus, SYNC_KEYS } from '../data/syncState';
 import type { AuthSession, SyncResult } from '../model/sync';
 import { resetForUser, syncOnce, type Remote } from './syncEngine';
 
@@ -23,6 +29,30 @@ export class SessionExpiredError extends Error {
   override name = 'SessionExpiredError';
 }
 
+/**
+ * Die Daten auf diesem Gerät sind schon mit einem anderen Konto abgeglichen. Die Anmeldung bricht
+ * ab (A-08): Sonst lüden alle Daten dieses Geräts in das neue Konto, und dessen Daten mischten
+ * sich hier ein. Einen Wechsel gibt es erst mit „Alle Daten löschen“.
+ */
+export class OtherAccountError extends Error {
+  override name = 'OtherAccountError';
+}
+
+async function hasDocuments(db: AppDb): Promise<boolean> {
+  for (const table of DOCUMENT_TABLES) if ((await db.table(table).count()) > 0) return true;
+  return false;
+}
+
+/** Bricht ab, wenn Daten dieses Geräts zu einem anderen Konto gehören; ein leeres Gerät darf wechseln. */
+async function assertSameAccount(db: AppDb, auth: AuthSession, fetchImpl: typeof fetch) {
+  const previous = await getMetaValue(db, SYNC_KEYS.user);
+  if (typeof previous !== 'string' || previous === auth.userId) return;
+  if (!(await hasDocuments(db))) return;
+  // Die eben erhaltene Anmeldung wird nicht gespeichert und am Server gleich wieder beendet.
+  await signOutRemote(auth.accessToken, fetchImpl).catch(() => undefined);
+  throw new OtherAccountError();
+}
+
 export async function signIn(
   db: AppDb,
   email: string,
@@ -30,6 +60,7 @@ export async function signIn(
   fetchImpl: typeof fetch = fetch,
 ): Promise<AuthSession> {
   const auth = await signInWithPassword(email, password, fetchImpl);
+  await assertSameAccount(db, auth, fetchImpl);
   await resetForUser(db, auth.userId);
   await setAuth(db, auth);
   return auth;
@@ -51,6 +82,7 @@ export async function signUp(
 ): Promise<SignUpResult> {
   const result = await signUpWithPassword(email, password, redirectTo, fetchImpl);
   if (result.kind === 'signedIn') {
+    await assertSameAccount(db, result.auth, fetchImpl);
     await resetForUser(db, result.auth.userId);
     await setAuth(db, result.auth);
   }
@@ -122,6 +154,8 @@ export function syncNow(
     const previous = await getStatus(rt.db);
     try {
       const result = await syncOnce(rt, remote, { onSessionChanged: refreshSessionProjection });
+      // Abgeholte Daten liegen jetzt auf diesem Gerät (AK-PWA-05, A-07).
+      if (result.pulled > 0) void requestPersistentStorage();
       await setStatus(rt.db, { lastSyncAt: new Date().toISOString(), ...result });
       return result;
     } catch (error) {

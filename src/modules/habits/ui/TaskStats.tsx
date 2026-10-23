@@ -15,6 +15,7 @@ import {
   previousDays,
   progressBuckets,
   rateChange,
+  weekdaysPerWeek,
   type InsightPeriod,
   type Insight,
 } from '../calc/insights';
@@ -78,7 +79,12 @@ export function TaskStats({
       const change =
         period === 'all'
           ? null
-          : rateChange(r, habitRate(habit, before, index, today), PERIOD_LENGTH[period]);
+          : rateChange(
+              r,
+              habitRate(habit, before, index, today),
+              PERIOD_LENGTH[period],
+              weekdaysPerWeek(habit, today),
+            );
       return { habit, rate: r, change };
     })
     // Gelöschte und pausierte nur, wenn sie im Zeitraum fällig waren.

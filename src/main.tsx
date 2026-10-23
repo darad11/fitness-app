@@ -11,6 +11,7 @@ import {
   installGlobalErrorHandlers,
   logError,
   openRuntime,
+  requestPersistentStorage,
   setConnectionState,
   watchDatabaseHealth,
   type DbRuntime,
@@ -49,6 +50,10 @@ async function start(): Promise<void> {
     runtime = await openRuntime({
       onVersionChange: () => {
         setConnectionState('replaced');
+      },
+      // Dauerhafter Speicher nach dem ersten gespeicherten Dokument, einmal je Lauf (A-07).
+      onDocumentWritten: () => {
+        void requestPersistentStorage();
       },
     });
   } catch (error) {

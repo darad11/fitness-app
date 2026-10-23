@@ -28,6 +28,7 @@ import { logFood, logQuick, type Quantity } from '../service/nutritionService';
 import { BarcodeFlow } from './BarcodeFlow';
 import { kcal } from './format';
 import { NutrientTable } from './NutrientTable';
+import { useSubmitOnce } from './useSubmitOnce';
 import { ApplyTemplateDialog, templateKcal } from './TemplateDialogs';
 import { useFoodCatalog } from './useFoodCatalog';
 
@@ -333,6 +334,7 @@ function LogDialog({
   const amount = parsed === null ? null : serving ? parsed * serving.amount : parsed;
   const scaled = amount !== null && amount > 0 ? scaleNutrients(food.per100, amount) : null;
   const preview = scaled?.kcal ?? null;
+  const once = useSubmitOnce();
 
   const submit = () => {
     if (parsed === null || parsed <= 0) {
@@ -342,10 +344,12 @@ function LogDialog({
     const quantity: Quantity = serving
       ? { kind: 'serving', servingId: serving.id, count: parsed }
       : { kind: 'amount', amount: parsed };
-    logFood(rt, { food, slot, dayKey: day, quantity }).then(onLogged, (caught: unknown) => {
-      setError(tNutrition.saveFailed);
-      void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
-    });
+    once.run(() =>
+      logFood(rt, { food, slot, dayKey: day, quantity }).then(onLogged, (caught: unknown) => {
+        setError(tNutrition.saveFailed);
+        void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
+      }),
+    );
   };
 
   return (
@@ -359,7 +363,7 @@ function LogDialog({
           <Button variant="secondary" onClick={onClose}>
             {tNutrition.cancel}
           </Button>
-          <Button type="submit" form={`${id}-form`}>
+          <Button type="submit" form={`${id}-form`} disabled={once.busy}>
             {tNutrition.add}
           </Button>
         </>
@@ -463,6 +467,7 @@ function QuickDialog({
   const id = useId();
   const [fields, setFields] = useState({ name: '', kcal: '', protein: '', carbs: '', fat: '' });
   const [error, setError] = useState<string | null>(null);
+  const once = useSubmitOnce();
   const field = (key: keyof typeof fields, label: string, numeric = true) => (
     <div>
       <label htmlFor={`${id}-${key}`} className="mb-2 block text-sm font-semibold text-muted">
@@ -491,18 +496,20 @@ function QuickDialog({
       setError(tNutrition.errors.number);
       return;
     }
-    logQuick(rt, {
-      name: fields.name,
-      slot,
-      dayKey: day,
-      kcal: kcalValue,
-      ...(protein !== undefined ? { protein } : {}),
-      ...(carbs !== undefined ? { carbs } : {}),
-      ...(fat !== undefined ? { fat } : {}),
-    }).then(onLogged, (caught: unknown) => {
-      setError(tNutrition.saveFailed);
-      void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
-    });
+    once.run(() =>
+      logQuick(rt, {
+        name: fields.name,
+        slot,
+        dayKey: day,
+        kcal: kcalValue,
+        ...(protein !== undefined ? { protein } : {}),
+        ...(carbs !== undefined ? { carbs } : {}),
+        ...(fat !== undefined ? { fat } : {}),
+      }).then(onLogged, (caught: unknown) => {
+        setError(tNutrition.saveFailed);
+        void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
+      }),
+    );
   };
   return (
     <Dialog
@@ -515,7 +522,7 @@ function QuickDialog({
           <Button variant="secondary" onClick={onClose}>
             {tNutrition.cancel}
           </Button>
-          <Button type="submit" form={`${id}-form`}>
+          <Button type="submit" form={`${id}-form`} disabled={once.busy}>
             {tNutrition.add}
           </Button>
         </>

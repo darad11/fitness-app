@@ -89,10 +89,16 @@ export function TodayPage() {
       if (active) {
         void navigate(`/training/einheit/${active.id}${LIGHT_QUERY}`);
       } else {
-        const input = program ? nextDayInput(program) : null;
-        void start(input ?? { source: 'free', title: t.training.freeTitle, exercises: [] }, {
-          light: true,
-        });
+        // Der Plan entsteht erst im Start; scheitert er, erscheint die Meldung (B-07).
+        void start(
+          () =>
+            (program ? nextDayInput(program) : null) ?? {
+              source: 'free',
+              title: t.training.freeTitle,
+              exercises: [],
+            },
+          { light: true },
+        );
       }
     }
   };

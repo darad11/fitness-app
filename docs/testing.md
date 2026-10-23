@@ -66,7 +66,7 @@ Repositories mit Tombstones · Transaktion „Training starten" atomar · „Sat
 | E-12 | Aktivieren, nächster Tag, anderer Tag, Wochentag-Hinweis | AK-PRG-07 bis -09, AK-DSH-02 |
 | E-13 | Programmänderung lässt laufende und abgeschlossene Einheit unverändert | AK-PRG-10 |
 | E-14 | Programmdatei exportieren und importieren | AK-PRG-13 |
-| E-15 | Übungstimer, Pausieren, Notizen, Nachtragen | AK-TRN-14, -18, -23, -24 |
+| E-15 | Übungstimer, Notizen, Nachtragen; Pausieren offen (D-297) | AK-TRN-14, -18 (offen), -23, -24 |
 | E-16 | Verlauf bearbeiten und löschen, Projektion aktualisiert | AK-HIS-03, -04 |
 | E-17 | Körpergewicht erfassen, bearbeiten, löschen; Diagramm mit 2, 3 und vielen Einträgen; Tooltip-Wert gleich Rohwert; Tabellenansicht | AK-BW-01 bis -06 |
 | E-18 | Übungsdiagramm mit 2 und 3 Einheiten | AK-HIS-05 |
@@ -1223,3 +1223,31 @@ Prüfung, Zusammenfassung, Ersetzen, Regeln für die Synchronisierung (A-14, D-3
 | `pnpm build`, `pnpm check:bundle` | Startansicht 239,4 KB von 250 KB (die Karte und ihre Texte laden mit der Seite „Daten und Sicherung“); Vorab-Liste 170 von 229 Dateien |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 318 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,3 min) |
 | WebKit, CI zu `cc7c86b` (Lauf 40008767361) | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (11,0 min): nur `start-watch.spec.ts` Fall 1 auf Desktop und Handy (bekannt, Nachtrag zu D-344); `restore.spec.ts` bestanden. Chromium: bestanden |
+
+### Stabilität §4: Weitere P2-Befunde und B-07 · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Befunde aus `audit-report.md` Abschnitt 5 nach Priorität, dazu B-07 (D-346). Bericht: `form-stabilitaet-report.md` Abschnitt 5. Gegenprobe heißt: dieselben Tests mit dem alten Stand der geänderten Dateien.
+
+| Nachweis | Ergebnis |
+|---|---|
+| A-03: `settings.test.ts` (zwei neue Fälle: Einstellungen, Profil mit geleertem Namen), `training/data/trainingStateRepository.test.ts` (neu: unbekanntes Feld bleibt, ein entferntes bekanntes Feld bleibt entfernt) | 8 bestanden; Gegenprobe 3 von 3 neuen Fällen fehlgeschlagen |
+| A-04: `syncEngine.test.ts` „kürzt lange Namen …“ (58, 59, 79, 80 Zeichen gegen die Schemas von Programm und Rezept) | 10 bestanden; Gegenprobe mit der alten Kürzung: 1 von 1 fehlgeschlagen („expected 81 to be less than or equal to 80“) |
+| A-07: `repository.test.ts` „ruft `onDocumentWritten` …“ (vier Schreibarten, außerhalb der Transaktion, abgelehnte Änderung meldet nichts) | 12 bestanden; Gegenprobe 1 von 1 fehlgeschlagen |
+| A-07: `e2e/persist.spec.ts` (neu, Chromium Desktop und Pixel 7): vor dem ersten Gewicht keine Anfrage, danach genau eine | 2 bestanden; Gegenprobe 2 von 2 fehlgeschlagen („Expected: 1, Received: 0“) |
+| A-07: Startansicht mit Import von `storage.ts` im Repository / mit Meldung über die Laufzeit | 242,2 KB (sechs kleine Teile neu abgespalten) / 239,3 KB; deshalb die Meldung über `onDocumentWritten` |
+| A-08: `syncService.test.ts` (drei neue Fälle: Anmelden, Registrieren, Gerät ohne Daten) | alle bestanden (Modul `sync` 33 Tests); Gegenprobe ohne Prüfung: 2 von 3 fehlgeschlagen, der Fall ohne Daten besteht in beiden Fassungen |
+| B-03: `programProgress.test.ts` (Tag verschoben, gelöscht, dupliziert; Nummer des Tages über die ID) | 15 bestanden; Gegenprobe 4 von 4 neuen Fällen fehlgeschlagen, dazu der bestehende Fall der Nummer (geänderter Aufruf) |
+| B-04: `training/data/sessionRepository.test.ts` (neu), `app.test.tsx` „legt die App nicht lahm …“, `banners/banner-boundary.test.tsx` (neu) | alle bestanden; Gegenprobe 3 von 3 fehlgeschlagen (ZodError; Seite und Navigation erschienen nicht, Zeitlimit) |
+| B-05: `playerService.test.ts` „lässt einen offenen Drop-Satz bei seinem übersprungenen Arbeitssatz“ | 9 bestanden; Gegenprobe 1 von 1 fehlgeschlagen (ZodError) |
+| B-07: `training/ui/start-from-program.test.tsx` (neu: fehlende Übung, Meldung, Knopf bedienbar, Protokoll) | 1 bestanden; Gegenprobe 1 von 1 fehlgeschlagen |
+| C-02: `nutrition-ui.test.tsx` (Doppeltipp auf „Hinzufügen“ im Schnelleintrag, auf „Speichern“ einer Vorlage) | 2 bestanden; Gegenprobe 2 von 2 fehlgeschlagen („expected 2 to be 1“) |
+| C-03: `nutrition/ui/barcode-flow.test.tsx` (neu: spätes Ergebnis nach „Schließen“) | 1 bestanden; Gegenprobe 1 von 1 fehlgeschlagen (Dialog der Einwilligung erschien) |
+| C-04: `waterService.test.ts` „lädt für einen Tag nur dessen Einträge“, `nutrition/ui/use-food-catalog.test.ts` (neu: ein Index je Import) | 2 bestanden. Keine fachliche Gegenprobe: Am alten Stand gab es beide Funktionen nicht; das Verhalten der App ist gleich, es entfällt doppelte Arbeit |
+| D-01: `insights.test.ts` (Aufgabe für Mo/Mi/Fr: Vergleich mit dem Zeitraum davor, Hinweis „verbessert“ an einem Dienstag) | 18 bestanden; Gegenprobe 2 von 2 fehlgeschlagen („expected null to be 50“, „expected [] to deeply equal [ 'improving' ]“) |
+| D-02, E-03: `snapshots.test.ts` (fünf neue Fälle), `app.test.tsx` (Ursache „Speicher voll“), `syncService.test.ts` und `steps/data/stepsState.test.ts` (Schlüssel der Module) | alle bestanden; Gegenprobe mit abgeschaltetem Filter, abgeschalteter Wiederholung und ohne neue Ursache: 4 von 4 betroffenen Fällen fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 239,5 KB von 250 KB (vorher 238,9 KB); Vorab-Liste 170 von 229 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min) |
+| WebKit | in der CI zu diesem Abschnitt |
+

@@ -227,6 +227,25 @@ describe('App-Shell', () => {
   });
 });
 
+describe('Ungültiges laufendes Training (B-04)', () => {
+  it('legt die App nicht lahm: Seite und Navigation bleiben, der Fehler steht im Protokoll', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const session = await startSession(rt, { source: 'free', title: 'Frei', exercises: [] });
+    // Etwa von einer neueren App-Version: Das Dokument passt nicht zum Schema dieser Version.
+    const stored = await rt.db.sessions.get(session.id);
+    await rt.db.sessions.put({ ...stored!, dayKey: 'kein Tag' });
+    renderApp('/training');
+    expect(await screen.findByRole('heading', { level: 1, name: 'Training' })).toBeInTheDocument();
+    expect(screen.getAllByRole('navigation', { name: 'Hauptnavigation' }).length).toBeGreaterThan(
+      0,
+    );
+    await waitFor(async () => {
+      const entries = await listErrorLog(rt.db);
+      expect(entries.some((e) => e.area === 'training')).toBe(true);
+    });
+  });
+});
+
 describe('Hinweisleisten', () => {
   const iphoneTab: PlatformInfo = {
     isIphone: true,
@@ -328,6 +347,10 @@ describe('Wiederherstellungsbildschirm', () => {
     [Object.assign(new Error('fehlt'), { name: 'MissingAPIError' }), 'lokalen Speicher'],
     [Object.assign(new Error('neu'), { name: 'VersionError' }), 'neueren Version'],
     [Object.assign(new Error('weg'), { name: 'ConnectionLostError' }), 'wiederholt abgebrochen'],
+    [
+      Object.assign(new Error('voll'), { name: 'QuotaExceededError' }),
+      'Speicher des Geräts ist voll',
+    ],
     [new Error('anderes'), 'Unbekannte Ursache'],
   ])('nennt die Ursache verständlich', (error, expected) => {
     expect(recoveryCause(error)).toContain(expected);

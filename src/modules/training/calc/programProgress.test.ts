@@ -58,8 +58,8 @@ describe('Folge der Trainingstage (D-214, D-249)', () => {
       [2, 'Woche 2', 'A'],
       [3, 'Woche 2', 'B'],
     ]);
-    expect(dayNumber(AB, 1, 0)).toBe(3);
-    expect(dayNumber(AB, 5, 0)).toBeUndefined();
+    expect(dayNumber(AB, { weekIndex: 1, dayIndex: 0 })).toBe(3);
+    expect(dayNumber(AB, { weekIndex: 5, dayIndex: 0 })).toBeUndefined();
   });
 
   it('beginnt ohne Einheiten beim ersten Tag', () => {
@@ -189,5 +189,70 @@ describe('Wochentag-Hinweis (AK-PRG-09)', () => {
     expect(isPlannedRest(fixed, { weekIndex: 0 }, monday)).toBe(false);
     expect(isPlannedRest(fixed, { weekIndex: 0 }, thursday)).toBe(true);
     expect(isPlannedRest(fixed, { weekIndex: 5 }, thursday)).toBe(false);
+  });
+});
+
+describe('Zuordnung über die ID des Tages (B-03)', () => {
+  const ABC = template([['A', 'B', 'C']], false);
+  const day = (t: SampleTemplate, name: string) => t.weeks[0]!.days.find((d) => d.name === name)!;
+  /** Einheit eines Tages, wie der Player sie speichert: mit Position und ID. */
+  function doneDay(t: SampleTemplate, name: string, endedAt: string): ProgramSessionLike {
+    const d = t.weeks[0]!.days.indexOf(day(t, name));
+    return {
+      status: 'completed',
+      endedAt,
+      program: { programId: 'p1', weekIndex: 0, dayIndex: d, dayId: day(t, name).id },
+    };
+  }
+  /** Dasselbe Programm mit Tagen in anderer Reihenfolge (IDs bleiben). */
+  function reorder(t: SampleTemplate, names: string[]): SampleTemplate {
+    const week = t.weeks[0]!;
+    return {
+      ...t,
+      weeks: [{ ...week, days: names.map((name, position) => ({ ...day(t, name), position })) }],
+    };
+  }
+
+  it('Nummer des Tages über die ID: verschoben die neue Nummer, gelöscht keine', () => {
+    const a = doneDay(ABC, 'A', '2026-10-01T10:00:00Z').program!;
+    expect(dayNumber(reorder(ABC, ['C', 'A', 'B']), a)).toBe(2);
+    expect(dayNumber(reorder(ABC, ['B', 'C']), a)).toBeUndefined();
+  });
+
+  it('Tag verschoben: die erledigte Einheit bleibt bei ihrem Tag', () => {
+    const a = doneDay(ABC, 'A', '2026-10-01T10:00:00Z');
+    const moved = reorder(ABC, ['C', 'A', 'B']);
+    const progress = programProgress(moved, [a]);
+    expect([...progress.doneInRound]).toEqual([1]);
+    expect(progress.next?.name).toBe('B');
+  });
+
+  it('Tag gelöscht: seine Einheiten zählen nicht für einen anderen Tag', () => {
+    const sessions = [
+      doneDay(ABC, 'A', '2026-10-01T10:00:00Z'),
+      doneDay(ABC, 'B', '2026-10-03T10:00:00Z'),
+    ];
+    const without = reorder(ABC, ['A', 'C']);
+    const progress = programProgress(without, sessions);
+    expect(progress.completed).toBe(1);
+    expect(progress.next?.name).toBe('C');
+  });
+
+  it('Tag dupliziert: die Einheit gehört zum Original, die Kopie ist offen', () => {
+    const a = doneDay(ABC, 'A', '2026-10-01T10:00:00Z');
+    const copy = { ...day(ABC, 'A'), id: 'kopie', name: 'A (Kopie)' };
+    const week = ABC.weeks[0]!;
+    const duplicated: SampleTemplate = {
+      ...ABC,
+      weeks: [
+        {
+          ...week,
+          days: [copy, ...week.days].map((d, position) => ({ ...d, position })),
+        },
+      ],
+    };
+    const progress = programProgress(duplicated, [a]);
+    expect([...progress.doneInRound]).toEqual([1]);
+    expect(progress.next?.name).toBe('B');
   });
 });

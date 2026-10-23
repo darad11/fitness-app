@@ -42,6 +42,8 @@ export const tSync = {
   },
   loginNote: 'Ohne Anmeldung bleibt alles auf diesem Gerät.',
   invalidCredentials: 'E-Mail oder Passwort stimmt nicht.',
+  otherAccount:
+    'Auf diesem Gerät liegen Daten eines anderen Kontos. Melde dich mit dem Konto an, mit dem du bisher abgeglichen hast. So vermischen sich keine Daten.',
   offline: 'Keine Verbindung. Bitte versuche es mit Netz erneut.',
   failed: 'Das hat nicht geklappt. Bitte versuche es erneut.',
   signedInAs: (email: string) => `Angemeldet als ${email}`,

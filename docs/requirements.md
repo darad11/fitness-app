@@ -125,7 +125,7 @@ Nachweis: **U** Unit-Test · **I** Integrationstest mit fake-indexeddb · **E** 
 | AK-TRN-15 | Die Einheit zeigt Dauer ohne Pausen, erledigte und geplante Sätze sowie den Fortschritt je Übung | TS-24 | E | M1 |
 | AK-TRN-16 | Jede Statusänderung eines Satzes ist spätestens 1 s nach der Aktion in IndexedDB gespeichert, jede Werteingabe spätestens 0,5 s nach der letzten Eingabe. Nachweis: „erledigt" und sofortiger Reload behält den Satz; Eingabe, 0,6 s warten, Reload behält den Wert | TS-12 | E | M1 |
 | AK-TRN-17 | Nach Reload, Beenden und Neustart der App oder einer Offline-Phase sind alle erledigten Sätze, Eingaben (gemäß AK-TRN-16) und der Timerzustand erhalten; die Startseite führt mit einem Tipp zurück; auf allen Seiten erscheint die Leiste „Training läuft" | TS-13, TS-25 | E, G | M1 |
-| AK-TRN-18 | „Pausieren" hält die Trainingsdauer an, „Fortsetzen" setzt sie fort; Pausen zählen nicht zur Dauer | TS-13 | U, E | M2 |
+| AK-TRN-18 | „Pausieren" hält die Trainingsdauer an, „Fortsetzen" setzt sie fort; Pausen zählen nicht zur Dauer. Offen (D-297, Phase B) | TS-13 | U, E | M2 |
 | AK-TRN-19 | „Training beenden" fragt bei offenen Sätzen, ob diese als übersprungen gelten sollen; danach ist die Einheit abgeschlossen, die Endzeit gesetzt und die Zusammenfassung sichtbar; die Einheit erscheint sofort im Verlauf | TS-14 | E | M1 |
 | AK-TRN-20 | Die Zusammenfassung zeigt Dauer, Zahl der Übungen, erledigte Sätze, Volumen in kg ohne Aufwärmsätze und je Übung den besten Satz; ab M3 zusätzlich den Vergleich mit der letzten Einheit desselben Trainingstags, nur wenn eine solche existiert | TS-15, TH-07 | U, E | M1, M3 |
 | AK-TRN-21 | „Training verwerfen" entfernt die Einheit nach Bestätigung; „Rückgängig" ist 10 s lang möglich | TS-26 | E | M1 |

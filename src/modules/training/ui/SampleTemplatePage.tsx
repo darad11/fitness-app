@@ -136,7 +136,8 @@ export function ProgramDetail({
   const markDone = progress?.total === groups.reduce((sum, group) => sum + group.days.length, 0);
 
   const startDay = (weekIndex: number, dayIndex: number) => {
-    void start(
+    // Der Plan entsteht erst im Start; scheitert er, erscheint die Meldung (B-07).
+    void start(() =>
       planFromTemplateDay(
         template,
         weekIndex,

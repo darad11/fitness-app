@@ -149,6 +149,39 @@ describe('Ernährung (Schritt G, D-261)', () => {
     },
   );
 
+  it('Doppeltipp auf „Hinzufügen“ trägt nur einmal ein (C-02)', { timeout: 30_000 }, async () => {
+    const user = userEvent.setup();
+    await renderAt('/ernaehrung/hinzufuegen?mahlzeit=dinner', 'Lebensmittel hinzufügen');
+    await user.click(await screen.findByRole('button', { name: 'Schnelleintrag' }, WAIT));
+    const quick = screen.getByRole('dialog', { name: 'Schnelleintrag' });
+    await user.type(within(quick).getByLabelText('Energie (kcal)'), '850');
+    await user.dblClick(within(quick).getByRole('button', { name: 'Hinzufügen' }));
+    await waitFor(async () => {
+      expect(await rt.db.foodLog.count()).toBe(1);
+    }, WAIT);
+    // Ein zweiter Eintrag käme kurz danach; es bleibt bei einem.
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(await rt.db.foodLog.count()).toBe(1);
+  });
+
+  it(
+    'Doppeltipp auf „Speichern“ legt eine Vorlage nur einmal an (C-02)',
+    { timeout: 30_000 },
+    async () => {
+      const user = userEvent.setup();
+      await logQuick(rt, { name: 'Müsli', slot: 'breakfast', dayKey: localDay(), kcal: 350 });
+      await renderAt('/ernaehrung', 'Ernährung');
+      await user.click(
+        await screen.findByRole('button', { name: 'Frühstück als Vorlage speichern' }, WAIT),
+      );
+      const save = screen.getByRole('dialog', { name: 'Als Vorlage speichern' });
+      await user.dblClick(within(save).getByRole('button', { name: 'Speichern' }));
+      expect(await screen.findByText('Vorlage „Frühstück“ gespeichert', {}, WAIT)).toBeVisible();
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(await rt.db.mealTemplates.count()).toBe(1);
+    },
+  );
+
   it('findet österreichische Bezeichnungen', { timeout: 30_000 }, async () => {
     await seedCatalog();
     const user = userEvent.setup();

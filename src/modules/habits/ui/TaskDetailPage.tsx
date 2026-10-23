@@ -14,6 +14,7 @@ import {
   previousDays,
   progressBuckets,
   rateChange,
+  weekdaysPerWeek,
   WEEKDAY_MIN_DUE,
   weekdayRates,
   type InsightPeriod,
@@ -74,7 +75,9 @@ export function TaskDetailPage() {
   const status = statusOf(habit, today);
   const previous =
     period === 'all' ? null : habitRate(habit, previousDays(period, [habit], today), index, today);
-  const change = previous ? rateChange(rate, previous, PERIOD_LENGTH[period]) : null;
+  const change = previous
+    ? rateChange(rate, previous, PERIOD_LENGTH[period], weekdaysPerWeek(habit, today))
+    : null;
   const chart = progressBuckets([habit], days, index, today);
   const calendarDays = days.slice(-CALENDAR_MAX);
   const firstDay = calendarDays[0];

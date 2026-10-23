@@ -126,7 +126,7 @@ Abhängigkeitsregeln, per ESLint-Regel `no-restricted-imports` mit den Pfad-Alia
 - **Projektionen:** `exerciseHistory` liefert vorherige Werte und Verläufe per Index `[exerciseId+completedAt]`. Sie wird in derselben Transaktion wie die Quelle aktualisiert und lässt sich jederzeit neu aufbauen.
 - **Schreibzeitpunkte:** Aktionen (Satz erledigt, Übung hinzufügen) sofort; Tastatureingaben mit 300 ms Entprellung; beim Wechsel in den Hintergrund (`visibilitychange` auf „hidden", `pagehide`) sofortiges Schreiben ausstehender Werte. `beforeunload` und `unload` werden dafür nicht genutzt, weil iOS sie nicht zuverlässig auslöst. Nur die Erholung bei fehlgeschlagenem Nachladen nimmt `beforeunload` als zusätzliches Zeichen, dass die Seite gerade geht (WebKit bricht dann laufende Importe ab; Nachtrag D-343).
 - **Verbindungsverlust in Safari** (D-216): Nach Rückkehr aus dem Hintergrund kann Safari die IndexedDB-Verbindung verlieren (WebKit-Fehler 197050, offen). Die App prüft bei `visibilitychange` auf „visible" und bei `pageshow` mit einem kleinen Lesezugriff. Schlägt er fehl, schließt und öffnet sie die Datenbank einmal neu. Gelingt auch das nicht, startet sie sich kontrolliert neu, bevor neue Eingaben möglich sind. Weil der Zustand vollständig in IndexedDB liegt, gehen gespeicherte Sätze dabei nicht verloren.
-- **Dauerhafter Speicher:** Nach dem ersten gespeicherten Datensatz ruft die App `navigator.storage.persist()` auf und zeigt den Status sowie `navigator.storage.estimate()` unter Mehr › Daten (AK-PWA-05).
+- **Dauerhafter Speicher:** Nach dem ersten gespeicherten Datensatz ruft die App `navigator.storage.persist()` auf und zeigt den Status sowie `navigator.storage.estimate()` unter Mehr › Daten (AK-PWA-05). Das Basis-Repository meldet jedes gespeicherte Dokument über `DbRuntime.onDocumentWritten`, `main.tsx` fragt einmal je Lauf; ebenso nach einem Abgleich mit abgeholten Daten und nach dem Wiederherstellen (D-346). Vorher geschah das nur während eines Trainings.
 - **Snapshots** (D-217): Eigene Datenbank `fitness-snapshots`; Inhalt gzip-komprimiert über `CompressionStream`; Anlässe Schema-Upgrade, Import, „Alle Daten löschen"; die letzten fünf bleiben.
 - **Gebündelte Stammdaten** (D-230): Basisübungen und Beispielvorlagen werden mit der App ausgeliefert, vom Service Worker vorgeladen und nicht in die Datenbank kopiert. IDs sind deterministisch, damit Verweise auf allen Geräten gleich sind.
 - **localStorage** nur für unkritische Anzeigeeinstellungen ohne Verlustfolgen.
@@ -138,8 +138,8 @@ Abhängigkeitsregeln, per ESLint-Regel `no-restricted-imports` mit den Pfad-Alia
 | Zustand | Auslöser | Gespeichert |
 |---|---|---|
 | Laufend | „Starten" | Einheit mit Snapshot aller Übungen und Sätze, `startedAt`, `dayKey` |
-| Pausiert | „Pausieren" | Offenes Pausenintervall |
-| Laufend | „Fortsetzen" | Pausenintervall geschlossen |
+| Pausiert | „Pausieren" (noch nicht umgesetzt, D-297) | Offenes Pausenintervall |
+| Laufend | „Fortsetzen" (noch nicht umgesetzt, D-297) | Pausenintervall geschlossen |
 | Abgeschlossen | „Training beenden" | `endedAt`, `durationSec`, offene Sätze als übersprungen, Projektion |
 | Verworfen | „Training verwerfen" | Tombstone mit `deletedFrom = in_progress` |
 
@@ -174,6 +174,7 @@ Nach einem Neustart der App liest die Startseite die laufende Einheit aus der Da
 | Datenbank lässt sich nicht öffnen | Fehler beim Start | Wiederherstellungsbildschirm: Ursache, „Erneut versuchen", „Snapshot wiederherstellen", „Fehlerprotokoll exportieren", „Zurücksetzen" nur nach Export-Angebot und doppelter Bestätigung | AK-DAT-08 |
 | Fehlgeschlagene Migration | Ausnahme im Upgrade | Upgrade bricht ab; der Snapshot von davor bleibt; Wiederherstellungsbildschirm | AK-DAT-06, AK-DAT-07 |
 | Absturz einer Ansicht | React-Fehlergrenze je Route | Fehleransicht mit „Neu laden"; andere Bereiche bleiben nutzbar | AK-DAT-09 |
+| Fehler in einer Hinweisleiste (z. B. ungültiges laufendes Training) | Fehlergrenze je Leiste, Eintrag im Fehlerprotokoll (D-346) | Nur die Leiste fehlt; Navigation und Seiten bleiben | B-04 |
 | Ungültige Importdatei | Zod-Prüfung vor dem Schreiben | Ablehnung ohne Änderung, mit Grund | AK-DAT-05 |
 | Neue App-Version während des Trainings | Service Worker meldet Update | Hinweis erst nach Abschluss der Einheit; Aktivierung nur nach Bestätigung | AK-PWA-03 |
 | Zweiter Tab mit älterer Version | Dexie-Ereignis `versionchange` | Der ältere Tab schließt seine Verbindung und bittet um Neuladen | Integrationstest |

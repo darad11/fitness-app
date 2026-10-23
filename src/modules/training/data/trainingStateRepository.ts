@@ -1,4 +1,11 @@
-import { getDoc, upsertDoc, type AppDb, type DbRuntime, type DocDef } from '@/shared/db';
+import {
+  getDoc,
+  unknownFields,
+  upsertDoc,
+  type AppDb,
+  type DbRuntime,
+  type DocDef,
+} from '@/shared/db';
 import { stableId } from '@/shared/lib/uuid';
 import {
   TRAINING_STATE_DEFAULTS,
@@ -30,10 +37,12 @@ export async function changeTrainingState(
   rt: DbRuntime,
   change: (current: TrainingStateData) => TrainingStateData,
 ): Promise<TrainingStateData> {
-  const doc = await upsertDoc(rt, trainingStateDef, TRAINING_STATE_ID, (current) =>
-    change(
+  const doc = await upsertDoc(rt, trainingStateDef, TRAINING_STATE_ID, (current) => ({
+    // Felder einer neueren App-Version bleiben erhalten (A-03).
+    ...(current ? unknownFields(current, trainingStateDataSchema) : {}),
+    ...change(
       structuredClone(current ? trainingStateDataSchema.parse(current) : TRAINING_STATE_DEFAULTS),
     ),
-  );
+  }));
   return trainingStateDataSchema.parse(doc);
 }

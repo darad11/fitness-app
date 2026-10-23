@@ -149,6 +149,35 @@ describe('Übung ersetzen (AK-TRN-09, TS-10)', () => {
     expect(liveSets(original).map((set) => set.type)).toEqual(['working', 'drop']);
     expect(liveSets(replacement).every((set) => set.type === 'working')).toBe(true);
   });
+
+  it('lässt einen offenen Drop-Satz bei seinem übersprungenen Arbeitssatz (B-05)', async () => {
+    const template = (await loadSampleTemplate('upper_lower'))!;
+    const session = await startSession(
+      rt,
+      planFromTemplateDay(template, 0, 0, (id) => exercises.find((e) => e.id === id)),
+      at(0),
+    );
+    const withDrop = liveExercises(session).find((e) =>
+      liveSets(e).some((set) => set.type === 'drop'),
+    )!;
+    const working = liveSets(withDrop).filter((set) => set.type === 'working');
+    // Erster Arbeitssatz erledigt, der mit dem Drop-Satz übersprungen; der Drop-Satz bleibt offen.
+    await completeSet(rt, session.id, working[0]!.id, {
+      ...REST,
+      previous: { weightKg: 20, reps: 10 },
+    });
+    await skipSet(rt, session.id, working.at(-1)!.id);
+    const updated = await replaceExercise(rt, session.id, withDrop.id, info('lateral_raise_cable'));
+    const original = liveExercises(updated).find((e) => e.id === withDrop.id)!;
+    const replacement = liveExercises(updated).find(
+      (e) => e.replacedFromExerciseId === withDrop.exerciseId && e.id !== withDrop.id,
+    )!;
+    expect(liveSets(original).map((set) => [set.type, set.status])).toContainEqual([
+      'drop',
+      'planned',
+    ]);
+    expect(liveSets(replacement).every((set) => set.type === 'working')).toBe(true);
+  });
 });
 
 describe('Umsortieren im Player (AK-PRG-03)', () => {

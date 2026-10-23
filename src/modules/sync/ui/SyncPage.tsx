@@ -8,7 +8,14 @@ import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { InvalidCredentialsError, SignUpError, SyncOfflineError } from '../data/remote';
 import { useSyncView } from '../data/syncState';
 import { LoginScreen, type LoginMode } from './LoginScreen';
-import { PASSWORD_MIN, signIn, signOut, signUp, syncNow } from '../service/syncService';
+import {
+  OtherAccountError,
+  PASSWORD_MIN,
+  signIn,
+  signOut,
+  signUp,
+  syncNow,
+} from '../service/syncService';
 
 /** Synchronisierung (D-269): anmelden, Stand ansehen, abgleichen, abmelden. */
 export function SyncPage() {
@@ -54,11 +61,13 @@ export function SyncPage() {
     setError(
       caught instanceof InvalidCredentialsError
         ? ts.invalidCredentials
-        : caught instanceof SignUpError
-          ? ts.signUpErrors[caught.problem]
-          : caught instanceof SyncOfflineError
-            ? ts.offline
-            : ts.failed,
+        : caught instanceof OtherAccountError
+          ? ts.otherAccount
+          : caught instanceof SignUpError
+            ? ts.signUpErrors[caught.problem]
+            : caught instanceof SyncOfflineError
+              ? ts.offline
+              : ts.failed,
     );
   };
 

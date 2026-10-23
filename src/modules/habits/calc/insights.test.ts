@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays } from '@/shared/lib/time';
+import { addDays, isoWeekday } from '@/shared/lib/time';
 import {
   dayTotals,
   habitRate,
@@ -246,5 +246,37 @@ describe('Wochentage (D-285)', () => {
       done: 1,
       due: 1,
     });
+  });
+});
+
+describe('Vergleich bei Aufgaben an Wochentagen (D-01)', () => {
+  // Mo/Mi/Fr seit 70 Tagen: höchstens 13 fällige Tage je 30 Tage. In den letzten 30 Tagen alles
+  // erledigt, davor jeder zweite fällige Tag.
+  const mwf = habit('mwf', d(-70), { schedule: [{ fromDayKey: d(-70), weekdays: [1, 3, 5] }] });
+  const dueDays = (from: number, to: number) => {
+    const days: string[] = [];
+    for (let offset = from; offset <= to; offset += 1) {
+      if ([1, 3, 5].includes(isoWeekday(d(offset)))) days.push(d(offset));
+    }
+    return days;
+  };
+  const logs = [
+    ...dueDays(-59, -30).map((day, i) => log('mwf', day, i % 2 === 0)),
+    ...dueDays(-29, -1).map((day) => log('mwf', day)),
+  ];
+  const index = indexLogs(logs);
+
+  it('vergleicht mit dem Zeitraum davor, obwohl weniger als 15 Tage fällig waren', () => {
+    const rate = habitRate(mwf, periodDays('30d', [mwf], TODAY), index, TODAY);
+    const before = habitRate(mwf, previousDays('30d', [mwf], TODAY), index, TODAY);
+    expect(rate.due).toBeLessThan(15);
+    expect(rate.rate).toBe(1);
+    expect(rateChange(rate, before, 30, 3)).toBe(Math.round((1 - (before.rate ?? 0)) * 100));
+    // Täglich bleibt es bei der bisherigen Schwelle.
+    expect(rateChange(rate, before, 30)).toBeNull();
+  });
+
+  it('meldet die Verbesserung als Hinweis', () => {
+    expect(insights([mwf], index, TODAY).map((item) => item.kind)).toEqual(['improving']);
   });
 });

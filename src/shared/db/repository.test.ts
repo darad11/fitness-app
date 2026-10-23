@@ -1,3 +1,4 @@
+import Dexie, { type Transaction } from 'dexie';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z, ZodError } from 'zod';
 import { HLC_PATTERN, parseHlc } from '../lib/hlc';
@@ -168,5 +169,34 @@ describe('Änderungsstempel', () => {
     const mine = await insertDoc(rt, noteDef, { text: 'A', count: 0 });
     expect(mine.hlc > fromOther.hlc).toBe(true);
     otherTab.db.close();
+  });
+});
+
+describe('Meldung gespeicherter Dokumente (AK-PWA-05, A-07)', () => {
+  it('ruft `onDocumentWritten` nach jedem gespeicherten Dokument, außerhalb der Transaktion', async () => {
+    const calls: boolean[] = [];
+    const watched: DbRuntime = {
+      ...rt,
+      onDocumentWritten: () => {
+        // Keine laufende Transaktion von Dexie mehr (die Typen von Dexie kennen hier kein `null`).
+        calls.push((Dexie.currentTransaction as Transaction | null) === null);
+      },
+    };
+    const note = await insertDoc(watched, noteDef, { text: 'Hallo', count: 1 });
+    await vi.waitFor(() => {
+      expect(calls).toEqual([true]);
+    });
+    await updateDoc(watched, noteDef, note.id, (n) => ({ ...n, count: 2 }));
+    await softDeleteDoc(watched, noteDef, note.id);
+    await restoreDoc(watched, noteDef, note.id);
+    await vi.waitFor(() => {
+      expect(calls).toEqual([true, true, true, true]);
+    });
+    // Abgelehnte Änderungen melden nichts.
+    await expect(
+      updateDoc(watched, noteDef, note.id, (n) => ({ ...n, count: -1 })),
+    ).rejects.toThrow(ZodError);
+    await new Promise((resolve) => setTimeout(resolve, 5));
+    expect(calls).toHaveLength(4);
   });
 });

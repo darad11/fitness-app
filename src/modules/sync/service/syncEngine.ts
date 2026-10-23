@@ -36,11 +36,21 @@ function isTable(name: string): name is DocumentTableName {
   return tables.has(name);
 }
 
-/** Name einer Konfliktkopie, z. B. „Push A (Konflikt 19.10.2026)“ (D-208). */
+/**
+ * Höchstlänge eines Namens in den Tabellen mit Konfliktkopie: Programme 80 Zeichen
+ * (`PLAN_LIMITS.nameLength`), Rezepte 100 (`FOOD_NAME_MAX`). Die Kopie hält die kleinere ein (A-04).
+ */
+export const CONFLICT_NAME_MAX = 80;
+
+/**
+ * Name einer Konfliktkopie, z. B. „Push A (Konflikt 19.10.2026)“ (D-208). Ein langer Name wird so
+ * gekürzt, dass die Kopie gültig bleibt; vorher war sie ab 59 Zeichen ungültig und unsichtbar (A-04).
+ */
 export function conflictName(name: unknown, now: Date): string {
   const day = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getFullYear())}`;
+  const suffix = ` (Konflikt ${day})`;
   const base = typeof name === 'string' && name.trim() ? name.trim() : 'Ohne Namen';
-  return `${base.slice(0, 70)} (Konflikt ${day})`;
+  return `${base.slice(0, CONFLICT_NAME_MAX - suffix.length).trimEnd()}${suffix}`;
 }
 
 /**

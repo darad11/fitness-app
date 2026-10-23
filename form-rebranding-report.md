@@ -213,6 +213,7 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Bewusst so gelassen: Beim Scrollen läuft der Inhalt wie in jeder iOS-App unter die Unschärfe, auch das Logo, kurz bevor es aus dem Bild geht. Eine feste Kopfzeile hätte das verhindert, aber dauerhaft 88 pt Höhe gekostet; am iPhone quer gibt es keinen Abstand, weil dort die Statusleiste fehlt.
 - Tests: neu `e2e/header-logo.spec.ts` (dreifache Pixeldichte, 360, 390, 768 pt, oben, angescrollt, gescrollt und zurück; dazu der Abstand mit gesetztem Token für Logo, „Später“ und klebenden Kopf) und `src/app/edge-clear.test.ts`; angepasst `e2e/shell.spec.ts` (Breite 106).
 - Dokumente: `docs/decisions.md` (D-332), `docs/known-limitations.md` (Unschärfe am oberen Rand), `docs/testing.md` (T-IPH-M0 Schritt 6, Protokoll), `brand-tokens.md` (Abschnitt 2.6).
+- Nachtrag aus der CI: Der neue Test schlug im WebKit-Projekt „iPhone 15“ fehl, weil die App dort im Safari-Tab den Hinweis zur Installation über der Kopfzeile zeigt; das ist richtig so (AK-PWA-04). Der Test blendet ihn jetzt zuerst aus und wartet nach „Programm aktivieren“, bis das Programm gespeichert ist. Nur `e2e/header-logo.spec.ts` geändert, die App nicht.
 
 ### F6 §2 Makro-Ring V2
 
@@ -414,6 +415,8 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §6: `pnpm test` | 23.10.2026 | 888 Tests in 105 Dateien bestanden |
 | F6 §6: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
 | F6 §6: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 299 bestanden, 39 übersprungen, 0 fehlgeschlagen (7,8 min) |
+| F6 §1, Befund der CI: `e2e/header-logo.spec.ts` in WebKit | 23.10.2026 | In der CI zu `6f99fc6`, `8271179`, `3f5b833`, `4852076` und `6f77dbe` jeweils dieselben 4 Fälle im Projekt `webkit-mobile` (iPhone 15) fehlgeschlagen; Chromium sowie Lint, Typen, Unit-Tests, Dokumente und Build bestanden (WebKit zu `6f77dbe`: 286 bestanden, 42 übersprungen, 4 fehlgeschlagen). Meldungen: „/heute bei 0: y 142.1875“ bzw. „y 181.375“ (Logo nicht auf ganzen Gerätepixeln) und „Expected: 14, Received: 181.375“. Ursache im Test, nicht in der App: Mit der Kennung eines iPhones zeigt die App im Safari-Tab den Hinweis zur Installation über der Kopfzeile (AK-PWA-04), das Logo rückt um dessen Höhe nach unten. Lokal nachgestellt mit Chromium und der Kennung des iPhone 15: alter Test 4 von 4 fehlgeschlagen, mit denselben Werten |
+| F6 §1, Korrektur des Tests | 23.10.2026 | Bei iPhone- und iPad-Kennung wartet der Test auf den Hinweis und blendet ihn einmal aus; die erwartete Lage des Logos rechnet den Abstand ein, den die Seite selbst anwendet. Danach zeigte sich im selben Test ein Wettlauf (1 von 6 Läufen, „Expected: 0, Received: 24“): Der Seitenwechsel nach „Programm aktivieren“ kam dem Speichern zuvor, „Heute“ startete ein freies Training ohne Übungen, und die Seite war zum Scrollen zu kurz. Der Test wartet jetzt, bis der Knopf verschwindet, und scrollt erneut, bis der Kopf oben klebt. Mit iPhone-Kennung 10 Wiederholungen: 40 bestanden; Desktop und Pixel 7 mit 5 Wiederholungen: 25 bestanden, 15 übersprungen. In WebKit selbst prüft das die CI |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

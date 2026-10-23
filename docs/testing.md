@@ -1054,3 +1054,16 @@ Startfläche beim Kaltstart mindestens 1,0 s ab dem ersten Bild, dann 300 ms Aus
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 299 bestanden, 39 übersprungen, 0 fehlgeschlagen (7,8 min) |
 | `pnpm check:bundle` | 237,6 KB von 250 KB |
 | Am Gerät | offen: T-IPH-M0 Schritt 5 (Kaltstart der installierten App) |
+
+### F6 §1 Nachtrag: Logo-Test in WebKit · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Befund der CI zu `e2e/header-logo.spec.ts` im Projekt `webkit-mobile` (D-332). Nur der Test geändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `6f99fc6`, `8271179`, `3f5b833`, `4852076`, `6f77dbe` | jeweils dieselben 4 Fälle in `webkit-mobile` fehlgeschlagen („y 142.1875“, „y 181.375“, „Expected: 14, Received: 181.375“), alle anderen Jobs bestanden |
+| Ursache | Mit der Kennung eines iPhones zeigt die App im Safari-Tab den Hinweis zur Installation über der Kopfzeile (AK-PWA-04) |
+| Chromium mit der Kennung des iPhone 15, alter Test | 4 von 4 fehlgeschlagen, dieselben Werte wie in der CI |
+| derselbe Aufbau, neuer Test | erst 1 von 6 Läufen fehlgeschlagen (Seitenwechsel vor dem Speichern von „Programm aktivieren“, freies Training ohne Übungen); nach der Korrektur 10 Wiederholungen: 40 bestanden |
+| `pnpm exec playwright test e2e/header-logo.spec.ts --repeat-each=5` (Desktop, Pixel 7) | 25 bestanden, 15 übersprungen |
+| WebKit | prüft die CI |

@@ -88,6 +88,35 @@ function inspect(page: Page) {
   });
 }
 
+/**
+ * Im Safari-Tab von iPhone und iPad (im WebKit-Projekt „iPhone 15“) steht über der Kopfzeile der
+ * Hinweis zur Installation (AK-PWA-04) und schiebt das Logo um seine Höhe nach unten. Er erscheint
+ * erst, wenn die Datenbank gelesen ist; deshalb nach der Gerätekennung entscheiden (wie
+ * `detectPlatform`) und auf ihn warten. Wie im Alltag einmal ausblenden; das bleibt gespeichert.
+ */
+async function dismissInstallHint(page: Page) {
+  const ios = await page.evaluate(
+    () =>
+      /iPhone|iPod|iPad/.test(navigator.userAgent) ||
+      (navigator.userAgent.includes('Macintosh') && navigator.maxTouchPoints > 1),
+  );
+  if (!ios) return;
+  const hide = page.getByRole('button', { name: 'Ausblenden' });
+  await hide.click();
+  await expect(hide).toHaveCount(0);
+}
+
+/** Abstand unter der Unschärfe in px, wie ihn die Seite gerade anwendet (0 oder 32). */
+const edgeClear = (page: Page) =>
+  page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.height = 'var(--spacing-edge-clear)';
+    document.body.append(probe);
+    const px = probe.getBoundingClientRect().height;
+    probe.remove();
+    return px;
+  });
+
 /** Auf ganzen Gerätepixeln (1/3 px bei dreifacher Dichte). */
 function onDevicePixels(value: number, dpr: number) {
   return Math.abs(value * dpr - Math.round(value * dpr)) < 0.01;
@@ -100,6 +129,8 @@ for (const width of [360, 390, 768]) {
   }) => {
     test.skip(!isMobile && width < 768, 'schmale Breiten im Handy-Projekt');
     await page.setViewportSize({ width, height: 844 });
+    await openPage(page, '/heute');
+    await dismissInstallHint(page);
     for (const path of ['/heute', '/training', '/ernaehrung']) {
       await openPage(page, path);
       await expect(page.locator('main a[href="/heute"] img')).toBeVisible();
@@ -134,10 +165,13 @@ test('Unter der Unschärfe von iOS: Logo, „Später“ und der Kopf im Training
     page.evaluate((v) => {
       document.documentElement.style.setProperty('--spacing-edge-clear', v);
     }, value);
-  // Ohne Abstand (Chromium, Mac): Logo 14 px unter dem oberen Rand, wie bisher.
+  // Mit dem Abstand, den die Seite selbst anwendet: in Chromium und am Mac keiner, also 14 px wie
+  // bisher; WebKit nimmt ihn, wenn es `-webkit-touch-callout` kennt.
   await openPage(page, '/heute');
+  await dismissInstallHint(page);
+  const initial = await edgeClear(page);
   const before = await inspect(page);
-  expect(before.top).toBe(14);
+  expect(before.top).toBe(14 + initial);
   // Mit dem Abstand von iPhone und iPad (2 rem): unter der Unschärfe.
   await clear('2rem');
   const after = await inspect(page);
@@ -157,7 +191,11 @@ test('Unter der Unschärfe von iOS: Logo, „Später“ und der Kopf im Training
   // Kopf im Training, auch wenn er beim Scrollen oben klebt: Schrift unter der Unschärfe,
   // die Fläche des Kopfes reicht bis an den oberen Rand.
   await openPage(page, '/training/vorlagen/compound_ab_4');
-  await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+  const activate = page.getByRole('button', { name: 'Programm aktivieren' });
+  await activate.click();
+  // Der Knopf verschwindet erst, wenn das Programm gespeichert ist; ein früherer Seitenwechsel
+  // kann dem Speichern zuvorkommen, dann startet „Heute“ ein freies Training ohne Übungen.
+  await expect(activate).toHaveCount(0);
   await openPage(page, '/heute');
   await page.getByRole('button', { name: 'Training starten' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\//);
@@ -166,10 +204,15 @@ test('Unter der Unschärfe von iOS: Logo, „Später“ und der Kopf im Training
   const head = page.locator('header').filter({ has: page.getByRole('heading', { level: 1 }) });
   const restTop = (await page.getByRole('heading', { level: 1 }).boundingBox())?.y ?? 0;
   expect(restTop).toBeGreaterThanOrEqual(EDGE_BLUR);
-  await page.evaluate(() => {
-    window.scrollTo(0, 600);
-  });
-  await expect.poll(async () => (await head.boundingBox())?.y).toBe(0);
+  // Erneut scrollen, bis der Kopf oben klebt; solange die Sätze noch fehlen, ist die Seite zu kurz.
+  await expect
+    .poll(async () => {
+      await page.evaluate(() => {
+        window.scrollTo(0, 600);
+      });
+      return (await head.boundingBox())?.y;
+    })
+    .toBe(0);
   const eyebrow = await head.locator('p.eyebrow').boundingBox();
   expect(eyebrow?.y ?? 0, 'Programm und Woche unter der Unschärfe').toBeGreaterThanOrEqual(
     EDGE_BLUR,

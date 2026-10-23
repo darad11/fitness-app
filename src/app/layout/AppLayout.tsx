@@ -31,7 +31,8 @@ export function AppLayout() {
       {fullscreen ? null : <Sidebar />}
       <div
         className={cn(
-          'flex min-h-dvh min-w-0 flex-1 flex-col pt-[env(safe-area-inset-top)] lg:pt-0',
+          // Oben Platz für Statusleiste und die Unschärfe von iOS am oberen Rand (D-332).
+          'flex min-h-dvh min-w-0 flex-1 flex-col pt-[calc(env(safe-area-inset-top)+var(--spacing-edge-clear))] lg:pt-edge-clear',
           !fullscreen && 'app-content',
         )}
       >
@@ -43,14 +44,14 @@ export function AppLayout() {
         >
           {fullscreen ? null : (
             // Kopfzeile (D-286, D-310, D-325): grüne Kachel mit F plus Wortmarke als Bild aus
-            // public/brand, 28 px hoch, Tippfläche 44 px; am Desktop zeigt die Seitenleiste das
-            // Logo. Führt zu „Heute“.
+            // public/brand, 106 × 28 px wie die Datei (ganze Pixel, D-332), Tippfläche 44 px; am
+            // Desktop zeigt die Seitenleiste das Logo. Führt zu „Heute“.
             <div className="-mt-6 mb-2 flex h-header items-center lg:hidden">
               <Link to="/heute" className="flex min-h-touch items-center rounded-input">
                 <img
                   src="/brand/logo-kopfzeile-kompakt.svg"
                   alt={t.app.brandLink}
-                  width={105}
+                  width={106}
                   height={28}
                   className="h-logo w-auto"
                 />

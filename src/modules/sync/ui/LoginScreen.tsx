@@ -67,7 +67,7 @@ export function LoginScreen({
         <Button
           variant="secondary"
           onClick={onLater}
-          className="absolute top-[calc(env(safe-area-inset-top)+1rem)] left-page"
+          className="absolute top-[calc(env(safe-area-inset-top)+var(--spacing-edge-clear)+1rem)] left-page"
         >
           <X aria-hidden="true" className="size-4" />
           {ts.later}

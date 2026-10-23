@@ -123,8 +123,8 @@ test('Logo am Handy auf jeder Seite links oben, grüne Kachel 28 px hoch, führt
     await expect(img).toHaveAttribute('src', '/brand/logo-kopfzeile-kompakt.svg');
     const image = await img.boundingBox();
     expect(Math.round(image?.height ?? 0)).toBe(28);
-    // Breite aus dem Seitenverhältnis der Datei: Kachel 28, Abstand 10, Wortmarke etwa 67,5.
-    expect(Math.round(image?.width ?? 0)).toBe(105);
+    // Breite wie die Datei: Kachel 28, Abstand 10, Wortmarke etwa 67,5, auf ganze Pixel (D-332).
+    expect(image?.width).toBe(106);
     const logo = await brand.boundingBox();
     expect(logo?.height ?? 0).toBeGreaterThanOrEqual(44);
     const title = await page.getByRole('heading', { level: 1 }).boundingBox();

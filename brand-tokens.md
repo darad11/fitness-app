@@ -128,7 +128,8 @@ Alle Werte stehen als Tokens in `src/app/styles.css` (`@theme`); Tailwind erzeug
 |---|---|---|---|
 | Seitenrand Handy / Tablet / Desktop | 16 / 24 / 32 px | 20 / 24 / 32 px | `--spacing-page`, `-page-md`, `-page-lg` |
 | Innenabstand Karte / Abstand zwischen Karten | 20 / 16 px | 16 / 12 px | `--spacing-card`, `--spacing-stack` |
-| Kopfzeile / Logo | 56 / 30 px | 56 / 28 px (Kachel 28 mit Radius 22,5 %, Versalhöhe der Wortmarke 12,5, Abstand 10; F5, D-325) | `--spacing-header`, `--spacing-logo` |
+| Kopfzeile / Logo | 56 / 30 px | 56 / 28 px (Kachel 28 mit Radius 22,5 %, Versalhöhe der Wortmarke 12,5, Abstand 10; F5, D-325); Datei und Anzeige 106 × 28 px, ganze Pixel (F6, D-332) | `--spacing-header`, `--spacing-logo` |
+| Abstand unter der Unschärfe von iOS am oberen Rand | – | 0, auf iPhone und iPad (ab 500 px Höhe) 2 rem; Logo dann bei 46 pt (F6, D-332) | `--spacing-edge-clear` |
 | Tab-Leiste (ohne Safe-Area) | 64 px | 64 px | `--spacing-tabbar` |
 | Eingabe / Primärknopf / Chip / Symbol-Kachel / Tippfläche | 48 / 48 / – / – / 44 px | 48 / 52 / 36 / 40 / 44 px | `--spacing-control`, `-button`, `-chip`, `-tile`, `-touch` |
 | Radius Karte / Knopf / Eingabe / Kachel / Sheet / Chip | 20 / 999 / 12 / – / 28 / 999 px | 20 / 14 / 12 / 12 / 24 / 999 px | `--radius-card`, `-button`, `-input`, `-tile`, `-sheet`, `-pill` |

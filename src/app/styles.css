@@ -47,6 +47,9 @@
      Chip 36, Symbol-Kachel 40, kleinste Tippfläche 44 px. */
   --spacing-header: 3.5rem;
   --spacing-logo: 1.75rem;
+  /* Abstand unter der Unschärfe, die iOS über den oberen Rand legt (F6, D-332): sonst 0, auf
+     iPhone und iPad 2 rem (Regel `--spacing-edge-clear` weiter unten). */
+  --spacing-edge-clear: 0rem;
   --spacing-tabbar: 4rem;
   --spacing-control: 3rem;
   --spacing-button: 3.25rem;
@@ -227,6 +230,22 @@
     min-width: 0;
     max-width: 100%;
   }
+
+  /*
+   * Unschärfe am oberen Rand (F6, D-332): iOS ab Version 26 legt über die obersten rund 40 pt der
+   * Seite eine weiche Unschärfe (Liquid Glass), im Safari-Tab wie in der installierten App; keine
+   * Einstellung der Seite schaltet sie ab. Was oben ruht (Logo der Kopfzeile, Hinweisleisten,
+   * „Später“ der Anmeldung, der Kopf im Training), beginnt auf iPhone und iPad deshalb 2 rem
+   * tiefer. Am iPhone quer gibt es keine Statusleiste und keinen Abstand. `-webkit-touch-callout`
+   * kennt nur WebKit auf iPhone und iPad.
+   */
+  @supports (-webkit-touch-callout: none) {
+    @media (min-height: 31.25rem) {
+      :root {
+        --spacing-edge-clear: 2rem;
+      }
+    }
+  }
   @supports (-webkit-touch-callout: none) {
     input:is([type='date'], [type='time'], [type='datetime-local']) {
       -webkit-appearance: none;
@@ -314,7 +333,10 @@
     color: var(--fg);
   }
   .login-body {
-    padding-top: max(calc(env(safe-area-inset-top) + 4.5rem), calc(30dvh - 2rem));
+    padding-top: max(
+      calc(env(safe-area-inset-top) + var(--spacing-edge-clear) + 4.5rem),
+      calc(30dvh - 2rem)
+    );
   }
   /* Logo der Anmeldung (handover-markenassets.md Paket C): 64 % der Breite, höchstens 280 px. */
   .brand-logo {

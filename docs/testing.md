@@ -150,6 +150,7 @@ Jedes Protokoll wird mit Datum, Gerät, Betriebssystemversion, App-Version und E
 3. Flugmodus ein, App beenden und neu starten. Erwartung: Alle Bereiche öffnen sich ohne Fehler.
 4. Nach einer zweiten Auslieferung App öffnen. Erwartung: Hinweis „Neue Version verfügbar"; Wechsel erst nach Bestätigung.
 5. Startbild (D-317): Ablauf (D-329): zuerst an der Vorschau von Vercel zum Pull Request (eigene Adresse, eigene App), nach dem Merge an der Produktivadresse. Die Daten in der App sind Testdaten; dass iOS beim Entfernen die Daten der installierten App löschen kann, spielt hier keine Rolle. Für echte Nutzer gilt die Warnung weiter, bis sich ein Export wieder einspielen lässt (`audit-report.md` A-14). App vom Home-Bildschirm entfernen und über „Teilen › Zum Home-Bildschirm“ neu hinzufügen (iOS lädt Name, Icon und Startbilder nur dabei), App beenden und neu starten, einmal hochkant und einmal quer. Erwartung: Startbild C3 (D-325): grünes F über der Wortmarke FORM, Mitte leicht über der Bildschirmmitte, unten „FORM YOURSELF.“; kein weißer Blitz; die Startfläche der App übernimmt ohne Sprung und blendet in etwa 250 ms zu „Heute“ über, ohne hellen Zwischenschritt; der Start dauert nicht spürbar länger als vorher. Zu notieren: iPhone-Modell.
+6. Logo der Kopfzeile (D-332): „Heute“ im Safari-Tab der Vorschau und in der installierten App öffnen, oben und nach kurzem Scrollen. Erwartung: Kachel und Wortmarke gestochen scharf, kein Schleier über dem Logo; über der Kopfzeile ein ruhiger Abstand von etwa 2 Fingerbreiten unter der Statusleiste. Zu notieren: Wirkt der Abstand zu groß, ob das Logo auch mit weniger Abstand scharf bleibt (Wert `--spacing-edge-clear`).
 
 ### T-IPH-M1 · iPhone, Training unter Alltagsbedingungen
 
@@ -972,3 +973,16 @@ Breiten 360, 390 und 768 pt, Korrekturen für schmale Breiten, Test „Seitenend
 | CI zu `61d7a52` | E2E Chromium und WebKit je 4 fehlgeschlagen (`program-list.spec.ts` 390 und 768 pt „Etikett neben dem Titel“, `narrow-layout.spec.ts` 360 pt „Meine Küche in einer Zeile“): Auf dem CI-Rechner fehlt Inter, die Systemschrift ist breiter. Korrigiert: Spalten der Knöpfe `minmax(max-content, 1fr)`, Test ohne die schriftabhängige Erwartung; mit erzwungener „DejaVu Sans“ lokal nachgestellt (vorher 1 fehlgeschlagen wie in der CI, danach 20 bestanden) |
 | CI zu `81f230e` | Lint bis Build grün; E2E Chromium 275 bestanden, 29 übersprungen; E2E WebKit 268 bestanden, 35 übersprungen, 1 erst im zweiten Versuch (`nutrition-ring.spec.ts`, „TypeError: Importing a module script failed.“ beim Seitenwechsel; vermerkt bei E-16) |
 
+### F6 §1 Logo der Kopfzeile · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Logo in Anzeigegröße auf ganzen Pixeln, Abstand unter der Unschärfe von iOS am oberen Rand (D-332). Auftrag: `docs/prompts/F6-feinschliff-vor-dem-merge.md`.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ursachensuche (Logo, Vorfahren, Pseudo-Elemente, überlagernde Flächen, Glas) | In der App nichts am Logo. Ursachen: die Unschärfe von iOS über den obersten rund 40 pt (das Logo lag 14 bis 42 pt unter dem Rand) und die Datei mit 5273 × 1400 als Größe (Anzeige 105,46 px breit) |
+| `pnpm exec playwright test e2e/header-logo.spec.ts e2e/shell.spec.ts` | 20 bestanden, 4 übersprungen. Gegenprobe gegen `eee9bf9` (Handy): 4 fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 862 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 280 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
+| `pnpm check:bundle` | 236,3 KB von 250 KB |
+| Gerätetest | steht aus: T-IPH-M0 Schritt 6 (Safari-Tab und installierte App) |

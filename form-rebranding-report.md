@@ -35,6 +35,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §7a Entscheidungen | Serie bleibt entfernt; Gerätetest des Startbilds zuerst an der Vorschau, die Daten sind Testdaten; kein Push nach langer Pause; zwei neue P2-Punkte (Wiederherstellen aus dem Export, Ursache des Offline-Tests) | D-329 | festgehalten |
 | F5 §8 Nächste Schritte | Nährstoffe mit Referenzwerten, Grundnahrungsmittel und Suche, eigene Workouts, Ausführungsanleitungen als Punkte 58 bis 61 im Plan; nicht begonnen | D-330 | eingetragen |
 | F5 §9 Abschluss | Prüfung auf 360, 390 und 768 pt (39 Ansichten), fünf Korrekturen für schmale Breiten, Test „Seitenende“ mit modalem Dialog, Screenshots, Übersicht und Archiv erneuert | D-331 | umgesetzt |
+| F6 §1 Logo der Kopfzeile | Ursache der Unschärfe: iOS legt über die obersten rund 40 pt eine eigene Unschärfe, das Logo lag darin; auf iPhone und iPad beginnt alles, was oben ruht, 2 rem tiefer (Logo bei 46 pt). Dazu Logo-Datei in Anzeigegröße 106 × 28 auf ganzen Pixeln; in der App kein Filter, kein Glas und nichts über dem Logo | D-332 | umgesetzt; Wirkung am iPhone nur am Gerät prüfbar (T-IPH-M0 Schritt 6) |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -196,6 +197,18 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Screenshots: `node tools/screenshots.mjs komponenten` und `screens` erneuert (18 Bilder geändert, darunter Heute, Training, Programme, Ernährung, aktives Workout, Ring), danach `node tools/screens-overview.mjs` („docs/screens/uebersicht.png: 28 Bilder“, „docs/screens.zip: 29 Bilder“).
 - Dokumente: `docs/decisions.md` (D-331), `docs/design-system.md`.
 
+### F6 §1 Logo der Kopfzeile
+
+- Auftrag: `docs/prompts/F6-feinschliff-vor-dem-merge.md` (gilt für alle Abschnitte von F6).
+- Geprüft: Logo, alle Vorfahren bis `html` und deren `::before`/`::after` auf `filter`, `backdrop-filter`, Masken, Deckkraft, Transformationen (auch `translate`, `scale`, `rotate`, `zoom`) und Mischmodus; was an neun Punkten über dem Logo liegt; welche Flächen der Seite Glas haben (nur die Tab-Leiste, unten). Ergebnis: in der App nichts davon am Logo.
+- Ursachen:
+  - iOS ab Version 26 legt über die obersten rund 40 pt einer Seite eine weiche Unschärfe (Liquid Glass), im Safari-Tab wie in der installierten App. Sie ist Teil des Systems und lässt sich von der Seite aus nicht abschalten; so berichten es mehrere Web-Apps, Apple dokumentiert es nicht. Das Logo lag 14 bis 42 pt unter dem oberen Rand, also mitten darin. Nachstellen lässt sich das hier nicht.
+  - Die Logo-Datei hatte 5273 × 1400 als Größe; aus ihrem Seitenverhältnis ergab sich eine Breite von 105,46 px. Das ist kein Rasterbild, unscharf wird ein SVG dadurch nicht, aber die rechte Kante lag nicht auf einem ganzen Pixel.
+- Geändert: `src/app/styles.css` (neues Token `--spacing-edge-clear`, 0 und auf iPhone und iPad ab 500 px Höhe 2 rem; Abstand der Anmeldung), `src/app/layout/AppLayout.tsx` (Inhaltsspalte mit dem Abstand, Logo 106 × 28), `Sidebar.tsx` (Abstand oben, Logo 106 breit), `sync/ui/LoginScreen.tsx` („Später“), `training/ui/player/SessionPage.tsx` (klebender Kopf: Fläche bis an den Rand, Schrift unter der Unschärfe), `tools/brand-compact.mjs` (Anzeigegröße in den Dateien), `public/brand/logo-kopfzeile-kompakt.svg` (106 × 28, `viewBox` 5300 × 1400) und `kachel-kompakt.svg` (28 × 28), beide nur in der ersten Zeile.
+- Bewusst so gelassen: Beim Scrollen läuft der Inhalt wie in jeder iOS-App unter die Unschärfe, auch das Logo, kurz bevor es aus dem Bild geht. Eine feste Kopfzeile hätte das verhindert, aber dauerhaft 88 pt Höhe gekostet; am iPhone quer gibt es keinen Abstand, weil dort die Statusleiste fehlt.
+- Tests: neu `e2e/header-logo.spec.ts` (dreifache Pixeldichte, 360, 390, 768 pt, oben, angescrollt, gescrollt und zurück; dazu der Abstand mit gesetztem Token für Logo, „Später“ und klebenden Kopf) und `src/app/edge-clear.test.ts`; angepasst `e2e/shell.spec.ts` (Breite 106).
+- Dokumente: `docs/decisions.md` (D-332), `docs/known-limitations.md` (Unschärfe am oberen Rand), `docs/testing.md` (T-IPH-M0 Schritt 6, Protokoll), `brand-tokens.md` (Abschnitt 2.6).
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -308,6 +321,11 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §9, Korrektur nach der CI: Nachstellung mit erzwungener Schrift „DejaVu Sans“ (vorübergehend, nicht im Repository) | 23.10.2026 | Am Stand `61d7a52`: „Meine Küche in einer Zeile“ (360 pt) fehlgeschlagen wie in der CI, 19 bestanden. Nach der Korrektur (Spalten `minmax(max-content, 1fr)`, Test ohne die schriftabhängige Erwartung „Etikett neben dem Titel“): `e2e/narrow-layout.spec.ts` und `e2e/program-list.spec.ts` 20 bestanden, 8 übersprungen; ohne erzwungene Schrift ebenso |
 | CI zu F5 §9, Korrektur (`81f230e`) | 23.10.2026 | Lint bis Build grün; E2E Chromium: 275 bestanden, 29 übersprungen (4,2 min); E2E WebKit: 268 bestanden, 35 übersprungen, 1 erst im zweiten Versuch (7,3 min): `nutrition-ring.spec.ts` „Ring mit Makros: Spur bei 0 …“ mit den Konsolenfehlern „TypeError: Importing a module script failed.“ und „React Router caught the following error during render TypeError: Importing a module script failed.“. Beim Seitenwechsel ließ sich ein Modul der App nicht laden, der Ring selbst war nicht betroffen; dieselbe Art Fehler wie beim Offline-Test (E-16) |
 | CI zu F5 §1 bis §8 (GitHub Actions) | 23.10.2026 | §1 (`43fc44f`) grün; §3 (`d0bc709`) grün, WebKit 221 bestanden, 15 übersprungen; §2, §4, §5, §7 und §7a abgebrochen, weil der nächste Push kam; §6 (`687d0bf`) rot: WebKit 1 fehlgeschlagen (`marks.spec.ts` „Seitenende …“ auf `/mehr/synchronisierung`, in beiden Versuchen; behoben in F5 §9), 1 erst im zweiten Versuch bestanden (`tabbar.spec.ts` „Ziehen mit der Linse …“), 255 bestanden; §8 (`273d608`): Lint bis Build und E2E Chromium grün, WebKit abgebrochen, weil der nächste Push kam |
+| F6 §1: `e2e/header-logo.spec.ts` (neu), `e2e/shell.spec.ts` | 23.10.2026 | 20 bestanden, 4 übersprungen (schmale Breiten und Abstand nur im Handy-Projekt). Gegenprobe gegen `eee9bf9` mit dem neuen Test (Handy): 4 fehlgeschlagen, je Breite „Datei in Anzeigegröße“ (5273 × 1400 statt 106 × 28) und „Expected: 46, Received: 14“ (kein Abstand) |
+| F6 §1: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund (erster Lauf: `lint` meldete „Unsafe assignment of an `any` value“ im neuen `edge-clear.test.ts`, behoben) |
+| F6 §1: `pnpm test` | 23.10.2026 | 862 Tests in 105 Dateien bestanden |
+| F6 §1: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,3 KB von 250 KB (gzip) |
+| F6 §1: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 280 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

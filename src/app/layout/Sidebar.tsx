@@ -14,7 +14,7 @@ export function Sidebar() {
   return (
     <nav
       aria-label={t.nav.label}
-      className="sidebar fixed top-3 bottom-3 left-3 z-30 hidden flex-col overflow-hidden px-3 pt-4 pb-4 lg:flex"
+      className="sidebar fixed top-[calc(0.75rem+var(--spacing-edge-clear))] bottom-3 left-3 z-30 hidden flex-col overflow-hidden px-3 pt-4 pb-4 lg:flex"
     >
       {/* Eingeklappt nur die grüne Kachel, mittig über den Symbolen; ausgeklappt blendet darüber
           das ganze Logo ein, dessen Kachel genau auf dieser liegt (D-310, D-325). */}
@@ -29,7 +29,7 @@ export function Sidebar() {
         <img
           src="/brand/logo-kopfzeile-kompakt.svg"
           alt={t.app.name}
-          width={105}
+          width={106}
           height={28}
           className="sidebar-label absolute left-2.5 h-logo w-auto"
         />

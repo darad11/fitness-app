@@ -10,6 +10,10 @@
  * Wortmarke 0,625-fach (Versalhöhe 625), 500 rechts der Kachel, Oberkante bei 387,5, in `--fg`.
  * In der Kopfzeile ist die Kachel 28 pt hoch: Versalhöhe 12,5 pt, Abstand 10 pt.
  *
+ * Ganze Pixel (F6, D-332): Die Dateien tragen ihre Anzeigegröße (Kachel 28 × 28, Logo 106 × 28);
+ * die Breite des Logos ist auf den nächsten ganzen Pixel aufgerundet, rechts bleibt ein halber
+ * Pixel frei. So gibt es keine Skalierung mit Bruchteilen von Pixeln (vorher 105,46 px breit).
+ *
  * Schreibt `public/brand/logo-kopfzeile-kompakt.svg` (Gruppen `kachel`, `symbol`, `wortmarke`)
  * und `public/brand/kachel-kompakt.svg` (nur Kachel und F, für die eingeklappte Seitenleiste).
  * Aufruf: `node tools/brand-compact.mjs` (braucht Chromium von Playwright für die Maße der Pfade).
@@ -28,6 +32,9 @@ const F_SHIFT_Y = 0.019 * TILE;
 const WORD_SCALE = 0.625;
 const WORD_GAP = 500;
 const WORD_TOP = 387.5;
+/** Anzeigegröße der Kachel in der Kopfzeile (`--spacing-logo`, 28 px). */
+const TILE_PX = 28;
+const UNITS_PER_PX = TILE / TILE_PX;
 
 function group(svg, id) {
   const match = new RegExp(`<g id="${id}"[^>]*>([\\s\\S]*?)</g>`).exec(svg);
@@ -73,17 +80,20 @@ try {
   // Wortmarke: linke Kante 500 rechts der Kachel, Oberkante bei 387,5.
   const wx = TILE + WORD_GAP - word.x * WORD_SCALE;
   const wy = WORD_TOP - word.y * WORD_SCALE;
-  const width = TILE + WORD_GAP + word.width * WORD_SCALE;
+  const drawn = TILE + WORD_GAP + word.width * WORD_SCALE;
+  // Auf ganze Pixel der Anzeigegröße aufrunden.
+  const widthPx = Math.ceil(drawn / UNITS_PER_PX - 1e-6);
+  const width = widthPx * UNITS_PER_PX;
 
   const tile = `<g id="kachel"><rect width="${String(TILE)}" height="${String(TILE)}" rx="${String(RADIUS)}" fill="${ACCENT}"/></g>`;
   const f0 = `<g id="symbol" fill="${ACCENT_FG}" transform="translate(${String(n(fx))} ${String(n(fy))}) scale(${String(F_SCALE)})">\n${symbol}\n</g>`;
   const w0 = `<g id="wortmarke" fill="${FG}" transform="translate(${String(n(wx))} ${String(n(wy))}) scale(${String(WORD_SCALE)})">\n${wordmark}\n</g>`;
-  const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${String(n(width))} ${String(TILE)}" width="${String(Math.round(width))}" height="${String(TILE)}">\n${tile}\n${f0}\n${w0}\n</svg>\n`;
-  const kachel = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${String(TILE)} ${String(TILE)}" width="${String(TILE)}" height="${String(TILE)}">\n${tile}\n${f0}\n</svg>\n`;
+  const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${String(n(width))} ${String(TILE)}" width="${String(widthPx)}" height="${String(TILE_PX)}">\n${tile}\n${f0}\n${w0}\n</svg>\n`;
+  const kachel = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${String(TILE)} ${String(TILE)}" width="${String(TILE_PX)}" height="${String(TILE_PX)}">\n${tile}\n${f0}\n</svg>\n`;
   await writeFile('public/brand/logo-kopfzeile-kompakt.svg', logo);
   await writeFile('public/brand/kachel-kompakt.svg', kachel);
   console.log(
-    `F ${String(n(f.width))} × ${String(n(f.height))}, Wortmarke ${String(n(word.width))} × ${String(n(word.height))}; Logo ${String(n(width))} × ${String(TILE)}`,
+    `F ${String(n(f.width))} × ${String(n(f.height))}, Wortmarke ${String(n(word.width))} × ${String(n(word.height))}; Logo ${String(n(drawn))} × ${String(TILE)}, Datei ${String(widthPx)} × ${String(TILE_PX)} px`,
   );
 } finally {
   await browser.close();

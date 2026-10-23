@@ -140,6 +140,86 @@ async function components() {
   await page.getByRole('button', { name: 'Meine Küche' }).click();
   await page.waitForTimeout(400);
   await shot(page.locator('dialog[open]'), 'sheet');
+
+  await markings();
+}
+
+/**
+ * Erledigt-Markierungen nebeneinander (F6 Abschnitt 3, D-334): „Verlauf“ und „Je Aufgabe“ auf
+ * „Tagesaufgaben“ und der Kalender der Auswertung, nach drei Tagen mit zwei Aufgaben. Eigener
+ * Kontext mit fester Uhr; die drei Ausschnitte stehen mit Titel auf einem Bild.
+ */
+async function markings() {
+  const ctx = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
+    locale: 'de-AT',
+    timezoneId: 'Europe/Vienna',
+    colorScheme: 'dark',
+    reducedMotion: 'reduce',
+  });
+  const tab = await ctx.newPage();
+  await tab.clock.install({ time: new Date('2026-10-20T09:00:00+02:00') });
+  const go = async (path) => {
+    await tab.goto(`${BASE}${path}`);
+    await tab.getByRole('heading', { level: 1 }).first().waitFor();
+    await tab.waitForTimeout(300);
+  };
+  await go('/heute/aufgaben');
+  for (const name of ['Lesen', 'Dehnen']) {
+    await tab.getByLabel('Name der Aufgabe').fill(name);
+    await tab.getByRole('button', { name: 'Aufgabe hinzufügen' }).click();
+    await tab.waitForTimeout(200);
+  }
+  for (const [day, names] of [
+    ['2026-10-20', ['Lesen']],
+    ['2026-10-21', ['Lesen', 'Dehnen']],
+    ['2026-10-22', ['Lesen', 'Dehnen']],
+  ]) {
+    await tab.clock.setSystemTime(new Date(`${day}T09:00:00+02:00`));
+    await go('/heute');
+    const card = tab.getByRole('region', { name: 'Tagesaufgaben' });
+    for (const name of names) {
+      await card.getByText(name, { exact: true }).click();
+      await tab.waitForTimeout(150);
+    }
+  }
+  await go('/heute/aufgaben');
+  // Zeiger weg vom Diagramm, sonst zeigt der Verlauf einen Hinweis zum Balken darunter.
+  await tab.mouse.move(0, 0);
+  const parts = [];
+  for (const [name, title] of [
+    ['Verlauf', 'Verlauf · 14 px'],
+    ['Je Aufgabe', 'Je Aufgabe · 16 px'],
+  ]) {
+    const region = tab.getByRole('region', { name });
+    await region.scrollIntoViewIfNeeded();
+    parts.push([title, await region.screenshot({ animations: 'disabled' })]);
+  }
+  // Dehnen: am 20. nicht erledigt, so zeigt der Kalender alle drei Arten (Zahl, Haken, heute).
+  await tab.getByRole('link', { name: 'Dehnen: Auswertung öffnen' }).click();
+  await tab.getByRole('heading', { level: 1, name: 'Dehnen' }).waitFor();
+  const calendar = tab.getByRole('region', { name: 'Kalender' });
+  await calendar.scrollIntoViewIfNeeded();
+  parts.push(['Kalender · 16 px', await calendar.screenshot({ animations: 'disabled' })]);
+  // Nebeneinander auf einem Bild, oben bündig, in der Größe der Aufnahme (doppelte Dichte).
+  const board = await ctx.newPage();
+  await board.setViewportSize({ width: 1200, height: 600 });
+  const figures = parts
+    .map(
+      ([title, png]) =>
+        `<figure><figcaption>${title}</figcaption><img src="data:image/png;base64,${png.toString('base64')}" width="350"></figure>`,
+    )
+    .join('');
+  await board.setContent(
+    `<!doctype html><html><body style="margin:0;background:#0c1219;font:600 15px system-ui;color:#aab2be"><main style="display:flex;gap:20px;align-items:flex-start;padding:20px">${figures}</main></body></html>`,
+  );
+  await board.addStyleTag({ content: 'figure{margin:0}figcaption{margin:0 0 8px 4px}' });
+  await board.locator('main').screenshot({ path: `${OUT}/markierungen.png` });
+  console.log(`${OUT}/markierungen.png`);
+  await ctx.close();
 }
 
 /** Bildschirm wie am Handy (390 × 844 pt). */

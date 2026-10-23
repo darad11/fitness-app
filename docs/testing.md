@@ -1000,3 +1000,16 @@ Makros Türkis, Blau, Violett überall gleich; Übergänge über 2 × 18° aus f
 | `pnpm test` | 105 Dateien, 876 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 282 bestanden, 32 übersprungen, 0 fehlgeschlagen (7,0 min) |
 | `pnpm check:bundle` | 236,3 KB von 250 KB |
+
+### F6 §3 Erledigt-Markierungen · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Eine Komponente `Mark` mit 14, 16 und 20 px; Verlauf, Je Aufgabe, Kalender und Abhakfeld (D-334).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm exec playwright test e2e/marks.spec.ts` | 9 bestanden, 1 übersprungen. Gegenprobe gegen `8271179` (Handy): 3 von 3 neuen Tests fehlgeschlagen |
+| Vergleichsbild `docs/screens/komponenten/markierungen.png` | Verlauf 14 px unter dem Balken, Je Aufgabe 16 px, Kalender 16 px mit Wochentagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 105 Dateien, 876 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 284 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
+| `pnpm check:bundle` | 236,5 KB von 250 KB |

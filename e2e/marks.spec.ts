@@ -1,7 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 import { APP_PAGES, expect, openPage, test } from './fixtures';
 
-/** Kopfzeile, Icons und Markierungen (F5, D-325): Regler-Symbol, Kalender, Erledigt-Kreise, Seitenende. */
+/** Kopfzeile, Icons und Markierungen (F5, D-325; F6, D-334): Regler-Symbol, Markierungen, Seitenende. */
 
 async function box(locator: Locator) {
   const b = await locator.boundingBox();
@@ -56,44 +56,70 @@ test('„Wochenziel“ zeigt dasselbe Regler-Symbol wie „Tagesaufgaben“, an 
   await expect(page.getByRole('heading', { level: 1, name: 'Profil und Ziele' })).toBeVisible();
 });
 
-test('Kalender der Auswertung: Zellen 28 px, Haken 14 px, dünner Lime-Rahmen nur heute, Legende dazu', async ({
-  page,
-}) => {
+/** Drei Tage: Lesen an allen erledigt, Dehnen am 21. und 22. (F6: Verlauf, Je Aufgabe, Kalender). */
+async function threeDays(page: Page) {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.clock.install({ time: new Date('2026-10-20T09:00:00+02:00') });
   await addTask(page, 'Lesen');
+  await addTask(page, 'Dehnen');
   for (const day of ['2026-10-20', '2026-10-21', '2026-10-22']) {
     await page.clock.setSystemTime(new Date(`${day}T09:00:00+02:00`));
     await openPage(page, '/heute');
     const card = page.getByRole('region', { name: 'Tagesaufgaben' });
-    await card.getByText('Lesen', { exact: true }).click();
-    await expect(card.getByRole('checkbox', { name: 'Lesen' })).toBeChecked();
+    const names = day === '2026-10-20' ? ['Lesen'] : ['Lesen', 'Dehnen'];
+    for (const name of names) {
+      await card.getByText(name, { exact: true }).click();
+      await expect(card.getByRole('checkbox', { name })).toBeChecked();
+    }
   }
+}
+
+const radius = (locator: Locator) =>
+  locator.evaluate((element) => getComputedStyle(element).borderRadius);
+const ring = (locator: Locator) =>
+  locator.evaluate((element) => getComputedStyle(element).boxShadow);
+
+/** Mitte einer Box. */
+const center = (b: { x: number; y: number; width: number; height: number }) => ({
+  x: b.x + b.width / 2,
+  y: b.y + b.height / 2,
+});
+
+test('Markierungen (F6): Kalender 16 px in sieben Spalten unter den Wochentagen, Haken 60 %, Legende 14 px', async ({
+  page,
+}) => {
+  await threeDays(page);
   await openPage(page, '/heute/aufgaben');
   await page.getByRole('link', { name: 'Lesen: Auswertung öffnen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Lesen' })).toBeVisible();
   const calendar = page.getByRole('list', { name: /Kalender/ });
   const cells = calendar.locator('li[title] > span[aria-hidden="true"]');
   await expect(cells).toHaveCount(3);
+  const boxes = [];
   for (let i = 0; i < 3; i += 1) {
     const cell = await box(cells.nth(i));
-    expect([Math.round(cell.width), Math.round(cell.height)]).toEqual([28, 28]);
+    boxes.push(cell);
+    expect([cell.width, cell.height]).toEqual([16, 16]);
+    // Haken 60 % der Markierung, Radius wie die Kachel (wächst mit der Größe).
     const check = await box(cells.nth(i).locator('svg'));
-    expect(Math.round(check.width)).toBe(14);
-    // Abgerundet wie die Kachel des App-Icons (22,5 %), nicht eckig.
-    expect(
-      await cells.nth(i).evaluate((element) => parseFloat(getComputedStyle(element).borderRadius)),
-    ).toBeGreaterThan(5);
+    expect(Math.abs(check.width - 9.6)).toBeLessThanOrEqual(0.5);
+    expect(await radius(cells.nth(i))).toBe('22.5%');
   }
-  const ring = (locator: Locator) =>
-    locator.evaluate((element) => getComputedStyle(element).boxShadow);
+  // Kompakte Spalten von 28 px, jede Markierung unter ihrem Wochentag (20.10.2026 ist ein Dienstag).
+  expect(center(boxes[1] ?? boxes[0]!).x - center(boxes[0]!).x).toBeCloseTo(28, 1);
+  const weekdays = calendar.locator('xpath=preceding-sibling::ul[1]/li');
+  await expect(weekdays).toHaveText(['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']);
+  for (let i = 0; i < 3; i += 1) {
+    const label = center(await box(weekdays.nth(i + 1)));
+    expect(Math.abs(label.x - center(boxes[i]!).x), 'unter dem Wochentag').toBeLessThanOrEqual(1);
+  }
   // Nur heute (22.10.) mit Rahmen: 1 px Lime mit 1 px Abstand.
   expect(await ring(cells.nth(0))).toBe('none');
   expect(await ring(cells.nth(1))).toBe('none');
   const today = await ring(cells.nth(2));
   expect(today).toContain('rgb(199, 255, 70) 0px 0px 0px 2px');
   expect(today).not.toContain('3px');
-  // Legende: Muster 14 px, auch für „heute“.
+  // Legende: Basisgröße 14 px, mittig zur Zeile, auch für „heute“.
   const legend = calendar.locator('xpath=following-sibling::ul[1]');
   await expect(legend.locator('li')).toHaveText([
     'erledigt',
@@ -102,14 +128,69 @@ test('Kalender der Auswertung: Zellen 28 px, Haken 14 px, dünner Lime-Rahmen nu
     'kein Eintrag',
     'heute',
   ]);
-  for (const swatch of await legend.locator('li > span').all()) {
-    const b = await box(swatch);
-    expect([Math.round(b.width), Math.round(b.height)]).toEqual([14, 14]);
+  for (const item of await legend.locator('li').all()) {
+    const swatch = await box(item.locator('span[aria-hidden="true"]'));
+    expect([swatch.width, swatch.height]).toEqual([14, 14]);
+    expect(Math.abs(center(swatch).y - center(await box(item)).y)).toBeLessThanOrEqual(1);
   }
   expect(await ring(legend.locator('li').last().locator('span'))).toContain('rgb(199, 255, 70)');
 });
 
-test('Erledigt-Kreis in Listen: 20 px, mittig zum Text, Zeile und Tippfläche unverändert', async ({
+test('Markierungen (F6): Je Aufgabe 16 px, Verlauf mit 14 px unter dem Balken statt grüner Balken', async ({
+  page,
+}) => {
+  await threeDays(page);
+  await openPage(page, '/heute/aufgaben');
+  // Je Aufgabe: eine Zeile je Aufgabe, Markierungen 16 px mit Haken, Legende 14 px.
+  const perTask = page.getByRole('region', { name: 'Je Aufgabe' });
+  const table = perTask.getByRole('table');
+  const done = table.locator('td span[aria-hidden="true"].bg-success');
+  await expect(done).toHaveCount(5);
+  for (const mark of await done.all()) {
+    const b = await box(mark);
+    expect([b.width, b.height]).toEqual([16, 16]);
+    expect(await radius(mark)).toBe('22.5%');
+    expect(Math.abs((await box(mark.locator('svg'))).width - 9.6)).toBeLessThanOrEqual(0.5);
+  }
+  const rowHeight = (await box(table.locator('tbody tr').first())).height;
+  expect(rowHeight, 'Zeile nicht höher als der Name').toBeLessThanOrEqual(26);
+  for (const swatch of await perTask.locator('ul[aria-hidden="true"] li > span').all()) {
+    const b = await box(swatch);
+    expect([b.width, b.height]).toEqual([14, 14]);
+  }
+  // Verlauf: alle Balken in Lime; „alles erledigt“ (21. und 22.10.) als Markierung 14 px mittig
+  // unter dem Balken des Tages, dazu dieselbe Markierung in der Legende.
+  const history = page.getByRole('region', { name: 'Verlauf' });
+  const success = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--success').trim(),
+  );
+  const bars = history.locator('.recharts-bar').first().locator('path.recharts-rectangle');
+  await expect(bars).toHaveCount(3);
+  for (const bar of await bars.all()) {
+    expect(await bar.getAttribute('fill')).toBe('var(--data-1)');
+  }
+  expect(success).not.toBe('');
+  const row = history.locator('[data-complete-row] > span');
+  await expect(row).toHaveCount(3);
+  const marks = [];
+  for (let i = 0; i < 3; i += 1) {
+    marks.push(await row.nth(i).locator('span[aria-hidden="true"]').count());
+  }
+  expect(marks, 'am 20. nur Lesen erledigt, am 21. und 22. beide').toEqual([0, 1, 1]);
+  for (const i of [1, 2]) {
+    const mark = await box(row.nth(i).locator('span[aria-hidden="true"]'));
+    expect([mark.width, mark.height]).toEqual([14, 14]);
+    const bar = await box(bars.nth(i));
+    expect(Math.abs(center(mark).x - center(bar).x), 'mittig unter dem Balken').toBeLessThanOrEqual(
+      1.5,
+    );
+  }
+  const hint = history.getByText('alles erledigt.');
+  const hintMark = await box(hint.locator('span[aria-hidden="true"]'));
+  expect([hintMark.width, hintMark.height]).toEqual([14, 14]);
+});
+
+test('Abhakfeld in Listen (F6): Quadrat 20 px, Haken 60 %, mittig zum Text, Tippfläche ab 44 px', async ({
   page,
 }) => {
   await addTask(page, 'Dehnen');
@@ -120,15 +201,14 @@ test('Erledigt-Kreis in Listen: 20 px, mittig zum Text, Zeile und Tippfläche un
   const text = row.getByText('Dehnen', { exact: true });
   for (const checked of [false, true]) {
     const [r, m, tx] = [await box(row), await box(mark), await box(text)];
-    expect([Math.round(m.width), Math.round(m.height)]).toEqual([20, 20]);
+    expect([m.width, m.height]).toEqual([20, 20]);
+    expect(await radius(mark)).toBe('22.5%');
     expect(Math.round(r.height)).toBe(48);
     expect(Math.abs(m.y + m.height / 2 - (tx.y + tx.height / 2))).toBeLessThanOrEqual(1);
     if (!checked) {
-      // Ein Tipp auf den Text hakt ab: die ganze Zeile ist die Tippfläche.
       await text.click();
       await expect(card.getByRole('checkbox', { name: 'Dehnen' })).toBeChecked();
-      await expect(mark.locator('svg')).toBeVisible();
-      expect(Math.round((await box(mark.locator('svg'))).width)).toBe(14);
+      expect(Math.abs((await box(mark.locator('svg'))).width - 12)).toBeLessThanOrEqual(0.5);
     }
   }
 
@@ -138,8 +218,10 @@ test('Erledigt-Kreis in Listen: 20 px, mittig zum Text, Zeile und Tippfläche un
   await field.press('Enter');
   const item = page.locator('label', { hasText: 'Haferflocken' });
   await expect(item).toBeVisible();
-  const itemMark = await box(item.locator('span[aria-hidden="true"]').first());
-  expect([Math.round(itemMark.width), Math.round(itemMark.height)]).toEqual([20, 20]);
+  const itemMark = item.locator('span[aria-hidden="true"]').first();
+  const b = await box(itemMark);
+  expect([b.width, b.height]).toEqual([20, 20]);
+  expect(await radius(itemMark)).toBe('22.5%');
   expect((await box(item)).height).toBeGreaterThanOrEqual(44);
 });
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
-import { Card, Meter, SegmentedControl, SelectField, StatTile } from '@/shared/ui';
+import { Card, Mark, Meter, SegmentedControl, SelectField, StatTile } from '@/shared/ui';
 import {
   dataStart,
   habitRate,
@@ -149,9 +149,18 @@ export function TaskStats({
 
       <Card title={ts.chartTitle}>
         <ProgressChart unit={chart.unit} buckets={chart.buckets} />
-        <p className="mt-2 text-sm text-muted">
-          {chart.unit === 'day' ? ts.chartHintDay : ts.chartHintWeek}
-        </p>
+        {chart.unit === 'day' ? (
+          // Legende wie die Markierung unter dem Verlauf, sauber an der Zeile ausgerichtet.
+          <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-sm text-muted">
+            <span>{ts.chartHintDay}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Mark state="done" />
+              {ts.chartComplete}
+            </span>
+          </p>
+        ) : (
+          <p className="mt-2 text-sm text-muted">{ts.chartHintWeek}</p>
+        )}
       </Card>
 
       <Card title={ts.perTask}>

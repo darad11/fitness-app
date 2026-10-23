@@ -56,6 +56,11 @@
   --spacing-chip: 2.25rem;
   --spacing-tile: 2.5rem;
   --spacing-touch: 2.75rem;
+  /* Erledigt-Markierungen (F6, D-334): Basis 14 px wie die Legende des Kalenders; „Je Aufgabe“
+     und Kalender 16 px; Abhakfeld in Listen 20 px. Radius `--radius-mark`, Haken 60 %. */
+  --spacing-mark: 0.875rem;
+  --spacing-mark-md: 1rem;
+  --spacing-mark-lg: 1.25rem;
   /* Seitenleiste ab 1024 px: eingeklappt nur Symbole, ausgeklappt mit Namen. */
   --spacing-sidebar: 4.5rem;
   --spacing-sidebar-open: 15rem;

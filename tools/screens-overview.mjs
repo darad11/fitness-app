@@ -51,6 +51,7 @@ const PARTS = [
   ['komponenten/chip-und-balken.png', 'Chip und Balken'],
   ['komponenten/ring.png', 'Ring'],
   ['komponenten/listenzeile.png', 'Listenzeile'],
+  ['komponenten/markierungen.png', 'Erledigt-Markierungen: Verlauf, Je Aufgabe, Kalender'],
   ['komponenten/eingabe.png', 'Eingabe'],
   ['komponenten/leerzustand.png', 'Leerzustand'],
   ['komponenten/toast.png', 'Toast'],

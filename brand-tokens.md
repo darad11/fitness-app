@@ -1,6 +1,6 @@
 # FORM · Design-Tokens der App
 
-Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326); F6 (Logo auf ganzen Pixeln, Abstand am oberen Rand: D-332; Makros Türkis, Blau, Violett: D-333) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326); F6 (Logo auf ganzen Pixeln, Abstand am oberen Rand: D-332; Makros Türkis, Blau, Violett: D-333; Erledigt-Markierungen: D-334) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
@@ -135,7 +135,8 @@ Alle Werte stehen als Tokens in `src/app/styles.css` (`@theme`); Tailwind erzeug
 | Tab-Leiste (ohne Safe-Area) | 64 px | 64 px | `--spacing-tabbar` |
 | Eingabe / Primärknopf / Chip / Symbol-Kachel / Tippfläche | 48 / 48 / – / – / 44 px | 48 / 52 / 36 / 40 / 44 px | `--spacing-control`, `-button`, `-chip`, `-tile`, `-touch` |
 | Radius Karte / Knopf / Eingabe / Kachel / Sheet / Chip | 20 / 999 / 12 / – / 28 / 999 px | 20 / 14 / 12 / 12 / 24 / 999 px | `--radius-card`, `-button`, `-input`, `-tile`, `-sheet`, `-pill` |
-| Radius Markierung (Kalenderzelle 28 px, Legende 14 px) | – (Klasse ohne Wirkung) | 22,5 % der Seite wie die Kachel des App-Icons (F5, D-325) | `--radius-mark` |
+| Radius Markierung | – (Klasse ohne Wirkung) | 22,5 % der Seite wie die Kachel des App-Icons (F5, D-325), wächst mit der Größe | `--radius-mark` |
+| Erledigt-Markierung (`Mark`) | Kreis 20 px, Felder 28 bis 40 px | 14 px Basis (Legenden, Verlauf), 16 px („Je Aufgabe“, Kalender), 20 px (Abhakfeld in Listen); Haken 60 % (F6, D-334) | `--spacing-mark`, `-mark-md`, `-mark-lg` |
 | Größte Inhaltsbreite | 1200 px (an fünf Stellen) | 75 rem (eine Stelle) | `--container-content` |
 | Dialog / Blatt ab Tablet / Menü / Tab-Leiste | 28 / 36 / 22 / 34 rem | gleich, als Tokens | `--container-dialog`, `-sheet`, `-menu`, `-tabbar` |
 | Logo der Anmeldung und von „Über die App“ (C) | App-Icon 72 px | 64 % der Breite, höchstens 280 px | `--container-logo` (`.brand-logo`) |
@@ -221,5 +222,5 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 Alle Bilder dunkel, Handy 390 × 844 pt, erzeugt mit `node tools/screenshots.mjs screens` bzw. `komponenten` aus der gebauten App mit Testdaten im frischen Browserprofil (nie aus echten Daten).
 
 - Screens in `docs/screens/`: `heute.png` (und `heute-ganz.png`), `training.png`, `training-programme.png`, `aktives-workout.png`, `abschluss.png`, `uebungsdetails.png`, `ernaehrung.png`, `fortschritt.png` (leer) und `fortschritt-mit-daten.png`, `mehr.png`, `anmeldung.png`, `ueber-die-app.png`, `rueckkehr-flow.png` und `rueckkehr-leichtes-training.png`, Tab-Leiste `tab-leiste-ausgeklappt.png` (dasselbe Bild wie `heute.png`: oben auf „Heute“ ist die Leiste ausgeklappt) und `tab-leiste-kreis.png`.
-- Komponenten in `docs/screens/komponenten/`: Knopf, Ring, Chip und Balken, Toast, Karte, Tab-Leiste ausgeklappt und als Kreis, Listenzeile, Eingabe, Leerzustand, Sheet.
+- Komponenten in `docs/screens/komponenten/`: Knopf, Ring, Chip und Balken, Toast, Karte, Tab-Leiste ausgeklappt und als Kreis, Listenzeile, Eingabe, Leerzustand, Sheet, Erledigt-Markierungen (`markierungen.png`: Verlauf, Je Aufgabe und Kalender nebeneinander, F6, D-334).
 - Für die Übergabe (D-321): `docs/screens/uebersicht.png` zeigt alle 28 Bilder verkleinert auf einem Bild, je mit Titel und Dateiname. `docs/screens.zip` enthält alle Bilder in voller Auflösung und die Übersicht (Ordner `screens/`). Beides erzeugt `node tools/screens-overview.mjs` aus den vorhandenen Bildern; nach neuen Screenshots erneut ausführen.

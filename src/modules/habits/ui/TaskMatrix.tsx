@@ -1,6 +1,7 @@
 import { useFormatters } from '@/modules/settings';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { cn } from '@/shared/lib/cn';
+import { Mark } from '@/shared/ui';
 import { startOfWeek, type DayKey } from '@/shared/lib/time';
 import { habitState, type DayState, type LogIndex } from '../calc/insights';
 import type { Habit } from '../model/habit';
@@ -10,9 +11,11 @@ const td = ts.detail;
 const dateOf = (day: DayKey) => new Date(`${day}T12:00:00`);
 
 /**
- * Gesamtübersicht (D-284): je Aufgabe eine Zeile, je Tag ein Feld; ab 32 Tagen je Woche ein Feld,
- * gefüllt nach Anteil erledigt. Zustände nicht nur über Farbe: erledigt gefüllt, offen mit Rand,
- * nicht fällig blass, ohne Eintrag gestrichelt. Als Tabelle für Screenreader lesbar.
+ * Gesamtübersicht „Je Aufgabe“ (D-284): je Aufgabe eine Zeile, je Tag eine Markierung von 16 px
+ * (F6, D-334; vorher bis 40 px), in schmalen Spalten so breit wie die Spalte; ab 32 Tagen je Woche
+ * ein Feld, gefüllt nach Anteil erledigt. Zustände nicht nur über Farbe: erledigt gefüllt mit
+ * Haken, offen mit Rand, nicht fällig blass, ohne Eintrag gestrichelt. Legende in Basisgröße
+ * (14 px). Als Tabelle für Screenreader lesbar.
  */
 export function TaskMatrix({
   habits,
@@ -93,7 +96,14 @@ export function TaskMatrix({
                   return (
                     <td key={day} title={label} className="p-0">
                       <span className="sr-only">{label}</span>
-                      <Cell state={state} today={day === today} tall={columns.length > 7} />
+                      <span className="flex justify-center">
+                        <Mark
+                          state={state}
+                          size="md"
+                          today={day === today}
+                          stretch={columns.length > 7}
+                        />
+                      </span>
                     </td>
                   );
                 }
@@ -139,9 +149,7 @@ export function TaskMatrix({
             ])
         ).map(([state, label]) => (
           <li key={state} className="flex items-center gap-1.5">
-            <span className="inline-block size-3">
-              <Cell state={state as DayState} />
-            </span>
+            <Mark state={state as DayState} />
             {label}
           </li>
         ))}
@@ -150,41 +158,20 @@ export function TaskMatrix({
   );
 }
 
-function Cell({
-  state,
-  today = false,
-  tall = false,
-}: {
-  state: DayState;
-  today?: boolean;
-  /** Viele schmale Spalten: feste Höhe statt quadratisch, damit die Felder lesbar bleiben. */
-  tall?: boolean;
-}) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        'block w-full rounded-[3px]',
-        tall ? 'h-5' : 'mx-auto aspect-square max-w-10',
-        state === 'done' && 'bg-success',
-        state === 'open' && 'border border-line-input',
-        state === 'notDue' && 'bg-surface-2 opacity-60',
-        state === 'noData' && 'border border-dashed border-line-input opacity-70',
-        today && 'outline-2 outline-offset-1 outline-focus',
-        today && tall && 'outline-1 outline-offset-0',
-      )}
-    />
-  );
-}
-
+/** Woche: Feld in der Größe der Markierung, von unten gefüllt nach Anteil erledigt. */
 function WeekCell({ done, due, noData }: { done: number; due: number; noData: boolean }) {
-  if (noData) return <Cell state="noData" />;
-  if (due === 0) return <Cell state="notDue" />;
+  if (noData || due === 0) {
+    return (
+      <span className="flex justify-center">
+        <Mark state={noData ? 'noData' : 'notDue'} size="md" stretch />
+      </span>
+    );
+  }
   const share = done / due;
   return (
     <span
       aria-hidden="true"
-      className="relative mx-auto block aspect-square w-full max-w-10 overflow-hidden rounded-[3px] border border-line-input"
+      className="relative mx-auto block h-mark-md w-full max-w-[var(--spacing-mark-md)] overflow-hidden rounded-mark border-[1.5px] border-line-input"
     >
       <span
         className="absolute inset-x-0 bottom-0 bg-success"

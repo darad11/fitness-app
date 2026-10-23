@@ -1,12 +1,10 @@
-import { Check, Minus } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { t } from '@/shared/i18n/de';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
-import { cn } from '@/shared/lib/cn';
 import { isoWeekday } from '@/shared/lib/time';
-import { Card, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@/shared/ui';
+import { Card, Mark, Meter, PageHeader, SegmentedControl, Skeleton, StatTile } from '@/shared/ui';
 import {
   habitRate,
   habitState,
@@ -18,7 +16,6 @@ import {
   rateChange,
   WEEKDAY_MIN_DUE,
   weekdayRates,
-  type DayState,
   type InsightPeriod,
 } from '../calc/insights';
 import { ProgressChart } from './ProgressChart';
@@ -131,8 +128,17 @@ export function TaskDetailPage() {
         ) : null}
 
         <Card title={td.calendar}>
+          {/* Kompakte Zellen in sieben Spalten, Wochentage darüber; Markierung 16 px (D-334). */}
+          <ul
+            aria-hidden="true"
+            className="grid w-max grid-cols-[repeat(7,1.75rem)] text-center text-[10px] font-medium text-muted"
+          >
+            {td.weekdayNames.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
           <ol
-            className="grid w-max grid-cols-7 gap-1.5"
+            className="mt-1 grid w-max grid-cols-[repeat(7,1.75rem)] gap-y-1.5"
             aria-label={`${td.calendar}, ${td.calendarHint}`}
           >
             {Array.from({ length: lead }, (_, i) => (
@@ -144,9 +150,11 @@ export function TaskDetailPage() {
                 day === today && state === 'open' ? td.states.today : td.states[state]
               }`;
               return (
-                <li key={day} title={label}>
+                <li key={day} title={label} className="flex justify-center">
                   <span className="sr-only">{label}</span>
-                  <CalendarCell state={state} today={day === today} day={Number(day.slice(8))} />
+                  <Mark state={state} size="md" today={day === today} dash>
+                    {Number(day.slice(8))}
+                  </Mark>
                 </li>
               );
             })}
@@ -154,12 +162,12 @@ export function TaskDetailPage() {
           <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted" aria-hidden="true">
             {(['done', 'open', 'notDue', 'noData'] as const).map((state) => (
               <li key={state} className="flex items-center gap-1.5">
-                <CalendarCell state={state} small />
+                <Mark state={state} />
                 {td.states[state]}
               </li>
             ))}
             <li className="flex items-center gap-1.5">
-              <CalendarCell state="open" today small />
+              <Mark state="open" today />
               {td.states.today}
             </li>
           </ul>
@@ -196,47 +204,5 @@ export function TaskDetailPage() {
         </Card>
       </div>
     </>
-  );
-}
-
-/**
- * Ein Tag im Kalender, 28 px (F5, D-325); Zustand nicht nur über Farbe (Haken, Strich, Zahl).
- * Heute trägt einen dünnen Rahmen in Lime mit 1 px Abstand. `small`: Muster der Legende, 14 px,
- * mit denselben Flächen und Rändern.
- */
-function CalendarCell({
-  state,
-  today = false,
-  day,
-  small = false,
-}: {
-  state: DayState;
-  today?: boolean;
-  day?: number;
-  small?: boolean;
-}) {
-  return (
-    <span
-      aria-hidden="true"
-      className={cn(
-        'flex shrink-0 items-center justify-center text-xs font-semibold tabular-nums',
-        'rounded-mark',
-        small ? 'size-3.5' : 'size-7',
-        state === 'done' && 'bg-success text-on-accent',
-        state === 'open' && 'border-line-input text-fg',
-        state === 'open' && (small ? 'border-[1.5px]' : 'border-2'),
-        state === 'notDue' && 'bg-surface-2 text-muted',
-        state === 'noData' && 'border border-dashed border-line-input text-muted',
-        today && 'ring-1 ring-accent ring-offset-1 ring-offset-surface',
-      )}
-    >
-      {small ? null : state === 'done' ? (
-        <Check className="size-3.5" strokeWidth={3} />
-      ) : state === 'noData' ? (
-        <Minus className="size-3" />
-      ) : (
-        day
-      )}
-    </span>
   );
 }

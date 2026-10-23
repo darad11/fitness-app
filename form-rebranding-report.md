@@ -37,6 +37,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §9 Abschluss | Prüfung auf 360, 390 und 768 pt (39 Ansichten), fünf Korrekturen für schmale Breiten, Test „Seitenende“ mit modalem Dialog, Screenshots, Übersicht und Archiv erneuert | D-331 | umgesetzt |
 | F6 §1 Logo der Kopfzeile | Ursache der Unschärfe: iOS legt über die obersten rund 40 pt eine eigene Unschärfe, das Logo lag darin; auf iPhone und iPad beginnt alles, was oben ruht, 2 rem tiefer (Logo bei 46 pt). Dazu Logo-Datei in Anzeigegröße 106 × 28 auf ganzen Pixeln; in der App kein Filter, kein Glas und nichts über dem Logo | D-332 | umgesetzt; Wirkung am iPhone nur am Gerät prüfbar (T-IPH-M0 Schritt 6) |
 | F6 §2 Makro-Ring V2 | Eiweiß Türkis, Kohlenhydrate Blau, Fett Violett in Ring, Balken und auf „Heute“; weiche Übergänge über 2 × 18° (höchstens ein Drittel des kürzeren Abschnitts) aus feinen Schritten, Mischfarben in OKLab ohne grelle oder trübe Töne; Kontrast 3:1 auf `--surface` und `--surface-2` | D-333 | umgesetzt |
+| F6 §3 Erledigt-Markierungen | Eine Komponente `Mark` mit drei Größen: Verlauf 14 px unter dem Balken statt grüner Balken, „Je Aufgabe“ 16 px statt bis 40 px, Kalender kompakt in sieben Spalten mit Wochentagen und 16 px statt 28 px; Haken 60 %, Radius 22,5 %; Abhakfeld in Listen als Quadrat 20 px | D-334 | umgesetzt, Vergleich in `docs/screens/komponenten/markierungen.png` |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -219,6 +220,21 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: `calc/ring.test.ts`, `ui/macro-ring.test.tsx`, `src/shared/ui/tokens.test.ts` (3:1 auch auf `--surface-2`), `e2e/nutrition-ring.spec.ts` („Ring V2 …“).
 - Dokumente: `docs/decisions.md` (D-333), `brand-tokens.md` (Abschnitte 2.0, 2.3 und 3), `docs/design-system.md` (Abschnitt 8.4), `docs/testing.md`.
 
+### F6 §3 Erledigt-Markierungen
+
+- Basis ist das Quadrat neben „erledigt“ in der Legende des Kalenders (14 px). Eine Komponente `Mark` (`src/shared/ui/Mark.tsx`) mit den Größen-Tokens `--spacing-mark` 14, `--spacing-mark-md` 16 und `--spacing-mark-lg` 20 px ersetzt `CheckMark` und die eigenen Felder; Radius 22,5 % wie die Kachel, Haken 60 %.
+- Verlauf: Bisher war ein Tag mit allem erledigt ein ganzer grüner Balken. Jetzt bleiben alle Balken in Lime; unter dem Balken steht dezent die Markierung in Basisgröße, mittig zum Balken, in schmalen Spalten schmaler. Die Legende zeigt dieselbe Markierung.
+- Je Aufgabe: Die Felder wuchsen mit der Spalte bis 40 px. Jetzt 16 px mit Haken, mittig; ab acht Tagen so breit wie die Spalte. Legende 14 px.
+- Kalender: kompakte Zellen in sieben Spalten von 28 px mit den Wochentagen darüber, Markierung 16 px statt 28, Tageszahl an offenen Tagen, Haken an erledigten, Rahmen in Lime nur heute. Legende 14 px.
+- Abhakfeld in Listen (Tagesaufgaben, Einkaufsliste): Quadrat 20 px statt Kreis, wie die Vorlage V1 in Abschnitt 4; die ganze Zeile bleibt bedienbar, die Zeilenhöhe bleibt.
+- Vergleich der drei Ansichten (nach drei Tagen mit zwei Aufgaben, erzeugt mit `node tools/screenshots.mjs komponenten`):
+
+  ![Erledigt-Markierungen: Verlauf 14 px, Je Aufgabe 16 px, Kalender 16 px](docs/screens/komponenten/markierungen.png)
+
+- Geändert: neu `src/shared/ui/Mark.tsx`, entfernt `CheckMark.tsx`; `src/app/styles.css` (Tokens), `habits/ui/ProgressChart.tsx`, `TaskStats.tsx`, `TaskMatrix.tsx`, `TaskDetailPage.tsx`, `TaskCheckbox.tsx`, `shopping/ui/ShoppingListPage.tsx`, `src/shared/i18n/de-task-stats.ts` (Legende des Verlaufs); `tools/screenshots.mjs` (Vergleichsbild), `tools/screens-overview.mjs` (Titel).
+- Tests: `e2e/marks.spec.ts` (drei neue Tests für Kalender, „Je Aufgabe“ mit Verlauf und das Abhakfeld; ersetzen die beiden Tests aus F5).
+- Dokumente: `docs/decisions.md` (D-334), `brand-tokens.md` (Abschnitte 2.6 und 6), `docs/design-system.md` (Komponenten), `docs/testing.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -342,6 +358,12 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F6 §2: `pnpm test` | 23.10.2026 | 876 Tests in 105 Dateien bestanden |
 | F6 §2: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,3 KB von 250 KB (gzip) |
 | F6 §2: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 282 bestanden, 32 übersprungen, 0 fehlgeschlagen (7,0 min) |
+| F6 §3: `e2e/marks.spec.ts` | 23.10.2026 | 9 bestanden, 1 übersprungen. Gegenprobe gegen `8271179` mit den neuen Tests (Handy): 3 von 3 fehlgeschlagen (Kalender 28 statt 16 px, Je Aufgabe größer als 16 px, Abhakfeld rund: „Expected: 22.5%, Received: 999px“) |
+| F6 §3: Vergleichsbild `docs/screens/komponenten/markierungen.png` | 23.10.2026 | erster Lauf mit einem Hinweis zum Balken im Verlauf (Zeiger vom letzten Tipp über dem Diagramm); Zeiger jetzt vorher weg, Kalender von „Dehnen“ mit einem offenen Tag |
+| F6 §3: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F6 §3: `pnpm test` | 23.10.2026 | 876 Tests in 105 Dateien bestanden |
+| F6 §3: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,5 KB von 250 KB (gzip) |
+| F6 §3: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 284 bestanden, 32 übersprungen, 0 fehlgeschlagen (6,8 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

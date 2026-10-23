@@ -22,7 +22,9 @@ export const tTaskStats = {
       : `An ${n} Tagen gab es keinen Eintrag; sie zählen nicht mit.`,
   empty: 'Sobald du Aufgaben abhakst, siehst du hier deinen Fortschritt.',
   chartTitle: 'Verlauf',
-  chartHintDay: 'Erledigte Aufgaben je Tag; grün: alles erledigt.',
+  chartHintDay: 'Erledigte Aufgaben je Tag;',
+  /** Neben der Markierung unter dem Verlauf (D-334). */
+  chartComplete: 'alles erledigt.',
   chartHintWeek: 'Erfüllt je Woche in Prozent.',
   chartAria: (n: number, unit: 'day' | 'week') =>
     `Balkendiagramm, ${n} ${unit === 'day' ? 'Tage' : 'Wochen'}; die Werte stehen in der Liste darunter.`,

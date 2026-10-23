@@ -8,9 +8,9 @@ import { cn } from '@/shared/lib/cn';
 import {
   Button,
   Card,
-  CheckMark,
   chipClasses,
   IconButton,
+  Mark,
   Meter,
   PageHeader,
   SegmentedControl,
@@ -218,7 +218,7 @@ export function ShoppingListPage() {
             }}
             className="peer sr-only"
           />
-          <CheckMark checked={item.doneAt !== undefined} />
+          <Mark state={item.doneAt !== undefined ? 'done' : 'open'} size="lg" peer />
           <span className="min-w-0 flex-1">
             <span className={cn('block', item.doneAt !== undefined && 'text-muted line-through')}>
               {item.name}

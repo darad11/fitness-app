@@ -1,6 +1,6 @@
 # FORM · Design-Tokens der App
 
-Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
+Stand: 23.10.2026 · abgeschlossen mit Paket E (D-320); Pakete F1 (D-308), F2 (D-314), C (D-316); Feinschliff F5 (Kopfzeile, Markierungen, Startbild: D-325; Ring mit Makros: D-326) · Quelle der Werte: `handover-form-rebranding.md` Abschnitt 3, `form-app-assets/snippets/brand.css` · Datei im Code: `src/shared/ui/tokens.css` · Prüfung: `src/shared/ui/tokens.test.ts`
 
 Diese Datei macht Abschnitt 4 des Markenhandbuchs für die App verbindlich: Welche App-Farbe entspricht welcher Markenfarbe, was wurde gemessen, und wo weicht die App bewusst vom Konzept ab.
 
@@ -83,6 +83,7 @@ Grundfläche, Akzent und Kachel der App entsprechen damit den Markenfarben. Abwe
 | `--macro-protein` | #78aff2 | #78aff2 | #c7ff46 | #4c7a00 | `protein` |
 | `--macro-carbs` | #4fbf86 | #4fbf86 | #4c7a00 | #2b7446 | `carbs` |
 | `--macro-fat` | #e5a947 | #e5a947 | #e0a33a | #b56f00 | `fat` |
+| `--macro-other` (neu, F5) | – | – | #8d96a3 (wie `--data-8`) | #6f7886 (wie `--data-8`) | – (neutrales Grau für kcal ohne Makro im Ring, D-326) |
 | `--data-1` | #2a78d6 | #4b94ea | #c7ff46 | #4c7a00 | `accent` (eine Reihe) |
 | `--data-2` bis `--data-8` | Orange, Aqua, Gelb, Magenta, Grün, Violett, Rot | dto. | #e0a33a, #4caf6e, #2f7cf6, #aab2be, #4c7a00, #ef6368, #8d96a3 | #b56f00, #2b7446, #1d5fcc, #4e5867, #6b8f00, #bb292f, #6f7886 | aus der Markenpalette (Abweichung: mehrere Reihen) |
 | `--chart-grid` | #0f1c3a1f | #ffffff1f | #232b36 | #e1e5ea | `line` |
@@ -166,7 +167,7 @@ Aus `tokens.test.ts` bzw. demselben Rechenweg (WCAG 2.1, gerundet). Hintergrund 
 | `--accent` (Lime) auf `--bg` / `--surface` / `--meter-track` | 16,0 / 14,7 / 13,6 | 3 |
 | `--action` auf `--surface` | 4,4 | 3 |
 | `--border-input` auf `--surface-2` | 3,4 | 3 |
-| `--macro-protein` / `--macro-carbs` / `--macro-fat` auf `--surface` | 14,7 / 3,4 / 7,8 | 3 |
+| `--macro-protein` / `--macro-carbs` / `--macro-fat` / `--macro-other` auf `--surface` | 14,7 / 3,4 / 7,8 / 5,8 | 3 |
 | `--chart-point` auf `--surface` | 3,7 | 3 |
 | `--border` (`line`) auf `--surface` | 1,2 | – (dekorativ) |
 | `--tile-border` auf `--tile` | 1,9 | – (dekorativ) |

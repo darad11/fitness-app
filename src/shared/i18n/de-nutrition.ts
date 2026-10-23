@@ -1,3 +1,5 @@
+import { listDe } from '../lib/list';
+
 // Texte, die nur nachgeladene Teile brauchen (D-288): Ernährung (Schritt G, D-261). Gehören zu `de.ts`, liegen
 // aber getrennt, damit sie nicht in die Startansicht geladen werden.
 export const tNutrition = {
@@ -11,12 +13,13 @@ export const tNutrition = {
   eaten: 'Gegessen',
   goal: 'Ziel',
   remaining: (kcal: string) => `noch ${kcal} kcal`,
-  over: (kcal: string) => `${kcal} kcal über dem Ziel`,
-  kcalOf: (eaten: string, goal: string) => `${eaten} / ${goal} kcal`,
+  over: (kcal: string) => `${kcal} kcal über dem Tagesziel`,
+  /** Ring für VoiceOver (D-326): „732 von 2.390 kcal, davon Eiweiß 184, …“. */
+  ringLabel: (eaten: string, goal: string) => `${eaten} von ${goal} kcal`,
+  ringParts: (parts: string) => `davon ${parts}`,
+  ringOther: 'nicht zugeordnet',
   ofKcal: (goal: string) => `/ ${goal} kcal`,
   kcalOnly: (eaten: string) => `${eaten} kcal`,
-  gramsOf: (eaten: string, goal: string) => `${eaten} / ${goal} g`,
-  gramsOnly: (eaten: string) => `${eaten} g`,
   macros: { protein: 'Eiweiß', carbs: 'Kohlenhydrate', fat: 'Fett' },
   macrosShort: { protein: 'Eiweiß', carbs: 'Kohlenh.', fat: 'Fett' },
   nutrients: {
@@ -67,7 +70,8 @@ export const tNutrition = {
   myFoods: 'Meine Lebensmittel',
   emptySlot: 'Noch nichts eingetragen.',
   entryCount: (n: number) => (n === 1 ? '1 Eintrag' : `${n} Einträge`),
-  incomplete: (names: string) => `Unvollständig: ${names} fehlt bei mindestens einem Eintrag.`,
+  incomplete: (names: readonly string[]) =>
+    `Bei mindestens einem Eintrag fehlen Angaben zu ${listDe(names)}.`,
   estimatedHint: 'Enthält Schätzungen (Schnelleinträge).',
   entryLabel: (name: string) => `${name} bearbeiten`,
   entryTitle: 'Eintrag bearbeiten',
@@ -255,8 +259,8 @@ export const tNutrition = {
     nutrientsTitle: 'Nährwerte',
     perServing: 'je Portion',
     total: 'gesamt',
-    missingHint: (names: string) =>
-      `Unvollständig: ${names} fehlt bei mindestens einer Zutat und fehlt deshalb in der Summe.`,
+    missingHint: (names: readonly string[]) =>
+      `Bei mindestens einer Zutat fehlen Angaben zu ${listDe(names)}. In der Summe fehlen sie deshalb.`,
     weightHint: (grams: string) =>
       `Zutaten zusammen ${grams} g (Milliliter zählen wie Gramm). Eine Portion trägst du als „Portion“ ein.`,
     stepsLabel: 'Zubereitung (optional)',
@@ -302,7 +306,6 @@ export const tNutrition = {
   // Ziele
   targetsTitle: 'Tagesziele',
   currentTarget: 'Aktuelles Ziel',
-  since: (date: string) => `Seit ${date}`,
   methods: { manual: 'Selbst festgelegt', computed: 'Aus Vorschlag übernommen' },
   manualTitle: 'Selbst festlegen',
   kcalLabel: 'Energie (kcal)',

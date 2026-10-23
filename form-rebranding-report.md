@@ -29,6 +29,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F5 §2 Aktives Training | Kein Sprung nach dem Erledigen eines Satzes: Verschiebungen über dem aktiven Satz werden vor dem Zeichnen ausgeglichen, der nächste Satz steht unter Kopf und Pausenkarte; beim Tippen bewegt sich nichts. Kopf: „Programm · Woche“ klein, Titel nur der Trainingstag, einzeilig | D-323 | umgesetzt; Verhalten der iOS-Tastatur nur am Gerät prüfbar |
 | F5 §3 Programme und Training | Neue Seiten beginnen oben, Zurück stellt die Liste wieder her; Etiketten der Programmkarten oben rechts, Titel bricht davor um, Chevron rechts mittig; „Bereit für dein Training?“ auf „Heute“ und „Training“ ohne Training und ohne Programm | D-324 | umgesetzt |
 | F5 §4 Kopfzeile, Icons, Markierungen, Startbild | Kopfzeilen-Logo mit grüner Kachel, 28 px, dieselbe Kachel in der Seitenleiste; ein Regler-Symbol für „Tagesaufgaben“ und „Wochenziel“; Kalenderzellen 28 px, abgerundet, Lime-Rahmen dünn und nur heute; Erledigt-Kreis 20 px; Seitenende geprüft (kein Fehler, neuer Test); Startbild C3 in 40 Größen und eine gleiche Startfläche in der installierten App | D-325 | umgesetzt; Kaltstart nur am Gerät prüfbar (T-IPH-M0 Schritt 5) |
+| F5 §5 Ernährung | Ring mit Abschnitten nach Makros (Eiweiß, Kohlenhydrate, Fett, ab 5 % nicht zugeordnete kcal in Grau), Karte „Gegessen“ wie in der bisherigen App, derselbe Ring auf „Heute“; Datumszeile „Heute · Do., 22. Okt.“ einzeilig; Hinweis „Bei mindestens einem Eintrag fehlen Angaben zu …“ mit richtiger Aufzählung; „Aktuelles Ziel“ ohne Datum | D-326 | umgesetzt |
 
 ## 2. Geänderte Dateien je Paket
 
@@ -143,6 +144,13 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 - Tests: neu `e2e/marks.spec.ts` (Regler-Symbol gleich groß, gleiche Strichstärke und Lage; Kalenderzellen 28 px, Haken 14 px, Rahmen nur heute; Erledigt-Kreis 20 px bei unveränderter Zeile; Seitenende aller Seiten mit offenem Bearbeiten einer Aufgabe), neu `e2e/start-surface.spec.ts` (Startfläche gegen das Startbild hochkant und quer, Ausblenden, „Bewegung reduzieren“, Browser-Tab), neu `src/app/theme-classes.test.ts` (Radius- und Schattenklassen ohne Token), neu `src/app/startSurface.test.ts`; `src/app/splash.test.ts` prüft statt der drei Bilder des Markenpakets die Regel C3 in den Pixeln von vier Bildern sowie Vorlage und Startfläche; angepasst `e2e/shell.spec.ts` (Logo 28 px), `e2e/tabbar.spec.ts` (Kachel der Seitenleiste).
 - Dokumente: `docs/decisions.md` (D-325), `brand-tokens.md` (Abschnitte 2.0, 2.6, 4, 5), `docs/design-system.md`, `docs/testing.md` (T-IPH-M0 Schritt 5), `docs/known-limitations.md` (Startbild).
 
+### F5 §5 Ernährung
+
+- Gefunden: Der Ring war einfarbig (D-314) und zeigte nicht, woraus die Kalorien kommen. Die Datumszeile „Heute · Donnerstag, 22. Oktober“ brach auf 390 pt um. Der Hinweis setzte die Namen vor ein „fehlt“ in der Einzahl („Zucker, gesättigte Fettsäuren, Ballaststoffe, Salz fehlt …“), ebenso beim Rezept. „Aktuelles Ziel“ zeigte das Datum, ab dem das Ziel gilt. Auf „Heute“ wurde „Kohlenhydrate“ auf 360 pt abgeschnitten.
+- Geändert: neu `nutrition/calc/ring.ts` (Anteile, 5-%-Schwelle, Verteilung kleiner Unterschiede), `nutrition/ui/MacroRing.tsx` neu gebaut (Abschnitte, Übergänge, runde Enden, `ringLabel`), `nutrition/ui/NutritionPage.tsx` (Karte „Gegessen“ wie im Vorbild, Karte „Ernährung heute“ mit demselben Ring und der Kurzform der Makros, kurze Datumszeile, Hinweis als Aufzählung), `nutrition/ui/TargetsPage.tsx` (ohne Datum), `nutrition/ui/RecipeEditPage.tsx` (Hinweis als Aufzählung); neu `src/shared/lib/list.ts` (`listDe`), `src/shared/lib/format.ts` (`weekdayDayMonthShort`), `src/shared/ui/tokens.css` (`--macro-other`), `src/shared/i18n/de-nutrition.ts` (`ringLabel`, `ringParts`, `ringOther`, `over`, `incomplete`, `recipes.missingHint`; entfallen `kcalOf`, `gramsOf`, `gramsOnly`, `since`).
+- Tests: neu `nutrition/calc/ring.test.ts`, `nutrition/ui/macro-ring.test.tsx`, `src/shared/lib/list.test.ts`, `e2e/nutrition-ring.spec.ts` (Spur bei 0 kcal, Abschnitte und Vorlesetext mit dem Beispiel aus dem Auftrag, grauer Abschnitt ab 5 %, voll über dem Ziel mit neutralem Text, „Heute“ mit derselben Komponente; Datumszeile einzeilig auf 360, 390 und 768 pt; „Aktuelles Ziel“ ohne Datum vor und nach dem Übernehmen eines Vorschlags); erweitert `format.test.ts` (kurzes Datum, de-AT „Jän.“), `tokens.test.ts` (`--macro-other` 3:1); angepasst `e2e/barcode.spec.ts` (neuer Vorlesetext des Rings).
+- Dokumente: `docs/decisions.md` (D-326), `brand-tokens.md` (Abschnitt 2.3 und Kontraste), `docs/design-system.md`.
+
 ## 3. Tests
 
 | Lauf | Stand | Ergebnis |
@@ -230,6 +238,11 @@ Auftrag: `docs/prompts/F5-feinschliff-vor-dem-merge.md` Abschnitt 1.
 | F5 §4: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 236,0 KB von 250 KB (gzip), jetzt mit `index.html` (6,1 KB) |
 | F5 §4: `e2e/marks.spec.ts` (3 Wiederholungen, Handy), `e2e/start-surface.spec.ts` | 23.10.2026 | 12 und 5 bestanden. Gegenprobe gegen den Stand vor Abschnitt 4: Regler-Symbol, Kalender, Erledigt-Kreis fehlgeschlagen; Seitenende bestanden. Startfläche gegen das Startbild: mittlere Abweichung 0,003 von 255 |
 | F5 §4: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 239 bestanden, 13 übersprungen, 0 fehlgeschlagen (5,7 min) |
+| F5 §5: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | 23.10.2026 | ohne Befund |
+| F5 §5: `pnpm test` | 23.10.2026 | 857 Tests in 104 Dateien bestanden (neu Ring, Ring-Komponente, Aufzählung; kurzes Datum, `--macro-other`) |
+| F5 §5: `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 235,8 KB von 250 KB (gzip) |
+| F5 §5: `e2e/nutrition-ring.spec.ts` (neu), `barcode.spec.ts`, `nutrition.spec.ts` | 23.10.2026 | 22 bestanden, 2 übersprungen. Gegenprobe gegen den Stand vor Abschnitt 5 (Handy): alle 5 neuen Tests fehlgeschlagen |
+| F5 §5: `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 247 bestanden, 15 übersprungen, 0 fehlgeschlagen (6,4 min) |
 
 ## 4. Audit-Befunde P2, die das Rebranding erledigt
 

@@ -280,7 +280,7 @@ function RecipeForm({ recipe }: { recipe?: Recipe }) {
             {totals.missing.length > 0 ? (
               <p className="mt-1 text-sm text-muted">
                 {tNutrition.recipes.missingHint(
-                  totals.missing.map((n) => tNutrition.nutrientNames[n]).join(', '),
+                  totals.missing.map((n) => tNutrition.nutrientNames[n]),
                 )}
               </p>
             ) : null}

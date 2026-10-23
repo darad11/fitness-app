@@ -918,3 +918,16 @@ Kompaktes Logo, Regler-Symbol, Kalender und Erledigt-Kreis, Seitenende, Startbil
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 239 bestanden, 13 übersprungen, 0 fehlgeschlagen (5,7 min) |
 | `pnpm check:bundle` | 236,0 KB von 250 KB, jetzt mit `index.html` (6,1 KB) |
 
+### F5 §5 Ernährung · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1194)
+
+Ring mit Makros, Karte „Gegessen“, kurze Datumszeile, Hinweis mit Aufzählung, „Aktuelles Ziel“ ohne Datum (D-326).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 104 Dateien, 857 Tests bestanden (neu `ring.test.ts` mit 8, `macro-ring.test.tsx` mit 5, `list.test.ts` mit 1 Test; kurzes Datum in `format.test.ts`, `--macro-other` in `tokens.test.ts`). Erster Lauf von `macro-ring.test.tsx` rot: de-AT trennt Tausender mit schmalem Leerzeichen, der Test nutzt jetzt de-DE |
+| `pnpm exec playwright test e2e/nutrition-ring.spec.ts e2e/barcode.spec.ts e2e/nutrition.spec.ts` | 22 bestanden, 2 übersprungen. Gegenprobe von `nutrition-ring.spec.ts` gegen den Stand vor Abschnitt 5 (Handy): alle 5 Tests fehlgeschlagen |
+| Sichtprüfung 360 und 390 pt (Bilder aus dem Browser) | Ring mit Abschnitten, Übergängen und runden Enden; über dem Ziel voll mit neutralem Text; drei Spalten ohne Überlauf; auf „Heute“ wurde „Kohlenhydrate“ auf 360 pt abgeschnitten, jetzt Kurzform „Kohlenh.“ |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 247 bestanden, 15 übersprungen, 0 fehlgeschlagen (6,4 min) |
+| `pnpm check:bundle` | 235,8 KB von 250 KB |
+

@@ -157,7 +157,10 @@ describe('Farbtokens', () => {
       ['action', 'surface'],
       ['action', 'bg'],
       ['success', 'ink'],
-      ...['macro-protein', 'macro-carbs', 'macro-fat'].map((ring) => [ring, 'surface']),
+      ...['macro-protein', 'macro-carbs', 'macro-fat', 'macro-other'].map((ring) => [
+        ring,
+        'surface',
+      ]),
     ])('Bedienelement oder Linie --%s auf --%s erreicht 3:1', (fg, bg) => {
       expect(minContrast(tokens, fg, bg)).toBeGreaterThanOrEqual(3);
     });

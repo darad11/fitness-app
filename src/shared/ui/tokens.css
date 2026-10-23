@@ -47,6 +47,8 @@
   --macro-protein: #c7ff46;
   --macro-carbs: #4c7a00;
   --macro-fat: #e0a33a;
+  /* kcal ohne Makro im Ring der Ernährung (D-326): neutrales Grau wie `--data-8`. */
+  --macro-other: #8d96a3;
   /* Diagramme: eine Reihe in Lime; weitere Reihen in fester Reihenfolge. */
   --data-1: #c7ff46;
   --data-2: #e0a33a;
@@ -119,6 +121,7 @@
   --macro-protein: #4c7a00;
   --macro-carbs: #2b7446;
   --macro-fat: #b56f00;
+  --macro-other: #6f7886;
   --data-1: #4c7a00;
   --data-2: #b56f00;
   --data-3: #2b7446;

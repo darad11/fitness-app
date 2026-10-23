@@ -20,7 +20,7 @@ import {
   type TargetInputs,
 } from '../model/nutrition';
 import { InvalidTargetError, setNutritionTarget } from '../service/nutritionService';
-import { dayDate, kcal } from './format';
+import { kcal } from './format';
 
 const INPUT = 'field w-full min-w-0';
 
@@ -153,10 +153,8 @@ function TargetsForm({
               {tNutrition.macros.protein} {current.proteinG} g · {tNutrition.macros.carbs}{' '}
               {current.carbsG} g · {tNutrition.macros.fat} {current.fatG} g
             </p>
-            <p className="mt-2 text-sm text-muted">
-              {tNutrition.methods[current.method]} ·{' '}
-              {tNutrition.since(fmt.weekdayDayMonth(dayDate(current.effectiveFrom)))}
-            </p>
+            {/* Wie das Ziel entstand, ohne Datum (F5, D-326); ändert sich mit dem nächsten Ziel. */}
+            <p className="mt-2 text-sm text-muted">{tNutrition.methods[current.method]}</p>
           </Card>
         ) : null}
         {message ? (

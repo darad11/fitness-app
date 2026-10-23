@@ -35,6 +35,7 @@ import {
 import { useToday } from '@/shared/ui/useToday';
 import { mealSlotAt } from '../calc/mealSlot';
 import { sumEntries } from '../calc/nutrients';
+import { macroRing } from '../calc/ring';
 import { targetOn } from '../calc/targets';
 import { useImportedCatalog } from '../data/catalogStore';
 import { useDayEntries, useTargets } from '../data/nutritionRepository';
@@ -42,7 +43,7 @@ import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
 import { KitchenMenu, PILL } from './KitchenMenu';
-import { MacroRing } from './MacroRing';
+import { MacroRing, ringLabel } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
 import { brandedName, dayDate, describeAmount, entryNameAndBrand, grams, kcal } from './format';
 
@@ -111,16 +112,9 @@ export function NutritionPage() {
   };
   const target = targets ? targetOn(targets, day) : undefined;
   const totals = entries ? sumEntries(entries) : undefined;
-  /** Name des Rings für VoiceOver: Kalorien und Makros mit Ziel. */
-  const dayLabel = (goal: NonNullable<typeof target>) =>
-    [
-      tNutrition.kcalOf(kcal(fmt, totals?.sums.kcal ?? 0), kcal(fmt, goal.kcal)),
-      ...MACROS.map(
-        (macro) =>
-          `${tNutrition.macros[macro]} ${tNutrition.gramsOf(grams(fmt, totals?.sums[macro] ?? 0), grams(fmt, macroGoal(goal, macro)))}`,
-      ),
-    ].join(', ');
-  const dateLabel = fmt.weekdayDayMonth(dayDate(day));
+  const ring = target && totals ? macroRing(totals.sums, target.kcal) : undefined;
+  // Kurz, damit die Zeile auf dem Handy einzeilig bleibt: „Heute · Do., 22. Okt.“ (D-326).
+  const dateLabel = fmt.weekdayDayMonthShort(dayDate(day));
 
   return (
     <>
@@ -135,7 +129,7 @@ export function NutritionPage() {
           <ChevronLeft aria-hidden="true" className="size-5" />
         </IconButton>
         <div className="text-center">
-          <p className="font-semibold" aria-live="polite">
+          <p className="font-semibold whitespace-nowrap" aria-live="polite">
             {day === today ? `${tNutrition.today} · ${dateLabel}` : dateLabel}
           </p>
           {day !== today ? (
@@ -169,65 +163,58 @@ export function NutritionPage() {
       ) : (
         <div className="grid gap-stack">
           <Card tone="stage" title={tNutrition.eaten} titleStyle="label">
-            <div className="flex items-center gap-5 md:gap-8">
-              {target ? (
-                <MacroRing
-                  size={8.5}
-                  label={dayLabel(target)}
-                  value={target.kcal > 0 ? totals.sums.kcal / target.kcal : 0}
-                >
-                  <span className="text-2xl font-semibold">{kcal(fmt, totals.sums.kcal)}</span>
-                  <span className="text-xs text-muted">
+            {/* Aufbau wie in der bisherigen App (D-326): großer Ring mittig, darunter drei Spalten
+                mit Ist / Ziel und Balken in den Farben der Abschnitte, darunter „noch x kcal“. */}
+            {target && ring ? (
+              <div className="flex justify-center">
+                <MacroRing model={ring} label={ringLabel(fmt, ring)} size={10} stroke={12}>
+                  <span className="text-value font-semibold">{kcal(fmt, totals.sums.kcal)}</span>
+                  <span className="mt-1 text-sm text-muted">
                     {tNutrition.ofKcal(kcal(fmt, target.kcal))}
                   </span>
                 </MacroRing>
-              ) : null}
-              <div className="min-w-0 flex-1">
-                {target ? null : (
-                  <div className="mb-4">
-                    <p className="text-value font-semibold">
-                      {tNutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
-                    </p>
-                    <p className="mt-1 text-sm text-muted">{tNutrition.noTarget}</p>
-                  </div>
-                )}
-                <dl className="grid gap-3">
-                  {MACROS.map((macro) => {
-                    const goal = target ? macroGoal(target, macro) : undefined;
-                    const eaten = totals.sums[macro];
-                    return (
-                      <div key={macro} className="grid grid-cols-[1fr_auto] items-baseline gap-x-2">
-                        <dt className="truncate text-sm text-muted">
-                          <span aria-hidden="true">{tNutrition.macrosShort[macro]}</span>
-                          <span className="sr-only">{tNutrition.macros[macro]}</span>
-                        </dt>
-                        <dd className="text-sm whitespace-nowrap text-muted">
-                          <span className="text-base font-semibold text-fg">
-                            {grams(fmt, eaten)}
-                          </span>
-                          {goal !== undefined
-                            ? ` / ${grams(fmt, goal)} ${tNutrition.units.g}`
-                            : ` ${tNutrition.units.g}`}
-                        </dd>
-                        {goal !== undefined ? (
-                          <Meter
-                            label={null}
-                            className="col-span-2 mt-1.5"
-                            value={goal > 0 ? eaten / goal : 0}
-                            color={MACRO_COLORS[macro]}
-                          />
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </dl>
               </div>
-            </div>
-            {target ? (
+            ) : (
+              <div>
+                <p className="text-value font-semibold">
+                  {tNutrition.kcalOnly(kcal(fmt, totals.sums.kcal))}
+                </p>
+                <p className="mt-1 text-sm text-muted">{tNutrition.noTarget}</p>
+              </div>
+            )}
+            <dl className="mt-5 grid grid-cols-3 gap-3">
+              {MACROS.map((macro) => {
+                const goal = target ? macroGoal(target, macro) : undefined;
+                const eaten = totals.sums[macro];
+                return (
+                  <div key={macro} className="min-w-0">
+                    <dt className="truncate text-sm text-muted">
+                      <span aria-hidden="true">{tNutrition.macrosShort[macro]}</span>
+                      <span className="sr-only">{tNutrition.macros[macro]}</span>
+                    </dt>
+                    <dd className="mt-0.5 text-sm whitespace-nowrap text-muted">
+                      <span className="text-lg font-semibold text-fg">{grams(fmt, eaten)}</span>
+                      {goal !== undefined
+                        ? ` / ${grams(fmt, goal)} ${tNutrition.units.g}`
+                        : ` ${tNutrition.units.g}`}
+                    </dd>
+                    {goal !== undefined ? (
+                      <Meter
+                        label={null}
+                        className="mt-2"
+                        value={goal > 0 ? eaten / goal : 0}
+                        color={MACRO_COLORS[macro]}
+                      />
+                    ) : null}
+                  </div>
+                );
+              })}
+            </dl>
+            {ring ? (
               <p className="mt-4 text-sm text-muted">
-                {totals.sums.kcal <= target.kcal
-                  ? tNutrition.remaining(kcal(fmt, target.kcal - totals.sums.kcal))
-                  : tNutrition.over(kcal(fmt, totals.sums.kcal - target.kcal))}
+                {ring.over > 0
+                  ? tNutrition.over(kcal(fmt, ring.over))
+                  : tNutrition.remaining(kcal(fmt, ring.remaining))}
               </p>
             ) : null}
             {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
@@ -264,8 +251,7 @@ export function NutritionPage() {
                 {tNutrition.incomplete(
                   totals.incomplete
                     .filter((n) => n !== 'kcal')
-                    .map((n) => tNutrition.nutrientNames[n])
-                    .join(', '),
+                    .map((n) => tNutrition.nutrientNames[n]),
                 )}
               </p>
             ) : null}
@@ -463,23 +449,14 @@ export function NutritionTodayCard() {
   if (entries === undefined || targets === undefined) return null;
   const target = targetOn(targets, today);
   const sums = sumEntries(entries).sums;
+  const ring = target ? macroRing(sums, target.kcal) : undefined;
   const hour = hourIn(now, fmt.timeZone);
   const scanTo = `/ernaehrung/hinzufuegen?mahlzeit=${mealSlotAt(hour)}&scan=1&von=heute`;
   return (
     <Card title={tNutrition.todayCard} titleStyle="label">
       <div className="flex items-center gap-5">
-        {target ? (
-          <MacroRing
-            size={7}
-            label={[
-              tNutrition.kcalOf(kcal(fmt, sums.kcal), kcal(fmt, target.kcal)),
-              ...MACROS.map(
-                (macro) =>
-                  `${tNutrition.macros[macro]} ${tNutrition.gramsOf(grams(fmt, sums[macro]), grams(fmt, macroGoal(target, macro)))}`,
-              ),
-            ].join(', ')}
-            value={target.kcal > 0 ? sums.kcal / target.kcal : 0}
-          >
+        {target && ring ? (
+          <MacroRing model={ring} label={ringLabel(fmt, ring)} size={7}>
             <span className="text-2xl font-semibold">{kcal(fmt, sums.kcal)}</span>
             <span className="text-xs text-muted">{tNutrition.ofKcal(kcal(fmt, target.kcal))}</span>
           </MacroRing>
@@ -492,7 +469,10 @@ export function NutritionTodayCard() {
             const eaten = sums[macro];
             return (
               <div key={macro} className="grid grid-cols-[1fr_auto] items-baseline gap-x-2">
-                <dt className="truncate text-sm text-muted">{tNutrition.macros[macro]}</dt>
+                <dt className="truncate text-sm text-muted">
+                  <span aria-hidden="true">{tNutrition.macrosShort[macro]}</span>
+                  <span className="sr-only">{tNutrition.macros[macro]}</span>
+                </dt>
                 <dd className="text-sm whitespace-nowrap text-muted">
                   <span className="font-semibold text-fg">{grams(fmt, eaten)}</span>
                   {goal !== undefined
@@ -512,6 +492,9 @@ export function NutritionTodayCard() {
           })}
         </dl>
       </div>
+      {ring && ring.over > 0 ? (
+        <p className="mt-3 text-sm text-muted">{tNutrition.over(kcal(fmt, ring.over))}</p>
+      ) : null}
       {/* Drei runde Symbol-Knöpfe in card-2, mittig: scannen, Ernährung, Einkaufsliste. */}
       <div className="mt-4 flex justify-center gap-3">
         {(

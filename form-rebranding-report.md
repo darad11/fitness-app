@@ -42,6 +42,7 @@ Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich in Abschnitt 3.
 | F6 §5 Karte V2c | „Bereit für dein Training?“ deckend grün (#283E18, Rand #405A28), Label und Text hell grüngrau, Titel und Link in `--fg`, weißer Primärknopf mit Play-Symbol; Tokens `--stage-tint-…`; Ausnahme in `brand-tokens.md` | D-336 | umgesetzt |
 | F6 §6 Startbild länger | Beim Kaltstart bleibt die Startfläche ab dem ersten Bild mindestens 1,0 s (Ladezeit eingerechnet), dann 300 ms Ausblenden; länger, bis die erste Ansicht steht; bei „Bewegung reduzieren“ ohne Ausblenden, Mindestzeit bleibt; nicht nach Hintergrund oder Navigation | D-337 | umgesetzt; Kaltstart am Gerät prüfbar (T-IPH-M0 Schritt 5) |
 | F6 §7 Trainingskopf | „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich nur der Programmname mit Auslassungspunkten („Winterprogramm 20… · Woche 3“) | D-338 | umgesetzt |
+| F6 §8 Nächste Schritte | Karte „Aktivitäten“, Rückblicke „Das warst du heute“ und „Das warst du diese Woche“, Wischen zum Löschen in der Einkaufsliste als Punkte 62 bis 64 in `docs/implementation-plan.md`, nicht begonnen | D-339 | eingetragen |
 
 ## 2. Geänderte Dateien je Paket
 

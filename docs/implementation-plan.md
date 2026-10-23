@@ -273,3 +273,6 @@ Nächste Schritte: <Liste>
 59. Nach dem Merge, eigene Sitzung: Grundnahrungsmittel und Suche in der Ernährung; laut Produktinhaber findet die Suche „Apfel“, „Eier“ und „Tomaten“ nicht. Zuerst die Ursache klären (fehlende Daten oder Suche), dann Quelle und Lizenz der Grundnahrungsmittel (D-306, D-330).
 60. Nach dem Merge, eigene Sitzung: eigene Workouts aus der Übungsbibliothek zusammenstellen (D-330).
 61. Nach dem Merge, eigene Sitzung: Ausführungsanleitungen in den Übungsdetails, mit eigenen Texten (D-106, D-330).
+62. Nach dem Merge, eigene Sitzung: Karte „Aktivitäten“ unter „Ernährung heute“ mit den Kalorien aus Workouts und Nachträgen, später aus Apple Health über die native App (AH-07, D-116). Verknüpft mit dem Kalorienbudget, ohne doppelte Anrechnung. Titel „Aktivitäten“, nicht „Verbrannte Kalorien“ (Wortfeld der Leitplanken, `form-markenleitplanken.md`). Vorher klären: wie die App die Kalorien eines Workouts schätzt und ob sie das Budget des Tages erhöhen (D-339).
+63. Nach dem Merge, eigene Sitzung: Rückblicke „Das warst du heute“ und „Das warst du diese Woche“ (D-339). Texte nach den Leitplanken, ohne Streaks und Zähler für Serien.
+64. Nach dem Merge, eigene Sitzung: Wischen zum Löschen in der Einkaufsliste (D-339). Wie das Löschen heute mit „Rückgängig“; der bisherige Weg ohne Wischen bleibt für Tastatur und Screenreader.

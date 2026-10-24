@@ -1428,4 +1428,4 @@ Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Beri
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,4 KB von 250 KB |
 | E2E `shopping.spec.ts` (Chromium Desktop und Pixel 7, Maus und Touch) | 9 bestanden, 1 übersprungen |
 | E2E, ganze Suite (Chromium) | 325 bestanden, 51 übersprungen, 0 fehlgeschlagen |
-| WebKit | in der CI zum Commit |
+| WebKit | CI-Lauf 40133009248 zu `bce4e15`: alle vier Jobs grün |

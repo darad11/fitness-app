@@ -16,7 +16,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §1 Nachtrag | Ganzes Wort vor Grundwort (Milch vor Buttermilch, Erdäpfel vor Ofenerdäpfel), drei Scheintreffer weniger (Oberschenkel bei „Obers“, Butternut bei „Butter“, gehackte Tomaten bei „Hackfleisch“); gefunden bei der Probe über die Auswahlliste | D-357 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40127846395 grün |
 | §2 Auswahlliste aus dem BLS 4.0 | `docs/lebensmittel-auswahl.csv` mit 354 Zeilen: 345 Grundnahrungsmittel aus dem BLS 4.0 in zwölf Gruppen, 9 fehlende als „fehlt im BLS“; EU-Rechenregeln geprüft (keine Umrechnung nötig); Stückgewichte 5 belegt, 74 offen; Lizenzen in `docs/licenses-data.md`; nicht eingebaut | D-358 | Liste fertig zur Durchsicht, CI-Lauf 40129250444 grün; wartet auf Freigabe |
 | §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe | Ist und Tagesreferenz unter „Weitere Nährwerte“ („4 g von höchstens 6 g“, „von mindestens 30 g“) mit Erklärung und Quelle; fehlende Angaben nicht als 0, Einträge ohne Angabe mit Namen | D-359 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40130994920 grün |
-| §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; WebKit in der CI |
+| §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; CI-Lauf 40133009248 mit allen vier Jobs grün, auch E2E (webkit) |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -36,7 +36,7 @@ Auf dem Branch waren zwei Commits: `444d7f1` (Phasenstart, D-353) und `8f0a0dd` 
 | Einbau in die App: Laden der Datei, Grundnahrungsmittel in Suche und „Zuletzt verwendet“, Karte „Grundnahrungsmittel“ in „Meine Lebensmittel“, Hinweis bei Ladefehler, Texte | lokal | zurückgenommen | Einbau erst nach Freigabe der Liste (§6) |
 | Quellenzeile je Eintrag im Fenster „Hinzufügen“ | lokal | zurückgestellt bis §6 | kommt zusammen mit den BLS-Einträgen und „Über die App“ |
 | Dubletten zwischen zwei Datenquellen erkennen (gleicher Name, gleiche Pflichtwerte) | lokal | behalten, in §1 für jede Datenquelle verallgemeinert | unabhängig von der Quelle |
-| BLS 4.0 als Rohdaten: `tools/data/bls-4.0.json` (byte-gleich mit `58dee8c^:src/modules/nutrition/data/bls-4.0.json`, 7.140 Lebensmittel, acht Nährwerte), `tools/bls_build.py` (Umwandlung aus der Excel-Datei, D-261) | lokal | behalten, kommt mit §2 | Grundlage der Auswahlliste |
+| BLS 4.0 als Rohdaten: `tools/data/bls-4.0.json` (byte-gleich mit `58dee8c^:src/modules/nutrition/data/bls-4.0.json`, 7.140 Lebensmittel, acht Nährwerte), `tools/bls_build.py` (Umwandlung aus der Excel-Datei, D-261) | lokal, mit §2 committet (`72e9094`) | behalten | Grundlage der Auswahlliste |
 
 In die App eingebaut war vom zurückgenommenen Teil nichts: Keiner der lokalen Stände wurde committet oder gepusht, `main` und der Entwurfs-PR enthalten ihn nicht.
 
@@ -46,7 +46,7 @@ In die App eingebaut war vom zurückgenommenen Teil nichts: Keiner der lokalen S
 
 ### Tests mit Ergebnis
 
-Nur Unterlagen, kein Code geändert. `pnpm format:check` und `pnpm check:docs` siehe Commit.
+Nur Unterlagen, kein Code geändert. `pnpm format:check` und `pnpm check:docs` ohne Befund; CI-Lauf 40123167625 zu `1f55e19` erfolgreich.
 
 ## 3. §1 Warum die Suche heute nichts findet
 
@@ -459,7 +459,7 @@ Grenzen: Auf dem iPhone selbst ist das Wischen noch nicht geprüft; die E2E-Test
 | Erster E2E-Lauf vor der Behebung | 2 fehlgeschlagen: Desktop „Expected: 3, Received: 2“ (Maus-Klick nach schrägem Ziehen hakte ab, behoben, siehe oben); Pixel 7 „Expected: 2, Received: 1“ (Testdaten „Artikel 01“ wurden als „Artikel“ mit Menge 1 erkannt und als Doppelte abgelehnt; Testdaten geändert) |
 | E2E, ganze Suite in Chromium, endgültiger Stand (mit §3) | 325 bestanden, 51 übersprungen, 0 fehlgeschlagen (12,9 min) |
 | Bildschirmfotos im Handyformat (390 pt, dunkel) | während des Wischens gedämpfter Papierkorb, ab der Löschstrecke „Löschen“ auf schwacher Warnfläche, danach „„Bananen“ gelöscht“ mit „Rückgängig“ |
-| WebKit | in der CI zum Commit |
+| WebKit | CI-Lauf 40133009248 zu `bce4e15`: alle vier Jobs grün, auch „E2E (webkit)“ mit dem Maus-Test zum Wischen |
 
 ---
 
@@ -476,4 +476,4 @@ Laut Auftrag Abschnitt 5 ist hier Halt: Abschnitte 0, 1 (mit Nachtrag), 2 (bis z
 
 Was die Freigabe braucht: deine Antworten auf die sieben offenen Fragen in Abschnitt 4 (am wichtigsten: Stückgewichte, fehlende Werte, Lücken) und Änderungen an der Liste, falls du welche hast. Du kannst die CSV direkt bearbeiten; `pnpm check:docs` prüft danach, ob Codes und BLS-Bezeichnungen noch stimmen.
 
-Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359) und der Commit zu §4 (D-360). Gemergt wird nur nach deiner Freigabe.
+Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359) und `bce4e15` (D-360). Gemergt wird nur nach deiner Freigabe.

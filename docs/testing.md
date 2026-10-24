@@ -1287,3 +1287,20 @@ Alle Prüfungen auf dem Stand des Abschlusses; die vorübergehende Gegenprobe `e
 | CI zu `86d4841` (Lauf 40021792538) | Prüfungen bestanden; Chromium 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,1 min); WebKit 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min) |
 | WebKit zum Commit des Abschlusses | steht beim Schreiben aus |
 
+### Stabilität, Nachtrag A-05: Sperre je Konto · 24.10.2026, Cloud-Umgebung (Node 22.22, PostgreSQL 16.15)
+
+Sperre je Konto in `push_documents`, SQL des Servers in `supabase/migrations/`, Datenbanktest (D-349). Bericht: `form-stabilitaet-report.md` Abschnitt 8.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Migrationen des Servers gegen die Dateien | `20261019145316` und `20261019145346`: Prüfsumme und Länge gleich (3851 und 1891 Bytes); `push_documents` auf dem Server vorher byte-gleich mit der zweiten |
+| `pnpm test:db` (frische Datenbank, Nachbildung von Supabase, drei Migrationen) | bestanden: zwei gleichzeitige Sendungen eines Kontos, B wartete auf A, Gerät C hat rev 1 und 2 geholt; ein anderes Konto wartet nicht; jüngerer HLC angenommen, gleicher HLC stale; vor und nach der Sperre nur `push_documents` geändert; Zurücknehmen stellt die Funktion wortgleich her |
+| Gegenprobe `node tools/test-db.mjs --bis 20261019145346` | fehlgeschlagen: „Übersprungen: Gerät C hat rev 1 nie geholt (A rev 1, B rev 2, B fertig, Cursor 2)“ |
+| je 10 Wiederholungen | mit Sperre 10 von 10 bestanden, ohne Sperre 10 von 10 fehlgeschlagen |
+| Server nach dem Einspielen (`tools/db/snapshot.sql`, lesend) | Migration `20261024055418` byte-gleich mit der Datei (2430 Bytes); 26 von 28 Werten wie vorher, anders nur Text von `push_documents` und „enthält die Sperre“; 0 Zeilen, 0 Konten; Hinweise von Supabase zur Sicherheit keine |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (8,0 min) |
+| CI-Job „Datenbank (Postgres 17)“ und WebKit | zum Commit ausstehend |
+

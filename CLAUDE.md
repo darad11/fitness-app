@@ -44,10 +44,12 @@ Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 ```
 pnpm format:check   pnpm lint   pnpm typecheck   pnpm test   pnpm test:coverage
 pnpm check:docs     pnpm build  pnpm check:bundle            pnpm test:e2e (nach pnpm build)
+pnpm test:db (Postgres mit Superuser über PGHOST, PGPORT, PGUSER, PGPASSWORD)
 ```
 
 - Cloud-Sitzungen: Der Start-Hook (`.claude/hooks/session-start.sh`) installiert die Abhängigkeiten und setzt `PW_CHROMIUM_PATH` und `E2E_ENGINES=chromium`. `playwright install` nicht ausführen; WebKit läuft in GitHub Actions.
 - Funktionsmatrix: Quelle ist `docs/feature-inventory.md`; danach `python3 tools/feature_inventory_to_csv.py` ausführen.
+- Server (Supabase): `supabase/migrations/` ist wortgleich mit dem Server (D-349). Eine Änderung kommt als neue Migration mit Datei zum Zurücknehmen in `supabase/rollback/`, vorher `pnpm test:db`; eingespielt wird nur mit Zustimmung des Produktinhabers. Lokal in Cloud-Sitzungen: `pg_ctlcluster 16 main start` und einmal `runuser -u postgres -- psql -c "alter user postgres password 'postgres'"`, dann `PGHOST=127.0.0.1 PGUSER=postgres PGPASSWORD=postgres pnpm test:db`.
 
 ## Code
 

@@ -1,5 +1,21 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.54 · 24.10.2026 · Phase Stabilität, Nachtrag A-05 (Sperre je Konto)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-349: Sperre je Konto in `push_documents`, SQL des Servers im Repository, Test `pnpm test:db` |
+| `architecture.md` | 11.2 Pull: `rev > Cursor` mit Sperre je Konto statt des alten Entwurfs mit Überlappung |
+| `data-model.md` | Abschnitt 12: SQL in `supabase/migrations/`, Sperre je Konto |
+| `testing.md` | Protokoll „Nachtrag A-05“ |
+| `.github/workflows/ci.yml` | Neuer Job „Datenbank (Postgres 17)“ |
+| `implementation-plan.md` | Punkt 66: A-05 erledigt, A-15 neu |
+| `feature-inventory.md` | Version 0.17: SY-03 mit Sperre je Konto |
+| `audit-report.md` | A-05 behoben, neu A-15 (Rechte), Abschnitt 9 Punkt 7 erledigt |
+| `form-stabilitaet-report.md` | Abschnitt 8 „Nachtrag: A-05“ |
+| `CLAUDE.md` | Befehl `pnpm test:db`, Ablauf für Änderungen am Server |
+| `supabase/`, `tools/test-db.mjs`, `tools/db/` | Neu: Migrationen des Servers, Datei zum Zurücknehmen, `README.md`; Datenbanktest |
+
 ## Version 0.53 · 23.10.2026 · Phase Stabilität, Abschnitt 6 (Tests und Abschluss)
 
 | Datei | Änderung |

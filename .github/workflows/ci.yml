@@ -40,6 +40,36 @@ jobs:
       - run: pnpm build
       - run: pnpm check:bundle
 
+  db:
+    name: Datenbank (Postgres 17)
+    # Migrationen aus supabase/migrations/ an einem frischen Postgres in der Hauptversion des
+    # Servers, dazu der Test zur Sperre je Konto (A-05, D-349). psql bringt das Image des Runners mit.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: node tools/test-db.mjs
+
   e2e:
     name: E2E (${{ matrix.engine }})
     needs: checks

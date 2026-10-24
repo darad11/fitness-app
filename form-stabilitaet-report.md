@@ -1,6 +1,6 @@
 # Phase Stabilität – Bericht
 
-Stand: 23.10.2026 · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
+Stand: 24.10.2026 (Nachtrag A-05, Abschnitt 8) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
 
 Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt.
 
@@ -16,6 +16,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `aa936d2`) |
 | §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `86d4841`) |
 | §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
+| Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zum Commit ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -269,7 +270,7 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §4“.
 ### Offen
 
 - **A-03 Rest:** strikte Kindschemas und neue Aufzählungswerte. Betrifft erst die nächste Schemaerweiterung; tolerante Leseschemas und eine Prüfung von `schema_version` im Abgleich sind ein eigenes Paket (verwandt mit A-01).
-- **A-05:** Das SQL des Servers (`push_documents`) liegt nicht im Repository; eine Sperre je Nutzer wäre eine Änderung an der Datenbank des Servers und braucht deine Zustimmung.
+- **A-05:** erledigt nach deiner Freigabe mit D-349 (Abschnitt 8).
 - **A-06 und Rest von E-03:** Snapshot über die App wiederherstellen, Export und Fehlerprotokoll im Wiederherstellungsbildschirm. Eigenes Paket; das Wiederherstellen aus dem Export (§3) deckt den Gerätewechsel ab.
 - **C-04 Rest:** Jede Seite mit Suche liest den Katalog aus IndexedDB (rund 0,6 MB). Ohne Messung am Gerät; die Abhilfe bräuchte einen eigenen kleinen Eintrag für den Stand des Imports, also eine Änderung am Datenmodell.
 - **B-02:** Pausieren bleibt bis Phase B offen (D-297).
@@ -376,7 +377,7 @@ Beim Produktinhaber:
 
 - Durchsicht und Merge von PR #50.
 - Gerätetests am iPhone, am besten an der Vorschau des Branches vor dem Merge: T-IPH-M0 Schritt 4 (Update) für diese Fassung; Wiederherstellen mit Dateien-App und Teilen-Menü (§3).
-- A-05: Die Sperre je Nutzer in `push_documents` ändert die Datenbank des Servers; das SQL liegt nicht im Repository. Nur mit deiner Zustimmung.
+- A-05: erledigt mit D-349 (Abschnitt 8). Neu dafür A-15: Rechte an `sync_documents` und an der Sequenz einschränken; eine Änderung am Server, nur mit deiner Zustimmung.
 
 Zu groß für diese Sitzung oder nicht Teil des Auftrags, mit Grund:
 
@@ -400,3 +401,51 @@ Empfehlungen:
 3. Vor der nächsten Erweiterung eines Schemas A-01 und den Rest von A-03, damit ältere Geräte neuere Daten nicht ablehnen oder verlieren.
 4. Braucht eine neue Funktion Platz in der Startansicht: die Abschnitte `programs` und `exercises` des Katalogs und die Linse der Tab-Leiste (Abschnitt 6).
 5. Bei einem neuen Verdacht auf einen wackelnden Test das Label „wiederholen“ setzen; die Liste der Tests steht in `repeat.yml`.
+
+## 8. Nachtrag: A-05 Sperre je Konto (24.10.2026)
+
+Freigabe des Produktinhabers am 24.10.2026 (D-349).
+
+### Ausgangslage
+
+`push_documents` vergibt `rev` aus einer Sequenz schon beim Aufruf; sichtbar wird die Zeile erst beim Commit. Senden zwei Geräte desselben Kontos gleichzeitig, kann die spätere Sendung zuerst committen. Holt ein drittes Gerät genau dann ab, sieht es die höhere Nummer, setzt seinen Cursor darauf und fragt danach nur `rev > Cursor` ab. Die niedrigere Nummer kommt dann nie an. Das SQL des Servers lag nicht im Repository.
+
+Auf dem Server vorher, lesend geprüft: zwei Migrationen, `push_documents` byte-gleich mit der zweiten, 0 Konten, 0 Zeilen, keine Hinweise von Supabase zur Sicherheit.
+
+### Änderungen
+
+- Die beiden Migrationen des Servers liegen wortgleich unter `supabase/migrations/`, mit Prüfsumme und Länge wie auf dem Server.
+- Dritte Migration `20261024055418_push_documents_lock_per_account.sql`: `pg_advisory_xact_lock(hashtext('push_documents'), hashtext(uid::text))` vor dem ersten Schreiben, sonst wortgleich mit der zweiten. Eine zweite Sendung desselben Kontos wartet bis zum Commit der ersten; ein anderes Konto wartet nicht.
+- Zurücknehmen: `supabase/rollback/push_documents_lock_per_account_revert.sql` stellt die Funktion wie in der zweiten Migration her.
+- Test ohne Server: `pnpm test:db` mit `tools/test-db.mjs` und `tools/db/` (Nachbildung von Supabase, Abfrage des Stands, Test mit drei Geräten über `dblink`). Neuer CI-Job „Datenbank (Postgres 17)“. Keine neue Abhängigkeit.
+
+### Geänderte Dateien
+
+Neu: `supabase/README.md`, drei Dateien in `supabase/migrations/`, `supabase/rollback/push_documents_lock_per_account_revert.sql`, `tools/test-db.mjs`, `tools/db/supabase-stub.sql`, `tools/db/snapshot.sql`, `tools/db/push-lock.test.sql`. Geändert: `package.json` (`test:db`), `.github/workflows/ci.yml` (Job `db`), `CLAUDE.md` (Befehl und Ablauf für den Server), `audit-report.md` (A-05 behoben, neu A-15), `docs/decisions.md` (D-349), `docs/architecture.md` 11.2, `docs/data-model.md` 12, `docs/testing.md`, `docs/implementation-plan.md` (Punkt 66), `docs/feature-inventory.md` (SY-03), `docs/CHANGELOG.md`.
+
+### Tests mit Ergebnis
+
+| Lauf | Ergebnis |
+|---|---|
+| `pnpm test:db` (lokal, PostgreSQL 16.15) | bestanden: „B wartete auf A; C hat rev 1 und 2 geholt, keine Nummer übersprungen“, „ein anderes Konto sendet, ohne zu warten“, „jüngerer HLC angenommen (rev 8 > 5), gleicher HLC stale“. Stand vor und nach der Sperre: nur `push_documents` geändert. Zurücknehmen: Funktion wieder wortgleich wie vor der Sperre |
+| Gegenprobe `node tools/test-db.mjs --bis 20261019145346` | fehlgeschlagen wie erwartet: „Übersprungen: Gerät C hat rev 1 nie geholt (A rev 1, B rev 2, B fertig, Cursor 2)“ |
+| je 10 Wiederholungen | mit Sperre 10 von 10 bestanden, ohne Sperre 10 von 10 fehlgeschlagen |
+| übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag A-05“ |
+| CI-Job „Datenbank (Postgres 17)“ und WebKit | zum Commit ausstehend |
+
+Lücken in der Folge der Nummern sind normal: Die Sequenz zählt auch bei abgelehnten Fassungen weiter (im Test 5, dann 8). Sie schaden nicht, weil das Abholen nur „größer als der Cursor“ fragt. Entscheidend ist, dass keine Nummer erst nach einer höheren sichtbar wird.
+
+### Prüfung auf dem Server
+
+| Prüfung | Ergebnis |
+|---|---|
+| Migrationen vorher | `20261019145316 sync_documents`, `20261019145346 push_documents_column_names` |
+| Einspielen | `20261024055418 push_documents_lock_per_account`; die gespeicherte Migration ist byte-gleich mit der Datei (2430 Bytes) |
+| Stand vorher und nachher (`tools/db/snapshot.sql`) | 26 von 28 Werten gleich. Anders nur der Text von `push_documents` (jetzt wie in der Datei) und „enthält die Sperre“ (vorher nein, nachher ja). Gleich: Rechte an Funktion, Tabelle und Sequenz, `security invoker`, `search_path`, Spalten, Bedingungen, Indizes, drei RLS-Regeln, keine Trigger, Daten (0 Zeilen, 0 Konten), Sequenz bei 4 |
+| `pg_advisory_xact_lock(integer, integer)` und `hashtext(text)` | vorhanden (PostgreSQL 17.11) |
+| Hinweise von Supabase zur Sicherheit | vorher und nachher keine |
+
+### Offen
+
+- A-15 (neu, P3): Durch die Standardrechte von Supabase hat `authenticated` auf `sync_documents` alle Rechte, `anon` hat Rechte an der Sequenz. Heute ohne Folgen: RLS verhindert das Löschen, TRUNCATE ist über die REST-Schnittstelle nicht erreichbar. Einschränken wäre eine eigene Migration am Server, nur mit deiner Zustimmung.
+- Gerätetest des Abgleichs mit zwei Geräten steht weiter aus; auf dem Server gibt es noch kein Konto.

@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { expect, openPage, test } from './fixtures';
 
@@ -82,8 +83,21 @@ test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Ne
   // Weitere Nährwerte sind dezent zugeklappt (D-272).
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toBeHidden();
   await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
-  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Zucker');
-  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Salz');
+  const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
+  await expect(extras).toContainText('Zucker');
+  await expect(extras).toContainText('Salz');
+  // Ist und Tagesreferenz mit Quelle (D-359).
+  await expect(extras).toContainText(/von höchstens 6 g/);
+  await expect(extras).toContainText(/von höchstens 90 g/);
+  await expect(extras).toContainText(/von höchstens 20 g/);
+  await expect(extras).toContainText(/von mindestens 30 g/);
+  await expect(extras).toContainText('VO (EU) Nr. 1169/2011, Anhang XIII');
+  // Barrierefreiheit der aufgeklappten Liste (die Prüfung je Seite sieht sie nur zugeklappt).
+  const axe = await new AxeBuilder({ page })
+    .include('[role="group"][aria-label="Weitere Nährwerte"]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
+  expect(axe.violations.map((violation) => violation.id)).toEqual([]);
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Mittagessen' }).getByText('200 g')).toBeVisible();

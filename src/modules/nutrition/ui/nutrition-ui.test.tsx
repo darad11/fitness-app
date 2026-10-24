@@ -712,3 +712,99 @@ describe('Ernährung (Schritt G, D-261)', () => {
     },
   );
 });
+
+describe('Weitere Nährwerte mit Tagesreferenz (D-359)', () => {
+  it(
+    'zeigt Ist und Referenz mit Quelle; Einträge ohne Angabe zählen nicht als 0',
+    { timeout: 30_000 },
+    async () => {
+      const muesli = await createFood(rt, {
+        name: 'Müsli',
+        basis: 'g',
+        per100: {
+          kcal: 370,
+          protein: 10,
+          carbs: 60,
+          sugar: 20,
+          fat: 8,
+          saturatedFat: 2,
+          fiber: 8,
+          salt: 0.5,
+        },
+        servings: [],
+      });
+      // Apfel ohne Salz, gesättigte Fettsäuren und Ballaststoffe.
+      const apple = await createFood(rt, {
+        name: 'Apfel',
+        basis: 'g',
+        per100: { kcal: 58, protein: 0.3, carbs: 12, sugar: 10, fat: 0.6 },
+        servings: [],
+      });
+      for (const [food, amount] of [
+        [muesli, 100],
+        [apple, 150],
+      ] as const) {
+        await logFood(rt, {
+          food: toFoodItem(food),
+          slot: 'breakfast',
+          dayKey: localDay(),
+          quantity: { kind: 'amount', amount },
+        });
+      }
+
+      await renderAt('/ernaehrung', 'Ernährung');
+      await screen.findByRole('region', { name: 'Frühstück' }, WAIT);
+      const list = await screen.findByRole(
+        'group',
+        { name: 'Weitere Nährwerte', hidden: true },
+        WAIT,
+      );
+      const row = (label: string) => {
+        const term = within(list).getByText(label, { selector: 'dt' });
+        if (!term.parentElement) throw new Error(`Zeile ${label} fehlt`);
+        return term.parentElement;
+      };
+      // Reihenfolge: Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe.
+      expect(
+        within(list)
+          .getAllByRole('term', { hidden: true })
+          .map((t) => t.textContent),
+      ).toEqual(['Salz', 'Zucker', 'Gesättigte Fettsäuren', 'Ballaststoffe']);
+      expect(row('Salz')).toHaveTextContent('0,5 g von höchstens 6 g');
+      expect(row('Salz')).toHaveTextContent('EU-Referenzmenge für Erwachsene (LMIV).');
+      expect(row('Salz')).toHaveTextContent('Ohne Angabe, nicht mitgezählt: Apfel.');
+      // Zucker: 20 g aus dem Müsli und 15 g aus dem Apfel, beide mit Angabe.
+      expect(row('Zucker')).toHaveTextContent('35 g von höchstens 90 g');
+      expect(row('Zucker')).toHaveTextContent('Gesamtzucker, auch aus Obst und Milch.');
+      expect(row('Zucker')).not.toHaveTextContent('Ohne Angabe');
+      expect(row('Gesättigte Fettsäuren')).toHaveTextContent('2 g von höchstens 20 g');
+      expect(row('Gesättigte Fettsäuren')).toHaveTextContent('nicht mitgezählt: Apfel.');
+      expect(row('Ballaststoffe')).toHaveTextContent('8 g von mindestens 30 g');
+      expect(row('Ballaststoffe')).toHaveTextContent('Richtwert der DGE für Erwachsene.');
+      expect(within(list).getByText(/VO \(EU\) Nr\. 1169\/2011, Anhang XIII/)).toBeTruthy();
+      expect(within(list).getByText(/freien Zucker unter 10 % der Energie/)).toBeTruthy();
+      // Kein Lob und keine Wertung beim Einhalten oder Überschreiten.
+      expect(list.textContent).not.toMatch(/gut|super|geschafft|!/i);
+    },
+  );
+
+  it('zeigt „keine Angabe“, wenn kein Eintrag einen Wert hat', { timeout: 30_000 }, async () => {
+    await logQuick(rt, { kcal: 300, slot: 'lunch', dayKey: localDay() });
+    await renderAt('/ernaehrung', 'Ernährung');
+    const list = await screen.findByRole(
+      'group',
+      { name: 'Weitere Nährwerte', hidden: true },
+      WAIT,
+    );
+    const salt = within(list).getByText('Salz', { selector: 'dt' }).parentElement;
+    expect(salt).toHaveTextContent('keine Angabe');
+    expect(salt).not.toHaveTextContent('0 g von höchstens');
+    // Fehlt derselbe Eintrag bei allen vier Werten, steht der Hinweis einmal unter der Liste.
+    expect(salt).not.toHaveTextContent('Ohne Angabe');
+    expect(
+      within(list).getByText(
+        'Ohne Angabe bei allen vier Werten, nicht mitgezählt: Schnelleintrag.',
+      ),
+    ).toBeTruthy();
+  });
+});

@@ -53,6 +53,32 @@ export const tNutrition = {
     fiber: 'Ballaststoffe',
     saturatedFat: 'Gesättigte Fettsäuren',
   },
+  /** Ist und Tagesreferenz unter „Weitere Nährwerte“ (Phase Ernährung §3, D-359). */
+  reference: {
+    atMost: (grams: string) => `von höchstens ${grams} g`,
+    atLeast: (grams: string) => `von mindestens ${grams} g`,
+    noValue: 'keine Angabe',
+    notes: {
+      salt: 'EU-Referenzmenge für Erwachsene (LMIV).',
+      sugar: 'Gesamtzucker, auch aus Obst und Milch. EU-Referenzmenge für Erwachsene (LMIV).',
+      saturatedFat: 'EU-Referenzmenge für Erwachsene (LMIV).',
+      fiber: 'Richtwert der DGE für Erwachsene.',
+    },
+    /** Einträge ohne Angabe: höchstens drei Namen, dann „und n weitere“. */
+    missing: (names: readonly string[]) => {
+      const shown = names.slice(0, 3);
+      const more = names.length - shown.length;
+      return `Ohne Angabe, nicht mitgezählt: ${listDe(more > 0 ? [...shown, `${String(more)} weitere`] : shown)}.`;
+    },
+    /** Dieselben Einträge fehlen bei allen vier Werten: ein Hinweis statt vier. */
+    missingAll: (names: readonly string[]) => {
+      const shown = names.slice(0, 3);
+      const more = names.length - shown.length;
+      return `Ohne Angabe bei allen vier Werten, nicht mitgezählt: ${listDe(more > 0 ? [...shown, `${String(more)} weitere`] : shown)}.`;
+    },
+    sources:
+      'Referenzmengen nach der EU-Lebensmittelinformationsverordnung (LMIV, VO (EU) Nr. 1169/2011, Anhang XIII), Ballaststoffe nach der Deutschen Gesellschaft für Ernährung (DGE). WHO und DGE empfehlen, freien Zucker unter 10 % der Energie zu halten; die Nährwertangaben trennen ihn nicht vom Zucker aus Obst und Milch, deshalb zeigt die App diesen Wert nicht. Allgemeine Orientierungswerte für Erwachsene, keine Ziele und keine medizinische Empfehlung.',
+  },
   noTarget: 'Noch kein Tagesziel.',
   setTarget: 'Ziel festlegen',
   targets: 'Ziele',

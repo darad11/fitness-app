@@ -35,6 +35,7 @@ import {
 import { useToday } from '@/shared/ui/useToday';
 import { mealSlotAt } from '../calc/mealSlot';
 import { sumEntries } from '../calc/nutrients';
+import { referenceLines, sharedMissing } from '../calc/references';
 import { macroRing } from '../calc/ring';
 import { targetOn } from '../calc/targets';
 import { useImportedCatalog } from '../data/catalogStore';
@@ -73,17 +74,6 @@ function macroGoal(
   return { protein: target.proteinG, carbs: target.carbsG, fat: target.fatG }[macro];
 }
 
-/**
- * Weitere Nährwerte in den Spalten der Makros darunter: Salz unter Eiweiß, Zucker und Ballaststoffe
- * unter Kohlenhydrate, gesättigte Fettsäuren unter Fett.
- */
-const EXTRAS = [
-  { nutrient: 'salt', column: 'col-start-1' },
-  { nutrient: 'sugar', column: 'col-start-2' },
-  { nutrient: 'saturatedFat', column: 'col-start-3' },
-  { nutrient: 'fiber', column: 'col-start-2' },
-] as const;
-
 /** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
 export function NutritionPage() {
   const fmt = useFormatters();
@@ -112,6 +102,16 @@ export function NutritionPage() {
   };
   const target = targets ? targetOn(targets, day) : undefined;
   const totals = entries ? sumEntries(entries) : undefined;
+  // Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz (D-359); Einträge ohne
+  // Angabe zählen nicht als 0, sie werden genannt.
+  const references = useMemo(
+    () =>
+      referenceLines(
+        (entries ?? []).map((entry) => ({ nutrients: entry.nutrients, name: entry.nameSnapshot })),
+      ),
+    [entries],
+  );
+  const missingForAll = sharedMissing(references);
   const ring = target && totals ? macroRing(totals.sums, target.kcal) : undefined;
   // Kurz, damit die Zeile auf dem Handy einzeilig bleibt: „Heute · Do., 22. Okt.“ (D-326).
   const dateLabel = fmt.weekdayDayMonthShort(dayDate(day));
@@ -230,20 +230,55 @@ export function NutritionPage() {
                   className="size-6 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
+              {/* Je Wert eine Zeile „Ist von höchstens/mindestens Referenz“ mit kurzer Erklärung
+                  und Quelle (D-359); in den drei Makro-Spalten (D-272) hatte das keinen Platz. */}
               <div role="group" aria-label={tNutrition.extrasLabel}>
-                <dl className="mt-1 grid grid-flow-row-dense grid-cols-3 gap-x-3 gap-y-2 text-sm">
-                  {EXTRAS.map(({ nutrient, column }) => (
-                    <div key={nutrient} className={column}>
-                      <dt className="text-muted">{tNutrition.extras[nutrient]}</dt>
-                      <dd className="font-semibold tabular-nums">
-                        {nutrient === 'salt'
-                          ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
-                          : grams(fmt, totals.sums[nutrient])}{' '}
-                        {tNutrition.units.g}
-                      </dd>
-                    </div>
-                  ))}
+                <dl className="mt-1 grid gap-3 text-sm">
+                  {references.map((line) => {
+                    const reference = fmt.number(line.reference.grams);
+                    return (
+                      <div
+                        key={line.nutrient}
+                        className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3"
+                      >
+                        <dt className="text-muted">{tNutrition.extras[line.nutrient]}</dt>
+                        <dd className="text-right tabular-nums">
+                          {line.total === null ? (
+                            <span className="text-muted">{tNutrition.reference.noValue}</span>
+                          ) : (
+                            <>
+                              <span className="font-semibold">
+                                {line.nutrient === 'salt'
+                                  ? fmt.number(line.total, { maximumFractionDigits: 1 })
+                                  : grams(fmt, line.total)}{' '}
+                                {tNutrition.units.g}
+                              </span>{' '}
+                              <span className="text-muted">
+                                {line.reference.bound === 'atMost'
+                                  ? tNutrition.reference.atMost(reference)
+                                  : tNutrition.reference.atLeast(reference)}
+                              </span>
+                            </>
+                          )}
+                        </dd>
+                        <dd className="col-span-2 text-caption text-muted">
+                          {tNutrition.reference.notes[line.nutrient]}
+                        </dd>
+                        {line.missingCount > 0 && missingForAll === null ? (
+                          <dd className="col-span-2 text-caption text-muted">
+                            {tNutrition.reference.missing(line.missingNames)}
+                          </dd>
+                        ) : null}
+                      </div>
+                    );
+                  })}
                 </dl>
+                {missingForAll ? (
+                  <p className="mt-3 text-caption text-muted">
+                    {tNutrition.reference.missingAll(missingForAll)}
+                  </p>
+                ) : null}
+                <p className="mt-3 text-caption text-muted">{tNutrition.reference.sources}</p>
               </div>
             </details>
             {totals.incomplete.some((n) => n !== 'kcal') ? (

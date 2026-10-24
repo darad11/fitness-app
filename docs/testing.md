@@ -1398,3 +1398,19 @@ Stufe 8 für das ganze Wort am Anfang des Namens, falsche Freunde „Oberschenke
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
 | E2E, ganze Suite (Chromium Desktop und Pixel 7) | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
 | WebKit | in der CI zum Commit |
+
+### Ernährung §3: Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe mit Referenz · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ist und Tagesreferenz unter „Weitere Nährwerte“, fehlende Angaben nicht als 0 (D-359, AK-NUT-15). Bericht: `form-ernaehrung-report.md` Abschnitt 5.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `references.test.ts`, `de-nutrition.test.ts`, `nutrition-ui.test.tsx` | 6, 6 und 16 bestanden |
+| Gegenprobe: zwei neue Komponententests gegen die alte Übersicht | 2 von 2 fehlgeschlagen |
+| `pnpm test` | 118 Dateien, 1017 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB |
+| E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts`, `network-a11y.spec.ts` (Chromium Desktop und Pixel 7) | 80 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| E2E, ganze Suite (Chromium), Stand vor dem gemeinsamen Hinweis | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: erweiterter E2E-Test gegen die alte Übersicht | 2 von 2 fehlgeschlagen („Expected pattern: /von höchstens 6 g/“) |
+| WebKit | in der CI zum Commit |

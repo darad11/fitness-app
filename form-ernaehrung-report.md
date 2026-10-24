@@ -15,6 +15,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §1 Warum die Suche heute nichts findet | Ursache belegt (D-354): keine Daten für lose Lebensmittel seit D-279, Schwächen der Suche. Suche neu für jede Datenquelle: Umlautschreibweisen, Einzahl und Mehrzahl, Synonyme in beide Richtungen, Grundwörter, Rang nach Stellung im Namen, lose vor Marke, keine Dubletten | D-354, D-356 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40124992752 mit allen vier Jobs grün, auch E2E (webkit) |
 | §1 Nachtrag | Ganzes Wort vor Grundwort (Milch vor Buttermilch, Erdäpfel vor Ofenerdäpfel), drei Scheintreffer weniger (Oberschenkel bei „Obers“, Butternut bei „Butter“, gehackte Tomaten bei „Hackfleisch“); gefunden bei der Probe über die Auswahlliste | D-357 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40127846395 grün |
 | §2 Auswahlliste aus dem BLS 4.0 | `docs/lebensmittel-auswahl.csv` mit 354 Zeilen: 345 Grundnahrungsmittel aus dem BLS 4.0 in zwölf Gruppen, 9 fehlende als „fehlt im BLS“; EU-Rechenregeln geprüft (keine Umrechnung nötig); Stückgewichte 5 belegt, 74 offen; Lizenzen in `docs/licenses-data.md`; nicht eingebaut | D-358 | Liste fertig zur Durchsicht; wartet auf Freigabe |
+| §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe | Ist und Tagesreferenz unter „Weitere Nährwerte“ („4 g von höchstens 6 g“, „von mindestens 30 g“) mit Erklärung und Quelle; fehlende Angaben nicht als 0, Einträge ohne Angabe mit Namen | D-359 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -360,4 +361,55 @@ Die erste Probe mit der Suche aus D-356 zeigte die Schwächen, die D-357 behebt 
 | `pnpm test` | 117 Dateien, 1005 Tests bestanden (kein App-Code geändert) |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB, unverändert; die Liste ist nicht in der App |
 | E2E, ganze Suite in Chromium (Desktop und Pixel 7) | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,8 min) |
+| WebKit | in der CI zum Commit |
+
+---
+
+## 5. §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe mit Referenz
+
+### Ergebnis
+
+Unter „Weitere Nährwerte“ in der Karte „Gegessen“ (weiterhin zugeklappt, wie in D-272 entschieden) steht je Wert eine Zeile „Ist von Referenz“:
+
+| Wert | Anzeige | Referenz | Quelle |
+|---|---|---|---|
+| Salz | „0,3 g von höchstens 6 g“ | Referenzmenge für Erwachsene | VO (EU) Nr. 1169/2011 (LMIV), Anhang XIII Teil B |
+| Zucker | „9,6 g von höchstens 90 g“ | Referenzmenge für Erwachsene, Gesamtzucker | ebenso |
+| Gesättigte Fettsäuren | „5,4 g von höchstens 20 g“ | Referenzmenge für Erwachsene | ebenso |
+| Ballaststoffe | „6,6 g von mindestens 30 g“ | Richtwert für Erwachsene | Deutsche Gesellschaft für Ernährung (DGE) |
+
+- Unter jeder Zeile eine kurze Erklärung mit Quelle; am Ende die Quellen ausgeschrieben, die Grenze beim freien Zucker und „Allgemeine Orientierungswerte für Erwachsene, keine Ziele und keine medizinische Empfehlung“.
+- **Freier Zucker:** WHO und DGE empfehlen weniger als 10 % der Energie. Die Nährwertangaben (BLS, Packungen, Open Food Facts) nennen nur den Gesamtzucker; der Wert wäre geschätzt. Die App zeigt ihn deshalb nicht und sagt das.
+- **Kein Lob, keine Farbe:** Weder beim Einhalten noch beim Überschreiten ändert sich die Anzeige (Markenleitplanken Punkt 5: keine rote Markierung beim Überschreiten).
+- **Fehlende Angaben zählen nicht als 0:** Die Summe gilt für die Einträge mit Wert. Die übrigen stehen darunter mit Namen: „Ohne Angabe, nicht mitgezählt: Apfel.“ (höchstens drei Namen, dann „und 2 weitere“). Fehlen dieselben Einträge bei allen vier Werten, etwa ein Schnelleintrag nur mit kcal, steht der Hinweis einmal. Hat kein Eintrag einen Wert, steht „keine Angabe“ statt „0 g“. Der bisherige Hinweis unter der Karte („Bei mindestens einem Eintrag fehlen Werte für …“) bleibt, damit man die Lücke auch zugeklappt sieht.
+- **Aufbau:** eine Zeile je Wert statt der drei Spalten unter den Makros, weil „4 g von höchstens 6 g“ dort am Handy keinen Platz hat. Die Rechnung steht ohne React in `calc/references.ts`.
+
+Die Beispielzahlen oben stammen aus einem Bildschirmfoto im Handyformat (390 pt, dunkel): Haferflocken 60 g, Joghurt 200 g und ein Schnelleintrag mit 450 kcal; bei allen vier Werten steht einmal „Ohne Angabe bei allen vier Werten, nicht mitgezählt: Schnelleintrag.“
+
+### Geprüfte Quellen
+
+| Angabe | Quelle |
+|---|---|
+| Zucker 90 g, gesättigte Fettsäuren 20 g, Salz 6 g als Referenzmengen für Erwachsene | VO (EU) Nr. 1169/2011, Anhang XIII Teil B „Referenzmengen für die Zufuhr von Energie und ausgewählten Nährstoffen“ (Rechtstext, per Websuche über gesetze.legal, freirecht.de und legislation.gov.uk geprüft) |
+| Ballaststoffe mindestens 30 g am Tag | DGE, Referenzwert für Erwachsene (DGE-FAQ Ballaststoffe 2021) |
+| Freier Zucker unter 10 % der Energie | WHO-Leitlinie „Sugars intake for adults and children“ (2015); Konsenspapier von DAG, DDG und DGE (2018) |
+
+### Geänderte Dateien
+
+`src/modules/nutrition/calc/references.ts` und `.test.ts` (neu), `src/modules/nutrition/ui/NutritionPage.tsx`, `src/shared/i18n/de-nutrition.ts` und `.test.ts`, `src/modules/nutrition/ui/nutrition-ui.test.tsx`, `e2e/nutrition.spec.ts`, `docs/decisions.md` (D-359), `docs/requirements.md` (AK-NUT-15), `docs/feature-inventory.md` und `.csv` (NU-28, Version 0.20), `docs/implementation-plan.md`, `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/references.test.ts` (neu) | 6 bestanden: Referenzwerte und Quellen, Summe auf 0,1 g, fehlende Angaben nicht als 0, „keine Angabe“ ohne jeden Wert, Tag ohne Einträge, gemeinsamer Hinweis |
+| `src/shared/i18n/de-nutrition.test.ts` | 6 bestanden, davon 4 neu: „höchstens“ und „mindestens“, höchstens drei Namen und „und 2 weitere“, gemeinsamer Hinweis, Quellen ohne Ausrufezeichen |
+| `src/modules/nutrition/ui/nutrition-ui.test.tsx` | 16 bestanden, davon 2 neu: Ist und Referenz mit Quelle für Müsli und Apfel (Apfel ohne Salz, gesättigte Fettsäuren und Ballaststoffe wird genannt, nicht als 0 gezählt), „keine Angabe“ bei einem Schnelleintrag |
+| Gegenprobe: die zwei neuen Komponententests gegen die alte Übersicht | 2 von 2 fehlgeschlagen, die übrigen 14 bestanden |
+| `pnpm test` | 118 Dateien, 1017 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB |
+| E2E `nutrition.spec.ts` (erweitert: Referenzen, Quelle, axe-Prüfung der aufgeklappten Liste), `nutrition-ring.spec.ts`, `network-a11y.spec.ts`, Chromium Desktop und Pixel 7, endgültiger Stand | 80 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| E2E, ganze Suite in Chromium, Stand vor dem gemeinsamen Hinweis | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen (12,3 min) |
+| Gegenprobe: erweiterter E2E-Test gegen die alte Übersicht | 2 von 2 fehlgeschlagen: „Expected pattern: /von höchstens 6 g/“, erhalten „Salz0 gZucker1,6 gGesättigte Fettsäuren0 gBallaststoffe3,4 g“ |
 | WebKit | in der CI zum Commit |

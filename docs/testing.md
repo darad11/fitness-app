@@ -1356,3 +1356,17 @@ Export und Sicherung vor dem Wiederherstellen heißen `form-sicherung-…` (D-35
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,2 min); darin `shell.spec.ts` (Name des Exports) und `restore.spec.ts` (Name der Sicherung vor dem Wiederherstellen) |
 | WebKit | in der CI zum Commit |
 
+### Ernährung §1: Suche für jede Datenquelle · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Neue Lebensmittelsuche (D-356, AK-NUT-14). Bericht: `form-ernaehrung-report.md` Abschnitt 3.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/foodSearch.test.ts` | 16 bestanden |
+| `pnpm test` | 117 Dateien, 1002 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: neuer E2E-Test „Suche: Mehrzahl, Umlautschreibweise und Synonyme …“ gegen die alte Suche | 2 von 2 fehlgeschlagen („Expected pattern: /^Tomate roh/“) |
+| Laufzeit (Node, vorübergehender Lauf) | Index 7.140 Einträge 147 ms; Suche über 12.140 Einträge Median 23,0 ms, höchstens 43,4 ms |
+| WebKit | in der CI zum Commit |

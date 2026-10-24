@@ -6,11 +6,12 @@ FORM, persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, d
 
 Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 
-- Branch: Jede Phase bekommt einen eigenen Branch von `main`, dazu einen Entwurfs-PR nach `main` für die CI. Aktuelle Phase: `form-stabilitaet`. Nie direkt auf `main` arbeiten. Nach jedem Commit sofort pushen.
+- Branch: Jede Phase bekommt einen eigenen Branch von `main`, dazu einen Entwurfs-PR nach `main` für die CI. Aktuelle Phase: `form-ernaehrung`. Nie direkt auf `main` arbeiten. Nach jedem Commit sofort pushen.
 - Zu Beginn jeder Aufgabe lesen: `CLAUDE.md`, `docs/decisions.md`, `audit-report.md`, `form-markenleitplanken.md`; ab dem Rebranding zusätzlich `brand-tokens.md`.
 - Ein Commit pro Paket. Jedes Paket bekommt eine D-Nummer in `docs/decisions.md`.
 - Nach jedem Paket: `pnpm check:bundle` (Startansicht unter 250 KB) und E2E inklusive WebKit.
 - Keine Änderungen an Datenmodellen ohne Migrations- und Rückfallplan.
+- Jede Migration, die eine neue Tabelle anlegt, schränkt deren Rechte selbst ein (siehe `supabase/README.md`).
 - Texte in der App nach `form-markenleitplanken.md`: Du-Form, keine Ausrufezeichen, keine Emojis, keine Streaks oder Challenge-Zähler.
 - Gemergt wird nur nach Freigabe des Produktinhabers.
 - Rückfragen nur, wenn eine Entscheidung die Richtung ändert; alles andere selbst entscheiden und begründen.

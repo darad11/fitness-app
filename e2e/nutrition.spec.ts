@@ -3,6 +3,15 @@ import { expect, openPage, test } from './fixtures';
 
 /** Lebensmitteldaten wie aus der BLS-Recherche importieren (D-263); der gebündelte BLS entfällt (D-279). */
 async function importFoods(page: Page) {
+  await importRows(page, [
+    ['0200001', 'Kartoffel geschält gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]],
+    ['C133000', 'Hafer Flocken', [348, 13.22, 53.3, 0.74, 6.65, 1.34, 10.98, 0]],
+    ['F503100', 'Banane roh', [79, 1.32, 15.89, 13.89, 0.4, 0.07, 2, 0]],
+  ]);
+}
+
+/** Importiert Zeilen [Code, Name, Werte in der Reihenfolge kcal, Eiweiß, KH, Zucker, Fett, gesFS, Ballaststoffe, Salz]. */
+async function importRows(page: Page, rows: [string, string, number[]][]) {
   const row = (code: string, name: string, v: number[]) => {
     const [kcal, protein, carbs, sugar, fat, saturatedFat, fiber, salt] = v;
     return {
@@ -19,13 +28,7 @@ async function importFoods(page: Page) {
       salt,
     };
   };
-  const content = JSON.stringify({
-    rows: [
-      row('0200001', 'Kartoffel geschält gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]),
-      row('C133000', 'Hafer Flocken', [348, 13.22, 53.3, 0.74, 6.65, 1.34, 10.98, 0]),
-      row('F503100', 'Banane roh', [79, 1.32, 15.89, 13.89, 0.4, 0.07, 2, 0]),
-    ],
-  });
+  const content = JSON.stringify({ rows: rows.map(([code, name, v]) => row(code, name, v)) });
   await openPage(page, '/ernaehrung/lebensmittel');
   await page.getByLabel('Datei auswählen').setInputFiles({
     name: 'nuts-recherche.json',
@@ -36,7 +39,9 @@ async function importFoods(page: Page) {
     .getByRole('dialog', { name: 'Lebensmitteldaten importieren' })
     .getByRole('button', { name: 'Importieren' })
     .click();
-  await expect(page.getByText('3 Lebensmittel importiert', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(`${String(rows.length)} Lebensmittel importiert`, { exact: true }),
+  ).toBeVisible();
 }
 
 test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Neuladen erhalten, auf „Heute“ sehen', async ({
@@ -227,4 +232,37 @@ test('Meine Küche: ein Knopf für Lebensmittel, Rezepte und Vorlagen (D-272)', 
       .click();
   }
   await expect(page.getByRole('heading', { level: 1, name: 'Rezepte' })).toBeVisible();
+});
+
+test('Suche: Mehrzahl, Umlautschreibweise und Synonyme, lose vor Marke (D-356)', async ({
+  page,
+}) => {
+  test.slow();
+  // Namen in der Schreibweise der Quelle; die Werte sind Testwerte, nur die Namen zählen hier.
+  await importRows(page, [
+    ['T000001', 'Tomate roh', [22, 1, 3, 3, 0.1, 0, 1.3, 0]],
+    ['T000002', 'Hühnerei roh', [135, 13, 0.3, 0.3, 9, 2.4, 0, 0.4]],
+    ['T000003', 'Apfel roh', [58, 0.4, 11.7, 10.5, 0.5, 0.2, 2.3, 0]],
+    ['T000004', 'Apfelmus', [59, 0.3, 12.5, 11.6, 0.4, 0.2, 1.8, 0]],
+    ['T000005', 'Erdäpfel gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]],
+    ['T000006', 'Eierlikör', [280, 4, 30, 30, 6, 3, 0, 0.1]],
+  ]);
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
+  const search = page.getByLabel('Lebensmittel suchen');
+  const first = page
+    .getByRole('list', { name: /Treffer$/ })
+    .getByRole('button')
+    .first();
+  for (const [query, expected] of [
+    ['Tomaten', /^Tomate roh/],
+    ['Paradeiser', /^Tomate roh/],
+    ['Eier', /^Hühnerei roh/],
+    ['Ei', /^Hühnerei roh/],
+    ['Aepfel', /^Apfel roh/],
+    ['Äpfel', /^Apfel roh/],
+    ['Kartoffeln', /^Erdäpfel gekocht/],
+  ] as const) {
+    await search.fill(query);
+    await expect(first).toHaveAccessibleName(expected);
+  }
 });

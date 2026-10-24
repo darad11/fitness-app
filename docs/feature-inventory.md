@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.19 (Phase Ernährung, Abschnitt 1, 24.10.2026): NU-08 „Implementiert“ für die lokale Suche (AK-NUT-14, D-356): für jede Datenquelle, mit Einzahl und Mehrzahl, Umlautschreibweisen, österreichischen und bundesdeutschen Begriffen in beide Richtungen, Rang nach Stellung im Namen und lose vor Marke, ohne Dubletten. Eine Online-Suche nach Namen gibt es weiterhin nicht (D-302).
 - Version 0.18 (Phase Stabilität, Gerätetests, 24.10.2026): SY-02 und SY-04 bleiben „Implementiert“. Am iPhone bestanden: das Update nach D-343 (AK-PWA-03, T-IPH-M0 Schritt 4) und das Wiederherstellen aus dem Export (D-345). Für „Abgenommen“ fehlen bei SY-02 noch T-IPH-M1, iPad und Mac (AK-DEV-01, AK-DEV-02), bei SY-04 das Zusammenführen (AK-DAT-03).
 - Version 0.17 (Phase Stabilität, Nachtrag A-05, 24.10.2026): SY-03 bleibt „Implementiert“; `push_documents` sperrt je Konto, damit beim Abholen keine Nummer übersprungen wird (A-05, D-349). Geprüft mit `pnpm test:db` an Postgres 16 (lokal) und im CI-Job an Postgres 17; der Gerätetest mit zwei Geräten steht weiter aus.
 - Version 0.16 (Phase Stabilität, Abschnitt 3, 23.10.2026): SY-04 „Implementiert“: Export und Wiederherstellen aus dem Export mit Prüfung, Zusammenfassung, doppelter Bestätigung und Sicherung vorher (AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05, D-345). Geprüft mit Unit-, Komponenten- und E2E-Tests in Chromium; WebKit in der CI und Gerätetest stehen aus. SY-05 bleibt „Zur Umsetzung ausgewählt“, weil der Sicherungshinweis nach 14 Tagen (AK-DAT-12) fehlt; SY-19 (Zusammenführen, AK-DAT-03) bleibt offen.
@@ -66,16 +67,16 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 49 | 29 | 10 | 88 |
+| Original verifiziert (OV) | 50 | 28 | 10 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
 | Eigene Verbesserung (EV) | 47 | 4 | 0 | 51 |
-| Summe | 109 | 46 | 12 | 167 |
+| Summe | 110 | 45 | 12 | 167 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 109 |
-| R2 | 20 |
+| R1 | 110 |
+| R2 | 19 |
 | R3 | 1 |
 | R4 | 13 |
 | R5 | 5 |
@@ -89,9 +90,9 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 88 |
+| Implementiert | 89 |
 | Noch zu recherchieren | 1 |
-| Spezifiziert | 17 |
+| Spezifiziert | 16 |
 | Verworfen | 2 |
 | Zur Umsetzung ausgewählt | 17 |
 <!-- STATS-END -->
@@ -206,7 +207,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-05 | Lebensmittel oder Mahlzeit protokollieren, mit Snapshot | Portionsanteil, z. B. 0,75 | HC-G | V | OV | H | NU-08 | M | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
 | NU-06 | Hinzufügen als selbstgemacht, Restaurant oder per Barcode | Drei Wege über „+" | HC-G | V | OV | H | NU-07; NU-10 | M | P1 | Später | R2 · M5/M6 | Übernehmen | Spezifiziert | Jeder Weg erzeugt ein validiertes Lebensmittel mit Quelle |
 | NU-07 | Barcode-Scanning | Vorhanden, 2026 verbessert | REV; AS 3.5.0 | V | OV | H | Kamera; barcode-detector; Open Food Facts | L | P2 | MVP | R1 · Schritt G | Anpassen: Polyfill (D-305), Open Food Facts nach Einwilligung, vorgezogen (D-266) | Implementiert | AK-NUT-09 |
-| NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | Später | R2 · M5/M6 | Anpassen: lokal zuerst, online ergänzend | Spezifiziert | Offline-Suche über eigene, generische und gespeicherte Einträge |
+| NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | MVP | R1 · Schritt G | Anpassen: lokal zuerst, für jede Datenquelle (D-356); online nur per Barcode (D-302) | Implementiert | AK-NUT-14 |
 | NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
 | NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-03 |
 | NU-11 | Favoriten, zuletzt verwendet, Mahlzeitvorlagen | Von Nutzern gewünscht, nicht belegt | REV | VF | EV | H | NU-05 | M | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-268) | Implementiert | AK-NUT-11 |

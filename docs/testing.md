@@ -1369,7 +1369,7 @@ Neue Lebensmittelsuche (D-356, AK-NUT-14). Bericht: `form-ernaehrung-report.md` 
 | E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
 | Gegenprobe: neuer E2E-Test „Suche: Mehrzahl, Umlautschreibweise und Synonyme …“ gegen die alte Suche | 2 von 2 fehlgeschlagen („Expected pattern: /^Tomate roh/“) |
 | Laufzeit (Node, vorübergehender Lauf) | Index 7.140 Einträge 147 ms; Suche über 12.140 Einträge Median 23,0 ms, höchstens 43,4 ms |
-| WebKit | in der CI zum Commit |
+| WebKit | CI-Lauf 40124992752 zu `b7dfaec`: erfolgreich |
 
 ### Ernährung §1, Nachtrag: ganzes Wort vor Grundwort · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1383,7 +1383,7 @@ Stufe 8 für das ganze Wort am Anfang des Namens, falsche Freunde „Oberschenke
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
 | E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
-| WebKit | in der CI zum Commit |
+| WebKit | CI-Lauf 40127846395 zu `6be7660`: erfolgreich |
 
 ### Ernährung §2: Auswahlliste aus dem BLS 4.0 · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1397,7 +1397,7 @@ Stufe 8 für das ganze Wort am Anfang des Namens, falsche Freunde „Oberschenke
 | `pnpm test` | 117 Dateien, 1005 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
 | E2E, ganze Suite (Chromium Desktop und Pixel 7) | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
-| WebKit | in der CI zum Commit |
+| WebKit | CI-Lauf 40129250444 zu `72e9094`: erfolgreich |
 
 ### Ernährung §3: Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe mit Referenz · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1413,4 +1413,19 @@ Ist und Tagesreferenz unter „Weitere Nährwerte“, fehlende Angaben nicht als
 | E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts`, `network-a11y.spec.ts` (Chromium Desktop und Pixel 7) | 80 bestanden, 2 übersprungen, 0 fehlgeschlagen |
 | E2E, ganze Suite (Chromium), Stand vor dem gemeinsamen Hinweis | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
 | Gegenprobe: erweiterter E2E-Test gegen die alte Übersicht | 2 von 2 fehlgeschlagen („Expected pattern: /von höchstens 6 g/“) |
+| WebKit | CI-Lauf 40130994920 zu `5c98762`: erfolgreich |
+
+### Ernährung §4: Einkaufsliste, Wischen zum Löschen · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Bericht: `form-ernaehrung-report.md` Abschnitt 6.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `swipe.test.ts`, `shopping-ui.test.tsx` | 5 und 10 bestanden |
+| Gegenprobe: vier neue Komponententests gegen die alte Liste | 4 von 4 fehlgeschlagen |
+| `pnpm test` | 119 Dateien, 1026 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,4 KB von 250 KB |
+| E2E `shopping.spec.ts` (Chromium Desktop und Pixel 7, Maus und Touch) | 9 bestanden, 1 übersprungen |
+| E2E, ganze Suite (Chromium) | 325 bestanden, 51 übersprungen, 0 fehlgeschlagen |
 | WebKit | in der CI zum Commit |

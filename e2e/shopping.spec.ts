@@ -1,3 +1,4 @@
+import type { Locator, Page } from '@playwright/test';
 import { expect, openPage, test } from './fixtures';
 
 test('Einkaufsliste: aus „Meine Küche“, eintragen, abhaken, neu laden, offline (D-287)', async ({
@@ -91,4 +92,138 @@ test('„Heute“: runde Knöpfe mittig in „Ernährung heute“, Einkaufswagen
   expect(Math.abs(left - right)).toBeLessThanOrEqual(1);
   await page.getByRole('link', { name: 'Einkaufsliste', exact: true }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Einkaufsliste' })).toBeVisible();
+});
+
+const GROCERIES = [
+  'Milch',
+  'Brot',
+  'Äpfel',
+  'Butter',
+  'Käse',
+  'Joghurt',
+  'Reis',
+  'Nudeln',
+  'Kaffee',
+  'Tee',
+  'Zucker',
+  'Mehl',
+  'Eier',
+  'Salz',
+  'Pfeffer',
+  'Honig',
+  'Senf',
+  'Essig',
+  'Karotten',
+  'Zwiebeln',
+  'Knoblauch',
+  'Paprika',
+  'Gurke',
+  'Topfen',
+];
+
+/** Artikel nacheinander eintragen. */
+async function addItems(page: Page, names: readonly string[]) {
+  const field = page.getByLabel('Was möchtest du einkaufen?');
+  for (const [index, name] of names.entries()) {
+    await field.fill(name);
+    await field.press('Enter');
+    await expect(page.locator('[data-swipe-row]')).toHaveCount(index + 1);
+  }
+}
+
+const swipeRow = (page: Page, name: string) =>
+  page.locator('[data-swipe-row]').filter({ has: page.getByText(name, { exact: true }) });
+
+/** Wisch mit der Maus (Zeiger-Ereignisse) von drei Vierteln der Zeilenbreite aus. */
+async function mouseSwipe(page: Page, row: Locator, dx: number, dy = 0) {
+  const box = await row.boundingBox();
+  if (!box) throw new Error('Zeile nicht sichtbar');
+  const x = box.x + box.width * 0.75;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + dx, y + dy, { steps: 12 });
+  await page.mouse.up();
+}
+
+test('Einkaufsliste: Wisch nach links löscht nur diesen Artikel, mit Rückgängig; kurz, schräg und senkrecht nicht (D-360)', async ({
+  page,
+}) => {
+  await openPage(page, '/ernaehrung/einkaufsliste');
+  await addItems(page, ['Milch', 'Brot', 'Äpfel']);
+  const milk = swipeRow(page, 'Milch');
+  // Senkrechtes Scrollen bleibt beim Browser.
+  await expect(milk).toHaveCSS('touch-action', 'pan-y');
+  const width = (await milk.boundingBox())?.width ?? 0;
+
+  await mouseSwipe(page, milk, -60); // zu kurz
+  await mouseSwipe(page, milk, -150, 100); // schräg
+  await mouseSwipe(page, milk, 0, 120); // senkrecht
+  await mouseSwipe(page, milk, 120); // nach rechts
+  await expect(page.locator('[data-swipe-row]')).toHaveCount(3);
+  await expect(page.getByText(/gelöscht/)).toHaveCount(0);
+  // Keine Geste hat abgehakt.
+  await expect(page.getByText('0 von 3 gekauft')).toBeVisible();
+
+  await mouseSwipe(page, milk, -Math.round(width * 0.6));
+  await expect(page.getByText('„Milch“ gelöscht')).toBeVisible();
+  await expect(page.locator('[data-swipe-row]')).toHaveCount(2);
+  await expect(swipeRow(page, 'Brot')).toBeVisible();
+  await expect(swipeRow(page, 'Äpfel')).toBeVisible();
+  await page.getByRole('button', { name: 'Rückgängig' }).click();
+  await expect(swipeRow(page, 'Milch')).toBeVisible();
+  await expect(page.locator('[data-swipe-row]')).toHaveCount(3);
+
+  // Tastatur und Screenreader: der bisherige Weg über „Bearbeiten“.
+  await page.getByRole('button', { name: 'Brot bearbeiten' }).click();
+  await page.getByRole('button', { name: 'Löschen' }).click();
+  await expect(page.getByText('„Brot“ gelöscht')).toBeVisible();
+});
+
+test('Einkaufsliste: echter Touch-Wisch löscht, senkrechtes Wischen scrollt die Seite (D-360)', async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'chromium-mobile',
+    'Touch-Gesten über das Chrome-Protokoll gibt es nur in Chromium mit Touch',
+  );
+  test.slow();
+  await openPage(page, '/ernaehrung/einkaufsliste');
+  // Namen ohne Zahl am Ende: „Artikel 1“ wäre „Artikel“ mit der Menge 1 (Doppelte).
+  await addItems(page, GROCERIES);
+  await page.getByRole('button', { name: 'Fertig' }).click();
+  const cdp = await page.context().newCDPSession(page);
+  const touch = async (from: { x: number; y: number }, to: { x: number; y: number }) => {
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [from] });
+    for (let step = 1; step <= 15; step++) {
+      const point = {
+        x: from.x + ((to.x - from.x) * step) / 15,
+        y: from.y + ((to.y - from.y) * step) / 15,
+      };
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [point] });
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  };
+  const centre = async (row: Locator) => {
+    await row.scrollIntoViewIfNeeded();
+    const box = await row.boundingBox();
+    if (!box) throw new Error('Zeile nicht sichtbar');
+    return { x: box.x + box.width * 0.75, y: box.y + box.height / 2, width: box.width };
+  };
+
+  // Senkrecht über eine Zeile wischen: Die Seite scrollt, nichts wird gelöscht.
+  const third = await centre(swipeRow(page, 'Äpfel'));
+  const before = await page.evaluate(() => window.scrollY);
+  await touch({ x: third.x, y: third.y }, { x: third.x, y: third.y - 250 });
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before + 50);
+  await expect(page.locator('[data-swipe-row]')).toHaveCount(24);
+  await expect(page.getByText(/gelöscht/)).toHaveCount(0);
+
+  // Waagrecht nach links: nur dieser Artikel ist weg.
+  const target = await centre(swipeRow(page, 'Kaffee'));
+  await touch({ x: target.x, y: target.y }, { x: target.x - target.width * 0.6, y: target.y + 4 });
+  await expect(page.getByText('„Kaffee“ gelöscht')).toBeVisible();
+  await expect(page.locator('[data-swipe-row]')).toHaveCount(23);
+  await expect(swipeRow(page, 'Nudeln')).toBeVisible();
+  await expect(swipeRow(page, 'Tee')).toBeVisible();
 });

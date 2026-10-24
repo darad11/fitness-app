@@ -14,8 +14,9 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §0 Stand prüfen und umsteuern | Bestand aufgenommen; der lokal angefangene Einbau (BLS-Auszug per Filter, USDA-Stückgewichte, Laden in der App) zurückgenommen; Ursachenanalyse und BLS-Rohdaten behalten | D-355 | erledigt |
 | §1 Warum die Suche heute nichts findet | Ursache belegt (D-354): keine Daten für lose Lebensmittel seit D-279, Schwächen der Suche. Suche neu für jede Datenquelle: Umlautschreibweisen, Einzahl und Mehrzahl, Synonyme in beide Richtungen, Grundwörter, Rang nach Stellung im Namen, lose vor Marke, keine Dubletten | D-354, D-356 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40124992752 mit allen vier Jobs grün, auch E2E (webkit) |
 | §1 Nachtrag | Ganzes Wort vor Grundwort (Milch vor Buttermilch, Erdäpfel vor Ofenerdäpfel), drei Scheintreffer weniger (Oberschenkel bei „Obers“, Butternut bei „Butter“, gehackte Tomaten bei „Hackfleisch“); gefunden bei der Probe über die Auswahlliste | D-357 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40127846395 grün |
-| §2 Auswahlliste aus dem BLS 4.0 | `docs/lebensmittel-auswahl.csv` mit 354 Zeilen: 345 Grundnahrungsmittel aus dem BLS 4.0 in zwölf Gruppen, 9 fehlende als „fehlt im BLS“; EU-Rechenregeln geprüft (keine Umrechnung nötig); Stückgewichte 5 belegt, 74 offen; Lizenzen in `docs/licenses-data.md`; nicht eingebaut | D-358 | Liste fertig zur Durchsicht; wartet auf Freigabe |
-| §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe | Ist und Tagesreferenz unter „Weitere Nährwerte“ („4 g von höchstens 6 g“, „von mindestens 30 g“) mit Erklärung und Quelle; fehlende Angaben nicht als 0, Einträge ohne Angabe mit Namen | D-359 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; WebKit in der CI |
+| §2 Auswahlliste aus dem BLS 4.0 | `docs/lebensmittel-auswahl.csv` mit 354 Zeilen: 345 Grundnahrungsmittel aus dem BLS 4.0 in zwölf Gruppen, 9 fehlende als „fehlt im BLS“; EU-Rechenregeln geprüft (keine Umrechnung nötig); Stückgewichte 5 belegt, 74 offen; Lizenzen in `docs/licenses-data.md`; nicht eingebaut | D-358 | Liste fertig zur Durchsicht, CI-Lauf 40129250444 grün; wartet auf Freigabe |
+| §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe | Ist und Tagesreferenz unter „Weitere Nährwerte“ („4 g von höchstens 6 g“, „von mindestens 30 g“) mit Erklärung und Quelle; fehlende Angaben nicht als 0, Einträge ohne Angabe mit Namen | D-359 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40130994920 grün |
+| §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -361,7 +362,7 @@ Die erste Probe mit der Suche aus D-356 zeigte die Schwächen, die D-357 behebt 
 | `pnpm test` | 117 Dateien, 1005 Tests bestanden (kein App-Code geändert) |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB, unverändert; die Liste ist nicht in der App |
 | E2E, ganze Suite in Chromium (Desktop und Pixel 7) | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,8 min) |
-| WebKit | in der CI zum Commit |
+| WebKit | CI-Lauf 40129250444 zu `72e9094`: erfolgreich |
 
 ---
 
@@ -412,4 +413,67 @@ Die Beispielzahlen oben stammen aus einem Bildschirmfoto im Handyformat (390 pt,
 | E2E `nutrition.spec.ts` (erweitert: Referenzen, Quelle, axe-Prüfung der aufgeklappten Liste), `nutrition-ring.spec.ts`, `network-a11y.spec.ts`, Chromium Desktop und Pixel 7, endgültiger Stand | 80 bestanden, 2 übersprungen, 0 fehlgeschlagen |
 | E2E, ganze Suite in Chromium, Stand vor dem gemeinsamen Hinweis | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen (12,3 min) |
 | Gegenprobe: erweiterter E2E-Test gegen die alte Übersicht | 2 von 2 fehlgeschlagen: „Expected pattern: /von höchstens 6 g/“, erhalten „Salz0 gZucker1,6 gGesättigte Fettsäuren0 gBallaststoffe3,4 g“ |
+| WebKit | CI-Lauf 40130994920 zu `5c98762`: erfolgreich |
+
+---
+
+## 6. §4 Einkaufsliste: Wischen zum Löschen
+
+### Ergebnis
+
+Jeder Artikel der Einkaufsliste (offen und gekauft, in „Meine Liste“ und „Nach Kategorie“) lässt sich mit einem Wisch nach links löschen, ohne „Bearbeiten“ zu öffnen.
+
+| Anforderung | Umsetzung |
+|---|---|
+| Wisch nach links löscht, ohne Bearbeiten-Modus | Loslassen nach der Löschstrecke löscht; die Zeile gleitet hinaus |
+| Dezente, eindeutige Löschaktion | Beim Wischen erscheint hinter der Zeile ein gedämpfter Papierkorb; ab der Löschstrecke „Löschen“ in der Warnfarbe auf schwacher Warnfläche |
+| Nur dieser Artikel | Jede Zeile hat ihre eigene Geste; geprüft mit drei und mit 24 Artikeln |
+| Senkrechtes Scrollen ungestört | `touch-action: pan-y`: Senkrecht scrollt der Browser selbst, die Zeile bekommt dann keine Bewegung. E2E mit echten Touch-Ereignissen (Chromium, Pixel 7): senkrechter Wisch über eine Zeile scrollt die Seite, nichts wird gelöscht |
+| Kurzer oder schräger Wisch löst nichts aus | Nach den ersten 10 px entscheidet die Richtung einmal für die ganze Geste: nur klar waagrecht nach links (mindestens doppelt so weit zur Seite wie nach oben oder unten, flacher als etwa 27°). Gelöscht wird erst ab 40 % der Zeilenbreite, mindestens 96 px; am Handy (343 px) sind das 137 px. Kürzer gleitet die Zeile zurück |
+| Danach Hinweis mit „Rückgängig“ | Derselbe Hinweis wie beim bisherigen Löschen: „„Milch“ gelöscht“ mit „Rückgängig“, 10 s |
+| Tastatur und Screenreader | Der bisherige Weg bleibt: „Bearbeiten“ (Stift) und „Löschen“. Die Anzeige hinter der Zeile ist für Screenreader ausgeblendet |
+| Pointer-Ereignisse, keine neue Abhängigkeit | `calc/swipe.ts` (Richtung, Verschiebung, Löschstrecke, ohne React) und `ui/SwipeToDelete.tsx` (Zeiger-Ereignisse, Zeigerfang) |
+
+Zwei Dinge, die die Tests aufgedeckt haben und die behoben sind: (1) Mit der Maus schickte der Browser nach einem schrägen oder nach rechts gerichteten Ziehen, das auf derselben Zeile endete, einen Klick, der den Artikel abhakte. Jetzt gilt jede Bewegung über die ersten 10 px als Geste; der Klick danach wird verworfen, ein Tipp bleibt ein Tipp. Am Handy schickt der Browser nach einer Bewegung ohnehin keinen Klick. (2) Bewegung reduzieren: ohne Gleiten, das Löschen kommt sofort.
+
+Schlägt das Löschen fehl (Datenbank), erscheint der bekannte Fehlerhinweis und die Zeile gleitet zurück.
+
+Grenzen: Auf dem iPhone selbst ist das Wischen noch nicht geprüft; die E2E-Tests nutzen Maus (Chromium und WebKit) und echte Touch-Ereignisse nur in Chromium, weil WebKit in Playwright keine Touch-Bewegungen erzeugen kann.
+
+### Geänderte Dateien
+
+`src/modules/shopping/calc/swipe.ts` und `.test.ts` (neu), `src/modules/shopping/ui/SwipeToDelete.tsx` (neu), `src/modules/shopping/ui/ShoppingListPage.tsx`, `src/modules/shopping/ui/shopping-ui.test.tsx`, `e2e/shopping.spec.ts`, `docs/decisions.md` (D-360), `docs/requirements.md` (AK-NUT-16), `docs/feature-inventory.md` und `.csv` (NU-26, Version 0.21), `docs/shopping-list.md` (Abschnitt 6), `docs/implementation-plan.md`, `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/shopping/calc/swipe.test.ts` (neu) | 5 bestanden: Entscheidung erst nach 10 px, nur klar waagrecht nach links, senkrecht, schräg (45° und knapp steiler als 2 : 1) und nach rechts nicht, Verschiebung nur nach links, Löschstrecke 40 % bzw. mindestens 96 px |
+| `src/modules/shopping/ui/shopping-ui.test.tsx` | 10 bestanden, davon 4 neu: Wisch löscht nur diesen Artikel mit Rückgängig; kurz, schräg, senkrecht und nach rechts ohne Folgen; kein Abhaken durch den Klick nach einer Geste (waagrecht zu kurz und schräg), ein Tipp danach hakt ab; `touch-pan-y` und Löschen über „Bearbeiten“ |
+| Gegenprobe: die vier neuen Komponententests gegen die alte Liste | 4 von 4 fehlgeschlagen, die übrigen 6 bestanden |
+| Gegenprobe: Klick nach schrägem Wisch mit der ersten Fassung (Klick nur nach waagrechtem Wisch verworfen) | 1 von 10 fehlgeschlagen; deshalb gilt jetzt jede Bewegung über 10 px als Geste |
+| `pnpm test` | 119 Dateien, 1026 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,4 KB von 250 KB; +0,1 KB gegenüber dem Stand ohne §4 durch neue CSS-Klassen in der gemeinsamen CSS-Datei (z. B. `touch-pan-y`), der Code der Liste wird nachgeladen |
+| E2E `shopping.spec.ts`, Chromium Desktop und Pixel 7 | 9 bestanden, 1 übersprungen (Touch-Test nur in Chromium mit Touch): neu „Wisch nach links löscht nur diesen Artikel, mit Rückgängig; kurz, schräg und senkrecht nicht“ (Maus) und „echter Touch-Wisch löscht, senkrechtes Wischen scrollt die Seite“ (Touch-Ereignisse über das Chrome-Protokoll, 24 Artikel) |
+| Erster E2E-Lauf vor der Behebung | 2 fehlgeschlagen: Desktop „Expected: 3, Received: 2“ (Maus-Klick nach schrägem Ziehen hakte ab, behoben, siehe oben); Pixel 7 „Expected: 2, Received: 1“ (Testdaten „Artikel 01“ wurden als „Artikel“ mit Menge 1 erkannt und als Doppelte abgelehnt; Testdaten geändert) |
+| E2E, ganze Suite in Chromium, endgültiger Stand (mit §3) | 325 bestanden, 51 übersprungen, 0 fehlgeschlagen (12,9 min) |
+| Bildschirmfotos im Handyformat (390 pt, dunkel) | während des Wischens gedämpfter Papierkorb, ab der Löschstrecke „Löschen“ auf schwacher Warnfläche, danach „„Bananen“ gelöscht“ mit „Rückgängig“ |
 | WebKit | in der CI zum Commit |
+
+---
+
+## 7. Übergabe und Halt
+
+Laut Auftrag Abschnitt 5 ist hier Halt: Abschnitte 0, 1 (mit Nachtrag), 2 (bis zur fertigen Liste), 3 und 4 sind erledigt, committet und gepusht. Abschnitt 6, der Einbau der Liste in die App, beginnt erst nach deiner Freigabe der Liste.
+
+| Für dich | Wo |
+|---|---|
+| Auswahlliste zur Durchsicht (354 Zeilen, öffnet in Excel und Numbers) | `docs/lebensmittel-auswahl.csv` |
+| Zusammenfassung: Anzahl je Gruppe, fehlende Lebensmittel, offene Fragen | Abschnitt 4 dieses Berichts |
+| Lizenzen der Lebensmitteldaten | `docs/licenses-data.md` |
+| Bericht zu §0, §1, §3 und §4 | Abschnitte 2, 3, 5 und 6 dieses Berichts |
+
+Was die Freigabe braucht: deine Antworten auf die sieben offenen Fragen in Abschnitt 4 (am wichtigsten: Stückgewichte, fehlende Werte, Lücken) und Änderungen an der Liste, falls du welche hast. Du kannst die CSV direkt bearbeiten; `pnpm check:docs` prüft danach, ob Codes und BLS-Bezeichnungen noch stimmen.
+
+Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359) und der Commit zu §4 (D-360). Gemergt wird nur nach deiner Freigabe.

@@ -45,6 +45,7 @@ import {
   undoClear,
   updateItem,
 } from '../service/shoppingService';
+import { SwipeToDelete } from './SwipeToDelete';
 
 const ts = tShopping;
 const INPUT = 'field w-full min-w-0';
@@ -109,6 +110,25 @@ export function ShoppingListPage() {
       setError(ts.saveFailed);
     });
   };
+  /**
+   * Löschen per Wisch (D-360): wie „Löschen“ beim Bearbeiten mit „Rückgängig“. Schlägt es fehl,
+   * erscheint der Hinweis und die Zeile gleitet zurück.
+   */
+  const removeBySwipe = (item: ShoppingItem) =>
+    deleteItem(rt, item.id).then(
+      () => {
+        setNotice({ kind: 'deleted', item });
+      },
+      (caught: unknown) => {
+        void logError(rt.db, {
+          area: 'shopping',
+          error: caught,
+          route: '/ernaehrung/einkaufsliste',
+        });
+        setError(ts.saveFailed);
+        throw caught;
+      },
+    );
   const amount = (item: { quantity?: number; unit?: string }) =>
     item.quantity === undefined
       ? ''
@@ -207,38 +227,45 @@ export function ShoppingListPage() {
         />
       </li>
     ) : (
-      <li key={item.id} className="flex items-center gap-1">
-        <label className="flex min-h-14 min-w-0 flex-1 cursor-pointer items-center gap-3 py-1">
-          <input
-            type="checkbox"
-            checked={item.doneAt !== undefined}
-            onChange={(event) => {
-              const checked = event.target.checked;
-              run(() => setItemDone(rt, item.id, checked));
-            }}
-            className="peer sr-only"
-          />
-          <Mark state={item.doneAt !== undefined ? 'done' : 'open'} size="lg" peer />
-          <span className="min-w-0 flex-1">
-            <span className={cn('block', item.doneAt !== undefined && 'text-muted line-through')}>
-              {item.name}
-            </span>
-            {item.note ? (
-              <span className="block truncate text-sm text-muted">{item.note}</span>
-            ) : null}
-          </span>
-          {item.quantity !== undefined ? (
-            <span className="shrink-0 text-sm text-muted tabular-nums">{amount(item)}</span>
-          ) : null}
-        </label>
-        <IconButton
-          label={ts.edit(item.name)}
-          onClick={() => {
-            setEditing(item.id);
-          }}
+      <li key={item.id}>
+        {/* Wisch nach links löscht (D-360); Tastatur und Screenreader löschen über „Bearbeiten“. */}
+        <SwipeToDelete
+          label={ts.delete}
+          onDelete={() => removeBySwipe(item)}
+          className="flex items-center gap-1"
         >
-          <Pencil aria-hidden="true" className="size-4" />
-        </IconButton>
+          <label className="flex min-h-14 min-w-0 flex-1 cursor-pointer items-center gap-3 py-1">
+            <input
+              type="checkbox"
+              checked={item.doneAt !== undefined}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                run(() => setItemDone(rt, item.id, checked));
+              }}
+              className="peer sr-only"
+            />
+            <Mark state={item.doneAt !== undefined ? 'done' : 'open'} size="lg" peer />
+            <span className="min-w-0 flex-1">
+              <span className={cn('block', item.doneAt !== undefined && 'text-muted line-through')}>
+                {item.name}
+              </span>
+              {item.note ? (
+                <span className="block truncate text-sm text-muted">{item.note}</span>
+              ) : null}
+            </span>
+            {item.quantity !== undefined ? (
+              <span className="shrink-0 text-sm text-muted tabular-nums">{amount(item)}</span>
+            ) : null}
+          </label>
+          <IconButton
+            label={ts.edit(item.name)}
+            onClick={() => {
+              setEditing(item.id);
+            }}
+          >
+            <Pencil aria-hidden="true" className="size-4" />
+          </IconButton>
+        </SwipeToDelete>
       </li>
     );
 

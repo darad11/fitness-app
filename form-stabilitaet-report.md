@@ -1,6 +1,6 @@
 # Phase Stabilität – Bericht
 
-Stand: 24.10.2026 (Nachträge A-05, A-15 und Testfix, Abschnitte 8 bis 10) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
+Stand: 24.10.2026 (Nachträge A-05, A-15 und Testfix, Abschnitte 8 bis 10; Gerätetests, Abschnitt 11) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
 
 Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt.
 
@@ -10,9 +10,9 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 
 | Abschnitt | Ergebnis | Entscheidung | Stand |
 |---|---|---|---|
-| §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt; in WebKit grün seit `9517f73` (der Startwächter brauchte den Nachtrag 2 zu §2) |
+| §1 E-16: Start nach Updates und ohne Netz | Ursache gefunden (Chromium bricht unter dem Service Worker Modul-Anfragen ab), Startwächter, einmal neu laden, Übernahme beim ersten Start, Update-Strategie, Test mit zwei Builds; Nachtrag nach der CI: drei Befunde in WebKit | D-343 | erledigt; in WebKit grün seit `9517f73` (der Startwächter brauchte den Nachtrag 2 zu §2); Gerätetest T-IPH-M0 Schritt 4 am 24.10.2026 bestanden |
 | §2 Wackelnde Tests und CI | Ursachen gefunden und behoben: Linse hing an der Bildrate, Leertaste fiel in Chromium in das Ende eines Tipps, Messung am Seitenende vor dem Dialog der Anmeldung, Ernährungseinträge aus derselben Millisekunde ohne feste Reihenfolge; E2E-Jobs im Image von Playwright; Wiederholung auf Abruf | D-344 | erledigt; Nachträge: Seitenende auf `/ernaehrung`, Startwächter in WebKit (kein Vorladen in index.html). 20 Wiederholungen in der CI zu `9517f73`: Chromium 260 von 260, WebKit 220 von 220 |
-| §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest ausstehend |
+| §3 Wiederherstellen aus dem Export | Datei wählen, prüfen, Zusammenfassung, zweimal bestätigen; vorher Sicherung als Datei und Snapshot; Ersetzen in einer Transaktion; Regeln für die Synchronisierung (K-01, K-03) | D-345 | erledigt, in WebKit (CI) bestanden; Gerätetest am 24.10.2026 bestanden |
 | §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `aa936d2`) |
 | §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `86d4841`) |
 | §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
@@ -93,7 +93,7 @@ Tests: `chunkRecovery.test.ts` 24 bestanden, die drei neuen Fälle am alten Stan
 ### Offen
 
 - WebKit: Die Fälle mit Service Worker laufen nur in Chromium (wie der bisherige Offline-Test); die Fälle ohne Service Worker und der Startwächter laufen in der CI auch in WebKit. Ob Safari unter dem Service Worker ebenfalls Modul-Anfragen abbricht, ist nicht geprüft; die Erholung greift dort genauso, sobald Safari einen Ladefehler meldet.
-- Gerätetest T-IPH-M0 Schritt 4 (Update am iPhone) für diese Fassung.
+- Gerätetest T-IPH-M0 Schritt 4 (Update am iPhone): am 24.10.2026 bestanden (Abschnitt 11).
 - Hängt eine Modul-Anfrage, ohne zu scheitern, greift der Startwächter nicht; die Startfläche blendet sich nach 10 s trotzdem aus (D-325). In den Traces kam das nicht vor.
 
 ## 3. §2 Wackelnde Tests und CI
@@ -225,7 +225,7 @@ Einzelheiten in `docs/testing.md`, Protokoll „Stabilität §3“.
 
 - „Zusammenführen“ (AK-DAT-03): eine neue Funktion, nicht Teil dieses Auftrags.
 - Snapshots über die App wiederherstellen (A-06).
-- Gerätetest am iPhone (Dateien-App, Teilen-Menü).
+- Gerätetest am iPhone (Dateien-App, Teilen-Menü): am 24.10.2026 bestanden (Abschnitt 11).
 
 ## 5. §4 Weitere P2-Befunde und B-07
 
@@ -377,8 +377,8 @@ Die 20 Wiederholungen der früher wackelnden Tests zeigt Abschnitt 3: Chromium 2
 
 Beim Produktinhaber:
 
-- Durchsicht und Merge von PR #50.
-- Gerätetests am iPhone, am besten an der Vorschau des Branches vor dem Merge: T-IPH-M0 Schritt 4 (Update) für diese Fassung; Wiederherstellen mit Dateien-App und Teilen-Menü (§3).
+- Durchsicht und Merge von PR #50: freigegeben am 24.10.2026, Merge nach grüner CI.
+- Gerätetests am iPhone an der Vorschau: am 24.10.2026 bestanden (Abschnitt 11).
 - A-05: erledigt mit D-349 (Abschnitt 8); A-15: erledigt mit D-350 (Abschnitt 9).
 
 Zu groß für diese Sitzung oder nicht Teil des Auftrags, mit Grund:
@@ -398,7 +398,7 @@ Nicht hier prüfbar:
 
 Empfehlungen:
 
-1. Vor dem Merge die beiden Gerätetests an der Vorschau.
+1. Vor dem Merge die beiden Gerätetests an der Vorschau: erledigt am 24.10.2026 (Abschnitt 11).
 2. Als nächstes Paket A-06 mit dem Rest von E-03: Damit ist ein Snapshot nicht nur angelegt, sondern auch wiederherstellbar.
 3. Vor der nächsten Erweiterung eines Schemas A-01 und den Rest von A-03, damit ältere Geräte neuere Daten nicht ablehnen oder verlieren.
 4. Braucht eine neue Funktion Platz in der Startansicht: die Abschnitte `programs` und `exercises` des Katalogs und die Linse der Tab-Leiste (Abschnitt 6).
@@ -529,3 +529,15 @@ In der CI zu `e33bcfb` schlug „Einfachauswahl auf /fortschritt/gewicht: jede O
 | übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag: Auswahl nach dem ersten Gewicht“ |
 | Wiederholung in der CI (`repeat.yml`, Lauf 40072960651, Stand `11fa1eb`, 20-mal ohne zweiten Versuch) | Chromium 300 bestanden, 60 übersprungen; WebKit 260 bestanden, 100 übersprungen; je 0 fehlgeschlagen. Darin der behobene Test je Engine 40 von 40 (Desktop und Handy) |
 | CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Chromium 320 bestanden, WebKit 310 bestanden; nichts im zweiten Versuch |
+
+## 11. Gerätetests (24.10.2026)
+
+Durchgeführt vom Produktinhaber an der Vorschau von `form-stabilitaet` auf einem iPhone 18 Pro mit iOS 27.0.1. Protokoll: `docs/testing.md` Abschnitt 7.
+
+| Test | Ergebnis |
+|---|---|
+| T-IPH-M0 Schritt 4: Update nach der Strategie aus D-343 (zweite Auslieferung `b501403`) | bestanden. Während des laufenden Trainings kam kein Hinweis, „Über die App“ meldete die bereite Version; nach dem Beenden kam „Neue Version verfügbar“, danach stand `b501403` da, alle Daten waren vorhanden. Start im Flugmodus in Ordnung |
+| Wiederherstellen aus dem Export mit Dateien-App und Teilen-Menü (D-345, Ablauf in Abschnitt 4) | bestanden, alle Schritte wie beschrieben |
+
+Weiter offen am Gerät: der Abgleich mit zwei Geräten (auf dem Server gibt es noch kein Konto).
+

@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.59 · 24.10.2026 · Phase Stabilität, Gerätetests
+
+| Datei | Änderung |
+|---|---|
+| `testing.md` | Abschnitt 7: Gerätetests vom 24.10.2026 (Update, Wiederherstellen) |
+| `decisions.md` | D-343 und D-345: Gerätetest bestanden |
+| `implementation-plan.md` | Punkt 66: Gerätetests, Merge freigegeben |
+| `feature-inventory.md` | Version 0.18: Gerätetests ohne Statuswechsel |
+| `form-stabilitaet-report.md` | Abschnitt 11 „Gerätetests“; offene Punkte nachgezogen |
+
 ## Version 0.58 · 24.10.2026 · Phase Stabilität, Ergebnisse der CI zu D-350 und D-351
 
 | Datei | Änderung |

@@ -191,6 +191,8 @@ Safari „Zum Dock hinzufügen" und Chrome-Installation; Fenstergrößen von 102
 | Datum | Protokoll | Gerät | Betriebssystem | App-Version | Ergebnis | Abweichungen |
 |---|---|---|---|---|---|---|
 | 18.10.2026 | T-IPH-M0 | iPhone (Modell nicht angegeben) | iOS 27.0.1 | 0.1.0, Build `b5fb9aa` | Alle vier Schritte bestanden: Hinweis im Safari-Tab, Installation über „Teilen › Zum Home-Bildschirm" mit Name und Icon, Offline-Start aller Bereiche; nach der Auslieferung von Build `66abab4` erschien „Neue Version verfügbar", der Wechsel erfolgte erst nach „Jetzt aktualisieren" (Schritt 4, am selben Tag) | Keine |
+| 24.10.2026 | T-IPH-M0 Schritt 4 (Update nach D-343) | iPhone 18 Pro | iOS 27.0.1 | Vorschau `form-stabilitaet`, Update auf Build `b501403` | Bestanden: Während des laufenden Trainings kein Hinweis, „Über die App“ meldete die bereite Version; nach dem Beenden „Neue Version verfügbar“, danach Build `b501403`, alle Daten vorhanden. Start im Flugmodus in Ordnung | keine |
+| 24.10.2026 | Wiederherstellen aus dem Export mit Dateien-App und Teilen-Menü (D-345, Ablauf in `form-stabilitaet-report.md` Abschnitt 4) | iPhone 18 Pro | iOS 27.0.1 | Vorschau `form-stabilitaet` | Bestanden: alle Schritte wie beschrieben | keine |
 
 ## 8. Testdaten
 

@@ -1317,6 +1317,7 @@ Rechte an `sync_documents` und der Sequenz eingeschränkt (D-350). Bericht: `for
 | Server nach dem Einspielen (`tools/db/snapshot.sql`, lesend) | Migration `20261024063941` byte-gleich mit der Datei (864 Bytes); 32 von 37 Werten wie vorher, anders nur die fünf Werte zu den Rechten; 0 Zeilen, 0 Konten |
 | Hinweise von Supabase zur Sicherheit nachher | keine |
 | CI zu `93d7f09` (Lauf 40071508901) | Datenbank (PostgreSQL 17.11) fehlgeschlagen: „malformed array literal: "MAINTAIN"“ in `rights.test.sql` Teil 3, ein Fehler im Test (Zweig nur ab Postgres 17). Nach der Änderung zu `unused \|\| array['MAINTAIN']`: Teil 3 lesend auf dem Server (PostgreSQL 17.11) ohne Fehler. E2E Chromium 320 bestanden, WebKit 310 bestanden, je 0 fehlgeschlagen |
+| CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Datenbank (PostgreSQL 17.11): alle sechs „bestanden“, beide Migrationen wieder wie vorher zurückgenommen |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB; Vorab-Liste 173 von 232 Dateien |
@@ -1336,5 +1337,6 @@ Wackelnder Test `e2e/switches.spec.ts:340` auf `/fortschritt/gewicht` (D-351). B
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7, Stand mit D-350 und D-351) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (8,0 min) |
-| CI und Wiederholung in der CI (WebKit) | zum Commit ausstehend |
+| Wiederholung in der CI (`repeat.yml`, Lauf 40072960651, Stand `11fa1eb`) | Chromium 300 bestanden, WebKit 260 bestanden, je 0 fehlgeschlagen; der behobene Test je Engine 40 von 40 |
+| CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Chromium 320 bestanden, WebKit 310 bestanden; nichts im zweiten Versuch |
 

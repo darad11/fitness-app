@@ -1,5 +1,13 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.58 · 24.10.2026 · Phase Stabilität, Ergebnisse der CI zu D-350 und D-351
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-350 und D-351: Ergebnisse der CI und der Wiederholung |
+| `testing.md` | Protokolle „Nachtrag A-15“ und „Auswahl nach dem ersten Gewicht“: CI zu `3cc0523`, Wiederholung |
+| `form-stabilitaet-report.md` | Abschnitte 1, 9 und 10: Ergebnisse der CI |
+
 ## Version 0.57 · 24.10.2026 · Phase Stabilität, Nachtrag A-15 (Test unter Postgres 17)
 
 | Datei | Änderung |

@@ -17,8 +17,8 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `86d4841`) |
 | §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
 | Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `e33bcfb` grün, Datenbank an PostgreSQL 17.11 bestanden |
-| Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `93d7f09`: Datenbank-Job rot wegen eines Fehlers im Test unter Postgres 17, im Nachtrag behoben; E2E grün |
-| Nachtrag: wackelnder Test `switches.spec.ts:340` (nach Freigabe am 24.10.2026) | Auf `/fortschritt/gewicht` wartet der Test nach dem ersten Gewicht, bis die Auswahl „Zeitraum“ gezeichnet ist; Gegenprobe mit gedrosselter CPU; Test in `repeat.yml` | D-351 | erledigt; lokal 40 von 40, Gegenprobe alt 2 von 60 rot, neu 60 von 60; CI zum Commit ausstehend |
+| Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `93d7f09`: Datenbank-Job rot wegen eines Fehlers im Test unter Postgres 17, im Nachtrag behoben; CI zu `3cc0523` grün |
+| Nachtrag: wackelnder Test `switches.spec.ts:340` (nach Freigabe am 24.10.2026) | Auf `/fortschritt/gewicht` wartet der Test nach dem ersten Gewicht, bis die Auswahl „Zeitraum“ gezeichnet ist; Gegenprobe mit gedrosselter CPU; Test in `repeat.yml` | D-351 | erledigt; lokal 40 von 40, Gegenprobe alt 2 von 60 rot, neu 60 von 60; Wiederholung in der CI je Engine 40 von 40; CI zu `3cc0523` grün |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -499,7 +499,7 @@ Durch die Standardrechte von Supabase im Schema `public` hatte `authenticated` a
 | Änderung | `unused \|\| array['MAINTAIN']` |
 | Prüfung laut Katalog (Teil 3) lesend auf dem Server, PostgreSQL 17.11 | ohne Fehler, mit MAINTAIN |
 | `pnpm test:db` lokal danach | bestanden; Gegenprobe `--bis 20261024055418` weiter fehlgeschlagen („Leeren wurde nicht abgelehnt“) |
-| CI zum Commit mit der Änderung | zum Commit ausstehend |
+| CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün. Datenbank (PostgreSQL 17.11): alle sechs „bestanden“, beide Migrationen wieder wie vorher zurückgenommen. Chromium 320 bestanden, 50 übersprungen; WebKit 310 bestanden, 60 übersprungen; nichts im zweiten Versuch |
 
 ### Offen
 
@@ -527,4 +527,5 @@ In der CI zu `e33bcfb` schlug „Einfachauswahl auf /fortschritt/gewicht: jede O
 | `pnpm exec playwright test --grep "Einfachauswahl auf /fortschritt/gewicht" --repeat-each=20 --retries=0` | 40 von 40 bestanden |
 | `e2e/switches.spec.ts` (beide Projekte, ohne zweiten Versuch) | 38 bestanden, 2 übersprungen, 0 fehlgeschlagen |
 | übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag: Auswahl nach dem ersten Gewicht“ |
-| CI und Wiederholung in der CI (WebKit) | zum Commit ausstehend |
+| Wiederholung in der CI (`repeat.yml`, Lauf 40072960651, Stand `11fa1eb`, 20-mal ohne zweiten Versuch) | Chromium 300 bestanden, 60 übersprungen; WebKit 260 bestanden, 100 übersprungen; je 0 fehlgeschlagen. Darin der behobene Test je Engine 40 von 40 (Desktop und Handy) |
+| CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Chromium 320 bestanden, WebKit 310 bestanden; nichts im zweiten Versuch |

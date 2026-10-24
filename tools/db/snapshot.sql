@@ -1,25 +1,30 @@
--- Stand von push_documents, sync_documents, Rechten und Daten als ein JSON-Objekt (A-05, D-349).
--- Nur lesend. tools/test-db.mjs vergleicht damit lokal vor und nach der Migration; auf dem Server
--- dieselbe Abfrage vor und nach dem Einspielen. Inhalte der Zeilen erscheinen nicht, nur Anzahl
--- und Prüfsumme.
+-- Stand von push_documents, sync_documents, Rechten und Daten als ein JSON-Objekt (A-05, D-349;
+-- Rechte je Rolle seit A-15, D-350). Nur lesend. tools/test-db.mjs vergleicht damit lokal vor und
+-- nach jeder Migration; auf dem Server dieselbe Abfrage vor und nach dem Einspielen. Rechte stehen
+-- sortiert, damit nur der Inhalt zählt, nicht die Reihenfolge. Inhalte der Zeilen erscheinen nicht,
+-- nur Anzahl und Prüfsumme.
 with
 fn as (
-  select count(*) as count,
-         max(md5(p.prosrc)) as prosrc_md5,
-         bool_or(position('pg_advisory_xact_lock' in p.prosrc) > 0) as has_lock,
-         max(p.proacl::text) as acl,
-         bool_or(p.prosecdef) as security_definer,
-         max(array_to_string(p.proconfig, ',')) as config,
-         max(p.provolatile::text) as volatility,
-         max(pg_get_userbyid(p.proowner)) as owner,
-         max(pg_get_function_identity_arguments(p.oid)) as arguments,
-         max(pg_get_function_result(p.oid)) as result
+  select (select count(*)
+          from pg_proc p
+          join pg_namespace n on n.oid = p.pronamespace
+          where n.nspname = 'public' and p.proname = 'push_documents') as count,
+         md5(p.prosrc) as prosrc_md5,
+         position('pg_advisory_xact_lock' in p.prosrc) > 0 as has_lock,
+         (select string_agg(a::text, ',' order by a::text) from unnest(p.proacl) a) as acl,
+         p.prosecdef as security_definer,
+         array_to_string(p.proconfig, ',') as config,
+         p.provolatile::text as volatility,
+         pg_get_userbyid(p.proowner) as owner,
+         pg_get_function_identity_arguments(p.oid) as arguments,
+         pg_get_function_result(p.oid) as result
   from pg_proc p
   join pg_namespace n on n.oid = p.pronamespace
   where n.nspname = 'public' and p.proname = 'push_documents'
+  limit 1
 ),
 tbl as (
-  select c.relacl::text as acl,
+  select (select string_agg(a::text, ',' order by a::text) from unnest(c.relacl) a) as acl,
          c.relrowsecurity as rls,
          c.relforcerowsecurity as force_rls,
          pg_get_userbyid(c.relowner) as owner
@@ -51,10 +56,29 @@ pol as (
   where schemaname = 'public' and tablename = 'sync_documents'
 ),
 seq as (
-  select c.relacl::text as acl from pg_class c where c.oid = 'public.sync_documents_rev_seq'::regclass
+  select (select string_agg(a::text, ',' order by a::text) from unnest(c.relacl) a) as acl
+  from pg_class c
+  where c.oid = 'public.sync_documents_rev_seq'::regclass
 ),
 seqv as (
   select last_value, is_called from public.sync_documents_rev_seq
+),
+-- Was jede Rolle tatsächlich darf (MAINTAIN gibt es erst ab Postgres 17).
+rights as (
+  select json_object_agg(r.rolname, json_build_object(
+           'table', (select coalesce(string_agg(p, ',' order by p), '')
+                     from unnest(array['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'TRUNCATE', 'REFERENCES',
+                                       'TRIGGER']
+                                 || case when current_setting('server_version_num')::int >= 170000
+                                         then array['MAINTAIN'] else array[]::text[] end) p
+                     where has_table_privilege(r.rolname, 'public.sync_documents', p)),
+           'sequence', (select coalesce(string_agg(p, ',' order by p), '')
+                        from unnest(array['USAGE', 'SELECT', 'UPDATE']) p
+                        where has_sequence_privilege(r.rolname, 'public.sync_documents_rev_seq', p)),
+           'push_documents', has_function_privilege(r.rolname, 'public.push_documents(jsonb)', 'EXECUTE'))
+         order by r.rolname) as roles
+  from pg_roles r
+  where r.rolname in ('anon', 'authenticated', 'service_role')
 ),
 dat as (
   select count(*) as rows,
@@ -75,6 +99,7 @@ select json_build_object(
     from tbl),
   'sequence', (select json_build_object('acl', seq.acl, 'last_value', seqv.last_value,
       'is_called', seqv.is_called) from seq, seqv),
+  'rights', (select roles from rights),
   'data', (select row_to_json(dat) from dat),
   'auth_users', (select count(*) from auth.users)
 ) as snapshot;

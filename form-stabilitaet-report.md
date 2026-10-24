@@ -1,6 +1,6 @@
 # Phase Stabilität – Bericht
 
-Stand: 24.10.2026 (Nachtrag A-05, Abschnitt 8) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
+Stand: 24.10.2026 (Nachträge A-05 und A-15, Abschnitte 8 und 9) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
 
 Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt.
 
@@ -16,7 +16,8 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §4 Weitere P2-Befunde und B-07 | Behoben: A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, D-01, D-02; teilweise: A-03, C-04, E-03; offen mit Grund: A-03 Rest, A-05, A-06, C-04 Rest, E-03 Rest; B-02 nach D-297 | D-346 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `aa936d2`) |
 | §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `86d4841`) |
 | §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
-| Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zum Commit ausstehend |
+| Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `e33bcfb` grün, Datenbank an PostgreSQL 17.11 bestanden |
+| Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zum Commit ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -377,7 +378,7 @@ Beim Produktinhaber:
 
 - Durchsicht und Merge von PR #50.
 - Gerätetests am iPhone, am besten an der Vorschau des Branches vor dem Merge: T-IPH-M0 Schritt 4 (Update) für diese Fassung; Wiederherstellen mit Dateien-App und Teilen-Menü (§3).
-- A-05: erledigt mit D-349 (Abschnitt 8). Neu dafür A-15: Rechte an `sync_documents` und an der Sequenz einschränken; eine Änderung am Server, nur mit deiner Zustimmung.
+- A-05: erledigt mit D-349 (Abschnitt 8); A-15: erledigt mit D-350 (Abschnitt 9).
 
 Zu groß für diese Sitzung oder nicht Teil des Auftrags, mit Grund:
 
@@ -431,7 +432,7 @@ Neu: `supabase/README.md`, drei Dateien in `supabase/migrations/`, `supabase/rol
 | Gegenprobe `node tools/test-db.mjs --bis 20261019145346` | fehlgeschlagen wie erwartet: „Übersprungen: Gerät C hat rev 1 nie geholt (A rev 1, B rev 2, B fertig, Cursor 2)“ |
 | je 10 Wiederholungen | mit Sperre 10 von 10 bestanden, ohne Sperre 10 von 10 fehlgeschlagen |
 | übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag A-05“ |
-| CI-Job „Datenbank (Postgres 17)“ und WebKit | zum Commit ausstehend |
+| CI zu `e33bcfb` (Lauf 40069234757) | alle Jobs grün. Datenbank (PostgreSQL 17.11): dieselben drei „bestanden“ wie lokal, Zurücknehmen wortgleich. Chromium 320 bestanden, 50 übersprungen; WebKit 309 bestanden, 1 flaky (`switches.spec.ts:340`, im zweiten Versuch bestanden), 60 übersprungen |
 
 Lücken in der Folge der Nummern sind normal: Die Sequenz zählt auch bei abgelehnten Fassungen weiter (im Test 5, dann 8). Sie schaden nicht, weil das Abholen nur „größer als der Cursor“ fragt. Entscheidend ist, dass keine Nummer erst nach einer höheren sichtbar wird.
 
@@ -447,5 +448,48 @@ Lücken in der Folge der Nummern sind normal: Die Sequenz zählt auch bei abgele
 
 ### Offen
 
-- A-15 (neu, P3): Durch die Standardrechte von Supabase hat `authenticated` auf `sync_documents` alle Rechte, `anon` hat Rechte an der Sequenz. Heute ohne Folgen: RLS verhindert das Löschen, TRUNCATE ist über die REST-Schnittstelle nicht erreichbar. Einschränken wäre eine eigene Migration am Server, nur mit deiner Zustimmung.
+- A-15: erledigt nach deiner Freigabe mit D-350 (Abschnitt 9).
+- Gerätetest des Abgleichs mit zwei Geräten steht weiter aus; auf dem Server gibt es noch kein Konto.
+
+## 9. Nachtrag: A-15 Rechte auf das Nötige (24.10.2026)
+
+Freigabe des Produktinhabers am 24.10.2026 (D-350).
+
+### Ausgangslage
+
+Durch die Standardrechte von Supabase im Schema `public` hatte `authenticated` alle Rechte an `sync_documents`: auch Löschen, Leeren (TRUNCATE), Auslöser (TRIGGER), Verweise (REFERENCES) und MAINTAIN. `anon` hatte Rechte an der Sequenz `sync_documents_rev_seq` (SELECT, UPDATE, USAGE). Die Migration von D-269 hatte nur SELECT, INSERT und UPDATE vorgesehen. Gefunden bei der Prüfung zu A-05.
+
+### Was die App braucht
+
+- Abholen: `GET /rest/v1/sync_documents` → SELECT an der Tabelle.
+- Senden: `push_documents` mit `security invoker`, also mit den Rechten des Kontos: INSERT, UPDATE und SELECT (ON CONFLICT und RETURNING) an der Tabelle, USAGE an der Sequenz für `nextval`.
+- Nichts anderes. Gelöscht wird über eine Löschmarkierung, nicht über DELETE.
+
+### Änderungen
+
+- Migration `20261024063941_sync_documents_restrict_rights.sql`: `revoke all` an Tabelle und Sequenz für `anon` und `authenticated`, dann `authenticated` nur SELECT, INSERT, UPDATE an der Tabelle und USAGE an der Sequenz. Eigentümer und `service_role` behalten ihre Rechte; `push_documents`, RLS-Regeln, Tabelle und Daten bleiben unverändert.
+- Zurücknehmen: `supabase/rollback/sync_documents_restrict_rights_revert.sql` gibt die Standardrechte zurück.
+- `tools/db/rights.test.sql` (neu) und `tools/db/test-setup.sql` (gemeinsame Hilfen, bisher in `push-lock.test.sql`). `tools/db/snapshot.sql` zeigt die Rechte sortiert und zusätzlich je Rolle. `tools/test-db.mjs` prüft jede Migration mit Datei zum Zurücknehmen gleich: Nur die vorgesehenen Werte ändern sich, nach dem Zurücknehmen sind sie wie vorher.
+
+### Tests mit Ergebnis
+
+| Lauf | Ergebnis |
+|---|---|
+| `pnpm test:db` (lokal, PostgreSQL 16.15, vier Migrationen) | bestanden. Rechte: geändert nur Rechte an Tabelle und Sequenz sowie die Rechte von `anon` und `authenticated`. „angemeldet senden (rev 9) und abholen; Leeren, Löschen und Lesen der Sequenz abgelehnt“, „nicht angemeldet weder Sequenz noch Tabelle noch push_documents“, „Rechte laut Katalog wie vorgesehen“. Die drei Tests zu A-05 weiter bestanden. Zurücknehmen beider Migrationen: wieder wie vorher |
+| Gegenprobe `node tools/test-db.mjs --bis 20261024055418` | fehlgeschlagen wie erwartet: „Leeren wurde nicht abgelehnt: authenticated konnte sync_documents leeren“ |
+| je 10 Wiederholungen | alle Migrationen 10 von 10 bestanden; Stand davor 10 von 10 fehlgeschlagen |
+| übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag A-15“ |
+
+### Prüfung auf dem Server
+
+| Prüfung | Ergebnis |
+|---|---|
+| Hinweise von Supabase zur Sicherheit vorher | keine |
+| Einspielen | `20261024063941 sync_documents_restrict_rights`; die gespeicherte Migration ist byte-gleich mit der Datei (864 Bytes) |
+| Stand vorher und nachher (`tools/db/snapshot.sql`) | 32 von 37 Werten gleich. Anders nur: Rechte an der Tabelle (`authenticated=arwdDxtm` → `authenticated=arw`), an der Sequenz (`anon=rwU` entfällt, `authenticated=rwU` → `authenticated=U`), `anon` an der Sequenz (SELECT, UPDATE, USAGE → keine), `authenticated` an der Tabelle (DELETE, INSERT, MAINTAIN, REFERENCES, SELECT, TRIGGER, TRUNCATE, UPDATE → INSERT, SELECT, UPDATE) und an der Sequenz (SELECT, UPDATE, USAGE → USAGE). Gleich: `push_documents` mit Sperre und Rechten, `service_role`, Tabelle, Spalten, Bedingungen, Indizes, drei RLS-Regeln, keine Trigger, Daten (0 Zeilen, 0 Konten), Sequenz bei 4 |
+| Hinweise von Supabase zur Sicherheit nachher | keine |
+
+### Offen
+
+- Neue Tabellen bekommen weiter die Standardrechte von Supabase. Eine Migration für eine neue Tabelle muss die Rechte deshalb selbst einschränken; `pnpm test:db` sollte das dann mitprüfen.
 - Gerätetest des Abgleichs mit zwei Geräten steht weiter aus; auf dem Server gibt es noch kein Konto.

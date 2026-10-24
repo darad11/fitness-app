@@ -1302,5 +1302,22 @@ Sperre je Konto in `push_documents`, SQL des Servers in `supabase/migrations/`, 
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (8,0 min) |
-| CI-Job „Datenbank (Postgres 17)“ und WebKit | zum Commit ausstehend |
+| CI zu `e33bcfb` (Lauf 40069234757) | alle Jobs grün; Datenbank (PostgreSQL 17.11) bestanden wie lokal; Chromium 320 bestanden, 50 übersprungen; WebKit 309 bestanden, 1 flaky (`switches.spec.ts:340`), 60 übersprungen |
+
+### Stabilität, Nachtrag A-15: Rechte auf das Nötige · 24.10.2026, Cloud-Umgebung (Node 22.22, PostgreSQL 16.15)
+
+Rechte an `sync_documents` und der Sequenz eingeschränkt (D-350). Bericht: `form-stabilitaet-report.md` Abschnitt 9.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Hinweise von Supabase zur Sicherheit vorher | keine |
+| `pnpm test:db` (vier Migrationen) | bestanden: angemeldet senden und abholen, Leeren, Löschen und Lesen der Sequenz abgelehnt; nicht angemeldet weder Sequenz noch Tabelle noch `push_documents`; Rechte laut Katalog wie vorgesehen; Tests zu A-05 weiter bestanden; Zurücknehmen beider Migrationen wieder wie vorher |
+| Gegenprobe `node tools/test-db.mjs --bis 20261024055418` | fehlgeschlagen: „Leeren wurde nicht abgelehnt: authenticated konnte sync_documents leeren“ |
+| je 10 Wiederholungen | alle Migrationen 10 von 10 bestanden; Stand davor 10 von 10 fehlgeschlagen |
+| Server nach dem Einspielen (`tools/db/snapshot.sql`, lesend) | Migration `20261024063941` byte-gleich mit der Datei (864 Bytes); 32 von 37 Werten wie vorher, anders nur die fünf Werte zu den Rechten; 0 Zeilen, 0 Konten |
+| Hinweise von Supabase zur Sicherheit nachher | keine |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB; Vorab-Liste 173 von 232 Dateien |
+| E2E | App und E2E-Tests in diesem Paket unverändert; der volle Lauf folgt mit dem nächsten Paket (Testfix `switches.spec.ts`) auf diesem Stand, WebKit in der CI |
 

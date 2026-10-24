@@ -242,7 +242,7 @@ Nach der Beziehungsanalyse in `data-model.md` Abschnitt 2 ist die Sync-Einheit d
 
 ### 11.3 Sicherheit und Daten bei Supabase
 
-- Row Level Security auf `sync_documents` mit `user_id = auth.uid()` für alle Operationen; RLS-Tests gehören zur Abnahme von R3. Der öffentliche Anon-Key ist kein Geheimnis; der Service-Role-Key existiert nie im Client.
+- Row Level Security auf `sync_documents` mit `user_id = auth.uid()` für alle Operationen; RLS-Tests gehören zur Abnahme von R3. Rechte nur, was die App braucht: `authenticated` SELECT, INSERT und UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` nichts (A-15, D-350); geprüft mit `pnpm test:db`. Der öffentliche Anon-Key ist kein Geheimnis; der Service-Role-Key existiert nie im Client.
 - Anmeldung per Magic Link oder Passkey; Abmelden löscht keine lokalen Fachdaten ohne Rückfrage.
 - Bei aktivierter Sync liegen alle synchronisierten Nutzdaten bei Supabase: Training, Körperwerte, Einstellungen, später Ernährung. Die App erklärt das beim Aktivieren. Region EU (Frankfurt) als Standard (Q-09).
 - Kostenloser Plan: Das Projekt pausiert nach 7 Tagen ohne Aktivität und muss manuell reaktiviert werden; es gibt keine automatischen Backups. Lokale Daten und Export bleiben deshalb die erste Sicherung. Laut einer Quelle ändert Supabase ab 30.10.2026 die Data API für bestehende kostenlose Projekte; das wird vor R3 geprüft.

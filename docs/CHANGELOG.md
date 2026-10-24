@@ -1,5 +1,18 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.55 · 24.10.2026 · Phase Stabilität, Nachtrag A-15 (Rechte auf das Nötige)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-350: Rechte an `sync_documents` und der Sequenz auf das Nötige |
+| `architecture.md` | 11.3: Rechte von `authenticated` und `anon` |
+| `data-model.md` | Abschnitt 12: Rechte seit D-350 |
+| `testing.md` | Protokoll „Nachtrag A-15“; CI-Ergebnis zu „Nachtrag A-05“ |
+| `implementation-plan.md` | Punkt 66: A-15 erledigt |
+| `audit-report.md` | A-15 behoben |
+| `form-stabilitaet-report.md` | Abschnitt 9 „Nachtrag: A-15“; CI-Ergebnis in Abschnitt 8 |
+| `supabase/`, `tools/test-db.mjs`, `tools/db/` | Migration und Datei zum Zurücknehmen für die Rechte; Test `rights.test.sql`, gemeinsame Hilfen `test-setup.sql`, Stand mit Rechten je Rolle; jede Migration mit Datei zum Zurücknehmen gleich geprüft |
+
 ## Version 0.54 · 24.10.2026 · Phase Stabilität, Nachtrag A-05 (Sperre je Konto)
 
 | Datei | Änderung |

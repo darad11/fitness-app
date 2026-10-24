@@ -92,7 +92,7 @@ test('Daten und Sicherung: Export lädt eine JSON-Datei herunter (AK-DAT-01, AK-
   const download = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Jetzt exportieren' }).click();
   const file = await download;
-  expect(file.suggestedFilename()).toMatch(/^fitness-sicherung-\d{4}-\d{2}-\d{2}-\d{4}\.json$/);
+  expect(file.suggestedFilename()).toMatch(/^form-sicherung-\d{4}-\d{2}-\d{2}-\d{4}\.json$/);
   const content = JSON.parse(
     await (await file.createReadStream()).toArray().then((c) => Buffer.concat(c).toString()),
   ) as {

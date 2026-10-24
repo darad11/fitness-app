@@ -86,7 +86,7 @@ describe('Sicherung wiederherstellen (D-345)', () => {
       );
     });
     expect(downloads).toHaveLength(1);
-    expect(downloads[0]).toMatch(/^fitness-sicherung-vor-wiederherstellung-/);
+    expect(downloads[0]).toMatch(/^form-sicherung-vor-wiederherstellung-/);
     expect((await listBodyWeights(rt.db)).map((w) => w.weightKg)).toEqual([80.4]);
   });
 
@@ -110,6 +110,29 @@ describe('Sicherung wiederherstellen (D-345)', () => {
     expect(downloads).toEqual([]);
     expect((await listBodyWeights(rt.db)).map((w) => w.weightKg)).toEqual([75]);
   });
+
+  // Sicherungen heißen seit D-352 `form-sicherung-…`; ältere `fitness-sicherung-…` gehen weiter.
+  it.each(['fitness-sicherung-2026-10-20-0815.json', 'form-sicherung-2026-10-24-1730.json'])(
+    'stellt die Datei %s wieder her (D-352)',
+    async (name) => {
+      const other = await createTestRuntime({ deviceId: 'c3c3c3c3' });
+      await addBodyWeight(other, { weightKg: 77.5, measuredAt: new Date('2026-10-20T07:00:00Z') });
+      const exported = await buildBackup(other.db, other.deviceId);
+      await other.db.delete();
+
+      const user = userEvent.setup();
+      const card = renderCard();
+      await user.upload(within(card).getByLabelText('Sicherung wählen'), jsonFile(exported, name));
+      await within(card).findByRole('region', { name: 'In dieser Sicherung' });
+      await user.click(within(card).getByRole('button', { name: 'Wiederherstellen' }));
+      const dialog = await screen.findByRole('dialog', { name: 'Sicherung übernehmen?' });
+      await user.click(within(dialog).getByRole('button', { name: 'Übernehmen' }));
+      await waitFor(() => {
+        expect(within(card).getByRole('status')).toHaveTextContent(/wiederhergestellt\.$/);
+      });
+      expect((await listBodyWeights(rt.db)).map((w) => w.weightKg)).toEqual([77.5]);
+    },
+  );
 
   it('während eines Trainings lässt sich nichts wiederherstellen', async () => {
     await addBodyWeight(rt, { weightKg: 80.4, measuredAt: new Date('2026-10-20T07:00:00Z') });

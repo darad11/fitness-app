@@ -83,7 +83,7 @@ describe('JSON-Export (AK-DAT-01, data-model.md Abschnitt 11)', () => {
 
   it('benennt die Datei nach lokalem Datum und Uhrzeit', () => {
     expect(backupFileName(new Date(2026, 9, 18, 16, 5))).toBe(
-      'fitness-sicherung-2026-10-18-1605.json',
+      'form-sicherung-2026-10-18-1605.json',
     );
   });
 

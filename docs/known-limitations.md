@@ -170,7 +170,7 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 
 ## Wiederherstellen aus dem Export (D-345)
 
-- **Nur Ersetzen:** Eine Sicherung ersetzt alle Daten dieses Geräts; Zusammenführen (AK-DAT-03) gibt es noch nicht. Was nur auf dem Gerät lag, ist danach gelöscht markiert. Es steckt in der Datei `fitness-sicherung-vor-wiederherstellung-…`, die FORM vorher anlegt, und im Snapshot „Vor Import“.
+- **Nur Ersetzen:** Eine Sicherung ersetzt alle Daten dieses Geräts; Zusammenführen (AK-DAT-03) gibt es noch nicht. Was nur auf dem Gerät lag, ist danach gelöscht markiert. Es steckt in der Datei `form-sicherung-vor-wiederherstellung-…`, die FORM vorher anlegt, und im Snapshot „Vor Import“.
 - **Snapshots** lassen sich weiterhin nicht über die App zurückspielen (A-06). Wieder einspielen lässt sich die Datei von vor dem Wiederherstellen.
 - **Nicht Teil der Sicherung** sind Anzeigeeinstellungen dieses Geräts (z. B. „Als Tabelle“), Anmeldungen, das Fehlerprotokoll und importierte Lebensmitteldaten. Sie bleiben beim Wiederherstellen, wie sie sind; nach einem Gerätewechsel die Lebensmitteldaten neu importieren.
 - **Mit Synchronisierung:** Der eingespielte Stand geht beim nächsten Abgleich an die anderen Geräte, auch die Löschmarken. Hat ein anderes Gerät seit dem letzten Abgleich ein Programm oder Rezept geändert, bleibt dessen Fassung, und die eingespielte erscheint als Konfliktkopie (K-09, K-17). Was ein anderes Gerät seit dem letzten Abgleich neu angelegt hat, bleibt erhalten und kommt mit dem nächsten Abgleich. Ein dort abgeschlossenes Training gewinnt gegen eine eingespielte laufende Fassung (K-01).

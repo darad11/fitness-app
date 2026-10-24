@@ -67,7 +67,7 @@ export class CurrentNotSavedError extends Error {
 /** Dateiname der Sicherung vor dem Wiederherstellen, z. B. `…-vor-wiederherstellung-2026-10-23-1815.json`. */
 export function beforeRestoreFileName(now: Date): string {
   const two = (n: number) => String(n).padStart(2, '0');
-  return `fitness-sicherung-vor-wiederherstellung-${String(now.getFullYear())}-${two(now.getMonth() + 1)}-${two(now.getDate())}-${two(now.getHours())}${two(now.getMinutes())}.json`;
+  return `form-sicherung-vor-wiederherstellung-${String(now.getFullYear())}-${two(now.getMonth() + 1)}-${two(now.getDate())}-${two(now.getHours())}${two(now.getMinutes())}.json`;
 }
 
 /** Liegt auf diesem Gerät etwas, das nicht gelöscht ist? Sonst gibt es vorher nichts zu sichern. */

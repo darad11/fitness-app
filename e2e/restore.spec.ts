@@ -79,7 +79,7 @@ test('Sicherung wiederherstellen: prüfen, Zusammenfassung, vorher sichern, erse
   await dialog.getByRole('button', { name: 'Sichern und ersetzen' }).click();
   const saved = await before;
   expect(saved.suggestedFilename()).toMatch(
-    /^fitness-sicherung-vor-wiederherstellung-\d{4}-\d{2}-\d{2}-\d{4}\.json$/,
+    /^form-sicherung-vor-wiederherstellung-\d{4}-\d{2}-\d{2}-\d{4}\.json$/,
   );
   await expect(card.getByRole('status')).toHaveText(
     /^Die Sicherung vom .+ ist wiederhergestellt\.$/,

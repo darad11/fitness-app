@@ -82,10 +82,14 @@ export async function buildBackup(
   };
 }
 
-/** Dateiname mit lokalem Datum und Uhrzeit, z. B. `fitness-sicherung-2026-10-18-1615.json`. */
+/**
+ * Dateiname mit lokalem Datum und Uhrzeit, z. B. `form-sicherung-2026-10-18-1615.json` (D-352).
+ * Ältere Dateien heißen `fitness-sicherung-…`; das Wiederherstellen prüft den Namen nicht, nur den
+ * Inhalt (`BACKUP_FORMAT` bleibt deshalb gleich).
+ */
 export function backupFileName(now: Date = new Date()): string {
   const two = (n: number) => String(n).padStart(2, '0');
-  return `fitness-sicherung-${String(now.getFullYear())}-${two(now.getMonth() + 1)}-${two(now.getDate())}-${two(now.getHours())}${two(now.getMinutes())}.json`;
+  return `form-sicherung-${String(now.getFullYear())}-${two(now.getMonth() + 1)}-${two(now.getDate())}-${two(now.getHours())}${two(now.getMinutes())}.json`;
 }
 
 export type DeliveryResult = 'shared' | 'downloaded' | 'cancelled';

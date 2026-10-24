@@ -1,6 +1,6 @@
 # Phase Stabilität – Bericht
 
-Stand: 24.10.2026 (Nachträge A-05, A-15 und Testfix, Abschnitte 8 bis 10; Gerätetests, Abschnitt 11) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
+Stand: 24.10.2026 (Nachträge A-05, A-15 und Testfix, Abschnitte 8 bis 10; Gerätetests, Abschnitt 11; Name der Sicherungsdateien, Abschnitt 12) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
 
 Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt.
 
@@ -19,6 +19,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `e33bcfb` grün, Datenbank an PostgreSQL 17.11 bestanden |
 | Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `93d7f09`: Datenbank-Job rot wegen eines Fehlers im Test unter Postgres 17, im Nachtrag behoben; CI zu `3cc0523` grün |
 | Nachtrag: wackelnder Test `switches.spec.ts:340` (nach Freigabe am 24.10.2026) | Auf `/fortschritt/gewicht` wartet der Test nach dem ersten Gewicht, bis die Auswahl „Zeitraum“ gezeichnet ist; Gegenprobe mit gedrosselter CPU; Test in `repeat.yml` | D-351 | erledigt; lokal 40 von 40, Gegenprobe alt 2 von 60 rot, neu 60 von 60; Wiederholung in der CI je Engine 40 von 40; CI zu `3cc0523` grün |
+| Nachtrag: Sicherungsdateien `form-sicherung-…` (Nachricht vom 24.10.2026) | Export und Sicherung vor dem Wiederherstellen heißen `form-sicherung-…`; Dateien mit dem alten Namen lassen sich weiter wiederherstellen | D-352 | erledigt; Unit-Tests am alten Stand 2 von 33 rot; CI zum Commit ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -184,7 +185,7 @@ Eine Exportdatei ließ sich nicht wieder einspielen (A-14). Wer die App vom Home
 2. FORM prüft die Datei. Bei einem Fehler nennt es den Grund und sagt: „An deinen Daten hat sich nichts geändert.“ Gründe: nicht lesbar, zu groß, keine Sicherung von FORM, beschädigt, von einer neueren Version, ungültiger Eintrag (mit seiner Art, nie mit Inhalt).
 3. Zusammenfassung „In dieser Sicherung“: Stand, Zeitraum, Trainings, Ernährungseinträge, Aufgaben. Dazu der Hinweis, dass FORM alle Daten dieses Geräts ersetzt und vorher den aktuellen Stand als Datei sichert; mit Synchronisierung: „Beim nächsten Abgleich übernehmen deine anderen Geräte den wiederhergestellten Stand.“
 4. „Wiederherstellen“, dann die Rückfrage „Daten ersetzen?“ mit „Sichern und ersetzen“. Auf einem leeren Gerät heißt sie „Sicherung übernehmen?“ mit „Übernehmen“; es gibt dann nichts vorher zu sichern.
-5. FORM legt die Datei `fitness-sicherung-vor-wiederherstellung-…json` an (Teilen-Menü bzw. Download). Bricht man ab, ersetzt es nichts. Dann ein Snapshot, dann das Ersetzen in einer Transaktion. Während eines Trainings ist das gesperrt.
+5. FORM legt die Datei `form-sicherung-vor-wiederherstellung-…json` an (bis D-352 `fitness-sicherung-…`; Teilen-Menü bzw. Download). Bricht man ab, ersetzt es nichts. Dann ein Snapshot, dann das Ersetzen in einer Transaktion. Während eines Trainings ist das gesperrt.
 
 ### Regeln
 
@@ -540,4 +541,22 @@ Durchgeführt vom Produktinhaber an der Vorschau von `form-stabilitaet` auf eine
 | Wiederherstellen aus dem Export mit Dateien-App und Teilen-Menü (D-345, Ablauf in Abschnitt 4) | bestanden, alle Schritte wie beschrieben |
 
 Weiter offen am Gerät: der Abgleich mit zwei Geräten (auf dem Server gibt es noch kein Konto).
+
+## 12. Nachtrag: Sicherungsdateien `form-sicherung-…` (24.10.2026)
+
+Auf Nachricht des Produktinhabers (D-352).
+
+### Änderung
+
+- Export: `form-sicherung-JJJJ-MM-TT-HHMM.json` statt `fitness-sicherung-…` (`src/shared/db/export.ts`).
+- Sicherung vor dem Wiederherstellen: `form-sicherung-vor-wiederherstellung-…json` (`src/modules/backup/service/restoreService.ts`).
+- Dateien mit dem alten Namen lassen sich weiter wiederherstellen. Das Wiederherstellen nimmt jede JSON-Datei und prüft nur den Inhalt. Die Kennung im Inhalt (`fitness-app-backup`) bleibt gleich, sonst würden ältere Sicherungen nicht mehr erkannt.
+
+### Tests mit Ergebnis
+
+| Lauf | Ergebnis |
+|---|---|
+| `src/shared/db/export.test.ts`, `src/modules/backup` | 33 bestanden, darunter neu: Wiederherstellen einer Datei `fitness-sicherung-2026-10-20-0815.json` und einer Datei `form-sicherung-2026-10-24-1730.json` |
+| Gegenprobe mit dem alten Code | 2 von 33 fehlgeschlagen: „Expected: "form-sicherung-2026-10-18-1605.json", Received: "fitness-sicherung-2026-10-18-1605.json"“ und der Name der Sicherung vor dem Wiederherstellen. Die beiden neuen Tests zum alten und neuen Namen bestehen in beiden Fällen; sie halten die Zusage fest |
+| übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Sicherungsdateien form-sicherung-…“ |
 

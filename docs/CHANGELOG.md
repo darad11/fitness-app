@@ -1,5 +1,17 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.60 · 24.10.2026 · Phase Stabilität, Sicherungsdateien `form-sicherung-…`
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-352: neuer Name der Sicherungsdateien, alte Namen weiter wiederherstellbar |
+| `data-model.md` | Abschnitt 11: Name der Sicherung vor dem Wiederherstellen |
+| `known-limitations.md` | Name der Sicherung vor dem Wiederherstellen |
+| `testing.md` | Protokoll „Sicherungsdateien form-sicherung-…“ |
+| `implementation-plan.md` | Punkt 66: D-352 |
+| `feature-inventory.md` | SY-04: D-352 |
+| `form-stabilitaet-report.md` | Abschnitt 12 |
+
 ## Version 0.59 · 24.10.2026 · Phase Stabilität, Gerätetests
 
 | Datei | Änderung |

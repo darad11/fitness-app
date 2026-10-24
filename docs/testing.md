@@ -1342,3 +1342,17 @@ Wackelnder Test `e2e/switches.spec.ts:340` auf `/fortschritt/gewicht` (D-351). B
 | Wiederholung in der CI (`repeat.yml`, Lauf 40072960651, Stand `11fa1eb`) | Chromium 300 bestanden, WebKit 260 bestanden, je 0 fehlgeschlagen; der behobene Test je Engine 40 von 40 |
 | CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Chromium 320 bestanden, WebKit 310 bestanden; nichts im zweiten Versuch |
 
+### Stabilität, Sicherungsdateien form-sicherung-… · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Export und Sicherung vor dem Wiederherstellen heißen `form-sicherung-…` (D-352). Bericht: `form-stabilitaet-report.md` Abschnitt 12.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/shared/db/export.test.ts`, `src/modules/backup` | 33 bestanden, darunter neu: Wiederherstellen einer Datei `fitness-sicherung-2026-10-20-0815.json` und einer Datei `form-sicherung-2026-10-24-1730.json` |
+| Gegenprobe mit dem alten Code | 2 von 33 fehlgeschlagen („Expected: "form-sicherung-2026-10-18-1605.json", Received: "fitness-sicherung-2026-10-18-1605.json"“ und der Name der Sicherung vor dem Wiederherstellen) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 986 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,2 min); darin `shell.spec.ts` (Name des Exports) und `restore.spec.ts` (Name der Sicherung vor dem Wiederherstellen) |
+| WebKit | in der CI zum Commit |
+

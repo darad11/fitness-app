@@ -1316,6 +1316,7 @@ Rechte an `sync_documents` und der Sequenz eingeschränkt (D-350). Bericht: `for
 | je 10 Wiederholungen | alle Migrationen 10 von 10 bestanden; Stand davor 10 von 10 fehlgeschlagen |
 | Server nach dem Einspielen (`tools/db/snapshot.sql`, lesend) | Migration `20261024063941` byte-gleich mit der Datei (864 Bytes); 32 von 37 Werten wie vorher, anders nur die fünf Werte zu den Rechten; 0 Zeilen, 0 Konten |
 | Hinweise von Supabase zur Sicherheit nachher | keine |
+| CI zu `93d7f09` (Lauf 40071508901) | Datenbank (PostgreSQL 17.11) fehlgeschlagen: „malformed array literal: "MAINTAIN"“ in `rights.test.sql` Teil 3, ein Fehler im Test (Zweig nur ab Postgres 17). Nach der Änderung zu `unused \|\| array['MAINTAIN']`: Teil 3 lesend auf dem Server (PostgreSQL 17.11) ohne Fehler. E2E Chromium 320 bestanden, WebKit 310 bestanden, je 0 fehlgeschlagen |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm test` | 116 Dateien, 984 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB; Vorab-Liste 173 von 232 Dateien |

@@ -17,7 +17,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §5 Startansicht höchstens 235 KB | Textkatalog aufgeteilt: Texte nachgeladener Seiten und des Players in eigenen Dateien; 234,3 KB statt 239,5 KB, ohne neue Abhängigkeit | D-347 | erledigt; WebKit 314 bestanden, 0 fehlgeschlagen (CI zu `86d4841`) |
 | §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
 | Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `e33bcfb` grün, Datenbank an PostgreSQL 17.11 bestanden |
-| Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zum Commit ausstehend |
+| Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `93d7f09`: Datenbank-Job rot wegen eines Fehlers im Test unter Postgres 17, im Nachtrag behoben; E2E grün |
 | Nachtrag: wackelnder Test `switches.spec.ts:340` (nach Freigabe am 24.10.2026) | Auf `/fortschritt/gewicht` wartet der Test nach dem ersten Gewicht, bis die Auswahl „Zeitraum“ gezeichnet ist; Gegenprobe mit gedrosselter CPU; Test in `repeat.yml` | D-351 | erledigt; lokal 40 von 40, Gegenprobe alt 2 von 60 rot, neu 60 von 60; CI zum Commit ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
@@ -489,6 +489,17 @@ Durch die Standardrechte von Supabase im Schema `public` hatte `authenticated` a
 | Einspielen | `20261024063941 sync_documents_restrict_rights`; die gespeicherte Migration ist byte-gleich mit der Datei (864 Bytes) |
 | Stand vorher und nachher (`tools/db/snapshot.sql`) | 32 von 37 Werten gleich. Anders nur: Rechte an der Tabelle (`authenticated=arwdDxtm` → `authenticated=arw`), an der Sequenz (`anon=rwU` entfällt, `authenticated=rwU` → `authenticated=U`), `anon` an der Sequenz (SELECT, UPDATE, USAGE → keine), `authenticated` an der Tabelle (DELETE, INSERT, MAINTAIN, REFERENCES, SELECT, TRIGGER, TRUNCATE, UPDATE → INSERT, SELECT, UPDATE) und an der Sequenz (SELECT, UPDATE, USAGE → USAGE). Gleich: `push_documents` mit Sperre und Rechten, `service_role`, Tabelle, Spalten, Bedingungen, Indizes, drei RLS-Regeln, keine Trigger, Daten (0 Zeilen, 0 Konten), Sequenz bei 4 |
 | Hinweise von Supabase zur Sicherheit nachher | keine |
+
+### Nachtrag: CI zu `93d7f09`
+
+| Lauf | Ergebnis |
+|---|---|
+| CI zu `93d7f09` (Lauf 40071508901) | Prüfungen bestanden; E2E Chromium 320 bestanden, 50 übersprungen; WebKit 310 bestanden, 60 übersprungen, 0 fehlgeschlagen. Datenbank (PostgreSQL 17.11) fehlgeschlagen: „malformed array literal: "MAINTAIN"“ in `rights.test.sql`, Teil 3. Teile 1 und 2 liefen durch (Leeren, Löschen, Sequenz und `anon` abgelehnt) |
+| Ursache | `unused \|\| 'MAINTAIN'` liest Postgres 17 als zwei Arrays; der Text wird zum Array-Literal. Der Zweig läuft nur ab Postgres 17, lokal (16.15) nie. Ein Fehler im Test, nicht an den Rechten |
+| Änderung | `unused \|\| array['MAINTAIN']` |
+| Prüfung laut Katalog (Teil 3) lesend auf dem Server, PostgreSQL 17.11 | ohne Fehler, mit MAINTAIN |
+| `pnpm test:db` lokal danach | bestanden; Gegenprobe `--bis 20261024055418` weiter fehlgeschlagen („Leeren wurde nicht abgelehnt“) |
+| CI zum Commit mit der Änderung | zum Commit ausstehend |
 
 ### Offen
 

@@ -1,5 +1,14 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.57 · 24.10.2026 · Phase Stabilität, Nachtrag A-15 (Test unter Postgres 17)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-350: Nachtrag zur CI (Fehler im Test unter Postgres 17) |
+| `testing.md` | Protokoll „Nachtrag A-15“: CI zu `93d7f09` |
+| `form-stabilitaet-report.md` | Abschnitt 9: Nachtrag zur CI |
+| `tools/db/rights.test.sql` | `MAINTAIN` als Array anhängen |
+
 ## Version 0.56 · 24.10.2026 · Phase Stabilität, wackelnder Test `switches.spec.ts:340`
 
 | Datei | Änderung |

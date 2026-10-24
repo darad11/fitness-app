@@ -92,8 +92,9 @@ declare
   priv text;
   unused text[] := array['DELETE', 'TRUNCATE', 'REFERENCES', 'TRIGGER'];
 begin
+  -- MAINTAIN gibt es erst ab Postgres 17; als Array anhängen, ein Text davor wäre ein Array-Literal.
   if current_setting('server_version_num')::int >= 170000 then
-    unused := unused || 'MAINTAIN';
+    unused := unused || array['MAINTAIN'];
   end if;
   foreach priv in array array['SELECT', 'INSERT', 'UPDATE'] loop
     if not has_table_privilege('authenticated', 'public.sync_documents', priv) then

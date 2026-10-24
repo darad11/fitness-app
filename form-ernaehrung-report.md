@@ -12,7 +12,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 |---|---|---|---|
 | Phasenstart | CI auf `main` (Lauf 40119684695) grün geprüft, Branch und Entwurfs-PR, `CLAUDE.md` mit Phase und Regel für neue Tabellen | D-353 | erledigt |
 | §0 Stand prüfen und umsteuern | Bestand aufgenommen; der lokal angefangene Einbau (BLS-Auszug per Filter, USDA-Stückgewichte, Laden in der App) zurückgenommen; Ursachenanalyse und BLS-Rohdaten behalten | D-355 | erledigt |
-| §1 Warum die Suche heute nichts findet | Ursache belegt (D-354): keine Daten für lose Lebensmittel seit D-279, Schwächen der Suche | D-354 | Analyse erledigt, Behebung folgt |
+| §1 Warum die Suche heute nichts findet | Ursache belegt (D-354): keine Daten für lose Lebensmittel seit D-279, Schwächen der Suche. Suche neu für jede Datenquelle: Umlautschreibweisen, Einzahl und Mehrzahl, Synonyme in beide Richtungen, Grundwörter, Rang nach Stellung im Namen, lose vor Marke, keine Dubletten | D-354, D-356 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -106,3 +106,63 @@ B) Dieselbe Suche über den BLS 4.0 (7.140 Einträge), erste fünf Treffer:
 Keine vorgetäuschten Treffer: Die Behebung kommt aus einer besseren Suche für jede Datenquelle (unten) und aus der kuratierten Auswahl aus dem BLS (§2, Einbau nach Freigabe in §6).
 
 Die Analyse ist Commit `8f0a0dd` (damals als §2 des ersten Auftrags). Der Beleg stammt aus einem vorübergehenden Vitest-Lauf gegen die unveränderte Suchfunktion; die Datei wurde danach entfernt. Die Fälle gehen als Tests in die Behebung ein.
+
+### Behebung: Suche für jede Datenquelle (D-356)
+
+Die Suche (`calc/foodSearch.ts`) ist neu geschrieben und gilt für alle Quellen gleich: eigene Lebensmittel, Rezepte, ÖNWT-Import, gescannte Produkte und später die BLS-Auswahl. Das Sprachwissen steht getrennt in `calc/foodTerms.ts`.
+
+| Punkt | Lösung |
+|---|---|
+| Groß- und Kleinschreibung, Umlaute | Eingabe und Lebensmittel werden gleich gefaltet: „Äpfel“, „Aepfel“ und „Apfel“ sind dasselbe Wort, ebenso „Müsli“ und „Muesli“ |
+| Einzahl und Mehrzahl | Ohne Wörterbuch: „-n“, „-e“, „-s“ am Ende (Tomaten, Bananen, Nüsse, Kiwis); „-er“ nur über eine kurze Liste (Eier, Hühner, Kräuter …), damit „Butter“ nicht „Butt“ trifft |
+| Synonyme | 60 Gruppen in beide Richtungen, österreichisch und bundesdeutsch (Paradeiser/Tomate, Erdäpfel/Kartoffel, Topfen/Quark, Karfiol/Blumenkohl, Fisolen/grüne Bohne, Marille/Aprikose …), Schreibweisen (Brokkoli/Broccoli, Jogurt/Joghurt) und Kurzformen (Nudel/Teigware/Pasta, Ei/Hühnerei). Auch in zusammengesetzten Wörtern: „Erdäpfelpüree“ findet „Kartoffelpüree“ |
+| Falsche Freunde | 14 Wörter, die ein anderes Lebensmittelwort enthalten, ohne es zu meinen, zählen nicht als Teiltreffer: Erdapfel, Granatapfel und Apfelsine bei „Apfel“, Seelachs bei „Lachs“, Knoblauch bei „Lauch“, Reis und Paradeiser bei „Eis“ |
+| Suchindex und Rang | Ganzes Wort oder Grundwort am Anfang des Namens zuerst („Olivenöl“ ist ein Öl, „Hühnerei“ ein Ei), dann ganzes Wort weiter hinten (Zutat eines Gerichts), dann Marke oder Suchbegriff, dann Wortanfang; Wortteile mitten im Wort erst ab fünf Buchstaben. Bei gleichem Rang lose Lebensmittel vor Markenprodukten, dann kürzere Namen |
+| Kurze Wörter | „Öl“ wird mit Umlaut verglichen und findet Rapsöl und Olivenöl, nicht Karfiol oder Oliven; „Ei“ trifft nie „Brei“ |
+| Dubletten | Gleicher Name, gleiche Marke und gleiche Pflichtwerte erscheinen einmal, der eigene Eintrag zuerst |
+| Vorgetäuschte Treffer | Keine: Jede Fundstelle steht im Namen, in der Marke oder in einem Suchbegriff des Eintrags oder über ein dokumentiertes Synonym |
+
+#### Nachher über den BLS 4.0
+
+Dieselben Suchbegriffe wie im Beleg oben, dazu Topfen, Nudeln und weitere, jetzt mit der neuen Suche über den ganzen BLS 4.0 (7.140 Einträge, mit Gerichten), danach die Laufzeit über 12.140 Einträge (BLS plus 5.000 Einträge mit Marke). Lauf vom 24.10.2026 mit dem endgültigen Code, vorübergehender Vitest-Lauf, Datei danach entfernt, Ausgabe wörtlich:
+
+```
+Index 7.140 Einträge: 147 ms
+  Apfel: 123 Treffer -> Apfel roh | Vanilleäpfel | Apfel gedünstet | Apfel getrocknet | Apfel geschält, roh
+  Äpfel: 123 Treffer -> Apfel roh | Vanilleäpfel | Apfel gedünstet | Apfel getrocknet | Apfel geschält, roh
+  Aepfel: 123 Treffer -> Apfel roh | Vanilleäpfel | Apfel gedünstet | Apfel getrocknet | Apfel geschält, roh
+  Ei: 341 Treffer -> Eier gekocht | Hühnerei roh | Eier russisch | Hühnerei Pulver | Hühnerei gekocht
+  Eier: 177 Treffer -> Eier gekocht | Hühnerei roh | Eier russisch | Hühnerei Pulver | Hühnerei gekocht
+  Tomate: 143 Treffer -> Tomate roh | Tomate Pulver | Tomate gekocht | Tomate gebacken | Tomate gegrillt
+  Tomaten: 143 Treffer -> Tomate roh | Tomate Pulver | Tomate gekocht | Tomate gebacken | Tomate gegrillt
+  Paradeiser: 143 Treffer -> Tomate roh | Tomate Pulver | Tomate gekocht | Tomate gebacken | Tomate gegrillt
+  Erdäpfel: 204 Treffer -> Kartoffel geschält, roh | Kartoffel-Gemüse-Kuchen | Batate/Süßkartoffel, roh | Kartoffel ungeschält, roh | Kartoffel-Lauchcremesuppe
+  Topfen: 89 Treffer -> Bananenquark | Früchtequark | Vanillequark | Quark-Plunder | Quark-Mokka-Creme
+  Karotten: 75 Treffer -> Karotte/Möhre, roh | Karotten-/Möhrenpüree | Karotte/Möhre, gekocht | Karotte/Möhre, gebacken | Karotte/Möhre, gedünstet
+  Brokkoli: 25 Treffer -> Broccoli roh | Broccoli gekocht | Broccoli gebacken | Broccoli gedünstet | Broccoli tiefgefroren
+  Paprika: 60 Treffer -> Gemüsepaprika rot, roh | Gemüsepaprika gelb, roh | Gemüsepaprika grün, roh | Gemüsepaprika rot, gekocht | Gemüsepaprika gelb, gekocht
+  Fisch: 99 Treffer -> Thunfisch roh | Schellfisch roh | Tintenfisch roh | Schwertfisch roh | Thunfisch gegrillt
+  Nüsse: 113 Treffer -> Walnuss | Paranuss | Haselnuss | Pekannuss | Nuss-Plunder
+  Öl: 92 Treffer -> Hanföl | Leinöl | Mohnöl | Sojaöl | Kokosöl
+  Nudeln: 148 Treffer -> Reisnudeln roh | Reisnudeln gekocht | Rohrnudeln gebacken | Schupfnudeln gegart | Teigwaren eifrei, roh
+  Bananen: 24 Treffer -> Banane roh | Kochbanane roh | Banane getrocknet | Kochbanane gekocht | Kochbanane gebacken
+Suche über 12140 Einträge: Median 23.0 ms, langsamste 43.4 ms
+```
+
+Was bleibt: Über den ganzen BLS stehen noch Gerichte zwischen den Grundlebensmitteln („Vanilleäpfel“, „Kartoffel-Gemüse-Kuchen“), und „Topfen“ zeigt zuerst Quarkspeisen, weil der BLS „Speisequark“ schreibt. Beides löst die kuratierte Auswahl mit österreichischen Anzeigenamen und ohne Gerichte (§2, Einbau in §6): Dort heißt der Eintrag „Topfen“ und steht als ganzes Wort vorn. Die Laufzeit wurde in Node gemessen (Index für 7.140 Einträge 147 ms, einmal je Datenstand); auf dem iPhone ist mit einem Mehrfachen zu rechnen, die Eingabe bleibt durch die verzögerte Suche flüssig.
+
+#### Geänderte Dateien
+
+`src/modules/nutrition/calc/foodSearch.ts` (neu geschrieben), `src/modules/nutrition/calc/foodTerms.ts` (neu), `src/modules/nutrition/calc/foodSearch.test.ts` (neu), `e2e/nutrition.spec.ts` (neuer Test, Hilfsfunktion für Importzeilen), `docs/decisions.md` (D-356), `docs/requirements.md` (AK-NUT-14), `docs/feature-inventory.md` und `.csv` (NU-08), `docs/testing.md`, dieser Bericht.
+
+#### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/foodSearch.test.ts` | 16 bestanden: Faltung, Einzahlformen, Apfel/Äpfel/Aepfel, Ei/Eier ohne Brei, Tomate/Tomaten/Paradeiser in beide Richtungen, Mehrzahl, österreichische Begriffe, Schreibweisen, Öl, falsche Freunde, keine vorgetäuschten Treffer, Dubletten, bisheriges Verhalten (D-306) |
+| `pnpm test` | 117 Dateien, 1002 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB (unverändert) |
+| E2E `nutrition.spec.ts` und `nutrition-ring.spec.ts`, Chromium Desktop und Pixel 7 | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen; darin neu „Suche: Mehrzahl, Umlautschreibweise und Synonyme, lose vor Marke (D-356)“ mit Tomaten, Paradeiser, Eier, Ei, Aepfel, Äpfel, Kartoffeln über importierte Daten |
+| Gegenprobe: neuer E2E-Test gegen die alte Suche | 2 von 2 fehlgeschlagen (Desktop und Mobil) beim ersten Begriff: „Expected pattern: /^Tomate roh/“ |
+| WebKit | in der CI zum Commit |

@@ -1,5 +1,194 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.60 · 24.10.2026 · Phase Stabilität, Sicherungsdateien `form-sicherung-…`
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-352: neuer Name der Sicherungsdateien, alte Namen weiter wiederherstellbar |
+| `data-model.md` | Abschnitt 11: Name der Sicherung vor dem Wiederherstellen |
+| `known-limitations.md` | Name der Sicherung vor dem Wiederherstellen |
+| `testing.md` | Protokoll „Sicherungsdateien form-sicherung-…“ |
+| `implementation-plan.md` | Punkt 66: D-352 |
+| `feature-inventory.md` | SY-04: D-352 |
+| `form-stabilitaet-report.md` | Abschnitt 12 |
+
+## Version 0.59 · 24.10.2026 · Phase Stabilität, Gerätetests
+
+| Datei | Änderung |
+|---|---|
+| `testing.md` | Abschnitt 7: Gerätetests vom 24.10.2026 (Update, Wiederherstellen) |
+| `decisions.md` | D-343 und D-345: Gerätetest bestanden |
+| `implementation-plan.md` | Punkt 66: Gerätetests, Merge freigegeben |
+| `feature-inventory.md` | Version 0.18: Gerätetests ohne Statuswechsel |
+| `form-stabilitaet-report.md` | Abschnitt 11 „Gerätetests“; offene Punkte nachgezogen |
+
+## Version 0.58 · 24.10.2026 · Phase Stabilität, Ergebnisse der CI zu D-350 und D-351
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-350 und D-351: Ergebnisse der CI und der Wiederholung |
+| `testing.md` | Protokolle „Nachtrag A-15“ und „Auswahl nach dem ersten Gewicht“: CI zu `3cc0523`, Wiederholung |
+| `form-stabilitaet-report.md` | Abschnitte 1, 9 und 10: Ergebnisse der CI |
+
+## Version 0.57 · 24.10.2026 · Phase Stabilität, Nachtrag A-15 (Test unter Postgres 17)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-350: Nachtrag zur CI (Fehler im Test unter Postgres 17) |
+| `testing.md` | Protokoll „Nachtrag A-15“: CI zu `93d7f09` |
+| `form-stabilitaet-report.md` | Abschnitt 9: Nachtrag zur CI |
+| `tools/db/rights.test.sql` | `MAINTAIN` als Array anhängen |
+
+## Version 0.56 · 24.10.2026 · Phase Stabilität, wackelnder Test `switches.spec.ts:340`
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-351: Test wartet nach dem ersten Gewicht auf die neu gezeichnete Seite |
+| `testing.md` | Protokoll „Nachtrag: Auswahl nach dem ersten Gewicht“ |
+| `implementation-plan.md` | Punkt 66: Testfix |
+| `form-stabilitaet-report.md` | Abschnitt 10; Hinweis in Abschnitt 8 |
+| `.github/workflows/repeat.yml` | Test „Einfachauswahl auf /fortschritt/gewicht“ in der Liste |
+
+## Version 0.55 · 24.10.2026 · Phase Stabilität, Nachtrag A-15 (Rechte auf das Nötige)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-350: Rechte an `sync_documents` und der Sequenz auf das Nötige |
+| `architecture.md` | 11.3: Rechte von `authenticated` und `anon` |
+| `data-model.md` | Abschnitt 12: Rechte seit D-350 |
+| `testing.md` | Protokoll „Nachtrag A-15“; CI-Ergebnis zu „Nachtrag A-05“ |
+| `implementation-plan.md` | Punkt 66: A-15 erledigt |
+| `audit-report.md` | A-15 behoben |
+| `form-stabilitaet-report.md` | Abschnitt 9 „Nachtrag: A-15“; CI-Ergebnis in Abschnitt 8 |
+| `supabase/`, `tools/test-db.mjs`, `tools/db/` | Migration und Datei zum Zurücknehmen für die Rechte; Test `rights.test.sql`, gemeinsame Hilfen `test-setup.sql`, Stand mit Rechten je Rolle; jede Migration mit Datei zum Zurücknehmen gleich geprüft |
+
+## Version 0.54 · 24.10.2026 · Phase Stabilität, Nachtrag A-05 (Sperre je Konto)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-349: Sperre je Konto in `push_documents`, SQL des Servers im Repository, Test `pnpm test:db` |
+| `architecture.md` | 11.2 Pull: `rev > Cursor` mit Sperre je Konto statt des alten Entwurfs mit Überlappung |
+| `data-model.md` | Abschnitt 12: SQL in `supabase/migrations/`, Sperre je Konto |
+| `testing.md` | Protokoll „Nachtrag A-05“ |
+| `.github/workflows/ci.yml` | Neuer Job „Datenbank (Postgres 17)“ |
+| `implementation-plan.md` | Punkt 66: A-05 erledigt, A-15 neu |
+| `feature-inventory.md` | Version 0.17: SY-03 mit Sperre je Konto |
+| `audit-report.md` | A-05 behoben, neu A-15 (Rechte), Abschnitt 9 Punkt 7 erledigt |
+| `form-stabilitaet-report.md` | Abschnitt 8 „Nachtrag: A-05“ |
+| `CLAUDE.md` | Befehl `pnpm test:db`, Ablauf für Änderungen am Server |
+| `supabase/`, `tools/test-db.mjs`, `tools/db/` | Neu: Migrationen des Servers, Datei zum Zurücknehmen, `README.md`; Datenbanktest |
+
+## Version 0.53 · 23.10.2026 · Phase Stabilität, Abschnitt 6 (Tests und Abschluss)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-348: Abschluss der Phase; D-344 mit dem Ergebnis der Gegenprobe und der Wiederholung, Laufzeit der Wiederholung berichtigt, Zahl für WebKit berichtigt (40 von 220 statt 320) |
+| `known-limitations.md` | Dauerhafter Speicher nach D-346; Vorladen in WebKit in der CI belegt; Testwerkzeuge: Image der CI, „flaky“ als Befund, Wiederholung auf Abruf |
+| `testing.md` | Abschnitte 3 und 5 nachgezogen (Image von Playwright, Vorab-Liste, Wiederholung); Ergebnisse der CI zu §1, §2, §4 und §5; Protokoll „Stabilität §6“ |
+| `implementation-plan.md` | Punkt 66: Phase abgeschlossen, wartet auf Freigabe |
+| `form-stabilitaet-report.md` | Abschnitt 7 (Abschluss), Ergebnisse der CI und der Wiederholung in den Abschnitten 1 bis 6 |
+| `.github/workflows/repeat.yml` | Kommentar: Laufzeit rund 12 min |
+
+## Version 0.52 · 23.10.2026 · Phase Stabilität, Abschnitt 5 (Startansicht höchstens 235 KB)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-347: Textkatalog aufgeteilt, Startansicht 234,3 KB |
+| `architecture.md` | Ordner `i18n/`: getrennte Kataloge für nachgeladene Teile |
+| `testing.md` | Protokoll „Stabilität §5“ |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `form-stabilitaet-report.md` | Abschnitt 6 |
+
+## Version 0.51 · 23.10.2026 · Phase Stabilität, Abschnitt 4 (weitere P2-Befunde und B-07)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-346: A-03 (teilweise), A-04, A-07/E-02, A-08, B-03, B-04, B-05, B-07, C-02, C-03, C-04 (teilweise), D-01, D-02, E-03 (teilweise); Offenes mit Grund |
+| `audit-report.md` | Status der Befunde nachgezogen |
+| `testing.md` | Protokoll „Stabilität §4“ mit Gegenproben |
+| `known-limitations.md` | Kontowechsel abgesichert; Snapshots ohne Zugänge, voller Speicher |
+| `architecture.md` | Dauerhafter Speicher über `onDocumentWritten`; Fehlergrenze je Hinweisleiste |
+| `architecture.md`, `data-model.md`, `requirements.md`, `testing.md`, `implementation-plan.md` | Pausieren als nicht umgesetzt vermerkt (B-02, D-297) |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `form-stabilitaet-report.md` | Abschnitt 5 |
+| `tools/check_docs.py` | Verweise `C-…` gelten auch für Befunde aus `audit-report.md` |
+
+## Version 0.50 · 23.10.2026 · Phase Stabilität, Nachtrag 2 zu Abschnitt 2 (Startwächter in WebKit)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-344: Ursache und Behebung des Startwächters in WebKit (kein Vorladen in index.html) |
+| `known-limitations.md` | Neu „Fehlgeschlagenes Vorladen in WebKit“; Chromium-Punkt und Wiederherstellen (WebKit bestanden) nachgezogen |
+| `testing.md` | Protokoll „Stabilität §2“: Diagnose in der CI, Nachtrag 2 |
+| `form-stabilitaet-report.md` | Abschnitt 3: Nachtrag mit Ursache und Behebung |
+| `implementation-plan.md` | Punkt 66 nachgezogen |
+
+## Version 0.49 · 23.10.2026 · Phase Stabilität, Nachtrag zu Abschnitt 2 (Wiederholung in der CI)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-344: Nachtrag mit dem Ergebnis der 20 Wiederholungen, Seitenende auf `/ernaehrung`, Diagnose des Startwächters in WebKit |
+| `testing.md` | Protokoll „Stabilität §2“: Ergebnisse der CI zu `63d9428`, Nachtrag; „Stabilität §3“: Ergebnis in WebKit |
+| `form-stabilitaet-report.md` | Abschnitt 3: Nachtrag „Befunde der CI zu `63d9428`“; Abschnitt 4: Ergebnis in WebKit |
+| `implementation-plan.md` | Punkt 66 nachgezogen |
+
+## Version 0.48 · 23.10.2026 · Phase Stabilität, Abschnitt 3 (Wiederherstellen aus dem Export)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-345: Prüfung, Zusammenfassung, Ersetzen, Regeln für die Synchronisierung |
+| `data-model.md` | Abschnitt 7.5 neu; 7.4 und 11 nachgezogen |
+| `architecture.md` | Modulstruktur: `backup/` |
+| `known-limitations.md` | Neuer Abschnitt „Wiederherstellen aus dem Export“; Startbild-Zeile nachgezogen |
+| `testing.md` | Protokoll „Stabilität §3“ |
+| `feature-inventory.md` | Version 0.16: SY-04 „Implementiert“ |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `audit-report.md` | A-14 behoben (Ersetzen) |
+| `form-stabilitaet-report.md` | Abschnitt 4 |
+
+## Version 0.47 · 23.10.2026 · Phase Stabilität, Abschnitt 2 (wackelnde Tests und CI)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-344: Linse, Wasser-Schalter, Seitenende, Reihenfolge gleichzeitiger Ernährungseinträge, E2E im Image von Playwright, Wiederholung auf Abruf |
+| `testing.md` | Protokoll „Stabilität §2“ |
+| `form-stabilitaet-report.md` | Abschnitt 3 |
+| `implementation-plan.md` | Punkt 66 ergänzt |
+| `architecture.md`, `known-limitations.md` | Nachtrag D-343: `beforeunload` nur als Zeichen für das Verlassen der Seite; Verhalten von WebKit beim Verlassen |
+
+## Version 0.46 · 23.10.2026 · Phase Stabilität, Nachtrag zu Abschnitt 1 (CI in WebKit)
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-343: Nachtrag mit vier Befunden der CI in WebKit |
+| `testing.md` | Protokoll „Stabilität §1“: Ergebnis der CI in WebKit, Nachtrag |
+| `form-stabilitaet-report.md` | Abschnitt 2: Nachtrag „Befunde der CI in WebKit“ |
+| `implementation-plan.md` | Punkt 66 nachgezogen |
+
+## Version 0.45 · 23.10.2026 · Phase Stabilität, Abschnitt 1 (E-16)
+
+| Datei | Änderung |
+|---|---|
+| `prompts/stabilitaet-FORM.md` | Neu: Auftrag der Phase Stabilität |
+| `decisions.md` | D-343: Ursache des Offline-Tests, Startwächter, einmal neu laden, Update-Strategie |
+| `architecture.md` | Abschnitt 9: Update-Strategie, fehlgeschlagenes Nachladen, Prüfung der Vorab-Liste |
+| `known-limitations.md` | Neuer Abschnitt „Updates und Start“; Abschnitt 12 „Updates“ nachgezogen |
+| `testing.md` | Protokoll „Stabilität §1“ |
+| `feature-inventory.md` | Version 0.15: SY-02 „Implementiert“ |
+| `implementation-plan.md` | Punkt 66 |
+| `audit-report.md` | E-16, E-01, E-04, E-05 behoben |
+| `form-stabilitaet-report.md` | Neu: Bericht der Phase, Abschnitt 1 |
+
+## Version 0.44 · 23.10.2026 · Nach dem Merge
+
+| Datei | Änderung |
+|---|---|
+| `CLAUDE.md` | Branch je Phase von `main` mit Entwurfs-PR für die CI, aktuelle Phase `form-stabilitaet` |
+| `decisions.md` | D-342: ein Branch je Phase |
+| `implementation-plan.md` | Punkt 57 erledigt (über #49 gemergt); neu Punkt 65 |
+| `testing.md` | Protokoll „Nach dem Merge“ |
+| `form-rebranding-report.md` | Abschnitt 10 „Nach dem Merge“ |
+
 ## Version 0.43 · 23.10.2026 · Vor dem Merge
 
 | Datei | Änderung |

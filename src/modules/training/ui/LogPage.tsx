@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router';
 import { ExercisePicker, type Exercise } from '@/modules/exercises';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button, Card, IconButton, PageHeader, SegmentedControl, SelectField } from '@/shared/ui';
 import { fieldsFor, toStored, type FieldSpec } from '../calc/fields';
@@ -27,8 +29,8 @@ function defaultStart(): string {
 }
 
 function messageFor(error: unknown): string {
-  if (error instanceof InvalidLogError) return t.log.errors[error.reason];
-  return t.log.saveFailed;
+  if (error instanceof InvalidLogError) return tTrainingPages.log.errors[error.reason];
+  return tTrainingPages.log.saveFailed;
 }
 
 /** Nachtragen (S-10, AK-TRN-23): Krafttraining ohne Timer oder Aktivität mit Dauer und Distanz. */
@@ -36,13 +38,16 @@ export function LogPage() {
   const [mode, setMode] = useState<Mode>('strength');
   return (
     <>
-      <PageHeader title={t.log.title} back={{ to: '/training', label: t.training.title }} />
+      <PageHeader
+        title={tTrainingPages.log.title}
+        back={{ to: '/training', label: t.training.title }}
+      />
       <div className="mb-4">
         <SegmentedControl
-          legend={t.log.modeLegend}
+          legend={tTrainingPages.log.modeLegend}
           options={[
-            { value: 'strength', label: t.log.modeStrength },
-            { value: 'activity', label: t.log.modeActivity },
+            { value: 'strength', label: tTrainingPages.log.modeStrength },
+            { value: 'activity', label: tTrainingPages.log.modeActivity },
           ]}
           value={mode}
           onChange={setMode}
@@ -63,17 +68,20 @@ function ActivityForm() {
   const [notes, setNotes] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const typeOptions = ACTIVITY_TYPES.map((value) => ({ value, label: t.log.activityTypes[value] }));
+  const typeOptions = ACTIVITY_TYPES.map((value) => ({
+    value,
+    label: tTrainingPages.log.activityTypes[value],
+  }));
 
   const submit = async () => {
     const duration = parseDecimal(minutes);
     const km = distance.trim() ? parseDecimal(distance) : null;
     if (duration === null || duration <= 0) {
-      setError(t.log.errors.duration);
+      setError(tTrainingPages.log.errors.duration);
       return;
     }
     if (distance.trim() && (km === null || km < 0)) {
-      setError(t.log.errors.values);
+      setError(tTrainingPages.log.errors.values);
       return;
     }
     setBusy(true);
@@ -88,7 +96,7 @@ function ActivityForm() {
           ...(km !== null && distance.trim() ? { distanceM: Math.round(km * 1000) } : {}),
           notes,
         },
-        t.log.activityTypes[type],
+        tTrainingPages.log.activityTypes[type],
       );
       void navigate(`/training/verlauf/${session.id}`);
     } catch (caught) {
@@ -102,7 +110,7 @@ function ActivityForm() {
   };
 
   return (
-    <Card title={t.log.modeActivity}>
+    <Card title={tTrainingPages.log.modeActivity}>
       <form
         className="grid gap-4"
         onSubmit={(event) => {
@@ -111,12 +119,12 @@ function ActivityForm() {
         }}
       >
         <SelectField
-          label={t.log.activityType}
+          label={tTrainingPages.log.activityType}
           options={typeOptions}
           value={type}
           onChange={setType}
         />
-        <Field id="aktivitaet-zeit" label={t.log.start}>
+        <Field id="aktivitaet-zeit" label={tTrainingPages.log.start}>
           <input
             id="aktivitaet-zeit"
             type="datetime-local"
@@ -128,7 +136,7 @@ function ActivityForm() {
           />
         </Field>
         <div className="grid grid-cols-2 gap-3">
-          <Field id="aktivitaet-dauer" label={t.log.durationMin}>
+          <Field id="aktivitaet-dauer" label={tTrainingPages.log.durationMin}>
             <input
               id="aktivitaet-dauer"
               type="text"
@@ -141,7 +149,7 @@ function ActivityForm() {
               className={INPUT}
             />
           </Field>
-          <Field id="aktivitaet-distanz" label={t.log.distanceKm}>
+          <Field id="aktivitaet-distanz" label={tTrainingPages.log.distanceKm}>
             <input
               id="aktivitaet-distanz"
               type="text"
@@ -155,7 +163,7 @@ function ActivityForm() {
             />
           </Field>
         </div>
-        <Field id="aktivitaet-notiz" label={t.log.notes}>
+        <Field id="aktivitaet-notiz" label={tTrainingPages.log.notes}>
           <textarea
             id="aktivitaet-notiz"
             rows={2}
@@ -173,7 +181,7 @@ function ActivityForm() {
           </p>
         ) : null}
         <Button type="submit" disabled={busy} className="md:justify-self-start">
-          {t.log.save}
+          {tTrainingPages.log.save}
         </Button>
       </form>
     </Card>
@@ -217,7 +225,7 @@ function StrengthForm() {
   const submit = async () => {
     const duration = parseDecimal(minutes);
     if (duration === null || duration <= 0) {
-      setError(t.log.errors.duration);
+      setError(tTrainingPages.log.errors.duration);
       return;
     }
     try {
@@ -242,7 +250,7 @@ function StrengthForm() {
       setBusy(true);
       setError(null);
       const session = await logStrength(rt, {
-        title: title.trim() || t.log.defaultTitle,
+        title: title.trim() || tTrainingPages.log.defaultTitle,
         startedAt: new Date(when),
         durationSec: Math.round(duration * 60),
         notes,
@@ -267,14 +275,14 @@ function StrengthForm() {
         void submit();
       }}
     >
-      <Card title={t.log.modeStrength}>
+      <Card title={tTrainingPages.log.modeStrength}>
         <div className="grid gap-4">
-          <Field id="kraft-titel" label={t.log.titleLabel}>
+          <Field id="kraft-titel" label={tTrainingPages.log.titleLabel}>
             <input
               id="kraft-titel"
               type="text"
               maxLength={200}
-              placeholder={t.log.defaultTitle}
+              placeholder={tTrainingPages.log.defaultTitle}
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -283,7 +291,7 @@ function StrengthForm() {
             />
           </Field>
           <div className="grid grid-cols-2 gap-3">
-            <Field id="kraft-zeit" label={t.log.start}>
+            <Field id="kraft-zeit" label={tTrainingPages.log.start}>
               <input
                 id="kraft-zeit"
                 type="datetime-local"
@@ -294,7 +302,7 @@ function StrengthForm() {
                 className={INPUT}
               />
             </Field>
-            <Field id="kraft-dauer" label={t.log.durationMin}>
+            <Field id="kraft-dauer" label={tTrainingPages.log.durationMin}>
               <input
                 id="kraft-dauer"
                 type="text"
@@ -308,7 +316,7 @@ function StrengthForm() {
               />
             </Field>
           </div>
-          <Field id="kraft-notiz" label={t.log.notes}>
+          <Field id="kraft-notiz" label={tTrainingPages.log.notes}>
             <textarea
               id="kraft-notiz"
               rows={2}
@@ -333,7 +341,7 @@ function StrengthForm() {
             title={draft.exercise.name}
             action={
               <IconButton
-                label={`${t.session.removeExercise}, ${draft.exercise.name}`}
+                label={`${tSession.removeExercise}, ${draft.exercise.name}`}
                 onClick={() => {
                   setExercises((all) => all.filter((d) => d.key !== draft.key));
                 }}
@@ -345,14 +353,14 @@ function StrengthForm() {
             <ol className="grid gap-2">
               {draft.sets.map((set) => {
                 const ordinal = set.type === 'working' ? ++working : ++warmup;
-                const name = `${draft.exercise.name}, ${t.session.setLabel(t.session.setTypeLabel[set.type], ordinal)}`;
+                const name = `${draft.exercise.name}, ${tSession.setLabel(tSession.setTypeLabel[set.type], ordinal)}`;
                 return (
                   <li key={set.key} className="flex items-center gap-2">
                     <span
                       className="w-8 shrink-0 text-sm font-semibold text-muted tabular-nums"
                       aria-hidden="true"
                     >
-                      {set.type === 'warmup' ? t.session.setTypeShort.warmup : String(ordinal)}
+                      {set.type === 'warmup' ? tSession.setTypeShort.warmup : String(ordinal)}
                     </span>
                     <div
                       className={
@@ -367,8 +375,8 @@ function StrengthForm() {
                           type="text"
                           inputMode={spec.decimals ? 'decimal' : 'numeric'}
                           autoComplete="off"
-                          aria-label={`${t.session.fields[spec.label]}, ${name}`}
-                          placeholder={t.session.units[spec.label]}
+                          aria-label={`${tSession.fields[spec.label]}, ${name}`}
+                          placeholder={tSession.units[spec.label]}
                           value={set.values[spec.label] ?? ''}
                           onChange={(event) => {
                             update(draft.key, (d) => ({
@@ -388,7 +396,7 @@ function StrengthForm() {
                       ))}
                     </div>
                     <IconButton
-                      label={`${t.session.removeSet}, ${name}`}
+                      label={`${tSession.removeSet}, ${name}`}
                       onClick={() => {
                         update(draft.key, (d) => ({
                           ...d,
@@ -412,7 +420,7 @@ function StrengthForm() {
                 }}
               >
                 <Plus aria-hidden="true" className="size-4" />
-                {t.session.addSet}
+                {tSession.addSet}
               </Button>
               <Button
                 type="button"
@@ -423,7 +431,7 @@ function StrengthForm() {
                 }}
               >
                 <Plus aria-hidden="true" className="size-4" />
-                {t.session.addWarmup}
+                {tSession.addWarmup}
               </Button>
             </div>
           </Card>
@@ -439,13 +447,15 @@ function StrengthForm() {
           }}
         >
           <Plus aria-hidden="true" className="size-5" />
-          {t.session.addExercise}
+          {tSession.addExercise}
         </Button>
         <Button type="submit" disabled={busy || exercises.length === 0}>
-          {t.log.save}
+          {tTrainingPages.log.save}
         </Button>
       </div>
-      {exercises.length === 0 ? <p className="text-sm text-muted">{t.log.noExercises}</p> : null}
+      {exercises.length === 0 ? (
+        <p className="text-sm text-muted">{tTrainingPages.log.noExercises}</p>
+      ) : null}
       {error ? (
         <p role="alert" className="text-sm text-danger">
           {error}
@@ -455,7 +465,7 @@ function StrengthForm() {
         <Suspense fallback={null}>
           <ExercisePicker
             open={pickerOpen}
-            title={t.session.pickTitle}
+            title={tSession.pickTitle}
             onClose={() => {
               setPickerOpen(false);
             }}

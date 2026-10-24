@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button, Dialog } from '@/shared/ui';
 import { needsReview, type WeightEntry } from '../calc/bodyWeight';
@@ -152,7 +153,7 @@ export function BodyWeightSheet(props: BodyWeightSheetProps) {
             {t.body.save}
           </Button>
           <Button type="button" variant="secondary" onClick={props.onClose}>
-            {t.session.cancel}
+            {tSession.cancel}
           </Button>
           {entry && props.onDelete ? (
             <Button type="button" variant="danger" className="ml-auto" onClick={props.onDelete}>

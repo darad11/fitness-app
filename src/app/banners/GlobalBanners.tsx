@@ -1,11 +1,12 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { RefreshCw, Smartphone, TriangleAlert } from 'lucide-react';
-import { useMemo } from 'react';
+import { Component, useMemo, type ReactNode } from 'react';
 import { useLocation } from 'react-router';
 import {
   META_KEYS,
   dismissHint,
   getMetaValue,
+  logError,
   parseDismissedHints,
   useConnectionState,
   useDb,
@@ -13,7 +14,7 @@ import {
 import { t } from '@/shared/i18n/de';
 import { currentPlatform, type PlatformInfo } from '@/shared/lib/platform';
 import { applyUpdate, usePwaState } from '@/shared/pwa/state';
-import { SessionBanner } from '@/modules/training';
+import { SessionBanner, useActiveSession } from '@/modules/training';
 import { Banner, Button, ButtonLink } from '@/shared/ui';
 
 /** Anderes Fenster hat die Datenbank auf eine neuere Version gebracht. */
@@ -40,10 +41,17 @@ export function ConnectionBanner() {
   );
 }
 
-/** Neue Version geladen; aktiv erst nach Bestätigung (AK-PWA-03). */
+/**
+ * Neue Version geladen; aktiv erst nach Bestätigung (AK-PWA-03). Nie während eines laufenden
+ * Trainings (E-01): Der Hinweis erscheint nach dem Beenden. Hat die neue Version in einem anderen
+ * Fenster schon übernommen, lädt der Knopf nur neu (D-343).
+ */
 export function UpdateBanner() {
-  const { updateAvailable } = usePwaState();
-  if (!updateAvailable) return null;
+  const { updateAvailable, reloadPending } = usePwaState();
+  // `undefined` beim Laden, `null` ohne laufendes Training.
+  const active = useActiveSession();
+  if (!updateAvailable && !reloadPending) return null;
+  if (active !== null) return null;
   return (
     <Banner
       icon={RefreshCw}
@@ -93,13 +101,48 @@ export function InstallHintBanner({ platform }: { platform?: PlatformInfo }) {
   );
 }
 
+/**
+ * Ein Fehler in einer Leiste nimmt nur diese Leiste weg, nicht Navigation und Seiten (B-04):
+ * Vorher landete z. B. ein ungültiges Training über „Training läuft“ in der Fehleransicht der App.
+ */
+class BannerBoundary extends Component<
+  { children: ReactNode; onError: (error: unknown) => void },
+  { failed: boolean }
+> {
+  override state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  override componentDidCatch(error: unknown) {
+    this.props.onError(error);
+  }
+
+  override render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
 export function GlobalBanners() {
+  const { db } = useDb();
+  const report = (area: string) => (error: unknown) => {
+    void logError(db, { area, error, route: window.location.pathname });
+  };
   return (
     <>
-      <ConnectionBanner />
-      <SessionBanner />
-      <UpdateBanner />
-      <InstallHintBanner />
+      <BannerBoundary onError={report('banner:connection')}>
+        <ConnectionBanner />
+      </BannerBoundary>
+      <BannerBoundary onError={report('banner:session')}>
+        <SessionBanner />
+      </BannerBoundary>
+      <BannerBoundary onError={report('banner:update')}>
+        <UpdateBanner />
+      </BannerBoundary>
+      <BannerBoundary onError={report('banner:install')}>
+        <InstallHintBanner />
+      </BannerBoundary>
     </>
   );
 }

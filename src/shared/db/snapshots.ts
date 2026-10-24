@@ -7,6 +7,7 @@
  */
 import Dexie, { type Table } from 'dexie';
 import { appInfo } from '../lib/env';
+import { isPrivateMetaKey } from './meta';
 
 export const SNAPSHOT_DB_NAME = 'fitness-snapshots';
 export const SNAPSHOT_KEEP = 5;
@@ -63,6 +64,33 @@ async function withSnapshotDb<T>(name: string, fn: (db: SnapshotDb) => Promise<T
   }
 }
 
+/**
+ * Fügt ein; ist der Speicher voll (E-03), löscht `dropOldest` den ältesten Snapshot, und es folgt
+ * ein zweiter Versuch. Vorher brach der Snapshot ab, und vor einem Schema-Upgrade blieb die App im
+ * Wiederherstellungsbildschirm. Scheitert auch der zweite Versuch, bleibt es beim Fehler.
+ */
+export async function withQuotaRetry<T>(
+  insert: () => Promise<T>,
+  dropOldest: () => Promise<boolean>,
+): Promise<T> {
+  try {
+    return await insert();
+  } catch (error) {
+    if (!isQuotaError(error) || !(await dropOldest())) throw error;
+    return insert();
+  }
+}
+
+/** Voller Speicher, auch verpackt in einem Fehler von Dexie (`inner`). */
+function isQuotaError(error: unknown): boolean {
+  let current: unknown = error;
+  for (let depth = 0; depth < 5 && typeof current === 'object' && current !== null; depth += 1) {
+    if ((current as { name?: unknown }).name === 'QuotaExceededError') return true;
+    current = (current as { inner?: unknown }).inner;
+  }
+  return false;
+}
+
 async function pipe(data: Uint8Array<ArrayBuffer>, transform: GenericTransformStream) {
   const stream = new Blob([data]).stream().pipeThrough(transform);
   return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -101,7 +129,12 @@ export async function createSnapshot(
   const counts: Record<string, number> = {};
   await source.transaction('r', source.tables, async () => {
     for (const table of source.tables) {
-      const rows = await table.toArray();
+      const all = await table.toArray();
+      // Zugänge bleiben draußen (D-02).
+      const rows =
+        table.name === 'meta'
+          ? all.filter((row) => !isPrivateMetaKey((row as { key?: unknown }).key))
+          : all;
       tables[table.name] = rows;
       counts[table.name] = rows.length;
     }
@@ -129,12 +162,19 @@ export async function createSnapshot(
   };
   const keep = options.keep ?? SNAPSHOT_KEEP;
   return withSnapshotDb(options.snapshotDbName ?? SNAPSHOT_DB_NAME, async (db) => {
-    const id = await db.transaction('rw', db.snapshots, async () => {
-      const newId = await db.snapshots.add(row);
-      const ids = await db.snapshots.toCollection().primaryKeys();
-      const excess = ids.length - keep;
-      if (excess > 0) await db.snapshots.bulkDelete(ids.slice(0, excess));
-      return newId;
+    // Zuerst kürzen, dann einfügen: Der neue Snapshot braucht so keinen Platz neben dem ältesten.
+    const insert = () =>
+      db.transaction('rw', db.snapshots, async () => {
+        const ids = await db.snapshots.toCollection().primaryKeys();
+        const excess = ids.length - (keep - 1);
+        if (excess > 0) await db.snapshots.bulkDelete(ids.slice(0, excess));
+        return db.snapshots.add(row);
+      });
+    const id = await withQuotaRetry(insert, async () => {
+      const first = (await db.snapshots.toCollection().primaryKeys())[0];
+      if (first === undefined) return false;
+      await db.snapshots.delete(first);
+      return true;
     });
     return toInfo({ ...row, id });
   });

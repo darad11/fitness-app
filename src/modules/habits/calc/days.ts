@@ -29,18 +29,23 @@ export interface LogLike {
 }
 
 /**
- * Aufgaben, die an einem Tag gelten: ab dem Tag des Anlegens bis vor den Tag des Pausierens
- * oder Löschens, ohne frühere Pausen und nur an ihren Wochentagen (D-285).
+ * Aufgaben, die an einem Tag laufen: ab dem Tag des Anlegens bis vor den Tag des Pausierens oder
+ * Löschens, ohne frühere Pausen, unabhängig vom Wochentag (D-01: Hinweise zu einer Aufgabe für
+ * Mo/Mi/Fr erschienen sonst nur an diesen Tagen).
  */
-export function activeOn<T extends HabitLike>(habits: readonly T[], dayKey: DayKey): T[] {
+export function runningOn<T extends HabitLike>(habits: readonly T[], dayKey: DayKey): T[] {
   return habits.filter(
     (habit) =>
       habit.fromDayKey <= dayKey &&
       (habit.toDayKey === undefined || dayKey < habit.toDayKey) &&
-      !(habit.pauses ?? []).some(
-        (pause) => pause.fromDayKey <= dayKey && dayKey < pause.toDayKey,
-      ) &&
-      (weekdaysOn(habit, dayKey)?.includes(isoWeekday(dayKey)) ?? true),
+      !(habit.pauses ?? []).some((pause) => pause.fromDayKey <= dayKey && dayKey < pause.toDayKey),
+  );
+}
+
+/** Aufgaben, die an einem Tag gelten: laufend und an ihren Wochentagen (D-285). */
+export function activeOn<T extends HabitLike>(habits: readonly T[], dayKey: DayKey): T[] {
+  return runningOn(habits, dayKey).filter(
+    (habit) => weekdaysOn(habit, dayKey)?.includes(isoWeekday(dayKey)) ?? true,
   );
 }
 

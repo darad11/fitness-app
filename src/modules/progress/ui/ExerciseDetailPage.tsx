@@ -25,6 +25,7 @@ import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/setting
 import { formatSetValues, useHistoryRows } from '@/modules/training';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import { Badge, Button, ButtonLink, Card, LinkList, PageHeader, Skeleton, Tabs } from '@/shared/ui';
 import { ExerciseNotFound } from './ExerciseProgressPage';
 
@@ -199,7 +200,7 @@ function Detail({
                 <div>
                   <dt className="text-sm text-muted">{t.session.info.tracking}</dt>
                   <dd className="font-medium">
-                    {t.session.trackingModes[exercise.trackingMode]}
+                    {tSession.trackingModes[exercise.trackingMode]}
                     {exercise.isUnilateral ? ` · ${t.exercises.unilateral}` : ''}
                   </dd>
                 </div>
@@ -223,12 +224,12 @@ function Detail({
         {pref?.notes ? (
           // Tipp-Karte (FORM): die eigene Notiz mit Rand in Warnfarbe und Glühbirne.
           <section
-            aria-label={t.session.yourNote}
+            aria-label={tSession.yourNote}
             className="flex gap-3 rounded-card bg-surface p-card shadow-[0_0_0_1px_var(--warning)]"
           >
             <Lightbulb aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-warning" />
             <div className="min-w-0">
-              <p className="eyebrow text-warning">{t.session.yourNote}</p>
+              <p className="eyebrow text-warning">{tSession.yourNote}</p>
               <p className="mt-1 whitespace-pre-line">{pref.notes}</p>
             </div>
           </section>
@@ -270,7 +271,7 @@ function Detail({
                         </span>
                         {row.note ? (
                           <span className="mt-1 block text-sm">
-                            {t.session.yourNote}: {row.note}
+                            {tSession.yourNote}: {row.note}
                           </span>
                         ) : null}
                       </span>

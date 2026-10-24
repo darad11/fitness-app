@@ -329,10 +329,15 @@ export function replaceExercise(
       }
       return;
     }
-    const doneIds = new Set(done.map((set) => set.id));
+    // Offene Sätze wandern zur neuen Übung; ein Drop-Satz nur zusammen mit seinem Arbeitssatz.
+    // Bleibt der Arbeitssatz (erledigt oder übersprungen), bleibt auch sein Drop-Satz (B-05).
+    const movingParents = new Set(
+      sets.filter((set) => set.status === 'planned' && set.type !== 'drop').map((set) => set.id),
+    );
     const moving = sets.filter(
       (set) =>
-        set.status === 'planned' && (set.type !== 'drop' || !doneIds.has(set.parentSetId ?? '')),
+        set.status === 'planned' &&
+        (set.type !== 'drop' || movingParents.has(set.parentSetId ?? '')),
     );
     const idMap = new Map(moving.map((set) => [set.id, uuidv4()]));
     const copies: SessionSet[] = moving.map((set, index) => {

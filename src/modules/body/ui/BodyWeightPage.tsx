@@ -4,6 +4,7 @@ import { changeTone, useActiveGoals, weightToGoal } from '@/modules/goals';
 import { useFormatters } from '@/modules/settings';
 import { logError, META_KEYS, useDb, useMetaFlag } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import {
   Button,
   Card,
@@ -290,7 +291,7 @@ export function BodyWeightPage() {
                 });
               }}
             >
-              {t.session.undoDiscard}
+              {tSession.undoDiscard}
             </Button>
           }
         />

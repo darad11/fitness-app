@@ -5,6 +5,8 @@ import { useFormatters } from '@/modules/settings';
 import { formatSetValues, useHistoryRows } from '@/modules/training';
 import { META_KEYS, useMetaFlag } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { ButtonLink, Card, PageHeader, SegmentedControl, Skeleton, Switch } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import {
@@ -20,7 +22,7 @@ const ExerciseChart = lazy(async () => ({
 
 const PERIOD_OPTIONS = EXERCISE_PERIODS.map((value) => ({
   value,
-  label: t.progress.exercise.periods[value],
+  label: tTrainingPages.progress.exercise.periods[value],
 }));
 
 /** Übungsverlauf (C-02, AK-HIS-05): bester Satz oder geschätztes 1RM je Einheit auf einer Zeitachse. */
@@ -64,7 +66,7 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
     : [];
   const unit =
     exercise.trackingMode === 'reps'
-      ? t.session.units.reps
+      ? tSession.units.reps
       : exercise.trackingMode === 'time'
         ? 's'
         : exercise.trackingMode === 'time_distance'
@@ -72,14 +74,16 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
           : 'kg';
   const formatValue = (value: number) => `${number(value)} ${unit}`;
   const metricLabel =
-    metric === 'orm' && canOrm ? t.progress.exercise.orm : t.progress.exercise.best;
+    metric === 'orm' && canOrm
+      ? tTrainingPages.progress.exercise.orm
+      : tTrainingPages.progress.exercise.best;
 
   return (
     <>
       <PageHeader
-        eyebrow={t.progress.exercisesTitle}
+        eyebrow={tTrainingPages.progress.exercisesTitle}
         title={exercise.name}
-        back={{ to: '/fortschritt', label: t.progress.title }}
+        back={{ to: '/fortschritt', label: tTrainingPages.progress.title }}
       />
       {rows === undefined ? (
         <div aria-busy="true">
@@ -91,46 +95,52 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
             <div className="mb-3 grid gap-3">
               {canOrm ? (
                 <SegmentedControl
-                  legend={t.progress.exercise.metricLegend}
+                  legend={tTrainingPages.progress.exercise.metricLegend}
                   options={[
-                    { value: 'best', label: t.progress.exercise.best },
-                    { value: 'orm', label: t.progress.exercise.orm },
+                    { value: 'best', label: tTrainingPages.progress.exercise.best },
+                    { value: 'orm', label: tTrainingPages.progress.exercise.orm },
                   ]}
                   value={metric}
                   onChange={setMetric}
-                  hint={metric === 'orm' ? t.progress.exercise.ormHint : undefined}
+                  hint={metric === 'orm' ? tTrainingPages.progress.exercise.ormHint : undefined}
                 />
               ) : null}
               <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
                 <SegmentedControl
                   row
-                  legend={t.progress.periodLegend}
+                  legend={tTrainingPages.progress.periodLegend}
                   options={PERIOD_OPTIONS}
                   value={period}
                   onChange={setPeriod}
                 />
-                <Switch label={t.progress.exercise.asTable} checked={table} onChange={setTable} />
+                <Switch
+                  label={tTrainingPages.progress.exercise.asTable}
+                  checked={table}
+                  onChange={setTable}
+                />
               </div>
             </div>
             {points.length === 0 ? (
-              <p className="text-muted">{t.progress.exercise.none}</p>
+              <p className="text-muted">{tTrainingPages.progress.exercise.none}</p>
             ) : table || points.length < 3 ? (
               <>
                 {points.length < 3 ? (
-                  <p className="mb-2 text-sm text-muted">{t.progress.exercise.tooFew}</p>
+                  <p className="mb-2 text-sm text-muted">
+                    {tTrainingPages.progress.exercise.tooFew}
+                  </p>
                 ) : null}
                 <table className="w-full text-sm">
                   <caption className="sr-only">{metricLabel}</caption>
                   <thead className="text-left text-muted">
                     <tr>
                       <th scope="col" className="py-1 font-medium">
-                        {t.progress.exercise.colDate}
+                        {tTrainingPages.progress.exercise.colDate}
                       </th>
                       <th scope="col" className="py-1 text-right font-medium">
-                        {t.progress.exercise.colValue}
+                        {tTrainingPages.progress.exercise.colValue}
                       </th>
                       <th scope="col" className="py-1 text-right font-medium">
-                        {t.progress.exercise.colSet}
+                        {tTrainingPages.progress.exercise.colSet}
                       </th>
                     </tr>
                   </thead>

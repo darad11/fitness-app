@@ -10,7 +10,8 @@ import { programLink, type ActiveProgram } from './useActiveProgram';
 export interface ActiveProgramCardProps {
   program: ActiveProgram;
   eyebrow: string;
-  onStart: (input: StartInput) => void;
+  /** Erhält den Plan als Funktion; `useStartSession` erstellt ihn erst beim Start (B-07). */
+  onStart: (input: () => StartInput | null) => void;
   busy: boolean;
   /** Ruhetag laut Plan (nur auf „Heute“): Satz „Heute ist Pause eingeplant.“, Start als Ghost-Knopf. */
   rest?: boolean;
@@ -70,8 +71,8 @@ export function ActiveProgramCard({
           className="w-full"
           disabled={busy}
           onClick={() => {
-            const input = nextDayInput(program);
-            if (input) onStart(input);
+            // Der Plan entsteht erst im Start; scheitert er, zeigt die Seite die Meldung (B-07).
+            onStart(() => nextDayInput(program));
           }}
         >
           <Play aria-hidden="true" className="size-5" />

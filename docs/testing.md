@@ -31,8 +31,8 @@ Ergänzend: Testing Library für Komponenten, axe-core in Playwright für Barrie
 
 ## 3. Testumgebungen und Grenzen
 
-- **Diese Cloud-Umgebung:** Node 22.22; Chromium (Playwright-Build 1194) unter `/opt/pw-browsers` vorinstalliert; WebKit fehlt. `playwright install` darf hier nicht laufen. Lokale E2E-Läufe nutzen Chromium über `executablePath`.
-- **GitHub Actions:** Node 24; `npx playwright install --with-deps chromium webkit`; alle E2E-Tests in beiden Engines (D-210).
+- **Diese Cloud-Umgebung:** Node 22.22; Chromium (Playwright-Build 1243, bis F6 1194) unter `/opt/pw-browsers` vorinstalliert; WebKit fehlt. `playwright install` darf hier nicht laufen. Lokale E2E-Läufe nutzen Chromium über `executablePath`.
+- **GitHub Actions:** Node 24; die E2E-Jobs laufen im offiziellen Image von Playwright (`mcr.microsoft.com/playwright:v<Version>-noble`, Version aus dem Lockfile), ohne `playwright install` (D-344); alle E2E-Tests in beiden Engines (D-210). Die früher wackelnden Tests laufen auf Abruf 20-mal ohne Wiederholung (`repeat.yml`, Label „wiederholen“ oder von Hand).
 - **Playwright-WebKit ist nicht Safari auf iOS.** Es deckt Rendering und Standardverhalten von WebKit ab, nicht aber Home-Bildschirm-Modus, Speicherisolation, Anhalten im Hintergrund, Wake Lock, Audio-Session oder Installation. Diese Punkte prüfen nur die Geräteprotokolle.
 - **Lighthouse** hat die PWA-Kategorie entfernt. Stattdessen prüft Playwright: Manifest gültig und verlinkt; Service Worker registriert und kontrolliert die Seite nach Reload; jede MVP-Route lädt offline (Netzwerk im Browserkontext abgeschaltet).
 - **Produktionsnahe E2E-Läufe:** Playwright testet den Build über `vite preview`. Die Vorschau sendet dieselben Sicherheits-Header wie Vercel, gelesen aus `vercel.json` (D-237). Jeder Test schlägt fehl, sobald der Browser einen Konsolenfehler meldet; so fallen auch CSP-Verstöße auf.
@@ -66,7 +66,7 @@ Repositories mit Tombstones · Transaktion „Training starten" atomar · „Sat
 | E-12 | Aktivieren, nächster Tag, anderer Tag, Wochentag-Hinweis | AK-PRG-07 bis -09, AK-DSH-02 |
 | E-13 | Programmänderung lässt laufende und abgeschlossene Einheit unverändert | AK-PRG-10 |
 | E-14 | Programmdatei exportieren und importieren | AK-PRG-13 |
-| E-15 | Übungstimer, Pausieren, Notizen, Nachtragen | AK-TRN-14, -18, -23, -24 |
+| E-15 | Übungstimer, Notizen, Nachtragen; Pausieren offen (D-297) | AK-TRN-14, -18 (offen), -23, -24 |
 | E-16 | Verlauf bearbeiten und löschen, Projektion aktualisiert | AK-HIS-03, -04 |
 | E-17 | Körpergewicht erfassen, bearbeiten, löschen; Diagramm mit 2, 3 und vielen Einträgen; Tooltip-Wert gleich Rohwert; Tabellenansicht | AK-BW-01 bis -06 |
 | E-18 | Übungsdiagramm mit 2 und 3 Einheiten | AK-HIS-05 |
@@ -136,8 +136,9 @@ Umsetzung (M0) in `.github/workflows/ci.yml`:
 | Unit-, Integrations- und Komponententests mit Abdeckungsschwellen | `pnpm test:coverage` (Schwellen in `vitest.config.ts`: `shared/lib` und `calc/` ≥ 95 %, `shared/db`, `data/` und `service/` ≥ 85 % Zeilen) | Umgesetzt |
 | Kontrasttest der Tokens | Teil von `pnpm test:coverage` (`tokens.test.ts`) | Umgesetzt |
 | Dokumentprüfungen | `pnpm check:docs` | Umgesetzt |
-| Build und Bündelgröße der Startansicht | `pnpm build`, `pnpm check:bundle` (Grenze 250 KB gzip) | Umgesetzt |
-| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt. In der CI wird ein fehlgeschlagener Test einmal wiederholt; Fehler erscheinen zusätzlich als GitHub-Annotationen (Reporter `github`), weil die Logdateien aus der Cloud-Umgebung nicht abrufbar sind. `openPage` wartet, bis die Überschrift sichtbar ist und kein Bereich mehr `aria-busy` trägt |
+| Build und Bündelgröße der Startansicht | `pnpm build`, `pnpm check:bundle` (Grenze 250 KB gzip; dazu `tools/check-precache.mjs`: jede Datei der App steht in der Vorab-Liste des Service Workers oder ist bewusst ausgenommen, D-343) | Umgesetzt |
+| E2E in Chromium und WebKit einschließlich PWA-Prüfungen | `pnpm test:e2e` je Engine | Umgesetzt. In der CI wird ein fehlgeschlagener Test einmal wiederholt; Fehler erscheinen zusätzlich als GitHub-Annotationen (Reporter `github`), weil die Logdateien aus der Cloud-Umgebung nicht abrufbar sind. `openPage` wartet, bis die Überschrift sichtbar ist und kein Bereich mehr `aria-busy` trägt. Die Jobs laufen im Image von Playwright, Zeitgrenze 30 min je Job (D-344) |
+| Wiederholung der früher wackelnden Tests | `.github/workflows/repeat.yml`: 20-mal hintereinander, ohne Wiederholung bei Fehlschlag, Chromium und WebKit | Umgesetzt, auf Abruf (Label „wiederholen“ am Pull Request oder von Hand), kein Gate (D-344) |
 
 ## 6. Geräteprotokolle
 
@@ -190,6 +191,8 @@ Safari „Zum Dock hinzufügen" und Chrome-Installation; Fenstergrößen von 102
 | Datum | Protokoll | Gerät | Betriebssystem | App-Version | Ergebnis | Abweichungen |
 |---|---|---|---|---|---|---|
 | 18.10.2026 | T-IPH-M0 | iPhone (Modell nicht angegeben) | iOS 27.0.1 | 0.1.0, Build `b5fb9aa` | Alle vier Schritte bestanden: Hinweis im Safari-Tab, Installation über „Teilen › Zum Home-Bildschirm" mit Name und Icon, Offline-Start aller Bereiche; nach der Auslieferung von Build `66abab4` erschien „Neue Version verfügbar", der Wechsel erfolgte erst nach „Jetzt aktualisieren" (Schritt 4, am selben Tag) | Keine |
+| 24.10.2026 | T-IPH-M0 Schritt 4 (Update nach D-343) | iPhone 18 Pro | iOS 27.0.1 | Vorschau `form-stabilitaet`, Update auf Build `b501403` | Bestanden: Während des laufenden Trainings kein Hinweis, „Über die App“ meldete die bereite Version; nach dem Beenden „Neue Version verfügbar“, danach Build `b501403`, alle Daten vorhanden. Start im Flugmodus in Ordnung | keine |
+| 24.10.2026 | Wiederherstellen aus dem Export mit Dateien-App und Teilen-Menü (D-345, Ablauf in `form-stabilitaet-report.md` Abschnitt 4) | iPhone 18 Pro | iOS 27.0.1 | Vorschau `form-stabilitaet` | Bestanden: alle Schritte wie beschrieben | keine |
 
 ## 8. Testdaten
 
@@ -1129,3 +1132,227 @@ Hinweistext „Werte für“ und drei Screenshots (D-341).
 | `pnpm test` | 106 Dateien, 892 Tests bestanden |
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 302 bestanden, 42 übersprungen, 2 fehlgeschlagen: Offline-Test `pwa.spec.ts` in beiden Projekten (E-16; zwei Modul-Anfragen offline abgebrochen); einzeln 4 Wiederholungen je Projekt: 1 von 8 fehlgeschlagen |
 | `pnpm check:bundle` | 237,6 KB von 250 KB |
+
+### Nach dem Merge · 23.10.2026, Cloud-Umgebung (Node 22.22)
+
+Merge von PR #49 (`1dc1dd7`), Auslieferung und Branch je Phase (D-342).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vercel zu `1dc1dd7` | „Deployment has completed“ |
+| CI auf `main` zu `1dc1dd7` | „Lint, Typen, Unit-Tests, Dokumente, Build“ bestanden; E2E lief beim Commit noch. Gleicher Inhalt wie `ef8b18e` (Tree `67769bd`), dort CI grün |
+| Live-Adresse https://fitness-app-mu-drab.vercel.app | aus der Cloud-Umgebung nicht erreichbar („CONNECT tunnel failed, response 403“), nicht geprüft |
+| `pnpm build` von `1dc1dd7` | Manifest „FORM“ (Name und Kurzname), vier Icons und `apple-touch-icon.png` vorhanden, 40 von 40 Startbildern vorhanden, Startfläche mit `theme-init.js`, Titel „FORM“ |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (Commit auf `form-stabilitaet`) | ohne Befund; Startansicht 237,6 KB von 250 KB |
+
+### Stabilität §1: Start nach Updates und ohne Netz · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ursache des Offline-Tests (E-16), Startwächter, einmal neu laden, Update-Strategie (D-343). Bericht: `form-stabilitaet-report.md` Abschnitt 2.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ausgangslage am alten Stand: `pwa.spec.ts` „… alle Bereiche starten offline“ einzeln, 8 Wiederholungen je Projekt, 4 Worker | 16 bestanden |
+| Ausgangslage: `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 304 bestanden, 42 übersprungen, 0 fehlgeschlagen (10,7 min) |
+| Nachstellen: derselbe Test mit 8 Workern auf 4 Kernen, 24 Läufe | 6 fehlgeschlagen, 18 bestanden; in allen sechs Traces ein Block vorgeladener Startmodule mit `net::ERR_ABORTED`, keine Konsolenfehler, Warnung „… is found, but is not used because it is a cross-world service worker resource mismatch.“ |
+| Gegenprobe online mit Service Worker / ohne Service Worker / ohne `modulepreload`, je 24 Läufe mit 8 Workern | 5 / 0 / 1 fehlgeschlagen |
+| `e2e/update.spec.ts` (neu, Chromium Desktop) | 7 bestanden; Gegenprobe am alten Stand: 7 von 7 fehlgeschlagen |
+| `e2e/start-watch.spec.ts` (neu, Chromium Desktop und Pixel 7) | 4 bestanden; Gegenprobe am alten Stand: 2 von 2 fehlgeschlagen |
+| Offline-Test mit 8 Workern, 24 Läufe, neuer Stand | 24 bestanden |
+| Rundgang mit Zählung des Neuladens, 8 Worker, 24 Läufe, neuer Stand | 24 bestanden, 1 Lauf mit genau einem automatischen Neuladen |
+| `e2e/update.spec.ts`, `start-watch.spec.ts`, `pwa.spec.ts`, `shell.spec.ts`, `resilience.spec.ts`, `session.spec.ts` | 40 bestanden, 8 übersprungen |
+| `src/app/chunkRecovery.test.ts` (neu) | 21 bestanden |
+| `src/shared/pwa/pwa.test.ts` | 11 bestanden (4 neu zum Wechsel des Service Workers) |
+| `src/app/app.test.tsx` „kein Hinweis während eines Trainings“ | mit der alten Regel 1 von 1 fehlgeschlagen, danach bestanden |
+| Chromium: zweiter Import einer Datei nach einem Fehlschlag | keine zweite Anfrage, derselbe Fehler (Grund für das Neuladen) |
+| `node tools/check-precache.mjs` | 168 von 227 Dateien vorab gespeichert, die übrigen bewusst ausgenommen; mit einer zusätzlichen Datei in `dist/assets` Exit-Code 1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 107 Dateien, 921 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 238,9 KB von 250 KB (vorher 237,6 KB) |
+| WebKit, CI zu `5a1db80` (Lauf 39990720590) | 299 bestanden, 59 übersprungen, 5 fehlgeschlagen, 1 wackelnd (11,2 min): `start-watch.spec.ts` Fall 1 auf Desktop und Handy (App startete nach dem Neuladen nicht); `sync.spec.ts` „anmelden, Gewicht senden …“ und „Registrieren …“ (Konsolenfehler „… due to access control checks.“ beim Neuladen); `update.spec.ts` „Während eines Trainings …“ ohne Service Worker (WebKit-Meldung „'text/html' is not a valid JavaScript MIME type …“ nicht erkannt); wackelnd `barcode.spec.ts` (Anfrage an Open Food Facts am Service Worker vorbei, 404). Chromium: bestanden |
+| Nachtrag (D-343): `chunkRecovery.test.ts` | 24 bestanden; die drei neuen Fälle (WebKit-Meldung, Navigation ab `beforeunload`, Navigation während der Prüfung) am alten Stand 3 von 3 fehlgeschlagen |
+| Nachtrag: `start-watch`, `barcode`, `sync`, `update`, `switches` (Chromium Desktop und Pixel 7) | 59 bestanden, 9 übersprungen |
+| Nachtrag: `pnpm test` | 107 Dateien, 924 Tests bestanden |
+| Nachtrag: `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
+| Nachtrag: `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 315 bestanden, 49 übersprungen, 0 fehlgeschlagen (11,5 min) |
+| Nachtrag: WebKit | CI zu `0f50be6` (Lauf 40000437469): E2E nicht gelaufen, weil die Prüfungen am wackelnden Unit-Test „belegt Mengen ab 1000 …“ scheiterten (Ursache und Behebung in §2). In der CI zu `63d9428` (Lauf 40005195222) bestanden `sync.spec.ts` und `barcode.spec.ts` auf Desktop und Handy und die Fälle ohne Service Worker aus `update.spec.ts` (Handy, darunter „Während eines Trainings …“); `start-watch.spec.ts` Fall 1 blieb rot, behoben im Nachtrag 2 zu §2 (CI zu `9517f73`: bestanden) |
+
+
+### Stabilität §2: Wackelnde Tests und CI · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Linse der Tab-Leiste, Wasser-Schalter per Tastatur, Seitenende auf `/mehr/synchronisierung`, Installation von WebKit in der CI (D-344). Bericht: `form-stabilitaet-report.md` Abschnitt 3.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ausgangslage aus der CI: „Ziehen mit der Linse …“ (WebKit) | zweimal erst im zweiten Versuch grün; bei `687d0bf` (Lauf 39881545035) in beiden Versuchen rot: „Received string: "tabbar pointer-events-auto lens-ready lens-active"“ |
+| Ausgangslage aus der CI: „Seitenende: …“ (WebKit, `/mehr/synchronisierung`) | bei `ef8b18e` wackelnd, bei `687d0bf` in beiden Versuchen rot: „Expected: <= 579, Received: 623.359375“ |
+| Ausgangslage aus der CI: Installation von WebKit (Lauf 39962966451, Job 120451347827, Versuch 2) | 13:51:46 bis 14:29:56, „Fetched 117 MB in 37min 47s (51.6 kB/s)“ |
+| Linse, Dauer bis zum Ablegen nach dem Loslassen in Chromium, ohne und mit 6-, 12-, 20-facher CPU-Drosselung | alter Stand 444 ms (27 Bilder), 837 ms (9), 1944 ms (9), 3964 ms (8); neuer Stand 518 ms (24), 613 ms (7), 1326 ms (6), 1450 ms (5) |
+| Neuer Test „Die Linse legt sich auch bei zwei Bildern je Sekunde binnen 2 s ab“ | neuer Stand bestanden; Gegenprobe am alten Stand: 2528 ms, fehlgeschlagen |
+| Wasser-Schalter: Leertaste gehalten, gedrückt nach dem Tipp (Pixel 7) | gedrückt nach 65 und 104 ms: keine Wirkung (der Schalter war beim Drücken noch „aktiv“ vom Tipp, beim Loslassen nicht mehr); gedrückt nach 162, 167, 193, 197, 212, 244 und 345 ms: jedes Mal umgeschaltet |
+| Wasser-Schalter: Gegenprobe, Leertaste direkt nach dem Tipp 250 ms gehalten, 2 × 10 Läufe mit 2 Workern | alter Ablauf 16 von 20 fehlgeschlagen; mit Warten auf das Ende des Tipps 20 von 20 bestanden |
+| Wasser-Schalter: breiter Belastungslauf vor der Ursache (`switches`, `tasks`, `task-rows`, `water`, `network-a11y`, je 6 Wiederholungen, 6 Worker) | 732 bestanden, 36 übersprungen, 0 fehlgeschlagen (21,7 min); dazu 80 von 80 Läufen des Tests mit 8 Workern; nicht nachgestellt, bis die Ursache gezielt geprüft wurde |
+| 20 Wiederholungen der früher wackelnden Tests, Chromium Desktop und Pixel 7, 2 Worker, ohne Wiederholung bei Fehlschlag (`--repeat-each=20 --retries=0`) | 260 bestanden, 60 übersprungen (Fälle nur für das Handy, auf dem Desktop), 0 fehlgeschlagen (17,5 min): Linse 20 und 20 (neuer Test), Seitenende 20, Wasser-Schalter 40, Offline-Start (E-16) 40, Barcode 40, Startwächter 80 |
+| Ausgangslage aus der CI zu `0f50be6` (Lauf 40000437469): `nutrition-ui.test.tsx` „belegt Mengen ab 1000 …“ | rot: „Unable to find a label with the text of: Menge in ml“; die Bearbeitung zeigte „Anzahl (Packung)“, also den anderen der beiden Einträge |
+| Neuer Test „Einträge mit gleicher Uhrzeit in der Reihenfolge des Eintragens“ (acht Einträge zur selben Zeit) | neuer Stand bestanden; Gegenprobe am alten Stand 3 von 3 fehlgeschlagen, jedes Mal eine andere Reihenfolge (z. B. 30, 80, 70, 10, 40, 50, 20, 60) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` und `pnpm test:coverage` | je 107 Dateien, 925 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 239,0 KB von 250 KB; Vorab-Liste 168 von 227 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 316 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,6 min) |
+| WebKit, CI zu `63d9428` (Lauf 40005195222) | 304 bestanden, 60 übersprungen, 2 fehlgeschlagen (11,1 min): `start-watch.spec.ts` Fall 1 auf Desktop und Handy, auch im zweiten Versuch („App gestartet (Dokument 1, ui abgebrochen, Dokument 2)“, keine Überschrift „Heute“ binnen 5 s). Chromium: bestanden |
+| 20 Wiederholungen in der CI (`repeat.yml`, Lauf 40005209039), Chromium | 259 bestanden, 60 übersprungen, 1 fehlgeschlagen (10,9 min): „Seitenende: …“ auf `/ernaehrung` (Pixel 7), „über dem Kreis (<a aria-label="Wasser: Einträge, Ziel und Verlauf" …)“, Expected: <= 762.93, Received: 807.05; alle übrigen bestanden |
+| 20 Wiederholungen in der CI, WebKit | 180 bestanden, 100 übersprungen, 40 fehlgeschlagen (12,7 min): alle 40 Fehlschläge `start-watch.spec.ts` Fall 1 (20 von 20 auf Desktop und Handy); Linse, Seitenende, Offline-Start, Barcode und Startwächter Fall 2 ohne Fehlschlag |
+| Nachtrag: Seitenende auf `/ernaehrung` nachgestellt, Wasser-Karte um 300 bis 1500 ms verzögert (61 Stufen zu 20 ms, Pixel 7, ohne Service Worker) | alter Ablauf zweimal je 5 von 61 fehlgeschlagen, mit 807,05 (wie in der CI) und 802,64; neuer Ablauf 61 von 61 bestanden |
+| Nachtrag: `marks.spec.ts` (Chromium Desktop und Pixel 7) | 9 bestanden, 1 übersprungen |
+| Nachtrag: `e2e/diagnose-start-watch.spec.ts` (vorübergehend, Chromium Desktop) | 4 bestanden; in allen vier Fassungen startet die App nach dem Neuladen (Protokoll im Testlauf) |
+| Nachtrag: CI zu `505cc1a` (Lauf 40010891575), WebKit | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (nur `start-watch.spec.ts` Fall 1); `marks.spec.ts` bestanden. Chromium: bestanden |
+| Nachtrag: Diagnose Startwächter in der CI (WebKit Desktop und Handy, je vier Fassungen: sofort, nach `load`, nach 1 s, `location.replace`) | in allen acht Läufen startete die App nicht; das zweite Dokument fragte `ui-…js` nicht an und zeigte „FORM ließ sich nicht starten“; nach dem Laden meldete WebKit „… was preloaded using link preload but not used within a few seconds …“. Chromium: alle acht gestartet |
+| Nachtrag 2: kein Vorladen in index.html, `pnpm build`, `pnpm check:bundle` | 0 Vorlade-Links in `dist/index.html`; Startansicht 238,9 KB von 250 KB (vorher 239,4 KB; index.html 5,6 statt 6,1 KB); Vorab-Liste 170 von 229 Dateien |
+| Nachtrag 2: `start-watch`, `diagnose-start-watch`, `pwa`, `update`, `start-surface`, `shell`, `resilience` (Chromium Desktop und Pixel 7) | 49 bestanden, 15 übersprungen |
+| Nachtrag 2: `start-watch.spec.ts` und Gegenprobe `diagnose-start-watch.spec.ts` (Chromium Desktop und Pixel 7) | 8 bestanden; in Chromium startet die App mit und ohne das frühere Vorladen (31 Vorlade-Links nachgebildet) |
+| Nachtrag 2: WebKit, CI zu `9517f73` (Lauf 40015267772) | 312 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,9 min); `start-watch.spec.ts` Fall 1 und 2 bestanden. Chromium: bestanden |
+| Nachtrag 2: Gegenprobe `diagnose-start-watch.spec.ts` in der CI (WebKit Desktop und Handy, Protokoll im Testlauf) | „ohne Vorladen (neu)“: `gestartet=true Dokumente=2 h1=["Heute: Guten Abend."]`, „Vorladen im Dokument: 0“, das zweite Dokument fragte `ui-…js` an („ui durchgelassen“). „mit Vorladen (alter Aufbau)“: `gestartet=false Dokumente=2 h1=["FORM ließ sich nicht starten"]`, „Vorladen im Dokument: 31“, das zweite Dokument fragte `ui-…js` nicht an. Auf beiden Geräten gleich |
+| Nachtrag 2: 20 Wiederholungen in der CI zu `9517f73` (`repeat.yml`, Lauf 40017391070), Chromium | 260 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,4 min): Linse 20 und 20 (Pixel 7, neuer und alter Test), Seitenende 20 (Pixel 7), Wasser-Schalter 40, Offline-Start (E-16) 40, Barcode 40, Startwächter 80; übersprungen sind die Fälle nur für das Handy auf dem Desktop |
+| Nachtrag 2: 20 Wiederholungen in der CI, WebKit | 220 bestanden, 100 übersprungen, 0 fehlgeschlagen (11,6 min): Linse 20 und 20 (Handy), Seitenende 20 (Handy), Wasser-Schalter 40, Barcode 40, Startwächter 80 (Fall 1 im ersten Lauf 40 von 40 rot); der Offline-Start läuft nur in Chromium |
+
+### Stabilität §3: Wiederherstellen aus dem Export · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Prüfung, Zusammenfassung, Ersetzen, Regeln für die Synchronisierung (A-14, D-345). Bericht: `form-stabilitaet-report.md` Abschnitt 4.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/backup/backup.test.ts` (neu) | 23 bestanden: Dokumentarten gleich `EXPORT_TYPES`; Export angenommen, Zusammenfassung; ältere Sicherung ohne neuere Arten angenommen; fremde, beschädigte, neuere und ungültige Dateien mit Grund abgelehnt (13 Fälle, darunter doppelte ID, falsche Art, Wert außerhalb des Schemas, Stand in der Zukunft, zu viele Dokumente); Migration Schritt für Schritt, ohne Schritt abgelehnt; keine JSON-Datei und zu große Datei; abgelehnte Dateien ändern weder Daten noch Uhr; Export, Änderungen, Import: fachlich derselbe Stand, nur lokal Liegendes gelöscht markiert, neue Stempel dieses Geräts, Projektion neu; in eine leere Datenbank (AK-DAT-02) ohne Sicherung vorher; zweimal eingespielt unverändert; während eines Trainings nichts gesichert und nichts ersetzt; abgebrochene Sicherung des aktuellen Stands ersetzt nichts; Fehler mitten in der Transaktion (Uhr nicht speicherbar) lässt alles wie vorher; K-01 und K-03 (fünf Fälle) |
+| Gegenprobe K-01/K-03: Regel abgeschaltet (`keep: () => false`) | 1 von 1 fehlgeschlagen (das abgeschlossene Training wurde durch die laufende Fassung ersetzt) |
+| `src/modules/backup/ui/restore-card.test.tsx` (neu) | 4 bestanden: fremde Datei mit Grund abgelehnt; Zusammenfassung, Rückfrage „Daten ersetzen?“, vorher eine Datei `fitness-sicherung-vor-wiederherstellung-…`, danach nur das Gewicht der Sicherung; leeres Gerät: „Sicherung übernehmen?“ ohne Datei vorher; während eines Trainings gesperrt |
+| `e2e/restore.spec.ts` (neu, Chromium Desktop und Pixel 7) | 2 bestanden: Gewicht erfassen, exportieren, ändern; fremde, neuere und abgeschnittene Datei abgelehnt, Gewicht unverändert; echte Sicherung: Zusammenfassung, zweimal bestätigt, Download der Sicherung vorher, „Die Sicherung vom … ist wiederhergestellt.“, Gewicht wie in der Sicherung, auch nach Neuladen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 109 Dateien, 952 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 239,4 KB von 250 KB (die Karte und ihre Texte laden mit der Seite „Daten und Sicherung“); Vorab-Liste 170 von 229 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 318 bestanden, 50 übersprungen, 0 fehlgeschlagen (11,3 min) |
+| WebKit, CI zu `cc7c86b` (Lauf 40008767361) | 306 bestanden, 60 übersprungen, 2 fehlgeschlagen (11,0 min): nur `start-watch.spec.ts` Fall 1 auf Desktop und Handy (bekannt, Nachtrag zu D-344); `restore.spec.ts` bestanden. Chromium: bestanden |
+
+### Stabilität §4: Weitere P2-Befunde und B-07 · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Befunde aus `audit-report.md` Abschnitt 5 nach Priorität, dazu B-07 (D-346). Bericht: `form-stabilitaet-report.md` Abschnitt 5. Gegenprobe heißt: dieselben Tests mit dem alten Stand der geänderten Dateien.
+
+| Nachweis | Ergebnis |
+|---|---|
+| A-03: `settings.test.ts` (zwei neue Fälle: Einstellungen, Profil mit geleertem Namen), `training/data/trainingStateRepository.test.ts` (neu: unbekanntes Feld bleibt, ein entferntes bekanntes Feld bleibt entfernt) | 8 bestanden; Gegenprobe 3 von 3 neuen Fällen fehlgeschlagen |
+| A-04: `syncEngine.test.ts` „kürzt lange Namen …“ (58, 59, 79, 80 Zeichen gegen die Schemas von Programm und Rezept) | 10 bestanden; Gegenprobe mit der alten Kürzung: 1 von 1 fehlgeschlagen („expected 81 to be less than or equal to 80“) |
+| A-07: `repository.test.ts` „ruft `onDocumentWritten` …“ (vier Schreibarten, außerhalb der Transaktion, abgelehnte Änderung meldet nichts) | 12 bestanden; Gegenprobe 1 von 1 fehlgeschlagen |
+| A-07: `e2e/persist.spec.ts` (neu, Chromium Desktop und Pixel 7): vor dem ersten Gewicht keine Anfrage, danach genau eine | 2 bestanden; Gegenprobe 2 von 2 fehlgeschlagen („Expected: 1, Received: 0“) |
+| A-07: Startansicht mit Import von `storage.ts` im Repository / mit Meldung über die Laufzeit | 242,2 KB (sechs kleine Teile neu abgespalten) / 239,3 KB; deshalb die Meldung über `onDocumentWritten` |
+| A-08: `syncService.test.ts` (drei neue Fälle: Anmelden, Registrieren, Gerät ohne Daten) | alle bestanden (Modul `sync` 33 Tests); Gegenprobe ohne Prüfung: 2 von 3 fehlgeschlagen, der Fall ohne Daten besteht in beiden Fassungen |
+| B-03: `programProgress.test.ts` (Tag verschoben, gelöscht, dupliziert; Nummer des Tages über die ID) | 15 bestanden; Gegenprobe 4 von 4 neuen Fällen fehlgeschlagen, dazu der bestehende Fall der Nummer (geänderter Aufruf) |
+| B-04: `training/data/sessionRepository.test.ts` (neu), `app.test.tsx` „legt die App nicht lahm …“, `banners/banner-boundary.test.tsx` (neu) | alle bestanden; Gegenprobe 3 von 3 fehlgeschlagen (ZodError; Seite und Navigation erschienen nicht, Zeitlimit) |
+| B-05: `playerService.test.ts` „lässt einen offenen Drop-Satz bei seinem übersprungenen Arbeitssatz“ | 9 bestanden; Gegenprobe 1 von 1 fehlgeschlagen (ZodError) |
+| B-07: `training/ui/start-from-program.test.tsx` (neu: fehlende Übung, Meldung, Knopf bedienbar, Protokoll) | 1 bestanden; Gegenprobe 1 von 1 fehlgeschlagen |
+| C-02: `nutrition-ui.test.tsx` (Doppeltipp auf „Hinzufügen“ im Schnelleintrag, auf „Speichern“ einer Vorlage) | 2 bestanden; Gegenprobe 2 von 2 fehlgeschlagen („expected 2 to be 1“) |
+| C-03: `nutrition/ui/barcode-flow.test.tsx` (neu: spätes Ergebnis nach „Schließen“) | 1 bestanden; Gegenprobe 1 von 1 fehlgeschlagen (Dialog der Einwilligung erschien) |
+| C-04: `waterService.test.ts` „lädt für einen Tag nur dessen Einträge“, `nutrition/ui/use-food-catalog.test.ts` (neu: ein Index je Import) | 2 bestanden. Keine fachliche Gegenprobe: Am alten Stand gab es beide Funktionen nicht; das Verhalten der App ist gleich, es entfällt doppelte Arbeit |
+| D-01: `insights.test.ts` (Aufgabe für Mo/Mi/Fr: Vergleich mit dem Zeitraum davor, Hinweis „verbessert“ an einem Dienstag) | 18 bestanden; Gegenprobe 2 von 2 fehlgeschlagen („expected null to be 50“, „expected [] to deeply equal [ 'improving' ]“) |
+| D-02, E-03: `snapshots.test.ts` (fünf neue Fälle), `app.test.tsx` (Ursache „Speicher voll“), `syncService.test.ts` und `steps/data/stepsState.test.ts` (Schlüssel der Module) | alle bestanden; Gegenprobe mit abgeschaltetem Filter, abgeschalteter Wiederholung und ohne neue Ursache: 4 von 4 betroffenen Fällen fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 239,5 KB von 250 KB (vorher 238,9 KB); Vorab-Liste 170 von 229 Dateien |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min) |
+| WebKit, CI zu `aa936d2` (Lauf 40018756552) | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min); `persist.spec.ts`, `restore.spec.ts` und `start-watch.spec.ts` auf Desktop und Handy bestanden. Chromium: 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,7 min) |
+
+### Stabilität §5: Startansicht höchstens 235 KB · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ziel aus dem Auftrag: höchstens 235 KB (gzip), vorher 239,5 KB (D-347). Bericht: `form-stabilitaet-report.md` Abschnitt 6.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Aufteilung der Startansicht nach Quelldateien (Build mit Sourcemaps, Anteil am gzip je Datei geschätzt) | react-dom 63,7 KB, Dexie 30,9 KB, React Router rund 28 KB, Zod rund 23 KB, Textkatalog `de.ts` 11,6 KB, Linse der Tab-Leiste 2,5 KB, der Rest unter 2 KB je Datei |
+| Versuch `"sideEffects": ["**/*.css"]` in `package.json` | 240,2 KB, verworfen |
+| Texte von „Mehr“, Nachtragen, Verlauf, Zusammenfassung, Fortschritt, Pausenanzeige und Tagesaufgaben in eigenen Dateien | 235,2 KB; Katalog in der Startansicht 7,2 KB |
+| dazu die Texte des Players (`de-session.ts`, 76 Schlüssel; `t.session` behält Fortschritt und Muskeln) | 234,3 KB von 250 KB; Katalog in der Startansicht 6,2 KB; Vorab-Liste 173 von 232 Dateien |
+| `pnpm typecheck` | ohne Befund; die Typprüfung fand jeden geänderten Aufrufer |
+| `src/app/wording.test.ts` (alle Kataloge, neu dazu `tMore`, `tTrainingPages`, `tTasks`, `tSession` und `tBackup`) | 29 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,6 min) |
+| WebKit, CI zu `86d4841` (Lauf 40021792538) | 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min). Chromium: 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,1 min) |
+
+### Stabilität §6: Tests und Abschluss · 23.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Alle Prüfungen auf dem Stand des Abschlusses; die vorübergehende Gegenprobe `e2e/diagnose-start-watch.spec.ts` ist entfernt (D-348). Bericht: `form-stabilitaet-report.md` Abschnitt 7.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm test:coverage` | 116 Dateien, 984 Tests bestanden; Schwellen der Abdeckung erreicht |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB; Vorab-Liste 173 von 232 Dateien; 0 Vorlade-Links in `dist/index.html`. Die Summe schwankt von Build zu Build um 0,1 KB (gemessen 234,2 und 234,3 KB), weil `db-….js` in der Startansicht die Uhrzeit des Builds enthält |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,7 min); 4 weniger als in §5, weil die Gegenprobe (2 Tests × 2 Projekte) entfällt |
+| Wackelnder Unit-Test aus §2 (Einträge derselben Millisekunde), je 20-mal hintereinander: „belegt Mengen ab 1000 …“ (`nutrition-ui.test.tsx`), „Einträge mit gleicher Uhrzeit …“ (`nutritionService.test.ts`) | je 20 von 20 bestanden (jeder Lauf ein eigener Prozess, gezählt nur mit „1 passed“) |
+| CI zu `86d4841` (Lauf 40021792538) | Prüfungen bestanden; Chromium 324 bestanden, 50 übersprungen, 0 fehlgeschlagen (6,1 min); WebKit 314 bestanden, 60 übersprungen, 0 fehlgeschlagen (11,7 min) |
+| WebKit zum Commit des Abschlusses | steht beim Schreiben aus |
+
+### Stabilität, Nachtrag A-05: Sperre je Konto · 24.10.2026, Cloud-Umgebung (Node 22.22, PostgreSQL 16.15)
+
+Sperre je Konto in `push_documents`, SQL des Servers in `supabase/migrations/`, Datenbanktest (D-349). Bericht: `form-stabilitaet-report.md` Abschnitt 8.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Migrationen des Servers gegen die Dateien | `20261019145316` und `20261019145346`: Prüfsumme und Länge gleich (3851 und 1891 Bytes); `push_documents` auf dem Server vorher byte-gleich mit der zweiten |
+| `pnpm test:db` (frische Datenbank, Nachbildung von Supabase, drei Migrationen) | bestanden: zwei gleichzeitige Sendungen eines Kontos, B wartete auf A, Gerät C hat rev 1 und 2 geholt; ein anderes Konto wartet nicht; jüngerer HLC angenommen, gleicher HLC stale; vor und nach der Sperre nur `push_documents` geändert; Zurücknehmen stellt die Funktion wortgleich her |
+| Gegenprobe `node tools/test-db.mjs --bis 20261019145346` | fehlgeschlagen: „Übersprungen: Gerät C hat rev 1 nie geholt (A rev 1, B rev 2, B fertig, Cursor 2)“ |
+| je 10 Wiederholungen | mit Sperre 10 von 10 bestanden, ohne Sperre 10 von 10 fehlgeschlagen |
+| Server nach dem Einspielen (`tools/db/snapshot.sql`, lesend) | Migration `20261024055418` byte-gleich mit der Datei (2430 Bytes); 26 von 28 Werten wie vorher, anders nur Text von `push_documents` und „enthält die Sperre“; 0 Zeilen, 0 Konten; Hinweise von Supabase zur Sicherheit keine |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (8,0 min) |
+| CI zu `e33bcfb` (Lauf 40069234757) | alle Jobs grün; Datenbank (PostgreSQL 17.11) bestanden wie lokal; Chromium 320 bestanden, 50 übersprungen; WebKit 309 bestanden, 1 flaky (`switches.spec.ts:340`), 60 übersprungen |
+
+### Stabilität, Nachtrag A-15: Rechte auf das Nötige · 24.10.2026, Cloud-Umgebung (Node 22.22, PostgreSQL 16.15)
+
+Rechte an `sync_documents` und der Sequenz eingeschränkt (D-350). Bericht: `form-stabilitaet-report.md` Abschnitt 9.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Hinweise von Supabase zur Sicherheit vorher | keine |
+| `pnpm test:db` (vier Migrationen) | bestanden: angemeldet senden und abholen, Leeren, Löschen und Lesen der Sequenz abgelehnt; nicht angemeldet weder Sequenz noch Tabelle noch `push_documents`; Rechte laut Katalog wie vorgesehen; Tests zu A-05 weiter bestanden; Zurücknehmen beider Migrationen wieder wie vorher |
+| Gegenprobe `node tools/test-db.mjs --bis 20261024055418` | fehlgeschlagen: „Leeren wurde nicht abgelehnt: authenticated konnte sync_documents leeren“ |
+| je 10 Wiederholungen | alle Migrationen 10 von 10 bestanden; Stand davor 10 von 10 fehlgeschlagen |
+| Server nach dem Einspielen (`tools/db/snapshot.sql`, lesend) | Migration `20261024063941` byte-gleich mit der Datei (864 Bytes); 32 von 37 Werten wie vorher, anders nur die fünf Werte zu den Rechten; 0 Zeilen, 0 Konten |
+| Hinweise von Supabase zur Sicherheit nachher | keine |
+| CI zu `93d7f09` (Lauf 40071508901) | Datenbank (PostgreSQL 17.11) fehlgeschlagen: „malformed array literal: "MAINTAIN"“ in `rights.test.sql` Teil 3, ein Fehler im Test (Zweig nur ab Postgres 17). Nach der Änderung zu `unused \|\| array['MAINTAIN']`: Teil 3 lesend auf dem Server (PostgreSQL 17.11) ohne Fehler. E2E Chromium 320 bestanden, WebKit 310 bestanden, je 0 fehlgeschlagen |
+| CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Datenbank (PostgreSQL 17.11): alle sechs „bestanden“, beide Migrationen wieder wie vorher zurückgenommen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB; Vorab-Liste 173 von 232 Dateien |
+| E2E | App und E2E-Tests in diesem Paket unverändert; der volle Lauf folgt mit dem nächsten Paket (Testfix `switches.spec.ts`) auf diesem Stand, WebKit in der CI |
+
+### Stabilität, Nachtrag: Auswahl nach dem ersten Gewicht · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Wackelnder Test `e2e/switches.spec.ts:340` auf `/fortschritt/gewicht` (D-351). Bericht: `form-stabilitaet-report.md` Abschnitt 10.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `e33bcfb`, WebKit Desktop | einmal fehlgeschlagen („Expected: > 0, Received: 0“, Zeile 345), im zweiten Versuch bestanden |
+| Gegenprobe mit 20-fach gedrosselter CPU (vorübergehender Test, nicht im Repository), je 30 Läufe in beiden Projekten, ohne zweiten Versuch | alter Ablauf 2 von 60 fehlgeschlagen (gleiche Meldung), neuer Ablauf 60 von 60 bestanden |
+| `--grep "Einfachauswahl auf /fortschritt/gewicht" --repeat-each=20 --retries=0` | 40 von 40 bestanden |
+| `e2e/switches.spec.ts`, ohne zweiten Versuch | 38 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7, Stand mit D-350 und D-351) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (8,0 min) |
+| Wiederholung in der CI (`repeat.yml`, Lauf 40072960651, Stand `11fa1eb`) | Chromium 300 bestanden, WebKit 260 bestanden, je 0 fehlgeschlagen; der behobene Test je Engine 40 von 40 |
+| CI zu `3cc0523` (Lauf 40073309337) | alle Jobs grün; Chromium 320 bestanden, WebKit 310 bestanden; nichts im zweiten Versuch |
+
+### Stabilität, Sicherungsdateien form-sicherung-… · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Export und Sicherung vor dem Wiederherstellen heißen `form-sicherung-…` (D-352). Bericht: `form-stabilitaet-report.md` Abschnitt 12.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/shared/db/export.test.ts`, `src/modules/backup` | 33 bestanden, darunter neu: Wiederherstellen einer Datei `fitness-sicherung-2026-10-20-0815.json` und einer Datei `form-sicherung-2026-10-24-1730.json` |
+| Gegenprobe mit dem alten Code | 2 von 33 fehlgeschlagen („Expected: "form-sicherung-2026-10-18-1605.json", Received: "fitness-sicherung-2026-10-18-1605.json"“ und der Name der Sicherung vor dem Wiederherstellen) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 986 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,2 min); darin `shell.spec.ts` (Name des Exports) und `restore.spec.ts` (Name der Sicherung vor dem Wiederherstellen) |
+| WebKit | in der CI zum Commit |
+

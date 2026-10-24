@@ -142,6 +142,28 @@ describe('Protokoll (NU-05, NU-09, NU-15, NU-20)', () => {
     expect(sumEntries(entries).sums.kcal).toBe(236.3);
   });
 
+  it('Einträge mit gleicher Uhrzeit in der Reihenfolge des Eintragens (D-344)', async () => {
+    // In derselben Millisekunde eingetragen (z. B. eine Vorlage): vorher entschied die zufällige
+    // ID über die Reihenfolge, ein Test in der CI wählte deshalb den falschen Eintrag.
+    const food = toFoodItem(
+      await createFood(rt, {
+        name: 'Wasser',
+        basis: 'ml',
+        per100: { kcal: 0, protein: 0, carbs: 0, fat: 0 },
+      }),
+    );
+    const at = { now: () => new Date('2026-10-19T08:00:00.000Z') };
+    const amounts = [10, 20, 30, 40, 50, 60, 70, 80];
+    for (const amount of amounts) {
+      await logFood(
+        rt,
+        { food, slot: 'breakfast', dayKey: DAY, quantity: { kind: 'amount', amount } },
+        at,
+      );
+    }
+    expect((await listDayEntries(rt.db, DAY)).map((e) => e.amount)).toEqual(amounts);
+  });
+
   it('nimmt Schnelleinträge als Schätzung und lehnt ungültige Mengen ab', async () => {
     const quick = await logQuick(rt, { slot: 'lunch', dayKey: DAY, kcal: 650.4, protein: 30 });
     expect(quick).toMatchObject({

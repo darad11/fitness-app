@@ -13,6 +13,16 @@ export const META_KEYS = {
   exerciseTable: 'view.exerciseTable',
 } as const;
 
+/**
+ * Schlüssel in `meta`, die nicht in einen Snapshot gehören (D-02): der Zugang der
+ * Synchronisierung (`sync.auth`) und alles zum Dashboard der Schritte (`steps.…`, Zugang und
+ * Zwischenspeicher). „Abmelden“ bzw. „Verbindung trennen“ entfernen sie; ein Snapshot behielte
+ * sie sonst, und ein späteres Wiederherstellen holte sie zurück.
+ */
+export function isPrivateMetaKey(key: unknown): boolean {
+  return typeof key === 'string' && (key === 'sync.auth' || key.startsWith('steps.'));
+}
+
 export type HintId = 'ios-install';
 
 export async function getMetaValue(db: AppDb, key: string): Promise<unknown> {

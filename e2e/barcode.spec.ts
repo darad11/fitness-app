@@ -17,6 +17,11 @@ const SKYR = {
   },
 };
 
+// WebKit: Steuert der Service Worker die Seite, umgehen ihre Anfragen `page.route` (wie in
+// sync.spec.ts). Seit D-343 (`clientsClaim`) gilt das schon beim ersten Aufruf; die Anfrage an
+// Open Food Facts ging dann ans echte Netz (404, CI zu D-343).
+test.use({ serviceWorkers: 'block' });
+
 test('Barcode: Einwilligung, Open Food Facts, speichern und eintragen; zweiter Scan lokal (NU-07, D-266)', async ({
   page,
 }) => {
@@ -71,10 +76,6 @@ test('Barcode: Einwilligung, Open Food Facts, speichern und eintragen; zweiter S
 });
 
 test.describe('Schnell-Eintrag von „Heute“', () => {
-  // WebKit: Nach dem ersten Laden steuert der Service Worker die Seite, und ihre Anfragen umgehen
-  // dann `page.route` (wie in sync.spec.ts).
-  test.use({ serviceWorkers: 'block' });
-
   test('„Heute“: kleiner Ring und „Barcode scannen“ öffnet sofort den Scanner, danach zurück zu „Heute“ (D-275)', async ({
     page,
   }) => {

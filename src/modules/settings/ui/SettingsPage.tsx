@@ -1,7 +1,7 @@
 import { Database, Download, Footprints } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import {
   isWakeLockSupported,
   subscribeWakeLockStatus,
@@ -15,10 +15,10 @@ import type { LocaleSetting, SettingsData } from '../model/settings';
 import { formattersFor } from '../service/formatting';
 
 const LOCALE_OPTIONS: readonly { value: LocaleSetting; label: string }[] = [
-  { value: 'auto', label: t.settings.localeAuto },
-  { value: 'de-AT', label: t.settings.localeAT },
-  { value: 'de-DE', label: t.settings.localeDE },
-  { value: 'de-CH', label: t.settings.localeCH },
+  { value: 'auto', label: tMore.settings.localeAuto },
+  { value: 'de-AT', label: tMore.settings.localeAT },
+  { value: 'de-DE', label: tMore.settings.localeDE },
+  { value: 'de-CH', label: tMore.settings.localeCH },
 ];
 
 /** Standardpause in Sekunden (AK-SET-02: 0 bis 600 s); als Auswahl, damit sie im Studio schnell geht. */
@@ -32,16 +32,16 @@ export function SettingsPage() {
   const settings = useSettings();
   return (
     <>
-      <PageHeader title={t.settings.title} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader title={tMore.settings.title} back={{ to: '/mehr', label: tMore.more.title }} />
       {settings ? <SettingsForm settings={settings} /> : <SettingsSkeleton />}
       {/* Daten, Installieren und Schritte unter den Einstellungen statt unter „Mehr“ (D-280). */}
-      <h2 className="mt-6 mb-2 px-1 text-sm font-semibold text-muted">{t.settings.more}</h2>
+      <h2 className="mt-6 mb-2 px-1 text-sm font-semibold text-muted">{tMore.settings.more}</h2>
       <LinkList
-        label={t.settings.more}
+        label={tMore.settings.more}
         items={[
-          { to: '/mehr/daten', label: t.more.data, icon: Database },
-          { to: '/mehr/installieren', label: t.more.install, icon: Download },
-          { to: '/mehr/schritte', label: t.more.steps, icon: Footprints },
+          { to: '/mehr/daten', label: tMore.more.data, icon: Database },
+          { to: '/mehr/installieren', label: tMore.more.install, icon: Download },
+          { to: '/mehr/schritte', label: tMore.more.steps, icon: Footprints },
         ]}
       />
     </>
@@ -55,10 +55,10 @@ export function SettingsPage() {
 function SettingsSkeleton() {
   return (
     <div aria-busy="true" className="space-y-4">
-      <Card title={t.settings.training}>
+      <Card title={tMore.settings.training}>
         <Skeleton className="h-40" />
       </Card>
-      <Card title={t.settings.formatting}>
+      <Card title={tMore.settings.formatting}>
         <Skeleton className="h-11" />
       </Card>
     </div>
@@ -82,7 +82,7 @@ function SettingsForm({ settings }: { settings: SettingsData }) {
   const wakeStatus = useSyncExternalStore(subscribeWakeLockStatus, wakeLockStatus, wakeLockStatus);
   const restOptions = REST_OPTIONS.map((sec) => ({
     value: String(sec),
-    label: sec === 0 ? t.settings.off : t.settings.seconds(sec),
+    label: sec === 0 ? tMore.settings.off : tMore.settings.seconds(sec),
   }));
   const restValue = REST_OPTIONS.includes(settings.restDefaultSec as (typeof REST_OPTIONS)[number])
     ? String(settings.restDefaultSec)
@@ -94,26 +94,26 @@ function SettingsForm({ settings }: { settings: SettingsData }) {
 
   return (
     <div className="space-y-4">
-      <Card title={t.settings.training}>
+      <Card title={tMore.settings.training}>
         <div className="grid gap-4 md:grid-cols-2">
           <SelectField
-            label={t.settings.restDefault}
+            label={tMore.settings.restDefault}
             options={
               restOptions.some((o) => o.value === restValue)
                 ? restOptions
                 : [
                     ...restOptions,
-                    { value: restValue, label: t.settings.seconds(settings.restDefaultSec) },
+                    { value: restValue, label: tMore.settings.seconds(settings.restDefaultSec) },
                   ]
             }
             value={restValue}
             onChange={(value) => {
               save({ restDefaultSec: Number(value) });
             }}
-            hint={t.settings.restDefaultHint}
+            hint={tMore.settings.restDefaultHint}
           />
           <SelectField
-            label={t.settings.weightStep}
+            label={tMore.settings.weightStep}
             options={
               stepOptions.some((o) => Number(o.value) === settings.weightStepKg)
                 ? stepOptions
@@ -133,28 +133,28 @@ function SettingsForm({ settings }: { settings: SettingsData }) {
         </div>
         <div className="mt-2 divide-y divide-line">
           <Switch
-            label={t.settings.autoStartRest}
+            label={tMore.settings.autoStartRest}
             checked={settings.autoStartRest}
             onChange={(autoStartRest) => {
               save({ autoStartRest });
             }}
           />
           <Switch
-            label={t.settings.restSound}
+            label={tMore.settings.restSound}
             checked={settings.restSound}
-            hint={t.settings.restSoundHint}
+            hint={tMore.settings.restSoundHint}
             onChange={(restSound) => {
               save({ restSound });
             }}
           />
           <Switch
-            label={t.settings.keepAwake}
+            label={tMore.settings.keepAwake}
             checked={settings.keepAwake}
             hint={
               !isWakeLockSupported()
-                ? t.settings.keepAwakeUnsupported
+                ? tMore.settings.keepAwakeUnsupported
                 : wakeStatus === 'denied'
-                  ? t.settings.keepAwakeDenied
+                  ? tMore.settings.keepAwakeDenied
                   : undefined
             }
             onChange={(keepAwake) => {
@@ -163,18 +163,18 @@ function SettingsForm({ settings }: { settings: SettingsData }) {
           />
         </div>
       </Card>
-      <Card title={t.settings.formatting}>
+      <Card title={tMore.settings.formatting}>
         <SelectField
-          label={t.settings.localeLabel}
+          label={tMore.settings.localeLabel}
           options={LOCALE_OPTIONS}
           value={settings.locale}
           onChange={(locale) => {
             save({ locale });
           }}
-          hint={t.settings.formattingHint}
+          hint={tMore.settings.formattingHint}
         />
         <p className="mt-3 tabular-nums" aria-live="polite">
-          {t.settings.example(
+          {tMore.settings.example(
             formatters.dayMonthYear(SAMPLE_DATE),
             formatters.time(SAMPLE_DATE),
             formatters.number(1234.5),
@@ -184,7 +184,7 @@ function SettingsForm({ settings }: { settings: SettingsData }) {
       </Card>
       {saveFailed ? (
         <p role="alert" className="text-danger">
-          {t.settings.saveFailed}
+          {tMore.settings.saveFailed}
         </p>
       ) : null}
     </div>

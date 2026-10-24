@@ -16,7 +16,7 @@ export interface ProgramDayRef {
 export interface ProgramSessionLike {
   status: 'in_progress' | 'completed';
   endedAt?: string;
-  program?: { programId: string; weekIndex: number; dayIndex: number };
+  program?: { programId: string; weekIndex: number; dayIndex: number; dayId?: string };
 }
 
 export interface ProgramProgress {
@@ -52,14 +52,18 @@ export function flattenDays(template: PlanTree): ProgramDayRef[] {
   return days;
 }
 
-/** Nummer eines Tages in der Folge (ab 1) oder `undefined`, wenn es ihn im Programm nicht gibt. */
+/**
+ * Nummer eines Tages in der Folge (ab 1) oder `undefined`, wenn es ihn im Programm nicht mehr gibt.
+ * Mit `dayId` über die ID, sonst über die Position (B-03).
+ */
 export function dayNumber(
   template: PlanTree,
-  weekIndex: number,
-  dayIndex: number,
+  ref: { weekIndex: number; dayIndex: number; dayId?: string },
 ): number | undefined {
-  const day = flattenDays(template).find(
-    (d) => d.weekIndex === weekIndex && d.dayIndex === dayIndex,
+  const day = flattenDays(template).find((d) =>
+    ref.dayId !== undefined
+      ? d.dayId === ref.dayId
+      : d.weekIndex === ref.weekIndex && d.dayIndex === ref.dayIndex,
   );
   return day ? day.index + 1 : undefined;
 }
@@ -78,6 +82,7 @@ export function programProgress(
   const days = flattenDays(template);
   const total = days.length;
   const byPosition = new Map(days.map((d) => [`${String(d.weekIndex)}:${String(d.dayIndex)}`, d]));
+  const byId = new Map(days.map((d) => [d.dayId, d]));
   const indices = sessions
     .filter(
       (
@@ -93,7 +98,13 @@ export function programProgress(
     )
     .sort((a, b) => a.endedAt.localeCompare(b.endedAt))
     .flatMap((s) => {
-      const day = byPosition.get(`${String(s.program.weekIndex)}:${String(s.program.dayIndex)}`);
+      // Zuerst über die ID des Tages (B-03): Verschieben, Duplizieren oder Löschen von Tagen im
+      // Editor ändert die Positionen, nicht die IDs. Ein gelöschter Tag zählt nicht mehr. Nur
+      // Einheiten ohne ID werden über die Position zugeordnet.
+      const day =
+        s.program.dayId !== undefined
+          ? byId.get(s.program.dayId)
+          : byPosition.get(`${String(s.program.weekIndex)}:${String(s.program.dayIndex)}`);
       return day ? [day.index] : [];
     });
 

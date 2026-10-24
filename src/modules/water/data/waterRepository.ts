@@ -1,4 +1,4 @@
-import { type AppDb, type DocDef } from '@/shared/db';
+import { type AppDb, type DocDef, type StoredDoc } from '@/shared/db';
 import type { DayKey } from '@/shared/lib/time';
 import { WATER_SCHEMA_VERSION, waterEntrySchema, type WaterEntry } from '../model/waterEntry';
 
@@ -15,6 +15,18 @@ export async function listWaterEntries(db: AppDb, fromDay?: DayKey): Promise<Wat
     fromDay === undefined
       ? await db.waterLog.toArray()
       : await db.waterLog.where('dayKey').aboveOrEqual(fromDay).toArray();
+  return validEntries(rows);
+}
+
+/**
+ * Nicht gelöschte Einträge genau eines Tages, älteste zuerst (C-04): Für einen früheren Tag lud
+ * die Karte vorher alle Einträge ab diesem Tag.
+ */
+export async function listWaterDay(db: AppDb, day: DayKey): Promise<WaterEntry[]> {
+  return validEntries(await db.waterLog.where('dayKey').equals(day).toArray());
+}
+
+function validEntries(rows: readonly StoredDoc[]): WaterEntry[] {
   const entries = rows.flatMap((row) => {
     if (row.type !== 'water_entry' || row.deletedAt !== null) return [];
     const parsed = waterEntrySchema.safeParse(row);

@@ -1,7 +1,8 @@
 import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { logError, useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button, Card, IconButton } from '@/shared/ui';
 import { fieldsFor, toDisplay, toStored } from '../calc/fields';
@@ -58,7 +59,7 @@ export function HistoryEditForm({
   const save = async () => {
     const duration = parseDecimal(minutes);
     if (duration === null) {
-      setError(t.historyEdit.errors.duration);
+      setError(tTrainingPages.historyEdit.errors.duration);
       return;
     }
     const sets: Record<string, SetValues> = {};
@@ -72,7 +73,7 @@ export function HistoryEditForm({
           if (!text.trim()) continue;
           const value = parseDecimal(text);
           if (value === null) {
-            setError(t.historyEdit.errors.values);
+            setError(tTrainingPages.historyEdit.errors.values);
             return;
           }
           parsed[spec.field] = toStored(spec, value);
@@ -98,11 +99,12 @@ export function HistoryEditForm({
       });
       onDone();
     } catch (caught) {
-      if (caught instanceof InvalidEditError) setError(t.historyEdit.errors[caught.reason]);
-      else if (caught instanceof InvalidValueError) setError(t.session.invalid[caught.field]);
+      if (caught instanceof InvalidEditError)
+        setError(tTrainingPages.historyEdit.errors[caught.reason]);
+      else if (caught instanceof InvalidValueError) setError(tSession.invalid[caught.field]);
       else {
         void logError(rt.db, { area: 'training', error: caught, route: window.location.pathname });
-        setError(t.historyEdit.saveFailed);
+        setError(tTrainingPages.historyEdit.saveFailed);
       }
     } finally {
       setBusy(false);
@@ -117,9 +119,9 @@ export function HistoryEditForm({
         void save();
       }}
     >
-      <Card title={t.historyEdit.title}>
+      <Card title={tTrainingPages.historyEdit.title}>
         <div className="grid gap-4">
-          <Labeled id="verlauf-titel" label={t.log.titleLabel}>
+          <Labeled id="verlauf-titel" label={tTrainingPages.log.titleLabel}>
             <input
               id="verlauf-titel"
               type="text"
@@ -132,7 +134,7 @@ export function HistoryEditForm({
             />
           </Labeled>
           <div className="grid grid-cols-2 gap-3">
-            <Labeled id="verlauf-beginn" label={t.log.start}>
+            <Labeled id="verlauf-beginn" label={tTrainingPages.log.start}>
               <input
                 id="verlauf-beginn"
                 type="datetime-local"
@@ -143,7 +145,7 @@ export function HistoryEditForm({
                 className={INPUT}
               />
             </Labeled>
-            <Labeled id="verlauf-dauer" label={t.log.durationMin}>
+            <Labeled id="verlauf-dauer" label={tTrainingPages.log.durationMin}>
               <input
                 id="verlauf-dauer"
                 type="text"
@@ -156,7 +158,7 @@ export function HistoryEditForm({
               />
             </Labeled>
           </div>
-          <Labeled id="verlauf-notiz" label={t.log.notes}>
+          <Labeled id="verlauf-notiz" label={tTrainingPages.log.notes}>
             <textarea
               id="verlauf-notiz"
               rows={2}
@@ -179,7 +181,7 @@ export function HistoryEditForm({
         if (done.length === 0 && !exercise.note) return null;
         return (
           <Card key={exercise.id} title={exercise.nameSnapshot}>
-            <Labeled id={`notiz-${exercise.id}`} label={t.session.noteTitle(exercise.nameSnapshot)}>
+            <Labeled id={`notiz-${exercise.id}`} label={tSession.noteTitle(exercise.nameSnapshot)}>
               <textarea
                 id={`notiz-${exercise.id}`}
                 rows={2}
@@ -199,7 +201,7 @@ export function HistoryEditForm({
                 const gone =
                   removed.has(set.id) ||
                   (set.parentSetId !== undefined && removed.has(set.parentSetId));
-                const name = `${exercise.nameSnapshot}, ${t.session.setLabel(t.session.setTypeLabel[set.type], ordinal)}`;
+                const name = `${exercise.nameSnapshot}, ${tSession.setLabel(tSession.setTypeLabel[set.type], ordinal)}`;
                 return (
                   <li
                     key={set.id}
@@ -211,7 +213,7 @@ export function HistoryEditForm({
                       aria-hidden="true"
                       className="w-8 shrink-0 text-sm font-semibold text-muted tabular-nums"
                     >
-                      {set.type === 'working' ? String(ordinal) : t.session.setTypeShort[set.type]}
+                      {set.type === 'working' ? String(ordinal) : tSession.setTypeShort[set.type]}
                     </span>
                     <div
                       className={
@@ -226,7 +228,7 @@ export function HistoryEditForm({
                           type="text"
                           inputMode={spec.decimals ? 'decimal' : 'numeric'}
                           disabled={gone}
-                          aria-label={`${t.session.fields[spec.label]}, ${name}`}
+                          aria-label={`${tSession.fields[spec.label]}, ${name}`}
                           value={values[set.id]?.[spec.label] ?? ''}
                           onChange={(event) => {
                             setValues((all) => ({
@@ -239,7 +241,7 @@ export function HistoryEditForm({
                       ))}
                     </div>
                     <IconButton
-                      label={`${gone ? t.historyEdit.keepSet : t.session.removeSet}, ${name}`}
+                      label={`${gone ? tTrainingPages.historyEdit.keepSet : tSession.removeSet}, ${name}`}
                       onClick={() => {
                         setRemoved((all) => {
                           const next = new Set(all);
@@ -265,10 +267,10 @@ export function HistoryEditForm({
       ) : null}
       <div className="flex flex-wrap gap-2">
         <Button type="submit" disabled={busy}>
-          {t.historyEdit.save}
+          {tTrainingPages.historyEdit.save}
         </Button>
         <Button type="button" variant="secondary" onClick={onDone}>
-          {t.session.cancel}
+          {tSession.cancel}
         </Button>
       </div>
     </form>

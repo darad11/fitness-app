@@ -13,6 +13,7 @@ import {
   renameTemplate,
 } from '../service/mealTemplateService';
 import { describeAmount, kcal } from './format';
+import { useSubmitOnce } from './useSubmitOnce';
 
 const INPUT = 'field w-full min-w-0';
 
@@ -36,17 +37,22 @@ function NameDialog({
   const id = useId();
   const [name, setName] = useState(initial);
   const [error, setError] = useState<string | null>(null);
+  const once = useSubmitOnce();
   const submit = () => {
-    onSave(name).then(onClose, (caught: unknown) => {
-      if (caught instanceof InvalidTemplateError) {
-        setError(
-          caught.reason === 'name' ? tNutrition.templates.nameError : tNutrition.templates.tooMany,
-        );
-      } else {
-        setError(tNutrition.saveFailed);
-        void logError(db, { area: 'nutrition', error: caught, route: window.location.pathname });
-      }
-    });
+    once.run(() =>
+      onSave(name).then(onClose, (caught: unknown) => {
+        if (caught instanceof InvalidTemplateError) {
+          setError(
+            caught.reason === 'name'
+              ? tNutrition.templates.nameError
+              : tNutrition.templates.tooMany,
+          );
+        } else {
+          setError(tNutrition.saveFailed);
+          void logError(db, { area: 'nutrition', error: caught, route: window.location.pathname });
+        }
+      }),
+    );
   };
   return (
     <Dialog
@@ -59,7 +65,7 @@ function NameDialog({
           <Button variant="secondary" onClick={onClose}>
             {tNutrition.cancel}
           </Button>
-          <Button type="submit" form={`${id}-form`}>
+          <Button type="submit" form={`${id}-form`} disabled={once.busy}>
             {tNutrition.templates.save}
           </Button>
         </>

@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Download, HardDrive } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { RestoreCard } from '@/modules/backup';
 import {
   backupFileName,
   buildBackup,
@@ -14,7 +15,7 @@ import {
   type PersistResult,
   type SnapshotInfo,
 } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { Button, Card, PageHeader, StatusList, type StatusItem } from '@/shared/ui';
 import { useFormatters } from '../service/formatting';
 
@@ -41,9 +42,10 @@ function formatBytes(bytes: number, number: (value: number, digits: number) => s
 }
 
 /**
- * Daten und Sicherung (S-35, AP 1.8): Speicherstatus (AK-PWA-05), JSON-Export (AK-DAT-01) und
- * die vorhandenen Snapshots (AK-DAT-06, nur Anzeige). Import, Wiederherstellen und Löschen
- * folgen mit M2 und M4 (AK-UX-01: keine Knöpfe ohne Funktion).
+ * Daten und Sicherung (S-35, AP 1.8): Speicherstatus (AK-PWA-05), JSON-Export (AK-DAT-01),
+ * Wiederherstellen aus dem Export (A-14, D-345) und die vorhandenen Snapshots (AK-DAT-06, nur
+ * Anzeige). Zusammenführen, Wiederherstellen eines Snapshots und Löschen folgen später
+ * (AK-UX-01: keine Knöpfe ohne Funktion).
  */
 export function DataPage() {
   const rt = useDb();
@@ -94,7 +96,7 @@ export function DataPage() {
           id: 'persist',
           icon: HardDrive,
           tone: storage.persist === 'persisted' ? 'success' : 'neutral',
-          content: t.data.persist[storage.persist],
+          content: tMore.data.persist[storage.persist],
         },
         ...(storage.usageBytes !== null
           ? [
@@ -102,7 +104,7 @@ export function DataPage() {
                 id: 'usage',
                 icon: HardDrive,
                 tone: 'neutral' as const,
-                content: t.data.usage(formatBytes(storage.usageBytes, number)),
+                content: tMore.data.usage(formatBytes(storage.usageBytes, number)),
               },
             ]
           : []),
@@ -112,17 +114,17 @@ export function DataPage() {
   return (
     <>
       <PageHeader
-        title={t.data.title}
-        back={{ to: '/mehr/einstellungen', label: t.settings.title }}
+        title={tMore.data.title}
+        back={{ to: '/mehr/einstellungen', label: tMore.settings.title }}
       />
       <div className="space-y-4">
-        <Card title={t.data.exportTitle}>
-          <p className="text-muted">{t.data.exportText}</p>
+        <Card title={tMore.data.exportTitle}>
+          <p className="text-muted">{tMore.data.exportText}</p>
           <p className="mt-2 text-sm text-muted">
             {typeof lastExportAt === 'string'
-              ? t.data.lastExport(fmt.dateTimeShort(new Date(lastExportAt)))
+              ? tMore.data.lastExport(fmt.dateTimeShort(new Date(lastExportAt)))
               : lastExportAt === null
-                ? t.data.noExportYet
+                ? tMore.data.noExportYet
                 : ''}
           </p>
           <Button
@@ -133,35 +135,36 @@ export function DataPage() {
             }}
           >
             <Download aria-hidden="true" className="size-5" />
-            {t.data.exportButton}
+            {tMore.data.exportButton}
           </Button>
           <p role="status" aria-live="polite" className="mt-3 text-sm">
             {exportState === 'idle' || exportState === 'busy'
               ? ''
-              : t.data.exportResult[exportState]}
+              : tMore.data.exportResult[exportState]}
           </p>
         </Card>
-        <Card title={t.data.storageTitle}>
+        <RestoreCard />
+        <Card title={tMore.data.storageTitle}>
           <div aria-busy={storage === null}>
             {storage ? <StatusList items={storageItems} /> : <p className="text-muted">…</p>}
           </div>
-          <p className="mt-3 text-sm text-muted">{t.data.storageHint}</p>
+          <p className="mt-3 text-sm text-muted">{tMore.data.storageHint}</p>
         </Card>
-        <Card title={t.data.snapshotsTitle}>
-          <p className="mb-3 text-sm text-muted">{t.data.snapshotsText}</p>
+        <Card title={tMore.data.snapshotsTitle}>
+          <p className="mb-3 text-sm text-muted">{tMore.data.snapshotsText}</p>
           <div aria-busy={snapshots === null}>
             {snapshots === null ? null : snapshots.length === 0 ? (
-              <p className="text-muted">{t.data.noSnapshots}</p>
+              <p className="text-muted">{tMore.data.noSnapshots}</p>
             ) : (
               <ul className="divide-y divide-line">
                 {snapshots.map((snapshot) => (
                   <li key={snapshot.id} className="flex flex-wrap justify-between gap-2 py-2">
                     <span>
                       <span className="block font-medium">
-                        {t.data.snapshotReason[snapshot.reason]}
+                        {tMore.data.snapshotReason[snapshot.reason]}
                       </span>
                       <span className="block text-sm text-muted">
-                        {fmt.dateTimeShort(new Date(snapshot.createdAt))} · {t.data.appVersion}{' '}
+                        {fmt.dateTimeShort(new Date(snapshot.createdAt))} · {tMore.data.appVersion}{' '}
                         {snapshot.appVersion}
                       </span>
                     </span>

@@ -1,7 +1,7 @@
 import { useFormatters } from '@/modules/settings';
 import type { HistoryRow } from '@/modules/training';
 import { LineTimeChart } from '@/shared/charts/LineTimeChart';
-import { t } from '@/shared/i18n/de';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import type { SeriesPoint } from '../calc/stats';
 
 /** Diagramm C-02: eine Reihe, Linie ab drei Punkten, Tooltip mit Satz. */
@@ -28,7 +28,7 @@ export function ExerciseChart({
         value: point.value,
         detail: formatSet(point.row),
       }))}
-      ariaLabel={t.progress.exercise.chartAria(name, metricLabel, points.length)}
+      ariaLabel={tTrainingPages.progress.exercise.chartAria(name, metricLabel, points.length)}
       valueLabel={metricLabel}
       formatValue={formatValue}
       formatAxis={formatAxis}

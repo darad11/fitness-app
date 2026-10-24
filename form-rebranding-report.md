@@ -574,3 +574,18 @@ Auf Nachricht des Produktinhabers ein letzter Commit vor dem Merge (D-341):
 | `pnpm test` | 23.10.2026 | 892 Tests in 106 Dateien bestanden |
 | `pnpm build`, `pnpm check:bundle` | 23.10.2026 | Build ok; Startansicht 237,6 KB von 250 KB (gzip) |
 | `pnpm test:e2e` (Chromium, lokal nach `pnpm build`) | 23.10.2026 | 302 bestanden, 42 übersprungen, 2 fehlgeschlagen (8,4 min): `pwa.spec.ts` „Service Worker übernimmt und alle Bereiche starten offline“ in beiden Projekten; offline brachen zwei Modul-Anfragen ab (`clsx-….js`, `ui-….js`, „net::ERR_ABORTED“), die App startete auf `/training/vorlagen/full_body_ab` nicht. Das ist der offene Befund E-16 aus F5 (`audit-report.md`), unabhängig vom Hinweistext. Einzeln wiederholt (4 Mal je Projekt): 1 von 8 fehlgeschlagen. Alle übrigen Tests bestanden |
+
+## 10. Nach dem Merge (23.10.2026)
+
+PR #49 ist nach Freigabe des Produktinhabers als normaler Merge ohne Squash nach `main` gegangen: `1dc1dd7` („Merge pull request #49 from darad11/form-rebranding“). Die CI zum letzten Commit `ef8b18e` war davor grün: Chromium 304 bestanden, 42 übersprungen; WebKit 297 bestanden, 1 flaky, 48 übersprungen.
+
+| Prüfung | Ergebnis |
+|---|---|
+| Vercel zu `1dc1dd7` | „Deployment has completed“, 26 s nach dem Merge |
+| CI auf `main` zu `1dc1dd7` | „Lint, Typen, Unit-Tests, Dokumente, Build“ bestanden; die beiden E2E-Jobs liefen beim Commit noch (Lauf 39971912653). Inhaltlich ist `1dc1dd7` gleich `ef8b18e` (derselbe Tree `67769bd`), dessen CI grün war |
+| Live-Adresse https://fitness-app-mu-drab.vercel.app | nicht geprüft: Der Netzwerkzugriff der Cloud-Umgebung lässt die Adresse nicht zu („CONNECT tunnel failed, response 403“) |
+| Build von `1dc1dd7`, lokal wie bei Vercel (`pnpm build`, Ausgabe `dist`) | Manifest: Name und Kurzname „FORM“, Start `/heute`, Anzeige `standalone`, Hintergrund- und Themenfarbe `#0c1219`. Icons 192 und 512 px, beide auch maskierbar, alle vorhanden; `apple-touch-icon.png` vorhanden. 40 Startbilder verlinkt, alle 40 Dateien vorhanden. Startfläche `#startflaeche` mit Ausblenden in 300 ms und `theme-init.js` in `index.html`. Seitentitel „FORM“ |
+
+Dass die Live-Adresse die neue Version ausliefert, ist damit nur mittelbar belegt: Vercel meldet die Auslieferung genau dieses Commits, und sein Build enthält Manifest, Icons, Startbilder und Startfläche. Offen beim Produktinhaber: die Live-Adresse am iPhone prüfen, dazu T-IPH-M0 Schritte 5 und 6 (D-329, D-332, D-337); der Schalter „Allow new users to sign up“ (D-328). Offen bleibt auch der Offline-Test E-16 (Abschnitt 9).
+
+Ab jetzt bekommt jede Phase einen eigenen Branch von `main` mit Entwurfs-PR für die CI; die nächste Phase läuft auf `form-stabilitaet` (D-342).

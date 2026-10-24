@@ -3,7 +3,7 @@ import { useCompletedSessions } from '@/modules/training';
 import { loadWaterReached } from '@/modules/water';
 import { logError, useDb } from '@/shared/db';
 import { dayKey, localTimeZone } from '@/shared/lib/time';
-import { t } from '@/shared/i18n/de';
+import { tTasks } from '@/shared/i18n/de-tasks';
 import { Button, ButtonLink, Card, Meter, SettingsLink, Skeleton } from '@/shared/ui';
 import { applyAutoDone, applyWaterAutoDoneToday, setHabitDone } from '../service/habitService';
 import { TaskRow } from './TaskRow';
@@ -60,22 +60,22 @@ export function TasksCard({ className }: { className?: string }) {
   const shown = tasks ? (expanded ? tasks.active : tasks.active.slice(0, VISIBLE)) : [];
   return (
     <Card
-      title={t.tasks.title}
+      title={tTasks.tasks.title}
       titleStyle="label"
       className={className}
-      action={<SettingsLink to="/heute/aufgaben" label={t.tasks.manage} />}
+      action={<SettingsLink to="/heute/aufgaben" label={tTasks.tasks.manage} />}
     >
       {tasks === undefined ? (
         <div aria-busy="true">
           <Skeleton className="h-16" />
         </div>
       ) : tasks.active.length === 0 && tasks.listed.length > 0 ? (
-        <p className="text-muted">{t.tasks.noneDueToday}</p>
+        <p className="text-muted">{tTasks.tasks.noneDueToday}</p>
       ) : tasks.active.length === 0 ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-muted">{t.tasks.emptyCard}</p>
+          <p className="text-muted">{tTasks.tasks.emptyCard}</p>
           <ButtonLink to="/heute/aufgaben" size="sm" variant="quiet" className="-ml-4">
-            {t.tasks.add}
+            {tTasks.tasks.add}
           </ButtonLink>
         </div>
       ) : (
@@ -106,19 +106,19 @@ export function TasksCard({ className }: { className?: string }) {
                 setExpanded((open) => !open);
               }}
             >
-              {expanded ? t.tasks.showLess : t.tasks.showMore(hidden)}
+              {expanded ? tTasks.tasks.showLess : tTasks.tasks.showMore(hidden)}
             </Button>
           ) : null}
           <div className="mt-3 flex items-center gap-3">
             <Meter
               className="h-1.5 flex-1"
-              label={t.tasks.progressLabel}
+              label={tTasks.tasks.progressLabel}
               value={tasks.status.total === 0 ? 0 : tasks.status.done / tasks.status.total}
             />
             <p className="shrink-0 text-sm text-muted tabular-nums">
               {tasks.status.complete
-                ? t.tasks.todayDone
-                : t.tasks.todayProgress(tasks.status.done, tasks.status.total)}
+                ? tTasks.tasks.todayDone
+                : tTasks.tasks.todayProgress(tasks.status.done, tasks.status.total)}
             </p>
           </div>
         </>

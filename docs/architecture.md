@@ -90,7 +90,7 @@ src/
     body/         Körpergewicht (Schritt E); R4: Maße, Fotos
     goals/        Wochenziel, Zielgewicht
     settings/     Einstellungen, Profil, Installation, Über
-    data/         Export, Import, Snapshots, Speicherstatus, Wiederherstellung
+    backup/       Wiederherstellen aus dem Export: Prüfung, Zusammenfassung, Ersetzen (D-345)
     nutrition/    R2
     recipes/      R2 (Rezepte, Wochenmenü, Einkaufsliste)
     habits/       Tagesaufgaben mit Serie (Schritt F)
@@ -102,7 +102,8 @@ src/
     lib/          HLC, IDs, Datum (dayKey), Einheiten, Formatierung, Textnormalisierung
     db/           Dexie-Datenbank, Basis-Repository, Snapshots, Gesundheitsprüfung, Fehlerprotokoll
     pwa/          Service Worker, Update-Zustand, Installationsdialog (Chromium)
-    i18n/         Typisierter deutscher Textkatalog
+    i18n/         Typisierter deutscher Textkatalog: de.ts lädt mit der Startansicht, Texte nur
+                  nachgeladener Teile in eigenen Dateien de-*.ts (D-288, D-347)
     testing/      Fixtures, Datengenerator, fake-indexeddb-Setup
 public/           Manifest, Icons
 e2e/              Playwright-Tests
@@ -124,9 +125,9 @@ Abhängigkeitsregeln, per ESLint-Regel `no-restricted-imports` mit den Pfad-Alia
 
 - **Aggregate als Dokumente** (D-204): Eine Trainingseinheit mit Übungen und Sätzen ist ein Dokument. Jede Änderung ist eine Dexie-Transaktion „lesen, ändern, validieren, schreiben"; damit gibt es keine halben Zustände.
 - **Projektionen:** `exerciseHistory` liefert vorherige Werte und Verläufe per Index `[exerciseId+completedAt]`. Sie wird in derselben Transaktion wie die Quelle aktualisiert und lässt sich jederzeit neu aufbauen.
-- **Schreibzeitpunkte:** Aktionen (Satz erledigt, Übung hinzufügen) sofort; Tastatureingaben mit 300 ms Entprellung; beim Wechsel in den Hintergrund (`visibilitychange` auf „hidden", `pagehide`) sofortiges Schreiben ausstehender Werte. `beforeunload` und `unload` werden nicht genutzt, weil iOS sie nicht zuverlässig auslöst.
+- **Schreibzeitpunkte:** Aktionen (Satz erledigt, Übung hinzufügen) sofort; Tastatureingaben mit 300 ms Entprellung; beim Wechsel in den Hintergrund (`visibilitychange` auf „hidden", `pagehide`) sofortiges Schreiben ausstehender Werte. `beforeunload` und `unload` werden dafür nicht genutzt, weil iOS sie nicht zuverlässig auslöst. Nur die Erholung bei fehlgeschlagenem Nachladen nimmt `beforeunload` als zusätzliches Zeichen, dass die Seite gerade geht (WebKit bricht dann laufende Importe ab; Nachtrag D-343).
 - **Verbindungsverlust in Safari** (D-216): Nach Rückkehr aus dem Hintergrund kann Safari die IndexedDB-Verbindung verlieren (WebKit-Fehler 197050, offen). Die App prüft bei `visibilitychange` auf „visible" und bei `pageshow` mit einem kleinen Lesezugriff. Schlägt er fehl, schließt und öffnet sie die Datenbank einmal neu. Gelingt auch das nicht, startet sie sich kontrolliert neu, bevor neue Eingaben möglich sind. Weil der Zustand vollständig in IndexedDB liegt, gehen gespeicherte Sätze dabei nicht verloren.
-- **Dauerhafter Speicher:** Nach dem ersten gespeicherten Datensatz ruft die App `navigator.storage.persist()` auf und zeigt den Status sowie `navigator.storage.estimate()` unter Mehr › Daten (AK-PWA-05).
+- **Dauerhafter Speicher:** Nach dem ersten gespeicherten Datensatz ruft die App `navigator.storage.persist()` auf und zeigt den Status sowie `navigator.storage.estimate()` unter Mehr › Daten (AK-PWA-05). Das Basis-Repository meldet jedes gespeicherte Dokument über `DbRuntime.onDocumentWritten`, `main.tsx` fragt einmal je Lauf; ebenso nach einem Abgleich mit abgeholten Daten und nach dem Wiederherstellen (D-346). Vorher geschah das nur während eines Trainings.
 - **Snapshots** (D-217): Eigene Datenbank `fitness-snapshots`; Inhalt gzip-komprimiert über `CompressionStream`; Anlässe Schema-Upgrade, Import, „Alle Daten löschen"; die letzten fünf bleiben.
 - **Gebündelte Stammdaten** (D-230): Basisübungen und Beispielvorlagen werden mit der App ausgeliefert, vom Service Worker vorgeladen und nicht in die Datenbank kopiert. IDs sind deterministisch, damit Verweise auf allen Geräten gleich sind.
 - **localStorage** nur für unkritische Anzeigeeinstellungen ohne Verlustfolgen.
@@ -138,8 +139,8 @@ Abhängigkeitsregeln, per ESLint-Regel `no-restricted-imports` mit den Pfad-Alia
 | Zustand | Auslöser | Gespeichert |
 |---|---|---|
 | Laufend | „Starten" | Einheit mit Snapshot aller Übungen und Sätze, `startedAt`, `dayKey` |
-| Pausiert | „Pausieren" | Offenes Pausenintervall |
-| Laufend | „Fortsetzen" | Pausenintervall geschlossen |
+| Pausiert | „Pausieren" (noch nicht umgesetzt, D-297) | Offenes Pausenintervall |
+| Laufend | „Fortsetzen" (noch nicht umgesetzt, D-297) | Pausenintervall geschlossen |
 | Abgeschlossen | „Training beenden" | `endedAt`, `durationSec`, offene Sätze als übersprungen, Projektion |
 | Verworfen | „Training verwerfen" | Tombstone mit `deletedFrom = in_progress` |
 
@@ -174,6 +175,7 @@ Nach einem Neustart der App liest die Startseite die laufende Einheit aus der Da
 | Datenbank lässt sich nicht öffnen | Fehler beim Start | Wiederherstellungsbildschirm: Ursache, „Erneut versuchen", „Snapshot wiederherstellen", „Fehlerprotokoll exportieren", „Zurücksetzen" nur nach Export-Angebot und doppelter Bestätigung | AK-DAT-08 |
 | Fehlgeschlagene Migration | Ausnahme im Upgrade | Upgrade bricht ab; der Snapshot von davor bleibt; Wiederherstellungsbildschirm | AK-DAT-06, AK-DAT-07 |
 | Absturz einer Ansicht | React-Fehlergrenze je Route | Fehleransicht mit „Neu laden"; andere Bereiche bleiben nutzbar | AK-DAT-09 |
+| Fehler in einer Hinweisleiste (z. B. ungültiges laufendes Training) | Fehlergrenze je Leiste, Eintrag im Fehlerprotokoll (D-346) | Nur die Leiste fehlt; Navigation und Seiten bleiben | B-04 |
 | Ungültige Importdatei | Zod-Prüfung vor dem Schreiben | Ablehnung ohne Änderung, mit Grund | AK-DAT-05 |
 | Neue App-Version während des Trainings | Service Worker meldet Update | Hinweis erst nach Abschluss der Einheit; Aktivierung nur nach Bestätigung | AK-PWA-03 |
 | Zweiter Tab mit älterer Version | Dexie-Ereignis `versionchange` | Der ältere Tab schließt seine Verbindung und bittet um Neuladen | Integrationstest |
@@ -206,10 +208,12 @@ Navigation: im MVP Tab-Leiste mit Heute, Training, Fortschritt, Mehr; am Desktop
 
 - **Manifest:** `display: standalone`, Name und Kurzname (Arbeitstitel „Fitness", D-222), Icons in allen benötigten Größen inklusive Apple-Touch-Icon, Theme-Farben für Hell und Dunkel, `start_url` `/heute`, `scope` `/`.
 - **Service Worker (Workbox über vite-plugin-pwa):** Vorab-Cache aller gebauten Dateien einschließlich aller nachgeladenen Code-Teile und der gebündelten Stammdaten; Navigations-Fallback auf die App-Shell; kein Cache für spätere API-Antworten, weil Daten in IndexedDB liegen.
-- **Update:** `registerType: 'prompt'`. Eine neue Version wird geladen und erst nach „Jetzt aktualisieren" aktiv; während einer laufenden Einheit erscheint der Hinweis erst danach (AK-PWA-03).
+- **Update (D-343):** `registerType: 'prompt'` mit `clientsClaim`. Beim allerersten Start übernimmt der Service Worker die offene Seite sofort, damit auch nachgeladene Teile schon in dieser Sitzung aus dem Vorab-Speicher kommen. Eine neue Version lädt im Hintergrund vollständig in den Speicher und wartet. Der Hinweis „Neue Version verfügbar“ mit „Jetzt aktualisieren“ erscheint, sobald sie bereit ist, während eines Trainings erst nach dem Beenden (AK-PWA-03, E-01). Die neue Version übernimmt nach „Jetzt aktualisieren“ oder beim nächsten Start, wenn kein Fenster der alten Version mehr offen ist; sie bringt alle ihre Teile mit, der Start gelingt deshalb auch ohne Netz. Übernimmt sie eine offene Seite, lädt diese neu, außer während eines Trainings; dann erscheint der Hinweis nach dem Training (`createControllerWatcher` in `src/shared/pwa/state.ts`).
+- **Fehlgeschlagenes Nachladen (D-343):** Fehlt ein nachgeladener Teil (nach einem Deployment ohne Service Worker oder weil der Browser die Anfrage abbricht), lädt die App einmal neu, nie während eines Trainings, nicht zweimal in fünf Minuten und nicht ohne Service Worker und ohne Netz; sonst zeigt die Ansicht einen ruhigen Hinweis mit „Neu laden“ (`src/app/chunkRecovery.ts`). Scheitert schon das Einstiegsskript, lädt der Startwächter in `public/theme-init.js` einmal neu oder zeigt „FORM ließ sich nicht starten“. Daten bleiben in beiden Fällen erhalten, sie liegen in IndexedDB.
+- **Vorab-Liste:** `tools/check-precache.mjs` (Teil von `pnpm check:bundle`) prüft nach jedem Build, dass jede Datei der App im Service Worker steht; bewusst ausgenommen sind nur große Bilder, die die App offline nicht braucht.
 - **Installationshilfe:** iOS bietet keinen Installationsdialog. Die App erkennt den Safari-Tab über `display-mode: standalone` und `navigator.standalone` und zeigt die Anleitung „Teilen › Zum Home-Bildschirm". Sie weist darauf hin, dass Daten im Browser-Tab getrennt von der installierten App gespeichert werden (AK-PWA-04).
 - **Umsetzung M0:** Das Manifest trägt die helle Theme-Farbe; `<meta name="theme-color">` folgt zur Laufzeit der gewählten Darstellung. `public/theme-init.js` setzt Hell oder Dunkel vor dem ersten Bild (extern, weil die CSP keine Inline-Skripte erlaubt). Nach Updates fragt die App beim Start und höchstens stündlich bei Rückkehr in den Vordergrund.
-- **Prüfung:** Lighthouse hat die PWA-Kategorie entfernt (D-221). Playwright prüft Manifest, Registrierung des Service Workers und den Offline-Start; zusätzlich prüfe ich die Installierbarkeit manuell in den Chrome-Entwicklerwerkzeugen.
+- **Prüfung:** Lighthouse hat die PWA-Kategorie entfernt (D-221). Playwright prüft Manifest, Registrierung des Service Workers und den Offline-Start; zusätzlich prüfe ich die Installierbarkeit manuell in den Chrome-Entwicklerwerkzeugen. `e2e/update.spec.ts` baut zwei Versionen nacheinander und liefert sie wie Vercel aus (altes Gerät, neue Version, kein Netz); `e2e/start-watch.spec.ts` prüft den Startwächter.
 
 ## 10. Hosting und Auslieferung
 
@@ -229,7 +233,7 @@ Nach der Beziehungsanalyse in `data-model.md` Abschnitt 2 ist die Sync-Einheit d
 1. **Lokale Änderung:** Das Dokument wird mit neuem HLC gespeichert; in derselben Transaktion entsteht ein Eintrag in der `outbox` (Typ, ID, Mutations-ID).
 2. **Push:** Die Engine sendet Dokumente gebündelt an `push_documents` mit der zuletzt bekannten Serverrevision als Basis. Der Server nimmt an, wenn die Basis passt, und vergibt `rev + 1`. Eine wiederholte Mutations-ID gilt als Duplikat und ist unschädlich (Idempotenz).
 3. **Konflikt:** Passt die Basis nicht, liefert der Server seine aktuelle Fassung. Der Client führt Basis, lokale und Serverfassung im 3-Wege-Merge nach den Regeln des Typs zusammen (`data-model.md` Abschnitt 7), speichert das Ergebnis, protokolliert es und sendet erneut.
-4. **Pull:** Abfrage nach `server_updated_at` ab dem gespeicherten Cursor mit 60 Sekunden Überlappung, sortiert nach Zeit und ID. Die Überlappung fängt Transaktionen ab, die später committen als ihr Zeitstempel. Bereits bekannte Revisionen werden übersprungen. Der Cursor rückt erst nach erfolgreichem Schreiben vor.
+4. **Pull:** Abfrage `rev > Cursor`, aufsteigend, 500 je Seite (erste Stufe, D-269). Sendungen eines Kontos laufen auf dem Server nacheinander (Sperre je Konto in `push_documents`, A-05, D-349): Eine zweite Sendung vergibt ihre Nummern erst nach dem Commit der ersten, deshalb überspringt der Cursor keine Zeile, die später sichtbar wird. Der Cursor rückt erst nach erfolgreichem Schreiben vor. Der frühere Entwurf mit `server_updated_at` und 60 Sekunden Überlappung ist nicht umgesetzt. Das SQL des Servers liegt in `supabase/migrations/`.
 5. **Auslöser:** App-Start, Rückkehr in den Vordergrund, Ereignis `online`, entprellt nach lokalen Änderungen, manuell. Hintergrund-Synchronisierung steht in Safari nicht zur Verfügung.
 6. **Fehler:** Exponentielles Backoff je Outbox-Eintrag; nach mehreren Fehlversuchen „braucht Aufmerksamkeit" mit sichtbarem Hinweis; Fehlerprotokoll ohne Nutzdaten.
 7. **Absturz:** Outbox, Basisfassungen und Cursor liegen in IndexedDB; die Engine setzt nach einem Neustart fort. Ein vollständiger Abgleich aller IDs ist jederzeit möglich.
@@ -238,7 +242,7 @@ Nach der Beziehungsanalyse in `data-model.md` Abschnitt 2 ist die Sync-Einheit d
 
 ### 11.3 Sicherheit und Daten bei Supabase
 
-- Row Level Security auf `sync_documents` mit `user_id = auth.uid()` für alle Operationen; RLS-Tests gehören zur Abnahme von R3. Der öffentliche Anon-Key ist kein Geheimnis; der Service-Role-Key existiert nie im Client.
+- Row Level Security auf `sync_documents` mit `user_id = auth.uid()` für alle Operationen; RLS-Tests gehören zur Abnahme von R3. Rechte nur, was die App braucht: `authenticated` SELECT, INSERT und UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` nichts (A-15, D-350); geprüft mit `pnpm test:db`. Der öffentliche Anon-Key ist kein Geheimnis; der Service-Role-Key existiert nie im Client.
 - Anmeldung per Magic Link oder Passkey; Abmelden löscht keine lokalen Fachdaten ohne Rückfrage.
 - Bei aktivierter Sync liegen alle synchronisierten Nutzdaten bei Supabase: Training, Körperwerte, Einstellungen, später Ernährung. Die App erklärt das beim Aktivieren. Region EU (Frankfurt) als Standard (Q-09).
 - Kostenloser Plan: Das Projekt pausiert nach 7 Tagen ohne Aktivität und muss manuell reaktiviert werden; es gibt keine automatischen Backups. Lokale Daten und Export bleiben deshalb die erste Sicherung. Laut einer Quelle ändert Supabase ab 30.10.2026 die Data API für bestehende kostenlose Projekte; das wird vor R3 geprüft.

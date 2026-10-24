@@ -102,7 +102,7 @@ interface Session extends Root {
   };
   dayKey: DayKey; tz: string;
   startedAt: string; endedAt?: string;
-  pauses: { start: string; end?: string }[];       // Pausieren/Fortsetzen
+  pauses: { start: string; end?: string }[];       // Pausieren/Fortsetzen (noch nicht umgesetzt, bleibt leer; D-297)
   durationSec?: number;                            // bei Abschluss gespeichert, ohne Pausen
   bodyweightKg?: number;                           // Snapshot des letzten Gewichtseintrags
   notes?: string;
@@ -395,6 +395,18 @@ Für den Import (R1) fehlt die Basis. Dann gilt der **2-Wege-Merge** aus Abschni
 5. Tombstones aus der Datei löschen lokal nur, wenn sie jünger sind als die lokale Fassung; für Trainingseinheiten gilt zusätzlich K-03.
 6. Die Zusammenfassung nennt je Typ: neu, aktualisiert, unverändert, gelöscht.
 
+Der Import mit Zusammenführen (AK-DAT-03) ist noch nicht umgesetzt; umgesetzt ist das Ersetzen nach Abschnitt 7.5.
+
+### 7.5 Wiederherstellen aus dem Export (Ersetzen, D-345)
+
+1. **Prüfen, ohne etwas zu ändern:** lesbares JSON bis 50 MB, Kennung `fitness-app-backup`, Hülle nach Abschnitt 11, Format und Datenbankversion nicht neuer als die App, Stand höchstens einen Tag in der Zukunft, höchstens 500.000 Dokumente, nur bekannte Arten. Je Dokument: Basisfelder, Art passend zur Liste, keine doppelte ID je Tabelle, Schemaversion nicht neuer als die der App, dann das Zod-Schema des zuständigen Moduls. Ein einziger Fehler lehnt die ganze Datei ab; die Meldung nennt den Grund und bei einem ungültigen Eintrag dessen Art, nie den Inhalt.
+2. **Ältere Fassungen:** Für Format und Dokumentarten gibt es Schritte von Version `n` nach `n + 1` (`src/modules/backup/calc/migrate.ts`); bisher keine, weil es nur Format 1 und Schemaversion 1 gibt. Ältere Datenbankversionen werden angenommen; Arten, die sie noch nicht kannten (z. B. Wasser vor v8), gelten als leer.
+3. **Zusammenfassung:** Stand der Sicherung, Zeitraum der Einträge (`dayKey` von Training, Ernährung, Gewicht, Aufgaben-Einträgen, Wasser), Zahl der abgeschlossenen Trainings, der Ernährungseinträge und der Aufgaben; gezählt wird, was nicht gelöscht ist.
+4. **Vorher:** kein laufendes Training (vorher und in der Transaktion geprüft). Liegt auf dem Gerät etwas, das nicht gelöscht ist, sichert die App den aktuellen Stand als Datei `form-sicherung-vor-wiederherstellung-JJJJ-MM-TT-HHMM.json`; bricht das ab, ersetzt sie nichts. Danach ein Snapshot (Anlass „Import“). Seit D-352 heißen Sicherungen `form-sicherung-…`; Dateien mit dem alten Namen `fitness-sicherung-…` lassen sich weiter wiederherstellen, weil nur der Inhalt zählt.
+5. **Ersetzen in einer Transaktion** über alle Dokumenttabellen, `meta` (Uhr) und `exerciseHistory`: Jedes Dokument der Sicherung erhält einen neuen HLC dieses Geräts und dessen Geräte-ID; Löschmarken der Datei bleiben Löschmarken. Was nur lokal liegt, bekommt eine Löschmarke (Trainings mit `deletedFrom`). Ein abgeschlossenes, nicht gelöschtes Training dieses Geräts bleibt, wenn die Sicherung es noch laufend oder als verworfene laufende Kopie enthält (K-01, K-03). Die Projektion wird für alle betroffenen Trainings neu geschrieben. Scheitert ein Schritt, ist nichts geändert.
+6. **Unberührt:** Fehlerprotokoll, Anmeldungen (Synchronisierung, Schritte), `syncBase`, Cursor der Synchronisierung, Anzeigeeinstellungen in `meta`, importierte Lebensmitteldaten.
+7. **Synchronisierung:** Der eingespielte Stand ist die jüngste Änderung; beim nächsten Abgleich geht er an den Server, und die anderen Geräte übernehmen ihn, auch die Löschmarken. Nach den Regeln aus 7.2 bleiben Ausnahmen: Hat ein anderes Gerät seit dem letzten Abgleich dieses Geräts ein Programm oder Rezept geändert, gilt dessen Fassung, und die eingespielte bleibt als Konfliktkopie (K-09, K-17). Ein dort abgeschlossenes Training schlägt eine eingespielte laufende Fassung (K-01). Was ein anderes Gerät nach dem letzten Abgleich dieses Geräts neu angelegt hat, kennt das Wiederherstellen nicht; es bleibt und erscheint beim nächsten Abgleich.
+
 ## 8. Integritätsregeln
 
 | Bereich | Regel | Durchsetzung |
@@ -423,7 +435,7 @@ Alle Formeln liegen als reine Funktionen in `calc/` und sind ohne Oberfläche ge
 | Bester Satz | Höchstes Gewicht, bei Gleichstand mehr Wiederholungen; bei `reps` die meisten Wiederholungen; bei `time` die längste Dauer |
 | Geschätztes 1RM | Bei 1 Wiederholung das Gewicht; bei 2 bis 10 Wiederholungen Epley: Gewicht × (1 + Wiederholungen / 30); darüber keine Schätzung (D-224) |
 | Vorherige Werte | Letzte abgeschlossene Einheit mit derselben Übung aus `exerciseHistory`; Zuordnung je Satztyp und Position innerhalb des Typs; Drop-Sätze über Position des Arbeitssatzes und Position in der Kette |
-| Dauer | (Ende oder jetzt) − Start − Summe der Pausen |
+| Dauer | (Ende oder jetzt) − Start − Summe der Pausen (Pausen gibt es noch nicht, D-297: die Dauer enthält jede Unterbrechung) |
 | Nächster Trainingstag | Tage aller Wochen in Reihenfolge als Liste. Letzte abgeschlossene Einheit dieses Programms seit der Aktivierung bestimmt die Position; der nächste Tag folgt darauf. Am Ende: Neubeginn, wenn `repeat`, sonst „Programm abgeschlossen". Fehlt der letzte Tag (gelöscht), beginnt die Folge beim ersten Tag mit Hinweis |
 | Heute geplant | Hat ein Tag des aktiven Programms den heutigen Wochentag als Hinweis, ist er „heute geplant"; sonst gilt der nächste Tag der Reihenfolge |
 | Wochenziel | Zahl der abgeschlossenen, nicht gelöschten Einheiten (Krafttraining und Aktivität) mit `dayKey` von Montag bis Sonntag der laufenden Woche |
@@ -464,7 +476,7 @@ Alle Formeln liegen als reine Funktionen in `calc/` und sind ohne Oberfläche ge
 }
 ```
 
-Tombstones sind enthalten, Projektionen nicht (sie werden neu aufgebaut). Eine Programmdatei (AK-PRG-13) nutzt dasselbe Format mit genau einem Programm. Der Import validiert jedes Dokument mit Zod und lehnt die Datei bei Fehlern vollständig ab (AK-DAT-05).
+Tombstones sind enthalten, Projektionen nicht (sie werden neu aufgebaut). Eine Programmdatei (AK-PRG-13) nutzt dasselbe Format mit genau einem Programm. Das Wiederherstellen (Abschnitt 7.5, D-345) prüft jedes Dokument mit Zod und lehnt die Datei bei Fehlern vollständig ab (AK-DAT-05). `schemaVersion` der Hülle ist die Version der Datenbank beim Export; fehlt eine Art, gilt sie als leer.
 
 ## 12. Serverschema (R3, Entwurf)
 
@@ -489,7 +501,7 @@ create policy own_rows on public.sync_documents for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 ```
 
-**Umsetzung der ersten Stufe (D-269, 19.10.2026):** Tabelle `public.sync_documents` mit `user_id`, `doc_id`, `doc_table`, `doc_type`, `hlc`, `deleted`, `schema_version`, `payload`, `device_id`, `rev` (Sequenz) und `server_updated_at`; Primärschlüssel `(user_id, doc_id)`, Index `(user_id, rev)`; RLS je Nutzer für Lesen, Anlegen und Ändern, kein Löschen; `anon` ohne Rechte. `push_documents(docs jsonb)` (bis 500 Dokumente, `security invoker`) übernimmt eine Fassung nur mit jüngerem HLC und liefert je Dokument `accepted` mit neuer `rev` oder `stale`. Abholen per REST: `rev > Cursor`, aufsteigend, 500 je Seite. Basisrevision, Mutations-ID und feldweise 3-Wege-Zusammenführung aus dem Entwurf unten sind noch nicht umgesetzt; der Client entscheidet mit `syncBase` und dem HLC (D-269).
+**Umsetzung der ersten Stufe (D-269, 19.10.2026):** Tabelle `public.sync_documents` mit `user_id`, `doc_id`, `doc_table`, `doc_type`, `hlc`, `deleted`, `schema_version`, `payload`, `device_id`, `rev` (Sequenz) und `server_updated_at`; Primärschlüssel `(user_id, doc_id)`, Index `(user_id, rev)`; RLS je Nutzer für Lesen, Anlegen und Ändern, kein Löschen; `anon` ohne Rechte. `push_documents(docs jsonb)` (bis 500 Dokumente, `security invoker`) übernimmt eine Fassung nur mit jüngerem HLC und liefert je Dokument `accepted` mit neuer `rev` oder `stale`. Abholen per REST: `rev > Cursor`, aufsteigend, 500 je Seite. Basisrevision, Mutations-ID und feldweise 3-Wege-Zusammenführung aus dem Entwurf unten sind noch nicht umgesetzt; der Client entscheidet mit `syncBase` und dem HLC (D-269). **Seit D-349 (24.10.2026):** Das SQL des Servers liegt wortgleich in `supabase/migrations/`; `push_documents` sperrt je Konto bis zum Ende der Transaktion, damit kein Gerät beim Abholen eine Nummer überspringt (A-05). Geprüft mit `pnpm test:db`. **Seit D-350:** `authenticated` hat nur SELECT, INSERT und UPDATE an der Tabelle und USAGE an der Sequenz; `anon` hat weder an der Tabelle noch an der Sequenz Rechte (A-15).
 
 Schreiben erfolgt über eine Postgres-Funktion `push_documents(docs jsonb)`: Sie prüft je Dokument die mitgesendete Basisrevision (optimistische Nebenläufigkeit), erkennt Wiederholungen über `last_mutation_id`, vergibt `rev + 1` und `server_updated_at` und liefert je Dokument „angenommen", „Duplikat" oder „Konflikt" mit der aktuellen Serverfassung. Der Ablauf steht in `architecture.md` Abschnitt 11.
 

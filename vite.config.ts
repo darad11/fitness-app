@@ -40,6 +40,13 @@ export default defineConfig({
   build: {
     // Für tools/check-bundle-size.mjs (Größe der Startansicht)
     manifest: true,
+    // Kein Vorladen in index.html (D-344, Nachtrag): WebKit behält ein fehlgeschlagenes
+    // Vorladen im Speicher, solange die alte Seite lebt; das Neuladen des Startwächters lud den
+    // Teil dann gar nicht erst neu, und die App startete nicht. Chromium lädt vorgeladene Module
+    // unter dem Service Worker ohnehin doppelt (E-16). Nachgeladene Bereiche laden weiter vor.
+    modulePreload: {
+      resolveDependencies: (_file, deps, { hostType }) => (hostType === 'html' ? [] : deps),
+    },
   },
   define: {
     __APP_ENV__: JSON.stringify(appEnv),
@@ -101,6 +108,10 @@ export default defineConfig({
         globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png', '**/splash/*.png'],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
+        // Beim allerersten Start übernimmt der Service Worker die offene Seite sofort; sonst
+        // kämen nachgeladene Teile bis zum Neuladen nur über das Netz (E-05, E-16, D-343).
+        // Neue Versionen übernehmen weiter erst nach Bestätigung (registerType 'prompt').
+        clientsClaim: true,
       },
       devOptions: { enabled: false },
     }),

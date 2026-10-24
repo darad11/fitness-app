@@ -1,10 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { DbRuntime } from '@/shared/db';
+import { addBodyWeight } from '@/modules/body';
+import { isPrivateMetaKey, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
 import { SUPABASE_KEY, SUPABASE_URL } from '../config';
 import { InvalidCredentialsError, SignUpError } from '../data/remote';
-import { getAuth, getStatus } from '../data/syncState';
-import { createRemote, SessionExpiredError, signIn, signOut, signUp, syncNow } from './syncService';
+import { getAuth, getStatus, SYNC_KEYS } from '../data/syncState';
+import {
+  createRemote,
+  OtherAccountError,
+  SessionExpiredError,
+  signIn,
+  signOut,
+  signUp,
+  syncNow,
+} from './syncService';
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -130,4 +139,55 @@ describe('Registrierung (D-273)', () => {
     expect((error as SignUpError).problem).toBe(problem);
     expect(await getAuth(rt.db)).toBeNull();
   });
+});
+
+describe('Kontowechsel (A-08)', () => {
+  const OTHER = '22222222-2222-4222-8222-222222222222';
+  const otherBody = { ...tokenBody(2), user: { id: OTHER, email: 'test@example.org' } };
+
+  async function syncedDevice() {
+    await signIn(rt.db, 'ich@example.org', 'geheim', () => json(200, tokenBody(1)));
+    await addBodyWeight(rt, { weightKg: 80.4, measuredAt: new Date('2026-10-20T07:00:00Z') });
+    await signOut(rt.db, () => json(204, null));
+  }
+
+  it('bricht die Anmeldung mit einem anderen Konto ab, solange Daten auf dem Gerät liegen', async () => {
+    await syncedDevice();
+    const calls: string[] = [];
+    const fetchMock = vi.fn<typeof fetch>((input) => {
+      calls.push(urlOf(input));
+      return urlOf(input).includes('/logout') ? json(204, null) : json(200, otherBody);
+    });
+    await expect(signIn(rt.db, 'test@example.org', 'geheim', fetchMock)).rejects.toBeInstanceOf(
+      OtherAccountError,
+    );
+    expect(await getAuth(rt.db)).toBeNull();
+    // Die eben erhaltene Anmeldung ist am Server wieder beendet.
+    expect(calls.some((url) => url.includes('/logout'))).toBe(true);
+    // Mit dem bisherigen Konto geht es weiter.
+    await signIn(rt.db, 'ich@example.org', 'geheim', () => json(200, tokenBody(3)));
+    expect(await getAuth(rt.db)).toMatchObject({ userId: USER });
+  });
+
+  it('auch beim Registrieren, wenn man danach gleich angemeldet ist', async () => {
+    await syncedDevice();
+    await expect(
+      signUp(rt.db, 'test@example.org', 'geheim123', 'https://app.example', (input) =>
+        urlOf(input).includes('/logout') ? json(204, null) : json(200, otherBody),
+      ),
+    ).rejects.toBeInstanceOf(OtherAccountError);
+    expect(await getAuth(rt.db)).toBeNull();
+  });
+
+  it('ein Gerät ohne Daten darf das Konto wechseln', async () => {
+    await signIn(rt.db, 'ich@example.org', 'geheim', () => json(200, tokenBody(1)));
+    await signOut(rt.db, () => json(204, null));
+    await signIn(rt.db, 'test@example.org', 'geheim', () => json(200, otherBody));
+    expect(await getAuth(rt.db)).toMatchObject({ userId: OTHER });
+  });
+});
+
+it('der Zugang gehört nicht in Snapshots, Cursor und Nutzer schon (D-02)', () => {
+  expect(isPrivateMetaKey(SYNC_KEYS.auth)).toBe(true);
+  expect([SYNC_KEYS.cursor, SYNC_KEYS.status, SYNC_KEYS.user].some(isPrivateMetaKey)).toBe(false);
 });

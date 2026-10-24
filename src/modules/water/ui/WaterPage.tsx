@@ -17,7 +17,7 @@ import {
 } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import { dayBars, entriesOf, parseAmount, validQuickAmounts, waterStats } from '../calc/water';
-import { useQuickAmounts, useWaterEntries, useWaterGoals } from '../data/useWater';
+import { useQuickAmounts, useWaterDay, useWaterEntries, useWaterGoals } from '../data/useWater';
 import type { WaterEntry } from '../model/waterEntry';
 import {
   deleteWater,
@@ -53,7 +53,7 @@ export function WaterPage() {
     requested !== null && isValidDayKey(requested) && requested <= today ? requested : today;
   const [period, setPeriod] = useState<Period>('7');
   const history = useWaterEntries(addDays(today, -29));
-  const dayEntries = useWaterEntries(day);
+  const dayEntries = useWaterDay(day);
   const goals = useWaterGoals();
   const quick = useQuickAmounts();
   const [editing, setEditing] = useState<{ id: string; value: string } | null>(null);

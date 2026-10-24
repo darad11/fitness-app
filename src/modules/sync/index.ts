@@ -1,5 +1,6 @@
 // Öffentliche Schnittstelle des Moduls „sync“ (Synchronisierung mit Supabase, D-269).
 import { lazy } from 'react';
+import type { AppDb } from '@/shared/db';
 
 export { syncRoutes } from './routes';
 /**
@@ -13,3 +14,12 @@ export const SyncRunner = lazy(() =>
     () => ({ default: () => null }),
   ),
 );
+
+/**
+ * Ist dieses Gerät mit der Synchronisierung angemeldet? Für den Hinweis beim Wiederherstellen aus
+ * dem Export (D-345); lädt den Zustand erst bei Bedarf.
+ */
+export async function loadSyncSignedIn(db: AppDb): Promise<boolean> {
+  const { getAuth } = await import('./data/syncState');
+  return (await getAuth(db)) !== null;
+}

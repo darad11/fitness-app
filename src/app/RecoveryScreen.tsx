@@ -19,6 +19,7 @@ export function recoveryCause(error: unknown): string {
   ) {
     return t.recovery.causeStorageBlocked;
   }
+  if (names.includes('QuotaExceededError')) return t.recovery.causeStorageFull;
   if (names.includes('VersionError')) return t.recovery.causeNewerVersion;
   if (names.includes('ConnectionLostError')) return t.recovery.causeConnectionLost;
   return t.recovery.causeUnknown;

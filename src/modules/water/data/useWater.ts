@@ -6,12 +6,18 @@ import { useDb } from '@/shared/db';
 import { dayKey, localTimeZone, type DayKey } from '@/shared/lib/time';
 import { WATER_DEFAULT_GOAL_ML, WATER_QUICK_DEFAULT, waterGoalOn } from '../calc/water';
 import type { WaterEntry } from '../model/waterEntry';
-import { listWaterEntries } from './waterRepository';
+import { listWaterDay, listWaterEntries } from './waterRepository';
 
 /** Einträge ab einem Tag, reaktiv; `undefined` beim Laden. */
 export function useWaterEntries(fromDay: DayKey): WaterEntry[] | undefined {
   const { db } = useDb();
   return useLiveQuery(() => listWaterEntries(db, fromDay), [db, fromDay]);
+}
+
+/** Einträge genau eines Tages, reaktiv; `undefined` beim Laden (C-04). */
+export function useWaterDay(day: DayKey): WaterEntry[] | undefined {
+  const { db } = useDb();
+  return useLiveQuery(() => listWaterDay(db, day), [db, day]);
 }
 
 export interface WaterGoals {

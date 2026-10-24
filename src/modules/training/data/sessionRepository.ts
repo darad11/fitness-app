@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { getDoc, type AppDb, type DocDef } from '@/shared/db';
+import { getDoc, logError, type AppDb, type DocDef } from '@/shared/db';
 import { buildHistoryRows } from '../calc/history';
 import { historyRowSchema, type HistoryRow } from '../model/history';
 import { SESSION_SCHEMA_VERSION, sessionSchema, type Session } from '../model/session';
@@ -15,13 +15,39 @@ export function getSession(db: AppDb, id: string): Promise<Session | undefined> 
   return getDoc(db, sessionDef, id);
 }
 
-/** Die laufende Einheit dieses Geräts, falls es eine gibt (AK-TRN-22). */
+/** Ungültige laufende Einheiten, die schon protokolliert sind (einmal je App-Lauf). */
+const reportedInvalid = new Set<string>();
+
+/**
+ * Die laufende Einheit dieses Geräts, falls es eine gibt (AK-TRN-22). Ungültige Dokumente werden
+ * übergangen wie in `listCompletedSessions` und einmal protokolliert: Ein einziges davon legte
+ * sonst über die Leiste „Training läuft“ jede Seite lahm (B-04).
+ */
 export async function findActiveSession(db: AppDb): Promise<Session | undefined> {
   const rows = await db.sessions.where('status').equals('in_progress').toArray();
   const live = rows.filter((row) => row.type === 'session' && row.deletedAt === null);
   live.sort((a, b) => String(b.startedAt).localeCompare(String(a.startedAt)));
-  const first = live[0];
-  return first ? getSession(db, first.id) : undefined;
+  for (const row of live) {
+    const parsed = sessionSchema.safeParse(row);
+    if (parsed.success) return { ...row, ...parsed.data };
+    if (!reportedInvalid.has(row.id)) {
+      reportedInvalid.add(row.id);
+      // In einer eigenen Aufgabe: Die Abfrage läuft oft in `useLiveQuery`, dort darf nichts schreiben.
+      setTimeout(() => {
+        void logError(db, { area: 'training', error: parsed.error, route: 'findActiveSession' });
+      }, 0);
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Läuft gerade ein Training? Leichte Abfrage über den Index ohne Schemaprüfung, damit sie auch bei
+ * einem ungültigen Dokument antwortet (Schutz vor automatischem Neuladen, E-16, D-343).
+ */
+export async function hasActiveSession(db: AppDb): Promise<boolean> {
+  const rows = await db.sessions.where('status').equals('in_progress').toArray();
+  return rows.some((row) => row.type === 'session' && row.deletedAt === null);
 }
 
 /** Abgeschlossene Einheiten, neueste zuerst (AK-HIS-01); ungültige Dokumente werden übergangen. */

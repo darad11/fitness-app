@@ -4,10 +4,12 @@ import { listenForInstallPrompt, promptInstall } from './installPrompt';
 import {
   applyUpdate,
   checkForUpdate,
+  createControllerWatcher,
   getPwaState,
   resetPwaState,
   setPwaState,
   setRegistration,
+  setReloader,
   setUpdateActivator,
 } from './state';
 
@@ -54,6 +56,46 @@ describe('Update-Suche', () => {
     expect(activate).not.toHaveBeenCalled();
     await applyUpdate();
     expect(activate).toHaveBeenCalledOnce();
+  });
+});
+
+describe('Wechsel des Service Workers (E-16, D-343)', () => {
+  it('erste Übernahme beim allerersten Start: dieselbe Version, kein Neuladen', async () => {
+    const reload = vi.fn();
+    setReloader(reload);
+    const onChange = createControllerWatcher(false, () => Promise.resolve(true));
+    expect(await onChange()).toBe('claimed');
+    expect(reload).not.toHaveBeenCalled();
+    // Der nächste Wechsel bringt eine neue Version.
+    expect(await onChange()).toBe('reload');
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
+  it('neue Version übernimmt eine gesteuerte Seite: neu laden', async () => {
+    const reload = vi.fn();
+    setReloader(reload);
+    expect(await createControllerWatcher(true, () => Promise.resolve(true))()).toBe('reload');
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
+  it('während eines Trainings nicht neu laden, sondern merken', async () => {
+    const reload = vi.fn();
+    setReloader(reload);
+    setPwaState({ updateAvailable: true });
+    expect(await createControllerWatcher(true, () => Promise.resolve(false))()).toBe('pending');
+    expect(reload).not.toHaveBeenCalled();
+    expect(getPwaState()).toMatchObject({ updateAvailable: false, reloadPending: true });
+    // „Jetzt aktualisieren“ lädt dann nur neu.
+    await applyUpdate();
+    expect(reload).toHaveBeenCalledOnce();
+  });
+
+  it('antwortet die Prüfung nicht, wird nicht neu geladen', async () => {
+    const reload = vi.fn();
+    setReloader(reload);
+    const onChange = createControllerWatcher(true, () => Promise.reject(new Error('weg')));
+    expect(await onChange()).toBe('pending');
+    expect(reload).not.toHaveBeenCalled();
   });
 });
 

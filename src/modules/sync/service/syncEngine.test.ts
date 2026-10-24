@@ -7,12 +7,22 @@ import {
   updateDoc,
   type DbRuntime,
   type DocDef,
+  type RootFields,
   type StoredDoc,
 } from '@/shared/db';
+import { nutritionDocDefs } from '@/modules/nutrition';
+import { trainingDocDefs } from '@/modules/training';
 import { createTestRuntime } from '@/shared/testing/db';
 import { getCursor } from '../data/syncState';
 import type { PushDoc, PushResult, RemoteRow } from '../model/sync';
-import { AppOutdatedError, conflictName, resetForUser, syncOnce, type Remote } from './syncEngine';
+import {
+  AppOutdatedError,
+  CONFLICT_NAME_MAX,
+  conflictName,
+  resetForUser,
+  syncOnce,
+  type Remote,
+} from './syncEngine';
 
 /** Server im Arbeitsspeicher mit denselben Regeln wie `push_documents` (jüngerer HLC gewinnt). */
 class FakeServer {
@@ -285,5 +295,26 @@ describe('Abgleich (D-269)', () => {
   it('benennt Konfliktkopien mit Datum', () => {
     expect(conflictName('Push A', new Date(2026, 9, 19))).toBe('Push A (Konflikt 19.10.2026)');
     expect(conflictName(undefined, new Date(2026, 0, 5))).toBe('Ohne Namen (Konflikt 05.01.2026)');
+  });
+
+  it('kürzt lange Namen, damit die Konfliktkopie gültig bleibt (A-04)', async () => {
+    // Namensfeld im Schema der Programme und Rezepte, den Tabellen mit Konfliktkopie.
+    const nameField = (defs: readonly DocDef<RootFields>[], type: string) =>
+      (defs.find((def) => def.type === type)?.schema as unknown as z.ZodObject<{ name: z.ZodType }>)
+        .shape.name;
+    const program = nameField(await trainingDocDefs(), 'program');
+    const recipe = nameField(await nutritionDocDefs(), 'recipe');
+    const day = new Date(2026, 9, 19);
+    for (const length of [58, 59, 79, 80]) {
+      const name = conflictName('x'.repeat(length), day);
+      expect(name.length).toBeLessThanOrEqual(CONFLICT_NAME_MAX);
+      expect(program.safeParse(name).success, name).toBe(true);
+      expect(recipe.safeParse(name).success, name).toBe(true);
+      expect(name).toMatch(/^x+ \(Konflikt 19\.10\.2026\)$/);
+    }
+    // Kein Leerzeichen vor der Klammer doppelt, wenn an einem Leerzeichen gekürzt wird.
+    expect(conflictName(`${'a'.repeat(57)} b`, day)).toBe(
+      `${'a'.repeat(57)} (Konflikt 19.10.2026)`,
+    );
   });
 });

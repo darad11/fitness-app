@@ -12,7 +12,7 @@ import {
 } from '@/shared/db';
 import { dayKey, localTimeZone, type DayKey } from '@/shared/lib/time';
 import { dayTotal, validQuickAmounts, WATER_DEFAULT_GOAL_ML, waterGoalOn } from '../calc/water';
-import { listWaterEntries, waterEntryDef } from '../data/waterRepository';
+import { listWaterDay, waterEntryDef } from '../data/waterRepository';
 import { WATER_ENTRY_MAX_ML, type WaterEntry } from '../model/waterEntry';
 
 export interface Clock {
@@ -40,7 +40,7 @@ export async function loadWaterGoal(db: AppDb, day: DayKey): Promise<number> {
 
 /** Ist das Wasserziel an diesem Tag erreicht? */
 export async function waterReached(db: AppDb, day: DayKey): Promise<boolean> {
-  const total = dayTotal(await listWaterEntries(db, day), day);
+  const total = dayTotal(await listWaterDay(db, day), day);
   return total >= (await loadWaterGoal(db, day));
 }
 

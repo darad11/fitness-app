@@ -1,5 +1,5 @@
 import { Info, RefreshCw, Settings, UserRound } from 'lucide-react';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { LinkList, PageHeader, type LinkListItem } from '@/shared/ui';
 
 interface MoreItem extends LinkListItem {
@@ -8,16 +8,16 @@ interface MoreItem extends LinkListItem {
 }
 
 const MORE_ITEMS: readonly MoreItem[] = [
-  { to: '/mehr/profil', label: t.more.profile, icon: UserRound, available: true },
-  { to: '/mehr/einstellungen', label: t.more.settings, icon: Settings, available: true },
-  { to: '/mehr/synchronisierung', label: t.more.sync, icon: RefreshCw, available: true },
-  { to: '/mehr/ueber', label: t.more.about, icon: Info, available: true },
+  { to: '/mehr/profil', label: tMore.more.profile, icon: UserRound, available: true },
+  { to: '/mehr/einstellungen', label: tMore.more.settings, icon: Settings, available: true },
+  { to: '/mehr/synchronisierung', label: tMore.more.sync, icon: RefreshCw, available: true },
+  { to: '/mehr/ueber', label: tMore.more.about, icon: Info, available: true },
 ];
 
 export function MorePage() {
   return (
     <>
-      <PageHeader title={t.more.title} />
+      <PageHeader title={tMore.more.title} />
       <LinkList items={MORE_ITEMS.filter((item) => item.available)} />
     </>
   );

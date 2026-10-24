@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { useDb } from '@/shared/db';
-import { t } from '@/shared/i18n/de';
+import { tMore } from '@/shared/i18n/de-more';
 import { tSync } from '@/shared/i18n/de-sync';
 import { Button, Card, PageHeader, Skeleton } from '@/shared/ui';
 import { InvalidCredentialsError, SignUpError, SyncOfflineError } from '../data/remote';
 import { useSyncView } from '../data/syncState';
 import { LoginScreen, type LoginMode } from './LoginScreen';
-import { PASSWORD_MIN, signIn, signOut, signUp, syncNow } from '../service/syncService';
+import {
+  OtherAccountError,
+  PASSWORD_MIN,
+  signIn,
+  signOut,
+  signUp,
+  syncNow,
+} from '../service/syncService';
 
 /** Synchronisierung (D-269): anmelden, Stand ansehen, abgleichen, abmelden. */
 export function SyncPage() {
@@ -54,11 +61,13 @@ export function SyncPage() {
     setError(
       caught instanceof InvalidCredentialsError
         ? ts.invalidCredentials
-        : caught instanceof SignUpError
-          ? ts.signUpErrors[caught.problem]
-          : caught instanceof SyncOfflineError
-            ? ts.offline
-            : ts.failed,
+        : caught instanceof OtherAccountError
+          ? ts.otherAccount
+          : caught instanceof SignUpError
+            ? ts.signUpErrors[caught.problem]
+            : caught instanceof SyncOfflineError
+              ? ts.offline
+              : ts.failed,
     );
   };
 
@@ -94,14 +103,17 @@ export function SyncPage() {
 
   return (
     <>
-      <PageHeader title={ts.title} back={{ to: '/mehr', label: t.more.title }} />
+      <PageHeader title={ts.title} back={{ to: '/mehr', label: tMore.more.title }} />
       <div className="grid gap-4">
         <Card>
           <p>{ts.intro}</p>
           <p className="mt-2 text-sm text-muted">{ts.notSynced}</p>
         </Card>
         {view === undefined ? (
-          <Skeleton className="h-40" />
+          // Beim Laden als beschäftigt markiert, wie die übrigen Seiten (D-344).
+          <div aria-busy="true">
+            <Skeleton className="h-40" />
+          </div>
         ) : view.auth ? (
           <Card title={ts.signedInAs(view.auth.email)}>
             <p role="status" aria-live="polite">

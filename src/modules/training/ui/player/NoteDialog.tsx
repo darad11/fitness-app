@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import { Button, Dialog } from '@/shared/ui';
 
 export interface NoteDialogProps {
@@ -24,20 +25,20 @@ export function NoteDialog({ title, hint, initial, maxLength, onSave, onClose }:
       actions={
         <>
           <Button variant="secondary" onClick={onClose}>
-            {t.session.noteCancel}
+            {tSession.noteCancel}
           </Button>
           <Button
             onClick={() => {
               onSave(text);
             }}
           >
-            {t.session.noteSave}
+            {tSession.noteSave}
           </Button>
         </>
       }
     >
       <label htmlFor={id} className="mb-2 block text-sm font-semibold text-muted">
-        {t.session.noteLabel}
+        {tSession.noteLabel}
       </label>
       <textarea
         id={id}

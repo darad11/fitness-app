@@ -1,6 +1,6 @@
 import { Check, Ellipsis, Minus, Plus, RotateCcw, Square, Timer } from 'lucide-react';
 import { useState } from 'react';
-import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui';
 import { fieldsFor, formatSetValues } from '../../calc/fields';
@@ -80,7 +80,7 @@ export function SetRow(props: SetRowProps) {
           {props.label}
         </span>
         <span className="w-14 shrink-0 text-xs text-muted tabular-nums">
-          <span className="sr-only">{t.session.previous}: </span>
+          <span className="sr-only">{tSession.previous}: </span>
           {props.previous
             ? formatSetValues(
                 props.previous,
@@ -100,7 +100,7 @@ export function SetRow(props: SetRowProps) {
             <ValueInput
               key={spec.label}
               spec={spec}
-              label={`${t.session.fields[spec.label]}, ${props.name}`}
+              label={`${tSession.fields[spec.label]}, ${props.name}`}
               stored={set.actual[spec.field]}
               suggestion={props.suggestion[spec.field]}
               format={props.number}
@@ -116,10 +116,10 @@ export function SetRow(props: SetRowProps) {
           onClick={props.onToggleDone}
           aria-label={
             done
-              ? `${t.session.undo}, ${props.name}`
+              ? `${tSession.undo}, ${props.name}`
               : skipped
-                ? `${t.session.unskip}, ${props.name}`
-                : `${t.session.done}, ${props.name}`
+                ? `${tSession.unskip}, ${props.name}`
+                : `${tSession.done}, ${props.name}`
           }
           aria-pressed={done}
           className={cn(
@@ -143,13 +143,13 @@ export function SetRow(props: SetRowProps) {
             setActionsOpen((open) => !open);
           }}
           aria-expanded={actionsOpen}
-          aria-label={`${t.session.more}, ${props.name}`}
+          aria-label={`${tSession.more}, ${props.name}`}
           className="-mr-1 flex h-12 w-9 shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
         >
           <Ellipsis aria-hidden="true" className="size-5" />
         </button>
       </div>
-      {skipped ? <p className="mt-1 ml-10 text-sm text-muted">{t.session.skipped}</p> : null}
+      {skipped ? <p className="mt-1 ml-10 text-sm text-muted">{tSession.skipped}</p> : null}
       {error ? (
         <p
           role="alert"
@@ -158,7 +158,7 @@ export function SetRow(props: SetRowProps) {
           {error}
           {props.onRetry ? (
             <Button variant="quiet" size="sm" onClick={props.onRetry}>
-              {t.session.retry}
+              {tSession.retry}
             </Button>
           ) : null}
         </p>
@@ -170,7 +170,7 @@ export function SetRow(props: SetRowProps) {
               variant={timer.running ? 'primary' : 'secondary'}
               size="sm"
               className={timer.running ? 'tabular-nums' : undefined}
-              aria-label={`${timer.running ? t.session.stopTimer : t.session.startTimer}, ${props.name}`}
+              aria-label={`${timer.running ? tSession.stopTimer : tSession.startTimer}, ${props.name}`}
               onClick={timer.onToggle}
             >
               {timer.running ? (
@@ -179,8 +179,8 @@ export function SetRow(props: SetRowProps) {
                 <Timer aria-hidden="true" className="size-4" />
               )}
               {timer.running
-                ? `${t.session.stopTimer} ${formatClock(timer.elapsedSec)}`
-                : t.session.startTimer}
+                ? `${tSession.stopTimer} ${formatClock(timer.elapsedSec)}`
+                : tSession.startTimer}
             </Button>
           ) : null}
           {current && weight && !done ? (
@@ -191,7 +191,7 @@ export function SetRow(props: SetRowProps) {
                 onClick={() => {
                   stepValue(-1);
                 }}
-                aria-label={t.session.stepDown(props.number(props.weightStep))}
+                aria-label={tSession.stepDown(props.number(props.weightStep))}
               >
                 <Minus aria-hidden="true" className="size-4" />
                 {props.number(props.weightStep)}
@@ -202,7 +202,7 @@ export function SetRow(props: SetRowProps) {
                 onClick={() => {
                   stepValue(1);
                 }}
-                aria-label={t.session.stepUp(props.number(props.weightStep))}
+                aria-label={tSession.stepUp(props.number(props.weightStep))}
               >
                 <Plus aria-hidden="true" className="size-4" />
                 {props.number(props.weightStep)}
@@ -213,11 +213,11 @@ export function SetRow(props: SetRowProps) {
             <>
               {!done && !skipped ? (
                 <Button variant="secondary" size="sm" onClick={props.onSkip}>
-                  {t.session.skip}
+                  {tSession.skip}
                 </Button>
               ) : null}
               <Button variant="danger" size="sm" onClick={props.onRemove}>
-                {t.session.removeSet}
+                {tSession.removeSet}
               </Button>
             </>
           ) : null}
@@ -233,7 +233,7 @@ export function SetHeader({ exercise }: { exercise: SessionExercise }) {
   return (
     <div aria-hidden="true" className="eyebrow mb-1 flex items-center gap-2 px-2 text-muted">
       <span className="w-8 shrink-0 text-center">#</span>
-      <span className="w-14 shrink-0">{t.session.previous}</span>
+      <span className="w-14 shrink-0">{tSession.previous}</span>
       <span
         className={cn(
           'grid min-w-0 flex-1 gap-2',
@@ -242,7 +242,7 @@ export function SetHeader({ exercise }: { exercise: SessionExercise }) {
       >
         {fields.map((spec) => (
           <span key={spec.label} className="text-center">
-            {t.session.units[spec.label]}
+            {tSession.units[spec.label]}
           </span>
         ))}
       </span>

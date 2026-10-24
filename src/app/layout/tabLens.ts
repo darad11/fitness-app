@@ -33,6 +33,17 @@ const SPRINGS = {
   reduced: [0.12, 1],
 } as const satisfies Record<string, Spring>;
 const SPRING_STEP = 1 / 240;
+/**
+ * Größter Zeitschritt je Bild (s). Bei wenigen Bildern je Sekunde (älteres Gerät, ausgelasteter
+ * Rechner) läuft die Feder so in Echtzeit weiter, statt sich über viele Bilder zu ziehen; die
+ * Teilschritte von `SPRING_STEP` halten sie stabil.
+ */
+const MAX_FRAME_DT = 0.25;
+/**
+ * Spätestens so lange nach dem Loslassen liegt die Linse (ms). Vorher hing das Ablegen an rund
+ * neun Bildern: bei zwei Bildern je Sekunde über 4 s (Linsen-Test in WebKit, Stabilität §2, D-344).
+ */
+const SETTLE_MAX_MS = 900;
 /** So weit ragt die Auswahl über ihren Eintrag hinaus (CSS: .tabbar-indicator). */
 export const PILL_OUTSET = 4;
 
@@ -154,6 +165,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
   let pendingTimer: ReturnType<typeof setTimeout> | undefined;
   let suppressClick = false;
   let suppressTimer: ReturnType<typeof setTimeout> | undefined;
+  let settleTimer: ReturnType<typeof setTimeout> | undefined;
   let left: State = { x: 0, v: 0 };
   let right: State = { x: 0, v: 0 };
   let lift: State = { x: 0, v: 0 };
@@ -316,7 +328,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
     frame = 0;
     const g = geo;
     if (!active || !g) return;
-    const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+    const dt = Math.min(MAX_FRAME_DT, Math.max(0, (now - last) / 1000));
     last = now;
     const reduced = reducedMotion.matches;
     const goal = target(g);
@@ -360,8 +372,16 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
       Math.abs(right.x - (goal + half)) < 0.2 &&
       Math.abs(left.v) < 4 &&
       Math.abs(right.v) < 4;
-    if (settled) end();
+    if (settled || (!pressed && now - releasedAt > SETTLE_MAX_MS)) end();
     else frame = window.requestAnimationFrame(step);
+  }
+
+  /** Kommen gar keine Bilder mehr, legt ein Zeitgeber die Linse trotzdem ab. */
+  function settleSoon() {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      if (!pressed) end();
+    }, SETTLE_MAX_MS + 300);
   }
 
   function start(g: Geo) {
@@ -412,6 +432,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
     if (!geo) return;
     clearTimeout(pendingTimer);
     clearTimeout(suppressTimer);
+    clearTimeout(settleTimer);
     pendingTap = undefined;
     suppressClick = false;
     const tab = (e.target as Element | null)?.closest<HTMLElement>('.tabbar-tab');
@@ -442,6 +463,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
     fingerX = xOf(e, geo);
     pressed = false;
     releasedAt = performance.now();
+    settleSoon();
     if (dragging) {
       dragging = false;
       // Ziehen wählt beim Loslassen; ein danach noch gesendeter Klick zählt nicht doppelt.
@@ -464,6 +486,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
     pressed = false;
     dragging = false;
     releasedAt = performance.now();
+    settleSoon();
   };
 
   const onLostCapture = (e: PointerEvent) => {
@@ -504,6 +527,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
     end();
     clearTimeout(pendingTimer);
     clearTimeout(suppressTimer);
+    clearTimeout(settleTimer);
     bar.removeEventListener('pointerdown', onDown);
     bar.removeEventListener('pointermove', onMove);
     bar.removeEventListener('pointerup', onUp);

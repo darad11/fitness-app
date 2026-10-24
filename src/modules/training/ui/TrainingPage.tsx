@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
+import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import {
   Button,
   ButtonLink,
@@ -34,9 +36,9 @@ const ENTRIES: readonly LinkListItem[] = [
   },
   {
     to: '/training/nachtragen',
-    label: t.log.title,
+    label: tTrainingPages.log.title,
     icon: PencilLine,
-    description: t.log.hint,
+    description: tTrainingPages.log.hint,
   },
   {
     to: '/training/verlauf',
@@ -115,7 +117,7 @@ export function TrainingPage() {
       <LinkList items={ENTRIES} />
       {discarded && undoVisible ? (
         <Toast
-          message={t.session.discarded}
+          message={tSession.discarded}
           durationMs={10_000}
           onTimeout={() => {
             setUndoVisible(false);
@@ -134,7 +136,7 @@ export function TrainingPage() {
                 );
               }}
             >
-              {t.session.undoDiscard}
+              {tSession.undoDiscard}
             </Button>
           }
         />

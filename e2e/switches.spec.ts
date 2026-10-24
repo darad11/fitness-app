@@ -70,6 +70,10 @@ test('Tagesaufgabe: „Mit Wasserziel abhaken“ per Tipp und Tastatur, nur eine
   await expect(list.getByRole('switch', { name: 'Mit Training abhaken' })).not.toBeChecked();
   // Tastatur: Leertaste schaltet aus und wieder ein.
   const water = list.getByRole('switch', { name: 'Mit Wasserziel abhaken' });
+  // Chromium hält ein angetipptes Element bis zu 150 ms „aktiv“ und hebt das per Zeitgeber auf.
+  // Fiel das zwischen Drücken und Loslassen der Leertaste, löste die Taste nichts aus: der
+  // einmalige Fehlschlag aus F6 §7 (Stabilität §2, D-344). Erst nach dem Tipp weiter.
+  await expect.poll(() => water.evaluate((element) => element.matches(':active'))).toBe(false);
   await water.focus();
   await page.keyboard.press('Space');
   await expect(water).not.toBeChecked();
@@ -310,7 +314,15 @@ const CHOICE_PAGES: readonly { path: string; setup?: (page: Page) => Promise<voi
       await openPage(page, '/fortschritt');
     },
   },
-  { path: '/fortschritt/gewicht', setup: (page) => addWeight(page, '80,5') },
+  {
+    path: '/fortschritt/gewicht',
+    // Ohne Eintrag zeigt die Seite den leeren Zustand. Die Auswahl erscheint erst, wenn das erste
+    // Gewicht aus der Datenbank zurückkommt; vorher gezählt, fand der Test keine (WebKit, D-351).
+    setup: async (page) => {
+      await addWeight(page, '80,5');
+      await expect(page.getByRole('group', { name: 'Zeitraum', exact: true })).toBeVisible();
+    },
+  },
   { path: '/ernaehrung/wasser' },
   { path: '/training/nachtragen' },
   { path: '/ernaehrung/lebensmittel/neu' },

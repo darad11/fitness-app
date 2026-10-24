@@ -6,7 +6,7 @@ FORM, persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, d
 
 Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 
-- Branch: immer auf `form-rebranding` arbeiten, nie direkt auf `main`. Nach jedem Commit sofort pushen.
+- Branch: Jede Phase bekommt einen eigenen Branch von `main`, dazu einen Entwurfs-PR nach `main` für die CI. Aktuelle Phase: `form-stabilitaet`. Nie direkt auf `main` arbeiten. Nach jedem Commit sofort pushen.
 - Zu Beginn jeder Aufgabe lesen: `CLAUDE.md`, `docs/decisions.md`, `audit-report.md`, `form-markenleitplanken.md`; ab dem Rebranding zusätzlich `brand-tokens.md`.
 - Ein Commit pro Paket. Jedes Paket bekommt eine D-Nummer in `docs/decisions.md`.
 - Nach jedem Paket: `pnpm check:bundle` (Startansicht unter 250 KB) und E2E inklusive WebKit.
@@ -27,7 +27,7 @@ Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 ## Zusammenarbeit
 
 - Sprache Deutsch, Anrede „du", kurze Sätze ohne Fachjargon. Texte der App gehören in `src/shared/i18n/de.ts`.
-- Arbeitsbranch ist `form-rebranding` (siehe oben); Änderungen gehen per Pull Request nach `main`. `main` ist die Produktivadresse https://fitness-app-mu-drab.vercel.app und ändert sich nur per Pull Request mit grüner CI. Gemergt wird vom Produktinhaber nach seiner Freigabe.
+- Arbeitsbranch ist der Branch der aktuellen Phase (siehe oben); Änderungen gehen per Pull Request nach `main`. `main` ist die Produktivadresse https://fitness-app-mu-drab.vercel.app und ändert sich nur per Pull Request mit grüner CI. Gemergt wird vom Produktinhaber nach seiner Freigabe.
 - Rückfragen nur bei Entscheidungen, die die Richtung ändern; alle anderen Entscheidungen mit Begründung in `docs/decisions.md` festhalten.
 - Nach jedem Arbeitspaket ein Bericht nach `docs/implementation-plan.md` Abschnitt 8; Stand, Testergebnisse und Status in der Funktionsmatrix nachtragen.
 
@@ -44,10 +44,12 @@ Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 ```
 pnpm format:check   pnpm lint   pnpm typecheck   pnpm test   pnpm test:coverage
 pnpm check:docs     pnpm build  pnpm check:bundle            pnpm test:e2e (nach pnpm build)
+pnpm test:db (Postgres mit Superuser über PGHOST, PGPORT, PGUSER, PGPASSWORD)
 ```
 
 - Cloud-Sitzungen: Der Start-Hook (`.claude/hooks/session-start.sh`) installiert die Abhängigkeiten und setzt `PW_CHROMIUM_PATH` und `E2E_ENGINES=chromium`. `playwright install` nicht ausführen; WebKit läuft in GitHub Actions.
 - Funktionsmatrix: Quelle ist `docs/feature-inventory.md`; danach `python3 tools/feature_inventory_to_csv.py` ausführen.
+- Server (Supabase): `supabase/migrations/` ist wortgleich mit dem Server (D-349). Eine Änderung kommt als neue Migration mit Datei zum Zurücknehmen in `supabase/rollback/`, vorher `pnpm test:db`; eingespielt wird nur mit Zustimmung des Produktinhabers. Lokal in Cloud-Sitzungen: `pg_ctlcluster 16 main start` und einmal `runuser -u postgres -- psql -c "alter user postgres password 'postgres'"`, dann `PGHOST=127.0.0.1 PGUSER=postgres PGPASSWORD=postgres pnpm test:db`.
 
 ## Code
 

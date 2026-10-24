@@ -67,6 +67,20 @@ function buildDoc<T extends RootFields>(
   return validated(def, candidate);
 }
 
+/**
+ * Meldet ein gespeichertes Dokument an `rt.onDocumentWritten`, in einer eigenen Aufgabe und damit
+ * außerhalb jeder Transaktion von Dexie. Die App fordert darüber nach dem ersten gespeicherten
+ * Dokument dauerhaften Speicher an (AK-PWA-05, A-07); vorher geschah das nur mit einem laufenden
+ * Training.
+ */
+function afterWrite<T>(rt: DbRuntime, written: Promise<T>): Promise<T> {
+  return written.then((value) => {
+    const notify = rt.onDocumentWritten;
+    if (notify) setTimeout(notify, 0);
+    return value;
+  });
+}
+
 /** Prüft mit dem Schema und behält unbekannte Felder. */
 function validated<T extends RootFields>(def: DocDef<T>, candidate: Record<string, unknown>): T {
   return { ...candidate, ...def.schema.parse(candidate) };
@@ -92,14 +106,17 @@ export async function insertDoc<T extends RootFields>(
   id: string = uuidv4(),
 ): Promise<T> {
   const table = def.table(rt.db);
-  return rt.db.transaction('rw', table, rt.db.meta, async () => {
-    if (await table.get(id)) throw new DocExistsError('Dokument existiert bereits');
-    const hlc = await nextStamp(rt);
-    const resolved = typeof data === 'function' ? data(hlc) : data;
-    const doc = buildDoc(rt, def, id, resolved, hlc, new Date().toISOString());
-    await table.add(doc);
-    return doc;
-  });
+  return afterWrite(
+    rt,
+    rt.db.transaction('rw', table, rt.db.meta, async () => {
+      if (await table.get(id)) throw new DocExistsError('Dokument existiert bereits');
+      const hlc = await nextStamp(rt);
+      const resolved = typeof data === 'function' ? data(hlc) : data;
+      const doc = buildDoc(rt, def, id, resolved, hlc, new Date().toISOString());
+      await table.add(doc);
+      return doc;
+    }),
+  );
 }
 
 /**
@@ -115,15 +132,18 @@ export async function upsertDoc<T extends RootFields>(
   mutate: (current: T | undefined, hlc: Hlc) => DocData<T>,
 ): Promise<T> {
   const table = def.table(rt.db);
-  return rt.db.transaction('rw', table, rt.db.meta, async () => {
-    const stored = parseStored(def, await table.get(id));
-    const active = stored && stored.deletedAt === null ? stored : undefined;
-    const hlc = await nextStamp(rt);
-    const data = mutate(active, hlc);
-    const doc = buildDoc(rt, def, id, data, hlc, active?.createdAt ?? new Date().toISOString());
-    await table.put(doc);
-    return doc;
-  });
+  return afterWrite(
+    rt,
+    rt.db.transaction('rw', table, rt.db.meta, async () => {
+      const stored = parseStored(def, await table.get(id));
+      const active = stored && stored.deletedAt === null ? stored : undefined;
+      const hlc = await nextStamp(rt);
+      const data = mutate(active, hlc);
+      const doc = buildDoc(rt, def, id, data, hlc, active?.createdAt ?? new Date().toISOString());
+      await table.put(doc);
+      return doc;
+    }),
+  );
 }
 
 /** Ändert ein bestehendes, nicht gelöschtes Dokument. */
@@ -147,21 +167,24 @@ export async function softDeleteDoc<T extends RootFields>(
   deletedFrom?: string,
 ): Promise<void> {
   const table = def.table(rt.db);
-  await rt.db.transaction('rw', table, rt.db.meta, async () => {
-    const stored = parseStored(def, await table.get(id));
-    if (!stored) throw new DocNotFoundError('Dokument nicht gefunden');
-    if (stored.deletedAt !== null) return;
-    const hlc = await nextStamp(rt);
-    const candidate: Record<string, unknown> = {
-      ...stored,
-      hlc,
-      deletedAt: hlc,
-      deviceId: rt.deviceId,
-    };
-    if (deletedFrom) candidate.deletedFrom = deletedFrom;
-    else delete candidate.deletedFrom;
-    await table.put(validated(def, candidate));
-  });
+  await afterWrite(
+    rt,
+    rt.db.transaction('rw', table, rt.db.meta, async () => {
+      const stored = parseStored(def, await table.get(id));
+      if (!stored) throw new DocNotFoundError('Dokument nicht gefunden');
+      if (stored.deletedAt !== null) return;
+      const hlc = await nextStamp(rt);
+      const candidate: Record<string, unknown> = {
+        ...stored,
+        hlc,
+        deletedAt: hlc,
+        deviceId: rt.deviceId,
+      };
+      if (deletedFrom) candidate.deletedFrom = deletedFrom;
+      else delete candidate.deletedFrom;
+      await table.put(validated(def, candidate));
+    }),
+  );
 }
 
 /** Hebt eine Löschung auf (z. B. „Rückgängig"). */
@@ -171,15 +194,18 @@ export async function restoreDoc<T extends RootFields>(
   id: string,
 ): Promise<T> {
   const table = def.table(rt.db);
-  return rt.db.transaction('rw', table, rt.db.meta, async () => {
-    const stored = parseStored(def, await table.get(id));
-    if (!stored) throw new DocNotFoundError('Dokument nicht gefunden');
-    if (stored.deletedAt === null) return stored;
-    const hlc = await nextStamp(rt);
-    const doc = buildDoc(rt, def, id, stored, hlc, stored.createdAt);
-    await table.put(doc);
-    return doc;
-  });
+  return afterWrite(
+    rt,
+    rt.db.transaction('rw', table, rt.db.meta, async () => {
+      const stored = parseStored(def, await table.get(id));
+      if (!stored) throw new DocNotFoundError('Dokument nicht gefunden');
+      if (stored.deletedAt === null) return stored;
+      const hlc = await nextStamp(rt);
+      const doc = buildDoc(rt, def, id, stored, hlc, stored.createdAt);
+      await table.put(doc);
+      return doc;
+    }),
+  );
 }
 
 /** Aktives Dokument oder `undefined` (gelöschte werden gefiltert). */

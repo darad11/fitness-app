@@ -22,6 +22,7 @@ import {
 import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tSession } from '@/shared/i18n/de-session';
 import { playRestEndSound, unlockSound } from '@/shared/lib/sound';
 import { keepScreenAwake } from '@/shared/lib/wakeLock';
 import { Button, ButtonLink, Dialog, IconButton, Meter, Skeleton } from '@/shared/ui';
@@ -95,7 +96,7 @@ export function SessionPage() {
     return (
       <div>
         <h1 className="mb-2 text-headline font-semibold">{t.training.title}</h1>
-        <p className="mb-6 text-muted">{t.session.notFound}</p>
+        <p className="mb-6 text-muted">{tSession.notFound}</p>
         <ButtonLink to="/training">{t.training.title}</ButtonLink>
       </div>
     );
@@ -151,8 +152,8 @@ function setNames(exercises: SessionExercise[]): Map<string, SetName> {
     sets.forEach((set, position) => {
       const ordinal =
         set.type === 'working' ? ++working : set.type === 'warmup' ? ++warmup : ++drop;
-      const label = set.type === 'working' ? String(ordinal) : t.session.setTypeShort[set.type];
-      const name = t.session.setLabel(t.session.setTypeLabel[set.type], ordinal);
+      const label = set.type === 'working' ? String(ordinal) : tSession.setTypeShort[set.type];
+      const name = tSession.setLabel(tSession.setTypeLabel[set.type], ordinal);
       names.set(set.id, {
         label,
         name: `${exercise.nameSnapshot}, ${name}`,
@@ -272,13 +273,13 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       setErrors(({ [key]: _removed, ...rest }) => rest);
     } catch (error) {
       let entry: RowError;
-      if (error instanceof MissingValuesError) entry = { message: t.session.missing };
+      if (error instanceof MissingValuesError) entry = { message: tSession.missing };
       else if (error instanceof InvalidValueError)
-        entry = { message: t.session.invalid[error.field] };
+        entry = { message: tSession.invalid[error.field] };
       else {
         void logError(rt.db, { area: 'training', error, route: window.location.pathname });
         entry = {
-          message: t.session.saveFailed,
+          message: tSession.saveFailed,
           retry: () => {
             void run(key, action);
           },
@@ -309,7 +310,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       void logError(rt.db, { area: 'training', error, route: window.location.pathname });
       setErrors((all) => ({
         ...all,
-        session: { message: t.session.saveFailed, retry: () => void finish(skipOpen) },
+        session: { message: tSession.saveFailed, retry: () => void finish(skipOpen) },
       }));
     }
   };
@@ -331,9 +332,9 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   // Ohne Programm: „Freies Training“, außer der Titel sagt es schon (D-323).
   const eyebrow = session.program
     ? null
-    : heading === t.session.freeSource
+    : heading === tSession.freeSource
       ? null
-      : t.session.freeSource;
+      : tSession.freeSource;
 
   return (
     <div
@@ -380,7 +381,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
               else void finish(false);
             }}
           >
-            {t.session.finish}
+            {tSession.finish}
           </Button>
         </div>
         <div className="mt-3 flex items-center gap-3">
@@ -390,7 +391,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
             className="flex-1"
           />
           <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
-            <span className="sr-only">{t.session.duration}: </span>
+            <span className="sr-only">{tSession.duration}: </span>
             {formatClock(sessionDurationSec(session, now))}
           </p>
         </div>
@@ -406,7 +407,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 className="font-semibold underline"
                 onClick={errors.session.retry}
               >
-                {t.session.retry}
+                {tSession.retry}
               </button>
             ) : null}
           </p>
@@ -439,15 +440,15 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       ) : null}
 
       {!restTimer && current && currentExercise && currentName ? (
-        <section aria-label={t.session.now} className="stage mb-4 rounded-card p-card text-fg">
-          <p className="eyebrow text-muted">{t.session.now}</p>
+        <section aria-label={tSession.now} className="stage mb-4 rounded-card p-card text-fg">
+          <p className="eyebrow text-muted">{tSession.now}</p>
           <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
           <p className="mt-1 text-muted">
             {[
-              `${t.session.setTypeLabel[current.type]} · ${t.session.setOf(currentName.index, currentName.total)}`,
-              currentTarget ? `${t.session.target} ${currentTarget.text}` : null,
+              `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
+              currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
               currentPrevious
-                ? `${t.session.previous} ${formatValues(currentExercise, currentPrevious)}`
+                ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
                 : null,
             ]
               .filter(Boolean)
@@ -463,19 +464,19 @@ function Player({ session, light }: { session: Session; light: boolean }) {
           ) : null}
           <p className="mt-3 text-sm text-muted">
             {nextExercise
-              ? t.session.nextExercise(nextExercise.nameSnapshot)
-              : t.session.lastExercise}
+              ? tSession.nextExercise(nextExercise.nameSnapshot)
+              : tSession.lastExercise}
           </p>
         </section>
       ) : null}
       {!restTimer && !current && exercises.length > 0 ? (
-        <section aria-label={t.session.allDone} className="stage mb-4 rounded-card p-card text-fg">
-          <p className="eyebrow text-muted">{t.session.now}</p>
-          <p className="mt-1 text-2xl font-semibold">{t.session.allDone}</p>
+        <section aria-label={tSession.allDone} className="stage mb-4 rounded-card p-card text-fg">
+          <p className="eyebrow text-muted">{tSession.now}</p>
+          <p className="mt-1 text-2xl font-semibold">{tSession.allDone}</p>
         </section>
       ) : null}
 
-      {exercises.length === 0 ? <p className="mb-4 text-muted">{t.session.empty}</p> : null}
+      {exercises.length === 0 ? <p className="mb-4 text-muted">{tSession.empty}</p> : null}
 
       <div className="grid gap-4">
         {exercises.map((exercise, index) => {
@@ -499,25 +500,25 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   />
                   <p className="text-sm text-muted">
                     {row
-                      ? t.session.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))
-                      : t.session.firstTime}
-                    {exercise.perSide ? ` · ${t.session.perSide}` : ''}
+                      ? tSession.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))
+                      : tSession.firstTime}
+                    {exercise.perSide ? ` · ${tSession.perSide}` : ''}
                   </p>
                   {exercise.notes ? <p className="mt-1 text-sm">{exercise.notes}</p> : null}
                   {exercise.note ? (
                     <p className="mt-1 text-sm">
-                      <span className="font-semibold">{t.session.yourNote}: </span>
+                      <span className="font-semibold">{tSession.yourNote}: </span>
                       {exercise.note}
                     </p>
                   ) : row?.note ? (
                     <p className="mt-1 text-sm text-muted">
-                      <span className="font-semibold">{t.session.previousNote}: </span>
+                      <span className="font-semibold">{tSession.previousNote}: </span>
                       {row.note}
                     </p>
                   ) : null}
                 </div>
                 <IconButton
-                  label={t.session.exerciseInfo(exercise.nameSnapshot)}
+                  label={tSession.exerciseInfo(exercise.nameSnapshot)}
                   onClick={() => {
                     setInfo(exercise);
                   }}
@@ -525,7 +526,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   <Info aria-hidden="true" className="size-5" />
                 </IconButton>
                 <IconButton
-                  label={t.session.moreExercise(exercise.nameSnapshot)}
+                  label={tSession.moreExercise(exercise.nameSnapshot)}
                   aria-expanded={open}
                   onClick={() => {
                     setActionsFor(open ? null : exercise.id);
@@ -545,7 +546,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     }
                   >
                     <ChevronUp aria-hidden="true" className="size-4" />
-                    {t.session.moveUp}
+                    {tSession.moveUp}
                   </Button>
                   <Button
                     variant="secondary"
@@ -556,7 +557,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     }
                   >
                     <ChevronDown aria-hidden="true" className="size-4" />
-                    {t.session.moveDown}
+                    {tSession.moveDown}
                   </Button>
                   <Button
                     variant="secondary"
@@ -568,7 +569,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     }}
                   >
                     <ArrowLeftRight aria-hidden="true" className="size-4" />
-                    {t.session.replaceExercise}
+                    {tSession.replaceExercise}
                   </Button>
                   <Button
                     variant="secondary"
@@ -579,7 +580,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     }}
                   >
                     <NotebookPen aria-hidden="true" className="size-4" />
-                    {t.session.noteAction}
+                    {tSession.noteAction}
                   </Button>
                   <Button
                     variant="danger"
@@ -590,7 +591,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     }}
                   >
                     <Trash2 aria-hidden="true" className="size-4" />
-                    {t.session.removeExercise}
+                    {tSession.removeExercise}
                   </Button>
                 </div>
               ) : null}
@@ -624,7 +625,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                         if (value === 'invalid') {
                           setErrors((all) => ({
                             ...all,
-                            [set.id]: { message: t.session.invalid[field] },
+                            [set.id]: { message: tSession.invalid[field] },
                           }));
                           return;
                         }
@@ -650,7 +651,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 onClick={() => void run(exercise.id, () => addSet(rt, session.id, exercise.id))}
               >
                 <Plus aria-hidden="true" className="size-5" />
-                {t.session.addSet}
+                {tSession.addSet}
               </Button>
             </section>
           );
@@ -658,12 +659,12 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       </div>
 
       <section
-        aria-label={t.session.sessionNoteTitle}
+        aria-label={tSession.sessionNoteTitle}
         className="mt-6 rounded-card bg-surface p-4 shadow-card"
       >
         {session.notes ? (
           <p className="mb-3 whitespace-pre-line">
-            <span className="font-semibold">{t.session.sessionNoteTitle}: </span>
+            <span className="font-semibold">{tSession.sessionNoteTitle}: </span>
             {session.notes}
           </p>
         ) : null}
@@ -675,7 +676,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
           }}
         >
           <NotebookPen aria-hidden="true" className="size-4" />
-          {t.session.sessionNoteAction}
+          {tSession.sessionNoteAction}
         </Button>
       </section>
 
@@ -686,7 +687,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
             setConfirm({ kind: 'discard' });
           }}
         >
-          {t.session.discard}
+          {tSession.discard}
         </Button>
       </div>
 
@@ -704,7 +705,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 void complete(currentExercise, current);
               }}
             >
-              {t.session.done}
+              {tSession.done}
             </Button>
           ) : null}
           <Button
@@ -717,7 +718,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
           >
             <Plus aria-hidden="true" className="size-5" />
             <span className={currentExercise ? 'sr-only md:not-sr-only' : ''}>
-              {t.session.addExercise}
+              {tSession.addExercise}
             </span>
           </Button>
         </div>
@@ -727,10 +728,10 @@ function Player({ session, light }: { session: Session; light: boolean }) {
         <NoteDialog
           title={
             noteFor === 'session'
-              ? t.session.sessionNoteTitle
-              : t.session.noteTitle(noteFor.nameSnapshot)
+              ? tSession.sessionNoteTitle
+              : tSession.noteTitle(noteFor.nameSnapshot)
           }
-          hint={noteFor === 'session' ? t.session.sessionNoteHint : t.session.noteHint}
+          hint={noteFor === 'session' ? tSession.sessionNoteHint : tSession.noteHint}
           initial={(noteFor === 'session' ? session.notes : noteFor.note) ?? ''}
           maxLength={noteFor === 'session' ? SESSION_NOTE_MAX : NOTE_MAX}
           onClose={() => {
@@ -753,9 +754,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
           <ExercisePicker
             open={pickerOpen}
             title={
-              replaceTarget
-                ? t.session.replaceTitle(replaceTarget.nameSnapshot)
-                : t.session.pickTitle
+              replaceTarget ? tSession.replaceTitle(replaceTarget.nameSnapshot) : tSession.pickTitle
             }
             alternativesForId={replaceTarget?.exerciseId}
             onClose={() => {
@@ -802,10 +801,10 @@ function Player({ session, light }: { session: Session; light: boolean }) {
         closeLabel={t.common.close}
         title={
           confirm?.kind === 'finish'
-            ? t.session.finishTitle
+            ? tSession.finishTitle
             : confirm?.kind === 'discard'
-              ? t.session.discardTitle
-              : t.session.removeExerciseTitle
+              ? tSession.discardTitle
+              : tSession.removeExerciseTitle
         }
         actions={
           <>
@@ -815,7 +814,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 setConfirm(null);
               }}
             >
-              {t.session.cancel}
+              {tSession.cancel}
             </Button>
             {confirm?.kind === 'finish' ? (
               <Button
@@ -824,7 +823,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   void finish(true);
                 }}
               >
-                {t.session.finishConfirm}
+                {tSession.finishConfirm}
               </Button>
             ) : confirm?.kind === 'discard' ? (
               <Button
@@ -836,7 +835,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   );
                 }}
               >
-                {t.session.discardConfirm}
+                {tSession.discardConfirm}
               </Button>
             ) : confirm?.kind === 'removeExercise' ? (
               <Button
@@ -847,7 +846,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   void run(target.id, () => removeExercise(rt, session.id, target.id));
                 }}
               >
-                {t.session.remove}
+                {tSession.remove}
               </Button>
             ) : null}
           </>
@@ -855,11 +854,11 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       >
         <p>
           {confirm?.kind === 'finish'
-            ? t.session.finishOpen(confirm.open)
+            ? tSession.finishOpen(confirm.open)
             : confirm?.kind === 'discard'
-              ? t.session.discardText
+              ? tSession.discardText
               : confirm?.kind === 'removeExercise'
-                ? `${confirm.exercise.nameSnapshot}: ${t.session.removeExerciseText(confirm.done)}`
+                ? `${confirm.exercise.nameSnapshot}: ${tSession.removeExerciseText(confirm.done)}`
                 : ''}
         </p>
       </Dialog>
@@ -898,10 +897,10 @@ function ExerciseInfo({
   }
   rows.push([
     t.session.info.tracking,
-    t.session.trackingModes[exercise.trackingMode] +
-      (exercise.perSide ? ` · ${t.session.perSide}` : ''),
+    tSession.trackingModes[exercise.trackingMode] +
+      (exercise.perSide ? ` · ${tSession.perSide}` : ''),
   ]);
-  if (exercise.notes) rows.push([t.session.note, exercise.notes]);
+  if (exercise.notes) rows.push([tSession.note, exercise.notes]);
   return (
     <div>
       {entry ? <p className="mb-3 text-sm text-muted">{describeExercise(entry)}</p> : null}
@@ -914,7 +913,7 @@ function ExerciseInfo({
         ))}
       </dl>
       {exercise.replacedFromExerciseId ? (
-        <p className="mt-3 text-sm text-muted">{t.session.replacedFrom(origin?.name ?? '')}</p>
+        <p className="mt-3 text-sm text-muted">{tSession.replacedFrom(origin?.name ?? '')}</p>
       ) : null}
       {!entry && !exercise.notes ? <p className="text-muted">{t.session.info.none}</p> : null}
     </div>

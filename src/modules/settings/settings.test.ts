@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 import { rootFieldsSchema, type DbRuntime } from '@/shared/db';
 import { createTestRuntime } from '@/shared/testing/db';
+import { PROFILE_ID, saveProfile } from './data/profileRepository';
 import { loadSettings, saveSettings, SETTINGS_ID } from './data/settingsRepository';
 import { SETTINGS_DEFAULTS, type SettingsData } from './model/settings';
 
@@ -57,5 +58,29 @@ describe('Einstellungen', () => {
     const invalid = { theme: 'pink' } as unknown as Partial<SettingsData>;
     await expect(saveSettings(rt, invalid)).rejects.toThrow(ZodError);
     expect(await rt.db.singletons.count()).toBe(0);
+  });
+});
+
+describe('Felder einer neueren App-Version (A-03)', () => {
+  it('bleiben in den Einstellungen beim Speichern erhalten', async () => {
+    await saveSettings(rt, { restDefaultSec: 120 });
+    // Ein neueres Gerät hat ein Feld ergänzt, das diese Version nicht kennt.
+    const stored = await rt.db.singletons.get(SETTINGS_ID);
+    await rt.db.singletons.put({ ...stored!, zukunft: { schnellmengen: [250, 500] } });
+    await saveSettings(rt, { restDefaultSec: 90 });
+    expect(await rt.db.singletons.get(SETTINGS_ID)).toMatchObject({
+      zukunft: { schnellmengen: [250, 500] },
+      restDefaultSec: 90,
+    });
+  });
+
+  it('bleiben im Profil erhalten, auch wenn der Name geleert wird', async () => {
+    await saveProfile(rt, { displayName: 'Alex' });
+    const stored = await rt.db.singletons.get(PROFILE_ID);
+    await rt.db.singletons.put({ ...stored!, zukunft: 'neu' });
+    await saveProfile(rt, { displayName: '' });
+    const after = await rt.db.singletons.get(PROFILE_ID);
+    expect(after).toMatchObject({ zukunft: 'neu' });
+    expect(after).not.toHaveProperty('displayName');
   });
 });

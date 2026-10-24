@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createTestRuntime, uniqueName } from '../testing/db';
 import { AppDb } from './schema';
 import {
@@ -8,7 +8,9 @@ import {
   readSnapshot,
   SNAPSHOT_KEEP,
   snapshotBeforeUpgradeIfNeeded,
+  withQuotaRetry,
 } from './snapshots';
+import { isPrivateMetaKey } from './meta';
 
 describe('Snapshots', () => {
   it('sichert alle Tabellen komprimiert und liest sie wieder', async () => {
@@ -74,5 +76,71 @@ describe('Snapshots', () => {
     expect(reopened.isOpen()).toBe(true);
     await reopened.delete();
     expect(await Dexie.exists(name)).toBe(false);
+  });
+});
+
+describe('Zugänge und voller Speicher (D-02, E-03)', () => {
+  it('lässt Zugänge der Synchronisierung und der Schritte aus dem Snapshot heraus', async () => {
+    const rt = await createTestRuntime();
+    const snapshotDbName = uniqueName('snap');
+    await rt.db.meta.bulkPut([
+      { key: 'sync.auth', value: { refreshToken: 'geheim' } },
+      { key: 'sync.cursor', value: 42 },
+      { key: 'steps.dashboardAuth', value: { refreshToken: 'geheim' } },
+      { key: 'steps.cache', value: { entries: {} } },
+    ]);
+    const info = await createSnapshot(rt.db, 'import', { snapshotDbName });
+    const payload = await readSnapshot(info.id, { snapshotDbName });
+    const keys = (payload?.tables.meta ?? []).map((row) => (row as { key: string }).key).sort();
+    expect(keys).toEqual(['deviceId', 'sync.cursor']);
+    expect(info.counts.meta).toBe(2);
+    expect(JSON.stringify(payload)).not.toContain('geheim');
+    await rt.db.delete();
+  });
+
+  it('erkennt private Schlüssel', () => {
+    expect(isPrivateMetaKey('sync.auth')).toBe(true);
+    expect(isPrivateMetaKey('steps.dashboardAuth')).toBe(true);
+    expect(isPrivateMetaKey('sync.cursor')).toBe(false);
+    expect(isPrivateMetaKey('hlc')).toBe(false);
+    expect(isPrivateMetaKey(undefined)).toBe(false);
+  });
+
+  it('löscht bei vollem Speicher den ältesten Snapshot und versucht es einmal neu', async () => {
+    const quota = Object.assign(new Error('voll'), { name: 'QuotaExceededError' });
+    const insert = vi
+      .fn<() => Promise<number>>()
+      .mockRejectedValueOnce(quota)
+      .mockResolvedValueOnce(7);
+    const dropOldest = vi.fn(() => Promise.resolve(true));
+    await expect(withQuotaRetry(insert, dropOldest)).resolves.toBe(7);
+    expect(dropOldest).toHaveBeenCalledOnce();
+    expect(insert).toHaveBeenCalledTimes(2);
+  });
+
+  it('erkennt den vollen Speicher auch in einem Fehler von Dexie', async () => {
+    const wrapped = Object.assign(new Error('Abbruch'), {
+      name: 'AbortError',
+      inner: Object.assign(new Error('voll'), { name: 'QuotaExceededError' }),
+    });
+    const insert = vi
+      .fn<() => Promise<number>>()
+      .mockRejectedValueOnce(wrapped)
+      .mockResolvedValueOnce(1);
+    await expect(withQuotaRetry(insert, () => Promise.resolve(true))).resolves.toBe(1);
+  });
+
+  it('wiederholt andere Fehler nicht und gibt auf, wenn nichts zu löschen ist', async () => {
+    const other = new Error('kaputt');
+    const dropOldest = vi.fn(() => Promise.resolve(true));
+    await expect(withQuotaRetry(() => Promise.reject(other), dropOldest)).rejects.toBe(other);
+    expect(dropOldest).not.toHaveBeenCalled();
+    const quota = Object.assign(new Error('voll'), { name: 'QuotaExceededError' });
+    await expect(
+      withQuotaRetry(
+        () => Promise.reject(quota),
+        () => Promise.resolve(false),
+      ),
+    ).rejects.toBe(quota);
   });
 });

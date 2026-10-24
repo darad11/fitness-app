@@ -100,10 +100,14 @@ export async function findFoodByBarcode(
   )[0];
 }
 
+/**
+ * Einträge eines Tages nach Uhrzeit. Bei gleicher Uhrzeit (z. B. eine Vorlage in derselben
+ * Millisekunde eingetragen) entscheidet der Änderungsstempel, nicht die zufällige ID (D-344).
+ */
 export async function listDayEntries(db: AppDb, dayKey: string): Promise<FoodLogEntry[]> {
   const rows = await db.foodLog.where('dayKey').equals(dayKey).toArray();
-  return parseRows<FoodLogEntry>(rows, 'food_log_entry', foodLogEntrySchema).sort((a, b) =>
-    a.loggedAt.localeCompare(b.loggedAt),
+  return parseRows<FoodLogEntry>(rows, 'food_log_entry', foodLogEntrySchema).sort(
+    (a, b) => a.loggedAt.localeCompare(b.loggedAt) || a.hlc.localeCompare(b.hlc),
   );
 }
 

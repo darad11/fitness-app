@@ -314,7 +314,15 @@ const CHOICE_PAGES: readonly { path: string; setup?: (page: Page) => Promise<voi
       await openPage(page, '/fortschritt');
     },
   },
-  { path: '/fortschritt/gewicht', setup: (page) => addWeight(page, '80,5') },
+  {
+    path: '/fortschritt/gewicht',
+    // Ohne Eintrag zeigt die Seite den leeren Zustand. Die Auswahl erscheint erst, wenn das erste
+    // Gewicht aus der Datenbank zurückkommt; vorher gezählt, fand der Test keine (WebKit, D-351).
+    setup: async (page) => {
+      await addWeight(page, '80,5');
+      await expect(page.getByRole('group', { name: 'Zeitraum', exact: true })).toBeVisible();
+    },
+  },
   { path: '/ernaehrung/wasser' },
   { path: '/training/nachtragen' },
   { path: '/ernaehrung/lebensmittel/neu' },

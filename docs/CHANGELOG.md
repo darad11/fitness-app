@@ -1,5 +1,15 @@
 # Änderungsprotokoll der Dokumentation
 
+## Version 0.56 · 24.10.2026 · Phase Stabilität, wackelnder Test `switches.spec.ts:340`
+
+| Datei | Änderung |
+|---|---|
+| `decisions.md` | D-351: Test wartet nach dem ersten Gewicht auf die neu gezeichnete Seite |
+| `testing.md` | Protokoll „Nachtrag: Auswahl nach dem ersten Gewicht“ |
+| `implementation-plan.md` | Punkt 66: Testfix |
+| `form-stabilitaet-report.md` | Abschnitt 10; Hinweis in Abschnitt 8 |
+| `.github/workflows/repeat.yml` | Test „Einfachauswahl auf /fortschritt/gewicht“ in der Liste |
+
 ## Version 0.55 · 24.10.2026 · Phase Stabilität, Nachtrag A-15 (Rechte auf das Nötige)
 
 | Datei | Änderung |

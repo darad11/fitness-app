@@ -52,9 +52,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       # Linse (WebKit), Wasser-Schalter per Tastatur, Seitenende (WebKit), Offline-Start (E-16),
-      # Barcode und Startwächter (CI zu D-343).
+      # Barcode und Startwächter (CI zu D-343), Auswahl nach dem ersten Gewicht (WebKit, D-351).
       - run: >-
           pnpm exec playwright test --repeat-each=20 --retries=0 --reporter=list
-          --grep "Linse|per Tipp und Tastatur|Seitenende: weder|alle Bereiche starten offline|Barcode: Einwilligung|Teil beim Start ab|Teil auch danach ab"
+          --grep "Linse|per Tipp und Tastatur|Seitenende: weder|alle Bereiche starten offline|Barcode: Einwilligung|Teil beim Start ab|Teil auch danach ab|Einfachauswahl auf /fortschritt/gewicht"
         env:
           E2E_ENGINES: ${{ matrix.engine }}

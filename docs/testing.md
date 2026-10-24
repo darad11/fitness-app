@@ -1321,3 +1321,19 @@ Rechte an `sync_documents` und der Sequenz eingeschränkt (D-350). Bericht: `for
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB; Vorab-Liste 173 von 232 Dateien |
 | E2E | App und E2E-Tests in diesem Paket unverändert; der volle Lauf folgt mit dem nächsten Paket (Testfix `switches.spec.ts`) auf diesem Stand, WebKit in der CI |
 
+### Stabilität, Nachtrag: Auswahl nach dem ersten Gewicht · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Wackelnder Test `e2e/switches.spec.ts:340` auf `/fortschritt/gewicht` (D-351). Bericht: `form-stabilitaet-report.md` Abschnitt 10.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `e33bcfb`, WebKit Desktop | einmal fehlgeschlagen („Expected: > 0, Received: 0“, Zeile 345), im zweiten Versuch bestanden |
+| Gegenprobe mit 20-fach gedrosselter CPU (vorübergehender Test, nicht im Repository), je 30 Läufe in beiden Projekten, ohne zweiten Versuch | alter Ablauf 2 von 60 fehlgeschlagen (gleiche Meldung), neuer Ablauf 60 von 60 bestanden |
+| `--grep "Einfachauswahl auf /fortschritt/gewicht" --repeat-each=20 --retries=0` | 40 von 40 bestanden |
+| `e2e/switches.spec.ts`, ohne zweiten Versuch | 38 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 116 Dateien, 984 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB |
+| `pnpm test:e2e` (Chromium Desktop und Pixel 7, Stand mit D-350 und D-351) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (8,0 min) |
+| CI und Wiederholung in der CI (WebKit) | zum Commit ausstehend |
+

@@ -1,6 +1,6 @@
 # Phase Stabilität – Bericht
 
-Stand: 24.10.2026 (Nachträge A-05 und A-15, Abschnitte 8 und 9) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
+Stand: 24.10.2026 (Nachträge A-05, A-15 und Testfix, Abschnitte 8 bis 10) · Branch `form-stabilitaet` (Basis `1dc1dd7`, `main` nach PR #49), Entwurfs-PR #50 · Auftrag: `docs/prompts/stabilitaet-FORM.md`. Aufbau wie `form-rebranding-report.md`.
 
 Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt.
 
@@ -18,6 +18,7 @@ Regeln: Keine neuen Funktionen außer den im Auftrag genannten. Ein Commit je Ab
 | §6 Tests und Abschluss | Alle Prüfungen auf dem letzten Stand, vorübergehende Gegenprobe entfernt, Unterlagen nachgezogen, dieser Bericht | D-348 | erledigt; WebKit zum Commit mit diesem Bericht in der CI |
 | Nachtrag A-05: Sperre je Konto (nach Freigabe am 24.10.2026) | SQL des Servers wortgleich in `supabase/migrations/`, Sperre je Konto in `push_documents` auf dem Server eingespielt und lesend geprüft, Datei zum Zurücknehmen, Test `pnpm test:db` mit Gegenprobe, CI-Job „Datenbank (Postgres 17)“; neu gefunden: A-15 | D-349 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zu `e33bcfb` grün, Datenbank an PostgreSQL 17.11 bestanden |
 | Nachtrag A-15: Rechte auf das Nötige (nach Freigabe am 24.10.2026) | `authenticated` nur SELECT, INSERT, UPDATE an `sync_documents` und USAGE an der Sequenz, `anon` ohne Rechte an der Sequenz; auf dem Server eingespielt und lesend geprüft, Sicherheitshinweise vorher und nachher keine; Test in `pnpm test:db` mit Gegenprobe | D-350 | erledigt; lokal bestanden, am Stand davor fehlgeschlagen; CI zum Commit ausstehend |
+| Nachtrag: wackelnder Test `switches.spec.ts:340` (nach Freigabe am 24.10.2026) | Auf `/fortschritt/gewicht` wartet der Test nach dem ersten Gewicht, bis die Auswahl „Zeitraum“ gezeichnet ist; Gegenprobe mit gedrosselter CPU; Test in `repeat.yml` | D-351 | erledigt; lokal 40 von 40, Gegenprobe alt 2 von 60 rot, neu 60 von 60; CI zum Commit ausstehend |
 
 ## 2. §1 E-16 – zuverlässiger Start nach Updates und ohne Netz
 
@@ -432,7 +433,7 @@ Neu: `supabase/README.md`, drei Dateien in `supabase/migrations/`, `supabase/rol
 | Gegenprobe `node tools/test-db.mjs --bis 20261019145346` | fehlgeschlagen wie erwartet: „Übersprungen: Gerät C hat rev 1 nie geholt (A rev 1, B rev 2, B fertig, Cursor 2)“ |
 | je 10 Wiederholungen | mit Sperre 10 von 10 bestanden, ohne Sperre 10 von 10 fehlgeschlagen |
 | übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag A-05“ |
-| CI zu `e33bcfb` (Lauf 40069234757) | alle Jobs grün. Datenbank (PostgreSQL 17.11): dieselben drei „bestanden“ wie lokal, Zurücknehmen wortgleich. Chromium 320 bestanden, 50 übersprungen; WebKit 309 bestanden, 1 flaky (`switches.spec.ts:340`, im zweiten Versuch bestanden), 60 übersprungen |
+| CI zu `e33bcfb` (Lauf 40069234757) | alle Jobs grün. Datenbank (PostgreSQL 17.11): dieselben drei „bestanden“ wie lokal, Zurücknehmen wortgleich. Chromium 320 bestanden, 50 übersprungen; WebKit 309 bestanden, 1 flaky (`switches.spec.ts:340`, im zweiten Versuch bestanden; behoben mit D-351, Abschnitt 10), 60 übersprungen |
 
 Lücken in der Folge der Nummern sind normal: Die Sequenz zählt auch bei abgelehnten Fassungen weiter (im Test 5, dann 8). Sie schaden nicht, weil das Abholen nur „größer als der Cursor“ fragt. Entscheidend ist, dass keine Nummer erst nach einer höheren sichtbar wird.
 
@@ -493,3 +494,26 @@ Durch die Standardrechte von Supabase im Schema `public` hatte `authenticated` a
 
 - Neue Tabellen bekommen weiter die Standardrechte von Supabase. Eine Migration für eine neue Tabelle muss die Rechte deshalb selbst einschränken; `pnpm test:db` sollte das dann mitprüfen.
 - Gerätetest des Abgleichs mit zwei Geräten steht weiter aus; auf dem Server gibt es noch kein Konto.
+
+## 10. Nachtrag: wackelnder Test `switches.spec.ts:340` (24.10.2026)
+
+Freigabe des Produktinhabers am 24.10.2026 (D-351).
+
+### Ursache
+
+In der CI zu `e33bcfb` schlug „Einfachauswahl auf /fortschritt/gewicht: jede Option per Tipp auf den Chip“ in WebKit einmal fehl („Expected: > 0, Received: 0“, Zeile 345) und bestand im zweiten Versuch. Ohne Eintrag zeigt `/fortschritt/gewicht` den leeren Zustand. Die Auswahl „Zeitraum“ erscheint erst, wenn das erste Gewicht aus der Datenbank zurückkommt. Der Test speicherte das Gewicht, wartete, bis das Fenster zu war, und zählte dann sofort die Auswahlgruppen; `count()` wartet nicht. War die Seite noch nicht neu gezeichnet, fand er keine.
+
+### Änderung
+
+- `e2e/switches.spec.ts`: Die Vorbereitung für `/fortschritt/gewicht` wartet nach dem Speichern, bis die Gruppe „Zeitraum“ sichtbar ist. Erst dann zählt der Test. Die App bleibt unverändert.
+- `.github/workflows/repeat.yml`: Der Test läuft bei „wiederholen“ mit.
+
+### Tests mit Ergebnis
+
+| Lauf | Ergebnis |
+|---|---|
+| Gegenprobe mit 20-fach gedrosselter CPU (Chromium, vorübergehender Test, nicht im Repository), je 30 Läufe in beiden Projekten, ohne zweiten Versuch | alter Ablauf: 2 von 60 fehlgeschlagen, „Expected: > 0, Received: 0“ wie in WebKit; neuer Ablauf: 60 von 60 bestanden. Ein erster Lauf mit je 10 Läufen: alt 2 von 20 fehlgeschlagen, neu 20 von 20 bestanden |
+| `pnpm exec playwright test --grep "Einfachauswahl auf /fortschritt/gewicht" --repeat-each=20 --retries=0` | 40 von 40 bestanden |
+| `e2e/switches.spec.ts` (beide Projekte, ohne zweiten Versuch) | 38 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| übrige Prüfungen | siehe `docs/testing.md`, Protokoll „Nachtrag: Auswahl nach dem ersten Gewicht“ |
+| CI und Wiederholung in der CI (WebKit) | zum Commit ausstehend |

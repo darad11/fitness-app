@@ -212,13 +212,17 @@ function parseQuery(query: string): Alternative[][] {
   return parts;
 }
 
+/** Beste Stufe von `wordLevel`. */
+const TOP_LEVEL = 8;
+
 /**
  * Stufe, wie gut ein Wort zu einem Eintrag passt (0 = gar nicht). Einzahl, Mehrzahl und Synonyme
  * zählen wie das eingegebene Wort.
- * 7 Anfang des Namens: ganzes Wort oder Grundwort („Olivenöl“ für „Öl“, „Hühnerei“, „Erdbeere“) ·
- * 6 ganzes Wort weiter hinten im Namen („Rührei mit Tomaten“) · 5 ganzes Wort in Marke oder
- * Suchbegriff · 4 Wortanfang im Namen oder Grundwort weiter hinten · 3 dasselbe in Marke oder
- * Suchbegriff · 2 Wortteil mitten im Wort (ab fünf Buchstaben).
+ * 8 ganzes Wort am Anfang des Namens („Milch 3,5 %“ für „Milch“) · 7 Grundwort am Anfang
+ * („Buttermilch“ für „Milch“, „Olivenöl“ für „Öl“, „Hühnerei“, „Erdbeere“; D-357) · 6 ganzes Wort
+ * weiter hinten im Namen („Rührei mit Tomaten“) · 5 ganzes Wort in Marke oder Suchbegriff ·
+ * 4 Wortanfang im Namen oder Grundwort weiter hinten · 3 dasselbe in Marke oder Suchbegriff ·
+ * 2 Wortteil mitten im Wort (ab fünf Buchstaben).
  */
 function wordLevel<T extends SearchableFood>(
   word: string,
@@ -237,7 +241,8 @@ function wordLevel<T extends SearchableFood>(
     ends.some((end) => end.length >= 3 && w.length - end.length >= 2 && w.endsWith(end)) &&
     unmasked(w);
   const partial = (w: string) => (w.startsWith(word) && unmasked(w)) || head(w);
-  if (exact(entry.firstSet) || entry.firstForms.has(word) || entry.firstWords.some(head)) return 7;
+  if (exact(entry.firstSet) || entry.firstForms.has(word)) return TOP_LEVEL;
+  if (entry.firstWords.some(head)) return 7;
   if (exact(entry.nameSet) || entry.nameForms.has(word)) return 6;
   if (exact(entry.otherSet) || entry.otherForms.has(word)) return 5;
   if (entry.nameWords.some(partial)) return 4;
@@ -278,7 +283,8 @@ function umlautLevel<T extends SearchableFood>(umlaut: string, entry: Entry<T>):
   const own = umlautWordsOf(entry.item);
   const head = (w: string) => w.length - umlaut.length >= 2 && w.endsWith(umlaut);
   const partial = (w: string) => w.startsWith(umlaut) || head(w);
-  if (own.first.includes(umlaut) || own.first.some(head)) return 7;
+  if (own.first.includes(umlaut)) return TOP_LEVEL;
+  if (own.first.some(head)) return 7;
   if (own.name.includes(umlaut)) return 6;
   if (own.other.includes(umlaut)) return 5;
   if (own.name.some(partial)) return 4;
@@ -299,7 +305,7 @@ function partLevel<T extends SearchableFood>(
   let best = 0;
   let literal = false;
   alternatives.forEach((alternative, i) => {
-    if (best === 7 && !(i === 0 && !literal)) return;
+    if (best === TOP_LEVEL && !(i === 0 && !literal)) return;
     let level = Infinity;
     for (const word of alternative.words) {
       level = Math.min(level, wordLevel(word, entry, alternative.umlaut, masks(word)));

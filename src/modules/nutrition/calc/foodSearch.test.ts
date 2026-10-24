@@ -170,6 +170,44 @@ describe('Suche über alle Quellen', () => {
   });
 });
 
+describe('Ganzes Wort vor Grundwort, falsche Freunde (D-357)', () => {
+  const index = buildFoodIndex<Item>([
+    item('buttermilch', 'Buttermilch'),
+    item('magermilch', 'Magermilch'),
+    item('milch', 'Milch 3,5 %'),
+    item('suesskartoffel', 'Süßkartoffel, roh'),
+    item('ofenerdaepfel', 'Ofenerdäpfel'),
+    item('erdaepfel', 'Erdäpfel, roh'),
+    item('butternuss', 'Butternusskürbis', { aliases: ['Butternut'] }),
+    item('kuerbis', 'Kürbis, Hokkaido'),
+    item('schenkel', 'Hühneroberschenkel mit Haut'),
+    item('obers', 'Schlagobers'),
+    item('mandeln', 'Mandeln', { aliases: ['gehackte Mandeln'] }),
+    item('faschiertes', 'Faschiertes gemischt'),
+    item('butter', 'Butter'),
+  ]);
+
+  it('stellt das ganze Wort vor zusammengesetzte Wörter mit diesem Grundwort', () => {
+    expect(ids(index, 'Milch')).toEqual(['milch', 'magermilch', 'buttermilch']);
+    expect(ids(index, 'Erdäpfel')).toEqual(['erdaepfel', 'ofenerdaepfel', 'suesskartoffel']);
+    expect(ids(index, 'Kartoffeln')).toEqual(['erdaepfel', 'ofenerdaepfel', 'suesskartoffel']);
+    expect(ids(index, 'Kürbis')).toEqual(['kuerbis', 'butternuss']);
+  });
+
+  it('findet Obers und Sahne nicht im Oberschenkel, Butter nicht im Butternusskürbis', () => {
+    expect(ids(index, 'Obers')).toEqual(['obers']);
+    expect(ids(index, 'Sahne')).toEqual(['obers']);
+    // Buttermilch beginnt mit „Butter“ und bleibt ein Treffer, der Butternusskürbis nicht.
+    expect(ids(index, 'Butter')).toEqual(['butter', 'buttermilch']);
+    expect(ids(index, 'Oberschenkel')).toEqual(['schenkel']);
+  });
+
+  it('macht aus Hackfleisch keine gehackten Mandeln', () => {
+    expect(ids(index, 'Hackfleisch')).toEqual(['faschiertes']);
+    expect(ids(index, 'gehackt')).toEqual(['mandeln']);
+  });
+});
+
 describe('Dubletten aus mehreren Quellen', () => {
   const values = { kcal: 52, protein: 0.3, carbs: 11.4, fat: 0.6 };
 

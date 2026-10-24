@@ -13,6 +13,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | Phasenstart | CI auf `main` (Lauf 40119684695) grün geprüft, Branch und Entwurfs-PR, `CLAUDE.md` mit Phase und Regel für neue Tabellen | D-353 | erledigt |
 | §0 Stand prüfen und umsteuern | Bestand aufgenommen; der lokal angefangene Einbau (BLS-Auszug per Filter, USDA-Stückgewichte, Laden in der App) zurückgenommen; Ursachenanalyse und BLS-Rohdaten behalten | D-355 | erledigt |
 | §1 Warum die Suche heute nichts findet | Ursache belegt (D-354): keine Daten für lose Lebensmittel seit D-279, Schwächen der Suche. Suche neu für jede Datenquelle: Umlautschreibweisen, Einzahl und Mehrzahl, Synonyme in beide Richtungen, Grundwörter, Rang nach Stellung im Namen, lose vor Marke, keine Dubletten | D-354, D-356 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; WebKit in der CI |
+| §1 Nachtrag | Ganzes Wort vor Grundwort (Milch vor Buttermilch, Erdäpfel vor Ofenerdäpfel), drei Scheintreffer weniger (Oberschenkel bei „Obers“, Butternut bei „Butter“, gehackte Tomaten bei „Hackfleisch“); gefunden bei der Probe über die Auswahlliste | D-357 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -165,4 +166,46 @@ Was bleibt: Über den ganzen BLS stehen noch Gerichte zwischen den Grundlebensmi
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB (unverändert) |
 | E2E `nutrition.spec.ts` und `nutrition-ring.spec.ts`, Chromium Desktop und Pixel 7 | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen; darin neu „Suche: Mehrzahl, Umlautschreibweise und Synonyme, lose vor Marke (D-356)“ mit Tomaten, Paradeiser, Eier, Ei, Aepfel, Äpfel, Kartoffeln über importierte Daten |
 | Gegenprobe: neuer E2E-Test gegen die alte Suche | 2 von 2 fehlgeschlagen (Desktop und Mobil) beim ersten Begriff: „Expected pattern: /^Tomate roh/“ |
+| WebKit | in der CI zum Commit |
+
+### Nachtrag (D-357): ganzes Wort vor Grundwort, drei Scheintreffer weniger
+
+Gefunden bei der Probe der Suche über die Auswahlliste aus §2: vorübergehender Vitest-Lauf über die 354 Einträge von `docs/lebensmittel-auswahl.csv` (Anzeigename, Suchbegriffe und BLS-Bezeichnung als Suchwörter), Datei danach entfernt.
+
+| Befund vorher | Ursache | Behebung |
+|---|---|---|
+| „Milch“ zeigte Magermilch und Buttermilch vor „Milch 3,5 %“, „Joghurt“ das Magerjoghurt vor „Joghurt 1,5 %“, „Erdäpfel“ zuerst Ofenerdäpfel, „Kartoffeln“ die Süßkartoffel vor „Erdäpfel, gekocht“, „Kürbis“ den Butternusskürbis vor „Kürbis, Hokkaido“ | Ganzes Wort und Grundwort am Anfang des Namens hatten dieselbe Stufe 7; danach entschied der kürzere Name | Neue Stufe 8 für das ganze Wort am Anfang (auch über Einzahl und Synonym); das Grundwort bleibt bei 7 |
+| „Sahne“ und „Obers“ fanden „Hühneroberschenkel mit Haut“ | „obers“ steckt in „Oberschenkel“ | falscher Freund „Oberschenkel“ |
+| „Butter“ fand den Butternusskürbis über dessen Suchbegriff „Butternut“ | nur „Butternuss“ stand bei den falschen Freunden | falscher Freund „Butternut“ |
+| „Hackfleisch“ und „Faschiertes“ fanden „Paradeiser aus der Dose“ über den Suchbegriff „gehackte Tomaten“ | Synonym „Gehacktes“ mit der Einzahlform „gehackte“ | „Gehacktes“ gestrichen; in der Liste heißt der Suchbegriff jetzt „Tomatenkonserve“ |
+
+Probe nachher, erste fünf Treffer, Ausgabe wörtlich (Auszug):
+
+```
+Erdäpfel     → Erdäpfel, roh | Erdäpfel, gekocht | Erdäpfel in der Schale, gekocht | Ofenerdäpfel | Süßkartoffel, roh
+Kartoffeln   → Erdäpfel, roh | Erdäpfel, gekocht | Erdäpfel in der Schale, gekocht | Ofenerdäpfel | Süßkartoffel, roh
+Milch        → Milch 1,5 % | Milch 3,5 % | Magermilch | Buttermilch | Magerjoghurt
+Joghurt      → Joghurt 1,5 % | Joghurt 3,5 % | Magerjoghurt | Sahnejoghurt 10 % | Griechisches Joghurt 10 %
+Hackfleisch  → Faschiertes gemischt | Faschiertes gemischt, gebraten | Rindsfaschiertes | Schweinsfaschiertes
+Sahne        → Kaffeeobers | Schlagobers | Sauerrahm 10 % | Sauerrahm 15 % | Sahnejoghurt 10 %
+Butter       → Butter | Buttermilch | Butterschmalz | Toastbrot | Erdnussmus
+Kürbis       → Kürbis, Hokkaido | Butternusskürbis | Kürbiskerne | Kürbiskernöl
+```
+
+Toastbrot und Erdnussmus bleiben bei „Butter“ mit Absicht: Ihre Suchbegriffe „Buttertoast“ und „Erdnussbutter“ enthalten das Wort. Die vollständige Probe mit allen Prüfwörtern steht in §2.
+
+#### Geänderte Dateien
+
+`src/modules/nutrition/calc/foodSearch.ts` (Stufe 8), `src/modules/nutrition/calc/foodTerms.ts` (zwei falsche Freunde, „Gehacktes“ gestrichen), `src/modules/nutrition/calc/foodSearch.test.ts` (drei Tests), `docs/decisions.md` (D-357), `docs/testing.md`, `docs/implementation-plan.md`, dieser Bericht.
+
+#### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/foodSearch.test.ts` | 19 bestanden (16 bisherige unverändert, 3 neue) |
+| Gegenprobe: die drei neuen Tests gegen die Suche aus D-356 | 3 von 3 fehlgeschlagen, die 16 bisherigen bestanden |
+| `pnpm test` | 117 Dateien, 1005 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB (unverändert) |
+| E2E `nutrition.spec.ts` und `nutrition-ring.spec.ts`, Chromium Desktop und Pixel 7 | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
 | WebKit | in der CI zum Commit |

@@ -23,7 +23,8 @@ export const SYNONYM_GROUPS: readonly (readonly string[])[] = [
   ['Schlagsahne', 'Schlagobers'],
   ['saure Sahne', 'Sauerrahm'],
   ['Kaffeesahne', 'Kaffeeobers'],
-  ['Hackfleisch', 'Faschiertes', 'Gehacktes'],
+  // Ohne „Gehacktes“: Dessen Einzahlform „gehackte“ träfe „gehackte Mandeln“ (D-357).
+  ['Hackfleisch', 'Faschiertes'],
   ['Brötchen', 'Semmel'],
   ['Hefe', 'Germ'],
   ['Brokkoli', 'Broccoli'],
@@ -83,8 +84,8 @@ export const IRREGULAR_PLURALS: Readonly<Record<string, string>> = {
 /**
  * Falsche Freunde: Wörter, in denen ein anderes Lebensmittelwort steckt, ohne dass sie es meinen
  * („Apfel“ in Erdapfel, Granatapfel und Apfelsine, „Lachs“ in Seelachs, „Lauch“ in Knoblauch,
- * „Eis“ in Reis und Paradeiser). Ein Teiltreffer in einem solchen Wort zählt nicht; als ganzes
- * Wort werden sie natürlich gefunden.
+ * „Eis“ in Reis und Paradeiser, „Obers“ in Oberschenkel). Ein Teiltreffer in einem solchen Wort
+ * zählt nicht; als ganzes Wort werden sie natürlich gefunden.
  */
 export const FALSE_FRIENDS: readonly string[] = [
   'Erdapfel',
@@ -95,6 +96,8 @@ export const FALSE_FRIENDS: readonly string[] = [
   'Eierschwammerl',
   'Muskatnuss',
   'Butternuss',
+  'Butternut',
+  'Oberschenkel',
   'Seelachs',
   'Bärlauch',
   'Schnittlauch',

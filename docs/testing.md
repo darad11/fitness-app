@@ -1370,3 +1370,17 @@ Neue Lebensmittelsuche (D-356, AK-NUT-14). Bericht: `form-ernaehrung-report.md` 
 | Gegenprobe: neuer E2E-Test „Suche: Mehrzahl, Umlautschreibweise und Synonyme …“ gegen die alte Suche | 2 von 2 fehlgeschlagen („Expected pattern: /^Tomate roh/“) |
 | Laufzeit (Node, vorübergehender Lauf) | Index 7.140 Einträge 147 ms; Suche über 12.140 Einträge Median 23,0 ms, höchstens 43,4 ms |
 | WebKit | in der CI zum Commit |
+
+### Ernährung §1, Nachtrag: ganzes Wort vor Grundwort · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Stufe 8 für das ganze Wort am Anfang des Namens, falsche Freunde „Oberschenkel“ und „Butternut“, Synonym „Gehacktes“ gestrichen (D-357). Bericht: `form-ernaehrung-report.md` Abschnitt 3, Nachtrag.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/foodSearch.test.ts` | 19 bestanden |
+| Gegenprobe: drei neue Tests gegen die Suche aus D-356 | 3 von 3 fehlgeschlagen |
+| `pnpm test` | 117 Dateien, 1005 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI zum Commit |

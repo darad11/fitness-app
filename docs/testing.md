@@ -1384,3 +1384,17 @@ Stufe 8 für das ganze Wort am Anfang des Namens, falsche Freunde „Oberschenke
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
 | E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
 | WebKit | in der CI zum Commit |
+
+### Ernährung §2: Auswahlliste aus dem BLS 4.0 · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+`docs/lebensmittel-auswahl.csv` mit 354 Zeilen zur Durchsicht, Prüfung `tools/lebensmittel_auswahl.py` in `pnpm check:docs` (D-358). Bericht: `form-ernaehrung-report.md` Abschnitt 4.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` | 354 Einträge geprüft |
+| Gegenprobe mit drei absichtlichen Fehlern | 3 Fehler gemeldet, Exit-Code 1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 117 Dateien, 1005 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| E2E, ganze Suite (Chromium Desktop und Pixel 7) | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI zum Commit |

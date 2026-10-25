@@ -8,6 +8,9 @@ import { expect, openPage, test } from './fixtures';
  * Stück → Nährwerte prüfen → hinzufügen.
  */
 
+/** Richtwert für 1 Apfel aus der Liste (essbarer Anteil, D-365). */
+const APFEL_G = 158;
+
 const firstResult = (page: Page) =>
   page
     .getByRole('list', { name: /Treffer$/ })
@@ -48,7 +51,7 @@ test('Grundauswahl: Suche nach Einzahl, Mehrzahl, Umlautschreibweise und österr
   await expect(firstResult(page)).toHaveAccessibleName(/^Erdäpfel, roh/);
 });
 
-test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte sofort (D-362)', async ({
+test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte sofort (D-362, D-365)', async ({
   page,
 }) => {
   test.slow();
@@ -70,11 +73,17 @@ test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte 
   await page.getByLabel('Lebensmittel suchen').fill('Eier');
   await page.getByRole('button', { name: /^Ei\s*BLS/ }).click();
   const dialog = page.getByRole('dialog', { name: 'Ei hinzufügen' });
-  // Stückgewicht aus der Liste: „Stück“ vorgewählt, sichtbar und änderbar.
+  // Richtwert vorgewählt: „1 Stück · ca. 51 g“; Plus zählt in halben Stück.
   await expect(dialog.getByRole('radio', { name: 'Stück' })).toBeChecked();
-  await expect(dialog.getByText('1 Stück = 51 g · Größe M')).toBeVisible();
-  await expect(dialog.getByRole('button', { name: 'Gewicht ändern' })).toBeVisible();
-  await dialog.getByLabel('Anzahl (Stück)').fill('2');
+  await expect(dialog.getByText('1 Stück · ca. 51 g')).toBeVisible();
+  await expect(dialog.getByText(/^Richtwert: 51 g je Stück/)).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Gewicht anpassen' })).toBeVisible();
+  const more = dialog.getByRole('button', { name: 'Anzahl erhöhen' });
+  await more.click();
+  await expect(dialog.getByText('1,5 Stück · ca. 77 g')).toBeVisible();
+  await more.click();
+  await expect(dialog.getByLabel('Anzahl (Stück)')).toHaveValue('2');
+  await expect(dialog.getByText('2 Stück · ca. 102 g')).toBeVisible();
   await expect(dialog.getByRole('status')).toHaveText('138 kcal');
   const table = dialog.getByRole('table', { name: 'Nährwerte' });
   await expect(table.getByRole('columnheader', { name: 'für 2 Stück' })).toBeVisible();
@@ -93,7 +102,7 @@ test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte 
   await expect(extras).toContainText('2,5 / 20 g');
 });
 
-test('Grundauswahl: Stückgewicht einmal angeben, nach Neuladen gemerkt (D-362)', async ({
+test('Grundauswahl: Apfel mit einem Tipp, eigenes Gewicht nach Neuladen gemerkt, zurücksetzbar (D-365)', async ({
   page,
 }) => {
   test.slow();
@@ -101,32 +110,61 @@ test('Grundauswahl: Stückgewicht einmal angeben, nach Neuladen gemerkt (D-362)'
   await page.getByLabel('Lebensmittel suchen').fill('Äpfel');
   await page.getByRole('button', { name: /^Apfel\s*BLS/ }).click();
   let dialog = page.getByRole('dialog', { name: 'Apfel hinzufügen' });
-  await expect(dialog.getByRole('radio', { name: 'g' })).toBeChecked();
-  await dialog.getByText('Stück', { exact: true }).click();
-  const weight = dialog.getByLabel('Gewicht für 1 Stück in g');
-  await expect(dialog.getByText(/Am genauesten ist eine Küchenwaage/)).toBeVisible();
-  await expect(weight).toBeFocused();
-  // Barrierefreiheit des Dialogs mit Umschaltung, Gewichtsfeld und Quelle.
-  const axe = await new AxeBuilder({ page })
-    .include('dialog[open]')
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
+  // Richtwert vorgewählt, keine Frage nach dem Gewicht: ein Tipp auf „Hinzufügen“ genügt.
+  await expect(dialog.getByRole('radio', { name: 'Stück' })).toBeChecked();
+  await expect(dialog.getByText(`1 Stück · ca. ${APFEL_G} g`)).toBeVisible();
+  await expect(dialog.getByLabel('Gewicht für 1 Stück in g')).toHaveCount(0);
+  // Barrierefreiheit des Dialogs mit Umschaltung, Zähler, Richtwert und Quelle.
+  const tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+  const axe = await new AxeBuilder({ page }).include('dialog[open]').withTags(tags).analyze();
   expect(axe.violations.map((violation) => violation.id)).toEqual([]);
-  await weight.fill('180');
-  await expect(dialog.getByRole('status')).toHaveText('104 kcal');
   await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
+  await expect(
+    page.getByRole('region', { name: 'Snacks' }).getByText(`1 × Stück (${APFEL_G} g)`),
+  ).toBeVisible();
+
+  // „Gewicht anpassen“: Feld mit Fokus, beim Hinzufügen gemerkt.
+  await openAdd(page, 'snacks');
+  await page.getByLabel('Lebensmittel suchen').fill('Apfel');
+  await page.getByRole('button', { name: /^Apfel\s*BLS/ }).click();
+  dialog = page.getByRole('dialog', { name: 'Apfel hinzufügen' });
+  await dialog.getByRole('button', { name: 'Gewicht anpassen' }).click();
+  const weight = dialog.getByLabel('Gewicht für 1 Stück in g');
+  await expect(weight).toBeFocused();
+  const axeAdjust = await new AxeBuilder({ page }).include('dialog[open]').withTags(tags).analyze();
+  expect(axeAdjust.violations.map((violation) => violation.id)).toEqual([]);
+  await weight.fill('180');
+  await expect(dialog.getByText('1 Stück · ca. 180 g')).toBeVisible();
+  await expect(dialog.getByRole('status')).toHaveText('104 kcal');
+  await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
   await expect(
     page.getByRole('region', { name: 'Snacks' }).getByText('1 × Stück (180 g)'),
   ).toBeVisible();
 
+  // Nach Neuladen zeigt der nächste Apfel das eigene Gewicht; zurücksetzen geht.
   await page.reload();
   await openAdd(page, 'snacks');
   await page.getByLabel('Lebensmittel suchen').fill('Apfel');
   await page.getByRole('button', { name: /^Apfel\s*BLS/ }).click();
   dialog = page.getByRole('dialog', { name: 'Apfel hinzufügen' });
   await expect(dialog.getByRole('radio', { name: 'Stück' })).toBeChecked();
-  await expect(dialog.getByText('1 Stück = 180 g')).toBeVisible();
+  await expect(dialog.getByText('1 Stück · ca. 180 g')).toBeVisible();
+  await expect(
+    dialog.getByText(`Dein Gewicht: 180 g je Stück, Richtwert ${APFEL_G} g`),
+  ).toBeVisible();
+  await dialog.getByRole('button', { name: 'Auf Richtwert zurücksetzen' }).click();
+  await expect(dialog.getByText(`1 Stück · ca. ${APFEL_G} g`)).toBeVisible();
+});
+
+test('Grundauswahl: ohne Richtwert nur Gramm, ohne Frage (D-365)', async ({ page }) => {
+  await openAdd(page, 'lunch');
+  await page.getByLabel('Lebensmittel suchen').fill('Kürbis');
+  await page.getByRole('button', { name: /^Kürbis, Hokkaido\s*BLS/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Kürbis, Hokkaido hinzufügen' });
+  await expect(dialog.getByLabel('Menge in g')).toHaveValue('100');
+  await expect(dialog.getByRole('radio')).toHaveCount(0);
+  await expect(dialog.getByText(/Stück|Richtwert/)).toHaveCount(0);
 });
 
 test('Grundauswahl: offline suchen und eintragen (D-362)', async ({ page, context }) => {
@@ -145,6 +183,7 @@ test('Grundauswahl: offline suchen und eintragen (D-362)', async ({ page, contex
   await page.getByLabel('Lebensmittel suchen').fill('Paradeiser');
   await page.getByRole('button', { name: /^Paradeiser\s*BLS/ }).click();
   const dialog = page.getByRole('dialog', { name: 'Paradeiser hinzufügen' });
+  await dialog.getByText('Gramm', { exact: true }).click();
   await dialog.getByLabel('Menge in g').fill('150');
   await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
   await expect(

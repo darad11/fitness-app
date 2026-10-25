@@ -156,20 +156,27 @@ export const tNutrition = {
   /** Grundauswahl (Phase Ernährung §6, D-362): Menge in g oder Stück, Stückgewicht, Quelle. */
   basic: {
     unitLegend: 'Menge in',
-    grams: 'g',
+    grams: 'Gramm',
     count: (unit: string) => `Anzahl (${unit})`,
     /** „1 Scheibe“, „2 Scheiben“, „1,5 Scheiben“, „2 Stück“. */
     pieces: (count: number, countText: string, unit: string) =>
       `${countText} ${count === 1 ? unit : (UNIT_PLURAL[unit] ?? unit)}`,
-    pieceIs: (unit: string, grams: string) => `1 ${unit} = ${grams} g`,
-    ownPiece: (grams: string) => `dein Wert, in der Liste ${grams} g`,
-    changePiece: 'Gewicht ändern',
+    fewer: 'Anzahl verringern',
+    more: 'Anzahl erhöhen',
+    /** Vorauswahl mit Richtwert (D-365): „1 Stück · ca. 150 g“. */
+    summary: (pieces: string, grams: string) => `${pieces} · ca. ${grams} g`,
+    richtwert: (grams: string, unit: string, hint?: string) =>
+      `Richtwert: ${grams} g je ${unit}${hint ? `, ${hint}` : ''}`,
+    own: (grams: string, unit: string, listed: string) =>
+      `Dein Gewicht: ${grams} g je ${unit}, Richtwert ${listed} g`,
+    adjust: 'Gewicht anpassen',
+    reset: 'Auf Richtwert zurücksetzen',
     pieceLabel: (unit: string) => `Gewicht für 1 ${unit} in g`,
-    pieceAsk:
-      'Am genauesten ist eine Küchenwaage. FORM merkt sich das Gewicht für dieses Lebensmittel, du kannst es jederzeit ändern.',
-    listPiece: (grams: string) => `In der Liste: ${grams} g`,
+    adjustHint:
+      'FORM merkt sich dein Gewicht beim Hinzufügen und zeigt es beim nächsten Mal statt des Richtwerts.',
     invalidPiece: 'Bitte gib ein Gewicht zwischen 0,1 und 5.000 g ein.',
     invalidCount: 'Bitte gib eine Anzahl größer als 0 ein, höchstens 100.',
+    invalidHalf: 'Bitte gib die Anzahl in ganzen oder halben Schritten an, höchstens 100.',
     source: {
       bls: (code: string, name: string) => `Quelle: BLS 4.0, ${code} „${name}“`,
       usda: (code: string, name: string) =>

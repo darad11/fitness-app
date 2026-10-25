@@ -24,13 +24,14 @@ export interface NutrientColumn {
 }
 
 /**
- * Feste Breite der Wertespalten (D-364): „je 100 g“ braucht höchstens „je 100 ml“ oder
- * „899 kcal“, „für x g“ auch „für 1,5 Stück“ oder „3 735 kcal“. Köpfe und Werte brechen nie um;
- * ist ein Wert doch breiter, wird seine Spalte breiter. Die Namen bekommen den Rest der Breite,
- * bei 360 pt genug für „davon gesättigte“ in der ersten Zeile.
+ * Feste Breite der Wertespalten (D-364, angepasst mit D-365): „je 100 g“ 3,75 rem für „je 100 g“
+ * oder „899 kcal“, „für x g“ 6,25 rem mit 0,5 rem Abstand nach links für „für 1,5 Stück“,
+ * „für 1 Scheibe“ oder „3 735 kcal“. Köpfe und Werte brechen nie um; ist ein Wert doch breiter
+ * (etwa „für 2 Scheiben“), wird seine Spalte breiter, der Abstand bleibt. Die Namen bekommen den
+ * Rest der Breite, bei 360 pt genug für „davon gesättigte“ in der ersten Zeile.
  */
 function columnWidth(index: number): string {
-  return index === 0 ? 'w-[4.25rem]' : 'w-[5.75rem]';
+  return index === 0 ? 'w-[3.75rem]' : 'w-[6.25rem] pl-2';
 }
 
 /**

@@ -38,20 +38,37 @@ describe('Grundauswahl (Phase Ernährung §6, D-362)', () => {
     expect(byName('Pfefferoni').id).toBe(stableId('usda:11670'));
   });
 
-  it('übernimmt Stückgewichte, Einheiten, Hinweise und Suchbegriffe aus der Liste', () => {
+  it('übernimmt Richtwerte, Einheiten, Hinweise und Suchbegriffe aus der Liste (D-365)', () => {
     expect(byName('Ei').basic).toMatchObject({
       unit: 'Stück',
       listPieceGrams: 51,
-      pieceHint: 'Größe M',
+      pieceHint: 'Größe M, ohne Schale',
     });
     expect(byName('Semmel').basic).toMatchObject({
       listPieceGrams: 46,
-      pieceHint: 'Mindestgewicht, anpassbar',
+      pieceHint: 'Mindestgewicht laut Codex',
     });
-    expect(byName('Apfel').basic).toMatchObject({ unit: 'Stück' });
-    expect(byName('Apfel').basic?.listPieceGrams).toBeUndefined();
-    expect(byName('Kochschinken').basic?.unit).toBe('Scheibe');
-    expect(byName('Brokkoli').basic?.unit).toBeUndefined();
+    expect(byName('Apfel').basic).toMatchObject({
+      unit: 'Stück',
+      listPieceGrams: 158,
+      pieceHint: 'ohne Kerngehäuse',
+    });
+    expect(byName('Banane').basic).toMatchObject({ listPieceGrams: 120, pieceHint: 'ohne Schale' });
+    expect(byName('Knoblauch').basic).toMatchObject({ unit: 'Zehe', listPieceGrams: 2 });
+    expect(byName('Schwarzbrot').basic).toMatchObject({ unit: 'Scheibe', listPieceGrams: 50 });
+    expect(byName('Gouda').basic).toMatchObject({ unit: 'Scheibe', listPieceGrams: 20 });
+    // Ohne Richtwert keine Einheit: nur Gramm, ohne Frage.
+    for (const name of ['Kochschinken', 'Mandarine', 'Toastbrot', 'Brokkoli', 'Kürbis, Hokkaido']) {
+      expect(byName(name).basic?.unit, name).toBeUndefined();
+      expect(byName(name).basic?.listPieceGrams, name).toBeUndefined();
+    }
+    // Jede Einheit hat einen Richtwert und umgekehrt; 47 Richtwerte.
+    const withUnit = foods.filter((food) => food.basic?.unit !== undefined);
+    expect(withUnit.every((food) => (food.basic?.listPieceGrams ?? 0) > 0)).toBe(true);
+    expect(foods.filter((food) => food.basic?.listPieceGrams !== undefined)).toHaveLength(47);
+    expect(new Set(withUnit.map((food) => food.basic?.unit))).toEqual(
+      new Set(['Stück', 'Scheibe', 'Zehe']),
+    );
     expect(byName('Zwiebel').aliases).toContain('rote Zwiebel');
     expect(byName('Magermilch').aliases).toEqual(['Milch 0,5 %', 'entrahmte Milch']);
   });
@@ -142,6 +159,16 @@ describe('Grundauswahl (Phase Ernährung §6, D-362)', () => {
     expect(() => parseBasicFoods({ ...data, version: 2 })).toThrow();
     expect(() => parseBasicFoods(changed(0, 'oenwt'))).toThrow();
     expect(() => parseBasicFoods(changed(5, 'Laib'))).toThrow();
+    // Einheit und Richtwert nur zusammen (D-365); „Stange“ und „Kolben“ gibt es nicht mehr.
+    expect(() => parseBasicFoods(changed(5, 'Stück'))).toThrow(/Einheit und Richtwert/);
+    expect(() => parseBasicFoods(changed(6, 120))).toThrow(/Einheit und Richtwert/);
+    const withUnit = (unit: string, grams: number): BasicFoodsFile => ({
+      ...data,
+      foods: [row.map((old, i) => (i === 5 ? unit : i === 6 ? grams : old))],
+    });
+    expect(parseBasicFoods(withUnit('Stück', 120))[0]?.basic?.listPieceGrams).toBe(120);
+    expect(() => parseBasicFoods(withUnit('Stange', 120))).toThrow(/Einheit/);
+    expect(() => parseBasicFoods(withUnit('Stück', 5001))).toThrow(/Einheit und Richtwert/);
     expect(() => parseBasicFoods(changed(8, ['fiber']))).toThrow(/0 sein/);
     expect(() => parseBasicFoods(changed(9, 1200))).toThrow();
     expect(() => parseBasicFoods({ ...data, foods: [row, row] })).toThrow(/doppelt/);

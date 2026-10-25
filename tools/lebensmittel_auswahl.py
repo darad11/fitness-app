@@ -10,9 +10,10 @@ tools/data/usda-sr28-auswahl.json:
   - BLS-Code vorhanden und BLS-Bezeichnung wortgleich mit dem BLS,
   - ohne BLS-Code: Quelle „USDA SR28 <Nummer> „<Bezeichnung>“ …“ (Nummer und Bezeichnung wie im
     Auszug) oder „fehlt im BLS …“ (dann nicht in der App),
-  - Einheit leer oder eine der festen Einheiten; Stückgewicht nur mit Einheit, als positive Zahl
-    und mit Herkunft; eine Einheit ohne Stückgewicht hat die Herkunft „offen …“; ein Hinweis nur
-    mit Einheit,
+  - Richtwerte (D-365): Einheit (Stück oder Scheibe, beim Knoblauch Zehe) und Stückgewicht nur
+    zusammen, das Gewicht als positive Zahl mit Herkunft; keine Einheit ohne Richtwert, kein
+    „offen“; die Herkunft nennt eine europäische Quelle (USDA nur als Gegenprobe, nie allein); ein
+    Hinweis nur mit Einheit,
   - abgeleitete Werte (Regel D-361): nur 0 g für einen Wert, der in der Quelle fehlt; Ballaststoffe
     bei rein tierischen Lebensmitteln und reinen Fetten, Eiweiß und Kohlenhydrate bei reinen Fetten
     (Gruppe Öle und Fette, mindestens 99 g Fett); wo die Regel greift, ist sie auch angewandt.
@@ -51,7 +52,7 @@ GROUPS = [
     "Milch und Milchprodukte", "Fleisch", "Geflügel", "Wurst und Schinken", "Fisch",
     "Nüsse und Samen", "Öle und Fette", "Zucker, Honig und Marmelade", "Getränke",
 ]
-UNITS = ["Stück", "Scheibe", "Zehe", "Stange", "Kolben"]
+UNITS = ["Stück", "Scheibe", "Zehe"]
 HINT_MAX = 40
 SOURCE_BLS = "BLS 4.0"
 MISSING_PREFIX = "fehlt im BLS"
@@ -213,10 +214,12 @@ def check(rows: list[dict[str, str]], bls: dict[str, dict[str, object]],
                 errors.append(f"{where}: Stückgewicht „{weight}“ ist keine positive Zahl")
             if not origin or origin.startswith("offen"):
                 errors.append(f"{where}: Stückgewicht ohne Herkunft")
-        elif unit and not origin.startswith("offen"):
-            errors.append(f"{where}: Einheit ohne Stückgewicht braucht die Herkunft „offen …“")
-        elif not unit and origin:
-            errors.append(f"{where}: Herkunft des Stückgewichts ohne Einheit")
+            elif origin.startswith("USDA"):
+                errors.append(f"{where}: Herkunft nur aus USDA; USDA gilt nur als Gegenprobe")
+        elif unit:
+            errors.append(f"{where}: Einheit ohne Richtwert (ohne Richtwert nur Gramm)")
+        elif origin:
+            errors.append(f"{where}: Herkunft des Stückgewichts ohne Richtwert")
         if hint and not unit:
             errors.append(f"{where}: Hinweis ohne Einheit")
         if len(hint) > HINT_MAX:
@@ -226,8 +229,8 @@ def check(rows: list[dict[str, str]], bls: dict[str, dict[str, object]],
 
 
 def summary(rows: list[dict[str, str]]) -> str:
-    lines = ["| Gruppe | Einträge | aus dem BLS | aus USDA | nicht in der App | Stückgewicht belegt | Stückgewicht offen |",
-             "|---|---:|---:|---:|---:|---:|---:|"]
+    lines = ["| Gruppe | Einträge | aus dem BLS | aus USDA | nicht in der App | mit Richtwert |",
+             "|---|---:|---:|---:|---:|---:|"]
     total = Counter()
     for group in GROUPS:
         part = [r for r in rows if r["Gruppe"] == group]
@@ -237,13 +240,12 @@ def summary(rows: list[dict[str, str]]) -> str:
             usda=sum(1 for r in part if usda_ref(r)),
             missing=sum(1 for r in part if r["Quelle"].startswith(MISSING_PREFIX)),
             weight=sum(1 for r in part if r["Stückgewicht (g)"]),
-            open=sum(1 for r in part if r["Einheit"] and not r["Stückgewicht (g)"]),
         )
         total.update(counts)
         lines.append(f"| {group} | {counts['all']} | {counts['bls']} | {counts['usda']} | {counts['missing']} | "
-                     f"{counts['weight']} | {counts['open']} |")
+                     f"{counts['weight']} |")
     lines.append(f"| **Summe** | **{total['all']}** | **{total['bls']}** | **{total['usda']}** | "
-                 f"**{total['missing']}** | **{total['weight']}** | **{total['open']}** |")
+                 f"**{total['missing']}** | **{total['weight']}** |")
     usda_rows = [r["Anzeigename"] for r in rows if usda_ref(r)]
     missing = [f"{r['Anzeigename']} ({r['Gruppe']})" for r in rows if r["Quelle"].startswith(MISSING_PREFIX)]
     derived = [f"{r['Anzeigename']}: {r['Abgeleitete Werte']}" for r in rows if r["Abgeleitete Werte"]]

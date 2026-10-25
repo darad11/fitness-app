@@ -21,6 +21,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenproben rot; WebKit zuerst rot am Fokus des Gewichtsfelds, behoben im Nachtrag; CI-Lauf 40171590098 mit allen vier Jobs grün, auch E2E (webkit) |
 | Abschluss §1 „Weitere Nährwerte“ kompakt | je Zeile Name und „Ist / Referenz g“, einzeilig bei 320, 360 und 390 pt; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt | D-363 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
 | Abschluss §2 Nährwerttabelle einzeilig | Köpfe und Werte einzeilig in festen Spalten, rechtsbündig; zweite Spalte „für x g“ bzw. „für x Stück“ nur, wenn die Menge von 100 g abweicht | D-364 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
+| Abschluss §3 Stückgewichte als Richtwerte | 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, ein Tipp trägt ein; Plus und Minus in halben Stück; „Gewicht anpassen“ gemerkt und zurücksetzbar; ohne Richtwert nur Gramm, keine Frage mehr | D-365 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenproben rot; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -701,4 +702,120 @@ Neu: `src/modules/nutrition/ui/ExtrasPanel.tsx`, `docs/prompts/ernaehrung-abschl
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `narrow-layout.spec.ts` (neu: „Nährwerttabelle: Köpfe und Werte einzeilig, Feta 100 g eine Spalte, 150 g zwei“ bei 360 und 390 pt, mit 150 und 1.500 g und gleichen Spaltenbreiten) | 2 bestanden (Pixel 7), im Desktop-Projekt übersprungen |
 | E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` | 105 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI nach dem Push |
+
+---
+
+## 13. Abschluss §3: Stückgewichte als Richtwerte, vorausgewählt (D-365)
+
+### Ergebnis in der App
+
+| Punkt | Umsetzung |
+|---|---|
+| Vorauswahl | Mit Richtwert ist „Stück“ bzw. „Scheibe“ mit Anzahl 1 vorgewählt: „1 Stück · ca. 158 g“, darunter „Richtwert: 158 g je Stück, ohne Kerngehäuse“. Ein Tipp auf „Hinzufügen“ trägt ein |
+| Menge | Minus und Plus neben dem Feld zählen in halben Schritten (0,5 bis 100), z. B. Ei 1 → 1,5 → 2: „2 Stück · ca. 102 g“. Andere Zahlen (etwa 1,3) weist der Dialog mit Hinweis ab. „Gramm“ bleibt wählbar und übernimmt die Menge |
+| Eigenes Gewicht | „Gewicht anpassen“ öffnet „Gewicht für 1 Stück in g“ mit dem geltenden Wert und Fokus. Beim Hinzufügen merkt sich die App den Wert (Einstellungen, wie bisher); beim nächsten Apfel steht „1 Stück · ca. 180 g“ und „Dein Gewicht: 180 g je Stück, Richtwert 158 g“. „Auf Richtwert zurücksetzen“ nimmt ihn beim Hinzufügen zurück |
+| Ohne Richtwert | nur Gramm, ohne „Stück“ und ohne Frage (z. B. Kürbis, Mandarine, Toastbrot). Die einmalige Frage mit dem Hinweis auf die Küchenwaage ist entfernt |
+| Nährwerttabelle | zweite Spalte „für 1 Stück“, „für 2 Stück“, „für 1,5 Scheiben“. Beim Bildschirmfoto mit Schwarzbrot standen „je 100 g“ und „für 1,5 Scheiben“ ohne Abstand aneinander; jetzt haben die Wertespalten 3,75 und 6,25 rem, die zweite mit 0,5 rem Abstand (Nachtrag zu D-364) |
+| Lizenzliste | „Über die App“ nennt unter „Richtwerte je Stück und Scheibe“ die Quellen; USDA „bei den Richtwerten je Stück nur zum Vergleich“ |
+
+### Wie die Werte hergeleitet sind
+
+Reihenfolge laut Auftrag: Stufe 1 BLS oder seine Dokumentation, Stufe 2 Vermarktungsnormen und Österreichisches Lebensmittelbuch, Stufe 3 anerkannte europäische Tabellen; USDA nur als Gegenprobe. Gesucht habe ich per Websuche, mit einer Hilfsrecherche und eigenen Nachprüfungen; die PDFs selbst ließen sich in der Cloud-Sitzung nicht öffnen.
+
+- Stufe 1: Die BLS-Dokumentation nennt keine Stückgewichte, nur „je 100 g essbarer Anteil“.
+- Stufe 2: Ei (Gewichtsklasse M = 53 bis unter 63 g mit Schale) und Semmel (Mindestausbackgewicht 46 g). Die EU-Normen für Obst und Gemüse nennen nur Mindestgrößen und Größenklassen, keine typischen Gewichte.
+- Stufe 3, Hauptquelle: Schweizer Nährwerttabelle 2021 (SGE, BAG, ETH), Tabelle „Durchschnittliche Gewichte verschiedener Lebensmittel (essbarer Anteil)“: „Sofern nicht anders vermerkt, beziehen sich die Angaben immer auf mittelgrosse Exemplare … und den essbaren Anteil“. Viele Werte stammen aus der deutschen BVL-Erhebung 2001/02 (Braunschweig), die nur den verzehrbaren Anteil erhob; beim Apfel und bei der Birne ist das die ganze Frucht ohne Stiel, also mit Kerngehäuse. Deshalb rechne ich dort mit dem essbaren Anteil aus CoFID (UK) heraus.
+- Nachgeprüft: Marillen 50 g sind ohne Kern (BVL 2002: 176 Marillen, 53,6 g gesamt, 50,0 g essbar); Ei, Eiklar und Dotter stehen im Schweizer Ernährungsbulletin 2021 (BLV) mit 51, 35 und 17 g.
+- Offen: Die Fußnoten a und b der Schweizer Tabelle ließen sich nicht lesen. Wahrscheinlich nennen sie die Herkunft (a bei den BVL-Werten); belegt ist nur die Überschrift „essbarer Anteil“.
+
+### Alle 47 Richtwerte
+
+| Lebensmittel | Einheit | Richtwert | Hinweis in der App | Herleitung (Spalte „Herkunft des Stückgewichts“) |
+|---|---|---:|---|---|
+| Apfel | Stück | 158 g | ohne Kerngehäuse | Stufe 3: Schweizer Nährwerttabelle 2021 182 g, das Mittel der BVL-Erhebung 2001/02, gewogen ohne Stiel, also mit Kerngehäuse; × 0,87 essbarer Anteil ohne Kerngehäuse (CoFID, UK) = 158 g. Gegenprobe: NICE (Belgien) 125 g ohne Kerngehäuse, DTU 2013 110 g netto |
+| Avocado | Stück | 168 g | ohne Schale und Kern | Stufe 3: Schweizer Nährwerttabelle 2021 168 g (essbarer Anteil). Gegenprobe: NUBEL (Belgien) 160 g, DTU 2013 145 g netto (mittel; Hass eher kleiner) |
+| Banane | Stück | 120 g | ohne Schale | Stufe 3: Schweizer Nährwerttabelle 2021 120 g (essbarer Anteil). Gegenprobe: BVL-Erhebung 2001/02 115 g geschält, NICE (Belgien) 130 g, DTU 2013 105 g netto |
+| Birne | Stück | 176 g | ohne Kerngehäuse | Stufe 3: Schweizer Nährwerttabelle 2021 207 g (BVL-Erhebung 2001/02, mit Kerngehäuse) × 0,85 essbarer Anteil (CoFID, UK) = 176 g. Gegenprobe: DTU 2013 105 g netto (mittel) |
+| Clementine | Stück | 74 g | ohne Schale | Stufe 3: Schweizer Nährwerttabelle 2021 74 g (essbarer Anteil, aus der BVL-Erhebung 2001/02). Gegenprobe: DTU 2013 65 g netto (mittel), USDA 74 g |
+| Datteln, getrocknet | Stück | 7 g | ohne Kern | Stufe 3: Schweizer Nährwerttabelle 2021 7 g (essbarer Anteil). Gegenprobe: USDA 7,1 g entsteint (Deglet Nour); Medjool-Datteln sind deutlich größer |
+| Kiwi | Stück | 75 g | ohne Schale | Stufe 3: Schweizer Nährwerttabelle 2021 75 g (essbarer Anteil). Gegenprobe: NICE (Belgien) 75 g ohne Schale, USDA 69 g |
+| Marillen | Stück | 50 g | ohne Kern | Stufe 3: Schweizer Nährwerttabelle 2021 50 g; BVL-Erhebung 2002 (176 Marillen): Gesamtgewicht 53,6 g, essbarer Anteil ohne Kern 50,0 g |
+| Nektarine | Stück | 97 g | ohne Kern | Stufe 3: Schweizer Nährwerttabelle 2021 97 g (essbarer Anteil). Gegenprobe: NUBEL (Belgien) 95 g, DTU 2013 115 g netto |
+| Orange | Stück | 169 g | ohne Schale | Stufe 3: Schweizer Nährwerttabelle 2021 169 g (essbarer Anteil, aus der BVL-Erhebung 2001/02). Gegenprobe: DTU 2013 140 g netto (mittel) |
+| Pfirsich | Stück | 128 g | ohne Kern | Stufe 3: Schweizer Nährwerttabelle 2021 128 g (essbarer Anteil). Gegenprobe: NICE (Belgien) 125 g ohne Kern, DTU 2013 140 g netto |
+| Zwetschken | Stück | 30 g | ohne Kern | Stufe 3: Schweizer Nährwerttabelle 2021 30 g (essbarer Anteil). Gegenprobe: BVL 55 g für Pflaumen und Zwetschen gemeinsam (Pflaumen sind größer) |
+| Champignons | Stück | 21 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 21 g |
+| Fenchel | Stück | 286 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 286 g je Knolle (aus der BVL-Erhebung 2001/02). Gegenprobe: USDA 234 g |
+| Gurke | Stück | 458 g | Salatgurke | Stufe 3: Schweizer Nährwerttabelle 2021 458 g (Salatgurke, aus der BVL-Erhebung 2001/02). Gegenprobe: DTU 2013 285 g netto (mittel), USDA 301 g |
+| Karotten | Stück | 62 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 62 g (aus der BVL-Erhebung 2001/02). Gegenprobe: DTU 2013 65 g netto (mittel) |
+| Knoblauch | Zehe | 2 g | geschält | Stufe 3: Schweizer Nährwerttabelle 2021 2 g je Zehe. Gegenprobe: Veggipedia (Niederlande) 2 g; Zehen schwanken je nach Knolle |
+| Kohlrabi | Stück | 265 g | geschält | Stufe 3: Schweizer Nährwerttabelle 2021 265 g (essbarer Anteil, aus der BVL-Erhebung 2001/02) |
+| Paprika, gelb | Stück | 155 g | ohne Stiel und Kerne | Stufe 3: Schweizer Nährwerttabelle 2021 155 g („Peperoni“, essbarer Anteil, ohne Farbangabe) |
+| Paprika, grün | Stück | 155 g | ohne Stiel und Kerne | Stufe 3: Schweizer Nährwerttabelle 2021 155 g („Peperoni“, essbarer Anteil, ohne Farbangabe) |
+| Paprika, rot | Stück | 155 g | ohne Stiel und Kerne | Stufe 3: Schweizer Nährwerttabelle 2021 155 g („Peperoni“, essbarer Anteil, ohne Farbangabe) |
+| Paradeiser | Stück | 96 g | mittelgroß | Stufe 3: Schweizer Nährwerttabelle 2021 96 g (mittelgroß, essbarer Anteil). Gegenprobe: DTU 2013 75 g (mittel) |
+| Radieschen | Stück | 10 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 10 g. Gegenprobe: USDA 9 g (groß) |
+| Rote Rüben | Stück | 135 g | geschält | Stufe 3: Schweizer Nährwerttabelle 2021 135 g („Rande“, essbarer Anteil) |
+| Zucchini | Stück | 210 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 210 g (aus der BVL-Erhebung 2001/02) |
+| Zwiebel | Stück | 83 g | geschält | Stufe 3: Schweizer Nährwerttabelle 2021 83 g (essbarer Anteil). Gegenprobe: DTU 2013 100 g netto (mittel) |
+| Erdäpfel, roh | Stück | 77 g | mittelgroß, geschält | Stufe 3: Schweizer Nährwerttabelle 2021 „Kartoffel, mit Schale“ 90 g × (1 − 0,15 Schälverlust, DTU 2013) = 76,5 g, gerundet 77 g. Gegenprobe: Veggipedia (Niederlande) 70 g geschält |
+| Dinkelbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Knäckebrot | Scheibe | 15 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 15 g. Gegenprobe: DTU 2013 12 g (mittel) |
+| Mehrkornbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Mischbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Reiswaffeln | Stück | 7 g | – | Stufe 3: Voedingscentrum (Niederlande): 1 Stück = 7 g |
+| Roggenbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Roggenvollkornbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Schwarzbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Semmel | Stück | 46 g | Mindestgewicht laut Codex | Stufe 2: Mindestausbackgewicht 46 g laut Österreichischem Lebensmittelbuch, Codex-Kapitel B 18 (auch BMLUK, Seite Kaisersemmel); im Handel oft schwerer; vom Produktinhaber bestätigt am 25.10.2026 |
+| Vollkornbrot | Scheibe | 50 g | – | Stufe 3: Schweizer Nährwerttabelle 2021 „1 Scheibe Brot“ 50 g; DGE 2004: 4 bis 6 Scheiben = 200 bis 300 g. Gegenprobe: DTU 2013 Roggenbrot 45 g (mittel) |
+| Dotter | Stück | 17 g | aus 1 Ei Größe M | Stufe 3: Schweizer Ernährungsbulletin 2021 (BLV), Eier: Eigelb 17 g je Ei. Gegenprobe: 30 % von 58 g (DTU 2013) = 17 g, USDA 17 g (large) |
+| Ei | Stück | 51 g | Größe M, ohne Schale | Stufe 2 und 3: Gewichtsklasse M = 53 bis unter 63 g mit Schale (Delegierte VO (EU) 2023/2465); Schweizer Ernährungsbulletin 2021 (BLV), Eier: Ei ohne Schale 51 g. Gegenprobe: Klassenmitte 58 g × 0,90 (Schale etwa 10 %, DTU 2013) = 52 g, USDA 50 g (large) |
+| Ei, gekocht | Stück | 51 g | Größe M, ohne Schale | wie Ei: Schweizer Ernährungsbulletin 2021 (BLV) 51 g ohne Schale, Größe M; vom Produktinhaber bestätigt am 25.10.2026 |
+| Eiklar | Stück | 35 g | aus 1 Ei Größe M | Stufe 3: Schweizer Ernährungsbulletin 2021 (BLV), Eier: Eiweiss 35 g je Ei. Gegenprobe: 60 % von 58 g (DTU 2013) = 35 g, USDA 33 g (large) |
+| Bergkäse | Scheibe | 20 g | dünne Scheibe | Stufe 3: DTU 2013 (Dänemark) Käse in Scheiben 20 g; NICE (Belgien) 1 Scheibe als Belag 20 g |
+| Edamer | Scheibe | 20 g | dünne Scheibe | Stufe 3: DTU 2013 (Dänemark) Käse in Scheiben 20 g; NICE (Belgien) 1 Scheibe als Belag 20 g |
+| Emmentaler | Scheibe | 20 g | dünne Scheibe | Stufe 3: DTU 2013 (Dänemark) Käse in Scheiben 20 g; NICE (Belgien) 1 Scheibe als Belag 20 g |
+| Gouda | Scheibe | 20 g | dünne Scheibe | Stufe 3: DTU 2013 (Dänemark) Käse in Scheiben 20 g; NICE (Belgien) 1 Scheibe als Belag 20 g |
+| Tilsiter | Scheibe | 20 g | dünne Scheibe | Stufe 3: DTU 2013 (Dänemark) Käse in Scheiben 20 g; NICE (Belgien) 1 Scheibe als Belag 20 g |
+| Trappistenkäse | Scheibe | 20 g | dünne Scheibe | Stufe 3: DTU 2013 (Dänemark) Käse in Scheiben 20 g; NICE (Belgien) 1 Scheibe als Belag 20 g |
+
+### Gestrichen: keine Einheit mehr, nur Gramm
+
+| Lebensmittel | Grund |
+|---|---|
+| Mandarine | Schweizer Tabelle 40 g, Belgien 60 g: widersprüchlich. Clementine hat einen Richtwert |
+| Zitrone, Limette | meist nur der Saft verwendet; keine Stückangabe aus AT, DE oder CH |
+| Mango | Größenklassen 200 bis 800 g, stark sortenabhängig |
+| Weckerl (Roggenweckerl, Mehrkornweckerl, Vollkornsemmel) | der Codex nennt nur für die Semmel ein Gewicht; keine Tabelle gefunden |
+| Laugengebäck | im Handel 63 bis 130 g |
+| Toastbrot, Vollkorntoast | Dänemark 30 und 35 g gegen deutsche KE-Tabelle 20 und 25 g; die Packung nennt das Gewicht |
+| Kochschinken | Schweiz 30 g gegen Belgien 45 g |
+| Erdäpfel gekocht, in der Schale gekocht, Ofenerdäpfel | keine Quelle für das Gewicht nach dem Kochen; nur „Erdäpfel, roh“ hat einen Richtwert |
+| 29 weitere, vorher „offen“ | keine belastbare europäische Stückangabe oder zu große Spanne: Dörrmarillen, Dörrzwetschken, Feigen frisch und getrocknet, Granatapfel, Grapefruit, Kaki, Maracuja, Papaya, Ringlotten, Essiggurkerl, Jungzwiebel, Mais, Melanzani, Pastinaken, Petersilwurzel, Pfefferoni, Porree, Rettich, Rote Rüben gekocht, Schalotte, Sellerie, Stangensellerie, Süßkartoffel, Baguette, Weißbrot, Frankfurter, Leberkäse, Rohschinken |
+
+### Daten, Prüfung, Migration
+
+- Liste: 47 Richtwerte, Einheiten nur noch Stück, Scheibe und Zehe. `tools/lebensmittel_auswahl.py --check` verlangt Einheit und Richtwert zusammen, eine Herkunft, die nicht allein auf USDA beruht, und kein „offen“. Gegenprobe mit acht absichtlichen Fehlern: 8 von 8 gemeldet.
+- App-Datei: `basicFoods.json` neu erzeugt; das Laden lehnt eine Einheit ohne Richtwert und „Stange“ oder „Kolben“ ab.
+- Keine Migration, kein neues Feld: Gemerkte Gewichte bleiben in `pieceWeights`. Gewichte für Lebensmittel ohne Richtwert bleiben dort liegen und gelten nicht. Rückfall: D-365 zurücknehmen, dann gilt wieder D-362.
+
+### Geänderte Dateien
+
+Liste und Daten: `docs/lebensmittel-auswahl.csv` (47 Richtwerte mit Herleitung, 43 Einheiten entfernt), `src/modules/nutrition/data/basicFoods.json` (neu erzeugt), `tools/lebensmittel_auswahl.py` (Regeln für Richtwerte). App: `src/modules/nutrition/ui/LogDialog.tsx`, `NutrientTable.tsx`, `calc/pieces.ts` (halbe Schritte, Stück nur mit Richtwert), `model/basicFood.ts`, `data/basicFoods.ts`, `service/pieceWeightService.ts`, `src/shared/i18n/de-nutrition.ts` und `de-more.ts`. Tests: `nutrition-ui.test.tsx`, `basicFoods.test.ts`, `pieces.test.ts`, `pieceWeightService.test.ts`, `src/app/app.test.tsx`, `e2e/basic-foods.spec.ts`, `e2e/narrow-layout.spec.ts`. Unterlagen: `docs/decisions.md` (D-365, Nachtrag in D-364), `docs/requirements.md` (AK-NUT-18, AK-NUT-19), `docs/feature-inventory.md` und `.csv` (NU-29, Version 0.25), `docs/licenses-data.md`, `docs/known-limitations.md`, `docs/data-model.md`, `docs/implementation-plan.md`, `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `nutrition-ui.test.tsx` | 23 bestanden, davon neu oder neu gefasst: Ei mit „1 Stück · ca. 51 g“, Plus in halben Stück bis „2 Stück · ca. 102 g“; Apfel mit einem Tipp (158 g), „Gewicht anpassen“ mit Fokus, gemerkt, beim nächsten Apfel „Dein Gewicht“, zurückgesetzt; Wechsel zu Gramm mit 102 g, „1,3“ abgelehnt; Kürbis nur Gramm ohne Frage. Der Test zum Fokus nach dem Tipp aufs Optionsfeld (WebKit) entfällt mit der Frage |
+| `basicFoods.test.ts`, `pieces.test.ts`, `pieceWeightService.test.ts`, `app.test.tsx` | 22, 6, 6 und 26 bestanden: Richtwerte, Hinweise und Einheiten aus der Liste, 47 Richtwerte, keine Einheit ohne Richtwert; halbe Schritte; Merken nur mit Richtwert; Lizenzliste mit den neuen Quellen |
+| Gegenprobe: die neuen Dialog-Tests gegen den alten Dialog | 3 von 4 fehlgeschlagen; der vierte (Kürbis nur Gramm) besteht auch mit dem alten Dialog, weil die neue Liste dort keine Einheit mehr hat |
+| Gegenprobe: Listenprüfung mit acht absichtlichen Fehlern | 8 von 8 gemeldet |
+| `pnpm test` | 122 Dateien, 1069 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB; Grundauswahl als eigener Teil 47,4 KB |
+| E2E `basic-foods.spec.ts` (Ei mit Plus, Apfel mit einem Tipp, eigenes Gewicht nach Neuladen, zurücksetzen, axe für den Dialog mit und ohne Gewichtsfeld; Kürbis nur Gramm; offline), `narrow-layout.spec.ts` (neu: „für 1,5 Scheiben“ einzeilig mit Abstand bei 360 und 390 pt), `nutrition`, `nutrition-ring`, `network-a11y` | 109 bestanden, 15 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: Abstandstest gegen die Tabelle aus D-364 | bei 360 pt fehlgeschlagen („Abstand zwischen den Köpfen“, Received: 0) |
 | WebKit | in der CI nach dem Push |

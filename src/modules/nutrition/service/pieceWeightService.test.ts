@@ -33,10 +33,11 @@ const food = (id: string, extra: Partial<NonNullable<FoodItem['basic']>> = {}): 
   basic: { origin: 'bls', code: 'X', sourceName: id, unit: 'Stück', derived: [], ...extra },
 });
 
-const APFEL = food('00000000-0000-5000-8000-000000000002');
+// Gewichte hier sind Testwerte, keine Richtwerte der Liste.
+const APFEL = food('00000000-0000-5000-8000-000000000002', { listPieceGrams: 150 });
 const EI = food('00000000-0000-5000-8000-000000000001', { listPieceGrams: 51 });
 
-describe('Stückgewicht merken (D-362)', () => {
+describe('Stückgewicht merken (D-362, D-365)', () => {
   it('speichert das Gewicht je Lebensmittel in den Einstellungen', async () => {
     expect(await savePieceWeight(rt, APFEL, 180)).toBe(true);
     expect(await savePieceWeight(rt, EI, 60)).toBe(true);
@@ -68,13 +69,16 @@ describe('Stückgewicht merken (D-362)', () => {
     expect((await rt.db.singletons.get(SETTINGS_ID))?.futureField).toBe('bleibt');
   });
 
-  it('lehnt ungültige Gewichte und Lebensmittel ohne Einheit ab', async () => {
+  it('lehnt ungültige Gewichte und Lebensmittel ohne Einheit oder Richtwert ab', async () => {
     await expect(savePieceWeight(rt, APFEL, 0)).rejects.toBeInstanceOf(InvalidEntryError);
     await expect(savePieceWeight(rt, APFEL, PIECE_WEIGHT_MAX + 1)).rejects.toBeInstanceOf(
       InvalidEntryError,
     );
     await expect(
       savePieceWeight(rt, { ...APFEL, basic: { ...APFEL.basic!, unit: undefined } }, 100),
+    ).rejects.toBeInstanceOf(InvalidEntryError);
+    await expect(
+      savePieceWeight(rt, { ...APFEL, basic: { ...APFEL.basic!, listPieceGrams: undefined } }, 100),
     ).rejects.toBeInstanceOf(InvalidEntryError);
     expect((await loadSettings(rt.db)).pieceWeights).toBeUndefined();
     // Gleiche Grenze in der Ernährung und in der Einstellung, die das Gewicht speichert.

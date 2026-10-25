@@ -143,15 +143,15 @@ export const tMore = {
     dataSources: {
       bls: {
         name: 'Bundeslebensmittelschlüssel (BLS) 4.0',
-        text: 'Nährwerte der Grundauswahl: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, Karlsruhe, DOI 10.25826/Data20251217-134202-0. Kostenfrei nutzbar, auch in Apps, mit Quellenangabe. Gekürzt auf acht Nährwerte, ergänzt um österreichische Namen, Suchbegriffe und Stückgewichte.',
+        text: 'Nährwerte der Grundauswahl: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, Karlsruhe, DOI 10.25826/Data20251217-134202-0. Kostenfrei nutzbar, auch in Apps, mit Quellenangabe. Gekürzt auf acht Nährwerte, ergänzt um österreichische Namen, Suchbegriffe und Richtwerte je Stück.',
       },
       usda: {
         name: 'USDA SR28',
-        text: 'Pfefferoni, Butternusskürbis und Magermilch sowie die Stückgewichte von Eiklar und Dotter: U.S. Department of Agriculture, Agricultural Research Service (2015): USDA National Nutrient Database for Standard Reference, Release 28. Gemeinfrei. Nährwerte nach EU-Regeln umgerechnet.',
+        text: 'Pfefferoni, Butternusskürbis und Magermilch: U.S. Department of Agriculture, Agricultural Research Service (2015): USDA National Nutrient Database for Standard Reference, Release 28. Gemeinfrei. Nährwerte nach EU-Regeln umgerechnet. Bei den Richtwerten je Stück nur zum Vergleich.',
       },
       pieces: {
-        name: 'Stückgewichte',
-        text: 'Ei Größe M nach der EU-Vermarktungsnorm für Eier, Semmel nach dem Österreichischen Lebensmittelbuch (Codex-Kapitel B 18, Mindestgewicht). Fehlt ein Stückgewicht, wiegst du einmal selbst; FORM merkt es sich.',
+        name: 'Richtwerte je Stück und Scheibe',
+        text: 'Mittelgroße Stücke, essbarer Anteil. Meist nach der Schweizer Nährwerttabelle 2021 (SGE, BAG, ETH), beim Apfel und bei der Birne ohne Kerngehäuse gerechnet (Anteil nach CoFID, Vereinigtes Königreich), Erdäpfel geschält (Schälverlust nach DTU, Dänemark). Ei Größe M nach der EU-Vermarktungsnorm für Eier und dem Schweizer Ernährungsbulletin 2021 (BLV), Semmel nach dem Österreichischen Lebensmittelbuch (Codex-Kapitel B 18, Mindestgewicht), Käsescheiben nach DTU (Dänemark) und NICE (Belgien), Reiswaffeln nach dem Voedingscentrum (Niederlande). Du kannst jedes Gewicht anpassen; FORM merkt es sich.',
       },
       off: {
         name: 'Open Food Facts',

@@ -1489,3 +1489,18 @@ Köpfe und Werte einzeilig in festen Spalten, zweite Spalte nur bei einer Menge 
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E „Nährwerttabelle: Köpfe und Werte einzeilig …“ bei 360 und 390 pt (Pixel 7) | 2 bestanden |
 | E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` | 105 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §3: Stückgewichte als Richtwerte · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, Plus und Minus in halben Stück, „Gewicht anpassen“ gemerkt und zurücksetzbar, ohne Richtwert nur Gramm (D-365, AK-NUT-18). Bericht: `form-ernaehrung-report.md` Abschnitt 13.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `nutrition-ui.test.tsx`, `basicFoods.test.ts`, `pieces.test.ts`, `pieceWeightService.test.ts`, `app.test.tsx` | 23, 22, 6, 6 und 26 bestanden |
+| Gegenprobe: neue Dialog-Tests gegen den alten Dialog | 3 von 4 fehlgeschlagen (der vierte prüft nur Gramm und besteht mit der neuen Liste auch dort) |
+| Gegenprobe: Listenprüfung mit acht absichtlichen Fehlern | 8 von 8 gemeldet |
+| `pnpm test` | 122 Dateien, 1069 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout`, `nutrition`, `nutrition-ring`, `network-a11y` | 109 bestanden, 15 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: Abstandstest gegen die Tabelle aus D-364 | bei 360 pt fehlgeschlagen |

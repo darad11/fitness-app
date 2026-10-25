@@ -854,8 +854,10 @@ async function openExtras(): Promise<HTMLElement> {
   return screen.findByRole('group', { name: 'Weitere Nährwerte' }, WAIT);
 }
 
-describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernährung §6, D-362)', () => {
+describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (D-362, Richtwerte D-365)', () => {
   const APFEL = stableId('bls:F110100');
+  /** Richtwert für 1 Apfel aus der Liste (essbarer Anteil, D-365). */
+  const APFEL_G = 158;
 
   async function openFood(query: string, button: RegExp, dialogName: string) {
     const user = userEvent.setup();
@@ -870,19 +872,25 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
   }
 
   it(
-    'trägt zwei Eier als Stück ein; Ring und weitere Nährwerte zeigen sie sofort',
+    'trägt zwei Eier als Stück ein; Plus zählt in halben Stück; Ring und weitere Nährwerte sofort',
     { timeout: 40_000 },
     async () => {
       await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
       const { user, dialog } = await openFood('Eier', /^EiBLS135 kcal/, 'Ei hinzufügen');
-      // Mit Stückgewicht aus der Liste ist „Stück“ vorgewählt.
+      // Mit Richtwert ist „1 Stück“ vorgewählt (D-365).
       expect(within(dialog).getByRole('radio', { name: 'Stück' })).toBeChecked();
-      expect(within(dialog).getByText('1 Stück = 51 g · Größe M')).toBeVisible();
+      expect(within(dialog).getByLabelText('Anzahl (Stück)')).toHaveValue('1');
+      expect(within(dialog).getByText('1 Stück · ca. 51 g')).toBeVisible();
+      expect(within(dialog).getByText(/^Richtwert: 51 g je Stück/)).toBeVisible();
       expect(within(dialog).getByRole('status')).toHaveTextContent('69 kcal');
       expect(within(dialog).getByText('Quelle: BLS 4.0, E111100 „Hühnerei roh“')).toBeVisible();
-      const count = within(dialog).getByLabelText('Anzahl (Stück)');
-      await user.clear(count);
-      await user.type(count, '2');
+      // Plus und Minus in halben Stück.
+      const more = within(dialog).getByRole('button', { name: 'Anzahl erhöhen' });
+      await user.click(more);
+      expect(within(dialog).getByText('1,5 Stück · ca. 77 g')).toBeVisible();
+      await user.click(more);
+      expect(within(dialog).getByLabelText('Anzahl (Stück)')).toHaveValue('2');
+      expect(within(dialog).getByText('2 Stück · ca. 102 g')).toBeVisible();
       expect(within(dialog).getByRole('status')).toHaveTextContent('138 kcal');
       await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
 
@@ -905,76 +913,104 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
         servingSnapshot: { name: 'Stück', count: 2 },
         nutrients: { kcal: 137.7, protein: 13.44, fat: 9.18, salt: 0.4, fiber: 0 },
       });
+      // Ohne Anpassung merkt sich die App nichts: Es gilt der Richtwert.
+      expect((await loadSettings(rt.db)).pieceWeights).toBeUndefined();
     },
   );
 
   it(
-    'fragt beim ersten „Stück“ nach dem Gewicht, merkt es sich und lässt es ändern',
-    { timeout: 40_000 },
+    'Apfel: Richtwert vorgewählt, ein Tipp trägt ein; „Gewicht anpassen“ wird gemerkt und lässt sich zurücksetzen',
+    { timeout: 60_000 },
     async () => {
       await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
       let { user, dialog } = await openFood('Äpfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen');
-      // Ohne Stückgewicht zuerst Gramm.
-      expect(within(dialog).getByRole('radio', { name: 'g' })).toBeChecked();
-      expect(within(dialog).getByLabelText('Menge in g')).toHaveValue('100');
-      await user.click(within(dialog).getByRole('radio', { name: 'Stück' }));
+      expect(within(dialog).getByRole('radio', { name: 'Stück' })).toBeChecked();
+      expect(within(dialog).getByText(`1 Stück · ca. ${APFEL_G} g`)).toBeVisible();
+      expect(within(dialog).getByText(/^Richtwert: \d+ g je Stück/)).toBeVisible();
+      // Keine Frage nach dem Gewicht.
+      expect(within(dialog).queryByLabelText('Gewicht für 1 Stück in g')).toBeNull();
+      expect(within(dialog).queryByText(/Küchenwaage/)).toBeNull();
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      expect((await listDayEntries(rt.db, localDay()))[0]).toMatchObject({
+        amount: APFEL_G,
+        servingSnapshot: { name: 'Stück', count: 1 },
+      });
+      expect((await loadSettings(rt.db)).pieceWeights).toBeUndefined();
+
+      // „Gewicht anpassen“: Feld mit dem Richtwert, mit Fokus; beim Hinzufügen gemerkt.
+      cleanup();
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
+      ({ user, dialog } = await openFood('Apfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen'));
+      await user.click(within(dialog).getByRole('button', { name: 'Gewicht anpassen' }));
       const weight = within(dialog).getByLabelText('Gewicht für 1 Stück in g');
-      expect(weight).toHaveAccessibleDescription(/Am genauesten ist eine Küchenwaage/);
-      // Das Gewicht ist die nächste Eingabe: Das Feld bekommt gleich den Fokus.
+      expect(weight).toHaveValue(String(APFEL_G));
+      expect(weight).toHaveAccessibleDescription(/^Richtwert: \d+ g je Stück.*merkt sich/);
       await waitFor(() => {
         expect(weight).toHaveFocus();
       });
-      expect(within(dialog).getByRole('status')).toHaveTextContent('–');
-      // Ohne Gewicht trägt „Hinzufügen“ nichts ein.
-      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
-      expect(within(dialog).getByRole('alert')).toHaveTextContent('Gewicht zwischen 0,1 und');
+      await user.clear(weight);
       await user.type(weight, '180');
+      expect(within(dialog).getByText('1 Stück · ca. 180 g')).toBeVisible();
       expect(within(dialog).getByRole('status')).toHaveTextContent('104 kcal');
       await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
       await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
       expect((await loadSettings(rt.db)).pieceWeights).toEqual({ [APFEL]: 180 });
-      expect((await listDayEntries(rt.db, localDay()))[0]).toMatchObject({
-        amount: 180,
-        servingSnapshot: { name: 'Stück', count: 1 },
-        nutrients: { kcal: 104.4 },
-      });
 
-      // Beim nächsten Mal gilt das gemerkte Gewicht; „Gewicht ändern“ ändert es.
+      // Der nächste Apfel zeigt das eigene Gewicht; zurücksetzen nimmt es beim Hinzufügen zurück.
       cleanup();
       await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
       ({ user, dialog } = await openFood('Apfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen'));
-      expect(within(dialog).getByRole('radio', { name: 'Stück' })).toBeChecked();
-      expect(within(dialog).getByText('1 Stück = 180 g')).toBeVisible();
-      await user.click(within(dialog).getByRole('button', { name: 'Gewicht ändern' }));
-      const changed = within(dialog).getByLabelText('Gewicht für 1 Stück in g');
-      expect(changed).toHaveValue('180');
-      await waitFor(() => {
-        expect(changed).toHaveFocus();
-      });
-      await user.clear(changed);
-      await user.type(changed, '150,5');
+      expect(within(dialog).getByText('1 Stück · ca. 180 g')).toBeVisible();
+      expect(
+        within(dialog).getByText(`Dein Gewicht: 180 g je Stück, Richtwert ${APFEL_G} g`),
+      ).toBeVisible();
+      await user.click(within(dialog).getByRole('button', { name: 'Auf Richtwert zurücksetzen' }));
+      expect(within(dialog).getByText(`1 Stück · ca. ${APFEL_G} g`)).toBeVisible();
+      expect(
+        within(dialog).queryByRole('button', { name: 'Auf Richtwert zurücksetzen' }),
+      ).toBeNull();
       await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
       await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
-      expect((await loadSettings(rt.db)).pieceWeights).toEqual({ [APFEL]: 150.5 });
+      expect((await loadSettings(rt.db)).pieceWeights).toBeUndefined();
     },
   );
 
   it(
-    'gibt dem Gewichtsfeld den Fokus auch, wenn der Browser ihn nach dem Tipp aufs Optionsfeld legt (WebKit)',
+    'wechselt zu Gramm mit derselben Menge und lehnt krumme Stückzahlen ab',
     { timeout: 30_000 },
     async () => {
       await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
-      const { dialog } = await openFood('Apfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen');
-      const radio = within(dialog).getByRole('radio', { name: 'Stück' });
-      // Wie WebKit beim Klick auf ein Label: erst der Klick aufs Optionsfeld (React rendert und
-      // führt die Effekte dabei sofort aus), danach legt der Browser den Fokus aufs Optionsfeld.
-      radio.click();
-      radio.focus();
-      await waitFor(() => {
-        expect(within(dialog).getByLabelText('Gewicht für 1 Stück in g')).toHaveFocus();
-      });
+      const { user, dialog } = await openFood('Eier', /^EiBLS135 kcal/, 'Ei hinzufügen');
+      const count = within(dialog).getByLabelText('Anzahl (Stück)');
+      await user.clear(count);
+      await user.type(count, '1,3');
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+      expect(within(dialog).getByRole('alert')).toHaveTextContent(
+        'in ganzen oder halben Schritten',
+      );
+      await user.clear(count);
+      await user.type(count, '2');
+      // „Gramm“ bleibt wählbar; aus 2 Stück zu 51 g werden 102 g.
+      await user.click(within(dialog).getByRole('radio', { name: 'Gramm' }));
+      expect(within(dialog).getByLabelText('Menge in g')).toHaveValue('102');
+      expect(within(dialog).queryByText(/Richtwert/)).toBeNull();
+      expect(await listDayEntries(rt.db, localDay())).toEqual([]);
     },
   );
+
+  it('ohne Richtwert nur Gramm, ohne „Stück“ und ohne Frage', { timeout: 30_000 }, async () => {
+    await renderAt('/ernaehrung/hinzufuegen?mahlzeit=lunch', 'Lebensmittel hinzufügen');
+    const { dialog } = await openFood(
+      'Kürbis',
+      /^Kürbis, HokkaidoBLS/,
+      'Kürbis, Hokkaido hinzufügen',
+    );
+    expect(within(dialog).queryByRole('radio')).toBeNull();
+    expect(within(dialog).queryByText('Stück')).toBeNull();
+    expect(within(dialog).getByLabelText('Menge in g')).toHaveValue('100');
+    expect(within(dialog).queryByText(/Richtwert|Gewicht für 1/)).toBeNull();
+  });
 
   it(
     'kennzeichnet abgeleitete Werte und nennt die Quelle, auch bei USDA',
@@ -1035,7 +1071,7 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
       // Köpfe und Werte brechen nicht um, die Wertespalten haben eine feste Breite.
       for (const cell of table.querySelectorAll('thead th, tbody td')) {
         expect(cell).toHaveClass('whitespace-nowrap');
-        expect(cell.className).toMatch(/w-\[(4\.25|5\.75)rem\]/);
+        expect(cell.className).toMatch(/w-\[(3\.75|6\.25)rem\]/);
       }
       // Wieder 100 g: wieder eine Spalte.
       await user.clear(amount);

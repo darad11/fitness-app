@@ -1,6 +1,7 @@
 import { stableId } from '@/shared/lib/uuid';
 import {
   BASIC_ORIGINS,
+  PIECE_GRAMS_MAX,
   PIECE_UNITS,
   type BasicFoodInfo,
   type BasicOrigin,
@@ -66,8 +67,13 @@ export function parseBasicFoods(file: BasicFoodsFile): FoodItem[] {
     }
     if (!Array.isArray(aliases) || !aliases.every(isString)) invalid(i, 'Suchbegriffe');
     if (unit !== null && !isUnit(unit)) invalid(i, 'Einheit');
-    if (pieceGrams !== null && (typeof pieceGrams !== 'number' || !(pieceGrams > 0) || !unit)) {
-      invalid(i, 'Stückgewicht');
+    // Einheit und Richtwert nur zusammen (D-365): ohne Richtwert nur Gramm.
+    if (
+      (unit === null) !== (pieceGrams === null) ||
+      (pieceGrams !== null &&
+        (typeof pieceGrams !== 'number' || !(pieceGrams > 0) || pieceGrams > PIECE_GRAMS_MAX))
+    ) {
+      invalid(i, 'Einheit und Richtwert');
     }
     if (pieceHint !== null && (!isString(pieceHint) || !unit)) invalid(i, 'Hinweis');
     if (!Array.isArray(derived) || !derived.every(isNutrient)) invalid(i, 'abgeleitete Werte');

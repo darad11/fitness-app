@@ -227,5 +227,41 @@ for (const width of [360, 390]) {
     const wide = await widths();
     await dialog.getByLabel('Menge in g').fill('150');
     expect(await widths(), 'Spalten gleich breit').toEqual(wide);
+    expect(await headerGap(table), 'Abstand zwischen den Köpfen').toBeGreaterThanOrEqual(6);
+  });
+
+  test(`Nährwerttabelle: „für 1,5 Scheiben“ einzeilig mit Abstand zum Nachbarkopf (${String(width)} pt)`, async ({
+    page,
+    isMobile,
+  }) => {
+    await setWidth(page, width, isMobile);
+    await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+    await page.getByLabel('Lebensmittel suchen').fill('Schwarzbrot');
+    await page.getByRole('button', { name: /^Schwarzbrot\s*BLS/ }).click();
+    const dialog = page.getByRole('dialog', { name: 'Schwarzbrot hinzufügen' });
+    await dialog.getByRole('button', { name: 'Anzahl erhöhen' }).click();
+    const table = dialog.getByRole('table', { name: 'Nährwerte' });
+    await expect(table.getByRole('columnheader')).toHaveText(['je 100 g', 'für 1,5 Scheiben']);
+    for (const cell of await table.locator('thead th, tbody td').all()) {
+      const text = (await cell.textContent()) ?? '';
+      expect(Math.max(...(await lineCounts(cell))), `${text}: eine Zeile`).toBe(1);
+    }
+    expect(await headerGap(table), 'Abstand zwischen den Köpfen').toBeGreaterThanOrEqual(6);
+    expect(await table.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
+      true,
+    );
+  });
+}
+
+/** Abstand in px zwischen dem Text des ersten und des zweiten Spaltenkopfs. */
+function headerGap(table: Locator) {
+  return table.locator('thead th').evaluateAll((cells) => {
+    const [first, second] = cells.map((cell) => {
+      const range = document.createRange();
+      range.selectNodeContents(cell);
+      return range.getBoundingClientRect();
+    });
+    return first && second ? second.left - first.right : Number.NaN;
   });
 }

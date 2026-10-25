@@ -245,7 +245,7 @@ interface Settings extends Root {                  // feste ID
   locale: 'auto' | 'de-AT' | 'de-CH' | 'de-DE';   // 'auto'
   backupReminderDays: number;    // 14
   waterQuickMl?: number[];       // D-289: vier Schnellmengen in ml (10 bis 2000); fehlt = 150, 250, 500, 750
-  pieceWeights?: Record<string, number>;   // D-362: eigenes Stückgewicht in g je Lebensmittel der Grundauswahl (Schlüssel: ID), 0 < g ≤ 5000, höchstens 1000 Einträge; fehlt = Gewicht aus der Liste oder Frage beim ersten Mal
+  pieceWeights?: Record<string, number>;   // D-362: eigenes Stückgewicht in g je Lebensmittel der Grundauswahl (Schlüssel: ID), 0 < g ≤ 5000, höchstens 1000 Einträge; fehlt = Richtwert aus der Liste (D-365); gilt nur für Lebensmittel mit Richtwert
 }
 interface Profile extends Root { displayName?: string }   // R2 ergänzt Körperdaten für Formeln
 ```

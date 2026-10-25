@@ -1555,3 +1555,13 @@ Zucker und gesättigte Fettsäuren höchstens 10 % der Kalorien aus dem Tageszie
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `nutrition`, `basic-foods`, `narrow-layout`, `nutrition-ring`, `network-a11y` (Chromium) | 111 bestanden, 15 übersprungen, 0 fehlgeschlagen |
+
+### Phase iPhone Duo: Gerätemaße und Prüfmaße · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Recherche der Maße zugeklappt und aufgeklappt, Prüfmaße als Annahmen (D-371). Bericht: `form-duo-report.md` Abschnitt 2.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Apple, Human Interface Guidelines „Designing for iPhone Duo“ | direkt gelesen; Leisten und Statusleiste an der Seite, Kamera in der Ecke |
+| WebKit, Safari 27.1; technische Daten von Apple | nur über Suchergebnisse, weil die Netzwerkregel `apple.com`, `support.apple.com` und `webkit.org` sperrt |
+| Chromium 153: `Emulation.setSafeAreaInsetsOverride` | `env(safe-area-inset-right)` meldet den gesetzten Wert (59 px gesetzt, 59 px gemessen) |

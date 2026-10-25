@@ -1,6 +1,6 @@
 # Phase Ernährung – Bericht
 
-Stand: 24.10.2026 · Branch `form-ernaehrung` (Basis `6612f17`, `main` nach PR #50), Entwurfs-PR #51 · Auftrag: `docs/prompts/ernaehrung-FORM.md` (neuer Gesamtauftrag vom 24.10.2026; er ersetzt den ersten Auftrag vollständig, der in `444d7f1` steht). Aufbau wie `form-stabilitaet-report.md`.
+Stand: 25.10.2026 · Branch `form-ernaehrung` (Basis `6612f17`, `main` nach PR #50), Entwurfs-PR #51 · Auftrag: `docs/prompts/ernaehrung-FORM.md` (neuer Gesamtauftrag vom 24.10.2026; er ersetzt den ersten Auftrag vollständig, der in `444d7f1` steht). Aufbau wie `form-stabilitaet-report.md`.
 
 Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Startansicht unter 250 KB, Lebensmitteldaten nur nachgeladen. Keine Nährwerte erfinden, jede Zahl hat eine Quelle. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt. Reihenfolge laut Auftrag: 0, 1, 2 (bis zur fertigen CSV), 3, 4, dann Halt bis zur Freigabe der Liste; Abschnitt 6 (Einbau) erst danach.
 
@@ -17,6 +17,8 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §2 Auswahlliste aus dem BLS 4.0 | `docs/lebensmittel-auswahl.csv` mit 354 Zeilen: 345 Grundnahrungsmittel aus dem BLS 4.0 in zwölf Gruppen, 9 fehlende als „fehlt im BLS“; EU-Rechenregeln geprüft (keine Umrechnung nötig); Stückgewichte 5 belegt, 74 offen; Lizenzen in `docs/licenses-data.md`; nicht eingebaut | D-358 | Liste fertig zur Durchsicht, CI-Lauf 40129250444 grün; wartet auf Freigabe |
 | §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe | Ist und Tagesreferenz unter „Weitere Nährwerte“ („4 g von höchstens 6 g“, „von mindestens 30 g“) mit Erklärung und Quelle; fehlende Angaben nicht als 0, Einträge ohne Angabe mit Namen | D-359 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40130994920 grün |
 | §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; CI-Lauf 40133009248 mit allen vier Jobs grün, auch E2E (webkit) |
+| Liste nach der Freigabe ergänzt | Entscheidungen 1 bis 8 eingearbeitet: 366 Zeilen, 13 neue Einträge, drei USDA-Lücken, Regel für abgeleitete 0 g, Spalten Einheit, Hinweis und abgeleitete Werte, zusätzliche Suchbegriffe; Prüfung erweitert | D-361 | erledigt (`baeac1e`); `pnpm check:docs` ohne Befund, zehn Gegenproben gemeldet |
+| §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe rot; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -463,9 +465,9 @@ Grenzen: Auf dem iPhone selbst ist das Wischen noch nicht geprüft; die E2E-Test
 
 ---
 
-## 7. Übergabe und Halt
+## 7. Erste Übergabe (24.10.2026)
 
-Laut Auftrag Abschnitt 5 ist hier Halt: Abschnitte 0, 1 (mit Nachtrag), 2 (bis zur fertigen Liste), 3 und 4 sind erledigt, committet und gepusht. Abschnitt 6, der Einbau der Liste in die App, beginnt erst nach deiner Freigabe der Liste.
+Laut Auftrag Abschnitt 5 war hier Halt: Abschnitte 0, 1 (mit Nachtrag), 2 (bis zur fertigen Liste), 3 und 4 sind erledigt, committet und gepusht. Abschnitt 6, der Einbau der Liste in die App, beginnt erst nach deiner Freigabe der Liste.
 
 | Für dich | Wo |
 |---|---|
@@ -477,3 +479,147 @@ Laut Auftrag Abschnitt 5 ist hier Halt: Abschnitte 0, 1 (mit Nachtrag), 2 (bis z
 Was die Freigabe braucht: deine Antworten auf die sieben offenen Fragen in Abschnitt 4 (am wichtigsten: Stückgewichte, fehlende Werte, Lücken) und Änderungen an der Liste, falls du welche hast. Du kannst die CSV direkt bearbeiten; `pnpm check:docs` prüft danach, ob Codes und BLS-Bezeichnungen noch stimmen.
 
 Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359) und `bce4e15` (D-360). Gemergt wird nur nach deiner Freigabe.
+
+---
+
+## 8. Liste nach der Freigabe ergänzt (D-361)
+
+### Ergebnis
+
+Deine acht Entscheidungen vom 25.10.2026 sind in `docs/lebensmittel-auswahl.csv` eingearbeitet, die Liste hat jetzt 366 Zeilen. Drei Spalten kamen am Ende dazu, damit die CSV die einzige Quelle für die App bleibt: „Einheit“ (Stück, Scheibe, Zehe, Stange, Kolben; leer heißt nur Gramm), „Hinweis in der App“ und „Abgeleitete Werte“.
+
+| Entscheidung | Umsetzung |
+|---|---|
+| 1 Stückgewichte | 79 Einträge mit Einheit bleiben ohne Gewicht, keine US-Werte; die App fragt beim ersten „Stück“ danach (§6) |
+| 2 Herleitungen | Ei 51 g, Ei gekocht 51 g, Eiklar 33 g, Dotter 17 g und Semmel 46 g als bestätigt vermerkt; Hinweise „Größe M“, „Ei Größe M“ und bei der Semmel „Mindestgewicht, anpassbar“ |
+| 3 Fehlende Werte | Regel: Ballaststoffe 0 g bei rein tierischen Lebensmitteln und reinen Fetten, Eiweiß und Kohlenhydrate 0 g bei reinen Fetten (Öle und Fette ab 99 g Fett). Abgeleitet sind 13 Werte: Ballaststoffe bei Crème fraîche, Feta, Mascarpone, Mozzarella, Ricotta, Lachs roh, Pangasius, Räuchermakrele, Seelachs, Thunfisch im eigenen Saft und Butter, Eiweiß bei Kokosöl und Schweineschmalz. „Fehlt“ bleiben: Fett bei Apfelringen, Dörrzwetschken, Ringlotten, Essiggurkerl, Orangen- und Apfelsaft, gesättigte Fettsäuren bei Bärlauch, Ballaststoffe bei Honig (enthält Pollen, USDA nennt 0,2 g), Margarine und Halbfettmargarine (weder rein tierisch noch reines Fett) |
+| 4 Lücken | USDA SR28 für Pfefferoni (11670), Butternusskürbis (11485) und Magermilch (01151), Rohwerte in `tools/data/usda-sr28-auswahl.json`; rote Zwiebel als Suchbegriff bei Zwiebel; Käferbohnen, Knödelbrot, griechisches Joghurt 10 %, Sauerrahm 15 % und geschälte Hanfsamen kommen nicht in die App (Barcode oder eigenes Lebensmittel) |
+| 5 Mehltypen | unverändert, österreichische Namen |
+| 6 Neu aus dem BLS | Zucker, Honig, Marmelade, Haferdrink, Sojadrink, Mandeldrink, Orangensaft, Apfelsaft, Kochschinken, Rohschinken, Schweinsschulter, Leberkäse, Frankfurter; neue Gruppen „Wurst und Schinken“, „Zucker, Honig und Marmelade“, „Getränke“ |
+| 7 Grenzfälle | bleiben |
+| 8 Suchbegriffe | Kale, Röhrlsalat, Lachsforelle, Babyspinat, Rundkornreis, Risottoreis, Milchreis, Spätzle, Nockerl, Leichtmilch; bei den neuen Einträgen außerdem naheliegende Formen wie Hafermilch, Leberkas, Staubzucker |
+
+USDA, umgerechnet nach den EU-Regeln (Kohlenhydrate ohne Ballaststoffe, Energie mit 4/4/9 und 2 kcal je g Ballaststoffe, Salz = Natrium × 2,5), je 100 g:
+
+| Lebensmittel | kcal | Eiweiß | Kohlenhydrate | Fett | Ballaststoffe | Zucker | ges. Fettsäuren | Salz |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Pfefferoni | 45 | 2,0 | 7,96 | 0,2 | 1,5 | 5,1 | 0,02 | 0,02 |
+| Butternusskürbis | 48 | 1,0 | 9,69 | 0,1 | 2,0 | 2,2 | 0,02 | 0,01 |
+| Magermilch | 34 | 3,37 | 4,96 | 0,08 | 0 | 5,09 | 0,05 | 0,11 |
+
+Bei der Magermilch nennt USDA mehr Zucker als Kohlenhydrate (nach Differenz); beide Werte bleiben, wie sie veröffentlicht sind. Den Eiweißfaktor gibt SR28 dort nicht an; mit dem EU-Faktor 6,25 statt 6,38 für Milch wären es rund 0,07 g weniger.
+
+**Milch 1,5 %:** Der BLS-Eintrag „Milch fettarm, frisch, 1,5 % Fett, pasteurisiert“ (1,54 g Fett) passt zu den in Österreich üblichen Sorten (Websuche: Schärdinger Fettarme Milch 1,5 %, NÖM Leichtmilch 1,5 %). Eine Abweichung gibt es nur bei Nischensorten: Milch mit 0,9 % Fett (NÖM fasten) hat 0,6 g Fett und rund 5 kcal je 100 ml weniger, Magermilch mit 0,5 % Fett hat 0,4 g Fett und rund 4 kcal mehr als der USDA-Wert (0,08 g).
+
+### Zusammenfassung je Gruppe
+
+Ausgabe von `python3 tools/lebensmittel_auswahl.py`:
+
+| Gruppe | Einträge | aus dem BLS | aus USDA | nicht in der App | Stückgewicht belegt | Stückgewicht offen |
+|---|---:|---:|---:|---:|---:|---:|
+| Obst | 46 | 46 | 0 | 0 | 0 | 26 |
+| Gemüse | 75 | 73 | 2 | 0 | 0 | 27 |
+| Erdäpfel | 6 | 6 | 0 | 0 | 0 | 5 |
+| Hülsenfrüchte | 20 | 19 | 0 | 1 | 0 | 0 |
+| Getreide und Getreideprodukte | 62 | 61 | 0 | 1 | 1 | 17 |
+| Eier | 4 | 4 | 0 | 0 | 4 | 0 |
+| Milch und Milchprodukte | 41 | 38 | 1 | 2 | 0 | 0 |
+| Fleisch | 26 | 26 | 0 | 0 | 0 | 0 |
+| Geflügel | 12 | 12 | 0 | 0 | 0 | 0 |
+| Wurst und Schinken | 4 | 4 | 0 | 0 | 0 | 4 |
+| Fisch | 28 | 28 | 0 | 0 | 0 | 0 |
+| Nüsse und Samen | 21 | 20 | 0 | 1 | 0 | 0 |
+| Öle und Fette | 13 | 13 | 0 | 0 | 0 | 0 |
+| Zucker, Honig und Marmelade | 3 | 3 | 0 | 0 | 0 | 0 |
+| Getränke | 5 | 5 | 0 | 0 | 0 | 0 |
+| **Summe** | **366** | **358** | **3** | **5** | **5** | **79** |
+
+### Geänderte Dateien
+
+`docs/lebensmittel-auswahl.csv`, `tools/lebensmittel_auswahl.py` (neue Spalten, Gruppen, USDA-Angaben, Regel für abgeleitete Werte in beide Richtungen), `tools/data/usda-sr28-auswahl.json` (neu), `docs/licenses-data.md`, `docs/decisions.md` (D-361), `docs/implementation-plan.md`, `docs/testing.md`.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` | „366 Einträge geprüft“ |
+| Gegenproben an einer Kopie der Zeilen: Regel nicht angewandt (Feta), falsch angewandt (Honig, Margarine), Wert steht im BLS (Ei), Herkunft ohne Einheit, unbekannte Einheit, Hinweis ohne Einheit, falsche USDA-Nummer, falsche USDA-Bezeichnung, falsches Format | 10 von 10 gemeldet |
+| `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+
+Beim Commit `baeac1e` ist versehentlich eine Python-Cache-Datei (`tools/__pycache__/…pyc`) mit ins Repository gekommen; der Commit zu §6 nimmt sie heraus, `.gitignore` schließt solche Dateien jetzt aus.
+
+---
+
+## 9. §6 Einbau der Grundauswahl (D-362)
+
+### Ergebnis
+
+Die freigegebene Liste ist in der App, ohne Import und auch offline. Ablauf: suchen → Ergebnis wählen → Menge in g oder Stück → Nährwerte prüfen → hinzufügen.
+
+| Punkt | Umsetzung |
+|---|---|
+| Daten | `tools/lebensmittel_auswahl.py --build` erzeugt aus der CSV `src/modules/nutrition/data/basicFoods.json`: 361 Lebensmittel (358 aus dem BLS 4.0, 3 aus USDA SR28), ohne die fünf Lücken für Barcode oder eigenen Eintrag. `pnpm check:docs` meldet, wenn die Datei nicht zur CSV passt; wer die CSV ändert, baut die Datei mit `--build` neu |
+| Nachladen und offline | eigener Teil von 47,3 KB (gzip 14,8 KB), erst im Ernährungsbereich geladen und vom Service Worker vorab gespeichert; Startansicht 234,5 KB von 250 KB |
+| Suche | Grundauswahl nach den eigenen Lebensmitteln und vor importierten Daten, mit derselben Suche für alle Quellen und der Herkunft „BLS“ oder „USDA“. Dazu behoben: Halbe Wörter wie „Erdäp“, „Parad“, „Seel“ oder „Knob“ fanden vorher nichts, bis das Wort fertig war (Fehler aus D-356) |
+| Menge in g oder Stück | Umschaltung „g“ / „Stück“ (bzw. Scheibe, Zehe, Stange, Kolben) bei den 84 Einträgen mit Einheit. Mit Stückgewicht aus der Liste ist „Stück“ vorgewählt: „1 Stück = 51 g · Größe M“, daneben „Gewicht ändern“ |
+| Stückgewicht einmal angeben | Ohne Gewicht zuerst Gramm. „Stück“ öffnet das Feld „Gewicht für 1 Stück in g“, mit Fokus und dem Hinweis „Am genauesten ist eine Küchenwaage. FORM merkt sich das Gewicht für dieses Lebensmittel, du kannst es jederzeit ändern.“ Beim Hinzufügen wird das Gewicht gemerkt; beim nächsten Mal ist „Stück“ vorgewählt. Ein Gewicht gleich dem aus der Liste entfernt den eigenen Wert |
+| Nährwerte und Quelle | Tabelle je 100 g und für die Menge; darunter „Quelle: BLS 4.0, E111100 „Hühnerei roh““ bzw. „Quelle: USDA SR28, 11670 „Peppers, hot chili, green, raw“, umgerechnet nach EU-Regeln“. Abgeleitete 0 g mit Sternchen und Erklärung, fehlende Werte als „–“, nicht als 0 |
+| Eintrag | eingefrorene Werte (D-209), bei Stück als Portion mit Anzahl, z. B. „2 × Stück (102 g)“; Ring und weitere Nährwerte zeigen ihn sofort |
+| Lizenzliste | „Mehr“ › „Über die App“ › „Lebensmitteldaten und Lizenzen“: BLS 4.0, USDA SR28, Belege der Stückgewichte, Open Food Facts, importierte Daten |
+
+### Wo das gemerkte Stückgewicht liegt
+
+In den Einstellungen, als neues Feld `pieceWeights` (ID des Lebensmittels → Gramm), synchronisiert und gesichert wie alle Einstellungen. Ich hatte zuerst eine eigene Tabelle erwogen und mich dagegen entschieden: Eine neue Dokumentart hätte ältere App-Versionen beim Abgleich angehalten (D-292), zum Beispiel die Produktivadresse, solange du die Vorschau mit demselben Konto testest. So gibt es keine neue Tabelle und keine neue Datenbankversion; ältere Versionen behalten das Feld und ignorieren es. Rückfall: Wird die Funktion zurückgenommen, bleibt das Feld ungenutzt liegen, nichts geht verloren. Grenze: Wie bei allen Einstellungen gewinnt beim Abgleich die jüngere Fassung des ganzen Dokuments.
+
+### Grenzen
+
+- Werte je 100 g, auch bei Getränken; bei Milch in ml liegt man um etwa 3 % daneben.
+- In Rezepten gibt es „Stück“ nur, wenn das Gewicht schon bekannt ist; sonst Gramm.
+- Den Lizenzhinweis des BLS aus dem Download konnte ich nicht wörtlich übernehmen: `blsdb.de` und `mri.bund.de` sind in der Netzwerkregel der Cloud-Sitzung gesperrt. Die App nennt die Zitierweise aus der BLS-Dokumentation (Abschnitt 9.3, Quellenangabe empfohlen) mit DOI. Bitte sieh im Download nach, ob dort eine Lizenz steht, die einen anderen Wortlaut verlangt.
+- WebKit und das iPhone selbst sind noch nicht geprüft; WebKit läuft in der CI.
+
+### Bilder
+
+Im Handyformat (390 pt, dunkel) geprüft: Trefferliste zu „Eier“, Dialog „Ei hinzufügen“ mit 2 Stück und Quelle, Dialog „Apfel hinzufügen“ mit der Frage nach dem Gewicht, Feta mit abgeleitetem Wert, „Über die App“ mit der Lizenzliste.
+
+### Geänderte Dateien
+
+Neu: `src/modules/nutrition/data/basicFoods.json` (erzeugt), `src/modules/nutrition/data/basicFoods.ts` und `.test.ts`, `src/modules/nutrition/model/basicFood.ts`, `src/modules/nutrition/calc/pieces.ts` und `.test.ts`, `src/modules/nutrition/service/pieceWeightService.ts` und `.test.ts`, `src/modules/nutrition/ui/LogDialog.tsx` (aus `AddFoodPage.tsx` herausgelöst und erweitert), `e2e/basic-foods.spec.ts`. Geändert: `src/modules/nutrition/calc/foodSearch.ts` und `.test.ts`, `src/modules/nutrition/model/foodItem.ts`, `src/modules/nutrition/ui/useFoodCatalog.ts`, `AddFoodPage.tsx`, `NutrientTable.tsx`, `nutrition-ui.test.tsx`, `src/modules/settings/model/settings.ts`, `data/settingsRepository.ts`, `index.ts`, `ui/AboutPage.tsx`, `src/app/app.test.tsx`, `src/shared/i18n/de-nutrition.ts` und `de-more.ts`, `e2e/nutrition.spec.ts` (Suchtest für importierte Daten neben der Grundauswahl), `tools/lebensmittel_auswahl.py` (`--build`, Abgleich in `--check`), `.prettierignore`, `.gitignore`. Unterlagen: `docs/decisions.md` (D-362), `docs/requirements.md` (AK-NUT-17 bis AK-NUT-19), `docs/feature-inventory.md` und `.csv` (NU-21, NU-25, NU-29, Version 0.22), `docs/data-model.md`, `docs/licenses-data.md`, `docs/known-limitations.md`, `docs/implementation-plan.md`, `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/data/basicFoods.test.ts` (neu) | 22 bestanden: 361 Einträge ohne die Lücken, feste IDs wie beim früheren BLS, Stückgewichte, Einheiten, Hinweise und Suchbegriffe aus der Liste, BLS-Werte unverändert und fehlende als fehlend, 13 abgeleitete Werte, USDA nach EU-Regeln, Lizenzliste je Quelle, einmaliges Nachladen, Ablehnung falscher Dateien; Suche nach Apfel, Äpfel, Aepfel, apfel, Ei, Eier, Tomate, Tomaten, Paradeiser, Erdäpfel und Topfen, Suchbegriffe der Liste, Suche beim Tippen |
+| `calc/pieces.test.ts`, `service/pieceWeightService.test.ts` (neu) | 5 und 6 bestanden: Rundung und Grenzen, eigenes vor Listengewicht, Stück-Portion, gemerkte Gewichte, nur Änderungen schreiben, Listenwert entfernt den eigenen, übrige Einstellungen und Felder neuerer Versionen bleiben |
+| `calc/foodSearch.test.ts` | 20 bestanden, davon 1 neu (falsche Freunde beim Antippen) |
+| `ui/nutrition-ui.test.tsx` | 19 bestanden, davon 3 neu (zwei Eier als Stück mit Ring und weiteren Nährwerten, Gewicht einmal angeben mit Fokus, merken und ändern, abgeleitete Werte und USDA-Quelle); ein bisheriger Test erwartet jetzt die Grundauswahl vor dem Import |
+| `src/app/app.test.tsx` | 26 bestanden, davon 1 neu (Lizenzliste unter „Über die App“) |
+| Gegenprobe: Tipp-Tests gegen die Suche vor §6 | 2 von 2 fehlgeschlagen („Erdäp“ fand nichts) |
+| Gegenprobe: Fokus-Prüfung ohne Fokus-Logik | 1 von 19 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1064 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB; Grundauswahl als eigener Teil 47,3 KB (gzip 14,8 KB), im Service Worker vorab gespeichert |
+| E2E `basic-foods.spec.ts` (neu), Chromium Desktop und Pixel 7 | 8 bestanden: Suche nach den zehn Begriffen des Auftrags ohne Scheintreffer und beim Tippen; zwei Eier als Stück mit Ring „138 von 2.200 kcal“ und weiteren Nährwerten sofort; Stückgewicht einmal angeben (Fokus im Gewichtsfeld, Dialog ohne axe-Verstoß nach WCAG 2.1 AA), nach Neuladen gemerkt; offline suchen und eintragen. Der erste Lauf mit der axe-Prüfung scheiterte 2-mal am Test selbst (Selektor `[role="dialog"]` statt `dialog[open]`), danach 8 von 8 bestanden |
+| E2E, ganze Suite in Chromium (Stand vor der Fokus-Verbesserung) | 333 bestanden, 51 übersprungen, 0 fehlgeschlagen (8,3 min) |
+| E2E mit dem Endstand: `basic-foods`, `nutrition`, `nutrition-ring`, `shopping` (Wischen zum Löschen mit Rückgängig, Scrollen ungestört), `network-a11y` | 97 bestanden, 3 übersprungen, 0 fehlgeschlagen |
+| WebKit | läuft in der CI zum Commit dieses Abschnitts |
+
+---
+
+## 10. Übergabe und Halt
+
+Abschnitt 6 ist erledigt, committet und gepusht; laut Auftrag ist hier Halt. Gemergt wird nur nach deiner Freigabe.
+
+| Für dich | Wo |
+|---|---|
+| Ergänzte Liste (366 Zeilen) | `docs/lebensmittel-auswahl.csv` |
+| Bericht zur Ergänzung und zu §6 | Abschnitte 8 und 9 dieses Berichts |
+| Lizenzen und Rechenregeln | `docs/licenses-data.md` |
+
+Offen bei dir:
+1. **Lizenzhinweis des BLS:** im Download nachsehen, ob er einen bestimmten Wortlaut verlangt (Abschnitt 9, Grenzen).
+2. **Gerätetest:** auf dem iPhone einmal „Apfel“ als Stück eintragen (Gewicht angeben), dann erneut öffnen; dazu ein Ei mit 2 Stück.
+3. **Vorschau und Abgleich:** Das gemerkte Stückgewicht liegt in den Einstellungen; ältere Versionen gleichen weiter ab. Du kannst die Vorschau also mit deinem Konto testen.
+
+Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359), `bce4e15` (D-360), `baeac1e` (D-361) und der Commit zu §6 (D-362).

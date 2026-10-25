@@ -17,8 +17,13 @@ tools/data/usda-sr28-auswahl.json:
     bei rein tierischen Lebensmitteln und reinen Fetten, Eiweiß und Kohlenhydrate bei reinen Fetten
     (Gruppe Öle und Fette, mindestens 99 g Fett); wo die Regel greift, ist sie auch angewandt.
 Ohne Schalter gibt es danach die Zusammenfassung aus (Anzahl je Gruppe, Stückgewichte, Lücken).
-Mit --check nur die Prüfung (für pnpm check:docs).
-Exit-Code 1, wenn eine Regel verletzt ist.
+Mit --build entsteht daraus die Datei der App, src/modules/nutrition/data/basicFoods.json
+(Phase Ernährung §6, D-362): je Eintrag Quelle, Code, Bezeichnung in der Quelle, Anzeigename,
+Suchbegriffe, Einheit, Stückgewicht, Hinweis, abgeleitete Werte und die acht Nährwerte je 100 g.
+USDA-Werte werden dabei nach den EU-Regeln umgerechnet (`usda_eu`). Zeilen „fehlt im BLS“ kommen
+nicht in die App.
+Mit --check nur die Prüfung (für pnpm check:docs), dazu der Vergleich mit der Datei der App.
+Exit-Code 1, wenn eine Regel verletzt ist oder die Datei der App nicht zur Liste passt.
 """
 from __future__ import annotations
 
@@ -27,12 +32,14 @@ import json
 import re
 import sys
 from collections import Counter
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "docs" / "lebensmittel-auswahl.csv"
 BLS_PATH = ROOT / "tools" / "data" / "bls-4.0.json"
 USDA_PATH = ROOT / "tools" / "data" / "usda-sr28-auswahl.json"
+APP_PATH = ROOT / "src" / "modules" / "nutrition" / "data" / "basicFoods.json"
 
 COLUMNS = [
     "Anzeigename", "Suchbegriffe", "Gruppe", "Zubereitung", "BLS-Code", "BLS-Bezeichnung",
@@ -245,15 +252,112 @@ def summary(rows: list[dict[str, str]]) -> str:
     return "\n".join(lines)
 
 
+NUTRIENTS = ["kcal", "protein", "carbs", "sugar", "fat", "saturatedFat", "fiber", "salt"]
+APP_FIELDS = ["origin", "code", "sourceName", "name", "aliases", "unit", "pieceGrams", "pieceHint",
+              "derived", *NUTRIENTS]
+
+
+def rounded(value: Decimal, places: int) -> int | float:
+    """Kaufmännisch gerundet (0,005 wird 0,01), ganze Zahlen ohne Nachkommastellen."""
+    result = value.quantize(Decimal(1).scaleb(-places), rounding=ROUND_HALF_UP)
+    return int(result) if result == result.to_integral_value() else float(result)
+
+
+def usda_eu(raw: dict[str, object]) -> dict[str, int | float | None]:
+    """USDA SR28 je 100 g nach den EU-Regeln (D-361): Kohlenhydrate ohne Ballaststoffe, Energie mit
+    4/4/9 und 2 kcal je g Ballaststoffe, Salz = Natrium × 2,5."""
+    def dec(key: str) -> Decimal | None:
+        value = raw[key]
+        return None if value is None else Decimal(str(value))
+    protein, fat, fiber = dec("protein"), dec("fat"), dec("fiber")
+    by_difference, sugar, saturated, sodium = (dec("carbsByDifference"), dec("sugar"),
+                                               dec("saturatedFat"), dec("sodiumMg"))
+    if protein is None or fat is None or by_difference is None or fiber is None:
+        raise SystemExit(f"USDA {raw['ndb']}: Eiweiß, Fett, Kohlenhydrate und Ballaststoffe nötig")
+    carbs = max(by_difference - fiber, Decimal(0))
+    kcal = 4 * protein + 4 * carbs + 9 * fat + 2 * fiber
+    return {
+        "kcal": rounded(kcal, 0),
+        "protein": rounded(protein, 2),
+        "carbs": rounded(carbs, 2),
+        "sugar": None if sugar is None else rounded(sugar, 2),
+        "fat": rounded(fat, 2),
+        "saturatedFat": None if saturated is None else rounded(saturated, 2),
+        "fiber": rounded(fiber, 2),
+        "salt": None if sodium is None else rounded(sodium * Decimal("2.5") / 1000, 2),
+    }
+
+
+def build(rows: list[dict[str, str]], bls: dict[str, dict[str, object]],
+          usda: dict[str, dict[str, object]]) -> str:
+    """Datei der App als Text: eine Zeile je Lebensmittel, damit Änderungen im Diff lesbar bleiben."""
+    foods = []
+    for r in rows:
+        if r["Quelle"].startswith(MISSING_PREFIX):
+            continue
+        if r["BLS-Code"]:
+            origin, code, source_name = "bls", r["BLS-Code"], r["BLS-Bezeichnung"]
+            values = {n: bls[code][n] for n in NUTRIENTS}
+        else:
+            ref = usda_ref(r)
+            assert ref, r["Anzeigename"]
+            origin, code, source_name = "usda", ref[0], ref[1]
+            values = usda_eu(usda[code])
+        derived = []
+        for part in filter(None, r["Abgeleitete Werte"].split(", ")):
+            match = DERIVED_RE.match(part)
+            assert match, part
+            nutrient = DERIVED_LABELS[match.group(1)]
+            derived.append(nutrient)
+            values[nutrient] = 0
+        weight = r["Stückgewicht (g)"]
+        piece = None
+        if weight:
+            number = Decimal(weight.replace(",", "."))
+            piece = rounded(number, 1)
+        # Getrennt durch Komma und Leerzeichen; „Milch 0,5 %“ bleibt ein Begriff.
+        aliases = [term.strip() for term in r["Suchbegriffe"].split(", ") if term.strip()]
+        foods.append([origin, code, source_name, r["Anzeigename"], aliases, r["Einheit"] or None, piece,
+                      r["Hinweis in der App"] or None, sorted(derived, key=NUTRIENTS.index),
+                      *(values[n] for n in NUTRIENTS)])
+    head = {
+        "version": 1,
+        "list": "docs/lebensmittel-auswahl.csv (freigegeben am 25.10.2026, D-361)",
+        "fields": APP_FIELDS,
+    }
+    lines = ["{"]
+    for key, value in head.items():
+        lines.append(f"  {json.dumps(key)}: {json.dumps(value, ensure_ascii=False)},")
+    lines.append('  "foods": [')
+    for i, food in enumerate(foods):
+        comma = "," if i < len(foods) - 1 else ""
+        lines.append(f"    {json.dumps(food, ensure_ascii=False, separators=(',', ':'))}{comma}")
+    lines += ["  ]", "}", ""]
+    return "\n".join(lines)
+
+
 def main() -> int:
     rows = read_rows()
-    errors = check(rows, load_bls(), load_usda())
+    bls, usda = load_bls(), load_usda()
+    errors = check(rows, bls, usda)
     for error in errors:
         print(f"lebensmittel-auswahl: {error}", file=sys.stderr)
     if errors:
         return 1
-    if "--check" in sys.argv[1:]:
-        print(f"lebensmittel-auswahl: {len(rows)} Einträge geprüft")
+    args = sys.argv[1:]
+    built = build(rows, bls, usda)
+    if "--build" in args:
+        APP_PATH.write_text(built, encoding="utf-8")
+        count = built.count("\n    [")
+        print(f"lebensmittel-auswahl: {count} Lebensmittel -> {APP_PATH.relative_to(ROOT)}")
+        return 0
+    if "--check" in args:
+        current = APP_PATH.read_text(encoding="utf-8") if APP_PATH.exists() else ""
+        if current != built:
+            print(f"lebensmittel-auswahl: {APP_PATH.relative_to(ROOT)} passt nicht zur Liste; "
+                  "python3 tools/lebensmittel_auswahl.py --build ausführen", file=sys.stderr)
+            return 1
+        print(f"lebensmittel-auswahl: {len(rows)} Einträge geprüft, Datei der App aktuell")
     else:
         print(summary(rows))
     return 0

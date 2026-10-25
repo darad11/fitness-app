@@ -245,6 +245,7 @@ interface Settings extends Root {                  // feste ID
   locale: 'auto' | 'de-AT' | 'de-CH' | 'de-DE';   // 'auto'
   backupReminderDays: number;    // 14
   waterQuickMl?: number[];       // D-289: vier Schnellmengen in ml (10 bis 2000); fehlt = 150, 250, 500, 750
+  pieceWeights?: Record<string, number>;   // D-362: eigenes Stückgewicht in g je Lebensmittel der Grundauswahl (Schlüssel: ID), 0 < g ≤ 5000, höchstens 1000 Einträge; fehlt = Gewicht aus der Liste oder Frage beim ersten Mal
 }
 interface Profile extends Root { displayName?: string }   // R2 ergänzt Körperdaten für Formeln
 ```
@@ -256,7 +257,7 @@ Die Felder sind festgelegt, damit spätere Module ohne Umbau hinzukommen. Feinhe
 | Typ | Stufe | Wesentliche Felder | Snapshot und Integrität |
 |---|---|---|---|
 | `food` (eigenes Lebensmittel) | R2 | name, brand, barcode, basis g/ml, per100 {kcal, protein, carbs, sugar, fat, saturatedFat, fiber, salt}, missing[] (fehlende Felder), servings[{id, name, grams}], densityGPerMl, source ('custom'/'off'/'quick'/'import'), quality ('verified'/'community'/'user'/'estimated'), category, favorite | kcal-Plausibilität 4/4/9 mit Toleranz max(15 %, 20 kcal); unvollständige Felder bleiben leer statt 0 |
-| `generic_food` (BLS, lokal) | R2 | BLS-Code, Name, Kategorie, per100, Datenversion | Nicht synchronisiert; ID deterministisch aus dem BLS-Code |
+| `generic_food` (BLS, lokal) | R2 | BLS-Code, Name, Kategorie, per100, Datenversion | Nicht synchronisiert; ID deterministisch aus dem BLS-Code. Seit D-362 als gebündelte Grundauswahl `src/modules/nutrition/data/basicFoods.json` (aus `docs/lebensmittel-auswahl.csv`), keine Tabelle: Quelle (`bls`/`usda`), Code, Bezeichnung in der Quelle, Anzeigename, Suchbegriffe, Einheit, Stückgewicht, Hinweis, abgeleitete Werte, per100; ID `uuidv5('bls:' + Code)` bzw. `uuidv5('usda:' + Nummer)` |
 | `food_log_entry` | R2 | dayKey, tz, slotId, loggedAt, kind ('food'/'recipe'/'quick'), foodId oder recipeId, nameSnapshot, brandSnapshot (optional, D-278), quantityGrams, servingsCount, servingNameSnapshot, nutrients (absolut), missing[], quality, isEstimated, notes, idempotencyKey | Nährwerte beim Protokollieren eingefroren; Rezept-Einträge speichern zusätzlich die Zutatenliste als Snapshot |
 | `nutrition_target` | R2 | effectiveFrom, kcal, proteinG, carbsG, fatG, method ('computed'/'manual'), inputsSnapshot | Wie Ziele datiert |
 | `recipe` | R2 | name, servings, mealTypes[], tags[], prepMin, cookMin, steps[], ingredients[{id, foodId/genericFoodId, nameSnapshot, quantity, unit, grams, per100Snapshot}], nutritionPerServing (Cache) | Bearbeiten ändert das Rezept; Protokolle behalten Snapshots |
@@ -287,7 +288,7 @@ Umsetzung im Grundausbau (D-261): `food` mit `basis` ('g' | 'ml'), `per100` (feh
 
 v2 (D-253) ergänzt additiv `habits: 'id, archivedAt'` und `habitLogs: 'id, habitId, dayKey'`; vor dem Upgrade entsteht ein Snapshot, der Migrationstest öffnet eine v1-Datenbank verlustfrei (`migrations.test.ts`).
 
-v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedAt'`, `foodLog: 'id, dayKey, foodId'` und `nutritionTargets: 'id, effectiveFrom'`; Snapshot vor dem Upgrade, Migrationstest v2 → v3. Der BLS liegt nicht in einer Tabelle, sondern gebündelt als Datei (590 KB, im Speicher durchsucht); die geplante Tabelle `generic_food` entfällt vorerst.
+v3 (D-261, Schritt G) ergänzt additiv `foods: 'id, nameNorm, barcode, archivedAt'`, `foodLog: 'id, dayKey, foodId'` und `nutritionTargets: 'id, effectiveFrom'`; Snapshot vor dem Upgrade, Migrationstest v2 → v3. Der BLS liegt nicht in einer Tabelle, sondern gebündelt als Datei (590 KB, im Speicher durchsucht); die geplante Tabelle `generic_food` entfällt vorerst. Seit D-362 gebündelt nur die freigegebene Grundauswahl (361 Einträge, 50 KB, nachgeladen); gemerkte Stückgewichte stehen in den Einstellungen (`pieceWeights`, Abschnitt 3.7), ohne neue Tabelle und ohne neue Datenbankversion. Rückfall: Ältere App-Versionen behalten das unbekannte Feld (A-03) und lesen es nicht; wird die Funktion zurückgenommen, bleibt das Feld ungenutzt liegen, nichts geht verloren.
 
 v4 (D-267, M7) ergänzt additiv `recipes: 'id, nameNorm, archivedAt'`; Snapshot vor dem Upgrade, Migrationstest v3 → v4. Umsetzung `recipe`: `name`, `nameNorm`, `servings` (ganzzahlig 1 bis 50), `ingredients[{id, foodId, nameSnapshot, basisSnapshot, amount, servingSnapshot{name, count}, per100Snapshot}]` (1 bis 40), `steps` (Text), `favorite`, `archivedAt`; ohne Tags, Zeiten und Mahlzeittypen vorerst. `food_log_entry.kind` kennt zusätzlich `'recipe'` (foodId ist dann die Rezept-ID).
 

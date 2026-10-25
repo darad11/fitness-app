@@ -5,7 +5,9 @@ import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import Dexie from 'dexie';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { loadSettings } from '@/modules/settings';
 import { DbProvider, type DbRuntime } from '@/shared/db';
+import { stableId } from '@/shared/lib/uuid';
 import { createTestRuntime } from '@/shared/testing/db';
 import { catalogDbName } from '../data/catalogStore';
 import { setOffConsent } from '../data/openFoodFacts';
@@ -192,7 +194,12 @@ describe('Ernährung (Schritt G, D-261)', () => {
     }, WAIT);
     await user.type(search, 'topfen');
     const list = await screen.findByRole('list', { name: /Treffer$/ }, WAIT);
-    expect(within(list).getAllByRole('button')[0]).toHaveTextContent(/quark/i);
+    // Zuerst die Grundauswahl (D-362), der importierte Quark über das Synonym danach.
+    const names = within(list)
+      .getAllByRole('button')
+      .map((b) => b.textContent);
+    expect(names[0]).toMatch(/^Topfen 10 %BLS/);
+    expect(names.some((name) => name.startsWith('Speisequark magerÖNWT'))).toBe(true);
   });
 
   it('legt ein eigenes Lebensmittel mit Portion an und nutzt es', { timeout: 40_000 }, async () => {
@@ -807,4 +814,133 @@ describe('Weitere Nährwerte mit Tagesreferenz (D-359)', () => {
       ),
     ).toBeTruthy();
   });
+});
+
+describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernährung §6, D-362)', () => {
+  const APFEL = stableId('bls:F110100');
+
+  async function openFood(query: string, button: RegExp, dialogName: string) {
+    const user = userEvent.setup();
+    const search = await screen.findByLabelText('Lebensmittel suchen', {}, WAIT);
+    await waitFor(() => {
+      expect(document.querySelector('[aria-busy="true"]')).toBeNull();
+    }, WAIT);
+    await user.clear(search);
+    await user.type(search, query);
+    await user.click(await screen.findByRole('button', { name: button }, WAIT));
+    return { user, dialog: screen.getByRole('dialog', { name: dialogName }) };
+  }
+
+  it(
+    'trägt zwei Eier als Stück ein; Ring und weitere Nährwerte zeigen sie sofort',
+    { timeout: 40_000 },
+    async () => {
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
+      const { user, dialog } = await openFood('Eier', /^EiBLS135 kcal/, 'Ei hinzufügen');
+      // Mit Stückgewicht aus der Liste ist „Stück“ vorgewählt.
+      expect(within(dialog).getByRole('radio', { name: 'Stück' })).toBeChecked();
+      expect(within(dialog).getByText('1 Stück = 51 g · Größe M')).toBeVisible();
+      expect(within(dialog).getByRole('status')).toHaveTextContent('69 kcal');
+      expect(within(dialog).getByText('Quelle: BLS 4.0, E111100 „Hühnerei roh“')).toBeVisible();
+      const count = within(dialog).getByLabelText('Anzahl (Stück)');
+      await user.clear(count);
+      await user.type(count, '2');
+      expect(within(dialog).getByRole('status')).toHaveTextContent('138 kcal');
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      const breakfast = await screen.findByRole('region', { name: 'Frühstück' }, WAIT);
+      expect(within(breakfast).getByText('Ei')).toBeVisible();
+      expect(within(breakfast).getByText('2 × Stück (102 g)')).toBeVisible();
+      expect(screen.getAllByText('138 kcal').length).toBeGreaterThan(0);
+      const list = await screen.findByRole(
+        'group',
+        { name: 'Weitere Nährwerte', hidden: true },
+        WAIT,
+      );
+      const salt = within(list).getByText('Salz', { selector: 'dt' }).parentElement;
+      expect(salt).toHaveTextContent('0,4 g von höchstens 6 g');
+      const [entry] = await listDayEntries(rt.db, localDay());
+      expect(entry).toMatchObject({
+        nameSnapshot: 'Ei',
+        amount: 102,
+        servingSnapshot: { name: 'Stück', count: 2 },
+        nutrients: { kcal: 137.7, protein: 13.44, fat: 9.18, salt: 0.4, fiber: 0 },
+      });
+    },
+  );
+
+  it(
+    'fragt beim ersten „Stück“ nach dem Gewicht, merkt es sich und lässt es ändern',
+    { timeout: 40_000 },
+    async () => {
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
+      let { user, dialog } = await openFood('Äpfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen');
+      // Ohne Stückgewicht zuerst Gramm.
+      expect(within(dialog).getByRole('radio', { name: 'g' })).toBeChecked();
+      expect(within(dialog).getByLabelText('Menge in g')).toHaveValue('100');
+      await user.click(within(dialog).getByRole('radio', { name: 'Stück' }));
+      const weight = within(dialog).getByLabelText('Gewicht für 1 Stück in g');
+      expect(weight).toHaveAccessibleDescription(/Am genauesten ist eine Küchenwaage/);
+      // Das Gewicht ist die nächste Eingabe: Das Feld hat gleich den Fokus.
+      expect(weight).toHaveFocus();
+      expect(within(dialog).getByRole('status')).toHaveTextContent('–');
+      // Ohne Gewicht trägt „Hinzufügen“ nichts ein.
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+      expect(within(dialog).getByRole('alert')).toHaveTextContent('Gewicht zwischen 0,1 und');
+      await user.type(weight, '180');
+      expect(within(dialog).getByRole('status')).toHaveTextContent('104 kcal');
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      expect((await loadSettings(rt.db)).pieceWeights).toEqual({ [APFEL]: 180 });
+      expect((await listDayEntries(rt.db, localDay()))[0]).toMatchObject({
+        amount: 180,
+        servingSnapshot: { name: 'Stück', count: 1 },
+        nutrients: { kcal: 104.4 },
+      });
+
+      // Beim nächsten Mal gilt das gemerkte Gewicht; „Gewicht ändern“ ändert es.
+      cleanup();
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
+      ({ user, dialog } = await openFood('Apfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen'));
+      expect(within(dialog).getByRole('radio', { name: 'Stück' })).toBeChecked();
+      expect(within(dialog).getByText('1 Stück = 180 g')).toBeVisible();
+      await user.click(within(dialog).getByRole('button', { name: 'Gewicht ändern' }));
+      const changed = within(dialog).getByLabelText('Gewicht für 1 Stück in g');
+      expect(changed).toHaveValue('180');
+      expect(changed).toHaveFocus();
+      await user.clear(changed);
+      await user.type(changed, '150,5');
+      await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
+      await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
+      expect((await loadSettings(rt.db)).pieceWeights).toEqual({ [APFEL]: 150.5 });
+    },
+  );
+
+  it(
+    'kennzeichnet abgeleitete Werte und nennt die Quelle, auch bei USDA',
+    { timeout: 30_000 },
+    async () => {
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=lunch', 'Lebensmittel hinzufügen');
+      const feta = await openFood('Feta', /^FetaBLS284 kcal/, 'Feta hinzufügen');
+      const fiber = within(feta.dialog).getByRole('rowheader', { name: 'Ballaststoffe' });
+      expect(fiber.nextElementSibling).toHaveTextContent('0 g* (abgeleitet)');
+      expect(
+        within(feta.dialog).getByText(/^\* Abgeleitet: Die Quelle nennt keinen Wert/),
+      ).toBeVisible();
+      await feta.user.click(within(feta.dialog).getByRole('button', { name: 'Abbrechen' }));
+
+      const { dialog } = await openFood(
+        'Pfefferoni',
+        /^PfefferoniUSDA45 kcal/,
+        'Pfefferoni hinzufügen',
+      );
+      expect(
+        within(dialog).getByText(
+          'Quelle: USDA SR28, 11670 „Peppers, hot chili, green, raw“, umgerechnet nach EU-Regeln',
+        ),
+      ).toBeVisible();
+      expect(within(dialog).queryByText(/Abgeleitet/)).toBeNull();
+    },
+  );
 });

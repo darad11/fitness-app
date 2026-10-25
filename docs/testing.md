@@ -1439,3 +1439,21 @@ Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Beri
 | `python3 tools/lebensmittel_auswahl.py --check` | 366 Einträge geprüft, ohne Befund |
 | Gegenproben (je eine Änderung an einer Kopie der Zeilen): Regel nicht angewandt (Feta), Regel falsch angewandt (Honig, Margarine), Wert steht im BLS (Ei), Herkunft ohne Einheit (Apfel), unbekannte Einheit (Semmel), Hinweis ohne Einheit (Brokkoli), falsche USDA-Nummer (Magermilch), falsche USDA-Bezeichnung (Pfefferoni), falsches Format (Kokosöl) | 10 von 10 gemeldet |
 | `pnpm check:docs` | ohne Befund |
+
+### Ernährung §6: Einbau der Grundauswahl · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+361 Lebensmittel nachgeladen und offline, Suche beim Tippen, Menge in g oder Stück, Stückgewicht einmal angeben und gemerkt, Quelle je Eintrag, Lizenzliste (D-362, AK-NUT-17 bis AK-NUT-19). Bericht: `form-ernaehrung-report.md` Abschnitt 9.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `basicFoods.test.ts`, `pieces.test.ts`, `pieceWeightService.test.ts` (neu) | 22, 5 und 6 bestanden |
+| `foodSearch.test.ts`, `nutrition-ui.test.tsx`, `app.test.tsx` | 20, 19 und 26 bestanden (1, 3 und 1 neu) |
+| Gegenprobe: Tipp-Tests gegen die Suche vor §6 | 2 von 2 fehlgeschlagen |
+| Gegenprobe: Fokus-Prüfung ohne Fokus-Logik | 1 von 19 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1064 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB; Grundauswahl als eigener Teil 47,3 KB (gzip 14,8 KB), vorab gespeichert |
+| E2E `basic-foods.spec.ts` (neu), Chromium Desktop und Pixel 7 | 8 bestanden, darin axe für den Dialog ohne Verstoß (erster Lauf 2 fehlgeschlagen am Selektor im Test, behoben) |
+| E2E, ganze Suite (Chromium), Stand vor der Fokus-Verbesserung | 333 bestanden, 51 übersprungen, 0 fehlgeschlagen |
+| E2E mit dem Endstand: `basic-foods`, `nutrition`, `nutrition-ring`, `shopping`, `network-a11y` | 97 bestanden, 3 übersprungen, 0 fehlgeschlagen |
+| WebKit | CI zum Commit dieses Abschnitts |

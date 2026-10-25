@@ -25,15 +25,18 @@ export interface NutrientColumn {
 
 /**
  * Alle acht Nährwerte (NU-16) in der Reihenfolge des Etiketts, z. B. je 100 g und für die gewählte
- * Menge. Fehlende Werte erscheinen als „–“.
+ * Menge. Fehlende Werte erscheinen als „–“; abgeleitete (0 g nach Regel D-361) mit Sternchen.
  */
 export function NutrientTable({
   caption,
   columns,
+  derived = [],
   className,
 }: {
   caption: string;
   columns: readonly NutrientColumn[];
+  /** Nährwerte, deren 0 g abgeleitet ist; die Erklärung steht unter der Tabelle. */
+  derived?: readonly Nutrient[];
   className?: string;
 }) {
   const fmt = useFormatters();
@@ -43,7 +46,15 @@ export function NutrientTable({
     // Salz meist unter 1 g, daher zwei Nachkommastellen.
     const shown =
       nutrient === 'salt' ? fmt.number(value, { maximumFractionDigits: 2 }) : grams(fmt, value);
-    return `${shown} ${tNutrition.units.g}`;
+    const text = `${shown} ${tNutrition.units.g}`;
+    if (!derived.includes(nutrient)) return text;
+    return (
+      <>
+        {text}
+        <span aria-hidden="true">{tNutrition.basic.derivedMark}</span>
+        <span className="sr-only"> ({tNutrition.basic.derivedLabel})</span>
+      </>
+    );
   };
   return (
     <table className={cn('w-full text-sm tabular-nums', className)}>

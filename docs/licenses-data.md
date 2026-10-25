@@ -2,7 +2,7 @@
 
 Stand: 25.10.2026 · Bezug: D-358 und D-361 (Phase Ernährung §2), `data-sources.md`, `lebensmittel-auswahl.csv`
 
-Dieses Dokument hält fest, woher die Lebensmitteldaten der App stammen, unter welchen Bedingungen sie genutzt werden und wie die Quelle genannt wird. Der Produktinhaber hat die Auswahlliste am 25.10.2026 freigegeben (D-361); eingebaut wird sie in Phase Ernährung §6. Ab dann steht die Quelle an jedem Eintrag und unter „Über die App“.
+Dieses Dokument hält fest, woher die Lebensmitteldaten der App stammen, unter welchen Bedingungen sie genutzt werden und wie die Quelle genannt wird. Der Produktinhaber hat die Auswahlliste am 25.10.2026 freigegeben (D-361); eingebaut ist sie seit Phase Ernährung §6 (D-362). Die Quelle steht an jedem Eintrag (unter der Nährwerttabelle beim Eintragen) und unter „Mehr“ › „Über die App“ › „Lebensmitteldaten und Lizenzen“.
 
 ## 1. Bundeslebensmittelschlüssel (BLS) 4.0, Hauptquelle
 
@@ -14,13 +14,13 @@ Dieses Dokument hält fest, woher die Lebensmitteldaten der App stammen, unter w
 | Lizenzbezeichnung | Laut Websuche vom 18.10.2026 CC BY 4.0 (Namensnennung), siehe `data-sources.md`. Websuchen am 24. und 25.10.2026 bestätigten die kostenfreie Freigabe (Gebühr vollständig entfallen, Open Data), nannten die Lizenzbezeichnung aber nicht. Den Lizenzhinweis aus dem Download wörtlich zu übernehmen, war in der Sitzung vom 25.10.2026 nicht möglich: `blsdb.de` und `mri.bund.de` sind in der Netzwerkregel der Cloud-Sitzung gesperrt. Offen beim Produktinhaber: den Hinweis in seinem Download nachsehen |
 | Genutzte Felder | Code, Bezeichnung und acht Nährwerte je 100 g: Energie (ENERCC), Eiweiß (PROT625), Kohlenhydrate verfügbar (CHO), Zucker (SUGAR), Fett (FAT), gesättigte Fettsäuren (FASAT), Ballaststoffe (FIBT), Salz (NACL) |
 | Änderungen | Auf acht Nährwerte gekürzt, Werte auf höchstens zwei Nachkommastellen gerundet (`tools/bls_build.py`); Auswahl von 358 Einträgen; eigene Anzeigenamen (österreichisch), Suchbegriffe, Gruppen und Stückgewichte. Die BLS-Werte selbst bleiben unverändert; fehlende Werte bleiben fehlend, außer in den Fällen der Regel unten (0 g, als abgeleitet gekennzeichnet) |
-| Ablage | `tools/data/bls-4.0.json` (Rohdaten für Werkzeuge, nicht in der App), `docs/lebensmittel-auswahl.csv` (Auswahl mit BLS-Code und BLS-Bezeichnung je Zeile) |
+| Ablage | `tools/data/bls-4.0.json` (Rohdaten für Werkzeuge, nicht in der App), `docs/lebensmittel-auswahl.csv` (Auswahl mit BLS-Code und BLS-Bezeichnung je Zeile), `src/modules/nutrition/data/basicFoods.json` (Datei der App, aus der CSV erzeugt, D-362) |
 
-Namensnennung in der App (ab §6), Vorschlag:
+Namensnennung in der App (D-362, „Über die App“ › „Lebensmitteldaten und Lizenzen“):
 
-> Nährwerte: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, DOI 10.25826/Data20251217-134202-0. Auswahl gekürzt; Namen, Suchbegriffe und Stückgewichte ergänzt.
+> Nährwerte der Grundauswahl: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, Karlsruhe, DOI 10.25826/Data20251217-134202-0. Kostenfrei nutzbar, auch in Apps, mit Quellenangabe. Gekürzt auf acht Nährwerte, ergänzt um österreichische Namen, Suchbegriffe und Stückgewichte.
 
-Je Eintrag: „Quelle: BLS 4.0“ mit BLS-Code und BLS-Bezeichnung.
+Je Eintrag (unter der Nährwerttabelle beim Eintragen): „Quelle: BLS 4.0, <BLS-Code> „<BLS-Bezeichnung>““.
 
 ### Rechenregeln im Vergleich mit der EU (LMIV)
 
@@ -54,7 +54,7 @@ Betroffen sind 13 Werte (Liste in D-361). Honig, Margarine und Halbfettmargarine
 | Stückgewichte | Eiklar 33 g und Dotter 17 g (SR 01124, 01125, „1 large“), Gegenprobe für das Ei (01123); vom Produktinhaber bestätigt |
 | Ablage | `tools/data/usda-sr28-auswahl.json` mit den Rohwerten je 100 g wie veröffentlicht (aus `ABBREV.txt` und `FOOD_DES.txt`) |
 
-Namensnennung in der App (ab §6): „Nährwerte für Pfefferoni, Butternusskürbis und Magermilch: U.S. Department of Agriculture, Agricultural Research Service (2015): USDA National Nutrient Database for Standard Reference, Release 28; umgerechnet nach EU-Regeln.“
+Namensnennung in der App (D-362, „Über die App“): „Pfefferoni, Butternusskürbis und Magermilch sowie die Stückgewichte von Eiklar und Dotter: U.S. Department of Agriculture, Agricultural Research Service (2015): USDA National Nutrient Database for Standard Reference, Release 28. Gemeinfrei. Nährwerte nach EU-Regeln umgerechnet.“ Je Eintrag: „Quelle: USDA SR28, <Nummer> „<Bezeichnung>“, umgerechnet nach EU-Regeln“.
 
 ## 3. Amtliche Texte als Belege für Stückgewichte
 

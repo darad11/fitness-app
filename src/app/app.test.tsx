@@ -184,6 +184,26 @@ describe('App-Shell', () => {
     ).toBeInTheDocument();
   });
 
+  it('listet unter „Über die App“ alle Lebensmitteldaten mit Lizenz (D-362)', async () => {
+    renderApp('/mehr/ueber');
+    await screen.findByRole('heading', { level: 1, name: 'Über die App' });
+    const card = screen.getByRole('region', { name: 'Lebensmitteldaten und Lizenzen' });
+    const names = within(card)
+      .getAllByRole('term')
+      .map((term) => term.textContent);
+    expect(names).toEqual([
+      'Bundeslebensmittelschlüssel (BLS) 4.0',
+      'USDA SR28',
+      'Stückgewichte',
+      'Open Food Facts',
+      'Importierte Lebensmitteldaten',
+    ]);
+    expect(within(card).getByText(/Max Rubner-Institut \(2025\).*DOI 10\.25826/)).toBeVisible();
+    expect(within(card).getByText(/Release 28\. Gemeinfrei/)).toBeVisible();
+    expect(within(card).getByText(/Open Database License \(ODbL\)/)).toBeVisible();
+    expect(within(card).getByText(/Codex-Kapitel B 18/)).toBeVisible();
+  });
+
   it('meldet unbekannte Beispielvorlagen als nicht gefunden, ohne Fehlerprotokoll', async () => {
     renderApp('/training/vorlagen/gibt_es_nicht');
     expect(

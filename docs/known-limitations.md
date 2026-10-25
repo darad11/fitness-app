@@ -96,6 +96,8 @@ Auf iOS und iPadOS nutzen alle Browser WebKit. Maßgeblich ist, was Safari und i
 
 Prüfergebnisse und Restfragen stehen in `data-sources.md`: strengere Limits bei Open Food Facts (15 Produktabfragen und 10 Suchanfragen pro Minute und IP), ungeklärte User-Agent-Anforderung im Browser, unsicheres CORS-Verhalten der Suche; BLS 4.0 frei unter CC BY 4.0.
 
+Grundauswahl (D-362): Die Nährwerte gelten je 100 g, auch bei Getränken (Milch, Säfte, Pflanzendrinks); wer in ml misst, liegt bei Milch um etwa 3 % daneben. Stückgewichte gibt es aus der Liste nur für Ei, Eiklar, Dotter und Semmel; alle anderen gibst du einmal selbst an, am genauesten mit einer Küchenwaage. Gemerkte Stückgewichte stehen in den Einstellungen; wie bei allen Einstellungen gewinnt beim Abgleich die jüngere Fassung des ganzen Dokuments, ändern zwei Geräte vor dem Abgleich Einstellungen, kann ein dort gemerktes Gewicht verloren gehen. Den Lizenzhinweis des BLS aus dem Download konnte die Cloud-Sitzung nicht wörtlich übernehmen (Seiten gesperrt, `licenses-data.md`).
+
 Barcode-Scanner (D-266): Open Food Facts war aus der Cloud-Umgebung nicht erreichbar; die Abfrage ist mit nachgebildeten Antworten getestet. Der erste echte Scan auf dem iPhone (19.10.2026) lieferte Marke und Nährwerte; CORS klappt damit (Prüfspike S-1). Ein Browser darf keinen eigenen User-Agent setzen; die Abfrage geht ohne App-Kennung. Auf dem iPhone fragt iOS bei installierten Web-Apps unter Umständen bei jedem Start erneut nach der Kamera. Die Erkennung braucht genug Licht und einen ruhigen Abstand von etwa 10 bis 20 cm; sonst bleibt die Eingabe von Hand.
 
 ## 9. Native Erweiterung (spätere Option)

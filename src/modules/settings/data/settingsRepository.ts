@@ -32,18 +32,23 @@ export async function loadSettings(db: AppDb): Promise<SettingsData> {
   return doc ? settingsDataSchema.parse(doc) : SETTINGS_DEFAULTS;
 }
 
-/** Ändert einzelne Felder; ungültige Werte lehnt das Schema ab, ohne etwas zu speichern. */
+/**
+ * Ändert einzelne Felder; ungültige Werte lehnt das Schema ab, ohne etwas zu speichern. Statt
+ * fester Werte darf eine Funktion stehen: Sie erhält die gespeicherten Einstellungen in derselben
+ * Transaktion, z. B. um ein einzelnes Stückgewicht zu ändern, ohne andere zu überschreiben.
+ */
 export async function saveSettings(
   rt: DbRuntime,
-  patch: Partial<SettingsData>,
+  patch: Partial<SettingsData> | ((current: SettingsData) => Partial<SettingsData>),
 ): Promise<SettingsData> {
-  const doc = await upsertDoc(rt, settingsDef, SETTINGS_ID, (current) => ({
-    ...SETTINGS_DEFAULTS,
-    // Felder einer neueren App-Version bleiben erhalten (A-03).
-    ...(current
-      ? { ...unknownFields(current, settingsDataSchema), ...settingsDataSchema.parse(current) }
-      : {}),
-    ...patch,
-  }));
+  const doc = await upsertDoc(rt, settingsDef, SETTINGS_ID, (current) => {
+    const stored = current ? settingsDataSchema.parse(current) : undefined;
+    return {
+      ...SETTINGS_DEFAULTS,
+      // Felder einer neueren App-Version bleiben erhalten (A-03).
+      ...(current && stored ? { ...unknownFields(current, settingsDataSchema), ...stored } : {}),
+      ...(typeof patch === 'function' ? patch(stored ?? SETTINGS_DEFAULTS) : patch),
+    };
+  });
   return settingsDataSchema.parse(doc);
 }

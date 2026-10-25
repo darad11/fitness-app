@@ -263,20 +263,19 @@ test('Suche: Mehrzahl, Umlautschreibweise und Synonyme, lose vor Marke (D-356)',
   ]);
   await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
   const search = page.getByLabel('Lebensmittel suchen');
-  const first = page
-    .getByRole('list', { name: /Treffer$/ })
-    .getByRole('button')
-    .first();
+  const results = page.getByRole('list', { name: /Treffer$/ });
+  // Die importierten Einträge stehen neben der Grundauswahl (D-362); gefunden werden sie über
+  // Mehrzahl, Umlautschreibweise und Synonyme genauso.
   for (const [query, expected] of [
-    ['Tomaten', /^Tomate roh/],
-    ['Paradeiser', /^Tomate roh/],
-    ['Eier', /^Hühnerei roh/],
-    ['Ei', /^Hühnerei roh/],
-    ['Aepfel', /^Apfel roh/],
-    ['Äpfel', /^Apfel roh/],
-    ['Kartoffeln', /^Erdäpfel gekocht/],
+    ['Tomaten', /^Tomate roh\s*ÖNWT/],
+    ['Paradeiser', /^Tomate roh\s*ÖNWT/],
+    ['Eier', /^Hühnerei roh\s*ÖNWT/],
+    ['Ei', /^Hühnerei roh\s*ÖNWT/],
+    ['Aepfel', /^Apfel roh\s*ÖNWT/],
+    ['Äpfel', /^Apfel roh\s*ÖNWT/],
+    ['Kartoffeln', /^Erdäpfel gekocht\s*ÖNWT/],
   ] as const) {
     await search.fill(query);
-    await expect(first).toHaveAccessibleName(expected);
+    await expect(results.getByRole('button', { name: expected })).toBeVisible();
   }
 });

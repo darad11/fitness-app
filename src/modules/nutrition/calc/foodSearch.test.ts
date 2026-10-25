@@ -206,6 +206,15 @@ describe('Ganzes Wort vor Grundwort, falsche Freunde (D-357)', () => {
     expect(ids(index, 'Hackfleisch')).toEqual(['faschiertes']);
     expect(ids(index, 'gehackt')).toEqual(['mandeln']);
   });
+
+  it('findet falsche Freunde selbst, wenn man sie erst antippt (D-362)', () => {
+    expect(ids(index, 'Erdäp')).toEqual(['erdaepfel', 'ofenerdaepfel']);
+    expect(ids(index, 'Butt')).toContain('butternuss');
+    expect(ids(index, 'Oberschen')).toEqual(['schenkel']);
+    // Ganze Lebensmittelwörter (auch aus dem Sprachwissen wie „Obers“) bleiben geschützt.
+    expect(ids(index, 'Obers')).toEqual(['obers']);
+    expect(ids(index, 'Butter')).toEqual(['butter', 'buttermilch']);
+  });
 });
 
 describe('Dubletten aus mehreren Quellen', () => {

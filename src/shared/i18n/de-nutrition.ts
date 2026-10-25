@@ -121,15 +121,42 @@ export const tNutrition = {
   favorites: 'Favoriten',
   results: (n: number) => (n === 1 ? '1 Treffer' : `${n} Treffer`),
   noResults: 'Nichts gefunden. Lege ein eigenes Lebensmittel an oder nutze den Schnelleintrag.',
-  searchHint: 'Suche in deinen Lebensmitteln, Rezepten und importierten Lebensmitteldaten.',
+  searchHint:
+    'Suche in deinen Lebensmitteln und Rezepten, in der Grundauswahl und in importierten Lebensmitteldaten.',
   loadingFoods: 'Lebensmittel werden geladen …',
+  basicFailed: 'Die Grundauswahl ließ sich nicht laden. Gesucht wird ohne sie.',
   sourceBadge: {
     custom: 'Eigenes',
     quick: 'Schnell',
     bls: 'BLS',
+    usda: 'USDA',
     off: 'Open Food Facts',
     import: 'Import',
     recipe: 'Rezept',
+  },
+  /** Grundauswahl (Phase Ernährung §6, D-362): Menge in g oder Stück, Stückgewicht, Quelle. */
+  basic: {
+    unitLegend: 'Menge in',
+    grams: 'g',
+    count: (unit: string) => `Anzahl (${unit})`,
+    pieceIs: (unit: string, grams: string) => `1 ${unit} = ${grams} g`,
+    ownPiece: (grams: string) => `dein Wert, in der Liste ${grams} g`,
+    changePiece: 'Gewicht ändern',
+    pieceLabel: (unit: string) => `Gewicht für 1 ${unit} in g`,
+    pieceAsk:
+      'Am genauesten ist eine Küchenwaage. FORM merkt sich das Gewicht für dieses Lebensmittel, du kannst es jederzeit ändern.',
+    listPiece: (grams: string) => `In der Liste: ${grams} g`,
+    invalidPiece: 'Bitte gib ein Gewicht zwischen 0,1 und 5.000 g ein.',
+    invalidCount: 'Bitte gib eine Anzahl größer als 0 ein, höchstens 100.',
+    source: {
+      bls: (code: string, name: string) => `Quelle: BLS 4.0, ${code} „${name}“`,
+      usda: (code: string, name: string) =>
+        `Quelle: USDA SR28, ${code} „${name}“, umgerechnet nach EU-Regeln`,
+    },
+    derivedMark: '*',
+    derivedLabel: 'abgeleitet',
+    derivedNote:
+      '* Abgeleitet: Die Quelle nennt keinen Wert, das Lebensmittel enthält diesen Nährstoff von Natur aus nicht.',
   },
   catalogBadge: { oenwt: 'ÖNWT' },
   per100: (unit: string) => `je 100 ${unit}`,

@@ -101,6 +101,13 @@ const COMPOUND_HEADS = [...SYNONYMS.keys()].filter((key) => !key.includes(' ') &
 
 const FALSE_FRIEND_WORDS = FALSE_FRIENDS.map(foldText);
 
+/** Einwortige Begriffe aus dem Sprachwissen („obers“, „topfen“, „eier“): sicher Lebensmittelwörter. */
+const KNOWN_WORDS: ReadonlySet<string> = new Set([
+  ...[...SYNONYMS.keys()].filter((key) => !key.includes(' ')),
+  ...Object.keys(IRREGULAR_PLURALS),
+  ...Object.values(IRREGULAR_PLURALS),
+]);
+
 /** Falsche Freunde, die ein Wort enthalten („apfel“ → erdapfel, granatapfel, apfelsine). */
 function masksFor(word: string): readonly string[] {
   return FALSE_FRIEND_WORDS.filter((term) => term.length > word.length && term.includes(word));
@@ -340,7 +347,16 @@ export function searchFoods<T extends SearchableFood>(
   const masks = (word: string) => {
     let found = maskCache.get(word);
     if (!found) {
-      found = masksFor(word);
+      const all = masksFor(word);
+      // Wer einen falschen Freund erst antippt („Erdäp“ für Erdäpfel, „Parad“, „Seel“ für
+      // Seelachs), sucht ihn selbst: Dann zählt er nicht als falscher Freund. Nur wenn das
+      // Getippte schon ein ganzes Lebensmittelwort ist („Butter“, „Obers“, „Apfel“, „Eier“), bleibt
+      // die Maske (D-362; vorher fanden halbe Wörter nichts).
+      const whole =
+        all.some((mask) => mask.startsWith(word)) &&
+        (KNOWN_WORDS.has(word) ||
+          index.entries.some((entry) => entry.nameSet.has(word) || entry.otherSet.has(word)));
+      found = all.filter((mask) => !mask.startsWith(word) || whole);
       maskCache.set(word, found);
     }
     return found;

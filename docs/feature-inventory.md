@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.22 (Phase Ernährung, Abschnitt 6, 25.10.2026): NU-21 mit der Grundauswahl aus dem BLS 4.0 (AK-NUT-17, D-362), NU-29 neu und „Implementiert“ (Stückgewicht einmal angeben und merken, AK-NUT-18), NU-25 zusätzlich mit AK-NUT-19 (Lizenzliste unter „Über die App“). Geprüft mit Unit-, Komponenten- und E2E-Tests in Chromium; WebKit in der CI und Gerätetest stehen aus.
 - Version 0.21 (Phase Ernährung, Abschnitt 4, 24.10.2026): NU-26 zusätzlich mit AK-NUT-16 (Wischen nach links löscht einen Artikel mit Rückgängig, D-360).
 - Version 0.20 (Phase Ernährung, Abschnitt 3, 24.10.2026): NU-28 neu und „Implementiert“ (AK-NUT-15, D-359): Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe als Ist und Tagesreferenz mit Quelle; Einträge ohne Angabe zählen nicht als 0.
 - Version 0.19 (Phase Ernährung, Abschnitt 1, 24.10.2026): NU-08 „Implementiert“ für die lokale Suche (AK-NUT-14, D-356): für jede Datenquelle, mit Einzahl und Mehrzahl, Umlautschreibweisen, österreichischen und bundesdeutschen Begriffen in beide Richtungen, Rang nach Stellung im Namen und lose vor Marke, ohne Dubletten. Eine Online-Suche nach Namen gibt es weiterhin nicht (D-302).
@@ -71,13 +72,13 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 |---|---|---|---|---|
 | Original verifiziert (OV) | 50 | 28 | 10 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
-| Eigene Verbesserung (EV) | 48 | 4 | 0 | 52 |
-| Summe | 111 | 45 | 12 | 168 |
+| Eigene Verbesserung (EV) | 49 | 4 | 0 | 53 |
+| Summe | 112 | 45 | 12 | 169 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 111 |
+| R1 | 112 |
 | R2 | 19 |
 | R3 | 1 |
 | R4 | 13 |
@@ -85,14 +86,14 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 68 | 30 | 16 | 12 |
+| Anzahl | 42 | 69 | 30 | 16 | 12 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 90 |
+| Implementiert | 91 |
 | Noch zu recherchieren | 1 |
 | Spezifiziert | 16 |
 | Verworfen | 2 |
@@ -222,14 +223,15 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-18 | Roh- und Gargewicht | Nicht belegt | – | P | ON | M | NU-21 | S | P2 | Später | R2 · M5 | Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor | Analysiert | Faktor-Werte als Schätzung markiert |
 | NU-19 | Quelle und Qualitätsstatus je Lebensmittel | Nicht belegt | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme |
 | NU-20 | Schnelleintrag nur mit kcal und Makros | Nicht belegt | – | E | EV | M | NU-05 | S | P2 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-04 |
-| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | Importierte ÖNWT-Daten (D-263); BLS 4.0 entfernt (D-279) | M | P1 | MVP | R1 · Schritt G | Verbesserung (D-110, D-301), vorgezogen (D-261) | Implementiert | AK-NUT-01, AK-NUT-06 |
+| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | Grundauswahl aus dem BLS 4.0 (D-361, D-362); importierte ÖNWT-Daten (D-263) | M | P1 | MVP | R1 · Schritt G | Verbesserung (D-110, D-301), vorgezogen (D-261); kuratierte Grundauswahl mit österreichischen Namen statt des ganzen BLS (D-362) | Implementiert | AK-NUT-01, AK-NUT-06, AK-NUT-17 |
 | NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | MVP | R1 · Schritt G | Verbesserung (D-110), vorgezogen (D-261) | Implementiert | AK-NUT-04 |
 | NU-23 | Einheiten und Haushaltsmaße mit Umrechnung | – | – | E | EV | H | NU-09 | M | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert |
 | NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-266): ohne Netz Hinweis, lokale Treffer, „Selbst anlegen“ mit Barcode; „für später merken“ entfällt vorerst | Implementiert | AK-NUT-09 |
 | NU-26 | Einkaufsliste in „Meine Küche“ | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-287 | Wunsch des Produktinhabers (D-287); Wischen zum Löschen (D-360) | Implementiert | AK-NUT-12, AK-NUT-16 |
 | NU-27 | Wasser: Tagesmenge, Ziel, Schnellmengen, Verlauf | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-289 | Wunsch des Produktinhabers (D-289) | Implementiert | AK-NUT-13 |
 | NU-28 | Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz | – | – | E | EV | M | NU-16 | S | P1 | MVP | R1 · D-359 | Wunsch des Produktinhabers (Planpunkt 58): Referenzmengen statt Ziele (D-359) | Implementiert | AK-NUT-15 |
-| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-06, AK-NUT-07 |
+| NU-29 | Stückgewicht einmal angeben und merken | – | – | E | EV | H | NU-21 | S | P1 | MVP | R1 · D-362 | Entscheidung des Produktinhabers (D-361): keine US-Stückgewichte, die App fragt einmal und merkt sich den Wert je Lebensmittel (D-362) | Implementiert | AK-NUT-18 |
+| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261); Quelle je Eintrag und Lizenzliste unter „Über die App“ (D-362) | Implementiert | AK-NUT-06, AK-NUT-07, AK-NUT-19 |
 
 ## F. Rezepte und Mahlzeitenplanung (RE)
 

@@ -1002,4 +1002,56 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
       expect(within(dialog).queryByText(/Abgeleitet/)).toBeNull();
     },
   );
+
+  it(
+    'zeigt die zweite Spalte nur, wenn die Menge von 100 g abweicht (D-364)',
+    { timeout: 30_000 },
+    async () => {
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=lunch', 'Lebensmittel hinzufügen');
+      const { user, dialog } = await openFood('Feta', /^FetaBLS284 kcal/, 'Feta hinzufügen');
+      const table = within(dialog).getByRole('table', { name: 'Nährwerte' });
+      const headers = () =>
+        within(table)
+          .getAllByRole('columnheader')
+          .map((header) => header.textContent);
+      // 100 g: eine Spalte, mit Kopf „je 100 g“.
+      expect(headers()).toEqual(['je 100 g']);
+      const energy = within(table).getByRole('row', { name: /Energie/ });
+      expect(
+        within(energy)
+          .getAllByRole('cell')
+          .map((cell) => cell.textContent),
+      ).toEqual(['284 kcal']);
+      // 150 g: zwei Spalten.
+      const amount = within(dialog).getByLabelText('Menge in g');
+      await user.clear(amount);
+      await user.type(amount, '150');
+      expect(headers()).toEqual(['je 100 g', 'für 150 g']);
+      expect(
+        within(energy)
+          .getAllByRole('cell')
+          .map((cell) => cell.textContent),
+      ).toEqual(['284 kcal', '426 kcal']);
+      // Köpfe und Werte brechen nicht um, die Wertespalten haben eine feste Breite.
+      for (const cell of table.querySelectorAll('thead th, tbody td')) {
+        expect(cell).toHaveClass('whitespace-nowrap');
+        expect(cell.className).toMatch(/w-\[(4\.25|5\.75)rem\]/);
+      }
+      // Wieder 100 g: wieder eine Spalte.
+      await user.clear(amount);
+      await user.type(amount, '100');
+      expect(headers()).toEqual(['je 100 g']);
+    },
+  );
+
+  it('nennt bei Stück die Anzahl im Spaltenkopf (D-364)', { timeout: 30_000 }, async () => {
+    await renderAt('/ernaehrung/hinzufuegen?mahlzeit=breakfast', 'Lebensmittel hinzufügen');
+    const { user, dialog } = await openFood('Eier', /^EiBLS135 kcal/, 'Ei hinzufügen');
+    const table = within(dialog).getByRole('table', { name: 'Nährwerte' });
+    expect(within(table).getByRole('columnheader', { name: 'für 1 Stück' })).toBeVisible();
+    const count = within(dialog).getByLabelText('Anzahl (Stück)');
+    await user.clear(count);
+    await user.type(count, '2');
+    expect(within(table).getByRole('columnheader', { name: 'für 2 Stück' })).toBeVisible();
+  });
 });

@@ -2,6 +2,16 @@ import { listDe } from '../lib/list';
 
 // Texte, die nur nachgeladene Teile brauchen (D-288): Ernährung (Schritt G, D-261). Gehören zu `de.ts`, liegen
 // aber getrennt, damit sie nicht in die Startansicht geladen werden.
+
+/** Mehrzahl der Einheiten der Grundauswahl; „Stück“ bleibt gleich. */
+const UNIT_PLURAL: Readonly<Record<string, string>> = {
+  Stück: 'Stück',
+  Scheibe: 'Scheiben',
+  Zehe: 'Zehen',
+  Stange: 'Stangen',
+  Kolben: 'Kolben',
+};
+
 export const tNutrition = {
   title: 'Ernährung',
   today: 'Heute',
@@ -148,6 +158,9 @@ export const tNutrition = {
     unitLegend: 'Menge in',
     grams: 'g',
     count: (unit: string) => `Anzahl (${unit})`,
+    /** „1 Scheibe“, „2 Scheiben“, „1,5 Scheiben“, „2 Stück“. */
+    pieces: (count: number, countText: string, unit: string) =>
+      `${countText} ${count === 1 ? unit : (UNIT_PLURAL[unit] ?? unit)}`,
     pieceIs: (unit: string, grams: string) => `1 ${unit} = ${grams} g`,
     ownPiece: (grams: string) => `dein Wert, in der Liste ${grams} g`,
     changePiece: 'Gewicht ändern',

@@ -60,3 +60,16 @@ describe('Info-Blatt zu „Weitere Nährwerte“', () => {
     }
   });
 });
+
+/** Spaltenkopf und Anzeige bei Stück und Scheibe (D-364): Einzahl nur bei genau 1. */
+describe('Anzahl mit Einheit', () => {
+  it('setzt die Mehrzahl, „Stück“ bleibt gleich', () => {
+    expect(tNutrition.basic.pieces(1, '1', 'Scheibe')).toBe('1 Scheibe');
+    expect(tNutrition.basic.pieces(2, '2', 'Scheibe')).toBe('2 Scheiben');
+    expect(tNutrition.basic.pieces(1.5, '1,5', 'Scheibe')).toBe('1,5 Scheiben');
+    expect(tNutrition.basic.pieces(0.5, '0,5', 'Scheibe')).toBe('0,5 Scheiben');
+    expect(tNutrition.basic.pieces(2, '2', 'Stück')).toBe('2 Stück');
+    expect(tNutrition.basic.pieces(3, '3', 'Zehe')).toBe('3 Zehen');
+    expect(tNutrition.forAmount(tNutrition.basic.pieces(2, '2', 'Stück'))).toBe('für 2 Stück');
+  });
+});

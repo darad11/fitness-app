@@ -24,6 +24,16 @@ export interface NutrientColumn {
 }
 
 /**
+ * Feste Breite der Wertespalten (D-364): „je 100 g“ braucht höchstens „je 100 ml“ oder
+ * „899 kcal“, „für x g“ auch „für 1,5 Stück“ oder „3 735 kcal“. Köpfe und Werte brechen nie um;
+ * ist ein Wert doch breiter, wird seine Spalte breiter. Die Namen bekommen den Rest der Breite,
+ * bei 360 pt genug für „davon gesättigte“ in der ersten Zeile.
+ */
+function columnWidth(index: number): string {
+  return index === 0 ? 'w-[4.25rem]' : 'w-[5.75rem]';
+}
+
+/**
  * Alle acht Nährwerte (NU-16) in der Reihenfolge des Etiketts, z. B. je 100 g und für die gewählte
  * Menge. Fehlende Werte erscheinen als „–“; abgeleitete (0 g nach Regel D-361) mit Sternchen.
  */
@@ -31,12 +41,15 @@ export function NutrientTable({
   caption,
   columns,
   derived = [],
+  header = columns.length > 1,
   className,
 }: {
   caption: string;
   columns: readonly NutrientColumn[];
   /** Nährwerte, deren 0 g abgeleitet ist; die Erklärung steht unter der Tabelle. */
   derived?: readonly Nutrient[];
+  /** Spaltenköpfe zeigen, auch bei nur einer Spalte („je 100 g“). */
+  header?: boolean;
   className?: string;
 }) {
   const fmt = useFormatters();
@@ -59,15 +72,18 @@ export function NutrientTable({
   return (
     <table className={cn('w-full text-sm tabular-nums', className)}>
       <caption className="mb-1 text-left font-semibold text-muted">{caption}</caption>
-      {columns.length > 1 ? (
+      {header ? (
         <thead>
           <tr>
             <td />
-            {columns.map((column) => (
+            {columns.map((column, index) => (
               <th
                 key={column.label}
                 scope="col"
-                className="pb-1 text-right font-semibold text-muted"
+                className={cn(
+                  'pb-1 text-right font-semibold whitespace-nowrap text-muted',
+                  columnWidth(index),
+                )}
               >
                 {column.label}
               </th>
@@ -82,13 +98,16 @@ export function NutrientTable({
               scope="row"
               className={cn(
                 'py-1.5 text-left font-normal',
-                SUB.includes(nutrient) && 'pl-4 text-muted',
+                SUB.includes(nutrient) && 'pl-3 text-muted',
               )}
             >
               {tNutrition.nutrients[nutrient]}
             </th>
-            {columns.map((column) => (
-              <td key={column.label} className="py-1.5 text-right">
+            {columns.map((column, index) => (
+              <td
+                key={column.label}
+                className={cn('py-1.5 text-right whitespace-nowrap', columnWidth(index))}
+              >
                 {show(nutrient, column.values[nutrient])}
               </td>
             ))}

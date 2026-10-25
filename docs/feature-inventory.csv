@@ -93,7 +93,7 @@ E. Ernährung (NU);NU-12;Ernährungsverlauf;Historie wird gespeichert;HC-G;V;OV;
 E. Ernährung (NU);NU-13;Wassertracking;Nur als tägliche Challenge-Aufgabe;TC;V;OV;M;–;S;P3;Später;R4 · M13;Später, mit den Gewohnheiten;Analysiert;"Schnelleingabe in ml; Tagesziel"
 E. Ernährung (NU);NU-14;Fotoerkennung von Mahlzeiten;Nur in einer Drittquelle genannt;MWM;N;ON;N;KI-Dienst;XL;–;Ausgeschlossen;–;Ausschließen;Analysiert;Entfällt
 E. Ernährung (NU);NU-15;Neuberechnung bei Mengenänderung;Seit 3.1.7;AS 3.1.7;V;OV;H;NU-05;S;P1;MVP;R1 · Schritt G;Übernehmen, vorgezogen (D-261);Implementiert;AK-NUT-02
-E. Ernährung (NU);NU-16;Nährwert-Aufschlüsselung je Lebensmittel;Protein, Fett, Kohlenhydrate;REV;V;OV;M;NU-08;S;P1;MVP;R1 · Schritt G;Übernehmen, vorgezogen (D-264);Implementiert;AK-NUT-08
+E. Ernährung (NU);NU-16;Nährwert-Aufschlüsselung je Lebensmittel;Protein, Fett, Kohlenhydrate;REV;V;OV;M;NU-08;S;P1;MVP;R1 · Schritt G, D-364;"Übernehmen, vorgezogen (D-264); Tabelle einzeilig in festen Spalten (D-364)";Implementiert;AK-NUT-08
 E. Ernährung (NU);NU-17;Ziele manuell überschreiben;Nicht belegt;–;P;ON;M;NU-01;S;P2;MVP;R1 · Schritt G;Übernehmen, vorgezogen (D-261);Implementiert;AK-NUT-05
 E. Ernährung (NU);NU-18;Roh- und Gargewicht;Nicht belegt;–;P;ON;M;NU-21;S;P2;Später;R2 · M5;"Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor";Analysiert;Faktor-Werte als Schätzung markiert
 E. Ernährung (NU);NU-19;Quelle und Qualitätsstatus je Lebensmittel;Nicht belegt;–;E;EV;M;NU-10;S;P1;Später;R2 · M5;Verbesserung (D-110);Spezifiziert;"Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme"

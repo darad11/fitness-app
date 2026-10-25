@@ -1475,3 +1475,17 @@ Je Zeile Name und „Ist / Referenz g“, einzeilig; Sternchen bei fehlenden Wer
 | E2E „Weitere Nährwerte: jede Zeile einzeilig“ bei 320, 360 und 390 pt (Pixel 7) | 3 bestanden (erster Lauf 3 fehlgeschlagen am erwarteten Text im Test, behoben) |
 | E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` mit dem Endstand | 103 bestanden, 11 übersprungen, 0 fehlgeschlagen |
 | E2E, ganze Suite (Chromium), Stand vor dem Hinweis unter den Makros | 336 bestanden, 54 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §2: Nährwerttabelle einzeilig · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Köpfe und Werte einzeilig in festen Spalten, zweite Spalte nur bei einer Menge ungleich 100 g (D-364, AK-NUT-08). Bericht: `form-ernaehrung-report.md` Abschnitt 12.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `nutrition-ui.test.tsx`, `de-nutrition.test.ts` | 22 und 6 bestanden (2 und 1 neu) |
+| Gegenprobe: die zwei neuen Komponententests gegen die alte Tabelle | 2 von 2 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1067 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E „Nährwerttabelle: Köpfe und Werte einzeilig …“ bei 360 und 390 pt (Pixel 7) | 2 bestanden |
+| E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` | 105 bestanden, 13 übersprungen, 0 fehlgeschlagen |

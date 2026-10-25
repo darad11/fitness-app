@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.24 (Abschluss Phase Ernährung, Abschnitt 2, 25.10.2026): NU-16 mit einzeiliger Nährwerttabelle in festen Spalten, zweite Spalte nur bei einer Menge ungleich 100 g (AK-NUT-08, D-364).
 - Version 0.23 (Abschluss Phase Ernährung, Abschnitt 1, 25.10.2026): NU-28 kompakt (AK-NUT-15, D-363): je Zeile Name und „Ist / Referenz g“, einzeilig; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt, fehlende Werte mit Sternchen.
 - Version 0.22 (Phase Ernährung, Abschnitt 6, 25.10.2026): NU-21 mit der Grundauswahl aus dem BLS 4.0 (AK-NUT-17, D-362), NU-29 neu und „Implementiert“ (Stückgewicht einmal angeben und merken, AK-NUT-18), NU-25 zusätzlich mit AK-NUT-19 (Lizenzliste unter „Über die App“). Geprüft mit Unit-, Komponenten- und E2E-Tests in Chromium und in der CI mit WebKit (Lauf 40171590098); der Gerätetest steht aus.
 - Version 0.21 (Phase Ernährung, Abschnitt 4, 24.10.2026): NU-26 zusätzlich mit AK-NUT-16 (Wischen nach links löscht einen Artikel mit Rückgängig, D-360).
@@ -219,7 +220,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-13 | Wassertracking | Nur als tägliche Challenge-Aufgabe | TC | V | OV | M | – | S | P3 | Später | R4 · M13 | Später, mit den Gewohnheiten | Analysiert | Schnelleingabe in ml; Tagesziel |
 | NU-14 | Fotoerkennung von Mahlzeiten | Nur in einer Drittquelle genannt | MWM | N | ON | N | KI-Dienst | XL | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |
 | NU-15 | Neuberechnung bei Mengenänderung | Seit 3.1.7 | AS 3.1.7 | V | OV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
-| NU-16 | Nährwert-Aufschlüsselung je Lebensmittel | Protein, Fett, Kohlenhydrate | REV | V | OV | M | NU-08 | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-264) | Implementiert | AK-NUT-08 |
+| NU-16 | Nährwert-Aufschlüsselung je Lebensmittel | Protein, Fett, Kohlenhydrate | REV | V | OV | M | NU-08 | S | P1 | MVP | R1 · Schritt G, D-364 | Übernehmen, vorgezogen (D-264); Tabelle einzeilig in festen Spalten (D-364) | Implementiert | AK-NUT-08 |
 | NU-17 | Ziele manuell überschreiben | Nicht belegt | – | P | ON | M | NU-01 | S | P2 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-05 |
 | NU-18 | Roh- und Gargewicht | Nicht belegt | – | P | ON | M | NU-21 | S | P2 | Später | R2 · M5 | Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor | Analysiert | Faktor-Werte als Schätzung markiert |
 | NU-19 | Quelle und Qualitätsstatus je Lebensmittel | Nicht belegt | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme |

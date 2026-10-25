@@ -179,3 +179,53 @@ for (const width of [320, 360, 390]) {
     else await expect(short).toBeHidden();
   });
 }
+
+/**
+ * Nährwerttabelle im Lebensmittel-Blatt (D-364): Köpfe und Werte einzeilig in festen Spalten,
+ * die zweite Spalte nur, wenn die Menge von 100 g abweicht. Namen dürfen umbrechen,
+ * „davon gesättigte Fettsäuren“ höchstens in zwei Zeilen.
+ */
+for (const width of [360, 390]) {
+  test(`Nährwerttabelle: Köpfe und Werte einzeilig, Feta 100 g eine Spalte, 150 g zwei (${String(width)} pt)`, async ({
+    page,
+    isMobile,
+  }) => {
+    await setWidth(page, width, isMobile);
+    await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+    await page.getByLabel('Lebensmittel suchen').fill('Feta');
+    await page.getByRole('button', { name: /^Feta\s*BLS/ }).click();
+    const dialog = page.getByRole('dialog', { name: 'Feta hinzufügen' });
+    const table = dialog.getByRole('table', { name: 'Nährwerte' });
+    await expect(table.getByRole('columnheader')).toHaveText(['je 100 g']);
+    const widths = async () =>
+      table
+        .locator('tbody tr:first-child td')
+        .evaluateAll((cells) =>
+          cells.map((cell) => Math.round(cell.getBoundingClientRect().width)),
+        );
+    for (const amount of ['150', '1500']) {
+      await dialog.getByLabel('Menge in g').fill(amount);
+      await expect(table.getByRole('columnheader')).toHaveText([
+        'je 100 g',
+        amount === '150' ? 'für 150 g' : /^für 1\D500 g$/,
+      ]);
+      for (const cell of await table.locator('thead th, tbody td').all()) {
+        const text = (await cell.textContent()) ?? '';
+        expect(Math.max(...(await lineCounts(cell))), `${text}: eine Zeile`).toBe(1);
+      }
+      const saturated = table.getByRole('rowheader', { name: 'davon gesättigte Fettsäuren' });
+      expect(
+        Math.max(...(await lineCounts(saturated))),
+        'Name in höchstens zwei Zeilen',
+      ).toBeLessThanOrEqual(2);
+      expect(await table.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
+        true,
+      );
+    }
+    // Feste Spaltenbreite: 150 g und 1.500 g ergeben dieselben Spalten.
+    const wide = await widths();
+    await dialog.getByLabel('Menge in g').fill('150');
+    expect(await widths(), 'Spalten gleich breit').toEqual(wide);
+  });
+}

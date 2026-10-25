@@ -20,6 +20,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | Liste nach der Freigabe ergänzt | Entscheidungen 1 bis 8 eingearbeitet: 366 Zeilen, 13 neue Einträge, drei USDA-Lücken, Regel für abgeleitete 0 g, Spalten Einheit, Hinweis und abgeleitete Werte, zusätzliche Suchbegriffe; Prüfung erweitert | D-361 | erledigt (`baeac1e`); `pnpm check:docs` ohne Befund, zehn Gegenproben gemeldet |
 | §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenproben rot; WebKit zuerst rot am Fokus des Gewichtsfelds, behoben im Nachtrag; CI-Lauf 40171590098 mit allen vier Jobs grün, auch E2E (webkit) |
 | Abschluss §1 „Weitere Nährwerte“ kompakt | je Zeile Name und „Ist / Referenz g“, einzeilig bei 320, 360 und 390 pt; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt | D-363 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
+| Abschluss §2 Nährwerttabelle einzeilig | Köpfe und Werte einzeilig in festen Spalten, rechtsbündig; zweite Spalte „für x g“ bzw. „für x Stück“ nur, wenn die Menge von 100 g abweicht | D-364 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -670,4 +671,34 @@ Neu: `src/modules/nutrition/ui/ExtrasPanel.tsx`, `docs/prompts/ernaehrung-abschl
 | E2E `narrow-layout.spec.ts` (neu: „Weitere Nährwerte: jede Zeile einzeilig“ bei 320, 360 und 390 pt, Pixel 7) | 3 bestanden; im Desktop-Projekt wie die übrigen schmalen Breiten übersprungen. Der erste Lauf scheiterte 3-mal am Test selbst (erwarteter Text ohne den Vorlesetext des Sternchens), danach bestanden |
 | E2E `nutrition.spec.ts` (Info-Blatt, axe nach WCAG 2.1 AA für die aufgeklappte Liste und das Blatt ohne Verstoß), `basic-foods.spec.ts`, `nutrition-ring.spec.ts`, `network-a11y.spec.ts`, `narrow-layout.spec.ts` mit dem Endstand | 103 bestanden, 11 übersprungen, 0 fehlgeschlagen |
 | E2E, ganze Suite (Chromium), Stand vor dem Hinweis unter den Makros | 336 bestanden, 54 übersprungen, 0 fehlgeschlagen (10,0 min) |
+| WebKit | in der CI nach dem Push |
+
+---
+
+## 12. Abschluss §2: Nährwerttabelle einzeilig (D-364)
+
+### Ergebnis
+
+| Punkt | Umsetzung |
+|---|---|
+| Vorher (gemessen bei 360 pt) | „je 100 g“, „für 150 g“ und „284 kcal“ brachen in zwei Zeilen um; die Spalten richteten sich nach dem Inhalt |
+| Einzeilig, feste Breite | Köpfe und Werte brechen nie um, Zahlen rechtsbündig. „je 100 g“ 4,25 rem (68 px), „für x g“ 5,75 rem (92 px), die Namen den Rest (128 px bei 360 pt, 158 px bei 390 pt). Ist ein Wert doch breiter, wird nur seine Spalte breiter |
+| Namen | „davon gesättigte Fettsäuren“ in zwei Zeilen, alle anderen in einer; Einrückung der „davon“-Zeilen 0,75 rem |
+| Zweite Spalte | nur, wenn die Menge von 100 g abweicht: Feta 100 g eine Spalte „je 100 g“, 150 g zwei Spalten „je 100 g“ und „für 150 g“; bei Stück „für 1 Stück“, „für 2 Stück“, bei Scheiben „für 2 Scheiben“ |
+
+### Geänderte Dateien
+
+`src/modules/nutrition/ui/NutrientTable.tsx`, `LogDialog.tsx`, `nutrition-ui.test.tsx`, `src/shared/i18n/de-nutrition.ts` und `.test.ts`, `e2e/narrow-layout.spec.ts`, `e2e/basic-foods.spec.ts`. Unterlagen: `docs/decisions.md` (D-364), `docs/requirements.md` (AK-NUT-08), `docs/feature-inventory.md` und `.csv` (NU-16, Version 0.24), `docs/implementation-plan.md`, `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `nutrition-ui.test.tsx`, `de-nutrition.test.ts` | 22 und 6 bestanden, davon neu: Feta mit 100 g eine Spalte, mit 150 g zwei, wieder 100 g eine; Köpfe und Werte ohne Umbruch in fester Breite; Ei „für 1 Stück“ und „für 2 Stück“; Mehrzahl „2 Scheiben“, „1,5 Scheiben“ |
+| Gegenprobe: die zwei neuen Komponententests gegen die alte Tabelle | 2 von 2 fehlgeschlagen („expected [ 'je 100 g', 'für 100 g' ] to deeply equal [ 'je 100 g' ]“) |
+| `pnpm test` | 122 Dateien, 1067 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `narrow-layout.spec.ts` (neu: „Nährwerttabelle: Köpfe und Werte einzeilig, Feta 100 g eine Spalte, 150 g zwei“ bei 360 und 390 pt, mit 150 und 1.500 g und gleichen Spaltenbreiten) | 2 bestanden (Pixel 7), im Desktop-Projekt übersprungen |
+| E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` | 105 bestanden, 13 übersprungen, 0 fehlgeschlagen |
 | WebKit | in der CI nach dem Push |

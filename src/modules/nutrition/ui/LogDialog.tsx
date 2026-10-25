@@ -283,13 +283,21 @@ export function LogDialog({
         <NutrientTable
           caption={tNutrition.nutrientsTitle}
           derived={derived}
+          header
           columns={[
             { label: tNutrition.per100(unit), values: food.per100 },
-            ...(scaled && amount !== null
+            // Zweite Spalte nur, wenn die Menge von 100 g abweicht (D-364).
+            ...(scaled && amount !== null && Math.abs(amount - 100) >= 0.05
               ? [
                   {
                     label: tNutrition.forAmount(
-                      `${fmt.number(amount, { maximumFractionDigits: 1 })} ${unit}`,
+                      piece && parsed !== null
+                        ? tNutrition.basic.pieces(
+                            parsed,
+                            fmt.number(parsed, { maximumFractionDigits: 1 }),
+                            pieceUnit,
+                          )
+                        : `${fmt.number(amount, { maximumFractionDigits: 1 })} ${unit}`,
                     ),
                     values: scaled,
                   },

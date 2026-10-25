@@ -77,7 +77,7 @@ test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte 
   await dialog.getByLabel('Anzahl (Stück)').fill('2');
   await expect(dialog.getByRole('status')).toHaveText('138 kcal');
   const table = dialog.getByRole('table', { name: 'Nährwerte' });
-  await expect(table.getByRole('columnheader', { name: 'für 102 g' })).toBeVisible();
+  await expect(table.getByRole('columnheader', { name: 'für 2 Stück' })).toBeVisible();
   await expect(table.getByRole('row', { name: /^Eiweiß/ })).toContainText('13 g');
   await expect(dialog.getByText('Quelle: BLS 4.0, E111100 „Hühnerei roh“')).toBeVisible();
   await dialog.getByRole('button', { name: 'Hinzufügen' }).click();

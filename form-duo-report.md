@@ -107,7 +107,7 @@ Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und a
 - **Befund:** Beim Messen für die Bewertung: „102,5“ passte zugeklappt nicht ins Feld für kg (Feld 57 px, Wert rund 59 px bei 18 px Schrift), in Safari zugeklappt (382 pt) und auf normalen iPhones noch weniger (390 pt: 51 px, 375 pt: 44 px). Zu sehen war „102,“.
 - **Ursache:** Die Zeile hat feste Spalten (Satz, Vorwert, erledigt, Menü) und 8 px Abstand; für die beiden Felder blieb zu wenig.
 - **Lösung:** Die Satzzeilen richten sich nach ihrer eigenen Breite. Unter 24 rem werden Abstände und Vorwert-Spalte etwas schmaler, und Werte ab fünf Zeichen stehen in 16 statt 18 px. Kleiner nicht, sonst vergrößert iOS die Seite beim Antippen. Aufgeklappt bleibt alles, wie es war.
-- **Test:** `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt, 382 pt, zugeklappt): am alten Stand fehlgeschlagen (10 px über den Rand bei 390 pt), mit der Korrektur bestanden.
+- **Test:** `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt und zugeklappt; bei 382 pt nur die kleinere Schrift, weil das Passen dort von der Schriftart abhängt): am alten Stand fehlgeschlagen (10 px über den Rand bei 390 pt), mit der Korrektur bestanden.
 - **Offen:** Bei 360 pt ragt „102,5“ weiter 7 px hinaus, bei 320 pt (iPhone SE oder mini mit Anzeigezoom „Größerer Text“) sind die Felder nur 25 px breit. Das braucht eine zweite Zeile in der Satzzeile und ist eine Layout-Entscheidung; sie kommt in die Bewertung der Layout-Verbesserungen.
 
 ## 4. Prüfung aller Screens in drei Breiten (D-379)

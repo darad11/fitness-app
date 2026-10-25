@@ -174,12 +174,16 @@ test('Satzzeile: „102,5“ passt ins Feld, zugeklappt und auf iPhones (D-378)'
   /** Wie viele Pixel der Wert über das Feld hinausragt (0: passt). */
   const overflow = () =>
     weight.evaluate((input: HTMLInputElement) => input.scrollWidth - input.clientWidth);
-  // iPhone 15 und Safari am Duo zugeklappt (382 pt), dann die App am Duo zugeklappt
-  // (466 pt mit 84 pt Systemrand). Vorher ragte der Wert 10, 14 und 4 px hinaus.
-  for (const width of [390, 382]) {
-    await page.setViewportSize({ width, height: 740 });
-    await expect.poll(overflow, `${String(width)} pt`).toBeLessThanOrEqual(0);
-  }
+  // iPhone 15 (390 pt), dann die App am Duo zugeklappt (466 pt mit 84 pt Systemrand). Vorher
+  // ragte der Wert 10 und 4 px hinaus. Safari am Duo zugeklappt (382 pt): Dort greift die
+  // kleinere Schrift; ob der Wert ganz passt, hängt an der Schriftart (gemessen mit Inter: 7 px
+  // Luft; mit breiteren Ersatzschriften wie DejaVu Sans knapp), deshalb hier nur die Schrift.
+  await page.setViewportSize({ width: 390, height: 740 });
+  await expect.poll(overflow, '390 pt').toBeLessThanOrEqual(0);
+  await page.setViewportSize({ width: 382, height: 740 });
+  await expect
+    .poll(() => weight.evaluate((input: HTMLInputElement) => getComputedStyle(input).fontSize))
+    .toBe('16px');
   await setDuoPose(page, 'zu');
   await expect.poll(overflow, 'zugeklappt').toBeLessThanOrEqual(0);
   await expect(weight).toHaveValue('102,5');

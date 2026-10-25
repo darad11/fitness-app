@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Prüfung aller Screens in den Haltungen des iPhone Duo (Phase iPhone Duo, Auftrag Phase 1
- * Punkt 2; Leitlinien Kapitel 3 bis 9; D-378).
+ * Punkt 2; Leitlinien Kapitel 3 bis 9; D-379).
  *
  * Voraussetzung: `pnpm build` und ein laufendes `pnpm preview` (http://localhost:4173).
  * Aufruf: `node tools/duo-screens.mjs`. Ergebnis: je Screen und Haltung ein Bild in

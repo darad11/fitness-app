@@ -1604,6 +1604,7 @@ Erkennung nur im sichtbaren Ausschnitt um den Rahmen, Kamerabild höchstens 45 %
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 354 bestanden, 71 übersprungen, 3 fehlgeschlagen, 8,5 min; alle drei in `e2e/duo-resize.spec.ts`, dem Test des nächsten Pakets (Leseposition beim Auf- und Zuklappen), an diesem Stand erwartet rot |
+| CI, WebKit (Läufe 40228596744 und 40229890511) | 10 fehlgeschlagen, alle fünf Scanner-Tests je Profil: WebKit startete nicht („Unknown option --use-fake-device-for-media-stream“), weil die Kamera-Optionen von Chromium für alle Browser galten und der Browser vor dem `test.skip` der Datei startet. Nachtrag: `e2e/scanner.ts` setzt die Optionen und die Kamera-Erlaubnis nur in Chromium, sonst bleiben die des Projekts |
 
 ### Phase iPhone Duo: Auf- und Zuklappen, Leseposition · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 

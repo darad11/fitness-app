@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { setDuoPose, type DuoPose } from './duo';
-import { expect, openPage } from './fixtures';
+import { expect, openPage, type test } from './fixtures';
 
 /**
  * Gemeinsames für die Scanner-Tests beim iPhone Duo (D-374). Jede Datei bekommt ihre eigene
@@ -10,18 +10,31 @@ import { expect, openPage } from './fixtures';
 /** Gültiger EAN-13 (Prüfziffer 1). */
 export const CODE = '4006381333931';
 
-/** Startoptionen für Chromium mit einem Standbild als Kamera (`e2e/fakeCamera.ts`). */
-export function fakeCamera(file: string) {
+/**
+ * Startoptionen für Chromium mit einem Standbild als Kamera (`e2e/fakeCamera.ts`). Nur für
+ * Chromium: WebKit startet mit diesen Optionen nicht („Unknown option“), und der Browser startet
+ * vor dem `test.skip` der Datei. Die übrigen Optionen des Projekts bleiben.
+ */
+export function fakeCamera(file: string): Parameters<typeof test.use>[0] {
+  const args = [
+    '--use-fake-device-for-media-stream',
+    '--use-fake-ui-for-media-stream',
+    `--use-file-for-fake-video-capture=${file}`,
+  ];
   return {
-    launchOptions: {
-      ...(process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {}),
-      args: [
-        '--use-fake-device-for-media-stream',
-        '--use-fake-ui-for-media-stream',
-        `--use-file-for-fake-video-capture=${file}`,
-      ],
+    launchOptions: [
+      async ({ browserName, launchOptions }, use) => {
+        await use(
+          browserName === 'chromium'
+            ? { ...launchOptions, args: [...(launchOptions.args ?? []), ...args] }
+            : launchOptions,
+        );
+      },
+      { scope: 'worker' },
+    ],
+    permissions: async ({ browserName, permissions }, use) => {
+      await use(browserName === 'chromium' ? [...(permissions ?? []), 'camera'] : permissions);
     },
-    permissions: ['camera'],
   };
 }
 

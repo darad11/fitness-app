@@ -26,15 +26,19 @@ const sessions = new WeakMap<Page, CDPSession>();
  */
 export async function setDuoPose(page: Page, pose: DuoPose): Promise<boolean> {
   const { width, height, insets } = DUO[pose];
-  await page.setViewportSize({ width, height });
-  if (page.context().browser()?.browserType().name() !== 'chromium') return false;
-  let cdp = sessions.get(page);
-  if (!cdp) {
-    cdp = await page.context().newCDPSession(page);
-    sessions.set(page, cdp);
+  const chromium = page.context().browser()?.browserType().name() === 'chromium';
+  // Am Gerät ändern sich sicherer Bereich und Fenster zusammen, danach kommt `resize`. Die
+  // Vorgabe für den sicheren Bereich löst kein `resize` aus; sie kommt deshalb zuerst.
+  if (chromium) {
+    let cdp = sessions.get(page);
+    if (!cdp) {
+      cdp = await page.context().newCDPSession(page);
+      sessions.set(page, cdp);
+    }
+    await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets });
   }
-  await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets });
-  return true;
+  await page.setViewportSize({ width, height });
+  return chromium;
 }
 
 /** Rechter Rand des sicheren Bereichs im Fenster (CSS-Pixel). */

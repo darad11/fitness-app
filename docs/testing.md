@@ -1603,4 +1603,4 @@ Erkennung nur im sichtbaren Ausschnitt um den Rahmen, Kamerabild höchstens 45 %
 | `pnpm test` | 123 Dateien, 1081 Tests bestanden |
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
-| `pnpm test:e2e` (Chromium, alle Dateien) | 354 bestanden, 71 übersprungen, 3 fehlgeschlagen, 8,5 min; alle drei in `e2e/duo-resize.spec.ts`, dem Test des nächsten Pakets (D-375), am Stand von D-374 erwartet rot |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 354 bestanden, 71 übersprungen, 3 fehlgeschlagen, 8,5 min; alle drei in `e2e/duo-resize.spec.ts`, dem Test des nächsten Pakets (Leseposition beim Auf- und Zuklappen), an diesem Stand erwartet rot |

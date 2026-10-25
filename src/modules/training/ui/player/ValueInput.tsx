@@ -79,6 +79,11 @@ export function ValueInput({
     };
   }, []);
 
+  const hint = suggestion === undefined ? '' : format(toDisplay(spec, suggestion));
+  // In schmalen Satzzeilen (unter 24 rem) ab fünf Zeichen („102,5“) 16 statt 18 px und weniger
+  // Innenabstand (D-378): Sonst passte der Wert nicht ins Feld (iPhone Duo zugeklappt: 59 px in
+  // 55 px). Nicht kleiner als 16 px, sonst vergrößert iOS die Seite beim Antippen.
+  const long = (draft === '' ? hint : draft).length >= 5;
   return (
     <input
       type="text"
@@ -88,7 +93,7 @@ export function ValueInput({
       aria-label={label}
       value={draft}
       disabled={disabled}
-      placeholder={suggestion === undefined ? '' : format(toDisplay(spec, suggestion))}
+      placeholder={hint}
       onFocus={() => {
         focused.current = true;
       }}
@@ -106,7 +111,8 @@ export function ValueInput({
         if (event.key === 'Enter') event.currentTarget.blur();
       }}
       className={cn(
-        'field w-full min-w-0 px-1 text-center text-lg font-semibold placeholder:font-normal disabled:opacity-60',
+        'field w-full min-w-0 px-1 text-center font-semibold placeholder:font-normal disabled:opacity-60',
+        long ? 'text-lg @max-sm:px-0.5 @max-sm:text-base' : 'text-lg',
       )}
     />
   );

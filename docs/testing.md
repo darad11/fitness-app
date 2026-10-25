@@ -1646,3 +1646,17 @@ Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WC
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 364 bestanden, 78 übersprungen, 0 fehlgeschlagen, 8,2 min |
+
+### Phase iPhone Duo: Satzzeile, lange Werte · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+„102,5“ passt zugeklappt und auf 375 bis 390 pt ins Feld (D-378). Bericht: `form-duo-report.md` Abschnitt 3.7.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt, 382 pt, zugeklappt) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Quellstand | fehlgeschlagen (Wert 10 px über dem Rand bei 390 pt) |
+| Messung (Chromium, Schrift der Umgebung): Platz im Feld minus Breite von „102,5“ | zugeklappt +17,7 px, 382 pt +7,7, 390 pt +11,7, 375 pt +4,7, 360 pt −3,3 (Feld 45 px), 320 pt: Feld 25 px; vorher zugeklappt 57 px Feld für 59 px Wert |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 365 bestanden, 79 übersprungen, 0 fehlgeschlagen, 8,4 min |

@@ -158,3 +158,29 @@ test('Pause: Minus und Plus bleiben auch in schmaler Pause zu sehen (D-377)', as
     expect(box?.width ?? 0, name).toBeGreaterThanOrEqual(15.5);
   }
 });
+
+test('Satzzeile: „102,5“ passt ins Feld, zugeklappt und auf iPhones (D-378)', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 740 });
+  await openPage(page, '/training/vorlagen/compound_ab_4');
+  await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+  await expect(page.getByRole('heading', { level: 2, name: /^Trainingstag 1 von/ })).toBeVisible();
+  await openPage(page, '/heute');
+  await page.getByRole('button', { name: 'Training starten' }).click();
+  const current = page.locator('li[aria-current="step"]');
+  const weight = current.getByLabel(/^Gewicht in kg, /);
+  await weight.fill('102,5');
+  await current.getByLabel(/^Wiederholungen, /).fill('12');
+  await weight.blur();
+  /** Wie viele Pixel der Wert über das Feld hinausragt (0: passt). */
+  const overflow = () =>
+    weight.evaluate((input: HTMLInputElement) => input.scrollWidth - input.clientWidth);
+  // iPhone 15 und Safari am Duo zugeklappt (382 pt), dann die App am Duo zugeklappt
+  // (466 pt mit 84 pt Systemrand). Vorher ragte der Wert 10, 14 und 4 px hinaus.
+  for (const width of [390, 382]) {
+    await page.setViewportSize({ width, height: 740 });
+    await expect.poll(overflow, `${String(width)} pt`).toBeLessThanOrEqual(0);
+  }
+  await setDuoPose(page, 'zu');
+  await expect.poll(overflow, 'zugeklappt').toBeLessThanOrEqual(0);
+  await expect(weight).toHaveValue('102,5');
+});

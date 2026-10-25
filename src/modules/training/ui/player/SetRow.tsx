@@ -63,7 +63,9 @@ export function SetRow(props: SetRowProps) {
         skipped && 'opacity-70',
       )}
     >
-      <div className="flex items-center gap-2">
+      {/* In schmalen Zeilen (unter 24 rem, alle iPhones hochkant und das Duo zugeklappt) etwas
+          engere Abstände und Vorwert-Spalte, damit die Felder Platz für „102,5“ haben (D-378). */}
+      <div className="flex items-center gap-2 @max-sm:gap-1.5">
         <span
           aria-hidden="true"
           className={cn(
@@ -79,7 +81,7 @@ export function SetRow(props: SetRowProps) {
         >
           {props.label}
         </span>
-        <span className="w-14 shrink-0 text-xs text-muted tabular-nums">
+        <span className="w-14 shrink-0 text-xs text-muted tabular-nums @max-sm:w-12">
           <span className="sr-only">{tSession.previous}: </span>
           {props.previous
             ? formatSetValues(
@@ -92,7 +94,7 @@ export function SetRow(props: SetRowProps) {
         </span>
         <div
           className={cn(
-            'grid min-w-0 flex-1 gap-2',
+            'grid min-w-0 flex-1 gap-2 @max-sm:gap-1.5',
             fields.length === 2 ? 'grid-cols-2' : 'grid-cols-1',
           )}
         >
@@ -231,12 +233,15 @@ export function SetRow(props: SetRowProps) {
 export function SetHeader({ exercise }: { exercise: SessionExercise }) {
   const fields = fieldsFor(exercise.trackingMode, exercise.distanceUnit);
   return (
-    <div aria-hidden="true" className="eyebrow mb-1 flex items-center gap-2 px-2 text-muted">
+    <div
+      aria-hidden="true"
+      className="eyebrow mb-1 flex items-center gap-2 px-2 text-muted @max-sm:gap-1.5"
+    >
       <span className="w-8 shrink-0 text-center">#</span>
-      <span className="w-14 shrink-0">{tSession.previous}</span>
+      <span className="w-14 shrink-0 @max-sm:w-12">{tSession.previous}</span>
       <span
         className={cn(
-          'grid min-w-0 flex-1 gap-2',
+          'grid min-w-0 flex-1 gap-2 @max-sm:gap-1.5',
           fields.length === 2 ? 'grid-cols-2' : 'grid-cols-1',
         )}
       >

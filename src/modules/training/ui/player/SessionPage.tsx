@@ -601,50 +601,55 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   {errors[exercise.id]?.message}
                 </p>
               ) : null}
-              {sets.length > 0 ? <SetHeader exercise={exercise} /> : null}
-              <ol className="grid gap-1">
-                {sets.map((set) => {
-                  const { label, name } = names.get(set.id) ?? { label: '', name: '' };
-                  const previous = previousValues(row, setSlot(exercise, set.id));
-                  return (
-                    <SetRow
-                      key={set.id}
-                      exercise={exercise}
-                      set={set}
-                      label={label}
-                      name={name}
-                      previous={previous}
-                      suggestion={suggestionFor(exercise, set, row)}
-                      current={current?.id === set.id}
-                      error={errors[set.id]?.message}
-                      onRetry={errors[set.id]?.retry}
-                      weightStep={
-                        prefs?.get(exercise.exerciseId)?.weightStepKg ?? settings.weightStepKg
-                      }
-                      number={number}
-                      onValue={(field, value) => {
-                        if (value === 'invalid') {
-                          setErrors((all) => ({
-                            ...all,
-                            [set.id]: { message: tSession.invalid[field] },
-                          }));
-                          return;
+              {/* Container für die Satzzeilen: Sie richten sich nach ihrer eigenen Breite, nicht nach
+                  dem Fenster (D-378; beim Duo zugeklappt ist die Zeile wegen des Systemrands
+                  schmaler, als das Fenster vermuten lässt). */}
+              <div className="@container">
+                {sets.length > 0 ? <SetHeader exercise={exercise} /> : null}
+                <ol className="grid gap-1">
+                  {sets.map((set) => {
+                    const { label, name } = names.get(set.id) ?? { label: '', name: '' };
+                    const previous = previousValues(row, setSlot(exercise, set.id));
+                    return (
+                      <SetRow
+                        key={set.id}
+                        exercise={exercise}
+                        set={set}
+                        label={label}
+                        name={name}
+                        previous={previous}
+                        suggestion={suggestionFor(exercise, set, row)}
+                        current={current?.id === set.id}
+                        error={errors[set.id]?.message}
+                        onRetry={errors[set.id]?.retry}
+                        weightStep={
+                          prefs?.get(exercise.exerciseId)?.weightStepKg ?? settings.weightStepKg
                         }
-                        void run(set.id, () =>
-                          setValues(rt, session.id, set.id, { [field]: value }),
-                        );
-                      }}
-                      onToggleDone={() => {
-                        if (set.status === 'planned') void complete(exercise, set);
-                        else void run(set.id, () => reopenSet(rt, session.id, set.id));
-                      }}
-                      onSkip={() => void run(set.id, () => skipSet(rt, session.id, set.id))}
-                      onRemove={() => void run(set.id, () => removeSet(rt, session.id, set.id))}
-                      timer={timerFor(exercise, set)}
-                    />
-                  );
-                })}
-              </ol>
+                        number={number}
+                        onValue={(field, value) => {
+                          if (value === 'invalid') {
+                            setErrors((all) => ({
+                              ...all,
+                              [set.id]: { message: tSession.invalid[field] },
+                            }));
+                            return;
+                          }
+                          void run(set.id, () =>
+                            setValues(rt, session.id, set.id, { [field]: value }),
+                          );
+                        }}
+                        onToggleDone={() => {
+                          if (set.status === 'planned') void complete(exercise, set);
+                          else void run(set.id, () => reopenSet(rt, session.id, set.id));
+                        }}
+                        onSkip={() => void run(set.id, () => skipSet(rt, session.id, set.id))}
+                        onRemove={() => void run(set.id, () => removeSet(rt, session.id, set.id))}
+                        timer={timerFor(exercise, set)}
+                      />
+                    );
+                  })}
+                </ol>
+              </div>
               <Button
                 variant="quiet"
                 size="sm"

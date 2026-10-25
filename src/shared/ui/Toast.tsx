@@ -33,7 +33,8 @@ export function Toast({ message, action, onTimeout, durationMs, tone = 'default'
     <div
       role={tone === 'error' ? 'alert' : 'status'}
       className={cn(
-        'fixed inset-x-4 bottom-[calc(env(safe-area-inset-bottom)+5rem)] z-30 mx-auto flex max-w-dialog items-center gap-3 rounded-card bg-surface px-card py-2 text-fg lg:bottom-6',
+        // Seitlich mindestens 1 rem und der sichere Bereich (D-372, iPhone Duo).
+        'fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[calc(env(safe-area-inset-bottom)+5rem)] left-[max(1rem,env(safe-area-inset-left))] z-30 mx-auto flex max-w-dialog items-center gap-3 rounded-card bg-surface px-card py-2 text-fg lg:bottom-6',
         tone === 'error' ? 'shadow-[0_0_0_1px_var(--danger)]' : 'shadow-card',
       )}
     >

@@ -1565,3 +1565,16 @@ Recherche der Maße zugeklappt und aufgeklappt, Prüfmaße als Annahmen (D-371).
 | Apple, Human Interface Guidelines „Designing for iPhone Duo“ | direkt gelesen; Leisten und Statusleiste an der Seite, Kamera in der Ecke |
 | WebKit, Safari 27.1; technische Daten von Apple | nur über Suchergebnisse, weil die Netzwerkregel `apple.com`, `support.apple.com` und `webkit.org` sperrt |
 | Chromium 153: `Emulation.setSafeAreaInsetsOverride` | `env(safe-area-inset-right)` meldet den gesetzten Wert (59 px gesetzt, 59 px gemessen) |
+
+### Phase iPhone Duo: Systemrand an der Seite · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Tab-Leiste, Blätter, Rückfragen, Hinweise, große Pause, Anmeldung und „Meine Küche“ beachten den sicheren Bereich links und rechts (D-372). Bericht: `form-duo-report.md` Abschnitt 3.1.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-safe-area.spec.ts` (Chromium, Handy-Profil, Prüfmaße zugeklappt und aufgeklappt) | 3 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 3 von 3 fehlgeschlagen („Mehr“ bis 446 statt höchstens 382,5; Kreis bis 939 statt höchstens 867,5; „Schließen“ im Scanner bis 458 statt höchstens 382,5) |
+| `pnpm test` | 122 Dateien, 1073 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,8 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 347 bestanden, 61 übersprungen, 0 fehlgeschlagen, 8,9 min |

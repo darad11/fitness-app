@@ -63,11 +63,12 @@ export function LoginScreen({
       }}
       className="login-screen m-0 h-dvh max-h-none w-screen max-w-none p-0 backdrop:bg-transparent"
     >
-      <div className="login-body relative flex min-h-full flex-col items-center px-page pb-[calc(env(safe-area-inset-bottom)+2rem)]">
+      {/* Seitenrand mindestens so breit wie der sichere Bereich (D-372, iPhone Duo). */}
+      <div className="login-body page-gutters relative flex min-h-full flex-col items-center pb-[calc(env(safe-area-inset-bottom)+2rem)]">
         <Button
           variant="secondary"
           onClick={onLater}
-          className="absolute top-[calc(env(safe-area-inset-top)+var(--spacing-edge-clear)+1rem)] left-page"
+          className="absolute top-[calc(env(safe-area-inset-top)+var(--spacing-edge-clear)+1rem)] left-[max(var(--spacing-page),env(safe-area-inset-left))]"
         >
           <X aria-hidden="true" className="size-4" />
           {ts.later}

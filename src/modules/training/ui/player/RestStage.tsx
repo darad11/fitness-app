@@ -92,7 +92,8 @@ export function RestStage(props: RestStageProps) {
       <section
         aria-label={tTrainingPages.rest.label}
         className={cn(
-          'stage fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 px-page text-center text-fg',
+          // page-gutters: Seitenrand mindestens so breit wie der sichere Bereich (D-372).
+          'stage page-gutters fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 text-center text-fg',
           overClass,
         )}
       >

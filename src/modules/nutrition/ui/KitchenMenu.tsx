@@ -172,7 +172,9 @@ export function KitchenMenu() {
           // Tipp auf den abgedunkelten Rand schließt.
           if (event.target === event.currentTarget) close();
         }}
-        className="mt-auto mb-0 w-full max-w-none rounded-t-sheet bg-panel p-0 text-fg shadow-float transition-transform duration-240 backdrop:bg-scrim"
+        // Wie das Blatt aus `Dialog`: Inhalt im sicheren Bereich (D-372); bleibt es beim
+        // Aufklappen offen, steht es ab 48 rem mittig wie jedes Blatt.
+        className="mt-auto mb-0 w-full max-w-none rounded-t-sheet bg-panel p-0 text-fg shadow-float transition-transform duration-240 backdrop:bg-scrim max-md:pr-[env(safe-area-inset-right)] max-md:pl-[env(safe-area-inset-left)] md:inset-x-safe md:m-auto md:max-w-sheet md:rounded-sheet"
       >
         {open === 'sheet' ? (
           <div className="px-4 pt-2.5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)]">

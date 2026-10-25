@@ -66,12 +66,15 @@ export function Dialog({
       }}
       className={cn(
         'bg-panel text-fg shadow-float backdrop:bg-scrim',
+        // Sicherer Bereich an der Seite (D-372; iPhone Duo: Statusleiste und Kamera an der Seite):
+        // Das Blatt über die ganze Breite rückt seinen Inhalt ein, Dialoge in der Mitte stehen
+        // mittig zwischen den Rändern des sicheren Bereichs.
         sheet
           ? cn(
-              'mt-auto mb-0 w-full max-w-none rounded-t-sheet p-0 transition-transform duration-240 md:m-auto md:max-w-sheet md:rounded-sheet',
+              'mt-auto mb-0 w-full max-w-none rounded-t-sheet p-0 transition-transform duration-240 max-md:pr-[env(safe-area-inset-right)] max-md:pl-[env(safe-area-inset-left)] md:inset-x-safe md:m-auto md:max-w-sheet md:rounded-sheet',
               fit ? 'h-fit max-h-[85dvh] md:max-h-[80dvh]' : 'h-[85dvh] md:h-[80dvh]',
             )
-          : 'm-auto w-[calc(100%-2rem)] max-w-dialog rounded-sheet p-page',
+          : 'inset-x-safe m-auto w-[calc(100%-2rem-env(safe-area-inset-left)-env(safe-area-inset-right))] max-w-dialog rounded-sheet p-page',
       )}
     >
       {open ? (

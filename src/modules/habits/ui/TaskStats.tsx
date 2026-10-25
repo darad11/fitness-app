@@ -1,9 +1,9 @@
 import { ChevronRight, Lightbulb } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Link } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
-import { Card, Mark, Meter, SegmentedControl, SelectField, StatTile } from '@/shared/ui';
+import { Card, Mark, Meter, NameRest, SegmentedControl, SelectField, StatTile } from '@/shared/ui';
 import {
   dataStart,
   habitRate,
@@ -52,6 +52,7 @@ export function TaskStats({
 }) {
   const fmt = useFormatters();
   const [sort, setSort] = useState<Sort>('list');
+  const baseId = useId();
   const { habits, index, today } = history;
   const start = dataStart(habits);
   if (start === null) {
@@ -189,11 +190,21 @@ export function TaskStats({
         <ul className="mt-2 divide-y divide-line">
           {sorted.map(({ habit, rate: r, change }) => {
             const status = statusOf(habit, today);
+            // Name aus dem Inhalt statt `aria-label` (D-377, WCAG 2.5.3 „Label in Name“, Audit
+            // D-08): sichtbarer Name und unsichtbar „– Auswertung öffnen“; Stand, Quote und
+            // Zeile beschreiben den Link und werden mit vorgelesen.
+            const ids = {
+              status: `${baseId}-${habit.id}-stand`,
+              rate: `${baseId}-${habit.id}-quote`,
+              line: `${baseId}-${habit.id}-zeile`,
+            };
             return (
               <li key={habit.id}>
                 <Link
                   to={`/heute/aufgaben/${habit.id}`}
-                  aria-label={ts.openTask(habit.name)}
+                  aria-describedby={[status ? ids.status : null, ids.rate, ids.line]
+                    .filter(Boolean)
+                    .join(' ')}
                   className="flex min-h-12 items-center gap-3 py-3"
                 >
                   <span className="min-w-0 flex-1">
@@ -201,21 +212,36 @@ export function TaskStats({
                       <span className="min-w-0 truncate font-medium">
                         {habit.name}
                         {status ? (
-                          <span className="ml-2 text-sm font-normal text-muted">{ts[status]}</span>
+                          <span
+                            id={ids.status}
+                            aria-hidden="true"
+                            className="ml-2 text-sm font-normal text-muted"
+                          >
+                            {ts[status]}
+                          </span>
                         ) : null}
                       </span>
-                      <span className="shrink-0 font-semibold tabular-nums">
+                      <span
+                        id={ids.rate}
+                        aria-hidden="true"
+                        className="shrink-0 font-semibold tabular-nums"
+                      >
                         {r.rate === null ? '–' : pct(r.rate)}
                       </span>
                     </span>
-                    <Meter className="mt-2 h-1.5" label={habit.name} value={r.rate ?? 0} />
-                    <span className="mt-1 block text-sm text-muted tabular-nums">
+                    <Meter className="mt-2 h-1.5" label={null} value={r.rate ?? 0} />
+                    <span
+                      id={ids.line}
+                      aria-hidden="true"
+                      className="mt-1 block text-sm text-muted tabular-nums"
+                    >
                       {r.due === 0 ? ts.taskNone : ts.taskLine(r.done, r.due)}
                       {change !== null && (activeSort === 'up' || activeSort === 'down')
                         ? ` · ${ts.change(change)}`
                         : ''}
                     </span>
                   </span>
+                  <NameRest full={ts.openTask(habit.name)} visible={habit.name} />
                   <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
                 </Link>
               </li>

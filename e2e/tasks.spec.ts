@@ -3,11 +3,19 @@ import { expect, openPage, test } from './fixtures';
 
 /** Namen der Zeilen in der Reihenfolge der Liste (Link „… bearbeiten“, D-335). */
 const rowNames = (list: Locator) =>
-  list
-    .getByRole('link', { name: / bearbeiten$/ })
-    .evaluateAll((links) =>
-      links.map((link) => (link.getAttribute('aria-label') ?? '').replace(/ bearbeiten$/, '')),
-    );
+  list.getByRole('link', { name: / bearbeiten$/ }).evaluateAll((links) =>
+    // Name aus dem Inhalt (D-377): Text ohne versteckte Teile, ohne den Rest „ bearbeiten“.
+    links.map((link) => {
+      const copy = link.cloneNode(true) as Element;
+      copy.querySelectorAll('[aria-hidden="true"]').forEach((node) => {
+        node.remove();
+      });
+      return copy.textContent
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/ bearbeiten$/, '');
+    }),
+  );
 
 test('Tagesaufgaben: hinzufügen, abhaken, neu laden, nächster Tag wieder offen (AH-03, D-283)', async ({
   page,
@@ -189,7 +197,7 @@ test('Tagesaufgaben: Fortschritt über drei Tage, Übersicht und Auswertung (D-2
     );
   expect(await overflow()).toBeLessThanOrEqual(0);
 
-  await perTask.getByRole('link', { name: 'Lesen: Auswertung öffnen' }).click();
+  await perTask.getByRole('link', { name: 'Lesen – Auswertung öffnen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Lesen' })).toBeVisible();
   await expect(page.getByRole('definition').nth(0)).toContainText('50 %');
   await expect(page.getByRole('list', { name: /Kalender/ }).getByTitle(/: erledigt$/)).toHaveCount(

@@ -7,6 +7,7 @@ export * from './Dialog';
 export * from './EmptyState';
 export * from './LinkList';
 export * from './Mark';
+export * from './NameRest';
 export * from './PageHeader';
 export * from './SegmentedControl';
 export * from './SearchField';

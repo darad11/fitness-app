@@ -68,7 +68,7 @@ export function TaskMatrix({
               <th
                 key={column.key}
                 scope="col"
-                className="text-center text-[10px] font-medium text-muted tabular-nums"
+                className="text-center text-tab font-medium text-muted tabular-nums"
               >
                 <span aria-hidden="true">{headLabel(column.key, i)}</span>
                 <span className="sr-only">

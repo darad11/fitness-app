@@ -64,6 +64,7 @@ export function KitchenMenu() {
   const wrapper = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
   const button = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const foods = useFoods();
   const recipes = useRecipes();
   const templates = useMealTemplates();
@@ -122,6 +123,11 @@ export function KitchenMenu() {
     document.addEventListener('pointerdown', onPointer);
     document.addEventListener('keydown', onKey);
     wrapper.current?.querySelector<HTMLElement>('a')?.focus();
+    // Ganz sichtbar, auch über der Tab-Leiste (D-377): Aufgeklappt quer (iPhone Duo, 669 pt hoch)
+    // lag der letzte Eintrag unter der Leiste. `scroll-padding` hält den Abstand zu ihr.
+    const node = panel.current;
+    if (node && typeof node.scrollIntoView === 'function')
+      node.scrollIntoView({ block: 'nearest' });
     return () => {
       document.removeEventListener('pointerdown', onPointer);
       document.removeEventListener('keydown', onKey);
@@ -152,6 +158,7 @@ export function KitchenMenu() {
       </button>
       {open === 'menu' ? (
         <div
+          ref={panel}
           id={`${id}-panel`}
           role="group"
           aria-label={tk.title}

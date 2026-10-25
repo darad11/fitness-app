@@ -144,7 +144,7 @@ export function TaskDetailPage() {
           {/* Kompakte Zellen in sieben Spalten, Wochentage darüber; Markierung 16 px (D-334). */}
           <ul
             aria-hidden="true"
-            className="grid w-max grid-cols-[repeat(7,1.75rem)] text-center text-[10px] font-medium text-muted"
+            className="grid w-max grid-cols-[repeat(7,1.75rem)] text-center text-tab font-medium text-muted"
           >
             {td.weekdayNames.map((name) => (
               <li key={name}>{name}</li>

@@ -88,3 +88,16 @@ Untersucht wurden Ausrichtung und Drehung des Videos, Seitenverhältnis und `obj
 - **Befund:** Beim Wiederholen des Tests zu 3.2 blieb die Linse in einem von drei Läufen sichtbar stehen. Ein Tipp fängt den Zeiger nicht, sonst ginge der Klick auf den Tab verloren. Glitt die Leiste beim Aufgehen unter dem Zeiger weg, kam das Loslassen nie bei ihr an.
 - **Lösung:** Während eines Drucks hört die Linse auch am Fenster auf das Loslassen; außerhalb der Leiste gilt es als Abbruch.
 - **Test:** `e2e/duo-tabbar.spec.ts` „Loslassen außerhalb der Leiste beendet die Linse“: am alten Stand fehlgeschlagen (Linse blieb aktiv), mit der Korrektur bestanden.
+
+### 3.6 Weitere Funde der Prüfung in drei Breiten (D-377)
+
+Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und axe je Screen).
+
+- **Kopf im Training:** Zugeklappt endete der klebende Kopf 64 pt vor dem Fensterrand, „Beenden“ und der Titel standen 64 pt weiter links als der Inhalt der Seite, die Trennlinie hörte vor dem Rand auf. Ursache: Der Kopf reichte nur um den Seitenrand über den Inhalt hinaus, nicht um den Systemrand. Jetzt bis an den Fensterrand, der Inhalt bündig (neue Hilfsklasse `page-bleed`).
+- **Mahlzeit beim Hinzufügen:** Aufgeklappt hoch (669 pt) war die Auswahl der Mahlzeit 58 px breit, von „Snacks“ blieb das „S“. Jetzt stehen Auswahl und Knöpfe erst ab 768 px nebeneinander, die Auswahl ist dann mindestens 160 px breit.
+- **„Meine Küche“ aufgeklappt:** Bei 669 pt Höhe lag das Menü teils unter der Tab-Leiste; „Rezepte“ ließ sich nicht tippen. Jetzt rollt das Menü beim Öffnen ganz ins Bild.
+- **Namen für Screenreader und Sprachsteuerung (WCAG 2.5.3):** In den Zeilen der Tagesaufgaben, der Auswertung „Je Aufgabe“, der Ernährung und der Gewichtseinträge enthielt der vorgelesene Name den sichtbaren Text nur zum Teil; axe meldete das, sobald Daten da sind. Jetzt besteht der Name aus dem sichtbaren Namen und einem unsichtbaren Rest („Lesen bearbeiten“, „Lesen – Auswertung öffnen“, „Skyr Natur von Spar bearbeiten“), Rhythmus, Quote, Menge und Kalorien werden als Beschreibung mit vorgelesen (erledigt Audit D-08).
+- **Wochentage im Kalender:** 10 px, jetzt 11 px.
+- **Pause, ±15 s:** Zugeklappt (vor der Korrektur des Kopfs) und bei 320 pt war die Pause so schmal, dass die Symbole Minus und Plus auf 0 px schrumpften; zu sehen war zweimal „15 s“. Jetzt bleiben die Symbole 16 px breit, die Chips haben weniger Innenabstand.
+- **Test:** `e2e/duo-funde.spec.ts`, 6 Tests (Handy-Profil; der Kopf nur in Chromium): am alten Stand 6 von 6 fehlgeschlagen (Kopf endete bei 402 statt am Rand 466; Auswahl 57,75 px bei 640 px; „Rezepte“ verdeckt; axe mit Verstößen gegen `label-content-name-mismatch`; Wochentage 10 px; Minus-Symbol 0 px), mit der Korrektur 6 von 6 bestanden. Dazu `src/shared/ui/name-rest.test.tsx` (4 Tests) und Name samt Beschreibung eines Eintrags mit Marke in `nutrition-ui.test.tsx`.
+- **Unterwegs bemerkt und vor dem Commit behoben:** Ein versteckter Namensteil in abgeschnittenem Text (Auswertung „Je Aufgabe“) lag hinter dem Zeilenende und machte die Seite bei 320 px um 77 px breiter; der bestehende Test „kleiner Bildschirm, nichts ragt über den Rand“ schlug an. Der versteckte Teil steht jetzt als eigenes Kind des Links.

@@ -344,10 +344,11 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
       {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
-          (D-332). Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. */}
+          (D-332). Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. Seitlich
+          reicht er bis an den Fensterrand, auch über einen sicheren Bereich (D-377). */}
       <header
         ref={headRef}
-        className="page-gutters sticky top-0 z-10 -mx-page -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3 md:-mx-page-md lg:-mx-page-lg"
+        className="page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
       >
         <div className="flex items-start justify-between gap-2">
           {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}

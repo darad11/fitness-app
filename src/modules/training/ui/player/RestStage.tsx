@@ -51,25 +51,27 @@ export function RestStage(props: RestStageProps) {
         size === 'lg' ? 'w-full max-w-md grid-cols-[1fr_1fr_1.6fr]' : 'grid-cols-[1fr_1fr_1.5fr]',
       )}
     >
-      {/* ±15 s als Chips, „Überspringen“ in Blau: Trainingsaktion im aktiven Workout (D-315). */}
+      {/* ±15 s als Chips, „Überspringen“ in Blau: Trainingsaktion im aktiven Workout (D-315).
+          Zellen des Rasters (`fill`) mit festem Symbol (D-377): Bei schmaler Pause (320 pt, iPhone
+          Duo zugeklappt) schrumpften Minus und Plus auf null, zu sehen war zweimal „15 s“. */}
       <Chip
         aria-label={tTrainingPages.rest.minus}
-        className="w-full"
+        fill
         onClick={() => {
           props.onAdjust(-REST_STEP_SEC);
         }}
       >
-        <Minus aria-hidden="true" className="size-4" />
+        <Minus aria-hidden="true" className="size-4 shrink-0" />
         15 s
       </Chip>
       <Chip
         aria-label={tTrainingPages.rest.plus}
-        className="w-full"
+        fill
         onClick={() => {
           props.onAdjust(REST_STEP_SEC);
         }}
       >
-        <Plus aria-hidden="true" className="size-4" />
+        <Plus aria-hidden="true" className="size-4 shrink-0" />
         15 s
       </Chip>
       <Button

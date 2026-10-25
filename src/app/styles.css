@@ -182,6 +182,23 @@
 }
 
 /*
+ * Gegenstück zu `page-gutters` (D-377): Ein Element im Inhalt reicht seitlich bis an den
+ * Fensterrand, um genau den Seitenrand samt sicherem Bereich. Vorher nur um den Seitenrand; beim
+ * iPhone Duo war der Kopf im Training dadurch um den Systemrand schmaler als der Inhalt.
+ */
+@utility page-bleed {
+  --gutter: var(--spacing-page);
+  margin-left: calc(-1 * max(var(--gutter), env(safe-area-inset-left)));
+  margin-right: calc(-1 * max(var(--gutter), env(safe-area-inset-right)));
+  @variant md {
+    --gutter: var(--spacing-page-md);
+  }
+  @variant lg {
+    --gutter: var(--spacing-page-lg);
+  }
+}
+
+/*
  * Feste Elemente links und rechts am Rand des sicheren Bereichs (D-372): Beim iPhone Duo liegen
  * Statusleiste, Dynamic Island und Kamera an der Seite; Dialoge stehen mittig daneben.
  */

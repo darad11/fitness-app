@@ -91,7 +91,7 @@ test('Markierungen (F6): Kalender 16 px in sieben Spalten unter den Wochentagen,
 }) => {
   await threeDays(page);
   await openPage(page, '/heute/aufgaben');
-  await page.getByRole('link', { name: 'Lesen: Auswertung öffnen' }).click();
+  await page.getByRole('link', { name: 'Lesen – Auswertung öffnen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Lesen' })).toBeVisible();
   const calendar = page.getByRole('list', { name: /Kalender/ });
   const cells = calendar.locator('li[title] > span[aria-hidden="true"]');

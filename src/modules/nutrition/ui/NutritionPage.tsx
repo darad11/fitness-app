@@ -13,7 +13,7 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from 'lucide-react';
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useId, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useFormatters } from '@/modules/settings';
 import { WaterCard } from '@/modules/water';
@@ -27,6 +27,7 @@ import {
   Card,
   IconButton,
   Meter,
+  NameRest,
   PageHeader,
   Skeleton,
   TileIcon,
@@ -47,7 +48,7 @@ import { ExtrasPanel } from './ExtrasPanel';
 import { KitchenMenu, PILL } from './KitchenMenu';
 import { MacroRing, RING_COLORS, ringLabel } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
-import { brandedName, dayDate, describeAmount, entryNameAndBrand, grams, kcal } from './format';
+import { dayDate, describeAmount, entryNameAndBrand, grams, kcal } from './format';
 
 /** Symbol je Mahlzeit in der Kachel (FORM, D-315). */
 const SLOT_ICONS: Record<MealSlot, LucideIcon> = {
@@ -85,6 +86,7 @@ export function NutritionPage() {
   const day = requested && isValidDayKey(requested) ? requested : today;
   const entries = useDayEntries(day);
   const targets = useTargets();
+  const entryIds = useId();
   const [editing, setEditing] = useState<FoodLogEntry | null>(null);
   const [deleted, setDeleted] = useState<FoodLogEntry | null>(null);
   const [saving, setSaving] = useState<MealSlot | null>(null);
@@ -290,34 +292,40 @@ export function NutritionPage() {
                 </div>
                 {items.length > 0 ? (
                   <ul className="mt-2 divide-y divide-line">
-                    {items.map((entry) => (
-                      <li key={entry.id}>
-                        <button
-                          type="button"
-                          aria-label={tNutrition.entryLabel(
-                            brandedName(entryNameAndBrand(entry, brandOf)),
-                          )}
-                          onClick={() => {
-                            setEditing(entry);
-                          }}
-                          className="flex min-h-12 w-full items-center gap-3 py-2 text-left hover:bg-surface-2"
-                        >
-                          <span className="min-w-0 flex-1">
-                            <span className="block font-medium break-words">
-                              {entryNameAndBrand(entry, brandOf).name}
+                    {items.map((entry) => {
+                      const { name, brand } = entryNameAndBrand(entry, brandOf);
+                      const ids = {
+                        amount: `${entryIds}-${entry.id}-menge`,
+                        kcal: `${entryIds}-${entry.id}-kcal`,
+                      };
+                      return (
+                        <li key={entry.id}>
+                          {/* Name aus dem Inhalt statt `aria-label` (D-377, WCAG 2.5.3 „Label
+                              in Name“): sichtbarer Name und unsichtbar „von Marke bearbeiten“;
+                              Menge und Kalorien beschreiben den Knopf. */}
+                          <button
+                            type="button"
+                            aria-describedby={`${ids.amount} ${ids.kcal}`}
+                            onClick={() => {
+                              setEditing(entry);
+                            }}
+                            className="flex min-h-12 w-full items-center gap-3 py-2 text-left hover:bg-surface-2"
+                          >
+                            <span className="min-w-0 flex-1">
+                              <span className="block font-medium break-words">{name}</span>
+                              <span aria-hidden="true" className="block text-caption text-muted">
+                                {brand ? `${brand} · ` : null}
+                                <span id={ids.amount}>{describeAmount(fmt, entry)}</span>
+                              </span>
                             </span>
-                            <span className="block text-caption text-muted">
-                              {[entryNameAndBrand(entry, brandOf).brand, describeAmount(fmt, entry)]
-                                .filter(Boolean)
-                                .join(' · ')}
+                            <NameRest full={tNutrition.entryLabel(name, brand)} visible={name} />
+                            <span id={ids.kcal} aria-hidden="true" className="shrink-0 text-muted">
+                              {kcal(fmt, entry.nutrients.kcal ?? 0)} {tNutrition.units.kcal}
                             </span>
-                          </span>
-                          <span className="shrink-0 text-muted">
-                            {kcal(fmt, entry.nutrients.kcal ?? 0)} {tNutrition.units.kcal}
-                          </span>
-                        </button>
-                      </li>
-                    ))}
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                 ) : null}
                 <div className="mt-2 -ml-3 flex flex-wrap gap-2">

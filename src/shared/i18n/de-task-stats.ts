@@ -57,7 +57,7 @@ export const tTaskStats = {
     points === 0 ? '± 0 Punkte' : `${points > 0 ? '+' : '−'}${Math.abs(points)} Punkte`,
   paused: 'pausiert',
   removed: 'gelöscht',
-  openTask: (name: string) => `${name}: Auswertung öffnen`,
+  openTask: (name: string) => `${name} – Auswertung öffnen`,
   insightsTitle: 'Hinweise',
   observation: 'Beobachtung',
   suggestion: 'Vorschlag',

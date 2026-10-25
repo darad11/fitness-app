@@ -1631,3 +1631,18 @@ Während eines Drucks hört die Linse auch am Fenster auf das Loslassen (D-376).
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,4 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 358 bestanden, 72 übersprungen, 0 fehlgeschlagen, 8,7 min |
+
+### Phase iPhone Duo: Weitere Funde der Prüfung in drei Breiten · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WCAG 2.5.3, Minus und Plus der Pause, Wochentage 11 px (D-377). Bericht: `form-duo-report.md` Abschnitt 3.6.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-funde.spec.ts` (Handy-Profil; der Kopf nur in Chromium) | 6 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 6 von 6 fehlgeschlagen (Kopf endete bei 402 statt am Rand 466; Auswahl 57,75 px bei 640 px; „Rezepte“ verdeckt; axe `label-content-name-mismatch`; Wochentage 10 px; Minus-Symbol 0 px) |
+| `src/shared/ui/name-rest.test.tsx`; Namen und Beschreibungen in `habits-ui.test.tsx`, `task-stats.test.tsx`, `nutrition-ui.test.tsx` | bestanden |
+| Zwischenstände vor dem Commit | 10 E2E-Fehlschläge in `tasks`, `task-rows` und `marks`: Chromium trennt den versteckten Namensteil mit einem Leerzeichen ab („Lesen : Auswertung öffnen“), und ein versteckter Teil in abgeschnittenem Text machte die Seite bei 320 pt 77 px breiter. Danach 2 in `barcode.spec.ts` (Test erwartete den alten Namen „Skyr Natur, Spar“). Alle behoben, siehe D-377 |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 364 bestanden, 78 übersprungen, 0 fehlgeschlagen, 8,2 min |

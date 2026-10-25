@@ -40,10 +40,19 @@ function renderRoutes(routes: typeof habitsRoutes, path: string) {
 }
 
 /** Namen der Zeilen in der Reihenfolge der Liste (der Link heißt „… bearbeiten“). */
+/** Text eines Links wie für Screenreader, ohne ausgeblendete Teile (Name aus dem Inhalt, D-377). */
+function accessibleText(element: Element): string {
+  const copy = element.cloneNode(true) as Element;
+  copy.querySelectorAll('[aria-hidden="true"]').forEach((node) => {
+    node.remove();
+  });
+  return copy.textContent.replace(/\s+/g, ' ').trim();
+}
+
 const names = (region: HTMLElement) =>
   within(region)
     .getAllByRole('link', { name: / bearbeiten$/ })
-    .map((link) => (link.getAttribute('aria-label') ?? '').replace(/ bearbeiten$/, ''));
+    .map((link) => accessibleText(link).replace(/ bearbeiten$/, ''));
 
 const myTasks = () => screen.findByRole('region', { name: 'Meine Aufgaben' });
 

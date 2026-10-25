@@ -1542,3 +1542,16 @@ Avocado 145 g nach DTU 2013 (Sorte Hass); „Datteln, Medjool“ ohne europäisc
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `basic-foods`, `narrow-layout`, `nutrition` (Chromium) | 43 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung: Referenz für Zucker und gesättigte Fettsäuren aus dem Tagesziel · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Zucker und gesättigte Fettsäuren höchstens 10 % der Kalorien aus dem Tagesziel (4 bzw. 9 kcal je g), ohne Ziel 50 und 22 g (D-369, AK-NUT-15). Bericht: `form-ernaehrung-report.md` Abschnitt 17.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `references.test.ts`, `nutrition-ui.test.tsx`, `de-nutrition.test.ts` | 8, 24 und 7 bestanden |
+| Gegenprobe: neue und geänderte Tests gegen den alten Stand | 5 von 5 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1073 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `nutrition`, `basic-foods`, `narrow-layout`, `nutrition-ring`, `network-a11y` (Chromium) | 111 bestanden, 15 übersprungen, 0 fehlgeschlagen |

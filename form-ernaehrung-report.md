@@ -25,6 +25,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | Abschluss §4 Quellenangabe des BLS | kein eigener Wortlaut in der Nachricht, deshalb bleibt die Zitierweise mit DOI; Quellenzeile bricht nicht mehr zwischen Zahl und „%“ um | D-366 | erledigt; Unit-Tests und E2E in Chromium bestanden; CI-Lauf 40183657652 grün |
 | Abschluss §5 Tests und Abschluss | jeder Prüfpunkt des Auftrags mit Nachweis; fünf Bilder, Übersicht und Zip neu; ganze E2E-Suite in Chromium grün | D-367 | erledigt; CI zu §1 bis §4 grün, auch WebKit (Läufe 40181118538 und 40183657652) |
 | Nachtrag nach Durchsicht der Richtwerte | Richtwerte freigegeben mit einer Änderung: Avocado 145 g (DTU 2013, Sorte Hass); „Datteln, Medjool“ nicht aufgenommen, keine europäische Tabelle nennt ein Stückgewicht | D-368 | erledigt; Unit-Tests und E2E in Chromium bestanden |
+| Referenz für Zucker und gesättigte Fettsäuren aus dem Tagesziel | Zucker und gesättigte Fettsäuren höchstens 10 % der Kalorien aus dem Tagesziel (4 bzw. 9 kcal je g), ohne Ziel 50 und 22 g; Erklärung mit WHO und DGE im Info-Blatt; freier Zucker als späterer Schritt im Plan (Punkt 68) | D-369 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenprobe rot |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -909,4 +910,39 @@ Die Liste hat weiter 47 Richtwerte; die vollständige Tabelle steht in Abschnitt
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `basic-foods`, `narrow-layout`, `nutrition` (Chromium) | 43 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI nach dem Push |
+
+---
+
+## 17. Referenz für Zucker und gesättigte Fettsäuren aus dem Tagesziel (D-369)
+
+Deine Nachricht vom 25.10.2026: Die 90 g Zucker (EU-Referenzmenge für Gesamtzucker) sahen in der kompakten Anzeige wie eine Empfehlung aus und waren zu hoch.
+
+| Punkt | Umsetzung |
+|---|---|
+| Zucker | höchstens 10 % der Kalorien aus dem Tagesziel des angezeigten Tages, 4 kcal je g, auf ganze Gramm gerundet: 2.390 kcal ergeben 59,75, also 60 g; ohne Tagesziel 50 g. Anzeige weiter kompakt, z. B. „Zucker 9,6 / 60 g“ |
+| Gesättigte Fettsäuren | ebenso mit 9 kcal je g: 2.390 kcal ergeben 26,6, also 27 g; ohne Tagesziel 22 g |
+| Ohne Tagesziel | 50 und 22 g sind genau 10 % von 2.000 kcal, der Referenzmenge für Energie nach LMIV Anhang XIII; so steht es auch im Info-Blatt |
+| Info-Blatt | bei Zucker und gesättigten Fettsäuren die Grundlage („10 % der Kalorien aus deinem Tagesziel von 2.390 kcal, 4 kcal je g.“) und „Der Wert folgt der Empfehlung von WHO und DGE (unter 10 % der Energie).“; beim Zucker dazu „Beim Zucker meint sie freien Zucker; die App zählt jeden Zucker, auch aus Obst und Milch, deshalb ist der Wert eine strenge Orientierung.“ Quellen: Salz nach LMIV, Zucker und gesättigte Fettsäuren nach WHO und DGE, Ballaststoffe nach DGE |
+| Salz, Ballaststoffe | unverändert 6 g (LMIV) und 30 g (DGE) |
+| Plan | Punkt 68: später freien Zucker näherungsweise über die Lebensmittelgruppen schätzen (Zucker, Honig, Süßes, Säfte) und die Referenz nur darauf beziehen |
+| Bilder | „Weitere Nährwerte“ und Info-Blatt in `docs/screens/` neu erzeugt, Übersicht und Zip ebenso |
+
+Quellen geprüft per Websuche: WHO-Faktenblatt „Healthy diet“ (Nr. 394): gesättigte Fette und freie Zucker jeweils unter 10 % der Energie. DGE: gesättigte Fettsäuren 7 bis 10 % der Energie (FAQ zur Fett-Leitlinie), freier Zucker unter 10 % (Konsenspapier von DAG, DDG und DGE 2018, wie in D-359).
+
+### Geänderte Dateien
+
+`src/modules/nutrition/calc/references.ts` und `.test.ts`, `ui/NutritionPage.tsx`, `ui/ExtrasPanel.tsx`, `ui/nutrition-ui.test.tsx`, `src/shared/i18n/de-nutrition.ts` und `.test.ts`, `e2e/nutrition.spec.ts`, `e2e/basic-foods.spec.ts`, `e2e/narrow-layout.spec.ts`, `docs/screens/` (zwei Bilder, Übersicht, Zip). Unterlagen: `docs/decisions.md` (D-369, Hinweis in D-359), `docs/requirements.md` (AK-NUT-15), `docs/feature-inventory.md` und `.csv` (NU-28, Version 0.28), `docs/known-limitations.md`, `docs/implementation-plan.md` (Punkt 67 und neuer Punkt 68), `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `references.test.ts` | 8 bestanden, davon neu: 2.390 kcal ergeben 60 und 27 g, 2.200 kcal 55 und 24 g; ohne Ziel (auch 0, negativ, keine Zahl) 50 und 22 g; die Zeilen bekommen die Referenz des Tagesziels |
+| `nutrition-ui.test.tsx`, `de-nutrition.test.ts` | 24 und 7 bestanden, davon neu: Tagesziel 2.390 kcal zeigt „/ 60 g“ und „/ 27 g“, das Blatt „Zucker: höchstens 60 g“ mit der Grundlage aus dem Tagesziel; ohne Ziel „35 / 50 g“, „/ 22 g“ und die Sätze zu WHO, DGE und freiem Zucker |
+| Gegenprobe: die neuen und geänderten Tests gegen den alten Stand | 5 von 5 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1073 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `nutrition` (Ziel 2.200 kcal: „/ 55 g“, „/ 24 g“, Blatt mit „Zucker: höchstens 55 g“), `basic-foods`, `narrow-layout` (ohne Ziel „/ 22 g“, Zeilen einzeilig), `nutrition-ring`, `network-a11y`, Chromium | 111 bestanden, 15 übersprungen, 0 fehlgeschlagen |
 | WebKit | in der CI nach dem Push |

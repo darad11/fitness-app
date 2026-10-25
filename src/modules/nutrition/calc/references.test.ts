@@ -1,15 +1,49 @@
 import { describe, expect, it } from 'vitest';
-import { DAILY_REFERENCES, REFERENCE_NUTRIENTS, referenceLines, sharedMissing } from './references';
+import { dailyReferences, REFERENCE_NUTRIENTS, referenceLines, sharedMissing } from './references';
 
-describe('Tagesreferenzen (D-359)', () => {
-  it('nennt die Referenzmengen der LMIV und den Richtwert der DGE', () => {
+describe('Tagesreferenzen (D-359, D-369)', () => {
+  it('rechnet Zucker und gesättigte Fettsäuren aus 10 % der Kalorien des Tagesziels', () => {
     expect(REFERENCE_NUTRIENTS).toEqual(['salt', 'sugar', 'saturatedFat', 'fiber']);
-    expect(DAILY_REFERENCES).toEqual({
+    // 2.390 kcal: Zucker 239 kcal / 4 = 59,75, also 60 g; gesättigte Fettsäuren 239 / 9 = 26,6,
+    // also 27 g. Salz und Ballaststoffe hängen nicht am Ziel.
+    expect(dailyReferences(2390)).toEqual({
       salt: { grams: 6, bound: 'atMost', source: 'lmiv' },
-      sugar: { grams: 90, bound: 'atMost', source: 'lmiv' },
-      saturatedFat: { grams: 20, bound: 'atMost', source: 'lmiv' },
+      sugar: {
+        grams: 60,
+        bound: 'atMost',
+        source: 'energyShare',
+        basis: { kcal: 2390, fromTarget: true },
+      },
+      saturatedFat: {
+        grams: 27,
+        bound: 'atMost',
+        source: 'energyShare',
+        basis: { kcal: 2390, fromTarget: true },
+      },
       fiber: { grams: 30, bound: 'atLeast', source: 'dge' },
     });
+    expect(dailyReferences(2200)).toMatchObject({
+      sugar: { grams: 55 },
+      saturatedFat: { grams: 24 },
+    });
+  });
+
+  it('nimmt ohne Tagesziel 2.000 kcal: Zucker 50 g, gesättigte Fettsäuren 22 g', () => {
+    for (const none of [undefined, null, 0, -1, Number.NaN]) {
+      expect(dailyReferences(none)).toMatchObject({
+        salt: { grams: 6 },
+        sugar: { grams: 50, basis: { kcal: 2000, fromTarget: false } },
+        saturatedFat: { grams: 22, basis: { kcal: 2000, fromTarget: false } },
+        fiber: { grams: 30 },
+      });
+    }
+  });
+
+  it('gibt die Referenz des Tagesziels an jede Zeile weiter', () => {
+    const lines = referenceLines([{ name: 'Milch', nutrients: { sugar: 9.6 } }], 2390);
+    expect(lines.find((l) => l.nutrient === 'sugar')?.reference.grams).toBe(60);
+    expect(lines.find((l) => l.nutrient === 'saturatedFat')?.reference.grams).toBe(27);
+    expect(referenceLines([]).find((l) => l.nutrient === 'sugar')?.reference.grams).toBe(50);
   });
 
   it('summiert je Nährwert und rundet auf 0,1 g', () => {

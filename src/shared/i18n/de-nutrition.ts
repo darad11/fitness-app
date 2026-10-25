@@ -77,13 +77,22 @@ export const tNutrition = {
     /** Für Screenreader hinter dem Sternchen. */
     incomplete: 'nicht bei allen Einträgen angegeben',
     sheetIntro:
-      'Je Zeile steht, was du an diesem Tag gegessen hast, und die Referenz für Erwachsene am Tag. Allgemeine Orientierungswerte, keine Ziele und keine medizinische Empfehlung.',
+      'Je Zeile steht, was du an diesem Tag gegessen hast, und die Referenz am Tag. Allgemeine Orientierungswerte, keine Ziele und keine medizinische Empfehlung.',
     atMost: (grams: string) => `höchstens ${grams} g`,
     atLeast: (grams: string) => `mindestens ${grams} g`,
+    /**
+     * Grundlage bei Zucker und gesättigten Fettsäuren (D-369): 10 % der Kalorien aus dem
+     * Tagesziel, ohne Ziel aus 2.000 kcal; dazu die Energie je Gramm.
+     */
+    energyBasis: (kcal: string, fromTarget: boolean, kcalPerGram: number) =>
+      fromTarget
+        ? `10 % der Kalorien aus deinem Tagesziel von ${kcal} kcal, ${String(kcalPerGram)} kcal je g.`
+        : `Ohne Tagesziel 10 % von ${kcal} kcal, ${String(kcalPerGram)} kcal je g.`,
     notes: {
       salt: 'EU-Referenzmenge für Erwachsene (LMIV).',
-      sugar: 'Gesamtzucker, auch aus Obst und Milch. EU-Referenzmenge für Erwachsene (LMIV).',
-      saturatedFat: 'EU-Referenzmenge für Erwachsene (LMIV).',
+      sugar:
+        'Der Wert folgt der Empfehlung von WHO und DGE (unter 10 % der Energie). Beim Zucker meint sie freien Zucker; die App zählt jeden Zucker, auch aus Obst und Milch, deshalb ist der Wert eine strenge Orientierung.',
+      saturatedFat: 'Der Wert folgt der Empfehlung von WHO und DGE (unter 10 % der Energie).',
       fiber: 'Richtwert der DGE für Erwachsene.',
     },
     asterisk:
@@ -99,7 +108,7 @@ export const tNutrition = {
     missingAll: 'Alle vier Werte',
     sourcesTitle: 'Quellen',
     sources:
-      'Referenzmengen nach der EU-Lebensmittelinformationsverordnung (LMIV, VO (EU) Nr. 1169/2011, Anhang XIII), Ballaststoffe nach der Deutschen Gesellschaft für Ernährung (DGE). WHO und DGE empfehlen, freien Zucker unter 10 % der Energie zu halten; die Nährwertangaben trennen ihn nicht vom Zucker aus Obst und Milch, deshalb zeigt die App diesen Wert nicht.',
+      'Salz nach der EU-Lebensmittelinformationsverordnung (LMIV, VO (EU) Nr. 1169/2011, Anhang XIII). Zucker und gesättigte Fettsäuren nach der Empfehlung von WHO und DGE, jeweils unter 10 % der Energie; ohne Tagesziel mit der Referenzmenge der LMIV von 2.000 kcal. Ballaststoffe nach der Deutschen Gesellschaft für Ernährung (DGE).',
   },
   noTarget: 'Noch kein Tagesziel.',
   setTarget: 'Ziel festlegen',

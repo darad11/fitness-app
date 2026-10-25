@@ -158,7 +158,8 @@ for (const width of [320, 360, 390]) {
     await openPage(page, '/ernaehrung');
     await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
     const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
-    await expect(extras).toContainText('56* (nicht bei allen Einträgen angegeben) / 20 g');
+    // Ohne Tagesziel: gesättigte Fettsäuren 10 % von 2.000 kcal, also 22 g (D-369).
+    await expect(extras).toContainText('56* (nicht bei allen Einträgen angegeben) / 22 g');
     const rows = extras.locator('dl > div');
     await expect(rows).toHaveCount(4);
     for (const row of await rows.all()) {

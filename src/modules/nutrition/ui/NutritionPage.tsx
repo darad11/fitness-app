@@ -103,15 +103,15 @@ export function NutritionPage() {
   };
   const target = targets ? targetOn(targets, day) : undefined;
   const totals = entries ? sumEntries(entries) : undefined;
-  // Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz (D-359); Einträge ohne
-  // Angabe zählen nicht als 0, sie werden genannt.
-  const references = useMemo(
+  // Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz (D-359); Zucker und
+  // gesättigte Fettsäuren aus 10 % der Kalorien des Tagesziels (D-369). Einträge ohne Angabe
+  // zählen nicht als 0, sie werden genannt.
+  const referenceEntries = useMemo(
     () =>
-      referenceLines(
-        (entries ?? []).map((entry) => ({ nutrients: entry.nutrients, name: entry.nameSnapshot })),
-      ),
+      (entries ?? []).map((entry) => ({ nutrients: entry.nutrients, name: entry.nameSnapshot })),
     [entries],
   );
+  const references = referenceLines(referenceEntries, target?.kcal);
   const ring = target && totals ? macroRing(totals.sums, target.kcal) : undefined;
   // Der Hinweis unter den Makros nennt nur Eiweiß, Kohlenhydrate und Fett; die weiteren
   // Nährwerte tragen bei fehlenden Werten ein Sternchen (D-363).

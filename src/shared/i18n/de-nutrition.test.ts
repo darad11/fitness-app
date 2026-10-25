@@ -44,12 +44,22 @@ describe('Info-Blatt zu „Weitere Nährwerte“', () => {
     );
   });
 
-  it('erklärt das Sternchen und nennt die Quellen und die Grenze beim freien Zucker', () => {
+  it('erklärt das Sternchen, die Grundlage aus dem Tagesziel und die Quellen (D-369)', () => {
     expect(tNutrition.reference.asterisk).toMatch(/^\* Bei mindestens einem Eintrag fehlt/);
     expect(tNutrition.reference.asterisk).toContain('zählt nicht als 0');
     expect(tNutrition.reference.sources).toContain('VO (EU) Nr. 1169/2011, Anhang XIII');
     expect(tNutrition.reference.sources).toContain('Deutschen Gesellschaft für Ernährung (DGE)');
-    expect(tNutrition.reference.sources).toContain('freien Zucker unter 10 % der Energie');
+    expect(tNutrition.reference.sources).toContain('jeweils unter 10 % der Energie');
+    expect(tNutrition.reference.sources).toContain('2.000 kcal');
+    // Zucker und gesättigte Fettsäuren: Grundlage aus dem Tagesziel, ohne Ziel aus 2.000 kcal.
+    expect(tNutrition.reference.energyBasis('2.390', true, 4)).toBe(
+      '10 % der Kalorien aus deinem Tagesziel von 2.390 kcal, 4 kcal je g.',
+    );
+    expect(tNutrition.reference.energyBasis('2.000', false, 9)).toBe(
+      'Ohne Tagesziel 10 % von 2.000 kcal, 9 kcal je g.',
+    );
+    expect(tNutrition.reference.notes.sugar).toContain('Beim Zucker meint sie freien Zucker');
+    expect(tNutrition.reference.notes.sugar).toContain('strenge Orientierung');
     expect(tNutrition.reference.sheetIntro).toContain('keine medizinische Empfehlung');
     for (const text of [
       tNutrition.reference.sources,

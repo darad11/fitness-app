@@ -20,7 +20,13 @@ import {
   toFoodItem,
 } from '../data/nutritionRepository';
 import { nutritionRoutes } from '../routes';
-import { createFood, localDayKey, logFood, logQuick } from '../service/nutritionService';
+import {
+  createFood,
+  localDayKey,
+  logFood,
+  logQuick,
+  setNutritionTarget,
+} from '../service/nutritionService';
 import { createRecipe, ingredientFrom } from '../service/recipeService';
 
 const localDay = () => localDayKey(new Date());
@@ -400,7 +406,8 @@ describe('Ernährung (Schritt G, D-261)', () => {
         WAIT,
       );
       // Kompakt „Ist / Referenz g“ (D-363).
-      expect(within(list).getByText('Zucker').nextElementSibling).toHaveTextContent('0,4 / 90 g');
+      // Ohne Tagesziel: Zucker 10 % von 2.000 kcal, also 50 g (D-369).
+      expect(within(list).getByText('Zucker').nextElementSibling).toHaveTextContent('0,4 / 50 g');
       expect(within(list).getByText('Ballaststoffe').nextElementSibling).toHaveTextContent(
         '5,5 / 30 g',
       );
@@ -779,12 +786,13 @@ describe('Weitere Nährwerte mit Tagesreferenz (D-359)', () => {
         'Gesättigte Fe',
         'Ballaststoffe',
       ]);
-      // Zucker: 20 g aus dem Müsli und 15 g aus dem Apfel, beide mit Angabe: kein Sternchen.
-      expect(row('Zucker').querySelector('dd')?.textContent).toBe('35 / 90 g');
+      // Zucker: 20 g aus dem Müsli und 15 g aus dem Apfel, beide mit Angabe: kein Sternchen. Ohne
+      // Tagesziel gilt 10 % von 2.000 kcal, also 50 g (D-369).
+      expect(row('Zucker').querySelector('dd')?.textContent).toBe('35 / 50 g');
       // Beim Apfel fehlen Salz, gesättigte Fettsäuren und Ballaststoffe: Sternchen, nicht als 0.
       for (const [label, ist, reference] of [
         ['Salz', '0,5', '6'],
-        ['Gesättigte Fettsäuren', '2', '20'],
+        ['Gesättigte Fettsäuren', '2', '22'],
         ['Ballaststoffe', '8', '30'],
       ] as const) {
         const value = row(label).querySelector('dd');
@@ -805,7 +813,12 @@ describe('Weitere Nährwerte mit Tagesreferenz (D-359)', () => {
       const sheet = screen.getByRole('dialog', { name: 'Weitere Nährwerte' });
       expect(sheet).toHaveTextContent('Salz: höchstens 6 g');
       expect(sheet).toHaveTextContent('Ballaststoffe: mindestens 30 g');
-      expect(sheet).toHaveTextContent('Gesamtzucker, auch aus Obst und Milch.');
+      expect(sheet).toHaveTextContent('Zucker: höchstens 50 g');
+      expect(sheet).toHaveTextContent('Gesättigte Fettsäuren: höchstens 22 g');
+      expect(sheet).toHaveTextContent('Ohne Tagesziel 10 % von 2');
+      expect(sheet).toHaveTextContent(
+        'Der Wert folgt der Empfehlung von WHO und DGE (unter 10 % der Energie). Beim Zucker meint sie freien Zucker; die App zählt jeden Zucker, auch aus Obst und Milch, deshalb ist der Wert eine strenge Orientierung.',
+      );
       expect(sheet).toHaveTextContent('Richtwert der DGE für Erwachsene.');
       expect(sheet).toHaveTextContent('* Bei mindestens einem Eintrag fehlt dieser Wert.');
       const missing = within(sheet).getByRole('heading', { name: 'Ohne Angabe an diesem Tag' });
@@ -813,7 +826,44 @@ describe('Weitere Nährwerte mit Tagesreferenz (D-359)', () => {
         'Salz:ApfelGesättigte Fettsäuren:ApfelBallaststoffe:Apfel',
       );
       expect(sheet).toHaveTextContent(/VO \(EU\) Nr\. 1169\/2011, Anhang XIII/);
-      expect(sheet).toHaveTextContent(/freien Zucker unter 10 % der Energie/);
+      expect(sheet).toHaveTextContent(/jeweils unter 10 % der Energie/);
+      expect(sheet.textContent).not.toMatch(/!/);
+    },
+  );
+
+  it(
+    'rechnet Zucker und gesättigte Fettsäuren aus 10 % des Tagesziels (D-369)',
+    { timeout: 30_000 },
+    async () => {
+      await setNutritionTarget(
+        rt,
+        { kcal: 2390, proteinG: 150, carbsG: 260, fatG: 80 },
+        { method: 'manual' },
+      );
+      await logQuick(rt, { kcal: 300, slot: 'lunch', dayKey: localDay() });
+      await renderAt('/ernaehrung', 'Ernährung');
+      const list = await openExtras();
+      const value = (label: string) =>
+        within(list).getByText(label, { selector: 'dt' }).parentElement?.querySelector('dd');
+      // 2.390 kcal: Zucker 239 kcal / 4 = 60 g, gesättigte Fettsäuren 239 kcal / 9 = 27 g.
+      expect(value('Zucker')?.textContent.endsWith('/ 60 g')).toBe(true);
+      const saturated = within(list).getAllByRole('term')[2]?.parentElement?.querySelector('dd');
+      expect(saturated?.textContent.endsWith('/ 27 g')).toBe(true);
+      // Salz und Ballaststoffe hängen nicht am Ziel.
+      expect(value('Salz')?.textContent.endsWith('/ 6 g')).toBe(true);
+      expect(value('Ballaststoffe')?.textContent.endsWith('/ 30 g')).toBe(true);
+      await userEvent
+        .setup()
+        .click(within(list).getByRole('button', { name: 'Erklärung und Quellen' }));
+      const sheet = screen.getByRole('dialog', { name: 'Weitere Nährwerte' });
+      expect(sheet).toHaveTextContent('Zucker: höchstens 60 g');
+      expect(sheet).toHaveTextContent('Gesättigte Fettsäuren: höchstens 27 g');
+      expect(sheet).toHaveTextContent(
+        /10 % der Kalorien aus deinem Tagesziel von 2\D?390 kcal, 4 kcal je g\./,
+      );
+      expect(sheet).toHaveTextContent(
+        /10 % der Kalorien aus deinem Tagesziel von 2\D?390 kcal, 9 kcal je g\./,
+      );
       expect(sheet.textContent).not.toMatch(/!/);
     },
   );

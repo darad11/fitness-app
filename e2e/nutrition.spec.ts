@@ -87,7 +87,8 @@ test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Ne
   // Kompakt: je Zeile Name und „Ist / Referenz g“ (D-359, D-363).
   await expect(extras).toContainText('Zucker');
   await expect(extras).toContainText('Salz');
-  for (const reference of ['/ 6 g', '/ 90 g', '/ 20 g', '/ 30 g'])
+  // Tagesziel 2.200 kcal: Zucker 10 % / 4 kcal = 55 g, gesättigte Fettsäuren 10 % / 9 kcal = 24 g (D-369).
+  for (const reference of ['/ 6 g', '/ 55 g', '/ 24 g', '/ 30 g'])
     await expect(extras).toContainText(reference);
   await expect(extras).not.toContainText('höchstens');
   // Barrierefreiheit der aufgeklappten Liste (die Prüfung je Seite sieht sie nur zugeklappt).
@@ -98,6 +99,8 @@ test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Ne
   await extras.getByRole('button', { name: 'Erklärung und Quellen' }).click();
   const sheet = page.getByRole('dialog', { name: 'Weitere Nährwerte' });
   await expect(sheet).toContainText('Salz: höchstens 6 g');
+  await expect(sheet).toContainText('Zucker: höchstens 55 g');
+  await expect(sheet).toContainText('strenge Orientierung');
   await expect(sheet).toContainText('Ballaststoffe: mindestens 30 g');
   await expect(sheet).toContainText('VO (EU) Nr. 1169/2011, Anhang XIII');
   const axeSheet = await new AxeBuilder({ page }).include('dialog[open]').withTags(tags).analyze();

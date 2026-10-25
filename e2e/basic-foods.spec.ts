@@ -101,7 +101,8 @@ test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte 
   await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
   const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
   await expect(extras).toContainText('0,4 / 6 g');
-  await expect(extras).toContainText('2,5 / 20 g');
+  // Tagesziel 2.200 kcal: gesättigte Fettsäuren höchstens 24 g (D-369).
+  await expect(extras).toContainText('2,5 / 24 g');
 });
 
 test('Grundauswahl: Apfel mit einem Tipp, eigenes Gewicht nach Neuladen gemerkt, zurücksetzbar (D-365)', async ({

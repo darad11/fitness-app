@@ -119,6 +119,8 @@ function ExtrasSheet({ lines, onClose }: { lines: readonly ReferenceLine[]; onCl
         <dl className="grid gap-3">
           {lines.map((line) => {
             const reference = fmt.number(line.reference.grams);
+            // Zucker und gesättigte Fettsäuren: Grundlage aus dem Tagesziel (D-369).
+            const basis = line.reference.basis;
             return (
               <div key={line.nutrient}>
                 <dt className="font-semibold">
@@ -127,7 +129,16 @@ function ExtrasSheet({ lines, onClose }: { lines: readonly ReferenceLine[]; onCl
                     ? text.atMost(reference)
                     : text.atLeast(reference)}
                 </dt>
-                <dd className="text-muted">{text.notes[line.nutrient]}</dd>
+                <dd className="text-muted">
+                  {basis
+                    ? `${text.energyBasis(
+                        fmt.number(basis.kcal),
+                        basis.fromTarget,
+                        line.nutrient === 'sugar' ? 4 : 9,
+                      )} `
+                    : null}
+                  {text.notes[line.nutrient]}
+                </dd>
               </div>
             );
           })}

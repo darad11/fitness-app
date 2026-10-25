@@ -5,28 +5,54 @@ export const REFERENCE_NUTRIENTS = ['salt', 'sugar', 'saturatedFat', 'fiber'] as
 export type ReferenceNutrient = (typeof REFERENCE_NUTRIENTS)[number];
 
 export interface DailyReference {
-  /** Gramm am Tag für Erwachsene. */
+  /** Gramm am Tag. */
   grams: number;
   /** „höchstens“ für Salz, Zucker und gesättigte Fettsäuren, „mindestens“ für Ballaststoffe. */
   bound: 'atMost' | 'atLeast';
-  /** EU-Lebensmittelinformationsverordnung (LMIV) oder Deutsche Gesellschaft für Ernährung. */
-  source: 'lmiv' | 'dge';
+  /**
+   * EU-Lebensmittelinformationsverordnung (Salz), Deutsche Gesellschaft für Ernährung
+   * (Ballaststoffe) oder ein Anteil der Energie nach WHO und DGE (Zucker, gesättigte Fettsäuren).
+   */
+  source: 'lmiv' | 'dge' | 'energyShare';
+  /** Nur beim Anteil der Energie: die kcal, aus denen gerechnet ist, und ob aus dem Tagesziel. */
+  basis?: { kcal: number; fromTarget: boolean };
 }
 
+/** Anteil der Energie für Zucker und gesättigte Fettsäuren: WHO und DGE, unter 10 % (D-369). */
+export const ENERGY_SHARE = 0.1;
+/** Ohne Tagesziel: Referenzmenge für Energie nach LMIV Anhang XIII Teil B. */
+export const DEFAULT_REFERENCE_KCAL = 2000;
+/** Energie je Gramm nach LMIV Anhang XIV: Zucker als Kohlenhydrat 4 kcal, Fett 9 kcal. */
+const KCAL_PER_GRAM = { sugar: 4, saturatedFat: 9 } as const;
+
 /**
- * Tagesreferenzen für Erwachsene, keine Ziele (D-359):
- * - Zucker 90 g (Gesamtzucker), gesättigte Fettsäuren 20 g, Salz 6 g: Referenzmengen nach
- *   VO (EU) Nr. 1169/2011 (LMIV), Anhang XIII Teil B.
+ * Tagesreferenzen, keine Ziele (D-359, Zucker und gesättigte Fettsäuren seit D-369):
+ * - Salz höchstens 6 g: Referenzmenge nach VO (EU) Nr. 1169/2011 (LMIV), Anhang XIII Teil B.
+ * - Zucker und gesättigte Fettsäuren höchstens 10 % der Energie aus dem Tagesziel (WHO und DGE),
+ *   mit 4 bzw. 9 kcal je g, auf ganze Gramm gerundet; ohne Tagesziel aus 2.000 kcal, also 50 g
+ *   und 22 g. WHO und DGE meinen beim Zucker freien Zucker; die Nährwertangaben trennen ihn nicht
+ *   vom Zucker aus Obst und Milch, deshalb ist die Referenz hier eine strenge Orientierung.
  * - Ballaststoffe mindestens 30 g: Richtwert der DGE.
- * Freien bzw. zugesetzten Zucker (WHO, DGE: unter 10 % der Energie) gibt es hier nicht, weil die
- * Nährwertangaben ihn nicht vom enthaltenen Zucker trennen.
  */
-export const DAILY_REFERENCES: Readonly<Record<ReferenceNutrient, DailyReference>> = {
-  salt: { grams: 6, bound: 'atMost', source: 'lmiv' },
-  sugar: { grams: 90, bound: 'atMost', source: 'lmiv' },
-  saturatedFat: { grams: 20, bound: 'atMost', source: 'lmiv' },
-  fiber: { grams: 30, bound: 'atLeast', source: 'dge' },
-};
+export function dailyReferences(
+  kcalTarget?: number | null,
+): Readonly<Record<ReferenceNutrient, DailyReference>> {
+  const fromTarget =
+    typeof kcalTarget === 'number' && Number.isFinite(kcalTarget) && kcalTarget > 0;
+  const kcal = fromTarget ? kcalTarget : DEFAULT_REFERENCE_KCAL;
+  const share = (nutrient: keyof typeof KCAL_PER_GRAM): DailyReference => ({
+    grams: Math.round((kcal * ENERGY_SHARE) / KCAL_PER_GRAM[nutrient]),
+    bound: 'atMost',
+    source: 'energyShare',
+    basis: { kcal, fromTarget },
+  });
+  return {
+    salt: { grams: 6, bound: 'atMost', source: 'lmiv' },
+    sugar: share('sugar'),
+    saturatedFat: share('saturatedFat'),
+    fiber: { grams: 30, bound: 'atLeast', source: 'dge' },
+  };
+}
 
 export interface ReferenceLine {
   nutrient: ReferenceNutrient;
@@ -57,12 +83,15 @@ export function sharedMissing(lines: readonly ReferenceLine[]): readonly string[
 }
 
 /**
- * Ist und Referenz je Nährwert für einen Tag. Fehlt einem Eintrag ein Wert, wird er nicht als 0
- * gezählt, sondern genannt: Die Summe gilt dann nur für die Einträge mit Angabe.
+ * Ist und Referenz je Nährwert für einen Tag; `kcalTarget` ist das Kalorien-Tagesziel dieses Tages
+ * (ohne Ziel gelten 2.000 kcal). Fehlt einem Eintrag ein Wert, wird er nicht als 0 gezählt,
+ * sondern genannt: Die Summe gilt dann nur für die Einträge mit Angabe.
  */
 export function referenceLines(
   entries: readonly { nutrients: Nutrients; name: string }[],
+  kcalTarget?: number | null,
 ): ReferenceLine[] {
+  const references = dailyReferences(kcalTarget);
   return REFERENCE_NUTRIENTS.map((nutrient) => {
     let total = 0;
     let known = 0;
@@ -77,7 +106,7 @@ export function referenceLines(
     }
     return {
       nutrient,
-      reference: DAILY_REFERENCES[nutrient],
+      reference: references[nutrient],
       total: known === 0 && entries.length > 0 ? null : Math.round(total * 10) / 10,
       missingNames: [...new Set(missing)],
       missingCount: missing.length,

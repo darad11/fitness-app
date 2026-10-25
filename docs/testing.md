@@ -1590,3 +1590,17 @@ Auswahl folgt jeder Größenänderung der Einträge, die Linse misst bei jeder B
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 349 bestanden, 63 übersprungen, 0 fehlgeschlagen, 8,7 min |
+
+### Phase iPhone Duo: Barcode-Scanner, Bild, Rahmen und Erkennung · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Erkennung nur im sichtbaren Ausschnitt um den Rahmen, Kamerabild höchstens 45 % der Fensterhöhe (D-374). Bericht: `form-duo-report.md` Abschnitt 3.3.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `scanRegion.test.ts` | 8 bestanden |
+| `e2e/duo-scanner.spec.ts`, `duo-scanner-mitte.spec.ts`, `duo-scanner-lage.spec.ts` (Chromium, Standbild als Kamera) | 5 bestanden; dazu `barcode.spec.ts` und `barcode-camera.spec.ts` bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 2 von 5 fehlgeschlagen (unsichtbarer Code erkannt; quer Unterkante 561,7 statt höchstens 368); die 3 Gegenkontrollen „Code im Rahmen“ bestanden |
+| `pnpm test` | 123 Dateien, 1081 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 354 bestanden, 71 übersprungen, 3 fehlgeschlagen, 8,5 min; alle drei in `e2e/duo-resize.spec.ts`, dem Test des nächsten Pakets (D-375), am Stand von D-374 erwartet rot |

@@ -63,3 +63,14 @@ Jeder behobene Fehler hat einen Test, der am alten Stand fehlschlägt (Gegenprob
 - **Lösung:** Die Auswahl folgt jeder Größenänderung der Einträge (`ResizeObserver`), ohne zu gleiten. Die Linse misst bei jeder Berührung neu und während einer Geste bei jeder Größenänderung der Leiste.
 - **Test:** `e2e/duo-tabbar.spec.ts`, 2 Tests (Chromium und WebKit, Handy-Profil): am alten Stand 2 von 2 fehlgeschlagen (Auswahl 69 px daneben; Ziehen endete auf `/mehr`), mit der Korrektur 2 von 2 bestanden; die bisherigen Tests der Tab-Leiste bestehen weiter.
 - **Nur am Gerät prüfbar:** ob iOS beim Auf- und Zuklappen weitere Zwischengrößen meldet; die Leiste misst jetzt nach jeder davon neu.
+
+### 3.3 Barcode-Scanner: Bild, Rahmen und Erkennung (D-374)
+
+Untersucht wurden Ausrichtung und Drehung des Videos, Seitenverhältnis und `object-fit`, die Lage des Rahmens, die Zuordnung des Erkennungsbereichs und das Verhalten beim Auf- und Zuklappen und Drehen. Aufnahmen vom Gerät lagen nicht bei.
+
+- **Befund 1 (behoben mit D-372):** Zugeklappt lagen der rechte Teil von Kamerabild und Rahmen und „Schließen“ unter dem Systemrand; das sichtbare Bild war nicht mittig.
+- **Befund 2:** Erkannt wurde im ganzen Kamerabild, auch im Teil, den `object-fit: cover` abschneidet. Am iPhone hoch liefert die Kamera ein hohes Bild, der Kasten ist 4 : 3 quer: Oben und unten fehlen je rund ein Fünftel. Ein Code dort wurde erkannt, obwohl man ihn nicht sieht; der Rahmen hatte für die Erkennung keine Bedeutung.
+- **Befund 3:** Zugeklappt quer (594 × 368 pt) blieb der Kasten 4 : 3; Bild und Rahmen lagen unterhalb des sichtbaren Bereichs (Unterkante bei 562 px).
+- **Lösung:** Erkannt wird nur der sichtbare Ausschnitt um den Rahmen: das Band des Rahmens mit je der halben Rahmenhöhe darüber und darunter, in voller sichtbarer Breite. Der Ausschnitt wird bei jedem Durchgang (alle 250 ms) aus den aktuellen Maßen berechnet, also auch nach Auf- und Zuklappen und Drehen (`calc/scanRegion.ts`). Der Kasten ist höchstens 45 % der Fensterhöhe hoch, der Rahmen steht mittig darin.
+- **Test:** `scanRegion.test.ts` (8 Tests); `e2e/duo-scanner.spec.ts`, `duo-scanner-mitte.spec.ts`, `duo-scanner-lage.spec.ts` mit einem Standbild als Kamera (EAN-13 an gewählter Stelle, `e2e/fakeCamera.ts`). Am alten Stand 2 von 5 fehlgeschlagen (unsichtbarer Code erkannt; quer Unterkante 561,7 statt höchstens 368); die drei Gegenkontrollen „Code im Rahmen wird erkannt“ (zugeklappt, aufgeklappt, quer) bestehen am alten und am neuen Stand. Mit der Korrektur 5 von 5 bestanden, die bisherigen Scanner-Tests ebenso.
+- **Nur am Gerät prüfbar:** ob Safari das Kamerabild auf dem inneren Display aufrecht zeigt (aufgeklappt hält man das Gerät wie zugeklappt, das System meldet aber Querformat); ob ein echter Code im Rahmen in beiden Zuständen erkannt wird.

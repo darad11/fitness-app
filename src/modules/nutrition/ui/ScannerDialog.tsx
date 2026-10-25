@@ -3,11 +3,50 @@ import { t } from '@/shared/i18n/de';
 import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, Dialog } from '@/shared/ui';
 import { normalizeBarcode } from '../calc/barcode';
+import { scanRegion } from '../calc/scanRegion';
 import { createDetector } from './barcodeDetector';
 
 const INPUT = 'field w-full min-w-0';
 
 type Camera = 'starting' | 'running' | 'denied' | 'unsupported' | 'error';
+
+/** Breiter wird der Ausschnitt für die Erkennung nicht (Pixel des Kamerabilds). */
+const MAX_REGION_WIDTH = 1920;
+
+/**
+ * Ausschnitt des Kamerabilds unter dem Rahmen als Canvas (D-374): Rahmen und Kasten werden bei
+ * jedem Durchgang neu gemessen, also auch nach Auf- und Zuklappen oder Drehen. Ohne Bild, Rahmen
+ * oder Zeichenfläche `null`; dann erkennt der Scanner wie bisher im ganzen Kamerabild.
+ */
+function frameImage(
+  element: HTMLVideoElement,
+  frame: HTMLElement | null,
+  canvas: HTMLCanvasElement,
+): HTMLCanvasElement | null {
+  if (!frame) return null;
+  const box = element.getBoundingClientRect();
+  const target = frame.getBoundingClientRect();
+  const region = scanRegion(
+    { width: element.videoWidth, height: element.videoHeight },
+    { width: box.width, height: box.height },
+    {
+      x: target.left - box.left,
+      y: target.top - box.top,
+      width: target.width,
+      height: target.height,
+    },
+  );
+  if (!region) return null;
+  const scale = Math.min(1, MAX_REGION_WIDTH / region.width);
+  const width = Math.max(1, Math.round(region.width * scale));
+  const height = Math.max(1, Math.round(region.height * scale));
+  if (canvas.width !== width) canvas.width = width;
+  if (canvas.height !== height) canvas.height = height;
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+  if (!context) return null;
+  context.drawImage(element, region.x, region.y, region.width, region.height, 0, 0, width, height);
+  return canvas;
+}
 
 /**
  * Barcode scannen (NU-07): Rückkamera mit Erkennung alle 250 ms, daneben Eingabe von Hand. Der
@@ -25,6 +64,7 @@ export function ScannerDialog({
 }) {
   const id = useId();
   const video = useRef<HTMLVideoElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
   const [camera, setCamera] = useState<Camera>('starting');
   const [manual, setManual] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -78,12 +118,15 @@ export function ScannerDialog({
         return;
       }
       let busy = false;
+      const canvas = document.createElement('canvas');
       timer = setInterval(() => {
         const element = video.current;
         if (busy || !element || element.readyState < 2) return;
         busy = true;
+        // Nur der sichtbare Ausschnitt unter dem Rahmen (D-374): Codes außerhalb des Rahmens
+        // oder im abgeschnittenen Teil des Kamerabilds zählen nicht.
         detector
-          .detect(element)
+          .detect(frameImage(element, frame.current, canvas) ?? element)
           .then((codes) => {
             for (const { rawValue } of codes) {
               const code = normalizeBarcode(rawValue);
@@ -133,17 +176,20 @@ export function ScannerDialog({
     >
       <div className="grid gap-4 overflow-y-auto p-4">
         {!found ? (
+          // Kamerabild höchstens 45 % der Fensterhöhe (D-374): Auch zugeklappt quer (368 pt
+          // hoch) bleiben Bild und Rahmen ganz sichtbar; der Rahmen steht mittig im Kasten.
           <div className="relative overflow-hidden rounded-card bg-ink">
             <video
               ref={video}
               playsInline
               muted
               aria-label={tNutrition.barcode.hint}
-              className="aspect-[4/3] w-full object-cover"
+              className="block aspect-[4/3] max-h-[45dvh] w-full object-cover"
             />
             <div
+              ref={frame}
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-8 top-1/2 h-24 -translate-y-1/2 rounded-card border-2 border-fg"
+              className="pointer-events-none absolute inset-x-8 top-1/2 h-24 max-h-[70%] -translate-y-1/2 rounded-card border-2 border-fg"
             />
           </div>
         ) : null}

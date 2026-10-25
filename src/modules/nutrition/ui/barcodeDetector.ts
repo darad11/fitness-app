@@ -6,7 +6,8 @@
 export const BARCODE_FORMATS = ['ean_13', 'ean_8', 'upc_a'] as const;
 
 export interface Detector {
-  detect(source: HTMLVideoElement): Promise<readonly { rawValue: string }[]>;
+  /** Erkennung im Ausschnitt unter dem Rahmen (Canvas, D-374) oder im ganzen Kamerabild. */
+  detect(source: HTMLCanvasElement | HTMLVideoElement): Promise<readonly { rawValue: string }[]>;
 }
 
 interface NativeDetectorClass {

@@ -18,7 +18,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §3 Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe | Ist und Tagesreferenz unter „Weitere Nährwerte“ („4 g von höchstens 6 g“, „von mindestens 30 g“) mit Erklärung und Quelle; fehlende Angaben nicht als 0, Einträge ohne Angabe mit Namen | D-359 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe am alten Stand rot; CI-Lauf 40130994920 grün |
 | §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; CI-Lauf 40133009248 mit allen vier Jobs grün, auch E2E (webkit) |
 | Liste nach der Freigabe ergänzt | Entscheidungen 1 bis 8 eingearbeitet: 366 Zeilen, 13 neue Einträge, drei USDA-Lücken, Regel für abgeleitete 0 g, Spalten Einheit, Hinweis und abgeleitete Werte, zusätzliche Suchbegriffe; Prüfung erweitert | D-361 | erledigt (`baeac1e`); `pnpm check:docs` ohne Befund, zehn Gegenproben gemeldet |
-| §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenprobe rot; WebKit in der CI |
+| §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenproben rot; WebKit zuerst rot am Fokus des Gewichtsfelds, behoben im Nachtrag; CI-Lauf 40171590098 mit allen vier Jobs grün, auch E2E (webkit) |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -616,7 +616,7 @@ Ursache: Nach dem Klick auf ein Label setzt WebKit den Fokus erst nach dem Klick
 | `pnpm test` | 122 Dateien, 1065 Tests bestanden |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | ohne Befund |
 | E2E `basic-foods.spec.ts`, Chromium Desktop und Pixel 7 | 8 bestanden |
-| WebKit | CI zum Nachtrag |
+| WebKit, CI-Lauf 40171590098 zu `9c851b1` | alle vier Jobs grün; „E2E (webkit)“ 322 bestanden, 62 übersprungen, 0 fehlgeschlagen, nichts wackelnd |
 
 ---
 
@@ -635,4 +635,4 @@ Offen bei dir:
 2. **Gerätetest:** auf dem iPhone einmal „Apfel“ als Stück eintragen (Gewicht angeben), dann erneut öffnen; dazu ein Ei mit 2 Stück.
 3. **Vorschau und Abgleich:** Das gemerkte Stückgewicht liegt in den Einstellungen; ältere Versionen gleichen weiter ab. Du kannst die Vorschau also mit deinem Konto testen.
 
-Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359), `bce4e15` (D-360), `baeac1e` (D-361) und der Commit zu §6 (D-362).
+Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359), `bce4e15` (D-360), `baeac1e` (D-361), `c117ec8` (D-362) und `9c851b1` (D-362, Nachtrag Fokus in WebKit).

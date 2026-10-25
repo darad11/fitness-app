@@ -1459,4 +1459,4 @@ Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Beri
 | WebKit, CI-Lauf 40170203278 zu `c117ec8` | rot: „Stückgewicht einmal angeben“ in webkit-desktop und webkit-mobile an `toBeFocused()` („Received: inactive“); 319 bestanden, 62 übersprungen, 1 wackelnd (Tab-Leiste, 2067 statt 2000 ms, nicht von §6) |
 | Nachtrag: Komponententest mit der Reihenfolge von WebKit (Klick, danach Fokus aufs Optionsfeld) | mit dem verzögerten Fokus bestanden, Gegenprobe mit sofortigem Fokus fehlgeschlagen |
 | Nachtrag: `pnpm test`; E2E `basic-foods.spec.ts` (Chromium) | 122 Dateien, 1065 Tests bestanden; 8 bestanden |
-| Nachtrag: WebKit | CI zum Nachtrag |
+| Nachtrag: WebKit, CI-Lauf 40171590098 zu `9c851b1` | alle vier Jobs grün; „E2E (webkit)“ 322 bestanden, 62 übersprungen, 0 fehlgeschlagen |

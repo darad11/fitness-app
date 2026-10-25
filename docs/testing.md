@@ -1578,3 +1578,15 @@ Tab-Leiste, Blätter, Rückfragen, Hinweise, große Pause, Anmeldung und „Mein
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,8 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 347 bestanden, 61 übersprungen, 0 fehlgeschlagen, 8,9 min |
+
+### Phase iPhone Duo: Tab-Leiste misst nach jeder Größenänderung neu · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auswahl folgt jeder Größenänderung der Einträge, die Linse misst bei jeder Berührung neu (D-373, Audit E-15). Bericht: `form-duo-report.md` Abschnitt 3.2.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-tabbar.spec.ts` (Chromium, Handy-Profil) | 2 bestanden; dazu `e2e/tabbar.spec.ts` 3 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 2 von 2 fehlgeschlagen (Auswahl 69,2 px neben dem Tab; Ziehen zu „Fortschritt“ endete auf `/mehr`) |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 349 bestanden, 63 übersprungen, 0 fehlgeschlagen, 8,7 min |

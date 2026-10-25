@@ -53,3 +53,13 @@ Jeder behobene Fehler hat einen Test, der am alten Stand fehlschlägt (Gegenprob
 - **Lösung:** Tab-Leiste, Blätter, Rückfragen, Hinweise, große Pause, Anmeldung und „Meine Küche“ beachten den sicheren Bereich links und rechts. Der Kreis der Tab-Leiste rückt mit, weil er am Innenrand gemessen wird.
 - **Test:** `e2e/duo-safe-area.spec.ts`, 3 Tests (Chromium, Handy-Profil): am alten Stand 3 von 3 fehlgeschlagen (446 statt höchstens 382,5; 939 statt höchstens 867,5; 458 statt höchstens 382,5), mit der Korrektur 3 von 3 bestanden.
 - **Nur am Gerät prüfbar:** wie breit der Systemrand einer App vom Home-Bildschirm wirklich ist und ob Tipps direkt daneben sicher ankommen.
+
+### 3.2 Tab-Leiste: Auswahl und Linse nach einer Größenänderung (D-373)
+
+- **Befund 1:** Zugeklappt auf „Ernährung“ runterscrollen (Kreis), aufklappen, hochscrollen: Die Auswahl stand bei 314 bis 393, der aktive Tab bei 387 bis 492. Die Leiste sah verschoben aus und „bewegte sich nicht wie vorgesehen“.
+- **Ursache 1:** Die Auswahl wurde beim Fenster-Ereignis `resize` gesetzt, bevor `tabMinimize` den Kreis neu vermaß; sie nahm die Breiten der alten Fenstergröße und wurde danach nicht mehr korrigiert.
+- **Befund 2 (Audit E-15, bisher „nicht verifiziert“):** Tipp auf den Kreis und gleich danach ein zweiter Tipp, während die Leiste aufgeht; danach von „Heute“ zu „Fortschritt“ ziehen: Gewählt wurde „Mehr“, die Linse hing bis zu 120 px hinter dem Finger.
+- **Ursache 2:** Die Linse maß ihre Maße einmal und verwarf sie nur beim Fenster-Ereignis `resize`; beim Aufgehen aus dem Kreis maß sie Zwischenmaße.
+- **Lösung:** Die Auswahl folgt jeder Größenänderung der Einträge (`ResizeObserver`), ohne zu gleiten. Die Linse misst bei jeder Berührung neu und während einer Geste bei jeder Größenänderung der Leiste.
+- **Test:** `e2e/duo-tabbar.spec.ts`, 2 Tests (Chromium und WebKit, Handy-Profil): am alten Stand 2 von 2 fehlgeschlagen (Auswahl 69 px daneben; Ziehen endete auf `/mehr`), mit der Korrektur 2 von 2 bestanden; die bisherigen Tests der Tab-Leiste bestehen weiter.
+- **Nur am Gerät prüfbar:** ob iOS beim Auf- und Zuklappen weitere Zwischengrößen meldet; die Leiste misst jetzt nach jeder davon neu.

@@ -428,7 +428,9 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
 
   const onDown = (e: PointerEvent) => {
     if (pressed || !e.isPrimary || e.button !== 0) return;
-    geo = geo ?? measure();
+    // Bei jeder Berührung neu messen (D-373, Audit E-15): Ein Tipp, während die Leiste aus dem
+    // Kreis aufgeht, maß sonst Zwischenmaße, und spätere Gesten zielten daneben.
+    geo = measure();
     if (!geo) return;
     clearTimeout(pendingTimer);
     clearTimeout(suppressTimer);
@@ -511,6 +513,15 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
     geo = null;
     end();
   };
+  // Ändert die Leiste ihre Größe ohne Fenster-Ereignis (Aufgehen aus dem Kreis, Auf- und
+  // Zuklappen beim iPhone Duo), misst eine laufende Geste neu; sonst die nächste Berührung.
+  const observer =
+    typeof ResizeObserver === 'function'
+      ? new ResizeObserver(() => {
+          geo = active ? (measure() ?? geo) : null;
+        })
+      : null;
+  observer?.observe(bar);
 
   bar.addEventListener('pointerdown', onDown);
   bar.addEventListener('pointermove', onMove);
@@ -524,6 +535,7 @@ export function attachTabLens(bar: HTMLElement, options: LensOptions): () => voi
   document.addEventListener('visibilitychange', onVisibility);
 
   return () => {
+    observer?.disconnect();
     end();
     clearTimeout(pendingTimer);
     clearTimeout(suppressTimer);

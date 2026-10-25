@@ -54,6 +54,12 @@ describe('Grundauswahl (Phase Ernährung §6, D-362)', () => {
       pieceHint: 'ohne Kerngehäuse',
     });
     expect(byName('Banane').basic).toMatchObject({ listPieceGrams: 120, pieceHint: 'ohne Schale' });
+    // Avocado nach DTU 2013 für die hier übliche Sorte Hass (D-368); Medjool ohne europäische Quelle.
+    expect(byName('Avocado').basic).toMatchObject({
+      listPieceGrams: 145,
+      pieceHint: 'Hass, ohne Schale und Kern',
+    });
+    expect(foods.some((food) => /Medjool/i.test(food.name))).toBe(false);
     expect(byName('Knoblauch').basic).toMatchObject({ unit: 'Zehe', listPieceGrams: 2 });
     expect(byName('Schwarzbrot').basic).toMatchObject({ unit: 'Scheibe', listPieceGrams: 50 });
     expect(byName('Gouda').basic).toMatchObject({ unit: 'Scheibe', listPieceGrams: 20 });

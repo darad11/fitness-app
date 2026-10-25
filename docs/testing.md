@@ -1529,3 +1529,16 @@ Jeder Prüfpunkt des Auftrags mit Nachweis, fünf neue Bilder, Übersicht und Zi
 | E2E, ganze Suite (Chromium Desktop und Pixel 7), mit den neuen Prüfungen für Banane und „Parad“ | 344 bestanden, 58 übersprungen, 0 fehlgeschlagen |
 | WebKit, CI-Lauf 40181118538 zu `b866a1f` (Abschnitt 1 und 2) | alle vier Jobs grün |
 | WebKit, CI-Lauf 40183657652 zu `88de135` (Abschnitt 3 und 4) | alle vier Jobs grün; „E2E (webkit)“ 331 bestanden, 69 übersprungen, 0 fehlgeschlagen, nichts wackelnd. Die neuen E2E-Prüfungen dieses Abschnitts (Banane, „Parad“) laufen in der CI zum Abschluss-Commit nach dem Push |
+
+### Ernährung: Richtwerte nach der Freigabe · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Avocado 145 g nach DTU 2013 (Sorte Hass); „Datteln, Medjool“ ohne europäische Quelle nicht aufgenommen (D-368). Bericht: `form-ernaehrung-report.md` Abschnitt 16.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` nach `--build` | 366 Einträge geprüft, Datei der App aktuell |
+| `basicFoods.test.ts`, `app.test.tsx` | 22 und 26 bestanden |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout`, `nutrition` (Chromium) | 43 bestanden, 13 übersprungen, 0 fehlgeschlagen |

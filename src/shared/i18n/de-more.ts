@@ -151,7 +151,7 @@ export const tMore = {
       },
       pieces: {
         name: 'Richtwerte je Stück und Scheibe',
-        text: 'Mittelgroße Stücke, essbarer Anteil. Meist nach der Schweizer Nährwerttabelle 2021 (SGE, BAG, ETH), beim Apfel und bei der Birne ohne Kerngehäuse gerechnet (Anteil nach CoFID, Vereinigtes Königreich), Erdäpfel geschält (Schälverlust nach DTU, Dänemark). Ei Größe M nach der EU-Vermarktungsnorm für Eier und dem Schweizer Ernährungsbulletin 2021 (BLV), Semmel nach dem Österreichischen Lebensmittelbuch (Codex-Kapitel B 18, Mindestgewicht), Käsescheiben nach DTU (Dänemark) und NICE (Belgien), Reiswaffeln nach dem Voedingscentrum (Niederlande). Du kannst jedes Gewicht anpassen; FORM merkt es sich.',
+        text: 'Mittelgroße Stücke, essbarer Anteil. Meist nach der Schweizer Nährwerttabelle 2021 (SGE, BAG, ETH), beim Apfel und bei der Birne ohne Kerngehäuse gerechnet (Anteil nach CoFID, Vereinigtes Königreich), Erdäpfel geschält (Schälverlust nach DTU, Dänemark). Ei Größe M nach der EU-Vermarktungsnorm für Eier und dem Schweizer Ernährungsbulletin 2021 (BLV), Semmel nach dem Österreichischen Lebensmittelbuch (Codex-Kapitel B 18, Mindestgewicht), Käsescheiben nach DTU (Dänemark) und NICE (Belgien), Avocado (Sorte Hass) nach DTU, Reiswaffeln nach dem Voedingscentrum (Niederlande). Du kannst jedes Gewicht anpassen; FORM merkt es sich.',
       },
       off: {
         name: 'Open Food Facts',

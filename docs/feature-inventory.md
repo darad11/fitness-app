@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.27 (Phase Ernährung, Freigabe der Richtwerte, 25.10.2026): NU-29 mit der Avocado nach DTU 2013 für die Sorte Hass, 145 g (D-368).
 - Version 0.26 (Abschluss Phase Ernährung, Abschnitt 4, 25.10.2026): NU-25 mit D-366: Ohne eigenen Wortlaut des Produktinhabers bleibt die Zitierweise des BLS mit DOI; Zahl und Prozentzeichen in der Quellenzeile brechen nicht mehr um.
 - Version 0.25 (Abschluss Phase Ernährung, Abschnitt 3, 25.10.2026): NU-29 „Richtwerte je Stück, vorausgewählt“ (AK-NUT-18, D-365): 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, Plus und Minus in halben Stück, „Gewicht anpassen“ gemerkt und zurücksetzbar; die einmalige Frage nach dem Stückgewicht entfällt.
 - Version 0.24 (Abschluss Phase Ernährung, Abschnitt 2, 25.10.2026): NU-16 mit einzeiliger Nährwerttabelle in festen Spalten, zweite Spalte nur bei einer Menge ungleich 100 g (AK-NUT-08, D-364).
@@ -234,7 +235,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-26 | Einkaufsliste in „Meine Küche“ | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-287 | Wunsch des Produktinhabers (D-287); Wischen zum Löschen (D-360) | Implementiert | AK-NUT-12, AK-NUT-16 |
 | NU-27 | Wasser: Tagesmenge, Ziel, Schnellmengen, Verlauf | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-289 | Wunsch des Produktinhabers (D-289) | Implementiert | AK-NUT-13 |
 | NU-28 | Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz | – | – | E | EV | M | NU-16 | S | P1 | MVP | R1 · D-359, D-363 | Wunsch des Produktinhabers (Planpunkt 58): Referenzmengen statt Ziele (D-359), kompakt mit Info-Blatt (D-363) | Implementiert | AK-NUT-15 |
-| NU-29 | Richtwerte je Stück, vorausgewählt; eigenes Gewicht gemerkt | – | – | E | EV | H | NU-21 | S | P1 | MVP | R1 · D-362, D-365 | Auftrag des Produktinhabers (D-361, D-365): Richtwerte aus europäischen Quellen statt Frage, keine US-Größen; eigenes Gewicht gemerkt und zurücksetzbar | Implementiert | AK-NUT-18 |
+| NU-29 | Richtwerte je Stück, vorausgewählt; eigenes Gewicht gemerkt | – | – | E | EV | H | NU-21 | S | P1 | MVP | R1 · D-362, D-365, D-368 | Auftrag des Produktinhabers (D-361, D-365): Richtwerte aus europäischen Quellen statt Frage, keine US-Größen; eigenes Gewicht gemerkt und zurücksetzbar; am 25.10.2026 freigegeben (D-368) | Implementiert | AK-NUT-18 |
 | NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261); Quelle je Eintrag und Lizenzliste unter „Über die App“ (D-362), Zitierweise des BLS mit DOI (D-366) | Implementiert | AK-NUT-06, AK-NUT-07, AK-NUT-19 |
 
 ## F. Rezepte und Mahlzeitenplanung (RE)

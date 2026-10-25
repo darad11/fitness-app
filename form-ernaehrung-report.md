@@ -24,6 +24,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | Abschluss §3 Stückgewichte als Richtwerte | 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, ein Tipp trägt ein; Plus und Minus in halben Stück; „Gewicht anpassen“ gemerkt und zurücksetzbar; ohne Richtwert nur Gramm, keine Frage mehr | D-365 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenproben rot; CI-Lauf 40183657652 grün, auch WebKit |
 | Abschluss §4 Quellenangabe des BLS | kein eigener Wortlaut in der Nachricht, deshalb bleibt die Zitierweise mit DOI; Quellenzeile bricht nicht mehr zwischen Zahl und „%“ um | D-366 | erledigt; Unit-Tests und E2E in Chromium bestanden; CI-Lauf 40183657652 grün |
 | Abschluss §5 Tests und Abschluss | jeder Prüfpunkt des Auftrags mit Nachweis; fünf Bilder, Übersicht und Zip neu; ganze E2E-Suite in Chromium grün | D-367 | erledigt; CI zu §1 bis §4 grün, auch WebKit (Läufe 40181118538 und 40183657652) |
+| Nachtrag nach Durchsicht der Richtwerte | Richtwerte freigegeben mit einer Änderung: Avocado 145 g (DTU 2013, Sorte Hass); „Datteln, Medjool“ nicht aufgenommen, keine europäische Tabelle nennt ein Stückgewicht | D-368 | erledigt; Unit-Tests und E2E in Chromium bestanden |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -736,7 +737,7 @@ Reihenfolge laut Auftrag: Stufe 1 BLS oder seine Dokumentation, Stufe 2 Vermarkt
 | Lebensmittel | Einheit | Richtwert | Hinweis in der App | Herleitung (Spalte „Herkunft des Stückgewichts“) |
 |---|---|---:|---|---|
 | Apfel | Stück | 158 g | ohne Kerngehäuse | Stufe 3: Schweizer Nährwerttabelle 2021 182 g, das Mittel der BVL-Erhebung 2001/02, gewogen ohne Stiel, also mit Kerngehäuse; × 0,87 essbarer Anteil ohne Kerngehäuse (CoFID, UK) = 158 g. Gegenprobe: NICE (Belgien) 125 g ohne Kerngehäuse, DTU 2013 110 g netto |
-| Avocado | Stück | 168 g | ohne Schale und Kern | Stufe 3: Schweizer Nährwerttabelle 2021 168 g (essbarer Anteil). Gegenprobe: NUBEL (Belgien) 160 g, DTU 2013 145 g netto (mittel; Hass eher kleiner) |
+| Avocado | Stück | 145 g | Hass, ohne Schale und Kern | Stufe 3: DTU 2013 (Dänemark) Avocado mittel 145 g netto (205 g brutto); gewählt, weil hier fast nur die kleinere Sorte Hass verkauft wird (Entscheidung des Produktinhabers vom 25.10.2026). Gegenprobe: Schweizer Nährwerttabelle 2021 168 g (essbarer Anteil), NUBEL (Belgien) 160 g |
 | Banane | Stück | 120 g | ohne Schale | Stufe 3: Schweizer Nährwerttabelle 2021 120 g (essbarer Anteil). Gegenprobe: BVL-Erhebung 2001/02 115 g geschält, NICE (Belgien) 130 g, DTU 2013 105 g netto |
 | Birne | Stück | 176 g | ohne Kerngehäuse | Stufe 3: Schweizer Nährwerttabelle 2021 207 g (BVL-Erhebung 2001/02, mit Kerngehäuse) × 0,85 essbarer Anteil (CoFID, UK) = 176 g. Gegenprobe: DTU 2013 105 g netto (mittel) |
 | Clementine | Stück | 74 g | ohne Schale | Stufe 3: Schweizer Nährwerttabelle 2021 74 g (essbarer Anteil, aus der BVL-Erhebung 2001/02). Gegenprobe: DTU 2013 65 g netto (mittel), USDA 74 g |
@@ -879,10 +880,33 @@ Dazu behoben: In der Quellenzeile brach „Feta mind. 45 % Fett i. Tr.“ zwisch
 Der Abschluss ist erledigt, committet und gepusht; laut Auftrag ist hier Halt. Gemergt wird nur nach deiner Freigabe (Entwurfs-PR #51).
 
 Offen bei dir:
-1. **Richtwerte durchsehen** (Abschnitt 13). Die meisten stammen aus der Schweizer Nährwerttabelle 2021; ihre Fußnoten konnte ich nicht lesen. Ohne Richtwert, also nur in Gramm: unter anderem Mandarine, Zitrone, Limette, Mango, Weckerl, Laugengebäck, Toastbrot, Kochschinken und gekochte Erdäpfel.
+1. ~~Richtwerte durchsehen~~: am 25.10.2026 freigegeben, mit der Änderung für die Avocado (Abschnitt 16).
 2. **Gerätetest am iPhone:** einen Apfel mit einem Tipp eintragen; „Gewicht anpassen“ (geht die Tastatur auf?) und beim nächsten Apfel den eigenen Wert sehen; zwei Eier mit Plus; „Weitere Nährwerte“ mit dem Info-Blatt.
 3. **Quellenangabe des BLS:** Wenn du einen bestimmten Wortlaut willst, nenne ihn; sonst bleibt das DOI-Zitat (D-366).
 
 Abschnitt 10 ist die erste Übergabe vor dem Abschluss; seine offenen Punkte sind mit den Abschnitten 11 bis 15 erledigt oder oben übernommen.
 
 Commits des Abschlusses: `85ccace` (D-363), `b866a1f` (D-364), `9166f25` (D-365), `88de135` (D-366) und der Commit mit diesem Abschnitt (D-367).
+
+---
+
+## 16. Nachtrag nach Durchsicht der Richtwerte (D-368)
+
+Deine Freigabe vom 25.10.2026: Die Richtwerte passen, mit einer Änderung.
+
+| Punkt | Umsetzung |
+|---|---|
+| Avocado | 145 g statt 168 g: DTU 2013 (Dänemark), Avocado mittel, 145 g netto (205 g brutto), weil hier fast nur die kleinere Sorte Hass verkauft wird. Hinweis in der App: „Richtwert: 145 g je Stück, Hass, ohne Schale und Kern“. Die Schweizer 168 g und NUBEL 160 g stehen als Gegenprobe in der Herleitung. „Über die App“ nennt DTU jetzt auch für die Avocado |
+| „Datteln, Medjool“ | nicht aufgenommen. Keine anerkannte europäische Tabelle nennt ein Stückgewicht. Geprüft per Websuche: Schweizer Nährwerttabelle 2021 (nur „Dattel, getrocknet“ 7 g), Voedingscentrum (Niederlande; nennt nur „verse dadels“ mit 18 g je großem Stück und rund 140 kcal je 100 g, also frische Datteln, nicht Medjool), NICE und NUBEL, DTU und Frida (Dänemark), Matvaretabellen (Norwegen), Fineli (Finnland), Livsmedelsverket (Schweden). Gewichte nennen nur Händler und Verbraucherseiten (18 bis 27 g, ein Händler 10 g) sowie Seiten mit dem USDA-Wert 24 g; USDA gilt nur als Gegenprobe. Nährwerte gäbe es im BLS nur als „Dattel getrocknet“, die schon „Datteln, getrocknet“ nutzt |
+
+Die Liste hat weiter 47 Richtwerte; die vollständige Tabelle steht in Abschnitt 13.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` nach `--build` | 366 Einträge geprüft, Datei der App aktuell |
+| `basicFoods.test.ts`, `app.test.tsx` | 22 und 26 bestanden (Avocado 145 g mit Hinweis „Hass“, kein Eintrag Medjool, Lizenzliste) |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout`, `nutrition` (Chromium) | 43 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+| WebKit | in der CI nach dem Push |

@@ -82,3 +82,9 @@ Untersucht wurden Ausrichtung und Drehung des Videos, Seitenverhältnis und `obj
 - **Lösung:** `ScrollManager` merkt sich beim Scrollen das Element auf der Leselinie (ein Viertel der Fensterhöhe) und stellt es nach jeder Größenänderung wieder an dieselbe Stelle. Es bleibt der Bezug, bis du selbst scrollst; so führt Auf- und wieder Zuklappen genau zurück. Ganz oben bleibt die Seite oben.
 - **Test:** `e2e/duo-resize.spec.ts`, 3 Tests (Chromium und WebKit, Handy-Profil): Leseposition auf zwei Seiten am alten Stand 2 von 2 fehlgeschlagen (Abweichung 182,4 und 192,7 px), mit der Korrektur bestanden, auch in drei Wiederholungen; der Trainingstest besteht am alten und am neuen Stand.
 - **Nur am Gerät prüfbar:** ob iOS die App beim Auf- und Zuklappen neu lädt. Dann gingen nicht gespeicherte Zustände verloren (offene Dialoge, Scrollposition); Training, Sätze und Pause liegen ohnehin in der Datenbank.
+
+### 3.5 Linse bleibt nach Loslassen außerhalb der Leiste stehen (D-376)
+
+- **Befund:** Beim Wiederholen des Tests zu 3.2 blieb die Linse in einem von drei Läufen sichtbar stehen. Ein Tipp fängt den Zeiger nicht, sonst ginge der Klick auf den Tab verloren. Glitt die Leiste beim Aufgehen unter dem Zeiger weg, kam das Loslassen nie bei ihr an.
+- **Lösung:** Während eines Drucks hört die Linse auch am Fenster auf das Loslassen; außerhalb der Leiste gilt es als Abbruch.
+- **Test:** `e2e/duo-tabbar.spec.ts` „Loslassen außerhalb der Leiste beendet die Linse“: am alten Stand fehlgeschlagen (Linse blieb aktiv), mit der Korrektur bestanden.

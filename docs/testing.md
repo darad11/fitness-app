@@ -1617,3 +1617,16 @@ Im Training bleibt beim Größenwechsel alles erhalten; die Leseposition bleibt 
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,4 KB von 250 KB (zusammen mit dem nächsten Paket gebaut) |
 | `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit dem nächsten Paket gebaut) | 358 bestanden, 72 übersprungen, 0 fehlgeschlagen, 8,7 min |
+
+### Phase iPhone Duo: Linse endet beim Loslassen außerhalb der Leiste · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Während eines Drucks hört die Linse auch am Fenster auf das Loslassen (D-376). Bericht: `form-duo-report.md` Abschnitt 3.5.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-tabbar.spec.ts`, `e2e/tabbar.spec.ts` (Chromium, Handy-Profil), dreimal wiederholt | alle bestanden |
+| Gegenprobe: neuer Test gegen den alten Quellstand | fehlgeschlagen (Linse blieb aktiv) |
+| `pnpm test` | 123 Dateien, 1081 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,4 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 358 bestanden, 72 übersprungen, 0 fehlgeschlagen, 8,7 min |

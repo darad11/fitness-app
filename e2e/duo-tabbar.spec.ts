@@ -84,3 +84,25 @@ test('Duo: Tipp beim Aufgehen aus dem Kreis, danach führt das Ziehen die Linse 
   await page.mouse.up();
   await expect(page).toHaveURL(/\/fortschritt$/);
 });
+
+test('Tab-Leiste: Loslassen außerhalb der Leiste beendet die Linse (D-376)', async ({ page }) => {
+  await openPage(page, '/heute');
+  const bar = tabBar(page);
+  const tab = await bar.getByRole('link', { name: 'Training' }).boundingBox();
+  if (!tab) throw new Error('Leiste fehlt');
+  await page.mouse.move(tab.x + tab.width / 2, tab.y + tab.height / 2);
+  await page.mouse.down();
+  await expect(bar).toHaveClass(/lens-active/);
+  // Wie wenn die Leiste unter dem Zeiger weggleitet: Das Loslassen trifft die Seite, nicht die
+  // Leiste (ohne Ziehen fängt die Leiste den Zeiger nicht).
+  await page.evaluate(() => {
+    document.body.dispatchEvent(
+      new PointerEvent('pointerup', { pointerId: 1, isPrimary: true, bubbles: true }),
+    );
+  });
+  await expect(bar).not.toHaveClass(/lens-active/, { timeout: 3000 });
+  // Echte Maus aufräumen, außerhalb der Leiste: kein Klick, kein Wechsel.
+  await page.mouse.move(tab.x + tab.width / 2, tab.y - 200);
+  await page.mouse.up();
+  await expect(page).toHaveURL(/\/heute$/);
+});

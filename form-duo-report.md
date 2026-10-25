@@ -108,6 +108,7 @@ Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und a
 - **Ursache:** Die Zeile hat feste Spalten (Satz, Vorwert, erledigt, Menü) und 8 px Abstand; für die beiden Felder blieb zu wenig.
 - **Lösung:** Die Satzzeilen richten sich nach ihrer eigenen Breite. Unter 24 rem werden Abstände und Vorwert-Spalte etwas schmaler, und Werte ab fünf Zeichen stehen in 16 statt 18 px. Kleiner nicht, sonst vergrößert iOS die Seite beim Antippen. Aufgeklappt bleibt alles, wie es war.
 - **Test:** `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt und zugeklappt; bei 382 pt nur die kleinere Schrift, weil das Passen dort von der Schriftart abhängt): am alten Stand fehlgeschlagen (10 px über den Rand bei 390 pt), mit der Korrektur bestanden.
+- **Schriftart:** Gemessen mit Inter, ähnlich breit wie die Systemschrift des iPhone. Mit einer breiteren Schrift (DejaVu Sans) fehlen bei 382 und 375 pt 0,6 und 3,6 px; das zeigt der Gerätetest.
 - **Offen:** Bei 360 pt ragt „102,5“ weiter 7 px hinaus, bei 320 pt (iPhone SE oder mini mit Anzeigezoom „Größerer Text“) sind die Felder nur 25 px breit. Das braucht eine zweite Zeile in der Satzzeile und ist eine Layout-Entscheidung; sie kommt in die Bewertung der Layout-Verbesserungen.
 
 ## 4. Prüfung aller Screens in drei Breiten (D-379)

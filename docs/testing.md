@@ -1656,7 +1656,7 @@ Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WC
 |---|---|
 | `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt und zugeklappt: passt; 382 pt: Schrift 16 px. Ob der Wert bei 382 pt ganz passt, hängt an der Schriftart: mit Inter 7,7 px Luft, mit der breiteren DejaVu Sans gerechnet knapp nicht, deshalb prüft der Test dort nur die Schrift) | bestanden |
 | Gegenprobe: derselbe Test gegen den alten Quellstand | fehlgeschlagen (Wert 10 px über dem Rand bei 390 pt) |
-| Messung (Chromium, Schrift der Umgebung): Platz im Feld minus Breite von „102,5“ | zugeklappt +17,7 px, 382 pt +7,7, 390 pt +11,7, 375 pt +4,7, 360 pt −3,3 (Feld 45 px), 320 pt: Feld 25 px; vorher zugeklappt 57 px Feld für 59 px Wert |
+| Messung (Chromium): Platz im Feld minus Breite von „102,5“ | mit Inter: zugeklappt +17,7 px, 382 pt +7,7, 390 pt +11,7, 375 pt +4,7, 360 pt −3,3 (Feld 45 px), 320 pt: Feld 25 px; mit DejaVu Sans: zugeklappt +9,4, 390 pt +3,4, 382 pt −0,6, 375 pt −3,6; vorher zugeklappt 57 px Feld für 59 px Wert |
 | `pnpm test` | 124 Dateien, 1085 Tests bestanden |
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "source": "U.S. Department of Agriculture, Agricultural Research Service (2015): USDA National Nutrient Database for Standard Reference, Release 28 (SR28). Auszug aus ABBREV.txt und FOOD_DES.txt, Werte je 100 g wie veröffentlicht.",
+  "fields": [
+    "ndb",
+    "description",
+    "kcal",
+    "protein",
+    "fat",
+    "carbsByDifference",
+    "fiber",
+    "sugar",
+    "saturatedFat",
+    "sodiumMg",
+    "nitrogenFactor"
+  ],
+  "foods": [
+    [
+      "01151",
+      "Milk, nonfat, fluid, without added vitamin A and vitamin D (fat free or skim)",
+      34,
+      3.37,
+      0.08,
+      4.96,
+      0,
+      5.09,
+      0.051,
+      42,
+      null
+    ],
+    ["11485", "Squash, winter, butternut, raw", 45, 1.0, 0.1, 11.69, 2.0, 2.2, 0.021, 4, 6.25],
+    ["11670", "Peppers, hot chili, green, raw", 40, 2.0, 0.2, 9.46, 1.5, 5.1, 0.021, 7, 6.25]
+  ]
+}

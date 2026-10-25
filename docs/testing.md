@@ -1429,3 +1429,13 @@ Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Beri
 | E2E `shopping.spec.ts` (Chromium Desktop und Pixel 7, Maus und Touch) | 9 bestanden, 1 übersprungen |
 | E2E, ganze Suite (Chromium) | 325 bestanden, 51 übersprungen, 0 fehlgeschlagen |
 | WebKit | CI-Lauf 40133009248 zu `bce4e15`: alle vier Jobs grün |
+
+### Ernährung: Auswahlliste nach der Freigabe ergänzt · 25.10.2026, Cloud-Umgebung (Node 22.22)
+
+366 Zeilen, neue Spalten Einheit, Hinweis in der App und abgeleitete Werte, drei Einträge aus USDA SR28 (D-361).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` | 366 Einträge geprüft, ohne Befund |
+| Gegenproben (je eine Änderung an einer Kopie der Zeilen): Regel nicht angewandt (Feta), Regel falsch angewandt (Honig, Margarine), Wert steht im BLS (Ei), Herkunft ohne Einheit (Apfel), unbekannte Einheit (Semmel), Hinweis ohne Einheit (Brokkoli), falsche USDA-Nummer (Magermilch), falsche USDA-Bezeichnung (Pfefferoni), falsches Format (Kokosöl) | 10 von 10 gemeldet |
+| `pnpm check:docs` | ohne Befund |

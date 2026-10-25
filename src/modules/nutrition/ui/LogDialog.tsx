@@ -62,13 +62,18 @@ export function LogDialog({
   const [editingPiece, setEditingPiece] = useState(knownPiece === undefined);
   const [error, setError] = useState<string | null>(null);
   const once = useSubmitOnce();
-  // Erscheint das Feld für das Stückgewicht nach einem Tipp, bekommt es den Fokus.
+  // Erscheint das Feld für das Stückgewicht nach einem Tipp, bekommt es den Fokus. Erst nach der
+  // Standardbehandlung des Tipps: WebKit setzt den Fokus nach dem Klick auf ein Label noch auf
+  // dessen Optionsfeld. Ein Zeitgeber unter einer Sekunde behält in WebKit die Geste des Tipps,
+  // auf dem iPhone darf die Tastatur also aufgehen.
   const pieceInput = useRef<HTMLInputElement>(null);
   const focusPiece = useRef(false);
   useEffect(() => {
     if (!focusPiece.current) return;
     focusPiece.current = false;
-    pieceInput.current?.focus();
+    window.setTimeout(() => {
+      pieceInput.current?.focus();
+    }, 0);
   });
 
   const piece = pieceUnit !== undefined && unitChoice === PIECE;

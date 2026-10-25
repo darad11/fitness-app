@@ -603,7 +603,20 @@ Neu: `src/modules/nutrition/data/basicFoods.json` (erzeugt), `src/modules/nutrit
 | E2E `basic-foods.spec.ts` (neu), Chromium Desktop und Pixel 7 | 8 bestanden: Suche nach den zehn Begriffen des Auftrags ohne Scheintreffer und beim Tippen; zwei Eier als Stück mit Ring „138 von 2.200 kcal“ und weiteren Nährwerten sofort; Stückgewicht einmal angeben (Fokus im Gewichtsfeld, Dialog ohne axe-Verstoß nach WCAG 2.1 AA), nach Neuladen gemerkt; offline suchen und eintragen. Der erste Lauf mit der axe-Prüfung scheiterte 2-mal am Test selbst (Selektor `[role="dialog"]` statt `dialog[open]`), danach 8 von 8 bestanden |
 | E2E, ganze Suite in Chromium (Stand vor der Fokus-Verbesserung) | 333 bestanden, 51 übersprungen, 0 fehlgeschlagen (8,3 min) |
 | E2E mit dem Endstand: `basic-foods`, `nutrition`, `nutrition-ring`, `shopping` (Wischen zum Löschen mit Rückgängig, Scrollen ungestört), `network-a11y` | 97 bestanden, 3 übersprungen, 0 fehlgeschlagen |
-| WebKit | läuft in der CI zum Commit dieses Abschnitts |
+| WebKit, CI-Lauf 40170203278 zu `c117ec8` | rot: 2 fehlgeschlagen, beide „Stückgewicht einmal angeben“ (webkit-desktop und webkit-mobile) an `toBeFocused()`, „Received: inactive“; 319 bestanden, 62 übersprungen, 1 wackelnd („Tab-Leiste: Die Linse legt sich … binnen 2 s ab“, 2067 statt 2000 ms, im zweiten Versuch bestanden, nicht von §6). Alle übrigen neuen Tests bestanden auch in WebKit |
+
+### Nachtrag: Fokus des Gewichtsfelds in WebKit
+
+Ursache: Nach dem Klick auf ein Label setzt WebKit den Fokus erst nach dem Klick auf dessen Optionsfeld. Die App hatte das Gewichtsfeld schon während des Klicks fokussiert, danach nahm WebKit den Fokus wieder weg. Jetzt setzt die App den Fokus mit einem Zeitgeber nach der Standardbehandlung des Tipps. Ein Zeitgeber unter einer Sekunde behält in WebKit die Geste des Tipps, auf dem iPhone darf die Tastatur also aufgehen; das ist am Gerät noch zu prüfen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Neuer Komponententest: Reihenfolge wie in WebKit (Klick aufs Optionsfeld, danach dessen Fokus) | mit der Korrektur bestanden; Gegenprobe mit dem sofortigen Fokus fehlgeschlagen |
+| `nutrition-ui.test.tsx` | 20 bestanden |
+| `pnpm test` | 122 Dateien, 1065 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | ohne Befund |
+| E2E `basic-foods.spec.ts`, Chromium Desktop und Pixel 7 | 8 bestanden |
+| WebKit | CI zum Nachtrag |
 
 ---
 

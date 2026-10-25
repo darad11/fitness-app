@@ -1456,4 +1456,7 @@ Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Beri
 | E2E `basic-foods.spec.ts` (neu), Chromium Desktop und Pixel 7 | 8 bestanden, darin axe für den Dialog ohne Verstoß (erster Lauf 2 fehlgeschlagen am Selektor im Test, behoben) |
 | E2E, ganze Suite (Chromium), Stand vor der Fokus-Verbesserung | 333 bestanden, 51 übersprungen, 0 fehlgeschlagen |
 | E2E mit dem Endstand: `basic-foods`, `nutrition`, `nutrition-ring`, `shopping`, `network-a11y` | 97 bestanden, 3 übersprungen, 0 fehlgeschlagen |
-| WebKit | CI zum Commit dieses Abschnitts |
+| WebKit, CI-Lauf 40170203278 zu `c117ec8` | rot: „Stückgewicht einmal angeben“ in webkit-desktop und webkit-mobile an `toBeFocused()` („Received: inactive“); 319 bestanden, 62 übersprungen, 1 wackelnd (Tab-Leiste, 2067 statt 2000 ms, nicht von §6) |
+| Nachtrag: Komponententest mit der Reihenfolge von WebKit (Klick, danach Fokus aufs Optionsfeld) | mit dem verzögerten Fokus bestanden, Gegenprobe mit sofortigem Fokus fehlgeschlagen |
+| Nachtrag: `pnpm test`; E2E `basic-foods.spec.ts` (Chromium) | 122 Dateien, 1065 Tests bestanden; 8 bestanden |
+| Nachtrag: WebKit | CI zum Nachtrag |

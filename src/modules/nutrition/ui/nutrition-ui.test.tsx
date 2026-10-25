@@ -882,8 +882,10 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
       await user.click(within(dialog).getByRole('radio', { name: 'Stück' }));
       const weight = within(dialog).getByLabelText('Gewicht für 1 Stück in g');
       expect(weight).toHaveAccessibleDescription(/Am genauesten ist eine Küchenwaage/);
-      // Das Gewicht ist die nächste Eingabe: Das Feld hat gleich den Fokus.
-      expect(weight).toHaveFocus();
+      // Das Gewicht ist die nächste Eingabe: Das Feld bekommt gleich den Fokus.
+      await waitFor(() => {
+        expect(weight).toHaveFocus();
+      });
       expect(within(dialog).getByRole('status')).toHaveTextContent('–');
       // Ohne Gewicht trägt „Hinzufügen“ nichts ein.
       await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
@@ -908,12 +910,31 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
       await user.click(within(dialog).getByRole('button', { name: 'Gewicht ändern' }));
       const changed = within(dialog).getByLabelText('Gewicht für 1 Stück in g');
       expect(changed).toHaveValue('180');
-      expect(changed).toHaveFocus();
+      await waitFor(() => {
+        expect(changed).toHaveFocus();
+      });
       await user.clear(changed);
       await user.type(changed, '150,5');
       await user.click(within(dialog).getByRole('button', { name: 'Hinzufügen' }));
       await screen.findByRole('heading', { level: 1, name: 'Ernährung' }, WAIT);
       expect((await loadSettings(rt.db)).pieceWeights).toEqual({ [APFEL]: 150.5 });
+    },
+  );
+
+  it(
+    'gibt dem Gewichtsfeld den Fokus auch, wenn der Browser ihn nach dem Tipp aufs Optionsfeld legt (WebKit)',
+    { timeout: 30_000 },
+    async () => {
+      await renderAt('/ernaehrung/hinzufuegen?mahlzeit=snacks', 'Lebensmittel hinzufügen');
+      const { dialog } = await openFood('Apfel', /^ApfelBLS58 kcal/, 'Apfel hinzufügen');
+      const radio = within(dialog).getByRole('radio', { name: 'Stück' });
+      // Wie WebKit beim Klick auf ein Label: erst der Klick aufs Optionsfeld (React rendert und
+      // führt die Effekte dabei sofort aus), danach legt der Browser den Fokus aufs Optionsfeld.
+      radio.click();
+      radio.focus();
+      await waitFor(() => {
+        expect(within(dialog).getByLabelText('Gewicht für 1 Stück in g')).toHaveFocus();
+      });
     },
   );
 

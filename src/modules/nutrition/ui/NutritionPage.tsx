@@ -35,7 +35,7 @@ import {
 import { useToday } from '@/shared/ui/useToday';
 import { mealSlotAt } from '../calc/mealSlot';
 import { sumEntries } from '../calc/nutrients';
-import { referenceLines, sharedMissing } from '../calc/references';
+import { referenceLines } from '../calc/references';
 import { macroRing } from '../calc/ring';
 import { targetOn } from '../calc/targets';
 import { useImportedCatalog } from '../data/catalogStore';
@@ -43,6 +43,7 @@ import { useDayEntries, useTargets } from '../data/nutritionRepository';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
+import { ExtrasPanel } from './ExtrasPanel';
 import { KitchenMenu, PILL } from './KitchenMenu';
 import { MacroRing, RING_COLORS, ringLabel } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
@@ -111,8 +112,10 @@ export function NutritionPage() {
       ),
     [entries],
   );
-  const missingForAll = sharedMissing(references);
   const ring = target && totals ? macroRing(totals.sums, target.kcal) : undefined;
+  // Der Hinweis unter den Makros nennt nur Eiweiß, Kohlenhydrate und Fett; die weiteren
+  // Nährwerte tragen bei fehlenden Werten ein Sternchen (D-363).
+  const missingMacros = totals ? MACROS.filter((macro) => totals.incomplete.includes(macro)) : [];
   // Kurz, damit die Zeile auf dem Handy einzeilig bleibt: „Heute · Do., 22. Okt.“ (D-326).
   const dateLabel = fmt.weekdayDayMonthShort(dayDate(day));
 
@@ -217,6 +220,14 @@ export function NutritionPage() {
                   : tNutrition.remaining(kcal(fmt, ring.remaining))}
               </p>
             ) : null}
+            {missingMacros.length > 0 ? (
+              <p className="mt-3 text-sm text-muted">
+                {tNutrition.incomplete(missingMacros.map((n) => tNutrition.nutrientNames[n]))}
+              </p>
+            ) : null}
+            {totals.estimated ? (
+              <p className="mt-1 text-sm text-muted">{tNutrition.estimatedHint}</p>
+            ) : null}
             {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
             <details className="group mt-1">
               <summary
@@ -230,69 +241,10 @@ export function NutritionPage() {
                   className="size-6 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
-              {/* Je Wert eine Zeile „Ist von höchstens/mindestens Referenz“ mit kurzer Erklärung
-                  und Quelle (D-359); in den drei Makro-Spalten (D-272) hatte das keinen Platz. */}
-              <div role="group" aria-label={tNutrition.extrasLabel}>
-                <dl className="mt-1 grid gap-3 text-sm">
-                  {references.map((line) => {
-                    const reference = fmt.number(line.reference.grams);
-                    return (
-                      <div
-                        key={line.nutrient}
-                        className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-3"
-                      >
-                        <dt className="text-muted">{tNutrition.extras[line.nutrient]}</dt>
-                        <dd className="text-right tabular-nums">
-                          {line.total === null ? (
-                            <span className="text-muted">{tNutrition.reference.noValue}</span>
-                          ) : (
-                            <>
-                              <span className="font-semibold">
-                                {line.nutrient === 'salt'
-                                  ? fmt.number(line.total, { maximumFractionDigits: 1 })
-                                  : grams(fmt, line.total)}{' '}
-                                {tNutrition.units.g}
-                              </span>{' '}
-                              <span className="text-muted">
-                                {line.reference.bound === 'atMost'
-                                  ? tNutrition.reference.atMost(reference)
-                                  : tNutrition.reference.atLeast(reference)}
-                              </span>
-                            </>
-                          )}
-                        </dd>
-                        <dd className="col-span-2 text-caption text-muted">
-                          {tNutrition.reference.notes[line.nutrient]}
-                        </dd>
-                        {line.missingCount > 0 && missingForAll === null ? (
-                          <dd className="col-span-2 text-caption text-muted">
-                            {tNutrition.reference.missing(line.missingNames)}
-                          </dd>
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </dl>
-                {missingForAll ? (
-                  <p className="mt-3 text-caption text-muted">
-                    {tNutrition.reference.missingAll(missingForAll)}
-                  </p>
-                ) : null}
-                <p className="mt-3 text-caption text-muted">{tNutrition.reference.sources}</p>
-              </div>
+              {/* Je Wert eine Zeile „Ist / Referenz g“ (D-363); Erklärung, Quellen und
+                  Einträge ohne Angabe im Blatt hinter dem Info-Symbol. */}
+              <ExtrasPanel lines={references} />
             </details>
-            {totals.incomplete.some((n) => n !== 'kcal') ? (
-              <p className="mt-3 text-sm text-muted">
-                {tNutrition.incomplete(
-                  totals.incomplete
-                    .filter((n) => n !== 'kcal')
-                    .map((n) => tNutrition.nutrientNames[n]),
-                )}
-              </p>
-            ) : null}
-            {totals.estimated ? (
-              <p className="mt-1 text-sm text-muted">{tNutrition.estimatedHint}</p>
-            ) : null}
           </Card>
 
           {/* Zwei gleich breite Knöpfe; braucht einer mehr Platz (breitere Schrift), wird seine

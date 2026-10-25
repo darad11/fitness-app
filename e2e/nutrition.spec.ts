@@ -84,20 +84,26 @@ test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Ne
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toBeHidden();
   await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
   const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
+  // Kompakt: je Zeile Name und „Ist / Referenz g“ (D-359, D-363).
   await expect(extras).toContainText('Zucker');
   await expect(extras).toContainText('Salz');
-  // Ist und Tagesreferenz mit Quelle (D-359).
-  await expect(extras).toContainText(/von höchstens 6 g/);
-  await expect(extras).toContainText(/von höchstens 90 g/);
-  await expect(extras).toContainText(/von höchstens 20 g/);
-  await expect(extras).toContainText(/von mindestens 30 g/);
-  await expect(extras).toContainText('VO (EU) Nr. 1169/2011, Anhang XIII');
+  for (const reference of ['/ 6 g', '/ 90 g', '/ 20 g', '/ 30 g'])
+    await expect(extras).toContainText(reference);
+  await expect(extras).not.toContainText('höchstens');
   // Barrierefreiheit der aufgeklappten Liste (die Prüfung je Seite sieht sie nur zugeklappt).
-  const axe = await new AxeBuilder({ page })
-    .include('[role="group"][aria-label="Weitere Nährwerte"]')
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
+  const tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+  const axe = await new AxeBuilder({ page }).include('details[open]').withTags(tags).analyze();
   expect(axe.violations.map((violation) => violation.id)).toEqual([]);
+  // Erklärung und Quellen im Blatt hinter dem Info-Symbol.
+  await extras.getByRole('button', { name: 'Erklärung und Quellen' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Weitere Nährwerte' });
+  await expect(sheet).toContainText('Salz: höchstens 6 g');
+  await expect(sheet).toContainText('Ballaststoffe: mindestens 30 g');
+  await expect(sheet).toContainText('VO (EU) Nr. 1169/2011, Anhang XIII');
+  const axeSheet = await new AxeBuilder({ page }).include('dialog[open]').withTags(tags).analyze();
+  expect(axeSheet.violations.map((violation) => violation.id)).toEqual([]);
+  await sheet.getByRole('button', { name: 'Schließen' }).click();
+  await expect(sheet).toBeHidden();
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Mittagessen' }).getByText('200 g')).toBeVisible();

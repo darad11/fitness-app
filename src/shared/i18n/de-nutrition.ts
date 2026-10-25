@@ -53,31 +53,40 @@ export const tNutrition = {
     fiber: 'Ballaststoffe',
     saturatedFat: 'Gesättigte Fettsäuren',
   },
-  /** Ist und Tagesreferenz unter „Weitere Nährwerte“ (Phase Ernährung §3, D-359). */
+  /** Kurzform, wenn die Zeile auf schmalen Bildschirmen sonst umbräche (D-363). */
+  extrasShort: { saturatedFat: 'Ges. Fettsäuren' },
+  /**
+   * Ist und Tagesreferenz unter „Weitere Nährwerte“ (D-359), kompakt als „0,3 / 6 g“ (D-363);
+   * Erklärung, Quellen und fehlende Angaben stehen im Info-Blatt.
+   */
   reference: {
-    atMost: (grams: string) => `von höchstens ${grams} g`,
-    atLeast: (grams: string) => `von mindestens ${grams} g`,
-    noValue: 'keine Angabe',
+    infoLabel: 'Erklärung und Quellen',
+    /** Für Screenreader hinter dem Sternchen. */
+    incomplete: 'nicht bei allen Einträgen angegeben',
+    sheetIntro:
+      'Je Zeile steht, was du an diesem Tag gegessen hast, und die Referenz für Erwachsene am Tag. Allgemeine Orientierungswerte, keine Ziele und keine medizinische Empfehlung.',
+    atMost: (grams: string) => `höchstens ${grams} g`,
+    atLeast: (grams: string) => `mindestens ${grams} g`,
     notes: {
       salt: 'EU-Referenzmenge für Erwachsene (LMIV).',
       sugar: 'Gesamtzucker, auch aus Obst und Milch. EU-Referenzmenge für Erwachsene (LMIV).',
       saturatedFat: 'EU-Referenzmenge für Erwachsene (LMIV).',
       fiber: 'Richtwert der DGE für Erwachsene.',
     },
-    /** Einträge ohne Angabe: höchstens drei Namen, dann „und n weitere“. */
-    missing: (names: readonly string[]) => {
+    asterisk:
+      '* Bei mindestens einem Eintrag fehlt dieser Wert. Er zählt nicht als 0; die Zahl gilt nur für die Einträge mit Angabe.',
+    missingTitle: 'Ohne Angabe an diesem Tag',
+    /** Einträge ohne Angabe: höchstens drei Namen, dann „n weitere“. */
+    missingNames: (names: readonly string[]) => {
       const shown = names.slice(0, 3);
       const more = names.length - shown.length;
-      return `Ohne Angabe, nicht mitgezählt: ${listDe(more > 0 ? [...shown, `${String(more)} weitere`] : shown)}.`;
+      return listDe(more > 0 ? [...shown, `${String(more)} weitere`] : shown);
     },
-    /** Dieselben Einträge fehlen bei allen vier Werten: ein Hinweis statt vier. */
-    missingAll: (names: readonly string[]) => {
-      const shown = names.slice(0, 3);
-      const more = names.length - shown.length;
-      return `Ohne Angabe bei allen vier Werten, nicht mitgezählt: ${listDe(more > 0 ? [...shown, `${String(more)} weitere`] : shown)}.`;
-    },
+    /** Dieselben Einträge fehlen bei allen vier Werten: eine Zeile statt vier. */
+    missingAll: 'Alle vier Werte',
+    sourcesTitle: 'Quellen',
     sources:
-      'Referenzmengen nach der EU-Lebensmittelinformationsverordnung (LMIV, VO (EU) Nr. 1169/2011, Anhang XIII), Ballaststoffe nach der Deutschen Gesellschaft für Ernährung (DGE). WHO und DGE empfehlen, freien Zucker unter 10 % der Energie zu halten; die Nährwertangaben trennen ihn nicht vom Zucker aus Obst und Milch, deshalb zeigt die App diesen Wert nicht. Allgemeine Orientierungswerte für Erwachsene, keine Ziele und keine medizinische Empfehlung.',
+      'Referenzmengen nach der EU-Lebensmittelinformationsverordnung (LMIV, VO (EU) Nr. 1169/2011, Anhang XIII), Ballaststoffe nach der Deutschen Gesellschaft für Ernährung (DGE). WHO und DGE empfehlen, freien Zucker unter 10 % der Energie zu halten; die Nährwertangaben trennen ihn nicht vom Zucker aus Obst und Milch, deshalb zeigt die App diesen Wert nicht.',
   },
   noTarget: 'Noch kein Tagesziel.',
   setTarget: 'Ziel festlegen',

@@ -1,6 +1,6 @@
 # Phase Ernährung – Bericht
 
-Stand: 25.10.2026 · Branch `form-ernaehrung` (Basis `6612f17`, `main` nach PR #50), Entwurfs-PR #51 · Auftrag: `docs/prompts/ernaehrung-FORM.md` (neuer Gesamtauftrag vom 24.10.2026; er ersetzt den ersten Auftrag vollständig, der in `444d7f1` steht). Aufbau wie `form-stabilitaet-report.md`.
+Stand: 25.10.2026 · Branch `form-ernaehrung` (Basis `6612f17`, `main` nach PR #50), Entwurfs-PR #51 · Auftrag: `docs/prompts/ernaehrung-FORM.md` (neuer Gesamtauftrag vom 24.10.2026; er ersetzt den ersten Auftrag vollständig, der in `444d7f1` steht), seit 25.10.2026 abgeschlossen nach `docs/prompts/ernaehrung-abschluss-FORM.md` (ersetzt alle offenen Ernährungs-Anweisungen, auch die einmalige Frage nach dem Stückgewicht). Aufbau wie `form-stabilitaet-report.md`.
 
 Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort pushen. Startansicht unter 250 KB, Lebensmitteldaten nur nachgeladen. Keine Nährwerte erfinden, jede Zahl hat eine Quelle. Texte nach `form-markenleitplanken.md`. Nur Getestetes gilt als fertig; Testergebnisse stehen wörtlich je Abschnitt. Reihenfolge laut Auftrag: 0, 1, 2 (bis zur fertigen CSV), 3, 4, dann Halt bis zur Freigabe der Liste; Abschnitt 6 (Einbau) erst danach.
 
@@ -19,6 +19,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; CI-Lauf 40133009248 mit allen vier Jobs grün, auch E2E (webkit) |
 | Liste nach der Freigabe ergänzt | Entscheidungen 1 bis 8 eingearbeitet: 366 Zeilen, 13 neue Einträge, drei USDA-Lücken, Regel für abgeleitete 0 g, Spalten Einheit, Hinweis und abgeleitete Werte, zusätzliche Suchbegriffe; Prüfung erweitert | D-361 | erledigt (`baeac1e`); `pnpm check:docs` ohne Befund, zehn Gegenproben gemeldet |
 | §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenproben rot; WebKit zuerst rot am Fokus des Gewichtsfelds, behoben im Nachtrag; CI-Lauf 40171590098 mit allen vier Jobs grün, auch E2E (webkit) |
+| Abschluss §1 „Weitere Nährwerte“ kompakt | je Zeile Name und „Ist / Referenz g“, einzeilig bei 320, 360 und 390 pt; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt | D-363 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -636,3 +637,37 @@ Offen bei dir:
 3. **Vorschau und Abgleich:** Das gemerkte Stückgewicht liegt in den Einstellungen; ältere Versionen gleichen weiter ab. Du kannst die Vorschau also mit deinem Konto testen.
 
 Commits der Phase: `444d7f1` (D-353), `8f0a0dd` (D-354), `1f55e19` (D-355), `b7dfaec` (D-356), `6be7660` (D-357), `72e9094` (D-358), `5c98762` (D-359), `bce4e15` (D-360), `baeac1e` (D-361), `c117ec8` (D-362) und `9c851b1` (D-362, Nachtrag Fokus in WebKit).
+
+---
+
+## 11. Abschluss §1: „Weitere Nährwerte“ kompakt (D-363)
+
+Auftrag: `docs/prompts/ernaehrung-abschluss-FORM.md` vom 25.10.2026. Er ersetzt alle offenen Ernährungs-Anweisungen.
+
+### Ergebnis
+
+| Punkt | Umsetzung |
+|---|---|
+| Zeilen | je Wert nur Name und „Ist / Referenz g“, z. B. „Salz 0,3 / 6 g“, „Zucker 9,6 / 90 g“, „Gesättigte Fettsäuren 5,4 / 20 g“, „Ballaststoffe 6,6 / 30 g“; ohne „von höchstens/mindestens“, Erklärzeilen, Quellenabsatz und Hinweise auf fehlende Werte |
+| Einzeilig | Name links, Zahl rechts, kein Umbruch. Gemessen: Die Liste ist bei 360 pt 288 px breit, bei 390 pt 318 px. Die breiteste Zeile („Gesättigte Fettsäuren 125* / 20 g“) braucht mit Inter 223 px, mit der breiten DejaVu Sans 241 px. Der volle Name passt also bei 360 pt; „Ges. Fettsäuren“ steht erst, wenn die Liste schmaler als 16 rem ist (etwa 320 pt). Screenreader lesen immer den vollen Namen |
+| Fehlende Werte | Sternchen hinter der Zahl, z. B. „0,5* / 6 g“, vorgelesen „nicht bei allen Einträgen angegeben“; ohne jede Angabe „–* / 6 g“. Fehlende Werte zählen weiter nicht als 0 |
+| Info-Blatt | kleines Info-Symbol neben der Überschrift („Erklärung und Quellen“), öffnet ein Blatt: Referenz je Wert („Salz: höchstens 6 g“, „Ballaststoffe: mindestens 30 g“) mit kurzer Erklärung, das Sternchen, „Ohne Angabe an diesem Tag“ mit den Namen, die Quellen und die Grenze beim freien Zucker |
+| Hinweis unter den Makros | „Bei mindestens einem Eintrag fehlen Werte für …“ nennt nur noch Eiweiß, Kohlenhydrate und Fett und steht direkt unter ihnen, über dem Pfeil. Die vier weiteren Werte tragen das Sternchen; der lange Satz unter der kompakten Liste wäre doppelt gewesen (beim ersten Bildschirmfoto aufgefallen) |
+
+### Geänderte Dateien
+
+Neu: `src/modules/nutrition/ui/ExtrasPanel.tsx`, `docs/prompts/ernaehrung-abschluss-FORM.md` (Auftrag). Geändert: `src/modules/nutrition/ui/NutritionPage.tsx`, `src/shared/i18n/de-nutrition.ts` und `.test.ts`, `src/modules/nutrition/ui/nutrition-ui.test.tsx`, `e2e/narrow-layout.spec.ts`, `e2e/nutrition.spec.ts`, `e2e/basic-foods.spec.ts`, `e2e/nutrition-ring.spec.ts`. Unterlagen: `docs/decisions.md` (D-363), `docs/requirements.md` (AK-NUT-15), `docs/feature-inventory.md` und `.csv` (NU-28, Version 0.23), `docs/implementation-plan.md`, `docs/testing.md`, dieser Bericht.
+
+### Tests mit Ergebnis
+
+| Nachweis | Ergebnis |
+|---|---|
+| `de-nutrition.test.ts`, `nutrition-ui.test.tsx` | 5 und 20 bestanden; neu gefasst: kompakte Zeilen mit Sternchen, Info-Blatt mit Erklärung, Einträgen ohne Angabe und Quellen, „–*“ ohne jede Angabe, Hinweis unter den Makros nur für Eiweiß, Kohlenhydrate und Fett |
+| Gegenprobe: die zwei neu gefassten Komponententests gegen die alte Liste | 2 von 2 fehlgeschlagen („expected '35 g von höchstens 90 g' to be '35 / 90 g'“) |
+| `pnpm test` | 122 Dateien, 1064 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `narrow-layout.spec.ts` (neu: „Weitere Nährwerte: jede Zeile einzeilig“ bei 320, 360 und 390 pt, Pixel 7) | 3 bestanden; im Desktop-Projekt wie die übrigen schmalen Breiten übersprungen. Der erste Lauf scheiterte 3-mal am Test selbst (erwarteter Text ohne den Vorlesetext des Sternchens), danach bestanden |
+| E2E `nutrition.spec.ts` (Info-Blatt, axe nach WCAG 2.1 AA für die aufgeklappte Liste und das Blatt ohne Verstoß), `basic-foods.spec.ts`, `nutrition-ring.spec.ts`, `network-a11y.spec.ts`, `narrow-layout.spec.ts` mit dem Endstand | 103 bestanden, 11 übersprungen, 0 fehlgeschlagen |
+| E2E, ganze Suite (Chromium), Stand vor dem Hinweis unter den Makros | 336 bestanden, 54 übersprungen, 0 fehlgeschlagen (10,0 min) |
+| WebKit | in der CI nach dem Push |

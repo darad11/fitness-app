@@ -399,9 +399,12 @@ describe('Ernährung (Schritt G, D-261)', () => {
         { name: 'Weitere Nährwerte', hidden: true },
         WAIT,
       );
-      expect(within(list).getByText('Zucker').nextElementSibling).toHaveTextContent('0,4 g');
-      expect(within(list).getByText('Ballaststoffe').nextElementSibling).toHaveTextContent('5,5 g');
-      expect(within(list).getByText('Salz').nextElementSibling).toHaveTextContent('0 g');
+      // Kompakt „Ist / Referenz g“ (D-363).
+      expect(within(list).getByText('Zucker').nextElementSibling).toHaveTextContent('0,4 / 90 g');
+      expect(within(list).getByText('Ballaststoffe').nextElementSibling).toHaveTextContent(
+        '5,5 / 30 g',
+      );
+      expect(within(list).getByText('Salz').nextElementSibling).toHaveTextContent('0 / 6 g');
 
       // Bearbeiten zeigt die Werte des Eintrags.
       await user.click(screen.getByRole('button', { name: 'Hafer Flocken bearbeiten' }));
@@ -761,60 +764,95 @@ describe('Weitere Nährwerte mit Tagesreferenz (D-359)', () => {
 
       await renderAt('/ernaehrung', 'Ernährung');
       await screen.findByRole('region', { name: 'Frühstück' }, WAIT);
-      const list = await screen.findByRole(
-        'group',
-        { name: 'Weitere Nährwerte', hidden: true },
-        WAIT,
-      );
+      const list = await openExtras();
+      const terms = within(list).getAllByRole('term');
       const row = (label: string) => {
-        const term = within(list).getByText(label, { selector: 'dt' });
-        if (!term.parentElement) throw new Error(`Zeile ${label} fehlt`);
+        const term = terms.find((item) => item.textContent.startsWith(label));
+        if (!term?.parentElement) throw new Error(`Zeile ${label} fehlt`);
         return term.parentElement;
       };
-      // Reihenfolge: Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe.
-      expect(
-        within(list)
-          .getAllByRole('term', { hidden: true })
-          .map((t) => t.textContent),
-      ).toEqual(['Salz', 'Zucker', 'Gesättigte Fettsäuren', 'Ballaststoffe']);
-      expect(row('Salz')).toHaveTextContent('0,5 g von höchstens 6 g');
-      expect(row('Salz')).toHaveTextContent('EU-Referenzmenge für Erwachsene (LMIV).');
-      expect(row('Salz')).toHaveTextContent('Ohne Angabe, nicht mitgezählt: Apfel.');
-      // Zucker: 20 g aus dem Müsli und 15 g aus dem Apfel, beide mit Angabe.
-      expect(row('Zucker')).toHaveTextContent('35 g von höchstens 90 g');
-      expect(row('Zucker')).toHaveTextContent('Gesamtzucker, auch aus Obst und Milch.');
-      expect(row('Zucker')).not.toHaveTextContent('Ohne Angabe');
-      expect(row('Gesättigte Fettsäuren')).toHaveTextContent('2 g von höchstens 20 g');
-      expect(row('Gesättigte Fettsäuren')).toHaveTextContent('nicht mitgezählt: Apfel.');
-      expect(row('Ballaststoffe')).toHaveTextContent('8 g von mindestens 30 g');
-      expect(row('Ballaststoffe')).toHaveTextContent('Richtwert der DGE für Erwachsene.');
-      expect(within(list).getByText(/VO \(EU\) Nr\. 1169\/2011, Anhang XIII/)).toBeTruthy();
-      expect(within(list).getByText(/freien Zucker unter 10 % der Energie/)).toBeTruthy();
-      // Kein Lob und keine Wertung beim Einhalten oder Überschreiten.
-      expect(list.textContent).not.toMatch(/gut|super|geschafft|!/i);
+      // Reihenfolge: Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe; je Zeile nur Name und
+      // „Ist / Referenz g“ (D-363).
+      expect(terms.map((term) => term.textContent.slice(0, 13))).toEqual([
+        'Salz',
+        'Zucker',
+        'Gesättigte Fe',
+        'Ballaststoffe',
+      ]);
+      // Zucker: 20 g aus dem Müsli und 15 g aus dem Apfel, beide mit Angabe: kein Sternchen.
+      expect(row('Zucker').querySelector('dd')?.textContent).toBe('35 / 90 g');
+      // Beim Apfel fehlen Salz, gesättigte Fettsäuren und Ballaststoffe: Sternchen, nicht als 0.
+      for (const [label, ist, reference] of [
+        ['Salz', '0,5', '6'],
+        ['Gesättigte Fettsäuren', '2', '20'],
+        ['Ballaststoffe', '8', '30'],
+      ] as const) {
+        const value = row(label).querySelector('dd');
+        expect(value).toHaveTextContent(`${ist}* (nicht bei allen Einträgen angegeben) /`);
+        expect(value?.textContent.endsWith(`/ ${reference} g`)).toBe(true);
+      }
+      // Ohne „von höchstens“, ohne Erklärzeilen, Quellen und Hinweise zu fehlenden Werten.
+      expect(list.textContent).not.toMatch(/höchstens|mindestens|LMIV|DGE|Ohne Angabe|!/);
+      expect(list.textContent).not.toMatch(/gut|super|geschafft/i);
+      // Auch die Karte nennt die vier Werte nicht noch einmal; Eiweiß, Kohlenhydrate und Fett
+      // haben beide Einträge.
+      expect(screen.queryByText(/fehlen Werte für/)).toBeNull();
+
+      // Erklärung, Sternchen, Einträge ohne Angabe und Quellen im Info-Blatt.
+      await userEvent
+        .setup()
+        .click(within(list).getByRole('button', { name: 'Erklärung und Quellen' }));
+      const sheet = screen.getByRole('dialog', { name: 'Weitere Nährwerte' });
+      expect(sheet).toHaveTextContent('Salz: höchstens 6 g');
+      expect(sheet).toHaveTextContent('Ballaststoffe: mindestens 30 g');
+      expect(sheet).toHaveTextContent('Gesamtzucker, auch aus Obst und Milch.');
+      expect(sheet).toHaveTextContent('Richtwert der DGE für Erwachsene.');
+      expect(sheet).toHaveTextContent('* Bei mindestens einem Eintrag fehlt dieser Wert.');
+      const missing = within(sheet).getByRole('heading', { name: 'Ohne Angabe an diesem Tag' });
+      expect(missing.nextElementSibling).toHaveTextContent(
+        'Salz:ApfelGesättigte Fettsäuren:ApfelBallaststoffe:Apfel',
+      );
+      expect(sheet).toHaveTextContent(/VO \(EU\) Nr\. 1169\/2011, Anhang XIII/);
+      expect(sheet).toHaveTextContent(/freien Zucker unter 10 % der Energie/);
+      expect(sheet.textContent).not.toMatch(/!/);
     },
   );
 
-  it('zeigt „keine Angabe“, wenn kein Eintrag einen Wert hat', { timeout: 30_000 }, async () => {
+  it('zeigt „–“ mit Sternchen, wenn kein Eintrag einen Wert hat', { timeout: 30_000 }, async () => {
     await logQuick(rt, { kcal: 300, slot: 'lunch', dayKey: localDay() });
     await renderAt('/ernaehrung', 'Ernährung');
-    const list = await screen.findByRole(
-      'group',
-      { name: 'Weitere Nährwerte', hidden: true },
-      WAIT,
-    );
+    const list = await openExtras();
     const salt = within(list).getByText('Salz', { selector: 'dt' }).parentElement;
-    expect(salt).toHaveTextContent('keine Angabe');
-    expect(salt).not.toHaveTextContent('0 g von höchstens');
-    // Fehlt derselbe Eintrag bei allen vier Werten, steht der Hinweis einmal unter der Liste.
-    expect(salt).not.toHaveTextContent('Ohne Angabe');
+    expect(salt?.querySelector('dd')).toHaveTextContent(
+      '–* (nicht bei allen Einträgen angegeben) / 6 g',
+    );
+    expect(salt).not.toHaveTextContent('0 /');
+    // Der Hinweis unter den Makros nennt nur Eiweiß, Kohlenhydrate und Fett (D-363).
     expect(
-      within(list).getByText(
-        'Ohne Angabe bei allen vier Werten, nicht mitgezählt: Schnelleintrag.',
+      screen.getByText(
+        'Bei mindestens einem Eintrag fehlen Werte für Eiweiß, Kohlenhydrate und Fett.',
       ),
-    ).toBeTruthy();
+    ).toBeVisible();
+    await userEvent
+      .setup()
+      .click(within(list).getByRole('button', { name: 'Erklärung und Quellen' }));
+    // Fehlt derselbe Eintrag bei allen vier Werten, steht er im Blatt einmal.
+    const sheet = screen.getByRole('dialog', { name: 'Weitere Nährwerte' });
+    const missing = within(sheet).getByRole('heading', { name: 'Ohne Angabe an diesem Tag' });
+    expect(missing.nextElementSibling).toHaveTextContent('Alle vier Werte:Schnelleintrag');
   });
 });
+
+/** „Weitere Nährwerte“ aufklappen (in jsdom über das Attribut, wie ein Tipp auf den Pfeil). */
+async function openExtras(): Promise<HTMLElement> {
+  const details = await waitFor(() => {
+    const found = document.querySelector('summary[aria-label="Weitere Nährwerte"]')?.parentElement;
+    if (!(found instanceof HTMLDetailsElement)) throw new Error('Weitere Nährwerte fehlen');
+    return found;
+  }, WAIT);
+  details.open = true;
+  return screen.findByRole('group', { name: 'Weitere Nährwerte' }, WAIT);
+}
 
 describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernährung §6, D-362)', () => {
   const APFEL = stableId('bls:F110100');
@@ -859,7 +897,7 @@ describe('Grundauswahl: suchen, Menge in g oder Stück, eintragen (Phase Ernähr
         WAIT,
       );
       const salt = within(list).getByText('Salz', { selector: 'dt' }).parentElement;
-      expect(salt).toHaveTextContent('0,4 g von höchstens 6 g');
+      expect(salt?.querySelector('dd')).toHaveTextContent('0,4 / 6 g');
       const [entry] = await listDayEntries(rt.db, localDay());
       expect(entry).toMatchObject({
         nameSnapshot: 'Ei',

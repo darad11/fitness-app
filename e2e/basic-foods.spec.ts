@@ -89,8 +89,8 @@ test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte 
   await expect(page.getByRole('img', { name: /^138 von 2\D?200 kcal/ })).toBeVisible();
   await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
   const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
-  await expect(extras).toContainText('0,4 g von höchstens 6 g');
-  await expect(extras).toContainText('2,5 g von höchstens 20 g');
+  await expect(extras).toContainText('0,4 / 6 g');
+  await expect(extras).toContainText('2,5 / 20 g');
 });
 
 test('Grundauswahl: Stückgewicht einmal angeben, nach Neuladen gemerkt (D-362)', async ({

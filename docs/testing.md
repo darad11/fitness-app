@@ -1460,3 +1460,18 @@ Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Beri
 | Nachtrag: Komponententest mit der Reihenfolge von WebKit (Klick, danach Fokus aufs Optionsfeld) | mit dem verzögerten Fokus bestanden, Gegenprobe mit sofortigem Fokus fehlgeschlagen |
 | Nachtrag: `pnpm test`; E2E `basic-foods.spec.ts` (Chromium) | 122 Dateien, 1065 Tests bestanden; 8 bestanden |
 | Nachtrag: WebKit, CI-Lauf 40171590098 zu `9c851b1` | alle vier Jobs grün; „E2E (webkit)“ 322 bestanden, 62 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §1: „Weitere Nährwerte“ kompakt · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Je Zeile Name und „Ist / Referenz g“, einzeilig; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt (D-363, AK-NUT-15). Bericht: `form-ernaehrung-report.md` Abschnitt 11.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `de-nutrition.test.ts`, `nutrition-ui.test.tsx` | 5 und 20 bestanden |
+| Gegenprobe: die zwei neu gefassten Komponententests gegen die alte Liste | 2 von 2 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1064 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E „Weitere Nährwerte: jede Zeile einzeilig“ bei 320, 360 und 390 pt (Pixel 7) | 3 bestanden (erster Lauf 3 fehlgeschlagen am erwarteten Text im Test, behoben) |
+| E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` mit dem Endstand | 103 bestanden, 11 übersprungen, 0 fehlgeschlagen |
+| E2E, ganze Suite (Chromium), Stand vor dem Hinweis unter den Makros | 336 bestanden, 54 übersprungen, 0 fehlgeschlagen |

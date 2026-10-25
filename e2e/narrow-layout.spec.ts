@@ -128,3 +128,54 @@ for (const width of [360, 390, 768]) {
     );
   });
 }
+
+/**
+ * „Weitere Nährwerte“ kompakt (D-363): jede Zeile einzeilig, nichts ragt hinaus. Mit vollem Namen
+ * bis 360 pt; erst darunter (Liste schmaler als 16 rem) „Ges. Fettsäuren“.
+ */
+for (const width of [320, 360, 390]) {
+  test(`Weitere Nährwerte: jede Zeile einzeilig (${String(width)} pt)`, async ({
+    page,
+    isMobile,
+  }) => {
+    test.slow();
+    await setWidth(page, width, isMobile);
+    // Butter (viele gesättigte Fettsäuren) und ein Schnelleintrag ohne diese Werte (Sternchen).
+    await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=breakfast');
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+    await page.getByLabel('Lebensmittel suchen').fill('Butter');
+    await page.getByRole('button', { name: /^Butter\s*BLS/ }).click();
+    const dialog = page.getByRole('dialog', { name: 'Butter hinzufügen' });
+    await dialog.getByLabel('Menge in g').fill('100');
+    await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: 'Ernährung' })).toBeVisible();
+    await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
+    await page.getByRole('button', { name: 'Schnelleintrag' }).click();
+    const quick = page.getByRole('dialog', { name: 'Schnelleintrag' });
+    await quick.getByLabel('Energie (kcal)').fill('300');
+    await quick.getByRole('button', { name: 'Hinzufügen' }).click();
+    await expect(quick).toBeHidden();
+    await openPage(page, '/ernaehrung');
+    await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
+    const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
+    await expect(extras).toContainText('56* (nicht bei allen Einträgen angegeben) / 20 g');
+    const rows = extras.locator('dl > div');
+    await expect(rows).toHaveCount(4);
+    for (const row of await rows.all()) {
+      const label = (await row.textContent()) ?? '';
+      const counts = await lineCounts(row);
+      expect(counts.length, `${label}: Text sichtbar`).toBeGreaterThan(0);
+      expect(Math.max(...counts), `${label}: kein Umbruch`).toBe(1);
+      const box = await row.evaluate((element) => ({
+        height: element.getBoundingClientRect().height,
+        lineHeight: Number.parseFloat(getComputedStyle(element).lineHeight),
+        overflow: element.scrollWidth > element.clientWidth,
+      }));
+      expect(box.height, `${label}: eine Zeile`).toBeLessThan(box.lineHeight * 1.5);
+      expect(box.overflow, `${label}: ragt nicht hinaus`).toBe(false);
+    }
+    const short = extras.getByText('Ges. Fettsäuren', { exact: true });
+    if (width < 360) await expect(short).toBeVisible();
+    else await expect(short).toBeHidden();
+  });
+}

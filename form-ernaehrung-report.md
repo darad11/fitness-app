@@ -19,10 +19,11 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | §4 Einkaufsliste: Wischen zum Löschen | Wisch nach links löscht genau diesen Artikel, danach „Rückgängig“; kurz, schräg, senkrecht oder nach rechts passiert nichts; Scrollen bleibt beim Browser; Tastatur und Screenreader über „Bearbeiten“ | D-360 | erledigt; Unit-Tests und E2E in Chromium (Maus und echter Touch) bestanden, Gegenproben rot; CI-Lauf 40133009248 mit allen vier Jobs grün, auch E2E (webkit) |
 | Liste nach der Freigabe ergänzt | Entscheidungen 1 bis 8 eingearbeitet: 366 Zeilen, 13 neue Einträge, drei USDA-Lücken, Regel für abgeleitete 0 g, Spalten Einheit, Hinweis und abgeleitete Werte, zusätzliche Suchbegriffe; Prüfung erweitert | D-361 | erledigt (`baeac1e`); `pnpm check:docs` ohne Befund, zehn Gegenproben gemeldet |
 | §6 Einbau der Grundauswahl | 361 Lebensmittel nachgeladen und offline; Suche schon beim Tippen; Menge in g oder Stück; Stückgewicht einmal angeben, gemerkt und änderbar; Quelle je Eintrag; Lizenzliste unter „Über die App“ | D-362 | erledigt; Unit-Tests und E2E in Chromium bestanden, Gegenproben rot; WebKit zuerst rot am Fokus des Gewichtsfelds, behoben im Nachtrag; CI-Lauf 40171590098 mit allen vier Jobs grün, auch E2E (webkit) |
-| Abschluss §1 „Weitere Nährwerte“ kompakt | je Zeile Name und „Ist / Referenz g“, einzeilig bei 320, 360 und 390 pt; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt | D-363 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
-| Abschluss §2 Nährwerttabelle einzeilig | Köpfe und Werte einzeilig in festen Spalten, rechtsbündig; zweite Spalte „für x g“ bzw. „für x Stück“ nur, wenn die Menge von 100 g abweicht | D-364 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
-| Abschluss §3 Stückgewichte als Richtwerte | 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, ein Tipp trägt ein; Plus und Minus in halben Stück; „Gewicht anpassen“ gemerkt und zurücksetzbar; ohne Richtwert nur Gramm, keine Frage mehr | D-365 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenproben rot; WebKit in der CI |
-| Abschluss §4 Quellenangabe des BLS | kein eigener Wortlaut in der Nachricht, deshalb bleibt die Zitierweise mit DOI; Quellenzeile bricht nicht mehr zwischen Zahl und „%“ um | D-366 | erledigt; Unit-Tests und E2E in Chromium bestanden |
+| Abschluss §1 „Weitere Nährwerte“ kompakt | je Zeile Name und „Ist / Referenz g“, einzeilig bei 320, 360 und 390 pt; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt | D-363 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenprobe rot; CI-Lauf 40181118538 grün, auch WebKit |
+| Abschluss §2 Nährwerttabelle einzeilig | Köpfe und Werte einzeilig in festen Spalten, rechtsbündig; zweite Spalte „für x g“ bzw. „für x Stück“ nur, wenn die Menge von 100 g abweicht | D-364 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenprobe rot; CI-Lauf 40181118538 grün, auch WebKit |
+| Abschluss §3 Stückgewichte als Richtwerte | 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, ein Tipp trägt ein; Plus und Minus in halben Stück; „Gewicht anpassen“ gemerkt und zurücksetzbar; ohne Richtwert nur Gramm, keine Frage mehr | D-365 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenproben rot; CI-Lauf 40183657652 grün, auch WebKit |
+| Abschluss §4 Quellenangabe des BLS | kein eigener Wortlaut in der Nachricht, deshalb bleibt die Zitierweise mit DOI; Quellenzeile bricht nicht mehr zwischen Zahl und „%“ um | D-366 | erledigt; Unit-Tests und E2E in Chromium bestanden; CI-Lauf 40183657652 grün |
+| Abschluss §5 Tests und Abschluss | jeder Prüfpunkt des Auftrags mit Nachweis; fünf Bilder, Übersicht und Zip neu; ganze E2E-Suite in Chromium grün | D-367 | erledigt; CI zu §1 bis §4 grün, auch WebKit (Läufe 40181118538 und 40183657652) |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -673,7 +674,7 @@ Neu: `src/modules/nutrition/ui/ExtrasPanel.tsx`, `docs/prompts/ernaehrung-abschl
 | E2E `narrow-layout.spec.ts` (neu: „Weitere Nährwerte: jede Zeile einzeilig“ bei 320, 360 und 390 pt, Pixel 7) | 3 bestanden; im Desktop-Projekt wie die übrigen schmalen Breiten übersprungen. Der erste Lauf scheiterte 3-mal am Test selbst (erwarteter Text ohne den Vorlesetext des Sternchens), danach bestanden |
 | E2E `nutrition.spec.ts` (Info-Blatt, axe nach WCAG 2.1 AA für die aufgeklappte Liste und das Blatt ohne Verstoß), `basic-foods.spec.ts`, `nutrition-ring.spec.ts`, `network-a11y.spec.ts`, `narrow-layout.spec.ts` mit dem Endstand | 103 bestanden, 11 übersprungen, 0 fehlgeschlagen |
 | E2E, ganze Suite (Chromium), Stand vor dem Hinweis unter den Makros | 336 bestanden, 54 übersprungen, 0 fehlgeschlagen (10,0 min) |
-| WebKit | in der CI nach dem Push |
+| WebKit | CI-Lauf 40181118538 (Abschnitte 11 und 12) bzw. 40183657652 (Abschnitt 13): alle vier Jobs grün |
 
 ---
 
@@ -703,7 +704,7 @@ Neu: `src/modules/nutrition/ui/ExtrasPanel.tsx`, `docs/prompts/ernaehrung-abschl
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `narrow-layout.spec.ts` (neu: „Nährwerttabelle: Köpfe und Werte einzeilig, Feta 100 g eine Spalte, 150 g zwei“ bei 360 und 390 pt, mit 150 und 1.500 g und gleichen Spaltenbreiten) | 2 bestanden (Pixel 7), im Desktop-Projekt übersprungen |
 | E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` | 105 bestanden, 13 übersprungen, 0 fehlgeschlagen |
-| WebKit | in der CI nach dem Push |
+| WebKit | CI-Lauf 40181118538 (Abschnitte 11 und 12) bzw. 40183657652 (Abschnitt 13): alle vier Jobs grün |
 
 ---
 
@@ -819,7 +820,7 @@ Liste und Daten: `docs/lebensmittel-auswahl.csv` (47 Richtwerte mit Herleitung, 
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB; Grundauswahl als eigener Teil 47,4 KB |
 | E2E `basic-foods.spec.ts` (Ei mit Plus, Apfel mit einem Tipp, eigenes Gewicht nach Neuladen, zurücksetzen, axe für den Dialog mit und ohne Gewichtsfeld; Kürbis nur Gramm; offline), `narrow-layout.spec.ts` (neu: „für 1,5 Scheiben“ einzeilig mit Abstand bei 360 und 390 pt), `nutrition`, `nutrition-ring`, `network-a11y` | 109 bestanden, 15 übersprungen, 0 fehlgeschlagen |
 | Gegenprobe: Abstandstest gegen die Tabelle aus D-364 | bei 360 pt fehlgeschlagen („Abstand zwischen den Köpfen“, Received: 0) |
-| WebKit | in der CI nach dem Push |
+| WebKit | CI-Lauf 40181118538 (Abschnitte 11 und 12) bzw. 40183657652 (Abschnitt 13): alle vier Jobs grün |
 
 ---
 
@@ -840,3 +841,48 @@ Dazu behoben: In der Quellenzeile brach „Feta mind. 45 % Fett i. Tr.“ zwisch
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
 | E2E `basic-foods.spec.ts`, `narrow-layout.spec.ts` | 29 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+---
+
+## 15. Abschluss §5: Nachweise, Bilder, Übergabe (D-367)
+
+### Prüfpunkte des Auftrags
+
+| Prüfpunkt | Nachweis | Ergebnis |
+|---|---|---|
+| Apfel: „1 Stück · ca. … g“ vorausgewählt, mit einem Tipp hinzugefügt | `nutrition-ui.test.tsx`, E2E `basic-foods` „Apfel mit einem Tipp …“ | bestanden: „1 Stück · ca. 158 g“, Eintrag „1 × Stück (158 g)“ |
+| Nach „Gewicht anpassen“ zeigt der nächste Apfel deinen Wert | dieselben Tests, E2E auch nach Neuladen | bestanden: „1 Stück · ca. 180 g“, „Dein Gewicht: 180 g je Stück, Richtwert 158 g“; zurücksetzen geht |
+| Zwei Eier: Menge 2, 2 × 51 g | `nutrition-ui.test.tsx`, E2E `basic-foods` | bestanden: Plus von 1 auf 2, „2 Stück · ca. 102 g“, Eintrag „2 × Stück (102 g)“, Ring 138 kcal |
+| Banane: essbarer Anteil | E2E `basic-foods` (neu), `basicFoods.test.ts` | bestanden: „Richtwert: 120 g je Stück, ohne Schale“, 95 kcal |
+| Kürbis ohne Richtwert: nur Gramm, keine Nachfrage | `nutrition-ui.test.tsx`, E2E `basic-foods` | bestanden: kein „Stück“, kein Gewichtsfeld, „Menge in g“ 100 |
+| Suche mit halben Wörtern („Erdäp“, „Parad“) und den zehn Suchbegriffen (Apfel, Äpfel, Aepfel, Ei, Eier, Tomate, Tomaten, Paradeiser, Erdäpfel, Topfen) | E2E `basic-foods` („Parad“ neu), `basicFoods.test.ts` | bestanden |
+| Offline | E2E `basic-foods` „offline suchen und eintragen“, `pwa` | bestanden |
+| Wischen zum Löschen | E2E `shopping` (Maus und echter Touch) | bestanden |
+| „Weitere Nährwerte“ einzeilig bei 360 und 390 pt (dazu 320 pt) | E2E `narrow-layout` | bestanden |
+| Nährwerttabelle einzeilig bei 360 und 390 pt; Feta 100 g eine Spalte, 150 g zwei | E2E `narrow-layout`, `nutrition-ui.test.tsx` | bestanden; dazu „für 1,5 Scheiben“ mit Abstand |
+| Bilder | `docs/screens/ernaehrung-weitere-naehrwerte.png`, `ernaehrung-info-blatt.png`, `ernaehrung-apfel.png`, `ernaehrung-feta-100.png`, `ernaehrung-feta-150.png`; erzeugt mit `node tools/screenshots.mjs ernaehrung` | Übersicht `docs/screens/uebersicht.png` (37 Bilder) und `docs/screens.zip` (38 Bilder) neu erzeugt |
+| Bericht mit allen Richtwerten und ihrer Herleitung | Abschnitt 13 | 47 Richtwerte, gestrichene Einträge mit Grund |
+
+### Prüfungen
+
+| Prüfung | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
+| E2E, ganze Suite in Chromium (Desktop und Pixel 7), lokal | 344 bestanden, 58 übersprungen, 0 fehlgeschlagen (9,5 min) |
+| CI zu Abschnitt 1 und 2 (Lauf 40181118538 zu `b866a1f`) | alle vier Jobs grün, auch „E2E (webkit)“ |
+| CI zu Abschnitt 3 und 4 (Lauf 40183657652 zu `88de135`) | alle vier Jobs grün; „E2E (webkit)“ 331 bestanden, 69 übersprungen, 0 fehlgeschlagen, nichts wackelnd. Die neuen E2E-Prüfungen dieses Abschnitts (Banane, „Parad“) laufen in der CI zum Abschluss-Commit nach dem Push |
+
+### Übergabe und Halt
+
+Der Abschluss ist erledigt, committet und gepusht; laut Auftrag ist hier Halt. Gemergt wird nur nach deiner Freigabe (Entwurfs-PR #51).
+
+Offen bei dir:
+1. **Richtwerte durchsehen** (Abschnitt 13). Die meisten stammen aus der Schweizer Nährwerttabelle 2021; ihre Fußnoten konnte ich nicht lesen. Ohne Richtwert, also nur in Gramm: unter anderem Mandarine, Zitrone, Limette, Mango, Weckerl, Laugengebäck, Toastbrot, Kochschinken und gekochte Erdäpfel.
+2. **Gerätetest am iPhone:** einen Apfel mit einem Tipp eintragen; „Gewicht anpassen“ (geht die Tastatur auf?) und beim nächsten Apfel den eigenen Wert sehen; zwei Eier mit Plus; „Weitere Nährwerte“ mit dem Info-Blatt.
+3. **Quellenangabe des BLS:** Wenn du einen bestimmten Wortlaut willst, nenne ihn; sonst bleibt das DOI-Zitat (D-366).
+
+Abschnitt 10 ist die erste Übergabe vor dem Abschluss; seine offenen Punkte sind mit den Abschnitten 11 bis 15 erledigt oder oben übernommen.
+
+Commits des Abschlusses: `85ccace` (D-363), `b866a1f` (D-364), `9166f25` (D-365), `88de135` (D-366) und der Commit mit diesem Abschnitt (D-367).

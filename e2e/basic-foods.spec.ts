@@ -46,9 +46,11 @@ test('Grundauswahl: Suche nach Einzahl, Mehrzahl, Umlautschreibweise und österr
   await search.fill('Äpfel');
   const results = page.getByRole('list', { name: /Treffer$/ });
   await expect(results.getByRole('button', { name: /^(Erdäpfel|Granatapfel)/ })).toHaveCount(0);
-  // Beim Tippen findet schon der Wortanfang („Erdäp“ für Erdäpfel).
+  // Beim Tippen findet schon der Wortanfang („Erdäp“ für Erdäpfel, „Parad“ für Paradeiser).
   await search.fill('Erdäp');
   await expect(firstResult(page)).toHaveAccessibleName(/^Erdäpfel, roh/);
+  await search.fill('Parad');
+  await expect(firstResult(page)).toHaveAccessibleName(/^Paradeiser\s*BLS/);
 });
 
 test('Grundauswahl: zwei Eier als Stück eintragen, Ring und weitere Nährwerte sofort (D-362, D-365)', async ({
@@ -155,6 +157,18 @@ test('Grundauswahl: Apfel mit einem Tipp, eigenes Gewicht nach Neuladen gemerkt,
   ).toBeVisible();
   await dialog.getByRole('button', { name: 'Auf Richtwert zurücksetzen' }).click();
   await expect(dialog.getByText(`1 Stück · ca. ${APFEL_G} g`)).toBeVisible();
+});
+
+test('Grundauswahl: Banane mit dem Richtwert für den essbaren Anteil (D-365)', async ({ page }) => {
+  await openAdd(page, 'snacks');
+  await page.getByLabel('Lebensmittel suchen').fill('Banane');
+  await page.getByRole('button', { name: /^Banane\s*BLS/ }).click();
+  const dialog = page.getByRole('dialog', { name: 'Banane hinzufügen' });
+  await expect(dialog.getByRole('radio', { name: 'Stück' })).toBeChecked();
+  await expect(dialog.getByText('1 Stück · ca. 120 g')).toBeVisible();
+  await expect(dialog.getByText('Richtwert: 120 g je Stück, ohne Schale')).toBeVisible();
+  // 120 g Banane ohne Schale: 79 kcal je 100 g ergeben 95 kcal.
+  await expect(dialog.getByRole('status')).toHaveText('95 kcal');
 });
 
 test('Grundauswahl: ohne Richtwert nur Gramm, ohne Frage (D-365)', async ({ page }) => {

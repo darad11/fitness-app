@@ -1516,3 +1516,16 @@ Ohne eigenen Wortlaut bleibt die Zitierweise mit DOI; Zahl und Prozentzeichen in
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
 | E2E `basic-foods`, `narrow-layout` | 29 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §5: Nachweise und Bilder · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Jeder Prüfpunkt des Auftrags mit Nachweis, fünf neue Bilder, Übersicht und Zip neu (D-367). Bericht: `form-ernaehrung-report.md` Abschnitt 15.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
+| E2E, ganze Suite (Chromium Desktop und Pixel 7), mit den neuen Prüfungen für Banane und „Parad“ | 344 bestanden, 58 übersprungen, 0 fehlgeschlagen |
+| WebKit, CI-Lauf 40181118538 zu `b866a1f` (Abschnitt 1 und 2) | alle vier Jobs grün |
+| WebKit, CI-Lauf 40183657652 zu `88de135` (Abschnitt 3 und 4) | alle vier Jobs grün; „E2E (webkit)“ 331 bestanden, 69 übersprungen, 0 fehlgeschlagen, nichts wackelnd. Die neuen E2E-Prüfungen dieses Abschnitts (Banane, „Parad“) laufen in der CI zum Abschluss-Commit nach dem Push |

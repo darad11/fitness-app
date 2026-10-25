@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
@@ -189,5 +189,115 @@ describe('Einkaufsliste (D-287)', () => {
     await user.click(screen.getByRole('button', { name: 'Fertig' }));
     expect(field()).not.toHaveFocus();
     expect(screen.queryByText(/Hinzugefügt:/)).toBeNull();
+  });
+});
+
+/**
+ * Wischen zum Löschen (D-360) mit Zeiger-Ereignissen wie auf dem iPhone. jsdom kennt keine
+ * Breiten, deshalb bekommt die Zeile 343 px wie am Handy.
+ */
+describe('Wischen zum Löschen (D-360)', () => {
+  async function listWith(names: readonly string[]) {
+    const user = userEvent.setup();
+    renderList();
+    await screen.findByText(/Die Liste ist leer/);
+    for (const name of names) {
+      await user.type(field(), `${name}{Enter}`);
+      await waitFor(() => {
+        expect(field()).toHaveValue('');
+      });
+    }
+    await waitFor(() => {
+      expect(rows()).toHaveLength(names.length);
+    });
+    return user;
+  }
+
+  function swipeRow(name: string) {
+    const label = screen.getAllByText(name).find((el) => el.closest('[data-swipe-row]'));
+    const row = label?.closest<HTMLElement>('[data-swipe-row]');
+    if (!row) throw new Error(`Zeile ${name} fehlt`);
+    vi.spyOn(row, 'getBoundingClientRect').mockReturnValue(
+      DOMRect.fromRect({ x: 16, y: 200, width: 343, height: 56 }),
+    );
+    return row;
+  }
+
+  /** Wisch über `dx`/`dy` Pixel in zehn Schritten, dann loslassen. */
+  function swipe(row: HTMLElement, dx: number, dy = 0) {
+    const start = { clientX: 300, clientY: 228 };
+    fireEvent.pointerDown(row, { ...start, pointerId: 1, isPrimary: true, button: 0 });
+    for (let step = 1; step <= 10; step++) {
+      fireEvent.pointerMove(row, {
+        pointerId: 1,
+        isPrimary: true,
+        clientX: start.clientX + (dx * step) / 10,
+        clientY: start.clientY + (dy * step) / 10,
+      });
+    }
+    fireEvent.pointerUp(row, {
+      pointerId: 1,
+      isPrimary: true,
+      clientX: start.clientX + dx,
+      clientY: start.clientY + dy,
+    });
+  }
+
+  it('löscht nur den gewischten Artikel und bietet Rückgängig an', async () => {
+    const user = await listWith(['Milch', 'Brot', 'Äpfel']);
+    swipe(swipeRow('Milch'), -200);
+    expect(await screen.findByText('„Milch“ gelöscht')).toBeVisible();
+    await waitFor(() => {
+      expect(rows()).toEqual(['Brot', 'Äpfel']);
+    });
+    expect((await listShoppingItems(rt.db)).map((item) => item.name).sort()).toEqual([
+      'Brot',
+      'Äpfel',
+    ]);
+    await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
+    await waitFor(() => {
+      expect(rows()).toEqual(['Milch', 'Brot', 'Äpfel']);
+    });
+  });
+
+  it('lässt kurze, schräge, senkrechte und Wische nach rechts ohne Folgen', async () => {
+    await listWith(['Milch']);
+    const row = swipeRow('Milch');
+    swipe(row, -60); // zu kurz
+    swipe(row, -150, 90); // schräg
+    swipe(row, 0, 150); // senkrecht
+    swipe(row, 200); // nach rechts
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(rows()).toEqual(['Milch']);
+    expect(screen.queryByText(/gelöscht/)).toBeNull();
+    expect(row.style.transform).toBe('');
+  });
+
+  it('hakt nach einem Wisch nicht ab, ein Tipp danach schon', async () => {
+    const user = await listWith(['Milch']);
+    const row = swipeRow('Milch');
+    // Der Klick, den der Browser (mit der Maus) nach einer Geste schickt, hakt nicht ab: nach
+    // einem zu kurzen waagrechten und nach einem schrägen Wisch.
+    swipe(row, -80);
+    fireEvent.click(within(row).getByText('Milch'));
+    swipe(row, -150, 90);
+    fireEvent.click(within(row).getByText('Milch'));
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect((await listShoppingItems(rt.db)).map((item) => item.doneAt)).toEqual([undefined]);
+    expect(screen.getByText('0 von 1 gekauft')).toBeVisible();
+    // Ein normaler Tipp danach hakt ab; der Artikel wandert zu „Gekauft“.
+    await user.click(screen.getByRole('checkbox', { name: 'Milch' }));
+    expect(await screen.findByRole('button', { name: 'Gekauft (1)' })).toBeVisible();
+  });
+
+  it('lässt senkrechtes Scrollen dem Browser und behält den Weg über „Bearbeiten“', async () => {
+    const user = await listWith(['Milch']);
+    const row = swipeRow('Milch');
+    expect(row.className).toContain('touch-pan-y');
+    // Die Anzeige hinter der Zeile ist für Screenreader ausgeblendet; gelöscht wird dort über
+    // „Bearbeiten“ und „Löschen“.
+    await user.click(screen.getByRole('button', { name: 'Milch bearbeiten' }));
+    await user.click(screen.getByRole('button', { name: 'Löschen' }));
+    expect(await screen.findByText('„Milch“ gelöscht')).toBeVisible();
   });
 });

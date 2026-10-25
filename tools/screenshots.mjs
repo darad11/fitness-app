@@ -3,7 +3,8 @@
  * Screenshots der Marke FORM für `docs/screens/` (Rebranding: F2 Komponenten, E Screens).
  *
  * Voraussetzung: `pnpm build` und ein laufendes `pnpm preview` (http://localhost:4173).
- * Aufruf: `node tools/screenshots.mjs komponenten` bzw. `node tools/screenshots.mjs screens`.
+ * Aufruf: `node tools/screenshots.mjs komponenten`, `node tools/screenshots.mjs screens` bzw.
+ * `node tools/screenshots.mjs ernaehrung` (Abschluss der Phase Ernährung, D-363 bis D-365).
  *
  * Das Skript legt Testdaten nur im frischen Browserprofil von Playwright an (eigene IndexedDB),
  * nie in echten Daten; ins Repository kommen nur die Bilder. Handy 390 × 844 pt, doppelte Dichte,
@@ -14,7 +15,7 @@ import { chromium } from '@playwright/test';
 
 const BASE = process.env.SCREENS_BASE_URL ?? 'http://localhost:4173';
 const mode = process.argv[2] ?? 'komponenten';
-const OUT = mode === 'screens' ? 'docs/screens' : 'docs/screens/komponenten';
+const OUT = mode === 'komponenten' ? 'docs/screens/komponenten' : 'docs/screens';
 
 const browser = await chromium.launch(
   process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {},
@@ -477,10 +478,63 @@ async function startSurfaceScreen() {
   await ctx.close();
 }
 
+/** Lebensmittel der Grundauswahl suchen und den Dialog öffnen. */
+async function openBasic(query, button, title) {
+  await page.getByLabel('Lebensmittel suchen').fill(query);
+  await page.getByRole('button', { name: button }).first().click();
+  const dialog = page.getByRole('dialog', { name: title });
+  await dialog.waitFor();
+  return dialog;
+}
+
+/**
+ * Abschluss der Phase Ernährung: „Weitere Nährwerte“ aufgeklappt (D-363) mit Sternchen durch
+ * einen Schnelleintrag, das Info-Blatt, der Apfel mit vorausgewähltem Stück (D-365) und Feta mit
+ * 100 g (eine Spalte) und 150 g (zwei Spalten, D-364).
+ */
+async function nutrition() {
+  await at('2026-10-25T12:30:00+02:00');
+  await open('/ernaehrung/hinzufuegen?mahlzeit=breakfast');
+  let dialog = await openBasic('Haferflocken', /^Haferflocken\s*BLS/, 'Haferflocken hinzufügen');
+  await dialog.getByLabel('Menge in g').fill('60');
+  await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
+  await page.getByRole('heading', { level: 1, name: 'Ernährung' }).waitFor();
+  await open('/ernaehrung/hinzufuegen?mahlzeit=breakfast');
+  dialog = await openBasic('Banane', /^Banane\s*BLS/, 'Banane hinzufügen');
+  await dialog.getByRole('button', { name: 'Hinzufügen' }).click();
+  await page.getByRole('heading', { level: 1, name: 'Ernährung' }).waitFor();
+  await quickEntry('lunch', 'Kantine', 650, 30, 70, 25);
+  await open('/ernaehrung');
+  await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
+  const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
+  await extras.scrollIntoViewIfNeeded();
+  await page.evaluate(() => globalThis.scrollBy(0, 120));
+  await screen('ernaehrung-weitere-naehrwerte');
+  await extras.getByRole('button', { name: 'Erklärung und Quellen' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Weitere Nährwerte' });
+  await sheet.waitFor();
+  await page.waitForTimeout(400);
+  await screen('ernaehrung-info-blatt');
+  await sheet.getByRole('button', { name: 'Schließen' }).click();
+
+  await open('/ernaehrung/hinzufuegen?mahlzeit=snacks');
+  dialog = await openBasic('Apfel', /^Apfel\s*BLS/, 'Apfel hinzufügen');
+  await page.waitForTimeout(300);
+  await screen('ernaehrung-apfel');
+  await dialog.getByRole('button', { name: 'Abbrechen' }).click();
+  dialog = await openBasic('Feta', /^Feta\s*BLS/, 'Feta hinzufügen');
+  await page.waitForTimeout(300);
+  await screen('ernaehrung-feta-100');
+  await dialog.getByLabel('Menge in g').fill('150');
+  await page.waitForTimeout(200);
+  await screen('ernaehrung-feta-150');
+}
+
 await mkdir(OUT, { recursive: true });
 try {
   if (mode === 'komponenten') await components();
   else if (mode === 'screens') await screens();
+  else if (mode === 'ernaehrung') await nutrition();
   else throw new Error(`Unbekannter Modus: ${mode}`);
 } finally {
   await browser.close();

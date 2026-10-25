@@ -184,6 +184,30 @@ describe('App-Shell', () => {
     ).toBeInTheDocument();
   });
 
+  it('listet unter „Über die App“ alle Lebensmitteldaten mit Lizenz (D-362, D-365)', async () => {
+    renderApp('/mehr/ueber');
+    await screen.findByRole('heading', { level: 1, name: 'Über die App' });
+    const card = screen.getByRole('region', { name: 'Lebensmitteldaten und Lizenzen' });
+    const names = within(card)
+      .getAllByRole('term')
+      .map((term) => term.textContent);
+    expect(names).toEqual([
+      'Bundeslebensmittelschlüssel (BLS) 4.0',
+      'USDA SR28',
+      'Richtwerte je Stück und Scheibe',
+      'Open Food Facts',
+      'Importierte Lebensmitteldaten',
+    ]);
+    expect(within(card).getByText(/Max Rubner-Institut \(2025\).*DOI 10\.25826/)).toBeVisible();
+    expect(within(card).getByText(/Release 28\. Gemeinfrei/)).toBeVisible();
+    expect(within(card).getByText(/Open Database License \(ODbL\)/)).toBeVisible();
+    expect(within(card).getByText(/Codex-Kapitel B 18/)).toBeVisible();
+    // Richtwerte je Stück aus europäischen Tabellen; USDA nur zum Vergleich.
+    expect(within(card).getByText(/Schweizer Nährwerttabelle 2021/)).toBeVisible();
+    expect(within(card).getByText(/Bei den Richtwerten je Stück nur zum Vergleich/)).toBeVisible();
+    expect(card.textContent).not.toMatch(/Stückgewichte von Eiklar|wiegst du einmal/);
+  });
+
   it('meldet unbekannte Beispielvorlagen als nicht gefunden, ohne Fehlerprotokoll', async () => {
     renderApp('/training/vorlagen/gibt_es_nicht');
     expect(

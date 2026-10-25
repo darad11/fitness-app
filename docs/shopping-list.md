@@ -23,7 +23,7 @@ Stand 20.10.2026, Branch `feat/einkaufsliste` (PR #44). Auftrag: „REFORM – K
 | 3B Details | Name, Menge, Einheit, Kategorie, Notiz, Status; Menge optional | Ja; Bearbeiten über das Stift-Symbol |
 | 3C Natürliche Eingabe | „500 g Hähnchenbrust“, „6 Bananen“ erkennen, Unklares unverändert lassen, lokal | Ja, lokal ohne KI; Menge vorne oder hinten; korrigierbar beim Bearbeiten |
 | 4 Kategorien | Optional, automatisch wenn sicher, änderbar, Ansicht nach Kategorie optional | Ja; 9 Kategorien, Ansicht „Meine Liste“ oder „Nach Kategorie“ |
-| 5 Einkauf | Antippen hakt ab, sofort gespeichert, wieder öffnen, Gekaufte eingeklappt, Menge ändern, einzeln löschen, „Gekaufte entfernen“ | Ja, mit Rückgängig für Löschen und Entfernen |
+| 5 Einkauf | Antippen hakt ab, sofort gespeichert, wieder öffnen, Gekaufte eingeklappt, Menge ändern, einzeln löschen, „Gekaufte entfernen“ | Ja, mit Rückgängig für Löschen und Entfernen; einzeln löschen seit D-360 auch mit einem Wisch nach links (Abschnitt 6) |
 | 5 Liste leeren | Nur falls umgesetzt, mit Bestätigung | Bewusst nicht umgesetzt: „Gekaufte entfernen“ deckt den Alltag ab, ein Knopf, der auch offene Artikel löscht, wäre ein unnötiges Risiko |
 | 6 Mehrere Listen | Nur wenn einfach; sonst eine Hauptliste mit erweiterbarer Struktur | Eine Hauptliste; ein späteres Feld `listId` lässt sich additiv ergänzen |
 | 7A Lebensmittelbibliothek | Auswahl übernimmt den Namen, freie Eingabe bleibt | Eigene, nicht archivierte Lebensmittel erscheinen beim Tippen als Vorschläge unter dem Feld (ein Tipp fügt hinzu); Marke und Nährwerte werden nicht übernommen, weil die Liste keine Nährwerte braucht |
@@ -116,3 +116,18 @@ Nächste Schritte: Favoriten bzw. „Immer wieder“, Kategorien-Reihenfolge, Wo
 ```
 
 Datenmodell, Persistenz und Offline: ein Dokument `shopping_item` je Artikel in `shoppingItems` (Dexie v7, additiv; Migration v6 → v7 mit Snapshot getestet), gespeichert über das Basis-Repository, synchronisiert wie alle Dokumente, in der Datensicherung enthalten. Die Seite funktioniert offline, weil alles lokal liegt.
+
+## 6. Wischen zum Löschen (D-360, Phase Ernährung §4)
+
+Ein Wisch nach links löscht einen Artikel, ohne „Bearbeiten“ zu öffnen; danach „„Name“ gelöscht“ mit „Rückgängig“ wie beim bisherigen Löschen.
+
+| Regel | Wert |
+|---|---|
+| Richtung | nach den ersten 10 px einmal für die ganze Geste: nur klar waagrecht nach links (mindestens doppelt so weit zur Seite wie nach oben oder unten) |
+| Löschstrecke | 40 % der Zeilenbreite, mindestens 96 px; kürzer gleitet die Zeile zurück |
+| Scrollen | `touch-action: pan-y`: senkrecht scrollt der Browser, die Zeile bleibt stehen |
+| Anzeige | dezenter Papierkorb hinter der Zeile, ab der Löschstrecke „Löschen“ auf schwacher Warnfläche; für Screenreader ausgeblendet |
+| Tastatur und Screenreader | weiter über „Bearbeiten“ und „Löschen“ |
+| Umsetzung | `calc/swipe.ts` (ohne React), `ui/SwipeToDelete.tsx`, Zeiger-Ereignisse, keine neue Abhängigkeit |
+
+Gerätetest auf dem iPhone steht aus; geprüft sind Maus und Touch in Chromium (E2E) und WebKit in der CI (Maus).

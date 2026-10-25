@@ -12,3 +12,4 @@ blob-report/
 *.log
 .DS_Store
 *.tsbuildinfo
+__pycache__/

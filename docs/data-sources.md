@@ -118,3 +118,5 @@ Version 7.1 mit 1.246 generischen Lebensmitteln in 19 Ober- und 106 Unterkategor
 - Adult Compendium of Physical Activities 2024: https://pacompendium.com/ (Websuche 18.10.2026, Seite selbst nicht abrufbar)
 
 **Nachtrag 20.10.2026 (D-279):** Der gebündelte BLS 4.0 ist aus der App entfernt. Lebensmitteldaten kommen nur noch aus dem lokalen Import (ÖNWT, D-263), eigenen Einträgen und Open Food Facts (Barcode).
+
+**Nachtrag 24.10.2026 (D-358):** Der BLS 4.0 kommt als feste Auswahl von 345 Grundnahrungsmitteln zurück, zuerst als Liste zur Durchsicht (`lebensmittel-auswahl.csv`); in die App kommt sie erst nach Freigabe des Produktinhabers (Phase Ernährung §6). Lizenzen, Namensnennung und der Abgleich mit den EU-Rechenregeln stehen in `licenses-data.md`.

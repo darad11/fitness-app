@@ -1356,3 +1356,202 @@ Export und Sicherung vor dem Wiederherstellen heißen `form-sicherung-…` (D-35
 | `pnpm test:e2e` (Chromium Desktop und Pixel 7) | 320 bestanden, 50 übersprungen, 0 fehlgeschlagen (10,2 min); darin `shell.spec.ts` (Name des Exports) und `restore.spec.ts` (Name der Sicherung vor dem Wiederherstellen) |
 | WebKit | in der CI zum Commit |
 
+### Ernährung §1: Suche für jede Datenquelle · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Neue Lebensmittelsuche (D-356, AK-NUT-14). Bericht: `form-ernaehrung-report.md` Abschnitt 3.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/foodSearch.test.ts` | 16 bestanden |
+| `pnpm test` | 117 Dateien, 1002 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: neuer E2E-Test „Suche: Mehrzahl, Umlautschreibweise und Synonyme …“ gegen die alte Suche | 2 von 2 fehlgeschlagen („Expected pattern: /^Tomate roh/“) |
+| Laufzeit (Node, vorübergehender Lauf) | Index 7.140 Einträge 147 ms; Suche über 12.140 Einträge Median 23,0 ms, höchstens 43,4 ms |
+| WebKit | CI-Lauf 40124992752 zu `b7dfaec`: erfolgreich |
+
+### Ernährung §1, Nachtrag: ganzes Wort vor Grundwort · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Stufe 8 für das ganze Wort am Anfang des Namens, falsche Freunde „Oberschenkel“ und „Butternut“, Synonym „Gehacktes“ gestrichen (D-357). Bericht: `form-ernaehrung-report.md` Abschnitt 3, Nachtrag.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/nutrition/calc/foodSearch.test.ts` | 19 bestanden |
+| Gegenprobe: drei neue Tests gegen die Suche aus D-356 | 3 von 3 fehlgeschlagen |
+| `pnpm test` | 117 Dateien, 1005 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts` (Chromium Desktop und Pixel 7) | 22 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| WebKit | CI-Lauf 40127846395 zu `6be7660`: erfolgreich |
+
+### Ernährung §2: Auswahlliste aus dem BLS 4.0 · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+`docs/lebensmittel-auswahl.csv` mit 354 Zeilen zur Durchsicht, Prüfung `tools/lebensmittel_auswahl.py` in `pnpm check:docs` (D-358). Bericht: `form-ernaehrung-report.md` Abschnitt 4.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` | 354 Einträge geprüft |
+| Gegenprobe mit drei absichtlichen Fehlern | 3 Fehler gemeldet, Exit-Code 1 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 117 Dateien, 1005 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,3 KB von 250 KB |
+| E2E, ganze Suite (Chromium Desktop und Pixel 7) | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| WebKit | CI-Lauf 40129250444 zu `72e9094`: erfolgreich |
+
+### Ernährung §3: Salz, Zucker, gesättigte Fettsäuren, Ballaststoffe mit Referenz · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ist und Tagesreferenz unter „Weitere Nährwerte“, fehlende Angaben nicht als 0 (D-359, AK-NUT-15). Bericht: `form-ernaehrung-report.md` Abschnitt 5.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `references.test.ts`, `de-nutrition.test.ts`, `nutrition-ui.test.tsx` | 6, 6 und 16 bestanden |
+| Gegenprobe: zwei neue Komponententests gegen die alte Übersicht | 2 von 2 fehlgeschlagen |
+| `pnpm test` | 118 Dateien, 1017 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,2 KB von 250 KB |
+| E2E `nutrition.spec.ts`, `nutrition-ring.spec.ts`, `network-a11y.spec.ts` (Chromium Desktop und Pixel 7) | 80 bestanden, 2 übersprungen, 0 fehlgeschlagen |
+| E2E, ganze Suite (Chromium), Stand vor dem gemeinsamen Hinweis | 322 bestanden, 50 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: erweiterter E2E-Test gegen die alte Übersicht | 2 von 2 fehlgeschlagen („Expected pattern: /von höchstens 6 g/“) |
+| WebKit | CI-Lauf 40130994920 zu `5c98762`: erfolgreich |
+
+### Ernährung §4: Einkaufsliste, Wischen zum Löschen · 24.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Wisch nach links löscht einen Artikel mit Rückgängig (D-360, AK-NUT-16). Bericht: `form-ernaehrung-report.md` Abschnitt 6.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `swipe.test.ts`, `shopping-ui.test.tsx` | 5 und 10 bestanden |
+| Gegenprobe: vier neue Komponententests gegen die alte Liste | 4 von 4 fehlgeschlagen |
+| `pnpm test` | 119 Dateien, 1026 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,4 KB von 250 KB |
+| E2E `shopping.spec.ts` (Chromium Desktop und Pixel 7, Maus und Touch) | 9 bestanden, 1 übersprungen |
+| E2E, ganze Suite (Chromium) | 325 bestanden, 51 übersprungen, 0 fehlgeschlagen |
+| WebKit | CI-Lauf 40133009248 zu `bce4e15`: alle vier Jobs grün |
+
+### Ernährung: Auswahlliste nach der Freigabe ergänzt · 25.10.2026, Cloud-Umgebung (Node 22.22)
+
+366 Zeilen, neue Spalten Einheit, Hinweis in der App und abgeleitete Werte, drei Einträge aus USDA SR28 (D-361).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` | 366 Einträge geprüft, ohne Befund |
+| Gegenproben (je eine Änderung an einer Kopie der Zeilen): Regel nicht angewandt (Feta), Regel falsch angewandt (Honig, Margarine), Wert steht im BLS (Ei), Herkunft ohne Einheit (Apfel), unbekannte Einheit (Semmel), Hinweis ohne Einheit (Brokkoli), falsche USDA-Nummer (Magermilch), falsche USDA-Bezeichnung (Pfefferoni), falsches Format (Kokosöl) | 10 von 10 gemeldet |
+| `pnpm check:docs` | ohne Befund |
+
+### Ernährung §6: Einbau der Grundauswahl · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+361 Lebensmittel nachgeladen und offline, Suche beim Tippen, Menge in g oder Stück, Stückgewicht einmal angeben und gemerkt, Quelle je Eintrag, Lizenzliste (D-362, AK-NUT-17 bis AK-NUT-19). Bericht: `form-ernaehrung-report.md` Abschnitt 9.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `basicFoods.test.ts`, `pieces.test.ts`, `pieceWeightService.test.ts` (neu) | 22, 5 und 6 bestanden |
+| `foodSearch.test.ts`, `nutrition-ui.test.tsx`, `app.test.tsx` | 20, 19 und 26 bestanden (1, 3 und 1 neu) |
+| Gegenprobe: Tipp-Tests gegen die Suche vor §6 | 2 von 2 fehlgeschlagen |
+| Gegenprobe: Fokus-Prüfung ohne Fokus-Logik | 1 von 19 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1064 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB; Grundauswahl als eigener Teil 47,3 KB (gzip 14,8 KB), vorab gespeichert |
+| E2E `basic-foods.spec.ts` (neu), Chromium Desktop und Pixel 7 | 8 bestanden, darin axe für den Dialog ohne Verstoß (erster Lauf 2 fehlgeschlagen am Selektor im Test, behoben) |
+| E2E, ganze Suite (Chromium), Stand vor der Fokus-Verbesserung | 333 bestanden, 51 übersprungen, 0 fehlgeschlagen |
+| E2E mit dem Endstand: `basic-foods`, `nutrition`, `nutrition-ring`, `shopping`, `network-a11y` | 97 bestanden, 3 übersprungen, 0 fehlgeschlagen |
+| WebKit, CI-Lauf 40170203278 zu `c117ec8` | rot: „Stückgewicht einmal angeben“ in webkit-desktop und webkit-mobile an `toBeFocused()` („Received: inactive“); 319 bestanden, 62 übersprungen, 1 wackelnd (Tab-Leiste, 2067 statt 2000 ms, nicht von §6) |
+| Nachtrag: Komponententest mit der Reihenfolge von WebKit (Klick, danach Fokus aufs Optionsfeld) | mit dem verzögerten Fokus bestanden, Gegenprobe mit sofortigem Fokus fehlgeschlagen |
+| Nachtrag: `pnpm test`; E2E `basic-foods.spec.ts` (Chromium) | 122 Dateien, 1065 Tests bestanden; 8 bestanden |
+| Nachtrag: WebKit, CI-Lauf 40171590098 zu `9c851b1` | alle vier Jobs grün; „E2E (webkit)“ 322 bestanden, 62 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §1: „Weitere Nährwerte“ kompakt · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Je Zeile Name und „Ist / Referenz g“, einzeilig; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt (D-363, AK-NUT-15). Bericht: `form-ernaehrung-report.md` Abschnitt 11.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `de-nutrition.test.ts`, `nutrition-ui.test.tsx` | 5 und 20 bestanden |
+| Gegenprobe: die zwei neu gefassten Komponententests gegen die alte Liste | 2 von 2 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1064 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E „Weitere Nährwerte: jede Zeile einzeilig“ bei 320, 360 und 390 pt (Pixel 7) | 3 bestanden (erster Lauf 3 fehlgeschlagen am erwarteten Text im Test, behoben) |
+| E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` mit dem Endstand | 103 bestanden, 11 übersprungen, 0 fehlgeschlagen |
+| E2E, ganze Suite (Chromium), Stand vor dem Hinweis unter den Makros | 336 bestanden, 54 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §2: Nährwerttabelle einzeilig · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Köpfe und Werte einzeilig in festen Spalten, zweite Spalte nur bei einer Menge ungleich 100 g (D-364, AK-NUT-08). Bericht: `form-ernaehrung-report.md` Abschnitt 12.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `nutrition-ui.test.tsx`, `de-nutrition.test.ts` | 22 und 6 bestanden (2 und 1 neu) |
+| Gegenprobe: die zwei neuen Komponententests gegen die alte Tabelle | 2 von 2 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1067 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E „Nährwerttabelle: Köpfe und Werte einzeilig …“ bei 360 und 390 pt (Pixel 7) | 2 bestanden |
+| E2E `narrow-layout`, `nutrition`, `basic-foods`, `nutrition-ring`, `network-a11y` | 105 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §3: Stückgewichte als Richtwerte · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, Plus und Minus in halben Stück, „Gewicht anpassen“ gemerkt und zurücksetzbar, ohne Richtwert nur Gramm (D-365, AK-NUT-18). Bericht: `form-ernaehrung-report.md` Abschnitt 13.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `nutrition-ui.test.tsx`, `basicFoods.test.ts`, `pieces.test.ts`, `pieceWeightService.test.ts`, `app.test.tsx` | 23, 22, 6, 6 und 26 bestanden |
+| Gegenprobe: neue Dialog-Tests gegen den alten Dialog | 3 von 4 fehlgeschlagen (der vierte prüft nur Gramm und besteht mit der neuen Liste auch dort) |
+| Gegenprobe: Listenprüfung mit acht absichtlichen Fehlern | 8 von 8 gemeldet |
+| `pnpm test` | 122 Dateien, 1069 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout`, `nutrition`, `nutrition-ring`, `network-a11y` | 109 bestanden, 15 übersprungen, 0 fehlgeschlagen |
+| Gegenprobe: Abstandstest gegen die Tabelle aus D-364 | bei 360 pt fehlgeschlagen |
+
+### Ernährung, Abschluss §4: Quellenangabe des BLS · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ohne eigenen Wortlaut bleibt die Zitierweise mit DOI; Zahl und Prozentzeichen in der Quellenzeile brechen nicht um (D-366). Bericht: `form-ernaehrung-report.md` Abschnitt 14.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `de-nutrition.test.ts` | 7 bestanden (1 neu) |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout` | 29 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung, Abschluss §5: Nachweise und Bilder · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Jeder Prüfpunkt des Auftrags mit Nachweis, fünf neue Bilder, Übersicht und Zip neu (D-367). Bericht: `form-ernaehrung-report.md` Abschnitt 15.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
+| E2E, ganze Suite (Chromium Desktop und Pixel 7), mit den neuen Prüfungen für Banane und „Parad“ | 344 bestanden, 58 übersprungen, 0 fehlgeschlagen |
+| WebKit, CI-Lauf 40181118538 zu `b866a1f` (Abschnitt 1 und 2) | alle vier Jobs grün |
+| WebKit, CI-Lauf 40183657652 zu `88de135` (Abschnitt 3 und 4) | alle vier Jobs grün; „E2E (webkit)“ 331 bestanden, 69 übersprungen, 0 fehlgeschlagen, nichts wackelnd. Die neuen E2E-Prüfungen dieses Abschnitts (Banane, „Parad“) laufen in der CI zum Abschluss-Commit nach dem Push |
+
+### Ernährung: Richtwerte nach der Freigabe · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Avocado 145 g nach DTU 2013 (Sorte Hass); „Datteln, Medjool“ ohne europäische Quelle nicht aufgenommen (D-368). Bericht: `form-ernaehrung-report.md` Abschnitt 16.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/lebensmittel_auswahl.py --check` nach `--build` | 366 Einträge geprüft, Datei der App aktuell |
+| `basicFoods.test.ts`, `app.test.tsx` | 22 und 26 bestanden |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout`, `nutrition` (Chromium) | 43 bestanden, 13 übersprungen, 0 fehlgeschlagen |
+
+### Ernährung: Referenz für Zucker und gesättigte Fettsäuren aus dem Tagesziel · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Zucker und gesättigte Fettsäuren höchstens 10 % der Kalorien aus dem Tagesziel (4 bzw. 9 kcal je g), ohne Ziel 50 und 22 g (D-369, AK-NUT-15). Bericht: `form-ernaehrung-report.md` Abschnitt 17.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `references.test.ts`, `nutrition-ui.test.tsx`, `de-nutrition.test.ts` | 8, 24 und 7 bestanden |
+| Gegenprobe: neue und geänderte Tests gegen den alten Stand | 5 von 5 fehlgeschlagen |
+| `pnpm test` | 122 Dateien, 1073 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
+| E2E `nutrition`, `basic-foods`, `narrow-layout`, `nutrition-ring`, `network-a11y` (Chromium) | 111 bestanden, 15 übersprungen, 0 fehlgeschlagen |

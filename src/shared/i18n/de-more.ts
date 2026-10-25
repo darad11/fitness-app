@@ -138,6 +138,30 @@ export const tMore = {
     updateFailed:
       'Die Suche hat nicht geklappt. Prüfe die Internetverbindung und versuche es erneut.',
     updateUnavailable: 'In dieser Umgebung gibt es keine automatischen Updates.',
+    /** Lizenzliste der Lebensmitteldaten (Phase Ernährung §6, D-362, `docs/licenses-data.md`). */
+    dataTitle: 'Lebensmitteldaten und Lizenzen',
+    dataSources: {
+      bls: {
+        name: 'Bundeslebensmittelschlüssel (BLS) 4.0',
+        text: 'Nährwerte der Grundauswahl: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, Karlsruhe, DOI 10.25826/Data20251217-134202-0. Kostenfrei nutzbar, auch in Apps, mit Quellenangabe. Gekürzt auf acht Nährwerte, ergänzt um österreichische Namen, Suchbegriffe und Richtwerte je Stück.',
+      },
+      usda: {
+        name: 'USDA SR28',
+        text: 'Pfefferoni, Butternusskürbis und Magermilch: U.S. Department of Agriculture, Agricultural Research Service (2015): USDA National Nutrient Database for Standard Reference, Release 28. Gemeinfrei. Nährwerte nach EU-Regeln umgerechnet. Bei den Richtwerten je Stück nur zum Vergleich.',
+      },
+      pieces: {
+        name: 'Richtwerte je Stück und Scheibe',
+        text: 'Mittelgroße Stücke, essbarer Anteil. Meist nach der Schweizer Nährwerttabelle 2021 (SGE, BAG, ETH), beim Apfel und bei der Birne ohne Kerngehäuse gerechnet (Anteil nach CoFID, Vereinigtes Königreich), Erdäpfel geschält (Schälverlust nach DTU, Dänemark). Ei Größe M nach der EU-Vermarktungsnorm für Eier und dem Schweizer Ernährungsbulletin 2021 (BLV), Semmel nach dem Österreichischen Lebensmittelbuch (Codex-Kapitel B 18, Mindestgewicht), Käsescheiben nach DTU (Dänemark) und NICE (Belgien), Avocado (Sorte Hass) nach DTU, Reiswaffeln nach dem Voedingscentrum (Niederlande). Du kannst jedes Gewicht anpassen; FORM merkt es sich.',
+      },
+      off: {
+        name: 'Open Food Facts',
+        text: 'Produkte per Barcode, nur wenn du es einschaltest: Open Food Facts, Open Database License (ODbL).',
+      },
+      import: {
+        name: 'Importierte Lebensmitteldaten',
+        text: 'Was du selbst importierst (ÖNWT), bleibt auf deinem Gerät und ist nicht Teil der App.',
+      },
+    },
     privacyTitle: 'Daten und Datenschutz',
     privacyText:
       'Keine Werbung, keine Analyse. Deine Daten bleiben auf diesem Gerät, solange du dich nicht anmeldest; angemeldet gleicht die App sie mit deinem eigenen Speicher bei Supabase ab. Andere Dienste fragt sie nur, wenn du sie selbst einschaltest: Open Food Facts beim Scannen und die Schritte aus dem Dashboard.',

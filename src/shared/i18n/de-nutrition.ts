@@ -2,6 +2,19 @@ import { listDe } from '../lib/list';
 
 // Texte, die nur nachgeladene Teile brauchen (D-288): Ernährung (Schritt G, D-261). Gehören zu `de.ts`, liegen
 // aber getrennt, damit sie nicht in die Startansicht geladen werden.
+
+/** Zahl und Prozentzeichen bleiben beisammen („45 %“ bricht nicht um), D-366. */
+const keepPercent = (text: string) => text.replace(/(\d) %/g, '$1\u00a0%');
+
+/** Mehrzahl der Einheiten der Grundauswahl; „Stück“ bleibt gleich. */
+const UNIT_PLURAL: Readonly<Record<string, string>> = {
+  Stück: 'Stück',
+  Scheibe: 'Scheiben',
+  Zehe: 'Zehen',
+  Stange: 'Stangen',
+  Kolben: 'Kolben',
+};
+
 export const tNutrition = {
   title: 'Ernährung',
   today: 'Heute',
@@ -53,6 +66,50 @@ export const tNutrition = {
     fiber: 'Ballaststoffe',
     saturatedFat: 'Gesättigte Fettsäuren',
   },
+  /** Kurzform, wenn die Zeile auf schmalen Bildschirmen sonst umbräche (D-363). */
+  extrasShort: { saturatedFat: 'Ges. Fettsäuren' },
+  /**
+   * Ist und Tagesreferenz unter „Weitere Nährwerte“ (D-359), kompakt als „0,3 / 6 g“ (D-363);
+   * Erklärung, Quellen und fehlende Angaben stehen im Info-Blatt.
+   */
+  reference: {
+    infoLabel: 'Erklärung und Quellen',
+    /** Für Screenreader hinter dem Sternchen. */
+    incomplete: 'nicht bei allen Einträgen angegeben',
+    sheetIntro:
+      'Je Zeile steht, was du an diesem Tag gegessen hast, und die Referenz am Tag. Allgemeine Orientierungswerte, keine Ziele und keine medizinische Empfehlung.',
+    atMost: (grams: string) => `höchstens ${grams} g`,
+    atLeast: (grams: string) => `mindestens ${grams} g`,
+    /**
+     * Grundlage bei Zucker und gesättigten Fettsäuren (D-369): 10 % der Kalorien aus dem
+     * Tagesziel, ohne Ziel aus 2.000 kcal; dazu die Energie je Gramm.
+     */
+    energyBasis: (kcal: string, fromTarget: boolean, kcalPerGram: number) =>
+      fromTarget
+        ? `10 % der Kalorien aus deinem Tagesziel von ${kcal} kcal, ${String(kcalPerGram)} kcal je g.`
+        : `Ohne Tagesziel 10 % von ${kcal} kcal, ${String(kcalPerGram)} kcal je g.`,
+    notes: {
+      salt: 'EU-Referenzmenge für Erwachsene (LMIV).',
+      sugar:
+        'Der Wert folgt der Empfehlung von WHO und DGE (unter 10 % der Energie). Beim Zucker meint sie freien Zucker; die App zählt jeden Zucker, auch aus Obst und Milch, deshalb ist der Wert eine strenge Orientierung.',
+      saturatedFat: 'Der Wert folgt der Empfehlung von WHO und DGE (unter 10 % der Energie).',
+      fiber: 'Richtwert der DGE für Erwachsene.',
+    },
+    asterisk:
+      '* Bei mindestens einem Eintrag fehlt dieser Wert. Er zählt nicht als 0; die Zahl gilt nur für die Einträge mit Angabe.',
+    missingTitle: 'Ohne Angabe an diesem Tag',
+    /** Einträge ohne Angabe: höchstens drei Namen, dann „n weitere“. */
+    missingNames: (names: readonly string[]) => {
+      const shown = names.slice(0, 3);
+      const more = names.length - shown.length;
+      return listDe(more > 0 ? [...shown, `${String(more)} weitere`] : shown);
+    },
+    /** Dieselben Einträge fehlen bei allen vier Werten: eine Zeile statt vier. */
+    missingAll: 'Alle vier Werte',
+    sourcesTitle: 'Quellen',
+    sources:
+      'Salz nach der EU-Lebensmittelinformationsverordnung (LMIV, VO (EU) Nr. 1169/2011, Anhang XIII). Zucker und gesättigte Fettsäuren nach der Empfehlung von WHO und DGE, jeweils unter 10 % der Energie; ohne Tagesziel mit der Referenzmenge der LMIV von 2.000 kcal. Ballaststoffe nach der Deutschen Gesellschaft für Ernährung (DGE).',
+  },
   noTarget: 'Noch kein Tagesziel.',
   setTarget: 'Ziel festlegen',
   targets: 'Ziele',
@@ -95,15 +152,56 @@ export const tNutrition = {
   favorites: 'Favoriten',
   results: (n: number) => (n === 1 ? '1 Treffer' : `${n} Treffer`),
   noResults: 'Nichts gefunden. Lege ein eigenes Lebensmittel an oder nutze den Schnelleintrag.',
-  searchHint: 'Suche in deinen Lebensmitteln, Rezepten und importierten Lebensmitteldaten.',
+  searchHint:
+    'Suche in deinen Lebensmitteln und Rezepten, in der Grundauswahl und in importierten Lebensmitteldaten.',
   loadingFoods: 'Lebensmittel werden geladen …',
+  basicFailed: 'Die Grundauswahl ließ sich nicht laden. Gesucht wird ohne sie.',
   sourceBadge: {
     custom: 'Eigenes',
     quick: 'Schnell',
     bls: 'BLS',
+    usda: 'USDA',
     off: 'Open Food Facts',
     import: 'Import',
     recipe: 'Rezept',
+  },
+  /** Grundauswahl (Phase Ernährung §6, D-362): Menge in g oder Stück, Stückgewicht, Quelle. */
+  basic: {
+    unitLegend: 'Menge in',
+    grams: 'Gramm',
+    count: (unit: string) => `Anzahl (${unit})`,
+    /** „1 Scheibe“, „2 Scheiben“, „1,5 Scheiben“, „2 Stück“. */
+    pieces: (count: number, countText: string, unit: string) =>
+      `${countText} ${count === 1 ? unit : (UNIT_PLURAL[unit] ?? unit)}`,
+    fewer: 'Anzahl verringern',
+    more: 'Anzahl erhöhen',
+    /** Vorauswahl mit Richtwert (D-365): „1 Stück · ca. 150 g“. */
+    summary: (pieces: string, grams: string) => `${pieces} · ca. ${grams} g`,
+    richtwert: (grams: string, unit: string, hint?: string) =>
+      `Richtwert: ${grams} g je ${unit}${hint ? `, ${hint}` : ''}`,
+    own: (grams: string, unit: string, listed: string) =>
+      `Dein Gewicht: ${grams} g je ${unit}, Richtwert ${listed} g`,
+    adjust: 'Gewicht anpassen',
+    reset: 'Auf Richtwert zurücksetzen',
+    pieceLabel: (unit: string) => `Gewicht für 1 ${unit} in g`,
+    adjustHint:
+      'FORM merkt sich dein Gewicht beim Hinzufügen und zeigt es beim nächsten Mal statt des Richtwerts.',
+    invalidPiece: 'Bitte gib ein Gewicht zwischen 0,1 und 5.000 g ein.',
+    invalidCount: 'Bitte gib eine Anzahl größer als 0 ein, höchstens 100.',
+    invalidHalf: 'Bitte gib die Anzahl in ganzen oder halben Schritten an, höchstens 100.',
+    /**
+     * Kurze Quelle unter der Nährwerttabelle (D-362); die volle Zitierweise mit DOI steht unter
+     * „Über die App“ (D-366: ohne eigenen Wortlaut des Produktinhabers bleibt sie so).
+     */
+    source: {
+      bls: (code: string, name: string) => `Quelle: BLS 4.0, ${code} „${keepPercent(name)}“`,
+      usda: (code: string, name: string) =>
+        `Quelle: USDA SR28, ${code} „${keepPercent(name)}“, umgerechnet nach EU-Regeln`,
+    },
+    derivedMark: '*',
+    derivedLabel: 'abgeleitet',
+    derivedNote:
+      '* Abgeleitet: Die Quelle nennt keinen Wert, das Lebensmittel enthält diesen Nährstoff von Natur aus nicht.',
   },
   catalogBadge: { oenwt: 'ÖNWT' },
   per100: (unit: string) => `je 100 ${unit}`,

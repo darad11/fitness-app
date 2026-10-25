@@ -11,6 +11,10 @@ export const LOCALE_PREFERENCES = ['auto', 'de-AT', 'de-CH', 'de-DE'] as const;
 
 export const SETTINGS_SCHEMA_VERSION = 1;
 
+/** Größtes Stückgewicht in g (wie eine Portion) und höchstens so viele gemerkte Gewichte. */
+export const PIECE_WEIGHT_MAX = 5000;
+export const PIECE_WEIGHTS_LIMIT = 1000;
+
 export const settingsSchema = defineDocSchema('settings', {
   restDefaultSec: z.number().int().min(0).max(3600),
   weightStepKg: z.number().min(0.25).max(50),
@@ -22,6 +26,14 @@ export const settingsSchema = defineDocSchema('settings', {
   backupReminderDays: z.number().int().min(0).max(365),
   /** Eigene Schnellmengen für Wasser in ml (D-289); fehlt, gelten die Standardwerte. */
   waterQuickMl: z.array(z.number().int().min(10).max(2000)).length(4).optional(),
+  /**
+   * Eigene Stückgewichte in g je Grundnahrungsmittel (D-362), Schlüssel ist die ID des
+   * Lebensmittels. Fehlt ein Eintrag, gilt das Gewicht aus der Liste, sonst fragt die App einmal.
+   */
+  pieceWeights: z
+    .record(z.uuid(), z.number().positive().max(PIECE_WEIGHT_MAX))
+    .refine((weights) => Object.keys(weights).length <= PIECE_WEIGHTS_LIMIT)
+    .optional(),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;

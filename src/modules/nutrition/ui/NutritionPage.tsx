@@ -35,6 +35,7 @@ import {
 import { useToday } from '@/shared/ui/useToday';
 import { mealSlotAt } from '../calc/mealSlot';
 import { sumEntries } from '../calc/nutrients';
+import { referenceLines } from '../calc/references';
 import { macroRing } from '../calc/ring';
 import { targetOn } from '../calc/targets';
 import { useImportedCatalog } from '../data/catalogStore';
@@ -42,6 +43,7 @@ import { useDayEntries, useTargets } from '../data/nutritionRepository';
 import { MEAL_SLOTS, type FoodLogEntry, type MealSlot } from '../model/nutrition';
 import { restoreEntry } from '../service/nutritionService';
 import { EntryDialog } from './EntryDialog';
+import { ExtrasPanel } from './ExtrasPanel';
 import { KitchenMenu, PILL } from './KitchenMenu';
 import { MacroRing, RING_COLORS, ringLabel } from './MacroRing';
 import { SaveTemplateDialog } from './TemplateDialogs';
@@ -73,17 +75,6 @@ function macroGoal(
   return { protein: target.proteinG, carbs: target.carbsG, fat: target.fatG }[macro];
 }
 
-/**
- * Weitere Nährwerte in den Spalten der Makros darunter: Salz unter Eiweiß, Zucker und Ballaststoffe
- * unter Kohlenhydrate, gesättigte Fettsäuren unter Fett.
- */
-const EXTRAS = [
-  { nutrient: 'salt', column: 'col-start-1' },
-  { nutrient: 'sugar', column: 'col-start-2' },
-  { nutrient: 'saturatedFat', column: 'col-start-3' },
-  { nutrient: 'fiber', column: 'col-start-2' },
-] as const;
-
 /** Ernährung an einem Tag (S-15, NU-02, NU-03, NU-12): Summen, Ziel und vier Mahlzeiten. */
 export function NutritionPage() {
   const fmt = useFormatters();
@@ -112,7 +103,19 @@ export function NutritionPage() {
   };
   const target = targets ? targetOn(targets, day) : undefined;
   const totals = entries ? sumEntries(entries) : undefined;
+  // Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz (D-359); Zucker und
+  // gesättigte Fettsäuren aus 10 % der Kalorien des Tagesziels (D-369). Einträge ohne Angabe
+  // zählen nicht als 0, sie werden genannt.
+  const referenceEntries = useMemo(
+    () =>
+      (entries ?? []).map((entry) => ({ nutrients: entry.nutrients, name: entry.nameSnapshot })),
+    [entries],
+  );
+  const references = referenceLines(referenceEntries, target?.kcal);
   const ring = target && totals ? macroRing(totals.sums, target.kcal) : undefined;
+  // Der Hinweis unter den Makros nennt nur Eiweiß, Kohlenhydrate und Fett; die weiteren
+  // Nährwerte tragen bei fehlenden Werten ein Sternchen (D-363).
+  const missingMacros = totals ? MACROS.filter((macro) => totals.incomplete.includes(macro)) : [];
   // Kurz, damit die Zeile auf dem Handy einzeilig bleibt: „Heute · Do., 22. Okt.“ (D-326).
   const dateLabel = fmt.weekdayDayMonthShort(dayDate(day));
 
@@ -217,6 +220,14 @@ export function NutritionPage() {
                   : tNutrition.remaining(kcal(fmt, ring.remaining))}
               </p>
             ) : null}
+            {missingMacros.length > 0 ? (
+              <p className="mt-3 text-sm text-muted">
+                {tNutrition.incomplete(missingMacros.map((n) => tNutrition.nutrientNames[n]))}
+              </p>
+            ) : null}
+            {totals.estimated ? (
+              <p className="mt-1 text-sm text-muted">{tNutrition.estimatedHint}</p>
+            ) : null}
             {/* Dezent zugeklappt: Eiweiß, Kohlenhydrate und Fett bleiben im Vordergrund. */}
             <details className="group mt-1">
               <summary
@@ -230,34 +241,10 @@ export function NutritionPage() {
                   className="size-6 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
-              <div role="group" aria-label={tNutrition.extrasLabel}>
-                <dl className="mt-1 grid grid-flow-row-dense grid-cols-3 gap-x-3 gap-y-2 text-sm">
-                  {EXTRAS.map(({ nutrient, column }) => (
-                    <div key={nutrient} className={column}>
-                      <dt className="text-muted">{tNutrition.extras[nutrient]}</dt>
-                      <dd className="font-semibold tabular-nums">
-                        {nutrient === 'salt'
-                          ? fmt.number(totals.sums.salt, { maximumFractionDigits: 1 })
-                          : grams(fmt, totals.sums[nutrient])}{' '}
-                        {tNutrition.units.g}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
+              {/* Je Wert eine Zeile „Ist / Referenz g“ (D-363); Erklärung, Quellen und
+                  Einträge ohne Angabe im Blatt hinter dem Info-Symbol. */}
+              <ExtrasPanel lines={references} />
             </details>
-            {totals.incomplete.some((n) => n !== 'kcal') ? (
-              <p className="mt-3 text-sm text-muted">
-                {tNutrition.incomplete(
-                  totals.incomplete
-                    .filter((n) => n !== 'kcal')
-                    .map((n) => tNutrition.nutrientNames[n]),
-                )}
-              </p>
-            ) : null}
-            {totals.estimated ? (
-              <p className="mt-1 text-sm text-muted">{tNutrition.estimatedHint}</p>
-            ) : null}
           </Card>
 
           {/* Zwei gleich breite Knöpfe; braucht einer mehr Platz (breitere Schrift), wird seine

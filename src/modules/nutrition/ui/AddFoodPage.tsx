@@ -19,15 +19,14 @@ import {
 } from '@/shared/ui';
 import { useToday } from '@/shared/ui/useToday';
 import { searchFoods } from '../calc/foodSearch';
-import { scaleNutrients } from '../calc/nutrients';
 import { useEntriesSince, useMealTemplates } from '../data/nutritionRepository';
 import type { MealTemplate } from '../model/mealTemplate';
 import type { FoodItem } from '../model/foodItem';
 import { MEAL_SLOTS, type MealSlot } from '../model/nutrition';
-import { logFood, logQuick, type Quantity } from '../service/nutritionService';
+import { logQuick } from '../service/nutritionService';
 import { BarcodeFlow } from './BarcodeFlow';
 import { kcal } from './format';
-import { NutrientTable } from './NutrientTable';
+import { LogDialog } from './LogDialog';
 import { useSubmitOnce } from './useSubmitOnce';
 import { ApplyTemplateDialog, templateKcal } from './TemplateDialogs';
 import { useFoodCatalog } from './useFoodCatalog';
@@ -102,7 +101,7 @@ export function AddFoodPage() {
               <span className="flex flex-wrap items-center gap-2">
                 <span className="font-medium break-words">{food.name}</span>
                 {food.brand ? <span className="text-sm text-muted">{food.brand}</span> : null}
-                <Badge tone={food.source === 'bls' || food.catalog ? 'neutral' : 'accent'}>
+                <Badge tone={food.basic || food.catalog ? 'neutral' : 'accent'}>
                   {food.catalog
                     ? tNutrition.catalogBadge[food.catalog]
                     : tNutrition.sourceBadge[food.source]}
@@ -172,6 +171,11 @@ export function AddFoodPage() {
         />
       </div>
       <p className="mb-4 text-sm text-muted">{tNutrition.searchHint}</p>
+      {catalog?.basicFailed ? (
+        <p role="status" className="mb-4 rounded-card bg-surface-2 p-3 text-sm">
+          {tNutrition.basicFailed}
+        </p>
+      ) : null}
       {catalog === undefined ? (
         <div aria-busy="true">
           <p className="sr-only">{tNutrition.loadingFoods}</p>
@@ -303,152 +307,6 @@ export function AddFoodPage() {
         />
       ) : null}
     </>
-  );
-}
-
-function LogDialog({
-  food,
-  slot,
-  day,
-  savedNotice = false,
-  onClose,
-  onLogged,
-}: {
-  food: FoodItem;
-  savedNotice?: boolean;
-  slot: MealSlot;
-  day: string;
-  onClose: () => void;
-  onLogged: () => void;
-}) {
-  const rt = useDb();
-  const fmt = useFormatters();
-  const id = useId();
-  const unit = tNutrition.units[food.basis];
-  // Einheit: Gramm bzw. Milliliter oder eine Portion des Lebensmittels (NU-09).
-  const [unitChoice, setUnitChoice] = useState<string>(food.servings[0]?.id ?? 'basis');
-  const serving = food.servings.find((s) => s.id === unitChoice);
-  const [value, setValue] = useState(serving ? '1' : '100');
-  const [error, setError] = useState<string | null>(null);
-  const parsed = parseDecimal(value);
-  const amount = parsed === null ? null : serving ? parsed * serving.amount : parsed;
-  const scaled = amount !== null && amount > 0 ? scaleNutrients(food.per100, amount) : null;
-  const preview = scaled?.kcal ?? null;
-  const once = useSubmitOnce();
-
-  const submit = () => {
-    if (parsed === null || parsed <= 0) {
-      setError(tNutrition.invalidAmount);
-      return;
-    }
-    const quantity: Quantity = serving
-      ? { kind: 'serving', servingId: serving.id, count: parsed }
-      : { kind: 'amount', amount: parsed };
-    once.run(() =>
-      logFood(rt, { food, slot, dayKey: day, quantity }).then(onLogged, (caught: unknown) => {
-        setError(tNutrition.saveFailed);
-        void logError(rt.db, { area: 'nutrition', error: caught, route: window.location.pathname });
-      }),
-    );
-  };
-
-  return (
-    <Dialog
-      open
-      onClose={onClose}
-      title={tNutrition.logTitle(food.name)}
-      closeLabel={t.common.close}
-      actions={
-        <>
-          <Button variant="secondary" onClick={onClose}>
-            {tNutrition.cancel}
-          </Button>
-          <Button type="submit" form={`${id}-form`} disabled={once.busy}>
-            {tNutrition.add}
-          </Button>
-        </>
-      }
-    >
-      <form
-        id={`${id}-form`}
-        className="grid gap-4"
-        onSubmit={(event) => {
-          event.preventDefault();
-          submit();
-        }}
-      >
-        {food.brand ? <p className="-mt-2 text-muted">{food.brand}</p> : null}
-        {food.servings.length > 0 ? (
-          <SelectField
-            label={tNutrition.quantityLabel}
-            value={unitChoice}
-            options={[
-              ...food.servings.map((s) => ({
-                value: s.id,
-                label: tNutrition.servingOption(
-                  s.name,
-                  fmt.number(s.amount, { maximumFractionDigits: 1 }),
-                  unit,
-                ),
-              })),
-              { value: 'basis', label: unit },
-            ]}
-            onChange={(next) => {
-              setUnitChoice(next);
-              setValue(next === 'basis' ? '100' : '1');
-            }}
-          />
-        ) : null}
-        <div>
-          <label htmlFor={`${id}-menge`} className="mb-2 block text-sm font-semibold text-muted">
-            {serving ? tNutrition.servingsLabel : tNutrition.amountLabel(unit)}
-          </label>
-          <input
-            id={`${id}-menge`}
-            inputMode="decimal"
-            autoComplete="off"
-            value={value}
-            onChange={(event) => {
-              setValue(event.target.value);
-              setError(null);
-            }}
-            className={INPUT}
-          />
-        </div>
-        <p role="status" className="text-lg font-semibold tabular-nums">
-          {preview !== null ? tNutrition.preview(kcal(fmt, preview)) : '–'}
-        </p>
-        {savedNotice ? (
-          <p className="rounded-card bg-surface-2 p-3 text-sm">
-            {tNutrition.barcode.saved(food.name)}
-          </p>
-        ) : null}
-        {food.source === 'off' ? (
-          <p className="text-sm text-muted">{tNutrition.barcode.fromOff}</p>
-        ) : null}
-        <NutrientTable
-          caption={tNutrition.nutrientsTitle}
-          columns={[
-            { label: tNutrition.per100(unit), values: food.per100 },
-            ...(scaled && amount !== null
-              ? [
-                  {
-                    label: tNutrition.forAmount(
-                      `${fmt.number(amount, { maximumFractionDigits: 1 })} ${unit}`,
-                    ),
-                    values: scaled,
-                  },
-                ]
-              : []),
-          ]}
-        />
-        {error ? (
-          <p role="alert" className="text-sm text-danger">
-            {error}
-          </p>
-        ) : null}
-      </form>
-    </Dialog>
   );
 }
 

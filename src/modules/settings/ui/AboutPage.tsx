@@ -20,7 +20,8 @@ const CHECK_MESSAGES: Record<Exclude<CheckState, 'idle'>, string> = {
 
 /**
  * Über die App (FORM D-316): Logo der Marke ohne Claim, darunter wie bisher Version, Build,
- * Umgebung (AK-PWA-07), Speicher-ID und die Suche nach Updates.
+ * Umgebung (AK-PWA-07), Speicher-ID und die Suche nach Updates; am Ende die Herkunft und Lizenzen
+ * der Lebensmitteldaten (D-362).
  */
 export function AboutPage() {
   const { deviceId } = useDb();
@@ -89,6 +90,17 @@ export function AboutPage() {
         </Card>
         <Card title={tMore.about.privacyTitle}>
           <p>{tMore.about.privacyText}</p>
+        </Card>
+        {/* Lizenzliste der Lebensmitteldaten (Phase Ernährung §6, D-362). */}
+        <Card title={tMore.about.dataTitle}>
+          <dl className="grid gap-3">
+            {Object.values(tMore.about.dataSources).map((source) => (
+              <div key={source.name}>
+                <dt className="font-semibold">{source.name}</dt>
+                <dd className="text-sm text-muted">{source.text}</dd>
+              </div>
+            ))}
+          </dl>
         </Card>
       </div>
     </>

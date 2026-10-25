@@ -11,6 +11,16 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.28 (Phase Ernährung, 25.10.2026): NU-28 mit Referenzen für Zucker und gesättigte Fettsäuren aus 10 % der Kalorien des Tagesziels, ohne Ziel 50 und 22 g (AK-NUT-15, D-369).
+- Version 0.27 (Phase Ernährung, Freigabe der Richtwerte, 25.10.2026): NU-29 mit der Avocado nach DTU 2013 für die Sorte Hass, 145 g (D-368).
+- Version 0.26 (Abschluss Phase Ernährung, Abschnitt 4, 25.10.2026): NU-25 mit D-366: Ohne eigenen Wortlaut des Produktinhabers bleibt die Zitierweise des BLS mit DOI; Zahl und Prozentzeichen in der Quellenzeile brechen nicht mehr um.
+- Version 0.25 (Abschluss Phase Ernährung, Abschnitt 3, 25.10.2026): NU-29 „Richtwerte je Stück, vorausgewählt“ (AK-NUT-18, D-365): 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, Plus und Minus in halben Stück, „Gewicht anpassen“ gemerkt und zurücksetzbar; die einmalige Frage nach dem Stückgewicht entfällt.
+- Version 0.24 (Abschluss Phase Ernährung, Abschnitt 2, 25.10.2026): NU-16 mit einzeiliger Nährwerttabelle in festen Spalten, zweite Spalte nur bei einer Menge ungleich 100 g (AK-NUT-08, D-364).
+- Version 0.23 (Abschluss Phase Ernährung, Abschnitt 1, 25.10.2026): NU-28 kompakt (AK-NUT-15, D-363): je Zeile Name und „Ist / Referenz g“, einzeilig; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt, fehlende Werte mit Sternchen.
+- Version 0.22 (Phase Ernährung, Abschnitt 6, 25.10.2026): NU-21 mit der Grundauswahl aus dem BLS 4.0 (AK-NUT-17, D-362), NU-29 neu und „Implementiert“ (Stückgewicht einmal angeben und merken, AK-NUT-18), NU-25 zusätzlich mit AK-NUT-19 (Lizenzliste unter „Über die App“). Geprüft mit Unit-, Komponenten- und E2E-Tests in Chromium und in der CI mit WebKit (Lauf 40171590098); der Gerätetest steht aus.
+- Version 0.21 (Phase Ernährung, Abschnitt 4, 24.10.2026): NU-26 zusätzlich mit AK-NUT-16 (Wischen nach links löscht einen Artikel mit Rückgängig, D-360).
+- Version 0.20 (Phase Ernährung, Abschnitt 3, 24.10.2026): NU-28 neu und „Implementiert“ (AK-NUT-15, D-359): Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe als Ist und Tagesreferenz mit Quelle; Einträge ohne Angabe zählen nicht als 0.
+- Version 0.19 (Phase Ernährung, Abschnitt 1, 24.10.2026): NU-08 „Implementiert“ für die lokale Suche (AK-NUT-14, D-356): für jede Datenquelle, mit Einzahl und Mehrzahl, Umlautschreibweisen, österreichischen und bundesdeutschen Begriffen in beide Richtungen, Rang nach Stellung im Namen und lose vor Marke, ohne Dubletten. Eine Online-Suche nach Namen gibt es weiterhin nicht (D-302).
 - Version 0.18 (Phase Stabilität, Gerätetests, 24.10.2026): SY-02 und SY-04 bleiben „Implementiert“. Am iPhone bestanden: das Update nach D-343 (AK-PWA-03, T-IPH-M0 Schritt 4) und das Wiederherstellen aus dem Export (D-345). Für „Abgenommen“ fehlen bei SY-02 noch T-IPH-M1, iPad und Mac (AK-DEV-01, AK-DEV-02), bei SY-04 das Zusammenführen (AK-DAT-03).
 - Version 0.17 (Phase Stabilität, Nachtrag A-05, 24.10.2026): SY-03 bleibt „Implementiert“; `push_documents` sperrt je Konto, damit beim Abholen keine Nummer übersprungen wird (A-05, D-349). Geprüft mit `pnpm test:db` an Postgres 16 (lokal) und im CI-Job an Postgres 17; der Gerätetest mit zwei Geräten steht weiter aus.
 - Version 0.16 (Phase Stabilität, Abschnitt 3, 23.10.2026): SY-04 „Implementiert“: Export und Wiederherstellen aus dem Export mit Prüfung, Zusammenfassung, doppelter Bestätigung und Sicherung vorher (AK-DAT-01, AK-DAT-02, AK-DAT-04, AK-DAT-05, D-345). Geprüft mit Unit-, Komponenten- und E2E-Tests in Chromium; WebKit in der CI und Gerätetest stehen aus. SY-05 bleibt „Zur Umsetzung ausgewählt“, weil der Sicherungshinweis nach 14 Tagen (AK-DAT-12) fehlt; SY-19 (Zusammenführen, AK-DAT-03) bleibt offen.
@@ -66,32 +76,32 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 
 | Herkunft | MVP | Später | Ausgeschlossen | Summe |
 |---|---|---|---|---|
-| Original verifiziert (OV) | 49 | 29 | 10 | 88 |
+| Original verifiziert (OV) | 50 | 28 | 10 | 88 |
 | Original nicht verifiziert (ON) | 13 | 13 | 2 | 28 |
-| Eigene Verbesserung (EV) | 47 | 4 | 0 | 51 |
-| Summe | 109 | 46 | 12 | 167 |
+| Eigene Verbesserung (EV) | 49 | 4 | 0 | 53 |
+| Summe | 112 | 45 | 12 | 169 |
 
 | Release | Funktionen |
 |---|---|
 | Backlog | 7 |
-| R1 | 109 |
-| R2 | 20 |
+| R1 | 112 |
+| R2 | 19 |
 | R3 | 1 |
 | R4 | 13 |
 | R5 | 5 |
 
 | Prio | P0 | P1 | P2 | P3 | – |
 |---|---|---|---|---|---|
-| Anzahl | 42 | 67 | 30 | 16 | 12 |
+| Anzahl | 42 | 69 | 30 | 16 | 12 |
 
 | Status | Anzahl |
 |---|---|
 | Abgenommen | 1 |
 | Analysiert | 38 |
 | Getestet | 3 |
-| Implementiert | 88 |
+| Implementiert | 91 |
 | Noch zu recherchieren | 1 |
-| Spezifiziert | 17 |
+| Spezifiziert | 16 |
 | Verworfen | 2 |
 | Zur Umsetzung ausgewählt | 17 |
 <!-- STATS-END -->
@@ -206,7 +216,7 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-05 | Lebensmittel oder Mahlzeit protokollieren, mit Snapshot | Portionsanteil, z. B. 0,75 | HC-G | V | OV | H | NU-08 | M | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-01 |
 | NU-06 | Hinzufügen als selbstgemacht, Restaurant oder per Barcode | Drei Wege über „+" | HC-G | V | OV | H | NU-07; NU-10 | M | P1 | Später | R2 · M5/M6 | Übernehmen | Spezifiziert | Jeder Weg erzeugt ein validiertes Lebensmittel mit Quelle |
 | NU-07 | Barcode-Scanning | Vorhanden, 2026 verbessert | REV; AS 3.5.0 | V | OV | H | Kamera; barcode-detector; Open Food Facts | L | P2 | MVP | R1 · Schritt G | Anpassen: Polyfill (D-305), Open Food Facts nach Einwilligung, vorgezogen (D-266) | Implementiert | AK-NUT-09 |
-| NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | Später | R2 · M5/M6 | Anpassen: lokal zuerst, online ergänzend | Spezifiziert | Offline-Suche über eigene, generische und gespeicherte Einträge |
+| NU-08 | Lebensmittelsuche | Vorhanden; bekannte Marken fehlen oft (laut Rezensionen) | REV | V | OV | H | NU-21; Open Food Facts | L | P1 | MVP | R1 · Schritt G | Anpassen: lokal zuerst, für jede Datenquelle (D-356); online nur per Barcode (D-302) | Implementiert | AK-NUT-14 |
 | NU-09 | Portionsgröße und Anzahl kombinierbar | Nur eines von beiden (laut Rezension) | REV | VF | EV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
 | NU-10 | Eigene Lebensmittel mit Nährwerten | Manuelle Eingabe mit Nährwerten | SD 05:54 | V | OV | H | – | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-03 |
 | NU-11 | Favoriten, zuletzt verwendet, Mahlzeitvorlagen | Von Nutzern gewünscht, nicht belegt | REV | VF | EV | H | NU-05 | M | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-268) | Implementiert | AK-NUT-11 |
@@ -214,18 +224,20 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | NU-13 | Wassertracking | Nur als tägliche Challenge-Aufgabe | TC | V | OV | M | – | S | P3 | Später | R4 · M13 | Später, mit den Gewohnheiten | Analysiert | Schnelleingabe in ml; Tagesziel |
 | NU-14 | Fotoerkennung von Mahlzeiten | Nur in einer Drittquelle genannt | MWM | N | ON | N | KI-Dienst | XL | – | Ausgeschlossen | – | Ausschließen | Analysiert | Entfällt |
 | NU-15 | Neuberechnung bei Mengenänderung | Seit 3.1.7 | AS 3.1.7 | V | OV | H | NU-05 | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-02 |
-| NU-16 | Nährwert-Aufschlüsselung je Lebensmittel | Protein, Fett, Kohlenhydrate | REV | V | OV | M | NU-08 | S | P1 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-264) | Implementiert | AK-NUT-08 |
+| NU-16 | Nährwert-Aufschlüsselung je Lebensmittel | Protein, Fett, Kohlenhydrate | REV | V | OV | M | NU-08 | S | P1 | MVP | R1 · Schritt G, D-364 | Übernehmen, vorgezogen (D-264); Tabelle einzeilig in festen Spalten (D-364) | Implementiert | AK-NUT-08 |
 | NU-17 | Ziele manuell überschreiben | Nicht belegt | – | P | ON | M | NU-01 | S | P2 | MVP | R1 · Schritt G | Übernehmen, vorgezogen (D-261) | Implementiert | AK-NUT-05 |
 | NU-18 | Roh- und Gargewicht | Nicht belegt | – | P | ON | M | NU-21 | S | P2 | Später | R2 · M5 | Anpassen: getrennte Einträge roh und gegart aus dem BLS; optionaler Faktor | Analysiert | Faktor-Werte als Schätzung markiert |
 | NU-19 | Quelle und Qualitätsstatus je Lebensmittel | Nicht belegt | – | E | EV | M | NU-10 | S | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | Quelle sichtbar; Anteil geschätzter Werte in der Tagessumme |
 | NU-20 | Schnelleintrag nur mit kcal und Makros | Nicht belegt | – | E | EV | M | NU-05 | S | P2 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-04 |
-| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | Importierte ÖNWT-Daten (D-263); BLS 4.0 entfernt (D-279) | M | P1 | MVP | R1 · Schritt G | Verbesserung (D-110, D-301), vorgezogen (D-261) | Implementiert | AK-NUT-01, AK-NUT-06 |
+| NU-21 | Generische Lebensmittel mit deutschen Namen | – | – | E | EV | H | Grundauswahl aus dem BLS 4.0 (D-361, D-362); importierte ÖNWT-Daten (D-263) | M | P1 | MVP | R1 · Schritt G | Verbesserung (D-110, D-301), vorgezogen (D-261); kuratierte Grundauswahl mit österreichischen Namen statt des ganzen BLS (D-362) | Implementiert | AK-NUT-01, AK-NUT-06, AK-NUT-17 |
 | NU-22 | Kennzeichnung unvollständiger Nährwerte | – | – | E | EV | M | NU-10 | S | P1 | MVP | R1 · Schritt G | Verbesserung (D-110), vorgezogen (D-261) | Implementiert | AK-NUT-04 |
 | NU-23 | Einheiten und Haushaltsmaße mit Umrechnung | – | – | E | EV | H | NU-09 | M | P1 | Später | R2 · M5 | Verbesserung (D-110) | Spezifiziert | g, ml, Stück, Portion; ml in g nur über Dichte, sonst markiert |
 | NU-24 | Offline-Verhalten der Online-Suche | – | – | E | EV | M | NU-08 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-266): ohne Netz Hinweis, lokale Treffer, „Selbst anlegen“ mit Barcode; „für später merken“ entfällt vorerst | Implementiert | AK-NUT-09 |
-| NU-26 | Einkaufsliste in „Meine Küche“ | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-287 | Wunsch des Produktinhabers (D-287) | Implementiert | AK-NUT-12 |
+| NU-26 | Einkaufsliste in „Meine Küche“ | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-287 | Wunsch des Produktinhabers (D-287); Wischen zum Löschen (D-360) | Implementiert | AK-NUT-12, AK-NUT-16 |
 | NU-27 | Wasser: Tagesmenge, Ziel, Schnellmengen, Verlauf | – | – | E | EV | H | – | M | P1 | MVP | R1 · D-289 | Wunsch des Produktinhabers (D-289) | Implementiert | AK-NUT-13 |
-| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261) | Implementiert | AK-NUT-06, AK-NUT-07 |
+| NU-28 | Salz, Zucker, gesättigte Fettsäuren und Ballaststoffe mit Tagesreferenz | – | – | E | EV | M | NU-16 | S | P1 | MVP | R1 · D-359, D-363, D-369 | Wunsch des Produktinhabers (Planpunkt 58): Referenzmengen statt Ziele (D-359), kompakt mit Info-Blatt (D-363), Zucker und gesättigte Fettsäuren aus dem Tagesziel (D-369) | Implementiert | AK-NUT-15 |
+| NU-29 | Richtwerte je Stück, vorausgewählt; eigenes Gewicht gemerkt | – | – | E | EV | H | NU-21 | S | P1 | MVP | R1 · D-362, D-365, D-368 | Auftrag des Produktinhabers (D-361, D-365): Richtwerte aus europäischen Quellen statt Frage, keine US-Größen; eigenes Gewicht gemerkt und zurücksetzbar; am 25.10.2026 freigegeben (D-368) | Implementiert | AK-NUT-18 |
+| NU-25 | Lizenz- und Quellenhinweise für Lebensmitteldaten | – | – | E | EV | M | D-301; D-302 | S | P1 | MVP | R1 · Schritt G | Verbesserung, vorgezogen (D-261); Quelle je Eintrag und Lizenzliste unter „Über die App“ (D-362), Zitierweise des BLS mit DOI (D-366) | Implementiert | AK-NUT-06, AK-NUT-07, AK-NUT-19 |
 
 ## F. Rezepte und Mahlzeitenplanung (RE)
 

@@ -1,8 +1,18 @@
+import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
 import { expect, openPage, test } from './fixtures';
 
 /** Lebensmitteldaten wie aus der BLS-Recherche importieren (D-263); der gebündelte BLS entfällt (D-279). */
 async function importFoods(page: Page) {
+  await importRows(page, [
+    ['0200001', 'Kartoffel geschält gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]],
+    ['C133000', 'Hafer Flocken', [348, 13.22, 53.3, 0.74, 6.65, 1.34, 10.98, 0]],
+    ['F503100', 'Banane roh', [79, 1.32, 15.89, 13.89, 0.4, 0.07, 2, 0]],
+  ]);
+}
+
+/** Importiert Zeilen [Code, Name, Werte in der Reihenfolge kcal, Eiweiß, KH, Zucker, Fett, gesFS, Ballaststoffe, Salz]. */
+async function importRows(page: Page, rows: [string, string, number[]][]) {
   const row = (code: string, name: string, v: number[]) => {
     const [kcal, protein, carbs, sugar, fat, saturatedFat, fiber, salt] = v;
     return {
@@ -19,13 +29,7 @@ async function importFoods(page: Page) {
       salt,
     };
   };
-  const content = JSON.stringify({
-    rows: [
-      row('0200001', 'Kartoffel geschält gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]),
-      row('C133000', 'Hafer Flocken', [348, 13.22, 53.3, 0.74, 6.65, 1.34, 10.98, 0]),
-      row('F503100', 'Banane roh', [79, 1.32, 15.89, 13.89, 0.4, 0.07, 2, 0]),
-    ],
-  });
+  const content = JSON.stringify({ rows: rows.map(([code, name, v]) => row(code, name, v)) });
   await openPage(page, '/ernaehrung/lebensmittel');
   await page.getByLabel('Datei auswählen').setInputFiles({
     name: 'nuts-recherche.json',
@@ -36,7 +40,9 @@ async function importFoods(page: Page) {
     .getByRole('dialog', { name: 'Lebensmitteldaten importieren' })
     .getByRole('button', { name: 'Importieren' })
     .click();
-  await expect(page.getByText('3 Lebensmittel importiert', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(`${String(rows.length)} Lebensmittel importiert`, { exact: true }),
+  ).toBeVisible();
 }
 
 test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Neuladen erhalten, auf „Heute“ sehen', async ({
@@ -77,8 +83,30 @@ test('Ernährung: Ziel setzen, importiertes Lebensmittel protokollieren, nach Ne
   // Weitere Nährwerte sind dezent zugeklappt (D-272).
   await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toBeHidden();
   await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
-  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Zucker');
-  await expect(page.getByRole('group', { name: 'Weitere Nährwerte' })).toContainText('Salz');
+  const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
+  // Kompakt: je Zeile Name und „Ist / Referenz g“ (D-359, D-363).
+  await expect(extras).toContainText('Zucker');
+  await expect(extras).toContainText('Salz');
+  // Tagesziel 2.200 kcal: Zucker 10 % / 4 kcal = 55 g, gesättigte Fettsäuren 10 % / 9 kcal = 24 g (D-369).
+  for (const reference of ['/ 6 g', '/ 55 g', '/ 24 g', '/ 30 g'])
+    await expect(extras).toContainText(reference);
+  await expect(extras).not.toContainText('höchstens');
+  // Barrierefreiheit der aufgeklappten Liste (die Prüfung je Seite sieht sie nur zugeklappt).
+  const tags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+  const axe = await new AxeBuilder({ page }).include('details[open]').withTags(tags).analyze();
+  expect(axe.violations.map((violation) => violation.id)).toEqual([]);
+  // Erklärung und Quellen im Blatt hinter dem Info-Symbol.
+  await extras.getByRole('button', { name: 'Erklärung und Quellen' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Weitere Nährwerte' });
+  await expect(sheet).toContainText('Salz: höchstens 6 g');
+  await expect(sheet).toContainText('Zucker: höchstens 55 g');
+  await expect(sheet).toContainText('strenge Orientierung');
+  await expect(sheet).toContainText('Ballaststoffe: mindestens 30 g');
+  await expect(sheet).toContainText('VO (EU) Nr. 1169/2011, Anhang XIII');
+  const axeSheet = await new AxeBuilder({ page }).include('dialog[open]').withTags(tags).analyze();
+  expect(axeSheet.violations.map((violation) => violation.id)).toEqual([]);
+  await sheet.getByRole('button', { name: 'Schließen' }).click();
+  await expect(sheet).toBeHidden();
 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Mittagessen' }).getByText('200 g')).toBeVisible();
@@ -227,4 +255,36 @@ test('Meine Küche: ein Knopf für Lebensmittel, Rezepte und Vorlagen (D-272)', 
       .click();
   }
   await expect(page.getByRole('heading', { level: 1, name: 'Rezepte' })).toBeVisible();
+});
+
+test('Suche: Mehrzahl, Umlautschreibweise und Synonyme, lose vor Marke (D-356)', async ({
+  page,
+}) => {
+  test.slow();
+  // Namen in der Schreibweise der Quelle; die Werte sind Testwerte, nur die Namen zählen hier.
+  await importRows(page, [
+    ['T000001', 'Tomate roh', [22, 1, 3, 3, 0.1, 0, 1.3, 0]],
+    ['T000002', 'Hühnerei roh', [135, 13, 0.3, 0.3, 9, 2.4, 0, 0.4]],
+    ['T000003', 'Apfel roh', [58, 0.4, 11.7, 10.5, 0.5, 0.2, 2.3, 0]],
+    ['T000004', 'Apfelmus', [59, 0.3, 12.5, 11.6, 0.4, 0.2, 1.8, 0]],
+    ['T000005', 'Erdäpfel gekocht', [72, 2, 15, 0.8, 0.1, 0, 1.7, 0]],
+    ['T000006', 'Eierlikör', [280, 4, 30, 30, 6, 3, 0, 0.1]],
+  ]);
+  await openPage(page, '/ernaehrung/hinzufuegen?mahlzeit=lunch');
+  const search = page.getByLabel('Lebensmittel suchen');
+  const results = page.getByRole('list', { name: /Treffer$/ });
+  // Die importierten Einträge stehen neben der Grundauswahl (D-362); gefunden werden sie über
+  // Mehrzahl, Umlautschreibweise und Synonyme genauso.
+  for (const [query, expected] of [
+    ['Tomaten', /^Tomate roh\s*ÖNWT/],
+    ['Paradeiser', /^Tomate roh\s*ÖNWT/],
+    ['Eier', /^Hühnerei roh\s*ÖNWT/],
+    ['Ei', /^Hühnerei roh\s*ÖNWT/],
+    ['Aepfel', /^Apfel roh\s*ÖNWT/],
+    ['Äpfel', /^Apfel roh\s*ÖNWT/],
+    ['Kartoffeln', /^Erdäpfel gekocht\s*ÖNWT/],
+  ] as const) {
+    await search.fill(query);
+    await expect(results.getByRole('button', { name: expected })).toBeVisible();
+  }
 });

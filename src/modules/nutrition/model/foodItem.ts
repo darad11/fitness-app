@@ -1,6 +1,10 @@
+import type { BasicFoodInfo } from './basicFood';
 import type { CatalogSource, Food, FoodBasis, Nutrients, Serving } from './nutrition';
 
-/** Lebensmittel in Anzeigeform, egal ob eigenes oder aus dem BLS (später Open Food Facts). */
+/**
+ * Lebensmittel in Anzeigeform, egal ob eigenes, aus der Grundauswahl (BLS, USDA), importiert oder
+ * aus Open Food Facts.
+ */
 export interface FoodItem {
   id: string;
   name: string;
@@ -10,8 +14,13 @@ export interface FoodItem {
   basis: FoodBasis;
   per100: Nutrients;
   servings: readonly Serving[];
-  /** 'recipe' für eigene Rezepte (D-267), die sich wie ein Lebensmittel eintragen lassen. */
-  source: Food['source'] | 'recipe';
+  /**
+   * 'recipe' für eigene Rezepte (D-267), die sich wie ein Lebensmittel eintragen lassen; 'usda' für
+   * die drei Lücken der Grundauswahl (D-361). Nur 'recipe' und 'usda' gibt es nie als Dokument.
+   */
+  source: Food['source'] | 'recipe' | 'usda';
+  /** Grundnahrungsmittel aus der freigegebenen Auswahl (D-362): Quelle, Einheit, Stückgewicht. */
+  basic?: BasicFoodInfo;
   /** Bei importierten Daten (D-263): Österreichische Nährwerttabelle (ÖNWT). */
   catalog?: CatalogSource;
   quality: Food['quality'];

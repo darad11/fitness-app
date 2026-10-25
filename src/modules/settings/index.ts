@@ -6,6 +6,7 @@ export { useSettings } from './data/useSettings';
 export { useFormatters } from './service/formatting';
 export { loadSettings, saveSettings, SETTINGS_ID, settingsDef } from './data/settingsRepository';
 export {
+  PIECE_WEIGHT_MAX,
   SETTINGS_DEFAULTS,
   settingsSchema,
   type Settings,

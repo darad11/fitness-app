@@ -1646,6 +1646,7 @@ Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WC
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 364 bestanden, 78 übersprungen, 0 fehlgeschlagen, 8,2 min |
+| CI, Lauf 40236345703 (`dd4d35b`, mit dem Nachtrag zu D-374) | alle vier Jobs grün; WebKit 344 bestanden, 98 übersprungen, 13,1 min; die Scanner-Tests werden in WebKit übersprungen |
 
 ### Phase iPhone Duo: Satzzeile, lange Werte · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
@@ -1660,3 +1661,13 @@ Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WC
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 365 bestanden, 79 übersprungen, 0 fehlgeschlagen, 8,4 min |
+
+### Phase iPhone Duo: Prüfung aller Screens in drei Breiten · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+28 Ansichten in den Prüfmaßen zugeklappt, Zwischenmaß und aufgeklappt, mit Testdaten (D-379). Bericht: `form-duo-report.md` Abschnitt 4. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/duo-screens.mjs`, erster Lauf (vor D-377) | 84 Ansichten: 16 × axe `label-content-name-mismatch`, 27 × Schrift unter 11 px, 7 Hinweise Tippfläche |
+| `node tools/duo-screens.mjs` nach D-377 und D-378, 3 min | 84 Ansichten: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst nach D-334), 7 Hinweise Tippfläche (Wochentag-Chips, 44 pt über unsichtbaren Rand); kein Überlauf, nichts unter dem Systemrand, keine Überlagerung, kein abgeschnittener Text, kein gestauchtes Symbol, keine axe-Verstöße |
+| Messung für die Bewertung (Training mit Pause) | Player aufgeklappt: Kopf 264 pt, Fußleiste 97 pt, 284 pt für Übung und Sätze, eine Satzzeile ganz sichtbar, Felder 298 pt breit; zugeklappt: 274, 111, 269 pt, eine Satzzeile; Zwischenmaß: 542 pt, fünf Satzzeilen. Ernährung: erste Mahlzeit bei 619 von 669 pt (aufgeklappt) und 639 von 678 pt (zugeklappt) |

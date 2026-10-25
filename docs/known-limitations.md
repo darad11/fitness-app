@@ -188,3 +188,11 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - **Kontowechsel (D-346):** Liegen Daten auf dem Gerät, die schon mit einem Konto abgeglichen wurden, bricht die Anmeldung mit einem anderen Konto ab: „Auf diesem Gerät liegen Daten eines anderen Kontos …“. Ein Wechsel mit Daten folgt erst mit „Alle Daten löschen“; ein Gerät ohne Daten darf wechseln.
 - Der Link in der Bestätigungsmail öffnet am iPhone Safari, nicht die installierte App. Beide haben getrennte Speicher; deshalb meldet man sich nach dem Bestätigen in der App selbst mit E-Mail und Passwort an.
 - Der Link führt nur dann zurück in die App, wenn in Supabase unter Authentication › URL Configuration die Adresse der App als „Site URL“ bzw. unter „Redirect URLs“ eingetragen ist; sonst landet er auf der voreingestellten Adresse.
+
+## iPhone Duo (D-371 bis D-379)
+
+- **Nicht am Gerät getestet:** Alle Prüfungen liefen in Browser-Fenstern mit den Maßen des Duo (`form-duo-report.md` Abschnitt 2.4). Ein Teil der Maße stammt aus Messungen Dritter; der Systemrand an der Seite (84 pt) ist eine Annahme. Die App nimmt immer den gemeldeten sicheren Bereich, keine feste Zahl.
+- **Zustand nicht erkennbar:** Web-Apps erfahren nicht, ob das Duo auf- oder zugeklappt oder halb geöffnet ist; die Schnittstellen dafür sind in Safari nur hinter Schaltern. FORM richtet sich nach der Fensterbreite. Was über den Falz läuft, ist nicht geprüft.
+- **Testwerkzeuge:** Den sicheren Bereich kann nur Chromium in Playwright nachstellen (`Emulation.setSafeAreaInsetsOverride`), die Kamera nur Chromium durch ein Standbild ersetzen. WebKit prüft dieselben Abläufe ohne Systemrand; die Scanner-Tests laufen dort nicht.
+- **Neu laden beim Auf- und Zuklappen:** Ob iOS die App dabei neu lädt, ist offen. Training, Sätze und Pause liegen in der Datenbank und bleiben; offene Dialoge und die Scrollposition gingen dann verloren.
+- **Sehr schmale Bildschirme:** Bei 360 pt ragt ein Wert wie „102,5“ in der Satzzeile 7 px über das Feld, bei 320 pt (iPhone SE oder mini mit Anzeigezoom) sind die Felder 25 pt breit (D-378, Vorschlag im Bericht Abschnitt 5).

@@ -1,0 +1,633 @@
+[
+  {
+    "key": "erster-start",
+    "title": "Erster Start („Heute“ ohne Einträge)",
+    "pose": "zu",
+    "file": "erster-start-zu.png",
+    "findings": []
+  },
+  {
+    "key": "erster-start",
+    "title": "Erster Start („Heute“ ohne Einträge)",
+    "pose": "hoch",
+    "file": "erster-start-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "erster-start",
+    "title": "Erster Start („Heute“ ohne Einträge)",
+    "pose": "auf",
+    "file": "erster-start-auf.png",
+    "findings": []
+  },
+  {
+    "key": "anmeldung",
+    "title": "Anmeldung",
+    "pose": "zu",
+    "file": "anmeldung-zu.png",
+    "findings": []
+  },
+  {
+    "key": "anmeldung",
+    "title": "Anmeldung",
+    "pose": "hoch",
+    "file": "anmeldung-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "anmeldung",
+    "title": "Anmeldung",
+    "pose": "auf",
+    "file": "anmeldung-auf.png",
+    "findings": []
+  },
+  {
+    "key": "training-aktiv",
+    "title": "Aktiver Workout-Player mit Pause",
+    "pose": "zu",
+    "file": "training-aktiv-zu.png",
+    "findings": []
+  },
+  {
+    "key": "training-aktiv",
+    "title": "Aktiver Workout-Player mit Pause",
+    "pose": "hoch",
+    "file": "training-aktiv-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "training-aktiv",
+    "title": "Aktiver Workout-Player mit Pause",
+    "pose": "auf",
+    "file": "training-aktiv-auf.png",
+    "findings": []
+  },
+  {
+    "key": "training-pause-gross",
+    "title": "Pause groß",
+    "pose": "zu",
+    "file": "training-pause-gross-zu.png",
+    "findings": []
+  },
+  {
+    "key": "training-pause-gross",
+    "title": "Pause groß",
+    "pose": "hoch",
+    "file": "training-pause-gross-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "training-pause-gross",
+    "title": "Pause groß",
+    "pose": "auf",
+    "file": "training-pause-gross-auf.png",
+    "findings": []
+  },
+  {
+    "key": "abschluss",
+    "title": "Workout-Abschluss",
+    "pose": "zu",
+    "file": "abschluss-zu.png",
+    "findings": []
+  },
+  {
+    "key": "abschluss",
+    "title": "Workout-Abschluss",
+    "pose": "hoch",
+    "file": "abschluss-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "abschluss",
+    "title": "Workout-Abschluss",
+    "pose": "auf",
+    "file": "abschluss-auf.png",
+    "findings": []
+  },
+  {
+    "key": "heute",
+    "title": "Home („Heute“)",
+    "pose": "zu",
+    "file": "heute-zu.png",
+    "findings": []
+  },
+  {
+    "key": "heute",
+    "title": "Home („Heute“)",
+    "pose": "hoch",
+    "file": "heute-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "heute",
+    "title": "Home („Heute“)",
+    "pose": "auf",
+    "file": "heute-auf.png",
+    "findings": []
+  },
+  {
+    "key": "training",
+    "title": "Trainingsübersicht",
+    "pose": "zu",
+    "file": "training-zu.png",
+    "findings": []
+  },
+  {
+    "key": "training",
+    "title": "Trainingsübersicht",
+    "pose": "hoch",
+    "file": "training-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "training",
+    "title": "Trainingsübersicht",
+    "pose": "auf",
+    "file": "training-auf.png",
+    "findings": []
+  },
+  {
+    "key": "programme",
+    "title": "Programme und Vorlagen",
+    "pose": "zu",
+    "file": "programme-zu.png",
+    "findings": []
+  },
+  {
+    "key": "programme",
+    "title": "Programme und Vorlagen",
+    "pose": "hoch",
+    "file": "programme-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "programme",
+    "title": "Programme und Vorlagen",
+    "pose": "auf",
+    "file": "programme-auf.png",
+    "findings": []
+  },
+  {
+    "key": "programm-details",
+    "title": "Programm-Details",
+    "pose": "zu",
+    "file": "programm-details-zu.png",
+    "findings": []
+  },
+  {
+    "key": "programm-details",
+    "title": "Programm-Details",
+    "pose": "hoch",
+    "file": "programm-details-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "programm-details",
+    "title": "Programm-Details",
+    "pose": "auf",
+    "file": "programm-details-auf.png",
+    "findings": []
+  },
+  {
+    "key": "uebungen",
+    "title": "Übungsbibliothek",
+    "pose": "zu",
+    "file": "uebungen-zu.png",
+    "findings": []
+  },
+  {
+    "key": "uebungen",
+    "title": "Übungsbibliothek",
+    "pose": "hoch",
+    "file": "uebungen-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "uebungen",
+    "title": "Übungsbibliothek",
+    "pose": "auf",
+    "file": "uebungen-auf.png",
+    "findings": []
+  },
+  {
+    "key": "verlauf",
+    "title": "Trainingsverlauf (Kalender)",
+    "pose": "zu",
+    "file": "verlauf-zu.png",
+    "findings": []
+  },
+  {
+    "key": "verlauf",
+    "title": "Trainingsverlauf (Kalender)",
+    "pose": "hoch",
+    "file": "verlauf-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "verlauf",
+    "title": "Trainingsverlauf (Kalender)",
+    "pose": "auf",
+    "file": "verlauf-auf.png",
+    "findings": []
+  },
+  {
+    "key": "fortschritt",
+    "title": "Fortschritt und Auswertung",
+    "pose": "zu",
+    "file": "fortschritt-zu.png",
+    "findings": []
+  },
+  {
+    "key": "fortschritt",
+    "title": "Fortschritt und Auswertung",
+    "pose": "hoch",
+    "file": "fortschritt-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "fortschritt",
+    "title": "Fortschritt und Auswertung",
+    "pose": "auf",
+    "file": "fortschritt-auf.png",
+    "findings": []
+  },
+  {
+    "key": "gewicht",
+    "title": "Gewicht (Diagramm)",
+    "pose": "zu",
+    "file": "gewicht-zu.png",
+    "findings": []
+  },
+  {
+    "key": "gewicht",
+    "title": "Gewicht (Diagramm)",
+    "pose": "hoch",
+    "file": "gewicht-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "gewicht",
+    "title": "Gewicht (Diagramm)",
+    "pose": "auf",
+    "file": "gewicht-auf.png",
+    "findings": []
+  },
+  {
+    "key": "ernaehrung",
+    "title": "Ernährung und Makros",
+    "pose": "zu",
+    "file": "ernaehrung-zu.png",
+    "findings": []
+  },
+  {
+    "key": "ernaehrung",
+    "title": "Ernährung und Makros",
+    "pose": "hoch",
+    "file": "ernaehrung-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "ernaehrung",
+    "title": "Ernährung und Makros",
+    "pose": "auf",
+    "file": "ernaehrung-auf.png",
+    "findings": []
+  },
+  {
+    "key": "hinzufuegen",
+    "title": "Lebensmittel hinzufügen",
+    "pose": "zu",
+    "file": "hinzufuegen-zu.png",
+    "findings": []
+  },
+  {
+    "key": "hinzufuegen",
+    "title": "Lebensmittel hinzufügen",
+    "pose": "hoch",
+    "file": "hinzufuegen-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "hinzufuegen",
+    "title": "Lebensmittel hinzufügen",
+    "pose": "auf",
+    "file": "hinzufuegen-auf.png",
+    "findings": []
+  },
+  {
+    "key": "einkaufsliste",
+    "title": "Küche: Einkaufsliste",
+    "pose": "zu",
+    "file": "einkaufsliste-zu.png",
+    "findings": []
+  },
+  {
+    "key": "einkaufsliste",
+    "title": "Küche: Einkaufsliste",
+    "pose": "hoch",
+    "file": "einkaufsliste-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "einkaufsliste",
+    "title": "Küche: Einkaufsliste",
+    "pose": "auf",
+    "file": "einkaufsliste-auf.png",
+    "findings": []
+  },
+  {
+    "key": "wasser",
+    "title": "Wasser-Tracker",
+    "pose": "zu",
+    "file": "wasser-zu.png",
+    "findings": []
+  },
+  {
+    "key": "wasser",
+    "title": "Wasser-Tracker",
+    "pose": "hoch",
+    "file": "wasser-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "wasser",
+    "title": "Wasser-Tracker",
+    "pose": "auf",
+    "file": "wasser-auf.png",
+    "findings": []
+  },
+  {
+    "key": "aufgaben",
+    "title": "Tagesaufgaben",
+    "pose": "zu",
+    "file": "aufgaben-zu.png",
+    "findings": []
+  },
+  {
+    "key": "aufgaben",
+    "title": "Tagesaufgaben",
+    "pose": "hoch",
+    "file": "aufgaben-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "aufgaben",
+    "title": "Tagesaufgaben",
+    "pose": "auf",
+    "file": "aufgaben-auf.png",
+    "findings": []
+  },
+  {
+    "key": "mehr",
+    "title": "Mehr",
+    "pose": "zu",
+    "file": "mehr-zu.png",
+    "findings": []
+  },
+  {
+    "key": "mehr",
+    "title": "Mehr",
+    "pose": "hoch",
+    "file": "mehr-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "mehr",
+    "title": "Mehr",
+    "pose": "auf",
+    "file": "mehr-auf.png",
+    "findings": []
+  },
+  {
+    "key": "einstellungen",
+    "title": "Einstellungen",
+    "pose": "zu",
+    "file": "einstellungen-zu.png",
+    "findings": []
+  },
+  {
+    "key": "einstellungen",
+    "title": "Einstellungen",
+    "pose": "hoch",
+    "file": "einstellungen-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "einstellungen",
+    "title": "Einstellungen",
+    "pose": "auf",
+    "file": "einstellungen-auf.png",
+    "findings": []
+  },
+  {
+    "key": "uebung-verlauf",
+    "title": "Übungsverlauf (Diagramm)",
+    "pose": "zu",
+    "file": "uebung-verlauf-zu.png",
+    "findings": []
+  },
+  {
+    "key": "uebung-verlauf",
+    "title": "Übungsverlauf (Diagramm)",
+    "pose": "hoch",
+    "file": "uebung-verlauf-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "uebung-verlauf",
+    "title": "Übungsverlauf (Diagramm)",
+    "pose": "auf",
+    "file": "uebung-verlauf-auf.png",
+    "findings": []
+  },
+  {
+    "key": "aufgabe-kalender",
+    "title": "Tagesaufgabe: Kalender und Verlauf",
+    "pose": "zu",
+    "file": "aufgabe-kalender-zu.png",
+    "findings": [
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „Mo fällig“ 44 × 36"
+      },
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „Di fällig“ 44 × 36"
+      },
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „Mi fällig“ 44 × 36"
+      },
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „Do fällig“ 44 × 36"
+      },
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „Fr fällig“ 44 × 36"
+      },
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „Sa fällig“ 44 × 36"
+      },
+      {
+        "art": "Tippfläche unter 44 px (Hinweis)",
+        "detail": "button „So fällig“ 44 × 36"
+      },
+      {
+        "art": "Schrift unter 11 px",
+        "detail": "span „22“ 10px"
+      }
+    ]
+  },
+  {
+    "key": "aufgabe-kalender",
+    "title": "Tagesaufgabe: Kalender und Verlauf",
+    "pose": "hoch",
+    "file": "aufgabe-kalender-hoch.png",
+    "findings": [
+      {
+        "art": "Schrift unter 11 px",
+        "detail": "span „22“ 10px"
+      }
+    ]
+  },
+  {
+    "key": "aufgabe-kalender",
+    "title": "Tagesaufgabe: Kalender und Verlauf",
+    "pose": "auf",
+    "file": "aufgabe-kalender-auf.png",
+    "findings": [
+      {
+        "art": "Schrift unter 11 px",
+        "detail": "span „22“ 10px"
+      }
+    ]
+  },
+  {
+    "key": "wasser-verlauf",
+    "title": "Wasser: Verlauf",
+    "pose": "zu",
+    "file": "wasser-verlauf-zu.png",
+    "findings": []
+  },
+  {
+    "key": "wasser-verlauf",
+    "title": "Wasser: Verlauf",
+    "pose": "hoch",
+    "file": "wasser-verlauf-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "wasser-verlauf",
+    "title": "Wasser: Verlauf",
+    "pose": "auf",
+    "file": "wasser-verlauf-auf.png",
+    "findings": []
+  },
+  {
+    "key": "tab-leiste-kreis",
+    "title": "Tab-Leiste als Kreis",
+    "pose": "zu",
+    "file": "tab-leiste-kreis-zu.png",
+    "findings": []
+  },
+  {
+    "key": "tab-leiste-kreis",
+    "title": "Tab-Leiste als Kreis",
+    "pose": "hoch",
+    "file": "tab-leiste-kreis-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "tab-leiste-kreis",
+    "title": "Tab-Leiste als Kreis",
+    "pose": "auf",
+    "file": "tab-leiste-kreis-auf.png",
+    "findings": []
+  },
+  {
+    "key": "blatt-kueche",
+    "title": "Blatt „Meine Küche“",
+    "pose": "zu",
+    "file": "blatt-kueche-zu.png",
+    "findings": []
+  },
+  {
+    "key": "blatt-kueche",
+    "title": "Blatt „Meine Küche“",
+    "pose": "hoch",
+    "file": "blatt-kueche-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "blatt-kueche",
+    "title": "Blatt „Meine Küche“",
+    "pose": "auf",
+    "file": "blatt-kueche-auf.png",
+    "findings": []
+  },
+  {
+    "key": "blatt-schnelleintrag",
+    "title": "Blatt „Schnelleintrag“",
+    "pose": "zu",
+    "file": "blatt-schnelleintrag-zu.png",
+    "findings": []
+  },
+  {
+    "key": "blatt-schnelleintrag",
+    "title": "Blatt „Schnelleintrag“",
+    "pose": "hoch",
+    "file": "blatt-schnelleintrag-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "blatt-schnelleintrag",
+    "title": "Blatt „Schnelleintrag“",
+    "pose": "auf",
+    "file": "blatt-schnelleintrag-auf.png",
+    "findings": []
+  },
+  {
+    "key": "scanner",
+    "title": "Barcode-Scanner (ohne Kamera)",
+    "pose": "zu",
+    "file": "scanner-zu.png",
+    "findings": []
+  },
+  {
+    "key": "scanner",
+    "title": "Barcode-Scanner (ohne Kamera)",
+    "pose": "hoch",
+    "file": "scanner-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "scanner",
+    "title": "Barcode-Scanner (ohne Kamera)",
+    "pose": "auf",
+    "file": "scanner-auf.png",
+    "findings": []
+  },
+  {
+    "key": "dialog-verwerfen",
+    "title": "Rückfrage „Training verwerfen?“",
+    "pose": "zu",
+    "file": "dialog-verwerfen-zu.png",
+    "findings": []
+  },
+  {
+    "key": "dialog-verwerfen",
+    "title": "Rückfrage „Training verwerfen?“",
+    "pose": "hoch",
+    "file": "dialog-verwerfen-hoch.png",
+    "findings": []
+  },
+  {
+    "key": "dialog-verwerfen",
+    "title": "Rückfrage „Training verwerfen?“",
+    "pose": "auf",
+    "file": "dialog-verwerfen-auf.png",
+    "findings": []
+  }
+]

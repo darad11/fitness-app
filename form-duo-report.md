@@ -109,3 +109,116 @@ Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und a
 - **Lösung:** Die Satzzeilen richten sich nach ihrer eigenen Breite. Unter 24 rem werden Abstände und Vorwert-Spalte etwas schmaler, und Werte ab fünf Zeichen stehen in 16 statt 18 px. Kleiner nicht, sonst vergrößert iOS die Seite beim Antippen. Aufgeklappt bleibt alles, wie es war.
 - **Test:** `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt, 382 pt, zugeklappt): am alten Stand fehlgeschlagen (10 px über den Rand bei 390 pt), mit der Korrektur bestanden.
 - **Offen:** Bei 360 pt ragt „102,5“ weiter 7 px hinaus, bei 320 pt (iPhone SE oder mini mit Anzeigezoom „Größerer Text“) sind die Felder nur 25 px breit. Das braucht eine zweite Zeile in der Satzzeile und ist eine Layout-Entscheidung; sie kommt in die Bewertung der Layout-Verbesserungen.
+
+## 4. Prüfung aller Screens in drei Breiten (D-379)
+
+### 4.1 Vorgehen
+
+- **Werkzeug:** `tools/duo-screens.mjs` öffnet in Chromium 28 Ansichten in den drei Prüfmaßen aus Abschnitt 2.4: zugeklappt 466 × 678 pt (rechts 84 pt Systemrand), Zwischenmaß 669 × 951 (inneres Display hoch), aufgeklappt 951 × 669 (rechts 84 pt). Mit Testdaten: Tagesziel und zwei Mahlzeiten, Wasser, fünf Gewichtsmessungen, zwei Tagesaufgaben, Einkaufsliste, aktives Programm mit laufendem Training und Pause. Das laufende Training wechselt dabei die Größe wie beim Auf- und Zuklappen.
+- **Je Ansicht automatisch geprüft:** waagrechter Überlauf, Bedienelemente und Text unter dem Systemrand, Bedienelemente übereinander, abgeschnittener Text, Schrift unter 11 px, gestauchte Symbole, Tippflächen unter 44 × 44 pt (Hinweis) und Barrierefreiheit mit axe (WCAG 2.1 AA). Dazu jedes Bild angesehen.
+- **Ergebnis im Repository:** 84 Bilder in `docs/screens/duo/` (je Ansicht und Breite), das Übersichtsbild `docs/screens/duo/uebersicht-duo.png` und die Befunde `docs/screens/duo/befunde.json`. Neu erzeugen: `pnpm build`, `pnpm preview`, dann `node tools/duo-screens.mjs`.
+- **Grenzen:** Browser-Fenster mit den Maßen des Duo, nicht das Gerät; Chromium statt Safari; der sichere Bereich ist nachgestellt. Halb aufgeklappt (Falz) sehen Web-Apps nicht, das ist nicht geprüft. Die Tooltips der Diagramme sind nicht einzeln geprüft; Recharts hält sie im Zeichenbereich, und der liegt im Inhalt.
+
+### 4.2 Screens aus Kapitel 4 der Leitlinien
+
+| Screen | Ansichten (Bilder) | Ergebnis |
+|---|---|---|
+| Home und Dashboard | `erster-start`, `heute`, `tab-leiste-kreis` | in Ordnung; ab 768 pt Ernährung und Wasser nebeneinander |
+| Trainingsübersicht | `training` | in Ordnung |
+| Programm-Details | `programme`, `programm-details` | in Ordnung |
+| Aktiver Workout-Player | `training-aktiv`, `training-pause-gross`, `dialog-verwerfen` | behoben: große Pause neben dem Systemrand (D-372), nichts geht beim Größenwechsel verloren (D-375), Kopf und ±15 s (D-377), Satzzeile (D-378). Aufgeklappt ist ohne Scrollen nur eine Satzzeile ganz zu sehen, siehe Abschnitt 5 |
+| Übungsbibliothek | `uebungen` | in Ordnung |
+| Workout-Abschluss | `abschluss` | in Ordnung |
+| Trainingskalender | – | gibt es in der App noch nicht (TH-03 „später“). Geprüft stattdessen der Verlauf (`verlauf`) und der Kalender einer Tagesaufgabe (`aufgabe-kalender`) |
+| Fortschritt und Analytics | `fortschritt`, `gewicht`, `uebung-verlauf` | in Ordnung; die Kachel „Kalorien“ ist durch ihre Erklärung viel höher als die anderen, siehe Abschnitt 5 |
+| Ernährung und Makros | `ernaehrung`, `hinzufuegen`, `blatt-schnelleintrag`, `scanner` | behoben: Scanner (D-374), Auswahl der Mahlzeit und Namen der Einträge (D-377). Aufgeklappt füllt der Ring den ersten Bildschirm, siehe Abschnitt 5 |
+| Küche und Einkaufsliste | `blatt-kueche`, `einkaufsliste` | behoben: „Meine Küche“ neben dem Systemrand (D-372) und über der Tab-Leiste (D-377) |
+| Wasser-Tracker | `wasser`, `wasser-verlauf` | in Ordnung |
+| Tagesaufgaben | `aufgaben`, `aufgabe-kalender` | behoben: Namen der Zeilen und Wochentage 11 px (D-377). Die Tageszahl im Kalender bleibt 10 px (siehe 4.3) |
+| Einstellungen | `mehr`, `einstellungen` | in Ordnung |
+| Onboarding | `erster-start`, `anmeldung` | in Ordnung; „Später“ neben dem Systemrand (D-372) |
+
+### 4.3 Ergebnis je Prüfpunkt (Kapitel 3 bis 9)
+
+- **Lesbarkeit:** Keine Schrift unter 11 px außer der Tageszahl im Kalender einer Tagesaufgabe: 10 px in einer 16-px-Markierung, so entschieden mit D-334; das Datum steht im Namen der Zelle. Wochentage jetzt 11 px (D-377), lange Werte im Training ganz lesbar (D-378).
+- **Abgeschnittene Inhalte:** kein waagrechter Überlauf, kein abgeschnittener Text. Behoben: Kopf im Training (D-377), Auswahl der Mahlzeit (D-377), Werte in der Satzzeile (D-378).
+- **Diagramme und Kalender:** Beschriftungen ab 11 px, Diagramme nutzen die Breite. Der Kalender einer Aufgabe bleibt auch aufgeklappt 7 × 28 pt breit, siehe Abschnitt 5.
+- **Dialoge und Blätter:** ganz sichtbar und neben dem Systemrand (D-372); „Meine Küche“ über der Tab-Leiste (D-377); der Scanner auch zugeklappt quer (594 × 368, D-374).
+- **Touch-Ziele:** Alle Bedienelemente haben mindestens 44 × 44 pt Tippfläche. Die 7 Hinweise betreffen die Wochentag-Chips (44 × 36 pt sichtbar); ihre Tippfläche reicht über einen unsichtbaren Rand auf 44 pt (D-314).
+- **Einhandbedienung zugeklappt:** Tab-Leiste, „Satz erledigt“ und Blätter liegen unten, Rückfragen in der Mitte. Oben und damit für den Daumen weit weg: „Zurück“ (wie in iOS) und im Training die Pause mit „Überspringen“ und ±15 s. Ob sich „Mehr“ direkt neben dem Systemrand gut tippen lässt, zeigt erst das Gerät.
+- **Barrierefreiheit:** axe ohne Verstöße in allen 84 Ansichten (im ersten Lauf 16 Verstöße gegen „Label in Name“, behoben mit D-377). Zustände nicht nur über Farbe (Markierungen mit Haken, Rand, Strich; D-334).
+
+### 4.4 Automatische Befunde
+
+| Lauf | Ansichten | Befunde |
+|---|---|---|
+| Erster Lauf, vor D-377 | 84 | 16 × axe `label-content-name-mismatch`, 27 × Schrift unter 11 px, 7 Hinweise Tippfläche; dazu aus den Bildern die Funde in Abschnitt 3.6 und 3.7 |
+| Nach D-377 und D-378 | 84 | 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst), 7 Hinweise Tippfläche (Wochentag-Chips, siehe 4.3); sonst nichts |
+
+## 5. Bewertung der Layout-Verbesserungen (Kapitel 5, 7, 8 und 12)
+
+Gemessen mit laufendem Training und Pause (Chromium, Prüfmaße aus Abschnitt 2.4):
+
+- **Player aufgeklappt (951 × 669):** Kopf mit Pause 264 pt, Fußleiste 97 pt. Für Übung und Sätze bleiben 284 pt; ganz zu sehen ist eine Satzzeile. Die Felder für kg und Wdh. sind je 298 pt breit.
+- **Player zugeklappt (466 × 678):** Kopf mit Pause 274 pt, Fußleiste 111 pt, für Übung und Sätze 269 pt; ganz zu sehen ist eine Satzzeile.
+- **Player im Zwischenmaß (669 × 951):** 542 pt für Übung und Sätze, fünf Satzzeilen.
+- **Ernährung:** Die erste Mahlzeit beginnt aufgeklappt bei 619 von 669 pt, zugeklappt bei 639 von 678 pt, also hinter der Tab-Leiste. Zu sehen ist nur der Ring mit den Makros. Im Zwischenmaß beginnt sie bei 643 von 951 pt.
+
+| Screen | Vorschlag | Nutzen | Aufwand | Risiko | Einteilung |
+|---|---|---|---|---|---|
+| Aktiver Workout-Player, aufgeklappt | Zwei Spalten ab 48 rem: links Übungen und Sätze, rechts mitlaufend Pause mit ±15 s, nächster Satz, Fortschritt und der Platz für die Übungsdemonstration (bleibt leer, bis es Bilder gibt) | hoch: statt einer Satzzeile die ganze Höhe für Sätze; Pause und nächster Satz immer sichtbar; Felder nicht mehr 298 pt breit | mittel: Anordnung in CSS um die vorhandenen Teile, keine neue Logik, mit dem Player nachgeladen | mittel: wichtigster Screen; beim Auf- und Zuklappen darf nichts neu aufgebaut werden, die Tests aus D-375 prüfen das | lohnt sich |
+| Aktiver Workout-Player, zugeklappt | Pause im Kopf einzeilig (Zeit, nächster Satz, Überspringen), ±15 s in der großen Pause | mittel: rund 60 pt mehr für Sätze, eine Satzzeile mehr; Kapitel 6 verlangt „Sekundäres ausklappbar“ | klein | klein bis mittel: ±15 s ist einen Tipp weiter | lohnt sich |
+| Satzzeile bei 320 und 360 pt | Vorwert in einer zweiten Zeile, wenn die Zeile schmaler als 20 rem ist | mittel: bei 320 pt (iPhone SE oder mini mit Anzeigezoom) sind die Felder 25 pt breit; das Duo betrifft es nicht | klein | klein | lohnt sich (mit dem Player) |
+| Ernährung, aufgeklappt | Zwei Spalten ab 48 rem: links Ring, Makros und weitere Nährwerte, rechts die Mahlzeiten | hoch: Mahlzeiten und Hinzufügen sofort sichtbar, ohne Scrollen | mittel | klein: nur die Anordnung, Daten und Logik bleiben | lohnt sich |
+| Fortschritt, alle Breiten | Erklärung der Kalorien-Schätzung unter die Kacheln statt in die Kachel | mittel: Kacheln gleich hoch, weniger leere Fläche, auch zugeklappt | klein | klein | lohnt sich |
+| Fortschritt, aufgeklappt | Körpergewicht und Bestleistungen neben den Kennzahlen | mittel: mehr auf einen Blick; die Seite wird seltener geöffnet | mittel | klein | später |
+| Programme | Liste links, Details rechts | mittel: Programme vergleichen ohne Seitenwechsel | hoch: Auswahl und Zurück je nach Breite anders | mittel bis hoch: beim Auf- und Zuklappen wechselt die Struktur (Kapitel 7: keine andere Informationsstruktur) | später |
+| Programm-Details | Beschreibung und „Training starten“ links, Wochen und Tage rechts | mittel | klein bis mittel | klein | später |
+| Tagesaufgaben | Liste links, Auswertung rechts | mittel | klein bis mittel | klein | später |
+| Kalender einer Tagesaufgabe | aufgeklappt größere Zellen (40 statt 28 pt), Tageszahl 11 statt 10 px | klein bis mittel | klein | klein | später |
+| Navigation, aufgeklappt | Seitenleiste wie ab 1024 pt statt der schwebenden Tab-Leiste | mittel: aufgeklappt ist die Höhe knapp, die Tab-Leiste liegt über rund 80 pt Inhalt | mittel: Umbruchpunkt für breit und niedrig | mittel: zwei Navigationsarten wechseln beim Auf- und Zuklappen; laut Leitlinien nur mit klarem Vorteil | später, nach deinem Gerätetest |
+| Heute | – (ab 768 pt schon zweispaltig) | – | – | – | unnötig |
+| Trainingsübersicht | Bühne links, Einstiege rechts | klein | klein | klein | unnötig |
+| Übungsbibliothek | Liste zweispaltig | klein: Gruppen nach Muskel lesen sich einspaltig besser; Suche und Filter stehen schon nebeneinander | klein | klein | unnötig |
+| Workout-Abschluss, Wasser, Küche und Einkaufsliste, Einstellungen, Anmeldung | – | klein: einspaltig gut lesbar, Felder der Einstellungen schon nebeneinander | – | – | unnötig |
+
+### 5.1 Empfehlung
+
+Für Phase 2 empfehle ich drei Pakete, in dieser Reihenfolge:
+
+1. **Workout-Player:** aufgeklappt zwei Spalten mit dem Platz für die Übungsdemonstration; zugeklappt die einzeilige Pause; die Satzzeile mit zweiter Zeile auf sehr schmalen Bildschirmen. Größter Gewinn, und Kapitel 6 der Leitlinien verlangt beides.
+2. **Ernährung aufgeklappt zweispaltig:** Ring links, Mahlzeiten rechts.
+3. **Fortschritt:** Erklärung der Kalorien unter die Kacheln (klein, hilft in allen Breiten).
+
+Alles andere später oder gar nicht. Die schwebende Tab-Leiste bleibt; ob aufgeklappt eine Seitenleiste besser ist, entscheiden wir nach deinem Gerätetest.
+
+So würde ich es umsetzen (Kapitel 10): dieselben Komponenten, nur in CSS-Rastern angeordnet, an den vorhandenen Umbruchpunkten (48 rem). Nichts wird je nach Breite ein- oder ausgeblendet und neu aufgebaut; so bleibt beim Auf- und Zuklappen der Zustand erhalten. Player und Ernährung werden schon heute nachgeladen; die neuen Layouts kommen in diese Teile, die Startansicht bleibt bei 235,5 KB. Tests in den drei Breiten wie in Phase 1, Bilder neu.
+
+## 6. Liste für deinen Gerätetest am iPhone Duo
+
+Am besten an der Vorschau des Branches (Vercel, Link im PR), als App vom Home-Bildschirm und einmal im Safari-Tab. Mit Testdaten, nicht mit echten Daten.
+
+1. **Systemrand an der Seite (D-372):** Zugeklappt und aufgeklappt: Liegt etwas unter Statusleiste, Dynamic Island oder Kamera? Tab-Leiste, „Mehr“, der Kreis beim Scrollen, „Schließen“ in Blättern und im Scanner, Hinweise unten. Lässt sich „Mehr“ direkt neben dem Systemrand sicher tippen?
+2. **Tab-Leiste (D-373, D-376):** In beiden Zuständen runterscrollen (Kreis), hochscrollen (Leiste geht auf), die Linse über die Tabs ziehen, jeden Tab einmal tippen. Dann im Kreis-Zustand auf- und zuklappen und wieder hochscrollen: Steht die Auswahl unter dem aktiven Tab?
+3. **Auf- und Zuklappen im Training (D-375):** Training starten, einen Wert tippen, Satz erledigen (Pause läuft), Menü eines Satzes öffnen, dann auf- und zuklappen: Training, Wert, Satz, Menü und Pause bleiben, die Pause zählt richtig weiter. Lädt iOS die App beim Auf- oder Zuklappen neu? Wenn ja, bitte notieren.
+4. **Leseposition (D-375):** Auf „Heute“ und „Programme und Vorlagen“ in die Mitte scrollen, auf- und zuklappen: Bleibt derselbe Inhalt sichtbar?
+5. **Barcode-Scanner (D-374):** Zugeklappt und aufgeklappt, hoch und quer: Steht das Kamerabild aufrecht? Liegt der Rahmen mittig im Bild? Wird ein Code im Rahmen erkannt, einer außerhalb nicht?
+6. **Training zugeklappt (D-377, D-378):** Zeigen die Chips „− 15 s“ und „+ 15 s“ beide Zeichen? Steht „102,5“ ganz im Feld für kg?
+7. **„Meine Küche“ aufgeklappt (D-377):** Ist das Menü ganz zu sehen, nichts unter der Tab-Leiste?
+8. **Halb aufgeklappt:** Was zeigt FORM, wenn das Gerät nur halb geöffnet ist (Falz)? Web-Apps erfahren davon nichts; bitte ein Foto, falls etwas über den Falz läuft.
+9. **Bildschirm im Training aktiv halten:** Bleibt der Bildschirm im Training an, auch nach dem Auf- und Zuklappen?
+
+## 7. Geänderte Dateien in Phase 1
+
+- **App:** `src/app/styles.css` (Hilfsklassen `inset-x-safe`, `page-bleed`), `src/app/layout/TabBar.tsx`, `tabLens.ts`, `ScrollManager.tsx`; `src/shared/ui/Dialog.tsx`, `Toast.tsx`, neu `NameRest.tsx`; Training: `RestStage.tsx`, `SessionPage.tsx`, `SetRow.tsx`, `ValueInput.tsx`; Ernährung: `calc/scanRegion.ts`, `ScannerDialog.tsx`, `barcodeDetector.ts`, `AddFoodPage.tsx`, `KitchenMenu.tsx`, `NutritionPage.tsx`, `format.ts`; Tagesaufgaben: `TaskRow.tsx`, `TaskStats.tsx`, `TaskMatrix.tsx`, `TaskDetailPage.tsx`; `BodyWeightPage.tsx`, `LoginScreen.tsx`; Texte in `de-nutrition.ts` und `de-task-stats.ts`.
+- **Tests:** `e2e/duo.ts` (Prüfmaße), `duo-safe-area`, `duo-tabbar`, `duo-scanner`, `duo-scanner-mitte`, `duo-scanner-lage`, `duo-resize`, `duo-funde` mit `fakeCamera.ts` und `scanner.ts`; angepasst `barcode`, `marks`, `tasks`; Unit-Tests `scanRegion.test.ts`, `name-rest.test.tsx` und Anpassungen in `habits-ui`, `task-stats`, `nutrition-ui`, `format`.
+- **Werkzeug und Bilder:** `tools/duo-screens.mjs`, `docs/screens/duo/`.
+- **Dokumente:** `CLAUDE.md`, `docs/prompts/iphone-duo-FORM.md`, `docs/prompts/iphone-duo-leitlinien-FORM.md`, `docs/decisions.md` (D-370 bis D-379), `docs/testing.md`, `docs/implementation-plan.md`, `docs/feature-inventory.md`, `docs/known-limitations.md`, `audit-report.md` (E-15 und D-08 behoben), dieser Bericht.
+
+## 8. Tests und Einschränkungen
+
+- **Ausgeführt** (Protokolle in `docs/testing.md`): `pnpm test` 124 Dateien, 1085 Tests bestanden; `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` ohne Befund; `pnpm check:bundle` 235,5 KB von 250 KB; `pnpm test:e2e` in Chromium 365 bestanden, 79 übersprungen, 0 fehlgeschlagen. WebKit läuft in GitHub Actions: Dort scheiterten zuerst die Scanner-Tests aus D-374, weil WebKit mit den Kamera-Optionen von Chromium nicht startete; seit dem Nachtrag zu D-374 ist die CI grün (Lauf 40236345703 zu D-377: alle vier Jobs, WebKit 344 bestanden, 98 übersprungen).
+- **Nicht am Gerät getestet.** Alles lief in Browser-Fenstern mit den Maßen des Duo. Die Maße stammen teils von Dritten (Abschnitt 2), der Systemrand von 84 pt ist eine Annahme.
+- **Nur in Chromium:** den sicheren Bereich nachstellen und die Kamera durch ein Standbild ersetzen. WebKit prüft dieselben Abläufe ohne Systemrand.
+- **Nicht erkennbar:** ob das Duo auf- oder zugeklappt ist und ob es halb geöffnet ist (Falz). FORM richtet sich nur nach der Fensterbreite.
+- **Bewusst offen:** Tageszahl im Kalender 10 px (D-334); Satzzeile bei 360 und 320 pt (Vorschlag in Abschnitt 5).

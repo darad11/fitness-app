@@ -1504,3 +1504,15 @@ Köpfe und Werte einzeilig in festen Spalten, zweite Spalte nur bei einer Menge 
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `basic-foods`, `narrow-layout`, `nutrition`, `nutrition-ring`, `network-a11y` | 109 bestanden, 15 übersprungen, 0 fehlgeschlagen |
 | Gegenprobe: Abstandstest gegen die Tabelle aus D-364 | bei 360 pt fehlgeschlagen |
+
+### Ernährung, Abschluss §4: Quellenangabe des BLS · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Ohne eigenen Wortlaut bleibt die Zitierweise mit DOI; Zahl und Prozentzeichen in der Quellenzeile brechen nicht um (D-366). Bericht: `form-ernaehrung-report.md` Abschnitt 14.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `de-nutrition.test.ts` | 7 bestanden (1 neu) |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
+| E2E `basic-foods`, `narrow-layout` | 29 bestanden, 13 übersprungen, 0 fehlgeschlagen |

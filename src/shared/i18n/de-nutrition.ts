@@ -3,6 +3,9 @@ import { listDe } from '../lib/list';
 // Texte, die nur nachgeladene Teile brauchen (D-288): Ernährung (Schritt G, D-261). Gehören zu `de.ts`, liegen
 // aber getrennt, damit sie nicht in die Startansicht geladen werden.
 
+/** Zahl und Prozentzeichen bleiben beisammen („45 %“ bricht nicht um), D-366. */
+const keepPercent = (text: string) => text.replace(/(\d) %/g, '$1\u00a0%');
+
 /** Mehrzahl der Einheiten der Grundauswahl; „Stück“ bleibt gleich. */
 const UNIT_PLURAL: Readonly<Record<string, string>> = {
   Stück: 'Stück',
@@ -177,10 +180,14 @@ export const tNutrition = {
     invalidPiece: 'Bitte gib ein Gewicht zwischen 0,1 und 5.000 g ein.',
     invalidCount: 'Bitte gib eine Anzahl größer als 0 ein, höchstens 100.',
     invalidHalf: 'Bitte gib die Anzahl in ganzen oder halben Schritten an, höchstens 100.',
+    /**
+     * Kurze Quelle unter der Nährwerttabelle (D-362); die volle Zitierweise mit DOI steht unter
+     * „Über die App“ (D-366: ohne eigenen Wortlaut des Produktinhabers bleibt sie so).
+     */
     source: {
-      bls: (code: string, name: string) => `Quelle: BLS 4.0, ${code} „${name}“`,
+      bls: (code: string, name: string) => `Quelle: BLS 4.0, ${code} „${keepPercent(name)}“`,
       usda: (code: string, name: string) =>
-        `Quelle: USDA SR28, ${code} „${name}“, umgerechnet nach EU-Regeln`,
+        `Quelle: USDA SR28, ${code} „${keepPercent(name)}“, umgerechnet nach EU-Regeln`,
     },
     derivedMark: '*',
     derivedLabel: 'abgeleitet',

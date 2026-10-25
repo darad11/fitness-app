@@ -22,6 +22,7 @@ Regeln: Ein Commit je Abschnitt mit D-Nummer, nach jedem Abschnitt Tests, sofort
 | Abschluss §1 „Weitere Nährwerte“ kompakt | je Zeile Name und „Ist / Referenz g“, einzeilig bei 320, 360 und 390 pt; Sternchen bei fehlenden Werten; Erklärung, Quellen und Einträge ohne Angabe im Info-Blatt | D-363 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
 | Abschluss §2 Nährwerttabelle einzeilig | Köpfe und Werte einzeilig in festen Spalten, rechtsbündig; zweite Spalte „für x g“ bzw. „für x Stück“ nur, wenn die Menge von 100 g abweicht | D-364 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden; WebKit in der CI |
 | Abschluss §3 Stückgewichte als Richtwerte | 47 Richtwerte aus europäischen Quellen, „1 Stück · ca. … g“ vorgewählt, ein Tipp trägt ein; Plus und Minus in halben Stück; „Gewicht anpassen“ gemerkt und zurücksetzbar; ohne Richtwert nur Gramm, keine Frage mehr | D-365 | erledigt; Unit-, Komponenten- und E2E-Tests in Chromium bestanden, Gegenproben rot; WebKit in der CI |
+| Abschluss §4 Quellenangabe des BLS | kein eigener Wortlaut in der Nachricht, deshalb bleibt die Zitierweise mit DOI; Quellenzeile bricht nicht mehr zwischen Zahl und „%“ um | D-366 | erledigt; Unit-Tests und E2E in Chromium bestanden |
 
 ## 2. §0 Stand prüfen und umsteuern
 
@@ -819,3 +820,23 @@ Liste und Daten: `docs/lebensmittel-auswahl.csv` (47 Richtwerte mit Herleitung, 
 | E2E `basic-foods.spec.ts` (Ei mit Plus, Apfel mit einem Tipp, eigenes Gewicht nach Neuladen, zurücksetzen, axe für den Dialog mit und ohne Gewichtsfeld; Kürbis nur Gramm; offline), `narrow-layout.spec.ts` (neu: „für 1,5 Scheiben“ einzeilig mit Abstand bei 360 und 390 pt), `nutrition`, `nutrition-ring`, `network-a11y` | 109 bestanden, 15 übersprungen, 0 fehlgeschlagen |
 | Gegenprobe: Abstandstest gegen die Tabelle aus D-364 | bei 360 pt fehlgeschlagen („Abstand zwischen den Köpfen“, Received: 0) |
 | WebKit | in der CI nach dem Push |
+
+---
+
+## 14. Abschluss §4: Quellenangabe des BLS (D-366)
+
+Der Auftrag sagt: Steht in deiner Nachricht ein Wortlaut für die Quellenangabe, übernehme ich ihn; sonst bleibt die Zitierweise mit DOI aus der Dokumentation. Deine Nachricht vom 25.10.2026 enthält keinen Wortlaut. Deshalb bleibt:
+
+> Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, Karlsruhe, DOI 10.25826/Data20251217-134202-0.
+
+Sie steht unter „Mehr“ › „Über die App“ › „Lebensmitteldaten und Lizenzen“ und in `docs/licenses-data.md`. Unter jeder Nährwerttabelle steht weiter die kurze Quelle „Quelle: BLS 4.0, <Code> „<Bezeichnung>““. Der offene Punkt aus Abschnitt 10 (Lizenzhinweis im Download nachsehen) ist damit erledigt. Nennst du später einen Wortlaut, trage ich ihn an diesen drei Stellen ein.
+
+Dazu behoben: In der Quellenzeile brach „Feta mind. 45 % Fett i. Tr.“ zwischen „45“ und „%“ um (beim Bildschirmfoto aufgefallen). Jetzt steht dort ein geschütztes Leerzeichen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `de-nutrition.test.ts` | 7 bestanden, davon 1 neu (Quelle mit Code und Bezeichnung, „45\u00a0%“) |
+| `pnpm test` | 122 Dateien, 1070 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,5 KB von 250 KB |
+| E2E `basic-foods.spec.ts`, `narrow-layout.spec.ts` | 29 bestanden, 13 übersprungen, 0 fehlgeschlagen |

@@ -11,7 +11,7 @@ Dieses Dokument hält fest, woher die Lebensmitteldaten der App stammen, unter w
 | Herausgeber | Max Rubner-Institut (MRI), Bundesforschungsinstitut für Ernährung und Lebensmittel, Karlsruhe |
 | Version | 4.0, veröffentlicht im Dezember 2025, rund 7.140 Lebensmittel und 138 Nährstoffe; DOI 10.25826/Data20251217-134202-0 |
 | Nutzungsbedingungen | Laut BLS-Dokumentation Abschnitt 9.3 kostenfrei und ohne Lizenzbarrieren nutzbar, auch für die Entwicklung von Apps; eine Quellenangabe wird empfohlen. Geprüft im Prüfspike S-2 am 19.10.2026 an der Datei `BLS_4_0_2025_DE.zip` des Produktinhabers (D-261) |
-| Lizenzbezeichnung | Laut Websuche vom 18.10.2026 CC BY 4.0 (Namensnennung), siehe `data-sources.md`. Websuchen am 24. und 25.10.2026 bestätigten die kostenfreie Freigabe (Gebühr vollständig entfallen, Open Data), nannten die Lizenzbezeichnung aber nicht. Den Lizenzhinweis aus dem Download wörtlich zu übernehmen, war in der Sitzung vom 25.10.2026 nicht möglich: `blsdb.de` und `mri.bund.de` sind in der Netzwerkregel der Cloud-Sitzung gesperrt. Offen beim Produktinhaber: den Hinweis in seinem Download nachsehen |
+| Lizenzbezeichnung | Laut Websuche vom 18.10.2026 CC BY 4.0 (Namensnennung), siehe `data-sources.md`. Websuchen am 24. und 25.10.2026 bestätigten die kostenfreie Freigabe (Gebühr vollständig entfallen, Open Data), nannten die Lizenzbezeichnung aber nicht. Den Lizenzhinweis aus dem Download wörtlich zu übernehmen, war in der Sitzung vom 25.10.2026 nicht möglich: `blsdb.de` und `mri.bund.de` sind in der Netzwerkregel der Cloud-Sitzung gesperrt. Entscheidung (Auftrag vom 25.10.2026, §4, D-366): Die Nachricht des Produktinhabers nennt keinen eigenen Wortlaut, deshalb bleibt die Zitierweise mit DOI aus der BLS-Dokumentation |
 | Genutzte Felder | Code, Bezeichnung und acht Nährwerte je 100 g: Energie (ENERCC), Eiweiß (PROT625), Kohlenhydrate verfügbar (CHO), Zucker (SUGAR), Fett (FAT), gesättigte Fettsäuren (FASAT), Ballaststoffe (FIBT), Salz (NACL) |
 | Änderungen | Auf acht Nährwerte gekürzt, Werte auf höchstens zwei Nachkommastellen gerundet (`tools/bls_build.py`); Auswahl von 358 Einträgen; eigene Anzeigenamen (österreichisch), Suchbegriffe, Gruppen und Richtwerte je Stück (D-365, Abschnitt 3). Die BLS-Werte selbst bleiben unverändert; fehlende Werte bleiben fehlend, außer in den Fällen der Regel unten (0 g, als abgeleitet gekennzeichnet) |
 | Ablage | `tools/data/bls-4.0.json` (Rohdaten für Werkzeuge, nicht in der App), `docs/lebensmittel-auswahl.csv` (Auswahl mit BLS-Code und BLS-Bezeichnung je Zeile), `src/modules/nutrition/data/basicFoods.json` (Datei der App, aus der CSV erzeugt, D-362) |
@@ -20,7 +20,7 @@ Namensnennung in der App (D-362, „Über die App“ › „Lebensmitteldaten un
 
 > Nährwerte der Grundauswahl: Max Rubner-Institut (2025): Bundeslebensmittelschlüssel (BLS), Version 4.0, Karlsruhe, DOI 10.25826/Data20251217-134202-0. Kostenfrei nutzbar, auch in Apps, mit Quellenangabe. Gekürzt auf acht Nährwerte, ergänzt um österreichische Namen, Suchbegriffe und Richtwerte je Stück.
 
-Je Eintrag (unter der Nährwerttabelle beim Eintragen): „Quelle: BLS 4.0, <BLS-Code> „<BLS-Bezeichnung>““.
+Je Eintrag (unter der Nährwerttabelle beim Eintragen): „Quelle: BLS 4.0, <BLS-Code> „<BLS-Bezeichnung>““, mit geschütztem Leerzeichen zwischen Zahl und Prozentzeichen (D-366). Die volle Zitierweise mit DOI steht unter „Über die App“; so bleibt es, solange der Produktinhaber keinen anderen Wortlaut nennt (D-366).
 
 ### Rechenregeln im Vergleich mit der EU (LMIV)
 

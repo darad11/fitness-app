@@ -73,3 +73,18 @@ describe('Anzahl mit Einheit', () => {
     expect(tNutrition.forAmount(tNutrition.basic.pieces(2, '2', 'Stück'))).toBe('für 2 Stück');
   });
 });
+
+/** Quellenzeile unter der Nährwerttabelle (D-362, D-366). */
+describe('Quelle unter der Nährwerttabelle', () => {
+  it('nennt BLS mit Code und Bezeichnung; Zahl und Prozentzeichen brechen nicht um', () => {
+    expect(tNutrition.basic.source.bls('E111100', 'Hühnerei roh')).toBe(
+      'Quelle: BLS 4.0, E111100 „Hühnerei roh“',
+    );
+    expect(tNutrition.basic.source.bls('M012200', 'Feta mind. 45 % Fett i. Tr.')).toBe(
+      'Quelle: BLS 4.0, M012200 „Feta mind. 45\u00a0% Fett i. Tr.“',
+    );
+    expect(tNutrition.basic.source.usda('11670', 'Peppers, hot chili, green, raw')).toBe(
+      'Quelle: USDA SR28, 11670 „Peppers, hot chili, green, raw“, umgerechnet nach EU-Regeln',
+    );
+  });
+});

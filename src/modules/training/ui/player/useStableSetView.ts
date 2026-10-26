@@ -1,5 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
-import { holdOwnPosition, onPageScroll, pageScrollTop, scrollPageBy } from '@/shared/ui';
+import {
+  holdOwnPosition,
+  onPageScroll,
+  pageScrollTop,
+  scrollPageBy,
+  suspendScrollAnchoring,
+} from '@/shared/ui';
 
 /** Abstand des aktiven Satzes zum Kopf (mit Pausenkarte) und zur Fußleiste, in px. */
 const GAP = 12;
@@ -157,10 +163,9 @@ export function useStableSetView(
   /** Freigabe, solange der Player die Lage beim Größenwechsel selbst hält. */
   const release = useRef<(() => void) | null>(null);
   /**
-   * Ist der aktive Satz zu sehen, hält der Player die Lage beim Größenwechsel selbst: ohne
-   * Ausgleich des ScrollManagers und ohne Scroll-Verankerung des Browsers, die sonst gegen den
-   * Ausgleich arbeiten (Nachtrag zu D-384). Hat man anderswo hingescrollt, gilt die Leseposition
-   * des ScrollManagers (D-375).
+   * Ist der aktive Satz zu sehen, hält der Player die Lage beim Größenwechsel selbst, ohne
+   * Ausgleich der Leseposition im ScrollManager (Nachtrag zu D-384). Hat man anderswo
+   * hingescrollt, gilt die Leseposition (D-375).
    */
   const track = useRef((isVisible: boolean) => {
     if (isVisible && !release.current) release.current = holdOwnPosition();
@@ -228,8 +233,13 @@ export function useStableSetView(
       const id = target.dataset.setId ?? '';
       let top = target.getBoundingClientRect().top;
       let count = 0;
+      // Während des Festhaltens ohne Scroll-Verankerung: Sie schob den Satz in WebKit nach dem
+      // Ausgleich zurück. Danach ist sie wieder an; dauerhaft aus störte sie das sanfte Zeigen
+      // des nächsten Satzes (Nachtrag zu D-384).
+      const resumeAnchoring = suspendScrollAnchoring();
       const stop = () => {
         cancelAnimationFrame(holdFrame);
+        resumeAnchoring();
         for (const name of STOP_EVENTS) window.removeEventListener(name, stop);
         stopHold = null;
       };

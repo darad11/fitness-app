@@ -255,35 +255,3 @@ test('Training: Scrollt die Seite kurz nach dem Größenwechsel noch, steht der 
   await page.waitForTimeout(700);
   expect(Math.abs((await topOf(current)) - rowTop), 'Satz an seiner Stelle').toBeLessThanOrEqual(4);
 });
-
-test('Training: Der Player hält die Lage selbst, solange der aktive Satz zu sehen ist (Nachtrag zu D-384)', async ({
-  page,
-}) => {
-  await setDuoPose(page, 'zu');
-  await openPage(page, '/training/vorlagen/compound_ab_4');
-  await page.getByRole('button', { name: 'Programm aktivieren' }).click();
-  await expect(page.getByRole('heading', { level: 2, name: /^Trainingstag 1 von/ })).toBeVisible();
-  await openPage(page, '/heute');
-  await page.getByRole('button', { name: 'Training starten' }).click();
-  await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
-  // Ohne Unterstützung für `overflow-anchor` (ältere Browser) bleibt die Angabe leer.
-  test.skip(
-    !(await page.evaluate(() => CSS.supports('overflow-anchor', 'none'))),
-    'Browser ohne overflow-anchor',
-  );
-  const anchoring = () =>
-    page.evaluate(
-      () => document.getElementById('seite')?.style.getPropertyValue('overflow-anchor') ?? '?',
-    );
-  // Satz zu sehen: Scroll-Verankerung des Browsers aus, der Player gleicht selbst aus.
-  await expect.poll(anchoring, 'Satz zu sehen').toBe('none');
-  // Weit weg gescrollt: Es gilt wieder die Leseposition, mit Verankerung des Browsers.
-  await page.evaluate(() => {
-    document.getElementById('seite')?.scrollBy({ top: 1500, behavior: 'instant' });
-  });
-  await expect.poll(anchoring, 'Satz nicht zu sehen').toBe('');
-  await page.evaluate(() => {
-    document.getElementById('seite')?.scrollTo({ top: 0, behavior: 'instant' });
-  });
-  await expect.poll(anchoring, 'wieder zu sehen').toBe('none');
-});

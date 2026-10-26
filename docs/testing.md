@@ -1888,3 +1888,21 @@ CI-Lauf 40366596552 zu `439269a` (Nachtrag 3 zu D-384): alle vier Jobs grün. E2
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 5 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40373060505 zu `2c2435c` (Nachtrag 4 zu D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente, Build und E2E Chromium grün; E2E WebKit 357 bestanden, 115 übersprungen, 2 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ und „Scrollt die Seite kurz nach dem Größenwechsel noch …“ | bestanden, im ersten Anlauf |
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“ | fehlgeschlagen in beiden Anläufen: „Satz 4 sichtbar“ (5 s gewartet); vorher an dieser Stelle bestanden |
+| WebKit, `duo-resize.spec.ts` „Der Player hält die Lage selbst …“ | fehlgeschlagen in beiden Anläufen: „wieder zu sehen“, `overflow-anchor` leer statt `none`; der Test nahm an, dass der Satz ganz oben zu sehen ist |
+| Änderung | Scroll-Verankerung nur noch aus, solange die App die Lage selbst nachführt (Festhalten nach dem Größenwechsel, Zurückgehen); der Test zum Halten und Freigeben entfällt |
+| `src/shared/ui/pageScroll.test.ts` (2 Tests) | bestanden |
+| `ScrollManager.test.tsx` „Leseposition beim Größenwechsel“ (2 Tests, neu) | bestanden; Gegenprobe ohne die Abfrage `ownPositionHeld`: „lässt die Lage der Seite, die sie selbst hält“ fehlgeschlagen |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `shopping`, `rahmen-tastatur`, `duo-etiketten`, `header-logo`, `program-list`, `tabbar` (Chromium) | 52 bestanden, 26 übersprungen |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

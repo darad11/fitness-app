@@ -57,24 +57,43 @@ let ownPositionHolders = 0;
 
 /**
  * Eine Seite hält ihre Lage beim Größenwechsel selbst, z. B. der Player den aktiven Satz
- * (Nachtrag zu D-384): Der `ScrollManager` gleicht dann nicht aus, und die Scroll-Verankerung des
- * Browsers ist im Rahmen aus. So scrollt nach dem Auf- und Zuklappen nur eine Stelle, nicht
- * mehrere gegeneinander. Gibt die Freigabe zurück.
+ * (Nachtrag zu D-384): Der `ScrollManager` gleicht dann die Leseposition nicht aus. So scrollt
+ * nach dem Auf- und Zuklappen nur eine Stelle, nicht mehrere gegeneinander. Gibt die Freigabe
+ * zurück.
  */
-export function holdOwnPosition(doc: Document = document): () => void {
+export function holdOwnPosition(): () => void {
   ownPositionHolders += 1;
-  const frame = doc.getElementById(PAGE_SCROLLER_ID);
-  frame?.style.setProperty('overflow-anchor', 'none');
   let released = false;
   return () => {
     if (released) return;
     released = true;
     ownPositionHolders -= 1;
-    if (ownPositionHolders === 0) frame?.style.removeProperty('overflow-anchor');
   };
 }
 
 /** Hält gerade eine Seite ihre Lage selbst (`holdOwnPosition`)? */
 export function ownPositionHeld(): boolean {
   return ownPositionHolders > 0;
+}
+
+/** Zahl der Stellen, die die Scroll-Verankerung gerade ausgesetzt haben. */
+let anchoringSuspensions = 0;
+
+/**
+ * Setzt die Scroll-Verankerung des Browsers im Rahmen aus (`overflow-anchor: none`), solange
+ * die App die Lage selbst nachführt: beim Zurückgehen und kurz nach einem Größenwechsel im
+ * Training. Sonst arbeitet die Verankerung gegen den Ausgleich (WebKit, Nachtrag zu D-384). Gibt
+ * die Rückgabe zurück; die Verankerung kommt wieder, wenn alle Stellen fertig sind.
+ */
+export function suspendScrollAnchoring(doc: Document = document): () => void {
+  anchoringSuspensions += 1;
+  const frame = pageScroller(doc);
+  frame.style.setProperty('overflow-anchor', 'none');
+  let resumed = false;
+  return () => {
+    if (resumed) return;
+    resumed = true;
+    anchoringSuspensions -= 1;
+    if (anchoringSuspensions === 0) frame.style.removeProperty('overflow-anchor');
+  };
 }

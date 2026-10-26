@@ -3,7 +3,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { createMemoryRouter } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PAGE_SCROLLER_ID } from '@/shared/ui/pageScroll';
+import { holdOwnPosition, PAGE_SCROLLER_ID } from '@/shared/ui/pageScroll';
 import { ScrollManager } from './ScrollManager';
 
 afterEach(() => {
@@ -58,5 +58,80 @@ describe('Scroll-Tasten ohne Fokus (Nachtrag zu D-384)', () => {
     dialog.setAttribute('open', '');
     expect(press(document.body, 'PageDown').defaultPrevented).toBe(false);
     expect(scrollBy).not.toHaveBeenCalled();
+  });
+});
+
+describe('Leseposition beim Größenwechsel (D-375, Nachtrag zu D-384)', () => {
+  const nextFrame = () =>
+    new Promise<void>((resolve) => {
+      requestAnimationFrame(() => {
+        resolve();
+      });
+    });
+
+  /**
+   * Rahmen mit einem Absatz auf der Leselinie. jsdom misst nichts: Lage des Absatzes und
+   * `elementsFromPoint` sind nachgestellt. Gibt Rahmen und Setzer für die Oberkante zurück.
+   */
+  async function renderReading() {
+    const router = createMemoryRouter([
+      {
+        path: '/',
+        element: (
+          <div id={PAGE_SCROLLER_ID}>
+            <ScrollManager />
+            <main id="inhalt">
+              <p>Absatz</p>
+            </main>
+          </div>
+        ),
+      },
+    ]);
+    render(<RouterProvider router={router} />);
+    const frame = document.getElementById(PAGE_SCROLLER_ID);
+    const main = document.getElementById('inhalt');
+    if (!frame || !main) throw new Error('Rahmen fehlt');
+    const text = screen.getByText('Absatz');
+    let top = 100;
+    vi.spyOn(text, 'getBoundingClientRect').mockImplementation(() =>
+      DOMRect.fromRect({ x: 0, y: top, width: 300, height: 20 }),
+    );
+    vi.spyOn(main, 'getBoundingClientRect').mockReturnValue(
+      DOMRect.fromRect({ x: 0, y: 0, width: 400, height: 2000 }),
+    );
+    document.elementsFromPoint = () => [text, main];
+    // Gescrollt: Der Absatz auf der Leselinie wird zum Bezug.
+    frame.scrollTop = 200;
+    frame.dispatchEvent(new Event('scroll'));
+    await nextFrame();
+    return {
+      frame,
+      moveTo: (value: number) => {
+        top = value;
+      },
+    };
+  }
+
+  afterEach(() => {
+    Reflect.deleteProperty(document, 'elementsFromPoint');
+  });
+
+  it('gleicht aus, wenn sich der Absatz verschiebt', async () => {
+    const { frame, moveTo } = await renderReading();
+    moveTo(150);
+    window.dispatchEvent(new Event('resize'));
+    expect(frame.scrollTop).toBe(250);
+  });
+
+  it('lässt die Lage der Seite, die sie selbst hält (Player)', async () => {
+    const { frame, moveTo } = await renderReading();
+    const release = holdOwnPosition();
+    try {
+      moveTo(150);
+      window.dispatchEvent(new Event('resize'));
+      expect(frame.scrollTop).toBe(200);
+    } finally {
+      release();
+    }
   });
 });

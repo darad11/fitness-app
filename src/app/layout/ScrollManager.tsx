@@ -7,6 +7,7 @@ import {
   pageScrollTop,
   pageViewportHeight,
   scrollPageTo,
+  suspendScrollAnchoring,
 } from '@/shared/ui/pageScroll';
 
 /** Scrollposition je Verlaufseintrag (`location.key`), solange die App offen ist. */
@@ -133,15 +134,13 @@ export function ScrollManager() {
     // Während des Festhaltens ohne Scroll-Verankerung des Browsers: Jede andere Änderung der
     // Position kommt dann vom Nutzer oder von der Seite selbst und beendet das Festhalten.
     const root = pageScroller();
-    const anchoring = root.style.overflowAnchor;
-    root.style.overflowAnchor = 'none';
+    const resumeAnchoring = suspendScrollAnchoring();
     let frame = 0;
     let count = 0;
     let last = pageScrollTop();
     const stop = () => {
       cancelAnimationFrame(frame);
-      // Hält eine Seite ihre Lage inzwischen selbst, bleibt die Verankerung aus.
-      root.style.overflowAnchor = ownPositionHeld() ? 'none' : anchoring;
+      resumeAnchoring();
       for (const name of STOP_EVENTS) window.removeEventListener(name, stop);
     };
     const step = () => {

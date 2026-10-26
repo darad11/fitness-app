@@ -263,3 +263,15 @@ Gemessen in Chromium mit Tagesziel, zwei Schnelleinträgen und Wasser, Seite gan
 - **Beim Auf- und Zuklappen** bleiben Ring, Mahlzeiten und Wasser dieselben Elemente; aufgeklappte weitere Nährwerte bleiben offen (Test).
 - **Tests:** `e2e/duo-nutrition.spec.ts`, 2 Tests (Handy-Profil, Chromium und WebKit): aufgeklappt zwei Spalten, das Frühstück mit Eintrag und „Hinzufügen“ über der Tab-Leiste, axe ohne Verstöße; zugeklappt und im Zwischenmaß eine Spalte, die weiteren Nährwerte bleiben offen; wieder aufgeklappt zwei Spalten. Dazu „Meine Küche“ unten in der linken Spalte: alle vier Einträge frei. Am alten Stand schlagen beide fehl: eine Spalte (Test 1); „Vorlagen“ verdeckt in 3 von 3 Läufen (Test 2, gegen das Menü ohne Öffnen nach oben).
 - **Nur am Gerät prüfbar:** ob die schwebende Tab-Leiste aufgeklappt beim Lesen der Mahlzeiten stört.
+
+### 9.3 Fortschritt (D-382)
+
+| Breite | Vorher (Messung mit einem Training) | Jetzt |
+|---|---|---|
+| Zugeklappt (Kacheln 2 × 2) | Kachel „Kalorien“ mit der Erklärung 242 px hoch, die oberen Kacheln 86 px; die Kacheln endeten bei 533 pt | vier Kacheln je 103 px, die Zahlen unten auf einer Linie, die Erklärung darunter in voller Breite; die Kacheln enden bei 412 pt |
+| Zwischenmaß (2 × 2) | 86 und 158 px | vier Kacheln je 86 px |
+| Aufgeklappt (vier nebeneinander) | alle vier 208 px hoch, weil die Kalorien-Kachel die Reihe streckte | vier Kacheln je 103 px, die Erklärung in zwei Zeilen darunter |
+
+- **Texte:** Die Methode steht unverändert da („Schätzung nach MET: …“). Die beiden kurzen Hinweise stehen jetzt unter allen Kacheln und nennen deshalb „Kalorien“ im Satz: „Kalorien werden erst mit Körpergewicht geschätzt.“ und „1 Training ohne Kalorien-Schätzung (kein Körpergewicht).“ Gibt es Trainings ohne Schätzung, steht jetzt beides da, der Hinweis und die Methode.
+- **Kacheln:** Alle Reihen sind gleich hoch, das Label steht oben, die Zahl unten. So stehen die Zahlen auf einer Linie, auch wenn „Kalorien (Schätzung)“ zweizeilig umbricht. Die gemeinsame Kachel (`StatTile`) bleibt unverändert; die Klassen kommen von der Seite.
+- **Tests:** `e2e/duo-progress.spec.ts`, 1 Test (Handy-Profil, Chromium und WebKit): in den drei Breiten gleich hohe Kacheln, Zahlen auf einer Linie, Erklärung unter und nicht in den Kacheln; am alten Stand fehlgeschlagen (155 px Unterschied). Dazu `progress-ui.test.tsx`.

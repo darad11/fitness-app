@@ -1726,3 +1726,18 @@ Links Ring, Makros und weitere Nährwerte, rechts Mahlzeiten und Wasser (D-381).
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB; `nutrition-layout.css` wird mit der Seite nachgeladen (`NutritionPage-*.css`) |
 | `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit dem Nachtrag zu D-380) | 370 bestanden, 84 übersprungen, 0 fehlgeschlagen, 13,6 min |
+
+### Phase iPhone Duo, Phase 2: Fortschritt, Erklärung der Kalorien unter den Kacheln · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Vier gleich hohe Kacheln, die Zahlen auf einer Linie, die Erklärung darunter (D-382). Bericht: `form-duo-report.md` Abschnitt 9.3. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-progress.spec.ts` (Handy-Profil; zugeklappt, Zwischenmaß, aufgeklappt) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Quellstand | fehlgeschlagen („zu“: Höhenunterschied der Kacheln 155 px statt höchstens 1) |
+| `progress-ui.test.tsx` (Hinweis unter den Kacheln, nicht in der Kachel) | bestanden |
+| Messung (Chromium, ein Training mit Körpergewicht): Höhe der vier Kacheln und Unterkante der Kacheln | zugeklappt vorher 86, 86, 242, 242 px (Unterkante 533), jetzt 4 × 103 px (412), Erklärung darunter in drei Zeilen; Zwischenmaß vorher 86, 86, 158, 158 (473), jetzt 4 × 86 (402); aufgeklappt vorher 4 × 208 (401), jetzt 4 × 103 (297); 320 × 568 vorher 86, 86, 242, 242, jetzt 4 × 103 |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund (ein Zwischenstand: Lint meldete eine vorübergehende Hilfsdatei für Playwright im Wurzelordner; sie liegt nicht im Repository) |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 371 bestanden, 85 übersprungen, 0 fehlgeschlagen, 14,3 min |

@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   isTextEntry,
+  keepFieldVisible,
   PAGE_SCROLLER_ID,
   releaseRoom,
   revealField,
@@ -190,6 +191,25 @@ describe('Angetipptes Feld zeigen (D-391)', () => {
     frame.scrollTop = 0;
     frame.dispatchEvent(new Event('scroll'));
     expect(room()).toBe('');
+  });
+
+  it('nach dem Aufgehen der Tastatur: steht das Feld ganz zu sehen, bewegt sich nichts, auch unter der Linie', () => {
+    const { field, scrollBy } = setup(250);
+    keepFieldVisible(field);
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it('rutscht das Feld dabei oben aus dem Bild (Abstand mit dvh, Nachtrag), kommt es unter den Abstand oben', () => {
+    // Wie WebKit in der CI: Der Abstand über dem Logo der Anmeldung wurde 140 px kleiner.
+    const { field, scrollBy } = setup(-32);
+    keepFieldVisible(field);
+    expect(scrollBy).toHaveBeenCalledWith({ top: -32 - 108, behavior: 'instant' });
+  });
+
+  it('liegt es danach unten außerhalb, kommt es ebenso nach oben', () => {
+    const { field, scrollBy } = setup(380);
+    keepFieldVisible(field);
+    expect(scrollBy).toHaveBeenCalledWith({ top: 380 - 108, behavior: 'instant' });
   });
 
   it('beim Wechsel der Seite ist der Platz weg', () => {

@@ -205,18 +205,48 @@ export function releaseRoom(doc: Document = document): void {
  * Bildschirm; Blätter bleiben, wie sie sind.
  */
 export function revealField(field: HTMLElement, doc: Document = document): void {
+  const place = placement(field, doc);
+  if (!place) return;
+  const { frame, rect, box, top, highest } = place;
+  const line = box.top + frame.clientHeight * KEYBOARD_FREE - pxOf(frame, BAR_BOTTOM);
+  if (rect.top >= top - 1 && (rect.bottom <= line + 1 || rect.top <= highest + 1)) return;
+  moveBy(frame, rect.top - highest);
+}
+
+/**
+ * Nach einer neuen Fensterhöhe beim Tippen (die Tastatur geht auf, Nachtrag zu D-391): Steht das
+ * Feld nicht mehr ganz im sichtbaren Teil seines Bereichs, etwa weil ein Abstand mit `dvh` kleiner
+ * wurde (über dem Logo der Anmeldung), kommt es wieder unter den Abstand oben. Steht es ganz zu
+ * sehen, bewegt sich nichts; die App scrollt dann nicht gegen iOS.
+ */
+export function keepFieldVisible(field: HTMLElement, doc: Document = document): void {
+  const place = placement(field, doc);
+  if (!place) return;
+  const { frame, rect, box, top, highest } = place;
+  if (rect.top >= top - 1 && rect.bottom <= box.top + frame.clientHeight + 1) return;
+  moveBy(frame, rect.top - highest);
+}
+
+/**
+ * Lage eines Feldes in seinem Bereich: oberer Rand (Abstand oben oder Kopf im Training) und die
+ * höchste Stelle für das Feld (dazu sein `scroll-margin-top`). Ohne Bereich oder ohne Ausmaße
+ * (nicht dargestellt) `null`.
+ */
+function placement(field: HTMLElement, doc: Document) {
   const frame = revealScroller(field, doc);
-  if (!frame) return;
+  if (!frame) return null;
   const rect = field.getBoundingClientRect();
-  if (rect.height === 0) return;
+  if (rect.height === 0) return null;
   const view = doc.defaultView ?? window;
   const box = frame.getBoundingClientRect();
   const padding = parseFloat(view.getComputedStyle(frame).scrollPaddingTop) || 0;
   const top = box.top + (pxOf(frame, BAR_TOP) || padding);
   const highest = top + (parseFloat(view.getComputedStyle(field).scrollMarginTop) || 0);
-  const line = box.top + frame.clientHeight * KEYBOARD_FREE - pxOf(frame, BAR_BOTTOM);
-  if (rect.top >= top - 1 && (rect.bottom <= line + 1 || rect.top <= highest + 1)) return;
-  const delta = rect.top - highest;
+  return { frame, rect, box, top, highest };
+}
+
+/** Ein Schritt ohne Animation; reicht der Bereich darunter nicht, entsteht unten Platz. */
+function moveBy(frame: HTMLElement, delta: number): void {
   if (Math.abs(delta) < 1) return;
   if (delta > 0) makeRoom(frame, delta);
   frame.scrollBy({ top: delta, behavior: 'instant' });

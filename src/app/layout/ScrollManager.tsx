@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { NavigationType, useLocation, useNavigationType } from 'react-router';
 import {
   isTextEntry,
+  keepFieldVisible,
   onPageScroll,
   ownPositionHeld,
   pageScroller,
@@ -90,6 +91,7 @@ export function ScrollManager() {
     let inputAt = -Infinity;
     let touching = false;
     let width = window.innerWidth;
+    let keyFrame = 0;
     const onInput = () => {
       inputAt = performance.now();
     };
@@ -115,6 +117,15 @@ export function ScrollManager() {
       // sehen, ein Ausgleich schöbe die Seite gegen das Zeigen des Feldes (D-391).
       const keyboard = typing() && window.innerWidth === width;
       width = window.innerWidth;
+      if (keyboard) {
+        // Ändert sich dabei etwas über dem Feld mit der Höhe des Fensters (Abstand mit `dvh`),
+        // bleibt das Feld trotzdem zu sehen (Nachtrag zu D-391).
+        const field = document.activeElement;
+        cancelAnimationFrame(keyFrame);
+        keyFrame = requestAnimationFrame(() => {
+          if (field === document.activeElement && isTextEntry(field)) keepFieldVisible(field);
+        });
+      }
       // Hält die Seite ihre Lage selbst (Player), gleicht nur sie aus (Nachtrag zu D-384).
       if (ownPositionHeld() || keyboard) {
         anchorRef.current = null;
@@ -138,6 +149,7 @@ export function ScrollManager() {
     window.addEventListener('keydown', onInput);
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(keyFrame);
       detachScroll();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('touchstart', onTouch);

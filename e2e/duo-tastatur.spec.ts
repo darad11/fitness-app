@@ -356,3 +356,23 @@ for (const pose of POSES) {
     await setPose(page, pose);
   });
 }
+
+test('iPhone ohne gemeldeten sicheren Bereich: In der Anmeldung bleibt das Feld zu sehen, wenn der Abstand über dem Logo mit der Tastatur kleiner wird (Nachtrag zu D-391)', async ({
+  page,
+}) => {
+  // Wie WebKit in der CI, das keinen sicheren Bereich nachstellt: Der Abstand über dem Logo hängt
+  // dann nur an der Höhe des Fensters (`30dvh`) und wird mit der Tastatur 140 px kleiner; das Feld
+  // stand danach bei -32 px.
+  const pose: Pose = {
+    name: 'iPhone ohne sicheren Bereich',
+    width: 393,
+    height: 852,
+    insets: { top: 0, right: 0, bottom: 0, left: 0 },
+  };
+  await setPose(page, pose);
+  await openPage(page, '/mehr/synchronisierung');
+  const login = page.getByRole('dialog', { name: 'FORM' });
+  for (const label of ['E-Mail', 'Passwort']) {
+    await typeInto(page, pose, login.getByLabel(label, { exact: true }), label, false);
+  }
+});

@@ -2064,3 +2064,17 @@ Keine Scroll-Balken am Touch-Gerät, dünne in den Farben der App am Computer (D
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,9 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions); die Tests prüfen dort nur, was die Engine kennt (`scrollbar-width`, `scrollbar-color`, Touch-Zeiger) |
+
+### Nachtrag zu D-391 nach der CI (WebKit) · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI-Lauf 40413276661 (`8a7c7ac`, D-391) | Chromium grün; WebKit 380 bestanden, 145 übersprungen, 1 fehlgeschlagen, auch im zweiten Anlauf: `duo-tastatur.spec.ts` „iPhone: Anmeldung“, Meldung „iPhone, E-Mail: ganz zu sehen (-32 bis 16 von 383, darüber <input id=\"_r_1_-email\" …>)“. Die übrigen 20 neuen Tests liefen in WebKit (es meldet `pointer: coarse`) und bestanden |
+| Ursache | WebKit stellt keinen sicheren Bereich nach. Der Abstand über dem Logo der Anmeldung (`max(env(safe-area-inset-top) + … + 4.5rem, 30dvh - 2rem)`) hängt dann nur an der Fensterhöhe und wird mit der Tastatur 140 px kleiner; das Feld rutscht oben aus dem Bild. In Chromium mit nachgestelltem sicherem Bereich schrumpft er weniger, dort blieb das Feld zu sehen |
+| Neuer Test in Chromium (Anmeldung am iPhone ohne sicheren Bereich), Stand ohne Korrektur | 1 fehlgeschlagen: „iPhone ohne sicheren Bereich, E-Mail: ganz zu sehen (-32 bis 16 von 383 …)“, wie in der CI; die drei bisherigen Tests zur Anmeldung bestanden |
+| Mit `keepFieldVisible` | `keyboard.test.ts` 16 Tests bestanden; `duo-tastatur`, `duo-player`, `duo-resize`, `training-scroll`, `scrollbars` (Handy-Profil) 32 bestanden, 1 übersprungen |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 410 bestanden, 124 übersprungen, 0 fehlgeschlagen, 10,1 min |
+| `pnpm test` | 130 Dateien, 1138 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 238,0 KB von 250 KB |
+| CI zu D-392 (Lauf 40415825999, `17e0fbc`) | Chromium grün; WebKit 381 bestanden, 148 übersprungen, 3 fehlgeschlagen: dieselbe Anmeldung und die beiden Touch-Tests aus `scrollbars.spec.ts` (Nachtrag zu D-392) |

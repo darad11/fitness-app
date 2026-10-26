@@ -103,11 +103,18 @@ async function inspect(page, pose) {
           '';
         return `${el.tagName.toLowerCase()}${name ? ` „${name}“` : ''}`;
       };
-      /** Sichtbarer Teil: geschnitten mit allen Vorfahren, die überstehenden Inhalt abschneiden. */
+      /**
+       * Sichtbarer Teil: geschnitten mit allen Vorfahren, die überstehenden Inhalt abschneiden.
+       * Der Rahmen der Seite (`#seite`, D-384) und alles um ihn herum zählt nicht: Er scrollt wie
+       * früher das Fenster, und geprüft wird wie damals die ganze Seite, nicht nur der gerade
+       * sichtbare Teil.
+       */
+      const frame = globalThis.document.getElementById('seite');
       const clipped = (el) => {
         const r = el.getBoundingClientRect();
         let [left, top, right, bottom] = [r.left, r.top, r.right, r.bottom];
         for (let n = el.parentElement; n; n = n.parentElement) {
+          if (frame && n.contains(frame)) continue;
           const s = globalThis.getComputedStyle(n);
           if (s.overflowX !== 'visible' || s.overflowY !== 'visible') {
             const c = n.getBoundingClientRect();
@@ -318,6 +325,9 @@ await open(page, '/heute');
 const water = page.getByRole('region', { name: 'Wasser' });
 await water.getByRole('button', { name: /250 ml hinzufügen/ }).click();
 await water.getByRole('button', { name: /500 ml hinzufügen/ }).click();
+// Erst weiter, wenn beide Einträge gespeichert sind: Der Wechsel zur nächsten Seite lädt neu und
+// verwarf sonst manchmal den zweiten (Bilder mit 250 statt 750 ml).
+await water.getByText(/^Noch 1,25\sl bis zum Tagesziel\.$/).waitFor();
 
 // Körpergewicht: fünf Messungen über vier Wochen (für das Diagramm).
 await open(page, '/fortschritt/gewicht');

@@ -1,6 +1,6 @@
 # FORM · Bericht zur Phase iPhone Duo
 
-Stand: 26.10.2026, Phase 2 abgeschlossen · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
+Stand: 26.10.2026, Phase 2 und Korrekturen nach dem Gerätetest abgeschlossen (Abschnitt 11) · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
 
 Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo (Chromium in dieser Umgebung, WebKit in GitHub Actions). Auf dem echten Gerät ist nichts getestet; was nur dort prüfbar ist, steht in der Liste für den Gerätetest.
 
@@ -204,7 +204,7 @@ Umgesetzt in Phase 2 (Freigabe vom 26.10.2026: alle drei Pakete, ohne leeren Pla
 
 ## 6. Liste für deinen Gerätetest am iPhone Duo
 
-Am besten an der Vorschau des Branches (Vercel, Link im PR: `fitness-app-git-form-duo-dr-b21f.vercel.app`), als App vom Home-Bildschirm und einmal im Safari-Tab. Mit Testdaten, nicht mit echten Daten. Punkte 10 bis 15 sind neu aus Phase 2.
+Am besten an der Vorschau des Branches (Vercel, Link im PR: `fitness-app-git-form-duo-dr-b21f.vercel.app`), als App vom Home-Bildschirm und einmal im Safari-Tab. Mit Testdaten, nicht mit echten Daten. Punkte 10 bis 15 sind neu aus Phase 2. Für den erneuten Gerätetest nach den Korrekturen genügt die kurze Liste in Abschnitt 11.7.
 
 1. **Systemrand an der Seite (D-372):** Zugeklappt und aufgeklappt: Liegt etwas unter Statusleiste, Dynamic Island oder Kamera? Tab-Leiste, „Mehr“, der Kreis beim Scrollen, „Schließen“ in Blättern und im Scanner, Hinweise unten. Lässt sich „Mehr“ direkt neben dem Systemrand sicher tippen?
 2. **Tab-Leiste (D-373, D-376):** In beiden Zuständen runterscrollen (Kreis), hochscrollen (Leiste geht auf), die Linse über die Tabs ziehen, jeden Tab einmal tippen. Dann im Kreis-Zustand auf- und zuklappen und wieder hochscrollen: Steht die Auswahl unter dem aktiven Tab?
@@ -356,3 +356,67 @@ Abschnitt 3 (Phase 1, D-372 bis D-378) und Abschnitt 9 (Phase 2, D-380 bis D-382
 - **Übungsdemonstration:** Sobald es Bilder oder Videos gibt, in den vorbereiteten Bereich „demo“ der rechten Spalte im Player; zugeklappt über die Karte „Jetzt“ oder die große Pause.
 - **Nach deinem Gerätetest:** ob aufgeklappt eine Seitenleiste statt der Tab-Leiste besser ist (Abschnitt 5).
 - **Später (Abschnitt 5):** Fortschritt aufgeklappt mit Körpergewicht und Bestleistungen neben den Kennzahlen; Programme als Liste mit Details; Programm-Details und Tagesaufgaben zweispaltig; größere Kalenderzellen aufgeklappt.
+
+## 11. Korrekturen nach dem Gerätetest (D-384 bis D-389)
+
+Auftrag vom 26.10.2026: `docs/prompts/duo-korrekturen-FORM.md`, mit deinen Einzelbildern A bis E vom echten iPhone Duo an der Vorschau des Branches. Die Fehler traten nur am Gerät auf. Getestet habe ich wieder in Browser-Fenstern (Chromium hier, WebKit in der CI), nicht auf dem Gerät. Wo sich die Ursache ohne Gerät nicht belegen lässt, steht unten, was ich geprüft und wie ich abgesichert habe.
+
+### 11.1 Feste Elemente verrutschen (D-384, Bilder A bis C)
+
+- **Was die Bilder zeigen:** Beim Scrollen lagen Tab-Leiste, Kreis und Fußleiste jeweils um genau die gescrollte Strecke zu hoch, also an einer festen Stelle im Dokument statt im Fenster (B2 bis B4, C1, C2 nachgemessen). In A2 und A3 scrollte zugleich der klebende Kopf des Trainings weg. Feste und klebende Elemente hängen beim Scrollen des Fensters am Layout-Viewport des Browsers; beide blieben stehen, also blieb dieser stehen.
+- **Geprüfte Hypothesen:** (1) Vorfahre mit eigenem Bezugsrahmen für `position: fixed` (`transform`, `translate`, `rotate`, `scale`, `filter`, `backdrop-filter`, `perspective`, `will-change`, `contain`, `container-type`, `content-visibility`, `transform-style`, `offset-path`): keiner, auch am alten Stand nicht. Die Startfläche ist kein Vorfahre und wird nach dem Start entfernt, Seitenübergänge gibt es nicht, D-372 hat nur Innenabstände geändert. (2) Lage per Skript aus `innerHeight`, `visualViewport`, `100vh` oder `dvh`: keine; nur der Kreis verschiebt sich per `transform` innerhalb der Leiste. (3) Welcher Container scrollt: bisher das Fenster. Das ist die Stelle, an der Safari auf dem Duo die festen Elemente beim Scrollen nachführen muss.
+- **Ursache:** nicht im Code der App gefunden. Sie liegt darin, wie Safari auf dem Duo den Layout-Viewport beim Scrollen des Fensters nachführt; belegen lässt sich das nur am Gerät.
+- **Absicherung:** Die Seite scrollt jetzt in einem eigenen Rahmen (`#seite`), das Fenster scrollt nicht mehr. Tab-Leiste, Kreis, Fußleiste und Hinweise liegen außerhalb des Rahmens, weiter mit `position: fixed` und `bottom` aus dem sicheren Bereich, ohne per Skript berechnete Lage; das Schrumpfen der Leiste bleibt ein `transform` im fixierten Element. Beim Scrollen bewegt sich nur der Inhalt im Rahmen; die Leisten muss niemand nachführen, auch der Browser nicht. Der Kopf im Training klebt am Rahmen, das Gummiband am Seitenende bleibt im Rahmen.
+- **Folgen, die du am Gerät bemerken kannst:** In Safari wird Safaris Leiste beim Scrollen nicht mehr kleiner (die App vom Home-Bildschirm hat keine solche Leiste), und ein Tipp auf die Statusleiste scrollt nicht nach oben, auch nicht in der App; iOS kennt beides nur für das Fenster.
+- **Nachträge nach der CI (WebKit, Nachträge 1 bis 8 zu D-384):** Elf Prüfungen auf waagrechten Überlauf maßen am Dokument, das seit dem Rahmen nie überläuft; sie messen jetzt den Rahmen. Beim Wisch zum Löschen in der Einkaufsliste begann WebKit mit der Maus ein Ziehen des Browsers, danach kam kein Loslassen mehr an; Ziehen ist in der Zeile jetzt aus, und die Zeile verfolgt die Geste am Fenster. Am Desktop scrollen Bild auf und ab, Leertaste, Pfeile, Pos1 und Ende ohne Fokus jetzt den Rahmen, wie vorher das Fenster. Im Training stand der aktive Satz nach dem Auf- und Zuklappen in WebKit bis gut 50 px daneben; in Chromium war das nicht nachstellbar. Die Mitschriften der Tests zeigten, dass neben dem Player auch der Ausgleich der Leseposition (D-375) die Lage nachführte; ohne die Scroll-Verankerung von WebKit bestand der Test, mit ihr nicht. Jetzt führt der Player die Lage allein, solange der aktive Satz zu sehen ist, und hält den Satz nach einem Größenwechsel rund 0,5 s an seiner Stelle; schiebt die neue Anordnung ihn hinter den Kopf oder unter die Fußleiste, zeigt der Player ihn sofort ganz. Ein Zwischenstand (Nachtrag 5) hatte eine falsche Ursache vermutet; das ist bei D-384 in `docs/decisions.md` berichtigt. Seit Nachtrag 8 ist die CI auch in WebKit grün.
+- **Tests:** `e2e/duo-feste-leisten.spec.ts` (4 Tests): kein Vorfahre mit eigenem Bezugsrahmen (mit Gegenprobe im Test), Leisten außerhalb des Rahmens, keine Lage per Skript, das Fenster scrollt nicht, Lage bei jedem Scrollschritt, am Seitenende und nach Auf- und Zuklappen und Drehen gleich. Am alten Stand 4 von 4 fehlgeschlagen. Dazu `e2e/rahmen-tastatur.spec.ts`, `ScrollManager.test.tsx` (Tasten und Leseposition), `pageScroll.test.ts`, zwei Unit-Tests für den Wisch (neben der Zeile, kein Ziehen) und ein Test mit spätem Scrollen nach dem Größenwechsel (`duo-resize.spec.ts`).
+
+### 11.2 Scanner aufgeklappt quer um 90° gedreht (D-385, Bild E)
+
+- **Geprüft:** eigene Drehung (CSS-Drehung, `screen.orientation`, `window.orientation`, Seitenverhältnis, Annahme „natürliche Ausrichtung hoch“): gibt es nicht. Das Video zeigt den Strom so, wie Safari ihn liefert; Rahmen und Erkennungsbereich richten sich nach `videoWidth` und `videoHeight` (D-374).
+- **Ursache:** Die Drehung kommt nicht aus der App. Zwei Möglichkeiten, ohne Gerät nicht zu unterscheiden: (a) Safari passt die Drehung eines laufenden Kamerastroms beim Wechsel des Displays nicht an; (b) iOS meldet für das innere Display quer eine Haltung, deren Drehung nicht zum Kamerabild passt.
+- **Absicherung:** Bei jeder neuen Haltung (hoch und quer, anderes Display) startet die Kamera neu; iOS liefert dann den Strom für die aktuelle Haltung. Das behebt (a). Für (b) gäbe es nur eine eigene Drehung, die du ausgeschlossen hast.
+- **Test:** `e2e/duo-scanner-neustart.spec.ts`: nach jedem Wechsel ein neuer Kamerastrom in der gelieferten Größe, ohne Drehung; am Stand davor fehlgeschlagen.
+
+### 11.3 Muskel-Etiketten in der Titelzeile (D-386, Bild D)
+
+- **Ursache:** Die Etiketten standen in einer eigenen Zeile unter dem Namen; am Gerät überdeckten sie „Erstes Mal“. Chromium und WebKit zeigten die Überlappung am alten Stand nicht.
+- **Neu:** Name und Etiketten stehen in einer Titelzeile vor (i) und „…“; reicht der Platz nicht, stehen die Etiketten zusammen in einer eigenen Zeile darunter. Alles im Fluss, ohne feste Höhen; nichts liegt über „Erstes Mal“. Aufgeklappt steht „Bankdrücken mit Langhantel“ mit „Brust“ in einer Zeile.
+- **Test:** `e2e/duo-etiketten.spec.ts` in fünf Breiten; am alten Stand fehlgeschlagen.
+
+### 11.4 Knöpfe der Karte „Ernährung heute“ (D-387, Bild C2)
+
+- **Ursache:** Die Karte ist aufgeklappt so hoch wie die Wasser-Karte daneben; die Knöpfe saßen fest unter den Makros.
+- **Neu:** Aufgeklappt stehen die drei Knöpfe vertikal mittig im freien Raum unter den Makros und horizontal mittig; vorher 51,9 px darüber. In einer Spalte bleibt es wie bisher. Reines CSS, ohne Messung.
+- **Test:** `e2e/duo-heute-ernaehrung.spec.ts`; am alten Stand fehlgeschlagen.
+
+### 11.5 Gerätedaten (D-388)
+
+- Unter „Mehr › Über die App“ ganz unten, zugeklappt: Fenster (`innerWidth` × `innerHeight`), sichtbarer Bereich (`visualViewport` mit Breite, Höhe, `offsetTop`, `pageTop`), sichere Bereiche, Ausrichtung (`screen.orientation`, Typ und Winkel), Pixeldichte (`devicePixelRatio`), Anzeigemodus (App vom Home-Bildschirm oder Browser). Die Werte folgen dem Drehen, Auf- und Zuklappen; der Teil wird erst beim Aufklappen nachgeladen, nichts wird gespeichert oder übertragen, keine neue Abhängigkeit.
+- **Test:** `settings/calc/deviceData.test.ts`, `e2e/duo-geraetedaten.spec.ts` (auch: beim Aufklappen keine Anfrage außer Teilen der App).
+
+### 11.6 Tests und Abschluss (D-389)
+
+- **Je Abschnitt ein Test, der am alten Stand fehlschlägt:** §1 `duo-feste-leisten` (4 von 4), §2 `duo-scanner-neustart`, §3 `duo-etiketten`, §4 `duo-heute-ernaehrung`; §5 ist neu (`deviceData.test.ts`, `duo-geraetedaten`). Die verlangte Prüfung, dass kein Vorfahre der Leisten einen eigenen Bezugsrahmen für `position: fixed` bildet, steckt in `duo-feste-leisten.spec.ts`, mit Gegenprobe im Test.
+- **Unit-Tests:** 127 Dateien, 1099 Tests bestanden (vor den Korrekturen 124 und 1085).
+- **E2E in Chromium, alle Dateien (diese Umgebung), Endstand:** 381 bestanden, 95 übersprungen, 0 fehlgeschlagen (11,1 min).
+- **CI in GitHub Actions (Chromium und WebKit):** Zu D-384 war WebKit rot (Lauf 40350698760); die Nachträge 1 bis 8 haben das behoben (Verlauf bei D-384 in `docs/decisions.md` und in `docs/testing.md`). Seitdem alle vier Jobs grün, ohne zweiten Anlauf: Lauf 40388811241 (Nachtrag 8: Chromium 379, WebKit 358 bestanden), Lauf 40391095695 (D-387: 380 und 359), Lauf 40393360149 (D-388: 381 und 360). Die CI zum letzten Commit steht im PR.
+- **Bilder:** `tools/duo-screens.mjs`, 84 Ansichten in drei Breiten; Befunde wie nach Phase 2: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst nach D-334), 7 Hinweise zu Wochentag-Chips, axe ohne Verstöße. Am Werkzeug zwei Korrekturen: Seit dem Rahmen prüfte es nur noch den sichtbaren Teil jeder Seite (die 7 Hinweise fehlten im ersten Lauf deshalb), jetzt wieder die ganze Seite; und die Testdaten verloren manchmal den zweiten Wasser-Eintrag (250 statt 750 ml), jetzt wartet es, bis beide gespeichert sind.
+- **Sichtbar geänderte Bilder:** Player in drei Breiten (Etiketten neben dem Namen oder darunter; im Zwischenmaß bleibt der aktive Satz nach dem Wechsel an seiner Stelle, die Seite steht deshalb nicht mehr ganz oben), erster Start aufgeklappt (Knöpfe der Karte „Ernährung heute“ mittig im freien Raum) und „Training verwerfen“ (hinter dem Dialog die Etiketten neben dem Namen; aufgeklappt steht die Seite dahinter weiter unten). In den übrigen 71 Bildern weichen nur einzelne Pixel ab (2 bis 2 597 je Bild); in den angesehenen Stichproben ist kein Unterschied zu erkennen.
+- **Startansicht:** 236,7 KB von 250 KB (vor den Korrekturen 235,7 KB).
+- **Geänderte Dateien:** App `AppLayout.tsx`, `ScrollManager.tsx`, `tabMinimize.ts`, `styles.css`, `Toast.tsx`, neu `src/shared/ui/pageScroll.ts`; Player `SessionPage.tsx`, `useStableSetView.ts`; Ernährung `NutritionPage.tsx`, `KitchenMenu.tsx`, `ScannerDialog.tsx`, `scanRegion.ts`; Einkaufsliste `SwipeToDelete.tsx`; „Über die App“ `AboutPage.tsx`, neu `DeviceData.tsx` und `deviceData.ts`; Texte `de-more.ts`. Tests neu: `duo-feste-leisten`, `duo-scanner-neustart`, `duo-etiketten`, `duo-heute-ernaehrung`, `duo-geraetedaten`, `rahmen-tastatur`, `e2e/scroll-log.ts`, `ScrollManager.test.tsx`, `pageScroll.test.ts`, `deviceData.test.ts`; angepasst 20 weitere E2E-Dateien, `scanRegion.test.ts`, `shopping-ui.test.tsx` und `src/test-setup.ts`. Werkzeuge `tools/duo-screens.mjs`, `tools/screenshots.mjs`.
+- **Nicht getestet:** auf dem echten iPhone Duo. Dafür die Liste in Abschnitt 11.7.
+
+### 11.7 Liste für deinen erneuten Gerätetest
+
+Am besten an der Vorschau des Branches, einmal als App vom Home-Bildschirm und einmal in Safari. Bei einem Fehler hilft ein Bild der Gerätedaten (Punkt 9) aus derselben Haltung.
+
+1. **Leisten beim Scrollen (D-384):** Zugeklappt im Training, in den Trainingsdetails und auf „Heute“ schnell scrollen, ans Seitenende und darüber hinaus ziehen (Gummiband): Bleiben Fußleiste, Tab-Leiste und Kreis unten über dem sicheren Bereich? Klebt im Training der Kopf oben? Dasselbe aufgeklappt quer auf „Heute“.
+2. **Nach Auf- und Zuklappen und Drehen (D-384):** mitten auf einer Seite auf- und zuklappen und drehen, dann scrollen: Leisten unten?
+3. **Folgen des Rahmens (D-384):** Scrollt alles wie gewohnt (Schwung, Gummiband nur im Inhalt)? In Safari: Stört es, dass Safaris Leiste beim Scrollen gleich groß bleibt? Vermisst du das Scrollen nach oben per Tipp auf die Statusleiste?
+4. **Training auf- und zuklappen (Nachträge zu D-384):** Training starten, einen Satz erledigen, so scrollen, dass der aktuelle Satz in der Mitte steht, dann auf- und zuklappen: Steht er danach an derselben Stelle und ganz zu sehen, nicht hinter dem Kopf oder unter der Fußleiste? Nach jedem „Satz erledigt“: Ist der nächste Satz ganz zu sehen?
+5. **Einkaufsliste (Nachtrag zu D-384):** Wisch nach links löscht den Artikel, mit „Rückgängig“; senkrecht wischen scrollt die Liste.
+6. **Scanner (D-385):** aufgeklappt quer öffnen: Steht das Bild aufrecht? Dann zugeklappt öffnen und während des Scannens aufklappen: Steht es nach einem kurzen Moment aufrecht? Steht es in einem der beiden Fälle quer, liegt es an iOS (Fall b); bitte notieren, in welchem.
+7. **Etiketten (D-386):** im Training zugeklappt und aufgeklappt: Etiketten neben dem Namen oder darunter, nichts über „Erstes Mal“?
+8. **„Ernährung heute“ (D-387):** aufgeklappt quer auf „Heute“: Knöpfe mittig im freien Raum der Karte?
+9. **Gerätedaten (D-388):** „Mehr › Über die App“, „Gerätedaten“ aufklappen: Ändern sich die Werte beim Drehen und Auf- und Zuklappen?

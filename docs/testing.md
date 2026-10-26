@@ -1986,3 +1986,22 @@ Zugeklappter Bereich „Gerätedaten“, nachgeladen beim Aufklappen (D-388). Br
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Abschluss, Bilder in drei Breiten · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Tests je Abschnitt, Bilder erneuert, Bericht mit Ursache oder geprüften Hypothesen je Fehler und Liste für den erneuten Gerätetest (D-389). Bericht: `form-duo-report.md` Abschnitt 11. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Je Abschnitt ein Test, der am alten Stand fehlschlägt | §1 `duo-feste-leisten` (4 von 4 rot), §2 `duo-scanner-neustart`, §3 `duo-etiketten`, §4 `duo-heute-ernaehrung` (Gegenproben bei D-384 bis D-387); §5 neu: `deviceData.test.ts`, `duo-geraetedaten` |
+| Prüfung aus Abschnitt 6: kein Vorfahre der Leisten bildet einen eigenen Bezugsrahmen für `position: fixed` | `duo-feste-leisten.spec.ts`, mit Gegenprobe im Test; bestanden in Chromium und WebKit (CI) |
+| `node tools/duo-screens.mjs` | 84 Ansichten, Befunde wie nach D-383: 3 × Schrift unter 11 px, bewusst nach D-334, und 7 Hinweise zu Wochentag-Chips, axe ohne Verstöße; das Werkzeug prüft wieder die ganze Seite statt nur des sichtbaren Teils im Rahmen und wartet, bis die Testdaten fürs Wasser gespeichert sind |
+| Geänderte Bilder gegenüber D-383 | Player zugeklappt, im Zwischenmaß und aufgeklappt (Etiketten; im Zwischenmaß bleibt der aktive Satz an seiner Stelle), erster Start aufgeklappt (Knöpfe der Karte „Ernährung heute“), „Training verwerfen“ aufgeklappt und im Zwischenmaß (hinter dem Dialog die Etiketten; aufgeklappt steht die Seite dahinter weiter unten); in den übrigen 71 Bildern 2 bis 2 597 abweichende Pixel, in Stichproben ohne sichtbaren Unterschied |
+| CI, Lauf 40388811241 (`8b6656e`, Nachtrag 8 zu D-384) | alle vier Jobs grün; Chromium 379 bestanden, 93 übersprungen; WebKit 358 bestanden, 114 übersprungen |
+| CI, Lauf 40391095695 (`88b4533`, D-387) | alle vier Jobs grün; Chromium 380 bestanden, 94 übersprungen; WebKit 359 bestanden, 115 übersprungen |
+| CI, Lauf 40393360149 (`8bc5a28`, D-388) | alle vier Jobs grün; Chromium 381 bestanden, 95 übersprungen; WebKit 360 bestanden, 116 übersprungen |
+| `pnpm test` | 127 Dateien, 1099 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 381 bestanden, 95 übersprungen, 0 fehlgeschlagen, 11,1 min |
+| WebKit | läuft in der CI (GitHub Actions) |

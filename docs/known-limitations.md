@@ -189,10 +189,13 @@ Ein nativer Rahmen um dieselbe Web-App, etwa mit Capacitor, würde HealthKit, lo
 - Der Link in der Bestätigungsmail öffnet am iPhone Safari, nicht die installierte App. Beide haben getrennte Speicher; deshalb meldet man sich nach dem Bestätigen in der App selbst mit E-Mail und Passwort an.
 - Der Link führt nur dann zurück in die App, wenn in Supabase unter Authentication › URL Configuration die Adresse der App als „Site URL“ bzw. unter „Redirect URLs“ eingetragen ist; sonst landet er auf der voreingestellten Adresse.
 
-## iPhone Duo (D-371 bis D-380)
+## iPhone Duo (D-371 bis D-389)
 
 - **Nicht am Gerät getestet:** Alle Prüfungen liefen in Browser-Fenstern mit den Maßen des Duo (`form-duo-report.md` Abschnitt 2.4). Ein Teil der Maße stammt aus Messungen Dritter; der Systemrand an der Seite (84 pt) ist eine Annahme. Die App nimmt immer den gemeldeten sicheren Bereich, keine feste Zahl.
 - **Zustand nicht erkennbar:** Web-Apps erfahren nicht, ob das Duo auf- oder zugeklappt oder halb geöffnet ist; die Schnittstellen dafür sind in Safari nur hinter Schaltern. FORM richtet sich nach der Fensterbreite. Was über den Falz läuft, ist nicht geprüft.
 - **Testwerkzeuge:** Den sicheren Bereich kann nur Chromium in Playwright nachstellen (`Emulation.setSafeAreaInsetsOverride`), die Kamera nur Chromium durch ein Standbild ersetzen. WebKit prüft dieselben Abläufe ohne Systemrand; die Scanner-Tests laufen dort nicht.
 - **Neu laden beim Auf- und Zuklappen:** Ob iOS die App dabei neu lädt, ist offen. Training, Sätze und Pause liegen in der Datenbank und bleiben; offene Dialoge und die Scrollposition gingen dann verloren.
 - **Einzeilige Pause:** Bei niedrigem Fenster (unter 45 rem, z. B. Duo zugeklappt, iPhone quer oder hoch in Safari) stehen ±15 s nur in der großen Pause, einen Tipp weiter. Ist der Player schmaler als 22 rem (Safari zugeklappt, iPhone SE und mini), steht der nächste Satz nicht in der Zeile, sondern in der Satzliste und in der großen Pause (D-380).
+- **Seite im eigenen Rahmen (D-384):** Die Seite scrollt im Rahmen der App, nicht im Fenster, damit Tab-Leiste und Fußleiste beim Scrollen stehen bleiben. In Safari wird Safaris Leiste beim Scrollen deshalb nicht kleiner (die App vom Home-Bildschirm hat keine solche Leiste), und ein Tipp auf die Statusleiste scrollt nicht nach oben, auch nicht in der App; iOS kennt beides nur für das Fenster.
+- **Kamerabild im Scanner (D-385):** Die App dreht das Bild nicht selbst. Steht es aufgeklappt quer auch nach dem Neustart der Kamera gedreht, liefert iOS es so.
+- **Gerätedaten (D-388):** Sie zeigen, was Safari meldet. Ob das Duo auf-, zu- oder halb aufgeklappt ist und wo der Falz liegt, meldet Safari nicht; das steht deshalb nicht dabei.

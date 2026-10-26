@@ -162,6 +162,22 @@ export const tMore = {
         text: 'Was du selbst importierst (ÖNWT), bleibt auf deinem Gerät und ist nicht Teil der App.',
       },
     },
+    /** Gerätedaten zum Nachsehen bei Fehlern am Gerät (D-388). Bezeichnungen wie im Browser. */
+    deviceTitle: 'Gerätedaten',
+    deviceHint:
+      'Maße von Fenster und Bildschirm, zum Nachsehen bei Fehlern in der Darstellung. Sie ändern sich beim Drehen, Auf- und Zuklappen. Die App speichert und überträgt sie nicht.',
+    device: {
+      window: 'Fenster (innerWidth × innerHeight)',
+      viewport: 'Sichtbarer Bereich (visualViewport, Breite × Höhe)',
+      viewportOffset: 'visualViewport offsetTop / pageTop',
+      safeArea: 'Sichere Bereiche (oben, rechts, unten, links)',
+      orientation: 'Ausrichtung (screen.orientation, Typ und Winkel)',
+      pixelRatio: 'Pixeldichte (devicePixelRatio)',
+      displayMode: 'Anzeigemodus',
+      standalone: 'App vom Home-Bildschirm',
+      browser: 'Browser (z. B. Safari)',
+      unavailable: 'nicht verfügbar',
+    },
     privacyTitle: 'Daten und Datenschutz',
     privacyText:
       'Keine Werbung, keine Analyse. Deine Daten bleiben auf diesem Gerät, solange du dich nicht anmeldest; angemeldet gleicht die App sie mit deinem eigenen Speicher bei Supabase ab. Andere Dienste fragt sie nur, wenn du sie selbst einschaltest: Open Food Facts beim Scannen und die Schritte aus dem Dashboard.',

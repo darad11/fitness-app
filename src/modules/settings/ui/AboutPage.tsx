@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { lazy, Suspense, useState } from 'react';
 import { useActiveSession } from '@/modules/training';
 import { useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
@@ -10,6 +11,9 @@ import { useFormatters } from '../service/formatting';
 
 type CheckState = 'idle' | 'checking' | UpdateCheckResult;
 
+/** Gerätedaten werden erst beim Aufklappen nachgeladen (D-388). */
+const DeviceData = lazy(() => import('./DeviceData').then((m) => ({ default: m.DeviceData })));
+
 const CHECK_MESSAGES: Record<Exclude<CheckState, 'idle'>, string> = {
   checking: tMore.about.checking,
   'update-available': tMore.about.updateFound,
@@ -20,14 +24,15 @@ const CHECK_MESSAGES: Record<Exclude<CheckState, 'idle'>, string> = {
 
 /**
  * Über die App (FORM D-316): Logo der Marke ohne Claim, darunter wie bisher Version, Build,
- * Umgebung (AK-PWA-07), Speicher-ID und die Suche nach Updates; am Ende die Herkunft und Lizenzen
- * der Lebensmitteldaten (D-362).
+ * Umgebung (AK-PWA-07), Speicher-ID und die Suche nach Updates; danach die Herkunft und Lizenzen
+ * der Lebensmitteldaten (D-362); am Ende zugeklappt die Gerätedaten (D-388).
  */
 export function AboutPage() {
   const { deviceId } = useDb();
   const formatters = useFormatters();
   const pwa = usePwaState();
   const [check, setCheck] = useState<CheckState>('idle');
+  const [deviceOpen, setDeviceOpen] = useState(false);
   const buildTime = new Date(appInfo.buildTime);
   const buildLabel = Number.isNaN(buildTime.getTime())
     ? appInfo.buildSha
@@ -101,6 +106,28 @@ export function AboutPage() {
               </div>
             ))}
           </dl>
+        </Card>
+        {/* Gerätedaten (D-388): zugeklappt; der Inhalt lädt und misst erst beim Aufklappen. */}
+        <Card as="div">
+          <details
+            className="group"
+            onToggle={(event) => {
+              setDeviceOpen(event.currentTarget.open);
+            }}
+          >
+            <summary className="-m-2 flex min-h-touch cursor-pointer list-none items-center justify-between gap-3 rounded-input p-2 text-title font-semibold [&::-webkit-details-marker]:hidden">
+              {tMore.about.deviceTitle}
+              <ChevronDown
+                aria-hidden="true"
+                className="size-5 shrink-0 text-muted transition-transform duration-200 group-open:rotate-180"
+              />
+            </summary>
+            {deviceOpen ? (
+              <Suspense fallback={null}>
+                <DeviceData />
+              </Suspense>
+            ) : null}
+          </details>
         </Card>
       </div>
     </>

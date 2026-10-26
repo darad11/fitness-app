@@ -1970,3 +1970,19 @@ Aufgeklappt Knöpfe mittig im freien Raum unter den Makros (D-387). Browser-Fens
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Gerätedaten unter „Über die App“ · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Zugeklappter Bereich „Gerätedaten“, nachgeladen beim Aufklappen (D-388). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `settings/calc/deviceData.test.ts` (3 Tests) | bestanden |
+| `e2e/duo-geraetedaten.spec.ts` (Chromium mit sicherem Bereich) | bestanden: zugeklappt ohne Werte; 466 × 678, sicherer Bereich 0, 84, 34, 0; nach Aufklappen ohne Neuladen 951 × 669 und 0, 84, 20, 0; Zwischenmaß 669 × 951; beim Aufklappen nur Skripte der App von der eigenen Adresse; axe ohne Verstöße |
+| Bild (Chromium, zugeklappt): alle sieben Werte unter „Gerätedaten“, darunter die Tab-Leiste | angesehen |
+| Nachgeladen | eigene Datei `DeviceData` 2,69 KB (gzip 1,15 KB), nicht in der Startansicht |
+| `duo-geraetedaten`, `shell`, `update`, `network-a11y` (Chromium; `network-a11y` prüft „Über die App“ mit allen Seiten) | 81 bestanden, 9 übersprungen |
+| `pnpm test` | 127 Dateien, 1099 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

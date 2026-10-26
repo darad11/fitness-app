@@ -1758,3 +1758,15 @@ Bilder erneuert, nächster Satz in der rechten Spalte des Players bis zu vier Ze
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 371 bestanden, 85 übersprungen, 0 fehlgeschlagen, 14,6 min |
+
+### Phase iPhone Duo, Phase 2: Nachtrag zu D-382 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Der Test zum Fortschritt prüft die Lage des Hinweises, nicht seinen Wortlaut (D-382, Nachtrag).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI, Lauf 40298724340 (`ffa8fa6`, Abschluss) | alle vier Jobs grün; Chromium 370 bestanden, 85 übersprungen, 1 erst im zweiten Anlauf: `duo-progress.spec.ts` („zu“: „Schätzung nach MET“ nicht gefunden); WebKit 351 bestanden, 105 übersprungen |
+| Ursache | Das Test-Training dauerte unter einer Sekunde; mit der Dauer 0 gibt es keine Schätzung (`estimateCalories`), unter den Kacheln stand „Kalorien werden erst mit Körpergewicht geschätzt.“ |
+| Nachgestellt (Chromium): Körpergewicht erst nach dem Training, also ohne Schätzung | alte Fassung des Tests fehlgeschlagen, mit derselben Meldung wie in der CI; neue Fassung bestanden |
+| `e2e/duo-progress.spec.ts`, neue Fassung, mit Schätzung | bestanden |
+| `pnpm lint`, `pnpm format:check` | ohne Befund |

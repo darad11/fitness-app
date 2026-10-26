@@ -37,11 +37,14 @@ test('Fortschritt: Kacheln gleich hoch, Erklärung der Kalorien darunter (D-382)
   const figures = page.getByRole('region', { name: 'Zeitraum' });
   const list = figures.locator('dl');
   const tiles = list.locator(':scope > div');
-  const note = figures.getByText(/^Schätzung nach MET/);
+  // Der Hinweis direkt unter den Kacheln. Welcher es ist, hängt an der Dauer: Ein Training unter
+  // einer Sekunde hat die Dauer 0 und keine Schätzung (in der CI einmal so geschehen); geprüft
+  // wird hier die Lage, nicht der Wortlaut.
+  const note = list.locator('xpath=following-sibling::div[1]');
   for (const pose of ['zu', 'hoch', 'auf'] as const) {
     await setDuoPose(page, pose);
     await expect(tiles, pose).toHaveCount(4);
-    await expect(note, pose).toBeVisible();
+    await expect(note, pose).toHaveText(/Schätzung nach MET|Körpergewicht geschätzt/);
     const layout = await figures.evaluate((section) => {
       const dl = section.querySelector('dl');
       const rect = (el: Element) => el.getBoundingClientRect();
@@ -54,7 +57,11 @@ test('Fortschritt: Kacheln gleich hoch, Erklärung der Kalorien darunter (D-382)
           return value ? Math.round(rect(value).bottom - rect(el).top) : null;
         }),
         listBottom: dl ? rect(dl).bottom : 0,
-        hintInTile: dl ? dl.textContent.includes('Schätzung nach MET') : true,
+        hintInTile: dl
+          ? ['Schätzung nach MET', 'Körpergewicht geschätzt', 'ohne Kalorien-Schätzung'].some(
+              (text) => dl.textContent.includes(text),
+            )
+          : true,
       };
     });
     // Vorher war „Kalorien“ durch die Erklärung rund doppelt so hoch wie die anderen Kacheln.

@@ -461,7 +461,8 @@ export function NutritionPage() {
  * Kurzkarte für „Heute“ (D-275, FORM D-315): Ring (Lime) mit den Kalorien links, rechts Eiweiß,
  * Kohlenhydrate und Fett mit Balken in Lime, Grün dunkel und Orange gedämpft; darunter drei
  * Schnellaktionen als Symbol-Knöpfe in card-2 („Barcode scannen“ öffnet den Scanner sofort, die
- * Mahlzeit folgt der Uhrzeit).
+ * Mahlzeit folgt der Uhrzeit). Ist die Karte höher als ihr Inhalt (zwei Spalten, so hoch wie die
+ * Wasser-Karte daneben), stehen die Knöpfe mittig im freien Raum unter den Makros (D-387).
  */
 export function NutritionTodayCard() {
   const fmt = useFormatters();
@@ -476,7 +477,7 @@ export function NutritionTodayCard() {
   const hour = hourIn(now, fmt.timeZone);
   const scanTo = `/ernaehrung/hinzufuegen?mahlzeit=${mealSlotAt(hour)}&scan=1&von=heute`;
   return (
-    <Card title={tNutrition.todayCard} titleStyle="label">
+    <Card title={tNutrition.todayCard} titleStyle="label" className="flex flex-col">
       <div className="flex items-center gap-5">
         {target && ring ? (
           <MacroRing model={ring} label={ringLabel(fmt, ring)} size={7}>
@@ -518,26 +519,31 @@ export function NutritionTodayCard() {
       {ring && ring.over > 0 ? (
         <p className="mt-3 text-sm text-muted">{tNutrition.over(kcal(fmt, ring.over))}</p>
       ) : null}
-      {/* Drei runde Symbol-Knöpfe in card-2, mittig: scannen, Ernährung, Einkaufsliste. */}
-      <div className="mt-4 flex justify-center gap-3">
-        {(
-          [
-            { to: scanTo, label: tNutrition.barcode.scan, icon: ScanBarcode },
-            { to: '/ernaehrung', label: tNutrition.toNutrition, icon: Apple },
-            { to: '/ernaehrung/einkaufsliste', label: tShopping.title, icon: ShoppingCart },
-          ] as const
-        ).map(({ to, label, icon: Icon }) => (
-          <ButtonLink
-            key={label}
-            to={to}
-            aria-label={label}
-            title={label}
-            variant="tile"
-            size="icon"
-          >
-            <Icon aria-hidden="true" className="size-5" />
-          </ButtonLink>
-        ))}
+      {/* Drei runde Symbol-Knöpfe in card-2, mittig: scannen, Ernährung, Einkaufsliste. Die Zeile
+          nimmt den übrigen Platz der Karte; zwei gleich wachsende Abstände darüber und darunter
+          stellen die Knöpfe mittig in den freien Raum unter den Makros, mindestens 16 px darunter
+          (D-387). Ohne freien Raum (eine Spalte) bleibt es bei 16 px Abstand wie bisher. */}
+      <div className="flex flex-1 flex-col before:min-h-4 before:flex-1 after:flex-1">
+        <div className="flex justify-center gap-3">
+          {(
+            [
+              { to: scanTo, label: tNutrition.barcode.scan, icon: ScanBarcode },
+              { to: '/ernaehrung', label: tNutrition.toNutrition, icon: Apple },
+              { to: '/ernaehrung/einkaufsliste', label: tShopping.title, icon: ShoppingCart },
+            ] as const
+          ).map(({ to, label, icon: Icon }) => (
+            <ButtonLink
+              key={label}
+              to={to}
+              aria-label={label}
+              title={label}
+              variant="tile"
+              size="icon"
+            >
+              <Icon aria-hidden="true" className="size-5" />
+            </ButtonLink>
+          ))}
+        </div>
       </div>
     </Card>
   );

@@ -1955,3 +1955,18 @@ CI-Lauf 40385119596 zu `7ccb640` (Nachtrag 7 zu D-384): alle Jobs außer E2E Web
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Knöpfe der Karte „Ernährung heute“ · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Aufgeklappt Knöpfe mittig im freien Raum unter den Makros (D-387). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-heute-ernaehrung.spec.ts` | bestanden: aufgeklappt Karte und Wasser-Karte nebeneinander und gleich hoch, Knöpfe vertikal und horizontal mittig (je höchstens 1 px); zugeklappt 16 px unter den Makros, unten ohne Lücke |
+| Gegenprobe: derselbe Test gegen den alten Stand | fehlgeschlagen („vertikal mittig“, 51,9 px) |
+| `shopping.spec.ts` „„Heute“: runde Knöpfe mittig in „Ernährung heute““ | bestanden |
+| `duo-heute-ernaehrung`, `shopping`, `nutrition`, `nutrition-ring`, `duo-nutrition`, `water` (Chromium) | 40 bestanden, 6 übersprungen |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

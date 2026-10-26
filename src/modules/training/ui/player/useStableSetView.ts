@@ -213,7 +213,12 @@ export function useStableSetView(
       update();
       if (header.offsetHeight === headHeight.current) return;
       headHeight.current = header.offsetHeight;
-      settle(container, header, foot.current, anchor.current, visible.current);
+      // Nur über der Liste verschiebt der Kopf die Sätze. Daneben (zwei Spalten) bewegt sich
+      // nichts; ein Ausgleich gegen den zuletzt gemerkten Stand schob dort in WebKit das sanfte
+      // Zeigen des nächsten Satzes zurück (Nachtrag zu D-384).
+      if (headAbove(header)) {
+        settle(container, header, foot.current, anchor.current, visible.current);
+      }
       note(container, header, foot.current, anchor, visible, track.current);
     });
     // Außenkante: Der sichere Bereich ändert nur den Innenabstand von Kopf und Fußleiste.
@@ -325,16 +330,25 @@ export function useStableSetView(
     const container = root.current;
     if (!container) return;
     const before = anchor.current;
+    const wasVisible = visible.current;
     const row = before ? rowById(container, before.id) : null;
+    let shifted = false;
     if (before && row) {
       const shift =
         row.getBoundingClientRect().top + pageScrollTop() - (before.top + before.scrollY);
-      if (Math.abs(shift) > 1) scrollPageBy(shift);
+      shifted = Math.abs(shift) > 1;
+      if (shifted) scrollPageBy(shift);
     }
     if (currentId !== shownCurrent.current) {
       shownCurrent.current = currentId;
       const next = currentId ? rowById(container, currentId) : null;
       if (next) reveal(next, head.current, foot.current);
+    } else if (row && shifted && wasVisible && !topVisible(row, head.current, foot.current)) {
+      // Hat die neue Anordnung den Satz an eine Stelle geschoben, die jetzt hinter dem Kopf oder
+      // unter der Fußleiste liegt (Zuklappen: der Kopf steht wieder über der Liste), wird er ganz
+      // gezeigt. Sonst zählte er danach als nicht zu sehen, und niemand zeigte ihn (Nachtrag zu
+      // D-384). Nur bei einer Verschiebung durch die Anordnung, nie gegen das Scrollen.
+      reveal(row, head.current, foot.current, true);
     }
     note(container, head.current, foot.current, anchor, visible, track.current);
   });

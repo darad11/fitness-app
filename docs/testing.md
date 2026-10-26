@@ -1921,3 +1921,21 @@ CI-Lauf 40376784316 zu `f140453` (Nachtrag 5 zu D-384): alle Jobs außer E2E Web
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 7 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40380283870 zu `fcc1828` (Nachtrag 6 zu D-384): alle Jobs außer E2E WebKit grün; E2E WebKit 354 bestanden, 114 übersprungen, 2 fehlgeschlagen, 2 erst im zweiten Anlauf, Laufzeit 19,1 min (sonst rund 12,5).
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“, erster Anlauf | fehlgeschlagen: „unter dem Kopf“, 25-mal „s704 r54 k192“; Mitschrift: „scrollBy 4729: {"top":260.5625} … SessionPag \| scrollTo 4786: {"top":704.375} … index \| resize 4787: 466×678“ |
+| WebKit, derselbe Test, zweiter Anlauf | fehlgeschlagen: „Satz 4 sichtbar (Satz 497 bis 605, Fußleiste ab 605; scrollBy 4552: {"top":25.078125,"behavior":"smooth"} … \| scroll 4578: s24 \| scrollBy 4581: {"top":-24,"behavior":"instant"} … \| scroll 4625: s0)“ |
+| WebKit, `start-surface.spec.ts` „Startfläche beim schnellen Start …“ | fehlgeschlagen in beiden Anläufen: 1303 bzw. 1281 statt unter 1190 bzw. 1163 ms; in allen Läufen davor bestanden |
+| WebKit, `duo-player.spec.ts` „Pause zugeklappt …“ und `duo-tabbar.spec.ts` „Tipp beim Aufgehen …“ | je im ersten Anlauf fehlgeschlagen (51,78 px im ersten Bild; Linse 128,7 statt über 306,2), im zweiten bestanden |
+| Änderung | Ausgleich für die Höhe des Kopfs nur, wenn er über der Liste steht; schiebt die neue Anordnung einen sichtbaren Satz hinter den Kopf oder unter die Fußleiste, zeigt der Player ihn sofort ganz |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `duo-etiketten` (Chromium) | 23 bestanden, 15 übersprungen; `duo-player` und `duo-resize` (Handy-Profil) zweimal wiederholt: 7 von 7 und 7 von 7 |
+| Gegenprobe | in Chromium nicht nachstellbar (dort kommt der Größenwechsel vor der neuen Darstellung, und das sanfte Zeigen endet vor der neuen Höhe des Kopfs); geprüft wird in WebKit in der CI |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

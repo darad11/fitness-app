@@ -1709,3 +1709,20 @@ Einzeilige Pause auch am iPhone in Safari; Satz bleibt beim Auf- und Zuklappen s
 | `pnpm test` | 124 Dateien, 1085 Tests bestanden |
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit Paket 2) | 370 bestanden, 84 übersprungen, 0 fehlgeschlagen, 13,6 min |
+
+### Phase iPhone Duo, Phase 2: Ernährung aufgeklappt zweispaltig · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Links Ring, Makros und weitere Nährwerte, rechts Mahlzeiten und Wasser (D-381). Bericht: `form-duo-report.md` Abschnitt 9.2. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-nutrition.spec.ts` (2 Tests, Handy-Profil) | 2 bestanden |
+| Gegenprobe: Test 1 gegen die Seite ohne zweispaltiges Layout | fehlgeschlagen (eine Spalte: Frühstück beginnt links bei 24 pt statt rechts neben der Ringkarte ab 867 pt) |
+| Gegenprobe: Test 2 („Meine Küche“ unten in der linken Spalte) gegen das Menü ohne Öffnen nach oben, 3 Wiederholungen | 3 von 3 fehlgeschlagen („Vorlagen“ verdeckt) |
+| Zwischenstände vor dem Commit | Test zu D-377 „Meine Küche aufgeklappt“ in 3 von 5 Wiederholungen fehlgeschlagen („Vorlagen“ verdeckt): Das Menü öffnete nach unten, die Seite reichte vor dem Laden des Wassers nicht weit genug. Behoben, siehe D-381 |
+| Wiederholung: `duo-nutrition`, `duo-funde`, `nutrition` (Chromium, Handy-Profil), je 4-mal | 60 bestanden |
+| Messung (Chromium, Tagesziel, zwei Schnelleinträge, Wasser, Seite ganz oben) | aufgeklappt (951 × 669, 52,7 rem Inhalt): Ringkarte links 410 pt breit, Mahlzeiten rechts 410 pt, Frühstück beginnt bei 194 pt (vorher 619); iPad hoch (820 × 1180, 48,3 rem): zwei Spalten je 374 pt, Frühstück bei 218 pt; Desktop 1280 × 800: zwei Spalten je 552 pt; zugeklappt (22,6 rem) und Zwischenmaß (39,3 rem): eine Spalte wie bisher |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB; `nutrition-layout.css` wird mit der Seite nachgeladen (`NutritionPage-*.css`) |
+| `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit dem Nachtrag zu D-380) | 370 bestanden, 84 übersprungen, 0 fehlgeschlagen, 13,6 min |

@@ -247,3 +247,19 @@ Gemessen in Chromium mit laufendem Training und Pause, Seite ganz oben; in einer
 - **Nachtrag nach der CI:** Die einzeilige Pause gilt bei jedem niedrigen Fenster, auch am iPhone hoch in Safari (das Testprofil iPhone 15 hat 393 × 659 pt). WebKit fand drei Tests, die das nicht berücksichtigten; sie tippen ±15 s jetzt in der großen Pause. Dabei zeigte sich: Wird der Kopf beim Wechsel zwischen zugeklappt und Zwischenmaß 72 pt höher oder niedriger, sprang der Satz bis zum nächsten Takt der Pause (bis 250 ms). Jetzt bleibt er schon im ersten Bild an seiner Stelle, auch wenn sich nur der sichere Bereich ändert.
 - **Tests:** `e2e/duo-player.spec.ts`, 3 Tests (Handy-Profil, Chromium und WebKit): zwei Spalten mit axe ohne Verstöße und der Satz nach jedem „Satz erledigt“ ganz sichtbar; einzeilige Pause; Satzzeile bei 390, 360 und 320 pt. Am alten Stand 3 von 3 fehlgeschlagen („Als Nächstes“ fehlt; Pause 142 px statt höchstens 80; Vorwert bei 360 pt in derselben Zeile). Gegenproben für den Satz hinter dem Kopf und für die zweite Textzeile der Pause: beide fehlgeschlagen ohne die Korrektur. Angepasst: `duo-resize.spec.ts` (aufgeklappt rückt der Satz um die Höhe des Kopfs nach oben und bleibt sichtbar) und der Test zu D-377 (±15 s bei 320 × 800, weil die Pause bei 320 × 640 einzeilig ist).
 - **Nur am Gerät prüfbar:** wie sich die mitlaufende rechte Spalte beim Scrollen anfühlt; ob die einzeilige Pause zugeklappt gut lesbar ist.
+
+### 9.2 Ernährung (D-381)
+
+| Zustand | Vorher (Messung D-379) | Jetzt |
+|---|---|---|
+| Aufgeklappt (Inhalt ab 48 rem breit: Duo aufgeklappt, iPad, Desktop) | eine Spalte; die erste Mahlzeit begann bei 619 von 669 pt hinter der Tab-Leiste, zu sehen war nur der Ring mit den Makros | zwei gleich breite Spalten: links Ring, Makros, Hinweise und weitere Nährwerte, darunter „Ziel“ und „Meine Küche“; rechts Frühstück, Mittagessen, Abendessen, Snacks und Wasser. Das Frühstück beginnt bei 194 pt und ist mit Eintrag und „Hinzufügen“ ohne Scrollen zu sehen |
+| Zugeklappt und Zwischenmaß (669 pt) | eine Spalte | unverändert |
+
+Gemessen in Chromium mit Tagesziel, zwei Schnelleinträgen und Wasser, Seite ganz oben. Am iPad hoch (820 pt) und am Desktop gelten ebenfalls zwei Spalten.
+
+- **Reihenfolge:** Im Dokument bleibt sie gleich (Ring, „Ziel“ und „Meine Küche“, Mahlzeiten, Wasser), für Screenreader und Tastatur ändert sich nichts. Mahlzeiten und Wasser stehen dafür in einem gemeinsamen Rahmen; das Wasser steht deshalb rechts unter den Mahlzeiten.
+- **Linke Spalte:** klebt nicht. Mit offenen weiteren Nährwerten wäre sie höher als das Fenster.
+- **„Meine Küche“:** Der Knopf steht aufgeklappt unten in der linken Spalte. Reicht die Seite darunter nicht, um das Menü über die Tab-Leiste zu scrollen (leerer Tag mit offenen weiteren Nährwerten, oder das Wasser ist noch nicht geladen), öffnet es nach oben über die Ringkarte. Gefunden beim Wiederholen des Tests zu D-377: aufgeklappt war „Vorlagen“ in 3 von 5 Läufen verdeckt.
+- **Beim Auf- und Zuklappen** bleiben Ring, Mahlzeiten und Wasser dieselben Elemente; aufgeklappte weitere Nährwerte bleiben offen (Test).
+- **Tests:** `e2e/duo-nutrition.spec.ts`, 2 Tests (Handy-Profil, Chromium und WebKit): aufgeklappt zwei Spalten, das Frühstück mit Eintrag und „Hinzufügen“ über der Tab-Leiste, axe ohne Verstöße; zugeklappt und im Zwischenmaß eine Spalte, die weiteren Nährwerte bleiben offen; wieder aufgeklappt zwei Spalten. Dazu „Meine Küche“ unten in der linken Spalte: alle vier Einträge frei. Am alten Stand schlagen beide fehl: eine Spalte (Test 1); „Vorlagen“ verdeckt in 3 von 3 Läufen (Test 2, gegen das Menü ohne Öffnen nach oben).
+- **Nur am Gerät prüfbar:** ob die schwebende Tab-Leiste aufgeklappt beim Lesen der Mahlzeiten stört.

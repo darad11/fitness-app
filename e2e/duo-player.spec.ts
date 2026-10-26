@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { setDuoPose } from './duo';
 import { expect, openPage, test } from './fixtures';
+import { startScrollLog, takeScrollLog } from './scroll-log';
 
 // Workout-Player beim iPhone Duo (D-380): aufgeklappt zwei Spalten, zugeklappt die Pause in einer
 // Zeile, auf sehr schmalen Bildschirmen der Vorwert in einer zweiten Zeile. Handy-Profil.
@@ -59,23 +60,27 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
     .analyze();
   expect(results.violations.map((v) => v.id)).toEqual([]);
 
-  // Nach jedem Satz bleibt der nächste ganz sichtbar; der Kopf steht daneben, nicht darüber.
+  // Nach jedem Satz bleibt der nächste ganz sichtbar; der Kopf steht daneben, nicht darüber. Bis
+  // zu 5 s warten; scheitert es, nennt die Meldung Lage und Verlauf (Nachtrag zu D-384).
+  await startScrollLog(page);
   for (let i = 0; i < 3; i += 1) {
+    await takeScrollLog(page);
     await page.getByRole('button', { name: 'Pause überspringen' }).click();
     const current = page.locator('li[aria-current="step"]');
     await current.getByLabel(/^Gewicht in kg, /).fill('80');
     await current.getByLabel(/^Wiederholungen, /).fill('8');
     await page.getByRole('button', { name: 'Satz erledigt', exact: true }).click();
     const footer = await box(page.getByRole('button', { name: 'Satz erledigt', exact: true }));
-    await expect
-      .poll(
-        async () => {
-          const row = await box(page.locator('li[aria-current="step"]'));
-          return row.top >= 0 && row.bottom <= footer.top;
-        },
-        `Satz ${String(i + 2)} sichtbar`,
-      )
-      .toBe(true);
+    let shown = false;
+    let where = '';
+    for (let attempt = 0; attempt < 25 && !shown; attempt += 1) {
+      const row = await box(page.locator('li[aria-current="step"]'));
+      shown = row.top >= 0 && row.bottom <= footer.top;
+      where = `Satz ${String(Math.round(row.top))} bis ${String(Math.round(row.bottom))}, Fußleiste ab ${String(Math.round(footer.top))}`;
+      if (!shown) await page.waitForTimeout(200);
+    }
+    const history = shown ? '' : await takeScrollLog(page);
+    expect(shown, `Satz ${String(i + 2)} sichtbar (${where}; ${history})`).toBe(true);
   }
 
   // Aufgeklappt den aktuellen Satz nach oben scrollen, dann zuklappen: Der Kopf steht wieder über
@@ -85,6 +90,7 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
     document.getElementById('seite')?.scrollBy(0, row.getBoundingClientRect().top - 40);
   });
   await page.waitForTimeout(700);
+  await takeScrollLog(page);
   await setDuoPose(page, 'zu');
   // Bis zu 5 s warten; die Meldung nennt den Verlauf: Scrollposition, Satz und Unterkante des
   // Kopfs (WebKit war einmal dahinter, Nachtrag zu D-384).
@@ -99,7 +105,8 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
     below = row.top >= top.bottom - 1;
     if (!below) await page.waitForTimeout(200);
   }
-  expect(below, `unter dem Kopf (${states.join(' | ')})`).toBe(true);
+  const history = below ? '' : await takeScrollLog(page);
+  expect(below, `unter dem Kopf (${states.join(' | ')}; ${history})`).toBe(true);
 
   // Zugeklappt und im Zwischenmaß eine Spalte: Der Kopf steht über der Liste, so breit wie die
   // Seite, nicht daneben; „Als Nächstes“ entfällt. Unabhängig davon, wohin die Seite gescrollt ist.

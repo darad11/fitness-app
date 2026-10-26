@@ -54,23 +54,33 @@ function headAbove(head: HTMLElement | null): boolean {
   return !side || getComputedStyle(side).display === 'contents';
 }
 
-/** Sichtbarer Bereich für Sätze: unter dem Kopf (wenn er darüber steht), über der Fußleiste. */
-function band(head: HTMLElement | null, foot: HTMLElement | null): { top: number; bottom: number } {
-  const top = (head && headAbove(head) ? head.getBoundingClientRect().bottom : 0) + GAP;
+/**
+ * Sichtbarer Bereich für Sätze: unter dem Kopf (wenn er darüber steht), über der Fußleiste, mit
+ * `gap` Abstand zu beiden.
+ */
+function band(
+  head: HTMLElement | null,
+  foot: HTMLElement | null,
+  gap = GAP,
+): { top: number; bottom: number } {
+  const top = (head && headAbove(head) ? head.getBoundingClientRect().bottom : 0) + gap;
   const viewport = window.visualViewport;
   const visibleBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
-  const bottom = Math.min(foot?.getBoundingClientRect().top ?? visibleBottom, visibleBottom) - GAP;
+  const bottom = Math.min(foot?.getBoundingClientRect().top ?? visibleBottom, visibleBottom) - gap;
   return { top, bottom };
 }
 
 /**
  * Ist der Satz zu sehen, also seine Oberkante zwischen Kopf und Fußleiste? Ein Satz mit offenem
- * Menü darf unten in die Fußleiste reichen. Ohne Ausmaße (Tests ohne Layout) gilt er als sichtbar.
+ * Menü darf unten in die Fußleiste reichen. Gezählt wird ohne den Abstand `GAP`: Ein Satz, den
+ * das Zeigen genau 12 px unter den Kopf gesetzt hat, gilt auch nach einem Pixel Verschiebung noch
+ * als sichtbar (vorher wechselte das in WebKit hin und her, Nachtrag zu D-384). Ohne Ausmaße
+ * (Tests ohne Layout) gilt er als sichtbar.
  */
 function topVisible(row: HTMLElement, head: HTMLElement | null, foot: HTMLElement | null): boolean {
   const rect = row.getBoundingClientRect();
   if (rect.height === 0) return true;
-  const { top, bottom } = band(head, foot);
+  const { top, bottom } = band(head, foot, 0);
   return rect.top >= top - 1 && rect.top <= bottom;
 }
 

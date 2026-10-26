@@ -1906,3 +1906,18 @@ CI-Lauf 40373060505 zu `2c2435c` (Nachtrag 4 zu D-384): Datenbank, Lint, Typen, 
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 6 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40376784316 zu `f140453` (Nachtrag 5 zu D-384): alle Jobs außer E2E WebKit grün; E2E WebKit 356 bestanden, 114 übersprungen, 1 fehlgeschlagen, 1 erst im zweiten Anlauf.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“ | fehlgeschlagen in beiden Anläufen: „Satz 4 sichtbar“ |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“, erster Anlauf | fehlgeschlagen: „hoch: Position“, 8,2 px. Mitschrift wörtlich (gekürzt): „overflow-anchor ja; scrollBy {"top":39.21875,"behavior":"instant"} In@…/index-BO \< @…/SessionPag \| scrollTo {"top":304.21875,"behavior":"instant"} Ln@…/index-BO \< c@…/index-BOf \| resize 175: s304 r301 k264“; zweiter Anlauf bestanden |
+| Änderung | Sichtbarkeit des aktiven Satzes ohne den Abstand von 12 px gemessen; `duo-player.spec.ts` schreibt Größenwechsel, Scrollen und Aufrufe am Rahmen in seine Meldung (`e2e/scroll-log.ts`) |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `shopping`, `duo-etiketten` (Chromium) | 32 bestanden, 16 übersprungen |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

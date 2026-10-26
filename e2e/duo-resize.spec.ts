@@ -134,6 +134,13 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
         Reflect.apply(original, this, args);
       };
     }
+    // Nach dem Ausgleich des Players für die neue Höhe des Kopfs (sein Beobachter kam zuerst).
+    const head = document.querySelector('main header');
+    if (head) {
+      new ResizeObserver(() => {
+        sample('kopf');
+      }).observe(head);
+    }
     window.addEventListener('resize', () => {
       sample('resize');
       let count = 0;

@@ -173,12 +173,20 @@ export function useStableSetView(
   /** Freigabe, solange der Player die Lage beim Größenwechsel selbst hält. */
   const release = useRef<(() => void) | null>(null);
   /**
-   * Ist der aktive Satz zu sehen, hält der Player die Lage beim Größenwechsel selbst, ohne
-   * Ausgleich der Leseposition im ScrollManager (Nachtrag zu D-384). Hat man anderswo
-   * hingescrollt, gilt die Leseposition (D-375).
+   * Ist der aktive Satz zu sehen, hält der Player die Lage beim Größenwechsel allein: ohne
+   * Ausgleich der Leseposition im ScrollManager und ohne Scroll-Verankerung des Browsers, die in
+   * WebKit den Ausgleich des Players wieder zurückschob (Nachtrag zu D-384). Hat man anderswo
+   * hingescrollt, gelten Leseposition und Verankerung wie auf anderen Seiten (D-375).
    */
   const track = useRef((isVisible: boolean) => {
-    if (isVisible && !release.current) release.current = holdOwnPosition();
+    if (isVisible && !release.current) {
+      const releaseHold = holdOwnPosition();
+      const resumeAnchoring = suspendScrollAnchoring();
+      release.current = () => {
+        releaseHold();
+        resumeAnchoring();
+      };
+    }
     if (!isVisible && release.current) {
       release.current();
       release.current = null;
@@ -248,9 +256,8 @@ export function useStableSetView(
       const id = target.dataset.setId ?? '';
       let top = target.getBoundingClientRect().top;
       let count = 0;
-      // Während des Festhaltens ohne Scroll-Verankerung: Sie schob den Satz in WebKit nach dem
-      // Ausgleich zurück. Danach ist sie wieder an; dauerhaft aus störte sie das sanfte Zeigen
-      // des nächsten Satzes (Nachtrag zu D-384).
+      // Während des Festhaltens ohne Scroll-Verankerung, auch wenn der Satz dabei kurz nicht zu
+      // sehen ist: Sie schob den Satz in WebKit nach dem Ausgleich zurück (Nachtrag zu D-384).
       const resumeAnchoring = suspendScrollAnchoring();
       const stop = () => {
         cancelAnimationFrame(holdFrame);

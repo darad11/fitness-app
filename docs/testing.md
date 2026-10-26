@@ -1939,3 +1939,19 @@ CI-Lauf 40380283870 zu `fcc1828` (Nachtrag 6 zu D-384): alle Jobs außer E2E Web
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 8 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40385119596 zu `7ccb640` (Nachtrag 7 zu D-384): alle Jobs außer E2E WebKit grün; E2E WebKit 357 bestanden, 114 übersprungen, 1 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-player.spec.ts` (alle drei Tests), `start-surface.spec.ts`, `duo-tabbar.spec.ts` | bestanden, im ersten Anlauf |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | fehlgeschlagen in beiden Anläufen: „hoch: Position“, 51,78 und 15,78 px. Mitschrift erster Anlauf: „scrollBy {"top":39.21875} … SessionPag \| resize 165: s175 r430 k264“, danach alle Bilder s175 r430; zweiter Anlauf: „scrollBy {"top":39.21875} … \| scrollBy {"top":-35.328125} … \| resize 189: s328 r277 k264“ |
+| Vergleich mit Lauf 40373060505 (Nachtrag 4, Verankerung aus, solange der Player die Lage hält) | dort bestand dieser Test im ersten Anlauf |
+| Änderung | Scroll-Verankerung wieder aus, solange der aktive Satz zu sehen ist; die Mitschrift nennt die Lage direkt nach dem Ausgleich für den Kopf |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `duo-etiketten`, `shopping`, `rahmen-tastatur` (Chromium) | 33 bestanden, 17 übersprungen; `duo-player`, `duo-resize`, `training-scroll` (Handy-Profil) zweimal wiederholt: 8 von 8 und 8 von 8 |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

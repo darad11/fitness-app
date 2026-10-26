@@ -289,6 +289,13 @@ describe('Wischen zum Löschen (D-360)', () => {
     expect(capture).not.toHaveBeenCalled();
   });
 
+  it('lässt in der Zeile kein Ziehen des Browsers zu (Nachtrag zu D-384)', async () => {
+    await listWith(['Milch']);
+    const row = swipeRow('Milch');
+    // WebKit begann sonst mit der Maus ein Ziehen der Zeile, danach kamen keine Zeiger-Ereignisse.
+    expect(fireEvent.dragStart(within(row).getByText('Milch'))).toBe(false);
+  });
+
   it('lässt kurze, schräge, senkrechte und Wische nach rechts ohne Folgen', async () => {
     await listWith(['Milch']);
     const row = swipeRow('Milch');

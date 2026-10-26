@@ -36,9 +36,10 @@ function prefersReducedMotion(): boolean {
  * hinter der Zeile für sie ausgeblendet.
  *
  * Die Geste wird am Fenster verfolgt, ohne den Zeiger zu fangen (Nachtrag zu D-384): So kommen
- * Bewegung und Loslassen auch an, wenn der Zeiger die Zeile verlässt. Mit Zeigerfang verlor
- * WebKit im Rahmen der Seite mit der Maus das Loslassen; ein Finger gehört ohnehin bis zum
- * Loslassen zur Zeile, auf der er aufsetzt.
+ * Bewegung und Loslassen auch an, wenn der Zeiger die Zeile verlässt; ein Finger gehört ohnehin
+ * bis zum Loslassen zur Zeile, auf der er aufsetzt. Ziehen und Ablegen des Browsers ist in der
+ * Zeile aus: WebKit begann mit der Maus sonst nach dem ersten Schritt ein Ziehen der Zeile, und
+ * es kamen keine Zeiger-Ereignisse mehr an.
  */
 export function SwipeToDelete({
   label,
@@ -192,6 +193,9 @@ export function SwipeToDelete({
         )}
         style={offset !== 0 ? { transform: `translateX(${offset}px)` } : undefined}
         onPointerDown={onPointerDown}
+        onDragStart={(event) => {
+          event.preventDefault();
+        }}
       >
         {children}
       </div>

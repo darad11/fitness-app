@@ -1835,3 +1835,21 @@ CI-Lauf 40355441729 zu `932c3bc` (Nachtrag zu D-384): Datenbank, Lint, Typen, Un
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 3 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40360962751 zu `fc78543` (Nachtrag 2 zu D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente und Build grün; E2E Chromium 377 bestanden, 91 übersprungen; E2E WebKit 354 bestanden, 112 übersprungen, 2 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, Handy-Profil, `shopping.spec.ts` „Wisch nach links …“ | fehlgeschlagen in beiden Anläufen. Mitschrift wörtlich: „pointermove Zeile x276 b0 \| mousemove Zeile x276 b0 \| pointerdown Zeile x276 b1 \| mousedown Zeile x276 b1 \| pointermove Zeile x260 b1 \| mousemove Zeile x260 b1 \| dragstart Zeile x276 b0“. WebKit begann ein Ziehen des Browsers; danach kam nichts mehr. Jetzt ist Ziehen in der Zeile aus |
+| Unit-Test „lässt in der Zeile kein Ziehen des Browsers zu“ (`shopping-ui.test.tsx`) | bestanden; Gegenprobe mit der Fassung aus `fc78543`: fehlgeschlagen |
+| WebKit, Handy-Profil, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | fehlgeschlagen in beiden Anläufen: „hoch: Position (Scroll 190, Kopf 264.1875)“, 51,59 statt höchstens 4 px |
+| Nachgestellt in Chromium wie in WebKit (Profil iPhone 15, ohne sicheren Bereich; einmal ohne Scroll-Verankerung) | Satz bleibt an seiner Stelle; ohne Verankerung gleicht der Player die Verschiebung von 39 px binnen 50 ms aus. Ursache in WebKit nicht nachstellbar |
+| Neuer Test „Scrollt die Seite kurz nach dem Größenwechsel noch, steht der Satz wieder an seiner Stelle“ (60 px, 150 ms danach) | bestanden; Gegenprobe ohne das Festhalten: fehlgeschlagen (60 px daneben) |
+| `duo-resize.spec.ts` (Handy-Profil) dreimal hintereinander | 3 von 3 bestanden (je 4 Tests) |
+| `duo-resize`, `shopping`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten` (Chromium) | 31 bestanden, 15 übersprungen |
+| `pnpm test` | 125 Dateien, 1092 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

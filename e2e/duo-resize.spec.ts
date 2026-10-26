@@ -86,12 +86,62 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
   await more.click();
   await expect(more).toHaveAttribute('aria-expanded', 'true');
   const rows = await page.locator('li[data-set-id]').count();
+  // Erst messen, wenn die Seite steht: Nach „Satz erledigt“ scrollt der Player sanft zum nächsten
+  // Satz (D-323), das kann in WebKit noch laufen (Nachtrag zu D-384).
+  const frameTop = () => page.evaluate(() => document.getElementById('seite')?.scrollTop ?? 0);
+  await expect
+    .poll(async () => {
+      const start = await frameTop();
+      await page.waitForTimeout(100);
+      return (await frameTop()) - start;
+    }, 'Seite steht')
+    .toBe(0);
   const rowTop = await topOf(current);
   let rest = await restSeconds(page);
+  // Verlauf je Größenwechsel für die Meldung: Scrollposition, Lage des Satzes und Höhe des Kopfs
+  // beim Ereignis `resize`, bei jedem Scrollen und in den 20 Bildern danach.
+  await page.evaluate(() => {
+    const w = window as unknown as { verlauf: string[] };
+    w.verlauf = [];
+    const start = performance.now();
+    const sample = (why: string) => {
+      const frame = document.getElementById('seite');
+      const row = document.querySelector('li[aria-current="step"]')?.getBoundingClientRect();
+      const head = document.querySelector('main header')?.getBoundingClientRect();
+      const at = Math.round(performance.now() - start);
+      w.verlauf.push(
+        `${why} ${String(at)}: s${String(frame?.scrollTop)} r${String(Math.round(row?.top ?? -1))} k${String(Math.round(head?.height ?? -1))}`,
+      );
+    };
+    window.addEventListener('resize', () => {
+      sample('resize');
+      let count = 0;
+      const tick = () => {
+        sample('bild');
+        count += 1;
+        if (count < 20) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+    document.getElementById('seite')?.addEventListener(
+      'scroll',
+      () => {
+        sample('scroll');
+      },
+      { passive: true },
+    );
+  });
+  const history = () =>
+    page.evaluate(() => {
+      const w = window as unknown as { verlauf: string[] };
+      const entries = w.verlauf.splice(0);
+      return entries.join(' | ');
+    });
 
   // Erst in einer Spalte (Zwischenmaß, zugeklappt), dann aufgeklappt in zwei Spalten und zurück.
   let twoColumnsSeen = false;
   for (const pose of ['hoch', 'zu', 'auf', 'zu'] as const satisfies readonly DuoPose[]) {
+    await history();
     await setDuoPose(page, pose);
     await page.waitForTimeout(300);
     expect(page.url(), `${pose}: dieselbe Einheit`).toBe(url);
@@ -123,15 +173,13 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
         }, `${pose}: sichtbar`)
         .toBe(true);
     } else {
-      // In einer Spalte steht der Satz an derselben Stelle. In der Meldung Scrollposition und
-      // Höhe des Kopfs, falls nicht (WebKit war einmal 53 px daneben, D-384).
-      const where = await page.evaluate(() => ({
-        scroll: document.getElementById('seite')?.scrollTop,
-        head: document.querySelector('main header')?.getBoundingClientRect().height,
-      }));
+      // In einer Spalte steht der Satz an derselben Stelle. In der Meldung der Verlauf seit dem
+      // Größenwechsel, falls nicht (WebKit war 52 und 53 px daneben, Nachtrag zu D-384).
+      const offset = Math.abs((await topOf(current)) - rowTop);
+      const where = offset > 4 ? await history() : '';
       expect(
-        Math.abs((await topOf(current)) - rowTop),
-        `${pose}: Position (Scroll ${String(where.scroll)}, Kopf ${String(where.head)})`,
+        offset,
+        `${pose}: Position (Satz vorher bei ${String(rowTop)}; ${where})`,
       ).toBeLessThanOrEqual(4);
     }
   }
@@ -145,4 +193,42 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
     await expect(note).toBeVisible();
     await expect(note.getByLabel('Notiz', { exact: true })).toHaveValue('Gut geschlafen');
   }
+});
+
+test('Training: Scrollt die Seite kurz nach dem Größenwechsel noch, steht der Satz wieder an seiner Stelle (Nachtrag zu D-384)', async ({
+  page,
+}) => {
+  await setDuoPose(page, 'zu');
+  await openPage(page, '/training/vorlagen/compound_ab_4');
+  await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+  await expect(page.getByRole('heading', { level: 2, name: /^Trainingstag 1 von/ })).toBeVisible();
+  await openPage(page, '/heute');
+  await page.getByRole('button', { name: 'Training starten' }).click();
+  await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
+  const first = page.locator('li[aria-current="step"]');
+  await first.getByLabel(/^Gewicht in kg, /).fill('60');
+  await first.getByLabel(/^Wiederholungen, /).fill('10');
+  await page.getByRole('button', { name: 'Satz erledigt', exact: true }).click();
+  await expect(page.getByRole('timer').first()).toBeVisible();
+  const current = page.locator('li[aria-current="step"]');
+  // Warten, bis der Player den nächsten Satz fertig gezeigt hat.
+  await page.waitForTimeout(800);
+  const rowTop = await topOf(current);
+
+  // Wie ein Browser, der die neue Anordnung erst später fertig hat: 150 ms nach dem Größenwechsel
+  // scrollt die Seite noch um 60 px. Der Player hält den Satz an seiner Stelle.
+  await page.evaluate(() => {
+    window.addEventListener(
+      'resize',
+      () => {
+        setTimeout(() => {
+          document.getElementById('seite')?.scrollBy({ top: 60, behavior: 'instant' });
+        }, 150);
+      },
+      { once: true },
+    );
+  });
+  await setDuoPose(page, 'hoch');
+  await page.waitForTimeout(700);
+  expect(Math.abs((await topOf(current)) - rowTop), 'Satz an seiner Stelle').toBeLessThanOrEqual(4);
 });

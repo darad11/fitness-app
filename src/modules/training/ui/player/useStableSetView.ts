@@ -4,6 +4,13 @@ import { onPageScroll, pageScrollTop, scrollPageBy } from '@/shared/ui';
 /** Abstand des aktiven Satzes zum Kopf (mit Pausenkarte) und zur Fußleiste, in px. */
 const GAP = 12;
 
+/**
+ * So viele Bilder lang (rund 0,5 s) hält ein Größenwechsel mit neuer Breite den aktiven Satz an
+ * seiner Stelle; eine Bedienung des Nutzers beendet das Festhalten.
+ */
+const HOLD_FRAMES = 30;
+const STOP_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+
 interface Anchor {
   /** Satz, an dem sich die Ansicht ausrichtet. */
   id: string;
@@ -180,6 +187,49 @@ export function useStableSetView(
   useEffect(() => {
     let frame = 0;
     let resizeFrame = 0;
+    let holdFrame = 0;
+    let width = window.innerWidth;
+    /** Hat sich seit dem letzten Ausgleich die Breite geändert? */
+    let widthChanged = false;
+    let stopHold: (() => void) | null = null;
+    /**
+     * Hält den Satz nach dem Ausgleich einige Bilder lang dort, wo er jetzt steht (Nachtrag zu
+     * D-384): Der Browser kann die neue Anordnung erst Bilder später fertig haben oder danach
+     * noch selbst scrollen. Nur bei neuer Breite (Auf- und Zuklappen, Drehen); die Tastatur ändert
+     * nur die Höhe, dort scrollt der Browser zum Feld.
+     */
+    const hold = (target: HTMLElement) => {
+      stopHold?.();
+      const id = target.dataset.setId ?? '';
+      let top = target.getBoundingClientRect().top;
+      let count = 0;
+      const stop = () => {
+        cancelAnimationFrame(holdFrame);
+        for (const name of STOP_EVENTS) window.removeEventListener(name, stop);
+        stopHold = null;
+      };
+      const step = () => {
+        const container = root.current;
+        const row = container ? rowById(container, id) : null;
+        if (!container || !row) {
+          stop();
+          return;
+        }
+        const delta = row.getBoundingClientRect().top - top;
+        if (Math.abs(delta) > 1) scrollPageBy(delta);
+        // Wird der Kopf noch höher, zeigt es den Satz darunter und hält ihn dort.
+        if (!topVisible(row, head.current, foot.current)) {
+          reveal(row, head.current, foot.current, true);
+          top = row.getBoundingClientRect().top;
+        }
+        count += 1;
+        if (count < HOLD_FRAMES) holdFrame = requestAnimationFrame(step);
+        else stop();
+      };
+      for (const name of STOP_EVENTS) window.addEventListener(name, stop, { passive: true });
+      stopHold = stop;
+      holdFrame = requestAnimationFrame(step);
+    };
     const remember = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
@@ -198,12 +248,17 @@ export function useStableSetView(
     const onResize = () => {
       const before = anchor.current;
       const wasVisible = visible.current;
+      widthChanged ||= window.innerWidth !== width;
+      width = window.innerWidth;
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(() => {
         const container = root.current;
         if (!container) return;
         settle(container, head.current, foot.current, before, wasVisible);
         note(container, head.current, foot.current, anchor, visible);
+        const row = before && wasVisible && widthChanged ? rowById(container, before.id) : null;
+        if (row) hold(row);
+        widthChanged = false;
       });
     };
     const detachScroll = onPageScroll(remember);
@@ -212,6 +267,7 @@ export function useStableSetView(
     return () => {
       cancelAnimationFrame(frame);
       cancelAnimationFrame(resizeFrame);
+      stopHold?.();
       detachScroll();
       window.removeEventListener('resize', onResize);
       document.removeEventListener('focusin', remember);

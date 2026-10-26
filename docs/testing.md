@@ -2047,3 +2047,20 @@ Tab-Leiste und Kreis bei offener Tastatur aus, angetipptes Feld im oberen Teil d
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions); die neuen Tests laufen dort nur, wenn WebKit einen Touch-Zeiger meldet (`pointer: coarse`), sonst übersprungen |
+
+### Korrekturen nach dem zweiten Gerätetest: Scroll-Balken, Bilder und Abschluss · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Keine Scroll-Balken am Touch-Gerät, dünne in den Farben der App am Computer (D-392); Bilder erneuert. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/app/scrollbars.test.ts`, `src/shared/ui/tokens.test.ts` | 5 Tests bestanden; Griff `--scrollbar-thumb` auf `--bg`, `--surface`, `--surface-2` und `--panel` mindestens 3:1, hell und dunkel (8 Tests) |
+| `e2e/scrollbars.spec.ts` (Chromium, Handy- und Desktop-Profil) | 3 bestanden, 3 übersprungen (je Profil nur die passenden) |
+| Gegenprobe: dieselben Tests mit dem Stand vor D-392 | 3 von 3 fehlgeschlagen: Der Rahmen `#seite` hatte `scrollbar-width: auto`, erwartet waren am Computer `thin` und am Touch-Gerät `none` |
+| Breite am Computer, gemessen mit sichtbaren Balken (Chromium ohne `--hide-scrollbars`, Übungsliste) | Rahmen 10 px statt 15 px ohne Vorgabe; Griff #6b7482 auf durchsichtiger Spur. Mit dem Handy-Profil 0 px. Playwright blendet Balken in Chromium ohne Fenster sonst aus |
+| `node tools/duo-screens.mjs` (84 Ansichten) | 2 Bilder geändert: `dialog-verwerfen-auf.png` (der Inhalt hinter dem Dialog steht 7 px höher, die Einheit stammt aus den Ansichten davor, in denen Felder angetippt wurden) und das Übersichtsbild; `befunde.json` unverändert. Scroll-Balken zeigen die Bilder weder vorher noch nachher: Das Handy-Profil zeichnet keine |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 409 bestanden, 123 übersprungen, 0 fehlgeschlagen, 10,6 min |
+| `pnpm test` | 130 Dateien, 1135 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,9 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions); die Tests prüfen dort nur, was die Engine kennt (`scrollbar-width`, `scrollbar-color`, Touch-Zeiger) |

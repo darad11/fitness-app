@@ -318,6 +318,39 @@
     scroll-margin-top: 0.375rem;
   }
 
+  /* Scroll-Balken (D-392): am Computer dünn und dunkel in den Farben der App, am Touch-Gerät in
+     keinem Bereich zu sehen (Rahmen, Blätter, Listen, Dialoge). Nur das Aussehen: Wischen,
+     Mausrad und Scroll-Tasten scrollen wie bisher, auch bei offener Tastatur. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  @media (pointer: coarse) {
+    * {
+      scrollbar-width: none;
+    }
+    *::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  /* Safari ohne `scrollbar-color`: dieselben Farben über das Webkit-Pseudoelement, nur mit Maus. */
+  @supports not (scrollbar-color: auto) {
+    @media (pointer: fine) {
+      ::-webkit-scrollbar {
+        width: 0.5rem;
+        height: 0.5rem;
+      }
+      ::-webkit-scrollbar-track,
+      ::-webkit-scrollbar-corner {
+        background: var(--scrollbar-track);
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 9999px;
+        background: var(--scrollbar-thumb);
+      }
+    }
+  }
+
   /* Ein Symbolsatz (Lucide) in Linie mit 1,75 px Strich (FORM, D-314). */
   svg.lucide {
     stroke-width: 1.75;

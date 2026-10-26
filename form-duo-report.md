@@ -1,6 +1,6 @@
 # FORM · Bericht zur Phase iPhone Duo
 
-Stand: 26.10.2026, Phase 2 und Korrekturen nach dem ersten Gerätetest abgeschlossen (Abschnitt 11), Korrekturen nach dem zweiten in Arbeit (Abschnitt 12) · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
+Stand: 26.10.2026, Phase 2 und Korrekturen nach dem ersten Gerätetest abgeschlossen (Abschnitt 11), Korrekturen nach dem zweiten abgeschlossen (Abschnitt 12), erneuter Gerätetest offen · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
 
 Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo (Chromium in dieser Umgebung, WebKit in GitHub Actions). Auf dem echten Gerät ist nichts getestet; was nur dort prüfbar ist, steht in der Liste für den Gerätetest.
 
@@ -447,3 +447,25 @@ Auftrag vom 26.10.2026: `docs/prompts/duo-korrekturen-2-FORM.md`, mit deinem Bil
 - **Tests:** `keyboard.test.ts` (13 Tests), `useFootClearOfField.test.tsx` (6 Tests) und `e2e/duo-tastatur.spec.ts` (21 Tests): sieben Formulare (Einkaufsliste mit „Artikel bearbeiten“, Lebensmittel suchen und Menge, Gewicht, Ziele, Tagesaufgaben, Anmeldung, Eingaben im Training), je zugeklappt, aufgeklappt und am iPhone. Playwright öffnet keine Tastatur; nachgestellt ist sie als um 55 % niedrigeres Fenster, so wie in Bild B. Geprüft: Tab-Leiste aus, Feld im oberen Teil, kein Umweg über den Seitenanfang, beim Öffnen der Tastatur kein Scrollen, Feld ganz zu sehen und von nichts verdeckt; im Training bleibt die Fußleiste über der Tastatur und geht aus, wenn du das Feld darunter scrollst; danach ist die Tab-Leiste wieder da. Gegenprobe am alten Stand: 21 von 21 fehlgeschlagen, 16 davon an der Sache (Tab-Leiste über dem Feld, Feld nicht im oberen Teil oder verdeckt), 5 nur an den neuen Klassen `tabbar-dock` und `player-foot`.
 - **Angepasste Tests:** Drei Tests zum Auf- und Zuklappen im Training (`duo-resize.spec.ts`, `duo-player.spec.ts`) erwarteten den Satz danach an derselben Stelle. Seit dem Antippen steht er direkt unter dem Kopf; wird der Kopf beim Aufklappen höher, rückt der Satz darunter, wie es der Player seit D-380 tut. Die Tests erwarten jetzt genau das: an seiner Stelle, oder 12 px unter dem Kopf, wenn dieser darüber läge.
 - **Offen:** Ob das Springen am Gerät weg ist, zeigt nur dein Gerätetest.
+
+### 12.3 Keine sichtbaren Scroll-Balken (D-392)
+
+- **Befund:** Am Rahmen der Seite (D-384) und in anderen scrollbaren Bereichen waren graue Balken zu sehen.
+- **Ursache:** Seit D-384 scrollt die Seite in einem eigenen Bereich. Dessen Balken zeigt der Browser wie bei jedem scrollbaren Bereich; die App blendete Balken nirgends aus.
+- **Neu:** Am Touch-Gerät ist in keinem Bereich ein Balken zu sehen: nicht im Rahmen, nicht in Blättern, Listen und Dialogen, nicht in der Spalte im Training. Am Computer mit Maus bleiben sie, dünn und dunkel in den Farben der App: Griff wie der Rand von Eingabefeldern, Spur durchsichtig, 10 statt 15 px breit (Chromium). Geändert ist nur das Aussehen; Wischen, Mausrad und Scroll-Tasten scrollen wie bisher, auch bei offener Tastatur.
+- **Tests:** `scrollbars.test.ts` (5 Tests), Kontrast des Griffs in `tokens.test.ts` und `e2e/scrollbars.spec.ts` (3 Tests): am Touch-Gerät im Rahmen, im Blatt „Übung auswählen“ mit seiner Liste und bei offener Tastatur kein scrollbarer Bereich mit Balken, und das Scrollen geht; am Computer alle Bereiche dünn in den Farben der App, „Bild ab“ scrollt den Rahmen. Gegenprobe am alten Stand: 3 von 3 fehlgeschlagen: Der Rahmen `#seite` hatte `scrollbar-width: auto`, erwartet waren am Computer `thin` und am Touch-Gerät `none`.
+
+### 12.4 Bilder und Prüfungen
+
+- **Bilder:** Mit `node tools/duo-screens.mjs` erneuert, 84 Ansichten. Geändert haben sich zwei: „Training verwerfen“ aufgeklappt (der Inhalt hinter dem Dialog steht 7 px höher, weil in den Ansichten davor Felder angetippt und dabei nach oben geholt wurden) und das Übersichtsbild. Die Befunde sind unverändert. Tastatur und Scroll-Balken zeigen die Bilder nicht: Playwright öffnet keine Tastatur, und das Handy-Profil zeichnet keine Balken.
+- **Prüfungen:** Unit 130 Dateien, 1135 Tests bestanden; E2E lokal (Chromium) 409 bestanden, 123 übersprungen, 0 fehlgeschlagen, 10,6 min; Startansicht 237,9 KB von 250 KB. WebKit läuft in der CI.
+
+### 12.5 Liste für deinen erneuten Gerätetest
+
+Bitte vorher die App vom Home-Bildschirm entfernen und neu hinzufügen: Nur dann lädt iOS die neuen Startbilder. Bei einem Fehler hilft ein Bild der Gerätedaten („Mehr › Über die App“) aus derselben Haltung.
+
+1. **Startfläche (D-390):** zugeklappt hoch und aufgeklappt quer starten: Stehen Logo und „FORM YOURSELF.“ in der Mitte des ganzen Bildschirms, und springt beim Übergang vom Startbild nichts? Aufgeklappt auch einmal mit dem Gerät andersherum: Liegt die Leiste dann links, und steht die Fläche daneben?
+2. **Gerätedaten (D-388):** zugeklappt und aufgeklappt Fenster und sicheren Bereich notieren: 382 oder 466 breit, rechts 0 oder 84. Das klärt, warum die Startfläche verrutscht war.
+3. **Tastatur in Formularen (D-391):** Einkaufsliste („Was möchtest du einkaufen?“ und „Artikel bearbeiten“), Lebensmittel suchen und Menge, Gewicht, Ziele, Tagesaufgaben, Anmeldung, je zugeklappt und aufgeklappt: Sind Tab-Leiste und Kreis beim Tippen weg und danach wieder da? Springt beim Antippen etwas? Steht das Feld ganz über der Tastatur?
+4. **Training mit Tastatur (D-391):** Werte eintippen, zugeklappt und aufgeklappt: Steht das Feld unter dem Kopf und ganz über der Tastatur? Bleibt die Fußleiste über der Tastatur? Zugeklappt mit laufender Pause ist sie beim Tippen aus; lässt sich der Satz mit dem Haken in seiner Zeile abhaken?
+5. **Scroll-Balken (D-392):** In Seiten, Blättern, Listen und Dialogen scrollen, auch mit offener Tastatur: Ist kein grauer Balken mehr zu sehen, und scrollt alles wie gewohnt? Am Computer: Sind die Balken dünn und dunkel?

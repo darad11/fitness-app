@@ -49,16 +49,27 @@ function band(head: HTMLElement | null, foot: HTMLElement | null): { top: number
   return { top, bottom };
 }
 
-/** Steht die Zeile ganz im sichtbaren Bereich? Ohne Ausmaße (Tests ohne Layout) gilt sie so. */
-function shown(row: HTMLElement, head: HTMLElement | null, foot: HTMLElement | null): boolean {
+/**
+ * Ist der Satz zu sehen, also seine Oberkante zwischen Kopf und Fußleiste? Ein Satz mit offenem
+ * Menü darf unten in die Fußleiste reichen. Ohne Ausmaße (Tests ohne Layout) gilt er als sichtbar.
+ */
+function topVisible(row: HTMLElement, head: HTMLElement | null, foot: HTMLElement | null): boolean {
   const rect = row.getBoundingClientRect();
   if (rect.height === 0) return true;
   const { top, bottom } = band(head, foot);
-  return rect.top >= top - 1 && rect.bottom <= bottom + 1;
+  return rect.top >= top - 1 && rect.top <= bottom;
 }
 
-/** Zeigt die Zeile ganz zwischen Kopf und Fußleiste, mit möglichst kleiner Bewegung. */
-function reveal(row: HTMLElement, head: HTMLElement | null, foot: HTMLElement | null): void {
+/**
+ * Zeigt die Zeile ganz zwischen Kopf und Fußleiste, mit möglichst kleiner Bewegung; `instant`
+ * beim Größenwechsel, der die Anordnung ohnehin auf einmal ändert.
+ */
+function reveal(
+  row: HTMLElement,
+  head: HTMLElement | null,
+  foot: HTMLElement | null,
+  instant = false,
+): void {
   const rect = row.getBoundingClientRect();
   // Ohne Ausmaße (nicht dargestellt, z. B. in Tests ohne Layout) gibt es nichts zu zeigen.
   if (rect.height === 0) return;
@@ -67,8 +78,41 @@ function reveal(row: HTMLElement, head: HTMLElement | null, foot: HTMLElement | 
   if (rect.top < top) delta = rect.top - top;
   else if (rect.bottom > bottom) delta = Math.min(rect.bottom - bottom, rect.top - top);
   if (Math.abs(delta) < 1) return;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduce = instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.scrollBy({ top: delta, behavior: reduce ? 'instant' : 'smooth' });
+}
+
+/** Merkt Lage und Sichtbarkeit des aktiven Satzes. */
+function note(
+  container: HTMLElement,
+  head: HTMLElement | null,
+  foot: HTMLElement | null,
+  anchor: { current: Anchor | null },
+  visible: { current: boolean },
+): void {
+  anchor.current = measure(container);
+  const row = activeRow(container);
+  visible.current = row ? topVisible(row, head, foot) : false;
+}
+
+/**
+ * Nach einer Änderung der Anordnung ohne Zutun des Nutzers (Auf- und Zuklappen, Kopf mit anderer
+ * Höhe; D-380): War der aktive Satz zu sehen, steht er wieder an derselben Stelle im Fenster; läge
+ * er dort hinter dem Kopf oder unter der Fußleiste, wird er ganz gezeigt. Gemessen am Fenster, so
+ * gleicht es auch einen Ausgleich davor aus (Leseposition D-375, Scroll-Verankerung des Browsers).
+ */
+function settle(
+  container: HTMLElement,
+  head: HTMLElement | null,
+  foot: HTMLElement | null,
+  before: Anchor | null,
+  wasVisible: boolean,
+): void {
+  const row = before ? rowById(container, before.id) : null;
+  if (!before || !row || !wasVisible) return;
+  const delta = row.getBoundingClientRect().top - before.top;
+  if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: 'instant' });
+  if (!topVisible(row, head, foot)) reveal(row, head, foot, true);
 }
 
 /**
@@ -95,8 +139,10 @@ export function useStableSetView(
 ): void {
   const anchor = useRef<Anchor | null>(null);
   const shownCurrent = useRef<string | null>(currentId);
-  /** War der aktive Satz zuletzt ganz zu sehen? Gilt beim nächsten Größenwechsel (D-380). */
-  const activeShown = useRef(true);
+  /** War der aktive Satz zuletzt zu sehen? Gilt bei der nächsten Änderung der Anordnung (D-380). */
+  const visible = useRef(true);
+  /** Zuletzt gemeldete Höhe des Kopfs (ResizeObserver). */
+  const headHeight = useRef<number | null>(null);
 
   useEffect(() => {
     const container = root.current;
@@ -111,9 +157,20 @@ export function useStableSetView(
     update();
     if (typeof ResizeObserver === 'undefined') return undefined;
     // Kopf und Fußleiste ändern ihre Größe auch beim Wechsel zwischen einer und zwei Spalten.
-    const observer = new ResizeObserver(update);
-    observer.observe(header);
-    if (foot.current) observer.observe(foot.current);
+    // Ändert der Kopf seine Höhe ohne neue Darstellung (die Pause wechselt zwischen Zeile und
+    // Karte, der sichere Bereich ändert sich), bleibt der aktive Satz im selben Bild an seiner
+    // Stelle, nicht erst beim nächsten Takt der Pause (D-380).
+    headHeight.current = header.offsetHeight;
+    const observer = new ResizeObserver(() => {
+      update();
+      if (header.offsetHeight === headHeight.current) return;
+      headHeight.current = header.offsetHeight;
+      settle(container, header, foot.current, anchor.current, visible.current);
+      note(container, header, foot.current, anchor, visible);
+    });
+    // Außenkante: Der sichere Bereich ändert nur den Innenabstand von Kopf und Fußleiste.
+    observer.observe(header, { box: 'border-box' });
+    if (foot.current) observer.observe(foot.current, { box: 'border-box' });
     return () => {
       observer.disconnect();
     };
@@ -125,23 +182,27 @@ export function useStableSetView(
     const remember = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        if (!root.current) return;
-        anchor.current = measure(root.current);
-        const row = activeRow(root.current);
-        activeShown.current = row ? shown(row, head.current, foot.current) : false;
+        const container = root.current;
+        if (!container) return;
+        // Hat der Kopf in diesem Bild seine Höhe geändert, gleicht das gleich danach der
+        // ResizeObserver aus. Jetzt gemessen, gälte die Verschiebung als neue Lage (D-380).
+        if (head.current && head.current.offsetHeight !== headHeight.current) return;
+        note(container, head.current, foot.current, anchor, visible);
       });
     };
-    // Auf- und Zuklappen (D-380): Wechselt der Kopf zwischen über und neben der Liste, kann der
-    // aktive Satz hinter den Kopf oder die Fußleiste rutschen. War er vorher zu sehen, wird er
-    // danach wieder gezeigt; hat man anderswo hingescrollt, bleibt es dabei (Leseposition, D-375).
+    // Auf- und Zuklappen (D-380): Der Kopf wechselt zwischen über und neben der Liste, die Pause
+    // zwischen Zeile und Karte, Text bricht anders um. Ausgeglichen wird im ersten Bild nach der
+    // Größenänderung, vor jedem Takt der Pause (vorher sprang der Satz bis dahin um die Änderung
+    // des Kopfs). Hat man anderswo hingescrollt, bleibt es bei der Leseposition (D-375).
     const onResize = () => {
-      const wasShown = activeShown.current;
+      const before = anchor.current;
+      const wasVisible = visible.current;
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(() => {
-        const row = root.current ? activeRow(root.current) : null;
-        if (wasShown && row && !shown(row, head.current, foot.current)) {
-          reveal(row, head.current, foot.current);
-        }
+        const container = root.current;
+        if (!container) return;
+        settle(container, head.current, foot.current, before, wasVisible);
+        note(container, head.current, foot.current, anchor, visible);
       });
     };
     window.addEventListener('scroll', remember, { passive: true });
@@ -173,8 +234,6 @@ export function useStableSetView(
       const next = currentId ? rowById(container, currentId) : null;
       if (next) reveal(next, head.current, foot.current);
     }
-    anchor.current = measure(container);
-    const active = activeRow(container);
-    activeShown.current = active ? shown(active, head.current, foot.current) : false;
+    note(container, head.current, foot.current, anchor, visible);
   });
 }

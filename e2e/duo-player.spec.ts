@@ -90,15 +90,16 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
     .poll(async () => (await box(active)).top >= (await box(head)).bottom - 1, 'unter dem Kopf')
     .toBe(true);
 
-  // Zugeklappt und im Zwischenmaß eine Spalte: Kopf über der Liste, „Als Nächstes“ entfällt.
+  // Zugeklappt und im Zwischenmaß eine Spalte: Der Kopf steht über der Liste, so breit wie die
+  // Seite, nicht daneben; „Als Nächstes“ entfällt. Unabhängig davon, wohin die Seite gescrollt ist.
   for (const pose of ['zu', 'hoch'] as const) {
     await setDuoPose(page, pose);
-    await page.evaluate(() => {
-      window.scrollTo(0, 0);
-    });
     await expect(upNext, pose).toBeHidden();
     await expect
-      .poll(async () => (await box(head)).bottom <= (await box(list)).top, pose)
+      .poll(async () => {
+        const [h, l] = [await box(head), await box(list)];
+        return h.left <= l.left + 1 && h.right >= l.right - 1;
+      }, pose)
       .toBe(true);
   }
 });
@@ -125,10 +126,38 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
   await expect(large.getByRole('button', { name: '15 s mehr' })).toBeVisible();
   await large.getByRole('button', { name: 'Pause klein anzeigen' }).click();
 
-  // Hohes Fenster (Zwischenmaß): die Karte wie bisher mit ±15 s.
+  // Hohes Fenster (Zwischenmaß): die Karte wie bisher mit ±15 s. Der Kopf wird dabei 72 px höher;
+  // der aktuelle Satz bleibt schon im ersten Bild nach dem Wechsel an seiner Stelle, nicht erst
+  // beim nächsten Takt der Pause. Gemessen wird in diesem Bild, nach dem Ausgleich der App.
+  const current = page.locator('li[aria-current="step"]');
+  const before = (await box(current)).top;
+  await page.evaluate(() => {
+    window.addEventListener(
+      'resize',
+      () => {
+        requestAnimationFrame(() => {
+          const row = document.querySelector('li[aria-current="step"]');
+          document.documentElement.dataset.rowTop = String(row?.getBoundingClientRect().top);
+        });
+      },
+      { once: true },
+    );
+  });
   await setDuoPose(page, 'hoch');
+  await expect.poll(() => page.locator('html').getAttribute('data-row-top')).not.toBeNull();
+  const firstFrame = Number(await page.locator('html').getAttribute('data-row-top'));
+  expect(Math.abs(firstFrame - before), 'erstes Bild nach dem Wechsel').toBeLessThanOrEqual(4);
   await expect(rest.getByRole('button', { name: '15 s mehr' })).toBeVisible();
   await expect.poll(async () => (await box(rest)).height).toBeGreaterThan(100);
+  // ±15 s wirken in der Karte wie bisher.
+  const timer = rest.getByRole('timer');
+  const seconds = async () => {
+    const [m, sec] = ((await timer.textContent()) ?? '0:00').split(':').map(Number);
+    return (m ?? 0) * 60 + (sec ?? 0);
+  };
+  const start = await seconds();
+  await rest.getByRole('button', { name: '15 s mehr' }).click();
+  await expect.poll(seconds).toBeGreaterThanOrEqual(start + 14);
 
   // iPhone SE (320 × 568): eine Zeile ohne Wortrest; der nächste Satz nur für Screenreader.
   await page.setViewportSize({ width: 320, height: 568 });

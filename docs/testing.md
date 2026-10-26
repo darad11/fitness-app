@@ -1691,3 +1691,21 @@ Aufgeklappt zwei Spalten, zugeklappt die Pause in einer Zeile, Satzzeile unter 2
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,6 KB von 250 KB (vorher 235,5); `player-layout.css` wird mit dem Player nachgeladen |
 | `pnpm test:e2e` (Chromium, alle Dateien) | erster Lauf: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen, 13,0 min; nach der zweiten Textzeile in der Pause: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen, 13,7 min |
+
+### Phase iPhone Duo, Phase 2: Nachtrag zu D-380 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Einzeilige Pause auch am iPhone in Safari; Satz bleibt beim Auf- und Zuklappen sofort an seiner Stelle (D-380, Nachtrag). Bericht: `form-duo-report.md` Abschnitt 9.1.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI, Lauf 40283966090 (`f27979f`, Paket 1) | „E2E (chromium)“ grün; „E2E (webkit)“ 3 fehlgeschlagen, 345 bestanden, 102 übersprungen: `session.spec.ts` und `resilience.spec.ts` (warteten auf „15 s weniger“ in der kleinen Pause, die im Profil iPhone 15 mit 393 × 659 einzeilig ist), `duo-player.spec.ts` Test 1 bei „hoch“ (Kopf über der Liste, geprüft nach dem Scrollen an den Anfang, das die App beim Größenwechsel wieder ausglich) |
+| `e2e/duo-resize.spec.ts` Training, 6 Wiederholungen am Stand von `f27979f` | 2 von 6 fehlgeschlagen („zu: Position“, 72 px): Der Kopf wird beim Wechsel 72 px höher oder niedriger, ausgeglichen erst beim nächsten Takt der Pause |
+| Ablauf Bild für Bild (Chromium, Skript): Lage des Satzes nach dem Wechsel zugeklappt → Zwischenmaß → zugeklappt | vorher 0, dann −85 px (Verankerung des Browsers, nachgeholter sicherer Bereich, Zeigen des Satzes mit offenem Menü); jetzt 0 und 0 px |
+| Gegenprobe: neue Prüfung in `duo-player.spec.ts` Test 2 (Lage des Satzes im ersten Bild nach dem Wechsel zugeklappt → Zwischenmaß) gegen den Stand von `f27979f` | fehlgeschlagen („erstes Bild nach dem Wechsel“: 72 px statt höchstens 4) |
+| `duo-player.spec.ts`, `duo-resize.spec.ts`, `duo-funde.spec.ts` (Chromium, Handy-Profil), je 5 Wiederholungen mit dem Endstand der Korrektur | 62 bestanden, 3 fehlgeschlagen: alle drei in „Meine Küche aufgeklappt“ (Paket 2, dort behoben); Player und Auf- und Zuklappen 30 von 30 |
+| Zwischenstand der Korrektur | Ein ResizeObserver auf den Kopf allein reichte nicht: Er beobachtete die Inhaltsbox (der sichere Bereich ändert nur den Innenabstand), und ein Scroll-Ereignis im selben Bild merkte die verschobene Lage als neue Lage. Jetzt Außenkante, und in einem Bild mit geänderter Kopfhöhe gleicht der ResizeObserver aus |
+| Angepasste Tests im Fenster des iPhone 15 (393 × 659, in Chromium nachgestellt): `session`, `resilience`, `duo-player`, `duo-resize`, `training-scroll`, `duo-funde`, `duo-nutrition` | 20 bestanden |
+| Ganze Suite im Fenster des iPhone 15 (393 × 659, in Chromium nachgestellt, 7,8 min) | 204 bestanden, 22 übersprungen, 1 fehlgeschlagen: `nutrition.spec.ts` „Meine Küche“ wählt Handy oder Desktop nach dem Namen des Projekts, das Hilfsprojekt hieß nicht „…-mobile“; mit passendem Namen bestanden |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit Paket 2) | 370 bestanden, 84 übersprungen, 0 fehlgeschlagen, 13,6 min |

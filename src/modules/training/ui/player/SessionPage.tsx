@@ -553,13 +553,20 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   >
                     <div className="mb-2 flex items-start gap-1 px-1">
                       <div className="min-w-0 flex-1">
-                        <h2 id={`uebung-${exercise.id}`} className="text-lg font-semibold">
-                          {exercise.nameSnapshot}
-                        </h2>
-                        <MuscleTags
-                          muscles={library.get(exercise.exerciseId)?.primaryMuscles ?? []}
-                          className="mt-1.5 mb-1"
-                        />
+                        {/* Titelzeile (D-386): die Muskel-Etiketten rechts neben dem Namen, vor (i)
+                            und „…“; reicht der Platz nicht, stehen sie in einer eigenen Zeile
+                            darunter. Alles im Fluss, nichts liegt über „Erstes Mal“. */}
+                        <div className="mb-1 flex min-h-touch flex-wrap items-center gap-x-2 gap-y-1">
+                          <h2
+                            id={`uebung-${exercise.id}`}
+                            className="min-w-0 text-lg font-semibold [overflow-wrap:anywhere]"
+                          >
+                            {exercise.nameSnapshot}
+                          </h2>
+                          <MuscleTags
+                            muscles={library.get(exercise.exerciseId)?.primaryMuscles ?? []}
+                          />
+                        </div>
                         <p className="text-sm text-muted">
                           {row
                             ? tSession.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))

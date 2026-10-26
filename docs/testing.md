@@ -1853,3 +1853,18 @@ CI-Lauf 40360962751 zu `fc78543` (Nachtrag 2 zu D-384): Datenbank, Lint, Typen, 
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Muskel-Etiketten in der Titelzeile · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Etiketten neben dem Namen, sonst in eigener Zeile darunter, nie über „Erstes Mal“ (D-386). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-etiketten.spec.ts` (zugeklappt, Zwischenmaß, aufgeklappt, 390 × 844, 320 × 640) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Stand | fehlgeschlagen („auf: Etiketten in der Titelzeile“, 0 statt mindestens 1); Überlappung zeigte Chromium auch am alten Stand nicht, nur das Gerät |
+| Bilder (Chromium): zugeklappt „Kniebeuge mit Langhantel“ mit „Oberschenkel vorne“ und „Gesäß“ in eigener Zeile; aufgeklappt „Bankdrücken mit Langhantel“ mit „Brust“ in einer Zeile vor (i) und „…“ | angesehen |
+| `duo-etiketten`, `duo-player`, `session`, `session-head`, `training-scroll`, `notes`, `duo-feste-leisten`, `duo-resize` (Chromium) | 23 bestanden, 15 übersprungen |
+| `pnpm test` | 125 Dateien, 1092 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

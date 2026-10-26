@@ -1804,3 +1804,15 @@ Keine eigene Drehung im Scanner gefunden; bei einer neuen Haltung startet die Ka
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,3 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 376 bestanden, 90 übersprungen, 0 fehlgeschlagen, 11,4 min |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40350698760 zu `001b2a0` (D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente und Build grün; E2E Chromium grün; E2E WebKit rot.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-feste-leisten.spec.ts` (3 von 4 Tests) | fehlgeschlagen: „Mouse wheel is not supported in mobile WebKit“; jetzt Scrollen per Skript |
+| WebKit, `shopping.spec.ts` „Wisch nach links löscht nur diesen Artikel …“ | fehlgeschlagen in beiden Anläufen: „„Milch“ gelöscht“ nicht gefunden; in Chromium bestanden. Ursache offen, der Test schreibt jetzt die Zeiger-Ereignisse in die Meldung |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | im ersten Anlauf fehlgeschlagen („zu: Position“, 53 statt höchstens 4 px), im zweiten bestanden; die Meldung nennt jetzt Scrollposition und Höhe des Kopfs |
+| Überlauf-Prüfungen am Dokument (11 Stellen in 10 Dateien) | seit dem Rahmen immer 0; Messung im Browser: ein 600 px breites Element bei 390 px, am Dokument 0, am Rahmen 230 px. Jetzt `pageOverflowX` (Rahmen und Dokument) |
+| Geänderte Tests in Chromium (`duo-feste-leisten`, `shopping`, `duo-resize` und die zehn Dateien mit Überlauf-Prüfung) | 139 bestanden |

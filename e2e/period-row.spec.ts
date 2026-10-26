@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /** Zeitraum-Auswahl einzeilig (F5 Abschnitt 6, D-327): alle Chips in einer Zeile, ohne Kürzung. */
 
@@ -85,9 +85,7 @@ for (const width of [360, 390, 768]) {
         expect(Math.round(box.height)).toBe(36);
         if (i > 0) expect(box.left).toBeGreaterThanOrEqual((boxes[i - 1]?.right ?? 0) - 0.5);
       }
-      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-        width,
-      );
+      expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
       // Jede Option per Tipp auf den Chip.
       for (const index of [...options.keys()].reverse()) {
         await chips.nth(index).click();

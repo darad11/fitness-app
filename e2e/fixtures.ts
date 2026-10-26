@@ -33,6 +33,22 @@ export async function openPage(page: Page, path: string) {
   await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
 }
 
+/**
+ * Waagrechter Überlauf der Seite in px, 0 heißt keiner. Die Seite scrollt im Rahmen der App
+ * (`#seite`, D-384), der waagrecht abschneidet; gemessen werden der Rahmen und das Dokument. Am
+ * Dokument allein wäre der Überlauf seit dem Rahmen immer 0.
+ */
+export function pageOverflowX(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const frame = document.getElementById('seite');
+    const root = document.documentElement;
+    return Math.max(
+      frame ? frame.scrollWidth - frame.clientWidth : 0,
+      root.scrollWidth - root.clientWidth,
+    );
+  });
+}
+
 /** Alle verfügbaren Seiten; geprüft werden Offline-Start, Netzwerk und Barrierefreiheit. */
 export const APP_PAGES = [
   '/heute',

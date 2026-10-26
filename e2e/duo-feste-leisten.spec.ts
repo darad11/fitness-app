@@ -147,9 +147,9 @@ for (const pose of ['zu', 'auf'] as const) {
     await page.waitForTimeout(500);
     const circle = await place(bar);
     expect(circle.bottom, 'Kreis unten').toBe(height - bottomGap(chromium, pose, 8 + 4));
+    // Scrollen per Skript, nicht mit dem Mausrad: Das gibt es im mobilen WebKit nicht.
     for (let i = 0; i < 6; i += 1) {
-      await page.mouse.move(120, height / 2);
-      await page.mouse.wheel(0, 700);
+      await userScroll(page, 700);
       await page.waitForTimeout(60);
       expect(await place(bar), `Schritt ${String(i + 1)}`).toEqual(circle);
     }
@@ -159,7 +159,7 @@ for (const pose of ['zu', 'auf'] as const) {
       frame?.scrollTo(0, frame.scrollHeight);
     });
     for (let i = 0; i < 3; i += 1) {
-      await page.mouse.wheel(0, 400);
+      await userScroll(page, 400);
       await page.waitForTimeout(60);
       expect(await place(bar), `Seitenende ${String(i + 1)}`).toEqual(circle);
     }
@@ -217,8 +217,9 @@ test('Duo zu: Fußleiste und Kopf im Training bleiben beim Scrollen an ihrer Ste
   await watch(footer);
 
   for (let i = 0; i < 8; i += 1) {
-    await page.mouse.move(120, height / 2);
-    await page.mouse.wheel(0, 250);
+    await page.evaluate(() => {
+      document.getElementById('seite')?.scrollBy(0, 250);
+    });
     await page.waitForTimeout(60);
     expect(await place(footer), `Fußleiste, Schritt ${String(i + 1)}`).toEqual(start);
     // Der Kopf klebt oben am Rahmen, er scrollt nicht mit.
@@ -227,8 +228,8 @@ test('Duo zu: Fußleiste und Kopf im Training bleiben beim Scrollen an ihrer Ste
   await page.evaluate(() => {
     const frame = document.getElementById('seite');
     frame?.scrollTo(0, frame.scrollHeight);
+    frame?.scrollBy(0, 400);
   });
-  await page.mouse.wheel(0, 400);
   await page.waitForTimeout(60);
   expect(await place(footer), 'Fußleiste am Seitenende').toEqual(start);
   expect(await page.evaluate(() => window.scrollY), 'Fenster bleibt oben').toBe(0);

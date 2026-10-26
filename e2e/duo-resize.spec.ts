@@ -123,8 +123,16 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
         }, `${pose}: sichtbar`)
         .toBe(true);
     } else {
-      // In einer Spalte steht der Satz an derselben Stelle.
-      expect(Math.abs((await topOf(current)) - rowTop), `${pose}: Position`).toBeLessThanOrEqual(4);
+      // In einer Spalte steht der Satz an derselben Stelle. In der Meldung Scrollposition und
+      // Höhe des Kopfs, falls nicht (WebKit war einmal 53 px daneben, D-384).
+      const where = await page.evaluate(() => ({
+        scroll: document.getElementById('seite')?.scrollTop,
+        head: document.querySelector('main header')?.getBoundingClientRect().height,
+      }));
+      expect(
+        Math.abs((await topOf(current)) - rowTop),
+        `${pose}: Position (Scroll ${String(where.scroll)}, Kopf ${String(where.head)})`,
+      ).toBeLessThanOrEqual(4);
     }
   }
 

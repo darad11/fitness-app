@@ -1,4 +1,4 @@
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 test('Wasser: auf „Heute“ eintragen, neu laden, offline, nächster Tag, Verlauf (D-289)', async ({
   page,
@@ -95,9 +95,7 @@ test('Wasser: kleiner Bildschirm ohne Überlauf (D-289)', async ({ page }) => {
     await openPage(page, path);
     await page.getByRole('button', { name: '750 ml hinzufügen' }).first().click();
     await expect(page.getByText(/von 2 l/).first()).toBeVisible();
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
+    const overflow = await pageOverflowX(page);
     expect(overflow).toBeLessThanOrEqual(0);
   }
 });

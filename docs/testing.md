@@ -1671,3 +1671,23 @@ Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WC
 | `node tools/duo-screens.mjs`, erster Lauf (vor D-377) | 84 Ansichten: 16 × axe `label-content-name-mismatch`, 27 × Schrift unter 11 px, 7 Hinweise Tippfläche |
 | `node tools/duo-screens.mjs` nach D-377 und D-378, 3 min | 84 Ansichten: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst nach D-334), 7 Hinweise Tippfläche (Wochentag-Chips, 44 pt über unsichtbaren Rand); kein Überlauf, nichts unter dem Systemrand, keine Überlagerung, kein abgeschnittener Text, kein gestauchtes Symbol, keine axe-Verstöße |
 | Messung für die Bewertung (Training mit Pause) | Player aufgeklappt: Kopf 264 pt, Fußleiste 97 pt, 284 pt für Übung und Sätze, eine Satzzeile ganz sichtbar, Felder 298 pt breit; zugeklappt: 274, 111, 269 pt, eine Satzzeile; Zwischenmaß: 542 pt, fünf Satzzeilen. Ernährung: erste Mahlzeit bei 619 von 669 pt (aufgeklappt) und 639 von 678 pt (zugeklappt) |
+
+### Phase iPhone Duo, Phase 2: Workout-Player für beide Zustände · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Aufgeklappt zwei Spalten, zugeklappt die Pause in einer Zeile, Satzzeile unter 20 rem mit zweiter Zeile (D-380). Bericht: `form-duo-report.md` Abschnitt 9.1. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-player.spec.ts` (3 Tests, Handy-Profil) | 3 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 3 von 3 fehlgeschlagen („Als Nächstes“ fehlt; Pause 142 px hoch statt höchstens 80; Vorwert bei 360 pt in derselben Zeile wie die Felder) |
+| Gegenprobe: ohne Nachrücken des Satzes nach einer Größenänderung (`useStableSetView`) | fehlgeschlagen („unter dem Kopf“: der aufgeklappt nach oben gescrollte Satz lag nach dem Zuklappen hinter dem Kopf) |
+| Gegenprobe: nächster Satz in der einzeiligen Pause in einer Textzeile (erster Entwurf) | fehlgeschlagen (Text 19,6 px hoch; zu sehen war nur „Beinpress…“) |
+| Angepasst: `e2e/duo-resize.spec.ts` (aufgeklappt rückt der Satz um die Höhe des Kopfs nach oben und bleibt sichtbar), Test zu D-377 in `e2e/duo-funde.spec.ts` (±15 s bei 320 × 800, weil die Pause bei 320 × 640 einzeilig ist) | bestanden |
+| Zwischenstände vor dem Commit | 3 Unit-Tests in `player-ui.test.tsx` (die Liste der Überschriften enthielt „Als Nächstes“; jetzt ein benannter Bereich ohne Überschrift); `pnpm lint` (`type` statt `interface` im Test); E2E: Test zu D-377 (einzeilige Pause bei 320 × 640) und `duo-resize` (Satz aufgeklappt nicht mehr an derselben Stelle). Alle behoben, siehe oben |
+| Messung (Chromium, Training mit Pause, Seite ganz oben) | aufgeklappt: Kopf rechts, 572 pt für Übung und Sätze (vorher 284), fünf Satzzeilen ganz sichtbar (vorher eine), Felder 118 pt (vorher 298); zugeklappt: Kopf 192 pt (vorher 274), 351 pt (vorher 269), zwei Satzzeilen (vorher eine); Zwischenmaß unverändert (Kopf 264 pt, 542 pt, fünf Satzzeilen); 320 × 568: Kopf 192 pt, Felder 52 px (vorher 25) |
+| Messung einzeilige Pause (Chromium): Breite des Players, nächster Satz | zugeklappt 362 px, Karte 60 px hoch, Text 86 px breit in zwei Zeilen; Safari zugeklappt (382 × 640) 342 px und 375 × 667 335 px: nur für Screenreader; zugeklappt quer (594 × 368) 490 px, Text 214 px; iPhone 15 quer (844 × 390) 750 px, Text 474 px |
+| Messung Satzzeile (Chromium, Vorwert „102,5 × 10“) | zweite Zeile unter 384 pt Fensterbreite (Zeile unter 20 rem), Feld für kg: 383 pt 84 px, 382 pt 83 px, 375 pt 80 px, 360 pt 72 px, 320 pt 52 px; eine Zeile ab 384 pt: 384 pt 57 px, 390 pt 60 px, 393 pt 62 px, 414 pt 72 px, 430 pt 80 px |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,6 KB von 250 KB (vorher 235,5); `player-layout.css` wird mit dem Player nachgeladen |
+| `pnpm test:e2e` (Chromium, alle Dateien) | erster Lauf: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen, 13,0 min; nach der zweiten Textzeile in der Pause: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen, 13,7 min |

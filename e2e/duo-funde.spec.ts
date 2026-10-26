@@ -139,8 +139,9 @@ test('Tagesaufgabe: Wochentage im Kalender mindestens 11 px (D-377)', async ({ p
 });
 
 test('Pause: Minus und Plus bleiben auch in schmaler Pause zu sehen (D-377)', async ({ page }) => {
-  // 320 pt: Die Pause im Kopf ist so schmal wie zugeklappt vor der Korrektur des Kopfs.
-  await page.setViewportSize({ width: 320, height: 640 });
+  // 320 pt: Die Pause im Kopf ist so schmal wie zugeklappt vor der Korrektur des Kopfs. Hoch
+  // genug für die ganze Karte; bei niedrigem Fenster ist die Pause einzeilig ohne ±15 s (D-380).
+  await page.setViewportSize({ width: 320, height: 800 });
   await openPage(page, '/training/vorlagen/compound_ab_4');
   await page.getByRole('button', { name: 'Programm aktivieren' }).click();
   await expect(page.getByRole('heading', { level: 2, name: /^Trainingstag 1 von/ })).toBeVisible();

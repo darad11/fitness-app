@@ -31,6 +31,10 @@ export const tSession = {
   target: 'Ziel',
   nextExercise: (name: string) => `Danach: ${name}`,
   lastExercise: 'Letzte Übung',
+  /** Zwei Spalten im Player (D-380): Übungen nach der aktuellen. */
+  upNext: 'Als Nächstes',
+  openSets: (n: number) => (n === 1 ? '1 Satz' : `${n} Sätze`),
+  moreExercises: (n: number) => (n === 1 ? 'und 1 weitere Übung' : `und ${n} weitere Übungen`),
   allDone: 'Alle Sätze erledigt',
   freeSource: 'Freies Training',
   done: 'Satz erledigt',

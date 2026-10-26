@@ -109,7 +109,7 @@ Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und a
 - **Lösung:** Die Satzzeilen richten sich nach ihrer eigenen Breite. Unter 24 rem werden Abstände und Vorwert-Spalte etwas schmaler, und Werte ab fünf Zeichen stehen in 16 statt 18 px. Kleiner nicht, sonst vergrößert iOS die Seite beim Antippen. Aufgeklappt bleibt alles, wie es war.
 - **Test:** `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt und zugeklappt; bei 382 pt nur die kleinere Schrift, weil das Passen dort von der Schriftart abhängt): am alten Stand fehlgeschlagen (10 px über den Rand bei 390 pt), mit der Korrektur bestanden.
 - **Schriftart:** Gemessen mit Inter, ähnlich breit wie die Systemschrift des iPhone. Mit einer breiteren Schrift (DejaVu Sans) fehlen bei 382 und 375 pt 0,6 und 3,6 px; das zeigt der Gerätetest.
-- **Offen:** Bei 360 pt ragt „102,5“ weiter 7 px hinaus, bei 320 pt (iPhone SE oder mini mit Anzeigezoom „Größerer Text“) sind die Felder nur 25 px breit. Das braucht eine zweite Zeile in der Satzzeile und ist eine Layout-Entscheidung; sie kommt in die Bewertung der Layout-Verbesserungen.
+- **Offen:** Bei 360 pt ragt „102,5“ weiter 7 px hinaus, bei 320 pt (iPhone SE oder mini mit Anzeigezoom „Größerer Text“) sind die Felder nur 25 px breit. Das braucht eine zweite Zeile in der Satzzeile und ist eine Layout-Entscheidung; sie kommt in die Bewertung der Layout-Verbesserungen. Erledigt in Phase 2 mit D-380 (Abschnitt 9.1), auch die Frage der Schriftart bei 382 und 375 pt.
 
 ## 4. Prüfung aller Screens in drei Breiten (D-379)
 
@@ -222,4 +222,27 @@ Am besten an der Vorschau des Branches (Vercel, Link im PR), als App vom Home-Bi
 - **Nicht am Gerät getestet.** Alles lief in Browser-Fenstern mit den Maßen des Duo. Die Maße stammen teils von Dritten (Abschnitt 2), der Systemrand von 84 pt ist eine Annahme.
 - **Nur in Chromium:** den sicheren Bereich nachstellen und die Kamera durch ein Standbild ersetzen. WebKit prüft dieselben Abläufe ohne Systemrand.
 - **Nicht erkennbar:** ob das Duo auf- oder zugeklappt ist und ob es halb geöffnet ist (Falz). FORM richtet sich nur nach der Fensterbreite.
-- **Bewusst offen:** Tageszahl im Kalender 10 px (D-334); Satzzeile bei 360 und 320 pt (Vorschlag in Abschnitt 5).
+- **Bewusst offen:** Tageszahl im Kalender 10 px (D-334); Satzzeile bei 360 und 320 pt (Vorschlag in Abschnitt 5, erledigt mit D-380).
+
+## 9. Phase 2: Layouts (D-380 bis D-382)
+
+Freigegeben am 26.10.2026: alle drei Pakete wie empfohlen, ohne leeren Platzhalter für die Übungsdemonstration; die Tab-Leiste bleibt. Umgesetzt nach Kapitel 10 der Leitlinien: dieselben Komponenten, nur anders angeordnet, an der Breite des Inhalts (48 rem) statt an der Haltung des Geräts. Die neuen Anordnungen werden mit dem Player und der Ernährung nachgeladen; die Startansicht bleibt bei 235,6 KB. Beim Auf- und Zuklappen wird nichts neu aufgebaut.
+
+### 9.1 Workout-Player (D-380)
+
+| Zustand | Vorher (Messung D-379) | Jetzt |
+|---|---|---|
+| Aufgeklappt (Inhalt ab 48 rem breit: Duo aufgeklappt, iPad quer, Desktop) | eine Spalte; Kopf mit Pause 264 pt über der Liste, für Übung und Sätze 284 pt, eine Satzzeile ganz zu sehen, Felder 298 pt breit | zwei Spalten: links die Übungen mit den Sätzen, rechts mitlaufend der Kopf mit Trainingstag, Fortschritt und Pause (mit ±15 s), darunter „Jetzt“ mit dem nächsten Satz und „Als Nächstes“ mit bis zu vier folgenden Übungen und ihren offenen Sätzen. Für Übung und Sätze 572 pt, fünf Satzzeilen ganz zu sehen, Felder 118 pt |
+| Zugeklappt (eine Spalte, Fenster unter 45 rem hoch: Duo zugeklappt, iPhone quer) | Pause als Karte mit ±15 s; Kopf 274 pt, für Übung und Sätze 269 pt, eine Satzzeile | Pause in einer Zeile: Zeit, nächster Satz in bis zu zwei Textzeilen, Taste für die große Pause, „Überspringen“; ±15 s in der großen Pause. Kopf 192 pt, für Übung und Sätze 351 pt, zwei Satzzeilen |
+| Zwischenmaß (669 × 951) und iPhone hoch | – | unverändert |
+| Satzzeile schmaler als 20 rem (Fenster unter 384 pt: Safari zugeklappt mit 382 pt, iPhone SE und mini) | bei 382 und 375 pt passte „102,5“ nur knapp, je nach Schriftart nicht ganz; bei 360 pt ragte es 7 px aus dem Feld, bei 320 pt waren die Felder 25 px breit | der Vorwert steht in einer zweiten Zeile unter den Feldern, mit sichtbarem Namen „Vorwert:“; die Felder sind bei 382 pt 83 px, bei 375 pt 80 px, bei 360 pt 72 px und bei 320 pt 52 px breit. Damit ist auch der offene Punkt zur Schriftart aus Abschnitt 3.7 erledigt |
+
+Gemessen in Chromium mit laufendem Training und Pause, Seite ganz oben; in einer Spalte steht unter dem Kopf noch die Karte „Jetzt“, im Training rückt der aktuelle Satz von selbst ins Bild.
+
+- **Übungsdemonstration:** Im Raster der rechten Spalte gibt es den Bereich „demo“ zwischen Hinweis und „Jetzt“. Ohne Bilder hat er keinen Inhalt und keine Höhe; es gibt keinen Platzhalter. Kommen Bilder, gehören sie in diesen Bereich.
+- **Pause zugeklappt:** Der nächste Satz steht in bis zu zwei Textzeilen neben der Zeit („Beinpresse, Aufwärm-…“), die Zeile wird dadurch nicht höher. Ist der Player schmaler als 22 rem (Safari zugeklappt mit 382 pt, iPhone SE und mini), bliebe nur ein Wortrest; dann steht der nächste Satz nur für Screenreader da und sichtbar in der Satzliste und in der großen Pause.
+- **Rechte Spalte:** klebt oben und reicht nie hinter die Fußleiste; ist sie höher als das Fenster, scrollt sie für sich.
+- **Beim Auf- und Zuklappen** bleiben Kopf, Pause und Sätze dieselben Elemente; Werte, Menüs, Dialoge und Pause bleiben erhalten (Tests aus D-375).
+- **Unterwegs gefunden und behoben:** Aufgeklappt den aktuellen Satz nach oben gescrollt, dann zugeklappt: Der Kopf stand wieder über der Liste und verdeckte den Satz. Jetzt rückt der Satz nach jeder Größenänderung wieder ins Bild, wenn er vorher zu sehen war.
+- **Tests:** `e2e/duo-player.spec.ts`, 3 Tests (Handy-Profil, Chromium und WebKit): zwei Spalten mit axe ohne Verstöße und der Satz nach jedem „Satz erledigt“ ganz sichtbar; einzeilige Pause; Satzzeile bei 390, 360 und 320 pt. Am alten Stand 3 von 3 fehlgeschlagen („Als Nächstes“ fehlt; Pause 142 px statt höchstens 80; Vorwert bei 360 pt in derselben Zeile). Gegenproben für den Satz hinter dem Kopf und für die zweite Textzeile der Pause: beide fehlgeschlagen ohne die Korrektur. Angepasst: `duo-resize.spec.ts` (aufgeklappt rückt der Satz um die Höhe des Kopfs nach oben und bleibt sichtbar) und der Test zu D-377 (±15 s bei 320 × 800, weil die Pause bei 320 × 640 einzeilig ist).
+- **Nur am Gerät prüfbar:** wie sich die mitlaufende rechte Spalte beim Scrollen anfühlt; ob die einzeilige Pause zugeklappt gut lesbar ist.

@@ -87,7 +87,9 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
   const rowTop = await topOf(current);
   let rest = await restSeconds(page);
 
-  for (const pose of ['auf', 'hoch', 'zu'] as const satisfies readonly DuoPose[]) {
+  // Erst in einer Spalte (Zwischenmaß, zugeklappt), dann aufgeklappt in zwei Spalten und zurück.
+  let twoColumnsSeen = false;
+  for (const pose of ['hoch', 'zu', 'auf', 'zu'] as const satisfies readonly DuoPose[]) {
     await setDuoPose(page, pose);
     await page.waitForTimeout(300);
     expect(page.url(), `${pose}: dieselbe Einheit`).toBe(url);
@@ -102,8 +104,26 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
     expect(now).toBeLessThanOrEqual(rest);
     expect(now).toBeGreaterThan(0);
     rest = now;
-    // Der Satz steht an derselben Stelle.
-    expect(Math.abs((await topOf(current)) - rowTop), `${pose}: Position`).toBeLessThanOrEqual(4);
+    if (pose === 'auf') twoColumnsSeen = true;
+    if (twoColumnsSeen) {
+      // Aufgeklappt zwei Spalten (D-380): Der Kopf steht neben der Liste, der Satz rückt um die
+      // Höhe des Kopfs nach oben; ganz oben kann die Seite das nicht ausgleichen. Er bleibt ganz
+      // sichtbar über der Fußleiste, zugeklappt wieder unter dem Kopf, nicht dahinter.
+      const head = pose === 'auf' ? null : await page.locator('main header').boundingBox();
+      const top = head ? head.y + head.height : 0;
+      await expect
+        .poll(async () => {
+          const box = await current.boundingBox();
+          const foot = await page
+            .getByRole('button', { name: 'Satz erledigt', exact: true })
+            .boundingBox();
+          return Boolean(box && foot && box.y >= top - 1 && box.y + box.height <= foot.y + 1);
+        }, `${pose}: sichtbar`)
+        .toBe(true);
+    } else {
+      // In einer Spalte steht der Satz an derselben Stelle.
+      expect(Math.abs((await topOf(current)) - rowTop), `${pose}: Position`).toBeLessThanOrEqual(4);
+    }
   }
 
   // Offener Dialog mit getipptem Text bleibt offen.

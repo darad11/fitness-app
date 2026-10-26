@@ -64,8 +64,10 @@ export function SetRow(props: SetRowProps) {
       )}
     >
       {/* In schmalen Zeilen (unter 24 rem, alle iPhones hochkant und das Duo zugeklappt) etwas
-          engere Abstände und Vorwert-Spalte, damit die Felder Platz für „102,5“ haben (D-378). */}
-      <div className="flex items-center gap-2 @max-sm:gap-1.5">
+          engere Abstände und Vorwert-Spalte, damit die Felder Platz für „102,5“ haben (D-378).
+          Unter 20 rem (375 pt und schmaler) steht der Vorwert in einer zweiten Zeile unter den
+          Feldern, mit seinem Namen davor (D-380). */}
+      <div className="flex items-center gap-2 @max-sm:gap-1.5 @max-[20rem]:flex-wrap">
         <span
           aria-hidden="true"
           className={cn(
@@ -81,8 +83,14 @@ export function SetRow(props: SetRowProps) {
         >
           {props.label}
         </span>
-        <span className="w-14 shrink-0 text-xs text-muted tabular-nums @max-sm:w-12">
-          <span className="sr-only">{tSession.previous}: </span>
+        <span
+          className={cn(
+            'w-14 shrink-0 text-xs text-muted tabular-nums @max-sm:w-12',
+            '@max-[20rem]:order-last @max-[20rem]:w-full @max-[20rem]:basis-full @max-[20rem]:pl-[2.375rem]',
+            !props.previous && '@max-[20rem]:hidden',
+          )}
+        >
+          <span className="sr-only @max-[20rem]:not-sr-only">{tSession.previous}: </span>
           {props.previous
             ? formatSetValues(
                 props.previous,
@@ -238,7 +246,7 @@ export function SetHeader({ exercise }: { exercise: SessionExercise }) {
       className="eyebrow mb-1 flex items-center gap-2 px-2 text-muted @max-sm:gap-1.5"
     >
       <span className="w-8 shrink-0 text-center">#</span>
-      <span className="w-14 shrink-0 @max-sm:w-12">{tSession.previous}</span>
+      <span className="w-14 shrink-0 @max-sm:w-12 @max-[20rem]:hidden">{tSession.previous}</span>
       <span
         className={cn(
           'grid min-w-0 flex-1 gap-2 @max-sm:gap-1.5',

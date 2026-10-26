@@ -76,6 +76,7 @@ import {
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
 import { useStableSetView } from './useStableSetView';
+import './player-layout.css';
 
 /** Trainingsplayer (S-07) unter `/training/einheit/:id`. */
 export function SessionPage() {
@@ -116,6 +117,9 @@ interface RowError {
   message: string;
   retry?: () => void;
 }
+
+/** Höchstens so viele Übungen unter „Als Nächstes“ (D-380); die Steuerung bleibt kurz. */
+const UPCOMING_MAX = 4;
 
 function useNow(intervalMs: number): Date {
   const [now, setNow] = useState(() => new Date());
@@ -327,6 +331,16 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const afterCurrent = lastOfCurrent ? nextOpenSet(session, lastOfCurrent.id) : null;
   const nextExercise =
     afterCurrent && afterCurrent.exercise.id !== currentExercise?.id ? afterCurrent.exercise : null;
+  // „Als Nächstes“ in zwei Spalten (D-380): Übungen nach der aktuellen mit offenen Sätzen.
+  const upcoming = currentExercise
+    ? exercises
+        .slice(exercises.indexOf(currentExercise) + 1)
+        .map((exercise) => ({
+          exercise,
+          open: liveSets(exercise).filter((s) => s.status === 'planned').length,
+        }))
+        .filter(({ open }) => open > 0)
+    : [];
   // Oben klein Programm und Woche, als Titel nur der Trainingstag; nichts doppelt (F5, D-323).
   const heading = session.program ? session.program.dayName : session.title;
   // Ohne Programm: „Freies Training“, außer der Titel sagt es schon (D-323).
@@ -343,358 +357,416 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       onPointerDownCapture={settings.restSound ? unlockSound : undefined}
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
-      {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
+      {/* Rahmen, Spalten und Steuerung (D-380, `player-layout.css`): schmal eine Spalte wie bisher,
+          ab 48 rem Inhaltsbreite links die Übungen, rechts mitlaufend Kopf, nächster Satz und die
+          nächsten Übungen. Nur angeordnet, nichts neu aufgebaut. */}
+      <div className="player-frame">
+        <div className="player-columns">
+          <div className="player-side">
+            {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
           (D-332). Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. Seitlich
           reicht er bis an den Fensterrand, auch über einen sicheren Bereich (D-377). */}
-      <header
-        ref={headRef}
-        className="page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
-      >
-        <div className="flex items-start justify-between gap-2">
-          {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
-          <Link
-            to="/training"
-            aria-label={t.training.title}
-            title={t.training.title}
-            className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
-          >
-            <ChevronLeft aria-hidden="true" className="size-6" />
-          </Link>
-          <div className="min-w-0 flex-1 pt-0.5">
-            {session.program ? (
-              // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
-              // (F6, D-338): „Winterprogramm 20… · Woche 3“.
-              <p className="eyebrow flex min-w-0 text-muted">
-                <span className="min-w-0 truncate">{session.program.programName}</span>
-                <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
-              </p>
-            ) : eyebrow ? (
-              <p className="eyebrow truncate text-muted">{eyebrow}</p>
-            ) : null}
-            <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              const open = progress.total - progress.done;
-              if (open > 0) setConfirm({ kind: 'finish', open });
-              else void finish(false);
-            }}
-          >
-            {tSession.finish}
-          </Button>
-        </div>
-        <div className="mt-3 flex items-center gap-3">
-          <Meter
-            value={progress.total > 0 ? progress.done / progress.total : 0}
-            label={t.session.progress(progress.done, progress.total)}
-            className="flex-1"
-          />
-          <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
-            <span className="sr-only">{tSession.duration}: </span>
-            {formatClock(sessionDurationSec(session, now))}
-          </p>
-        </div>
-        <p className="mt-1 text-sm text-muted tabular-nums">
-          {t.session.progress(progress.done, progress.total)}
-        </p>
-        {errors.session ? (
-          <p role="alert" className="mt-2 text-sm text-danger">
-            {errors.session.message}{' '}
-            {errors.session.retry ? (
-              <button
-                type="button"
-                className="font-semibold underline"
-                onClick={errors.session.retry}
-              >
-                {tSession.retry}
-              </button>
-            ) : null}
-          </p>
-        ) : null}
-        {restTimer ? (
-          <RestStage
-            timer={restTimer}
-            now={now}
-            next={
-              afterRest
-                ? {
-                    ...afterRest,
-                    name: names.get(afterRest.set.id)?.name ?? afterRest.exercise.nameSnapshot,
-                  }
-                : null
-            }
-            previous={(() => {
-              const values = afterRest ? previousFor(afterRest.exercise, afterRest.set) : null;
-              return afterRest && values ? formatValues(afterRest.exercise, values) : undefined;
-            })()}
-            onAdjust={(delta) => void run('rest', () => adjustRest(rt, session.id, delta))}
-            onSkip={() => void run('rest', () => skipRest(rt, session.id))}
-          />
-        ) : null}
-      </header>
-      {light ? (
-        <p role="note" className="mb-4 rounded-card bg-surface p-card shadow-card">
-          {t.returnFlow.lightHint}
-        </p>
-      ) : null}
-
-      {!restTimer && current && currentExercise && currentName ? (
-        <section aria-label={tSession.now} className="stage mb-4 rounded-card p-card text-fg">
-          <p className="eyebrow text-muted">{tSession.now}</p>
-          <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
-          <p className="mt-1 text-muted">
-            {[
-              `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
-              currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
-              currentPrevious
-                ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(' · ')}
-          </p>
-          {setTimer?.setId === current.id ? (
-            <p className="mt-2 text-timer font-semibold tabular-nums" role="timer">
-              {formatClock(timerElapsed)}
-            </p>
-          ) : null}
-          {currentExercise.notes ? (
-            <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
-          ) : null}
-          <p className="mt-3 text-sm text-muted">
-            {nextExercise
-              ? tSession.nextExercise(nextExercise.nameSnapshot)
-              : tSession.lastExercise}
-          </p>
-        </section>
-      ) : null}
-      {!restTimer && !current && exercises.length > 0 ? (
-        <section aria-label={tSession.allDone} className="stage mb-4 rounded-card p-card text-fg">
-          <p className="eyebrow text-muted">{tSession.now}</p>
-          <p className="mt-1 text-2xl font-semibold">{tSession.allDone}</p>
-        </section>
-      ) : null}
-
-      {exercises.length === 0 ? <p className="mb-4 text-muted">{tSession.empty}</p> : null}
-
-      <div className="grid gap-4">
-        {exercises.map((exercise, index) => {
-          const row = history?.get(exercise.exerciseId);
-          const sets = liveSets(exercise);
-          const open = actionsFor === exercise.id;
-          return (
-            <section
-              key={exercise.id}
-              aria-labelledby={`uebung-${exercise.id}`}
-              className="rounded-card bg-surface p-3 shadow-card"
+            <header
+              ref={headRef}
+              className="player-head page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
             >
-              <div className="mb-2 flex items-start gap-1 px-1">
-                <div className="min-w-0 flex-1">
-                  <h2 id={`uebung-${exercise.id}`} className="text-lg font-semibold">
-                    {exercise.nameSnapshot}
-                  </h2>
-                  <MuscleTags
-                    muscles={library.get(exercise.exerciseId)?.primaryMuscles ?? []}
-                    className="mt-1.5 mb-1"
-                  />
-                  <p className="text-sm text-muted">
-                    {row
-                      ? tSession.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))
-                      : tSession.firstTime}
-                    {exercise.perSide ? ` · ${tSession.perSide}` : ''}
-                  </p>
-                  {exercise.notes ? <p className="mt-1 text-sm">{exercise.notes}</p> : null}
-                  {exercise.note ? (
-                    <p className="mt-1 text-sm">
-                      <span className="font-semibold">{tSession.yourNote}: </span>
-                      {exercise.note}
+              <div className="flex items-start justify-between gap-2">
+                {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
+                <Link
+                  to="/training"
+                  aria-label={t.training.title}
+                  title={t.training.title}
+                  className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
+                >
+                  <ChevronLeft aria-hidden="true" className="size-6" />
+                </Link>
+                <div className="min-w-0 flex-1 pt-0.5">
+                  {session.program ? (
+                    // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
+                    // (F6, D-338): „Winterprogramm 20… · Woche 3“.
+                    <p className="eyebrow flex min-w-0 text-muted">
+                      <span className="min-w-0 truncate">{session.program.programName}</span>
+                      <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
                     </p>
-                  ) : row?.note ? (
-                    <p className="mt-1 text-sm text-muted">
-                      <span className="font-semibold">{tSession.previousNote}: </span>
-                      {row.note}
-                    </p>
+                  ) : eyebrow ? (
+                    <p className="eyebrow truncate text-muted">{eyebrow}</p>
                   ) : null}
+                  <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
                 </div>
-                <IconButton
-                  label={tSession.exerciseInfo(exercise.nameSnapshot)}
+                <Button
+                  variant="secondary"
+                  size="sm"
                   onClick={() => {
-                    setInfo(exercise);
+                    const open = progress.total - progress.done;
+                    if (open > 0) setConfirm({ kind: 'finish', open });
+                    else void finish(false);
                   }}
                 >
-                  <Info aria-hidden="true" className="size-5" />
-                </IconButton>
-                <IconButton
-                  label={tSession.moreExercise(exercise.nameSnapshot)}
-                  aria-expanded={open}
-                  onClick={() => {
-                    setActionsFor(open ? null : exercise.id);
-                  }}
-                >
-                  <Ellipsis aria-hidden="true" className="size-5" />
-                </IconButton>
+                  {tSession.finish}
+                </Button>
               </div>
-              {open ? (
-                <div className="mb-3 flex flex-wrap gap-2 px-1">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={index === 0}
-                    onClick={() =>
-                      void run(exercise.id, () => moveExercise(rt, session.id, exercise.id, -1))
-                    }
-                  >
-                    <ChevronUp aria-hidden="true" className="size-4" />
-                    {tSession.moveUp}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={index === exercises.length - 1}
-                    onClick={() =>
-                      void run(exercise.id, () => moveExercise(rt, session.id, exercise.id, 1))
-                    }
-                  >
-                    <ChevronDown aria-hidden="true" className="size-4" />
-                    {tSession.moveDown}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      setActionsFor(null);
-                      setReplaceTarget(exercise);
-                      setPickerOpen(true);
-                    }}
-                  >
-                    <ArrowLeftRight aria-hidden="true" className="size-4" />
-                    {tSession.replaceExercise}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      setActionsFor(null);
-                      setNoteFor(exercise);
-                    }}
-                  >
-                    <NotebookPen aria-hidden="true" className="size-4" />
-                    {tSession.noteAction}
-                  </Button>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => {
-                      setActionsFor(null);
-                      removeWithConfirm(exercise);
-                    }}
-                  >
-                    <Trash2 aria-hidden="true" className="size-4" />
-                    {tSession.removeExercise}
-                  </Button>
-                </div>
-              ) : null}
-              {errors[exercise.id] ? (
-                <p role="alert" className="mb-2 px-1 text-sm text-danger">
-                  {errors[exercise.id]?.message}
+              <div className="mt-3 flex items-center gap-3">
+                <Meter
+                  value={progress.total > 0 ? progress.done / progress.total : 0}
+                  label={t.session.progress(progress.done, progress.total)}
+                  className="flex-1"
+                />
+                <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
+                  <span className="sr-only">{tSession.duration}: </span>
+                  {formatClock(sessionDurationSec(session, now))}
+                </p>
+              </div>
+              <p className="mt-1 text-sm text-muted tabular-nums">
+                {t.session.progress(progress.done, progress.total)}
+              </p>
+              {errors.session ? (
+                <p role="alert" className="mt-2 text-sm text-danger">
+                  {errors.session.message}{' '}
+                  {errors.session.retry ? (
+                    <button
+                      type="button"
+                      className="font-semibold underline"
+                      onClick={errors.session.retry}
+                    >
+                      {tSession.retry}
+                    </button>
+                  ) : null}
                 </p>
               ) : null}
-              {/* Container für die Satzzeilen: Sie richten sich nach ihrer eigenen Breite, nicht nach
+              {restTimer ? (
+                <RestStage
+                  timer={restTimer}
+                  now={now}
+                  next={
+                    afterRest
+                      ? {
+                          ...afterRest,
+                          name:
+                            names.get(afterRest.set.id)?.name ?? afterRest.exercise.nameSnapshot,
+                        }
+                      : null
+                  }
+                  previous={(() => {
+                    const values = afterRest
+                      ? previousFor(afterRest.exercise, afterRest.set)
+                      : null;
+                    return afterRest && values
+                      ? formatValues(afterRest.exercise, values)
+                      : undefined;
+                  })()}
+                  onAdjust={(delta) => void run('rest', () => adjustRest(rt, session.id, delta))}
+                  onSkip={() => void run('rest', () => skipRest(rt, session.id))}
+                />
+              ) : null}
+            </header>
+            {light ? (
+              <p
+                role="note"
+                className="player-hint mb-4 rounded-card bg-surface p-card shadow-card"
+              >
+                {t.returnFlow.lightHint}
+              </p>
+            ) : null}
+
+            {!restTimer && current && currentExercise && currentName ? (
+              <section
+                aria-label={tSession.now}
+                className="player-now stage mb-4 rounded-card p-card text-fg"
+              >
+                <p className="eyebrow text-muted">{tSession.now}</p>
+                <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
+                <p className="mt-1 text-muted">
+                  {[
+                    `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
+                    currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
+                    currentPrevious
+                      ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+                {setTimer?.setId === current.id ? (
+                  <p className="mt-2 text-timer font-semibold tabular-nums" role="timer">
+                    {formatClock(timerElapsed)}
+                  </p>
+                ) : null}
+                {currentExercise.notes ? (
+                  <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
+                ) : null}
+                <p className="mt-3 text-sm text-muted">
+                  {nextExercise
+                    ? tSession.nextExercise(nextExercise.nameSnapshot)
+                    : tSession.lastExercise}
+                </p>
+              </section>
+            ) : null}
+            {!restTimer && !current && exercises.length > 0 ? (
+              <section
+                aria-label={tSession.allDone}
+                className="player-now stage mb-4 rounded-card p-card text-fg"
+              >
+                <p className="eyebrow text-muted">{tSession.now}</p>
+                <p className="mt-1 text-2xl font-semibold">{tSession.allDone}</p>
+              </section>
+            ) : null}
+            {/* Nur in zwei Spalten sichtbar (D-380): die Übungen nach der aktuellen mit ihren offenen
+          Sätzen; schmal nennt die Karte „Jetzt“ die nächste Übung. */}
+            {upcoming.length > 0 ? (
+              <section
+                aria-label={tSession.upNext}
+                className="player-next mb-4 rounded-card bg-surface p-card shadow-card"
+              >
+                <p className="eyebrow text-muted">{tSession.upNext}</p>
+                <ol className="mt-2 grid gap-2">
+                  {upcoming.slice(0, UPCOMING_MAX).map(({ exercise, open }) => (
+                    <li key={exercise.id} className="flex items-baseline justify-between gap-3">
+                      <span className="min-w-0 truncate font-medium">{exercise.nameSnapshot}</span>
+                      <span className="shrink-0 text-sm text-muted tabular-nums">
+                        {tSession.openSets(open)}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                {upcoming.length > UPCOMING_MAX ? (
+                  <p className="mt-2 text-sm text-muted">
+                    {tSession.moreExercises(upcoming.length - UPCOMING_MAX)}
+                  </p>
+                ) : null}
+              </section>
+            ) : null}
+          </div>
+          <div className="player-main">
+            {exercises.length === 0 ? <p className="mb-4 text-muted">{tSession.empty}</p> : null}
+
+            <div className="grid gap-4">
+              {exercises.map((exercise, index) => {
+                const row = history?.get(exercise.exerciseId);
+                const sets = liveSets(exercise);
+                const open = actionsFor === exercise.id;
+                return (
+                  <section
+                    key={exercise.id}
+                    aria-labelledby={`uebung-${exercise.id}`}
+                    className="rounded-card bg-surface p-3 shadow-card"
+                  >
+                    <div className="mb-2 flex items-start gap-1 px-1">
+                      <div className="min-w-0 flex-1">
+                        <h2 id={`uebung-${exercise.id}`} className="text-lg font-semibold">
+                          {exercise.nameSnapshot}
+                        </h2>
+                        <MuscleTags
+                          muscles={library.get(exercise.exerciseId)?.primaryMuscles ?? []}
+                          className="mt-1.5 mb-1"
+                        />
+                        <p className="text-sm text-muted">
+                          {row
+                            ? tSession.lastTime(fmt.weekdayDayMonth(new Date(row.completedAt)))
+                            : tSession.firstTime}
+                          {exercise.perSide ? ` · ${tSession.perSide}` : ''}
+                        </p>
+                        {exercise.notes ? <p className="mt-1 text-sm">{exercise.notes}</p> : null}
+                        {exercise.note ? (
+                          <p className="mt-1 text-sm">
+                            <span className="font-semibold">{tSession.yourNote}: </span>
+                            {exercise.note}
+                          </p>
+                        ) : row?.note ? (
+                          <p className="mt-1 text-sm text-muted">
+                            <span className="font-semibold">{tSession.previousNote}: </span>
+                            {row.note}
+                          </p>
+                        ) : null}
+                      </div>
+                      <IconButton
+                        label={tSession.exerciseInfo(exercise.nameSnapshot)}
+                        onClick={() => {
+                          setInfo(exercise);
+                        }}
+                      >
+                        <Info aria-hidden="true" className="size-5" />
+                      </IconButton>
+                      <IconButton
+                        label={tSession.moreExercise(exercise.nameSnapshot)}
+                        aria-expanded={open}
+                        onClick={() => {
+                          setActionsFor(open ? null : exercise.id);
+                        }}
+                      >
+                        <Ellipsis aria-hidden="true" className="size-5" />
+                      </IconButton>
+                    </div>
+                    {open ? (
+                      <div className="mb-3 flex flex-wrap gap-2 px-1">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          disabled={index === 0}
+                          onClick={() =>
+                            void run(exercise.id, () =>
+                              moveExercise(rt, session.id, exercise.id, -1),
+                            )
+                          }
+                        >
+                          <ChevronUp aria-hidden="true" className="size-4" />
+                          {tSession.moveUp}
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          disabled={index === exercises.length - 1}
+                          onClick={() =>
+                            void run(exercise.id, () =>
+                              moveExercise(rt, session.id, exercise.id, 1),
+                            )
+                          }
+                        >
+                          <ChevronDown aria-hidden="true" className="size-4" />
+                          {tSession.moveDown}
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            setActionsFor(null);
+                            setReplaceTarget(exercise);
+                            setPickerOpen(true);
+                          }}
+                        >
+                          <ArrowLeftRight aria-hidden="true" className="size-4" />
+                          {tSession.replaceExercise}
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            setActionsFor(null);
+                            setNoteFor(exercise);
+                          }}
+                        >
+                          <NotebookPen aria-hidden="true" className="size-4" />
+                          {tSession.noteAction}
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => {
+                            setActionsFor(null);
+                            removeWithConfirm(exercise);
+                          }}
+                        >
+                          <Trash2 aria-hidden="true" className="size-4" />
+                          {tSession.removeExercise}
+                        </Button>
+                      </div>
+                    ) : null}
+                    {errors[exercise.id] ? (
+                      <p role="alert" className="mb-2 px-1 text-sm text-danger">
+                        {errors[exercise.id]?.message}
+                      </p>
+                    ) : null}
+                    {/* Container für die Satzzeilen: Sie richten sich nach ihrer eigenen Breite, nicht nach
                   dem Fenster (D-378; beim Duo zugeklappt ist die Zeile wegen des Systemrands
                   schmaler, als das Fenster vermuten lässt). */}
-              <div className="@container">
-                {sets.length > 0 ? <SetHeader exercise={exercise} /> : null}
-                <ol className="grid gap-1">
-                  {sets.map((set) => {
-                    const { label, name } = names.get(set.id) ?? { label: '', name: '' };
-                    const previous = previousValues(row, setSlot(exercise, set.id));
-                    return (
-                      <SetRow
-                        key={set.id}
-                        exercise={exercise}
-                        set={set}
-                        label={label}
-                        name={name}
-                        previous={previous}
-                        suggestion={suggestionFor(exercise, set, row)}
-                        current={current?.id === set.id}
-                        error={errors[set.id]?.message}
-                        onRetry={errors[set.id]?.retry}
-                        weightStep={
-                          prefs?.get(exercise.exerciseId)?.weightStepKg ?? settings.weightStepKg
-                        }
-                        number={number}
-                        onValue={(field, value) => {
-                          if (value === 'invalid') {
-                            setErrors((all) => ({
-                              ...all,
-                              [set.id]: { message: tSession.invalid[field] },
-                            }));
-                            return;
-                          }
-                          void run(set.id, () =>
-                            setValues(rt, session.id, set.id, { [field]: value }),
+                    <div className="@container">
+                      {sets.length > 0 ? <SetHeader exercise={exercise} /> : null}
+                      <ol className="grid gap-1">
+                        {sets.map((set) => {
+                          const { label, name } = names.get(set.id) ?? { label: '', name: '' };
+                          const previous = previousValues(row, setSlot(exercise, set.id));
+                          return (
+                            <SetRow
+                              key={set.id}
+                              exercise={exercise}
+                              set={set}
+                              label={label}
+                              name={name}
+                              previous={previous}
+                              suggestion={suggestionFor(exercise, set, row)}
+                              current={current?.id === set.id}
+                              error={errors[set.id]?.message}
+                              onRetry={errors[set.id]?.retry}
+                              weightStep={
+                                prefs?.get(exercise.exerciseId)?.weightStepKg ??
+                                settings.weightStepKg
+                              }
+                              number={number}
+                              onValue={(field, value) => {
+                                if (value === 'invalid') {
+                                  setErrors((all) => ({
+                                    ...all,
+                                    [set.id]: { message: tSession.invalid[field] },
+                                  }));
+                                  return;
+                                }
+                                void run(set.id, () =>
+                                  setValues(rt, session.id, set.id, { [field]: value }),
+                                );
+                              }}
+                              onToggleDone={() => {
+                                if (set.status === 'planned') void complete(exercise, set);
+                                else void run(set.id, () => reopenSet(rt, session.id, set.id));
+                              }}
+                              onSkip={() => void run(set.id, () => skipSet(rt, session.id, set.id))}
+                              onRemove={() =>
+                                void run(set.id, () => removeSet(rt, session.id, set.id))
+                              }
+                              timer={timerFor(exercise, set)}
+                            />
                           );
-                        }}
-                        onToggleDone={() => {
-                          if (set.status === 'planned') void complete(exercise, set);
-                          else void run(set.id, () => reopenSet(rt, session.id, set.id));
-                        }}
-                        onSkip={() => void run(set.id, () => skipSet(rt, session.id, set.id))}
-                        onRemove={() => void run(set.id, () => removeSet(rt, session.id, set.id))}
-                        timer={timerFor(exercise, set)}
-                      />
-                    );
-                  })}
-                </ol>
-              </div>
+                        })}
+                      </ol>
+                    </div>
+                    <Button
+                      variant="quiet"
+                      size="sm"
+                      className="mt-2"
+                      onClick={() =>
+                        void run(exercise.id, () => addSet(rt, session.id, exercise.id))
+                      }
+                    >
+                      <Plus aria-hidden="true" className="size-5" />
+                      {tSession.addSet}
+                    </Button>
+                  </section>
+                );
+              })}
+            </div>
+
+            <section
+              aria-label={tSession.sessionNoteTitle}
+              className="mt-6 rounded-card bg-surface p-4 shadow-card"
+            >
+              {session.notes ? (
+                <p className="mb-3 whitespace-pre-line">
+                  <span className="font-semibold">{tSession.sessionNoteTitle}: </span>
+                  {session.notes}
+                </p>
+              ) : null}
               <Button
-                variant="quiet"
+                variant="secondary"
                 size="sm"
-                className="mt-2"
-                onClick={() => void run(exercise.id, () => addSet(rt, session.id, exercise.id))}
+                onClick={() => {
+                  setNoteFor('session');
+                }}
               >
-                <Plus aria-hidden="true" className="size-5" />
-                {tSession.addSet}
+                <NotebookPen aria-hidden="true" className="size-4" />
+                {tSession.sessionNoteAction}
               </Button>
             </section>
-          );
-        })}
-      </div>
 
-      <section
-        aria-label={tSession.sessionNoteTitle}
-        className="mt-6 rounded-card bg-surface p-4 shadow-card"
-      >
-        {session.notes ? (
-          <p className="mb-3 whitespace-pre-line">
-            <span className="font-semibold">{tSession.sessionNoteTitle}: </span>
-            {session.notes}
-          </p>
-        ) : null}
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => {
-            setNoteFor('session');
-          }}
-        >
-          <NotebookPen aria-hidden="true" className="size-4" />
-          {tSession.sessionNoteAction}
-        </Button>
-      </section>
-
-      <div className="mt-8 flex justify-center">
-        <Button
-          variant="quietDanger"
-          onClick={() => {
-            setConfirm({ kind: 'discard' });
-          }}
-        >
-          {tSession.discard}
-        </Button>
+            <div className="mt-8 flex justify-center">
+              <Button
+                variant="quietDanger"
+                onClick={() => {
+                  setConfirm({ kind: 'discard' });
+                }}
+              >
+                {tSession.discard}
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div

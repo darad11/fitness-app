@@ -1,0 +1,150 @@
+/*
+ * Anordnung des Workout-Players je nach Platz (Phase iPhone Duo, D-380; Leitlinien Kapitel 6
+ * und 10). Die Datei wird mit dem Player nachgeladen und liegt nicht in der Startansicht.
+ *
+ * Hier wird nur angeordnet, nichts ein- oder ausgehängt: Kopf, Pause, Sätze und Eingaben bleiben
+ * beim Auf- und Zuklappen dieselben Elemente, Werte, Menüs und Pause bleiben erhalten (D-375).
+ * Ohne Ebene (`@layer`), damit die Regeln die Tailwind-Klassen derselben Elemente übersteuern.
+ */
+
+/* Maßstab ist die Breite des Inhalts, nicht des Fensters: Beim Duo nimmt der Systemrand an der
+   Seite Platz weg. Der Rahmen enthält keine festen Elemente (Fußleiste, Dialoge). */
+.player-frame {
+  container: player / inline-size;
+}
+
+/* Eine Spalte: Die Steuerung ist kein eigener Kasten, ihr Kopf klebt oben über der Liste. */
+.player-side {
+  display: contents;
+}
+
+/* „Als Nächstes“ gibt es nur in zwei Spalten; schmal sagt die Karte „Jetzt“ die nächste Übung. */
+.player-next {
+  display: none;
+}
+
+/*
+ * Ab 48 rem Inhaltsbreite (Duo aufgeklappt, iPad quer) zwei Spalten: links die Übungen mit den
+ * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), dem
+ * nächsten Satz und den nächsten Übungen.
+ *
+ * Der Bereich „demo“ ist für die Übungsdemonstration vorbereitet. Er erscheint erst, wenn es
+ * Bilder gibt: Ein Bereich ohne Inhalt hat keine Höhe, deshalb Abstände über Ränder statt `gap`.
+ */
+@container player (min-width: 48rem) {
+  .player-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .player-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .player-side {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'head' 'hint' 'demo' 'now' 'next';
+    position: sticky;
+    top: 0;
+    /* Wie der Kopf in einer Spalte bis an den oberen Rand, unter der Unschärfe von iOS (D-332). */
+    margin-top: calc(-1 * var(--spacing-edge-clear));
+    /* Nie hinter der Fußleiste; reicht die Höhe nicht, scrollt die Steuerung für sich. */
+    max-height: calc(100dvh - var(--player-foot, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Der Kopf steht in der Spalte: nicht bis an den Fensterrand, ohne eigenes Kleben. */
+  .player-side > .player-head {
+    grid-area: head;
+    position: static;
+    margin: 0 0 1rem;
+    padding-left: 0;
+    padding-right: 0;
+    border-bottom-width: 0;
+  }
+
+  .player-side > .player-hint {
+    grid-area: hint;
+  }
+
+  .player-side > .player-now {
+    grid-area: now;
+  }
+
+  .player-next {
+    display: block;
+    grid-area: next;
+  }
+}
+
+/*
+ * Eine Spalte und niedriges Fenster (unter 45 rem, Duo zugeklappt, iPhone quer): Pause in einer
+ * Zeile mit Zeit, nächstem Satz und „Überspringen“. ±15 s gibt es in der großen Pause; der Name
+ * „Nächster Satz“ und „Pause“ bleiben für Screenreader.
+ */
+@media (max-height: 44.99rem) {
+  @container player (max-width: 47.99rem) {
+    .rest-card {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      align-items: center;
+      column-gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .rest-card .rest-row,
+    .rest-card .rest-controls,
+    .rest-card .rest-controls > div {
+      display: contents;
+    }
+
+    .rest-card .rest-adjust {
+      display: none;
+    }
+
+    .rest-card .rest-clock {
+      font-size: var(--text-headline);
+    }
+
+    .rest-card .rest-label,
+    .rest-card .rest-next-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    /* Der nächste Satz in bis zu zwei Zeilen: so hoch wie die Knöpfe daneben, die Zeile wird
+       nicht höher. Zugeklappt steht so „Beinpresse, Aufwärm-…“ da statt nur „Beinpress…“; lange
+       Wörter werden getrennt statt abgeschnitten. */
+    .rest-card .rest-next-text {
+      margin-top: 0;
+      overflow-wrap: anywhere;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+  }
+
+  /* Schmaler als 22 rem (Safari zugeklappt, iPhone SE und mini) bliebe vom nächsten Satz kaum ein
+     Wort: Er steht dann nur für Screenreader da; sichtbar ist er in der Satzliste und in der
+     großen Pause. */
+  @container player (max-width: 21.99rem) {
+    .rest-card .rest-next-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+}

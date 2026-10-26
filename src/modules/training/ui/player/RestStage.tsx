@@ -57,6 +57,7 @@ export function RestStage(props: RestStageProps) {
       <Chip
         aria-label={tTrainingPages.rest.minus}
         fill
+        className="rest-adjust"
         onClick={() => {
           props.onAdjust(-REST_STEP_SEC);
         }}
@@ -67,6 +68,7 @@ export function RestStage(props: RestStageProps) {
       <Chip
         aria-label={tTrainingPages.rest.plus}
         fill
+        className="rest-adjust"
         onClick={() => {
           props.onAdjust(REST_STEP_SEC);
         }}
@@ -128,25 +130,26 @@ export function RestStage(props: RestStageProps) {
     );
   }
 
+  // Klassen `rest-…`: Anordnung in einer Zeile bei niedrigem Fenster (`player-layout.css`, D-380).
   return (
     <section
       aria-label={tTrainingPages.rest.label}
-      className={cn('stage mt-3 rounded-card p-card text-fg', overClass)}
+      className={cn('rest-card stage mt-3 rounded-card p-card text-fg', overClass)}
     >
-      <div className="flex min-h-12 items-center gap-4">
+      <div className="rest-row flex min-h-12 items-center gap-4">
         <p
           role="timer"
           aria-label={status}
-          className={cn('text-value font-semibold', over && 'text-accent-ink')}
+          className={cn('rest-clock text-value font-semibold', over && 'text-accent-ink')}
         >
           {time}
         </p>
         <p className="min-w-0 flex-1">
-          <span className="eyebrow block text-muted">
+          <span className="rest-label eyebrow block text-muted">
             {over ? tTrainingPages.rest.over : tTrainingPages.rest.label}
           </span>
-          <span className="mt-0.5 line-clamp-2 text-sm">
-            <span className="font-semibold">{tTrainingPages.rest.next}: </span>
+          <span className="rest-next-text mt-0.5 line-clamp-2 text-sm">
+            <span className="rest-next-label font-semibold">{tTrainingPages.rest.next}: </span>
             {nextText}
           </span>
         </p>
@@ -160,7 +163,7 @@ export function RestStage(props: RestStageProps) {
           <ChevronUp aria-hidden="true" className="size-6" />
         </IconButton>
       </div>
-      <div className="mt-3">{controls('sm')}</div>
+      <div className="rest-controls mt-3">{controls('sm')}</div>
     </section>
   );
 }

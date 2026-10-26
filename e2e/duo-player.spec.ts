@@ -146,7 +146,9 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
 
   // Hohes Fenster (Zwischenmaß): die Karte wie bisher mit ±15 s. Der Kopf wird dabei 72 px höher;
   // der aktuelle Satz bleibt schon im ersten Bild nach dem Wechsel an seiner Stelle, nicht erst
-  // beim nächsten Takt der Pause. Gemessen wird in diesem Bild, nach dem Ausgleich der App.
+  // beim nächsten Takt der Pause; läge er dort hinter dem höheren Kopf, steht er schon in diesem
+  // Bild 12 px darunter. Das ist hier der Fall, seit das Antippen eines Feldes den Satz unter den
+  // Kopf holt (D-391). Gemessen wird in diesem Bild, nach dem Ausgleich der App.
   const current = page.locator('li[aria-current="step"]');
   const before = (await box(current)).top;
   await page.evaluate(() => {
@@ -155,6 +157,10 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
       () => {
         requestAnimationFrame(() => {
           const row = document.querySelector('li[aria-current="step"]');
+          const head = document.querySelector('main header');
+          document.documentElement.dataset.headBottom = String(
+            head?.getBoundingClientRect().bottom,
+          );
           document.documentElement.dataset.rowTop = String(row?.getBoundingClientRect().top);
         });
       },
@@ -164,7 +170,12 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
   await setDuoPose(page, 'hoch');
   await expect.poll(() => page.locator('html').getAttribute('data-row-top')).not.toBeNull();
   const firstFrame = Number(await page.locator('html').getAttribute('data-row-top'));
-  expect(Math.abs(firstFrame - before), 'erstes Bild nach dem Wechsel').toBeLessThanOrEqual(4);
+  const headBottom = Number(await page.locator('html').getAttribute('data-head-bottom'));
+  const expected = Math.max(before, headBottom + 12);
+  expect(
+    Math.abs(firstFrame - expected),
+    `erstes Bild nach dem Wechsel (vorher ${String(before)}, Kopf bis ${String(headBottom)})`,
+  ).toBeLessThanOrEqual(4);
   await expect(rest.getByRole('button', { name: '15 s mehr' })).toBeVisible();
   await expect.poll(async () => (await box(rest)).height).toBeGreaterThan(100);
   // ±15 s wirken in der Karte wie bisher.

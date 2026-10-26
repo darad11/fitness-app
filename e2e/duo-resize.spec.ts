@@ -33,6 +33,12 @@ async function topOf(locator: Locator): Promise<number> {
   return box.y;
 }
 
+/** Oberste Stelle für einen Satz unter dem Kopf im Training: 12 px darunter (D-380). */
+async function belowHead(page: Page): Promise<number> {
+  const head = await page.locator('main header').boundingBox();
+  return head ? head.y + head.height + 12 : 0;
+}
+
 for (const path of ['/heute', '/training/programme']) {
   test(`Leseposition auf ${path} bleibt beim Auf- und Zuklappen (D-375)`, async ({ page }) => {
     await setDuoPose(page, 'zu');
@@ -96,7 +102,7 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
       return (await frameTop()) - start;
     }, 'Seite steht')
     .toBe(0);
-  const rowTop = await topOf(current);
+  let rowTop = await topOf(current);
   let rest = await restSeconds(page);
   // Verlauf je Größenwechsel für die Meldung: Scrollposition, Lage des Satzes und Höhe des Kopfs
   // beim Ereignis `resize`, bei jedem Scrollen und in den 20 Bildern danach.
@@ -201,16 +207,20 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
         }, `${pose}: sichtbar`)
         .toBe(true);
     } else {
-      // In einer Spalte steht der Satz an derselben Stelle. In der Meldung der Verlauf seit dem
-      // Größenwechsel, falls nicht (WebKit war 52 und 53 px daneben, Nachtrag zu D-384).
-      const offset = Math.abs((await topOf(current)) - rowTop);
+      // In einer Spalte steht der Satz an derselben Stelle wie in der Haltung davor; nur wenn der
+      // Kopf höher wird und darüber läge, steht er direkt darunter (D-380). Das ist der Fall, seit
+      // das Antippen eines Feldes den Satz unter den Kopf holt (D-391). In der Meldung der Verlauf
+      // seit dem Größenwechsel, falls nicht (WebKit war 52 und 53 px daneben, Nachtrag zu D-384).
+      const expected = Math.max(rowTop, await belowHead(page));
+      const offset = Math.abs((await topOf(current)) - expected);
       const anchoring = await page.evaluate(() => CSS.supports('overflow-anchor', 'none'));
       const where =
         offset > 4 ? `overflow-anchor ${anchoring ? 'ja' : 'nein'}; ${await history()}` : '';
       expect(
         offset,
-        `${pose}: Position (Satz vorher bei ${String(rowTop)}; ${where})`,
+        `${pose}: Position (Satz vorher bei ${String(rowTop)}, erwartet ${String(expected)}; ${where})`,
       ).toBeLessThanOrEqual(4);
+      rowTop = await topOf(current);
     }
   }
 
@@ -260,5 +270,9 @@ test('Training: Scrollt die Seite kurz nach dem Größenwechsel noch, steht der 
   });
   await setDuoPose(page, 'hoch');
   await page.waitForTimeout(700);
-  expect(Math.abs((await topOf(current)) - rowTop), 'Satz an seiner Stelle').toBeLessThanOrEqual(4);
+  // An seiner Stelle, oder direkt unter dem Kopf, wenn dieser höher wurde und darüber läge.
+  const expected = Math.max(rowTop, await belowHead(page));
+  expect(Math.abs((await topOf(current)) - expected), 'Satz an seiner Stelle').toBeLessThanOrEqual(
+    4,
+  );
 });

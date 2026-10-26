@@ -4,7 +4,9 @@ import {
   onPageScroll,
   pageScrollTop,
   scrollPageBy,
+  setKeyboardBars,
   suspendScrollAnchoring,
+  typing,
 } from '@/shared/ui';
 
 /** Abstand des aktiven Satzes zum Kopf (mit Pausenkarte) und zur Fußleiste, in px. */
@@ -209,22 +211,34 @@ export function useStableSetView(
       container.style.setProperty('--player-head', `${String(above ? header.offsetHeight : 0)}px`);
       // Höhe der Fußleiste: Die Steuerung in zwei Spalten endet darüber (D-380).
       container.style.setProperty('--player-foot', `${String(foot.current?.offsetHeight ?? 0)}px`);
+      // Ein angetipptes Feld kommt unter den Kopf, nicht dahinter, und möglichst über die
+      // Fußleiste, die über der Tastatur bleibt (D-391).
+      setKeyboardBars(above ? header.offsetHeight + GAP : 0, foot.current?.offsetHeight ?? 0);
     };
     update();
-    if (typeof ResizeObserver === 'undefined') return undefined;
+    const cleanup = () => {
+      setKeyboardBars(0, 0);
+    };
+    if (typeof ResizeObserver === 'undefined') return cleanup;
     // Kopf und Fußleiste ändern ihre Größe auch beim Wechsel zwischen einer und zwei Spalten.
     // Ändert der Kopf seine Höhe ohne neue Darstellung (die Pause wechselt zwischen Zeile und
     // Karte, der sichere Bereich ändert sich), bleibt der aktive Satz im selben Bild an seiner
     // Stelle, nicht erst beim nächsten Takt der Pause (D-380).
     headHeight.current = header.offsetHeight;
+    let width = window.innerWidth;
     const observer = new ResizeObserver(() => {
       update();
+      // Tastatur: Beim Tippen ändert sich nur die Höhe des Fensters (D-391).
+      const keyboard = typing() && window.innerWidth === width;
+      width = window.innerWidth;
       if (header.offsetHeight === headHeight.current) return;
       headHeight.current = header.offsetHeight;
       // Nur über der Liste verschiebt der Kopf die Sätze. Daneben (zwei Spalten) bewegt sich
       // nichts; ein Ausgleich gegen den zuletzt gemerkten Stand schob dort in WebKit das sanfte
-      // Zeigen des nächsten Satzes zurück (Nachtrag zu D-384).
-      if (headAbove(header)) {
+      // Zeigen des nächsten Satzes zurück (Nachtrag zu D-384). Geht die Tastatur auf oder zu
+      // (die Pause wechselt dabei zwischen Karte und Zeile), scrollt der Player nicht von selbst;
+      // das Feld steht schon unter dem Kopf (D-391).
+      if (headAbove(header) && !keyboard) {
         settle(container, header, foot.current, anchor.current, visible.current);
       }
       note(container, header, foot.current, anchor, visible, track.current);
@@ -234,6 +248,7 @@ export function useStableSetView(
     if (foot.current) observer.observe(foot.current, { box: 'border-box' });
     return () => {
       observer.disconnect();
+      cleanup();
     };
   }, [root, head, foot]);
 
@@ -311,6 +326,14 @@ export function useStableSetView(
       resizeFrame = requestAnimationFrame(() => {
         const container = root.current;
         if (!container) return;
+        // Ändert sich beim Tippen nur die Höhe, geht die Tastatur auf oder zu: iOS und das Zeigen
+        // beim Antippen haben das Feld schon unter den Kopf gebracht, ein Ausgleich schöbe es
+        // zurück (D-391). Auf- und Zuklappen ändert die Breite und wird ausgeglichen wie sonst.
+        if (typing() && !widthChanged) {
+          stopHold?.();
+          note(container, head.current, foot.current, anchor, visible, track.current);
+          return;
+        }
         settle(container, head.current, foot.current, before, wasVisible);
         note(container, head.current, foot.current, anchor, visible, track.current);
         const row = before && wasVisible && widthChanged ? rowById(container, before.id) : null;

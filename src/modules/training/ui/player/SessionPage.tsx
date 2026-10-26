@@ -76,6 +76,7 @@ import {
 } from '../../service/sessionService';
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
+import { useFootClearOfField } from './useFootClearOfField';
 import { useStableSetView } from './useStableSetView';
 import './player-layout.css';
 
@@ -241,6 +242,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const headRef = useRef<HTMLElement>(null);
   const footRef = useRef<HTMLDivElement>(null);
   useStableSetView(rootRef, headRef, footRef, current?.id ?? null);
+  useFootClearOfField(footRef);
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
   const afterRest = restTimer ? nextOpenSet(session, restTimer.afterSetId) : null;
@@ -778,11 +780,12 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       </div>
 
       {/* Fußleiste als Portal außerhalb des Rahmens, in dem die Seite scrollt (D-384): Sie steht
-          beim Scrollen still, ohne dass der Browser sie nachführen muss. */}
+          beim Scrollen still, ohne dass der Browser sie nachführen muss. Bei offener Tastatur
+          bleibt sie über ihr, außer sie verdeckte das Feld (`useFootClearOfField`, D-391). */}
       {createPortal(
         <div
           ref={footRef}
-          className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
+          className="player-foot page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
         >
           <div className="mx-auto flex max-w-content gap-2">
             {current && currentExercise ? (

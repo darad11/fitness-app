@@ -2025,3 +2025,25 @@ Startfläche in der Mitte des ganzen Bildschirms, vier Startbilder für das Duo 
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,8 KB von 250 KB (`index.html` 5,7 KB); Startbilder nicht vorab gespeichert, wie bisher |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem zweiten Gerätetest: Tastatur in Formularen · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Tab-Leiste und Kreis bei offener Tastatur aus, angetipptes Feld im oberen Teil der Seite, Fußleiste im Training über der Tastatur (D-391). Browser-Fenster, nicht das Gerät; die Tastatur ist als um 55 % niedrigeres Fenster nachgestellt.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen in Bild B | Tastatur samt Leiste darüber 54 % der Höhe; die Tab-Leiste liegt darüber, mitten im Formular |
+| Nachgemessen im Player (Chromium, Duo zugeklappt) | Kopf 120 px, mit laufender Pause 192 px; Fußleiste 111 px (mit sicherem Bereich unten), Satzzeile 108 px, Feld 48 px. Mit Pause passen Kopf, Feld, Fußleiste und Tastatur nicht zugleich in 678 px |
+| `src/app/keyboard.test.ts`, `src/modules/training/ui/player/useFootClearOfField.test.tsx` | 13 und 6 Tests bestanden |
+| `e2e/duo-tastatur.spec.ts` (Chromium, Handy-Profil; zugeklappt, aufgeklappt, iPhone je sieben Formulare) | 21 bestanden |
+| Gegenprobe: dieselben 21 Tests mit dem Stand vor D-391 | 21 von 21 fehlgeschlagen. 16 an der Sache, z. B. „zugeklappt, Was möchtest du einkaufen?: ganz zu sehen (182 bis 230 von 305, darüber <a data-tab=\"/heute\" class=\"tabbar-tab\" …)“, „zugeklappt, Lebensmittel suchen: im oberen Teil (Feld 450 bis 498, oben 80, Linie 271)“, „iPhone, kg im ersten Satz: im oberen Teil (Feld 536 bis 584, oben 80, Linie 341)“; 5 nur an den neuen Klassen `tabbar-dock` und `player-foot` („Tab-Leiste wieder da“ bei „Gewicht erfassen“ in allen Haltungen und aufgeklappt in der Einkaufsliste, „Fußleiste über der Tastatur“ aufgeklappt im Training) |
+| Erste Fassung (Fußleiste im niedrigen Fenster beim Tippen immer aus), ganze Suite | 401 bestanden, 120 übersprungen, 5 fehlgeschlagen: vier Tests im Training kamen nicht an „Satz erledigt“ (Zeitüberschreitung beim Klick, das Feld hatte noch den Fokus), `training-scroll.spec.ts` „verdeckt von der Fußleiste“. Danach: Fußleiste nur aus, wenn sie das Feld verdeckte |
+| Zweite Fassung, Training (`duo-tastatur`, `duo-player`, `duo-resize`, `training-scroll`) | 26 bestanden, 3 fehlgeschlagen: `training-scroll.spec.ts` (der Kopf als `scroll-padding-top` des Rahmens zählte mit dem `scroll-margin-top` der Satzzeilen doppelt; jetzt eigene Angabe `--tastatur-oben`) und zwei Tests in `duo-resize.spec.ts` (Satz 72,8 px tiefer) |
+| Dritte Fassung, dieselben Dateien | 27 bestanden, 2 fehlgeschlagen: `duo-player.spec.ts` „erstes Bild nach dem Wechsel“ (72,8 px) und einmal „Satzzeile unter 20 rem“ (der Dialog „Training beenden?“ meldete den eben erledigten Satz als offen; in drei Wiederholungen danach bestanden) |
+| Satz 72,8 px tiefer | Seit dem Antippen steht der Satz direkt unter dem Kopf. Wird der Kopf beim Aufklappen 72 px höher (Pause als Karte), läge er darüber; der Player rückt den Satz 12 px darunter, wie seit D-380. Drei Tests erwarten jetzt: an seiner Stelle, oder 12 px unter dem Kopf, wenn dieser darüber läge |
+| `duo-player.spec.ts`, dreimal wiederholt | 9 bestanden |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 406 bestanden, 120 übersprungen, 0 fehlgeschlagen, 10,5 min |
+| `pnpm test` | 129 Dateien, 1122 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions); die neuen Tests laufen dort nur, wenn WebKit einen Touch-Zeiger meldet (`pointer: coarse`), sonst übersprungen |

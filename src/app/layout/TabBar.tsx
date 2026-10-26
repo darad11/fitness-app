@@ -93,10 +93,11 @@ export function TabBar() {
 
   return (
     // Seitlich mindestens der sichere Bereich (D-372): Beim iPhone Duo liegen Statusleiste und
-    // Kamera an der Seite; Leiste und Kreis bleiben daneben und damit antippbar.
+    // Kamera an der Seite; Leiste und Kreis bleiben daneben und damit antippbar. Bei offener
+    // Bildschirmtastatur ist beides aus (`tabbar-dock` in styles.css, D-391).
     <div
       ref={wrapper}
-      className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center pr-[max(0.75rem,env(safe-area-inset-right))] pl-[max(0.75rem,env(safe-area-inset-left))] lg:hidden"
+      className="tabbar-dock pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center pr-[max(0.75rem,env(safe-area-inset-right))] pl-[max(0.75rem,env(safe-area-inset-left))] lg:hidden"
     >
       <nav ref={bar} aria-label={t.nav.label} className="tabbar pointer-events-auto">
         <span ref={indicator} aria-hidden="true" className="tabbar-indicator" />

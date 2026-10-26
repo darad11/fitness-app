@@ -1,13 +1,18 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { NavigationType, useLocation, useNavigationType } from 'react-router';
 import {
+  isTextEntry,
   onPageScroll,
   ownPositionHeld,
   pageScroller,
   pageScrollTop,
   pageViewportHeight,
+  releaseRoom,
+  revealField,
   scrollPageTo,
   suspendScrollAnchoring,
+  touchScreen,
+  typing,
 } from '@/shared/ui/pageScroll';
 
 /** Scrollposition je Verlaufseintrag (`location.key`), solange die App offen ist. */
@@ -58,6 +63,20 @@ export function ScrollManager() {
     };
   }, []);
 
+  // Bildschirmtastatur (D-391): Ein angetipptes Feld kommt sofort in den oberen Teil der Seite,
+  // bevor die Tastatur aufgeht; liegt es dort schon, bewegt sich nichts.
+  useEffect(() => {
+    const onFocus = (event: FocusEvent) => {
+      if (touchScreen() && isTextEntry(event.target as Element | null)) {
+        revealField(event.target as HTMLElement);
+      }
+    };
+    document.addEventListener('focusin', onFocus);
+    return () => {
+      document.removeEventListener('focusin', onFocus);
+    };
+  }, []);
+
   // Leseposition beim Auf- und Zuklappen (D-375): Ändert sich die Breite, bricht der Text anders
   // um, und ohne Ausgleich rutscht der Inhalt unter dem Finger weg (WebKit kennt keine
   // Scroll-Verankerung, Chromium setzt sie bei einer Breitenänderung aus). Gemerkt wird das
@@ -70,6 +89,7 @@ export function ScrollManager() {
     let resizedAt = -Infinity;
     let inputAt = -Infinity;
     let touching = false;
+    let width = window.innerWidth;
     const onInput = () => {
       inputAt = performance.now();
     };
@@ -91,8 +111,12 @@ export function ScrollManager() {
     const onResize = () => {
       cancelAnimationFrame(frame);
       resizedAt = performance.now();
+      // Ändert sich beim Tippen nur die Höhe, geht die Tastatur auf oder zu; das Feld ist schon zu
+      // sehen, ein Ausgleich schöbe die Seite gegen das Zeigen des Feldes (D-391).
+      const keyboard = typing() && window.innerWidth === width;
+      width = window.innerWidth;
       // Hält die Seite ihre Lage selbst (Player), gleicht nur sie aus (Nachtrag zu D-384).
-      if (ownPositionHeld()) {
+      if (ownPositionHeld() || keyboard) {
         anchorRef.current = null;
         return;
       }
@@ -127,6 +151,8 @@ export function ScrollManager() {
   useLayoutEffect(() => {
     keyRef.current = location.key;
     anchorRef.current = null;
+    // Platz unten für ein Feld über der Tastatur gilt nur auf der Seite, auf der er entstand (D-391).
+    releaseRoom();
     if (location.hash) return undefined;
     const target = type === NavigationType.Pop ? (positions.get(location.key) ?? 0) : 0;
     scrollPageTo(target);

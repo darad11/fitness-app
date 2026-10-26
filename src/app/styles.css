@@ -309,6 +309,15 @@
     outline-offset: 2px;
   }
 
+  /* Beim Antippen bleibt über einem Feld Platz für seine Beschriftung (D-391, `revealField`); in
+     der Satzzeile im Training steht keine darüber, dort nur der Innenabstand der Zeile. */
+  :is(input, textarea, select) {
+    scroll-margin-top: 1.75rem;
+  }
+  [data-set-id] :is(input, textarea, select) {
+    scroll-margin-top: 0.375rem;
+  }
+
   /* Ein Symbolsatz (Lucide) in Linie mit 1,75 px Strich (FORM, D-314). */
   svg.lucide {
     stroke-width: 1.75;
@@ -347,6 +356,14 @@
     overscroll-behavior-y: contain;
     scroll-padding-top: 5rem;
     scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
+  }
+
+  /* Platz unten im Rahmen, damit ein angetipptes Feld am Seitenende nach oben kommen kann
+     (D-391, `revealField` in src/shared/ui/pageScroll.ts setzt `--tastatur-platz`). */
+  .page-scroller::after {
+    content: '';
+    display: block;
+    height: var(--tastatur-platz, 0px);
   }
   /* Bühne: die wichtigste Karte einer Seite, eine Stufe heller als die Seite (bg-elevated). */
   .stage {
@@ -396,6 +413,13 @@
   .login-screen {
     background: var(--bg);
     color: var(--fg);
+    /* Ein angetipptes Feld kommt unter die Unschärfe oben, mit Platz unten (D-391). */
+    scroll-padding-top: 5rem;
+  }
+  .login-screen::after {
+    content: '';
+    display: block;
+    height: var(--tastatur-platz, 0px);
   }
   .login-body {
     padding-top: max(
@@ -783,5 +807,44 @@
     .tabbar-lens-ring {
       display: none;
     }
+  }
+}
+
+/*
+ * Bildschirmtastatur (D-391): Hat am Touch-Gerät ein Feld den Fokus, ist die Tastatur offen. iOS
+ * schiebt feste Leisten dann über die Tastatur, mitten ins Formular; Tab-Leiste und Kreis sind
+ * deshalb aus; das angetippte Feld kommt in den oberen Teil der Seite (`revealField` in
+ * `src/shared/ui/pageScroll.ts`, mit Platz unten bei Bedarf). Die Fußleiste im Training bleibt
+ * über der Tastatur; nur wenn sie das Feld verdecken würde, ist sie aus (`data-covering`, gesetzt
+ * von `useFootClearOfField`). Die Felder sind dieselben wie in `TEXT_ENTRY_SELECTOR`;
+ * `keyboard.test.ts` vergleicht.
+ */
+@layer components {
+  @media (pointer: coarse) {
+    :root:has(
+        :is(
+          input:not(
+            [type='checkbox'],
+            [type='radio'],
+            [type='range'],
+            [type='button'],
+            [type='submit'],
+            [type='reset'],
+            [type='color'],
+            [type='file'],
+            [type='image'],
+            [type='hidden']
+          ),
+          textarea,
+          select,
+          [contenteditable]:not([contenteditable='false'])
+        ):focus
+      )
+      .tabbar-dock {
+      visibility: hidden;
+    }
+  }
+  .player-foot[data-covering] {
+    visibility: hidden;
   }
 }

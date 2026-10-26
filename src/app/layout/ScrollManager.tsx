@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { NavigationType, useLocation, useNavigationType } from 'react-router';
 import {
   onPageScroll,
+  ownPositionHeld,
   pageScroller,
   pageScrollTop,
   pageViewportHeight,
@@ -89,6 +90,11 @@ export function ScrollManager() {
     const onResize = () => {
       cancelAnimationFrame(frame);
       resizedAt = performance.now();
+      // Hält die Seite ihre Lage selbst (Player), gleicht nur sie aus (Nachtrag zu D-384).
+      if (ownPositionHeld()) {
+        anchorRef.current = null;
+        return;
+      }
       const before = anchorRef.current;
       if (!before?.element.isConnected) {
         anchorRef.current = readingAnchor();
@@ -134,7 +140,8 @@ export function ScrollManager() {
     let last = pageScrollTop();
     const stop = () => {
       cancelAnimationFrame(frame);
-      root.style.overflowAnchor = anchoring;
+      // Hält eine Seite ihre Lage inzwischen selbst, bleibt die Verankerung aus.
+      root.style.overflowAnchor = ownPositionHeld() ? 'none' : anchoring;
       for (const name of STOP_EVENTS) window.removeEventListener(name, stop);
     };
     const step = () => {

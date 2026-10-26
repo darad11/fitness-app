@@ -113,6 +113,27 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
         `${why} ${String(at)}: s${String(frame?.scrollTop)} r${String(Math.round(row?.top ?? -1))} k${String(Math.round(head?.height ?? -1))}`,
       );
     };
+    // Wer scrollt den Rahmen? Aufrufe von `scrollTo` und `scrollBy` mit der Stelle im Code.
+    const proto = Element.prototype as unknown as Record<
+      'scrollTo' | 'scrollBy',
+      (...args: unknown[]) => void
+    >;
+    for (const name of ['scrollTo', 'scrollBy'] as const) {
+      const original = proto[name];
+      proto[name] = function (this: Element, ...args: unknown[]) {
+        if (this.id === 'seite') {
+          const stack = (new Error().stack ?? '')
+            .split('\n')
+            .filter((line) => !line.startsWith('Error'));
+          const where = stack
+            .slice(1, 3)
+            .map((line) => line.trim().slice(0, 40))
+            .join(' < ');
+          w.verlauf.push(`${name} ${JSON.stringify(args[0])} ${where}`);
+        }
+        Reflect.apply(original, this, args);
+      };
+    }
     window.addEventListener('resize', () => {
       sample('resize');
       let count = 0;
@@ -176,7 +197,9 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
       // In einer Spalte steht der Satz an derselben Stelle. In der Meldung der Verlauf seit dem
       // Größenwechsel, falls nicht (WebKit war 52 und 53 px daneben, Nachtrag zu D-384).
       const offset = Math.abs((await topOf(current)) - rowTop);
-      const where = offset > 4 ? await history() : '';
+      const anchoring = await page.evaluate(() => CSS.supports('overflow-anchor', 'none'));
+      const where =
+        offset > 4 ? `overflow-anchor ${anchoring ? 'ja' : 'nein'}; ${await history()}` : '';
       expect(
         offset,
         `${pose}: Position (Satz vorher bei ${String(rowTop)}; ${where})`,
@@ -231,4 +254,36 @@ test('Training: Scrollt die Seite kurz nach dem Größenwechsel noch, steht der 
   await setDuoPose(page, 'hoch');
   await page.waitForTimeout(700);
   expect(Math.abs((await topOf(current)) - rowTop), 'Satz an seiner Stelle').toBeLessThanOrEqual(4);
+});
+
+test('Training: Der Player hält die Lage selbst, solange der aktive Satz zu sehen ist (Nachtrag zu D-384)', async ({
+  page,
+}) => {
+  await setDuoPose(page, 'zu');
+  await openPage(page, '/training/vorlagen/compound_ab_4');
+  await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+  await expect(page.getByRole('heading', { level: 2, name: /^Trainingstag 1 von/ })).toBeVisible();
+  await openPage(page, '/heute');
+  await page.getByRole('button', { name: 'Training starten' }).click();
+  await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
+  // Ohne Unterstützung für `overflow-anchor` (ältere Browser) bleibt die Angabe leer.
+  test.skip(
+    !(await page.evaluate(() => CSS.supports('overflow-anchor', 'none'))),
+    'Browser ohne overflow-anchor',
+  );
+  const anchoring = () =>
+    page.evaluate(
+      () => document.getElementById('seite')?.style.getPropertyValue('overflow-anchor') ?? '?',
+    );
+  // Satz zu sehen: Scroll-Verankerung des Browsers aus, der Player gleicht selbst aus.
+  await expect.poll(anchoring, 'Satz zu sehen').toBe('none');
+  // Weit weg gescrollt: Es gilt wieder die Leseposition, mit Verankerung des Browsers.
+  await page.evaluate(() => {
+    document.getElementById('seite')?.scrollBy({ top: 1500, behavior: 'instant' });
+  });
+  await expect.poll(anchoring, 'Satz nicht zu sehen').toBe('');
+  await page.evaluate(() => {
+    document.getElementById('seite')?.scrollTo({ top: 0, behavior: 'instant' });
+  });
+  await expect.poll(anchoring, 'wieder zu sehen').toBe('none');
 });

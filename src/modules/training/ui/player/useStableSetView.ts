@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
-import { onPageScroll, pageScrollTop, scrollPageBy } from '@/shared/ui';
+import { holdOwnPosition, onPageScroll, pageScrollTop, scrollPageBy } from '@/shared/ui';
 
 /** Abstand des aktiven Satzes zum Kopf (mit Pausenkarte) und zur Fußleiste, in px. */
 const GAP = 12;
@@ -90,17 +90,19 @@ function reveal(
   scrollPageBy(delta, reduce ? 'instant' : 'smooth');
 }
 
-/** Merkt Lage und Sichtbarkeit des aktiven Satzes. */
+/** Merkt Lage und Sichtbarkeit des aktiven Satzes und meldet die Sichtbarkeit an `track`. */
 function note(
   container: HTMLElement,
   head: HTMLElement | null,
   foot: HTMLElement | null,
   anchor: { current: Anchor | null },
   visible: { current: boolean },
+  track: (isVisible: boolean) => void,
 ): void {
   anchor.current = measure(container);
   const row = activeRow(container);
   visible.current = row ? topVisible(row, head, foot) : false;
+  track(visible.current);
 }
 
 /**
@@ -152,6 +154,29 @@ export function useStableSetView(
   /** Zuletzt gemeldete Höhe des Kopfs (ResizeObserver). */
   const headHeight = useRef<number | null>(null);
 
+  /** Freigabe, solange der Player die Lage beim Größenwechsel selbst hält. */
+  const release = useRef<(() => void) | null>(null);
+  /**
+   * Ist der aktive Satz zu sehen, hält der Player die Lage beim Größenwechsel selbst: ohne
+   * Ausgleich des ScrollManagers und ohne Scroll-Verankerung des Browsers, die sonst gegen den
+   * Ausgleich arbeiten (Nachtrag zu D-384). Hat man anderswo hingescrollt, gilt die Leseposition
+   * des ScrollManagers (D-375).
+   */
+  const track = useRef((isVisible: boolean) => {
+    if (isVisible && !release.current) release.current = holdOwnPosition();
+    if (!isVisible && release.current) {
+      release.current();
+      release.current = null;
+    }
+  });
+  useEffect(
+    () => () => {
+      release.current?.();
+      release.current = null;
+    },
+    [],
+  );
+
   useEffect(() => {
     const container = root.current;
     const header = head.current;
@@ -174,7 +199,7 @@ export function useStableSetView(
       if (header.offsetHeight === headHeight.current) return;
       headHeight.current = header.offsetHeight;
       settle(container, header, foot.current, anchor.current, visible.current);
-      note(container, header, foot.current, anchor, visible);
+      note(container, header, foot.current, anchor, visible, track.current);
     });
     // Außenkante: Der sichere Bereich ändert nur den Innenabstand von Kopf und Fußleiste.
     observer.observe(header, { box: 'border-box' });
@@ -238,7 +263,7 @@ export function useStableSetView(
         // Hat der Kopf in diesem Bild seine Höhe geändert, gleicht das gleich danach der
         // ResizeObserver aus. Jetzt gemessen, gälte die Verschiebung als neue Lage (D-380).
         if (head.current && head.current.offsetHeight !== headHeight.current) return;
-        note(container, head.current, foot.current, anchor, visible);
+        note(container, head.current, foot.current, anchor, visible, track.current);
       });
     };
     // Auf- und Zuklappen (D-380): Der Kopf wechselt zwischen über und neben der Liste, die Pause
@@ -255,7 +280,7 @@ export function useStableSetView(
         const container = root.current;
         if (!container) return;
         settle(container, head.current, foot.current, before, wasVisible);
-        note(container, head.current, foot.current, anchor, visible);
+        note(container, head.current, foot.current, anchor, visible, track.current);
         const row = before && wasVisible && widthChanged ? rowById(container, before.id) : null;
         if (row) hold(row);
         widthChanged = false;
@@ -291,6 +316,6 @@ export function useStableSetView(
       const next = currentId ? rowById(container, currentId) : null;
       if (next) reveal(next, head.current, foot.current);
     }
-    note(container, head.current, foot.current, anchor, visible);
+    note(container, head.current, foot.current, anchor, visible, track.current);
   });
 }

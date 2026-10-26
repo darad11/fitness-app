@@ -1868,3 +1868,23 @@ Etiketten neben dem Namen, sonst in eigener Zeile darunter, nie über „Erstes 
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 4 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40366596552 zu `439269a` (Nachtrag 3 zu D-384): alle vier Jobs grün. E2E Chromium bestanden; E2E WebKit 355 bestanden, 113 übersprungen, 2 erst im zweiten Anlauf („flaky“). Danach CI-Lauf 40370315333 zu `c7946a0` (D-386): Chromium grün, WebKit rot (siehe Tabelle).
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, Handy-Profil, `shopping.spec.ts` „Wisch nach links …“ | bestanden |
+| CI-Lauf 40370315333 zu `c7946a0` (D-386), WebKit | 356 bestanden, 114 übersprungen; fehlgeschlagen in beiden Anläufen der neue Test „Scrollt die Seite kurz nach dem Größenwechsel noch …“ (51,78 statt höchstens 4 px; im Lauf davor bestanden); „Training: Satz, Werte, Pause …“ erst im zweiten Anlauf (erster: „hoch: Position“, 8,2 px; Verlauf „resize 255: s304 r301 k264 \| bild 255 \| bild 639 \| bild 669“, alle s304 r301, zwischen zwei Bildern 384 ms) |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“, erster Anlauf | fehlgeschlagen: „zu: Position“, 53 statt höchstens 4 px. Verlauf (gekürzt): vorher Seite 138, Satz 482; „resize: s33 r535 k192 \| scroll: s33 r535 \| bild: s85 r483 \| bild: s33 r535“, danach bis zum Ende der Aufzeichnung (rund 360 ms) s33 r535 |
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“, erster Anlauf | fehlgeschlagen: „unter dem Kopf“ (5 s gewartet) |
+| Nachgestellt in Chromium (Profil iPhone 15, ohne sicheren Bereich und ohne Scroll-Verankerung, Aufrufe am Rahmen mitgeschrieben) | beim Zwischenmaß und zurück nur je ein `scrollBy` des Players (±39 px), kein Aufruf des ScrollManagers; der Satz steht danach an seiner Stelle |
+| `src/shared/ui/pageScroll.test.ts` (2 Tests, neu) | bestanden |
+| Neuer Test „Der Player hält die Lage selbst, solange der aktive Satz zu sehen ist“ (Chromium) | bestanden: Satz zu sehen `overflow-anchor: none`, weit weg gescrollt wieder leer, zurück wieder `none` |
+| `duo-resize`, `duo-player` (Chromium, Handy-Profil) | 8 bestanden |
+| `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `shopping`, `rahmen-tastatur`, `duo-etiketten`, `header-logo`, `program-list`, `tabbar`, `duo-resize`, `duo-player` (Chromium) | 53 bestanden, 27 übersprungen |
+| `pnpm test` | 126 Dateien, 1094 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

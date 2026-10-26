@@ -86,9 +86,20 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
   });
   await page.waitForTimeout(700);
   await setDuoPose(page, 'zu');
-  await expect
-    .poll(async () => (await box(active)).top >= (await box(head)).bottom - 1, 'unter dem Kopf')
-    .toBe(true);
+  // Bis zu 5 s warten; die Meldung nennt den Verlauf: Scrollposition, Satz und Unterkante des
+  // Kopfs (WebKit war einmal dahinter, Nachtrag zu D-384).
+  const states: string[] = [];
+  let below = false;
+  for (let attempt = 0; attempt < 25 && !below; attempt += 1) {
+    const [row, top] = [await box(active), await box(head)];
+    const scroll = await page.evaluate(() => document.getElementById('seite')?.scrollTop ?? -1);
+    states.push(
+      `s${String(scroll)} r${String(Math.round(row.top))} k${String(Math.round(top.bottom))}`,
+    );
+    below = row.top >= top.bottom - 1;
+    if (!below) await page.waitForTimeout(200);
+  }
+  expect(below, `unter dem Kopf (${states.join(' | ')})`).toBe(true);
 
   // Zugeklappt und im Zwischenmaß eine Spalte: Der Kopf steht über der Liste, so breit wie die
   // Seite, nicht daneben; „Als Nächstes“ entfällt. Unabhängig davon, wohin die Seite gescrollt ist.

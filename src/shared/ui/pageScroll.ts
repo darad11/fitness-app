@@ -51,3 +51,30 @@ export function onPageScroll(listener: () => void): () => void {
     target.removeEventListener('scroll', listener);
   };
 }
+
+/** Zahl der Seiten, die ihre Lage beim Größenwechsel gerade selbst halten. */
+let ownPositionHolders = 0;
+
+/**
+ * Eine Seite hält ihre Lage beim Größenwechsel selbst, z. B. der Player den aktiven Satz
+ * (Nachtrag zu D-384): Der `ScrollManager` gleicht dann nicht aus, und die Scroll-Verankerung des
+ * Browsers ist im Rahmen aus. So scrollt nach dem Auf- und Zuklappen nur eine Stelle, nicht
+ * mehrere gegeneinander. Gibt die Freigabe zurück.
+ */
+export function holdOwnPosition(doc: Document = document): () => void {
+  ownPositionHolders += 1;
+  const frame = doc.getElementById(PAGE_SCROLLER_ID);
+  frame?.style.setProperty('overflow-anchor', 'none');
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    ownPositionHolders -= 1;
+    if (ownPositionHolders === 0) frame?.style.removeProperty('overflow-anchor');
+  };
+}
+
+/** Hält gerade eine Seite ihre Lage selbst (`holdOwnPosition`)? */
+export function ownPositionHeld(): boolean {
+  return ownPositionHolders > 0;
+}

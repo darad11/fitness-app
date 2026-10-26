@@ -1,12 +1,14 @@
 # FORM · Bericht zur Phase iPhone Duo
 
-Stand: 25.10.2026 · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
+Stand: 26.10.2026, Phase 2 abgeschlossen · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
 
 Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo (Chromium in dieser Umgebung, WebKit in GitHub Actions). Auf dem echten Gerät ist nichts getestet; was nur dort prüfbar ist, steht in der Liste für den Gerätetest.
 
 ## 1. Auftrag und Reihenfolge
 
 Phase 1: Gerätemaße recherchieren, alle Screens der Leitlinien (Kapitel 4) in drei Breiten prüfen, Fehler sofort beheben (Barcode-Scanner, Tab-Leiste, Verluste beim Auf- und Zuklappen, weitere Funde), Layout-Verbesserungen bewerten, dann stoppen. Phase 2 (Layouts) erst nach Freigabe. Vorher geprüft: CI-Lauf 40223344366 auf `main` (`dd27315`) mit allen vier Jobs grün (D-370).
+
+Phase 2, freigegeben am 26.10.2026: Workout-Player für beide Zustände, Ernährung aufgeklappt zweispaltig, Erklärung der Kalorien im Fortschritt (Abschnitt 9); danach die Bilder in drei Breiten erneuert, die Liste für deinen Gerätetest ergänzt (Abschnitt 6) und dieser Bericht abgeschlossen (Abschnitt 10, nach Kapitel 13 der Leitlinien). Die Tab-Leiste bleibt.
 
 ## 2. Gerät: Maße zugeklappt und aufgeklappt (D-371)
 
@@ -139,6 +141,8 @@ Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und a
 | Einstellungen | `mehr`, `einstellungen` | in Ordnung |
 | Onboarding | `erster-start`, `anmeldung` | in Ordnung; „Später“ neben dem Systemrand (D-372) |
 
+Nach Phase 2: Player, Ernährung und Fortschritt sind umgestellt (Abschnitt 9); die Bilder in `docs/screens/duo/` zeigen den Stand nach Phase 2.
+
 ### 4.3 Ergebnis je Prüfpunkt (Kapitel 3 bis 9)
 
 - **Lesbarkeit:** Keine Schrift unter 11 px außer der Tageszahl im Kalender einer Tagesaufgabe: 10 px in einer 16-px-Markierung, so entschieden mit D-334; das Datum steht im Namen der Zelle. Wochentage jetzt 11 px (D-377), lange Werte im Training ganz lesbar (D-378).
@@ -155,6 +159,7 @@ Gefunden bei der Prüfung aller Screens in drei Breiten (Bilder, Messungen und a
 |---|---|---|
 | Erster Lauf, vor D-377 | 84 | 16 × axe `label-content-name-mismatch`, 27 × Schrift unter 11 px, 7 Hinweise Tippfläche; dazu aus den Bildern die Funde in Abschnitt 3.6 und 3.7 |
 | Nach D-377 und D-378 | 84 | 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst), 7 Hinweise Tippfläche (Wochentag-Chips, siehe 4.3); sonst nichts |
+| Nach Phase 2 (D-383) | 84 | wie nach D-378: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst), 7 Hinweise Tippfläche; kein Überlauf, nichts unter dem Systemrand, keine Überlagerung, kein abgeschnittener Text, axe ohne Verstöße |
 
 ## 5. Bewertung der Layout-Verbesserungen (Kapitel 5, 7, 8 und 12)
 
@@ -195,19 +200,27 @@ Alles andere später oder gar nicht. Die schwebende Tab-Leiste bleibt; ob aufgek
 
 So würde ich es umsetzen (Kapitel 10): dieselben Komponenten, nur in CSS-Rastern angeordnet, an den vorhandenen Umbruchpunkten (48 rem). Nichts wird je nach Breite ein- oder ausgeblendet und neu aufgebaut; so bleibt beim Auf- und Zuklappen der Zustand erhalten. Player und Ernährung werden schon heute nachgeladen; die neuen Layouts kommen in diese Teile, die Startansicht bleibt bei 235,5 KB. Tests in den drei Breiten wie in Phase 1, Bilder neu.
 
+Umgesetzt in Phase 2 (Freigabe vom 26.10.2026: alle drei Pakete, ohne leeren Platzhalter für die Übungsdemonstration): Abschnitt 9.
+
 ## 6. Liste für deinen Gerätetest am iPhone Duo
 
-Am besten an der Vorschau des Branches (Vercel, Link im PR), als App vom Home-Bildschirm und einmal im Safari-Tab. Mit Testdaten, nicht mit echten Daten.
+Am besten an der Vorschau des Branches (Vercel, Link im PR: `fitness-app-git-form-duo-dr-b21f.vercel.app`), als App vom Home-Bildschirm und einmal im Safari-Tab. Mit Testdaten, nicht mit echten Daten. Punkte 10 bis 15 sind neu aus Phase 2.
 
 1. **Systemrand an der Seite (D-372):** Zugeklappt und aufgeklappt: Liegt etwas unter Statusleiste, Dynamic Island oder Kamera? Tab-Leiste, „Mehr“, der Kreis beim Scrollen, „Schließen“ in Blättern und im Scanner, Hinweise unten. Lässt sich „Mehr“ direkt neben dem Systemrand sicher tippen?
 2. **Tab-Leiste (D-373, D-376):** In beiden Zuständen runterscrollen (Kreis), hochscrollen (Leiste geht auf), die Linse über die Tabs ziehen, jeden Tab einmal tippen. Dann im Kreis-Zustand auf- und zuklappen und wieder hochscrollen: Steht die Auswahl unter dem aktiven Tab?
 3. **Auf- und Zuklappen im Training (D-375):** Training starten, einen Wert tippen, Satz erledigen (Pause läuft), Menü eines Satzes öffnen, dann auf- und zuklappen: Training, Wert, Satz, Menü und Pause bleiben, die Pause zählt richtig weiter. Lädt iOS die App beim Auf- oder Zuklappen neu? Wenn ja, bitte notieren.
 4. **Leseposition (D-375):** Auf „Heute“ und „Programme und Vorlagen“ in die Mitte scrollen, auf- und zuklappen: Bleibt derselbe Inhalt sichtbar?
 5. **Barcode-Scanner (D-374):** Zugeklappt und aufgeklappt, hoch und quer: Steht das Kamerabild aufrecht? Liegt der Rahmen mittig im Bild? Wird ein Code im Rahmen erkannt, einer außerhalb nicht?
-6. **Training zugeklappt (D-377, D-378):** Zeigen die Chips „− 15 s“ und „+ 15 s“ beide Zeichen? Steht „102,5“ ganz im Feld für kg?
+6. **Training zugeklappt (D-377, D-378):** Zeigen die Chips „− 15 s“ und „+ 15 s“ beide Zeichen (seit D-380 zugeklappt in der großen Pause)? Steht „102,5“ ganz im Feld für kg?
 7. **„Meine Küche“ aufgeklappt (D-377):** Ist das Menü ganz zu sehen, nichts unter der Tab-Leiste?
 8. **Halb aufgeklappt:** Was zeigt FORM, wenn das Gerät nur halb geöffnet ist (Falz)? Web-Apps erfahren davon nichts; bitte ein Foto, falls etwas über den Falz läuft.
 9. **Bildschirm im Training aktiv halten:** Bleibt der Bildschirm im Training an, auch nach dem Auf- und Zuklappen?
+10. **Player aufgeklappt (D-380, D-383):** Training starten, einen Satz erledigen, aufklappen: Stehen links die Sätze, rechts der Kopf mit Pause (±15 s) und darunter „Als Nächstes“? Ist der nächste Satz in der Pause ganz zu lesen? Ohne Pause: Steht rechts die Karte „Jetzt“? Bleibt die rechte Spalte beim Scrollen der Sätze stehen? Nach jedem „Satz erledigt“: Ist der nächste Satz links ganz zu sehen?
+11. **Auf- und Zuklappen mit gescrolltem Satz (D-380):** Aufgeklappt in der Satzliste nach unten scrollen, bis der aktuelle Satz oben steht, dann zuklappen: Steht der Satz unter dem Kopf, nicht dahinter? Wert, Pause und Menü bleiben wie in Punkt 3.
+12. **Pause zugeklappt (D-380):** Ist die Pause eine Zeile mit Zeit, nächstem Satz (zwei kurze Zeilen), Pfeil und „Überspringen“? Ist der nächste Satz lesbar? Öffnet der Pfeil die große Pause mit ±15 s? Einmal im Safari-Tab: Dort steht der nächste Satz nicht in der Zeile, weil sie schmaler ist; stört das?
+13. **Satzzeile in Safari zugeklappt und auf kleinen iPhones (D-380):** Steht der Vorwert in einer zweiten Zeile mit „Vorwert:“ davor? Passen „102,5“ und die Wiederholungen ganz ins Feld?
+14. **Ernährung aufgeklappt (D-381):** Links Ring, Makros und weitere Nährwerte, rechts die Mahlzeiten und das Wasser; Frühstück mit „Hinzufügen“ ohne Scrollen zu sehen? Weitere Nährwerte aufklappen, zuklappen: Bleiben sie offen, stehen die Mahlzeiten wieder unter dem Ring? „Meine Küche“ unten links antippen: Ist das Menü ganz zu sehen (bei wenig Platz öffnet es nach oben)?
+15. **Fortschritt (D-382):** Sind die vier Kacheln zugeklappt und aufgeklappt gleich hoch, stehen die Zahlen auf einer Linie, steht die Erklärung der Kalorien darunter?
 
 ## 7. Geänderte Dateien in Phase 1
 
@@ -226,13 +239,13 @@ Am besten an der Vorschau des Branches (Vercel, Link im PR), als App vom Home-Bi
 
 ## 9. Phase 2: Layouts (D-380 bis D-382)
 
-Freigegeben am 26.10.2026: alle drei Pakete wie empfohlen, ohne leeren Platzhalter für die Übungsdemonstration; die Tab-Leiste bleibt. Umgesetzt nach Kapitel 10 der Leitlinien: dieselben Komponenten, nur anders angeordnet, an der Breite des Inhalts (48 rem) statt an der Haltung des Geräts. Die neuen Anordnungen werden mit dem Player und der Ernährung nachgeladen; die Startansicht bleibt bei 235,6 KB. Beim Auf- und Zuklappen wird nichts neu aufgebaut.
+Freigegeben am 26.10.2026: alle drei Pakete wie empfohlen, ohne leeren Platzhalter für die Übungsdemonstration; die Tab-Leiste bleibt. Umgesetzt nach Kapitel 10 der Leitlinien: dieselben Komponenten, nur anders angeordnet, an der Breite des Inhalts (48 rem) statt an der Haltung des Geräts. Die neuen Anordnungen werden mit dem Player und der Ernährung nachgeladen; die Startansicht steht bei 235,7 KB (vorher 235,5 KB). Beim Auf- und Zuklappen wird nichts neu aufgebaut.
 
 ### 9.1 Workout-Player (D-380)
 
 | Zustand | Vorher (Messung D-379) | Jetzt |
 |---|---|---|
-| Aufgeklappt (Inhalt ab 48 rem breit: Duo aufgeklappt, iPad quer, Desktop) | eine Spalte; Kopf mit Pause 264 pt über der Liste, für Übung und Sätze 284 pt, eine Satzzeile ganz zu sehen, Felder 298 pt breit | zwei Spalten: links die Übungen mit den Sätzen, rechts mitlaufend der Kopf mit Trainingstag, Fortschritt und Pause (mit ±15 s), darunter „Jetzt“ mit dem nächsten Satz und „Als Nächstes“ mit bis zu vier folgenden Übungen und ihren offenen Sätzen. Für Übung und Sätze 572 pt, fünf Satzzeilen ganz zu sehen, Felder 118 pt |
+| Aufgeklappt (Inhalt ab 48 rem breit: Duo aufgeklappt, iPad quer, Desktop) | eine Spalte; Kopf mit Pause 264 pt über der Liste, für Übung und Sätze 284 pt, eine Satzzeile ganz zu sehen, Felder 298 pt breit | zwei Spalten: links die Übungen mit den Sätzen, rechts mitlaufend der Kopf mit Trainingstag, Fortschritt und Pause (mit ±15 s und dem nächsten Satz), ohne Pause darunter „Jetzt“ mit dem nächsten Satz, dann „Als Nächstes“ mit bis zu vier folgenden Übungen und ihren offenen Sätzen. Für Übung und Sätze 572 pt, fünf Satzzeilen ganz zu sehen, Felder 118 pt |
 | Zugeklappt (eine Spalte, Fenster unter 45 rem hoch: Duo zugeklappt, iPhone quer, iPhone hoch in Safari) | Pause als Karte mit ±15 s; Kopf 274 pt, für Übung und Sätze 269 pt, eine Satzzeile | Pause in einer Zeile: Zeit, nächster Satz in bis zu zwei Textzeilen, Taste für die große Pause, „Überspringen“; ±15 s in der großen Pause. Kopf 192 pt, für Übung und Sätze 351 pt, zwei Satzzeilen |
 | Zwischenmaß (669 × 951) und iPhone hoch | – | unverändert |
 | Satzzeile schmaler als 20 rem (Fenster unter 384 pt: Safari zugeklappt mit 382 pt, iPhone SE und mini) | bei 382 und 375 pt passte „102,5“ nur knapp, je nach Schriftart nicht ganz; bei 360 pt ragte es 7 px aus dem Feld, bei 320 pt waren die Felder 25 px breit | der Vorwert steht in einer zweiten Zeile unter den Feldern, mit sichtbarem Namen „Vorwert:“; die Felder sind bei 382 pt 83 px, bei 375 pt 80 px, bei 360 pt 72 px und bei 320 pt 52 px breit. Damit ist auch der offene Punkt zur Schriftart aus Abschnitt 3.7 erledigt |
@@ -246,6 +259,7 @@ Gemessen in Chromium mit laufendem Training und Pause, Seite ganz oben; in einer
 - **Unterwegs gefunden und behoben:** Aufgeklappt den aktuellen Satz nach oben gescrollt, dann zugeklappt: Der Kopf stand wieder über der Liste und verdeckte den Satz. Jetzt rückt der Satz nach jeder Größenänderung wieder ins Bild, wenn er vorher zu sehen war.
 - **Nachtrag nach der CI:** Die einzeilige Pause gilt bei jedem niedrigen Fenster, auch am iPhone hoch in Safari (das Testprofil iPhone 15 hat 393 × 659 pt). WebKit fand drei Tests, die das nicht berücksichtigten; sie tippen ±15 s jetzt in der großen Pause. Dabei zeigte sich: Wird der Kopf beim Wechsel zwischen zugeklappt und Zwischenmaß 72 pt höher oder niedriger, sprang der Satz bis zum nächsten Takt der Pause (bis 250 ms). Jetzt bleibt er schon im ersten Bild an seiner Stelle, auch wenn sich nur der sichere Bereich ändert.
 - **Tests:** `e2e/duo-player.spec.ts`, 3 Tests (Handy-Profil, Chromium und WebKit): zwei Spalten mit axe ohne Verstöße und der Satz nach jedem „Satz erledigt“ ganz sichtbar; einzeilige Pause; Satzzeile bei 390, 360 und 320 pt. Am alten Stand 3 von 3 fehlgeschlagen („Als Nächstes“ fehlt; Pause 142 px statt höchstens 80; Vorwert bei 360 pt in derselben Zeile). Gegenproben für den Satz hinter dem Kopf und für die zweite Textzeile der Pause: beide fehlgeschlagen ohne die Korrektur. Angepasst: `duo-resize.spec.ts` (aufgeklappt rückt der Satz um die Höhe des Kopfs nach oben und bleibt sichtbar) und der Test zu D-377 (±15 s bei 320 × 800, weil die Pause bei 320 × 640 einzeilig ist).
+- **Beim Abschluss (D-383):** In der rechten Spalte stand vom nächsten Satz neben der großen Zeit nur „Beinpresse,…“. Dort darf er jetzt bis zu vier Zeilen haben („Nächster Satz: Beinpresse, Arbeitssatz 2 · Ziel 8–12“).
 - **Nur am Gerät prüfbar:** wie sich die mitlaufende rechte Spalte beim Scrollen anfühlt; ob die einzeilige Pause zugeklappt gut lesbar ist.
 
 ### 9.2 Ernährung (D-381)
@@ -275,3 +289,70 @@ Gemessen in Chromium mit Tagesziel, zwei Schnelleinträgen und Wasser, Seite gan
 - **Texte:** Die Methode steht unverändert da („Schätzung nach MET: …“). Die beiden kurzen Hinweise stehen jetzt unter allen Kacheln und nennen deshalb „Kalorien“ im Satz: „Kalorien werden erst mit Körpergewicht geschätzt.“ und „1 Training ohne Kalorien-Schätzung (kein Körpergewicht).“ Gibt es Trainings ohne Schätzung, steht jetzt beides da, der Hinweis und die Methode.
 - **Kacheln:** Alle Reihen sind gleich hoch, das Label steht oben, die Zahl unten. So stehen die Zahlen auf einer Linie, auch wenn „Kalorien (Schätzung)“ zweizeilig umbricht. Die gemeinsame Kachel (`StatTile`) bleibt unverändert; die Klassen kommen von der Seite.
 - **Tests:** `e2e/duo-progress.spec.ts`, 1 Test (Handy-Profil, Chromium und WebKit): in den drei Breiten gleich hohe Kacheln, Zahlen auf einer Linie, Erklärung unter und nicht in den Kacheln; am alten Stand fehlgeschlagen (155 px Unterschied). Dazu `progress-ui.test.tsx`.
+
+## 10. Abschlussbericht nach Kapitel 13 der Leitlinien
+
+Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo, nicht auf dem Gerät. Was nur dort prüfbar ist, steht in der Liste für deinen Gerätetest (Abschnitt 6).
+
+### 10.1 Analysierte Screens und Komponenten
+
+- **Screens:** alle aus Kapitel 4 der Leitlinien, 28 Ansichten in den drei Prüfmaßen (Abschnitt 4.2); dazu Safari zugeklappt (382 × 640), zugeklappt quer (594 × 368), iPhone SE (320 × 568), iPhone 15 in Safari (393 × 659) und für die Satzzeile 320 bis 430 pt.
+- **Komponenten:** schwebende Tab-Leiste mit Linse und Kreis, Blätter, Rückfragen, Hinweise, „Meine Küche“, Barcode-Scanner, Kopf, Pause und Satzzeile im Player, Ring und Makros der Ernährung, Kennzahl-Kacheln, Kalender und Diagramme, Leseposition beim Größenwechsel.
+
+### 10.2 Gefundene Layoutprobleme
+
+- **Fehler (behoben in Phase 1):** Bedienelemente unter dem Systemrand an der Seite (D-372); Tab-Leiste nach Größenänderung und Linse (D-373, D-376); Scanner erkannte außerhalb des Rahmens, quer lag das Bild außerhalb (D-374); Leseposition verrutschte beim Auf- und Zuklappen (D-375); Kopf im Training, Auswahl der Mahlzeit, „Meine Küche“, Namen für Screenreader, ±15 s, Wochentage (D-377); lange Werte in der Satzzeile (D-378).
+- **Fläche (behoben in Phase 2):** Im Player war aufgeklappt und zugeklappt nur eine Satzzeile ganz zu sehen; in der Ernährung begann die erste Mahlzeit aufgeklappt hinter der Tab-Leiste; im Fortschritt war die Kachel „Kalorien“ doppelt so hoch wie die anderen; bei 360 und 320 pt waren die Felder der Satzzeile zu schmal.
+- **Unterwegs in Phase 2 (behoben):** Satz nach Aufklappen, Scrollen und Zuklappen hinter dem Kopf; nächster Satz in der einzeiligen Pause nur als „Beinpress…“; Satz sprang beim Wechsel der Pause zwischen Zeile und Karte bis zum nächsten Takt; „Meine Küche“ aufgeklappt unter der Tab-Leiste, wenn die Seite darunter zu kurz war (D-380, D-381).
+
+### 10.3 Implementierte responsive Layouts: Verhalten schmal und breit
+
+| Screen | Zugeklappt (schmal, 466 × 678) | Zwischenmaß (669 × 951) | Aufgeklappt (breit, 951 × 669) |
+|---|---|---|---|
+| Workout-Player | eine Spalte; Pause in einer Zeile mit Zeit, nächstem Satz und „Überspringen“, ±15 s in der großen Pause | eine Spalte wie bisher, Pause als Karte mit ±15 s | zwei Spalten: links Übungen und Sätze, rechts mitlaufend Kopf mit Pause und nächstem Satz (ohne Pause: „Jetzt“) und „Als Nächstes“; Platz für die Übungsdemonstration im Raster vorbereitet |
+| Satzzeile | eine Zeile (als App; in Safari mit 382 pt zweite Zeile für den Vorwert) | eine Zeile | eine Zeile |
+| Ernährung | eine Spalte wie bisher | eine Spalte wie bisher | zwei Spalten: links Ring, Makros, weitere Nährwerte, „Ziel“ und „Meine Küche“; rechts Mahlzeiten und Wasser |
+| Fortschritt | vier gleich hohe Kacheln (2 × 2), Erklärung der Kalorien darunter | wie zugeklappt | vier Kacheln nebeneinander, Erklärung darunter |
+| Alle übrigen Screens | unverändert (Bewertung „später“ oder „unnötig“, Abschnitt 5) | | |
+| Navigation | schwebende Tab-Leiste, neben dem Systemrand | Tab-Leiste | Tab-Leiste (unverändert, nach deiner Vorgabe) |
+
+Umbruchpunkte: zwei Spalten ab 48 rem Breite des Inhalts (Container-Abfragen, so zählt der Systemrand mit); einzeilige Pause bei Fenstern unter 45 rem Höhe; zweite Zeile der Satzzeile unter 20 rem Zeilenbreite; nächster Satz in der Pause erst ab 22 rem Breite des Players. Beim Auf- und Zuklappen wird nichts neu aufgebaut: Werte, Menüs, Dialoge, Pause und die Lage des aktuellen Satzes bleiben.
+
+### 10.4 Tatsächlich ausgeführte Tests
+
+- **Unit-Tests:** `pnpm test` nach jedem Paket 124 Dateien, 1085 Tests bestanden.
+- **E2E in Chromium, alle Dateien (diese Umgebung):** Paket 1: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen (zweimal); Nachtrag zu D-380 und Paket 2: 370, 84, 0; Paket 3: 371, 85, 0; Abschluss: 371, 85, 0.
+- **Im Fenster des iPhone 15 (393 × 659, in Chromium nachgestellt):** ganze Suite 204 bestanden, 22 übersprungen, 1 fehlgeschlagen; der eine Test wählt Handy oder Desktop nach dem Namen des Projekts, mit passendem Namen bestanden.
+- **CI in GitHub Actions (Chromium und WebKit):** Paket 1 (Lauf 40283966090) in WebKit 3 fehlgeschlagen: die einzeilige Pause im Profil iPhone 15 und eine Prüfung, die vom Scrollen abhing; behoben im Nachtrag zu D-380. Danach grün: Lauf 40292622372 (Paket 2, WebKit 350 bestanden) und Lauf 40295195644 (Paket 3, Chromium 371, WebKit 351 bestanden). Die CI zum Abschluss-Commit steht im PR.
+- **Neue Tests in Phase 2:** `e2e/duo-player.spec.ts` (3), `duo-nutrition.spec.ts` (2), `duo-progress.spec.ts` (1); angepasst `duo-resize`, `duo-funde`, `session`, `resilience` und `progress-ui.test.tsx`. Jede neue Prüfung schlug am alten Stand fehl (Gegenproben in `docs/testing.md`).
+- **Wiederholungen gegen Wackeln:** `duo-player` und `duo-resize` je fünfmal: 30 von 30 bestanden; `duo-nutrition`, `duo-funde` und `nutrition` je viermal: 60 von 60.
+- **Prüfung aller Screens:** `tools/duo-screens.mjs`, 84 Ansichten in drei Breiten, Befunde wie nach Phase 1 (Abschnitt 4.4), axe ohne Verstöße.
+- **Startansicht:** 235,7 KB von 250 KB (vor Phase 2: 235,5 KB). Die neuen Anordnungen werden mit Player und Ernährung nachgeladen.
+- **Nicht getestet:** auf dem echten iPhone Duo. Dafür die Liste in Abschnitt 6.
+
+### 10.5 Behobene Probleme
+
+Abschnitt 3 (Phase 1, D-372 bis D-378) und Abschnitt 9 (Phase 2, D-380 bis D-382). Jeder behobene Fehler hat einen Test, der am alten Stand fehlschlägt; die Gegenproben stehen bei den Abschnitten und in `docs/testing.md`.
+
+### 10.6 Geänderte Dateien in Phase 2
+
+- **App:** neu `src/modules/training/ui/player/player-layout.css` und `src/modules/nutrition/ui/nutrition-layout.css`; geändert im Player `SessionPage.tsx`, `RestStage.tsx`, `SetRow.tsx`, `useStableSetView.ts`; in der Ernährung `NutritionPage.tsx`, `KitchenMenu.tsx`; im Fortschritt `ProgressPage.tsx`; Texte in `de-session.ts` und `de-training-pages.ts`.
+- **Tests:** neu `e2e/duo-player.spec.ts`, `duo-nutrition.spec.ts`, `duo-progress.spec.ts`; angepasst `duo-resize`, `duo-funde`, `session`, `resilience`, `src/modules/progress/ui/progress-ui.test.tsx`.
+- **Bilder:** `docs/screens/duo/` mit Übersicht und Befunden.
+- **Dokumente:** `docs/decisions.md` (D-380 bis D-383), `docs/testing.md`, `docs/implementation-plan.md`, `docs/feature-inventory.md` mit CSV, `docs/known-limitations.md`, dieser Bericht.
+
+### 10.7 Bestehende Einschränkungen
+
+- Nicht auf dem echten Gerät getestet; die Prüfmaße stammen teils von Dritten, der Systemrand von 84 pt ist eine Annahme (Abschnitt 2).
+- Den sicheren Bereich und die Kamera stellt nur Chromium nach; WebKit prüft dieselben Abläufe ohne Systemrand.
+- Ob das Duo auf-, zu- oder halb aufgeklappt ist, erfährt eine Web-App nicht; FORM richtet sich nach der Fenstergröße. Was über den Falz läuft, ist nicht geprüft.
+- Ob iOS die App beim Auf- und Zuklappen neu lädt, ist offen.
+- Einzeilige Pause: ±15 s sind einen Tipp weiter; in Safari zugeklappt und am iPhone SE oder mini steht der nächste Satz nicht in der Zeile (`docs/known-limitations.md`).
+- Aufgeklappt liegt die schwebende Tab-Leiste über rund 80 pt Inhalt; die Navigation bleibt nach deiner Vorgabe.
+- Tageszahl im Kalender einer Tagesaufgabe 10 px (bewusst, D-334).
+
+### 10.8 Empfohlene Verbesserungen
+
+- **Übungsdemonstration:** Sobald es Bilder oder Videos gibt, in den vorbereiteten Bereich „demo“ der rechten Spalte im Player; zugeklappt über die Karte „Jetzt“ oder die große Pause.
+- **Nach deinem Gerätetest:** ob aufgeklappt eine Seitenleiste statt der Tab-Leiste besser ist (Abschnitt 5).
+- **Später (Abschnitt 5):** Fortschritt aufgeklappt mit Körpergewicht und Bestleistungen neben den Kennzahlen; Programme als Liste mit Details; Programm-Details und Tagesaufgaben zweispaltig; größere Kalenderzellen aufgeklappt.

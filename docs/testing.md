@@ -1741,3 +1741,20 @@ Vier gleich hohe Kacheln, die Zahlen auf einer Linie, die Erklärung darunter (D
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund (ein Zwischenstand: Lint meldete eine vorübergehende Hilfsdatei für Playwright im Wurzelordner; sie liegt nicht im Repository) |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 371 bestanden, 85 übersprungen, 0 fehlgeschlagen, 14,3 min |
+
+### Phase iPhone Duo, Phase 2: Abschluss, Bilder in drei Breiten · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Bilder erneuert, nächster Satz in der rechten Spalte des Players bis zu vier Zeilen, Liste für den Gerätetest ergänzt, Abschlussbericht (D-383). Bericht: `form-duo-report.md` Abschnitte 4.4, 6, 9 und 10. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/duo-screens.mjs`, erster Lauf nach Paket 3 (4 min) | 84 Ansichten: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst nach D-334), 7 Hinweise Tippfläche (Wochentag-Chips); kein Überlauf, nichts unter dem Systemrand, keine Überlagerung, kein abgeschnittener Text, kein gestauchtes Symbol, axe ohne Verstöße. Beim Ansehen der Bilder: In der rechten Spalte des Players stand vom nächsten Satz nur „Beinpresse,…“ |
+| `node tools/duo-screens.mjs` nach der Korrektur | 84 Ansichten, dieselben Befunde; Bilder zusammen 3,4 MB |
+| Rechte Spalte (Chromium, aufgeklappt, Pause läuft) | „Nächster Satz: Beinpresse, Arbeitssatz 2 · Ziel 8–12“ ganz zu sehen, in vier Zeilen |
+| Geänderte Bilder gegenüber Phase 1 | Player zugeklappt und aufgeklappt, „Training verwerfen“ aufgeklappt, Ernährung und „Meine Küche“ aufgeklappt, Fortschritt in drei Breiten; dazu „Heute“, Wasser, Wasser-Verlauf und Tab-Leiste, weil diesmal beide Wasser-Tipps der Testdaten ankamen (750 statt 250 ml), und ein einzelnes Pixel im Scanner aufgeklappt |
+| CI, Lauf 40292622372 (`a94434a`, Paket 2 mit dem Nachtrag zu D-380) | alle vier Jobs grün; WebKit 350 bestanden, 104 übersprungen |
+| CI, Lauf 40295195644 (`3a80d2e`, Paket 3) | alle vier Jobs grün; Chromium 371 bestanden, 85 übersprungen; WebKit 351 bestanden, 105 übersprungen |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 371 bestanden, 85 übersprungen, 0 fehlgeschlagen, 14,6 min |

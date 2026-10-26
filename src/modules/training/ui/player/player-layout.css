@@ -82,6 +82,13 @@
     display: block;
     grid-area: next;
   }
+
+  /* In der schmalen Spalte stünde vom nächsten Satz neben der Zeit nur „Beinpresse,…“: Er darf
+     hier bis zu vier Zeilen haben, die Spalte hat die Höhe dafür. */
+  .player-side .rest-next-text {
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }
 }
 
 /*

@@ -1816,3 +1816,22 @@ CI-Lauf 40350698760 zu `001b2a0` (D-384): Datenbank, Lint, Typen, Unit-Tests, Do
 | WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | im ersten Anlauf fehlgeschlagen („zu: Position“, 53 statt höchstens 4 px), im zweiten bestanden; die Meldung nennt jetzt Scrollposition und Höhe des Kopfs |
 | Überlauf-Prüfungen am Dokument (11 Stellen in 10 Dateien) | seit dem Rahmen immer 0; Messung im Browser: ein 600 px breites Element bei 390 px, am Dokument 0, am Rahmen 230 px. Jetzt `pageOverflowX` (Rahmen und Dokument) |
 | Geänderte Tests in Chromium (`duo-feste-leisten`, `shopping`, `duo-resize` und die zehn Dateien mit Überlauf-Prüfung) | 139 bestanden |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 2 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40355441729 zu `932c3bc` (Nachtrag zu D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente und Build grün; E2E Chromium grün; E2E WebKit 354 bestanden, 111 übersprungen, 1 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, Handy-Profil (iPhone 15), `shopping.spec.ts` „Wisch nach links löscht nur diesen Artikel …“ | fehlgeschlagen in beiden Anläufen, am Desktop bestanden. Mitschrift wörtlich, erster Anlauf: „pointermove mouse Zeile x276 scroll 0/0 \| pointermove mouse Zeile x276 scroll 0/0 \| pointermove mouse Zeile x260 scroll 0/0“; zweiter Anlauf: „pointermove mouse Zeile x276 scroll 0/183 \| pointerdown mouse Zeile x276 scroll 0/183 \| pointermove mouse Zeile x260 scroll 0/183“. Nach dem Schritt, in dem die Zeile den Zeiger fing, kam nichts mehr an, auch kein Loslassen |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | bestanden |
+| Änderung | Die Zeile verfolgt die Geste am Fenster, ohne den Zeiger zu fangen; die Mitschrift nennt jetzt auch Maus-Ereignisse, gedrückte Tasten und Zeigerfang. Ob WebKit besteht, zeigt der nächste Lauf |
+| Unit-Test „folgt dem Zeiger auch neben der Zeile, ohne ihn zu fangen“ (`shopping-ui.test.tsx`) | bestanden; Gegenprobe mit der alten Fassung von `SwipeToDelete`: fehlgeschlagen |
+| Tastatur am Desktop, Gegenprobe (Chromium, „Übungen“, Fokus auf `body`) | Bild ab mit Weiterleitung an den Rahmen 630 px, ohne sie 0 px |
+| `ScrollManager.test.tsx` (2 Tests, neu): Tasten scrollen den Rahmen; Felder, Kürzel, andere Tasten und offene Dialoge bleiben unberührt | bestanden |
+| `e2e/rahmen-tastatur.spec.ts` (Desktop): Bild ab, Pfeil, Ende, Pos1, Leertaste; Fenster bleibt oben; im Suchfeld schreibt die Leertaste | bestanden |
+| `shopping`, `rahmen-tastatur`, `duo-feste-leisten` (Chromium) | 14 bestanden, 6 übersprungen |
+| `pnpm test` | 125 Dateien, 1091 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |

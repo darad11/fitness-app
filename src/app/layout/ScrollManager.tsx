@@ -46,6 +46,16 @@ export function ScrollManager() {
     };
   }, []);
 
+  // Tastatur am Desktop (D-384): Ohne Fokus scrollen Bild auf und ab, Leertaste, Pfeile, Pos1 und
+  // Ende den Rahmen, wie zuvor das Fenster. Der Browser leitet sie nur dorthin, wenn der Fokus im
+  // Rahmen liegt; den Fokus zu setzen, änderte aber die Reihenfolge der Tab-Taste.
+  useEffect(() => {
+    window.addEventListener('keydown', keyScroll);
+    return () => {
+      window.removeEventListener('keydown', keyScroll);
+    };
+  }, []);
+
   // Leseposition beim Auf- und Zuklappen (D-375): Ändert sich die Breite, bricht der Text anders
   // um, und ohne Ausgleich rutscht der Inhalt unter dem Finger weg (WebKit kennt keine
   // Scroll-Verankerung, Chromium setzt sie bei einer Breitenänderung aus). Gemerkt wird das
@@ -148,6 +158,40 @@ export function ScrollManager() {
 }
 
 const STOP_EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown'] as const;
+
+/** Pfeiltasten scrollen um so viele px, wie es Browser beim Fenster tun. */
+const ARROW_STEP = 40;
+
+/**
+ * Scroll-Tasten ohne Fokus (D-384): Liegt der Fokus auf `body`, scrollt die Taste den Rahmen der
+ * Seite um eine Bildschirmseite (Bild auf und ab, Leertaste, mit Umschalt zurück), eine Zeile
+ * (Pfeile) oder an Anfang und Ende (Pos1, Ende). Felder, Knöpfe, offene Dialoge und Tastenkürzel
+ * mit Strg, Alt oder Befehl bleiben unberührt; ohne Rahmen scrollt der Browser selbst.
+ */
+function keyScroll(event: KeyboardEvent): void {
+  if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (event.target !== document.body && event.target !== document.documentElement) return;
+  if (document.querySelector('dialog[open]')) return;
+  const frame = pageScroller();
+  if (frame === document.scrollingElement || frame === document.documentElement) return;
+  const page = Math.max(ARROW_STEP, frame.clientHeight * 0.875);
+  const steps: Record<string, number> = {
+    PageDown: page,
+    PageUp: -page,
+    ' ': event.shiftKey ? -page : page,
+    ArrowDown: ARROW_STEP,
+    ArrowUp: -ARROW_STEP,
+    Home: -frame.scrollHeight,
+    End: frame.scrollHeight,
+  };
+  const delta = steps[event.key];
+  if (delta === undefined) return;
+  event.preventDefault();
+  const reduce =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  frame.scrollBy({ top: delta, behavior: reduce ? 'instant' : 'smooth' });
+}
 
 interface ReadingAnchor {
   element: Element;

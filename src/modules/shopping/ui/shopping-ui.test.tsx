@@ -260,6 +260,35 @@ describe('Wischen zum Löschen (D-360)', () => {
     });
   });
 
+  it('folgt dem Zeiger auch neben der Zeile, ohne ihn zu fangen (Nachtrag zu D-384)', async () => {
+    await listWith(['Milch', 'Brot']);
+    const row = swipeRow('Milch');
+    const capture = vi.fn();
+    row.setPointerCapture = capture;
+    const start = { clientX: 300, clientY: 228 };
+    fireEvent.pointerDown(row, { ...start, pointerId: 1, isPrimary: true, button: 0 });
+    // Bewegung und Loslassen kommen am Fenster an, auch wenn der Zeiger die Zeile verlassen hat.
+    for (let step = 1; step <= 10; step++) {
+      fireEvent.pointerMove(document.body, {
+        pointerId: 1,
+        isPrimary: true,
+        clientX: start.clientX - 20 * step,
+        clientY: start.clientY + 4,
+      });
+    }
+    fireEvent.pointerUp(document.body, {
+      pointerId: 1,
+      isPrimary: true,
+      clientX: start.clientX - 200,
+      clientY: start.clientY + 4,
+    });
+    expect(await screen.findByText('„Milch“ gelöscht')).toBeVisible();
+    await waitFor(() => {
+      expect(rows()).toEqual(['Brot']);
+    });
+    expect(capture).not.toHaveBeenCalled();
+  });
+
   it('lässt kurze, schräge, senkrechte und Wische nach rechts ohne Folgen', async () => {
     await listWith(['Milch']);
     const row = swipeRow('Milch');

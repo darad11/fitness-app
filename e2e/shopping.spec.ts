@@ -130,6 +130,27 @@ async function addItems(page: Page, names: readonly string[]) {
 const swipeRow = (page: Page, name: string) =>
   page.locator('[data-swipe-row]').filter({ has: page.getByText(name, { exact: true }) });
 
+/** Mitschrift kürzen: Bewegungen hintereinander als eine Angabe mit Anzahl, erster und letzter. */
+function compactLog(log: readonly string[]): string {
+  const out: string[] = [];
+  let run: string[] = [];
+  const flush = () => {
+    if (run.length > 2) out.push(`${String(run.length)} Bewegungen: ${run[0]} … ${run.at(-1)}`);
+    else out.push(...run);
+    run = [];
+  };
+  for (const entry of log) {
+    if (/^(pointer|mouse)move /.test(entry)) {
+      run.push(entry);
+      continue;
+    }
+    flush();
+    out.push(entry);
+  }
+  flush();
+  return out.join(' | ');
+}
+
 /** Wisch mit der Maus (Zeiger-Ereignisse) von drei Vierteln der Zeilenbreite aus. */
 async function mouseSwipe(page: Page, row: Locator, dx: number, dy = 0) {
   const box = await row.boundingBox();
@@ -161,8 +182,8 @@ test('Einkaufsliste: Wisch nach links löscht nur diesen Artikel, mit Rückgäng
   // Keine Geste hat abgehakt.
   await expect(page.getByText('0 von 3 gekauft')).toBeVisible();
 
-  // Zeiger-Ereignisse und Scrollen beim Löschwisch mitschreiben: Schlägt er fehl, steht in der
-  // Meldung, was die Zeile erreicht hat (WebKit, D-384).
+  // Zeiger- und Maus-Ereignisse beim Löschwisch mitschreiben: Schlägt er fehl, steht in der
+  // Meldung, was ankam (WebKit, Nachtrag zu D-384).
   await page.evaluate(() => {
     const log: string[] = [];
     (window as unknown as { wischLog: string[] }).wischLog = log;
@@ -172,19 +193,27 @@ test('Einkaufsliste: Wisch nach links löscht nur diesen Artikel, mit Rückgäng
       'pointermove',
       'pointerup',
       'pointercancel',
+      'gotpointercapture',
       'lostpointercapture',
+      'mousedown',
+      'mousemove',
+      'mouseup',
+      'click',
+      'dragstart',
+      'selectstart',
+      'scroll',
     ];
     for (const type of types) {
-      document.addEventListener(
+      window.addEventListener(
         type,
         (event) => {
           const target = event.target instanceof Element ? event.target : null;
-          const pointer = event as PointerEvent;
-          const row = target?.closest('[data-swipe-row]') ? 'Zeile' : (target?.tagName ?? '?');
-          if (type === 'pointermove' && log.filter((l) => l.startsWith(type)).length >= 3) return;
-          log.push(
-            `${type} ${pointer.pointerType} ${row} x${String(Math.round(pointer.clientX))} scroll ${String(frame?.scrollLeft ?? 0)}/${String(frame?.scrollTop ?? 0)}`,
-          );
+          const where = target?.closest('[data-swipe-row]') ? 'Zeile' : (target?.tagName ?? '?');
+          const detail =
+            event instanceof MouseEvent
+              ? `x${String(Math.round(event.clientX))} b${String(event.buttons)}`
+              : `top ${String(frame?.scrollTop ?? 0)}`;
+          log.push(`${type} ${where} ${detail}`);
         },
         { capture: true },
       );
@@ -194,7 +223,7 @@ test('Einkaufsliste: Wisch nach links löscht nur diesen Artikel, mit Rückgäng
   const wischLog = await page.evaluate(
     () => (window as unknown as { wischLog: string[] }).wischLog,
   );
-  await expect(page.getByText('„Milch“ gelöscht'), wischLog.join(' | ')).toBeVisible();
+  await expect(page.getByText('„Milch“ gelöscht'), compactLog(wischLog)).toBeVisible();
   await expect(page.locator('[data-swipe-row]')).toHaveCount(2);
   await expect(swipeRow(page, 'Brot')).toBeVisible();
   await expect(swipeRow(page, 'Äpfel')).toBeVisible();

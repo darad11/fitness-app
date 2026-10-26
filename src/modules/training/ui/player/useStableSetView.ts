@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from 'react';
+import { onPageScroll, pageScrollTop, scrollPageBy } from '@/shared/ui';
 
 /** Abstand des aktiven Satzes zum Kopf (mit Pausenkarte) und zur Fußleiste, in px. */
 const GAP = 12;
@@ -6,7 +7,7 @@ const GAP = 12;
 interface Anchor {
   /** Satz, an dem sich die Ansicht ausrichtet. */
   id: string;
-  /** Oberkante im Fenster und Scrollposition beim Messen. */
+  /** Oberkante im Fenster und Scrollposition der Seite beim Messen (Rahmen `#seite`, D-384). */
   top: number;
   scrollY: number;
 }
@@ -28,7 +29,7 @@ function measure(root: HTMLElement): Anchor | null {
   const row = activeRow(root);
   const id = row?.dataset.setId;
   if (!row || !id) return null;
-  return { id, top: row.getBoundingClientRect().top, scrollY: window.scrollY };
+  return { id, top: row.getBoundingClientRect().top, scrollY: pageScrollTop() };
 }
 
 /**
@@ -79,7 +80,7 @@ function reveal(
   else if (rect.bottom > bottom) delta = Math.min(rect.bottom - bottom, rect.top - top);
   if (Math.abs(delta) < 1) return;
   const reduce = instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  window.scrollBy({ top: delta, behavior: reduce ? 'instant' : 'smooth' });
+  scrollPageBy(delta, reduce ? 'instant' : 'smooth');
 }
 
 /** Merkt Lage und Sichtbarkeit des aktiven Satzes. */
@@ -111,7 +112,7 @@ function settle(
   const row = before ? rowById(container, before.id) : null;
   if (!before || !row || !wasVisible) return;
   const delta = row.getBoundingClientRect().top - before.top;
-  if (Math.abs(delta) > 1) window.scrollBy({ top: delta, behavior: 'instant' });
+  if (Math.abs(delta) > 1) scrollPageBy(delta);
   if (!topVisible(row, head, foot)) reveal(row, head, foot, true);
 }
 
@@ -205,13 +206,13 @@ export function useStableSetView(
         note(container, head.current, foot.current, anchor, visible);
       });
     };
-    window.addEventListener('scroll', remember, { passive: true });
+    const detachScroll = onPageScroll(remember);
     window.addEventListener('resize', onResize);
     document.addEventListener('focusin', remember);
     return () => {
       cancelAnimationFrame(frame);
       cancelAnimationFrame(resizeFrame);
-      window.removeEventListener('scroll', remember);
+      detachScroll();
       window.removeEventListener('resize', onResize);
       document.removeEventListener('focusin', remember);
     };
@@ -226,8 +227,8 @@ export function useStableSetView(
     const row = before ? rowById(container, before.id) : null;
     if (before && row) {
       const shift =
-        row.getBoundingClientRect().top + window.scrollY - (before.top + before.scrollY);
-      if (Math.abs(shift) > 1) window.scrollBy({ top: shift, behavior: 'instant' });
+        row.getBoundingClientRect().top + pageScrollTop() - (before.top + before.scrollY);
+      if (Math.abs(shift) > 1) scrollPageBy(shift);
     }
     if (currentId !== shownCurrent.current) {
       shownCurrent.current = currentId;

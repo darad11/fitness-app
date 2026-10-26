@@ -105,13 +105,13 @@ async function components() {
   await shot(main.getByRole('region', { name: 'Wochenziel' }), 'karte');
 
   // Tab-Leiste: ausgeklappt und beim Runterscrollen als Kreis rechts.
-  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await page.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
   await page.waitForTimeout(300);
   await clip('tab-leiste', { top: 844 - 110, height: 110 });
   await page.evaluate(() => {
     // Eigenes Scrollen wie in e2e/tabbar.spec.ts: Taste, dann Bewegung.
     globalThis.dispatchEvent(new globalThis.KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    globalThis.scrollBy(0, 400);
+    globalThis.document.getElementById('seite')?.scrollBy(0, 400);
   });
   await page
     .getByRole('navigation', { name: 'Hauptnavigation' })
@@ -233,9 +233,16 @@ async function screen(name) {
   console.log(`${OUT}/${name}.png`);
 }
 
-/** Ganze Seite ohne die schwebende Tab-Leiste (sie hat eigene Bilder). */
+/**
+ * Ganze Seite ohne die schwebende Tab-Leiste (sie hat eigene Bilder). Die Seite scrollt im Rahmen
+ * der App (D-384); für dieses Bild wird er kurz Teil des Dokuments, damit es die ganze Länge hat.
+ */
 async function fullPage(name) {
-  const style = await page.addStyleTag({ content: '.tabbar { visibility: hidden !important; }' });
+  const style = await page.addStyleTag({
+    content: `.tabbar { visibility: hidden !important; }
+      :root:has(.page-scroller), :root:has(.page-scroller) body { overflow: visible !important; }
+      .page-scroller { position: static !important; overflow: visible !important; }`,
+  });
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: true, animations: 'disabled' });
   await style.evaluate((node) => node.remove());
@@ -296,17 +303,17 @@ async function screens() {
   await water.getByRole('button', { name: /250 ml hinzufügen/ }).click();
   await water.getByRole('button', { name: /500 ml hinzufügen/ }).click();
   // Ohne aktives Programm steht oben die Karte „Bereit für dein Training?“ (V2c, D-336).
-  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await page.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
   await screen('heute-ohne-programm');
   await activateProgram();
   await open('/heute');
-  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await page.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
   await screen('heute');
   await fullPage('heute-ganz');
   await screen('tab-leiste-ausgeklappt');
   await page.evaluate(() => {
     globalThis.dispatchEvent(new globalThis.KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    globalThis.scrollBy(0, 500);
+    globalThis.document.getElementById('seite')?.scrollBy(0, 500);
   });
   await page
     .getByRole('navigation', { name: 'Hauptnavigation' })
@@ -336,7 +343,7 @@ async function screens() {
   await page.getByRole('button', { name: 'Pause überspringen' }).click();
   await at('2026-10-22T08:31:24+02:00');
   await completeCurrentSet(100, 9);
-  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await page.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
   await screen('aktives-workout');
 
   // Abschluss nach 48 Minuten.
@@ -362,7 +369,7 @@ async function screens() {
     .fill('Schulterblätter zusammen, Füße fest am Boden.');
   await page.getByRole('button', { name: 'Speichern' }).click();
   await page.getByText('Gespeichert').first().waitFor();
-  await page.evaluate(() => globalThis.scrollTo(0, 0));
+  await page.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
   await screen('uebungsdetails');
 
   // Fortschritt mit Daten (nach dem Training).
@@ -440,7 +447,7 @@ async function tasksScreen() {
   const walk = tab.getByRole('checkbox', { name: 'Spaziergang abhaken' });
   await walk.click();
   for (let i = 0; i < 50 && !(await walk.isChecked()); i += 1) await tab.waitForTimeout(100);
-  await tab.evaluate(() => globalThis.scrollTo(0, 0));
+  await tab.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
   await tab.waitForTimeout(300);
   await tab.screenshot({ path: `${OUT}/tagesaufgaben.png`, animations: 'disabled' });
   console.log(`${OUT}/tagesaufgaben.png`);
@@ -508,7 +515,7 @@ async function nutrition() {
   await page.locator('summary[aria-label="Weitere Nährwerte"]').click();
   const extras = page.getByRole('group', { name: 'Weitere Nährwerte' });
   await extras.scrollIntoViewIfNeeded();
-  await page.evaluate(() => globalThis.scrollBy(0, 120));
+  await page.evaluate(() => globalThis.document.getElementById('seite')?.scrollBy(0, 120));
   await screen('ernaehrung-weitere-naehrwerte');
   await extras.getByRole('button', { name: 'Erklärung und Quellen' }).click();
   const sheet = page.getByRole('dialog', { name: 'Weitere Nährwerte' });

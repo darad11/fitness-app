@@ -105,7 +105,8 @@ test('Tab-Leiste: beim Runterscrollen ein Kreis rechts, zurück beim Hochscrolle
       // noch einmal (Erfassung vor dem Listener der App auf window).
       window.addEventListener('scroll', key, { capture: true, once: true });
       key();
-      window.scrollBy(0, delta);
+      // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+      document.getElementById('seite')?.scrollBy(0, delta);
     }, dy);
   await scrollBy(300);
   await expect(bar).toHaveClass(/minimized/);

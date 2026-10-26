@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '../lib/cn';
 
 export interface ToastProps {
@@ -13,7 +14,8 @@ export interface ToastProps {
 
 /**
  * Kurzer Hinweis unten über der Tab-Leiste; verschwindet nach `durationMs`. Marke FORM (D-314):
- * Fläche `card` mit 1-px-Rand, Schrift `text`, keine Farbe außer bei Fehlern.
+ * Fläche `card` mit 1-px-Rand, Schrift `text`, keine Farbe außer bei Fehlern. Als Portal
+ * außerhalb des Rahmens, in dem die Seite scrollt (D-384): Er steht beim Scrollen still.
  */
 export function Toast({ message, action, onTimeout, durationMs, tone = 'default' }: ToastProps) {
   // Der Zeitraum läuft ab dem Erscheinen, auch wenn die Seite dazwischen neu zeichnet.
@@ -29,7 +31,7 @@ export function Toast({ message, action, onTimeout, durationMs, tone = 'default'
       window.clearTimeout(timer);
     };
   }, [durationMs]);
-  return (
+  return createPortal(
     <div
       role={tone === 'error' ? 'alert' : 'status'}
       className={cn(
@@ -40,6 +42,7 @@ export function Toast({ message, action, onTimeout, durationMs, tone = 'default'
     >
       <p className="flex-1 py-2">{message}</p>
       {action}
-    </div>
+    </div>,
+    document.body,
   );
 }

@@ -20,3 +20,4 @@ export * from './StatusList';
 export * from './Toast';
 export * from './theme';
 export * from './breakpoints';
+export * from './pageScroll';

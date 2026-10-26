@@ -137,11 +137,14 @@ async function inspect(page, pose) {
         }
         return true;
       };
-      const root = globalThis.document.documentElement;
-      if (root.scrollWidth > globalThis.innerWidth + 1) {
+      // Die Seite scrollt im Rahmen der App (D-384); er schneidet waagrecht ab, Überlauf zählt
+      // trotzdem: `scrollWidth` misst ihn mit.
+      const root =
+        globalThis.document.getElementById('seite') ?? globalThis.document.documentElement;
+      if (root.scrollWidth > root.clientWidth + 1) {
         out.push({
           art: 'Überlauf waagrecht',
-          detail: `${root.scrollWidth} px bei ${globalThis.innerWidth} px`,
+          detail: `${root.scrollWidth} px bei ${root.clientWidth} px`,
         });
       }
       // In einem offenen Dialog zählt nur er; sonst die ganze Seite.
@@ -263,7 +266,8 @@ async function capture(page, key, title, prepare, poses = POSE_ORDER) {
   }
 }
 
-const top = (page) => page.evaluate(() => globalThis.scrollTo(0, 0));
+const top = (page) =>
+  page.evaluate(() => globalThis.document.getElementById('seite')?.scrollTo(0, 0));
 
 // ---- Erster Start (eigenes Profil): „Heute“ ohne Einträge und die Anmeldung ----
 {
@@ -473,7 +477,7 @@ await capture(page, 'tab-leiste-kreis', 'Tab-Leiste als Kreis', async () => {
   await open(page, '/heute');
   await page.evaluate(() => {
     globalThis.dispatchEvent(new globalThis.KeyboardEvent('keydown', { key: 'ArrowDown' }));
-    globalThis.scrollBy(0, 500);
+    globalThis.document.getElementById('seite')?.scrollBy(0, 500);
   });
   await page.locator('nav.tabbar.minimized').waitFor();
   await page.waitForTimeout(500);

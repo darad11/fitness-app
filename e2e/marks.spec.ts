@@ -238,10 +238,12 @@ test('Abhakfeld in Listen (F6): Quadrat 20 px, Haken 60 %, Tippfläche 44 px, mi
  */
 function measure(page: Page, toEnd: boolean) {
   return page.evaluate((scroll) => {
-    const height = document.documentElement.scrollHeight;
-    const end = height - window.innerHeight;
-    if (scroll && window.scrollY < end - 1) window.scrollTo(0, end);
-    const atEnd = window.scrollY >= end - 1;
+    // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+    const scroller = document.getElementById('seite') ?? document.documentElement;
+    const height = scroller.scrollHeight;
+    const end = height - scroller.clientHeight;
+    if (scroll && scroller.scrollTop < end - 1) scroller.scrollTo(0, end);
+    const atEnd = scroller.scrollTop >= end - 1;
     const dialog = document.querySelector('dialog:modal');
     const rect = dialog?.getBoundingClientRect();
     const modal = rect ? { width: rect.width, height: rect.height, innerWidth, innerHeight } : null;
@@ -289,7 +291,8 @@ async function userScroll(page: Page, dy: number) {
     const key = () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     window.addEventListener('scroll', key, { capture: true, once: true });
     key();
-    window.scrollBy(0, delta);
+    // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+    document.getElementById('seite')?.scrollBy(0, delta);
   }, dy);
 }
 
@@ -319,7 +322,7 @@ async function checkPageEnd(page: Page, label: string) {
     return;
   }
   await page.evaluate((y) => {
-    window.scrollTo(0, y);
+    document.getElementById('seite')?.scrollTo(0, y);
   }, first.end - 300);
   await userScroll(page, 300);
   await expect(bar).toHaveClass(/minimized/);

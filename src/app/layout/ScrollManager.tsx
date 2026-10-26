@@ -1,5 +1,12 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { NavigationType, useLocation, useNavigationType } from 'react-router';
+import {
+  onPageScroll,
+  pageScroller,
+  pageScrollTop,
+  pageViewportHeight,
+  scrollPageTo,
+} from '@/shared/ui/pageScroll';
 
 /** Scrollposition je Verlaufseintrag (`location.key`), solange die App offen ist. */
 const positions = new Map<string, number>();
@@ -11,10 +18,11 @@ const positions = new Map<string, number>();
 const RESTORE_FRAMES = 40;
 
 /**
- * Seitenanfang und Zurück (F5, D-324): Es scrollt das Fenster, nicht `main`. Eine neu geöffnete
- * Seite beginnt oben (vorher blieb die Scrollposition der Liste stehen, Detailseiten öffneten
- * mitten auf der Seite). Beim Zurückgehen kommt die gemerkte Position wieder, auch wenn die Liste
- * ihre Daten erst nach dem Wechsel lädt; eine Bedienung des Nutzers beendet das Nachhelfen.
+ * Seitenanfang und Zurück (F5, D-324): Es scrollt der Rahmen der App (`#seite`, D-384), nicht
+ * das Fenster und nicht `main`. Eine neu geöffnete Seite beginnt oben (vorher blieb die
+ * Scrollposition der Liste stehen, Detailseiten öffneten mitten auf der Seite). Beim Zurückgehen
+ * kommt die gemerkte Position wieder, auch wenn die Liste ihre Daten erst nach dem Wechsel lädt;
+ * eine Bedienung des Nutzers beendet das Nachhelfen.
  */
 export function ScrollManager() {
   const location = useLocation();
@@ -24,15 +32,15 @@ export function ScrollManager() {
   useEffect(() => {
     if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
     const save = () => {
-      positions.set(keyRef.current, window.scrollY);
+      positions.set(keyRef.current, pageScrollTop());
     };
     // Beim Scrollen und unmittelbar vor einem Wechsel (Klick, Zurück), bevor die neue Seite
     // gezeichnet ist; das Scroll-Ereignis allein käme manchmal erst danach an.
-    window.addEventListener('scroll', save, { passive: true });
+    const detachScroll = onPageScroll(save);
     document.addEventListener('click', save, { capture: true });
     window.addEventListener('popstate', save, { capture: true });
     return () => {
-      window.removeEventListener('scroll', save);
+      detachScroll();
       document.removeEventListener('click', save, { capture: true });
       window.removeEventListener('popstate', save, { capture: true });
     };
@@ -78,11 +86,9 @@ export function ScrollManager() {
       }
       if (before.atTop) return;
       const shift = before.element.getBoundingClientRect().top - before.top;
-      if (Math.abs(shift) > 1) {
-        window.scrollTo({ top: window.scrollY + shift, behavior: 'instant' });
-      }
+      if (Math.abs(shift) > 1) scrollPageTo(pageScrollTop() + shift);
     };
-    window.addEventListener('scroll', remember, { passive: true });
+    const detachScroll = onPageScroll(remember);
     window.addEventListener('resize', onResize);
     window.addEventListener('touchstart', onTouch, { passive: true });
     window.addEventListener('touchend', onTouch, { passive: true });
@@ -91,7 +97,7 @@ export function ScrollManager() {
     window.addEventListener('keydown', onInput);
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', remember);
+      detachScroll();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('touchstart', onTouch);
       window.removeEventListener('touchend', onTouch);
@@ -106,31 +112,29 @@ export function ScrollManager() {
     anchorRef.current = null;
     if (location.hash) return undefined;
     const target = type === NavigationType.Pop ? (positions.get(location.key) ?? 0) : 0;
-    window.scrollTo({ top: target, behavior: 'instant' });
+    scrollPageTo(target);
     if (target === 0) return undefined;
     // Während des Festhaltens ohne Scroll-Verankerung des Browsers: Jede andere Änderung der
     // Position kommt dann vom Nutzer oder von der Seite selbst und beendet das Festhalten.
-    const root = document.documentElement;
+    const root = pageScroller();
     const anchoring = root.style.overflowAnchor;
     root.style.overflowAnchor = 'none';
     let frame = 0;
     let count = 0;
-    let last = window.scrollY;
+    let last = pageScrollTop();
     const stop = () => {
       cancelAnimationFrame(frame);
       root.style.overflowAnchor = anchoring;
       for (const name of STOP_EVENTS) window.removeEventListener(name, stop);
     };
     const step = () => {
-      const room = root.scrollHeight - window.innerHeight;
-      if (room >= target - 1 && Math.abs(window.scrollY - last) > 1) {
+      const room = root.scrollHeight - root.clientHeight;
+      if (room >= target - 1 && Math.abs(root.scrollTop - last) > 1) {
         stop();
         return;
       }
-      if (Math.abs(window.scrollY - target) > 1) {
-        window.scrollTo({ top: target, behavior: 'instant' });
-      }
-      last = window.scrollY;
+      if (Math.abs(root.scrollTop - target) > 1) scrollPageTo(target);
+      last = root.scrollTop;
       count += 1;
       if (count >= RESTORE_FRAMES) stop();
       else frame = requestAnimationFrame(step);
@@ -166,14 +170,16 @@ const RESIZE_SETTLE_MS = 500;
 function readingAnchor(): ReadingAnchor | null {
   const main = document.getElementById('inhalt');
   if (!main || typeof document.elementsFromPoint !== 'function') return null;
-  const atTop = window.scrollY <= 8;
-  const y = window.innerHeight * READING_LINE;
+  const atTop = pageScrollTop() <= 8;
+  const height = pageViewportHeight();
+  // Der Rahmen beginnt oben im Fenster (`inset: 0`); die Leselinie gilt also im Fenster.
+  const y = height * READING_LINE;
   const box = main.getBoundingClientRect();
   for (const x of [box.left + box.width / 2, box.left + box.width / 4, box.left + 24]) {
     for (const element of document.elementsFromPoint(x, y)) {
       if (element === main || !main.contains(element) || element.closest('dialog')) continue;
       const rect = element.getBoundingClientRect();
-      if (rect.height === 0 || rect.height >= window.innerHeight || pinned(element, main)) continue;
+      if (rect.height === 0 || rect.height >= height || pinned(element, main)) continue;
       return { element, top: rect.top, atTop };
     }
   }

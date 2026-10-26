@@ -76,7 +76,7 @@ function inspect(page: Page) {
     return {
       x: rect.x,
       y: rect.y,
-      top: rect.top + window.scrollY,
+      top: rect.top + (document.getElementById('seite')?.scrollTop ?? 0),
       width: rect.width,
       height: rect.height,
       natural: [img.naturalWidth, img.naturalHeight],
@@ -137,10 +137,11 @@ for (const width of [360, 390, 768]) {
       // Oben, ein wenig gescrollt (Logo halb unter dem Rand), weit gescrollt und zurück.
       for (const y of [0, 9, 'mitte', 0] as const) {
         await page.evaluate((target) => {
-          const middle = Math.round(
-            (document.documentElement.scrollHeight - window.innerHeight) / 2,
-          );
-          window.scrollTo(0, target === 'mitte' ? middle : target);
+          // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+          const scroller = document.getElementById('seite');
+          if (!scroller) return;
+          const middle = Math.round((scroller.scrollHeight - scroller.clientHeight) / 2);
+          scroller.scrollTo(0, target === 'mitte' ? middle : target);
         }, y);
         const logo = await inspect(page);
         const label = `${path} bei ${String(y)}`;
@@ -208,7 +209,7 @@ test('Unter der Unschärfe von iOS: Logo, „Später“ und der Kopf im Training
   await expect
     .poll(async () => {
       await page.evaluate(() => {
-        window.scrollTo(0, 600);
+        document.getElementById('seite')?.scrollTo(0, 600);
       });
       return (await head.boundingBox())?.y;
     })

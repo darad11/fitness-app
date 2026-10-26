@@ -26,7 +26,8 @@ async function scrollBy(page: Page, dy: number) {
     const key = () => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
     window.addEventListener('scroll', key, { capture: true, once: true });
     key();
-    window.scrollBy(0, delta);
+    // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+    document.getElementById('seite')?.scrollBy(0, delta);
   }, dy);
 }
 

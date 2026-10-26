@@ -10,6 +10,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import {
   describeExercise,
@@ -769,38 +770,43 @@ function Player({ session, light }: { session: Session; light: boolean }) {
         </div>
       </div>
 
-      <div
-        ref={footRef}
-        className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
-      >
-        <div className="mx-auto flex max-w-content gap-2">
-          {current && currentExercise ? (
+      {/* Fußleiste als Portal außerhalb des Rahmens, in dem die Seite scrollt (D-384): Sie steht
+          beim Scrollen still, ohne dass der Browser sie nachführen muss. */}
+      {createPortal(
+        <div
+          ref={footRef}
+          className="page-gutters fixed inset-x-0 bottom-0 z-20 border-t border-line bg-panel pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]"
+        >
+          <div className="mx-auto flex max-w-content gap-2">
+            {current && currentExercise ? (
+              <Button
+                variant="action"
+                size="lg"
+                className="flex-1"
+                onClick={() => {
+                  void complete(currentExercise, current);
+                }}
+              >
+                {tSession.done}
+              </Button>
+            ) : null}
             <Button
-              variant="action"
+              variant="secondary"
               size="lg"
-              className="flex-1"
+              className={currentExercise ? '' : 'flex-1'}
               onClick={() => {
-                void complete(currentExercise, current);
+                setPickerOpen(true);
               }}
             >
-              {tSession.done}
+              <Plus aria-hidden="true" className="size-5" />
+              <span className={currentExercise ? 'sr-only md:not-sr-only' : ''}>
+                {tSession.addExercise}
+              </span>
             </Button>
-          ) : null}
-          <Button
-            variant="secondary"
-            size="lg"
-            className={currentExercise ? '' : 'flex-1'}
-            onClick={() => {
-              setPickerOpen(true);
-            }}
-          >
-            <Plus aria-hidden="true" className="size-5" />
-            <span className={currentExercise ? 'sr-only md:not-sr-only' : ''}>
-              {tSession.addExercise}
-            </span>
-          </Button>
-        </div>
-      </div>
+          </div>
+        </div>,
+        document.body,
+      )}
 
       {noteFor ? (
         <NoteDialog

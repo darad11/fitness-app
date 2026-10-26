@@ -1770,3 +1770,20 @@ Der Test zum Fortschritt prüft die Lage des Hinweises, nicht seinen Wortlaut (D
 | Nachgestellt (Chromium): Körpergewicht erst nach dem Training, also ohne Schätzung | alte Fassung des Tests fehlgeschlagen, mit derselben Meldung wie in der CI; neue Fassung bestanden |
 | `e2e/duo-progress.spec.ts`, neue Fassung, mit Schätzung | bestanden |
 | `pnpm lint`, `pnpm format:check` | ohne Befund |
+
+### Korrekturen nach dem Gerätetest: Feste Leisten kleben am unteren Rand · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Die Seite scrollt in einem eigenen Rahmen, Tab-Leiste, Kreis, Fußleiste im Training und Hinweise liegen außerhalb (D-384). Der Fehler zeigte sich nur am iPhone Duo; im Browser ist er nicht nachstellbar. Geprüft wird deshalb der Aufbau, der ihn ausschließt, und die Lage der Leisten beim Scrollen. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorfahren der Leisten (Chromium, zugeklappt und aufgeklappt): `transform`, `translate`, `rotate`, `scale`, `perspective`, `filter`, `backdrop-filter`, `will-change`, `contain`, `container-type`, `content-visibility`, `transform-style`, `offset-path` | keiner bildet einen eigenen Bezugsrahmen, auch am alten Stand nicht; Gegenprobe im Test: `will-change: transform` an `.app-shell` und `container-type` an `body` werden gefunden |
+| Messung (Chromium, zugeklappt 466 × 678 mit sicherem Bereich unten 34, „Übungen“, acht Schritte mit dem Mausrad) | Fenster bleibt bei 0, der Rahmen scrollt bis 2400 px; Unterkante der Leiste 636, als Kreis 632, rechte Kante 382 (Rand des sicheren Bereichs), in jedem Schritt gleich |
+| `e2e/duo-feste-leisten.spec.ts` (4 Tests, Handy-Profil) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Stand (`aec96f4`, neu gebaut) | 4 von 4 fehlgeschlagen („außerhalb des scrollenden Rahmens“: Die Seite scrollte im Fenster). Die Bewegung selbst zeigt Chromium auch am alten Stand nicht |
+| Angepasst auf den Rahmen: `duo-player`, `duo-resize`, `duo-safe-area`, `duo-tabbar`, `header-logo`, `marks`, `program-list`, `shopping`, `tabbar`, `training-scroll`; `tools/duo-screens.mjs`, `tools/screenshots.mjs` | bestanden (in der ganzen Suite) |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden; vorher in `app.test.tsx` 13 Zeitüberschreitungen, weil jsdom `scrollTo` an Elementen nicht kennt: Ergänzung in `src/test-setup.ts` |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,4 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 375 bestanden, 89 übersprungen, 0 fehlgeschlagen, 12,3 min |
+| WebKit | läuft in der CI (GitHub Actions) |

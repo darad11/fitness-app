@@ -249,6 +249,17 @@
     scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
   }
 
+  /*
+   * Mit dem Rahmen der App scrollt das Fenster nicht (D-384, `.page-scroller`): kein Scrollen und
+   * kein Gummiband des Fensters, auch nicht, wenn eine Geste auf einer Leiste beginnt. Ansichten
+   * ohne Rahmen (Fehleransichten) scrollen weiter im Fenster.
+   */
+  :root:has(.page-scroller),
+  :root:has(.page-scroller) body {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
   /* Nacht als Grundfläche: iOS färbt die Statusleiste nach dem Seitenhintergrund ein. Alle Werte
      mit tabellarischen Ziffern (brand-tokens.md). */
   body {
@@ -320,6 +331,23 @@
  * kein Glas. Einzige Ausnahme ist das Glas der Tab-Leiste (D-312, Abschnitt Tab-Leiste unten).
  */
 @layer components {
+  /*
+   * Rahmen, in dem die Seite scrollt (D-384, `src/shared/ui/pageScroll.ts`): so groß wie das
+   * Fenster, ohne eigenen Bezugsrahmen für feste Elemente und ohne eigene Stapelebene (kein
+   * `position: fixed`, kein `z-index`, keine Transformation), damit sich an der Reihenfolge der
+   * Ebenen nichts ändert. Beim iPhone Duo hingen feste und klebende Elemente beim Scrollen des
+   * Fensters am Layout-Viewport, der stehen blieb; im Rahmen klebt der Kopf am Rahmen, und die
+   * Leisten außerhalb bewegen sich nicht. Das Gummiband am Seitenende bleibt im Rahmen.
+   */
+  .page-scroller {
+    position: absolute;
+    inset: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scroll-padding-top: 5rem;
+    scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
+  }
   /* Bühne: die wichtigste Karte einer Seite, eine Stufe heller als die Seite (bg-elevated). */
   .stage {
     background: var(--bg-elevated);

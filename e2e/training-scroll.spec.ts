@@ -73,7 +73,9 @@ test('Ganzes Training im Handy-Format: nach jedem Satz liegt der nächste sichtb
     const fields = row.locator('input');
     const count = await fields.count();
     await fields.first().click();
-    const scrollBefore = await page.evaluate(() => window.scrollY);
+    // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+    const scrollTop = () => page.evaluate(() => document.getElementById('seite')?.scrollTop);
+    const scrollBefore = await scrollTop();
     const rowTop = (await row.boundingBox())?.y;
     for (let i = 0; i < count; i += 1) {
       const field = fields.nth(i);
@@ -84,9 +86,7 @@ test('Ganzes Training im Handy-Format: nach jedem Satz liegt der nächste sichtb
       });
     }
     await page.waitForTimeout(400); // Speichern nach 300 ms
-    expect(await page.evaluate(() => window.scrollY), `${name}: keine Bewegung beim Tippen`).toBe(
-      scrollBefore,
-    );
+    expect(await scrollTop(), `${name}: keine Bewegung beim Tippen`).toBe(scrollBefore);
     expect((await row.boundingBox())?.y, `${name}: Satz bleibt stehen`).toBe(rowTop);
     const field = fields.nth(count - 1);
     await expect(field).toBeFocused();

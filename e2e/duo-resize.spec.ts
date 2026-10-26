@@ -38,7 +38,9 @@ for (const path of ['/heute', '/training/programme']) {
     await setDuoPose(page, 'zu');
     await openPage(page, path);
     await page.evaluate(() => {
-      window.scrollTo(0, (document.documentElement.scrollHeight - window.innerHeight) * 0.5);
+      // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+      const scroller = document.getElementById('seite');
+      scroller?.scrollTo(0, (scroller.scrollHeight - scroller.clientHeight) * 0.5);
     });
     await page.waitForTimeout(300);
     const reading = await markReadingLine(page);

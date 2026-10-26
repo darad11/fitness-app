@@ -213,9 +213,11 @@ test('Einkaufsliste: echter Touch-Wisch löscht, senkrechtes Wischen scrollt die
 
   // Senkrecht über eine Zeile wischen: Die Seite scrollt, nichts wird gelöscht.
   const third = await centre(swipeRow(page, 'Äpfel'));
-  const before = await page.evaluate(() => window.scrollY);
+  // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+  const scrollTop = () => page.evaluate(() => document.getElementById('seite')?.scrollTop ?? 0);
+  const before = await scrollTop();
   await touch({ x: third.x, y: third.y }, { x: third.x, y: third.y - 250 });
-  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before + 50);
+  await expect.poll(scrollTop).toBeGreaterThan(before + 50);
   await expect(page.locator('[data-swipe-row]')).toHaveCount(24);
   await expect(page.getByText(/gelöscht/)).toHaveCount(0);
 

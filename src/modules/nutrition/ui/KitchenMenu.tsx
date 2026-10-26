@@ -14,7 +14,7 @@ import { useOpenShoppingCount } from '@/modules/shopping';
 import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
-import { buttonClasses, isAtLeast, TileIcon, useSwipeToClose } from '@/shared/ui';
+import { buttonClasses, isAtLeast, pageScroller, TileIcon, useSwipeToClose } from '@/shared/ui';
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
 
 /** Knopf unter „Gegessen“: Sekundärknopf (Ghost) der Marke FORM, gleich für „Ziel“ und „Meine Küche“ (D-314). */
@@ -33,10 +33,11 @@ interface Entry {
  * Knopf unten in der linken Spalte (D-381); ist die Seite darunter zu kurz, geht das nicht.
  */
 function roomBelow(panel: HTMLElement): boolean {
-  const root = document.documentElement;
+  // Es scrollt der Rahmen der App (D-384); er beginnt oben im Fenster.
+  const root = pageScroller();
   const padding = parseFloat(getComputedStyle(root).scrollPaddingBottom) || 0;
-  const need = panel.getBoundingClientRect().bottom - (window.innerHeight - padding);
-  const room = root.scrollHeight - window.scrollY - window.innerHeight;
+  const need = panel.getBoundingClientRect().bottom - (root.clientHeight - padding);
+  const room = root.scrollHeight - root.scrollTop - root.clientHeight;
   return need <= room + 1;
 }
 

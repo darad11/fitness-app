@@ -82,7 +82,7 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
   // der Liste; der Satz rutscht nicht dahinter, sondern bleibt darunter sichtbar.
   const active = page.locator('li[aria-current="step"]');
   await active.evaluate((row) => {
-    window.scrollBy(0, row.getBoundingClientRect().top - 40);
+    document.getElementById('seite')?.scrollBy(0, row.getBoundingClientRect().top - 40);
   });
   await page.waitForTimeout(700);
   await setDuoPose(page, 'zu');

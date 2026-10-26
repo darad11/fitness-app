@@ -2078,3 +2078,11 @@ Keine Scroll-Balken am Touch-Gerät, dünne in den Farben der App am Computer (D
 | `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 238,0 KB von 250 KB |
 | CI zu D-392 (Lauf 40415825999, `17e0fbc`) | Chromium grün; WebKit 381 bestanden, 148 übersprungen, 3 fehlgeschlagen: dieselbe Anmeldung und die beiden Touch-Tests aus `scrollbars.spec.ts` (Nachtrag zu D-392) |
+
+### Nachtrag zu D-392 nach der CI (WebKit) · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI-Lauf 40415825999 (`17e0fbc`, D-392) | Chromium grün; WebKit 381 bestanden, 148 übersprungen, 3 fehlgeschlagen: die Anmeldung aus D-391 (Nachtrag zu D-391) und beide Tests am Touch-Gerät aus `scrollbars.spec.ts` mit „mouse.wheel: Mouse wheel is not supported in mobile WebKit“, auch im zweiten Anlauf. Die Prüfung der Balken davor bestand in WebKit; der Test am Computer bestand |
+| `e2e/scrollbars.spec.ts` mit Wischen statt Mausrad (Chromium als Wisch-Geste über `Input.dispatchTouchEvent`, WebKit per Skript), dreimal wiederholt | 9 bestanden, 9 übersprungen (je Profil nur die passenden) |
+| `pnpm lint`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |

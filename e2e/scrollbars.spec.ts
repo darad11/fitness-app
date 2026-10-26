@@ -4,8 +4,8 @@ import { expect, openPage, test } from './fixtures';
 
 /**
  * Scroll-Balken (D-392): Am Touch-Gerät ist in keinem scrollbaren Bereich ein Balken zu sehen,
- * weder im Rahmen der Seite noch in Blättern, Listen und Dialogen. Gescrollt wird wie bisher, auch
- * bei offener Tastatur. Am Computer mit Maus bleiben sie, dünn und dunkel in den Farben der App
+ * weder im Rahmen der Seite noch in Blättern, Listen und Dialogen. Gescrollt wird wie bisher, mit
+ * dem Finger, auch bei offener Tastatur. Am Computer mit Maus bleiben sie, dünn und dunkel in den Farben der App
  * (`--scrollbar-thumb` auf durchsichtiger Spur), und die Scroll-Tasten scrollen weiter.
  */
 
@@ -33,13 +33,34 @@ function scrollers(page: Page): Promise<Scroller[]> {
   );
 }
 
-/** Scrollt mit dem Mausrad über dem Bereich und meldet, wie weit er gescrollt hat. */
-async function wheelScrolls(page: Page, area: Locator): Promise<number> {
+/**
+ * Wischt mit dem Finger über den Bereich nach oben und meldet, wie weit er gescrollt hat. Echte
+ * Touch-Gesten gibt es in Playwright nur in Chromium (Chrome-Protokoll), das Mausrad nicht im
+ * Handy-Profil von WebKit; dort scrollt der Test per Skript und prüft, dass der Bereich scrollt.
+ */
+async function swipeScrolls(page: Page, area: Locator): Promise<number> {
   const box = await area.boundingBox();
   if (!box) return 0;
   const before = await area.evaluate((element) => element.scrollTop);
-  await page.mouse.move(box.x + box.width / 2, box.y + Math.min(box.height / 2, 200));
-  await page.mouse.wheel(0, 300);
+  const x = box.x + box.width / 2;
+  const y = box.y + Math.min(box.height * 0.7, 400);
+  const distance = Math.min(250, y - box.y - 10);
+  if (page.context().browser()?.browserType().name() === 'chromium') {
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+    for (let step = 1; step <= 15; step++) {
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchMove',
+        touchPoints: [{ x, y: y - (distance * step) / 15 }],
+      });
+    }
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await cdp.detach();
+  } else {
+    await area.evaluate((element, top) => {
+      element.scrollBy({ top, behavior: 'instant' });
+    }, distance);
+  }
   await expect.poll(() => area.evaluate((element) => element.scrollTop)).toBeGreaterThan(before);
   return (await area.evaluate((element) => element.scrollTop)) - before;
 }
@@ -63,7 +84,7 @@ test.describe('am Touch-Gerät', () => {
     let found = await scrollers(page);
     expect(found.map((s) => s.name)).toContain('#seite');
     expect(found.filter((s) => s.width !== 'none')).toEqual([]);
-    expect(await wheelScrolls(page, frame)).toBeGreaterThan(0);
+    expect(await swipeScrolls(page, frame)).toBeGreaterThan(0);
 
     // Blatt mit Liste: Übung auswählen im freien Training.
     await openPage(page, '/training');
@@ -81,7 +102,7 @@ test.describe('am Touch-Gerät', () => {
     expect(inSheet, 'im Blatt scrollt etwas').toBeGreaterThan(0);
     expect(found.filter((s) => s.width !== 'none')).toEqual([]);
     const list = picker.locator('.overflow-y-auto').first();
-    expect(await wheelScrolls(page, list)).toBeGreaterThan(0);
+    expect(await swipeScrolls(page, list)).toBeGreaterThan(0);
   });
 
   test('bei offener Tastatur scrollt die Seite wie bisher, ohne Balken (D-392)', async ({
@@ -94,7 +115,7 @@ test.describe('am Touch-Gerät', () => {
     // Tastatur: Das Fenster wird um gut die Hälfte niedriger (wie D-391).
     await page.setViewportSize({ width: DUO.zu.width, height: Math.round(DUO.zu.height * 0.45) });
     const frame = page.locator('#seite');
-    expect(await wheelScrolls(page, frame)).toBeGreaterThan(0);
+    expect(await swipeScrolls(page, frame)).toBeGreaterThan(0);
     expect((await scrollers(page)).filter((s) => s.width !== 'none')).toEqual([]);
     await expect(field).toBeFocused();
   });

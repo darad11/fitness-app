@@ -455,6 +455,7 @@ Auftrag vom 26.10.2026: `docs/prompts/duo-korrekturen-2-FORM.md`, mit deinem Bil
 - **Ursache:** Seit D-384 scrollt die Seite in einem eigenen Bereich. Dessen Balken zeigt der Browser wie bei jedem scrollbaren Bereich; die App blendete Balken nirgends aus.
 - **Neu:** Am Touch-Gerät ist in keinem Bereich ein Balken zu sehen: nicht im Rahmen, nicht in Blättern, Listen und Dialogen, nicht in der Spalte im Training. Am Computer mit Maus bleiben sie, dünn und dunkel in den Farben der App: Griff wie der Rand von Eingabefeldern, Spur durchsichtig, 10 statt 15 px breit (Chromium). Geändert ist nur das Aussehen; Wischen, Mausrad und Scroll-Tasten scrollen wie bisher, auch bei offener Tastatur.
 - **Tests:** `scrollbars.test.ts` (5 Tests), Kontrast des Griffs in `tokens.test.ts` und `e2e/scrollbars.spec.ts` (3 Tests): am Touch-Gerät im Rahmen, im Blatt „Übung auswählen“ mit seiner Liste und bei offener Tastatur kein scrollbarer Bereich mit Balken, und das Scrollen geht; am Computer alle Bereiche dünn in den Farben der App, „Bild ab“ scrollt den Rahmen. Gegenprobe am alten Stand: 3 von 3 fehlgeschlagen: Der Rahmen `#seite` hatte `scrollbar-width: auto`, erwartet waren am Computer `thin` und am Touch-Gerät `none`.
+- **Nachtrag nach der CI (WebKit):** Die beiden Tests am Touch-Gerät scheiterten in WebKit nicht an den Balken, sondern am Mausrad, das Playwright im Handy-Profil von WebKit nicht kennt. Sie scrollen jetzt mit dem Finger: in Chromium als echte Wisch-Geste, in WebKit per Skript.
 
 ### 12.4 Bilder und Prüfungen
 

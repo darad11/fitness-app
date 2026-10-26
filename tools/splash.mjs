@@ -18,11 +18,12 @@
  * liefert `tools/glyphs.mjs`.
  *
  * Schreibt
- * - `public/splash/splash-<Breite>x<Höhe>.png`: 40 Bilder für 20 Geräte, hochkant und quer;
+ * - `public/splash/splash-<Breite>x<Höhe>.png`: 44 Bilder für 22 Geräte, hochkant und quer
+ *   (seit D-390 mit dem iPhone Duo, äußeres und inneres Display);
  * - `public/splash/splash.svg`: Vorlage 390 × 844 pt mit den Gruppen `symbol`, `wortmarke`, `claim`;
  * - in `index.html` die Startfläche zwischen den Markierungen `startflaeche`: dieselben Pfade,
  *   mit CSS nach derselben Regel gesetzt (`vmin` für die kurze Seite), damit Startbild und
- *   Startfläche gleich aussehen.
+ *   Startfläche gleich aussehen; beim Duo so breit wie der ganze Bildschirm (D-390).
  * Danach gibt es die `<link>`-Zeilen für `index.html` aus. `src/app/splash.test.ts` prüft Zeilen,
  * Dateien, Pixelmaße und die Regel in den Bildern.
  *
@@ -34,7 +35,12 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
 import { glyphPath, loadFont } from './glyphs.mjs';
 
-/** Bildschirm hochkant in CSS-Pixeln und Pixeldichte; Quelle: Apple, Geräte mit aktuellem iOS. */
+/**
+ * Bildschirm hochkant in CSS-Pixeln und Pixeldichte; Quelle: Apple, Geräte mit aktuellem iOS.
+ * `seite`: Haltungen, in denen iOS die Systemleiste an die rechte Seite legt und den Bereich der
+ * App daneben schmaler macht (iPhone Duo, D-390, nach den Bildern vom Gerät); dort richtet sich die
+ * Startfläche trotzdem nach dem ganzen Bildschirm.
+ */
 const DEVICES = [
   { w: 375, h: 667, dpr: 2, name: 'iPhone SE (2. und 3. Generation)' },
   { w: 375, h: 812, dpr: 3, name: 'iPhone 12 mini, 13 mini, 11 Pro, XS, X' },
@@ -47,6 +53,10 @@ const DEVICES = [
   { w: 428, h: 926, dpr: 3, name: 'iPhone 12 Pro Max, 13 Pro Max, 14 Plus' },
   { w: 430, h: 932, dpr: 3, name: 'iPhone 14 Pro Max, 15 Plus, 15 Pro Max, 16 Plus' },
   { w: 440, h: 956, dpr: 3, name: 'iPhone 16 Pro Max, 17 Pro Max' },
+  // iPhone Duo (D-371, D-390): äußeres Display 1398 × 2034 Pixel; inneres 669 × 951 pt, mit
+  // Faktor 3 gezeichnet (2007 × 2853) und auf 1878 × 2670 Pixel verkleinert.
+  { w: 466, h: 678, dpr: 3, name: 'iPhone Duo, äußeres Display', seite: ['portrait'] },
+  { w: 669, h: 951, dpr: 3, name: 'iPhone Duo, inneres Display', seite: ['landscape'] },
   { w: 744, h: 1133, dpr: 2, name: 'iPad mini (6. und 7. Generation)' },
   { w: 768, h: 1024, dpr: 2, name: 'iPad mini 5, iPad 9,7 Zoll' },
   { w: 810, h: 1080, dpr: 2, name: 'iPad 10,2 Zoll' },
@@ -216,6 +226,29 @@ function screenSvg(width, height, pt, p, attributes = '') {
   );
 }
 
+/** So viel schmaler als der Bildschirm darf der Bereich der App höchstens sein: eine Leiste. */
+const SIDE_MAX = 120;
+
+/**
+ * Startfläche ohne Systemleiste an der Seite (D-390): Macht iOS den Bereich der App neben der
+ * Leiste schmaler, so breit wie der Bildschirm, links bündig; die Leiste liegt rechts. Logo und
+ * Claim stehen dann wie im Startbild in der Mitte des ganzen Bildschirms, nicht in der Mitte
+ * daneben. Nur bis `SIDE_MAX` schmaler: Ist das Fenster viel kleiner (geteilter Bildschirm), bleibt
+ * die Fläche so breit wie das Fenster. Ist es so breit wie der Bildschirm, ändert sich nichts.
+ */
+function sideRules() {
+  const rules = [];
+  for (const device of DEVICES) {
+    for (const orientation of device.seite ?? []) {
+      const screen = orientation === 'portrait' ? device.w : device.h;
+      rules.push(
+        `@media (device-width:${String(device.w)}px) and (device-height:${String(device.h)}px) and (orientation:${orientation}) and (min-width:${String(screen - SIDE_MAX)}px){#startflaeche>svg{width:${String(screen)}px}}`,
+      );
+    }
+  }
+  return rules;
+}
+
 /**
  * Startfläche für `index.html`: Stil für den Kopf und Inhalt für den Körper. Sichtbar nur in der
  * installierten App (`display-mode: standalone`), denn nur dort zeigt iOS vorher ein Startbild.
@@ -223,7 +256,8 @@ function screenSvg(width, height, pt, p, attributes = '') {
  * nur das Netz, falls die App gar nicht startet.
  */
 function surface(p) {
-  // Alles in Prozent des Bildschirms: Hochkant ist die kurze Seite die Breite, quer die Höhe.
+  // Alles in Prozent des Bildschirms: Hochkant ist die kurze Seite die Breite, quer die Höhe. Die
+  // Fläche richtet sich nicht nach den sicheren Bereichen; sie hat keine Bedienelemente (D-390).
   const word = RULE.wordWidth * 100;
   const logoHeight = (word * p.logoHeight) / LOGO_WIDTH;
   const center = RULE.centerY * 100;
@@ -235,13 +269,14 @@ function surface(p) {
   const pct = (value) => `${s(value, 4)}%`;
   const style = [
     '#startflaeche{display:none}',
-    '@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;background:' +
+    '@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;overflow:hidden;background:' +
       RULE.night +
       ';pointer-events:none;animation:startflaeche-netz 0s 10s forwards}}',
     '#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}',
     '@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}',
     '@keyframes startflaeche-netz{to{visibility:hidden}}',
     '#startflaeche>svg{display:block;width:100%;height:100%}',
+    ...sideRules(),
     `#startflaeche .start-unten{transform:translateY(calc(${s(below, 4)}vmin - ${String(RULE.baseline)}px))}`,
     '@media (orientation:landscape){#startflaeche .hoch{display:none}}',
     '@media (orientation:portrait){#startflaeche .quer{display:none}}',

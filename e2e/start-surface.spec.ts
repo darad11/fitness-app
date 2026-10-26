@@ -14,10 +14,20 @@ import { expect, test } from './fixtures';
  */
 async function installedStart(
   browser: Browser,
-  options: { reducedMotion?: 'reduce'; landscape?: boolean; safari?: boolean } = {},
+  options: {
+    reducedMotion?: 'reduce';
+    landscape?: boolean;
+    safari?: boolean;
+    /** Bereich der App und Bildschirm, wenn sie verschieden groß sind (iPhone Duo, D-390). */
+    viewport?: { width: number; height: number };
+    screen?: { width: number; height: number };
+  } = {},
 ) {
   const context = await browser.newContext({
-    viewport: options.landscape ? { width: 844, height: 390 } : { width: 390, height: 844 },
+    viewport:
+      options.viewport ??
+      (options.landscape ? { width: 844, height: 390 } : { width: 390, height: 844 }),
+    ...(options.screen ? { screen: options.screen } : {}),
     deviceScaleFactor: 3,
     isMobile: true,
     hasTouch: true,
@@ -100,21 +110,28 @@ async function timeline(page: Page) {
 const heading = (page: Page) =>
   page.getByRole('heading', { level: 1, name: /Guten (Morgen|Tag|Abend)/ });
 
-/** Mittlere Abweichung je Kanal und Anteil stark abweichender Pixel zwischen zwei PNGs. */
-async function compare(page: Page, a: Buffer, b: Buffer) {
+/**
+ * Mittlere Abweichung je Kanal und Anteil stark abweichender Pixel zwischen zwei PNGs. Mit `crop`
+ * zählt vom zweiten Bild nur der Ausschnitt links oben in der Größe des ersten (Bereich der App
+ * neben der Systemleiste, D-390).
+ */
+async function compare(page: Page, a: Buffer, b: Buffer, crop = false) {
   return page.evaluate(
-    async ({ first, second }) => {
-      const load = async (data: string) => {
+    async ({ first, second, cut }) => {
+      const load = async (data: string, size?: { width: number; height: number }) => {
         const image = new Image();
         image.src = `data:image/png;base64,${data}`;
         await image.decode();
-        const canvas = new OffscreenCanvas(image.width, image.height);
+        const width = size?.width ?? image.width;
+        const height = size?.height ?? image.height;
+        const canvas = new OffscreenCanvas(width, height);
         const context = canvas.getContext('2d');
         if (!context) throw new Error('Kein Canvas');
         context.drawImage(image, 0, 0);
-        return context.getImageData(0, 0, image.width, image.height);
+        return context.getImageData(0, 0, width, height);
       };
-      const [pa, pb] = await Promise.all([load(first), load(second)]);
+      const pa = await load(first);
+      const pb = await load(second, cut ? { width: pa.width, height: pa.height } : undefined);
       if (pa.width !== pb.width || pa.height !== pb.height) return { mean: 255, strong: 1 };
       let sum = 0;
       let strong = 0;
@@ -130,7 +147,7 @@ async function compare(page: Page, a: Buffer, b: Buffer) {
       const count = pa.data.length / 4;
       return { mean: sum / (count * 3), strong: strong / count };
     },
-    { first: a.toString('base64'), second: b.toString('base64') },
+    { first: a.toString('base64'), second: b.toString('base64'), cut: crop },
   );
 }
 
@@ -164,6 +181,94 @@ test('Startfläche: gleich dem Startbild, blendet aus, sobald „Heute“ steht'
   expect((times.gone ?? 0) - (times.weg ?? 0)).toBeGreaterThanOrEqual(250);
   await context.close();
 });
+
+/**
+ * iPhone Duo (D-390): Auf dem Gerät machte iOS den Bereich der App neben der Systemleiste rechts
+ * schmaler (zugeklappt 382 statt 466 pt), die Startfläche stand dadurch in der Mitte daneben. Der
+ * Test stellt beide Fälle nach: Bereich schmaler als der Bildschirm und so groß wie er. Erwartet:
+ * Symbol in der Mitte des ganzen Bildschirms und pixelgleich mit dem Startbild, soweit die Fläche
+ * zu sehen ist.
+ */
+const DUO_STARTS = [
+  {
+    name: 'zugeklappt, Leiste rechts neben dem Bereich der App',
+    viewport: { width: 382, height: 678 },
+    screen: { width: 466, height: 678 },
+    image: 'splash-1398x2034.png',
+    center: 233,
+  },
+  {
+    name: 'zugeklappt, Bereich so groß wie der Bildschirm',
+    viewport: { width: 466, height: 678 },
+    screen: { width: 466, height: 678 },
+    image: 'splash-1398x2034.png',
+    center: 233,
+  },
+  {
+    name: 'aufgeklappt quer, Leiste rechts neben dem Bereich der App',
+    viewport: { width: 867, height: 669 },
+    screen: { width: 669, height: 951 },
+    image: 'splash-2853x2007.png',
+    center: 475.5,
+  },
+  {
+    name: 'aufgeklappt quer, Bereich so groß wie der Bildschirm',
+    viewport: { width: 951, height: 669 },
+    screen: { width: 669, height: 951 },
+    image: 'splash-2853x2007.png',
+    center: 475.5,
+  },
+];
+
+for (const pose of DUO_STARTS) {
+  test(`Startfläche am iPhone Duo, ${pose.name}: Logo in der Mitte des ganzen Bildschirms, gleich dem Startbild (D-390)`, async ({
+    browser,
+    browserName,
+  }, testInfo) => {
+    test.skip(!testInfo.project.name.includes('mobile'), 'Startbild nur am iPhone');
+    test.skip(browserName !== 'chromium', 'Bildschirm und Fenster verschieden groß: nur Chromium');
+    const { context, page, release } = await installedStart(browser, {
+      viewport: pose.viewport,
+      screen: pose.screen,
+    });
+    await page.goto('/heute', { waitUntil: 'commit' });
+    await expect(page.locator('#startflaeche')).toBeVisible();
+    const shot = await page.screenshot();
+    // Waagrechte Mitte des Symbols (Lime #C7FF46) in pt.
+    const symbolCenter = await page.evaluate(async (data) => {
+      const image = new Image();
+      image.src = `data:image/png;base64,${data}`;
+      await image.decode();
+      const canvas = new OffscreenCanvas(image.width, image.height);
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Kein Canvas');
+      context.drawImage(image, 0, 0);
+      const { data: px, width, height } = context.getImageData(0, 0, image.width, image.height);
+      let left = Infinity;
+      let right = -1;
+      for (let y = 0; y < height; y += 2) {
+        for (let x = 0; x < width; x += 1) {
+          const i = (y * width + x) * 4;
+          const [r, g, b] = [px[i] ?? 0, px[i + 1] ?? 0, px[i + 2] ?? 0];
+          if (g > 200 && r > 150 && b < 120) {
+            left = Math.min(left, x);
+            right = Math.max(right, x + 1);
+          }
+        }
+      }
+      return (left + right) / 2 / 3;
+    }, shot.toString('base64'));
+    expect(
+      Math.abs(symbolCenter - pose.center),
+      `Mitte des Symbols ${String(symbolCenter)}`,
+    ).toBeLessThanOrEqual(1);
+    const result = await compare(page, shot, readFileSync(`public/splash/${pose.image}`), true);
+    expect(result.mean, 'mittlere Abweichung je Kanal').toBeLessThan(0.25);
+    expect(result.strong, 'Anteil stark abweichender Pixel').toBeLessThan(0.0005);
+    release();
+    await context.close();
+  });
+}
 
 test('Startfläche beim schnellen Start: mindestens 1,0 s ab dem ersten Bild, dann 300 ms', async ({
   browser,

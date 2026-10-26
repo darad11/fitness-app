@@ -167,7 +167,20 @@ describe('Startbilder für die installierte App (D-317, D-325)', () => {
 
   it('jede Zeile in index.html ist vollständig lesbar', () => {
     expect(links.length).toBe(html.match(/apple-touch-startup-image/g)?.length);
-    expect(links.length).toBe(40);
+    expect(links.length).toBe(44);
+  });
+
+  it('das iPhone Duo hat Startbilder für beide Displays, hoch und quer (D-390)', () => {
+    const duo = links
+      .filter((l) => l.ratio === 3 && [466, 669].includes(l.width))
+      .map((l) => `${String(l.width)}x${String(l.height)} ${l.orientation} ${l.href}`)
+      .sort();
+    expect(duo).toEqual([
+      '466x678 landscape /splash/splash-2034x1398.png',
+      '466x678 portrait /splash/splash-1398x2034.png',
+      '669x951 landscape /splash/splash-2853x2007.png',
+      '669x951 portrait /splash/splash-2007x2853.png',
+    ]);
   });
 
   it('jede Zeile zeigt auf ein Bild in genau der Größe des Bildschirms', () => {
@@ -195,8 +208,16 @@ describe('Startbilder für die installierte App (D-317, D-325)', () => {
     expect(new Set(links.map((l) => fileOf(l.href)))).toEqual(new Set(Object.keys(files)));
   });
 
-  // Die drei Größen des Markenpakets (iPhone, Pro Max, iPad) und ein Bild quer.
-  for (const size of ['1170x2532', '1290x2796', '2048x2732', '2532x1170']) {
+  // Die drei Größen des Markenpakets (iPhone, Pro Max, iPad), ein Bild quer und das iPhone Duo
+  // zugeklappt hoch und aufgeklappt quer (D-390).
+  for (const size of [
+    '1170x2532',
+    '1290x2796',
+    '2048x2732',
+    '2532x1170',
+    '1398x2034',
+    '2853x2007',
+  ]) {
     it(`${size} folgt der Regel C3: Logo vertikal mittig bei 47 %, „FORM YOURSELF.“ 58 pt über dem Rand`, async () => {
       const link = links.find((l) => l.href === `/splash/splash-${size}.png`);
       expect(link).toBeDefined();
@@ -345,5 +366,26 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
     expect(surface).toContain('preserveAspectRatio="xMidYMax meet"');
     // Steht vor der App, damit sie mit dem ersten Bild da ist.
     expect(html.indexOf('<div id="startflaeche"')).toBeLessThan(html.indexOf('<div id="root">'));
+  });
+
+  it('die Startfläche richtet sich nach dem ganzen Bildschirm, nicht nach den sicheren Bereichen (D-390)', () => {
+    // Ohne Bedienelemente: kein Abstand für Systemleiste, Kamera oder Home-Balken.
+    expect(style).not.toContain('safe-area');
+    expect(surface).not.toContain('safe-area');
+    expect(style).toContain('position:fixed;inset:0;');
+    expect(style).toContain('overflow:hidden;');
+    // iPhone Duo: Liegt die Systemleiste an der Seite und macht iOS den Bereich der App daneben
+    // schmaler, ist die Fläche trotzdem so breit wie der Bildschirm, links bündig. Nur bis 120 pt
+    // schmaler (eine Leiste), damit ein geteilter Bildschirm die Fläche nicht verschiebt.
+    expect(style).toContain(
+      '@media (device-width:466px) and (device-height:678px) and (orientation:portrait) and (min-width:346px){#startflaeche>svg{width:466px}}',
+    );
+    expect(style).toContain(
+      '@media (device-width:669px) and (device-height:951px) and (orientation:landscape) and (min-width:831px){#startflaeche>svg{width:951px}}',
+    );
+    // Gilt nach der allgemeinen Regel (100 %), damit sie diese überschreibt.
+    expect(style.indexOf('#startflaeche>svg{display:block;width:100%;height:100%}')).toBeLessThan(
+      style.indexOf('(device-width:466px)'),
+    );
   });
 });

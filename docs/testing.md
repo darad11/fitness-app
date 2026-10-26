@@ -2005,3 +2005,23 @@ Tests je Abschnitt, Bilder erneuert, Bericht mit Ursache oder geprüften Hypothe
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 381 bestanden, 95 übersprungen, 0 fehlgeschlagen, 11,1 min |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem zweiten Gerätetest: Startfläche und Startbilder · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Startfläche in der Mitte des ganzen Bildschirms, vier Startbilder für das Duo (D-390). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen in Bild A (Einzelbilder, Maßstab aus der Bildschirmbreite) | Mitte von Logo und Claim zugeklappt 190 statt 233 pt, aufgeklappt quer 433 statt 475,5 pt; Wortmarke zugeklappt 139 pt breit (36 % von 382 pt) |
+| Nachgemessen in Bild B und in den Bildern vom ersten Gerätetest | jetzt endet der Inhalt bei 362 pt (382 minus 20 pt Rand), die Tab-Leiste bei 370 pt; vorher endeten Karten und Tab-Leiste bei 382 bis 384 pt, also beim sicheren Bereich von rund 84 pt in einem 466 pt breiten Bereich |
+| `node tools/splash.mjs`, dann die 40 bestehenden Bilder aus Git zurück (Chromium schrieb sie bytegleich bis auf Kleinigkeiten neu) | 4 neue Bilder: 1398 × 2034, 2034 × 1398, 2007 × 2853, 2853 × 2007 |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“ |
+| `src/app/splash.test.ts` | 14 Tests bestanden, darunter neu: Duo hoch und quer verlinkt, Regel C3 in 1398 × 2034 und 2853 × 2007, Startfläche ohne sichere Bereiche, Regeln fürs Duo |
+| `e2e/start-surface.spec.ts` (Chromium, Handy-Profil; Bildschirm und Bereich der App getrennt eingestellt) | 13 bestanden, darunter die vier neuen: zugeklappt (Bereich 382 und 466 pt) und aufgeklappt quer (867 und 951 pt): Symbol in der Mitte des ganzen Bildschirms, Fläche pixelgleich mit dem Startbild (mittlere Abweichung unter 0,25 von 255) |
+| Gegenprobe: dieselben vier Tests mit der Startfläche vor D-390 | 2 fehlgeschlagen („Mitte des Symbols 191“ und „433.5“, wie auf den Bildern), 2 bestanden (Bereich so breit wie der Bildschirm) |
+| WebKit | Die vier neuen Tests laufen nur in Chromium: WebKit in Playwright stellt Bildschirm und Fenster nicht getrennt ein |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 383 bestanden, 99 übersprungen, 2 fehlgeschlagen: `pwa.spec.ts` erwartete 40 Startbilder (Desktop und Handy); jetzt 44, danach `pwa.spec.ts` 6 bestanden |
+| `pnpm test` | 127 Dateien, 1103 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,8 KB von 250 KB (`index.html` 5,7 KB); Startbilder nicht vorab gespeichert, wie bisher |
+| WebKit | läuft in der CI (GitHub Actions) |

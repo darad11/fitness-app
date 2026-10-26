@@ -1,6 +1,6 @@
 # FORM · Bericht zur Phase iPhone Duo
 
-Stand: 26.10.2026, Phase 2 und Korrekturen nach dem Gerätetest abgeschlossen (Abschnitt 11) · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
+Stand: 26.10.2026, Phase 2 und Korrekturen nach dem ersten Gerätetest abgeschlossen (Abschnitt 11), Korrekturen nach dem zweiten in Arbeit (Abschnitt 12) · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
 
 Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo (Chromium in dieser Umgebung, WebKit in GitHub Actions). Auf dem echten Gerät ist nichts getestet; was nur dort prüfbar ist, steht in der Liste für den Gerätetest.
 
@@ -420,3 +420,16 @@ Am besten an der Vorschau des Branches, einmal als App vom Home-Bildschirm und e
 7. **Etiketten (D-386):** im Training zugeklappt und aufgeklappt: Etiketten neben dem Namen oder darunter, nichts über „Erstes Mal“?
 8. **„Ernährung heute“ (D-387):** aufgeklappt quer auf „Heute“: Knöpfe mittig im freien Raum der Karte?
 9. **Gerätedaten (D-388):** „Mehr › Über die App“, „Gerätedaten“ aufklappen: Ändern sich die Werte beim Drehen und Auf- und Zuklappen?
+
+## 12. Korrekturen nach dem zweiten Gerätetest (D-390 bis D-392)
+
+Auftrag vom 26.10.2026: `docs/prompts/duo-korrekturen-2-FORM.md`, mit deinem Bild `duo-befunde-2.png` (A: Startfläche, B: Einkaufsliste mit Tastatur). Getestet habe ich wieder in Browser-Fenstern (Chromium hier, WebKit in der CI), nicht auf dem Gerät.
+
+### 12.1 Startfläche und Startbilder (D-390, Bild A)
+
+- **Nachgemessen:** Auf Bild A steht die Mitte von Logo und Claim zugeklappt bei 190 pt statt 233 pt, aufgeklappt quer bei 433 pt statt 475,5 pt, also um die halbe Breite der Leiste links der Mitte. Auch die Größe passt zu einem schmaleren Bereich: Die Wortmarke ist zugeklappt 139 pt breit, 36 % von 382 pt statt von 466 pt.
+- **Ursache:** Die Startfläche richtet sich nicht nach den sicheren Bereichen. Sie füllt den Bereich, den iOS der App gibt. Dieser Bereich endet auf dem Gerät jetzt vor der Leiste: In deinen neuen Bildern (B) endet der Inhalt 20 pt vor 382 pt, ohne sicheren Bereich. In den Bildern vom ersten Gerätetest reichte der Bereich unter die Leiste (466 pt), und der Inhalt endete beim gemeldeten sicheren Bereich von rund 84 pt. Für den Inhalt ist die Lage gleich, für die Startfläche nicht. Zwischen beiden Tests änderte sich im Code vor allem der Rahmen (D-384). Ob er iOS dazu bringt, zeigen die Gerätedaten unter „Über die App“: Fenster 382 oder 466 breit, sicherer Bereich rechts 0 oder 84.
+- **Startbilder:** Für das Duo gab es keine, iOS zeigte beim Start also kein Startbild. Neu sind vier nach derselben Regel: zugeklappt 466 × 678 pt und aufgeklappt 669 × 951 pt, je hoch und quer.
+- **Neu:** Ist der Bereich der App bis zu 120 pt schmaler als der Bildschirm, zeichnet die Startfläche so breit wie der ganze Bildschirm, links bündig. Logo und Claim stehen dann in der Mitte des ganzen Bildschirms, an derselben Stelle wie im Startbild. Reines CSS aus der Bildschirmgröße, ohne Messung per Skript. Reicht der Bereich unter die Leiste, ändert sich nichts.
+- **Annahme:** Die Leiste liegt rechts, wie auf allen deinen Bildern. Hältst du das Gerät aufgeklappt andersherum und liegt die Leiste dann links, stünde das Logo um die Breite der Leiste daneben.
+- **Tests:** `splash.test.ts` (Startbilder fürs Duo, Regel in den neuen Bildern, Startfläche ohne sichere Bereiche); `e2e/start-surface.spec.ts` vier neue Tests, zugeklappt und aufgeklappt quer, mit Bereich schmaler als der Bildschirm und gleich groß: Das Symbol steht in der Mitte des ganzen Bildschirms, die Fläche ist pixelgleich mit dem Startbild. Gegenprobe am alten Stand: Mitte 191 und 433,5 pt, wie auf deinen Bildern.

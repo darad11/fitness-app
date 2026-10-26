@@ -57,3 +57,20 @@ export function scanRegion(
     height: (bottom - top) * perBoxPixel,
   };
 }
+
+/** Ab dieser Änderung der Fensterbreite (Anteil) gilt ein Wechsel des Displays (iPhone Duo). */
+export const DISPLAY_CHANGE = 0.2;
+
+/**
+ * Neue Haltung für die Kamera (D-385): Das Fenster wechselt zwischen hoch und quer (Drehen,
+ * Auf- und Zuklappen) oder seine Breite ändert sich um mehr als ein Fünftel (Wechsel zwischen
+ * äußerem und innerem Display bei gleicher Haltung). Dann startet der Scanner die Kamera neu, damit
+ * iOS das Bild für die neue Haltung liefert; die App dreht das Bild nie selbst. Kleine Änderungen
+ * (Tastatur, Systemleisten) zählen nicht.
+ */
+export function cameraPostureChanged(before: Size, after: Size): boolean {
+  if (!(before.width > 0 && before.height > 0 && after.width > 0 && after.height > 0)) return false;
+  const landscape = (size: Size) => size.width > size.height;
+  if (landscape(before) !== landscape(after)) return true;
+  return Math.abs(after.width - before.width) > before.width * DISPLAY_CHANGE;
+}

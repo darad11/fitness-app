@@ -1787,3 +1787,20 @@ Die Seite scrollt in einem eigenen Rahmen, Tab-Leiste, Kreis, Fußleiste im Trai
 | `pnpm build`, `pnpm check:bundle` | Startansicht 236,4 KB von 250 KB |
 | `pnpm test:e2e` (Chromium, alle Dateien) | 375 bestanden, 89 übersprungen, 0 fehlgeschlagen, 12,3 min |
 | WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Scanner ohne eigene Drehung, Neustart der Kamera · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Keine eigene Drehung im Scanner gefunden; bei einer neuen Haltung startet die Kamera neu (D-385). Ob das Bild am Duo aufrecht steht, zeigt nur das Gerät. Browser-Fenster mit künstlicher Kamera (Standbild 640 × 480), nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Durchsicht `ScannerDialog.tsx`, `scanRegion.ts`, `barcodeDetector.ts`, CSS der App | keine Drehung am Video oder an seinen Vorfahren, keine Abfrage von `screen.orientation`, `window.orientation` oder des Seitenverhältnisses; `getUserMedia` nur mit `facingMode: environment`; Erkennungsbereich aus `videoWidth` und `videoHeight` (D-374) |
+| `calc/scanRegion.test.ts` (11 Tests, davon 3 neu für `cameraPostureChanged`) | bestanden |
+| `e2e/duo-scanner-neustart.spec.ts` (zugeklappt, Zwischenmaß, aufgeklappt, zugeklappt quer, zurück; kleine Änderung) | bestanden: nach jedem Wechsel ein neuer Kamerastrom (2, 3, 4, 5 Starts), 640 × 480 wie geliefert, keine Drehung; bei 466 × 640 kein Neustart |
+| Gegenprobe: derselbe Test am Stand vor der Änderung (Build zu `001b2a0`) | fehlgeschlagen („hoch: Kamera neu gestartet“, 1 statt 2 Starts) |
+| `duo-scanner`, `duo-scanner-mitte`, `duo-scanner-lage` | bestanden |
+| `pnpm test` | 124 Dateien, 1088 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,3 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 376 bestanden, 90 übersprungen, 0 fehlgeschlagen, 11,4 min |
+| WebKit | läuft in der CI (GitHub Actions) |

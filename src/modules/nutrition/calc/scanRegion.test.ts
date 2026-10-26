@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { coverSource, scanRegion } from './scanRegion';
+import { cameraPostureChanged, coverSource, scanRegion } from './scanRegion';
 
 describe('coverSource (object-fit: cover)', () => {
   it('zeigt das ganze Bild, wenn Kasten und Bild dasselbe Seitenverhältnis haben', () => {
@@ -80,5 +80,30 @@ describe('scanRegion', () => {
         { x: 0, y: 0, width: 10, height: 10 },
       ),
     ).toBeNull();
+  });
+});
+
+describe('cameraPostureChanged (D-385)', () => {
+  const zu = { width: 466, height: 678 };
+  const hoch = { width: 669, height: 951 };
+  const auf = { width: 951, height: 669 };
+  const quer = { width: 594, height: 368 };
+
+  it('meldet den Wechsel zwischen hoch und quer', () => {
+    expect(cameraPostureChanged(zu, auf)).toBe(true);
+    expect(cameraPostureChanged(auf, hoch)).toBe(true);
+    expect(cameraPostureChanged(hoch, quer)).toBe(true);
+  });
+
+  it('meldet den Wechsel des Displays bei gleicher Haltung', () => {
+    expect(cameraPostureChanged(zu, hoch)).toBe(true);
+    expect(cameraPostureChanged(auf, quer)).toBe(true);
+  });
+
+  it('übergeht kleine Änderungen und fehlende Maße', () => {
+    expect(cameraPostureChanged(zu, { width: 466, height: 620 })).toBe(false);
+    expect(cameraPostureChanged(auf, { width: 940, height: 669 })).toBe(false);
+    expect(cameraPostureChanged(zu, zu)).toBe(false);
+    expect(cameraPostureChanged({ width: 0, height: 0 }, auf)).toBe(false);
   });
 });

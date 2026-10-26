@@ -3,7 +3,7 @@ import { t } from '@/shared/i18n/de';
 import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { Button, Dialog } from '@/shared/ui';
 import { normalizeBarcode } from '../calc/barcode';
-import { scanRegion } from '../calc/scanRegion';
+import { cameraPostureChanged, scanRegion } from '../calc/scanRegion';
 import { createDetector } from './barcodeDetector';
 
 const INPUT = 'field w-full min-w-0';
@@ -12,6 +12,37 @@ type Camera = 'starting' | 'running' | 'denied' | 'unsupported' | 'error';
 
 /** Breiter wird der Ausschnitt für die Erkennung nicht (Pixel des Kamerabilds). */
 const MAX_REGION_WIDTH = 1920;
+
+/** So lange muss das Fenster nach Auf- und Zuklappen oder Drehen ruhen (ms). */
+const POSTURE_SETTLE_MS = 400;
+
+/**
+ * Zählt neue Haltungen des Fensters (D-385): hoch und quer, äußeres und inneres Display. Bei
+ * jeder startet die Kamera neu; iOS liefert das Bild dann für die neue Haltung. Die App dreht das
+ * Kamerabild nie selbst, sie zeigt es so, wie der Browser es liefert.
+ */
+function usePostureEpoch(): number {
+  const [epoch, setEpoch] = useState(0);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let base = { width: window.innerWidth, height: window.innerHeight };
+    const onResize = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const now = { width: window.innerWidth, height: window.innerHeight };
+        if (!cameraPostureChanged(base, now)) return;
+        base = now;
+        setEpoch((n) => n + 1);
+      }, POSTURE_SETTLE_MS);
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+  return epoch;
+}
 
 /**
  * Ausschnitt des Kamerabilds unter dem Rahmen als Canvas (D-374): Rahmen und Kasten werden bei
@@ -73,6 +104,7 @@ export function ScannerDialog({
   useEffect(() => {
     onCodeRef.current = onCode;
   }, [onCode]);
+  const posture = usePostureEpoch();
 
   useEffect(() => {
     if (found) return;
@@ -146,7 +178,8 @@ export function ScannerDialog({
     };
     void start();
     return stop;
-  }, [found]);
+    // `posture`: Bei einer neuen Haltung endet der Kamerastrom, und ein neuer beginnt (D-385).
+  }, [found, posture]);
 
   const submitManual = () => {
     const code = normalizeBarcode(manual);

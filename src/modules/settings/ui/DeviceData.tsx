@@ -1,17 +1,44 @@
 import { useEffect, useRef, useState } from 'react';
 import { tMore } from '@/shared/i18n/de-more';
 import { currentPlatform } from '@/shared/lib/platform';
-import { deviceRows, type DeviceSnapshot } from '../calc/deviceData';
+import { deviceRows, type DeviceSnapshot, type StartPlacement } from '../calc/deviceData';
 import { useFormatters } from '../service/formatting';
+
+/** Rechnung der Startfläche aus `public/startflaeche.js` (D-393), dieselbe wie beim Start. */
+type StartLage = (messung: {
+  fenster: { b: number; h: number };
+  bildschirm: { b: number; h: number } | null;
+}) => StartPlacement;
+
+/** Lage der Startfläche für die Werte jetzt; ohne das Skript `null`. */
+function startPlacement(snapshot: Omit<DeviceSnapshot, 'start'>): StartPlacement | null {
+  const startLage = (window as Window & { __formStartLage?: StartLage }).__formStartLage;
+  if (typeof startLage !== 'function') return null;
+  return startLage({
+    fenster: { b: snapshot.inner.width, h: snapshot.inner.height },
+    bildschirm: snapshot.screen ? { b: snapshot.screen.width, h: snapshot.screen.height } : null,
+  });
+}
 
 /** Liest die Werte jetzt; die sicheren Bereiche aus dem Innenabstand des Messelements. */
 function read(probe: HTMLElement | null): DeviceSnapshot {
   const viewport = window.visualViewport;
   const style = probe ? getComputedStyle(probe) : null;
   const px = (value: string | undefined) => parseFloat(value ?? '') || 0;
-  const orientation = typeof screen === 'undefined' ? undefined : screen.orientation;
-  return {
+  const display = typeof screen === 'undefined' ? undefined : screen;
+  const orientation = display?.orientation;
+  const snapshot: Omit<DeviceSnapshot, 'start'> = {
     inner: { width: window.innerWidth, height: window.innerHeight },
+    screen: display
+      ? {
+          width: display.width,
+          height: display.height,
+          availWidth: display.availWidth,
+          availHeight: display.availHeight,
+        }
+      : null,
+    outer: { width: window.outerWidth, height: window.outerHeight },
+    position: { x: window.screenX, y: window.screenY },
     viewport: viewport
       ? {
           width: viewport.width,
@@ -30,13 +57,16 @@ function read(probe: HTMLElement | null): DeviceSnapshot {
     pixelRatio: window.devicePixelRatio,
     standalone: currentPlatform().isStandalone,
   };
+  return { ...snapshot, start: startPlacement(snapshot) };
 }
 
 /**
- * Gerätedaten (D-388): Fenster, `visualViewport`, sichere Bereiche, `screen.orientation`,
- * `devicePixelRatio` und Anzeigemodus. Die Werte folgen jeder Änderung (Drehen, Auf- und
- * Zuklappen, Tastatur); nichts davon wird gespeichert oder übertragen. Wird erst beim Aufklappen
- * nachgeladen.
+ * Gerätedaten (D-388): Fenster, Bildschirm (`screen.*`, `outerWidth`, `screenX`; D-393),
+ * `visualViewport`, sichere Bereiche, `screen.orientation`, `devicePixelRatio`, Anzeigemodus und
+ * die Lage der Startfläche, wie `public/startflaeche.js` sie für diese Werte rechnet (`screenX`
+ * und `screenY` zählen dort nicht, sie stehen nur zum Nachsehen da). Die Werte folgen jeder
+ * Änderung (Drehen, Auf- und Zuklappen, Tastatur); nichts davon wird gespeichert oder übertragen.
+ * Wird erst beim Aufklappen nachgeladen.
  */
 export function DeviceData() {
   const fmt = useFormatters();

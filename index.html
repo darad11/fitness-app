@@ -240,11 +240,13 @@
     <title>FORM</title>
     <!-- Setzt das Farbschema vor dem ersten Bild; extern, weil die CSP keine Inline-Skripte erlaubt. -->
     <script src="/theme-init.js"></script>
+    <!-- Größe und Lage der Startfläche wie im Startbild, auch neben Systemstreifen (D-393). -->
+    <script src="/startflaeche.js"></script>
     <!-- Startfläche der installierten App (D-325): dasselbe Bild wie das Startbild, erzeugt mit
          tools/splash.mjs; src/app/startSurface.ts blendet sie aus, sobald die erste Ansicht steht. -->
     <!-- startflaeche:stil -->
     <!-- prettier-ignore -->
-    <style>#startflaeche{display:none}@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;overflow:hidden;background:#0C1219;pointer-events:none;animation:startflaeche-netz 0s 10s forwards}}#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}@keyframes startflaeche-netz{to{visibility:hidden}}#startflaeche>svg{display:block;width:100%;height:100%}@media (device-width:466px) and (device-height:678px) and (orientation:portrait) and (min-width:346px){#startflaeche>svg{width:466px}}@media (device-width:669px) and (device-height:951px) and (orientation:landscape) and (min-width:831px){#startflaeche>svg{width:951px}}#startflaeche .start-unten{transform:translateY(calc(0.0365vmin - 58px))}@media (orientation:landscape){#startflaeche .hoch{display:none}}@media (orientation:portrait){#startflaeche .quer{display:none}}</style>
+    <style>#startflaeche{display:none}@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;overflow:hidden;background:#0C1219;pointer-events:none;animation:startflaeche-netz 0s 10s forwards}}#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}@keyframes startflaeche-netz{to{visibility:hidden}}#startflaeche>svg{display:block;width:var(--start-b,100%);height:var(--start-h,100%);transform:translate(var(--start-x,0px),var(--start-y,0px))}#startflaeche .start-unten{transform:translateY(calc(0.000365 * var(--start-kurz,100vmin) - 58px))}@media (orientation:landscape){#startflaeche .hoch{display:none}}@media (orientation:portrait){#startflaeche .quer{display:none}}</style>
     <!-- /startflaeche:stil -->
   </head>
   <body>

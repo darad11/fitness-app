@@ -1,6 +1,7 @@
 // Prüft die komprimierte Größe der Startansicht (testing.md Abschnitt 5: unter 250 KB gzip).
-// Startansicht = index.html selbst (mit der Startfläche, D-325), der Einstieg mit allen
-// statischen Importen und CSS plus die nachgeladene Seite „Heute" mit ihren Importen.
+// Startansicht = index.html selbst (mit der Startfläche, D-325) und die Skripte im Kopf, der
+// Einstieg mit allen statischen Importen und CSS plus die nachgeladene Seite „Heute" mit ihren
+// Importen.
 // Voraussetzung: `pnpm build`.
 import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
@@ -21,6 +22,12 @@ function collect(key) {
 }
 collect('index.html');
 collect(START_PAGE);
+// Klassische Skripte aus public/ im Kopf (`theme-init.js`, `startflaeche.js`): Sie laden vor dem
+// ersten Bild, stehen aber nicht im Vite-Manifest (D-393).
+const html = readFileSync(new URL('index.html', dist), 'utf8');
+for (const match of html.matchAll(/<script src="\/([^"]+\.js)"><\/script>/g)) {
+  files.add(match[1]);
+}
 
 let total = 0;
 for (const file of [...files].sort()) {

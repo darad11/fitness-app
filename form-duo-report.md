@@ -471,3 +471,37 @@ Bitte vorher die App vom Home-Bildschirm entfernen und neu hinzufügen: Nur dann
 3. **Tastatur in Formularen (D-391):** Einkaufsliste („Was möchtest du einkaufen?“ und „Artikel bearbeiten“), Lebensmittel suchen und Menge, Gewicht, Ziele, Tagesaufgaben, Anmeldung, je zugeklappt und aufgeklappt: Sind Tab-Leiste und Kreis beim Tippen weg und danach wieder da? Springt beim Antippen etwas? Steht das Feld ganz über der Tastatur?
 4. **Training mit Tastatur (D-391):** Werte eintippen, zugeklappt und aufgeklappt: Steht das Feld unter dem Kopf und ganz über der Tastatur? Bleibt die Fußleiste über der Tastatur? Zugeklappt mit laufender Pause ist sie beim Tippen aus; lässt sich der Satz mit dem Haken in seiner Zeile abhaken?
 5. **Scroll-Balken (D-392):** In Seiten, Blättern, Listen und Dialogen scrollen, auch mit offener Tastatur: Ist kein grauer Balken mehr zu sehen, und scrollt alles wie gewohnt? Am Computer: Sind die Balken dünn und dunkel?
+
+## 13. Startfläche aufgeklappt nach deiner Messung (D-393)
+
+Auftrag vom 27.10.2026: `docs/prompts/duo-korrekturen-3-FORM.md`, mit deinem Bild `duo-startflaeche-messung.png` (A: Startfläche aufgeklappt hoch und quer, B: Gerätedaten). Getestet habe ich wieder in Browser-Fenstern (Chromium hier, WebKit in der CI), nicht auf dem Gerät.
+
+### 13.1 Befund und Ursache
+
+- **Deine Messung:** Aufgeklappt hoch stand das Logo 102 pt links der Mitte, aufgeklappt quer 42 pt links; zugeklappt hoch passte.
+- **Ursache:** Deine Vermutung stimmt mit allem überein, was sich nachrechnen lässt. D-390 wählte die Breite der Fläche nach der Bildschirmbreite, die das Gerät meldet. Meldet das Duo auch aufgeklappt 466 pt (das äußere Display), greift aufgeklappt hoch die Regel für zugeklappt: Die Fläche wurde 466 pt breit und stand links im 669 pt breiten Fenster, also (466 − 669) / 2 = 101,5 pt links. Aufgeklappt quer griff keine Regel, die Fläche blieb mittig im Fenster und damit 42 pt links der Bildschirmmitte.
+- **Nachgemessen in deinem Bild A:** Aufgeklappt hoch liegen Uhrzeit und Symbole oben, Logo und Claim passen genau zu einem Fenster von 669 × 869 pt, 82 pt unter dem oberen Rand. Aufgeklappt quer liegen sie rechts. Dort waren Logo und Claim so groß und so hoch wie im Startbild: Beim Start war das Fenster quer 867 × 669 pt. Den Streifen oben (82 pt), den deine Gerätedaten mit 867 × 587 zeigen, gab es da noch nicht.
+
+### 13.2 Neu
+
+- Eine kleine Datei (`public/startflaeche.js`) rechnet vor dem ersten Bild aus, wie groß der Bildschirm ist und wo das Fenster darauf liegt. Die Grafik der Startfläche wird so groß wie der Bildschirm und um die Lage des Fensters verschoben, wie das Startbild.
+- **Bildschirm:** Die gemeldete Größe (`screen.*`) zählt nur, wenn sie plausibel ist: in beiden Richtungen mindestens so groß wie das Fenster, höchstens einen Streifen (120 pt) größer und gleich ausgerichtet. Sonst gelten die Maße des Duo, wenn das Fenster dazu passt.
+- **Lage des Fensters:** nur nach der offiziellen Lage der Streifen des Duo aus der Recherche in Phase 1 und deinen Bildern: rechts an der hinteren Kante, aufgeklappt hoch oben, aufgeklappt quer rechts und, sobald die App läuft, oben. `screenX` und `screenY` zählen nicht; sie stehen nur in den Gerätedaten.
+- **Ist nichts verlässlich**, etwa auf einem anderen Gerät mit Streifen an unbekannter Seite, steht die Fläche wie bisher mittig im Fenster. Nie in die Gegenrichtung.
+- **Ergebnis:** zugeklappt hoch 42 pt nach rechts, wie bisher; aufgeklappt hoch 41 pt nach oben, waagrecht nichts; aufgeklappt quer 42 pt nach rechts, mit Streifen oben zusätzlich 41 pt nach oben; zugeklappt quer 42 pt nach rechts (angenommen, nicht gemessen).
+- **Gerätedaten:** neu `screen.width × screen.height`, `screen.availWidth × screen.availHeight`, `outerWidth × outerHeight`, `screenX / screenY` und die Rechnung der Startfläche: welcher Bildschirm, woher („aus screen.*“, „Maße des Duo“ oder „nichts verlässlich, mittig im Fenster“), und die Verschiebung x, y. Gerechnet mit derselben Datei wie beim Start.
+
+### 13.3 Tests
+
+- `startLage.test.ts` (16 Tests) mit deinen Messwerten: vier Haltungen und der Start quer, gemeldeter Bildschirm richtig oder falsch, nie in die Gegenrichtung, Rückfall ins Fenster.
+- `splash.test.ts` vergleicht in denselben fünf Lagen das Startbild mit der Startfläche: Mitte des Logos, Breite der Wortmarke und Claim liegen auf 1 pt gleich. Beim Übergang springt also nichts, sofern iOS das passende Startbild zeigt.
+- `e2e/start-surface.spec.ts` stellt sieben Lagen des Duo nach, mit gemeldetem Bildschirm 466 × 678: Das Symbol steht in der Mitte des ganzen Bildschirms, die Fläche ist pixelgleich mit dem Ausschnitt des Startbilds. Gegenprobe am alten Stand: 4 von 7 fehlgeschlagen, mit 42 und 101,5 pt neben der Mitte, wie von dir gemessen.
+- **Prüfungen:** Unit 131 Dateien, 1160 Tests bestanden; E2E lokal (Chromium) 413 bestanden, 127 übersprungen, 0 fehlgeschlagen; Startansicht 242,3 KB von 250 KB, jetzt mit den Skripten im Kopf gezählt. WebKit läuft in der CI.
+
+### 13.4 Liste für deinen erneuten Gerätetest
+
+Bitte vorher die App vom Home-Bildschirm entfernen und neu hinzufügen (Daten vorher unter „Mehr › Daten und Sicherung“ sichern).
+
+1. **Startfläche:** in allen vier Haltungen starten, zugeklappt und aufgeklappt, je hoch und quer: Stehen Logo und „FORM YOURSELF.“ in der Mitte des ganzen Bildschirms, und springt beim Übergang vom Startbild nichts?
+2. **Gerätedaten:** in denselben vier Haltungen ein Bild von „Mehr › Über die App › Gerätedaten“. Wichtig sind `screen.width × screen.height`, `screenX / screenY` und die beiden Zeilen zur Startfläche. Sie zeigen, ob das Duo aufgeklappt wirklich 466 meldet und ob die Rechnung die Lage richtig trifft.
+3. **Zugeklappt quer:** Dieses Fenster ist noch nicht gemessen. Passt die Verschiebung dort (42, 0)?

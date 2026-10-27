@@ -16,7 +16,7 @@ function value(page: Page, label: string) {
     .first();
 }
 
-test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts übertragen (D-388)', async ({
+test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts übertragen (D-388, D-393)', async ({
   page,
 }) => {
   const chromium = await setDuoPose(page, 'zu');
@@ -39,6 +39,17 @@ test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts über
   );
   await expect(value(page, 'Pixeldichte')).toHaveText(/^\d+([,.]\d+)?$/);
   await expect(value(page, 'Anzeigemodus')).toHaveText('Browser (z. B. Safari)');
+  // Bildschirm, Fenster außen, Lage des Fensters und die Rechnung der Startfläche (D-393). Den
+  // Bildschirm stellt Playwright je nach Browser anders ein; das Fenster ist so groß wie das
+  // äußere Display, also keine Verschiebung.
+  await expect(value(page, 'Bildschirm (screen.width × screen.height)')).toHaveText(/^\d+ × \d+$/);
+  await expect(value(page, 'Verfügbar (screen.availWidth')).toHaveText(/^\d+ × \d+$/);
+  await expect(value(page, 'Fenster außen (outerWidth')).toHaveText(/^\d+ × \d+$/);
+  await expect(value(page, 'Lage des Fensters (screenX')).toHaveText(/^-?\d+ \/ -?\d+$/);
+  await expect(value(page, 'Startfläche: Bildschirm')).toHaveText(
+    /^466 × 678, (aus screen\.\*|Maße des Duo)$/,
+  );
+  await expect(value(page, 'Startfläche: Verschiebung')).toHaveText('0, 0');
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();
@@ -48,8 +59,11 @@ test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts über
   await setDuoPose(page, 'auf');
   await expect(value(page, 'Fenster (innerWidth × innerHeight)')).toHaveText('951 × 669');
   if (chromium) await expect(value(page, 'Sichere Bereiche')).toHaveText('0, 84, 20, 0');
+  await expect(value(page, 'Startfläche: Bildschirm')).toHaveText(/^951 × 669, /);
   await setDuoPose(page, 'hoch');
   await expect(value(page, 'Fenster (innerWidth × innerHeight)')).toHaveText('669 × 951');
+  await expect(value(page, 'Startfläche: Bildschirm')).toHaveText(/^669 × 951, /);
+  await expect(value(page, 'Startfläche: Verschiebung')).toHaveText('0, 0');
 
   // Nichts übertragen: nur Abrufe von Teilen der App, nichts an andere Adressen, nichts gesendet.
   const origin = new URL(page.url()).origin;

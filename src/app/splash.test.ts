@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import html from '../../index.html?raw';
+import startScript from '../../public/startflaeche.js?raw';
 import template from '../../public/splash/splash.svg?raw';
 import { START_FADE_MS } from './startSurface';
 
@@ -320,8 +321,12 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
     );
     expect(style).toContain('@media (orientation:landscape){#startflaeche .hoch{display:none}}');
     expect(style).toContain('@media (orientation:portrait){#startflaeche .quer{display:none}}');
-    // Grundlinie 58 pt über dem Rand (abzüglich des winzigen Überhangs von O und S).
-    expect(style).toMatch(/\.start-unten\{transform:translateY\(calc\(0\.0\d+vmin - 58px\)\)\}/);
+    // Grundlinie 58 pt über dem Rand (abzüglich des winzigen Überhangs von O und S); die kurze
+    // Seite ist die des Bildschirms aus public/startflaeche.js, ohne das Skript die des Fensters
+    // (D-393).
+    expect(style).toMatch(
+      /\.start-unten\{transform:translateY\(calc\(0\.000\d+ \* var\(--start-kurz,100vmin\) - 58px\)\)\}/,
+    );
 
     const viewBox = (id: string) =>
       (new RegExp(`<symbol id="${id}" viewBox="([^"]+)"`).exec(surface)?.[1] ?? '')
@@ -368,24 +373,146 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
     expect(html.indexOf('<div id="startflaeche"')).toBeLessThan(html.indexOf('<div id="root">'));
   });
 
-  it('die Startfläche richtet sich nach dem ganzen Bildschirm, nicht nach den sicheren Bereichen (D-390)', () => {
+  it('die Startfläche richtet sich nach dem ganzen Bildschirm, nicht nach den sicheren Bereichen (D-390, D-393)', () => {
     // Ohne Bedienelemente: kein Abstand für Systemleiste, Kamera oder Home-Balken.
     expect(style).not.toContain('safe-area');
     expect(surface).not.toContain('safe-area');
     expect(style).toContain('position:fixed;inset:0;');
     expect(style).toContain('overflow:hidden;');
-    // iPhone Duo: Liegt die Systemleiste an der Seite und macht iOS den Bereich der App daneben
-    // schmaler, ist die Fläche trotzdem so breit wie der Bildschirm, links bündig. Nur bis 120 pt
-    // schmaler (eine Leiste), damit ein geteilter Bildschirm die Fläche nicht verschiebt.
+    // Größe und Lage der Grafik aus public/startflaeche.js: so groß wie der Bildschirm und dort, wo
+    // das Startbild liegt; ohne das Skript füllt sie das Fenster. Keine Regeln mehr nach
+    // `device-width`: Das Duo meldet dort auch aufgeklappt das äußere Display (D-393).
     expect(style).toContain(
-      '@media (device-width:466px) and (device-height:678px) and (orientation:portrait) and (min-width:346px){#startflaeche>svg{width:466px}}',
+      '#startflaeche>svg{display:block;width:var(--start-b,100%);height:var(--start-h,100%);transform:translate(var(--start-x,0px),var(--start-y,0px))}',
     );
-    expect(style).toContain(
-      '@media (device-width:669px) and (device-height:951px) and (orientation:landscape) and (min-width:831px){#startflaeche>svg{width:951px}}',
-    );
-    // Gilt nach der allgemeinen Regel (100 %), damit sie diese überschreibt.
-    expect(style.indexOf('#startflaeche>svg{display:block;width:100%;height:100%}')).toBeLessThan(
-      style.indexOf('(device-width:466px)'),
-    );
+    expect(style).not.toContain('device-width');
+    // Das Skript läuft vor der Fläche, im Kopf, nach dem Farbschema.
+    const script = html.indexOf('<script src="/startflaeche.js"></script>');
+    expect(script).toBeGreaterThan(html.indexOf('<script src="/theme-init.js"></script>'));
+    expect(script).toBeLessThan(html.indexOf('</head>'));
   });
+});
+
+/** Rechnung der Startfläche aus public/startflaeche.js, ausgeführt mit einem leeren Fenster. */
+function loadStartLage() {
+  const fake: Record<string, unknown> = {
+    innerWidth: 390,
+    innerHeight: 844,
+    screen: { width: 390, height: 844 },
+    addEventListener: () => undefined,
+    removeEventListener: () => undefined,
+  };
+  const doc = {
+    readyState: 'loading',
+    documentElement: { style: { setProperty: () => undefined } },
+    getElementById: () => null,
+  };
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval -- nur im Test: die Datei aus public/
+  const execute = new Function('window', 'document', startScript) as (
+    win: unknown,
+    doc: unknown,
+  ) => void;
+  execute(fake, doc);
+  return fake.__formStartLage as (messung: {
+    fenster: { b: number; h: number };
+    bildschirm: { b: number; h: number } | null;
+  }) => { b: number; h: number; x: number; y: number; dx: number; dy: number };
+}
+
+describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständen gleich (D-393)', () => {
+  const links = startupLinks();
+  const surface = /<div id="startflaeche"[\s\S]*?<\/div>/.exec(html)?.[0] ?? '';
+  const style = /#startflaeche\{display:none\}[^<]*/.exec(html)?.[0] ?? '';
+  const startLage = loadStartLage();
+
+  /** Ansicht `<use>` in Prozent der Grafik. */
+  const useBox = (orientation: string, href: string) => {
+    const match = new RegExp(`<use class="${orientation}" href="#${href}" ([^>]*)/>`).exec(surface);
+    const values: Record<string, number> = {};
+    for (const a of (match?.[1] ?? '').matchAll(/(\w+)="([-\d.]+)%?"/g)) {
+      values[a[1] ?? ''] = Number(a[2]);
+    }
+    return { x: values.x ?? 0, y: values.y ?? 0, w: values.width ?? 0, h: values.height ?? 0 };
+  };
+  const [, , logoW = 1, logoH = 1] = (
+    /<symbol id="start-logo" viewBox="([^"]+)"/.exec(surface)?.[1] ?? ''
+  )
+    .split(' ')
+    .map(Number);
+  /** Unterkante des Claims: Faktor der kurzen Seite und Abstand vom unteren Rand. */
+  const claimShift = /translateY\(calc\(([\d.]+) \* var\(--start-kurz,100vmin\) - (\d+)px\)\)/.exec(
+    style,
+  );
+  const below = Number(claimShift?.[1]);
+  const baseline = Number(claimShift?.[2]);
+
+  // Fenster am Gerät gemessen; zugeklappt quer angenommen (84 pt schmaler wie Safari dort);
+  // aufgeklappt quer beim Start laut Messbild noch ohne Streifen oben. screen.* meldet wie am
+  // Gerät vermutet überall das äußere Display, 466 × 678.
+  const STATES = [
+    { name: 'zugeklappt hoch', fenster: { b: 382, h: 678 } },
+    { name: 'zugeklappt quer', fenster: { b: 594, h: 466 } },
+    { name: 'aufgeklappt hoch', fenster: { b: 669, h: 869 } },
+    { name: 'aufgeklappt quer', fenster: { b: 867, h: 587 } },
+    { name: 'aufgeklappt quer beim Start', fenster: { b: 867, h: 669 } },
+  ];
+
+  for (const state of STATES) {
+    it(`${state.name}: Logo und Claim der Fläche stehen auf dem Bildschirm wie im Startbild, die Verschiebung stimmt mit den Gerätedaten`, async () => {
+      const lage = startLage({ fenster: state.fenster, bildschirm: { b: 466, h: 678 } });
+      const quer = lage.b > lage.h;
+      const link = links.find(
+        (l) =>
+          l.ratio === 3 &&
+          l.width === Math.min(lage.b, lage.h) &&
+          l.height === Math.max(lage.b, lage.h) &&
+          l.orientation === (quer ? 'landscape' : 'portrait'),
+      );
+      expect(link, 'Startbild für diesen Bildschirm').toBeDefined();
+      const image = await decodePng(files[fileOf(link?.href ?? '')] ?? '');
+      expect([image.width / 3, image.height / 3]).toEqual([lage.b, lage.h]);
+      const { symbol, wordmark, claim } = measure(image);
+      // Startbild über den ganzen Bildschirm, in pt.
+      const picture = {
+        x: (Math.min(symbol.left, wordmark.left) + Math.max(symbol.right, wordmark.right)) / 6,
+        y: (symbol.top + wordmark.bottom) / 6,
+        width: (wordmark.right - wordmark.left) / 3,
+        claimX: (claim.left + claim.right) / 6,
+        claimBottom: claim.bottom / 3,
+      };
+
+      // Startfläche: Die Grafik ist so groß wie der Bildschirm und im Fenster um (−x, −y)
+      // verschoben; das Fenster liegt bei (x, y) auf dem Bildschirm. Auf dem Bildschirm beginnt die
+      // Grafik also bei (x − x, y − y), wie das Startbild.
+      const left = lage.x + -lage.x;
+      const top = lage.y + -lage.y;
+      const logo = useBox(quer ? 'quer' : 'hoch', 'start-logo');
+      const claimUse = useBox(quer ? 'quer' : 'hoch', 'start-claim-zeichen');
+      const flaeche = {
+        x: left + (lage.b * (logo.x + logo.w / 2)) / 100,
+        y: top + (lage.h * (logo.y + logo.h / 2)) / 100,
+        width: quer ? ((lage.h * logo.h) / 100) * (logoW / logoH) : (lage.b * logo.w) / 100,
+        claimX: left + (lage.b * (claimUse.x + claimUse.w / 2)) / 100,
+        claimBottom: top + lage.h - baseline + below * Math.min(lage.b, lage.h),
+      };
+
+      expect(Math.abs(flaeche.x - picture.x), 'Mitte des Logos waagrecht').toBeLessThanOrEqual(1);
+      expect(Math.abs(flaeche.y - picture.y), 'Mitte des Logos senkrecht').toBeLessThanOrEqual(1);
+      expect(Math.abs(flaeche.width - picture.width), 'Breite der Wortmarke').toBeLessThanOrEqual(
+        1,
+      );
+      expect(Math.abs(flaeche.claimX - picture.claimX), 'Mitte des Claims').toBeLessThanOrEqual(1);
+      expect(
+        Math.abs(flaeche.claimBottom - picture.claimBottom),
+        'Claim unten',
+      ).toBeLessThanOrEqual(1);
+      // In der Mitte des ganzen Bildschirms, auf 47 % der Höhe.
+      expect(Math.abs(picture.x - lage.b / 2)).toBeLessThanOrEqual(1);
+      expect(Math.abs(picture.y - 0.47 * lage.h)).toBeLessThanOrEqual(1);
+      // Vom Fenster aus: Die Mitte des Bildschirms liegt um die Verschiebung aus den Gerätedaten
+      // neben der Mitte des Fensters.
+      expect(lage.b / 2 - lage.x - state.fenster.b / 2).toBeCloseTo(lage.dx, 6);
+      expect(lage.h / 2 - lage.y - state.fenster.h / 2).toBeCloseTo(lage.dy, 6);
+    });
+  }
 });

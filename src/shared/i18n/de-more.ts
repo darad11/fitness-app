@@ -168,6 +168,17 @@ export const tMore = {
       'Maße von Fenster und Bildschirm, zum Nachsehen bei Fehlern in der Darstellung. Sie ändern sich beim Drehen, Auf- und Zuklappen. Die App speichert und überträgt sie nicht.',
     device: {
       window: 'Fenster (innerWidth × innerHeight)',
+      screen: 'Bildschirm (screen.width × screen.height)',
+      available: 'Verfügbar (screen.availWidth × screen.availHeight)',
+      outer: 'Fenster außen (outerWidth × outerHeight)',
+      position: 'Lage des Fensters (screenX / screenY)',
+      startScreen: 'Startfläche: Bildschirm (Breite × Höhe, Quelle)',
+      startShift: 'Startfläche: Verschiebung (x, y)',
+      startSource: {
+        bildschirm: 'aus screen.*',
+        duo: 'Maße des Duo',
+        fenster: 'nichts verlässlich, mittig im Fenster',
+      },
       viewport: 'Sichtbarer Bereich (visualViewport, Breite × Höhe)',
       viewportOffset: 'visualViewport offsetTop / pageTop',
       safeArea: 'Sichere Bereiche (oben, rechts, unten, links)',

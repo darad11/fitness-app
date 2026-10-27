@@ -1,0 +1,3084 @@
+{
+  "version": 1,
+  "checked": "2026-10-27",
+  "guides": {
+    "bench_press_barbell": {
+      "summary": "Drückübung in Rückenlage auf der Flachbank: Du senkst die Langhantel zur Brust und drückst sie bis zu gestreckten Armen nach oben.",
+      "setup": [
+        "Leg dich rücklings auf die Bank, die Füße stehen flach auf dem Boden.",
+        "Greif die Stange im Obergriff etwas weiter als schulterbreit.",
+        "Heb die Stange aus der Ablage und bring sie über die obere Brust."
+      ],
+      "steps": [
+        "Senk die Stange kontrolliert zur Brust.",
+        "Drück sie nach oben, bis die Arme gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Führ die Stange über den ganzen Weg von der Brust bis zu gestreckten Armen.",
+        "Wähl die Griffbreite so, dass du den vollen Bewegungsumfang nutzt."
+      ],
+      "mistakes": ["Griff ist zu breit, dadurch wird der Bewegungsumfang kleiner."],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Bench Press",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/BBBenchPress"
+        },
+        {
+          "title": "ExRx.net: Barbell Bench Press (power lift)",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/BBBenchPressPowerLift"
+        }
+      ]
+    },
+    "bench_press_dumbbell": {
+      "summary": "Drückübung in Rückenlage auf der Flachbank: Du drückst zwei Kurzhanteln von der Seite der Brust nach oben und senkst sie wieder.",
+      "setup": [
+        "Setz dich auf die Bank, die Kurzhanteln liegen auf den Oberschenkeln.",
+        "Bring die Hanteln mit einem Schwung der Knie auf Schulterhöhe und leg dich dabei zurück.",
+        "Die Hanteln liegen seitlich der Brust, jeder Oberarm steht unter seiner Hantel."
+      ],
+      "steps": [
+        "Drück die Hanteln nach oben, die Ellbogen zeigen zur Seite.",
+        "Streck die Arme vollständig.",
+        "Senk die Hanteln seitlich der Brust ab, bis du eine leichte Dehnung in Brust oder Schulter spürst."
+      ],
+      "cues": [
+        "Führ die Hanteln in einem leichten Bogen: unten über dem Oberarm, oben nach innen über die Schultern.",
+        "Halt die Handgelenke gerade.",
+        "Senk die Hanteln ruhig ab und lass sie nicht von der Brust abprallen."
+      ],
+      "mistakes": [
+        "Hanteln federn unten von der Brust ab.",
+        "Handgelenke knicken unter dem Gewicht nach hinten ab."
+      ],
+      "safety": [
+        "Leg die Hanteln am Satzende kontrolliert ab: Setz dich mit den Hanteln auf den Oberschenkeln auf, statt sie fallen zu lassen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Bench Press",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/DBBenchPress"
+        },
+        {
+          "title": "ACE Exercise Library: Chest Press",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/19/chest-press/"
+        }
+      ],
+      "sourceNote": "Sicherheitshinweis zum Ablegen sinngemäß aus der Quelle abgeleitet."
+    },
+    "incline_bench_press_barbell": {
+      "summary": "Drückübung auf der Schrägbank: Du senkst die Langhantel zur oberen Brust und drückst sie bis zu gestreckten Armen nach oben.",
+      "setup": [
+        "Leg dich rücklings auf die Schrägbank.",
+        "Greif die Stange weit im Obergriff.",
+        "Heb die Stange aus der Ablage und bring sie über die obere Brust."
+      ],
+      "steps": [
+        "Senk die Stange kontrolliert zur oberen Brust.",
+        "Drück sie nach oben, bis die Arme gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Nutz den vollen Weg von der oberen Brust bis zu gestreckten Armen.",
+        "Senk die Stange ruhig und gleichmäßig ab."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Incline Bench Press",
+          "url": "https://exrx.net/WeightExercises/PectoralClavicular/BBInclineBenchPress"
+        }
+      ]
+    },
+    "incline_bench_press_dumbbell": {
+      "summary": "Drückübung auf der Schrägbank: Du drückst zwei Kurzhanteln von der Seite der oberen Brust nach oben und senkst sie wieder.",
+      "setup": [
+        "Setz dich auf die Schrägbank, die Kurzhanteln liegen auf den Oberschenkeln.",
+        "Bring die Hanteln mit einem Schwung der Knie auf Schulterhöhe und lehn dich zurück.",
+        "Die Hanteln liegen seitlich der Brust, jeder Oberarm steht unter seiner Hantel."
+      ],
+      "steps": [
+        "Drück die Hanteln nach oben, die Ellbogen zeigen zur Seite.",
+        "Streck die Arme vollständig.",
+        "Senk die Hanteln seitlich der oberen Brust ab, bis du eine leichte Dehnung in Brust oder Schulter spürst."
+      ],
+      "cues": [
+        "Führ die Hanteln in einem leichten Bogen: unten über dem Oberarm, oben nach innen über die Schultern.",
+        "Senk die Hanteln kontrolliert bis zur leichten Dehnung, nicht weiter."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Incline Bench Press",
+          "url": "https://exrx.net/WeightExercises/PectoralClavicular/DBInclineBenchPress"
+        }
+      ]
+    },
+    "bench_press_smith": {
+      "summary": "Bankdrücken an der Multipresse: Die Stange läuft in einer Führung, du senkst sie zur Brust und drückst sie wieder nach oben.",
+      "setup": [
+        "Leg dich rücklings auf die Bank, die Brust liegt unter der Stange.",
+        "Greif die Stange weit im Obergriff.",
+        "Löse die Stange aus den Haken, indem du sie anhebst und nach hinten drehst."
+      ],
+      "steps": [
+        "Senk die Stange kontrolliert zur Brust.",
+        "Drück sie nach oben, bis die Arme gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Wähl die Griffbreite so, dass du den vollen Bewegungsumfang nutzt.",
+        "Senk die Stange ruhig und gleichmäßig ab."
+      ],
+      "mistakes": ["Griff ist zu breit, dadurch wird der Bewegungsumfang kleiner."],
+      "sources": [
+        {
+          "title": "ExRx.net: Smith Bench Press",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/SMBenchPress"
+        }
+      ]
+    },
+    "chest_press_machine": {
+      "summary": "Drückübung im Sitzen an der Maschine: Du drückst die Griffe nach vorn, bis die Arme gestreckt sind, und lässt sie kontrolliert zurück.",
+      "setup": [
+        "Stell den Sitz so ein, dass die Brust etwa auf Höhe der Griffe liegt.",
+        "Hat die Maschine einen Fußhebel, drück ihn, um die Griffe nach vorn zu holen.",
+        "Greif die Griffe weit im Obergriff, die Ellbogen liegen knapp unter Schulterhöhe."
+      ],
+      "steps": [
+        "Drück die Griffe nach vorn, bis die Arme gestreckt sind.",
+        "Lass die Griffe zurückkommen, bis du eine leichte Dehnung in der Brust spürst.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Nutz den Weg von der leichten Dehnung bis zu gestreckten Armen.",
+        "Führ die Griffe in beide Richtungen kontrolliert."
+      ],
+      "mistakes": ["Griff ist zu breit, dadurch wird der Bewegungsumfang kleiner."],
+      "safety": [
+        "Nutz den Fußhebel, bevor du die Griffe nimmst, und wieder, bevor du sie loslässt."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Chest Press",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/LVChestPress"
+        }
+      ]
+    },
+    "floor_press_dumbbell": {
+      "summary": "Drückübung in Rückenlage auf dem Boden: Du senkst die Gewichte, bis die Oberarme aufliegen, und drückst sie wieder nach oben.",
+      "setup": [
+        "Leg dich rücklings auf den Boden, die Knie sind gebeugt, die Füße stehen flach.",
+        "Halte die Kurzhanteln mit gestreckten Armen über der Brust."
+      ],
+      "steps": [
+        "Senk die Hanteln, bis die Oberarme ganz auf dem Boden liegen.",
+        "Lös die Spannung kurz am Boden.",
+        "Drück die Hanteln nach oben, bis die Arme gestreckt sind."
+      ],
+      "cues": [
+        "Halte unten kurz an, statt aus dem Boden heraus zu federn.",
+        "Der Boden begrenzt den Weg nach unten, du brauchst nicht tiefer zu gehen."
+      ],
+      "mistakes": ["Oberarme prallen vom Boden ab und die Hanteln gehen mit Schwung nach oben."],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Floor Press (nahe Variante mit Langhantel)",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/BBFloorPress"
+        }
+      ],
+      "sourceNote": "Keine Quelle zur Variante mit Kurzhanteln; übernommen ist nur, was auch für die Langhantel-Variante der Quelle gilt."
+    },
+    "fly_dumbbell": {
+      "summary": "Isolationsübung auf der Flachbank: Du öffnest die Arme mit leicht gebeugten Ellbogen zur Seite und führst die Hanteln im Bogen wieder zusammen.",
+      "setup": [
+        "Leg dich rücklings auf die Bank und halte die Kurzhanteln über der Brust.",
+        "Beug die Ellbogen leicht, sie zeigen zur Seite."
+      ],
+      "steps": [
+        "Senk die Hanteln seitlich ab, bis du eine Dehnung in der Brust spürst.",
+        "Führ die Hanteln in einem weiten Bogen wieder über der Brust zusammen, wie bei einer Umarmung.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Winkel im Ellbogen über die ganze Bewegung gleich und nur leicht gebeugt.",
+        "Senk die Hanteln langsam bis zur Dehnung, nicht weiter."
+      ],
+      "mistakes": [
+        "Ellbogen beugen und strecken sich während der Bewegung, die Übung wird zum Drücken."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Fly",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/DBFly"
+        }
+      ]
+    },
+    "cable_fly": {
+      "summary": "Isolationsübung im Stand zwischen zwei Kabelzügen: Du führst die Griffe mit leicht gebeugten Armen im Bogen vor dem Körper zusammen.",
+      "setup": [
+        "Stell dich zwischen zwei Seilzüge und nimm in jede Hand einen Griff der oberen Rollen.",
+        "Beug Hüfte und Knie leicht, beug auch die Ellbogen leicht."
+      ],
+      "steps": [
+        "Führ die Griffe in einer umarmenden Bewegung vor dem Körper zusammen.",
+        "Lass die Griffe zurückgehen, bis du eine Dehnung in der Brust spürst.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Halte die Ellbogen in einem festen, leicht gebeugten Winkel.",
+        "Lehn dich aus der Hüfte leicht nach vorn, so hält dein Oberkörper dem Zug der Kabel stand.",
+        "Führ die Griffe in beide Richtungen kontrolliert."
+      ],
+      "mistakes": [
+        "Ellbogen beugen und strecken sich während der Bewegung, die Übung wird zum Drücken."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Isolateral Standing Fly",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/CBStandingFly"
+        }
+      ],
+      "sourceNote": "Beschreibt die Variante im Stand an den oberen Rollen; Schräg- und Negativvarianten (Alias-Namen) deckt der Text nicht ab."
+    },
+    "pec_deck": {
+      "summary": "Isolationsübung im Sitzen an der Maschine: Du führst die Griffe mit leicht gebeugten Armen im Bogen vor der Brust zusammen.",
+      "setup": [
+        "Setz dich mit dem Rücken an das Polster.",
+        "Greif die Griffe seitlich auf Schulterhöhe, die Ellbogen sind leicht gebeugt und zeigen nach hinten."
+      ],
+      "steps": [
+        "Führ die Griffe nach vorn, bis sie zusammenkommen.",
+        "Lass die Griffe zurückgehen, bis du eine leichte Dehnung in Brust oder Schulter spürst.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Halte die Ellbogen über die ganze Bewegung leicht gebeugt.",
+        "Geh beim Zurückführen nur bis zur leichten Dehnung."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Isolateral Seated Fly",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/LVSeatedFly"
+        },
+        {
+          "title": "ExRx.net: Lever Seated Fly (gripless)",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/LVSeatedFlyGripless"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Maschine mit Griffen; eine Maschine mit Armpolstern weicht davon ab."
+    },
+    "push_up": {
+      "summary": "Drückübung mit dem eigenen Körpergewicht: Du senkst den gestreckten Körper zum Boden und drückst dich wieder hoch.",
+      "setup": [
+        "Stütz dich auf Hände und Fußballen, die Hände etwas weiter als schulterbreit.",
+        "Streck die Arme, der Körper bildet eine gerade Linie."
+      ],
+      "steps": [
+        "Beug die Arme und senk den Körper zum Boden.",
+        "Drück dich hoch, bis die Arme gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Halte Ober- und Unterkörper während der ganzen Bewegung gerade.",
+        "Leichter wird es mit Knien am Boden oder Händen auf einer Erhöhung, schwerer mit erhöhten Füßen."
+      ],
+      "mistakes": ["Hüfte sackt durch oder knickt ein, der Körper ist nicht mehr gerade."],
+      "sources": [
+        {
+          "title": "ExRx.net: Push-up",
+          "url": "https://exrx.net/WeightExercises/PectoralSternal/BWPushup"
+        }
+      ]
+    },
+    "incline_press_cable": {
+      "summary": "Drückübung auf der Schrägbank mit zwei Kabelgriffen: Du drückst die Griffe von der Seite der Brust nach oben über die Schultern.",
+      "setup": [
+        "Setz dich auf die Schrägbank und nimm in jede Hand einen Griff der unteren Rollen.",
+        "Lehn dich zurück, die Griffe liegen seitlich der Brust, die Unterarme stehen senkrecht unter den Handgelenken."
+      ],
+      "steps": [
+        "Drück die Griffe nach oben über die Schultern, bis die Arme gestreckt und parallel sind.",
+        "Lass die Griffe zurückgehen, bis du eine leichte Dehnung in Brust oder Schultern spürst.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Führ die Griffe in einem leichten Bogen: unten über dem Oberarm, oben nach innen über die Schultern.",
+        "Geh beim Zurückführen nur bis zur leichten Dehnung."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Isolateral Bench Press (incline)",
+          "url": "https://exrx.net/WeightExercises/PectoralClavicular/CBInclineBenchPress"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt das einarmig geführte Drücken am Kabel auf der Schrägbank mit den unteren Rollen."
+    },
+    "deadlift_barbell": {
+      "summary": "Zugübung aus dem Stand: Du hebst die Langhantel vom Boden, indem du Hüfte und Knie streckst, und setzt sie wieder ab.",
+      "setup": [
+        "Stell dich mit flachen Füßen etwa hüftbreit unter die Stange, die Stange liegt über der Fußmitte, die Schienbeine nah daran.",
+        "Geh in die Hocke und greif die Stange schulterbreit oder etwas weiter, im Obergriff oder Kreuzgriff.",
+        "Halte den Rücken gerade und die Brust aufgerichtet."
+      ],
+      "steps": [
+        "Drück dich vom Boden ab und streck Hüfte und Knie, bis du aufrecht stehst.",
+        "Zieh oben die Schultern zurück, falls sie nach vorn gerundet sind.",
+        "Schieb die Hüfte nach hinten, beug die Knie und führ die Stange mit geradem Rücken zum Boden.",
+        "Lass die Stange bei jeder Wiederholung kurz auf dem Boden zur Ruhe kommen."
+      ],
+      "cues": [
+        "Halte die Stange nah am Körper.",
+        "Halte die Arme und den Rücken gerade, die Schultern bleiben höher als die Hüfte.",
+        "Die Knie zeigen in die gleiche Richtung wie die Füße."
+      ],
+      "mistakes": [
+        "Rücken rundet sich beim Heben.",
+        "Stange entfernt sich vom Körper.",
+        "Stange tippt bei Wiederholungen nur kurz auf den Boden, statt abzusetzen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Deadlift",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/BBDeadlift"
+        },
+        {
+          "title": "ACE Exercise Library: Deadlift",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/6/deadlift/"
+        },
+        {
+          "title": "ACE: The ACE Do It Better Series – The Deadlift",
+          "url": "https://www.acefitness.org/continuing-education/certified/december-2024/8762/the-ace-do-it-better-series-the-deadlift/"
+        }
+      ]
+    },
+    "pull_up": {
+      "summary": "Zugübung an der Stange im Obergriff: Du ziehst den Körper hoch, bis das Kinn über der Stange ist, und senkst dich wieder ab.",
+      "setup": [
+        "Greif die Stange im Obergriff, die Handflächen zeigen nach vorn.",
+        "Häng dich mit gestreckten Armen an die Stange."
+      ],
+      "steps": [
+        "Zieh den Körper nach oben, bis das Kinn über der Stange ist.",
+        "Senk dich ab, bis Arme und Schultern ganz gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Zieh die Schulterblätter nach unten und hinten.",
+        "Nutz den vollen Weg von gestreckten Armen bis zum Kinn über der Stange.",
+        "Leichter wird es mit Unterstützung, schwerer mit Zusatzgewicht am Gürtel."
+      ],
+      "mistakes": ["Griff ist zu breit, dadurch wird der Bewegungsumfang kleiner."],
+      "sources": [
+        {
+          "title": "ExRx.net: Pull-up",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/BWPullup"
+        },
+        {
+          "title": "ACE Exercise Library: Pull-ups",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/191/pull-ups/"
+        }
+      ]
+    },
+    "assisted_pull_up": {
+      "summary": "Klimmzug an der Maschine mit Unterstützung: Eine Plattform nimmt dir einen Teil des Körpergewichts ab, du ziehst dich nach oben.",
+      "setup": [
+        "Greif die Stange weit.",
+        "Stell oder knie dich auf die Plattform der Maschine, je nach Bauart."
+      ],
+      "steps": [
+        "Zieh dich nach oben, bis der Hals etwa auf Höhe der Hände ist.",
+        "Senk dich ab, bis Arme und Schultern ganz gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Nutz den vollen Weg von gestreckten Armen bis oben.",
+        "Senk dich ruhig und gleichmäßig ab."
+      ],
+      "mistakes": ["Griff ist zu breit, dadurch wird der Bewegungsumfang kleiner."],
+      "sources": [
+        {
+          "title": "ExRx.net: Machine-assisted Pull-up (open-centered bar, standing)",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/AsPullupOpen"
+        },
+        {
+          "title": "ExRx.net: Machine-assisted Pull-up (open-centered bar)",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/AsPullupOpenKneeling"
+        }
+      ],
+      "sourceNote": "Die Quellen sagen nichts zur Einstellung des Gegengewichts; dieser Punkt fehlt."
+    },
+    "chin_up": {
+      "summary": "Zugübung an der Stange im Untergriff: Du ziehst den Körper hoch, bis die Ellbogen an den Seiten sind, und senkst dich wieder ab.",
+      "setup": [
+        "Greif die Stange schulterbreit im Untergriff, die Handflächen zeigen zu dir.",
+        "Häng dich mit gestreckten Armen an die Stange."
+      ],
+      "steps": [
+        "Zieh den Körper nach oben, bis die Ellbogen an den Seiten sind.",
+        "Senk dich ab, bis Arme und Schultern ganz gestreckt sind.",
+        "Wiederhole die Bewegung für alle Wiederholungen."
+      ],
+      "cues": [
+        "Nutz den vollen Weg von gestreckten Armen bis oben.",
+        "Leichter wird es mit Unterstützung, schwerer mit Zusatzgewicht am Gürtel."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Chin-up",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/BWUnderhandChinup"
+        },
+        {
+          "title": "ACE Exercise Library: Chin-ups",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/190/chin-ups/"
+        }
+      ]
+    },
+    "lat_pulldown": {
+      "summary": "Am Kabelzug sitzend ziehst du eine breite Stange von oben zur oberen Brust und lässt sie kontrolliert wieder nach oben.",
+      "setup": [
+        "Setz dich in die Maschine und klemm die Oberschenkel fest unter die Polster.",
+        "Greif die Stange breit im Obergriff. Wähle den Griff nicht so breit, dass die Bewegung kürzer wird.",
+        "Spann den Bauch an und lehn dich nur leicht zurück, höchstens etwa 30 Grad."
+      ],
+      "steps": [
+        "Zieh zuerst die Schulterblätter nach unten und hinten.",
+        "Zieh die Stange zur oberen Brust. Führ die Ellbogen dabei nach unten zu den Körperseiten.",
+        "Lass die Stange langsam nach oben, bis Arme und Schultern ganz gestreckt sind."
+      ],
+      "cues": [
+        "Halte die Rückenneigung während des Zugs gleich.",
+        "Hör auf zu ziehen, wenn die Stange die Brust erreicht oder die Ellbogen nicht mehr nach unten, sondern nach hinten wandern.",
+        "Führ das Gewicht auf dem Weg nach oben kontrolliert zurück."
+      ],
+      "mistakes": [
+        "Griff ist so breit, dass der Bewegungsumfang leidet.",
+        "Oberkörper lehnt sich beim Ziehen zusätzlich nach hinten.",
+        "Ellbogen wandern am Ende des Zugs nach hinten statt nach unten."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Pulldown",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/CBFrontPulldown"
+        },
+        {
+          "title": "ACE Exercise Library: Seated Lat Pulldown",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/158/seated-lat-pulldown/"
+        }
+      ]
+    },
+    "lat_pulldown_close": {
+      "summary": "Am Kabelzug sitzend ziehst du einen engen Parallelgriff zur oberen Brust und lässt ihn kontrolliert wieder nach oben.",
+      "setup": [
+        "Häng einen engen Parallelgriff (V-Griff) oder eine Mehrzweckstange mit Parallelgriff ein.",
+        "Setz dich und klemm die Oberschenkel fest unter die Polster.",
+        "Greif mit beiden Händen, die Handflächen zeigen zueinander. Spann den Bauch an."
+      ],
+      "steps": [
+        "Zieh den Griff nach unten zur oberen Brust.",
+        "Lass den Griff langsam nach oben, bis Arme und Schultern ganz gestreckt sind."
+      ],
+      "cues": [
+        "Halte die Rückenneigung während des Zugs gleich.",
+        "Hör auf zu ziehen, wenn die Ellbogen nicht mehr nach unten, sondern nach hinten wandern.",
+        "Streck die Arme oben jedes Mal ganz aus."
+      ],
+      "mistakes": ["Oberkörper lehnt sich beim Ziehen zusätzlich nach hinten."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Close Grip Pulldown",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/CBCloseGripPulldown"
+        },
+        {
+          "title": "ACE Exercise Library: Seated Lat Pulldown (allgemeine Hinweise zum Latziehen)",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/158/seated-lat-pulldown/"
+        }
+      ],
+      "sourceNote": "Allgemeine Hinweise stammen von der Seite zum breiten Latziehen."
+    },
+    "seated_cable_row": {
+      "summary": "Am tiefen Kabelzug sitzend ziehst du den Griff zur Taille und streckst die Arme danach wieder kontrolliert nach vorn.",
+      "setup": [
+        "Setz dich etwas nach vorn, um den Griff zu fassen, und stell die Füße auf die Fußplatten.",
+        "Schieb die Hüfte zurück, bis die Knie nur noch leicht gebeugt sind."
+      ],
+      "steps": [
+        "Zieh den Griff zur Taille und richte dabei den unteren Rücken auf.",
+        "Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind.",
+        "Beginn die nächste Wiederholung ohne Pause am vorderen Umkehrpunkt."
+      ],
+      "cues": [
+        "Beginn mit wenig Gewicht und steigere es schrittweise.",
+        "Bleib am vorderen Umkehrpunkt in Bewegung, ohne abzufedern."
+      ],
+      "mistakes": ["Gewicht federt am vorderen Umkehrpunkt ab.", "Pause am vorderen Umkehrpunkt."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Seated Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/CBSeatedRow"
+        }
+      ],
+      "sourceNote": "Folgt dem Standardgriff; weiter Griff und Untergriff (Alias-Namen) sind nicht eigens beschrieben."
+    },
+    "bent_over_row_barbell": {
+      "summary": "Vorgebeugt mit geradem Rücken ziehst du die Langhantel zum Bauch und senkst sie danach bis zur vollen Armstreckung.",
+      "setup": [
+        "Beug die Knie leicht und lehn dich mit geradem Rücken über die Stange.",
+        "Greif die Stange breit im Obergriff."
+      ],
+      "steps": [
+        "Zieh die Stange zum oberen Bauch.",
+        "Senk die Stange, bis die Arme ganz gestreckt sind."
+      ],
+      "cues": [
+        "Halte den Oberkörper für eine strenge Ausführung waagerecht.",
+        "Wird der untere Rücken rund, beug die Knie stärker oder halte den Oberkörper etwas höher.",
+        "Ein engerer Griff oder Untergriff verlagert die Arbeit stärker auf den Latissimus."
+      ],
+      "mistakes": [
+        "Unterer Rücken rundet sich, weil die Oberschenkel hinten zu wenig Spielraum lassen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Bent-over Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/BBBentOverRow"
+        }
+      ]
+    },
+    "one_arm_row_dumbbell": {
+      "summary": "Mit Knie und Hand auf der Bank gestützt ziehst du eine Kurzhantel mit einem Arm zu den Rippen und senkst sie wieder ab.",
+      "setup": [
+        "Stütz ein Knie und die Hand derselben Seite auf die Bank, die Kurzhantel hängt im anderen Arm.",
+        "Bring den Oberkörper fast waagerecht. Verschieb Knie oder Hand etwas, bis er gerade liegt."
+      ],
+      "steps": [
+        "Zieh die Kurzhantel nach oben zu den Rippen.",
+        "Senk sie, bis der Arm ganz gestreckt ist.",
+        "Mach auf beiden Seiten gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Lass das Schulterblatt mitgehen.",
+        "Halte den Oberkörper ruhig und dreh ihn nicht auf."
+      ],
+      "mistakes": ["Oberkörper dreht sich auf, um die Hantel nach oben zu schwingen."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Bent-over Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow"
+        }
+      ]
+    },
+    "t_bar_row": {
+      "summary": "Vorgebeugt mit geradem Rücken ziehst du die Griffe der T-Stange zum Oberkörper und lässt sie bis zur Armstreckung ab.",
+      "setup": [
+        "Beug die Knie leicht und lehn dich mit geradem Rücken über die Griffe.",
+        "Greif schulterbreit bis breit im Obergriff."
+      ],
+      "steps": [
+        "Zieh die Griffe zum Oberkörper.",
+        "Lass sie ab, bis die Arme gestreckt sind und die Schultern nach unten gezogen werden."
+      ],
+      "cues": [
+        "Halte den unteren Rücken gerade.",
+        "Ein engerer Griff verlagert die Arbeit stärker auf den Latissimus."
+      ],
+      "mistakes": [
+        "Oberkörper richtet sich über 45 Grad auf, um die Wiederholung zu schaffen – dann ist das Gewicht zu schwer."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever T-bar Row (plate loaded)",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/LVTBarRow"
+        },
+        {
+          "title": "ExRx.net: Lever Close Grip T-bar Row (plate loaded)",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/LVCloseGripTBarRow"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Hebelmaschine; übernommen ist nur, was auch für die freie T-Stange gilt."
+    },
+    "machine_row": {
+      "summary": "An der Rudermaschine mit Brustpolster ziehst du die Griffe nach hinten, bis die Ellbogen hinter dem Rücken sind.",
+      "setup": [
+        "Setz dich und leg die Brust an das Polster. Drück den Fußhebel, falls es einen gibt.",
+        "Stell das Brustpolster so ein, dass die Schultern bei gestreckten Armen nach vorn gehen können.",
+        "Greif die Griffe."
+      ],
+      "steps": [
+        "Zieh die Griffe nach hinten, bis die Ellbogen hinter dem Rücken sind und die Schultern zurückgezogen sind.",
+        "Lass die Griffe zurück, bis die Arme gestreckt sind und die Schultern nach vorn gehen."
+      ],
+      "cues": [
+        "Zieh am Ende des Zugs die Schulterblätter zusammen.",
+        "Lass die untere Brust während des Zugs am Polster."
+      ],
+      "mistakes": [
+        "Brust löst sich beim Ziehen vom Polster.",
+        "Polster ist so eingestellt, dass die Schultern bei gestreckten Armen nicht nach vorn gehen können."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Seated Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/LVSeatedRow"
+        },
+        {
+          "title": "ExRx.net: Lever Isolateral Narrow Grip Seated Row (plate loaded)",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/LVNarrowGripSeatedRowH"
+        }
+      ]
+    },
+    "straight_arm_pulldown": {
+      "summary": "Am oberen Kabelzug ziehst du den Griff mit fast gestreckten Armen in einem Bogen nach unten zu den Körperseiten.",
+      "setup": [
+        "Stell dich vor den oberen Kabelzug und greif den Griff mit leicht gebeugten Armen.",
+        "Stell einen Fuß zurück und beug dich in der Hüfte vor, bis die Arme ganz nach oben gestreckt sind."
+      ],
+      "steps": [
+        "Zieh den Griff nach unten zu den Körperseiten.",
+        "Führ ihn kontrolliert zurück nach oben."
+      ],
+      "cues": ["Halte die Ellbogen die ganze Bewegung über bei etwa 30 Grad Beugung."],
+      "mistakes": ["Ellbogen beugen und strecken sich während der Bewegung."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Bent-over Pullover",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/CBBentoverPullover"
+        }
+      ]
+    },
+    "back_extension": {
+      "summary": "Am 45-Grad-Gerät senkst du den Oberkörper nach vorn ab und richtest ihn wieder auf, bis er in einer Linie mit den Beinen ist.",
+      "setup": [
+        "Leg die Oberschenkel bäuchlings auf das Polster und hak die Fersen unter die Fußstütze.",
+        "Verschränk die Hände hinter dem Kopf oder halte ein Gewicht vor der Brust."
+      ],
+      "steps": [
+        "Senk den Oberkörper ab, bis du eine leichte Dehnung spürst.",
+        "Richte den Oberkörper wieder auf, bis er etwa in einer Linie mit den Beinen ist."
+      ],
+      "cues": [
+        "Senk dich nur bis zu einer leichten Dehnung hinten in Oberschenkeln und unterem Rücken. Der Umfang ist von Mensch zu Mensch verschieden.",
+        "Beginn ohne Zusatzgewicht und steigere die Last schrittweise."
+      ],
+      "mistakes": [
+        "Oberkörper federt am unteren Punkt ab.",
+        "Oberkörper geht über eine leichte Dehnung hinaus nach unten."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Weighted 45° Back Extension (on hyperextension apparatus)",
+          "url": "https://exrx.net/WeightExercises/ErectorSpinae/Wt45BackExtension"
+        },
+        {
+          "title": "ExRx.net: 45° Hyperextension (hands behind neck)",
+          "url": "https://exrx.net/WeightExercises/ErectorSpinae/BW45HyperextensionNeck"
+        },
+        {
+          "title": "ExRx.net: Barbell 45° Back Extension (on hyperextension apparatus)",
+          "url": "https://exrx.net/WeightExercises/ErectorSpinae/BB45BackExtension"
+        }
+      ],
+      "sourceNote": "Folgt der Rückenstreckung am 45-Grad-Gerät; die Hüftstreckung (Back Raise) hat eine eigene Quelle."
+    },
+    "shrug_dumbbell": {
+      "summary": "Mit Kurzhanteln in den Händen hebst du die Schultern Richtung Ohren und senkst sie wieder ab.",
+      "setup": [
+        "Stell dich hin, die Kurzhanteln hängen seitlich am Körper.",
+        "Steh aufrecht oder ganz leicht vorgebeugt."
+      ],
+      "steps": ["Heb die Schultern Richtung Ohren.", "Senk sie wieder ab und wiederhole."],
+      "cues": [
+        "Die Bewegung wird oben schwerer. Leg eine feste Höhe fest, etwa bis die Schulterlinie waagerecht ist."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Shrug",
+          "url": "https://exrx.net/WeightExercises/TrapeziusUpper/DBShrug"
+        }
+      ]
+    },
+    "lat_pulldown_single_arm": {
+      "summary": "Kniend vor dem oberen Kabelzug ziehst du einen Einzelgriff mit einem Arm nach unten und lässt ihn wieder nach oben.",
+      "setup": ["Knie dich vor den oberen Kabelzug.", "Greif den Einzelgriff mit einer Hand."],
+      "steps": [
+        "Zieh den Griff mit einem Arm nach unten an die Körperseite.",
+        "Lass ihn zurück, bis Arm und Schulter ganz gestreckt sind.",
+        "Wechsel den Arm. Mach auf beiden Seiten gleich viele Wiederholungen."
+      ],
+      "cues": ["Streck Arm und Schulter oben jedes Mal ganz aus."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable One Arm Kneeling Pulldown",
+          "url": "https://exrx.net/WeightExercises/LatissimusDorsi/CBOneArmKneelingPulldown"
+        }
+      ],
+      "sourceNote": "Zielpunkt des Zugs nur allgemein beschrieben."
+    },
+    "bent_over_row_smith": {
+      "summary": "Vorgebeugt mit geradem Rücken ziehst du die geführte Stange der Multipresse zum Bauch und senkst sie wieder ab.",
+      "setup": [
+        "Beug die Knie leicht und lehn dich mit geradem Rücken über die Stange.",
+        "Greif die Stange breit im Obergriff."
+      ],
+      "steps": [
+        "Zieh die Stange zum oberen Bauch.",
+        "Senk die Stange, bis die Arme ganz gestreckt sind."
+      ],
+      "cues": [
+        "Halte den Oberkörper für eine strenge Ausführung waagerecht.",
+        "Wird der untere Rücken rund, beug die Knie stärker oder halte den Oberkörper etwas höher.",
+        "Ein schulterbreiter Griff oder Untergriff verlagert die Arbeit stärker auf den Latissimus."
+      ],
+      "mistakes": [
+        "Unterer Rücken rundet sich, weil die Oberschenkel hinten zu wenig Spielraum lassen."
+      ],
+      "safety": [
+        "Reicht die Stange nicht weit genug nach unten, stell dich auf eine stabile Erhöhung."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Smith Bent-over Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/SMBentOverRow"
+        }
+      ]
+    },
+    "overhead_press_barbell": {
+      "summary": "Im Stand drückst du die Langhantel von vorn am Hals nach oben, bis die Arme über dem Kopf gestreckt sind.",
+      "setup": [
+        "Nimm die Stange aus der Ablage oder setz sie vom Boden um.",
+        "Greif im Obergriff etwas breiter als schulterbreit.",
+        "Halte die Stange vorn auf Höhe des Halses."
+      ],
+      "steps": [
+        "Drück die Stange nach oben, bis die Arme über dem Kopf gestreckt sind.",
+        "Senk sie wieder vor den Hals und wiederhole."
+      ],
+      "cues": ["Streck die Arme oben jedes Mal ganz aus.", "Senk die Stange kontrolliert ab."],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Military Press",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress"
+        }
+      ],
+      "sourceNote": "Die Quelle nennt „stehend“ nicht ausdrücklich, führt die sitzende Variante aber getrennt."
+    },
+    "shoulder_press_dumbbell_seated": {
+      "summary": "Auf der Bank mit Rückenlehne drückst du zwei Kurzhanteln von Schulterhöhe nach oben, bis die Arme gestreckt sind.",
+      "setup": [
+        "Setz dich mit Kopf, Schultern und Gesäß an die Rückenlehne. Spann den Bauch an.",
+        "Bring die Kurzhanteln auf Schulterhöhe, Handflächen nach vorn, Ellbogen unter den Handgelenken.",
+        "Zieh die Schulterblätter nach unten und hinten und halte sie dort."
+      ],
+      "steps": [
+        "Drück die Kurzhanteln nach oben, bis die Arme über dem Kopf gestreckt sind.",
+        "Senk sie kontrolliert wieder seitlich an die Schultern."
+      ],
+      "cues": [
+        "Halte die Handgelenke gerade.",
+        "Zeigen die Ellbogen leicht nach vorn, ist die Bewegung oft angenehmer.",
+        "Lass die Hanteln nicht fallen, sondern führ sie aktiv nach unten."
+      ],
+      "mistakes": ["Unterer Rücken hohl beim Drücken."],
+      "safety": [
+        "Lass dir bei schweren Hanteln helfen: Die Hilfsperson steht hinter dir, die Hände nah an deinen Handgelenken."
+      ],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Seated Overhead Press",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/45/seated-overhead-press/"
+        },
+        {
+          "title": "ExRx.net: Dumbbell Shoulder Press",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/DBShoulderPress"
+        }
+      ]
+    },
+    "shoulder_press_machine": {
+      "summary": "An der Schulterdrückmaschine sitzend drückst du die Griffe nach oben, bis die Arme gestreckt sind, und senkst sie wieder.",
+      "setup": [
+        "Stell den Sitz so ein, dass du die Schulter im ganzen Umfang bewegen kannst.",
+        "Setz dich und greif die Griffe seitlich im Obergriff."
+      ],
+      "steps": [
+        "Drück die Griffe nach oben, bis die Arme über dem Kopf gestreckt sind.",
+        "Senk sie kontrolliert wieder ab und wiederhole."
+      ],
+      "cues": [
+        "Kommst du mit dem Obergriff nicht weit genug nach hinten, nimm die parallelen Griffe, falls vorhanden."
+      ],
+      "mistakes": ["Sitz ist so eingestellt, dass der Bewegungsumfang eingeschränkt ist."],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Shoulder Press",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/LVShoulderPress"
+        },
+        {
+          "title": "ExRx.net: Lever Shoulder Press (parallel grip)",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/LVShoulderPressParGrip"
+        }
+      ]
+    },
+    "arnold_press": {
+      "summary": "Drückübung mit zwei Kurzhanteln: Du führst die Ellbogen nach außen und drückst die Hanteln von vor den Schultern nach oben.",
+      "setup": [
+        "Halte zwei Kurzhanteln vor den Schultern, die Handflächen zeigen zu dir.",
+        "Die Ellbogen stehen unter den Handgelenken."
+      ],
+      "steps": [
+        "Beginne die Bewegung, indem du die Ellbogen zur Seite nach außen führst.",
+        "Führ die Ellbogen weiter nach außen und drück die Hanteln dabei nach oben, bis die Arme gestreckt sind.",
+        "Senk die Hanteln auf demselben Weg zurück vor die Schultern."
+      ],
+      "cues": [
+        "Lass die Bewegung vor allem aus dem seitlichen Heben der Arme kommen, nicht aus dem Drehen der Unterarme.",
+        "Neig den Oberkörper beim Heben leicht nach vorn.",
+        "Senk die Hanteln kontrolliert bis vor die Schultern ab."
+      ],
+      "mistakes": ["Die Unterarme drehen stark ein, während die Ellbogen kaum nach außen wandern."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Arnold Press",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/DBArnoldPress"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Übung im Stand, die App nennt eine Bank; Stehen oder Sitzen bleibt offen."
+    },
+    "lateral_raise_dumbbell": {
+      "summary": "Isolationsübung für die seitliche Schulter: Du hebst die Kurzhanteln mit leicht gebeugten Armen seitlich bis auf Schulterhöhe.",
+      "setup": [
+        "Halte die Kurzhanteln vor den Oberschenkeln, die Ellbogen leicht gebeugt.",
+        "Beug dich in Hüfte und Knien leicht vor."
+      ],
+      "steps": [
+        "Heb die Oberarme seitlich an, bis die Ellbogen auf Schulterhöhe sind.",
+        "Lass die Ellbogen dabei nach hinten zeigen.",
+        "Senk die Hanteln kontrolliert ab und wiederhole."
+      ],
+      "cues": [
+        "Halte den Winkel im Ellbogen während der ganzen Bewegung gleich.",
+        "Heb die Arme seitlich an, statt sie nach außen zu drehen.",
+        "Bleib mit dem Oberkörper leicht vorgeneigt."
+      ],
+      "mistakes": [
+        "Die Ellbogen sinken unter die Handgelenke – dann arbeitet vor allem die vordere Schulter.",
+        "Die Hanteln werden mit Schwung hochgerissen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Lateral Raise",
+          "url": "https://exrx.net/WeightExercises/DeltoidLateral/DBLateralRaise"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ],
+      "sourceNote": "Die Variante „Spider“ (Alias-Name) ist nicht eigens beschrieben."
+    },
+    "lateral_raise_cable": {
+      "summary": "Einarmiges Seitheben am unteren Kabelzug: Du hebst den Arm mit leicht gebeugtem Ellbogen seitlich bis auf Schulterhöhe.",
+      "setup": [
+        "Stell dich mit der Seite zum Kabelzug und greif den Einzelgriff am unteren Zug.",
+        "Halte dich mit der freien Hand fest, wenn eine Haltestange da ist.",
+        "Die Rolle kann zwischen ganz unten und Mitte Oberschenkel stehen."
+      ],
+      "steps": [
+        "Heb den Arm seitlich an, bis der Ellbogen auf Schulterhöhe ist.",
+        "Halte den Ellbogen dabei leicht gebeugt und nach hinten gerichtet.",
+        "Senk den Arm kontrolliert ab.",
+        "Mach auf beiden Seiten gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Winkel im Ellbogen während der ganzen Bewegung gleich.",
+        "Die Höhe der Rolle verschiebt, wo die Übung am schwersten ist – wähl sie bewusst und bleib dabei."
+      ],
+      "mistakes": ["Der Ellbogen sinkt ab – dann übernimmt die vordere Schulter mehr Arbeit."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable One Arm Lateral Raise",
+          "url": "https://exrx.net/WeightExercises/DeltoidLateral/CBOneArmLateralRaise"
+        }
+      ]
+    },
+    "front_raise_dumbbell": {
+      "summary": "Isolationsübung für die vordere Schulter: Du hebst die Kurzhanteln mit fast gestreckten Armen nach vorn bis knapp über Schulterhöhe.",
+      "setup": ["Halte die Kurzhanteln vor den Oberschenkeln, die Arme fast gestreckt."],
+      "steps": [
+        "Heb die Hanteln nach vorn und oben, bis die Oberarme knapp über der Waagerechten sind.",
+        "Senk die Hanteln kontrolliert ab und wiederhole."
+      ],
+      "cues": [
+        "Hör mit dem Heben auf, bevor du ein Spannen im Schultergelenk spürst.",
+        "Knapp über der Waagerechten reicht als obere Position.",
+        "Heb und senk ruhig, ohne Schwung."
+      ],
+      "mistakes": ["Die Hanteln werden mit Schwung aus dem Oberkörper hochgerissen."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Front Raise",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/DBFrontRaise"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ]
+    },
+    "reverse_fly_dumbbell": {
+      "summary": "Vorgebeugtes Seitheben für die hintere Schulter: Mit fast waagerechtem Oberkörper hebst du die Kurzhanteln seitlich an.",
+      "setup": [
+        "Beug den Oberkörper vor, bis er fast waagerecht ist. Der Rücken bleibt gerade, die Knie sind gebeugt.",
+        "Die Handflächen zeigen zueinander, die Ellbogen sind leicht gebeugt."
+      ],
+      "steps": [
+        "Heb die Oberarme seitlich an, bis die Ellbogen auf Schulterhöhe sind.",
+        "Die Oberarme bleiben dabei quer zum Oberkörper.",
+        "Senk die Hanteln kontrolliert ab und wiederhole."
+      ],
+      "cues": [
+        "Halte den Ellbogen in einem festen Winkel von etwa 10 bis 30 Grad.",
+        "Halte die Ellbogen höher als die Handgelenke, indem du die Kleinfingerseite leicht anhebst.",
+        "Bleib tief: Mit nur 45 Grad Vorneigung arbeitet eher die seitliche Schulter."
+      ],
+      "mistakes": [
+        "Die Ellbogen wandern zum Körper hin – dann übernimmt der Latissimus viel Arbeit.",
+        "Das Gewicht wird mit Schwung hochgeworfen.",
+        "Der untere Rücken rundet sich."
+      ],
+      "safety": ["Nimm ein leichteres Gewicht, wenn du den Rücken nicht gerade halten kannst."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Rear Lateral Raise",
+          "url": "https://exrx.net/WeightExercises/DeltoidPosterior/DBRearLateralRaise"
+        },
+        {
+          "title": "ExRx.net: Common Resistance Training Mistakes",
+          "url": "https://exrx.net/Kinesiology/Errors"
+        }
+      ]
+    },
+    "reverse_pec_deck": {
+      "summary": "Reverse Flys an der Maschine: Du führst die Arme auf Schulterhöhe in einem Bogen nach hinten.",
+      "setup": [
+        "Stell Sitzhöhe und Griffe so ein, dass deine Arme auf Schulterhöhe liegen.",
+        "Greif die Griffe mit den Daumen nach oben oder nach unten, je nach Maschine."
+      ],
+      "steps": [
+        "Führ die Arme in einem Bogen auseinander und nach hinten, bis die Ellbogen etwa auf Höhe des Oberkörpers sind.",
+        "Führ die Arme kontrolliert zurück nach vorn und wiederhole."
+      ],
+      "cues": [
+        "Halte die Ellbogen während der ganzen Bewegung auf Schulterhöhe.",
+        "Mit den Daumen nach unten fällt es leichter, die Ellbogen oben zu halten."
+      ],
+      "mistakes": [
+        "Die Ellbogen sinken nach unten – dann arbeiten seitliche Schulter und Latissimus mehr mit."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Isolateral Seated Reverse Fly (parallel grip)",
+          "url": "https://exrx.net/WeightExercises/DeltoidPosterior/LVRearLateralRaise"
+        },
+        {
+          "title": "ExRx.net: Lever Isolateral Seated Reverse Fly (pronated parallel grip)",
+          "url": "https://exrx.net/WeightExercises/DeltoidPosterior/LVReverseFlyPronated"
+        },
+        {
+          "title": "ExRx.net: Lever Seated Reverse Fly (gripless)",
+          "url": "https://exrx.net/WeightExercises/DeltoidPosterior/LVSeatedRearDeltFly"
+        }
+      ],
+      "sourceNote": "Gestützt auf die Seiten zur Maschine mit und ohne Griffe; die Sitzrichtung bleibt offen."
+    },
+    "face_pull": {
+      "summary": "Zugübung am oberen Kabelzug mit Seil: Du ziehst das Seil zum Gesicht, die Ellbogen gehen dabei nach außen.",
+      "setup": [
+        "Stell den Kabelzug mit Seil etwa auf Augenhöhe oder etwas darüber ein.",
+        "Greif das Seil so, dass die Daumen zu dir zeigen. Ein versetzter Stand gibt dir Halt."
+      ],
+      "steps": [
+        "Zieh das Seil zum Gesicht und führ die Ellbogen dabei seitlich nach außen.",
+        "Zieh die Schulterblätter zusammen, bis die Hände etwa neben den Ohren sind.",
+        "Lass das Seil kontrolliert nach vorn zurück, bis die Arme gestreckt sind."
+      ],
+      "cues": [
+        "Halte die Ellbogen etwa auf Schulterhöhe.",
+        "Bleib mit dem Oberkörper aufrecht und lehn dich nicht nach vorn.",
+        "Lass das Gewicht nicht zurückschnellen."
+      ],
+      "mistakes": [
+        "Das Kinn schiebt sich nach vorn.",
+        "Der untere Rücken geht ins Hohlkreuz, die Rippen heben sich.",
+        "Die Schultern ziehen zu den Ohren hoch."
+      ],
+      "sources": [
+        {
+          "title": "NASM Exercise Library: Face Pull",
+          "url": "https://www.nasm.org/resource-center/exercise-library/face-pull"
+        },
+        {
+          "title": "NASM: How to Properly Perform the Face Pull",
+          "url": "https://m.nasm.org/workout-exercise-guidance/how-to-face-pull"
+        },
+        {
+          "title": "ExRx.net: Cable Standing Rear Delt Row (with rope)",
+          "url": "https://exrx.net/WeightExercises/DeltoidPosterior/CBStandingRearDeltRowRope"
+        }
+      ],
+      "sourceNote": "Hauptquelle NASM; Ellbogenhöhe und Haltung aus der ExRx-Seite zum Rudern für die hintere Schulter mit Seil."
+    },
+    "front_raise_cable": {
+      "summary": "Frontheben am Kabelzug mit Stange: Du hebst die Stange mit gestreckten Armen nach vorn bis knapp über Schulterhöhe.",
+      "setup": [
+        "Greif die Stange am Kabelzug im Obergriff.",
+        "Die Ellbogen sind gestreckt oder leicht gebeugt."
+      ],
+      "steps": [
+        "Heb die Stange nach vorn und oben, bis die Oberarme knapp über der Waagerechten sind.",
+        "Senk die Stange kontrolliert ab und wiederhole."
+      ],
+      "cues": [
+        "Hör mit dem Heben auf, bevor du ein Spannen im Schultergelenk spürst.",
+        "Knapp über der Waagerechten reicht als obere Position.",
+        "Halte den Winkel im Ellbogen während der ganzen Bewegung gleich."
+      ],
+      "mistakes": ["Die Stange wird mit Schwung aus dem Oberkörper hochgerissen."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Bar Front Raise",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/CBBarFrontRaise"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Variante mit Stange; wie du zum Kabelzug stehst, nennt sie nicht."
+    },
+    "shoulder_press_dumbbell_standing": {
+      "summary": "Schulterdrücken im Stand: Du drückst zwei Kurzhanteln von den Schultern nach oben, bis die Arme gestreckt sind.",
+      "setup": [
+        "Stell dich aufrecht hin und halte die Kurzhanteln seitlich an den Schultern.",
+        "Die Ellbogen stehen unter den Handgelenken."
+      ],
+      "steps": [
+        "Drück die Hanteln nach oben, bis die Arme gestreckt sind.",
+        "Senk die Hanteln kontrolliert zurück auf Schulterhöhe und wiederhole.",
+        "Du kannst auch abwechselnd mit einem Arm drücken."
+      ],
+      "cues": [
+        "Halte die Ellbogen während des Drückens unter den Handgelenken.",
+        "Senk die Hanteln jedes Mal bis zu den Schultern ab."
+      ],
+      "mistakes": ["Die Ellbogen wandern aus der Linie unter den Handgelenken."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Shoulder Press",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/DBShoulderPress"
+        },
+        {
+          "title": "ExRx.net: Dumbbell One Arm Shoulder Press",
+          "url": "https://exrx.net/WeightExercises/DeltoidAnterior/DBOneArmShoulderPress"
+        }
+      ]
+    },
+    "biceps_curl_barbell": {
+      "summary": "Bizepscurl mit Langhantel: Du beugst die Arme im Untergriff, bis die Unterarme senkrecht stehen.",
+      "setup": [
+        "Greif die Langhantel schulterbreit im Untergriff.",
+        "Lass die Arme gestreckt hängen, die Ellbogen liegen seitlich am Körper."
+      ],
+      "steps": [
+        "Beug die Arme und heb die Stange, bis die Unterarme senkrecht stehen.",
+        "Senk die Stange, bis die Arme ganz gestreckt sind, und wiederhole."
+      ],
+      "cues": [
+        "Die Ellbogen dürfen oben leicht nach vorn gehen, aber nicht vor die Stange.",
+        "Streck die Arme unten jedes Mal ganz.",
+        "Curl kontrolliert und ohne Schwung."
+      ],
+      "mistakes": [
+        "Die Ellbogen wandern weit nach vorn, über die Stange hinaus.",
+        "Die Stange wird mit Schwung aus dem Oberkörper hochgerissen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Curl",
+          "url": "https://exrx.net/WeightExercises/Biceps/BBCurl"
+        },
+        {
+          "title": "ExRx.net: Arm Curl",
+          "url": "https://exrx.net/Questions/ArmCurl"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ]
+    },
+    "biceps_curl_dumbbell": {
+      "summary": "Bizepscurl mit Kurzhanteln: Du beugst den Arm und drehst dabei den Unterarm, bis die Handfläche zur Schulter zeigt.",
+      "setup": ["Steh aufrecht und lass die Kurzhanteln an den Seiten hängen."],
+      "steps": [
+        "Beug einen Arm und dreh den Unterarm dabei, bis er senkrecht steht und die Handfläche zur Schulter zeigt.",
+        "Senk die Hantel, bis der Arm gestreckt ist.",
+        "Wechsle zum anderen Arm. Du kannst auch beide Arme gleichzeitig beugen."
+      ],
+      "cues": [
+        "Lass die Ellbogen an den Seiten.",
+        "Der Ellbogen darf oben leicht nach vorn gehen, bis der Unterarm senkrecht ist – nicht weiter.",
+        "Curl kontrolliert und ohne Schwung."
+      ],
+      "mistakes": [
+        "Der Ellbogen wandert weit nach vorn, über die Hantel hinaus.",
+        "Die Hantel wird mit Schwung aus dem Oberkörper hochgerissen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Alternating Curl",
+          "url": "https://exrx.net/WeightExercises/Biceps/DBCurl"
+        },
+        {
+          "title": "ExRx.net: Arm Curl",
+          "url": "https://exrx.net/Questions/ArmCurl"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ]
+    },
+    "biceps_curl_ez_bar": {
+      "summary": "Bizepscurl mit der gewinkelten SZ-Stange: Du beugst die Arme im Untergriff, bis die Unterarme senkrecht stehen.",
+      "setup": [
+        "Greif die SZ-Stange etwa schulterbreit im Untergriff.",
+        "Lass die Arme gestreckt hängen, die Ellbogen liegen seitlich am Körper."
+      ],
+      "steps": [
+        "Beug die Arme und heb die Stange, bis die Unterarme senkrecht stehen.",
+        "Senk die Stange, bis die Arme ganz gestreckt sind, und wiederhole."
+      ],
+      "cues": [
+        "Die Ellbogen dürfen oben leicht nach vorn gehen, aber nicht vor die Stange.",
+        "Streck die Arme unten jedes Mal ganz.",
+        "Curl kontrolliert und ohne Schwung."
+      ],
+      "mistakes": [
+        "Die Ellbogen wandern weit nach vorn, über die Stange hinaus.",
+        "Die Stange wird mit Schwung aus dem Oberkörper hochgerissen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Curl",
+          "url": "https://exrx.net/WeightExercises/Biceps/BBCurl"
+        },
+        {
+          "title": "ExRx.net: Arm Curl",
+          "url": "https://exrx.net/Questions/ArmCurl"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ],
+      "sourceNote": "Quelle ist die Seite zum Curl mit Langhantel, die eine gewinkelte Stange zeigt."
+    },
+    "hammer_curl": {
+      "summary": "Curl mit Kurzhanteln im neutralen Griff: Der Daumen zeigt nach oben, du beugst den Arm, bis der Unterarm senkrecht steht.",
+      "setup": [
+        "Steh aufrecht, die Kurzhanteln hängen an den Seiten, die Daumen zeigen nach vorn."
+      ],
+      "steps": [
+        "Beug einen Arm, bis der Unterarm senkrecht steht und der Daumen zur Schulter zeigt.",
+        "Senk die Hantel zurück in die Ausgangsposition.",
+        "Wechsle zum anderen Arm. Du kannst auch beide Arme gleichzeitig beugen."
+      ],
+      "cues": [
+        "Lass die Ellbogen an den Seiten.",
+        "Behalte den neutralen Griff während der ganzen Bewegung bei.",
+        "Curl kontrolliert und ohne Schwung."
+      ],
+      "mistakes": ["Die Hantel wird mit Schwung aus dem Oberkörper hochgerissen."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Alternating Hammer Curl",
+          "url": "https://exrx.net/WeightExercises/Brachioradialis/DBHammerCurl"
+        },
+        {
+          "title": "ExRx.net: Most Common Weight Training Mistakes",
+          "url": "https://exrx.net/WeightTraining/Mistakes"
+        }
+      ]
+    },
+    "preacher_curl": {
+      "summary": "Curl an der Scottbank: Die Oberarme liegen auf dem Polster, du beugst die Arme mit der SZ-Stange.",
+      "setup": [
+        "Stell den Sitz so ein, dass deine Achseln nah an der Oberkante des Polsters liegen.",
+        "Leg die Rückseite der Oberarme auf das Polster.",
+        "Greif die SZ-Stange schulterbreit im Untergriff."
+      ],
+      "steps": [
+        "Beug die Arme, bis die Unterarme senkrecht stehen.",
+        "Senk die Stange, bis die Arme ganz gestreckt sind, und wiederhole."
+      ],
+      "cues": [
+        "Lass die Oberarme während der ganzen Bewegung auf dem Polster.",
+        "Senk die Stange kontrolliert bis zur vollen Streckung ab."
+      ],
+      "mistakes": ["Die Oberarme heben vom Polster ab."],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Preacher Curl",
+          "url": "https://exrx.net/WeightExercises/Brachialis/BBPreacherCurl"
+        }
+      ]
+    },
+    "biceps_curl_cable": {
+      "summary": "Bizepscurl am unteren Kabelzug mit Stange: Du beugst die Arme im Untergriff, bis die Unterarme senkrecht stehen.",
+      "setup": [
+        "Greif die Stange am unteren Kabelzug schulterbreit im Untergriff.",
+        "Stell dich nah an den Kabelzug."
+      ],
+      "steps": [
+        "Beug die Arme mit den Ellbogen an den Seiten, bis die Unterarme senkrecht stehen.",
+        "Senk die Stange, bis die Arme ganz gestreckt sind, und wiederhole."
+      ],
+      "cues": [
+        "Die Ellbogen dürfen oben leicht nach vorn gehen, bis die Unterarme senkrecht sind – nicht weiter.",
+        "Streck die Arme unten jedes Mal ganz.",
+        "Curl kontrolliert und ohne Schwung."
+      ],
+      "mistakes": ["Die Ellbogen wandern weit nach vorn, über die Stange hinaus."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Curl",
+          "url": "https://exrx.net/WeightExercises/Biceps/CBCurl"
+        },
+        {
+          "title": "ExRx.net: Arm Curl",
+          "url": "https://exrx.net/Questions/ArmCurl"
+        }
+      ]
+    },
+    "incline_curl_dumbbell": {
+      "summary": "Bizepscurl auf der Schrägbank: Die Arme hängen hinter dem Körper, du beugst sie und drehst die Handfläche zur Schulter.",
+      "setup": [
+        "Stell die Schrägbank auf 45 bis 60 Grad und lehn dich mit dem Rücken an.",
+        "Lass die Arme gestreckt nach unten hängen, die Handflächen zeigen zum Körper."
+      ],
+      "steps": [
+        "Beug einen Arm und dreh den Unterarm dabei, bis er senkrecht steht und die Handfläche zur Schulter zeigt.",
+        "Senk die Hantel zurück in die Ausgangsposition.",
+        "Wechsle zum anderen Arm. Du kannst auch beide Arme gleichzeitig beugen."
+      ],
+      "cues": [
+        "Lass die Ellbogen hinten an den Seiten.",
+        "Der Ellbogen darf oben leicht nach vorn gehen, bis der Unterarm senkrecht ist – nicht weiter.",
+        "Lass die Arme unten jedes Mal ganz hängen."
+      ],
+      "mistakes": ["Der Ellbogen wandert weit nach vorn, über die Hantel hinaus."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Alternating Incline Curl",
+          "url": "https://exrx.net/WeightExercises/Biceps/DBInclineCurl"
+        },
+        {
+          "title": "ExRx.net: Arm Curl",
+          "url": "https://exrx.net/Questions/ArmCurl"
+        }
+      ]
+    },
+    "wrist_curl": {
+      "summary": "Isolationsübung für die Unterarme: Du rollst die Kurzhantel im Sitzen aus den Fingern und beugst das Handgelenk wieder nach oben.",
+      "setup": [
+        "Setz dich auf eine Bank und nimm die Kurzhantel im Untergriff, die Handfläche zeigt nach oben.",
+        "Leg den Unterarm auf den Oberschenkel, das Handgelenk liegt knapp vor dem Knie."
+      ],
+      "steps": [
+        "Senk die Hantel ab und lass sie von der Handfläche bis in die Finger rollen.",
+        "Schließ die Finger wieder und beug das Handgelenk, bis die Knöchel so weit wie möglich nach oben zeigen.",
+        "Senk die Hantel kontrolliert ab und beginn die nächste Wiederholung."
+      ],
+      "cues": [
+        "Halte den Ellbogen etwa auf Höhe des Handgelenks, damit der Unterarm waagerecht bleibt.",
+        "Die freie Hand kann das Handgelenk von unten stützen.",
+        "Nutz den vollen Bewegungsumfang und arbeite in ruhigem Tempo."
+      ],
+      "mistakes": ["Ellbogen liegt deutlich tiefer als das Handgelenk, der Unterarm kippt schräg."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Wrist Curl",
+          "url": "https://exrx.net/WeightExercises/WristFlexors/DBWristCurl"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Übung einarmig; der Text passt für einen oder beide Arme."
+    },
+    "hammer_curl_cable": {
+      "summary": "Curl am unteren Kabelzug mit Seil im neutralen Griff: Du beugst die Arme bei ruhigen Ellbogen, bis die Unterarme senkrecht stehen.",
+      "setup": [
+        "Häng das Seil an den unteren Zug und greif die Enden so, dass die Handflächen zueinander zeigen.",
+        "Stell dich aufrecht hin, die Arme hängen gestreckt an den Seiten."
+      ],
+      "steps": [
+        "Zieh das Seil nach oben, bis die Unterarme senkrecht stehen.",
+        "Senk das Seil kontrolliert ab, bis die Arme ganz gestreckt sind."
+      ],
+      "cues": [
+        "Halte die Ellbogen an den Seiten.",
+        "Oben dürfen die Ellbogen leicht nach vorn wandern – die Unterarme gehen dabei nicht über die Senkrechte hinaus.",
+        "Bewege dich in ruhigem Tempo durch den ganzen Umfang."
+      ],
+      "mistakes": ["Arme werden unten nicht ganz gestreckt."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Hammer Curl",
+          "url": "https://exrx.net/WeightExercises/Brachioradialis/CBHammerCurl"
+        }
+      ]
+    },
+    "preacher_curl_dumbbell": {
+      "summary": "Curl mit Kurzhantel an der Scottbank: Der Oberarm liegt auf dem Polster, nur der Ellbogen beugt und streckt sich.",
+      "setup": [
+        "Stell den Sitz so ein, dass deine Achsel nahe an der Oberkante des Polsters liegt.",
+        "Nimm die Kurzhantel, setz dich und leg die Rückseite des Oberarms auf das Polster, die Handfläche zeigt zur Schulter."
+      ],
+      "steps": [
+        "Senk die Hantel kontrolliert ab, bis der Arm ganz gestreckt ist.",
+        "Beug den Arm und heb die Hantel, bis der Unterarm senkrecht steht."
+      ],
+      "cues": [
+        "Lass die Rückseite des Oberarms während der ganzen Bewegung auf dem Polster.",
+        "Bewege dich langsam und nutz den vollen Umfang."
+      ],
+      "mistakes": [
+        "Oberarm hebt sich vom Polster ab.",
+        "Sitz ist zu hoch oder zu tief, die Achsel liegt nicht nahe der Polsterkante."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Preacher Curl",
+          "url": "https://exrx.net/WeightExercises/Brachialis/DBPreacherCurl"
+        },
+        {
+          "title": "ExRx.net: Barbell Preacher Curl",
+          "url": "https://exrx.net/WeightExercises/Brachialis/BBPreacherCurl"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Übung einarmig; der Text passt für einen oder beide Arme."
+    },
+    "reverse_curl_ez_bar": {
+      "summary": "Curl im Obergriff: Du hebst die Stange mit nach unten zeigenden Handrücken, bis die Unterarme senkrecht stehen.",
+      "setup": [
+        "Greif die Stange schulterbreit im Obergriff, die Handrücken zeigen nach vorn.",
+        "Stell dich aufrecht hin, die Arme hängen gestreckt vor dem Körper."
+      ],
+      "steps": [
+        "Beug die Arme und heb die Stange, bis die Unterarme senkrecht stehen.",
+        "Senk die Stange kontrolliert ab, bis die Arme ganz gestreckt sind."
+      ],
+      "cues": [
+        "Oben dürfen die Ellbogen leicht nach vorn wandern, die Unterarme bleiben knapp vor der Senkrechten.",
+        "Bewege dich in ruhigem Tempo durch den ganzen Umfang."
+      ],
+      "mistakes": ["Arme werden unten nicht ganz gestreckt."],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Reverse Curl (Langhantel; gleiche Ausführung, nur andere Stange)",
+          "url": "https://exrx.net/WeightExercises/Brachioradialis/BBReverseCurl"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Variante mit Langhantel."
+    },
+    "triceps_pushdown_cable": {
+      "summary": "Trizepsübung am oberen Kabelzug: Du drückst den Griff bei anliegenden Ellbogen nach unten, bis die Arme gestreckt sind.",
+      "setup": [
+        "Stell dich vor den oberen Zug und greif die Stange eng im Obergriff.",
+        "Leg die Ellbogen seitlich an den Körper."
+      ],
+      "steps": [
+        "Streck die Arme nach unten, bis sie ganz gestreckt sind.",
+        "Lass den Griff kontrolliert zurückkommen, bis der Unterarm nahe am Oberarm ist."
+      ],
+      "cues": [
+        "Bleib nah am Kabel, damit auch oben noch Zug auf dem Griff liegt.",
+        "Oben darf der Ellbogen etwas nach oben wandern.",
+        "Mit Seil: Die Hände liegen nebeneinander, die Handflächen zeigen zueinander und drehen unten nach unten."
+      ],
+      "mistakes": ["Ellbogen lösen sich von den Seiten."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Pushdown",
+          "url": "https://exrx.net/WeightExercises/Triceps/CBPushdown"
+        },
+        {
+          "title": "ExRx.net: Cable Pushdown (with rope attachment)",
+          "url": "https://exrx.net/WeightExercises/Triceps/CBPushdownRope"
+        }
+      ],
+      "sourceNote": "Hauptquelle beschreibt die Ausführung mit Stange, das Seil nur als Hinweis."
+    },
+    "overhead_extension_cable": {
+      "summary": "Trizepsstrecken mit Seil am unteren Zug: Du stehst vom Gerät abgewandt und streckst die Arme hinter dem Kopf nach oben.",
+      "setup": [
+        "Häng das Seil an den unteren Zug, dreh dich vom Gerät weg und stell die Füße versetzt.",
+        "Halt die Seilenden hinter dem Kopf, die Ellbogen zeigen nach oben."
+      ],
+      "steps": [
+        "Streck die Arme über dem Kopf, bis sie gerade sind.",
+        "Lass das Seil kontrolliert zurück, bis die Unterarme die Oberarme berühren."
+      ],
+      "cues": [
+        "Lass den Zug die Arme nach hinten führen, damit die Arme über Kopf bleiben.",
+        "Du kannst die Übung auch auf einer Bank mit Rückenlehne knapp unter den Schultern sitzend machen."
+      ],
+      "mistakes": ["Ellbogen sinken nach vorn ab, statt nach oben zu zeigen."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Triceps Extension (with rope)",
+          "url": "https://exrx.net/WeightExercises/Triceps/CBStandingTricepsExtensionRope"
+        }
+      ]
+    },
+    "overhead_extension_dumbbell": {
+      "summary": "Trizepsstrecken im Sitzen: Du hältst eine Kurzhantel über dem Kopf, senkst sie hinter den Kopf und streckst die Arme wieder.",
+      "setup": [
+        "Setz dich auf eine Bank mit Rückenlehne knapp unter Schulterhöhe.",
+        "Halt eine Kurzhantel mit beiden Händen an der inneren Scheibe über dem Kopf."
+      ],
+      "steps": [
+        "Beug die Ellbogen und senk die Hantel hinter den Kopf.",
+        "Streck die Arme, bis die Hantel wieder über dem Kopf ist."
+      ],
+      "cues": [
+        "Beug unten die Handgelenke leicht, damit die Hantel den Nacken nicht berührt.",
+        "Die Oberarme bleiben senkrecht; einarmig hältst du den Ellbogen eng, damit es kein Schulterdrücken wird.",
+        "Bei steifen Schultern rutsch mit der Hüfte etwas nach vorn, damit die Ellbogen höher stehen."
+      ],
+      "mistakes": ["Rückenlehne ist so hoch, dass die Hantel nicht ganz absinken kann."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Triceps Extension",
+          "url": "https://exrx.net/WeightExercises/Triceps/DBTriExt"
+        },
+        {
+          "title": "ExRx.net: Dumbbell One Arm Triceps Extension",
+          "url": "https://exrx.net/WeightExercises/Triceps/DBOneArmTriExt"
+        }
+      ],
+      "sourceNote": "Hauptquelle beidhändig, die einarmige Variante als zweite Quelle."
+    },
+    "skull_crusher": {
+      "summary": "Trizepsstrecken im Liegen: Du senkst die SZ-Stange durch Beugen der Ellbogen zur Stirn und streckst die Arme wieder.",
+      "setup": [
+        "Leg dich auf eine Flachbank und greif die SZ-Stange eng im Obergriff.",
+        "Halt die Stange mit gestreckten Armen über der Stirn."
+      ],
+      "steps": [
+        "Beug die Ellbogen und senk die Stange in Richtung Stirn.",
+        "Lass die Ellbogen dabei leicht nach hinten wandern, damit die Stange am Kopf vorbeikommt.",
+        "Streck die Arme wieder, bis die Stange über der Stirn ist."
+      ],
+      "cues": [
+        "Bewege dich langsam, vor allem beim Absenken.",
+        "Zwischen den Wiederholungen kannst du die Stange kurz auf der oberen Brust ablegen."
+      ],
+      "safety": [
+        "Nimm die Stange vom Boden oder hinter dem Kopf auf und leg sie dort auch wieder ab."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Lying Triceps Extension",
+          "url": "https://exrx.net/WeightExercises/Triceps/BBLyingTriExt"
+        },
+        {
+          "title": "ExRx.net: Barbell Lying Triceps Extension „Skull Crusher“",
+          "url": "https://exrx.net/WeightExercises/Triceps/BBLyingTriExtSC"
+        }
+      ]
+    },
+    "close_grip_bench_press": {
+      "summary": "Bankdrücken mit engem Griff: Du senkst die Langhantel mit körpernahen Ellbogen zur Brust und drückst sie bis zu gestreckten Armen hoch.",
+      "setup": [
+        "Leg dich auf die Flachbank und greif die Stange etwas enger als schulterbreit.",
+        "Heb die Stange aus der Ablage und halt sie mit gestreckten Armen über der Brust."
+      ],
+      "steps": [
+        "Senk die Stange zur Brust, die Ellbogen bleiben nah am Körper.",
+        "Drück die Stange hoch, bis die Arme gestreckt sind."
+      ],
+      "cues": [
+        "Greif nicht zu eng – etwa schulterbreit oder knapp darunter reicht.",
+        "Senk die Stange kontrolliert ab und drück gleichmäßig nach oben."
+      ],
+      "mistakes": [
+        "Griff ist zu eng: Der Bewegungsumfang wird kleiner, die Handgelenke knicken ab und die Stange wird unruhig.",
+        "Ellbogen gehen weit vom Körper weg."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Close Grip Bench Press",
+          "url": "https://exrx.net/WeightExercises/Triceps/BBCloseGripBenchPress"
+        }
+      ]
+    },
+    "triceps_kickback": {
+      "summary": "Einarmiges Trizepsstrecken vorgebeugt: Der Oberarm liegt waagerecht, du streckst den Unterarm mit der Kurzhantel nach hinten.",
+      "setup": [
+        "Knie mit einem Bein auf einer Bank und stütz dich mit der freien Hand ab.",
+        "Bring den Oberarm des Arbeitsarms waagerecht neben den Körper, der Ellbogen ist gebeugt."
+      ],
+      "steps": [
+        "Streck den Arm nach hinten, bis er gerade ist.",
+        "Beug den Arm kontrolliert zurück in die Ausgangsposition.",
+        "Mach alle Wiederholungen und wechsle dann die Seite. Beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Oberarm waagerecht; für mehr Umfang darf der Ellbogen etwas höher als die Schulter liegen.",
+        "Wähl das Gewicht so, dass du den Arm ohne Schwung ganz strecken kannst."
+      ],
+      "mistakes": [
+        "Ellbogen sinkt ab, die Bewegung wird kleiner und ähnelt einem Hammercurl.",
+        "Oberkörper ist zu wenig vorgebeugt, der Oberarm steht nicht waagerecht."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Kickback",
+          "url": "https://exrx.net/WeightExercises/Triceps/DBKickback"
+        },
+        {
+          "title": "ExRx.net: Common Resistance Training Mistakes",
+          "url": "https://exrx.net/Kinesiology/Errors"
+        }
+      ]
+    },
+    "dip": {
+      "summary": "Stütz am Barren: Du senkst den Körper durch Beugen der Arme ab und drückst dich bis zu gestreckten Armen wieder hoch.",
+      "setup": [
+        "Stütz dich auf einem schulterbreiten Barren, die Arme sind gestreckt, die Schultern über den Händen."
+      ],
+      "steps": [
+        "Beug die Arme und senk den Körper, bis du eine leichte Dehnung in den Schultern spürst.",
+        "Drück dich hoch, bis die Arme gestreckt sind."
+      ],
+      "cues": [
+        "Senk dich kontrolliert ab, bis zur leichten Dehnung in den Schultern.",
+        "Zu schwer: Nutz eine Dipmaschine mit Unterstützung oder stell die Füße auf eine Erhöhung.",
+        "Zu leicht: Häng Gewicht an einen Dipgürtel."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Triceps Dip",
+          "url": "https://www.exrx.net/WeightExercises/Triceps/BWTriDip.html"
+        },
+        {
+          "title": "ExRx.net: Cable Triceps Dip (nahe Variante, gleicher Endpunkt der Bewegung)",
+          "url": "https://exrx.net/WeightExercises/Triceps/CBTriDip"
+        }
+      ],
+      "sourceNote": "Endpunkt der Bewegung aus einer nahen Variante der Quelle (Dips am Kabel)."
+    },
+    "assisted_dip": {
+      "summary": "Dips an der Maschine mit Gegengewicht: Ein Hebel unter Füßen oder Knien nimmt dir einen Teil des Körpergewichts ab.",
+      "setup": [
+        "Stell die Unterstützung an der Maschine ein.",
+        "Stütz dich mit gestreckten Armen auf die schulterbreiten Griffe, die Schultern über den Händen.",
+        "Stell dich auf den Hebel; bei manchen Maschinen kniest du auf einem Polster."
+      ],
+      "steps": [
+        "Beug die Arme und senk den Körper, bis du eine leichte Dehnung in den Schultern spürst.",
+        "Drück dich hoch, bis die Arme gestreckt sind."
+      ],
+      "cues": [
+        "Bewege dich in ruhigem Tempo, auch beim Absenken.",
+        "Mehr Unterstützung macht die Übung leichter, weniger Unterstützung schwerer."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Machine-assisted Triceps Dip",
+          "url": "https://exrx.net/WeightExercises/Triceps/ASTriDip"
+        },
+        {
+          "title": "ExRx.net: Machine-assisted Triceps Dip (kneeling)",
+          "url": "https://exrx.net/WeightExercises/Triceps/ASTriDipKneeling"
+        },
+        {
+          "title": "ExRx.net: Cable Triceps Dip (nahe Variante, gleicher Endpunkt der Bewegung)",
+          "url": "https://exrx.net/WeightExercises/Triceps/CBTriDip"
+        }
+      ],
+      "sourceNote": "Endpunkt der Bewegung aus einer nahen Variante der Quelle (Dips am Kabel)."
+    },
+    "bench_dip": {
+      "summary": "Dips mit den Händen auf der Bankkante: Du senkst die Hüfte durch Beugen der Arme ab und drückst dich wieder hoch.",
+      "setup": [
+        "Setz dich auf die Kante einer Bank und stütz die Hände neben der Hüfte ab.",
+        "Schieb dich mit gestreckten Armen von der Bank, die Fersen stehen auf dem Boden."
+      ],
+      "steps": [
+        "Beug die Arme und senk dich ab, bis du eine leichte Dehnung in Brust oder Schultern spürst oder das Gesäß den Boden berührt.",
+        "Drück dich hoch, bis die Arme gestreckt sind."
+      ],
+      "cues": [
+        "Wähl eine Bank, die hoch genug für den vollen Bewegungsumfang ist.",
+        "Leichter: Beug die Knie. Schwerer: Streck die Beine weiter aus oder leg Gewicht auf den Schoß."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Bench Dip (heels on floor)",
+          "url": "https://exrx.net/WeightExercises/Triceps/BWBenchDipFloor"
+        },
+        {
+          "title": "ExRx.net: Bench Dip (knees bent)",
+          "url": "https://exrx.net/WeightExercises/Triceps/BWBenchDipBentKnee"
+        }
+      ]
+    },
+    "skull_crusher_dumbbell": {
+      "summary": "Trizepsstrecken im Liegen mit Kurzhanteln: Du senkst die Hanteln neben den Kopf und streckst die Arme wieder.",
+      "setup": [
+        "Leg dich auf eine Flachbank.",
+        "Halt die Kurzhanteln mit gestreckten Armen über dem Kopf."
+      ],
+      "steps": [
+        "Beug die Ellbogen und senk die Hanteln seitlich neben den Kopf.",
+        "Streck die Arme wieder, bis die Hanteln über dem Kopf sind."
+      ],
+      "cues": [
+        "Bewege nur die Ellbogen, langsam und durch den ganzen Umfang.",
+        "Zwischen den Wiederholungen kannst du die Hanteln kurz auf der oberen Brust absetzen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Lying Triceps Extension",
+          "url": "https://exrx.net/WeightExercises/Triceps/DBLyingTriExt"
+        }
+      ]
+    },
+    "plank": {
+      "summary": "Haltende Übung für den Rumpf: Du stützt dich auf Unterarme und Fußballen und hältst den Körper in einer geraden Linie.",
+      "setup": [
+        "Leg dich bäuchlings auf eine Matte.",
+        "Setz die Unterarme auf, die Ellbogen liegen unter den Schultern.",
+        "Schließ die Beine, die Fußballen stehen auf dem Boden."
+      ],
+      "steps": [
+        "Heb den Körper an, bis er von Kopf bis Fersen eine gerade Linie bildet.",
+        "Halte diese Position für die geplante Zeit.",
+        "Leg den Körper kontrolliert wieder ab."
+      ],
+      "cues": [
+        "Leichter: Stütz dich auf die Knie statt auf die Füße oder leg die Unterarme erhöht ab.",
+        "Schwerer: Heb einen Fuß vom Boden."
+      ],
+      "mistakes": ["Körper bildet keine gerade Linie mehr, Hüfte hängt durch oder ragt nach oben."],
+      "sources": [
+        {
+          "title": "ExRx.net: Front Plank",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWFrontPlank"
+        }
+      ]
+    },
+    "side_plank": {
+      "summary": "Haltende Übung in Seitlage: Du stützt dich auf einen Unterarm und hältst den Körper als gerade Linie über dem Boden.",
+      "setup": [
+        "Leg dich auf die Seite, den Unterarm unter der Schulter und quer zum Körper.",
+        "Leg das obere Bein auf das untere, Knie und Hüfte sind gestreckt."
+      ],
+      "steps": [
+        "Heb die Hüfte vom Boden, bis Kopf, Rumpf und Beine eine feste, gerade Linie bilden.",
+        "Halte diese Position für die geplante Zeit.",
+        "Leg die Hüfte ab und wechsle die Seite. Halte beide Seiten gleich lange."
+      ],
+      "cues": [
+        "Halte den Körper während der ganzen Zeit gerade und fest, ohne Bewegung in der Hüfte.",
+        "Leichter: Beuge die Knie etwa im rechten Winkel und stütz dich auf Knie und Unterarm."
+      ],
+      "mistakes": [
+        "Hüfte sackt zum Boden ab, der Körper bildet keine gerade Linie mehr.",
+        "Ellbogen steht nicht unter der Schulter."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Side Plank",
+          "url": "https://exrx.net/WeightExercises/Obliques/BWSidePlank"
+        },
+        {
+          "title": "ExRx.net: Bent Knee Side Plank",
+          "url": "https://exrx.net/WeightExercises/Obliques/BWBentKneeSidePlank"
+        }
+      ]
+    },
+    "crunch": {
+      "summary": "Bauchübung in Rückenlage: Du rollst den oberen Rücken vom Boden ein, der untere Rücken bleibt liegen.",
+      "setup": [
+        "Leg dich auf den Rücken auf eine Matte.",
+        "Beuge Hüfte und Knie und stell die Füße auf den Boden."
+      ],
+      "steps": [
+        "Roll den Oberkörper ein und heb den oberen Rücken vom Boden.",
+        "Komm so hoch, wie es geht, ohne dass der untere Rücken abhebt.",
+        "Senk dich ab, bis die Schulterblätter den Boden wieder berühren, und wiederhole."
+      ],
+      "cues": [
+        "Lass den unteren Rücken während der ganzen Bewegung am Boden.",
+        "Halte den Nacken neutral und lass Platz zwischen Kinn und Brustbein.",
+        "Senk dich kontrolliert ab statt dich fallen zu lassen."
+      ],
+      "mistakes": ["Unterer Rücken hebt vom Boden ab.", "Kinn wird auf die Brust gezogen."],
+      "sources": [
+        {
+          "title": "ExRx.net: Crunch",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunch"
+        },
+        {
+          "title": "ExRx.net: Crunch (arms down)",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunchAD"
+        }
+      ]
+    },
+    "cable_crunch": {
+      "summary": "Bauchübung kniend am oberen Kabelzug: Du rollst den Rumpf ein und führst die Ellbogen Richtung Oberschenkel.",
+      "setup": [
+        "Knie dich unter den oberen Kabelzug.",
+        "Fass das Seil mit beiden Händen und leg die Handgelenke seitlich an den Kopf."
+      ],
+      "steps": [
+        "Roll den Rumpf ein und führ die Ellbogen zu den Oberschenkeln.",
+        "Die Hüfte bleibt dabei an ihrem Platz.",
+        "Roll dich kontrolliert wieder auf und wiederhole."
+      ],
+      "cues": [
+        "Beweg dich aus dem Rumpf, nicht aus der Hüfte.",
+        "Halte den Nacken neutral.",
+        "Statt des Seils gehen auch zwei weiche Schlaufengriffe."
+      ],
+      "mistakes": [
+        "Hüfte beugt sich mit und setzt sich nach hinten, statt dass sich der Rumpf einrollt."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Kneeling Crunch",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/CBKneelingCrunch"
+        }
+      ]
+    },
+    "hanging_leg_raise": {
+      "summary": "Du hängst an einer Klimmzugstange und hebst die gebeugten Beine, bis die Knie deutlich über der Hüfte sind.",
+      "setup": [
+        "Fass die Stange im Obergriff, etwas weiter als schulterbreit.",
+        "Häng dich mit gestreckten Armen und Beinen."
+      ],
+      "steps": [
+        "Beuge Hüfte und Knie und heb die Beine, bis die Knie deutlich über der Hüfte sind.",
+        "Senk die Beine kontrolliert, bis Hüfte und Knie wieder gestreckt nach unten zeigen.",
+        "Wiederhole ohne Schwung aus der letzten Wiederholung."
+      ],
+      "cues": [
+        "Den Bauch beanspruchst du stärker, wenn du am Ende das Becken einrollst und die Knie Richtung Schultern führst.",
+        "Schwerer: Beine gestreckt lassen. Leichter: die Übung liegend auf dem Boden oder einer Schrägbank."
+      ],
+      "mistakes": ["Nur die Hüfte beugt, der Rumpf rollt nicht ein – dann hält der Bauch nur."],
+      "sources": [
+        {
+          "title": "ExRx.net: Hanging Leg Raise",
+          "url": "https://exrx.net/WeightExercises/HipFlexors/BWHangingLegRaise"
+        }
+      ],
+      "sourceNote": "Die Quelle ordnet die Übung den Hüftbeugern zu; der Bauch arbeitet vor allem haltend."
+    },
+    "lying_leg_raise": {
+      "summary": "Bauchübung in Rückenlage: Du hebst die gebeugten Beine an, bis die Oberschenkel ganz zum Rumpf zeigen, und senkst sie wieder.",
+      "setup": [
+        "Leg dich auf den Rücken auf eine Matte.",
+        "Schieb die Hände unter das Gesäß, je eine Hand auf jeder Seite, um das Becken zu stützen."
+      ],
+      "steps": [
+        "Beuge Hüfte und Knie und heb die Beine, bis die Oberschenkel ganz angezogen sind.",
+        "Senk die Beine, bis Hüfte und Knie wieder gestreckt sind.",
+        "Wiederhole gleichmäßig."
+      ],
+      "cues": [
+        "Leichter: Lass die Fersen bei jeder Wiederholung kurz den Boden berühren.",
+        "Schwerer: Fersen nicht absetzen oder die Knie gestreckt lassen.",
+        "Der Bauch arbeitet mehr, wenn sich am Ende auch das Becken leicht einrollt."
+      ],
+      "mistakes": ["Hände liegen nicht unter dem Gesäß und das Becken hat keine Stütze."],
+      "sources": [
+        {
+          "title": "ExRx.net: Lying Leg Raise (on floor)",
+          "url": "https://exrx.net/WeightExercises/HipFlexors/BWLyingLegRaiseFloor"
+        }
+      ],
+      "sourceNote": "Die Quelle ordnet die Übung den Hüftbeugern zu; der Bauch arbeitet vor allem haltend."
+    },
+    "russian_twist": {
+      "summary": "Im Sitz leicht zurückgelehnt drehst du den Oberkörper abwechselnd zu beiden Seiten, auf Wunsch mit Gewicht oder Medizinball.",
+      "setup": [
+        "Setz dich auf den Boden, Hüfte und Knie gebeugt.",
+        "Halte das Gewicht oder den Ball mit beiden Händen.",
+        "Lehn dich etwas zurück und balancier auf dem Gesäß, die gebeugten Beine dienen als Gegengewicht."
+      ],
+      "steps": [
+        "Dreh den Oberkörper zu einer Seite und führ die Arme mit, bis das Gewicht neben der Hüfte den Boden berührt.",
+        "Dreh dich zur anderen Seite und tipp dort ab.",
+        "Wechsle fortlaufend die Seite."
+      ],
+      "cues": [
+        "Die Drehung kommt aus dem Oberkörper, die Arme gehen mit.",
+        "Ohne Bodenkontakt: Arme vor der Brust strecken, parallel zu den Oberschenkeln, und in dieser Ebene zu beiden Seiten drehen."
+      ],
+      "mistakes": ["Nur die Arme schwingen zur Seite, der Oberkörper dreht nicht mit."],
+      "sources": [
+        {
+          "title": "ExRx.net: Medicine Ball Russian Twist",
+          "url": "https://exrx.net/Plyometrics/MBRussianTwist"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Variante mit Medizinball."
+    },
+    "ab_wheel": {
+      "summary": "Kniend rollst du den Bauchroller mit gestreckten Armen nach vorn und ziehst ihn wieder zurück.",
+      "setup": [
+        "Knie dich auf eine Matte.",
+        "Fass die Griffe rechts und links des Rads im Obergriff."
+      ],
+      "steps": [
+        "Roll das Rad mit gestreckten Armen so weit nach vorn, wie du es kontrollieren kannst.",
+        "Zieh das Rad zurück in die Ausgangsposition.",
+        "Wiederhole."
+      ],
+      "cues": [
+        "Lass die Arme während der ganzen Bewegung gestreckt.",
+        "Der Rumpf hält vor allem dagegen und beugt sich kaum.",
+        "Leichter: nur einen Teil des Wegs ausrollen."
+      ],
+      "mistakes": ["Arme beugen sich beim Ausrollen oder Zurückziehen."],
+      "safety": ["Roll nur so weit aus, wie du ohne Hilfe wieder zurückkommst."],
+      "sources": [
+        {
+          "title": "ExRx.net: Wheel Rollout",
+          "url": "https://exrx.net/WeightExercises/HipFlexors/BWKneelingWheelRollout"
+        }
+      ],
+      "sourceNote": "Die Quelle ordnet die Übung den Hüftbeugern zu; der Bauch arbeitet vor allem haltend."
+    },
+    "dead_bug": {
+      "summary": "In Rückenlage mit Armen und Beinen in der Luft senkst du abwechselnd einen Arm und das gegenüberliegende Bein ab.",
+      "setup": [
+        "Leg dich auf den Rücken, Knie gebeugt, Füße auf dem Boden, Arme neben dem Körper.",
+        "Zieh die Schultern nach unten und hinten, ohne ins Hohlkreuz zu gehen oder die Hüfte zu heben.",
+        "Spann den Bauch an, heb dann die Beine (Knie über der Hüfte, 90 Grad gebeugt) und die Arme (Hände Richtung Decke)."
+      ],
+      "steps": [
+        "Senk langsam einen Arm und die gegenüberliegende Ferse Richtung Boden.",
+        "Tipp den Boden nur leicht an, ohne abzulegen.",
+        "Kehr zurück in die Ausgangsposition und wechsle die Seite."
+      ],
+      "cues": [
+        "Halte Becken und Rippen ruhig, während Arm und Bein sich bewegen.",
+        "Beweg dich langsam und kontrolliert.",
+        "Leichter: Hände über dem Kopf und Füße vor dem Gesäß auf dem Boden lassen und von dort je einen Arm und das Gegenbein anheben."
+      ],
+      "mistakes": [
+        "Unterer Rücken geht ins Hohlkreuz.",
+        "Hand und Ferse werden am Boden abgelegt statt nur angetippt."
+      ],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Supine Dead Bug",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/147/supine-dead-bug/"
+        }
+      ]
+    },
+    "bird_dog": {
+      "summary": "Im Vierfüßlerstand streckst du einen Arm nach vorn und das gegenüberliegende Bein nach hinten und hältst den Rücken dabei ruhig.",
+      "setup": [
+        "Geh in den Vierfüßlerstand, Hände unter den Schultern, Knie unter der Hüfte.",
+        "Spann den Bauch an und bring den Rücken in eine neutrale Lage."
+      ],
+      "steps": [
+        "Streck einen Arm gerade neben dem Kopf nach vorn und gleichzeitig das gegenüberliegende Bein nach hinten.",
+        "Heb Arm und Bein etwa bis auf Höhe des Rumpfs, parallel zum Boden.",
+        "Senk beide ab und wechsle die Seite. Mach auf beiden Seiten gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Heb Arm und Bein nur so hoch, wie du den unteren Rücken in seiner Lage halten kannst.",
+        "Beweg dich ruhig und ohne Ruck.",
+        "Prüf vor einem Spiegel, ob Hüfte und Schultern sich mitdrehen."
+      ],
+      "mistakes": [
+        "Hüfte oder Schultern drehen sich zur Seite.",
+        "Unterer Rücken sinkt ins Hohlkreuz.",
+        "Arm und Bein werden ruckartig gehoben."
+      ],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Bird Dog",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/14/bird-dog/"
+        },
+        {
+          "title": "ExRx.net: Bird Dog",
+          "url": "https://exrx.net/WeightExercises/ErectorSpinae/BWBirdDog"
+        },
+        {
+          "title": "ExRx.net: Alternating Bird Dog",
+          "url": "https://exrx.net/WeightExercises/ErectorSpinae/BWAlternatingBirdDog"
+        }
+      ]
+    },
+    "pallof_press": {
+      "summary": "Seitlich zum Kabelzug drückst du den Griff vor der Brust nach vorn und hältst dagegen, dass dich der Zug zur Seite dreht.",
+      "setup": [
+        "Stell dich seitlich zum Kabelzug und halte den Griff mit beiden Händen auf Brusthöhe.",
+        "Wähl ein leichtes Gewicht und geh seitlich vom Gerät weg, bis das Kabel leicht gespannt ist."
+      ],
+      "steps": [
+        "Drück den Griff mit gestreckten Armen von der Brust nach vorn.",
+        "Halte die Arme 2–3 s gestreckt, ohne dass sich der Oberkörper zum Gerät dreht.",
+        "Zieh die Ellbogen langsam zurück an die Seiten.",
+        "Wechsle danach die Seite. Mach auf beiden Seiten gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Rücken gerade und aufrecht.",
+        "Der Rumpf hält gegen die Drehung, er bewegt sich nicht.",
+        "Leichter: die Arme nur gestreckt halten, statt zu drücken."
+      ],
+      "mistakes": ["Oberkörper dreht sich zum Gerät hin."],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Standing Anti-Rotation Press",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/332/standing-anti-rotation-press/"
+        },
+        {
+          "title": "ACE: 5 Core Exercises to Improve Balance",
+          "url": "https://www.acefitness.org/resources/pros/expert-articles/6474/5-core-exercises-to-improve-balance/"
+        }
+      ],
+      "sourceNote": "Quelle ist die ACE-Übung zum Drücken gegen die Drehung; die Haltezeit stammt aus einer Zusammenfassung der Suche und ist nicht eigens bestätigt."
+    },
+    "bicycle_crunch": {
+      "summary": "In Rückenlage ziehst du abwechselnd ein Knie zur Brust und drehst den Ellbogen der Gegenseite dazu, das andere Bein streckt sich.",
+      "setup": [
+        "Leg dich auf den Rücken, Knie gebeugt, Füße auf dem Boden, Hände hinter dem Kopf.",
+        "Spann den Bauch an und zieh die Schulterblätter nach unten und hinten.",
+        "Heb beide Füße an, bis die Oberschenkel etwa 90 Grad zum Boden stehen."
+      ],
+      "steps": [
+        "Atme aus, zieh ein Knie zur Brust und streck das andere Bein, ohne dass es den Boden berührt.",
+        "Roll den Oberkörper ein, heb das Schulterblatt an und dreh den Ellbogen zum gegenüberliegenden Knie.",
+        "Halte oben 1–2 s, kehr langsam zurück und wechsle die Seite."
+      ],
+      "cues": [
+        "Die Drehung kommt aus dem Rumpf, nicht aus der Hüfte.",
+        "Lass den unteren Rücken auf der Matte.",
+        "Stütz den Kopf nur mit den Händen, Kopf in Linie mit dem oberen Rücken."
+      ],
+      "mistakes": [
+        "Hände ziehen am Kopf.",
+        "Beine strampeln schnell, die Schulterblätter heben kaum ab."
+      ],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Supine Bicycle Crunches",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/241/supine-bicycle-crunches/"
+        }
+      ]
+    },
+    "hip_thrust_machine": {
+      "summary": "Hüftstrecken an der Hip-Thrust-Maschine: Du liegst mit gebeugten Knien, das Polster liegt über der Hüfte, und du drückst die Hüfte nach oben.",
+      "setup": [
+        "Leg dich mit gebeugten Knien auf das Gerät, die Füße schulterbreit oder etwas enger auf der Fußplatte.",
+        "Richte das Polster knapp unterhalb der Hüftknochen aus und zieh den Gurt eng, falls es einen gibt."
+      ],
+      "steps": [
+        "Drück die Hüfte nach oben, bis sie ganz gestreckt ist.",
+        "Senk das Gewicht kontrolliert ab.",
+        "Wiederhole die Bewegung."
+      ],
+      "cues": [
+        "Wähl ein Gewicht, mit dem du die Hüfte oben vollständig strecken kannst.",
+        "Beweg dich aus der Hüfte und halte den Oberkörper fest, statt die Brust nach oben zu wölben."
+      ],
+      "mistakes": [
+        "Hüfte wird oben nicht ganz gestreckt, weil das Gewicht zu schwer ist.",
+        "Brust wölbt sich nach oben oder das Becken kippt nach vorn, sodass der Rücken ins Hohlkreuz geht."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Hip Thrust",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/LVHipThrustPL"
+        },
+        {
+          "title": "ExRx.net: Barbell Hip Thrust",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/BBHipThrust"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt eine Maschine mit Scheiben; Hinweise zum Oberkörper aus der Seite zur Langhantel."
+    },
+    "glute_bridge": {
+      "summary": "Hüftheben in Rückenlage: Du liegst mit aufgestellten Füßen und hebst die Hüfte aus dem Gesäß an.",
+      "setup": [
+        "Leg dich auf den Rücken, auf eine Matte oder den Boden.",
+        "Stell die Füße hüftbreit und flach auf, die Knie sind gebeugt.",
+        "Spann den Bauch leicht an."
+      ],
+      "steps": [
+        "Spann das Gesäß an und drück die Hüfte vom Boden nach oben.",
+        "Drück dabei die Fersen in den Boden, das gibt dir Halt.",
+        "Senk die Hüfte kontrolliert wieder ab."
+      ],
+      "cues": [
+        "Halte den Bauch während der ganzen Bewegung angespannt.",
+        "Heb die Hüfte nur so weit, wie du es ohne Hohlkreuz schaffst."
+      ],
+      "mistakes": ["Hüfte wird zu hoch gedrückt, der untere Rücken geht ins Hohlkreuz."],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Glute Bridge",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/49/glute-bridge/"
+        }
+      ],
+      "sourceNote": "Der Schritt zum Absenken ist sinngemäß ergänzt."
+    },
+    "cable_kickback": {
+      "summary": "Einbeiniges Rückwärtsstrecken am unteren Kabelzug: Du lehnst dich vor und drückst das Bein mit Hüfte und Knie nach hinten.",
+      "setup": [
+        "Leg die Fußmanschette an und häng sie am unteren Kabelzug ein.",
+        "Halt dich mit beiden Händen an einer Stange fest und tritt mit dem anderen Fuß weit zurück.",
+        "Die Arme sind gestreckt, der Oberkörper neigt sich nach vorn; das Bein mit Manschette ist in Hüfte und Knie gebeugt."
+      ],
+      "steps": [
+        "Zieh das Kabel nach hinten, indem du Hüfte und Knie streckst.",
+        "Führ das Bein kontrolliert in die Ausgangsposition zurück.",
+        "Mach alle Wiederholungen und wechsle dann das Bein; beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Oberkörper ruhig, damit er dem einseitigen Zug nicht nachgibt.",
+        "Beweg das Bein langsam, auch auf dem Rückweg."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Glute Kickback",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/CBGluteKickback"
+        }
+      ]
+    },
+    "step_up_dumbbell": {
+      "summary": "Aufsteigen auf eine Bank mit Kurzhanteln in den Händen: Du steigst mit einem Bein hinauf und kontrolliert wieder hinunter.",
+      "setup": [
+        "Stell dich mit einer Kurzhantel in jeder Hand vor die Längsseite einer Bank, die Arme hängen seitlich."
+      ],
+      "steps": [
+        "Stell den Fuß des ersten Beins auf die Bank.",
+        "Streck Hüfte und Knie dieses Beins, steig hinauf und stell den zweiten Fuß dazu.",
+        "Steig mit dem zweiten Bein wieder hinunter, indem du das erste Bein in Hüfte und Knie beugst.",
+        "Stell den ersten Fuß zurück auf den Boden und beginn den nächsten Schritt mit dem anderen Bein; beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Oberkörper aufrecht.",
+        "Das Knie des führenden Beins zeigt immer in dieselbe Richtung wie der Fuß.",
+        "Stehst du weiter von der Bank weg, arbeitet das Gesäß mehr; stehst du näher, die Oberschenkel vorne."
+      ],
+      "mistakes": [
+        "Knie des führenden Beins knickt nach innen ab.",
+        "Oberkörper kippt beim Aufsteigen nach vorn."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Step-up",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/DBStepUp"
+        },
+        {
+          "title": "ExRx.net: Step-up",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/BWStepUp"
+        }
+      ]
+    },
+    "sumo_deadlift": {
+      "summary": "Kreuzheben mit sehr breitem Stand: Du greifst die Langhantel zwischen den Beinen und hebst sie mit Beinen und Hüfte bis in den aufrechten Stand.",
+      "setup": [
+        "Stell die Füße sehr breit unter die Stange.",
+        "Geh in die Hocke und greif die Stange zwischen den Beinen schulterbreit, zum Beispiel im Kreuzgriff.",
+        "Halte die Brust oben, die Hüfte tief und den Rücken gerade."
+      ],
+      "steps": [
+        "Zieh die Stange hoch, indem du die Füße nach außen drückst und die Brust anhebst.",
+        "Streck die Knie, sobald die Stange an ihnen vorbei ist.",
+        "Wenn der Oberkörper aufrecht ist, nimm die Schultern zurück und die Brust hoch.",
+        "Bring die Stange zurück zum Boden: Hüfte nach hinten, Knie zeigen nach außen."
+      ],
+      "cues": [
+        "Drück die Füße zur Seite und nicht nur nach unten, damit die Knie nicht nach innen fallen.",
+        "Schieb die Knie nach außen, so kommt die Hüfte schneller zur Stange.",
+        "Führ die Stange nah am Körper."
+      ],
+      "mistakes": [
+        "Knie fallen beim Hochziehen nach innen.",
+        "Stange entfernt sich vom Körper.",
+        "Griff ist enger als schulterbreit, das erschwert das Aufrichten oben."
+      ],
+      "safety": [
+        "Setz die Stange bei jeder Wiederholung ganz auf dem Boden ab, statt sie nur anzutippen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Sumo Deadlift",
+          "url": "https://exrx.net/WeightExercises/ErectorSpinae/BBSumoDeadlift"
+        },
+        {
+          "title": "ExRx.net: Deadlift Variations",
+          "url": "https://exrx.net/Kinesiology/DeadliftVariations"
+        }
+      ]
+    },
+    "reverse_lunge_dumbbell": {
+      "summary": "Ausfallschritt nach hinten mit Kurzhanteln: Du trittst zurück, senkst dich ab und drückst dich über das vordere Bein wieder hoch.",
+      "setup": [
+        "Stell dich aufrecht hin, in jeder Hand eine Kurzhantel, die Arme hängen seitlich."
+      ],
+      "steps": [
+        "Tritt mit einem Bein nach hinten und beug dabei das vordere Bein.",
+        "Setz den hinteren Fuß mit dem Ballen weit hinten auf.",
+        "Senk dich ab, bis das hintere Knie fast den Boden berührt.",
+        "Streck Hüfte und Knie des vorderen Beins und hol das hintere Bein wieder heran; wechsle die Seite, beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halte den Oberkörper aufrecht.",
+        "Das vordere Knie zeigt immer in dieselbe Richtung wie der Fuß.",
+        "Ein langer Schritt nach hinten betont das Gesäß, ein kurzer die Oberschenkel vorne."
+      ],
+      "mistakes": ["Vorderes Knie knickt nach innen ab.", "Oberkörper kippt nach vorn."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Rear Lunge",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/DBRearLunge"
+        }
+      ]
+    },
+    "hip_thrust_dumbbell": {
+      "summary": "Hip Thrust mit dem oberen Rücken auf der Bank und Kurzhanteln auf der Hüfte: Du senkst das Becken ab und drückst es wieder hoch.",
+      "setup": [
+        "Leg den oberen Rücken und die Schultern quer auf eine flache Bank.",
+        "Stell die Füße hüftbreit auf den Boden, die Knie sind gebeugt.",
+        "Leg die Kurzhantel auf die Hüfte und halt sie mit den Händen fest."
+      ],
+      "steps": [
+        "Senk das Becken kontrolliert Richtung Boden.",
+        "Drück beide Füße in den Boden und spann das Gesäß an, bis die Hüfte gestreckt ist.",
+        "Senk das Becken wieder ab und wiederhole."
+      ],
+      "cues": [
+        "Beweg dich aus der Hüfte und halte den Oberkörper fest.",
+        "Wölb die Brust oben nicht nach oben und kipp das Becken nicht nach vorn."
+      ],
+      "mistakes": ["Rücken geht oben ins Hohlkreuz, weil Brust oder Becken nachgeben."],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Elevated Glute Bridge",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/367/elevated-glute-bridge/"
+        },
+        {
+          "title": "ExRx.net: Barbell Hip Thrust",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/BBHipThrust"
+        }
+      ],
+      "sourceNote": "Gestützt auf die erhöhte Gesäßbrücke von ACE und die Seite zur Langhantel."
+    },
+    "back_squat_barbell": {
+      "summary": "Kniebeuge mit der Langhantel auf dem oberen Rücken: Du schiebst die Hüfte zurück, gehst bis knapp unter die Waagerechte und richtest dich wieder auf.",
+      "setup": [
+        "Stell die Ablage etwa auf Höhe der oberen Brust ein.",
+        "Leg die Stange hinten auf die Schultern, greif sie seitlich und heb sie aus der Ablage.",
+        "Tritt zurück und stell die Füße schulterbreit."
+      ],
+      "steps": [
+        "Schieb die Hüfte nach hinten und lass die Knie nach vorn gehen, der Rücken bleibt gerade.",
+        "Geh tief, bis die Oberschenkel knapp unter der Waagerechten sind.",
+        "Streck Knie und Hüfte und richte dich wieder auf."
+      ],
+      "cues": [
+        "Blick nach vorn, Rücken gerade.",
+        "Verteil das Gewicht gleichmäßig auf Vorfuß und Ferse, die Füße bleiben flach.",
+        "Die Knie zeigen immer in dieselbe Richtung wie die Füße."
+      ],
+      "mistakes": [
+        "Knie knicken nach innen ab.",
+        "Gewicht wandert ganz auf die Zehen oder die Fersen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Squat",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/BBSquat"
+        }
+      ]
+    },
+    "front_squat_barbell": {
+      "summary": "Kniebeuge mit der Langhantel vorn auf den Schultern: Du hältst die Stange mit gekreuzten Armen und gehst bis knapp unter die Waagerechte.",
+      "setup": [
+        "Leg die Stange in der Ablage vorn auf die Schultern.",
+        "Kreuz die Arme und leg die Hände oben auf die Stange, die Oberarme sind waagerecht.",
+        "Heb die Stange aus der Ablage und tritt zurück."
+      ],
+      "steps": [
+        "Schieb die Hüfte nach hinten und lass die Knie nach vorn gehen, der Rücken bleibt gerade.",
+        "Geh tief, bis die Oberschenkel knapp unter der Waagerechten sind.",
+        "Streck Knie und Hüfte wieder ganz."
+      ],
+      "cues": [
+        "Blick nach vorn, Rücken gerade, Füße flach auf dem Boden.",
+        "Verteil das Gewicht gleichmäßig auf Vorfuß und Ferse.",
+        "Die Knie zeigen immer in dieselbe Richtung wie die Füße."
+      ],
+      "mistakes": [
+        "Oberarme sinken ab, die Stange rutscht nach vorn.",
+        "Knie knicken nach innen ab."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Front Squat",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/BBFrontSquat"
+        }
+      ]
+    },
+    "goblet_squat": {
+      "summary": "Kniebeuge mit einem Gewicht vor der Brust: Du hältst Kettlebell oder Kurzhantel mit beiden Händen und gehst bis knapp unter die Waagerechte.",
+      "setup": [
+        "Stell die Füße schulterbreit oder etwas weiter.",
+        "Halt die Kettlebell an den Griffseiten oder die Kurzhantel mit beiden Händen vor der Brust."
+      ],
+      "steps": [
+        "Schieb die Hüfte nach hinten und lass die Knie nach vorn gehen, der Rücken bleibt gerade.",
+        "Geh tief, bis die Oberschenkel knapp unter der Waagerechten sind.",
+        "Streck Knie und Hüfte und richte dich wieder auf."
+      ],
+      "cues": [
+        "Blick nach vorn, Brust hoch, Rücken gerade.",
+        "Füße flach, Gewicht gleichmäßig auf Vorfuß und Ferse.",
+        "Die Knie zeigen immer in dieselbe Richtung wie die Füße."
+      ],
+      "mistakes": ["Brust sinkt nach vorn ab.", "Knie knicken nach innen ab."],
+      "sources": [
+        {
+          "title": "ExRx.net: Kettlebell Goblet Squat",
+          "url": "https://exrx.net/WeightExercises/Kettlebell/KBGobletSquat"
+        },
+        {
+          "title": "ExRx.net: Dumbbell Squat",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/DBSquat"
+        }
+      ],
+      "sourceNote": "Ablauf aus der Seite zur Kniebeuge mit Kurzhanteln, weil die Seite zum Goblet Squat keinen Ablauf beschreibt."
+    },
+    "squat_smith": {
+      "summary": "Kniebeuge an der Multipresse: Die Stange läuft in einer festen Führung, du gehst bis knapp unter die Waagerechte und richtest dich wieder auf.",
+      "setup": [
+        "Stell die Stange etwa auf Höhe der oberen Brust ein.",
+        "Leg sie hinten auf die Schultern und greif sie seitlich.",
+        "Stell die Füße unter die Stange und dreh sie aus den Haken."
+      ],
+      "steps": [
+        "Schieb die Hüfte nach hinten und lass die Knie nach vorn gehen, der Rücken bleibt gerade.",
+        "Geh tief, bis die Oberschenkel knapp unter der Waagerechten sind.",
+        "Streck Knie und Hüfte und richte dich wieder auf."
+      ],
+      "cues": [
+        "Blick nach vorn, Rücken gerade.",
+        "Füße flach, Gewicht gleichmäßig auf Vorfuß und Ferse.",
+        "Die Knie zeigen immer in dieselbe Richtung wie die Füße."
+      ],
+      "mistakes": ["Fersen heben vom Boden ab.", "Knie knicken nach innen ab."],
+      "safety": [
+        "Dreh die Stange nach dem letzten Wiederholen wieder in die Haken, bevor du loslässt."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Smith Squat",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/SMSquat"
+        },
+        {
+          "title": "ExRx.net: Author's Analysis of Smith Squat",
+          "url": "https://exrx.net/Kinesiology/SmithSquat1"
+        }
+      ],
+      "sourceNote": "Hinweis zum Einhängen der Stange aus der Beschreibung des Aushakens abgeleitet."
+    },
+    "leg_extension": {
+      "summary": "Isolationsübung an der Maschine: Du streckst im Sitzen die Knie gegen den Widerstand des Polsterhebels.",
+      "setup": [
+        "Setz dich mit dem Rücken an die Rückenlehne.",
+        "Leg die Vorderseite der Unterschenkel unter das Polster des Hebels.",
+        "Stell die Maschine so ein, dass dein Kniegelenk auf Höhe der Drehachse des Hebels liegt. Halt dich an den seitlichen Griffen fest."
+      ],
+      "steps": [
+        "Streck die Knie und drück den Hebel nach vorn und oben, bis die Beine gerade sind.",
+        "Beug die Knie und führ den Hebel zurück in die Ausgangsposition.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Nutz den vollen Bewegungsumfang bis zu gestreckten Beinen.",
+        "Senk den Hebel kontrolliert ab, statt ihn fallen zu lassen.",
+        "Halt dich bei schwerem Gewicht an den Griffen fest, damit dein Körper im Sitz bleibt."
+      ],
+      "mistakes": [
+        "Gesäß hebt bei schwerem Gewicht vom Sitz ab.",
+        "Kniegelenk liegt nicht auf Höhe der Drehachse."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Leg Extension",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/LVLegExtension"
+        }
+      ]
+    },
+    "wall_sit": {
+      "summary": "Haltende Übung: Du sitzt mit dem Rücken an der Wand in der Hocke und hältst die Position über eine feste Zeit.",
+      "setup": [
+        "Stell dich mit flachem Rücken an eine Wand.",
+        "Setz die Füße etwa 60 cm nach vorn, hüft- bis schulterbreit."
+      ],
+      "steps": [
+        "Rutsch mit dem Rücken an der Wand nach unten, bis Hüfte, Knie und Sprunggelenke jeweils etwa 90 Grad bilden.",
+        "Halt die Position für die geplante Zeit. Der Rücken bleibt an der Wand.",
+        "Drück dich zum Schluss über die Füße zurück in den Stand."
+      ],
+      "cues": [
+        "Spann den Bauch an.",
+        "Halt die Knie in einer Linie über den Zehen.",
+        "Ist 90 Grad zu schwer, bleib mit der Hüfte etwas höher und geh mit der Zeit tiefer."
+      ],
+      "mistakes": [
+        "Knie weichen von der Linie über den Zehen ab.",
+        "Rücken löst sich von der Wand."
+      ],
+      "sources": [
+        {
+          "title": "NASM: Wall Sits – How Trainers Can Program This Isometric Staple",
+          "url": "https://www.nasm.org/resource-center/blog/training/wall-sits"
+        }
+      ],
+      "sourceNote": "Einzige Quelle ist ein Fachartikel von NASM; ExRx und ACE haben keinen Eintrag."
+    },
+    "leg_press_single_leg": {
+      "summary": "Beinpresse mit einem Bein: Du senkst den Schlitten durch Beugen von Knie und Hüfte ab und drückst ihn mit einem Bein wieder hoch.",
+      "setup": [
+        "Setz dich mit dem Rücken an das Polster. Stell einen Fuß auf die Plattform, den anderen darunter auf den Boden.",
+        "Streck Hüfte und Knie des Arbeitsbeins und löse dann die Sicherungshebel.",
+        "Stell Rückenlehne und Sicherung so ein, dass du fast den vollen Umfang erreichst, ohne dass das Becken einrollt."
+      ],
+      "steps": [
+        "Senk den Schlitten, bis das Knie fast ganz gebeugt ist.",
+        "Drück den Schlitten durch Strecken von Knie und Hüfte wieder nach oben.",
+        "Mach alle Wiederholungen und wechsle dann das Bein. Beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Führ das Knie in einer Linie mit dem Fuß.",
+        "Lass die Ferse unten und drück über Ferse und Vorfuß.",
+        "Senk den Schlitten kontrolliert ab."
+      ],
+      "mistakes": [
+        "Becken rollt unten ein und hebt vom Polster ab.",
+        "Ferse hebt von der Plattform ab.",
+        "Knie weicht von der Linie über dem Fuß ab."
+      ],
+      "safety": [
+        "Leg die Sicherungshebel in gestreckter Position wieder ein, bevor du aussteigst."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Sled Single Leg 45° Leg Press",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/SLSingleLeg45LegPress"
+        }
+      ]
+    },
+    "romanian_deadlift_barbell": {
+      "summary": "Hüftbeuge mit Langhantel: Du schiebst die Hüfte nach hinten, senkst die Stange an den Beinen entlang ab und richtest dich wieder auf.",
+      "setup": [
+        "Nimm die Stange aus dem Ständer oder heb sie vom Boden auf. Greif im Obergriff schulterbreit bis etwas weiter.",
+        "Stell die Füße schulterbreit oder enger. Die Knie sind leicht gebeugt, der Rücken ist gerade.",
+        "Heb die Brust und zieh die Schulterblätter nach unten Richtung Gesäßtaschen."
+      ],
+      "steps": [
+        "Schieb die Hüfte nach hinten und senk die Stange an der Vorderseite der Beine entlang Richtung Füße.",
+        "Beug die Knie dabei nur so weit, dass du eine Dehnung hinten im Oberschenkel spürst. Der Rücken bleibt lang.",
+        "Ist die Dehnung erreicht, kurz bevor die Stange den Boden berührt, streck Hüfte und Knie, bis du aufrecht stehst."
+      ],
+      "cues": [
+        "Halt die Stange nah am Körper.",
+        "Halt das Kinn leicht eingezogen und schau Richtung Boden.",
+        "Der Bewegungsumfang endet dort, wo du den Rücken noch gerade halten kannst."
+      ],
+      "mistakes": [
+        "Rücken rundet sich beim Absenken.",
+        "Knie werden beim Absenken ganz durchgestreckt.",
+        "Stange entfernt sich von den Beinen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Romanian Deadlift",
+          "url": "https://exrx.net/WeightExercises/OlympicLifts/RomanianDeadlift"
+        },
+        {
+          "title": "ACE Exercise Library: Romanian Deadlift",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/317/romanian-deadlift/"
+        },
+        {
+          "title": "ACE: The ACE Do it Better Series – The Romanian Deadlift",
+          "url": "https://www.acefitness.org/continuing-education/certified/may-2025/8865/the-ace-do-it-better-series-the-romanian-deadlift/"
+        }
+      ]
+    },
+    "romanian_deadlift_dumbbell": {
+      "summary": "Hüftbeuge mit zwei Kurzhanteln: Du schiebst die Hüfte nach hinten, senkst die Hanteln an den Beinen entlang ab und richtest dich auf.",
+      "setup": [
+        "Halt in jeder Hand eine Kurzhantel vor den Oberschenkeln.",
+        "Stell die Füße etwa hüftbreit. Die Knie sind leicht gebeugt, der Rücken ist gerade."
+      ],
+      "steps": [
+        "Schieb die Hüfte nach hinten und senk die Hanteln an der Vorderseite der Beine ab.",
+        "Geh nur so tief, bis du eine Dehnung hinten im Oberschenkel spürst und der Rücken lang bleibt.",
+        "Streck Hüfte und Knie, bis du wieder aufrecht stehst."
+      ],
+      "cues": [
+        "Halt die Knie die ganze Zeit leicht gebeugt.",
+        "Halt das Kinn leicht eingezogen und schau Richtung Boden.",
+        "Senk die Hanteln langsam und kontrolliert ab."
+      ],
+      "mistakes": [
+        "Rücken rundet sich beim Absenken.",
+        "Knie werden beim Absenken ganz durchgestreckt."
+      ],
+      "sources": [
+        {
+          "title": "ACE: ACE Technique Series – Romanian Deadlift",
+          "url": "https://www.acefitness.org/continuing-education/prosource/january-2016/5767/ace-technique-series-romanian-deadlift/"
+        },
+        {
+          "title": "ExRx.net: Romanian Deadlift (Langhantel, nahe Variante)",
+          "url": "https://exrx.net/WeightExercises/OlympicLifts/RomanianDeadlift"
+        }
+      ],
+      "sourceNote": "Gestützt auf einen ACE-Technikartikel, der Kurzhanteln erlaubt, und die Seite zur Langhantel."
+    },
+    "single_leg_rdl_dumbbell": {
+      "summary": "Einbeinige Hüftbeuge: Du neigst den Oberkörper nach vorn, während das freie Bein gestreckt nach hinten geht, und richtest dich wieder auf.",
+      "setup": [
+        "Halt die Kurzhantel – oder je eine in jeder Hand – und stell die Füße zusammen.",
+        "Heb ein Bein so weit an, dass der Fuß knapp über dem Boden ist."
+      ],
+      "steps": [
+        "Senk die Hantel Richtung Boden und führ das freie Bein dabei nach hinten.",
+        "Halt das Standknie leicht gebeugt, Hüfte und Knie des freien Beins bleiben gestreckt.",
+        "Spürst du eine leichte Dehnung hinten im Oberschenkel, richte den Oberkörper auf und senk das freie Bein wieder ab.",
+        "Mach alle Wiederholungen und wechsle dann die Seite. Beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halt Arme und Rücken gerade.",
+        "Geh nur bis zu einer leichten Dehnung hinten im Oberschenkel. Wie weit das ist, ist bei jedem verschieden.",
+        "Du darfst zwischen den Wiederholungen oben kurz mit dem freien Fuß den Boden berühren, um das Gleichgewicht zu halten."
+      ],
+      "mistakes": [
+        "Rücken rundet sich beim Absenken.",
+        "Absenken über eine leichte Dehnung hinaus."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Single Leg Stiff-leg Deadlift",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/DBSingleLegStiffLegDeadlift"
+        }
+      ],
+      "sourceNote": "Quelle arbeitet mit je einer Hantel pro Hand; der Text deckt eine oder zwei Hanteln ab."
+    },
+    "lying_leg_curl": {
+      "summary": "Isolationsübung an der Maschine: Du liegst auf dem Bauch und ziehst das Polster durch Beugen der Knie nach oben.",
+      "setup": [
+        "Stell dich mit dem Gesicht zur Bank zwischen Bank und Hebelpolster.",
+        "Leg dich bäuchlings auf die Bank. Die Knie liegen knapp über der Bankkante, die Unterschenkel unter dem Polster."
+      ],
+      "steps": [
+        "Beug die Knie und zieh das Polster nach oben.",
+        "Senk das Polster ab, bis die Knie wieder gestreckt sind.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Halt den Oberkörper auf der Bank.",
+        "Senk das Polster kontrolliert bis zu gestreckten Knien ab."
+      ],
+      "mistakes": ["Oberkörper hebt von der Bank ab und der untere Rücken überstreckt."],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Lying Leg Curl",
+          "url": "https://exrx.net/WeightExercises/Hamstrings/LVLyingLegCurl"
+        }
+      ]
+    },
+    "seated_leg_curl": {
+      "summary": "Isolationsübung an der Maschine: Du sitzt und ziehst das Polster durch Beugen der Knie unter dich.",
+      "setup": [
+        "Stell den Sitz so ein, dass deine Knie auf Höhe der Drehachse des Hebels liegen.",
+        "Setz dich mit dem Rücken an die Lehne. Leg die Rückseite der Unterschenkel auf das Polster, knapp über den Knöcheln.",
+        "Fixier die Oberschenkel mit dem Oberschenkelpolster und greif die Griffe."
+      ],
+      "steps": [
+        "Beug die Knie und zieh den Hebel Richtung Rückseite der Oberschenkel.",
+        "Führ den Hebel zurück, bis die Knie gestreckt sind.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Zieh die Fußspitzen zu dir. So arbeitet die Wade bei der Kniebeugung mit.",
+        "Führ den Hebel kontrolliert zurück bis zu gestreckten Knien."
+      ],
+      "mistakes": [
+        "Knie liegen nicht auf Höhe der Drehachse.",
+        "Polster sitzt nicht knapp über den Knöcheln."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Seated Leg Curl",
+          "url": "https://exrx.net/WeightExercises/Hamstrings/LVSeatedLegCurl"
+        }
+      ]
+    },
+    "good_morning": {
+      "summary": "Hüftbeuge mit Langhantel im Nacken: Du neigst den Oberkörper aus der Hüfte nach vorn und richtest dich wieder auf.",
+      "setup": [
+        "Leg die Langhantel hinten auf die Schultern und greif sie seitlich.",
+        "Stell dich aufrecht hin, Rücken und Knie gerade."
+      ],
+      "steps": [
+        "Beug dich in der Hüfte nach vorn, bis der Oberkörper etwa parallel zum Boden ist.",
+        "Richte dich auf, bis die Hüfte ganz gestreckt ist.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Halt Rücken und Knie gerade.",
+        "Geh nur bis zu einer leichten Dehnung hinten im Oberschenkel. Wie weit das ist, hängt von deiner Beweglichkeit ab.",
+        "Beginn mit sehr wenig Gewicht und steiger es schrittweise."
+      ],
+      "mistakes": [
+        "Rücken rundet sich beim Vorbeugen.",
+        "Absenken über eine leichte Dehnung hinaus."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Good-morning",
+          "url": "https://exrx.net/WeightExercises/Hamstrings/BBGoodMorning"
+        }
+      ],
+      "sourceNote": "Folgt der Variante mit gestreckten Knien."
+    },
+    "nordic_curl": {
+      "summary": "Kniende Übung mit fixierten Füßen: Du senkst den aufrechten Körper langsam nach vorn ab und kommst mit wenig Hilfe der Hände zurück.",
+      "setup": [
+        "Knie auf ein dickes, festes Polster. Fixier die Knöchel unter einer Stange oder einem Polster.",
+        "Die Stange ist nur so hoch, dass die Knöchel darunter passen und die Zehen auf dem Boden stehen.",
+        "Richte dich auf, die Hüfte ist gestreckt."
+      ],
+      "steps": [
+        "Streck die Knie langsam und senk den Körper nach vorn ab, so weit du es mit der Oberschenkelrückseite kontrollieren kannst.",
+        "Beginnst du zu fallen, fang dich mit den Händen ab und senk dich mit Hilfe der Arme bis zum Boden ab.",
+        "Drück dich mit den Händen ab und zieh dich mit der Oberschenkelrückseite zurück in die aufrechte Position."
+      ],
+      "cues": [
+        "Halt die Hüfte während der Bewegung gestreckt.",
+        "Senk dich langsam ab.",
+        "Drück dich nur so stark mit den Händen ab, wie du unbedingt brauchst."
+      ],
+      "mistakes": ["Hände übernehmen beim Aufrichten den größten Teil der Arbeit."],
+      "sources": [
+        {
+          "title": "ExRx.net: Self-assisted Inverse Leg Curl (on floor)",
+          "url": "https://exrx.net/WeightExercises/Hamstrings/ASHamstringRaiseSelfFloor"
+        }
+      ],
+      "sourceNote": "Quelle führt die Übung als „Inverse Leg Curl“; beschrieben ist die Variante am Boden mit Abfangen."
+    },
+    "standing_calf_raise": {
+      "summary": "Wadenübung an der Maschine: Du stehst mit den Schultern unter den Polstern und hebst und senkst die Fersen.",
+      "setup": [
+        "Stell dich mit den Schultern unter die Polster des Hebels.",
+        "Stell dich mit den Vorfüßen auf den Block, sodass die Fersen frei sind."
+      ],
+      "steps": [
+        "Heb die Fersen so hoch wie möglich, indem du die Sprunggelenke streckst.",
+        "Senk die Fersen ab, bis du eine Dehnung in der Wade spürst.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Halt die Knie gerade. Beug sie höchstens leicht in der Dehnung.",
+        "Nutz den vollen Weg von der Dehnung bis ganz nach oben.",
+        "Senk die Fersen kontrolliert ab."
+      ],
+      "mistakes": ["Knie beugen sich und die Beine drücken mit."],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Standing Calf Raise",
+          "url": "https://exrx.net/WeightExercises/Gastrocnemius/LVStandingCalfRaise"
+        }
+      ]
+    },
+    "seated_calf_raise": {
+      "summary": "Wadenübung im Sitzen: Die Oberschenkel liegen unter dem Polster, du hebst und senkst die Fersen.",
+      "setup": [
+        "Setz dich mit dem Gesicht zum Hebel auf den Sitz.",
+        "Stell die Vorfüße auf die Plattform, die Fersen stehen über. Schieb die unteren Oberschenkel unter die Polster.",
+        "Leg die Hände auf die Polster und löse den Sicherungshebel."
+      ],
+      "steps": [
+        "Heb die Fersen so hoch wie möglich, indem du die Sprunggelenke streckst.",
+        "Senk die Fersen ab, bis du eine Dehnung in der Wade spürst.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Nutz den vollen Weg von der Dehnung bis ganz nach oben.",
+        "Senk die Fersen kontrolliert ab."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Seated Calf Raise",
+          "url": "https://exrx.net/WeightExercises/Soleus/LVSeatedCalfRaise"
+        }
+      ]
+    },
+    "calf_press_leg_press": {
+      "summary": "Wadenübung an der 45-Grad-Beinpresse: Du drückst die Plattform nur durch Strecken der Sprunggelenke weg.",
+      "setup": [
+        "Setz dich mit dem Rücken an das Polster der Beinpresse.",
+        "Stell die Füße so auf die Plattform, dass du die Fersen absenken kannst. Die Beine sind gestreckt."
+      ],
+      "steps": [
+        "Drück die Plattform weg, indem du die Sprunggelenke so weit wie möglich streckst.",
+        "Beug die Sprunggelenke wieder, bis du eine Dehnung in der Wade spürst.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Halt die Knie gerade. Beug sie höchstens leicht in der Dehnung.",
+        "Bewege nur die Sprunggelenke, kontrolliert und über den vollen Weg."
+      ],
+      "mistakes": ["Knie beugen sich und die Beine drücken mit."],
+      "safety": ["Rutschen die Füße, setz sie neu auf, bevor du weitermachst."],
+      "sources": [
+        {
+          "title": "ExRx.net: Sled 45° Calf Press",
+          "url": "https://exrx.net/WeightExercises/Gastrocnemius/SL45CalfPress"
+        }
+      ]
+    },
+    "hip_adduction_machine": {
+      "summary": "Isolationsübung an der Maschine: Du führst im Sitzen die geöffneten Beine gegen Widerstand zusammen.",
+      "setup": [
+        "Setz dich in die Maschine und leg die Beine an die Polster.",
+        "Stell den Hebel so ein, dass die Beine mit einer leichten Dehnung geöffnet sind, und arretier ihn."
+      ],
+      "steps": [
+        "Führ die Beine zusammen.",
+        "Lass sie kontrolliert zurück in die geöffnete Ausgangsposition gehen.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Öffne die Beine in der Ausgangsposition nur bis zu einer leichten Dehnung.",
+        "Führ die Beine langsam und kontrolliert zurück."
+      ],
+      "mistakes": ["Beine schnellen in die geöffnete Position zurück."],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Seated Hip Adduction",
+          "url": "https://exrx.net/WeightExercises/HipAdductors/LVSeatedHipAdduction"
+        }
+      ]
+    },
+    "hip_abduction_machine": {
+      "summary": "Isolationsübung an der Maschine: Du drückst im Sitzen die Beine gegen die seitlichen Polster auseinander.",
+      "setup": ["Setz dich in die Maschine, die Beine liegen innen an den seitlichen Polstern."],
+      "steps": [
+        "Drück die Beine so weit wie möglich auseinander.",
+        "Führ sie zurück in die Ausgangsposition.",
+        "Wiederhol die Bewegung."
+      ],
+      "cues": [
+        "Nutz den vollen Weg, so weit du die Beine öffnen kannst.",
+        "Führ die Beine kontrolliert zurück."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Seated Hip Abduction",
+          "url": "https://exrx.net/WeightExercises/HipAbductor/LVSeatedHipAbduction"
+        }
+      ]
+    },
+    "calf_raise_dumbbell": {
+      "summary": "Stehend auf einer Erhöhung: Du drückst dich mit Zusatzgewicht auf die Zehenspitzen und senkst die Fersen danach kontrolliert ab.",
+      "setup": [
+        "Stell dich mit den Fußballen auf einen Wadenblock oder eine Stufe, die Fersen ragen über die Kante.",
+        "Halte eine Kurzhantel in einer Hand und stütz dich mit der freien Hand an einer festen Halterung ab."
+      ],
+      "steps": [
+        "Drück dich so hoch wie möglich auf die Zehenspitzen.",
+        "Senk die Fersen langsam ab, bis du eine Dehnung in den Waden spürst.",
+        "Wiederhole die Bewegung aus dieser Dehnung heraus."
+      ],
+      "cues": [
+        "Halte die Knie gestreckt oder nur leicht gebeugt.",
+        "Nutze den vollen Weg: oben ganz hoch, unten bis in die Dehnung.",
+        "Wird das Halten der Hantel zu schwer, wechsle zur einbeinigen Variante."
+      ],
+      "mistakes": ["Knie beugen sich unten stark und schieben die Bewegung mit an."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Standing Calf Raise",
+          "url": "https://exrx.net/WeightExercises/Gastrocnemius/DBStandingCalfRaise"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die Übung mit einer Kurzhantel und Abstützen mit der anderen Hand."
+    },
+    "kettlebell_swing": {
+      "summary": "Schwungübung aus der Hüfte: Du beugst dich in der Hüfte und schwingst die Kettlebell mit einem kräftigen Hüftstoß nach vorn und oben.",
+      "setup": [
+        "Stell dich hinter die Kettlebell, die Füße etwas weiter als schulterbreit.",
+        "Beug dich in der Hüfte, die Knie leicht gebeugt, der Rücken gerade.",
+        "Greif den Griff mit beiden Händen und heb die Kettlebell mit fester Rumpfspannung an."
+      ],
+      "steps": [
+        "Schwing die Kettlebell zwischen den Beinen nach hinten unter die Hüfte, die Unterarme berühren dabei die Innenseiten der Oberschenkel.",
+        "Schieb die Hüfte kräftig nach vorn, richte den Oberkörper auf und streck die Knie.",
+        "Lass die Kettlebell dadurch nach vorn bis etwa auf Brusthöhe schwingen.",
+        "Lass sie zurück zwischen die Beine fallen und beug dich dabei wieder in der Hüfte.",
+        "Am Ende bremst du den Schwung ab und stellst die Kettlebell in der Ausgangsposition ab."
+      ],
+      "cues": [
+        "Die Kraft kommt aus Hüfte und Beinen, die Arme führen nur.",
+        "Beuge dich in der Hüfte statt in die Hocke zu gehen.",
+        "Halte die Wirbelsäule lang, die Schienbeine bleiben eher senkrecht."
+      ],
+      "mistakes": [
+        "Tiefe Kniebeuge statt Beugung in der Hüfte.",
+        "Kettlebell wird mit den Schultern hochgehoben."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Kettlebell Two Arm Swing",
+          "url": "https://exrx.net/WeightExercises/Kettlebell/KBTwoArmSwing"
+        },
+        {
+          "title": "ExRx.net: Kettlebell Swing",
+          "url": "https://exrx.net/WeightExercises/Kettlebell/KBSwing"
+        },
+        {
+          "title": "ACE Exercise Library: Swing",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/391/swing/"
+        }
+      ]
+    },
+    "thruster_dumbbell": {
+      "summary": "Kniebeuge mit Kurzhanteln an den Schultern, die im Aufstehen direkt in ein Drücken über Kopf übergeht.",
+      "setup": [
+        "Halte die Kurzhanteln vor den Schultern, die Ellbogen zeigen leicht nach vorn, der Rumpf ist fest.",
+        "Stell die Füße etwas weiter als schulterbreit, die Fußspitzen zeigen leicht nach außen."
+      ],
+      "steps": [
+        "Geh in die Hocke, bis Hüfte und Knie ganz gebeugt sind oder die Oberschenkel knapp unter der Waagerechten liegen.",
+        "Drück dich aus den Beinen nach oben und werde gegen Ende des Aufstehens schneller.",
+        "Nutz den Schwung, um die Hanteln von den Schultern nach oben zu drücken, bis die Arme gestreckt sind.",
+        "Senk die Hanteln, beug dabei die Beine und fang sie bei etwa 90 Grad Kniebeugung vor den Schultern auf.",
+        "Geh fließend in die nächste Wiederholung über."
+      ],
+      "cues": [
+        "Beine und Arme arbeiten in einer durchgehenden Bewegung.",
+        "Halte den Rumpf in jeder Phase fest."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Thruster",
+          "url": "https://exrx.net/WeightExercises/Power/DBThruster"
+        },
+        {
+          "title": "ACE Exercise Library: Squat to Overhead Press",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/357/squat-to-overhead-press/"
+        }
+      ],
+      "sourceNote": "ACE führt die Übung als „Squat to Overhead Press“."
+    },
+    "farmers_walk": {
+      "summary": "Tragen von zwei schweren Gewichten an den Seiten über eine festgelegte Strecke, aufrecht und mit festem Griff.",
+      "setup": [
+        "Stell je eine Kurzhantel oder Kettlebell neben deine Füße.",
+        "Heb die Gewichte aus den Beinen vom Boden, wie beim Kreuzheben, der Rücken bleibt gerade.",
+        "Die Arme hängen seitlich, die Gewichte liegen neben der Hüfte, der Griff ist fest."
+      ],
+      "steps": [
+        "Geh mit kurzen, zügigen Schritten eine vorher festgelegte Strecke.",
+        "Dreh am Ende um und geh zum Startpunkt zurück.",
+        "Stell die Gewichte zum Schluss kontrolliert aus den Beinen ab."
+      ],
+      "cues": [
+        "Bleib groß: Ohren, Schultern, Hüfte und Knie in einer Linie, das Brustbein oben.",
+        "Schultern zurück, Kopf oben, Rücken gerade.",
+        "Atme beim Gehen weiter."
+      ],
+      "mistakes": ["Rippen klappen nach vorn auf, der Oberkörper verliert die aufrechte Haltung."],
+      "sources": [
+        {
+          "title": "ACE Exercise Library: Farmer’s Carry",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/359/farmer-s-carry/"
+        },
+        {
+          "title": "ExRx.net: Kettlebell Farmer's Walk",
+          "url": "https://exrx.net/WeightExercises/Kettlebell/KBFarmersWalk"
+        },
+        {
+          "title": "ACE: 5 Exercises to Challenge your Core",
+          "url": "https://www.acefitness.org/resources/everyone/blog/6072/5-exercises-to-challenge-your-core/"
+        }
+      ],
+      "sourceNote": "Gestützt auf die Variante mit Kettlebells und das Tragen mit Kurzhanteln."
+    },
+    "burpee": {
+      "summary": "Ganzkörperübung ohne Gerät: aus dem Stand in die Hocke, Beine nach hinten in den Stütz, zurück in die Hocke und wieder aufrichten.",
+      "setup": ["Stell dich aufrecht hin, die Füße etwa hüftbreit."],
+      "steps": [
+        "Geh in die Hocke und setz die Hände etwas weiter als schulterbreit auf den Boden.",
+        "Heb die Hüfte leicht an und spring mit den Beinen nach hinten in den Stütz.",
+        "Lande auf den Fußballen, der Körper bildet eine gerade Linie.",
+        "Zieh die Beine mit einem kurzen Hüftimpuls wieder unter den Körper.",
+        "Richte dich zum Stand auf."
+      ],
+      "cues": [
+        "Halte im Stütz den Körper gerade.",
+        "Mehr Tempo macht die Übung schwerer; steigere es erst, wenn der Ablauf sauber sitzt."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Burpee",
+          "url": "https://exrx.net/Aerobic/Exercises/Burpee"
+        }
+      ]
+    },
+    "mountain_climber": {
+      "summary": "Im hohen Stütz ziehst du abwechselnd die Knie zur Brust, während der Oberkörper ruhig bleibt.",
+      "setup": [
+        "Geh in den hohen Stütz, die Hände etwas weiter als schulterbreit, die Arme gestreckt."
+      ],
+      "steps": [
+        "Zieh ein Knie Richtung Brust.",
+        "Streck das Bein wieder nach hinten und zieh gleichzeitig das andere Knie heran.",
+        "Wechsle im gleichmäßigen Rhythmus über die gewählte Zeit."
+      ],
+      "cues": [
+        "Halte Schultern und Oberkörper ruhig über den Händen.",
+        "Schnellere Wechsel machen die Übung schwerer."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Mountain Climber",
+          "url": "https://exrx.net/Aerobic/Exercises/MountainClimber"
+        }
+      ]
+    },
+    "jumping_jack": {
+      "summary": "Sprungübung im Stand: Du springst in eine breite Beinstellung, hebst dabei die Arme und springst zurück in den geschlossenen Stand.",
+      "setup": ["Stell dich aufrecht hin, die Füße zusammen, die Arme an den Seiten."],
+      "steps": [
+        "Spring und öffne dabei die Beine, gleichzeitig führst du die Arme seitlich nach oben.",
+        "Lande auf den Fußballen.",
+        "Spring zurück in den geschlossenen Stand und senk die Arme.",
+        "Wiederhole den Ablauf im gleichmäßigen Rhythmus."
+      ],
+      "cues": ["Lande weich auf den Fußballen.", "Schnelleres Springen macht die Übung schwerer."],
+      "sources": [
+        {
+          "title": "ExRx.net: Jumping Jack",
+          "url": "https://exrx.net/Aerobic/Exercises/JumpingJack"
+        }
+      ]
+    },
+    "jump_rope": {
+      "summary": "Grundsprung mit dem Seil: Du schwingst das Seil über den Kopf nach vorn und hüpfst flach, wenn es unter den Füßen durchläuft.",
+      "setup": [
+        "Nimm in jede Hand einen Griff, das Seil liegt hinter dir.",
+        "Verteil das Gewicht auf die Fußballen, die Knie leicht gebeugt."
+      ],
+      "steps": [
+        "Schwing das Seil von hinten über den Kopf nach vorn bis zum Boden.",
+        "Hüpf, wenn das Seil unter den Füßen durchläuft.",
+        "Wiederhole den Ablauf im gleichmäßigen Rhythmus."
+      ],
+      "cues": [
+        "Spring nur so hoch wie nötig; das spart Kraft und hält die Landung sanft.",
+        "Schnellere Sprünge machen die Übung schwerer."
+      ],
+      "mistakes": ["Zu hohe Sprünge."],
+      "sources": [
+        {
+          "title": "ExRx.net: Jump Rope: Basic Hop",
+          "url": "https://exrx.net/Aerobic/Exercises/JumpRopeSingleHop"
+        }
+      ]
+    },
+    "rowing_machine": {
+      "summary": "Ausdauertraining am Rudergerät: Beine, Rumpf und Arme ziehen den Griff in fester Reihenfolge, danach rollst du kontrolliert nach vorn.",
+      "setup": [
+        "Leg den Griff in Reichweite in seine Halterung, setz dich und schnall die Füße auf den Fußstützen fest.",
+        "Greif den Griff mit beiden Händen von oben.",
+        "Stell die Dämpferklappe so ein, dass sie sich angenehm anfühlt."
+      ],
+      "steps": [
+        "Beginn mit gestreckten Armen und leicht nach vorn geneigtem Oberkörper.",
+        "Beug die Beine und roll nach vorn, bis die Schienbeine senkrecht stehen.",
+        "Drück dich mit den Beinen nach hinten, die Arme bleiben gestreckt.",
+        "Wenn die Knie gestreckt sind, zieh den Griff zum Bauch und lehn dich leicht zurück.",
+        "Streck die Arme wieder und roll nach vorn in den nächsten Zug."
+      ],
+      "cues": [
+        "Reihenfolge im Zug: erst Beine, dann Arme; zurück: erst Arme, dann Beine.",
+        "Die Belastung steuerst du über Dämpfereinstellung und Schlagzahl."
+      ],
+      "mistakes": ["Dämpfer zu hoch eingestellt, die Leistung sinkt."],
+      "safety": [
+        "Wähl keine zu hohe Dämpferstufe; ExRx nennt dafür ein erhöhtes Verletzungsrisiko."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Row Ergometer",
+          "url": "https://exrx.net/Aerobic/Exercises/RowErgometer"
+        }
+      ]
+    },
+    "stationary_bike": {
+      "summary": "Ausdauertraining auf dem aufrechten Fahrradergometer: Du trittst gleichmäßig gegen einen einstellbaren Widerstand.",
+      "setup": [
+        "Stell den Sattel so ein, dass das Knie unten im Tritt fast, aber nicht ganz gestreckt ist.",
+        "Setz dich, stell die Füße auf die Pedale und greif den Lenker.",
+        "Wähl einen Schnellstart oder gib ein Programm ein."
+      ],
+      "steps": [
+        "Tritt gleichmäßig in die Pedale.",
+        "Pass Widerstand und Trittfrequenz an die geplante Belastung an."
+      ],
+      "cues": [
+        "Die Belastung steuerst du über Widerstand und Umdrehungen pro Minute.",
+        "Prüf die Sattelhöhe nach den ersten Minuten noch einmal, weil du im Sattel etwas einsinken kannst."
+      ],
+      "mistakes": ["Sattel zu niedrig eingestellt."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cycle Ergometer",
+          "url": "https://exrx.net/Aerobic/Exercises/UprightCycle"
+        },
+        {
+          "title": "ExRx.net: YMCA Sub Max Cycle Ergometer Test",
+          "url": "https://exrx.net/Testing/YMCACycleTest"
+        }
+      ],
+      "sourceNote": "Gilt für das aufrechte Fahrradergometer, nicht für das Liegeergometer."
+    },
+    "treadmill": {
+      "summary": "Gehen oder Laufen auf dem motorisierten Laufband; Tempo und Steigung stellst du am Gerät ein.",
+      "setup": [
+        "Stell dich auf das Laufband, greif die Haltegriffe und stell die Füße links und rechts neben das Band.",
+        "Befestige die Sicherheitsleine an deiner Kleidung.",
+        "Wähl einen Schnellstart oder gib ein Programm ein."
+      ],
+      "steps": [
+        "Steig auf das laufende Band, sobald es sich bewegt.",
+        "Geh oder lauf im Tempo des Bandes.",
+        "Pass Geschwindigkeit und Steigung an die geplante Belastung an."
+      ],
+      "cues": [
+        "Die Belastung steuerst du über Geschwindigkeit und Steigung.",
+        "Nutze die Haltegriffe nur, um kurz das Gleichgewicht zu halten."
+      ],
+      "mistakes": ["Körpergewicht lastet auf den Haltegriffen, oder du hängst dich daran."],
+      "safety": ["Befestige die Sicherheitsleine, bevor du startest."],
+      "sources": [
+        {
+          "title": "ExRx.net: Treadmill Run",
+          "url": "https://exrx.net/Aerobic/Exercises/TreadmillRun"
+        },
+        {
+          "title": "ExRx.net: Treadmill Walk",
+          "url": "https://exrx.net/Aerobic/Exercises/TreadmillWalk"
+        }
+      ],
+      "sourceNote": "Gilt für ein motorisiertes Laufband."
+    },
+    "elliptical": {
+      "summary": "Ausdauertraining mit geringer Stoßbelastung: Du trittst in einer ovalen Bahn und führst die Armhebel im Wechsel vor und zurück.",
+      "setup": [
+        "Stell dich auf die Trittflächen und greif die Griffe an den Armhebeln.",
+        "Wähl einen Schnellstart oder gib ein Programm ein."
+      ],
+      "steps": [
+        "Tritt vorwärts in die Pedale.",
+        "Führ dabei die Armhebel im Wechsel vor und zurück.",
+        "Pass Widerstand und Schrittfrequenz an die geplante Belastung an."
+      ],
+      "cues": [
+        "Wärm dich langsam mit etwas mehr Widerstand auf.",
+        "Rückwärtstreten bringt Abwechslung oder dient als lockere Erholung.",
+        "Eine andere Steigung verlagert die Arbeit auf andere Muskelgruppen."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Elliptical Cross Trainer",
+          "url": "https://exrx.net/Aerobic/Exercises/EllipticalCrossTrainer"
+        },
+        {
+          "title": "ExRx.net: Elliptical Trainer",
+          "url": "https://exrx.net/Aerobic/Exercises/EllipticalTrainer"
+        }
+      ],
+      "sourceNote": "Gilt für Geräte mit beweglichen Armhebeln."
+    }
+  },
+  "open": [
+    {
+      "key": "bent_over_row_dumbbell",
+      "reason": "Keine Quelle zur Variante mit zwei Kurzhanteln im Stand gefunden; ExRx beschreibt nur die einarmige Variante auf der Bank."
+    },
+    {
+      "key": "triceps_extension_cable_cross_body",
+      "reason": "Keine Quelle zur Variante über Kreuz gefunden (ExRx, ACE, NASM, Human Kinetics, Mayo Clinic)."
+    },
+    {
+      "key": "heel_tap",
+      "reason": "Keine Quelle zur Übung gefunden; ExRx führt unter „Heel Tap“ nur eine Übung mit dem Springseil."
+    },
+    {
+      "key": "sit_up",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "windshield_wiper",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "standing_knee_raise",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "hip_thrust_barbell",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "cable_pull_through",
+      "reason": "Keine Quelle zur Variante am Kabelzug gefunden (ExRx nur am Schlingentrainer; ACE, NASM, Human Kinetics ohne Treffer)."
+    },
+    {
+      "key": "leg_press",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "hack_squat",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "bulgarian_split_squat_dumbbell",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "lunge_dumbbell",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    },
+    {
+      "key": "lateral_band_walk",
+      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+    }
+  ]
+}

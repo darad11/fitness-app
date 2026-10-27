@@ -89,7 +89,10 @@ export default defineConfig({
     // Teil dann gar nicht erst neu, und die App startete nicht. Chromium lädt vorgeladene Module
     // unter dem Service Worker ohnehin doppelt (E-16). Nachgeladene Bereiche laden weiter vor.
     modulePreload: {
-      resolveDependencies: (_file, deps, { hostType }) => (hostType === 'html' ? [] : deps),
+      // Visuals der Übungen (D-397): Die Modulschnittstelle lädt sie über `ui/visuals`; ohne
+      // Vorladeliste bleibt diese Liste aus der Startansicht, die Teile kommen beim Laden nach.
+      resolveDependencies: (file, deps, { hostType }) =>
+        hostType === 'html' || /\/visuals-[\w-]+\.js$/.test(file) ? [] : deps,
     },
   },
   define: {
@@ -148,10 +151,30 @@ export default defineConfig({
       },
       workbox: {
         // wasm: Barcode-Erkennung auch ohne Netz (D-266, rund 1,1 MB).
-        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}'],
+        // Liste der Übungsvisuals (D-397): klein, vorab gespeichert, damit Zuordnung und Rückfall
+        // offline stimmen.
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}', 'uebungen/medien.json'],
         // Store-Größe und Rasterfassungen der Logos braucht die App nicht offline (SVGs reichen).
         // Startbilder lädt iOS selbst beim Hinzufügen zum Home-Bildschirm (D-317).
-        globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png', '**/splash/*.png'],
+        // Bilder der Übungen nicht vorab (Auftrag Abschnitt 0.3), sondern bei Bedarf (runtimeCaching).
+        globIgnores: [
+          '**/icons/icon-1024.png',
+          '**/brand/*.png',
+          '**/splash/*.png',
+          '**/uebungen/medien/**',
+        ],
+        // Bilder der Übungen beim ersten Anzeigen speichern, danach auch offline (D-397). Erst
+        // Phase 2 bringt Dateien; die Regel steht schon, damit nichts vorab geladen wird.
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/uebungen/medien/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'uebungen-medien',
+              expiration: { maxEntries: 600 },
+            },
+          },
+        ],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
         // Beim allerersten Start übernimmt der Service Worker die offene Seite sofort; sonst

@@ -23,6 +23,8 @@ const IGNORED = [
   /^icons\/icon-1024\.png$/,
   /^brand\/.+\.png$/,
   /^splash\/.+\.png$/,
+  // Bilder der Übungen lädt der Service Worker bei Bedarf, nicht vorab (D-397).
+  /^uebungen\/medien\//,
 ];
 
 function walk(dir) {

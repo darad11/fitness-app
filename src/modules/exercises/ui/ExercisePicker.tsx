@@ -8,6 +8,7 @@ import { useExercises } from '../data/customExercises';
 import { CustomExerciseDialog } from './CustomExerciseDialog';
 import type { Equipment, Exercise, Muscle } from '../model/exercise';
 import { EQUIPMENT_OPTIONS, MUSCLE_OPTIONS, describeExercise } from './describe';
+import { ExerciseThumb } from './ExerciseVisual';
 
 export interface ExercisePickerProps {
   open: boolean;
@@ -61,15 +62,19 @@ export function ExercisePicker({
             onClick={() => {
               onSelect(exercise);
             }}
-            className="block min-h-14 w-full px-4 py-3 text-left hover:bg-line"
+            className="flex min-h-14 w-full items-center gap-3 px-4 py-3 text-left hover:bg-line"
           >
-            <span className="flex flex-wrap items-center gap-2">
-              <span className="font-medium">{exercise.name}</span>
-              {exercise.source === 'custom' ? (
-                <Badge tone="accent">{t.exercises.customBadge}</Badge>
-              ) : null}
+            {/* Vorschaubild links (D-397); die Liste liegt auf card-2, die Kachel auf card. */}
+            <ExerciseThumb exerciseId={exercise.id} on="card-2" />
+            <span className="min-w-0 flex-1">
+              <span className="flex flex-wrap items-center gap-2">
+                <span className="font-medium">{exercise.name}</span>
+                {exercise.source === 'custom' ? (
+                  <Badge tone="accent">{t.exercises.customBadge}</Badge>
+                ) : null}
+              </span>
+              <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
             </span>
-            <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
           </button>
         </li>
       ))}

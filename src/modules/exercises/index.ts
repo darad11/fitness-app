@@ -28,6 +28,35 @@ export { coreExerciseId, loadCoreExercises } from './data/coreLibrary';
 export { findAlternatives } from './calc/alternatives';
 export { describeExercise } from './ui/describe';
 export { MuscleTags } from './ui/MuscleTags';
+// Visuals und Ausführung (D-397, D-398): Komponenten ohne Seitenimporte; Daten und Bilder laden
+// erst, wenn eine Übung angezeigt wird.
+// Wie `ExercisePicker` nur als `lazy` exportiert, damit nichts davon in die Startansicht kommt.
+// Andere Module setzen eine eigene `Suspense` mit dem Symbol in der Kachel als Platzhalter.
+/** Vorschaubild links neben dem Namen in Übungslisten (D-397). */
+const visuals = () => import('./ui/visuals');
+export const ExerciseThumb = lazy(async () => ({ default: (await visuals()).ExerciseThumb }));
+/** Demonstration der Übung im Player, in der Übungsinfo und in den Details (D-397). */
+export const ExerciseDemo = lazy(async () => ({ default: (await visuals()).ExerciseDemo }));
+/** Ausführung mit Quellen (D-398). */
+export const ExerciseGuideView = lazy(async () => ({
+  default: (await visuals()).ExerciseGuideView,
+}));
+export type { ExerciseDemoProps } from './ui/ExerciseVisual';
+
+/** Lädt die Demonstrationen der genannten Übungen vor (aktuelle und nächste im Player). */
+export async function preloadExerciseDemos(exerciseIds: readonly string[]): Promise<void> {
+  const { loadVisualIndex, preloadVisual } = await visuals();
+  const index = await loadVisualIndex();
+  for (const id of exerciseIds) {
+    const entry = index.get(id);
+    if (entry) preloadVisual(entry.visual);
+  }
+}
+
+/** Nur für Tests anderer Module: geladene Visuals und Texte vergessen. */
+export async function resetExerciseMediaForTests(): Promise<void> {
+  (await visuals()).resetMediaCacheForTests();
+}
 export {
   EQUIPMENT,
   MUSCLES,

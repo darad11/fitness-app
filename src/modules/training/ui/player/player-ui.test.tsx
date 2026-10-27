@@ -374,7 +374,7 @@ describe('Player ausgebaut (Schritt D): Info, Umsortieren, Ersetzen, Übungstime
     expect(names.some((n) => n.startsWith('Kniebeuge mit Langhantel'))).toBe(false);
     const legPress = within(alternatives)
       .getAllByRole('button')
-      .find((b) => b.querySelector('span')?.textContent === 'Beinpresse')!;
+      .find((b) => b.querySelector('.font-medium')?.textContent === 'Beinpresse')!;
     await user.click(legPress);
     await waitFor(() => {
       expect(screen.queryByRole('dialog', { name: /ersetzen$/ })).toBeNull();

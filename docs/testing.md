@@ -2152,3 +2152,22 @@ Kopf-Skripte beim Bauen verkleinert, Kommentare aus `index.html`, Linse und Krei
 | `pnpm lint`, `pnpm typecheck` | ohne Befund |
 | WebKit | läuft in der CI |
 
+### Phase Übungen, Phase 1 · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Bestandsaufnahme, Gerüst für Visuals mit Rückfall auf das Symbol, Ausführungstexte, Quellenvorschlag (D-397 bis D-399). Browser-Fenster, nicht das Gerät; Visuals in den Tests nur als Testliste über `page.route` bzw. gestubbtes `fetch`.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/modules/exercises/data/media.test.ts` | 15 Tests bestanden: Liste gültig, Zuordnung über die ID aus dem Schlüssel, unbekannter Schlüssel ordnet nichts zu, ungültige Liste und Netzfehler ergeben keine Visuals, neuer Versuch beim nächsten Aufruf, Vorausladen je Datei einmal; Texte: jede Basisübung genau einmal (Text oder offen), nur https und zugelassene Fachseiten, keine zwei gleichen Beschreibungen, Leitplanken, `useGuide` zeigt beim Wechsel nie den Text der vorigen Übung; IDs wie in `tools/exercise_inventory.py` |
+| `src/modules/exercises/ui/exercise-visual.test.tsx` | 12 Tests bestanden: Symbol ohne Visual, Bild mit leerem Alternativtext und `loading=lazy`, Ladefehler und fehlende Liste zeigen das Symbol, Wechsel der Übung ohne Bild der vorigen (auch im ersten Bild nach dem Wechsel), Fehler gilt nicht für die nächste Übung, zwei Phasen und bei weniger Bewegung nebeneinander, Video stumm, ohne Autoplay bei weniger Bewegung, Animation mit ruhendem Bild, `onlyWithVisual`, Knopf mit Namen |
+| `src/modules/training/ui/player/player-demo.test.tsx` | 2 Tests bestanden: Demonstration folgt der aktuellen Übung (Verschieben), Abhaken mit Pause ändert sie nicht, Vorausladen aktuelle und nächste Übung; ohne Visual Symbol mit Etiketten, Antippen öffnet die Info mit Ausführung und Link zu den Details |
+| Angepasste Tests | `player-ui.test.tsx`, `log-ui.test.tsx` (Name im Knopf nicht mehr im ersten `span`, dort steht das Vorschaubild); `custom-exercises-ui.test.tsx` (zuerst Reiter „Ausführung“; mit Coverage wartet der Test bis 15 s auf die nachgeladenen Etiketten, ein Lauf scheiterte vorher nach 5 s) |
+| `e2e/uebungen.spec.ts` (Chromium) | 8 bestanden, 2 übersprungen (Desktop-Profil für die Player-Tests): Liste mit Symbol, alle Kacheln 56 × 56; mit Testliste richtiges Bild, 404 zeigt das Symbol; Player zugeklappt kompakt, aufgeklappt groß, „Satz erledigt“ im Bild, Verschieben, Neuladen und Zurück mit richtiger Zuordnung; ohne Visuals Symbol mit Etiketten und Info mit Ausführung; Details mit Quellen und offener Übung |
+| `pnpm test:e2e` (Chromium, alle Dateien), erster Lauf | 418 bestanden, 131 übersprungen, 5 fehlgeschlagen: `player.spec.ts` (zweimal, „Hauptmuskeln“ doppelt in der Übungsinfo), `duo-player.spec.ts` (Bereich „Ausführung von Beinpresse“ traf die Suche nach dem Bereich „Beinpresse“), `duo-tastatur.spec.ts` zweimal (lief, während ich parallel einen Einzeltest startete). Behoben: Demonstration in der Übungsinfo nur mit Visual, Bereich heißt „Ausführung der aktuellen Übung“; die vier Dateien danach 35 bestanden, 27 übersprungen |
+| `pnpm test:e2e` (Chromium, alle Dateien), zweiter Lauf | 422 bestanden, 131 übersprungen, 1 fehlgeschlagen: `duo-player.spec.ts` „Satzzeile unter 20 rem“ („Training abgeschlossen“ nicht gefunden). Einzeln mit `session.spec.ts` dreimal wiederholt: 9 von 9 bestanden |
+| `pnpm test`, `pnpm test:coverage` | 134 Dateien, 1203 Tests bestanden (Coverage zweimal in Folge ohne Befund) |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund; `check:docs` prüft neu `uebungen-bestand.md` gegen die Daten |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,7 KB von 250 KB; „Vorab gespeichert: 188 von 251 Dateien“, Prüfsummen passen; `uebungen/medien.json` vorab gespeichert, Bilder unter `uebungen/medien/` nicht |
+| Bilder `node tools/uebungen-screens.mjs` | 14 Ansichten und Übersicht in `docs/screens/uebungen/`, selbst angesehen |
+| WebKit | läuft in der CI |
+

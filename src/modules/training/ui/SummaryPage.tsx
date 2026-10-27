@@ -16,6 +16,7 @@ import { isNewRecord } from '../calc/records';
 import { bestSet, liveExercises, sessionProgress, sessionVolume } from '../calc/session';
 import { useCompletedSessions, useHistoryRows, useSession } from '../data/useSession';
 import { useActiveProgram, useProgramById, type ActiveProgram } from './useActiveProgram';
+import { Thumb } from './exerciseVisuals';
 
 /**
  * Abschluss nach dem Beenden (S-09, AK-TRN-19, AK-TRN-20; FORM D-315): „Training abgeschlossen“,
@@ -150,8 +151,10 @@ export function SummaryPage() {
           {exercises.map((exercise) => {
             const best = bestSet(exercise);
             return (
-              <li key={exercise.id} className="flex flex-wrap justify-between gap-2 py-3">
-                <span className="flex flex-wrap items-center gap-2 font-medium">
+              <li key={exercise.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 py-3">
+                {/* Kleines Vorschaubild zur Wiedererkennung (D-397). */}
+                <Thumb exerciseId={exercise.exerciseId} size="small" />
+                <span className="flex min-w-0 flex-1 flex-wrap items-center gap-2 font-medium">
                   {exercise.nameSnapshot}
                   {best &&
                   rows &&

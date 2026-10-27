@@ -62,7 +62,14 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
     expect(router.state.location.pathname).toBe(`/uebungen/${created?.id ?? ''}`);
     expect(screen.getByText('Eigene Übung')).toBeVisible();
     // Muskeln als Chip unter dem Titel und im Reiter „Muskeln“ (FORM, D-315).
-    expect(screen.getByText('Hauptmuskeln: Brust')).toBeInTheDocument();
+    // Die Etiketten stehen in der nachgeladenen Demonstration (D-397); mit Coverage lädt sie langsamer.
+    expect(
+      await screen.findByText('Hauptmuskeln: Brust', undefined, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    // Zuerst „Ausführung“ (D-398): Für eigene Übungen gibt es keinen Text aus der Bibliothek.
+    const guide = screen.getByRole('tabpanel', { name: 'Ausführung' });
+    expect(within(guide).getByText(/Eigene Übung: Die Ausführung beschreibst du/)).toBeVisible();
+    await user.click(screen.getByRole('tab', { name: 'Muskeln' }));
     const muscles = screen.getByRole('tabpanel', { name: 'Muskeln' });
     expect(within(muscles).getByText('Brust')).toBeVisible();
     expect(within(muscles).getByText('Trizeps')).toBeVisible();

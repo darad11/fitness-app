@@ -55,6 +55,10 @@
   --spacing-button: 3.25rem;
   --spacing-chip: 2.25rem;
   --spacing-tile: 2.5rem;
+  /* Vorschaubild einer Übung in Listen (D-397): 56 px, Bild oder Symbol-Kachel gleich groß. */
+  --spacing-thumb: 3.5rem;
+  /* Demonstration in der Karte „Jetzt“ im Training, schmal (D-397). */
+  --spacing-demo-compact: 4.5rem;
   --spacing-touch: 2.75rem;
   /* Erledigt-Markierungen (F6, D-334): Basis 14 px wie die Legende des Kalenders; „Je Aufgabe“
      und Kalender 16 px; Abhakfeld in Listen 20 px. Radius `--radius-mark`, Haken 60 %. */

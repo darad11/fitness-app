@@ -37,6 +37,7 @@ import { ValueInput } from '../player/ValueInput';
 import { describeDay } from '../../calc/describe';
 import { ConfirmDialog, ErrorMessage, INPUT, TEXTAREA, useProgramEdit } from './editorParts';
 import { useLibrary } from './useLibrary';
+import { Thumb } from '../exerciseVisuals';
 
 /** Tag im Programm-Editor (S-07, AK-PRG-03, AK-PRG-04, AK-PRG-09, D-257). */
 export function DayEditPage() {
@@ -380,7 +381,9 @@ function ExerciseEditor({
   return (
     <Card>
       <div className="flex flex-wrap items-start gap-1">
-        <div className="min-w-0 flex-1 basis-48 pt-2">
+        {/* Vorschaubild links neben dem Namen (D-397). */}
+        <Thumb exerciseId={exercise.exerciseId} className="mt-1 mr-2" />
+        <div className="min-w-0 flex-1 basis-40 pt-2">
           <p className="text-sm font-semibold text-muted tabular-nums">{index + 1}</p>
           <h3 className="text-lg font-semibold break-words">{name}</h3>
         </div>

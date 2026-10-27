@@ -23,13 +23,19 @@
   display: none;
 }
 
+/* Große Demonstration (D-397) nur in zwei Spalten; schmal steht sie kompakt in der Karte „Jetzt“,
+   damit sie die Bedienung mit einer Hand nicht nach unten schiebt. */
+.player-demo {
+  display: none;
+}
+
 /*
  * Ab 48 rem Inhaltsbreite (Duo aufgeklappt, iPad quer) zwei Spalten: links die Übungen mit den
  * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), dem
  * nächsten Satz und den nächsten Übungen.
  *
- * Der Bereich „demo“ ist für die Übungsdemonstration vorbereitet. Er erscheint erst, wenn es
- * Bilder gibt: Ein Bereich ohne Inhalt hat keine Höhe, deshalb Abstände über Ränder statt `gap`.
+ * Der Bereich „demo“ zeigt die Demonstration der aktuellen Übung (D-397); ohne Visual das Symbol
+ * in der Kachel mit den Muskel-Etiketten. Abstände über Ränder statt `gap`.
  */
 @container player (min-width: 48rem) {
   .player-columns {
@@ -76,6 +82,17 @@
 
   .player-side > .player-now {
     grid-area: now;
+  }
+
+  /* Der vorbereitete Bereich „demo“ (D-380) zeigt jetzt die Demonstration der aktuellen Übung;
+     die kompakte Fassung in „Jetzt“ entfällt, damit nichts doppelt steht (D-397). */
+  .player-side > .player-demo {
+    display: block;
+    grid-area: demo;
+  }
+
+  .player-now .player-now-demo {
+    display: none;
   }
 
   .player-next {

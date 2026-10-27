@@ -68,7 +68,7 @@ describe('Nachtragen (S-10, AK-TRN-23)', () => {
     await user.click(
       within(picker)
         .getAllByRole('button')
-        .find((b) => b.querySelector('span')?.textContent === 'Beinpresse')!,
+        .find((b) => b.querySelector('.font-medium')?.textContent === 'Beinpresse')!,
     );
     const card = await screen.findByRole('region', { name: 'Beinpresse' });
     // Drei Arbeitssätze vorbelegt; einen entfernen, einen Aufwärmsatz davor.

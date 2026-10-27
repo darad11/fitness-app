@@ -3,7 +3,15 @@ import { t } from '@/shared/i18n/de';
 import { tExerciseMedia } from '@/shared/i18n/de-exercise-media';
 import { cn } from '@/shared/lib/cn';
 import { tagClasses } from '@/shared/ui';
-import { mediaUrl, useVisualIndex, type VisualEntry } from '../data/media';
+import {
+  demoFiles,
+  isVideo,
+  loopFile,
+  mediaUrl,
+  preloadVisual,
+  useVisualIndex,
+  type VisualEntry,
+} from '../data/media';
 import type { Muscle } from '../model/exercise';
 import type { ExerciseVisual as Visual, MediaFile } from '../model/media';
 import { SymbolTile, type TileLook } from './SymbolTile';
@@ -33,6 +41,49 @@ function useReducedMotion(): boolean {
     };
   }, []);
   return reduced;
+}
+
+/**
+ * Ohne Netz nur Dateien anfragen, die der Service Worker schon gespeichert hat (D-403): Sonst
+ * scheitert die Anfrage, und kurz stünde ein kaputtes Bild da. Gibt `true` zurück, solange offline
+ * nicht feststeht, dass alle Dateien im Speicher liegen; dann zeigt die Kachel gleich das Symbol.
+ */
+function useMissingOffline(files: readonly MediaFile[]): boolean {
+  const offline = typeof navigator !== 'undefined' && !navigator.onLine;
+  const key = files.map((file) => file.src).join(' ');
+  const [checked, setChecked] = useState<{ key: string; missing: boolean } | null>(null);
+  useEffect(() => {
+    if (!offline || key === '') return undefined;
+    let alive = true;
+    const urls = key.split(' ').map((src) => mediaUrl({ src, width: 1, height: 1 }));
+    const check =
+      typeof caches === 'undefined'
+        ? Promise.resolve(false)
+        : Promise.all(urls.map((url) => caches.match(url))).then((hits) => hits.every(Boolean));
+    void check
+      .catch(() => false)
+      .then((all) => {
+        if (alive) setChecked({ key, missing: !all });
+      });
+    return () => {
+      alive = false;
+    };
+  }, [offline, key]);
+  if (!offline) return false;
+  return checked?.key !== key || checked.missing;
+}
+
+/** Dateien, die eine Ansicht sofort braucht. */
+function neededFiles(
+  visual: Visual | undefined,
+  variant: 'large' | 'compact' | 'thumb',
+): MediaFile[] {
+  if (!visual) return [];
+  if (variant !== 'large') return [visual.preview];
+  const demo = visual.demo;
+  if (demo?.kind === 'animation')
+    return isVideo(demo.file) ? [demo.still, loopFile(demo)] : [demo.still, demo.file];
+  return demoFiles(visual);
 }
 
 function Img({
@@ -85,13 +136,18 @@ function Thumb({
   size = 'list',
 }: TileLook & { entry: VisualEntry | undefined; className?: string }) {
   const [failed, setFailed] = useState(false);
-  if (!entry || failed) return <SymbolTile className={className} size={size} />;
-  // Bilder liegen immer auf der Fläche `card` mit Rand (Leitlinien, Vorbemerkung).
+  const missing = useMissingOffline(neededFiles(entry?.visual, 'thumb'));
+  if (!entry || failed || missing) return <SymbolTile className={className} size={size} />;
+  // Bilder liegen auf der Fläche `card` mit Rand (Leitlinien, Vorbemerkung); als Kreis (Fotos auf
+  // weißem Grund, Plan C) füllt das Bild den Kreis (D-403).
+  const circle = entry.visual.previewShape === 'circle';
   return (
     <span
       data-visual="bild"
+      data-shape={circle ? 'kreis' : 'quadrat'}
       className={cn(
-        'block shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]',
+        'block shrink-0 overflow-hidden bg-surface shadow-[inset_0_0_0_1px_var(--border)]',
+        circle ? 'rounded-full' : 'rounded-tile',
         size === 'small' ? 'size-tile' : 'size-thumb',
         className,
       )}
@@ -99,7 +155,7 @@ function Thumb({
       <Img
         file={entry.visual.preview}
         alt=""
-        className="size-full object-contain"
+        className={circle ? 'size-full object-cover' : 'size-full object-contain'}
         onError={() => {
           setFailed(true);
         }}
@@ -145,7 +201,8 @@ function Demo({
   const fail = () => {
     setFailed(true);
   };
-  const visual = entry && !failed ? entry.visual : undefined;
+  const missing = useMissingOffline(neededFiles(entry?.visual, variant));
+  const visual = entry && !failed && !missing ? entry.visual : undefined;
   if (!visual && onlyWithVisual) return null;
 
   let body: ReactNode;
@@ -212,6 +269,39 @@ function Demo({
   );
 }
 
+function LoopVideo({
+  demo,
+  alt,
+  className,
+  onError,
+}: {
+  demo: { file: MediaFile; webm?: MediaFile; still: MediaFile };
+  alt: string;
+  className: string;
+  onError: () => void;
+}) {
+  return (
+    <video
+      className={className}
+      poster={mediaUrl(demo.still)}
+      width={demo.file.width}
+      height={demo.file.height}
+      muted
+      loop
+      playsInline
+      autoPlay
+      preload="auto"
+      disablePictureInPicture
+      aria-label={alt}
+      onError={onError}
+    >
+      {demo.webm ? <source src={mediaUrl(demo.webm)} type="video/webm" /> : null}
+      {/* Fehlt auch die letzte Quelle, meldet erst sie den Fehler. */}
+      <source src={mediaUrl(demo.file)} type="video/mp4" onError={onError} />
+    </video>
+  );
+}
+
 function LargeDemo({
   visual,
   name,
@@ -222,19 +312,35 @@ function LargeDemo({
   onError: () => void;
 }) {
   const reduced = useReducedMotion();
+  // Bei Bedarf zwischenspeichern (D-403): Was einmal gezeigt wurde, läuft danach auch offline.
+  useEffect(() => {
+    preloadVisual(visual);
+  }, [visual]);
   const demo = visual.demo ?? { kind: 'image' as const, file: visual.preview };
   const frame =
     'relative block aspect-[4/3] max-h-[40dvh] w-full overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]';
   const media = 'absolute inset-0 size-full object-contain';
   switch (demo.kind) {
     case 'animation':
-      // Animation nur ohne Wunsch nach weniger Bewegung, sonst das ruhende Bild (Kapitel 9).
+      // Animation nur ohne Wunsch nach weniger Bewegung, sonst das Standbild (Kapitel 9, D-403).
+      if (reduced) {
+        return (
+          <span className={frame}>
+            <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />
+          </span>
+        );
+      }
+      if (isVideo(demo.file)) {
+        // Stumme Schleife ohne Bedienelemente; das Standbild steht, bis das Video läuft.
+        return (
+          <span className={frame}>
+            <LoopVideo demo={demo} alt={visual.alt} className={media} onError={onError} />
+          </span>
+        );
+      }
       return (
         <span className={frame}>
-          <picture>
-            <source media="(prefers-reduced-motion: reduce)" srcSet={mediaUrl(demo.still)} />
-            <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />
-          </picture>
+          <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />
         </span>
       );
     case 'video':

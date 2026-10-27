@@ -65,13 +65,22 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Symbol in der Kachel ohne Visual, nie ein leerer Kasten (D-397)', async ({
+test('Übungsliste: Pilot-Übungen mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
-  const squat = row(page, 'Kniebeuge mit Langhantel');
-  await expect(squat.locator('[data-visual="symbol"] svg')).toBeVisible();
-  expect(await page.locator('ul[aria-label] img').count()).toBe(0);
+  const dumbbells = row(page, 'Bankdrücken mit Kurzhanteln');
+  await expect(dumbbells.locator('[data-visual="symbol"] svg')).toBeVisible();
+  // Ausgeliefert sind Animationen für drei Übungen (Pilot 3D, D-402).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(3);
+  const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
+  await squat.scrollIntoViewIfNeeded();
+  await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');
+  await expect.poll(() => squat.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(240);
+  await expect(row(page, 'Latziehen').locator('[data-visual="bild"]')).toHaveAttribute(
+    'data-shape',
+    'quadrat',
+  );
   // Jede Zeile hat ein Vorschaubild oder Symbol links, alle gleich groß.
   const sizes = await page
     .locator('[aria-label="Brust"] li [data-visual]')
@@ -126,32 +135,53 @@ test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur a
   );
   const done = page.getByRole('button', { name: 'Satz erledigt', exact: true });
   await expect(done).toBeInViewport();
-  // Schmal kein Vorschaubild in der Übungskarte: Der erste Satz steht über der Fußleiste.
+  // Schmal kein Vorschaubild in der Übungskarte: Das Bild in „Jetzt“ verschiebt den ersten Satz
+  // nicht; er steht genau dort, wo er ohne Bild steht (Symbol in der Kachel, gleich groß).
   await expect(page.locator('.player-card-thumb').first()).toBeHidden();
-  const firstSet = await page
-    .getByLabel(/^Gewicht in kg, /)
-    .first()
-    .boundingBox();
-  const footTop = (await page.locator('.player-foot').boundingBox())?.y ?? 0;
-  // Lage der Blöcke über dem ersten Satz, damit ein Fehlschlag in WebKit die Ursache zeigt.
+  const firstSetBottom = async () => {
+    const box = await page
+      .getByLabel(/^Gewicht in kg, /)
+      .first()
+      .boundingBox();
+    return (box?.y ?? 0) + (box?.height ?? 0);
+  };
+  const withImage = await firstSetBottom();
+  // Lage der Blöcke über dem ersten Satz, damit ein Fehlschlag die Ursache zeigt.
   const layout = await page.evaluate(() =>
     [
       ...document.querySelectorAll(
-        '.player-frame section, .player-frame section > *, .player-frame [data-demo], .player-frame [data-visual], .player-frame img',
+        '.player-frame header, .player-frame header > *, .player-frame > * > * > *, .player-frame section, .player-frame [data-demo]',
       ),
     ]
       .map((node) => {
         const box = node.getBoundingClientRect();
         const name = `${node.tagName.toLowerCase()}.${(node.getAttribute('class') ?? '').slice(0, 40)}`;
-        return `${name} y=${Math.round(box.top)} h=${Math.round(box.height)} w=${Math.round(box.width)}`;
+        const text = node.textContent.trim().slice(0, 30);
+        return `${name} y=${Math.round(box.top)} h=${Math.round(box.height)} „${text}“`;
       })
       .slice(0, 40)
       .join('\n'),
   );
+  await context.unroute('**/uebungen/medien.json');
+  await context.route('**/uebungen/medien.json', (route) =>
+    route.fulfill({ json: { version: 1, sources: {}, visuals: {} } }),
+  );
+  await page.reload();
+  await expect(now.locator('[data-demo="symbol"]')).toBeVisible();
+  const withSymbol = await firstSetBottom();
   expect(
-    (firstSet?.y ?? 0) + (firstSet?.height ?? 0),
-    `Erster Satz über der Fußleiste (${String(footTop)}):\n${layout}`,
-  ).toBeLessThanOrEqual(footTop);
+    Math.abs(withImage - withSymbol),
+    `mit Bild ${String(withImage)}, ohne ${String(withSymbol)}:\n${layout}`,
+  ).toBeLessThanOrEqual(1);
+  // Mit sicherem Bereich (nur Chromium stellt ihn nach) steht er über der Fußleiste.
+  if (test.info().project.name.startsWith('chromium')) {
+    const footTop = (await page.locator('.player-foot').boundingBox())?.y ?? 0;
+    expect(withImage, layout).toBeLessThanOrEqual(footTop);
+  }
+  await context.unroute('**/uebungen/medien.json');
+  await serveVisuals(context);
+  await page.reload();
+  await expect(now.getByRole('img')).toBeVisible();
 
   // Aufgeklappt: groß in der rechten Spalte, kompakt in „Jetzt“ aus.
   await setDuoPose(page, 'auf');
@@ -200,9 +230,14 @@ test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur a
 
 test('Player ohne Visuals: Symbol mit Muskel-Etiketten, Antippen öffnet die Ausführung (D-397, D-398)', async ({
   page,
+  context,
   isMobile,
 }) => {
   test.skip(!isMobile, 'Handy-Profil');
+  // Ohne Visuals, auch für die Pilot-Übungen.
+  await context.route('**/uebungen/medien.json', (route) =>
+    route.fulfill({ json: { version: 1, sources: {}, visuals: {} } }),
+  );
   await setDuoPose(page, 'auf');
   await startTemplateDay(page);
   const demo = page.getByRole('region', { name: 'Ausführung der aktuellen Übung' });
@@ -325,4 +360,38 @@ test('Übungsdetails, Reiter „Muskeln“: Karte vorne und hinten je Übung, Mu
   await expect(squat.locator('g[data-region="quadriceps"][data-level="primary"]')).toHaveCount(1);
   await expect(squat.locator('g[data-region="gluteal"][data-level="primary"]')).toHaveCount(1);
   await expect(squat.locator('g[data-region="chest"][data-level="none"]')).toHaveCount(1);
+});
+
+test('Pilot-Animation: Schleife im Player aufgeklappt und in den Details, Standbild bei weniger Bewegung (D-403)', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, 'Handy-Profil');
+  await setDuoPose(page, 'auf');
+  await startTemplateDay(page);
+  const demo = page.getByRole('region', { name: 'Ausführung der aktuellen Übung' });
+  const video = demo.locator('video');
+  await expect(video).toHaveAttribute('poster', '/uebungen/medien/kniebeuge-poster.webp');
+  await expect(video).toHaveJSProperty('muted', true);
+  await expect(video).toHaveJSProperty('loop', true);
+  // Die Schleife läuft wirklich (Zeit schreitet fort).
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime), { timeout: 10_000 })
+    .toBeGreaterThan(0.2);
+
+  // Übungsdetails: dieselbe Schleife.
+  await openPage(page, '/uebungen');
+  await row(page, 'Latziehen').click();
+  const detail = page.locator('[data-demo="bild"] video');
+  await expect(detail.locator('source').last()).toHaveAttribute(
+    'src',
+    '/uebungen/medien/latziehen.mp4',
+  );
+
+  // Weniger Bewegung: nur das Standbild, kein Video.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  const still = page.locator('[data-demo="bild"] img');
+  await expect(still).toHaveAttribute('src', '/uebungen/medien/latziehen-poster.webp');
+  await expect(page.locator('[data-demo="bild"] video')).toHaveCount(0);
 });

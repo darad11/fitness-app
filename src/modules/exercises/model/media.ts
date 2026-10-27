@@ -12,9 +12,10 @@ const text = (max: number) => z.string().trim().min(1).max(max);
  *  aus dem gemeinsamen Zod-Teil der Startansicht (D-396). */
 const httpsUrl = z.string().regex(/^https:\/\/[^\s/]+\.[^\s]+$/);
 
-/** Datei unter `public/uebungen/medien/`, relativ angegeben; nur Bildformate, die Safari kann. */
+/** Datei unter `public/uebungen/medien/`, relativ angegeben; nur Formate, die Safari kann (WebM nur
+ *  zusätzlich zu MP4). */
 const mediaFileSchema = z.strictObject({
-  src: z.string().regex(/^medien\/[a-z0-9_-]+\.(?:webp|avif|png|jpg|svg|gif|mp4)$/),
+  src: z.string().regex(/^medien\/[a-z0-9_-]+\.(?:webp|avif|png|jpg|svg|gif|mp4|webm)$/),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
 });
@@ -23,11 +24,19 @@ export type MediaFile = z.infer<typeof mediaFileSchema>;
 
 /**
  * Große Demonstration im Player und in den Übungsdetails, in der Reihenfolge der Leitlinien
- * (Kapitel 3): Animation als Bild (animiertes WebP oder GIF), stummes Video im Loop, zwei Phasen
- * im Wechsel (Ausgangs- und Endposition) oder ein ruhendes Bild.
+ * (Kapitel 3): Animation (stumme Schleife einer Wiederholung als MP4, dazu WebM, oder als
+ * animiertes Bild), stummes Video, zwei Phasen im Wechsel (Ausgangs- und Endposition) oder ein
+ * ruhendes Bild. Bei der Animation ist `still` das Standbild: Poster, und bei „Bewegung
+ * reduzieren“ das einzige Bild (D-403).
  */
 export const exerciseDemoSchema = z.union([
-  z.strictObject({ kind: z.literal('animation'), file: mediaFileSchema, still: mediaFileSchema }),
+  z.strictObject({
+    kind: z.literal('animation'),
+    file: mediaFileSchema,
+    /** Dieselbe Schleife als WebM (kleiner); der Browser nimmt die erste, die er kann. */
+    webm: mediaFileSchema.optional(),
+    still: mediaFileSchema,
+  }),
   z.strictObject({ kind: z.literal('video'), file: mediaFileSchema, poster: mediaFileSchema }),
   z.strictObject({
     kind: z.literal('phases'),
@@ -55,6 +64,9 @@ export type MediaSource = z.infer<typeof mediaSourceSchema>;
 export const exerciseVisualSchema = z.strictObject({
   /** Vorschaubild für Listen, quadratisch. */
   preview: mediaFileSchema,
+  /** Form des Vorschaubilds: abgerundetes Quadrat auf `card` (Standard) oder Kreis, etwa für
+   *  Fotos auf weißem Grund (Plan C, D-403). */
+  previewShape: z.enum(['square', 'circle']).optional(),
   demo: exerciseDemoSchema.optional(),
   /** Alternativtext: was das Bild zeigt (Bewegung, Gerät), nicht nur der Name. */
   alt: text(240),

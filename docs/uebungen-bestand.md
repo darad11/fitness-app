@@ -23,7 +23,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Bankdrücken mit Langhantel | Bench Press | Langhantel, Bank | Brust | Trizeps, Vordere Schulter | Bankdrücken mit Kurzhanteln · Bankdrücken an der Multipresse | fehlt | fertig (exrx.net) | – | `bench_press_barbell` · `d9e18691-fe6c-5885-8a52-a9004e985f9a` |
+| 1 | Bankdrücken mit Langhantel | Bench Press | Langhantel, Bank | Brust | Trizeps, Vordere Schulter | Bankdrücken mit Kurzhanteln · Bankdrücken an der Multipresse | vorhanden | fertig (exrx.net) | – | `bench_press_barbell` · `d9e18691-fe6c-5885-8a52-a9004e985f9a` |
 | 2 | Bankdrücken mit Kurzhanteln | Dumbbell Bench Press | Kurzhantel, Bank | Brust | Trizeps, Vordere Schulter | Bankdrücken mit Langhantel · Bankdrücken an der Multipresse | fehlt | fertig (acefitness.org, exrx.net) | Sicherheitshinweis zum Ablegen sinngemäß aus der Quelle abgeleitet. | `bench_press_dumbbell` · `1befb0e4-3746-5331-8201-ffa3e293bfd4` |
 | 3 | Schrägbankdrücken mit Langhantel | Incline Bench Press | Langhantel, Bank | Brust | Vordere Schulter, Trizeps | Schrägbankdrücken mit Kurzhanteln · Schrägbankdrücken am Kabel | fehlt | fertig (exrx.net) | – | `incline_bench_press_barbell` · `c4df9656-93f6-5694-843d-4f59a08489bc` |
 | 4 | Schrägbankdrücken mit Kurzhanteln | Incline Dumbbell Press | Kurzhantel, Bank | Brust | Vordere Schulter, Trizeps | Schrägbankdrücken mit Langhantel · Schrägbankdrücken am Kabel | fehlt | fertig (exrx.net) | – | `incline_bench_press_dumbbell` · `addd5f52-31a7-5b29-9906-145ff0fb1a41` |
@@ -44,7 +44,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 14 | Klimmzüge | Pull-up | Klimmzugstange | Latissimus | Bizeps, Oberer Rücken | Klimmzüge mit Unterstützung · Klimmzüge im Untergriff | fehlt | fertig (acefitness.org, exrx.net) | – | `pull_up` · `23775e80-9bcc-5529-a8e1-0af70bbc4923` |
 | 15 | Klimmzüge mit Unterstützung | Assisted Pull-up | Maschine | Latissimus | Bizeps, Oberer Rücken | Klimmzüge · Klimmzüge im Untergriff | fehlt | fertig (exrx.net) | Die Quellen sagen nichts zur Einstellung des Gegengewichts; dieser Punkt fehlt. | `assisted_pull_up` · `86549491-6d57-5eaa-a0b3-d27986e90ce1` |
 | 16 | Klimmzüge im Untergriff | Chin-up | Klimmzugstange | Latissimus, Bizeps | Oberer Rücken | Klimmzüge · Klimmzüge mit Unterstützung | fehlt | fertig (acefitness.org, exrx.net) | – | `chin_up` · `ac317cae-6fcd-5a05-b0af-cab99086661b` |
-| 17 | Latziehen | Lat Pulldown | Kabelzug | Latissimus | Bizeps, Oberer Rücken | Latziehen, enger Griff | fehlt | fertig (acefitness.org, exrx.net) | – | `lat_pulldown` · `f3a5257c-a964-5dce-989c-5502406147ee` |
+| 17 | Latziehen | Lat Pulldown | Kabelzug | Latissimus | Bizeps, Oberer Rücken | Latziehen, enger Griff | vorhanden | fertig (acefitness.org, exrx.net) | – | `lat_pulldown` · `f3a5257c-a964-5dce-989c-5502406147ee` |
 | 18 | Latziehen, enger Griff | Close-Grip Lat Pulldown | Kabelzug | Latissimus | Bizeps, Oberer Rücken | Latziehen | fehlt | fertig (acefitness.org, exrx.net) | Allgemeine Hinweise stammen von der Seite zum breiten Latziehen. | `lat_pulldown_close` · `e1da8f74-8e8a-52c1-a0a7-81526f0feb73` |
 | 19 | Rudern am Kabel, sitzend | Seated Cable Row | Kabelzug | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter | Rudern mit Langhantel, vorgebeugt · Rudern mit Kurzhanteln, vorgebeugt · Rudern an der Maschine · Rudern an der Multipresse, vorgebeugt | fehlt | fertig (exrx.net) | Folgt dem Standardgriff; weiter Griff und Untergriff (Alias-Namen) sind nicht eigens beschrieben. | `seated_cable_row` · `ad506360-ee74-5369-b109-6a5f6d9d5f5f` |
 | 20 | Rudern mit Langhantel, vorgebeugt | Barbell Row | Langhantel | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter, Unterer Rücken | Rudern am Kabel, sitzend · Rudern mit Kurzhanteln, vorgebeugt · Rudern an der Maschine · Rudern an der Multipresse, vorgebeugt | fehlt | fertig (exrx.net) | – | `bent_over_row_barbell` · `4f6f22ca-b1cc-5995-8b0e-592de3e081ed` |
@@ -146,7 +146,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 89 | Kniebeuge mit Langhantel | Back Squat | Langhantel | Oberschenkel vorne, Gesäß | Adduktoren, Unterer Rücken | Kniebeuge an der Multipresse | fehlt | fertig (exrx.net) | – | `back_squat_barbell` · `572e6fea-7c72-5622-a62c-c844a1eb72ce` |
+| 89 | Kniebeuge mit Langhantel | Back Squat | Langhantel | Oberschenkel vorne, Gesäß | Adduktoren, Unterer Rücken | Kniebeuge an der Multipresse | vorhanden | fertig (exrx.net) | – | `back_squat_barbell` · `572e6fea-7c72-5622-a62c-c844a1eb72ce` |
 | 90 | Frontkniebeuge mit Langhantel | Front Squat | Langhantel | Oberschenkel vorne | Gesäß, Bauch | – | fehlt | fertig (exrx.net) | – | `front_squat_barbell` · `f45fc053-9ec2-54f6-853d-b20cec1334ee` |
 | 91 | Goblet Squat | Goblet Squat | Kurzhantel, Kettlebell | Oberschenkel vorne, Gesäß | Bauch | – | fehlt | fertig (exrx.net) | Ablauf aus der Seite zur Kniebeuge mit Kurzhanteln, weil die Seite zum Goblet Squat keinen Ablauf beschreibt. | `goblet_squat` · `e778ec94-4ff0-5f6b-9111-9cad5724cb61` |
 | 92 | Kniebeuge an der Multipresse | Smith Machine Squat | Multipresse | Oberschenkel vorne, Gesäß | – | Kniebeuge mit Langhantel | fehlt | fertig (exrx.net) | Hinweis zum Einhängen der Stange aus der Beschreibung des Aushakens abgeleitet. | `squat_smith` · `8d07eac8-b5e2-5d91-b670-253ff1af2c37` |
@@ -198,4 +198,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 123 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 124 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 124 Übungen · mit Visual 0 · ohne Visual 124 · Ausführung fertig 122 · offen 2
+Summe: 124 Übungen · mit Visual 3 · ohne Visual 121 · Ausführung fertig 122 · offen 2

@@ -10,7 +10,10 @@ const SQUAT = coreExerciseId('back_squat_barbell');
 const GOBLET = coreExerciseId('goblet_squat');
 const PLANK = coreExerciseId('plank');
 
-function media(demoKind: 'phases' | 'video' | 'animation' | 'image' = 'phases'): ExerciseMedia {
+function media(
+  demoKind: 'phases' | 'video' | 'animation' | 'loop' | 'image' = 'phases',
+  previewShape?: 'circle',
+): ExerciseMedia {
   const file = (name: string, ext = 'webp') => ({
     src: `medien/${name}.${ext}`,
     width: 640,
@@ -23,9 +26,17 @@ function media(demoKind: 'phases' | 'video' | 'animation' | 'image' = 'phases'):
         ? { kind: 'video' as const, file: file(key, 'mp4'), poster: file(`${key}-poster`) }
         : demoKind === 'animation'
           ? { kind: 'animation' as const, file: file(`${key}-loop`), still: file(`${key}-still`) }
-          : { kind: 'image' as const, file: file(`${key}-bild`) };
+          : demoKind === 'loop'
+            ? {
+                kind: 'animation' as const,
+                file: file(key, 'mp4'),
+                webm: file(key, 'webm'),
+                still: file(`${key}-poster`),
+              }
+            : { kind: 'image' as const, file: file(`${key}-bild`) };
   const visual = (key: string) => ({
     preview: { src: `medien/${key}-vorschau.webp`, width: 240, height: 240 },
+    ...(previewShape ? { previewShape } : {}),
     demo: demo(key),
     alt: `Bild zu ${key}`,
     source: 'test',
@@ -209,21 +220,72 @@ describe('Demonstration (D-397)', () => {
     expect(still.controls).toBe(true);
   });
 
-  it('Animation mit ruhendem Bild für weniger Bewegung', async () => {
+  it('Animation als Bild: läuft, bei weniger Bewegung nur das Standbild (D-403)', async () => {
     serve(media('animation'));
     reducedMotion(false);
-    const { container } = render(
-      <ExerciseDemo exerciseId={SQUAT} name="Kniebeuge" muscles={[]} variant="large" />,
-    );
+    const props = { name: 'Kniebeuge', muscles: [] as const, variant: 'large' as const };
+    const first = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
     await waitFor(() => {
-      expect(container.querySelector('picture source')).not.toBeNull();
+      expect(srcs(first.container)).toEqual(['/uebungen/medien/back_squat_barbell-loop.webp']);
     });
-    expect(container.querySelector('picture source')?.getAttribute('srcset')).toBe(
-      '/uebungen/medien/back_squat_barbell-still.webp',
+    first.unmount();
+    reducedMotion(true);
+    const second = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
+    await waitFor(() => {
+      expect(srcs(second.container)).toEqual(['/uebungen/medien/back_squat_barbell-still.webp']);
+    });
+  });
+
+  it('Animation als Video-Schleife: WebM vor MP4, Standbild als Poster und bei weniger Bewegung (D-403)', async () => {
+    serve(media('loop'));
+    reducedMotion(false);
+    const props = { name: 'Kniebeuge', muscles: [] as const, variant: 'large' as const };
+    const first = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
+    const video = await waitFor(() => need(first.container.querySelector('video')));
+    expect([...video.querySelectorAll('source')].map((n) => n.getAttribute('src'))).toEqual([
+      '/uebungen/medien/back_squat_barbell.webm',
+      '/uebungen/medien/back_squat_barbell.mp4',
+    ]);
+    expect(video.getAttribute('poster')).toBe('/uebungen/medien/back_squat_barbell-poster.webp');
+    expect(video.muted).toBe(true);
+    expect(video.loop).toBe(true);
+    expect(video.autoplay).toBe(true);
+    expect(video.controls).toBe(false);
+    expect(video.hasAttribute('playsinline')).toBe(true);
+    expect(video.getAttribute('aria-label')).toBe('Bild zu back_squat_barbell');
+    first.unmount();
+    reducedMotion(true);
+    const second = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
+    await waitFor(() => {
+      expect(srcs(second.container)).toEqual(['/uebungen/medien/back_squat_barbell-poster.webp']);
+    });
+    expect(second.container.querySelector('video')).toBeNull();
+  });
+
+  it('offline nur Gespeichertes: ohne Treffer im Speicher das Symbol, ohne Anfrage (D-403)', async () => {
+    serve(media('loop'));
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    const match = vi.fn((url: string) =>
+      Promise.resolve(url.includes('goblet') ? new Response('x') : undefined),
     );
-    expect(container.querySelector('picture source')?.getAttribute('media')).toBe(
-      '(prefers-reduced-motion: reduce)',
-    );
+    vi.stubGlobal('caches', { match });
+    const squat = render(<ExerciseThumb exerciseId={SQUAT} />);
+    const goblet = render(<ExerciseThumb exerciseId={GOBLET} />);
+    await waitFor(() => {
+      expect(goblet.container.querySelector('img')).not.toBeNull();
+    });
+    expect(squat.container.querySelector('img')).toBeNull();
+    expect(squat.container.querySelector('[data-visual="symbol"]')).not.toBeNull();
+    expect(match).toHaveBeenCalledWith('/uebungen/medien/back_squat_barbell-vorschau.webp');
+    vi.unstubAllGlobals();
+  });
+
+  it('Vorschaubild als Kreis, wenn das Visual es verlangt (D-403)', async () => {
+    serve(media('loop', 'circle'));
+    const { container } = render(<ExerciseThumb exerciseId={SQUAT} />);
+    const tile = await waitFor(() => need(container.querySelector('[data-visual="bild"]')));
+    expect(tile.getAttribute('data-shape')).toBe('kreis');
+    expect(tile.className).toContain('rounded-full');
   });
 
   it('onlyWithVisual: ohne Visual nichts, mit Visual die Demonstration', async () => {

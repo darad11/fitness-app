@@ -50,8 +50,21 @@ const wrong = entries.filter(
       .update(readFileSync(join(dist, url)))
       .digest('hex') !== revision,
 );
+// Jede Datei, die die Liste der Visuals nennt, liegt im Build und ist nicht leer (D-403).
+const media = JSON.parse(readFileSync(join(dist, 'uebungen/medien.json'), 'utf8'));
+const mediaFiles = Object.values(media.visuals).flatMap((visual) => [
+  visual.preview,
+  ...Object.values(visual.demo ?? {}).filter((value) => typeof value === 'object'),
+]);
+const absent = mediaFiles
+  .map((file) => `uebungen/${file.src}`)
+  .filter((file) => !files.includes(file) || statSync(join(dist, file)).size < 1000);
 console.log(`Vorab gespeichert: ${precached.size} von ${files.length} Dateien`);
-if (missing.length > 0 || stale.length > 0 || wrong.length > 0) {
+console.log(
+  `Dateien der Übungsbilder: ${mediaFiles.length - absent.length} von ${mediaFiles.length}`,
+);
+for (const file of absent) console.error(`Übungsbild fehlt oder ist leer: ${file}`);
+if (missing.length > 0 || stale.length > 0 || wrong.length > 0 || absent.length > 0) {
   for (const file of missing) console.error(`fehlt im Service Worker: ${file}`);
   for (const { url } of wrong) console.error(`Prüfsumme passt nicht zur Datei im Build: ${url}`);
   for (const url of stale) console.error(`im Service Worker, aber nicht im Build: ${url}`);

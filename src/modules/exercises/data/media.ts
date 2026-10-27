@@ -84,13 +84,35 @@ export function mediaUrl(file: MediaFile): string {
   return `${MEDIA_BASE}${file.src}`;
 }
 
+/** Ist die Datei ein Video (MP4, WebM) und kein Bild? */
+export function isVideo(file: MediaFile): boolean {
+  return /\.(?:mp4|webm)$/.test(file.src);
+}
+
+/**
+ * Die Datei der Schleife, die der Browser abspielen wird: dieselbe Wahl wie `<video>` mit WebM
+ * zuerst, dann MP4. So liegt beim Vorladen genau die Datei im Speicher, die später läuft.
+ */
+export function loopFile(demo: { file: MediaFile; webm?: MediaFile }): MediaFile {
+  if (demo.webm && typeof document !== 'undefined') {
+    const probe = document.createElement('video');
+    if (
+      typeof probe.canPlayType === 'function' &&
+      probe.canPlayType('video/webm; codecs="vp9"') !== ''
+    ) {
+      return demo.webm;
+    }
+  }
+  return demo.file;
+}
+
 /** Dateien, die die Demonstration zuerst braucht (für das Vorausladen im Player). */
 export function demoFiles(visual: ExerciseVisual): MediaFile[] {
   const demo = visual.demo;
   if (!demo) return [visual.preview];
   switch (demo.kind) {
     case 'animation':
-      return [demo.file];
+      return [demo.still, loopFile(demo)];
     case 'video':
       return [demo.poster];
     case 'phases':
@@ -104,7 +126,9 @@ const preloaded = new Set<string>();
 
 /**
  * Lädt die Demonstration einer Übung im Hintergrund vor (aktuelle und nächste Übung im Player,
- * Leitlinien Kapitel 8). Nur Bilder; Videos lädt der Browser selbst, wenn sie erscheinen.
+ * Leitlinien Kapitel 8; Übungsdetails bei Bedarf). Bilder über `Image`, Videos ganz über `fetch`:
+ * Der Service Worker speichert die vollständige Antwort und bedient daraus später auch die
+ * Teilanfragen von Safari (D-403). Was so geladen wurde, läuft auch offline.
  */
 export function preloadVisual(visual: ExerciseVisual): void {
   if (typeof Image !== 'function') return;
@@ -112,6 +136,10 @@ export function preloadVisual(visual: ExerciseVisual): void {
     const url = mediaUrl(file);
     if (preloaded.has(url)) continue;
     preloaded.add(url);
+    if (isVideo(file)) {
+      if (typeof fetch === 'function') void fetch(url).catch(() => preloaded.delete(url));
+      continue;
+    }
     const image = new Image();
     image.decoding = 'async';
     image.src = url;

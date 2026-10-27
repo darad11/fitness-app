@@ -62,15 +62,16 @@ if (typeof Element !== 'undefined' && typeof Element.prototype.scrollTo !== 'fun
   };
 }
 
-// Visuals der Übungen (D-397): Die Liste liegt in `public/uebungen/medien.json` und wird per
-// `fetch` mit relativer Adresse geladen. In Tests kommt sie aus der Datei, ohne Netz; Tests, die
-// bestimmte Visuals brauchen, ersetzen `fetch` selbst.
+// Visuals der Übungen (D-397): Die Liste wird per `fetch` mit relativer Adresse geladen. In Tests
+// ist sie leer, ohne Netz, damit die ausgelieferten Animationen (D-403) keine Tests anderer
+// Bereiche verändern; Tests, die bestimmte Visuals brauchen, ersetzen `fetch` selbst. Die
+// ausgelieferte Datei prüft `media.test.ts`.
 if (typeof window !== 'undefined') {
   const original = globalThis.fetch;
   globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
     if (url.startsWith('/uebungen/')) {
-      const media = (await import('../public/uebungen/medien.json')).default;
+      const media = { version: 1, sources: {}, visuals: {} };
       return new Response(JSON.stringify(media), {
         status: 200,
         headers: { 'content-type': 'application/json' },

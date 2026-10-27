@@ -161,7 +161,7 @@ export default defineConfig({
           '**/uebungen/medien/**',
         ],
         // Bilder der Übungen beim ersten Anzeigen speichern, danach auch offline (D-397). Erst
-        // Phase 2 bringt Dateien; die Regel steht schon, damit nichts vorab geladen wird.
+        // Pilot 3D bringt die ersten Dateien (D-402, D-403); nichts davon wird vorab geladen.
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/uebungen/medien/'),
@@ -169,6 +169,10 @@ export default defineConfig({
             options: {
               cacheName: 'uebungen-medien',
               expiration: { maxEntries: 600 },
+              // Nur vollständige Antworten speichern; Teilanfragen für Videos (Safari) bedient
+              // der Service Worker aus der gespeicherten Datei (D-403).
+              cacheableResponse: { statuses: [200] },
+              rangeRequests: true,
             },
           },
         ],

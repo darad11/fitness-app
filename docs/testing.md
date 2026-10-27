@@ -2220,3 +2220,5 @@ Pilot-Übungen auf dem IK-Rig neu gerendert (D-406 bis D-410). Prüfung der Bewe
 | Mit den neuen Videos: `pnpm test` | 135 Dateien, 1.209 Tests bestanden |
 | App-Bilder `node tools/pilot-screens.mjs` (mit `pnpm preview`) | Liste, Player zu- und aufgeklappt, Details je Übung, Übersicht und Aufnahme des Players in `docs/screens/uebungen/`, selbst angesehen |
 | WebKit | läuft in der CI |
+| CI zu 1f3faa8 (Lauf 40558753879, neue Videos) | Lint, Typen, Unit, Dokumente, Build; Datenbank; E2E Chromium; E2E WebKit: alle grün |
+| Vergleich alt und neu | alter Stand (`5d155fa`) und neuer Stand je vorn und Seite, 60 Bilder, 360 × 270, 16 Samples; Werte des alten Stands mit dessen Code nachgemessen (Bankdrücken: Unterarm in der Mitte 20,8°, Stange unten 1,8 cm über der Brust, Oberarm 54°; Latziehen: Unterarm unten 58,1°; Kniebeuge: Knie unten 16,7 cm innerhalb des Fußgelenks, Fuß im Stand 10 bis 11 mm über dem Boden) |

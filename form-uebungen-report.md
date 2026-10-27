@@ -1,8 +1,8 @@
 # FORM · Bericht zur Phase Übungen
 
-Stand: 27.10.2026, Abschnitt 0, Phase 1 und die Fortsetzung (`prompts/uebungen-weiter-FORM.md`, Abschnitt 9) abgeschlossen; Entscheidung über den Weg der Übungsbilder beim Produktinhaber (Q-24, D-405) · Branch `form-uebungen`, Entwurfs-PR [darad11/fitness-app#53](https://github.com/darad11/fitness-app/pull/53) · Auftrag `docs/prompts/uebungen-FORM.md`, verbindliche Leitlinien `docs/prompts/uebungen-leitlinien-FORM.md` · Entscheidungen D-395 bis D-405
+Stand: 27.10.2026, Abschnitt 0, Phase 1, die Fortsetzung (`prompts/uebungen-weiter-FORM.md`, Abschnitt 9) und die Übungsanimationen ohne Kosten (`prompts/uebungen-animation-gratis-FORM.md`, Abschnitt 10) bis zum vereinbarten Halt abgeschlossen; Übertragen auf weitere Übungen nach Freigabe des Produktinhabers · Branch `form-uebungen`, Entwurfs-PR [darad11/fitness-app#53](https://github.com/darad11/fitness-app/pull/53) · Auftrag `docs/prompts/uebungen-FORM.md`, verbindliche Leitlinien `docs/prompts/uebungen-leitlinien-FORM.md` · Entscheidungen D-395 bis D-412
 
-Getestet in Browser-Fenstern (Chromium in dieser Umgebung, WebKit in GitHub Actions), nicht am Gerät. Visuals gibt es noch keine; in den Bildern mit „prototyp“ kommt ein Rohentwurf nur im Test dazu.
+Getestet in Browser-Fenstern (Chromium in dieser Umgebung, WebKit in GitHub Actions), nicht am Gerät. Animationen gibt es für die drei Pilot-Übungen (Abschnitte 9 und 10); in den Bildern mit „prototyp“ kam ein Rohentwurf nur im Test dazu.
 
 ## 1. Abschnitt 0 – Vorab
 
@@ -158,13 +158,13 @@ Auftrag mit Anhang `pilot-korrekturen.png` unter `docs/prompts/`. Nur kostenlose
 | Fehler | Ursache | Art |
 |---|---|---|
 | Hände schweben wie Krallen, umgreifen die Stange nicht | Jedes Fingerglied um einen festen Winkel gebeugt, ohne Bezug zur Stange; das Handziel hing 4,5 bis 6 cm neben der Stange; die Drehung der Hand ergab sich zufällig aus der IK-Kette | Rig, Animationsdaten |
-| Knie kippen nach innen | Blender-IK über vier Knochen; das Pol-Ziel wurde in jedem Bild aus der Lage des Knies neu gesetzt, nichts band das Knie an die Zehenrichtung | Rig |
-| Füße uneinheitlich gedreht, Gewicht auf den Zehen | Der Fuß behielt die Richtung der Grundhaltung, in der er beim MakeHuman-Modell nicht flach steht; die Drehung nach außen saß nur am Halter, beide Seiten wurden getrennt gelöst | Rig, Modell |
+| Knie kippen nach innen (unten 17 cm innerhalb der Fußgelenke) | Blender-IK über vier Knochen; das Pol-Ziel wurde in jedem Bild aus der Lage des Knies neu gesetzt, nichts band das Knie an die Zehenrichtung | Rig |
+| Füße uneinheitlich gedreht, nicht fest am Boden (im Stand 1 cm darüber) | Fuß- und Pol-Ziele je Seite getrennt gelöst, die Drehung nach außen saß nur am Halter; der Fuß hing an der IK-Kette, statt auf den Boden gesetzt zu werden | Rig |
 | Muskelzonen verschwommen | Weicher Abfall je Muskel, zweimal mit den Nachbarpunkten geglättet, im Material weich gemischt | Zonendaten, Rendering |
 | Seitenansicht verdeckt Kopf und Oberkörper | Kniebeuge und Latziehen schräg von hinten, Bankdrücken schräg von der Seite, fester Abstand; die Scheiben lagen vor Kopf und Oberkörper | Rendering |
 | Ruck an den Umkehrpunkten | Zeitverlauf mit Kosinus: Die Geschwindigkeit ist stetig, die Beschleunigung springt | Animationsdaten |
-| Bankdrücken mit weit abgespreizten Ellbogen | Pol-Ziel 70 cm seitlich der Schulter | Animationsdaten |
-| Latziehen: Hände auf den gebogenen Enden, Knierolle fest | Handziel 47 cm neben der Mitte; Rolle unabhängig von den Oberschenkeln gesetzt | Animationsdaten |
+| Bankdrücken: Unterarme in der Mitte 21° schräg, Stange unten 1,8 cm über der Brust, Ellbogen oben ganz durchgestreckt (179°) | Ellbogen über ein festes Pol-Ziel 70 cm seitlich der Schulter statt über die Stange; Endpunkte nicht an Brust und Arm gemessen | Rig, Animationsdaten |
+| Latziehen: Hände auf den gebogenen Enden, Unterarme bis 58° schräg, Knierolle nicht auf den Oberschenkeln | Handziel 47 cm neben der Mitte; Rolle unabhängig von den Oberschenkeln gesetzt | Animationsdaten |
 
 Zum Modell: MakeHuman-Grundmodell ohne Formziele, 1,67 m, Oberarm 22,8 cm von Gelenk zu Gelenk (eher kurz). Das begrenzt die Reichweite; bei der Kniebeuge liegt die Stange deshalb hoch auf dem Trapez und schräg in der Hand. Die Hände haben drei Glieder je Finger und einen beweglichen Daumen und erlauben natürliche Griffe, wenn die Pose stimmt; ein anderes Modell ist dafür nicht nötig.
 
@@ -209,3 +209,55 @@ Darstellung in der App: `docs/screens/uebungen/pilot-uebersicht.png` (je Übung 
 | **Summe** | | | | | **270,0 KB** | 245,2 KB | |
 
 Abgerufen wird je Übung nur ein Video (MP4 oder WebM) mit Poster und Vorschau, also 47 bis 62 KB. Alles nachgeladen, die Startansicht bleibt bei 237,8 KB von 250 KB. Latziehen ist größer, weil sich Stange, Kabel und Oberkörper mehr bewegen. Rechnen: Blender 4.2, Cycles auf vier CPU-Kernen, 40 Samples mit Entrauschen, 720 × 540; dazu die Prüfung je Übung (60 Bilder messen, 21 Prüfbilder mit 16 Samples) rund 2 bis 4 Minuten. Für alle 124 Übungen ergibt das rund 35 Stunden Rechenzeit (Abschnitt 10.7).
+
+### 10.5 Alt und neu (Abschnitt 7.3, D-412)
+
+Je Übung ein Standbild (Ausgang und Endposition, alt und neu, je von vorn und von der Seite) und eine kurze Aufnahme (zwei Schleifen, oben alt, unten neu): `docs/screens/uebungen/vergleich-<übung>.webp` und `.mp4`. Beide Stände mit derselben Regel für den Bildausschnitt, 360 × 270, 16 Samples; von der Seite ohne Hantelscheiben, von vorn ohne Säule und Gewichtsblock des Latzugs. Werte des alten Stands nachgemessen mit seinem eigenen Code (Stand `5d155fa`).
+
+| | alt (5d155fa) | neu |
+|---|---|---|
+| **Kniebeuge** | Finger fest gebeugt, Hand neben der Stange; Knie unten 17 cm innerhalb der Fußgelenke; Füße verschieden gedreht, im Stand 1 cm über dem Boden; unten Knie 94°, Hüfte 12 cm über dem Knie; Zonen weich; Kamera schräg von hinten | Hand umgreift die Stange, Handfläche nach vorn, Ellbogen unten-hinten; Knie folgen den Zehen; beide Füße 18° außen, flach; unten Oberschenkel waagrecht (Knie 67°), Stange über der Fußmitte; Zonen scharf; Dreiviertelansicht vorn |
+| **Bankdrücken** | Finger fest gebeugt, Hand 4,5 cm unter der Stange; Unterarme in der Mitte 21° schräg; Stange unten 1,8 cm über der Brust; oben Ellbogen ganz durchgestreckt (179°); Kamera schräg von der Seite | Handgelenke über den Ellbogen (Unterarm unten höchstens 5,7° schräg), Oberarm unten 66° zum Rumpf, Stange berührt die untere Brust, oben Ellbogen 171° (nicht ganz durchgestreckt), Daumen umgreift; Schulterblätter auf der Bank; Dreiviertelansicht vorn oben |
+| **Latziehen** | Hände auf den gebogenen Enden und 6 cm unter der Stange; Unterarme bis 58° schräg, Ellbogen unten nur bis 106° gebeugt; Knierolle fest und nicht auf den Oberschenkeln | Hände auf dem geraden Teil, Finger an der Stange; Unterarme im Mittelteil in Zugrichtung (höchstens 5°), unten 27°; Ellbogen unten 52°; Knierolle auf den Oberschenkeln; Stange vor dem Gesicht vorbei bis zur oberen Brust |
+
+### 10.6 Verwendete Daten und Lizenzen
+
+- MakeHuman-Grundmodell, Skelett und Gewichte: CC0 1.0, Renderings frei nutzbar (`licenses-data.md` Abschnitt 6). Nicht im Repository, `render.py --hole` lädt sie.
+- Bewegung der drei Pilot-Übungen: eigenes Werk aus dem Rig, keine fremden Bewegungsdaten.
+- Für weitere Familien vorgesehen: CMU (frei, auch in Produkten; Daten nicht weiterverkaufen) und Mixamo (lizenzfrei mit Adobe-Konto; Rohdateien nicht weitergeben). Wortlaut, Belege und was davon nicht zu verwenden ist: `licenses-data.md` Abschnitt 7. Rohdaten nie ins öffentliche Repository.
+- Werkzeuge: Blender 4.2 (GPL) und ffmpeg nur zum Rendern und Kodieren, nicht Teil der App.
+
+### 10.7 Bewegungsfamilien, Aufwand und Mixamo (Abschnitte 3, 7.4 und 7.5; D-411)
+
+`docs/uebungen-bewegungsfamilien.md`: alle 124 Übungen in zwölf Familien mit Variante, Gerät, Quelle der Bewegung und Aufwand. 112 aus der Familie im Code, 3 mit CMU (Farmer's Walk, Hampelmann, Laufband), 9 mit Mixamo. Für die Pilot-Übungen passt keine freie Aufnahme (keine mit Langhantel oder Gerät beschrieben).
+
+**Aufwand für alle 124 mit diesem Verfahren:** rund 300 Stunden, Spanne 250 bis 400, dazu rund 35 Stunden Rechenzeit. Die Pilot-Familien sind am weitesten (Rig, Griffe, Prüfung stehen); teuer sind Geräte mit vielen Teilen und Übungen am Boden mit Körperkontakt.
+
+**Mixamo:** Liste mit Einstellungen in Abschnitt 7 der Übersicht (Figur „Y Bot“, FBX Binary, Without Skin, 30 fps, Keyframe Reduction none). Priorität 1, acht Animationen, nur für die Familien Rumpf und Kondition: Push Up, Situps, Bicycle Crunch, Plank, Burpee, Jumping Jacks, Jumping Rope, Kettlebell Swing. Für die drei Pilot-Übungen brauche ich nichts.
+
+**Adressen:** keine neue nötig (CMU als BVH über GitHub).
+
+### 10.8 Verbleibende Einschränkungen
+
+- **Modell:** MakeHuman-Grundmodell ohne Formziele: neutrale, eher schmale Figur, Oberarm kurz (22,8 cm). Folgen: Kniebeuge nur mit hoher Stangenposition und schräger Stange in der Hand ohne Knick im Handgelenk; Latziehen unten mit 27° schrägem Unterarm und 17° Handgelenk.
+- **Bankdrücken:** Die Schulter bleibt fest; im Mittelteil stehen die Unterarme dadurch bis 17° schräg (Ellbogen etwas außerhalb der Hände). Oben 27° im Handgelenk (12° gewollte Streckung, der Rest seitlich bei gestreckten Armen und breitem Griff). Am kleinen Finger bleibt ein Spalt von 2,6 mm.
+- **Haut:** Verformung nur über Gewichte, ohne Korrekturformen; bei starker Beugung kann ein Gelenk etwas Volumen verlieren (in den Prüfbildern nicht störend aufgefallen). Finger drücken bis 1,7 mm in die Stange (gewollt als Kontakt).
+- **Geräte:** Stange biegt sich nicht, Kabel ist eine gerade Linie.
+- **Nicht geprüft:** das iPhone mit den neuen Videos (Gerätetest steht aus); Mixamo- und CMU-Daten selbst (nicht geladen). WebKit ist in der CI grün (Lauf 40558753879).
+
+### 10.9 Empfehlungen für die nächsten Familien
+
+1. **Kniebeuge** (Frontkniebeuge, Goblet, Multipresse, Hackenschmidt): Rig, Fuß-Lock und Stangenregel stehen; Varianten sind Stangenlage, Griff und Gerät.
+2. **Waagrechtes Drücken** (Schrägbank, Kurzhanteln, Maschine): Bank, Griff und Unterarmregel stehen; Kurzhantelgriff ist neu (kurzer Griff, Hand neutral möglich).
+3. **Senkrechtes Ziehen** (enger Griff, Untergriff, Klimmzug): Latzug und Kabel stehen.
+4. **Hüftbeuge** (Kreuzheben, rumänisches Kreuzheben): neue Regel „Stange am Körper, Rücken gerade, Hüfte nach hinten“.
+5. **Rumpf und Kondition** erst mit den Mixamo-Dateien oder CMU, jeweils nach Sichtprüfung.
+
+Vorher empfehle ich zu prüfen, ob die Formziele von MakeHuman (ebenfalls CC0, auf GitHub) eine Figur mit längerem Oberarm und etwas mehr Muskulatur erlauben; das würde Kompromisse wie die schräge Stange bei der Kniebeuge kleiner machen. Je Familie eine Prüfseite wie `pruef-<übung>.webp`.
+
+### 10.10 Was ich von dir brauche
+
+1. Sichtung der drei neuen Schleifen in der App und der Vergleiche; danach deine Freigabe, welche Familie zuerst übertragen wird.
+2. Mixamo-Dateien nur, wenn Rumpf oder Kondition dran sind (Liste in `docs/uebungen-bewegungsfamilien.md` Abschnitt 7).
+3. Gerätetest am iPhone mit den neuen Videos (Schleife, offline, „Bewegung reduzieren“).
+4. Merge-Freigabe für PR #53.

@@ -1,6 +1,42 @@
-# Übungen · Quellenvorschlag für die Visuals
+# Übungen · Quellen und Wege für die Übungsbilder
 
-Stand: 27.10.2026 · Phase Übungen, Phase 1 Punkt 4 (D-399, Q-24) · Leitlinien `prompts/uebungen-leitlinien-FORM.md` Kapitel 6 und 7 · Entscheidung beim Produktinhaber; nichts davon ist beschafft, gekauft oder in großer Zahl erzeugt.
+Stand: 27.10.2026 · Fortsetzung Abschnitt 6 (D-405) nach der Entscheidung Q-24 (D-400): realistisch wirkender Körper in Grau auf dunklem Grund, arbeitende Muskeln in Lime. Verglichen werden drei Wege; entschieden wird beim Produktinhaber. Nichts gekauft, keine Lizenz abgeschlossen, keine Anfrage gestellt.
+
+## Vergleich der Wege (Q-24)
+
+Plan B und C: nur Websuche (rund 58 Suchen am 27.10.2026), Seiten nicht geöffnet, Lizenztexte nicht vollständig gelesen; was nicht belegt ist, steht als „unbekannt“. Abdeckung per Stichprobe: jede 8. Übung der Bibliothek (16 Übungen, Liste unten). Der Pilot ist gemessen.
+
+| | Pilot: eigene 3D-Pipeline (D-402) | Plan B: Exercise Animatic | Plan B: Gym Visual | Plan C: YMove | Plan C: Stock (Adobe Stock, Shutterstock) |
+|---|---|---|---|---|---|
+| Ergebnis, Beispiele | Kniebeuge, Bankdrücken, Latziehen in der App; `docs/screens/uebungen/pilot-uebersicht.png`, Aufnahme `pilot-player.webm` | 3D-Figur „realistic style“ mit hervorgehobenen Muskeln (Herstellerangabe), z. B. exerciseanimatic.com/product-page/barbell-bench-press-1 | Videos und GIFs „with the muscles worked highlighted“, z. B. gymvisual.com/videos/2936-barbell-close-grip-bench-press.html; Aussehen in den Treffern nicht beschrieben | Videos echter Menschen, 1.164 auf Weiß (Herstellerangabe), ymove.app/exercise-video-library | Fotoserien einzelner Fotografen auf Weiß, z. B. stock.adobe.com/137279529 |
+| Muskeln hervorgehoben | ja, Zonen in Lime, mitarbeitende gedämpft | ja (Farbe ab Werk unbekannt) | ja (Farbe unbekannt) | nein | nein |
+| Eigene Farben, dunkler Grund | ja, genau der FORM-Look (Grau, Lime #C7FF46, #0C1219) | Umfärben laut FAQ erlaubt; Fassungen mit Greenscreen, also freistellbar | unklar: Bearbeitung nicht geregelt, nur KI-Bearbeitung verboten | unbekannt | Adobe Standardlizenz erlaubt Bearbeitung; Muskeln nicht darstellbar |
+| Lizenz für Apps | eigenes Werk auf CC0-Grundlage, ohne Pflichten (`licenses-data.md` Abschnitt 6) | „N-ECL“, lebenslang, ohne Namensnennung, auch in Apps (nur Herstellerangaben) | „N-CRFL“, unbefristet, iOS- und Android-Apps erlaubt; Weitergabe verboten, ein offenes App-Projekt wertet Dateien im öffentlichen Repository als Weitergabe | Abo, Streaming von YMove; Rechte enden mit dem Abo, Dateien müssen gelöscht werden | Standardlizenz je Bild; erweiterte Lizenz bei Produkten zum Verkauf |
+| Model-Freigaben | entfällt (keine echte Person) | entfällt | entfällt | unbekannt | Adobe je Bild vermerkt („Model Released“), Shutterstock laut Drittquelle alle Bezahlinhalte |
+| Preis | 0 €, nur Arbeitszeit und Rechenzeit | Gesamtpaket regulär 599 USD, im Angebot 349 USD (einmalig) | ab 5 Videos je 6 USD, rechnerisch 124 Videos rund 744 USD; GIFs rund 112 USD | 19 bis 299 USD im Monat; offline erst ab 79 USD im Monat | Adobe erweiterte Lizenz 79,99 USD je Bild; sonst unbekannt |
+| Abdeckung der 124 | alle möglich, jede Übung einzeln zu bauen; heute 3 | Stichprobe: 9 von 16 direkt, 5 als Variante, 2 nicht belegt (Cable Fly, Seitstütz); Katalog 2.300 bis 2.600 Videos | Stichprobe: 12 von 16 direkt, 4 als Variante; Katalog über 6.500 GIFs | Stichprobe: 5 direkt, 2 Variante, 9 nicht belegt (wenige Suchen) | keine durchgehende Serie gefunden |
+| Gleiche Person, gleicher Stil | ja, eine Figur, ein Licht, eine Kamera-Regel | ja (eine Serie), männlich und weiblich | vermutlich ja | einheitliches Studio, ob eine Person alles zeigt: unbekannt | nur innerhalb einer Fotoserie |
+| Offline, local-first | ja, Dateien in der App, bei Bedarf gespeichert | ja, wenn die Lizenz Dateien in einer PWA erlaubt (zu klären) | wie links, Weitergabeverbot zu klären | nein (Streaming), offline nur im teuren Abo | ja |
+| Aufwand für 124 | Pipeline steht; je Übung Posen im Code und Prüfung etwa 1 bis 2 Stunden, neue Geräte (Beinpresse, Hackenschmidt, Butterfly, Kabelturm, Rudergerät, Kurzhanteln) je 2 bis 4 Stunden: zusammen grob 150 bis 250 Stunden, dazu deine Freigabe je Übung (Schätzung) | Auswahl, Freistellen und Umfärben je Clip, Zuordnung; Lücken selbst füllen | wie Exercise Animatic, falls Bearbeitung erlaubt | Anbindung an fremden Dienst | 124 einzelne Bilder suchen, freistellen; Lücken bleiben |
+| Renderzeit | gemessen auf 4 CPU-Kernen (Cycles, 40 Samples, 720 × 540, 60 Bilder): 968, 1.179 und 928 s je Übung, also 15 bis 20 Minuten oder rund 17 s je Bild; für 124 Übungen rund 35 Stunden Rechenzeit. Mit Grafikkarte deutlich weniger (nicht gemessen). Dateien je Übung 70 bis 95 KB (MP4 und WebM), zusammen 280 KB | entfällt | entfällt | entfällt | entfällt |
+| Grenzen | Grundmodell von MakeHuman ohne Körperformen (Muskulatur, Proportionen): wirkt wie eine Gliederpuppe, nicht wie ein trainierter Körper; Muskelzonen sind gemalte Bereiche, keine einzelnen Muskeln; Hände und Finger vereinfacht; keine Kollisionsprüfung (Stange und Polster können den Körper streifen); Maschinen schematisch | Aussehen, Logo im Paket, Alpha-Kanal und Lieferform vor dem Kauf zu prüfen | Aussehen unbekannt, Bearbeitungs- und Weitergaberecht unklar | widerspricht local-first und „keine Nutzdaten an Dritte“ | keine Muskeln, uneinheitlicher Stil |
+
+**Empfehlung: Plan B mit Exercise Animatic, nach schriftlicher Klärung; der Pilot bleibt der Rückfallweg.**
+
+Begründung:
+
+1. **Realismus.** Q-24 verlangt einen realistisch wirkenden Körper. Der Pilot trifft Farben, Licht und Bewegung genau, sein Körper bleibt aber eine glatte Gliederpuppe. Besser würde er erst mit den Körperformen von MakeHuman (Muskulatur, Proportionen) oder einem besseren CC0-Modell; die Dateien dazu lagen in dieser Sitzung nicht unter den bekannten Adressen, und `github.com` selbst war gesperrt. Ein fertiger Katalog hat diesen Stand ab Werk.
+2. **Aufwand.** Für 124 Übungen braucht der Pilot nach meiner Schätzung 150 bis 250 Stunden Arbeit und je Übung deine Freigabe der Bewegung. Exercise Animatic kostet einmalig 349 bis 599 USD und deckt die Stichprobe zu 14 von 16 ab (9 direkt, 5 als Variante).
+3. **FORM-Look.** Exercise Animatic erlaubt laut FAQ das Umfärben und liefert Fassungen mit Greenscreen. Grau auf dunklem Grund mit Lime-Zonen ist damit erreichbar, aber nicht bewiesen.
+4. **Plan C** scheidet aus: Fotos und Videos zeigen keine Muskeln, YMove streamt von fremden Servern, und Stock-Serien decken die Liste nicht.
+
+Vor einem Kauf schriftlich klären (Exercise Animatic, zum Vergleich auch Gym Visual): Darf man umfärben und freistellen? Darf man die Dateien in einer öffentlich erreichbaren PWA ausliefern und im Repository ablegen? Gibt es sie ohne Logo und mit Alpha-Kanal? Gibt es die Lücken der Stichprobe (Cable Fly, Seitstütz)? Am besten mit je einem Probeclip für die drei Pilot-Übungen, damit der Vergleich mit dem Pilot am selben Bild möglich ist. Fällt die Klärung negativ aus, ist der Pilot der Weg: zuerst ein besseres Grundmodell, dann die Übungen der Vorlagen.
+
+Stichprobe: 1 Bankdrücken mit Langhantel, 9 Fliegende am Kabel, 17 Latziehen, 25 Überzüge am Kabel, 33 Arnold Press, 41 Schulterdrücken stehend, 49 Handgelenkcurls, 57 Enges Bankdrücken, 65 Seitstütz, 73 Bird Dog, 81 Hip Thrust an der Maschine, 89 Kniebeuge mit Langhantel, 97 Beinstrecker, 105 Good Mornings, 113 Wadenheben mit Kurzhanteln, 121 Rudergerät. Weitere geprüfte Anbieter: Muscle & Motion (App-Lizenz nur auf Anfrage, Inhalte bleiben in deren App), Envato Elements (einzelne passende Clips, keine Serie), WorkoutLabs (2D), Hyperhuman, Central Athlete, Getty Images (zu teuer), Auftragsarbeit über Upwork oder Fiverr (laut einem Auftragstext 40 bis 100 USD je Animation, Qualität uneinheitlich).
+
+---
+
+Die folgenden Abschnitte sind der Stand aus Phase 1 (D-399), vor der Entscheidung Q-24. Der gezeichnete Stil ist damit verworfen.
 
 ## 1. Wie geprüft wurde
 

@@ -1,0 +1,559 @@
+"""Rig mit inverser Kinematik für die Übungsbilder (D-407).
+
+Statt Gelenkwinkel einzeln zu setzen, rechnet das Rig jede Haltung aus Zielen:
+
+- **Beine:** Zwei-Gelenk-IK von der Hüfte zum Fußgelenk. Das Knie liegt in der Ebene aus
+  Hüfte, Fußgelenk und der Kniestellung (Richtung der Zehen), es kann nicht nach innen kippen.
+  Der Fuß bleibt flach und fest am Boden („foot lock“), gedreht um die Fußstellung.
+- **Arme:** Zwei-Gelenk-IK von der Schulter zum Handgelenk, Ellbogen zur Richtung des Pol-Ziels.
+  Die Hand hängt am Gerät: Ihre Lage ergibt sich aus dem Griff (Stange in der Handfläche, quer zur
+  Hand), nicht umgekehrt. Die Unterarmdrehung (Pronation) verteilt sich auf die zwei Segmente.
+- **Finger:** Jedes Glied beugt sich um die Achse der Stange; die Winkel werden so gesucht, dass
+  die Finger die Stange umschließen, ohne sie zu durchdringen. Der Daumen umgreift gegenläufig.
+- **Rumpf:** Becken und Wirbelsäule als starre oder fein verteilte Drehungen um echte Gelenkpunkte.
+
+Gerechnet wird mit Segment-Transformationen `G` (Grundhaltung → Haltung) im Raum des Skeletts; am
+Ende werden daraus die lokalen Matrizen der Knochen. Kein Blender-IK-Löser, keine Zufallswinkel:
+dieselben Ziele ergeben immer dieselbe Haltung.
+"""
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass, field
+
+import bpy
+from mathutils import Matrix, Quaternion, Vector
+
+X, Y, Z = Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1))
+KONTAKT = -0.0008  # Finger berühren die Stange, Haut 0,8 mm eingedrückt
+
+
+def senkrecht(v: Vector, achse: Vector) -> Vector:
+    """Anteil von v senkrecht zur Achse, normiert."""
+    a = achse.normalized()
+    w = v - v.dot(a) * a
+    return w.normalized() if w.length > 1e-9 else w
+
+
+def rahmen(y: Vector, z: Vector) -> Matrix:
+    """Orthonormale Basis (3 × 3) mit y entlang der ersten Richtung, z aus der zweiten."""
+    yy = y.normalized()
+    zz = senkrecht(z, yy)
+    xx = yy.cross(zz)
+    return Matrix((xx, yy, zz)).transposed()
+
+
+def abbild(alt_y: Vector, alt_z: Vector, neu_y: Vector, neu_z: Vector) -> Matrix:
+    """Drehung, die die Basis (alt_y, alt_z) auf (neu_y, neu_z) bringt."""
+    return rahmen(neu_y, neu_z) @ rahmen(alt_y, alt_z).transposed()
+
+
+def um_punkt(punkt: Vector, drehung: Matrix) -> Matrix:
+    """Drehung (3 × 3) um einen Punkt als 4 × 4."""
+    return Matrix.Translation(punkt) @ drehung.to_4x4() @ Matrix.Translation(-punkt)
+
+
+def starr(von: Vector, nach: Vector, drehung: Matrix) -> Matrix:
+    """Starre Abbildung: dreht um `von` und verschiebt `von` nach `nach`."""
+    return Matrix.Translation(nach) @ drehung.to_4x4() @ Matrix.Translation(-von)
+
+
+def achse_winkel(achse: Vector, grad: float) -> Matrix:
+    return Quaternion(achse.normalized(), math.radians(grad)).to_matrix()
+
+
+def winkel_um(a: Vector, b: Vector, achse: Vector) -> float:
+    """Vorzeichenbehafteter Winkel (Grad) von a nach b um die Achse."""
+    pa, pb = senkrecht(a, achse), senkrecht(b, achse)
+    if pa.length < 1e-9 or pb.length < 1e-9:
+        return 0.0
+    return math.degrees(math.atan2(achse.normalized().dot(pa.cross(pb)), pa.dot(pb)))
+
+
+def zwei_glieder(start: Vector, ziel: Vector, l1: float, l2: float, richtung: Vector):
+    """Mittleres Gelenk einer Zwei-Glieder-Kette. Gibt (Gelenk, Ausweichrichtung, erreicht) zurück."""
+    d_vec = ziel - start
+    d = d_vec.length
+    erreicht = d <= (l1 + l2) * 0.9999 and d >= abs(l1 - l2)
+    d = min(max(d, abs(l1 - l2) + 1e-6), (l1 + l2) * 0.9999)
+    u = d_vec.normalized()
+    a = (l1 * l1 - l2 * l2 + d * d) / (2 * d)
+    h = math.sqrt(max(l1 * l1 - a * a, 0.0))
+    p = senkrecht(richtung, u)
+    return start + u * a + p * h, p, erreicht
+
+
+def gelenkkreis(S: Vector, W: Vector, l1: float, l2: float):
+    """Kreis aller möglichen Lagen des mittleren Gelenks: Mitte, Radius, zwei Achsen."""
+    d_vec = W - S
+    d = min(max(d_vec.length, abs(l1 - l2) + 1e-6), (l1 + l2) * 0.9999)
+    u = d_vec.normalized()
+    a = (l1 * l1 - l2 * l2 + d * d) / (2 * d)
+    h = math.sqrt(max(l1 * l1 - a * a, 0.0))
+    e1 = senkrecht(Z if abs(u.dot(Z)) < 0.95 else X, u)
+    e2 = u.cross(e1)
+    return S + u * a, h, e1, e2
+
+
+def ellbogen_zur_richtung(S: Vector, W: Vector, l1: float, l2: float, richtung: Vector) -> Vector:
+    """Ellbogen so, dass der Unterarm (Ellbogen → Hand) möglichst in `richtung` zeigt.
+    Geschlossene Lösung: eindeutig und stetig, ohne Suche und ohne Gedächtnis."""
+    M, h, e1, e2 = gelenkkreis(S, W, l1, l2)
+    # f·r = ((W - M) - h·(e1 cos φ + e2 sin φ))·r → maximal, wenn e(φ) entgegen r zeigt
+    A, B = e1.dot(richtung), e2.dot(richtung)
+    if abs(A) + abs(B) < 1e-9:
+        return M + e1 * h
+    phi = math.atan2(B, A) + math.pi
+    return M + (e1 * math.cos(phi) + e2 * math.sin(phi)) * h
+
+
+@dataclass
+class Griff:
+    """Lage der Stange in der Hand (Grundhaltung). Achse quer zur Hand entlang der Knöchellinie."""
+
+    mitte: Vector  # Mittelpunkt der Stange in der Grundhaltung, Raum des Skeletts
+    achse: Vector  # Richtung Zeigefinger → kleiner Finger
+    handflaeche: Vector  # Normale der Handfläche (zur Stange hin)
+    laengs: Vector  # Handgelenk → Fingeransatz
+    radius: float
+    finger: dict[str, list[float]] = field(default_factory=dict)  # Beugewinkel je Glied
+
+
+class Rig:
+    def __init__(self, skelett: bpy.types.Object, koerper: bpy.types.Object):
+        self.sk = skelett
+        self.koerper = koerper
+        self.knochen = skelett.data.bones
+        self.ruhe = {b.name: b.matrix_local.copy() for b in self.knochen}
+        self.kopf = {b.name: b.head_local.copy() for b in self.knochen}
+        self.ende = {b.name: b.tail_local.copy() for b in self.knochen}
+        self.reihe: list[str] = []
+
+        def tiefe(b):
+            self.reihe.append(b.name)
+            for c in b.children:
+                tiefe(c)
+
+        for b in self.knochen:
+            if b.parent is None:
+                tiefe(b)
+        self.G: dict[str, Matrix] = {}
+        self.versatz = skelett.location.copy()
+        self.meldungen: list[str] = []
+        self._hand = self._handdaten()
+
+    # ------------------------------------------------------------------ Grundlagen
+
+    def welt(self, p: Vector) -> Vector:
+        return p + self.versatz
+
+    def lokal(self, p: Vector) -> Vector:
+        return p - self.versatz
+
+    def zuruecksetzen(self) -> None:
+        self.G = {}
+        self.meldungen = []
+
+    def g(self, name: str) -> Matrix:
+        b = self.knochen[name]
+        while b is not None:
+            if b.name in self.G:
+                return self.G[b.name]
+            b = b.parent
+        return Matrix.Identity(4)
+
+    def setze(self, name: str, G: Matrix) -> None:
+        self.G[name] = G
+
+    def dreh(self, name: str, drehung: Matrix) -> None:
+        """Vorwärtskinematik: Knochen relativ zum Elternteil um seinen Kopf drehen (Achsen der
+        Grundhaltung)."""
+        eltern = self.knochen[name].parent
+        Gp = self.g(eltern.name) if eltern else Matrix.Identity(4)
+        self.G[name] = Gp @ um_punkt(self.kopf[name], drehung)
+
+    def punkt(self, name: str, p_ruhe: Vector) -> Vector:
+        """Lage eines Punkts der Grundhaltung, der am Knochen hängt (Raum des Skeletts)."""
+        return self.g(name) @ p_ruhe
+
+    def anwenden(self) -> None:
+        for name in self.reihe:
+            b = self.knochen[name]
+            pose = self.g(name) @ self.ruhe[name]
+            if b.parent is not None:
+                eltern = self.g(b.parent.name) @ self.ruhe[b.parent.name]
+                rel = self.ruhe[b.parent.name].inverted() @ self.ruhe[name]
+                basis = rel.inverted() @ eltern.inverted() @ pose
+            else:
+                basis = self.ruhe[name].inverted() @ pose
+            self.sk.pose.bones[name].matrix_basis = basis
+        bpy.context.view_layer.update()
+
+    def brust_flach(self, faktor: float = 0.45) -> None:
+        """Brust flacher (geschlechtsneutrale Figur): Brustknochen entlang ihrer Richtung stauchen."""
+        for s in "LR":
+            name = "breast." + s
+            d = (self.ende[name] - self.kopf[name]).normalized()
+            S = Matrix.Identity(3)
+            for i in range(3):
+                for j in range(3):
+                    S[i][j] -= (1 - faktor) * d[i] * d[j]
+            eltern = self.knochen[name].parent
+            Gp = self.g(eltern.name) if eltern else Matrix.Identity(4)
+            self.G[name] = Gp @ um_punkt(self.kopf[name], S)
+
+    # ------------------------------------------------------------------ Beine
+
+    def bein(self, seite: str, knoechel: Vector, knie_richtung: Vector, fuss_grad: float) -> dict:
+        """Fuß flach am Boden, um `fuss_grad` nach außen gedreht, Fußgelenk bei `knoechel`.
+        Das Knie zeigt in `knie_richtung` (in der Regel die Zehenrichtung)."""
+        s = seite
+        H0, K0, A0 = self.kopf["upperleg01." + s], self.kopf["lowerleg01." + s], self.kopf["foot." + s]
+        H = self.punkt("pelvis." + s, H0)
+        l1, l2 = (K0 - H0).length, (A0 - K0).length
+        K, p, ok = zwei_glieder(H, knoechel, l1, l2, knie_richtung)
+        if not ok:
+            self.meldungen.append(f"Bein {s}: Fußgelenk nicht erreichbar")
+        vorn = -Y
+        R_ober = abbild(K0 - H0, vorn, K - H, p)
+        G_ober = starr(H0, H, R_ober)
+        self.setze("upperleg01." + s, G_ober)
+        self.setze("upperleg02." + s, G_ober)
+        R_unter = abbild(A0 - K0, vorn, knoechel - K, p)
+        G_unter = starr(K0, K, R_unter)
+        self.setze("lowerleg01." + s, G_unter)
+        self.setze("lowerleg02." + s, G_unter)
+        drehung = achse_winkel(Z, fuss_grad if s == "L" else -fuss_grad)
+        self.setze("foot." + s, starr(A0, knoechel, drehung))
+        return {"huefte": H, "knie": K, "knoechel": knoechel, "richtung": p}
+
+    # ------------------------------------------------------------------ Hände und Arme
+
+    def _handdaten(self) -> dict[str, dict]:
+        daten = {}
+        k = self.koerper
+        for s in "LR":
+            W0 = self.kopf["wrist." + s]
+            iM, mM, lM = self.kopf["finger2-1." + s], self.kopf["finger3-1." + s], self.kopf["finger5-1." + s]
+            n = (iM - W0).cross(lM - W0).normalized()
+            if (self.ende["finger1-3." + s] - W0).dot(n) < 0:
+                n = -n
+            achse = (lM - iM).normalized()
+            n = senkrecht(n, achse)
+            laengs = senkrecht(mM - W0, achse)
+            namen = [f"metacarpal{i}.{s}" for i in range(1, 5)]
+            idx = {k.vertex_groups[nm].index for nm in namen}
+            L = (mM - W0).length
+            proben = []
+            for v in k.data.vertices:
+                w = sum(g.weight for g in v.groups if g.group in idx)
+                if w < 0.5:
+                    continue
+                rel = v.co - W0
+                t = rel.dot(laengs) / L
+                proben.append((t, rel.dot(n), rel.dot(achse)))
+            quer = ((iM + lM) / 2 - W0).dot(achse)
+            daten[s] = {"W0": W0, "n": n, "achse": achse, "laengs": laengs, "L": L, "proben": proben, "quer": quer}
+        return daten
+
+    def handdaten(self, seite: str) -> dict:
+        """Achsen der Hand in der Grundhaltung: Handgelenk W0, Handflächennormale n, Knöchelachse
+        achse, Längsachse laengs."""
+        return self._hand[seite]
+
+    def handflaeche(self, seite: str, t: float) -> Vector:
+        """Punkt auf der Haut der Handfläche bei Anteil t (0 Handgelenk, 1 Fingeransatz), mittig."""
+        d = self._hand[seite]
+        nahe = [p for p in d["proben"] if abs(p[0] - t) < 0.08 and abs(p[2] - d["quer"]) < 0.02]
+        tiefe = max(p[1] for p in nahe) if nahe else 0.015
+        return d["W0"] + d["laengs"] * (t * d["L"]) + d["achse"] * d["quer"] + d["n"] * tiefe
+
+    def griff(self, seite: str, t: float, radius: float, daumen: bool = True, schraeg: float = 0.0) -> Griff:
+        """Griff um eine Stange mit `radius`, quer in der Handfläche bei Anteil t. `schraeg` (Grad)
+        legt die Stange schräg in die Hand (zur Kleinfingerseite tiefer), wie bei breiten Griffen,
+        damit Hand und Unterarm in einer Linie bleiben."""
+        d = self._hand[seite]
+        achse = d["achse"]
+        if schraeg:
+            achse = achse_winkel(d["n"], schraeg if seite == "L" else -schraeg) @ achse
+        mitte = self.handflaeche(seite, t) + d["n"] * (radius - 0.0015)
+        # Handfläche ist zur Daumenseite dicker: Stange so weit von der Handfläche weg, dass kein
+        # Punkt von Hand und Daumenballen mehr als 2,5 mm in die Stange ragt (Haut gibt nach).
+        k = self.koerper
+        hand = {k.vertex_groups[n].index for n in
+                [f"metacarpal{i}.{seite}" for i in range(1, 5)] + [f"wrist.{seite}", f"finger1-1.{seite}"]}
+        punkte = [v.co for v in k.data.vertices if sum(gg.weight for gg in v.groups if gg.group in hand) > 0.4]
+        for _ in range(6):
+            tiefste = min(self._abstand_achse(p, mitte, achse) for p in punkte if (p - mitte).dot(d["n"]) < 0)
+            if tiefste >= radius - 0.0025:
+                break
+            mitte = mitte + d["n"] * (radius - 0.0025 - tiefste)
+        g = Griff(mitte, achse, d["n"], d["laengs"], radius)
+        # Fingerdicke (Knochen bis Haut der Beugeseite) als Startwert; danach am verformten Netz
+        # nachgemessen und angepasst, bis jeder Finger die Stange berührt (Haut 0,8 mm eingedrückt).
+        dicke = {"finger1": 0.0125, "finger2": 0.0085, "finger3": 0.0085, "finger4": 0.0085, "finger5": 0.0065}
+        if not daumen:
+            del dicke["finger1"]
+        for runde in range(4):
+            for f in ("finger2", "finger3", "finger4", "finger5"):
+                g.finger[f] = self._finger_wickeln(seite, f, g, dicke[f])
+            if daumen:
+                g.finger["finger1"] = self._daumen_wickeln(seite, g, dicke["finger1"])
+            abstand = self._kontakt(seite, g)
+            g.finger["_abstand"] = dict(abstand)
+            if runde == 3 or all(abs(a - KONTAKT) < 0.0004 for a in abstand.values()):
+                break
+            for f, a in abstand.items():
+                dicke[f] = max(0.002, dicke[f] - (a - KONTAKT))
+        self.zuruecksetzen()
+        self.anwenden()
+        return g
+
+    def _verformt(self) -> list[Vector]:
+        """Eckpunkte des verformten Körpers (Raum des Skeletts), ohne Glättung."""
+        sub = self.koerper.modifiers.get("Glatt")
+        if sub:
+            sub.show_viewport = False
+        deps = bpy.context.evaluated_depsgraph_get()
+        obj = self.koerper.evaluated_get(deps)
+        mesh = obj.to_mesh()
+        pkte = [v.co.copy() for v in mesh.vertices]
+        obj.to_mesh_clear()
+        if sub:
+            sub.show_viewport = True
+        return pkte
+
+    def _kontakt(self, seite: str, g: Griff) -> dict[str, float]:
+        """Geringster Abstand (m) jedes Fingers zur Stangenoberfläche, gemessen am verformten Netz
+        mit gebeugten Fingern und Hand in Grundhaltung (negativ = Haut eingedrückt)."""
+        self.zuruecksetzen()
+        self.finger_setzen(seite, g, Matrix.Identity(4))
+        self.anwenden()
+        netz = self._verformt()
+        k = self.koerper
+        namen = {gr.index: gr.name for gr in k.vertex_groups}
+        erg: dict[str, float] = {}
+        for v, p in zip(k.data.vertices, netz):
+            for gg in v.groups:
+                n = namen[gg.group]
+                if gg.weight <= 0.5 or not (n.startswith("finger") and n.endswith("." + seite)):
+                    continue
+                f, glied = n.split(".")[0].split("-")
+                if f not in g.finger or (f == "finger1" and glied == "1"):  # Daumenballen gehört zur Handfläche
+                    continue
+                a = self._abstand_achse(p, g.mitte, g.achse) - g.radius
+                erg[f] = min(erg.get(f, 1.0), a)
+        return erg
+
+    def _kette(self, seite: str, f: str) -> list[tuple[Vector, Vector]]:
+        return [(self.kopf[f"{f}-{i}.{seite}"], self.ende[f"{f}-{i}.{seite}"]) for i in (1, 2, 3)]
+
+    @staticmethod
+    def _abstand_achse(p: Vector, mitte: Vector, achse: Vector) -> float:
+        r = p - mitte
+        return (r - r.dot(achse) * achse).length
+
+    def _spreizung(self, seite: str, f: str, g: Griff, achse: Vector) -> Matrix:
+        """Drehung um die Handflächennormale, die den Finger quer zur Stange stellt (Finger im
+        Griff parallel statt gespreizt)."""
+        kopf, ende = self._kette(seite, f)[0]
+        d = ende - kopf
+        ziel = senkrecht(d, g.achse)
+        return achse_winkel(g.handflaeche, winkel_um(d, ziel, g.handflaeche))
+
+    def _finger_wickeln(self, seite: str, f: str, g: Griff, dicke: float) -> list[float]:
+        """Beugewinkel (Grad) der drei Glieder. Gelenk für Gelenk: Jedes Glied beugt sich um die
+        Stangenachse, bis sein Ende auf dem Kreis um die Stange liegt (Fingerdicke plus Radius),
+        so wickelt sich der Finger um die Stange, ohne sie zu durchdringen."""
+        kette = self._kette(seite, f)
+        R = g.radius + dicke
+        achse = g.achse if g.achse.dot(g.laengs.cross(g.handflaeche)) > 0 else -g.achse
+        g.finger["_achse_" + seite] = achse
+        Rs = self._spreizung(seite, f, g, achse)
+        g.finger["_spreiz_" + f + seite] = Rs
+        # Endgelenk folgt dem Mittelgelenk (etwa 0,7 : 1, wie bei der echten Hand); gesucht
+        # werden Grund- und Mittelgelenk so, dass Mittel-, Endgelenk und Spitze auf dem Kreis um
+        # die Stange liegen und kein Punkt des Fingers in die Stange ragt.
+        def kosten(a1: float, a2: float) -> float:
+            pkte = self._fingerpunkte(kette, achse, (a1, a2, 0.7 * a2), Rs)
+            wert = 0.0
+            for i, q in enumerate(pkte[1:], start=1):
+                r = self._abstand_achse(q, g.mitte, g.achse)
+                if r < R - 0.0015:
+                    wert += 1e6 * (R - 0.0015 - r) ** 2
+                if i in (2, 4, 6):  # Mittelgelenk, Endgelenk, Spitze: auf der Stange
+                    wert += 1e4 * (r - (R + 0.0005)) ** 2
+            return wert
+
+        best = min(((a1, a2) for a1 in range(0, 101, 2) for a2 in range(0, 111, 2)), key=lambda w: kosten(*w))
+        return [float(best[0]), float(best[1]), round(0.7 * best[1], 1)]
+
+    @staticmethod
+    def _fingerpunkte(kette, achse: Vector, winkel, Rs: Matrix | None = None) -> list[Vector]:
+        """Punkte entlang des gebeugten Fingers (Gelenke und Mitten der Glieder)."""
+        Rs = Rs or Matrix.Identity(3)
+        pkte = [kette[0][0]]
+        p = kette[0][0]
+        summe = 0.0
+        for (kopf, ende), w in zip(kette, winkel):
+            summe += w
+            d = achse_winkel(achse, summe) @ (Rs @ (ende - kopf))
+            pkte.append(p + d * 0.5)
+            p = p + d
+            pkte.append(p)
+        return pkte
+
+    def _daumen_wickeln(self, seite: str, g: Griff, dicke: float) -> list[float]:
+        """Daumen gegenläufig um die Stange: Drehung im Grundgelenk (zwei Achsen), Beugung der
+        beiden Glieder um die Stangenachse in Gegenrichtung."""
+        kette = self._kette(seite, "finger1")
+        R = g.radius + dicke  # Daumen dicker als die Finger
+        achse = g.finger.get("_achse_" + seite, g.achse)
+        # Ziel der Daumenspitze: auf der Gegenseite der Stange (gegenüber der Handfläche), auf Höhe des
+        # Zeigefingeransatzes, knapp über der Oberfläche: Der Daumen umgreift die Stange, statt an ihr
+        # entlang zu liegen.
+        ax = g.achse.normalized()
+        basis = self.kopf[f"finger2-1.{seite}"]
+        ziel = g.mitte + ax * (basis - g.mitte).dot(ax) + g.handflaeche.normalized() * (R + 0.002)
+        p0 = kette[0][0]
+
+        def kosten(a: float, b: float, c: float, e: float) -> float:
+            Rb = achse_winkel(g.handflaeche, a) @ achse_winkel(achse, b)
+            p1 = p0 + Rb @ (kette[0][1] - kette[0][0])
+            p2 = p1 + achse_winkel(-achse, c) @ (Rb @ (kette[1][1] - kette[1][0]))
+            p3 = p2 + achse_winkel(-achse, c + e) @ (Rb @ (kette[2][1] - kette[2][0]))
+            wert = 0.0
+            for p in (p1, (p1 + p2) / 2, p2, (p2 + p3) / 2, p3):
+                r = self._abstand_achse(p, g.mitte, g.achse)
+                if r < R - 0.001:
+                    wert += 50 * (R - r) ** 2 * 1e4
+                wert += 0.3 * (r - R) ** 2 * 1e4
+            return wert + 20.0 * (p3 - ziel).length ** 2 * 1e2
+
+        # grob über den ganzen Bereich, dann zweimal feiner um die beste Lage
+        raster = [(a, b, c, e) for a in range(-80, 81, 10) for b in range(-80, 81, 10)
+                  for c in range(0, 91, 10) for e in range(0, 91, 10)]
+        beste = min(raster, key=lambda w: kosten(*w))
+        for schritt in (4, 1.5):
+            raster = [(beste[0] + i * schritt, beste[1] + j * schritt, max(0.0, beste[2] + k * schritt),
+                       max(0.0, beste[3] + m * schritt))
+                      for i in (-2, -1, 0, 1, 2) for j in (-2, -1, 0, 1, 2) for k in (-2, -1, 0, 1, 2) for m in (-2, -1, 0, 1, 2)]
+            beste = min(raster, key=lambda w: kosten(*w))
+        return [float(w) for w in beste]
+
+    def finger_setzen(self, seite: str, g: Griff, G_hand: Matrix) -> None:
+        achse = g.finger.get("_achse_" + seite, g.achse)
+        for f in ("finger2", "finger3", "finger4", "finger5"):
+            winkel = g.finger[f]
+            Rs = g.finger.get("_spreiz_" + f + seite, Matrix.Identity(3))
+            Gp = G_hand
+            for i, w in enumerate(winkel, start=1):
+                name = f"{f}-{i}.{seite}"
+                drehung = achse_winkel(achse, w) @ Rs if i == 1 else Rs.inverted() @ achse_winkel(achse, w) @ Rs
+                G = Gp @ um_punkt(self.kopf[name], drehung)
+                self.setze(name, G)
+                Gp = G
+        if "finger1" in g.finger:
+            a, b, c, e = g.finger["finger1"]
+            Rb = achse_winkel(g.handflaeche, a) @ achse_winkel(achse, b)
+            n1 = f"finger1-1.{seite}"
+            G1 = G_hand @ um_punkt(self.kopf[n1], Rb)
+            self.setze(n1, G1)
+            n2 = f"finger1-2.{seite}"
+            # Beugeachse im Raum der Grundhaltung nach der Drehung des Grundglieds
+            G2 = G1 @ um_punkt(self.kopf[n2], Rb.inverted() @ achse_winkel(-achse, c) @ Rb)
+            self.setze(n2, G2)
+            n3 = f"finger1-3.{seite}"
+            G3 = G2 @ um_punkt(self.kopf[n3], Rb.inverted() @ achse_winkel(-achse, e) @ Rb)
+            self.setze(n3, G3)
+
+    def hand_an_stange(self, seite: str, g: Griff, mitte: Vector, stangen_achse: Vector, phi: float) -> Matrix:
+        """Starre Abbildung der Hand: Stangenmitte des Griffs auf `mitte`, Griffachse auf die
+        Stangenachse, Hand um die Stange um `phi` Grad gedreht."""
+        d = self._hand[seite]
+        e1 = senkrecht(d["n"], g.achse)
+        k_neu = stangen_achse.normalized()
+        hilf = Z if abs(k_neu.dot(Z)) < 0.9 else Y
+        e1_neu = senkrecht(hilf, k_neu)
+        R0 = abbild(g.achse, e1, k_neu, e1_neu)
+        R = achse_winkel(k_neu, phi) @ R0
+        return starr(g.mitte, mitte, R)
+
+    def arm(self, seite: str, g: Griff, mitte: Vector, stangen_achse: Vector, ellbogen_richtung: Vector,
+            streckung: float = 0.0, ellbogen=None, phi: float | None = None) -> dict:
+        """Arm an die Stange: Die Hand liegt im Griff an `mitte` und kann sich nur um die Stange
+        drehen (Winkel φ). Für jedes φ liegt das Handgelenk fest; den Ellbogen bestimmt die Regel
+        der Übung `ellbogen(S, W, l1, l2)` (geschlossen, z. B. Unterarm senkrecht) oder die
+        Pol-Richtung. Gewählt wird das φ, bei dem das Handgelenk am geradesten ist (Hand in
+        Verlängerung des Unterarms, plus `streckung` Grad zum Handrücken). Gesucht wird über den ganzen
+        Kreis, dann fein: kein Pendeln zwischen Lösungen, dieselbe Phase ergibt dieselbe Haltung. Mit
+        `phi` ist die Drehung vorgegeben (Armhaltung, die fest zum Rumpf gesucht wurde)."""
+        s = seite
+        S0, E0, W0 = self.kopf["upperarm01." + s], self.kopf["lowerarm01." + s], self.kopf["wrist." + s]
+        S = self.punkt("shoulder01." + s, S0)
+        l1, l2 = (E0 - S0).length, (W0 - E0).length
+        d = self._hand[s]
+        k = stangen_achse.normalized()
+
+        def ellbogen_fuer(W: Vector) -> Vector:
+            if ellbogen is not None:
+                return ellbogen(S, W, l1, l2)
+            return zwei_glieder(S, W, l1, l2, ellbogen_richtung)[0]
+
+        def knick(phi: float) -> float:
+            G = self.hand_an_stange(s, g, mitte, k, phi)
+            W = G @ W0
+            E = ellbogen_fuer(W)
+            f = (W - E).normalized()
+            R = G.to_3x3()
+            ziel = f
+            if streckung:
+                ziel = achse_winkel(f.cross(-(R @ d["n"])), streckung) @ f
+            return math.degrees((R @ d["laengs"]).angle(ziel))
+
+        if phi is None:
+            phi = min(range(-180, 180, 3), key=knick)
+            lo, hi = phi - 3.0, phi + 3.0
+            for _ in range(30):  # Goldener Schnitt im Umfeld des besten Rasterpunkts
+                m1, m2 = hi - 0.618 * (hi - lo), lo + 0.618 * (hi - lo)
+                if knick(m1) < knick(m2):
+                    hi = m2
+                else:
+                    lo = m1
+            phi = (lo + hi) / 2
+        G_hand = self.hand_an_stange(s, g, mitte, k, phi)
+        W = G_hand @ W0
+        E = ellbogen_fuer(W)
+        p = senkrecht(E - S, W - S)
+        ok = abs((E - S).length - l1) < 2e-3 and abs((W - E).length - l2) < 2e-3
+        if not ok:
+            self.meldungen.append(f"Arm {s}: Handgelenk nicht erreichbar")
+        u, f = (E - S).normalized(), (W - E).normalized()
+        u0, f0 = (E0 - S0).normalized(), (W0 - E0).normalized()
+        scharnier0 = u0.cross(f0).normalized()
+        scharnier = u.cross(-p).normalized() if u.cross(-p).length > 1e-6 else u.cross(f).normalized()
+        R_ober = abbild(u0, scharnier0.cross(u0), u, scharnier.cross(u))
+        G_ober = starr(S0, S, R_ober)
+        self.setze("upperarm01." + s, G_ober)
+        self.setze("upperarm02." + s, G_ober)
+        R_unter0 = abbild(f0, scharnier0, f, scharnier)
+        n_ohne = R_unter0 @ d["n"]
+        n_soll = G_hand.to_3x3() @ d["n"]
+        tau = winkel_um(n_ohne, n_soll, f)
+        for name, anteil in (("lowerarm01." + s, 0.35), ("lowerarm02." + s, 0.85)):
+            R = achse_winkel(f, tau * anteil) @ R_unter0
+            self.setze(name, starr(E0, E, R))
+        self.setze("wrist." + s, G_hand)
+        for i in range(1, 5):
+            self.setze(f"metacarpal{i}.{s}", G_hand)
+        self.finger_setzen(s, g, G_hand)
+        laengs_neu = G_hand.to_3x3() @ d["laengs"]
+        return {
+            "schulter": S,
+            "ellbogen": E,
+            "handgelenk": W,
+            "ellbogenwinkel": 180 - math.degrees(u.angle(f)),
+            "handgelenk_knick": math.degrees(f.angle(laengs_neu)),
+            "pronation": tau,
+            "phi": phi,
+        }

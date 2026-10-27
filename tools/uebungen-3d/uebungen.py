@@ -1,274 +1,581 @@
-"""Die drei Übungen des Piloten als Posen im Code (D-402).
+"""Die drei Pilot-Übungen auf dem IK-Rig (D-407, D-408).
 
-Jede Übung baut ihre Szene (Figur, Geräte, Kamera, Zonen) und setzt je Phase p (0 = Ausgang,
-1 = Endposition) die Ziele der Gelenke. Gelenkwinkel ergeben sich aus der IK; geprüft wird in
-`render.py --pruefen` (Kniewinkel, Hüftwinkel, Lage der Stange).
+Jede Übung baut ihre Szene (Figur, Geräte, Muskelzonen) und rechnet je Phase p (0 = Ausgang,
+1 = Endposition) die Haltung aus Zielen: Füße fest am Boden, Hände im Griff an der Stange, Becken
+und Rumpf so, dass die Last über der Unterstützungsfläche bleibt. `pruefwerte()` liefert die
+Kennwerte für die Qualitätskontrolle (Gelenkwinkel, Abstände, Meldungen des Rigs).
 """
 from __future__ import annotations
 
 import math
 
 import bpy
-from mathutils import Euler, Vector
+from mathutils import Matrix, Vector
 
 import figur
 import geraete
 import zonen
-from haltung import Steuerung, leer, mische
+from rig import X, Y, Z, Rig, achse_winkel, ellbogen_zur_richtung, gelenkkreis, starr
 
-AUF = Vector((0, 0, 1))
+STANGE_R = 0.014  # Griffteil der olympischen Stange, 28 mm
 
 
-def _ruecken_y(koerper: bpy.types.Object, z: float, breite: float = 0.04) -> float:
-    """Hinterste Stelle des Körpers (größtes y) in der Grundhaltung auf Höhe z (Welt)."""
-    versatz = koerper.parent.location.z
-    werte = [v.co.y for v in koerper.data.vertices if abs(v.co.x) < breite and abs(v.co.z + versatz - z) < 0.015]
-    return max(werte)
+def _hinten(koerper: bpy.types.Object, z: float, breite: float = 0.05) -> float:
+    """Hinterste Stelle des Körpers (größtes y) in der Grundhaltung auf Höhe z (Raum des Skeletts)."""
+    return max(v.co.y for v in koerper.data.vertices if abs(v.co.x) < breite and abs(v.co.z - z) < 0.012)
+
+
+def _vorn(koerper: bpy.types.Object, z: float, breite: float = 0.03) -> Vector:
+    """Vorderste Stelle des Körpers (kleinstes y) auf Höhe z (Raum des Skeletts)."""
+    pkte = [v.co for v in koerper.data.vertices if abs(v.co.x) < breite and abs(v.co.z - z) < 0.012]
+    return min(pkte, key=lambda c: c.y).copy()
+
+
+def _ruecken_tief(koerper: bpy.types.Object) -> float:
+    """Größtes y des Rumpfs (Schulterblätter, Gesäß): Auflage beim Liegen."""
+    return max(v.co.y for v in koerper.data.vertices if abs(v.co.x) < 0.14 and -0.15 < v.co.z < 0.55)
 
 
 class Uebung:
     name = ""
     haupt: list[str] = []
     mit: list[str] = []
-    kamera = (70.0, 4.6, 0.4, Vector((0, 0, 0.9)))
+    # Kamera (D-410): Dreiviertelansicht von vorn-seitlich, 45° zur linken Körperseite, leicht von
+    # oben. Der Abstand ergibt sich aus Figur und Gerät (`szene.bildausschnitt`).
+    kamera = {"richtung": 45.0, "neigung": 10.0}
+
+    def rahmen_objekte(self) -> list:
+        """Geräteteile, die ganz im Bild sein sollen."""
+        return []
+
+    def rahmenpunkte(self, phasen=(0.0, 0.5, 1.0)) -> list[Vector]:
+        """Punkte von Figur und Gerät über die ganze Bewegung, für den Bildausschnitt."""
+        punkte: list[Vector] = []
+        for p in phasen:
+            self.setzen(p)
+            netz = _netz(self.koerper)
+            punkte += netz[::6]
+            for obj in self.rahmen_objekte():
+                for teil in [obj, *obj.children_recursive]:
+                    if teil.type == "MESH":
+                        punkte += [teil.matrix_world @ Vector(c) for c in teil.bound_box]
+        return punkte
 
     def bauen(self) -> None:
         self.koerper, self.skelett = figur.baue_figur()
         bpy.context.view_layer.update()
-        self.st = Steuerung(self.skelett)
+        self.rig = Rig(self.skelett, self.koerper)
         zonen.setze_zonen(self.koerper, self.skelett, self.haupt, self.mit)
+        self.werte: dict[str, float] = {}
 
     def setzen(self, p: float) -> None:
+        self.rig.zuruecksetzen()
+        self.werte = {}
+        self.haltung(p)
+        self.rig.brust_flach()
+        self.rig.anwenden()
+
+    def haltung(self, p: float) -> None:
         raise NotImplementedError
 
     def pruefwerte(self) -> dict[str, float]:
-        return {}
+        return dict(self.werte)
 
-    # Hilfen für die Prüfung: Winkel zwischen zwei Knochen in Grad (180 = gestreckt).
-    def winkel(self, a: str, b: str) -> float:
-        bpy.context.view_layer.update()
-        pa = self.skelett.pose.bones[a]
-        pb = self.skelett.pose.bones[b]
-        va = (pa.head - pa.tail).normalized()
-        vb = (pb.tail - pb.head).normalized()
-        return math.degrees(va.angle(vb))
+    @staticmethod
+    def kniewinkel(info: dict) -> float:
+        """Innenwinkel am Knie (180 = gestreckt)."""
+        a = (info["huefte"] - info["knie"]).normalized()
+        b = (info["knoechel"] - info["knie"]).normalized()
+        return math.degrees(a.angle(b))
 
 
 class Kniebeuge(Uebung):
     """Kniebeuge mit Langhantel, hohe Stangenposition auf dem oberen Trapez.
 
-    Ausgang: aufrecht, Knie und Hüfte gestreckt. Endposition: Hüftgelenk etwa auf Kniehöhe
-    (Oberschenkel waagrecht), Rumpf rund 40° nach vorn geneigt, Rücken gerade, Knie über den
-    Zehen, Fersen am Boden. Die Stange bleibt über der Fußmitte.
+    Ausgang: Füße etwa schulterbreit, Zehen 18° nach außen, ganze Sohle am Boden; Stange auf dem
+    oberen Rücken über der Fußmitte; Hände umgreifen die Stange knapp außerhalb der Schultern,
+    Handgelenke gerade, Ellbogen nach unten-hinten. Abwärts: Hüfte nach unten und hinten, Knie
+    folgen den Zehen, Rumpf neigt sich mit dem Becken (Rücken gerade), Stange senkrecht über der
+    Fußmitte. Tiefste Position: Oberschenkel waagrecht. Aufwärts derselbe Weg zurück.
     """
 
     name = "kniebeuge"
     haupt = ["quads", "glutes"]
     mit = ["adductors", "lower_back"]
-    kamera = (140.0, 3.5, 0.5, Vector((0, 0.1, 0.82)))
+    NEIGUNG = 44.0  # Rumpfneigung unten, Grad zur Senkrechten
+    NEIGUNG_OBEN = 6.0  # leichte Rumpfneigung im Stand, damit die Stange über der Fußmitte steht
+    KNIE_OBEN = 176.0  # Kniewinkel im Stand (Knie nicht ganz durchgedrückt)
+    ZEHEN = 18.0
+    GRIFF = 0.29  # halber Abstand der Hände, m (knapp anderthalbfache Schulterbreite)
+    # Hohe Stangenposition auf dem oberen Trapez, knapp unter dem Halswirbel C7 (Grundhaltung, Raum
+    # des Skeletts). Tiefer kann die Hand die Stange mit diesem Modell nur mit stark geknicktem
+    # Handgelenk oder nach vorn zeigenden Ellbogen greifen (Oberarm des Modells 22,8 cm).
+    STANGE_Z = 0.58
+    SCHRAEG = 20.0  # Stange schräg in der Hand (vom Zeigefinger- zum Kleinfingerballen), Grad
+    STRECKUNG = 15.0  # Handgelenk leicht gestreckt, Grad
 
     def bauen(self) -> None:
         super().bauen()
-        st = self.st
-        for s, x in (("L", 1), ("R", -1)):
-            st.ik(f"lowerleg02.{s}", 4, f"Fuss.{s}", f"Knie.{s}", math.radians(-90))
-            st.flach(f"foot.{s}")
-            st.ik(f"lowerarm02.{s}", 4, f"Hand.{s}", f"Ellbogen.{s}", math.radians(90))
-            st.faust(s)
-            halter = st.ziele[f"foot.{s}_Halter"]
-            halter.rotation_quaternion = (Euler((0, 0, x * math.radians(12))).to_quaternion()
-                                          @ halter.rotation_quaternion)
-        self.fuss = {s: st.ziele[f"Fuss.{s}"].location.copy() for s in "LR"}
-        self.mitte_fuss_y = sum(v.y for v in self.fuss.values()) / 2 - 0.07
-        # Stange auf dem oberen Trapez, hängt am oberen Rücken (Knochen spine01).
-        z = 1.375
-        y = _ruecken_y(self.koerper, z) + 0.016
+        rig = self.rig
+        z0 = self.STANGE_Z
+        self.B0 = Vector((0, _hinten(self.koerper, z0, 0.15) + STANGE_R - 0.003, z0))
         self.stange = geraete.langhantel([(0.45, 0.035), (0.45, 0.035)])
-        self.stange.location = (0, y, z)
-        bpy.context.view_layer.update()
-        welt = self.stange.matrix_world.copy()
-        self.stange.parent = self.skelett
-        self.stange.parent_type = "BONE"
-        self.stange.parent_bone = "spine01"
-        bpy.context.view_layer.update()
-        self.stange.matrix_world = welt
-        for s, x in (("L", 1), ("R", -1)):
-            hand = st.ziele[f"Hand.{s}"]
-            hand.parent = self.stange
-            hand.location = (x * 0.29, -0.015, -0.055)
-        self.drehpunkt = self.skelett.data.bones["upperleg01.L"].head_local.copy()
-        self.drehpunkt.x = 0
+        self.griff = {s: rig.griff(s, 0.6, STANGE_R, schraeg=self.SCHRAEG) for s in "LR"}
+        A0 = rig.kopf["foot.L"]
+        w = math.radians(self.ZEHEN)
+        self.knoechel = {"L": Vector((0.185, A0.y, A0.z)), "R": Vector((-0.185, A0.y, A0.z))}
+        self.zehen = {"L": Vector((math.sin(w), -math.cos(w), 0)), "R": Vector((-math.sin(w), -math.cos(w), 0))}
+        # Fußmitte: halbe Strecke Ferse–Zehenspitze; das Fußgelenk sitzt über dem hinteren Drittel.
+        self.fussmitte_y = A0.y - 0.062 * math.cos(w)
+        hl, hr = rig.kopf["upperleg01.L"], rig.kopf["upperleg01.R"]
+        self.H0 = (hl + hr) / 2
+        self.tiefe = self._tiefe_suchen()
+        self.armhaltung = {s: self._arm_suchen(s) for s in "LR"}
 
-    def setzen(self, p: float) -> None:
-        st = self.st
-        tiefe = 0.45 * p
-        neigung = 42.0 * p
-        y = 0.0
-        # Stange über die Fußmitte: Becken nach hinten schieben, bis die Stange darüber steht.
-        for _ in range(4):
-            st.becken(Vector((0, y, -tiefe)), neigung, self.drehpunkt)
-            bpy.context.view_layer.update()
-            fehler = self.stange.matrix_world.translation.y - self.mitte_fuss_y
-            y -= fehler
+    def _arm_suchen(self, s: str) -> tuple[Vector, float]:
+        """Armhaltung zur Stange auf dem Rücken, einmal im Raum des Rumpfs gesucht (sie bleibt über die
+        ganze Bewegung gleich): Handdrehung um die Stange (φ) und Lage des Ellbogens auf seinem Kreis.
+        Ziel: Handgelenk gerade (bis auf `STRECKUNG`), Ellbogen nach unten-hinten und etwas außen,
+        Handfläche nach vorn."""
+        rig = self.rig
+        x = 1 if s == "L" else -1
+        rig.zuruecksetzen()
+        S0, E0, W0 = rig.kopf["upperarm01." + s], rig.kopf["lowerarm01." + s], rig.kopf["wrist." + s]
+        l1, l2 = (E0 - S0).length, (W0 - E0).length
+        d = rig.handdaten(s)
+        g = self.griff[s]
+        mitte = self.B0 + X * (x * self.GRIFF)
+        oberarm = Vector((0.30 * x, 0.40, -0.87)).normalized()
+        best = (1e9, None, 0.0)
+        for phi in range(-180, 180, 3):
+            G = rig.hand_an_stange(s, g, mitte, X * x, phi)
+            W = G @ W0
+            R = G.to_3x3()
+            laengs, n = R @ d["laengs"], R @ d["n"]
+            M, h, e1, e2 = gelenkkreis(S0, W, l1, l2)
+            if (W - S0).length > l1 + l2 - 0.002:
+                continue
+            for i in range(0, 360, 4):
+                w = math.radians(i)
+                E = M + (e1 * math.cos(w) + e2 * math.sin(w)) * h
+                f = (W - E).normalized()
+                ziel = achse_winkel(f.cross(-n), self.STRECKUNG) @ f if self.STRECKUNG else f
+                kosten = (math.degrees(laengs.angle(ziel)) + math.degrees((E - S0).angle(oberarm))
+                          + math.degrees(n.angle(-Y)) / 4)
+                if kosten < best[0]:
+                    best = (kosten, E.copy(), float(phi))
+        return best[1], best[2]
+
+    def rahmen_objekte(self) -> list:
+        return [self.stange]
+
+    def stange_achse(self):
+        return self.stange.location.copy(), X, STANGE_R
+
+    def _becken(self, s: float, dz: float) -> Matrix:
+        a = self.NEIGUNG_OBEN + (self.NEIGUNG - self.NEIGUNG_OBEN) * s
+        R = achse_winkel(X, a)
+        # Stange über die Fußmitte: Becken waagrecht so verschieben, dass B.y = Fußmitte.
+        b = R @ (self.B0 - self.H0)
+        dy = self.fussmitte_y - self.H0.y - b.y
+        return starr(self.H0, self.H0 + Vector((0, dy, dz)), R)
+
+    def _bein_probe(self, s: float, dz: float) -> dict:
+        self.rig.zuruecksetzen()
+        self.rig.setze("root", self._becken(s, dz))
+        return self.rig.bein("L", self.knoechel["L"], self.zehen["L"], self.ZEHEN)
+
+    def _dz_fuer(self, s: float, tiefer) -> float:
+        """Hüftabsenkung per Halbierung: `tiefer(info)` ist wahr, solange es noch tiefer gehen muss."""
+        lo, hi = -0.75, 0.05
+        for _ in range(40):
+            dz = (lo + hi) / 2
+            if tiefer(self._bein_probe(s, dz)):
+                hi = dz
+            else:
+                lo = dz
+        return (lo + hi) / 2
+
+    def _tiefe_suchen(self) -> float:
+        """Unten: Hüftgelenk auf Kniehöhe (Oberschenkel waagrecht); merkt sich den Kniewinkel dort."""
+        dz = self._dz_fuer(1.0, lambda i: i["huefte"].z > i["knie"].z)
+        self.knie_unten = self.kniewinkel(self._bein_probe(1.0, dz))
+        return -dz
+
+    def _absenkung(self, s: float) -> float:
+        """Der Kniewinkel läuft gleichmäßig vom Stand zur tiefsten Position; dazu die Hüfthöhe."""
+        ziel = self.KNIE_OBEN + (self.knie_unten - self.KNIE_OBEN) * s
+        return self._dz_fuer(s, lambda i: self.kniewinkel(i) > ziel)
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        G = self._becken(p, self._absenkung(p))
+        rig.zuruecksetzen()
+        rig.setze("root", G)
         # Kopf in Verlängerung der Wirbelsäule, Blick leicht nach vorn unten.
-        st.drehe("neck01", Vector((1, 0, 0)), -12.0 * p)
+        rig.dreh("neck01", achse_winkel(X, -14.0 * p))
+        beine = {s: rig.bein(s, self.knoechel[s], self.zehen[s], self.ZEHEN) for s in "LR"}
+        B = rig.punkt("spine01", self.B0)
+        arme = {}
+        # Pol-Ziel der Ellbogen: nach unten-hinten, fest zum Rumpf (die Arme halten die Stange auf
+        # dem Rücken, ihre Haltung zum Oberkörper bleibt über die ganze Bewegung gleich)
+        # Die Armhaltung ist im Raum des Rumpfs gesucht; der Rumpf dreht sich um die Stangenachse (X),
+        # die Hand dreht sich mit (φ plus Rumpfwinkel, rechts gegenläufig, weil die Achse dort -X ist).
+        rumpf = math.degrees(math.atan2(G[2][1], G[1][1]))
         for s, x in (("L", 1), ("R", -1)):
-            knie = st.welt(f"lowerleg01.{s}")
-            st.ziele[f"Knie.{s}"].location = knie + Vector((x * 0.12, -0.6, 0))
-            schulter = st.welt(f"upperarm02.{s}")
-            st.ziele[f"Ellbogen.{s}"].location = schulter + Vector((x * 0.25, 0.5, -0.5))
-
-    def pruefwerte(self) -> dict[str, float]:
-        bpy.context.view_layer.update()
-        huefte = self.st.welt("upperleg01.L").z
-        knie = self.st.welt("lowerleg01.L").z
-        return {
-            "Kniewinkel": self.winkel("upperleg02.L", "lowerleg01.L"),
-            "Hüfte über Knie (cm)": (huefte - knie) * 100,
-            "Stange vor Fußmitte (cm)": (self.mitte_fuss_y - self.stange.matrix_world.translation.y) * 100,
+            mitte = B + X * (x * self.GRIFF)
+            E_rumpf, phi = self.armhaltung[s]
+            arme[s] = rig.arm(s, self.griff[s], mitte, X * x, Z, self.STRECKUNG, phi=phi + rumpf * x,
+                              ellbogen=lambda S, W, l1, l2, E=E_rumpf: G @ E)
+        self.stange.location = rig.welt(B)
+        L = beine["L"]
+        oberschenkel = L["knie"] - L["huefte"]
+        unterschenkel = L["knie"] - L["knoechel"]
+        vor = (L["knie"] - self.knoechel["L"]).dot(self.zehen["L"])
+        self.werte = {
+            "Kniewinkel": self.kniewinkel(L),
+            "Oberschenkel zur Waagrechten": math.degrees(
+                math.asin(max(-1.0, min(1.0, (L["huefte"].z - L["knie"].z) / oberschenkel.length)))
+            ),
+            "Rumpfneigung": self.NEIGUNG_OBEN + (self.NEIGUNG - self.NEIGUNG_OBEN) * p,
+            "Unterschenkel zur Senkrechten": math.degrees(unterschenkel.angle(Z)),
+            "Stange über Fußmitte (cm)": (B.y - self.fussmitte_y) * 100,
+            "Knie hinter Zehenspitze (cm)": (0.19 - vor) * 100,
+            "Knie zur Zehenrichtung (Grad)": self._knie_zu_zehen(L, "L"),
+            "Ellbogenwinkel": arme["L"]["ellbogenwinkel"],
+            "Handgelenk geknickt": arme["L"]["handgelenk_knick"],
+            "Pronation": arme["L"]["pronation"],
         }
 
+    def _knie_zu_zehen(self, info: dict, s: str) -> float:
+        """Winkel (waagrecht) zwischen der Richtung, in die das Knie zeigt, und der Zehenrichtung;
+        positiv nach außen. Kippt das Knie nach innen, wird der Wert negativ."""
+        p = info["richtung"]
+        a = Vector((p.x, p.y, 0)).normalized()
+        b = self.zehen[s]
+        winkel = math.degrees(a.angle(b))
+        aussen = (a - b).dot(Vector((1 if s == "L" else -1, 0, 0)))
+        return winkel if aussen >= 0 else -winkel
 
-def _vorn_punkt(koerper: bpy.types.Object, z_lokal: float, breite: float = 0.03) -> Vector:
-    """Vorderste Stelle des Körpers (kleinstes y) auf Höhe z, Raum des Skeletts."""
-    kandidaten = [v.co for v in koerper.data.vertices if abs(v.co.x) < breite and abs(v.co.z - z_lokal) < 0.012]
-    return min(kandidaten, key=lambda c: c.y).copy()
 
-
-def _ruecken_max(koerper: bpy.types.Object) -> float:
-    """Größtes y des Rumpfs (Schulterblätter, Gesäß) im Raum des Skeletts."""
-    return max(v.co.y for v in koerper.data.vertices if abs(v.co.x) < 0.15 and -0.1 < v.co.z < 0.55)
+def _netz(koerper: bpy.types.Object) -> list[Vector]:
+    """Eckpunkte des verformten Körpers in Weltkoordinaten (ohne Glättung)."""
+    sub = koerper.modifiers.get("Glatt")
+    if sub:
+        sub.show_viewport = False
+    deps = bpy.context.evaluated_depsgraph_get()
+    obj = koerper.evaluated_get(deps)
+    mesh = obj.to_mesh()
+    pkte = [obj.matrix_world @ v.co for v in mesh.vertices]
+    obj.to_mesh_clear()
+    if sub:
+        sub.show_viewport = True
+    return pkte
 
 
 class Bankdruecken(Uebung):
     """Bankdrücken auf der Flachbank mit Langhantel.
 
-    Rücken auf der Bank, Füße flach am Boden, Knie etwa 90°. Griff etwas breiter als die
-    Schultern. Ausgang: Arme gestreckt, Stange über den Schultern. Endposition: Stange berührt
-    die untere Brust, Ellbogen rund 50 bis 70° vom Rumpf. Die Stange läuft in einem leichten
-    Bogen (unten über der Brust, oben über den Schultern).
+    Rücken und Schulterblätter auf der Bank, Schultern leicht zurückgezogen, Füße flach am Boden,
+    Knie etwa 100°. Beide Hände greifen gleich breit, etwas weiter als die Schultern; die Stange
+    liegt tief in der Handfläche, Handgelenk leicht gestreckt, Daumen umgreift. Ausgang: Arme fast
+    gestreckt, Stange über den Schultern. Abwärts senkt sich die Stange in einem leichten Bogen zur
+    unteren Brust; die Handgelenke bleiben über den Ellbogen (Unterarme senkrecht). Unten berührt
+    die Stange die Brust; aufwärts derselbe Weg zurück.
     """
 
     name = "bankdruecken"
     haupt = ["chest"]
     mit = ["triceps", "front_delts"]
-    kamera = (55.0, 3.4, 1.5, Vector((0, 0.05, 0.62)))
+    # Liegend: dieselbe Richtung, steiler von oben, damit die Brust zu sehen ist
+    kamera = {"richtung": 45.0, "neigung": 32.0}
+
+    def rahmen_objekte(self) -> list:
+        return [self.stange, self.bank]
+
+    def stange_achse(self):
+        return self.stange.location.copy(), X, STANGE_R
+    BANK_OBEN = 0.43
+    GRIFF = 0.30
+    SCHULTER_Y = 0.32  # Schultern über dem Kopfende des Polsters (Welt)
+    ZURUECK = 8.0  # Schultern zurückgezogen, Grad
+    ELLBOGEN_OBEN = 172.0
+    UNTERARM = 0.0  # Unterarm-Neigung nach außen (Grad), die der Ellbogen anstrebt
+    SCHRAEG = 0.0  # Stange schräg in der Hand (Grad)
+    UNTEN_DZ = 0.0  # Stange unten höher (m)
+    BOGEN = 1.4  # Form der Stangenbahn: Exponent der Bewegung zur Brust hin
 
     def bauen(self) -> None:
         super().bauen()
-        st = self.st
-        ruecken = _ruecken_max(self.koerper)
-        # Liegen: Skelett um x drehen (Blick nach oben, Kopf nach +y), Rücken auf das Polster (0,43 m).
-        self.skelett.rotation_euler = Euler((-math.pi / 2, 0, 0))
-        self.skelett.location = (0, -0.145, 0.43 + ruecken - 0.012)
-        geraete.flachbank()
-        bpy.context.view_layer.update()
-        for s, x in (("L", 1), ("R", -1)):
-            st.ik(f"lowerleg02.{s}", 4, f"Fuss.{s}", f"Knie.{s}", math.radians(-90))
-            st.flach(f"foot.{s}")
-            st.ziele[f"Fuss.{s}"].location = (x * 0.30, -0.47, 0.075)
-            st.ziele[f"Knie.{s}"].location = (x * 0.4, -0.45, 1.5)
-            st.ik(f"lowerarm02.{s}", 4, f"Hand.{s}", f"Ellbogen.{s}", math.radians(90))
-            st.faust(s)
-        brust = _vorn_punkt(self.koerper, 0.41)
-        self.brust = st.punkt("spine02", brust)
-        self.schulter = {s: st.punkt("upperarm01." + s, self.skelett.data.bones["upperarm01." + s].head_local)
-                         for s in "LR"}
+        rig = self.rig
+        self.bank = geraete.flachbank()
         self.stange = geraete.langhantel([(0.45, 0.035), (0.33, 0.03)])
-        for s, x in (("L", 1), ("R", -1)):
-            hand = st.ziele[f"Hand.{s}"]
-            hand.parent = self.stange
-            hand.location = (x * 0.31, 0.0, -0.045)
+        self.griff = {s: rig.griff(s, 0.38, STANGE_R, schraeg=self.SCHRAEG) for s in "LR"}
+        self.R_liegen = achse_winkel(X, -90)
+        ruecken = _ruecken_tief(self.koerper)
+        z_bank = self.BANK_OBEN - rig.versatz.z
+        schulter_z = rig.kopf["upperarm01.L"].z
+        self.verschiebung = Vector((0, self.SCHULTER_Y - schulter_z, z_bank + ruecken))
+        A0 = rig.kopf["foot.L"]
+        # Auflage aus dem verformten Netz: tiefster Punkt von Rücken und Gesäß auf der Bank
+        self.oben = None
+        self.unten = None
+        self.knoechel = {}
+        self._torso()
+        H = rig.punkt("pelvis.L", rig.kopf["upperleg01.L"])
+        self.knoechel = {"L": Vector((0.27, H.y - 0.45, A0.z)), "R": Vector((-0.27, H.y - 0.45, A0.z))}
+        self.oben, self.unten = Vector((0, 0, 0)), Vector((0, 0, 0))
+        rig.zuruecksetzen()
+        self._torso()
+        self.rig.brust_flach()
+        self.rig.anwenden()
+        tief = min(p.z for p in _netz(self.koerper) if abs(p.x) < 0.15 and -0.55 < p.y < 0.58)
+        self.verschiebung.z += self.BANK_OBEN - tief - 0.004
+        self._bahn()
 
-    def setzen(self, p: float) -> None:
-        st = self.st
-        schulter = (self.schulter["L"]() + self.schulter["R"]()) / 2
-        oben = Vector((0, schulter.y + 0.01, schulter.z + 0.55))
-        unten = self.brust() + Vector((0, 0, 0.018))
-        # Bogen: waagrecht erst im letzten Teil, damit die Stange über der Brust landet.
-        q = p * p * (3 - 2 * p)
-        lage = Vector((0, oben.y + (unten.y - oben.y) * q, oben.z + (unten.z - oben.z) * p))
-        self.stange.location = lage
-        for s, x in (("L", 1), ("R", -1)):
-            sch = self.schulter[s]()
-            st.ziele[f"Ellbogen.{s}"].location = sch + Vector((x * 0.7, 0.02, -0.25))
-        bpy.context.view_layer.update()
+    def _torso(self) -> None:
+        rig = self.rig
+        rig.setze("root", starr(Vector(), self.verschiebung, self.R_liegen))
+        rig.dreh("clavicle.L", achse_winkel(Z, self.ZURUECK))
+        rig.dreh("clavicle.R", achse_winkel(Z, -self.ZURUECK))
 
-    def pruefwerte(self) -> dict[str, float]:
-        bpy.context.view_layer.update()
-        ellbogen = self.winkel("upperarm02.L", "lowerarm01.L")
-        oberarm = (self.st.welt("upperarm02.L", ende=True) - self.st.welt("upperarm01.L")).normalized()
-        rumpf = (self.st.welt("spine05") - self.st.welt("spine01")).normalized()
-        return {
-            "Ellbogenwinkel": ellbogen,
-            "Oberarm zum Rumpf": math.degrees(oberarm.angle(rumpf)),
-            "Kniewinkel": self.winkel("upperleg02.L", "lowerleg01.L"),
-            "Stange über Brust (cm)": (self.stange.location.z - self.brust().z) * 100,
+    def _schultern(self) -> Vector:
+        return (self.rig.punkt("shoulder01.L", self.rig.kopf["upperarm01.L"])
+                + self.rig.punkt("shoulder01.R", self.rig.kopf["upperarm01.R"])) / 2
+
+    def _bahn(self) -> None:
+        """Stange oben (Ellbogen fast gestreckt, über den Schultern) und unten (auf der Brust)."""
+        rig = self.rig
+        rig.zuruecksetzen()
+        self._torso()
+        S = self._schultern()
+        lo, hi = S.z, S.z + 0.7
+        for _ in range(30):
+            z = (lo + hi) / 2
+            self.oben = Vector((0, S.y, z))
+            rig.zuruecksetzen()
+            self._torso()
+            arme = [rig.arm(s, self.griff[s], self.oben + X * (x * self.GRIFF), X * x, Vector((0, 0, -1)), 12.0,
+                            ellbogen=self._regel(s)) for s, x in (("L", 1), ("R", -1))]
+            if max(a["ellbogenwinkel"] for a in arme) < self.ELLBOGEN_OBEN and not rig.meldungen:
+                lo = z
+            else:
+                hi = z
+        self.oben = Vector((0, S.y, lo))
+        # unten: untere Brust (Höhe der Brustwarzenlinie); Stange liegt auf dem höchsten Punkt darunter
+        rig.zuruecksetzen()
+        self._torso()
+        self.rig.brust_flach()
+        self.rig.anwenden()
+        brust = rig.punkt("spine02", _vorn(self.koerper, 0.40))
+        y = brust.y
+        hoehe = max(p.z for p in _netz(self.koerper) if abs(p.x) < 0.2 and abs(p.y - rig.welt(brust).y) < 0.012)
+        self.unten = Vector((0, y, rig.lokal(Vector((0, 0, hoehe))).z + STANGE_R - 0.002))
+
+    def _regel(self, s: str):
+        # Handgelenk über dem Ellbogen: Unterarm so senkrecht wie möglich (optional leicht nach außen)
+        w = math.radians(self.UNTERARM) * (1 if s == "L" else -1)
+        richtung = Vector((math.sin(w), 0, math.cos(w)))
+        return lambda S, W, l1, l2: ellbogen_zur_richtung(S, W, l1, l2, richtung)
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        self._torso()
+        hz = Vector((0.15, 0, 1)).normalized()
+        for s, x in (("L", 1), ("R", -1)):
+            rig.bein(s, self.knoechel[s], Vector((hz.x * x, -0.1, hz.z)), 6.0)
+        y = self.oben.y + (self.unten.y - self.oben.y) * p ** self.BOGEN
+        z = self.oben.z + (self.unten.z - self.oben.z) * p
+        B = Vector((0, y, z))
+        arme = {}
+        for s, x in (("L", 1), ("R", -1)):
+            arme[s] = rig.arm(s, self.griff[s], B + X * (x * self.GRIFF), X * x, Vector((0, 0, -1)), 12.0, ellbogen=self._regel(s))
+        self.stange.location = rig.welt(B)
+        A = arme["L"]
+        oberarm = (A["ellbogen"] - A["schulter"]).normalized()
+        laengs = (rig.punkt("spine05", rig.kopf["spine05"]) - rig.punkt("spine01", rig.kopf["spine01"])).normalized()
+        self.werte = {
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Oberarm zum Rumpf": math.degrees(oberarm.angle(laengs)),
+            "Unterarm zur Senkrechten": math.degrees((A["handgelenk"] - A["ellbogen"]).angle(Z)),
+            "Handgelenk geknickt": A["handgelenk_knick"],
+            "Stange über Schulter (cm, y)": (B.y - self._schultern().y) * 100,
+            "Stangenhöhe über Brustkontakt (cm)": (B.z - self.unten.z) * 100,
         }
 
 
 class Latziehen(Uebung):
     """Latziehen am Kabel, breiter Obergriff, Stange vor dem Körper zur oberen Brust.
 
-    Sitzend, Oberschenkel unter der Knierolle, Füße am Boden. Ausgang: Arme fast gestreckt
-    über dem Kopf. Endposition: Stange an der oberen Brust, Ellbogen nach unten und leicht
-    hinten, Oberkörper etwa 15° zurückgelehnt, Rücken gerade.
+    Sitzend, Sitz auf Kniehöhe, Oberschenkel waagrecht unter der Knierolle, Füße flach am Boden.
+    Hände greifen die Stange gut schulterbreit plus eine Handbreite, Handflächen nach vorn,
+    Handgelenke gerade. Ausgang: Arme fast gestreckt über dem Kopf, Schultern mit angehoben,
+    Oberkörper leicht zurückgelehnt. Abwärts ziehen die Ellbogen nach unten und leicht nach hinten,
+    die Unterarme folgen der Zugrichtung des Kabels, die Schulterblätter senken sich; die Stange
+    kommt vor dem Gesicht zur oberen Brust, der Oberkörper lehnt etwas weiter zurück, Rücken gerade.
     """
 
     name = "latziehen"
     haupt = ["lats"]
     mit = ["biceps", "upper_back"]
-    kamera = (148.0, 4.2, 0.3, Vector((0, -0.15, 1.05)))
+    # Die arbeitenden Muskeln liegen auf dem Rücken: dieselbe Dreiviertelansicht, von hinten-seitlich
+    kamera = {"richtung": 135.0, "neigung": 10.0}
+    GRIFF = 0.32
+    LEHNE_OBEN, LEHNE_UNTEN = 8.0, 18.0
+    SCHULTER_HOCH = 22.0  # Schlüsselbein angehoben bei gestreckten Armen
+    ELLBOGEN_OBEN = 168.0
+    UNTERARM = 0.0  # Unterarm-Neigung nach außen (Grad), die der Ellbogen anstrebt
+    # Stange leicht schräg in der Hand (breiter Griff): Hand und Unterarm bleiben oben und unten in
+    # einer Linie (Handgelenk höchstens etwa 13° seitlich statt 33°).
+    SCHRAEG = 6.0
+    UNTEN_DZ = 0.04  # Stange unten auf Höhe der Schlüsselbeine (obere Brust)
 
     def bauen(self) -> None:
         super().bauen()
-        st = self.st
-        self.teile = geraete.latzug()
-        bpy.context.view_layer.update()
-        for s, x in (("L", 1), ("R", -1)):
-            st.ik(f"lowerleg02.{s}", 4, f"Fuss.{s}", f"Knie.{s}", math.radians(-90))
-            st.flach(f"foot.{s}")
-            st.ziele[f"Fuss.{s}"].location = (x * 0.20, -0.50, 0.075)
-            st.ziele[f"Knie.{s}"].location = (x * 0.25, -1.4, 0.7)
-            st.ik(f"lowerarm02.{s}", 4, f"Hand.{s}", f"Ellbogen.{s}", math.radians(90))
-            st.faust(s)
-        brust = _vorn_punkt(self.koerper, 0.47)
-        self.brust = st.punkt("spine01", brust)
-        self.schulter = {s: st.punkt("upperarm01." + s, self.skelett.data.bones["upperarm01." + s].head_local)
-                         for s in "LR"}
-        self.drehpunkt = self.skelett.data.bones["upperleg01.L"].head_local.copy()
-        self.drehpunkt.x = 0
-        # Sitzen: Hüftgelenk 9 cm über der Sitzfläche (0,52 m), über der Mitte des Sitzes.
-        huefte = self.skelett.matrix_world @ self.drehpunkt
-        self.sitz = Vector((0, 0.04 - huefte.y, 0.61 - huefte.z))
-        stange = self.teile["stange"]
-        for s, x in (("L", 1), ("R", -1)):
-            hand = st.ziele[f"Hand.{s}"]
-            hand.parent = stange
-            hand.location = (x * 0.47, 0.0, -0.06)
+        rig = self.rig
+        self.griff = {s: rig.griff(s, 0.72, 0.012, schraeg=self.SCHRAEG) for s in "LR"}
+        knie_welt = rig.welt(rig.kopf["lowerleg01.L"]).z
+        self.sitz_oben = round(knie_welt - 0.005, 3)
+        H0 = (rig.kopf["upperleg01.L"] + rig.kopf["upperleg01.R"]) / 2
+        self.H0 = H0
+        self.huefte = Vector((0, 0.04, rig.lokal(Vector((0, 0, self.sitz_oben))).z + 0.09))
+        A0 = rig.kopf["foot.L"]
+        self.knoechel = {}
+        self.oben = self.unten = Vector()
+        # Sitzhöhe aus dem verformten Netz: tiefster Punkt unter dem Gesäß auf dem Polster
+        self._torso(0.0)
+        HL = rig.punkt("pelvis.L", rig.kopf["upperleg01.L"])
+        oberschenkel = (rig.kopf["lowerleg01.L"] - rig.kopf["upperleg01.L"]).length
+        self.knie_y = HL.y - oberschenkel * 0.98
+        self.knoechel = {"L": Vector((0.17, self.knie_y + 0.06, A0.z)), "R": Vector((-0.17, self.knie_y + 0.06, A0.z))}
+        self._pose_ohne_arme(0.0)
+        netz = _netz(self.koerper)
+        tief = min(p.z for p in netz if abs(p.x) < 0.17 and -0.12 < p.y - rig.welt(self.huefte).y < 0.12)
+        self.huefte.z += self.sitz_oben - tief - 0.004
+        self._pose_ohne_arme(0.0)
+        netz = _netz(self.koerper)
+        # Knierolle auf dem Oberschenkel, kurz vor dem Knie (82 % der Strecke Hüfte–Knie)
+        b = self._bein
+        y_rolle = rig.welt(b["huefte"].lerp(b["knie"], 0.82)).y
+        oberseite = max(p.z for p in netz if 0.04 < abs(p.x) < 0.17 and abs(p.y - y_rolle) < 0.02)
+        self.knierolle = Vector((0, y_rolle, oberseite + 0.055 - 0.004))
+        self._bahn()
+        self.teile = geraete.latzug(self.sitz_oben, self.knierolle, rig.welt(Vector((0, (self.oben.y + self.unten.y) / 2, 0))).y)
 
-    def setzen(self, p: float) -> None:
-        st = self.st
-        st.becken(self.sitz, -6.0 - 12.0 * p, self.drehpunkt)
-        bpy.context.view_layer.update()
-        schulter = (self.schulter["L"]() + self.schulter["R"]()) / 2
-        oben = Vector((0, -0.09, schulter.z + 0.47))
-        unten = self.brust() + Vector((0, -0.05, 0.03))
-        stange = self.teile["stange"]
-        stange.location = oben.lerp(unten, p)
+    def rahmen_objekte(self) -> list:
+        return [self.teile["stange"]]
+
+    def stange_achse(self):
+        return self.teile["stange"].location.copy(), X, 0.012
+
+    def _lehne(self, p: float) -> float:
+        # Zurücklehnen früh in der Bewegung (die Stange kommt am Gesicht vorbei), unten ruhig
+        return self.LEHNE_OBEN + (self.LEHNE_UNTEN - self.LEHNE_OBEN) * (1 - (1 - p) ** 2)
+
+    def _torso(self, p: float) -> None:
+        rig = self.rig
+        R = achse_winkel(X, -self._lehne(p))
+        rig.setze("root", starr(self.H0, self.huefte, R))
+        hoch = self.SCHULTER_HOCH * (1 - p)
+        rig.dreh("clavicle.L", achse_winkel(-Y, hoch) @ achse_winkel(Z, 6 * p))
+        rig.dreh("clavicle.R", achse_winkel(Y, hoch) @ achse_winkel(Z, -6 * p))
+        rig.dreh("neck01", achse_winkel(X, 6 * p))
+
+    def _pose_ohne_arme(self, p: float) -> None:
+        rig = self.rig
+        rig.zuruecksetzen()
+        self._torso(p)
+        if self.knoechel:
+            for s, x in (("L", 1), ("R", -1)):
+                info = rig.bein(s, self.knoechel[s], Vector((0.15 * x, -1, 0.1)), 8.0)
+                if s == "L":
+                    self._bein = info
+        rig.brust_flach()
+        rig.anwenden()
+
+    def _schultern(self) -> Vector:
+        return (self.rig.punkt("shoulder01.L", self.rig.kopf["upperarm01.L"])
+                + self.rig.punkt("shoulder01.R", self.rig.kopf["upperarm01.R"])) / 2
+
+    def _regel(self, s: str):
+        # Unterarm in Zugrichtung des Kabels: so senkrecht wie möglich (optional leicht nach außen)
+        w = math.radians(self.UNTERARM) * (1 if s == "L" else -1)
+        richtung = Vector((math.sin(w), 0, math.cos(w)))
+        return lambda S, W, l1, l2: ellbogen_zur_richtung(S, W, l1, l2, richtung)
+
+    def _bahn(self) -> None:
+        rig = self.rig
+        # unten: Stange vor der oberen Brust (Höhe Schlüsselbein), 3 cm Abstand
+        self._pose_ohne_arme(1.0)
+        brust = rig.punkt("spine01", _vorn(self.koerper, 0.50))
+        self.unten = Vector((0, brust.y - 0.03 - 0.012, brust.z + 0.01 + self.UNTEN_DZ))
+        # oben: über dem Kopf, Ellbogen fast gestreckt
+        rig.zuruecksetzen()
+        self._torso(0.0)
+        S = self._schultern()
+        lo, hi = S.z, S.z + 0.8
+        y = self.unten.y - 0.03  # oben etwas weiter vorn: Kabel senkrecht vor dem Gesicht
+        for _ in range(30):
+            z = (lo + hi) / 2
+            rig.zuruecksetzen()
+            self._torso(0.0)
+            arme = [rig.arm(s, self.griff[s], Vector((x * self.GRIFF, y, z)), X * x, Z, 0.0, ellbogen=self._regel(s))
+                    for s, x in (("L", 1), ("R", -1))]
+            if max(a["ellbogenwinkel"] for a in arme) < self.ELLBOGEN_OBEN and not rig.meldungen:
+                lo = z
+            else:
+                hi = z
+        self.oben = Vector((0, y, lo))
+        self._abstand_gesicht()
+
+    def _abstand_gesicht(self) -> None:
+        """Die Stange läuft vor dem Gesicht vorbei: Wo Nase und Kinn in die gerade Bahn ragen, wird
+        sie nach vorn verlegt (4 cm Abstand zur Haut), geglättet über die ganze Bewegung."""
+        rig = self.rig
+        phasen = [i / 20 for i in range(21)]
+        noetig = []
+        for p in phasen:
+            self._pose_ohne_arme(p)
+            B = self.oben.lerp(self.unten, p)
+            z = rig.welt(B).z
+            vorn = [q.y for q in _netz(self.koerper) if abs(q.x) < 0.1 and abs(q.z - z) < 0.012 + 0.03]
+            y_frei = rig.lokal(Vector((0, min(vorn), 0))).y - 0.012 - 0.04 if vorn else B.y
+            noetig.append(max(0.0, B.y - y_frei))
+        # gleitendes Maximum, dann Mittel: weicher Bogen ohne Knick
+        breit = [max(noetig[max(0, i - 1):i + 2]) for i in range(21)]
+        self._noetig = noetig
+        self.vorlage = [sum(breit[max(0, i - 2):i + 3]) / len(breit[max(0, i - 2):i + 3]) for i in range(21)]
+        self.vorlage[-1] = noetig[-1]  # unten genau an der oberen Brust
+
+    def _stange(self, p: float) -> Vector:
+        B = self.oben.lerp(self.unten, p)
+        i = min(int(p * 20), 19)
+        t = p * 20 - i
+        vor = self.vorlage[i] * (1 - t) + self.vorlage[i + 1] * t
+        return B - Y * vor
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        self._torso(p)
         for s, x in (("L", 1), ("R", -1)):
-            sch = self.schulter[s]()
-            st.ziele[f"Ellbogen.{s}"].location = sch + Vector((x * 0.6, 0.25, -0.5))
+            rig.bein(s, self.knoechel[s], Vector((0.15 * x, -1, 0.1)), 8.0)
+        B = self._stange(p)
+        arme = {}
+        for s, x in (("L", 1), ("R", -1)):
+            arme[s] = rig.arm(s, self.griff[s], B + X * (x * self.GRIFF), X * x, Z, 0.0, ellbogen=self._regel(s))
+        stange = self.teile["stange"]
+        stange.location = rig.welt(B) + Vector((0, 0, 0.0))
         rolle = self.teile["rolle"].location
-        geraete.kabel("Kabel", Vector((rolle.x, rolle.y, rolle.z - 0.06)), stange.location + Vector((0, 0, 0.04)))
-        geraete.kabel("Kabel2", Vector((rolle.x, rolle.y - 0.06, rolle.z)), Vector((0, -0.9, 2.13)))
-        bpy.context.view_layer.update()
-
-    def pruefwerte(self) -> dict[str, float]:
-        return {
-            "Ellbogenwinkel": self.winkel("upperarm02.L", "lowerarm01.L"),
-            "Kniewinkel": self.winkel("upperleg02.L", "lowerleg01.L"),
-            "Stange über Brust (cm)": (self.teile["stange"].location.z - self.brust().z) * 100,
+        geraete.kabel("Kabel", Vector((0, rolle.y, rolle.z - 0.06)), stange.location + Vector((0, 0, 0.04)))
+        r2 = self.teile["rolle2"].location
+        geraete.kabel("Kabel2", Vector((0, rolle.y, rolle.z + 0.06)), Vector((0, r2.y, r2.z + 0.05)))
+        A = arme["L"]
+        self.werte = {
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Unterarm zur Senkrechten": math.degrees((A["handgelenk"] - A["ellbogen"]).angle(Z)),
+            "Handgelenk geknickt": A["handgelenk_knick"],
+            "Lehne zurück": self._lehne(p),
+            "Stange über Schulter (cm)": (B.z - self._schultern().z) * 100,
         }
 
 

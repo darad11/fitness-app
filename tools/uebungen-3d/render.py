@@ -1,16 +1,20 @@
-"""Übungsbilder rendern (Pilot 3D, D-402).
+"""Übungsbilder rendern (Pilot 3D, D-402; Rig und Darstellung D-407 bis D-410).
 
 Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.11):
 
-    python -I tools/uebungen-3d/render.py kniebeuge --probe 0 1   # zwei Standbilder zur Kontrolle
-    python -I tools/uebungen-3d/render.py kniebeuge                # 60 Bilder, dann ffmpeg
+    python -I tools/uebungen-3d/render.py --hole                  # MakeHuman-Dateien (CC0) laden
+    python -I tools/uebungen-3d/render.py kniebeuge                # Schleife, 60 Bilder, ffmpeg
+    python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
+    python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
+        --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
 
-Ergebnis in `public/uebungen/medien/` (MP4, WebM, Poster, Vorschau). Die Grundlage (MakeHuman,
-CC0) lädt `--hole` nach `tools/uebungen-3d/quelle/`.
+Ergebnis der Schleife in `public/uebungen/medien/` (MP4, WebM, Poster, Vorschau). Die Kamera folgt
+der Regel der Übung (`kamera`); der Abstand ergibt sich aus Figur und Gerät über die ganze Bewegung.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 import time
@@ -21,10 +25,11 @@ HIER = Path(__file__).resolve().parent
 sys.path.insert(0, str(HIER))
 
 import bpy  # noqa: E402
+from mathutils import Vector  # noqa: E402
 
 import szene  # noqa: E402
 from haltung import ablauf  # noqa: E402
-from uebungen import UEBUNGEN  # noqa: E402
+from uebungen import UEBUNGEN, _netz  # noqa: E402
 
 BILDER = 60
 FPS = 24
@@ -35,6 +40,12 @@ DATEIEN = {
     "default_weights.mhw": f"{QUELLE}/data/rigs/default_weights.mhw",
     "LICENSE.md": "https://raw.githubusercontent.com/makehuman/makehuman/master/LICENSE.md",
 }
+# Prüfansichten: (Richtung, Neigung); „vorn“ bei liegenden Übungen vom Fußende
+ANSICHTEN = {"vorn": (0.0, 5.0), "seite": (90.0, 5.0)}
+# In den Prüfansichten ausgeblendet, damit Arme, Hände und Kopf zu sehen sind (nur dort; die
+# Schleife für die App zeigt alle Geräteteile): Hantelscheiben verdecken von der Seite den Oberkörper,
+# Säule und Gewichtsblock des Latzugs von vorn den Rumpf.
+AUSBLENDEN = {"vorn": ("Saeule", "Gewichtsblock"), "seite": ("Scheibe", "Verschluss")}
 
 
 def hole() -> None:
@@ -50,59 +61,149 @@ def baue(name: str, breite: int, hoehe: int, proben: int):
     s.cycles.samples = proben
     s.render.resolution_x = breite
     s.render.resolution_y = hoehe
-    s.render.use_persistent_data = True
     uebung = UEBUNGEN[name]()
     uebung.bauen()
     uebung.koerper.data.materials.append(szene.koerper_material())
     szene.boden()
-    richtung, abstand, hoehe_kamera, ziel = uebung.kamera
-    szene.licht_und_kamera(ziel, richtung, abstand, hoehe_kamera)
-    return s, uebung
+    punkte = uebung.rahmenpunkte()
+    return s, uebung, punkte
+
+
+def kamera(uebung, punkte, ansicht: str, breite: int, hoehe: int) -> None:
+    for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
+        bpy.data.objects.remove(o)
+    if ansicht == "standard":
+        richtung, neigung = uebung.kamera["richtung"], uebung.kamera["neigung"]
+    else:
+        richtung, neigung = ANSICHTEN[ansicht]
+        if uebung.name == "bankdruecken" and ansicht == "vorn":
+            neigung = 20.0
+    ziel, abstand, h = szene.bildausschnitt(punkte, richtung, neigung, breite, hoehe)
+    szene.licht_und_kamera(ziel, richtung, abstand, h)
+
+
+def messen(uebung) -> dict:
+    """Messwerte am verformten Netz: Abstand der Finger zur Stange, Bodenkontakt der Füße."""
+    netz = _netz(uebung.koerper)
+    gruppen = {g.name: g.index for g in uebung.koerper.vertex_groups}
+    erg = {}
+    finger = {gruppen[n] for n in gruppen if n.startswith("finger")}
+    fuss = {gruppen[n] for n in gruppen if n.startswith(("foot", "toe"))}
+    stange = uebung.stange_achse() if hasattr(uebung, "stange_achse") else None
+    fingerpunkte, fusspunkte = [], []
+    for v, p in zip(uebung.koerper.data.vertices, netz):
+        gs = {g.group for g in v.groups if g.weight > 0.5}
+        if gs & finger:
+            fingerpunkte.append(p)
+        if gs & fuss:
+            fusspunkte.append(p)
+    if stange is not None and fingerpunkte:
+        mitte, achse, radius = stange
+        abst = []
+        for p in fingerpunkte:
+            r = p - mitte
+            abst.append((r - r.dot(achse) * achse).length - radius)
+        erg["Finger: geringster Abstand zur Stange (mm, negativ = eingedrungen)"] = min(abst) * 1000
+        erg["Finger: Punkte in Kontakt (≤ 3 mm)"] = sum(1 for a in abst if a <= 0.003)
+    if fusspunkte:
+        erg["Fuß: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
+    erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in fusspunkte[::25]]
+    return erg
+
+
+def pruefen(name: str, arbeit: Path) -> None:
+    """Prüfansichten (vorn, Seite, Standard) für fünf Phasen, Griff aus der Nähe und Messwerte für
+    alle 60 Bilder."""
+    s, u, punkte = baue(name, 480, 360, 16)
+    werte = []
+    fuss0 = None
+    fuss_max = 0.0
+    for bild in range(BILDER):
+        p = ablauf(bild, BILDER)
+        u.setzen(p)
+        w = {k: round(v, 2) for k, v in u.pruefwerte().items()}
+        m = messen(u)
+        fuss = m.pop("_fuss")
+        if fuss0 is None:
+            fuss0 = fuss
+        else:
+            fuss_max = max(fuss_max, max((Vector(a) - Vector(b)).length for a, b in zip(fuss0, fuss)))
+        w.update({k: round(v, 2) for k, v in m.items()})
+        w["Meldungen"] = list(u.rig.meldungen)
+        werte.append({"bild": bild, "phase": round(p, 3), **w})
+    zusammen = {
+        "uebung": name,
+        "Fuß: größte Verschiebung über die Schleife (mm)": round(fuss_max * 1000, 2),
+        "bilder": werte,
+    }
+    (arbeit / f"{name}-messwerte.json").write_text(json.dumps(zusammen, ensure_ascii=False, indent=1), encoding="utf-8")
+    for p in (0.0, 0.25, 0.5, 0.75, 1.0):
+        u.setzen(p)
+        for ansicht in ("vorn", "seite", "standard"):
+            for o in bpy.data.objects:
+                o.hide_render = o.name.startswith(AUSBLENDEN.get(ansicht, ()))
+            kamera(u, punkte, ansicht, 480, 360)
+            s.render.filepath = str(arbeit / f"pruef-{ansicht}-{p:.2f}.png")
+            bpy.ops.render.render(write_still=True)
+    # Griff aus der Nähe: linke Hand von vorn, von außen und von hinten, Ausgang und Endposition
+    for o in bpy.data.objects:
+        o.hide_render = False
+    for p in (0.0, 1.0):
+        u.setzen(p)
+        hand = u.rig.welt(u.rig.punkt("wrist.L", u.rig.kopf["metacarpal2.L"]))
+        for richtung, hoehe in ((20, 0.10), (110, 0.25), (200, 0.15)):
+            for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
+                bpy.data.objects.remove(o)
+            szene.licht_und_kamera(hand, richtung, 0.5, hoehe)
+            s.render.filepath = str(arbeit / f"pruef-hand-{richtung}-{p:.2f}.png")
+            bpy.ops.render.render(write_still=True)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("uebung", nargs="?")
-    ap.add_argument("--probe", nargs="*", type=float, help="Phasen (0 bis 1) als Standbilder")
     ap.add_argument("--hole", action="store_true")
+    ap.add_argument("--pruefen", action="store_true")
+    ap.add_argument("--ansicht", default="standard", choices=["standard", "vorn", "seite"])
+    ap.add_argument("--breite", type=int, default=720)
+    ap.add_argument("--hoehe", type=int, default=540)
+    ap.add_argument("--proben", type=int, default=40)
+    ap.add_argument("--nur-bilder", action="store_true")
     ap.add_argument("--ziel", default=str(HIER.parent.parent / "public/uebungen/medien"))
     ap.add_argument("--arbeit", default="/tmp/uebungen-3d")
-    ap.add_argument("--proben", type=int, default=40)
     args = ap.parse_args()
     if args.hole:
         hole()
         return
     arbeit = Path(args.arbeit) / args.uebung
     arbeit.mkdir(parents=True, exist_ok=True)
-    if args.probe is not None:
-        s, u = baue(args.uebung, 720, 540, 16)
-        for p in args.probe:
-            u.setzen(p)
-            print(f"Phase {p}:", {k: round(v, 1) for k, v in u.pruefwerte().items()})
-            s.render.filepath = str(arbeit / f"probe-{p:.2f}.png")
-            bpy.ops.render.render(write_still=True)
+    if args.pruefen:
+        pruefen(args.uebung, arbeit)
         return
-    s, u = baue(args.uebung, 720, 540, args.proben)
+    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben)
+    for o in bpy.data.objects:
+        o.hide_render = o.name.startswith(AUSBLENDEN.get(args.ansicht, ()))
+    kamera(u, punkte, args.ansicht, args.breite, args.hoehe)
     start = time.time()
     for bild in range(BILDER):
         u.setzen(ablauf(bild, BILDER))
-        s.render.filepath = str(arbeit / f"bild-{bild:03d}.png")
+        s.render.filepath = str(arbeit / f"{args.ansicht}-{bild:03d}.png")
         bpy.ops.render.render(write_still=True)
-    dauer = time.time() - start
-    print(f"Renderzeit {args.uebung}: {dauer:.0f} s für {BILDER} Bilder")
-    kodiere(arbeit, Path(args.ziel), args.uebung)
+    print(f"Renderzeit {args.uebung} ({args.ansicht}): {time.time() - start:.0f} s für {BILDER} Bilder")
+    if not args.nur_bilder:
+        kodiere(arbeit, Path(args.ziel), args.uebung, args.ansicht)
 
 
-def kodiere(arbeit: Path, ziel: Path, name: str) -> None:
+def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:
     ziel.mkdir(parents=True, exist_ok=True)
-    muster = str(arbeit / "bild-%03d.png")
+    muster = str(arbeit / f"{ansicht}-%03d.png")
     gemeinsam = ["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", muster, "-an"]
     subprocess.run(gemeinsam + ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "24", "-preset", "slow",
                                 "-movflags", "+faststart", str(ziel / f"{name}.mp4")], check=True)
     subprocess.run(gemeinsam + ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "36", "-row-mt", "1",
                                 str(ziel / f"{name}.webm")], check=True)
     # Poster: Endposition (Mitte der Pause unten); Vorschau 240 × 240 aus der Mitte.
-    poster = arbeit / f"bild-{BILDER // 2:03d}.png"
+    poster = arbeit / f"{ansicht}-{BILDER // 2:03d}.png"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(poster), "-q:v", "80",
                     str(ziel / f"{name}-poster.webp")], check=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(poster), "-vf",

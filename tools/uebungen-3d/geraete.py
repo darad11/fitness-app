@@ -91,35 +91,44 @@ def flachbank(laenge_achse: str = "y") -> bpy.types.Object:
     return wurzel
 
 
-def latzug() -> dict[str, bpy.types.Object]:
-    """Gerät mit Blick der Person nach -y. Sitz im Ursprung, Säule vorn (bei -y)."""
+def latzug(sitz_oben: float, knie: Vector, rolle_y: float) -> dict[str, bpy.types.Object]:
+    """Latzug mit Blick der Person nach -y, Sitz um den Ursprung, Säule vorn (bei -y).
+
+    Eingestellt wie im Studio auf die Person: Sitzhöhe `sitz_oben` (Oberkante), Knierolle bei
+    `knie` (Mitte der Rollen, liegt auf den Oberschenkeln kurz vor den Knien), Rolle oben bei
+    `rolle_y` senkrecht über der Zugbahn der Stange.
+    """
     polster = _mat("Polster", GERAET, 0.8)
     rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
     stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
     teile: dict[str, bpy.types.Object] = {}
-    _kasten("Sitz", (0.40, 0.36, 0.08), Vector((0, 0, 0.48)), polster, 0.025)
-    _kasten("Sitzstuetze", (0.06, 0.06, 0.44), Vector((0, 0, 0.22)), rahmen, 0.005)
-    _kasten("Grundrahmen", (0.08, 0.95, 0.05), Vector((0, -0.45, 0.025)), rahmen, 0.005)
-    # Knierolle über den Oberschenkeln, nahe den Knien.
-    _kasten("Knieholm", (0.05, 0.05, 0.30), Vector((0, -0.38, 0.55)), rahmen, 0.005)
+    _kasten("Sitz", (0.40, 0.36, 0.08), Vector((0, 0.02, sitz_oben - 0.04)), polster, 0.025)
+    _kasten("Sitzstuetze", (0.06, 0.06, sitz_oben - 0.08), Vector((0, 0.02, (sitz_oben - 0.08) / 2)), rahmen, 0.005)
+    _kasten("Grundrahmen", (0.08, 1.05, 0.05), Vector((0, -0.48, 0.025)), rahmen, 0.005)
+    # Säule vorn, Ausleger nach oben über der Person, Rolle über der Zugbahn.
+    saeule_y = -0.95
+    _kasten("Saeule", (0.10, 0.10, 2.30), Vector((0, saeule_y, 1.15)), rahmen, 0.008)
+    _kasten("Ausleger", (0.08, rolle_y - saeule_y + 0.08, 0.08), Vector((0, (rolle_y + saeule_y) / 2, 2.26)), rahmen, 0.008)
+    rolle = _zylinder("Rolle", 0.06, 0.03, Vector((0, rolle_y, 2.15)), "x", stahl, ecken=64)
+    _kasten("Rollenhalter", (0.05, 0.05, 0.10), Vector((0, rolle_y, 2.22)), rahmen, 0.005)
+    hintere_rolle = _zylinder("Rolle2", 0.05, 0.03, Vector((0, saeule_y + 0.05, 2.15)), "x", stahl, ecken=48)
+    _kasten("Gewichtsblock", (0.30, 0.16, 0.65), Vector((0, saeule_y - 0.12, 0.40)), rahmen, 0.01)
+    # Knierolle: Holm von der Säule, zwei Rollen über den Oberschenkeln.
+    _kasten("Knieholm", (0.05, abs(knie.y - saeule_y), 0.05), Vector((0, (knie.y + saeule_y) / 2, knie.z)), rahmen, 0.005)
     for seite in (-1, 1):
-        _zylinder("Knierolle", 0.055, 0.2, Vector((seite * 0.12, -0.36, 0.69)), "x", polster)
-    # Säule vorn, Ausleger nach oben über der Person, Rolle über dem Griffbereich.
-    _kasten("Saeule", (0.10, 0.10, 2.25), Vector((0, -0.85, 1.125)), rahmen, 0.008)
-    _kasten("Ausleger", (0.08, 0.80, 0.08), Vector((0, -0.48, 2.22)), rahmen, 0.008)
-    rolle = _zylinder("Rolle", 0.06, 0.03, Vector((0, -0.10, 2.13)), "x", stahl, ecken=64)
-    _kasten("Rollenhalter", (0.05, 0.05, 0.10), Vector((0, -0.10, 2.20)), rahmen, 0.005)
-    _kasten("Gewichtsblock", (0.30, 0.16, 0.65), Vector((0, -1.0, 0.40)), rahmen, 0.01)
+        _zylinder("Knierolle", 0.055, 0.17, Vector((seite * 0.105, knie.y, knie.z)), "x", polster)
     teile["rolle"] = rolle
-    # Latzugstange: gerades Mittelstück, Enden 20° nach unten, Griffe.
+    teile["rolle2"] = hintere_rolle
+    # Latzugstange: gerades Mittelstück 0,80 m, Enden 20° nach unten (ohne Gummigriffe, damit
+    # die Griffposition der Hände auf dem geraden Teil eindeutig ist).
     stange = bpy.data.objects.new("Latzugstange", None)
     bpy.context.scene.collection.objects.link(stange)
     _zylinder("Mittelstueck", 0.012, 0.80, Vector(), "x", stahl, stange)
     for seite in (-1, 1):
         ende = _zylinder("Ende", 0.012, 0.22, Vector((seite * 0.503, 0, -0.037)), "x", stahl, stange)
         ende.rotation_euler = Euler((0, math.pi / 2 + seite * math.radians(20), 0))
-        griff = _zylinder("Griff", 0.016, 0.13, Vector((seite * 0.52, 0, -0.043)), "x", polster, stange)
-        griff.rotation_euler = Euler((0, math.pi / 2 + seite * math.radians(20), 0))
+        _zylinder("Kappe", 0.015, 0.02, Vector((seite * 0.6067, 0, -0.0752)), "x", stahl, stange).rotation_euler = Euler(
+            (0, math.pi / 2 + seite * math.radians(20), 0))
     _zylinder("Oese", 0.02, 0.04, Vector((0, 0, 0.02)), "y", stahl, stange)
     teile["stange"] = stange
     return teile

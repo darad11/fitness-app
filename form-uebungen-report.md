@@ -167,3 +167,16 @@ Auftrag mit Anhang `pilot-korrekturen.png` unter `docs/prompts/`. Nur kostenlose
 | Latziehen: Hände auf den gebogenen Enden, Knierolle fest | Handziel 47 cm neben der Mitte; Rolle unabhängig von den Oberschenkeln gesetzt | Animationsdaten |
 
 Zum Modell: MakeHuman-Grundmodell ohne Formziele, 1,67 m, Oberarm 22,8 cm von Gelenk zu Gelenk (eher kurz). Das begrenzt die Reichweite; bei der Kniebeuge liegt die Stange deshalb hoch auf dem Trapez und schräg in der Hand. Die Hände haben drei Glieder je Finger und einen beweglichen Daumen und erlauben natürliche Griffe, wenn die Pose stimmt; ein anderes Modell ist dafür nicht nötig.
+
+### 10.2 Änderungen an Rig, Animation und Darstellung (Abschnitte 2, 3 und 5; D-407, D-409, D-410)
+
+- **Rig statt Einzelwinkel** (`tools/uebungen-3d/rig.py`): Jede Haltung folgt aus Zielen und ist rechnerisch geschlossen gelöst, ohne Blender-IK und ohne Gedächtnis zwischen den Bildern; dieselbe Phase ergibt immer dieselbe Haltung.
+  - Beine: Knie in der Ebene der Zehenrichtung, Fuß flach, gedreht und fest am Boden.
+  - Arme: Die Hand hängt am Griff und dreht sich nur um die Stange; zu jeder Drehung setzt die Regel der Übung den Ellbogen; gewählt wird die Drehung mit dem geradesten Handgelenk.
+  - Hände: Finger bis auf die Stange gebeugt, am verformten Netz nachgemessen und angepasst; Daumen umgreift gegenläufig bis auf die Gegenseite der Stange.
+  - Rumpf und Becken: Drehungen um echte Gelenkpunkte, Last über der Unterstützungsfläche.
+- **Bewegung** (`haltung.py`): Minimum-Ruck-Verlauf (stetige Beschleunigung), kurze Pause an beiden Umkehrpunkten, 60 Bilder bei 24 fps, nahtlose Schleife. Motion Capture passt zu keiner der drei Pilot-Übungen (keine Aufnahme mit Langhantel oder Gerät, Abschnitt 10.7); die Bewegung ist deshalb aus Ausgangs-, Zwischen- und Endposition gebaut.
+- **Muskelzonen** (`zonen.py`, `szene.py`): Umriss je Muskel in Körperkoordinaten, Abstand je Eckpunkt, scharfer Schnitt im Material mit 1,2 mm Übergang. Hauptmuskeln Lime, mitarbeitende Lime mit 42 % Deckkraft, beides aus den Übungsdaten.
+- **Kamera** (`szene.bildausschnitt`): Dreiviertelansicht von vorn-seitlich (45°, 10° von oben; liegend 32°), Abstand aus Figur und Gerät über die ganze Bewegung. Latziehen von hinten-seitlich (135°), weil die arbeitenden Muskeln auf dem Rücken liegen und von vorn Säule und Gewichtsblock den Rumpf verdecken.
+- **Prüfung** (`render.py --pruefen`): Messwerte für alle 60 Bilder (Gelenkwinkel, Abstand der Finger zur Stange am verformten Netz, Bodenkontakt und Verschiebung der Füße), Prüfansichten von vorn, von der Seite und in der Standardansicht in fünf Phasen, dazu der Griff aus der Nähe von drei Seiten.
+- **Modell:** unverändert MakeHuman (CC0). Brust wie bisher abgeflacht (geschlechtsneutral).

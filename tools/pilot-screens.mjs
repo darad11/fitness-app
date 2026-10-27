@@ -194,7 +194,7 @@ except OSError:
     font = small = ImageFont.load_default()
 rows = []
 for key, title in pilot:
-    cells = [(load(f'{F}/{key}/bild-000.png', 300), 'Ausgangsposition'), (load(f'{F}/{key}/bild-030.png', 300), 'Endposition'),
+    cells = [(load(f'{F}/{key}/standard-000.png', 300), 'Ausgangsposition'), (load(f'{F}/{key}/standard-030.png', 300), 'Endposition'),
              (load(f'{D}/pilot-{key}-zugeklappt.png'), 'Player zugeklappt'), (load(f'{D}/pilot-{key}-aufgeklappt.png'), 'Player aufgeklappt'),
              (load(f'{D}/pilot-{key}-details.png'), 'Übungsdetails')]
     rows.append((title, cells))

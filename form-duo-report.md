@@ -1,8 +1,8 @@
 # FORM · Bericht zur Phase iPhone Duo
 
-Stand: 26.10.2026, Phase 2 und Korrekturen nach dem ersten Gerätetest abgeschlossen (Abschnitt 11), Korrekturen nach dem zweiten abgeschlossen (Abschnitt 12), erneuter Gerätetest offen · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
+Stand: 26.10.2026, Phase 2 und Korrekturen nach dem ersten Gerätetest abgeschlossen (Abschnitt 11), Korrekturen nach dem zweiten abgeschlossen (Abschnitt 12), Gerätetest am 27.10.2026 bestanden (Abschnitt 15) · Branch `form-duo`, Entwurfs-PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52) · Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md` · Entscheidungen ab D-370
 
-Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo (Chromium in dieser Umgebung, WebKit in GitHub Actions). Auf dem echten Gerät ist nichts getestet; was nur dort prüfbar ist, steht in der Liste für den Gerätetest.
+Getestet wurde in Browser-Fenstern mit den Maßen des iPhone Duo (Chromium in dieser Umgebung, WebKit in GitHub Actions). Auf dem echten Gerät hat der Produktinhaber getestet; der Gerätetest ist bestanden (Abschnitt 15).
 
 ## 1. Auftrag und Reihenfolge
 
@@ -539,3 +539,13 @@ Bitte vorher die App vom Home-Bildschirm entfernen und neu hinzufügen (Daten vo
 1. **Mehrmals starten:** aufgeklappt quer mehrere Kaltstarts hintereinander, wie auf deinem Bild. Steht das Logo jedes Mal in der Mitte, und springt beim Übergang vom Startbild nichts? Ein kurzes Blinken des Logos (bis 300 ms) ist möglich.
 2. **Gerätedaten nach einem Start:** „Mehr › Über die App › Gerätedaten“, besonders die drei Zeilen zum Start. Sie zeigen, ob iOS zuerst andere Maße meldet und wie schnell sie sich ändern.
 3. **Alle vier Haltungen** wie in Abschnitt 13.4, dazu einmal das normale iPhone: Steht das Logo dort wie bisher, und erscheint es ohne merkbare Verzögerung?
+
+## 15. Gerätetest am iPhone Duo bestanden (Nachtrag vom 27.10.2026)
+
+Der Produktinhaber hat nach dem Merge (`25a3553`) am iPhone Duo getestet. Ergebnis: bestanden.
+
+- **Startfläche:** bei zehn Kaltstarts aufgeklappt hoch und aufgeklappt quer mittig.
+- **Übrige Punkte** der Listen in den Abschnitten 12.5, 13.4 und 14.4: in Ordnung.
+
+Eingetragen in `docs/testing.md` und in der Beschreibung von PR [darad11/fitness-app#52](https://github.com/darad11/fitness-app/pull/52); Nachtrag in der Phase Übungen (D-395).
+

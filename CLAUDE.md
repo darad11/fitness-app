@@ -6,7 +6,7 @@ FORM, persönliche Fitness-App als local-first PWA für einen einzigen Nutzer, d
 
 Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 
-- Branch: Jede Phase bekommt einen eigenen Branch von `main`, dazu einen Entwurfs-PR nach `main` für die CI. Aktuelle Phase: `form-duo` (Auftrag `docs/prompts/iphone-duo-FORM.md`, verbindliche Leitlinien `docs/prompts/iphone-duo-leitlinien-FORM.md`). Nie direkt auf `main` arbeiten. Nach jedem Commit sofort pushen.
+- Branch: Jede Phase bekommt einen eigenen Branch von `main`, dazu einen Entwurfs-PR nach `main` für die CI. Aktuelle Phase: `form-uebungen` (Auftrag `docs/prompts/uebungen-FORM.md`, verbindliche Leitlinien `docs/prompts/uebungen-leitlinien-FORM.md`). Nie direkt auf `main` arbeiten. Nach jedem Commit sofort pushen.
 - Zu Beginn jeder Aufgabe lesen: `CLAUDE.md`, `docs/decisions.md`, `audit-report.md`, `form-markenleitplanken.md`; ab dem Rebranding zusätzlich `brand-tokens.md`.
 - Ein Commit pro Paket. Jedes Paket bekommt eine D-Nummer in `docs/decisions.md`.
 - Nach jedem Paket: `pnpm check:bundle` (Startansicht unter 250 KB) und E2E inklusive WebKit.

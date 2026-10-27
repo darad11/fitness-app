@@ -2128,3 +2128,13 @@ Die Startfläche misst in jedem Bild, das Logo erscheint erst bei stabilen Werte
 | `pnpm build`, `pnpm check:bundle` | Startansicht 244,7 KB von 250 KB (`startflaeche.js` 4,9 KB, `theme-init.js` 1,6 KB) |
 | `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“; die 44 Startbilder sind unverändert |
 | WebKit | läuft in der CI; die Tests mit Ausrichtung über das Chrome-Protokoll nur in Chromium |
+
+### Gerätetest am iPhone Duo bestanden · 27.10.2026, Gerät des Produktinhabers
+
+Nachtrag zur Phase iPhone Duo (D-370 bis D-394), eingetragen in der Phase Übungen (D-395). Getestet vom Produktinhaber am echten Gerät nach dem Merge von PR #52 (`25a3553`).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Startfläche, zehn Kaltstarts aufgeklappt hoch und aufgeklappt quer | bestanden: jedes Mal mittig |
+| Übrige Punkte der Listen für den erneuten Gerätetest (`form-duo-report.md` Abschnitte 12.5, 13.4, 14.4) | bestanden: in Ordnung |
+

@@ -505,3 +505,37 @@ Bitte vorher die App vom Home-Bildschirm entfernen und neu hinzufügen (Daten vo
 1. **Startfläche:** in allen vier Haltungen starten, zugeklappt und aufgeklappt, je hoch und quer: Stehen Logo und „FORM YOURSELF.“ in der Mitte des ganzen Bildschirms, und springt beim Übergang vom Startbild nichts?
 2. **Gerätedaten:** in denselben vier Haltungen ein Bild von „Mehr › Über die App › Gerätedaten“. Wichtig sind `screen.width × screen.height`, `screenX / screenY` und die beiden Zeilen zur Startfläche. Sie zeigen, ob das Duo aufgeklappt wirklich 466 meldet und ob die Rechnung die Lage richtig trifft.
 3. **Zugeklappt quer:** Dieses Fenster ist noch nicht gemessen. Passt die Verschiebung dort (42, 0)?
+
+## 14. Startfläche wechselt bei mehrmaligem Start (D-394)
+
+Auftrag vom 27.10.2026: `docs/prompts/duo-korrekturen-4-FORM.md`, mit deinem Bild `duo-startflaeche-wechselnd.png` (aufgeklappt quer, mehrere Kaltstarts). Getestet habe ich wieder in Browser-Fenstern (Chromium hier, WebKit in der CI), nicht auf dem Gerät.
+
+### 14.1 Befund und Ursache
+
+- **Dein Bild:** Zweimal steht das Logo mittig, beim vierten Start bei 233 pt.
+- **Nachgemessen:** Beim vierten Start stehen Logo und Claim senkrecht genau wie bei den anderen Starts, und die Wortmarke ist gleich breit. Der Streifen rechts ist auf allen drei Bildern zu sehen, das Fenster war also immer 867 pt breit. Das passt nur zu einer Grafik von 466 × 669 pt: Die Startfläche hatte beim Laden ein Fenster von 466 × 669 gemessen, also die Breite des zugeklappten Duo und die Höhe des aufgeklappten quer. Danach kam keine Größenänderung mehr, und die Fläche blieb so.
+- **Ursache:** Deine Vermutung stimmt. Die Startfläche hat einmal gemessen, vor dem ersten Bild. Meldet iOS in diesem Moment noch Werte des zugeklappten Zustands, bleibt die falsche Lage stehen.
+- **Gegenprobe:** Mit genau diesen Werten beim Laden zeigt der alte Stand im Browser dasselbe wie dein vierter Start: Grafik 466 × 669, Logo bei 233 pt, vom ersten Bild an sichtbar.
+
+### 14.2 Neu
+
+- **Keine einmalige Messung mehr.** Die Fläche richtet sich per CSS nach dem Fenster, wie es gerade ist. Die Datei `public/startflaeche.js` setzt nur noch die Breite der Streifen daneben. Sie misst in jedem Bild und bei jeder Größenänderung, Drehung und Änderung des sichtbaren Bereichs, solange die Fläche da ist.
+- **Logo erst bei stabilen Werten.** Das Logo bleibt unsichtbar, bis zwei Bilder nacheinander dieselben Maße melden, die zu einer bekannten Haltung des Duo passen oder bei denen Fenster und Bildschirm gleich groß sind. Das dauert meist zwei Bilder, etwa 30 ms, höchstens 300 ms. Dann erscheint es gleich an der richtigen Stelle.
+- **Widersprüche zählen nicht.** Ein Fenster in Hochformat bei Ausrichtung quer, wie 466 × 669 beim vierten Start, wird nie zur Rechnung genutzt.
+- **Normales iPhone:** Dort hängt die Lage nicht an den Streifen des Duo. Das Logo erscheint ebenfalls nach zwei gleichen Bildern, an derselben Stelle wie bisher. Ohne diese Ausnahme stünde am iPhone bei jedem Start 300 ms kein Logo.
+- **Gerätedaten:** neu das Layout (`clientWidth × clientHeight`), dazu drei Zeilen zum Start: die zuerst gemeldeten Maße mit Zeit, jede Änderung danach mit Zeit, und wann das Logo erschien und warum („Werte stabil“ oder „nach der Wartezeit“).
+- **Grenze:** Meldet iOS die Maße des zugeklappten Zustands zwei Bilder lang ohne Widerspruch, gelten sie als echtes Zuklappen. Das lässt sich von außen nicht unterscheiden.
+
+### 14.3 Tests
+
+- `startLage.test.ts` (28 Tests) spielt den Start Bild für Bild nach, mit Uhr, Bildern und Ereignissen. Darunter dein vierter Start (466 × 669 beim Laden, dann 867 × 669), zuerst zugeklappt ohne Widerspruch, Widersprüche über 100 ms und dauerhaft, normales iPhone und Computer.
+- `e2e/start-surface.spec.ts` schneidet in Chromium jedes Bild mit. Zuerst melden Fenster und Layout 466 × 669, nur beim Laden wie beim vierten Start oder 120 ms lang. In keinem Bild steht das Logo an einer anderen Stelle als in der Mitte des Bildschirms (475,5 pt), am Ende ist die Fläche pixelgleich mit dem Startbild.
+- **Prüfungen:** siehe `docs/testing.md`, Abschnitt „Startfläche ohne einmalige Messung“.
+
+### 14.4 Liste für deinen erneuten Gerätetest
+
+Bitte vorher die App vom Home-Bildschirm entfernen und neu hinzufügen (Daten vorher unter „Mehr › Daten und Sicherung“ sichern).
+
+1. **Mehrmals starten:** aufgeklappt quer mehrere Kaltstarts hintereinander, wie auf deinem Bild. Steht das Logo jedes Mal in der Mitte, und springt beim Übergang vom Startbild nichts? Ein kurzes Blinken des Logos (bis 300 ms) ist möglich.
+2. **Gerätedaten nach einem Start:** „Mehr › Über die App › Gerätedaten“, besonders die drei Zeilen zum Start. Sie zeigen, ob iOS zuerst andere Maße meldet und wie schnell sie sich ändern.
+3. **Alle vier Haltungen** wie in Abschnitt 13.4, dazu einmal das normale iPhone: Steht das Logo dort wie bisher, und erscheint es ohne merkbare Verzögerung?

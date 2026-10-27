@@ -322,10 +322,10 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
     expect(style).toContain('@media (orientation:landscape){#startflaeche .hoch{display:none}}');
     expect(style).toContain('@media (orientation:portrait){#startflaeche .quer{display:none}}');
     // Grundlinie 58 pt über dem Rand (abzüglich des winzigen Überhangs von O und S); die kurze
-    // Seite ist die des Bildschirms aus public/startflaeche.js, ohne das Skript die des Fensters
-    // (D-393).
-    expect(style).toMatch(
-      /\.start-unten\{transform:translateY\(calc\(0\.000\d+ \* var\(--start-kurz,100vmin\) - 58px\)\)\}/,
+    // Seite ist die des Bildschirms: das aktuelle Fenster plus die Streifen aus
+    // public/startflaeche.js, ohne das Skript das Fenster (D-393, D-394).
+    expect(style).toContain(
+      '#startflaeche .start-unten{transform:translateY(calc(0.000365 * min(100vw + var(--start-links,0px) + var(--start-rechts,0px), 100vh + var(--start-oben,0px) + var(--start-unten,0px)) - 58px))}',
     );
 
     const viewBox = (id: string) =>
@@ -373,19 +373,28 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
     expect(html.indexOf('<div id="startflaeche"')).toBeLessThan(html.indexOf('<div id="root">'));
   });
 
-  it('die Startfläche richtet sich nach dem ganzen Bildschirm, nicht nach den sicheren Bereichen (D-390, D-393)', () => {
+  it('die Startfläche richtet sich nach dem ganzen Bildschirm, nicht nach den sicheren Bereichen (D-390, D-393, D-394)', () => {
     // Ohne Bedienelemente: kein Abstand für Systemleiste, Kamera oder Home-Balken.
     expect(style).not.toContain('safe-area');
     expect(surface).not.toContain('safe-area');
     expect(style).toContain('position:fixed;inset:0;');
     expect(style).toContain('overflow:hidden;');
-    // Größe und Lage der Grafik aus public/startflaeche.js: so groß wie der Bildschirm und dort, wo
-    // das Startbild liegt; ohne das Skript füllt sie das Fenster. Keine Regeln mehr nach
+    // Die Grafik ist per CSS das aktuelle Fenster plus die Streifen daneben, die
+    // public/startflaeche.js in jedem Bild setzt: so groß wie der Bildschirm und dort, wo das
+    // Startbild liegt; ohne das Skript füllt sie das Fenster (D-394). Keine Regeln nach
     // `device-width`: Das Duo meldet dort auch aufgeklappt das äußere Display (D-393).
     expect(style).toContain(
-      '#startflaeche>svg{display:block;width:var(--start-b,100%);height:var(--start-h,100%);transform:translate(var(--start-x,0px),var(--start-y,0px))}',
+      '#startflaeche>svg{display:block;position:absolute;left:calc(var(--start-links,0px) * -1);top:calc(var(--start-oben,0px) * -1);width:calc(100% + var(--start-links,0px) + var(--start-rechts,0px));height:calc(100% + var(--start-oben,0px) + var(--start-unten,0px))}',
     );
     expect(style).not.toContain('device-width');
+    expect(style).not.toMatch(/--start-(b|h|x|y|kurz)\b/);
+    // Das Logo bleibt unsichtbar, solange das Skript wartet, höchstens 300 ms, auch wenn das
+    // Skript nicht weiterkommt; dieselbe Zeit wie im Skript (D-394).
+    expect(style).toContain(
+      'html[data-startlage=warten] #startflaeche>svg{visibility:hidden;animation:startlage-netz 0s 300ms forwards}',
+    );
+    expect(style).toContain('@keyframes startlage-netz{to{visibility:visible}}');
+    expect(startScript).toContain('var WARTEN_MS = 300;');
     // Das Skript läuft vor der Fläche, im Kopf, nach dem Farbschema.
     const script = html.indexOf('<script src="/startflaeche.js"></script>');
     expect(script).toBeGreaterThan(html.indexOf('<script src="/theme-init.js"></script>'));
@@ -393,18 +402,28 @@ describe('Vorlage splash.svg und Startfläche in index.html (D-325)', () => {
   });
 });
 
-/** Rechnung der Startfläche aus public/startflaeche.js, ausgeführt mit einem leeren Fenster. */
+/** Rechnung der Startfläche aus public/startflaeche.js, ausgeführt mit einem ruhenden Fenster. */
 function loadStartLage() {
   const fake: Record<string, unknown> = {
     innerWidth: 390,
     innerHeight: 844,
     screen: { width: 390, height: 844 },
+    performance: { now: () => 0 },
+    setTimeout: () => 0,
+    clearTimeout: () => undefined,
+    requestAnimationFrame: () => 0,
     addEventListener: () => undefined,
     removeEventListener: () => undefined,
   };
   const doc = {
     readyState: 'loading',
-    documentElement: { style: { setProperty: () => undefined } },
+    documentElement: {
+      clientWidth: 390,
+      clientHeight: 844,
+      style: { setProperty: () => undefined },
+      setAttribute: () => undefined,
+      removeAttribute: () => undefined,
+    },
     getElementById: () => null,
   };
   // eslint-disable-next-line @typescript-eslint/no-implied-eval -- nur im Test: die Datei aus public/
@@ -416,10 +435,20 @@ function loadStartLage() {
   return fake.__formStartLage as (messung: {
     fenster: { b: number; h: number };
     bildschirm: { b: number; h: number } | null;
-  }) => { b: number; h: number; x: number; y: number; dx: number; dy: number };
+    ausrichtung: 'hoch' | 'quer' | null;
+  }) => {
+    b: number;
+    h: number;
+    links: number;
+    rechts: number;
+    oben: number;
+    unten: number;
+    dx: number;
+    dy: number;
+  };
 }
 
-describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständen gleich (D-393)', () => {
+describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständen gleich (D-393, D-394)', () => {
   const links = startupLinks();
   const surface = /<div id="startflaeche"[\s\S]*?<\/div>/.exec(html)?.[0] ?? '';
   const style = /#startflaeche\{display:none\}[^<]*/.exec(html)?.[0] ?? '';
@@ -440,9 +469,7 @@ describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständ
     .split(' ')
     .map(Number);
   /** Unterkante des Claims: Faktor der kurzen Seite und Abstand vom unteren Rand. */
-  const claimShift = /translateY\(calc\(([\d.]+) \* var\(--start-kurz,100vmin\) - (\d+)px\)\)/.exec(
-    style,
-  );
+  const claimShift = /translateY\(calc\(([\d.]+) \* min\(100vw .*?\)\) - (\d+)px\)\)/.exec(style);
   const below = Number(claimShift?.[1]);
   const baseline = Number(claimShift?.[2]);
 
@@ -459,7 +486,11 @@ describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständ
 
   for (const state of STATES) {
     it(`${state.name}: Logo und Claim der Fläche stehen auf dem Bildschirm wie im Startbild, die Verschiebung stimmt mit den Gerätedaten`, async () => {
-      const lage = startLage({ fenster: state.fenster, bildschirm: { b: 466, h: 678 } });
+      const lage = startLage({
+        fenster: state.fenster,
+        bildschirm: { b: 466, h: 678 },
+        ausrichtung: state.fenster.b > state.fenster.h ? 'quer' : 'hoch',
+      });
       const quer = lage.b > lage.h;
       const link = links.find(
         (l) =>
@@ -481,19 +512,24 @@ describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständ
         claimBottom: claim.bottom / 3,
       };
 
-      // Startfläche: Die Grafik ist so groß wie der Bildschirm und im Fenster um (−x, −y)
-      // verschoben; das Fenster liegt bei (x, y) auf dem Bildschirm. Auf dem Bildschirm beginnt die
-      // Grafik also bei (x − x, y − y), wie das Startbild.
-      const left = lage.x + -lage.x;
-      const top = lage.y + -lage.y;
+      // Startfläche wie das CSS aus index.html sie zeichnet: Die Grafik ist das Fenster plus die
+      // Streifen und beginnt im Fenster bei (−links, −oben). Das Fenster liegt rechts und unter
+      // den Streifen, auf dem Bildschirm also bei (links, oben): Dort beginnt die Grafik bei (0, 0),
+      // wie das Startbild.
+      const fenster = { x: lage.links, y: lage.oben };
+      const left = fenster.x - lage.links;
+      const top = fenster.y - lage.oben;
+      const width = state.fenster.b + lage.links + lage.rechts;
+      const height = state.fenster.h + lage.oben + lage.unten;
+      expect([width, height]).toEqual([lage.b, lage.h]);
       const logo = useBox(quer ? 'quer' : 'hoch', 'start-logo');
       const claimUse = useBox(quer ? 'quer' : 'hoch', 'start-claim-zeichen');
       const flaeche = {
-        x: left + (lage.b * (logo.x + logo.w / 2)) / 100,
-        y: top + (lage.h * (logo.y + logo.h / 2)) / 100,
-        width: quer ? ((lage.h * logo.h) / 100) * (logoW / logoH) : (lage.b * logo.w) / 100,
-        claimX: left + (lage.b * (claimUse.x + claimUse.w / 2)) / 100,
-        claimBottom: top + lage.h - baseline + below * Math.min(lage.b, lage.h),
+        x: left + (width * (logo.x + logo.w / 2)) / 100,
+        y: top + (height * (logo.y + logo.h / 2)) / 100,
+        width: quer ? ((height * logo.h) / 100) * (logoW / logoH) : (width * logo.w) / 100,
+        claimX: left + (width * (claimUse.x + claimUse.w / 2)) / 100,
+        claimBottom: top + height - baseline + below * Math.min(width, height),
       };
 
       expect(Math.abs(flaeche.x - picture.x), 'Mitte des Logos waagrecht').toBeLessThanOrEqual(1);
@@ -511,8 +547,8 @@ describe('Startbild und Startfläche liegen am iPhone Duo in allen vier Zuständ
       expect(Math.abs(picture.y - 0.47 * lage.h)).toBeLessThanOrEqual(1);
       // Vom Fenster aus: Die Mitte des Bildschirms liegt um die Verschiebung aus den Gerätedaten
       // neben der Mitte des Fensters.
-      expect(lage.b / 2 - lage.x - state.fenster.b / 2).toBeCloseTo(lage.dx, 6);
-      expect(lage.h / 2 - lage.y - state.fenster.h / 2).toBeCloseTo(lage.dy, 6);
+      expect(lage.b / 2 - fenster.x - state.fenster.b / 2).toBeCloseTo(lage.dx, 6);
+      expect(lage.h / 2 - fenster.y - state.fenster.h / 2).toBeCloseTo(lage.dy, 6);
     });
   }
 });

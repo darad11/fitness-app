@@ -2107,3 +2107,24 @@ Startfläche in allen vier Haltungen des Duo in der Mitte des ganzen Bildschirms
 | `pnpm build`, `pnpm check:bundle` | Startansicht 242,3 KB von 250 KB. Neu zählt `tools/check-bundle-size.mjs` die Skripte im Kopf mit, die es bisher nicht erfasste: `startflaeche.js` 2,6 KB, `theme-init.js` 1,6 KB; ohne sie 238,1 KB. `startflaeche.js` ist vorab gespeichert |
 | `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“; die 44 Startbilder sind unverändert |
 | WebKit | läuft in der CI (GitHub Actions); die Lagen des Duo nur in Chromium, wie seit D-390 |
+
+### Startfläche ohne einmalige Messung · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Die Startfläche misst in jedem Bild, das Logo erscheint erst bei stabilen Werten, Widersprüche zählen nicht, die Gerätedaten zeigen das Protokoll des Starts (D-394). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen im Bild `duo-startflaeche-wechselnd.png` (Maßstab 640 px für 951 pt) | Start 1 und 3: Mitte des Logos 474,8 pt, senkrecht 314,3 pt, Wortmarke 239,2 pt; Start 4: Mitte 231,8 pt, senkrecht 314,3 pt, Wortmarke 237,8 pt. Streifen rechts (84 pt) auf allen drei Bildern, das Fenster war 867 pt breit. Passt zu einer Grafik von 466 × 669 pt |
+| `src/app/startLage.test.ts` | 28 Tests bestanden: Rechnung mit den Messwerten, Widersprüche (466 × 669, 466 × 678, 382 × 678 bei quer; 867 × 669 bei hoch), Rückfälle (iPhone, auch unter der Statusleiste und quer, Handy-Profil der Tests, iPad, geteilter Bildschirm, ohne `screen`), und Bild für Bild mit nachgestellter Seite: vierter Start, zuerst zugeklappt ohne Widerspruch, Widerspruch über 100 ms, Widerspruch bleibt (Logo nach 300 ms ohne Streifen), ohne Bilder (Zeitgeber), Computer, `window.orientation`, Streifen oben kommt nach dem Erscheinen dazu, echtes Zuklappen, Widerspruch nach dem Erscheinen, alle vier Hörer, Ende nach dem Entfernen der Fläche, höchstens 10 s und 20 Änderungen |
+| `src/app/splash.test.ts` | 19 Tests bestanden: CSS (Grafik = Fenster plus Streifen, Logo verborgen bei `data-startlage=warten`, 300 ms in CSS und Skript gleich, Claim mit `min(100vw + …, 100vh + …)`), Startbild gegen Fläche in fünf Lagen auf 1 pt |
+| `src/modules/settings/calc/deviceData.test.ts` | 6 Tests bestanden: 17 Zeilen in fester Reihenfolge, Protokoll des Starts, Widerspruch, fehlende Werte |
+| `e2e/start-surface.spec.ts`, neue Tests (Chromium, Handy-Profil, Fenster 867 × 669, Bildschirm 466 × 678, quer; zuerst 466 × 669 gemeldet), je dreimal wiederholt | 6 bestanden. In jedem mitgeschnittenen Bild mit Logo liegt die Mitte bei 475,5 pt, am Ende pixelgleich mit dem Startbild; erstes Protokoll 466 × 669, erste Änderung 867 × 669, Logo „stabil“ |
+| Erster Lauf des Tests mit 120 ms falschen Werten | scheiterte am Test, nicht an der App: Bis das Skript lief, waren seit Beginn der Navigation schon mehr als 120 ms vergangen, die Seite meldete schon die echten Werte. Die Zeit zählt jetzt ab dem ersten Lesen |
+| Gegenprobe im Browser mit denselben Werten beim Laden (Bilder mitgeschnitten) | Stand D-393: Grafik 466 × 669, Mitte 233,0 pt, vom ersten Bild an sichtbar, wie beim vierten Start. Stand D-394: 40 Bilder, das erste ohne Logo, danach in jedem Bild 475,5 pt; mit 120 ms falschen Werten 38 Bilder, 9 ohne Logo, danach 475,5 pt |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 414 bestanden, 129 übersprungen, 1 fehlgeschlagen, 12,1 min: `duo-resize.spec.ts` „Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- und Zuklappen (D-375)“ mit „zu: Position … Expected: <= 4, Received: 24.1875“. Die Datei danach einzeln fünfmal wiederholt: 20 von 20 bestanden; die Startfläche ist in diesem Test längst entfernt |
+| `e2e/duo-geraetedaten.spec.ts` mit den neuen Zeilen, Muster für ein abweichendes Layout gelockert | bestanden |
+| `pnpm test` | 131 Dateien, 1174 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 244,7 KB von 250 KB (`startflaeche.js` 4,9 KB, `theme-init.js` 1,6 KB) |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“; die 44 Startbilder sind unverändert |
+| WebKit | läuft in der CI; die Tests mit Ausrichtung über das Chrome-Protokoll nur in Chromium |

@@ -1,22 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
 import { tMore } from '@/shared/i18n/de-more';
 import { currentPlatform } from '@/shared/lib/platform';
-import { deviceRows, type DeviceSnapshot, type StartPlacement } from '../calc/deviceData';
+import {
+  deviceRows,
+  type DeviceSnapshot,
+  type StartLog,
+  type StartPlacement,
+} from '../calc/deviceData';
 import { useFormatters } from '../service/formatting';
 
-/** Rechnung der Startfläche aus `public/startflaeche.js` (D-393), dieselbe wie beim Start. */
+/** Rechnung der Startfläche aus `public/startflaeche.js` (D-393, D-394), dieselbe wie beim Start. */
 type StartLage = (messung: {
   fenster: { b: number; h: number };
   bildschirm: { b: number; h: number } | null;
+  ausrichtung: 'hoch' | 'quer' | null;
 }) => StartPlacement;
+
+type StartWindow = Window & { __formStartLage?: StartLage; __formStartMessung?: StartLog };
+
+/** Ausrichtung aus `screen.orientation`, wie beim Start; ohne sie keine (dann zählt nur das Fenster). */
+function alignment(snapshot: Omit<DeviceSnapshot, 'start'>): 'hoch' | 'quer' | null {
+  if (!snapshot.orientation) return null;
+  return snapshot.orientation.type.startsWith('landscape') ? 'quer' : 'hoch';
+}
 
 /** Lage der Startfläche für die Werte jetzt; ohne das Skript `null`. */
 function startPlacement(snapshot: Omit<DeviceSnapshot, 'start'>): StartPlacement | null {
-  const startLage = (window as Window & { __formStartLage?: StartLage }).__formStartLage;
+  const startLage = (window as StartWindow).__formStartLage;
   if (typeof startLage !== 'function') return null;
   return startLage({
-    fenster: { b: snapshot.inner.width, h: snapshot.inner.height },
+    fenster: { b: snapshot.layout.width, h: snapshot.layout.height },
     bildschirm: snapshot.screen ? { b: snapshot.screen.width, h: snapshot.screen.height } : null,
+    ausrichtung: alignment(snapshot),
   });
 }
 
@@ -29,6 +44,10 @@ function read(probe: HTMLElement | null): DeviceSnapshot {
   const orientation = display?.orientation;
   const snapshot: Omit<DeviceSnapshot, 'start'> = {
     inner: { width: window.innerWidth, height: window.innerHeight },
+    layout: {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+    },
     screen: display
       ? {
           width: display.width,
@@ -56,17 +75,19 @@ function read(probe: HTMLElement | null): DeviceSnapshot {
     orientation: orientation ? { type: orientation.type, angle: orientation.angle } : null,
     pixelRatio: window.devicePixelRatio,
     standalone: currentPlatform().isStandalone,
+    startLog: (window as StartWindow).__formStartMessung ?? null,
   };
   return { ...snapshot, start: startPlacement(snapshot) };
 }
 
 /**
- * Gerätedaten (D-388): Fenster, Bildschirm (`screen.*`, `outerWidth`, `screenX`; D-393),
+ * Gerätedaten (D-388): Fenster, Layout, Bildschirm (`screen.*`, `outerWidth`, `screenX`; D-393),
  * `visualViewport`, sichere Bereiche, `screen.orientation`, `devicePixelRatio`, Anzeigemodus und
  * die Lage der Startfläche, wie `public/startflaeche.js` sie für diese Werte rechnet (`screenX`
- * und `screenY` zählen dort nicht, sie stehen nur zum Nachsehen da). Die Werte folgen jeder
- * Änderung (Drehen, Auf- und Zuklappen, Tastatur); nichts davon wird gespeichert oder übertragen.
- * Wird erst beim Aufklappen nachgeladen.
+ * und `screenY` zählen dort nicht, sie stehen nur zum Nachsehen da). Dazu das Protokoll des
+ * Starts (D-394): die zuerst gemeldeten Maße, ihre Änderungen und wann das Logo erschien. Die
+ * Werte folgen jeder Änderung (Drehen, Auf- und Zuklappen, Tastatur); nichts davon wird
+ * gespeichert oder übertragen. Wird erst beim Aufklappen nachgeladen.
  */
 export function DeviceData() {
   const fmt = useFormatters();

@@ -22,9 +22,10 @@
  *   (seit D-390 mit dem iPhone Duo, äußeres und inneres Display);
  * - `public/splash/splash.svg`: Vorlage 390 × 844 pt mit den Gruppen `symbol`, `wortmarke`, `claim`;
  * - in `index.html` die Startfläche zwischen den Markierungen `startflaeche`: dieselben Pfade,
- *   mit CSS nach derselben Regel gesetzt, damit Startbild und Startfläche gleich aussehen. Größe
- *   und Lage der Grafik kommen aus `public/startflaeche.js` (D-393): so groß wie der ganze
- *   Bildschirm und dort, wo das Startbild liegt, auch wenn das Fenster der App kleiner ist.
+ *   mit CSS nach derselben Regel gesetzt, damit Startbild und Startfläche gleich aussehen. Die
+ *   Grafik ist so groß wie der ganze Bildschirm und liegt dort, wo das Startbild liegt, auch wenn
+ *   das Fenster der App kleiner ist: das aktuelle Fenster plus die Streifen daneben, die
+ *   `public/startflaeche.js` misst (D-393, D-394).
  * Danach gibt es die `<link>`-Zeilen für `index.html` aus. `src/app/splash.test.ts` prüft Zeilen,
  * Dateien, Pixelmaße und die Regel in den Bildern.
  *
@@ -222,6 +223,17 @@ function screenSvg(width, height, pt, p, attributes = '') {
   );
 }
 
+/** Streifen neben dem Fenster, gesetzt von `public/startflaeche.js` (D-394); ohne Skript 0. */
+const STRIP = {
+  links: 'var(--start-links,0px)',
+  rechts: 'var(--start-rechts,0px)',
+  oben: 'var(--start-oben,0px)',
+  unten: 'var(--start-unten,0px)',
+};
+
+/** So lange bleibt das Logo höchstens unsichtbar, bis die Werte stabil sind (D-394). */
+const WAIT_MS = 300;
+
 /**
  * Startfläche für `index.html`: Stil für den Kopf und Inhalt für den Körper. Sichtbar nur in der
  * installierten App (`display-mode: standalone`), denn nur dort zeigt iOS vorher ein Startbild.
@@ -232,8 +244,9 @@ function surface(p) {
   // Alles in Prozent des Bildschirms: Hochkant ist die kurze Seite die Breite, quer die Höhe. Die
   // Fläche richtet sich nicht nach den sicheren Bereichen; sie hat keine Bedienelemente (D-390).
   // Die Grafik ist so groß wie der Bildschirm und liegt wie das Startbild, auch wenn das Fenster
-  // kleiner ist: Größe, Lage und kurze Seite setzt `public/startflaeche.js` (D-393); ohne das
-  // Skript füllt sie das Fenster.
+  // kleiner ist (D-393): per CSS das aktuelle Fenster plus die Streifen daneben, die
+  // `public/startflaeche.js` in jedem Bild misst (D-394); ohne das Skript füllt sie das Fenster.
+  // Das Logo bleibt unsichtbar, bis die Werte stabil sind, höchstens `WAIT_MS`, auch ohne Skript.
   const word = RULE.wordWidth * 100;
   const logoHeight = (word * p.logoHeight) / LOGO_WIDTH;
   const center = RULE.centerY * 100;
@@ -251,8 +264,10 @@ function surface(p) {
     '#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}',
     '@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}',
     '@keyframes startflaeche-netz{to{visibility:hidden}}',
-    '#startflaeche>svg{display:block;width:var(--start-b,100%);height:var(--start-h,100%);transform:translate(var(--start-x,0px),var(--start-y,0px))}',
-    `#startflaeche .start-unten{transform:translateY(calc(${s(below / 100, 6)} * var(--start-kurz,100vmin) - ${String(RULE.baseline)}px))}`,
+    `#startflaeche>svg{display:block;position:absolute;left:calc(${STRIP.links} * -1);top:calc(${STRIP.oben} * -1);width:calc(100% + ${STRIP.links} + ${STRIP.rechts});height:calc(100% + ${STRIP.oben} + ${STRIP.unten})}`,
+    `html[data-startlage=warten] #startflaeche>svg{visibility:hidden;animation:startlage-netz 0s ${String(WAIT_MS)}ms forwards}`,
+    '@keyframes startlage-netz{to{visibility:visible}}',
+    `#startflaeche .start-unten{transform:translateY(calc(${s(below / 100, 6)} * min(100vw + ${STRIP.links} + ${STRIP.rechts}, 100vh + ${STRIP.oben} + ${STRIP.unten}) - ${String(RULE.baseline)}px))}`,
     '@media (orientation:landscape){#startflaeche .hoch{display:none}}',
     '@media (orientation:portrait){#startflaeche .quer{display:none}}',
   ].join('');

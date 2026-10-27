@@ -16,7 +16,7 @@ function value(page: Page, label: string) {
     .first();
 }
 
-test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts übertragen (D-388, D-393)', async ({
+test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts übertragen (D-388, D-393, D-394)', async ({
   page,
 }) => {
   const chromium = await setDuoPose(page, 'zu');
@@ -50,6 +50,17 @@ test('Gerätedaten: zugeklappt, Werte live beim Auf- und Zuklappen, nichts über
     /^466 × 678, (aus screen\.\*|Maße des Duo)$/,
   );
   await expect(value(page, 'Startfläche: Verschiebung')).toHaveText('0, 0');
+  // Layout und Protokoll des Starts (D-394): zuerst gemeldete Maße mit Zeit, Änderungen, Logo.
+  await expect(value(page, 'Layout (clientWidth × clientHeight)')).toHaveText('466 × 678');
+  await expect(value(page, 'Startfläche: beim Start zuerst gemeldet')).toHaveText(
+    /^466 × 678( \(Layout \d+ × \d+\))?, Bildschirm \d+ × \d+(, .+)?, nach \d+ ms$/,
+  );
+  await expect(value(page, 'Startfläche: Änderungen beim Start')).toHaveText(
+    /^(keine|nach \d+ ms: .+)$/,
+  );
+  await expect(value(page, 'Startfläche: Logo erschienen')).toHaveText(
+    /^(nach \d+ ms, Werte (stabil|nicht stabil, nach der Wartezeit)|nicht gezeigt)$/,
+  );
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
     .analyze();

@@ -103,3 +103,17 @@ Gestrichen (keine Einheit, nur Gramm), weil die Werte zu stark schwanken oder si
 | Werkzeug | Blender 4.2 als Python-Modul `bpy` (GPL), nur zum Rendern, nicht Teil der App. Was Blender rendert, gehört dem, der es rendert; die GPL gilt nicht für die Bilder |
 | Eigenes | Posen, Bewegung, Geräte, Muskelzonen, Licht und Farben in `tools/uebungen-3d/` |
 | Ablage | Die MakeHuman-Dateien liegen nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie. Ergebnisse in `public/uebungen/medien/` |
+
+## 7. Bewegungsdaten für weitere Übungsfamilien (D-411)
+
+Für die drei Pilot-Übungen ist keine fremde Bewegung verwendet: Kniebeuge, Bankdrücken und Latziehen rechnet das IK-Rig aus Zielen (D-407). Die folgenden Quellen sind für weitere Familien vorgesehen, erst nach Freigabe des Produktinhabers und nach Sichtprüfung jeder Aufnahme. Übersicht und Zuordnung in `docs/uebungen-bewegungsfamilien.md`.
+
+| Quelle | Lizenz (Wortlaut) | Was das für FORM heißt | Belege |
+|---|---|---|---|
+| CMU Graphics Lab Motion Capture Database | „This data is free for use in research projects. You may include this data in commercially-sold products, but you may not resell this data directly, even in converted form.“ Für Veröffentlichungen erbeten: „The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.“ | Gerenderte Videos in der App sind erlaubt. Die Bewegungsdaten selbst (auch umgewandelt) kommen nicht ins Repository, denn es ist öffentlich und eine Weitergabe dort wäre mehr als Einbau in ein Produkt. Mit der ersten CMU-Übung kommt die Danksagung hierher und in `medien.json` zur Quelle | Original `mocap.cs.cmu.edu` (aus dieser Umgebung nicht abrufbar); wörtliche Kopien in `github.com/SheffieldML/GPy` (`GPy/util/data_resources.json`) und `github.com/probml/pyprobml` |
+| BVH-Umwandlung der CMU-Daten (Bruce Hahne, cgspeed) | „CMU places no restrictions on the use of the original dataset, and I (Bruce) place no additional restrictions on the use of this particular BVH conversion.“ | Wie CMU. Geladen würde über GitHub (`github.com/una-dinosauria/cmu-mocap`), keine neue Adresse nötig | README und READMEFIRST in `github.com/una-dinosauria/cmu-mocap`, zitiert in `github.com/Shriinivas/cmubvh` |
+| Mixamo (Adobe) | FAQ von Adobe: „You can use both characters and animations royalty free for personal, commercial, and non-profit projects“; nicht erlaubt ist die Weitergabe der rohen Figuren- und Animationsdateien („the files may not be distributed to customers or non-team members“); keine Namensnennung nötig | Nur mit Adobe-Konto; ich lege keines an. Lädt der Produktinhaber Dateien herunter, liegen sie nur lokal in `tools/uebungen-3d/quelle/mixamo/` (in `.gitignore`), nie im Repository; in die App kommen nur gerenderte Videos. Vor dem ersten Einsatz die aktuelle offizielle FAQ im Browser prüfen (die Forenkopie ist von 2022) | `helpx.adobe.com/creative-cloud/faq/mixamo-faq.html` (aus dieser Umgebung nicht abrufbar, Wortlaut aus Suchtreffern); FAQ-Kopie im Adobe-Forum `community.adobe.com/t5/mixamo-discussions/…/m-p/13234775` |
+
+**Nicht verwenden:** AMASS (enthält CMU, Lizenz nur nichtkommerziell), die FBX-Umwandlung auf `data.4tu.nl` (CC BY-NC 4.0) und `huggingface.co/datasets/gbionics/cmu-fbx` (Lizenz ungeklärt).
+
+**Werkzeuge:** Blender 4.2 als Python-Modul (GPL, nur zum Rendern), ffmpeg (LGPL/GPL, nur zum Kodieren). Beide sind nicht Teil der App; die GPL gilt nicht für die gerenderten Bilder.

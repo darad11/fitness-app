@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+"""Erzeugt docs/uebungen-bewegungsfamilien.md aus tools/uebungen-3d/familien.json (D-411).
+
+Die Zuordnung der 124 Basisübungen zu Bewegungsfamilien, Geräten und Quellen der Bewegung
+(CMU-Motion-Capture, Mixamo oder im Code aus der Familie) steht als Daten in der JSON-Datei;
+dieses Skript macht daraus die lesbare Übersicht mit Aufwandsschätzung.
+
+    python3 tools/uebungen_familien.py           # schreibt die Übersicht
+    python3 tools/uebungen_familien.py --check   # prüft, ob die Übersicht zu den Daten passt
+"""
+from __future__ import annotations
+
+import json
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+DATEN = ROOT / "tools/uebungen-3d/familien.json"
+ZIEL = ROOT / "docs/uebungen-bewegungsfamilien.md"
+
+NAMEN = {
+    "kniebeuge": "Kniebeuge",
+    "hueftbeuge": "Hüftbeuge",
+    "ausfallschritt": "Ausfallschritt und einbeinig",
+    "waagrecht_druecken": "Waagrechtes Drücken",
+    "senkrecht_druecken": "Senkrechtes Drücken",
+    "waagrecht_ziehen": "Waagrechtes Ziehen",
+    "senkrecht_ziehen": "Senkrechtes Ziehen",
+    "arme": "Arme beugen und strecken",
+    "schulter_brust_isoliert": "Schulter und Brust isoliert",
+    "beine_isoliert": "Beine isoliert",
+    "rumpf": "Rumpf",
+    "kondition": "Kondition",
+}
+QUELLE = {"familie": "Familie (Code)", "cmu": "CMU", "mixamo": "Mixamo"}
+
+
+def zelle(text: str) -> str:
+    return " ".join(str(text).split()).replace("|", "/")
+
+
+def main() -> None:
+    d = json.loads(DATEN.read_text(encoding="utf-8"))
+    uebungen = d["uebungen"]
+    nach_familie: dict[str, list] = defaultdict(list)
+    for key, u in uebungen.items():
+        nach_familie[u["familie"]].append((key, u))
+    zeilen = [
+        "# Übungen · Bewegungsfamilien und Quellen der Animationen",
+        "",
+        "Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschnitt 3 und 7 (D-411) · "
+        "Daten `tools/uebungen-3d/familien.json`, Abschnitte 2 bis 7 erzeugt von `python3 tools/uebungen_familien.py`. "
+        "Recherche zu CMU und Mixamo nur über Websuche und GitHub, Bewegungsdaten nicht angesehen: Jede Zuordnung "
+        "zu einer Aufnahme braucht vor dem Einbau eine Sichtprüfung.",
+        "",
+        "## 1. Verfahren",
+        "",
+        "- **Rig:** Alle Übungen laufen über dasselbe IK-Rig (`tools/uebungen-3d/rig.py`, D-407): Füße fest am Boden, "
+        "Knie folgen den Zehen, Hände im Griff am Gerät, Ellbogen nach der Regel der Übung (etwa Unterarm senkrecht), "
+        "Hand um die Stange gedreht, bis das Handgelenk gerade ist, Rumpf über Becken und Wirbelsäule.",
+        "- **Quelle der Bewegung:** Motion Capture nur, wenn die Aufnahme dieselbe Übung zeigt; bei gleich guter "
+        "Passung CMU vor Mixamo, weil CMU kein Konto braucht. Sonst baut der Code die Bewegung aus der Familie "
+        "(Ausgangs-, Zwischen- und Endposition, Minimum-Ruck-Zeitverlauf). Auch bei Motion Capture korrigiert das Rig "
+        "Hände, Füße und Gerät.",
+        "- **Rohdaten nicht ins Repository:** Das Repository ist öffentlich. CMU-Daten dürfen nicht weiterverkauft, "
+        "Mixamo-Dateien nicht weitergegeben werden; beide werden wie das MakeHuman-Modell beim Rendern geladen "
+        "(`tools/uebungen-3d/quelle/`, in `.gitignore`). In die App kommen nur die gerenderten Videos. Lizenzen in "
+        "`licenses-data.md` Abschnitt 7.",
+        "- **Familien statt Einzelstücke:** Jede Familie wird einmal biomechanisch sauber gebaut; eine Übung ist eine "
+        "Variante davon (Gerät, Griff, Winkel, Bewegungsumfang). Keine starre gleiche Haltung für alle.",
+        "",
+        "## 2. Familien",
+        "",
+        "| Familie | Grundmuster | Gelenke und Kennwerte | Übungen | Basis (Std.) |",
+        "|---|---|---|---|---|",
+    ]
+    for f, name in NAMEN.items():
+        info = d["familien"][f]
+        zeilen.append(
+            f"| {name} | {zelle(info['grundmuster'])} | {zelle(info['gelenke'])} | {len(nach_familie[f])} | "
+            f"{info['basis_stunden']} |"
+        )
+    zeilen += ["", "## 3. Zuordnung aller 124 Übungen", ""]
+    for f, name in NAMEN.items():
+        zeilen += [
+            f"### {name}",
+            "",
+            "| Nr. | Übung | Variante | Gerät | Quelle | Std. Übung | Std. neues Gerät | Hinweis |",
+            "|---|---|---|---|---|---|---|---|",
+        ]
+        for key, u in sorted(nach_familie[f], key=lambda x: x[1]["nr"]):
+            quelle = QUELLE[u["quelle"]]
+            if u["quelle"] == "cmu":
+                quelle += f" {u.get('cmu_trial', '')}"
+            if u["quelle"] == "mixamo":
+                quelle += f" „{u.get('mixamo_name', '')}“"
+            alt = u.get("alternative") or {}
+            if alt.get("mixamo_name") and u["quelle"] != "mixamo":
+                quelle += f"; Abgleich Mixamo „{alt['mixamo_name']}“"
+            zeilen.append(
+                f"| {u['nr']} | {zelle(u['name'])} | {zelle(u['variante'])} | {zelle(u['geraet_modell'])} | {quelle} | "
+                f"{u['aufwand_stunden']} | {u['geraet_neu_stunden']} | {zelle(u.get('hinweis', ''))} |"
+            )
+        zeilen.append("")
+    s = d["summen"]
+    zeilen += [
+        "## 4. Aufwand",
+        "",
+        "| Posten | Stunden |",
+        "|---|---|",
+        f"| Übungen (Varianten, Prüfung) | {s['uebungen_stunden']} |",
+        f"| Neue Geräte ({s['geraete_neu_anzahl']}, je einmal gezählt) | {s['geraete_neu_stunden']} |",
+        f"| Basis der Familien (davon {s['davon_basis_der_pilot_familien']} für die drei Familien der Pilot-Übungen) | {s['familien_basis_stunden']} |",
+        f"| Einmalig (CMU- und Mixamo-Übertragung, Kabelverlauf, Prüfseiten) | {s['einmalig_stunden']} |",
+        f"| **Summe** | **{s['gesamt_stunden']}** |",
+        "",
+        "Die Zahlen je Zeile sind eine Einzelschätzung. Meine Gesamteinschätzung nach dem Pilot: **rund 300 Stunden, "
+        "Spanne 250 bis 400**, dazu rund 35 Stunden Rechenzeit auf vier CPU-Kernen (etwa 17 Minuten je Übung). "
+        "Unsicher sind vor allem die Maschinen mit vielen Teilen (Beinpresse, Hackenschmidt, Butterfly, Kabelturm, "
+        "Cardiogeräte) und Bodenübungen, bei denen Körper und Matte sich berühren. Nicht enthalten: deine Freigabe je Familie.",
+        "",
+        "## 5. Motion Capture",
+        "",
+        "### CMU Graphics Lab Motion Capture Database",
+        "",
+        "| Aufnahme | Beschreibung | passt zu | Beleg |",
+        "|---|---|---|---|",
+    ]
+    for c in d["cmu"]:
+        beleg = c.get("beleg")
+        beleg = beleg[0] if isinstance(beleg, list) and beleg else (beleg or "")
+        zeilen.append(f"| {zelle(c['trial'])} | {zelle(c['beschreibung'])} | {', '.join(c.get('passt_zu', []))} | {zelle(beleg)} |")
+    zeilen += [
+        "",
+        "Laut Beschreibung zeigt keine Aufnahme eine Übung mit Langhantel, Kurzhantel oder an einem Gerät (79_93 "
+        "„weight lifting“ ist nicht näher beschrieben und nicht angesehen). Für die drei Pilot-Übungen gibt es deshalb "
+        "keine passende CMU-Aufnahme; eine Kniebeuge ohne Gewicht mit vorgestreckten Armen hat eine andere Rumpfneigung "
+        "als die Kniebeuge mit der Stange auf dem Rücken.",
+        "",
+        "### Mixamo",
+        "",
+        "| Animation | dazu | passt zu | Beleg |",
+        "|---|---|---|---|",
+    ]
+    for m in d["mixamo"]:
+        beleg = m.get("beleg")
+        beleg = beleg[0] if isinstance(beleg, list) and beleg else (beleg or "")
+        zeilen.append(
+            f"| {zelle(m['name'])} | {zelle(', '.join(m.get('dazu', [])))} | {', '.join(m.get('passt_zu', []) + m.get('referenz_fuer', []))} | {zelle(beleg)} |"
+        )
+    zeilen += [
+        "",
+        "## 6. Adressen",
+        "",
+        "| Host | Wofür | Stand | Empfehlung |",
+        "|---|---|---|---|",
+    ]
+    for a in d["adressen_fuer_network_access"]:
+        zeilen.append(f"| {zelle(a['host'])} | {zelle(a['zweck'])} | {zelle(a['status'])} | {zelle(a['empfehlung'])} |")
+    zeilen += [
+        "",
+        "Für alles bisher Geplante brauche ich keine neue Adresse unter „Network access“: Die CMU-Aufnahmen liegen "
+        "als BVH auf GitHub, MakeHuman auf `raw.githubusercontent.com`.",
+        "",
+        "## 7. Mixamo: Liste zum Herunterladen",
+        "",
+        "Nur falls du die Familien Rumpf und Kondition freigibst; für die drei Pilot-Übungen brauche ich nichts "
+        "(in der Namensliste von Mixamo fanden sich weder Bankdrücken noch Latziehen, die Kniebeuge kommt aus dem Rig). Mixamo braucht ein "
+        "Adobe-Konto; ich lege keines an. Gib mir die Dateien hier im Chat (einzeln oder als ZIP). Sie kommen nach "
+        "`tools/uebungen-3d/quelle/mixamo/`, nicht ins Repository; in die App kommen nur die gerenderten Videos "
+        "(Lizenz in `licenses-data.md` Abschnitt 7).",
+        "",
+        "**Einstellungen im Download-Fenster, für jede Datei gleich:**",
+        "",
+        "| Feld | Wert |",
+        "|---|---|",
+    ]
+    for feld, wert in d["mixamo_einstellungen"]:
+        zeilen.append(f"| {feld} | {zelle(wert)} |")
+    zeilen += [
+        "",
+        "| Prio. | Animation (Suchbegriff bei Mixamo) | für | Vorlage für | In Place | Wozu |",
+        "|---|---|---|---|---|---|",
+    ]
+    for m in d["mixamo_liste"]:
+        fuer = ", ".join(uebungen[k]["name"] for k in m["fuer"]) or "–"
+        ref = ", ".join(uebungen[k]["name"] for k in m.get("referenz", [])) or "–"
+        zeilen.append(
+            f"| {m['prioritaet']} | {zelle(m['name'])} | {zelle(fuer)} | {zelle(ref)} | "
+            f"{'ja' if m['in_place'] else 'nein'} | {zelle(m['warum'])} |"
+        )
+    zeilen += [
+        "",
+        "Priorität 1: Hier bringt eine echte Aufnahme mehr als ein Ablauf aus dem Code (Sprünge, Abrollen, Rhythmus). "
+        "Priorität 2: nur Vorlage oder Gegenprobe; ohne sie geht es auch. Jede Datei prüfe ich vor dem Einbau "
+        "(Sichtprüfung, ob sie die Übung wirklich zeigt), Hände, Füße und Gerät korrigiert das Rig.",
+        "",
+    ]
+    text = "\n".join(zeilen)
+    if "--check" in sys.argv:
+        if not ZIEL.exists() or ZIEL.read_text(encoding="utf-8") != text:
+            print(f"{ZIEL.relative_to(ROOT)} passt nicht zu {DATEN.relative_to(ROOT)}: python3 tools/uebungen_familien.py")
+            sys.exit(1)
+        print(f"{ZIEL.relative_to(ROOT)}: aktuell")
+        return
+    ZIEL.write_text(text, encoding="utf-8")
+    print(f"{ZIEL.relative_to(ROOT)}: {len(uebungen)} Übungen")
+
+
+if __name__ == "__main__":
+    main()

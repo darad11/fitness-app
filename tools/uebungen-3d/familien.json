@@ -1,0 +1,2245 @@
+{
+  "stand": "2026-10-27",
+  "uebungen": {
+    "bench_press_barbell": {
+      "nr": 1,
+      "name": "Bankdrücken mit Langhantel",
+      "familie": "waagrecht_druecken",
+      "variante": "Rückenlage auf der Flachbank, Langhantel etwa 1,5-fach schulterbreit, Stange senkt sich zur unteren Brust und geht zurück",
+      "geraet_modell": "Langhantel mit Scheiben + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Pilot, neu auf dem IK-Rig gebaut (D-407). Keine Mocap-Quelle (CMU ohne Hanteln, bei Mixamo kein Bankdrücken belegt)."
+    },
+    "bench_press_dumbbell": {
+      "nr": 2,
+      "name": "Bankdrücken mit Kurzhanteln",
+      "familie": "waagrecht_druecken",
+      "variante": "Kurzhanteln statt Stange; Hanteln senken sich seitlich der Brust, Unterarme senkrecht, oben leicht zueinander; beidseitig (Alias auch abwechselnd)",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 1.0,
+      "geraet_neu": ["Kurzhanteln"],
+      "hinweis": "Freie Hantelbahn, Hände per IK an den Griffen."
+    },
+    "incline_bench_press_barbell": {
+      "nr": 3,
+      "name": "Schrägbankdrücken mit Langhantel",
+      "familie": "waagrecht_druecken",
+      "variante": "Schrägbank 30–45°, Stange zur oberen Brust",
+      "geraet_modell": "Langhantel mit Scheiben + Schrägbank, verstellbar (auch fast senkrecht)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 2.0,
+      "geraet_neu": ["Schrägbank, verstellbar (auch fast senkrecht)"],
+      "hinweis": "Bankwinkel als Parameter; die Lehne darf Kopf und Schulter nicht verdecken."
+    },
+    "incline_bench_press_dumbbell": {
+      "nr": 4,
+      "name": "Schrägbankdrücken mit Kurzhanteln",
+      "familie": "waagrecht_druecken",
+      "variante": "Schrägbank 30–45° mit Kurzhanteln",
+      "geraet_modell": "Kurzhanteln + Schrägbank, verstellbar (auch fast senkrecht)",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kombination der Varianten Kurzhantel und Schrägbank."
+    },
+    "bench_press_smith": {
+      "nr": 5,
+      "name": "Bankdrücken an der Multipresse",
+      "familie": "waagrecht_druecken",
+      "variante": "Stange in der Führung der Multipresse, senkrechte Bahn; das Aus- und Einhängen (Drehen der Haken) wird nicht gezeigt",
+      "geraet_modell": "Multipresse + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 3.0,
+      "geraet_neu": ["Multipresse"],
+      "hinweis": "Bank so unter die Führung stellen, dass die Stange über der unteren Brust läuft."
+    },
+    "chest_press_machine": {
+      "nr": 6,
+      "name": "Brustpresse an der Maschine",
+      "familie": "waagrecht_druecken",
+      "variante": "sitzend, Griffe auf Brusthöhe, Hebelarme führen die Hände auf einem Bogen nach vorn",
+      "geraet_modell": "Brustpresse-Maschine",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Brustpresse-Maschine"],
+      "hinweis": "Maschine mit vielen Teilen (Sitz, Lehne, Hebel, Gewichtsblock); Griffe drehen um den Hebeldrehpunkt, Hände per IK gebunden, Gewichtsblock hebt sich mit."
+    },
+    "floor_press_dumbbell": {
+      "nr": 7,
+      "name": "Bodendrücken mit Kurzhanteln",
+      "familie": "waagrecht_druecken",
+      "variante": "Rückenlage am Boden, Knie gebeugt, Ellbogen setzen unten auf (kürzerer Bewegungsumfang)",
+      "geraet_modell": "Kurzhanteln + Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.3,
+      "geraet_neu": ["Matte"],
+      "hinweis": "Bodenübung: Ellbogen berühren die Matte ohne Durchdringen; Kamera etwas höher als Standard."
+    },
+    "fly_dumbbell": {
+      "nr": 8,
+      "name": "Fliegende mit Kurzhanteln",
+      "familie": "schulter_brust_isoliert",
+      "variante": "Rückenlage auf der Flachbank, Arme leicht gebeugt und fixiert, Hanteln auf einem Bogen nach außen-unten bis Schulterhöhe und zurück",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Ellbogenwinkel konstant halten, sonst sieht es wie Drücken aus."
+    },
+    "cable_fly": {
+      "nr": 9,
+      "name": "Fliegende am Kabel",
+      "familie": "schulter_brust_isoliert",
+      "variante": "stehend zwischen zwei Kabelsäulen, obere Rollen, Schrittstellung, leicht vorgeneigt; Hände treffen sich vor dem unteren Bauch",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 3.5,
+      "geraet_neu": ["Kabelzug: zwei Säulen mit höhenverstellbaren Rollen", "D-Griff"],
+      "hinweis": "Zwei Kabel mit Verlauf über die Rollen; Schräg- und Negativvarianten (Alias-Namen) nur über die Rollenhöhe; Kabel dürfen den Körper nicht schneiden."
+    },
+    "pec_deck": {
+      "nr": 10,
+      "name": "Butterfly an der Maschine",
+      "familie": "schulter_brust_isoliert",
+      "variante": "sitzend an der Butterfly-Maschine, Griffe auf Schulterhöhe, Arme auf einem Bogen nach vorn",
+      "geraet_modell": "Butterfly-Maschine (auch für Reverse Butterfly)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Butterfly-Maschine (auch für Reverse Butterfly)"],
+      "hinweis": "Hebelarme drehen um senkrechte Achsen; Quelle beschreibt Griffe, nicht Armpolster."
+    },
+    "push_up": {
+      "nr": 11,
+      "name": "Liegestütze",
+      "familie": "waagrecht_druecken",
+      "variante": "Stütz in Bauchlage, Körper als Brett, Hände etwas weiter als schulterbreit am Boden; der Körper bewegt sich, Hände und Füße bleiben fest",
+      "geraet_modell": "keins",
+      "quelle": "mixamo",
+      "mixamo_name": "Push Up",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Bodenübung, Kamera seitlich und niedrig; Hände und Fußspitzen per IK am Boden sperren. Keine CMU-Aufnahme (nur Handstand-Liegestütz 88_02)."
+    },
+    "incline_press_cable": {
+      "nr": 12,
+      "name": "Schrägbankdrücken am Kabel",
+      "familie": "waagrecht_druecken",
+      "variante": "Schrägbank zwischen den Kabelsäulen, untere Rollen, Drücken nach oben-vorn (laut Quelle einarmig geführt)",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff + Schrägbank, verstellbar (auch fast senkrecht)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kabel laufen von unten-hinten zu den Händen; Bank mittig zwischen den Säulen."
+    },
+    "deadlift_barbell": {
+      "nr": 13,
+      "name": "Kreuzheben mit Langhantel",
+      "familie": "hueftbeuge",
+      "variante": "Referenz der Familie: Stange vom Boden über der Fußmitte, Start mit der Hüfte über den Knien, Stange gleitet an Schienbeinen und Oberschenkeln hoch bis zum aufrechten Stand",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Scheiben (45 cm) stehen am Boden, Stange 22,5 cm hoch; Rücken neutral; Stange und Beine dürfen sich nicht durchdringen."
+    },
+    "pull_up": {
+      "nr": 14,
+      "name": "Klimmzüge",
+      "familie": "senkrecht_ziehen",
+      "variante": "hängend, Obergriff etwas weiter als schulterbreit; Hände fest an der Stange, der Körper zieht sich hoch, bis das Kinn über der Stange ist",
+      "geraet_modell": "Klimmzugstange",
+      "quelle": "familie",
+      "aufwand_stunden": 2.0,
+      "geraet_neu_stunden": 1.0,
+      "geraet_neu": ["Klimmzugstange"],
+      "hinweis": "Umgekehrte Kette: Wurzel bewegt sich, Hände fix; Beine hängen gestreckt oder gekreuzt mit leichtem Nachschwingen. Weder CMU (nur Spielplatz 01_12) noch Mixamo („Pull Up“ nicht belegt)."
+    },
+    "assisted_pull_up": {
+      "nr": 15,
+      "name": "Klimmzüge mit Unterstützung",
+      "familie": "senkrecht_ziehen",
+      "variante": "kniend auf der Plattform der Gegengewichtsmaschine; die Plattform bewegt sich mit den Knien",
+      "geraet_modell": "Gegengewichtsmaschine für Klimmzug und Dip",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Gegengewichtsmaschine für Klimmzug und Dip"],
+      "hinweis": "Maschine mit vielen Teilen (Plattform, Griffe, Gewichtsblock); die Einstellung des Gegengewichts ist nicht darstellbar."
+    },
+    "chin_up": {
+      "nr": 16,
+      "name": "Klimmzüge im Untergriff",
+      "familie": "senkrecht_ziehen",
+      "variante": "Untergriff schulterbreit, sonst wie Klimmzug",
+      "geraet_modell": "Klimmzugstange",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Handflächen zum Körper, Ellbogen bleiben vor dem Körper."
+    },
+    "lat_pulldown": {
+      "nr": 17,
+      "name": "Latziehen",
+      "familie": "senkrecht_ziehen",
+      "variante": "sitzend, Oberschenkel unter der Knierolle, Latzugstange im breiten Obergriff, Zug zur oberen Brust, Oberkörper leicht zurückgelehnt",
+      "geraet_modell": "Latzug mit Kabel und Latzugstange",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Pilot, neu auf dem IK-Rig gebaut (D-407); Stange und Kabel folgen den Händen. Ansicht hinten-seitlich, weil die arbeitenden Muskeln auf dem Rücken liegen."
+    },
+    "lat_pulldown_close": {
+      "nr": 18,
+      "name": "Latziehen, enger Griff",
+      "familie": "senkrecht_ziehen",
+      "variante": "V-Griff eng und neutral, Zug zur Brust, Ellbogen nah am Körper",
+      "geraet_modell": "Latzug mit Kabel und Latzugstange + V-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.5,
+      "geraet_neu": ["V-Griff"],
+      "hinweis": "V-Griff ersetzt die Latzugstange am Kabel."
+    },
+    "seated_cable_row": {
+      "nr": 19,
+      "name": "Rudern am Kabel, sitzend",
+      "familie": "waagrecht_ziehen",
+      "variante": "Referenz der Familie: sitzend, Füße an der Fußstütze, Knie leicht gebeugt, Rumpf aufrecht; V-Griff zum Bauch, Schulterblätter zusammen",
+      "geraet_modell": "Kabelrudern-Station (Sitz, Fußstütze, untere Rolle) + V-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 2.0,
+      "geraet_neu": ["Kabelrudern-Station (Sitz, Fußstütze, untere Rolle)"],
+      "referenz_der_familie": true,
+      "hinweis": "Weiter Griff und Untergriff (Alias-Namen) nur über einen anderen Griff; Rumpf schaukelt nicht."
+    },
+    "bent_over_row_barbell": {
+      "nr": 20,
+      "name": "Rudern mit Langhantel, vorgebeugt",
+      "familie": "waagrecht_ziehen",
+      "variante": "stehend in Vorbeuge (Rumpf etwa 30–45° zur Waagrechten, Haltung aus der Hüftbeuge-Familie), Obergriff, Zug zum Bauch",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Zwei Familien kombiniert (Haltung aus hueftbeuge, Bewegung aus waagrecht_ziehen); Stange bleibt über der Fußmitte."
+    },
+    "bent_over_row_dumbbell": {
+      "nr": 21,
+      "name": "Rudern mit Kurzhanteln, vorgebeugt",
+      "familie": "waagrecht_ziehen",
+      "variante": "Kurzhanteln, neutraler Griff, beidarmig",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "one_arm_row_dumbbell": {
+      "nr": 22,
+      "name": "Einarmiges Rudern mit Kurzhantel",
+      "familie": "waagrecht_ziehen",
+      "variante": "einarmig; Knie und Hand der Gegenseite auf der Flachbank, Rumpf waagrecht",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Asymmetrische Stützhaltung mit drei Kontakten; der Rumpf dreht nicht mit."
+    },
+    "t_bar_row": {
+      "nr": 23,
+      "name": "T-Bar-Rudern",
+      "familie": "waagrecht_ziehen",
+      "variante": "Langhantel in einer Landmine-Halterung, V-Griff unter dem Stangenende, Vorbeuge; die Stange beschreibt einen Bogen um den Drehpunkt",
+      "geraet_modell": "Langhantel mit Scheiben + Landmine-Halterung + V-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.5,
+      "geraet_neu": ["Landmine-Halterung"],
+      "hinweis": "Quelle beschreibt die Hebelmaschine; für die freie T-Stange reicht der Drehpunkt am Boden."
+    },
+    "machine_row": {
+      "nr": 24,
+      "name": "Rudern an der Maschine",
+      "familie": "waagrecht_ziehen",
+      "variante": "sitzend, Brust am Polster, Griffe an Hebelarmen",
+      "geraet_modell": "Rudermaschine, brustgestützt",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Rudermaschine, brustgestützt"],
+      "hinweis": "Maschine mit vielen Teilen; Hebelbahn als Kreisbogen."
+    },
+    "straight_arm_pulldown": {
+      "nr": 25,
+      "name": "Überzüge am Kabel",
+      "familie": "senkrecht_ziehen",
+      "variante": "Überzug: stehend an der oberen Rolle, leicht vorgeneigt, Arme fast gestreckt; Bogen von Augenhöhe bis zu den Oberschenkeln",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + gerade Kabelstange, kurz",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.3,
+      "geraet_neu": ["gerade Kabelstange, kurz"],
+      "hinweis": "Nur die Schulter bewegt sich, Ellbogenwinkel fix."
+    },
+    "back_extension": {
+      "nr": 26,
+      "name": "Rückenstrecken",
+      "familie": "hueftbeuge",
+      "variante": "45°-Rückenstrecker: Becken auf dem Polster, Fersen unter der Rolle; Rumpf senkt sich und richtet sich bis zur geraden Linie auf (laut Quelle Rückenstreckung, also mit Wirbelsäule)",
+      "geraet_modell": "Rückenstrecker 45°",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 2.0,
+      "geraet_neu": ["Rückenstrecker 45°"],
+      "hinweis": "Beugung über mehrere Wirbelknochen verteilen, Kopf in Verlängerung."
+    },
+    "shrug_dumbbell": {
+      "nr": 27,
+      "name": "Schulterheben mit Kurzhanteln",
+      "familie": "schulter_brust_isoliert",
+      "variante": "stehend, Arme hängen gestreckt, nur die Schultern heben und senken (3–5 cm), keine Kreisbewegung",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kleine Bewegung; braucht bewegliche Schlüsselbein-Knochen im Rig; frontale Ansicht zeigt sie besser."
+    },
+    "lat_pulldown_single_arm": {
+      "nr": 28,
+      "name": "Einarmiges Latziehen am Kabel, kniend",
+      "familie": "senkrecht_ziehen",
+      "variante": "kniend vor der oberen Rolle, einarmig mit D-Griff, Zug zur Schulter",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kniestand als neue Grundhaltung; Kabel kommt schräg von oben."
+    },
+    "bent_over_row_smith": {
+      "nr": 29,
+      "name": "Rudern an der Multipresse, vorgebeugt",
+      "familie": "waagrecht_ziehen",
+      "variante": "Vorbeuge an der Multipresse, Stange senkrecht geführt",
+      "geraet_modell": "Multipresse",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "overhead_press_barbell": {
+      "nr": 30,
+      "name": "Schulterdrücken mit Langhantel, stehend",
+      "familie": "senkrecht_druecken",
+      "variante": "Referenz der Familie: stehend, Stange von der Schulterablage senkrecht über den Kopf, der Kopf weicht kurz zurück",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Stangenbahn senkrecht über der Fußmitte; Schulterblätter drehen mit."
+    },
+    "shoulder_press_dumbbell_seated": {
+      "nr": 31,
+      "name": "Schulterdrücken mit Kurzhanteln, sitzend",
+      "familie": "senkrecht_druecken",
+      "variante": "sitzend an fast senkrechter Lehne, Kurzhanteln",
+      "geraet_modell": "Kurzhanteln + Schrägbank, verstellbar (auch fast senkrecht)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Lehne der verstellbaren Bank fast senkrecht."
+    },
+    "shoulder_press_machine": {
+      "nr": 32,
+      "name": "Schulterdrücken an der Maschine",
+      "familie": "senkrecht_druecken",
+      "variante": "sitzend, Griffe an Hebelarmen",
+      "geraet_modell": "Schulterpresse-Maschine",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Schulterpresse-Maschine"],
+      "hinweis": "Maschine mit vielen Teilen."
+    },
+    "arnold_press": {
+      "nr": 33,
+      "name": "Arnold Press mit Kurzhanteln",
+      "familie": "senkrecht_druecken",
+      "variante": "sitzend; Start mit den Handflächen zum Gesicht vor dem Kinn, beim Drücken drehen die Unterarme nach außen",
+      "geraet_modell": "Kurzhanteln + Schrägbank, verstellbar (auch fast senkrecht)",
+      "quelle": "familie",
+      "aufwand_stunden": 2.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Unterarmdrehung um etwa 180° braucht Drehknochen im Unterarm, sonst verdreht sich die Haut; neue Bewegungskopplung."
+    },
+    "lateral_raise_dumbbell": {
+      "nr": 34,
+      "name": "Seitheben mit Kurzhanteln",
+      "familie": "schulter_brust_isoliert",
+      "variante": "Referenz der Familie: stehend, Arme seitlich bis Schulterhöhe, Ellbogen leicht gebeugt",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Alias Spider Lateral Raise (auf der Schrägbank liegend) wird nicht dargestellt; keine Mixamo-Animation belegt."
+    },
+    "lateral_raise_cable": {
+      "nr": 35,
+      "name": "Seitheben am Kabel",
+      "familie": "schulter_brust_isoliert",
+      "variante": "einarmig, Kabel von der unteren Rolle vor dem Körper, D-Griff",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Freie Hand hält sich an der Säule."
+    },
+    "front_raise_dumbbell": {
+      "nr": 36,
+      "name": "Frontheben mit Kurzhanteln",
+      "familie": "schulter_brust_isoliert",
+      "variante": "Arme nach vorn bis Schulterhöhe",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "mixamo",
+      "mixamo_name": "Front Raises",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Mixamo-Figur hält keine Hantel: Griffpose und Hantel per IK ergänzen."
+    },
+    "reverse_fly_dumbbell": {
+      "nr": 37,
+      "name": "Reverse Flys mit Kurzhanteln",
+      "familie": "schulter_brust_isoliert",
+      "variante": "vorgebeugt (Rumpf fast waagrecht, Haltung aus der Hüftbeuge-Familie), Arme seitlich nach oben",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "reverse_pec_deck": {
+      "nr": 38,
+      "name": "Reverse Butterfly an der Maschine",
+      "familie": "schulter_brust_isoliert",
+      "variante": "an der Butterfly-Maschine mit der Brust zum Polster, Arme auf dem Bogen nach hinten",
+      "geraet_modell": "Butterfly-Maschine (auch für Reverse Butterfly)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Gleiche Maschine wie Butterfly, andere Sitzrichtung."
+    },
+    "face_pull": {
+      "nr": 39,
+      "name": "Face Pulls am Kabel",
+      "familie": "waagrecht_ziehen",
+      "variante": "stehend, Kabel auf Gesichtshöhe, Seilgriff, Zug zum Gesicht mit Außendrehung, Ellbogen hoch",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + Seilgriff (Trizepsseil)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 1.0,
+      "geraet_neu": ["Seilgriff (Trizepsseil)"],
+      "hinweis": "Seilenden biegen sich mit den Händen; Außendrehung der Schulter deutlich zeigen."
+    },
+    "front_raise_cable": {
+      "nr": 40,
+      "name": "Frontheben am Kabel",
+      "familie": "schulter_brust_isoliert",
+      "variante": "Rücken zur unteren Rolle, Kabel zwischen den Beinen, gerade Stange, Arme nach vorn bis Schulterhöhe",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + gerade Kabelstange, kurz",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Bewegung wie Mixamo „Front Raises“ (Referenz); Alias Spider Cable Front Raise nicht dargestellt."
+    },
+    "shoulder_press_dumbbell_standing": {
+      "nr": 41,
+      "name": "Schulterdrücken mit Kurzhanteln, stehend",
+      "familie": "senkrecht_druecken",
+      "variante": "stehend mit Kurzhanteln, beidarmig (Alias abwechselnd)",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "biceps_curl_barbell": {
+      "nr": 42,
+      "name": "Bizepscurls mit Langhantel",
+      "familie": "arme",
+      "variante": "Referenz der Familie: stehend, Langhantel im Untergriff schulterbreit, Ellbogen am Körper, Beugung bis vor die Schultern",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Oberarm ruhig, kein Schwung aus dem Rücken."
+    },
+    "biceps_curl_dumbbell": {
+      "nr": 43,
+      "name": "Bizepscurls mit Kurzhanteln",
+      "familie": "arme",
+      "variante": "Kurzhanteln, Unterarm dreht beim Heben nach außen; Alias abwechselnd",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "mixamo",
+      "mixamo_name": "Bicep Curl",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Prüfen, ob die Mixamo-Animation beidarmig oder abwechselnd ist; Hanteln per IK."
+    },
+    "biceps_curl_ez_bar": {
+      "nr": 44,
+      "name": "Bizepscurls mit SZ-Stange",
+      "familie": "arme",
+      "variante": "SZ-Stange, halb gedrehter Griff",
+      "geraet_modell": "SZ-Stange mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 1.0,
+      "geraet_neu": ["SZ-Stange mit Scheiben"],
+      "hinweis": "SZ-Stange neu (Knicke im Griffteil)."
+    },
+    "hammer_curl": {
+      "nr": 45,
+      "name": "Hammercurls",
+      "familie": "arme",
+      "variante": "Kurzhanteln, neutraler Griff (Daumen oben)",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Aus dem Kurzhantelcurl ableitbar, Unterarmdrehung gesperrt; Mixamo „Bicep Curl“ als Vorlage."
+    },
+    "preacher_curl": {
+      "nr": 46,
+      "name": "Scottcurls",
+      "familie": "arme",
+      "variante": "sitzend an der Scottbank, Oberarme auf dem schrägen Polster, SZ-Stange",
+      "geraet_modell": "SZ-Stange mit Scheiben + Scottbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 1.5,
+      "geraet_neu": ["Scottbank"],
+      "hinweis": "Oberarm liegt auf dem Polster (Kontakt ohne Durchdringen)."
+    },
+    "biceps_curl_cable": {
+      "nr": 47,
+      "name": "Bizepscurls am Kabel",
+      "familie": "arme",
+      "variante": "stehend vor der unteren Rolle, gerade Stange (Alias Bayesian und High Cable nicht dargestellt)",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + gerade Kabelstange, kurz",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "incline_curl_dumbbell": {
+      "nr": 48,
+      "name": "Schrägbank-Curls mit Kurzhanteln",
+      "familie": "arme",
+      "variante": "Rücken an der Schrägbank (45–60°), Arme hängen hinter dem Körper, Curl",
+      "geraet_modell": "Kurzhanteln + Schrägbank, verstellbar (auch fast senkrecht)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "wrist_curl": {
+      "nr": 49,
+      "name": "Handgelenkcurls",
+      "familie": "arme",
+      "variante": "sitzend, Unterarme auf den Oberschenkeln, nur das Handgelenk beugt und streckt",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Sehr kleine Bewegung: engerer Bildausschnitt oder Ausgangs- und Endposition; Handgelenk und Griffpose müssen sauber sein."
+    },
+    "hammer_curl_cable": {
+      "nr": 50,
+      "name": "Hammercurls am Kabel mit Seil",
+      "familie": "arme",
+      "variante": "untere Rolle, Seilgriff, neutraler Griff",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + Seilgriff (Trizepsseil)",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "preacher_curl_dumbbell": {
+      "nr": 51,
+      "name": "Scottcurls mit Kurzhanteln",
+      "familie": "arme",
+      "variante": "Scottbank mit Kurzhantel (einarmig oder beidarmig)",
+      "geraet_modell": "Kurzhanteln + Scottbank",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "reverse_curl_ez_bar": {
+      "nr": 52,
+      "name": "Reverse Curls mit SZ-Stange",
+      "familie": "arme",
+      "variante": "SZ-Stange im Obergriff",
+      "geraet_modell": "SZ-Stange mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "triceps_pushdown_cable": {
+      "nr": 53,
+      "name": "Trizepsdrücken am Kabel",
+      "familie": "arme",
+      "variante": "stehend an der oberen Rolle, Ellbogen am Körper, Strecken nach unten, gerade Stange",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + gerade Kabelstange, kurz",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Alias mit Seil möglich (Seilgriff vorhanden)."
+    },
+    "overhead_extension_cable": {
+      "nr": 54,
+      "name": "Trizepsstrecken über Kopf am Kabel",
+      "familie": "arme",
+      "variante": "Rücken zur Rolle, Seil über dem Kopf, Oberarme neben dem Kopf, Strecken nach vorn-oben; Schrittstellung",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + Seilgriff (Trizepsseil)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kabel läuft über die Schulter: Abstand zum Kopf prüfen."
+    },
+    "overhead_extension_dumbbell": {
+      "nr": 55,
+      "name": "Trizepsstrecken über Kopf mit Kurzhantel",
+      "familie": "arme",
+      "variante": "sitzend, eine Kurzhantel mit beiden Händen hinter dem Kopf (Alias einarmig), Ellbogen zeigen nach oben",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Hantel darf den Kopf nicht durchdringen."
+    },
+    "skull_crusher": {
+      "nr": 56,
+      "name": "French Press mit SZ-Stange",
+      "familie": "arme",
+      "variante": "Rückenlage auf der Flachbank, SZ-Stange von über der Stirn nach oben strecken, Oberarme leicht nach hinten geneigt und fix",
+      "geraet_modell": "SZ-Stange mit Scheiben + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "close_grip_bench_press": {
+      "nr": 57,
+      "name": "Enges Bankdrücken",
+      "familie": "waagrecht_druecken",
+      "variante": "Griff schulterbreit, Ellbogen näher am Körper",
+      "geraet_modell": "Langhantel mit Scheiben + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Nur Griffbreite und Ellbogenweg ändern sich gegenüber der Referenz."
+    },
+    "triceps_kickback": {
+      "nr": 58,
+      "name": "Trizeps-Kickbacks mit Kurzhantel",
+      "familie": "arme",
+      "variante": "vorgebeugt mit Abstützen auf der Bank, Oberarm parallel zum Rumpf und fix, Ellbogen streckt nach hinten (einarmig)",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Stützhaltung vom einarmigen Rudern übernehmen."
+    },
+    "dip": {
+      "nr": 59,
+      "name": "Dips",
+      "familie": "waagrecht_druecken",
+      "variante": "Stütz am Barren, Körper senkt sich, bis die Oberarme etwa waagrecht sind, Rumpf leicht vorgeneigt; Hände fest, der Körper bewegt sich",
+      "geraet_modell": "Dipbarren",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 1.0,
+      "geraet_neu": ["Dipbarren"],
+      "hinweis": "Umgekehrte Kette wie beim Klimmzug; Beine leicht gebeugt."
+    },
+    "assisted_dip": {
+      "nr": 60,
+      "name": "Dips mit Unterstützung",
+      "familie": "waagrecht_druecken",
+      "variante": "kniend auf der Plattform der Gegengewichtsmaschine",
+      "geraet_modell": "Gegengewichtsmaschine für Klimmzug und Dip",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Gleiche Maschine wie Klimmzüge mit Unterstützung."
+    },
+    "bench_dip": {
+      "nr": 61,
+      "name": "Dips an der Bank",
+      "familie": "waagrecht_druecken",
+      "variante": "Hände hinter dem Körper auf der Bankkante, Füße am Boden, Ellbogen beugen nach hinten",
+      "geraet_modell": "Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Becken nah an der Bank; Schulter nicht zu tief."
+    },
+    "triceps_extension_cable_cross_body": {
+      "nr": 62,
+      "name": "Trizepsdrücken am Kabel, über Kreuz",
+      "familie": "arme",
+      "variante": "einarmig, Kabel von der oberen Rolle der Gegenseite, der Arm streckt sich schräg vor dem Körper nach außen",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kabel kreuzt vor dem Körper: Durchdringung prüfen."
+    },
+    "skull_crusher_dumbbell": {
+      "nr": 63,
+      "name": "French Press mit Kurzhanteln",
+      "familie": "arme",
+      "variante": "Kurzhanteln, neutraler Griff",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "plank": {
+      "nr": 64,
+      "name": "Unterarmstütz (Plank)",
+      "familie": "rumpf",
+      "variante": "Unterarmstütz statisch, Körperlinie gerade",
+      "geraet_modell": "Matte",
+      "quelle": "mixamo",
+      "mixamo_name": "Plank",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Statisch: Schleife zeigt Halten mit dezenter Atmung; Einnehmen der Position mit Mixamo „Start Plank“ möglich."
+    },
+    "side_plank": {
+      "nr": 65,
+      "name": "Seitstütz",
+      "familie": "rumpf",
+      "variante": "Seitstütz auf einem Unterarm, Körper seitlich gestreckt, statisch",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Statisch; frontale Kamera zeigt die Körperlinie besser als die Standardansicht."
+    },
+    "crunch": {
+      "nr": 66,
+      "name": "Crunches",
+      "familie": "rumpf",
+      "variante": "Referenz für Rumpfbeugung: Rückenlage, Knie gebeugt, Oberkörper rollt etwa 30° ein, Schulterblätter lösen sich vom Boden",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Mixamo „Situps“ nur als Vorlage (Bewegungsumfang begrenzen); Beugung über die Wirbel verteilen."
+    },
+    "cable_crunch": {
+      "nr": 67,
+      "name": "Crunches am Kabel, kniend",
+      "familie": "rumpf",
+      "variante": "kniend vor der oberen Rolle, Seil am Kopf, Rumpf rollt ein, Hüfte bleibt",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + Seilgriff (Trizepsseil)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kniestand; Hände halten das Seil neben dem Kopf."
+    },
+    "hanging_leg_raise": {
+      "nr": 68,
+      "name": "Beinheben hängend",
+      "familie": "rumpf",
+      "variante": "hängend an der Klimmzugstange, Beine heben bis waagrecht",
+      "geraet_modell": "Klimmzugstange",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Hängen wie beim Klimmzug; kein Pendeln, Becken kippt leicht mit."
+    },
+    "lying_leg_raise": {
+      "nr": 69,
+      "name": "Beinheben liegend",
+      "familie": "rumpf",
+      "variante": "Rückenlage, gestreckte Beine heben bis senkrecht und senken bis knapp über den Boden",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "russian_twist": {
+      "nr": 70,
+      "name": "Russian Twist",
+      "familie": "rumpf",
+      "variante": "sitzend, Oberkörper etwa 45° zurückgelehnt, Füße leicht angehoben, Drehung nach links und rechts mit Gewicht",
+      "geraet_modell": "Matte + Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Drehung über Brust- und Lendenwirbel verteilen; Gewicht (Kurzhantel) in beiden Händen."
+    },
+    "ab_wheel": {
+      "nr": 71,
+      "name": "Bauchroller",
+      "familie": "rumpf",
+      "variante": "kniend, der Bauchroller rollt nach vorn, bis der Körper fast gestreckt ist, und zurück",
+      "geraet_modell": "Matte + Bauchroller",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.5,
+      "geraet_neu": ["Bauchroller"],
+      "hinweis": "Rad rollt ohne Rutschen (Drehung aus dem Weg berechnen); Hände per IK am Griff."
+    },
+    "dead_bug": {
+      "nr": 72,
+      "name": "Dead Bug",
+      "familie": "rumpf",
+      "variante": "Rückenlage, Arme senkrecht, Hüfte und Knie 90°; gegengleich Arm und Bein strecken",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Lendenwirbel bleiben am Boden."
+    },
+    "bird_dog": {
+      "nr": 73,
+      "name": "Vierfüßlerstand diagonal (Bird Dog)",
+      "familie": "rumpf",
+      "variante": "Vierfüßlerstand, gegengleich Arm nach vorn und Bein nach hinten strecken",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Becken bleibt waagrecht; drei Kontakte am Boden."
+    },
+    "pallof_press": {
+      "nr": 74,
+      "name": "Pallof Press am Kabel",
+      "familie": "rumpf",
+      "variante": "seitlich zur Rolle auf Brusthöhe, D-Griff vor der Brust, Arme nach vorn strecken und zurück, Rumpf bleibt gerade",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Die eigentliche Arbeit (gegen die Drehung halten) ist unsichtbar; der seitliche Kabelzug muss die Idee tragen."
+    },
+    "bicycle_crunch": {
+      "nr": 75,
+      "name": "Bicycle Crunches",
+      "familie": "rumpf",
+      "variante": "Rückenlage, Ellbogen zum Gegenknie mit Drehung, Beine radeln",
+      "geraet_modell": "Matte",
+      "quelle": "mixamo",
+      "mixamo_name": "Bicycle Crunch",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "heel_tap": {
+      "nr": 76,
+      "name": "Heel Taps",
+      "familie": "rumpf",
+      "variante": "Rückenlage, Knie gebeugt, Schultern leicht angehoben, Rumpf neigt seitlich, die Hand tippt abwechselnd an die Ferse",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Seitneigung statt Drehung."
+    },
+    "sit_up": {
+      "nr": 77,
+      "name": "Sit-ups",
+      "familie": "rumpf",
+      "variante": "Rückenlage, Knie gebeugt, Oberkörper richtet sich ganz auf",
+      "geraet_modell": "Matte",
+      "quelle": "mixamo",
+      "mixamo_name": "Situps",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Füße bleiben am Boden (Fußsperre)."
+    },
+    "windshield_wiper": {
+      "nr": 78,
+      "name": "Windshield Wipers",
+      "familie": "rumpf",
+      "variante": "Rückenlage, Arme seitlich, Beine senkrecht; die Beine kippen gemeinsam nach links und rechts",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Schultern bleiben am Boden; Drehung in Becken und unterem Rücken."
+    },
+    "standing_knee_raise": {
+      "nr": 79,
+      "name": "Knieheben stehend",
+      "familie": "rumpf",
+      "variante": "stehend, Knie abwechselnd bis über Hüfthöhe heben",
+      "geraet_modell": "keins",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Gleichgewicht auf einem Bein; CMU „Marching“ (138_01 bis 138_10) nur als Referenz."
+    },
+    "hip_thrust_barbell": {
+      "nr": 80,
+      "name": "Hip Thrust mit Langhantel",
+      "familie": "hueftbeuge",
+      "variante": "Schulterblätter an der Flachbank, Langhantel auf der Hüfte, Hüfte streckt, bis der Rumpf waagrecht ist",
+      "geraet_modell": "Langhantel mit Scheiben + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Drehpunkt an der Bankkante; Stange liegt auf der Hüfte, die Hände halten sie."
+    },
+    "hip_thrust_machine": {
+      "nr": 81,
+      "name": "Hip Thrust an der Maschine",
+      "familie": "hueftbeuge",
+      "variante": "an der Maschine mit Rückenpolster und Hüftpolster",
+      "geraet_modell": "Hip-Thrust-Maschine",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Hip-Thrust-Maschine"],
+      "hinweis": "Maschine mit vielen Teilen."
+    },
+    "glute_bridge": {
+      "nr": 82,
+      "name": "Hüftheben am Boden (Glute Bridge)",
+      "familie": "hueftbeuge",
+      "variante": "Rückenlage am Boden, Füße aufgestellt, Becken heben bis zur Linie Knie–Schulter",
+      "geraet_modell": "Matte",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "cable_kickback": {
+      "nr": 83,
+      "name": "Kickbacks am Kabel",
+      "familie": "beine_isoliert",
+      "variante": "stehend vor der unteren Rolle, Fußschlaufe am Knöchel, ein Bein streckt nach hinten, Oberkörper leicht vorgeneigt, Hände an der Säule",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + Fußschlaufe für den Kabelzug",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.5,
+      "geraet_neu": ["Fußschlaufe für den Kabelzug"],
+      "hinweis": "Standbein mit Fußsperre; Becken nicht verdrehen."
+    },
+    "step_up_dumbbell": {
+      "nr": 84,
+      "name": "Step-ups mit Kurzhanteln",
+      "familie": "ausfallschritt",
+      "variante": "einbeinig auf die Flachbank (43 cm) steigen und zurück, Kurzhanteln seitlich",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Fußkontakt wechselt zwischen Boden und Bank; CMU 111_31 („Stepping up / stepping down“, schwangere Person) nur als Referenz."
+    },
+    "sumo_deadlift": {
+      "nr": 85,
+      "name": "Kreuzheben Sumo mit Langhantel",
+      "familie": "hueftbeuge",
+      "variante": "weiter Stand, Zehen 30–45° nach außen, Griff innen zwischen den Knien, aufrechterer Rumpf, mehr Kniebeugung",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Mixamo „Sumo High Pull“ nur als Referenz (zieht zusätzlich hoch)."
+    },
+    "reverse_lunge_dumbbell": {
+      "nr": 86,
+      "name": "Ausfallschritte rückwärts mit Kurzhanteln",
+      "familie": "ausfallschritt",
+      "variante": "Referenz der Familie: Schritt rückwärts, das hintere Knie senkt sich bis knapp über den Boden, zurück in den Stand",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Fußkontakte schalten (IK-Sperre an und aus); kein Ausfallschritt bei CMU oder Mixamo belegt."
+    },
+    "cable_pull_through": {
+      "nr": 87,
+      "name": "Pull-Throughs am Kabel",
+      "familie": "hueftbeuge",
+      "variante": "Rücken zur unteren Rolle, Seil zwischen den Beinen, Hüftbeuge und Streckung nach vorn",
+      "geraet_modell": "Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + Seilgriff (Trizepsseil)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kabel läuft zwischen den Beinen: Durchdringung prüfen."
+    },
+    "hip_thrust_dumbbell": {
+      "nr": 88,
+      "name": "Hip Thrust mit Kurzhantel",
+      "familie": "hueftbeuge",
+      "variante": "Kurzhantel auf der Hüfte gehalten",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "back_squat_barbell": {
+      "nr": 89,
+      "name": "Kniebeuge mit Langhantel",
+      "familie": "kniebeuge",
+      "variante": "Stange auf dem oberen Rücken, Füße schulterbreit, Zehen leicht nach außen, Tiefe bis die Oberschenkel waagrecht sind",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "alternative": {
+        "cmu_trials": ["86_02", "86_08", "14_06", "13_30"],
+        "eignung": "Kniebeugen ohne Gewicht als Vorlage für die Beinbewegung",
+        "mixamo_name": "Back Squat"
+      },
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "referenz_der_familie": true,
+      "hinweis": "Pilot, neu auf dem IK-Rig gebaut (D-407); Mixamo „Back Squat“ kann den Zeitverlauf gegenprüfen, Stange und Hände bleiben beim Rig."
+    },
+    "front_squat_barbell": {
+      "nr": 90,
+      "name": "Frontkniebeuge mit Langhantel",
+      "familie": "kniebeuge",
+      "variante": "Stange vorn auf den Schultern, Ellbogen hoch, Rumpf aufrechter",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Front-Rack-Griff per IK; Mixamo „Air Squat“ oder CMU-Kniebeugen ohne Gewicht als Vorlage möglich."
+    },
+    "goblet_squat": {
+      "nr": 91,
+      "name": "Goblet Squat",
+      "familie": "kniebeuge",
+      "variante": "Kurzhantel senkrecht vor der Brust, aufrecht, Ellbogen unten zwischen den Knien (Alias: Fersen erhöht)",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kettlebell als Alternative; Mixamo „Air Squat Bent Arms“ oder CMU-Kniebeugen ohne Gewicht (86_02, 14_06) als Vorlage prüfen."
+    },
+    "squat_smith": {
+      "nr": 92,
+      "name": "Kniebeuge an der Multipresse",
+      "familie": "kniebeuge",
+      "variante": "Stange in der Multipresse geführt, Füße etwas vor der Stange",
+      "geraet_modell": "Multipresse",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "leg_press": {
+      "nr": 93,
+      "name": "Beinpresse",
+      "familie": "kniebeuge",
+      "variante": "Rückenlage im 45°-Schlitten, Füße auf der Plattform; die Plattform bewegt sich mit den Füßen, das Becken bleibt am Polster",
+      "geraet_modell": "Beinpresse 45°",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Beinpresse 45°"],
+      "hinweis": "Schlitten auf Schienen, Plattform an die Füße gebunden; Knie unten etwa 90°."
+    },
+    "hack_squat": {
+      "nr": 94,
+      "name": "Hackenschmidt-Kniebeuge",
+      "familie": "kniebeuge",
+      "variante": "Rücken am Polster des Schlittens, Schultern unter den Polstern, Kniebeuge entlang der Schiene",
+      "geraet_modell": "Hackenschmidt-Maschine",
+      "quelle": "familie",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Hackenschmidt-Maschine"],
+      "hinweis": "Maschine mit vielen Teilen."
+    },
+    "bulgarian_split_squat_dumbbell": {
+      "nr": 95,
+      "name": "Bulgarische Kniebeuge mit Kurzhanteln",
+      "familie": "ausfallschritt",
+      "variante": "hinterer Fuß auf der Flachbank, das vordere Bein beugt, bis der Oberschenkel waagrecht ist",
+      "geraet_modell": "Kurzhanteln + Flachbank",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Fußrücken liegt auf der Bank (Kontakt)."
+    },
+    "lunge_dumbbell": {
+      "nr": 96,
+      "name": "Ausfallschritte mit Kurzhanteln",
+      "familie": "ausfallschritt",
+      "variante": "Schritt nach vorn und zurück (Alias abwechselnd)",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "leg_extension": {
+      "nr": 97,
+      "name": "Beinstrecker",
+      "familie": "beine_isoliert",
+      "variante": "Referenz der Familie: sitzend, Polster vor den Schienbeinen, Knie streckt von 90° bis fast gestreckt",
+      "geraet_modell": "Beinstrecker-Maschine",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 3.5,
+      "geraet_neu": ["Beinstrecker-Maschine"],
+      "referenz_der_familie": true,
+      "hinweis": "Hebeldrehpunkt auf Höhe der Kniegelenkachse."
+    },
+    "wall_sit": {
+      "nr": 98,
+      "name": "Wandsitzen",
+      "familie": "kniebeuge",
+      "variante": "statisch, Rücken an der Wand, Knie und Hüfte 90°",
+      "geraet_modell": "Wand",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.2,
+      "geraet_neu": ["Wand"],
+      "hinweis": "Statisch: Schleife mit dezenter Atmung."
+    },
+    "leg_press_single_leg": {
+      "nr": 99,
+      "name": "Beinpresse, einbeinig",
+      "familie": "kniebeuge",
+      "variante": "einbeinig an der Beinpresse, der andere Fuß ruht",
+      "geraet_modell": "Beinpresse 45°",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "romanian_deadlift_barbell": {
+      "nr": 100,
+      "name": "Rumänisches Kreuzheben mit Langhantel",
+      "familie": "hueftbeuge",
+      "variante": "Start im Stand, Knie leicht gebeugt und fest, Hüfte nach hinten, bis die Stange unter Kniehöhe ist",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "romanian_deadlift_dumbbell": {
+      "nr": 101,
+      "name": "Rumänisches Kreuzheben mit Kurzhanteln",
+      "familie": "hueftbeuge",
+      "variante": "Kurzhanteln vor den Oberschenkeln",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "single_leg_rdl_dumbbell": {
+      "nr": 102,
+      "name": "Einbeiniges Rumänisches Kreuzheben mit Kurzhantel",
+      "familie": "hueftbeuge",
+      "variante": "einbeinig, das freie Bein streckt nach hinten, Becken bleibt waagrecht, Kurzhantel in der Gegenhand",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Gleichgewicht auf einem Bein (Schwerpunkt über dem Standfuß)."
+    },
+    "lying_leg_curl": {
+      "nr": 103,
+      "name": "Beinbeuger liegend",
+      "familie": "beine_isoliert",
+      "variante": "Bauchlage auf der Maschine, Rolle hinter den Fersen, das Knie beugt",
+      "geraet_modell": "Beinbeuger-Maschine, liegend",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 3.0,
+      "geraet_neu": ["Beinbeuger-Maschine, liegend"],
+      "hinweis": "Liegende Haltung auf schräger Liegefläche."
+    },
+    "seated_leg_curl": {
+      "nr": 104,
+      "name": "Beinbeuger sitzend",
+      "familie": "beine_isoliert",
+      "variante": "sitzend, Oberschenkelpolster, Rolle unter den Waden, das Knie beugt nach unten-hinten",
+      "geraet_modell": "Beinbeuger-Maschine, sitzend (vom Beinstrecker abgeleitet)",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 1.5,
+      "geraet_neu": ["Beinbeuger-Maschine, sitzend (vom Beinstrecker abgeleitet)"],
+      "hinweis": "Gerät vom Beinstrecker ableitbar."
+    },
+    "good_morning": {
+      "nr": 105,
+      "name": "Good Mornings mit Langhantel",
+      "familie": "hueftbeuge",
+      "variante": "Stange auf dem oberen Rücken, Hüftbeugung, bis der Rumpf fast waagrecht ist, Knie leicht gebeugt",
+      "geraet_modell": "Langhantel mit Scheiben",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "nordic_curl": {
+      "nr": 106,
+      "name": "Nordic Curls",
+      "familie": "beine_isoliert",
+      "variante": "kniend, Fersen fixiert, Körper gerade nach vorn senken, mit den Händen abfangen und zurückdrücken",
+      "geraet_modell": "Matte + Fersenhalter mit Kniepolster (Nordic Curls)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 1.5,
+      "geraet_neu": ["Fersenhalter mit Kniepolster (Nordic Curls)"],
+      "hinweis": "Schwer als Schleife (Rückweg mit Abstoßen der Hände); eventuell Ausgangs- und Endposition mit dezenter Bewegung."
+    },
+    "standing_calf_raise": {
+      "nr": 107,
+      "name": "Wadenheben stehend",
+      "familie": "beine_isoliert",
+      "variante": "stehend unter den Schulterpolstern, Fußballen auf der Stufe, Fersen heben und senken",
+      "geraet_modell": "Wadenmaschine, stehend",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 3.0,
+      "geraet_neu": ["Wadenmaschine, stehend"],
+      "hinweis": "Kleine Bewegung; seitliche Ansicht wichtig."
+    },
+    "seated_calf_raise": {
+      "nr": 108,
+      "name": "Wadenheben sitzend",
+      "familie": "beine_isoliert",
+      "variante": "sitzend, Knie unter dem Polster, Fersen heben",
+      "geraet_modell": "Wadenmaschine, sitzend",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 3.0,
+      "geraet_neu": ["Wadenmaschine, sitzend"],
+      "hinweis": "–"
+    },
+    "calf_press_leg_press": {
+      "nr": 109,
+      "name": "Wadenheben an der Beinpresse",
+      "familie": "beine_isoliert",
+      "variante": "an der Beinpresse, Beine gestreckt, nur das Sprunggelenk drückt die Plattform",
+      "geraet_modell": "Beinpresse 45°",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "hip_adduction_machine": {
+      "nr": 110,
+      "name": "Adduktorenmaschine",
+      "familie": "beine_isoliert",
+      "variante": "sitzend, Polster an der Knie-Innenseite, Beine schließen",
+      "geraet_modell": "Ab-/Adduktorenmaschine",
+      "quelle": "familie",
+      "aufwand_stunden": 0.75,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Ab-/Adduktorenmaschine"],
+      "hinweis": "Kamera eher frontal."
+    },
+    "hip_abduction_machine": {
+      "nr": 111,
+      "name": "Abduktorenmaschine",
+      "familie": "beine_isoliert",
+      "variante": "Polster außen, Beine öffnen",
+      "geraet_modell": "Ab-/Adduktorenmaschine",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Gleiche Maschine, Polster umgesteckt."
+    },
+    "lateral_band_walk": {
+      "nr": 112,
+      "name": "Seitliches Gehen mit Widerstandsband",
+      "familie": "beine_isoliert",
+      "variante": "halbe Hocke, Band über den Knien oder Knöcheln, seitliche Schritte",
+      "geraet_modell": "Widerstandsband (Mini-Band, dehnbar)",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 1.5,
+      "geraet_neu": ["Widerstandsband (Mini-Band, dehnbar)"],
+      "hinweis": "Band dehnt sich mit dem Beinabstand (Verformung); seitliche Fortbewegung als Schleife auf der Stelle oder mit mitlaufender Kamera."
+    },
+    "calf_raise_dumbbell": {
+      "nr": 113,
+      "name": "Wadenheben mit Kurzhanteln",
+      "familie": "beine_isoliert",
+      "variante": "stehend, Kurzhanteln seitlich, Fersen heben",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 0.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "–"
+    },
+    "kettlebell_swing": {
+      "nr": 114,
+      "name": "Kettlebell Swing",
+      "familie": "hueftbeuge",
+      "variante": "ballistische Hüftbeuge und -streckung, die Kettlebell schwingt zwischen den Beinen nach hinten und bis Brusthöhe nach vorn",
+      "geraet_modell": "Kettlebell",
+      "quelle": "mixamo",
+      "mixamo_name": "Kettlebell Swing",
+      "aufwand_stunden": 1.25,
+      "geraet_neu_stunden": 1.0,
+      "geraet_neu": ["Kettlebell"],
+      "hinweis": "Kettlebell an beiden Händen; ihre Bahn muss zum Schwung passen."
+    },
+    "thruster_dumbbell": {
+      "nr": 115,
+      "name": "Thruster mit Kurzhanteln",
+      "familie": "kniebeuge",
+      "variante": "Kurzhanteln auf Schulterhöhe, aus der Kniebeuge ohne Pause über den Kopf drücken",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "familie",
+      "aufwand_stunden": 2.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kombination aus Kniebeuge und Schulterdrücken; beide Familien müssen fertig sein."
+    },
+    "farmers_walk": {
+      "nr": 116,
+      "name": "Farmer's Walk",
+      "familie": "kondition",
+      "variante": "Gehen mit schweren Kurzhanteln in beiden Händen, Rumpf aufrecht, Schultern unten",
+      "geraet_modell": "Kurzhanteln",
+      "quelle": "cmu",
+      "cmu_trial": "35_01",
+      "alternative": {
+        "cmu_trials": ["35_02", "08_01", "07_01"],
+        "mixamo_name": "Standard Walk"
+      },
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Gehen aus CMU auf der Stelle, Arme per IK mit Last; CMU 70_01 bis 70_13 („carry … suitcase“, einseitige Last) als Referenz für den Gang unter Last."
+    },
+    "burpee": {
+      "nr": 117,
+      "name": "Burpees",
+      "familie": "kondition",
+      "variante": "Hocke, Hände auf den Boden, Sprung in den Stütz, zurück, Strecksprung",
+      "geraet_modell": "keins",
+      "quelle": "mixamo",
+      "mixamo_name": "Burpee",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Kontakte wechseln (Hände, Füße); Mixamo „Burpee Start“ und „Burpee End“ helfen bei der Schleife."
+    },
+    "mountain_climber": {
+      "nr": 118,
+      "name": "Bergsteiger (Mountain Climbers)",
+      "familie": "kondition",
+      "variante": "Stütz mit den Händen unter den Schultern, Knie abwechselnd zügig zur Brust",
+      "geraet_modell": "keins",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Hände fest, Becken ruhig; Ausgangshaltung aus Mixamo „Plank“ oder „Push Up“ ableitbar; als Mixamo-Animation nicht belegt."
+    },
+    "jumping_jack": {
+      "nr": 119,
+      "name": "Hampelmann",
+      "familie": "kondition",
+      "variante": "Sprung in die Grätsche mit den Armen über dem Kopf und zurück",
+      "geraet_modell": "keins",
+      "quelle": "cmu",
+      "cmu_trial": "86_05",
+      "alternative": {
+        "cmu_trials": ["13_29", "13_30", "13_31", "14_06", "14_14", "14_20", "22_15", "22_16"],
+        "mixamo_name": "Jumping Jacks"
+      },
+      "aufwand_stunden": 2.0,
+      "geraet_neu_stunden": 0.0,
+      "hinweis": "Abschnitt aus einer langen Aufnahme schneiden und zur Schleife schließen; Kandidaten in der GIF-Vorschau vergleichen (CMU rät, mit höheren Subject-Nummern zu beginnen)."
+    },
+    "jump_rope": {
+      "nr": 120,
+      "name": "Seilspringen",
+      "familie": "kondition",
+      "variante": "kleine Sprünge auf den Fußballen, Handgelenke kreisen, das Seil dreht sich",
+      "geraet_modell": "Springseil",
+      "quelle": "mixamo",
+      "mixamo_name": "Jumping Rope",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 2.0,
+      "geraet_neu": ["Springseil"],
+      "hinweis": "Seil als Kurve zwischen den Händen, Drehung an die Sprünge gekoppelt (Seil unter den Füßen, wenn sie in der Luft sind)."
+    },
+    "rowing_machine": {
+      "nr": 121,
+      "name": "Rudergerät",
+      "familie": "kondition",
+      "variante": "Zyklus: Auslage (Knie gebeugt, Arme gestreckt), Beinstoß, Rumpf zurück, Armzug; Rückweg umgekehrt; Rollsitz gleitet, Füße fest im Stemmbrett",
+      "geraet_modell": "Rudergerät",
+      "quelle": "familie",
+      "aufwand_stunden": 3.0,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["Rudergerät"],
+      "hinweis": "Neue mehrphasige Bewegung; Griff und Kette per IK; Verhältnis Zug zu Rückweg etwa 1:2. Keine Mocap-Quelle (CMU 79_95 „rowing“ ist vermutlich Pantomime)."
+    },
+    "stationary_bike": {
+      "nr": 122,
+      "name": "Fahrradergometer",
+      "familie": "kondition",
+      "variante": "sitzend, Füße an den Pedalen, Kurbel dreht 360°, Hände am Lenker",
+      "geraet_modell": "Fahrradergometer",
+      "quelle": "familie",
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 3.0,
+      "geraet_neu": ["Fahrradergometer"],
+      "hinweis": "Bewegung vollständig aus dem Kurbelwinkel ableitbar (Fuß-IK an den Pedalen); gute Schleife."
+    },
+    "treadmill": {
+      "nr": 123,
+      "name": "Laufband",
+      "familie": "kondition",
+      "variante": "Joggen auf der Stelle, das Band läuft",
+      "geraet_modell": "Laufband",
+      "quelle": "cmu",
+      "cmu_trial": "35_17",
+      "alternative": {
+        "cmu_trials": ["35_18", "16_35", "16_36"],
+        "mixamo_name": "Treadmill Running"
+      },
+      "aufwand_stunden": 1.5,
+      "geraet_neu_stunden": 3.0,
+      "geraet_neu": ["Laufband"],
+      "referenz_der_familie": true,
+      "hinweis": "Vorwärtsbewegung der CMU-Aufnahme entfernen (die Füße gleiten dann wie auf dem Band); Bandtextur mitlaufen lassen."
+    },
+    "elliptical": {
+      "nr": 124,
+      "name": "Crosstrainer",
+      "familie": "kondition",
+      "variante": "Füße auf den Pedalen (elliptische Bahn), Hände an den beweglichen Griffen, gegengleich",
+      "geraet_modell": "Crosstrainer",
+      "quelle": "familie",
+      "aufwand_stunden": 2.0,
+      "geraet_neu_stunden": 5.0,
+      "geraet_neu": ["Crosstrainer"],
+      "hinweis": "Die Gerätemechanik (Koppelgetriebe) bestimmt die Bahn; Füße und Hände per IK; gute Schleife."
+    }
+  },
+  "familien": {
+    "kniebeuge": {
+      "grundmuster": "Hüfte und Knie beugen gleichzeitig; der Rumpf neigt sich so weit, dass Schwerpunkt und Last über der Fußmitte bleiben; aufwärts strecken Knie und Hüfte gemeinsam. Füße fest am Boden (IK, Fußsperre), Knie folgen der Zehenrichtung (Pol-Ziele). Führung der Last: freie Stange auf senkrechter Bahn, Schiene (Multipresse, Hackenschmidt) oder Schlitten (Beinpresse: Körper fix, Plattform bewegt sich). Statisch: Wandsitzen.",
+      "gelenke": "Hüfte 0° → 95–115° Beugung; Knie 0° → 100–120° (Oberschenkel waagrecht); oberes Sprunggelenk bis 25–35° Dorsalflexion; Rumpfneigung zur Senkrechten: Rückenkniebeuge 35–45°, Front- und Goblet-Kniebeuge 15–25°, an Hackenschmidt und Beinpresse durch das Polster vorgegeben; Stand schulterbreit, Zehen 15–30° nach außen; Hände per IK an Stange oder Hantel.",
+      "basis_stunden": 8,
+      "referenz": "back_squat_barbell"
+    },
+    "hueftbeuge": {
+      "grundmuster": "Bewegung aus der Hüfte bei neutraler Wirbelsäule: Becken schiebt nach hinten, Rumpf neigt sich nach vorn, Knie nur leicht gebeugt; Rückweg durch Hüftstreckung. Untermuster: stehend mit Last (Kreuzheben, Rumänisches Kreuzheben, Good Morning, Swing), Rückenlage oder an die Bank gelehnt (Hip Thrust, Brücke), am Gerät (Rückenstrecker, Pull-Through).",
+      "gelenke": "Hüfte 0° → 70–100° Beugung; Knie beim Rumänischen Kreuzheben 15–25° fest, beim Kreuzheben vom Boden unten 60–80°, Sumo mehr; Rumpf im Umkehrpunkt 0–45° zur Waagrechten; Wirbelsäule neutral (nur Rückenstrecker mit Wirbelbeugung); Hip Thrust und Brücke: Hüftstreckung aus etwa 90° bzw. 45° Beugung bis 0°, Knie oben etwa 90°; Stange nah am Körper über der Fußmitte.",
+      "basis_stunden": 10,
+      "referenz": "deadlift_barbell"
+    },
+    "ausfallschritt": {
+      "grundmuster": "Schrittstellung, Gewicht überwiegend auf dem vorderen Bein: vorderes Knie und Hüfte beugen, das hintere Knie senkt sich senkrecht Richtung Boden; Rumpf aufrecht bis leicht vorgeneigt. Varianten mit Schritt (vor, zurück), stationär (Bulgarische Kniebeuge mit erhöhtem hinterem Fuß) und Aufsteigen (Step-up).",
+      "gelenke": "Vorderes Knie 0° → etwa 90°, vordere Hüfte 0° → 80–100°; hinteres Knie 0° → etwa 90° (2–5 cm über dem Boden), hintere Hüfte 0–10° Streckung, hinterer Fuß auf dem Ballen; Schrittlänge etwa 0,7–0,9 m; Becken waagrecht; Fußkontakte wechseln (IK-Sperre an und aus).",
+      "basis_stunden": 7,
+      "referenz": "reverse_lunge_dumbbell"
+    },
+    "waagrecht_druecken": {
+      "grundmuster": "Die Arme drücken vom Rumpf weg (Schulter-Horizontalbeugung und Ellbogenstreckung), Schulterblätter stabil. Entweder bewegt sich die Last (Bankdrücken, Brustpresse, Kabel) oder der Körper (Liegestütz, Dips: Hände fest, Rumpf bewegt sich).",
+      "gelenke": "Ellbogen 0–10° → 80–100° Beugung; Oberarm 45–70° zum Rumpf (nicht 90°); Unterarme senkrecht unter der Last; Bankdrücken: Stange zur unteren Brust, Bahn leicht schräg; Schrägbank 30–45°; Dips: Schulterstreckung, bis die Oberarme etwa waagrecht sind, Rumpf 10–30° vorgeneigt; Liegestütz: Körper als Brett, Brust 5–10 cm über dem Boden.",
+      "basis_stunden": 8,
+      "referenz": "bench_press_barbell"
+    },
+    "senkrecht_druecken": {
+      "grundmuster": "Last von Schulterhöhe senkrecht über den Kopf drücken und kontrolliert zurück; beim Langhanteldrücken weicht der Kopf kurz nach hinten aus; Rumpf stabil, Last endet über Schulter und Fußmitte.",
+      "gelenke": "Schulterbeugung und -abduktion von etwa 80–90° auf 170–180°; Ellbogen 90–110° → 0–5°; Unterarme senkrecht; Schulterblatt dreht nach oben (Schlüsselbein-Knochen); stehend Knie und Hüfte gestreckt; Arnold Press zusätzlich Unterarmdrehung um etwa 180° und Außenrotation.",
+      "basis_stunden": 5,
+      "referenz": "overhead_press_barbell"
+    },
+    "waagrecht_ziehen": {
+      "grundmuster": "Last zum Rumpf ziehen: Schulterstreckung mit Ellbogenbeugung, Schulterblätter ziehen zusammen und lösen sich wieder; der Rumpf ruht (sitzend, brustgestützt) oder wird in Vorbeuge gehalten (Haltung aus der Hüftbeuge-Familie).",
+      "gelenke": "Ellbogen 0° → 90–110°; Schulterstreckung, bis der Ellbogen 15–30° hinter dem Rumpf ist; Schulterblätter 2–4 cm zusammen; Vorbeuge-Rudern: Rumpf fest bei 30–60° zur Waagrechten, Knie 15–25°; Face Pull: Ellbogen hoch, Außenrotation, bis die Hände neben dem Kopf sind.",
+      "basis_stunden": 6,
+      "referenz": "seated_cable_row"
+    },
+    "senkrecht_ziehen": {
+      "grundmuster": "Die Arme ziehen von oben nach unten (Schulter-Adduktion und -Streckung mit Ellbogenbeugung), die Schulterblätter senken sich. Entweder bewegt sich der Griff (Latzug, Kabel) oder der Körper (Klimmzug: Hände fest, Wurzel bewegt sich). Überzug: gestreckte Arme, nur die Schulter.",
+      "gelenke": "Schulter von 160–180° auf 30–60° Abduktion bzw. Beugung; Ellbogen 0–10° → 90–120°; beim Latziehen Rumpf 10–20° zurückgelehnt; beim Klimmzug hängen die Beine gestreckt oder gekreuzt, Kinn über die Stange; Überzug: Ellbogen 10–20° fest, Schulter 90–120° → 0–10°.",
+      "basis_stunden": 7,
+      "referenz": "lat_pulldown"
+    },
+    "arme": {
+      "grundmuster": "Eingelenkig am Ellbogen (oder Handgelenk): der Oberarm bleibt ruhig, der Unterarm beugt oder streckt; der Griff bestimmt die Unterarmdrehung. Varianten nach Lage des Oberarms: neben dem Rumpf, über dem Kopf, auf dem Polster vor dem Körper, hinter dem Körper an der Schrägbank.",
+      "gelenke": "Ellbogen 0–10° ↔ 130–145° (Curls) bzw. 140° → 0° (Trizeps); Unterarm supiniert (Curl), neutral (Hammer) oder proniert (Reverse); Handgelenk bei Handgelenkcurls etwa 40° Beugung ↔ 40° Streckung; Schulter fest (Pushdown: Ellbogen am Rumpf; über Kopf: Oberarm 150–170°).",
+      "basis_stunden": 4,
+      "referenz": "biceps_curl_barbell"
+    },
+    "schulter_brust_isoliert": {
+      "grundmuster": "Eingelenkig an der Schulter mit festem, leicht gebeugtem Ellbogen (langer Hebel): der Arm bewegt sich auf einem Bogen in einer Ebene (seitlich, vorn, waagrecht); dazu Schulterheben als reine Schulterblatt-Bewegung.",
+      "gelenke": "Ellbogen 10–20° fest; Seitheben: Abduktion 10° → 80–90°; Frontheben: Beugung 0° → 90°; Fliegende und Butterfly: horizontale Adduktion von 10–20° hinter der Körperebene bis 80–90° nach vorn; Reverse Fly: Gegenrichtung, Rumpf 45–90° vorgeneigt oder Brust am Polster; Schulterheben: Schlüsselbein 3–5 cm nach oben.",
+      "basis_stunden": 5,
+      "referenz": "lateral_raise_dumbbell"
+    },
+    "beine_isoliert": {
+      "grundmuster": "Eingelenkig am Bein, meist an einer Maschine: das Knie streckt oder beugt gegen ein Polster, das Sprunggelenk hebt die Ferse, die Hüfte spreizt, schließt oder streckt; der übrige Körper ruht und ist an Sitz und Griffe gebunden.",
+      "gelenke": "Knie 90° ↔ 0–5° (Beinstrecker) bzw. 0° ↔ 110–130° (Beinbeuger); Sprunggelenk 10–15° Dorsalflexion ↔ 20–30° Plantarflexion (Wadenheben); Hüfte sitzend 0° ↔ 35–45° Abduktion bzw. Adduktion je Seite; Hüftstreckung 0° → 20–30° (Kickback); Nordic Curl: Knie 90° → 0–20° bei gestrecktem Körper.",
+      "basis_stunden": 4,
+      "referenz": "leg_extension"
+    },
+    "rumpf": {
+      "grundmuster": "Uneinheitliche Familie mit fünf Untermustern: (a) Rumpfbeugung in Rückenlage (Crunch, Sit-up, Kabelcrunch), (b) statischer Stütz (Plank, Seitstütz), (c) Beinheben (liegend, hängend, stehend), (d) Drehung und Seitneigung (Russian Twist, Scheibenwischer, Heel Taps, Bicycle Crunch), (e) Arme und Beine gegengleich bei ruhigem Rumpf (Dead Bug, Bird Dog); dazu Anti-Rotation (Pallof Press) und Rollout (Bauchroller).",
+      "gelenke": "Wirbelsäule: Beugung über mehrere Wirbelknochen verteilt (Crunch etwa 30° Anheben des Oberkörpers, Sit-up bis 80–90° mit Hüftbeugung), Drehung bis 30–45° je Seite; Hüfte beim Beinheben 0° → 90°; Stütz: Ellbogen 90°, Körperlinie gerade; Kontakte an Becken, Rücken, Händen und Füßen ohne Durchdringen der Matte.",
+      "basis_stunden": 12,
+      "referenz": "crunch"
+    },
+    "kondition": {
+      "grundmuster": "Zyklische Ganzkörperbewegungen als Schleife: Sprünge (Hampelmann, Seilspringen, Burpee), Stützbewegung (Bergsteiger), Gehen und Laufen auf der Stelle (Laufband, Farmer's Walk) und Cardiogeräte, deren Mechanik die Bewegung vorgibt (Pedale, Rollsitz, Griffe per IK).",
+      "gelenke": "Sprünge: Knie und Hüfte federn 20–40°, Flugphase 5–15 cm; Laufen: Hüfte −10° bis +40°, Knie 0–90°, 150–170 Schritte je Minute; Rad: Kurbel 360°, Knie 30–110°; Rudern: Knie 0° ↔ 110–120°, Rumpf 30° vor ↔ 15–20° zurück, Ellbogen 0° ↔ 100°; Crosstrainer: Fußbahn als Ellipse, Arme gegengleich.",
+      "basis_stunden": 10,
+      "referenz": "treadmill"
+    }
+  },
+  "cmu": [
+    {
+      "trial": "86_05",
+      "beschreibung": "walking, jumping, jumping jacks,  jumping on one foot, punching, chopping,",
+      "subject": "86 (sports and various activities)",
+      "bilder": 8341,
+      "passt_zu": ["jumping_jack"],
+      "eignung": "direkt (Abschnitt schneiden)",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-086-094/86/README.md"
+      ]
+    },
+    {
+      "trial": "13_29",
+      "beschreibung": "jumping jacks, side twists, bend over, squats",
+      "subject": "13 (various everyday behaviors)",
+      "bilder": 4593,
+      "passt_zu": ["jumping_jack"],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "direkt (Hampelmann), Vorlage (Kniebeuge ohne Gewicht); frühe Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-010-014/13/README.md"
+      ]
+    },
+    {
+      "trial": "13_30",
+      "beschreibung": "jumping jacks, side twists, squats, jog",
+      "subject": "13 (various everyday behaviors)",
+      "bilder": 2466,
+      "passt_zu": ["jumping_jack"],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "direkt (Hampelmann), Vorlage (Kniebeuge); frühe Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-010-014/13/README.md"
+      ]
+    },
+    {
+      "trial": "13_31",
+      "beschreibung": "jumping jacks, side twists, bend over, jog",
+      "subject": "13 (various everyday behaviors)",
+      "bilder": 3018,
+      "passt_zu": ["jumping_jack"],
+      "eignung": "direkt (Abschnitt schneiden); frühe Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-010-014/13/README.md"
+      ]
+    },
+    {
+      "trial": "14_06",
+      "beschreibung": "jumping jacks, jog, squats, side twists, stretches",
+      "subject": "14 (various everyday behaviors)",
+      "bilder": 5358,
+      "passt_zu": ["jumping_jack"],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "direkt (Hampelmann), Vorlage (Kniebeuge); frühe Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-010-014/14/README.md"
+      ]
+    },
+    {
+      "trial": "14_14",
+      "beschreibung": "jumping jacks, jog, squats, side twists, stretches",
+      "subject": "14 (various everyday behaviors)",
+      "bilder": 4654,
+      "passt_zu": ["jumping_jack"],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "direkt (Hampelmann), Vorlage (Kniebeuge); frühe Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-010-014/14/README.md"
+      ]
+    },
+    {
+      "trial": "14_20",
+      "beschreibung": "jumping jacks, side twists, reach up, bend over",
+      "subject": "14 (various everyday behaviors)",
+      "bilder": 4645,
+      "passt_zu": ["jumping_jack"],
+      "eignung": "direkt (Abschnitt schneiden); frühe Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-010-014/14/README.md"
+      ]
+    },
+    {
+      "trial": "22_15 / 23_15",
+      "beschreibung": "alternating jumping jacks (2 subjects - subject A / subject B)",
+      "subject": "22/23 (human interaction, 2 Personen)",
+      "bilder": 496,
+      "passt_zu": ["jumping_jack"],
+      "eignung": "direkt; zwei Personen gleichzeitig aufgenommen (Verdeckung möglich)",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-020-029/22/README.md",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-020-029/23/README.md"
+      ]
+    },
+    {
+      "trial": "22_16 / 23_16",
+      "beschreibung": "synchronized jumping jacks (2 subjects - subject A / subject B)",
+      "subject": "22/23 (human interaction, 2 Personen)",
+      "bilder": 433,
+      "passt_zu": ["jumping_jack"],
+      "eignung": "direkt; zwei Personen gleichzeitig aufgenommen",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-020-029/22/README.md",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-020-029/23/README.md"
+      ]
+    },
+    {
+      "trial": "22_14 / 23_14",
+      "beschreibung": "alternating squats (2 subjects - subject A / subject B)",
+      "subject": "22/23 (human interaction, 2 Personen)",
+      "bilder": 708,
+      "passt_zu": [],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "Vorlage (Kniebeuge ohne Gewicht)",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-020-029/22/README.md",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-020-029/23/README.md"
+      ]
+    },
+    {
+      "trial": "86_02",
+      "beschreibung": "walk, squats, run, stretch, jumps, punches, and drinking",
+      "subject": "86 (sports and various activities)",
+      "bilder": 10618,
+      "passt_zu": [],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "Vorlage (Kniebeuge ohne Gewicht); spätere Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-086-094/86/README.md"
+      ]
+    },
+    {
+      "trial": "86_08",
+      "beschreibung": "walking, squats, stretching, kicking, and punching",
+      "subject": "86 (sports and various activities)",
+      "bilder": 9207,
+      "passt_zu": [],
+      "basis_fuer": [
+        "goblet_squat",
+        "front_squat_barbell",
+        "back_squat_barbell",
+        "thruster_dumbbell"
+      ],
+      "eignung": "Vorlage (Kniebeuge ohne Gewicht); spätere Sitzung",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-086-094/86/README.md"
+      ]
+    },
+    {
+      "trial": "35_01 bis 35_16, 35_28 bis 35_34",
+      "beschreibung": "walk",
+      "subject": "35 (walk, run)",
+      "passt_zu": ["farmers_walk"],
+      "eignung": "direkt für den Gang (auf der Stelle), Arme per IK",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "07_01 bis 07_12, 08_01 bis 08_11",
+      "beschreibung": "walk (auch slow walk, brisk walk, walk/stride)",
+      "subject": "7 (walk), 8 (walk)",
+      "passt_zu": ["farmers_walk"],
+      "eignung": "Alternative für den Gang",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "35_17 bis 35_26",
+      "beschreibung": "run/jog",
+      "subject": "35 (walk, run)",
+      "passt_zu": ["treadmill"],
+      "eignung": "direkt (Vorwärtsbewegung entfernen)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "16_35, 16_36, 16_45, 16_46, 16_56",
+      "beschreibung": "run/jog",
+      "subject": "16 (run, jump, walk)",
+      "passt_zu": ["treadmill"],
+      "eignung": "Alternative",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "70_01 bis 70_13",
+      "beschreibung": "carry 5.5lb / 12.5lb / 19.5lb suitcase",
+      "subject": "70 (suitcase)",
+      "passt_zu": [],
+      "referenz_fuer": ["farmers_walk"],
+      "eignung": "nur Referenz (Gang mit einseitiger Last)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "111_31",
+      "beschreibung": "Stepping up / stepping down",
+      "subject": "111 (Pregnant Woman)",
+      "passt_zu": [],
+      "referenz_fuer": ["step_up_dumbbell"],
+      "eignung": "nur Referenz (schwangere Person, Stufenhöhe unbekannt)",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-102-111/111/README.md"
+      ]
+    },
+    {
+      "trial": "49_02, 49_03",
+      "beschreibung": "jump up and down, hop on one foot",
+      "subject": "49 (modern dance, gymnastics)",
+      "passt_zu": [],
+      "referenz_fuer": ["jump_rope"],
+      "eignung": "nur Referenz (Sprünge auf der Stelle, ohne Seil)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "138_01 bis 138_10",
+      "beschreibung": "Marching",
+      "subject": "138 (Marching, Walking and Talking)",
+      "passt_zu": [],
+      "referenz_fuer": ["standing_knee_raise"],
+      "eignung": "nur Referenz (Knie heben beim Marschieren)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "01_12",
+      "beschreibung": "playground - climb, pull up, dangle, sit, lower self to ground",
+      "subject": "1 (Spielplatz)",
+      "passt_zu": [],
+      "referenz_fuer": ["pull_up"],
+      "eignung": "ungeeignet als Quelle (Klettergerüst, früheste Sitzung)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "79_93, 79_95",
+      "beschreibung": "weight lifting; rowing",
+      "subject": "79 (actor everyday activities)",
+      "passt_zu": [],
+      "eignung": "ungeprüft; Schauspieler-Sitzung, vermutlich Pantomime ohne Gerät",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "88_02",
+      "beschreibung": "backflips, jump onto platform, handstands, vertical pushups",
+      "subject": "88 (acrobatics)",
+      "passt_zu": [],
+      "eignung": "keine Übung der Liste (Handstand-Liegestütz)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    },
+    {
+      "trial": "42_01, 77_21, 83_22, 114_10, 86_03, 86_04, 86_07",
+      "beschreibung": "stretch / stretching (in Mischaufnahmen)",
+      "subject": "42, 77, 83, 114, 86",
+      "passt_zu": [],
+      "eignung": "Dehnen ist nicht in der Liste",
+      "beleg": [
+        "https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt",
+        "https://github.com/Shriinivas/cmubvh/blob/main/Sequence-040-045/42/README.md"
+      ]
+    },
+    {
+      "trial": "111_38 bis 111_41, 113_28, 113_29",
+      "beschreibung": "Yoga",
+      "subject": "111 (Pregnant Woman), 113 (Post pregnant woman)",
+      "passt_zu": [],
+      "eignung": "Inhalt ungeprüft (nur Sichtprüfung kann zeigen, ob Stütz- oder Brückenhaltungen dabei sind)",
+      "beleg": ["https://github.com/una-dinosauria/cmu-mocap/blob/master/cmu-mocap-index-text.txt"]
+    }
+  ],
+  "mixamo": [
+    {
+      "name": "Push Up",
+      "dazu": ["Idle To Push Up", "Push Up To Idle"],
+      "passt_zu": ["push_up"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js",
+        "https://github.com/hukej/FormCheckAI/blob/main/project/src/constants/activities.jsx"
+      ]
+    },
+    {
+      "name": "Plank",
+      "dazu": ["Start Plank", "End Plank"],
+      "passt_zu": ["plank"],
+      "referenz_fuer": ["mountain_climber", "side_plank"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Situps",
+      "dazu": ["Idle To Situp", "Situp To Idle"],
+      "passt_zu": ["sit_up"],
+      "referenz_fuer": ["crunch"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Bicycle Crunch",
+      "dazu": ["Start Bicycle Sit Up"],
+      "passt_zu": ["bicycle_crunch"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json"
+      ]
+    },
+    {
+      "name": "Burpee",
+      "dazu": ["Burpee Start", "Burpee End"],
+      "passt_zu": ["burpee"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Jumping Jacks",
+      "dazu": ["Start Jumping Jacks", "Stop Jumping Jacks"],
+      "passt_zu": ["jumping_jack"],
+      "hinweis": "Alternative zur CMU-Aufnahme",
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/IchihanaYue/running_mayhem/blob/main/scenes/training_center.tscn"
+      ]
+    },
+    {
+      "name": "Jumping Rope",
+      "passt_zu": ["jump_rope"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Kettlebell Swing",
+      "hinweis": "Beschreibung bei Mixamo laut Exportliste: Russian Kettlebell Swing",
+      "passt_zu": ["kettlebell_swing"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Bicep Curl",
+      "passt_zu": ["biceps_curl_dumbbell"],
+      "referenz_fuer": ["hammer_curl", "biceps_curl_barbell"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Front Raises",
+      "passt_zu": ["front_raise_dumbbell"],
+      "referenz_fuer": ["front_raise_cable"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Back Squat",
+      "hinweis": "Beschreibung laut Exportliste: Back Squat Workout",
+      "passt_zu": ["back_squat_barbell"],
+      "referenz_fuer": ["squat_smith"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Air Squat",
+      "hinweis": "Beschreibung laut Exportliste: Air Squat Workout; Kniebeuge ohne Gewicht, in der Liste keine eigene Übung",
+      "passt_zu": [],
+      "referenz_fuer": ["front_squat_barbell", "thruster_dumbbell", "wall_sit"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js",
+        "https://github.com/temuulen1221/Bodify/blob/main/utils/avatarAnimationConfig.js"
+      ]
+    },
+    {
+      "name": "Air Squat Bent Arms",
+      "passt_zu": [],
+      "referenz_fuer": ["goblet_squat"],
+      "hinweis": "Armhaltung nicht gesehen, nur der Name ist belegt",
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json"
+      ]
+    },
+    {
+      "name": "Sumo High Pull",
+      "hinweis": "Beschreibung laut Exportliste: Sumo High Pull Workout; zieht nach dem Kreuzheben bis unters Kinn",
+      "passt_zu": [],
+      "referenz_fuer": ["sumo_deadlift"],
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Treadmill Running",
+      "passt_zu": ["treadmill"],
+      "hinweis": "Alternative zur CMU-Aufnahme; in der großen Dateiliste nicht enthalten, aber in mehreren Projekten",
+      "beleg": [
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js",
+        "https://github.com/SaintAnthony777/Wildest-sunsets-repo"
+      ]
+    },
+    {
+      "name": "Standard Walk",
+      "passt_zu": [],
+      "referenz_fuer": ["farmers_walk"],
+      "hinweis": "Alternative zur CMU-Aufnahme; nur in der Exportliste belegt",
+      "beleg": ["https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"]
+    },
+    {
+      "name": "Overhead Squat; Pistol (Beschreibung „Pistol Workout“); Box Jump; Jump Push Up; Circle Crunch; Arm Stretching; Neck Stretching; Warming Up",
+      "passt_zu": [],
+      "hinweis": "belegt, aber ohne Gegenstück in den 124 Übungen",
+      "beleg": [
+        "https://github.com/hansen1416/video2motion-screenshots/blob/main/anim-player/public/filenames.json",
+        "https://github.com/QuadrigaProj/Fitage/blob/main/docs/3d/mixamo_export.js"
+      ]
+    },
+    {
+      "name": "Pull Up",
+      "status": "nicht belegt",
+      "passt_zu": [],
+      "beleg": ["kein Treffer in der Dateiliste (rund 2.355 Namen) und in der GitHub-Codesuche"]
+    },
+    {
+      "name": "Mountain Climber",
+      "status": "nicht belegt",
+      "passt_zu": [],
+      "beleg": ["kein Treffer in der Dateiliste und in der GitHub-Codesuche"]
+    },
+    {
+      "name": "Lunge, Bench Press, Deadlift, Dips, Lat Pulldown, Shoulder Press, Lateral Raise, Crunch (ohne Zusatz), Leg Raise, Glute Bridge, Russian Twist, Rowing (Ergometer), Cycling",
+      "status": "nicht belegt",
+      "passt_zu": [],
+      "beleg": ["kein Treffer in der Dateiliste"]
+    }
+  ],
+  "lizenzen": {
+    "cmu": {
+      "wortlaut": "Startseite (laut Katalog-Eintrag, Stand 23.10.2026): „This dataset of motions is free for all uses.“ Nutzungsbedingungen (Fußzeile, wortgleich in mehreren Kopien): „This data is free for use in research projects. You may include this data in commercially-sold products, but you may not resell this data directly, even in converted form. If you publish results obtained using this data, we would appreciate it if you would send the citation to your published paper to jkh+mocap@cs.cmu.edu, and also would add this text to your acknowledgments section: The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.“ Ältere Fassung (zitiert): „This data is free for use in research and commercial projects worldwide.“",
+      "quelle": [
+        "http://mocap.cs.cmu.edu (Original; aus dieser Umgebung nicht abrufbar)",
+        "https://github.com/SheffieldML/GPy (GPy/util/data_resources.json, wörtliche Kopie der Bedingungen)",
+        "https://github.com/probml/pyprobml (notebooks/book2/28/gplvm_mocap.ipynb, wörtliche Kopie)",
+        "https://github.com/TMHSDigital/Free-Game-Dev-Assets/blob/main/catalog/animation/cmu-mocap.md (Startseite und Fußzeile, geprüft am 24.08. und 23.10.2026)",
+        "https://github.com/Phantom-Con-Artist/Cineviz (ASSET_LICENSES.md, ältere Fassung)"
+      ],
+      "bedeutung_fuer_form": "Gerenderte Videos in der App sind erlaubt (Einbau in Produkte ist sogar beim Verkauf erlaubt). Verboten ist nur der Weiterverkauf der Daten selbst, auch umgewandelt. Danksagung ist für Veröffentlichungen erbeten, für Produkte nicht verlangt; trotzdem in docs/licenses-data.md aufnehmen."
+    },
+    "cgspeed_bvh": {
+      "wortlaut": "„CMU places no restrictions on the use of the original dataset, and I (Bruce) place no additional restrictions on the use of this particular BVH conversion.“",
+      "quelle": [
+        "https://sites.google.com/a/cgspeed.com/cgspeed/motion-capture/the-daz-friendly-bvh-release-of-cmus-motion-capture-database/readmefirst-file-for-daz-friendly-primary-release (zitiert in https://github.com/Shriinivas/cmubvh)",
+        "https://github.com/una-dinosauria/cmu-mocap (README: Kopie der BVH-Umwandlung von Bruce Hahne, READMEFIRST.txt)"
+      ]
+    },
+    "mixamo": {
+      "wortlaut": "Offizielle FAQ von Adobe (laut Suchtreffern): „Mixamo is available free for anyone with an Adobe ID and does not require a subscription to Creative Cloud.“ „You can use both characters and animations royalty free for personal, commercial, and non-profit projects including:“ (Illustrationen, 3D-Druck, Filme, Videospiele). „The following restrictions apply: Mixamo is not available for Enterprise and Federated IDs.“ Ergänzende FAQ im Adobe-Forum (2022, Zeit der „technology preview“): Das Einzige, was nicht erlaubt ist, ist die Weitergabe der rohen Figuren- und Animationsdateien (verboten z. B. Pakete für 3D-Stock- oder Asset-Store-Seiten, in denen Rohdateien verkauft oder verteilt werden); „members of a project team may access and use the file, but the files may not be distributed to customers or non-team members“; keine Namensnennung nötig („not required to give credit to Adobe, Mixamo, or Fuse“); die einzige ausgeschlossene Forschungsanwendung ist das Training von Machine-Learning-Modellen. Ein Adobe-Community-Manager: Veröffentlichen eines Datensatzes verstößt gegen die Nutzungsbedingungen.",
+      "quelle": [
+        "https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html (offiziell; aus dieser Umgebung nicht abrufbar, Wortlaut aus Suchtreffern)",
+        "https://community.adobe.com/t5/mixamo-discussions/mixamo-faq-licensing-royalties-ownership-eula-and-tos/m-p/13234775 (FAQ-Kopie im Adobe-Forum)"
+      ],
+      "bedeutung_fuer_form": "Gerenderte Videos in der App: erlaubt. Mixamo-FBX und daraus gewonnene Bewegungsdaten (auch umgewandelte Keyframes) dürfen nicht weitergegeben werden. Das Repository darad11/fitness-app ist öffentlich (GitHub-API: visibility public), also gehören diese Dateien nicht hinein; nur lokal in der Sitzung verwenden. Die Forums-FAQ ist von 2022; vor dem Einsatz die aktuelle offizielle Seite im Browser prüfen."
+    },
+    "nicht_verwenden": [
+      {
+        "quelle": "AMASS (amass.is.tue.mpg.de, enthält CMU als SMPL)",
+        "grund": "Lizenz nur für nichtkommerzielle Forschung, Lehre und Kunst; Weitergabe nur mit schriftlicher Erlaubnis",
+        "beleg": "https://amass.is.tue.mpg.de/license.html"
+      },
+      {
+        "quelle": "4TU.ResearchData, FBX-Umwandlung der CMU-Datenbank (data.4tu.nl)",
+        "grund": "Datensatz-Metadaten nennen CC BY-NC 4.0 (nichtkommerziell), widersprüchlich zum CMU-Text",
+        "beleg": "https://data.4tu.nl/datasets/0448aab2-3332-449f-a8e2-d208cb58c7df"
+      },
+      {
+        "quelle": "Hugging Face gbionics/cmu-fbx",
+        "grund": "Lizenz der Umwandlung nicht geprüft; Host hier ohnehin gesperrt",
+        "beleg": "https://huggingface.co/datasets/gbionics/cmu-fbx"
+      }
+    ]
+  },
+  "erreichbarkeit": {
+    "mocap.cs.cmu.edu": "nicht erreichbar. http://mocap.cs.cmu.edu/ → curl: (6) Could not resolve host (kein Statuscode; in dieser Umgebung gibt es nur einen HTTPS-Proxy, direkte Namensauflösung fehlt). https://mocap.cs.cmu.edu/ → curl: (56) CONNECT tunnel failed, response 403 (Proxy lehnt ab, Netzrichtlinie). Laut einem Katalog-Eintrag vom 22.10.2026 bedient die Seite nur HTTP, HTTPS wird dort abgelehnt.",
+    "github.com": "erreichbar (HEAD 400 über den Proxy, Verbindung steht)",
+    "raw.githubusercontent.com": "erreichbar (HEAD 301)",
+    "media.githubusercontent.com": "erreichbar (HEAD 302)",
+    "codeload.github.com": "erreichbar (HEAD 400, Verbindung steht)",
+    "sites.google.com": "gesperrt (CONNECT 403)",
+    "data.4tu.nl": "gesperrt (CONNECT 403)",
+    "huggingface.co": "gesperrt (CONNECT 403)",
+    "www.mixamo.com": "gesperrt (CONNECT 403); nicht nötig, der Produktinhaber lädt selbst herunter"
+  },
+  "adressen_fuer_network_access": [
+    {
+      "host": "mocap.cs.cmu.edu",
+      "zweck": "Originalseite der CMU (ASF/AMC, C3D, Unterseiten /subjects/…, Sammelarchiv allasfamc.zip)",
+      "status": "gesperrt",
+      "empfehlung": "nur nötig für die Originalformate; die Seite läuft nur über HTTP, das in dieser Umgebung auch nach Freigabe scheitern kann. BVH über GitHub reicht."
+    },
+    {
+      "host": "github.com, raw.githubusercontent.com, media.githubusercontent.com, codeload.github.com",
+      "zweck": "Spiegel der BVH-Umwandlung: github.com/una-dinosauria/cmu-mocap (Pfad data/013/13_29.bvh usw.) und github.com/Shriinivas/cmubvh (ZIP je Aufnahme, GIF-Vorschau)",
+      "status": "bereits erreichbar",
+      "empfehlung": "keine Freigabe nötig; bevorzugter Weg"
+    },
+    {
+      "host": "sites.google.com",
+      "zweck": "cgspeed-Seiten von Bruce Hahne (BVH-Umwandlung, READMEFIRST)",
+      "status": "gesperrt",
+      "empfehlung": "nicht nötig, da die gleiche Umwandlung auf GitHub liegt; Downloads führen dort zudem oft auf weitere Google-Hosts (nicht geprüft)"
+    },
+    {
+      "host": "data.4tu.nl",
+      "zweck": "FBX-Umwandlung",
+      "status": "gesperrt",
+      "empfehlung": "nicht freigeben (CC BY-NC 4.0)"
+    },
+    {
+      "host": "huggingface.co",
+      "zweck": "FBX-Umwandlung gbionics/cmu-fbx",
+      "status": "gesperrt",
+      "empfehlung": "nicht freigeben (Lizenz ungeklärt)"
+    }
+  ],
+  "einmalig": {
+    "IK-Rig mit Händen und Griffposen": "nicht eingerechnet, entsteht im laufenden Pilot",
+    "CMU-Import (BVH, Umrechnung auf 24 Bilder je Sekunde), Übertragung auf das MakeHuman-Skelett, Fußsperre, Schnitt und Schleife": 8,
+    "Mixamo-Übertragung (Skelett mixamorig auf das MakeHuman-Skelett)": 4,
+    "Kabelverlauf über mehrere Rollen und Seilgriff (wiederverwendbar)": 2,
+    "Prüfseite je Familie (12 × 1 h)": 12
+  },
+  "summen": {
+    "verteilung_familien": {
+      "arme": 18,
+      "rumpf": 16,
+      "waagrecht_druecken": 13,
+      "hueftbeuge": 13,
+      "beine_isoliert": 12,
+      "schulter_brust_isoliert": 10,
+      "kniebeuge": 9,
+      "kondition": 9,
+      "waagrecht_ziehen": 8,
+      "senkrecht_ziehen": 7,
+      "senkrecht_druecken": 5,
+      "ausfallschritt": 4
+    },
+    "verteilung_quellen": {
+      "familie": 111,
+      "mixamo": 10,
+      "cmu": 3
+    },
+    "uebungen_stunden": 130.5,
+    "geraete_neu_stunden": 92.8,
+    "geraete_neu_anzahl": 41,
+    "familien_basis_stunden": 86,
+    "einmalig_stunden": 26,
+    "gesamt_stunden": 335.3,
+    "davon_basis_der_pilot_familien": 23,
+    "hinweis": "gesamt = Übungen + neue Geräte + Familienbasis + einmalige Arbeiten; ohne IK-Rig und Renderzeit"
+  },
+  "notizen": "1. CMU hat keine Aufnahmen mit Langhantel, Kurzhantel oder an Trainingsgeräten. Einzige Treffer zu Gewichten: 79_93 „weight lifting“ und 79_95 „rowing“ aus einer Schauspieler-Sitzung (Subject 79, „actor everyday activities“), vermutlich Pantomime ohne Gerät, Inhalt ungeprüft. Brauchbar sind Hampelmann, Kniebeugen ohne Gewicht, Gehen, Laufen, Stufen, Marschieren, Dehnen. Es gibt keine Liegestütze (nur Handstand-Liegestütz 88_02), keine Sit-ups, Crunches, Burpees, Bergsteiger, Ausfallschritte, kein Seilspringen und keinen Klimmzug an der Stange (nur Spielplatz 01_12).\n2. CMU-Aufnahmen sind lange Mischsequenzen (z. B. 86_05 mit 8.341 Bildern). Je Übung einen Abschnitt schneiden, Vorwärtsbewegung entfernen, Schleife schließen. CMU rät, mit höheren Subject-Nummern zu beginnen; 13, 14, 22 und 23 sind frühe Sitzungen. Ein Drittprojekt (github.com/AssiamahS/opengym3d, motions/cmu/index.json) fand in 13_29 zwei tiefe Kniebeugen bei 32 s und 35 s, beschreibt die Dateien aber gegenüber dem offiziellen Index verschoben. Deshalb vor der Nutzung die GIF-Vorschau bei Shriinivas/cmubvh oder den Viewer prüfen.\n3. Die BVH-Umwandlung (Bruce Hahne) enthält keine Fingerbewegung; Hände kommen ohnehin aus den eigenen Griffposen und IK.\n4. Quellenregel dieser Zuordnung: cmu oder mixamo nur, wenn die Aufnahme dieselbe Übung zeigt (gleiche Gelenkbewegung und Körperlage). Gerät, Griff und Hände werden immer per IK ergänzt. Bei gleich guter Passung gilt CMU vor Mixamo (kein Konto nötig). Teilweise passende Aufnahmen stehen als Vorlage im Hinweis, die Übung zählt dann als familie.\n5. Mixamo-Einstellungen, wie sie ein Fitness-Projekt beim Export nutzt (QuadrigaProj/Fitage, docs/3d/mixamo_export.js): Format FBX Binary (fbx7_2019), 30 Bilder je Sekunde, Keyframe Reduction aus, ohne Haut (nur eine Datei mit Haut als T-Pose), In Place nur für Gehen und Laufen. Die Pipeline rendert mit 24 Bildern je Sekunde (tools/uebungen-3d/render.py), Blender rechnet um.\n6. Das Repository darad11/fitness-app ist öffentlich. Mixamo-Rohdateien und daraus abgeleitete Bewegungsdaten gehören nicht hinein (Lizenz verbietet Weitergabe). CMU-Daten dürften hinein (nur Weiterverkauf verboten), sollten aber wegen der Größe nur als zugeschnittene Abschnitte abgelegt werden.\n7. Netz: GitHub ist erreichbar, daher lassen sich die CMU-BVH-Dateien ohne Freigabe laden (z. B. raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/086/86_05.bvh). Die Originalseite der CMU, sites.google.com, data.4tu.nl, huggingface.co und mixamo.com sind gesperrt (Proxy 403).\n8. Schätzung: aufwand_stunden gilt bei fertiger Familie und vorhandenem Gerät und umfasst Animation, Prüfung aus zwei Perspektiven, Schleife, Muskelzonen und Ansicht in der App. Nicht enthalten: IK-Rig (läuft im Pilot) und Rechenzeit fürs Rendern. Die drei Pilot-Übungen sind Referenzen ihrer Familien, ihr Hauptaufwand steckt in basis_stunden.\n9. Die Bewegungen in den Aufnahmen selbst wurden nicht angesehen (keine Datendateien geladen). Alle Zuordnungen zu CMU und Mixamo beruhen auf Indexbeschreibungen und Dateinamen und brauchen vor dem Einbau eine Sichtprüfung.",
+  "mixamo_liste": [
+    {
+      "name": "Push Up",
+      "prioritaet": 1,
+      "fuer": ["push_up"],
+      "in_place": false,
+      "warum": "Gewichtsverlagerung und Rumpfspannung über die ganze Wiederholung; Hände und Füße setzt das Rig fest auf den Boden"
+    },
+    {
+      "name": "Situps",
+      "prioritaet": 1,
+      "fuer": ["sit_up"],
+      "referenz": ["crunch"],
+      "in_place": false,
+      "warum": "Abrollen der Wirbelsäule ist im Code schwer natürlich zu bauen"
+    },
+    {
+      "name": "Bicycle Crunch",
+      "prioritaet": 1,
+      "fuer": ["bicycle_crunch"],
+      "in_place": false,
+      "warum": "Wechsel von Rumpfdrehung und Beinen im richtigen Takt"
+    },
+    {
+      "name": "Plank",
+      "prioritaet": 1,
+      "fuer": ["plank"],
+      "referenz": ["side_plank", "mountain_climber"],
+      "in_place": false,
+      "warum": "leichtes Atmen und Nachspannen statt starrer Pose"
+    },
+    {
+      "name": "Burpee",
+      "prioritaet": 1,
+      "fuer": ["burpee"],
+      "in_place": true,
+      "warum": "Ganzkörperablauf mit Sprung, im Code kaum glaubwürdig"
+    },
+    {
+      "name": "Jumping Jacks",
+      "prioritaet": 1,
+      "fuer": ["jumping_jack"],
+      "in_place": true,
+      "warum": "Abgleich mit der CMU-Aufnahme 86_05; die bessere wird genommen"
+    },
+    {
+      "name": "Jumping Rope",
+      "prioritaet": 1,
+      "fuer": ["jump_rope"],
+      "in_place": true,
+      "warum": "Sprungrhythmus aus dem Fußgelenk; das Seil baut der Code"
+    },
+    {
+      "name": "Kettlebell Swing",
+      "prioritaet": 1,
+      "fuer": ["kettlebell_swing"],
+      "in_place": false,
+      "warum": "Hüftstreckung mit Schwung; Griff und Kugel setzt das Rig"
+    },
+    {
+      "name": "Bicep Curl",
+      "prioritaet": 2,
+      "fuer": ["biceps_curl_dumbbell"],
+      "referenz": ["hammer_curl", "biceps_curl_barbell"],
+      "in_place": false,
+      "warum": "nur als Vorlage für Takt und Mitbewegung des Rumpfs; die Familie „Arme beugen“ geht auch ohne"
+    },
+    {
+      "name": "Front Raises",
+      "prioritaet": 2,
+      "fuer": ["front_raise_dumbbell"],
+      "referenz": ["front_raise_cable"],
+      "in_place": false,
+      "warum": "wie Bicep Curl: Vorlage, nicht zwingend"
+    },
+    {
+      "name": "Back Squat",
+      "prioritaet": 2,
+      "fuer": [],
+      "referenz": ["back_squat_barbell", "squat_smith"],
+      "in_place": false,
+      "warum": "Gegenprobe zur neuen Kniebeuge (Takt, Rumpfneigung); die Kniebeuge selbst bleibt aus dem Rig"
+    },
+    {
+      "name": "Air Squat",
+      "prioritaet": 2,
+      "fuer": [],
+      "referenz": ["front_squat_barbell", "thruster_dumbbell", "wall_sit"],
+      "in_place": false,
+      "warum": "Vorlage für Kniebeugen ohne Stange auf dem Rücken"
+    },
+    {
+      "name": "Air Squat Bent Arms",
+      "prioritaet": 2,
+      "fuer": [],
+      "referenz": ["goblet_squat"],
+      "in_place": false,
+      "warum": "Vorlage für die Goblet-Kniebeuge (Armhaltung vor der Brust)"
+    }
+  ],
+  "mixamo_einstellungen": [
+    [
+      "Figur",
+      "„Y Bot“ (Standard-Skelett „mixamorig“ mit Fingern); die Figur selbst brauche ich nicht"
+    ],
+    ["Format", "FBX Binary (.fbx)"],
+    ["Skin", "Without Skin (nur Skelett und Bewegung, kleinere Datei)"],
+    ["Frames per Second", "30"],
+    ["Keyframe Reduction", "none"],
+    ["In Place", "anhaken, wo die Option erscheint und die Tabelle „ja“ sagt; sonst aus"],
+    ["Regler der Animation", "Standardwerte lassen (Overdrive, Character Arm-Space, Trim)"],
+    ["Dateiname", "wie von Mixamo vorgeschlagen"]
+  ]
+}

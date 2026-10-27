@@ -21,7 +21,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:db": "node tools/test-db.mjs",
-    "check:docs": "python3 tools/check_docs.py && python3 tools/feature_inventory_to_csv.py --check && python3 tools/exercise_library_to_md.py --check && python3 tools/exercise_inventory.py --check && python3 tools/sample_templates_from_md.py --check && python3 tools/winterprogramm_to_md.py --check && python3 tools/check_names.py && python3 tools/programs_build.py --check && python3 tools/lebensmittel_auswahl.py --check",
+    "check:docs": "python3 tools/check_docs.py && python3 tools/feature_inventory_to_csv.py --check && python3 tools/exercise_library_to_md.py --check && python3 tools/exercise_inventory.py --check && python3 tools/sample_templates_from_md.py --check && python3 tools/winterprogramm_to_md.py --check && python3 tools/check_names.py && python3 tools/programs_build.py --check && python3 tools/lebensmittel_auswahl.py --check && python3 tools/uebungen_familien.py --check",
     "check:bundle": "node tools/check-bundle-size.mjs && node tools/check-precache.mjs"
   },
   "dependencies": {

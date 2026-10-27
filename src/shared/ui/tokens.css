@@ -23,6 +23,9 @@
   /* Ränder: `--border` ist die 1-px-Linie; Eingabefelder brauchen 3:1 (AK-UX-04). */
   --border: #232b36;
   --border-input: #6b7482;
+  /* Scroll-Balken am Computer (D-392): Griff wie der Rand von Eingabefeldern, Spur durchsichtig. */
+  --scrollbar-thumb: #6b7482;
+  --scrollbar-track: #00000000;
   /* Akzent Lime: Primärbutton, aktiver Tab, Ringe, Balken; Schrift darauf in Nacht. */
   --accent: #c7ff46;
   --accent-hover: #c7ff46;
@@ -113,6 +116,8 @@
   --fg-faint: #8a93a0;
   --border: #e1e5ea;
   --border-input: #6f7886;
+  --scrollbar-thumb: #6f7886;
+  --scrollbar-track: #00000000;
   --accent: #4c7a00;
   --accent-hover: #4c7a00;
   --accent-fg: #ffffff;

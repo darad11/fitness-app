@@ -51,6 +51,7 @@ Grundfläche, Akzent und Kachel der App entsprechen damit den Markenfarben. Abwe
 | `--fg-faint` (neu) | – | – | #5b6470 | #8a93a0 | `text-faint` | Platzhalter, deaktiviert, Chevrons |
 | `--border` | #0f1c3a1f | #ffffff24 | #232b36 | #e1e5ea | `line` | 1-px-Ränder, Trenner, Gitterlinien |
 | `--border-input` | #5f6878 | #99a2b2 | #6b7482 | #6f7886 | – (Abweichung) | Rand von Eingabefeldern, 3:1 |
+| `--scrollbar-thumb`, `--scrollbar-track` (neu, D-392) | – | – | #6b7482, durchsichtig | #6f7886, durchsichtig | – | Scroll-Balken am Computer: Griff wie `--border-input` (3:1), Spur durchsichtig; am Touch-Gerät keine Balken |
 | `--glass-edge` | #ffffffcc | #ffffff2e | entfällt (F2) | entfällt | – | Lichtkante entfällt |
 | `--scrim` | rgb(18 21 28 / 0.45) | rgb(0 0 0 / 0.6) | rgb(0 0 0 / 0.6) | rgb(12 18 25 / 0.45) | – | Hintergrund von Dialogen |
 
@@ -183,6 +184,7 @@ Aus `tokens.test.ts` bzw. demselben Rechenweg (WCAG 2.1, gerundet). Hintergrund 
 | `--accent` (Lime) auf `--bg` / `--surface` / `--meter-track` | 16,0 / 14,7 / 13,6 | 3 |
 | `--action` auf `--surface` | 4,4 | 3 |
 | `--border-input` auf `--surface-2` | 3,4 | 3 |
+| `--scrollbar-thumb` auf `--bg` / `--surface` / `--surface-2` / `--panel` (D-392) | 4,0 / 3,7 / 3,4 / 3,8 (hell: 4,5 / 4,5 / 3,9 / 4,5) | 3 |
 | `--macro-protein` / `--macro-carbs` / `--macro-fat` / `--macro-other` auf `--surface` / `--surface-2` (F6, D-333) | 9,5 / 5,8 / 6,6 / 5,8 und 8,8 / 5,3 / 6,1 / 5,3 (hell, angelegt: 3,7 / 4,7 / 4,7 / 4,5 und 3,2 / 4,1 / 4,2 / 3,9) | 3 |
 | `--chart-point` auf `--surface` | 3,7 | 3 |
 | `--border` (`line`) auf `--surface` | 1,2 | – (dekorativ) |
@@ -217,7 +219,7 @@ Heller Block (angelegt): alle Textpaare ≥ 4,5, alle Bedienelemente ≥ 3 (Test
 | Claim in Weiß #FFFFFF (`brand.css`) | `--fg` #F2F3F4 | Keine neuen Hex-Werte (Leitplanken Regel 1); 16,9:1 statt 18,8:1 (C, D-316) |
 | Claim in Inter 17/600 (`brand.css`) | Systemschrift 17/600 | wie überall: Inter ist nicht gebündelt (D-203) |
 | Anmeldung als Glas-Karte mit Lichtflecken (D-270) | Logo, Claim und Felder direkt auf der Nacht-Fläche | kein Glas außer der Tab-Leiste (D-312), kein Glow in der App (Markenassets) |
-| Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad), nur das Symbol | 40 Startbilder für 20 Gerätemaße, hochkant und quer, nach Variante C3: Logo vertikal mittig bei 47 %, „FORM YOURSELF.“ als Fußzeile; dieselbe Regel als Startfläche in der App | iOS zeigt ein Startbild nur bei genau passendem Bildschirm (D-317); C3 nach Wahl des Produktinhabers (F5, D-325); Schriftgröße des Claims quer aus der kurzen Seite statt der Breite |
+| Drei Startbilder im Markenpaket (iPhone 14/15, Pro Max, iPad), nur das Symbol | 44 Startbilder für 22 Gerätemaße (seit D-390 mit dem iPhone Duo, beide Displays), hochkant und quer, nach Variante C3: Logo vertikal mittig bei 47 %, „FORM YOURSELF.“ als Fußzeile; dieselbe Regel als Startfläche in der App | iOS zeigt ein Startbild nur bei genau passendem Bildschirm (D-317); C3 nach Wahl des Produktinhabers (F5, D-325); Schriftgröße des Claims quer aus der kurzen Seite statt der Breite |
 | Mikrotext „Woche abgeschlossen: Diese Woche 3 von 4.“ | „x von y Trainings diese Woche“ | Formulierung aus AK-DSH-05 bleibt; der Sinn ist derselbe (F4, D-318) |
 | Mikrotext „Nutzer überzieht“ | nicht verwendet | Die App misst keine Belastung; ohne Grundlage keine Aussage (Leitplanken Regel 5) |
 | Primärknopf immer Lime | auf der grünen Karte „Bereit für dein Training?“ weiß mit Schrift in Nacht | Variante V2c des Produktinhabers (F6, D-336); Lime auf Grün hebt sich kaum ab, kein weiterer Lime-Akzent auf der Karte |

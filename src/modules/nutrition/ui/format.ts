@@ -43,8 +43,3 @@ export function entryNameAndBrand(
     : entry.nameSnapshot;
   return { name, brand };
 }
-
-/** „Hummus, Alnatura“ für Vorleser und Hinweise. */
-export function brandedName({ name, brand }: { name: string; brand?: string }): string {
-  return brand ? `${name}, ${brand}` : name;
-}

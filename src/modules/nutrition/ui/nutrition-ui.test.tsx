@@ -489,6 +489,11 @@ describe('Ernährung (Schritt G, D-261)', () => {
           brandSnapshot: 'Spar',
           amount: 150,
         });
+        // Name aus dem sichtbaren Namen und unsichtbar „von Spar bearbeiten“, Menge und
+        // Kalorien als Beschreibung (D-377).
+        expect(
+          await screen.findByRole('button', { name: 'Skyr Natur von Spar bearbeiten' }, WAIT),
+        ).toHaveAccessibleDescription('1 × Portion (150 g) 95 kcal');
 
         // Zweiter Scan: lokal, ohne Anfrage.
         cleanup();

@@ -63,6 +63,7 @@ export default defineConfig({
       // Marke FORM (D-309): Icons aus form-app-assets, Nacht als Hintergrund- und Theme-Farbe.
       includeAssets: [
         'theme-init.js',
+        'startflaeche.js',
         'robots.txt',
         'icons/favicon.svg',
         'icons/favicon.ico',

@@ -24,7 +24,7 @@
       ]
     },
     {
-      "source": "/(sw.js|index.html|manifest.webmanifest|theme-init.js)",
+      "source": "/(sw.js|index.html|manifest.webmanifest|theme-init.js|startflaeche.js)",
       "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
     },
     {

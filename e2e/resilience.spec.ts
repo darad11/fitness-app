@@ -39,6 +39,8 @@ test('Pausentimer: Sichtbarkeitswechsel, Neuladen und Überziehung (E-04, AK-TRN
   expect(afterReturn).toBeGreaterThanOrEqual(before - 4);
 
   // Überziehung: Pause auf unter null verkürzen; Anzeige „+m:ss" und „Pause vorbei" bleiben nach Neuladen.
+  // ±15 s in der großen Pause: Bei niedrigem Fenster ist die kleine Pause einzeilig (D-380).
+  await page.getByRole('button', { name: 'Pause groß anzeigen' }).click();
   const minus = rest.getByRole('button', { name: '15 s weniger' });
   for (let i = 0; i < Math.ceil(before / 15) + 1; i++) await minus.click();
   await expect(timer).toHaveText(/^\+\d:\d\d$/);

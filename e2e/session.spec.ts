@@ -45,14 +45,16 @@ test('Training aus einer Vorlage: erfassen, neu laden, beenden (AK-TRN-01, -06, 
   await expectNoAxeViolations(page, 'Player');
 
   // Pausentimer nach „erledigt" (AK-TRN-10, -11): Restzeit, ±15 s, Vollansicht, Neuladen, Überspringen.
+  // ±15 s in der großen Pause: Dort stehen sie in jeder Fenstergröße; bei niedrigem Fenster (unter
+  // 45 rem, z. B. iPhone in Safari) ist die kleine Pause einzeilig ohne ±15 s (D-380).
   const rest = page.getByRole('region', { name: 'Pause' });
   const timer = rest.getByRole('timer');
   await expect(timer).toHaveText(/^\d:\d\d$/);
   const before = toSec(await timer.textContent());
-  await rest.getByRole('button', { name: '15 s weniger' }).click();
-  await expect.poll(async () => toSec(await timer.textContent())).toBeLessThanOrEqual(before - 14);
   await page.getByRole('button', { name: 'Pause groß anzeigen' }).click();
   await expect(page.getByRole('button', { name: 'Pause klein anzeigen' })).toBeVisible();
+  await rest.getByRole('button', { name: '15 s weniger' }).click();
+  await expect.poll(async () => toSec(await timer.textContent())).toBeLessThanOrEqual(before - 14);
   await expectNoAxeViolations(page, 'Pause groß');
   await page.getByRole('button', { name: 'Pause klein anzeigen' }).click();
   await page.reload();

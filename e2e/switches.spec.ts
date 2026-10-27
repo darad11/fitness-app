@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /**
  * Alle Ein-/Aus-Schalter der App (F5, D-322; Liste in `docs/testing.md` Abschnitt „Schalter“).
@@ -132,9 +132,7 @@ for (const width of [360, 390]) {
       'Pausieren und Löschen in einer Zeile',
     ).toBe(Math.round((await remove.boundingBox())?.y ?? -2));
     // Kein waagrechtes Scrollen der Seite.
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-      width,
-    );
+    expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
   });
 }
 

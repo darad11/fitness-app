@@ -1,5 +1,5 @@
 import { Plus, Scale } from 'lucide-react';
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useId, useMemo, useState } from 'react';
 import { changeTone, useActiveGoals, weightToGoal } from '@/modules/goals';
 import { useFormatters } from '@/modules/settings';
 import { logError, META_KEYS, useDb, useMetaFlag } from '@/shared/db';
@@ -43,6 +43,7 @@ const PERIOD_OPTIONS = WEIGHT_PERIODS.map((value) => ({ value, label: t.body.per
 export function BodyWeightPage() {
   const rt = useDb();
   const fmt = useFormatters();
+  const entryIds = useId();
   const entries = useBodyWeights();
   const goals = useActiveGoals();
   const now = useToday();
@@ -219,29 +220,52 @@ export function BodyWeightPage() {
                   <ul className="divide-y divide-line rounded-card bg-surface shadow-card">
                     {group.items.map(({ entry, diff }) => (
                       <li key={entry.id}>
+                        {/* Name aus dem Inhalt statt `aria-label` (D-377, WCAG 2.5.3 „Label
+                            in Name“): „… kg am … bearbeiten“ unsichtbar im Knopf, der sichtbare
+                            Inhalt ist für Screenreader ausgeblendet, Notiz und Änderung
+                            beschreiben ihn. */}
                         <button
                           type="button"
                           className="flex min-h-14 w-full items-center gap-3 px-5 py-3 text-left hover:bg-surface-2"
-                          aria-label={t.body.editEntry(
-                            formatWeight(entry.weightKg),
-                            fmt.dateTimeShort(new Date(entry.measuredAt)),
-                          )}
+                          aria-describedby={
+                            [
+                              entry.note ? `${entryIds}-${entry.id}-notiz` : null,
+                              diff === null ? null : `${entryIds}-${entry.id}-diff`,
+                            ]
+                              .filter(Boolean)
+                              .join(' ') || undefined
+                          }
                           onClick={() => {
                             setSheet({ entry });
                           }}
                         >
-                          <span className="min-w-0 flex-1">
+                          <span className="sr-only">
+                            {t.body.editEntry(
+                              formatWeight(entry.weightKg),
+                              fmt.dateTimeShort(new Date(entry.measuredAt)),
+                            )}
+                          </span>
+                          <span aria-hidden="true" className="min-w-0 flex-1">
                             <span className="block text-sm text-muted tabular-nums">
                               {fmt.dateTimeShort(new Date(entry.measuredAt))}
                             </span>
                             {entry.note ? (
-                              <span className="block truncate text-sm">{entry.note}</span>
+                              <span
+                                id={`${entryIds}-${entry.id}-notiz`}
+                                className="block truncate text-sm"
+                              >
+                                {entry.note}
+                              </span>
                             ) : null}
                           </span>
-                          <span className="font-semibold tabular-nums">
+                          <span aria-hidden="true" className="font-semibold tabular-nums">
                             {formatWeight(entry.weightKg)} kg
                           </span>
-                          <span className="w-16 text-right text-sm text-muted tabular-nums">
+                          <span
+                            id={`${entryIds}-${entry.id}-diff`}
+                            aria-hidden="true"
+                            className="w-16 text-right text-sm text-muted tabular-nums"
+                          >
                             {diff === null ? '' : `${diff > 0 ? '+' : ''}${formatWeight(diff)}`}
                           </span>
                         </button>

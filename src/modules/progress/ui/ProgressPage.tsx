@@ -43,6 +43,10 @@ const PERIOD_OPTIONS = STAT_PERIODS.map((value) => ({
   label: tTrainingPages.progress.periods[value],
 }));
 
+/** Kachel als Raster (D-382): Label oben, Zahl unten; so stehen die Zahlen einer Reihe auf einer
+ *  Linie, auch wenn ein Label zweizeilig umbricht („Kalorien (Schätzung)“). */
+const TILE = 'grid grid-rows-[1fr_auto]';
+
 /** Fortschritt (S-27): Kennzahlen mit Zeitraum, Körpergewicht, Bestleistungen, Übungsverläufe. */
 export function ProgressPage() {
   const library = useExercises();
@@ -92,6 +96,17 @@ export function ProgressPage() {
   const records = bestRecords(rows).slice(0, 8);
   const frequent = frequentExercises(rows).slice(0, 10);
   const weightText = latestWeight ? fmt.bodyWeightKg(latestWeight.weightKg) : null;
+  // Erklärung der Kalorien unter den Kacheln statt in der Kachel (D-382): Die Kacheln bleiben
+  // gleich hoch. Ohne Körpergewicht der Hinweis darauf, sonst die Methode der Schätzung.
+  const kcalNotes =
+    totals.kcal === null
+      ? [tTrainingPages.progress.kcalNone]
+      : [
+          ...(totals.withoutKcal > 0
+            ? [tTrainingPages.progress.kcalPartial(totals.withoutKcal)]
+            : []),
+          tTrainingPages.progress.kcalHint,
+        ];
   const changeText =
     weightChange === null
       ? null
@@ -133,36 +148,39 @@ export function ProgressPage() {
                 />
               </dl>
             ) : (
-              <dl className="mt-3 grid grid-cols-2 gap-stack md:grid-cols-4">
-                <StatTile
-                  label={tTrainingPages.progress.sessions}
-                  value={fmt.number(totals.sessions)}
-                />
-                <StatTile
-                  label={tTrainingPages.progress.minutes}
-                  value={fmt.number(totals.minutes)}
-                  unit="min"
-                />
-                <StatTile
-                  label={tTrainingPages.progress.volume}
-                  value={fmt.number(totals.volumeKg)}
-                  unit="kg"
-                />
-                <StatTile
-                  label={tTrainingPages.progress.kcal}
-                  value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
-                  unit={totals.kcal === null ? undefined : 'kcal'}
-                  hint={
-                    totals.kcal === null
-                      ? totals.sessions > 0
-                        ? tTrainingPages.progress.kcalNone
-                        : undefined
-                      : totals.withoutKcal > 0
-                        ? tTrainingPages.progress.kcalPartial(totals.withoutKcal)
-                        : tTrainingPages.progress.kcalHint
-                  }
-                />
-              </dl>
+              <>
+                {/* Gleich hohe Reihen (`auto-rows-fr`), die Zahlen unten auf einer Linie (D-382). */}
+                <dl className="mt-3 grid auto-rows-fr grid-cols-2 gap-stack md:grid-cols-4">
+                  <StatTile
+                    className={TILE}
+                    label={tTrainingPages.progress.sessions}
+                    value={fmt.number(totals.sessions)}
+                  />
+                  <StatTile
+                    className={TILE}
+                    label={tTrainingPages.progress.minutes}
+                    value={fmt.number(totals.minutes)}
+                    unit="min"
+                  />
+                  <StatTile
+                    className={TILE}
+                    label={tTrainingPages.progress.volume}
+                    value={fmt.number(totals.volumeKg)}
+                    unit="kg"
+                  />
+                  <StatTile
+                    className={TILE}
+                    label={tTrainingPages.progress.kcal}
+                    value={totals.kcal === null ? '–' : fmt.number(totals.kcal)}
+                    unit={totals.kcal === null ? undefined : 'kcal'}
+                  />
+                </dl>
+                <div className="mt-3 grid gap-1 text-caption text-muted">
+                  {kcalNotes.map((note) => (
+                    <p key={note}>{note}</p>
+                  ))}
+                </div>
+              </>
             )}
           </section>
 

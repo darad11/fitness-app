@@ -91,7 +91,12 @@ describe('Fortschritt (S-27, TH-05, TH-06)', () => {
     expect(tiles[2]).toHaveTextContent('900 kg');
     // Die erste Einheit liegt vor dem Gewichtseintrag: eine Schätzung fehlt.
     expect(tiles[3]).toHaveTextContent('kcal');
-    expect(screen.getByText('1 Training ohne Schätzung (kein Körpergewicht)')).toBeVisible();
+    // Die Erklärung steht unter den Kacheln, nicht in der Kachel (D-382).
+    expect(
+      screen.getByText('1 Training ohne Kalorien-Schätzung (kein Körpergewicht).'),
+    ).toBeVisible();
+    expect(screen.getByText(/^Schätzung nach MET/)).toBeVisible();
+    expect(tiles[3]).not.toHaveTextContent(/Schätzung nach MET|ohne Kalorien-Schätzung/);
     // Zeitraum ohne Training (die Einheiten liegen im Oktober 2026): „Pause“ statt Nullwerten.
     await user.click(screen.getByRole('radio', { name: 'Woche' }));
     expect(screen.getAllByRole('definition')).toHaveLength(1);

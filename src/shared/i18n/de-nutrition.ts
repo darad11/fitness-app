@@ -130,7 +130,8 @@ export const tNutrition = {
   incomplete: (names: readonly string[]) =>
     `Bei mindestens einem Eintrag fehlen Werte für ${listDe(names)}.`,
   estimatedHint: 'Enthält Schätzungen (Schnelleinträge).',
-  entryLabel: (name: string) => `${name} bearbeiten`,
+  entryLabel: (name: string, brand?: string) =>
+    brand ? `${name} von ${brand} bearbeiten` : `${name} bearbeiten`,
   entryTitle: 'Eintrag bearbeiten',
   amountLabel: (unit: string) => `Menge in ${unit}`,
   servingsLabel: 'Anzahl',

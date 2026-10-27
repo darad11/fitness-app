@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /**
  * Aufgaben als bearbeitbar erkennbar (F6 Abschnitt 4, D-335, Vorlage V1): links das Abhakfeld,
@@ -149,9 +149,7 @@ for (const width of [360, 390, 768]) {
           1,
         );
       }
-      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-        width,
-      );
+      expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
     }
   });
 }

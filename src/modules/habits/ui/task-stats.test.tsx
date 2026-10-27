@@ -99,7 +99,7 @@ describe('Fortschritt der Tagesaufgaben (D-284)', () => {
     const user = userEvent.setup();
     await seed();
     renderAt('/heute/aufgaben');
-    await user.click(await screen.findByRole('link', { name: 'Wasser: Auswertung öffnen' }));
+    await user.click(await screen.findByRole('link', { name: 'Wasser – Auswertung öffnen' }));
     expect(await screen.findByRole('heading', { level: 1, name: 'Wasser' })).toBeVisible();
     const tiles = screen.getAllByRole('definition');
     expect(tiles[0]).toHaveTextContent('89 %');

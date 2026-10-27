@@ -1,4 +1,4 @@
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /**
  * Kopf im Training (F6 Abschnitt 7, D-338): „Woche n“ bleibt immer sichtbar; wird es eng, kürzt
@@ -64,8 +64,6 @@ for (const width of [360, 390, 768]) {
     expect(m.nameEllipsis, 'Name mit Auslassungspunkten').toBe(true);
     // Auf 360 und 390 pt ist es eng: der Name ist gekürzt; auf 768 pt passt alles.
     expect(m.nameCut, 'Programmname gekürzt').toBe(width < 768);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-      width,
-    );
+    expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
   });
 }

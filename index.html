@@ -129,6 +129,26 @@
     />
     <link
       rel="apple-touch-startup-image"
+      media="(device-width: 466px) and (device-height: 678px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splash/splash-1398x2034.png"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      media="(device-width: 466px) and (device-height: 678px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+      href="/splash/splash-2034x1398.png"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      media="(device-width: 669px) and (device-height: 951px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+      href="/splash/splash-2007x2853.png"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      media="(device-width: 669px) and (device-height: 951px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+      href="/splash/splash-2853x2007.png"
+    />
+    <link
+      rel="apple-touch-startup-image"
       media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
       href="/splash/splash-1488x2266.png"
     />
@@ -220,11 +240,13 @@
     <title>FORM</title>
     <!-- Setzt das Farbschema vor dem ersten Bild; extern, weil die CSP keine Inline-Skripte erlaubt. -->
     <script src="/theme-init.js"></script>
+    <!-- Startfläche wie im Startbild, auch neben Systemstreifen; misst in jedem Bild (D-393, D-394). -->
+    <script src="/startflaeche.js"></script>
     <!-- Startfläche der installierten App (D-325): dasselbe Bild wie das Startbild, erzeugt mit
          tools/splash.mjs; src/app/startSurface.ts blendet sie aus, sobald die erste Ansicht steht. -->
     <!-- startflaeche:stil -->
     <!-- prettier-ignore -->
-    <style>#startflaeche{display:none}@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;background:#0C1219;pointer-events:none;animation:startflaeche-netz 0s 10s forwards}}#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}@keyframes startflaeche-netz{to{visibility:hidden}}#startflaeche>svg{display:block;width:100%;height:100%}#startflaeche .start-unten{transform:translateY(calc(0.0365vmin - 58px))}@media (orientation:landscape){#startflaeche .hoch{display:none}}@media (orientation:portrait){#startflaeche .quer{display:none}}</style>
+    <style>#startflaeche{display:none}@media (display-mode:standalone){#startflaeche{display:block;position:fixed;inset:0;z-index:2147483647;overflow:hidden;background:#0C1219;pointer-events:none;animation:startflaeche-netz 0s 10s forwards}}#startflaeche.weg{opacity:0;transition:opacity 300ms ease-out}@media (prefers-reduced-motion:reduce){#startflaeche.weg{transition:none}}@keyframes startflaeche-netz{to{visibility:hidden}}#startflaeche>svg{display:block;position:absolute;left:calc(var(--start-links,0px) * -1);top:calc(var(--start-oben,0px) * -1);width:calc(100% + var(--start-links,0px) + var(--start-rechts,0px));height:calc(100% + var(--start-oben,0px) + var(--start-unten,0px))}html[data-startlage=warten] #startflaeche>svg{visibility:hidden;animation:startlage-netz 0s 300ms forwards}@keyframes startlage-netz{to{visibility:visible}}#startflaeche .start-unten{transform:translateY(calc(0.000365 * min(100vw + var(--start-links,0px) + var(--start-rechts,0px), 100vh + var(--start-oben,0px) + var(--start-unten,0px)) - 58px))}@media (orientation:landscape){#startflaeche .hoch{display:none}}@media (orientation:portrait){#startflaeche .quer{display:none}}</style>
     <!-- /startflaeche:stil -->
   </head>
   <body>

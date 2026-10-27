@@ -1,3 +1,5 @@
+import { onPageScroll, pageScrollTop } from '@/shared/ui/pageScroll';
+
 /**
  * Tab-Leiste minimiert sich beim Runterscrollen (D-276), wie im Dashboard des Produktinhabers
  * und wie `tabBarMinimizeBehavior(.onScrollDown)` in iOS 26: Sie schrumpft zu einem Glas-Kreis
@@ -16,7 +18,8 @@ const INTENT_MS = 600;
 const CIRCLE = 56;
 
 export function attachTabMinimize(bar: HTMLElement, wrapper: HTMLElement): () => void {
-  let anchor = window.scrollY;
+  // Es zählt das Scrollen der Seite im Rahmen der App, nicht des Fensters (D-384).
+  let anchor = pageScrollTop();
   let intentAt = -Infinity;
   let touching = false;
 
@@ -62,7 +65,7 @@ export function attachTabMinimize(bar: HTMLElement, wrapper: HTMLElement): () =>
   };
 
   const onScroll = () => {
-    const y = window.scrollY;
+    const y = pageScrollTop();
     if (y <= TOP) {
       restore();
       anchor = y;
@@ -127,7 +130,7 @@ export function attachTabMinimize(bar: HTMLElement, wrapper: HTMLElement): () =>
     bar.classList.remove('no-morph');
   };
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  const detachScroll = onPageScroll(onScroll);
   window.addEventListener('wheel', markIntent, { passive: true });
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchend', onTouchEnd, { passive: true });
@@ -138,7 +141,7 @@ export function attachTabMinimize(bar: HTMLElement, wrapper: HTMLElement): () =>
   bar.addEventListener('click', swallow, true);
   bar.addEventListener('focusin', onFocusIn);
   return () => {
-    window.removeEventListener('scroll', onScroll);
+    detachScroll();
     window.removeEventListener('wheel', markIntent);
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchend', onTouchEnd);

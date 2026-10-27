@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /**
  * Schmale Breiten (F5 Abschnitt 9, D-331): Knopftexte einzeilig, kein Wort getrennt, Feldnamen
@@ -123,9 +123,7 @@ for (const width of [360, 390, 768]) {
     const remove = (await page.getByRole('button', { name: 'Woche 1 löschen' }).boundingBox())?.y;
     for (const top of tops)
       expect(Math.abs(top - (remove ?? 0)), 'Knöpfe in einer Reihe').toBeLessThan(1);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-      width,
-    );
+    expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
   });
 }
 

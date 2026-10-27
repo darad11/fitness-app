@@ -56,17 +56,25 @@ export function TabBar() {
   useEffect(() => {
     const node = bar.current;
     if (!node) return;
-    const onResize = () => {
+    // Die Auswahl folgt jeder Größenänderung der Einträge, ohne zu gleiten (D-373). Vorher hing
+    // sie am Fenster-Ereignis: Kam das, während die Leiste ein Kreis war (Auf- und Zuklappen beim
+    // iPhone Duo), maß sie die alten Breiten und stand nach dem Aufgehen neben dem aktiven Tab.
+    const place = () => {
       const pill = indicator.current;
       const tab = node.querySelector<HTMLElement>(
         `.tabbar-tab[data-tab="${currentRef.current ?? ''}"]`,
       );
-      if (pill && tab) {
-        pill.style.width = `${String(tab.offsetWidth + 2 * PILL_OUTSET)}px`;
-        pill.style.transform = `translateX(${String(tab.offsetLeft - PILL_OUTSET)}px)`;
-      }
+      if (!pill || !tab) return;
+      pill.classList.add('no-transition');
+      pill.style.width = `${String(tab.offsetWidth + 2 * PILL_OUTSET)}px`;
+      pill.style.transform = `translateX(${String(tab.offsetLeft - PILL_OUTSET)}px)`;
+      pill.getBoundingClientRect(); // Layout erzwingen, damit der Sprung ohne Übergang bleibt
+      pill.classList.remove('no-transition');
     };
-    window.addEventListener('resize', onResize);
+    const items = node.querySelector('.tabbar-items');
+    const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(place) : null;
+    if (items) observer?.observe(items);
+    if (!observer) window.addEventListener('resize', place);
     // Vor der Linse anmelden: Ein Tipp auf den Kreis klappt nur auf.
     const detachMinimize = wrapper.current ? attachTabMinimize(node, wrapper.current) : undefined;
     const detach = attachTabLens(node, {
@@ -76,16 +84,20 @@ export function TabBar() {
       },
     });
     return () => {
-      window.removeEventListener('resize', onResize);
+      observer?.disconnect();
+      window.removeEventListener('resize', place);
       detach();
       detachMinimize?.();
     };
   }, [navigate]);
 
   return (
+    // Seitlich mindestens der sichere Bereich (D-372): Beim iPhone Duo liegen Statusleiste und
+    // Kamera an der Seite; Leiste und Kreis bleiben daneben und damit antippbar. Bei offener
+    // Bildschirmtastatur ist beides aus (`tabbar-dock` in styles.css, D-391).
     <div
       ref={wrapper}
-      className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center px-3 lg:hidden"
+      className="tabbar-dock pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center pr-[max(0.75rem,env(safe-area-inset-right))] pl-[max(0.75rem,env(safe-area-inset-left))] lg:hidden"
     >
       <nav ref={bar} aria-label={t.nav.label} className="tabbar pointer-events-auto">
         <span ref={indicator} aria-hidden="true" className="tabbar-indicator" />

@@ -101,11 +101,12 @@ export const tTrainingPages = {
     minutes: 'Minuten',
     volume: 'Volumen',
     kcal: 'Kalorien (Schätzung)',
-    kcalNone: 'Schätzung erst mit Körpergewicht',
+    /** Unter den Kacheln (D-382), deshalb mit „Kalorien“ im Satz. */
+    kcalNone: 'Kalorien werden erst mit Körpergewicht geschätzt.',
     kcalPartial: (n: number) =>
       n === 1
-        ? '1 Training ohne Schätzung (kein Körpergewicht)'
-        : `${n} Trainings ohne Schätzung (kein Körpergewicht)`,
+        ? '1 Training ohne Kalorien-Schätzung (kein Körpergewicht).'
+        : `${n} Trainings ohne Kalorien-Schätzung (kein Körpergewicht).`,
     kcalHint:
       'Schätzung nach MET: Krafttraining 3,5, Körpergewichtsübungen 3,0 × 3,5 × Körpergewicht ÷ 200 je Minute. Cardio ohne Tempo zählt nur als Dauer.',
     weightTitle: 'Körpergewicht',

@@ -1,5 +1,5 @@
 import type { Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /** Ernährung (F5 Abschnitt 5, D-326): Ring mit Makros, Datumszeile, Hinweis, Aktuelles Ziel. */
 
@@ -116,9 +116,7 @@ for (const width of [360, 390, 768]) {
     expect(box?.height ?? 0).toBeLessThan(lineHeight * 1.5);
     await page.getByRole('button', { name: 'Vorheriger Tag' }).click();
     await expect(page.getByText('Mi., 21. Okt.', { exact: true })).toBeVisible();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-      width,
-    );
+    expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
   });
 }
 

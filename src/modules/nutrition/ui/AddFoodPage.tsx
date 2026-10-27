@@ -126,7 +126,9 @@ export function AddFoodPage() {
         title={tNutrition.addTitle}
         back={{ to: back, label: fromToday ? t.today.title : tNutrition.backToDay }}
       />
-      <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+      {/* Auswahl und Knöpfe nebeneinander erst ab 48 rem, die Auswahl mindestens 10 rem breit
+          (D-377): Zwischen 40 und 48 rem (iPhone Duo hoch) blieb von „Snacks“ nur das „S“. */}
+      <div className="mb-4 grid gap-3 md:grid-cols-[minmax(10rem,1fr)_auto] md:items-end">
         <SelectField
           label={tNutrition.slotLabel}
           value={slot}

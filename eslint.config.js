@@ -31,6 +31,7 @@ export default tseslint.config(
       'test-results',
       'docs/archive',
       'public/theme-init.js',
+      'public/startflaeche.js',
     ],
   },
   js.configs.recommended,

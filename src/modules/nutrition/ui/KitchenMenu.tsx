@@ -14,7 +14,7 @@ import { useOpenShoppingCount } from '@/modules/shopping';
 import { tNutrition } from '@/shared/i18n/de-nutrition';
 import { tShopping } from '@/shared/i18n/de-shopping';
 import { cn } from '@/shared/lib/cn';
-import { buttonClasses, isAtLeast, TileIcon, useSwipeToClose } from '@/shared/ui';
+import { buttonClasses, isAtLeast, pageScroller, TileIcon, useSwipeToClose } from '@/shared/ui';
 import { useFoods, useMealTemplates, useRecipes } from '../data/nutritionRepository';
 
 /** Knopf unter „Gegessen“: Sekundärknopf (Ghost) der Marke FORM, gleich für „Ziel“ und „Meine Küche“ (D-314). */
@@ -26,6 +26,19 @@ interface Entry {
   title: string;
   hint: string;
   count: number | undefined;
+}
+
+/**
+ * Lässt sich das Menü unter dem Knopf ganz über die Tab-Leiste scrollen? Aufgeklappt steht der
+ * Knopf unten in der linken Spalte (D-381); ist die Seite darunter zu kurz, geht das nicht.
+ */
+function roomBelow(panel: HTMLElement): boolean {
+  // Es scrollt der Rahmen der App (D-384); er beginnt oben im Fenster.
+  const root = pageScroller();
+  const padding = parseFloat(getComputedStyle(root).scrollPaddingBottom) || 0;
+  const need = panel.getBoundingClientRect().bottom - (root.clientHeight - padding);
+  const room = root.scrollHeight - root.scrollTop - root.clientHeight;
+  return need <= room + 1;
 }
 
 function Entries({ entries, onPick }: { entries: readonly Entry[]; onPick: () => void }) {
@@ -64,6 +77,7 @@ export function KitchenMenu() {
   const wrapper = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
   const button = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const foods = useFoods();
   const recipes = useRecipes();
   const templates = useMealTemplates();
@@ -122,6 +136,13 @@ export function KitchenMenu() {
     document.addEventListener('pointerdown', onPointer);
     document.addEventListener('keydown', onKey);
     wrapper.current?.querySelector<HTMLElement>('a')?.focus();
+    // Ganz sichtbar, auch über der Tab-Leiste (D-377): Aufgeklappt quer (iPhone Duo, 669 pt hoch)
+    // lag der letzte Eintrag unter der Leiste. `scroll-padding` hält den Abstand zu ihr. Reicht
+    // die Seite unter dem Knopf dafür nicht, öffnet das Menü nach oben (D-381).
+    const node = panel.current;
+    if (node && !roomBelow(node)) node.dataset.side = 'top';
+    if (node && typeof node.scrollIntoView === 'function')
+      node.scrollIntoView({ block: 'nearest' });
     return () => {
       document.removeEventListener('pointerdown', onPointer);
       document.removeEventListener('keydown', onKey);
@@ -152,10 +173,11 @@ export function KitchenMenu() {
       </button>
       {open === 'menu' ? (
         <div
+          ref={panel}
           id={`${id}-panel`}
           role="group"
           aria-label={tk.title}
-          className="absolute top-full left-1/2 z-20 mt-2 w-menu max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-card bg-panel p-2 shadow-float"
+          className="absolute top-full left-1/2 z-20 mt-2 w-menu max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-card bg-panel p-2 shadow-float data-[side=top]:top-auto data-[side=top]:bottom-full data-[side=top]:mt-0 data-[side=top]:mb-2"
         >
           <Entries entries={entries} onPick={close} />
         </div>
@@ -172,7 +194,9 @@ export function KitchenMenu() {
           // Tipp auf den abgedunkelten Rand schließt.
           if (event.target === event.currentTarget) close();
         }}
-        className="mt-auto mb-0 w-full max-w-none rounded-t-sheet bg-panel p-0 text-fg shadow-float transition-transform duration-240 backdrop:bg-scrim"
+        // Wie das Blatt aus `Dialog`: Inhalt im sicheren Bereich (D-372); bleibt es beim
+        // Aufklappen offen, steht es ab 48 rem mittig wie jedes Blatt.
+        className="mt-auto mb-0 w-full max-w-none rounded-t-sheet bg-panel p-0 text-fg shadow-float transition-transform duration-240 backdrop:bg-scrim max-md:pr-[env(safe-area-inset-right)] max-md:pl-[env(safe-area-inset-left)] md:inset-x-safe md:m-auto md:max-w-sheet md:rounded-sheet"
       >
         {open === 'sheet' ? (
           <div className="px-4 pt-2.5 pb-[calc(env(safe-area-inset-bottom)+1.25rem)]">

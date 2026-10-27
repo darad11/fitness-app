@@ -38,3 +38,26 @@ if (
     this.removeAttribute('open');
   };
 }
+
+// jsdom kennt scrollTo und scrollBy an Elementen nicht; die Seite scrollt im Rahmen der App
+// (D-384, `pageScroll.ts`). Im Browser gibt es beide.
+if (typeof Element !== 'undefined' && typeof Element.prototype.scrollTo !== 'function') {
+  const topOf = (options?: ScrollToOptions | number, y?: number) =>
+    typeof options === 'object' ? options.top : y;
+  Element.prototype.scrollTo = function scrollTo(
+    this: Element,
+    options?: ScrollToOptions | number,
+    y?: number,
+  ) {
+    const top = topOf(options, y);
+    if (typeof top === 'number') this.scrollTop = top;
+  };
+  Element.prototype.scrollBy = function scrollBy(
+    this: Element,
+    options?: ScrollToOptions | number,
+    y?: number,
+  ) {
+    const top = topOf(options, y);
+    if (typeof top === 'number') this.scrollTop += top;
+  };
+}

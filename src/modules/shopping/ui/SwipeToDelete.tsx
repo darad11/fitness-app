@@ -1,5 +1,11 @@
 import { Trash2 } from 'lucide-react';
-import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+  type ReactNode,
+} from 'react';
 import { cn } from '@/shared/lib/cn';
 import { releasesDelete, swipeIntent, swipeOffset, type SwipeIntent } from '../calc/swipe';
 
@@ -28,6 +34,12 @@ function prefersReducedMotion(): boolean {
  * erscheint dezent „Löschen“; ab der Löschstrecke wird es deutlicher, und Loslassen löscht.
  * Tastatur und Screenreader nutzen weiter den Weg über „Bearbeiten“, deshalb ist die Anzeige
  * hinter der Zeile für sie ausgeblendet.
+ *
+ * Die Geste wird am Fenster verfolgt, ohne den Zeiger zu fangen (Nachtrag zu D-384): So kommen
+ * Bewegung und Loslassen auch an, wenn der Zeiger die Zeile verlässt; ein Finger gehört ohnehin
+ * bis zum Loslassen zur Zeile, auf der er aufsetzt. Ziehen und Ablegen des Browsers ist in der
+ * Zeile aus: WebKit begann mit der Maus sonst nach dem ersten Schritt ein Ziehen der Zeile, und
+ * es kamen keine Zeiger-Ereignisse mehr an.
  */
 export function SwipeToDelete({
   label,
@@ -44,6 +56,8 @@ export function SwipeToDelete({
   className?: string;
 }) {
   const gesture = useRef<Gesture | null>(null);
+  /** Entfernt die Zuhörer am Fenster der laufenden Geste. */
+  const unfollow = useRef<(() => void) | null>(null);
   const suppressClick = useRef(false);
   const mounted = useRef(true);
   const [offset, setOffset] = useState(0);
@@ -55,10 +69,12 @@ export function SwipeToDelete({
     mounted.current = true;
     return () => {
       mounted.current = false;
+      unfollow.current?.();
     };
   }, []);
 
   const reset = () => {
+    unfollow.current?.();
     gesture.current = null;
     setDragging(false);
     setLeaving(false);
@@ -71,7 +87,7 @@ export function SwipeToDelete({
     });
   };
 
-  const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+  const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     suppressClick.current = false;
     if (!event.isPrimary || event.button !== 0 || leaving) return;
     const rowWidth = event.currentTarget.getBoundingClientRect().width;
@@ -83,9 +99,23 @@ export function SwipeToDelete({
       intent: 'pending',
     };
     setWidth(rowWidth);
+    unfollow.current?.();
+    const pointerId = event.pointerId;
+    const onCancel = (cancel: PointerEvent) => {
+      if (cancel.pointerId === pointerId) reset();
+    };
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onCancel);
+    unfollow.current = () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onCancel);
+      unfollow.current = null;
+    };
   };
 
-  const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+  const onPointerMove = (event: PointerEvent) => {
     const current = gesture.current;
     if (current?.pointerId !== event.pointerId || current.intent === 'ignore') return;
     const dx = event.clientX - current.x;
@@ -97,18 +127,14 @@ export function SwipeToDelete({
       suppressClick.current = true;
       if (current.intent !== 'swipe') return;
       setDragging(true);
-      try {
-        event.currentTarget.setPointerCapture(event.pointerId);
-      } catch {
-        // Ohne Zeigerfang (Tests) folgt die Zeile, solange der Zeiger auf ihr bleibt.
-      }
     }
     setOffset(swipeOffset(dx, current.width));
   };
 
-  const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+  const onPointerUp = (event: PointerEvent) => {
     const current = gesture.current;
     if (current?.pointerId !== event.pointerId) return;
+    unfollow.current?.();
     gesture.current = null;
     if (current.intent !== 'swipe') return;
     setDragging(false);
@@ -167,10 +193,8 @@ export function SwipeToDelete({
         )}
         style={offset !== 0 ? { transform: `translateX(${offset}px)` } : undefined}
         onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={() => {
-          if (!leaving) reset();
+        onDragStart={(event) => {
+          event.preventDefault();
         }}
       >
         {children}

@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 test('Einkaufsliste: aus „Meine Küche“, eintragen, abhaken, neu laden, offline (D-287)', async ({
   page,
@@ -62,11 +62,7 @@ test('Einkaufsliste: kleiner Bildschirm ohne Überlauf (D-287)', async ({ page }
   await expect(page.getByRole('checkbox')).toHaveCount(1);
   await page.getByRole('button', { name: /bearbeiten$/ }).click();
   await expect(page.getByLabel('Menge')).toBeVisible();
-  expect(
-    await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    ),
-  ).toBeLessThanOrEqual(0);
+  expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
 });
 
 test('„Heute“: runde Knöpfe mittig in „Ernährung heute“, Einkaufswagen öffnet die Einkaufsliste', async ({
@@ -134,6 +130,27 @@ async function addItems(page: Page, names: readonly string[]) {
 const swipeRow = (page: Page, name: string) =>
   page.locator('[data-swipe-row]').filter({ has: page.getByText(name, { exact: true }) });
 
+/** Mitschrift kürzen: Bewegungen hintereinander als eine Angabe mit Anzahl, erster und letzter. */
+function compactLog(log: readonly string[]): string {
+  const out: string[] = [];
+  let run: string[] = [];
+  const flush = () => {
+    if (run.length > 2) out.push(`${String(run.length)} Bewegungen: ${run[0]} … ${run.at(-1)}`);
+    else out.push(...run);
+    run = [];
+  };
+  for (const entry of log) {
+    if (/^(pointer|mouse)move /.test(entry)) {
+      run.push(entry);
+      continue;
+    }
+    flush();
+    out.push(entry);
+  }
+  flush();
+  return out.join(' | ');
+}
+
 /** Wisch mit der Maus (Zeiger-Ereignisse) von drei Vierteln der Zeilenbreite aus. */
 async function mouseSwipe(page: Page, row: Locator, dx: number, dy = 0) {
   const box = await row.boundingBox();
@@ -165,8 +182,48 @@ test('Einkaufsliste: Wisch nach links löscht nur diesen Artikel, mit Rückgäng
   // Keine Geste hat abgehakt.
   await expect(page.getByText('0 von 3 gekauft')).toBeVisible();
 
+  // Zeiger- und Maus-Ereignisse beim Löschwisch mitschreiben: Schlägt er fehl, steht in der
+  // Meldung, was ankam (WebKit, Nachtrag zu D-384).
+  await page.evaluate(() => {
+    const log: string[] = [];
+    (window as unknown as { wischLog: string[] }).wischLog = log;
+    const frame = document.getElementById('seite');
+    const types = [
+      'pointerdown',
+      'pointermove',
+      'pointerup',
+      'pointercancel',
+      'gotpointercapture',
+      'lostpointercapture',
+      'mousedown',
+      'mousemove',
+      'mouseup',
+      'click',
+      'dragstart',
+      'selectstart',
+      'scroll',
+    ];
+    for (const type of types) {
+      window.addEventListener(
+        type,
+        (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          const where = target?.closest('[data-swipe-row]') ? 'Zeile' : (target?.tagName ?? '?');
+          const detail =
+            event instanceof MouseEvent
+              ? `x${String(Math.round(event.clientX))} b${String(event.buttons)}`
+              : `top ${String(frame?.scrollTop ?? 0)}`;
+          log.push(`${type} ${where} ${detail}`);
+        },
+        { capture: true },
+      );
+    }
+  });
   await mouseSwipe(page, milk, -Math.round(width * 0.6));
-  await expect(page.getByText('„Milch“ gelöscht')).toBeVisible();
+  const wischLog = await page.evaluate(
+    () => (window as unknown as { wischLog: string[] }).wischLog,
+  );
+  await expect(page.getByText('„Milch“ gelöscht'), compactLog(wischLog)).toBeVisible();
   await expect(page.locator('[data-swipe-row]')).toHaveCount(2);
   await expect(swipeRow(page, 'Brot')).toBeVisible();
   await expect(swipeRow(page, 'Äpfel')).toBeVisible();
@@ -213,9 +270,11 @@ test('Einkaufsliste: echter Touch-Wisch löscht, senkrechtes Wischen scrollt die
 
   // Senkrecht über eine Zeile wischen: Die Seite scrollt, nichts wird gelöscht.
   const third = await centre(swipeRow(page, 'Äpfel'));
-  const before = await page.evaluate(() => window.scrollY);
+  // Es scrollt der Rahmen der App, nicht das Fenster (D-384).
+  const scrollTop = () => page.evaluate(() => document.getElementById('seite')?.scrollTop ?? 0);
+  const before = await scrollTop();
   await touch({ x: third.x, y: third.y }, { x: third.x, y: third.y - 250 });
-  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before + 50);
+  await expect.poll(scrollTop).toBeGreaterThan(before + 50);
   await expect(page.locator('[data-swipe-row]')).toHaveCount(24);
   await expect(page.getByText(/gelöscht/)).toHaveCount(0);
 

@@ -54,7 +54,8 @@ test('Barcode: Einwilligung, Open Food Facts, speichern und eintragen; zweiter S
   await expect(
     page
       .getByRole('region', { name: 'Frühstück' })
-      .getByRole('button', { name: /Skyr Natur, Spar/ }),
+      // Name mit Marke, Menge und Kalorien als Beschreibung (D-278, D-377).
+      .getByRole('button', { name: 'Skyr Natur von Spar bearbeiten' }),
   ).toBeVisible();
   // Marke in der Tagesliste unter dem Namen (D-278).
   await expect(page.getByRole('region', { name: 'Frühstück' })).toContainText('Spar ·');

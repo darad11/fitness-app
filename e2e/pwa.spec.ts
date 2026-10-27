@@ -46,7 +46,7 @@ test('Manifest ist verlinkt, gültig und hat alle Icons (AK-PWA-01, D-221)', asy
   expect(pngSize(await (await request.get(appleIcon ?? '')).body())).toBe('180x180');
 });
 
-test('Startbilder für iPhone und iPad werden ausgeliefert, je Lage in passender Größe (D-317)', async ({
+test('Startbilder für iPhone, iPhone Duo und iPad werden ausgeliefert, je Lage in passender Größe (D-317, D-390)', async ({
   page,
   request,
 }) => {
@@ -56,7 +56,8 @@ test('Startbilder für iPhone und iPad werden ausgeliefert, je Lage in passender
     .evaluateAll((nodes) =>
       nodes.map((node) => [node.getAttribute('media') ?? '', node.getAttribute('href') ?? '']),
     );
-  expect(links).toHaveLength(40);
+  // 20 Geräte (D-317) und das iPhone Duo mit beiden Displays (D-390), je hoch und quer.
+  expect(links).toHaveLength(44);
   for (const [media, href] of links) {
     const [, w, h, ratio, orientation] =
       /device-width: (\d+)px\) and \(device-height: (\d+)px\) and \(-webkit-device-pixel-ratio: (\d)\) and \(orientation: (\w+)\)/.exec(

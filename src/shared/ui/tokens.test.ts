@@ -152,6 +152,8 @@ describe('Farbtokens', () => {
 
     it.each([
       ...SURFACES.map((bg) => ['border-input', bg]),
+      // Griff der Scroll-Balken am Computer (D-392).
+      ...SURFACES.map((bg) => ['scrollbar-thumb', bg]),
       ...SURFACES.map((bg) => ['focus', bg]),
       ...SURFACES.map((bg) => ['accent', bg]),
       ['chart-point', 'surface'],

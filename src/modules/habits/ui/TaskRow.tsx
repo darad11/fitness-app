@@ -5,7 +5,7 @@ import { tTasks } from '@/shared/i18n/de-tasks';
 import { tTaskStats } from '@/shared/i18n/de-task-stats';
 import { tWater } from '@/shared/i18n/de-water';
 import { cn } from '@/shared/lib/cn';
-import { Mark } from '@/shared/ui';
+import { Mark, NameRest } from '@/shared/ui';
 import { weekdaysOn } from '../calc/days';
 import type { Habit } from '../model/habit';
 
@@ -69,10 +69,12 @@ export function TaskRow({
         />
         <Mark state={checked ? 'done' : due ? 'open' : 'notDue'} size="lg" peer />
       </span>
+      {/* Name aus dem Inhalt statt `aria-label` (D-377, WCAG 2.5.3 „Label in Name“): sichtbarer
+          Name und unsichtbar „bearbeiten“; der Rhythmus beschreibt den Link. Name und
+          Beschreibung bleiben wie bisher. */}
       <Link
         to={`/heute/aufgaben/${habit.id}`}
         state={{ back: pathname }}
-        aria-label={tTasks.tasks.editLabel(habit.name)}
         aria-describedby={`${id}-rhythmus`}
         className="-mr-2 ml-1 flex min-h-14 min-w-0 flex-1 items-center gap-2 rounded-input py-2 pr-2"
       >
@@ -82,10 +84,11 @@ export function TaskRow({
           >
             {habit.name}
           </span>
-          <span id={`${id}-rhythmus`} className="block text-sm text-muted">
+          <span id={`${id}-rhythmus`} aria-hidden="true" className="block text-sm text-muted">
             {line}
           </span>
         </span>
+        <NameRest full={tTasks.tasks.editLabel(habit.name)} visible={habit.name} />
         <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
       </Link>
     </div>

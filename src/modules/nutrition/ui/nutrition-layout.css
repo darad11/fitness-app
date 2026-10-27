@@ -1,0 +1,44 @@
+/*
+ * Anordnung der Ernährung je nach Platz (Phase iPhone Duo, D-381; Leitlinien Kapitel 5 und 10).
+ * Die Datei wird mit der Seite nachgeladen und liegt nicht in der Startansicht.
+ *
+ * Hier wird nur angeordnet: Ring, Mahlzeiten und Wasser bleiben beim Auf- und Zuklappen dieselben
+ * Elemente, offene Bereiche und Menüs bleiben offen. Die Reihenfolge im Dokument ist in beiden
+ * Anordnungen dieselbe (Ring, Ziel und Küche, Mahlzeiten, Wasser), also auch für Screenreader
+ * und die Tastatur. Ohne Ebene (`@layer`), damit die Regeln die Tailwind-Klassen übersteuern.
+ */
+
+/* Maßstab ist die Breite des Inhalts, nicht des Fensters (Systemrand beim Duo, Seitenleiste am
+   Desktop). Blätter und Dialoge liegen in der obersten Ebene und hängen nicht davon ab. */
+.nutrition-frame {
+  container: nutrition / inline-size;
+}
+
+/*
+ * Ab 48 rem Inhaltsbreite (Duo aufgeklappt, iPad quer, Desktop) zwei Spalten: links der Ring mit
+ * Makros und weiteren Nährwerten, darunter „Ziel“ und „Meine Küche“; rechts die Mahlzeiten und
+ * das Wasser. Die zweite Zeile links nimmt die übrige Höhe, damit der Ring oben bleibt.
+ */
+@container nutrition (min-width: 48rem) {
+  .nutrition-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'stage meals'
+      'nav meals';
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .nutrition-grid > .nutrition-stage {
+    grid-area: stage;
+  }
+
+  .nutrition-grid > .nutrition-nav {
+    grid-area: nav;
+  }
+
+  .nutrition-grid > .nutrition-meals {
+    grid-area: meals;
+  }
+}

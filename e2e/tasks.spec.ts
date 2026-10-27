@@ -1,13 +1,21 @@
 import type { Locator } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /** Namen der Zeilen in der Reihenfolge der Liste (Link „… bearbeiten“, D-335). */
 const rowNames = (list: Locator) =>
-  list
-    .getByRole('link', { name: / bearbeiten$/ })
-    .evaluateAll((links) =>
-      links.map((link) => (link.getAttribute('aria-label') ?? '').replace(/ bearbeiten$/, '')),
-    );
+  list.getByRole('link', { name: / bearbeiten$/ }).evaluateAll((links) =>
+    // Name aus dem Inhalt (D-377): Text ohne versteckte Teile, ohne den Rest „ bearbeiten“.
+    links.map((link) => {
+      const copy = link.cloneNode(true) as Element;
+      copy.querySelectorAll('[aria-hidden="true"]').forEach((node) => {
+        node.remove();
+      });
+      return copy.textContent
+        .replace(/\s+/g, ' ')
+        .trim()
+        .replace(/ bearbeiten$/, '');
+    }),
+  );
 
 test('Tagesaufgaben: hinzufügen, abhaken, neu laden, nächster Tag wieder offen (AH-03, D-283)', async ({
   page,
@@ -103,10 +111,7 @@ test('Tagesaufgaben: kleiner Bildschirm, nichts ragt über den Rand (D-283)', as
     await expect(list.getByRole('link', { name: / bearbeiten$/ })).toHaveCount(index + 1);
     await expect(page.getByLabel('Name der Aufgabe')).toHaveValue('');
   }
-  const overflow = () =>
-    page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
+  const overflow = () => pageOverflowX(page);
   expect(await overflow()).toBeLessThanOrEqual(0);
   await openPage(page, '/heute');
   await expect(
@@ -183,13 +188,10 @@ test('Tagesaufgaben: Fortschritt über drei Tage, Übersicht und Auswertung (D-2
   await expect(perTask.getByRole('rowheader')).toHaveText(['Wasser', 'Lesen']);
   await expect(perTask.getByText(/an 2 von 2 fälligen Tagen/)).toBeVisible();
   await expect(perTask.getByText(/an 1 von 2 fälligen Tagen/)).toBeVisible();
-  const overflow = () =>
-    page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
+  const overflow = () => pageOverflowX(page);
   expect(await overflow()).toBeLessThanOrEqual(0);
 
-  await perTask.getByRole('link', { name: 'Lesen: Auswertung öffnen' }).click();
+  await perTask.getByRole('link', { name: 'Lesen – Auswertung öffnen' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Lesen' })).toBeVisible();
   await expect(page.getByRole('definition').nth(0)).toContainText('50 %');
   await expect(page.getByRole('list', { name: /Kalender/ }).getByTitle(/: erledigt$/)).toHaveCount(

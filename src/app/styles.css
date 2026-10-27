@@ -182,6 +182,32 @@
 }
 
 /*
+ * Gegenstück zu `page-gutters` (D-377): Ein Element im Inhalt reicht seitlich bis an den
+ * Fensterrand, um genau den Seitenrand samt sicherem Bereich. Vorher nur um den Seitenrand; beim
+ * iPhone Duo war der Kopf im Training dadurch um den Systemrand schmaler als der Inhalt.
+ */
+@utility page-bleed {
+  --gutter: var(--spacing-page);
+  margin-left: calc(-1 * max(var(--gutter), env(safe-area-inset-left)));
+  margin-right: calc(-1 * max(var(--gutter), env(safe-area-inset-right)));
+  @variant md {
+    --gutter: var(--spacing-page-md);
+  }
+  @variant lg {
+    --gutter: var(--spacing-page-lg);
+  }
+}
+
+/*
+ * Feste Elemente links und rechts am Rand des sicheren Bereichs (D-372): Beim iPhone Duo liegen
+ * Statusleiste, Dynamic Island und Kamera an der Seite; Dialoge stehen mittig daneben.
+ */
+@utility inset-x-safe {
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+}
+
+/*
  * Eingabefeld (FORM): Fläche card-2, Rand 3:1 (`--border-input`, Abweichung von `line`, siehe
  * brand-tokens.md), Radius 12, mindestens 48 hoch, Fokus-Rand Lime. Schrift 16 px, damit iOS beim
  * Antippen nicht zoomt. Breite und Ausrichtung setzt die Stelle, an der das Feld steht.
@@ -221,6 +247,17 @@
     /* Programmatisches Scrollen (Fokus, scrollIntoView) hält Abstand zu klebenden Köpfen und festen Leisten. */
     scroll-padding-top: 5rem;
     scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
+  }
+
+  /*
+   * Mit dem Rahmen der App scrollt das Fenster nicht (D-384, `.page-scroller`): kein Scrollen und
+   * kein Gummiband des Fensters, auch nicht, wenn eine Geste auf einer Leiste beginnt. Ansichten
+   * ohne Rahmen (Fehleransichten) scrollen weiter im Fenster.
+   */
+  :root:has(.page-scroller),
+  :root:has(.page-scroller) body {
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   /* Nacht als Grundfläche: iOS färbt die Statusleiste nach dem Seitenhintergrund ein. Alle Werte
@@ -272,6 +309,48 @@
     outline-offset: 2px;
   }
 
+  /* Beim Antippen bleibt über einem Feld Platz für seine Beschriftung (D-391, `revealField`); in
+     der Satzzeile im Training steht keine darüber, dort nur der Innenabstand der Zeile. */
+  :is(input, textarea, select) {
+    scroll-margin-top: 1.75rem;
+  }
+  [data-set-id] :is(input, textarea, select) {
+    scroll-margin-top: 0.375rem;
+  }
+
+  /* Scroll-Balken (D-392): am Computer dünn und dunkel in den Farben der App, am Touch-Gerät in
+     keinem Bereich zu sehen (Rahmen, Blätter, Listen, Dialoge). Nur das Aussehen: Wischen,
+     Mausrad und Scroll-Tasten scrollen wie bisher, auch bei offener Tastatur. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  @media (pointer: coarse) {
+    * {
+      scrollbar-width: none;
+    }
+    *::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  /* Safari ohne `scrollbar-color`: dieselben Farben über das Webkit-Pseudoelement, nur mit Maus. */
+  @supports not (scrollbar-color: auto) {
+    @media (pointer: fine) {
+      ::-webkit-scrollbar {
+        width: 0.5rem;
+        height: 0.5rem;
+      }
+      ::-webkit-scrollbar-track,
+      ::-webkit-scrollbar-corner {
+        background: var(--scrollbar-track);
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 9999px;
+        background: var(--scrollbar-thumb);
+      }
+    }
+  }
+
   /* Ein Symbolsatz (Lucide) in Linie mit 1,75 px Strich (FORM, D-314). */
   svg.lucide {
     stroke-width: 1.75;
@@ -294,6 +373,31 @@
  * kein Glas. Einzige Ausnahme ist das Glas der Tab-Leiste (D-312, Abschnitt Tab-Leiste unten).
  */
 @layer components {
+  /*
+   * Rahmen, in dem die Seite scrollt (D-384, `src/shared/ui/pageScroll.ts`): so groß wie das
+   * Fenster, ohne eigenen Bezugsrahmen für feste Elemente und ohne eigene Stapelebene (kein
+   * `position: fixed`, kein `z-index`, keine Transformation), damit sich an der Reihenfolge der
+   * Ebenen nichts ändert. Beim iPhone Duo hingen feste und klebende Elemente beim Scrollen des
+   * Fensters am Layout-Viewport, der stehen blieb; im Rahmen klebt der Kopf am Rahmen, und die
+   * Leisten außerhalb bewegen sich nicht. Das Gummiband am Seitenende bleibt im Rahmen.
+   */
+  .page-scroller {
+    position: absolute;
+    inset: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scroll-padding-top: 5rem;
+    scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);
+  }
+
+  /* Platz unten im Rahmen, damit ein angetipptes Feld am Seitenende nach oben kommen kann
+     (D-391, `revealField` in src/shared/ui/pageScroll.ts setzt `--tastatur-platz`). */
+  .page-scroller::after {
+    content: '';
+    display: block;
+    height: var(--tastatur-platz, 0px);
+  }
   /* Bühne: die wichtigste Karte einer Seite, eine Stufe heller als die Seite (bg-elevated). */
   .stage {
     background: var(--bg-elevated);
@@ -342,6 +446,13 @@
   .login-screen {
     background: var(--bg);
     color: var(--fg);
+    /* Ein angetipptes Feld kommt unter die Unschärfe oben, mit Platz unten (D-391). */
+    scroll-padding-top: 5rem;
+  }
+  .login-screen::after {
+    content: '';
+    display: block;
+    height: var(--tastatur-platz, 0px);
   }
   .login-body {
     padding-top: max(
@@ -729,5 +840,44 @@
     .tabbar-lens-ring {
       display: none;
     }
+  }
+}
+
+/*
+ * Bildschirmtastatur (D-391): Hat am Touch-Gerät ein Feld den Fokus, ist die Tastatur offen. iOS
+ * schiebt feste Leisten dann über die Tastatur, mitten ins Formular; Tab-Leiste und Kreis sind
+ * deshalb aus; das angetippte Feld kommt in den oberen Teil der Seite (`revealField` in
+ * `src/shared/ui/pageScroll.ts`, mit Platz unten bei Bedarf). Die Fußleiste im Training bleibt
+ * über der Tastatur; nur wenn sie das Feld verdecken würde, ist sie aus (`data-covering`, gesetzt
+ * von `useFootClearOfField`). Die Felder sind dieselben wie in `TEXT_ENTRY_SELECTOR`;
+ * `keyboard.test.ts` vergleicht.
+ */
+@layer components {
+  @media (pointer: coarse) {
+    :root:has(
+        :is(
+          input:not(
+            [type='checkbox'],
+            [type='radio'],
+            [type='range'],
+            [type='button'],
+            [type='submit'],
+            [type='reset'],
+            [type='color'],
+            [type='file'],
+            [type='image'],
+            [type='hidden']
+          ),
+          textarea,
+          select,
+          [contenteditable]:not([contenteditable='false'])
+        ):focus
+      )
+      .tabbar-dock {
+      visibility: hidden;
+    }
+  }
+  .player-foot[data-covering] {
+    visibility: hidden;
   }
 }

@@ -1555,3 +1555,576 @@ Zucker und gesättigte Fettsäuren höchstens 10 % der Kalorien aus dem Tageszie
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | ohne Befund |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 234,6 KB von 250 KB |
 | E2E `nutrition`, `basic-foods`, `narrow-layout`, `nutrition-ring`, `network-a11y` (Chromium) | 111 bestanden, 15 übersprungen, 0 fehlgeschlagen |
+
+### Phase iPhone Duo: Gerätemaße und Prüfmaße · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Recherche der Maße zugeklappt und aufgeklappt, Prüfmaße als Annahmen (D-371). Bericht: `form-duo-report.md` Abschnitt 2.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Apple, Human Interface Guidelines „Designing for iPhone Duo“ | direkt gelesen; Leisten und Statusleiste an der Seite, Kamera in der Ecke |
+| WebKit, Safari 27.1; technische Daten von Apple | nur über Suchergebnisse, weil die Netzwerkregel `apple.com`, `support.apple.com` und `webkit.org` sperrt |
+| Chromium 153: `Emulation.setSafeAreaInsetsOverride` | `env(safe-area-inset-right)` meldet den gesetzten Wert (59 px gesetzt, 59 px gemessen) |
+
+### Phase iPhone Duo: Systemrand an der Seite · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Tab-Leiste, Blätter, Rückfragen, Hinweise, große Pause, Anmeldung und „Meine Küche“ beachten den sicheren Bereich links und rechts (D-372). Bericht: `form-duo-report.md` Abschnitt 3.1.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-safe-area.spec.ts` (Chromium, Handy-Profil, Prüfmaße zugeklappt und aufgeklappt) | 3 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 3 von 3 fehlgeschlagen („Mehr“ bis 446 statt höchstens 382,5; Kreis bis 939 statt höchstens 867,5; „Schließen“ im Scanner bis 458 statt höchstens 382,5) |
+| `pnpm test` | 122 Dateien, 1073 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,8 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 347 bestanden, 61 übersprungen, 0 fehlgeschlagen, 8,9 min |
+
+### Phase iPhone Duo: Tab-Leiste misst nach jeder Größenänderung neu · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auswahl folgt jeder Größenänderung der Einträge, die Linse misst bei jeder Berührung neu (D-373, Audit E-15). Bericht: `form-duo-report.md` Abschnitt 3.2.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-tabbar.spec.ts` (Chromium, Handy-Profil) | 2 bestanden; dazu `e2e/tabbar.spec.ts` 3 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 2 von 2 fehlgeschlagen (Auswahl 69,2 px neben dem Tab; Ziehen zu „Fortschritt“ endete auf `/mehr`) |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 349 bestanden, 63 übersprungen, 0 fehlgeschlagen, 8,7 min |
+
+### Phase iPhone Duo: Barcode-Scanner, Bild, Rahmen und Erkennung · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Erkennung nur im sichtbaren Ausschnitt um den Rahmen, Kamerabild höchstens 45 % der Fensterhöhe (D-374). Bericht: `form-duo-report.md` Abschnitt 3.3.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `scanRegion.test.ts` | 8 bestanden |
+| `e2e/duo-scanner.spec.ts`, `duo-scanner-mitte.spec.ts`, `duo-scanner-lage.spec.ts` (Chromium, Standbild als Kamera) | 5 bestanden; dazu `barcode.spec.ts` und `barcode-camera.spec.ts` bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 2 von 5 fehlgeschlagen (unsichtbarer Code erkannt; quer Unterkante 561,7 statt höchstens 368); die 3 Gegenkontrollen „Code im Rahmen“ bestanden |
+| `pnpm test` | 123 Dateien, 1081 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 234,9 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 354 bestanden, 71 übersprungen, 3 fehlgeschlagen, 8,5 min; alle drei in `e2e/duo-resize.spec.ts`, dem Test des nächsten Pakets (Leseposition beim Auf- und Zuklappen), an diesem Stand erwartet rot |
+| CI, WebKit (Läufe 40228596744 und 40229890511) | 10 fehlgeschlagen, alle fünf Scanner-Tests je Profil: WebKit startete nicht („Unknown option --use-fake-device-for-media-stream“), weil die Kamera-Optionen von Chromium für alle Browser galten und der Browser vor dem `test.skip` der Datei startet. Nachtrag: `e2e/scanner.ts` setzt die Optionen und die Kamera-Erlaubnis nur in Chromium, sonst bleiben die des Projekts |
+
+### Phase iPhone Duo: Auf- und Zuklappen, Leseposition · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Im Training bleibt beim Größenwechsel alles erhalten; die Leseposition bleibt auf allen Seiten (D-375). Bericht: `form-duo-report.md` Abschnitt 3.4.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-resize.spec.ts` (Chromium, Handy-Profil), dreimal wiederholt | 9 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 2 von 3 fehlgeschlagen (Leseposition 182,4 und 192,7 px daneben); der Trainingstest bestand schon dort |
+| `pnpm test` | 123 Dateien, 1081 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,4 KB von 250 KB (zusammen mit dem nächsten Paket gebaut) |
+| `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit dem nächsten Paket gebaut) | 358 bestanden, 72 übersprungen, 0 fehlgeschlagen, 8,7 min |
+
+### Phase iPhone Duo: Linse endet beim Loslassen außerhalb der Leiste · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Während eines Drucks hört die Linse auch am Fenster auf das Loslassen (D-376). Bericht: `form-duo-report.md` Abschnitt 3.5.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-tabbar.spec.ts`, `e2e/tabbar.spec.ts` (Chromium, Handy-Profil), dreimal wiederholt | alle bestanden |
+| Gegenprobe: neuer Test gegen den alten Quellstand | fehlgeschlagen (Linse blieb aktiv) |
+| `pnpm test` | 123 Dateien, 1081 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,4 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 358 bestanden, 72 übersprungen, 0 fehlgeschlagen, 8,7 min |
+
+### Phase iPhone Duo: Weitere Funde der Prüfung in drei Breiten · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Kopf im Training, Mahlzeit-Auswahl, „Meine Küche“, Namen der Zeilen nach WCAG 2.5.3, Minus und Plus der Pause, Wochentage 11 px (D-377). Bericht: `form-duo-report.md` Abschnitt 3.6.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-funde.spec.ts` (Handy-Profil; der Kopf nur in Chromium) | 6 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 6 von 6 fehlgeschlagen (Kopf endete bei 402 statt am Rand 466; Auswahl 57,75 px bei 640 px; „Rezepte“ verdeckt; axe `label-content-name-mismatch`; Wochentage 10 px; Minus-Symbol 0 px) |
+| `src/shared/ui/name-rest.test.tsx`; Namen und Beschreibungen in `habits-ui.test.tsx`, `task-stats.test.tsx`, `nutrition-ui.test.tsx` | bestanden |
+| Zwischenstände vor dem Commit | 10 E2E-Fehlschläge in `tasks`, `task-rows` und `marks`: Chromium trennt den versteckten Namensteil mit einem Leerzeichen ab („Lesen : Auswertung öffnen“), und ein versteckter Teil in abgeschnittenem Text machte die Seite bei 320 pt 77 px breiter. Danach 2 in `barcode.spec.ts` (Test erwartete den alten Namen „Skyr Natur, Spar“). Alle behoben, siehe D-377 |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 364 bestanden, 78 übersprungen, 0 fehlgeschlagen, 8,2 min |
+| CI, Lauf 40236345703 (`dd4d35b`, mit dem Nachtrag zu D-374) | alle vier Jobs grün; WebKit 344 bestanden, 98 übersprungen, 13,1 min; die Scanner-Tests werden in WebKit übersprungen |
+
+### Phase iPhone Duo: Satzzeile, lange Werte · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+„102,5“ passt zugeklappt und auf 375 bis 390 pt ins Feld (D-378). Bericht: `form-duo-report.md` Abschnitt 3.7.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-funde.spec.ts` „Satzzeile: „102,5“ passt ins Feld …“ (390 pt und zugeklappt: passt; 382 pt: Schrift 16 px. Ob der Wert bei 382 pt ganz passt, hängt an der Schriftart: mit Inter 7,7 px Luft, mit der breiteren DejaVu Sans gerechnet knapp nicht, deshalb prüft der Test dort nur die Schrift) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Quellstand | fehlgeschlagen (Wert 10 px über dem Rand bei 390 pt) |
+| Messung (Chromium): Platz im Feld minus Breite von „102,5“ | mit Inter: zugeklappt +17,7 px, 382 pt +7,7, 390 pt +11,7, 375 pt +4,7, 360 pt −3,3 (Feld 45 px), 320 pt: Feld 25 px; mit DejaVu Sans: zugeklappt +9,4, 390 pt +3,4, 382 pt −0,6, 375 pt −3,6; vorher zugeklappt 57 px Feld für 59 px Wert |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,5 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 365 bestanden, 79 übersprungen, 0 fehlgeschlagen, 8,4 min |
+
+### Phase iPhone Duo: Prüfung aller Screens in drei Breiten · 25.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+28 Ansichten in den Prüfmaßen zugeklappt, Zwischenmaß und aufgeklappt, mit Testdaten (D-379). Bericht: `form-duo-report.md` Abschnitt 4. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/duo-screens.mjs`, erster Lauf (vor D-377) | 84 Ansichten: 16 × axe `label-content-name-mismatch`, 27 × Schrift unter 11 px, 7 Hinweise Tippfläche |
+| `node tools/duo-screens.mjs` nach D-377 und D-378, 3 min | 84 Ansichten: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst nach D-334), 7 Hinweise Tippfläche (Wochentag-Chips, 44 pt über unsichtbaren Rand); kein Überlauf, nichts unter dem Systemrand, keine Überlagerung, kein abgeschnittener Text, kein gestauchtes Symbol, keine axe-Verstöße |
+| Messung für die Bewertung (Training mit Pause) | Player aufgeklappt: Kopf 264 pt, Fußleiste 97 pt, 284 pt für Übung und Sätze, eine Satzzeile ganz sichtbar, Felder 298 pt breit; zugeklappt: 274, 111, 269 pt, eine Satzzeile; Zwischenmaß: 542 pt, fünf Satzzeilen. Ernährung: erste Mahlzeit bei 619 von 669 pt (aufgeklappt) und 639 von 678 pt (zugeklappt) |
+
+### Phase iPhone Duo, Phase 2: Workout-Player für beide Zustände · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Aufgeklappt zwei Spalten, zugeklappt die Pause in einer Zeile, Satzzeile unter 20 rem mit zweiter Zeile (D-380). Bericht: `form-duo-report.md` Abschnitt 9.1. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-player.spec.ts` (3 Tests, Handy-Profil) | 3 bestanden |
+| Gegenprobe: dieselben Tests gegen den alten Quellstand | 3 von 3 fehlgeschlagen („Als Nächstes“ fehlt; Pause 142 px hoch statt höchstens 80; Vorwert bei 360 pt in derselben Zeile wie die Felder) |
+| Gegenprobe: ohne Nachrücken des Satzes nach einer Größenänderung (`useStableSetView`) | fehlgeschlagen („unter dem Kopf“: der aufgeklappt nach oben gescrollte Satz lag nach dem Zuklappen hinter dem Kopf) |
+| Gegenprobe: nächster Satz in der einzeiligen Pause in einer Textzeile (erster Entwurf) | fehlgeschlagen (Text 19,6 px hoch; zu sehen war nur „Beinpress…“) |
+| Angepasst: `e2e/duo-resize.spec.ts` (aufgeklappt rückt der Satz um die Höhe des Kopfs nach oben und bleibt sichtbar), Test zu D-377 in `e2e/duo-funde.spec.ts` (±15 s bei 320 × 800, weil die Pause bei 320 × 640 einzeilig ist) | bestanden |
+| Zwischenstände vor dem Commit | 3 Unit-Tests in `player-ui.test.tsx` (die Liste der Überschriften enthielt „Als Nächstes“; jetzt ein benannter Bereich ohne Überschrift); `pnpm lint` (`type` statt `interface` im Test); E2E: Test zu D-377 (einzeilige Pause bei 320 × 640) und `duo-resize` (Satz aufgeklappt nicht mehr an derselben Stelle). Alle behoben, siehe oben |
+| Messung (Chromium, Training mit Pause, Seite ganz oben) | aufgeklappt: Kopf rechts, 572 pt für Übung und Sätze (vorher 284), fünf Satzzeilen ganz sichtbar (vorher eine), Felder 118 pt (vorher 298); zugeklappt: Kopf 192 pt (vorher 274), 351 pt (vorher 269), zwei Satzzeilen (vorher eine); Zwischenmaß unverändert (Kopf 264 pt, 542 pt, fünf Satzzeilen); 320 × 568: Kopf 192 pt, Felder 52 px (vorher 25) |
+| Messung einzeilige Pause (Chromium): Breite des Players, nächster Satz | zugeklappt 362 px, Karte 60 px hoch, Text 86 px breit in zwei Zeilen; Safari zugeklappt (382 × 640) 342 px und 375 × 667 335 px: nur für Screenreader; zugeklappt quer (594 × 368) 490 px, Text 214 px; iPhone 15 quer (844 × 390) 750 px, Text 474 px |
+| Messung Satzzeile (Chromium, Vorwert „102,5 × 10“) | zweite Zeile unter 384 pt Fensterbreite (Zeile unter 20 rem), Feld für kg: 383 pt 84 px, 382 pt 83 px, 375 pt 80 px, 360 pt 72 px, 320 pt 52 px; eine Zeile ab 384 pt: 384 pt 57 px, 390 pt 60 px, 393 pt 62 px, 414 pt 72 px, 430 pt 80 px |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,6 KB von 250 KB (vorher 235,5); `player-layout.css` wird mit dem Player nachgeladen |
+| `pnpm test:e2e` (Chromium, alle Dateien) | erster Lauf: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen, 13,0 min; nach der zweiten Textzeile in der Pause: 368 bestanden, 82 übersprungen, 0 fehlgeschlagen, 13,7 min |
+
+### Phase iPhone Duo, Phase 2: Nachtrag zu D-380 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Einzeilige Pause auch am iPhone in Safari; Satz bleibt beim Auf- und Zuklappen sofort an seiner Stelle (D-380, Nachtrag). Bericht: `form-duo-report.md` Abschnitt 9.1.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI, Lauf 40283966090 (`f27979f`, Paket 1) | „E2E (chromium)“ grün; „E2E (webkit)“ 3 fehlgeschlagen, 345 bestanden, 102 übersprungen: `session.spec.ts` und `resilience.spec.ts` (warteten auf „15 s weniger“ in der kleinen Pause, die im Profil iPhone 15 mit 393 × 659 einzeilig ist), `duo-player.spec.ts` Test 1 bei „hoch“ (Kopf über der Liste, geprüft nach dem Scrollen an den Anfang, das die App beim Größenwechsel wieder ausglich) |
+| `e2e/duo-resize.spec.ts` Training, 6 Wiederholungen am Stand von `f27979f` | 2 von 6 fehlgeschlagen („zu: Position“, 72 px): Der Kopf wird beim Wechsel 72 px höher oder niedriger, ausgeglichen erst beim nächsten Takt der Pause |
+| Ablauf Bild für Bild (Chromium, Skript): Lage des Satzes nach dem Wechsel zugeklappt → Zwischenmaß → zugeklappt | vorher 0, dann −85 px (Verankerung des Browsers, nachgeholter sicherer Bereich, Zeigen des Satzes mit offenem Menü); jetzt 0 und 0 px |
+| Gegenprobe: neue Prüfung in `duo-player.spec.ts` Test 2 (Lage des Satzes im ersten Bild nach dem Wechsel zugeklappt → Zwischenmaß) gegen den Stand von `f27979f` | fehlgeschlagen („erstes Bild nach dem Wechsel“: 72 px statt höchstens 4) |
+| `duo-player.spec.ts`, `duo-resize.spec.ts`, `duo-funde.spec.ts` (Chromium, Handy-Profil), je 5 Wiederholungen mit dem Endstand der Korrektur | 62 bestanden, 3 fehlgeschlagen: alle drei in „Meine Küche aufgeklappt“ (Paket 2, dort behoben); Player und Auf- und Zuklappen 30 von 30 |
+| Zwischenstand der Korrektur | Ein ResizeObserver auf den Kopf allein reichte nicht: Er beobachtete die Inhaltsbox (der sichere Bereich ändert nur den Innenabstand), und ein Scroll-Ereignis im selben Bild merkte die verschobene Lage als neue Lage. Jetzt Außenkante, und in einem Bild mit geänderter Kopfhöhe gleicht der ResizeObserver aus |
+| Angepasste Tests im Fenster des iPhone 15 (393 × 659, in Chromium nachgestellt): `session`, `resilience`, `duo-player`, `duo-resize`, `training-scroll`, `duo-funde`, `duo-nutrition` | 20 bestanden |
+| Ganze Suite im Fenster des iPhone 15 (393 × 659, in Chromium nachgestellt, 7,8 min) | 204 bestanden, 22 übersprungen, 1 fehlgeschlagen: `nutrition.spec.ts` „Meine Küche“ wählt Handy oder Desktop nach dem Namen des Projekts, das Hilfsprojekt hieß nicht „…-mobile“; mit passendem Namen bestanden |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit Paket 2) | 370 bestanden, 84 übersprungen, 0 fehlgeschlagen, 13,6 min |
+
+### Phase iPhone Duo, Phase 2: Ernährung aufgeklappt zweispaltig · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Links Ring, Makros und weitere Nährwerte, rechts Mahlzeiten und Wasser (D-381). Bericht: `form-duo-report.md` Abschnitt 9.2. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-nutrition.spec.ts` (2 Tests, Handy-Profil) | 2 bestanden |
+| Gegenprobe: Test 1 gegen die Seite ohne zweispaltiges Layout | fehlgeschlagen (eine Spalte: Frühstück beginnt links bei 24 pt statt rechts neben der Ringkarte ab 867 pt) |
+| Gegenprobe: Test 2 („Meine Küche“ unten in der linken Spalte) gegen das Menü ohne Öffnen nach oben, 3 Wiederholungen | 3 von 3 fehlgeschlagen („Vorlagen“ verdeckt) |
+| Zwischenstände vor dem Commit | Test zu D-377 „Meine Küche aufgeklappt“ in 3 von 5 Wiederholungen fehlgeschlagen („Vorlagen“ verdeckt): Das Menü öffnete nach unten, die Seite reichte vor dem Laden des Wassers nicht weit genug. Behoben, siehe D-381 |
+| Wiederholung: `duo-nutrition`, `duo-funde`, `nutrition` (Chromium, Handy-Profil), je 4-mal | 60 bestanden |
+| Messung (Chromium, Tagesziel, zwei Schnelleinträge, Wasser, Seite ganz oben) | aufgeklappt (951 × 669, 52,7 rem Inhalt): Ringkarte links 410 pt breit, Mahlzeiten rechts 410 pt, Frühstück beginnt bei 194 pt (vorher 619); iPad hoch (820 × 1180, 48,3 rem): zwei Spalten je 374 pt, Frühstück bei 218 pt; Desktop 1280 × 800: zwei Spalten je 552 pt; zugeklappt (22,6 rem) und Zwischenmaß (39,3 rem): eine Spalte wie bisher |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB; `nutrition-layout.css` wird mit der Seite nachgeladen (`NutritionPage-*.css`) |
+| `pnpm test:e2e` (Chromium, alle Dateien, zusammen mit dem Nachtrag zu D-380) | 370 bestanden, 84 übersprungen, 0 fehlgeschlagen, 13,6 min |
+
+### Phase iPhone Duo, Phase 2: Fortschritt, Erklärung der Kalorien unter den Kacheln · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Vier gleich hohe Kacheln, die Zahlen auf einer Linie, die Erklärung darunter (D-382). Bericht: `form-duo-report.md` Abschnitt 9.3. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-progress.spec.ts` (Handy-Profil; zugeklappt, Zwischenmaß, aufgeklappt) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Quellstand | fehlgeschlagen („zu“: Höhenunterschied der Kacheln 155 px statt höchstens 1) |
+| `progress-ui.test.tsx` (Hinweis unter den Kacheln, nicht in der Kachel) | bestanden |
+| Messung (Chromium, ein Training mit Körpergewicht): Höhe der vier Kacheln und Unterkante der Kacheln | zugeklappt vorher 86, 86, 242, 242 px (Unterkante 533), jetzt 4 × 103 px (412), Erklärung darunter in drei Zeilen; Zwischenmaß vorher 86, 86, 158, 158 (473), jetzt 4 × 86 (402); aufgeklappt vorher 4 × 208 (401), jetzt 4 × 103 (297); 320 × 568 vorher 86, 86, 242, 242, jetzt 4 × 103 |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund (ein Zwischenstand: Lint meldete eine vorübergehende Hilfsdatei für Playwright im Wurzelordner; sie liegt nicht im Repository) |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 371 bestanden, 85 übersprungen, 0 fehlgeschlagen, 14,3 min |
+
+### Phase iPhone Duo, Phase 2: Abschluss, Bilder in drei Breiten · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Bilder erneuert, nächster Satz in der rechten Spalte des Players bis zu vier Zeilen, Liste für den Gerätetest ergänzt, Abschlussbericht (D-383). Bericht: `form-duo-report.md` Abschnitte 4.4, 6, 9 und 10. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/duo-screens.mjs`, erster Lauf nach Paket 3 (4 min) | 84 Ansichten: 3 × Schrift unter 11 px (Tageszahl im Kalender, bewusst nach D-334), 7 Hinweise Tippfläche (Wochentag-Chips); kein Überlauf, nichts unter dem Systemrand, keine Überlagerung, kein abgeschnittener Text, kein gestauchtes Symbol, axe ohne Verstöße. Beim Ansehen der Bilder: In der rechten Spalte des Players stand vom nächsten Satz nur „Beinpresse,…“ |
+| `node tools/duo-screens.mjs` nach der Korrektur | 84 Ansichten, dieselben Befunde; Bilder zusammen 3,4 MB |
+| Rechte Spalte (Chromium, aufgeklappt, Pause läuft) | „Nächster Satz: Beinpresse, Arbeitssatz 2 · Ziel 8–12“ ganz zu sehen, in vier Zeilen |
+| Geänderte Bilder gegenüber Phase 1 | Player zugeklappt und aufgeklappt, „Training verwerfen“ aufgeklappt, Ernährung und „Meine Küche“ aufgeklappt, Fortschritt in drei Breiten; dazu „Heute“, Wasser, Wasser-Verlauf und Tab-Leiste, weil diesmal beide Wasser-Tipps der Testdaten ankamen (750 statt 250 ml), und ein einzelnes Pixel im Scanner aufgeklappt |
+| CI, Lauf 40292622372 (`a94434a`, Paket 2 mit dem Nachtrag zu D-380) | alle vier Jobs grün; WebKit 350 bestanden, 104 übersprungen |
+| CI, Lauf 40295195644 (`3a80d2e`, Paket 3) | alle vier Jobs grün; Chromium 371 bestanden, 85 übersprungen; WebKit 351 bestanden, 105 übersprungen |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 235,7 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 371 bestanden, 85 übersprungen, 0 fehlgeschlagen, 14,6 min |
+
+### Phase iPhone Duo, Phase 2: Nachtrag zu D-382 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Der Test zum Fortschritt prüft die Lage des Hinweises, nicht seinen Wortlaut (D-382, Nachtrag).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI, Lauf 40298724340 (`ffa8fa6`, Abschluss) | alle vier Jobs grün; Chromium 370 bestanden, 85 übersprungen, 1 erst im zweiten Anlauf: `duo-progress.spec.ts` („zu“: „Schätzung nach MET“ nicht gefunden); WebKit 351 bestanden, 105 übersprungen |
+| Ursache | Das Test-Training dauerte unter einer Sekunde; mit der Dauer 0 gibt es keine Schätzung (`estimateCalories`), unter den Kacheln stand „Kalorien werden erst mit Körpergewicht geschätzt.“ |
+| Nachgestellt (Chromium): Körpergewicht erst nach dem Training, also ohne Schätzung | alte Fassung des Tests fehlgeschlagen, mit derselben Meldung wie in der CI; neue Fassung bestanden |
+| `e2e/duo-progress.spec.ts`, neue Fassung, mit Schätzung | bestanden |
+| `pnpm lint`, `pnpm format:check` | ohne Befund |
+
+### Korrekturen nach dem Gerätetest: Feste Leisten kleben am unteren Rand · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Die Seite scrollt in einem eigenen Rahmen, Tab-Leiste, Kreis, Fußleiste im Training und Hinweise liegen außerhalb (D-384). Der Fehler zeigte sich nur am iPhone Duo; im Browser ist er nicht nachstellbar. Geprüft wird deshalb der Aufbau, der ihn ausschließt, und die Lage der Leisten beim Scrollen. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorfahren der Leisten (Chromium, zugeklappt und aufgeklappt): `transform`, `translate`, `rotate`, `scale`, `perspective`, `filter`, `backdrop-filter`, `will-change`, `contain`, `container-type`, `content-visibility`, `transform-style`, `offset-path` | keiner bildet einen eigenen Bezugsrahmen, auch am alten Stand nicht; Gegenprobe im Test: `will-change: transform` an `.app-shell` und `container-type` an `body` werden gefunden |
+| Messung (Chromium, zugeklappt 466 × 678 mit sicherem Bereich unten 34, „Übungen“, acht Schritte mit dem Mausrad) | Fenster bleibt bei 0, der Rahmen scrollt bis 2400 px; Unterkante der Leiste 636, als Kreis 632, rechte Kante 382 (Rand des sicheren Bereichs), in jedem Schritt gleich |
+| `e2e/duo-feste-leisten.spec.ts` (4 Tests, Handy-Profil) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Stand (`aec96f4`, neu gebaut) | 4 von 4 fehlgeschlagen („außerhalb des scrollenden Rahmens“: Die Seite scrollte im Fenster). Die Bewegung selbst zeigt Chromium auch am alten Stand nicht |
+| Angepasst auf den Rahmen: `duo-player`, `duo-resize`, `duo-safe-area`, `duo-tabbar`, `header-logo`, `marks`, `program-list`, `shopping`, `tabbar`, `training-scroll`; `tools/duo-screens.mjs`, `tools/screenshots.mjs` | bestanden (in der ganzen Suite) |
+| `pnpm test` | 124 Dateien, 1085 Tests bestanden; vorher in `app.test.tsx` 13 Zeitüberschreitungen, weil jsdom `scrollTo` an Elementen nicht kennt: Ergänzung in `src/test-setup.ts` |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,4 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 375 bestanden, 89 übersprungen, 0 fehlgeschlagen, 12,3 min |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Scanner ohne eigene Drehung, Neustart der Kamera · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Keine eigene Drehung im Scanner gefunden; bei einer neuen Haltung startet die Kamera neu (D-385). Ob das Bild am Duo aufrecht steht, zeigt nur das Gerät. Browser-Fenster mit künstlicher Kamera (Standbild 640 × 480), nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Durchsicht `ScannerDialog.tsx`, `scanRegion.ts`, `barcodeDetector.ts`, CSS der App | keine Drehung am Video oder an seinen Vorfahren, keine Abfrage von `screen.orientation`, `window.orientation` oder des Seitenverhältnisses; `getUserMedia` nur mit `facingMode: environment`; Erkennungsbereich aus `videoWidth` und `videoHeight` (D-374) |
+| `calc/scanRegion.test.ts` (11 Tests, davon 3 neu für `cameraPostureChanged`) | bestanden |
+| `e2e/duo-scanner-neustart.spec.ts` (zugeklappt, Zwischenmaß, aufgeklappt, zugeklappt quer, zurück; kleine Änderung) | bestanden: nach jedem Wechsel ein neuer Kamerastrom (2, 3, 4, 5 Starts), 640 × 480 wie geliefert, keine Drehung; bei 466 × 640 kein Neustart |
+| Gegenprobe: derselbe Test am Stand vor der Änderung (Build zu `001b2a0`) | fehlgeschlagen („hoch: Kamera neu gestartet“, 1 statt 2 Starts) |
+| `duo-scanner`, `duo-scanner-mitte`, `duo-scanner-lage` | bestanden |
+| `pnpm test` | 124 Dateien, 1088 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,3 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 376 bestanden, 90 übersprungen, 0 fehlgeschlagen, 11,4 min |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40350698760 zu `001b2a0` (D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente und Build grün; E2E Chromium grün; E2E WebKit rot.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-feste-leisten.spec.ts` (3 von 4 Tests) | fehlgeschlagen: „Mouse wheel is not supported in mobile WebKit“; jetzt Scrollen per Skript |
+| WebKit, `shopping.spec.ts` „Wisch nach links löscht nur diesen Artikel …“ | fehlgeschlagen in beiden Anläufen: „„Milch“ gelöscht“ nicht gefunden; in Chromium bestanden. Ursache offen, der Test schreibt jetzt die Zeiger-Ereignisse in die Meldung |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | im ersten Anlauf fehlgeschlagen („zu: Position“, 53 statt höchstens 4 px), im zweiten bestanden; die Meldung nennt jetzt Scrollposition und Höhe des Kopfs |
+| Überlauf-Prüfungen am Dokument (11 Stellen in 10 Dateien) | seit dem Rahmen immer 0; Messung im Browser: ein 600 px breites Element bei 390 px, am Dokument 0, am Rahmen 230 px. Jetzt `pageOverflowX` (Rahmen und Dokument) |
+| Geänderte Tests in Chromium (`duo-feste-leisten`, `shopping`, `duo-resize` und die zehn Dateien mit Überlauf-Prüfung) | 139 bestanden |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 2 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40355441729 zu `932c3bc` (Nachtrag zu D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente und Build grün; E2E Chromium grün; E2E WebKit 354 bestanden, 111 übersprungen, 1 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, Handy-Profil (iPhone 15), `shopping.spec.ts` „Wisch nach links löscht nur diesen Artikel …“ | fehlgeschlagen in beiden Anläufen, am Desktop bestanden. Mitschrift wörtlich, erster Anlauf: „pointermove mouse Zeile x276 scroll 0/0 \| pointermove mouse Zeile x276 scroll 0/0 \| pointermove mouse Zeile x260 scroll 0/0“; zweiter Anlauf: „pointermove mouse Zeile x276 scroll 0/183 \| pointerdown mouse Zeile x276 scroll 0/183 \| pointermove mouse Zeile x260 scroll 0/183“. Nach dem Schritt, in dem die Zeile den Zeiger fing, kam nichts mehr an, auch kein Loslassen |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | bestanden |
+| Änderung | Die Zeile verfolgt die Geste am Fenster, ohne den Zeiger zu fangen; die Mitschrift nennt jetzt auch Maus-Ereignisse, gedrückte Tasten und Zeigerfang. Ob WebKit besteht, zeigt der nächste Lauf |
+| Unit-Test „folgt dem Zeiger auch neben der Zeile, ohne ihn zu fangen“ (`shopping-ui.test.tsx`) | bestanden; Gegenprobe mit der alten Fassung von `SwipeToDelete`: fehlgeschlagen |
+| Tastatur am Desktop, Gegenprobe (Chromium, „Übungen“, Fokus auf `body`) | Bild ab mit Weiterleitung an den Rahmen 630 px, ohne sie 0 px |
+| `ScrollManager.test.tsx` (2 Tests, neu): Tasten scrollen den Rahmen; Felder, Kürzel, andere Tasten und offene Dialoge bleiben unberührt | bestanden |
+| `e2e/rahmen-tastatur.spec.ts` (Desktop): Bild ab, Pfeil, Ende, Pos1, Leertaste; Fenster bleibt oben; im Suchfeld schreibt die Leertaste | bestanden |
+| `shopping`, `rahmen-tastatur`, `duo-feste-leisten` (Chromium) | 14 bestanden, 6 übersprungen |
+| `pnpm test` | 125 Dateien, 1091 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 3 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40360962751 zu `fc78543` (Nachtrag 2 zu D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente und Build grün; E2E Chromium 377 bestanden, 91 übersprungen; E2E WebKit 354 bestanden, 112 übersprungen, 2 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, Handy-Profil, `shopping.spec.ts` „Wisch nach links …“ | fehlgeschlagen in beiden Anläufen. Mitschrift wörtlich: „pointermove Zeile x276 b0 \| mousemove Zeile x276 b0 \| pointerdown Zeile x276 b1 \| mousedown Zeile x276 b1 \| pointermove Zeile x260 b1 \| mousemove Zeile x260 b1 \| dragstart Zeile x276 b0“. WebKit begann ein Ziehen des Browsers; danach kam nichts mehr. Jetzt ist Ziehen in der Zeile aus |
+| Unit-Test „lässt in der Zeile kein Ziehen des Browsers zu“ (`shopping-ui.test.tsx`) | bestanden; Gegenprobe mit der Fassung aus `fc78543`: fehlgeschlagen |
+| WebKit, Handy-Profil, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | fehlgeschlagen in beiden Anläufen: „hoch: Position (Scroll 190, Kopf 264.1875)“, 51,59 statt höchstens 4 px |
+| Nachgestellt in Chromium wie in WebKit (Profil iPhone 15, ohne sicheren Bereich; einmal ohne Scroll-Verankerung) | Satz bleibt an seiner Stelle; ohne Verankerung gleicht der Player die Verschiebung von 39 px binnen 50 ms aus. Ursache in WebKit nicht nachstellbar |
+| Neuer Test „Scrollt die Seite kurz nach dem Größenwechsel noch, steht der Satz wieder an seiner Stelle“ (60 px, 150 ms danach) | bestanden; Gegenprobe ohne das Festhalten: fehlgeschlagen (60 px daneben) |
+| `duo-resize.spec.ts` (Handy-Profil) dreimal hintereinander | 3 von 3 bestanden (je 4 Tests) |
+| `duo-resize`, `shopping`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten` (Chromium) | 31 bestanden, 15 übersprungen |
+| `pnpm test` | 125 Dateien, 1092 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Muskel-Etiketten in der Titelzeile · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Etiketten neben dem Namen, sonst in eigener Zeile darunter, nie über „Erstes Mal“ (D-386). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-etiketten.spec.ts` (zugeklappt, Zwischenmaß, aufgeklappt, 390 × 844, 320 × 640) | bestanden |
+| Gegenprobe: derselbe Test gegen den alten Stand | fehlgeschlagen („auf: Etiketten in der Titelzeile“, 0 statt mindestens 1); Überlappung zeigte Chromium auch am alten Stand nicht, nur das Gerät |
+| Bilder (Chromium): zugeklappt „Kniebeuge mit Langhantel“ mit „Oberschenkel vorne“ und „Gesäß“ in eigener Zeile; aufgeklappt „Bankdrücken mit Langhantel“ mit „Brust“ in einer Zeile vor (i) und „…“ | angesehen |
+| `duo-etiketten`, `duo-player`, `session`, `session-head`, `training-scroll`, `notes`, `duo-feste-leisten`, `duo-resize` (Chromium) | 23 bestanden, 15 übersprungen |
+| `pnpm test` | 125 Dateien, 1092 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 4 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40366596552 zu `439269a` (Nachtrag 3 zu D-384): alle vier Jobs grün. E2E Chromium bestanden; E2E WebKit 355 bestanden, 113 übersprungen, 2 erst im zweiten Anlauf („flaky“). Danach CI-Lauf 40370315333 zu `c7946a0` (D-386): Chromium grün, WebKit rot (siehe Tabelle).
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, Handy-Profil, `shopping.spec.ts` „Wisch nach links …“ | bestanden |
+| CI-Lauf 40370315333 zu `c7946a0` (D-386), WebKit | 356 bestanden, 114 übersprungen; fehlgeschlagen in beiden Anläufen der neue Test „Scrollt die Seite kurz nach dem Größenwechsel noch …“ (51,78 statt höchstens 4 px; im Lauf davor bestanden); „Training: Satz, Werte, Pause …“ erst im zweiten Anlauf (erster: „hoch: Position“, 8,2 px; Verlauf „resize 255: s304 r301 k264 \| bild 255 \| bild 639 \| bild 669“, alle s304 r301, zwischen zwei Bildern 384 ms) |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“, erster Anlauf | fehlgeschlagen: „zu: Position“, 53 statt höchstens 4 px. Verlauf (gekürzt): vorher Seite 138, Satz 482; „resize: s33 r535 k192 \| scroll: s33 r535 \| bild: s85 r483 \| bild: s33 r535“, danach bis zum Ende der Aufzeichnung (rund 360 ms) s33 r535 |
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“, erster Anlauf | fehlgeschlagen: „unter dem Kopf“ (5 s gewartet) |
+| Nachgestellt in Chromium (Profil iPhone 15, ohne sicheren Bereich und ohne Scroll-Verankerung, Aufrufe am Rahmen mitgeschrieben) | beim Zwischenmaß und zurück nur je ein `scrollBy` des Players (±39 px), kein Aufruf des ScrollManagers; der Satz steht danach an seiner Stelle |
+| `src/shared/ui/pageScroll.test.ts` (2 Tests, neu) | bestanden |
+| Neuer Test „Der Player hält die Lage selbst, solange der aktive Satz zu sehen ist“ (Chromium) | bestanden: Satz zu sehen `overflow-anchor: none`, weit weg gescrollt wieder leer, zurück wieder `none` |
+| `duo-resize`, `duo-player` (Chromium, Handy-Profil) | 8 bestanden |
+| `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `shopping`, `rahmen-tastatur`, `duo-etiketten`, `header-logo`, `program-list`, `tabbar`, `duo-resize`, `duo-player` (Chromium) | 53 bestanden, 27 übersprungen |
+| `pnpm test` | 126 Dateien, 1094 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 5 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40373060505 zu `2c2435c` (Nachtrag 4 zu D-384): Datenbank, Lint, Typen, Unit-Tests, Dokumente, Build und E2E Chromium grün; E2E WebKit 357 bestanden, 115 übersprungen, 2 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ und „Scrollt die Seite kurz nach dem Größenwechsel noch …“ | bestanden, im ersten Anlauf |
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“ | fehlgeschlagen in beiden Anläufen: „Satz 4 sichtbar“ (5 s gewartet); vorher an dieser Stelle bestanden |
+| WebKit, `duo-resize.spec.ts` „Der Player hält die Lage selbst …“ | fehlgeschlagen in beiden Anläufen: „wieder zu sehen“, `overflow-anchor` leer statt `none`; der Test nahm an, dass der Satz ganz oben zu sehen ist |
+| Änderung | Scroll-Verankerung nur noch aus, solange die App die Lage selbst nachführt (Festhalten nach dem Größenwechsel, Zurückgehen); der Test zum Halten und Freigeben entfällt |
+| `src/shared/ui/pageScroll.test.ts` (2 Tests) | bestanden |
+| `ScrollManager.test.tsx` „Leseposition beim Größenwechsel“ (2 Tests, neu) | bestanden; Gegenprobe ohne die Abfrage `ownPositionHeld`: „lässt die Lage der Seite, die sie selbst hält“ fehlgeschlagen |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `shopping`, `rahmen-tastatur`, `duo-etiketten`, `header-logo`, `program-list`, `tabbar` (Chromium) | 52 bestanden, 26 übersprungen |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 6 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40376784316 zu `f140453` (Nachtrag 5 zu D-384): alle Jobs außer E2E WebKit grün; E2E WebKit 356 bestanden, 114 übersprungen, 1 fehlgeschlagen, 1 erst im zweiten Anlauf.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“ | fehlgeschlagen in beiden Anläufen: „Satz 4 sichtbar“ |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“, erster Anlauf | fehlgeschlagen: „hoch: Position“, 8,2 px. Mitschrift wörtlich (gekürzt): „overflow-anchor ja; scrollBy {"top":39.21875,"behavior":"instant"} In@…/index-BO \< @…/SessionPag \| scrollTo {"top":304.21875,"behavior":"instant"} Ln@…/index-BO \< c@…/index-BOf \| resize 175: s304 r301 k264“; zweiter Anlauf bestanden |
+| Änderung | Sichtbarkeit des aktiven Satzes ohne den Abstand von 12 px gemessen; `duo-player.spec.ts` schreibt Größenwechsel, Scrollen und Aufrufe am Rahmen in seine Meldung (`e2e/scroll-log.ts`) |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `shopping`, `duo-etiketten` (Chromium) | 32 bestanden, 16 übersprungen |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,6 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 7 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40380283870 zu `fcc1828` (Nachtrag 6 zu D-384): alle Jobs außer E2E WebKit grün; E2E WebKit 354 bestanden, 114 übersprungen, 2 fehlgeschlagen, 2 erst im zweiten Anlauf, Laufzeit 19,1 min (sonst rund 12,5).
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-player.spec.ts` „Player aufgeklappt …“, erster Anlauf | fehlgeschlagen: „unter dem Kopf“, 25-mal „s704 r54 k192“; Mitschrift: „scrollBy 4729: {"top":260.5625} … SessionPag \| scrollTo 4786: {"top":704.375} … index \| resize 4787: 466×678“ |
+| WebKit, derselbe Test, zweiter Anlauf | fehlgeschlagen: „Satz 4 sichtbar (Satz 497 bis 605, Fußleiste ab 605; scrollBy 4552: {"top":25.078125,"behavior":"smooth"} … \| scroll 4578: s24 \| scrollBy 4581: {"top":-24,"behavior":"instant"} … \| scroll 4625: s0)“ |
+| WebKit, `start-surface.spec.ts` „Startfläche beim schnellen Start …“ | fehlgeschlagen in beiden Anläufen: 1303 bzw. 1281 statt unter 1190 bzw. 1163 ms; in allen Läufen davor bestanden |
+| WebKit, `duo-player.spec.ts` „Pause zugeklappt …“ und `duo-tabbar.spec.ts` „Tipp beim Aufgehen …“ | je im ersten Anlauf fehlgeschlagen (51,78 px im ersten Bild; Linse 128,7 statt über 306,2), im zweiten bestanden |
+| Änderung | Ausgleich für die Höhe des Kopfs nur, wenn er über der Liste steht; schiebt die neue Anordnung einen sichtbaren Satz hinter den Kopf oder unter die Fußleiste, zeigt der Player ihn sofort ganz |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `duo-etiketten` (Chromium) | 23 bestanden, 15 übersprungen; `duo-player` und `duo-resize` (Handy-Profil) zweimal wiederholt: 7 von 7 und 7 von 7 |
+| Gegenprobe | in Chromium nicht nachstellbar (dort kommt der Größenwechsel vor der neuen Darstellung, und das sanfte Zeigen endet vor der neuen Höhe des Kopfs); geprüft wird in WebKit in der CI |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Nachtrag 8 zu D-384 nach der CI · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+CI-Lauf 40385119596 zu `7ccb640` (Nachtrag 7 zu D-384): alle Jobs außer E2E WebKit grün; E2E WebKit 357 bestanden, 114 übersprungen, 1 fehlgeschlagen.
+
+| Nachweis | Ergebnis |
+|---|---|
+| WebKit, `duo-player.spec.ts` (alle drei Tests), `start-surface.spec.ts`, `duo-tabbar.spec.ts` | bestanden, im ersten Anlauf |
+| WebKit, `duo-resize.spec.ts` „Training: Satz, Werte, Pause …“ | fehlgeschlagen in beiden Anläufen: „hoch: Position“, 51,78 und 15,78 px. Mitschrift erster Anlauf: „scrollBy {"top":39.21875} … SessionPag \| resize 165: s175 r430 k264“, danach alle Bilder s175 r430; zweiter Anlauf: „scrollBy {"top":39.21875} … \| scrollBy {"top":-35.328125} … \| resize 189: s328 r277 k264“ |
+| Vergleich mit Lauf 40373060505 (Nachtrag 4, Verankerung aus, solange der Player die Lage hält) | dort bestand dieser Test im ersten Anlauf |
+| Änderung | Scroll-Verankerung wieder aus, solange der aktive Satz zu sehen ist; die Mitschrift nennt die Lage direkt nach dem Ausgleich für den Kopf |
+| `duo-resize`, `duo-player`, `training-scroll`, `session`, `session-head`, `notes`, `duo-feste-leisten`, `duo-etiketten`, `shopping`, `rahmen-tastatur` (Chromium) | 33 bestanden, 17 übersprungen; `duo-player`, `duo-resize`, `training-scroll` (Handy-Profil) zweimal wiederholt: 8 von 8 und 8 von 8 |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Knöpfe der Karte „Ernährung heute“ · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Aufgeklappt Knöpfe mittig im freien Raum unter den Makros (D-387). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/duo-heute-ernaehrung.spec.ts` | bestanden: aufgeklappt Karte und Wasser-Karte nebeneinander und gleich hoch, Knöpfe vertikal und horizontal mittig (je höchstens 1 px); zugeklappt 16 px unter den Makros, unten ohne Lücke |
+| Gegenprobe: derselbe Test gegen den alten Stand | fehlgeschlagen („vertikal mittig“, 51,9 px) |
+| `shopping.spec.ts` „„Heute“: runde Knöpfe mittig in „Ernährung heute““ | bestanden |
+| `duo-heute-ernaehrung`, `shopping`, `nutrition`, `nutrition-ring`, `duo-nutrition`, `water` (Chromium) | 40 bestanden, 6 übersprungen |
+| `pnpm test` | 126 Dateien, 1096 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Gerätedaten unter „Über die App“ · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Zugeklappter Bereich „Gerätedaten“, nachgeladen beim Aufklappen (D-388). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `settings/calc/deviceData.test.ts` (3 Tests) | bestanden |
+| `e2e/duo-geraetedaten.spec.ts` (Chromium mit sicherem Bereich) | bestanden: zugeklappt ohne Werte; 466 × 678, sicherer Bereich 0, 84, 34, 0; nach Aufklappen ohne Neuladen 951 × 669 und 0, 84, 20, 0; Zwischenmaß 669 × 951; beim Aufklappen nur Skripte der App von der eigenen Adresse; axe ohne Verstöße |
+| Bild (Chromium, zugeklappt): alle sieben Werte unter „Gerätedaten“, darunter die Tab-Leiste | angesehen |
+| Nachgeladen | eigene Datei `DeviceData` 2,69 KB (gzip 1,15 KB), nicht in der Startansicht |
+| `duo-geraetedaten`, `shell`, `update`, `network-a11y` (Chromium; `network-a11y` prüft „Über die App“ mit allen Seiten) | 81 bestanden, 9 übersprungen |
+| `pnpm test` | 127 Dateien, 1099 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem Gerätetest: Abschluss, Bilder in drei Breiten · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Tests je Abschnitt, Bilder erneuert, Bericht mit Ursache oder geprüften Hypothesen je Fehler und Liste für den erneuten Gerätetest (D-389). Bericht: `form-duo-report.md` Abschnitt 11. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Je Abschnitt ein Test, der am alten Stand fehlschlägt | §1 `duo-feste-leisten` (4 von 4 rot), §2 `duo-scanner-neustart`, §3 `duo-etiketten`, §4 `duo-heute-ernaehrung` (Gegenproben bei D-384 bis D-387); §5 neu: `deviceData.test.ts`, `duo-geraetedaten` |
+| Prüfung aus Abschnitt 6: kein Vorfahre der Leisten bildet einen eigenen Bezugsrahmen für `position: fixed` | `duo-feste-leisten.spec.ts`, mit Gegenprobe im Test; bestanden in Chromium und WebKit (CI) |
+| `node tools/duo-screens.mjs` | 84 Ansichten, Befunde wie nach D-383: 3 × Schrift unter 11 px, bewusst nach D-334, und 7 Hinweise zu Wochentag-Chips, axe ohne Verstöße; das Werkzeug prüft wieder die ganze Seite statt nur des sichtbaren Teils im Rahmen und wartet, bis die Testdaten fürs Wasser gespeichert sind |
+| Geänderte Bilder gegenüber D-383 | Player zugeklappt, im Zwischenmaß und aufgeklappt (Etiketten; im Zwischenmaß bleibt der aktive Satz an seiner Stelle), erster Start aufgeklappt (Knöpfe der Karte „Ernährung heute“), „Training verwerfen“ aufgeklappt und im Zwischenmaß (hinter dem Dialog die Etiketten; aufgeklappt steht die Seite dahinter weiter unten); in den übrigen 71 Bildern 2 bis 2 597 abweichende Pixel, in Stichproben ohne sichtbaren Unterschied |
+| CI, Lauf 40388811241 (`8b6656e`, Nachtrag 8 zu D-384) | alle vier Jobs grün; Chromium 379 bestanden, 93 übersprungen; WebKit 358 bestanden, 114 übersprungen |
+| CI, Lauf 40391095695 (`88b4533`, D-387) | alle vier Jobs grün; Chromium 380 bestanden, 94 übersprungen; WebKit 359 bestanden, 115 übersprungen |
+| CI, Lauf 40393360149 (`8bc5a28`, D-388) | alle vier Jobs grün; Chromium 381 bestanden, 95 übersprungen; WebKit 360 bestanden, 116 übersprungen |
+| `pnpm test` | 127 Dateien, 1099 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,7 KB von 250 KB |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 381 bestanden, 95 übersprungen, 0 fehlgeschlagen, 11,1 min |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem zweiten Gerätetest: Startfläche und Startbilder · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Startfläche in der Mitte des ganzen Bildschirms, vier Startbilder für das Duo (D-390). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen in Bild A (Einzelbilder, Maßstab aus der Bildschirmbreite) | Mitte von Logo und Claim zugeklappt 190 statt 233 pt, aufgeklappt quer 433 statt 475,5 pt; Wortmarke zugeklappt 139 pt breit (36 % von 382 pt) |
+| Nachgemessen in Bild B und in den Bildern vom ersten Gerätetest | jetzt endet der Inhalt bei 362 pt (382 minus 20 pt Rand), die Tab-Leiste bei 370 pt; vorher endeten Karten und Tab-Leiste bei 382 bis 384 pt, also beim sicheren Bereich von rund 84 pt in einem 466 pt breiten Bereich |
+| `node tools/splash.mjs`, dann die 40 bestehenden Bilder aus Git zurück (Chromium schrieb sie bytegleich bis auf Kleinigkeiten neu) | 4 neue Bilder: 1398 × 2034, 2034 × 1398, 2007 × 2853, 2853 × 2007 |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“ |
+| `src/app/splash.test.ts` | 14 Tests bestanden, darunter neu: Duo hoch und quer verlinkt, Regel C3 in 1398 × 2034 und 2853 × 2007, Startfläche ohne sichere Bereiche, Regeln fürs Duo |
+| `e2e/start-surface.spec.ts` (Chromium, Handy-Profil; Bildschirm und Bereich der App getrennt eingestellt) | 13 bestanden, darunter die vier neuen: zugeklappt (Bereich 382 und 466 pt) und aufgeklappt quer (867 und 951 pt): Symbol in der Mitte des ganzen Bildschirms, Fläche pixelgleich mit dem Startbild (mittlere Abweichung unter 0,25 von 255) |
+| Gegenprobe: dieselben vier Tests mit der Startfläche vor D-390 | 2 fehlgeschlagen („Mitte des Symbols 191“ und „433.5“, wie auf den Bildern), 2 bestanden (Bereich so breit wie der Bildschirm) |
+| WebKit | Die vier neuen Tests laufen nur in Chromium: WebKit in Playwright stellt Bildschirm und Fenster nicht getrennt ein |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 383 bestanden, 99 übersprungen, 2 fehlgeschlagen: `pwa.spec.ts` erwartete 40 Startbilder (Desktop und Handy); jetzt 44, danach `pwa.spec.ts` 6 bestanden |
+| `pnpm test` | 127 Dateien, 1103 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 236,8 KB von 250 KB (`index.html` 5,7 KB); Startbilder nicht vorab gespeichert, wie bisher |
+| WebKit | läuft in der CI (GitHub Actions) |
+
+### Korrekturen nach dem zweiten Gerätetest: Tastatur in Formularen · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Tab-Leiste und Kreis bei offener Tastatur aus, angetipptes Feld im oberen Teil der Seite, Fußleiste im Training über der Tastatur (D-391). Browser-Fenster, nicht das Gerät; die Tastatur ist als um 55 % niedrigeres Fenster nachgestellt.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen in Bild B | Tastatur samt Leiste darüber 54 % der Höhe; die Tab-Leiste liegt darüber, mitten im Formular |
+| Nachgemessen im Player (Chromium, Duo zugeklappt) | Kopf 120 px, mit laufender Pause 192 px; Fußleiste 111 px (mit sicherem Bereich unten), Satzzeile 108 px, Feld 48 px. Mit Pause passen Kopf, Feld, Fußleiste und Tastatur nicht zugleich in 678 px |
+| `src/app/keyboard.test.ts`, `src/modules/training/ui/player/useFootClearOfField.test.tsx` | 13 und 6 Tests bestanden |
+| `e2e/duo-tastatur.spec.ts` (Chromium, Handy-Profil; zugeklappt, aufgeklappt, iPhone je sieben Formulare) | 21 bestanden |
+| Gegenprobe: dieselben 21 Tests mit dem Stand vor D-391 | 21 von 21 fehlgeschlagen. 16 an der Sache, z. B. „zugeklappt, Was möchtest du einkaufen?: ganz zu sehen (182 bis 230 von 305, darüber <a data-tab=\"/heute\" class=\"tabbar-tab\" …)“, „zugeklappt, Lebensmittel suchen: im oberen Teil (Feld 450 bis 498, oben 80, Linie 271)“, „iPhone, kg im ersten Satz: im oberen Teil (Feld 536 bis 584, oben 80, Linie 341)“; 5 nur an den neuen Klassen `tabbar-dock` und `player-foot` („Tab-Leiste wieder da“ bei „Gewicht erfassen“ in allen Haltungen und aufgeklappt in der Einkaufsliste, „Fußleiste über der Tastatur“ aufgeklappt im Training) |
+| Erste Fassung (Fußleiste im niedrigen Fenster beim Tippen immer aus), ganze Suite | 401 bestanden, 120 übersprungen, 5 fehlgeschlagen: vier Tests im Training kamen nicht an „Satz erledigt“ (Zeitüberschreitung beim Klick, das Feld hatte noch den Fokus), `training-scroll.spec.ts` „verdeckt von der Fußleiste“. Danach: Fußleiste nur aus, wenn sie das Feld verdeckte |
+| Zweite Fassung, Training (`duo-tastatur`, `duo-player`, `duo-resize`, `training-scroll`) | 26 bestanden, 3 fehlgeschlagen: `training-scroll.spec.ts` (der Kopf als `scroll-padding-top` des Rahmens zählte mit dem `scroll-margin-top` der Satzzeilen doppelt; jetzt eigene Angabe `--tastatur-oben`) und zwei Tests in `duo-resize.spec.ts` (Satz 72,8 px tiefer) |
+| Dritte Fassung, dieselben Dateien | 27 bestanden, 2 fehlgeschlagen: `duo-player.spec.ts` „erstes Bild nach dem Wechsel“ (72,8 px) und einmal „Satzzeile unter 20 rem“ (der Dialog „Training beenden?“ meldete den eben erledigten Satz als offen; in drei Wiederholungen danach bestanden) |
+| Satz 72,8 px tiefer | Seit dem Antippen steht der Satz direkt unter dem Kopf. Wird der Kopf beim Aufklappen 72 px höher (Pause als Karte), läge er darüber; der Player rückt den Satz 12 px darunter, wie seit D-380. Drei Tests erwarten jetzt: an seiner Stelle, oder 12 px unter dem Kopf, wenn dieser darüber läge |
+| `duo-player.spec.ts`, dreimal wiederholt | 9 bestanden |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 406 bestanden, 120 übersprungen, 0 fehlgeschlagen, 10,5 min |
+| `pnpm test` | 129 Dateien, 1122 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions); die neuen Tests laufen dort nur, wenn WebKit einen Touch-Zeiger meldet (`pointer: coarse`), sonst übersprungen |
+
+### Korrekturen nach dem zweiten Gerätetest: Scroll-Balken, Bilder und Abschluss · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Keine Scroll-Balken am Touch-Gerät, dünne in den Farben der App am Computer (D-392); Bilder erneuert. Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `src/app/scrollbars.test.ts`, `src/shared/ui/tokens.test.ts` | 5 Tests bestanden; Griff `--scrollbar-thumb` auf `--bg`, `--surface`, `--surface-2` und `--panel` mindestens 3:1, hell und dunkel (8 Tests) |
+| `e2e/scrollbars.spec.ts` (Chromium, Handy- und Desktop-Profil) | 3 bestanden, 3 übersprungen (je Profil nur die passenden) |
+| Gegenprobe: dieselben Tests mit dem Stand vor D-392 | 3 von 3 fehlgeschlagen: Der Rahmen `#seite` hatte `scrollbar-width: auto`, erwartet waren am Computer `thin` und am Touch-Gerät `none` |
+| Breite am Computer, gemessen mit sichtbaren Balken (Chromium ohne `--hide-scrollbars`, Übungsliste) | Rahmen 10 px statt 15 px ohne Vorgabe; Griff #6b7482 auf durchsichtiger Spur. Mit dem Handy-Profil 0 px. Playwright blendet Balken in Chromium ohne Fenster sonst aus |
+| `node tools/duo-screens.mjs` (84 Ansichten) | 2 Bilder geändert: `dialog-verwerfen-auf.png` (der Inhalt hinter dem Dialog steht 7 px höher, die Einheit stammt aus den Ansichten davor, in denen Felder angetippt wurden) und das Übersichtsbild; `befunde.json` unverändert. Scroll-Balken zeigen die Bilder weder vorher noch nachher: Das Handy-Profil zeichnet keine |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 409 bestanden, 123 übersprungen, 0 fehlgeschlagen, 10,6 min |
+| `pnpm test` | 130 Dateien, 1135 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,9 KB von 250 KB |
+| WebKit | läuft in der CI (GitHub Actions); die Tests prüfen dort nur, was die Engine kennt (`scrollbar-width`, `scrollbar-color`, Touch-Zeiger) |
+
+### Nachtrag zu D-391 nach der CI (WebKit) · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI-Lauf 40413276661 (`8a7c7ac`, D-391) | Chromium grün; WebKit 380 bestanden, 145 übersprungen, 1 fehlgeschlagen, auch im zweiten Anlauf: `duo-tastatur.spec.ts` „iPhone: Anmeldung“, Meldung „iPhone, E-Mail: ganz zu sehen (-32 bis 16 von 383, darüber <input id=\"_r_1_-email\" …>)“. Die übrigen 20 neuen Tests liefen in WebKit (es meldet `pointer: coarse`) und bestanden |
+| Ursache | WebKit stellt keinen sicheren Bereich nach. Der Abstand über dem Logo der Anmeldung (`max(env(safe-area-inset-top) + … + 4.5rem, 30dvh - 2rem)`) hängt dann nur an der Fensterhöhe und wird mit der Tastatur 140 px kleiner; das Feld rutscht oben aus dem Bild. In Chromium mit nachgestelltem sicherem Bereich schrumpft er weniger, dort blieb das Feld zu sehen |
+| Neuer Test in Chromium (Anmeldung am iPhone ohne sicheren Bereich), Stand ohne Korrektur | 1 fehlgeschlagen: „iPhone ohne sicheren Bereich, E-Mail: ganz zu sehen (-32 bis 16 von 383 …)“, wie in der CI; die drei bisherigen Tests zur Anmeldung bestanden |
+| Mit `keepFieldVisible` | `keyboard.test.ts` 16 Tests bestanden; `duo-tastatur`, `duo-player`, `duo-resize`, `training-scroll`, `scrollbars` (Handy-Profil) 32 bestanden, 1 übersprungen |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 410 bestanden, 124 übersprungen, 0 fehlgeschlagen, 10,1 min |
+| `pnpm test` | 130 Dateien, 1138 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 238,0 KB von 250 KB |
+| CI zu D-392 (Lauf 40415825999, `17e0fbc`) | Chromium grün; WebKit 381 bestanden, 148 übersprungen, 3 fehlgeschlagen: dieselbe Anmeldung und die beiden Touch-Tests aus `scrollbars.spec.ts` (Nachtrag zu D-392) |
+
+### Nachtrag zu D-392 nach der CI (WebKit) · 26.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI-Lauf 40415825999 (`17e0fbc`, D-392) | Chromium grün; WebKit 381 bestanden, 148 übersprungen, 3 fehlgeschlagen: die Anmeldung aus D-391 (Nachtrag zu D-391) und beide Tests am Touch-Gerät aus `scrollbars.spec.ts` mit „mouse.wheel: Mouse wheel is not supported in mobile WebKit“, auch im zweiten Anlauf. Die Prüfung der Balken davor bestand in WebKit; der Test am Computer bestand |
+| `e2e/scrollbars.spec.ts` mit Wischen statt Mausrad (Chromium als Wisch-Geste über `Input.dispatchTouchEvent`, WebKit per Skript), dreimal wiederholt | 9 bestanden, 9 übersprungen (je Profil nur die passenden) |
+| `pnpm lint`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+
+### Startfläche nach der Messung am Gerät · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Startfläche in allen vier Haltungen des Duo in der Mitte des ganzen Bildschirms, Gerätedaten erweitert (D-393). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen im Messbild A (Maßstab aus der Breite der Einzelbilder, 0,904 und 0,896 px je pt) | aufgeklappt hoch: Wortmarke 166 pt breit (36 % von 466 statt von 669 pt), Mitte des Logos 232 pt (Bildschirmmitte 334,5), senkrecht 490 pt, Claim unten 892 pt: passt nur zu einem Fenster 669 × 869 bei 82 pt; aufgeklappt quer: Mitte 433 pt (Bildschirmmitte 475,5), Wortmarke 239 pt breit (36 % von 669 pt), Mitte des Logos senkrecht 315 pt (47 % von 669 pt): Fenster beim Start 867 × 669, ohne Streifen oben |
+| `src/app/startLage.test.ts` | 16 Tests bestanden: die vier Haltungen mit den Messwerten (zugeklappt hoch 42, 0 aus `screen.*`; aufgeklappt hoch 0, −41 und quer 42, −41 aus den Maßen des Duo; zugeklappt quer 42, 0, angenommen), der Start quer (867 × 669: 42, 0), Fenster so groß wie das Display, `screen.*` richtig gemeldet, `screen.*` hochkant bei Fenster quer, nie in die Gegenrichtung (5 Fenster mit 5 gemeldeten Bildschirmen), Rückfall ins Fenster (iPhone, geteilter Bildschirm, ohne `screen`, Seite unbekannt, Handy-Profil der Tests), `screenX` zählt nicht, CSS-Variablen beim Laden und nach dem Aufklappen, Ende nach dem Start |
+| `src/app/splash.test.ts` | 19 Tests bestanden, neu je Lage (zugeklappt hoch und quer, aufgeklappt hoch und quer, quer beim Start): Startbild dekodiert und gemessen, Startfläche aus den Prozentwerten der `<use>`-Elemente und der Rechnung: Mitte des Logos waagrecht und senkrecht, Breite der Wortmarke, Mitte und Unterkante des Claims auf 1 pt gleich; die Verschiebung der Gerätedaten führt von der Mitte des Fensters zur Mitte des Bildschirms |
+| `src/modules/settings/calc/deviceData.test.ts` | 4 Tests bestanden: 13 Zeilen in fester Reihenfolge, zugeklappt hoch „466 × 678, aus screen.*“ und „42, 0“, aufgeklappt hoch „669 × 951, Maße des Duo“ und „0, -41“, quer „951 × 669, Maße des Duo“ und „42, -41“; fehlende Werte „nicht verfügbar“ |
+| `e2e/start-surface.spec.ts` (Chromium, Handy-Profil, Bildschirm 466 × 678 gemeldet) | sieben Lagen des Duo bestanden, neu aufgeklappt hoch (669 × 869), aufgeklappt quer mit Streifen oben (867 × 587) und beim Start (867 × 669): Symbol in der Mitte des ganzen Bildschirms, Fläche pixelgleich mit dem Ausschnitt des Startbilds |
+| Gegenprobe: dieselben sieben Tests mit dem Stand vor D-393 (`index.html` aus `8e17394`, neu gebaut) | 4 von 7 fehlgeschlagen: Mitte des Symbols 42 pt neben der Bildschirmmitte (zugeklappt quer, aufgeklappt quer mit und ohne Streifen oben) und 101,5 pt (aufgeklappt hoch), wie am Gerät gemessen; 3 bestanden (zugeklappt hoch, Fenster so groß wie der Bildschirm) |
+| Erster Lauf nach dem Umbau | `Startfläche: gleich dem Startbild` scheiterte mit „mittlere Abweichung je Kanal 1.5263662161371483“, dreimal gleich: Das Handy-Profil Pixel 7 meldet einen Bildschirm von 412 × 915 bei einem Fenster von 390 × 844, die erste Fassung nahm ihn als plausibel und zeichnete die Grafik dafür. Jetzt zählt der Bildschirm nur mit bekannter Lage des Fensters; danach bestanden |
+| `e2e/duo-geraetedaten.spec.ts` (Chromium, Handy-Profil) | bestanden: die neuen Zeilen `screen.*`, `screen.avail*`, `outerWidth`, `screenX / screenY` mit Zahlen; Startfläche zugeklappt „466 × 678“, aufgeklappt quer „951 × 669“ und hoch „669 × 951“, Verschiebung „0, 0“, denn das Fenster ist dort so groß wie das Display |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 413 bestanden, 127 übersprungen, 0 fehlgeschlagen, 11,2 min; die Ergänzung in `duo-geraetedaten.spec.ts` danach einzeln bestanden |
+| `pnpm test` | 131 Dateien, 1160 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 242,3 KB von 250 KB. Neu zählt `tools/check-bundle-size.mjs` die Skripte im Kopf mit, die es bisher nicht erfasste: `startflaeche.js` 2,6 KB, `theme-init.js` 1,6 KB; ohne sie 238,1 KB. `startflaeche.js` ist vorab gespeichert |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“; die 44 Startbilder sind unverändert |
+| WebKit | läuft in der CI (GitHub Actions); die Lagen des Duo nur in Chromium, wie seit D-390 |
+
+### Startfläche ohne einmalige Messung · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Die Startfläche misst in jedem Bild, das Logo erscheint erst bei stabilen Werten, Widersprüche zählen nicht, die Gerätedaten zeigen das Protokoll des Starts (D-394). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgemessen im Bild `duo-startflaeche-wechselnd.png` (Maßstab 640 px für 951 pt) | Start 1 und 3: Mitte des Logos 474,8 pt, senkrecht 314,3 pt, Wortmarke 239,2 pt; Start 4: Mitte 231,8 pt, senkrecht 314,3 pt, Wortmarke 237,8 pt. Streifen rechts (84 pt) auf allen drei Bildern, das Fenster war 867 pt breit. Passt zu einer Grafik von 466 × 669 pt |
+| `src/app/startLage.test.ts` | 28 Tests bestanden: Rechnung mit den Messwerten, Widersprüche (466 × 669, 466 × 678, 382 × 678 bei quer; 867 × 669 bei hoch), Rückfälle (iPhone, auch unter der Statusleiste und quer, Handy-Profil der Tests, iPad, geteilter Bildschirm, ohne `screen`), und Bild für Bild mit nachgestellter Seite: vierter Start, zuerst zugeklappt ohne Widerspruch, Widerspruch über 100 ms, Widerspruch bleibt (Logo nach 300 ms ohne Streifen), ohne Bilder (Zeitgeber), Computer, `window.orientation`, Streifen oben kommt nach dem Erscheinen dazu, echtes Zuklappen, Widerspruch nach dem Erscheinen, alle vier Hörer, Ende nach dem Entfernen der Fläche, höchstens 10 s und 20 Änderungen |
+| `src/app/splash.test.ts` | 19 Tests bestanden: CSS (Grafik = Fenster plus Streifen, Logo verborgen bei `data-startlage=warten`, 300 ms in CSS und Skript gleich, Claim mit `min(100vw + …, 100vh + …)`), Startbild gegen Fläche in fünf Lagen auf 1 pt |
+| `src/modules/settings/calc/deviceData.test.ts` | 6 Tests bestanden: 17 Zeilen in fester Reihenfolge, Protokoll des Starts, Widerspruch, fehlende Werte |
+| `e2e/start-surface.spec.ts`, neue Tests (Chromium, Handy-Profil, Fenster 867 × 669, Bildschirm 466 × 678, quer; zuerst 466 × 669 gemeldet), je dreimal wiederholt | 6 bestanden. In jedem mitgeschnittenen Bild mit Logo liegt die Mitte bei 475,5 pt, am Ende pixelgleich mit dem Startbild; erstes Protokoll 466 × 669, erste Änderung 867 × 669, Logo „stabil“ |
+| Erster Lauf des Tests mit 120 ms falschen Werten | scheiterte am Test, nicht an der App: Bis das Skript lief, waren seit Beginn der Navigation schon mehr als 120 ms vergangen, die Seite meldete schon die echten Werte. Die Zeit zählt jetzt ab dem ersten Lesen |
+| Gegenprobe im Browser mit denselben Werten beim Laden (Bilder mitgeschnitten) | Stand D-393: Grafik 466 × 669, Mitte 233,0 pt, vom ersten Bild an sichtbar, wie beim vierten Start. Stand D-394: 40 Bilder, das erste ohne Logo, danach in jedem Bild 475,5 pt; mit 120 ms falschen Werten 38 Bilder, 9 ohne Logo, danach 475,5 pt |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 414 bestanden, 129 übersprungen, 1 fehlgeschlagen, 12,1 min: `duo-resize.spec.ts` „Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- und Zuklappen (D-375)“ mit „zu: Position … Expected: <= 4, Received: 24.1875“. Die Datei danach einzeln fünfmal wiederholt: 20 von 20 bestanden; die Startfläche ist in diesem Test längst entfernt |
+| `e2e/duo-geraetedaten.spec.ts` mit den neuen Zeilen, Muster für ein abweichendes Layout gelockert | bestanden |
+| `pnpm test` | 131 Dateien, 1174 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs` | ohne Befund |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 244,7 KB von 250 KB (`startflaeche.js` 4,9 KB, `theme-init.js` 1,6 KB) |
+| `node tools/splash.mjs --check` | „Bilder, Vorlage und Startfläche passen zur Regel“; die 44 Startbilder sind unverändert |
+| WebKit | läuft in der CI; die Tests mit Ausrichtung über das Chrome-Protokoll nur in Chromium |

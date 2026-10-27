@@ -1,9 +1,11 @@
 import type { Locator, Page } from '@playwright/test';
-import { expect, openPage, test } from './fixtures';
+import { expect, openPage, pageOverflowX, test } from './fixtures';
 
 /** Programme und Training (F5, D-324): Seitenanfang, Etiketten in den Karten, „Bereit für dein Training?“. */
 
-const scrollY = (page: Page) => page.evaluate(() => window.scrollY);
+/** Scrollposition der Seite: Es scrollt der Rahmen der App, nicht das Fenster (D-384). */
+const scrollY = (page: Page) =>
+  page.evaluate(() => document.getElementById('seite')?.scrollTop ?? Number.NaN);
 
 /**
  * „Programm aktivieren“ und warten, bis es gespeichert ist: Der Knopf verschwindet erst dann.
@@ -119,9 +121,7 @@ for (const width of [360, 390, 768]) {
         `${label}: Chevron mittig`,
       ).toBeLessThanOrEqual(2);
     }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
-      width,
-    );
+    expect(await pageOverflowX(page), 'waagrechter Überlauf').toBeLessThanOrEqual(0);
   });
 }
 

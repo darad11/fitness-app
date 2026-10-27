@@ -1,4 +1,5 @@
 import type { RouteObject } from 'react-router';
+import { loadExerciseVisuals } from '@/modules/exercises';
 
 /**
  * Fortschritt (S-27), Übungsverlauf (C-02) und Übungsdetail (S-13). Das Detail liegt hier, weil es
@@ -19,8 +20,12 @@ export const progressRoutes: RouteObject[] = [
   },
   {
     path: 'uebungen/:exerciseId',
-    lazy: async () => ({
-      Component: (await import('./ui/ExerciseDetailPage')).ExerciseDetailPage,
-    }),
+    lazy: async () => {
+      const [{ ExerciseDetailPage }] = await Promise.all([
+        import('./ui/ExerciseDetailPage'),
+        loadExerciseVisuals(),
+      ]);
+      return { Component: ExerciseDetailPage };
+    },
   },
 ];

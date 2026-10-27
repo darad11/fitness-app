@@ -2183,4 +2183,6 @@ Bestandsaufnahme, Gerüst für Visuals mit Rückfall auf das Symbol, Ausführung
 | `vitest run src/modules/training src/modules/exercises` | 244 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | 237,7 KB von 250 KB |
 | Bilder | `node tools/uebungen-screens.mjs` neu, 14 Ansichten und Übersicht |
+| CI Lauf 40500435564 (`8879e65`), E2E WebKit | `duo-tastatur.spec.ts` jetzt bestanden. 2 fehlgeschlagen: `program-list.spec.ts` mit „Fetch API cannot load …/uebungen/medien.json due to access control checks“ (Abruf der Liste lief noch beim Seitenwechsel), `uebungen.spec.ts` (mit Testbild war das kompakte Bild 72 px hoch, erster Satz unten bei 633 px, Leiste ab 601). 2 erst im zweiten Anlauf: `program-list.spec.ts` (Desktop), `player.spec.ts` (Info schließen) |
+| Behoben (zweiter Nachtrag) | Seiten mit Übungsbildern laden Komponenten und Liste der Visuals in ihrem `lazy` (`loadExerciseVisuals`): Player, Zusammenfassung, Vorlage, Trainingstag bearbeiten, Übungsdetails, Bibliothek. Kompaktes Bild so groß wie das Symbol (56 px). Danach 10 E2E-Dateien (Chromium) 61 bestanden; `vitest run src/modules` 677 bestanden; Startansicht 237,8 KB |
 

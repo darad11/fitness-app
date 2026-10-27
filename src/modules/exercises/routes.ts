@@ -7,8 +7,14 @@ import type { RouteObject } from 'react-router';
 export const exercisesRoutes: RouteObject[] = [
   {
     path: 'uebungen',
-    lazy: async () => ({
-      Component: (await import('./ui/ExerciseLibraryPage')).ExerciseLibraryPage,
-    }),
+    // Liste der Visuals vor der Seite (D-397), damit beim schnellen Weiterwechseln kein Abruf
+    // mehr läuft.
+    lazy: async () => {
+      const [{ ExerciseLibraryPage }] = await Promise.all([
+        import('./ui/ExerciseLibraryPage'),
+        import('./ui/visuals').then((m) => m.loadVisualIndex()),
+      ]);
+      return { Component: ExerciseLibraryPage };
+    },
   },
 ];

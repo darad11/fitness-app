@@ -174,7 +174,7 @@ function Demo({
       );
   } else if (variant === 'compact') {
     body = (
-      <span className="block size-demo-compact shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]">
+      <span className="block size-thumb shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]">
         <Img
           file={visual.preview}
           alt={visual.alt}

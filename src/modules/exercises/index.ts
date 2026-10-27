@@ -43,6 +43,15 @@ export const ExerciseGuideView = lazy(async () => ({
 }));
 export type { ExerciseDemoProps } from './ui/ExerciseVisual';
 
+/**
+ * Lädt Komponenten und Liste der Visuals, bevor eine Seite mit Übungen erscheint (im `lazy` der
+ * Route). Sonst liefe der Abruf der Liste noch, wenn man gleich weiterwechselt, und WebKit meldet
+ * den abgebrochenen Abruf als Fehler. Scheitert nie: Ohne Liste gibt es das Symbol.
+ */
+export async function loadExerciseVisuals(): Promise<void> {
+  await (await visuals()).loadVisualIndex();
+}
+
 /** Lädt die Demonstrationen der genannten Übungen vor (aktuelle und nächste im Player). */
 export async function preloadExerciseDemos(exerciseIds: readonly string[]): Promise<void> {
   const { loadVisualIndex, preloadVisual } = await visuals();

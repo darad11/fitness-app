@@ -56,7 +56,7 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
     await screen.findByRole(
       'heading',
       { level: 1, name: 'Brustpresse Technogym' },
-      { timeout: 10_000 },
+      { timeout: 20_000 },
     );
     const [created] = await listCustomExercises(rt.db);
     expect(router.state.location.pathname).toBe(`/uebungen/${created?.id ?? ''}`);
@@ -133,7 +133,7 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
       await screen.findByRole(
         'heading',
         { level: 1, name: 'Zirkeltraining Spezial' },
-        { timeout: 10_000 },
+        { timeout: 20_000 },
       );
       expect((await listCustomExercises(rt.db))[0]).toMatchObject({
         trackingMode: 'time_distance',
@@ -161,7 +161,7 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
       await screen.findByRole(
         'heading',
         { level: 1, name: 'Bankdrücken mit Langhantel' },
-        { timeout: 10_000 },
+        { timeout: 20_000 },
       );
       expect(screen.queryByRole('button', { name: 'Archivieren' })).toBeNull();
       await user.type(

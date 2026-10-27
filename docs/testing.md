@@ -2170,4 +2170,5 @@ Bestandsaufnahme, Gerüst für Visuals mit Rückfall auf das Symbol, Ausführung
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,7 KB von 250 KB; „Vorab gespeichert: 188 von 251 Dateien“, Prüfsummen passen; `uebungen/medien.json` vorab gespeichert, Bilder unter `uebungen/medien/` nicht |
 | Bilder `node tools/uebungen-screens.mjs` | 14 Ansichten und Übersicht in `docs/screens/uebungen/`, selbst angesehen |
 | WebKit | läuft in der CI |
+| Nachtrag nach der CI (Lauf 40492306595, Job „Lint, Typen, Unit-Tests“) | `custom-exercises-ui.test.tsx` „legt eine Übung an …“ scheiterte mit „Unable to find role="heading" and name "Brustpresse Technogym"“ nach 10 s; der DOM-Auszug zeigt noch die Bibliothek. Ursache: Die Liste hat jetzt 124 Symbol-Kacheln mit je 5 SVG-Pfaden, Rollen-Abfragen in jsdom mit Coverage dauern damit länger. Neu: Symbol als ein Pfad (gleiches Bild, 496 Elemente weniger in der Liste), Wartezeit dieses Schritts 20 s (Test 40 s). Danach `pnpm test:coverage` 134 Dateien, 1203 Tests bestanden; `uebungen.spec.ts` und `custom-exercises.spec.ts` bestanden |
 

@@ -1,6 +1,6 @@
 // Öffentliche Schnittstelle des Moduls „exercises" (Basisbibliothek, Suche).
 import type { DocDef, RootFields } from '@/shared/db';
-import { lazy } from 'react';
+import { lazy, type ComponentType } from 'react';
 
 /** Übungsauswahl (S-39), erst beim Öffnen geladen, damit sie den Start nicht verlangsamt. */
 export const ExercisePicker = lazy(async () => ({
@@ -32,33 +32,57 @@ export { MuscleTags } from './ui/MuscleTags';
 // erst, wenn eine Übung angezeigt wird.
 // Wie `ExercisePicker` nur als `lazy` exportiert, damit nichts davon in die Startansicht kommt.
 // Andere Module setzen eine eigene `Suspense` mit dem Symbol in der Kachel als Platzhalter.
+type VisualsModule = typeof import('./ui/visuals');
+/**
+ * Fehlt der nachgeladene Teil (Deployment, kein Netz), sind Bilder verzichtbar: Die Komponenten
+ * zeigen dann nichts, die Seite bleibt benutzbar (D-400). Den Fehlschlag meldet der Lade-Helfer
+ * von Vite als `vite:preloadError`; außerhalb eines Trainings lädt die App dann genau einmal neu
+ * (D-343), im Training nie.
+ */
+const visuals = (): Promise<VisualsModule> => import('./ui/visuals');
+function visualLazy<P extends object>(pick: (module: VisualsModule) => ComponentType<P>) {
+  const missing: ComponentType<P> = () => null;
+  return lazy(async () => {
+    try {
+      return { default: pick(await visuals()) };
+    } catch {
+      return { default: missing };
+    }
+  });
+}
 /** Vorschaubild links neben dem Namen in Übungslisten (D-397). */
-const visuals = () => import('./ui/visuals');
-export const ExerciseThumb = lazy(async () => ({ default: (await visuals()).ExerciseThumb }));
+export const ExerciseThumb = visualLazy((m) => m.ExerciseThumb);
 /** Demonstration der Übung im Player, in der Übungsinfo und in den Details (D-397). */
-export const ExerciseDemo = lazy(async () => ({ default: (await visuals()).ExerciseDemo }));
+export const ExerciseDemo = visualLazy((m) => m.ExerciseDemo);
 /** Ausführung mit Quellen (D-398). */
-export const ExerciseGuideView = lazy(async () => ({
-  default: (await visuals()).ExerciseGuideView,
-}));
+export const ExerciseGuideView = visualLazy((m) => m.ExerciseGuideView);
 export type { ExerciseDemoProps } from './ui/ExerciseVisual';
 
 /**
  * Lädt Komponenten und Liste der Visuals, bevor eine Seite mit Übungen erscheint (im `lazy` der
  * Route). Sonst liefe der Abruf der Liste noch, wenn man gleich weiterwechselt, und WebKit meldet
- * den abgebrochenen Abruf als Fehler. Scheitert nie: Ohne Liste gibt es das Symbol.
+ * den abgebrochenen Abruf als Fehler. Scheitert nie: Ohne Liste gibt es das Symbol, ohne den
+ * nachgeladenen Teil nichts (D-400).
  */
 export async function loadExerciseVisuals(): Promise<void> {
-  await (await visuals()).loadVisualIndex();
+  try {
+    await (await visuals()).loadVisualIndex();
+  } catch {
+    // Gemeldet über `vite:preloadError` (siehe oben).
+  }
 }
 
 /** Lädt die Demonstrationen der genannten Übungen vor (aktuelle und nächste im Player). */
 export async function preloadExerciseDemos(exerciseIds: readonly string[]): Promise<void> {
-  const { loadVisualIndex, preloadVisual } = await visuals();
-  const index = await loadVisualIndex();
-  for (const id of exerciseIds) {
-    const entry = index.get(id);
-    if (entry) preloadVisual(entry.visual);
+  try {
+    const { loadVisualIndex, preloadVisual } = await visuals();
+    const index = await loadVisualIndex();
+    for (const id of exerciseIds) {
+      const entry = index.get(id);
+      if (entry) preloadVisual(entry.visual);
+    }
+  } catch {
+    // Vorladen ist verzichtbar.
   }
 }
 

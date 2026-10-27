@@ -133,7 +133,25 @@ test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur a
     .first()
     .boundingBox();
   const footTop = (await page.locator('.player-foot').boundingBox())?.y ?? 0;
-  expect((firstSet?.y ?? 0) + (firstSet?.height ?? 0)).toBeLessThanOrEqual(footTop);
+  // Lage der Blöcke über dem ersten Satz, damit ein Fehlschlag in WebKit die Ursache zeigt.
+  const layout = await page.evaluate(() =>
+    [
+      ...document.querySelectorAll(
+        '.player-frame section, .player-frame section > *, .player-frame [data-demo], .player-frame [data-visual], .player-frame img',
+      ),
+    ]
+      .map((node) => {
+        const box = node.getBoundingClientRect();
+        const name = `${node.tagName.toLowerCase()}.${(node.getAttribute('class') ?? '').slice(0, 40)}`;
+        return `${name} y=${Math.round(box.top)} h=${Math.round(box.height)} w=${Math.round(box.width)}`;
+      })
+      .slice(0, 40)
+      .join('\n'),
+  );
+  expect(
+    (firstSet?.y ?? 0) + (firstSet?.height ?? 0),
+    `Erster Satz über der Fußleiste (${String(footTop)}):\n${layout}`,
+  ).toBeLessThanOrEqual(footTop);
 
   // Aufgeklappt: groß in der rechten Spalte, kompakt in „Jetzt“ aus.
   await setDuoPose(page, 'auf');
@@ -222,4 +240,61 @@ test('Übungsdetails: zuerst Ausführung mit Quellen, offene Übungen ehrlich of
   await expect(
     page.getByText('Für diese Übung gibt es noch keine belegte Beschreibung der Ausführung.'),
   ).toBeVisible();
+});
+
+test('Teil für Übungsbilder lädt nicht: Training läuft mit Symbol weiter, kein Neuladen (D-400)', async ({
+  page,
+  consoleErrors,
+}) => {
+  let documents = 0;
+  page.on('request', (request) => {
+    if (request.resourceType() === 'document') documents += 1;
+  });
+  // Wie nach einem Deployment ohne Netz: Der nachgeladene Teil mit den Visuals fehlt.
+  await page.route('**/assets/visuals-*.js', (route) => route.abort());
+  await openPage(page, '/training');
+  await page.getByRole('button', { name: 'Freies Training starten' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Freies Training' })).toBeVisible();
+  await page.getByRole('button', { name: 'Übung hinzufügen' }).click();
+  const picker = page.getByRole('dialog', { name: 'Übung auswählen' });
+  await picker.getByLabel('Übungen suchen').fill('kniebeuge mit lang');
+  await picker.getByRole('button', { name: /^Kniebeuge mit Langhantel/ }).click();
+  await expect(picker).toBeHidden();
+  const set = 'Kniebeuge mit Langhantel, Arbeitssatz 1';
+  await page.getByLabel(`Gewicht in kg, ${set}`).fill('60');
+  await page.getByLabel(`Wiederholungen, ${set}`).fill('5');
+  await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();
+  await expect(page.getByText('1 von 1 Sätzen')).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  // Während eines Trainings lädt die App nie von selbst neu (D-343).
+  expect(documents).toBe(1);
+  const expected = (text: string) =>
+    /Failed to load resource|Failed to fetch dynamically imported module|Importing a module script failed|Failed to load module script/.test(
+      text,
+    );
+  consoleErrors.splice(0, consoleErrors.length, ...consoleErrors.filter((t) => !expected(t)));
+});
+
+test('Teil für Übungsbilder lädt nicht: außerhalb des Trainings genau einmal neu laden (D-400)', async ({
+  page,
+  consoleErrors,
+}) => {
+  let documents = 0;
+  page.on('request', (request) => {
+    if (request.resourceType() === 'document') documents += 1;
+  });
+  await openPage(page, '/heute');
+  await page.route('**/assets/visuals-*.js', (route) => route.abort());
+  await page.goto('/training/vorlagen/full_body_ab');
+  // Einmal neu geladen; fehlt der Teil weiter, bleibt die Seite mit dem Symbol stehen.
+  await expect.poll(() => documents, { timeout: 10_000 }).toBe(3);
+  await expect(page.getByRole('button', { name: 'Tag A heute trainieren' }).first()).toBeVisible();
+  await page.waitForTimeout(1000);
+  expect(documents).toBe(3);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  const expected = (text: string) =>
+    /Failed to load resource|Failed to fetch dynamically imported module|Importing a module script failed|Failed to load module script/.test(
+      text,
+    );
+  consoleErrors.splice(0, consoleErrors.length, ...consoleErrors.filter((t) => !expected(t)));
 });

@@ -2138,3 +2138,17 @@ Nachtrag zur Phase iPhone Duo (D-370 bis D-394), eingetragen in der Phase Übung
 | Startfläche, zehn Kaltstarts aufgeklappt hoch und aufgeklappt quer | bestanden: jedes Mal mittig |
 | Übrige Punkte der Listen für den erneuten Gerätetest (`form-duo-report.md` Abschnitte 12.5, 13.4, 14.4) | bestanden: in Ordnung |
 
+### Platz in der Startansicht · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Kopf-Skripte beim Bauen verkleinert, Kommentare aus `index.html`, Linse und Kreis der Tab-Leiste nachgeladen (D-396).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,0 KB von 250 KB (vorher 244,7 KB): `startflaeche.js` 1,7 KB (vorher 4,9), `theme-init.js` 0,8 KB (vorher 1,6), `index.html` 5,4 KB (vorher 5,8); `tabLens` und `tabMinimize` in eigenen nachgeladenen Dateien |
+| `tools/check-precache.mjs` mit neuer Prüfung der Prüfsummen | „Vorab gespeichert: 180 von 243 Dateien“, keine Abweichung. Erster Versuch scheiterte am Muster (Einträge mit `revision:null` nicht erkannt), korrigiert. Vor dem Entfernen aus `includeAssets` standen beide Skripte zweimal im Service Worker, mit verschiedenen Prüfsummen |
+| `e2e/tabbar.spec.ts`, `duo-tabbar.spec.ts`, `start-surface.spec.ts`, `offline.spec.ts` (Chromium) | 25 bestanden, 23 übersprungen |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 415 bestanden, 129 übersprungen, 0 fehlgeschlagen, 15,1 min |
+| `pnpm test` | 131 Dateien, 1174 Tests bestanden |
+| `pnpm lint`, `pnpm typecheck` | ohne Befund |
+| WebKit | läuft in der CI |
+

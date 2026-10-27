@@ -1,6 +1,6 @@
 # FORM · Bericht zur Phase Übungen
 
-Stand: 27.10.2026, Abschnitt 0 und Phase 1 abgeschlossen, Entscheidung über die Quelle der Visuals offen (Q-24) · Branch `form-uebungen`, Entwurfs-PR [darad11/fitness-app#53](https://github.com/darad11/fitness-app/pull/53) · Auftrag `docs/prompts/uebungen-FORM.md`, verbindliche Leitlinien `docs/prompts/uebungen-leitlinien-FORM.md` · Entscheidungen D-395 bis D-399
+Stand: 27.10.2026, Abschnitt 0, Phase 1 und die Fortsetzung (`prompts/uebungen-weiter-FORM.md`, Abschnitt 9) abgeschlossen; Entscheidung über den Weg der Übungsbilder beim Produktinhaber (Q-24, D-405) · Branch `form-uebungen`, Entwurfs-PR [darad11/fitness-app#53](https://github.com/darad11/fitness-app/pull/53) · Auftrag `docs/prompts/uebungen-FORM.md`, verbindliche Leitlinien `docs/prompts/uebungen-leitlinien-FORM.md` · Entscheidungen D-395 bis D-405
 
 Getestet in Browser-Fenstern (Chromium in dieser Umgebung, WebKit in GitHub Actions), nicht am Gerät. Visuals gibt es noch keine; in den Bildern mit „prototyp“ kommt ein Rohentwurf nur im Test dazu.
 
@@ -102,3 +102,49 @@ Ergebnisse wörtlich in `docs/testing.md`, Abschnitte „Platz in der Startansic
 
 1. **Q-24:** Quelle der Visuals. Meine Empfehlung: eigener FORM-Stil.
 2. Ob ich die 9 noch nicht recherchierten Texte in Phase 2 nachholen soll (Empfehlung: ja, zuerst Hip Thrust und Beinpresse).
+
+## 9. Fortsetzung nach Phase 1 (`uebungen-weiter-FORM.md`)
+
+Entscheidung Q-24 festgehalten (D-400): realistisch wirkender Körper in Grau auf dunklem Grund, arbeitende Muskeln in Lime; kein gezeichneter Stil mehr. Den Weg wählst du nach dem Vergleich.
+
+### 9.1 Behobene Fehler (Abschnitt 1)
+
+| Fehler | Ursache und Behebung | Test |
+|---|---|---|
+| WebKit: Gewichtsfeld im zugeklappten Training ohne Fokus | Das Vorschaubild in der Übungskarte schob den ersten Satz unter die Fußleiste; seit 8879e65 erst ab 30 rem Breite. `duo-tastatur.spec.ts` ist in WebKit grün (CI-Läufe zu 989007c und 748051c) | schlug am alten Stand fehl (CI 2510894) |
+| Fehlgeschlagener Import der Übungsbilder | Fehlte der nachgeladene Teil (Deployment, kein Netz), brach die ganze Seite ab, im Training mit „Dieser Bereich ließ sich nicht laden“. Jetzt zeigen die Bild-Komponenten nichts, die Seite bleibt; außerhalb des Trainings lädt die App genau einmal neu wie in der Stabilitäts-Phase (D-343), im Training nie (D-400) | zwei E2E-Tests, beide am alten Stand rot |
+| `uebungen.spec.ts` in WebKit rot | Kein Fehler der Bilder: Die Diagnose zeigt, dass der Kopf des Players in diesem Test in WebKit 148 px höher ist (Karte „Jetzt“ bei 295 statt 147 px), Bild und Karte sind gleich groß. Der Test vergleicht jetzt mit und ohne Bild im selben Browser und nennt bei Abweichung die Lage aller Blöcke samt Text | Ergebnis in der CI zu diesem Stand steht aus |
+
+### 9.2 Startansicht
+
+237,8 KB (gzip), Ziel höchstens 238 KB, Grenze 250 KB. Muskelkarte, Videos und alle neuen Teile laden nach. Einmal fiel auf: Ein nachgeladener Teil nur mit JSX trennte `react` von `jsx-runtime` (+0,4 KB); die Muskelkarte nutzt deshalb `useMemo` (D-401).
+
+### 9.3 Muskelkarte (Abschnitt 2, D-401)
+
+Vorder- und Rückansicht im Reiter „Muskeln“, Hauptmuskeln Lime, Nebenmuskeln Lime mit 35 % Deckkraft, Körper grau. Vorlage: SVG-Pfade aus `react-native-body-highlighter` (MIT), Lizenz in `licenses-data.md` Abschnitt 5. Bilder: `docs/screens/uebungen/muskelkarte-bankdruecken.png`, `muskelkarte-kniebeuge.png`.
+
+### 9.4 3D-Pilot (Abschnitte 3 und 4, D-402, D-403)
+
+- Pipeline in `tools/uebungen-3d/` (Blender 4.2 als Python-Modul, MakeHuman-Grundmodell CC0). Kniebeuge, Bankdrücken, Latziehen als Schleife von 2,5 s, MP4 und WebM 720 × 540, Poster und Vorschau; zusammen rund 280 KB.
+- In der App: Liste, Player zu- und aufgeklappt, Übungsdetails; „Bewegung reduzieren“ zeigt das Standbild; offline läuft, was einmal gezeigt wurde.
+- Übersicht: `docs/screens/uebungen/pilot-uebersicht.png`; Aufnahme der Bewegung: `pilot-bewegung.mp4` (drei Schleifen nebeneinander) und `pilot-player.webm` (Player aufgeklappt).
+- Heruntergeladen wurde nur über bereits freie Adressen: `pypi.org` und `files.pythonhosted.org` (bpy), `raw.githubusercontent.com` (MakeHuman), `registry.npmjs.org` (Muskelkarte). Die Körperformen von MakeHuman (Muskulatur, Proportionen) lagen nicht unter den bekannten Adressen; dafür wäre `github.com` nötig.
+
+### 9.5 Ausführungstexte (Abschnitt 5, D-404)
+
+122 von 124. Neu: Hip Thrust, Beinpresse, Sit-up, Scheibenwischer, Knieheben stehend, Hackenschmidt-Kniebeuge, Bulgarische Split-Kniebeuge, Ausfallschritt mit Kurzhanteln, seitliches Gehen mit Band, Rudern mit zwei Kurzhanteln, Trizepsstrecken über Kreuz; nahe Varianten gekennzeichnet. Offen: Cable Pull-Through und Heel Taps (die nächsten Treffer sind andere Übungen).
+
+### 9.6 Vergleich der Wege (Abschnitt 6, D-405)
+
+Tabelle in `docs/uebungen-quellen.md`. Empfehlung: Plan B mit Exercise Animatic, nach schriftlicher Klärung (Umfärben, Auslieferung in der PWA, Logo, Alpha-Kanal, Lücken), am besten mit Probeclips der drei Pilot-Übungen; Rückfallweg ist der Pilot mit besserem Grundmodell. Plan C scheidet aus.
+
+### 9.7 Tests
+
+Wörtlich in `docs/testing.md`, Abschnitt „Phase Übungen, Fortsetzung“. Unit 1.209 bestanden; E2E Chromium 428 bestanden, danach 4 Offline-Tests rot (Vorschaubilder ohne Netz angefragt), behoben, die betroffenen Dateien 27 bestanden. WebKit nur in der CI.
+
+### 9.8 Offene Punkte
+
+1. Deine Wahl des Wegs (D-405).
+2. WebKit-Ergebnis für den umgestellten Player-Test in `uebungen.spec.ts`.
+3. Gerätetest der Animationen am iPhone (Autoplay, Schleife, offline, „Bewegung reduzieren“).
+4. Cable Pull-Through und Heel Taps ohne belegte Quelle.

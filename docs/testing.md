@@ -2186,3 +2186,17 @@ Bestandsaufnahme, Gerüst für Visuals mit Rückfall auf das Symbol, Ausführung
 | CI Lauf 40500435564 (`8879e65`), E2E WebKit | `duo-tastatur.spec.ts` jetzt bestanden. 2 fehlgeschlagen: `program-list.spec.ts` mit „Fetch API cannot load …/uebungen/medien.json due to access control checks“ (Abruf der Liste lief noch beim Seitenwechsel), `uebungen.spec.ts` (mit Testbild war das kompakte Bild 72 px hoch, erster Satz unten bei 633 px, Leiste ab 601). 2 erst im zweiten Anlauf: `program-list.spec.ts` (Desktop), `player.spec.ts` (Info schließen) |
 | Behoben (zweiter Nachtrag) | Seiten mit Übungsbildern laden Komponenten und Liste der Visuals in ihrem `lazy` (`loadExerciseVisuals`): Player, Zusammenfassung, Vorlage, Trainingstag bearbeiten, Übungsdetails, Bibliothek. Kompaktes Bild so groß wie das Symbol (56 px). Danach 10 E2E-Dateien (Chromium) 61 bestanden; `vitest run src/modules` 677 bestanden; Startansicht 237,8 KB |
 
+
+### Phase Übungen, Fortsetzung · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu 989007c (Lauf 40503897777) | Lint, Unit, Build, Datenbank, E2E Chromium grün; E2E WebKit: 392 bestanden, 1 fehlgeschlagen (`uebungen.spec.ts` Player, erster Satz bei 632,7 statt höchstens 601), `duo-tastatur.spec.ts` bestanden |
+| CI zu 748051c (Lauf 40509052343), E2E WebKit | 398 bestanden, 1 fehlgeschlagen (derselbe Test); Diagnose: Karte „Jetzt“ bei y 295 (Chromium 147), Kopf des Players 148 px höher, Bild und Karte gleich groß |
+| Nachladen (D-400): `uebungen.spec.ts` „Teil für Übungsbilder lädt nicht …“ (2 Tests) | am alten Stand beide rot (Player ersetzt durch den Hinweis; Seite nach dem Neuladen leer), danach mit `update.spec.ts` 19 bestanden, 9 übersprungen |
+| Muskelkarte (D-401): `muscle-map.test.tsx` | 3 bestanden; E2E Reiter „Muskeln“ 2 bestanden |
+| `pnpm test` (nach D-403) | 135 Dateien, 1.208 Tests bestanden; danach `exercise-visual.test.tsx` mit Offline-Test 27 bestanden |
+| `pnpm test:e2e` (Chromium, nach D-403) | 428 bestanden, 4 fehlgeschlagen (`pwa.spec.ts` und `resilience.spec.ts` offline: „Failed to load resource“ für nie geladene Vorschaubilder), 132 übersprungen. Behoben: ohne Netz nur Gespeichertes anfragen. Danach `pwa`, `resilience`, `uebungen`, `uebungen-offline`: 27 bestanden, 3 übersprungen |
+| `uebungen-offline.spec.ts` | Latziehen online gezeigt, danach offline neu geladen: Video läuft aus dem Speicher (Range Requests) |
+| `pnpm build`, `pnpm check:bundle` | 237,8 KB von 250 KB; Dateien der Übungsbilder 12 von 12 |
+| Renderzeit 3D-Pilot | 968, 1.179 und 928 s je 60 Bilder (4 CPU-Kerne, Cycles, 40 Samples) |

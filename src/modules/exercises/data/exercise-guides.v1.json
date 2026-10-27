@@ -3025,60 +3025,327 @@
         }
       ],
       "sourceNote": "Gilt für Geräte mit beweglichen Armhebeln."
+    },
+    "hip_thrust_barbell": {
+      "summary": "Hüftstreckung mit Langhantel: Du lehnst den oberen Rücken an eine Bank und schiebst die Stange über der Hüfte nach oben, bis der Körper gerade ist.",
+      "setup": [
+        "Setz dich auf den Boden, die lange Seite einer niedrigen Bank (etwa 40 bis 46 cm) liegt hinter deinem Rücken.",
+        "Roll die Stange über die Beine, bis sie mittig über der Hüfte liegt, und leg den oberen Rücken an die Bankkante.",
+        "Stell die Füße etwa schulterbreit mit gebeugten Knien auf und greif die Stange links und rechts der Hüfte."
+      ],
+      "steps": [
+        "Schieb die Stange nach oben, indem du die Hüfte streckst.",
+        "Geh so weit hoch, bis Hüfte und Oberkörper eine gerade Linie bilden.",
+        "Senk die Hüfte kontrolliert ab und wiederhole die Bewegung."
+      ],
+      "cues": [
+        "Beweg dich nur aus der Hüfte, der Oberkörper bleibt fest.",
+        "Leg die Stange über die Leiste und den unteren Bauch; ein dickes Polster macht den Druck erträglicher."
+      ],
+      "mistakes": [
+        "Brustkorb wölbt sich oben nach oben, der Rücken geht ins Hohlkreuz.",
+        "Becken kippt nach vorn, statt mit dem Oberkörper eine Linie zu bilden."
+      ],
+      "safety": ["Sichere die Bank, damit sie nicht über den Boden rutscht."],
+      "sources": [
+        {
+          "title": "ExRx.net: Barbell Hip Thrust",
+          "url": "https://exrx.net/WeightExercises/GluteusMaximus/BBHipThrust"
+        }
+      ]
+    },
+    "leg_press": {
+      "summary": "Beinübung an der Maschine: Du senkst den Schlitten mit Hüfte und Knien ab und drückst ihn wieder weg, bis die Beine fast gestreckt sind.",
+      "setup": [
+        "Stell Sicherung und Rückenlehne so ein, dass du fast den vollen Weg gehen kannst, ohne dass die Hüfte sich vom Polster löst.",
+        "Setz dich mit dem Rücken an die Lehne und stell die Füße etwas höher auf die Plattform.",
+        "Drück die Plattform hoch, löse die Sicherung und greif die Griffe seitlich."
+      ],
+      "steps": [
+        "Senk den Schlitten ab, indem du Hüfte und Knie beugst.",
+        "Geh so tief, bis die Knie kurz vor der vollen Beugung sind oder die Hüfte ganz gebeugt ist.",
+        "Drück die Plattform zurück, bis Knie und Hüfte gestreckt sind."
+      ],
+      "cues": [
+        "Drück mit der ganzen Fußsohle, mit Ferse und Ballen.",
+        "Höher gestellte Füße fordern mehr das Gesäß, tiefer gestellte mehr den Oberschenkel vorne."
+      ],
+      "mistakes": [
+        "Fersen heben sich von der Plattform ab.",
+        "Hüfte rollt unten vom Polster weg, weil die Lehne zu weit eingestellt ist."
+      ],
+      "safety": ["Leg die Sicherung bei gestreckten Beinen wieder ein, bevor du aussteigst."],
+      "sources": [
+        {
+          "title": "ExRx.net: Sled 45° Leg Press",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/SL45LegPress"
+        },
+        {
+          "title": "ExRx.net: Sled Single Leg 45° Leg Press",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/SLSingleLeg45LegPress"
+        }
+      ],
+      "sourceNote": "Quelle beschreibt die 45-Grad-Beinpresse; der Hinweis zum Ablegen der Sicherung stammt von der einbeinigen Variante."
+    },
+    "sit_up": {
+      "summary": "Bauchübung in Rückenlage: Du rollst den Oberkörper aus Hüfte und Taille hoch und legst ihn wieder ab.",
+      "setup": [
+        "Hak die Füße unter eine Fußstütze oder eine niedrige Kante.",
+        "Leg dich mit gebeugter Hüfte auf den Rücken, auf den Boden oder eine Bank.",
+        "Leg die Hände an den Hinterkopf oder seitlich an den Nacken."
+      ],
+      "steps": [
+        "Heb den Oberkörper, indem du dich in Taille und Hüfte beugst.",
+        "Senk ihn kontrolliert ab, bis die Rückseite der Schultern den Boden berührt.",
+        "Wiederhole die Bewegung."
+      ],
+      "cues": [
+        "Leichter wird es, wenn du die Arme weiter unten hältst, weiter weg vom Kopf.",
+        "Schwerer wird es mit Händen weiter oben am Kopf, auf einer Schrägbank oder mit Zusatzgewicht."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Sit-up",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWSitUp"
+        }
+      ]
+    },
+    "windshield_wiper": {
+      "summary": "Bauchübung in Rückenlage: Du hältst die Beine angehoben und senkst sie wie einen Scheibenwischer abwechselnd zu beiden Seiten.",
+      "setup": [
+        "Leg dich auf den Rücken und streck die Arme seitlich auf dem Boden aus.",
+        "Heb die Beine an, die Knie sind leicht gebeugt."
+      ],
+      "steps": [
+        "Senk die Beine zu einer Seite, bis die Außenseite des Oberschenkels den Boden berührt.",
+        "Heb die Beine zurück zur Mitte.",
+        "Senk sie zur anderen Seite und wechsle so weiter ab."
+      ],
+      "cues": [
+        "Halt die Kniebeugung über die ganze Bewegung gleich.",
+        "Leichter wird es, wenn du die Knie stärker beugst und die Beine näher zum Körper ziehst; gestreckte Beine machen es schwerer."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lying Twist",
+          "url": "https://exrx.net/WeightExercises/Obliques/BWLyingTwist"
+        },
+        {
+          "title": "ExRx.net: Bent-knee Lying Twist",
+          "url": "https://exrx.net/WeightExercises/Obliques/BWBentKneeLyingTwist"
+        },
+        {
+          "title": "ACE: A New Twist on Traditional Exercises to Strengthen Your Arms and Abs",
+          "url": "https://www.acefitness.org/resources/everyone/blog/7325/a-new-twist-on-traditional-exercises-to-strengthen-your-arms-and-abs/"
+        }
+      ],
+      "sourceNote": "ExRx führt die liegende Form als „Lying Twist“; eine eigene Seite „Windshield Wiper“ gibt es dort nur hängend und ohne Anleitung."
+    },
+    "standing_knee_raise": {
+      "summary": "Übung im Stand: Du hebst ein Knie durch Beugen der Hüfte an, bis der Oberschenkel etwas über der Waagerechten ist, und senkst es wieder.",
+      "setup": ["Stell dich aufrecht hin und halt dich anfangs an einer Wand oder Stange fest."],
+      "steps": [
+        "Heb ein Knie an, indem du die Hüfte beugst.",
+        "Geh hoch, bis der Oberschenkel knapp über der Waagerechten ist.",
+        "Senk das Bein ab, bis Hüfte und Knie wieder gestreckt sind, und wiederhole.",
+        "Wechsle das Bein, beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halt das Becken waagerecht und den Rücken gerade.",
+        "Heb das Knie ruhig an und senk es kontrolliert ab."
+      ],
+      "mistakes": ["Hüfte der Spielbeinseite zieht beim Anheben mit nach oben."],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Standing Leg Raise",
+          "url": "https://exrx.net/WeightExercises/HipFlexors/CBStandingLegRaise"
+        },
+        {
+          "title": "ACE: Addressing Stubborn Back Pain – 5 Exercises that Address the Deep Anatomy",
+          "url": "https://www.acefitness.org/resources/pros/expert-articles/6818/addressing-stubborn-back-pain-5-exercises-that-address-the-deep-anatomy/"
+        }
+      ],
+      "sourceNote": "ExRx beschreibt die Variante mit Fußmanschette am Kabel, ACE eine Variante über eine Hürde; übernommen sind nur Bewegungsweg, Stütze und Haltung."
+    },
+    "hack_squat": {
+      "summary": "Kniebeuge an der Maschine: Du stehst mit den Schultern unter den Polstern, senkst den Schlitten ab und drückst ihn wieder hoch.",
+      "setup": [
+        "Lehn dich mit dem Rücken an das Polster, die Schultern liegen unter den Schulterpolstern.",
+        "Stell die Füße etwas höher als den unteren Rand auf die Plattform."
+      ],
+      "steps": [
+        "Senk den Schlitten ab, indem du Knie und Hüfte beugst.",
+        "Geh so tief, bis die Knie kurz vor der vollen Beugung sind.",
+        "Drück dich zurück nach oben, bis die Beine gestreckt sind."
+      ],
+      "cues": [
+        "Führ die Knie in Linie mit den Füßen.",
+        "Geh nur so tief, wie der Rücken am Polster bleibt.",
+        "Höher gestellte Füße fordern mehr das Gesäß, tiefer gestellte mehr den Oberschenkel vorne."
+      ],
+      "mistakes": [
+        "Fersen heben sich von der Plattform ab.",
+        "Becken löst sich unten vom Polster."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Sled Hack Squat",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/SLHackSquat"
+        }
+      ]
+    },
+    "bulgarian_split_squat_dumbbell": {
+      "summary": "Einbeinige Kniebeuge mit Kurzhanteln: Der hintere Fuß liegt auf einer Bank, du beugst das vordere Bein, bis das hintere Knie fast den Boden berührt.",
+      "setup": [
+        "Halt die Kurzhanteln seitlich am Körper und stell dich mit dem Rücken zur Bank.",
+        "Streck ein Bein nach hinten und leg den Fußrücken auf die Bank."
+      ],
+      "steps": [
+        "Senk dich ab, indem du Knie und Hüfte des vorderen Beins beugst.",
+        "Geh tief, bis das hintere Knie fast den Boden berührt.",
+        "Drück dich zurück nach oben, bis vorderes Knie und Hüfte gestreckt sind.",
+        "Wechsle das Bein, beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halt den Oberkörper aufrecht.",
+        "Führ das vordere Knie in Linie mit dem vorderen Fuß."
+      ],
+      "mistakes": ["Vorderes Knie knickt nach innen weg statt über dem Fuß zu bleiben."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Single Leg Split Squat",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/DBSingleLegSplitSquat"
+        }
+      ]
+    },
+    "lunge_dumbbell": {
+      "summary": "Ausfallschritt mit Kurzhanteln: Du machst einen Schritt nach vorn, beugst beide Beine und drückst dich zurück in den Stand.",
+      "setup": ["Stell dich aufrecht hin und halt die Kurzhanteln seitlich am Körper."],
+      "steps": [
+        "Mach mit einem Bein einen Schritt nach vorn.",
+        "Beug Hüfte und Knie, bis das hintere Knie fast den Boden berührt.",
+        "Drück dich mit dem vorderen Bein zurück in den Stand.",
+        "Wechsle das Bein, beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halt den Oberkörper aufrecht.",
+        "Führ das vordere Knie in Linie mit dem Fuß.",
+        "Ein langer Schritt fordert mehr das Gesäß, ein kurzer mehr den Oberschenkel vorne."
+      ],
+      "mistakes": ["Vorderes Knie weicht nach innen oder außen vom Fuß ab."],
+      "sources": [
+        {
+          "title": "ExRx.net: Dumbbell Lunge",
+          "url": "https://exrx.net/WeightExercises/Quadriceps/DBLunge"
+        }
+      ]
+    },
+    "lateral_band_walk": {
+      "summary": "Seitliches Gehen mit Band um die Beine: Du gehst in leichter Hocke Schritt für Schritt zur Seite und hältst das Band dabei gespannt.",
+      "setup": [
+        "Leg ein kleines Band um die Knöchel, die Schienbeine oder knapp über oder unter die Knie.",
+        "Geh in eine leichte Viertelhocke."
+      ],
+      "steps": [
+        "Mach einen Schritt zur Seite und zieh den anderen Fuß nach, ohne das Band locker zu lassen.",
+        "Geh einige Schritte in eine Richtung und dann gleich viele zurück."
+      ],
+      "cues": [
+        "Bleib während aller Schritte in der Hocke.",
+        "Halt das Becken waagerecht.",
+        "Ein festeres Band oder ein Band über den Knien macht es schwerer."
+      ],
+      "mistakes": [
+        "Band wird zwischen den Schritten locker.",
+        "Hüfte der Gegenseite sackt beim Schritt ab."
+      ],
+      "sources": [
+        {
+          "title": "ACE: 6 Glute Medius Exercises for Strength & Stability",
+          "url": "https://www.acefitness.org/resources/pros/expert-articles/6936/6-glute-medius-exercises-for-strength-amp-stability/"
+        },
+        {
+          "title": "ACE: Ankles, Knees and Hips – 10 Joint-Friendly Exercises for the Lower Extremity",
+          "url": "https://www.acefitness.org/resources/pros/expert-articles/9158/ankles-knees-and-hips-10-joint-friendly-exercises-for-the-lower-extremity/"
+        },
+        {
+          "title": "ACE: 6 Moves for Stronger Glutes",
+          "url": "https://acefitness.org/education-and-resources/professional/expert-articles/4977/6-moves-for-stronger-glutes"
+        }
+      ],
+      "sourceNote": "Keine Seite der ACE-Übungsbibliothek gefunden; die Angaben stammen aus ACE-Fachartikeln."
+    },
+    "bent_over_row_dumbbell": {
+      "summary": "Rudern im vorgebeugten Stand: Du hältst zwei Kurzhanteln, neigst den Oberkörper nach vorn und ziehst die Hanteln an die Seiten des Bauchs.",
+      "setup": [
+        "Nimm in jede Hand eine Kurzhantel, die Handflächen zeigen zueinander.",
+        "Beug die Knie leicht und kipp aus der Hüfte nach vorn, bis der Oberkörper fast waagerecht ist.",
+        "Halt den Rücken vom Kopf bis zur Hüfte in einer geraden Linie."
+      ],
+      "steps": [
+        "Zieh die Hanteln über die Ellbogen nach oben an die Seiten, etwa auf Höhe des Bauchnabels.",
+        "Senk sie kontrolliert ab, bis die Arme gestreckt sind.",
+        "Wiederhole die Bewegung."
+      ],
+      "cues": [
+        "Führ den Zug aus den Ellbogen.",
+        "Beweg dich aus der Hüfte nach vorn, nicht über einen runden Rücken."
+      ],
+      "mistakes": ["Rücken rundet sich, statt dass die Neigung aus der Hüfte kommt."],
+      "sources": [
+        {
+          "title": "ACE ProSource: Book Review – Strength Training for Fat Loss",
+          "url": "https://www.acefitness.org/continuing-education/prosource/november-2014/5082/book-review-strength-training-for-fat-loss/"
+        },
+        {
+          "title": "ExRx.net: Dumbbell Bent-over Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/DBBentOverRow"
+        },
+        {
+          "title": "ACE: A BACK-to-School Program – An Evidence-based Approach to Training the Back",
+          "url": "https://www.acefitness.org/resources/pros/expert-articles/8944/a-back-to-school-program-an-evidence-based-approach-to-training-the-back/"
+        }
+      ],
+      "sourceNote": "ExRx beschreibt die einarmige Form; die beidarmige Ausführung stützt sich auf einen ACE-Auszug aus einem Buch, Haltungshinweise auf einen ACE-Fachartikel."
+    },
+    "triceps_extension_cable_cross_body": {
+      "summary": "Einarmige Trizepsstreckung am Kabel quer zum Körper: Du streckst den Unterarm vom Nacken aus zur Seite, bis der Ellenbogen gerade ist.",
+      "setup": [
+        "Stell den Seilzug auf mittlere bis hohe Position und nimm den Einzelgriff in die Hand des Arbeitsarms.",
+        "Dreh dich so, dass der Seilzug auf der Seite des freien Arms ist, und führ den Griff über den Kopf hinter den Nacken.",
+        "Tritt etwas vor, bis der Griff knapp über der Schulter liegt. Der Ellenbogen ist leicht über Schulterhöhe, die Handfläche zeigt nach unten."
+      ],
+      "steps": [
+        "Streck den Unterarm zur Seite, bis der Ellenbogen gerade ist.",
+        "Lass den Griff kontrolliert zurück über die Schulter kommen.",
+        "Wiederhole die Bewegung und wechsle dann auf den anderen Arm. Beide Seiten bekommen gleich viele Wiederholungen."
+      ],
+      "cues": [
+        "Halt den Ellenbogen die ganze Zeit etwa an derselben Stelle – nur der Unterarm bewegt sich.",
+        "Steh so weit vom Seilzug weg, dass das Kabel auch in der Ausgangsposition gespannt bleibt.",
+        "Nutz den ganzen Weg: vom Griff über der Schulter bis zum gestreckten Arm."
+      ],
+      "mistakes": [
+        "Ellenbogen wandert beim Strecken nach oben, unten oder vorn.",
+        "Kabel hängt in der Ausgangsposition durch, weil du zu nah am Seilzug stehst."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Cable Side Triceps Extension",
+          "url": "https://exrx.net/WeightExercises/Triceps/CBSideTricepsExt"
+        }
+      ],
+      "sourceNote": "ExRx beschreibt die „Cable Side Triceps Extension“: Seilzug auf der Seite des freien Arms, Griff hinter dem Nacken, Streckung zur Seite. Das ist der Weg quer zum Körper. Formen mit Griff vor der Brust oder anderer Seilzughöhe beschreibt die Quelle nicht."
     }
   },
   "open": [
     {
-      "key": "bent_over_row_dumbbell",
-      "reason": "Keine Quelle zur Variante mit zwei Kurzhanteln im Stand gefunden; ExRx beschreibt nur die einarmige Variante auf der Bank."
-    },
-    {
-      "key": "triceps_extension_cable_cross_body",
-      "reason": "Keine Quelle zur Variante über Kreuz gefunden (ExRx, ACE, NASM, Human Kinetics, Mayo Clinic)."
+      "key": "cable_pull_through",
+      "reason": "Keine Quelle zum Pull-Through am Kabel (ExRx, ACE, NASM, Human Kinetics, NSCA, Mayo Clinic). Die nächsten Treffer bei ExRx (Suspended Pull Through, Cable Straight-back Straight-leg Deadlift) sind andere Übungen."
     },
     {
       "key": "heel_tap",
-      "reason": "Keine Quelle zur Übung gefunden; ExRx führt unter „Heel Tap“ nur eine Übung mit dem Springseil."
-    },
-    {
-      "key": "sit_up",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "windshield_wiper",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "standing_knee_raise",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "hip_thrust_barbell",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "cable_pull_through",
-      "reason": "Keine Quelle zur Variante am Kabelzug gefunden (ExRx nur am Schlingentrainer; ACE, NASM, Human Kinetics ohne Treffer)."
-    },
-    {
-      "key": "leg_press",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "hack_squat",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "bulgarian_split_squat_dumbbell",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "lunge_dumbbell",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
-    },
-    {
-      "key": "lateral_band_walk",
-      "reason": "Noch nicht recherchiert: Das Kontingent der Websuche war in dieser Sitzung aufgebraucht."
+      "reason": "Keine Quelle zur liegenden Form mit der Hand zur Ferse. ACE führt unter „heel tap“ eine andere Übung (Beine in 90 Grad, Ferse absenken); ExRx und NASM nur andere Bauchübungen."
     }
   ]
 }

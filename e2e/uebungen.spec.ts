@@ -298,3 +298,31 @@ test('Teil für Übungsbilder lädt nicht: außerhalb des Trainings genau einmal
     );
   consoleErrors.splice(0, consoleErrors.length, ...consoleErrors.filter((t) => !expected(t)));
 });
+
+test('Übungsdetails, Reiter „Muskeln“: Karte vorne und hinten je Übung, Muskeln als Text (D-401)', async ({
+  page,
+}) => {
+  const maps: string[] = [];
+  page.on('request', (request) => {
+    if (request.url().includes('/assets/MuscleMap-')) maps.push(request.url());
+  });
+  await openPage(page, '/uebungen');
+  expect(maps).toHaveLength(0);
+  await row(page, 'Bankdrücken mit Langhantel').click();
+  await page.getByRole('tab', { name: 'Muskeln' }).click();
+  const map = page.getByRole('img', { name: /^Muskelkarte\. Hauptmuskeln: Brust\./ });
+  await expect(map).toBeVisible();
+  await expect(map.locator('g[data-region="chest"][data-level="primary"]')).toHaveCount(1);
+  await expect(map.locator('g[data-level="primary"]')).toHaveCount(1);
+  expect(maps.length).toBeGreaterThan(0);
+
+  await openPage(page, '/uebungen');
+  await row(page, 'Kniebeuge mit Langhantel').click();
+  await page.getByRole('tab', { name: 'Muskeln' }).click();
+  const squat = page.getByRole('img', {
+    name: /^Muskelkarte\. Hauptmuskeln: Oberschenkel vorne, Gesäß\./,
+  });
+  await expect(squat.locator('g[data-region="quadriceps"][data-level="primary"]')).toHaveCount(1);
+  await expect(squat.locator('g[data-region="gluteal"][data-level="primary"]')).toHaveCount(1);
+  await expect(squat.locator('g[data-region="chest"][data-level="none"]')).toHaveCount(1);
+});

@@ -6,6 +6,7 @@ import {
   describeExercise,
   ExerciseDemo,
   ExerciseGuideView,
+  ExerciseMuscleMap,
   ExercisePrefsCard,
   ExerciseThumb,
   findAlternatives,
@@ -193,6 +194,13 @@ function Detail({
             </Card>
           ) : section === 'muscles' ? (
             <Card>
+              {/* Muskelkarte (D-401): Hauptmuskeln Lime, mitarbeitende Lime mit wenig Deckkraft. */}
+              <Suspense fallback={<Skeleton className="mb-4 h-24" />}>
+                <ExerciseMuscleMap
+                  primary={exercise.primaryMuscles}
+                  secondary={exercise.secondaryMuscles}
+                />
+              </Suspense>
               <dl className="grid gap-3 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm text-muted">{t.session.info.primary}</dt>

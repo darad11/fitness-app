@@ -1,6 +1,6 @@
 // Öffentliche Schnittstelle des Moduls „exercises" (Basisbibliothek, Suche).
 import type { DocDef, RootFields } from '@/shared/db';
-import { lazy, type ComponentType } from 'react';
+import { lazy, type ComponentProps, type ComponentType } from 'react';
 
 /** Übungsauswahl (S-39), erst beim Öffnen geladen, damit sie den Start nicht verlangsamt. */
 export const ExercisePicker = lazy(async () => ({
@@ -33,6 +33,7 @@ export { MuscleTags } from './ui/MuscleTags';
 // Wie `ExercisePicker` nur als `lazy` exportiert, damit nichts davon in die Startansicht kommt.
 // Andere Module setzen eine eigene `Suspense` mit dem Symbol in der Kachel als Platzhalter.
 type VisualsModule = typeof import('./ui/visuals');
+type MuscleMapProps = ComponentProps<typeof import('./ui/MuscleMap').MuscleMap>;
 /**
  * Fehlt der nachgeladene Teil (Deployment, kein Netz), sind Bilder verzichtbar: Die Komponenten
  * zeigen dann nichts, die Seite bleibt benutzbar (D-400). Den Fehlschlag meldet der Lade-Helfer
@@ -56,6 +57,14 @@ export const ExerciseThumb = visualLazy((m) => m.ExerciseThumb);
 export const ExerciseDemo = visualLazy((m) => m.ExerciseDemo);
 /** Ausführung mit Quellen (D-398). */
 export const ExerciseGuideView = visualLazy((m) => m.ExerciseGuideView);
+/** Muskelkarte, vorne und hinten (D-401); lädt erst im Reiter „Muskeln“. */
+export const ExerciseMuscleMap = lazy<ComponentType<MuscleMapProps>>(async () => {
+  try {
+    return { default: (await (await visuals()).loadMuscleMap()).MuscleMap };
+  } catch {
+    return { default: () => null };
+  }
+});
 export type { ExerciseDemoProps } from './ui/ExerciseVisual';
 
 /**

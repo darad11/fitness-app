@@ -81,3 +81,14 @@ Gestrichen (keine Einheit, nur Gramm), weil die Werte zu stark schwanken oder si
 | ÖNWT-Einträge aus der „BLS-Recherche“ von nutritional-software.at | Angebot eines Drittanbieters, vom Produktinhaber für den persönlichen Gebrauch abgerufen | Nur als lokaler Import auf seinem Gerät (D-263); nicht im Repository, nicht im App-Paket | nicht nötig, weil nicht verbreitet |
 | Schweizer Nährwertdatenbank | freie Nutzung mit Quellenangabe | Nährwerte geprüft, nicht verwendet; die Broschüre „Schweizer Nährwerttabelle 2021“ ist Hauptquelle der Richtwerte je Stück (Abschnitt 3) | in der App unter „Richtwerte je Stück und Scheibe“ |
 | Eigene Lebensmittel | eigene Daten des Nutzers | lokal, auf Wunsch synchronisiert | – |
+
+## 5. Muskelkarte der Übungen (D-401)
+
+| Punkt | Angabe |
+|---|---|
+| Quelle | npm-Paket `react-native-body-highlighter`, Version 3.2.0, Copyright (c) 2022 ELABBASSI Hicham; geladen am 27.10.2026 von `registry.npmjs.org` |
+| Lizenz | MIT. Erlaubt Nutzung, Änderung und Weitergabe, auch kommerziell; Bedingung: Copyright- und Lizenzhinweis bleiben bei allen Kopien oder wesentlichen Teilen. Lizenztext im Paket (`LICENSE`) geprüft |
+| Genutzt | Nur die SVG-Pfade der männlichen Vorder- und Rückansicht (`dist/assets/bodyFront.js`, `bodyBack.js`) und die beiden Umrisse (`dist/components/SvgMaleWrapper.js`), ohne Haare. Kein Code des Pakets, keine neue Laufzeitabhängigkeit |
+| Änderungen | Eigene Farben aus den Tokens (Körper Grau, Hauptmuskeln Lime, mitarbeitende Lime mit 35 % Deckkraft, Hintergrund wie die Karte), eigene Zuordnung der 20 Muskeln der App zu den Bereichen der Vorlage (`MuscleMap.tsx`). Abduktoren haben in der Vorlage keinen eigenen Bereich und färben „gluteal“; Latissimus und oberer Rücken teilen sich „upper-back“ |
+| Ablage | `tools/muscle_map.py` erzeugt `src/modules/exercises/ui/muscleMapPaths.ts` (mit Copyright im Kopf); der Lizenztext liegt mit der App unter `/uebungen/muskelkarte-lizenz.txt` (`public/uebungen/muskelkarte-lizenz.txt`) |
+| Geprüft, nicht genommen | `react-body-highlighter` 2.0.5 (MIT, GV79): nur grobe Vielecke im Raster 100 × 200, wirkt nicht anatomisch |

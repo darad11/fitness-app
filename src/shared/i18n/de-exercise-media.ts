@@ -4,6 +4,10 @@
 export const tExerciseMedia = {
   /** Bereich der Demonstration im Player; ohne Übungsnamen, damit er nicht wie die Übung heißt. */
   demoRegion: 'Ausführung der aktuellen Übung',
+  /** Muskelkarte in den Übungsdetails (D-401). */
+  muscleMapLabel: (muscles: string) => `Muskelkarte. ${muscles}`,
+  muscleMapFront: 'Vorne',
+  muscleMapBack: 'Hinten',
   /** Knopf über der Demonstration im Player. */
   openInfo: (name: string) => `${name}: Ausführung und Angaben`,
   phaseStart: 'Ausgangsposition',

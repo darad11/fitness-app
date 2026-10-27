@@ -2211,3 +2211,12 @@ Pilot-Übungen auf dem IK-Rig neu gerendert (D-406 bis D-410). Prüfung der Bewe
 | Bankdrücken, Messwerte | Ellbogen 171° bis 56°, Oberarm zum Rumpf 95° bis 66°, Unterarm unten höchstens 5,7° aus der Senkrechten (über die ganze Bewegung höchstens 17,2°), Handgelenk 11,8° bis 27,1°, Stange von über den Schultern bis zum Brustkontakt (0,0 cm); Finger höchstens 1,21 mm, 332 Punkte; Füße 0 mm; keine Meldung |
 | Latziehen, Messwerte | Ellbogen 168° bis 52°, Unterarm im Mittelteil höchstens 5,1°, unten 27,3°; Handgelenk höchstens 16,9°; Lehne 8° bis 18°; Stange vor dem Gesicht mindestens 4,1 cm von der Haut (eigene Messung am verformten Netz, Phasen 0 bis 1 in Zehntelschritten); Finger höchstens 1,28 mm, 264 Punkte; Füße 0,1 mm; keine Meldung |
 | Gegenprobe nach dem Aufräumen des Rigs | Messwerte von fünf Bildern je Übung gleich wie im Prüflauf (größte Abweichung 0,0) |
+| `pnpm lint`, `pnpm typecheck` | ohne Befund |
+| `pnpm test` | 135 Dateien, 1.208 Tests bestanden, 1 fehlgeschlagen: `media.test.ts` „die ausgelieferte Liste ist gültig …“ (neue Bildbeschreibungen von Kniebeuge und Bankdrücken über 240 Zeichen). Gekürzt (240 und 222 Zeichen), danach `media.test.ts` 15 bestanden |
+| `pnpm build`, `pnpm check:bundle` (neuer Code, Videos noch alt) | Startansicht 237,8 KB von 250 KB; „Vorab gespeichert: 191 von 266 Dateien“; Dateien der Übungsbilder 12 von 12 |
+| `pnpm test:e2e` (Chromium, alle Dateien) | 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,7 min) |
+| Mit den neuen Videos: `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB von 250 KB; Dateien der Übungsbilder 12 von 12 |
+| Mit den neuen Videos: `uebungen`, `uebungen-offline`, `pwa`, `resilience`, `player` (Chromium) | 29 bestanden, 3 übersprungen |
+| Mit den neuen Videos: `pnpm test` | 135 Dateien, 1.209 Tests bestanden |
+| App-Bilder `node tools/pilot-screens.mjs` (mit `pnpm preview`) | Liste, Player zu- und aufgeklappt, Details je Übung, Übersicht und Aufnahme des Players in `docs/screens/uebungen/`, selbst angesehen |
+| WebKit | läuft in der CI |

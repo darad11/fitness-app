@@ -196,3 +196,16 @@ Messwerte aus `render.py --pruefen` über alle 60 Bilder einer Schleife; Prüfbi
 | Weiteres | hohe Stangenposition auf dem oberen Trapez, Kopf in Verlängerung der Wirbelsäule | Schulterblätter zurückgezogen auf der Bank | Sitz auf Kniehöhe, Knierolle auf den Oberschenkeln; die Stange läuft mit mindestens 4,1 cm Abstand vor dem Gesicht vorbei |
 
 Ausweichen auf Ausgangs- und Endposition mit dezenter Bewegung dazwischen (Abschnitt 6) war bei keiner der drei nötig.
+
+Darstellung in der App: `docs/screens/uebungen/pilot-uebersicht.png` (je Übung Ausgangs- und Endposition, Player zu- und aufgeklappt, Übungsdetails, Liste) und `pilot-player.webm` (Player aufgeklappt mit der Kniebeuge, gut zwei Wiederholungen).
+
+### 10.4 Dateigrößen und Performance
+
+| Übung | MP4 | WebM | Poster | Vorschau | zusammen | vorher | Renderzeit (60 Bilder) |
+|---|---|---|---|---|---|---|---|
+| Kniebeuge | 54,1 KB | 39,9 KB | 5,3 KB | 2,2 KB | 101,6 KB | 99,7 KB | 1.557 s (neben laufenden Tests) |
+| Bankdrücken | 37,6 KB | 29,1 KB | 6,5 KB | 2,8 KB | 76,0 KB | 75,6 KB | 1.154 s |
+| Latziehen | 45,1 KB | 37,5 KB | 6,9 KB | 3,0 KB | 92,4 KB | 69,9 KB | 830 s |
+| **Summe** | | | | | **270,0 KB** | 245,2 KB | |
+
+Abgerufen wird je Übung nur ein Video (MP4 oder WebM) mit Poster und Vorschau, also 47 bis 62 KB. Alles nachgeladen, die Startansicht bleibt bei 237,8 KB von 250 KB. Latziehen ist größer, weil sich Stange, Kabel und Oberkörper mehr bewegen. Rechnen: Blender 4.2, Cycles auf vier CPU-Kernen, 40 Samples mit Entrauschen, 720 × 540; dazu die Prüfung je Übung (60 Bilder messen, 21 Prüfbilder mit 16 Samples) rund 2 bis 4 Minuten. Für alle 124 Übungen ergibt das rund 35 Stunden Rechenzeit (Abschnitt 10.7).

@@ -40,8 +40,8 @@ Volle Tabelle mit allen 124 Übungen (Schlüssel und ID, deutscher und englische
 ## 3. Gerüst
 
 - **Datenstruktur:** `public/uebungen/medien.json`, je Schlüssel Vorschaubild, Demonstration (Animation mit ruhendem Bild, stummes Video mit Standbild, zwei Phasen oder ein Bild), Alternativtext und Quelle mit Lizenz und Namensnennung. In Phase 1 leer. Der Service Worker speichert die Liste vorab, die Bilder selbst erst beim ersten Anzeigen.
-- **Listen:** Vorschaubild links neben dem Namen in Übungsbibliothek und Suche, Übungsauswahl (Freies Training, Ersetzen), Alternativen, Programmvorlagen, Trainingstag bearbeiten; kleiner in den Übungskarten des Players, in „Als Nächstes“ und in der Zusammenfassung.
-- **Player:** aufgeklappt die große Demonstration im vorbereiteten Platz der rechten Spalte, zugeklappt und am iPhone kompakt in der Karte „Jetzt“. „Satz erledigt“ bleibt unten erreichbar. Die Demonstration gehört zur aktuellen Übung und wird je Übung neu aufgebaut; aktuelle und nächste Übung werden vorgeladen.
+- **Listen:** Vorschaubild links neben dem Namen in Übungsbibliothek und Suche, Übungsauswahl (Freies Training, Ersetzen), Alternativen, Programmvorlagen, Trainingstag bearbeiten; kleiner in „Als Nächstes“, in der Zusammenfassung und in den Übungskarten des Players. Dort erst ab 30 rem Breite: Schmal (Duo zugeklappt, iPhone) zeigt „Jetzt“ die aktuelle Übung, und der erste Satz bleibt über der Fußleiste.
+- **Player:** aufgeklappt die große Demonstration im vorbereiteten Platz der rechten Spalte, zugeklappt und am iPhone kompakt rechts in der Karte „Jetzt“, der Text fließt darum. „Satz erledigt“ bleibt unten erreichbar. Die Demonstration gehört zur aktuellen Übung und wird je Übung neu aufgebaut; aktuelle und nächste Übung werden vorgeladen.
 - **Verknüpfung:** Antippen der Demonstration öffnet die Übungsinfo mit Kurzfassung der Ausführung und „Alle Angaben zur Übung“ (das Training läuft weiter).
 - **Übungsdetails:** Demonstration oben, neuer erster Reiter „Ausführung“.
 - **Solange ein Visual fehlt:** das bisherige Symbol (Hantel) in der Kachel, groß mit den Muskel-Etiketten. Kein leerer Kasten, nichts, das wie eine Demonstration aussieht. Ebenso, wenn eine Datei nicht lädt oder die Liste fehlt.
@@ -94,7 +94,7 @@ Ergebnisse wörtlich in `docs/testing.md`, Abschnitte „Platz in der Startansic
 
 ## 7. Beobachtungen und Grenzen
 
-- Zugeklappt (466 pt mit Systemrand) rutschen in der Übungskarte die Muskel-Etiketten der Kniebeuge untereinander, weil das Vorschaubild 40 px Breite braucht. Alles bleibt lesbar und bedienbar.
+- Nach der CI behoben: In WebKit schob das Vorschaubild in der Übungskarte zugeklappt den ersten Satz unter die Fußleiste. Jetzt steht er wie ohne Vorschaubilder (gemessen gegen `main`).
 - Die Texte stützen sich auf Zusammenfassungen der Websuche, nicht auf die geöffnete Seite. Die Adressen stehen dabei; ein Abgleich mit der Seite selbst ist in einer Umgebung mit offenem Netz möglich.
 - Die Regel des Service Workers für Bilder (bei Bedarf speichern) ist gesetzt, aber erst mit echten Dateien in Phase 2 geprüft.
 

@@ -2172,3 +2172,15 @@ Bestandsaufnahme, Gerüst für Visuals mit Rückfall auf das Symbol, Ausführung
 | WebKit | läuft in der CI |
 | Nachtrag nach der CI (Lauf 40492306595, Job „Lint, Typen, Unit-Tests“) | `custom-exercises-ui.test.tsx` „legt eine Übung an …“ scheiterte mit „Unable to find role="heading" and name "Brustpresse Technogym"“ nach 10 s; der DOM-Auszug zeigt noch die Bibliothek. Ursache: Die Liste hat jetzt 124 Symbol-Kacheln mit je 5 SVG-Pfaden, Rollen-Abfragen in jsdom mit Coverage dauern damit länger. Neu: Symbol als ein Pfad (gleiches Bild, 496 Elemente weniger in der Liste), Wartezeit dieses Schritts 20 s (Test 40 s). Danach `pnpm test:coverage` 134 Dateien, 1203 Tests bestanden; `uebungen.spec.ts` und `custom-exercises.spec.ts` bestanden |
 
+### Phase Übungen, Nachtrag nach der CI (WebKit) · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI Lauf 40493458163 (`2510894`), E2E WebKit | 390 bestanden, 1 fehlgeschlagen, 2 erst im zweiten Anlauf: `duo-tastatur.spec.ts` „zugeklappt: Eingaben im Training“ (Gewichtsfeld ohne Fokus), `duo-tabbar.spec.ts` (Linse), `program-list.spec.ts` („Importing a module script failed“) |
+| Diagnose (`d8f652b`), CI Lauf 40497208432 | Meldung: „Getippt bei 184, 614 auf <button …>; Feld jetzt bei 590, vorher 590; Fokus auf <button …>“: Der Tipp traf den Knopf der Fußleiste, das Feld lag tiefer als in Chromium (471). Außerdem `uebungen.spec.ts` Player rot: In WebKit sieht `page.route` die Anfragen des Service Workers nicht, die Liste kam leer aus seinem Speicher |
+| Messung in Chromium gegen `main` (gebaut in eigenem Arbeitsverzeichnis), erster Satz oben | `main`: 471 / 477 / 477 px (466 × 678, 382 × 678, 390 × 664). Mit Vorschaubild als erstem Element der Titelzeile (verworfener Versuch): 496 / 521 / 521. Mit `player-card-thumb` erst ab 30 rem: 471 / 477 / 477 |
+| `e2e/uebungen.spec.ts` (ohne Service Worker, neu: schmal kein Vorschaubild in der Karte, erster Satz über der Fußleiste; aufgeklappt sichtbar), dazu `duo-tastatur`, `player`, `duo-player`, `program-list`, `session` (Chromium) | 49 bestanden |
+| `vitest run src/modules/training src/modules/exercises` | 244 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | 237,7 KB von 250 KB |
+| Bilder | `node tools/uebungen-screens.mjs` neu, 14 Ansichten und Übersicht |
+

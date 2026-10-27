@@ -23,6 +23,16 @@
   display: none;
 }
 
+/* Vorschaubild in der Übungskarte (D-397) erst ab 30 rem Breite des Players: Schmal (Duo
+   zugeklappt, iPhone) nähme es dem Namen und den Muskel-Etiketten Breite, die Karte würde höher
+   und der erste Satz rutschte unter die Fußleiste (in WebKit gemessen). Die aktuelle Übung zeigt
+   dort „Jetzt“ kompakt. */
+@container player (max-width: 29.99rem) {
+  .player-card-thumb {
+    display: none;
+  }
+}
+
 /* Große Demonstration (D-397) nur in zwei Spalten; schmal steht sie kompakt in der Karte „Jetzt“,
    damit sie die Bedienung mit einer Hand nicht nach unten schiebt. */
 .player-demo {

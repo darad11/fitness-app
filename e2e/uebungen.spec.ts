@@ -12,6 +12,10 @@ import { expect, openPage, test } from './fixtures';
 
 const PROTO = 'docs/screens/uebungen/prototyp';
 
+// Ohne Service Worker: Sonst käme die Liste der Visuals nach dem ersten Laden aus seinem Speicher
+// (leer) statt aus der Testliste; `page.route` sieht Anfragen des Service Workers in WebKit nicht.
+test.use({ serviceWorkers: 'block' });
+
 function visual(key: string) {
   return {
     preview: { src: `medien/${key}-vorschau.svg`, width: 240, height: 240 },
@@ -122,6 +126,14 @@ test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur a
   );
   const done = page.getByRole('button', { name: 'Satz erledigt', exact: true });
   await expect(done).toBeInViewport();
+  // Schmal kein Vorschaubild in der Übungskarte: Der erste Satz steht über der Fußleiste.
+  await expect(page.locator('.player-card-thumb').first()).toBeHidden();
+  const firstSet = await page
+    .getByLabel(/^Gewicht in kg, /)
+    .first()
+    .boundingBox();
+  const footTop = (await page.locator('.player-foot').boundingBox())?.y ?? 0;
+  expect((firstSet?.y ?? 0) + (firstSet?.height ?? 0)).toBeLessThanOrEqual(footTop);
 
   // Aufgeklappt: groß in der rechten Spalte, kompakt in „Jetzt“ aus.
   await setDuoPose(page, 'auf');
@@ -131,6 +143,7 @@ test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur a
     '/uebungen/medien/back_squat_barbell-start.svg',
   );
   await expect(now.locator('.player-now-demo')).toBeHidden();
+  await expect(page.locator('.player-card-thumb').first()).toBeVisible();
   const width = (await demo.boundingBox())?.width ?? 0;
   expect(width).toBeGreaterThan(250);
   await expect(done).toBeInViewport();

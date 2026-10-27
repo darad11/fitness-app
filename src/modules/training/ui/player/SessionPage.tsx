@@ -498,25 +498,23 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 aria-label={tSession.now}
                 className="player-now stage mb-4 rounded-card p-card text-fg"
               >
-                <div className="flex items-start gap-3">
-                  {/* Schmal kompakt neben dem Namen (D-397); Antippen öffnet die Übungsinfo. */}
-                  <Demo
-                    exerciseId={currentExercise.exerciseId}
-                    name={currentExercise.nameSnapshot}
-                    muscles={currentEntry?.primaryMuscles ?? []}
-                    variant="compact"
-                    className="player-now-demo mt-1 shrink-0"
-                    onOpen={() => {
-                      setInfo(currentExercise);
-                    }}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="eyebrow text-muted">{tSession.now}</p>
-                    <p className="mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
-                      {currentExercise.nameSnapshot}
-                    </p>
-                  </div>
-                </div>
+                {/* Schmal kompakt rechts, der Text fließt darum (D-397): Das Bild nimmt dem Namen
+                    nur in den ersten Zeilen Breite, die Karte wird kaum höher, der Satz bleibt über
+                    der Fußleiste. Antippen öffnet die Übungsinfo. */}
+                <Demo
+                  exerciseId={currentExercise.exerciseId}
+                  name={currentExercise.nameSnapshot}
+                  muscles={currentEntry?.primaryMuscles ?? []}
+                  variant="compact"
+                  className="player-now-demo float-right mb-1 ml-3"
+                  onOpen={() => {
+                    setInfo(currentExercise);
+                  }}
+                />
+                <p className="eyebrow text-muted">{tSession.now}</p>
+                <p className="mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
+                  {currentExercise.nameSnapshot}
+                </p>
                 <p className="mt-1 text-muted">
                   {[
                     `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
@@ -596,13 +594,15 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     className="rounded-card bg-surface p-3 shadow-card"
                   >
                     <div className="mb-2 flex items-start gap-1 px-1">
-                      {/* Vorschaubild links neben dem Namen (D-397). Antippen öffnet die Übungsinfo
-                          wie (i); für Tastatur und Screenreader genügt (i). */}
+                      {/* Vorschaubild links neben dem Namen (D-397), erst ab 30 rem Breite des
+                          Players (`player-card-thumb`): schmal zeigt „Jetzt“ die aktuelle Übung
+                          kompakt, und der erste Satz bleibt über der Fußleiste. Antippen öffnet
+                          die Übungsinfo wie (i); für Tastatur und Screenreader genügt (i). */}
                       <button
                         type="button"
                         tabIndex={-1}
                         aria-hidden="true"
-                        className="mt-1 mr-2 shrink-0 rounded-tile"
+                        className="player-card-thumb mt-1 mr-2 shrink-0 rounded-tile"
                         onClick={() => {
                           setInfo(exercise);
                         }}

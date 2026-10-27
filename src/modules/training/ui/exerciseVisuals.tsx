@@ -33,11 +33,7 @@ export function Thumb(props: ComponentProps<typeof ExerciseThumb>) {
 export function Demo(props: ComponentProps<typeof ExerciseDemo>) {
   return (
     <Suspense
-      fallback={
-        props.variant === 'compact' ? (
-          <Placeholder className={cn('player-now-demo mt-1', props.className)} />
-        ) : null
-      }
+      fallback={props.variant === 'compact' ? <Placeholder className={props.className} /> : null}
     >
       <ExerciseDemo {...props} />
     </Suspense>

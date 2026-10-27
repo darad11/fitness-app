@@ -89,10 +89,7 @@ export default defineConfig({
     // Teil dann gar nicht erst neu, und die App startete nicht. Chromium lädt vorgeladene Module
     // unter dem Service Worker ohnehin doppelt (E-16). Nachgeladene Bereiche laden weiter vor.
     modulePreload: {
-      // Visuals der Übungen (D-397): Die Modulschnittstelle lädt sie über `ui/visuals`; ohne
-      // Vorladeliste bleibt diese Liste aus der Startansicht, die Teile kommen beim Laden nach.
-      resolveDependencies: (file, deps, { hostType }) =>
-        hostType === 'html' || /\/visuals-[\w-]+\.js$/.test(file) ? [] : deps,
+      resolveDependencies: (_file, deps, { hostType }) => (hostType === 'html' ? [] : deps),
     },
   },
   define: {

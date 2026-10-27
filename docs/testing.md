@@ -2200,3 +2200,14 @@ Bestandsaufnahme, Gerüst für Visuals mit Rückfall auf das Symbol, Ausführung
 | `uebungen-offline.spec.ts` | Latziehen online gezeigt, danach offline neu geladen: Video läuft aus dem Speicher (Range Requests) |
 | `pnpm build`, `pnpm check:bundle` | 237,8 KB von 250 KB; Dateien der Übungsbilder 12 von 12 |
 | Renderzeit 3D-Pilot | 968, 1.179 und 928 s je 60 Bilder (4 CPU-Kerne, Cycles, 40 Samples) |
+
+### Phase Übungen, Animationen ohne Kosten · 27.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Pilot-Übungen auf dem IK-Rig neu gerendert (D-406 bis D-410). Prüfung der Bewegung mit `python -I tools/uebungen-3d/render.py <übung> --pruefen` (Blender 4.2 als Python-Modul): Messwerte für alle 60 Bilder, Prüfbilder vorn, Seite, Standard in fünf Phasen und der Griff aus der Nähe (`docs/screens/uebungen/pruef-<übung>.webp`, selbst angesehen). Browser-Fenster, nicht das Gerät.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kniebeuge, Messwerte | Knie 176° bis 67°, Oberschenkel unten waagrecht (0,0°), Rumpf 6° bis 44°, Stange über der Fußmitte 0,00 cm in allen Bildern, Knie zur Zehenrichtung −0,59 bis +1,38°, Knie unten 2,5 cm hinter der Zehenspitze; Fuß tiefster Punkt 0 mm, Verschiebung höchstens 2,82 mm; Ellbogen 37,2°, Handgelenk 12,3° (gleichbleibend); Finger höchstens 1,71 mm eingedrückt, 222 Punkte ≤ 3 mm; Schleife ohne Unterschied, keine Meldung |
+| Bankdrücken, Messwerte | Ellbogen 171° bis 56°, Oberarm zum Rumpf 95° bis 66°, Unterarm unten höchstens 5,7° aus der Senkrechten (über die ganze Bewegung höchstens 17,2°), Handgelenk 11,8° bis 27,1°, Stange von über den Schultern bis zum Brustkontakt (0,0 cm); Finger höchstens 1,21 mm, 332 Punkte; Füße 0 mm; keine Meldung |
+| Latziehen, Messwerte | Ellbogen 168° bis 52°, Unterarm im Mittelteil höchstens 5,1°, unten 27,3°; Handgelenk höchstens 16,9°; Lehne 8° bis 18°; Stange vor dem Gesicht mindestens 4,1 cm von der Haut (eigene Messung am verformten Netz, Phasen 0 bis 1 in Zehntelschritten); Finger höchstens 1,28 mm, 264 Punkte; Füße 0,1 mm; keine Meldung |
+| Gegenprobe nach dem Aufräumen des Rigs | Messwerte von fünf Bildern je Übung gleich wie im Prüflauf (größte Abweichung 0,0) |

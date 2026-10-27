@@ -180,3 +180,19 @@ Zum Modell: MakeHuman-Grundmodell ohne Formziele, 1,67 m, Oberarm 22,8 cm von Ge
 - **Kamera** (`szene.bildausschnitt`): Dreiviertelansicht von vorn-seitlich (45°, 10° von oben; liegend 32°), Abstand aus Figur und Gerät über die ganze Bewegung. Latziehen von hinten-seitlich (135°), weil die arbeitenden Muskeln auf dem Rücken liegen und von vorn Säule und Gewichtsblock den Rumpf verdecken.
 - **Prüfung** (`render.py --pruefen`): Messwerte für alle 60 Bilder (Gelenkwinkel, Abstand der Finger zur Stange am verformten Netz, Bodenkontakt und Verschiebung der Füße), Prüfansichten von vorn, von der Seite und in der Standardansicht in fünf Phasen, dazu der Griff aus der Nähe von drei Seiten.
 - **Modell:** unverändert MakeHuman (CC0). Brust wie bisher abgeflacht (geschlechtsneutral).
+
+### 10.3 Pilot-Übungen neu animiert und geprüft (Abschnitte 4 und 6, D-408)
+
+Messwerte aus `render.py --pruefen` über alle 60 Bilder einer Schleife; Prüfbilder `docs/screens/uebungen/pruef-<übung>.webp` (vorn, Seite und Standardansicht in fünf Phasen, Griff aus der Nähe von drei Seiten). In allen drei: kein Sprung (größte Änderung je Bild entspricht der Bewegung), Schleife schließt ohne Unterschied zwischen erstem und letztem Bild, das Rig meldet nichts.
+
+| Prüfpunkt | Kniebeuge | Bankdrücken | Latziehen |
+|---|---|---|---|
+| Ausgang | Stand, Knie 176°, Rumpf 6° geneigt, Stange über der Fußmitte | Arme fast gestreckt (171°), Stange über den Schultern | Arme fast gestreckt (168°), Schultern mit angehoben, 8° zurückgelehnt |
+| Endposition | Oberschenkel waagrecht, Knie 67°, Rumpf 44° | Stange auf der unteren Brust (Abstand 0 cm), Ellbogen 56°, Oberarm 66° zum Rumpf | Stange vor der oberen Brust, Ellbogen 52°, 18° zurückgelehnt |
+| Gelenkausrichtung | Knie zur Zehenrichtung −0,6 bis +1,4°; Stange über der Fußmitte 0,0 cm in jedem Bild; Knie unten 2,5 cm hinter der Zehenspitze | Unterarm unten höchstens 5,7° aus der Senkrechten (Handgelenk über dem Ellbogen), dazwischen höchstens 17° zur Seite | Unterarm im Mittelteil höchstens 5,1° aus der Senkrechten (Zugrichtung des Kabels), unten 27° (breiter Griff) |
+| Handgelenk | 12° gestreckt, gleichbleibend | 12° bis 27° (darin 12° gewollte Streckung, Stange tief in der Hand) | höchstens 10° im Mittelteil, oben 11°, unten 17° |
+| Griff und Kontakt | Griff 58 cm, Stange in der Handfläche, 20° schräg, Handfläche nach vorn, Ellbogen unten-hinten; Haut höchstens 1,7 mm eingedrückt, 222 Punkte in Kontakt | Griff 60 cm, beide Hände gleich, Daumen umgreift; 1,2 mm, 332 Punkte; am kleinen Finger 2,6 mm Spalt (Stange tief in der Hand) | Griff 64 cm auf dem geraden Teil, 6° schräg; 1,3 mm, 264 Punkte |
+| Füße | flach, 18° nach außen, tiefster Punkt 0 mm, Verschiebung höchstens 2,8 mm | flach am Boden, 0 mm | flach am Boden, 0,1 mm |
+| Weiteres | hohe Stangenposition auf dem oberen Trapez, Kopf in Verlängerung der Wirbelsäule | Schulterblätter zurückgezogen auf der Bank | Sitz auf Kniehöhe, Knierolle auf den Oberschenkeln; die Stange läuft mit mindestens 4,1 cm Abstand vor dem Gesicht vorbei |
+
+Ausweichen auf Ausgangs- und Endposition mit dezenter Bewegung dazwischen (Abschnitt 6) war bei keiner der drei nötig.

@@ -92,3 +92,14 @@ Gestrichen (keine Einheit, nur Gramm), weil die Werte zu stark schwanken oder si
 | Änderungen | Eigene Farben aus den Tokens (Körper Grau, Hauptmuskeln Lime, mitarbeitende Lime mit 35 % Deckkraft, Hintergrund wie die Karte), eigene Zuordnung der 20 Muskeln der App zu den Bereichen der Vorlage (`MuscleMap.tsx`). Abduktoren haben in der Vorlage keinen eigenen Bereich und färben „gluteal“; Latissimus und oberer Rücken teilen sich „upper-back“ |
 | Ablage | `tools/muscle_map.py` erzeugt `src/modules/exercises/ui/muscleMapPaths.ts` (mit Copyright im Kopf); der Lizenztext liegt mit der App unter `/uebungen/muskelkarte-lizenz.txt` (`public/uebungen/muskelkarte-lizenz.txt`) |
 | Geprüft, nicht genommen | `react-body-highlighter` 2.0.5 (MIT, GV79): nur grobe Vielecke im Raster 100 × 200, wirkt nicht anatomisch |
+
+## 6. 3D-Pilot der Übungsbilder (D-402)
+
+| Punkt | Angabe |
+|---|---|
+| Grundmodell | MakeHuman, Repository `makehuman/makehuman` (Zweig `master`), Dateien `makehuman/data/3dobjs/base.obj` (Grundmodell), `makehuman/data/rigs/default.mhskel` (Skelett) und `default_weights.mhw` (Gewichte); geladen am 27.10.2026 über `raw.githubusercontent.com`, mit `LICENSE.md` |
+| Lizenz | CC0 1.0 Universal für alle Assets: „The assets are defined as any data contributing to the graphical output of MakeHuman“, darunter Grundmodell, Ziele, Posen (`LICENSE.md` Abschnitt C). Keine Pflicht zur Namensnennung, keine Weitergabe unter gleicher Lizenz |
+| Was das für die Bilder heißt | `LICENSE.md` Abschnitt D: Das Projekt erhebt keinen Anspruch auf Ausgaben, ausdrücklich auch nicht auf „Renderings“ und „Graphical data generated via scripting or plugins“; „there is no limitation on what you can do with this combined output“. Die gerenderten Schleifen, Standbilder und Vorschaubilder sind damit frei nutzbar, auch in der App und im öffentlichen Repository; die Quelle nennen wir trotzdem (`medien.json`, Quelle `form_3d_pilot`) |
+| Werkzeug | Blender 4.2 als Python-Modul `bpy` (GPL), nur zum Rendern, nicht Teil der App. Was Blender rendert, gehört dem, der es rendert; die GPL gilt nicht für die Bilder |
+| Eigenes | Posen, Bewegung, Geräte, Muskelzonen, Licht und Farben in `tools/uebungen-3d/` |
+| Ablage | Die MakeHuman-Dateien liegen nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie. Ergebnisse in `public/uebungen/medien/` |

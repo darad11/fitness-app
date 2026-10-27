@@ -148,3 +148,22 @@ Wörtlich in `docs/testing.md`, Abschnitt „Phase Übungen, Fortsetzung“. Uni
 2. WebKit-Ergebnis für den umgestellten Player-Test in `uebungen.spec.ts`.
 3. Gerätetest der Animationen am iPhone (Autoplay, Schleife, offline, „Bewegung reduzieren“).
 4. Cable Pull-Through und Heel Taps ohne belegte Quelle.
+
+## 10. Übungsanimationen ohne Kosten (`uebungen-animation-gratis-FORM.md`)
+
+Auftrag mit Anhang `pilot-korrekturen.png` unter `docs/prompts/`. Nur kostenlose Werkzeuge und Daten: Blender 4.2 als Python-Modul, MakeHuman (CC0), ffmpeg. Nichts gekauft, kein Konto angelegt, keine neue Adresse unter „Network access“. Plan B und Plan C zurückgestellt.
+
+### 10.1 Fehler des bisherigen Piloten und Ursachen (Abschnitt 7.1, D-406)
+
+| Fehler | Ursache | Art |
+|---|---|---|
+| Hände schweben wie Krallen, umgreifen die Stange nicht | Jedes Fingerglied um einen festen Winkel gebeugt, ohne Bezug zur Stange; das Handziel hing 4,5 bis 6 cm neben der Stange; die Drehung der Hand ergab sich zufällig aus der IK-Kette | Rig, Animationsdaten |
+| Knie kippen nach innen | Blender-IK über vier Knochen; das Pol-Ziel wurde in jedem Bild aus der Lage des Knies neu gesetzt, nichts band das Knie an die Zehenrichtung | Rig |
+| Füße uneinheitlich gedreht, Gewicht auf den Zehen | Der Fuß behielt die Richtung der Grundhaltung, in der er beim MakeHuman-Modell nicht flach steht; die Drehung nach außen saß nur am Halter, beide Seiten wurden getrennt gelöst | Rig, Modell |
+| Muskelzonen verschwommen | Weicher Abfall je Muskel, zweimal mit den Nachbarpunkten geglättet, im Material weich gemischt | Zonendaten, Rendering |
+| Seitenansicht verdeckt Kopf und Oberkörper | Kniebeuge und Latziehen schräg von hinten, Bankdrücken schräg von der Seite, fester Abstand; die Scheiben lagen vor Kopf und Oberkörper | Rendering |
+| Ruck an den Umkehrpunkten | Zeitverlauf mit Kosinus: Die Geschwindigkeit ist stetig, die Beschleunigung springt | Animationsdaten |
+| Bankdrücken mit weit abgespreizten Ellbogen | Pol-Ziel 70 cm seitlich der Schulter | Animationsdaten |
+| Latziehen: Hände auf den gebogenen Enden, Knierolle fest | Handziel 47 cm neben der Mitte; Rolle unabhängig von den Oberschenkeln gesetzt | Animationsdaten |
+
+Zum Modell: MakeHuman-Grundmodell ohne Formziele, 1,67 m, Oberarm 22,8 cm von Gelenk zu Gelenk (eher kurz). Das begrenzt die Reichweite; bei der Kniebeuge liegt die Stange deshalb hoch auf dem Trapez und schräg in der Hand. Die Hände haben drei Glieder je Finger und einen beweglichen Daumen und erlauben natürliche Griffe, wenn die Pose stimmt; ein anderes Modell ist dafür nicht nötig.

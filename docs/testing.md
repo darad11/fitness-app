@@ -2338,7 +2338,7 @@ Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C mä
 
 ### Phase Übungen, Korrekturrunde 3 (Griff, Rundhalskragen, Rückenlogo) · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekommen): Griff (D-430), Rundhalskragen (D-431). Nur C männlich, Fassung A1, Brust-F 4 cm; Werkzeuge und Daten, Code und Videos der App unverändert.
+Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekommen): Griff (D-430), Rundhalskragen (D-431), Rückenlogo (D-432). Nur C männlich, Fassung A1, Brust-F 4 cm; Werkzeuge und Daten, Code und Videos der App unverändert.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2348,3 +2348,4 @@ Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekomme
 | Halsansatz gemessen (Skript im Arbeitsordner, C männlich, Grundhaltung): Höhe der Schlüsselbeinenden 0,591 m, `neck01` 0,665 m, Halsbreite knapp über dem Halsansatz ±6,7 cm, Haut der Trapezmuskeln bei 13 cm seitlich 0,63 bis 0,64 m | die Trapezmuskeln liegen seitlich fast auf Höhe des Halsansatzes: Grund, warum die reine Ebene vorn/hinten über die Schultern schnitt |
 | Halsöffnung, vier Fassungen nacheinander (Nahaufnahmen Stand von vorn und von der Seite, tiefste Kniebeuge 45° und 135°, Latziehen oben, 560 px, 16 Proben) | 1. Ellipse in geneigter Ebene mit Zylinder: Nacken über der hinteren Kante außerhalb des Zylinders, Lappen seitlich am Hals; 2. reine Ebene: Kante über den Schultern (siehe Messung); 3. Ebene seitlich parabolisch zum Halsansatz angehoben: Kante am Hals, vorn Spitze entlang der Brustbeinrinne, Bündchen ohne Schnittpunkte vorn (Haken); 4. dazu Stoff unterhalb der vorderen Kante, Bündchen aus dem Feld `Hals` und mindestens 2,5 mm über dem Stoff: runder Bogen vorn, Kante seitlich am Halsansatz, hinten über dem Halswirbel, Bündchen durchgehend; in der tiefsten Kniebeuge mit aufliegender Stange und beim Latziehen oben unverändert am Halsansatz; selbst angesehen |
 | Bündchen (Skript im Arbeitsordner): 72 Stützen je Winkel, Höhe über der Tangentialebene des nächsten Stoffpunkts | nach der Anhebung 2,2 bis 2,6 mm überall (vorher −12 bis +1,6 mm, Stützen im Stoff); Innenkante z 0,59 bis 0,68 m, x ±7,3 cm; 144 Eckpunkte, 72 Flächen |
+| Rückenlogo (`kleidung.anziehen.masse`, C männlich): Wortmarke 15,0 cm, F 6,3 cm hoch, Block 11,4 cm, Oberkante des F 7,0 cm unter der hinteren Kante der Halsöffnung; Nahaufnahmen Kniebeuge Ausgang und Latziehen Endposition von hinten, Kniebeuge tiefste Position von hinten-seitlich | mittig im oberen Rücken, Originalproportionen, über den Lime-Zonen lesbar; vorher (D-427) 8,4 cm und 3,5 cm, Oberkante des F rund 13 cm unter der Kante |

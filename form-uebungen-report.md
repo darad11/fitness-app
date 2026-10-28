@@ -945,3 +945,93 @@ Dein Auftrag steht in `docs/prompts/uebungen-korrektur3-FORM.md`; der Anhang mit
 
 - **Regel:** Die Wortmarke ist 15 cm breit (ein Wert in der Konfiguration), das F folgt aus der festen Proportion des vertikalen Logos: 6,3 cm hoch, Block 11,4 cm. Die Oberkante des F liegt 7 cm unter der hinteren Kante der Halsöffnung, waagrecht mittig. Die Regel aus D-427 (zwei Drittel der Breite zwischen den Schulterblättern) ist weg; sie hatte das Logo auf 8,4 cm verkleinert und zu tief gesetzt.
 - **Geprüft** in Kniebeuge (Ausgang, von hinten; tiefste Position von hinten-seitlich), Latziehen (Endposition, von hinten, über den Lime-Zonen) und Bankdrücken (Rückenlage): mittig im oberen Rücken, Originalproportionen, folgt dem Stoff.
+
+### 16.4 Vorher-nachher-Vergleich (D-433)
+
+Alle Blätter in `docs/screens/uebungen/`, links der Stand D-429 (Werkzeug aus dem Repository ausgecheckt), rechts der Stand nach den Korrekturen, dieselben Kameras:
+
+1. `korrektur3-1-griff.webp`: Griff beim Bankdrücken vom Fußende, von der Seite entlang der Stange, von oben auf die Hand, vom Kopfende; Griff in der Kniebeuge und beim Latziehen.
+2. `korrektur3-2-kragen.webp`: Kragen von vorn und von der Seite im Stand, in der tiefsten Kniebeuge aus der Kamera der App und von hinten-seitlich, beim Latziehen oben mit gehobenen Armen.
+3. `korrektur3-3-ruecken.webp`: Rückenlogo in der Kniebeuge und beim Latziehen, bisherige und korrigierte Position und Größe.
+4. `korrektur3-4-gesamt.webp`: Gesamtansicht jeder Pilot-Übung (Kniebeuge unten, Bankdrücken Ausgang, Latziehen Endposition), Kamera wie in der App.
+5. `korrektur3-5-player.webp`: die Gesamtansichten in der Größe des großen Players (390 px breit) und des kleinen Players (56 px).
+
+**Renderzeit** (C männlich, 720 × 540, 40 Proben, ein Prozess auf vier CPU-Kernen; der Aufbau enthält Griffsuche und Kragen):
+
+| Standbild | Aufbau vorher / nachher | Bild vorher / nachher |
+|---|---|---|
+| Kniebeuge unten | 5,4 / 5,1 s | 19,4 / 17,3 s |
+| Bankdrücken oben | 4,9 / 5,0 s | 32,1 / 23,9 s |
+| Latziehen unten | 8,8 / 6,3 s | 37,3 / 18,6 s |
+
+Die 5 Blätter: `korrektur3-1-griff.webp` 118,1 KB, `korrektur3-2-kragen.webp` 110,0 KB, `korrektur3-3-ruecken.webp` 48,7 KB, `korrektur3-4-gesamt.webp` 67,5 KB, `korrektur3-5-player.webp` 40,9 KB; zusammen 385,2 KB.
+
+**Was die Blätter zeigen:**
+
+- **Griff:** Vorher saß die Faust über der Stange, die Finger rollten in die Handfläche, der Daumen hing darunter. Nachher läuft die Stange vom Fußende gesehen durch die geschlossene Hand, von oben greifen die Finger über die Stange, von der Seite ist der Ring aus Fingern und Daumen zu sehen, vom Kopfende liegt der Daumen unter den Fingern. Kniebeuge und Latziehen zeigen dieselbe geschlossene Hand mit ihren eigenen Griffen.
+- **Kragen:** Vorher eine flache Kante mit Spitze und Einschnitt, seitlich am Hals hochgezogen. Nachher ein runder Ausschnitt mit Bündchen: vorn unter der Drosselgrube, seitlich am Halsansatz, hinten über dem Halswirbel; in der tiefsten Kniebeuge mit aufliegender Stange und beim Latziehen oben bleibt er am Halsansatz.
+- **Rückenlogo:** Vorher klein und tief zwischen den Schulterblättern (Wortmarke 8,4 cm). Nachher ein Backprint von 15 cm Breite mit der Oberkante des F 7 cm unter dem Kragen, in Originalproportionen; beim Latziehen liegt er über den Lime-Zonen und bleibt lesbar.
+- **Gesamtansichten:** In der Kamera der App sind Kragen und Backprint zu erkennen, der Griff liest sich als geschlossene Hand; sonst ist das Bild unverändert. Die Renderzeiten vorher liefen parallel zu anderen Renderings und sind nicht vergleichbar.
+- **Player-Größe:** Im großen Player (390 px) sind Kragen, Griff und Backprint sichtbar; im kleinen Player (56 px) bleibt wie bisher nur die Silhouette mit den Lime-Zonen.
+
+### 16.6 Tests
+
+- **Ursachen** gemessen statt geraten: Handgeometrie und Lage der Stange (Griff), Halsansatz und Trapezhöhe (Kragen), Maße des Logos; danach dieselben Ansichten neu.
+- **Griff:** Winkel und Abstände in allen drei Übungen und Phasen; Sichtprobe aus vier Richtungen beim Bankdrücken.
+- **Kragen:** vier Fassungen nacheinander, Bündchen numerisch (Höhe über dem Stoff je Stütze) und in fünf Ansichten.
+- **Vergleich:** 13 Nahaufnahmen vorher und 13 nachher (`nahaufnahme.py`, 560 px, 24 Proben) und je 3 Standbilder, alle selbst angesehen; 5 Blätter, zusammen 385,2 KB.
+- **Dokumente:** `pnpm check:docs` und Prettier je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
+- **CI:** Die Läufe zu den Commits stehen in PR #53; jeder Push bricht den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
+- Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde 3“.
+
+### 16.7 Übertragbarkeit und offene Punkte
+
+- **Griff:** Das Einsinken der Stange in die Handfläche und die Konstruktion von Fingern und Daumen gelten für jede Übung mit Stange oder Griff; die Lage in der Hand (Anteil und Schrägstellung) bleibt je Übung ein Wert, weil Bankdrücken, Kniebeuge und Latziehen verschieden greifen. Für Kurzhanteln und Kabelgriffe (Animationsplan) ist dieselbe Konstruktion mit anderem Radius zu erwarten.
+- **Kragen und Rückenlogo:** hängen an den Marken des Körpers (Schlüsselbeine, Halsansatz, Halsbreite) und gelten unverändert für alle Übungen und für die zurückgestellte weibliche Figur.
+- **Offen:** deine Freigabe der Standbilder; danach rendere ich die drei Pilot-Übungen neu und baue sie ein, nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+
+### 16.8 Berichte je Paket
+
+```
+Arbeitspaket: D-430 Stange liegt in der Hand
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/rig.py, uebungen.py; Auftrag, CLAUDE.md, Dokumente
+Technische Entscheidungen: D-430
+Ausgeführte Tests: Handgeometrie gemessen, Winkel und Abstände in drei Übungen und Phasen, Nahaufnahmen aus vier Richtungen; pnpm check:docs
+Ergebnis: bestanden; Ursache war die Lage der Stange, nicht der Daumen
+Bekannte Einschränkungen: Haut der Handfläche in der Stange (9 mm), nicht sichtbar
+Nächste Schritte: Kragen (D-431)
+```
+
+```
+Arbeitspaket: D-431 Rundhalskragen als Halsöffnung im Netz mit Bündchen
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py, varianten.py; Dokumente
+Technische Entscheidungen: D-431
+Ausgeführte Tests: Halsansatz gemessen, vier Fassungen in fünf Ansichten, Bündchen numerisch; pnpm check:docs
+Ergebnis: bestanden nach vier Fassungen
+Bekannte Einschränkungen: Fläche aus drei Marken, nicht aus einem Schnittmuster
+Nächste Schritte: Rückenlogo (D-432)
+```
+
+```
+Arbeitspaket: D-432 Rückenlogo als Backprint
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py; Dokumente
+Technische Entscheidungen: D-432
+Ausgeführte Tests: Maße gemessen, Nahaufnahmen in drei Übungen; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine
+Nächste Schritte: Vergleich (D-433)
+```
+
+```
+Arbeitspaket: D-433 Vorher-nachher-Vergleich
+Umgesetzte Funktionen: Nachweis, erfüllte AK: –
+Geänderte Dateien: docs/screens/uebungen/korrektur3-*.webp, tools/uebungen_korrektur_bild.py; Dokumente
+Technische Entscheidungen: D-433
+Ausgeführte Tests: 13 Nahaufnahmen vorher und 13 nachher (`nahaufnahme.py`, 560 px, 24 Proben) und je 3 Standbilder, alle selbst angesehen; 5 Blätter, zusammen 385,2 KB; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: Standbilder statt Schleifen
+Nächste Schritte: Animationsplan nach Programmen, dann Halt
+```

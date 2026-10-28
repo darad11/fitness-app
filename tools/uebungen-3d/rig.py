@@ -27,6 +27,7 @@ from mathutils import Matrix, Quaternion, Vector
 
 X, Y, Z = Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1))
 KONTAKT = -0.0008  # Finger berühren die Stange, Haut 0,8 mm eingedrückt
+EINSINKEN = 0.009  # Stange sinkt in die Haut der Handfläche ein, m (D-430)
 
 
 def senkrecht(v: Vector, achse: Vector) -> Vector:
@@ -282,26 +283,35 @@ class Rig:
         tiefe = max(p[1] for p in nahe) if nahe else 0.015
         return d["W0"] + d["laengs"] * (t * d["L"]) + d["achse"] * d["quer"] + d["n"] * tiefe
 
-    def griff(self, seite: str, t: float, radius: float, daumen: bool = True, schraeg: float = 0.0) -> Griff:
-        """Griff um eine Stange mit `radius`, quer in der Handfläche bei Anteil t. `schraeg` (Grad)
-        legt die Stange schräg in die Hand (zur Kleinfingerseite tiefer), wie bei breiten Griffen,
-        damit Hand und Unterarm in einer Linie bleiben."""
+    def griff(self, seite: str, t: float, radius: float, daumen: bool = True, schraeg: float = 0.0,
+              einsinken: float = EINSINKEN) -> Griff:
+        """Griff um eine Stange mit `radius`, quer in der Handfläche bei Anteil t (0 Handgelenk, 1
+        Fingeransatz). `schraeg` (Grad) legt die Stange schräg in die Hand (zur Kleinfingerseite
+        tiefer), wie bei breiten Griffen, damit Hand und Unterarm in einer Linie bleiben.
+
+        Die Stange liegt in der Hand (D-430): Sie sinkt `einsinken` in die Haut der Handfläche ein,
+        wie Ballen und Hohlhand unter Last nachgeben; was von der Haut in der Stange liegt, ist nicht
+        zu sehen. Bis D-429 wurde die Stange so weit von der Handfläche weggeschoben, dass kein Punkt
+        der Hand mehr als 2,5 mm in sie ragte; damit lag sie auf den Ballen, 4,8 cm über den
+        Mittelhandknochen, die Finger kamen nicht um sie herum und rollten als Faust vor ihr ein.
+        Geprüft wird nur, dass die Haut nicht auf der anderen Seite aus der Stange herausragt."""
         d = self._hand[seite]
         achse = d["achse"]
         if schraeg:
             achse = achse_winkel(d["n"], schraeg if seite == "L" else -schraeg) @ achse
-        mitte = self.handflaeche(seite, t) + d["n"] * (radius - 0.0015)
-        # Handfläche ist zur Daumenseite dicker: Stange so weit von der Handfläche weg, dass kein
-        # Punkt von Hand und Daumenballen mehr als 2,5 mm in die Stange ragt (Haut gibt nach).
+        mitte = self.handflaeche(seite, t) + d["n"] * (radius - einsinken)
         k = self.koerper
         hand = {k.vertex_groups[n].index for n in
                 [f"metacarpal{i}.{seite}" for i in range(1, 5)] + [f"wrist.{seite}", f"finger1-1.{seite}"]}
         punkte = [v.co for v in k.data.vertices if sum(gg.weight for gg in v.groups if gg.group in hand) > 0.4]
+        # Haut darf nicht durch die Stange hindurch auf der Gegenseite erscheinen: Punkte der
+        # Handfläche in der Nähe der Achse bleiben unter ihr (Abstand längs n höchstens Radius − 3 mm)
         for _ in range(6):
-            tiefste = min(self._abstand_achse(p, mitte, achse) for p in punkte if (p - mitte).dot(d["n"]) < 0)
-            if tiefste >= radius - 0.0025:
+            hoechste = max(((p - mitte).dot(d["n"]) for p in punkte
+                            if abs((p - mitte).dot(achse)) < 0.05 and abs((p - mitte).dot(d["laengs"])) < radius), default=-1.0)
+            if hoechste <= radius - 0.003:
                 break
-            mitte = mitte + d["n"] * (radius - 0.0025 - tiefste)
+            mitte = mitte + d["n"] * (hoechste - (radius - 0.003))
         g = Griff(mitte, achse, d["n"], d["laengs"], radius)
         # Fingerdicke (Knochen bis Haut der Beugeseite) als Startwert; danach am verformten Netz
         # nachgemessen und angepasst, bis jeder Finger die Stange berührt (Haut 0,8 mm eingedrückt).

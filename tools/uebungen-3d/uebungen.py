@@ -345,7 +345,10 @@ class Bankdruecken(Uebung):
     UNTERARM = 0.0  # Unterarm-Neigung nach außen (Grad), die der Ellbogen anstrebt
     # Stange schräg in der Hand (Grad): vom Zeigefingerballen zum Handballen an der Kleinfingerseite,
     # tief in der Handfläche über dem Unterarm (voller Griff, D-423; vorher quer)
-    SCHRAEG = 12.0
+    SCHRAEG = 18.0
+    # Lage der Stange in der Hand (Anteil Handgelenk→Fingeransatz, D-430): in der oberen Hohlhand, so dass
+    # die Finger sie umschließen; bis D-429 lag sie bei 0,38 auf den Ballen und die Faust vor ihr
+    GRIFF_LAGE = 0.68
     UNTEN_DZ = 0.0  # Stange unten höher (m)
     BOGEN = 1.4  # Form der Stangenbahn: Exponent der Bewegung zur Brust hin
 
@@ -354,7 +357,7 @@ class Bankdruecken(Uebung):
         rig = self.rig
         self.bank = geraete.flachbank()
         self.stange = geraete.langhantel([(0.45, 0.035), (0.33, 0.03)])
-        self.griff = {s: rig.griff(s, 0.38, STANGE_R, schraeg=self.SCHRAEG) for s in "LR"}
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, STANGE_R, schraeg=self.SCHRAEG) for s in "LR"}
         self.griff_x = self.GRIFF * self.mass
         self.R_liegen = achse_winkel(X, -90)
         ruecken = _ruecken_tief(self.koerper, rig.kopf["upperleg01.L"].z - 0.2, rig.kopf["neck01"].z - 0.04)

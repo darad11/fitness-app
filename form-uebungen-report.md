@@ -922,3 +922,14 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Einzelschätzung wie D-411, Renderzeit aus den Standbildern hochgerechnet
 Nächste Schritte: Freigabe der Standbilder, Pilot-Übungen neu rendern und einbauen
 ```
+
+## 16. Korrekturrunde 3: Griff, Rundhalskragen und Rückenlogo (`uebungen-korrektur3-FORM.md`)
+
+Dein Auftrag steht in `docs/prompts/uebungen-korrektur3-FORM.md`; der Anhang mit deinen Markierungen ist angekommen. Gerendert wird nur C männlich in A1 mit Brust-F 4 cm; die Pilot-Übungen und die Videos der App bleiben unverändert, bis du freigibst.
+
+### 16.1 Griff: die Stange liegt in der Hand (D-430)
+
+- **Ursache:** nicht die Daumenwinkel, sondern die Lage der Stange. `Rig.griff` schob die Stange so weit von der Handfläche weg, dass kein Punkt der Hand mehr als 2,5 mm in sie ragte. Die Ballen liegen aber 3 cm über den Mittelhandknochen; so lag die Stange 4,8 cm über den Knochen auf den Ballen statt in der Hand. Die Finger reichten nicht um sie herum, rollten als Faust davor ein, und der Daumen hing darunter.
+- **Jetzt:** Die Stange sinkt 9 mm in die Haut der Handfläche ein, wie Ballen und Hohlhand unter Last nachgeben; die Haut in der Stange ist nicht zu sehen. Geprüft wird nur, dass keine Haut auf der Gegenseite aus der Stange ragt. Beim Bankdrücken liegt sie in der oberen Hohlhand und 18° schräg vom Zeigefingerballen zum Handballen; das Handgelenk steht über dem Unterarm. Finger und Daumen schließen sich mit der Konstruktion aus D-425 um die Stange: Daumen Sattelgelenk 41°, Grundgelenk 53°, Endgelenk 69°; die Finger drücken die Haut 0,1 bis 1,9 mm ein, der Daumen 0,7 mm.
+- **Sichtprobe:** Vom Fußende läuft die Stange durch die geschlossene Hand, von oben greifen die Finger über sie, der Daumen schließt den Ring unten mit der Spitze neben dem Zeigefinger; vom Kopfende liegt er unter den Fingern.
+- **Kniebeuge und Latziehen:** behalten ihre eigenen Griffe (Stange hinter dem Nacken bei 0,6 und 20° schräg; Latzugstange bei 0,72 und 6°), nur mit demselben Einsinken. Auch dort schließt sich die Hand um die Stange; die Kniebeuge zeigt den Handrücken, das Latziehen den Obergriff.

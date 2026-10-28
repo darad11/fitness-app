@@ -2335,3 +2335,13 @@ Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C mä
 | Blätter (`tools/uebungen_korrektur_bild.py --runde 2`) | 2 Dateien, zusammen 122,2 KB, selbst angesehen |
 | Animationsplan (`tools/uebungen_animationsplan.py`, D-429): drei Programme in `programs.v1.json` gefunden, 68 Übungen der Zuordnung D-411, vier Platzhalter der Programme (keine Übungen) ausgeschlossen; `--check` in `pnpm check:docs` | Summen 103,0 Std. Übungen, 63,0 Std. Basis, 1784 min Rechenzeit; Plan und Daten stimmen überein |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |
+
+### Phase Übungen, Korrekturrunde 3 (Griff, Rundhalskragen, Rückenlogo) · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekommen): Griff (D-430). Nur C männlich, Fassung A1, Brust-F 4 cm; Werkzeuge und Daten, Code und Videos der App unverändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Handgeometrie im Griff (Skript im Arbeitsordner, C männlich, Grundhaltung): Mittelhandknochen, Fingergrundgelenke, Hauttiefe der Handfläche je Anteil Handgelenk → Fingeransatz, Lage der Stange | Haut der Ballen 2,9 bis 3,2 cm über den Mittelhandknochen (Anteil 0,2 bis 0,4), Hohlhand 1,8 bis 2,2 cm (0,6 bis 0,9); Stange bis D-429 bei Anteil 0,38, Mitte 4,8 cm über den Knochen: auf den Ballen, nicht in der Hand |
+| Messung je Übung nach der Korrektur (`pruef_griff.py`): Daumenwinkel, Abstand jedes Fingers zur Stange, Finger in den Phasen 0, 0,5 und 1 | Bankdrücken Daumen 41°/53°/69°, Finger −0,1 bis −1,9 mm, Daumen −0,7 mm; Kniebeuge 51°/67°/69°, −0,7 bis −1,7 mm; Latziehen 44°/33°/73°, −0,4 bis −1,2 mm; in den Phasen geringster Abstand −1,9 / −5,1 / −1,2 mm (Kniebeuge: Haut des Daumenballens in der Stange, Einsinken 9 mm, nicht sichtbar), keine Meldungen des Rigs |
+| Nahaufnahmen Bankdrücken (640 px, 24 Proben, Scheiben ausgeblendet): vom Fußende, von der Seite entlang der Stange, von oben, vom Kopfende; Kniebeuge hinten-seitlich und von hinten; Latziehen schräg | Stange läuft durch die geschlossene Hand, Finger greifen von oben über die Stange, Daumen schließt den Ring unten, Spitze neben dem Zeigefinger; Handgelenk über dem Unterarm; nichts ragt aus der Stange; selbst angesehen |

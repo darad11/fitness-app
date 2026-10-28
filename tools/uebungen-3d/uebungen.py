@@ -64,6 +64,8 @@ class Uebung:
     # Kamera (D-410): Dreiviertelansicht von vorn-seitlich, 45° zur linken Körperseite, leicht von
     # oben. Der Abstand ergibt sich aus Figur und Gerät (`szene.bildausschnitt`).
     kamera = {"richtung": 45.0, "neigung": 10.0}
+    # Vorschaubild (D-415): Position, in der die Übung klein am besten zu erkennen ist
+    vorschau_phase = 1.0
 
     def rahmen_objekte(self) -> list:
         """Geräteteile, die ganz im Bild sein sollen."""
@@ -320,6 +322,9 @@ class Bankdruecken(Uebung):
     mit = ["triceps", "front_delts"]
     # Liegend: dieselbe Richtung, steiler von oben, damit die Brust zu sehen ist
     kamera = {"richtung": 45.0, "neigung": 32.0}
+    # Vorschau oben: gestreckte Arme mit der Stange über der Brust sind klein sofort Bankdrücken; unten
+    # verdeckt die Stange das Gesicht und die gebeugten Arme werden angeschnitten (D-415)
+    vorschau_phase = 0.0
 
     def rahmen_objekte(self) -> list:
         return [self.stange, self.bank]
@@ -458,6 +463,8 @@ class Latziehen(Uebung):
     mit = ["biceps", "upper_back"]
     # Die arbeitenden Muskeln liegen auf dem Rücken: dieselbe Dreiviertelansicht, von hinten-seitlich
     kamera = {"richtung": 135.0, "neigung": 10.0}
+    # Vorschau oben: Arme über dem Kopf an der breiten Stange, dazu Sitz und Knierolle (D-415)
+    vorschau_phase = 0.0
     GRIFF = 0.32
     LEHNE_OBEN, LEHNE_UNTEN = 8.0, 18.0
     SCHULTER_HOCH = 22.0  # Schlüsselbein angehoben bei gestreckten Armen

@@ -368,3 +368,7 @@ Aufnahmen: `docs/screens/uebungen/variante-A-kniebeuge.mp4` und `.webm`, `varian
 ### 11.5 Lizenzen
 
 Alles in `licenses-data.md` Abschnitt 8: Formziele (MPFB2) und Augen (MakeHuman) CC0 1.0, Renderings frei; Haut, Augenbrauen, Haare und Kleidung eigene Arbeit. Fremde Dateien liegen nicht im Repository, `render.py --hole` lädt sie über `raw.githubusercontent.com` (keine neue Adresse nötig). Nur für die MakeHuman-Haut und -Haare bräuchte es `files2.makehumancommunity.org` (Spiegel `files.makehumancommunity.org`).
+
+### 11.6 Vorschaubild (D-415)
+
+Eigenes Standbild statt Ausschnitt aus dem Poster: Kamera wie die Schleife, Ausschnitt nur um den Körper (5 % Rand), gerendert mit 480 × 480 und auf 240 × 240 verkleinert. Position je Übung, in der sie klein am besten zu erkennen ist: Kniebeuge tiefste Position, Bankdrücken Ausgangsposition (gestreckte Arme mit der Stange; unten verdeckt die Stange das Gesicht), Latziehen Ausgangsposition (Arme über dem Kopf an der breiten Stange). Vergleich alt und neu: `docs/screens/uebungen/vorschau-vergleich.webp`. In die App kommt das neue Vorschaubild mit dem Neurendern nach deiner Wahl.

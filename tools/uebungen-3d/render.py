@@ -5,6 +5,7 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py --hole                  # MakeHuman-Dateien (CC0) laden
     python -I tools/uebungen-3d/render.py kniebeuge                # Schleife, 60 Bilder, ffmpeg
     python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
+    python -I tools/uebungen-3d/render.py kniebeuge --nur-vorschau  # nur das Vorschaubild 240 × 240
     python -I tools/uebungen-3d/render.py kniebeuge --variante C-m  # Variante zur Probe (D-414)
     python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
         --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
@@ -37,6 +38,7 @@ from uebungen import UEBUNGEN, _netz  # noqa: E402
 
 BILDER = 60
 FPS = 24
+VORSCHAU = 480  # Kantenlänge des Vorschau-Renders; verkleinert auf 240 × 240 (D-415)
 QUELLE = "https://raw.githubusercontent.com/makehuman/makehuman/master/makehuman"
 DATEIEN = {
     "base.obj": f"{QUELLE}/data/3dobjs/base.obj",
@@ -172,6 +174,31 @@ def pruefen(name: str, arbeit: Path, form: str) -> None:
             bpy.ops.render.render(write_still=True)
 
 
+def vorschau(u, s, arbeit: Path, ziel: Path, name: str, phase: float | None = None) -> Path:
+    """Vorschaubild (D-415): Standbild in der Position, in der die Übung am besten zu erkennen ist
+    (`vorschau_phase` der Übung), Kamera in Richtung und Neigung wie die Schleife, Ausschnitt eng auf
+    die Figur (nur der Körper, 5 % Rand), quadratisch; gerendert mit 480 × 480, verkleinert auf
+    240 × 240. So bleibt die Figur auch klein gut lesbar."""
+    u.setzen(u.vorschau_phase if phase is None else phase)
+    punkte = _netz(u.koerper)
+    richtung, neigung = u.kamera["richtung"], u.kamera["neigung"]
+    for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
+        bpy.data.objects.remove(o)
+    mitte, abstand, h = szene.bildausschnitt(punkte, richtung, neigung, VORSCHAU, VORSCHAU, rand=0.05)
+    szene.licht_und_kamera(mitte, richtung, abstand, h)
+    alt = (s.render.resolution_x, s.render.resolution_y)
+    s.render.resolution_x = s.render.resolution_y = VORSCHAU
+    bild = arbeit / f"vorschau-{name}.png"
+    s.render.filepath = str(bild)
+    bpy.ops.render.render(write_still=True)
+    s.render.resolution_x, s.render.resolution_y = alt
+    ziel.mkdir(parents=True, exist_ok=True)
+    datei = ziel / f"{name}-vorschau.webp"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(bild), "-vf", "scale=240:240:flags=lanczos",
+                    "-q:v", "82", str(datei)], check=True)
+    return datei
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("uebung", nargs="?")
@@ -184,6 +211,8 @@ def main() -> None:
     ap.add_argument("--hoehe", type=int, default=540)
     ap.add_argument("--proben", type=int, default=40)
     ap.add_argument("--nur-bilder", action="store_true")
+    ap.add_argument("--nur-vorschau", action="store_true", help="nur das Vorschaubild (D-415)")
+    ap.add_argument("--vorschau-phase", type=float, help="Phase des Vorschaubilds statt der Vorgabe der Übung")
     ap.add_argument("--ziel", default=str(HIER.parent.parent / "public/uebungen/medien"))
     ap.add_argument("--arbeit", default="/tmp/uebungen-3d")
     args = ap.parse_args()
@@ -197,6 +226,9 @@ def main() -> None:
         return
     s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form, args.variante)
     name = f"{args.uebung}-{args.variante}" if args.variante else args.uebung
+    if args.nur_vorschau:
+        print(vorschau(u, s, arbeit, Path(args.ziel), name, args.vorschau_phase))
+        return
     for o in bpy.data.objects:
         o.hide_render = o.name.startswith(AUSBLENDEN.get(args.ansicht, ()))
     kamera(u, punkte, args.ansicht, args.breite, args.hoehe)
@@ -208,6 +240,7 @@ def main() -> None:
     print(f"Renderzeit {args.uebung} ({args.ansicht}): {time.time() - start:.0f} s für {BILDER} Bilder")
     if not args.nur_bilder:
         kodiere(arbeit, Path(args.ziel), name, args.ansicht)
+        vorschau(u, s, arbeit, Path(args.ziel), name, args.vorschau_phase)
 
 
 def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:
@@ -218,13 +251,10 @@ def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:
                                 "-movflags", "+faststart", str(ziel / f"{name}.mp4")], check=True)
     subprocess.run(gemeinsam + ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "36", "-row-mt", "1",
                                 str(ziel / f"{name}.webm")], check=True)
-    # Poster: Endposition (Mitte der Pause unten); Vorschau 240 × 240 aus der Mitte.
+    # Poster: Endposition (Mitte der Pause unten). Das Vorschaubild rendert `vorschau` eigens.
     poster = arbeit / f"{ansicht}-{BILDER // 2:03d}.png"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(poster), "-q:v", "80",
                     str(ziel / f"{name}-poster.webp")], check=True)
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(poster), "-vf",
-                    "crop=540:540:90:0,scale=240:240:flags=lanczos", "-q:v", "82",
-                    str(ziel / f"{name}-vorschau.webp")], check=True)
 
 
 if __name__ == "__main__":

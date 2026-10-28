@@ -2258,3 +2258,19 @@ Auftrag `prompts/uebungen-varianten-FORM.md`: Brust und Körperform (D-413), Var
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB von 250 KB; „Vorab gespeichert: 191 von 266 Dateien“; Dateien der Übungsbilder 12 von 12 |
 | `pnpm test:e2e` (Chromium) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen: `start-surface.spec.ts:484` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, nur beim Laden des Skripts wie beim vierten Start“ (D-394) mit „Bilder ohne Logo davor: Expected > 0, Received 0“, das erste mitgeschnittene Bild zeigte schon das Logo |
 | Derselbe Test einzeln, `--repeat-each=10` (beide Fälle) | 20 bestanden |
+
+### Phase Übungen, Feinschliff D und C mit MakeHuman-Dateien · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Zweite Nachricht vom 28.10.2026 in `prompts/uebungen-varianten-FORM.md`: Feinschliff der gewählten Variante D (D-417); C mit den Dateien von MakeHuman folgt als eigenes Paket. Nur Werkzeuge und Daten; Code und Videos der App unverändert. Nahaufnahmen mit `tools/uebungen-3d/nahaufnahme.py` (Kamera auf einen Knochen des verformten Netzes), Standbilder mit `varianten_bilder.py` (720 × 540, 40 Proben, Kamera wie in der App), zusammengesetzt mit `tools/uebungen_varianten_bild.py`.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Hals vermessen (Ruhehaltung, neutral) | Halsgelenk `neck01` bei y = −0,005 m; Halshaut am Ansatz (0 bis 3,5 cm darüber): x ±0,063 m, y −0,081 bis +0,023 m, Mitte y −0,029 m, Kehle also 8 cm vor dem Gelenk; der alte Ausschnitt (Ellipse 7,2 × 6,6 cm um das Gelenk, Vorderkante y −0,067 m) ließ vorn Stoff am Hals stehen |
+| Rundhals, Ruhehaltung (`nahaufnahme.py D-z kniebeuge 0.0 neck01 0.26`, von vorn, seitlich, hinten, Kamera der App) | Hals frei, Ausschnitt rund, vorn rund 5 cm unter der Kehle, hinten am Halsansatz; selbst angesehen |
+| Rundhals in allen Phasen (drei Übungen × Phasen 0, 0,25, 0,5, 0,75, 1, Kamera der App, 300 px, 12 Proben) | 15 Bilder, Hals in jedem frei: `docs/screens/uebungen/feinschliff-hals.webp` |
+| FORM-F gerastert (`kleidung._f_bild`, numpy, 1024 px, 4-fach überabgetastet) gegen eine Pillow-Rasterung derselben Pfade | Umriss 37–987 × 71–953 px gegen 35–989 × 69–955 px; größte Abweichung 69 von 255 nur an Rändern, Mittel 0,125; das F füllt 36,1 % des Bildes |
+| Ausrichtung der Logos (Nahaufnahmen Brust 20°, Rücken 180°, Bein 90°) | erster Stand: Rücken-F spiegelverkehrt, Bein-F auf dem Kopf (Abwicklung am Rücken nach links, am Bein von der Hüfte nach unten gezählt); behoben, danach alle drei richtig herum, selbst angesehen |
+| Lime-F in einer Lime-Zone (Latziehen hinten, Bankdrücken Brust) | erster Stand: das F verschwand in der Zone oder blieb als Rest stehen (Latziehen); jetzt in der Stoffarbe ausgespart, als F lesbar, selbst angesehen |
+| Kantenlicht, Kniebeuge unten (`nahaufnahme.py --kante`, 420 px) | ohne (bisher 90 W): Oberkörper verschwimmt mit dem Hintergrund; 200/140 W: Kante kaum sichtbar; 280/200 W: Silhouette klar, Kante schmal; 420/300 W: Arme und Schultern zu hell. Gewählt 280/200 W: `docs/screens/uebungen/feinschliff-kantenlicht.webp` |
+| Standbilder D, vier Fassungen × drei Momente (720 × 540, 40 Proben, `varianten_bilder.py`, ein Prozess) | je Bild im Schnitt: Zonen, F in Lime, Kantenlicht 21,2 s, Zonen, F hell Ton in Ton 20,5 s, Zonen, F in Lime, ohne Kantenlicht (bisher) 19,7 s, Zonen, Tee in Graphit 20,2 s; zusammengesetzt mit `uebungen_varianten_bild.py --praefix feinschliff` (Reihe 1) und `--nah` (`logos-nah.webp`, 81,5 KB), selbst angesehen |
+| `pnpm check:docs` je Paket am Stand des Commits, `python3 -m py_compile` aller Werkzeuge | bestanden |

@@ -16,6 +16,7 @@ KOERPER = "#8D96A3"  # --data-8 / --macro-other aus brand-tokens.md
 GERAET = "#3C424E"  # --tile-border
 GERAET_HELL = "#6B7482"  # --border-input
 LIME = "#C7FF46"
+KANTE = (280.0, 200.0)  # Kantenlicht hinten links und rechts, W (D-417; 420/300 war zu hell, 200/140 zu schwach)
 
 
 def srgb(hex_farbe: str) -> tuple[float, float, float, float]:
@@ -113,8 +114,12 @@ def koerper_material(mit_deckkraft: float = 0.42) -> bpy.types.Material:
 
 
 def licht_und_kamera(ziel: Vector, richtung_grad: float, abstand: float, hoehe: float,
-                     brennweite: float = 50.0) -> bpy.types.Object:
-    """Kamera in Dreiviertel- oder Seitenansicht; Hauptlicht schräg vorn oben, Gegenlicht schwach."""
+                     brennweite: float = 50.0, kantenlicht: bool = True) -> bpy.types.Object:
+    """Kamera in Dreiviertel- oder Seitenansicht; Hauptlicht schräg vorn oben, Fülllicht von der
+    Kamera. Kantenlicht (D-417): zwei schmale Flächen hinter der Figur, je 30° neben der Gegenrichtung
+    der Kamera und hoch, geben Figur, Kleidung und Geräten eine dünne helle Kante, damit sich dunkler
+    Stoff vom Hintergrund Nacht abhebt. Ohne Kantenlicht (Stand bis D-416) nur ein schwaches
+    Gegenlicht von hinten links."""
     szene = bpy.context.scene
     winkel = math.radians(richtung_grad)
     pos = ziel + Vector((math.sin(winkel) * abstand, -math.cos(winkel) * abstand, hoehe))
@@ -139,8 +144,13 @@ def licht_und_kamera(ziel: Vector, richtung_grad: float, abstand: float, hoehe: 
     # Hauptlicht schräg vorn (von der Kamera aus 35° zur Seite, oben), weich durch große Fläche.
     w2 = winkel - math.radians(40)
     flaeche("Hauptlicht", 260.0, 3.0, ziel + Vector((math.sin(w2) * 4, -math.cos(w2) * 4, 3.0)))
-    w3 = winkel + math.radians(150)
-    flaeche("Kante", 90.0, 2.0, ziel + Vector((math.sin(w3) * 4, -math.cos(w3) * 4, 2.5)))
+    if kantenlicht:
+        for name, seite, staerke in (("KanteL", 150, KANTE[0]), ("KanteR", -150, KANTE[1])):
+            w3 = winkel + math.radians(seite)
+            flaeche(name, staerke, 1.0, ziel + Vector((math.sin(w3) * 4, -math.cos(w3) * 4, 3.2)))
+    else:
+        w3 = winkel + math.radians(150)
+        flaeche("Kante", 90.0, 2.0, ziel + Vector((math.sin(w3) * 4, -math.cos(w3) * 4, 2.5)))
     flaeche("Fuell", 40.0, 4.0, ziel + Vector((math.sin(winkel) * 5, -math.cos(winkel) * 5, -0.5)))
     return cam
 

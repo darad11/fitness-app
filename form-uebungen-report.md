@@ -460,3 +460,59 @@ Ergebnis: Dokumente bestanden; App-Prüfungen wie in Abschnitt 11.8 (ein E2E-Tes
 Bekannte Einschränkungen: Aufwand ist Schätzung ohne Rechenzeit
 Nächste Schritte: Familien nach dem Merge von PR #53 auf eigenen Branches, zuerst die Kniebeuge
 ```
+
+## 12. Entscheidung D, Feinschliff und C mit MakeHuman-Dateien (zweite Nachricht vom 28.10.2026)
+
+Deine Entscheidung: D mit Zonen; A und B nicht weiter. Die Nachricht steht wörtlich in `docs/prompts/uebungen-varianten-FORM.md` (zweiter Teil). Die angehängte Vorlage der Kleidung ist auch diesmal nicht angekommen; Farben und Logos nach deinem Text. Die Videos der App sind unverändert, bis du die Fassung wählst.
+
+### 12.1 Farben (D-417)
+
+Tee Nacht #0C1219, Shorts Graphit #4A4F57 (`kleidung.GRAPHIT`; vorher #575D67 als Annahme). Graphit liegt nahe am Grau der Bank (#3C424E); mit dem Kantenlicht (12.4) hebt sich beides ab.
+
+### 12.2 Rundhals (D-417)
+
+Ursache des Rollkragens: Der Ausschnitt war ein senkrechter Zylinder von 7,2 × 6,6 cm um das Halsgelenk. Der Hals sitzt aber 3 bis 8 cm vor dem Gelenk (die Kehle bei y ≈ −8 cm, die Zylindervorderkante bei −6,7 cm), darum blieb vorn Stoff stehen. Jetzt wird der Ausschnitt aus dem Netz bestimmt: Mitte und Maße der Halshaut am Halsansatz plus 8 mm Rand, dazu eine Kugel mit 7,5 cm Radius am Halsansatz für den runden Ausschnitt vorn (rund 5 cm unter der Kehle; hinten am Ansatz). Der Schnitt hängt an den Eckpunkten der Ruhehaltung, darum bleibt der Hals in jeder Haltung frei: 15 Nahaufnahmen (drei Übungen × fünf Phasen) in `docs/screens/uebungen/feinschliff-hals.webp`.
+
+### 12.3 Logos (D-417)
+
+Das echte FORM-F aus `public/brand/symbol-f-gruen.svg`, aus den zwei Pfaden gerastert (1024 px) und als Bild auf den Stoff gelegt: Abwicklung um die Körperachse (Bogenlänge quer, Lage längs), so liegt es scharf wie ein Aufdruck und bewegt sich mit dem Stoff. Lage und Höhe:
+
+| Logo | Lage | Höhe des F | bisher |
+|---|---|---|---|
+| Brust | links, 24° neben der Mitte, 79 % der Rumpfhöhe | 5,5 cm | Zeichen 1,4 cm |
+| Rücken | zwischen den Schulterblättern, Mitte, 80 % | 10 cm | – |
+| Shorts | außen am linken Bein, 2 cm über dem Saum | 4,5 cm | Zeichen 1,2 cm |
+
+Zwei Fassungen: **F in Lime** (`D-z`) und **F hell Ton in Ton** (`D-z-hell`, #AAB2BE aus den Tokens, dieselbe Farbfamilie wie Nacht und Graphit). Damit kein Logo mit einer Zone zu verwechseln ist, ist ein Lime-F in einer Lime-Zone in der Stoffarbe ausgespart (Brust beim Bankdrücken, Rücken beim Latziehen): Es bleibt als F lesbar, statt zu verschwinden oder als Rest stehen zu bleiben. Nahaufnahmen aller drei Logos in beiden Farben und die Standbilder in der Breite des Players (390 px): `docs/screens/uebungen/logos-nah.webp`. Die Paspeln an den Säumen bleiben 5 mm Lime.
+
+### 12.4 Kantenlicht (D-417)
+
+Zwei schmale Flächenlichter hinter der Figur (je 30° neben der Gegenrichtung der Kamera, 3,2 m hoch, 280 und 200 W) statt des schwachen Gegenlichts (90 W). Sie geben Figur, Kleidung und Geräten eine dünne helle Kante. Vergleich in vier Stufen (ohne, 200/140, 280/200, 420/300 W): `docs/screens/uebungen/feinschliff-kantenlicht.webp`; 200/140 hob die Silhouette kaum, 420/300 machte Arme und Schultern zu hell. In den Vergleichsbildern steht die Fassung „ohne Kantenlicht (bisher)“ neben der neuen, dazu die Alternative „Tee in Graphit“.
+
+### 12.8 Tests
+
+- **Hals:** vermessen in der Ruhehaltung (Kehle 8 cm vor dem Gelenk), Nahaufnahmen von vorn, seitlich, hinten und aus der Kamera der App, dann 15 Phasen aller drei Übungen; in jedem Bild frei.
+- **F:** Rasterung gegen eine Pillow-Rasterung derselben Pfade geprüft (Abweichung nur an Rändern); Ausrichtung in Nahaufnahmen geprüft, zwei Fehler gefunden und behoben (Rücken spiegelverkehrt, Bein auf dem Kopf); Lime-F in Lime-Zonen beim Latziehen und Bankdrücken geprüft.
+- **Kantenlicht:** vier Stärken an der Kniebeuge unten verglichen.
+- **Dokumente:** `pnpm check:docs` je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
+- **App:** Code und Videos unverändert; die CI (Lint, Typen, Unit, Dokumente, Build, Datenbank, E2E Chromium und WebKit) läuft auf jedem Commit, Ergebnis im Testprotokoll. CI zum vorigen Stand `890dd80` (Lauf 40652262738) in allen Jobs grün, auch WebKit; der Lauf zu D-417 steht im Testprotokoll und in PR #53.
+- Alles wörtlich in `docs/testing.md`, Abschnitt „Feinschliff D“.
+
+### 12.9 Was ich von dir brauche
+
+1. Deine Wahl: F in Lime oder hell Ton in Ton; Kantenlicht ja oder nein (sonst Tee in Graphit); C mit den Dateien von MakeHuman folgt als eigenes Paket. Danach rendere ich die drei Pilot-Übungen neu, mit dem neuen Vorschaubild, und baue sie ein.
+2. Falls die Vorlage der Kleidung Details zeigt, die vom Text abweichen (Schnitt des Ausschnitts, Lage der Logos, Paspeln): die Datei noch einmal, zum Beispiel als Bild im Repository.
+3. Nach dem Neurendern dein Gerätetest; danach gibst du den Merge von PR #53 frei.
+
+### 12.10 Berichte je Paket
+
+```
+Arbeitspaket: D-417 Feinschliff D: Farben nach Vorlage, Rundhals, FORM-F als Aufdruck, Kantenlicht
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py, szene.py, render.py, varianten.py, nahaufnahme.py (neu); tools/uebungen_varianten_bild.py; docs/screens/uebungen/feinschliff-hals.webp, feinschliff-kantenlicht.webp, logos-nah.webp; Dokumente
+Technische Entscheidungen: D-417
+Ausgeführte Tests: Halsmessung, Nahaufnahmen Hals (4 Richtungen, 15 Phasen), Rasterung des F, Ausrichtung der Logos, Lime-F in Zonen, Kantenlicht in vier Stärken, pnpm check:docs
+Ergebnis: bestanden; zwei Fehler bei der Ausrichtung der Logos gefunden und behoben
+Bekannte Einschränkungen: Vorlage der Kleidung fehlt weiterhin (Farben und Logos nach dem Text); Lime-F in einer Lime-Zone in der Stoffarbe
+Nächste Schritte: Wahl der Fassung durch den Produktinhaber
+```

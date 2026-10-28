@@ -118,9 +118,9 @@ Für die drei Pilot-Übungen ist keine fremde Bewegung verwendet: Kniebeuge, Ban
 
 **Werkzeuge:** Blender 4.2 als Python-Modul (GPL, nur zum Rendern), ffmpeg (LGPL/GPL, nur zum Kodieren). Beide sind nicht Teil der App; die GPL gilt nicht für die gerenderten Bilder.
 
-## 8. Körperform, Kleidung, Haut, Augen und Haare der Figur (D-413, D-414)
+## 8. Körperform, Kleidung, Haut, Augen und Haare der Figur (D-413, D-414, D-417)
 
-Geprüft am 28.10.2026 für die Varianten A bis D. Nur kostenlose Quellen, die die Nutzung in der App erlauben; nichts gekauft, kein Konto angelegt. Wie beim Grundmodell liegen fremde Dateien nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie.
+Geprüft am 28.10.2026 für die Varianten A bis D, ergänzt am selben Tag für den Feinschliff von D (FORM-F als Aufdruck). Nur kostenlose Quellen, die die Nutzung in der App erlauben; nichts gekauft, kein Konto angelegt. Wie beim Grundmodell liegen fremde Dateien nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie.
 
 | Element | Quelle | Lizenz (Wortlaut) | Was das für FORM heißt |
 |---|---|---|---|
@@ -129,6 +129,7 @@ Geprüft am 28.10.2026 für die Varianten A bis D. Nur kostenlose Quellen, die d
 | Haut | eigener Shader in `tools/uebungen-3d/realistisch.py` (Hautton, Unterflächenstreuung, Rauschen) | eigene Arbeit, keine Bilddatei | keine Einschränkung |
 | Augenbrauen | eigenes Feld auf der Haut (`realistisch.setze_brauen`) | eigene Arbeit | keine Einschränkung |
 | Haare | Partikelhaar und Haarfläche aus Blender (`realistisch.haare`, Shader „Principled Hair BSDF“ von Blender) | eigene Arbeit; was Blender rendert, gehört dem, der es rendert | keine Einschränkung |
-| Kleidung (STEP Running Tee in Nacht, STEP Shorts in Graphit, kleine Lime-Details) | eigener Code `tools/uebungen-3d/kleidung.py`: aus dem Netz der Figur (CC0) abgeleitet, Farben aus `brand-tokens.md` | eigene Arbeit nach der FORM-Marke | keine Einschränkung; Graphit als #575D67 angenommen, weil die Vorlage nicht ankam: heller als Bank und Geräte (#3C424E), sonst verschwimmen Shorts und Polster |
+| Kleidung (STEP Running Tee in Nacht #0C1219, STEP Shorts in Graphit #4A4F57, Paspeln in Lime) | eigener Code `tools/uebungen-3d/kleidung.py`: aus dem Netz der Figur (CC0) abgeleitet, Farben nach der Vorlage des Produktinhabers (Nachricht vom 28.10.2026) und `brand-tokens.md` | eigene Arbeit nach der FORM-Marke | keine Einschränkung |
+| FORM-F auf der Kleidung (D-417) | `public/brand/symbol-f-gruen.svg` aus dem Repository (Markendatei von FORM, `docs/brand-form.md`), gerastert zu `quelle/form-f.png` | Markenzeichen des Produktinhabers | keine Einschränkung; nur in der App und ihren Bildern |
 
 **Nicht verwendet, aber ebenfalls frei:** Die Haut-, Haar-, Brauen- und Wimpern-Assets von MakeHuman (Paket `makehuman_system_assets_cc0.zip`, Hauttexturen `skins01_cc0.zip`, `skins02_cc0.zip`, alle CC0 1.0) liegen auf `files2.makehumancommunity.org` (Spiegel `files.makehumancommunity.org`); beide Adressen sind in dieser Umgebung gesperrt. Mit ihnen würden Haut und Haare aus der Nähe detailreicher; für die Größe in der App reicht der eigene Stand.

@@ -15,3 +15,21 @@ Sehr gute Arbeit – Knie, Hände, Füße, Zonen und Kamera passen jetzt. Nächs
 4. **Priorität:** Liste, welche Übungen in den Programmen und Vorlagen vorkommen und wie oft, und ordne die Bewegungsfamilien danach. Übertragen wird zuerst, was in Programmen vorkommt; die übrigen behalten Symbol und Muskelkarte. Nenne mir den geschätzten Aufwand für die Kniebeuge-Familie und die nächsten zwei Familien in dieser Reihenfolge.
 
 5. **Dann stoppen.** Nach meiner Wahl der Variante renderst du die drei Pilot-Übungen neu; nach meinem Gerätetest gebe ich den Merge von #53 frei. Die Familien kommen danach auf eigenen Branches.
+
+---
+
+## Entscheidung und Feinschliff · Nachricht des Produktinhabers vom 28.10.2026 (zweite)
+
+> **Stand:** wörtlich festgehalten; Paket D-417 (Feinschliff D); C mit den Dateien von MakeHuman folgt als eigenes Paket. Die erneut angehängte Vorlage der Kleidung ist auch diesmal nicht angekommen; Farben und Logos nach dem Text.
+
+Entscheidung: Variante D mit Zonen – die graue, neutrale Figur in FORM-Kleidung, die Muskelzonen in Lime auf der Kleidung. A und B verfolgen wir nicht weiter; C bekommt noch eine faire Chance mit echten Dateien (Punkt 4).
+
+Feinschliff an D (Vorlage der Kleidung angehängt):
+1. Farben genau nach Vorlage: Tee in Nacht #0C1219, Shorts in Graphit #4A4F57.
+2. Hals: Am Hals sitzt Stoff des Tees, das wirkt wie ein Rollkragen. Das Tee hat einen Rundhals wie in der Vorlage, der Hals bleibt frei – in jeder Phase aller drei Übungen.
+3. Logos deutlicher: Nimm das echte FORM-F aus den Markendateien im Repository als scharfes Motiv, wie ein Aufdruck. Am Tee vorn auf der Brust, hinten zwischen den Schulterblättern, an den Shorts am Bein – etwas größer als bisher, damit es auch im Player klar zu erkennen ist. Zeig mir zwei Fassungen: das F in Lime und das F hell Ton in Ton. Achte darauf, dass man ein Logo nicht mit einer Muskelzone verwechseln kann, besonders vorn auf der Brust beim Bankdrücken.
+4. Kontrast: Das Tee hat dieselbe Farbe wie der Hintergrund, der Oberkörper verschwimmt. Setz ein dezentes Kantenlicht von hinten, damit sich die Silhouette klar abhebt – für Figur, Kleidung und Geräte gleich. Zeig mir einen Vergleich ohne und mit Kantenlicht; reicht das nicht, als Alternative das Tee in Graphit.
+
+5. Variante C mit echten Dateien: Ich habe *.makehumancommunity.org unter „Network access“ freigegeben. Nimm die originalen Haut-, Haar-, Augen- und Augenbrauendateien von MakeHuman (CC0, Lizenz prüfen und dokumentieren) und rendere C noch einmal, männlich und weiblich, in derselben FORM-Kleidung wie D, mit Lime-Zonen und ohne.
+
+Alles zuerst als Standbilder: Kniebeuge in der tiefsten Position und Bankdrücken in Ausgangs- und Endposition, in einem Vergleichsbild im selben Moment der Bewegung. Dann stoppen. Nach meiner Wahl renderst du die drei Pilot-Übungen neu und baust sie ein; nach meinem Gerätetest gebe ich den Merge von #53 frei.

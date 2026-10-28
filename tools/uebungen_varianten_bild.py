@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Vergleichsbilder der Varianten zur Probe (D-414) aus den Standbildern von
+"""Vergleichsbilder der Varianten zur Probe (D-414; Feinschliff D-417) aus den Standbildern von
 `tools/uebungen-3d/varianten_bilder.py`: je Moment der Bewegung ein Bild mit allen Varianten,
-dazu eine Übersicht. Alle Kacheln eines Moments zeigen denselben Ausschnitt (gemeinsamer Bereich
+dazu eine Übersicht; mit `--nah` die Logos aus der Nähe und in Player-Größe (`logos-nah.webp`). Alle Kacheln eines Moments zeigen denselben Ausschnitt (gemeinsamer Bereich
 von Figur und Gerät über alle Varianten, mit Rand), damit die Figuren groß und vergleichbar sind.
 Mit `--zeiten` steht die Renderzeit je Bild aus einem eigenen Lauf (ein Prozess) unter dem Titel.
 Hintergrund und Schrift in FORM-Farben (Inter, wenn vorhanden).
@@ -26,7 +26,8 @@ sys.path.insert(0, str(HIER / "uebungen-3d"))
 GRUND = (12, 18, 25)  # #0C1219
 TEXT = (242, 243, 244)  # #F2F3F4
 LEISE = (170, 178, 190)  # #AAB2BE
-REIHENFOLGE = ["A", "B", "D-z", "D", "C-m-z", "C-m", "C-w-z", "C-w"]
+# Feinschliff D (D-417); die Reihenfolge der Kacheln je Moment
+REIHENFOLGE = ["D-z", "D-z-hell", "D-z-ohne-kante", "D-z-graphit", "C-m-z", "C-m", "C-w-z", "C-w"]
 TITEL = {
     "A": "A · neutral, grau, Zonen",
     "B": "B · männlich, grau, Zonen",
@@ -34,9 +35,15 @@ TITEL = {
     "C-m": "C · männlich, real",
     "C-w-z": "C · weiblich, real, Zonen",
     "C-w": "C · weiblich, real",
-    "D-z": "D · grau, Kleidung, Zonen",
-    "D": "D · grau, Kleidung",
+    "D-z": "D · Zonen, F in Lime, Kantenlicht",
+    "D-z-hell": "D · Zonen, F hell Ton in Ton",
+    "D-z-ohne-kante": "D · Zonen, F in Lime, ohne Kantenlicht (bisher)",
+    "D-z-graphit": "D · Zonen, Tee in Graphit",
+    "D": "D · Kleidung ohne Zonen",
 }
+# Nahaufnahmen der Logos (`tools/uebungen-3d/nahaufnahme.py`) und die Ansicht in Player-Größe
+NAH = [("brust", "Brust, links"), ("ruecken", "Rücken, zwischen den Schulterblättern"), ("bein", "Shorts, linkes Bein außen")]
+PLAYER_BREITE = 390  # Breite des Videos im Player am iPhone, px
 MOMENTE = [
     ("kniebeuge", "1.00", "kniebeuge-unten", "Kniebeuge · tiefste Position"),
     ("bankdruecken", "0.00", "bank-oben", "Bankdrücken · Ausgangsposition"),
@@ -118,19 +125,52 @@ def blatt(arbeit: Path, uebung: str, phase: str, titel: str, zeiten: Path | None
     return gesamt
 
 
+def logos_nah(nah: Path, arbeit: Path) -> Image.Image:
+    """Die drei Logos in Lime und hell Ton in Ton aus der Nähe (`<lage>-<farbe>.png` in `nah`), darunter
+    die Standbilder Kniebeuge unten und Bankdrücken oben in der Breite des Players am iPhone."""
+    kacheln = []
+    for farbe, name in (("lime", "F in Lime"), ("hell", "F hell Ton in Ton")):
+        for lage, titel in NAH:
+            kacheln.append(kachel(nah / f"{lage}-{farbe}.png", f"{name} · {titel}", 420, 420))
+    w, h = kacheln[0].size
+    unten = []
+    for variante, name in (("D-z", "F in Lime"), ("D-z-hell", "F hell Ton in Ton")):
+        for uebung, phase, titel in (("kniebeuge", "1.00", "Kniebeuge unten"), ("bankdruecken", "0.00", "Bankdrücken oben")):
+            bild = arbeit / f"{variante}-{uebung}-{phase}.png"
+            k = kachel(bild, f"{name} · {titel}", PLAYER_BREITE, PLAYER_BREITE * 3 // 4, "Größe wie im Player am iPhone")
+            unten.append(k)
+    kopf = 56
+    breite = max(3 * w + 4 * 8, 4 * PLAYER_BREITE + 5 * 8)
+    hoehe = kopf + 2 * (h + 8) + unten[0].height + 16
+    gesamt = Image.new("RGB", (breite, hoehe), GRUND)
+    ImageDraw.Draw(gesamt).text((16, 14), "FORM-F auf der Kleidung · Nahaufnahmen und Player-Größe", fill=TEXT,
+                                font=schrift(26, True))
+    for i, k in enumerate(kacheln):
+        gesamt.paste(k, (8 + (i % 3) * (w + 8), kopf + (i // 3) * (h + 8)))
+    y = kopf + 2 * (h + 8) + 8
+    for i, k in enumerate(unten):
+        gesamt.paste(k, (8 + i * (PLAYER_BREITE + 8), y))
+    return gesamt
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arbeit", default="/tmp/uebungen-varianten")
     ap.add_argument("--zeiten", help="Ordner mit <Variante>-kniebeuge.json aus einem Lauf mit einem Prozess")
+    ap.add_argument("--nah", help="Ordner mit den Nahaufnahmen der Logos (`nahaufnahme.py`); schreibt logos-nah.webp")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
+    ap.add_argument("--praefix", default="varianten", help="Anfang der Dateinamen (varianten-… oder feinschliff-…)")
     args = ap.parse_args()
     arbeit, ziel = Path(args.arbeit), Path(args.ziel)
     zeiten = Path(args.zeiten) if args.zeiten else None
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.nah:
+        logos_nah(Path(args.nah), arbeit).save(ziel / "logos-nah.webp", quality=84, method=6)
+        return
     blaetter = []
     for uebung, phase, datei, titel in MOMENTE:
         b = blatt(arbeit, uebung, phase, titel, zeiten)
-        b.save(ziel / f"varianten-{datei}.webp", quality=82, method=6)
+        b.save(ziel / f"{args.praefix}-{datei}.webp", quality=82, method=6)
         blaetter.append(b)
     # Übersicht: alle drei Momente untereinander, verkleinert
     breite = max(b.width for b in blaetter)
@@ -140,7 +180,7 @@ def main() -> None:
         uebersicht.paste(b, (0, y))
         y += b.height
     uebersicht = uebersicht.resize((uebersicht.width // 2, uebersicht.height // 2), Image.LANCZOS)
-    uebersicht.save(ziel / "varianten-uebersicht.webp", quality=80, method=6)
+    uebersicht.save(ziel / f"{args.praefix}-uebersicht.webp", quality=80, method=6)
 
 
 if __name__ == "__main__":

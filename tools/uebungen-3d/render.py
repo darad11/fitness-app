@@ -94,7 +94,7 @@ def kamera(uebung, punkte, ansicht: str, breite: int, hoehe: int) -> None:
         if uebung.name == "bankdruecken" and ansicht == "vorn":
             neigung = 20.0
     ziel, abstand, h = szene.bildausschnitt(punkte, richtung, neigung, breite, hoehe)
-    szene.licht_und_kamera(ziel, richtung, abstand, h)
+    szene.licht_und_kamera(ziel, richtung, abstand, h, kantenlicht=getattr(uebung, "kantenlicht", True))
 
 
 def messen(uebung) -> dict:
@@ -185,7 +185,7 @@ def vorschau(u, s, arbeit: Path, ziel: Path, name: str, phase: float | None = No
     for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
         bpy.data.objects.remove(o)
     mitte, abstand, h = szene.bildausschnitt(punkte, richtung, neigung, VORSCHAU, VORSCHAU, rand=0.05)
-    szene.licht_und_kamera(mitte, richtung, abstand, h)
+    szene.licht_und_kamera(mitte, richtung, abstand, h, kantenlicht=getattr(u, "kantenlicht", True))
     alt = (s.render.resolution_x, s.render.resolution_y)
     s.render.resolution_x = s.render.resolution_y = VORSCHAU
     bild = arbeit / f"vorschau-{name}.png"

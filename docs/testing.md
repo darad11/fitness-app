@@ -2338,7 +2338,7 @@ Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C mä
 
 ### Phase Übungen, Korrekturrunde 3 (Griff, Rundhalskragen, Rückenlogo) · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekommen): Griff (D-430), Rundhalskragen (D-431), Rückenlogo (D-432), Vergleichsblätter (D-433). Nur C männlich, Fassung A1, Brust-F 4 cm; Werkzeuge und Daten, Code und Videos der App unverändert.
+Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekommen): Griff (D-430), Rundhalskragen (D-431), Rückenlogo (D-432), Vergleichsblätter (D-433), Animationsplan nach Programmen (D-434). Nur C männlich, Fassung A1, Brust-F 4 cm; Werkzeuge und Daten, Code und Videos der App unverändert.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2350,3 +2350,4 @@ Auftrag `prompts/uebungen-korrektur3-FORM.md` (Anhang mit Markierungen angekomme
 | Bündchen (Skript im Arbeitsordner): 72 Stützen je Winkel, Höhe über der Tangentialebene des nächsten Stoffpunkts | nach der Anhebung 2,2 bis 2,6 mm überall (vorher −12 bis +1,6 mm, Stützen im Stoff); Innenkante z 0,59 bis 0,68 m, x ±7,3 cm; 144 Eckpunkte, 72 Flächen |
 | Rückenlogo (`kleidung.anziehen.masse`, C männlich): Wortmarke 15,0 cm, F 6,3 cm hoch, Block 11,4 cm, Oberkante des F 7,0 cm unter der hinteren Kante der Halsöffnung; Nahaufnahmen Kniebeuge Ausgang und Latziehen Endposition von hinten, Kniebeuge tiefste Position von hinten-seitlich | mittig im oberen Rücken, Originalproportionen, über den Lime-Zonen lesbar; vorher (D-427) 8,4 cm und 3,5 cm, Oberkante des F rund 13 cm unter der Kante |
 | Vergleichsblätter (D-433): vorher mit dem Werkzeugstand D-429 (`git archive HEAD` vor D-430 in einen eigenen Ordner, dieselben Quelldateien), nachher mit dem Stand D-432; 13 Ansichten je Stand (`nahaufnahme.py`, 560 px, 24 Proben) und 3 Standbilder je Stand (`varianten_bilder.py`, 720 × 540, 40 Proben) | Kniebeuge unten 19,4 / 17,3 s; Bankdrücken oben 32,1 / 23,9 s; Latziehen unten 37,3 / 18,6 s (vorher / nachher); 5 Blätter, zusammen 385,2 KB, selbst angesehen |
+| Animationsplan nach Programmen (D-434, `tools/uebungen_animationsplan.py --check`) | Ganzkörper A/B, 4 Tage: 11 Übungen, 22,2 Std. plus Basis 42,0, 289 min; Push/Pull/Beine, rotierend: 14 Übungen, 24,0 Std. plus Basis 4,0, 368 min; Winterprogramm 2026: 43 Übungen, 56,8 Std. plus Basis 17,0, 1126 min; Summe unverändert 68 Übungen, 103,0 Std., 63,0 Std. Basis, 1784 min |

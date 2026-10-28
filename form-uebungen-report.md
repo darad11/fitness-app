@@ -974,13 +974,27 @@ Die 5 Blätter: `korrektur3-1-griff.webp` 118,1 KB, `korrektur3-2-kragen.webp` 1
 - **Gesamtansichten:** In der Kamera der App sind Kragen und Backprint zu erkennen, der Griff liest sich als geschlossene Hand; sonst ist das Bild unverändert. Die Renderzeiten vorher liefen parallel zu anderen Renderings und sind nicht vergleichbar.
 - **Player-Größe:** Im großen Player (390 px) sind Kragen, Griff und Backprint sichtbar; im kleinen Player (56 px) bleibt wie bisher nur die Silhouette mit den Lime-Zonen.
 
+### 16.5 Animationsplan nach Programmen (D-434)
+
+`docs/uebungen-animationsplan.md` ordnet die Übungen jetzt nach Programmen: erst alle aus „Ganzkörper A/B“, dann die noch fehlenden aus „Push/Pull/Beine“, zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach Familien, die Basis einer Familie zählt beim ersten Programm, das sie braucht, neue Geräte bei der ersten Übung.
+
+| Reihenfolge | Programm | Übungen | Familien | Aufwand Übungen (Std.) | Basis (Std.) | Renderzeit |
+|---|---|---|---|---|---|---|
+| 1 | Ganzkörper A/B, 4 Tage | 11 | 9 | 22,2 | 42,0 | 289 min (4,8 Std.) |
+| 2 | Push/Pull/Beine, rotierend | 14 | 9 | 24,0 | 4,0 | 368 min (6,1 Std.) |
+| 3 | Winterprogramm 2026 | 43 | 12 | 56,8 | 17,0 | 1126 min (18,8 Std.) |
+
+Summe unverändert: 68 Übungen, rund 192 Arbeitsstunden, rund 30 Stunden Rechenzeit.
+
+Noch nichts davon ist gerendert; umgesetzt wird nach der Freigabe der Pilot-Übungen und dem Merge von PR #53, auf einem eigenen Branch, familienweise mit Prüfseite.
+
 ### 16.6 Tests
 
 - **Ursachen** gemessen statt geraten: Handgeometrie und Lage der Stange (Griff), Halsansatz und Trapezhöhe (Kragen), Maße des Logos; danach dieselben Ansichten neu.
 - **Griff:** Winkel und Abstände in allen drei Übungen und Phasen; Sichtprobe aus vier Richtungen beim Bankdrücken.
 - **Kragen:** vier Fassungen nacheinander, Bündchen numerisch (Höhe über dem Stoff je Stütze) und in fünf Ansichten.
 - **Vergleich:** 13 Nahaufnahmen vorher und 13 nachher (`nahaufnahme.py`, 560 px, 24 Proben) und je 3 Standbilder, alle selbst angesehen; 5 Blätter, zusammen 385,2 KB.
-- **Dokumente:** `pnpm check:docs` und Prettier je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
+- **Dokumente:** `pnpm check:docs` und Prettier je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge; der Animationsplan mit `--check`.
 - **CI:** Die Läufe zu den Commits stehen in PR #53; jeder Push bricht den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
 - Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde 3“.
 
@@ -1033,5 +1047,16 @@ Technische Entscheidungen: D-433
 Ausgeführte Tests: 13 Nahaufnahmen vorher und 13 nachher (`nahaufnahme.py`, 560 px, 24 Proben) und je 3 Standbilder, alle selbst angesehen; 5 Blätter, zusammen 385,2 KB; pnpm check:docs
 Ergebnis: bestanden
 Bekannte Einschränkungen: Standbilder statt Schleifen
-Nächste Schritte: Animationsplan nach Programmen, dann Halt
+Nächste Schritte: Animationsplan (D-434), dann Halt
+```
+
+```
+Arbeitspaket: D-434 Animationsplan nach Programmen
+Umgesetzte Funktionen: Planung, erfüllte AK: –
+Geänderte Dateien: tools/uebungen_animationsplan.py, docs/uebungen-animationsplan.md; Dokumente
+Technische Entscheidungen: D-434
+Ausgeführte Tests: --check in pnpm check:docs; Summen unverändert gegen D-429 geprüft
+Ergebnis: bestanden
+Bekannte Einschränkungen: Einzelschätzung wie D-411
+Nächste Schritte: Freigabe der Standbilder durch den Produktinhaber
 ```

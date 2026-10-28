@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Erzeugt docs/uebungen-animationsplan.md (D-429): die Animationen, die vorerst gebaut werden, nämlich
-für die Übungen der Programme „Ganzkörper A/B, 4 Tage“, „Push/Pull/Beine, rotierend“ und
-„Winterprogramm 2026“ (`programs.v1.json`). Je Übung die Bewegungsfamilie, die Quelle der Bewegung,
-der geschätzte Aufwand und die Renderzeit (aus `tools/uebungen-3d/familien.json`, D-411, und den
-gemessenen Renderzeiten der Pilot-Übungen); dazu die Summen und die Reihenfolge nach Familien.
+"""Erzeugt docs/uebungen-animationsplan.md (D-429, Reihenfolge nach Programmen D-434): die Animationen,
+die vorerst gebaut werden, nämlich für die Übungen der Programme „Ganzkörper A/B, 4 Tage“,
+„Push/Pull/Beine, rotierend“ und „Winterprogramm 2026“ (`programs.v1.json`). Je Übung die
+Bewegungsfamilie, die Quelle der Bewegung, der geschätzte Aufwand und die Renderzeit (aus
+`tools/uebungen-3d/familien.json`, D-411, und den gemessenen Renderzeiten der Pilot-Übungen).
+Reihenfolge: erst alle Übungen aus „Ganzkörper A/B“, dann die noch fehlenden aus „Push/Pull/Beine“,
+zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach Familien.
 
     python3 tools/uebungen_animationsplan.py           # schreibt den Plan
     python3 tools/uebungen_animationsplan.py --check   # prüft, ob der Plan zu den Daten passt
@@ -19,7 +21,8 @@ ROOT = Path(__file__).resolve().parent.parent
 DATEN = ROOT / "tools/uebungen-3d/familien.json"
 PROGRAMME = ROOT / "src/modules/training/data/programs.v1.json"
 ZIEL = ROOT / "docs/uebungen-animationsplan.md"
-# Die drei Programme (Name in `programs.v1.json`) und ihr Kürzel in den Tabellen
+# Die drei Programme (Name in `programs.v1.json`) und ihr Kürzel in den Tabellen, in der Reihenfolge
+# der Umsetzung (D-434): Der Produktinhaber startet mit „Ganzkörper A/B“
 PROGRAMM_KUERZEL = {"Ganzkörper A/B, 4 Tage": "GK", "Push/Pull/Beine, rotierend": "PPB", "Winterprogramm 2026": "W26"}
 # Pilot-Übungen: Rig, Kamera und Bewegung stehen (D-407, D-408); ihre Familienbasis ist geleistet
 PILOTEN = {"back_squat_barbell", "bench_press_barbell", "lat_pulldown"}
@@ -102,30 +105,28 @@ def bauen() -> str:
     einheiten, in_programm = einheiten_je_uebung()
     keys = [k for k in einheiten if k in uebungen]
     unbekannt = sorted(k for k in einheiten if k not in uebungen)
-    je_familie: dict[str, list[str]] = defaultdict(list)
-    for k in keys:
-        je_familie[uebungen[k]["familie"]].append(k)
-    # Reihenfolge der Familien: Pilot-Familien zuerst (Basis steht), dann nach Einheiten in den drei
-    # Programmen; innerhalb der Familie nach Einheiten, dann Name
     pilot_familien = [uebungen[p]["familie"] for p in ("back_squat_barbell", "bench_press_barbell", "lat_pulldown")]
 
-    def summe(f: str) -> int:
-        return sum(einheiten[k] for k in je_familie[f])
-
-    reihenfolge = sorted(je_familie, key=lambda f: (f not in pilot_familien, -summe(f), NAMEN[f]))
-    for f in je_familie:
-        je_familie[f].sort(key=lambda k: (-einheiten[k], uebungen[k]["name"]))
+    def familien_reihe(ks: list[str]) -> list[str]:
+        """Familien in der Reihenfolge: Pilot-Familien zuerst (Basis steht), dann nach Einheiten."""
+        fam = sorted({uebungen[k]["familie"] for k in ks})
+        return sorted(fam, key=lambda f: (f not in pilot_familien, -sum(einheiten[k] for k in ks if uebungen[k]["familie"] == f), NAMEN[f]))
 
     zeilen = [
         "# Animationsplan: Übungen der drei Programme",
         "",
-        f"Stand: {d['stand']} (Zuordnung D-411), Plan vom 28.10.2026 (D-429). Erzeugt aus `tools/uebungen-3d/familien.json` und "
-        "`src/modules/training/data/programs.v1.json` mit `tools/uebungen_animationsplan.py`; Änderungen dort, nicht hier.",
+        f"Stand: {d['stand']} (Zuordnung D-411), Plan vom 28.10.2026 (D-429, Reihenfolge nach Programmen D-434). Erzeugt aus "
+        "`tools/uebungen-3d/familien.json` und `src/modules/training/data/programs.v1.json` mit `tools/uebungen_animationsplan.py`; "
+        "Änderungen dort, nicht hier.",
         "",
         "Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (GK), „Push/Pull/Beine, rotierend“ (PPB) und "
-        "„Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026). Die drei "
-        "Pilot-Übungen (Kniebeuge mit Langhantel, Bankdrücken mit Langhantel, Latziehen) sind gebaut und werden in der gewählten Fassung "
-        "(C männlich, A1, Brust-F 4 cm) neu gerendert; ihre Familien haben die Basis (Rig-Muster, Kamera) schon.",
+        "„Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026). Reihenfolge "
+        "(sechste Nachricht): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch "
+        "fehlenden aus „Push/Pull/Beine“, zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach "
+        "Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, "
+        "Bankdrücken mit Langhantel, Latziehen) sind gebaut und werden in der gewählten Fassung (C männlich, A1, Brust-F 4 cm) neu "
+        "gerendert; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird erst nach der Freigabe der Pilot-Übungen "
+        "und dem Merge von PR #53, auf einem eigenen Branch, familienweise mit Prüfseite.",
         "",
         "## 1. Was gezählt ist",
         "",
@@ -133,55 +134,68 @@ def bauen() -> str:
         "- **Quelle der Bewegung:** „Familie (Code)“ heißt aus dem Grundmuster der Familie im Rig gebaut (wie die Piloten); "
         "„Mixamo“ und „CMU“ sind Aufnahmen, die übertragen werden (`docs/uebungen-bewegungsfamilien.md` Abschnitt 5).",
         "- **Aufwand:** Arbeitsstunden je Übung aus D-411 (Variante bauen und prüfen) plus das neue Gerät, einmal gezählt bei der "
-        "ersten Übung, die es braucht; dazu je Familie die Basis (Grundmuster, Rig-Regeln, Kamera, Prüfseite), bei den drei "
-        "Pilot-Familien schon geleistet. Ohne Rechenzeit.",
+        "ersten Übung, die es braucht; dazu je Familie die Basis (Grundmuster, Rig-Regeln, Kamera, Prüfseite), einmal gezählt beim "
+        "ersten Programm, das die Familie braucht; bei den drei Pilot-Familien schon geleistet. Ohne Rechenzeit.",
         f"- **Renderzeit:** je Übung {BILDER} Bilder der Schleife à {z(SEKUNDEN_JE_BILD, 0)} s (C männlich, A1, 720 × 540, 40 Proben, "
         f"ein Prozess auf vier CPU-Kernen, gemessen an den Standbildern D-424: Kniebeuge 18 s, Bankdrücken 25 s) plus {z(RUESTZEIT_MIN, 0)} min "
         f"Aufbau und Vorschaubild; mit Gerät im Bild {z((ZUSCHLAG_GERAET - 1) * 100, 0)} % mehr. Die Rechenzeit läuft im Hintergrund, "
         "sie ist kein Arbeitsaufwand.",
         "",
-        "## 2. Übungen nach Familien",
+        "## 2. Übungen nach Programmen und Familien",
         "",
     ]
     geraete_gezaehlt: set[str] = set()
-    gesamt = {"uebungen": 0, "stunden": 0.0, "geraete": 0.0, "basis": 0.0, "render": 0.0, "einheiten": 0}
-    je_familie_summe = []
-    for rang, f in enumerate(reihenfolge, start=1):
-        basis = 0.0 if f in pilot_familien else float(familien[f]["basis_stunden"])
-        zeilen += [f"### {rang}. {NAMEN[f]}", "",
-                   "| Übung | Programme | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis |",
-                   "|---|---|---|---|---|---|---|---|"]
-        std_f = ger_f = ren_f = 0.0
-        ein_f = 0
-        for k in je_familie[f]:
-            e = uebungen[k]
-            geraet = 0.0
-            neu = [g for g in e.get("geraet_neu", []) if g not in geraete_gezaehlt]
-            if neu and e.get("geraet_neu_stunden"):
-                geraet = float(e["geraet_neu_stunden"])
-                geraete_gezaehlt.update(neu)
-            std = float(e["aufwand_stunden"]) + geraet
-            ren = renderzeit_min(e)
-            hinweis = "Pilot, gebaut (neu rendern)" if k in PILOTEN else ("neues Gerät: " + ", ".join(neu) if neu else "")
-            if e.get("geraet_neu") and not neu and k not in PILOTEN:
-                hinweis = "Gerät schon gezählt"
-            zeilen.append(f"| {zelle(e['name'])} | {', '.join(sorted(in_programm[k]))} | {einheiten[k]} | {zelle(quelle_text(e))} | "
-                          f"{z(std, 2)} | {z(geraet, 2)} | {z(ren, 0)} | {zelle(hinweis)} |")
-            std_f += std
-            ger_f += geraet
-            ren_f += ren
-            ein_f += einheiten[k]
-        zeilen += ["", f"Familie {NAMEN[f]}: {len(je_familie[f])} Übungen, {ein_f} Einheiten, Aufwand {z(std_f)} Std. "
-                   f"(davon neue Geräte {z(ger_f)}) plus Basis {z(basis)} Std., Renderzeit {z(ren_f, 0)} min.", ""]
-        je_familie_summe.append((rang, f, len(je_familie[f]), ein_f, std_f, ger_f, basis, ren_f))
-        gesamt["uebungen"] += len(je_familie[f])
-        gesamt["stunden"] += std_f
-        gesamt["geraete"] += ger_f
-        gesamt["basis"] += basis
-        gesamt["render"] += ren_f
-        gesamt["einheiten"] += ein_f
+    familien_gezaehlt: set[str] = set()
+    erledigt: set[str] = set()
+    je_programm = []
+    for kuerzel, titel in (("GK", "Ganzkörper A/B, 4 Tage"), ("PPB", "Push/Pull/Beine, rotierend"), ("W26", "Winterprogramm 2026")):
+        ks = [k for k in keys if kuerzel in in_programm[k] and k not in erledigt]
+        reihe = familien_reihe(ks)
+        schon = [k for k in keys if kuerzel in in_programm[k] and k in erledigt]
+        zeilen += [f"### {len(je_programm) + 1}. {titel} ({kuerzel})", ""]
+        if schon:
+            zeilen += [f"Schon in den Programmen davor: {len(schon)} Übungen ({', '.join(sorted(uebungen[k]['name'] for k in schon))}).", ""]
+        summe_p = {"uebungen": 0, "stunden": 0.0, "geraete": 0.0, "basis": 0.0, "render": 0.0, "einheiten": 0}
+        for f in reihe:
+            fks = sorted((k for k in ks if uebungen[k]["familie"] == f), key=lambda k: (-einheiten[k], uebungen[k]["name"]))
+            basis = 0.0 if (f in pilot_familien or f in familien_gezaehlt) else float(familien[f]["basis_stunden"])
+            familien_gezaehlt.add(f)
+            zeilen += [f"#### {NAMEN[f]}", "",
+                       "| Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis |",
+                       "|---|---|---|---|---|---|---|---|"]
+            std_f = ger_f = ren_f = 0.0
+            ein_f = 0
+            for k in fks:
+                e = uebungen[k]
+                geraet = 0.0
+                neu = [g for g in e.get("geraet_neu", []) if g not in geraete_gezaehlt]
+                if neu and e.get("geraet_neu_stunden"):
+                    geraet = float(e["geraet_neu_stunden"])
+                    geraete_gezaehlt.update(neu)
+                std = float(e["aufwand_stunden"]) + geraet
+                ren = renderzeit_min(e)
+                hinweis = "Pilot, gebaut (neu rendern)" if k in PILOTEN else ("neues Gerät: " + ", ".join(neu) if neu else "")
+                if e.get("geraet_neu") and not neu and k not in PILOTEN:
+                    hinweis = "Gerät schon gezählt"
+                auch = ", ".join(sorted(in_programm[k] - {kuerzel})) or "–"
+                zeilen.append(f"| {zelle(e['name'])} | {auch} | {einheiten[k]} | {zelle(quelle_text(e))} | "
+                              f"{z(std, 2)} | {z(geraet, 2)} | {z(ren, 0)} | {zelle(hinweis)} |")
+                std_f += std
+                ger_f += geraet
+                ren_f += ren
+                ein_f += einheiten[k]
+                erledigt.add(k)
+            zeilen += ["", f"{NAMEN[f]}: {len(fks)} Übungen, Aufwand {z(std_f)} Std. (davon neue Geräte {z(ger_f)})"
+                       + (f" plus Basis der Familie {z(basis)} Std." if basis else " (Basis schon geleistet)") + f", Renderzeit {z(ren_f, 0)} min.", ""]
+            for key_, val in (("uebungen", len(fks)), ("stunden", std_f), ("geraete", ger_f), ("basis", basis), ("render", ren_f), ("einheiten", ein_f)):
+                summe_p[key_] += val
+        je_programm.append((kuerzel, titel, summe_p, len(reihe)))
+        zeilen += [f"**{titel}: {summe_p['uebungen']} Übungen in {len(reihe)} Familien, Aufwand {z(summe_p['stunden'])} Std. "
+                   f"(davon neue Geräte {z(summe_p['geraete'])}) plus Basis {z(summe_p['basis'])} Std., Renderzeit {z(summe_p['render'], 0)} min "
+                   f"({z(summe_p['render'] / 60)} Std.).**", ""]
     # Einmalige Arbeiten: nur, was die genutzten Quellen brauchen
     quellen = {uebungen[k]["quelle"] for k in keys}
+    alle_familien = {uebungen[k]["familie"] for k in keys}
     einmalig = []
     for posten, wert in d["einmalig"].items():
         if not isinstance(wert, (int, float)):
@@ -191,16 +205,17 @@ def bauen() -> str:
         if posten.startswith("Mixamo") and "mixamo" not in quellen:
             continue
         if posten.startswith("Prüfseite"):
-            wert = float(len(reihenfolge))  # 1 h je Familie, nur die Familien im Plan
-            posten = f"Prüfseite je Familie ({len(reihenfolge)} × 1 h)"
+            wert = float(len(alle_familien))  # 1 h je Familie, nur die Familien im Plan
+            posten = f"Prüfseite je Familie ({len(alle_familien)} × 1 h)"
         einmalig.append((posten, float(wert)))
     einmalig_std = sum(w for _, w in einmalig)
+    gesamt = {k: sum(p[2][k] for p in je_programm) for k in ("uebungen", "stunden", "geraete", "basis", "render", "einheiten")}
     zeilen += ["## 3. Summen und Reihenfolge", "",
-               "| Rang | Familie | Übungen | Einheiten | Aufwand Übungen (Std.) | davon neue Geräte | Basis (Std.) | Renderzeit (min) |",
-               "|---|---|---|---|---|---|---|---|"]
-    for rang, f, n, ein, std, ger, basis, ren in je_familie_summe:
-        zeilen.append(f"| {rang} | {NAMEN[f]} | {n} | {ein} | {z(std)} | {z(ger)} | {z(basis)} | {z(ren, 0)} |")
-    zeilen.append(f"| | **Summe** | **{gesamt['uebungen']}** | **{gesamt['einheiten']}** | **{z(gesamt['stunden'])}** | "
+               "| Reihenfolge | Programm | Übungen | Familien | Einheiten | Aufwand Übungen (Std.) | davon neue Geräte | Basis (Std.) | Renderzeit (min) |",
+               "|---|---|---|---|---|---|---|---|---|"]
+    for i, (kuerzel, titel, sp, nf) in enumerate(je_programm, start=1):
+        zeilen.append(f"| {i} | {titel} | {sp['uebungen']} | {nf} | {sp['einheiten']} | {z(sp['stunden'])} | {z(sp['geraete'])} | {z(sp['basis'])} | {z(sp['render'], 0)} |")
+    zeilen.append(f"| | **Summe** | **{gesamt['uebungen']}** | **{len(alle_familien)}** | **{gesamt['einheiten']}** | **{z(gesamt['stunden'])}** | "
                   f"**{z(gesamt['geraete'])}** | **{z(gesamt['basis'])}** | **{z(gesamt['render'], 0)}** |")
     zeilen += ["", "Einmalige Arbeiten für die genutzten Quellen:", ""]
     for posten, wert in einmalig:
@@ -212,9 +227,9 @@ def bauen() -> str:
                f"({z(gesamt['render'], 0)} min) auf vier CPU-Kernen. Die Schätzung je Übung ist eine Einzelschätzung wie in D-411 "
                "(Spanne dort 250 bis 400 Stunden für alle 124 Übungen); nach den ersten beiden Familien wird sie an der Ist-Zeit nachgeführt.",
                "",
-               "**Reihenfolge:** erst die drei Pilot-Familien (Kniebeuge, Waagrechtes Drücken, Senkrechtes Ziehen), weil Rig-Muster und "
-               "Kamera stehen, dann die übrigen Familien nach Einheiten in den drei Programmen. Jede Familie kommt auf einem eigenen "
-               "Branch mit Prüfseite; die Videos gehen erst in die App, wenn der Produktinhaber die Prüfseite freigibt.",
+               "**Reihenfolge:** Programm für Programm wie in der Tabelle, innerhalb des Programms Familie für Familie (Pilot-Familien zuerst, "
+               "dann nach Einheiten). Jede Familie kommt auf einem eigenen Branch mit Prüfseite; die Videos gehen erst in die App, wenn der "
+               "Produktinhaber die Prüfseite freigibt.",
                ""]
     if unbekannt:
         zeilen += [f"Nicht in der Zuordnung (keine Übung, z. B. Platzhalter der Programme): {', '.join(f'`{k}`' for k in unbekannt)}.", ""]

@@ -29,6 +29,7 @@ sys.path.insert(0, str(HIER))
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
+import gesicht  # noqa: E402
 import kleidung  # noqa: E402
 import koerperform  # noqa: E402
 import realistisch  # noqa: E402
@@ -62,6 +63,7 @@ def hole() -> None:
         if not (ziel / name).exists():
             urllib.request.urlretrieve(url, ziel / name)
     koerperform.hole(list(koerperform.FORMEN.values()))
+    gesicht.hole()
     realistisch.hole()
 
 

@@ -130,3 +130,16 @@ Geprüft am 28.10.2026 für die Varianten A bis D, ergänzt am selben Tag für d
 | FORM-F auf der Kleidung (D-417) | `public/brand/symbol-f-gruen.svg` aus dem Repository (Markendatei von FORM, `docs/brand-form.md`), gerastert zu `quelle/form-f.png` | Markenzeichen des Produktinhabers | keine Einschränkung; nur in der App und ihren Bildern |
 
 Vor D-418 waren Haut, Augenbrauen und Haare eigene Arbeit ohne Dateien (eigener Shader, aufgemaltes Feld, Partikelhaar und Haarfläche aus Blender; Stand D-414, Commit `068509a`), weil die Adressen von MakeHuman gesperrt waren; der Produktinhaber hat `*.makehumancommunity.org` am 28.10.2026 freigegeben.
+
+## 9. Personalisiertes Modell: Landmarken und Gesichtsregler (D-437)
+
+Geprüft am 28.10.2026. Nur Werkzeuge und Daten, deren Lizenz die Nutzung in einer kommerziellen App erlaubt; Verfahren auf Gesichtsmodellen nur für Forschung (FLAME, Basel Face Model, DECA) und Landmarken mit Trainingsdaten nur für Forschung (dlib mit iBUG 300-W) sind ausgeschlossen. Fotos, Landmarken und Texturen der Person liegen nie im Repository.
+
+| Element | Quelle | Lizenz (Wortlaut) | Was das für FORM heißt |
+|---|---|---|---|
+| Gesichtslandmarken (`tools/uebungen-3d/landmarken.py`) | MediaPipe 0.10.14 (Python-Paket `mediapipe`, Google), Face Landmarker; Modell `face_landmarker.task` (float16, Version 1) von `storage.googleapis.com/mediapipe-models/` | Apache License 2.0 (Paket: `License: Apache 2.0` in den Metadaten; Modellkarte Face Landmarker: Apache 2.0) | Nutzung in der App und in den Werkzeugen erlaubt; läuft nur in den Werkzeugen, nichts davon in der App; Hinweis und Lizenztext bei Weitergabe des Werkzeugs |
+| Gesichtsregler (Formziele für Kopf, Stirn, Brauen, Augen, Nase, Mund, Ohren, Kinn, Wangen, Hals) | MPFB2, Repository `makehumancommunity/mpfb2`, `src/mpfb/data/targets/<Ordner>/*.target.gz` (89 Dateien, Liste `gesicht.alle_ziele`), über `raw.githubusercontent.com`, nicht im Repository (`render.py --hole`) | CC0 1.0 (wie die Körperform, `LICENSE.md` Abschnitt C von MakeHuman: „Targets and modifiers … released under CC0 1.0 Universal“) | keine Einschränkung |
+| Namen der Regler (`gesicht.REGLER`) | Liste der Regler aus `data/modifiers/modeling_modifiers.json` von MakeHuman, nur als Namen und Richtungen übernommen, Datei nicht kopiert | die Datei gehört zum Programm MakeHuman (AGPL 3); Namen sind Fakten, keine Kopie | keine Einschränkung |
+| Zuordnung Landmarke → Netz (`tools/uebungen-3d/gesicht-marken.json`) | eigene Datei: Strahl je Landmarke eines Renderings des Grundmodells (CC0) auf das Netz | eigene Arbeit, beschreibt nur das Grundmodell | keine Einschränkung; enthält keine Person |
+| Frisur `hair/short04`, Brauen `eyebrows/eyebrow009` (Variante „C männlich – Personalisiert“) | Paket `makehuman_system_assets_cc0.zip` wie in Abschnitt 8 | CC0 1.0 | keine Einschränkung |
+

@@ -32,7 +32,7 @@ Ebenen im Shader an einem mitlaufenden Leerobjekt; das gab seitlich Spitzen und 
 als Bild in Originalproportionen eben auf den Stoff projiziert (`_rahmen`): Mittelpunkt und
 Blickrichtung je Logo aus der Körpergeometrie, die Bildebene senkrecht zur mittleren
 Oberflächennormalen; so wird nichts in die Breite gezogen. Das Bild hängt an den Eckpunkten und bewegt
-sich mit dem Stoff. Jedes Logo gilt nur für sein Körperteil (Rumpf bzw. linkes Bein) und nur bis zu
+sich mit dem Stoff. Jedes Logo gilt nur für sein Körperteil (Rumpf bzw. ein Bein) und nur bis zu
 einer Tiefe vor und hinter der Bildebene (D-422; vorher traf die Projektion des Shorts-F auch die
 Innenseite des rechten Beins) und nur für Flächen, die zur Bildebene zeigen (kein Spiegelbild). Jedes
 Logo hat einen schmalen Rand in Stoffarbe und liegt über den Muskelzonen (Abschnitt 4). Größen, Lagen
@@ -107,6 +107,12 @@ LOGOS = {
                 "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10},
     "bein": {"teil": "hose", "motiv": "f", "hoehe": 0.035, "winkel": 80.0, "lage": 0.30,
              "teile": ("bein",), "x": 1, "tiefe": 0.05},
+    # Zweites F auf den Shorts (D-436): vorn-außen nahe dem Saum auf dem Bein, das beim Bankdrücken zur
+    # Kamera zeigt. Das ist das linke Bein (Kamera 45° zur linken Seite, D-410); die Markierung des
+    # Produktinhabers trifft, von der Kamera der App aus auf den Stoff gezielt, das linke Bein bei 17°
+    # von vorn nach außen und 0,32 Hüfte→Knie (Saum bei 0,40). Gleiche Größe und Farbe wie `bein`.
+    "beinvorn": {"teil": "hose", "motiv": "f", "hoehe": 0.035, "winkel": 17.0, "lage": 0.32,
+                 "teile": ("bein",), "x": 1, "tiefe": 0.05, "farbe": "bein"},
 }
 F_ANTEIL = 0.861  # Höhe des F im quadratischen Bild „f“ (`_bilder`)
 RAND_PX = 32  # Rand in Stoffarbe um das F, px im 1024-px-Bild (rund 3,6 % der F-Höhe)
@@ -218,12 +224,13 @@ def _rahmen(koerper: bpy.types.Object, k: zonen.Koordinaten, teile: list[str], l
     Bild liegen darf; `tiefe`: Reichweite vor und hinter der Bildebene (D-422)."""
     verts = koerper.data.vertices
     if lage["teil"] == "hose" and "winkel" in lage and "lage" in lage and lage.get("bild") is None:
+        s = "L" if lage.get("x", 1) > 0 else "R"  # Oberschenkel der Seite `x` (links positiv)
         kandidaten = []
         for i, t in enumerate(teile):
-            if t == "bein" and verts[i].co.x > 0:
-                th, tt, _, _ = k.glied(verts[i].co, "upperleg01.L", "lowerleg01.L", Vector((0, -1, 0)), "L")
+            if t == "bein" and verts[i].co.x * lage.get("x", 1) > 0:
+                th, tt, _, _ = k.glied(verts[i].co, f"upperleg01.{s}", f"lowerleg01.{s}", Vector((0, -1, 0)), s)
                 kandidaten.append((abs(th - lage["winkel"]) / 60 + abs(tt - lage["lage"]), i))
-        achse = (k.kopf["upperleg01.L"] - k.kopf["lowerleg01.L"]).normalized()
+        achse = (k.kopf[f"upperleg01.{s}"] - k.kopf[f"lowerleg01.{s}"]).normalized()
     elif "quer" in lage:
         z0 = k.kopf["upperarm01.L"].z - lage["unter_schulter"]
         blick = Vector(lage["blick"])
@@ -819,7 +826,9 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: boo
         rahmen[d["teil"]][d_name] = _rahmen(koerper, k, teile, d, d["seite"])
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"])
     shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"])
-    hose.data.materials.append(stoff_material("Shorts", GRAPHIT, zonen_an, [("Bein", logo_farben["bein"], motive["bein"])],
+    hose.data.materials.append(stoff_material("Shorts", GRAPHIT, zonen_an,
+                                               [("Bein", logo_farben["bein"], motive["bein"]),
+                                                ("Beinvorn", logo_farben[LOGOS["beinvorn"]["farbe"]], motive["beinvorn"])],
                                               [d for d in DETAILS if DETAILS[d]["teil"] == "hose"], zonen_staerke))
     shirt.data.materials.append(stoff_material("Shirt", tee, zonen_an,
                                                [("Brust", logo_farben["brust"], motive["brust"]),

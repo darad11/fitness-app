@@ -1246,3 +1246,46 @@ Deine Nachricht vom 28.10.2026: Das personalisierte Modell sieht dir nicht ähnl
 - **Arbeitsumgebung:** Beim Durchsehen fand ich einen Fehler aus Runde 5: Ein Arbeitsbild mit einem Ausschnitt deines Handfotos lag noch im Arbeitsordner, meine damalige Löschprüfung hatte es übersehen. Es ist gelöscht, ebenso der archivierte Werkzeugstand mit den alten Reglerwerten, die Umgebungen von MediaPipe und die nur für das Gesicht geladenen Formziele.
 - **Grenze, ehrlich:** Die Git-Historie des Branches enthält die alten Inhalte weiter, also Reglerwerte, Haarparameter und Beschreibungen in früheren Commits und Commit-Nachrichten; ebenso die früheren Fassungen der PR-Beschreibung. Bilddaten von dir lagen nie im Repository. Ganz entfernen ließe sich das nur durch Umschreiben der Historie des Branches und Löschen der alten Fassungen auf GitHub; das mache ich nur, wenn du es ausdrücklich willst.
 - **Shorts-F:** als freigegeben vermerkt (D-441).
+
+### 19.2 Daumen: letzter Versuch mit zwei Hebeln (D-445)
+
+**Ergebnis, ehrlich:** Es wird nicht deutlich besser. Keine Variante erfüllt deine Abnahme: Der Daumen liegt in keiner aus allen vier Blickwinkeln flach auf den Fingerrücken, ohne Abstand und ohne seitlich abzustehen. Wie du es vorgegeben hast, bleibt die beste bisherige Fassung, also D-440. Werkzeuge der Figur, Pilot-Übungen und Videos sind unverändert.
+
+So habe ich gemessen: an der rechten Hand im Rahmen der Stange, mit `tools/uebungen-3d/daumen_versuch.py`. „Spalt“ ist die mittlere Lücke zwischen Daumen und Fingern im Blick entlang der Stange, also das, was du von der Seite siehst; dazu, wie weit der Daumen über die Außenkante des Zeigefingers hinausragt (von oben), wie weit die Fingerspitzen um die Stange reichen und wie stark das Handgelenk knickt. Die Werte stehen im Testprotokoll.
+
+**Was jeder Hebel bewirkt hat:**
+
+- **Hebel 1, Finger länger** (Regler für die Fingerlänge von MakeHuman, 0,3 und 0,5; die Finger werden 11 bis 26 % länger): Die Finger rollen sich deutlich weiter um die Stange. Zeige- und Mittelfinger reichen bei 0,5 bis 258° und 260° statt bis 219° und 235°; unter dem Daumen liegt jetzt fast überall Fingerhaut. Der Daumen nutzt das kaum: Beim Bankdrücken sinkt der Spalt von 3,7 auf 2,8 mm, die Spitze hebt aber weiter 7 bis 10 mm ab, und von oben ragt er unverändert 12 mm über den Zeigefinger hinaus. In der Kniebeuge und beim Latziehen wird der Spalt größer (4,8 statt 2,2 mm und 5,0 statt 4,0 mm). Bei 0,5 wirkt die Hand lang, die Finger sind etwa so lang wie die Handfläche; 0,3 wirkt noch natürlich, bringt aber weniger.
+- **Hebel 2, Lage der Stange** (weiter zu den Fingern, 0,74 und 0,80 statt 0,68; tiefer eingesunken, 12 statt 9 mm): Die Finger reichen dadurch nicht weiter herum, bei 0,80 sogar weniger weit. Das Handgelenk bleibt gerade (beim Bankdrücken 12 bis 13° am Start und 20 bis 22° am Ende wie bisher), die Stange bleibt in der Handfläche. Beim Bankdrücken wird der Spalt mit 0,74 kleiner (1,8 mm), die Spitze hebt aber weiter ab; von oben bleibt es gleich, in Kniebeuge und Latziehen ändert sich wenig.
+- **Beide zusammen** (0,5 und 0,78): nicht besser als einzeln (Spalt 3,4, 3,7 und 4,1 mm in Bankdrücken, Kniebeuge und Latziehen).
+
+**Was ich dabei gefunden habe:** Der Daumen hebt nicht nur ab, weil ihm Auflage fehlt. Die Daumenkonstruktion rechnet die Beere bis zur Spitze so dick wie in der Gliedmitte, sie wird zur Kuppe hin aber dünner. Klappe ich das Endglied danach um sein Gelenk zur Stange, bis die Kuppe aufliegt, berührt die Kuppe von der Seite die Finger (Spalt 1,6, 1,4 und 3,4 mm), und zwar auch ohne die Hebel. Von oben ragt der Daumen aber weiter unter der Stange hervor, an seinem Ansatz steht er von der Seite weiter ab, und an einzelnen Stellen ragt Fingerhaut in den Daumen. Schiebe ich den Ansatz 4 mm zum Zeigefinger, halbiert sich das Abstehen von oben (6,6 statt 12 mm), der Spalt von der Seite wird aber größer. Das ist eine Folgeänderung am Daumen, kein dritter Hebel; ich habe sie nicht übernommen. Ohne Gewinn blieben außerdem: die Glieder einzeln herunterklappen statt die Gelenke anzuheben, die Fingerhaut per Strahl statt aus den Eckpunkten abtasten und die Dicke der Beere für alle Glieder als Verlauf.
+
+**Bilder:** `docs/screens/uebungen/korrektur6-1-hebel.webp` zeigt alle Stände nebeneinander (Bankdrücken vom Fußende, von der Seite, von oben und schräg, dazu Kniebeuge und Latziehen), `korrektur6-2-hand-player.webp` die Hand in der Größe des Players und die offene Hand mit den drei Fingerlängen. Das Griffblatt neben deinem Handfoto liegt nur bei dir; das Handfoto ist danach aus der Arbeitsumgebung gelöscht.
+
+**Wenn du willst:** Ich kann nur das Nachklappen des Endglieds übernehmen, ohne die Hebel. Es verbessert die Seitenansicht, löst aber das Abstehen von oben nicht. Sonst bleibt D-440. Bis zu deiner Freigabe rendere ich die Pilot-Übungen nicht neu.
+
+### 19.3 Berichte je Paket
+
+```
+Arbeitspaket: D-444 Personalisierte Variante entfernt
+Umgesetzte Funktionen: Werkzeug (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/ (gesicht.py, haare.py, gesicht_anpassen.py, gesicht_masse.py, landmarken.py, gesicht-marken.json gelöscht; realistisch.py, varianten.py, render.py auf dem Stand vor D-437), .gitignore, .prettierignore, Dokumente, Aufträge der Runden 4 und 5
+Technische Entscheidungen: D-444
+Ausgeführte Tests: Suche im Code und im ganzen Stand nach Merkmalen, Werten und Verhältnissen der Person; py_compile; Messung des Griffs wie D-440
+Ergebnis: bestanden; CI zu 741b8a1 (Lauf 40766973789) alle Jobs grün
+Bekannte Einschränkungen: alte Inhalte in der Git-Historie und in früheren Fassungen der PR-Beschreibung
+Nächste Schritte: Daumen, letzter Versuch
+```
+
+```
+Arbeitspaket: D-445 Daumen, letzter Versuch mit zwei Hebeln
+Umgesetzte Funktionen: Prüfwerkzeug, Werkzeug der Figur unverändert (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/daumen_versuch.py (neu), tools/uebungen_korrektur_bild.py (Runde 6); Blätter korrektur6-1-hebel.webp, korrektur6-2-hand-player.webp; Dokumente
+Technische Entscheidungen: D-445
+Ausgeführte Tests: Messung in drei Übungen für zwölf Varianten, Nahaufnahmen, Standbilder in Player-Größe, Diagnose der Daumenkonstruktion; pnpm format:check, check:docs, lint, typecheck, build, check:bundle; py_compile
+Ergebnis: Abnahme nicht erfüllt, nicht deutlich besser; Fassung D-440 bleibt; Checks bestanden
+Bekannte Einschränkungen: Daumen von der Seite als eigener Finger, von oben unter der Stange hervor (wie D-440)
+Nächste Schritte: Entscheidung des Produktinhabers (D-440 behalten oder nur das Nachklappen des Endglieds übernehmen), dann die drei Pilot-Übungen neu rendern
+```
+

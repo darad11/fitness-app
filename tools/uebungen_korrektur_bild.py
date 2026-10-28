@@ -13,6 +13,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur3 --runde 3   # D-433: vorher/nachher Griff, Kragen, Rückenlogo, Gesamt, Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur4 --runde 4   # D-439: vorher/nachher Daumen, zweites Shorts-F, Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur5 --runde 5   # D-443: vorher/nachher Daumen nach Handfoto, ein Shorts-F, Player
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur6 --runde 6   # D-445: Daumen, zwei Hebel und Folgeänderung, Hand im Player
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -164,8 +165,8 @@ def blatt_player3(paket: Path) -> "Image":
 
 
 # Korrekturrunde 4 (D-439): Vorher (Stand D-434) und Nachher, Ordner wie in Runde 3. Blatt A Griff mit der
-# neuen schrägen Nahaufnahme, Blatt B das zweite Shorts-Logo; das personalisierte Modell (Blatt C) entsteht
-# nur außerhalb des Repositorys (`--runde 4 --privat <ordner>`).
+# neuen schrägen Nahaufnahme, Blatt B das zweite Shorts-Logo; das Blatt des personalisierten Modells entstand
+# nur außerhalb des Repositorys, die Variante ist mit D-444 entfernt.
 VERGLEICH4 = {
     "griff": ("1 · Griff: Daumen klar getrennt (Bankdrücken), Kniebeuge und Latziehen", [
         ("griff-vorn", "Bankdrücken, vom Fußende"), ("griff-seite", "Bankdrücken, von der Seite entlang der Stange"),
@@ -258,15 +259,84 @@ def blatt_player5(paket: Path) -> "Image":
     return gitter(kacheln, 2, "3 · Die drei Pilot-Übungen in der Größe des Players", "links vorher (D-439), rechts nachher (D-440, D-441); Standbilder statt Schleifen")
 
 
+# Nachricht nach Korrekturrunde 5 (D-445): letzter Versuch am Daumen mit zwei Hebeln, einzeln und zusammen, und der
+# Folgeänderung (Endglied nachgeklappt), gerendert mit `tools/uebungen-3d/daumen_versuch.py`. Ordner
+# `<paket>/nah/<stand>/` (Nahaufnahmen wie in Runde 5), `<paket>/bilder/<stand>/` (Standbilder wie in der App, dazu
+# `hand.json` mit der Kiste der Hand je Übung im Bild 720 × 540), `<paket>/hand/<gewicht>/` (offene Hand) und
+# `<paket>/messwerte.json` (je Stand und Übung Spalt von der Seite und Überstand über den Zeigefinger). Das
+# Handfoto des Produktinhabers bleibt außerhalb des Repositorys.
+STAENDE6 = [("d440", "Stand D-440"), ("hebel1", "Hebel 1 · Finger 0,5"), ("hebel2", "Hebel 2 · Stange 0,74"),
+            ("beide", "Hebel 1 und 2"), ("kuppe", "Endglied geklappt"), ("kuppe-hebel1", "Endglied + Hebel 1")]
+ANSICHTEN6 = [("griff-vorn", "Bankdrücken, Fußende", "bankdruecken"), ("griff-seite", "Bankdrücken, Seite", "bankdruecken"),
+              ("griff-oben", "Bankdrücken, oben", "bankdruecken"), ("griff-schraeg", "Bankdrücken, schräg", "bankdruecken"),
+              ("griff-knie", "Kniebeuge", "kniebeuge"), ("griff-lat", "Latziehen", "latziehen")]
+
+
+def _komma(wert: float, stellen: int = 1) -> str:
+    return f"{wert:.{stellen}f}".replace(".", ",")
+
+
+def blatt_hebel6(paket: Path) -> "Image":
+    """Zeilen = Stände, Spalten = Ansichten; unter jeder Ansicht der gemessene Spalt von der Seite."""
+    werte = json.loads((paket / "messwerte.json").read_text(encoding="utf-8"))
+    kacheln = []
+    for stand, titel in STAENDE6:
+        for datei, at, uebung in ANSICHTEN6:
+            w = werte.get(stand, {}).get(uebung, {})
+            mass = f"Spalt {_komma(w['spalt'])} mm" if w else ""
+            if w and datei == "griff-oben":
+                mass = f"über Zeigefinger {_komma(w['seitlich'], 0)} mm"
+            kacheln.append(kachel(paket / "nah" / stand / f"{datei}.png", titel, 300, 300, f"{at} · {mass}"))
+    return gitter(kacheln, 6, "1 · Daumen: zwei Hebel einzeln und zusammen, dazu die Folgeänderung",
+                  "Spalt: mittlere Lücke zwischen Daumen und Fingern im Blick entlang der Stange (rechte Hand); oben: Daumen über die Außenkante des Zeigefingers")
+
+
+def blatt_hand6(paket: Path) -> "Image":
+    """Die Hand im großen Player (390 px breit): Ausschnitt 1 : 1 und sechsfach, je Stand und Übung; dazu die
+    offene Hand mit den Fingerlängen 0, 0,3 und 0,5."""
+    kisten = json.loads((paket / "bilder" / "d440" / "hand.json").read_text(encoding="utf-8"))
+    momente = [("kniebeuge", "1.00", "Kniebeuge unten"), ("bankdruecken", "0.00", "Bankdrücken Start"), ("latziehen", "1.00", "Latziehen unten")]
+    kacheln = []
+    for stand, titel in (("d440", "Stand D-440"), ("hebel1", "Hebel 1 · Finger 0,5"), ("kuppe", "Endglied geklappt"),
+                         ("kuppe-hebel1", "Endglied + Hebel 1")):
+        for u, p, mt in momente:
+            still = Image.open(paket / "bilder" / stand / f"Cm-A1-{u}-{p}.png").convert("RGB")
+            f = PLAYER_BREITE / still.width
+            gross = still.resize((PLAYER_BREITE, round(still.height * f)), Image.LANCZOS)
+            x0, y0, x1, y1 = kisten[u]
+            m = 6
+            hand = gross.crop((max(0, int(x0 * f) - m), max(0, int(y0 * f) - m), min(gross.width, int(x1 * f) + m), min(gross.height, int(y1 * f) + m)))
+            feld = Image.new("RGB", (PLAYER_BREITE, 210), GRUND)
+            feld.paste(hand, (8, 8))
+            d = ImageDraw.Draw(feld)
+            d.text((8, hand.height + 16), "1 : 1 wie im Player", fill=LEISE, font=schrift(13))
+            d.text((150, 192), "sechsfach", fill=LEISE, font=schrift(13))
+            sechs = hand.resize((hand.width * 6, hand.height * 6), Image.LANCZOS)
+            s_ = min(1.0, (PLAYER_BREITE - 158) / sechs.width, 186 / sechs.height)
+            if s_ < 1.0:
+                sechs = sechs.resize((int(sechs.width * s_), int(sechs.height * s_)), Image.LANCZOS)
+            feld.paste(sechs, (150, 0))
+            kacheln.append(kachel(feld, f"{titel} · {mt}", feld.width, feld.height, "Ausschnitt aus dem großen Player (390 px breit)"))
+    for gewicht, gt in (("0", "Fingerlänge 0 (D-440)"), ("0.3", "Fingerlänge 0,3"), ("0.5", "Fingerlänge 0,5")):
+        for ansicht, at in (("hand-innen", "Handfläche"), ("hand-aussen", "Handrücken")):
+            kacheln.append(kachel(paket / "hand" / gewicht / f"{ansicht}.png", f"{gt} · {at}", PLAYER_BREITE, 236, "offene Hand, Proportion"))
+    return gitter(kacheln, 3, "2 · Die Hand in der Größe des Players und die Proportion der Hand",
+                  "Standbilder statt Schleifen; unten die offene Hand mit dem MakeHuman-Regler für die Fingerlänge")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 6:
+        speichern(blatt_hebel6(paket), ziel, "korrektur6-1-hebel")
+        speichern(blatt_hand6(paket), ziel, "korrektur6-2-hand-player")
+        return
     if args.runde == 5:
         speichern(blatt_vergleich5(paket, "griff"), ziel, "korrektur5-1-griff")
         speichern(blatt_vergleich5(paket, "logo"), ziel, "korrektur5-2-shorts-logo")

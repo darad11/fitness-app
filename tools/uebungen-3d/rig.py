@@ -189,19 +189,6 @@ class Rig:
             self.sk.pose.bones[name].matrix_basis = basis
         bpy.context.view_layer.update()
 
-    def brust_flach(self, faktor: float = 0.45) -> None:
-        """Brust flacher (geschlechtsneutrale Figur): Brustknochen entlang ihrer Richtung stauchen."""
-        for s in "LR":
-            name = "breast." + s
-            d = (self.ende[name] - self.kopf[name]).normalized()
-            S = Matrix.Identity(3)
-            for i in range(3):
-                for j in range(3):
-                    S[i][j] -= (1 - faktor) * d[i] * d[j]
-            eltern = self.knochen[name].parent
-            Gp = self.g(eltern.name) if eltern else Matrix.Identity(4)
-            self.G[name] = Gp @ um_punkt(self.kopf[name], S)
-
     # ------------------------------------------------------------------ Beine
 
     def bein(self, seite: str, knoechel: Vector, knie_richtung: Vector, fuss_grad: float) -> dict:
@@ -228,6 +215,27 @@ class Rig:
         return {"huefte": H, "knie": K, "knoechel": knoechel, "richtung": p}
 
     # ------------------------------------------------------------------ Hände und Arme
+
+    def armhebung(self, u: Vector) -> float:
+        """Winkel des Oberarms zur Längsachse des Rumpfs nach unten (0 = hängend, 90 = waagrecht nach
+        vorn oder zur Seite, 180 = über dem Kopf)."""
+        unten = self.g("spine01").to_3x3() @ Vector((0, 0, -1))
+        return math.degrees(u.angle(unten))
+
+    def _schulterhilfe(self, s: str, S0: Vector, S: Vector, R_ober: Matrix, u: Vector) -> None:
+        """Hilfsknochen `achsel` (Haut an Brust und Achsel, `figur.schulter_gewichte`): bis 110°
+        Armhebung nimmt er die halbe Drehung des Oberarms mit, bis 160° gleitend die ganze. Halb
+        glättet die Achselfalte beim Drücken nach vorn; über dem Kopf (Latziehen oben) zöge die
+        halbe Drehung die Brusthaut in Falten, dort verformt die Haut wieder genau wie ohne
+        Hilfsknochen (D-413)."""
+        if "achsel." + s not in self.knochen:
+            return
+        hebung = self.armhebung(u)
+        t = min(1.0, max(0.0, (hebung - 110.0) / 50.0))
+        anteil = 0.5 + 0.5 * t * t * (3 - 2 * t)
+        R_eltern = self.g("clavicle." + s).to_3x3()
+        q = R_eltern.to_quaternion().slerp(R_ober.to_quaternion(), anteil)
+        self.setze("achsel." + s, starr(S0, S, q.to_matrix()))
 
     def _handdaten(self) -> dict[str, dict]:
         daten = {}
@@ -490,6 +498,7 @@ class Rig:
         `phi` ist die Drehung vorgegeben (Armhaltung, die fest zum Rumpf gesucht wurde)."""
         s = seite
         S0, E0, W0 = self.kopf["upperarm01." + s], self.kopf["lowerarm01." + s], self.kopf["wrist." + s]
+        # Schultergelenk: folgt dem Schlüsselbein
         S = self.punkt("shoulder01." + s, S0)
         l1, l2 = (E0 - S0).length, (W0 - E0).length
         d = self._hand[s]
@@ -536,6 +545,7 @@ class Rig:
         G_ober = starr(S0, S, R_ober)
         self.setze("upperarm01." + s, G_ober)
         self.setze("upperarm02." + s, G_ober)
+        self._schulterhilfe(s, S0, S, R_ober, u)
         R_unter0 = abbild(f0, scharnier0, f, scharnier)
         n_ohne = R_unter0 @ d["n"]
         n_soll = G_hand.to_3x3() @ d["n"]

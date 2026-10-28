@@ -2222,3 +2222,21 @@ Pilot-Übungen auf dem IK-Rig neu gerendert (D-406 bis D-410). Prüfung der Bewe
 | WebKit | läuft in der CI |
 | CI zu 1f3faa8 (Lauf 40558753879, neue Videos) | Lint, Typen, Unit, Dokumente, Build; Datenbank; E2E Chromium; E2E WebKit: alle grün |
 | Vergleich alt und neu | alter Stand (`5d155fa`) und neuer Stand je vorn und Seite, 60 Bilder, 360 × 270, 16 Samples; Werte des alten Stands mit dessen Code nachgemessen (Bankdrücken: Unterarm in der Mitte 20,8°, Stange unten 1,8 cm über der Brust, Oberarm 54°; Latziehen: Unterarm unten 58,1°; Kniebeuge: Knie unten 16,7 cm innerhalb des Fußgelenks, Fuß im Stand 10 bis 11 mm über dem Boden) |
+
+### Phase Übungen, Brust und Varianten der Figur · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auftrag `prompts/uebungen-varianten-FORM.md`; Brust und Körperform (D-413). Werkzeuge und Daten, die App-Videos unverändert. Brust gemessen am verformten Netz: Querschnitt im Raum des Rumpfs (Knochen `spine02`) als Schnitt der Netzflächen mit der Ebene, je Übung fünf Phasen und Höhen 60, 65, 72, 80 und 86 % der Strecke Hüftgelenke–Halsansatz. „Wölbung“ = Abstand der Brustmuskeln (4 bis 10 cm neben der Mitte) vor der Brustbeinlinie; „Delle“ = größter Abstand des Profils hinter seiner vorderen konvexen Hülle 3 bis 11 cm neben der Mitte.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Brust vorher (Stand `bac6438`, Grundmodell mit gestauchter Brust) | Wölbung −36,0 bis −20,4 mm (Kniebeuge), −36,1 bis −21,2 mm (Bankdrücken), −36,1 bis −20,4 mm (Latziehen): Brustmuskeln hinter dem Brustbein, in jeder Phase |
+| Brust nachher, neutral | Wölbung +5,8 bis +10,3 mm (Kniebeuge), +4,8 bis +10,1 mm (Bankdrücken), +5,3 bis +10,4 mm (Latziehen); Delle höchstens 6,1, 8,1 und 6,7 mm |
+| Brust nachher, männlich | Wölbung +6,1 bis +12,9, +3,5 bis +12,9, +5,2 bis +12,9 mm; Delle höchstens 10,1, 6,6 und 11,5 mm |
+| Brust nachher, weiblich | Wölbung +6,7 bis +17,2, +6,4 bis +17,1, +6,5 bis +17,2 mm; Delle höchstens 7,5 mm, nur Bankdrücken oben bei 80 % (über der Brust, Arm senkrecht) 26,8 mm |
+| Achsel-Hilfsknochen an und aus (neutral, Bankdrücken oben bei 80 und 86 %) | Delle 8,1 und 16,6 mm statt 13,5 und 39,3 mm; Latziehen und Kniebeuge praktisch gleich (Unterschied höchstens 6 mm, in den Nahaufnahmen nicht zu sehen) |
+| Erster Versuch mit dem Knochen `shoulder01` | Finger bis −13,4 mm in der Stange (Grundmodell) bzw. +3,8 mm daneben (neutral), weil Blender den verbundenen Knochen am Gelenk festhält und den Arm verschiebt; verworfen |
+| Gegenprobe Grundmodell mit neuem Code (`griff_test`, Kniebeuge) | Finger −1,71 mm, 222 Punkte in Kontakt: genau der alte Wert |
+| Kniebeuge, Prüfung neutral (60 Bilder) | Knie 176° bis 75,4°, Oberschenkel unten waagrecht (0,0°), Rumpf 6° bis 44°, Stange über der Fußmitte 0,00 cm in allen Bildern, Knie zur Zehenrichtung −1,12 bis +0,24°, Knie unten 7,5 cm hinter der Zehenspitze; Ellbogen 38,1°, Handgelenk 16,0°; Finger −1,17 mm, 230 Punkte; Fuß 0 mm, Verschiebung höchstens 2,26 mm; keine Meldung |
+| Bankdrücken, Prüfung neutral | Ellbogen 171,5° bis 49,2°, Oberarm zum Rumpf 95,4° bis 76,8°, Unterarm unten 8,7° aus der Senkrechten (über die Bewegung höchstens 19,9°), Handgelenk 11,8° bis 26,5°, Stange bis zum Brustkontakt (0,0 cm); Finger −1,25 mm, 326 Punkte; Füße 0 mm; keine Meldung |
+| Latziehen, Prüfung neutral | Ellbogen 168° bis 47,4°, Unterarm unten 18,0°, Handgelenk höchstens 14,9°, Lehne 8° bis 18°; Finger −1,11 mm, 220 Punkte; Füße 0,1 mm; keine Meldung |
+| Nahaufnahmen vorher und nachher | `docs/screens/uebungen/brust-vorher-nachher.webp` (Bankdrücken oben und unten, Latziehen oben, Kniebeuge unten), selbst angesehen: vorher eingesunkene Brust mit Falte in der Mitte, nachher gewölbt |

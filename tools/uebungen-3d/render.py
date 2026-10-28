@@ -27,6 +27,7 @@ sys.path.insert(0, str(HIER))
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
+import koerperform  # noqa: E402
 import szene  # noqa: E402
 from haltung import ablauf  # noqa: E402
 from uebungen import UEBUNGEN, _netz  # noqa: E402
@@ -54,14 +55,16 @@ def hole() -> None:
     for name, url in DATEIEN.items():
         if not (ziel / name).exists():
             urllib.request.urlretrieve(url, ziel / name)
+    koerperform.hole(list(koerperform.FORMEN.values()))
 
 
-def baue(name: str, breite: int, hoehe: int, proben: int):
+def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral"):
+    """Szene der Übung: graue Figur mit Zonen in der Körperform `form` (D-413)."""
     s = szene.leere_szene()
     s.cycles.samples = proben
     s.render.resolution_x = breite
     s.render.resolution_y = hoehe
-    uebung = UEBUNGEN[name]()
+    uebung = UEBUNGEN[name](koerperform.FORMEN[form])
     uebung.bauen()
     uebung.koerper.data.materials.append(szene.koerper_material())
     szene.boden()
@@ -111,10 +114,10 @@ def messen(uebung) -> dict:
     return erg
 
 
-def pruefen(name: str, arbeit: Path) -> None:
+def pruefen(name: str, arbeit: Path, form: str) -> None:
     """Prüfansichten (vorn, Seite, Standard) für fünf Phasen, Griff aus der Nähe und Messwerte für
     alle 60 Bilder."""
-    s, u, punkte = baue(name, 480, 360, 16)
+    s, u, punkte = baue(name, 480, 360, 16, form)
     werte = []
     fuss0 = None
     fuss_max = 0.0
@@ -163,6 +166,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("uebung", nargs="?")
     ap.add_argument("--hole", action="store_true")
+    ap.add_argument("--form", default="neutral", choices=sorted(koerperform.FORMEN))
     ap.add_argument("--pruefen", action="store_true")
     ap.add_argument("--ansicht", default="standard", choices=["standard", "vorn", "seite"])
     ap.add_argument("--breite", type=int, default=720)
@@ -178,9 +182,9 @@ def main() -> None:
     arbeit = Path(args.arbeit) / args.uebung
     arbeit.mkdir(parents=True, exist_ok=True)
     if args.pruefen:
-        pruefen(args.uebung, arbeit)
+        pruefen(args.uebung, arbeit, args.form)
         return
-    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben)
+    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form)
     for o in bpy.data.objects:
         o.hide_render = o.name.startswith(AUSBLENDEN.get(args.ansicht, ()))
     kamera(u, punkte, args.ansicht, args.breite, args.hoehe)

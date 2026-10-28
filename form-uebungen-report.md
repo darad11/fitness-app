@@ -261,3 +261,46 @@ Vorher empfehle ich zu prüfen, ob die Formziele von MakeHuman (ebenfalls CC0, a
 2. Mixamo-Dateien nur, wenn Rumpf oder Kondition dran sind (Liste in `docs/uebungen-bewegungsfamilien.md` Abschnitt 7).
 3. Gerätetest am iPhone mit den neuen Videos (Schleife, offline, „Bewegung reduzieren“).
 4. Merge-Freigabe für PR #53.
+
+## 11. Brust, Varianten der Figur, Vorschaubild und Priorität (`uebungen-varianten-FORM.md`)
+
+Nachricht des Produktinhabers vom 28.10.2026, wörtlich in `docs/prompts/uebungen-varianten-FORM.md`. Die angehängte Vorlage der Kleidung ist nicht angekommen; Farben nach dem Text, Graphit als Annahme (Abschnitt 11.3). Weiterhin nur kostenlose Werkzeuge und Daten, nichts gekauft, kein Konto angelegt. Die Videos in der App sind unverändert, bis du eine Variante wählst.
+
+### 11.1 Brust: Ursache und Korrektur (D-413)
+
+**Ursache:** nicht die Armbewegung, sondern meine eigene Abflachung der Brust. Für eine geschlechtsneutrale Figur hatte ich die Brustknochen des Grundmodells auf 45 % gestaucht (`Rig.brust_flach`). Gemessen im Querschnitt auf Höhe der Brustwarzen: Die Brustmuskeln lagen dadurch 20 bis 36 mm hinter der Linie des Brustbeins, in jeder Phase aller drei Übungen; am stärksten sichtbar beim Bankdrücken, weil man dort von oben auf die Brust schaut.
+
+**Zweiter, kleinerer Grund:** die Verformung der Haut an der Schulter. Ist der Arm nach vorn gehoben (Bankdrücken oben), springt die Haut vorn an der Achsel abrupt vom Rumpf zum Oberarm; es entsteht eine Kerbe von der Achsel zum Schlüsselbein.
+
+**Korrektur:**
+
+1. **Echte Körperform statt Stauchung** (`tools/uebungen-3d/koerperform.py`): Formziele von MakeHuman (MPFB2, CC0) für Geschlecht, Muskeln, Gewicht, Proportionen und Brustgröße, gewichtet wie in MakeHuman. Die Formziele verschieben auch die Hilfspunkte der Gelenke; das Skelett passt sich so von selbst an.
+2. **Hilfsknochen an der Achsel** (`figur.schulter_gewichte`, `Rig._schulterhilfe`): Haut, die zugleich am Oberarm und am Rumpf hängt, gibt ihren Oberarmanteil an einen eigenen Knochen ab. Er nimmt bis 110° Armhebung die halbe Drehung des Oberarms mit, bis 160° gleitend die ganze; über dem Kopf (Latziehen oben) verformt die Haut damit genau wie vorher.
+3. **Übungen nach dem Körper:** Griffbreite und Fußstellung wachsen mit der Schulterbreite, Höhen beziehen sich auf Gelenke (Stange knapp unter dem Halsansatz, Brustkontakt auf 65 % der Strecke Hüfte–Halsansatz), Kniewinkel auf der Bank 100° aus den Beinlängen, Fußmitte und Zehenspitze aus dem Netz.
+
+**Ergebnis (Messung am verformten Netz, Querschnitt im Raum des Rumpfs, alle drei Übungen, fünf Phasen):**
+
+| Wölbung (Brustmuskeln vor + oder hinter − der Linie des Brustbeins) | Kniebeuge | Bankdrücken | Latziehen |
+|---|---|---|---|
+| vorher (Grundmodell, Brust gestaucht) | −36 bis −20 mm | −36 bis −21 mm | −36 bis −20 mm |
+| neutral | +5,8 bis +10,3 mm | +4,8 bis +10,1 mm | +5,3 bis +10,4 mm |
+| männlich | +6,1 bis +12,9 mm | +3,5 bis +12,9 mm | +5,2 bis +12,9 mm |
+| weiblich | +6,7 bis +17,2 mm | +6,4 bis +17,1 mm | +6,5 bis +17,2 mm |
+
+Kleinster und größter Wert über fünf Phasen und drei Höhen (60, 65 und 72 % der Strecke Hüftgelenke–Halsansatz), Querschnitt im Raum des Rumpfs. Dellen im Bereich der Brust (3 bis 11 cm neben der Mitte, bis 80 % Höhe) höchstens 11,5 mm: die Rinne neben dem Brustbein und der Übergang zur Schulter. Ausnahme ist die weibliche Form oben auf der Bank (Arme senkrecht) mit 27 mm über der Brust, dort, wo die Brust in die gehobene Schulter übergeht. Mit dem Achsel-Hilfsknochen sind die Dellen beim Bankdrücken oben kleiner als ohne (8 statt 14 mm bei 80 %, 17 statt 39 mm direkt unter dem Schlüsselbein); Latziehen und Kniebeuge bleiben praktisch gleich.
+
+Nahaufnahmen vorher und nachher: `docs/screens/uebungen/brust-vorher-nachher.webp`.
+
+**Prüfung der Bewegung mit der neuen Figur** (neutral, `render.py --pruefen`, 60 Bilder): Füße flach und fest (Kniebeuge höchstens 2,3 mm Verschiebung), Stange über der Fußmitte 0,00 cm in jedem Bild, Knie zur Zehenrichtung −1,1 bis +0,2°, Finger höchstens 1,25 mm eingedrückt bei 220 bis 326 Punkten in Kontakt, keine Meldung des Rigs. Mit dem Grundmodell ergibt der neue Code genau die alten Werte (Finger 1,71 mm, 222 Punkte). Unterschiede zur alten Figur: Knie unten 75° statt 67° (Oberschenkel kürzer, Unterschenkel länger), Bankdrücken Unterarm unten 8,7° statt 5,7° aus der Senkrechten, Latziehen Unterarm unten 18° statt 27°.
+
+Ein Fehler auf dem Weg, gefunden durch die Prüfung: Der erste Hilfsknochen war der vorhandene Schulterknochen. Blender hält „verbundene“ Knochen an ihrem Gelenk fest; dadurch verschob sich der ganze Arm um einige Millimeter, und die Finger drangen bis 13 mm in die Stange. Der eigene Achsel-Knochen hat dieses Problem nicht und lässt Schulterknochen und Arm unberührt.
+
+### 11.2 Körperformen (D-413)
+
+| Form | Geschlecht | Muskeln | Gewicht | Proportionen | Brust | Größe | Oberarm |
+|---|---|---|---|---|---|---|---|
+| neutral (A, D) | 0,5 | 0,70 | 0,45 | 0,75 | 0,10 | 1,66 m | 24,2 cm |
+| männlich (B, C) | 1,0 | 0,72 | 0,45 | 0,75 | – | 1,73 m | 25,1 cm |
+| weiblich (C) | 0,0 | 0,66 | 0,42 | 0,75 | 0,40 | 1,59 m | 23,3 cm |
+
+Werte 0 bis 1 wie in MakeHuman (0,5 = Durchschnitt). Muskeln knapp über dem Durchschnitt, Gewicht knapp darunter: sichtbar trainiert, keine Bodybuilder-Optik. Der Oberarm ist länger als beim Grundmodell (22,8 cm).

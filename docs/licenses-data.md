@@ -117,3 +117,11 @@ Für die drei Pilot-Übungen ist keine fremde Bewegung verwendet: Kniebeuge, Ban
 **Nicht verwenden:** AMASS (enthält CMU, Lizenz nur nichtkommerziell), die FBX-Umwandlung auf `data.4tu.nl` (CC BY-NC 4.0) und `huggingface.co/datasets/gbionics/cmu-fbx` (Lizenz ungeklärt).
 
 **Werkzeuge:** Blender 4.2 als Python-Modul (GPL, nur zum Rendern), ffmpeg (LGPL/GPL, nur zum Kodieren). Beide sind nicht Teil der App; die GPL gilt nicht für die gerenderten Bilder.
+
+## 8. Körperform der Figur (D-413)
+
+Geprüft am 28.10.2026. Nur kostenlose Quellen, die die Nutzung in der App erlauben; nichts gekauft, kein Konto angelegt. Wie beim Grundmodell liegen fremde Dateien nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie.
+
+| Element | Quelle | Lizenz (Wortlaut) | Was das für FORM heißt |
+|---|---|---|---|
+| Körperform (Formziele: Geschlecht, Muskeln, Gewicht, Proportionen, Brustgröße) | MPFB2, Repository `makehumancommunity/mpfb2`, `src/mpfb/data/targets/` (30 Dateien `*.target.gz`, Liste in `koerperform.ziele`), über `raw.githubusercontent.com` | `LICENSE.md` Abschnitt C: Assets sind „any data contributing to the output from MPFB“, darunter „Targets and modifiers“; „These assets have been released under CC0 1.0 Universal“. Abschnitt D: keine Ansprüche auf „Renderings“ und „Graphical data generated via scripting or plugins“ | Frei nutzbar, auch in der App und im öffentlichen Repository; keine Namensnennung nötig. Der Code von MPFB2 (GPLv3) wird nicht verwendet, nur die Daten |

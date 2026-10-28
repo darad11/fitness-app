@@ -41,7 +41,7 @@ def ausstatten(uebung, schluessel: str) -> list:
     k, sk = uebung.koerper, uebung.skelett
     uebung.kantenlicht = True
     k.data.materials.clear()
-    teile = kleidung.anziehen(k, sk, v["zonen"], v["logos"], v["staerke"], v.get("brust_hoehe"), rig=uebung.rig)
+    teile = kleidung.anziehen(k, sk, v["zonen"], v["logos"], v["staerke"], v.get("brust_hoehe"))
     if v["aussehen"] == "real":
         teile += realistisch.ausstatten(k, sk, k.name, v["form"], v["zonen"], v["staerke"])
     else:

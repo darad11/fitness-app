@@ -13,12 +13,19 @@ der Figur, ohne fremde Dateien: Die Flächen des bedeckten Bereichs werden kopie
 sie jeder Haltung ohne Stoffsimulation. Säume, Ärmel und Schlitze sind keine Netzkanten, sondern ein
 Feld (Abstand zum Rand in Metern, wie bei den Muskelzonen): Der Stoff endet dort scharf.
 
-**Rundhals** (D-417, D-422): Der Ausschnitt ist eine Kugel am Halsansatz plus, darüber, eine Ellipse um
-die gemessene Halshaut. Seit D-422 wird er nicht mehr als festes Feld je Eckpunkt geschnitten, sondern
-im Shader am Leerobjekt „Hals“ gemessen, das mit dem Halsknochen `neck01` mitläuft (`Rig.folger`): Der
-Kragen liegt in jeder Haltung flach am Halsansatz, auch wenn Schultern und Trapez den Stoff heben
-(vorher stieg er in der Kniebeuge seitlich am Hals hoch). Die Haut unter dem Stoff wird nach derselben
-Regel ausgeblendet (`haut_ausblenden`).
+**Rundhalskragen** (D-431): Die Halsöffnung ist der Schnitt des Körpers mit einer Fläche durch drei
+Marken: vorn etwas unter der Drosselgrube (Höhe der inneren Schlüsselbeinenden), hinten knapp über dem
+vorstehenden Halswirbel (Halsansatz `neck01`), seitlich am Halsansatz (Halsbreite, knapp unter dem
+Halsknochen). Die Fläche ist die geneigte Ebene durch vorn und hinten, seitlich parabolisch zum
+Halsansatz angehoben; nur so bleibt die Kante am Hals, denn bei diesem Körper liegen die Trapezmuskeln
+seitlich fast auf Höhe des Halsansatzes und die reine Ebene schnitte über die Schultern. Stoff gibt es
+nur unter der Fläche (`_halsoeffnung`, `_halsfeld`, Feld je Eckpunkt wie die Säume); der Schnitt ist
+eine geschlossene, glatte Kurve wie der Halsausschnitt eines Schnittmusters. Damit die Kante bei gehobenem Trapez oder aufliegender Stange nicht mitgezogen
+wird, hängt der Stoff in der Nähe der Öffnung am Halsansatz (Gewichte gleitend auf `spine01` und
+`neck01` umgebunden, `_kragen_binden`), wie der steife Kragen eines echten Shirts; weiter unten
+folgt er wieder Schultern und Armen. Auf der Kante liegt ein schmales Kragenbündchen als eigenes Netz
+(`_buendchen`), aus den Schnittpunkten des Felds auf dem Stoff. Bis D-430 schnitten Kugel, Ellipse und
+Ebenen im Shader an einem mitlaufenden Leerobjekt; das gab seitlich Spitzen und eine unruhige Kante.
 
 **Logos** (Abschnitt 3): das FORM-F aus `public/brand/symbol-f-gruen.svg` und die Wortmarke aus
 `public/brand/logo-kopfzeile-dunkel.svg`, gerastert (`quelle/form-f.png`, `quelle/form-vertikal.png`),
@@ -41,7 +48,7 @@ from pathlib import Path
 
 import bpy
 import bmesh  # erst nach bpy verfügbar (Blender als Modul)
-from mathutils import Matrix, Vector
+from mathutils import Vector
 
 import szene
 import zonen
@@ -62,8 +69,12 @@ SHIRT_SAUM = 0.02  # Anteil Hüftgelenk (0) bis Halsansatz (1): Saum knapp über
 AERMEL = 0.40  # Anteil Schulter (0) bis Ellbogen (1): kurzer Ärmel
 HOSE_BUND = 0.22  # Bund knapp unter dem Nabel
 HOSE_BEIN = 0.40  # Anteil Hüfte (0) bis Knie (1): Laufshorts
-HALS_RAND = 0.008  # Abstand des Ausschnitts zur Halshaut, m
-AUSSCHNITT_R = 0.075  # Kugel am Halsansatz: Radius des runden Ausschnitts, m
+# Rundhalskragen (D-431): vorn unter der Drosselgrube, hinten über dem Halswirbel, seitlich Halsbreite plus Rand
+KRAGEN = {"unter_drosselgrube": 0.015, "ueber_halswirbel": 0.012,
+          "seitlich_unter_hals": 0.015, "seitlich_rand": 0.006,  # seitliche Kante unter `neck01`, außerhalb der Halshaut, m
+          "bindung": 0.06,  # bis zu diesem Abstand von der Öffnung hängt der Stoff gleitend am Halsansatz, m
+          "buendchen": 0.014, "buendchen_dicke": 0.0032}  # Breite und Dicke des Kragenbündchens, m
+KRAGEN_KNOCHEN = {"spine01": 0.6, "neck01": 0.4}  # woran der Kragen hängt
 ABSTAND = {"shirt": 0.0065, "hose": 0.0048}  # Stoff über der Haut, m
 DICKE = 0.0012  # Stoffdicke, m
 STOFF = ABSTAND["shirt"] + DICKE  # Oberfläche des Tees über der Haut: Die Stange liegt darauf (D-422)
@@ -143,16 +154,52 @@ def _schulterblatt_breite(koerper: bpy.types.Object) -> float | None:
     return abstand * (1.0 - SCHULTERBLATT_ANTEIL)
 
 
+# ---------------------------------------------------------------------- Halsöffnung
+
+
+def _halsoeffnung(koerper: bpy.types.Object, k: zonen.Koordinaten) -> dict:
+    """Fläche der Halsöffnung (D-431): die Ebene durch den Punkt vorn auf der Haut unter der
+    Drosselgrube (Höhe der inneren Schlüsselbeinenden minus `unter_drosselgrube`) und den Punkt
+    hinten auf der Haut über dem Halsansatz (`neck01` plus `ueber_halswirbel`), quer waagrecht;
+    seitlich parabolisch angehoben (`c`), so dass die Kante bei der halben Halsbreite `b` (plus
+    `seitlich_rand`) `seitlich_unter_hals` unter dem Halsknochen liegt. Rückgabe: Mitte C,
+    Längsrichtung e (vorn → hinten), Normale m (nach oben), halbe Länge a, Halbbreite b, Wölbung c,
+    vordere und hintere Kante (`vorn`, `hinten`; letztere für das Rückenlogo)."""
+    verts = koerper.data.vertices
+    N = k.kopf["neck01"]
+    z_vorn = k.kopf["clavicle.L"].z - KRAGEN["unter_drosselgrube"]
+    z_hinten = N.z + KRAGEN["ueber_halswirbel"]
+
+    def haut(z: float, vorn: bool) -> Vector:
+        p = [v.co for v in verts if abs(v.co.x) < 0.015 and abs(v.co.z - z) < 0.008]
+        y = min(q.y for q in p) if vorn else max(q.y for q in p)
+        return Vector((0.0, y, z))
+
+    F, B = haut(z_vorn, True), haut(z_hinten, False)
+    hals = [abs(v.co.x) for v in verts if k.w(v.index, "neck01", "neck02", "neck03") > 0.5 and 0.0 < v.co.z - N.z < 0.01]
+    b = max(hals) + KRAGEN["seitlich_rand"]
+    C = (F + B) / 2
+    e = (B - F).normalized()
+    m = Vector((1.0, 0.0, 0.0)).cross(e).normalized()
+    if m.z < 0:
+        m = -m
+    # seitliche Kante: Höhe über der Ebene (längs m) bei x = b, als Parabel c · x²
+    z_seite = N.z - KRAGEN["seitlich_unter_hals"]
+    w_seite = (Vector((b, C.y, z_seite)) - C).dot(m)
+    c = max(0.0, w_seite / (b * b))
+    return {"C": C, "e": e, "m": m, "a": (B - F).length / 2, "b": b, "c": c, "vorn": F, "hinten": B}
+
+
+def _halsfeld(h: dict, p: Vector) -> float:
+    """Abstand zur Fläche der Halsöffnung (m, positiv = Stoff, unter der Fläche): Höhe über der Ebene
+    längs m, verglichen mit der seitlichen Wölbung c · x². Unterhalb der vorderen Kante gibt es immer
+    Stoff: Die Ebene schnitte sonst entlang der Brustbeinrinne in die vorgewölbte Brust und machte
+    aus dem runden Ausschnitt vorn eine Spitze."""
+    d = p - h["C"]
+    return max(h["c"] * d.x * d.x - d.dot(h["m"]), h["vorn"].z - p.z)
+
+
 # ---------------------------------------------------------------------- Felder je Eckpunkt
-
-
-def _halsmasse(koerper: bpy.types.Object, k: zonen.Koordinaten) -> tuple[float, float, float]:
-    """Mitte (y) und Halbachsen (quer, vorn–hinten) der Halshaut am Halsansatz, aus dem Netz."""
-    hals = k.kopf["neck01"]
-    haut = [v.co for v in koerper.data.vertices
-            if k.w(v.index, "neck01", "neck02", "neck03") > 0.5 and -0.005 < v.co.z - hals.z < 0.035]
-    ys = [p.y for p in haut]
-    return (min(ys) + max(ys)) / 2, max(abs(p.x) for p in haut) + HALS_RAND, (max(ys) - min(ys)) / 2 + HALS_RAND
 
 
 def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
@@ -160,14 +207,10 @@ def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
     (m, positiv = bedeckt) und das Körperteil mit dem größten Gewicht; dazu die Maße des Rundhalses
     (`hals`) für das Leerobjekt und den Shader."""
     k = zonen.Koordinaten(koerper, skelett)
-    kopf = k.kopf
-    hals = kopf["neck01"]
-    hals_y, hals_x, hals_tiefe = _halsmasse(koerper, k)
-    kugel = Vector((0.0, hals_y - 0.015, hals.z - 0.025))
     L = (k.N - k.O).length
-    felder: dict = {n: [] for n in ("shirt", "hose", "teil")}
-    # Rumpf mit dem ganzen Hals: Der Ausschnitt schneidet ihn im Shader, so bleibt der Stoff dort
-    # vorhanden und das Feld stetig
+    oeffnung = _halsoeffnung(koerper, k)
+    felder: dict = {n: [] for n in ("shirt", "hose", "teil", "hals")}
+    # Rumpf mit dem ganzen Hals: Die Halsöffnung schneidet ihn als Feld (`_halsfeld`)
     rumpfknochen = ("root", "spine01", "spine02", "spine03", "spine04", "spine05", "neck01", "neck02", "neck03",
                     "pelvis.L", "pelvis.R", "clavicle.L", "clavicle.R", "breast.L", "breast.R", "shoulder01.L",
                     "shoulder01.R")
@@ -187,7 +230,7 @@ def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
             _, t, La, _ = k.glied(p, f"upperarm01.{seite}", f"lowerarm01.{seite}", Vector((0, -1, 0)), seite)
             shirt = (AERMEL - t) * La
         elif teil == "rumpf":
-            shirt = (s - SHIRT_SAUM) * L
+            shirt = min((s - SHIRT_SAUM) * L, _halsfeld(oeffnung, p))
             hose = (HOSE_BUND - s) * L
         elif teil == "bein":
             _, t, Lb, _ = k.glied(p, f"upperleg01.{seite}", f"lowerleg01.{seite}", Vector((0, -1, 0)), seite)
@@ -196,16 +239,9 @@ def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
         felder["shirt"].append(shirt)
         felder["hose"].append(hose)
         felder["teil"].append(teil)
+        felder["hals"].append(_halsfeld(oeffnung, p) if teil == "rumpf" else 1.0)
     felder["k"] = k
-    # Rundhals: Kugel um `kugel` (Radius AUSSCHNITT_R), darüber die Ellipse um die Halsmitte (`mitte_y`
-    # über dem Kugelmittelpunkt, Halbachsen `x` und `tiefe`) und eine Ebene quer zum Hals in der Höhe
-    # `oben` über dem Kugelmittelpunkt: Über ihr gibt es keinen Stoff, auch wenn Schulter und Trapez
-    # den Stoff seitlich am Hals heben (D-426). `oben` liegt dort, wo die Kugel in der Grundhaltung
-    # seitlich (bei der Halsbreite) endet, so bleibt die Grundhaltung unverändert. Alles relativ zum
-    # Leerobjekt, das mit dem Halsknochen mitläuft.
-    oben = math.sqrt(max(0.0, AUSSCHNITT_R ** 2 - hals_x ** 2))
-    felder["hals"] = {"kugel": kugel, "r": AUSSCHNITT_R, "x": hals_x, "tiefe": hals_tiefe, "mitte_y": hals_y - kugel.y,
-                      "oben": oben}
+    felder["oeffnung"] = oeffnung
     return felder
 
 
@@ -270,11 +306,13 @@ def _glaetten(bm: bmesh.types.BMesh, runden: int, anteil: float = 0.5) -> None:
 
 
 def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld: list[float],
-          abstand: float, rahmen: dict[str, dict], rand: float = 0.03) -> bpy.types.Object:
+          abstand: float, rahmen: dict[str, dict], rand: float = 0.03,
+          kragen: list[float] | None = None) -> bpy.types.Object:
     """Kleidungsstück: Flächen, deren Eckpunkte höchstens `rand` außerhalb des Saums liegen, kopiert,
     versetzt und geglättet; mit denselben Gewichten am Skelett. Je Logo und Detail eine UV-Schicht
     (ebene Projektion auf die Bildebene) und eine Maske: nur Flächen des erlaubten Körperteils in
-    Reichweite der Bildebene, die zu ihr zeigen."""
+    Reichweite der Bildebene, die zu ihr zeigen. Mit `kragen` (Abstand zur Halsöffnung je Eckpunkt)
+    hängt der Stoff nahe der Öffnung am Halsansatz (`_kragen_binden`, D-431)."""
     quelle = koerper.data
     behalten = {v.index for v in quelle.vertices if feld[v.index] > -rand}
     bm = bmesh.new()
@@ -304,6 +342,8 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
     alt = sorted(behalten)
     for g in koerper.vertex_groups:
         obj.vertex_groups.new(name=g.name)
+    if kragen is not None:
+        _kragen_binden(obj, [kragen[i] for i in alt])
     for attr_name in ("Zone", "ZoneMit"):
         if attr_name not in mesh.attributes:
             ziel = mesh.attributes.new(attr_name, "FLOAT", "POINT")
@@ -312,6 +352,10 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
     saum = mesh.attributes.new("Saum", "FLOAT", "POINT")
     for neu_i, alt_i in enumerate(alt):
         saum.data[neu_i].value = feld[alt_i]
+    if kragen is not None:
+        hals = mesh.attributes.new("Hals", "FLOAT", "POINT")  # Abstand zur Halsöffnung, für das Bündchen
+        for neu_i, alt_i in enumerate(alt):
+            hals.data[neu_i].value = kragen[alt_i]
     for logo_name, r in rahmen.items():
         schicht = mesh.uv_layers.new(name="Logo" + logo_name)
         maske = mesh.attributes.new("Maske" + logo_name, "FLOAT", "POINT")
@@ -337,6 +381,118 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
     sub = obj.modifiers.new("Glatt", "SUBSURF")
     sub.levels = 1
     sub.render_levels = 2
+    return obj
+
+
+def _kragen_binden(obj: bpy.types.Object, abstand: list[float]) -> None:
+    """Gewichte des Stoffs nahe der Halsöffnung gleitend auf die Knochen des Halsansatzes umbinden
+    (`KRAGEN_KNOCHEN`): an der Kante ganz, bis `KRAGEN["bindung"]` auslaufend. So bleibt der Kragen
+    ein Ring am Halsansatz, auch wenn Schultern und Trapez den Stoff heben (D-431)."""
+    gruppen = {g.name: g for g in obj.vertex_groups}
+    for v, d in zip(obj.data.vertices, abstand):
+        if d >= KRAGEN["bindung"]:
+            continue
+        x = max(0.0, min(1.0, 1.0 - d / KRAGEN["bindung"]))
+        t = x * x * (3 - 2 * x)
+        alt = {g.group: g.weight for g in v.groups}
+        for idx, w in alt.items():
+            obj.vertex_groups[idx].add([v.index], w * (1 - t), "REPLACE")
+        for name, anteil in KRAGEN_KNOCHEN.items():
+            vorher = alt.get(gruppen[name].index, 0.0) * (1 - t)
+            gruppen[name].add([v.index], vorher + t * anteil, "REPLACE")
+
+
+def _buendchen(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.types.Object,
+               oeffnung: dict, material: bpy.types.Material) -> bpy.types.Object:
+    """Kragenbündchen (D-431): ein schmales Band auf der Kante der Halsöffnung, aus den Punkten, in
+    denen das Feld `Hals` des Shirts (Abstand zur Öffnung je Eckpunkt) die Null kreuzt, nach dem Winkel
+    um die Öffnung geordnet, geglättet und auf 72 Stützen verteilt; jede Stütze liegt mindestens 2,5 mm
+    über dem Stoff. Innenkante knapp in der Öffnung, Außenkante `KRAGEN["buendchen"]` nach außen auf dem
+    Stoff; Dicke über Solidify. Gewichte vom nächsten Eckpunkt des Shirts (schon umgebunden)."""
+    mesh = shirt.data
+    hals = mesh.attributes["Hals"].data
+    C, e, m = oeffnung["C"], oeffnung["e"], oeffnung["m"]
+    punkte = []
+    for ed in mesh.edges:
+        i, j = ed.vertices
+        a, b = hals[i].value, hals[j].value
+        if (a < 0) == (b < 0) or abs(a - b) < 1e-9:
+            continue
+        t = a / (a - b)
+        p = mesh.vertices[i].co.lerp(mesh.vertices[j].co, t)
+        d = p - C
+        if d.length > 0.2:
+            continue
+        n = mesh.vertices[i].normal.lerp(mesh.vertices[j].normal, t).normalized()
+        punkte.append((math.atan2(d.x, -d.dot(e)), p, n))
+    if len(punkte) < 12:
+        raise ValueError("Kragen: zu wenige Schnittpunkte der Halsöffnung")
+    punkte.sort(key=lambda x: x[0])
+    N = 72
+    stuetzen = []
+    for s_i in range(N):
+        w = -math.pi + 2 * math.pi * (s_i + 0.5) / N
+        # Mittel der Schnittpunkte im Winkelfenster ±2,5 Schritte (Glättung, Lücken überbrückt)
+        nahe = [(p, n) for a, p, n in punkte if abs(((a - w + math.pi) % (2 * math.pi)) - math.pi) < 2.5 * 2 * math.pi / N]
+        if not nahe:
+            nahe = [min(punkte, key=lambda x: abs(((x[0] - w + math.pi) % (2 * math.pi)) - math.pi))[1:]]
+        p = sum((q for q, _ in nahe), Vector()) / len(nahe)
+        n = sum((q for _, q in nahe), Vector()).normalized()
+        stuetzen.append((p, n))
+    # dreimal glätten (Nachbarn mitteln), damit die Kante ruhig läuft
+    for _ in range(3):
+        stuetzen = [((stuetzen[i - 1][0] + 2 * stuetzen[i][0] + stuetzen[(i + 1) % N][0]) / 4,
+                     (stuetzen[i - 1][1] + 2 * stuetzen[i][1] + stuetzen[(i + 1) % N][1]).normalized()) for i in range(N)]
+    # jede Stütze mindestens 2,5 mm über der Tangentialebene des nächsten Stoffpunkts (die Glättung
+    # zieht Stützen an gewölbten Stellen unter den Stoff)
+    sv = mesh.vertices
+    angehoben = []
+    for p, n in stuetzen:
+        naechster = min(sv, key=lambda v: (v.co - p).length_squared)
+        hoehe = (p - naechster.co).dot(naechster.normal)
+        if hoehe < 0.0025:
+            p = p + naechster.normal * (0.0025 - hoehe)
+        angehoben.append((p, n))
+    stuetzen = angehoben
+    ecken = []
+    for i, (p, n) in enumerate(stuetzen):
+        tang = (stuetzen[(i + 1) % N][0] - stuetzen[i - 1][0]).normalized()
+        aussen = n.cross(tang).normalized()
+        # nach außen heißt von der Öffnung weg: in der Ebene der Öffnung radial nach außen und unter
+        # die Ebene (auf die Schulter, die Brust, den Rücken), nicht den Hals hinauf
+        radial = (p - C) - m * (p - C).dot(m)
+        if aussen.dot(radial.normalized()) - aussen.dot(m) < 0:
+            aussen = -aussen
+        # Innenkante 3 mm in der Öffnung, damit das Bündchen die Schnittkante des Stoffs verdeckt
+        ecken.append(p - aussen * 0.003)
+        ecken.append(p + aussen * KRAGEN["buendchen"])
+    flaechen = [[2 * i, 2 * i + 1, 2 * ((i + 1) % N) + 1, 2 * ((i + 1) % N)] for i in range(N)]
+    bm_mesh = bpy.data.meshes.new("Kragen")
+    bm_mesh.from_pydata([tuple(q) for q in ecken], [], flaechen)
+    bm_mesh.update()
+    for poly in bm_mesh.polygons:
+        poly.use_smooth = True
+    obj = bpy.data.objects.new("Kragen", bm_mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    obj.parent = shirt.parent
+    # Gewichte: vom nächsten Eckpunkt des Shirts
+    kd = {g.index: g.name for g in shirt.vertex_groups}
+    namen = {}
+    for g in koerper.vertex_groups:
+        namen[g.name] = obj.vertex_groups.new(name=g.name)
+    for i, q in enumerate(ecken):
+        naechster = min(sv, key=lambda v: (v.co - q).length_squared)
+        for g in naechster.groups:
+            namen[kd[g.group]].add([i], g.weight, "REPLACE")
+    mod = obj.modifiers.new("Skelett", "ARMATURE")
+    mod.object = skelett
+    dicke = obj.modifiers.new("Dicke", "SOLIDIFY")
+    dicke.thickness = KRAGEN["buendchen_dicke"]
+    dicke.offset = 1.0
+    sub = obj.modifiers.new("Glatt", "SUBSURF")
+    sub.levels = 1
+    sub.render_levels = 2
+    obj.data.materials.append(material)
     return obj
 
 
@@ -551,19 +707,7 @@ def _detail_bilder() -> dict[str, dict[str, bpy.types.Image]]:
     return aus
 
 
-# ---------------------------------------------------------------------- Rundhals im Shader
-
-
-def hals_objekt(skelett: bpy.types.Object, hals: dict) -> bpy.types.Object:
-    """Leerobjekt „Hals“ im Mittelpunkt der Ausschnittkugel, Achsen wie die Grundhaltung. Shirt und
-    Haut messen im Shader ihren Abstand zum Rundhals in seinen Koordinaten; `Rig.folger` führt es mit
-    dem Halsknochen `neck01` mit, darum liegt der Kragen in jeder Haltung am Halsansatz (D-422)."""
-    obj = bpy.data.objects.new("Hals", None)
-    obj.empty_display_size = 0.05
-    bpy.context.scene.collection.objects.link(obj)
-    obj.matrix_world = skelett.matrix_world @ Matrix.Translation(hals["kugel"])
-    obj["kugel"] = tuple(hals["kugel"])
-    return obj
+# ---------------------------------------------------------------------- Hilfen für den Shader
 
 
 def _rechne(nodes, links, op: str, a, b=None):
@@ -593,43 +737,16 @@ def _stufe(nodes, links, wert, von: float, bis: float, nach: tuple[float, float]
     return rng.outputs["Result"]
 
 
-def _hals_abstand(nodes, links, hals_obj: bpy.types.Object, hals: dict):
-    """Abstand des Schattierungspunkts zum Rundhals (m, positiv = Stoff, negativ = Ausschnitt), in den
-    Koordinaten des Leerobjekts: außerhalb der Kugel, oberhalb ihres Mittelpunkts außerdem außerhalb
-    der Ellipse um die Halsmitte und unterhalb der Ebene `oben` (D-426); dieselbe Regel wie das Feld
-    bis D-419, nur je Haltung neu und mit der Ebene als Obergrenze."""
-    tc = nodes.new("ShaderNodeTexCoord")
-    tc.object = hals_obj
-    sep = nodes.new("ShaderNodeSeparateXYZ")
-    links.new(tc.outputs["Object"], sep.inputs[0])
-    laenge = nodes.new("ShaderNodeVectorMath")
-    laenge.operation = "LENGTH"
-    links.new(tc.outputs["Object"], laenge.inputs[0])
-    f_kugel = _rechne(nodes, links, "SUBTRACT", laenge.outputs["Value"], hals["r"])
-    xq = _rechne(nodes, links, "DIVIDE", sep.outputs["X"], hals["x"])
-    yq = _rechne(nodes, links, "DIVIDE", _rechne(nodes, links, "SUBTRACT", sep.outputs["Y"], hals["mitte_y"]), hals["tiefe"])
-    e = _rechne(nodes, links, "SQRT", _rechne(nodes, links, "ADD", _rechne(nodes, links, "MULTIPLY", xq, xq),
-                                               _rechne(nodes, links, "MULTIPLY", yq, yq)))
-    ellipse = _rechne(nodes, links, "MULTIPLY", _rechne(nodes, links, "SUBTRACT", e, 1.0), hals["tiefe"])
-    beides = _rechne(nodes, links, "MINIMUM", f_kugel, ellipse)
-    oben = _rechne(nodes, links, "GREATER_THAN", sep.outputs["Z"], 0.0)
-    f = _rechne(nodes, links, "ADD", f_kugel,
-                _rechne(nodes, links, "MULTIPLY", oben, _rechne(nodes, links, "SUBTRACT", beides, f_kugel)))
-    if "oben" in hals:
-        f = _rechne(nodes, links, "MINIMUM", f, _rechne(nodes, links, "SUBTRACT", hals["oben"], sep.outputs["Z"]))
-    return f
-
-
 # ---------------------------------------------------------------------- Material
 
 
 def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str, str, str]], details: list[str],
-                   zonen_staerke: float = 1.0, mit_deckkraft: float = 0.5, hals=None) -> bpy.types.Material:
-    """Stoff matt mit leichtem Glanz (Sheen); endet scharf am Saum (Attribut „Saum“) und, mit `hals`
-    (Leerobjekt, Maße), am Rundhals; auf Wunsch Muskelzonen in Lime auf dem Stoff (`zonen_staerke`
-    dämpft sie); darüber die Lime-Details (`details`, Schlüssel aus `DETAILS`: Bild, Schnitt) und die
-    Logos (je (Name, Farbe, Motiv): UV-Schicht `Logo<Name>`, Maske `Maske<Name>`) wie ein Aufdruck mit
-    schmalem Rand in Stoffarbe."""
+                   zonen_staerke: float = 1.0, mit_deckkraft: float = 0.5, mit_saum: bool = True) -> bpy.types.Material:
+    """Stoff matt mit leichtem Glanz (Sheen); endet scharf am Saum (Attribut „Saum“, auch die
+    Halsöffnung); auf Wunsch Muskelzonen in Lime auf dem Stoff (`zonen_staerke` dämpft sie); darüber
+    die Lime-Details (`details`, Schlüssel aus `DETAILS`: Bild, Schnitt) und die Logos (je (Name, Farbe,
+    Motiv): UV-Schicht `Logo<Name>`, Maske `Maske<Name>`) wie ein Aufdruck mit schmalem Rand in
+    Stoffarbe. Ohne `mit_saum` (Kragenbündchen) ist der Stoff überall deckend."""
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
@@ -665,10 +782,7 @@ def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str,
         nicht = _rechne(nodes, links, "SUBTRACT", 1.0, haupt)
         farbe_out = mischen(mal(mal(mit, nicht), mit_deckkraft * zonen_staerke), stoff, szene.srgb(LIME))
         farbe_out = mischen(mal(haupt, zonen_staerke), farbe_out, szene.srgb(LIME))
-    alpha = maske("Saum", -0.0008, 0.0008)
-    if hals is not None:
-        hals_obj, hals_masse = hals
-        alpha = mal(alpha, _stufe(nodes, links, _hals_abstand(nodes, links, hals_obj, hals_masse), -0.0008, 0.0008))
+    alpha = maske("Saum", -0.0008, 0.0008) if mit_saum else None
     if details:
         bilder = _detail_bilder()
         for d in details:
@@ -684,7 +798,7 @@ def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str,
                 wert = mal(tex.outputs["Alpha"], sichtbar)
                 if art == "lime":
                     farbe_out = mischen(wert, farbe_out, szene.srgb(LIME))
-                else:
+                elif alpha is not None:
                     alpha = mal(alpha, _rechne(nodes, links, "SUBTRACT", 1.0, wert))
     for logo_name, farb_name, motiv in logos:
         bild_f, bild_rand = _bilder(motiv)
@@ -697,19 +811,22 @@ def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str,
             tex.extension = "CLIP"
             links.new(uv.outputs["UV"], tex.inputs["Vector"])
             farbe_out = mischen(mal(tex.outputs["Alpha"], sichtbar), farbe_out, ziel)
-    links.new(farbe_out, bsdf.inputs["Base Color"])
-    links.new(alpha, bsdf.inputs["Alpha"])
+    if isinstance(farbe_out, tuple):  # nur Stofffarbe (Kragenbündchen ohne Zonen, Details und Logos)
+        bsdf.inputs["Base Color"].default_value = farbe_out
+    else:
+        links.new(farbe_out, bsdf.inputs["Base Color"])
+    if alpha is not None:
+        links.new(alpha, bsdf.inputs["Alpha"])
     return mat
 
 
 def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: bool,
              logo_farben: dict[str, str] = KOLLEKTION, zonen_staerke: float = 1.0,
-             brust_hoehe: float | None = None, tee: str = NACHT, rig=None) -> list[bpy.types.Object]:
-    """Shirt und Shorts an die Figur (nach `zonen.setze_zonen` und `figur.schulter_gewichte`), dazu das
-    Leerobjekt „Hals“ des Rundhalses (mit `rig` am Halsknochen mitgeführt, `Rig.folger`).
-    `logo_farben` je Logo „lime“ oder „hell“, `zonen_staerke` 1 (Lime) bis 0 (gedämpft bis aus),
-    `brust_hoehe` ersetzt die Höhe des Brust-F aus `LOGOS`, `tee` die Farbe des Shirts. Setzt am Körper
-    das Attribut „Bedeckt“ (Abstand innerhalb von Shirt oder Hose, m, ohne den Rundhals): Haut, die
+             brust_hoehe: float | None = None, tee: str = NACHT) -> list[bpy.types.Object]:
+    """Shirt mit Kragenbündchen und Shorts an die Figur (nach `zonen.setze_zonen` und
+    `figur.schulter_gewichte`). `logo_farben` je Logo „lime“ oder „hell“, `zonen_staerke` 1 (Lime) bis 0
+    (gedämpft bis aus), `brust_hoehe` ersetzt die Höhe des Brust-F aus `LOGOS`, `tee` die Farbe des
+    Shirts. Setzt am Körper das Attribut „Bedeckt“ (Abstand innerhalb von Shirt oder Hose, m): Haut, die
     tiefer als 12 mm unter dem Stoff liegt, blendet das Material aus (`haut_ausblenden`)."""
     f = _felder(koerper, skelett)
     k, teile = f["k"], f["teil"]
@@ -737,31 +854,24 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: boo
     for d_name, d in DETAILS.items():
         rahmen[d["teil"]][d_name] = _rahmen(koerper, k, teile, d, d["seite"])
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"])
-    shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"])
-    hals = hals_objekt(skelett, f["hals"])
-    hals_shader = (hals, f["hals"])
-    if rig is not None:
-        rig.folger.append((hals, "neck01", Matrix.Translation(f["hals"]["kugel"])))
+    shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"])
     hose.data.materials.append(stoff_material("Shorts", GRAPHIT, zonen_an, [("Bein", logo_farben["bein"], motive["bein"])],
                                               [d for d in DETAILS if DETAILS[d]["teil"] == "hose"], zonen_staerke))
     shirt.data.materials.append(stoff_material("Shirt", tee, zonen_an,
                                                [("Brust", logo_farben["brust"], motive["brust"]),
                                                 ("Ruecken", logo_farben["ruecken"], motive["ruecken"])],
-                                               [d for d in DETAILS if DETAILS[d]["teil"] == "shirt"], zonen_staerke,
-                                               hals=hals_shader))
+                                               [d for d in DETAILS if DETAILS[d]["teil"] == "shirt"], zonen_staerke))
+    kragen = _buendchen(shirt, koerper, skelett, f["oeffnung"], stoff_material("Kragen", tee, False, [], [], mit_saum=False))
     attr = koerper.data.attributes.get("Bedeckt") or koerper.data.attributes.new("Bedeckt", "FLOAT", "POINT")
     for i in range(len(koerper.data.vertices)):
         attr.data[i].value = max(f["shirt"][i], f["hose"][i])
-    koerper["hals"] = tuple(f["hals"]["kugel"])
-    anziehen.hals = hals_shader  # für `haut_ausblenden` der zuletzt angezogenen Figur
     anziehen.masse = masse  # Maße des Rückenlogos der zuletzt angezogenen Figur (D-427)
-    return [shirt, hose, hals]
+    anziehen.oeffnung = f["oeffnung"]
+    return [shirt, hose, kragen]
 
 
-def haut_ausblenden(mat: bpy.types.Material, hals=None) -> None:
-    """Material des Körpers unter der Kleidung durchsichtig (Attribut „Bedeckt“ über 12 bis 16 mm);
-    mit `hals` (Leerobjekt, Maße; sonst das der zuletzt angezogenen Figur) bleibt die Haut im Rundhals
-    und bis 12 mm unter seinem Rand sichtbar, so wie der Shader des Shirts dort schneidet."""
+def haut_ausblenden(mat: bpy.types.Material) -> None:
+    """Material des Körpers unter der Kleidung durchsichtig (Attribut „Bedeckt“ über 12 bis 16 mm)."""
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
     bsdf = nodes["Principled BSDF"]
     attr = nodes.new("ShaderNodeAttribute")
@@ -774,10 +884,4 @@ def haut_ausblenden(mat: bpy.types.Material, hals=None) -> None:
     rng.inputs["To Min"].default_value = 1.0
     rng.inputs["To Max"].default_value = 0.0
     links.new(attr.outputs["Fac"], rng.inputs["Value"])
-    sichtbar = rng.outputs["Result"]
-    hals = hals or getattr(anziehen, "hals", None)
-    if hals is not None:
-        hals_obj, hals_masse = hals
-        im_hals = _stufe(nodes, links, _hals_abstand(nodes, links, hals_obj, hals_masse), 0.012, 0.016, (1.0, 0.0))
-        sichtbar = _rechne(nodes, links, "MAXIMUM", sichtbar, im_hals)
-    links.new(sichtbar, bsdf.inputs["Alpha"])
+    links.new(rng.outputs["Result"], bsdf.inputs["Alpha"])

@@ -140,6 +140,9 @@ class Rig:
         self.G: dict[str, Matrix] = {}
         self.versatz = skelett.location.copy()
         self.meldungen: list[str] = []
+        # Objekte, die starr an einem Knochen hängen: (Objekt, Knochen, Lage in der Grundhaltung, Raum
+        # des Skeletts); `anwenden` setzt ihre Weltlage je Haltung (Leerobjekt „Hals“, D-422)
+        self.folger: list[tuple] = []
         self._hand = self._handdaten()
 
     # ------------------------------------------------------------------ Grundlagen
@@ -187,6 +190,8 @@ class Rig:
             else:
                 basis = self.ruhe[name].inverted() @ pose
             self.sk.pose.bones[name].matrix_basis = basis
+        for obj, knochen, lage in self.folger:
+            obj.matrix_world = self.sk.matrix_world @ self.g(knochen) @ lage
         bpy.context.view_layer.update()
 
     # ------------------------------------------------------------------ Beine

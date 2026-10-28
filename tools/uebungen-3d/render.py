@@ -29,6 +29,7 @@ sys.path.insert(0, str(HIER))
 import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
+import kleidung  # noqa: E402
 import koerperform  # noqa: E402
 import realistisch  # noqa: E402
 import szene  # noqa: E402
@@ -72,7 +73,7 @@ def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral",
     s.render.resolution_x = breite
     s.render.resolution_y = hoehe
     if variante:
-        uebung = UEBUNGEN[name](koerperform.FORMEN[varianten.VARIANTEN[variante]["form"]])
+        uebung = UEBUNGEN[name](koerperform.FORMEN[varianten.VARIANTEN[variante]["form"]], stoff=kleidung.STOFF)
         uebung.bauen()
         varianten.ausstatten(uebung, variante)
     else:

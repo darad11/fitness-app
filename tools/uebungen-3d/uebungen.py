@@ -84,8 +84,11 @@ class Uebung:
                         punkte += [teil.matrix_world @ Vector(c) for c in teil.bound_box]
         return punkte
 
-    def __init__(self, form: koerperform.Form | None = koerperform.NEUTRAL):
+    def __init__(self, form: koerperform.Form | None = koerperform.NEUTRAL, stoff: float = 0.0):
         self.form = form
+        # Höhe der Kleidung über der Haut (`kleidung.STOFF`), wo die Stange am Körper anliegt: auf dem
+        # Trapez (Kniebeuge) und auf der Brust (Bankdrücken) liegt sie auf dem Stoff, nicht in ihm (D-422)
+        self.stoff = stoff
 
     def bauen(self) -> None:
         self.koerper, self.skelett = figur.baue_figur(form=self.form)
@@ -147,7 +150,7 @@ class Kniebeuge(Uebung):
         super().bauen()
         rig = self.rig
         z0 = rig.kopf["neck01"].z - self.STANGE_UNTER_HALS
-        self.B0 = Vector((0, _hinten(self.koerper, z0, 0.15) + STANGE_R - 0.003, z0))
+        self.B0 = Vector((0, _hinten(self.koerper, z0, 0.15) + self.stoff + STANGE_R - 0.003, z0))
         self.griff_x = self.GRIFF * self.mass
         self.stange = geraete.langhantel([(0.45, 0.035), (0.45, 0.035)])
         self.griff = {s: rig.griff(s, 0.6, STANGE_R, schraeg=self.SCHRAEG) for s in "LR"}
@@ -413,7 +416,7 @@ class Bankdruecken(Uebung):
         brust = rig.punkt("spine02", _vorn(self.koerper, _rumpfhoehe(rig.kopf, self.BRUST)))
         y = brust.y
         hoehe = max(p.z for p in _netz(self.koerper) if abs(p.x) < 0.2 and abs(p.y - rig.welt(brust).y) < 0.012)
-        self.unten = Vector((0, y, rig.lokal(Vector((0, 0, hoehe))).z + STANGE_R - 0.002))
+        self.unten = Vector((0, y, rig.lokal(Vector((0, 0, hoehe))).z + self.stoff + STANGE_R - 0.002))
 
     def _regel(self, s: str):
         # Handgelenk über dem Ellbogen: Unterarm so senkrecht wie möglich (optional leicht nach außen)

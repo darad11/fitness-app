@@ -88,8 +88,11 @@ DETAILS = {
 LOGOS = {
     "brust": {"teil": "shirt", "motiv": "f", "hoehe": 0.040, "quer": 0.07, "unter_schulter": 0.085,
               "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08},
-    "ruecken": {"teil": "shirt", "motiv": "vertikal", "hoehe": 0.080, "quer": 0.0, "unter_schulter": 0.08,
-                "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08},
+    # Rücken: Größe je Körper (D-427): die Wortmarke nimmt `anteil` der Breite zwischen den
+    # Schulterblättern ein (`_schulterblatt_breite`), die Höhe des F folgt aus der Proportion des
+    # vertikalen Logos; `hoehe` ist nur der Rückfall ohne Marken
+    "ruecken": {"teil": "shirt", "motiv": "vertikal", "hoehe": 0.080, "anteil": 2.0 / 3.0, "quer": 0.0,
+                "unter_schulter": 0.08, "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08},
     "bein": {"teil": "hose", "motiv": "f", "hoehe": 0.035, "winkel": 80.0, "lage": 0.30,
              "teile": ("bein",), "x": 1, "tiefe": 0.05},
 }
@@ -99,6 +102,45 @@ RAND_PX = 32  # Rand in Stoffarbe um das F, px im 1024-px-Bild (rund 3,6 % der F
 # Versalhöhen der Wortmarke die Höhe des F, der Abstand zwischen F und Wortmarke und die Seitenlänge des
 # quadratischen Bilds; der Block (F oben, Wortmarke darunter, beide waagrecht mittig) steht in der Mitte.
 VERTIKAL = {"f": 2.28, "abstand": 0.82, "seite": 6.0}
+WORTMARKE_BREITE = 5.396  # Breite der Wortmarke FORM in Versalhöhen (`logo-kopfzeile-dunkel.svg`)
+# Schulterblätter: Das Grundmodell führt Marken der Schulterblattmitten (Hilfsgruppen
+# `joint-l-scapula`, `joint-r-scapula` in `base.obj`, bei ±11,8 cm). Die Breite zwischen den
+# Schulterblättern ist der Abstand der inneren Ränder: Abstand der Mitten minus Breite eines Blatts,
+# die hier mit `SCHULTERBLATT_ANTEIL` des Mittenabstands angesetzt ist (rund 10,7 cm beim Grundmodell;
+# Ränder dann bei ±6,5 cm, Breite rund 13 cm).
+SCHULTERBLATT_ANTEIL = 0.45
+
+
+# ---------------------------------------------------------------------- Marken des Grundmodells
+
+
+def _hilfsmarken(gruppen: tuple[str, ...]) -> dict[str, list[int]]:
+    """Eckpunktnummern der Hilfsgruppen (`g joint-...`) in `base.obj`, in der Nummerierung von
+    `figur.PUNKTE` (alle Eckpunkte, mit Hilfsgeometrie)."""
+    aus: dict[str, set[int]] = {g: set() for g in gruppen}
+    gruppe = ""
+    for zeile in (QUELLE / "base.obj").read_text(encoding="utf-8").splitlines():
+        if zeile.startswith("g "):
+            gruppe = zeile[2:].strip()
+        elif zeile.startswith("f ") and gruppe in aus:
+            aus[gruppe].update(int(e.split("/")[0]) - 1 for e in zeile.split()[1:])
+    return {g: sorted(i) for g, i in aus.items()}
+
+
+def _schulterblatt_breite(koerper: bpy.types.Object) -> float | None:
+    """Breite zwischen den Schulterblättern (m) aus den Marken des Grundmodells für diese Figur
+    (`figur.PUNKTE`, mit Körperform), oder None ohne Marken."""
+    import figur
+
+    punkte = figur.PUNKTE.get(koerper.name)
+    if not punkte:
+        return None
+    marken = _hilfsmarken(("joint-l-scapula", "joint-r-scapula"))
+    if not marken["joint-l-scapula"] or not marken["joint-r-scapula"]:
+        return None
+    mitte = {g: sum((punkte[i] for i in idx), Vector()) / len(idx) for g, idx in marken.items()}
+    abstand = abs(mitte["joint-l-scapula"].x - mitte["joint-r-scapula"].x)
+    return abstand * (1.0 - SCHULTERBLATT_ANTEIL)
 
 
 # ---------------------------------------------------------------------- Felder je Eckpunkt
@@ -673,9 +715,16 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: boo
     k, teile = f["k"], f["teil"]
     rahmen = {"shirt": {}, "hose": {}}
     motive = {}
+    masse = {}
     for logo_name, logo in LOGOS.items():
         hoehe = brust_hoehe if logo_name == "brust" and brust_hoehe else logo["hoehe"]
         lage = dict(logo)
+        if logo.get("motiv") == "vertikal" and "anteil" in logo:
+            breite = _schulterblatt_breite(koerper)
+            if breite:
+                # Wortmarke `anteil` der Breite zwischen den Schulterblättern; F aus der Proportion
+                hoehe = breite * logo["anteil"] / WORTMARKE_BREITE * VERTIKAL["f"]
+                masse[logo_name] = {"schulterblaetter": breite, "wortmarke": breite * logo["anteil"], "f": hoehe}
         if logo.get("motiv") == "vertikal":
             # Bildseite so, dass das F `hoehe` hoch ist; der Mittelpunkt des Bilds liegt um die halbe
             # Höhe von Abstand und Wortmarke unter dem F, das F selbst bleibt an der konfigurierten Lage
@@ -705,6 +754,7 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: boo
         attr.data[i].value = max(f["shirt"][i], f["hose"][i])
     koerper["hals"] = tuple(f["hals"]["kugel"])
     anziehen.hals = hals_shader  # für `haut_ausblenden` der zuletzt angezogenen Figur
+    anziehen.masse = masse  # Maße des Rückenlogos der zuletzt angezogenen Figur (D-427)
     return [shirt, hose, hals]
 
 

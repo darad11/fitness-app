@@ -2321,11 +2321,13 @@ Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit
 
 ### Phase Übungen, Korrekturen Daumen, Kragen und Rückenlogo · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
+Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425), Kragen (D-426), Rückenlogo (D-427). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
 
 | Nachweis | Ergebnis |
 |---|---|
 | Lage der Daumengelenke im Griff (Skript im Arbeitsordner, C männlich, Bankdrücken): Abstand zur Stangenachse, axiale Lage, Soll gegen Ist | erster Stand der Konstruktion: alle Gelenke auf 3,95 cm statt 2,65 cm, weil die Kontaktmessung Ballen und Schwimmhaut mitnahm; danach 3,13 cm (Dicke 17 mm aus der Messung an der Beere), Soll und Ist gleich, alle Gelenke in einer Ebene quer zur Stange |
 | Messung je Übung (`pruef_griff.py`, C männlich): Daumenwinkel, Abstand zur Stange, Finger in den Phasen 0, 0,5 und 1 | Bankdrücken Sattel 71°, Grund 39°, End 69°, Daumen −0,7 mm; Kniebeuge 52°/30°/69°, −0,7 mm; Latziehen 43°/19°/73°, −0,8 mm; Finger geringster Abstand −2,3 / −0,7 / −2,0 mm, Kontaktpunkte 346 / 182 / 226, in allen Phasen gleich, keine Meldungen |
 | Nahaufnahmen Bankdrücken vom Fußende, von der Seite (90°, Scheiben ausgeblendet), vom Kopfende und von oben; Kniebeuge hinten-seitlich; Latziehen schräg | Daumen umschließt die Stange unter den Fingern, nichts ragt über die Stange oder zeigt von ihr weg; von vorn ist die Daumenspitze neben dem Zeigefinger zu sehen, vom Kopfende liegt sie unter den Fingern; selbst angesehen |
+| Kragen in der tiefsten Kniebeuge (C männlich, 45° Kamera der App und 135° hinten-seitlich, 480 px) | vor D-426 Spitze seitlich am Hals auf der Seite der Stange (Markierung des Produktinhabers); danach gleichmäßige Kante am Halsansatz rundum, Stange auf dem Stoff; selbst angesehen |
+| Rückenlogo (C männlich, Latziehen unten und Kniebeuge oben von hinten, 480 px) | Marken der Schulterblätter aus `base.obj` gelesen (±11,8 cm beim Grundmodell); C männlich Breite zwischen den Schulterblättern 13,2 cm, Wortmarke 8,8 cm, F 3,7 cm, mittig zwischen den Schulterblättern über den Lime-Zonen; selbst angesehen |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |

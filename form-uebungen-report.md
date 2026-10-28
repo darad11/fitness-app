@@ -817,3 +817,13 @@ Deine Entscheidung: Körper C männlich, Fassung A1, Brust-F 4 cm; die weibliche
 - **Feste Winkel für die 28-mm-Stange** (C männlich, Bankdrücken): Sattelgelenk 71°, Grundgelenk 39°, Endgelenk 69°. Kniebeuge 52°/30°/69°, Latziehen (24 mm) 43°/19°/73°. Die Winkel folgen aus der Konstruktion und sind je Übung gleich in allen Phasen.
 - **Dabei gefunden:** Die Kontaktmessung des Daumens nahm Haut des Daumenballens und der Schwimmhaut mit, die weit vom Knochen liegt, und trieb die Daumendicke auf das Doppelte; der Daumen schwebte 1,3 cm um die Stange. Jetzt zählt nur Haut bis 16 mm neben den Gliedknochen; der Daumen drückt die Haut 0,7 bis 0,8 mm ein wie die Finger.
 - **Geprüft** aus vier Blickwinkeln beim Bankdrücken (vom Fußende, von der Seite, vom Kopfende, von oben) und in Kniebeuge und Latziehen: Nichts zeigt von der Stange weg. Von vorn ist die Daumenspitze neben dem Zeigefinger zu sehen, vom Kopfende liegt sie unter den Fingern.
+
+### 15.2 Kragen (D-426)
+
+- **Ursache der Spitze:** Kugel und Ellipse des Rundhalses schneiden nur, was im Querschnitt des Halses liegt. Hebt die Schulter das Trapez, steigt der Stoff seitlich neben dem Hals über die Kugel hinaus und blieb als Spitze stehen, vor allem unter der Stange.
+- **Jetzt:** Zusätzlich begrenzt eine Ebene quer zum Hals den Stoff, in der Höhe, in der die Kugel in der Grundhaltung seitlich endet; darüber gibt es keinen Stoff. Die Ebene läuft mit dem Halsknochen mit wie Kugel und Ellipse. Die Kante ist in der tiefsten Kniebeuge rundum gleichmäßig, die Grundhaltung bleibt wie sie war.
+
+### 15.3 Rückenlogo (D-427)
+
+- **Regel:** Die Wortmarke nimmt zwei Drittel der Breite zwischen den Schulterblättern ein, das F folgt aus der festen Proportion (F 2,28 Versalhöhen hoch, Abstand 0,82). Die Breite zwischen den Schulterblättern kommt aus den Marken des Grundmodells für die Schulterblattmitten, mit der Körperform verschoben: Abstand der Mitten minus Breite eines Blatts (45 % des Mittenabstands). Beim Grundmodell liegen die inneren Ränder dann bei ±6,5 cm.
+- **C männlich:** Breite 13,2 cm, Wortmarke 8,8 cm, F 3,7 cm, Block 6,5 cm hoch, Versalhöhe 1,6 cm. Vorher waren es 18,9 cm und 8 cm; das Logo ist jetzt ein kleiner Aufdruck zwischen den Schulterblättern. Wenn du es größer willst, ist der Anteil eine Zahl in der Konfiguration.

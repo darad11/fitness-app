@@ -2281,7 +2281,7 @@ Zweite Nachricht vom 28.10.2026 in `prompts/uebungen-varianten-FORM.md`: Feinsch
 
 ### Phase Übungen, Korrekturrunde Logos und Zonen · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassungen (D-419); das Vergleichspaket mit App-Ansichten folgt als eigenes Paket. Nur Werkzeuge und Daten; Code und Videos der App unverändert.
+Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassungen (D-419), Vergleichspaket mit App-Ansichten (D-420). Nur Werkzeuge und Daten; Code und Videos der App unverändert. App-Ansichten mit `tools/uebungen-fassungen-screens.mjs` gegen `pnpm preview` (Build vom Stand `890dd80`, App-Code seither unverändert), Medien nur in `dist/` getauscht und zurückgesetzt.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2290,5 +2290,8 @@ Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassunge
 | Rand in Stoffarbe über Zonen (A1 Bankdrücken Brust, A2 Latziehen Rücken, A2 Kniebeuge Shorts) | helles bzw. Lime-F mit dunklem Rand auf der Zone lesbar, kein Ausschnitt in der Zone; selbst angesehen |
 | Seitenschlitz mit Einfassung (Nahaufnahme Hüfte von der Seite, D und C weiblich) | erster Stand 3,6 cm über dem Saum, weil die Hüftseite am Saum zum Bein zählt und die Suche nur Rumpfpunkte nahm; behoben, danach am Saum, 5 cm hoch mit Einfassung beidseits |
 | Kordelenden am Bund (Nahaufnahme von vorn) | vorhanden, aber unter dem Saum des Tees, von außen nicht zu sehen |
-§STANDBILDER2§
+| Standbilder 3 Körper × 3 Fassungen × 3 Momente (`varianten_bilder.py`, 720 × 540, 40 Proben) und je 3 Vorschaubilder (`render.py --nur-vorschau`), dazu Brust-F 3,5 und 4,5 cm für D und C männlich (D-420) | je Bild im Schnitt: D 20,7/22,6/22,1 s (A1/A2/B); C männlich 23,1/22,9/22,9 s (A1/A2/B); C weiblich 23,1/23,4/23,5 s (A1/A2/B) |
+| Nahaufnahmen je Körper (Brust von vorn und aus der Kamera der App, Rücken von hinten und beim Latziehen, Shorts, Hals) und Kantenlicht ohne/mit (D-420) | 24 Bilder, selbst angesehen; Blätter `paket-2` bis `paket-4`, `paket-hals-kantenlicht` |
+| App-Ansichten (`tools/uebungen-fassungen-screens.mjs`, D-420) | 36 Bildschirmfotos (9 Fassungen × kleiner Player am iPhone, aufgeklappter Player am Duo, Übungsübersicht mit Suche „Langhantel“, Übungsdetails der Kniebeuge; iPhone 390 × 844 in doppelter Auflösung, Duo aufgeklappt 951 × 669, „Bewegung reduzieren“), Medien nur in `dist/uebungen/medien/` getauscht und danach zurückgesetzt (Prüfsummen gleich `public/`); Blätter `paket-9-app-D`, `-Cm`, `-Cw` |
+| Blätter des Pakets (`tools/uebungen_paket_bild.py`) | 13 Dateien, zusammen 1328,3 KB, selbst angesehen |
 | `pnpm check:docs` je Paket am Stand des Commits, `python3 -m py_compile` aller Werkzeuge | bestanden |

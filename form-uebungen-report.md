@@ -591,7 +591,7 @@ Dein Auftrag ersetzt die vorige Korrekturrunde; er steht in `docs/prompts/uebung
 
 - Bei C männlich sitzt das Brust-F damit näher an der Mitte als in D-417: Dort lag es bei einem festen Winkel, der am breiteren Rumpf weiter außen landete; jetzt bei einem festen Abstand von 7 cm.
 - **Rand in Stoffarbe:** Jedes F hat einen schmalen Rand in der Farbe des Stoffs (3,6 % seiner Höhe: 1,4 mm auf der Brust, 2,9 mm am Rücken, 1,3 mm an den Shorts) und liegt immer über den Zonen; der Ausschnitt in Lime-Zonen aus D-417 ist weg. So bleibt das F auf einer Lime-Zone als Aufdruck lesbar und verschmilzt nie mit ihr (geprüft: helles F auf der Brustzone beim Bankdrücken, Lime-F auf der gedämpften Rückenzone beim Latziehen, Lime-F auf der Oberschenkelzone in der Kniebeuge).
-- Geprüft aus mehreren Perspektiven an allen drei Körpern (von vorn, aus der Kamera der App, von hinten, von der Seite); die Nahaufnahmen folgen im Vergleichspaket.
+- Geprüft aus mehreren Perspektiven an allen drei Körpern (von vorn, aus der Kamera der App, von hinten, von der Seite); Nahaufnahmen in `paket-2-brustlogo-nah.webp`, `paket-3-ruecken.webp`, `paket-4-shorts-nah.webp`.
 
 ### 13.3 Fassungen A1, A2 und B (D-419)
 
@@ -603,17 +603,77 @@ Dein Auftrag ersetzt die vorige Korrekturrunde; er steht in `docs/prompts/uebung
 
 Für alle drei Körper (D, C männlich, C weiblich): Schlüssel `D-A1` bis `Cw-B` in `varianten.py`.
 
+### 13.4 Vergleichspaket (D-420)
+
+Alle Blätter in `docs/screens/uebungen/`, eindeutig beschriftet, Nummern wie in deinem Abschnitt 9:
+
+1. `paket-1-brustlogo-groessen.webp`: Brust-F 3,5, 4 und 4,5 cm für D und C männlich in der Größe der App: großer Player 390 px breit (Übungsdetails, Duo aufgeklappt) und das Vorschaubild des kleinen Players (56 px, dazu zweifach).
+2. `paket-2-brustlogo-nah.webp`: Brust je Körper von vorn und aus der Kamera der App.
+3. `paket-3-ruecken.webp`: Rücken je Körper in der Kniebeuge von hinten und beim Latziehen.
+4. `paket-4-shorts-nah.webp`: Shorts-Logo je Körper.
+5. `paket-5-bank-oben.webp`, `paket-5-bank-unten.webp`: Bankdrücken in A1, A2 und B, Zeilen D, C männlich, C weiblich.
+6. `paket-6-kniebeuge.webp`: Kniebeuge in A1, A2 und B.
+7. `paket-7-c-maennlich.webp`: C männlich, drei Momente in A1 und B, Logos aus der Nähe.
+8. `paket-8-c-weiblich.webp`: C weiblich ebenso.
+9. `paket-9-app-D.webp`, `paket-9-app-Cm.webp`, `paket-9-app-Cw.webp`: je Fassung der kleine Player am iPhone, die Übungsübersicht, die Übungsdetails und der aufgeklappte Player am Duo, mit den Standbildern der Fassung (mit „Bewegung reduzieren“ zeigt der Player das Standbild; die Medien wurden nur im Build getauscht, nichts davon ist in der App).
+
+Dazu `paket-hals-kantenlicht.webp`: Hals und Kantenlicht je Körper.
+
+**Renderzeit je Bild** (720 × 540, 40 Proben, ein Prozess nacheinander auf vier CPU-Kernen):
+
+| Körper | Fassung | Aufbau | Kniebeuge unten | Bankdrücken oben | Bankdrücken unten | je Bild im Schnitt |
+|---|---|---|---|---|---|---|
+| D | A1 | 6,5 s | 16,9 s | 22,5 s | 22,8 s | 20,7 s |
+| D | A2 | 6,7 s | 16,7 s | 24,6 s | 26,4 s | 22,6 s |
+| D | B | 6,1 s | 16,2 s | 25,6 s | 24,4 s | 22,1 s |
+| C männlich | A1 | 4,9 s | 18,3 s | 24,9 s | 26,0 s | 23,1 s |
+| C männlich | A2 | 4,6 s | 18,4 s | 25,0 s | 25,4 s | 22,9 s |
+| C männlich | B | 4,4 s | 18,7 s | 25,8 s | 24,2 s | 22,9 s |
+| C weiblich | A1 | 5,9 s | 18,7 s | 24,6 s | 25,9 s | 23,1 s |
+| C weiblich | A2 | 6,6 s | 18,8 s | 25,5 s | 25,9 s | 23,4 s |
+| C weiblich | B | 6,0 s | 19,0 s | 24,9 s | 26,5 s | 23,5 s |
+
+B ohne Zonen ist nicht schneller als A1: Die Zonen kosten im Shader nichts Messbares. Die 13 Blätter des Pakets: `paket-1-brustlogo-groessen.webp` 70,9 KB, `paket-2-brustlogo-nah.webp` 58,7 KB, `paket-3-ruecken.webp` 60,7 KB, `paket-4-shorts-nah.webp` 20,6 KB, `paket-5-bank-oben.webp` 96,8 KB, `paket-5-bank-unten.webp` 99,7 KB, `paket-6-kniebeuge.webp` 96,2 KB, `paket-7-c-maennlich.webp` 61,5 KB, `paket-8-c-weiblich.webp` 63,7 KB, `paket-9-app-Cm.webp` 202,0 KB, `paket-9-app-Cw.webp` 202,2 KB, `paket-9-app-D.webp` 198,6 KB, `paket-hals-kantenlicht.webp` 96,7 KB; zusammen 1328,3 KB.
+
+### 13.5 Bewertung in der tatsächlichen Darstellung
+
+Bewertet an den App-Ansichten (`paket-9-app-*.webp`), nicht an den Renderbildern: kleiner Player am iPhone (Vorschaubild 56 px in der Karte „Jetzt“), Übungsübersicht (56 px), Übungsdetails (Standbild 390 px breit) und aufgeklappter Player am Duo (Standbild rund 400 px breit).
+
+| Kriterium | A1 · Zonen Lime, Logos hell | A2 · Zonen gedämpft, Logos Kollektion | B · ohne Zonen |
+|---|---|---|---|
+| Verständlichkeit der Übung | gut: Haltung, Stange und Bank tragen die Übung, die Zonen stören sie nicht | gut, wie A1 | gut, wie A1 |
+| Erkennbarkeit der arbeitenden Muskeln | klar, auch in 56 px: Lime auf Nacht und Graphit | sichtbar, aber matt (olivgrün); in 56 px schwächer | nur in der Muskelkarte der Details, im Player gar nicht |
+| Sichtbarkeit des FORM-Logos | Brust-F in 390 px ein feines helles Zeichen, in 56 px nicht zu sehen; Rücken-F nur bei Übungen von hinten (Latziehen) | Shorts-F in Lime in 390 px als kleines Lime-Zeichen zu sehen, Brust-F wie A1 | wie A2, dazu ohne Konkurrenz durch Zonen am deutlichsten |
+| Visuelle Ruhe und Hochwertigkeit | ruhig: Lime nur an den Zonen, Logos leise, Rand in Stoffarbe | unruhig: zwei Grüntöne (mattes Zonen-Olive neben Lime-Logos) | am ruhigsten, wirkt wie ein Produktbild der Kleidung |
+| Konsistenz zwischen Player und Muskelkarte | gleiches Lime, gleiche Bedeutung „dieser Muskel arbeitet“ | Lime bedeutet im Player Marke, in der Karte Muskel: verkehrt zur Karte | keine Zonen im Player, die Karte trägt die Information allein |
+
+**Unterschiede in Smartphone-Größe:** In 56 px (kleiner Player, Übersicht) bleiben Silhouette, Stange und die Lime-Zonen (A1 deutlich, A2 schwach); Logos, Schlitze und Kordeln sind in keiner Fassung zu sehen. In 390 px (Details, Duo) sind die Zonen und das Brust-F als feines Zeichen zu sehen, das Shorts-F in Lime (A2, B) als kleiner Punkt; das Rücken-F erscheint in den drei Pilot-Übungen nur beim Latziehen. **Körper:** D und C männlich unterscheiden sich in 56 px nur durch Hautton und Haar; C wirkt menschlicher, D ruhiger, und bei D heben sich die Lime-Zonen an Armen und Beinen besser vom Grau ab als vom Hautton. C weiblich ist als Fassung gleichwertig, Haare und Gesicht ziehen in 390 px etwas mehr Blick.
+
+**Brustlogo-Größen** (`paket-1-brustlogo-groessen.webp`): 3,5 cm ist in 390 px kaum zu finden, 4 cm ein feines Zeichen, 4,5 cm etwas deutlicher, aber noch kein Buchstabe. Als Buchstabe lesbar wäre das F im großen Player (390 px) erst ab rund 8 cm (etwa 10 px hoch), im kleinen Player nie. In der Nahaufnahme wirken 4 cm wie ein hochwertiger Aufdruck; 4,5 cm rückt bei D schon näher an die Mitte als ein Sportshirt-Logo.
+
+### 13.6 Empfehlung
+
+**Körper D, Fassung A1, Brust-F 4 cm.**
+
+- **Fassung A1:** Lime bleibt im Player und in der Muskelkarte dasselbe Signal, die Zonen sind auch in 56 px lesbar, und die hellen Logos mit Rand in Stoffarbe sind nie mit einer Zone zu verwechseln. A2 dämpft die Zonen, kehrt aber die Bedeutung von Lime um (Marke im Player, Muskel in der Karte) und wirkt mit zwei Grüntönen unruhig. B ist das ruhigste Bild, verliert aber die Trainingsinformation im Player, für die die Zonen da sind (D-402).
+- **Zonen auf der Kleidung: ja**, weil der kleine Player und die Übersicht sonst nur die Haltung zeigen und die Muskelkarte erst in den Details zu sehen ist.
+- **Verwechslung gelöst:** Logos liegen immer über den Zonen, haben einen Rand in Stoffarbe und sind in A1 nie Lime; der Ausschnitt in Zonen aus D-417 ist weg.
+- **Körper D statt C männlich:** D ist in der App ruhiger, die Lime-Zonen heben sich an Armen und Beinen vom Grau besser ab als vom Hautton, die Figur zeigt keine bestimmte Person und ist über alle 124 Übungen gleich; C männlich bleibt eine echte Alternative, falls dir das Menschliche wichtiger ist, dann ebenfalls mit A1 und 4 cm.
+- **Brust-F 4 cm:** als Detail stimmig (eine Handbreit neben der Mitte, unter der Schulternaht), in 390 px ein feines Zeichen; 4,5 cm bringt in der App kaum mehr Sichtbarkeit und rückt näher an die Mitte. Die Marke trägt das Rücken-F (8 cm), das bei Übungen von hinten voll sichtbar ist, dazu das Shorts-F.
+
 ### 13.7 Tests
 
 - **Logos:** aus vier Perspektiven an drei Körpern geprüft; Rand über Zonen in drei Fällen geprüft (Bankdrücken Brust, Latziehen Rücken, Kniebeuge Shorts).
 - **Details:** Schlitz erst 3,6 cm zu hoch (Suche nur in Rumpfpunkten, die Hüftseite zählt am Saum zum Bein), behoben; Kordelenden vorhanden, unter dem Saum.
+- **Fassungen:** 27 Standbilder und 27 Vorschaubilder, dazu 4 Größenfassungen; Renderzeiten im Testprotokoll.
+- **App-Ansichten:** 36 Bildschirmfotos (9 Fassungen × kleiner Player am iPhone, aufgeklappter Player am Duo, Übungsübersicht mit Suche „Langhantel“, Übungsdetails der Kniebeuge; iPhone 390 × 844 in doppelter Auflösung, Duo aufgeklappt 951 × 669, „Bewegung reduzieren“), Medien nur in `dist/uebungen/medien/` getauscht und danach zurückgesetzt (Prüfsummen gleich `public/`).
 - **Dokumente:** `pnpm check:docs` je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
-- **CI:** zu `dfa586e` (D-418) alle Jobs grün, auch WebKit; der Lauf zu D-419 steht in PR #53 und im Testprotokoll.
+- **CI:** zu `dfa586e` (D-418) alle Jobs grün, auch WebKit; die Läufe zu D-419 und D-420 stehen in PR #53 und im Testprotokoll.
 - Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde Logos und Zonen“.
 
 ### 13.8 Was ich von dir brauche
 
-Nach dem Vergleichspaket deine Freigabe einer Kombination aus Körper (D oder C männlich), Fassung (A1, A2 oder B) und Brustlogo-Größe. Danach rendere ich die drei Pilot-Übungen in dieser Fassung neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+Deine Freigabe einer Kombination aus Körper (D oder C männlich), Fassung (A1, A2 oder B) und Brustlogo-Größe. Danach rendere ich die drei Pilot-Übungen in dieser Fassung neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
 
 ### 13.9 Berichte je Paket
 
@@ -625,5 +685,16 @@ Technische Entscheidungen: D-419
 Ausgeführte Tests: Nahaufnahmen aus vier Perspektiven an drei Körpern, Rand über Zonen, Schlitz und Kordel, pnpm check:docs
 Ergebnis: bestanden; ein Fehler (Schlitz zu hoch) gefunden und behoben
 Bekannte Einschränkungen: Kordelenden unter dem Saum nicht sichtbar; Details und Logos als Bilder, nicht als Netz
-Nächste Schritte: Vergleichspaket als eigenes Paket
+Nächste Schritte: Vergleichspaket (D-420)
+```
+
+```
+Arbeitspaket: D-420 Vergleichspaket mit App-Ansichten, Bewertung und Empfehlung
+Umgesetzte Funktionen: Planung und Nachweis, erfüllte AK: –
+Geänderte Dateien: docs/screens/uebungen/paket-*.webp; Dokumente
+Technische Entscheidungen: D-420
+Ausgeführte Tests: 27 Standbilder, 27 Vorschaubilder, 4 Größenfassungen, 24 Nahaufnahmen, 36 App-Ansichten, alle selbst angesehen; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: App-Ansichten mit Standbildern statt Schleifen (Medien nur im Build getauscht)
+Nächste Schritte: Freigabe der Kombination durch den Produktinhaber, dann Neurendern der drei Pilot-Übungen
 ```

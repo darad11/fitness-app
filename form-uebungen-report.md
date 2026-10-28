@@ -722,3 +722,86 @@ Deine Entscheidung: Fassung A1 (Zonen Lime, Logos hell mit Rand in Stoffarbe) un
 - **Jetzt:** Daumenballen und Grundglied umschließen die Stange von der Gegenseite der Finger, die Spitze liegt über den Mittelgliedern von Zeige- und Mittelfinger, das Endglied legt sich auf die Finger. Die Beugung ist fest begrenzt (Grundglied 20 bis 60°, Endglied 20 bis 70°, kein Knick nach hinten). Weiche Strafen reichten nicht: Damit blieb der Daumen in Kniebeuge und Latziehen gestreckt und knickte beim Bankdrücken im Endglied 92°; die Grenzen gelten jetzt im Suchraster selbst.
 - **Stange schräg:** Beim Bankdrücken liegt die Stange 12° schräg in der Handfläche, vom Zeigefingerballen zum Handballen, tief über dem Unterarm (Kniebeuge 20°, Latziehen 6° wie bisher).
 - **Geprüft** in allen drei Übungen und Phasen: Beugung Bankdrücken 20°/70°, Kniebeuge 20°/20°, Latziehen 20°/28°; der Daumen drückt die Haut 0,1 bis 0,7 mm ein wie die Finger, nichts dringt ein. In der Kniebeuge ragt die Daumenspitze über dem Zeigefinger knapp über die Stange; das ist der Daumen auf dem Finger, kein Abstehen. Für den Blick entlang der Stange blendet `nahaufnahme.py --ohne-scheiben` die Scheiben aus, sonst steht die Kamera in der Scheibe.
+
+### 14.4 Standbilder und Nahaufnahmen (D-424)
+
+Alle Blätter in `docs/screens/uebungen/`:
+
+1. `korrektur-1-standbilder.webp`: Fassung A1 mit Brust-F 4 cm, Zeilen D, C männlich, C weiblich; Spalten Kniebeuge tiefste Position, Bankdrücken Ausgangs- und Endposition; Kamera wie in der App.
+2. `korrektur-2-nah-D.webp`, `korrektur-3-nah-Cm.webp`, `korrektur-4-nah-Cw.webp`: je Körper Augen, Hals und Kragen (Kniebeuge unten), Rücken mit Schriftzug (Latziehen unten, von hinten), Shorts-Logo (linkes Bein außen), Griff beim Bankdrücken von vorn (Fußende), von der Seite (schräg entlang der Stange, Scheiben ausgeblendet) und vom Kopfende, dazu der Griff in der Kniebeuge.
+
+**Renderzeit je Bild** (720 × 540, 40 Proben, ein Prozess nacheinander auf vier CPU-Kernen; der Aufbau enthält jetzt die Daumensuche mit festen Grenzen):
+
+| Körper | Aufbau Kniebeuge / Bankdrücken | Kniebeuge unten | Bankdrücken oben | Bankdrücken unten | je Bild im Schnitt |
+|---|---|---|---|---|---|
+| D | 6,1 / 6,1 s | 17,7 s | 31,5 s | 32,0 s | 27,1 s |
+| C männlich | 5,7 / 5,3 s | 18,3 s | 24,7 s | 25,0 s | 22,7 s |
+| C weiblich | 6,0 / 5,4 s | 18,4 s | 23,9 s | 25,7 s | 22,7 s |
+
+Zum Vergleich D-420: D 21,8 s, C männlich 23,0 s, C weiblich 23,3 s je Bild. Die 4 Blätter: `korrektur-1-standbilder.webp` 105,8 KB, `korrektur-2-nah-D.webp` 72,4 KB, `korrektur-3-nah-Cm.webp` 83,0 KB, `korrektur-4-nah-Cw.webp` 85,1 KB; zusammen 346,3 KB.
+
+**Was die Blätter zeigen, je Körper:**
+
+- **D:** Augen in Körpergrau mit weich dunklerer Iris, das Gesicht bleibt neutral und ohne Löcher. Kragen in der Kniebeuge unten beidseits am Halsansatz, die Stange liegt auf dem Tee. F über FORM mittig zwischen den Schulterblättern, über den Lime-Zonen lesbar. Shorts-F außen am linken Bein, der Schlitz mit Lime-Einfassung darüber. Griff beim Bankdrücken: von vorn Finger über der Stange, der Daumen liegt dahinter; vom Kopfende die Daumenspitze über dem Zeigefinger; in der Kniebeuge ragt sie über dem Zeigefinger knapp über die Stange.
+- **C männlich:** Lederhaut, braune Iris und Pupille sichtbar, mit Glanz. Die Lidspalte bleibt eng; das kommt aus dem Formziel des Gesichts, nicht aus dem Auge. Kragen, Rücken, Shorts und Griff wie bei D.
+- **C weiblich:** dunkler Zopf am Hinterkopf, Nacken und Hals frei, Augen mit Iris. Die Wortmarke reicht auf dem schmaleren Rücken fast über die ganze Breite zwischen den Ärmeln, bleibt aber in Originalproportion zum 8-cm-F. Kragen, Shorts und Griff wie bei D.
+
+**Zu allen dreien:** Die Standbilder entsprechen der Kamera der App; in dieser Größe sind die korrigierten Augen und der Daumen kaum zu erkennen, der Kragen und das Rücken-Logo schon. Die Renderzeit je Bild liegt etwas über D-420, weil die Hornhaut durchsichtig ist und die Daumensuche im Aufbau mehr Lagen prüft.
+
+### 14.5 Tests
+
+- **Ursachen** vor jeder Korrektur in Nahaufnahmen des alten Stands geprüft (Augen, Griff, Beine beim Bankdrücken, Kragen), danach dieselben Ansichten neu; Messwerte des Griffs in allen drei Übungen und Phasen.
+- **Standbilder und Nahaufnahmen:** 9 Standbilder (3 Körper × 3 Momente, `varianten_bilder.py`) und 24 Nahaufnahmen (`nahaufnahme.py`, 480 px, Augen 32 Proben, sonst 24), alle selbst angesehen; 4 Blätter, zusammen 346,3 KB.
+- **Dokumente:** `pnpm check:docs` und Prettier je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
+- **CI:** CI zu `bd65d53` (D-421, Lauf 40682710242) und `fd5d8ee` (D-422, Lauf 40682762529) vom jeweils nächsten Commit abgebrochen, wie in der CI vorgesehen; Lauf 40684266041 zu `f0bc9aa` (D-423) lief beim Schreiben dieses Protokolls noch, der Lauf zum Commit von D-424 folgt; Stand in PR #53.
+- Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturen Augen, Logos, Kragen und Griff“.
+
+### 14.6 Was ich von dir brauche
+
+Deine Wahl des Körpers (D, C männlich oder C weiblich). Danach rendere ich die drei Pilot-Übungen in A1 mit Brust-F 4 cm neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+
+### 14.7 Berichte je Paket
+
+```
+Arbeitspaket: D-421 Augen mit Iris und Hornhaut, neutrale Augen für D, Zopf für C weiblich
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/realistisch.py, varianten.py; Lizenzen, Testprotokoll, Bericht
+Technische Entscheidungen: D-421
+Ausgeführte Tests: Augenbild gemessen, Nahaufnahmen Kopf D, C männlich, C weiblich, Zopf von hinten; pnpm check:docs
+Ergebnis: bestanden; ein Fehler (Absturz beim Zopf) gefunden und behoben
+Bekannte Einschränkungen: Iris von MakeHuman in Braun, keine Wahl der Augenfarbe
+Nächste Schritte: Kleidung (D-422)
+```
+
+```
+Arbeitspaket: D-422 Logos je Körperteil begrenzt, F über FORM am Rücken, Kragen am Hals mitgeführt, Stange auf dem Stoff
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py, rig.py, uebungen.py, render.py, varianten.py; Dokumente
+Technische Entscheidungen: D-422
+Ausgeführte Tests: Nahaufnahmen Beine (Bankdrücken vom Fußende), Bein außen, Kragen (45°, 135°, Kamera der App), Rücken (D Kniebeuge, C weiblich Latziehen); pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: Wortmarke 18,9 cm breit (Originalproportion zum 8-cm-F)
+Nächste Schritte: Griff (D-423)
+```
+
+```
+Arbeitspaket: D-423 voller Griff mit Daumen über den Fingern, Stange schräg in der Hand
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/rig.py, uebungen.py, nahaufnahme.py; Dokumente
+Technische Entscheidungen: D-423
+Ausgeführte Tests: Messung je Übung (Winkel, Abstände, drei Phasen), Nahaufnahmen aus fünf Richtungen; pnpm check:docs
+Ergebnis: bestanden; weiche Strafen verworfen, feste Grenzen
+Bekannte Einschränkungen: in der Kniebeuge ragt die Daumenspitze über dem Zeigefinger knapp über die Stange
+Nächste Schritte: Standbilder und Nahaufnahmen (D-424)
+```
+
+```
+Arbeitspaket: D-424 Standbilder und Nahaufnahmen in A1 je Körper
+Umgesetzte Funktionen: Nachweis, erfüllte AK: –
+Geänderte Dateien: docs/screens/uebungen/korrektur-*.webp, tools/uebungen_korrektur_bild.py; Dokumente
+Technische Entscheidungen: D-424
+Ausgeführte Tests: 9 Standbilder (3 Körper × 3 Momente, `varianten_bilder.py`) und 24 Nahaufnahmen (`nahaufnahme.py`, 480 px, Augen 32 Proben, sonst 24), alle selbst angesehen; 4 Blätter, zusammen 346,3 KB; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine Videos, nur Standbilder (nach der Wahl des Körpers)
+Nächste Schritte: Wahl des Körpers durch den Produktinhaber, dann die drei Pilot-Übungen neu rendern und einbauen
+```

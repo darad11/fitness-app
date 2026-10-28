@@ -2298,7 +2298,7 @@ Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassunge
 
 ### Phase Übungen, Korrekturen Augen, Logos, Kragen und Griff · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit Brust-F 4 cm; Korrekturen 1 bis 6): Augen und Zopf (D-421), Kleidung (D-422), Griff (D-423). Nur Werkzeuge und Daten; Code und Videos der App unverändert. Der genannte Anhang `korrektur-markierungen.png` ist nicht angekommen (Upload-Ordner ohne neue Datei); Prüfung nach dem Text.
+Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit Brust-F 4 cm; Korrekturen 1 bis 6): Augen und Zopf (D-421), Kleidung (D-422), Griff (D-423), Standbilder und Nahaufnahmen (D-424). Nur Werkzeuge und Daten; Code und Videos der App unverändert. Der genannte Anhang `korrektur-markierungen.png` ist nicht angekommen (Upload-Ordner ohne neue Datei); Prüfung nach dem Text.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2312,4 +2312,9 @@ Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit
 | Daumen vor der Korrektur (D, Bankdrücken vom Fußende und vom Kopfende, Kniebeuge hinten-seitlich, Latziehen von vorn) | Haken unter der Stange, Spitze von den Fingern weg; Ursache: Ziel der Spitze auf der Stangenoberfläche gegenüber der Handfläche |
 | Messung je Übung (D-A1, `pruef_griff.py` im Arbeitsordner): Daumen Grundgelenk, Beugung Grund- und Endglied, Abstand zur Stange; Finger in den Phasen 0, 0,5 und 1 | mit weichen Strafen: Bankdrücken 8°/92°, Kniebeuge 0°/0°, Latziehen 0°/70° (Daumen gestreckt oder geknickt). Mit festen Grenzen: Bankdrücken Grundgelenk −62°/28°, Beugung 20°/70°, Daumen −0,6 mm; Kniebeuge −50°/−14°, 20°/20°, −0,1 mm; Latziehen −28°/38°, 20°/28°, −0,7 mm; Finger geringster Abstand −4,3 / −1,2 / −1,1 mm, Kontaktpunkte 324 / 206 / 236, in allen Phasen gleich, keine Meldungen des Rigs |
 | Nahaufnahmen danach (Bankdrücken vom Fußende, vom Kopfende und schräg entlang der Stange ohne Scheiben; Kniebeuge hinten-seitlich; Latziehen schräg) | Faust um die Stange, Daumenspitze über dem Zeigefinger, nicht abstehend, kein Knick nach hinten; in der Kniebeuge ragt die Spitze über dem Zeigefinger knapp über die Stange; selbst angesehen |
+| Standbilder A1 mit Brust-F 4 cm, 3 Körper × 3 Momente (`varianten_bilder.py`, 720 × 540, 40 Proben, D-424) | je Bild im Schnitt: D 27,1 s, C männlich 22,7 s, C weiblich 22,7 s |
+| Nahaufnahmen je Körper (`nahaufnahme.py`, 480 px): Augen, Hals, Rücken mit Schriftzug, Shorts-Logo, Griff Bankdrücken von vorn, von der Seite und vom Kopfende, Griff Kniebeuge (D-424) | 24 Bilder, selbst angesehen; Blätter `korrektur-2-nah-D`, `-3-nah-Cm`, `-4-nah-Cw` |
+| Blätter (`tools/uebungen_korrektur_bild.py`) | 4 Dateien, zusammen 346,3 KB, selbst angesehen |
+| CI | CI zu `bd65d53` (D-421, Lauf 40682710242) und `fd5d8ee` (D-422, Lauf 40682762529) vom jeweils nächsten Commit abgebrochen, wie in der CI vorgesehen; Lauf 40684266041 zu `f0bc9aa` (D-423) lief beim Schreiben dieses Protokolls noch, der Lauf zum Commit von D-424 folgt; Stand in PR #53 |
+| `pnpm check:docs`, Prettier, `python3 -m py_compile` je Paket am Stand des Commits | bestanden |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |

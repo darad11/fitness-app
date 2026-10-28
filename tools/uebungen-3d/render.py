@@ -5,6 +5,7 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py --hole                  # MakeHuman-Dateien (CC0) laden
     python -I tools/uebungen-3d/render.py kniebeuge                # Schleife, 60 Bilder, ffmpeg
     python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
+    python -I tools/uebungen-3d/render.py kniebeuge --variante C-m  # Variante zur Probe (D-414)
     python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
         --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
 
@@ -28,7 +29,9 @@ import bpy  # noqa: E402
 from mathutils import Vector  # noqa: E402
 
 import koerperform  # noqa: E402
+import realistisch  # noqa: E402
 import szene  # noqa: E402
+import varianten  # noqa: E402
 from haltung import ablauf  # noqa: E402
 from uebungen import UEBUNGEN, _netz  # noqa: E402
 
@@ -56,17 +59,24 @@ def hole() -> None:
         if not (ziel / name).exists():
             urllib.request.urlretrieve(url, ziel / name)
     koerperform.hole(list(koerperform.FORMEN.values()))
+    realistisch.hole()
 
 
-def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral"):
-    """Szene der Übung: graue Figur mit Zonen in der Körperform `form` (D-413)."""
+def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral", variante: str | None = None):
+    """Szene der Übung. Ohne `variante`: graue Figur mit Zonen in der Körperform `form`; mit
+    `variante` (Schlüssel aus `varianten.VARIANTEN`) deren Form, Kleidung und Aussehen (D-414)."""
     s = szene.leere_szene()
     s.cycles.samples = proben
     s.render.resolution_x = breite
     s.render.resolution_y = hoehe
-    uebung = UEBUNGEN[name](koerperform.FORMEN[form])
-    uebung.bauen()
-    uebung.koerper.data.materials.append(szene.koerper_material())
+    if variante:
+        uebung = UEBUNGEN[name](koerperform.FORMEN[varianten.VARIANTEN[variante]["form"]])
+        uebung.bauen()
+        varianten.ausstatten(uebung, variante)
+    else:
+        uebung = UEBUNGEN[name](koerperform.FORMEN[form])
+        uebung.bauen()
+        uebung.koerper.data.materials.append(szene.koerper_material())
     szene.boden()
     punkte = uebung.rahmenpunkte()
     return s, uebung, punkte
@@ -167,6 +177,7 @@ def main() -> None:
     ap.add_argument("uebung", nargs="?")
     ap.add_argument("--hole", action="store_true")
     ap.add_argument("--form", default="neutral", choices=sorted(koerperform.FORMEN))
+    ap.add_argument("--variante", choices=sorted(varianten.VARIANTEN), help="Variante zur Probe (D-414)")
     ap.add_argument("--pruefen", action="store_true")
     ap.add_argument("--ansicht", default="standard", choices=["standard", "vorn", "seite"])
     ap.add_argument("--breite", type=int, default=720)
@@ -184,7 +195,8 @@ def main() -> None:
     if args.pruefen:
         pruefen(args.uebung, arbeit, args.form)
         return
-    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form)
+    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form, args.variante)
+    name = f"{args.uebung}-{args.variante}" if args.variante else args.uebung
     for o in bpy.data.objects:
         o.hide_render = o.name.startswith(AUSBLENDEN.get(args.ansicht, ()))
     kamera(u, punkte, args.ansicht, args.breite, args.hoehe)
@@ -195,7 +207,7 @@ def main() -> None:
         bpy.ops.render.render(write_still=True)
     print(f"Renderzeit {args.uebung} ({args.ansicht}): {time.time() - start:.0f} s für {BILDER} Bilder")
     if not args.nur_bilder:
-        kodiere(arbeit, Path(args.ziel), args.uebung, args.ansicht)
+        kodiere(arbeit, Path(args.ziel), name, args.ansicht)
 
 
 def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:

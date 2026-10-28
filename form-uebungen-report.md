@@ -304,3 +304,67 @@ Ein Fehler auf dem Weg, gefunden durch die Prüfung: Der erste Hilfsknochen war 
 | weiblich (C) | 0,0 | 0,66 | 0,42 | 0,75 | 0,40 | 1,59 m | 23,3 cm |
 
 Werte 0 bis 1 wie in MakeHuman (0,5 = Durchschnitt). Muskeln knapp über dem Durchschnitt, Gewicht knapp darunter: sichtbar trainiert, keine Bodybuilder-Optik. Der Oberarm ist länger als beim Grundmodell (22,8 cm).
+
+### 11.3 Varianten zur Probe (D-414)
+
+| Variante | Figur | Kleidung | Zonen |
+|---|---|---|---|
+| A | neutral, grau | – | Lime auf der Haut |
+| B | männlich, grau | – | Lime auf der Haut |
+| C männlich, weiblich | realistisch: Haut, Haare, Augen, Augenbrauen | FORM | je mit Zonen auf dem Stoff (und auf der Haut darunter) und ohne |
+| D | neutral, grau | FORM | mit Zonen auf dem Stoff und ohne |
+
+**FORM-Kleidung** (`kleidung.py`): STEP Running Tee in Nacht #0C1219, STEP Shorts in Graphit. Graphit ist eine Annahme, weil die Vorlage nicht ankam: Mit #3C424E (dem Grau von Kacheln und Geräten, `--form-tile-border`) verschwammen Shorts und Bank, deshalb #575D67. Lime-Details klein: Zeichen 3,0 × 1,4 cm auf der linken Brust und 2,4 × 1,2 cm außen am linken Bein, 5 mm breite Paspeln an Ärmel- und Beinsaum; in den Bildern nicht mit Muskelzonen zu verwechseln. Die Teile entstehen aus dem Netz der Figur, liegen eng an und folgen jeder Haltung ohne Stoffsimulation; Säume und Ausschnitt sind scharf. Mit Zonen ist der Stoff über dem Muskel Lime (Hauptmuskeln) oder Lime mit halber Deckkraft (mitarbeitend), auf der freien Haut geht die Zone weiter.
+
+**Realistisch** (`realistisch.py`): Augen von MakeHuman (CC0), Haut als eigener Shader, Augenbrauen aufgemalt, Haare aus Blender (männlich kurzes Partikelhaar, weiblich anliegend mit Dutt). Die Haut-, Haar- und Brauen-Dateien von MakeHuman wären ebenfalls frei (CC0), liegen aber auf `files2.makehumancommunity.org`, das hier gesperrt ist; aus der Nähe wären Haut und Haare damit detailreicher.
+
+**Vergleichsbilder** (720 × 540 je Variante, 40 Samples, Kamera wie in der App): `docs/screens/uebungen/varianten-kniebeuge-unten.webp`, `varianten-bank-oben.webp`, `varianten-bank-unten.webp`, Übersicht `varianten-uebersicht.webp`.
+
+**Renderzeit und Dateigröße je Variante** (Kniebeuge unten, ein Prozess, nacheinander, 4 CPU-Kerne):
+
+| Variante | Renderzeit je Bild | 60 Bilder (eine Schleife), gerechnet | Faktor zu A | Standbild als Poster (WebP) |
+|---|---|---|---|---|
+| A neutral, grau, Zonen | 13,0 s | 13,1 min | 1,00 | 5,1 KB |
+| B männlich, grau, Zonen | 13,7 s | 13,7 min | 1,05 | 5,2 KB |
+| D grau, Kleidung, Zonen | 14,1 s | 14,2 min | 1,08 | 5,4 KB |
+| D grau, Kleidung | 13,6 s | 13,7 min | 1,05 | 4,9 KB |
+| C männlich, real, Zonen | 20,0 s | 20,1 min | 1,54 | 6,0 KB |
+| C männlich, real | 19,9 s | 19,9 min | 1,53 | 5,7 KB |
+| C weiblich, real, Zonen | 16,1 s | 16,2 min | 1,24 | 6,3 KB |
+| C weiblich, real | 16,6 s | 16,7 min | 1,28 | 6,0 KB |
+
+Standbild im Poster-Format 720 × 540 als WebP (Qualität 80), wie die App es lädt. C mit Partikelhaar (männlich) braucht am längsten; die weibliche Haarfläche mit feinen Härchen ist günstiger. Kleidung kostet kaum Zeit.
+
+**Bewertung:**
+
+| Variante | Stärken | Schwächen |
+|---|---|---|
+| A neutral, grau | Zonen am klarsten (Lime auf Grau), ruhig, für jeden passend; am schnellsten gerendert | wirkt wie eine unbekleidete Gliederpuppe; eine kleine Brustform bleibt sichtbar |
+| B männlich, grau | wie A, breitere Schultern, kräftigere Arme; passt, wenn die Figur dir ähneln soll | weniger neutral; sonst kaum Unterschied zu A |
+| C realistisch | wirkt am lebendigsten, Kleidung und Gesicht machen die Übung greifbar | Haare und Haut aus der Nähe puppenhaft (eigene Haare, keine MakeHuman-Assets); Zonen auf der Haut wirken wie Farbe; rund 1,2- bis 1,5-fach längere Renderzeit (männlich mit Partikelhaar am langsamsten); Gesicht, Haare und Hautton ziehen den Blick, die Zone tritt zurück (Leitplanke 9: Bilder nur, wo sie erklären) |
+| D grau in FORM-Kleidung | Marke sichtbar (Shirt, Shorts, kleines Zeichen), die Figur wirkt bekleidet und natürlicher als A; Zonen auf dem Stoff sehr deutlich (Lime auf Nacht); kaum langsamer als A | Shirt in Nacht auf dem Hintergrund Nacht: der Oberkörper hebt sich nur durch Licht ab; ohne Zonen zeigt D nicht, welcher Muskel arbeitet |
+
+### 11.4 Zwei Varianten als Kniebeuge animiert (D-414)
+
+**Gewählt: A und D mit Zonen.**
+
+1. Beide bleiben beim bisherigen FORM-Stil (graue Figur, Lime als einziges Signal, D-402) und zeigen die arbeitenden Muskeln am deutlichsten: Lime auf Grau bei A, Lime auf dem dunklen Stoff bei D.
+2. Zusammen beantworten sie die eigentliche Frage, unbekleidet oder in FORM-Kleidung, mit derselben Figur, denselben Zonen und derselben Bewegung.
+3. Beide sind schnell gerendert (13 und 14 s je Bild) und bleiben klein.
+
+Nicht animiert: B unterscheidet sich von A nur im Körperbau, das zeigen die Standbilder. C wirkt mit den eigenen Haaren und der eigenen Haut aus der Nähe puppenhaft, Gesicht und Haare ziehen den Blick von der Zone, und die Renderzeit steigt um das 1,2- bis 1,5-Fache.
+
+| Variante | Renderzeit der Schleife (60 Bilder) | je Bild | MP4 | WebM | Poster | Vorschau | Abruf in der App (ein Video, Poster, Vorschau) |
+|---|---|---|---|---|---|---|---|
+| A neutral, grau, Zonen | 841 s (14,0 min; mit Aufbau und Kodieren 861 s) | 14,0 s | 51,8 KB | 39,3 KB | 5,1 KB | 3,2 KB | 47,6 KB bis 60,1 KB |
+| D grau, FORM-Kleidung, Zonen | 897 s (14,9 min; mit Aufbau und Kodieren 917 s) | 14,9 s | 55,6 KB | 41,6 KB | 5,4 KB | 3,3 KB | 50,3 KB bis 64,3 KB |
+
+720 × 540, 40 Samples, 24 Bilder je Sekunde, 2,5 s Schleife; ein Prozess auf vier CPU-Kernen, nacheinander. Zum Vergleich die bisherige Kniebeuge in der App: MP4 54,1 KB, WebM 39,9 KB (KB zu 1024 Byte wie in Abschnitt 10.4).
+
+Aufnahmen: `docs/screens/uebungen/variante-A-kniebeuge.mp4` und `.webm`, `variante-D-z-kniebeuge.mp4` und `.webm`, beide nebeneinander (zwei Schleifen) `varianten-kniebeuge.mp4`. In der App laufen weiter die bisherigen Videos, bis du wählst.
+
+**Beobachtung:** Beide Schleifen laufen ruhig, Stange und Füße wie bisher. Bei D folgt der Stoff jeder Haltung, ohne dass Haut durchsticht; Säume und das kleine Zeichen bleiben an ihrem Platz, und die Zone geht ohne Kante von den Shorts auf den Oberschenkel über. Die Kleidung kostet rund 7 % Renderzeit (897 statt 841 s) und 6 bis 7 % Dateigröße. Je Bild brauchen die Schleifen im Schnitt 14,0 und 14,9 s, etwas mehr als die Standbilder unten (13,0 und 14,1 s), weil stehende Bilder etwas länger dauern als die tiefe Position.
+
+### 11.5 Lizenzen
+
+Alles in `licenses-data.md` Abschnitt 8: Formziele (MPFB2) und Augen (MakeHuman) CC0 1.0, Renderings frei; Haut, Augenbrauen, Haare und Kleidung eigene Arbeit. Fremde Dateien liegen nicht im Repository, `render.py --hole` lädt sie über `raw.githubusercontent.com` (keine neue Adresse nötig). Nur für die MakeHuman-Haut und -Haare bräuchte es `files2.makehumancommunity.org` (Spiegel `files.makehumancommunity.org`).

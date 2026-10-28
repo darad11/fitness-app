@@ -27,6 +27,7 @@ import koerperform
 QUELLE = Path(__file__).resolve().parent / "quelle"
 # MakeHuman rechnet in Dezimetern mit y nach oben; Blender in Metern mit z nach oben.
 SKALA = 0.1
+PUNKTE: dict[str, list[Vector]] = {}
 
 
 def mh_zu_blender(x: float, y: float, z: float) -> Vector:
@@ -79,6 +80,9 @@ def baue_figur(name: str = "Figur", form: koerperform.Form | None = None) -> tup
     punkte, flaechen = lies_obj(QUELLE / "base.obj")
     if form is not None:
         koerperform.wende_an(punkte, form)
+    # Alle Eckpunkte in der Nummerierung von base.obj (mit Hilfsgeometrie): Bezug für Anbauteile
+    # wie die Augen (`realistisch.augen`), deren Lage MakeHuman über diese Nummern festlegt.
+    PUNKTE[name] = [p.copy() for p in punkte]
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata([tuple(p) for p in punkte], [], flaechen)
     mesh.update()

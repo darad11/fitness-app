@@ -118,10 +118,17 @@ Für die drei Pilot-Übungen ist keine fremde Bewegung verwendet: Kniebeuge, Ban
 
 **Werkzeuge:** Blender 4.2 als Python-Modul (GPL, nur zum Rendern), ffmpeg (LGPL/GPL, nur zum Kodieren). Beide sind nicht Teil der App; die GPL gilt nicht für die gerenderten Bilder.
 
-## 8. Körperform der Figur (D-413)
+## 8. Körperform, Kleidung, Haut, Augen und Haare der Figur (D-413, D-414)
 
-Geprüft am 28.10.2026. Nur kostenlose Quellen, die die Nutzung in der App erlauben; nichts gekauft, kein Konto angelegt. Wie beim Grundmodell liegen fremde Dateien nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie.
+Geprüft am 28.10.2026 für die Varianten A bis D. Nur kostenlose Quellen, die die Nutzung in der App erlauben; nichts gekauft, kein Konto angelegt. Wie beim Grundmodell liegen fremde Dateien nicht im Repository (`tools/uebungen-3d/quelle/`, in `.gitignore`); `render.py --hole` lädt sie.
 
 | Element | Quelle | Lizenz (Wortlaut) | Was das für FORM heißt |
 |---|---|---|---|
 | Körperform (Formziele: Geschlecht, Muskeln, Gewicht, Proportionen, Brustgröße) | MPFB2, Repository `makehumancommunity/mpfb2`, `src/mpfb/data/targets/` (30 Dateien `*.target.gz`, Liste in `koerperform.ziele`), über `raw.githubusercontent.com` | `LICENSE.md` Abschnitt C: Assets sind „any data contributing to the output from MPFB“, darunter „Targets and modifiers“; „These assets have been released under CC0 1.0 Universal“. Abschnitt D: keine Ansprüche auf „Renderings“ und „Graphical data generated via scripting or plugins“ | Frei nutzbar, auch in der App und im öffentlichen Repository; keine Namensnennung nötig. Der Code von MPFB2 (GPLv3) wird nicht verwendet, nur die Daten |
+| Augen („HighPolyEyes“, Netz, Anpassung, Textur `brown_eye.png`) | MakeHuman, Repository `makehumancommunity/makehuman`, `makehuman/data/eyes/high-poly/` und `…/eyes/materials/brown_eye.png`, über `raw.githubusercontent.com` | Kopf der Dateien `high-poly.mhclo` und `brown.mhmat`: „This asset was explicitly released as CC0 in september 2020“; `LICENSE.md` Abschnitt C (Assets CC0 1.0) und D (keine Ansprüche auf Renderings) | Frei nutzbar. Die Anpassung an die Figur (Eckpunkte aus drei Eckpunkten des Körpers plus Versatz) ist eigener Code nach dem Verfahren von MakeHuman (`realistisch.augen`) |
+| Haut | eigener Shader in `tools/uebungen-3d/realistisch.py` (Hautton, Unterflächenstreuung, Rauschen) | eigene Arbeit, keine Bilddatei | keine Einschränkung |
+| Augenbrauen | eigenes Feld auf der Haut (`realistisch.setze_brauen`) | eigene Arbeit | keine Einschränkung |
+| Haare | Partikelhaar und Haarfläche aus Blender (`realistisch.haare`, Shader „Principled Hair BSDF“ von Blender) | eigene Arbeit; was Blender rendert, gehört dem, der es rendert | keine Einschränkung |
+| Kleidung (STEP Running Tee in Nacht, STEP Shorts in Graphit, kleine Lime-Details) | eigener Code `tools/uebungen-3d/kleidung.py`: aus dem Netz der Figur (CC0) abgeleitet, Farben aus `brand-tokens.md` | eigene Arbeit nach der FORM-Marke | keine Einschränkung; Graphit als #575D67 angenommen, weil die Vorlage nicht ankam: heller als Bank und Geräte (#3C424E), sonst verschwimmen Shorts und Polster |
+
+**Nicht verwendet, aber ebenfalls frei:** Die Haut-, Haar-, Brauen- und Wimpern-Assets von MakeHuman (Paket `makehuman_system_assets_cc0.zip`, Hauttexturen `skins01_cc0.zip`, `skins02_cc0.zip`, alle CC0 1.0) liegen auf `files2.makehumancommunity.org` (Spiegel `files.makehumancommunity.org`); beide Adressen sind in dieser Umgebung gesperrt. Mit ihnen würden Haut und Haare aus der Nähe detailreicher; für die Größe in der App reicht der eigene Stand.

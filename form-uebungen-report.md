@@ -843,3 +843,82 @@ Alle Blätter in `docs/screens/uebungen/`:
 - **Kragen:** In der tiefsten Kniebeuge läuft die Kante rundum am Halsansatz, auch auf der Seite der Stange; die Stange liegt auf dem Tee.
 - **Rückenlogo:** F über FORM sitzt klein und mittig zwischen den Schulterblättern, über den Lime-Zonen beim Latziehen und auf dem dunklen Stoff in der Kniebeuge, in Originalproportionen.
 - **Standbilder:** In der Größe der App ändern die drei Korrekturen das Bild kaum; Kragen und Logo sind zu erkennen, der Daumen nicht.
+
+### 15.5 Animationsplan für die drei Programme (D-429)
+
+Die Liste steht in `docs/uebungen-animationsplan.md`, erzeugt aus der Familienzuordnung (D-411) und den Programmen der App; `pnpm check:docs` prüft, dass sie zu den Daten passt. Je Übung: Familie, Programme und Einheiten, Quelle der Bewegung, Aufwand (Übung plus neues Gerät, einmal gezählt), Renderzeit.
+
+- **Umfang:** 68 Übungen mit 526 Einheiten in den drei Programmen; die Platzhalter der Programme sind keine Übungen.
+- **Aufwand:** 103,0 Std. für die Übungen (davon neue Geräte 39,8) plus 63,0 Std. Basis der Familien (die drei Pilot-Familien haben sie schon) und einmalige Arbeiten für CMU, Mixamo, Kabelverlauf und Prüfseiten: 68 Übungen, rund 192 Arbeitsstunden (Übungen 103,0, Basis der Familien 63,0, einmalig 26). Das ist eine Einzelschätzung wie in D-411; nach den ersten beiden Familien führe ich sie an der Ist-Zeit nach.
+- **Rechenzeit:** rund 29,7 Stunden (1784 min) auf vier CPU-Kernen, 60 Bilder à 23 s je Übung wie bei C männlich gemessen; sie läuft im Hintergrund.
+- **Reihenfolge:** erst die Pilot-Familien Waagrechtes Drücken, Kniebeuge, Senkrechtes Ziehen, dann nach Einheiten Rumpf, Arme beugen und strecken, Beine isoliert, Schulter und Brust isoliert, Hüftbeuge, Waagrechtes Ziehen, Kondition, Senkrechtes Drücken, Ausfallschritt und einbeinig. Jede Familie kommt nach dem Merge von PR #53 auf einen eigenen Branch mit Prüfseite.
+
+### 15.6 Tests
+
+- **Ursachen** vor jeder Korrektur in Nahaufnahmen geprüft (Daumenlage gemessen, Kragen aus zwei Richtungen), danach dieselben Ansichten neu; Daumen in allen drei Übungen und Phasen gemessen.
+- **Standbilder und Nahaufnahmen:** 3 Standbilder und 8 Nahaufnahmen von C männlich, alle selbst angesehen; zwei Blätter.
+- **Animationsplan:** Werkzeug mit `--check` in `pnpm check:docs`.
+- **Dokumente:** `pnpm check:docs` und Prettier je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
+- **CI:** Die Läufe zu den fünf Commits stehen in PR #53; wie in der CI vorgesehen bricht jeder Push den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
+- Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturen Daumen, Kragen und Rückenlogo“.
+
+### 15.7 Was ich von dir brauche
+
+Deine Freigabe der Standbilder. Danach rendere ich die drei Pilot-Übungen in C männlich, A1, Brust-F 4 cm neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei. Die Animationen der drei Programme kommen danach familienweise auf eigenen Branches mit Prüfseite.
+
+### 15.8 Berichte je Paket
+
+```
+Arbeitspaket: D-425 Daumen als fester Ring um die Stange
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/rig.py; Dokumente
+Technische Entscheidungen: D-425
+Ausgeführte Tests: Lage der Daumengelenke gemessen, Winkel und Abstände in drei Übungen und Phasen, Nahaufnahmen aus vier Richtungen; pnpm check:docs
+Ergebnis: bestanden; zwei Fehler gefunden und behoben (Suche statt Konstruktion, Kontaktmessung mit Ballenhaut)
+Bekannte Einschränkungen: feste Winkel aus der Konstruktion, je Übung gleich in allen Phasen
+Nächste Schritte: Kragen (D-426)
+```
+
+```
+Arbeitspaket: D-426 Rundhals durch eine Ebene am Halsansatz begrenzt
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py; Dokumente (Nachweise im Commit von D-427)
+Technische Entscheidungen: D-426
+Ausgeführte Tests: Kragen in der tiefsten Kniebeuge aus zwei Richtungen; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine
+Nächste Schritte: Rückenlogo (D-427)
+```
+
+```
+Arbeitspaket: D-427 Rückenlogo je Körper nach der Breite zwischen den Schulterblättern
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py; Dokumente
+Technische Entscheidungen: D-427
+Ausgeführte Tests: Marken gelesen, Maße je Körper gemessen, Nahaufnahmen Latziehen und Kniebeuge von hinten; pnpm check:docs
+Ergebnis: bestanden; Zahlen in D-428 nachgemessen und berichtigt
+Bekannte Einschränkungen: Blattbreite als Anteil des Mittenabstands angesetzt
+Nächste Schritte: Standbilder (D-428)
+```
+
+```
+Arbeitspaket: D-428 Standbilder und Nahaufnahmen C männlich
+Umgesetzte Funktionen: Nachweis, erfüllte AK: –
+Geänderte Dateien: docs/screens/uebungen/korrektur2-*.webp, tools/uebungen_korrektur_bild.py; Dokumente
+Technische Entscheidungen: D-428
+Ausgeführte Tests: 3 Standbilder, 8 Nahaufnahmen, alle selbst angesehen; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: nur Standbilder, Videos nach der Freigabe
+Nächste Schritte: Animationsplan (D-429), dann Halt
+```
+
+```
+Arbeitspaket: D-429 Animationsplan für die drei Programme
+Umgesetzte Funktionen: Planung, erfüllte AK: –
+Geänderte Dateien: docs/uebungen-animationsplan.md, tools/uebungen_animationsplan.py, package.json (check:docs); Dokumente
+Technische Entscheidungen: D-429
+Ausgeführte Tests: --check in pnpm check:docs; Summen gegen die Daten geprüft
+Ergebnis: bestanden
+Bekannte Einschränkungen: Einzelschätzung wie D-411, Renderzeit aus den Standbildern hochgerechnet
+Nächste Schritte: Freigabe der Standbilder, Pilot-Übungen neu rendern und einbauen
+```

@@ -2321,7 +2321,7 @@ Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit
 
 ### Phase Übungen, Korrekturen Daumen, Kragen und Rückenlogo · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425), Kragen (D-426), Rückenlogo (D-427), Standbilder und Nahaufnahmen (D-428). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
+Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425), Kragen (D-426), Rückenlogo (D-427), Standbilder und Nahaufnahmen (D-428), Animationsplan (D-429). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2333,4 +2333,5 @@ Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C mä
 | Standbilder C männlich A1 mit Brust-F 4 cm, drei Momente (`varianten_bilder.py`, 720 × 540, 40 Proben, D-428) | Kniebeuge unten 17,7 s, Bankdrücken oben 24,3 s, unten 25,8 s; selbst angesehen |
 | Nahaufnahmen (`nahaufnahme.py`, 480 px, 24 Proben, D-428): Griff von vorn, von der Seite, vom Kopfende, von oben; Kragen 45° und 135°; Rückenlogo Latziehen und Kniebeuge | 8 Bilder, selbst angesehen; Blatt `korrektur2-2-nahaufnahmen` |
 | Blätter (`tools/uebungen_korrektur_bild.py --runde 2`) | 2 Dateien, zusammen 122,2 KB, selbst angesehen |
+| Animationsplan (`tools/uebungen_animationsplan.py`, D-429): drei Programme in `programs.v1.json` gefunden, 68 Übungen der Zuordnung D-411, Platzhalter der Programme (`compound_ab_4`, `ppl_rotation_4`, `winter_arc_2026`, `winterprogramm-2026`) ausgeschlossen; `--check` in `pnpm check:docs` | Summen 103,0 Std. Übungen, 63,0 Std. Basis, 1784 min Rechenzeit; Plan und Daten stimmen überein |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |

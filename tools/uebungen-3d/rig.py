@@ -9,8 +9,10 @@ Statt Gelenkwinkel einzeln zu setzen, rechnet das Rig jede Haltung aus Zielen:
   Die Hand hängt am Gerät: Ihre Lage ergibt sich aus dem Griff (Stange in der Handfläche, quer zur
   Hand), nicht umgekehrt. Die Unterarmdrehung (Pronation) verteilt sich auf die zwei Segmente.
 - **Finger:** Jedes Glied beugt sich um die Achse der Stange; die Winkel werden so gesucht, dass
-  die Finger die Stange umschließen, ohne sie zu durchdringen. Der Daumen umgreift gegenläufig
-  und legt sich über Zeige- und Mittelfinger (voller Griff, D-423).
+  die Finger die Stange umschließen, ohne sie zu durchdringen; die Beeren sinken wie die Handfläche
+  etwas in die Stange ein (D-435). Der Daumen umgreift gegenläufig und läuft schräg über die
+  Finger hinweg: am Ballen auf der Stange, darüber auf dem Rücken der Fingerspitzen, die Spitze
+  zwischen Zeige- und Mittelfinger (voller Griff, D-423, D-425, D-435).
 - **Rumpf:** Becken und Wirbelsäule als starre oder fein verteilte Drehungen um echte Gelenkpunkte.
 
 Gerechnet wird mit Segment-Transformationen `G` (Grundhaltung → Haltung) im Raum des Skeletts; am
@@ -28,6 +30,19 @@ from mathutils import Matrix, Quaternion, Vector
 X, Y, Z = Vector((1, 0, 0)), Vector((0, 1, 0)), Vector((0, 0, 1))
 KONTAKT = -0.0008  # Finger berühren die Stange, Haut 0,8 mm eingedrückt
 EINSINKEN = 0.009  # Stange sinkt in die Haut der Handfläche ein, m (D-430)
+# Daumen über den Fingern (D-435): Die Spitze endet axial zwischen Zeige- und Mittelfinger (Anteil
+# vom Zeige- zum Mittelfinger), die Beere liegt mit etwas Luft auf dem Fingerrücken; die Umgebung, in
+# der Finger unter dem Daumen zählen, ist die halbe Daumenbreite
+DAUMEN_QUER = 0.45
+DAUMEN_AUF_FINGER = -0.003  # Beere und Fingerrücken geben unter Druck nach: 3 mm ineinander
+DAUMEN_BREITE = 0.006  # halbe Breite der Auflagefläche der Beere: nur direkt unter dem Daumen zählen Finger
+# Fingerbeeren sinken wie die Handfläche in die Stange ein (D-435): Mit nur 0,8 mm lagen die
+# Fingerknochen des Grundmodells (Beere 15 mm vom Knochen) 29 mm von der Stangenachse, die Finger
+# rollten sich kaum und die Spitzen endeten oben auf der Stange, wo der Daumen liegen muss
+FINGER_EINSINKEN = 0.004
+DAUMEN_ANSTIEG = 0.3  # ein Daumenglied steigt höchstens 0,3 seiner Länge radial an (flach über den Fingern)
+DAUMEN_ABSTIEG = 0.25  # und fällt höchstens 0,25 seiner Länge: kein Haken zurück zur Stange
+DAUMEN_WINKEL = 6.0  # Winkelfenster (Grad) um den Daumen, in dem Finger unter ihm zählen
 
 
 def senkrecht(v: Vector, achse: Vector) -> Vector:
@@ -283,7 +298,7 @@ class Rig:
         tiefe = max(p[1] for p in nahe) if nahe else 0.015
         return d["W0"] + d["laengs"] * (t * d["L"]) + d["achse"] * d["quer"] + d["n"] * tiefe
 
-    def griff(self, seite: str, t: float, radius: float, daumen: bool = True, schraeg: float = 0.0,
+    def griff(self, seite: str, t: float, radius: float, daumen: bool | str = True, schraeg: float = 0.0,
               einsinken: float = EINSINKEN) -> Griff:
         """Griff um eine Stange mit `radius`, quer in der Handfläche bei Anteil t (0 Handgelenk, 1
         Fingeransatz). `schraeg` (Grad) legt die Stange schräg in die Hand (zur Kleinfingerseite
@@ -294,7 +309,12 @@ class Rig:
         zu sehen. Bis D-429 wurde die Stange so weit von der Handfläche weggeschoben, dass kein Punkt
         der Hand mehr als 2,5 mm in sie ragte; damit lag sie auf den Ballen, 4,8 cm über den
         Mittelhandknochen, die Finger kamen nicht um sie herum und rollten als Faust vor ihr ein.
-        Geprüft wird nur, dass die Haut nicht auf der anderen Seite aus der Stange herausragt."""
+        Geprüft wird nur, dass die Haut nicht auf der anderen Seite aus der Stange herausragt.
+
+        `daumen`: True (oder "ueber") legt den Daumen schräg über die Finger (D-435, Bankdrücken und
+        Kniebeuge); "ring" schließt ihn als Ring in seiner Querebene (D-425), passend für dünne
+        Stangen, bei denen der Daumen über den Fingern von der Stange abstehen würde (Latziehen);
+        False lässt ihn weg."""
         d = self._hand[seite]
         achse = d["achse"]
         if schraeg:
@@ -315,22 +335,33 @@ class Rig:
         g = Griff(mitte, achse, d["n"], d["laengs"], radius)
         # Fingerdicke (Knochen bis Haut der Beugeseite) als Startwert; danach am verformten Netz
         # nachgemessen und angepasst, bis jeder Finger die Stange berührt (Haut 0,8 mm eingedrückt).
-        dicke = {"finger1": 0.0125, "finger2": 0.0085, "finger3": 0.0085, "finger4": 0.0085, "finger5": 0.0065}
-        if not daumen:
-            del dicke["finger1"]
+        dicke = {"finger2": 0.0085, "finger3": 0.0085, "finger4": 0.0085, "finger5": 0.0065}
+        ring = daumen == "ring"
+        if ring:
+            dicke["finger1"] = 0.0125
+        kontakt = -FINGER_EINSINKEN
+
+        def soll(f: str) -> float:
+            return KONTAKT if f == "finger1" else kontakt
+
         for runde in range(4):
             for f in ("finger2", "finger3", "finger4", "finger5"):
                 g.finger[f] = self._finger_wickeln(seite, f, g, dicke[f])
-            if daumen:
-                g.finger["finger1"] = self._daumen_wickeln(seite, g, dicke["finger1"])
+            if ring:
+                g.finger["finger1"] = self._daumen_ring(seite, g, dicke["finger1"])
+            elif daumen:
+                # Daumen über den Fingern (D-435): Beere aus dem Netz gemessen, keine Suche am Kontakt
+                g.finger["finger1"] = self._daumen_wickeln(seite, g, self._fingerhuelle(seite, g))
             abstand = self._kontakt(seite, g)
             g.finger["_abstand"] = dict(abstand)
-            if runde == 3 or all(abs(a - KONTAKT) < 0.0004 for a in abstand.values()):
+            if runde == 3 or all(abs(a - soll(f)) < 0.0004 for f, a in abstand.items() if ring or f != "finger1"):
                 break
             for f, a in abstand.items():
-                dicke[f] = max(0.002, dicke[f] - (a - KONTAKT))
                 if f == "finger1":
-                    dicke[f] = min(0.018, max(0.008, dicke[f]))  # Beere 8 bis 18 mm vom Knochen
+                    if ring:
+                        dicke[f] = min(0.018, max(0.008, dicke[f] - (a - KONTAKT)))  # Beere 8 bis 18 mm vom Knochen
+                else:
+                    dicke[f] = max(0.002, dicke[f] - (a - kontakt))
         self.zuruecksetzen()
         self.anwenden()
         return g
@@ -446,8 +477,196 @@ class Rig:
             pkte.append(p)
         return pkte
 
-    def _daumen_wickeln(self, seite: str, g: Griff, dicke: float) -> dict:
-        """Daumen im vollen Griff (D-425), feste Konstruktion ohne Suche: Daumen und Finger bilden einen
+    def _stangenrahmen(self, seite: str, g: Griff):
+        """Zylinderkoordinaten um die Stange in der Grundhaltung der Hand: axial entlang der
+        Wickelachse der Finger, Winkel 0 zur Handfläche hin, positiv in Wickelrichtung der Finger."""
+        achse = g.finger.get("_achse_" + seite, g.achse)
+        e1 = senkrecht(-g.handflaeche, achse)
+        e2 = achse.cross(e1)
+
+        def zyl(p: Vector) -> tuple[float, float, float]:
+            r = p - g.mitte
+            a = r.dot(achse)
+            rad = r - a * achse
+            return a, rad.length, math.atan2(rad.dot(e2), rad.dot(e1))
+
+        def punkt(a: float, r: float, phi: float) -> Vector:
+            return g.mitte + achse * a + (e1 * math.cos(phi) + e2 * math.sin(phi)) * r
+
+        return achse, zyl, punkt
+
+    def _fingerhuelle(self, seite: str, g: Griff) -> list[tuple[float, float, float]]:
+        """Haut von Zeige- und Mittelfinger im Griff ohne Daumen, als (axial, Radius, Winkel) um die
+        Stange: die Hülle, über die der Daumen hinwegläuft (D-435)."""
+        ohne = Griff(g.mitte, g.achse, g.handflaeche, g.laengs, g.radius)
+        ohne.finger = {k: v for k, v in g.finger.items() if k != "finger1"}
+        self.zuruecksetzen()
+        self.finger_setzen(seite, ohne, Matrix.Identity(4))
+        self.anwenden()
+        netz = self._verformt()
+        _, zyl, _ = self._stangenrahmen(seite, g)
+        k = self.koerper
+        namen = {gr.index: gr.name for gr in k.vertex_groups}
+        huelle = []
+        for v, p in zip(k.data.vertices, netz):
+            for gg in v.groups:
+                n = namen[gg.group]
+                if gg.weight > 0.5 and n.endswith("." + seite) and n.startswith(("finger2-", "finger3-")):
+                    huelle.append(zyl(p))
+                    break
+        return huelle
+
+    def _beere(self, seite: str, glied: str) -> float:
+        """Dicke der Beere eines Daumenglieds in der Grundhaltung: Haut des Glieds, so weit sie von
+        der Knochenachse zur Handfläche hin reicht (m)."""
+        a, b = self.kopf[f"{glied}.{seite}"], self.ende[f"{glied}.{seite}"]
+        ax = (b - a).normalized()
+        n = senkrecht(self._hand[seite]["n"], ax)
+        k = self.koerper
+        idx = k.vertex_groups[f"{glied}.{seite}"].index
+        werte = [(v.co - a).dot(n) for v in k.data.vertices if any(gg.group == idx and gg.weight > 0.5 for gg in v.groups)]
+        return max(werte) if werte else 0.011
+
+    def _daumen_wickeln(self, seite: str, g: Griff, huelle: list) -> dict:
+        """Daumen im vollen Griff, feste Konstruktion ohne Suche (D-425), über den Fingern (D-435).
+
+        Bis D-434 lagen alle Daumengelenke auf einem Kreis um die Stange in der Querebene durch das
+        Sattelgelenk, mit demselben Radius wie die Finger. Diese Ebene ist die des Zeigefingers (bei
+        der schrägen Stange 3 mm daneben), darum lief der Daumen durch den Zeigefinger hindurch und
+        verschmolz mit ihm. Jetzt läuft er in Gegenrichtung der Finger um die Stange und dabei schräg
+        über sie hinweg: axial von seinem Sattelgelenk zu einem Punkt zwischen Zeige- und
+        Mittelfinger (`DAUMEN_QUER`), radial am Handballen auf der Stange (Radius Stange plus
+        Beere `dicke`) und, wo Finger unter ihm liegen, auf deren Rücken (`huelle`: Haut von Zeige-
+        und Mittelfinger, plus Beere und `DAUMEN_AUF_FINGER` Luft). Je Gelenk wird der Winkel um die
+        Stange so bestimmt, dass das Glied seine Länge behält; die Beere zeigt zur Stangenachse. Je
+        Glied eine Drehung relativ zum vorigen Glied für `finger_setzen`; dazu Gelenkwinkel (Grad),
+        Radien, axiale Lagen und Winkel um die Stange für das Protokoll."""
+        kette = self._kette(seite, "finger1")
+        achse, zyl, punkt = self._stangenrahmen(seite, g)
+        p0 = kette[0][0]
+        a0, _, phi0 = zyl(p0)
+        laengen = [(e - k).length for k, e in kette]
+
+        def axial(f: str) -> float:
+            pk = self._fingerpunkte(self._kette(seite, f), achse, g.finger[f], g.finger.get("_spreiz_" + f + seite))
+            return (zyl(pk[2])[0] + zyl(pk[4])[0]) / 2  # Mittelglied: Mittel- und Endgelenk
+
+        a_spitze = axial("finger2") + DAUMEN_QUER * (axial("finger3") - axial("finger2"))
+        summe = [sum(laengen[:i + 1]) for i in range(3)]
+        axiale = [a0 + (a_spitze - a0) * s / summe[-1] for s in summe]
+        beere_grund = self._beere(seite, "finger1-2")
+        beeren = [beere_grund, beere_grund, self._beere(seite, "finger1-3")]
+
+        # Hülle als Raster über axialer Lage (1 mm) und Winkel (2°), je Zelle der größte Radius der
+        # Fingerhaut, dann über die halbe Daumenbreite und 15° ausgedehnt: ein Nachschlagen je Punkt
+        import numpy as np
+
+        if huelle:
+            a_min = min(h[0] for h in huelle) - 0.002
+            n_a = int((max(h[0] for h in huelle) - a_min) / 0.001) + 3
+            raster = np.full((n_a, 180), g.radius)
+            for ah, rh, ph in huelle:
+                ia = int((ah - a_min) / 0.001)
+                ip = int((math.degrees(ph) + 180) / 2) % 180
+                raster[ia, ip] = max(raster[ia, ip], rh)
+            weit = raster.copy()
+            da = int(DAUMEN_BREITE / 0.001)
+            for sa in range(-da, da + 1):
+                verschoben = np.full_like(raster, g.radius)
+                if sa >= 0:
+                    verschoben[sa:] = raster[:n_a - sa] if sa else raster
+                else:
+                    verschoben[:sa] = raster[-sa:]
+                for sp in range(-int(DAUMEN_WINKEL / 2), int(DAUMEN_WINKEL / 2) + 1):
+                    weit = np.maximum(weit, np.roll(verschoben, sp, axis=1))
+        else:
+            a_min, n_a, weit = 0.0, 0, None
+
+        def huelle_r(a: float, phi: float) -> float:
+            if weit is None:
+                return g.radius
+            ia = int((a - a_min) / 0.001)
+            if ia < 0 or ia >= n_a:
+                return g.radius
+            return float(weit[ia, int((math.degrees(phi) + 180) / 2) % 180])
+
+        def glied(k: int, vorher: Vector, phi_v: float, r: float):
+            """Gelenk k bei Radius r: Drehung gegen die Finger, mit der das Glied seine Länge behält;
+            gibt Ziel, Winkel, ob Gelenk und Glied über der Fingerhülle liegen, und das tatsächliche
+            Gelenk (Länge des Glieds) zurück."""
+            a_k, L, beere = axiale[k], laengen[k], beeren[k]
+
+            def f(delta: float) -> float:
+                return (punkt(a_k, r, phi_v - delta) - vorher).length - L
+
+            lo, hi = 0.0, math.pi
+            if f(lo) > 0:
+                delta = 0.0  # radialer und axialer Sprung größer als das Glied: so weit es reicht
+            elif f(hi) < 0:
+                delta = hi
+            else:
+                for _ in range(40):
+                    m = (lo + hi) / 2
+                    if f(m) > 0:
+                        hi = m
+                    else:
+                        lo = m
+                delta = (lo + hi) / 2
+            phi_k = phi_v - delta
+            z = punkt(a_k, r, phi_k)
+            frei = all(zyl(q := vorher + (z - vorher) * t)[1] >= huelle_r(zyl(q)[0], zyl(q)[2]) + beere + DAUMEN_AUF_FINGER - 1e-6
+                       for t in (0.2, 0.4, 0.6, 0.8, 1.0))
+            return z, phi_k, frei, vorher + (z - vorher).normalized() * L
+
+        def naechstes_frei(k: int, vorher: Vector, phi_v: float, r_vor: float) -> bool:
+            """Vorausschau: Kann das folgende Glied frei liegen, ohne mehr als `DAUMEN_ANSTIEG` seiner
+            Länge radial anzusteigen? Sonst muss schon dieses Gelenk höher."""
+            r = g.radius + beeren[k]
+            while r <= r_vor + DAUMEN_ANSTIEG * laengen[k]:
+                if glied(k, vorher, phi_v, r)[2]:
+                    return True
+                r += 0.001
+            return False
+
+        ziele, radien, phis = [], [], []
+        vorher, phi_v = p0, phi0
+        for k in range(3):
+            # Radius von der Stange (Beere auf der Stange) in Schritten anheben, bis Gelenk und Glied
+            # frei liegen und das nächste Glied flach folgen kann
+            r = max(g.radius + beeren[k], (radien[-1] if radien else 0.0) - DAUMEN_ABSTIEG * laengen[k])
+            while True:
+                z, phi_k, frei, ist = glied(k, vorher, phi_v, r)
+                if (frei and (k == 2 or naechstes_frei(k + 1, ist, phi_k, r))) or r > g.radius + 0.08:
+                    break
+                r += 0.0005
+            ziele.append(z)
+            radien.append(r)
+            phis.append(phi_k)
+            vorher, phi_v = ist, phi_k
+
+        # Je Glied die Drehung, die die Ruhe-Richtung auf die Sehne bringt und die Beere (in der
+        # Grundhaltung zur Handfläche hin, `g.handflaeche`) zur Stangenachse dreht
+        absolut, richtungen = [], []
+        start = p0
+        for (kopf, ende), ziel in zip(kette, ziele):
+            v = ziel - start
+            mitte_glied = (start + ziel) / 2
+            radial = mitte_glied - (g.mitte + achse * zyl(mitte_glied)[0])
+            absolut.append(abbild(ende - kopf, g.handflaeche, v, -radial))
+            richtungen.append(v.normalized())
+            start = start + v.normalized() * (ende - kopf).length
+        relativ = [absolut[0], absolut[0].inverted() @ absolut[1], absolut[1].inverted() @ absolut[2]]
+        winkel = {
+            "sattel": math.degrees((kette[0][1] - kette[0][0]).angle(richtungen[0])),
+            "grund": math.degrees(richtungen[0].angle(richtungen[1])),
+            "end": math.degrees(richtungen[1].angle(richtungen[2])),
+        }
+        return {"R": relativ, "winkel": winkel, "punkte": ziele, "radien": radien, "axial": axiale,
+                "phi": [math.degrees(x) for x in phis], "spitze_axial": a_spitze, "beeren": beeren}
+
+    def _daumen_ring(self, seite: str, g: Griff, dicke: float) -> dict:
+        """Daumen als Ring in der Querebene des Sattelgelenks (D-425; seit D-435 nur noch für dünne Stangen,
+        beim Latziehen): Daumen und Finger bilden einen
         geschlossenen Ring um die Stange. Alle Gelenke des Daumens liegen auf dem Kreis um die
         Stangenachse mit dem Radius Stange plus Daumendicke, in der Ebene quer zur Stange durch das
         Sattelgelenk; der Daumen läuft in Gegenrichtung der Finger um die Stange (vom Handgelenk her

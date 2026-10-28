@@ -1080,21 +1080,9 @@ Dein Auftrag steht in `docs/prompts/uebungen-korrektur4-FORM.md`; beide Anhänge
 - **Geprüft:** Nahaufnahme des Oberschenkels mit der Kamera der App, Bankdrücken in Player-Größe (390 px: als heller Fleck erkennbar, im Vorschaubild nicht, wie das Brust-F), tiefste Kniebeuge (am Rand der Lime-Zone sichtbar), Latziehen (von hinten-seitlich).
 - **Zur Entscheidung:** Weil das bisherige F ebenfalls auf dem linken Bein liegt (außen, 80°), sind beim Latziehen beide F zugleich zu sehen, 6 cm voneinander (Blatt `korrektur4-2-shorts-logo.webp`, dritte Spalte). Das war im Auftrag so verlangt (Ergänzung, bisheriges F unverändert), sieht von der Seite aber nach zwei Logos auf einem Bein aus. Drei Wege, alle nur Konfiguration: beide lassen; das äußere F auf das rechte Bein spiegeln (`x: -1`), dann hat jedes Bein ein F; das äußere F durch das neue ersetzen. Ich habe nichts davon vorweggenommen.
 
-### 17.3 Personalisiertes Modell: Technik und Datenschutz (D-437)
+### 17.3 und 17.4 Personalisiertes Modell (D-437, D-438)
 
-- **Datenschutz zuerst:** Deine drei Fotos, die erkannten Landmarken, die Silhouette des Profils, alle Zwischenbilder und Vorschauen liegen nur im Arbeitsordner dieser Sitzung. `.gitignore` sperrt zusätzlich `tools/uebungen-3d/persoenlich/`, `docs/screens/uebungen/persoenlich/` und Dateien `persoenlich-*`; vor jedem Commit habe ich `git status` geprüft. Ins Repository kommen nur Reglerwerte und Konfiguration (`gesicht.py`), die Zuordnung der Landmarken zum Grundmodell (`gesicht-marken.json`, beschreibt nur das MakeHuman-Netz) und die Werkzeuge.
-- **Lizenzen:** Landmarken mit dem Face Landmarker von MediaPipe 0.10.14 (Apache 2.0, Modell Apache 2.0); Gesichtsform aus den Formzielen von MakeHuman über MPFB2 (CC0); Frisur und Brauen aus dem CC0-Paket von MakeHuman. Ausgeschlossen: FLAME, Basel Face Model, DECA und Verwandte (nur Forschung), dlib-Landmarken (Trainingsdaten nur Forschung), InsightFace (nicht kommerziell). Alles in `docs/licenses-data.md` Abschnitt 9.
-- **Weg:** Landmarken auf den Fotos und auf einem Rendering des Grundmodells von vorn (lange Brennweite). Die Landmarken des Renderings werden per Strahl auf das Netz zurückprojiziert; danach lassen sich die Landmarken des Modells für jede Reglerstellung direkt aus dem verschobenen Netz berechnen, ohne neues Rendering. Zwanzig Verhältnisse (Gesichtshöhe zu -breite, Nasenlänge und -breite, Mundbreite, Lippen, Augengröße und -abstand, Brauen, Kinn, Wangenknochen) beschreiben Foto und Modell gleich; die Regler werden Paar für Paar so eingestellt, dass die Maße des Modells denen der Fotos am nächsten kommen. Das Profil kommt als Silhouette dazu.
-- **Grenzen der Technik, ehrlich:** Das Profilfoto erkennt der Landmarker nicht (volles Profil); seine Silhouette ist an Nase, Kinn und Stirn beschnitten, Nasenvorsprung und Kinn sind daraus nur Untergrenzen. Beide Frontfotos sind Selfies aus kurzem Abstand, die Nase und Lippen gegenüber dem Rendering vergrößern; die Nasenbreite ist darum geringer gewichtet. Fünf Regler (Stirnhöhe, Kinnbreite, Kieferform, Wangenlage) ändern keine Landmarke und sind nur von Hand zu setzen. Eine erste Ausgleichsrechnung über alle Maße zugleich trieb Fülle, Wangen und Kiefer an die Grenzen und machte das Gesicht hager, das Gegenteil der Fotos; sie ist verworfen (Testprotokoll).
-
-### 17.4 Variante „C männlich – Personalisiert“ (D-438)
-
-- **Was es ist:** Schlüssel `Cp` neben `Cm`, wählbar als `Cp-A1` in allen Werkzeugen; nur für Test- und Vorschau-Renderings, nichts stellt darauf um. Körper, Skelett, Rig, Kleidung, Licht und Zonen sind die von C männlich; nur Kopf und Aussehen ändern sich. Renderzeit gleich (Bankdrücken 22,7 s gegen 25,2 s).
-- **Gesichtsform:** Charakterregler nach Augenschein deiner Fotos (volles, rundes Gesicht, weiche Wangen, kräftiger Kiefer, breites Kinn, breite Nasenflügel und runde Spitze, deutlich hervortretende Nase, niedriger Haaransatz), die Größen- und Lageregler Paar für Paar an die Maße beider Frontfotos angepasst (Abweichung 10,4 % statt 13,0 % beim Grundmodell). Alle Werte mit Begründung in `gesicht.py` und D-438.
-- **Aussehen:** Frisur `short04` fast schwarz (die nächste der vier kurzen CC0-Frisuren, Deckhaar nach hinten, kurze Seiten), dichte dunkle Brauen (Brauennetz plus Zone der Haut), braune Augen, wärmerer Hautton, Vollbart als Zone der Haut mit Stoppelmuster: Oberlippe, Kinn, Kiefer und oberer Hals dicht, Wangen bis zu einer Linie vom Ohr zum Mundwinkel, Koteletten bis zum Ohr. Kleiner Leberfleck neben dem linken Nasenflügel.
-- **Was aus den Fotos nicht sicher ist, gekennzeichnet:** die Seite des Leberflecks (zwei Selfies zeigen ihn auf verschiedenen Seiten; ich habe links genommen); Nasenvorsprung und Kinn im Profil (Profilfoto an Nase und Kinn beschnitten, nur Untergrenzen); die genaue Breite des Bartes am Hals und die Höhe des Haaransatzes unter dem nassen Haar; Augenfarbe aus den Fotos als dunkelbraun gelesen.
-- **Ehrliche Bewertung:** Die Vorschau geht erkennbar in deine Richtung (Gesichtsform, Brauen, Bart, Haar, Hautton), ist aber keine perfekte Gesichtstreue. Bart und Brauen sind Texturzonen ohne Volumen, der Haaransatz liegt höher als bei dir, die Augen wirken größer und offener, die Lippen voller und rosiger. Du beurteilst das an den Vorschauen; nächste Stufen wären ein Haarnetz für den Bart (Renderzeit steigt), eine eigene Frisur und Feinarbeit an Augenlidern und Lippen.
-- **Vorschauen, nur bei dir:** Gesicht von vorn, im Dreiviertelprofil und von der Seite neben dem passenden Foto und neben dem bisherigen Modell; Bankdrücken vollständig mit der Kamera der App neben C männlich; Kopf in der Ausgangsposition des Bankdrückens und im Stand. Nichts davon liegt im Repository.
+Mit D-444 vollständig entfernt: Du verwendest die Variante nicht. Werkzeuge, Reglerwerte, die Beschreibung des Aussehens und die aus deinen Fotos gemessenen Maße stehen nicht mehr im Repository; Fotos und Vorschauen lagen nie darin.
 
 ### 17.5 Vorher-nachher-Blätter (D-439)
 
@@ -1104,13 +1092,13 @@ Alle drei in `docs/screens/uebungen/`, links der Stand D-434 (Werkzeug aus dem R
 2. `korrektur4-2-shorts-logo.webp`: linker Oberschenkel mit der Kamera der App beim Bankdrücken, in der tiefsten Kniebeuge und beim Latziehen (dort beide F).
 3. `korrektur4-3-player.webp`: Bankdrücken vorher und nachher in der Größe des großen Players mit dem Vorschaubild; darunter die drei Pilot-Übungen nachher.
 
-Blatt C (personalisiertes Modell neben deinen Fotos und dem bisherigen Modell, Bankdrücken neben C männlich, Kopf in der Übung) hast du als Dateien bekommen; es liegt nicht im Repository.
+Blatt C zum personalisierten Modell hast du als Datei bekommen; es lag nie im Repository (Variante mit D-444 entfernt).
 
 ### 17.6 Tests
 
 - **Daumen:** Ursache gemessen (Lage aller Gelenke um die Stange, Abstände, Haut im Netz), Dicken des Grundmodells gemessen, jede Zwischenfassung numerisch geprüft, danach alle drei Übungen und Phasen; Markierungskugeln an den Gelenken in drei Ansichten, um Bild und Zahlen abzugleichen.
 - **Shorts-F:** Bein per Strahl von der Kamera der App durch deine Markierung bestimmt; Nahaufnahmen in drei Übungen und Player-Größe.
-- **Personalisiertes Modell:** Werkzeuge einzeln geprüft (Landmarken auf Fotos und Rendering, Rückprojektion mit Kontrolle der Eckpunktnummern, Wirkung jedes Reglers auf die Maße, Abweichung je Fassung), vier Vorschauen neben den Fotos, Variante ganz im Bankdrücken und in der Kniebeuge; `git status` vor jedem Commit.
+- **Personalisiertes Modell:** Nachweise mit D-444 gestrichen (Variante entfernt).
 - **Dokumente:** `pnpm check:docs` und Prettier je Paket, `py_compile` aller Werkzeuge. Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde 4“.
 - **CI:** Die Läufe zu den Commits stehen in PR #53; jeder Push bricht den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
 
@@ -1118,7 +1106,7 @@ Blatt C (personalisiertes Modell neben deinen Fotos und dem bisherigen Modell, B
 
 - **Daumen:** Die Hülle macht die Konstruktion für jede Stange gleich; für dünne Griffe (Latzug, Kabelgriffe, Kurzhanteln mit dünnem Griff) steht der Daumen über den Fingern ab, dort bleibt der Ring (`daumen="ring"` je Übung). Beides gilt für die Familien des Animationsplans.
 - **Shorts-F:** Konfiguration, gilt für alle Übungen und Körper. Offen bei dir: beide F auf dem linken Bein lassen, das äußere auf das rechte Bein spiegeln oder ersetzen (17.2).
-- **Personalisiertes Modell:** Werkzeuge und Zuordnung gelten für jede Person; je Person kommen Fotos (nie ins Repository), Reglerwerte und Aussehen dazu. Nächste Stufen, wenn du sie willst: Bart als Haarnetz, eigene Frisur, Feinarbeit an Lidern und Lippen; besser wäre ein Profilfoto mit etwas Abstand, auf dem Nase und Kinn ganz im Bild sind.
+- **Personalisiertes Modell:** mit D-444 entfernt.
 - **Offen:** deine Freigabe der Standbilder (Daumen, Shorts-F) und der Vorschauen (personalisiertes Modell); danach rendere ich die Pilot-Übungen neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
 
 ### 17.8 Berichte je Paket
@@ -1146,25 +1134,8 @@ Nächste Schritte: Entscheidung des Produktinhabers (17.2)
 ```
 
 ```
-Arbeitspaket: D-437 Grundlage personalisiertes Modell
-Umgesetzte Funktionen: Werkzeuge, erfüllte AK: –
-Geänderte Dateien: .gitignore, tools/uebungen-3d/landmarken.py, gesicht_masse.py, gesicht_anpassen.py, gesicht.py, gesicht-marken.json, render.py; docs/licenses-data.md, Dokumente
-Technische Entscheidungen: D-437
-Ausgeführte Tests: MediaPipe-Umgebung, Landmarken auf Fotos und Rendering, Rückprojektion, Reglerwirkung, Maße; pnpm check:docs
-Ergebnis: bestanden; Profilfoto nur als Silhouette mit Untergrenzen
-Bekannte Einschränkungen: Perspektive der Selfies, fünf Regler ohne Wirkung auf Landmarken
-Nächste Schritte: Variante (D-438)
-```
-
-```
-Arbeitspaket: D-438 Variante C männlich – Personalisiert
-Umgesetzte Funktionen: Werkzeug (Vorschau), erfüllte AK: –
-Geänderte Dateien: tools/uebungen-3d/gesicht.py, realistisch.py, varianten.py; Dokumente
-Technische Entscheidungen: D-438
-Ausgeführte Tests: vier Vorschauen neben den Fotos, Variante ganz in zwei Übungen, Bartzone gezählt, git status; pnpm check:docs
-Ergebnis: bestanden als vorsichtige Annäherung, keine perfekte Gesichtstreue
-Bekannte Einschränkungen: Bart und Brauen als Texturzonen, Haaransatz, Augen, Lippen (17.4)
-Nächste Schritte: Beurteilung durch den Produktinhaber an den Vorschauen
+Arbeitspaket: D-437 und D-438 Personalisiertes Modell
+Inhalt mit D-444 entfernt (Variante wird nicht verwendet)
 ```
 
 ```
@@ -1197,15 +1168,7 @@ Dein Auftrag steht in `docs/prompts/uebungen-korrektur5-FORM.md`; dein Handfoto 
 
 ### 18.3 Personalisiertes Modell neu nach dem Referenzblatt (D-442)
 
-- **Was ersetzt wurde:** Die Variante `Cp` aus Runde 4 (Haarnetz `short04`, Bart und Brauen als Zonen der Haut, Gesicht aus den Selfies) ist ersetzt. C männlich bleibt unverändert die Standardfigur, nichts stellt um; `Cp-A1` gibt es weiter nur für Test- und Vorschau-Renderings.
-- **Wie das Gesicht entstand:** Zuerst die Gesichtsregler von MakeHuman. Als Startpunkt habe ich die Landmarken der Vorderansicht deines Blatts (MediaPipe) mit den Maßen des Grundmodells abgeglichen, Paar für Paar wie in Runde 4 (Abweichung 9,1 % statt 15,5 %). Das reicht nicht: Das Ergebnis war ein flaches, breites Gesicht. Danach habe ich jeden Wert nach Augenschein neben dem Blatt gesetzt, in acht Fassungen von vorn, im Dreiviertelprofil, im Profil und von hinten. Für Lidfalte, Augenwinkel, Lippenvolumen, Mundwinkel, Vorbiss, innere Wangen und Hals kamen 20 weitere Formziele von MakeHuman (CC0) dazu; eigene Formziele waren nicht nötig. Alle 45 Werte stehen in `gesicht.py`, mit Gruppen nach deinen Abweichungen: volles, eher ovales Gesicht; kräftiger, definierter Kiefer mit deutlichem Kinn; niedrige Stirn; Brauen nah über den Augen; große mandelförmige Augen mit etwas schweren Lidern und leicht gesenkten Außenwinkeln; gerade, deutliche Nase; Lippen weniger voll als in Runde 4; kräftiger Hals.
-- **Haare, Bart und Brauen als echte Haargeometrie:** `haare.py` lässt aus dem Netz der Figur Strähnen wachsen (Blender-Haarkurven, in Cycles als Haar gerendert; Material Principled Hair nach Melanin). Frisur: 40 000 Strähnen; Haaransatz je Winkel um den Kopf (Stirn tief, leichte Schläfenecken, Koteletten bis Augenhöhe, hinter dem Ohr zum Nacken), Deckhaar 34 bis 56 mm nach hinten-oben mit Tolle, Seiten und Nacken 9 bis 14 mm anliegend mit weichem Übergang vom Ansatz, leichte Welle, Strähnenbündel; die Ohren bleiben frei. Bart: 36 000 kurze Strähnen (3,5 bis 5 mm) im Bartfeld der Marken mit klarer Wangenlinie, Schnurrbart mit dem Kinnbart verbunden, unter dem Kiefer nach 2 cm begrenzt. Brauen: 2 600 Strähnen in einem schmalen Band, dicht und fast gerade, außen schmaler. Die Kurven hängen am Skelett und folgen dem Kopfknochen starr; in den drei Übungen bewegen sich Kopf, Kiefer und Brauen nicht gegeneinander, der Hals bleibt frei, darum berühren die Strähnen weder Kragen noch Stange.
-- **Haut und Leberfleck:** warmer hellbrauner Ton, feine Struktur als Unebenheit, weniger Wachs (Glanz rauer, weniger Unterflächenstreuung); Augen braun. Der Leberfleck sitzt als flache Kugel auf der linken Wange neben dem Nasenflügel, wie auf dem Blatt (deine Vorlage nennt die Seite als „[linken/rechten]“, das Blatt zeigt links; sag Bescheid, wenn rechts gemeint ist). Die Zone aus Runde 4 traf auf dem groben Netz keinen Eckpunkt und war deshalb nie zu sehen.
-- **Ohren und Stolperstein:** Die Ohr-Formziele von MakeHuman taugen nicht als Maske, sie verschieben die halbe Kopfseite; zwei Fassungen hatten darum kahle Seiten. Jetzt erkennt das Werkzeug die Ohren an der dichten Vernetzung des Grundmodells.
-- **Lizenzen:** MakeHuman-Grundmodell und Formziele CC0, MediaPipe Apache 2.0 (nur im Werkzeug, für die Landmarken des Blatts), Blender als Programm GPL mit freien Bildern; die Haare sind eigene Geometrie ohne fremde Haarmodelle. Alles in `docs/licenses-data.md` Abschnitt 9. FLAME, Basel Face Model und DECA bleiben ausgeschlossen.
-- **Renderzeit:** Bankdrücken 25,1 s, Kniebeuge 17,8 s, Latziehen 18,1 s je Bild (720 × 540, 40 Proben) gegen 23,0 / 16,5 / 17,5 s für C männlich; der Aufbau der Haare kostet rund 16 s je Szene (Aufbau 21 bis 23 s statt 5 bis 6 s), einmal je Übung.
-- **Wie nah das Blatt erreicht ist, ehrlich:** Erkennbar dieselbe Richtung: Frisur mit vollem Deckhaar und kurzen Seiten, dunkler Vollbart mit Wangenlinie, dichte gerade Brauen, warmer Hautton, Leberfleck, volles Gesicht mit kräftigem Kiefer. Keine Kopie: Die Strähnen sind erzeugt und wirken feiner und struppiger als die gemalten Bündel des Blatts, Tolle und Haaransatz sind nur angenähert; Augenform, Nase und Lippen bleiben in den Grenzen der MakeHuman-Ziele; es gibt keine Fototextur, Hautstruktur und Lichtwirkung sind die des FORM-Looks. Das Blatt ist selbst ein erzeugtes Bild, kein Foto; sein Profil erkennt MediaPipe nicht, das Profil wurde darum nur nach Augenschein abgeglichen. Mit MakeHuman ist mehr Ähnlichkeit vor allem über Handarbeit an den Haaren und am Gesichtsnetz möglich; kostenlose Werkzeuge mit kommerzieller Lizenz dafür wären Blenders Bildhauerwerkzeuge und Haarwerkzeuge selbst, nicht andere Gesichtsmodelle.
-- **Vorschauen:** drei private Blätter als Dateien bei dir, nicht im Repository: Kopf von vorn, im Dreiviertelprofil, im Profil und von hinten, je neben dem Blatt und neben dem bisherigen `Cp-A1`; Nahaufnahmen Auge mit Braue und Ohr mit Haaransatz; die drei Pilot-Übungen in Player-Größe.
+Mit D-444 vollständig entfernt: Die neue Fassung sah dir nicht ähnlich, du verwendest die Variante nicht. Reglerwerte, Haarparameter, die Beschreibung des Aussehens und alle Nachweise mit Maßen stehen nicht mehr im Repository; Referenzblatt und Vorschauen lagen nie darin.
 
 ### 18.4 Vergleichsblätter (D-443)
 
@@ -1215,13 +1178,13 @@ Alle drei in `docs/screens/uebungen/`, links der Stand D-439 (Werkzeug aus dem R
 2. `korrektur5-2-shorts-logo.webp`: linker Oberschenkel mit der Kamera der App beim Bankdrücken, in der tiefsten Kniebeuge und beim Latziehen sowie im Stand von links.
 3. `korrektur5-3-player.webp`: die drei Pilot-Übungen vorher und nachher in der Größe des großen Players mit dem Vorschaubild.
 
-Privat als Dateien bei dir, nicht im Repository: das Griffblatt mit deinem Handfoto daneben und die drei Blätter C zum personalisierten Modell (Kopf aus vier Richtungen neben Referenzblatt und bisherigem Modell, Nahaufnahmen Auge mit Braue und Ohr mit Haaransatz, drei Pilot-Übungen in Player-Größe).
+Privat als Dateien bei dir, nicht im Repository: das Griffblatt mit deinem Handfoto daneben und die Blätter zum personalisierten Modell (Variante mit D-444 entfernt).
 
 ### 18.5 Tests
 
 - **Daumen:** Ursache gemessen (Lage aller Gelenke um die Stange, Hub, Beeren, Querschnitt der Daumenglieder mit Hauptachsen), zwei Zwischenfassungen numerisch und im Bild geprüft, danach alle drei Übungen; neun Nahaufnahmen je Stand neben dem Handfoto, Latziehen zusätzlich als Ring und über den Fingern.
 - **Shorts-F:** Nahaufnahmen in drei Übungen und im Stand von links, Standbilder in Player-Größe.
-- **Personalisiertes Modell:** Landmarken des Blatts, Anpassung Paar für Paar, acht Kopffassungen neben dem Blatt aus bis zu vier Richtungen, Fehlersuche an Ohrmaske und Leberfleck mit Zahlen, Variante ganz in den drei Pilot-Übungen mit Renderzeiten; `git status` und Suche nach Bilddateien vor jedem Commit.
+- **Personalisiertes Modell:** Nachweise mit D-444 gestrichen (Variante entfernt).
 - **Dokumente:** `pnpm check:docs` und Prettier je Paket, `py_compile` aller Werkzeuge; zu D-440 zusätzlich alle Checks des CI-Jobs lokal. Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde 5“.
 - **CI:** Die Läufe zu den Commits stehen in PR #53; jeder Push bricht den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
 
@@ -1229,8 +1192,8 @@ Privat als Dateien bei dir, nicht im Repository: das Griffblatt mit deinem Handf
 
 - **Daumen:** Eine Konstruktion für alle Stangen; der Ring aus D-425 bleibt als Option im Werkzeug. Für die Familien des Animationsplans gilt dasselbe Rig.
 - **Shorts-F:** Konfiguration für alle Übungen und Körper.
-- **Personalisiertes Modell:** Werkzeuge gelten für jede Person; je Person kommen Vorlagen (nie ins Repository), Reglerwerte und Haarparameter dazu. Die Haarkurven kosten rund 2 s je Bild und 16 s je Aufbau mehr. Nächste Stufen, wenn du sie willst: Deckhaar mit größeren Bündeln und mehr Glanz wie auf dem Blatt, Feinarbeit an Augenform und Lippen, eine Fototextur nur mit Fotos aus mehreren Richtungen.
-- **Offen bei dir:** Freigabe der Standbilder (Daumen, Shorts-F) und der Vorschauen des personalisierten Modells; die Seite des Leberflecks (Blatt zeigt links); danach rendere ich die drei Pilot-Übungen neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+- **Personalisiertes Modell:** mit D-444 entfernt.
+- **Offen bei dir:** Freigabe der Standbilder (Daumen, Shorts-F) und der Vorschauen des personalisierten Modells; danach rendere ich die drei Pilot-Übungen neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei. Stand danach: Shorts-F freigegeben, Variante entfernt, Daumen offen (D-444).
 
 ### 18.7 Berichte je Paket
 
@@ -1258,13 +1221,7 @@ Nächste Schritte: Freigabe der Standbilder
 
 ```
 Arbeitspaket: D-442 Personalisiertes Modell neu nach dem Referenzblatt
-Umgesetzte Funktionen: Werkzeug für Vorschauen (nichts in der App), erfüllte AK: –
-Geänderte Dateien: tools/uebungen-3d/haare.py (neu), gesicht.py, realistisch.py, varianten.py; docs/licenses-data.md; Dokumente
-Technische Entscheidungen: D-442
-Ausgeführte Tests: Landmarken, Anpassung Paar für Paar, acht Kopffassungen neben dem Blatt, Variante in drei Übungen mit Renderzeiten, Datenschutzprüfung vor dem Commit
-Ergebnis: bestanden als Vorschau; Gesichtstreue vom Produktinhaber zu beurteilen
-Bekannte Einschränkungen: erzeugte Strähnen statt gemalter Bündel, Tolle und Haaransatz angenähert, Augen, Nase und Lippen in den Grenzen von MakeHuman, keine Fototextur
-Nächste Schritte: Freigabe der Vorschauen, Seite des Leberflecks bestätigen
+Inhalt mit D-444 entfernt (Variante wird nicht verwendet)
 ```
 
 ```
@@ -1277,3 +1234,15 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine
 Nächste Schritte: Freigabe durch den Produktinhaber, dann Pilot-Übungen neu rendern
 ```
+
+## 19. Nachricht nach Korrekturrunde 5: Variante entfernt, Shorts-F frei, Daumen letzter Versuch
+
+Deine Nachricht vom 28.10.2026: Das personalisierte Modell sieht dir nicht ähnlich und wird nicht verwendet; das einzelne Shorts-F ist freigegeben; der Daumen ist noch nicht frei, dafür ein letzter Versuch mit zwei Hebeln. Dein Handfoto liegt wieder nur im Arbeitsordner der Sitzung.
+
+### 19.1 Personalisierte Variante entfernt (D-444)
+
+- **Code:** Gelöscht sind die Reglerwerte (`gesicht.py`), die Haarparameter (`haare.py`), die Werkzeuge für Landmarken, Maße und Anpassung und die Zuordnung der Landmarken. `realistisch.py`, `varianten.py`, `render.py`, `.gitignore` und `.prettierignore` stehen wieder wie vor Runde 4. Was die Standardfigur braucht, bleibt unverändert: Rig, Körperform, Haut, Augen und Haare von MakeHuman für C männlich, Kleidung, Logos und das Blattwerkzeug.
+- **Dokumente:** Die Einträge D-437, D-438 und D-442, die Nachweise im Testprotokoll, die Abschnitte 17.3, 17.4 und 18.3 und die Paketberichte sind gekürzt; Abschnitt 9 der Lizenzen ist als entfernt vermerkt. In deinen Aufträgen der Runden 4 und 5 ist der Abschnitt zur Variante durch einen Vermerk ersetzt, weil er dein Aussehen beschrieb. Ich habe den ganzen aktuellen Stand nach Merkmalen, Werten und den gemessenen Verhältnissen durchsucht; übrig sind nur Hinweise, dass es die Variante gab und dass sie entfernt ist.
+- **Arbeitsumgebung:** Beim Durchsehen fand ich einen Fehler aus Runde 5: Ein Arbeitsbild mit einem Ausschnitt deines Handfotos lag noch im Arbeitsordner, meine damalige Löschprüfung hatte es übersehen. Es ist gelöscht, ebenso der archivierte Werkzeugstand mit den alten Reglerwerten, die Umgebungen von MediaPipe und die nur für das Gesicht geladenen Formziele.
+- **Grenze, ehrlich:** Die Git-Historie des Branches enthält die alten Inhalte weiter, also Reglerwerte, Haarparameter und Beschreibungen in früheren Commits und Commit-Nachrichten; ebenso die früheren Fassungen der PR-Beschreibung. Bilddaten von dir lagen nie im Repository. Ganz entfernen ließe sich das nur durch Umschreiben der Historie des Branches und Löschen der alten Fassungen auf GitHub; das mache ich nur, wenn du es ausdrücklich willst.
+- **Shorts-F:** als freigegeben vermerkt (D-441).

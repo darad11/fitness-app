@@ -50,39 +50,7 @@ Rendere eine Nahaufnahme der Shorts und die vollständige Bankdrückposition in 
 
 ## 3. Zusätzliche männliche Variante mit meinem Gesicht
 
-### Ziel
-
-Das bestehende männliche Modell bleibt als unveränderte Standardvariante. Erstelle zusätzlich eine eindeutig benannte Variante **„C männlich – Personalisiert“**, die mein Aussehen anhand meiner Fotos so genau wie technisch möglich wiedergibt und dieselben Übungen ausführen kann. Es soll erkennbar dieselbe Person sein, nicht bloß ein beliebiges Modell mit ähnlicher Frisur.
-
-### Datenschutz – zwingend
-
-Das Repository ist öffentlich. Deshalb:
-- Meine Fotos, daraus erzeugte Gesichtstexturen, Zwischenbilder und erkannte Gesichtsmerkmale werden **nie committet** und liegen nur außerhalb des Repositorys in der Arbeitsumgebung der Sitzung. Trag die verwendeten Pfade in `.gitignore` ein, bevor du anfängst, und prüfe vor jedem Commit, dass nichts davon darin ist.
-- Ins Repository kommen nur die Reglerwerte des Modells und die Konfiguration der Variante – keine Bilddaten meines Gesichts. Vorschau-Renderings der personalisierten Variante liegen ebenfalls nur außerhalb des Repositorys, bis ich sie freigebe.
-- Nach Abschluss der Runde löschst du die Fotos und die abgeleiteten Texturen aus der Arbeitsumgebung und bestätigst mir das.
-
-### Gesichtstreue hat Priorität
-
-Übernimm die sichtbaren Merkmale so genau wie möglich: Gesichtsform und -proportionen, Stirn und Haaransatz, Frisur mit Länge, Farbe und Form, Augenform, -abstand und -farbe, Augenbrauen nach Form, Dichte und Lage, Nase mit Breite, Länge und Spitze, Lippen und Mundform, Wangen und Wangenknochen, Kieferpartie, Kinn, Ohren, Bart mit Dichte, Konturen und Übergängen, und weitere individuelle Merkmale, die für die Wiedererkennbarkeit wichtig sind.
-
-**Nicht verschönern, stilisieren oder eigenständig verändern** – keine andere Frisur, kein anderer Bart, keine symmetrischere Gesichtsform, keine veränderte Nase, keine größeren Augen, keine idealisierten Züge. Ist ein Detail auf den Fotos nicht eindeutig zu erkennen, erfinde nichts; nutze eine vorsichtige Annäherung und kennzeichne sie.
-
-### Technische Umsetzung
-
-- **Lizenz:** Nur Werkzeuge und Modelle, deren Lizenz die Nutzung in einer kommerziellen App erlaubt. Viele Verfahren zur 3D-Gesichtsrekonstruktion beruhen auf Gesichtsmodellen, die nur für nichtkommerzielle Forschung freigegeben sind – die scheiden aus. Prüfe und dokumentiere jede Lizenz in `docs/licenses-data.md`.
-- **Bevorzugter Weg:** Gesichtsmerkmale (Landmarken) mit einem frei lizenzierten Werkzeug auf allen Fotos erkennen und damit die Gesichtsregler von MakeHuman (CC0) so einstellen, dass Form und Proportionen aus allen Blickwinkeln passen. Eine Gesichtstextur aus den Fotos nur ergänzend und nur, wenn sie aus seitlichen und schrägen Ansichten ohne sichtbare Nähte und Fehler funktioniert – keine Fototextur über eine unpassende Grundform legen.
-- Skelett, Rig und Animationen bleiben unverändert nutzbar; Kopf, Hals und Körper sind natürlich verbunden; Haare, Bart und Gesicht durchdringen sich bei Bewegung nicht und fallen nicht auseinander; Texturauflösung angemessen; Renderzeit und Ladezeit steigen nicht unverhältnismäßig.
-- Wenn die Fotos noch fehlen: Bereite die Technik vor, erstelle aber keine erfundene Rekonstruktion meines Gesichts, sondern fordere die Fotos an.
-
-### Erwartung
-
-Kennzeichne ehrlich, welche Bereiche sich aus den Fotos nicht zuverlässig ableiten lassen. Behaupte keine perfekte Gesichtstreue – ich beurteile sie an den Vorschauen.
-
-### Varianten und Kompatibilität
-
-- Die neue Variante ist über die bestehende Modellkonfiguration wählbar; nichts wird automatisch auf sie umgestellt.
-- Vorerst nur für Test- und Vorschau-Renderings.
-- Prüfe die Gesichtstreue von vorn, im Dreiviertelprofil und von der Seite, jeweils neben meinen Fotos; teste die drei Pilot-Übungen.
+[Der Inhalt dieses Abschnitts ist mit D-444 auf Wunsch des Produktinhabers aus dem Repository entfernt: Er beschrieb die personalisierte Variante, die nicht verwendet wird. Datenschutz galt unverändert: Fotos, Landmarken, Texturen und Vorschauen der Person lagen nie im Repository.]
 
 ## 4. Reihenfolge
 

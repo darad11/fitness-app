@@ -11,9 +11,6 @@ Farben der Kollektion. Schlüssel `<Körper>-<Fassung>`, z. B. `D-A1`, `Cm-B`; d
 """
 from __future__ import annotations
 
-from mathutils import Matrix
-
-import gesicht  # noqa: F401  (registriert die Form „persoenlich“)
 import kleidung
 import realistisch
 import szene
@@ -22,9 +19,6 @@ KOERPER = {
     "D": {"titel": "D · grau, neutral", "form": "neutral", "aussehen": "grau"},
     "Cm": {"titel": "C · männlich, MakeHuman", "form": "maennlich", "aussehen": "real"},
     "Cw": {"titel": "C · weiblich, MakeHuman", "form": "weiblich", "aussehen": "real"},
-    # „C männlich – Personalisiert“ (D-438, neu nach dem Referenzblatt D-442: Gesichtsregler in `gesicht.py`,
-    # Frisur, Bart und Brauen als Haarkurven in `haare.py`): nur für Test- und Vorschau-Renderings, nichts stellt darauf um
-    "Cp": {"titel": "C · männlich, personalisiert", "form": "persoenlich", "aussehen": "real"},
 }
 ALLE_HELL = {"brust": "hell", "ruecken": "hell", "bein": "hell"}
 FASSUNGEN = {
@@ -50,10 +44,6 @@ def ausstatten(uebung, schluessel: str) -> list:
     teile = kleidung.anziehen(k, sk, v["zonen"], v["logos"], v["staerke"], v.get("brust_hoehe"))
     if v["aussehen"] == "real":
         teile += realistisch.ausstatten(k, sk, k.name, v["form"], v["zonen"], v["staerke"])
-        # Haarkurven folgen dem Kopfknochen starr (D-442): `Rig.anwenden` setzt ihre Lage je Haltung
-        for o in teile:
-            if o.get("folgt"):
-                uebung.rig.folger.append((o, o["folgt"], Matrix.Identity(4)))
     else:
         mat = szene.koerper_material(zonen_staerke=v["staerke"]) if v["zonen"] else szene.matt("Koerper", szene.KOERPER, 0.72)
         k.data.materials.append(mat)

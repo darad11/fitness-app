@@ -14,10 +14,3 @@ blob-report/
 *.tsbuildinfo
 __pycache__/
 tools/uebungen-3d/quelle/
-# Personalisiertes Modell (D-437): Fotos, Landmarken, Texturen und Vorschauen einer Person nie im Repository
-tools/uebungen-3d/persoenlich/
-docs/screens/uebungen/persoenlich/
-**/persoenlich-*.png
-**/persoenlich-*.jpg
-**/persoenlich-*.webp
-**/persoenlich-*.json

@@ -42,39 +42,7 @@ Behalte **nur das neue F** links vorn-außen nahe dem Saum (aus D-436). Das bish
 
 ## 4. Personalisiertes Modell – Neubau nach dem Referenzblatt
 
-Die Variante Cp-A1 sieht mir nicht ähnlich. **Ersetze** sie durch eine neue Fassung – nicht zusätzlich behalten. Das bestehende männliche Modell bleibt unverändert die Standardvariante; nichts wird auf die personalisierte Variante umgestellt.
-
-Das Referenzblatt ist ein gemaltes Bild, kein 3D-Modell. Es ist die Vorlage für Form, Proportionen, Haare, Bart, Haut und Materialwirkung – baue es so nah nach, wie es in 3D technisch möglich ist.
-
-### Abweichungen, die ich sehe
-
-- **Haare:** bisher glatt und nach hinten gelegt – im Referenzblatt kurz, oben voluminös und strukturiert mit leichter Welle, nach hinten-oben gestylt, Seiten und Nacken kurz mit weichem Übergang, sauberer Abschluss im Nacken. Haaransatz tiefer als bisher.
-- **Bart:** bisher eine verschwommene Texturzone ohne Volumen – im Referenzblatt kurzer, voller Bart mit klarer Wangenlinie, Schnurrbart mit Verbindung zum Kinnbart, am Kinn dichter, unter dem Kiefer sauber begrenzt.
-- **Augenbrauen:** dicht, dunkel, kräftig, fast gerade mit leichtem Bogen außen.
-- **Augen:** braun, mandelförmig, mit leicht schweren Oberlidern – bisher zu offen.
-- **Lippen:** bisher zu voll; nach dem Referenzblatt angleichen.
-- **Gesichtsform:** volles Gesicht mit kräftigem, definiertem Kiefer, wie im Referenzblatt.
-- **Leberfleck:** auf meiner **[linken/rechten]** Wange, seitlich über dem Mundwinkel. Selfies können gespiegelt sein – diese Angabe gilt.
-- **Haut:** warmer, hellbrauner Ton mit natürlicher Struktur, nicht wachsartig.
-
-Ergänze weitere Abweichungen, die du siehst: Nase, Ohren, Stirn, Hals. **Nichts verschönern oder eigenständig verändern** – größtmögliche Ähnlichkeit, keine Interpretation.
-
-### Technik
-
-- Lege die Ansichten des Referenzblatts als Referenzbilder hinter passende Kameras (vorn, Dreiviertel, Profil, hinten) und passe Umriss und Merkmale in allen Ansichten zugleich an.
-- Zuerst die Gesichtsregler von MakeHuman; wo sie nicht reichen, eigene Formziele (Shape Keys) für Kiefer, Wangen, Nase, Lippen und Augenpartie. Topologie, Skelett und Rig bleiben unverändert.
-- **Haare, Bart und Augenbrauen als echte Haargeometrie** (Haarkurven oder Haarkarten) mit Volumen – keine aufgemalten Texturzonen.
-- Natürliche Hautstruktur und weiche Lichtwirkung wie im Referenzblatt, aber im FORM-Look (dunkler Hintergrund, Kantenlicht).
-- Weiter nur kostenlose Werkzeuge und Daten mit Lizenz für kommerzielle Apps (wie MediaPipe, Apache 2.0), dokumentiert in `docs/licenses-data.md`; FLAME, Basel Face Model, DECA und Ähnliches bleiben ausgeschlossen.
-- Haare und Bart durchdringen bei Bewegung weder Kopf noch Kleidung noch Stange. Nenne die zusätzliche Renderzeit je Bild.
-
-### Ehrliche Grenze
-
-Sag mir offen, wie nahe du dem Referenzblatt kommst und welche Merkmale an Grundfigur oder Werkzeugen scheitern. Ist die Ähnlichkeit mit MakeHuman grundsätzlich nicht erreichbar, schlag kostenlose Alternativen mit kommerzieller Lizenz vor. Behaupte keine Gesichtstreue, die die Vorschauen nicht zeigen.
-
-### Vorschauen
-
-Jeweils neben dem passenden Ausschnitt des Referenzblatts und neben Cp-A1: Kopf von vorn, im Dreiviertelprofil, im Profil und von hinten; Nahaufnahmen von Auge mit Augenbraue und von Ohr mit Haaransatz; Kniebeuge, Bankdrücken und Latziehen in Player-Größe.
+[Der Inhalt dieses Abschnitts ist mit D-444 auf Wunsch des Produktinhabers aus dem Repository entfernt: Er beschrieb das Aussehen des Produktinhabers als Vorlage für die personalisierte Variante, die nicht verwendet wird.]
 
 ## 5. Halt
 

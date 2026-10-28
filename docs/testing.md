@@ -2278,3 +2278,17 @@ Zweite Nachricht vom 28.10.2026 in `prompts/uebungen-varianten-FORM.md`: Feinsch
 | Standbilder D, vier Fassungen × drei Momente (720 × 540, 40 Proben, `varianten_bilder.py`, ein Prozess) | je Bild im Schnitt: Zonen, F in Lime, Kantenlicht 21,2 s, Zonen, F hell Ton in Ton 20,5 s, Zonen, F in Lime, ohne Kantenlicht (bisher) 19,7 s, Zonen, Tee in Graphit 20,2 s; zusammengesetzt mit `uebungen_varianten_bild.py --praefix feinschliff` (Reihe 1) und `--nah` (`logos-nah.webp`, 81,5 KB), selbst angesehen |
 | Standbilder C mit MakeHuman-Dateien, vier Fassungen × drei Momente (D-418) | je Bild im Schnitt: männlich, MakeHuman, Zonen 21,9 s, männlich, MakeHuman 21,5 s, weiblich, MakeHuman, Zonen 21,9 s, weiblich, MakeHuman 20,5 s; Reihe 2 der Vergleichsbilder `feinschliff-kniebeuge-unten.webp` (81,2 KB), `feinschliff-bank-oben.webp` (80,5 KB), `feinschliff-bank-unten.webp` (83,2 KB), Übersicht `feinschliff-uebersicht.webp`; selbst angesehen |
 | `pnpm check:docs` je Paket am Stand des Commits, `python3 -m py_compile` aller Werkzeuge | bestanden |
+
+### Phase Übungen, Korrekturrunde Logos und Zonen · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassungen (D-419); das Vergleichspaket mit App-Ansichten folgt als eigenes Paket. Nur Werkzeuge und Daten; Code und Videos der App unverändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu dfa586e (Lauf 40666024325, D-418) | Lint, Typen, Unit, Dokumente, Build; Datenbank; E2E Chromium; E2E WebKit: alle grün (der Lauf zu 2e4b2c4 wurde vom nächsten Commit abgebrochen, wie in der CI vorgesehen) |
+| Logos aus mehreren Perspektiven (`nahaufnahme.py`, D, C männlich, C weiblich; Brust von vorn und aus der Kamera der App, Rücken von hinten, Shorts von der Seite und aus der Kamera der App) | Brust-F links des Trägers auf der Herzseite, aus der Kamera der App sichtbar; bei C männlich näher an der Mitte als in D-417; Rücken-F in Originalproportionen (vorher gestreckt); Shorts-F außen am linken Bein, von der Seite und aus der Kamera der App sichtbar; selbst angesehen |
+| Rand in Stoffarbe über Zonen (A1 Bankdrücken Brust, A2 Latziehen Rücken, A2 Kniebeuge Shorts) | helles bzw. Lime-F mit dunklem Rand auf der Zone lesbar, kein Ausschnitt in der Zone; selbst angesehen |
+| Seitenschlitz mit Einfassung (Nahaufnahme Hüfte von der Seite, D und C weiblich) | erster Stand 3,6 cm über dem Saum, weil die Hüftseite am Saum zum Bein zählt und die Suche nur Rumpfpunkte nahm; behoben, danach am Saum, 5 cm hoch mit Einfassung beidseits |
+| Kordelenden am Bund (Nahaufnahme von vorn) | vorhanden, aber unter dem Saum des Tees, von außen nicht zu sehen |
+§STANDBILDER2§
+| `pnpm check:docs` je Paket am Stand des Commits, `python3 -m py_compile` aller Werkzeuge | bestanden |

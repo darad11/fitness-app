@@ -565,3 +565,65 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Augen des Mannes aus der Nähe schmal (MakeHuman-Dateien); Haarbilder eingefärbt
 Nächste Schritte: Wahl der Fassung durch den Produktinhaber
 ```
+
+## 13. Korrekturrunde Logos, Zonen und Vergleichspaket (`uebungen-korrektur-logos-FORM.md`)
+
+Dein Auftrag ersetzt die vorige Korrekturrunde; er steht in `docs/prompts/uebungen-korrektur-logos-FORM.md`. Gezielte Korrekturen, kein Neustart: Modelle, Bewegung, Hals, Kantenlicht (280/200 W), Tee in Nacht und Kamera bleiben wie in D-417 und D-418. Zuerst nur das Vergleichspaket (Abschnitt 9); die Videos und Bilder der App bleiben unverändert, bis du freigibst.
+
+### 13.1 Kleidung nach deinem Text (D-419)
+
+- **Tee:** Nacht #0C1219, Rundhals, kleines F vorn links, F zwischen den Schulterblättern, schmale Lime-Einfassung an den Seitenschlitzen am Saum (Schlitz 5 cm, Einfassung 3,5 mm, beidseitig).
+- **Shorts:** Graphit #4A4F57, Kordelenden in Lime vorn am Bund (zwei Bänder 3 mm, 6 cm lang, dickeres Ende), F außen am linken Bein.
+- Die Paspeln an Ärmeln und Beinen aus D-414 entfallen, weil dein Text sie nicht nennt.
+- Beide Details liegen als Bilder auf dem Stoff, wie die Logos: Das Netz der Figur hat Punkte 5 bis 8 mm auseinander, ein 3 mm schmales Band lässt sich als Feld je Punkt nicht darstellen (erster Versuch unsichtbar). Der Schlitz schneidet den Stoff über die Deckkraft.
+- Die Kordelenden liegen in allen drei Übungen unter dem Saum des Tees, das bis über die Hüftgelenke reicht; von außen sind sie nicht zu sehen. Das Tee kürzer zu machen hieße, die Kleidung aus D-417 zu ändern; ich habe es gelassen.
+
+### 13.2 Logos (D-419)
+
+- **Originalproportionen:** Jedes F wird jetzt eben auf den Stoff projiziert (Bildebene senkrecht zur mittleren Oberfläche am Logo, Hochachse längs des Körperteils). Die Abwicklung um die Körperachse aus D-417 zog das Rücken-F am flacheren Rücken in die Breite. Eine Maske sorgt dafür, dass das Bild nur auf den Flächen liegt, die zur Bildebene zeigen (kein Spiegelbild auf der Gegenseite).
+- **Eine Konfiguration** (`kleidung.LOGOS`) für alle Übungen und Körper, links und rechts aus Sicht des Trägers:
+
+| Logo | Lage | Höhe des F |
+|---|---|---|
+| Brust | links (Herzseite), 7 cm neben der Mitte, 8,5 cm unter dem Schultergelenk | 4 cm (dazu 3,5 und 4,5 cm im Vergleich) |
+| Rücken | mittig zwischen den Schulterblättern, 8 cm unter dem Schultergelenk | 8 cm |
+| Shorts | außen am linken Bein, 30 % der Strecke Hüfte–Knie, 2,7 cm über dem Saum | 3,5 cm |
+
+- Bei C männlich sitzt das Brust-F damit näher an der Mitte als in D-417: Dort lag es bei einem festen Winkel, der am breiteren Rumpf weiter außen landete; jetzt bei einem festen Abstand von 7 cm.
+- **Rand in Stoffarbe:** Jedes F hat einen schmalen Rand in der Farbe des Stoffs (3,6 % seiner Höhe: 1,4 mm auf der Brust, 2,9 mm am Rücken, 1,3 mm an den Shorts) und liegt immer über den Zonen; der Ausschnitt in Lime-Zonen aus D-417 ist weg. So bleibt das F auf einer Lime-Zone als Aufdruck lesbar und verschmilzt nie mit ihr (geprüft: helles F auf der Brustzone beim Bankdrücken, Lime-F auf der gedämpften Rückenzone beim Latziehen, Lime-F auf der Oberschenkelzone in der Kniebeuge).
+- Geprüft aus mehreren Perspektiven an allen drei Körpern (von vorn, aus der Kamera der App, von hinten, von der Seite); die Nahaufnahmen folgen im Vergleichspaket.
+
+### 13.3 Fassungen A1, A2 und B (D-419)
+
+| Fassung | Zonen | Logos |
+|---|---|---|
+| A1 | Lime wie in der Muskelkarte | alle hell Ton in Ton (#AAB2BE) |
+| A2 | gedämpft: Hauptmuskeln halb Lime, mitarbeitende ein Viertel (Stoff, Körper und Haut gleich) | Kollektion: vorn hell, hinten und am Bein Lime |
+| B | keine, weder auf der Kleidung noch auf der Haut | Kollektion |
+
+Für alle drei Körper (D, C männlich, C weiblich): Schlüssel `D-A1` bis `Cw-B` in `varianten.py`.
+
+### 13.7 Tests
+
+- **Logos:** aus vier Perspektiven an drei Körpern geprüft; Rand über Zonen in drei Fällen geprüft (Bankdrücken Brust, Latziehen Rücken, Kniebeuge Shorts).
+- **Details:** Schlitz erst 3,6 cm zu hoch (Suche nur in Rumpfpunkten, die Hüftseite zählt am Saum zum Bein), behoben; Kordelenden vorhanden, unter dem Saum.
+- **Dokumente:** `pnpm check:docs` je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
+- **CI:** zu `dfa586e` (D-418) alle Jobs grün, auch WebKit; der Lauf zu D-419 steht in PR #53 und im Testprotokoll.
+- Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde Logos und Zonen“.
+
+### 13.8 Was ich von dir brauche
+
+Nach dem Vergleichspaket deine Freigabe einer Kombination aus Körper (D oder C männlich), Fassung (A1, A2 oder B) und Brustlogo-Größe. Danach rendere ich die drei Pilot-Übungen in dieser Fassung neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+
+### 13.9 Berichte je Paket
+
+```
+Arbeitspaket: D-419 Kleidung nach Text, Logos in Originalproportionen mit Rand, Fassungen A1, A2, B
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py, varianten.py, szene.py, realistisch.py; tools/uebungen_paket_bild.py (neu), tools/uebungen-fassungen-screens.mjs (neu); CLAUDE.md; Dokumente
+Technische Entscheidungen: D-419
+Ausgeführte Tests: Nahaufnahmen aus vier Perspektiven an drei Körpern, Rand über Zonen, Schlitz und Kordel, pnpm check:docs
+Ergebnis: bestanden; ein Fehler (Schlitz zu hoch) gefunden und behoben
+Bekannte Einschränkungen: Kordelenden unter dem Saum nicht sichtbar; Details und Logos als Bilder, nicht als Netz
+Nächste Schritte: Vergleichspaket als eigenes Paket
+```

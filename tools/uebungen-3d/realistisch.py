@@ -194,9 +194,10 @@ def _proxy(name: str, ordner: str, skelett: bpy.types.Object, punkte: list[Vecto
 # ---------------------------------------------------------------------- Haut
 
 
-def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42) -> bpy.types.Material:
-    """Haut aus dem Bild von MakeHuman mit Unterflächenstreuung; auf Wunsch Muskelzonen in Lime; unter
-    der Kleidung blendet `kleidung.haut_ausblenden` die Haut aus (Attribut „Bedeckt“)."""
+def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42, zonen_staerke: float = 1.0) -> bpy.types.Material:
+    """Haut aus dem Bild von MakeHuman mit Unterflächenstreuung; auf Wunsch Muskelzonen in Lime
+    (`zonen_staerke` dämpft sie, D-419); unter der Kleidung blendet `kleidung.haut_ausblenden` die
+    Haut aus (Attribut „Bedeckt“)."""
     mat = bpy.data.materials.new("Haut")
     mat.use_nodes = True
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
@@ -230,7 +231,7 @@ def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42) -> bpy
         mix.inputs[7].default_value = b
         return mix.outputs[2]
 
-    if zonen_an:
+    if zonen_an and zonen_staerke > 0:
         haupt, mit = schwelle("Zone"), schwelle("ZoneMit")
         nicht = nodes.new("ShaderNodeMath")
         nicht.operation = "SUBTRACT"
@@ -242,15 +243,20 @@ def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42) -> bpy
         links.new(nicht.outputs[0], mf.inputs[1])
         md = nodes.new("ShaderNodeMath")
         md.operation = "MULTIPLY"
-        md.inputs[1].default_value = mit_deckkraft
+        md.inputs[1].default_value = mit_deckkraft * zonen_staerke
         links.new(mf.outputs[0], md.inputs[0])
+        hd = nodes.new("ShaderNodeMath")
+        hd.operation = "MULTIPLY"
+        hd.inputs[1].default_value = zonen_staerke
+        links.new(haupt, hd.inputs[0])
         farbe = mischen(md.outputs[0], farbe, szene.srgb(szene.LIME))
-        farbe = mischen(haupt, farbe, szene.srgb(szene.LIME))
+        farbe = mischen(hd.outputs[0], farbe, szene.srgb(szene.LIME))
     links.new(farbe, bsdf.inputs["Base Color"])
     return mat
 
 
-def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, stil: str, zonen_an: bool) -> list:
+def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, stil: str, zonen_an: bool,
+               zonen_staerke: float = 1.0) -> list:
     """Haut, Augen, Brauen, Wimpern und Haare an die Figur `name` (gebaut mit `figur.baue_figur`)."""
     import figur
 
@@ -264,5 +270,5 @@ def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, 
         bild = _bild_aus_mhmat(QUELLE / ordner, Path(ordner).name)
         teile.append(_proxy(teil, ordner, skelett, punkte, bild, rauheit, True, glanz=0.2, ton=ton))
     koerper.data.materials.clear()
-    koerper.data.materials.append(haut_material(stil, zonen_an))
+    koerper.data.materials.append(haut_material(stil, zonen_an, zonen_staerke=zonen_staerke))
     return teile

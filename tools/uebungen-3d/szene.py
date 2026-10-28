@@ -54,12 +54,13 @@ def matt(name: str, farbe: str, rauheit: float = 0.7) -> bpy.types.Material:
     return mat
 
 
-def koerper_material(mit_deckkraft: float = 0.42) -> bpy.types.Material:
+def koerper_material(mit_deckkraft: float = 0.42, zonen_staerke: float = 1.0) -> bpy.types.Material:
     """Grau, Muskelzonen in Lime mit scharfem Rand (D-409).
 
     Die Attribute „Zone“ (Hauptmuskeln) und „ZoneMit“ (mitarbeitend) sind Abstände zum Rand des
     Umrisses in Metern, positiv innen. Geschnitten wird bei 0 mit 1,2 mm Übergang: so bleibt der
     Rand glatt, aber klar. Mitarbeitende Muskeln: Lime mit geringer Deckkraft über dem Grau.
+    `zonen_staerke` unter 1 dämpft beide (Fassung A2, D-419).
     """
     mat = bpy.data.materials.new("Koerper")
     mat.use_nodes = True
@@ -93,8 +94,12 @@ def koerper_material(mit_deckkraft: float = 0.42) -> bpy.types.Material:
     links.new(nicht_haupt.outputs[0], mit_faktor.inputs[1])
     mit_deck = nodes.new("ShaderNodeMath")
     mit_deck.operation = "MULTIPLY"
-    mit_deck.inputs[1].default_value = mit_deckkraft
+    mit_deck.inputs[1].default_value = mit_deckkraft * zonen_staerke
     links.new(mit_faktor.outputs[0], mit_deck.inputs[0])
+    haupt_deck = nodes.new("ShaderNodeMath")
+    haupt_deck.operation = "MULTIPLY"
+    haupt_deck.inputs[1].default_value = zonen_staerke
+    links.new(haupt, haupt_deck.inputs[0])
 
     def mischen(faktor, a, b):
         mix = nodes.new("ShaderNodeMix")
@@ -108,7 +113,7 @@ def koerper_material(mit_deckkraft: float = 0.42) -> bpy.types.Material:
         return mix.outputs[2]
 
     farbe = mischen(mit_deck.outputs[0], srgb(KOERPER), srgb(LIME))
-    farbe = mischen(haupt, farbe, srgb(LIME))
+    farbe = mischen(haupt_deck.outputs[0], farbe, srgb(LIME))
     links.new(farbe, bsdf.inputs["Base Color"])
     return mat
 

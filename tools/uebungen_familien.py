@@ -3,7 +3,9 @@
 
 Die Zuordnung der 124 Basisübungen zu Bewegungsfamilien, Geräten und Quellen der Bewegung
 (CMU-Motion-Capture, Mixamo oder im Code aus der Familie) steht als Daten in der JSON-Datei;
-dieses Skript macht daraus die lesbare Übersicht mit Aufwandsschätzung.
+dieses Skript macht daraus die lesbare Übersicht mit Aufwandsschätzung. Abschnitt 8 zählt, wie oft
+jede Übung in den Programmen (`programs.v1.json`) und Vorlagen (`sample-templates.v1.json`)
+vorkommt, und ordnet die Familien danach (D-416).
 
     python3 tools/uebungen_familien.py           # schreibt die Übersicht
     python3 tools/uebungen_familien.py --check   # prüft, ob die Übersicht zu den Daten passt
@@ -18,6 +20,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATEN = ROOT / "tools/uebungen-3d/familien.json"
 ZIEL = ROOT / "docs/uebungen-bewegungsfamilien.md"
+PROGRAMME = ROOT / "src/modules/training/data/programs.v1.json"
+VORLAGEN = ROOT / "src/modules/training/data/sample-templates.v1.json"
+# Die Kniebeuge-Familie kommt zuerst (Pilot, Rig und Kamera stehen), danach nach Häufigkeit (D-416)
+ERSTE_FAMILIE = "kniebeuge"
 
 NAMEN = {
     "kniebeuge": "Kniebeuge",
@@ -40,6 +46,139 @@ def zelle(text: str) -> str:
     return " ".join(str(text).split()).replace("|", "/")
 
 
+def zaehlen() -> tuple[dict, dict, dict, dict, list, list]:
+    """Wie oft jede Übung vorkommt. Programme: Einheiten im Verlauf (je Woche die Tage laut `weeks`,
+    über alle Wochen des Plans). Vorlagen: Tage, an denen sie vorkommt."""
+    programme = json.loads(PROGRAMME.read_text(encoding="utf-8"))["templates"]
+    vorlagen = json.loads(VORLAGEN.read_text(encoding="utf-8"))["templates"]
+    einheiten: dict[str, int] = defaultdict(int)
+    in_programm: dict[str, set] = defaultdict(set)
+    for prog in programme:
+        tage = {t["name"]: {x["exercise"] for x in t["exercises"]} for t in prog["days"]}
+        for woche in prog["weeks"]:
+            for tag in woche:
+                for e in tage[tag]:
+                    einheiten[e] += 1
+                    in_programm[e].add(prog["name"])
+    vorlage_tage: dict[str, int] = defaultdict(int)
+    in_vorlage: dict[str, set] = defaultdict(set)
+    for v in vorlagen:
+        for t in v["days"]:
+            for e in {x["exercise"] for x in t["exercises"]}:
+                vorlage_tage[e] += 1
+                in_vorlage[e].add(v["name"])
+    return einheiten, in_programm, vorlage_tage, in_vorlage, programme, vorlagen
+
+
+def geraete_stunden(uebungen: dict) -> dict[str, float]:
+    """Neue Geräte mit Stunden (bei zwei Geräten an einer Übung je zur Hälfte)."""
+    erg: dict[str, float] = {}
+    for u in uebungen.values():
+        neu = u.get("geraet_neu") or []
+        for g in neu:
+            erg[g] = round(u["geraet_neu_stunden"] / len(neu), 2)
+    return erg
+
+
+def prioritaet(d: dict) -> list[str]:
+    """Abschnitt 8: Häufigkeit je Übung, Reihenfolge der Familien und Aufwand für ihre Programm-Übungen."""
+    uebungen = d["uebungen"]
+    einheiten, in_programm, vorlage_tage, in_vorlage, programme, vorlagen = zaehlen()
+    fehlen = sorted((set(einheiten) | set(vorlage_tage)) - set(uebungen))
+    if fehlen:
+        raise SystemExit(f"Übungen ohne Familie in familien.json: {', '.join(fehlen)}")
+    familien: dict[str, list[str]] = defaultdict(list)
+    for key, u in uebungen.items():
+        familien[u["familie"]].append(key)
+
+    def summe(f: str, quelle: dict) -> int:
+        return sum(quelle.get(k, 0) for k in familien[f])
+    rest = sorted((f for f in NAMEN if f != ERSTE_FAMILIE),
+                  key=lambda f: (-summe(f, einheiten), -summe(f, vorlage_tage), NAMEN[f]))
+    reihenfolge = [ERSTE_FAMILIE] + rest
+    geraete = geraete_stunden(uebungen)
+    gebaut: set[str] = set()
+    zeilen = [
+        "## 8. Priorität nach Programmen und Vorlagen",
+        "",
+        f"Gezählt in `{PROGRAMME.relative_to(ROOT)}` ({len(programme)} Programme) und "
+        f"`{VORLAGEN.relative_to(ROOT)}` ({len(vorlagen)} Vorlagen). **Einheiten** = wie oft die Übung im "
+        "Verlauf eines Programms drankommt (je Woche die Tage des Plans, über alle Wochen; das rotierende "
+        "Push/Pull/Beine-Programm steht mit drei Wochen im Plan). **Vorlagen** = Tage in den Vorlagen, an denen sie "
+        "vorkommt. Übertragen wird zuerst, was in Programmen vorkommt; Übungen nur aus Vorlagen und alle übrigen "
+        "behalten vorerst Symbol und Muskelkarte. Die Kniebeuge-Familie kommt zuerst (Pilot, Rig und Kamera stehen), "
+        "danach die Familien nach ihren Einheiten in Programmen.",
+        "",
+        "### 8.1 Familien in Reihenfolge",
+        "",
+        "| Rang | Familie | Einheiten in Programmen | Übungen in Programmen | nur in Vorlagen | übrige (Symbol und Muskelkarte) | "
+        "Aufwand für die Programm-Übungen (Std.) |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    aufwand = {}
+    for rang, f in enumerate(reihenfolge, start=1):
+        prog = [k for k in familien[f] if einheiten.get(k)]
+        nur_vorlage = [k for k in familien[f] if not einheiten.get(k) and vorlage_tage.get(k)]
+        uebrig = len(familien[f]) - len(prog) - len(nur_vorlage)
+        neue = []
+        for k in prog:
+            for g in [t.strip() for t in uebungen[k]["geraet_modell"].split("+")]:
+                if g in geraete and g not in gebaut:
+                    gebaut.add(g)
+                    neue.append(g)
+        std_u = sum(uebungen[k]["aufwand_stunden"] for k in prog)
+        std_g = sum(geraete[g] for g in neue)
+        basis = d["familien"][f]["basis_stunden"] if prog else 0
+        pruefseite = 1 if prog else 0
+        gesamt = basis + std_u + std_g + pruefseite
+        aufwand[f] = (basis, std_u, std_g, pruefseite, gesamt, prog, neue)
+        zeilen.append(f"| {rang} | {NAMEN[f]} | {summe(f, einheiten)} | {len(prog)} | {len(nur_vorlage)} | {uebrig} | "
+                      f"{gesamt:.1f} |")
+    zeilen += [
+        "",
+        "Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, die diese Übungen brauchen "
+        "(jedes Gerät einmal, in der ersten Familie, die es braucht) + 1 Std. Prüfseite; Werte aus Abschnitt 2 bis 4.",
+        "",
+        "### 8.2 Übungen in Programmen und Vorlagen",
+        "",
+        "| Familie | Übung | Einheiten in Programmen | Programme | Tage in Vorlagen | Vorlagen |",
+        "|---|---|---|---|---|---|",
+    ]
+    for f in reihenfolge:
+        liste = [k for k in familien[f] if einheiten.get(k) or vorlage_tage.get(k)]
+        liste.sort(key=lambda k: (-einheiten.get(k, 0), -vorlage_tage.get(k, 0), uebungen[k]["nr"]))
+        for k in liste:
+            zeilen.append(
+                f"| {NAMEN[f]} | {zelle(uebungen[k]['name'])} | {einheiten.get(k, 0)} | "
+                f"{zelle(', '.join(sorted(in_programm.get(k, []))) or '–')} | {vorlage_tage.get(k, 0)} | "
+                f"{zelle(', '.join(sorted(in_vorlage.get(k, []))) or '–')} |"
+            )
+    zeilen += ["", "### 8.3 Aufwand der ersten drei Familien", ""]
+    for f in reihenfolge[:3]:
+        basis, std_u, std_g, pruef, gesamt, prog, neue = aufwand[f]
+        namen = ", ".join(f"{uebungen[k]['name']} ({uebungen[k]['aufwand_stunden']:g})"
+                          for k in sorted(prog, key=lambda k: uebungen[k]["nr"]))
+        geraet = ", ".join(f"{g} ({geraete[g]:g})" for g in neue) or "keine"
+        fremd = [k for k in prog if uebungen[k]["quelle"] in ("mixamo", "cmu")]
+        zusatz = ""
+        if fremd:
+            quellen = sorted({QUELLE[uebungen[k]["quelle"]] for k in fremd})
+            zusatz = (f" Bewegung aus {' und '.join(quellen)}: {', '.join(uebungen[k]['name'] for k in fremd)}; dafür einmalig "
+                      "die Übertragung aufs Skelett (Abschnitt 4) und bei Mixamo die Dateien von dir, sonst aus der Familie "
+                      "im Code.")
+        zeilen.append(
+            f"- **{NAMEN[f]}: rund {round(gesamt):d} Std.** Basis {basis:g}, Übungen {std_u:g} ({namen}), neue Geräte "
+            f"{std_g:g} ({geraet}), Prüfseite {pruef:g}.{zusatz}"
+        )
+    zeilen += [
+        "",
+        "Die Zahlen sind meine Schätzung der Arbeitszeit, ohne Rechenzeit; die Rechenzeit hängt von der gewählten "
+        "Variante der Figur ab (Renderzeiten in `form-uebungen-report.md` Abschnitt 11).",
+        "",
+    ]
+    return zeilen
+
+
 def main() -> None:
     d = json.loads(DATEN.read_text(encoding="utf-8"))
     uebungen = d["uebungen"]
@@ -50,7 +189,8 @@ def main() -> None:
         "# Übungen · Bewegungsfamilien und Quellen der Animationen",
         "",
         "Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschnitt 3 und 7 (D-411) · "
-        "Daten `tools/uebungen-3d/familien.json`, Abschnitte 2 bis 7 erzeugt von `python3 tools/uebungen_familien.py`. "
+        "Daten `tools/uebungen-3d/familien.json`, Abschnitte 2 bis 8 erzeugt von `python3 tools/uebungen_familien.py`; "
+        "Abschnitt 8 (Priorität nach Programmen und Vorlagen) Stand 28.10.2026, D-416. "
         "Recherche zu CMU und Mixamo nur über Websuche und GitHub, Bewegungsdaten nicht angesehen: Jede Zuordnung "
         "zu einer Aufnahme braucht vor dem Einbau eine Sichtprüfung.",
         "",
@@ -197,6 +337,7 @@ def main() -> None:
         "(Sichtprüfung, ob sie die Übung wirklich zeigt), Hände, Füße und Gerät korrigiert das Rig.",
         "",
     ]
+    zeilen += prioritaet(d)
     text = "\n".join(zeilen)
     if "--check" in sys.argv:
         if not ZIEL.exists() or ZIEL.read_text(encoding="utf-8") != text:

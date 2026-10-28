@@ -372,3 +372,91 @@ Alles in `licenses-data.md` Abschnitt 8: Formziele (MPFB2) und Augen (MakeHuman)
 ### 11.6 Vorschaubild (D-415)
 
 Eigenes Standbild statt Ausschnitt aus dem Poster: Kamera wie die Schleife, Ausschnitt nur um den Körper (5 % Rand), gerendert mit 480 × 480 und auf 240 × 240 verkleinert. Position je Übung, in der sie klein am besten zu erkennen ist: Kniebeuge tiefste Position, Bankdrücken Ausgangsposition (gestreckte Arme mit der Stange; unten verdeckt die Stange das Gesicht), Latziehen Ausgangsposition (Arme über dem Kopf an der breiten Stange). Vergleich alt und neu: `docs/screens/uebungen/vorschau-vergleich.webp`. In die App kommt das neue Vorschaubild mit dem Neurendern nach deiner Wahl.
+
+### 11.7 Priorität und Aufwand (D-416)
+
+Gezählt in den drei Programmen (Einheiten im Verlauf) und vier Vorlagen (Tage): 79 Übungen kommen vor, 68 davon in Programmen. Übersicht mit allen Zahlen: `docs/uebungen-bewegungsfamilien.md` Abschnitt 8.
+
+| Rang | Familie | Einheiten in Programmen | Übungen in Programmen | Aufwand (Std.) |
+|---|---|---|---|---|
+| 1 | Kniebeuge | 40 | 4 | rund 18 |
+| 2 | Rumpf | 68 | 11 | rund 25 |
+| 3 | Waagrechtes Drücken | 66 | 7 | rund 23 |
+| 4 | Arme beugen und strecken | 57 | 14 | 20 |
+| 5 | Beine isoliert | 54 | 6 | 20 |
+| 6 | Schulter und Brust isoliert | 48 | 7 | 17 |
+| 7 | Hüftbeuge | 44 | 4 | 14 |
+| 8 | Waagrechtes Ziehen | 40 | 5 | 19 |
+| 9 | Kondition | 39 | 1 | 16 |
+| 10 | Senkrechtes Ziehen | 35 | 5 | 18 |
+| 11 | Senkrechtes Drücken | 26 | 3 | 12 |
+| 12 | Ausfallschritt und einbeinig | 9 | 1 | 9 |
+
+- **Kniebeuge, rund 18 Std.:** Kniebeuge mit Langhantel (Pilot, steht), Goblet Squat, Beinpresse, Beinpresse einbeinig; neu sind Kurzhanteln und die Beinpresse (4 Std., Schlitten auf Schienen). Basis der Familie 8 Std., Prüfseite 1 Std.
+- **Rumpf, rund 25 Std.:** elf Übungen (Unterarmstütz, Crunches, Beinheben hängend und liegend, Russian Twist, Dead Bug, Bicycle Crunches, Heel Taps, Sit-ups, Windshield Wipers, Knieheben stehend); Matte und Klimmzugstange. Teuer, weil die Familie fünf Untermuster hat und Körper und Matte sich berühren. Unterarmstütz, Bicycle Crunches und Sit-ups sind mit Mixamo geplant (Dateien von dir, einmalig 4 Std. Übertragung); ohne Mixamo baue ich sie aus der Familie im Code.
+- **Waagrechtes Drücken, rund 23 Std.:** sieben Übungen (Bankdrücken mit Langhantel steht, mit Kurzhanteln, Schrägbank mit Kurzhanteln, Liegestütze, Schrägbank am Kabel, enges Bankdrücken, Dips); neu sind Schrägbank, Kabelzug mit D-Griff und Dipbarren. Liegestütze sind mit Mixamo geplant, sonst aus der Familie im Code.
+
+Dazu die Rechenzeit: je Übung 60 Bilder Schleife plus Prüfung, je nach Variante (Abschnitt 11.3).
+
+### 11.8 Tests
+
+- **Prüfung der Bewegung** mit der neuen Figur (neutral) über alle 60 Bilder je Übung: ohne Meldung, Werte in Abschnitt 11.1 und `docs/testing.md`.
+- **Brustmessung** am verformten Netz für drei Formen, drei Übungen, fünf Phasen, alter Stand mit demselben Verfahren nachgemessen.
+- **Gegenprobe:** Mit dem Grundmodell liefert der neue Code genau die alten Werte (Finger 1,71 mm, 222 Punkte).
+- **Fehler auf dem Weg, alle vor den Vergleichsbildern behoben und im Testprotokoll:** verschobener Arm durch einen verbundenen Hilfsknochen, doppelte Gewichte in der Kleidung (zerrissener Stoff), Shirt über Händen und Gesicht, Haare 4 m lang; dazu doppelt kopierte Zonenwerte in der Kleidung (ohne Wirkung aufs Bild, aufgeräumt).
+- **Dokumente:** `pnpm check:docs` und `python3 tools/uebungen_familien.py --check` je Paket am Stand des Commits.
+- **App** (Code der App in allen vier Paketen unverändert; Stand `0806790` mit den Dokumenten von D-416): `pnpm format:check`, `lint`, `typecheck` und `check:docs` bestanden; `pnpm test:coverage` 1.209 Tests in 135 Dateien bestanden; `pnpm build` und `pnpm check:bundle`: Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 12 von 12. `pnpm test:e2e` (Chromium): 431 bestanden, 132 übersprungen, 1 fehlgeschlagen: `start-surface.spec.ts:484` (Startfläche am Duo, D-394), „Bilder ohne Logo davor“, das erste mitgeschnittene Bild zeigte schon das Logo. Einzeln 20-mal wiederholt (beide Fälle des Tests): 20 bestanden.
+- **WebKit** läuft in der CI.
+
+### 11.9 Was ich von dir brauche
+
+1. Deine Wahl der Variante (A, B, C männlich oder weiblich, D; bei C und D mit oder ohne Zonen). Danach rendere ich die drei Pilot-Übungen neu, mit dem neuen Vorschaubild.
+2. Falls C: ob ich `files2.makehumancommunity.org` nutzen darf (dann trägst du die Adresse unter „Network access“ ein), oder ob die eigenen Haare und die eigene Haut reichen.
+3. Falls D oder C: die Vorlage der Kleidung noch einmal (sie kam nicht an), vor allem Graphit und die Lime-Details.
+4. Nach dem Neurendern dein Gerätetest; danach gibst du den Merge von PR #53 frei.
+
+### 11.10 Berichte je Paket
+
+```
+Arbeitspaket: D-413 Brust natürlich gewölbt, Körperform aus MakeHuman-Formzielen
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/koerperform.py (neu), figur.py, rig.py, uebungen.py, render.py; Dokumente
+Technische Entscheidungen: D-413
+Ausgeführte Tests: render.py --pruefen (3 Übungen, neutral), Brustmessung (3 Formen × 3 Übungen × 5 Phasen), Gegenprobe Grundmodell, pnpm check:docs
+Ergebnis: bestanden; Brustmuskeln +3,5 bis +17 mm vor dem Brustbein, Prüfung ohne Meldung
+Bekannte Einschränkungen: weibliche Form oben auf der Bank 27 mm Delle über der Brust
+Nächste Schritte: Wahl der Variante, dann Neurendern der drei Pilot-Übungen
+```
+
+```
+Arbeitspaket: D-414 Varianten der Figur zur Probe, zwei als Kniebeuge animiert
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/varianten.py, kleidung.py, realistisch.py, varianten_bilder.py (neu), figur.py, render.py; tools/uebungen_varianten_bild.py (neu); docs/screens/uebungen/varianten-*, variante-*; Dokumente
+Technische Entscheidungen: D-414
+Ausgeführte Tests: 24 Standbilder, Renderzeit je Variante (ein Prozess), zwei Schleifen mit Sichtprüfung, pnpm check:docs
+Ergebnis: bestanden; vier Fehler beim Aufbau gefunden und behoben (Testprotokoll)
+Bekannte Einschränkungen: Vorlage der Kleidung fehlt (Graphit angenommen); eigene Haare und Haut aus der Nähe einfach; Shirt in Nacht auf Hintergrund Nacht
+Nächste Schritte: Wahl der Variante
+```
+
+```
+Arbeitspaket: D-415 Vorschaubild eng auf die Figur
+Umgesetzte Funktionen: Werkzeug für die Vorschau der Übungsbilder, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/render.py, uebungen.py; docs/screens/uebungen/vorschau-vergleich.webp; Dokumente
+Technische Entscheidungen: D-415
+Ausgeführte Tests: render.py --nur-vorschau für 3 Übungen, Sichtprüfung in 240 und 96 px, pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: in der App erst mit dem Neurendern
+Nächste Schritte: mit den drei Pilot-Übungen neu erzeugen
+```
+
+```
+Arbeitspaket: D-416 Priorität der Familien nach Programmen und Vorlagen
+Umgesetzte Funktionen: Planung, erfüllte AK: –
+Geänderte Dateien: tools/uebungen_familien.py, docs/uebungen-bewegungsfamilien.md; Dokumente
+Technische Entscheidungen: D-416
+Ausgeführte Tests: python3 tools/uebungen_familien.py --check, pnpm check:docs; pnpm format:check, lint, typecheck, test:coverage (1.209 bestanden), build, check:bundle (237,8 KB von 250 KB), test:e2e Chromium (431 bestanden, 1 im vollen Lauf rot, einzeln 20-mal bestanden); WebKit in der CI
+Ergebnis: Dokumente bestanden; App-Prüfungen wie in Abschnitt 11.8 (ein E2E-Test im vollen Lauf einmal rot, einzeln 20-mal bestanden)
+Bekannte Einschränkungen: Aufwand ist Schätzung ohne Rechenzeit
+Nächste Schritte: Familien nach dem Merge von PR #53 auf eigenen Branches, zuerst die Kniebeuge
+```

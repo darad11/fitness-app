@@ -1,6 +1,6 @@
 # Übungen · Bewegungsfamilien und Quellen der Animationen
 
-Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschnitt 3 und 7 (D-411) · Daten `tools/uebungen-3d/familien.json`, Abschnitte 2 bis 7 erzeugt von `python3 tools/uebungen_familien.py`. Recherche zu CMU und Mixamo nur über Websuche und GitHub, Bewegungsdaten nicht angesehen: Jede Zuordnung zu einer Aufnahme braucht vor dem Einbau eine Sichtprüfung.
+Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschnitt 3 und 7 (D-411) · Daten `tools/uebungen-3d/familien.json`, Abschnitte 2 bis 8 erzeugt von `python3 tools/uebungen_familien.py`; Abschnitt 8 (Priorität nach Programmen und Vorlagen) Stand 28.10.2026, D-416. Recherche zu CMU und Mixamo nur über Websuche und GitHub, Bewegungsdaten nicht angesehen: Jede Zuordnung zu einer Aufnahme braucht vor dem Einbau eine Sichtprüfung.
 
 ## 1. Verfahren
 
@@ -329,3 +329,118 @@ Nur falls du die Familien Rumpf und Kondition freigibst; für die drei Pilot-Üb
 | 2 | Air Squat Bent Arms | – | Goblet Squat | nein | Vorlage für die Goblet-Kniebeuge (Armhaltung vor der Brust) |
 
 Priorität 1: Hier bringt eine echte Aufnahme mehr als ein Ablauf aus dem Code (Sprünge, Abrollen, Rhythmus). Priorität 2: nur Vorlage oder Gegenprobe; ohne sie geht es auch. Jede Datei prüfe ich vor dem Einbau (Sichtprüfung, ob sie die Übung wirklich zeigt), Hände, Füße und Gerät korrigiert das Rig.
+
+## 8. Priorität nach Programmen und Vorlagen
+
+Gezählt in `src/modules/training/data/programs.v1.json` (3 Programme) und `src/modules/training/data/sample-templates.v1.json` (4 Vorlagen). **Einheiten** = wie oft die Übung im Verlauf eines Programms drankommt (je Woche die Tage des Plans, über alle Wochen; das rotierende Push/Pull/Beine-Programm steht mit drei Wochen im Plan). **Vorlagen** = Tage in den Vorlagen, an denen sie vorkommt. Übertragen wird zuerst, was in Programmen vorkommt; Übungen nur aus Vorlagen und alle übrigen behalten vorerst Symbol und Muskelkarte. Die Kniebeuge-Familie kommt zuerst (Pilot, Rig und Kamera stehen), danach die Familien nach ihren Einheiten in Programmen.
+
+### 8.1 Familien in Reihenfolge
+
+| Rang | Familie | Einheiten in Programmen | Übungen in Programmen | nur in Vorlagen | übrige (Symbol und Muskelkarte) | Aufwand für die Programm-Übungen (Std.) |
+|---|---|---|---|---|---|---|
+| 1 | Kniebeuge | 40 | 4 | 0 | 5 | 18.0 |
+| 2 | Rumpf | 68 | 11 | 1 | 4 | 25.1 |
+| 3 | Waagrechtes Drücken | 66 | 7 | 1 | 5 | 22.8 |
+| 4 | Arme beugen und strecken | 57 | 14 | 0 | 4 | 20.1 |
+| 5 | Beine isoliert | 54 | 6 | 1 | 5 | 20.2 |
+| 6 | Schulter und Brust isoliert | 48 | 7 | 0 | 3 | 17.0 |
+| 7 | Hüftbeuge | 44 | 4 | 3 | 6 | 14.0 |
+| 8 | Waagrechtes Ziehen | 40 | 5 | 2 | 1 | 18.8 |
+| 9 | Kondition | 39 | 1 | 0 | 8 | 15.5 |
+| 10 | Senkrechtes Ziehen | 35 | 5 | 1 | 1 | 17.5 |
+| 11 | Senkrechtes Drücken | 26 | 3 | 1 | 1 | 12.2 |
+| 12 | Ausfallschritt und einbeinig | 9 | 1 | 1 | 2 | 8.8 |
+
+Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, die diese Übungen brauchen (jedes Gerät einmal, in der ersten Familie, die es braucht) + 1 Std. Prüfseite; Werte aus Abschnitt 2 bis 4.
+
+### 8.2 Übungen in Programmen und Vorlagen
+
+| Familie | Übung | Einheiten in Programmen | Programme | Tage in Vorlagen | Vorlagen |
+|---|---|---|---|---|---|
+| Kniebeuge | Beinpresse | 23 | Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Kniebeuge | Kniebeuge mit Langhantel | 8 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Kniebeuge | Beinpresse, einbeinig | 5 | Winterprogramm 2026 | 0 | – |
+| Kniebeuge | Goblet Squat | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Rumpf | Unterarmstütz (Plank) | 22 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
+| Rumpf | Crunches | 20 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 0 | – |
+| Rumpf | Beinheben liegend | 5 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Beinheben hängend | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Rumpf | Russian Twist | 4 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Heel Taps | 3 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Sit-ups | 3 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Knieheben stehend | 3 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Bicycle Crunches | 2 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Dead Bug | 1 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Windshield Wipers | 1 | Winterprogramm 2026 | 0 | – |
+| Rumpf | Seitstütz | 0 | – | 2 | Ganzkörper A/B, Zuhause mit Kurzhanteln |
+| Waagrechtes Drücken | Schrägbankdrücken mit Kurzhanteln | 23 | Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Drücken | Bankdrücken mit Kurzhanteln | 22 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Waagrechtes Drücken | Schrägbankdrücken am Kabel | 7 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Drücken | Bankdrücken mit Langhantel | 4 | Push/Pull/Beine, rotierend | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Drücken | Liegestütze | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Waagrechtes Drücken | Dips | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Waagrechtes Drücken | Enges Bankdrücken | 2 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Drücken | Bodendrücken mit Kurzhanteln | 0 | – | 1 | Zuhause mit Kurzhanteln |
+| Arme beugen und strecken | Trizepsdrücken am Kabel | 8 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Arme beugen und strecken | Bizepscurls am Kabel | 6 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Trizepsdrücken am Kabel, über Kreuz | 6 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Hammercurls am Kabel mit Seil | 5 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Hammercurls | 4 | Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Arme beugen und strecken | Bizepscurls mit Langhantel | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Arme beugen und strecken | Scottcurls mit Kurzhanteln | 4 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Trizepsstrecken über Kopf am Kabel | 4 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | French Press mit SZ-Stange | 4 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Bizepscurls mit Kurzhanteln | 3 | Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
+| Arme beugen und strecken | Schrägbank-Curls mit Kurzhanteln | 3 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Reverse Curls mit SZ-Stange | 3 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | French Press mit Kurzhanteln | 2 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Trizepsstrecken über Kopf mit Kurzhantel | 1 | Winterprogramm 2026 | 0 | – |
+| Beine isoliert | Beinbeuger liegend | 23 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 2 | Ganzkörper A/B, Oberkörper/Unterkörper |
+| Beine isoliert | Wadenheben sitzend | 11 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 1 | Push/Pull/Beine |
+| Beine isoliert | Beinstrecker | 7 | Winterprogramm 2026 | 1 | Oberkörper/Unterkörper |
+| Beine isoliert | Wadenheben mit Kurzhanteln | 7 | Winterprogramm 2026 | 0 | – |
+| Beine isoliert | Beinbeuger sitzend | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Beine isoliert | Wadenheben an der Beinpresse | 2 | Winterprogramm 2026 | 0 | – |
+| Beine isoliert | Wadenheben stehend | 0 | – | 1 | Oberkörper/Unterkörper |
+| Schulter und Brust isoliert | Seitheben mit Kurzhanteln | 24 | Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Schulter und Brust isoliert | Fliegende am Kabel | 5 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Butterfly an der Maschine | 5 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Seitheben am Kabel | 5 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Reverse Flys mit Kurzhanteln | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Schulter und Brust isoliert | Frontheben mit Kurzhanteln | 3 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Frontheben am Kabel | 2 | Winterprogramm 2026 | 0 | – |
+| Hüftbeuge | Rumänisches Kreuzheben mit Kurzhanteln | 21 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Hüftbeuge | Rumänisches Kreuzheben mit Langhantel | 9 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Hüftbeuge | Hip Thrust mit Kurzhantel | 9 | Winterprogramm 2026 | 0 | – |
+| Hüftbeuge | Pull-Throughs am Kabel | 5 | Winterprogramm 2026 | 0 | – |
+| Hüftbeuge | Kreuzheben mit Langhantel | 0 | – | 1 | Oberkörper/Unterkörper |
+| Hüftbeuge | Hip Thrust mit Langhantel | 0 | – | 1 | Oberkörper/Unterkörper |
+| Hüftbeuge | Hüftheben am Boden (Glute Bridge) | 0 | – | 1 | Zuhause mit Kurzhanteln |
+| Waagrechtes Ziehen | Rudern am Kabel, sitzend | 24 | Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Ziehen | Rudern an der Multipresse, vorgebeugt | 5 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Ziehen | Rudern mit Langhantel, vorgebeugt | 4 | Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Ziehen | Face Pulls am Kabel | 4 | Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Ziehen | T-Bar-Rudern | 3 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Ziehen | Rudern mit Kurzhanteln, vorgebeugt | 0 | – | 1 | Zuhause mit Kurzhanteln |
+| Waagrechtes Ziehen | Einarmiges Rudern mit Kurzhantel | 0 | – | 1 | Zuhause mit Kurzhanteln |
+| Kondition | Laufband | 39 | Winterprogramm 2026 | 0 | – |
+| Senkrechtes Ziehen | Latziehen | 17 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 2 | Ganzkörper A/B, Oberkörper/Unterkörper |
+| Senkrechtes Ziehen | Klimmzüge mit Unterstützung | 5 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 0 | – |
+| Senkrechtes Ziehen | Einarmiges Latziehen am Kabel, kniend | 5 | Winterprogramm 2026 | 0 | – |
+| Senkrechtes Ziehen | Latziehen, enger Griff | 4 | Winterprogramm 2026 | 0 | – |
+| Senkrechtes Ziehen | Überzüge am Kabel | 4 | Winterprogramm 2026 | 0 | – |
+| Senkrechtes Ziehen | Klimmzüge | 0 | – | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Senkrechtes Drücken | Schulterdrücken an der Maschine | 20 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 0 | – |
+| Senkrechtes Drücken | Schulterdrücken mit Langhantel, stehend | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Senkrechtes Drücken | Schulterdrücken mit Kurzhanteln, stehend | 2 | Winterprogramm 2026 | 0 | – |
+| Senkrechtes Drücken | Schulterdrücken mit Kurzhanteln, sitzend | 0 | – | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
+| Ausfallschritt und einbeinig | Ausfallschritte mit Kurzhanteln | 9 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Ausfallschritt und einbeinig | Bulgarische Kniebeuge mit Kurzhanteln | 0 | – | 2 | Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
+
+### 8.3 Aufwand der ersten drei Familien
+
+- **Kniebeuge: rund 18 Std.** Basis 8, Übungen 4 (Kniebeuge mit Langhantel (1), Goblet Squat (1), Beinpresse (1.25), Beinpresse, einbeinig (0.75)), neue Geräte 5 (Kurzhanteln (1), Beinpresse 45° (4)), Prüfseite 1.
+- **Rumpf: rund 25 Std.** Basis 12, Übungen 10.75 (Unterarmstütz (Plank) (0.75), Crunches (0.5), Beinheben hängend (1.5), Beinheben liegend (0.75), Russian Twist (1.25), Dead Bug (1), Bicycle Crunches (1), Heel Taps (1), Sit-ups (1), Windshield Wipers (1.25), Knieheben stehend (0.75)), neue Geräte 1.3 (Matte (0.3), Klimmzugstange (1)), Prüfseite 1. Bewegung aus Mixamo: Unterarmstütz (Plank), Bicycle Crunches, Sit-ups; dafür einmalig die Übertragung aufs Skelett (Abschnitt 4) und bei Mixamo die Dateien von dir, sonst aus der Familie im Code.
+- **Waagrechtes Drücken: rund 23 Std.** Basis 8, Übungen 7.25 (Bankdrücken mit Langhantel (0.5), Bankdrücken mit Kurzhanteln (1), Schrägbankdrücken mit Kurzhanteln (0.75), Liegestütze (1.5), Schrägbankdrücken am Kabel (1.5), Enges Bankdrücken (0.5), Dips (1.5)), neue Geräte 6.5 (Schrägbank, verstellbar (auch fast senkrecht) (2), Kabelzug: zwei Säulen mit höhenverstellbaren Rollen (1.75), D-Griff (1.75), Dipbarren (1)), Prüfseite 1. Bewegung aus Mixamo: Liegestütze; dafür einmalig die Übertragung aufs Skelett (Abschnitt 4) und bei Mixamo die Dateien von dir, sonst aus der Familie im Code.
+
+Die Zahlen sind meine Schätzung der Arbeitszeit, ohne Rechenzeit; die Rechenzeit hängt von der gewählten Variante der Figur ab (Renderzeiten in `form-uebungen-report.md` Abschnitt 11).

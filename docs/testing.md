@@ -2225,7 +2225,7 @@ Pilot-Übungen auf dem IK-Rig neu gerendert (D-406 bis D-410). Prüfung der Bewe
 
 ### Phase Übungen, Brust und Varianten der Figur · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Auftrag `prompts/uebungen-varianten-FORM.md`: Brust und Körperform (D-413), Varianten der Figur (D-414), Vorschaubild (D-415). Werkzeuge und Daten, die App-Videos unverändert. Brust gemessen am verformten Netz: Querschnitt im Raum des Rumpfs (Knochen `spine02`) als Schnitt der Netzflächen mit der Ebene, je Übung fünf Phasen und Höhen 60, 65, 72, 80 und 86 % der Strecke Hüftgelenke–Halsansatz. „Wölbung“ = Abstand der Brustmuskeln (4 bis 10 cm neben der Mitte) vor der Brustbeinlinie; „Delle“ = größter Abstand des Profils hinter seiner vorderen konvexen Hülle 3 bis 11 cm neben der Mitte.
+Auftrag `prompts/uebungen-varianten-FORM.md`: Brust und Körperform (D-413), Varianten der Figur (D-414), Vorschaubild (D-415), Priorität (D-416). Werkzeuge und Daten, die App-Videos unverändert. Brust gemessen am verformten Netz: Querschnitt im Raum des Rumpfs (Knochen `spine02`) als Schnitt der Netzflächen mit der Ebene, je Übung fünf Phasen und Höhen 60, 65, 72, 80 und 86 % der Strecke Hüftgelenke–Halsansatz. „Wölbung“ = Abstand der Brustmuskeln (4 bis 10 cm neben der Mitte) vor der Brustbeinlinie; „Delle“ = größter Abstand des Profils hinter seiner vorderen konvexen Hülle 3 bis 11 cm neben der Mitte.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2251,3 +2251,10 @@ Auftrag `prompts/uebungen-varianten-FORM.md`: Brust und Körperform (D-413), Var
 | Schleife Kniebeuge, Variante D mit Zonen (`--variante D-z`) | 60 Bilder in 897 s (14,9 s je Bild), mit Aufbau und Kodieren 917 s; MP4 55,6 KB, WebM 41,6 KB, Poster 5,4 KB, Vorschau 3,3 KB; Bewegung aus derselben Form und denselben Knochen wie die Prüfung neutral, Kleidung und Material ändern sie nicht |
 | Sichtprüfung der Schleifen | Vier Momente beider Schleifen (oben, abwärts, unten, aufwärts), jedes dritte Bild von D und zwei Nahaufnahmen selbst angesehen: Bewegung, Stange und Füße wie bisher; bei D folgt der Stoff jeder Haltung, keine Haut sticht durch, Säume und das kleine Zeichen bleiben an ihrem Platz, die Zone geht ohne Kante von den Shorts auf den Oberschenkel über. Zeit je Bild 12,7 bis 15,3 s (A) und 13,9 bis 16,8 s (D), stehend etwas länger als unten |
 | Vorschaubild (D-415) | `render.py <übung> --variante A --nur-vorschau`: 480 × 480 gerendert, 240 × 240 als WebP; Vergleich alt und neu je in 240 und 96 px in `docs/screens/uebungen/vorschau-vergleich.webp`, selbst angesehen; `medien.json` und die Dateien der App unverändert |
+| Priorität (D-416) | `python3 tools/uebungen_familien.py --check`: aktuell; 79 Übungen in Programmen oder Vorlagen, 68 in Programmen, 11 nur in Vorlagen, keine ohne Familie |
+| CI zu 101b31b (Lauf 40644885547, D-413) | Lint, Typen, Unit, Dokumente, Build; Datenbank; E2E Chromium; E2E WebKit: alle grün |
+| `pnpm format:check`, `lint`, `typecheck`, `check:docs` (Stand `0806790` mit den Dokumenten von D-416; Code der App in D-413 bis D-416 unverändert) | bestanden |
+| `pnpm test:coverage` | 135 Dateien, 1.209 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB von 250 KB; „Vorab gespeichert: 191 von 266 Dateien“; Dateien der Übungsbilder 12 von 12 |
+| `pnpm test:e2e` (Chromium) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen: `start-surface.spec.ts:484` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, nur beim Laden des Skripts wie beim vierten Start“ (D-394) mit „Bilder ohne Logo davor: Expected > 0, Received 0“, das erste mitgeschnittene Bild zeigte schon das Logo |
+| Derselbe Test einzeln, `--repeat-each=10` (beide Fälle) | 20 bestanden |

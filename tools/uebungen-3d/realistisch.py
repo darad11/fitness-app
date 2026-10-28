@@ -9,9 +9,15 @@ Teile aus (nicht im Repository).
 
 - **Haut:** `skins/young_caucasian_male` bzw. `_female`, Bild 2048 × 2048 auf der UV-Abwicklung von
   `base.obj` (`figur.lies_obj`), Unterflächenstreuung aus Blender.
-- **Augen** `eyes/high-poly` mit `eyes/materials/brown_eye.png`, **Augenbrauen** `eyebrows/eyebrow001`
-  und `eyebrow005`, **Wimpern** `eyelashes/eyelashes01` und `eyelashes02`, **Haare** `hair/short02`
-  (männlich) und `hair/bob02` (weiblich): Netze aus Strähnen und Streifen mit Bild und Deckkraft.
+- **Augen** `eyes/high-poly` mit `eyes/materials/brown_eye.png`: Das Bild trägt Lederhaut, Iris und
+  Pupille; die Hornhaut davor liegt auf dem durchsichtigen Teil des Bilds, darum ist sie im Material
+  durchsichtig mit Glanz, und die Iris dahinter bleibt sichtbar (D-421; bis D-420 deckte eine graue
+  Schale die Iris). Dieselben Augen bekommt die graue Figur D in Körpergrau mit weich dunklerer Iris,
+  damit die Augenhöhlen nicht leer bleiben.
+- **Augenbrauen** `eyebrows/eyebrow001` und `eyebrow005`, **Wimpern** `eyelashes/eyelashes01` und
+  `eyelashes02`, **Haare** `hair/short02` (männlich, dunkelbraun eingefärbt) und `hair/ponytail01`
+  (weiblich, zum Zopf gebunden, dunkel eingefärbt; D-421): Netze aus Strähnen und Streifen mit Bild
+  und Deckkraft.
 - Anpassung wie in MakeHuman (`proxy.py`): Jeder Eckpunkt ist ein gewichtetes Mittel dreier Eckpunkte
   des Körpers plus Versatz, der mit dem Körper skaliert; so passen die Teile zu jeder Körperform. Sie
   hängen am Kopfknochen und bewegen sich mit dem Kopf.
@@ -32,14 +38,15 @@ PAKET = "makehuman_system_assets_cc0.zip"
 PAKET_URL = f"https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/{PAKET}"
 AUGEN = "eyes/high-poly"
 AUGEN_BILD = "eyes/materials/brown_eye.png"
+# Haarbilder von MakeHuman sind hell; `haarton` färbt sie ein (Faktoren je Kanal, linear): männlich
+# dunkelbraun, weiblich dunkel (Zopf `ponytail01`, D-421)
 TEILE = {
     "maennlich": {"haut": "skins/young_caucasian_male/young_lightskinned_male_diffuse.png", "haare": "hair/short02",
-                  "brauen": "eyebrows/eyebrow001", "wimpern": "eyelashes/eyelashes01"},
-    "weiblich": {"haut": "skins/young_caucasian_female/young_lightskinned_female_diffuse.png", "haare": "hair/bob02",
-                 "brauen": "eyebrows/eyebrow005", "wimpern": "eyelashes/eyelashes02"},
+                  "brauen": "eyebrows/eyebrow001", "wimpern": "eyelashes/eyelashes01", "haarton": (0.42, 0.30, 0.22)},
+    "weiblich": {"haut": "skins/young_caucasian_female/young_lightskinned_female_diffuse.png", "haare": "hair/ponytail01",
+                 "brauen": "eyebrows/eyebrow005", "wimpern": "eyelashes/eyelashes02", "haarton": (0.22, 0.20, 0.19)},
 }
 TEILE["neutral"] = TEILE["maennlich"]
-HAARTON = (0.42, 0.30, 0.22)  # Haarbilder von MakeHuman (blond) dunkelbraun eingefärbt, linear je Kanal
 
 
 def _benoetigt() -> tuple[set[str], set[str]]:
@@ -74,18 +81,20 @@ def _lies_mhclo(pfad: Path):
         teile = zeile.split()
         if not teile or zeile.startswith("#"):
             continue
-        if in_verts:
+        # Referenzzeilen nach `verts`: drei Eckpunkte mit Gewichten und Versatz, oder ein Eckpunkt.
+        # Dazwischen können Schlüsselwörter stehen (`material` bei ponytail01), die übersprungen werden.
+        if in_verts and teile[0].isdigit():
             if len(teile) == 9:
                 refs.append(([int(t) for t in teile[:3]], [float(t) for t in teile[3:6]], [float(t) for t in teile[6:9]]))
-                continue
-            if len(teile) == 1 and teile[0].isdigit():
+            elif len(teile) == 1:
                 refs.append(([int(teile[0])] * 3, [1.0, 0.0, 0.0], [0.0, 0.0, 0.0]))
-                continue
-            in_verts = False
+            continue
         if teile[0] in ("x_scale", "y_scale", "z_scale"):
             skal[teile[0][0]] = (int(teile[1]), int(teile[2]), float(teile[3]))
         elif teile[0] == "verts":
             in_verts = True
+    if not refs:
+        raise ValueError(f"{pfad.name}: keine Referenzen auf den Körper")
     return skal, refs
 
 
@@ -150,12 +159,69 @@ def _bild_material(name: str, bild: Path, rauheit: float, deckkraft: bool, glanz
     return mat
 
 
-def _proxy(name: str, ordner: str, skelett: bpy.types.Object, punkte: list[Vector], bild: Path, rauheit: float,
-           deckkraft: bool, glanz: float = 0.5, lack: float = 0.0, ton=None) -> bpy.types.Object:
+def _augen_material(bild: Path, grau: tuple[float, float, float, float] | None = None) -> bpy.types.Material:
+    """Auge von MakeHuman: Wo das Bild deckt (Lederhaut, Iris, Pupille), feucht glänzende Oberfläche mit
+    dem Bild; wo es durchsichtig ist (Hornhaut vor der Iris), eine durchsichtige Schale mit Glanz nach
+    Fresnel, durch die die Iris sichtbar bleibt. Mit `grau` (Figur D) statt der Bildfarben das
+    Körpergrau, die Helligkeit des Bilds macht Iris und Pupille als weichen dunkleren Kreis sichtbar."""
+    mat = bpy.data.materials.new("Augen")
+    mat.use_nodes = True
+    nodes, links = mat.node_tree.nodes, mat.node_tree.links
+    bsdf = nodes["Principled BSDF"]
+    tex = nodes.new("ShaderNodeTexImage")
+    tex.image = bpy.data.images.load(str(bild), check_existing=True)
+    if grau is None:
+        links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+        bsdf.inputs["Roughness"].default_value = 0.35
+        bsdf.inputs["Specular IOR Level"].default_value = 0.4
+        bsdf.inputs["Coat Weight"].default_value = 0.3
+        bsdf.inputs["Coat Roughness"].default_value = 0.1
+        glanz_rauheit = 0.05
+    else:
+        bw = nodes.new("ShaderNodeRGBToBW")
+        links.new(tex.outputs["Color"], bw.inputs["Color"])
+        rng = nodes.new("ShaderNodeMapRange")  # Lederhaut (linear rund 0,40) → 1, Pupille (0) → 0,55
+        rng.clamp = True
+        rng.inputs["From Min"].default_value = 0.0
+        rng.inputs["From Max"].default_value = 0.40
+        rng.inputs["To Min"].default_value = 0.55
+        rng.inputs["To Max"].default_value = 1.0
+        links.new(bw.outputs["Val"], rng.inputs["Value"])
+        mix = nodes.new("ShaderNodeMix")
+        mix.data_type = "RGBA"
+        links.new(rng.outputs["Result"], mix.inputs[0])
+        mix.inputs[6].default_value = (0.0, 0.0, 0.0, 1.0)
+        mix.inputs[7].default_value = grau
+        links.new(mix.outputs[2], bsdf.inputs["Base Color"])
+        bsdf.inputs["Roughness"].default_value = 0.72
+        glanz_rauheit = 0.2
+    durch = nodes.new("ShaderNodeBsdfTransparent")
+    glanz = nodes.new("ShaderNodeBsdfGlossy")
+    glanz.inputs["Roughness"].default_value = glanz_rauheit
+    fresnel = nodes.new("ShaderNodeLayerWeight")
+    fresnel.inputs["Blend"].default_value = 0.35
+    hornhaut = nodes.new("ShaderNodeMixShader")
+    links.new(fresnel.outputs["Fresnel"], hornhaut.inputs["Fac"])
+    links.new(durch.outputs[0], hornhaut.inputs[1])
+    links.new(glanz.outputs[0], hornhaut.inputs[2])
+    weg = nodes.new("ShaderNodeMath")  # 1 − Deckkraft: 0 Bild, 1 Hornhaut
+    weg.operation = "SUBTRACT"
+    weg.inputs[0].default_value = 1.0
+    links.new(tex.outputs["Alpha"], weg.inputs[1])
+    auswahl = nodes.new("ShaderNodeMixShader")
+    links.new(weg.outputs[0], auswahl.inputs["Fac"])
+    links.new(bsdf.outputs[0], auswahl.inputs[1])
+    links.new(hornhaut.outputs[0], auswahl.inputs[2])
+    links.new(auswahl.outputs[0], nodes["Material Output"].inputs["Surface"])
+    return mat
+
+
+def _proxy(name: str, ordner: str, skelett: bpy.types.Object, punkte: list[Vector],
+           material: bpy.types.Material) -> bpy.types.Object:
     """Teil von MakeHuman an den Körper angepasst (Raum des Skeletts), am Kopf mitbewegt."""
     stamm = Path(ordner).name
     skal, refs = _lies_mhclo(QUELLE / ordner / f"{stamm}.mhclo")
-    _, vt, flaechen, uv = _lies_obj(QUELLE / ordner / f"{stamm}.obj")
+    v, vt, flaechen, uv = _lies_obj(QUELLE / ordner / f"{stamm}.obj")
     mh = {}
 
     def h(i):
@@ -173,6 +239,8 @@ def _proxy(name: str, ordner: str, skelett: bpy.types.Object, punkte: list[Vecto
         Y = sum(w[j] * h(idx[j])[1] for j in range(3)) + s[1] * d[1]
         Z = sum(w[j] * h(idx[j])[2] for j in range(3)) + s[2] * d[2]
         lage.append(Vector((X * 0.1, -Z * 0.1, Y * 0.1)))
+    if len(lage) != len(v):
+        raise ValueError(f"{stamm}: {len(lage)} Referenzen für {len(v)} Eckpunkte")
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata([tuple(p) for p in lage], [], flaechen)
     schicht = mesh.uv_layers.new(name="UV")
@@ -187,7 +255,7 @@ def _proxy(name: str, ordner: str, skelett: bpy.types.Object, punkte: list[Vecto
     gruppe.add(list(range(len(lage))), 1.0, "REPLACE")
     mod = obj.modifiers.new("Skelett", "ARMATURE")
     mod.object = skelett
-    obj.data.materials.append(_bild_material(name, bild, rauheit, deckkraft, glanz, lack, ton))
+    obj.data.materials.append(material)
     return obj
 
 
@@ -262,13 +330,22 @@ def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, 
 
     punkte = figur.PUNKTE[name]
     t = TEILE.get(stil, TEILE["neutral"])
-    teile = [_proxy("Augen", AUGEN, skelett, punkte, QUELLE / AUGEN_BILD, 0.25, False, lack=0.6)]
-    for teil, ordner, rauheit, ton in (("Augenbrauen", t["brauen"], 0.6, None), ("Wimpern", t["wimpern"], 0.6, None),
-                                       ("Haare", t["haare"], 0.6, HAARTON)):
+    teile = [_proxy("Augen", AUGEN, skelett, punkte, _augen_material(QUELLE / AUGEN_BILD))]
+    for teil, ordner, ton in (("Augenbrauen", t["brauen"], None), ("Wimpern", t["wimpern"], None),
+                              ("Haare", t["haare"], t["haarton"])):
         if not ordner:
             continue
         bild = _bild_aus_mhmat(QUELLE / ordner, Path(ordner).name)
-        teile.append(_proxy(teil, ordner, skelett, punkte, bild, rauheit, True, glanz=0.2, ton=ton))
+        teile.append(_proxy(teil, ordner, skelett, punkte, _bild_material(teil, bild, 0.6, True, glanz=0.2, ton=ton)))
     koerper.data.materials.clear()
     koerper.data.materials.append(haut_material(stil, zonen_an, zonen_staerke=zonen_staerke))
     return teile
+
+
+def augen_neutral(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, grau: str = szene.KOERPER) -> list:
+    """Augen von MakeHuman für die graue Figur D, in Körpergrau mit weich dunklerer Iris (D-421):
+    ohne sie bleiben die Augenhöhlen des Grundmodells leer."""
+    import figur
+
+    hole()
+    return [_proxy("Augen", AUGEN, skelett, figur.PUNKTE[name], _augen_material(QUELLE / AUGEN_BILD, szene.srgb(grau)))]

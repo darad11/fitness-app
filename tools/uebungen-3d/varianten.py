@@ -47,5 +47,6 @@ def ausstatten(uebung, schluessel: str) -> list:
     else:
         mat = szene.koerper_material(zonen_staerke=v["staerke"]) if v["zonen"] else szene.matt("Koerper", szene.KOERPER, 0.72)
         k.data.materials.append(mat)
+        teile += realistisch.augen_neutral(k, sk, k.name)
     kleidung.haut_ausblenden(k.data.materials[0])
     return teile

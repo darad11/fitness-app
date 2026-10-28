@@ -2295,3 +2295,15 @@ Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassunge
 | App-Ansichten (`tools/uebungen-fassungen-screens.mjs`, D-420) | 36 Bildschirmfotos (9 Fassungen × kleiner Player am iPhone, aufgeklappter Player am Duo, Übungsübersicht mit Suche „Langhantel“, Übungsdetails der Kniebeuge; iPhone 390 × 844 in doppelter Auflösung, Duo aufgeklappt 951 × 669, „Bewegung reduzieren“), Medien nur in `dist/uebungen/medien/` getauscht und danach zurückgesetzt (Prüfsummen gleich `public/`); Blätter `paket-9-app-D`, `-Cm`, `-Cw` |
 | Blätter des Pakets (`tools/uebungen_paket_bild.py`) | 13 Dateien, zusammen 1328,3 KB, selbst angesehen |
 | `pnpm check:docs` je Paket am Stand des Commits, `python3 -m py_compile` aller Werkzeuge | bestanden |
+
+### Phase Übungen, Korrekturen Augen, Logos, Kragen und Griff · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit Brust-F 4 cm; Korrekturen 1 bis 6): Augen und Zopf (D-421). Nur Werkzeuge und Daten; Code und Videos der App unverändert. Der genannte Anhang `korrektur-markierungen.png` ist nicht angekommen (Upload-Ordner ohne neue Datei); Prüfung nach dem Text.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ursache der schwarzen Augen (Bild `brown_eye.png` gemessen: Lederhaut hellgrau, zwei Iris-Bereiche, 1,3 % durchsichtig in einer Ecke; UV des vordersten Punkts der Hornhaut (0,937, 0,069) liegt in diesem Bereich) | Hornhaut auf dem durchsichtigen Teil des Bilds, Material ohne Deckkraft; behoben in `realistisch._augen_material` |
+| Nahaufnahmen Kopf von vorn (`nahaufnahme.py`, 600 px, 32 Proben): D, C männlich, C weiblich | D: graue Augen mit weich dunklerer Iris, keine Löcher; C: Lederhaut, Iris, Pupille und Glanz sichtbar; selbst angesehen |
+| Zopf von hinten (C weiblich, 150°) | dunkler Zopf am Hinterkopf, Hals und Nacken frei; selbst angesehen |
+| `hair/ponytail01` laden | erster Lauf: Absturz von Blender (Segmentation fault) bei einem Netz mit 0 Eckpunkten, weil `ponytail01.mhclo` eine `material`-Zeile in der Referenzliste führt; nach der Korrektur 3718 Eckpunkte, 2676 Flächen, `mesh.validate` ohne Befund |
+| `pnpm check:docs`, `python3 -m py_compile` | bestanden |

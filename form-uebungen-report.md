@@ -698,3 +698,13 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: App-Ansichten mit Standbildern statt Schleifen (Medien nur im Build getauscht)
 Nächste Schritte: Freigabe der Kombination durch den Produktinhaber, dann Neurendern der drei Pilot-Übungen
 ```
+
+## 14. Korrekturen Augen, Logos, Kragen und Griff (vierte Nachricht vom 28.10.2026)
+
+Deine Entscheidung: Fassung A1 (Zonen Lime, Logos hell mit Rand in Stoffarbe) und Brust-F 4 cm; den Körper wählst du nach dieser Runde zwischen D, C männlich und C weiblich. Der Anhang `korrektur-markierungen.png` ist nicht angekommen: Im Upload-Ordner der Sitzung lagen nur die fünf Auftragsdateien. Ich habe nach deinem Text gearbeitet, der die sechs Punkte klar beschreibt, und jede Ursache zuerst in Nahaufnahmen des alten Stands geprüft.
+
+### 14.1 Augen und Zopf (D-421)
+
+- **Ursache der schwarzen Augen:** Das Augenbild von MakeHuman trägt Lederhaut, Iris und Pupille; die Hornhaut des Augennetzes liegt auf einem durchsichtigen Eckbereich des Bilds. Mein Material ignorierte die Deckkraft, darum verdeckte eine bläulich-graue Schale die Iris, und die Augen wirkten schwarz. Jetzt zeigt der deckende Teil das Bild (feucht glänzend), die Hornhaut ist eine durchsichtige Schale mit Glanz nach Fresnel; Iris und Pupille sind sichtbar.
+- **D:** dieselben Augen in Körpergrau mit weich dunklerer Iris aus der Helligkeit des Bilds. Die Augenhöhlen des Grundmodells sind sonst leer, darum die schwarzen Löcher.
+- **Frau:** Haare `hair/ponytail01` aus dem CC0-Paket (zum Zopf gebunden), dunkel eingefärbt; Lizenz in `docs/licenses-data.md` Abschnitt 8. Beim Laden stürzte Blender zunächst ab: Die Datei führt mitten in der Referenzliste eine `material`-Zeile, die mein Leser als Ende der Liste nahm. Behoben, die Liste wird jetzt vollständig gelesen.

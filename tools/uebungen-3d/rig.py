@@ -9,7 +9,8 @@ Statt Gelenkwinkel einzeln zu setzen, rechnet das Rig jede Haltung aus Zielen:
   Die Hand hängt am Gerät: Ihre Lage ergibt sich aus dem Griff (Stange in der Handfläche, quer zur
   Hand), nicht umgekehrt. Die Unterarmdrehung (Pronation) verteilt sich auf die zwei Segmente.
 - **Finger:** Jedes Glied beugt sich um die Achse der Stange; die Winkel werden so gesucht, dass
-  die Finger die Stange umschließen, ohne sie zu durchdringen. Der Daumen umgreift gegenläufig.
+  die Finger die Stange umschließen, ohne sie zu durchdringen. Der Daumen umgreift gegenläufig
+  und legt sich über Zeige- und Mittelfinger (voller Griff, D-423).
 - **Rumpf:** Becken und Wirbelsäule als starre oder fein verteilte Drehungen um echte Gelenkpunkte.
 
 Gerechnet wird mit Segment-Transformationen `G` (Grundhaltung → Haltung) im Raum des Skeletts; am
@@ -417,17 +418,35 @@ class Rig:
         return pkte
 
     def _daumen_wickeln(self, seite: str, g: Griff, dicke: float) -> list[float]:
-        """Daumen gegenläufig um die Stange: Drehung im Grundgelenk (zwei Achsen), Beugung der
-        beiden Glieder um die Stangenachse in Gegenrichtung."""
+        """Daumen im vollen Griff (D-423): Daumenballen und Grundglied umschließen die Stange von der
+        Gegenseite der Finger, die Daumenspitze liegt auf der anderen Seite der Stange über den
+        Mittelgliedern von Zeige- und Mittelfinger auf. Gesucht werden die Drehung im Grundgelenk (zwei
+        Achsen) und die Beugung der beiden Glieder, fest begrenzt wie bei der echten Hand (Grundglied 20
+        bis 60°, Endglied 20 bis 70°, kein Knick nach hinten), so dass kein Punkt in die Stange ragt; das
+        Endglied legt sich dabei auf die Finger, statt von ihnen wegzuzeigen. Bis D-422 zielte die Spitze auf die Stangenoberfläche
+        gegenüber der Handfläche; der Daumen hing dann wie ein Haken unter der Stange, ohne die Finger
+        zu berühren."""
         kette = self._kette(seite, "finger1")
         R = g.radius + dicke  # Daumen dicker als die Finger
         achse = g.finger.get("_achse_" + seite, g.achse)
-        # Ziel der Daumenspitze: auf der Gegenseite der Stange (gegenüber der Handfläche), auf Höhe des
-        # Zeigefingeransatzes, knapp über der Oberfläche: Der Daumen umgreift die Stange, statt an ihr
-        # entlang zu liegen.
         ax = g.achse.normalized()
-        basis = self.kopf[f"finger2-1.{seite}"]
-        ziel = g.mitte + ax * (basis - g.mitte).dot(ax) + g.handflaeche.normalized() * (R + 0.002)
+        # Ziel der Spitze: über den Mittelgliedern von Zeige- und Mittelfinger (Punkt 3 der Fingerkette:
+        # Mitte des Mittelglieds), radial um Finger- und Daumendicke nach außen
+        auflage = []
+        for f in ("finger2", "finger3"):
+            if f in g.finger:
+                pk = self._fingerpunkte(self._kette(seite, f), achse, g.finger[f], g.finger.get("_spreiz_" + f + seite))
+                auflage.append(pk[3])
+        if auflage:
+            mitte_f = sum(auflage, Vector()) / len(auflage)
+            radial = mitte_f - g.mitte
+            radial = radial - radial.dot(ax) * ax
+            r_finger = radial.length  # Knochen der Finger: Stangenradius plus Fingerdicke
+            ziel = g.mitte + ax * (mitte_f - g.mitte).dot(ax) + radial.normalized() * (r_finger + 0.014)
+        else:
+            basis = self.kopf[f"finger2-1.{seite}"]
+            r_finger = g.radius + 0.0085
+            ziel = g.mitte + ax * (basis - g.mitte).dot(ax) + g.handflaeche.normalized() * (R + 0.002)
         p0 = kette[0][0]
 
         def kosten(a: float, b: float, c: float, e: float) -> float:
@@ -438,18 +457,26 @@ class Rig:
             wert = 0.0
             for p in (p1, (p1 + p2) / 2, p2, (p2 + p3) / 2, p3):
                 r = self._abstand_achse(p, g.mitte, g.achse)
-                if r < R - 0.001:
+                if r < R - 0.001:  # nicht in die Stange
                     wert += 50 * (R - r) ** 2 * 1e4
+            for p in (p1, (p1 + p2) / 2, p2):  # Ballen und Grundglied an der Stange
+                r = self._abstand_achse(p, g.mitte, g.achse)
                 wert += 0.3 * (r - R) ** 2 * 1e4
-            return wert + 20.0 * (p3 - ziel).length ** 2 * 1e2
+            # Endglied auf den Fingern (Knochen der Finger plus Fingerdicke), Spitze am Ziel
+            r_end = self._abstand_achse((p2 + p3) / 2, g.mitte, g.achse)
+            wert += 0.2 * (r_end - (r_finger + 0.010)) ** 2 * 1e4
+            wert += 40.0 * (p3 - ziel).length ** 2 * 1e2
+            return wert
 
-        # grob über den ganzen Bereich, dann zweimal feiner um die beste Lage
+        # grob über den ganzen Bereich innerhalb der Gelenkgrenzen, dann zweimal feiner um die beste Lage
+        GRENZEN = ((20.0, 60.0), (20.0, 70.0))  # Beugung Grundglied, Endglied (Grad)
         raster = [(a, b, c, e) for a in range(-80, 81, 10) for b in range(-80, 81, 10)
-                  for c in range(0, 91, 10) for e in range(0, 91, 10)]
+                  for c in range(20, 61, 10) for e in range(20, 71, 10)]
         beste = min(raster, key=lambda w: kosten(*w))
         for schritt in (4, 1.5):
-            raster = [(beste[0] + i * schritt, beste[1] + j * schritt, max(0.0, beste[2] + k * schritt),
-                       max(0.0, beste[3] + m * schritt))
+            raster = [(beste[0] + i * schritt, beste[1] + j * schritt,
+                       min(GRENZEN[0][1], max(GRENZEN[0][0], beste[2] + k * schritt)),
+                       min(GRENZEN[1][1], max(GRENZEN[1][0], beste[3] + m * schritt)))
                       for i in (-2, -1, 0, 1, 2) for j in (-2, -1, 0, 1, 2) for k in (-2, -1, 0, 1, 2) for m in (-2, -1, 0, 1, 2)]
             beste = min(raster, key=lambda w: kosten(*w))
         return [float(w) for w in beste]

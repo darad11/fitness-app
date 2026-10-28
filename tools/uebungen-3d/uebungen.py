@@ -343,7 +343,9 @@ class Bankdruecken(Uebung):
     ZURUECK = 8.0  # Schultern zurückgezogen, Grad
     ELLBOGEN_OBEN = 172.0
     UNTERARM = 0.0  # Unterarm-Neigung nach außen (Grad), die der Ellbogen anstrebt
-    SCHRAEG = 0.0  # Stange schräg in der Hand (Grad)
+    # Stange schräg in der Hand (Grad): vom Zeigefingerballen zum Handballen an der Kleinfingerseite,
+    # tief in der Handfläche über dem Unterarm (voller Griff, D-423; vorher quer)
+    SCHRAEG = 12.0
     UNTEN_DZ = 0.0  # Stange unten höher (m)
     BOGEN = 1.4  # Form der Stangenbahn: Exponent der Bewegung zur Brust hin
 

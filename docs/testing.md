@@ -2298,7 +2298,7 @@ Auftrag `prompts/uebungen-korrektur-logos-FORM.md`: Kleidung, Logos und Fassunge
 
 ### Phase Übungen, Korrekturen Augen, Logos, Kragen und Griff · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit Brust-F 4 cm; Korrekturen 1 bis 6): Augen und Zopf (D-421), Kleidung (D-422). Nur Werkzeuge und Daten; Code und Videos der App unverändert. Der genannte Anhang `korrektur-markierungen.png` ist nicht angekommen (Upload-Ordner ohne neue Datei); Prüfung nach dem Text.
+Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit Brust-F 4 cm; Korrekturen 1 bis 6): Augen und Zopf (D-421), Kleidung (D-422), Griff (D-423). Nur Werkzeuge und Daten; Code und Videos der App unverändert. Der genannte Anhang `korrektur-markierungen.png` ist nicht angekommen (Upload-Ordner ohne neue Datei); Prüfung nach dem Text.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2309,4 +2309,7 @@ Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit
 | Ursache des Shorts-F innen (Bankdrücken D, Kamera vom Fußende) | F auf der Innenseite des rechten Beins: ebene Projektion ohne Begrenzung traf das andere Bein (Normale zeigt zur Bildebene); behoben (D-422), danach in derselben Ansicht keine Spur mehr, F außen am linken Bein (Seitenansicht 90°) unverändert |
 | Kragen Kniebeuge unten (D, 45° und 135°, dazu Kamera der App, 700 px) | liegt beidseits am Halsansatz, Stange auf dem Stoff; bis D-420 stieg er auf der Seite der Stange am Hals hoch |
 | Rücken mit Wortmarke (D Kniebeuge von hinten; C weiblich Latziehen unten von hinten) | F über FORM mittig zwischen den Schulterblättern, Wortmarke in Originalproportionen, Rand in Stoffarbe über den Lime-Zonen; selbst angesehen |
+| Daumen vor der Korrektur (D, Bankdrücken vom Fußende und vom Kopfende, Kniebeuge hinten-seitlich, Latziehen von vorn) | Haken unter der Stange, Spitze von den Fingern weg; Ursache: Ziel der Spitze auf der Stangenoberfläche gegenüber der Handfläche |
+| Messung je Übung (D-A1, `pruef_griff.py` im Arbeitsordner): Daumen Grundgelenk, Beugung Grund- und Endglied, Abstand zur Stange; Finger in den Phasen 0, 0,5 und 1 | mit weichen Strafen: Bankdrücken 8°/92°, Kniebeuge 0°/0°, Latziehen 0°/70° (Daumen gestreckt oder geknickt). Mit festen Grenzen: Bankdrücken Grundgelenk −62°/28°, Beugung 20°/70°, Daumen −0,6 mm; Kniebeuge −50°/−14°, 20°/20°, −0,1 mm; Latziehen −28°/38°, 20°/28°, −0,7 mm; Finger geringster Abstand −4,3 / −1,2 / −1,1 mm, Kontaktpunkte 324 / 206 / 236, in allen Phasen gleich, keine Meldungen des Rigs |
+| Nahaufnahmen danach (Bankdrücken vom Fußende, vom Kopfende und schräg entlang der Stange ohne Scheiben; Kniebeuge hinten-seitlich; Latziehen schräg) | Faust um die Stange, Daumenspitze über dem Zeigefinger, nicht abstehend, kein Knick nach hinten; in der Kniebeuge ragt die Spitze über dem Zeigefinger knapp über die Stange; selbst angesehen |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |

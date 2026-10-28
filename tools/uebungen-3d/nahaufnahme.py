@@ -5,7 +5,8 @@ Umgebung eines Knochens im verformten Netz, wahlweise mit eigener Richtung und N
     python -I tools/uebungen-3d/nahaufnahme.py D-z-hell kniebeuge 0.0 upperleg02.L 0.22 --richtung 90 --ziel bein.png
 
 Ohne `--richtung`/`--neigung` die Kamera der Übung (wie in der App). `--kante a b` setzt die Stärke
-des Kantenlichts (W), `--ohne-kante` den Stand bis D-416.
+des Kantenlichts (W), `--ohne-kante` den Stand bis D-416, `--ohne-scheiben` blendet die Hantelscheiben
+aus (Blick entlang der Stange auf den Griff, D-423).
 """
 from __future__ import annotations
 
@@ -36,6 +37,7 @@ def main() -> None:
     ap.add_argument("--proben", type=int, default=16)
     ap.add_argument("--kante", type=float, nargs=2, metavar=("LINKS", "RECHTS"))
     ap.add_argument("--ohne-kante", action="store_true")
+    ap.add_argument("--ohne-scheiben", action="store_true", help="Hantelscheiben ausblenden (Blick entlang der Stange)")
     ap.add_argument("--ziel", required=True)
     args = ap.parse_args()
     if args.kante:
@@ -44,6 +46,10 @@ def main() -> None:
     if args.ohne_kante:
         u.kantenlicht = False
     u.setzen(args.phase)
+    if args.ohne_scheiben:
+        for o in bpy.data.objects:
+            if o.name.startswith("Scheibe"):
+                o.hide_render = True
     mitte = u.rig.welt(u.rig.punkt(args.knochen, u.rig.kopf[args.knochen]))
     nah = [p for p in _netz(u.koerper) if (p - mitte).length < args.radius]
     richtung = args.richtung if args.richtung is not None else u.kamera["richtung"]

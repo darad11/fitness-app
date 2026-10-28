@@ -1206,3 +1206,74 @@ Dein Auftrag steht in `docs/prompts/uebungen-korrektur5-FORM.md`; dein Handfoto 
 - **Renderzeit:** Bankdrücken 25,1 s, Kniebeuge 17,8 s, Latziehen 18,1 s je Bild (720 × 540, 40 Proben) gegen 23,0 / 16,5 / 17,5 s für C männlich; der Aufbau der Haare kostet rund 16 s je Szene (Aufbau 21 bis 23 s statt 5 bis 6 s), einmal je Übung.
 - **Wie nah das Blatt erreicht ist, ehrlich:** Erkennbar dieselbe Richtung: Frisur mit vollem Deckhaar und kurzen Seiten, dunkler Vollbart mit Wangenlinie, dichte gerade Brauen, warmer Hautton, Leberfleck, volles Gesicht mit kräftigem Kiefer. Keine Kopie: Die Strähnen sind erzeugt und wirken feiner und struppiger als die gemalten Bündel des Blatts, Tolle und Haaransatz sind nur angenähert; Augenform, Nase und Lippen bleiben in den Grenzen der MakeHuman-Ziele; es gibt keine Fototextur, Hautstruktur und Lichtwirkung sind die des FORM-Looks. Das Blatt ist selbst ein erzeugtes Bild, kein Foto; sein Profil erkennt MediaPipe nicht, das Profil wurde darum nur nach Augenschein abgeglichen. Mit MakeHuman ist mehr Ähnlichkeit vor allem über Handarbeit an den Haaren und am Gesichtsnetz möglich; kostenlose Werkzeuge mit kommerzieller Lizenz dafür wären Blenders Bildhauerwerkzeuge und Haarwerkzeuge selbst, nicht andere Gesichtsmodelle.
 - **Vorschauen:** drei private Blätter als Dateien bei dir, nicht im Repository: Kopf von vorn, im Dreiviertelprofil, im Profil und von hinten, je neben dem Blatt und neben dem bisherigen `Cp-A1`; Nahaufnahmen Auge mit Braue und Ohr mit Haaransatz; die drei Pilot-Übungen in Player-Größe.
+
+### 18.4 Vergleichsblätter (D-443)
+
+Alle drei in `docs/screens/uebungen/`, links der Stand D-439 (Werkzeug aus dem Repository ausgecheckt), rechts der Stand nach den Korrekturen, dieselben Kameras:
+
+1. `korrektur5-1-griff.webp`: Griff beim Bankdrücken vom Fußende, von der Seite entlang der Stange, von oben auf die Hand, schräg und vom Kopfende; Kniebeuge hinten-seitlich und vorn-seitlich; Latziehen schräg von vorn und von der Seite.
+2. `korrektur5-2-shorts-logo.webp`: linker Oberschenkel mit der Kamera der App beim Bankdrücken, in der tiefsten Kniebeuge und beim Latziehen sowie im Stand von links.
+3. `korrektur5-3-player.webp`: die drei Pilot-Übungen vorher und nachher in der Größe des großen Players mit dem Vorschaubild.
+
+Privat als Dateien bei dir, nicht im Repository: das Griffblatt mit deinem Handfoto daneben und die drei Blätter C zum personalisierten Modell (Kopf aus vier Richtungen neben Referenzblatt und bisherigem Modell, Nahaufnahmen Auge mit Braue und Ohr mit Haaransatz, drei Pilot-Übungen in Player-Größe).
+
+### 18.5 Tests
+
+- **Daumen:** Ursache gemessen (Lage aller Gelenke um die Stange, Hub, Beeren, Querschnitt der Daumenglieder mit Hauptachsen), zwei Zwischenfassungen numerisch und im Bild geprüft, danach alle drei Übungen; neun Nahaufnahmen je Stand neben dem Handfoto, Latziehen zusätzlich als Ring und über den Fingern.
+- **Shorts-F:** Nahaufnahmen in drei Übungen und im Stand von links, Standbilder in Player-Größe.
+- **Personalisiertes Modell:** Landmarken des Blatts, Anpassung Paar für Paar, acht Kopffassungen neben dem Blatt aus bis zu vier Richtungen, Fehlersuche an Ohrmaske und Leberfleck mit Zahlen, Variante ganz in den drei Pilot-Übungen mit Renderzeiten; `git status` und Suche nach Bilddateien vor jedem Commit.
+- **Dokumente:** `pnpm check:docs` und Prettier je Paket, `py_compile` aller Werkzeuge; zu D-440 zusätzlich alle Checks des CI-Jobs lokal. Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde 5“.
+- **CI:** Die Läufe zu den Commits stehen in PR #53; jeder Push bricht den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
+
+### 18.6 Übertragbarkeit und offene Punkte
+
+- **Daumen:** Eine Konstruktion für alle Stangen; der Ring aus D-425 bleibt als Option im Werkzeug. Für die Familien des Animationsplans gilt dasselbe Rig.
+- **Shorts-F:** Konfiguration für alle Übungen und Körper.
+- **Personalisiertes Modell:** Werkzeuge gelten für jede Person; je Person kommen Vorlagen (nie ins Repository), Reglerwerte und Haarparameter dazu. Die Haarkurven kosten rund 2 s je Bild und 16 s je Aufbau mehr. Nächste Stufen, wenn du sie willst: Deckhaar mit größeren Bündeln und mehr Glanz wie auf dem Blatt, Feinarbeit an Augenform und Lippen, eine Fototextur nur mit Fotos aus mehreren Richtungen.
+- **Offen bei dir:** Freigabe der Standbilder (Daumen, Shorts-F) und der Vorschauen des personalisierten Modells; die Seite des Leberflecks (Blatt zeigt links); danach rendere ich die drei Pilot-Übungen neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+
+### 18.7 Berichte je Paket
+
+```
+Arbeitspaket: D-440 Daumen nach Handfoto
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/rig.py, uebungen.py, tools/uebungen_korrektur_bild.py; Blatt korrektur5-1-griff.webp; Auftrag, CLAUDE.md, Dokumente
+Technische Entscheidungen: D-440
+Ausgeführte Tests: Diagnose vorher und nachher in drei Übungen, Querschnitte, Zwischenfassungen, neun Nahaufnahmen je Stand neben dem Handfoto; alle Checks des CI-Jobs lokal
+Ergebnis: bestanden
+Bekannte Einschränkungen: Daumenknochen 42 bis 48 mm von der Achse, weil die Zeigefingerspitze 14 mm über der Stange steht; Ballenhaut 3,9 mm von der Stange
+Nächste Schritte: Freigabe der Standbilder
+```
+
+```
+Arbeitspaket: D-441 Ein Shorts-F
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py; Blätter korrektur5-2-shorts-logo.webp, korrektur5-3-player.webp; Dokumente
+Technische Entscheidungen: D-441
+Ausgeführte Tests: Nahaufnahmen in drei Übungen und im Stand, Standbilder in Player-Größe; pnpm check:docs, Prettier
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine
+Nächste Schritte: Freigabe der Standbilder
+```
+
+```
+Arbeitspaket: D-442 Personalisiertes Modell neu nach dem Referenzblatt
+Umgesetzte Funktionen: Werkzeug für Vorschauen (nichts in der App), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/haare.py (neu), gesicht.py, realistisch.py, varianten.py; docs/licenses-data.md; Dokumente
+Technische Entscheidungen: D-442
+Ausgeführte Tests: Landmarken, Anpassung Paar für Paar, acht Kopffassungen neben dem Blatt, Variante in drei Übungen mit Renderzeiten, Datenschutzprüfung vor dem Commit
+Ergebnis: bestanden als Vorschau; Gesichtstreue vom Produktinhaber zu beurteilen
+Bekannte Einschränkungen: erzeugte Strähnen statt gemalter Bündel, Tolle und Haaransatz angenähert, Augen, Nase und Lippen in den Grenzen von MakeHuman, keine Fototextur
+Nächste Schritte: Freigabe der Vorschauen, Seite des Leberflecks bestätigen
+```
+
+```
+Arbeitspaket: D-443 Vergleichsblätter, Bericht, Halt
+Umgesetzte Funktionen: Dokumentation, erfüllte AK: –
+Geänderte Dateien: docs/decisions.md, docs/testing.md, docs/feature-inventory.md (0.52) mit CSV, docs/implementation-plan.md, form-uebungen-report.md Abschnitt 18
+Technische Entscheidungen: D-443
+Ausgeführte Tests: pnpm check:docs, Prettier; Löschung der persönlichen Dateien geprüft
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine
+Nächste Schritte: Freigabe durch den Produktinhaber, dann Pilot-Übungen neu rendern
+```

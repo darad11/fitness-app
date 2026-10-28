@@ -1089,10 +1089,92 @@ Dein Auftrag steht in `docs/prompts/uebungen-korrektur4-FORM.md`; beide Anhänge
 
 ### 17.4 Variante „C männlich – Personalisiert“ (D-438)
 
-- **Was es ist:** Schlüssel `Cp` neben `Cm`, wählbar als `Cp-A1` in allen Werkzeugen; nur für Test- und Vorschau-Renderings, nichts stellt darauf um. Körper, Skelett, Rig, Kleidung, Licht und Zonen sind die von C männlich; nur Kopf und Aussehen ändern sich. Renderzeit gleich (Bankdrücken 24,8 s gegen 25,2 s).
+- **Was es ist:** Schlüssel `Cp` neben `Cm`, wählbar als `Cp-A1` in allen Werkzeugen; nur für Test- und Vorschau-Renderings, nichts stellt darauf um. Körper, Skelett, Rig, Kleidung, Licht und Zonen sind die von C männlich; nur Kopf und Aussehen ändern sich. Renderzeit gleich (Bankdrücken 22,7 s gegen 25,2 s).
 - **Gesichtsform:** Charakterregler nach Augenschein deiner Fotos (volles, rundes Gesicht, weiche Wangen, kräftiger Kiefer, breites Kinn, breite Nasenflügel und runde Spitze, deutlich hervortretende Nase, niedriger Haaransatz), die Größen- und Lageregler Paar für Paar an die Maße beider Frontfotos angepasst (Abweichung 10,4 % statt 13,0 % beim Grundmodell). Alle Werte mit Begründung in `gesicht.py` und D-438.
 - **Aussehen:** Frisur `short04` fast schwarz (die nächste der vier kurzen CC0-Frisuren, Deckhaar nach hinten, kurze Seiten), dichte dunkle Brauen (Brauennetz plus Zone der Haut), braune Augen, wärmerer Hautton, Vollbart als Zone der Haut mit Stoppelmuster: Oberlippe, Kinn, Kiefer und oberer Hals dicht, Wangen bis zu einer Linie vom Ohr zum Mundwinkel, Koteletten bis zum Ohr. Kleiner Leberfleck neben dem linken Nasenflügel.
 - **Was aus den Fotos nicht sicher ist, gekennzeichnet:** die Seite des Leberflecks (zwei Selfies zeigen ihn auf verschiedenen Seiten; ich habe links genommen); Nasenvorsprung und Kinn im Profil (Profilfoto an Nase und Kinn beschnitten, nur Untergrenzen); die genaue Breite des Bartes am Hals und die Höhe des Haaransatzes unter dem nassen Haar; Augenfarbe aus den Fotos als dunkelbraun gelesen.
 - **Ehrliche Bewertung:** Die Vorschau geht erkennbar in deine Richtung (Gesichtsform, Brauen, Bart, Haar, Hautton), ist aber keine perfekte Gesichtstreue. Bart und Brauen sind Texturzonen ohne Volumen, der Haaransatz liegt höher als bei dir, die Augen wirken größer und offener, die Lippen voller und rosiger. Du beurteilst das an den Vorschauen; nächste Stufen wären ein Haarnetz für den Bart (Renderzeit steigt), eine eigene Frisur und Feinarbeit an Augenlidern und Lippen.
 - **Vorschauen, nur bei dir:** Gesicht von vorn, im Dreiviertelprofil und von der Seite neben dem passenden Foto und neben dem bisherigen Modell; Bankdrücken vollständig mit der Kamera der App neben C männlich; Kopf in der Ausgangsposition des Bankdrückens und im Stand. Nichts davon liegt im Repository.
+
+### 17.5 Vorher-nachher-Blätter (D-439)
+
+Alle drei in `docs/screens/uebungen/`, links der Stand D-434 (Werkzeug aus dem Repository ausgecheckt), rechts der Stand nach den Korrekturen, dieselben Kameras:
+
+1. `korrektur4-1-griff.webp`: Griff beim Bankdrücken vom Fußende, von der Seite entlang der Stange, von oben auf die Hand, schräg (Daumen und Finger zugleich) und vom Kopfende; Griff in der Kniebeuge und beim Latziehen.
+2. `korrektur4-2-shorts-logo.webp`: linker Oberschenkel mit der Kamera der App beim Bankdrücken, in der tiefsten Kniebeuge und beim Latziehen (dort beide F).
+3. `korrektur4-3-player.webp`: Bankdrücken vorher und nachher in der Größe des großen Players mit dem Vorschaubild; darunter die drei Pilot-Übungen nachher.
+
+Blatt C (personalisiertes Modell neben deinen Fotos und dem bisherigen Modell, Bankdrücken neben C männlich, Kopf in der Übung) hast du als Dateien bekommen; es liegt nicht im Repository.
+
+### 17.6 Tests
+
+- **Daumen:** Ursache gemessen (Lage aller Gelenke um die Stange, Abstände, Haut im Netz), Dicken des Grundmodells gemessen, jede Zwischenfassung numerisch geprüft, danach alle drei Übungen und Phasen; Markierungskugeln an den Gelenken in drei Ansichten, um Bild und Zahlen abzugleichen.
+- **Shorts-F:** Bein per Strahl von der Kamera der App durch deine Markierung bestimmt; Nahaufnahmen in drei Übungen und Player-Größe.
+- **Personalisiertes Modell:** Werkzeuge einzeln geprüft (Landmarken auf Fotos und Rendering, Rückprojektion mit Kontrolle der Eckpunktnummern, Wirkung jedes Reglers auf die Maße, Abweichung je Fassung), vier Vorschauen neben den Fotos, Variante ganz im Bankdrücken und in der Kniebeuge; `git status` vor jedem Commit.
+- **Dokumente:** `pnpm check:docs` und Prettier je Paket, `py_compile` aller Werkzeuge. Alles wörtlich in `docs/testing.md`, Abschnitt „Korrekturrunde 4“.
+- **CI:** Die Läufe zu den Commits stehen in PR #53; jeder Push bricht den laufenden Lauf ab, der Lauf zum letzten Commit zählt.
+
+### 17.7 Übertragbarkeit und offene Punkte
+
+- **Daumen:** Die Hülle macht die Konstruktion für jede Stange gleich; für dünne Griffe (Latzug, Kabelgriffe, Kurzhanteln mit dünnem Griff) steht der Daumen über den Fingern ab, dort bleibt der Ring (`daumen="ring"` je Übung). Beides gilt für die Familien des Animationsplans.
+- **Shorts-F:** Konfiguration, gilt für alle Übungen und Körper. Offen bei dir: beide F auf dem linken Bein lassen, das äußere auf das rechte Bein spiegeln oder ersetzen (17.2).
+- **Personalisiertes Modell:** Werkzeuge und Zuordnung gelten für jede Person; je Person kommen Fotos (nie ins Repository), Reglerwerte und Aussehen dazu. Nächste Stufen, wenn du sie willst: Bart als Haarnetz, eigene Frisur, Feinarbeit an Lidern und Lippen; besser wäre ein Profilfoto mit etwas Abstand, auf dem Nase und Kinn ganz im Bild sind.
+- **Offen:** deine Freigabe der Standbilder (Daumen, Shorts-F) und der Vorschauen (personalisiertes Modell); danach rendere ich die Pilot-Übungen neu und baue sie ein; nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+
+### 17.8 Berichte je Paket
+
+```
+Arbeitspaket: D-435 Daumen klar getrennt
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/rig.py, uebungen.py; Auftrag, CLAUDE.md, Dokumente
+Technische Entscheidungen: D-435
+Ausgeführte Tests: Diagnose vorher und nachher in drei Übungen und Phasen, Dicken gemessen, Zwischenfassungen, Nahaufnahmen mit Markierungskugeln; pnpm check:docs
+Ergebnis: bestanden für Bankdrücken und Kniebeuge; Latziehen behält den Ring
+Bekannte Einschränkungen: Spalt zur Fingerspitze in der Seitenansicht; Ring beim Latziehen überschneidet verdeckt
+Nächste Schritte: Freigabe der Standbilder
+```
+
+```
+Arbeitspaket: D-436 Zweites Shorts-F
+Umgesetzte Funktionen: Werkzeug für TP-06, TP-07, TS-02 (Videos der App unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py; Dokumente
+Technische Entscheidungen: D-436
+Ausgeführte Tests: Bein per Strahl bestimmt, Nahaufnahmen in drei Übungen, Player-Größe; pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: beide F auf dem linken Bein, von der Seite zugleich sichtbar
+Nächste Schritte: Entscheidung des Produktinhabers (17.2)
+```
+
+```
+Arbeitspaket: D-437 Grundlage personalisiertes Modell
+Umgesetzte Funktionen: Werkzeuge, erfüllte AK: –
+Geänderte Dateien: .gitignore, tools/uebungen-3d/landmarken.py, gesicht_masse.py, gesicht_anpassen.py, gesicht.py, gesicht-marken.json, render.py; docs/licenses-data.md, Dokumente
+Technische Entscheidungen: D-437
+Ausgeführte Tests: MediaPipe-Umgebung, Landmarken auf Fotos und Rendering, Rückprojektion, Reglerwirkung, Maße; pnpm check:docs
+Ergebnis: bestanden; Profilfoto nur als Silhouette mit Untergrenzen
+Bekannte Einschränkungen: Perspektive der Selfies, fünf Regler ohne Wirkung auf Landmarken
+Nächste Schritte: Variante (D-438)
+```
+
+```
+Arbeitspaket: D-438 Variante C männlich – Personalisiert
+Umgesetzte Funktionen: Werkzeug (Vorschau), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/gesicht.py, realistisch.py, varianten.py; Dokumente
+Technische Entscheidungen: D-438
+Ausgeführte Tests: vier Vorschauen neben den Fotos, Variante ganz in zwei Übungen, Bartzone gezählt, git status; pnpm check:docs
+Ergebnis: bestanden als vorsichtige Annäherung, keine perfekte Gesichtstreue
+Bekannte Einschränkungen: Bart und Brauen als Texturzonen, Haaransatz, Augen, Lippen (17.4)
+Nächste Schritte: Beurteilung durch den Produktinhaber an den Vorschauen
+```
+
+```
+Arbeitspaket: D-439 Vergleichsblätter und Abschluss
+Umgesetzte Funktionen: Dokumentation, erfüllte AK: –
+Geänderte Dateien: tools/uebungen_korrektur_bild.py, docs/screens/uebungen/korrektur4-*.webp; Dokumente, Funktionsmatrix, Plan
+Technische Entscheidungen: D-439
+Ausgeführte Tests: Blätter selbst angesehen, pnpm check:docs, Prettier, py_compile; Fotos und abgeleitete Daten gelöscht
+Ergebnis: bestanden
+Bekannte Einschränkungen: Standbilder statt Schleifen
+Nächste Schritte: Halt bis zur Freigabe des Produktinhabers
+```
 

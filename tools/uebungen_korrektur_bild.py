@@ -11,6 +11,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur --ziel docs/screens/uebungen
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur2 --runde 2   # D-428: C männlich, Griff, Kragen, Rückenlogo
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur3 --runde 3   # D-433: vorher/nachher Griff, Kragen, Rückenlogo, Gesamt, Player
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur4 --runde 4   # D-439: vorher/nachher Daumen, zweites Shorts-F, Player
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -161,15 +162,67 @@ def blatt_player3(paket: Path) -> "Image":
     return gitter(kacheln, 3, "5 · In der Größe des Players", "nachher (D-430 bis D-432); Standbilder statt Schleifen")
 
 
+# Korrekturrunde 4 (D-439): Vorher (Stand D-434) und Nachher, Ordner wie in Runde 3. Blatt A Griff mit der
+# neuen schrägen Nahaufnahme, Blatt B das zweite Shorts-Logo; das personalisierte Modell (Blatt C) entsteht
+# nur außerhalb des Repositorys (`--runde 4 --privat <ordner>`).
+VERGLEICH4 = {
+    "griff": ("1 · Griff: Daumen klar getrennt (Bankdrücken), Kniebeuge und Latziehen", [
+        ("griff-vorn", "Bankdrücken, vom Fußende"), ("griff-seite", "Bankdrücken, von der Seite entlang der Stange"),
+        ("griff-oben", "Bankdrücken, von oben auf die Hand"), ("griff-schraeg", "Bankdrücken, schräg: Daumen und Finger zugleich"),
+        ("griff-kopf", "Bankdrücken, vom Kopfende"), ("griff-knie", "Kniebeuge, hinten-seitlich"),
+        ("griff-lat", "Latziehen, schräg von vorn (Daumen als Ring)")]),
+    "logo": ("2 · Zweites FORM-F auf den Shorts (linkes Bein, vorn-außen nahe dem Saum)", [
+        ("logo-bein-bank", "Bankdrücken, Kamera der App, Oberschenkel"), ("logo-bein-knie", "Kniebeuge, tiefste Position, Kamera der App"),
+        ("logo-bein-lat", "Latziehen, Kamera der App (beide F sichtbar)")]),
+}
+
+
+def blatt_vergleich4(paket: Path, schluessel: str, nummer: str) -> "Image":
+    titel, ansichten = VERGLEICH4[schluessel]
+    kacheln = []
+    for datei, at in ansichten:
+        kacheln.append(kachel(paket / "vorher" / "nah" / f"{datei}.png", f"vorher · {at}", 380, 380, "Stand D-434"))
+        kacheln.append(kachel(paket / "nachher" / "nah" / f"{datei}.png", f"nachher · {at}", 380, 380, "Stand D-435 und D-436"))
+    return gitter(kacheln, 4, titel, "C männlich, Fassung A1, Brust-F 4 cm; links und rechts aus Sicht des Trägers; links vorher, rechts nachher")
+
+
+def blatt_player4(paket: Path) -> "Image":
+    """Bankdrücken vorher und nachher in der Größe des großen Players (390 px) mit dem Vorschaubild (56 px):
+    dort muss das zweite F erkennbar sein."""
+    kacheln = []
+    for stand, titel in (("vorher", "vorher (D-434)"), ("nachher", "nachher (D-435, D-436)")):
+        pfad = paket / stand / "bilder" / "Cm-A1-bankdruecken-0.00.png"
+        still = Image.open(pfad).convert("RGB")
+        gross = still.resize((PLAYER_BREITE, PLAYER_BREITE * 3 // 4), Image.LANCZOS)
+        feld = Image.new("RGB", (PLAYER_BREITE, gross.height + THUMB * 2 + 16), GRUND)
+        feld.paste(gross, (0, 0))
+        klein = still.crop(ausschnitt([pfad], rand=0.02))
+        seite = min(klein.size)
+        klein = klein.crop(((klein.width - seite) // 2, (klein.height - seite) // 2, (klein.width + seite) // 2, (klein.height + seite) // 2))
+        feld.paste(klein.resize((THUMB, THUMB), Image.LANCZOS), (0, gross.height + 8))
+        feld.paste(klein.resize((THUMB * 2, THUMB * 2), Image.LANCZOS), (THUMB + 8, gross.height + 8))
+        ImageDraw.Draw(feld).text((THUMB * 3 + 16, gross.height + 12), "kleiner Player: 56 px, rechts 2-fach", fill=LEISE, font=schrift(13))
+        kacheln.append(kachel(feld, f"{titel} · Bankdrücken · Ausgangsposition", feld.width, feld.height, "oben: großer Player am iPhone (390 px breit)"))
+    for u, p, mt in GESAMT3:
+        pfad = paket / "nachher" / "bilder" / f"Cm-A1-{u}-{p}.png"
+        kacheln.append(kachel(pfad, f"nachher · {mt}", 480, 360, "Kamera wie in der App", ausschnitt([pfad])))
+    return gitter(kacheln, 2, "3 · In der Größe des Players und Gesamtansicht", "Bankdrücken vorher und nachher im Player; darunter die drei Pilot-Übungen nachher")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher)")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 4:
+        speichern(blatt_vergleich4(paket, "griff", "1"), ziel, "korrektur4-1-griff")
+        speichern(blatt_vergleich4(paket, "logo", "2"), ziel, "korrektur4-2-shorts-logo")
+        speichern(blatt_player4(paket), ziel, "korrektur4-3-player")
+        return
     if args.runde == 3:
         for schluessel in ("griff", "kragen", "ruecken"):
             speichern(blatt_vergleich3(paket, schluessel), ziel, f"korrektur3-{VERGLEICH3[schluessel][0][0]}-{schluessel}")

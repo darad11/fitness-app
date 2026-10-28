@@ -47,6 +47,15 @@ TEILE = {
                  "brauen": "eyebrows/eyebrow005", "wimpern": "eyelashes/eyelashes02", "haarton": (0.22, 0.20, 0.19)},
 }
 TEILE["neutral"] = TEILE["maennlich"]
+# „C männlich – Personalisiert“ (D-438): Körper und Haut wie C männlich; Frisur `short04` (Deckhaar nach
+# hinten, kurze Seiten) fast schwarz, dichte Brauen `eyebrow009`, Hautton etwas wärmer und dunkler,
+# Bart als dunkle Zone der Haut mit Stoppelmuster (`gesicht.bart_gewichte`), kleiner Leberfleck neben der
+# Nase. Die Gesichtsform kommt aus den Reglern in `gesicht.py`; keine Bilddaten einer Person im Repository.
+TEILE["persoenlich"] = {
+    "haut": TEILE["maennlich"]["haut"], "haare": "hair/short04", "brauen": "eyebrows/eyebrow009",
+    "wimpern": "eyelashes/eyelashes01", "haarton": (0.10, 0.08, 0.07), "hautton": (0.86, 0.74, 0.63),
+    "bart": (0.045, 0.034, 0.027), "brauenton": (0.07, 0.05, 0.04), "fleck": "links",
+}
 
 
 def _benoetigt() -> tuple[set[str], set[str]]:
@@ -275,9 +284,18 @@ def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42, zonen_
     bsdf.inputs["Subsurface Radius"].default_value = (1.0, 0.42, 0.25)
     bsdf.inputs["Subsurface Scale"].default_value = 0.006
     bsdf.inputs["Specular IOR Level"].default_value = 0.35
+    t = TEILE.get(stil, TEILE["neutral"])
     tex = nodes.new("ShaderNodeTexImage")
-    tex.image = bpy.data.images.load(str(QUELLE / TEILE.get(stil, TEILE["neutral"])["haut"]), check_existing=True)
+    tex.image = bpy.data.images.load(str(QUELLE / t["haut"]), check_existing=True)
     farbe = tex.outputs["Color"]
+    if t.get("hautton"):
+        ton = nodes.new("ShaderNodeMix")
+        ton.data_type = "RGBA"
+        ton.blend_type = "MULTIPLY"
+        ton.inputs[0].default_value = 1.0
+        links.new(farbe, ton.inputs[6])
+        ton.inputs[7].default_value = (*t["hautton"], 1.0)
+        farbe = ton.outputs[2]
 
     def schwelle(name: str):
         a = nodes.new("ShaderNodeAttribute")
@@ -319,8 +337,68 @@ def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42, zonen_
         links.new(haupt, hd.inputs[0])
         farbe = mischen(md.outputs[0], farbe, szene.srgb(szene.LIME))
         farbe = mischen(hd.outputs[0], farbe, szene.srgb(szene.LIME))
+    if t.get("bart"):
+        # Bart (D-438): Attribut „Bart“ (0 bis 1) mal Stoppelmuster, dunkelt die Haut zur Bartfarbe ab
+        a = nodes.new("ShaderNodeAttribute")
+        a.attribute_name = "Bart"
+        a.attribute_type = "GEOMETRY"
+        rausch = nodes.new("ShaderNodeTexNoise")
+        rausch.inputs["Scale"].default_value = 420.0
+        rausch.inputs["Detail"].default_value = 3.0
+        rausch.inputs["Roughness"].default_value = 0.7
+        r = nodes.new("ShaderNodeMapRange")
+        r.inputs["From Min"].default_value = 0.3
+        r.inputs["From Max"].default_value = 0.7
+        r.inputs["To Min"].default_value = 0.85
+        r.inputs["To Max"].default_value = 1.0
+        r.clamp = True
+        links.new(rausch.outputs["Fac"], r.inputs["Value"])
+        mb = nodes.new("ShaderNodeMath")
+        mb.operation = "MULTIPLY"
+        links.new(a.outputs["Fac"], mb.inputs[0])
+        links.new(r.outputs["Result"], mb.inputs[1])
+        farbe = mischen(mb.outputs[0], farbe, (*t["bart"], 1.0))
+    if t.get("brauenton"):
+        a = nodes.new("ShaderNodeAttribute")
+        a.attribute_name = "Brauen"
+        a.attribute_type = "GEOMETRY"
+        mb = nodes.new("ShaderNodeMath")
+        mb.operation = "MULTIPLY"
+        mb.inputs[1].default_value = 0.85
+        links.new(a.outputs["Fac"], mb.inputs[0])
+        farbe = mischen(mb.outputs[0], farbe, (*t["brauenton"], 1.0))
+    if t.get("fleck"):
+        a = nodes.new("ShaderNodeAttribute")
+        a.attribute_name = "Fleck"
+        a.attribute_type = "GEOMETRY"
+        farbe = mischen(a.outputs["Fac"], farbe, (0.11, 0.06, 0.045, 1.0))
     links.new(farbe, bsdf.inputs["Base Color"])
     return mat
+
+
+def _gesichtsattribute(koerper: bpy.types.Object, name: str, t: dict) -> None:
+    """Bart und Leberfleck als Attribute je Eckpunkt aus den Marken des Grundmodells (`gesicht.py`)."""
+    import json
+
+    import numpy as np
+
+    import figur
+    import gesicht
+
+    pfad = Path(__file__).resolve().parent / "gesicht-marken.json"
+    if not pfad.exists():
+        print("Hinweis: gesicht-marken.json fehlt, Bart und Leberfleck entfallen (gesicht_anpassen.py marken)")
+        return
+    zuordnung = json.loads(pfad.read_text(encoding="utf-8"))["zuordnung"]
+    V = np.array([tuple(p) for p in figur.PUNKTE[name]])
+    n = len(koerper.data.vertices)
+    for attr, werte in (("Bart", gesicht.bart_gewichte(V, zuordnung) if t.get("bart") else None),
+                        ("Brauen", gesicht.brauen_gewichte(V, zuordnung) if t.get("brauenton") else None),
+                        ("Fleck", gesicht.fleck_gewichte(V, zuordnung, t["fleck"]) if t.get("fleck") else None)):
+        if werte is None:
+            continue
+        a = koerper.data.attributes.get(attr) or koerper.data.attributes.new(attr, "FLOAT", "POINT")
+        a.data.foreach_set("value", [float(x) for x in werte[:n]])
 
 
 def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, stil: str, zonen_an: bool,
@@ -339,6 +417,8 @@ def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, 
         teile.append(_proxy(teil, ordner, skelett, punkte, _bild_material(teil, bild, 0.6, True, glanz=0.2, ton=ton)))
     koerper.data.materials.clear()
     koerper.data.materials.append(haut_material(stil, zonen_an, zonen_staerke=zonen_staerke))
+    if t.get("bart") or t.get("brauenton") or t.get("fleck"):
+        _gesichtsattribute(koerper, name, t)
     return teile
 
 

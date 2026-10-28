@@ -85,12 +85,42 @@ PAARE = [
 # Charakterregler nach Augenschein der Fotos (D-438), nicht aus Maßen: Die Verhältnisse der Landmarken
 # erfassen Fülle, Rundung und Kiefer kaum, und die Ausgleichsrechnung über alle Maße trieb sie an die
 # Grenzen (hageres Gesicht). Begründung je Wert im Bericht; alle Werte vorsichtig gewählt.
-FEST: dict[str, float] = {}
+FEST = {
+    "kopf-fett": 0.5,  # volles Gesicht, weiche Wangen
+    "wangen-volumen": 0.5,
+    "kopf-rund": 0.35,  # eher rundes als längliches Gesicht
+    "kiefer-bogen": 0.4,  # kräftiger, runder Kiefer
+    "kiefer-fallen": 0.3,
+    "kinn-breite": 0.9,  # breites, rundes Kinn
+    "kinn-vor": 0.3,  # Kinn im Profil deutlich
+    "nase-fluegel": 0.4,  # breite Nasenflügel
+    "nase-spitze-breite": 0.4,  # runde, breite Nasenspitze
+    "nase-tiefe": 0.6,  # gerade, deutlich hervortretende Nase (Profilfoto am Nasenrand beschnitten, darum nach Augenschein)
+    "mund-tiefe": -0.3,  # Lippen voll, aber nicht vorgewölbt
+    "stirn-hoehe": -0.6,  # niedriger Haaransatz
+    "stirn-vor": -0.15,
+    "augen-lage": -0.1,
+}
 # Grenzen für Paare, bei denen die Landmarken mehr zeigen als die Fotos hergeben (Lippen im Selfie)
 GRENZEN = {"unterlippe-hoehe": (-1.0, 0.5), "oberlippe-hoehe": (-1.0, 0.5), "augen-hoehe": (-1.0, 0.2), "augen-groesse": (-1.0, 0.3)}
 
 # Reglerwerte der personalisierten Variante (D-438): FEST plus das Ergebnis der Anpassung
-PERSOENLICH: dict[str, float] = dict(FEST)
+PERSOENLICH: dict[str, float] = {**FEST, **{
+    "kopf-hoehe": -0.387,
+    "nase-laenge": 0.531,
+    "nase-breite": -0.468,
+    "mund-breite": -0.324,
+    "oberlippe-hoehe": 0.217,
+    "unterlippe-hoehe": 0.5,
+    "augen-groesse": -0.057,
+    "augen-hoehe": -1.0,
+    "augen-abstand": -0.067,
+    "brauen-hoehe": 1.0,
+    "brauen-winkel": 1.0,
+    "kinn-hoehe": 1.0,
+    "mund-lage": -1.0,
+    "wangen-knochen": 0.679,
+}}
 
 
 def ziele(regler: dict[str, float]) -> dict[str, float]:

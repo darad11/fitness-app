@@ -131,7 +131,7 @@ Geprüft am 28.10.2026 für die Varianten A bis D, ergänzt am selben Tag für d
 
 Vor D-418 waren Haut, Augenbrauen und Haare eigene Arbeit ohne Dateien (eigener Shader, aufgemaltes Feld, Partikelhaar und Haarfläche aus Blender; Stand D-414, Commit `068509a`), weil die Adressen von MakeHuman gesperrt waren; der Produktinhaber hat `*.makehumancommunity.org` am 28.10.2026 freigegeben.
 
-## 9. Personalisiertes Modell: Landmarken und Gesichtsregler (D-437)
+## 9. Personalisiertes Modell: Landmarken und Gesichtsregler (D-437, D-438)
 
 Geprüft am 28.10.2026. Nur Werkzeuge und Daten, deren Lizenz die Nutzung in einer kommerziellen App erlaubt; Verfahren auf Gesichtsmodellen nur für Forschung (FLAME, Basel Face Model, DECA) und Landmarken mit Trainingsdaten nur für Forschung (dlib mit iBUG 300-W) sind ausgeschlossen. Fotos, Landmarken und Texturen der Person liegen nie im Repository.
 

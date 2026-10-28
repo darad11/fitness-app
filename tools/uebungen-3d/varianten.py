@@ -11,6 +11,7 @@ Farben der Kollektion. Schlüssel `<Körper>-<Fassung>`, z. B. `D-A1`, `Cm-B`; d
 """
 from __future__ import annotations
 
+import gesicht  # noqa: F401  (registriert die Form „persoenlich“)
 import kleidung
 import realistisch
 import szene
@@ -19,6 +20,8 @@ KOERPER = {
     "D": {"titel": "D · grau, neutral", "form": "neutral", "aussehen": "grau"},
     "Cm": {"titel": "C · männlich, MakeHuman", "form": "maennlich", "aussehen": "real"},
     "Cw": {"titel": "C · weiblich, MakeHuman", "form": "weiblich", "aussehen": "real"},
+    # „C männlich – Personalisiert“ (D-438): nur für Test- und Vorschau-Renderings, nichts stellt darauf um
+    "Cp": {"titel": "C · männlich, personalisiert", "form": "persoenlich", "aussehen": "real"},
 }
 ALLE_HELL = {"brust": "hell", "ruecken": "hell", "bein": "hell"}
 FASSUNGEN = {

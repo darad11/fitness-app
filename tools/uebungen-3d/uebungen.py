@@ -488,8 +488,9 @@ class Latziehen(Uebung):
     def bauen(self) -> None:
         super().bauen()
         rig = self.rig
-        # Daumen als Ring (D-425): Über den Fingern (D-435) stünde er an der dünnen Latzugstange als Haken ab
-        self.griff = {s: rig.griff(s, 0.72, 0.012, schraeg=self.SCHRAEG, daumen="ring") for s in "LR"}
+        # Daumen über den Fingern wie beim Bankdrücken (D-440); bis D-439 als Ring (D-425), weil die frühere
+        # Konstruktion über den Fingern an der dünnen Latzugstange als Haken abstand
+        self.griff = {s: rig.griff(s, 0.72, 0.012, schraeg=self.SCHRAEG) for s in "LR"}
         self.griff_x = self.GRIFF * self.mass
         knie_welt = rig.welt(rig.kopf["lowerleg01.L"]).z
         self.sitz_oben = round(knie_welt - 0.005, 3)

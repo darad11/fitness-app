@@ -5,7 +5,7 @@ Nach dem Text des Produktinhabers (`docs/prompts/uebungen-korrektur-logos-FORM.m
 - **STEP Running Tee** in Nacht #0C1219 mit Rundhals; kleines F vorn auf der linken Brust des Trägers,
   hinten das vertikale Logo (F über der Wortmarke FORM) zwischen den Schulterblättern, schmale
   Lime-Einfassung an den seitlichen Schlitzen am Saum.
-- **STEP Shorts** in Graphit #4A4F57; Kordelenden in Lime vorn am Bund, F außen am linken Bein.
+- **STEP Shorts** in Graphit #4A4F57; Kordelenden in Lime vorn am Bund, F vorn-außen am linken Bein nahe dem Saum (D-441).
 
 Links und rechts gelten aus Sicht des Trägers (links = +x in Blender). Die Teile entstehen aus dem Netz
 der Figur, ohne fremde Dateien: Die Flächen des bedeckten Bereichs werden kopiert, nach außen versetzt
@@ -105,12 +105,12 @@ LOGOS = {
     # Kante der Halsöffnung, waagrecht mittig
     "ruecken": {"teil": "shirt", "motiv": "vertikal", "wortmarke": 0.15, "unter_kragen": 0.07, "quer": 0.0,
                 "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10},
-    "bein": {"teil": "hose", "motiv": "f", "hoehe": 0.035, "winkel": 80.0, "lage": 0.30,
-             "teile": ("bein",), "x": 1, "tiefe": 0.05},
-    # Zweites F auf den Shorts (D-436): vorn-außen nahe dem Saum auf dem Bein, das beim Bankdrücken zur
+    # Das eine F auf den Shorts (D-441): vorn-außen nahe dem Saum auf dem Bein, das beim Bankdrücken zur
     # Kamera zeigt. Das ist das linke Bein (Kamera 45° zur linken Seite, D-410); die Markierung des
     # Produktinhabers trifft, von der Kamera der App aus auf den Stoff gezielt, das linke Bein bei 17°
-    # von vorn nach außen und 0,32 Hüfte→Knie (Saum bei 0,40). Gleiche Größe und Farbe wie `bein`.
+    # von vorn nach außen und 0,32 Hüfte→Knie (Saum bei 0,40; D-436). Das frühere F außen am linken
+    # Bein (80°, 0,30; D-419 bis D-440) entfällt, damit nie zwei F nebeneinander zu sehen sind; seine
+    # Farbe in den Fassungen heißt weiter `bein`.
     "beinvorn": {"teil": "hose", "motiv": "f", "hoehe": 0.035, "winkel": 17.0, "lage": 0.32,
                  "teile": ("bein",), "x": 1, "tiefe": 0.05, "farbe": "bein"},
 }
@@ -827,8 +827,7 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: boo
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"])
     shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"])
     hose.data.materials.append(stoff_material("Shorts", GRAPHIT, zonen_an,
-                                               [("Bein", logo_farben["bein"], motive["bein"]),
-                                                ("Beinvorn", logo_farben[LOGOS["beinvorn"]["farbe"]], motive["beinvorn"])],
+                                               [("Beinvorn", logo_farben[LOGOS["beinvorn"]["farbe"]], motive["beinvorn"])],
                                               [d for d in DETAILS if DETAILS[d]["teil"] == "hose"], zonen_staerke))
     shirt.data.materials.append(stoff_material("Shirt", tee, zonen_an,
                                                [("Brust", logo_farben["brust"], motive["brust"]),

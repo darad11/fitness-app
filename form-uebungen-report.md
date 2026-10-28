@@ -826,4 +826,20 @@ Deine Entscheidung: Körper C männlich, Fassung A1, Brust-F 4 cm; die weibliche
 ### 15.3 Rückenlogo (D-427)
 
 - **Regel:** Die Wortmarke nimmt zwei Drittel der Breite zwischen den Schulterblättern ein, das F folgt aus der festen Proportion (F 2,28 Versalhöhen hoch, Abstand 0,82). Die Breite zwischen den Schulterblättern kommt aus den Marken des Grundmodells für die Schulterblattmitten, mit der Körperform verschoben: Abstand der Mitten minus Breite eines Blatts (45 % des Mittenabstands). Beim Grundmodell liegen die inneren Ränder dann bei ±6,5 cm.
-- **C männlich:** Breite 13,2 cm, Wortmarke 8,8 cm, F 3,7 cm, Block 6,5 cm hoch, Versalhöhe 1,6 cm. Vorher waren es 18,9 cm und 8 cm; das Logo ist jetzt ein kleiner Aufdruck zwischen den Schulterblättern. Wenn du es größer willst, ist der Anteil eine Zahl in der Konfiguration.
+- **C männlich:** Breite 12,6 cm, Wortmarke 8,4 cm, F 3,5 cm, Block 6,4 cm hoch, Versalhöhe 1,6 cm (D 11,4 cm, C weiblich 10,1 cm Breite). Vorher waren es 18,9 cm und 8 cm; das Logo ist jetzt ein kleiner Aufdruck zwischen den Schulterblättern. Wenn du es größer willst, ist der Anteil eine Zahl in der Konfiguration.
+
+### 15.4 Standbilder und Nahaufnahmen (D-428)
+
+Alle Blätter in `docs/screens/uebungen/`:
+
+1. `korrektur2-1-standbilder.webp`: C männlich, A1, Brust-F 4 cm; Kniebeuge tiefste Position, Bankdrücken Ausgangs- und Endposition, Kamera wie in der App.
+2. `korrektur2-2-nahaufnahmen.webp`: Griff beim Bankdrücken von vorn (Fußende), von der Seite (entlang der Stange), vom Kopfende und von oben; Kragen in der tiefsten Kniebeuge aus der Kamera der App und von hinten-seitlich; Rückenlogo beim Latziehen und in der Kniebeuge von hinten.
+
+**Renderzeit je Bild** (C männlich, 720 × 540, 40 Proben, ein Prozess auf vier CPU-Kernen): Aufbau 4,8 s (Kniebeuge) und 4,6 s (Bankdrücken); Kniebeuge unten 17,7 s, Bankdrücken oben 24,3 s, unten 25,8 s, im Schnitt 22,6 s (D-424: 22,7 s). Die 2 Blätter: `korrektur2-1-standbilder.webp` 39,7 KB, `korrektur2-2-nahaufnahmen.webp` 82,5 KB; zusammen 122,2 KB.
+
+**Was die Blätter zeigen:**
+
+- **Daumen:** Von vorn liegt der Daumen um die vordere Hälfte der Stange, die Spitze neben dem Zeigefinger; von der Seite ist der Ring aus Daumen und Fingern zu sehen; vom Kopfende und von oben liegt der Daumen unter den Fingern, nichts ragt über die Stange, nichts zeigt von ihr weg.
+- **Kragen:** In der tiefsten Kniebeuge läuft die Kante rundum am Halsansatz, auch auf der Seite der Stange; die Stange liegt auf dem Tee.
+- **Rückenlogo:** F über FORM sitzt klein und mittig zwischen den Schulterblättern, über den Lime-Zonen beim Latziehen und auf dem dunklen Stoff in der Kniebeuge, in Originalproportionen.
+- **Standbilder:** In der Größe der App ändern die drei Korrekturen das Bild kaum; Kragen und Logo sind zu erkennen, der Daumen nicht.

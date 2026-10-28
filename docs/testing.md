@@ -2321,7 +2321,7 @@ Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit
 
 ### Phase Übungen, Korrekturen Daumen, Kragen und Rückenlogo · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425), Kragen (D-426), Rückenlogo (D-427). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
+Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425), Kragen (D-426), Rückenlogo (D-427), Standbilder und Nahaufnahmen (D-428). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2329,5 +2329,8 @@ Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C mä
 | Messung je Übung (`pruef_griff.py`, C männlich): Daumenwinkel, Abstand zur Stange, Finger in den Phasen 0, 0,5 und 1 | Bankdrücken Sattel 71°, Grund 39°, End 69°, Daumen −0,7 mm; Kniebeuge 52°/30°/69°, −0,7 mm; Latziehen 43°/19°/73°, −0,8 mm; Finger geringster Abstand −2,3 / −0,7 / −2,0 mm, Kontaktpunkte 346 / 182 / 226, in allen Phasen gleich, keine Meldungen |
 | Nahaufnahmen Bankdrücken vom Fußende, von der Seite (90°, Scheiben ausgeblendet), vom Kopfende und von oben; Kniebeuge hinten-seitlich; Latziehen schräg | Daumen umschließt die Stange unter den Fingern, nichts ragt über die Stange oder zeigt von ihr weg; von vorn ist die Daumenspitze neben dem Zeigefinger zu sehen, vom Kopfende liegt sie unter den Fingern; selbst angesehen |
 | Kragen in der tiefsten Kniebeuge (C männlich, 45° Kamera der App und 135° hinten-seitlich, 480 px) | vor D-426 Spitze seitlich am Hals auf der Seite der Stange (Markierung des Produktinhabers); danach gleichmäßige Kante am Halsansatz rundum, Stange auf dem Stoff; selbst angesehen |
-| Rückenlogo (C männlich, Latziehen unten und Kniebeuge oben von hinten, 480 px) | Marken der Schulterblätter aus `base.obj` gelesen (±11,8 cm beim Grundmodell); C männlich Breite zwischen den Schulterblättern 13,2 cm, Wortmarke 8,8 cm, F 3,7 cm, mittig zwischen den Schulterblättern über den Lime-Zonen; selbst angesehen |
+| Rückenlogo (C männlich, Latziehen unten und Kniebeuge oben von hinten, 480 px) | Marken der Schulterblätter aus `base.obj` gelesen (±11,8 cm beim Grundmodell); C männlich Breite zwischen den Schulterblättern 12,6 cm, Wortmarke 8,4 cm, F 3,5 cm (`kleidung.anziehen.masse`, nachgemessen in D-428; D 11,4 cm, C weiblich 10,1 cm), mittig zwischen den Schulterblättern über den Lime-Zonen; selbst angesehen |
+| Standbilder C männlich A1 mit Brust-F 4 cm, drei Momente (`varianten_bilder.py`, 720 × 540, 40 Proben, D-428) | Kniebeuge unten 17,7 s, Bankdrücken oben 24,3 s, unten 25,8 s; selbst angesehen |
+| Nahaufnahmen (`nahaufnahme.py`, 480 px, 24 Proben, D-428): Griff von vorn, von der Seite, vom Kopfende, von oben; Kragen 45° und 135°; Rückenlogo Latziehen und Kniebeuge | 8 Bilder, selbst angesehen; Blatt `korrektur2-2-nahaufnahmen` |
+| Blätter (`tools/uebungen_korrektur_bild.py --runde 2`) | 2 Dateien, zusammen 122,2 KB, selbst angesehen |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |

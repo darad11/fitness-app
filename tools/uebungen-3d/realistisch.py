@@ -51,17 +51,20 @@ TEILE["neutral"] = TEILE["maennlich"]
 # hinten, kurze Seiten) fast schwarz, dichte Brauen `eyebrow009`, Hautton etwas wärmer und dunkler,
 # Bart als dunkle Zone der Haut mit Stoppelmuster (`gesicht.bart_gewichte`), kleiner Leberfleck neben der
 # Nase. Die Gesichtsform kommt aus den Reglern in `gesicht.py`; keine Bilddaten einer Person im Repository.
+# „C männlich – Personalisiert“ nach dem Referenzblatt (D-442): Frisur, Bart und Brauen als Haarkurven
+# (`haare.py`, `haarkurven`), kein Haarnetz und keine Brauen von MakeHuman, keine Zonen der Haut für Bart
+# und Brauen mehr; Wimpern von MakeHuman bleiben; Leberfleck auf der linken Wange (Referenzblatt)
 TEILE["persoenlich"] = {
-    "haut": TEILE["maennlich"]["haut"], "haare": "hair/short04", "brauen": "eyebrows/eyebrow009",
-    "wimpern": "eyelashes/eyelashes01", "haarton": (0.10, 0.08, 0.07), "hautton": (0.86, 0.74, 0.63),
-    "bart": (0.045, 0.034, 0.027), "brauenton": (0.07, 0.05, 0.04), "fleck": "links",
+    "haut": TEILE["maennlich"]["haut"], "haare": None, "brauen": None, "wimpern": "eyelashes/eyelashes01",
+    "haarton": None, "hautton": (0.88, 0.72, 0.58), "hautstruktur": True,
+    "haarkurven": ("frisur", "bart", "brauen", "fleck"),
 }
 
 
 def _benoetigt() -> tuple[set[str], set[str]]:
     """Einzelne Dateien und ganze Ordner aus dem Paket, die die Figur braucht."""
     dateien = {AUGEN_BILD} | {t["haut"] for t in TEILE.values()}
-    ordner = {AUGEN} | {t[k] for t in TEILE.values() for k in ("haare", "brauen", "wimpern")}
+    ordner = {AUGEN} | {t[k] for t in TEILE.values() for k in ("haare", "brauen", "wimpern") if t.get(k)}
     return dateien, ordner
 
 
@@ -367,17 +370,28 @@ def haut_material(stil: str, zonen_an: bool, mit_deckkraft: float = 0.42, zonen_
         mb.inputs[1].default_value = 0.85
         links.new(a.outputs["Fac"], mb.inputs[0])
         farbe = mischen(mb.outputs[0], farbe, (*t["brauenton"], 1.0))
-    if t.get("fleck"):
-        a = nodes.new("ShaderNodeAttribute")
-        a.attribute_name = "Fleck"
-        a.attribute_type = "GEOMETRY"
-        farbe = mischen(a.outputs["Fac"], farbe, (0.11, 0.06, 0.045, 1.0))
+    if t.get("hautstruktur"):
+        # Natürliche Hautstruktur statt Wachs (D-442): feines Rauschen als Unebenheit, Glanz etwas rauer,
+        # Unterflächenstreuung geringer
+        rausch = nodes.new("ShaderNodeTexNoise")
+        rausch.inputs["Scale"].default_value = 900.0
+        rausch.inputs["Detail"].default_value = 4.0
+        rausch.inputs["Roughness"].default_value = 0.6
+        bump = nodes.new("ShaderNodeBump")
+        bump.inputs["Strength"].default_value = 0.12
+        bump.inputs["Distance"].default_value = 0.0006
+        links.new(rausch.outputs["Fac"], bump.inputs["Height"])
+        links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
+        bsdf.inputs["Roughness"].default_value = 0.58
+        bsdf.inputs["Subsurface Weight"].default_value = 0.12
+        bsdf.inputs["Specular IOR Level"].default_value = 0.3
     links.new(farbe, bsdf.inputs["Base Color"])
     return mat
 
 
 def _gesichtsattribute(koerper: bpy.types.Object, name: str, t: dict) -> None:
-    """Bart und Leberfleck als Attribute je Eckpunkt aus den Marken des Grundmodells (`gesicht.py`)."""
+    """Bart und Brauen als Attribute je Eckpunkt aus den Marken des Grundmodells (`gesicht.py`; bis D-439 auch
+    der Leberfleck, der auf dem groben Netz keinen Eckpunkt traf, seit D-442 eine Kugel in `haare.py`)."""
     import json
 
     import numpy as np
@@ -387,14 +401,13 @@ def _gesichtsattribute(koerper: bpy.types.Object, name: str, t: dict) -> None:
 
     pfad = Path(__file__).resolve().parent / "gesicht-marken.json"
     if not pfad.exists():
-        print("Hinweis: gesicht-marken.json fehlt, Bart und Leberfleck entfallen (gesicht_anpassen.py marken)")
+        print("Hinweis: gesicht-marken.json fehlt, Bart und Brauen als Zonen entfallen (gesicht_anpassen.py marken)")
         return
     zuordnung = json.loads(pfad.read_text(encoding="utf-8"))["zuordnung"]
     V = np.array([tuple(p) for p in figur.PUNKTE[name]])
     n = len(koerper.data.vertices)
     for attr, werte in (("Bart", gesicht.bart_gewichte(V, zuordnung) if t.get("bart") else None),
-                        ("Brauen", gesicht.brauen_gewichte(V, zuordnung) if t.get("brauenton") else None),
-                        ("Fleck", gesicht.fleck_gewichte(V, zuordnung, t["fleck"]) if t.get("fleck") else None)):
+                        ("Brauen", gesicht.brauen_gewichte(V, zuordnung) if t.get("brauenton") else None)):
         if werte is None:
             continue
         a = koerper.data.attributes.get(attr) or koerper.data.attributes.new(attr, "FLOAT", "POINT")
@@ -417,9 +430,29 @@ def ausstatten(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, 
         teile.append(_proxy(teil, ordner, skelett, punkte, _bild_material(teil, bild, 0.6, True, glanz=0.2, ton=ton)))
     koerper.data.materials.clear()
     koerper.data.materials.append(haut_material(stil, zonen_an, zonen_staerke=zonen_staerke))
-    if t.get("bart") or t.get("brauenton") or t.get("fleck"):
+    if t.get("bart") or t.get("brauenton"):
         _gesichtsattribute(koerper, name, t)
+    if t.get("haarkurven"):
+        teile += _haarkurven(koerper, skelett, name, t["haarkurven"])
     return teile
+
+
+def _haarkurven(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, welche) -> list:
+    """Frisur, Bart und Brauen als Haarkurven (D-442, `haare.py`) aus dem Grundmodell und den Marken."""
+    import json
+
+    import numpy as np
+
+    import figur
+    import haare
+
+    pfad = Path(__file__).resolve().parent / "gesicht-marken.json"
+    if not pfad.exists():
+        print("Hinweis: gesicht-marken.json fehlt, keine Haarkurven (gesicht_anpassen.py marken)")
+        return []
+    zuordnung = json.loads(pfad.read_text(encoding="utf-8"))["zuordnung"]
+    V = np.array([tuple(p) for p in figur.PUNKTE[name]])
+    return haare.erzeugen(koerper, skelett, V, zuordnung, welche)
 
 
 def augen_neutral(koerper: bpy.types.Object, skelett: bpy.types.Object, name: str, grau: str = szene.KOERPER) -> list:

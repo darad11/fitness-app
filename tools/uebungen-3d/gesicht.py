@@ -1,15 +1,17 @@
-"""Gesicht der personalisierten Variante „C männlich – Personalisiert“ (Korrekturrunde 4, D-437, D-438).
+"""Gesicht der personalisierten Variante „C männlich – Personalisiert“ (Korrekturrunde 4, D-437, D-438;
+neu nach dem Referenzblatt in Korrekturrunde 5, D-442).
 
 Hier liegen nur Reglerwerte und Konfiguration: die Gesichtsregler von MakeHuman (CC0, Formziele aus
-MPFB2 wie in `koerperform.py`), Frisur, Brauen, Bart und Hautton. Fotos, daraus erkannte
-Landmarken, Texturen und Vorschauen bleiben außerhalb des Repositorys (D-437). Die Werte entstehen
-mit `gesicht_anpassen.py` aus Maßen der Fotos (`gesicht_masse.py`) und werden hier eingetragen; ein
-Pfad in `GESICHT_REGLER` (Umgebungsvariable) überschreibt sie zum Probieren.
+MPFB2 wie in `koerperform.py`) und die Felder für Bart und Brauen, aus denen `haare.py` die Haarkurven
+wachsen lässt. Fotos, das Referenzblatt, daraus erkannte Landmarken und Vorschauen bleiben außerhalb des
+Repositorys (D-437). Die Werte entstehen mit `gesicht_anpassen.py` aus Maßen der Vorderansicht
+(`gesicht_masse.py`, Paare in `PAARE`) als Startpunkt und werden danach nach Augenschein neben dem
+Referenzblatt gesetzt (D-442); ein Pfad in `GESICHT_REGLER` (Umgebungsvariable) überschreibt sie zum
+Probieren.
 
 Jeder Regler läuft von −1 bis 1 wie in MakeHuman: negative Werte gewichten das `min`-Ziel, positive
 das `max`-Ziel (`modeling_modifiers.json` von MakeHuman); Regler mit einem einzigen Ziel laufen
-von 0 bis 1. Paare links/rechts werden gemeinsam gesetzt (symmetrisches Gesicht; die Fotos geben keine
-belastbare Asymmetrie her).
+von 0 bis 1. Paare links/rechts werden gemeinsam gesetzt (symmetrisches Gesicht).
 """
 from __future__ import annotations
 
@@ -61,6 +63,18 @@ REGLER = {
     "wangen-volumen": (("cheek/r-cheek-volume", "cheek/l-cheek-volume"), "decr", "incr"),
     "wangen-lage": (("cheek/r-cheek-trans", "cheek/l-cheek-trans"), "down", "up"),
     "ohren-groesse": (("ears/r-ear-scale", "ears/l-ear-scale"), "decr", "incr"),
+    # Ergänzt für das Referenzblatt (D-442): schwere Oberlider, Augenwinkel außen, Lippenvolumen, Lippenbreite,
+    # Kinnvorsprung, innere Wangen, Hals
+    "lider-schwer": (("eyes/r-eye-eyefold", "eyes/l-eye-eyefold"), "up", "down"),
+    "augen-winkel-aussen": (("eyes/r-eye-corner1", "eyes/l-eye-corner1"), "down", "up"),
+    "augen-tief": (("eyes/r-eye-push1", "eyes/l-eye-push1"), "out", "in"),
+    "oberlippe-volumen": (("mouth/mouth-upperlip-volume",), "decr", "incr"),
+    "unterlippe-volumen": (("mouth/mouth-lowerlip-volume",), "decr", "incr"),
+    "mundwinkel": (("mouth/mouth-angles",), "down", "up"),
+    "kinn-vorbiss": (("chin/chin-prognathism",), "decr", "incr"),
+    "wangen-innen": (("cheek/r-cheek-inner", "cheek/l-cheek-inner"), "decr", "incr"),
+    "hals-breite": (("neck/neck-scale-horiz",), "decr", "incr"),
+    "hals-tiefe": (("neck/neck-scale-depth",), "decr", "incr"),
 }
 # Regler, die die Ausgleichsrechnung aus der Vorderansicht bestimmt; die übrigen (Tiefe, Profil) werden
 # aus der Silhouette des Profils gesetzt
@@ -82,45 +96,32 @@ PAARE = [
     ("mundwinkel", "mund-lage"), ("wangenknochen", "wangen-knochen"),
 ]
 
-# Charakterregler nach Augenschein der Fotos (D-438), nicht aus Maßen: Die Verhältnisse der Landmarken
-# erfassen Fülle, Rundung und Kiefer kaum, und die Ausgleichsrechnung über alle Maße trieb sie an die
-# Grenzen (hageres Gesicht). Begründung je Wert im Bericht; alle Werte vorsichtig gewählt.
-FEST = {
-    "kopf-fett": 0.5,  # volles Gesicht, weiche Wangen
-    "wangen-volumen": 0.5,
-    "kopf-rund": 0.35,  # eher rundes als längliches Gesicht
-    "kiefer-bogen": 0.4,  # kräftiger, runder Kiefer
-    "kiefer-fallen": 0.3,
-    "kinn-breite": 0.9,  # breites, rundes Kinn
-    "kinn-vor": 0.3,  # Kinn im Profil deutlich
-    "nase-fluegel": 0.4,  # breite Nasenflügel
-    "nase-spitze-breite": 0.4,  # runde, breite Nasenspitze
-    "nase-tiefe": 0.6,  # gerade, deutlich hervortretende Nase (Profilfoto am Nasenrand beschnitten, darum nach Augenschein)
-    "mund-tiefe": -0.3,  # Lippen voll, aber nicht vorgewölbt
-    "stirn-hoehe": -0.6,  # niedriger Haaransatz
-    "stirn-vor": -0.15,
-    "augen-lage": -0.1,
+# Reglerwerte der personalisierten Variante nach dem Referenzblatt (D-442): Startpunkt die Anpassung Paar für
+# Paar an die Maße der Vorderansicht (Abweichung 9,1 % statt 15,5 %), danach jeder Wert nach Augenschein in
+# acht Fassungen neben dem Referenzblatt (vorn, Dreiviertel, Profil, hinten) gesetzt. Nichts verschönert:
+# Die Werte folgen dem Blatt, die Grenzen stehen im Bericht (Abschnitt 18.3).
+PERSOENLICH: dict[str, float] = {
+    # Kopf und Wangen: volles, eher ovales Gesicht
+    "kopf-breite": -0.3, "kopf-hoehe": 0.1, "kopf-rund": 0.1, "kopf-oval": 0.3, "kopf-fett": 0.5, "wangen-volumen": 0.3, "wangen-knochen": 0.3, "wangen-innen": 0.2,
+    # Kiefer und Kinn: kräftig, definiert, Kinn deutlich
+    "kiefer-bogen": 0.7, "kiefer-fallen": 0.2, "kinn-breite": 0.5, "kinn-hoehe": 0.2, "kinn-vor": 0.6, "kinn-vorbiss": 0.0,
+    # Stirn: niedriger Haaransatz, leicht zurück
+    "stirn-hoehe": -0.5, "stirn-vor": -0.1,
+    # Brauen: nah über den Augen, fast gerade
+    "brauen-hoehe": -0.5, "brauen-winkel": 0.2,
+    # Augen: groß, mandelförmig, Oberlider etwas schwer, außen leicht gesenkt
+    "augen-groesse": 0.6, "augen-hoehe": -0.15, "augen-abstand": -0.1, "augen-lage": -0.1, "lider-schwer": 0.35, "augen-winkel-aussen": -0.1, "augen-tief": 0.0,
+    # Nase: gerade, deutlich, Spitze leicht breit
+    "nase-laenge": 0.45, "nase-breite": -0.1, "nase-tiefe": 0.7, "nase-fluegel": 0.1, "nase-spitze-breite": 0.2, "nase-huegel": 0.1, "nase-spitze": -0.1, "nase-lage": 0.0,
+    # Mund: mittlere Lippen, weniger voll als in D-438
+    "mund-breite": 0.0, "mund-hoehe": 0.0, "mund-lage": -0.3, "oberlippe-hoehe": 0.0, "unterlippe-hoehe": 0.1, "oberlippe-volumen": -0.2, "unterlippe-volumen": -0.15, "mund-tiefe": -0.2, "mundwinkel": 0.0,
+    # Ohren und Hals: Ohren wie das Grundmodell, kräftiger Hals
+    "ohren-groesse": 0.0, "hals-breite": 0.5, "hals-tiefe": 0.3,
 }
-# Grenzen für Paare, bei denen die Landmarken mehr zeigen als die Fotos hergeben (Lippen im Selfie)
-GRENZEN = {"unterlippe-hoehe": (-1.0, 0.5), "oberlippe-hoehe": (-1.0, 0.5), "augen-hoehe": (-1.0, 0.2), "augen-groesse": (-1.0, 0.3)}
-
-# Reglerwerte der personalisierten Variante (D-438): FEST plus das Ergebnis der Anpassung
-PERSOENLICH: dict[str, float] = {**FEST, **{
-    "kopf-hoehe": -0.387,
-    "nase-laenge": 0.531,
-    "nase-breite": -0.468,
-    "mund-breite": -0.324,
-    "oberlippe-hoehe": 0.217,
-    "unterlippe-hoehe": 0.5,
-    "augen-groesse": -0.057,
-    "augen-hoehe": -1.0,
-    "augen-abstand": -0.067,
-    "brauen-hoehe": 1.0,
-    "brauen-winkel": 1.0,
-    "kinn-hoehe": 1.0,
-    "mund-lage": -1.0,
-    "wangen-knochen": 0.679,
-}}
+# Charakterregler, die die Anpassung Paar für Paar (`gesicht_anpassen.py anpassen`) festhält: alle außer den Paaren
+FEST = {k: v for k, v in PERSOENLICH.items() if k not in {name for _, name in PAARE}}
+# Grenzen für Paare, bei denen die Landmarken mehr zeigen als das Blatt hergibt
+GRENZEN = {"unterlippe-hoehe": (-1.0, 0.5), "oberlippe-hoehe": (-1.0, 0.5), "augen-hoehe": (-1.0, 0.3), "augen-groesse": (-1.0, 0.6)}
 
 
 def ziele(regler: dict[str, float]) -> dict[str, float]:
@@ -203,7 +204,7 @@ def silhouette_marken(vorn: np.ndarray, hoehe: np.ndarray, drucken: bool = False
     return erg
 
 
-# ---------------------------------------------------------------------- Bart und Leberfleck
+# ---------------------------------------------------------------------- Bart und Brauen
 
 
 def _marke(V: np.ndarray, zuordnung: list, n: int) -> np.ndarray:
@@ -221,7 +222,8 @@ def _marke(V: np.ndarray, zuordnung: list, n: int) -> np.ndarray:
     return sum(w * V[e] for e, w in zip(z["ecken"], z["gewichte"]))
 
 
-BART = {"dicht": 1.0, "wange": 0.95, "koteletten": 1.0, "hals": 0.045, "wangenlinie_ueber_mund": 0.034, "wangenlinie_am_ohr": 0.02}
+# Bartfeld (D-438; seit D-442 Wurzeln der Haarkurven): unter dem Kiefer begrenzt (`hals` 2 cm statt 4,5 cm)
+BART = {"dicht": 1.0, "wange": 0.95, "koteletten": 1.0, "hals": 0.02, "wangenlinie_ueber_mund": 0.028, "wangenlinie_am_ohr": 0.015}
 BRAUE = {"halbbreite": 0.0035, "rand": 0.003}
 
 
@@ -281,14 +283,6 @@ def brauen_gewichte(V: np.ndarray, zuordnung: list) -> np.ndarray:
                 best = min(best, float(np.linalg.norm(V[i] - (a + d * t))))
             w[i] = max(w[i], float(np.clip((BRAUE["halbbreite"] + BRAUE["rand"] - best) / BRAUE["rand"], 0.0, 1.0)))
     return w
-
-
-def fleck_gewichte(V: np.ndarray, zuordnung: list, seite: str = "links", radius: float = 0.0035) -> np.ndarray:
-    """Kleiner Leberfleck neben der Nase (vorsichtige Annäherung: Lage seitlich des Nasenflügels)."""
-    n = 358 if seite == "links" else 129
-    p = _marke(V, zuordnung, n) + np.array([0.013 if seite == "links" else -0.013, -0.004, -0.004])
-    d = np.linalg.norm(V - p, axis=1)
-    return np.clip(1.0 - d / radius, 0.0, 1.0)
 
 
 # Die personalisierte Form steht wie die übrigen unter ihrem Namen bereit (`render.baue`, `varianten`)

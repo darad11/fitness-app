@@ -10,3 +10,4 @@ public/icons/
 src/modules/training/data/programs.v1.json
 src/modules/nutrition/data/basicFoods.json
 src/modules/exercises/ui/muscleMapPaths.ts
+tools/uebungen-3d/gesicht-marken.json

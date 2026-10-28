@@ -805,3 +805,15 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine Videos, nur Standbilder (nach der Wahl des Körpers)
 Nächste Schritte: Wahl des Körpers durch den Produktinhaber, dann die drei Pilot-Übungen neu rendern und einbauen
 ```
+
+## 15. Korrekturen Daumen, Kragen und Rückenlogo (fünfte Nachricht vom 28.10.2026)
+
+Deine Entscheidung: Körper C männlich, Fassung A1, Brust-F 4 cm; die weibliche Figur bleibt zurückgestellt und kann später als zweite Figur dazukommen. Dein Anhang mit den Markierungen ist diesmal angekommen. Die Pilot-Übungen und die Videos der App rendere ich erst nach deiner Freigabe der Standbilder neu.
+
+### 15.1 Daumen (D-425)
+
+- **Warum die Suche nicht reichte:** Das Ziel der Daumenspitze lag über den Fingern, und die Suche fand Lagen, in denen der Daumen neben den Fingern nach oben ragte. Aus allen drei Blickwinkeln blieb der „Daumen hoch“.
+- **Feste Konstruktion:** Alle Daumengelenke liegen auf dem Kreis um die Stangenachse (Stangenradius plus Daumendicke) in der Ebene quer zur Stange durch das Sattelgelenk. Der Daumen läuft in Gegenrichtung der Finger: vom Handgelenk her unter der Stange hindurch und auf der Gegenseite hoch; die Spitze endet auf der Stange unter den Mittelgliedern von Zeige- und Mittelfinger, die sich darüber schließen. Daumen und Finger bilden so den geschlossenen Ring. Je Glied dreht eine Abbildung die Ruhe-Richtung auf die Sehne des Kreises und die Beere zur Stange.
+- **Feste Winkel für die 28-mm-Stange** (C männlich, Bankdrücken): Sattelgelenk 71°, Grundgelenk 39°, Endgelenk 69°. Kniebeuge 52°/30°/69°, Latziehen (24 mm) 43°/19°/73°. Die Winkel folgen aus der Konstruktion und sind je Übung gleich in allen Phasen.
+- **Dabei gefunden:** Die Kontaktmessung des Daumens nahm Haut des Daumenballens und der Schwimmhaut mit, die weit vom Knochen liegt, und trieb die Daumendicke auf das Doppelte; der Daumen schwebte 1,3 cm um die Stange. Jetzt zählt nur Haut bis 16 mm neben den Gliedknochen; der Daumen drückt die Haut 0,7 bis 0,8 mm ein wie die Finger.
+- **Geprüft** aus vier Blickwinkeln beim Bankdrücken (vom Fußende, von der Seite, vom Kopfende, von oben) und in Kniebeuge und Latziehen: Nichts zeigt von der Stange weg. Von vorn ist die Daumenspitze neben dem Zeigefinger zu sehen, vom Kopfende liegt sie unter den Fingern.

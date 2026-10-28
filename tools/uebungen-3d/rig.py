@@ -319,6 +319,8 @@ class Rig:
                 break
             for f, a in abstand.items():
                 dicke[f] = max(0.002, dicke[f] - (a - KONTAKT))
+                if f == "finger1":
+                    dicke[f] = min(0.018, max(0.008, dicke[f]))  # Beere 8 bis 18 mm vom Knochen
         self.zuruecksetzen()
         self.anwenden()
         return g
@@ -346,6 +348,21 @@ class Rig:
         netz = self._verformt()
         k = self.koerper
         namen = {gr.index: gr.name for gr in k.vertex_groups}
+        # Daumenglieder in der gebeugten Lage: Nur Haut bis 16 mm neben dem Knochen zählt als Daumen
+        # (Beere und Rücken des Glieds); Ballen und Schwimmhaut hängen zwar am Daumen, liegen aber
+        # weit vom Knochen und trieben sonst die Daumendicke auf das Doppelte (D-425)
+        glieder = {}
+        for i in (2, 3):
+            name = f"finger1-{i}.{seite}"
+            if name in self.knochen:
+                glieder[str(i)] = (self.punkt(name, self.kopf[name]), self.punkt(name, self.ende[name]))
+
+        def nahe_am_glied(p: Vector, glied: str) -> bool:
+            a, b = glieder[glied]
+            d = b - a
+            t = max(0.0, min(1.0, (p - a).dot(d) / d.length_squared))
+            return (p - (a + d * t)).length < 0.016
+
         erg: dict[str, float] = {}
         for v, p in zip(k.data.vertices, netz):
             for gg in v.groups:
@@ -354,6 +371,8 @@ class Rig:
                     continue
                 f, glied = n.split(".")[0].split("-")
                 if f not in g.finger or (f == "finger1" and glied == "1"):  # Daumenballen gehört zur Handfläche
+                    continue
+                if f == "finger1" and not nahe_am_glied(p, glied):
                     continue
                 a = self._abstand_achse(p, g.mitte, g.achse) - g.radius
                 erg[f] = min(erg.get(f, 1.0), a)
@@ -417,69 +436,55 @@ class Rig:
             pkte.append(p)
         return pkte
 
-    def _daumen_wickeln(self, seite: str, g: Griff, dicke: float) -> list[float]:
-        """Daumen im vollen Griff (D-423): Daumenballen und Grundglied umschließen die Stange von der
-        Gegenseite der Finger, die Daumenspitze liegt auf der anderen Seite der Stange über den
-        Mittelgliedern von Zeige- und Mittelfinger auf. Gesucht werden die Drehung im Grundgelenk (zwei
-        Achsen) und die Beugung der beiden Glieder, fest begrenzt wie bei der echten Hand (Grundglied 20
-        bis 60°, Endglied 20 bis 70°, kein Knick nach hinten), so dass kein Punkt in die Stange ragt; das
-        Endglied legt sich dabei auf die Finger, statt von ihnen wegzuzeigen. Bis D-422 zielte die Spitze auf die Stangenoberfläche
-        gegenüber der Handfläche; der Daumen hing dann wie ein Haken unter der Stange, ohne die Finger
-        zu berühren."""
+    def _daumen_wickeln(self, seite: str, g: Griff, dicke: float) -> dict:
+        """Daumen im vollen Griff (D-425), feste Konstruktion ohne Suche: Daumen und Finger bilden einen
+        geschlossenen Ring um die Stange. Alle Gelenke des Daumens liegen auf dem Kreis um die
+        Stangenachse mit dem Radius Stange plus Daumendicke, in der Ebene quer zur Stange durch das
+        Sattelgelenk; der Daumen läuft in Gegenrichtung der Finger um die Stange (vom Handgelenk her
+        unter der Stange hindurch und auf der Gegenseite hoch), die Spitze endet auf der Stange unter
+        den Mittelgliedern der Finger, die sich darüber schließen. Je Glied eine Drehung, die die
+        Ruhe-Richtung auf die Sehne des Kreises abbildet (`Rabs`), daraus die Drehung relativ zum
+        vorigen Glied für `finger_setzen`. Gibt die Drehungen und die Gelenkwinkel (Grad) zurück."""
         kette = self._kette(seite, "finger1")
-        R = g.radius + dicke  # Daumen dicker als die Finger
-        achse = g.finger.get("_achse_" + seite, g.achse)
-        ax = g.achse.normalized()
-        # Ziel der Spitze: über den Mittelgliedern von Zeige- und Mittelfinger (Punkt 3 der Fingerkette:
-        # Mitte des Mittelglieds), radial um Finger- und Daumendicke nach außen
-        auflage = []
-        for f in ("finger2", "finger3"):
-            if f in g.finger:
-                pk = self._fingerpunkte(self._kette(seite, f), achse, g.finger[f], g.finger.get("_spreiz_" + f + seite))
-                auflage.append(pk[3])
-        if auflage:
-            mitte_f = sum(auflage, Vector()) / len(auflage)
-            radial = mitte_f - g.mitte
-            radial = radial - radial.dot(ax) * ax
-            r_finger = radial.length  # Knochen der Finger: Stangenradius plus Fingerdicke
-            ziel = g.mitte + ax * (mitte_f - g.mitte).dot(ax) + radial.normalized() * (r_finger + 0.014)
-        else:
-            basis = self.kopf[f"finger2-1.{seite}"]
-            r_finger = g.radius + 0.0085
-            ziel = g.mitte + ax * (basis - g.mitte).dot(ax) + g.handflaeche.normalized() * (R + 0.002)
+        R = g.radius + dicke
+        achse_w = g.finger.get("_achse_" + seite, g.achse)  # Wickelachse der Finger
+        w = (-achse_w).normalized()  # der Daumen wickelt in Gegenrichtung
         p0 = kette[0][0]
+        laengen = [(e - k).length for k, e in kette]
+        mitte = g.mitte + w * (p0 - g.mitte).dot(w)  # Kreismittelpunkt auf der Achsenhöhe des Sattelgelenks
+        e1 = (p0 - mitte).normalized()
+        e2 = w.cross(e1).normalized()
+        r0 = (p0 - mitte).length
 
-        def kosten(a: float, b: float, c: float, e: float) -> float:
-            Rb = achse_winkel(g.handflaeche, a) @ achse_winkel(achse, b)
-            p1 = p0 + Rb @ (kette[0][1] - kette[0][0])
-            p2 = p1 + achse_winkel(-achse, c) @ (Rb @ (kette[1][1] - kette[1][0]))
-            p3 = p2 + achse_winkel(-achse, c + e) @ (Rb @ (kette[2][1] - kette[2][0]))
-            wert = 0.0
-            for p in (p1, (p1 + p2) / 2, p2, (p2 + p3) / 2, p3):
-                r = self._abstand_achse(p, g.mitte, g.achse)
-                if r < R - 0.001:  # nicht in die Stange
-                    wert += 50 * (R - r) ** 2 * 1e4
-            for p in (p1, (p1 + p2) / 2, p2):  # Ballen und Grundglied an der Stange
-                r = self._abstand_achse(p, g.mitte, g.achse)
-                wert += 0.3 * (r - R) ** 2 * 1e4
-            # Endglied auf den Fingern (Knochen der Finger plus Fingerdicke), Spitze am Ziel
-            r_end = self._abstand_achse((p2 + p3) / 2, g.mitte, g.achse)
-            wert += 0.2 * (r_end - (r_finger + 0.010)) ** 2 * 1e4
-            wert += 40.0 * (p3 - ziel).length ** 2 * 1e2
-            return wert
+        def kreis(theta: float) -> Vector:
+            return mitte + R * (math.cos(theta) * e1 + math.sin(theta) * e2)
 
-        # grob über den ganzen Bereich innerhalb der Gelenkgrenzen, dann zweimal feiner um die beste Lage
-        GRENZEN = ((20.0, 60.0), (20.0, 70.0))  # Beugung Grundglied, Endglied (Grad)
-        raster = [(a, b, c, e) for a in range(-80, 81, 10) for b in range(-80, 81, 10)
-                  for c in range(20, 61, 10) for e in range(20, 71, 10)]
-        beste = min(raster, key=lambda w: kosten(*w))
-        for schritt in (4, 1.5):
-            raster = [(beste[0] + i * schritt, beste[1] + j * schritt,
-                       min(GRENZEN[0][1], max(GRENZEN[0][0], beste[2] + k * schritt)),
-                       min(GRENZEN[1][1], max(GRENZEN[1][0], beste[3] + m * schritt)))
-                      for i in (-2, -1, 0, 1, 2) for j in (-2, -1, 0, 1, 2) for k in (-2, -1, 0, 1, 2) for m in (-2, -1, 0, 1, 2)]
-            beste = min(raster, key=lambda w: kosten(*w))
-        return [float(w) for w in beste]
+        # Grundgelenk: auf dem Kreis, so dass der Mittelhandknochen seine Länge behält
+        cos1 = max(-1.0, min(1.0, (r0 * r0 + R * R - laengen[0] ** 2) / (2 * r0 * R)))
+        th1 = math.acos(cos1)
+        th2 = th1 + 2 * math.asin(min(1.0, laengen[1] / (2 * R)))
+        th3 = th2 + 2 * math.asin(min(1.0, laengen[2] / (2 * R)))
+        ziele = [kreis(th1), kreis(th2), kreis(th3)]
+
+        # Je Glied die Drehung, die die Ruhe-Richtung auf die Sehne bringt und die Beere (in der
+        # Grundhaltung zur Handfläche hin, `g.handflaeche`) zur Stangenachse dreht
+        absolut = []
+        start = p0
+        richtungen = []
+        for (kopf, ende), ziel in zip(kette, ziele):
+            v = ziel - start
+            mitte_glied = (start + ziel) / 2
+            radial = mitte_glied - (mitte + w * (mitte_glied - mitte).dot(w))
+            absolut.append(abbild(ende - kopf, g.handflaeche, v, -radial))
+            richtungen.append(v.normalized())
+            start = ziel
+        relativ = [absolut[0], absolut[0].inverted() @ absolut[1], absolut[1].inverted() @ absolut[2]]
+        winkel = {
+            "sattel": math.degrees((kette[0][1] - kette[0][0]).angle(richtungen[0])),
+            "grund": math.degrees(richtungen[0].angle(richtungen[1])),
+            "end": math.degrees(richtungen[1].angle(richtungen[2])),
+        }
+        return {"R": relativ, "winkel": winkel, "punkte": ziele}
 
     def finger_setzen(self, seite: str, g: Griff, G_hand: Matrix) -> None:
         achse = g.finger.get("_achse_" + seite, g.achse)
@@ -494,18 +499,12 @@ class Rig:
                 self.setze(name, G)
                 Gp = G
         if "finger1" in g.finger:
-            a, b, c, e = g.finger["finger1"]
-            Rb = achse_winkel(g.handflaeche, a) @ achse_winkel(achse, b)
-            n1 = f"finger1-1.{seite}"
-            G1 = G_hand @ um_punkt(self.kopf[n1], Rb)
-            self.setze(n1, G1)
-            n2 = f"finger1-2.{seite}"
-            # Beugeachse im Raum der Grundhaltung nach der Drehung des Grundglieds
-            G2 = G1 @ um_punkt(self.kopf[n2], Rb.inverted() @ achse_winkel(-achse, c) @ Rb)
-            self.setze(n2, G2)
-            n3 = f"finger1-3.{seite}"
-            G3 = G2 @ um_punkt(self.kopf[n3], Rb.inverted() @ achse_winkel(-achse, e) @ Rb)
-            self.setze(n3, G3)
+            # Daumen: je Glied eine Drehung relativ zum vorigen Glied (Konstruktion in `_daumen_wickeln`)
+            G = G_hand
+            for i, L in enumerate(g.finger["finger1"]["R"], start=1):
+                name = f"finger1-{i}.{seite}"
+                G = G @ um_punkt(self.kopf[name], L)
+                self.setze(name, G)
 
     def hand_an_stange(self, seite: str, g: Griff, mitte: Vector, stangen_achse: Vector, phi: float) -> Matrix:
         """Starre Abbildung der Hand: Stangenmitte des Griffs auf `mitte`, Griffachse auf die

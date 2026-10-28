@@ -2318,3 +2318,14 @@ Vierte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Fassung A1 mit
 | CI | CI zu `bd65d53` (D-421, Lauf 40682710242) und `fd5d8ee` (D-422, Lauf 40682762529) vom jeweils nächsten Commit abgebrochen, wie in der CI vorgesehen; Lauf 40684266041 zu `f0bc9aa` (D-423) lief beim Schreiben dieses Protokolls noch, der Lauf zum Commit von D-424 folgt; Stand in PR #53 |
 | `pnpm check:docs`, Prettier, `python3 -m py_compile` je Paket am Stand des Commits | bestanden |
 | `pnpm check:docs`, `python3 -m py_compile` | bestanden |
+
+### Phase Übungen, Korrekturen Daumen, Kragen und Rückenlogo · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Fünfte Nachricht des Produktinhabers vom 28.10.2026 (Entscheidung Körper C männlich, A1, Brust-F 4 cm; Korrekturen 1 bis 3; Anhang `korrektur-markierungen` diesmal angekommen): Griff (D-425). Nur Werkzeuge und Daten; Code und Videos der App unverändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Lage der Daumengelenke im Griff (Skript im Arbeitsordner, C männlich, Bankdrücken): Abstand zur Stangenachse, axiale Lage, Soll gegen Ist | erster Stand der Konstruktion: alle Gelenke auf 3,95 cm statt 2,65 cm, weil die Kontaktmessung Ballen und Schwimmhaut mitnahm; danach 3,13 cm (Dicke 17 mm aus der Messung an der Beere), Soll und Ist gleich, alle Gelenke in einer Ebene quer zur Stange |
+| Messung je Übung (`pruef_griff.py`, C männlich): Daumenwinkel, Abstand zur Stange, Finger in den Phasen 0, 0,5 und 1 | Bankdrücken Sattel 71°, Grund 39°, End 69°, Daumen −0,7 mm; Kniebeuge 52°/30°/69°, −0,7 mm; Latziehen 43°/19°/73°, −0,8 mm; Finger geringster Abstand −2,3 / −0,7 / −2,0 mm, Kontaktpunkte 346 / 182 / 226, in allen Phasen gleich, keine Meldungen |
+| Nahaufnahmen Bankdrücken vom Fußende, von der Seite (90°, Scheiben ausgeblendet), vom Kopfende und von oben; Kniebeuge hinten-seitlich; Latziehen schräg | Daumen umschließt die Stange unter den Fingern, nichts ragt über die Stange oder zeigt von ihr weg; von vorn ist die Daumenspitze neben dem Zeigefinger zu sehen, vom Kopfende liegt sie unter den Fingern; selbst angesehen |
+| `pnpm check:docs`, `python3 -m py_compile` | bestanden |

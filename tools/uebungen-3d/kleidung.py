@@ -155,9 +155,15 @@ def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
         felder["hose"].append(hose)
         felder["teil"].append(teil)
     felder["k"] = k
-    # Rundhals: Kugel um `kugel` (Radius AUSSCHNITT_R) und darüber die Ellipse um die Halsmitte
-    # (`mitte_y` über dem Kugelmittelpunkt, Halbachsen `x` und `tiefe`), alles relativ zum Leerobjekt
-    felder["hals"] = {"kugel": kugel, "r": AUSSCHNITT_R, "x": hals_x, "tiefe": hals_tiefe, "mitte_y": hals_y - kugel.y}
+    # Rundhals: Kugel um `kugel` (Radius AUSSCHNITT_R), darüber die Ellipse um die Halsmitte (`mitte_y`
+    # über dem Kugelmittelpunkt, Halbachsen `x` und `tiefe`) und eine Ebene quer zum Hals in der Höhe
+    # `oben` über dem Kugelmittelpunkt: Über ihr gibt es keinen Stoff, auch wenn Schulter und Trapez
+    # den Stoff seitlich am Hals heben (D-426). `oben` liegt dort, wo die Kugel in der Grundhaltung
+    # seitlich (bei der Halsbreite) endet, so bleibt die Grundhaltung unverändert. Alles relativ zum
+    # Leerobjekt, das mit dem Halsknochen mitläuft.
+    oben = math.sqrt(max(0.0, AUSSCHNITT_R ** 2 - hals_x ** 2))
+    felder["hals"] = {"kugel": kugel, "r": AUSSCHNITT_R, "x": hals_x, "tiefe": hals_tiefe, "mitte_y": hals_y - kugel.y,
+                      "oben": oben}
     return felder
 
 
@@ -547,8 +553,9 @@ def _stufe(nodes, links, wert, von: float, bis: float, nach: tuple[float, float]
 
 def _hals_abstand(nodes, links, hals_obj: bpy.types.Object, hals: dict):
     """Abstand des Schattierungspunkts zum Rundhals (m, positiv = Stoff, negativ = Ausschnitt), in den
-    Koordinaten des Leerobjekts: außerhalb der Kugel und, oberhalb ihres Mittelpunkts, außerhalb der
-    Ellipse um die Halsmitte; dieselbe Regel wie das Feld bis D-419, nur je Haltung neu."""
+    Koordinaten des Leerobjekts: außerhalb der Kugel, oberhalb ihres Mittelpunkts außerdem außerhalb
+    der Ellipse um die Halsmitte und unterhalb der Ebene `oben` (D-426); dieselbe Regel wie das Feld
+    bis D-419, nur je Haltung neu und mit der Ebene als Obergrenze."""
     tc = nodes.new("ShaderNodeTexCoord")
     tc.object = hals_obj
     sep = nodes.new("ShaderNodeSeparateXYZ")
@@ -564,8 +571,11 @@ def _hals_abstand(nodes, links, hals_obj: bpy.types.Object, hals: dict):
     ellipse = _rechne(nodes, links, "MULTIPLY", _rechne(nodes, links, "SUBTRACT", e, 1.0), hals["tiefe"])
     beides = _rechne(nodes, links, "MINIMUM", f_kugel, ellipse)
     oben = _rechne(nodes, links, "GREATER_THAN", sep.outputs["Z"], 0.0)
-    return _rechne(nodes, links, "ADD", f_kugel,
-                   _rechne(nodes, links, "MULTIPLY", oben, _rechne(nodes, links, "SUBTRACT", beides, f_kugel)))
+    f = _rechne(nodes, links, "ADD", f_kugel,
+                _rechne(nodes, links, "MULTIPLY", oben, _rechne(nodes, links, "SUBTRACT", beides, f_kugel)))
+    if "oben" in hals:
+        f = _rechne(nodes, links, "MINIMUM", f, _rechne(nodes, links, "SUBTRACT", hals["oben"], sep.outputs["Z"]))
+    return f
 
 
 # ---------------------------------------------------------------------- Material

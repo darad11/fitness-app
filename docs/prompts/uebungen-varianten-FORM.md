@@ -20,7 +20,7 @@ Sehr gute Arbeit – Knie, Hände, Füße, Zonen und Kamera passen jetzt. Nächs
 
 ## Entscheidung und Feinschliff · Nachricht des Produktinhabers vom 28.10.2026 (zweite)
 
-> **Stand:** wörtlich festgehalten; Paket D-417 (Feinschliff D); C mit den Dateien von MakeHuman folgt als eigenes Paket. Die erneut angehängte Vorlage der Kleidung ist auch diesmal nicht angekommen; Farben und Logos nach dem Text.
+> **Stand:** wörtlich festgehalten; Pakete D-417 (Feinschliff D) und D-418 (C mit MakeHuman-Dateien). Die erneut angehängte Vorlage der Kleidung ist auch diesmal nicht angekommen; Farben und Logos nach dem Text.
 
 Entscheidung: Variante D mit Zonen – die graue, neutrale Figur in FORM-Kleidung, die Muskelzonen in Lime auf der Kleidung. A und B verfolgen wir nicht weiter; C bekommt noch eine faire Chance mit echten Dateien (Punkt 4).
 

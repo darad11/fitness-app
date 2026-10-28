@@ -34,20 +34,28 @@ def mh_zu_blender(x: float, y: float, z: float) -> Vector:
     return Vector((x * SKALA, -z * SKALA, y * SKALA))
 
 
-def lies_obj(pfad: Path) -> tuple[list[Vector], list[list[int]]]:
-    """Eckpunkte und nur die Flächen der Gruppe „body“ (ohne Hilfsgeometrie)."""
+def lies_obj(pfad: Path) -> tuple[list[Vector], list[list[int]], list[tuple[float, float]], list[list[int]]]:
+    """Eckpunkte, nur die Flächen der Gruppe „body“ (ohne Hilfsgeometrie), die UV-Punkte der Abwicklung
+    von MakeHuman und je Fläche deren Nummern (für die Hautbilder, `realistisch.haut_material`)."""
     punkte: list[Vector] = []
     flaechen: list[list[int]] = []
+    uv_punkte: list[tuple[float, float]] = []
+    uv: list[list[int]] = []
     gruppe = ""
     for zeile in pfad.read_text(encoding="utf-8").splitlines():
         if zeile.startswith("v "):
             _, x, y, z = zeile.split()[:4]
             punkte.append(mh_zu_blender(float(x), float(y), float(z)))
+        elif zeile.startswith("vt "):
+            _, u, v = zeile.split()[:3]
+            uv_punkte.append((float(u), float(v)))
         elif zeile.startswith("g "):
             gruppe = zeile[2:].strip()
         elif zeile.startswith("f ") and gruppe == "body":
-            flaechen.append([int(teil.split("/")[0]) - 1 for teil in zeile.split()[1:]])
-    return punkte, flaechen
+            ecken = [teil.split("/") for teil in zeile.split()[1:]]
+            flaechen.append([int(e[0]) - 1 for e in ecken])
+            uv.append([int(e[1]) - 1 for e in ecken])
+    return punkte, flaechen, uv_punkte, uv
 
 
 # Rumpfknochen, an denen Haut der Brust und der Achsel mit hängt (D-413)
@@ -77,7 +85,7 @@ def schulter_gewichte(koerper: bpy.types.Object) -> None:
 
 def baue_figur(name: str = "Figur", form: koerperform.Form | None = None) -> tuple[bpy.types.Object, bpy.types.Object]:
     """Gibt (Körper, Skelett) zurück. Der Körper hängt mit Gewichten am Skelett."""
-    punkte, flaechen = lies_obj(QUELLE / "base.obj")
+    punkte, flaechen, uv_punkte, uv = lies_obj(QUELLE / "base.obj")
     if form is not None:
         koerperform.wende_an(punkte, form)
     # Alle Eckpunkte in der Nummerierung von base.obj (mit Hilfsgeometrie): Bezug für Anbauteile
@@ -86,6 +94,10 @@ def baue_figur(name: str = "Figur", form: koerperform.Form | None = None) -> tup
     mesh = bpy.data.meshes.new(name)
     mesh.from_pydata([tuple(p) for p in punkte], [], flaechen)
     mesh.update()
+    schicht = mesh.uv_layers.new(name="UV")
+    for poly, ecken in zip(mesh.polygons, uv):
+        for loop, n in zip(poly.loop_indices, ecken):
+            schicht.data[loop].uv = uv_punkte[n]
     for poly in mesh.polygons:
         poly.use_smooth = True
     koerper = bpy.data.objects.new(name, mesh)

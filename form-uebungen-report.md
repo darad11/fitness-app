@@ -489,18 +489,56 @@ Zwei Fassungen: **F in Lime** (`D-z`) und **F hell Ton in Ton** (`D-z-hell`, #AA
 
 Zwei schmale Flächenlichter hinter der Figur (je 30° neben der Gegenrichtung der Kamera, 3,2 m hoch, 280 und 200 W) statt des schwachen Gegenlichts (90 W). Sie geben Figur, Kleidung und Geräten eine dünne helle Kante. Vergleich in vier Stufen (ohne, 200/140, 280/200, 420/300 W): `docs/screens/uebungen/feinschliff-kantenlicht.webp`; 200/140 hob die Silhouette kaum, 420/300 machte Arme und Schultern zu hell. In den Vergleichsbildern steht die Fassung „ohne Kantenlicht (bisher)“ neben der neuen, dazu die Alternative „Tee in Graphit“.
 
+### 12.5 Variante C mit den Dateien von MakeHuman (D-418)
+
+`*.makehumancommunity.org` ist frei; `render.py --hole` lädt das Paket `makehuman_system_assets_cc0.zip` (267 MB) und packt nur die genutzten Teile aus: Haut `young_caucasian_male` und `_female` (Bild 2048 × 2048 auf der Abwicklung von `base.obj`), Augen `high-poly` mit `brown_eye.png`, Brauen `eyebrow001` und `eyebrow005`, Wimpern `eyelashes01` und `eyelashes02`, Haare `short02` (männlich) und `bob02` (weiblich; ein Pferdeschwanz läge beim Bankdrücken auf der Bank). Alle Teile sind Proxys wie die Augen (drei Körperpunkte plus Versatz) und hängen am Kopf. Die Haarbilder sind blond mit starkem Glanz; ich habe sie dunkelbraun eingefärbt und den Glanz gesenkt. Lizenz: CC0 1.0, jede Datei trägt den Vermerk im Kopf; Wortlaut in `docs/licenses-data.md` Abschnitt 8. C trägt dieselbe Kleidung wie D (F in Lime, Kantenlicht), je mit Zonen und ohne.
+
+Aus der Nähe wirken die Augen des Mannes schmal; das liegt an Augen und Lidern aus den MakeHuman-Dateien, nicht an den Wimpern (mit und ohne gleich). In der Größe der App ist das nicht zu sehen.
+
+### 12.6 Vergleichsbilder
+
+Je Moment ein Bild mit acht Kacheln im selben Ausschnitt, 720 × 540 je Kachel, 40 Proben, Kamera wie in der App: `docs/screens/uebungen/feinschliff-kniebeuge-unten.webp`, `feinschliff-bank-oben.webp`, `feinschliff-bank-unten.webp`, Übersicht `feinschliff-uebersicht.webp`. Reihe 1: D mit Zonen, F in Lime, Kantenlicht · F hell Ton in Ton · F in Lime ohne Kantenlicht (bisher) · Tee in Graphit. Reihe 2: C männlich und weiblich, je mit Zonen und ohne.
+
+**Renderzeit je Bild** (720 × 540, 40 Proben, ein Prozess nacheinander auf vier CPU-Kernen; Aufbau einmal je Fassung und Übung):
+
+| Fassung | Aufbau | Kniebeuge unten | Bankdrücken oben | Bankdrücken unten | je Bild im Schnitt |
+|---|---|---|---|---|---|
+| D · Zonen, F in Lime, Kantenlicht | 5,6 s | 16,7 s | 23,6 s | 23,4 s | 21,2 s |
+| D · Zonen, F hell Ton in Ton | 5,6 s | 15,7 s | 23,2 s | 22,7 s | 20,5 s |
+| D · Zonen, F in Lime, ohne Kantenlicht (bisher) | 5,6 s | 16,4 s | 21,8 s | 20,9 s | 19,7 s |
+| D · Zonen, Tee in Graphit | 6,2 s | 16,4 s | 22,5 s | 21,8 s | 20,2 s |
+| C · männlich, MakeHuman, Zonen | 4,0 s | 18,0 s | 23,3 s | 24,5 s | 21,9 s |
+| C · männlich, MakeHuman | 4,0 s | 17,1 s | 23,3 s | 24,0 s | 21,5 s |
+| C · weiblich, MakeHuman, Zonen | 4,7 s | 17,7 s | 23,6 s | 24,3 s | 21,9 s |
+| C · weiblich, MakeHuman | 4,3 s | 17,2 s | 22,0 s | 22,4 s | 20,5 s |
+
+Zum Vergleich D-414: A 13,0 s, D mit Zonen 14,1 s je Bild (ohne Kantenlicht, kleine Zeichen statt Logos). Das Kantenlicht kostet rund 7,8 % Zeit, Haut und Haarsträhnen von MakeHuman rund 3 % mehr als D (Bankdrücken liegt bei allen über der Kniebeuge, weil Bank und Scheiben mehr Fläche füllen). Dateigrößen der Vergleichsbilder: `feinschliff-kniebeuge-unten.webp` 81,2 KB, `feinschliff-bank-oben.webp` 80,5 KB, `feinschliff-bank-unten.webp` 83,2 KB, `feinschliff-uebersicht.webp` 95,2 KB, `logos-nah.webp` 81,5 KB.
+
+**Beobachtung in den Vergleichsbildern:**
+
+- **Kantenlicht:** Ohne (bisher) verschwimmt der Oberkörper in Nacht mit dem Hintergrund, nur die grauen Arme zeichnen die Figur; mit Kantenlicht haben Schultern, Rücken, Stange und Scheiben eine schmale helle Kante, die Silhouette ist in allen drei Momenten klar, ohne dass die Zonen heller würden. Das Tee in Graphit hebt sich auch ohne Kante ab, nimmt der Kleidung aber den Kontrast von Nacht zu Graphit aus der Vorlage.
+- **F in Lime:** aus der Nähe klar als FORM-F; in der Größe der App ein kleines Lime-Zeichen auf der Brust (in der Kniebeuge nicht von einer kleinen Zone zu unterscheiden). Beim Bankdrücken liegt es in der Lime-Zone und erscheint ausgespart als dunkles F; auf dem Hosenbein liegt es in der Oberschenkelzone und ist dort in der Kniebeuge ebenfalls ausgespart. Das Rücken-F (10 cm) ist in den drei Momenten nicht im Bild (Kamera von vorn-seitlich), nur beim Latziehen.
+- **F hell Ton in Ton:** aus der Nähe ebenso klar, ruhiger; in der Größe der App ein feines helles Zeichen, das nie mit einer Zone zu verwechseln ist, auch nicht in der Lime-Zone beim Bankdrücken (helles F auf Lime).
+- **Lesbarkeit im Player:** In 390 px Breite ist das Brust-F 7 bis 8 px hoch, als Buchstabe gerade noch erkennbar, als Marke eindeutig erst beim Rücken-F. Größer als 5,5 cm würde es auf der Brust wie ein Aufdruck eines Sportvereins wirken; ich lasse es so und nenne es als Stellschraube (`kleidung.LOGOS`).
+- **C mit MakeHuman-Dateien:** Haut, Haare, Brauen und Augen wirken jetzt natürlich, auch beim Liegen auf der Bank (kurze Haare, kein Durchstoßen); in der Größe der App ist der Unterschied zur eigenen Haut aus D-414 deutlich, der zur grauen Figur ebenfalls: Gesicht, Hautton und Haare ziehen den Blick, die Zonen treten etwas zurück. Renderzeit nur rund 3 % über D.
+
+### 12.7 Empfehlung
+
+**D mit Zonen, Tee in Nacht, F hell Ton in Ton, mit Kantenlicht.** Gründe: Das helle F ist nie mit einer Zone zu verwechseln, bleibt beim Bankdrücken in der Lime-Zone lesbar, und Lime bleibt das einzige Signal für arbeitende Muskeln (D-402). Das Kantenlicht löst den Kontrast, ohne die Farben der Vorlage zu ändern; Graphit nur als Rückfall, falls dir die Kante am Gerät nicht reicht. Das F in Lime ist markentypischer, wirkt in der Größe der App aber wie ein kleines Lime-Zeichen auf der Brust. C ist mit den MakeHuman-Dateien eine faire Alternative geworden (natürlich, kaum langsamer); gegen C spricht, dass Gesicht, Haut und Haare vom Muskel ablenken und die Figur eine bestimmte Person zeigt, wo die graue Figur neutral bleibt. Falls du C willst: männlich mit Zonen.
+
 ### 12.8 Tests
 
 - **Hals:** vermessen in der Ruhehaltung (Kehle 8 cm vor dem Gelenk), Nahaufnahmen von vorn, seitlich, hinten und aus der Kamera der App, dann 15 Phasen aller drei Übungen; in jedem Bild frei.
 - **F:** Rasterung gegen eine Pillow-Rasterung derselben Pfade geprüft (Abweichung nur an Rändern); Ausrichtung in Nahaufnahmen geprüft, zwei Fehler gefunden und behoben (Rücken spiegelverkehrt, Bein auf dem Kopf); Lime-F in Lime-Zonen beim Latziehen und Bankdrücken geprüft.
 - **Kantenlicht:** vier Stärken an der Kniebeuge unten verglichen.
+- **MakeHuman:** Paket geladen (298.739.872 Byte, 517 Dateien), Lizenzvermerk in jeder genutzten Datei; Haare und Augen in Nahaufnahmen geprüft, Haare eingefärbt.
 - **Dokumente:** `pnpm check:docs` je Paket am Stand des Commits; `python3 -m py_compile` aller Werkzeuge.
-- **App:** Code und Videos unverändert; die CI (Lint, Typen, Unit, Dokumente, Build, Datenbank, E2E Chromium und WebKit) läuft auf jedem Commit, Ergebnis im Testprotokoll. CI zum vorigen Stand `890dd80` (Lauf 40652262738) in allen Jobs grün, auch WebKit; der Lauf zu D-417 steht im Testprotokoll und in PR #53.
-- Alles wörtlich in `docs/testing.md`, Abschnitt „Feinschliff D“.
+- **App:** Code und Videos unverändert; die CI (Lint, Typen, Unit, Dokumente, Build, Datenbank, E2E Chromium und WebKit) läuft auf jedem Commit, Ergebnis im Testprotokoll. CI zum vorigen Stand `890dd80` (Lauf 40652262738) in allen Jobs grün, auch WebKit; die Läufe zu D-417 und D-418 stehen im Testprotokoll und in PR #53.
+- Alles wörtlich in `docs/testing.md`, Abschnitt „Feinschliff D und C mit MakeHuman-Dateien“.
 
 ### 12.9 Was ich von dir brauche
 
-1. Deine Wahl: F in Lime oder hell Ton in Ton; Kantenlicht ja oder nein (sonst Tee in Graphit); C mit den Dateien von MakeHuman folgt als eigenes Paket. Danach rendere ich die drei Pilot-Übungen neu, mit dem neuen Vorschaubild, und baue sie ein.
+1. Deine Wahl: F in Lime oder hell Ton in Ton; Kantenlicht ja oder nein (sonst Tee in Graphit); oder doch C (männlich oder weiblich, mit Zonen oder ohne). Danach rendere ich die drei Pilot-Übungen neu, mit dem neuen Vorschaubild, und baue sie ein.
 2. Falls die Vorlage der Kleidung Details zeigt, die vom Text abweichen (Schnitt des Ausschnitts, Lage der Logos, Paspeln): die Datei noch einmal, zum Beispiel als Bild im Repository.
 3. Nach dem Neurendern dein Gerätetest; danach gibst du den Merge von PR #53 frei.
 
@@ -514,5 +552,16 @@ Technische Entscheidungen: D-417
 Ausgeführte Tests: Halsmessung, Nahaufnahmen Hals (4 Richtungen, 15 Phasen), Rasterung des F, Ausrichtung der Logos, Lime-F in Zonen, Kantenlicht in vier Stärken, pnpm check:docs
 Ergebnis: bestanden; zwei Fehler bei der Ausrichtung der Logos gefunden und behoben
 Bekannte Einschränkungen: Vorlage der Kleidung fehlt weiterhin (Farben und Logos nach dem Text); Lime-F in einer Lime-Zone in der Stoffarbe
+Nächste Schritte: Wahl der Fassung durch den Produktinhaber
+```
+
+```
+Arbeitspaket: D-418 Variante C mit Haut, Augen, Brauen, Wimpern und Haaren von MakeHuman
+Umgesetzte Funktionen: Werkzeug, erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/realistisch.py, figur.py, varianten.py; docs/screens/uebungen/feinschliff-kniebeuge-unten.webp, feinschliff-bank-oben.webp, feinschliff-bank-unten.webp, feinschliff-uebersicht.webp; docs/licenses-data.md; Dokumente
+Technische Entscheidungen: D-418
+Ausgeführte Tests: Paket geladen und Lizenz je Datei geprüft, Nahaufnahmen Kopf (Haare, Augen mit und ohne Wimpern), 24 Standbilder mit Renderzeit, pnpm check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: Augen des Mannes aus der Nähe schmal (MakeHuman-Dateien); Haarbilder eingefärbt
 Nächste Schritte: Wahl der Fassung durch den Produktinhaber
 ```

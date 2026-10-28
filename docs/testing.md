@@ -2261,7 +2261,7 @@ Auftrag `prompts/uebungen-varianten-FORM.md`: Brust und Körperform (D-413), Var
 
 ### Phase Übungen, Feinschliff D und C mit MakeHuman-Dateien · 28.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
 
-Zweite Nachricht vom 28.10.2026 in `prompts/uebungen-varianten-FORM.md`: Feinschliff der gewählten Variante D (D-417); C mit den Dateien von MakeHuman folgt als eigenes Paket. Nur Werkzeuge und Daten; Code und Videos der App unverändert. Nahaufnahmen mit `tools/uebungen-3d/nahaufnahme.py` (Kamera auf einen Knochen des verformten Netzes), Standbilder mit `varianten_bilder.py` (720 × 540, 40 Proben, Kamera wie in der App), zusammengesetzt mit `tools/uebungen_varianten_bild.py`.
+Zweite Nachricht vom 28.10.2026 in `prompts/uebungen-varianten-FORM.md`: Feinschliff der gewählten Variante D (D-417) und C mit den Dateien von MakeHuman (D-418). Nur Werkzeuge und Daten; Code und Videos der App unverändert. Nahaufnahmen mit `tools/uebungen-3d/nahaufnahme.py` (Kamera auf einen Knochen des verformten Netzes), Standbilder mit `varianten_bilder.py` (720 × 540, 40 Proben, Kamera wie in der App), zusammengesetzt mit `tools/uebungen_varianten_bild.py`.
 
 | Nachweis | Ergebnis |
 |---|---|
@@ -2272,5 +2272,9 @@ Zweite Nachricht vom 28.10.2026 in `prompts/uebungen-varianten-FORM.md`: Feinsch
 | Ausrichtung der Logos (Nahaufnahmen Brust 20°, Rücken 180°, Bein 90°) | erster Stand: Rücken-F spiegelverkehrt, Bein-F auf dem Kopf (Abwicklung am Rücken nach links, am Bein von der Hüfte nach unten gezählt); behoben, danach alle drei richtig herum, selbst angesehen |
 | Lime-F in einer Lime-Zone (Latziehen hinten, Bankdrücken Brust) | erster Stand: das F verschwand in der Zone oder blieb als Rest stehen (Latziehen); jetzt in der Stoffarbe ausgespart, als F lesbar, selbst angesehen |
 | Kantenlicht, Kniebeuge unten (`nahaufnahme.py --kante`, 420 px) | ohne (bisher 90 W): Oberkörper verschwimmt mit dem Hintergrund; 200/140 W: Kante kaum sichtbar; 280/200 W: Silhouette klar, Kante schmal; 420/300 W: Arme und Schultern zu hell. Gewählt 280/200 W: `docs/screens/uebungen/feinschliff-kantenlicht.webp` |
+| MakeHuman-Paket (`render.py --hole`) | `makehuman_system_assets_cc0.zip` 298.739.872 Byte, 517 Dateien; ausgepackt nur Haut (2), Augen, Brauen (2), Wimpern (2), Haare (2); jede Datei mit „explicitly released as CC0 in september 2020“ im Kopf |
+| Haare von MakeHuman | Bilder sind blond (`short02`, `bob02`) mit starkem Glanz; eingefärbt (`HAARTON` 0,42/0,30/0,22, Glanz 0,2, Rauheit 0,6), danach dunkelbraun; Nahaufnahmen selbst angesehen |
+| Augen des Mannes (Nahaufnahme Kopf, mit Wimpern `eyelashes01`, ohne, mit `eyelashes02`) | in allen drei Fällen gleich schmal: liegt an Augen und Lidern aus den MakeHuman-Dateien, nicht an den Wimpern; in der Größe der App nicht zu sehen |
 | Standbilder D, vier Fassungen × drei Momente (720 × 540, 40 Proben, `varianten_bilder.py`, ein Prozess) | je Bild im Schnitt: Zonen, F in Lime, Kantenlicht 21,2 s, Zonen, F hell Ton in Ton 20,5 s, Zonen, F in Lime, ohne Kantenlicht (bisher) 19,7 s, Zonen, Tee in Graphit 20,2 s; zusammengesetzt mit `uebungen_varianten_bild.py --praefix feinschliff` (Reihe 1) und `--nah` (`logos-nah.webp`, 81,5 KB), selbst angesehen |
+| Standbilder C mit MakeHuman-Dateien, vier Fassungen × drei Momente (D-418) | je Bild im Schnitt: männlich, MakeHuman, Zonen 21,9 s, männlich, MakeHuman 21,5 s, weiblich, MakeHuman, Zonen 21,9 s, weiblich, MakeHuman 20,5 s; Reihe 2 der Vergleichsbilder `feinschliff-kniebeuge-unten.webp` (81,2 KB), `feinschliff-bank-oben.webp` (80,5 KB), `feinschliff-bank-unten.webp` (83,2 KB), Übersicht `feinschliff-uebersicht.webp`; selbst angesehen |
 | `pnpm check:docs` je Paket am Stand des Commits, `python3 -m py_compile` aller Werkzeuge | bestanden |

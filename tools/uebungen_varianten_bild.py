@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Vergleichsbilder der Varianten zur Probe (D-414; Feinschliff D-417) aus den Standbildern von
+"""Vergleichsbilder der Varianten zur Probe (D-414; Feinschliff D-417, D-418) aus den Standbildern von
 `tools/uebungen-3d/varianten_bilder.py`: je Moment der Bewegung ein Bild mit allen Varianten,
 dazu eine Übersicht; mit `--nah` die Logos aus der Nähe und in Player-Größe (`logos-nah.webp`). Alle Kacheln eines Moments zeigen denselben Ausschnitt (gemeinsamer Bereich
 von Figur und Gerät über alle Varianten, mit Rand), damit die Figuren groß und vergleichbar sind.
@@ -26,15 +26,15 @@ sys.path.insert(0, str(HIER / "uebungen-3d"))
 GRUND = (12, 18, 25)  # #0C1219
 TEXT = (242, 243, 244)  # #F2F3F4
 LEISE = (170, 178, 190)  # #AAB2BE
-# Feinschliff D (D-417); die Reihenfolge der Kacheln je Moment
+# Feinschliff D und C mit MakeHuman-Dateien (D-417, D-418); die Reihenfolge der Kacheln je Moment
 REIHENFOLGE = ["D-z", "D-z-hell", "D-z-ohne-kante", "D-z-graphit", "C-m-z", "C-m", "C-w-z", "C-w"]
 TITEL = {
     "A": "A · neutral, grau, Zonen",
     "B": "B · männlich, grau, Zonen",
-    "C-m-z": "C · männlich, real, Zonen",
-    "C-m": "C · männlich, real",
-    "C-w-z": "C · weiblich, real, Zonen",
-    "C-w": "C · weiblich, real",
+    "C-m-z": "C · männlich, MakeHuman, Zonen",
+    "C-m": "C · männlich, MakeHuman",
+    "C-w-z": "C · weiblich, MakeHuman, Zonen",
+    "C-w": "C · weiblich, MakeHuman",
     "D-z": "D · Zonen, F in Lime, Kantenlicht",
     "D-z-hell": "D · Zonen, F hell Ton in Ton",
     "D-z-ohne-kante": "D · Zonen, F in Lime, ohne Kantenlicht (bisher)",

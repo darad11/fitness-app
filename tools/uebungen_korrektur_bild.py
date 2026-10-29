@@ -16,6 +16,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur6 --runde 6   # D-445: Daumen, zwei Hebel und Folgeänderung, Hand im Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/kleidung --runde 7     # D-453: Kleidung nach dem Board, Handgelenk
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/latziehen --runde 8   # D-455: Griffblatt Latziehen vorher/nachher
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/schuh --runde 9       # D-460: Schuh und Rückenlogo, Player-Größe
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -378,7 +379,8 @@ def blatt_nah7(paket: Path) -> "Image":
                   "Ruhehaltung, Licht und Kantenlicht wie in der App; links und rechts aus Sicht des Trägers")
 
 
-def blatt_player7(paket: Path) -> "Image":
+def blatt_player7(paket: Path, titel: str = "3 · Die drei Pilot-Übungen in der Größe des Players",
+                  unter: str = "Standbilder statt Schleifen; die Schleifen der App folgen nach deiner Freigabe") -> "Image":
     """Die vier Momente in der Größe des großen Players (390 px) mit dem Vorschaubild (56 px)."""
     kacheln = []
     for u, p, mt in MOMENTE7:
@@ -398,8 +400,7 @@ def blatt_player7(paket: Path) -> "Image":
         info = json.loads((paket / "bilder" / f"Cm-{u}.json").read_text(encoding="utf-8"))
         zeit = f"{info['bild_s'][p]:.0f} s"
         kacheln.append(kachel(feld, mt, feld.width, feld.height, f"großer Player am iPhone, 390 px · Renderzeit {zeit}"))
-    return gitter(kacheln, 2, "3 · Die drei Pilot-Übungen in der Größe des Players",
-                  "Standbilder statt Schleifen; die Schleifen der App folgen nach deiner Freigabe")
+    return gitter(kacheln, 2, titel, unter)
 
 
 def _grad(w: float) -> str:
@@ -460,15 +461,91 @@ def blatt_lat8(paket: Path) -> "Image":
                   "vorher Stand D-454 (Stange 6° schräg bei 0,72 der Hand), nachher D-455 (20° schräg bei 0,65)")
 
 
+# Runde „Schuh und Rückenlogo“ (Phase Programme, Abschnitt 1, D-460), gerendert mit `tools/uebungen-3d/schuh_bilder.py`
+# und `varianten_bilder.py`. Ordner `<paket>/`: `vorher/` (schuh, ruecken mit --vorher: Schuh bis D-459, Logo im
+# Verhältnis des Boards), `nachher/` (schuh, details, ruecken), `bilder/Cm-<Übung>-<Phase>.png` (720 × 540)
+BOARD_SCHUH = (178, 528, 453, 688)  # Ausschnitt der Schuhe auf dem Board (453 × 696 px)
+SCHUH9 = [("aussen", "von außen"), ("innen", "von innen"), ("hinten", "von hinten"), ("oben", "von oben")]
+DETAILS9 = [("schnuerung-oben", "Schnürung von oben", "Senkel über Kreuz, Ösen, Knoten mit Schlaufen"),
+            ("schnuerung-seite", "Schnürung von der Seite", "Senkel liegen auf dem Rist"),
+            ("zunge", "Zunge", "kleines F über der Schnürung"),
+            ("kragen-aussen", "Kragen außen", "Polster und schwarzes Futter"),
+            ("kragen-hinten", "Kragen hinten", "Polster um die Ferse, Lasche"),
+            ("kragen-innen", "Kragen innen", "Polster und Futter"),
+            ("profil-spitze", "Spitze und Profil", "angehobene Spitze, Stollen"),
+            ("profil-ferse", "Ferse und Profil", "Stollen unter dem Einsatz in Lime")]
+
+
+def _mm(w: float) -> str:
+    return f"{w:.1f} mm".replace(".", ",")
+
+
+def blatt_schuh9(paket: Path) -> "Image":
+    """Board, beide Schuhe aus der Richtung des Boards vorher und nachher, darunter die vier Ansichten nachher und
+    vorher."""
+    g = 360
+    board = Image.open(BOARD).convert("RGB").crop(BOARD_SCHUH)
+    kacheln = [kachel(board, "Design-Board", g, g, "Vorlage, Schuhe"),
+               kachel(paket / "nachher" / "schuh-board.png", "Nachher · wie auf dem Board", g, g, "beide Schuhe, schräg von vorn außen"),
+               kachel(paket / "vorher" / "schuh-board.png", "Vorher · wie auf dem Board", g, g, "Stand D-459"),
+               kachel(paket / "nachher" / "detail-schnuerung-oben.png", "Nachher · Schnürung", g, g, "aus der Nähe")]
+    for stand, st in (("nachher", "Nachher"), ("vorher", "Vorher")):
+        for datei, at in SCHUH9:
+            kacheln.append(kachel(paket / stand / f"schuh-{datei}.png", f"{st} · {at}", g, g, "linker Schuh, Ruhehaltung"))
+    return gitter(kacheln, 4, "1 · Der Schuh neben dem Board, vorher und nachher",
+                  "C männlich, Ruhehaltung, Licht wie in der App; außen = Seite mit dem F")
+
+
+def blatt_details9(paket: Path) -> "Image":
+    werte = json.loads((paket / "nachher" / "schuh.json").read_text(encoding="utf-8"))["messwerte"]
+    alt = json.loads((paket / "vorher" / "schuh.json").read_text(encoding="utf-8"))["messwerte"]
+    kacheln = [kachel(paket / "nachher" / f"detail-{datei}.png", titel, 360, 360, zusatz) for datei, titel, zusatz in DETAILS9]
+    z = "Zehenbox: Socke unter der Außenseite des Schafts (mm)"
+    unter = (f"Ruhehaltung: Sohle flach, Standhöhe {_mm(werte['Standhöhe: Sohle unter dem Fuß (mm)'])} "
+             f"(vorher {_mm(alt['Standhöhe: Sohle unter dem Fuß (mm)'])}); Socke im Schuh ≥ {_mm(werte[z])} unter der Außenseite; "
+             f"Senkel {_mm(werte['Senkel: kleinster Abstand über der Socke (mm)'])}, Polster {_mm(werte['Polster: kleinster Abstand über der Socke (mm)'])} über der Socke")
+    return gitter(kacheln, 4, "2 · Schnürung, Zunge, Kragen und Profil aus der Nähe", unter)
+
+
+def blatt_ruecken9(paket: Path) -> "Image":
+    """Rückenlogo vorher und nachher: ganze Figur und Oberkörper von hinten, Latziehen mit der Kamera der App und
+    von hinten in Ausgangs- und Endposition."""
+    lv = json.loads((paket / "vorher" / "ruecken.json").read_text(encoding="utf-8"))["logo_cm"]
+    ln = json.loads((paket / "nachher" / "ruecken.json").read_text(encoding="utf-8"))["logo_cm"]
+
+    def cm(w: float) -> str:
+        return f"{w:.1f} cm".replace(".", ",")
+
+    mass = {st: f"F {cm(l['ruecken_f'])}, FORM {cm(l['ruecken_wortmarke'])} breit" for st, l in (("vorher", lv), ("nachher", ln))}
+    kacheln = []
+    for datei, titel in (("ruecken-ganz", "Rückansicht"), ("ruecken-nah", "Oberkörper")):
+        for stand, st in (("vorher", "Vorher"), ("nachher", "Nachher")):
+            kacheln.append(kachel(paket / stand / f"{datei}.png", f"{st} · {titel}", 300, 300, mass[stand]))
+    for p, pt in (("1.00", "Endposition"), ("0.00", "Ausgangsposition")):
+        for datei, titel in (("latziehen-app", "Kamera der App"), ("latziehen-hinten", "von hinten")):
+            for stand, st in (("vorher", "Vorher"), ("nachher", "Nachher")):
+                kacheln.append(kachel(paket / stand / f"{datei}-{p}.png", f"{st} · {titel}", 300, 300, f"Latziehen, {pt}"))
+    return gitter(kacheln, 4, "Rückenlogo vorher und nachher",
+                  "vorher Verhältnis des Boards (F 3,40 Versalhöhen), nachher des Startbilds (F 2,28, Abstand 0,82); Mitte des Blocks gleich")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen)")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen); 9: D-460 (Schuh und Rückenlogo)")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 9:
+        speichern(blatt_schuh9(paket), ziel, "schuh-1-board")
+        speichern(blatt_details9(paket), ziel, "schuh-2-details")
+        speichern(blatt_ruecken9(paket), ziel, "ruecken-vorher-nachher")
+        speichern(blatt_player7(paket, "3 · Die drei Pilot-Übungen in der Größe des Players",
+                                "Standbilder mit Schuh und Rückenlogo nach D-460; die Schleifen folgen nach deiner Freigabe"),
+                   ziel, "schuh-3-player")
+        return
     if args.runde == 8:
         speichern(blatt_lat8(paket), ziel, "latziehen-griff")
         return

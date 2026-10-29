@@ -2515,4 +2515,21 @@ Rückenlogo im Verhältnis des Startbilds in der Konfiguration (D-459); Schuh un
 | Quellen der Figur (`render.py --hole`) | Grundmodell, Skelett, Gewichte von `makehumancommunity/makehuman` geladen (19.158 Eckpunkte, 18.486 Flächen; unter `makehuman/makehuman` 404); Formziele von `makehumancommunity/mpfb2` erreichbar; Paket von `files2.makehumancommunity.org` gesperrt (Proxy 403), kein Ersatz (`makehuman-assets` über raw 404, `github.com` und `codeload.github.com` 403, PyPI-Paket `makehuman` 1.3.2 ohne die Dateien) |
 | Standbilder Schuh und Rückenlogo | nicht gerendert (Paket von MakeHuman gesperrt) |
 | `pnpm format:check`, `pnpm check:docs` (D-459) | bestanden |
+| CI zum Entwurfs-PR #54 zu f6a5f24 (D-459) | Lauf 40954039802: alle vier Jobs grün, auch E2E (webkit) |
+
+### Phase Programme, Abschnitt 1 · 29.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schuh näher am Board und Rückenlogo als Standbilder (D-460).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen der Figur nach der Freigabe von `*.makehumancommunity.org` (`render.py --hole`) | Paket von MakeHuman geladen (280 MB), Formziele und Grundmodell vollständig |
+| Messung aller 60 Bilder je Pilot-Übung mit dem neuen Schuh (`render.py <Übung> --pruefen`, dann `--nur-messwerte` mit der Prüfung der Zehenbox über der angehobenen Sohle) | Kniebeuge, Bankdrücken, Latziehen: Ferse und Ballen beider Füße 0,0 mm über dem Boden, Verschiebung höchstens 0,1 mm, Standhöhe 27,0 mm; Kragen mindestens 0,95 mm, Polster 0,63 mm, Senkel 4,55 mm, Ösen 4,36 mm über der Socke; Socke im Schuh mindestens 1,0 mm unter der Außenseite der Zehenbox; Socke mindestens 2,76 mm über der Haut; 0 Löcher, 0 sichtbare Punkte der Socke außerhalb des Schuhs; keine Meldungen des Rigs; Messung 46 bis 48 s je Übung |
+| Alter Schuh (Stand D-459) zum Vergleich, Ruhehaltung | Socke außen am Vorfuß bis 4,0 mm durch den Schaft (verdeckt); beim Bankdrücken schwarzer Fleck innen an der Ferse (Rückseite des Futters) |
+| Versuch: Gewichte am Kragen glätten (verworfen) | Fleck weg, aber Kragen beim Bankdrücken −0,77 mm (Futter an der Ferse in der Socke); stattdessen Futter 0,3 mm dick: Fleck weg, Kragen 0,95 mm |
+| Prüfansichten der Füße (24 Bilder: drei Übungen, vier Richtungen, Ausgangs- und Endposition) | selbst angesehen: Schnürung, Polster und Profil in jeder Haltung, nichts schaut durch |
+| Standbilder (`schuh_bilder.py schuh`, `details`, `ruecken`, je mit `--vorher`; `varianten_bilder.py Cm`) | 34 Bilder, je 16 bis 45 s, zusammen rund 15 min; selbst angesehen |
+| Blätter (`tools/uebungen_korrektur_bild.py --runde 9`) | `schuh-1-board.webp` 79 KB, `schuh-2-details.webp` 66 KB, `ruecken-vorher-nachher.webp` 79 KB, `schuh-3-player.webp` 54 KB |
+| Rückenlogo auf der Figur | F 9,50 cm (vorher 14,16), FORM 22,47 cm breit (vorher 22,47), Oberkante des F 13,93 cm unter dem Bündchen (vorher 11,68) |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (D-460) | bestanden; Startansicht 237,8 KB von 250 KB (unverändert, die App ist nicht geändert), Dateien der Übungsbilder 12 von 12; E2E mit WebKit in der CI zum Entwurfs-PR |
 

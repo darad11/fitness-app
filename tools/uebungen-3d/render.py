@@ -5,6 +5,7 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py --hole                  # MakeHuman-Dateien (CC0) laden
     python -I tools/uebungen-3d/render.py kniebeuge                # Schleife, 60 Bilder, ffmpeg
     python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
+    python -I tools/uebungen-3d/render.py kniebeuge --pruefen --nur-messwerte  # nur die Messwerte aller 60 Bilder
     python -I tools/uebungen-3d/render.py kniebeuge --nur-vorschau  # nur das Vorschaubild 240 × 240
     python -I tools/uebungen-3d/render.py kniebeuge --variante D     # anderer Körper zur Probe (D-414)
     python -I tools/uebungen-3d/render.py kniebeuge --grau          # graue Figur ohne Kleidung
@@ -141,6 +142,8 @@ def messen(uebung) -> dict:
             erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
         erg.update(schuhe.bodenkontakt(o["Sohle"], o["Schuhe"]))
         erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts")))
+        if "Senkel" in o:  # Schuh seit D-460: Senkel, Ösen, Polster, Zehenbox
+            erg.update(schuhe.pruefung_neu(uebung.koerper, o["Socken"]))
         sohle = schuhe._verformt(o["Sohle"])[0]
         erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in sohle[::8]]
     else:
@@ -150,9 +153,9 @@ def messen(uebung) -> dict:
     return erg
 
 
-def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None) -> None:
+def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bilder: bool = True) -> None:
     """Prüfansichten (vorn, Seite, Standard) für fünf Phasen, Griff aus der Nähe und Messwerte für
-    alle 60 Bilder."""
+    alle 60 Bilder; mit `bilder=False` nur die Messwerte."""
     s, u, punkte = baue(name, 480, 360, 16, form, variante)
     werte = []
     fuss0 = None
@@ -177,6 +180,8 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None) -> 
         "bilder": werte,
     }
     (arbeit / f"{name}-messwerte.json").write_text(json.dumps(zusammen, ensure_ascii=False, indent=1), encoding="utf-8")
+    if not bilder:
+        return
     for p in (0.0, 0.25, 0.5, 0.75, 1.0):
         u.setzen(p)
         for ansicht in ("vorn", "seite", "standard"):
@@ -244,6 +249,7 @@ def main() -> None:
     ap.add_argument("--variante", choices=sorted(varianten.VARIANTEN), help="Variante zur Probe (D-414)")
     ap.add_argument("--grau", action="store_true", help="graue Figur ohne Kleidung in der Körperform --form")
     ap.add_argument("--pruefen", action="store_true")
+    ap.add_argument("--nur-messwerte", action="store_true", help="mit --pruefen: nur die Messwerte, ohne Prüfansichten")
     ap.add_argument("--ansicht", default="standard", choices=["standard", "vorn", "seite"])
     ap.add_argument("--breite", type=int, default=720)
     ap.add_argument("--hoehe", type=int, default=540)
@@ -261,7 +267,7 @@ def main() -> None:
     arbeit.mkdir(parents=True, exist_ok=True)
     variante = None if args.grau else (args.variante or FIGUR)
     if args.pruefen:
-        pruefen(args.uebung, arbeit, args.form, variante)
+        pruefen(args.uebung, arbeit, args.form, variante, bilder=not args.nur_messwerte)
         return
     s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form, variante)
     name = f"{args.uebung}-{args.variante}" if args.variante else args.uebung

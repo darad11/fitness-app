@@ -1,6 +1,6 @@
 # FORM · Bericht zur Phase Programme
 
-Stand: 29.10.2026, Abschnitt 0 (Vorab) erledigt; Abschnitt 1 begonnen: Rückenlogo in der Konfiguration (D-459), noch nicht gerendert. Schuh und Standbilder stehen aus, weil `*.makehumancommunity.org` in dieser Sitzung gesperrt war (Abschnitt 2.3).
+Stand: 29.10.2026, Abschnitt 0 (Vorab) erledigt; Abschnitt 1 als Standbilder fertig (D-459, D-460). **Halt:** Ich warte auf deine Freigabe von Schuh und Rückenlogo; danach rendere ich die drei Pilot-Übungen neu.
 
 ## 1. Abschnitt 0 – Vorab (D-458)
 
@@ -27,56 +27,83 @@ Bekannte Einschränkungen: –
 Nächste Schritte: Abschnitt 1 (Schuh und Rückenlogo als Standbilder) in einer neuen Sitzung
 ```
 
-## 2. Abschnitt 1 – Schuh und Rückenlogo (begonnen, D-459)
+## 2. Abschnitt 1 – Schuh und Rückenlogo (D-459, D-460)
 
-Auftrag: zuerst nur Standbilder, dann Halt bis zur Freigabe. Vorher geprüft: CI auf `main` zum Merge `8b2ab96` grün (Abschnitt 1), `form-programme` auf dem Stand von `main`.
+Auftrag: zuerst nur Standbilder, dann Halt bis zur Freigabe. Vorher geprüft: CI auf `main` zum Merge `8b2ab96` grün (Abschnitt 1), `form-programme` auf dem Stand von `main`. Der erste Teil (D-459) lag noch ohne Bilder vor, weil `*.makehumancommunity.org` gesperrt war (2.6); nach deiner Freigabe der Adresse ist alles gerendert und geprüft (D-460).
 
-### 2.1 Rückenlogo kleiner (in der Konfiguration)
+### 2.1 Rückenlogo kleiner (D-459)
 
 F über FORM jetzt in der Proportion des vertikalen Logos im Startbild (D-325): F 2,28 Versalhöhen der Wortmarke hoch statt 3,40 wie auf dem Board, Abstand 0,82 statt 0,78. Die Wortmarke bleibt so groß wie bisher, das F wird rund ein Drittel kleiner. Die Mitte des Blocks bleibt, wo sie war, mittig im oberen Rücken. F und Wortmarke kommen weiter unverzerrt aus den Markendateien.
 
-| Maß (C männlich, W 35,5 cm nach D-450) | bisher (Board) | neu (Startbild) |
+| Maß (C männlich) | bisher (Board) | neu (Startbild) |
 |---|---|---|
-| F hoch | 14,2 cm | 9,5 cm (67 %) |
-| Wortmarke breit | 22,5 cm | 22,5 cm |
+| F hoch, auf der Figur gemessen | 14,2 cm | 9,5 cm (67 %) |
+| Wortmarke breit, auf der Figur gemessen | 22,5 cm | 22,5 cm |
 | Abstand F zu FORM | 3,3 cm | 3,4 cm |
 | Block hoch | 21,6 cm | 17,1 cm |
 | Mitte des Blocks unter dem Bündchen | 22,5 cm | 22,5 cm |
-| Oberkante des F unter dem Bündchen | 11,7 cm | 14,0 cm |
+| Oberkante des F unter dem Bündchen, auf der Figur gemessen | 11,7 cm | 13,9 cm |
 
-Der Wert steht in `tools/uebungen-3d/kleidung.py` als `RUECKEN_LOGO`; die Messung des Boards bleibt in `BOARD["ruecken_versal"]`. Setzt man dort die Werte des Boards ein, ergibt die neue Rechnung genau die bisherige Größe und Lage; so entsteht das Vorher-Bild.
+Am Bild des Logos nachgemessen: F 2,28 Versalhöhen hoch, Abstand 0,82, Wortmarke 5,40 Versalhöhen breit, beide waagrecht mittig. Der Wert steht in `tools/uebungen-3d/kleidung.py` als `RUECKEN_LOGO`; die Messung des Boards bleibt in `BOARD["ruecken_versal"]`. Mit den Werten des Boards ergibt die Rechnung genau das bisherige Logo; so entstehen die Vorher-Bilder.
 
-**Geprüft:** nur nachgerechnet (Tabelle) und Syntax. **Nicht geprüft:** Gerendert ist noch nichts; die Rückansicht und das Latziehen mit dem neuen Logo fehlen (2.3).
+### 2.2 Schuh näher am Board (D-460)
 
-### 2.2 Schuh: Plan
+Alles als Geometrie am Schaft von MakeHuman (`schuhe.py`); Farben, Aufteilung und FORM-F wie bisher nach dem Board. Der Schalter `schuhe.NEU = False` zeigt den Schuh bis D-459 (Vorher-Bilder).
 
-Noch nicht umgesetzt; geplant nach dem Board, alles als Geometrie am Schaft von `shoes05` (`schuhe.py`):
+- **Schnürung:** sechs Paar Ösen als kleine Ringe (5 mm) auf dem Rist, von 55,5 bis 78,5 % der Schuhlänge, quer 2,7 cm unten bis 3,7 cm oben auseinander. Flache Senkel (3,8 × 1,8 mm) über Kreuz von Öse zu Öse; wo sie sich kreuzen, liegt eine Bahn über der anderen. Unten ein Steg, oben ein Knoten mit zwei Schlaufen und zwei Enden mit Hülsen. Jeder Punkt sitzt senkrecht über der Oberfläche des Schafts und hängt an denselben Knochen wie der Schaft darunter. Das kleine F auf der Zunge bleibt über der Schnürung sichtbar. Die aufgemalten Fugen entfallen.
+- **Profil an der Laufsohle:** Stollen quer zum Fuß, in der Mitte geteilt, 6,2 mm lang mit 3,4 mm Fuge, 2,5 mm hoch, von 3,5 bis 95,5 % der Länge. Der Körper der Sohle beginnt um die Profilhöhe höher; von der Seite sieht man die Stollen als Kerben in der schwarzen Laufsohle, die jetzt 6 mm hoch reicht.
+- **Angehobene Spitze:** ab 70 % der Länge hebt sich der Schuh zur Spitze hin bis 12 mm. Ferse und Ballen stehen flach; die Farbfelder (Laufsohle, Zehenkappe) folgen der Spitze.
+- **Polster am Knöchel:** schwarzer Wulst (Radius 4 mm) entlang der Oberkante um die Ferse, auf beiden Seiten bis 37 % der Länge (kurz vor der Zunge); seine Enden tauchen in die Kante. Seitlich am Knöchel wölbt sich der Schaft bis 2,5 mm nach außen. Das Futter im Kragen und hinter der Zunge ist schwarz wie auf dem Board.
+- **Zehenbox eines Laufschuhs:** ab 56 % der Länge zur Spitze hin bis 20 % schmaler und 30 % flacher, die Spitze 6 mm zur großen Zehe. Der Schaft bleibt dabei mindestens 3,5 mm über der Socke (an den Ecken 5 mm); wo das nicht reicht, gibt er nach.
 
-- **Schnürung:** Ösen als kleine Ringe in zwei Reihen beiderseits der Zunge, Senkel als Röhren über Kreuz von Öse zu Öse, oben eine Schleife; Gewichte vom nächsten Punkt des Schafts, damit alles mit dem Fuß läuft. Die aufgemalten Fugen entfallen.
-- **Laufsohle:** Profil als echte Stollen unter der Sohle, an der Kante als Kerben sichtbar; Spitze ab dem Ballen angehoben, Ferse und Ballen bleiben flach am Boden.
-- **Polster am Knöchel:** wulstiger Kragen mit schwarzem Futter, seitlich am Knöchel etwas aufgepolstert.
-- **Zehenbox eines Laufschuhs:** vorn schmaler und flacher zulaufend, zur Innenseite gerichtet, statt der runden, flachen Kappe.
-- **Farben, Aufteilung, FORM-F:** wie bisher nach dem Board.
+### 2.3 Zwei alte Durchdringungen behoben
 
-Danach Bodenkontakt, Standhöhe und Durchdringung in allen drei Pilot-Übungen neu messen (`render.py --pruefen`, `schuhe.bodenkontakt`, `schuhe.durchdringung`).
+- **Vorfuß:** Im Schuh von MakeHuman ragte die Socke außen am Vorfuß bis 4,0 mm durch den Schaft. Zu sehen war das nicht, weil Socke und Haut im Schuh ausgeblendet sind; es war aber eine Durchdringung. Der Schaft rückt dort jetzt bis 7,0 mm nach außen, die Socke liegt überall mindestens 1,0 mm unter seiner Außenseite.
+- **Ferse beim Bankdrücken:** Von hinten innen sah man an der Ferse einen schwarzen Fleck, auch im Schuh bis D-459. Es war die Rückseite des Futters: Das Futter lag dort nur 1 mm unter der Außenlage, und seine Dicke von 2 mm wuchs nach außen. Jetzt ist das Futter 0,3 mm dick, der Fleck ist weg. Ein erster Versuch, die Gewichte am Kragen zu glätten, beseitigte den Fleck auch, ließ aber das Futter an der Ferse 0,8 mm in die Socke rücken; verworfen, die Gewichte bleiben wie bisher.
 
-### 2.3 Blockiert: Paket von MakeHuman gesperrt
+### 2.4 Prüfung in den drei Pilot-Übungen
 
-Die Figur entsteht in jeder Sitzung neu aus Dateien, die nicht im Repository liegen (`render.py --hole`). Stand in der Sitzung vom 29.10.2026:
+Alle 60 Bilder jeder Schleife, Figur der App, verformte Netze (`render.py --pruefen`, neue Werte aus `schuhe.pruefung_neu`). Kleinste Werte über die Schleife:
 
-| Quelle | Inhalt | Ergebnis |
-|---|---|---|
-| `raw.githubusercontent.com`, `makehuman/makehuman` (bisherige Adresse) | Grundmodell `base.obj`, Skelett, Gewichte, `LICENSE.md` | 404 auf jede Datei |
-| `raw.githubusercontent.com`, `makehumancommunity/makehuman` (neue Adresse in `render.py`) | dieselben Dateien unter denselben Pfaden | geladen; Grundmodell mit 19.158 Eckpunkten und 18.486 Flächen |
-| `raw.githubusercontent.com`, `makehumancommunity/mpfb2` | Körperformen (Formziele) | erreichbar (200) |
-| `files2.makehumancommunity.org` | Paket `makehuman_system_assets_cc0.zip`: Haut, Augen, Haare, Brauen, Wimpern, Schuhform `shoes05` | gesperrt (Proxy 403); `files.`, `static.` und `www.makehumancommunity.org` ebenfalls nicht erreichbar |
-| Ersatz für das Paket | `makehumancommunity/makehuman-assets` über `raw.githubusercontent.com`; `github.com`, `codeload.github.com`; PyPI-Paket `makehuman` 1.3.2 | 404; 403; ohne die Dateien |
+| | Kniebeuge | Bankdrücken | Latziehen | bis D-459 |
+|---|---|---|---|---|
+| Ferse und Ballen beider Füße über dem Boden | 0,0 mm | 0,0 mm | 0,0 mm | 0,0 mm |
+| Verschiebung der Sohle über die Schleife | 0,1 mm | 0,0 mm | 0,1 mm | 0,1 mm |
+| Standhöhe (Fuß im Schuh über dem Boden) | 27,0 mm | 27,0 mm | 27,0 mm | 27,0 mm |
+| Kragen innen über der Socke | 1,59 mm | 0,95 mm | 1,59 mm | 0,95 mm |
+| Polster über der Socke | 1,60 mm | 0,63 mm | 1,60 mm | – |
+| Senkel / Ösen über der Socke | 4,55 / 4,36 mm | 4,55 / 4,36 mm | 4,55 / 4,36 mm | – |
+| Socke im Schuh unter der Außenseite der Zehenbox | 1,0 mm | 1,0 mm | 1,0 mm | −4,0 mm (verdeckt) |
+| Socke über der Haut | 2,86 mm | 2,76 mm | 2,96 mm | 2,8 mm |
+| Löcher über dem Schuh (Punkte) | 0 | 0 | 0 | 0 |
+| Sichtbare Socke außerhalb des Schuhs (Punkte) | 0 | 0 | 0 | – |
 
-Ohne das Paket fehlen Haut, Haare und die Form des Schuhs; die Figur der Pilot-Übungen lässt sich nicht wie bisher aufbauen, und am Schuh ist nichts zu prüfen. Blender 4.2 als Python-Modul kommt über PyPI, die Adresse ist frei. Die Installation lief hier langsam; der erste Versuch endete an der Grenze von 30 Minuten für Hintergrundaufgaben, ein zweiter läuft mit längerer Grenze.
+Positive Werte heißen Luft, negative Durchdringung. Die Spalte „bis D-459“ stammt aus der Prüfung von D-451 (`form-uebungen-report.md`); die Zehenbox des alten Schuhs habe ich in der Ruhehaltung gemessen (der Fuß bewegt sich im Schuh nicht), Standhöhe aus derselben Messung; Polster, Senkel, Ösen und die sichtbare Socke gab es vorher nicht als Prüfwert. Der Rig meldet nichts; Kniebeuge: Knie mindestens 6,9 cm hinter der Schuhspitze, Stange 0,1 cm über der Mitte der Sohle. Die Prüfansichten der Füße (je Übung von außen, vorn, hinten und innen, in Ausgangs- und Endposition, 24 Bilder) habe ich mir angesehen: Schnürung, Polster und Profil sitzen in jeder Haltung, nirgends schaut etwas durch.
 
-**Was es braucht:** `files2.makehumancommunity.org` (oder `*.makehumancommunity.org`) als erlaubte Adresse in den Netzwerkeinstellungen der Umgebung; am 28.10.2026 war die Adresse frei (`docs/licenses-data.md` Abschnitt 8). Danach: Schuh nach 2.2, Standbilder (Schuh von außen, innen, hinten und oben neben dem Board; Rückenlogo vorher und nachher in der Rückansicht und beim Latziehen; die drei Pilot-Übungen in Player-Größe), dann Halt bis zur Freigabe.
+### 2.5 Standbilder
 
-### 2.4 Bericht zum Paket
+In `docs/screens/uebungen/`, gerendert mit `tools/uebungen-3d/schuh_bilder.py` und `varianten_bilder.py` (Licht und Kantenlicht wie in der App, C männlich), Blätter mit `tools/uebungen_korrektur_bild.py --runde 9`:
+
+- `schuh-1-board.webp`: das Board, beide Schuhe aus seiner Richtung vorher und nachher, der linke Schuh von außen, innen, hinten und oben, nachher und vorher.
+- `schuh-2-details.webp`: Schnürung von oben und von der Seite, Zunge mit F, Kragen außen, hinten und innen, Spitze und Ferse mit Profil.
+- `ruecken-vorher-nachher.webp`: Rückansicht der ganzen Figur und des Oberkörpers, Latziehen mit der Kamera der App und von hinten, in End- und Ausgangsposition, jeweils vorher und nachher.
+- `schuh-3-player.webp`: Kniebeuge unten, Bankdrücken oben und unten, Latziehen unten in der Größe des großen Players (390 px), dazu das Vorschaubild (56 px).
+
+Renderzeit je Standbild 16 bis 45 s (560 × 560, 600 × 900 und 720 × 540 Pixel, 40 bis 48 Proben), zusammen mit dem Aufbau der Szenen rund 15 Minuten; die Messung aller 180 Bilder der drei Schleifen knapp 2,5 Minuten.
+
+### 2.6 Quellen
+
+In der Sitzung vom 29.10.2026 war `*.makehumancommunity.org` zuerst gesperrt (Proxy 403); dort liegt das Paket mit Haut, Augen, Haaren und der Form des Schuhs. Grundmodell, Skelett und Gewichte lädt `render.py --hole` seitdem aus `makehumancommunity/makehuman` (unter `makehuman/makehuman` lieferte `raw.githubusercontent.com` 404), die Körperformen weiter aus `makehumancommunity/mpfb2`. Nach deiner Freigabe der Adresse lud das Paket in rund zwei Minuten (280 MB). Blender 4.2 als Python-Modul kommt über PyPI.
+
+### 2.7 Abweichungen und offene Punkte
+
+- **Form von MakeHuman:** Der Schaft ist weiter `shoes05`, angepasst. Der Rist ist geschlossen (keine Lasche zwischen zwei Ösenleisten), die Schnürung liegt darauf. Nähte, Netzeinsätze und Ziernähte des Boards gibt es nicht.
+- **Innen flach:** Die angehobene Spitze ist nur am Schuh; die Zehen der Figur liegen weiter flach, an der Spitze liegen ihre Unterseiten in der Sohle (verdeckt).
+- **Profil von unten:** Die App-Kamera sieht die Sohle nie von unten; das Profil zeigt sich an der Kante und an der angehobenen Spitze.
+- **Polster beim Bankdrücken:** 0,63 mm über der Socke, weniger als in den anderen Übungen (1,60 mm), aber ohne Durchdringung.
+- **In Player-Größe** ist der Schuh rund 30 Pixel lang; Schnürung und Profil sind dort nur angedeutet. Deutlich sieht man sie auf den Detailbildern.
+
+### 2.8 Berichte zu den Paketen
 
 ```
 Arbeitspaket: D-459 Phase Programme, Abschnitt 1 (erster Teil): Rückenlogo im Verhältnis des Startbilds
@@ -85,6 +112,19 @@ Geänderte Dateien: tools/uebungen-3d/kleidung.py, tools/uebungen-3d/render.py, 
 Technische Entscheidungen: D-459
 Ausgeführte Tests: Syntax (py_compile), Nachrechnung der Maße, Laden des Grundmodells von der neuen Adresse, pnpm format:check, pnpm check:docs; CI zum Entwurfs-PR
 Ergebnis: bestanden; nicht gerendert
-Bekannte Einschränkungen: Paket von MakeHuman in der Sitzung gesperrt (2.3); Schuh nicht umgesetzt
+Bekannte Einschränkungen: Paket von MakeHuman in der Sitzung zuerst gesperrt (2.6); Schuh noch nicht umgesetzt (folgte mit D-460)
 Nächste Schritte: files2.makehumancommunity.org freigeben, dann Schuh und Standbilder, Halt bis zur Freigabe
 ```
+
+```
+Arbeitspaket: D-460 Phase Programme, Abschnitt 1: Schuh näher am Board und Rückenlogo als Standbilder
+Umgesetzte Funktionen: keine in der App; Werkzeug: Schnürung, Profil, angehobene Spitze, Polster am Knöchel, Zehenbox, schwarzes und dünnes Futter (schuhe.py), Prüfwerte pruefung_neu, render.py --nur-messwerte, schuh_bilder.py, Blätter Runde 9; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/schuhe.py, tools/uebungen-3d/render.py, tools/uebungen-3d/schuh_bilder.py (neu), tools/uebungen_korrektur_bild.py, docs/screens/uebungen/schuh-1-board.webp, schuh-2-details.webp, ruecken-vorher-nachher.webp, schuh-3-player.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-460
+Ausgeführte Tests: Messung aller 60 Bilder der drei Pilot-Übungen (render.py --pruefen und --nur-messwerte), Prüfansichten der Füße angesehen, Standbilder angesehen; pnpm format:check, pnpm check:docs, pnpm build, pnpm check:bundle; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 2.4)
+Bekannte Einschränkungen: 2.7
+Nächste Schritte: Halt bis zur Freigabe; danach die drei Pilot-Übungen als Schleifen mit Schuh und Rückenlogo, dann Abschnitt 2
+```
+
+**Halt:** Ich warte auf deine Freigabe von Schuh und Rückenlogo. Danach rendere ich die drei Pilot-Übungen als Schleifen neu.

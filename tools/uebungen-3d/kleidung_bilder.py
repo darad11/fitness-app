@@ -6,6 +6,8 @@ Abschnitt 6) in der Figur der App (`render.FIGUR`), Licht und Kantenlicht wie in
     python -I tools/uebungen-3d/kleidung_bilder.py handgelenk <ordner>  # Bankdrücken: Handgelenk in fünf Phasen
     python -I tools/uebungen-3d/kleidung_bilder.py griff <ordner>       # Bankdrücken: Griffblatt, Phasen 0 und 0,5
     python -I tools/uebungen-3d/kleidung_bilder.py handgelenk <ordner> --vorher  # Griff im Stand D-451 (vor D-452)
+    python -I tools/uebungen-3d/kleidung_bilder.py latziehen <ordner>   # Latziehen: Handgelenk und Griff (D-455)
+    python -I tools/uebungen-3d/kleidung_bilder.py latziehen <ordner> --vorher   # Griff im Stand D-454
 
 `stand` und `nah` in der Ruhehaltung ohne Geräte (Kniebeuge ohne Stange), `handgelenk` von der Seite längs der
 Stange (Scheiben, Hülsen und Verschlüsse ausgeblendet) und vom Fußende. Jeder Befehl schreibt `<befehl>.json`
@@ -150,20 +152,62 @@ def griff(ziel: Path) -> dict:
     return zeiten
 
 
+# Latziehen (D-455): von vorn sieht man das seitliche Abknicken, von der Seite die Streckung (15° von vorn, damit
+# die Stange in der Hand zu sehen ist; ihre gebogenen Enden ausgeblendet, sie stünden vor der Hand), von hinten den
+# Handrücken mit dem Daumen, schräg von hinten oben den Griff wie in der Kamera der App.
+# Je Ansicht: Name, Richtung, Neigung, Radius um das Handgelenk (m), ausgeblendete Teile
+LAT_ANSICHTEN = (("vorn", 0, 5, 0.11, ()), ("seite", 75, 5, 0.11, ("Ende", "Kappe")), ("hinten", 180, 10, 0.08, ()),
+                 ("schraeg", 135, 25, 0.08, ()))
+
+
+def latziehen(ziel: Path) -> dict:
+    """Latziehen, linke Hand mit Unterarm in den Phasen 0 bis 1 aus `LAT_ANSICHTEN` (Säule und Gewichtsblock
+    ausgeblendet); Winkel des Handgelenks je Phase."""
+    G = 480
+    s, u, _ = render.baue("latziehen", G, G, 32, variante=render.FIGUR)
+    for o in bpy.data.objects:
+        if o.name.startswith(("Saeule", "Gewichtsblock")):
+            o.hide_render = True
+    werte = {}
+    for p in (0.0, 0.25, 0.5, 0.75, 1.0):
+        u.setzen(p)
+        rig = u.rig
+        W = rig.welt(rig.punkt("wrist.L", rig.kopf["wrist.L"]))
+        E = rig.welt(rig.punkt("lowerarm01.L", rig.kopf["lowerarm01.L"]))
+        mitte = W + (W - E).normalized() * 0.02
+        netz = _netz(u.koerper)
+        werte[f"{p:.2f}"] = {k: round(u.werte[k], 1) for k in u.werte if k.startswith("Handgelenk") and "(" in k}
+        for name, richtung, neigung, radius, aus in LAT_ANSICHTEN:
+            for o in bpy.data.objects:
+                if o.name.startswith(("Ende", "Kappe")):
+                    o.hide_render = o.name.startswith(aus) if aus else False
+            punkte = [q for q in netz if (q - mitte).length < radius]
+            for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
+                bpy.data.objects.remove(o)
+            z, abstand, h = szene.bildausschnitt(punkte, richtung, neigung, G, G, rand=0.06)
+            szene.licht_und_kamera(z, richtung, abstand, h)
+            s.render.filepath = str(ziel / f"lat-{name}-{p:.2f}.png")
+            bpy.ops.render.render(write_still=True)
+    return werte
+
+
 # Griff beim Bankdrücken bis D-451; D-452 hat nur diese drei Werte geändert (dazu die Messung)
 GRIFF_D451 = {"GRIFF_LAGE": 0.68, "SCHRAEG": 18.0, "STRECKUNG": 12.0}
+# Griff beim Latziehen bis D-454; D-455 hat nur diese zwei Werte geändert
+LAT_D454 = {"GRIFF_LAGE": 0.72, "SCHRAEG": 6.0}
 
 
 def main() -> None:
     befehl, ziel = sys.argv[1], Path(sys.argv[2])
     ziel.mkdir(parents=True, exist_ok=True)
     if "--vorher" in sys.argv:
-        from uebungen import Bankdruecken
+        from uebungen import Bankdruecken, Latziehen
 
-        for name, wert in GRIFF_D451.items():
-            setattr(Bankdruecken, name, wert)
+        klasse, alt = (Latziehen, LAT_D454) if befehl == "latziehen" else (Bankdruecken, GRIFF_D451)
+        for name, wert in alt.items():
+            setattr(klasse, name, wert)
     t0 = time.time()
-    werte = {"stand": stand, "nah": nah, "handgelenk": handgelenk, "griff": griff}[befehl](ziel)
+    werte = {"stand": stand, "nah": nah, "handgelenk": handgelenk, "griff": griff, "latziehen": latziehen}[befehl](ziel)
     (ziel / f"{befehl}.json").write_text(json.dumps({"werte": werte, "gesamt_s": round(time.time() - t0, 1)},
                                                      ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{befehl}: {round(time.time() - t0)} s")

@@ -504,9 +504,17 @@ class Latziehen(Uebung):
     SCHULTER_HOCH = 22.0  # Schlüsselbein angehoben bei gestreckten Armen
     ELLBOGEN_OBEN = 168.0
     UNTERARM = 0.0  # Unterarm-Neigung nach außen (Grad), die der Ellbogen anstrebt
-    # Stange leicht schräg in der Hand (breiter Griff): Hand und Unterarm bleiben oben und unten in
-    # einer Linie (Handgelenk höchstens etwa 13° seitlich statt 33°).
-    SCHRAEG = 6.0
+    # Stange schräg in der Hand (breiter Griff), vom Zeigefinger zum Handballen an der Kleinfingerseite: 20° statt
+    # 6° (D-455). Beim breiten Griff neigt sich der Unterarm oben und unten nach außen (die Armlängen lassen ihn
+    # nicht senkrecht stehen), in der Mitte etwas nach innen; das Handgelenk knickte dadurch bis 30,6° zur
+    # Daumenseite ab (an der Längsachse der Mittelhand gemessen). Mit 20° liegt es in der ganzen Bewegung zwischen
+    # −13,4° und +13,3°; jedes Grad Schräge verschiebt den Verlauf um gut 1°, die Bewegung bleibt
+    SCHRAEG = 20.0
+    # Lage der Stange in der Hand (Anteil Handgelenk→Fingeransatz): 0,65 statt 0,72 (D-455), etwas tiefer in der
+    # Hohlhand; weiter vorn drücken die Finger bei der größeren Schräge tiefer in die Stange
+    GRIFF_LAGE = 0.65
+    # Ziel der Streckung bei der Suche der Handdrehung (Grad); die Streckung bleibt so zwischen −2° und +4°
+    STRECKUNG = 0.0
     UNTEN_DZ = 0.04  # Stange unten auf Höhe der Schlüsselbeine (obere Brust)
     FUESSE = 0.17  # halber Abstand der Fußgelenke, m
     BRUST = 0.835  # obere Brust unter den Schlüsselbeinen (Anteil Hüfte–Halsansatz)
@@ -516,7 +524,7 @@ class Latziehen(Uebung):
         rig = self.rig
         # Daumen über den Fingern wie beim Bankdrücken (D-440); bis D-439 als Ring (D-425), weil die frühere
         # Konstruktion über den Fingern an der dünnen Latzugstange als Haken abstand
-        self.griff = {s: rig.griff(s, 0.72, 0.012, schraeg=self.SCHRAEG) for s in "LR"}
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, 0.012, schraeg=self.SCHRAEG) for s in "LR"}
         self.griff_x = self.GRIFF * self.mass
         knie_welt = rig.welt(rig.kopf["lowerleg01.L"]).z
         self.sitz_oben = round(knie_welt - 0.005, 3)
@@ -603,8 +611,8 @@ class Latziehen(Uebung):
             z = (lo + hi) / 2
             rig.zuruecksetzen()
             self._torso(0.0)
-            arme = [rig.arm(s, self.griff[s], Vector((x * self.griff_x, y, z)), X * x, Z, 0.0, ellbogen=self._regel(s))
-                    for s, x in (("L", 1), ("R", -1))]
+            arme = [rig.arm(s, self.griff[s], Vector((x * self.griff_x, y, z)), X * x, Z, self.STRECKUNG,
+                            ellbogen=self._regel(s)) for s, x in (("L", 1), ("R", -1))]
             if max(a["ellbogenwinkel"] for a in arme) < self.ELLBOGEN_OBEN and not rig.meldungen:
                 lo = z
             else:
@@ -646,7 +654,8 @@ class Latziehen(Uebung):
         B = self._stange(p)
         arme = {}
         for s, x in (("L", 1), ("R", -1)):
-            arme[s] = rig.arm(s, self.griff[s], B + X * (x * self.griff_x), X * x, Z, 0.0, ellbogen=self._regel(s))
+            arme[s] = rig.arm(s, self.griff[s], B + X * (x * self.griff_x), X * x, Z, self.STRECKUNG,
+                              ellbogen=self._regel(s))
         stange = self.teile["stange"]
         stange.location = rig.welt(B) + Vector((0, 0, 0.0))
         rolle = self.teile["rolle"].location

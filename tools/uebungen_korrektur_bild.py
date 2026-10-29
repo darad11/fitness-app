@@ -15,6 +15,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur5 --runde 5   # D-443: vorher/nachher Daumen nach Handfoto, ein Shorts-F, Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur6 --runde 6   # D-445: Daumen, zwei Hebel und Folgeänderung, Hand im Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/kleidung --runde 7     # D-453: Kleidung nach dem Board, Handgelenk
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/latziehen --runde 8   # D-455: Griffblatt Latziehen vorher/nachher
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -435,15 +436,42 @@ def blatt_griff7(paket: Path) -> "Image":
                   "vorher: Stange 18° schräg bei 0,68 der Hand; nachher: 12° schräg, etwas tiefer zum Handballen (0,65); Daumen nachgeklappt wie freigegeben")
 
 
+# Runde „Pilot-Übungen mit der neuen Kleidung“ (D-455): Griffblatt Latziehen aus `kleidung_bilder.py latziehen`,
+# Ordner `<paket>/vorher/` (Stand D-454) und `<paket>/nachher/` mit lat-<Ansicht>-<Phase>.png und latziehen.json
+STAND8 = {"vorher": "vorher", "nachher": "nachher"}
+LAT8 = [("vorher", "vorn", "von vorn"), ("nachher", "vorn", "von vorn"), ("nachher", "seite", "Seite"),
+        ("nachher", "hinten", "von hinten"), ("nachher", "schraeg", "schräg")]
+
+
+def blatt_lat8(paket: Path) -> "Image":
+    """Zeilen: vorher und nachher von vorn, nachher von der Seite, von hinten und schräg; Spalten: Phasen 0 bis 1."""
+    phasen = ["0.00", "0.25", "0.50", "0.75", "1.00"]
+    namen = {"0.00": "oben", "0.25": "Viertel", "0.50": "Mitte", "0.75": "Dreiviertel", "1.00": "unten"}
+    werte = {st: json.loads((paket / st / "latziehen.json").read_text(encoding="utf-8"))["werte"] for st in STAND8}
+    kacheln = []
+    for stand, ansicht, at in LAT8:
+        for p in phasen:
+            w = werte[stand][p]
+            mass = (f"hinten {_grad(w['Handgelenk gestreckt (Grad)'])} · seitlich {_grad(w['Handgelenk seitlich (Grad, + zum Daumen)'])}"
+                    f" · gesamt {_grad(w['Handgelenk gesamt (Grad)'])}")
+            kacheln.append(kachel(paket / stand / f"lat-{ansicht}-{p}.png", f"{STAND8[stand]} · {namen[p]} · {at}", 300, 300, mass))
+    return gitter(kacheln, 5, "Griffblatt Latziehen vorher und nachher",
+                  "linke Hand; Winkel an der Längsachse der Mittelhand: hinten = gestreckt, seitlich + zum Daumen; "
+                  "vorher Stand D-454 (Stange 6° schräg bei 0,72 der Hand), nachher D-455 (20° schräg bei 0,65)")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board)")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen)")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 8:
+        speichern(blatt_lat8(paket), ziel, "latziehen-griff")
+        return
     if args.runde == 7:
         speichern(blatt_board7(paket), ziel, "kleidung-1-board")
         speichern(blatt_nah7(paket), ziel, "kleidung-2-nah")

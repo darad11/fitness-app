@@ -1566,6 +1566,26 @@ Deine Nachricht vom 29.10.2026 nach Abschnitt 21: Die Standbilder sind freigegeb
 
 Danach folgen die Übungen der Programme nach dem Animationsplan, beginnend mit „Ganzkörper A/B“. Den Merge von PR #53 gibst du nach deinem Gerätetest frei.
 
+### 22.2 Handgelenk beim Latziehen (D-455)
+
+**Befund.** Gemessen wie beim Bankdrücken an der Längsachse der Mittelhand knickte die Hand beim Latziehen zur Daumenseite ab: oben 24,8°, in der Mitte nur 2,4°, unten 30,6°. Nach hinten war sie kaum gebeugt, höchstens 2,8°. Die Ursache ist der breite Griff: Oben stehen die Arme als V über dem Kopf, unten kommen die Ellbogen mit diesen Armlängen nicht unter die Hände. Der Unterarm neigt sich dort nach außen (oben 16,6°, unten 22,7°), in der Mitte etwas nach innen; die Hand folgte ihm nicht.
+
+**Geändert.** Die Stange liegt jetzt 20° schräg in der Hand statt 6°, vom Zeigefinger zum Handballen an der Kleinfingerseite, und etwas tiefer in der Hohlhand (0,65 statt 0,72 der Strecke Handgelenk bis Fingeransatz). So folgt die Hand dem Unterarm. Bewegung, Bahn der Stange und Kamera bleiben gleich. Untersucht habe ich 80 Einstellungen von Lage, Schräge und Streckung. Eine Schräge in die andere Richtung macht es schlechter; weiter vorn in der Hand drücken die Finger bei dieser Schräge tiefer in die Stange (bei 0,72 bis 5,6 mm, bei 0,78 bis 9 mm).
+
+**Messwerte über alle 60 Bilder:**
+
+| | vorher | nachher |
+|---|---|---|
+| zur Seite (+ zum Daumen) | +2,5 bis +30,6° | −13,3 bis +13,3° |
+| nach hinten | −2,3 bis +2,8° | −2,0 bis +3,9° |
+| gesamt | bis 30,6° | bis 13,8° |
+
+**Griff.** Die Finger schließen wie bisher um die Stange (4 mm eingedrückt, 380 Punkte in Kontakt), der Griff löst sich in keinem Bild. Der Daumen liegt über den Fingern, seine Beere berührt die Stange mit höchstens 1,2 mm. Sichtbar ragt kein Teil der Hand in die Stange; die Haut der Handfläche liegt wie bei allen Griffen seit D-430 bis 11 mm in ihr, die Stange verdeckt das.
+
+**Griffblatt** `docs/screens/uebungen/latziehen-griff.webp`: oben vorher und nachher von vorn, darunter nachher von der Seite, von hinten und schräg von hinten oben, jeweils oben, nach einem Viertel, in der Mitte, nach drei Vierteln und unten, mit den Winkeln. Von vorn sieht man den Unterschied am besten: Vorher knickt die Hand unten deutlich zur Daumenseite, nachher bildet sie fast eine Linie mit dem Unterarm.
+
+**Was bleibt:** zur Seite bis 13,3°, oben und unten zur Daumenseite, in der Mitte zum kleinen Finger. Das kommt daher, dass sich der Unterarm über die Bewegung unterschiedlich neigt; eine feste Lage der Stange in der Hand kann das nur ausgleichen, nicht aufheben.
+
 ### 22.5 Berichte je Paket
 
 ```
@@ -1577,5 +1597,16 @@ Ausgeführte Tests: pnpm format:check, check:docs
 Ergebnis: bestanden
 Bekannte Einschränkungen: –
 Nächste Schritte: Handgelenk beim Latziehen prüfen und korrigieren, dann die drei Pilot-Übungen als Schleifen
+```
+
+```
+Arbeitspaket: D-455 Handgelenk beim Latziehen annähernd gerade
+Umgesetzte Funktionen: Werkzeug der Figur (die Schleife der App folgt mit dem nächsten Paket), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, kleidung_bilder.py, tools/uebungen_korrektur_bild.py (Runde 8); Blatt latziehen-griff.webp; Dokumente
+Technische Entscheidungen: D-455
+Ausgeführte Tests: Raster mit 80 Einstellungen; render.py latziehen --pruefen über alle 60 Bilder; Griffblatt vorher und nachher; py_compile; pnpm format:check, check:docs, build, check:bundle
+Ergebnis: bestanden
+Bekannte Einschränkungen: zur Seite bleiben bis 13,3°, weil sich der Unterarm über die Bewegung unterschiedlich neigt
+Nächste Schritte: die drei Pilot-Übungen als Schleifen rendern und einbauen
 ```
 

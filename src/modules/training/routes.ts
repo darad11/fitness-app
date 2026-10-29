@@ -1,5 +1,5 @@
 import { data, type RouteObject } from 'react-router';
-import { loadCoreExercises } from '@/modules/exercises';
+import { loadCoreExercises, loadExerciseVisuals } from '@/modules/exercises';
 
 /** Bereich Training. Seiten und gebündelte Daten werden erst beim Aufruf geladen (D-242). */
 export const trainingRoutes: RouteObject[] = [
@@ -35,9 +35,13 @@ export const trainingRoutes: RouteObject[] = [
   },
   {
     path: 'training/programme/:id/tage/:dayId',
-    lazy: async () => ({
-      Component: (await import('./ui/programs/DayEditPage')).DayEditPage,
-    }),
+    lazy: async () => {
+      const [{ DayEditPage }] = await Promise.all([
+        import('./ui/programs/DayEditPage'),
+        loadExerciseVisuals(),
+      ]);
+      return { Component: DayEditPage };
+    },
   },
   {
     path: 'training/vorlagen/:key',
@@ -45,6 +49,7 @@ export const trainingRoutes: RouteObject[] = [
       const [{ SampleTemplatePage }, { loadSampleTemplate }] = await Promise.all([
         import('./ui/SampleTemplatePage'),
         import('./data/sampleTemplates'),
+        loadExerciseVisuals(),
       ]);
       return {
         Component: SampleTemplatePage,
@@ -75,12 +80,23 @@ export const trainingRoutes: RouteObject[] = [
   {
     path: 'training/einheit/:id',
     handle: { fullscreen: true },
-    lazy: async () => ({
-      Component: (await import('./ui/player/SessionPage')).SessionPage,
-    }),
+    // Visuals vor dem Player (D-397): kein Abruf mehr unterwegs, wenn man gleich weiterwechselt.
+    lazy: async () => {
+      const [{ SessionPage }] = await Promise.all([
+        import('./ui/player/SessionPage'),
+        loadExerciseVisuals(),
+      ]);
+      return { Component: SessionPage };
+    },
   },
   {
     path: 'training/einheit/:id/zusammenfassung',
-    lazy: async () => ({ Component: (await import('./ui/SummaryPage')).SummaryPage }),
+    lazy: async () => {
+      const [{ SummaryPage }] = await Promise.all([
+        import('./ui/SummaryPage'),
+        loadExerciseVisuals(),
+      ]);
+      return { Component: SummaryPage };
+    },
   },
 ];

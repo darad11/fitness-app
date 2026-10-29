@@ -1,0 +1,29 @@
+/*
+ * Zwei Phasen einer Übung im Wechsel (D-397): Ausgangsposition, dann Endposition, je etwa 1,2 s,
+ * mit kurzem Überblenden. Nur Deckkraft, keine künstliche Bewegung, die die Übung verfälscht
+ * (Leitlinien Kapitel 7). Bei weniger Bewegung zeigt die Komponente beide Bilder nebeneinander.
+ * Nachgeladen mit den Seiten, die Übungen zeigen; nicht in der Startansicht.
+ */
+.demo-phases .demo-phase-end {
+  animation: demo-phase 2.4s ease-in-out infinite;
+}
+
+@keyframes demo-phase {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  50%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-phases .demo-phase-end {
+    animation: none;
+  }
+}

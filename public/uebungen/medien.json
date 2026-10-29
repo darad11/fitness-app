@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "sources": {
+    "form_3d_pilot": {
+      "name": "FORM, eigene 3D-Darstellung (Pilot), Grundmodell MakeHuman",
+      "url": "https://github.com/makehuman/makehuman",
+      "license": "Grundmodell, Haut, Augen und Haare CC0 1.0 (MakeHuman), Darstellung eigenes Werk",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "commercialUse": true
+    }
+  },
+  "visuals": {
+    "back_squat_barbell": {
+      "preview": { "src": "medien/kniebeuge-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/kniebeuge.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/kniebeuge.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/kniebeuge-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Kniebeuge mit Langhantel auf dem oberen Rücken, schräg von vorn: Hüfte nach unten und hinten bis Oberschenkel waagrecht, Knie über den Zehen, Füße flach am Boden, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "bench_press_barbell": {
+      "preview": { "src": "medien/bankdruecken-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/bankdruecken.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/bankdruecken.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/bankdruecken-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Bankdrücken auf der Flachbank, schräg von vorn oben: Stange von gestreckten Armen bis zur unteren Brust und zurück, Handgelenke gerade über den Ellbogen, Füße flach am Boden.",
+      "source": "form_3d_pilot"
+    },
+    "lat_pulldown": {
+      "preview": { "src": "medien/latziehen-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/latziehen.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/latziehen.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/latziehen-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Handgelenke gerade, Oberschenkel unter dem Polster.",
+      "source": "form_3d_pilot"
+    }
+  }
+}

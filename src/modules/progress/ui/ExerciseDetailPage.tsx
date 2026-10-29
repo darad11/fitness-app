@@ -1,20 +1,15 @@
-import {
-  Archive,
-  ArchiveRestore,
-  ArrowLeftRight,
-  ChevronRight,
-  Lightbulb,
-  LineChart,
-  Pencil,
-} from 'lucide-react';
+import { Archive, ArchiveRestore, ChevronRight, Lightbulb, LineChart, Pencil } from 'lucide-react';
 import { Suspense, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   CustomExerciseDialog,
   describeExercise,
+  ExerciseDemo,
+  ExerciseGuideView,
+  ExerciseMuscleMap,
   ExercisePrefsCard,
+  ExerciseThumb,
   findAlternatives,
-  MuscleTags,
   setCustomExerciseArchived,
   useExercisePrefs,
   useExercises,
@@ -25,8 +20,9 @@ import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/setting
 import { formatSetValues, useHistoryRows } from '@/modules/training';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tExerciseMedia } from '@/shared/i18n/de-exercise-media';
 import { tSession } from '@/shared/i18n/de-session';
-import { Badge, Button, ButtonLink, Card, LinkList, PageHeader, Skeleton, Tabs } from '@/shared/ui';
+import { Badge, Button, ButtonLink, Card, PageHeader, Skeleton, Tabs } from '@/shared/ui';
 import { ExerciseNotFound } from './ExerciseProgressPage';
 
 const RECENT_LIMIT = 5;
@@ -59,7 +55,7 @@ export function ExerciseDetailPage() {
   );
 }
 
-type Section = 'muscles' | 'alternatives';
+type Section = 'guide' | 'muscles' | 'alternatives';
 
 function Detail({
   exercise,
@@ -76,7 +72,7 @@ function Detail({
   const rows = useHistoryRows();
   const [editing, setEditing] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [section, setSection] = useState<Section>('muscles');
+  const [section, setSection] = useState<Section>('guide');
   const custom = exercise.source === 'custom';
   // Alternativen aus der vorhandenen Logik des Players (AK-TRN-09), ohne archivierte Übungen.
   const alternatives = useMemo(
@@ -105,7 +101,17 @@ function Detail({
         subtitle={exercise.aliases.length > 0 ? exercise.aliases.join(' · ') : undefined}
         back={{ to: '/uebungen', label: t.exercises.title }}
       />
-      <MuscleTags muscles={exercise.primaryMuscles} className="-mt-2 mb-5" />
+      {/* Demonstration der Übung (D-397); ohne Visual das Symbol in der Kachel mit den
+          Muskel-Etiketten, wie bisher die Etiketten allein. */}
+      <Suspense fallback={null}>
+        <ExerciseDemo
+          exerciseId={exercise.id}
+          name={exercise.name}
+          muscles={exercise.primaryMuscles}
+          variant="large"
+          className="-mt-2 mb-5 max-w-md"
+        />
+      </Suspense>
       {custom ? (
         <div className="mb-4 flex flex-wrap gap-2">
           <Button
@@ -172,14 +178,29 @@ function Detail({
         <Tabs
           label={t.exercises.sections}
           items={[
+            { key: 'guide', label: tExerciseMedia.tabGuide },
             { key: 'muscles', label: t.exercises.tabMuscles },
             { key: 'alternatives', label: t.exercises.tabAlternatives },
           ]}
           selected={section}
           onSelect={setSection}
         >
-          {section === 'muscles' ? (
+          {section === 'guide' ? (
+            // Ausführung je Übung mit Quellen (D-398); eigene Übungen haben keinen Text.
             <Card>
+              <Suspense fallback={<Skeleton className="h-24" />}>
+                <ExerciseGuideView exercise={exercise} />
+              </Suspense>
+            </Card>
+          ) : section === 'muscles' ? (
+            <Card>
+              {/* Muskelkarte (D-401): Hauptmuskeln Lime, mitarbeitende Lime mit wenig Deckkraft. */}
+              <Suspense fallback={<Skeleton className="mb-4 h-24" />}>
+                <ExerciseMuscleMap
+                  primary={exercise.primaryMuscles}
+                  secondary={exercise.secondaryMuscles}
+                />
+              </Suspense>
               <dl className="grid gap-3 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm text-muted">{t.session.info.primary}</dt>
@@ -207,14 +228,28 @@ function Detail({
               </dl>
             </Card>
           ) : alternatives.length > 0 ? (
-            <LinkList
-              items={alternatives.map((alternative) => ({
-                to: `/uebungen/${alternative.id}`,
-                label: alternative.name,
-                icon: ArrowLeftRight,
-                description: describeExercise(alternative),
-              }))}
-            />
+            // Alternativen mit Vorschaubild wie in der Bibliothek (D-397).
+            <ul className="divide-y divide-line rounded-card bg-surface shadow-card">
+              {alternatives.map((alternative) => (
+                <li key={alternative.id}>
+                  <Link
+                    to={`/uebungen/${alternative.id}`}
+                    className="flex min-h-14 items-center gap-3 px-card py-3 first:rounded-t-card last:rounded-b-card hover:bg-surface-2"
+                  >
+                    <Suspense fallback={<span className="size-thumb shrink-0" />}>
+                      <ExerciseThumb exerciseId={alternative.id} />
+                    </Suspense>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-semibold">{alternative.name}</span>
+                      <span className="block text-caption text-muted">
+                        {describeExercise(alternative)}
+                      </span>
+                    </span>
+                    <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-faint" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           ) : (
             <p className="rounded-card bg-surface p-card text-muted shadow-card">
               {t.exercises.alternativesEmpty}

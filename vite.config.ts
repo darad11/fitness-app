@@ -1,8 +1,8 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, minify, type Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as {
@@ -30,6 +30,50 @@ const buildSha = (process.env.VERCEL_GIT_COMMIT_SHA ?? process.env.GITHUB_SHA ??
   7,
 );
 
+/**
+ * Startansicht schlanker (D-396): Die klassischen Skripte im Kopf (`theme-init.js`,
+ * `startflaeche.js`) kommen unverändert aus `public/` und gingen bisher samt Kommentaren raus.
+ * Beim Bauen werden sie mit dem Minifier von Vite verkleinert, bevor der Service Worker ihre
+ * Prüfsummen berechnet; `index.html` verliert ihre Kommentare. Die Quellen bleiben lesbar.
+ */
+const HEAD_SCRIPTS = ['theme-init.js', 'startflaeche.js'];
+function slimStartView(): Plugin {
+  let outDir = 'dist';
+  return {
+    name: 'form-slim-start-view',
+    apply: 'build',
+    configResolved(config) {
+      outDir = config.build.outDir.startsWith('/')
+        ? config.build.outDir
+        : `${config.root}/${config.build.outDir}`;
+    },
+    transformIndexHtml: {
+      order: 'post',
+      handler: (html) =>
+        html
+          .replace(/<!--[\s\S]*?-->/g, '')
+          .replace(/\/\*[\s\S]*?\*\//g, '')
+          .replace(/\n\s*\n/g, '\n'),
+    },
+    writeBundle: {
+      order: 'pre',
+      async handler() {
+        for (const name of HEAD_SCRIPTS) {
+          const file = `${outDir}/${name}`;
+          const result = await minify(name, readFileSync(file, 'utf8'), {
+            compress: true,
+            mangle: true,
+          });
+          if (result.errors.length > 0) {
+            throw new Error(`${name}: ${result.errors.map((e) => e.message).join('; ')}`);
+          }
+          writeFileSync(file, result.code);
+        }
+      },
+    },
+  };
+}
+
 export default defineConfig({
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
@@ -55,15 +99,16 @@ export default defineConfig({
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
   plugins: [
+    slimStartView(),
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
       // Marke FORM (D-309): Icons aus form-app-assets, Nacht als Hintergrund- und Theme-Farbe.
+      // Die Skripte im Kopf erfasst globPatterns aus dist, also verkleinert (D-396); aus public/
+      // kämen sie ein zweites Mal mit anderer Prüfsumme dazu.
       includeAssets: [
-        'theme-init.js',
-        'startflaeche.js',
         'robots.txt',
         'icons/favicon.svg',
         'icons/favicon.ico',
@@ -103,10 +148,34 @@ export default defineConfig({
       },
       workbox: {
         // wasm: Barcode-Erkennung auch ohne Netz (D-266, rund 1,1 MB).
-        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}'],
+        // Liste der Übungsvisuals (D-397): klein, vorab gespeichert, damit Zuordnung und Rückfall
+        // offline stimmen.
+        globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt,wasm}', 'uebungen/medien.json'],
         // Store-Größe und Rasterfassungen der Logos braucht die App nicht offline (SVGs reichen).
         // Startbilder lädt iOS selbst beim Hinzufügen zum Home-Bildschirm (D-317).
-        globIgnores: ['**/icons/icon-1024.png', '**/brand/*.png', '**/splash/*.png'],
+        // Bilder der Übungen nicht vorab (Auftrag Abschnitt 0.3), sondern bei Bedarf (runtimeCaching).
+        globIgnores: [
+          '**/icons/icon-1024.png',
+          '**/brand/*.png',
+          '**/splash/*.png',
+          '**/uebungen/medien/**',
+        ],
+        // Bilder der Übungen beim ersten Anzeigen speichern, danach auch offline (D-397). Erst
+        // Pilot 3D bringt die ersten Dateien (D-402, D-403); nichts davon wird vorab geladen.
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/uebungen/medien/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'uebungen-medien',
+              expiration: { maxEntries: 600 },
+              // Nur vollständige Antworten speichern; Teilanfragen für Videos (Safari) bedient
+              // der Service Worker aus der gespeicherten Datei (D-403).
+              cacheableResponse: { statuses: [200] },
+              rangeRequests: true,
+            },
+          },
+        ],
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
         // Beim allerersten Start übernimmt der Service Worker die offene Seite sofort; sonst

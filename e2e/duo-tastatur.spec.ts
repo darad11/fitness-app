@@ -149,11 +149,27 @@ async function typeInto(page: Page, pose: Pose, field: Locator, label: string, b
   expect(box, label).not.toBeNull();
   await startScrollLog(page);
   // Antippen an der Stelle des Feldes, ohne dass Playwright es vorher in den Blick scrollt.
-  await page.touchscreen.tap(
-    (box?.x ?? 0) + Math.min((box?.width ?? 0) / 2, 40),
-    (box?.y ?? 0) + (box?.height ?? 0) / 2,
+  const x = (box?.x ?? 0) + Math.min((box?.width ?? 0) / 2, 40);
+  const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
+  // Was unter dem Finger liegt, für die Meldung, falls der Fokus nicht ankommt (WebKit in der CI).
+  const hit = await page.evaluate(
+    ([px, py]) => document.elementFromPoint(px ?? 0, py ?? 0)?.outerHTML.slice(0, 160) ?? 'nichts',
+    [x, y],
   );
-  await expect(field, `${label}: Fokus`).toBeFocused();
+  await page.touchscreen.tap(x, y);
+  try {
+    await expect(field).toBeFocused();
+  } catch (error) {
+    const state = await page.evaluate(() => ({
+      active: document.activeElement?.outerHTML.slice(0, 160) ?? 'nichts',
+      scroll: document.getElementById('seite')?.scrollTop ?? -1,
+    }));
+    const now = await field.boundingBox();
+    throw new Error(
+      `${label}: Fokus fehlt. Getippt bei ${String(Math.round(x))}, ${String(Math.round(y))} auf ${hit}; Feld jetzt bei ${String(Math.round(now?.y ?? -1))}, vorher ${String(Math.round(box?.y ?? -1))}; Fokus auf ${state.active}; Rahmen gescrollt ${String(state.scroll)}`,
+      { cause: error },
+    );
+  }
   await frames(page);
   if (bar) await expect(page.locator('.tabbar-dock'), `${label}: Tab-Leiste aus`).toBeHidden();
   const placed = await inUpperPart(field);

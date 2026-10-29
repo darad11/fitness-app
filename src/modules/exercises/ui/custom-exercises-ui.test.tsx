@@ -56,13 +56,20 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
     await screen.findByRole(
       'heading',
       { level: 1, name: 'Brustpresse Technogym' },
-      { timeout: 10_000 },
+      { timeout: 20_000 },
     );
     const [created] = await listCustomExercises(rt.db);
     expect(router.state.location.pathname).toBe(`/uebungen/${created?.id ?? ''}`);
     expect(screen.getByText('Eigene Übung')).toBeVisible();
     // Muskeln als Chip unter dem Titel und im Reiter „Muskeln“ (FORM, D-315).
-    expect(screen.getByText('Hauptmuskeln: Brust')).toBeInTheDocument();
+    // Die Etiketten stehen in der nachgeladenen Demonstration (D-397); mit Coverage lädt sie langsamer.
+    expect(
+      await screen.findByText('Hauptmuskeln: Brust', undefined, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    // Zuerst „Ausführung“ (D-398): Für eigene Übungen gibt es keinen Text aus der Bibliothek.
+    const guide = screen.getByRole('tabpanel', { name: 'Ausführung' });
+    expect(within(guide).getByText(/Eigene Übung: Die Ausführung beschreibst du/)).toBeVisible();
+    await user.click(screen.getByRole('tab', { name: 'Muskeln' }));
     const muscles = screen.getByRole('tabpanel', { name: 'Muskeln' });
     expect(within(muscles).getByText('Brust')).toBeVisible();
     expect(within(muscles).getByText('Trizeps')).toBeVisible();
@@ -126,7 +133,7 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
       await screen.findByRole(
         'heading',
         { level: 1, name: 'Zirkeltraining Spezial' },
-        { timeout: 10_000 },
+        { timeout: 20_000 },
       );
       expect((await listCustomExercises(rt.db))[0]).toMatchObject({
         trackingMode: 'time_distance',
@@ -154,7 +161,7 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
       await screen.findByRole(
         'heading',
         { level: 1, name: 'Bankdrücken mit Langhantel' },
-        { timeout: 10_000 },
+        { timeout: 20_000 },
       );
       expect(screen.queryByRole('button', { name: 'Archivieren' })).toBeNull();
       await user.type(

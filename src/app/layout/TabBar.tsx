@@ -1,10 +1,11 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router';
 import { t } from '@/shared/i18n/de';
 import { cn } from '@/shared/lib/cn';
 import { inSection, VISIBLE_NAV_ITEMS } from './nav';
-import { attachTabLens, PILL_OUTSET } from './tabLens';
-import { attachTabMinimize } from './tabMinimize';
+
+/** So weit ragt die Auswahl über ihren Eintrag hinaus (CSS: .tabbar-indicator, tabLens.ts). */
+const PILL_OUTSET = 4;
 
 function activeKey(pathname: string): string | undefined {
   return VISIBLE_NAV_ITEMS.find(
@@ -26,6 +27,9 @@ export function TabBar() {
   const indicator = useRef<HTMLSpanElement>(null);
   const current = activeKey(pathname);
   const currentRef = useRef(current);
+  // Linse und Kreis kommen nachgeladen (D-396); bis dahin ist die Leiste „beschäftigt“, Tippen
+  // geht schon wie gewohnt.
+  const [effectsReady, setEffectsReady] = useState(false);
 
   // Auswahl gleitet zum aktiven Eintrag; beim ersten Bild ohne Übergang.
   useLayoutEffect(() => {
@@ -75,19 +79,36 @@ export function TabBar() {
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(place) : null;
     if (items) observer?.observe(items);
     if (!observer) window.addEventListener('resize', place);
-    // Vor der Linse anmelden: Ein Tipp auf den Kreis klappt nur auf.
-    const detachMinimize = wrapper.current ? attachTabMinimize(node, wrapper.current) : undefined;
-    const detach = attachTabLens(node, {
-      active: () => currentRef.current,
-      select: (key) => {
-        void navigate(key);
-      },
-    });
+    // Linse und Kreis nachgeladen (D-396): Sie liegen nicht in der Startansicht. Vor der Linse
+    // anmelden: Ein Tipp auf den Kreis klappt nur auf.
+    let detach: (() => void) | undefined;
+    let cancelled = false;
+    void Promise.all([import('./tabMinimize'), import('./tabLens')])
+      .then(([minimize, lens]) => {
+        if (cancelled) return;
+        const detachMinimize = wrapper.current
+          ? minimize.attachTabMinimize(node, wrapper.current)
+          : undefined;
+        const detachLens = lens.attachTabLens(node, {
+          active: () => currentRef.current,
+          select: (key) => {
+            void navigate(key);
+          },
+        });
+        detach = () => {
+          detachLens();
+          detachMinimize?.();
+        };
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) setEffectsReady(true);
+      });
     return () => {
+      cancelled = true;
       observer?.disconnect();
       window.removeEventListener('resize', place);
-      detach();
-      detachMinimize?.();
+      detach?.();
     };
   }, [navigate]);
 
@@ -99,7 +120,12 @@ export function TabBar() {
       ref={wrapper}
       className="tabbar-dock pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.5rem)] z-20 flex justify-center pr-[max(0.75rem,env(safe-area-inset-right))] pl-[max(0.75rem,env(safe-area-inset-left))] lg:hidden"
     >
-      <nav ref={bar} aria-label={t.nav.label} className="tabbar pointer-events-auto">
+      <nav
+        ref={bar}
+        aria-label={t.nav.label}
+        aria-busy={effectsReady ? undefined : true}
+        className="tabbar pointer-events-auto"
+      >
         <span ref={indicator} aria-hidden="true" className="tabbar-indicator" />
         <ul className="tabbar-items">
           {VISIBLE_NAV_ITEMS.map((item) => {

@@ -15,6 +15,7 @@ import { activateProgram, copyProgram, deactivateProgram } from '../service/prog
 import { planFromTemplateDay } from '../service/sessionService';
 import type { AnyProgram } from './useActiveProgram';
 import { useStartSession } from './useStartSession';
+import { Thumb } from './exerciseVisuals';
 
 export interface SampleTemplateData {
   template: SampleTemplate;
@@ -224,10 +225,15 @@ export function ProgramDetail({
                     ) : (
                       <ol className="divide-y divide-line">
                         {day.exercises.map((exercise, position) => (
-                          <li key={exercise.id} className="flex gap-3 py-3 first:pt-0 last:pb-0">
+                          <li
+                            key={exercise.id}
+                            className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+                          >
                             <span className="w-6 shrink-0 pt-0.5 text-sm font-semibold text-muted tabular-nums">
                               {position + 1}
                             </span>
+                            {/* Vorschaubild links neben dem Namen (D-397). */}
+                            <Thumb exerciseId={exercise.exerciseId} />
                             <span className="min-w-0">
                               <span className="block font-medium">{exercise.nameSnapshot}</span>
                               <span className="block text-sm text-muted">

@@ -16,6 +16,7 @@ import {
   describeExercise,
   ExercisePicker,
   MuscleTags,
+  preloadExerciseDemos,
   useExercisePrefs,
   useExercises,
   type Exercise,
@@ -23,6 +24,7 @@ import {
 import { SETTINGS_DEFAULTS, useFormatters, useSettings } from '@/modules/settings';
 import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
+import { tExerciseMedia } from '@/shared/i18n/de-exercise-media';
 import { tSession } from '@/shared/i18n/de-session';
 import { playRestEndSound, unlockSound } from '@/shared/lib/sound';
 import { keepScreenAwake } from '@/shared/lib/wakeLock';
@@ -79,6 +81,7 @@ import { SetHeader, SetRow } from './SetRow';
 import { useFootClearOfField } from './useFootClearOfField';
 import { useStableSetView } from './useStableSetView';
 import './player-layout.css';
+import { Demo, Guide, Thumb } from '../exerciseVisuals';
 
 /** Trainingsplayer (S-07) unter `/training/einheit/:id`. */
 export function SessionPage() {
@@ -334,6 +337,8 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const afterCurrent = lastOfCurrent ? nextOpenSet(session, lastOfCurrent.id) : null;
   const nextExercise =
     afterCurrent && afterCurrent.exercise.id !== currentExercise?.id ? afterCurrent.exercise : null;
+  usePreloadDemos(currentExercise?.exerciseId, nextExercise?.exerciseId);
+  const currentEntry = currentExercise ? library.get(currentExercise.exerciseId) : undefined;
   // „Als Nächstes“ in zwei Spalten (D-380): Übungen nach der aktuellen mit offenen Sätzen.
   const upcoming = currentExercise
     ? exercises
@@ -471,13 +476,45 @@ function Player({ session, light }: { session: Session; light: boolean }) {
               </p>
             ) : null}
 
+            {/* Demonstration der aktuellen Übung (D-397) im vorbereiteten Bereich „demo“ der rechten
+                Spalte (D-380); nur in zwei Spalten sichtbar, schmal steht sie kompakt in „Jetzt“.
+                Unabhängig von Satz und Pause, je Übung neu aufgebaut. */}
+            {currentExercise ? (
+              <section aria-label={tExerciseMedia.demoRegion} className="player-demo mb-4">
+                <Demo
+                  exerciseId={currentExercise.exerciseId}
+                  name={currentExercise.nameSnapshot}
+                  muscles={currentEntry?.primaryMuscles ?? []}
+                  variant="large"
+                  className="w-full"
+                  onOpen={() => {
+                    setInfo(currentExercise);
+                  }}
+                />
+              </section>
+            ) : null}
             {!restTimer && current && currentExercise && currentName ? (
               <section
                 aria-label={tSession.now}
                 className="player-now stage mb-4 rounded-card p-card text-fg"
               >
+                {/* Schmal kompakt rechts, der Text fließt darum (D-397): Das Bild nimmt dem Namen
+                    nur in den ersten Zeilen Breite, die Karte wird kaum höher, der Satz bleibt über
+                    der Fußleiste. Antippen öffnet die Übungsinfo. */}
+                <Demo
+                  exerciseId={currentExercise.exerciseId}
+                  name={currentExercise.nameSnapshot}
+                  muscles={currentEntry?.primaryMuscles ?? []}
+                  variant="compact"
+                  className="player-now-demo float-right mb-1 ml-3"
+                  onOpen={() => {
+                    setInfo(currentExercise);
+                  }}
+                />
                 <p className="eyebrow text-muted">{tSession.now}</p>
-                <p className="mt-1 text-2xl font-semibold">{currentExercise.nameSnapshot}</p>
+                <p className="mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
+                  {currentExercise.nameSnapshot}
+                </p>
                 <p className="mt-1 text-muted">
                   {[
                     `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
@@ -523,8 +560,11 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 <p className="eyebrow text-muted">{tSession.upNext}</p>
                 <ol className="mt-2 grid gap-2">
                   {upcoming.slice(0, UPCOMING_MAX).map(({ exercise, open }) => (
-                    <li key={exercise.id} className="flex items-baseline justify-between gap-3">
-                      <span className="min-w-0 truncate font-medium">{exercise.nameSnapshot}</span>
+                    <li key={exercise.id} className="flex items-center gap-3">
+                      <Thumb exerciseId={exercise.exerciseId} size="small" />
+                      <span className="min-w-0 flex-1 truncate font-medium">
+                        {exercise.nameSnapshot}
+                      </span>
                       <span className="shrink-0 text-sm text-muted tabular-nums">
                         {tSession.openSets(open)}
                       </span>
@@ -554,6 +594,21 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     className="rounded-card bg-surface p-3 shadow-card"
                   >
                     <div className="mb-2 flex items-start gap-1 px-1">
+                      {/* Vorschaubild links neben dem Namen (D-397), erst ab 30 rem Breite des
+                          Players (`player-card-thumb`): schmal zeigt „Jetzt“ die aktuelle Übung
+                          kompakt, und der erste Satz bleibt über der Fußleiste. Antippen öffnet
+                          die Übungsinfo wie (i); für Tastatur und Screenreader genügt (i). */}
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                        className="player-card-thumb mt-1 mr-2 shrink-0 rounded-tile"
+                        onClick={() => {
+                          setInfo(exercise);
+                        }}
+                      >
+                        <Thumb exerciseId={exercise.exerciseId} size="small" />
+                      </button>
                       <div className="min-w-0 flex-1">
                         {/* Titelzeile (D-386): die Muskel-Etiketten rechts neben dem Namen, vor (i)
                             und „…“; reicht der Platz nicht, stehen sie in einer eigenen Zeile
@@ -997,6 +1052,15 @@ function ExerciseInfo({
   if (exercise.notes) rows.push([tSession.note, exercise.notes]);
   return (
     <div>
+      {/* Demonstration und Ausführung (D-397, D-398); die vollen Angaben in den Übungsdetails. */}
+      <Demo
+        exerciseId={exercise.exerciseId}
+        name={exercise.nameSnapshot}
+        muscles={entry?.primaryMuscles ?? []}
+        variant="large"
+        onlyWithVisual
+        className="mb-4"
+      />
       {entry ? <p className="mb-3 text-sm text-muted">{describeExercise(entry)}</p> : null}
       <dl className="grid gap-2">
         {rows.map(([label, value]) => (
@@ -1010,6 +1074,26 @@ function ExerciseInfo({
         <p className="mt-3 text-sm text-muted">{tSession.replacedFrom(origin?.name ?? '')}</p>
       ) : null}
       {!entry && !exercise.notes ? <p className="text-muted">{t.session.info.none}</p> : null}
+      {entry ? (
+        <section className="mt-5 border-t border-line pt-4">
+          <h3 className="mb-3 text-lg font-semibold">{tExerciseMedia.guideTitle}</h3>
+          <Guide exercise={entry} compact />
+          <ButtonLink to={`/uebungen/${entry.id}`} variant="quiet" size="sm" className="mt-3">
+            {tExerciseMedia.allDetails}
+          </ButtonLink>
+        </section>
+      ) : null}
     </div>
   );
+}
+
+/**
+ * Lädt die Demonstration der aktuellen und der nächsten Übung vor (Leitlinien Kapitel 8), nicht
+ * die ganze Bibliothek. Ohne Visual passiert nichts.
+ */
+function usePreloadDemos(currentId: string | undefined, nextId: string | undefined): void {
+  useEffect(() => {
+    const ids = [currentId, nextId].filter((id): id is string => id !== undefined);
+    if (ids.length > 0) void preloadExerciseDemos(ids);
+  }, [currentId, nextId]);
 }

@@ -6,6 +6,7 @@ import { Badge, Button, PageHeader, SearchField, SelectField, Skeleton } from '@
 import { buildSearchIndex, compareExerciseNames, searchExercises } from '../calc/search';
 import { useExercises } from '../data/customExercises';
 import { describeExercise, EQUIPMENT_OPTIONS, MUSCLE_OPTIONS } from './describe';
+import { ExerciseThumb } from './ExerciseVisual';
 
 const CustomExerciseDialog = lazy(async () => ({
   default: (await import('./CustomExerciseDialog')).CustomExerciseDialog,
@@ -250,8 +251,10 @@ function ExerciseList({ exercises, label }: { exercises: readonly Exercise[]; la
         <li key={exercise.id}>
           <Link
             to={`/uebungen/${exercise.id}`}
-            className="flex min-h-14 items-center gap-3 px-5 py-3 hover:bg-surface-2"
+            className="flex min-h-14 items-center gap-3 px-4 py-3 hover:bg-surface-2"
           >
+            {/* Vorschaubild links neben dem Namen (D-397). */}
+            <ExerciseThumb exerciseId={exercise.id} />
             <span className="min-w-0 flex-1">
               <span className="flex flex-wrap items-center gap-2">
                 <span className="font-medium">{exercise.name}</span>

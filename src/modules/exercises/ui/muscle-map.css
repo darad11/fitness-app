@@ -1,0 +1,26 @@
+/* Muskelkarte (D-401). Eigene Datei, damit die Regeln mit der Karte nachladen und die Startansicht
+   keine neuen Klassen bekommt. */
+.muscle-map-view {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+}
+
+.muscle-map-view svg {
+  width: 100%;
+  max-width: 10rem;
+  height: auto;
+}
+
+.muscle-map-dot {
+  display: inline-block;
+}
+
+.muscle-map-dot.is-secondary {
+  opacity: 0.35;
+}
+
+.muscle-map-skeleton {
+  aspect-ratio: 1;
+  max-width: 20rem;
+}

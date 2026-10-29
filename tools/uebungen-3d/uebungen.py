@@ -296,6 +296,9 @@ class Kniebeuge(Uebung):
                 "Knie hinter der Schuhspitze (cm)": (self.schuhspitze - vor) * 100} if self.schuhe else {}),
             "Ellbogenwinkel": arme["L"]["ellbogenwinkel"],
             "Handgelenk geknickt": arme["L"]["handgelenk_knick"],
+            "Handgelenk gesamt (Grad)": arme["L"]["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": arme["L"]["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": arme["L"]["handgelenk_seitlich"],
             "Pronation": arme["L"]["pronation"],
         }
 
@@ -358,11 +361,17 @@ class Bankdruecken(Uebung):
     ELLBOGEN_OBEN = 172.0
     UNTERARM = 0.0  # Unterarm-Neigung nach außen (Grad), die der Ellbogen anstrebt
     # Stange schräg in der Hand (Grad): vom Zeigefingerballen zum Handballen an der Kleinfingerseite,
-    # tief in der Handfläche über dem Unterarm (voller Griff, D-423; vorher quer)
-    SCHRAEG = 18.0
-    # Lage der Stange in der Hand (Anteil Handgelenk→Fingeransatz, D-430): in der oberen Hohlhand, so dass
-    # die Finger sie umschließen; bis D-429 lag sie bei 0,38 auf den Ballen und die Faust vor ihr
-    GRIFF_LAGE = 0.68
+    # tief in der Handfläche über dem Unterarm (voller Griff, D-423; vorher quer). 12° wie in D-423 statt 18°
+    # (D-430): Die Schräge verschiebt das seitliche Abknicken des Handgelenks, bei 12° liegt es über die
+    # ganze Bewegung am kleinsten (D-452)
+    SCHRAEG = 12.0
+    # Lage der Stange in der Hand (Anteil Handgelenk→Fingeransatz): in der Hohlhand, so dass die Finger sie
+    # umschließen; seit D-452 etwas tiefer zum Handballen (0,65 statt 0,68 seit D-430). Bis D-429 lag sie bei
+    # 0,38 auf den Ballen und die Faust vor ihr; unter 0,65 drückt der nachgeklappte Daumen in die Stange
+    GRIFF_LAGE = 0.65
+    # Handgelenk leicht gestreckt (Grad), Ziel bei der Suche der Handdrehung: 6° statt 12° (D-452); die
+    # Streckung bleibt so in der ganzen Bewegung unter 10°, an der Längsachse der Mittelhand gemessen
+    STRECKUNG = 6.0
     UNTEN_DZ = 0.0  # Stange unten höher (m)
     BOGEN = 1.4  # Form der Stangenbahn: Exponent der Bewegung zur Brust hin
 
@@ -421,7 +430,7 @@ class Bankdruecken(Uebung):
             self.oben = Vector((0, S.y, z))
             rig.zuruecksetzen()
             self._torso()
-            arme = [rig.arm(s, self.griff[s], self.oben + X * (x * self.griff_x), X * x, Vector((0, 0, -1)), 12.0,
+            arme = [rig.arm(s, self.griff[s], self.oben + X * (x * self.griff_x), X * x, Vector((0, 0, -1)), self.STRECKUNG,
                             ellbogen=self._regel(s)) for s, x in (("L", 1), ("R", -1))]
             if max(a["ellbogenwinkel"] for a in arme) < self.ELLBOGEN_OBEN and not rig.meldungen:
                 lo = z
@@ -454,7 +463,8 @@ class Bankdruecken(Uebung):
         B = Vector((0, y, z))
         arme = {}
         for s, x in (("L", 1), ("R", -1)):
-            arme[s] = rig.arm(s, self.griff[s], B + X * (x * self.griff_x), X * x, Vector((0, 0, -1)), 12.0, ellbogen=self._regel(s))
+            arme[s] = rig.arm(s, self.griff[s], B + X * (x * self.griff_x), X * x, Vector((0, 0, -1)), self.STRECKUNG,
+                              ellbogen=self._regel(s))
         self.stange.location = rig.welt(B)
         A = arme["L"]
         oberarm = (A["ellbogen"] - A["schulter"]).normalized()
@@ -464,6 +474,9 @@ class Bankdruecken(Uebung):
             "Oberarm zum Rumpf": math.degrees(oberarm.angle(laengs)),
             "Unterarm zur Senkrechten": math.degrees((A["handgelenk"] - A["ellbogen"]).angle(Z)),
             "Handgelenk geknickt": A["handgelenk_knick"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
             "Stange über Schulter (cm, y)": (B.y - self._schultern().y) * 100,
             "Stangenhöhe über Brustkontakt (cm)": (B.z - self.unten.z) * 100,
         }
@@ -645,6 +658,9 @@ class Latziehen(Uebung):
             "Ellbogenwinkel": A["ellbogenwinkel"],
             "Unterarm zur Senkrechten": math.degrees((A["handgelenk"] - A["ellbogen"]).angle(Z)),
             "Handgelenk geknickt": A["handgelenk_knick"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
             "Lehne zurück": self._lehne(p),
             "Stange über Schulter (cm)": (B.z - self._schultern().z) * 100,
         }

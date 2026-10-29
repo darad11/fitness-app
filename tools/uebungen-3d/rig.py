@@ -295,7 +295,10 @@ class Rig:
                 t = rel.dot(laengs) / L
                 proben.append((t, rel.dot(n), rel.dot(achse)))
             quer = ((iM + lM) / 2 - W0).dot(achse)
-            daten[s] = {"W0": W0, "n": n, "achse": achse, "laengs": laengs, "L": L, "proben": proben, "quer": quer}
+            # Längsachse der Mittelhand (Handgelenk → Grundgelenk des Mittelfingers): Bezug für die Winkel des
+            # Handgelenks (D-452); `laengs` steht senkrecht zur Knöchelachse und liegt 14° daneben
+            daten[s] = {"W0": W0, "n": n, "achse": achse, "laengs": laengs, "L": L, "proben": proben, "quer": quer,
+                        "mittelhand": (mM - W0).normalized()}
         return daten
 
     def handdaten(self, seite: str) -> dict:
@@ -982,7 +985,18 @@ class Rig:
             self.setze(f"metacarpal{i}.{s}", G_hand)
         self.finger_setzen(s, g, G_hand)
         laengs_neu = G_hand.to_3x3() @ d["laengs"]
+        # Winkel des Handgelenks an der Längsachse der Mittelhand (D-452): Streckung zum Handrücken positiv,
+        # seitlich positiv zum Daumen (Speiche), negativ zum kleinen Finger (Elle)
+        R_hand = G_hand.to_3x3()
+        el = (R_hand @ d["mittelhand"]).normalized()
+        ea = senkrecht(R_hand @ d["achse"], el)
+        en = el.cross(ea)
+        if en.dot(R_hand @ d["n"]) < 0:
+            en = -en
         return {
+            "handgelenk_streckung": math.degrees(math.atan2(f.dot(en), f.dot(el))),
+            "handgelenk_seitlich": math.degrees(math.atan2(f.dot(ea), f.dot(el))),
+            "handgelenk_gesamt": math.degrees(f.angle(el)),
             "schulter": S,
             "ellbogen": E,
             "handgelenk": W,

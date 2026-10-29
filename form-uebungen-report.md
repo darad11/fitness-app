@@ -1411,7 +1411,34 @@ Mit Schuhen steht die Figur um die Dicke der Sohle höher, 27 mm. Füße, Bank u
 
 Renderzeit der Prüfung je Übung 214 bis 235 s; Standbilder in der Größe der App 13,6 bis 18,4 s.
 
-### 21.4 Berichte je Paket
+### 21.4 Handgelenk beim Bankdrücken (D-452)
+
+**Zuerst eine Richtigstellung.** In D-447 schrieb ich, das Handgelenk knicke beim Bankdrücken bis 39,5° nach hinten. Das stimmte so nicht: Die 39,5° waren der Gesamtwinkel zu einer Hilfsachse des Rigs, die 14° neben der echten Längsachse der Hand liegt. An der Längsachse der Mittelhand gemessen waren es höchstens 27°, davon bis 16,7° nach hinten und bis 22,9° zur Seite (zum kleinen Finger). Das Rig weist die Winkel jetzt an dieser Achse aus, getrennt nach hinten und zur Seite.
+
+**Warum die Hand zur Seite knickte:** In der Mitte der Bewegung kippt der Unterarm bis 18° zur Seite, der Ellbogen steht dort 8 cm außerhalb der Hand. Ein senkrechter Unterarm ist an dieser Stelle mit den Armlängen der Figur nicht erreichbar. Dazu kommt die Schräge der Stange in der Hand.
+
+**Geändert:**
+
+- Die Stange liegt 12° schräg in der Hand statt 18°, so wie in D-423. Schräg bleibt sie, wie du es in Korrekturrunde 3 wolltest; bei 12° knickt die Hand über die ganze Bewegung am wenigsten zur Seite.
+- Sie liegt etwas tiefer zum Handballen (0,65 statt 0,68 der Strecke Handgelenk bis Fingeransatz). Noch tiefer geht nicht: Dann drückt der nachgeklappte Daumen in die Stange (bei der Lage bis D-429 bis 12 mm), und gerader würde das Handgelenk dadurch nicht.
+- Das Rig sucht die Drehung der Hand jetzt mit 6° Streckung als Ziel statt 12°.
+
+Untersucht habe ich 123 Einstellungen von Lage, Schräge und Streckung und dazu eine Neigung des Unterarms nach außen. Die Neigung brachte in der Mitte nur 4°, spreizte dafür den Oberarm bis 93° ab; ich habe sie nicht übernommen, die Bewegung bleibt.
+
+**Messwerte über alle 60 Bilder:**
+
+| | vorher | nachher |
+|---|---|---|
+| nach hinten (Streckung) | 10,0 bis 16,7° | 4,3 bis 9,3° |
+| zur Seite | −22,9 bis +9,9° | −15,5 bis +16,9° |
+| gesamt | bis 27,0° | bis 18,2° |
+| Unterarm zur Senkrechten | bis 19,1° | bis 17,8° |
+
+Die Stange liegt 1,0 bis 1,7 cm vor der Linie des Unterarms, also über ihm. Der Daumen berührt die Stange nicht, er liegt wie freigegeben über den Fingern; kein Teil der Hand ragt sichtbar in die Stange.
+
+**Zur Info, unverändert:** Bei der Kniebeuge ist das Handgelenk 16,5° gestreckt (so gewollt seit D-407). Beim Latziehen zeigt die neue Messung in der Endposition 30,6° zur Seite des Daumens, bei kaum Streckung; dort steht der Unterarm 25° schräg. Das gehört nicht zu diesem Auftrag und würde den Griff mit dem freigegebenen Daumen neu anpassen; ich habe es nicht geändert. Wenn du willst, prüfe ich dort die Schräge der Stange auf dieselbe Weise.
+
+### 21.5 Berichte je Paket
 
 ```
 Arbeitspaket: D-449 Muskelzonen nur noch in der Muskelkarte
@@ -1444,4 +1471,15 @@ Ausgeführte Tests: render.py --pruefen über alle 60 Bilder je Übung mit Sohle
 Ergebnis: bestanden
 Bekannte Einschränkungen: Sohle mit senkrechter Wand und ohne Profil (siehe 21.2)
 Nächste Schritte: Handgelenk beim Bankdrücken (Abschnitt 4)
+```
+
+```
+Arbeitspaket: D-452 Handgelenk beim Bankdrücken annähernd gerade
+Umgesetzte Funktionen: Werkzeug der Figur (Videos der App bis zur Freigabe unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, rig.py; Dokumente
+Technische Entscheidungen: D-452
+Ausgeführte Tests: Raster mit 123 Einstellungen und 8 Neigungen des Unterarms; render.py --pruefen über alle 60 Bilder je Übung; Handgelenk von der Seite und vom Fußende vorher und nachher, Griffblatt; py_compile; pnpm format:check, check:docs, check:bundle
+Ergebnis: bestanden
+Bekannte Einschränkungen: seitlich bleiben bis 16,9° (Unterarm kippt in der Mitte der Bewegung); Latziehen in der Endposition 30,6° zur Seite (unverändert, nicht Teil des Auftrags)
+Nächste Schritte: Standbilder neben dem Board, Nahaufnahmen, Player-Größe, Handgelenk (Abschnitt 6)
 ```

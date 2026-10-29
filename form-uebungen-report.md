@@ -1586,6 +1586,17 @@ Danach folgen die Übungen der Programme nach dem Animationsplan, beginnend mit 
 
 **Was bleibt:** zur Seite bis 13,3°, oben und unten zur Daumenseite, in der Mitte zum kleinen Finger. Das kommt daher, dass sich der Unterarm über die Bewegung unterschiedlich neigt; eine feste Lage der Stange in der Hand kann das nur ausgleichen, nicht aufheben.
 
+### 22.3 Die drei Pilot-Übungen in der App (D-456)
+
+Die Schleifen in der App zeigen jetzt die Kleidung vom Board: Shirt, Shorts, Socken und Schuhe, ohne Muskelzonen. Beim Latziehen ist der Griff korrigiert, beim Bankdrücken bleibt er wie in den freigegebenen Standbildern. Dateinamen, Bildgröße und Ladeverhalten sind unverändert.
+
+- **Renderzeit** für 60 Bilder: Kniebeuge 1.056 s, Bankdrücken 1.397 s, Latziehen 985 s, mit Aufbau und Kodierung zusammen knapp 59 Minuten.
+- **Geprüft:** Ich habe mir alle 60 Bilder jeder Schleife als Kontaktbogen angesehen. Die Bewegung läuft gleichmäßig, ohne Sprung; erstes und letztes Bild sind pixelgleich, die Schleifen laufen also nahtlos.
+- **Dateigrößen:** zusammen 365,3 KB statt 390,1 KB. Je Übung lädt die App höchstens 81,3 KB (Kniebeuge mit Video, Poster und Vorschau), vorher 84,2 KB. Ohne die Zonen hat das Bild weniger Inhalt.
+- **Bildbeschreibungen:** Der Satz zu den hervorgehobenen Muskeln ist gestrichen, die Bilder zeigen keine Zonen mehr. Welche Muskeln arbeiten, steht in der Muskelkarte.
+- **Prüfseiten** `pruef-kniebeuge.webp`, `pruef-bankdruecken.webp`, `pruef-latziehen.webp` sind neu, mit der neuen Kleidung.
+- **Startansicht** unverändert 237,8 KB von 250 KB.
+
 ### 22.5 Berichte je Paket
 
 ```
@@ -1608,5 +1619,16 @@ Ausgeführte Tests: Raster mit 80 Einstellungen; render.py latziehen --pruefen �
 Ergebnis: bestanden
 Bekannte Einschränkungen: zur Seite bleiben bis 13,3°, weil sich der Unterarm über die Bewegung unterschiedlich neigt
 Nächste Schritte: die drei Pilot-Übungen als Schleifen rendern und einbauen
+```
+
+```
+Arbeitspaket: D-456 Die drei Pilot-Übungen als Schleifen mit der neuen Kleidung
+Umgesetzte Funktionen: TP-06, TP-07, TS-02 (Schleifen, Poster und Vorschaubilder der drei Pilot-Übungen), erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/ (je Übung MP4, WebM, Poster, Vorschau), public/uebungen/medien.json (Bildbeschreibungen); Prüfseiten pruef-<übung>.webp; Dokumente
+Technische Entscheidungen: D-456
+Ausgeführte Tests: render.py für alle drei Übungen, Kontaktbögen aller 60 Bilder, erstes und letztes Bild verglichen; media.test.ts; pnpm format:check, check:docs, build, check:bundle; E2E lokal mit Chromium (WebKit in der CI)
+Ergebnis: bestanden
+Bekannte Einschränkungen: Gerätetest am iPhone steht aus; Schuh und Rückenlogo bleiben bis zur Runde vor den Programmen (22.1)
+Nächste Schritte: Übersichtsbild, Aufnahme und Griffblatt an den Produktinhaber, PR-Beschreibung, dann Halt bis zum Gerätetest
 ```
 

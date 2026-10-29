@@ -18,7 +18,7 @@
         "webm": { "src": "medien/kniebeuge.webm", "width": 720, "height": 540 },
         "still": { "src": "medien/kniebeuge-poster.webp", "width": 720, "height": 540 }
       },
-      "alt": "Kniebeuge mit Langhantel auf dem oberen Rücken, schräg von vorn: Hüfte nach unten und hinten bis Oberschenkel waagrecht, Knie über den Zehen, und zurück. Vordere Oberschenkel und Gesäß hervorgehoben, Adduktoren und unterer Rücken schwächer.",
+      "alt": "Kniebeuge mit Langhantel auf dem oberen Rücken, schräg von vorn: Hüfte nach unten und hinten bis Oberschenkel waagrecht, Knie über den Zehen, Füße flach am Boden, und zurück.",
       "source": "form_3d_pilot"
     },
     "bench_press_barbell": {
@@ -29,7 +29,7 @@
         "webm": { "src": "medien/bankdruecken.webm", "width": 720, "height": 540 },
         "still": { "src": "medien/bankdruecken-poster.webp", "width": 720, "height": 540 }
       },
-      "alt": "Bankdrücken auf der Flachbank, schräg von vorn oben: Stange von gestreckten Armen bis zur unteren Brust und zurück, Handgelenke über den Ellbogen, Füße am Boden. Brust hervorgehoben, Trizeps und vordere Schulter schwächer.",
+      "alt": "Bankdrücken auf der Flachbank, schräg von vorn oben: Stange von gestreckten Armen bis zur unteren Brust und zurück, Handgelenke gerade über den Ellbogen, Füße flach am Boden.",
       "source": "form_3d_pilot"
     },
     "lat_pulldown": {
@@ -40,7 +40,7 @@
         "webm": { "src": "medien/latziehen.webm", "width": 720, "height": 540 },
         "still": { "src": "medien/latziehen-poster.webp", "width": 720, "height": 540 }
       },
-      "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Oberschenkel unter dem Polster. Breiter Rückenmuskel hervorgehoben, Bizeps und oberer Rücken schwächer.",
+      "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Handgelenke gerade, Oberschenkel unter dem Polster.",
       "source": "form_3d_pilot"
     }
   }

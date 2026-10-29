@@ -109,7 +109,9 @@ def kamera(uebung, punkte, ansicht: str, breite: int, hoehe: int) -> None:
 
 
 def messen(uebung) -> dict:
-    """Messwerte am verformten Netz: Abstand der Finger zur Stange, Bodenkontakt der Füße."""
+    """Messwerte am verformten Netz: Abstand der Finger zur Stange, Bodenkontakt der Füße. In Schuhen
+    (D-451) steht die Figur auf der Sohle: Bodenkontakt über die Sohle (`schuhe.bodenkontakt`), dazu
+    Kragen, Socke und Shorts (`schuhe.durchdringung`); der Fuß steht im Schuh um die Sohle höher."""
     netz = _netz(uebung.koerper)
     gruppen = {g.name: g.index for g in uebung.koerper.vertex_groups}
     erg = {}
@@ -131,9 +133,18 @@ def messen(uebung) -> dict:
             abst.append((r - r.dot(achse) * achse).length - radius)
         erg["Finger: geringster Abstand zur Stange (mm, negativ = eingedrungen)"] = min(abst) * 1000
         erg["Finger: Punkte in Kontakt (≤ 3 mm)"] = sum(1 for a in abst if a <= 0.003)
-    if fusspunkte:
-        erg["Fuß: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
-    erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in fusspunkte[::25]]
+    o = bpy.data.objects
+    if "Sohle" in o:
+        if fusspunkte:
+            erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
+        erg.update(schuhe.bodenkontakt(o["Sohle"], o["Schuhe"]))
+        erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts")))
+        sohle = schuhe._verformt(o["Sohle"])[0]
+        erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in sohle[::8]]
+    else:
+        if fusspunkte:
+            erg["Fuß: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
+        erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in fusspunkte[::25]]
     return erg
 
 
@@ -157,9 +168,10 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None) -> 
         w.update({k: round(v, 2) for k, v in m.items()})
         w["Meldungen"] = list(u.rig.meldungen)
         werte.append({"bild": bild, "phase": round(p, 3), **w})
+    schuh = "Sohle" in bpy.data.objects
     zusammen = {
         "uebung": name,
-        "Fuß: größte Verschiebung über die Schleife (mm)": round(fuss_max * 1000, 2),
+        ("Sohle" if schuh else "Fuß") + ": größte Verschiebung über die Schleife (mm)": round(fuss_max * 1000, 2),
         "bilder": werte,
     }
     (arbeit / f"{name}-messwerte.json").write_text(json.dumps(zusammen, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -183,6 +195,18 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None) -> 
             szene.licht_und_kamera(hand, richtung, 0.5, hoehe)
             s.render.filepath = str(arbeit / f"pruef-hand-{richtung}-{p:.2f}.png")
             bpy.ops.render.render(write_still=True)
+    # Linker Fuß aus der Nähe (D-451): Kragen, Zunge und Sohle von außen, vorn, hinten und innen
+    if schuh:
+        for p in (0.0, 1.0):
+            u.setzen(p)
+            sohle = [q for q in schuhe._verformt(bpy.data.objects["Sohle"])[0] if q.x > 0]
+            fuss = sum(sohle, Vector()) / len(sohle) + Vector((0, 0, 0.05))
+            for richtung, hoehe in ((90, 0.08), (0, 0.12), (180, 0.10), (270, 0.08)):
+                for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
+                    bpy.data.objects.remove(o)
+                szene.licht_und_kamera(fuss, richtung, 0.55, hoehe, brennweite=60)
+                s.render.filepath = str(arbeit / f"pruef-fuss-{richtung}-{p:.2f}.png")
+                bpy.ops.render.render(write_still=True)
 
 
 def vorschau(u, s, arbeit: Path, ziel: Path, name: str, phase: float | None = None) -> Path:

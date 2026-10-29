@@ -1393,7 +1393,25 @@ Ich habe das Board ausgemessen, immer relativ zum Kleidungsstück: das Shirt in 
 
 **Renderzeit** je Standbild in der Größe der App (720 × 540): 13,8 bis 19,3 s.
 
-### 21.3 Berichte je Paket
+### 21.3 Füße, Bodenkontakt und Bewegung mit Schuhen (D-451)
+
+Mit Schuhen steht die Figur um die Dicke der Sohle höher, 27 mm. Füße, Bank und Sitz beziehen sich auf das angehobene Skelett; die Bewegung selbst bleibt dieselbe. Die Prüfung über alle 60 Bilder je Übung misst jetzt auch die Sohle, den Kragen und die Socken, dazu gibt es Nahaufnahmen des Fußes aus vier Richtungen.
+
+**Drei Fehler, die ich in D-450 übersehen hatte.** Ich hatte den Schuh nur von außen, vorn und hinten angesehen. Von innen und aus der Nähe zeigte sich:
+
+- Die Sohle war an der Innenseite von Ferse und Gewölbe zerklüftet und vorn an der Spitze offen. Sie entstand aus dem unteren Teil des Schuhs von MakeHuman und hing an dessen Unterseite; wo die fehlte oder sich hob, brach sie. Jetzt ist die Sohle ein eigener, geschlossener Körper mit dem Umriss des Schuhs, glatt und flach.
+- Kragen und Zunge lagen bis 6 mm unter der Haut. Die Socke kam oben durch den Schuh, oben an der Zunge sah man durch einen schwarzen Spalt hinein. Jetzt liegen sie außen auf der Socke, mit 1 bis 1,4 mm Luft, und bewegen sich mit dem Bein. Beim Bankdrücken drückte vorher die Wade in die Fersenlasche; das ist weg.
+- Die Socke wurde im Schuh nach einer Höhenlinie ausgeblendet, an den Seiten auch über dem Kragen. Jetzt nur dort, wo der Schuh sie wirklich verdeckt.
+
+**Messwerte über alle 60 Bilder:**
+
+- **Bodenkontakt:** In allen drei Übungen liegt die Sohle an Ferse und Ballen beidseitig bei 0,0 mm über dem Boden, in jedem Bild. Sie verschiebt sich höchstens 0,1 mm. Nichts schwebt, nichts sinkt ein.
+- **Kniebeuge:** Die Stange steht genau über der Fußmitte (zur Mitte der Sohle 1 mm). Die Knie folgen den Zehen (−1,8° bis +0,1°). Unten steht das Knie 6,1 cm hinter der Zehenspitze, also über den Zehen, und 6,9 cm hinter der Spitze des Schuhs.
+- **Durchdringung:** Der Kragen bleibt innen mindestens 0,95 mm über der Socke, auch unten in der Kniebeuge, wo das Sprunggelenk am stärksten gebeugt ist (Unterschenkel 18° zur Senkrechten). Die Socke liegt überall mindestens 2,8 mm über der Haut, zu den Shorts bleiben mindestens 13,7 cm. Nirgends sieht man durch die Socke in den Schuh.
+
+Renderzeit der Prüfung je Übung 214 bis 235 s; Standbilder in der Größe der App 13,6 bis 18,4 s.
+
+### 21.4 Berichte je Paket
 
 ```
 Arbeitspaket: D-449 Muskelzonen nur noch in der Muskelkarte
@@ -1415,4 +1433,15 @@ Ausgeführte Tests: py_compile; Ruhehaltung von vorn, hinten und von der Seite n
 Ergebnis: bestanden
 Bekannte Einschränkungen: Shirt 1 % kürzer als auf dem Board (Saum über dem Schritt); Rückenlogo im Verhältnis des Boards statt des Startbilds; Schuh in der Form vereinfacht (siehe 21.2)
 Nächste Schritte: Bodenkontakt über die Sohle prüfen (Abschnitt 3)
+```
+
+```
+Arbeitspaket: D-451 Füße, Bodenkontakt und Bewegung mit Schuhen
+Umgesetzte Funktionen: Werkzeug der Figur (Videos der App bis zur Freigabe unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/schuhe.py, render.py, uebungen.py; Dokumente
+Technische Entscheidungen: D-451
+Ausgeführte Tests: render.py --pruefen über alle 60 Bilder je Übung mit Sohle, Kragen, Socke und Shorts; Nahaufnahmen der Füße vorher und nachher; Standbilder in der Kamera der App; py_compile; pnpm format:check, check:docs, check:bundle
+Ergebnis: bestanden
+Bekannte Einschränkungen: Sohle mit senkrechter Wand und ohne Profil (siehe 21.2)
+Nächste Schritte: Handgelenk beim Bankdrücken (Abschnitt 4)
 ```

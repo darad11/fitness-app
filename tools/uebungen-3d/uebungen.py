@@ -168,6 +168,15 @@ class Kniebeuge(Uebung):
         ferse, spitze = _fuss(self.koerper, rig.kopf)
         self.fussmitte_y = A0.y - (A0.y - (ferse + spitze) / 2) * math.cos(w)
         self.zehenspitze = A0.y - spitze  # Fußgelenk bis Zehenspitze, m
+        self.schuhspitze = self.sohlenmitte_y = None
+        if self.schuhe:
+            # In Schuhen (D-451): Fußgelenk bis Spitze des Schuhs und Mitte der Sohle, längs des Fußes
+            import schuhe
+
+            r = schuhe._schaft(self.koerper.name)["rahmen"]["L"]
+            a = (r["c"] - A0).dot(r["vor"]) + r["ferse"]
+            self.schuhspitze = a + r["L"]
+            self.sohlenmitte_y = A0.y - (a + r["L"] / 2) * math.cos(w)
         hl, hr = rig.kopf["upperleg01.L"], rig.kopf["upperleg01.R"]
         self.H0 = (hl + hr) / 2
         self.tiefe = self._tiefe_suchen()
@@ -283,6 +292,8 @@ class Kniebeuge(Uebung):
             "Stange über Fußmitte (cm)": (B.y - self.fussmitte_y) * 100,
             "Knie hinter Zehenspitze (cm)": (self.zehenspitze - vor) * 100,
             "Knie zur Zehenrichtung (Grad)": self._knie_zu_zehen(L, "L"),
+            **({"Stange über Mitte der Sohle (cm)": (B.y - self.sohlenmitte_y) * 100,
+                "Knie hinter der Schuhspitze (cm)": (self.schuhspitze - vor) * 100} if self.schuhe else {}),
             "Ellbogenwinkel": arme["L"]["ellbogenwinkel"],
             "Handgelenk geknickt": arme["L"]["handgelenk_knick"],
             "Pronation": arme["L"]["pronation"],

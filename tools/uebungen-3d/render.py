@@ -7,14 +7,15 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
     python -I tools/uebungen-3d/render.py kniebeuge --nur-vorschau  # nur das Vorschaubild 240 × 240
     python -I tools/uebungen-3d/render.py kniebeuge --variante D-A1  # Variante zur Probe (D-414)
-    python -I tools/uebungen-3d/render.py kniebeuge --grau          # graue Figur wie bis D-446
+    python -I tools/uebungen-3d/render.py kniebeuge --grau          # graue Figur ohne Kleidung
     python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
         --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
 
 Ergebnis der Schleife in `public/uebungen/medien/` (MP4, WebM, Poster, Vorschau). Die Kamera folgt
 der Regel der Übung (`kamera`); der Abstand ergibt sich aus Figur und Gerät über die ganze Bewegung.
 Schleife und Prüfung zeigen die Figur der App, `FIGUR` (D-447); mit `--variante` eine andere Fassung
-(Dateinamen mit Zusatz), mit `--grau` die graue Figur in der Körperform `--form`.
+(Dateinamen mit Zusatz), mit `--grau` die graue Figur ohne Kleidung in der Körperform `--form`. Muskelzonen
+gibt es seit D-449 nicht mehr: Welche Muskeln arbeiten, zeigt nur die Muskelkarte der Übungsdetails.
 """
 from __future__ import annotations
 
@@ -42,8 +43,8 @@ from uebungen import UEBUNGEN, _netz  # noqa: E402
 
 BILDER = 60
 FPS = 24
-# Figur der App: C männlich, Fassung A1 (Zonen Lime, Logos hell), Brust-F 4 cm (Entscheidungen des
-# Produktinhabers vom 28.10.2026, D-424, D-428; gerendert für die App mit D-447)
+# Figur der App: C männlich, Fassung A1 (Logos hell), Brust-F 4 cm (Entscheidungen des Produktinhabers
+# vom 28.10.2026, D-424, D-428; gerendert für die App mit D-447); ohne Muskelzonen seit D-449
 FIGUR = "Cm-A1"
 VORSCHAU = 480  # Kantenlänge des Vorschau-Renders; verkleinert auf 240 × 240 (D-415)
 QUELLE = "https://raw.githubusercontent.com/makehuman/makehuman/master/makehuman"
@@ -72,7 +73,7 @@ def hole() -> None:
 
 
 def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral", variante: str | None = None):
-    """Szene der Übung. Ohne `variante`: graue Figur mit Zonen in der Körperform `form`; mit
+    """Szene der Übung. Ohne `variante`: graue Figur in der Körperform `form`; mit
     `variante` (Schlüssel aus `varianten.VARIANTEN`) deren Form, Kleidung und Aussehen (D-414)."""
     s = szene.leere_szene()
     s.cycles.samples = proben
@@ -212,7 +213,7 @@ def main() -> None:
     ap.add_argument("--hole", action="store_true")
     ap.add_argument("--form", default="neutral", choices=sorted(koerperform.FORMEN))
     ap.add_argument("--variante", choices=sorted(varianten.VARIANTEN), help="Variante zur Probe (D-414)")
-    ap.add_argument("--grau", action="store_true", help="graue Figur in der Körperform --form (Stand bis D-446)")
+    ap.add_argument("--grau", action="store_true", help="graue Figur ohne Kleidung in der Körperform --form")
     ap.add_argument("--pruefen", action="store_true")
     ap.add_argument("--ansicht", default="standard", choices=["standard", "vorn", "seite"])
     ap.add_argument("--breite", type=int, default=720)

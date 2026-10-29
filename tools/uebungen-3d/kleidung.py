@@ -11,7 +11,7 @@ Links und rechts gelten aus Sicht des Trägers (links = +x in Blender). Die Teil
 der Figur, ohne fremde Dateien: Die Flächen des bedeckten Bereichs werden kopiert, nach außen versetzt
 (eng anliegend wie Laufkleidung), geglättet und hängen mit denselben Gewichten am Skelett; so folgen
 sie jeder Haltung ohne Stoffsimulation. Säume, Ärmel und Schlitze sind keine Netzkanten, sondern ein
-Feld (Abstand zum Rand in Metern, wie bei den Muskelzonen): Der Stoff endet dort scharf.
+Feld (Abstand zum Rand in Metern): Der Stoff endet dort scharf.
 
 **Rundhalskragen** (D-431): Die Halsöffnung ist der Schnitt des Körpers mit einer Fläche durch drei
 Marken: vorn etwas unter der Drosselgrube (Höhe der inneren Schlüsselbeinenden), hinten knapp über dem
@@ -35,7 +35,7 @@ Oberflächennormalen; so wird nichts in die Breite gezogen. Das Bild hängt an d
 sich mit dem Stoff. Jedes Logo gilt nur für sein Körperteil (Rumpf bzw. ein Bein) und nur bis zu
 einer Tiefe vor und hinter der Bildebene (D-422; vorher traf die Projektion des Shorts-F auch die
 Innenseite des rechten Beins) und nur für Flächen, die zur Bildebene zeigen (kein Spiegelbild). Jedes
-Logo hat einen schmalen Rand in Stoffarbe und liegt über den Muskelzonen (Abschnitt 4). Größen, Lagen
+Logo hat einen schmalen Rand in Stoffarbe. Größen, Lagen
 und Farben kommen aus einer Konfiguration (`LOGOS`, `KOLLEKTION`) für alle Übungen und Körper. Das
 vertikale Logo folgt der Regel des Startbilds (`tools/splash.mjs`, D-325): F 2,28 Versalhöhen hoch,
 Abstand 0,82 Versalhöhen, beide mittig (`VERTIKAL`); am Rücken als Backprint mit fester Breite der
@@ -51,8 +51,8 @@ import bpy
 import bmesh  # erst nach bpy verfügbar (Blender als Modul)
 from mathutils import Vector
 
+import koordinaten
 import szene
-import zonen
 
 NACHT = "#0C1219"  # STEP Running Tee
 GRAPHIT = "#4A4F57"  # STEP Shorts
@@ -65,7 +65,7 @@ SVG_F = MARKE / "symbol-f-gruen.svg"
 SVG_WORTMARKE = MARKE / "logo-kopfzeile-dunkel.svg"
 QUELLE = Path(__file__).resolve().parent / "quelle"
 
-# Lage der Säume (Körperkoordinaten wie bei den Zonen, `zonen.Koordinaten`)
+# Lage der Säume (Körperkoordinaten, `koordinaten.Koordinaten`)
 SHIRT_SAUM = 0.02  # Anteil Hüftgelenk (0) bis Halsansatz (1): Saum knapp über den Hüftgelenken
 AERMEL = 0.40  # Anteil Schulter (0) bis Ellbogen (1): kurzer Ärmel
 HOSE_BUND = 0.22  # Bund knapp unter dem Nabel
@@ -126,7 +126,7 @@ WORTMARKE_BREITE = 5.396  # Breite der Wortmarke FORM in Versalhöhen (`logo-kop
 # ---------------------------------------------------------------------- Halsöffnung
 
 
-def _halsoeffnung(koerper: bpy.types.Object, k: zonen.Koordinaten) -> dict:
+def _halsoeffnung(koerper: bpy.types.Object, k: koordinaten.Koordinaten) -> dict:
     """Fläche der Halsöffnung (D-431): die Ebene durch den Punkt vorn auf der Haut unter der
     Drosselgrube (Höhe der inneren Schlüsselbeinenden minus `unter_drosselgrube`) und den Punkt
     hinten auf der Haut über dem Halsansatz (`neck01` plus `ueber_halswirbel`), quer waagrecht;
@@ -175,7 +175,7 @@ def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
     """Je Eckpunkt: Abstand zum Rand von Shirt (Saum und Ärmel, ohne den Halsausschnitt) und Hose
     (m, positiv = bedeckt) und das Körperteil mit dem größten Gewicht; dazu die Maße des Rundhalses
     (`hals`) für das Leerobjekt und den Shader."""
-    k = zonen.Koordinaten(koerper, skelett)
+    k = koordinaten.Koordinaten(koerper, skelett)
     L = (k.N - k.O).length
     oeffnung = _halsoeffnung(koerper, k)
     felder: dict = {n: [] for n in ("shirt", "hose", "teil", "hals")}
@@ -214,7 +214,7 @@ def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
     return felder
 
 
-def _rahmen(koerper: bpy.types.Object, k: zonen.Koordinaten, teile: list[str], lage: dict, seite: float) -> dict:
+def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], lage: dict, seite: float) -> dict:
     """Bildebene eines Logos oder Details: Mittelpunkt auf der Haut (Ruhehaltung), Normale als Mittel
     der Umgebung (3 cm), Hochachse längs des Körperteils, Querachse so, dass das Bild von außen
     richtig herum liegt. Lage am Rumpf über `quer`/`unter_schulter`/`blick` (Logos) oder über
@@ -306,19 +306,14 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
     bm.free()
     obj = bpy.data.objects.new(name, mesh)
     bpy.context.scene.collection.objects.link(obj)
-    # Gewichte und Zonen kommen mit dem Netz (bmesh übernimmt sie je Eckpunkt, die Gewichte mit den
-    # Nummern der Gruppen); dazu dieselben Gruppen in derselben Reihenfolge wie am Körper. Die Felder
-    # der Säume und Details nach den ursprünglichen Nummern der Eckpunkte.
+    # Gewichte kommen mit dem Netz (bmesh übernimmt sie je Eckpunkt mit den Nummern der Gruppen);
+    # dazu dieselben Gruppen in derselben Reihenfolge wie am Körper. Die Felder der Säume und Details
+    # nach den ursprünglichen Nummern der Eckpunkte.
     alt = sorted(behalten)
     for g in koerper.vertex_groups:
         obj.vertex_groups.new(name=g.name)
     if kragen is not None:
         _kragen_binden(obj, [kragen[i] for i in alt])
-    for attr_name in ("Zone", "ZoneMit"):
-        if attr_name not in mesh.attributes:
-            ziel = mesh.attributes.new(attr_name, "FLOAT", "POINT")
-            for i in range(len(alt)):
-                ziel.data[i].value = -1.0
     saum = mesh.attributes.new("Saum", "FLOAT", "POINT")
     for neu_i, alt_i in enumerate(alt):
         saum.data[neu_i].value = feld[alt_i]
@@ -710,13 +705,13 @@ def _stufe(nodes, links, wert, von: float, bis: float, nach: tuple[float, float]
 # ---------------------------------------------------------------------- Material
 
 
-def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str, str, str]], details: list[str],
-                   zonen_staerke: float = 1.0, mit_deckkraft: float = 0.5, mit_saum: bool = True) -> bpy.types.Material:
+def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, str]], details: list[str],
+                   mit_saum: bool = True) -> bpy.types.Material:
     """Stoff matt mit leichtem Glanz (Sheen); endet scharf am Saum (Attribut „Saum“, auch die
-    Halsöffnung); auf Wunsch Muskelzonen in Lime auf dem Stoff (`zonen_staerke` dämpft sie); darüber
-    die Lime-Details (`details`, Schlüssel aus `DETAILS`: Bild, Schnitt) und die Logos (je (Name, Farbe,
-    Motiv): UV-Schicht `Logo<Name>`, Maske `Maske<Name>`) wie ein Aufdruck mit schmalem Rand in
-    Stoffarbe. Ohne `mit_saum` (Kragenbündchen) ist der Stoff überall deckend."""
+    Halsöffnung); darauf die Lime-Details (`details`, Schlüssel aus `DETAILS`: Bild, Schnitt) und die
+    Logos (je (Name, Farbe, Motiv): UV-Schicht `Logo<Name>`, Maske `Maske<Name>`) wie ein Aufdruck mit
+    schmalem Rand in Stoffarbe. Ohne `mit_saum` (Kragenbündchen) ist der Stoff überall deckend. Keine
+    Muskelzonen mehr (D-449)."""
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
@@ -747,11 +742,6 @@ def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str,
 
     stoff = szene.srgb(farbe)
     farbe_out = stoff
-    if zonen_an and zonen_staerke > 0:
-        haupt, mit = maske("Zone", -0.0012, 0.0012), maske("ZoneMit", -0.0012, 0.0012)
-        nicht = _rechne(nodes, links, "SUBTRACT", 1.0, haupt)
-        farbe_out = mischen(mal(mal(mit, nicht), mit_deckkraft * zonen_staerke), stoff, szene.srgb(LIME))
-        farbe_out = mischen(mal(haupt, zonen_staerke), farbe_out, szene.srgb(LIME))
     alpha = maske("Saum", -0.0008, 0.0008) if mit_saum else None
     if details:
         bilder = _detail_bilder()
@@ -781,7 +771,7 @@ def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str,
             tex.extension = "CLIP"
             links.new(uv.outputs["UV"], tex.inputs["Vector"])
             farbe_out = mischen(mal(tex.outputs["Alpha"], sichtbar), farbe_out, ziel)
-    if isinstance(farbe_out, tuple):  # nur Stofffarbe (Kragenbündchen ohne Zonen, Details und Logos)
+    if isinstance(farbe_out, tuple):  # nur Stofffarbe (Kragenbündchen ohne Details und Logos)
         bsdf.inputs["Base Color"].default_value = farbe_out
     else:
         links.new(farbe_out, bsdf.inputs["Base Color"])
@@ -790,14 +780,12 @@ def stoff_material(name: str, farbe: str, zonen_an: bool, logos: list[tuple[str,
     return mat
 
 
-def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: bool,
-             logo_farben: dict[str, str] = KOLLEKTION, zonen_staerke: float = 1.0,
+def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, logo_farben: dict[str, str] = KOLLEKTION,
              brust_hoehe: float | None = None, tee: str = NACHT) -> list[bpy.types.Object]:
-    """Shirt mit Kragenbündchen und Shorts an die Figur (nach `zonen.setze_zonen` und
-    `figur.schulter_gewichte`). `logo_farben` je Logo „lime“ oder „hell“, `zonen_staerke` 1 (Lime) bis 0
-    (gedämpft bis aus), `brust_hoehe` ersetzt die Höhe des Brust-F aus `LOGOS`, `tee` die Farbe des
-    Shirts. Setzt am Körper das Attribut „Bedeckt“ (Abstand innerhalb von Shirt oder Hose, m): Haut, die
-    tiefer als 12 mm unter dem Stoff liegt, blendet das Material aus (`haut_ausblenden`)."""
+    """Shirt mit Kragenbündchen und Shorts an die Figur (nach `figur.schulter_gewichte`). `logo_farben`
+    je Logo „lime“ oder „hell“, `brust_hoehe` ersetzt die Höhe des Brust-F aus `LOGOS`, `tee` die
+    Farbe des Shirts. Setzt am Körper das Attribut „Bedeckt“ (Abstand innerhalb von Shirt oder Hose, m):
+    Haut, die tiefer als 12 mm unter dem Stoff liegt, blendet das Material aus (`haut_ausblenden`)."""
     f = _felder(koerper, skelett)
     k, teile = f["k"], f["teil"]
     rahmen = {"shirt": {}, "hose": {}}
@@ -826,14 +814,14 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, zonen_an: boo
         rahmen[d["teil"]][d_name] = _rahmen(koerper, k, teile, d, d["seite"])
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"])
     shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"])
-    hose.data.materials.append(stoff_material("Shorts", GRAPHIT, zonen_an,
+    hose.data.materials.append(stoff_material("Shorts", GRAPHIT,
                                                [("Beinvorn", logo_farben[LOGOS["beinvorn"]["farbe"]], motive["beinvorn"])],
-                                              [d for d in DETAILS if DETAILS[d]["teil"] == "hose"], zonen_staerke))
-    shirt.data.materials.append(stoff_material("Shirt", tee, zonen_an,
+                                              [d for d in DETAILS if DETAILS[d]["teil"] == "hose"]))
+    shirt.data.materials.append(stoff_material("Shirt", tee,
                                                [("Brust", logo_farben["brust"], motive["brust"]),
                                                 ("Ruecken", logo_farben["ruecken"], motive["ruecken"])],
-                                               [d for d in DETAILS if DETAILS[d]["teil"] == "shirt"], zonen_staerke))
-    kragen = _buendchen(shirt, koerper, skelett, f["oeffnung"], stoff_material("Kragen", tee, False, [], [], mit_saum=False))
+                                               [d for d in DETAILS if DETAILS[d]["teil"] == "shirt"]))
+    kragen = _buendchen(shirt, koerper, skelett, f["oeffnung"], stoff_material("Kragen", tee, [], [], mit_saum=False))
     attr = koerper.data.attributes.get("Bedeckt") or koerper.data.attributes.new("Bedeckt", "FLOAT", "POINT")
     for i in range(len(koerper.data.vertices)):
         attr.data[i].value = max(f["shirt"][i], f["hose"][i])

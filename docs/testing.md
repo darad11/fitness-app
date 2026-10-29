@@ -2441,3 +2441,13 @@ Nachricht des Produktinhabers vom 29.10.2026: Nachklappen des Daumen-Endglieds �
 | CI Lauf 333 zu cfbee88 (D-446) | rot nur in E2E (webkit): `switches.spec.ts:166` „Übungsfortschritt: ‚Als Tabelle‘ bleibt nach Neuladen“ zweimal (mit Wiederholung) „Konsolenfehler im Browser“, empfangen „/localhost:4173/uebungen/medien/bankdruecken.webm due to access control checks.“; sonst 399 bestanden, 164 übersprungen; Ursache und Änderung des Tests in D-447; die anderen Jobs grün |
 | CI Lauf 334 zu 3fe7bd5 (D-447, Teil 1) | alle Jobs grün, auch E2E (webkit) mit dem unveränderten Test |
 | Bilder und Aufnahmen der App (D-448): `node tools/pilot-screens.mjs` gegen `pnpm preview` (Build mit allen drei neuen Schleifen) | 10 Bilder und Übersicht, Laufzeit 1 min 26 s; Aufnahme des Players 224 Bilder mit 18 je Sekunde, 12,4 s, MP4 98,9 KB, WebM 309,7 KB; `pilot-bewegung.mp4` 7,5 s, 1440 × 360, 229,9 KB; Übersicht 2636 × 1970, 555,3 KB. Alles selbst angesehen, auch als Kontaktbogen der Aufnahmen: Liste mit Vorschaubild, Player zugeklappt mit Bild in „Jetzt“, aufgeklappt mit großer Schleife, Übungsdetails mit Schleife oben, überall die neue Figur; in der Aufnahme bewegen sich alle drei Übungen; kein Symbol statt Bild |
+| CI Lauf 336 zu 122b5d6 (D-448) | alle vier Jobs grün, auch E2E (webkit); der Lauf 335 zu 7147e45 wurde vom nächsten Commit abgebrochen (wie in der CI vorgesehen) |
+
+### Phase Übungen, neue Kleidung nach dem Design-Board · 29.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auftrag des Produktinhabers vom 29.10.2026 (`docs/prompts/uebungen-kleidung-neu-FORM.md`, Board `docs/prompts/uebungen-kleidung-neu-board.png`): Muskelzonen nur noch in der Muskelkarte, Kleidung 1:1 nach dem Board mit Socken und Schuhen, Bodenkontakt über die Sohle, Handgelenk beim Bankdrücken annähernd gerade; zuerst Standbilder, dann Halt.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ohne Muskelzonen (D-449): `py_compile` aller Werkzeuge, Standbild Kniebeuge unten in der Figur der App (`varianten_bilder.py Cm-A1 kniebeuge 1.0`, 480 × 360, 16 Samples) | kompiliert; im Bild kein Lime auf Haut und Stoff, Logos wie bisher; Aufbau und Bild 24 s |
+

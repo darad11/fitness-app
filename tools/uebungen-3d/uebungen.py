@@ -1,6 +1,6 @@
 """Die drei Pilot-Übungen auf dem IK-Rig (D-407, D-408).
 
-Jede Übung baut ihre Szene (Figur, Geräte, Muskelzonen) und rechnet je Phase p (0 = Ausgang,
+Jede Übung baut ihre Szene (Figur, Geräte) und rechnet je Phase p (0 = Ausgang,
 1 = Endposition) die Haltung aus Zielen: Füße fest am Boden, Hände im Griff an der Stange, Becken
 und Rumpf so, dass die Last über der Unterstützungsfläche bleibt. `pruefwerte()` liefert die
 Kennwerte für die Qualitätskontrolle (Gelenkwinkel, Abstände, Meldungen des Rigs).
@@ -15,7 +15,6 @@ from mathutils import Matrix, Vector
 import figur
 import geraete
 import koerperform
-import zonen
 from rig import X, Y, Z, Rig, achse_winkel, ellbogen_zur_richtung, gelenkkreis, starr
 
 STANGE_R = 0.014  # Griffteil der olympischen Stange, 28 mm
@@ -27,8 +26,9 @@ def _hinten(koerper: bpy.types.Object, z: float, breite: float = 0.05) -> float:
 
 
 def _rumpfhoehe(kopf: dict, anteil: float) -> float:
-    """Höhe (Grundhaltung) als Anteil der Strecke Hüftgelenke (0) bis Halsansatz (1), wie bei den
-    Muskelzonen; so trifft dieselbe Zahl bei jeder Körperform dieselbe Stelle des Rumpfs."""
+    """Höhe (Grundhaltung) als Anteil der Strecke Hüftgelenke (0) bis Halsansatz (1), wie in den
+    Körperkoordinaten (`koordinaten.py`); so trifft dieselbe Zahl bei jeder Körperform dieselbe Stelle
+    des Rumpfs."""
     unten = (kopf["upperleg01.L"].z + kopf["upperleg01.R"].z) / 2
     return unten + (kopf["neck01"].z - unten) * anteil
 
@@ -58,8 +58,6 @@ class Uebung:
     Verhältnis der Schulterbreite skaliert (`mass`), Höhen beziehen sich auf Gelenke (D-413)."""
 
     name = ""
-    haupt: list[str] = []
-    mit: list[str] = []
     SCHULTER_GRUND = 0.1677  # halber Abstand der Schultergelenke im Grundmodell, m
     # Kamera (D-410): Dreiviertelansicht von vorn-seitlich, 45° zur linken Körperseite, leicht von
     # oben. Der Abstand ergibt sich aus Figur und Gerät (`szene.bildausschnitt`).
@@ -93,8 +91,7 @@ class Uebung:
     def bauen(self) -> None:
         self.koerper, self.skelett = figur.baue_figur(form=self.form)
         bpy.context.view_layer.update()
-        # Zonen nach den Gewichten des Grundmodells, danach der Hilfsknochen an der Schulter
-        zonen.setze_zonen(self.koerper, self.skelett, self.haupt, self.mit)
+        # Hilfsknochen an der Schulter (Muskelzonen gibt es seit D-449 nicht mehr)
         figur.schulter_gewichte(self.koerper)
         self.rig = Rig(self.skelett, self.koerper)
         self.mass = self.rig.kopf["upperarm01.L"].x / self.SCHULTER_GRUND
@@ -131,8 +128,6 @@ class Kniebeuge(Uebung):
     """
 
     name = "kniebeuge"
-    haupt = ["quads", "glutes"]
-    mit = ["adductors", "lower_back"]
     NEIGUNG = 44.0  # Rumpfneigung unten, Grad zur Senkrechten
     NEIGUNG_OBEN = 6.0  # leichte Rumpfneigung im Stand, damit die Stange über der Fußmitte steht
     KNIE_OBEN = 176.0  # Kniewinkel im Stand (Knie nicht ganz durchgedrückt)
@@ -321,8 +316,6 @@ class Bankdruecken(Uebung):
     """
 
     name = "bankdruecken"
-    haupt = ["chest"]
-    mit = ["triceps", "front_delts"]
     # Liegend: dieselbe Richtung, steiler von oben, damit die Brust zu sehen ist
     kamera = {"richtung": 45.0, "neigung": 32.0}
     # Vorschau oben: gestreckte Arme mit der Stange über der Brust sind klein sofort Bankdrücken; unten
@@ -467,9 +460,8 @@ class Latziehen(Uebung):
     """
 
     name = "latziehen"
-    haupt = ["lats"]
-    mit = ["biceps", "upper_back"]
-    # Die arbeitenden Muskeln liegen auf dem Rücken: dieselbe Dreiviertelansicht, von hinten-seitlich
+    # Dreiviertelansicht von hinten-seitlich (D-410): Rücken und Schulterblätter arbeiten sichtbar, die
+    # Stange läuft vor dem Gesicht frei; seit D-449 ohne Zonen, die Kamera bleibt
     kamera = {"richtung": 135.0, "neigung": 10.0}
     # Vorschau oben: Arme über dem Kopf an der breiten Stange, dazu Sitz und Knierolle (D-415)
     vorschau_phase = 0.0

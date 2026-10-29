@@ -1356,3 +1356,25 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Aufnahme mit 18 Bildern je Sekunde (die App spielt 24); Handgelenk beim Bankdrücken wie in D-447
 Nächste Schritte: Gerätetest des Produktinhabers, danach seine Freigabe des Merge von PR #53
 ```
+
+## 21. Neue Kleidung nach dem Design-Board
+
+Dein Auftrag vom 29.10.2026 (`docs/prompts/uebungen-kleidung-neu-FORM.md`) mit dem Design-Board (`docs/prompts/uebungen-kleidung-neu-board.png`): Die Muskelzonen entfallen aus den Übungsbildern, die Kleidung kommt 1:1 vom Board (T-Shirt, Shorts, Socken, Schuhe), die Figur steht auf den Sohlen, und das Handgelenk bleibt beim Bankdrücken annähernd gerade. Zuerst Standbilder, dann Halt bis zu deiner Freigabe; erst danach rendere ich die Schleifen neu.
+
+### 21.1 Muskelzonen nur noch in der Muskelkarte (D-449)
+
+Die Lime-Zonen sind aus allen Übungsdarstellungen entfernt, auf Haut und Stoff. Welche Muskeln arbeiten, zeigt nur noch die Muskelkarte in den Übungsdetails; sie bleibt, ebenso die Muskel-Etiketten in den Übungskarten. Im Werkzeug gibt es keine Zonen mehr: Die Umrisse der Muskeln sind gelöscht, die Körperkoordinaten für Säume und Logos stehen in einem eigenen Modul. Die Schleifen in der App zeigen die Zonen noch, bis du die Standbilder freigibst und ich die drei Pilot-Übungen neu rendere; dann ändern sich auch ihre Bildbeschreibungen.
+
+### 21.2 Berichte je Paket
+
+```
+Arbeitspaket: D-449 Muskelzonen nur noch in der Muskelkarte
+Umgesetzte Funktionen: Werkzeug der Figur (Videos der App bis zur Freigabe unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/zonen.py (gelöscht), koordinaten.py (neu), kleidung.py, realistisch.py, szene.py, uebungen.py, varianten.py, render.py; Auftrag und Board in docs/prompts/; CLAUDE.md; Dokumente
+Technische Entscheidungen: D-449
+Ausgeführte Tests: py_compile; Standbild Kniebeuge unten ohne Zonen; pnpm format:check, check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: Schleifen der App zeigen die Zonen bis zum Neurendern nach der Freigabe
+Nächste Schritte: Kleidung nach dem Board (Abschnitt 2)
+```
+

@@ -1,8 +1,9 @@
 """Szene im FORM-Look für die Übungsbilder (Pilot 3D, D-402).
 
-Hintergrund #0C1219, Körper matt in Grau, arbeitende Muskeln als Zonen in Lime #C7FF46, weiches
-Licht von schräg vorn, kein Leuchten (keine Emission, kein Bloom). Farben als sRGB-Werte; Blender
-rechnet linear, deshalb `srgb()`.
+Hintergrund #0C1219, weiches Licht von schräg vorn, kein Leuchten (keine Emission, kein Bloom).
+Lime #C7FF46 ist in den Übungsbildern nur Markenfarbe auf der Kleidung: Welche Muskeln arbeiten, zeigt
+seit D-449 nur die Muskelkarte der Übungsdetails (bis D-448 Zonen in Lime auf Körper und Stoff).
+Farben als sRGB-Werte; Blender rechnet linear, deshalb `srgb()`.
 """
 from __future__ import annotations
 
@@ -54,68 +55,9 @@ def matt(name: str, farbe: str, rauheit: float = 0.7) -> bpy.types.Material:
     return mat
 
 
-def koerper_material(mit_deckkraft: float = 0.42, zonen_staerke: float = 1.0) -> bpy.types.Material:
-    """Grau, Muskelzonen in Lime mit scharfem Rand (D-409).
-
-    Die Attribute „Zone“ (Hauptmuskeln) und „ZoneMit“ (mitarbeitend) sind Abstände zum Rand des
-    Umrisses in Metern, positiv innen. Geschnitten wird bei 0 mit 1,2 mm Übergang: so bleibt der
-    Rand glatt, aber klar. Mitarbeitende Muskeln: Lime mit geringer Deckkraft über dem Grau.
-    `zonen_staerke` unter 1 dämpft beide (Fassung A2, D-419).
-    """
-    mat = bpy.data.materials.new("Koerper")
-    mat.use_nodes = True
-    nodes = mat.node_tree.nodes
-    links = mat.node_tree.links
-    bsdf = nodes["Principled BSDF"]
-    bsdf.inputs["Roughness"].default_value = 0.72
-
-    def maske(attribut: str):
-        attr = nodes.new("ShaderNodeAttribute")
-        attr.attribute_name = attribut
-        attr.attribute_type = "GEOMETRY"
-        rng = nodes.new("ShaderNodeMapRange")
-        rng.interpolation_type = "SMOOTHSTEP"
-        rng.clamp = True
-        rng.inputs["From Min"].default_value = -0.0012
-        rng.inputs["From Max"].default_value = 0.0012
-        links.new(attr.outputs["Fac"], rng.inputs["Value"])
-        return rng.outputs["Result"]
-
-    haupt = maske("Zone")
-    mit = maske("ZoneMit")
-    # Mitarbeitend nur, wo kein Hauptmuskel ist; Deckkraft gering.
-    nicht_haupt = nodes.new("ShaderNodeMath")
-    nicht_haupt.operation = "SUBTRACT"
-    nicht_haupt.inputs[0].default_value = 1.0
-    links.new(haupt, nicht_haupt.inputs[1])
-    mit_faktor = nodes.new("ShaderNodeMath")
-    mit_faktor.operation = "MULTIPLY"
-    links.new(mit, mit_faktor.inputs[0])
-    links.new(nicht_haupt.outputs[0], mit_faktor.inputs[1])
-    mit_deck = nodes.new("ShaderNodeMath")
-    mit_deck.operation = "MULTIPLY"
-    mit_deck.inputs[1].default_value = mit_deckkraft * zonen_staerke
-    links.new(mit_faktor.outputs[0], mit_deck.inputs[0])
-    haupt_deck = nodes.new("ShaderNodeMath")
-    haupt_deck.operation = "MULTIPLY"
-    haupt_deck.inputs[1].default_value = zonen_staerke
-    links.new(haupt, haupt_deck.inputs[0])
-
-    def mischen(faktor, a, b):
-        mix = nodes.new("ShaderNodeMix")
-        mix.data_type = "RGBA"
-        links.new(faktor, mix.inputs[0])
-        if isinstance(a, tuple):
-            mix.inputs[6].default_value = a
-        else:
-            links.new(a, mix.inputs[6])
-        mix.inputs[7].default_value = b
-        return mix.outputs[2]
-
-    farbe = mischen(mit_deck.outputs[0], srgb(KOERPER), srgb(LIME))
-    farbe = mischen(haupt_deck.outputs[0], farbe, srgb(LIME))
-    links.new(farbe, bsdf.inputs["Base Color"])
-    return mat
+def koerper_material() -> bpy.types.Material:
+    """Graue Figur (D, `--grau`), matt; ohne Muskelzonen (D-449)."""
+    return matt("Koerper", KOERPER, 0.72)
 
 
 def licht_und_kamera(ziel: Vector, richtung_grad: float, abstand: float, hoehe: float,

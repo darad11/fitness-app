@@ -1597,6 +1597,17 @@ Die Schleifen in der App zeigen jetzt die Kleidung vom Board: Shirt, Shorts, Soc
 - **Prüfseiten** `pruef-kniebeuge.webp`, `pruef-bankdruecken.webp`, `pruef-latziehen.webp` sind neu, mit der neuen Kleidung.
 - **Startansicht** unverändert 237,8 KB von 250 KB.
 
+### 22.4 Übersichtsbild, Aufnahme und Griffblatt (D-457)
+
+Alles mit der App im Browser aufgenommen, mit den neuen Schleifen; in `docs/screens/uebungen/`:
+
+- `pilot-uebersicht.png`: je Übung Ausgangs- und Endposition, Player zugeklappt (iPhone-Breite) und aufgeklappt, Übungsdetails, rechts die Übungsliste mit den Vorschaubildern (551,7 KB).
+- `pilot-player.mp4` (und `.webm`): der aufgeklappte Player, nacheinander Kniebeuge, Bankdrücken und Latziehen, zusammen 12,6 Sekunden (112,2 KB).
+- `pilot-bewegung.mp4`: die drei Schleifen der App nebeneinander, je dreimal (209,0 KB).
+- `latziehen-griff.webp`: das Griffblatt fürs Latziehen mit den Messwerten (22.2).
+
+**Halt:** Ich warte auf deinen Gerätetest. Danach gibst du den Merge von PR #53 frei. Die Übungen der Programme kommen auf einem eigenen Branch: zuerst Schuh und Rückenlogo (22.1), dann „Ganzkörper A/B“ nach dem Animationsplan.
+
 ### 22.5 Berichte je Paket
 
 ```
@@ -1630,5 +1641,16 @@ Ausgeführte Tests: render.py für alle drei Übungen, Kontaktbögen aller 60 Bi
 Ergebnis: bestanden
 Bekannte Einschränkungen: Gerätetest am iPhone steht aus; Schuh und Rückenlogo bleiben bis zur Runde vor den Programmen (22.1)
 Nächste Schritte: Übersichtsbild, Aufnahme und Griffblatt an den Produktinhaber, PR-Beschreibung, dann Halt bis zum Gerätetest
+```
+
+```
+Arbeitspaket: D-457 Übersichtsbild, Aufnahme und Griffblatt, Halt
+Umgesetzte Funktionen: keine (Bilder und Dokumente), erfüllte AK: –
+Geänderte Dateien: docs/screens/uebungen/pilot-*.png, pilot-uebersicht.png, pilot-player.mp4 und .webm, pilot-bewegung.mp4; Dokumente; Beschreibung von PR #53
+Technische Entscheidungen: D-457
+Ausgeführte Tests: tools/pilot-screens.mjs gegen pnpm preview; alle Bilder und die Aufnahmen als Kontaktbogen angesehen; pnpm format:check, check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: getestet im Browser, nicht am Gerät
+Nächste Schritte: Gerätetest des Produktinhabers, dann seine Freigabe des Merge von PR #53; danach eigener Branch für die Programme, zuerst Schuh und Rückenlogo
 ```
 

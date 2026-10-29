@@ -1297,3 +1297,40 @@ Deine Nachricht vom 29.10.2026: Das Nachklappen des Daumen-Endglieds wird übern
 
 Die Daumenkonstruktion klappt das Endglied jetzt selbst nach: Nach der bisherigen Konstruktion dreht es sich um das Endgelenk zur Stange, bis die Beere aufliegt, mit ihrer echten Dicke an jeder Stelle (an der Spitze 3,5 statt 13 mm). Gemessen wie im Versuch: Der Spalt von der Seite sinkt beim Bankdrücken von 3,7 auf 1,6 mm, in der Kniebeuge von 2,2 auf 1,4 mm und beim Latziehen von 4,0 auf 3,4 mm; von oben bleibt es wie bisher. Die Werte sind dieselben wie im Versuch D-445. Das Prüfwerkzeug misst seitdem mit dem Nachklappen; der Schalter `--ohne-kuppe` zeigt den alten Stand.
 
+### 20.2 Pilot-Übungen in der Figur der App (D-447)
+
+Kniebeuge, Bankdrücken und Latziehen sind neu gerendert: C männlich, Fassung A1 (Zonen Lime, Logos hell), Brust-F 4 cm, mit dem nachgeklappten Daumen. Sie ersetzen in der App die graue Figur. Dateien und Ablauf wie bisher: MP4 und WebM 720 × 540, 60 Bilder, Schleife von 2,5 s, Poster (Endposition) und Vorschau 240 × 240.
+
+- **Werkzeug:** `render.py` rendert Schleife und Prüfung jetzt in der Figur der App (`FIGUR = "Cm-A1"`) unter den bisherigen Dateinamen. Mit `--variante` entsteht eine andere Fassung mit Zusatz im Namen, mit `--grau` die graue Figur bis D-446.
+- **Prüfung über alle 60 Bilder je Übung:** keine Meldung des Rigs. Kniebeuge: Stange in jedem Bild über der Fußmitte, Knie folgen den Zehen (−1,8 bis +0,1°), Füße höchstens 2,7 mm verschoben. Bankdrücken: Unterarm höchstens 19,1° aus der Senkrechten, Stange bis zum Brustkontakt. Latziehen: Unterarm höchstens 24,8°, Handgelenk höchstens 16,5°, Lehne 8° bis 18°. Die Prüfseiten `docs/screens/uebungen/pruef-<übung>.webp` habe ich angesehen: Stange, Stoff und Haut durchdringen sich nicht.
+- **Schleifen:** Alle 60 Bilder je Übung habe ich als Kontaktbogen angesehen. Die Bewegung läuft gleichmäßig und ohne Sprung, erstes und letztes Bild sind gleich. Renderzeit 946 s (Kniebeuge), 1.268 s (Bankdrücken) und 1.049 s (Latziehen).
+- **Größe:** zusammen 390,1 KB statt 270,0 KB. Haut, Haare und Kleidung mit Logos bringen mehr Bildinhalt; die Kodierung ist dieselbe. Abgerufen wird je Übung nur MP4 oder WebM, mit Poster und Vorschau höchstens 84,2 KB (Kniebeuge). Die Startansicht bleibt bei 237,8 KB.
+- **Quelle in der App:** `medien.json` nennt jetzt Grundmodell, Haut, Augen und Haare von MakeHuman (CC0), die Darstellung als eigenes Werk.
+- **Test:** Ein E2E-Test öffnete die Übungsdetails nur, um die ID der Übung zu lesen. WebKit meldete dabei in Lauf 333 das abgebrochene Laden der Schleife als Konsolenfehler. Der Test liest die ID jetzt aus dem Link und prüft sonst dasselbe.
+
+**Bitte beim Gerätetest anschauen:** Beim Bankdrücken knickt das Handgelenk in der Mitte der Bewegung bis 39,5° nach hinten, am Start sind es 12°, unten 22°. Dort steht auch der Unterarm am schrägsten (bis 19°). Bis D-430 waren es höchstens 27°; seither liegt die Stange tiefer in der Hand. In deinen Standbildern (Ausgang und Ende) war die Mitte nicht zu sehen. Ich habe es nicht geändert, weil du nur das Neurendern beauftragt hast.
+
+### 20.3 Berichte je Paket
+
+```
+Arbeitspaket: D-446 Daumen-Endglied nachgeklappt
+Umgesetzte Funktionen: Werkzeug der Figur (die Videos der App folgen mit D-447), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/rig.py, tools/uebungen-3d/daumen_versuch.py; Dokumente
+Technische Entscheidungen: D-446
+Ausgeführte Tests: daumen_versuch.py messen in drei Übungen mit und ohne Nachklappen; pnpm format:check
+Ergebnis: Messwerte gleich wie im Versuch D-445; CI zu cfbee88 (Lauf 333) rot nur in E2E (webkit), ein Test (Konsolenfehler beim Laden der Schleife, Ursache und Änderung in D-447), sonst grün
+Bekannte Einschränkungen: von oben ragt der Daumen wie bisher unter der Stange hervor (12,0 und 14,3 mm)
+Nächste Schritte: die drei Pilot-Übungen neu rendern (D-447)
+```
+
+```
+Arbeitspaket: D-447 Pilot-Übungen in der Figur der App
+Umgesetzte Funktionen: TP-06, TP-07, TS-02 (neue Schleifen, Poster und Vorschaubilder für Kniebeuge, Bankdrücken, Latziehen), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/render.py, tools/uebungen_pruef_bild.py (neu), tools/pilot-screens.mjs, public/uebungen/medien/ (12 Dateien), public/uebungen/medien.json, e2e/switches.spec.ts, docs/screens/uebungen/pruef-*.webp; Dokumente
+Technische Entscheidungen: D-447
+Ausgeführte Tests: render.py --pruefen über alle 60 Bilder je Übung, Prüfseiten und Kontaktbögen angesehen, Schleifen nahtlos; pnpm format:check, lint, typecheck, check:docs, build, check:bundle; E2E Chromium 432 bestanden, 132 übersprungen
+Ergebnis: bestanden; CI zu 3fe7bd5 (Teil 1, Lauf 334) alle Jobs grün
+Bekannte Einschränkungen: Handgelenk beim Bankdrücken in der Mitte der Bewegung bis 39,5° (bis D-430 höchstens 27°); Medien zusammen 390,1 statt 270,0 KB
+Nächste Schritte: Übersichtsbild und Aufnahme (D-448), Gerätetest des Produktinhabers, Merge von PR #53
+```
+

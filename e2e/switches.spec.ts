@@ -166,14 +166,14 @@ test('Körpergewicht: „Als Tabelle“ wechselt zur Tabelle, bleibt beim Zeitra
 test('Übungsfortschritt: „Als Tabelle“ bleibt nach Neuladen', async ({ page, hasTouch }) => {
   await openPage(page, '/uebungen');
   await page.getByLabel('Übungen suchen').fill('Bankdrücken mit Langhantel');
-  await page
+  // Die ID aus dem Link, ohne die Details zu öffnen: Dort lädt die Schleife (D-403), und WebKit
+  // meldet das beim Weggehen abgebrochene Laden als Konsolenfehler (D-447).
+  const href = await page
     .getByRole('link', { name: /^Bankdrücken mit Langhantel/ })
     .first()
-    .click();
-  await expect(
-    page.getByRole('heading', { level: 1, name: 'Bankdrücken mit Langhantel' }),
-  ).toBeVisible();
-  const id = new URL(page.url()).pathname.split('/').pop() ?? '';
+    .getAttribute('href');
+  const id = href?.split('/').pop() ?? '';
+  expect(id).not.toBe('');
   await openPage(page, `/fortschritt/uebung/${id}`);
   const control = page.getByRole('switch', { name: 'Als Tabelle' });
   await expect(control).not.toBeChecked();

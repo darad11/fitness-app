@@ -1310,7 +1310,19 @@ Kniebeuge, Bankdrücken und Latziehen sind neu gerendert: C männlich, Fassung A
 
 **Bitte beim Gerätetest anschauen:** Beim Bankdrücken knickt das Handgelenk in der Mitte der Bewegung bis 39,5° nach hinten, am Start sind es 12°, unten 22°. Dort steht auch der Unterarm am schrägsten (bis 19°). Bis D-430 waren es höchstens 27°; seither liegt die Stange tiefer in der Hand. In deinen Standbildern (Ausgang und Ende) war die Mitte nicht zu sehen. Ich habe es nicht geändert, weil du nur das Neurendern beauftragt hast.
 
-### 20.3 Berichte je Paket
+### 20.3 Übersichtsbild und Aufnahme (D-448)
+
+Die App lief dafür lokal (`pnpm preview`), aufgenommen mit Chromium in drei Haltungen: iPhone 390 × 844, Duo zugeklappt 466 × 678 und aufgeklappt 951 × 669.
+
+- **Übersichtsbild** `docs/screens/uebungen/pilot-uebersicht.png`: je Übung Ausgangs- und Endposition aus dem Render, Player zugeklappt und aufgeklappt, Übungsdetails; rechts die Übungsliste. Die Einzelbilder `pilot-*.png` ersetzen die aus D-408.
+- **Aufnahme** `pilot-player.mp4` (neu, dazu als WebM): der Player aufgeklappt, nacheinander Kniebeuge, Bankdrücken und Latziehen, je gut vier Sekunden, zusammen 12,4 s. Aufgenommen als Einzelbilder mit 18 je Sekunde; in der App läuft die Schleife mit 24 Bildern je Sekunde, also etwas flüssiger.
+- **Die drei Schleifen nebeneinander** `pilot-bewegung.mp4`: je dreimal, 7,5 s, so wie die App sie abspielt.
+
+Ich habe alles angesehen: In jeder Ansicht steht die neue Figur, die Schleifen laufen, nirgends erscheint das Symbol statt des Bilds. In den Übungsdetails steht oben „Training läuft“, weil für die Bilder des Players vorher ein Training gestartet wurde.
+
+Damit halte ich an. Nach deinem Gerätetest gibst du den Merge von PR #53 frei.
+
+### 20.4 Berichte je Paket
 
 ```
 Arbeitspaket: D-446 Daumen-Endglied nachgeklappt
@@ -1334,3 +1346,13 @@ Bekannte Einschränkungen: Handgelenk beim Bankdrücken in der Mitte der Bewegun
 Nächste Schritte: Übersichtsbild und Aufnahme (D-448), Gerätetest des Produktinhabers, Merge von PR #53
 ```
 
+```
+Arbeitspaket: D-448 Übersichtsbild und Aufnahme der Pilot-Übungen
+Umgesetzte Funktionen: Dokumentation (Bilder und Aufnahmen der App), erfüllte AK: –
+Geänderte Dateien: tools/pilot-screens.mjs (Titel „Latziehen“ wie in der App), docs/screens/uebungen/pilot-*.png, pilot-uebersicht.png, pilot-player.mp4 (neu), pilot-player.webm, pilot-bewegung.mp4; Dokumente
+Technische Entscheidungen: D-448
+Ausgeführte Tests: pilot-screens.mjs gegen pnpm preview, Bilder und Kontaktbögen der Aufnahmen angesehen; pnpm format:check, lint, check:docs, check:bundle
+Ergebnis: bestanden
+Bekannte Einschränkungen: Aufnahme mit 18 Bildern je Sekunde (die App spielt 24); Handgelenk beim Bankdrücken wie in D-447
+Nächste Schritte: Gerätetest des Produktinhabers, danach seine Freigabe des Merge von PR #53
+```

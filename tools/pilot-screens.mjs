@@ -233,7 +233,7 @@ execFileSync(
 import sys
 from PIL import Image, ImageDraw, ImageFont
 D, F = sys.argv[1], sys.argv[2]
-pilot = [('kniebeuge', 'Kniebeuge mit Langhantel'), ('bankdruecken', 'Bankdrücken mit Langhantel'), ('latziehen', 'Latziehen am Kabel')]
+pilot = [('kniebeuge', 'Kniebeuge mit Langhantel'), ('bankdruecken', 'Bankdrücken mit Langhantel'), ('latziehen', 'Latziehen')]
 H = 560
 def load(path, h=H):
     im = Image.open(path).convert('RGB')

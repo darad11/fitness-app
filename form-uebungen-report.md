@@ -1438,7 +1438,60 @@ Die Stange liegt 1,0 bis 1,7 cm vor der Linie des Unterarms, also über ihm. Der
 
 **Zur Info, unverändert:** Bei der Kniebeuge ist das Handgelenk 16,5° gestreckt (so gewollt seit D-407). Beim Latziehen zeigt die neue Messung in der Endposition 30,6° zur Seite des Daumens, bei kaum Streckung; dort steht der Unterarm 25° schräg. Das gehört nicht zu diesem Auftrag und würde den Griff mit dem freigegebenen Daumen neu anpassen; ich habe es nicht geändert. Wenn du willst, prüfe ich dort die Schräge der Stange auf dieselbe Weise.
 
-### 21.5 Berichte je Paket
+### 21.5 Standbilder zur Freigabe (D-453)
+
+Wie vereinbart gibt es in dieser Runde nur Standbilder; die Schleifen in der App sind noch die von D-447. Alle Bilder zeigen die Figur der App (C männlich) mit dem Licht und dem Kantenlicht der App. Die fünf Blätter liegen in `docs/screens/uebungen/`:
+
+1. `kleidung-1-board.webp`: links dein Board, daneben die Figur in Ruhehaltung von vorn und von hinten. Die Ansicht ist ohne Perspektive, so lassen sich Längen und Lagen direkt mit dem Board vergleichen.
+2. `kleidung-2-nah.webp`: Brust-F, Rückenlogo, Shorts von vorn und von der Seite mit Streifen und F, Socke, Schuh von der Seite; dazu der Schuh von innen mit der geschlossenen Sohle.
+3. `kleidung-3-player.webp`: Kniebeuge in der tiefsten Position, Bankdrücken in Ausgangs- und Endposition, Latziehen in der Endposition, je im großen Player (390 px breit wie am iPhone) und im kleinen (56 px, daneben 2-fach vergrößert).
+4. `kleidung-4-handgelenk.webp`: das Handgelenk beim Bankdrücken vorher (Stand D-451) und nachher (D-452) in fünf Phasen, von der Seite längs der Stange und vom Fußende, mit den Winkeln.
+5. `kleidung-5-griff.webp`: das Griffblatt vorher und nachher, in der Ausgangsposition und in der Mitte der Bewegung, aus fünf Richtungen.
+
+**Was ich beim Ansehen festgestellt habe:**
+
+- Schnitt, Farben, Aufteilung, Lage und Größe der Logos folgen dem Board. Abweichungen gibt es zwei, beide in 21.2 begründet: Das Shirt ist 1 % kürzer, und das Rückenlogo hat das Verhältnis des Boards, nicht das des Startbilds.
+- Die schwarze Spitze der Socke ist da, sie liegt aber im Schuh. In keinem Bild ist sie zu sehen.
+- Hinten sitzt der Rundhals mit seinem Bündchen flach am Hals. Auf dem Board ist das Shirt ohne Körper gezeigt, dort wirkt die Öffnung tiefer.
+- Die Vereinfachungen am Schuh aus 21.2 sieht man von innen und von der Seite am deutlichsten: Die Zehenbox ist runder, die Schnürung nur aufgemalt.
+- Im kleinen Player erkennt man Figur, Gerät, weiße Schuhe und Socken, die Logos nicht.
+
+**Messwerte Handgelenk** (linke Hand, an der Längsachse der Mittelhand; die Bilder von Blatt 4):
+
+| | Ausgang | Viertel | Mitte | Dreiviertel | unten |
+|---|---|---|---|---|---|
+| nach hinten, vorher | 11,4° | 10,3° | 15,4° | 16,4° | 14,1° |
+| nach hinten, nachher | 7,1° | 4,3° | 7,5° | 9,2° | 7,5° |
+| zur Seite, vorher | +9,9° | −16,8° | −22,9° | −17,8° | −2,5° |
+| zur Seite, nachher | +16,9° | −8,9° | −15,4° | −11,0° | +3,5° |
+| gesamt, vorher | 15,0° | 19,4° | 26,8° | 23,6° | 14,3° |
+| gesamt, nachher | 18,2° | 9,8° | 17,0° | 14,2° | 8,2° |
+
+Zur Seite heißt plus zum Daumen, minus zum kleinen Finger. Über alle 60 Bilder der Schleife knickt das Handgelenk jetzt 4,3 bis 9,3° nach hinten, also deutlich unter den verlangten etwa 15°; gesamt sind es höchstens 18,2°. In der Ausgangsposition entfallen davon 16,9° auf die Seite des Daumens, weil die Stange schräg in der Hand liegt. Die Stange liegt über dem Unterarm, 1,0 bis 1,7 cm vor seiner Linie. Sichtbar ragt kein Teil der Hand in die Stange. Gemessen liegen die Fingerkuppen bis 4 mm und die Haut der Handfläche bis 11 mm in ihr: Das ist das Einsinken der Stange in die Hand aus D-430, die Stange verdeckt es.
+
+**Messwerte Bodenkontakt** (über alle 60 Bilder je Übung, D-451):
+
+- Die Sohle liegt an Ferse und Ballen beidseitig bei 0,0 mm über dem Boden, in allen drei Übungen und in jedem Bild. Sie verschiebt sich höchstens 0,1 mm.
+- Kniebeuge: Die Stange steht über der Fußmitte (0,0 cm, zur Mitte der Sohle 0,1 cm). Die Knie folgen den Zehen (−1,8 bis +0,1°), unten steht das Knie 6,1 cm hinter der Zehenspitze.
+- Der Kragen bleibt mindestens 0,95 mm über der Socke, die Socke mindestens 2,8 mm über der Haut, keine Löcher; zu den Shorts mindestens 13,7 cm.
+
+**Renderzeiten:**
+
+- Standbilder dieser Runde: Ruhehaltung 15 bis 16 s je Bild, Nahaufnahmen 16 bis 26 s, Player-Größe 16 bis 22 s, Handgelenk und Griff 10 bis 14 s (kleiner, weniger Samples). Alles zusammen mit dem Aufbau der Szenen knapp 13 Minuten.
+- Prüfung über alle 60 Bilder je Übung: 214 bis 392 s.
+- Schleifen nach der Freigabe, geschätzt aus den Standbildern in Player-Größe mit denselben Einstellungen: Kniebeuge rund 16 Minuten, Bankdrücken 22, Latziehen 17, zusammen knapp eine Stunde. Mit der bisherigen Kleidung (D-447) waren es 16, 21 und 17 Minuten.
+
+**Dateigrößen:**
+
+- Blätter: 63, 48, 54, 134 und 124 KB.
+- Standbilder in Player-Größe als PNG 336 bis 371 KB; das sind Arbeitsdateien, sie liegen nicht im Repository.
+- App unverändert: Medien der drei Pilot-Übungen zusammen 390,1 KB, Startansicht 237,8 KB von 250 KB. Die Größe der neuen Schleifen steht erst nach dem Rendern fest; Bildgröße und Kodierung bleiben gleich.
+
+**PR #53:** Ich habe die Meldungen gelesen. Es gibt keine Reviews, in den Kommentaren stehen nur die Vorschau von Vercel und ein älterer Hinweis der CI, keine Aufgaben. Die CI ist auf den Commits zu D-449 bis D-452 grün, auch E2E mit WebKit. Die Beschreibung des PR enthält jetzt D-446 bis D-453.
+
+**Halt:** Ich warte auf deine Freigabe. Erst danach rendere ich die drei Pilot-Übungen als Schleifen neu und baue sie ein.
+
+### 21.6 Berichte je Paket
 
 ```
 Arbeitspaket: D-449 Muskelzonen nur noch in der Muskelkarte
@@ -1482,4 +1535,15 @@ Ausgeführte Tests: Raster mit 123 Einstellungen und 8 Neigungen des Unterarms; 
 Ergebnis: bestanden
 Bekannte Einschränkungen: seitlich bleiben bis 16,9° (Unterarm kippt in der Mitte der Bewegung); Latziehen in der Endposition 30,6° zur Seite (unverändert, nicht Teil des Auftrags)
 Nächste Schritte: Standbilder neben dem Board, Nahaufnahmen, Player-Größe, Handgelenk (Abschnitt 6)
+```
+
+```
+Arbeitspaket: D-453 Standbilder zur Freigabe
+Umgesetzte Funktionen: Werkzeug der Figur (Videos der App bis zur Freigabe unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung_bilder.py (neu), kleidung.py, schuhe.py, tools/uebungen_korrektur_bild.py (Runde 7); Blätter kleidung-1-board.webp bis kleidung-5-griff.webp; Dokumente; Beschreibung von PR #53
+Technische Entscheidungen: D-453
+Ausgeführte Tests: Standbilder und Nahaufnahmen neben dem Board angesehen; Winkel des Handgelenks je Phase vorher und nachher; py_compile; pnpm format:check, check:docs, build, check:bundle; E2E mit Chromium und WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Schleifen der App zeigen bis zur Freigabe noch die Kleidung von D-447 mit den Zonen; Schuh in der Form vereinfacht (21.2)
+Nächste Schritte: nach deiner Freigabe die drei Pilot-Übungen als Schleifen neu rendern und einbauen, dann dein Gerätetest und deine Freigabe des Merge von PR #53
 ```

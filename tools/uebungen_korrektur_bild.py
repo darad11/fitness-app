@@ -14,6 +14,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur4 --runde 4   # D-439: vorher/nachher Daumen, zweites Shorts-F, Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur5 --runde 5   # D-443: vorher/nachher Daumen nach Handfoto, ein Shorts-F, Player
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/korrektur6 --runde 6   # D-445: Daumen, zwei Hebel und Folgeänderung, Hand im Player
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/kleidung --runde 7     # D-453: Kleidung nach dem Board, Handgelenk
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -324,15 +325,132 @@ def blatt_hand6(paket: Path) -> "Image":
                   "Standbilder statt Schleifen; unten die offene Hand mit dem MakeHuman-Regler für die Fingerlänge")
 
 
+# Runde „Kleidung nach dem Design-Board“ (D-449 bis D-453, `docs/prompts/uebungen-kleidung-neu-FORM.md` Abschnitt 6),
+# gerendert mit `tools/uebungen-3d/kleidung_bilder.py` und `varianten_bilder.py`. Ordner `<paket>/`: `stand/`
+# (stand-vorn, stand-hinten), `nah/` (Nahaufnahmen), `bilder/Cm-<Übung>-<Phase>.png` (720 × 540) und je Stand
+# `vorher/` und `nachher/` mit `handgelenk/` (Bilder und handgelenk.json) und `griff/`.
+BOARD = HIER.parent / "docs" / "prompts" / "uebungen-kleidung-neu-board.png"
+NAH7 = [("brust", "Brust-F", "von vorn, Ruhehaltung"), ("ruecken", "Rückenlogo", "F über FORM, von hinten"),
+        ("shorts-vorn", "Shorts von vorn", "Seitenstreifen und F am linken Bein"),
+        ("shorts-seite", "Shorts von der Seite", "Seitenstreifen, zum Saum breiter"),
+        ("socke", "Socke", "F schwarz außen, Spitze schwarz"), ("schuh-aussen", "Schuh von der Seite", "außen, mit F"),
+        ("schuh-innen", "Schuh von innen", "Sohle geschlossen (D-451)")]
+MOMENTE7 = [("kniebeuge", "1.00", "Kniebeuge · tiefste Position"), ("bankdruecken", "0.00", "Bankdrücken · Ausgangsposition"),
+            ("bankdruecken", "1.00", "Bankdrücken · Endposition"), ("latziehen", "1.00", "Latziehen · Endposition")]
+STAND7 = {"vorher": "vorher D-451", "nachher": "nachher D-452"}
+
+
+def _figur(bild: Path) -> "Image":
+    """Die Figur aus dem orthografischen Bild, oben und unten knapp beschnitten."""
+    b = Image.open(bild).convert("RGB")
+    maske = Image.eval(b.convert("L"), lambda v: 255 if v > 24 else 0)
+    k = maske.getbbox()
+    return b.crop((0, max(0, k[1] - 12), b.width, min(b.height, k[3] + 12)))
+
+
+def blatt_board7(paket: Path) -> "Image":
+    """Das Board und die Figur von vorn und von hinten, alle gleich hoch."""
+    hoehe = 900
+    board = Image.open(BOARD).convert("RGB")
+    board = board.resize((round(board.width * hoehe / board.height), hoehe), Image.LANCZOS)
+    vorn, hinten = (_figur(paket / "stand" / f"stand-{n}.png") for n in ("vorn", "hinten"))
+    vorn = vorn.resize((round(vorn.width * hoehe / vorn.height), hoehe), Image.LANCZOS)
+    hinten = hinten.resize((round(hinten.width * hoehe / hinten.height), hoehe), Image.LANCZOS)
+    kacheln = [kachel(board, "Design-Board", board.width, hoehe, "Vorlage des Produktinhabers"),
+               kachel(vorn, "Figur von vorn", vorn.width, hoehe, "Ruhehaltung, orthografisch, Licht wie in der App"),
+               kachel(hinten, "Figur von hinten", hinten.width, hoehe, "Ruhehaltung, orthografisch")]
+    breite = max(k.width for k in kacheln)
+    kacheln = [k if k.width == breite else _breiter(k, breite) for k in kacheln]
+    return gitter(kacheln, 3, "1 · Die neue Kleidung neben dem Design-Board",
+                  "C männlich; T-Shirt, Shorts, Socken und Schuhe nach dem Board (D-450, D-451); links und rechts aus Sicht des Trägers")
+
+
+def _breiter(k: "Image", breite: int) -> "Image":
+    neu = Image.new("RGB", (breite, k.height), GRUND)
+    neu.paste(k, ((breite - k.width) // 2, 0))
+    return neu
+
+
+def blatt_nah7(paket: Path) -> "Image":
+    kacheln = [kachel(paket / "nah" / f"{datei}.png", titel, 400, 400, zusatz) for datei, titel, zusatz in NAH7]
+    return gitter(kacheln, 4, "2 · Nahaufnahmen der Kleidung",
+                  "Ruhehaltung, Licht und Kantenlicht wie in der App; links und rechts aus Sicht des Trägers")
+
+
+def blatt_player7(paket: Path) -> "Image":
+    """Die vier Momente in der Größe des großen Players (390 px) mit dem Vorschaubild (56 px)."""
+    kacheln = []
+    for u, p, mt in MOMENTE7:
+        pfad = paket / "bilder" / f"Cm-{u}-{p}.png"
+        still = Image.open(pfad).convert("RGB")
+        gross = still.resize((PLAYER_BREITE, PLAYER_BREITE * 3 // 4), Image.LANCZOS)
+        feld = Image.new("RGB", (PLAYER_BREITE, gross.height + THUMB * 2 + 16), GRUND)
+        feld.paste(gross, (0, 0))
+        klein = still.crop(ausschnitt([pfad], rand=0.02))
+        seite = min(klein.size)
+        klein = klein.crop(((klein.width - seite) // 2, (klein.height - seite) // 2, (klein.width + seite) // 2, (klein.height + seite) // 2))
+        feld.paste(klein.resize((THUMB, THUMB), Image.LANCZOS), (0, gross.height + 8))
+        feld.paste(klein.resize((THUMB * 2, THUMB * 2), Image.LANCZOS), (THUMB + 8, gross.height + 8))
+        d = ImageDraw.Draw(feld)
+        d.text((THUMB * 3 + 16, gross.height + 12), "kleiner Player 56 px,", fill=LEISE, font=schrift(13))
+        d.text((THUMB * 3 + 16, gross.height + 30), "rechts 2-fach", fill=LEISE, font=schrift(13))
+        info = json.loads((paket / "bilder" / f"Cm-{u}.json").read_text(encoding="utf-8"))
+        zeit = f"{info['bild_s'][p]:.0f} s"
+        kacheln.append(kachel(feld, mt, feld.width, feld.height, f"großer Player am iPhone, 390 px · Renderzeit {zeit}"))
+    return gitter(kacheln, 2, "3 · Die drei Pilot-Übungen in der Größe des Players",
+                  "Standbilder statt Schleifen; die Schleifen der App folgen nach deiner Freigabe")
+
+
+def _grad(w: float) -> str:
+    return f"{w:+.1f}°".replace(".", ",") if w < 0 else f"{w:.1f}°".replace(".", ",")
+
+
+def blatt_handgelenk7(paket: Path) -> "Image":
+    """Zeilen: von der Seite vorher und nachher, vom Fußende vorher und nachher; Spalten: Phasen 0 bis 1."""
+    phasen = ["0.00", "0.25", "0.50", "0.75", "1.00"]
+    namen = {"0.00": "Ausgang", "0.25": "Viertel", "0.50": "Mitte", "0.75": "Dreiviertel", "1.00": "unten"}
+    kacheln = []
+    for ansicht, at in (("seite", "Seite"), ("fussende", "Fuß")):
+        for stand in ("vorher", "nachher"):
+            werte = json.loads((paket / stand / "handgelenk" / "handgelenk.json").read_text(encoding="utf-8"))["werte"]
+            for p in phasen:
+                w = werte[p]
+                mass = (f"hinten {_grad(w['Handgelenk gestreckt (Grad)'])} · seitlich {_grad(w['Handgelenk seitlich (Grad, + zum Daumen)'])}"
+                        f" · gesamt {_grad(w['Handgelenk gesamt (Grad)'])}")
+                kacheln.append(kachel(paket / stand / "handgelenk" / f"handgelenk-{ansicht}-{p}.png",
+                                      f"{STAND7[stand]} · {namen[p]} · {at}", 300, 300, mass))
+    return gitter(kacheln, 5, "4 · Handgelenk beim Bankdrücken vorher und nachher",
+                  "linke Hand; oben von der Seite längs der Stange, unten vom Fußende; Winkel an der Längsachse der Mittelhand: hinten = gestreckt, seitlich + zum Daumen")
+
+
+def blatt_griff7(paket: Path) -> "Image":
+    ansichten = [("griff-vorn", "vom Fußende"), ("griff-seite", "von der Seite"), ("griff-oben", "von oben"),
+                 ("griff-schraeg", "schräg"), ("griff-kopf", "vom Kopfende")]
+    kacheln = []
+    for phase, pt in (("0.00", "Ausgang"), ("0.50", "Mitte")):
+        for stand in ("vorher", "nachher"):
+            for datei, at in ansichten:
+                kacheln.append(kachel(paket / stand / "griff" / f"{datei}-{phase}.png", f"{STAND7[stand]} · {pt}", 300, 300, at))
+    return gitter(kacheln, 5, "5 · Griffblatt Bankdrücken vorher und nachher",
+                  "vorher: Stange 18° schräg bei 0,68 der Hand; nachher: 12° schräg, etwas tiefer zum Handballen (0,65); Daumen nachgeklappt wie freigegeben")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board)")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 7:
+        speichern(blatt_board7(paket), ziel, "kleidung-1-board")
+        speichern(blatt_nah7(paket), ziel, "kleidung-2-nah")
+        speichern(blatt_player7(paket), ziel, "kleidung-3-player")
+        speichern(blatt_handgelenk7(paket), ziel, "kleidung-4-handgelenk")
+        speichern(blatt_griff7(paket), ziel, "kleidung-5-griff")
+        return
     if args.runde == 6:
         speichern(blatt_hebel6(paket), ziel, "korrektur6-1-hebel")
         speichern(blatt_hand6(paket), ziel, "korrektur6-2-hand-player")

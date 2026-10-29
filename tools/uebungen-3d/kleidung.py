@@ -877,7 +877,8 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     mit `mit_schuhen` dazu Socken und Schuhe (`schuhe.anziehen`). Setzt am Körper das Attribut „Bedeckt“
     (Abstand innerhalb von Shirt, Shorts oder Socke, m): Haut, die tiefer als 12 mm unter dem Stoff liegt,
     blendet das Material aus (`haut_ausblenden`). Die Maße des Schnitts stehen danach in
-    `anziehen.schnitt`, die der Logos in `anziehen.logos` (für Bericht und Prüfung)."""
+    `anziehen.schnitt`, die der Logos in `anziehen.logos` (für Bericht und Prüfung), ihre Mittelpunkte in
+    `anziehen.mitten`."""
     k = koordinaten.Koordinaten(koerper, skelett)
     oeffnung = _halsoeffnung(koerper, k)
     teile = _teile(koerper, k)
@@ -937,6 +938,8 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     anziehen.logos = {"brust_f": brust_h, "ruecken_f": ruecken_h, "ruecken_wortmarke": versal * WORTMARKE_BREITE,
                       "ruecken_f_oben_unter_buendchen": rf["oben"] * W, "bein_f": bein_h}
     anziehen.oeffnung = oeffnung
+    # Mittelpunkte der Logos auf der Haut (Ruhehaltung, Raum des Skeletts), für Nahaufnahmen (D-453)
+    anziehen.mitten = {name: r["P0"].copy() for teil in rahmen.values() for name, r in teil.items() if name != "Kordel"}
     return teile_obj
 
 

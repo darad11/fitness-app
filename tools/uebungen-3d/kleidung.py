@@ -117,6 +117,11 @@ STOFF = ABSTAND["shirt"] + DICKE  # Oberfläche des Tees über der Haut: Die Sta
 F_ANTEIL = 0.861  # Höhe des F im quadratischen Bild „f“ (`_bilder`)
 WORTMARKE_BREITE = 5.396  # Breite der Wortmarke FORM in Versalhöhen (`logo-kopfzeile-dunkel.svg`)
 RUECKEN_SEITE = 6.2  # Seitenlänge des quadratischen Bilds „ruecken“ in Versalhöhen
+# Rückenlogo (D-459): F über FORM in der Proportion des vertikalen Logos im Startbild (D-325, `tools/splash.mjs`):
+# F 2,28 Versalhöhen der Wortmarke hoch, Abstand 0,82. Die Wortmarke bleibt so groß wie auf dem Board, das F
+# wird damit rund ein Drittel kleiner (2,28 statt 3,40); die Mitte des Blocks bleibt, wo sie auf dem Board liegt.
+# Bis D-458 galt das Verhältnis des Boards (`BOARD["ruecken_versal"]`)
+RUECKEN_LOGO = {"f": 2.28, "abstand": 0.82}
 RUMPFKNOCHEN = ("root", "spine01", "spine02", "spine03", "spine04", "spine05", "neck01", "neck02", "neck03",
                 "pelvis.L", "pelvis.R", "clavicle.L", "clavicle.R", "breast.L", "breast.R", "shoulder01.L",
                 "shoulder01.R")
@@ -708,7 +713,7 @@ def _bilder(motiv: str) -> dict[str, bpy.types.Image]:
 
     - „f“: das FORM-F aus `symbol-f-gruen.svg`, 1024 px, `F_ANTEIL` der Höhe, in der Mitte (Teil „f“);
     - „ruecken“: F über der Wortmarke FORM (`logo-kopfzeile-dunkel.svg`, Gruppe `wortmarke`) im
-      Verhältnis des Boards (`BOARD["ruecken_versal"]`), 2048 px auf `RUECKEN_SEITE` Versalhöhen, der
+      Verhältnis des Startbilds (`RUECKEN_LOGO`, D-459), 2048 px auf `RUECKEN_SEITE` Versalhöhen, der
       Block senkrecht mittig, beide waagrecht mittig; Teile „f“ und „wort“ (zwei Farben)."""
     f_polys = _svg_polygone(SVG_F)
     f_einheit = _bbox(f_polys)[3] - _bbox(f_polys)[2]
@@ -718,7 +723,7 @@ def _bilder(motiv: str) -> dict[str, bpy.types.Image]:
         dateien = {"f": QUELLE / "form-f.png"}
     elif motiv == "ruecken":
         N = 2048
-        v = BOARD["ruecken_versal"]
+        v = RUECKEN_LOGO
         s = RUECKEN_SEITE
         w_polys = _svg_polygone(SVG_WORTMARKE, "wortmarke")
         _, _, wy0, wy1 = _bbox(w_polys)
@@ -895,13 +900,16 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     brust_h = bf["hoehe"] * W
     brust = {"teil": "shirt", "ziel": (bf["quer"] * W, oeffnung["vorn"].z - buendchen - bf["unter_buendchen"] * W),
              "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08}
-    ruecken_h = rf["hoehe"] * W
-    versal = ruecken_h / rv["f"]
+    # Rücken (D-459): Versalhöhe der Wortmarke wie auf dem Board, F in der Proportion des Startbilds
+    # (`RUECKEN_LOGO`); Mitte des Blocks (F, Abstand, Wortmarke) an der Stelle des Boards. Das Bild hat den
+    # Block senkrecht mittig, seine Mitte ist also die Mitte des Bilds
+    versal = rf["hoehe"] * W / rv["f"]
+    rl = RUECKEN_LOGO
+    ruecken_h = rl["f"] * versal
     seite_r = RUECKEN_SEITE * versal
-    f_oben = oeffnung["hinten"].z - buendchen - rf["oben"] * W
-    # Mitte des Bilds: Oberkante des F minus halbe Höhe des F minus halber Abstand und halbe Versalhöhe
-    ruecken = {"teil": "shirt", "ziel": (0.0, f_oben - ruecken_h / 2 - (rv["abstand"] + 1.0) / 2 * versal),
-               "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10}
+    mitte_r = oeffnung["hinten"].z - buendchen - rf["oben"] * W - (rv["f"] + rv["abstand"] + 1.0) / 2 * versal
+    f_oben_unter = oeffnung["hinten"].z - buendchen - (mitte_r + (rl["f"] + rl["abstand"] + 1.0) / 2 * versal)
+    ruecken = {"teil": "shirt", "ziel": (0.0, mitte_r), "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10}
     bein_h = hf["hoehe"] * schnitt["bein"]
     lage_f = schnitt["bein_t"] - (hf["ueber_saum"] * schnitt["bein"] + bein_h / 2) / schnitt["Lb"]
     beinvorn = {"teil": "hose", "winkel": hf["winkel"], "lage": lage_f, "teile": ("bein",), "x": 1, "tiefe": 0.05}
@@ -936,7 +944,7 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
         attr.data[i].value = wert
     anziehen.schnitt = schnitt
     anziehen.logos = {"brust_f": brust_h, "ruecken_f": ruecken_h, "ruecken_wortmarke": versal * WORTMARKE_BREITE,
-                      "ruecken_f_oben_unter_buendchen": rf["oben"] * W, "bein_f": bein_h}
+                      "ruecken_f_oben_unter_buendchen": f_oben_unter, "bein_f": bein_h}
     anziehen.oeffnung = oeffnung
     # Mittelpunkte der Logos auf der Haut (Ruhehaltung, Raum des Skeletts), für Nahaufnahmen (D-453)
     anziehen.mitten = {name: r["P0"].copy() for teil in rahmen.values() for name, r in teil.items() if name != "Kordel"}

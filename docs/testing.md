@@ -2504,3 +2504,15 @@ Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`; Merge der Phase Übungen u
 | CI auf `main` zu 8b2ab96 | Lauf 40942580965 (Nr. 346): alle vier Jobs grün, auch E2E (webkit); E2E Chromium 11,0 min, WebKit 15,4 min |
 | `pnpm format:check`, `pnpm check:docs` (D-458) | bestanden |
 
+### Phase Programme, Abschnitt 1 (begonnen) · 29.10.2026, Cloud-Umgebung
+
+Rückenlogo im Verhältnis des Startbilds in der Konfiguration (D-459); Schuh und Standbilder ausstehend.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Syntax `tools/uebungen-3d/kleidung.py` (`python3 -m py_compile`) | bestanden |
+| Nachrechnung der neuen Formel mit den Maßen aus D-450 (W 35,5 cm) | mit den Werten des Boards genau die bisherige Größe und Lage (F 14,2 cm, Mitte 22,5 cm, Oberkante 11,7 cm unter dem Bündchen); neu F 9,5 cm, Wortmarke 22,5 cm, Mitte 22,5 cm, Oberkante 14,0 cm |
+| Quellen der Figur (`render.py --hole`) | Grundmodell, Skelett, Gewichte von `makehumancommunity/makehuman` geladen (19.158 Eckpunkte, 18.486 Flächen; unter `makehuman/makehuman` 404); Formziele von `makehumancommunity/mpfb2` erreichbar; Paket von `files2.makehumancommunity.org` gesperrt (Proxy 403), kein Ersatz (`makehuman-assets` über raw 404, `github.com` und `codeload.github.com` 403, PyPI-Paket `makehuman` 1.3.2 ohne die Dateien) |
+| Standbilder Schuh und Rückenlogo | nicht gerendert (Paket von MakeHuman gesperrt) |
+| `pnpm format:check`, `pnpm check:docs` (D-459) | bestanden |
+

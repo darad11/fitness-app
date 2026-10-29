@@ -48,12 +48,14 @@ FPS = 24
 # dem Design-Board mit Socken und Schuhen (D-450); ohne Muskelzonen seit D-449
 FIGUR = "Cm"
 VORSCHAU = 480  # Kantenlänge des Vorschau-Renders; verkleinert auf 240 × 240 (D-415)
-QUELLE = "https://raw.githubusercontent.com/makehuman/makehuman/master/makehuman"
+# Repository von MakeHuman: `makehumancommunity/makehuman`; unter `makehuman/makehuman` (bis D-458) antwortete
+# raw.githubusercontent.com am 29.10.2026 auf jede Datei mit 404 (D-459)
+QUELLE = "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/makehuman"
 DATEIEN = {
     "base.obj": f"{QUELLE}/data/3dobjs/base.obj",
     "default.mhskel": f"{QUELLE}/data/rigs/default.mhskel",
     "default_weights.mhw": f"{QUELLE}/data/rigs/default_weights.mhw",
-    "LICENSE.md": "https://raw.githubusercontent.com/makehuman/makehuman/master/LICENSE.md",
+    "LICENSE.md": "https://raw.githubusercontent.com/makehumancommunity/makehuman/master/LICENSE.md",
 }
 # Prüfansichten: (Richtung, Neigung); „vorn“ bei liegenden Übungen vom Fußende
 ANSICHTEN = {"vorn": (0.0, 5.0), "seite": (90.0, 5.0)}

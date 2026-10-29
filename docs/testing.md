@@ -2492,3 +2492,15 @@ Freigabe der Standbilder durch den Produktinhaber (D-454): Handgelenk beim Latzi
 | E2E lokal, Chromium (`pnpm test:e2e`, chromium-desktop und chromium-mobile) mit den neuen Schleifen (D-456) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (13,9 min); WebKit in der CI |
 | Bilder und Aufnahmen der App (D-457): `PILOT_FRAMES=<Arbeitsordner> node tools/pilot-screens.mjs` gegen `pnpm preview` (Build mit den Schleifen aus D-456) | 10 Bilder und Übersicht in 1 min 25 s; Aufnahme des Players 253 Bilder mit 20 je Sekunde, 12,65 s, 950 × 668, MP4 112,2 KB, WebM 306,1 KB; `pilot-bewegung.mp4` 7,5 s, 1440 × 360, 209,0 KB; Übersicht 2636 × 1970, 551,7 KB. Selbst angesehen, die Aufnahmen als Kontaktbogen: Liste mit Vorschaubild, Player zugeklappt mit Bild in „Jetzt“, aufgeklappt mit großer Schleife, Übungsdetails mit Schleife oben, überall die neue Kleidung; in der Aufnahme bewegen sich alle drei Übungen; kein Symbol statt Bild |
 
+### Phase Programme, Abschnitt 0 · 29.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`; Merge der Phase Übungen und neuer Branch (D-458).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Gerätetest der Phase Übungen am iPhone (Produktinhaber) | bestanden (Nachricht vom 29.10.2026) |
+| CI Lauf 345 zu aa03bbd (Kopf von PR #53, D-457) | alle vier Jobs grün, auch E2E (webkit); E2E Chromium 10,8 min, WebKit 12,7 min |
+| Merge von PR #53 nach `main` (normaler Merge, auf Anweisung des Produktinhabers) | `8b2ab96` |
+| CI auf `main` zu 8b2ab96 | Lauf 40942580965 (Nr. 346): alle vier Jobs grün, auch E2E (webkit); E2E Chromium 11,0 min, WebKit 15,4 min |
+| `pnpm format:check`, `pnpm check:docs` (D-458) | bestanden |
+

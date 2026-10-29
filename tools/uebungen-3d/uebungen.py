@@ -82,14 +82,24 @@ class Uebung:
                         punkte += [teil.matrix_world @ Vector(c) for c in teil.bound_box]
         return punkte
 
-    def __init__(self, form: koerperform.Form | None = koerperform.NEUTRAL, stoff: float = 0.0):
+    def __init__(self, form: koerperform.Form | None = koerperform.NEUTRAL, stoff: float = 0.0, schuhe: bool = False):
         self.form = form
         # Höhe der Kleidung über der Haut (`kleidung.STOFF`), wo die Stange am Körper anliegt: auf dem
         # Trapez (Kniebeuge) und auf der Brust (Bankdrücken) liegt sie auf dem Stoff, nicht in ihm (D-422)
         self.stoff = stoff
+        # In Schuhen (D-450): Die Figur steht auf der Sohle, um deren Dicke unter dem Fuß höher
+        self.schuhe = schuhe
+        self.sohle = 0.0
 
     def bauen(self) -> None:
         self.koerper, self.skelett = figur.baue_figur(form=self.form)
+        if self.schuhe:
+            # Bodenkontakt über die Sohle (D-450): Das Skelett steht um die Dicke der Sohle unter dem Fuß
+            # höher, alle Ziele der Übung (Füße flach, Bank, Sitz) beziehen sich darauf
+            import schuhe
+
+            self.sohle = schuhe.sohle_unter_fuss(self.koerper)
+            self.skelett.location.z += self.sohle
         bpy.context.view_layer.update()
         # Hilfsknochen an der Schulter (Muskelzonen gibt es seit D-449 nicht mehr)
         figur.schulter_gewichte(self.koerper)

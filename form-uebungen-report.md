@@ -1365,7 +1365,35 @@ Dein Auftrag vom 29.10.2026 (`docs/prompts/uebungen-kleidung-neu-FORM.md`) mit d
 
 Die Lime-Zonen sind aus allen Übungsdarstellungen entfernt, auf Haut und Stoff. Welche Muskeln arbeiten, zeigt nur noch die Muskelkarte in den Übungsdetails; sie bleibt, ebenso die Muskel-Etiketten in den Übungskarten. Im Werkzeug gibt es keine Zonen mehr: Die Umrisse der Muskeln sind gelöscht, die Körperkoordinaten für Säume und Logos stehen in einem eigenen Modul. Die Schleifen in der App zeigen die Zonen noch, bis du die Standbilder freigibst und ich die drei Pilot-Übungen neu rendere; dann ändern sich auch ihre Bildbeschreibungen.
 
-### 21.2 Berichte je Paket
+### 21.2 Kleidung nach dem Board (D-450)
+
+Ich habe das Board ausgemessen, immer relativ zum Kleidungsstück: das Shirt in seiner Breite knapp unter den Ärmeln (W), die Shorts in ihrer Breite am Bund (B) und in der Weite eines Beins, die Socke in der Breite ihres Schafts. Diese Verhältnisse überträgt das Werkzeug beim Anziehen auf die Figur. In Klammern steht jeweils der Wert des Boards.
+
+- **T-Shirt:** Anthrazit, Rundhals, kurze Ärmel, gerader Schnitt. An Taille und Saum steht der Stoff so weit ab, dass der Umriss dem Board folgt: Taille 0,93 W (0,945), Saum 1,07 W (1,07). Keine Lime-Einfassung mehr.
+- **Brust-F:** links, 4,4 cm hoch (0,125 W), Lage wie auf dem Board.
+- **Rückenlogo:** das große F in Lime über FORM in Weiß, mittig im oberen Rücken. Das F ist 14,2 cm hoch, die Wortmarke 22,5 cm breit, die Oberkante des F liegt 11,7 cm unter dem Kragen. Das ist deutlich größer als bisher (F 6,3 cm, Wortmarke 15 cm, 7 cm unter dem Kragen, D-432), so groß ist es auf dem Board.
+- **Shorts:** fast Schwarz, Länge 1,29 B (1,29), unten über beide Beine 1,52 B (1,52), etwas dunklerer Bund mit dunkler Kordel. Seitlich auf beiden Beinen der Streifen in Lime, der zum Saum breiter wird; von vorn und von hinten sichtbar, am Saum rund 15 % der Beinweite wie auf dem Board. Vorn das F in Lime am linken Bein nahe dem Saum, 4,7 cm hoch. Das F vorn-außen und die Kordelenden in Lime sind weg.
+- **Socken:** weiß, F in Schwarz außen, Spitze schwarz. Der Bund liegt 29 cm über dem Boden, das ist das 5-Fache der schmalsten Breite des Schafts; auf dem Board das 4,3- bis 5,5-Fache.
+- **Schuhe:** weißer Sneaker mit schwarzem F außen, schwarzer Fersenkappe und schwarzem Futter am Kragen, weißer Schnürung, Fersenlasche in Lime; die Zwischensohle ist weiß mit einem Lime-Einsatz an der Ferse und einem schwarzen Keil davor, darunter die schwarze Laufsohle. Die Figur steht jetzt um die Dicke der Sohle höher; den Bodenkontakt prüfe ich im nächsten Paket (Abschnitt 3).
+
+**Farben:** Mit #2A2D30 wirkte das Shirt im Licht der Szene grau (im Bild #414345), weil Haupt-, Füll- und Kantenlicht den Glanz des Stoffs aufhellen, egal wie dunkel er ist. Der Stoff ist jetzt matter, die Grundfarben sind dunkler. Im Bild ist das Shirt von vorn #2A2E30 und die Shorts #202326, wie auf dem Board.
+
+**Zwei Stellen, an denen ich nicht genau dem Board folge:**
+
+- **Länge des Shirts:** 64,1 statt 64,8 cm (1,81 statt 1,83 W). Der Saum endet 3 cm über dem Schritt. Darunter würde der Stoff, weil er dem Körper folgt, um jedes Bein einzeln laufen wie eine Hose; ein Shirt hängt dort frei. Das Shirt deckt in dieser Länge den Bund der Shorts mit der Kordel ab, wie es bei einem so langen Shirt auch in echt wäre.
+- **Rückenlogo:** Du schreibst „Größenverhältnis und Abstand wie auf dem Board“ und „das offizielle Logo vertikal in Originalproportionen“. Beides geht nicht zugleich: Auf dem Board ist das F 3,40 Versalhöhen der Wortmarke hoch, im vertikalen Logo des Startbilds 2,28. Ich bin dem Board gefolgt und habe F und Wortmarke unverzerrt aus den Markendateien genommen. Soll das Verhältnis des Startbilds gelten, ist das ein Wert in der Konfiguration; das F wäre dann bei gleicher Wortmarke ein Drittel kleiner.
+
+**Wo ich den Schuh vereinfacht habe:** Farben, Aufteilung und Logo sind wie auf dem Board. Die Form ist einfacher:
+
+- Die Grundform kommt von MakeHuman (frei nutzbar, CC0). Die Zehenbox ist runder und flacher als auf dem Board. Nähte, Polster und Netzeinsätze gibt es nicht, der Kragen hat keinen Polsterrand.
+- Die Schnürung ist nur aufgemalt: feine graue Fugen quer über den Rist, keine Senkel, keine Ösen.
+- Die Laufsohle hat kein Profil, die Spitze ist nicht angehoben.
+- Innen ist der Schuh flach: Die Ferse steht innen so hoch wie der Ballen. Die höhere Sohle an der Ferse ist nur außen zu sehen (an der Ferse 44 mm, vorn 24 mm).
+- Fersenkappe, Keil und Einsatz sind Farbfelder auf der Fläche, keine eigenen Teile; nur Sohle und Fersenlasche sind eigene Netze.
+
+**Renderzeit** je Standbild in der Größe der App (720 × 540): 13,8 bis 19,3 s.
+
+### 21.3 Berichte je Paket
 
 ```
 Arbeitspaket: D-449 Muskelzonen nur noch in der Muskelkarte
@@ -1378,3 +1406,13 @@ Bekannte Einschränkungen: Schleifen der App zeigen die Zonen bis zum Neurendern
 Nächste Schritte: Kleidung nach dem Board (Abschnitt 2)
 ```
 
+```
+Arbeitspaket: D-450 Kleidung nach dem Board
+Umgesetzte Funktionen: Werkzeug der Figur (Videos der App bis zur Freigabe unverändert), erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py, schuhe.py (neu), varianten.py, render.py, uebungen.py, daumen_versuch.py; docs/licenses-data.md; Dokumente
+Technische Entscheidungen: D-450
+Ausgeführte Tests: py_compile; Ruhehaltung von vorn, hinten und von der Seite neben dem Board, Maße am verformten Netz; Farbreihe im Licht der Szene; Standbilder der drei Übungen in der Kamera der App; pnpm format:check, check:docs, build, check:bundle
+Ergebnis: bestanden
+Bekannte Einschränkungen: Shirt 1 % kürzer als auf dem Board (Saum über dem Schritt); Rückenlogo im Verhältnis des Boards statt des Startbilds; Schuh in der Form vereinfacht (siehe 21.2)
+Nächste Schritte: Bodenkontakt über die Sohle prüfen (Abschnitt 3)
+```

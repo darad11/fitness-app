@@ -6,7 +6,7 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py kniebeuge                # Schleife, 60 Bilder, ffmpeg
     python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
     python -I tools/uebungen-3d/render.py kniebeuge --nur-vorschau  # nur das Vorschaubild 240 × 240
-    python -I tools/uebungen-3d/render.py kniebeuge --variante D-A1  # Variante zur Probe (D-414)
+    python -I tools/uebungen-3d/render.py kniebeuge --variante D     # anderer Körper zur Probe (D-414)
     python -I tools/uebungen-3d/render.py kniebeuge --grau          # graue Figur ohne Kleidung
     python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
         --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
@@ -36,6 +36,7 @@ from mathutils import Vector  # noqa: E402
 import kleidung  # noqa: E402
 import koerperform  # noqa: E402
 import realistisch  # noqa: E402
+import schuhe  # noqa: E402
 import szene  # noqa: E402
 import varianten  # noqa: E402
 from haltung import ablauf  # noqa: E402
@@ -43,9 +44,9 @@ from uebungen import UEBUNGEN, _netz  # noqa: E402
 
 BILDER = 60
 FPS = 24
-# Figur der App: C männlich, Fassung A1 (Logos hell), Brust-F 4 cm (Entscheidungen des Produktinhabers
-# vom 28.10.2026, D-424, D-428; gerendert für die App mit D-447); ohne Muskelzonen seit D-449
-FIGUR = "Cm-A1"
+# Figur der App: C männlich (Entscheidung des Produktinhabers vom 28.10.2026, D-428) in der Kleidung nach
+# dem Design-Board mit Socken und Schuhen (D-450); ohne Muskelzonen seit D-449
+FIGUR = "Cm"
 VORSCHAU = 480  # Kantenlänge des Vorschau-Renders; verkleinert auf 240 × 240 (D-415)
 QUELLE = "https://raw.githubusercontent.com/makehuman/makehuman/master/makehuman"
 DATEIEN = {
@@ -70,6 +71,7 @@ def hole() -> None:
             urllib.request.urlretrieve(url, ziel / name)
     koerperform.hole(list(koerperform.FORMEN.values()))
     realistisch.hole()
+    schuhe.hole()
 
 
 def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral", variante: str | None = None):
@@ -80,7 +82,8 @@ def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral",
     s.render.resolution_x = breite
     s.render.resolution_y = hoehe
     if variante:
-        uebung = UEBUNGEN[name](koerperform.FORMEN[varianten.VARIANTEN[variante]["form"]], stoff=kleidung.STOFF)
+        uebung = UEBUNGEN[name](koerperform.FORMEN[varianten.VARIANTEN[variante]["form"]], stoff=kleidung.STOFF,
+                                 schuhe=True)
         uebung.bauen()
         varianten.ausstatten(uebung, variante)
     else:

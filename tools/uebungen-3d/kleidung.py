@@ -1,17 +1,27 @@
-"""FORM-Kleidung für die Figur (D-414, Feinschliff D-417, Korrekturrunde D-419, Korrekturen D-422).
+"""FORM-Kleidung nach dem Design-Board (D-450; Grundlage D-414, D-417, D-419, D-422, D-431).
 
-Nach dem Text des Produktinhabers (`docs/prompts/uebungen-korrektur-logos-FORM.md`, Abschnitt 2):
+Das Board des Produktinhabers (`docs/prompts/uebungen-kleidung-neu-board.png`, Auftrag
+`docs/prompts/uebungen-kleidung-neu-FORM.md`) wird 1:1 übernommen. Proportionen, Lagen und Größen sind
+am Board gemessen, relativ zum Kleidungsstück (`BOARD`: Breite des Shirts, Bundbreite und Beinweite
+der Shorts), und werden beim Anziehen auf die gemessene Figur übertragen (`_schnitt`):
 
-- **STEP Running Tee** in Nacht #0C1219 mit Rundhals; kleines F vorn auf der linken Brust des Trägers,
-  hinten das vertikale Logo (F über der Wortmarke FORM) zwischen den Schulterblättern, schmale
-  Lime-Einfassung an den seitlichen Schlitzen am Saum.
-- **STEP Shorts** in Graphit #4A4F57; Kordelenden in Lime vorn am Bund, F vorn-außen am linken Bein nahe dem Saum (D-441).
+- **T-Shirt** in Anthrazit (im Bild #2A2D30 wie auf dem Board, `TEE`), Rundhals mit Bündchen, kurze
+  Ärmel, gerader, sportlicher Schnitt: An Taille und Saum steht der Stoff vom Körper ab, bis die Breiten
+  denen des Boards entsprechen (`_weite`). Vorn das FORM-F in Lime auf der linken Brust des Trägers,
+  hinten das große F in Lime über der Wortmarke FORM in Weiß, mittig im oberen Rücken. Keine
+  Lime-Einfassung mehr (bis D-449 an den Seitenschlitzen, die es auf dem Board nicht gibt).
+- **Shorts** fast schwarz (im Bild #202326, `SHORTS`), Länge und Weite wie auf dem Board (zum Saum hin
+  weiter), breiter Bund mit dunkler Kordel; an beiden Beinen seitlich ein Streifen in Lime, der zum Saum
+  breiter wird (`_streifen`), vorn und hinten sichtbar; vorn das F in Lime am linken Bein des Trägers
+  nahe dem Saum. Das F vorn-außen (D-441) und die Kordelenden in Lime entfallen.
+- **Socken und Schuhe**: `schuhe.py`.
 
-Links und rechts gelten aus Sicht des Trägers (links = +x in Blender). Die Teile entstehen aus dem Netz
-der Figur, ohne fremde Dateien: Die Flächen des bedeckten Bereichs werden kopiert, nach außen versetzt
-(eng anliegend wie Laufkleidung), geglättet und hängen mit denselben Gewichten am Skelett; so folgen
-sie jeder Haltung ohne Stoffsimulation. Säume, Ärmel und Schlitze sind keine Netzkanten, sondern ein
-Feld (Abstand zum Rand in Metern): Der Stoff endet dort scharf.
+Links und rechts gelten aus Sicht des Trägers (links = +x in Blender). Shirt und Shorts entstehen aus
+dem Netz der Figur, ohne fremde Dateien: Die Flächen des bedeckten Bereichs werden kopiert, nach außen
+versetzt (eng anliegend, an Taille, Saum und Beinen zusätzlich um die Weite des Schnitts), geglättet und
+hängen mit denselben Gewichten am Skelett; so folgen sie jeder Haltung ohne Stoffsimulation. Säume,
+Ärmel, Bund und Streifen sind keine Netzkanten, sondern Felder (Abstand zum Rand in Metern): Stoff und
+Farben enden dort scharf.
 
 **Rundhalskragen** (D-431): Die Halsöffnung ist der Schnitt des Körpers mit einer Fläche durch drei
 Marken: vorn etwas unter der Drosselgrube (Höhe der inneren Schlüsselbeinenden), hinten knapp über dem
@@ -19,27 +29,19 @@ vorstehenden Halswirbel (Halsansatz `neck01`), seitlich am Halsansatz (Halsbreit
 Halsknochen). Die Fläche ist die geneigte Ebene durch vorn und hinten, seitlich parabolisch zum
 Halsansatz angehoben; nur so bleibt die Kante am Hals, denn bei diesem Körper liegen die Trapezmuskeln
 seitlich fast auf Höhe des Halsansatzes und die reine Ebene schnitte über die Schultern. Stoff gibt es
-nur unter der Fläche (`_halsoeffnung`, `_halsfeld`, Feld je Eckpunkt wie die Säume); der Schnitt ist
-eine geschlossene, glatte Kurve wie der Halsausschnitt eines Schnittmusters. Damit die Kante bei gehobenem Trapez oder aufliegender Stange nicht mitgezogen
-wird, hängt der Stoff in der Nähe der Öffnung am Halsansatz (Gewichte gleitend auf `spine01` und
-`neck01` umgebunden, `_kragen_binden`), wie der steife Kragen eines echten Shirts; weiter unten
-folgt er wieder Schultern und Armen. Auf der Kante liegt ein schmales Kragenbündchen als eigenes Netz
-(`_buendchen`), aus den Schnittpunkten des Felds auf dem Stoff. Bis D-430 schnitten Kugel, Ellipse und
-Ebenen im Shader an einem mitlaufenden Leerobjekt; das gab seitlich Spitzen und eine unruhige Kante.
+nur unter der Fläche (`_halsoeffnung`, `_halsfeld`, Feld je Eckpunkt wie die Säume). Damit die Kante bei
+gehobenem Trapez oder aufliegender Stange nicht mitgezogen wird, hängt der Stoff in der Nähe der
+Öffnung am Halsansatz (`_kragen_binden`), wie der steife Kragen eines echten Shirts. Auf der Kante
+liegt ein schmales Kragenbündchen als eigenes Netz (`_buendchen`).
 
-**Logos** (Abschnitt 3): das FORM-F aus `public/brand/symbol-f-gruen.svg` und die Wortmarke aus
-`public/brand/logo-kopfzeile-dunkel.svg`, gerastert (`quelle/form-f.png`, `quelle/form-vertikal.png`),
-als Bild in Originalproportionen eben auf den Stoff projiziert (`_rahmen`): Mittelpunkt und
-Blickrichtung je Logo aus der Körpergeometrie, die Bildebene senkrecht zur mittleren
-Oberflächennormalen; so wird nichts in die Breite gezogen. Das Bild hängt an den Eckpunkten und bewegt
-sich mit dem Stoff. Jedes Logo gilt nur für sein Körperteil (Rumpf bzw. ein Bein) und nur bis zu
-einer Tiefe vor und hinter der Bildebene (D-422; vorher traf die Projektion des Shorts-F auch die
-Innenseite des rechten Beins) und nur für Flächen, die zur Bildebene zeigen (kein Spiegelbild). Jedes
-Logo hat einen schmalen Rand in Stoffarbe. Größen, Lagen
-und Farben kommen aus einer Konfiguration (`LOGOS`, `KOLLEKTION`) für alle Übungen und Körper. Das
-vertikale Logo folgt der Regel des Startbilds (`tools/splash.mjs`, D-325): F 2,28 Versalhöhen hoch,
-Abstand 0,82 Versalhöhen, beide mittig (`VERTIKAL`); am Rücken als Backprint mit fester Breite der
-Wortmarke, die Oberkante des F unter dem Kragen (D-432).
+**Logos**: das FORM-F aus `public/brand/symbol-f-gruen.svg` und die Wortmarke aus
+`public/brand/logo-kopfzeile-dunkel.svg` in Originalproportionen, gerastert (`quelle/form-*.png`), als
+Bild eben auf den Stoff projiziert (`_rahmen`): Mittelpunkt und Blickrichtung je Logo aus der
+Körpergeometrie, die Bildebene senkrecht zur mittleren Oberflächennormalen; so wird nichts in die Breite
+gezogen. Jedes Logo gilt nur für sein Körperteil und bis zu einer Tiefe vor und hinter der Bildebene
+(D-422) und nur für Flächen, die zur Bildebene zeigen. Hinten stehen F und Wortmarke im
+Größenverhältnis und Abstand des Boards: F 3,40 Versalhöhen der Wortmarke hoch, Abstand 0,78 (im
+vertikalen Logo des Startbilds 2,28 und 0,82, D-325); beide Formen unverzerrt aus den Markendateien.
 """
 from __future__ import annotations
 
@@ -49,78 +51,75 @@ from pathlib import Path
 
 import bpy
 import bmesh  # erst nach bpy verfügbar (Blender als Modul)
-from mathutils import Vector
+from mathutils import Vector, kdtree
 
 import koordinaten
 import szene
 
-NACHT = "#0C1219"  # STEP Running Tee
-GRAPHIT = "#4A4F57"  # STEP Shorts
+# Farben des Boards (Auftrag: Tee etwa #2A2D30, Shorts etwa #202326) an das Licht der Szene angepasst: Haupt-,
+# Füll- und Kantenlicht hellen den Stoff auf, ein Teil davon als Glanz unabhängig von der Grundfarbe. Mit dem
+# matten Stoff aus `stoff_material` ergeben diese Grundfarben im Bild die Werte des Boards (gemessen von vorn
+# am Bauch und an den Shorts, D-450)
+TEE = "#1B2023"  # Anthrazit, im Bild etwa #2A2D30
+SHORTS = "#11171C"  # fast Schwarz, im Bild etwa #202326
+BUND = "#0F141A"  # Bund der Shorts, etwas dunkler (Board: #1F2224 neben #222629)
+KORDEL = "#060708"  # dunkle Kordel (im Bild dunkler als die Shorts, wie auf dem Board)
+KORDEL_ENDE = "#363A3F"  # Kordelenden (Hülsen), etwas heller
 LIME = szene.LIME
-HELL = "#AAB2BE"  # hell Ton in Ton: --fg-muted, dieselbe Farbfamilie wie Nacht und Graphit
-LOGO_FARBEN = {"lime": LIME, "hell": HELL}
-KOLLEKTION = {"brust": "hell", "ruecken": "lime", "bein": "lime"}  # Logofarben der Kollektion
+WEISS = "#F2F3F4"  # Wortmarke hinten: --fg der App, im Licht hellgrau wie auf dem Board
 MARKE = Path(__file__).resolve().parent.parent.parent / "public" / "brand"
 SVG_F = MARKE / "symbol-f-gruen.svg"
 SVG_WORTMARKE = MARKE / "logo-kopfzeile-dunkel.svg"
 QUELLE = Path(__file__).resolve().parent / "quelle"
 
-# Lage der Säume (Körperkoordinaten, `koordinaten.Koordinaten`)
-SHIRT_SAUM = 0.02  # Anteil Hüftgelenk (0) bis Halsansatz (1): Saum knapp über den Hüftgelenken
-AERMEL = 0.40  # Anteil Schulter (0) bis Ellbogen (1): kurzer Ärmel
-HOSE_BUND = 0.22  # Bund knapp unter dem Nabel
-HOSE_BEIN = 0.40  # Anteil Hüfte (0) bis Knie (1): Laufshorts
+# Am Board gemessen (453 × 696 px, `docs/prompts/uebungen-kleidung-neu-board.png`). W: Breite des Shirts
+# knapp unter den Ärmeln in der jeweiligen Ansicht (vorn 128 px, hinten 120 px); B: Breite der Shorts am
+# oberen Rand des Bunds (vorn 132 px); Bein: Weite eines Beins am Saum (vorn 89 px). In Klammern die Pixel.
+BOARD = {
+    "shirt_laenge": 1.83,  # höchster Punkt der Schulter am Kragen bis Saum, in W (234)
+    "taille": 0.945,  # schmalste Breite des Shirts, in W (121), bei 0,39 der Strecke Achsel → Saum
+    "taille_lage": 0.39,
+    "saum": 1.07,  # Breite des Shirts am Saum, in W (137)
+    "aermel": 0.58,  # Schulterpunkt bis Ärmelsaum außen, in W (74)
+    # Brust-F: Höhe, Mitte links der Mitte und unter der Unterkante des Bündchens vorn, in W (16; 44,5; 24)
+    "brust_f": {"hoehe": 0.125, "quer": 0.35, "unter_buendchen": 0.19},
+    # Rücken-F: Höhe und Oberkante unter der Unterkante des Bündchens hinten, in W (48; 40)
+    "ruecken_f": {"hoehe": 0.40, "oben": 0.33},
+    # F und Abstand zur Wortmarke in Versalhöhen der Wortmarke (14 px; F 48, Abstand 11)
+    "ruecken_versal": {"f": 3.40, "abstand": 0.78},
+    "hose_laenge": 1.29,  # oberer Rand des Bunds bis Saum außen, in B (170)
+    "hose_saum": 1.52,  # Breite über beide Beine am Saum, in B (200)
+    "hose_bein": 0.445,  # Weite eines Beins am Saum, Anteil der Breite über beide Beine (89 von 200)
+    "bund": 0.082,  # Höhe des Bunds, Anteil der Länge (14)
+    # Streifen: halbe Breite in Grad um die Seitennaht, oben unter dem Bund (vorn, hinten) und am Saum; so
+    # eingestellt, dass er an der Figur von vorn und hinten so breit wirkt wie auf dem Board (am Saum vorn
+    # 13, hinten 14 px bei 89 px Beinweite, also rund 15 %)
+    "streifen": {"oben_vorn": 13.0, "oben_hinten": 21.0, "saum": 40.0},
+    # Shorts-F: Höhe und Unterkante über dem Saum in Bein, Mitte 24° von vorn nach außen (21; 10; 18)
+    "hose_f": {"hoehe": 0.236, "ueber_saum": 0.112, "winkel": 24.0},
+    # Kordel: zwei Schnüre aus der Mitte des Bunds, Abstand und Länge in B, Hülsen am Ende (6; 35; 7,5)
+    "kordel": {"abstand": 0.045, "laenge": 0.21, "ende": 0.045},
+}
+HOSE_BUND = 0.22  # oberer Rand des Bunds knapp unter dem Nabel (Anteil Hüftgelenk → Halsansatz)
+AKROMION = 0.14  # Schulterpunkt (Ansatz des Ärmels) rund 0,14 Oberarmlängen vor dem Schultergelenk
+WEITE_VORN_HINTEN = 0.55  # Weite des Shirts vorn und hinten im Verhältnis zur Seite
+SCHRITT_ABSTAND = 0.03  # Saum des Shirts höchstens bis so weit über dem Schritt, m
+HOSE_WEITE = {"vorn_hinten": 0.45, "innen": 0.15, "steigung": 1.5}  # Weite der Shorts je Seite, zum Saum hin
 # Rundhalskragen (D-431): vorn unter der Drosselgrube, hinten über dem Halswirbel, seitlich Halsbreite plus Rand
 KRAGEN = {"unter_drosselgrube": 0.015, "ueber_halswirbel": 0.012,
           "seitlich_unter_hals": 0.015, "seitlich_rand": 0.006,  # seitliche Kante unter `neck01`, außerhalb der Halshaut, m
           "bindung": 0.06,  # bis zu diesem Abstand von der Öffnung hängt der Stoff gleitend am Halsansatz, m
           "buendchen": 0.014, "buendchen_dicke": 0.0032}  # Breite und Dicke des Kragenbündchens, m
 KRAGEN_KNOCHEN = {"spine01": 0.6, "neck01": 0.4}  # woran der Kragen hängt
-ABSTAND = {"shirt": 0.0065, "hose": 0.0048}  # Stoff über der Haut, m
+ABSTAND = {"shirt": 0.0065, "hose": 0.0048}  # Stoff über der Haut, m (dazu die Weite des Schnitts)
 DICKE = 0.0012  # Stoffdicke, m
 STOFF = ABSTAND["shirt"] + DICKE  # Oberfläche des Tees über der Haut: Die Stange liegt darauf (D-422)
-# Lime-Details als Bilder auf dem Stoff (wie die Logos, `_detail_bilder`): Seitenschlitze am Saum des
-# Tees mit Einfassung (der Schlitz schneidet den Stoff), Kordelenden vorn am Bund der Shorts. Maße in m.
-# `teile`: Körperteile, auf denen das Bild gilt; `x`: nur links (1) oder rechts (-1); `tiefe`: Reichweite
-# der Projektion vor und hinter der Bildebene, m.
-SCHLITZ = {"hoehe": 0.05, "breite": 0.006, "einfassung": 0.0035}
-KORDEL = {"abstand": 0.012, "laenge": 0.06, "breite": 0.003, "ende": 0.008, "ende_breite": 0.0045}
-DETAILS = {
-    "schlitz_l": {"teil": "shirt", "bild": "schlitz", "seite": 0.08, "winkel": 90.0, "lage": SHIRT_SAUM, "hoch": 0.025,
-                  "teile": ("rumpf", "bein"), "x": 1, "tiefe": 0.05},
-    "schlitz_r": {"teil": "shirt", "bild": "schlitz", "seite": 0.08, "winkel": -90.0, "lage": SHIRT_SAUM, "hoch": 0.025,
-                  "teile": ("rumpf", "bein"), "x": -1, "tiefe": 0.05},
-    "kordel": {"teil": "hose", "bild": "kordel", "seite": 0.08, "winkel": 0.0, "lage": HOSE_BUND, "hoch": -0.034,
-               "teile": ("rumpf",), "tiefe": 0.06},
-}
-# Logos: Höhe des F in Metern; Lage am Rumpf quer zur Mitte (m, links positiv) und unter der
-# Schulternaht (Schultergelenk), Blickrichtung der Bildebene; am linken Oberschenkel Winkel um den
-# Knochen (0 vorn, 90 außen) und Anteil Hüfte→Knie. `motiv`: „f“ (nur das F) oder „vertikal“ (F über
-# der Wortmarke FORM, Rücken); `teile`, `x`, `tiefe` wie bei den Details.
-LOGOS = {
-    "brust": {"teil": "shirt", "motiv": "f", "hoehe": 0.040, "quer": 0.07, "unter_schulter": 0.085,
-              "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08},
-    # Rücken (D-432): Backprint mit fester Breite der Wortmarke (`wortmarke`, m), die Höhe des F folgt
-    # aus der Proportion des vertikalen Logos; die Oberkante des F `unter_kragen` unter der hinteren
-    # Kante der Halsöffnung, waagrecht mittig
-    "ruecken": {"teil": "shirt", "motiv": "vertikal", "wortmarke": 0.15, "unter_kragen": 0.07, "quer": 0.0,
-                "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10},
-    # Das eine F auf den Shorts (D-441): vorn-außen nahe dem Saum auf dem Bein, das beim Bankdrücken zur
-    # Kamera zeigt. Das ist das linke Bein (Kamera 45° zur linken Seite, D-410); die Markierung des
-    # Produktinhabers trifft, von der Kamera der App aus auf den Stoff gezielt, das linke Bein bei 17°
-    # von vorn nach außen und 0,32 Hüfte→Knie (Saum bei 0,40; D-436). Das frühere F außen am linken
-    # Bein (80°, 0,30; D-419 bis D-440) entfällt, damit nie zwei F nebeneinander zu sehen sind; seine
-    # Farbe in den Fassungen heißt weiter `bein`.
-    "beinvorn": {"teil": "hose", "motiv": "f", "hoehe": 0.035, "winkel": 17.0, "lage": 0.32,
-                 "teile": ("bein",), "x": 1, "tiefe": 0.05, "farbe": "bein"},
-}
 F_ANTEIL = 0.861  # Höhe des F im quadratischen Bild „f“ (`_bilder`)
-RAND_PX = 32  # Rand in Stoffarbe um das F, px im 1024-px-Bild (rund 3,6 % der F-Höhe)
-# Vertikales Logo (Rücken, D-422) nach der Regel des Startbilds (`tools/splash.mjs`, Variante C3): in
-# Versalhöhen der Wortmarke die Höhe des F, der Abstand zwischen F und Wortmarke und die Seitenlänge des
-# quadratischen Bilds; der Block (F oben, Wortmarke darunter, beide waagrecht mittig) steht in der Mitte.
-VERTIKAL = {"f": 2.28, "abstand": 0.82, "seite": 6.0}
 WORTMARKE_BREITE = 5.396  # Breite der Wortmarke FORM in Versalhöhen (`logo-kopfzeile-dunkel.svg`)
+RUECKEN_SEITE = 6.2  # Seitenlänge des quadratischen Bilds „ruecken“ in Versalhöhen
+RUMPFKNOCHEN = ("root", "spine01", "spine02", "spine03", "spine04", "spine05", "neck01", "neck02", "neck03",
+                "pelvis.L", "pelvis.R", "clavicle.L", "clavicle.R", "breast.L", "breast.R", "shoulder01.L",
+                "shoulder01.R")
 
 
 # ---------------------------------------------------------------------- Halsöffnung
@@ -168,62 +167,196 @@ def _halsfeld(h: dict, p: Vector) -> float:
     return max(h["c"] * d.x * d.x - d.dot(h["m"]), h["vorn"].z - p.z)
 
 
-# ---------------------------------------------------------------------- Felder je Eckpunkt
+# ---------------------------------------------------------------------- Schnitt nach dem Board
 
 
-def _felder(koerper: bpy.types.Object, skelett: bpy.types.Object) -> dict:
-    """Je Eckpunkt: Abstand zum Rand von Shirt (Saum und Ärmel, ohne den Halsausschnitt) und Hose
-    (m, positiv = bedeckt) und das Körperteil mit dem größten Gewicht; dazu die Maße des Rundhalses
-    (`hals`) für das Leerobjekt und den Shader."""
-    k = koordinaten.Koordinaten(koerper, skelett)
-    L = (k.N - k.O).length
-    oeffnung = _halsoeffnung(koerper, k)
-    felder: dict = {n: [] for n in ("shirt", "hose", "teil", "hals")}
-    # Rumpf mit dem ganzen Hals: Die Halsöffnung schneidet ihn als Feld (`_halsfeld`)
-    rumpfknochen = ("root", "spine01", "spine02", "spine03", "spine04", "spine05", "neck01", "neck02", "neck03",
-                    "pelvis.L", "pelvis.R", "clavicle.L", "clavicle.R", "breast.L", "breast.R", "shoulder01.L",
-                    "shoulder01.R")
+def _teile(koerper: bpy.types.Object, k: koordinaten.Koordinaten) -> list[str]:
+    """Körperteil je Eckpunkt mit dem größten Gewicht: Oberarm, Rumpf (mit Hals), Oberschenkel oder Rest
+    (Unterarm, Hand, Kopf, Unterschenkel, Fuß; von Shirt und Shorts nie bedeckt)."""
+    teile = []
     for v in koerper.data.vertices:
-        i, p = v.index, v.co
-        seite = "L" if p.x >= 0 else "R"
-        # Körperteil mit dem größten Gewicht: Oberarm, Rumpf (mit Hals), Oberschenkel oder Rest
-        # (Unterarm, Hand, Kopf, Gesicht, Unterschenkel, Fuß; nie bedeckt)
+        i = v.index
+        seite = "L" if v.co.x >= 0 else "R"
         arm = k.w(i, f"upperarm01.{seite}", f"upperarm02.{seite}", f"achsel.{seite}")
         bein = k.w(i, f"upperleg01.{seite}", f"upperleg02.{seite}")
-        rumpf = k.w(i, *rumpfknochen)
+        rumpf = k.w(i, *RUMPFKNOCHEN)
         rest = max(0.0, 1.0 - arm - bein - rumpf)
-        teil = max((arm, "arm"), (bein, "bein"), (rumpf, "rumpf"), (rest, "rest"))[1]
+        teile.append(max((arm, "arm"), (bein, "bein"), (rumpf, "rumpf"), (rest, "rest"))[1])
+    return teile
+
+
+def _breite(koerper: bpy.types.Object, teile: list[str], z: float, erlaubt: tuple[str, ...], dz: float = 0.006) -> float:
+    """Breite des Körpers in der Ansicht von vorn (Ausdehnung in x) auf Höhe z, nur Eckpunkte der Teile."""
+    xs = [v.co.x for v, t in zip(koerper.data.vertices, teile) if t in erlaubt and abs(v.co.z - z) < dz]
+    return max(xs) - min(xs) if xs else 0.0
+
+
+def _schnitt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, oeffnung: dict, teile: list[str]) -> dict:
+    """Maße der Figur und daraus der Schnitt nach `BOARD` (Ruhehaltung, Raum des Skeletts, Meter):
+    Brustbreite W des Shirts knapp unter den Ärmeln, höchster Punkt der Schulter am Kragen, Saum und
+    Ärmel des Shirts, Weite an Taille und Saum; Bundbreite B und Saum der Shorts, ihre Weite am Saum."""
+    L = (k.N - k.O).length
+    S, E = k.kopf["upperarm01.L"], k.kopf["lowerarm01.L"]
+    La = (E - S).length
+    z_w = S.z - 0.56 * La  # knapp unter der Achsel (Board: Breite knapp unter den Ärmeln)
+    W = _breite(koerper, teile, z_w, ("rumpf",)) + 2 * ABSTAND["shirt"]
+    verts = koerper.data.vertices
+    b = oeffnung["b"]
+    schulter = [v.co.z for v, t in zip(verts, teile)
+                if t == "rumpf" and b < abs(v.co.x) < b + 0.03 and _halsfeld(oeffnung, v.co) > 0]
+    z_hals = max(schulter)  # höchster Punkt der Schulter am Kragen
+    # Saum: Länge vom Board, aber über dem Schritt. Darunter läge der Stoff um jedes Bein einzeln wie eine
+    # Hose, weil er dem Körper folgt; ein Shirt hängt dort frei (Vereinfachung, D-450)
+    z_schritt = min(v.co.z for v in verts if abs(v.co.x) < 0.015)
+    z_saum = max(z_hals - BOARD["shirt_laenge"] * W, z_schritt + SCHRITT_ABSTAND)
+    # Weite je Höhe: Der Umriss des Shirts folgt dem des Boards, von W unter den Ärmeln zur Taille (0,945 W
+    # bei 0,39 der Strecke zum Saum) und zum Saum (1,07 W); wo der Körper schmaler ist, steht der Stoff
+    # seitlich um die halbe Differenz ab (seitlich an der Hüfte hängt die Haut schon am Oberschenkel: Rumpf
+    # und Bein zählen, die Arme nicht)
+    z_taille = z_w - BOARD["taille_lage"] * (z_w - z_saum)
+    weite = []
+    for i in range(int((z_w - z_saum) / 0.01) + 2):
+        z = z_w - i * 0.01
+        if z >= z_taille:
+            ziel = W + (BOARD["taille"] * W - W) * (z_w - z) / (z_w - z_taille)
+        else:
+            ziel = BOARD["taille"] * W + (BOARD["saum"] - BOARD["taille"]) * W * min(1.0, (z_taille - z) / (z_taille - z_saum))
+        koerper_w = _breite(koerper, teile, z, ("rumpf", "bein")) + 2 * ABSTAND["shirt"]
+        weite.append((z, max(0.0, (ziel - koerper_w) / 2)))
+    # Shorts: Bund und Saum
+    z_bund = k.O.z + HOSE_BUND * L
+    B = _breite(koerper, teile, z_bund, ("rumpf",)) + 2 * ABSTAND["hose"]
+    laenge = BOARD["hose_laenge"] * B
+    z_hose_saum = z_bund - laenge
+    A, K = k.kopf["upperleg01.L"], k.kopf["lowerleg01.L"]
+    bein_t = (A.z - z_hose_saum) / (A.z - K.z)
+    w_beine = _breite(koerper, teile, z_hose_saum, ("bein",)) + 2 * ABSTAND["hose"]
+    saum_breite = BOARD["hose_saum"] * B
+    return {
+        "W": W, "z_w": z_w, "z_hals": z_hals, "La": La, "z_schritt": z_schritt,
+        "shirt_laenge": z_hals - z_saum, "shirt_laenge_board": BOARD["shirt_laenge"] * W,
+        "saum_s": (z_saum - k.O.z) / L, "z_saum": z_saum,
+        "aermel_t": BOARD["aermel"] * W / La - AKROMION,
+        "z_taille": z_taille, "weite": weite, "weite_max": max(e for _, e in weite),
+        "B": B, "z_bund": z_bund, "hose_laenge": laenge, "z_hose_saum": z_hose_saum, "bein_t": bein_t,
+        "weite_hose": max(0.0, (saum_breite - w_beine) / 2), "bein": BOARD["hose_bein"] * saum_breite,
+        "Lb": (K - A).length,
+    }
+
+
+def _felder(koerper: bpy.types.Object, k: koordinaten.Koordinaten, oeffnung: dict, teile: list[str],
+            schnitt: dict) -> dict:
+    """Je Eckpunkt: Abstand zum Rand von Shirt (Saum und Ärmel, ohne den Halsausschnitt) und Hose
+    (m, positiv = bedeckt); dazu der Abstand zur Halsöffnung (`hals`) für Kragen und Bündchen."""
+    L = (k.N - k.O).length
+    felder: dict = {n: [] for n in ("shirt", "hose", "hals")}
+    for v, teil in zip(koerper.data.vertices, teile):
+        p = v.co
+        seite = "L" if p.x >= 0 else "R"
         _, s, _ = k.rumpf(p)
         shirt = hose = -1.0
         if teil == "arm":
             _, t, La, _ = k.glied(p, f"upperarm01.{seite}", f"lowerarm01.{seite}", Vector((0, -1, 0)), seite)
-            shirt = (AERMEL - t) * La
+            shirt = (schnitt["aermel_t"] - t) * La
         elif teil == "rumpf":
-            shirt = min((s - SHIRT_SAUM) * L, _halsfeld(oeffnung, p))
+            shirt = min((s - schnitt["saum_s"]) * L, _halsfeld(oeffnung, p))
             hose = (HOSE_BUND - s) * L
         elif teil == "bein":
             _, t, Lb, _ = k.glied(p, f"upperleg01.{seite}", f"lowerleg01.{seite}", Vector((0, -1, 0)), seite)
-            hose = (HOSE_BEIN - t) * Lb
-            shirt = (s - SHIRT_SAUM) * L
+            hose = (schnitt["bein_t"] - t) * Lb
+            shirt = (s - schnitt["saum_s"]) * L
         felder["shirt"].append(shirt)
         felder["hose"].append(hose)
-        felder["teil"].append(teil)
         felder["hals"].append(_halsfeld(oeffnung, p) if teil == "rumpf" else 1.0)
-    felder["k"] = k
-    felder["oeffnung"] = oeffnung
     return felder
+
+
+def _weite(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict) -> tuple[list, list]:
+    """Zusätzlicher Abstand des Stoffs vom Körper (m) je Eckpunkt, damit der Schnitt dem Board folgt.
+    Shirt: gerade geschnitten, unter den Ärmeln so weit, dass der Umriss dem des Boards folgt (Weite je
+    Höhe aus `_schnitt`, dazwischen linear); seitlich voll, vorn und hinten `WEITE_VORN_HINTEN`.
+    Shorts: am Bund eng, zum Saum hin weiter (Potenz `steigung`), außen bis zur Saumbreite des Boards,
+    vorn und hinten weniger, innen kaum (die Beine berühren sich sonst)."""
+    tabelle = schnitt["weite"]  # (z, Weite), von oben nach unten in Schritten von 1 cm
+    z_w = schnitt["z_w"]
+
+    def weite_bei(z: float) -> float:
+        i = (z_w - z) / 0.01
+        j = max(0, min(len(tabelle) - 2, int(i)))
+        a = max(0.0, min(1.0, i - j))
+        return tabelle[j][1] * (1 - a) + tabelle[j + 1][1] * a
+
+    shirt, hose = [], []
+    for v, teil in zip(koerper.data.vertices, teile):
+        p = v.co
+        th, _, _ = k.rumpf(p)
+        e_shirt = 0.0
+        if teil in ("rumpf", "bein") and p.z < z_w:
+            g = math.sin(math.radians(th)) ** 2 + WEITE_VORN_HINTEN * math.cos(math.radians(th)) ** 2
+            e_shirt = weite_bei(p.z) * g
+        shirt.append(e_shirt)
+        e_hose = 0.0
+        if teil in ("rumpf", "bein"):
+            vv = (schnitt["z_bund"] - p.z) / schnitt["hose_laenge"]
+            if vv > 0:
+                vv = min(1.0, vv) ** HOSE_WEITE["steigung"]
+                if teil == "bein":
+                    s = "L" if p.x >= 0 else "R"
+                    tb, _, _, _ = k.glied(p, f"upperleg01.{s}", f"lowerleg01.{s}", Vector((0, -1, 0)), s)
+                    c, fb = math.sin(math.radians(tb)), math.cos(math.radians(tb)) ** 2
+                else:
+                    c, fb = math.sin(math.radians(th)), math.cos(math.radians(th)) ** 2
+                anteil = max(c, 0.0) ** 2 + HOSE_WEITE["vorn_hinten"] * fb + HOSE_WEITE["innen"] * max(-c, 0.0) ** 2
+                e_hose = schnitt["weite_hose"] * vv * anteil
+        hose.append(e_hose)
+    return shirt, hose
+
+
+def _glatte_normalen(koerper: bpy.types.Object, radius: float = 0.03) -> list[Vector]:
+    """Normalen der Ruhehaltung, gemittelt über die Umgebung (`radius`): ohne die Buckel der Muskeln."""
+    verts = koerper.data.vertices
+    baum = kdtree.KDTree(len(verts))
+    for v in verts:
+        baum.insert(v.co, v.index)
+    baum.balance()
+    aus = []
+    for v in verts:
+        n = Vector()
+        for _, i, _ in baum.find_range(v.co, radius):
+            n += verts[i].normal
+        aus.append(n.normalized() if n.length > 1e-9 else v.normal.copy())
+    return aus
+
+
+def _streifen(koerper: bpy.types.Object, schnitt: dict, normalen: list[Vector]) -> list[float]:
+    """Feld des Lime-Streifens an der Seite der Shorts (m, positiv = Streifen): Winkel der geglätteten
+    Normale zur Seite (0 = genau seitlich nach außen, vorn negativ, hinten positiv) gegen die halbe Breite,
+    die vom Bund zum Saum gleichmäßig wächst (`BOARD["streifen"]`, hinten oben breiter). Der Streifen
+    beginnt unter dem Bund und reicht bis zum Saum, auf beiden Beinen."""
+    st = BOARD["streifen"]
+    aus = []
+    for v, n in zip(koerper.data.vertices, normalen):
+        p = v.co
+        vv = (schnitt["z_bund"] - p.z) / schnitt["hose_laenge"]
+        sx = 1.0 if p.x >= 0 else -1.0
+        phi = math.degrees(math.atan2(n.y, n.x * sx))
+        w = max(0.0, min(1.0, (vv - BOARD["bund"]) / (1 - BOARD["bund"])))
+        oben = st["oben_hinten"] if phi > 0 else st["oben_vorn"]
+        alpha = oben + (st["saum"] - oben) * w
+        feld = (alpha - abs(phi)) * math.pi / 180 * 0.09
+        aus.append(min(feld, (vv - BOARD["bund"]) * schnitt["hose_laenge"]))
+    return aus
 
 
 def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], lage: dict, seite: float) -> dict:
     """Bildebene eines Logos oder Details: Mittelpunkt auf der Haut (Ruhehaltung), Normale als Mittel
     der Umgebung (3 cm), Hochachse längs des Körperteils, Querachse so, dass das Bild von außen
-    richtig herum liegt. Lage am Rumpf über `quer`/`unter_schulter`/`blick` (Logos) oder über
-    `winkel`/`lage` (Winkel um die Rumpfachse, 0 vorn, links positiv; Anteil Hüfte→Hals), am linken
-    Oberschenkel bei `teil` „hose“ mit `winkel`/`lage` um den Knochen; `hoch` verschiebt den
-    Mittelpunkt längs (m). `erlaubt`: Eckpunkte des Körperteils (`teile`, Seite `x`), auf denen das
-    Bild liegen darf; `tiefe`: Reichweite vor und hinter der Bildebene (D-422)."""
+    richtig herum liegt. Lage am Rumpf über `ziel` (x, z) und `blick` (Logos und Kordel, genau auf den
+    Punkt geschoben) oder am Oberschenkel bei `teil` „hose“ mit `winkel`/`lage` um den Knochen (0 vorn,
+    90 außen; Anteil Hüfte→Knie). `erlaubt`: Eckpunkte des Körperteils (`teile`, Seite `x`), auf denen
+    das Bild liegen darf; `tiefe`: Reichweite vor und hinter der Bildebene (D-422)."""
     verts = koerper.data.vertices
-    if lage["teil"] == "hose" and "winkel" in lage and "lage" in lage and lage.get("bild") is None:
+    if "winkel" in lage:
         s = "L" if lage.get("x", 1) > 0 else "R"  # Oberschenkel der Seite `x` (links positiv)
         kandidaten = []
         for i, t in enumerate(teile):
@@ -231,30 +364,28 @@ def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[s
                 th, tt, _, _ = k.glied(verts[i].co, f"upperleg01.{s}", f"lowerleg01.{s}", Vector((0, -1, 0)), s)
                 kandidaten.append((abs(th - lage["winkel"]) / 60 + abs(tt - lage["lage"]), i))
         achse = (k.kopf[f"upperleg01.{s}"] - k.kopf[f"lowerleg01.{s}"]).normalized()
-    elif "quer" in lage:
-        z0 = k.kopf["upperarm01.L"].z - lage["unter_schulter"]
-        blick = Vector(lage["blick"])
-        kandidaten = [(abs(verts[i].co.x - lage["quer"]) + abs(verts[i].co.z - z0), i)
-                      for i, t in enumerate(teile) if t == "rumpf" and verts[i].normal.dot(blick) > 0.5]
-        achse = (k.N - k.O).normalized()
     else:
-        # Rumpf und Hüfte (am Saum zählt die Hüftseite zum Bein), nicht die Arme
-        kandidaten = []
-        for i, t in enumerate(teile):
-            if t in ("rumpf", "bein"):
-                th, s, _ = k.rumpf(verts[i].co)
-                th *= 1 if verts[i].co.x >= 0 else -1
-                kandidaten.append((abs(th - lage["winkel"]) / 90 + abs(s - lage["lage"]), i))
+        x0, z0 = lage["ziel"]
+        blick = Vector(lage["blick"])
+        kandidaten = [(abs(verts[i].co.x - x0) + abs(verts[i].co.z - z0), i)
+                      for i, t in enumerate(teile) if t == "rumpf" and verts[i].normal.dot(blick) > 0.5]
         achse = (k.N - k.O).normalized()
     _, beste = min(kandidaten)
     P0 = verts[beste].co.copy()
     n0 = sum((v.normal for v in verts if (v.co - P0).length < 0.03), Vector()).normalized()
     hoch = (achse - achse.dot(n0) * n0).normalized()
     quer = hoch.cross(n0)
+    if "ziel" in lage:
+        # genau auf den Zielpunkt schieben: längs der Hochachse auf z0, längs der Querachse auf x0
+        x0, z0 = lage["ziel"]
+        if abs(hoch.z) > 0.3:
+            P0 = P0 + hoch * ((z0 - P0.z) / hoch.z)
+        if abs(quer.x) > 0.3:
+            P0 = P0 + quer * ((x0 - P0.x) / quer.x)
     x = lage.get("x")
     erlaubt = {i for i, t in enumerate(teile)
                if t in lage.get("teile", (t,)) and (x is None or verts[i].co.x * x > 0)}
-    return {"P0": P0 + hoch * lage.get("hoch", 0.0), "n": n0, "hoch": hoch, "quer": quer, "seite": seite,
+    return {"P0": P0, "n": n0, "hoch": hoch, "quer": quer, "seite": seite,
             "erlaubt": erlaubt, "tiefe": lage.get("tiefe", 1.0)}
 
 
@@ -276,25 +407,29 @@ def _glaetten(bm: bmesh.types.BMesh, runden: int, anteil: float = 0.5) -> None:
 
 
 def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld: list[float],
-          abstand: float, rahmen: dict[str, dict], rand: float = 0.03,
-          kragen: list[float] | None = None) -> bpy.types.Object:
+          abstand: float, rahmen: dict[str, dict], rand: float = 0.03, kragen: list[float] | None = None,
+          weite: list[float] | None = None, attribute: dict[str, list[float]] | None = None) -> bpy.types.Object:
     """Kleidungsstück: Flächen, deren Eckpunkte höchstens `rand` außerhalb des Saums liegen, kopiert,
-    versetzt und geglättet; mit denselben Gewichten am Skelett. Je Logo und Detail eine UV-Schicht
-    (ebene Projektion auf die Bildebene) und eine Maske: nur Flächen des erlaubten Körperteils in
-    Reichweite der Bildebene, die zu ihr zeigen. Mit `kragen` (Abstand zur Halsöffnung je Eckpunkt)
-    hängt der Stoff nahe der Öffnung am Halsansatz (`_kragen_binden`, D-431)."""
+    um `abstand` plus die Weite des Schnitts (`weite`, je Eckpunkt) versetzt und geglättet; mit denselben
+    Gewichten am Skelett. Je Logo und Detail eine UV-Schicht (ebene Projektion auf die Bildebene) und eine
+    Maske: nur Flächen des erlaubten Körperteils in Reichweite der Bildebene, die zu ihr zeigen. Mit
+    `kragen` (Abstand zur Halsöffnung je Eckpunkt) hängt der Stoff nahe der Öffnung am Halsansatz
+    (`_kragen_binden`, D-431). `attribute`: weitere Felder je Eckpunkt für den Shader (z. B. Streifen)."""
     quelle = koerper.data
     behalten = {v.index for v in quelle.vertices if feld[v.index] > -rand}
     bm = bmesh.new()
     bm.from_mesh(quelle)
     bm.verts.ensure_lookup_table()
+    nummer = bm.verts.layers.int.new("nummer")
+    for v in bm.verts:
+        v[nummer] = v.index
     weg = [v for v in bm.verts if v.index not in behalten]
     bmesh.ops.delete(bm, geom=weg, context="VERTS")
     bm.normal_update()
     # Abstand zur Haut, dann glätten; danach nirgends näher als 3 mm an der Haut
     haut = {v: (v.co.copy(), v.normal.copy()) for v in bm.verts}
     for v in bm.verts:
-        v.co = v.co + v.normal * abstand
+        v.co = v.co + v.normal * (abstand + (weite[v[nummer]] if weite else 0.0))
     _glaetten(bm, 6)
     for v in bm.verts:
         co0, n0 = haut[v]
@@ -306,21 +441,21 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
     bm.free()
     obj = bpy.data.objects.new(name, mesh)
     bpy.context.scene.collection.objects.link(obj)
-    # Gewichte kommen mit dem Netz (bmesh übernimmt sie je Eckpunkt mit den Nummern der Gruppen);
-    # dazu dieselben Gruppen in derselben Reihenfolge wie am Körper. Die Felder der Säume und Details
-    # nach den ursprünglichen Nummern der Eckpunkte.
+    # Gewichte kommen mit dem Netz (bmesh übernimmt sie je Eckpunkt mit den Nummern der Gruppen); dazu
+    # dieselben Gruppen in derselben Reihenfolge wie am Körper. Die Felder der Säume und Details nach den
+    # ursprünglichen Nummern der Eckpunkte.
     alt = sorted(behalten)
     for g in koerper.vertex_groups:
         obj.vertex_groups.new(name=g.name)
     if kragen is not None:
         _kragen_binden(obj, [kragen[i] for i in alt])
-    saum = mesh.attributes.new("Saum", "FLOAT", "POINT")
-    for neu_i, alt_i in enumerate(alt):
-        saum.data[neu_i].value = feld[alt_i]
+    felder = {"Saum": feld, **(attribute or {})}
     if kragen is not None:
-        hals = mesh.attributes.new("Hals", "FLOAT", "POINT")  # Abstand zur Halsöffnung, für das Bündchen
+        felder["Hals"] = kragen  # Abstand zur Halsöffnung, für das Bündchen
+    for attr_name, werte in felder.items():
+        attr = mesh.attributes.new(attr_name, "FLOAT", "POINT")
         for neu_i, alt_i in enumerate(alt):
-            hals.data[neu_i].value = kragen[alt_i]
+            attr.data[neu_i].value = werte[alt_i]
     for logo_name, r in rahmen.items():
         schicht = mesh.uv_layers.new(name="Logo" + logo_name)
         maske = mesh.attributes.new("Maske" + logo_name, "FLOAT", "POINT")
@@ -567,108 +702,67 @@ def _bild_aus_alpha(name: str, alpha) -> bpy.types.Image:
     return bild
 
 
-def _rand_alpha(alpha, px: int):
-    """Das Motiv um `px` Pixel in alle Richtungen verbreitert, Kanten geglättet: der Rand in Stoffarbe."""
-    import numpy as np
+def _bilder(motiv: str) -> dict[str, bpy.types.Image]:
+    """Motiv als quadratische Bilder mit Deckkraft (weiß auf durchsichtig), je Teil eines, gespeichert in
+    `quelle/form-<motiv>[-<teil>].png`:
 
-    form = alpha > 0.5
-    for _ in range(px):
-        erweitert = form.copy()
-        erweitert[1:] |= form[:-1]
-        erweitert[:-1] |= form[1:]
-        erweitert[:, 1:] |= form[:, :-1]
-        erweitert[:, :-1] |= form[:, 1:]
-        form = erweitert
-    weich = form.astype(np.float32)
-    for _ in range(2):
-        weich = (weich + np.roll(weich, 1, 0) + np.roll(weich, -1, 0) + np.roll(weich, 1, 1) + np.roll(weich, -1, 1)) / 5
-    return weich
-
-
-def _bilder(motiv: str) -> tuple[bpy.types.Image, bpy.types.Image]:
-    """Motiv als quadratisches Bild mit Deckkraft (weiß auf durchsichtig) und sein Rand, gespeichert in
-    `quelle/form-<motiv>.png` und `quelle/form-<motiv>-rand.png`:
-
-    - „f“: das FORM-F aus `symbol-f-gruen.svg`, 1024 px, `F_ANTEIL` der Höhe, in der Mitte;
-    - „vertikal“: F über der Wortmarke FORM (`logo-kopfzeile-dunkel.svg`, Gruppe `wortmarke`) nach
-      `VERTIKAL`, 2048 px: Seitenlänge `seite` Versalhöhen, Block vertikal mittig, F oben.
-
-    Der Rand ist bei beiden rund 3,6 % der F-Höhe breit."""
-    import numpy as np
-
-    pfad_bild, pfad_rand = QUELLE / f"form-{motiv}.png", QUELLE / f"form-{motiv}-rand.png"
-    if pfad_bild.exists():
-        bild = bpy.data.images.load(str(pfad_bild), check_existing=True)
+    - „f“: das FORM-F aus `symbol-f-gruen.svg`, 1024 px, `F_ANTEIL` der Höhe, in der Mitte (Teil „f“);
+    - „ruecken“: F über der Wortmarke FORM (`logo-kopfzeile-dunkel.svg`, Gruppe `wortmarke`) im
+      Verhältnis des Boards (`BOARD["ruecken_versal"]`), 2048 px auf `RUECKEN_SEITE` Versalhöhen, der
+      Block senkrecht mittig, beide waagrecht mittig; Teile „f“ und „wort“ (zwei Farben)."""
+    f_polys = _svg_polygone(SVG_F)
+    f_einheit = _bbox(f_polys)[3] - _bbox(f_polys)[2]
+    if motiv == "f":
+        N = 1024
+        teile = {"f": _einpassen(f_polys, 0.5, 0.5, F_ANTEIL, f_einheit)}
+        dateien = {"f": QUELLE / "form-f.png"}
+    elif motiv == "ruecken":
+        N = 2048
+        v = BOARD["ruecken_versal"]
+        s = RUECKEN_SEITE
+        w_polys = _svg_polygone(SVG_WORTMARKE, "wortmarke")
+        _, _, wy0, wy1 = _bbox(w_polys)
+        # Versalhöhe = 1 Einheit; der Block ist f + abstand + 1 hoch, seine Mitte in der Bildmitte
+        teile = {"f": _einpassen(f_polys, 0.5, 0.5 + (v["abstand"] + 1.0) / 2 / s, v["f"] / s, f_einheit),
+                 "wort": _einpassen(w_polys, 0.5, 0.5 - (v["f"] + v["abstand"]) / 2 / s, 1.0 / s, wy1 - wy0)}
+        # Verhältnis im Namen: Ändern sich die Werte, entsteht ein neues Bild statt eines veralteten
+        name = f"form-ruecken-{v['f']:.2f}-{v['abstand']:.2f}"
+        dateien = {"f": QUELLE / f"{name}-f.png", "wort": QUELLE / f"{name}-wort.png"}
     else:
-        f_polys = _svg_polygone(SVG_F)
-        if motiv == "f":
-            N = 1024
-            f_hoehe = F_ANTEIL
-            polys = _einpassen(f_polys, 0.5, 0.5, f_hoehe, _bbox(f_polys)[3] - _bbox(f_polys)[2])
-        elif motiv == "vertikal":
-            N = 2048
-            v = VERTIKAL
-            f_hoehe = v["f"] / v["seite"]
-            # Versalhöhe der Wortmarke = 1 Einheit; der Block ist f + abstand + 1 hoch, seine Mitte in
-            # der Bildmitte: Mitte des F um (abstand + 1) / 2 darüber, Mitte der Wortmarke um (f + abstand) / 2 darunter
-            w_polys = _svg_polygone(SVG_WORTMARKE, "wortmarke")
-            wx0, wx1, wy0, wy1 = _bbox(w_polys)
-            polys = (_einpassen(f_polys, 0.5, 0.5 + (v["abstand"] + 1.0) / 2 / v["seite"], f_hoehe,
-                                _bbox(f_polys)[3] - _bbox(f_polys)[2])
-                     + _einpassen(w_polys, 0.5, 0.5 - (v["f"] + v["abstand"]) / 2 / v["seite"], 1.0 / v["seite"],
-                                  wy1 - wy0))
-        else:
-            raise ValueError(f"Motiv {motiv} unbekannt")
-        bild = _bild_aus_alpha("FORM-" + motiv, _rastern(polys, N))
-        _speichern(bild, pfad_bild)
-    if pfad_rand.exists():
-        rand = bpy.data.images.load(str(pfad_rand), check_existing=True)
-    else:
-        N = bild.size[0]
-        f_px = N * (F_ANTEIL if motiv == "f" else VERTIKAL["f"] / VERTIKAL["seite"])
-        px = np.empty(N * N * 4, dtype=np.float32)
-        bild.pixels.foreach_get(px)
-        rand = _bild_aus_alpha("FORM-" + motiv + "-Rand", _rand_alpha(px.reshape(N, N, 4)[..., 3], round(RAND_PX / (F_ANTEIL * 1024) * f_px)))
-        _speichern(rand, pfad_rand)
-    return bild, rand
-
-
-def _detail_bilder() -> dict[str, dict[str, bpy.types.Image]]:
-    """Bilder der Lime-Details, je Art mit Deckkraft für Lime (`lime`) und, beim Schlitz, für den
-    Schnitt im Stoff (`schnitt`); 512 px auf `DETAILS[...]["seite"]` Metern, gespeichert in `quelle/`."""
-    import numpy as np
-
-    N = 512
-    aus: dict[str, dict[str, bpy.types.Image]] = {}
-
-    def bild(name: str, maske) -> bpy.types.Image:
-        pfad = QUELLE / f"detail-{name}.png"
+        raise ValueError(f"Motiv {motiv} unbekannt")
+    aus = {}
+    for teil, polys in teile.items():
+        pfad = dateien[teil]
         if pfad.exists():
-            return bpy.data.images.load(str(pfad), check_existing=True)
-        b = _bild_aus_alpha("Detail-" + name, maske)
-        _speichern(b, pfad)
-        return b
-
-    # Koordinaten in Metern, Mitte des Bildes = Mittelpunkt des Rahmens, y nach oben
-    for art in ("schlitz", "kordel"):
-        seite = DETAILS["schlitz_l" if art == "schlitz" else "kordel"]["seite"]
-        lin = (np.arange(N) + 0.5) / N * seite - seite / 2
-        X, Y = np.meshgrid(lin, lin)  # Zeile 0 ist in Blender unten: y steigt mit der Zeile
-        if art == "schlitz":
-            # Schlitz von der Saumkante (unten, -hoch) nach oben, Einfassung beidseits
-            unten = -DETAILS["schlitz_l"]["hoch"]
-            im_schlitz = (np.abs(X) < SCHLITZ["breite"] / 2) & (Y > unten - 0.01) & (Y < unten + SCHLITZ["hoehe"])
-            einfassung = ((np.abs(X) < SCHLITZ["breite"] / 2 + SCHLITZ["einfassung"]) & (Y > unten - 0.01)
-                          & (Y < unten + SCHLITZ["hoehe"] + SCHLITZ["einfassung"]) & ~im_schlitz)
-            aus[art] = {"schnitt": bild("schlitz-schnitt", im_schlitz.astype(np.float32)),
-                        "lime": bild("schlitz-lime", einfassung.astype(np.float32))}
+            aus[teil] = bpy.data.images.load(str(pfad), check_existing=True)
         else:
-            # Zwei Kordelenden vom Bund (oben) nach unten, unten ein dickeres Ende
-            oben = -DETAILS["kordel"]["hoch"]
-            tief = oben - Y
-            breite = np.where(tief > KORDEL["laenge"] - KORDEL["ende"], KORDEL["ende_breite"], KORDEL["breite"])
-            band = ((np.abs(np.abs(X) - KORDEL["abstand"]) < breite / 2) & (tief > 0.004) & (tief < KORDEL["laenge"]))
-            aus[art] = {"lime": bild("kordel-lime", band.astype(np.float32))}
+            aus[teil] = _bild_aus_alpha(f"FORM-{motiv}-{teil}", _rastern(polys, N))
+            _speichern(aus[teil], pfad)
+    return aus
+
+
+def _kordel_bilder(schnitt: dict) -> dict[str, bpy.types.Image]:
+    """Kordel der Shorts als Bilder (Deckkraft) für Schnur und Hülsen: zwei Schnüre aus der Mitte des
+    Bunds nach unten, leicht auseinander, unten je eine Hülse; 512 px auf `seite` Metern, Mitte des Bilds
+    an der Unterkante des Bunds. Maße aus `BOARD["kordel"]` mal Bundbreite B."""
+    import numpy as np
+
+    kd = BOARD["kordel"]
+    B = schnitt["B"]
+    seite = 2.4 * kd["laenge"] * B
+    N = 512
+    lin = (np.arange(N) + 0.5) / N * seite - seite / 2
+    X, Y = np.meshgrid(lin, lin)  # Zeile 0 ist in Blender unten: y steigt mit der Zeile
+    tief = -Y  # unter der Unterkante des Bunds
+    laenge, ende = kd["laenge"] * B, kd["ende"] * B
+    mitte = kd["abstand"] * B / 2 + tief * 0.08  # die Schnüre laufen nach unten leicht auseinander
+    abst = np.abs(np.abs(X) - mitte)
+    schnur = (abst < 0.0016) & (tief > -0.002) & (tief < laenge - ende)
+    huelse = (abst < 0.0024) & (tief >= laenge - ende) & (tief < laenge)
+    aus = {}
+    for name, maske in (("schnur", schnur), ("huelse", huelse)):
+        aus[name] = _bild_aus_alpha("Kordel-" + name, maske.astype(np.float32))
+    aus["seite"] = seite
     return aus
 
 
@@ -705,19 +799,23 @@ def _stufe(nodes, links, wert, von: float, bis: float, nach: tuple[float, float]
 # ---------------------------------------------------------------------- Material
 
 
-def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, str]], details: list[str],
+def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, str]]],
+                   kordel: dict | None = None, streifen: bool = False, bund: float | None = None,
                    mit_saum: bool = True) -> bpy.types.Material:
     """Stoff matt mit leichtem Glanz (Sheen); endet scharf am Saum (Attribut „Saum“, auch die
-    Halsöffnung); darauf die Lime-Details (`details`, Schlüssel aus `DETAILS`: Bild, Schnitt) und die
-    Logos (je (Name, Farbe, Motiv): UV-Schicht `Logo<Name>`, Maske `Maske<Name>`) wie ein Aufdruck mit
-    schmalem Rand in Stoffarbe. Ohne `mit_saum` (Kragenbündchen) ist der Stoff überall deckend. Keine
-    Muskelzonen mehr (D-449)."""
+    Halsöffnung). Darauf, je nach Teil: der Bund etwas dunkler (`bund`: Höhe in m, Attribut „Bund“ =
+    Abstand unter dem oberen Rand), der Streifen in Lime (Attribut „Streifen“), die Kordel (Bilder aus
+    `_kordel_bilder`, UV-Schicht `LogoKordel`) und die Logos (je (Name, Motiv, Farbe je Teil): UV-Schicht
+    `Logo<Name>`, Maske `Maske<Name>`) wie ein Aufdruck. Ohne `mit_saum` (Kragenbündchen) ist der Stoff
+    überall deckend. Keine Muskelzonen (D-449)."""
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     nodes, links = mat.node_tree.nodes, mat.node_tree.links
     bsdf = nodes["Principled BSDF"]
-    bsdf.inputs["Roughness"].default_value = 0.82
-    bsdf.inputs["Sheen Weight"].default_value = 0.35
+    # matt wie das Board: wenig Glanz und Sheen, sonst wirkt der dunkle Stoff grau (D-450)
+    bsdf.inputs["Roughness"].default_value = 0.88
+    bsdf.inputs["Specular IOR Level"].default_value = 0.25
+    bsdf.inputs["Sheen Weight"].default_value = 0.1
     bsdf.inputs["Sheen Roughness"].default_value = 0.45
 
     def maske(attribut: str, von: float, bis: float):
@@ -740,94 +838,106 @@ def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, str]], det
                 links.new(wert, mix.inputs[eingang])
         return mix.outputs[2]
 
-    stoff = szene.srgb(farbe)
-    farbe_out = stoff
-    alpha = maske("Saum", -0.0008, 0.0008) if mit_saum else None
-    if details:
-        bilder = _detail_bilder()
-        for d in details:
-            uv = nodes.new("ShaderNodeUVMap")
-            uv.uv_map = "Logo" + d
-            sichtbar = maske("Maske" + d, 0.45, 0.55)
-            for art, bild in bilder[DETAILS[d]["bild"]].items():
-                tex = nodes.new("ShaderNodeTexImage")
-                tex.image = bild
-                tex.extension = "CLIP"
-                tex.interpolation = "Cubic"
-                links.new(uv.outputs["UV"], tex.inputs["Vector"])
-                wert = mal(tex.outputs["Alpha"], sichtbar)
-                if art == "lime":
-                    farbe_out = mischen(wert, farbe_out, szene.srgb(LIME))
-                elif alpha is not None:
-                    alpha = mal(alpha, _rechne(nodes, links, "SUBTRACT", 1.0, wert))
-    for logo_name, farb_name, motiv in logos:
-        bild_f, bild_rand = _bilder(motiv)
+    def bild(image, uv_name: str):
         uv = nodes.new("ShaderNodeUVMap")
-        uv.uv_map = "Logo" + logo_name
+        uv.uv_map = uv_name
+        tex = nodes.new("ShaderNodeTexImage")
+        tex.image = image
+        tex.extension = "CLIP"
+        tex.interpolation = "Cubic"
+        links.new(uv.outputs["UV"], tex.inputs["Vector"])
+        return tex.outputs["Alpha"]
+
+    farbe_out = szene.srgb(farbe)
+    if bund:
+        farbe_out = mischen(_rechne(nodes, links, "SUBTRACT", 1.0, maske("Bund", bund - 0.0008, bund + 0.0008)),
+                            farbe_out, szene.srgb(BUND))
+    if streifen:
+        farbe_out = mischen(maske("Streifen", -0.0008, 0.0008), farbe_out, szene.srgb(LIME))
+    if kordel:
+        sichtbar = maske("MaskeKordel", 0.45, 0.55)
+        for teil, ton in (("schnur", KORDEL), ("huelse", KORDEL_ENDE)):
+            farbe_out = mischen(mal(bild(kordel[teil], "LogoKordel"), sichtbar), farbe_out, szene.srgb(ton))
+    for logo_name, motiv, farben in logos:
+        bilder = _bilder(motiv)
         sichtbar = maske("Maske" + logo_name, 0.45, 0.55)
-        for bild, ziel in ((bild_rand, stoff), (bild_f, szene.srgb(LOGO_FARBEN[farb_name]))):
-            tex = nodes.new("ShaderNodeTexImage")
-            tex.image = bild
-            tex.extension = "CLIP"
-            links.new(uv.outputs["UV"], tex.inputs["Vector"])
-            farbe_out = mischen(mal(tex.outputs["Alpha"], sichtbar), farbe_out, ziel)
-    if isinstance(farbe_out, tuple):  # nur Stofffarbe (Kragenbündchen ohne Details und Logos)
+        for teil, ton in farben.items():
+            farbe_out = mischen(mal(bild(bilder[teil], "Logo" + logo_name), sichtbar), farbe_out, szene.srgb(ton))
+    if isinstance(farbe_out, tuple):  # nur Stofffarbe (Kragenbündchen)
         bsdf.inputs["Base Color"].default_value = farbe_out
     else:
         links.new(farbe_out, bsdf.inputs["Base Color"])
-    if alpha is not None:
-        links.new(alpha, bsdf.inputs["Alpha"])
+    if mit_saum:
+        links.new(maske("Saum", -0.0008, 0.0008), bsdf.inputs["Alpha"])
     return mat
 
 
-def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, logo_farben: dict[str, str] = KOLLEKTION,
-             brust_hoehe: float | None = None, tee: str = NACHT) -> list[bpy.types.Object]:
-    """Shirt mit Kragenbündchen und Shorts an die Figur (nach `figur.schulter_gewichte`). `logo_farben`
-    je Logo „lime“ oder „hell“, `brust_hoehe` ersetzt die Höhe des Brust-F aus `LOGOS`, `tee` die
-    Farbe des Shirts. Setzt am Körper das Attribut „Bedeckt“ (Abstand innerhalb von Shirt oder Hose, m):
-    Haut, die tiefer als 12 mm unter dem Stoff liegt, blendet das Material aus (`haut_ausblenden`)."""
-    f = _felder(koerper, skelett)
-    k, teile = f["k"], f["teil"]
-    rahmen = {"shirt": {}, "hose": {}}
-    motive = {}
-    masse = {}
-    for logo_name, logo in LOGOS.items():
-        lage = dict(logo)
-        if logo.get("motiv") == "vertikal":
-            # Backprint (D-432): F aus der festen Breite der Wortmarke; Bildseite so, dass das F `hoehe`
-            # hoch ist. Die Oberkante des F liegt `unter_kragen` unter der hinteren Kante der Halsöffnung;
-            # daraus die Lage des F-Mittelpunkts unter dem Schultergelenk (`unter_schulter`) und, um die
-            # halbe Höhe von Abstand und Wortmarke tiefer, der Mittelpunkt des Bilds
-            hoehe = logo["wortmarke"] / WORTMARKE_BREITE * VERTIKAL["f"]
-            seite = hoehe * VERTIKAL["seite"] / VERTIKAL["f"]
-            z_f = f["oeffnung"]["hinten"].z - logo["unter_kragen"] - hoehe / 2
-            lage["unter_schulter"] = k.kopf["upperarm01.L"].z - z_f
-            lage["hoch"] = -(VERTIKAL["abstand"] + 1.0) / 2 / VERTIKAL["seite"] * seite
-            masse[logo_name] = {"wortmarke": logo["wortmarke"], "f": hoehe, "f_oben_unter_kragen": logo["unter_kragen"],
-                                "block": hoehe * (VERTIKAL["f"] + VERTIKAL["abstand"] + 1.0) / VERTIKAL["f"]}
-        else:
-            hoehe = brust_hoehe if logo_name == "brust" and brust_hoehe else logo["hoehe"]
-            seite = hoehe / F_ANTEIL
-        rahmen[logo["teil"]][logo_name.capitalize()] = _rahmen(koerper, k, teile, lage, seite)
-        motive[logo_name] = logo.get("motiv", "f")
-    for d_name, d in DETAILS.items():
-        rahmen[d["teil"]][d_name] = _rahmen(koerper, k, teile, d, d["seite"])
-    hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"])
-    shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"])
-    hose.data.materials.append(stoff_material("Shorts", GRAPHIT,
-                                               [("Beinvorn", logo_farben[LOGOS["beinvorn"]["farbe"]], motive["beinvorn"])],
-                                              [d for d in DETAILS if DETAILS[d]["teil"] == "hose"]))
-    shirt.data.materials.append(stoff_material("Shirt", tee,
-                                               [("Brust", logo_farben["brust"], motive["brust"]),
-                                                ("Ruecken", logo_farben["ruecken"], motive["ruecken"])],
-                                               [d for d in DETAILS if DETAILS[d]["teil"] == "shirt"]))
-    kragen = _buendchen(shirt, koerper, skelett, f["oeffnung"], stoff_material("Kragen", tee, [], [], mit_saum=False))
+def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: bool = True) -> list[bpy.types.Object]:
+    """Shirt mit Kragenbündchen und Shorts nach dem Board an die Figur (nach `figur.schulter_gewichte`),
+    mit `mit_schuhen` dazu Socken und Schuhe (`schuhe.anziehen`). Setzt am Körper das Attribut „Bedeckt“
+    (Abstand innerhalb von Shirt, Shorts oder Socke, m): Haut, die tiefer als 12 mm unter dem Stoff liegt,
+    blendet das Material aus (`haut_ausblenden`). Die Maße des Schnitts stehen danach in
+    `anziehen.schnitt`, die der Logos in `anziehen.logos` (für Bericht und Prüfung)."""
+    k = koordinaten.Koordinaten(koerper, skelett)
+    oeffnung = _halsoeffnung(koerper, k)
+    teile = _teile(koerper, k)
+    schnitt = _schnitt(koerper, k, oeffnung, teile)
+    f = _felder(koerper, k, oeffnung, teile, schnitt)
+    weite_shirt, weite_hose = _weite(koerper, k, teile, schnitt)
+    normalen = _glatte_normalen(koerper)
+    streifen = _streifen(koerper, schnitt, normalen)
+    bund = [schnitt["z_bund"] - v.co.z for v in koerper.data.vertices]
+    W = schnitt["W"]
+    buendchen = KRAGEN["buendchen"]
+    # Logos nach dem Board: Höhe des F, Mittelpunkt des Bilds; Seitenlänge des Bilds aus der Höhe
+    bf, rf, rv, hf = BOARD["brust_f"], BOARD["ruecken_f"], BOARD["ruecken_versal"], BOARD["hose_f"]
+    brust_h = bf["hoehe"] * W
+    brust = {"teil": "shirt", "ziel": (bf["quer"] * W, oeffnung["vorn"].z - buendchen - bf["unter_buendchen"] * W),
+             "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08}
+    ruecken_h = rf["hoehe"] * W
+    versal = ruecken_h / rv["f"]
+    seite_r = RUECKEN_SEITE * versal
+    f_oben = oeffnung["hinten"].z - buendchen - rf["oben"] * W
+    # Mitte des Bilds: Oberkante des F minus halbe Höhe des F minus halber Abstand und halbe Versalhöhe
+    ruecken = {"teil": "shirt", "ziel": (0.0, f_oben - ruecken_h / 2 - (rv["abstand"] + 1.0) / 2 * versal),
+               "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10}
+    bein_h = hf["hoehe"] * schnitt["bein"]
+    lage_f = schnitt["bein_t"] - (hf["ueber_saum"] * schnitt["bein"] + bein_h / 2) / schnitt["Lb"]
+    beinvorn = {"teil": "hose", "winkel": hf["winkel"], "lage": lage_f, "teile": ("bein",), "x": 1, "tiefe": 0.05}
+    kordel_bilder = _kordel_bilder(schnitt)
+    kordel = {"teil": "hose", "ziel": (0.0, schnitt["z_bund"] - BOARD["bund"] * schnitt["hose_laenge"]),
+              "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.06}
+    rahmen = {"shirt": {"Brust": _rahmen(koerper, k, teile, brust, brust_h / F_ANTEIL),
+                        "Ruecken": _rahmen(koerper, k, teile, ruecken, seite_r)},
+              "hose": {"Beinvorn": _rahmen(koerper, k, teile, beinvorn, bein_h / F_ANTEIL)}}
+    # Kordel: Bildmitte an der Unterkante des Bunds, die Schnüre hängen in der unteren Hälfte des Bilds
+    rahmen["hose"]["Kordel"] = _rahmen(koerper, k, teile, kordel, kordel_bilder["seite"])
+    hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"], weite=weite_hose,
+                 attribute={"Streifen": streifen, "Bund": bund})
+    shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"],
+                  weite=weite_shirt)
+    hose.data.materials.append(stoff_material("Shorts", SHORTS, [("Beinvorn", "f", {"f": LIME})],
+                                              kordel=kordel_bilder, streifen=True,
+                                              bund=BOARD["bund"] * schnitt["hose_laenge"]))
+    shirt.data.materials.append(stoff_material("Shirt", TEE, [("Brust", "f", {"f": LIME}),
+                                                              ("Ruecken", "ruecken", {"f": LIME, "wort": WEISS})]))
+    kragen = _buendchen(shirt, koerper, skelett, oeffnung, stoff_material("Kragen", TEE, [], mit_saum=False))
+    teile_obj = [shirt, hose, kragen]
+    bedeckt = [max(a, b) for a, b in zip(f["shirt"], f["hose"])]
+    if mit_schuhen:
+        import schuhe
+
+        fuesse = schuhe.anziehen(koerper, skelett, k)
+        teile_obj += fuesse["teile"]
+        bedeckt = [max(a, b) for a, b in zip(bedeckt, fuesse["socke"])]
     attr = koerper.data.attributes.get("Bedeckt") or koerper.data.attributes.new("Bedeckt", "FLOAT", "POINT")
-    for i in range(len(koerper.data.vertices)):
-        attr.data[i].value = max(f["shirt"][i], f["hose"][i])
-    anziehen.masse = masse  # Maße des Rückenlogos der zuletzt angezogenen Figur (D-432)
-    anziehen.oeffnung = f["oeffnung"]
-    return [shirt, hose, kragen]
+    for i, wert in enumerate(bedeckt):
+        attr.data[i].value = wert
+    anziehen.schnitt = schnitt
+    anziehen.logos = {"brust_f": brust_h, "ruecken_f": ruecken_h, "ruecken_wortmarke": versal * WORTMARKE_BREITE,
+                      "ruecken_f_oben_unter_buendchen": rf["oben"] * W, "bein_f": bein_h}
+    anziehen.oeffnung = oeffnung
+    return teile_obj
 
 
 def haut_ausblenden(mat: bpy.types.Material) -> None:

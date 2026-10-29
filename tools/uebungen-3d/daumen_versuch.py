@@ -85,7 +85,7 @@ def messen(uebung: str, gesetzt: dict) -> dict:
 
     import render
 
-    s, u, _ = render.baue(uebung, 64, 64, 4, variante="Cm-A1")
+    s, u, _ = render.baue(uebung, 64, 64, 4, variante=render.FIGUR)
     rig = u.rig
     seite = "R"
     g = u.griff[seite]
@@ -172,7 +172,7 @@ def bilder(ziel: Path, art: str, groesse: int, proben: int) -> None:
 
     ziel.mkdir(parents=True, exist_ok=True)
     uebung, phase, kameras = ANSICHTEN[art]
-    s, u, _ = render.baue(uebung, groesse, groesse, proben, variante="Cm-A1")
+    s, u, _ = render.baue(uebung, groesse, groesse, proben, variante=render.FIGUR)
     if phase is None:  # offene Hand in der Grundhaltung, ohne Stange
         u.rig.zuruecksetzen()
         u.rig.anwenden()
@@ -208,7 +208,7 @@ def handkiste(ordner: Path) -> dict:
     erg = {}
     for uebung, phase in (("kniebeuge", 1.0), ("bankdruecken", 0.0), ("latziehen", 1.0)):
         b, h = 720, 540
-        s, u, punkte = render.baue(uebung, b, h, 4, variante="Cm-A1")
+        s, u, punkte = render.baue(uebung, b, h, 4, variante=render.FIGUR)
         render.kamera(u, punkte, "standard", b, h)
         u.setzen(phase)
         bpy.context.view_layer.update()
@@ -256,7 +256,7 @@ def main() -> None:
     else:
         import varianten_bilder
 
-        sys.argv = ["varianten_bilder.py", "Cm-A1", a.werte[0], a.werte[1], "--arbeit", a.werte[2]]
+        sys.argv = ["varianten_bilder.py", render.FIGUR, a.werte[0], a.werte[1], "--arbeit", a.werte[2]]
         varianten_bilder.main()
 
 

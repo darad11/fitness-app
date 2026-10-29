@@ -1547,3 +1547,35 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Schleifen der App zeigen bis zur Freigabe noch die Kleidung von D-447 mit den Zonen; Schuh in der Form vereinfacht (21.2)
 Nächste Schritte: nach deiner Freigabe die drei Pilot-Übungen als Schleifen neu rendern und einbauen, dann dein Gerätetest und deine Freigabe des Merge von PR #53
 ```
+
+## 22. Pilot-Übungen mit der neuen Kleidung
+
+Deine Nachricht vom 29.10.2026 nach Abschnitt 21: Die Standbilder sind freigegeben. Die drei Pilot-Übungen bekommen die neue Kleidung als Schleifen in der App, das Handgelenk beim Latziehen wird geprüft und korrigiert wie beim Bankdrücken. Dazu kommen Übersichtsbild, kurze Aufnahme und das Griffblatt fürs Latziehen; danach Halt bis zu deinem Gerätetest.
+
+### 22.1 Freigabe und offene Punkte (D-454)
+
+- **Freigegeben:** die Standbilder aus 21.5 und das Shirt, 1 % kürzer als auf dem Board.
+- **Rückenlogo:** Für die Pilot-Übungen bleibt das Verhältnis des Boards.
+- **Schuh:** Für die Pilot-Übungen bleibt er, wie er ist.
+- **Handgelenk beim Latziehen:** höchstens etwa 15° zur Daumen- oder Kleinfingerseite und nach hinten, in der ganzen Bewegung; die Hand dringt nicht in die Stange ein, der Griff löst sich nicht.
+
+**Offene Punkte für die Runde vor den Programmen.** Sie kommen als erster Schritt auf den neuen Branch der Programme, vor dem Rendern nach dem Animationsplan:
+
+1. **Rückenlogo kleiner.** Heute ist das F 3,40 Versalhöhen der Wortmarke hoch (Board), im vertikalen Logo des Startbilds 2,28. Das Verhältnis ist ein Wert in der Konfiguration (`kleidung.BOARD["ruecken_versal"]`); die neue Größe lege ich dir dort mit Standbildern vor.
+2. **Schuh verbessern:** echte Schnürung mit Senkeln und Ösen statt aufgemalter Fugen, Profil an der Laufsohle, angehobene Spitze, Polster am Knöchel. Danach prüfe ich den Bodenkontakt und die Durchdringung wieder über alle Bilder (D-451).
+
+Danach folgen die Übungen der Programme nach dem Animationsplan, beginnend mit „Ganzkörper A/B“. Den Merge von PR #53 gibst du nach deinem Gerätetest frei.
+
+### 22.5 Berichte je Paket
+
+```
+Arbeitspaket: D-454 Freigabe der Standbilder, Entscheidungen und offene Punkte
+Umgesetzte Funktionen: keine (Dokumente), erfüllte AK: –
+Geänderte Dateien: docs/decisions.md, docs/implementation-plan.md, form-uebungen-report.md
+Technische Entscheidungen: D-454
+Ausgeführte Tests: pnpm format:check, check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: –
+Nächste Schritte: Handgelenk beim Latziehen prüfen und korrigieren, dann die drei Pilot-Übungen als Schleifen
+```
+

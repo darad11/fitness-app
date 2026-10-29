@@ -7,7 +7,10 @@
  * Aufruf: `node tools/pilot-screens.mjs`. Ergebnis in `docs/screens/uebungen/`:
  *   - `pilot-<übung>-{zugeklappt,aufgeklappt,details}.png`, `pilot-liste.png`,
  *   - `pilot-uebersicht.png` (je Übung Ausgangs- und Endposition, Player zu und auf, Details),
- *   - `pilot-player.webm` (Aufnahme des Players aufgeklappt, Kniebeuge).
+ *   - `pilot-player.webm` und `.mp4` (Aufnahme des Players aufgeklappt, nacheinander Kniebeuge,
+ *     Bankdrücken und Latziehen, je gut vier Sekunden; seit D-448 alle drei und zusätzlich als MP4,
+ *     das auch ältere iPhones abspielen),
+ *   - `pilot-bewegung.mp4` (die drei Schleifen der App nebeneinander, je dreimal).
  * Haltungen wie `e2e/duo.ts`: Duo zugeklappt 466 × 678, aufgeklappt 951 × 669; iPhone 390 × 844.
  */
 import { execFileSync } from 'node:child_process';
@@ -136,24 +139,28 @@ for (const [key, name, search] of PILOT) {
   await page.context().close();
 }
 
-// Aufnahme: Player aufgeklappt mit der Kniebeuge, gut zwei Wiederholungen. Einzelbilder statt der
-// Videoaufnahme von Playwright (die bräuchte ein eigenes ffmpeg), dann mit ffmpeg zusammengesetzt.
+// Aufnahme: Player aufgeklappt, nacheinander die drei Übungen, je gut vier Sekunden. Einzelbilder
+// statt der Videoaufnahme von Playwright (die bräuchte ein eigenes ffmpeg), dann mit ffmpeg zusammengesetzt.
 {
-  const page = await newPage(true);
-  await setPose(page, 'auf');
-  await startWith(page, PILOT[0][2], PILOT[0][1]);
-  await page.waitForTimeout(1500);
   await rm('/tmp/pilot-frames', { recursive: true, force: true });
   await mkdir('/tmp/pilot-frames', { recursive: true });
-  const start = Date.now();
   let count = 0;
-  while (Date.now() - start < 5500) {
-    await page.screenshot({ path: `/tmp/pilot-frames/${String(count).padStart(4, '0')}.png` });
-    count += 1;
+  let dauer = 0;
+  for (const [, name, search] of PILOT) {
+    const page = await newPage(true);
+    await setPose(page, 'auf');
+    await startWith(page, search, name);
+    await page.waitForTimeout(1500);
+    const start = Date.now();
+    while (Date.now() - start < 4200) {
+      await page.screenshot({ path: `/tmp/pilot-frames/${String(count).padStart(4, '0')}.png` });
+      count += 1;
+    }
+    dauer += Date.now() - start;
+    await page.context().close();
   }
-  const fps = Math.max(1, Math.round((count * 1000) / (Date.now() - start)));
-  await page.context().close();
-  execFileSync('ffmpeg', [
+  const fps = Math.max(1, Math.round((count * 1000) / dauer));
+  const eingang = [
     '-y',
     '-loglevel',
     'error',
@@ -162,6 +169,9 @@ for (const [key, name, search] of PILOT) {
     '-i',
     '/tmp/pilot-frames/%04d.png',
     '-an',
+  ];
+  execFileSync('ffmpeg', [
+    ...eingang,
     '-c:v',
     'libvpx-vp9',
     '-b:v',
@@ -170,9 +180,50 @@ for (const [key, name, search] of PILOT) {
     '40',
     `${OUT}/pilot-player.webm`,
   ]);
-  console.log(`${OUT}/pilot-player.webm (${String(count)} Bilder, ${String(fps)} je Sekunde)`);
+  execFileSync('ffmpeg', [
+    ...eingang,
+    '-vf',
+    'scale=trunc(iw/2)*2:trunc(ih/2)*2',
+    '-c:v',
+    'libx264',
+    '-pix_fmt',
+    'yuv420p',
+    '-crf',
+    '28',
+    '-preset',
+    'slow',
+    '-movflags',
+    '+faststart',
+    `${OUT}/pilot-player.mp4`,
+  ]);
+  console.log(
+    `${OUT}/pilot-player.webm und .mp4 (${String(count)} Bilder, ${String(fps)} je Sekunde)`,
+  );
 }
 await browser.close();
+
+// Die drei Schleifen der App nebeneinander, je dreimal abgespielt (`pilot-bewegung.mp4`).
+execFileSync('ffmpeg', [
+  '-y',
+  '-loglevel',
+  'error',
+  ...PILOT.flatMap(([key]) => ['-stream_loop', '2', '-i', `public/uebungen/medien/${key}.mp4`]),
+  '-filter_complex',
+  '[0:v]scale=480:360[a];[1:v]scale=480:360[b];[2:v]scale=480:360[c];[a][b][c]hstack=inputs=3',
+  '-an',
+  '-c:v',
+  'libx264',
+  '-pix_fmt',
+  'yuv420p',
+  '-crf',
+  '26',
+  '-preset',
+  'slow',
+  '-movflags',
+  '+faststart',
+  `${OUT}/pilot-bewegung.mp4`,
+]);
+console.log(`${OUT}/pilot-bewegung.mp4`);
 
 execFileSync(
   'python3',

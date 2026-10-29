@@ -6,12 +6,15 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py kniebeuge                # Schleife, 60 Bilder, ffmpeg
     python -I tools/uebungen-3d/render.py kniebeuge --pruefen      # Prüfansichten und Messwerte
     python -I tools/uebungen-3d/render.py kniebeuge --nur-vorschau  # nur das Vorschaubild 240 × 240
-    python -I tools/uebungen-3d/render.py kniebeuge --variante C-m  # Variante zur Probe (D-414)
+    python -I tools/uebungen-3d/render.py kniebeuge --variante D-A1  # Variante zur Probe (D-414)
+    python -I tools/uebungen-3d/render.py kniebeuge --grau          # graue Figur wie bis D-446
     python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
         --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
 
 Ergebnis der Schleife in `public/uebungen/medien/` (MP4, WebM, Poster, Vorschau). Die Kamera folgt
 der Regel der Übung (`kamera`); der Abstand ergibt sich aus Figur und Gerät über die ganze Bewegung.
+Schleife und Prüfung zeigen die Figur der App, `FIGUR` (D-447); mit `--variante` eine andere Fassung
+(Dateinamen mit Zusatz), mit `--grau` die graue Figur in der Körperform `--form`.
 """
 from __future__ import annotations
 
@@ -39,6 +42,9 @@ from uebungen import UEBUNGEN, _netz  # noqa: E402
 
 BILDER = 60
 FPS = 24
+# Figur der App: C männlich, Fassung A1 (Zonen Lime, Logos hell), Brust-F 4 cm (Entscheidungen des
+# Produktinhabers vom 28.10.2026, D-424, D-428; gerendert für die App mit D-447)
+FIGUR = "Cm-A1"
 VORSCHAU = 480  # Kantenlänge des Vorschau-Renders; verkleinert auf 240 × 240 (D-415)
 QUELLE = "https://raw.githubusercontent.com/makehuman/makehuman/master/makehuman"
 DATEIEN = {
@@ -127,10 +133,10 @@ def messen(uebung) -> dict:
     return erg
 
 
-def pruefen(name: str, arbeit: Path, form: str) -> None:
+def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None) -> None:
     """Prüfansichten (vorn, Seite, Standard) für fünf Phasen, Griff aus der Nähe und Messwerte für
     alle 60 Bilder."""
-    s, u, punkte = baue(name, 480, 360, 16, form)
+    s, u, punkte = baue(name, 480, 360, 16, form, variante)
     werte = []
     fuss0 = None
     fuss_max = 0.0
@@ -206,6 +212,7 @@ def main() -> None:
     ap.add_argument("--hole", action="store_true")
     ap.add_argument("--form", default="neutral", choices=sorted(koerperform.FORMEN))
     ap.add_argument("--variante", choices=sorted(varianten.VARIANTEN), help="Variante zur Probe (D-414)")
+    ap.add_argument("--grau", action="store_true", help="graue Figur in der Körperform --form (Stand bis D-446)")
     ap.add_argument("--pruefen", action="store_true")
     ap.add_argument("--ansicht", default="standard", choices=["standard", "vorn", "seite"])
     ap.add_argument("--breite", type=int, default=720)
@@ -222,10 +229,11 @@ def main() -> None:
         return
     arbeit = Path(args.arbeit) / args.uebung
     arbeit.mkdir(parents=True, exist_ok=True)
+    variante = None if args.grau else (args.variante or FIGUR)
     if args.pruefen:
-        pruefen(args.uebung, arbeit, args.form)
+        pruefen(args.uebung, arbeit, args.form, variante)
         return
-    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form, args.variante)
+    s, u, punkte = baue(args.uebung, args.breite, args.hoehe, args.proben, args.form, variante)
     name = f"{args.uebung}-{args.variante}" if args.variante else args.uebung
     if args.nur_vorschau:
         print(vorschau(u, s, arbeit, Path(args.ziel), name, args.vorschau_phase))

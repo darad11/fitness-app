@@ -1289,3 +1289,11 @@ Bekannte Einschränkungen: Daumen von der Seite als eigener Finger, von oben unt
 Nächste Schritte: Entscheidung des Produktinhabers (D-440 behalten oder nur das Nachklappen des Endglieds übernehmen), dann die drei Pilot-Übungen neu rendern
 ```
 
+## 20. Entscheidung zum Daumen und neue Pilot-Übungen
+
+Deine Nachricht vom 29.10.2026: Das Nachklappen des Daumen-Endglieds wird übernommen, längere Finger und eine andere Lage der Stange nicht; der Daumen ist damit abgeschlossen. Die Git-Historie bleibt, wie sie ist. Danach die drei Pilot-Übungen in C männlich, Fassung A1, Brust-F 4 cm neu rendern, in die App einbauen, Übersichtsbild und kurze Aufnahme an dich, dann Halt bis zu deinem Gerätetest.
+
+### 20.1 Daumen-Endglied nachgeklappt (D-446)
+
+Die Daumenkonstruktion klappt das Endglied jetzt selbst nach: Nach der bisherigen Konstruktion dreht es sich um das Endgelenk zur Stange, bis die Beere aufliegt, mit ihrer echten Dicke an jeder Stelle (an der Spitze 3,5 statt 13 mm). Gemessen wie im Versuch: Der Spalt von der Seite sinkt beim Bankdrücken von 3,7 auf 1,6 mm, in der Kniebeuge von 2,2 auf 1,4 mm und beim Latziehen von 4,0 auf 3,4 mm; von oben bleibt es wie bisher. Die Werte sind dieselben wie im Versuch D-445. Das Prüfwerkzeug misst seitdem mit dem Nachklappen; der Schalter `--ohne-kuppe` zeigt den alten Stand.
+

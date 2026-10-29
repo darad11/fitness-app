@@ -2426,3 +2426,12 @@ Werte je Variante (Spalt: mittlere Lücke zwischen Daumen und Fingern im Blick e
 | Folgeänderung, Hebel 1 (0,5), `--daumen-seit -0.004` | 2,8 / 21,7 / 40 % | 4,4 / 23,0 / 57 % | 7,2 / 18,8 / 76 % | 6,6 / 8,9 mm | 258° / 260° | 12,0° / 21,7° |
 
 Mit `--kuppe-klappen` liegen je nach Übung bis zu 11 Eckpunkte der Fingerhaut näher als 7,5 mm an den Daumenknochen (ohne die Folgeänderung in keiner Variante); das Handgelenk ändert sich mit Hebel 2 in Kniebeuge (14,4 bis 14,8° statt 16,0°) und Latziehen (16,9 bis 17,8° statt 16,5° am Ende) wenig.
+
+### Phase Übungen, Entscheidung zum Daumen und neue Pilot-Übungen · 29.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Nachricht des Produktinhabers vom 29.10.2026: Nachklappen des Daumen-Endglieds übernehmen, längere Finger und andere Lage der Stange nicht; Git-Historie nicht umschreiben; die drei Pilot-Übungen in C männlich, Fassung A1, Brust-F 4 cm mit dem neuen Daumen neu rendern, in die App einbauen, Übersichtsbild und kurze Aufnahme schicken, dann Halt bis zum Gerätetest.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachklappen im Rig (D-446): `daumen_versuch.py messen` für Bankdrücken, Kniebeuge, Latziehen mit dem neuen `rig.py` und mit `--ohne-kuppe` | mit Nachklappen Spalt 1,6 / 14,4 mm / 32 %, 1,4 / 14,4 / 29 %, 3,4 / 19,0 / 38 %; Daumenspitze 37,7, 36,6 und 36,9 mm von der Achse; ohne 3,7 / 15,0 / 60 %, 2,2 / 14,4 / 48 %, 4,0 / 19,0 / 43 %: beides gleich wie im Versuch D-445; Überstand von oben 12,0 und 14,3 mm wie bisher; Handgelenk unverändert |
+

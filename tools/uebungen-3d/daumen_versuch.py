@@ -2,7 +2,7 @@
 
 Nachricht des Produktinhabers nach Korrekturrunde 5: ein letzter, gezielter Versuch mit zwei Hebeln, einzeln und
 kombiniert. Die Schalter wirken nur in diesem Aufruf; `rig.py`, `koerperform.py` und die Übungen bleiben, wie sie
-sind (Stand D-440).
+sind. Übernommen hat der Produktinhaber nur das Nachklappen des Endglieds (D-446).
 
 Hebel 1  --finger-lang W   Formziele `hands/l-hand-fingers-length-incr` und `hands/r-hand-fingers-length-incr`
                            von MakeHuman (MPFB2, CC0) mit Gewicht W für C männlich (geprüft 0,3 und 0,5)
@@ -11,14 +11,14 @@ Hebel 2  --lage T          Lage der Stange in der Hand (Anteil Handgelenk → Fi
          --einsinken M     Einsinken der Stange in die Handfläche in m (statt 0,009)
 Folge    --daumen-seit M   Grundgelenk des Daumens axial neben dem Sattelgelenk in m (statt +0,004; negativ =
                            zum Zeigefinger hin)
-         --kuppe-klappen   Endglied nach der Konstruktion um das Endgelenk zur Stange klappen, bis die Kuppe
-                           aufliegt; die Dicke der Beere je Stelle des Glieds kommt per Strahl aus dem Netz und
-                           nimmt zur Kuppe hin ab (die Konstruktion D-440 nimmt die Dicke der Gliedmitte bis zur
-                           Spitze)
+         --ohne-kuppe      Endglied nicht nachklappen (Stand D-440). Seit D-446 klappt `rig.py` das Endglied
+                           selbst um das Endgelenk zur Stange, bis die zur Kuppe hin dünnere Beere aufliegt; in
+                           D-445 hieß das Prüfen dieses Schritts `--kuppe-klappen`
 
-    python -I tools/uebungen-3d/daumen_versuch.py messen bankdruecken --finger-lang 0.5 --kuppe-klappen
-    python -I tools/uebungen-3d/daumen_versuch.py bilder /tmp/d445/folge bank --finger-lang 0.5 --kuppe-klappen
-    python -I tools/uebungen-3d/daumen_versuch.py stand bankdruecken 0.0 /tmp/d445/folge --finger-lang 0.5 --kuppe-klappen
+    python -I tools/uebungen-3d/daumen_versuch.py messen bankdruecken
+    python -I tools/uebungen-3d/daumen_versuch.py messen bankdruecken --ohne-kuppe --finger-lang 0.5
+    python -I tools/uebungen-3d/daumen_versuch.py bilder /tmp/d445/hebel1 bank --ohne-kuppe --finger-lang 0.5
+    python -I tools/uebungen-3d/daumen_versuch.py stand bankdruecken 0.0 /tmp/d445/hebel1 --ohne-kuppe --finger-lang 0.5
 
 `messen` (rechte Hand, Grundhaltung der Hand im Rahmen der Stange, Winkel 0 zur Handfläche):
 - `silhouette`: Blick entlang der Stange; je 2° Winkel die innerste Haut von Grund- und Endglied des Daumens gegen
@@ -50,9 +50,6 @@ import koerperform  # noqa: E402
 import rig as rigmod  # noqa: E402
 
 FINGERZIELE = ("hands/l-hand-fingers-length-incr", "hands/r-hand-fingers-length-incr")
-KUPPE_STELLEN = (0.6, 0.8, 0.9, 1.0)  # Prüfstellen des Endglieds beim Klappen (Anteil der Länge)
-KUPPE_ABSTIEG = 0.35  # die Spitze darf höchstens 0,35 der Gliedlänge tiefer liegen als das Endgelenk
-KUPPE_TOLERANZ = 0.0005
 
 
 def hebel_setzen(a: argparse.Namespace) -> dict:
@@ -76,148 +73,10 @@ def hebel_setzen(a: argparse.Namespace) -> dict:
     if a.daumen_seit is not None:
         rigmod.DAUMEN_SEIT = a.daumen_seit
         gesetzt["daumen_seit"] = a.daumen_seit
-    if a.kuppe_klappen:
-        _kuppe_klappen()
-        gesetzt["kuppe_klappen"] = True
+    if a.ohne_kuppe:
+        rigmod.DAUMEN_KUPPE_KLAPPEN = False
+        gesetzt["ohne_kuppe"] = True
     return gesetzt
-
-
-def _beere_profil(rig, seite: str, richtung) -> list[float]:
-    """Dicke der Beere des Endglieds je Stelle t = 0, 0,1 … 1: Strahl von der Knochenlinie in Beerenrichtung
-    (und 15° daneben) auf die Haut des Daumens in der Grundhaltung, der weiteste Treffer zählt."""
-    from mathutils.bvhtree import BVHTree
-
-    k = rig.koerper
-    namen = {gr.index: gr.name for gr in k.vertex_groups}
-    ist = [any(gg.weight > 0.3 and namen[gg.group] in (f"finger1-2.{seite}", f"finger1-3.{seite}") for gg in v.groups)
-           for v in k.data.vertices]
-    flaechen = [tuple(p.vertices) for p in k.data.polygons if all(ist[i] for i in p.vertices)]
-    bvh = BVHTree.FromPolygons([tuple(v.co) for v in k.data.vertices], flaechen)
-    a, b = rig.kopf[f"finger1-3.{seite}"], rig.ende[f"finger1-3.{seite}"]
-    ax = (b - a).normalized()
-    r0 = rigmod.senkrecht(richtung, ax)
-    werte = []
-    for i in range(11):
-        o = a + (b - a) * (i / 10)
-        best = None
-        for w in (-15.0, 0.0, 15.0):
-            treffer = bvh.ray_cast(o, rigmod.achse_winkel(ax, w) @ r0, 0.04)
-            if treffer[0] is not None and (best is None or treffer[3] > best):
-                best = treffer[3]
-        werte.append(best)
-    gefunden = [i for i, w in enumerate(werte) if w is not None]
-    return [w if w is not None else werte[min(gefunden, key=lambda j: abs(j - i))] for i, w in enumerate(werte)]
-
-
-def _huelle_lesen(huelle: list, g):
-    """Dieselbe Hülle wie in `Rig._daumen_wickeln`: Raster 1 mm × 2°, über Daumenbreite und Winkelfenster gedehnt."""
-    import numpy as np
-
-    if not huelle:
-        return lambda a, phi: g.radius
-    a_min = min(h[0] for h in huelle) - 0.002
-    n_a = int((max(h[0] for h in huelle) - a_min) / 0.001) + 3
-    raster = np.full((n_a, 180), g.radius)
-    for ah, rh, ph in huelle:
-        ia = int((ah - a_min) / 0.001)
-        ip = int((math.degrees(ph) + 180) / 2) % 180
-        raster[ia, ip] = max(raster[ia, ip], rh)
-    weit = raster.copy()
-    da = int(rigmod.DAUMEN_BREITE / 0.001)
-    for sa in range(-da, da + 1):
-        verschoben = np.full_like(raster, g.radius)
-        if sa >= 0:
-            verschoben[sa:] = raster[:n_a - sa] if sa else raster
-        else:
-            verschoben[:sa] = raster[-sa:]
-        for sp in range(-int(rigmod.DAUMEN_WINKEL / 2), int(rigmod.DAUMEN_WINKEL / 2) + 1):
-            weit = np.maximum(weit, np.roll(verschoben, sp, axis=1))
-
-    def lesen(a: float, phi: float) -> float:
-        ia = int((a - a_min) / 0.001)
-        if ia < 0 or ia >= n_a:
-            return g.radius
-        return float(weit[ia, int((math.degrees(phi) + 180) / 2) % 180])
-
-    return lesen
-
-
-def _kuppe_klappen() -> None:
-    alt = rigmod.Rig._daumen_wickeln
-
-    def neu(self, seite, g, huelle):
-        d = alt(self, seite, g, huelle)
-        kette = self._kette(seite, "finger1")
-        achse, zyl, punkt = self._stangenrahmen(seite, g)
-        laengen = [(e - k).length for k, e in kette]
-        p0 = kette[0][0]
-        ist0 = p0 + (d["punkte"][0] - p0).normalized() * laengen[0]
-        vor = ist0 + (d["punkte"][1] - ist0).normalized() * laengen[1]  # Endgelenk
-        beere_richtung, _ = self._daumenbeere(seite)
-        profil = _beere_profil(self, seite, beere_richtung)
-        huelle_r = _huelle_lesen(huelle, g)
-        L, a_k = laengen[2], d["axial"][2]
-        _, r_v, phi_v = zyl(vor)
-
-        def dicke(t: float) -> float:
-            x = max(0.0, min(1.0, t)) * 10
-            i = min(int(x), 9)
-            return profil[i] + (profil[i + 1] - profil[i]) * (x - i)
-
-        def soll(a: float, phi: float, t: float) -> float:
-            return max(g.radius + dicke(t) + rigmod.DAUMEN_AUF_STANGE, huelle_r(a, phi) + dicke(t) + rigmod.DAUMEN_AUF_FINGER)
-
-        def loese(r: float):
-            def f(delta: float) -> float:
-                return (punkt(a_k, r, phi_v - delta) - vor).length - L
-
-            lo, hi = 0.0, math.pi
-            if f(lo) > 0:
-                return None
-            for _ in range(40):
-                m = (lo + hi) / 2
-                if f(m) > 0:
-                    hi = m
-                else:
-                    lo = m
-            return punkt(a_k, r, phi_v - (lo + hi) / 2)
-
-        def tiefe(z) -> float:
-            """Wie weit die Beere an den Prüfstellen in Finger oder Stange ragt (m, positiv = zu tief)."""
-            w = -1.0
-            for t in KUPPE_STELLEN:
-                aq, rq, pq = zyl(vor + (z - vor) * t)
-                w = max(w, soll(aq, pq, t) - rq)
-            return w
-
-        gewaehlt = None
-        r = r_v + 0.6 * L
-        while r >= max(g.radius, r_v - KUPPE_ABSTIEG * L):
-            z = loese(r)
-            if z is not None:
-                if tiefe(z) > KUPPE_TOLERANZ:
-                    break
-                gewaehlt = (r, z)
-            r -= 0.0005
-        if gewaehlt is None:
-            return d
-        r, z = gewaehlt
-        # Drehung des Endglieds neu, wie in `_daumen_wickeln`: Ruherichtung auf die Sehne, Beere zur Stangenachse
-        v = z - vor
-        mitte_glied = (vor + z) / 2
-        radial = mitte_glied - (g.mitte + achse * zyl(mitte_glied)[0])
-        kopf, ende = kette[2]
-        absolut1 = d["R"][0] @ d["R"][1]
-        absolut2 = rigmod.abbild(ende - kopf, beere_richtung, v, -radial)
-        d["R"] = [d["R"][0], d["R"][1], absolut1.inverted() @ absolut2]
-        d["punkte"] = [d["punkte"][0], d["punkte"][1], z]
-        d["radien"] = [d["radien"][0], d["radien"][1], r]
-        d["phi"] = [d["phi"][0], d["phi"][1], math.degrees(zyl(z)[2])]
-        d["winkel"]["end"] = math.degrees((vor - ist0).angle(v))
-        d["kuppe_geklappt"] = True
-        return d
-
-    rigmod.Rig._daumen_wickeln = neu
 
 
 def messen(uebung: str, gesetzt: dict) -> dict:
@@ -383,7 +242,7 @@ def main() -> None:
     ap.add_argument("--lage", type=float)
     ap.add_argument("--einsinken", type=float)
     ap.add_argument("--daumen-seit", type=float)
-    ap.add_argument("--kuppe-klappen", action="store_true")
+    ap.add_argument("--ohne-kuppe", action="store_true", help="Endglied nicht nachklappen (Stand D-440)")
     ap.add_argument("--groesse", type=int, default=560)
     ap.add_argument("--proben", type=int, default=24)
     a = ap.parse_args()

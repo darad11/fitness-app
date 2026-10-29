@@ -47,6 +47,12 @@ FINGER_EINSINKEN = 0.004
 FINGER_ENDGELENK = 76.0  # Endgelenk der Finger beugt sich bis dahin (Grad), die Spitze rollt unter die Stange (D-440)
 DAUMEN_ABSTIEG = 0.25  # ein Daumenglied fällt höchstens 0,25 seiner Länge radial: kein Haken zurück zur Stange
 DAUMEN_WINKEL = 6.0  # Winkelfenster (Grad) um den Daumen, in dem Finger unter ihm zählen
+# Endglied nachklappen (D-446): Die Beere wird zur Kuppe hin dünner; nach der Konstruktion dreht sich das
+# Endglied um das Endgelenk zur Stange, bis die Beere an diesen Stellen (Anteil der Gliedlänge) aufliegt
+DAUMEN_KUPPE_KLAPPEN = True
+KUPPE_STELLEN = (0.6, 0.8, 0.9, 1.0)
+KUPPE_ABSTIEG = 0.35  # die Spitze liegt höchstens 0,35 der Gliedlänge tiefer als das Endgelenk
+KUPPE_TOLERANZ = 0.0005
 
 
 def senkrecht(v: Vector, achse: Vector) -> Vector:
@@ -166,6 +172,7 @@ class Rig:
         self.folger: list[tuple] = []
         self._hand = self._handdaten()
         self._daumen: dict[str, tuple] = {}
+        self._beere: dict[str, list[float]] = {}
 
     # ------------------------------------------------------------------ Grundlagen
 
@@ -600,7 +607,8 @@ class Rig:
         Der Winkel um die Stange folgt je Gelenk aus der Länge des Glieds; die axiale Lage läuft
         von der Mittelhand neben dem Zeigefinger (`DAUMEN_SEIT` außen am Sattelgelenk) gleichmäßig
         zur Spitze. Ragt die Beere entlang eines Glieds in Stange oder Finger, werden beide
-        Gelenke des Glieds in Schritten angehoben (`hub`), nicht mehr.
+        Gelenke des Glieds in Schritten angehoben (`hub`), nicht mehr. Zuletzt klappt das Endglied um
+        das Endgelenk zur Stange, bis die zur Kuppe hin dünnere Beere aufliegt (D-446).
 
         Bis D-439 wurde jedes Gelenk so weit angehoben, dass auch das nächste Glied flach folgen
         konnte; weil die Fingerspitzen 17 mm über der Stange standen, trieb das Grundgelenk auf
@@ -729,6 +737,43 @@ class Rig:
                     hub[k - 1] += schritt
                     hub[k] += schritt
 
+        # Endglied nachklappen (D-446): Oben gilt für das ganze Endglied die Dicke der Beere aus der Gliedmitte;
+        # zur Kuppe hin ist die Beere aber dünner (an der Spitze 3,5 statt 13 mm), darum hob die Kuppe 7 bis
+        # 10 mm von den Fingern ab. Jetzt dreht sich das Endglied um das Endgelenk zur Stange, bis die Beere an
+        # den Stellen `KUPPE_STELLEN` mit ihrer Dicke dort (`_beere_profil`) auf Fingerhaut oder Stange liegt;
+        # das Endgelenk darf dabei in die Fingerknöchel sinken.
+        geklappt = False
+        if DAUMEN_KUPPE_KLAPPEN:
+            profil = self._beere_profil(seite, beere_richtung)
+            vor, L = ist[1], laengen[2]
+            _, r_v, phi_v = zyl(vor)
+
+            def dicke(t: float) -> float:
+                x = max(0.0, min(1.0, t)) * (len(profil) - 1)
+                i = min(int(x), len(profil) - 2)
+                return profil[i] + (profil[i + 1] - profil[i]) * (x - i)
+
+            def tiefe_kuppe(z: Vector) -> float:
+                w = -1.0
+                for t in KUPPE_STELLEN:
+                    aq, rq, pq = zyl(vor + (z - vor) * t)
+                    b = dicke(t)
+                    w = max(w, max(g.radius + b + DAUMEN_AUF_STANGE, huelle_r(aq, pq) + b + DAUMEN_AUF_FINGER) - rq)
+                return w
+
+            gewaehlt = None
+            r = r_v + 0.6 * L
+            while r >= max(g.radius, r_v - KUPPE_ABSTIEG * L):
+                z, phi_k = loese(2, vor, phi_v, r)
+                if tiefe_kuppe(z) > KUPPE_TOLERANZ:
+                    break
+                gewaehlt = (r, z, phi_k)
+                r -= 0.0005
+            if gewaehlt:
+                radien[2], ziele[2], phis[2] = gewaehlt
+                ist[2] = vor + (ziele[2] - vor).normalized() * L
+                geklappt = True
+
         # Je Glied die Drehung, die die Ruhe-Richtung auf die Sehne bringt und die Beere (Richtung in der
         # Grundhaltung aus `_daumenbeere`) zur Stangenachse dreht, den Nagel nach außen
         absolut, richtungen = [], []
@@ -747,7 +792,40 @@ class Rig:
             "end": math.degrees(richtungen[1].angle(richtungen[2])),
         }
         return {"R": relativ, "winkel": winkel, "punkte": ziele, "radien": radien, "axial": axiale,
-                "phi": [math.degrees(x) for x in phis], "spitze_axial": a_spitze, "beeren": beeren, "hub": hub}
+                "phi": [math.degrees(x) for x in phis], "spitze_axial": a_spitze, "beeren": beeren, "hub": hub,
+                "kuppe_geklappt": geklappt}
+
+    def _beere_profil(self, seite: str, richtung: Vector) -> list[float]:
+        """Dicke der Beere des Endglieds je Stelle t = 0; 0,1 … 1 (m), Grundhaltung (D-446): Strahl von der
+        Knochenlinie in Beerenrichtung und 15° daneben auf die Haut von Grund- und Endglied, der weiteste
+        Treffer zählt (tiefste Stelle der Beere). Gemessen am Grundmodell: 14,8 mm am Endgelenk, 12,0 mm in
+        der Gliedmitte, 3,5 mm an der Spitze; `_daumenbeere` gibt für das ganze Glied 13,1 mm."""
+        if seite in self._beere:
+            return self._beere[seite]
+        from mathutils.bvhtree import BVHTree
+
+        k = self.koerper
+        namen = {gr.index: gr.name for gr in k.vertex_groups}
+        glieder = (f"finger1-2.{seite}", f"finger1-3.{seite}")
+        ist = [any(gg.weight > 0.3 and namen[gg.group] in glieder for gg in v.groups) for v in k.data.vertices]
+        flaechen = [tuple(p.vertices) for p in k.data.polygons if all(ist[i] for i in p.vertices)]
+        bvh = BVHTree.FromPolygons([tuple(v.co) for v in k.data.vertices], flaechen)
+        a, b = self.kopf[f"finger1-3.{seite}"], self.ende[f"finger1-3.{seite}"]
+        ax = (b - a).normalized()
+        r0 = senkrecht(richtung, ax)
+        werte: list[float | None] = []
+        for i in range(11):
+            o = a + (b - a) * (i / 10)
+            best = None
+            for w in (-15.0, 0.0, 15.0):
+                treffer = bvh.ray_cast(o, achse_winkel(ax, w) @ r0, 0.04)
+                if treffer[0] is not None and (best is None or treffer[3] > best):
+                    best = treffer[3]
+            werte.append(best)
+        gefunden = [i for i, w in enumerate(werte) if w is not None]
+        self._beere[seite] = [w if w is not None else werte[min(gefunden, key=lambda j: abs(j - i))]
+                              for i, w in enumerate(werte)]
+        return self._beere[seite]
 
     def _daumen_ring(self, seite: str, g: Griff, dicke: float) -> dict:
         """Daumen als Ring in der Querebene des Sattelgelenks (D-425; seit D-435 nur noch für dünne Stangen,

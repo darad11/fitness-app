@@ -2548,3 +2548,17 @@ Shorts-F weiter nach vorn, die drei Pilot-Übungen als Schleifen in der App (D-4
 | `pnpm build`, `pnpm check:bundle` (D-461) | bestanden; Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 12 von 12 im Offline-Vorrat |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (15,4 min); WebKit in der CI zum Entwurfs-PR |
 | `pnpm format:check`, `pnpm check:docs` (D-461) | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Waagrechtes Drücken“ · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite für Schrägbankdrücken und Bankdrücken mit Kurzhanteln (D-462).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py bankdruecken_kh --pruefen`, `schraegbankdruecken_kh --pruefen` (alle 60 Bilder, Prüfansichten vorn, Seite, Standard in fünf Phasen, Hand und Fuß aus der Nähe) | Bankdrücken 316 s, Schrägbankdrücken 304 s; Werte in `form-programme-report.md` 4.3: Handgelenk gesamt höchstens 7,9°, Unterarm höchstens 4,5° zur Senkrechten, Sohlen 0,0 mm, Köpfe mindestens 37,4 mm vom Körper (ohne Hände), Hand 13,7 mm von den Köpfen, Finger 4,1 mm eingedrückt (gewollt), Rücken und Gesäß 2,8 mm bzw. 3,9 bis 5,1 mm im Polster, Oberschenkel 7,8 bzw. 14,6 mm über dem Polster, keine Meldungen des Rigs |
+| `familie_bilder.py` (Griff von der Handfläche und vom Handrücken, Ausgangs- und Endposition) | je Übung 4 Bilder, 55 und 57 s |
+| Prüfbilder angesehen | Lage auf beiden Bänken, Hanteln über den Schultern und seitlich der Brust, Unterarme senkrecht, Griff geschlossen mit dem Daumen über den Fingern, Füße flach mit Sohlenkontakt |
+| Beim Bau gefunden und behoben | Köpfe der Hantel 30° schief zur Achse (Reihenfolge der Drehungen); Abstand der Köpfe zum Körper maß die eigene Hand mit (19 mm in allen Bildern), beim ersten Versuch ohne Hände kippte das Vorzeichen an der offenen Kante am Handgelenk (−159 mm) und die Bahn endete zu hoch; jetzt am geschlossenen Netz mit eigenem Wert für die Hand |
+| Prüfseite (`tools/uebungen_pruef_bild.py ... --familie waagrechtes-druecken`) | `familie-waagrechtes-druecken.webp`, 230 KB, 1480 × 2898 |
+| `python3 tools/uebungen_animationsplan.py --check` | Plan passt zu den Daten (Spalte „Stand“) |
+| `pnpm format:check`, `pnpm check:docs` (D-462) | bestanden |

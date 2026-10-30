@@ -107,6 +107,16 @@ def bauen() -> str:
     unbekannt = sorted(k for k in einheiten if k not in uebungen)
     pilot_familien = [uebungen[p]["familie"] for p in ("back_squat_barbell", "bench_press_barbell", "lat_pulldown")]
 
+    def stand(k: str) -> str:
+        """Fortschritt je Übung in der Phase Programme (`fortschritt` in familien.json), sonst „offen“."""
+        return d.get("fortschritt", {}).get(k, "offen")
+
+    zaehler: dict[str, int] = defaultdict(int)
+    for k in keys:
+        zaehler[stand(k)] += 1
+    # Reihenfolge: in der App, dann zur Freigabe, dann alles Übrige, zuletzt offen
+    fortschritt_summen = sorted(zaehler.items(), key=lambda kv: (kv[0] == "offen", not kv[0].startswith("Schleife"), kv[0]))
+
     def familien_reihe(ks: list[str]) -> list[str]:
         """Familien in der Reihenfolge: Pilot-Familien zuerst (Basis steht), dann nach Einheiten."""
         fam = sorted({uebungen[k]["familie"] for k in ks})
@@ -124,9 +134,12 @@ def bauen() -> str:
         "(sechste Nachricht): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch "
         "fehlenden aus „Push/Pull/Beine“, zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach "
         "Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, "
-        "Bankdrücken mit Langhantel, Latziehen) sind gebaut und werden in der gewählten Fassung (C männlich, A1, Brust-F 4 cm) neu "
-        "gerendert; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird erst nach der Freigabe der Pilot-Übungen "
-        "und dem Merge von PR #53, auf einem eigenen Branch, familienweise mit Prüfseite.",
+        "Bankdrücken mit Langhantel, Latziehen) laufen als Schleifen in der App; ihre Familien haben die Basis (Rig-Muster, Kamera) "
+        "schon. Umgesetzt wird in der Phase Programme (Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`) familienweise: erst eine "
+        "Prüfseite, die Schleifen der Familie nach der Freigabe des Produktinhabers.",
+        "",
+        f"**Fortschritt** (Stand {d['fortschritt_stand']}, Spalte „Stand“ in den Tabellen): "
+        + "; ".join(f"{text}: {n}" for text, n in fortschritt_summen) + ".",
         "",
         "## 1. Was gezählt ist",
         "",
@@ -161,8 +174,8 @@ def bauen() -> str:
             basis = 0.0 if (f in pilot_familien or f in familien_gezaehlt) else float(familien[f]["basis_stunden"])
             familien_gezaehlt.add(f)
             zeilen += [f"#### {NAMEN[f]}", "",
-                       "| Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis |",
-                       "|---|---|---|---|---|---|---|---|"]
+                       "| Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |",
+                       "|---|---|---|---|---|---|---|---|---|"]
             std_f = ger_f = ren_f = 0.0
             ein_f = 0
             for k in fks:
@@ -174,12 +187,12 @@ def bauen() -> str:
                     geraete_gezaehlt.update(neu)
                 std = float(e["aufwand_stunden"]) + geraet
                 ren = renderzeit_min(e)
-                hinweis = "Pilot, gebaut (neu rendern)" if k in PILOTEN else ("neues Gerät: " + ", ".join(neu) if neu else "")
+                hinweis = "Pilot" if k in PILOTEN else ("neues Gerät: " + ", ".join(neu) if neu else "")
                 if e.get("geraet_neu") and not neu and k not in PILOTEN:
                     hinweis = "Gerät schon gezählt"
                 auch = ", ".join(sorted(in_programm[k] - {kuerzel})) or "–"
                 zeilen.append(f"| {zelle(e['name'])} | {auch} | {einheiten[k]} | {zelle(quelle_text(e))} | "
-                              f"{z(std, 2)} | {z(geraet, 2)} | {z(ren, 0)} | {zelle(hinweis)} |")
+                              f"{z(std, 2)} | {z(geraet, 2)} | {z(ren, 0)} | {zelle(hinweis)} | {zelle(stand(k))} |")
                 std_f += std
                 ger_f += geraet
                 ren_f += ren

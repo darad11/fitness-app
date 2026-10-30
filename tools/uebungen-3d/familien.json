@@ -1,5 +1,13 @@
 {
   "stand": "2026-10-27",
+  "fortschritt_stand": "30.10.2026",
+  "fortschritt": {
+    "back_squat_barbell": "Schleife in der App (D-461)",
+    "bench_press_barbell": "Schleife in der App (D-461)",
+    "lat_pulldown": "Schleife in der App (D-461)",
+    "bench_press_dumbbell": "Prüfseite, wartet auf Freigabe (D-462)",
+    "incline_bench_press_dumbbell": "Prüfseite, wartet auf Freigabe (D-462)"
+  },
   "uebungen": {
     "bench_press_barbell": {
       "nr": 1,

@@ -675,4 +675,432 @@ class Latziehen(Uebung):
         }
 
 
-UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen)}
+# ---------------------------------------------------------------------- Familie „Waagrechtes Drücken“ mit Kurzhanteln (D-462)
+
+
+def kopf_punkte(hantel: bpy.types.Object, schritte: int = 6) -> list[Vector]:
+    """Punkte auf der Oberfläche beider Köpfe einer Kurzhantel (Welt), für den Abstand zum Körper."""
+    kh = geraete.KH
+    kopf_l = (kh["laenge"] - kh["griff"]) / 2
+    R = kh["kopf"] / 2
+    M = hantel.matrix_world
+    pkte = []
+    ecken = [(math.cos(math.radians(60 * k)), math.sin(math.radians(60 * k))) for k in range(6)]  # wie `geraete.kurzhantel`
+    for seite in (-1, 1):
+        x0, x1 = seite * kh["griff"] / 2, seite * (kh["griff"] / 2 + kopf_l)
+        for i in range(schritte + 1):
+            x = x0 + (x1 - x0) * i / schritte
+            for k in range(6):
+                (ay, az), (by, bz) = ecken[k], ecken[(k + 1) % 6]
+                for j in range(schritte):
+                    t = j / schritte
+                    pkte.append(M @ Vector((x, R * (ay + (by - ay) * t), R * (az + (bz - az) * t))))
+        for f in (0.0, 0.5):
+            for k in range(6):
+                ay, az = ecken[k]
+                pkte.append(M @ Vector((x0, R * ay * f, R * az * f)))
+    return pkte
+
+
+HAND = ("wrist", "metacarpal", "finger")  # Gruppen der Hände (wie in `hand_zu_koepfen`)
+_HANDFLAECHEN: dict[int, tuple[set[int], list[list[int]]]] = {}  # je Netz
+
+
+def abstand_koerper(koerper: bpy.types.Object, punkte: list[Vector]) -> float:
+    """Kleinster Abstand der Punkte zum Körper ohne die Hände (m, negativ = im Körper), am verformten Netz ohne
+    Glättung. Die Hand hält den Griff zwischen den Köpfen, ihren Abstand misst `hand_zu_koepfen`. Im Körper liegt ein
+    Punkt, wenn die nächste Fläche des ganzen (geschlossenen) Netzes keine Hand ist und er hinter ihr liegt; sonst zählt
+    der Abstand zur nächsten Fläche ohne die Hände."""
+    from mathutils.bvhtree import BVHTree
+
+    schluessel = koerper.data.as_pointer()
+    if schluessel not in _HANDFLAECHEN:
+        namen = {g.index: g.name for g in koerper.vertex_groups}
+        hand = {v.index for v in koerper.data.vertices
+                if sum(g.weight for g in v.groups if namen[g.group].startswith(HAND)) >= 0.3}
+        flaechen = {f.index for f in koerper.data.polygons if hand.intersection(f.vertices)}
+        _HANDFLAECHEN[schluessel] = (flaechen, [list(f.vertices) for f in koerper.data.polygons if f.index not in flaechen])
+    handflaechen, ohne_haende = _HANDFLAECHEN[schluessel]
+    netz = _netz(koerper)
+    ganz = BVHTree.FromPolygons(netz, [list(f.vertices) for f in koerper.data.polygons])
+    ohne = BVHTree.FromPolygons(netz, ohne_haende)
+    beste = float("inf")
+    for p in punkte:
+        ort, n, i, d = ganz.find_nearest(p)
+        if ort is not None and i not in handflaechen and (p - ort).dot(n) < 0:
+            beste = min(beste, -d)
+            continue
+        ort, _, _, d = ohne.find_nearest(p)
+        if ort is not None:
+            beste = min(beste, d)
+    return beste
+
+
+def hand_zu_koepfen(koerper: bpy.types.Object, hanteln: dict) -> float:
+    """Kleinster Abstand der Hand zu den Innenseiten der Köpfe ihrer Hantel (m, negativ = in einem Kopf): Punkte der
+    Hand (Gewicht an Handgelenk, Mittelhand und Fingern) im Raum der Hantel; gezählt wird, was innerhalb des Inkreises
+    der Köpfe um die Achse liegt (die Hand umschließt den Griff mit rund 5 cm, der Inkreis hat 6,3 cm)."""
+    kh = geraete.KH
+    netz = _netz(koerper)
+    namen = {g.index: g.name for g in koerper.vertex_groups}
+    r_in = kh["kopf"] / 2 * math.cos(math.radians(30))
+    beste = 1.0
+    for s, hantel in hanteln.items():
+        teile = ("wrist." + s, "metacarpal", "finger")
+        Mi = hantel.matrix_world.inverted()
+        for v, p in zip(koerper.data.vertices, netz):
+            w = sum(g.weight for g in v.groups if namen[g.group].startswith(teile) and namen[g.group].endswith("." + s))
+            if w < 0.3:
+                continue
+            q = Mi @ p
+            if math.hypot(q.y, q.z) < r_in:
+                beste = min(beste, kh["griff"] / 2 - abs(q.x))
+    return beste
+
+
+def polster_werte(koerper: bpy.types.Object, polster: list) -> dict:
+    """Körper und Polster der Bank (Welt, verformtes Netz, mm): wie tief Rumpf und Gesäß einsinken (gewollt 4 mm) und
+    wie weit die Oberschenkel über dem Polster bleiben. Jedes Polster als Kasten in seinem eigenen Raum."""
+    netz = _netz(koerper)
+    namen = {g.index: g.name for g in koerper.vertex_groups}
+    bein = [sum(g.weight for g in v.groups if namen[g.group].startswith(("upperleg", "lowerleg"))) > 0.5
+            for v in koerper.data.vertices]
+    tief_rumpf, luft_bein = 0.0, float("nan")
+    for obj in polster:
+        Mi = obj.matrix_world.inverted()
+        bb = [Vector(c) for c in obj.bound_box]
+        lo = Vector((min(c.x for c in bb), min(c.y for c in bb), min(c.z for c in bb)))
+        hi = Vector((max(c.x for c in bb), max(c.y for c in bb), max(c.z for c in bb)))
+        for p, ist_bein in zip(netz, bein):
+            q = Mi @ p
+            if not (lo.x <= q.x <= hi.x and lo.y <= q.y <= hi.y and lo.z - 0.02 <= q.z <= hi.z + 0.10):
+                continue
+            if ist_bein:
+                luft_bein = q.z - hi.z if math.isnan(luft_bein) else min(luft_bein, q.z - hi.z)
+            else:
+                tief_rumpf = max(tief_rumpf, hi.z - q.z)
+    return {"Bank: Rumpf im Polster (mm)": tief_rumpf * 1000, "Bank: Oberschenkel über dem Polster (mm)": luft_bein * 1000}
+
+
+class BankdrueckenKH(Bankdruecken):
+    """Bankdrücken mit Kurzhanteln auf der Flachbank (Familie „Waagrechtes Drücken“, D-462).
+
+    Lage auf der Bank, Füße und Schultern wie beim Bankdrücken mit Langhantel. Je Hand eine Kurzhantel, Griff quer
+    (Handflächen zu den Füßen), voller Griff mit dem Daumen über den Fingern. Ausgang: Arme fast gestreckt
+    (Ellbogen 172°), Hanteln senkrecht über den Schultergelenken, innen leicht zueinander. Abwärts bleibt der
+    Unterarm senkrecht unter dem Griff, der Oberarm zeigt `ALPHA` = 50° vom Rumpf zur Seite (in der Ebene der Bank
+    gemessen, empfohlen 45 bis 60°): Die Hanteln gehen in einem Bogen nach außen und etwas zu den Füßen und kommen
+    seitlich der Brust an. Unten steht der Oberarm `BETA_UNTEN` = 25° unter der Ebene der Bank (Ellbogen knapp unter
+    der Bank), höher nur, wenn der innere Kopf sonst näher als `LUFT` = 5 mm an Brust oder Schulter käme. Die Griffe
+    sinken gleichmäßig; aufwärts derselbe Weg zurück."""
+
+    name = "bankdruecken_kh"
+    titel = "Bankdrücken mit Kurzhanteln"
+    kamera = {"richtung": 45.0, "neigung": 32.0}
+    vorschau_phase = 0.0
+    KH_R = geraete.KH["griff_d"] / 2
+    LEHNE = 0.0  # Neigung der Bank unter dem Rücken (Grad), flach
+    ALPHA = 50.0  # Oberarm vom Rumpf zur Seite, in der Ebene der Bank (Grad)
+    BETA_UNTEN = 25.0  # unten: Oberarm so weit unter der Ebene der Flachbank (Grad)
+    BETA_GRENZE = -70.0  # darüber ist der Arm fast gestreckt und der Ellbogen kaum bestimmt: gerade Bahn nach oben
+    X_OBEN = 0.186  # oben: Mitte des Griffs neben der Mitte des Körpers (vor dem Maß der Schultern), m
+    HAND = 0.075  # Mitte des Griffs über dem Handgelenk bei senkrechtem Unterarm, m
+    LUFT = 0.005  # innerer Kopf mindestens so weit über dem Körper, m
+    STUETZEN = 21  # Stützstellen der Bahn
+
+    def rahmen_objekte(self) -> list:
+        return [*self.hanteln.values(), self.bank]
+
+    def stange_achse(self):
+        # beide Griffe liegen auf einer Linie quer zum Körper (symmetrisch): für den Abstand der Finger
+        return self.hanteln["L"].location.copy(), X, self.KH_R
+
+    def polster_objekte(self) -> list:
+        return [o for o in self.bank.children_recursive if o.name.startswith("Polster")]
+
+    def _geraete(self) -> None:
+        self.bank = geraete.flachbank()
+
+    def bauen(self) -> None:
+        Uebung.bauen(self)
+        rig = self.rig
+        self._geraete()
+        self.hanteln = {s: geraete.kurzhantel(f"Kurzhantel.{s}") for s in "LR"}
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, self.KH_R, schraeg=self.SCHRAEG) for s in "LR"}
+        self._lage()
+        self._fuesse()
+        self._bahn()
+
+    def _lage(self) -> None:
+        """Rücken auf der Bank wie beim Bankdrücken mit Langhantel (4 mm im Polster)."""
+        rig = self.rig
+        self.R_liegen = achse_winkel(X, -90)
+        ruecken = _ruecken_tief(self.koerper, rig.kopf["upperleg01.L"].z - 0.2, rig.kopf["neck01"].z - 0.04)
+        self.verschiebung = Vector((0, self.SCHULTER_Y - rig.kopf["upperarm01.L"].z, self.BANK_OBEN - rig.versatz.z + ruecken))
+        rig.zuruecksetzen()
+        self._torso()
+        rig.anwenden()
+        tief = min(p.z for p in _netz(self.koerper) if abs(p.x) < 0.15 and -0.55 < p.y < 0.58)
+        self.verschiebung.z += self.BANK_OBEN - tief - 0.004
+
+    def _fuesse(self) -> None:
+        """Füße flach am Boden, Knie im Winkel `KNIE` (wie beim Bankdrücken mit Langhantel)."""
+        rig = self.rig
+        A0 = rig.kopf["foot.L"]
+        rig.zuruecksetzen()
+        self._torso()
+        H = rig.punkt("pelvis.L", rig.kopf["upperleg01.L"])
+        H0, K0 = rig.kopf["upperleg01.L"], rig.kopf["lowerleg01.L"]
+        l1, l2 = (K0 - H0).length, (A0 - K0).length
+        d = math.sqrt(l1 * l1 + l2 * l2 - 2 * l1 * l2 * math.cos(math.radians(self.KNIE)))
+        x = self.FUESSE * self.mass
+        dy = math.sqrt(max(d * d - (x - H.x) ** 2 - (A0.z - H.z) ** 2, 0.0))
+        self.knoechel = {"L": Vector((x, H.y - dy, A0.z)), "R": Vector((-x, H.y - dy, A0.z))}
+
+    def _bank_achsen(self) -> tuple[Vector, Vector]:
+        """Richtungen der Bank unter dem Rücken (Welt): längs zum Gesäß und senkrecht aus dem Polster heraus."""
+        a = math.radians(self.LEHNE)
+        return Vector((0, -math.cos(a), -math.sin(a))), Vector((0, -math.sin(a), math.cos(a)))
+
+    def _armlaengen(self) -> tuple[float, float]:
+        k = self.rig.kopf
+        return (k["lowerarm01.L"] - k["upperarm01.L"]).length, (k["wrist.L"] - k["lowerarm01.L"]).length
+
+    def _richtung_unten(self) -> Vector:
+        """Oberarm links unten (Welt): `ALPHA` vom Rumpf zur Seite und so weit unter die Ebene der Bank, dass der Griff
+        senkrecht zur Bank gleich weit über dem Schultergelenk liegt wie auf der Flachbank mit `BETA_UNTEN`
+        (Unterarm senkrecht, Griff `HAND` über dem Handgelenk). Flach ist das `BETA_UNTEN`; auf der Schrägbank steht
+        der senkrechte Unterarm schräg zur Lehne, der Oberarm geht dann weniger tief unter die Lehne."""
+        l1, l2 = self._armlaengen()
+        a = math.radians(self.LEHNE)
+        tief = math.asin(max(-1.0, min(1.0, math.sin(math.radians(self.BETA_UNTEN)) - (l2 + self.HAND) * (1 - math.cos(a)) / l1)))
+        laengs, n = self._bank_achsen()
+        seite = math.radians(self.ALPHA)
+        return (laengs * math.cos(seite) + X * math.sin(seite)) * math.cos(tief) - n * math.sin(tief)
+
+    def _ziele(self, mitte: Vector, x: float) -> dict:
+        return {"L": mitte + X * (x * self.mass), "R": mitte - X * (x * self.mass)}
+
+    def _pose(self, mitte: Vector, x: float) -> dict:
+        """Rumpf, Beine und beide Arme an die Griffe (`mitte`, Abstand `x` vor dem Maß der Schultern); Hanteln an die
+        Griffe. Gibt die Werte der Arme zurück."""
+        rig = self.rig
+        rig.zuruecksetzen()
+        self._torso()
+        hz = Vector((0.15, 0, 1)).normalized()
+        for s, sx in (("L", 1), ("R", -1)):
+            rig.bein(s, self.knoechel[s], Vector((hz.x * sx, -0.1, hz.z)), 6.0)
+        ziele = self._ziele(mitte, x)
+        arme = {s: rig.arm(s, self.griff[s], ziele[s], X * sx, Vector((0, 0, -1)), self.STRECKUNG, ellbogen=self._regel(s))
+                for s, sx in (("L", 1), ("R", -1))}
+        for s in "LR":
+            self.hanteln[s].location = rig.welt(ziele[s])
+        return arme
+
+    def _handgelenk(self, s: str, beta: float) -> Vector:
+        """Handgelenk bei senkrechtem Unterarm: Oberarm vom Schultergelenk `alpha_welt` zur Seite (waagrecht, 0 = längs
+        zu den Füßen) und `beta` Grad unter die Waagrechte; der Unterarm steht senkrecht darüber."""
+        rig = self.rig
+        x = 1 if s == "L" else -1
+        S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+        l1, l2 = self._armlaengen()
+        a, b = math.radians(self.alpha_welt), math.radians(beta)
+        d = Vector((x * math.sin(a) * math.cos(b), -math.cos(a) * math.cos(b), -math.sin(b)))
+        return S + d * l1 + Z * l2
+
+    def _pose_beta(self, beta: float) -> dict:
+        """Haltung mit dem Oberarm `beta` unter der Waagrechten: Ziel der Griffe so, dass das Handgelenk dort liegt
+        (der Versatz Handgelenk → Griff kommt aus dem Rig, bis auf 0,2 mm nachgeführt, immer vom selben Start)."""
+        W = {s: self._handgelenk(s, beta) for s in "LR"}
+        versatz = Vector((0, 0.0, self.HAND))
+        for _ in range(8):
+            H = {s: W[s] + Vector((versatz.x * (1 if s == "L" else -1), versatz.y, versatz.z)) for s in "LR"}
+            mitte = Vector((0, (H["L"].y + H["R"].y) / 2, (H["L"].z + H["R"].z) / 2))
+            x = (H["L"].x - H["R"].x) / 2
+            arme = self._pose(mitte, x / self.mass)
+            fehler = W["L"] - arme["L"]["handgelenk"]
+            if fehler.length < 2e-4:
+                break
+            versatz = versatz + fehler
+        return {"arme": arme, "mitte": mitte, "x": x / self.mass}
+
+    def _oben_suchen(self, S: Vector) -> None:
+        """Oben wie mit der Langhantel: Griffe senkrecht über den Schultergelenken, Ellbogen knapp nicht gestreckt."""
+        rig = self.rig
+        lo, hi = S.z, S.z + 0.75
+        for _ in range(28):
+            z = (lo + hi) / 2
+            rig.meldungen.clear()
+            arme = self._pose(Vector((0, S.y, z)), self.X_OBEN)
+            if max(a["ellbogenwinkel"] for a in arme.values()) < self.ELLBOGEN_OBEN and not rig.meldungen:
+                lo = z
+            else:
+                hi = z
+        self.oben = Vector((0, S.y, lo))
+
+    def _koepfe_frei(self) -> float:
+        self.rig.anwenden()
+        return min(abstand_koerper(self.koerper, kopf_punkte(self.hanteln[s], 3)) for s in "LR")
+
+    def _unten_suchen(self) -> None:
+        """Unten: Oberarm wie `_richtung_unten`, höher nur, wenn der innere Kopf sonst näher als `LUFT` an den Körper
+        käme."""
+        rig = self.rig
+        rig.meldungen.clear()
+        self._pose_beta(self.beta_welt_unten)
+        if self._koepfe_frei() >= self.LUFT and not rig.meldungen:
+            self.beta_unten = self.beta_welt_unten
+            rig.meldungen.clear()
+            return
+        lo, hi = -20.0, self.beta_welt_unten
+        for _ in range(16):
+            beta = (lo + hi) / 2
+            rig.meldungen.clear()
+            self._pose_beta(beta)
+            if self._koepfe_frei() >= self.LUFT and not rig.meldungen:
+                lo = beta
+            else:
+                hi = beta
+        self.beta_unten = lo
+        rig.meldungen.clear()
+
+    def _bahn(self) -> None:
+        """Bahn über den Winkel des Oberarms in der senkrechten Ebene durch die Richtung unten: je Stützstelle Mitte und
+        Breite der Griffe; die Griffe sinken gleichmäßig (Höhe linear in der Phase). Über `BETA_GRENZE` gerade zum
+        Punkt über den Schultern."""
+        rig = self.rig
+        rig.zuruecksetzen()
+        self._torso()
+        d = self._richtung_unten()
+        self.alpha_welt = math.degrees(math.atan2(d.x, -d.y))
+        self.beta_welt_unten = math.degrees(math.asin(-d.z))
+        self._oben_suchen(self._schultern())
+        self._unten_suchen()
+        grenze = self._pose_beta(self.BETA_GRENZE)
+        self.unten = self._pose_beta(self.beta_unten)["mitte"]
+        self.stuetzen = []
+        for i in range(self.STUETZEN):
+            z = self.oben.z + (self.unten.z - self.oben.z) * i / (self.STUETZEN - 1)
+            if z >= grenze["mitte"].z:
+                t = (self.oben.z - z) / (self.oben.z - grenze["mitte"].z)
+                self.stuetzen.append((self.oben.lerp(grenze["mitte"], t), self.X_OBEN * (1 - t) + grenze["x"] * t))
+                continue
+            lo, hi = self.BETA_GRENZE, self.beta_unten
+            for _ in range(20):  # Winkel, bei dem die Griffe auf Höhe z liegen
+                beta = (lo + hi) / 2
+                if self._pose_beta(beta)["mitte"].z > z:
+                    lo = beta
+                else:
+                    hi = beta
+            r = self._pose_beta((lo + hi) / 2)
+            self.stuetzen.append((r["mitte"].copy(), r["x"]))
+        rig.meldungen.clear()
+
+    def _stuetze(self, p: float) -> tuple[Vector, float]:
+        f = p * (self.STUETZEN - 1)
+        i = min(int(f), self.STUETZEN - 2)
+        t = f - i
+        (m0, x0), (m1, x1) = self.stuetzen[i], self.stuetzen[i + 1]
+        return m0.lerp(m1, t), x0 * (1 - t) + x1 * t
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        B, x = self._stuetze(p)
+        self._torso()
+        hz = Vector((0.15, 0, 1)).normalized()
+        for s, sx in (("L", 1), ("R", -1)):
+            rig.bein(s, self.knoechel[s], Vector((hz.x * sx, -0.1, hz.z)), 6.0)
+        ziele = self._ziele(B, x)
+        A = None
+        for s, sx in (("L", 1), ("R", -1)):
+            arm = rig.arm(s, self.griff[s], ziele[s], X * sx, Vector((0, 0, -1)), self.STRECKUNG, ellbogen=self._regel(s))
+            self.hanteln[s].location = rig.welt(ziele[s])
+            A = arm if s == "L" else A
+        oberarm = (A["ellbogen"] - A["schulter"]).normalized()
+        laengs = (rig.punkt("spine05", rig.kopf["spine05"]) - rig.punkt("spine01", rig.kopf["spine01"])).normalized()
+        bank_laengs, bank_normale = self._bank_achsen()
+        unter = math.degrees(math.asin(max(-1.0, min(1.0, -oberarm.dot(bank_normale)))))
+        H = rig.punkt("upperleg01.L", rig.kopf["upperleg01.L"])
+        K = rig.punkt("lowerleg01.L", rig.kopf["lowerleg01.L"])
+        F = rig.punkt("foot.L", rig.kopf["foot.L"])
+        self.werte = {
+            "Kniewinkel (Grad)": math.degrees((H - K).angle(F - K)),
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Oberarm zum Rumpf": math.degrees(oberarm.angle(laengs)),
+            "Oberarm unter der Ebene der Bank (Grad)": unter,
+            # nur, solange der Ellbogen unter der Ebene der Bank ist; darüber zeigt der Arm nach oben
+            "Oberarm vom Rumpf zur Seite, Ellbogen unter der Bank (Grad)":
+                math.degrees(math.atan2(abs(oberarm.dot(X)), oberarm.dot(bank_laengs))) if unter >= 0 else float("nan"),
+            "Unterarm zur Senkrechten": math.degrees((A["handgelenk"] - A["ellbogen"]).angle(Z)),
+            "Handgelenk geknickt": A["handgelenk_knick"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Griff über Schulter (cm, y)": (B.y - self._schultern().y) * 100,
+            "Griff über unten (cm)": (B.z - self.unten.z) * 100,
+            "Griffe auseinander (cm)": 2 * x * self.mass * 100,
+            "Köpfe innen auseinander (cm)": (2 * x * self.mass - geraete.KH["laenge"]) * 100,
+        }
+
+    def zusatzwerte(self) -> dict:
+        """Durchdringungen in der aktuellen Haltung (mm): Köpfe der Hanteln zum Körper, Hand zu den Köpfen, Körper im
+        Polster der Bank."""
+        aus = {"Kurzhantel: Köpfe über dem Körper (mm)":
+               min(abstand_koerper(self.koerper, kopf_punkte(self.hanteln[s], 4)) for s in "LR") * 1000,
+               "Kurzhantel: Hand zu den Köpfen (mm)": hand_zu_koepfen(self.koerper, self.hanteln) * 1000}
+        aus.update(polster_werte(self.koerper, self.polster_objekte()))
+        return aus
+
+
+class SchraegbankdrueckenKH(BankdrueckenKH):
+    """Schrägbankdrücken mit Kurzhanteln auf der verstellbaren Bank, Lehne 30°, Sitz flach (D-462).
+
+    Gesäß auf dem Sitz am Gelenk, Rücken und Schulterblätter an der Lehne (je 4 mm im Polster), Füße flach am
+    Boden. Arme wie beim Bankdrücken mit Kurzhanteln: oben senkrecht über den Schultergelenken, Unterarme senkrecht,
+    Oberarm unten 50° vom Rumpf zur Seite (in der Ebene der Lehne). Unten kommen die Griffe so nah an die Brust wie
+    auf der Flachbank, senkrecht zur Lehne gemessen (`_richtung_unten`): seitlich der oberen Brust, der Oberarm rund
+    15° unter der Ebene der Lehne."""
+
+    name = "schraegbankdruecken_kh"
+    titel = "Schrägbankdrücken mit Kurzhanteln"
+    kamera = {"richtung": 45.0, "neigung": 25.0}
+    LEHNE = 30.0
+    SITZ = 0.0
+
+    def _geraete(self) -> None:
+        self.bank = geraete.schraegbank(self.LEHNE, self.SITZ)
+
+    def polster_objekte(self) -> list:
+        return [o for o in self.bank.children_recursive if o.name in ("Lehne", "Sitz")]
+
+    def _lage(self) -> None:
+        """Rücken an der Lehne, Gesäß auf dem Sitz: Rumpf um die Lehne geneigt, dann so verschoben, dass der Rücken
+        4 mm in die Lehne und das Gesäß 4 mm in den Sitz einsinkt (Punkte des Rückens zwischen Hüfte und Hals, des
+        Gesäßes um die Hüfte, in der Ruhehaltung ausgewählt)."""
+        rig = self.rig
+        b = geraete.BANK
+        a, s = math.radians(self.LEHNE), math.radians(self.SITZ)
+        self.R_liegen = achse_winkel(X, self.LEHNE) @ achse_winkel(X, -90)
+        gelenk = Vector((0, 0, b["oben"] - b["dicke"])) - rig.versatz
+        n_lehne = Vector((0, -math.sin(a), math.cos(a)))
+        d_lehne = Vector((0, math.cos(a), math.sin(a)))
+        p_lehne = gelenk + d_lehne * (b["spalt"] / 2) + n_lehne * b["dicke"]
+        n_sitz = Vector((0, -math.sin(s), math.cos(s)))
+        p_sitz = gelenk + Vector((0, -math.cos(s), math.sin(s))) * (b["spalt"] / 2) + n_sitz * b["dicke"]
+        huefte, hals = rig.kopf["upperleg01.L"].z, rig.kopf["neck01"].z
+        ruhe = [v.co.copy() for v in self.koerper.data.vertices]
+        ruecken_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.14 and huefte + 0.12 < r.z < hals - 0.05 and r.y > 0.0]
+        gesaess_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.17 and huefte - 0.12 < r.z < huefte + 0.06 and r.y > 0.02]
+        self.verschiebung = Vector((0, 0.20, 0.80)) - rig.versatz
+        for _ in range(8):
+            rig.zuruecksetzen()
+            self._torso()
+            rig.anwenden()
+            netz = [rig.lokal(p) for p in _netz(self.koerper)]
+            d_r = min((netz[i] - p_lehne).dot(n_lehne) for i in ruecken_i)
+            self.verschiebung += n_lehne * (-d_r - 0.004)
+            d_s = min((netz[i] + n_lehne * (-d_r - 0.004) - p_sitz).dot(n_sitz) for i in gesaess_i)
+            self.verschiebung += d_lehne * ((-d_s - 0.004) / max(d_lehne.dot(n_sitz), 0.2))
+
+
+UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH)}

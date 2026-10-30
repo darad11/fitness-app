@@ -152,6 +152,8 @@ def messen(uebung) -> dict:
         erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in fusspunkte[::25]]
     if "Shorts" in o and "MaskeBeinvorn" in o["Shorts"].data.attributes:  # Shorts-F zum Streifen (D-461)
         erg["Shorts: kleinster Abstand F zum Streifen (cm)"] = kleidung.f_streifen_abstand(o["Shorts"])["abstand_cm"]
+    if hasattr(uebung, "zusatzwerte"):  # Hanteln und Bank (D-462)
+        erg.update(uebung.zusatzwerte())
     return erg
 
 
@@ -178,6 +180,7 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
     schuh = "Sohle" in bpy.data.objects
     zusammen = {
         "uebung": name,
+        "titel": getattr(u, "titel", name),
         ("Sohle" if schuh else "Fuß") + ": größte Verschiebung über die Schleife (mm)": round(fuss_max * 1000, 2),
         "bilder": werte,
     }

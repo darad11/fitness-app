@@ -4,6 +4,13 @@
 und Endposition) auf einem Blatt `docs/screens/uebungen/pruef-<übung>.webp`.
 
     python3 tools/uebungen_pruef_bild.py kniebeuge bankdruecken latziehen --arbeit /tmp/uebungen-3d
+    python3 tools/uebungen_pruef_bild.py bankdruecken_kh schraegbankdruecken_kh --familie waagrechtes-druecken \
+        --titel "Waagrechtes Drücken" --arbeit /tmp/uebungen-3d     # Prüfseite einer Familie (Programme, Abschnitt 2)
+
+Prüfseite einer Familie (D-462): je Übung Ausgangs- und Endposition mit der Kamera der App und von der Seite, der
+Griff der linken Hand in beiden Positionen von der Handfläche und vom Handrücken (`pruef-griff-<Seite>-<Phase>.png`
+aus `familie_bilder.py`), der linke Fuß von außen und von vorn und die Messwerte aller 60 Bilder (kleinster und
+größter Wert aus `<übung>-messwerte.json`).
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -18,7 +25,7 @@ sys.path.insert(0, str(HIER))
 
 from PIL import Image, ImageDraw  # noqa: E402
 
-from uebungen_paket_bild import GRUND, TEXT, schrift, speichern  # noqa: E402
+from uebungen_paket_bild import GRUND, LEISE, TEXT, schrift, speichern  # noqa: E402
 
 PHASEN = ("0.00", "0.25", "0.50", "0.75", "1.00")
 ANSICHTEN = (("vorn", "vorn"), ("seite", "Seite"), ("standard", "Standard"))
@@ -57,12 +64,142 @@ def blatt(arbeit: Path) -> Image.Image:
     return gesamt
 
 
+# Messwerte der Prüfseite einer Familie: (Schlüssel in `<übung>-messwerte.json`, Text, Art: „spanne“ = kleinster bis
+# größter Wert, „min“, „max“, „betrag“ = größter Betrag; Einheit)
+MESSWERTE = (
+    ("Ellbogenwinkel", "Ellbogen", "spanne", "°"),
+    ("Oberarm vom Rumpf zur Seite, Ellbogen unter der Bank (Grad)", "Oberarm vom Rumpf zur Seite (Ellbogen unter der Bank)",
+     "spanne", "°"),
+    ("Oberarm unter der Ebene der Bank (Grad)", "Oberarm unten unter der Bankebene", "max", "°"),
+    ("Unterarm zur Senkrechten", "Unterarm zur Senkrechten", "max", "°"),
+    ("Handgelenk gestreckt (Grad)", "Handgelenk nach hinten", "spanne", "°"),
+    ("Handgelenk seitlich (Grad, + zum Daumen)", "Handgelenk zur Seite (+ Daumen)", "spanne", "°"),
+    ("Handgelenk gesamt (Grad)", "Handgelenk gesamt", "max", "°"),
+    ("Finger: geringster Abstand zur Stange (mm, negativ = eingedrungen)", "Finger am Griff (gewollt 4 mm eingedrückt)", "min",
+     " mm"),
+    ("Kurzhantel: Hand zu den Köpfen (mm)", "Hand zu den Köpfen", "min", " mm"),
+    ("Kurzhantel: Köpfe über dem Körper (mm)", "Köpfe über dem Körper (ohne Hände)", "min", " mm"),
+    ("Köpfe innen auseinander (cm)", "Köpfe innen auseinander", "spanne", " cm"),
+    ("Kniewinkel (Grad)", "Knie", "spanne", "°"),
+    ("Sohle L: Ferse über dem Boden (mm)", "Sohle links, Ferse über dem Boden", "betrag", " mm"),
+    ("Sohle L: Ballen über dem Boden (mm)", "Sohle links, Ballen über dem Boden", "betrag", " mm"),
+    ("Sohle R: Ferse über dem Boden (mm)", "Sohle rechts, Ferse über dem Boden", "betrag", " mm"),
+    ("Sohle R: Ballen über dem Boden (mm)", "Sohle rechts, Ballen über dem Boden", "betrag", " mm"),
+    ("Kragen: Innenseite über der Socke (mm)", "Kragen über der Socke", "min", " mm"),
+    ("Polster: kleinster Abstand über der Socke (mm)", "Kragenpolster über der Socke", "min", " mm"),
+    ("Shorts: kleinster Abstand F zum Streifen (cm)", "Shorts-F zum Streifen", "min", " cm"),
+    ("Bank: Rumpf im Polster (mm)", "Rücken und Gesäß im Polster (Ziel 4 mm)", "max", " mm"),
+    ("Bank: Oberschenkel über dem Polster (mm)", "Oberschenkel über dem Polster", "min", " mm"),
+)
+
+
+def _zahl(w: float, einheit: str) -> str:
+    text = f"{w:.1f}".replace(".", ",").replace("-", "−")
+    return f"{text}{einheit}"
+
+
+def messtabelle(messwerte: Path, breite: int) -> Image.Image:
+    """Tabelle der Messwerte aller Bilder einer Schleife (nur Schlüssel, die es gibt)."""
+    import json
+    import math
+
+    daten = json.loads(messwerte.read_text(encoding="utf-8"))
+    bilder = daten["bilder"]
+    zeilen = []
+    for schluessel, text, art, einheit in MESSWERTE:
+        werte = [b[schluessel] for b in bilder if isinstance(b.get(schluessel), (int, float))
+                 and not (isinstance(b[schluessel], float) and math.isnan(b[schluessel]))]
+        if not werte:
+            continue
+        if art == "spanne":
+            wert = f"{_zahl(min(werte), einheit)} bis {_zahl(max(werte), einheit)}"
+        elif art == "min":
+            wert = _zahl(min(werte), einheit)
+        elif art == "max":
+            wert = _zahl(max(werte), einheit)
+        else:
+            wert = _zahl(max(abs(w) for w in werte), einheit)
+        zeilen.append((text, wert))
+    verschiebung = [v for k, v in daten.items() if k.endswith("größte Verschiebung über die Schleife (mm)")]
+    if verschiebung:
+        zeilen.append(("Sohle: Verschiebung über die Schleife", _zahl(verschiebung[0], " mm")))
+    meldungen = sum(len(b.get("Meldungen", [])) for b in bilder)
+    zeilen.append(("Meldungen des Rigs", str(meldungen)))
+    f = schrift(15)
+    spalten = 2
+    je = (len(zeilen) + spalten - 1) // spalten
+    hoehe = 34 + je * 24 + 8
+    feld = Image.new("RGB", (breite, hoehe), GRUND)
+    d = ImageDraw.Draw(feld)
+    d.text((10, 6), f"Messwerte über alle {len(bilder)} Bilder der Schleife", fill=TEXT, font=schrift(17, True))
+    for i, (text, wert) in enumerate(zeilen):
+        x = 10 + (i // je) * (breite // spalten)
+        y = 34 + (i % je) * 24
+        d.text((x, y), text, fill=LEISE, font=f)
+        d.text((x + breite // spalten - 190, y), wert, fill=TEXT, font=f)
+    return feld
+
+
+def familienblock(arbeit: Path, uebung: str, titel: str, breite: int) -> Image.Image:
+    """Ein Block der Prüfseite: Positionen aus zwei Perspektiven, Griff und Fuß aus der Nähe, Messwerte."""
+    zeilen: list[list[Image.Image]] = []
+    b4 = breite // 4 - 8
+    zeilen.append([zelle(arbeit / f"pruef-{a}-{p}.png", b4, f"{t} · {pt}")
+                   for a, t in (("standard", "Kamera der App"), ("seite", "von der Seite"))
+                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition"))])
+    zeilen.append([zelle(arbeit / f"pruef-griff-{r}-{p}.png", b4, f"{t} · {pt}")
+                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition"))
+                   for r, t in (("handflaeche", "Griff von der Handfläche"), ("handruecken", "Griff vom Handrücken"))])
+    zeilen.append([zelle(arbeit / f"pruef-fuss-{r}-{p}.png", b4, f"{t} · {pt}")
+                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition"))
+                   for r, t in (("90", "linker Fuß von außen"), ("0", "linker Fuß von vorn"))])
+    zeilen.append([messtabelle(arbeit / f"{uebung}-messwerte.json", breite - 16)])
+    hoehe = 44 + sum(max(z.height for z in zeile) + 8 for zeile in zeilen)
+    block = Image.new("RGB", (breite, hoehe), GRUND)
+    d = ImageDraw.Draw(block)
+    d.text((10, 8), titel, fill=TEXT, font=schrift(22, True))
+    y = 44
+    for zeile in zeilen:
+        x = (breite - sum(z.width + 8 for z in zeile) + 8) // 2
+        for z in zeile:
+            block.paste(z, (x, y))
+            x += z.width + 8
+        y += max(z.height for z in zeile) + 8
+    return block
+
+
+def familienblatt(arbeit: Path, uebungen: list[str], titel: str) -> Image.Image:
+    import json
+
+    breite = 1480
+    bloecke = []
+    for u in uebungen:
+        name = json.loads((arbeit / u / f"{u}-messwerte.json").read_text(encoding="utf-8")).get("titel", u)
+        bloecke.append(familienblock(arbeit / u, u, name, breite))
+    kopf = 70
+    gesamt = Image.new("RGB", (breite, kopf + sum(b.height + 12 for b in bloecke)), GRUND)
+    d = ImageDraw.Draw(gesamt)
+    d.text((16, 14), f"Prüfseite · {titel}", fill=TEXT, font=schrift(28, True))
+    d.text((16, 48), "C männlich, Kleidung, Licht und Kamera wie bei den Pilot-Übungen; linke Hand und linker Fuß", fill=LEISE,
+           font=schrift(15))
+    y = kopf
+    for b in bloecke:
+        gesamt.paste(b, (0, y))
+        y += b.height + 12
+    return gesamt
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("uebungen", nargs="+")
     ap.add_argument("--arbeit", default="/tmp/uebungen-3d")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
+    ap.add_argument("--familie", help="Prüfseite einer Familie: Name der Datei familie-<Name>.webp")
+    ap.add_argument("--titel", default="", help="Name der Familie auf der Prüfseite")
     args = ap.parse_args()
+    if args.familie:
+        speichern(familienblatt(Path(args.arbeit), args.uebungen, args.titel), Path(args.ziel), f"familie-{args.familie}")
+        return
     for u in args.uebungen:
         speichern(blatt(Path(args.arbeit) / u), Path(args.ziel), f"pruef-{u}")
 

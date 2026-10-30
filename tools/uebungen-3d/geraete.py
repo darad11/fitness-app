@@ -5,6 +5,12 @@ Scheiben aus Eisen, 20 kg mit 450 mm und 10 kg mit 330 mm Durchmesser.
 Flachbank: Polster 1,20 × 0,30 m, Oberkante 0,43 m.
 Latzug: Sitz 0,48 m hoch, Knierolle, Säule, obere Rolle 12 cm, Kabel 5 mm, Latzugstange 1,20 m
 mit abgewinkelten Enden.
+Kurzhantel 20 kg (D-462), Sechskant, gummiert, nach Herstellerangabe (Fitcom Hex 20 kg): 365 mm lang, Griff 130 mm
+lang und 34 mm dick, Köpfe 145 mm über die Ecken.
+Verstellbare Bank (D-462) nach Herstellerangaben (Factory Weights Adjustable Commercial Bench: 43 cm hoch, Lehne
+30 cm breit, Stufen der Lehne 0, 15, 30, 45 … Grad, des Sitzes 0, 10, 20 Grad; Life Fitness Signature Series
+Multi-Adjustable Bench: Rückenpolster 81 cm, Sitz 43 cm hoch): Polster 6 cm dick und 30 cm breit, Lehne 80 cm, Sitz
+40 cm lang, 2 cm Spalt am Gelenk.
 """
 from __future__ import annotations
 
@@ -145,3 +151,67 @@ def kabel(name: str, von: Vector, nach: Vector) -> bpy.types.Object:
     obj.rotation_euler = richtung.to_track_quat("Z", "Y").to_euler()
     obj.scale = (1, 1, richtung.length)
     return obj
+
+
+# Kurzhantel und verstellbare Bank (D-462)
+KH = {"laenge": 0.365, "griff": 0.130, "griff_d": 0.034, "kopf": 0.145, "ring": (0.022, 0.012)}
+BANK = {"oben": 0.43, "dicke": 0.06, "breite": 0.30, "lehne": 0.80, "sitz": 0.40, "spalt": 0.02}
+
+
+def kurzhantel(name: str) -> bpy.types.Object:
+    """Kurzhantel (`KH`) mit dem Griff entlang x, Mitte des Griffs im Ursprung des Leerobjekts `name`: Griff aus Stahl
+    mit je einem Ring (22 mm Radius, 12 mm) an den Köpfen, frei bleiben 106 mm; Köpfe als Sechskant aus Gummi, eine
+    flache Seite unten, Kanten gerundet."""
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    mitte = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(mitte)
+    _zylinder(f"{name}-Griff", KH["griff_d"] / 2, KH["griff"], Vector(), "x", stahl, mitte)
+    kopf_l = (KH["laenge"] - KH["griff"]) / 2
+    r_ring, l_ring = KH["ring"]
+    for seite in (-1, 1):
+        _zylinder(f"{name}-Ring", r_ring, l_ring, Vector((seite * (KH["griff"] / 2 - l_ring / 2), 0, 0)), "x", stahl, mitte)
+        kopf = _zylinder(f"{name}-Kopf", KH["kopf"] / 2, kopf_l, Vector((seite * (KH["griff"] / 2 + kopf_l / 2), 0, 0)), "x",
+                         gummi, mitte, ecken=6)
+        # erst entlang x legen, dann 30° um die eigene Achse: Ecken bei 0, 60, 120 … Grad, unten eine flache Seite
+        kopf.rotation_mode = "YXZ"
+        kopf.rotation_euler = Euler((math.radians(30), math.pi / 2, 0), "YXZ")
+        bpy.context.view_layer.objects.active = kopf
+        bpy.ops.object.shade_flat()
+        rund = kopf.modifiers.new("Rund", "BEVEL")
+        rund.width = 0.008
+        rund.segments = 3
+    return mitte
+
+
+def schraegbank(lehne: float, sitz: float = 0.0) -> bpy.types.Object:
+    """Verstellbare Bank (`BANK`), Person mit dem Kopf nach +y: Gelenk zwischen Sitz und Lehne bei y = 0 an der
+    Unterkante der Polster; die Lehne steigt um `lehne` Grad zum Kopf, der Sitz um `sitz` Grad zu den Füßen. Polster
+    „Lehne“ und „Sitz“ auf Platten, Rahmen mit Träger, Füßen, Stütze unter dem Gelenk und Strebe unter der Lehne."""
+    polster = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    b = BANK
+    wurzel = bpy.data.objects.new("Bank", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    gelenk = Vector((0, 0, b["oben"] - b["dicke"]))
+    for name, winkel, laenge, richt in (("Lehne", lehne, b["lehne"], 1), ("Sitz", -sitz, b["sitz"], -1)):
+        dreh = bpy.data.objects.new(f"{name}Dreh", None)
+        bpy.context.scene.collection.objects.link(dreh)
+        dreh.location = gelenk
+        dreh.rotation_euler = Euler((math.radians(winkel), 0, 0))
+        dreh.parent = wurzel
+        _kasten(name, (b["breite"], laenge, b["dicke"]), Vector((0, richt * (b["spalt"] / 2 + laenge / 2), b["dicke"] / 2)),
+                polster, 0.02, dreh)
+        _kasten(f"{name}Platte", (0.10, laenge - 0.06, 0.02), Vector((0, richt * (b["spalt"] / 2 + laenge / 2), -0.01)),
+                rahmen, 0.004, dreh)
+    _kasten("Traeger", (0.08, 1.10, 0.05), Vector((0, 0.0, 0.055)), rahmen, 0.005, wurzel)
+    for y in (-0.52, 0.52):
+        _kasten("Fuss", (0.42, 0.06, 0.04), Vector((0, y, 0.02)), rahmen, 0.005, wurzel)
+    _kasten("Stuetze", (0.06, 0.06, gelenk.z - 0.08), Vector((0, 0, (gelenk.z + 0.08) / 2)), rahmen, 0.005, wurzel)
+    if lehne > 1.0:
+        a = math.radians(lehne)
+        oben = gelenk + Vector((0, math.cos(a), math.sin(a))) * (b["lehne"] * 0.55) - Vector((0, -math.sin(a), math.cos(a))) * 0.02
+        unten = Vector((0, oben.y + 0.05, 0.08))
+        strebe = _kasten("Strebe", (0.05, 0.05, (oben - unten).length), (oben + unten) / 2, rahmen, 0.004, wurzel)
+        strebe.rotation_euler = Euler((math.atan2(-(oben - unten).y, (oben - unten).z), 0, 0))
+    return wurzel

@@ -62,6 +62,44 @@ def _kasten(name: str, groesse: tuple[float, float, float], ort: Vector, mat, ru
     return obj
 
 
+# Gymnastikmatte (D-466) nach Herstellerangaben: PROGYM Gymnastikmatte mit Ösen (gewerbliche Nutzung), Sissel
+# Gymnastikmatte und Trendy Sport ProfiGymMat, je 180 × 60 × 1,5 cm
+MATTE = {"laenge": 1.80, "breite": 0.60, "dicke": 0.015, "raster": 0.0075}
+
+
+def matte(mitte: Vector) -> tuple[bpy.types.Object, tuple[list[Vector], list[Vector]]]:
+    """Gymnastikmatte flach auf dem Boden, Länge längs y, Mitte der Unterseite bei `mitte` (Welt). Die Oberseite ist
+    ein Raster von `raster`, damit `eindruecken` sie unter Körper und Schuhen absenken kann; Rand und Unterseite
+    schlicht (1,5 cm Schaum). Gibt das Objekt und Punkte und Normalen in Ruhe zurück (Raum der Matte)."""
+    b = MATTE
+    nx, ny = round(b["breite"] / b["raster"]), round(b["laenge"] / b["raster"])
+    hx, hy, d = b["breite"] / 2, b["laenge"] / 2, b["dicke"]
+
+    def idx(i: int, j: int) -> int:
+        return j * (nx + 1) + i
+
+    punkte = [Vector((-hx + i * b["breite"] / nx, -hy + j * b["laenge"] / ny, d)) for j in range(ny + 1) for i in range(nx + 1)]
+    flaechen = [[idx(i, j), idx(i + 1, j), idx(i + 1, j + 1), idx(i, j + 1)] for j in range(ny) for i in range(nx)]
+    rand = ([idx(i, 0) for i in range(nx)] + [idx(nx, j) for j in range(ny)] + [idx(i, ny) for i in range(nx, 0, -1)]
+            + [idx(0, j) for j in range(ny, 0, -1)])
+    unten = len(punkte)
+    punkte += [Vector((punkte[k].x, punkte[k].y, 0.0)) for k in rand]
+    n = len(rand)
+    flaechen += [[rand[a], unten + a, unten + (a + 1) % n, rand[(a + 1) % n]] for a in range(n)]
+    flaechen.append([unten + a for a in range(n - 1, -1, -1)])
+    me = bpy.data.meshes.new("Matte")
+    me.from_pydata([tuple(p) for p in punkte], [], flaechen)
+    me.update()
+    for f in me.polygons:
+        f.use_smooth = len(f.vertices) == 4 and f.normal.z > 0.9
+    obj = bpy.data.objects.new("Matte", me)
+    bpy.context.scene.collection.objects.link(obj)
+    obj.location = mitte
+    obj.data.materials.append(_mat("Matte", GERAET, 0.85))
+    bpy.context.view_layer.update()
+    return obj, ([v.co.copy() for v in me.vertices], [v.normal.copy() for v in me.vertices])
+
+
 def weiches_polster(obj: bpy.types.Object, raster: float = 0.006) -> tuple[list[Vector], list[Vector]]:
     """Polster als gleichmäßig feines Netz (D-465), damit `eindruecken` die Oberfläche unter dem Körper absenken kann:
     erst gerundet wie zuvor, dann mit Würfeln von `raster` neu vernetzt, auch in den Rundungen; die Modifikatoren
@@ -85,8 +123,8 @@ def eindruecken(polster: list, ruhe: dict, auflage: list, glaetten: int = 4, wan
     oder Kleidung (`auflage`) tiefer als der Punkt, sinkt er bis dorthin. Danach `glaetten` Schritte, in denen jeder
     Punkt auf das Mittel seiner Nachbarn sinkt, nie aber weniger tief als der Körper verlangt: So läuft die Delle
     weich aus, und kein Punkt bleibt im Körper. `ruhe`: Punkte und Normalen jedes Polsters in Ruhe (Raum des
-    Polsters). `wand`: Die Seitenwände sinken bis `wand[0]` unter der Oberseite ganz mit, bis `wand[1]` immer
-    weniger. `radius`: Umkreis, in dem ein Punkt von Haut oder Kleidung das
+    Polsters). `wand`: Die Seitenwände sinken bis `wand[0]` unter der Oberseite ganz mit, bis `wand[1]` immer weniger
+    (Matte, D-466: die Unterseite bleibt am Boden). `radius`: Umkreis, in dem ein Punkt von Haut oder Kleidung das
     Polster mitnimmt (etwas mehr als das Raster). Gibt die tiefste Delle zurück (m)."""
     from mathutils.bvhtree import BVHTree
     from mathutils.kdtree import KDTree

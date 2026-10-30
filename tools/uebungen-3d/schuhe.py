@@ -1499,18 +1499,19 @@ def bodenkontakt(sohle: bpy.types.Object, schaft: bpy.types.Object | None = None
 
 
 
-def kontakt_ebene(sohle: bpy.types.Object, punkt: Vector, normale: Vector) -> dict:
-    """Wie `bodenkontakt`, aber zu einer beliebigen Ebene (D-464, Fußplatte der Beinpresse): Abstand der Unterseite
-    der Sohle über der Ebene (mm, negativ = in ihr), tiefster Punkt, Ferse (u < 0,3) und Ballen (u > 0,6) je Seite."""
+def kontakt_ebene(sohle: bpy.types.Object, punkt: Vector, normale: Vector, name: str = "Platte") -> dict:
+    """Wie `bodenkontakt`, aber zu einer beliebigen Ebene (D-464, Fußplatte der Beinpresse; D-466 die Matte, `name`):
+    Abstand der Unterseite der Sohle über der Ebene (mm, negativ = in ihr), tiefster Punkt, Ferse (u < 0,3) und Ballen
+    (u > 0,6) je Seite."""
     pkte, _, _ = _verformt(sohle)
     u = [a.value for a in sohle.data.attributes["SchuhU"].data]
     ab = [(p - punkt).dot(normale) for p in pkte]
-    aus = {"Sohle: tiefster Punkt über der Platte (mm)": min(ab) * 1000}
+    aus = {f"Sohle: tiefster Punkt über der {name} (mm)": min(ab) * 1000}
     for s, x in (("L", 1), ("R", -1)):
         ferse = [a for a, p, uu in zip(ab, pkte, u) if uu < 0.3 and p.x * x > 0]
         ballen = [a for a, p, uu in zip(ab, pkte, u) if uu > 0.6 and p.x * x > 0]
-        aus[f"Sohle {s}: Ferse auf der Platte (mm)"] = min(ferse) * 1000
-        aus[f"Sohle {s}: Ballen auf der Platte (mm)"] = min(ballen) * 1000
+        aus[f"Sohle {s}: Ferse auf der {name} (mm)"] = min(ferse) * 1000
+        aus[f"Sohle {s}: Ballen auf der {name} (mm)"] = min(ballen) * 1000
     return aus
 
 

@@ -2610,3 +2610,22 @@ Sitz und Lehne korrigiert, Schleife der Beinpresse in der App (D-465).
 | `pnpm test` | fünf Läufe, alle unter Last (Blender-Prozesse nebenher): einmal 2 Tests in 1 Datei fehlgeschlagen, die Namen sind nicht festgehalten (die Ausgabe war gekürzt); die übrigen bestanden, zuletzt zweimal 135 Dateien, 1.209 Tests |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 24 von 24 im Build |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (18,6 min, nebenher liefen Blender-Prozesse): `start-surface.spec.ts` „Startfläche beim schnellen Start …“, „Heute“ stand erst 1.195 ms nach dem ersten Bild statt vor 1.121 ms; einzeln fünfmal wiederholt bestanden. Der Test zu den Aufgabenzeilen (360, 390 und 768 pt) bestanden; der geänderte Test der Übungsliste (sechs Vorschaubilder, Beinpresse) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Rumpf“ · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Rumpf“ mit Unterarmstütz und Crunches (D-466).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Matte 180 × 60 × 1,5 cm nach Herstellerangaben (Websuche: PROGYM, Sissel, Trendy Sport) | Oberseite als Raster von 7,5 mm, gibt unter Haut, Kleidung und Schuhen nach, Unterseite bleibt am Boden |
+| Unterarmstütz: Neigung des Körpers gesucht (Halbierung, Schuhe 2,5 mm in der Matte), Lage der gedachten Stange in der Faust (Ellbogen unter der Schulter), Höhe von Ellbogen und Faust (je 2 mm in der Matte) | Neigung 4,2°; Stange 20° schräg in der Faust: Handgelenk 4,8° (gerade Stange 21,0°); Fuß 15° zurück (Sprunggelenk 16,6° gebeugt): der Schuh steht auf dem vorderen Rand der Sohle statt auf der Spitze |
+| Crunches: Liegen gesucht mit der Figur der App (Lende 40 und 50° flacher, Rumpf 3 bis 9°, Brustkorb 0 und 10°, Kopf 10 und 25°), Lende 2 mm an jeder Stelle | gewählt Lende 45°, Rumpf 9°, Brustkorb 10°, Kopf 20°: Gesäß 12,8 mm, Schulterblätter 9,0 mm, Kopf liegt auf. Erst mit der grauen Figur gesucht; deren Maße passen nicht zur Figur der App, darum neu gerechnet |
+| Crunches: Einrollen verteilt (erst mit dem Wirbel spine03: Lende oben 4,6 mm abgehoben), dann ein Viertel ab spine02, drei Viertel ab spine01 | Lende in jeder Phase an jeder Stelle auf der Matte |
+| Gewebe flacht ab: erste Fassung mit der Haut unter dem Stoff und mit den Händen | Haut lag unter der Kleidung, Hände konnten nicht aufliegen; Haut jetzt über dem Stoff, Hände und Arme ausgenommen |
+| `render.py unterarmstuetz --pruefen` (alle 60 Bilder) | Hüfte 1,6 bis 1,7 cm über der Linie Schulter–Fußgelenk, Ellbogen 0,0 cm vor der Schulter, Oberarm höchstens 0,1° zur Senkrechten, Ellbogen 89°, Handgelenk 4,8 bis 5,0°, Knie 177°, Unterarm 1,0 bis 2,0 mm, Faust 2,0 mm, Schuhe 2,5 mm in der Matte, übriger Körper mindestens 16 mm darüber, Auflage mindestens 5,2 cm vom Rand, Delle 1,9 mm, nichts durch die Matte, Sohlen 0,0 mm verschoben, keine Meldungen |
+| `render.py crunch --pruefen` (alle 60 Bilder, Knie 70°) | Oberkörper 9,5 bis 38,1° zur Matte; Lende 1,5 bis 3,0 mm auf der Matte; Gesäß und Kreuzbein 3,0 mm (ohne Abflachen 12,6 mm); Becken 0,0 mm und 0,0°; Schulterblätter oben 32,6 mm über der Matte; Kinn 10,5 bis 11,5 cm vom Brustbein; Hände zu Beginn 2,0 mm auf der Matte, mindestens 68 mm vom Körper; Sohlen 0,0 mm, nicht verschoben; Kragen des Schuhs 0,5 mm über der Socke; Auflage mindestens 10,7 cm vom Rand; Delle 3,0 mm, nichts durch die Matte; keine Meldungen |
+| Crunches: Knie 85° gegen 75° und 70° | Sprunggelenk 44,4°, 39,9° und 37,6° gestreckt; Kragen des Schuhs −0,7 mm (schneidet in die Socke), +0,14 und +0,5 mm: gewählt 70° |
+| Lage auf der Matte (Auflage bis 2 mm über der Oberseite) | Unterarmstütz zuerst Schuhspitzen 8 mm vor dem Ende, Crunches Hände neben der Matte; mittig gelegt und Arme näher am Körper: mindestens 5,2 und 10,7 cm vom Rand |
+| Prüfansichten angesehen | Fläche für das Abflachen erschien weiß um die Matte (die Prüfansichten setzen die Sichtbarkeit aller Objekte neu); jetzt für jeden Strahl unsichtbar. Fuß beim Unterarmstütz und Rücken bei den Crunches zuerst ohne die Auflage im Bild; Bildmittelpunkt und Ausschnitt angepasst |
+| Prüfseite (`tools/uebungen_pruef_bild.py unterarmstuetz crunch --familie rumpf --titel Rumpf`) | `familie-rumpf.webp`, angesehen: Körperlinie gerade, Ellbogen unter den Schultern, Schuhe auf der Matte; Lende und Becken liegen, oben nur der obere Rücken gehoben |
+| `pnpm format:check`, `pnpm check:docs` (D-466) | bestanden |

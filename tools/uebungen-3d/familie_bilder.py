@@ -35,12 +35,13 @@ def griff(name: str, ziel: Path) -> None:
         u.setzen(p)
         rig = u.rig
         hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
-        punkte = [q for q in _netz(u.koerper) if (q - hand).length < 0.10]
+        punkte = [q for q in _netz(u.koerper) if (q - hand).length < 0.10] + [hand + Vector((0.09, 0, 0)), hand - Vector((0.09, 0, 0))]
+        if hasattr(u, "nah_punkte"):  # eigene Nahaufnahme (D-466): Unterarm auf der Matte, Lende auf der Matte
+            punkte = u.nah_punkte()
         for datei, richtung, neigung in getattr(u, "griff_ansichten", GRIFF):
             for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
                 bpy.data.objects.remove(o)
-            z, abstand, h = szene.bildausschnitt(punkte + [hand + Vector((0.09, 0, 0)), hand - Vector((0.09, 0, 0))],
-                                                 richtung, neigung, G, G, rand=0.06)
+            z, abstand, h = szene.bildausschnitt(punkte, richtung, neigung, G, G, rand=0.06)
             szene.licht_und_kamera(z, richtung, abstand, h)
             s.render.filepath = str(ziel / f"pruef-griff-{datei}-{p:.2f}.png")
             bpy.ops.render.render(write_still=True)

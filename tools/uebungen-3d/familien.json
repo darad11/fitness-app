@@ -7,7 +7,9 @@
     "lat_pulldown": "Schleife in der App (D-461)",
     "bench_press_dumbbell": "Schleife in der App (D-463)",
     "incline_bench_press_dumbbell": "Schleife in der App (D-463)",
-    "leg_press": "Schleife in der App (D-465)"
+    "leg_press": "Schleife in der App (D-465)",
+    "plank": "Prüfseite, wartet auf Freigabe (D-466)",
+    "crunch": "Prüfseite, wartet auf Freigabe (D-466)"
   },
   "uebungen": {
     "bench_press_barbell": {
@@ -739,11 +741,10 @@
       "familie": "rumpf",
       "variante": "Unterarmstütz statisch, Körperlinie gerade",
       "geraet_modell": "Matte",
-      "quelle": "mixamo",
-      "mixamo_name": "Plank",
+      "quelle": "familie",
       "aufwand_stunden": 0.75,
       "geraet_neu_stunden": 0.0,
-      "hinweis": "Statisch: Schleife zeigt Halten mit dezenter Atmung; Einnehmen der Position mit Mixamo „Start Plank“ möglich."
+      "hinweis": "Statisch: Schleife zeigt Halten mit dezenter Atmung. Aus dem Code statt Mixamo „Plank“ (D-466): Die Dateien brauchen das Konto des Produktinhabers, und eine gehaltene Haltung braucht keine Aufnahme."
     },
     "side_plank": {
       "nr": 65,

@@ -474,3 +474,98 @@ Ergebnis: siehe 7.3 und 7.4
 Bekannte Einschränkungen: Gesäß sinkt unten weniger tief ein als oben (Haut der Gesäßfalte); Shirt am Kreuzbein steht im Sitzen ab (7.3)
 Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Rumpf)
 ```
+
+## 8. Nächste Familie: Rumpf mit Unterarmstütz und Crunches, Prüfseite (D-466)
+
+Im Animationsplan kommt nach „Kniebeuge“ und „Senkrechtes Ziehen“ (Latziehen, Pilot) die Familie „Rumpf“: Unterarmstütz (Plank, 22 Einheiten) und Crunches (20 Einheiten). Wie verlangt zuerst nur die Prüfseite.
+
+### 8.1 Matte
+
+Gymnastikmatte 180 × 60 × 1,5 cm, das gängige Maß im Studio: [PROGYM Gymnastikmatte mit Ösen](https://www.benz-sport.de/gymnastik-gymnastikmatten-gymnastikmatten-mit-oesen/progym-gymnastikmatte-mit-oesen-180-x-60-x-15-cm-31141) (für gewerbliche Nutzung), [Sissel Gymnastikmatte](https://www.ebay.de/p/10029083321), [Trendy Sport ProfiGymMat](https://www.preissuchmaschine.de/preisvergleich/trendy-sport-profigymmat-trainingsmatte-therapiematte-500002915951.html). Sie gibt wie die Polster der Beinpresse unter Haut, Kleidung und Schuhen nach; die Unterseite bleibt am Boden.
+
+### 8.2 Unterarmstütz
+
+- **Quelle der Bewegung:** Der Plan nannte Mixamo „Plank“. Mixamo-Dateien brauchen dein Konto und liegen nicht vor; eine gehaltene Haltung braucht auch keine Aufnahme. Ich habe sie darum aus dem Code gebaut, wie die Piloten.
+- **Haltung:** Unterarme parallel auf der Matte, Ellbogen senkrecht unter den Schultern, Hände locker zur Faust, Daumen oben. Beine geschlossen und fast gestreckt, auf dem Vorfuß der Schuhe, Fersen nach hinten. Der Körper bildet von Kopf bis Fersen eine Linie und steigt zu den Schultern um 4,2°. Kopf in Verlängerung des Rumpfs.
+- **Schleife:** Halten mit dezenter Atmung; der Rücken wölbt sich in der Mitte leicht.
+
+### 8.3 Crunches
+
+- **Liegen:** Knie 70°, Füße flach auf der Matte. Bei 85° stünde der Fuß 44° gestreckt, und der Kragen des Schuhs schnitte 0,7 mm in die Socke; mit 70° sind es 37,6° und 0,5 mm Luft. Die Lende liegt an jeder Stelle auf, dafür ist sie flacher als im Stand, wie beim Liegen mit gebeugten Beinen üblich. Der Kopf liegt auf.
+- **Bewegung:** Der Oberkörper rollt ein, bis die Schulterblätter gut 3 cm über der Matte sind: von 9,5° auf 38,1° zur Matte. Lende und Becken bleiben liegen, der Nacken bleibt neutral, zwischen Kinn und Brustbein bleiben gut 10 cm.
+- **Arme:** lang neben dem Körper, Handflächen unten, zu Beginn auf der Matte; beim Einrollen reichen sie waagrecht Richtung Knie. Das ist die zweite Quelle der Anleitung in der App (ExRx „Crunch (arms down)“).
+- **Gewebe flacht ab:** Im Liegen sinken Gesäß und Brustkorb tiefer, als eine Matte von 1,5 cm nachgibt. Haut und Kleidung legen sich darum 3 mm unter der Oberseite flach, wie Gewebe auf festem Grund; die Matte gibt 3 mm nach. Ohne das lägen Gesäß 12,6 mm und Schulterblätter 9,1 mm in der Matte.
+
+### 8.4 Messwerte über alle 60 Bilder
+
+**Unterarmstütz**
+
+| | Wert |
+|---|---|
+| Hüfte über der Linie Schulter–Fußgelenk | 1,6 bis 1,7 cm (gerade Linie) |
+| Körper steigt zu den Schultern | 4,2° |
+| Ellbogen vor der Schulter / Oberarm zur Senkrechten | 0,0 cm / höchstens 0,1° |
+| Ellbogen | 89° |
+| Handgelenk gesamt (seitlich / gestreckt) | 4,8 bis 5,0° (−5,0° / −0,4°) |
+| Knie / Sprunggelenk gebeugt | 177° / 16,6° |
+| Unterarm / Faust auf der Matte | 1,0 bis 2,0 / 2,0 mm eingedrückt |
+| Schuh: vorderer Rand der Sohle auf der Matte | 2,5 mm eingedrückt (Ferse 172 mm darüber) |
+| Körper sonst über der Matte | mindestens 16 mm |
+| Auflage vom Rand der Matte | mindestens 5,2 cm |
+| Matte: Delle / Haut, Kleidung oder Schuh durch die Matte | 1,9 / 0,0 mm |
+| Sohle verschoben / Meldungen des Rigs | 0,0 mm / 0 |
+
+**Crunches**
+
+| | Wert |
+|---|---|
+| Oberkörper zur Matte | 9,5° (liegend) bis 38,1° (oben) |
+| Lende auf der Matte, schwächste Stelle | 1,5 bis 3,0 mm, in jeder Phase |
+| Gesäß / Kreuzbein auf der Matte | 3,0 / 3,0 mm (ohne Abflachen 12,6 mm) |
+| Becken verschoben / gedreht | 0,0 mm / 0,0° |
+| Schulterblätter | liegend 3,0 mm auf der Matte, oben 32,6 mm darüber |
+| Untere Brustwirbel | liegend 3,0 mm auf der Matte, oben 0,4 mm darüber |
+| Kopf | liegend 3,0 mm auf der Matte, oben 227 mm darüber |
+| Kinn zum Brustbein | 10,5 bis 11,5 cm |
+| Hände | zu Beginn 2,0 mm auf der Matte, oben 109 mm darüber, mindestens 68 mm vom Körper |
+| Knie / Hüfte (Oberschenkel zum Rumpf) / Ellbogen | 70° / 128 bis 132° / 172° |
+| Sprunggelenk gestreckt / Kragen des Schuhs über der Socke | 37,6° / 0,5 mm |
+| Sohlen auf der Matte (Ferse und Ballen) / verschoben | 0,0 mm / 0,0 mm |
+| Auflage vom Rand der Matte | mindestens 10,7 cm |
+| Matte: Delle / Haut, Kleidung oder Schuh durch die Matte | 3,0 / 0,0 mm |
+| Meldungen des Rigs | 0 |
+
+Positive Werte heißen „in der Matte“ (eingedrückt), negative Luft. Gemessen an der Oberfläche der Kleidung; die Matte gibt dort so weit nach.
+
+### 8.5 Prüfseite und Rechenzeit
+
+`docs/screens/uebungen/familie-rumpf.webp`: je Übung Ausgangs- und Endposition mit der Kamera der App und von der Seite; beim Unterarmstütz Unterarm und Faust von außen und von vorn, der linke Fuß von außen und von hinten; bei den Crunches Rumpf und Matte von der Seite und schräg vom Kopf her, der linke Fuß von außen und von vorn; darunter die Messwerte. Rechenzeit: Unterarmstütz Messung und Prüfansichten 850 s, Nahaufnahmen 185 s (nebenher lief die Schleife der Beinpresse); Crunches 369 s und 53 s.
+
+Beim Prüfen gefunden und behoben:
+- Die unsichtbare Fläche, auf die sich das Gewebe legt, erschien in den Prüfansichten weiß um die Matte; sie ist jetzt für jeden Strahl ausgeblendet (auch in der Schleife).
+- Die Schuhspitzen beim Unterarmstütz lagen 8 mm vor dem Ende der Matte; jetzt liegen beide Übungen mittig.
+- Die Nahaufnahme des Fußes beim Unterarmstütz zeigte die Auflage nicht; ihr Bildmittelpunkt liegt jetzt am Rand der Sohle auf der Matte.
+- Bei den Crunches lagen die Hände zuerst neben der Matte und der Kragen des Schuhs schnitt in die Socke (siehe 8.3).
+
+### 8.6 Abweichungen und offene Punkte
+
+- **Quelle Unterarmstütz:** Code statt Mixamo (8.2).
+- **Hände beim Unterarmstütz:** Faust mit dem Daumen oben. Möglich wären auch flache Hände.
+- **Arme bei den Crunches:** lang Richtung Knie. Möglich wären auch die Hände an den Schläfen oder vor der Brust verschränkt.
+- **Kopf bei den Crunches:** liegt zu Beginn jeder Wiederholung auf. Manche lassen ihn zwischen den Wiederholungen leicht angehoben.
+- **Schuhe beim Unterarmstütz:** Die Sohle biegt sich nicht; der Schuh steht auf dem vorderen Rand der Sohle.
+
+### 8.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-466 Phase Programme, Abschnitt 2: Familie „Rumpf“ (Unterarmstütz, Crunches), Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Gymnastikmatte (geraete.matte), Übungen auf der Matte mit nachgebender Matte und abflachendem Gewebe (uebungen.Boden), Unterarmstütz, Crunches, Arm ohne Griff (rig.arm_frei), Nahaufnahmen je Übung, Stand im Animationsplan; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/rig.py, tools/uebungen-3d/schuhe.py, tools/uebungen-3d/render.py, tools/uebungen-3d/familie_bilder.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-rumpf.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-466
+Ausgeführte Tests: render.py unterarmstuetz und crunch --pruefen (alle 60 Bilder gemessen, Prüfansichten), Nahaufnahmen, Bilder angesehen, Lage auf der Matte und Abstand der Hände gemessen; pnpm format:check, pnpm check:docs; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 8.4)
+Bekannte Einschränkungen: 8.6
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleifen rendern und einbauen, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Rumpf“.

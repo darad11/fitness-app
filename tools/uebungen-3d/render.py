@@ -142,7 +142,7 @@ def messen(uebung) -> dict:
     ebene = uebung.sohle_ebene() if hasattr(uebung, "sohle_ebene") else None
     if "Sohle" in o:
         if ebene is not None:  # Füße auf einer Platte (D-464): Kontakt zur Platte statt zum Boden
-            erg.update(schuhe.kontakt_ebene(o["Sohle"], *ebene))
+            erg.update(schuhe.kontakt_ebene(o["Sohle"], *ebene, name=getattr(uebung, "sohle_auf", "Platte")))
         else:
             if fusspunkte:
                 erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
@@ -223,6 +223,8 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
             u.setzen(p)
             sohle = [q for q in schuhe._verformt(bpy.data.objects["Sohle"])[0] if q.x > 0]
             fuss = sum(sohle, Vector()) / len(sohle) + Vector((0, 0, 0.05))
+            if hasattr(u, "fuss_ziel"):  # eigener Bildmittelpunkt (D-466: beim Unterarmstütz der Rand der Sohle auf der Matte)
+                fuss = u.fuss_ziel(sohle)
             # Nichts verdeckt den Fuß (Beinpresse: Scheiben, Hörner, Schiene und Wagen neben und unter der Platte, D-464)
             for o in bpy.data.objects:
                 o.hide_render = o.name.startswith(("Scheibe", "Horn", "Verschluss", "Schiene", "Wagen"))

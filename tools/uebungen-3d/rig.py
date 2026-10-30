@@ -919,6 +919,40 @@ class Rig:
         R = achse_winkel(k_neu, phi) @ R0
         return starr(g.mitte, mitte, R)
 
+    def arm_frei(self, seite: str, W: Vector, ellbogen_richtung: Vector, handflaeche: Vector) -> dict:
+        """Arm ohne Griff (D-466, Crunches): Handgelenk bei `W` (Raum des Skeletts), Ellbogen zur `ellbogen_richtung`,
+        Mittelhand in Verlängerung des Unterarms, Handfläche zu `handflaeche`; Finger wie in der Grundhaltung. Die
+        Knochen setzt es wie `arm` (Oberarm mit Achselhilfe, Unterarm mit verteilter Drehung, Hand)."""
+        s = seite
+        S0, E0, W0 = self.kopf["upperarm01." + s], self.kopf["lowerarm01." + s], self.kopf["wrist." + s]
+        S = self.punkt("shoulder01." + s, S0)
+        l1, l2 = (E0 - S0).length, (W0 - E0).length
+        d = self._hand[s]
+        E, p, ok = zwei_glieder(S, W, l1, l2, ellbogen_richtung)
+        if not ok:
+            self.meldungen.append(f"Arm {s}: Handgelenk nicht erreichbar")
+        W = E + (W - E).normalized() * l2
+        u, f = (E - S).normalized(), (W - E).normalized()
+        u0, f0 = (E0 - S0).normalized(), (W0 - E0).normalized()
+        scharnier0 = u0.cross(f0).normalized()
+        scharnier = u.cross(-p).normalized() if u.cross(-p).length > 1e-6 else u.cross(f).normalized()
+        R_ober = abbild(u0, scharnier0.cross(u0), u, scharnier.cross(u))
+        G_ober = starr(S0, S, R_ober)
+        self.setze("upperarm01." + s, G_ober)
+        self.setze("upperarm02." + s, G_ober)
+        self._schulterhilfe(s, S0, S, R_ober, u)
+        R_unter0 = abbild(f0, scharnier0, f, scharnier)
+        R_hand = abbild(d["mittelhand"], senkrecht(d["n"], d["mittelhand"]), f, senkrecht(handflaeche, f))
+        G_hand = starr(W0, W, R_hand)
+        tau = winkel_um(R_unter0 @ d["n"], R_hand @ d["n"], f)
+        for name, anteil in (("lowerarm01." + s, 0.35), ("lowerarm02." + s, 0.85)):
+            self.setze(name, starr(E0, E, achse_winkel(f, tau * anteil) @ R_unter0))
+        self.setze("wrist." + s, G_hand)
+        for i in range(1, 5):
+            self.setze(f"metacarpal{i}.{s}", G_hand)
+        return {"schulter": S, "ellbogen": E, "handgelenk": W, "ellbogenwinkel": 180 - math.degrees(u.angle(f)),
+                "pronation": tau}
+
     def arm(self, seite: str, g: Griff, mitte: Vector, stangen_achse: Vector, ellbogen_richtung: Vector,
             streckung: float = 0.0, ellbogen=None, phi: float | None = None) -> dict:
         """Arm an die Stange: Die Hand liegt im Griff an `mitte` und kann sich nur um die Stange

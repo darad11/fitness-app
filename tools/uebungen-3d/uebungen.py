@@ -1521,5 +1521,522 @@ class Beinpresse(Uebung):
         return aus
 
 
+class Boden(Uebung):
+    """Übungen auf der Gymnastikmatte (Familie „Rumpf“, D-466). Die Matte liegt flach auf dem Boden, Länge längs y,
+    Mitte im Ursprung, und gibt unter Körper und Schuhen nach (`geraete.eindruecken`), wie Polster unter Last."""
+
+    sohle_auf = "Matte"
+
+    def matte_bauen(self) -> None:
+        self.matte, ruhe = geraete.matte(Vector((0.0, 0.0, 0.0)))
+        self.matte_ruhe = {self.matte.name: ruhe}
+        self.oben = geraete.MATTE["dicke"]
+        self.delle = 0.0
+        self.geloest = False
+
+    def auflage(self) -> list:
+        """Haut, Kleidung, Haare und Schuhe; die Kleidung entsteht erst nach `bauen`, darum je Haltung gesucht."""
+        return auflage_objekte(self.koerper, "Shirt", "Shorts", "Haare", "Sohle", "Schuhe")
+
+    def loesen(self) -> None:
+        """Haltung, die Schuhe und Kleidung braucht: beim ersten `setzen`, wenn sie da sind."""
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self.geloest = True
+            self.loesen()
+        super().setzen(p)
+        self.delle = geraete.eindruecken([self.matte], self.matte_ruhe, self.auflage(), wand=(0.0, geraete.MATTE["dicke"]))
+
+    def sohle_ebene(self) -> tuple[Vector, Vector]:
+        """Oberseite der Matte vor dem Eindrücken (Welt): Punkt und Normale."""
+        return Vector((0.0, 0.0, self.oben)), Vector((0.0, 0.0, 1.0))
+
+    def gruppenpunkte(self, *anfaenge: str, ausser: tuple = (), mindestens: float = 0.5) -> list[int]:
+        """Punkte des Körpers, deren Gewichte auf Knochen mit diesen Namensanfängen zusammen mindestens `mindestens`
+        sind (ohne Knochen, die mit `ausser` beginnen)."""
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+        aus = []
+        for v in self.koerper.data.vertices:
+            w = sum(g.weight for g in v.groups if namen[g.group].startswith(anfaenge) and not namen[g.group].startswith(ausser or ("\0",)))
+            if w >= mindestens:
+                aus.append(v.index)
+        return aus
+
+    def in_matte(self, netz: list[Vector], idx) -> float:
+        """Wie tief die Punkte `idx` höchstens in der Matte liegen (m, Oberseite vor dem Eindrücken; negativ = Luft)."""
+        return max((self.oben - netz[i].z for i in idx), default=float("nan"))
+
+    def abflachen(self, ein: float = 0.003) -> None:
+        """Gewebe flacht sich beim Liegen ab (D-466): Haut, Shirt, Shorts und Haare legen sich `ein` unter der
+        Oberseite der Matte auf eine unsichtbare Fläche, wo sie tiefer lägen (Shrinkwrap „außen“ nach dem Skelett,
+        vor der Glättung; die Haut `kleidung.STOFF` darüber, damit sie im Stoff bleibt). Die Matte gibt dort `ein` nach.
+        Wie tief sie ohne das lägen, misst `ohne_abflachen`."""
+        import kleidung
+
+        me = bpy.data.meshes.new("Liegeflaeche")
+        me.from_pydata([(-1.5, -1.5, 0.0), (1.5, -1.5, 0.0), (1.5, 1.5, 0.0), (-1.5, 1.5, 0.0)], [], [[0, 1, 2, 3]])
+        flaeche = bpy.data.objects.new("Liegeflaeche", me)
+        bpy.context.scene.collection.objects.link(flaeche)
+        flaeche.location.z = self.oben - ein
+        # unsichtbar für jeden Strahl: Die Prüfansichten und die Schleife setzen `hide_render` aller Objekte neu
+        flaeche.hide_render = True
+        for art in ("camera", "diffuse", "glossy", "transmission", "volume_scatter", "shadow"):
+            setattr(flaeche, f"visible_{art}", False)
+        self.flaeche = flaeche
+        self.flach = []
+        for obj in self.auflage():
+            if obj.name in ("Sohle", "Schuhe"):
+                continue
+            mod = obj.modifiers.new("Abflachen", "SHRINKWRAP")
+            mod.target = flaeche
+            mod.wrap_method = "PROJECT"
+            mod.use_project_z = True
+            mod.use_negative_direction = True
+            mod.use_positive_direction = True
+            mod.wrap_mode = "OUTSIDE"
+            mod.offset = kleidung.STOFF if obj == self.koerper else 0.0
+            if obj == self.koerper:  # Hände und Arme liegen mit ihrer Haut auf (eigener Kontakt), sie flachen nicht ab
+                namen = {g.index: g.name for g in obj.vertex_groups}
+                arm = ("upperarm", "lowerarm", "wrist", "metacarpal", "finger")
+                gruppe = obj.vertex_groups.new(name="Abflachen")
+                gruppe.add([v.index for v in obj.data.vertices
+                            if sum(g.weight for g in v.groups if namen[g.group].startswith(arm)) < 0.3], 1.0, "REPLACE")
+                mod.vertex_group = "Abflachen"
+            # nach dem Skelett (und der Dicke des Stoffs), vor der Glättung
+            ziel = next((i for i, m in enumerate(obj.modifiers) if m.type == "SUBSURF"), None)
+            if ziel is not None:
+                with bpy.context.temp_override(object=obj, active_object=obj):
+                    bpy.ops.object.modifier_move_to_index(modifier="Abflachen", index=ziel)
+            self.flach.append(mod)
+
+    def ohne_abflachen(self, idx_listen: list) -> list[float]:
+        """Wie tief die Punktlisten ohne Abflachen in der Matte lägen (m)."""
+        for m in getattr(self, "flach", []):
+            m.show_viewport = False
+        netz = _netz(self.koerper)
+        aus = [self.in_matte(netz, idx) for idx in idx_listen]
+        for m in getattr(self, "flach", []):
+            m.show_viewport = True
+        return aus
+
+    def matte_werte(self) -> dict:
+        b = geraete.MATTE
+        dg = bpy.context.evaluated_depsgraph_get()
+        rand = float("inf")
+        for o in self.auflage():  # was aufliegt (bis 2 mm über der Oberseite): Abstand zum Rand der Matte
+            oe = o.evaluated_get(dg)
+            me = oe.to_mesh()
+            for v in me.vertices:
+                q = oe.matrix_world @ v.co
+                if q.z < self.oben + 0.002:
+                    rand = min(rand, b["breite"] / 2 - abs(q.x), b["laenge"] / 2 - abs(q.y))
+            oe.to_mesh_clear()
+        return {"Matte: Auflage vom Rand (cm, mindestens)": rand * 100,
+                "Matte: tiefste Delle (mm)": self.delle * 1000,
+                "Matte: Haut, Kleidung oder Schuh durch die Oberfläche (mm)":
+                    geraete.durch_polster([self.matte], self.auflage()) * 1000}
+
+
+class Unterarmstuetz(Boden):
+    """Unterarmstütz (Plank), Familie „Rumpf“ (D-466). Bäuchlings über der Matte, Kopf zu −y: Unterarme parallel auf
+    der Matte, Ellbogen unter den Schultern (Oberarm senkrecht), Hände locker zur Faust, Daumen oben, die
+    Kleinfingerseite auf der Matte (wie um eine gedachte senkrechte Stange, `FAUST_R`); Beine geschlossen und
+    gestreckt, auf den Schuhspitzen. Der Körper bildet von Kopf bis Fersen eine Linie: Er steigt von den Füßen zu den
+    Schultern um den Winkel, bei dem die Schuhspitzen die Matte berühren (`_neigung`). Kopf in Verlängerung des
+    Rumpfs wie im Stand. Schleife: Halten mit dezenter Atmung, der Rücken wölbt sich beim Einatmen in der Mitte leicht
+    (`ATMUNG`)."""
+
+    name = "unterarmstuetz"
+    titel = "Unterarmstütz (Plank)"
+    kamera = {"richtung": 62.0, "neigung": 12.0}
+    vorschau_phase = 0.0
+    ELLBOGEN_Y = -0.479  # Ellbogen auf der Matte (Welt), Kopf zu −y: Fäuste und Schuhspitzen gleich weit vom Rand
+    FAUST_R = 0.015
+    SCHRAEG = 20.0  # gedachte Stange schräg in der Faust (Grad), damit Hand und Unterarm in einer Linie bleiben
+    FUSS_X = 0.055  # Fußgelenke so weit von der Mitte: Beine geschlossen
+    KNIE = 177.0  # Knie fast gestreckt
+    SPRUNG = -15.0  # Fuß gegenüber dem Rumpf gedreht, + Spitze zu den Füßen hin (Grad): Fersen nach hinten, Vorfuß auf der Matte
+    ATMUNG = 1.2  # Atmung: Rücken in der Mitte beim Einatmen leicht gewölbt (Grad)
+    TIEF = 0.002  # Unterarm, Faust und Schuhspitzen so tief in der Matte (m)
+    fuss_ansichten = ((90, 0.0), (180, 0.10), (0, 0.10), (270, 0.0))
+    griff_ansichten = (("unterarm_aussen", 90.0, 8.0), ("unterarm_vorn", 0.0, 25.0))
+
+    def fuss_ziel(self, sohle: list[Vector]) -> Vector:
+        """Mitte der Fuß-Nahaufnahmen: 7 cm über dem tiefsten Punkt der linken Sohle, damit der Rand der Sohle auf der
+        Matte im Bild liegt."""
+        unten = min(sohle, key=lambda q: q.z)
+        return Vector((unten.x, unten.y, unten.z + 0.07))
+
+    def nah_punkte(self) -> list[Vector]:
+        """Punkte für die Nahaufnahme von Unterarm und Faust (linke Seite, Welt)."""
+        rig = self.rig
+        e = rig.welt(rig.punkt("lowerarm01.L", rig.kopf["lowerarm01.L"]))
+        w = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        return [e, w, e + Vector((0, 0, 0.12)), w + Vector((0, -0.06, 0)), e - Vector((0, 0, 0.04))]
+
+    def bauen(self) -> None:
+        super().bauen()
+        self.matte_bauen()
+        rig = self.rig
+        k = rig.kopf
+        self.l1 = (k["lowerarm01.L"] - k["upperarm01.L"]).length
+        self.l2 = (k["wrist.L"] - k["lowerarm01.L"]).length
+        b1, b2 = (k["lowerleg01.L"] - k["upperleg01.L"]).length, (k["foot.L"] - k["lowerleg01.L"]).length
+        self.bein_l = math.sqrt(b1 * b1 + b2 * b2 - 2 * b1 * b2 * math.cos(math.radians(self.KNIE)))
+        self.griff = {s: rig.griff(s, 0.6, self.FAUST_R, schraeg=self.SCHRAEG) for s in "LR"}
+        self.unterarm_i = self.gruppenpunkte("lowerarm")
+        self.hand_i = self.gruppenpunkte("wrist", "metacarpal", "finger")
+        ohne = set(self.unterarm_i) | set(self.hand_i) | set(self.gruppenpunkte("foot", "toe", "lowerleg"))
+        self.rest_i = [i for i in range(len(self.koerper.data.vertices)) if i not in ohne]
+        self.atmung = 0.0
+        self.r_e, self.faust_z, self.eps = 0.035, 0.045, 8.0
+        self.stange = {}
+
+    def loesen(self) -> None:
+        """Höhe des Ellbogengelenks über der Matte und der gedachten Stange in der Faust: so lange angepasst, bis
+        Unterarm und Faust `TIEF` in der Matte liegen; dazu die Neigung, bei der die Schuhspitzen aufsetzen."""
+        rig = self.rig
+        for _ in range(6):
+            self.eps = self._neigung()
+            self._arme_suchen()
+            rig.zuruecksetzen()
+            self._haltung_ohne_werte(0.0)
+            rig.anwenden()
+            netz = _netz(self.koerper)
+            ua, fa = self.in_matte(netz, self.unterarm_i), self.in_matte(netz, self.hand_i)
+            self.r_e += ua - self.TIEF
+            self.faust_z += fa - self.TIEF
+            if abs(ua - self.TIEF) < 2e-4 and abs(fa - self.TIEF) < 2e-4:
+                break
+
+    def _R(self) -> Matrix:
+        return achse_winkel(X, 90.0 - self.eps)
+
+    def _torso(self) -> None:
+        """Rumpf bäuchlings, um `eps` zu den Schultern ansteigend; die Schultergelenke stehen senkrecht über den
+        Ellbogen (y = `ELLBOGEN_Y`), so hoch, wie Oberarm und Ellbogen über der Matte (`r_e`) es verlangen."""
+        rig = self.rig
+        R = self._R()
+        rig.setze("root", starr(Vector(), Vector(), R))
+        S = (rig.punkt("shoulder01.L", rig.kopf["upperarm01.L"]) + rig.punkt("shoulder01.R", rig.kopf["upperarm01.R"])) / 2
+        ziel = rig.lokal(Vector((0.0, self.ELLBOGEN_Y, self.oben + self.r_e + self.l1)))
+        rig.setze("root", starr(Vector(), Vector((0.0, ziel.y - S.y, ziel.z - S.z)), R))
+        if self.atmung:  # Rücken wölbt sich in der Mitte leicht, Schultern und Becken bleiben fast, wo sie sind
+            rig.dreh("spine03", achse_winkel(X, -self.atmung))
+            rig.dreh("spine02", achse_winkel(X, self.atmung))
+
+    def _beine(self) -> dict:
+        rig = self.rig
+        R = self._R()
+        unten = R @ Vector((0, 0, -1))
+        beine = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            H = rig.punkt("pelvis." + s, rig.kopf["upperleg01." + s])
+            A = H + unten * self.bein_l
+            A.x = sx * self.FUSS_X * self.mass
+            A = H + (A - H).normalized() * self.bein_l
+            beine[s] = rig.bein(s, A, Vector((0, 0, -1)), 3.0, fuss_ebene=R @ achse_winkel(X, self.SPRUNG))
+        return beine
+
+    def _spitze(self) -> float:
+        """Tiefster Punkt der Sohlen über der Matte (m); ohne Schuhe der Füße."""
+        sohle = bpy.data.objects.get("Sohle")
+        if sohle is None:
+            netz = _netz(self.koerper)
+            return min(netz[i].z for i in self.gruppenpunkte("foot", "toe")) - self.oben
+        dg = bpy.context.evaluated_depsgraph_get()
+        oe = sohle.evaluated_get(dg)
+        me = oe.to_mesh()
+        z = min((oe.matrix_world @ v.co).z for v in me.vertices)
+        oe.to_mesh_clear()
+        return z - self.oben
+
+    def _neigung(self) -> float:
+        """Neigung des Körpers (Grad), bei der die Schuhspitzen `TIEF` in der Matte liegen (Halbierung)."""
+        rig = self.rig
+        lo, hi = -5.0, 25.0
+        for _ in range(30):
+            self.eps = (lo + hi) / 2
+            rig.zuruecksetzen()
+            self._torso()
+            self._beine()
+            rig.anwenden()
+            if self._spitze() > -self.TIEF:
+                lo = self.eps  # Spitzen über der Matte: Körper steiler, die Füße sinken
+            else:
+                hi = self.eps
+        return (lo + hi) / 2
+
+    def _arme_suchen(self) -> None:
+        """Gedachte Stange in der Faust so legen, dass der Ellbogen senkrecht unter der Schulter auf der Höhe `r_e`
+        liegt und der Unterarm gerade nach vorn zeigt."""
+        rig = self.rig
+        for s, sx in (("L", 1), ("R", -1)):
+            rig.zuruecksetzen()
+            self._torso()
+            S = rig.welt(rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s]))
+            M = self.stange.get(s, Vector((S.x, S.y - self.l2 - 0.07, self.oben + self.faust_z)))
+            M.z = self.oben + self.faust_z
+            for _ in range(8):
+                A = rig.arm(s, self.griff[s], rig.lokal(M), Z, Vector((0, 0.3, -1)).normalized())
+                E = rig.welt(A["ellbogen"])
+                fehler = Vector((S.x - E.x, S.y - E.y, 0.0))
+                M = M + fehler
+                if fehler.length < 2e-4:
+                    break
+            self.stange[s] = M
+
+    def _haltung_ohne_werte(self, p: float) -> dict:
+        rig = self.rig
+        self.atmung = self.ATMUNG * p
+        self._torso()
+        beine = self._beine()
+        arme = {s: rig.arm(s, self.griff[s], rig.lokal(self.stange[s]), Z, Vector((0, 0.3, -1)).normalized()) for s in "LR"}
+        return {"beine": beine, "arme": arme}
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        h = self._haltung_ohne_werte(p)
+        L, A = h["beine"]["L"], h["arme"]["L"]
+        S = (A["schulter"] + h["arme"]["R"]["schulter"]) / 2
+        H = (L["huefte"] + h["beine"]["R"]["huefte"]) / 2
+        F = (L["knoechel"] + h["beine"]["R"]["knoechel"]) / 2
+        linie = (F - S).normalized()
+        quer = linie.cross(X).normalized()  # senkrecht zur Linie, nach oben
+        if quer.z < 0:
+            quer = -quer
+        schienbein = (L["knie"] - L["knoechel"]).normalized()
+        zehen = (rig.g("foot.L").to_3x3() @ Vector((0, -1, 0))).normalized()
+        self.werte = {
+            "Körperlinie: Hüfte über der Linie Schulter–Fußgelenk (cm)": (H - S).dot(quer) * 100,
+            "Körper steigt zu den Schultern (Grad)": self.eps,
+            "Ellbogen vor der Schulter (cm, + zum Kopf)": (A["schulter"].y - A["ellbogen"].y) * 100,
+            "Oberarm zur Senkrechten (Grad)": math.degrees((A["schulter"] - A["ellbogen"]).angle(Vector((0, 0, 1)))),
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Sprunggelenk gebeugt (Grad)": 90.0 - math.degrees(schienbein.angle(zehen)),
+        }
+
+    def zusatzwerte(self) -> dict:
+        netz = _netz(self.koerper)
+        aus = {"Unterarm auf der Matte (mm)": self.in_matte(netz, self.unterarm_i) * 1000,
+               "Faust auf der Matte (mm)": self.in_matte(netz, self.hand_i) * 1000,
+               "Körper sonst über der Matte (mm)": -self.in_matte(netz, self.rest_i) * 1000}
+        aus.update(self.matte_werte())
+        return aus
+
+
+class Crunch(Boden):
+    """Crunches, Referenz der Familie „Rumpf“ (D-466). Rückenlage auf der Matte, Kopf zu +y: Hüfte und Knie gebeugt
+    (Knie `KNIE`), Füße etwas schmaler als schulterbreit flach auf der Matte. Liegen wie beim Sitzen an der Lehne der
+    Beinpresse (D-465): Lende flacher als im Stand (`LENDE`, `KIPP`, `BRUST`), sie liegt an jeder Stelle auf der Matte;
+    Kopf mit gleichem Blick zurück, bis er aufliegt (`KOPF`). Bewegung: Der Oberkörper rollt ein, `EINROLLEN` Grad,
+    verteilt auf drei Wirbel (`VERTEILUNG`, von unten nach oben), bis die Schulterblätter von der Matte gelöst sind;
+    Lende und Becken bleiben liegen, der Nacken bleibt neutral (der Kopf folgt dem Brustkorb, Platz zwischen Kinn und
+    Brustbein). Arme lang neben dem Körper, Handflächen unten, Hände auf der Matte; beim Einrollen reichen sie mit dem
+    Oberkörper waagrecht Richtung Knie (ExRx „Crunch (arms down)“, Quelle der Anleitung in der App)."""
+
+    name = "crunch"
+    titel = "Crunches"
+    kamera = {"richtung": 70.0, "neigung": 16.0}
+    vorschau_phase = 1.0
+    KNIE = 70.0  # bei 85° stünde der Fuß 44° gestreckt, der Kragen des Schuhs schnitte 0,7 mm in die Socke
+    FUESSE = 0.10  # halber Abstand der Fußgelenke vor dem Maß der Schultern, m
+    ZEHEN = 8.0
+    HUEFTE_Y = 0.0  # Hüftgelenke über der Matte (Welt, y): Kopf und Füße gleich weit vom Rand
+    LENDE, KIPP, BRUST, KOPF = 45.0, 9.0, 10.0, 20.0
+    RUECKEN = 0.004  # Lende (Stoff) so tief in der Matte, an der Stelle mit dem geringsten Wert, m
+    TIEF = 0.002  # Hände zu Beginn so tief auf der Matte, m
+    EINROLLEN = 40.0
+    VERTEILUNG = (0.0, 0.25, 0.75)  # spine03, spine02, spine01: das Einrollen liegt über der Lende
+    ARM_AUSSEN = 0.06  # Arme so weit zur Seite (Anteil quer zur Richtung Füße): Hände noch auf der Matte
+    fuss_ansichten = ((90, 0.0), (0, 0.10), (180, 0.10), (270, 0.0))
+    griff_ansichten = (("ruecken_seite", 90.0, 3.0), ("ruecken_schraeg", 125.0, 6.0))
+
+    def nah_punkte(self) -> list[Vector]:
+        """Punkte für die Nahaufnahme: Rumpf vom Becken bis zu den Schultern auf der Matte (Welt), knapp über der Matte
+        von der Seite und schräg vom Kopf her; zu Beginn liegt der linke Arm davor, oben ist er gehoben."""
+        rig = self.rig
+        k = rig.kopf
+        h = rig.welt(rig.punkt("root", (k["upperleg01.L"] + k["upperleg01.R"]) / 2))
+        return [Vector((0.0, h.y - 0.15, self.oben)), Vector((0.0, h.y + 0.55, self.oben)), Vector((0.0, h.y + 0.20, self.oben + 0.30)),
+                Vector((0.15, h.y + 0.20, self.oben)), Vector((-0.15, h.y + 0.20, self.oben))]
+
+    def bauen(self) -> None:
+        super().bauen()
+        self.matte_bauen()
+        rig = self.rig
+        k = rig.kopf
+        huefte = k["upperleg01.L"].z
+        ruhe = [v.co for v in self.koerper.data.vertices]
+        self.lenden_baender = [[i for i, r in enumerate(ruhe) if abs(r.x) < 0.10 and r.y > 0.0
+                                and huefte + z / 100 <= r.z < huefte + (z + 2) / 100] for z in range(12, 26, 2)]
+        self.gesaess_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.17 and huefte - 0.12 < r.z < huefte + 0.06 and r.y > 0.02]
+        self.kreuz_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.10 and r.y > 0.0 and huefte <= r.z < huefte + 0.12]
+        self.brust_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.14 and r.y > 0.0 and huefte + 0.26 <= r.z < huefte + 0.36]
+        self.schulter_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.14 and r.y > 0.0 and huefte + 0.36 <= r.z < huefte + 0.50]
+        self.hand_i = self.gruppenpunkte("wrist", "metacarpal", "finger")
+        # Kinn (tiefster Punkt des Gesichts vor dem Hals) und Brustbein (Drosselgrube: vorderster Punkt auf Höhe der
+        # Brustbein-Schlüsselbein-Gelenke)
+        kopf_i = self.gruppenpunkte("head", "jaw")
+        hals_y, hals_z = k["neck01"].y, k["neck01"].z
+        self.kinn = min((i for i in kopf_i if abs(ruhe[i].x) < 0.01 and ruhe[i].y < hals_y - 0.04), key=lambda i: ruhe[i].z)
+        self.brustbein = min((i for i, r in enumerate(ruhe) if abs(r.x) < 0.01 and abs(r.z - k["clavicle.L"].z) < 0.01),
+                             key=lambda i: ruhe[i].y)
+        self.l1 = (k["lowerleg01.L"] - k["upperleg01.L"]).length
+        self.l2 = (k["foot.L"] - k["lowerleg01.L"]).length
+        self.a1 = (k["lowerarm01.L"] - k["upperarm01.L"]).length
+        self.a2 = (k["wrist.L"] - k["lowerarm01.L"]).length
+        self.ueber_sohle = k["foot.L"].z + rig.versatz.z  # Fußgelenk über der Unterseite der Sohle im Stand
+        self.R_liegen = achse_winkel(X, -90.0)
+        self.verschiebung = Vector()
+        self.einrollen = 0.0
+        self._lage()
+        rig.zuruecksetzen()
+        self._torso()
+        self.becken0 = self._becken()
+        self.knoechel = self._fuesse()
+        self.hand_z = 0.03
+
+    def loesen(self) -> None:
+        """Gewebe flacht auf der Matte ab; Hände so hoch, dass sie zu Beginn `TIEF` auf der Matte liegen."""
+        self.abflachen()
+        rig = self.rig
+        for _ in range(6):
+            rig.zuruecksetzen()
+            self.haltung(0.0)
+            rig.anwenden()
+            fehler = self.in_matte(_netz(self.koerper), self.hand_i) - self.TIEF
+            self.hand_z += fehler
+            if abs(fehler) < 2e-4:
+                break
+
+    def _torso(self) -> None:
+        rig = self.rig
+        rig.setze("root", starr(Vector(), self.verschiebung, self.R_liegen @ achse_winkel(X, self.KIPP - self.LENDE)))
+        for n in ("spine05", "spine04"):
+            rig.dreh(n, achse_winkel(X, self.LENDE / 3))
+        # spine03 trägt das letzte Drittel der Lende und den ersten Teil des Einrollens
+        a3, a2, a1 = (self.einrollen * v for v in self.VERTEILUNG)
+        rig.dreh("spine03", achse_winkel(X, self.LENDE / 3 + a3))
+        if a2:
+            rig.dreh("spine02", achse_winkel(X, a2))
+        rig.dreh("spine01", achse_winkel(X, a1 - self.BRUST))
+        if self.KOPF:
+            rig.dreh("neck01", achse_winkel(X, -self.KOPF))
+            rig.dreh("head", achse_winkel(X, self.KOPF))
+
+    def _lage(self) -> None:
+        """Lende auf der Matte: in jedem Streifen zu 2 cm (12 bis 26 cm über den Hüftgelenken) liegt das Shirt
+        `RUECKEN` tief (die Haut `kleidung.STOFF` darüber), auch im Streifen mit dem geringsten Wert; Hüftgelenke bei
+        y = `HUEFTE_Y`."""
+        import kleidung
+
+        rig = self.rig
+        for _ in range(4):
+            rig.zuruecksetzen()
+            self._torso()
+            rig.anwenden()
+            netz = [rig.welt(rig.lokal(q)) for q in _netz(self.koerper)]
+            d = max(min(netz[i].z for i in band) for band in self.lenden_baender) - self.oben
+            H = rig.welt((rig.punkt("pelvis.L", rig.kopf["upperleg01.L"]) + rig.punkt("pelvis.R", rig.kopf["upperleg01.R"])) / 2)
+            self.verschiebung += Vector((0.0, self.HUEFTE_Y - H.y, -d - self.RUECKEN + kleidung.STOFF))
+
+    def _becken(self) -> tuple[Vector, Vector]:
+        rig = self.rig
+        mitte = (rig.punkt("pelvis.L", rig.kopf["upperleg01.L"]) + rig.punkt("pelvis.R", rig.kopf["upperleg01.R"])) / 2
+        return mitte, (rig.punkt("spine04", rig.kopf["spine04"]) - mitte).normalized()
+
+    def _fuesse(self) -> dict:
+        """Fußgelenke über der Matte so weit vor den Hüftgelenken, dass das Knie `KNIE` gebeugt ist; die Sohle liegt
+        flach auf der Matte (Fußgelenk `ueber_sohle` über ihr)."""
+        rig = self.rig
+        D = math.sqrt(self.l1 ** 2 + self.l2 ** 2 - 2 * self.l1 * self.l2 * math.cos(math.radians(self.KNIE)))
+        aus = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            H = rig.punkt("pelvis." + s, rig.kopf["upperleg01." + s])
+            x = sx * self.FUESSE * self.mass
+            z = rig.lokal(Vector((0, 0, self.oben + self.ueber_sohle))).z
+            quer = (x - H.x) ** 2 + (z - H.z) ** 2
+            aus[s] = Vector((x, H.y - math.sqrt(max(D * D - quer, 0.0)), z))
+        return aus
+
+    def _arme(self) -> dict:
+        """Arme lang, Handflächen unten. Aus der Lage zu Beginn (Hände auf der Matte neben den Hüften) heben sie sich
+        mit dem Oberkörper und zeigen oben waagrecht Richtung Knie."""
+        rig = self.rig
+        aus = {}
+        D = math.sqrt(self.a1 ** 2 + self.a2 ** 2 - 2 * self.a1 * self.a2 * math.cos(math.radians(172.0)))
+        for s, sx in (("L", 1), ("R", -1)):
+            S = rig.welt(rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s]))
+            # Richtung zur Matte neben der Hüfte (Handgelenk `hand_z` über ihr, so dass die Hand aufliegt) und
+            # waagrecht zu den Knien, gemischt
+            unten = Vector((sx * self.ARM_AUSSEN, -1.0, 0.0)).normalized()
+            dz = (self.oben + self.hand_z) - S.z
+            zur_matte = Vector((unten.x * math.sqrt(max(D * D - dz * dz, 0.0)), unten.y * math.sqrt(max(D * D - dz * dz, 0.0)), dz)).normalized()
+            t = self.einrollen / self.EINROLLEN if self.EINROLLEN else 0.0
+            r = (zur_matte * (1 - t) + unten * t).normalized()
+            W = rig.lokal(S + r * D)
+            aus[s] = rig.arm_frei(s, W, Vector((sx, 0.0, 0.4)), Vector((0, 0, -1)))
+        return aus
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        self.einrollen = self.EINROLLEN * p
+        self._torso()
+        beine = {s: rig.bein(s, self.knoechel[s], Vector((0, -0.3, 1.0)).normalized(), self.ZEHEN) for s in "LR"}
+        arme = self._arme()
+        k = rig.kopf
+        L = beine["L"]
+        # Oberkörper zur Matte: Linie vom Wirbel spine02 zum Halsansatz
+        oben_v = (rig.punkt("neck01", k["neck01"]) - rig.punkt("spine02", k["spine02"])).normalized()
+        rumpf = (rig.punkt("spine01", k["spine01"]) - rig.punkt("spine05", k["spine05"])).normalized()
+        oberschenkel = (L["knie"] - L["huefte"]).normalized()
+        self.werte = {
+            "Oberkörper zur Matte (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, oben_v.z)))),
+            "Einrollen (Grad)": self.einrollen,
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüftwinkel (Grad)": math.degrees(oberschenkel.angle(rumpf)),
+            "Ellbogenwinkel": arme["L"]["ellbogenwinkel"],
+        }
+
+    def zusatzwerte(self) -> dict:
+        """Kontakt zur Matte an der Oberfläche der Kleidung (Haut + `kleidung.STOFF`), positiv = in der Matte: Lende
+        in Streifen zu 2 cm (gezählt der mit dem geringsten Wert), Gesäß, Kreuzbein, untere Brustwirbel (26 bis 36 cm
+        über den Hüftgelenken) und Schulterblätter (36 bis 50 cm); dazu, wie tief sie ohne Abflachen lägen (so weit
+        gibt das Gewebe nach), Hände, Kopf, Becken gegenüber dem Ausgang, Kinn zum Brustbein und die Matte."""
+        import kleidung
+
+        st = kleidung.STOFF
+        netz = _netz(self.koerper)
+        aus = {
+            "Unterer Rücken auf der Matte (mm, schwächste Stelle)": (min(self.in_matte(netz, b) for b in self.lenden_baender) + st) * 1000,
+            "Gesäß auf der Matte (mm)": (self.in_matte(netz, self.gesaess_i) + st) * 1000,
+            "Kreuzbein auf der Matte (mm)": (self.in_matte(netz, self.kreuz_i) + st) * 1000,
+            "Untere Brustwirbel auf der Matte (mm, unter 0 = abgehoben)": (self.in_matte(netz, self.brust_i) + st) * 1000,
+            "Schulterblätter auf der Matte (mm, unter 0 = abgehoben)": (self.in_matte(netz, self.schulter_i) + st) * 1000,
+            "Hände über der Matte (mm)": -self.in_matte(netz, self.hand_i) * 1000,
+        }
+        ohne = self.ohne_abflachen([self.gesaess_i, self.kreuz_i, self.brust_i, self.schulter_i])
+        (aus["Gesäß ohne Abflachen (mm)"], aus["Kreuzbein ohne Abflachen (mm)"], aus["Untere Brustwirbel ohne Abflachen (mm)"],
+         aus["Schulterblätter ohne Abflachen (mm)"]) = ((w + st) * 1000 for w in ohne)
+        haare = bpy.data.objects.get("Haare")
+        if haare is not None:
+            he = haare.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            me = he.to_mesh()
+            aus["Kopf (Haare) auf der Matte (mm, unter 0 = abgehoben)"] = (self.oben - min((he.matrix_world @ v.co).z for v in me.vertices)) * 1000
+            he.to_mesh_clear()
+        mitte, richtung = self._becken()
+        aus["Becken verschoben (mm)"] = (mitte - self.becken0[0]).length * 1000
+        aus["Becken gedreht (Grad)"] = math.degrees(richtung.angle(self.becken0[1]))
+        aus["Kinn zum Brustbein (cm)"] = (netz[self.kinn] - netz[self.brustbein]).length * 100
+        aus.update(self.matte_werte())
+        return aus
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
-                               Beinpresse)}
+                               Beinpresse, Unterarmstuetz, Crunch)}

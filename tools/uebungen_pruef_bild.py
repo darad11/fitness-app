@@ -110,6 +110,32 @@ MESSWERTE = (
     ("Becken gedreht (Grad)", "Becken gedreht (Einrollen)", "max", "°"),
     ("Polster: tiefste Delle (mm)", "Polster: tiefste Delle", "spanne", " mm"),
     ("Polster: Haut oder Kleidung durch die Oberfläche (mm)", "Haut oder Kleidung durch das Polster", "max", " mm"),
+    # Familie „Rumpf“ (D-466)
+    ("Körperlinie: Hüfte über der Linie Schulter–Fußgelenk (cm)", "Hüfte über der Linie Schulter–Fußgelenk", "spanne", " cm"),
+    ("Körper steigt zu den Schultern (Grad)", "Körper steigt zu den Schultern", "spanne", "°"),
+    ("Ellbogen vor der Schulter (cm, + zum Kopf)", "Ellbogen vor der Schulter", "spanne", " cm"),
+    ("Oberarm zur Senkrechten (Grad)", "Oberarm zur Senkrechten", "max", "°"),
+    ("Unterarm auf der Matte (mm)", "Unterarm auf der Matte (unter 0 = Luft)", "spanne", " mm"),
+    ("Faust auf der Matte (mm)", "Faust auf der Matte (unter 0 = Luft)", "spanne", " mm"),
+    ("Körper sonst über der Matte (mm)", "Körper sonst über der Matte", "min", " mm"),
+    ("Sohle: tiefster Punkt über der Matte (mm)", "Schuh: tiefster Punkt über der Matte", "spanne", " mm"),
+    ("Sohle L: Ferse auf der Matte (mm)", "Sohle links: Ferse auf der Matte", "spanne", " mm"),
+    ("Sohle L: Ballen auf der Matte (mm)", "Sohle links: Ballen auf der Matte", "spanne", " mm"),
+    ("Oberkörper zur Matte (Grad)", "Oberkörper zur Matte", "spanne", "°"),
+    ("Unterer Rücken auf der Matte (mm, schwächste Stelle)", "Lende auf der Matte, schwächste Stelle (unter 0 = Lücke)",
+     "spanne", " mm"),
+    ("Gesäß auf der Matte (mm)", "Gesäß auf der Matte", "spanne", " mm"),
+    ("Gesäß ohne Abflachen (mm)", "Gesäß ohne Abflachen (Gewebe gibt so weit nach)", "spanne", " mm"),
+    ("Untere Brustwirbel auf der Matte (mm, unter 0 = abgehoben)", "Untere Brustwirbel auf der Matte", "spanne", " mm"),
+    ("Schulterblätter auf der Matte (mm, unter 0 = abgehoben)", "Schulterblätter auf der Matte (unter 0 = abgehoben)",
+     "spanne", " mm"),
+    ("Schulterblätter ohne Abflachen (mm)", "Schulterblätter ohne Abflachen", "spanne", " mm"),
+    ("Hände über der Matte (mm)", "Hände über der Matte", "spanne", " mm"),
+    ("Kopf (Haare) auf der Matte (mm, unter 0 = abgehoben)", "Kopf auf der Matte (unter 0 = abgehoben)", "spanne", " mm"),
+    ("Kinn zum Brustbein (cm)", "Kinn zum Brustbein", "min", " cm"),
+    ("Matte: Auflage vom Rand (cm, mindestens)", "Auflage vom Rand der Matte", "min", " cm"),
+    ("Matte: tiefste Delle (mm)", "Matte: tiefste Delle", "max", " mm"),
+    ("Matte: Haut, Kleidung oder Schuh durch die Oberfläche (mm)", "Haut, Kleidung oder Schuh durch die Matte", "max", " mm"),
 )
 
 
@@ -164,7 +190,9 @@ def messtabelle(messwerte: Path, breite: int) -> Image.Image:
 
 # Beschriftung der Nahaufnahmen (Dateien aus `familie_bilder.py` und `render.py --pruefen`)
 GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff vom Handrücken", "aussen": "Griff von außen",
-              "oben": "Griff von oben"}
+              "oben": "Griff von oben", "unterarm_aussen": "Unterarm und Faust von außen",
+              "unterarm_vorn": "Unterarm und Faust von vorn", "ruecken_seite": "Lende und Becken von der Seite",
+              "ruecken_schraeg": "Rücken schräg vom Kopf her"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

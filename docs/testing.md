@@ -2562,3 +2562,18 @@ Prüfseite für Schrägbankdrücken und Bankdrücken mit Kurzhanteln (D-462).
 | Prüfseite (`tools/uebungen_pruef_bild.py ... --familie waagrechtes-druecken`) | `familie-waagrechtes-druecken.webp`, 230 KB, 1480 × 2898 |
 | `python3 tools/uebungen_animationsplan.py --check` | Plan passt zu den Daten (Spalte „Stand“) |
 | `pnpm format:check`, `pnpm check:docs` (D-462) | bestanden |
+
+### Phase Programme, Abschnitt 2, „Waagrechtes Drücken“ in der App · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Bahn der Hanteln nie breiter als unten, beide Schleifen in der App (D-463).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Bahn in 41 Phasen (Probe) und über alle 60 Bilder (`render.py <Übung> --pruefen --nur-messwerte`) | Griffmitten auseinander unten / Mitte / oben: flach 73,8 / 71,8 / 44,5 cm, schräg 76,3 / 74,6 / 44,5 cm; Breite nimmt mit der Phase nur zu (vorher in der Mitte bis 77,4 und 82,6 cm); Unterarm höchstens 6,8° und 9,1° zur Senkrechten, Ellbogen bis 1,8 und 3,2 cm weiter außen als unten, Handgelenk gesamt höchstens 8,6° und 10,2°; Köpfe mindestens 37,4 mm vom Körper ohne Hände, Hand 13,7 mm von den Köpfen, Sohlen 0,0 mm, keine Meldungen des Rigs |
+| Bilder in fünf Phasen, Kamera der App und von vorn | angesehen: Hanteln steigen fast senkrecht und laufen oben zusammen, nie breiter als unten |
+| Schleifen (`render.py schraegbankdruecken_kh`, `bankdruecken_kh`) | 1.791 s und 1.596 s für je 60 Bilder; Bankdrücken in zwei Teilen nach einem Neustart der Umgebung (`--fortsetzen`); schräg erstes und letztes Bild pixelgleich, flach 511 Pixel um höchstens 5 von 255 Stufen verschieden |
+| Dateigrößen | abgerufen je Übung (MP4, Poster, Vorschau) 54,2 KB und 55,7 KB |
+| Aufnahme (`tools/uebungen_bewegung.py waagrechtes-druecken …`) | `waagrechtes-druecken-bewegung.mp4`, 95 KB |
+| `pnpm build`, `pnpm check:bundle` (D-463) | bestanden; Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 20 von 20 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (16,1 min): `task-rows.spec.ts` „Zeilen ohne Überlauf, Abhakfeld und Chevron auf gleicher Höhe (390 pt)“, Abhakfeld 75,6 px neben der Mitte der Zeile; einzeln wiederholt (`--repeat-each=3`) 30 von 30 bestanden; der Test berührt nichts aus diesem Paket. Der geänderte Test der Übungsliste (fünf Vorschaubilder) bestanden |
+| `pnpm format:check`, `pnpm check:docs` (D-463) | bestanden |

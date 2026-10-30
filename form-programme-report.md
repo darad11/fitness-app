@@ -264,3 +264,63 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die beiden Schle
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite. Danach rendere ich die beiden Schleifen und baue sie ein.
+
+## 5. Freigabe „Waagrechtes Drücken“: Bahn der Hanteln und Schleifen (D-463)
+
+Deine Freigabe vom 30.10.2026 mit zwei Entscheidungen: Die Tiefe auf der Schrägbank bleibt (Griffe unten gleich nah an der Brust wie flach). Die Hanteln dürfen in der Mitte nicht weiter außen sein als unten, sondern laufen gleichmäßig von seitlich der Brust nach oben über die Schultern, nach oben leicht zusammen.
+
+### 5.1 Bahn der Hanteln
+
+Bis D-462 blieb der Unterarm auf der ganzen Bahn senkrecht. Der Ellbogen ist am weitesten vom Schultergelenk weg, wenn der Oberarm waagrecht steht; mit senkrechtem Unterarm gingen deshalb auch die Hanteln dort nach außen. Ganz oben schwenkten sie außerdem auf den letzten 1,5 cm Höhe 8 cm Richtung Kopf (auf der Prüfseite nicht zu sehen, weil sie nur Ausgang und Ende zeigt).
+
+Jetzt läuft die Bahn in zwei glatten Kurven: unten das Handgelenk vom Punkt unten (Unterarm senkrecht) bis zum Bogen mit senkrechtem Unterarm bei 45° über der Waagrechten, mit Stützpunkten, die nach oben nur enger und höher werden; darüber die Griffe bis zum Ausgang über den Schultern. Ausgang und Ende sind wie freigegeben.
+
+Seitlicher Abstand der Hanteln, Griffmitte zu Griffmitte (in Klammern innen zwischen den Köpfen):
+
+| | unten | Mitte | oben | vorher größte Breite |
+|---|---|---|---|---|
+| Bankdrücken mit Kurzhanteln | 73,8 cm (37,3) | 71,8 cm (35,3) | 44,5 cm (8,0) | 77,4 cm |
+| Schrägbankdrücken mit Kurzhanteln | 76,3 cm (39,8) | 74,6 cm (38,1) | 44,5 cm (8,0) | 82,6 cm |
+
+„Mitte“ heißt halbe Höhe der Bahn. Über alle 60 Bilder nimmt die Breite von oben nach unten nur zu, unten ist sie am größten. Eine Bahn, die nie breiter wird, gibt es nur mit leicht schrägem Unterarm: In der Mitte steht der Ellbogen etwas außerhalb der Hand.
+
+| Über alle 60 Bilder | Bankdrücken | Schrägbankdrücken |
+|---|---|---|
+| Unterarm zur Senkrechten | höchstens 6,8° (vorher 4,5°) | höchstens 9,1° (vorher 3,8°) |
+| Ellbogen weiter außen als unten | bis 1,8 cm | bis 3,2 cm |
+| Handgelenk gesamt | höchstens 8,6° | höchstens 10,2° |
+| Köpfe der Hanteln zum Körper (ohne Hände) | mindestens 37,4 mm | mindestens 37,4 mm |
+| Sohlen über dem Boden | 0,0 mm | 0,0 mm |
+| Meldungen des Rigs | 0 | 0 |
+
+Alle übrigen Werte wie auf der Prüfseite (D-462).
+
+### 5.2 Schleifen in der App
+
+Gerendert wie die Pilot-Übungen (C männlich, 720 × 540, 60 Bilder, 40 Proben), eingetragen in `public/uebungen/medien.json` mit Bildbeschreibung.
+
+| | Schrägbankdrücken | Bankdrücken |
+|---|---|---|
+| Renderzeit, 60 Bilder | 1.791 s | 1.596 s |
+| MP4 / WebM | 41,1 / 35,5 KB | 43,1 / 35,5 KB |
+| Poster / Vorschau | 8,9 / 4,1 KB | 8,5 / 4,2 KB |
+| abgerufen (MP4, Poster, Vorschau) | 54,2 KB | 55,7 KB |
+
+Nebenher liefen Proben der Beinpresse, daher die längere Zeit beim Schrägbankdrücken. Das Bankdrücken entstand in zwei Teilen: 33 Bilder vor einem Neustart der Arbeitsumgebung, 27 danach (`render.py --fortsetzen` rendert nur fehlende Bilder). Beim Schrägbankdrücken sind erstes und letztes Bild pixelgleich; beim Bankdrücken weichen 511 Pixel um höchstens 5 von 255 Stufen ab, Rauschen aus dem zweiten Prozess, nicht zu sehen. Startansicht unverändert 237,8 KB; die Liste nennt jetzt 20 Dateien, alle im Build vorhanden. Der Name der Quelle heißt nicht mehr „(Pilot)“, weil sie nun auch für andere Übungen gilt.
+
+### 5.3 Aufnahme
+
+`docs/screens/uebungen/waagrechtes-druecken-bewegung.mp4`: die beiden Schleifen der App nebeneinander, je dreimal (aus `tools/uebungen_bewegung.py`).
+
+### 5.4 Bericht zum Paket
+
+```
+Arbeitspaket: D-463 Phase Programme, Abschnitt 2: Familie „Waagrechtes Drücken“, Bahn und Schleifen in der App
+Umgesetzte Funktionen: Schleifen, Poster und Vorschaubilder für Schrägbankdrücken und Bankdrücken mit Kurzhanteln in der App; Werkzeug: Bahn der Hanteln nie breiter als unten (uebungen.py), render.py --fortsetzen, uebungen_bewegung.py; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/render.py, tools/uebungen_bewegung.py (neu), public/uebungen/medien/ (8 Dateien neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, docs/uebungen-bestand.md, docs/screens/uebungen/waagrechtes-druecken-bewegung.mp4 (neu), tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-463
+Ausgeführte Tests: Messung aller 60 Bilder beider Übungen (render.py --pruefen --nur-messwerte), Breite über die Phase geprüft, Bilder in fünf Phasen angesehen, erstes und letztes Bild verglichen; pnpm format:check, pnpm check:docs, pnpm build, pnpm check:bundle, pnpm test:e2e (Chromium); CI zum Entwurfs-PR mit WebKit
+Ergebnis: siehe 5.1, 5.2 und docs/testing.md
+Bekannte Einschränkungen: in der Mitte leicht schräger Unterarm (5.1)
+Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Kniebeuge: Beinpresse)
+```

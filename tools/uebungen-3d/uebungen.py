@@ -787,11 +787,13 @@ class BankdrueckenKH(Bankdruecken):
 
     Lage auf der Bank, Füße und Schultern wie beim Bankdrücken mit Langhantel. Je Hand eine Kurzhantel, Griff quer
     (Handflächen zu den Füßen), voller Griff mit dem Daumen über den Fingern. Ausgang: Arme fast gestreckt
-    (Ellbogen 172°), Hanteln senkrecht über den Schultergelenken, innen leicht zueinander. Abwärts bleibt der
-    Unterarm senkrecht unter dem Griff, der Oberarm zeigt `ALPHA` = 50° vom Rumpf zur Seite (in der Ebene der Bank
-    gemessen, empfohlen 45 bis 60°): Die Hanteln gehen in einem Bogen nach außen und etwas zu den Füßen und kommen
-    seitlich der Brust an. Unten steht der Oberarm `BETA_UNTEN` = 25° unter der Ebene der Bank (Ellbogen knapp unter
-    der Bank), höher nur, wenn der innere Kopf sonst näher als `LUFT` = 5 mm an Brust oder Schulter käme. Die Griffe
+    (Ellbogen 172°), Hanteln senkrecht über den Schultergelenken, innen leicht zueinander. Unten steht der Unterarm
+    senkrecht unter dem Griff, der Oberarm zeigt `ALPHA` = 50° vom Rumpf zur Seite (in der Ebene der Bank gemessen,
+    empfohlen 45 bis 60°) und `BETA_UNTEN` = 25° unter die Ebene der Bank (Ellbogen knapp unter der Bank), höher nur,
+    wenn der innere Kopf sonst näher als `LUFT` = 5 mm an Brust oder Schulter käme. Die Hanteln laufen auf einer
+    gleichmäßigen Bahn von seitlich der Brust nach oben über die Schultern, nach oben leicht zusammen und nie breiter
+    als unten (D-463, `_bahn`): Mit senkrechtem Unterarm gingen sie in der Mitte nach außen, weil der Ellbogen dort am
+    weitesten vom Schultergelenk weg ist; dafür steht der Ellbogen in der Mitte etwas außerhalb der Hand. Die Griffe
     sinken gleichmäßig; aufwärts derselbe Weg zurück."""
 
     name = "bankdruecken_kh"
@@ -802,11 +804,17 @@ class BankdrueckenKH(Bankdruecken):
     LEHNE = 0.0  # Neigung der Bank unter dem Rücken (Grad), flach
     ALPHA = 50.0  # Oberarm vom Rumpf zur Seite, in der Ebene der Bank (Grad)
     BETA_UNTEN = 25.0  # unten: Oberarm so weit unter der Ebene der Flachbank (Grad)
-    BETA_GRENZE = -70.0  # darüber ist der Arm fast gestreckt und der Ellbogen kaum bestimmt: gerade Bahn nach oben
     X_OBEN = 0.186  # oben: Mitte des Griffs neben der Mitte des Körpers (vor dem Maß der Schultern), m
     HAND = 0.075  # Mitte des Griffs über dem Handgelenk bei senkrechtem Unterarm, m
     LUFT = 0.005  # innerer Kopf mindestens so weit über dem Körper, m
     STUETZEN = 21  # Stützstellen der Bahn
+    # Bahn (D-463): unten das Handgelenk auf einer Kurve, die nach oben nur enger wird, bis zum Bogen mit senkrechtem
+    # Unterarm bei `ANSCHLUSS` (Oberarm 45° über der Waagrechten); von dort die Griffe auf einer zweiten Kurve, die in
+    # Richtung des Bogens beginnt und am Ausgang über den Schultern endet. `EINWAERTS`: Richtung am Anfang der unteren
+    # Kurve, so viel nach innen je Meter Höhe
+    ANSCHLUSS = -45.0
+    EINWAERTS = 0.04
+    PROBEN = 30
 
     def rahmen_objekte(self) -> list:
         return [*self.hanteln.values(), self.bank]
@@ -909,9 +917,47 @@ class BankdrueckenKH(Bankdruecken):
         return S + d * l1 + Z * l2
 
     def _pose_beta(self, beta: float) -> dict:
-        """Haltung mit dem Oberarm `beta` unter der Waagrechten: Ziel der Griffe so, dass das Handgelenk dort liegt
-        (der Versatz Handgelenk → Griff kommt aus dem Rig, bis auf 0,2 mm nachgeführt, immer vom selben Start)."""
-        W = {s: self._handgelenk(s, beta) for s in "LR"}
+        """Haltung mit dem Oberarm `beta` unter der Waagrechten und senkrechtem Unterarm."""
+        return self._pose_handgelenk({s: self._handgelenk(s, beta) for s in "LR"})
+
+    def _bogen(self, beta: float) -> tuple[float, float]:
+        """Handgelenk bei senkrechtem Unterarm und Oberarm `beta` unter der Waagrechten: Abstand waagrecht vom
+        Schultergelenk (in der Richtung `alpha_welt`) und Höhe über ihm."""
+        l1, l2 = self._armlaengen()
+        b = math.radians(beta)
+        return l1 * math.cos(b), l2 - l1 * math.sin(b)
+
+    def _handgelenk_rh(self, s: str, r: float, h: float) -> Vector:
+        """Handgelenk `r` waagrecht vom Schultergelenk in der Richtung `alpha_welt` und `h` über ihm."""
+        rig = self.rig
+        x = 1 if s == "L" else -1
+        S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+        a = math.radians(self.alpha_welt)
+        return S + Vector((x * math.sin(a) * r, -math.cos(a) * r, h))
+
+    def _bahn_rh(self) -> list[tuple[float, float]]:
+        """Untere Bahn des Handgelenks als (Abstand waagrecht vom Schultergelenk, Höhe über ihm), vom `ANSCHLUSS` am
+        Bogen mit senkrechtem Unterarm bis unten (D-463): kubische Kurve (Bézier) vom Punkt unten, nach oben leicht nach
+        innen (`EINWAERTS`), zum Bogen mit dessen Richtung. Ihre Stützpunkte werden nach oben nur enger und höher,
+        damit auch die Kurve: Die Hanteln werden nach oben nie breiter und rücken nie zu den Füßen."""
+        rB, hB = self._bogen(self.beta_unten)
+        rP, hP = self._bogen(self.ANSCHLUSS)
+        steigung = math.tan(math.radians(self.ANSCHLUSS))  # dr/dh am Bogen, nach oben (negativ)
+        a = (hP - hB) / 3
+        P1 = (rB - self.EINWAERTS * a, hB + a)
+        b = min((hP - hB) / 3, 0.9 * (P1[0] - rP) / abs(steigung))
+        P2 = (rP - b * steigung, hP - b)
+        bahn = []
+        for i in range(self.PROBEN + 1):
+            t = 1 - i / self.PROBEN  # 1 = Anschluss, 0 = unten
+            g = ((1 - t) ** 3, 3 * (1 - t) ** 2 * t, 3 * (1 - t) * t * t, t ** 3)
+            bahn.append((g[0] * rB + g[1] * P1[0] + g[2] * P2[0] + g[3] * rP, g[0] * hB + g[1] * P1[1] + g[2] * P2[1] + g[3] * hP))
+        return bahn
+
+    def _pose_handgelenk(self, W: dict) -> dict:
+        """Haltung mit den Handgelenken bei `W` (je Seite): Ziel der Griffe so, dass das Handgelenk dort liegt (der
+        Versatz Handgelenk → Griff kommt aus dem Rig, bis auf 0,2 mm nachgeführt, immer vom selben Start). Der
+        Ellbogen folgt der Regel „Unterarm so senkrecht wie möglich“."""
         versatz = Vector((0, 0.0, self.HAND))
         for _ in range(8):
             H = {s: W[s] + Vector((versatz.x * (1 if s == "L" else -1), versatz.y, versatz.z)) for s in "LR"}
@@ -965,9 +1011,11 @@ class BankdrueckenKH(Bankdruecken):
         rig.meldungen.clear()
 
     def _bahn(self) -> None:
-        """Bahn über den Winkel des Oberarms in der senkrechten Ebene durch die Richtung unten: je Stützstelle Mitte und
-        Breite der Griffe; die Griffe sinken gleichmäßig (Höhe linear in der Phase). Über `BETA_GRENZE` gerade zum
-        Punkt über den Schultern."""
+        """Stützstellen der Bahn (Mitte und Breite der Griffe), die Griffe sinken gleichmäßig (Höhe linear in der Phase),
+        D-463. Unten die Bahn des Handgelenks aus `_bahn_rh`; oben eine kubische Kurve der Griffe vom `ANSCHLUSS` zum
+        Ausgang über den Schultern, die in Richtung des Bogens beginnt und in Richtung der Sehne endet. Breite und Lage
+        längs werden nach oben nur kleiner. Bis D-462: Bogen mit senkrechtem Unterarm (in der Mitte breiter als unten)
+        und oben ein gerades Stück, auf dem die Hanteln auf 1,5 cm Höhe 8 cm zum Kopf schwenkten."""
         rig = self.rig
         rig.zuruecksetzen()
         self._torso()
@@ -976,24 +1024,39 @@ class BankdrueckenKH(Bankdruecken):
         self.beta_welt_unten = math.degrees(math.asin(-d.z))
         self._oben_suchen(self._schultern())
         self._unten_suchen()
-        grenze = self._pose_beta(self.BETA_GRENZE)
-        self.unten = self._pose_beta(self.beta_unten)["mitte"]
+
+        def punkt(erg: dict) -> Vector:  # Griff links als Punkt: Breite (m), Lage längs, Höhe
+            return Vector((erg["x"] * self.mass, erg["mitte"].y, erg["mitte"].z))
+
+        unten = [punkt(self._pose_handgelenk({s: self._handgelenk_rh(s, r, h) for s in "LR"})) for r, h in self._bahn_rh()]
+        G0 = unten[0]
+        ueber = punkt(self._pose_beta(self.ANSCHLUSS - 2.0))  # Richtung des Bogens über dem Anschluss
+        G3 = Vector((self.X_OBEN * self.mass, self.oben.y, self.oben.z))
+        sehne = (G3 - G0).length
+        G1 = G0 + (ueber - G0).normalized() * (sehne / 3)
+        G2 = G3 - (G3 - G0) / 3
+
+        def oben_kurve(t: float) -> Vector:
+            return (1 - t) ** 3 * G0 + 3 * (1 - t) ** 2 * t * G1 + 3 * (1 - t) * t * t * G2 + t ** 3 * G3
+
+        self.unten = Vector((0, unten[-1].y, unten[-1].z))
         self.stuetzen = []
         for i in range(self.STUETZEN):
             z = self.oben.z + (self.unten.z - self.oben.z) * i / (self.STUETZEN - 1)
-            if z >= grenze["mitte"].z:
-                t = (self.oben.z - z) / (self.oben.z - grenze["mitte"].z)
-                self.stuetzen.append((self.oben.lerp(grenze["mitte"], t), self.X_OBEN * (1 - t) + grenze["x"] * t))
-                continue
-            lo, hi = self.BETA_GRENZE, self.beta_unten
-            for _ in range(20):  # Winkel, bei dem die Griffe auf Höhe z liegen
-                beta = (lo + hi) / 2
-                if self._pose_beta(beta)["mitte"].z > z:
-                    lo = beta
-                else:
-                    hi = beta
-            r = self._pose_beta((lo + hi) / 2)
-            self.stuetzen.append((r["mitte"].copy(), r["x"]))
+            if z >= G0.z:
+                lo, hi = 0.0, 1.0
+                for _ in range(40):
+                    m = (lo + hi) / 2
+                    if oben_kurve(m).z < z:
+                        lo = m
+                    else:
+                        hi = m
+                q = oben_kurve((lo + hi) / 2)
+            else:
+                k = next((k for k in range(len(unten) - 1) if unten[k + 1].z <= z), len(unten) - 2)
+                q0, q1 = unten[k], unten[k + 1]
+                q = q0.lerp(q1, (q0.z - z) / (q0.z - q1.z) if q0.z > q1.z else 1.0)
+            self.stuetzen.append((Vector((0, q.y, z)), q.x / self.mass))
         rig.meldungen.clear()
 
     def _stuetze(self, p: float) -> tuple[Vector, float]:
@@ -1039,6 +1102,7 @@ class BankdrueckenKH(Bankdruecken):
             "Griff über Schulter (cm, y)": (B.y - self._schultern().y) * 100,
             "Griff über unten (cm)": (B.z - self.unten.z) * 100,
             "Griffe auseinander (cm)": 2 * x * self.mass * 100,
+            "Ellbogen von der Mitte (cm)": A["ellbogen"].x * 100,
             "Köpfe innen auseinander (cm)": (2 * x * self.mass - geraete.KH["laenge"]) * 100,
         }
 

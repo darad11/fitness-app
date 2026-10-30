@@ -65,14 +65,19 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Pilot-Übungen mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
-  const dumbbells = row(page, 'Bankdrücken mit Kurzhanteln');
-  await expect(dumbbells.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für drei Übungen (Pilot 3D, D-402).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(3);
+  const smith = row(page, 'Bankdrücken an der Multipresse');
+  await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
+  // Ausgeliefert sind Animationen für fünf Übungen: die drei Pilot-Übungen (D-402) und die Familie
+  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(5);
+  await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
+    'src',
+    '/uebungen/medien/bankdruecken_kh-vorschau.webp',
+  );
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
   await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');

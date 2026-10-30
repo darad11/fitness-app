@@ -260,6 +260,8 @@ def main() -> None:
     ap.add_argument("--hoehe", type=int, default=540)
     ap.add_argument("--proben", type=int, default=40)
     ap.add_argument("--nur-bilder", action="store_true")
+    ap.add_argument("--fortsetzen", action="store_true",
+                    help="vorhandene, lesbare Einzelbilder der Schleife behalten und nur die fehlenden rendern (D-463)")
     ap.add_argument("--nur-vorschau", action="store_true", help="nur das Vorschaubild (D-415)")
     ap.add_argument("--vorschau-phase", type=float, help="Phase des Vorschaubilds statt der Vorgabe der Übung")
     ap.add_argument("--ziel", default=str(HIER.parent.parent / "public/uebungen/medien"))
@@ -283,14 +285,32 @@ def main() -> None:
         o.hide_render = o.name.startswith(AUSBLENDEN.get(args.ansicht, ()))
     kamera(u, punkte, args.ansicht, args.breite, args.hoehe)
     start = time.time()
+    gerendert = 0
     for bild in range(BILDER):
+        datei = arbeit / f"{args.ansicht}-{bild:03d}.png"
+        if args.fortsetzen and _lesbar(datei):
+            continue
         u.setzen(ablauf(bild, BILDER))
-        s.render.filepath = str(arbeit / f"{args.ansicht}-{bild:03d}.png")
+        s.render.filepath = str(datei)
         bpy.ops.render.render(write_still=True)
-    print(f"Renderzeit {args.uebung} ({args.ansicht}): {time.time() - start:.0f} s für {BILDER} Bilder")
+        gerendert += 1
+    print(f"Renderzeit {args.uebung} ({args.ansicht}): {time.time() - start:.0f} s für {gerendert} Bilder")
     if not args.nur_bilder:
         kodiere(arbeit, Path(args.ziel), name, args.ansicht)
         vorschau(u, s, arbeit, Path(args.ziel), name, args.vorschau_phase)
+
+
+def _lesbar(datei: Path) -> bool:
+    """Einzelbild vorhanden und vollständig (nach einem Abbruch kann das letzte Bild halb geschrieben sein)."""
+    if not datei.exists() or datei.stat().st_size < 1000:
+        return False
+    bild = bpy.data.images.load(str(datei), check_existing=False)
+    try:
+        return bild.size[0] > 0 and len(bild.pixels) > 0
+    except RuntimeError:
+        return False
+    finally:
+        bpy.data.images.remove(bild)
 
 
 def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:

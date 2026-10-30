@@ -83,6 +83,7 @@ MESSWERTE = (
     ("Köpfe innen auseinander (cm)", "Köpfe innen auseinander", "spanne", " cm"),
     ("Kniewinkel (Grad)", "Knie", "spanne", "°"),
     ("Hüftwinkel (Grad)", "Hüfte (Oberschenkel zum Rumpf)", "spanne", "°"),
+    ("Hüftgelenk gebeugt (Grad, gegenüber dem Stand)", "Hüftgelenk gebeugt (zum Becken)", "spanne", "°"),
     ("Sprunggelenk gebeugt (Grad)", "Sprunggelenk gebeugt", "spanne", "°"),
     ("Knie neben der Fußachse (cm, + außen)", "Knie neben der Fußachse (+ außen)", "spanne", " cm"),
     ("Schlitten: Weg von oben (cm)", "Weg des Schlittens", "max", " cm"),
@@ -97,8 +98,18 @@ MESSWERTE = (
     ("Kragen: Innenseite über der Socke (mm)", "Kragen über der Socke", "min", " mm"),
     ("Polster: kleinster Abstand über der Socke (mm)", "Kragenpolster über der Socke", "min", " mm"),
     ("Shorts: kleinster Abstand F zum Streifen (cm)", "Shorts-F zum Streifen", "min", " cm"),
-    ("Bank: Rumpf im Polster (mm)", "Rücken und Gesäß im Polster (Ziel 4 mm)", "max", " mm"),
+    ("Bank: Rumpf im Polster (mm)", "Rumpf im Polster, tiefste Stelle", "max", " mm"),
     ("Bank: Oberschenkel über dem Polster (mm)", "Oberschenkel über dem Polster", "min", " mm"),
+    ("Gesäß im Sitz (mm)", "Gesäß im Sitz (unter 0 = abgehoben)", "spanne", " mm"),
+    ("Unterer Rücken im Polster (mm, schwächste Stelle)", "Lende an der Lehne, schwächste Stelle (unter 0 = Lücke)",
+     "spanne", " mm"),
+    ("Kreuzbein im Polster (mm)", "Kreuzbein im Polster (Polster gibt nach)", "spanne", " mm"),
+    ("Oberer Rücken im Polster (mm)", "Oberer Rücken im Polster", "spanne", " mm"),
+    ("Kopf (Haare) in der Lehne (mm)", "Kopf an der Lehne (unter 0 = Luft)", "spanne", " mm"),
+    ("Becken verschoben (mm)", "Becken verschoben", "max", " mm"),
+    ("Becken gedreht (Grad)", "Becken gedreht (Einrollen)", "max", "°"),
+    ("Polster: tiefste Delle (mm)", "Polster: tiefste Delle", "spanne", " mm"),
+    ("Polster: Haut oder Kleidung durch die Oberfläche (mm)", "Haut oder Kleidung durch das Polster", "max", " mm"),
 )
 
 

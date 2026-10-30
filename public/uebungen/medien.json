@@ -68,6 +68,17 @@
       },
       "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Handgelenke gerade, Oberschenkel unter dem Polster.",
       "source": "form_3d_pilot"
+    },
+    "leg_press": {
+      "preview": { "src": "medien/beinpresse-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/beinpresse.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/beinpresse.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/beinpresse-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Beinpresse 45°, schräg von der Seite: Platte von fast gestreckten Beinen bis Knie 95° heran und zurück, Rücken und Gesäß bleiben an Lehne und Sitz, Füße flach auf der Platte, Knie über den Zehen.",
+      "source": "form_3d_pilot"
     }
   }
 }

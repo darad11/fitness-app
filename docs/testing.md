@@ -2590,3 +2590,23 @@ Prüfseite der Beinpresse (D-464).
 | Maße des Geräts im Modell | 179 × 150 × 149 cm (Schlitten oben); Vorbilder 241 × 165 × 145 und 244 × 145 × 145 cm |
 | Prüfseite (`tools/uebungen_pruef_bild.py beinpresse --familie kniebeuge …`) | `familie-kniebeuge.webp`, angesehen: Füße flach auf der Platte, Knie über den Zehen, Rücken an der Lehne, Hände an den Griffen |
 | `pnpm format:check`, `pnpm check:docs` (D-464) | bestanden |
+
+### Phase Programme, Abschnitt 2, Beinpresse in der App · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Sitz und Lehne korrigiert, Schleife der Beinpresse in der App (D-465).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Neue Messwerte am Stand D-464 (`render.py beinpresse --pruefen --nur-messwerte`, alle 60 Bilder) | Gesäß 56,6 bis 60,0 mm über dem Sitz, Lende 15,4 mm vor der Lehne (an der tiefsten Stelle 31 mm), Kopf 22 mm über der Lehne; Becken verschoben 0,0 mm, gedreht 0,0° |
+| Haltung gesucht: Lende flacher (0 bis 40°), Rumpf zur Lehne gedreht (0 bis 12°), oberer Brustkorb gestreckt (0 bis 10°), drei Verteilungen auf die Lendenwirbel; Kopf zurück (0, 12, 18°) | gewählt Lende 25°, Rumpf 9°, Brustkorb 10°, Kopf 14°: Lende in jedem Streifen an der Lehne, Schultern wie vorher |
+| Gesäß mit gebeugten Beinen auf den Sitz | zuerst sprang die Lage zwischen zwei Werten (Punkt an der Kante des Sitzes); mit gerundeter Oberfläche gemessen stetig, Gesäß unten 4,0 mm |
+| Polster geben nach, Prüfung je Bild | erste Fassung (dichter Kasten) verlor die Rundung der Kanten und ließ an der Kante eine Lippe stehen (bis 12,9 mm); neu vernetzt (Würfel 6 mm) mit mitsinkenden Seitenwänden. Dann gab das Polster nur unter der Haut nach (Kleidung entsteht erst nach dem Aufbau), Shirt bis 4,2 mm durch; behoben, dazu ein zweiter Weg für schmale Grate: 0,0 mm |
+| `render.py beinpresse --pruefen --nur-messwerte` (alle 60 Bilder, Endstand) | Gesäß im Sitz 4,0 bis 18,4 mm; Lende schwächste Stelle 2,0 bis 2,2 mm; Kreuzbein 19,3 bis 25,7 mm, oberer Rücken 7,0 mm, Kopf 2,1 mm im Polster; Becken verschoben 0,0 mm, gedreht 0,0°; tiefste Delle 36,8 bis 44,5 mm; Haut oder Kleidung durch das Polster 0,0 mm; Hüftgelenk zum Becken 68 bis 107°; Knie, Sprunggelenk, Sohle und Finger wie D-464; Handgelenk 1,9°; keine Meldungen des Rigs |
+| Standbilder Ausgang und Ende, Seite und schräg, Polster ohne Figur | angesehen: Rücken und Gesäß an Lehne und Sitz, Kopf an der Lehne, Dellen weich, Kanten gerundet |
+| `render.py beinpresse` (60 Bilder, 720 × 540, 40 Proben, ein Prozess auf vier CPU-Kernen) | 2.960 s (nebenher liefen Prüfansichten); MP4 64,1 KB, WebM 54,7 KB, Poster 14,6 KB, Vorschau 6,6 KB; abgerufen 85,3 KB (mit WebM 76,0 KB); erstes und letztes Bild pixelgleich |
+| `tools/uebungen_bewegung.py beinpresse beinpresse` | `beinpresse-bewegung.mp4`, 131 KB, 720 × 540, 7,5 s (dreimal die Schleife) |
+| Prüfseite neu (`render.py beinpresse --pruefen`, `familie_bilder.py beinpresse`, `uebungen_pruef_bild.py beinpresse --familie kniebeuge …`) | 840 s und 225 s (nebenher lief die Schleife); angesehen: neue Werte für Gesäß, Lende, Kreuzbein, Kopf, Becken und Polster |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | fünf Läufe, alle unter Last (Blender-Prozesse nebenher): einmal 2 Tests in 1 Datei fehlgeschlagen, die Namen sind nicht festgehalten (die Ausgabe war gekürzt); die übrigen bestanden, zuletzt zweimal 135 Dateien, 1.209 Tests |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 24 von 24 im Build |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (18,6 min, nebenher liefen Blender-Prozesse): `start-surface.spec.ts` „Startfläche beim schnellen Start …“, „Heute“ stand erst 1.195 ms nach dem ersten Bild statt vor 1.121 ms; einzeln fünfmal wiederholt bestanden. Der Test zu den Aufgabenzeilen (360, 390 und 768 pt) bestanden; der geänderte Test der Übungsliste (sechs Vorschaubilder, Beinpresse) bestanden |

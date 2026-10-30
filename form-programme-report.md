@@ -391,4 +391,86 @@ Bekannte Einschränkungen: 6.5
 Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife rendern und einbauen, dann die nächste Familie
 ```
 
-**Halt:** Ich warte auf deine Freigabe der Prüfseite „Kniebeuge (Beinpresse)“.
+## 7. Freigabe „Kniebeuge (Beinpresse)“: Sitz und Lehne, Schleife in der App (D-465)
+
+Deine Freigabe vom 30.10.2026: Füße 10 cm höher, Lehne 30°, Knie unten 95° bleiben. Vor dem Rendern solltest du prüfen lassen, ob Gesäß und unterer Rücken in jeder Phase an Sitz und Lehne bleiben und ob sich das Becken unten weder abhebt noch einrollt.
+
+### 7.1 Befund
+
+Die Messung zeigte einen Fehler der Prüfseite:
+
+- Das Gesäß schwebte 57 bis 60 mm über dem Sitz.
+- Die Lende lag 15 bis 31 mm vor der Lehne. Nur der obere Rücken lag an.
+- Der Kopf lag 2,2 cm über der Lehne. Auf der Prüfseite stand „Kopf an der Lehne“; gemessen hatte ich das nicht.
+
+Der Wert „Rücken und Gesäß 5,1 mm im Polster“ war die tiefste Stelle beider Polster zusammen und zeigte nur den oberen Rücken. Ursachen:
+
+- Ich hatte das Gesäß mit gestreckten Beinen auf den Sitz gesetzt. Mit gebeugter Hüfte liegt die Haut unter dem Becken anders.
+- Der Rumpf hatte die Form des Stehens, mit Hohlkreuz. Auf einer flachen Lehne bleibt die Lende so frei.
+
+### 7.2 Korrektur
+
+- **Haltung im Sitzen**, in der ganzen Schleife gleich: Lende 25° flacher als im Stand, wie beim Sitzen üblich. Das Becken kippt dafür gegenüber dem Brustkorb nach hinten; Brustkorb und Schultern liegen wie vorher an der Lehne. Das Hüftgelenk beugt sich so gegenüber dem Becken höchstens 107°; mit dem Becken wie im Stand waren es rund 117° (180° − 62,6°).
+- **Kopf** zurück an die Lehne, der Blick bleibt gleich (Hals 14° gestreckt, Kopf 14° gebeugt).
+- **Lage:** Die Lende liegt an jeder Stelle 2 mm im Polster. Das Gesäß setze ich jetzt mit den gebeugten Beinen von fünf Phasen auf den Sitz.
+- **Polster geben nach:** Sitz und Lehne geben unter Haut, Shirt, Shorts und Haaren nach wie Schaumstoff. Wo Kreuzbein und Brustkorb tiefer einsinken, zeigt das Polster eine weiche Delle statt einer Durchdringung.
+
+### 7.3 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Gesäß im Sitz | 4,0 mm (unten) bis 18,4 mm (oben) |
+| Lende an der Lehne, schwächste Stelle | 2,0 bis 2,2 mm im Polster |
+| Becken verschoben / gedreht | 0,0 mm / 0,0° |
+| Kreuzbein / oberer Rücken / Kopf im Polster | 19,3 bis 25,7 / 7,0 / 2,1 mm |
+| tiefste Delle im Polster | 36,8 bis 44,5 mm (unter dem Shirt am Kreuzbein) |
+| Haut oder Kleidung durch das Polster | 0,0 mm |
+| Hüftgelenk gebeugt (zum Becken) | 68 bis 107° |
+| Hüfte (Oberschenkel zum Rumpf) | 59,4 bis 96,4° |
+| Knie / Sprunggelenk gebeugt | 95 bis 165° / bis 31,3° |
+| Knie neben der Fußachse (+ außen) | −0,8 bis +0,2 cm |
+| Sohle auf der Platte / Füße verschoben | 0,0 mm / 0,1 mm |
+| Handgelenk gesamt | 1,9° |
+| Meldungen des Rigs | 0 |
+
+„Lende“ heißt 12 bis 26 cm über den Hüftgelenken, in Streifen zu 2 cm; gezählt ist der Streifen mit dem geringsten Wert. Unter 0 hieße dort eine Lücke. Das Gesäß sinkt unten weniger tief ein, weil die Haut der Gesäßfalte mit dem Oberschenkel mitgeht; das Becken selbst bleibt fest. Am Kreuzbein steht der Saum des Shirts im Sitzen bis 2 cm ab; dort gibt das Polster bis 44,5 mm nach, in der Ecke zwischen Sitz und Lehne.
+
+Gefunden beim Prüfen: Zuerst gab das Polster nur unter der Haut nach, weil Shirt und Shorts erst nach dem Aufbau der Übung entstehen; das Shirt ragte dann bis 4,2 mm durch. Behoben, bevor die Schleife gerendert wurde.
+
+### 7.4 Schleife in der App
+
+Gerendert wie die übrigen Schleifen (C männlich, 720 × 540, 60 Bilder, 40 Proben) und in `public/uebungen/medien.json` eingetragen, mit Bildbeschreibung.
+
+| | Beinpresse |
+|---|---|
+| Renderzeit, 60 Bilder | 2.960 s |
+| MP4 / WebM | 64,1 / 54,7 KB |
+| Poster / Vorschau | 14,6 / 6,6 KB |
+| abgerufen (MP4, Poster, Vorschau) | 85,3 KB (mit WebM 76,0 KB) |
+
+Die Renderzeit ist länger als geschätzt (rund 25 min), weil nebenher die Prüfansichten der Beinpresse und der nächsten Familie liefen. Mit 85,3 KB liegt die Beinpresse an der Grenze von rund 85 KB je Übung: Das große Gerät macht Poster und Vorschau größer als bei den Hanteln. Erstes und letztes Bild der Schleife sind pixelgleich. Startansicht unverändert 237,8 KB; die Liste nennt jetzt 24 Dateien, alle im Build vorhanden.
+
+### 7.5 Aufnahme
+
+`docs/screens/uebungen/beinpresse-bewegung.mp4`: die Schleife der App, dreimal (aus `tools/uebungen_bewegung.py`).
+
+**Test zu den Aufgabenzeilen:** Diesmal bestanden (360, 390 und 768 pt). Vermutete Ursache des Ausfalls vom letzten Mal: Der Test misst Abhakfeld, Zeile und Pfeil nacheinander. Auf „Heute“ laden die Karten über den Aufgaben nach (Ernährung, Wasser, Schritte); kommt eine davon zwischen zwei Messungen dazu, rutscht die Zeile nach unten. Die 75,6 px Versatz von damals passen dazu. Fällt er wieder aus, messe ich alle drei Lagen in einem Schritt.
+
+**Weitere Tests:** Einmal fiel ein Zeittest der Startfläche aus („Heute“ nach 1.195 ms statt vor 1.121 ms), während nebenher Blender rechnete; einzeln fünfmal bestanden.
+
+### 7.6 Prüfseite
+
+`docs/screens/uebungen/familie-kniebeuge.webp` neu mit der korrigierten Haltung und den neuen Werten (Gesäß, Lende, Kreuzbein, Kopf, Becken, Polster).
+
+### 7.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-465 Phase Programme, Abschnitt 2: Beinpresse, Sitz und Lehne korrigiert, Schleife in der App
+Umgesetzte Funktionen: Schleife, Poster und Vorschaubild der Beinpresse in der App; Werkzeug: Haltung im Sitzen (Lende, Kopf), Lage an Lehne und Sitz mit gebeugten Beinen, Polster geben nach (geraete.weiches_polster, geraete.eindruecken), neue Messwerte; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/geraete.py, tools/uebungen_pruef_bild.py, tools/uebungen_bewegung.py, public/uebungen/medien/ (4 Dateien neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, docs/uebungen-bestand.md, docs/screens/uebungen/beinpresse-bewegung.mp4 (neu), docs/screens/uebungen/familie-kniebeuge.webp, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-465
+Ausgeführte Tests: Messung aller 60 Bilder (render.py beinpresse --pruefen --nur-messwerte), Suche der Haltung, Standbilder und Polster ohne Figur angesehen, Schleife gerendert, erstes und letztes Bild verglichen, Prüfseite neu; pnpm format:check, pnpm lint, pnpm typecheck, pnpm test, pnpm check:docs, pnpm build, pnpm check:bundle, pnpm test:e2e (Chromium; ein Zeittest unter Last fehlgeschlagen, einzeln bestanden); CI zum Entwurfs-PR mit WebKit
+Ergebnis: siehe 7.3 und 7.4
+Bekannte Einschränkungen: Gesäß sinkt unten weniger tief ein als oben (Haut der Gesäßfalte); Shirt am Kreuzbein steht im Sitzen ab (7.3)
+Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Rumpf)
+```

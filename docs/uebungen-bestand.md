@@ -150,7 +150,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 90 | Frontkniebeuge mit Langhantel | Front Squat | Langhantel | Oberschenkel vorne | Gesäß, Bauch | – | fehlt | fertig (exrx.net) | – | `front_squat_barbell` · `f45fc053-9ec2-54f6-853d-b20cec1334ee` |
 | 91 | Goblet Squat | Goblet Squat | Kurzhantel, Kettlebell | Oberschenkel vorne, Gesäß | Bauch | – | fehlt | fertig (exrx.net) | Ablauf aus der Seite zur Kniebeuge mit Kurzhanteln, weil die Seite zum Goblet Squat keinen Ablauf beschreibt. | `goblet_squat` · `e778ec94-4ff0-5f6b-9111-9cad5724cb61` |
 | 92 | Kniebeuge an der Multipresse | Smith Machine Squat | Multipresse | Oberschenkel vorne, Gesäß | – | Kniebeuge mit Langhantel | fehlt | fertig (exrx.net) | Hinweis zum Einhängen der Stange aus der Beschreibung des Aushakens abgeleitet. | `squat_smith` · `8d07eac8-b5e2-5d91-b670-253ff1af2c37` |
-| 93 | Beinpresse | Leg Press | Maschine | Oberschenkel vorne, Gesäß | Oberschenkel hinten | Beinpresse, einbeinig | fehlt | fertig (exrx.net) | Quelle beschreibt die 45-Grad-Beinpresse; der Hinweis zum Ablegen der Sicherung stammt von der einbeinigen Variante. | `leg_press` · `5f06b716-93ce-5b12-adf2-e80792c48503` |
+| 93 | Beinpresse | Leg Press | Maschine | Oberschenkel vorne, Gesäß | Oberschenkel hinten | Beinpresse, einbeinig | vorhanden | fertig (exrx.net) | Quelle beschreibt die 45-Grad-Beinpresse; der Hinweis zum Ablegen der Sicherung stammt von der einbeinigen Variante. | `leg_press` · `5f06b716-93ce-5b12-adf2-e80792c48503` |
 | 94 | Hackenschmidt-Kniebeuge | Hack Squat | Maschine | Oberschenkel vorne | Gesäß | – | fehlt | fertig (exrx.net) | – | `hack_squat` · `62a9f45c-b5a4-5dec-b773-0b8781ee4a10` |
 | 95 | Bulgarische Kniebeuge mit Kurzhanteln | Bulgarian Split Squat | Kurzhantel, Bank | Oberschenkel vorne, Gesäß | Oberschenkel hinten | – | fehlt | fertig (exrx.net) | – | `bulgarian_split_squat_dumbbell` · `7d604fd8-b795-53b4-b4e6-b089d07e98a0` |
 | 96 | Ausfallschritte mit Kurzhanteln | Dumbbell Lunge | Kurzhantel | Oberschenkel vorne, Gesäß | Oberschenkel hinten | – | fehlt | fertig (exrx.net) | – | `lunge_dumbbell` · `22ab398c-7994-500f-b17a-45b482c2d086` |
@@ -198,4 +198,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 123 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 124 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 124 Übungen · mit Visual 5 · ohne Visual 119 · Ausführung fertig 122 · offen 2
+Summe: 124 Übungen · mit Visual 6 · ohne Visual 118 · Ausführung fertig 122 · offen 2

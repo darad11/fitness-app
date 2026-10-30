@@ -62,6 +62,157 @@ def _kasten(name: str, groesse: tuple[float, float, float], ort: Vector, mat, ru
     return obj
 
 
+def weiches_polster(obj: bpy.types.Object, raster: float = 0.006) -> tuple[list[Vector], list[Vector]]:
+    """Polster als gleichmäßig feines Netz (D-465), damit `eindruecken` die Oberfläche unter dem Körper absenken kann:
+    erst gerundet wie zuvor, dann mit Würfeln von `raster` neu vernetzt, auch in den Rundungen; die Modifikatoren
+    werden angewandt. Gibt Punkte und Normalen des Netzes in Ruhe zurück (Raum des Polsters)."""
+    neu = obj.modifiers.new("Raster", "REMESH")
+    neu.mode = "VOXEL"
+    neu.voxel_size = raster
+    dg = bpy.context.evaluated_depsgraph_get()
+    netz = bpy.data.meshes.new_from_object(obj.evaluated_get(dg))
+    obj.modifiers.clear()
+    obj.data = netz
+    for f in netz.polygons:
+        f.use_smooth = True
+    return [v.co.copy() for v in netz.vertices], [v.normal.copy() for v in netz.vertices]
+
+
+def eindruecken(polster: list, ruhe: dict, auflage: list, glaetten: int = 4, wand: tuple[float, float] = (0.02, 0.07),
+                radius: float = 0.01) -> float:
+    """Polster unter dem Körper eindrücken (D-465), wie Schaumstoff unter Last: Für jeden Punkt der Oberseite und
+    der oberen Rundung wird von unten längs der Normalen des Polsters gemessen; liegt die erste Oberfläche von Haut
+    oder Kleidung (`auflage`) tiefer als der Punkt, sinkt er bis dorthin. Danach `glaetten` Schritte, in denen jeder
+    Punkt auf das Mittel seiner Nachbarn sinkt, nie aber weniger tief als der Körper verlangt: So läuft die Delle
+    weich aus, und kein Punkt bleibt im Körper. `ruhe`: Punkte und Normalen jedes Polsters in Ruhe (Raum des
+    Polsters). `wand`: Die Seitenwände sinken bis `wand[0]` unter der Oberseite ganz mit, bis `wand[1]` immer
+    weniger. `radius`: Umkreis, in dem ein Punkt von Haut oder Kleidung das
+    Polster mitnimmt (etwas mehr als das Raster). Gibt die tiefste Delle zurück (m)."""
+    from mathutils.bvhtree import BVHTree
+    from mathutils.kdtree import KDTree
+
+    dg = bpy.context.evaluated_depsgraph_get()
+    baeume, alle = [], []
+    for obj in auflage:
+        oe = obj.evaluated_get(dg)
+        me = oe.to_mesh()
+        M = oe.matrix_world
+        me.calc_loop_triangles()
+        welt = [M @ v.co for v in me.vertices]
+        alle += welt
+        baeume.append(BVHTree.FromPolygons(welt, [tuple(t.vertices) for t in me.loop_triangles]))
+        oe.to_mesh_clear()
+    tiefste = 0.0
+    for obj in polster:
+        me = obj.data
+        punkte, normalen = ruhe[obj.name]
+        M = obj.matrix_world
+        n = (M.to_3x3() @ Vector((0, 0, 1))).normalized()
+        # Nur wo Haut oder Kleidung bis 1 cm an die Oberseite kommt (mit Rand für das Glätten): gleiches Ergebnis,
+        # weniger Strahlen
+        Mi = M.inverted()
+        oben = max(p.z for p in punkte)
+        nah = [q for q in (Mi @ w for w in alle) if q.z < oben + 0.01]
+        if not nah:
+            me.vertices.foreach_set("co", [c for p in punkte for c in p])
+            me.update()
+            continue
+        x0, x1 = min(q.x for q in nah) - 0.05, max(q.x for q in nah) + 0.05
+        y0, y1 = min(q.y for q in nah) - 0.05, max(q.y for q in nah) + 0.05
+        zone = [i for i, nv in enumerate(normalen) if nv.z > 0.2 and x0 <= punkte[i].x <= x1 and y0 <= punkte[i].y <= y1]
+        tief = {}
+        for i in zone:
+            start = M @ punkte[i] - n * 0.10
+            beste = None
+            for b in baeume:
+                treffer = b.ray_cast(start, n, 0.10)
+                if treffer[0] is not None and (beste is None or treffer[3] < beste):
+                    beste = treffer[3]
+            tief[i] = 0.10 - beste if beste is not None else 0.0
+        # Zweiter Weg: jeder Punkt von Haut oder Kleidung über der Fläche und unter der Oberseite drückt die Punkte des
+        # Polsters im Umkreis `radius` mindestens bis auf seine Höhe (schmale Grate wie eine Naht fallen sonst
+        # zwischen zwei Strahlen durch)
+        if zone:
+            kd_zone = KDTree(len(zone))
+            for k, i in enumerate(zone):
+                kd_zone.insert(Vector((punkte[i].x, punkte[i].y, 0.0)), k)
+            kd_zone.balance()
+            lo = Vector((min(p.x for p in punkte), min(p.y for p in punkte), min(p.z for p in punkte)))
+            hi = Vector((max(p.x for p in punkte), max(p.y for p in punkte), oben))
+            for q in nah:
+                if not (lo.x <= q.x <= hi.x and lo.y <= q.y <= hi.y and lo.z <= q.z < hi.z):
+                    continue
+                for _, k, _ in kd_zone.find_range(Vector((q.x, q.y, 0.0)), radius):
+                    i = zone[k]
+                    if punkte[i].z - q.z > tief[i]:
+                        tief[i] = punkte[i].z - q.z
+        roh = dict(tief)
+        nachbarn = {i: [] for i in zone}
+        for e in me.edges:
+            a, b = e.vertices
+            if a in nachbarn and b in nachbarn:
+                nachbarn[a].append(b)
+                nachbarn[b].append(a)
+        for _ in range(glaetten):
+            tief = {i: max(roh[i], sum(tief[j] for j in nb) / len(nb)) if nb else roh[i] for i, nb in nachbarn.items()}
+        co = [c for p in punkte for c in p]
+        for i, d in tief.items():
+            co[3 * i + 2] = punkte[i].z - d
+            tiefste = max(tiefste, d)
+        # Seitenwände sinken unter einer Delle am Rand mit, oben ganz, `wand[1]` unter der Oberseite nicht mehr: So
+        # bleibt an der Kante keine Lippe stehen, und die Wand faltet sich nicht (Delle kleiner als wand[1] − wand[0])
+        if tiefste > 0 and zone:
+            kd = KDTree(len(zone))
+            for k, i in enumerate(zone):
+                kd.insert(Vector((punkte[i].x, punkte[i].y, 0.0)), k)
+            kd.balance()
+            for i, nv in enumerate(normalen):
+                if nv.z > 0.2:
+                    continue
+                gewicht = min(max((punkte[i].z - (oben - wand[1])) / (wand[1] - wand[0]), 0.0), 1.0)
+                if gewicht <= 0.0:
+                    continue
+                d = tief[zone[kd.find(Vector((punkte[i].x, punkte[i].y, 0.0)))[1]]] * gewicht
+                if d > 0.0:
+                    co[3 * i + 2] = punkte[i].z - d
+        me.vertices.foreach_set("co", co)
+        me.update()
+    return tiefste
+
+
+def durch_polster(polster: list, auflage: list) -> float:
+    """Wie weit Haut oder Kleidung (`auflage`) noch durch die eingedrückte Oberfläche der Polster ragen (m, 0 =
+    nirgends): je Punkt über der Fläche eines Polsters von oben längs der Normalen bis zur Oberfläche gemessen."""
+    from mathutils.bvhtree import BVHTree
+
+    dg = bpy.context.evaluated_depsgraph_get()
+    punkte = []
+    for obj in auflage:
+        oe = obj.evaluated_get(dg)
+        me = oe.to_mesh()
+        M = oe.matrix_world
+        punkte += [M @ v.co for v in me.vertices]
+        oe.to_mesh_clear()
+    schlimmste = 0.0
+    for obj in polster:
+        me = obj.data
+        M = obj.matrix_world
+        baum = BVHTree.FromPolygons([M @ v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
+        Mi = M.inverted()
+        n = (M.to_3x3() @ Vector((0, 0, 1))).normalized()
+        bb = [Vector(c) for c in obj.bound_box]
+        lo = Vector((min(c.x for c in bb), min(c.y for c in bb), min(c.z for c in bb)))
+        hi = Vector((max(c.x for c in bb), max(c.y for c in bb), max(c.z for c in bb)))
+        for q in punkte:
+            ql = Mi @ q
+            if not (lo.x <= ql.x <= hi.x and lo.y <= ql.y <= hi.y and hi.z - 0.06 <= ql.z <= hi.z + 0.005):
+                continue
+            treffer = baum.ray_cast(q + n * 0.08, -n, 0.16)
+            if treffer[0] is not None:
+                schlimmste = max(schlimmste, (treffer[0] - q).dot(n))
+    return schlimmste
+
+
 def langhantel(scheiben: list[tuple[float, float]]) -> bpy.types.Object:
     """Stange entlang x, Mitte im Ursprung des zurückgegebenen Leerobjekts.
 
@@ -220,7 +371,7 @@ def schraegbank(lehne: float, sitz: float = 0.0) -> bpy.types.Object:
 # Beinpresse 45° (D-464), Maße nach Herstellerangaben: Grundfläche wie Hammer Strength Linear Leg Press (241 × 165 ×
 # 145 cm) und Precor DPL0601 (244 × 145 × 145 cm), Fußplatte wie Bodykore G277 (28,35 × 19,92 Zoll, 72 × 50 cm),
 # Schlitten auf Schienen unter 45°, Lehne verstellbar (Benchfit Exceed ISO: 30 bis 50°)
-BEINPRESSE = {"platte": (0.72, 0.50, 0.03), "schiene": 45.0, "polster_breite": 0.38, "polster_dicke": 0.07,
+BEINPRESSE = {"platte": (0.72, 0.50, 0.03), "schiene": 45.0, "polster_breite": 0.38, "polster_dicke": 0.07, "polster_rund": 0.025,
               "sitz": 0.40, "lehne": 0.85, "schienen_abstand": 0.56, "griff": (0.016, 0.30)}
 
 
@@ -279,9 +430,9 @@ def beinpresse(ecke: Vector, lehne: float, sitz: float, platte: Vector, weg: tup
     R_lehne = Matrix((X, d_lehne, n_lehne)).transposed()
     R_sitz = Matrix((X, d_sitz, n_sitz)).transposed()
     lehne_obj = _quader("Lehne", (breite, b["lehne"], dicke), ecke + d_lehne * (b["lehne"] / 2 + 0.01) - n_lehne * (dicke / 2),
-                        R_lehne, polster, 0.025, wurzel)
+                        R_lehne, polster, b["polster_rund"], wurzel)
     sitz_obj = _quader("Sitz", (breite, b["sitz"], dicke), ecke + d_sitz * (b["sitz"] / 2 + 0.01) - n_sitz * (dicke / 2),
-                       R_sitz, polster, 0.025, wurzel)
+                       R_sitz, polster, b["polster_rund"], wurzel)
     for teil, R, laenge, rich, n in (("Lehne", R_lehne, b["lehne"], d_lehne, n_lehne), ("Sitz", R_sitz, b["sitz"], d_sitz, n_sitz)):
         _quader(f"{teil}Platte", (0.12, laenge - 0.06, 0.02), ecke + rich * (laenge / 2 + 0.01) - n * (dicke + 0.01), R, rahmen,
                 0.004, wurzel)

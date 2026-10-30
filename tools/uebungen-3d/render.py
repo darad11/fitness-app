@@ -64,6 +64,8 @@ ANSICHTEN = {"vorn": (0.0, 5.0), "seite": (90.0, 5.0)}
 # Schleife für die App zeigt alle Geräteteile): Hantelscheiben verdecken von der Seite den Oberkörper,
 # Säule und Gewichtsblock des Latzugs von vorn den Rumpf.
 AUSBLENDEN = {"vorn": ("Saeule", "Gewichtsblock"), "seite": ("Scheibe", "Verschluss")}
+# Linker Fuß aus der Nähe (D-451): Richtung und Höhe der Kamera; eine Übung kann eigene nennen (`fuss_ansichten`)
+FUSS_ANSICHTEN = ((90, 0.08), (0, 0.12), (180, 0.10), (270, 0.08))
 
 
 def hole() -> None:
@@ -137,14 +139,21 @@ def messen(uebung) -> dict:
         erg["Finger: geringster Abstand zur Stange (mm, negativ = eingedrungen)"] = min(abst) * 1000
         erg["Finger: Punkte in Kontakt (≤ 3 mm)"] = sum(1 for a in abst if a <= 0.003)
     o = bpy.data.objects
+    ebene = uebung.sohle_ebene() if hasattr(uebung, "sohle_ebene") else None
     if "Sohle" in o:
-        if fusspunkte:
-            erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
-        erg.update(schuhe.bodenkontakt(o["Sohle"], o["Schuhe"]))
+        if ebene is not None:  # Füße auf einer Platte (D-464): Kontakt zur Platte statt zum Boden
+            erg.update(schuhe.kontakt_ebene(o["Sohle"], *ebene))
+        else:
+            if fusspunkte:
+                erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
+            erg.update(schuhe.bodenkontakt(o["Sohle"], o["Schuhe"]))
         erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts")))
         if "Senkel" in o:  # Schuh seit D-460: Senkel, Ösen, Polster, Zehenbox
             erg.update(schuhe.pruefung_neu(uebung.koerper, o["Socken"]))
         sohle = schuhe._verformt(o["Sohle"])[0]
+        if hasattr(uebung, "schlitten"):  # auf der Platte: Lage im Raum des Schlittens, die Füße dürfen nicht rutschen
+            Mi = uebung.schlitten.matrix_world.inverted()
+            sohle = [Mi @ p for p in sohle]
         erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in sohle[::8]]
     else:
         if fusspunkte:
@@ -181,6 +190,7 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
     zusammen = {
         "uebung": name,
         "titel": getattr(u, "titel", name),
+        "fuss_ansichten": [a for a, _ in getattr(u, "fuss_ansichten", FUSS_ANSICHTEN)],
         ("Sohle" if schuh else "Fuß") + ": größte Verschiebung über die Schleife (mm)": round(fuss_max * 1000, 2),
         "bilder": werte,
     }
@@ -213,7 +223,10 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
             u.setzen(p)
             sohle = [q for q in schuhe._verformt(bpy.data.objects["Sohle"])[0] if q.x > 0]
             fuss = sum(sohle, Vector()) / len(sohle) + Vector((0, 0, 0.05))
-            for richtung, hoehe in ((90, 0.08), (0, 0.12), (180, 0.10), (270, 0.08)):
+            # Nichts verdeckt den Fuß (Beinpresse: Scheiben, Hörner, Schiene und Wagen neben und unter der Platte, D-464)
+            for o in bpy.data.objects:
+                o.hide_render = o.name.startswith(("Scheibe", "Horn", "Verschluss", "Schiene", "Wagen"))
+            for richtung, hoehe in getattr(u, "fuss_ansichten", FUSS_ANSICHTEN):
                 for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
                     bpy.data.objects.remove(o)
                 szene.licht_und_kamera(fuss, richtung, 0.55, hoehe, brennweite=60)

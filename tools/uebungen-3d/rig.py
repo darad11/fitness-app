@@ -225,9 +225,12 @@ class Rig:
 
     # ------------------------------------------------------------------ Beine
 
-    def bein(self, seite: str, knoechel: Vector, knie_richtung: Vector, fuss_grad: float) -> dict:
+    def bein(self, seite: str, knoechel: Vector, knie_richtung: Vector, fuss_grad: float,
+             fuss_ebene: Matrix | None = None) -> dict:
         """Fuß flach am Boden, um `fuss_grad` nach außen gedreht, Fußgelenk bei `knoechel`.
-        Das Knie zeigt in `knie_richtung` (in der Regel die Zehenrichtung)."""
+        Das Knie zeigt in `knie_richtung` (in der Regel die Zehenrichtung). `fuss_ebene` (D-464): Drehung,
+        die den Fuß nach dem Ausdrehen vom Boden auf eine andere Ebene legt (Beinpresse: Sohle flach auf
+        der Platte)."""
         s = seite
         H0, K0, A0 = self.kopf["upperleg01." + s], self.kopf["lowerleg01." + s], self.kopf["foot." + s]
         H = self.punkt("pelvis." + s, H0)
@@ -245,6 +248,8 @@ class Rig:
         self.setze("lowerleg01." + s, G_unter)
         self.setze("lowerleg02." + s, G_unter)
         drehung = achse_winkel(Z, fuss_grad if s == "L" else -fuss_grad)
+        if fuss_ebene is not None:
+            drehung = fuss_ebene @ drehung
         self.setze("foot." + s, starr(A0, knoechel, drehung))
         return {"huefte": H, "knie": K, "knoechel": knoechel, "richtung": p}
 

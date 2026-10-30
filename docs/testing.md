@@ -2577,3 +2577,16 @@ Bahn der Hanteln nie breiter als unten, beide Schleifen in der App (D-463).
 | `pnpm build`, `pnpm check:bundle` (D-463) | bestanden; Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 20 von 20 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (16,1 min): `task-rows.spec.ts` „Zeilen ohne Überlauf, Abhakfeld und Chevron auf gleicher Höhe (390 pt)“, Abhakfeld 75,6 px neben der Mitte der Zeile; einzeln wiederholt (`--repeat-each=3`) 30 von 30 bestanden; der Test berührt nichts aus diesem Paket. Der geänderte Test der Übungsliste (fünf Vorschaubilder) bestanden |
 | `pnpm format:check`, `pnpm check:docs` (D-463) | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Kniebeuge“: Beinpresse · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Beinpresse (D-464).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorab gerechnet: Sprunggelenk und Hüfte je nach Lehne (30, 35°), Höhe der Füße auf der Platte (0 bis 10 cm über der Linie Hüfte–Schiene) und Knie unten (90 bis 110°) | gewählt Lehne 30°, 10 cm, Knie 95°: Sprunggelenk unten rund 31°, mit den Füßen auf der Linie über 40° |
+| Griffrichtung und Lage gesucht (längs, quer, senkrecht, schräg; 4 × 3 Lagen) | schräg, 10 cm vor der Hüfte: Handgelenk gesamt 3,2°, Ellbogen 139°; längs zum Sitz war es 46,6° |
+| `render.py beinpresse --pruefen` (alle 60 Bilder) | Knie 95 bis 165°, Hüfte 62,6 bis 99,6°, Sprunggelenk bis 31,3°, Knie −0,8 bis +0,2 cm neben der Fußachse; Ferse und Ballen beider Füße 0,0 mm auf der Platte (höchstens 0,01 mm), Füße 0,1 mm verschoben; Handgelenk 3,2°, Finger 4,5 mm eingedrückt (gewollt); Rücken und Gesäß 5,1 mm im Polster, Oberschenkel mindestens 64 mm über dem Sitz; Kragen 1,6 mm, Kragenpolster 1,6 mm über der Socke; keine Meldungen des Rigs; Messung und Ansichten rund 5,3 min, Griffbilder rund 1 min |
+| Maße des Geräts im Modell | 179 × 150 × 149 cm (Schlitten oben); Vorbilder 241 × 165 × 145 und 244 × 145 × 145 cm |
+| Prüfseite (`tools/uebungen_pruef_bild.py beinpresse --familie kniebeuge …`) | `familie-kniebeuge.webp`, angesehen: Füße flach auf der Platte, Knie über den Zehen, Rücken an der Lehne, Hände an den Griffen |
+| `pnpm format:check`, `pnpm check:docs` (D-464) | bestanden |

@@ -9,8 +9,9 @@ und Endposition) auf einem Blatt `docs/screens/uebungen/pruef-<übung>.webp`.
 
 Prüfseite einer Familie (D-462): je Übung Ausgangs- und Endposition mit der Kamera der App und von der Seite, der
 Griff der linken Hand in beiden Positionen von der Handfläche und vom Handrücken (`pruef-griff-<Seite>-<Phase>.png`
-aus `familie_bilder.py`), der linke Fuß von außen und von vorn und die Messwerte aller 60 Bilder (kleinster und
-größter Wert aus `<übung>-messwerte.json`).
+aus `familie_bilder.py`, je Übung auch andere Seiten), der linke Fuß aus zwei Richtungen (die ersten beiden aus
+`fuss_ansichten` der Übung, sonst von außen und von vorn) und die Messwerte aller 60 Bilder (kleinster und größter
+Wert aus `<übung>-messwerte.json`).
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -81,6 +82,14 @@ MESSWERTE = (
     ("Kurzhantel: Köpfe über dem Körper (mm)", "Köpfe über dem Körper (ohne Hände)", "min", " mm"),
     ("Köpfe innen auseinander (cm)", "Köpfe innen auseinander", "spanne", " cm"),
     ("Kniewinkel (Grad)", "Knie", "spanne", "°"),
+    ("Hüftwinkel (Grad)", "Hüfte (Oberschenkel zum Rumpf)", "spanne", "°"),
+    ("Sprunggelenk gebeugt (Grad)", "Sprunggelenk gebeugt", "spanne", "°"),
+    ("Knie neben der Fußachse (cm, + außen)", "Knie neben der Fußachse (+ außen)", "spanne", " cm"),
+    ("Schlitten: Weg von oben (cm)", "Weg des Schlittens", "max", " cm"),
+    ("Sohle L: Ferse auf der Platte (mm)", "Sohle links, Ferse auf der Platte", "betrag", " mm"),
+    ("Sohle L: Ballen auf der Platte (mm)", "Sohle links, Ballen auf der Platte", "betrag", " mm"),
+    ("Sohle R: Ferse auf der Platte (mm)", "Sohle rechts, Ferse auf der Platte", "betrag", " mm"),
+    ("Sohle R: Ballen auf der Platte (mm)", "Sohle rechts, Ballen auf der Platte", "betrag", " mm"),
     ("Sohle L: Ferse über dem Boden (mm)", "Sohle links, Ferse über dem Boden", "betrag", " mm"),
     ("Sohle L: Ballen über dem Boden (mm)", "Sohle links, Ballen über dem Boden", "betrag", " mm"),
     ("Sohle R: Ferse über dem Boden (mm)", "Sohle rechts, Ferse über dem Boden", "betrag", " mm"),
@@ -122,7 +131,9 @@ def messtabelle(messwerte: Path, breite: int) -> Image.Image:
         zeilen.append((text, wert))
     verschiebung = [v for k, v in daten.items() if k.endswith("größte Verschiebung über die Schleife (mm)")]
     if verschiebung:
-        zeilen.append(("Sohle: Verschiebung über die Schleife", _zahl(verschiebung[0], " mm")))
+        platte = any("auf der Platte" in k for k in bilder[0])
+        text = "Füße auf der Platte verschoben" if platte else "Sohle: Verschiebung über die Schleife"
+        zeilen.append((text, _zahl(verschiebung[0], " mm")))
     meldungen = sum(len(b.get("Meldungen", [])) for b in bilder)
     zeilen.append(("Meldungen des Rigs", str(meldungen)))
     f = schrift(15)
@@ -140,6 +151,13 @@ def messtabelle(messwerte: Path, breite: int) -> Image.Image:
     return feld
 
 
+# Beschriftung der Nahaufnahmen (Dateien aus `familie_bilder.py` und `render.py --pruefen`)
+GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff vom Handrücken", "aussen": "Griff von außen",
+              "oben": "Griff von oben"}
+FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
+             "270": "linker Fuß von innen"}
+
+
 def familienblock(arbeit: Path, uebung: str, titel: str, breite: int) -> Image.Image:
     """Ein Block der Prüfseite: Positionen aus zwei Perspektiven, Griff und Fuß aus der Nähe, Messwerte."""
     zeilen: list[list[Image.Image]] = []
@@ -147,12 +165,15 @@ def familienblock(arbeit: Path, uebung: str, titel: str, breite: int) -> Image.I
     zeilen.append([zelle(arbeit / f"pruef-{a}-{p}.png", b4, f"{t} · {pt}")
                    for a, t in (("standard", "Kamera der App"), ("seite", "von der Seite"))
                    for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition"))])
-    zeilen.append([zelle(arbeit / f"pruef-griff-{r}-{p}.png", b4, f"{t} · {pt}")
-                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition"))
-                   for r, t in (("handflaeche", "Griff von der Handfläche"), ("handruecken", "Griff vom Handrücken"))])
-    zeilen.append([zelle(arbeit / f"pruef-fuss-{r}-{p}.png", b4, f"{t} · {pt}")
-                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition"))
-                   for r, t in (("90", "linker Fuß von außen"), ("0", "linker Fuß von vorn"))])
+    import json
+
+    daten = json.loads((arbeit / f"{uebung}-messwerte.json").read_text(encoding="utf-8"))
+    griffe = [g for g in GRIFF_TEXT if (arbeit / f"pruef-griff-{g}-0.00.png").exists()][:2]
+    fuesse = [str(a) for a in daten.get("fuss_ansichten", [90, 0])][:2]
+    zeilen.append([zelle(arbeit / f"pruef-griff-{r}-{p}.png", b4, f"{GRIFF_TEXT[r]} · {pt}")
+                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition")) for r in griffe])
+    zeilen.append([zelle(arbeit / f"pruef-fuss-{r}-{p}.png", b4, f"{FUSS_TEXT.get(r, r)} · {pt}")
+                   for p, pt in (("0.00", "Ausgangsposition"), ("1.00", "Endposition")) for r in fuesse])
     zeilen.append([messtabelle(arbeit / f"{uebung}-messwerte.json", breite - 16)])
     hoehe = 44 + sum(max(z.height for z in zeile) + 8 for zeile in zeilen)
     block = Image.new("RGB", (breite, hoehe), GRUND)

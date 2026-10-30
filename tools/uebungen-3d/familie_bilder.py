@@ -6,7 +6,8 @@ Handfläche und vom Handrücken, quer zum Griff gesehen (die Köpfe der Hanteln 
 
 Schreibt `pruef-griff-handflaeche-<Phase>.png` und `pruef-griff-handruecken-<Phase>.png` (360 × 360 Pixel) in
 `<ordner>/<übung>/`, passend zu den Prüfansichten aus `render.py <übung> --pruefen` und zur Prüfseite
-`tools/uebungen_pruef_bild.py --familie`.
+`tools/uebungen_pruef_bild.py --familie`. Eine Übung kann eigene Ansichten nennen (`griff_ansichten`, D-464; die
+Beinpresse: `aussen` und `oben`).
 """
 from __future__ import annotations
 
@@ -35,7 +36,7 @@ def griff(name: str, ziel: Path) -> None:
         rig = u.rig
         hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
         punkte = [q for q in _netz(u.koerper) if (q - hand).length < 0.10]
-        for datei, richtung, neigung in GRIFF:
+        for datei, richtung, neigung in getattr(u, "griff_ansichten", GRIFF):
             for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
                 bpy.data.objects.remove(o)
             z, abstand, h = szene.bildausschnitt(punkte + [hand + Vector((0.09, 0, 0)), hand - Vector((0.09, 0, 0))],

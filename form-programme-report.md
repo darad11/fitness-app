@@ -324,3 +324,71 @@ Ergebnis: siehe 5.1, 5.2 und docs/testing.md
 Bekannte Einschränkungen: in der Mitte leicht schräger Unterarm (5.1)
 Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Kniebeuge: Beinpresse)
 ```
+
+## 6. Nächste Familie: Kniebeuge mit der Beinpresse, Prüfseite (D-464)
+
+Im Animationsplan kommt nach „Waagrechtes Drücken“ die Familie „Kniebeuge“. Aus „Ganzkörper A/B“ ist dort neu nur die Beinpresse (23 Einheiten in den drei Programmen); die Kniebeuge mit Langhantel läuft schon als Pilot. Wie verlangt zuerst nur die Prüfseite.
+
+### 6.1 Gerät
+
+Beinpresse 45° (`geraete.beinpresse`). Die Seiten der Hersteller sind in dieser Umgebung gesperrt; die Maße stammen aus der Websuche:
+
+- **Fußplatte** 72 × 50 cm wie Bodykore G277 (28,35 × 19,92 Zoll), senkrecht zur Schiene.
+- **Schlitten** auf zwei Schienen unter 45°, mit Wagen und zwei Hörnern mit je zwei Scheiben 20 kg.
+- **Lehne** 30° über der Waagrechten (verstellbar 30 bis 50° wie Benchfit Exceed ISO), **Sitz** 40 cm hoch und 15° nach vorn steigend, Polster 38 cm breit, 7 cm dick.
+- **Haltegriffe** schräg neben dem Sitz.
+- **Gesamtmaß** im Modell 179 × 150 × 149 cm (lang × breit × hoch, Schlitten oben). Vorbilder: Hammer Strength Linear Leg Press 241 × 165 × 145 cm, Precor DPL0601 244 × 145 × 145 cm. Breite und Höhe passen; die Vorbilder sind länger, weil ihre Schienen und ihr Rahmen weiter reichen.
+
+### 6.2 Bewegung
+
+- **Lage:** Rücken und Gesäß an Lehne und Sitz, Kopf an der Lehne, Hände an den Griffen.
+- **Füße:** etwas weiter als hüftbreit, Zehen 15° nach außen, die ganze Sohle flach auf der Platte. Das Rig kann den Fuß dafür jetzt vom Boden auf eine beliebige Ebene drehen.
+- **Lage der Füße auf der Platte:** Die Fußgelenke stehen 10 cm über der Linie von der Hüfte längs der Schiene. Mit den Füßen genau auf dieser Linie wäre das Sprunggelenk unten über 40° gebeugt, mehr als üblich beweglich; so sind es 31°.
+- **Bahn:** Ausgang oben mit Knie 165° (nicht durchgedrückt), Ende unten mit Knie 95°, der Schlitten fährt dabei 22,1 cm, gleichmäßig. Die Knie zeigen über die Zehen.
+- **Griffe:** Ich habe die Richtung der Griffe gesucht (längs, quer, senkrecht, schräg); schräg von vorn oben nach hinten unten bleibt das Handgelenk am geradesten (3,2°), der Arm locker (Ellbogen 139°).
+
+### 6.3 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Knie | 95° bis 165° |
+| Hüfte (Oberschenkel zum Rumpf) | 62,6° bis 99,6° |
+| Sprunggelenk gebeugt | 0° bis 31,3° |
+| Knie neben der Fußachse (+ außen) | −0,8 bis +0,2 cm |
+| Ferse und Ballen beider Füße auf der Platte | 0,0 mm (höchstens 0,01 mm) |
+| Füße auf der Platte verschoben | 0,1 mm |
+| Handgelenk gesamt (nach hinten / zur Seite) | 3,2° (−2,2° / −2,3°) |
+| Finger am Griff | 4,5 mm eingedrückt (gewollt wie bei allen Griffen, D-435), 167 Punkte in Kontakt |
+| Rücken und Gesäß im Polster (Ziel 4 mm) | 5,1 mm |
+| Oberschenkel über dem Sitz | mindestens 64 mm |
+| Kragen / Kragenpolster über der Socke | 1,6 / 1,6 mm |
+| Shorts-F zum Streifen | 2,54 cm |
+| Meldungen des Rigs | 0 |
+
+Positive Werte heißen Luft, negative Durchdringung. Auf der Beinpresse zählt der Kontakt der Sohle zur Platte, nicht zum Boden; dafür misst `schuhe.kontakt_ebene` den Abstand der Sohle zur Ebene der Platte, und die Verschiebung der Füße wird im Raum des Schlittens gemessen (die Platte fährt mit).
+
+### 6.4 Prüfseite und Rechenzeit
+
+`docs/screens/uebungen/familie-kniebeuge.webp`: Ausgangs- und Endposition mit der Kamera der App (von links hinten, damit die Platte die Füße nicht verdeckt) und von der Seite, der Griff der linken Hand von außen und von oben, der linke Fuß von außen und von hinten, darunter die Messwerte. In den Fuß-Nahaufnahmen sind Scheiben, Hörner, Schiene und Wagen ausgeblendet, damit die Kante zwischen Sohle und Platte frei liegt. Rechenzeit: Messung und Prüfansichten rund 5,3 min, Griffbilder rund 1 min. Die Schleife schätze ich nach den bisherigen auf rund 25 Minuten; ihre Größe folgt mit ihr.
+
+### 6.5 Abweichungen und offene Punkte
+
+- **Länge des Geräts:** 179 statt rund 240 cm (6.1).
+- **Lehne 30°** und **Füße 10 cm über der Linie** sind meine Wahl, beide verstellbar. Eine steilere Lehne schließt die Hüfte unten weiter (je 5° Lehne rund 5° enger).
+- **Tiefe:** Knie unten 95°. Tiefer ginge, dann würde das Sprunggelenk mehr gebeugt und die Hüfte enger.
+- **Gerät ohne Aufschrift**, Scheiben wie an der Langhantel.
+
+### 6.6 Bericht zum Paket
+
+```
+Arbeitspaket: D-464 Phase Programme, Abschnitt 2: Familie „Kniebeuge“ mit der Beinpresse, Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Beinpresse 45° (geraete.py), Übung Beinpresse (uebungen.py), Fuß auf einer Ebene (rig.py), Kontakt der Sohle zur Platte (schuhe.py, render.py), Fuß- und Griffansichten je Übung (render.py, familie_bilder.py, uebungen_pruef_bild.py), Stand im Animationsplan; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/rig.py, tools/uebungen-3d/schuhe.py, tools/uebungen-3d/render.py, tools/uebungen-3d/familie_bilder.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-kniebeuge.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-464
+Ausgeführte Tests: render.py beinpresse --pruefen (alle 60 Bilder gemessen, Prüfansichten), Griffbilder, Bilder angesehen; pnpm format:check, pnpm check:docs; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 6.3)
+Bekannte Einschränkungen: 6.5
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife rendern und einbauen, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Kniebeuge (Beinpresse)“.

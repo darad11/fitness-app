@@ -1167,4 +1167,200 @@ class SchraegbankdrueckenKH(BankdrueckenKH):
             self.verschiebung += d_lehne * ((-d_s - 0.004) / max(d_lehne.dot(n_sitz), 0.2))
 
 
-UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH)}
+
+# ---------------------------------------------------------------------- Familie „Kniebeuge“: Beinpresse (D-464)
+
+
+class Beinpresse(Uebung):
+    """Beinpresse 45° (Familie „Kniebeuge“, D-464).
+
+    Rücken und Gesäß an Lehne (30° über der Waagrechten) und Sitz, je rund 4 mm im Polster; Hände an den Griffen
+    neben dem Sitz, Handgelenke gerade. Füße etwas weiter als hüftbreit, Zehen 15° nach außen, die ganze Sohle flach
+    auf der Platte, etwas über deren Mitte. Der Schlitten fährt auf der Schiene unter 45°: Ausgang oben mit fast
+    gestreckten Knien (165°, nicht durchgedrückt), Ende unten bei 95° im Knie; die Knie zeigen über die Zehen, die
+    Füße bleiben flach auf der Platte. Sprunggelenk unten rund 31° gebeugt, Hüfte rund 63° (Winkel zwischen
+    Oberschenkel und Rumpf). Die Füße stehen etwas über der Linie Hüfte–Schiene (`HOEHER`), sonst müsste das
+    Sprunggelenk unten über 40° gebeugt sein. Der Schlitten fährt gleichmäßig; aufwärts derselbe Weg zurück."""
+
+    name = "beinpresse"
+    titel = "Beinpresse"
+    kamera = {"richtung": 115.0, "neigung": 22.0}
+    vorschau_phase = 1.0
+    LEHNE = 30.0  # Lehne, Grad über der Waagrechten
+    SITZ = 15.0  # Sitz steigt nach vorn
+    KNIE_OBEN = 165.0
+    KNIE_UNTEN = 95.0
+    FUESSE = 0.13  # halber Abstand der Fußgelenke vor dem Maß der Schultern, m
+    ZEHEN = 15.0  # Füße nach außen gedreht, Grad
+    HOEHER = 0.10  # Fußgelenke so weit über der Linie durch die Hüfte längs der Schiene (in der Platte nach oben), m
+    ECKE = Vector((0.0, 0.0, 0.40))  # Ecke zwischen den Oberflächen von Sitz und Lehne (Welt), Sitz 40 cm hoch
+    GRIFF_R = 0.016
+    KNIE_AUSSEN = 0.05
+    STRECKUNG = 0.0
+    # Prüfansichten (`render.pruefen`, `familie_bilder.py`): Fuß von außen und von der Seite der Person, Griff von
+    # außen und von oben
+    fuss_ansichten = ((90, 0.0), (180, 0.20), (0, 0.12), (270, 0.0))
+    griff_ansichten = (("aussen", 90.0, 25.0), ("oben", 160.0, 60.0))
+
+    def rahmen_objekte(self) -> list:
+        return [self.geraet["wurzel"]]
+
+    def polster_objekte(self) -> list:
+        return self.geraet["polster"]
+
+    def stange_achse(self):
+        # linker Haltegriff (Welt): für den Abstand der Finger zum Griff in `render.messen`
+        return self.griff_mitte["L"].copy(), self.griff_achse, self.GRIFF_R
+
+    def bauen(self) -> None:
+        super().bauen()
+        rig = self.rig
+        r = math.radians(45.0)
+        self.d = Vector((0, -math.cos(r), math.sin(r)))  # längs der Schiene, von der Person weg
+        self.q = Vector((0, math.sin(r), math.cos(r)))  # in der Platte nach oben
+        self.R_fuss = achse_winkel(X, -135.0)  # Boden → Platte: vorn (−y) wird +q, oben (+z) wird −d
+        self._lage()
+        rig.zuruecksetzen()
+        self._torso()
+        k = rig.kopf
+        self.l1 = (k["lowerleg01.L"] - k["upperleg01.L"]).length
+        self.l2 = (k["foot.L"] - k["lowerleg01.L"]).length
+        self.huefte = {s: rig.punkt("pelvis." + s, k["upperleg01." + s]) for s in "LR"}
+        x = self.FUESSE * self.mass
+        self.basis = {s: Vector((x * (1 if s == "L" else -1), self.huefte[s].y, self.huefte[s].z)) + self.q * self.HOEHER
+                      for s in "LR"}
+        self.s_oben = self._weg(self.KNIE_OBEN)
+        self.s_unten = self._weg(self.KNIE_UNTEN)
+        platte = self._sohlenmitte()
+        # Griffe schräg neben dem Sitz, vorn oben bis hinten unten: Achse vom Zeigefinger zum kleinen Finger nach
+        # hinten unten (gesucht unter Griffen längs, quer, senkrecht und schräg: hier bleibt das Handgelenk am geradesten)
+        sitz = math.radians(self.SITZ)
+        d_sitz, n_sitz = Vector((0, -math.cos(sitz), math.sin(sitz))), Vector((0, math.sin(sitz), math.cos(sitz)))
+        self.griff_achse = (-n_sitz - d_sitz).normalized()
+        self.griff_mitte = self._griffe()
+        import geraete as g
+
+        self.geraet = g.beinpresse(self.ECKE, self.LEHNE, self.SITZ, platte, (self.s_unten - self.s_oben - 0.05, 0.05),
+                                   {s: (m, self.griff_achse) for s, m in self.griff_mitte.items()})
+        self.platte0 = platte
+        self.schlitten = self.geraet["schlitten"]
+        self.M_schlitten0 = self.schlitten.matrix_world.copy()
+        self.griff = {s: rig.griff(s, 0.6, self.GRIFF_R, schraeg=0.0) for s in "LR"}
+
+    def _sohlenmitte(self) -> Vector:
+        """Mitte der Plattenoberfläche (Welt) unter den Füßen in der Ausgangsstellung: Die Unterkante der Sohle liegt
+        in der Grundhaltung so tief unter dem Fußgelenk, wie dieses über dem Boden steht (mit Schuh steht die Figur
+        auf der Sohle, D-450); längs der Platte in der Mitte zwischen Ferse und Zehenspitze."""
+        rig = self.rig
+        k = rig.kopf
+        ueber_sohle = k["foot.L"].z + rig.versatz.z
+        ferse, spitze = _fuss(self.koerper, k)
+        mitte_vor = k["foot.L"].y - (ferse + spitze) / 2  # Fußgelenk bis Mitte des Fußes, nach vorn
+        pkte = [rig.welt(self._knoechel(s, self.s_oben)) + self.d * ueber_sohle + self._zehenrichtung(s) * mitte_vor
+                for s in "LR"]
+        m = (pkte[0] + pkte[1]) / 2
+        return Vector((0.0, m.y, m.z))
+
+    def _weg(self, knie: float) -> float:
+        """Weg längs der Schiene (von der Linie durch die Hüfte), bei dem das Knie den Winkel `knie` hat."""
+        D = math.sqrt(self.l1 ** 2 + self.l2 ** 2 - 2 * self.l1 * self.l2 * math.cos(math.radians(knie)))
+        seit = self.basis["L"] - self.huefte["L"]  # quer und in der Platte nach oben, unabhängig vom Weg
+        return math.sqrt(max(D * D - seit.length_squared, 0.0))
+
+    def _knoechel(self, s: str, weg: float) -> Vector:
+        return self.basis[s] + self.d * weg
+
+    def _zehenrichtung(self, s: str) -> Vector:
+        w = math.radians(self.ZEHEN) * (1 if s == "L" else -1)
+        return self.R_fuss @ Vector((math.sin(w), -math.cos(w), 0.0))
+
+    def _knierichtung(self, s: str) -> Vector:
+        """Richtung, in die das Knie ausweicht: über die Zehen, etwas nach außen (`KNIE_AUSSEN`), damit es über der
+        Fußachse bleibt und nicht nach innen fällt."""
+        return self._zehenrichtung(s) + X * (self.KNIE_AUSSEN * (1 if s == "L" else -1))
+
+    def _beine(self, weg: float) -> dict:
+        rig = self.rig
+        return {s: rig.bein(s, self._knoechel(s, weg), self._knierichtung(s), self.ZEHEN, fuss_ebene=self.R_fuss) for s in "LR"}
+
+    def _griffe(self) -> dict:
+        """Mitte der Haltegriffe (Welt): neben dem Sitz, auf Höhe der Hüftgelenke, 10 cm vor ihnen."""
+        rig = self.rig
+        aus = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            H = rig.welt(self.huefte[s])
+            aus[s] = Vector((sx * 0.27, H.y - 0.10, H.z))
+        return aus
+
+    def _torso(self) -> None:
+        self.rig.setze("root", starr(Vector(), self.verschiebung, self.R_liegen))
+
+    def _lage(self) -> None:
+        """Rücken an der Lehne, Gesäß auf dem Sitz (je 4 mm im Polster), wie beim Schrägbankdrücken mit Kurzhanteln:
+        Rumpf um die Lehne geneigt, dann verschoben, bis Rücken und Gesäß auf den Ebenen der Polster liegen."""
+        rig = self.rig
+        a, s = math.radians(self.LEHNE), math.radians(self.SITZ)
+        self.R_liegen = achse_winkel(X, self.LEHNE) @ achse_winkel(X, -90)
+        ecke = self.ECKE - rig.versatz
+        n_lehne = Vector((0, -math.sin(a), math.cos(a)))
+        d_lehne = Vector((0, math.cos(a), math.sin(a)))
+        n_sitz = Vector((0, math.sin(s), math.cos(s)))
+        huefte, hals = rig.kopf["upperleg01.L"].z, rig.kopf["neck01"].z
+        ruhe = [v.co.copy() for v in self.koerper.data.vertices]
+        ruecken_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.14 and huefte + 0.12 < r.z < hals - 0.05 and r.y > 0.0]
+        gesaess_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.17 and huefte - 0.12 < r.z < huefte + 0.06 and r.y > 0.02]
+        self.verschiebung = Vector((0, 0.20, 0.80)) - rig.versatz
+        for _ in range(8):
+            rig.zuruecksetzen()
+            self._torso()
+            rig.anwenden()
+            netz = [rig.lokal(p) for p in _netz(self.koerper)]
+            d_r = min((netz[i] - ecke).dot(n_lehne) for i in ruecken_i)
+            self.verschiebung += n_lehne * (-d_r - 0.004)
+            d_s = min((netz[i] + n_lehne * (-d_r - 0.004) - ecke).dot(n_sitz) for i in gesaess_i)
+            self.verschiebung += d_lehne * ((-d_s - 0.004) / max(d_lehne.dot(n_sitz), 0.2))
+
+    def sohle_ebene(self) -> tuple[Vector, Vector]:
+        """Oberfläche der Fußplatte in der aktuellen Stellung (Welt): Punkt und Normale zur Person."""
+        M = self.schlitten.matrix_world
+        return M.translation.copy(), (M.to_3x3() @ Vector((0, 0, 1))).normalized()
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        weg = self.s_oben + (self.s_unten - self.s_oben) * p
+        self._torso()
+        beine = self._beine(weg)
+        self.schlitten.matrix_world = Matrix.Translation(self.d * (weg - self.s_oben)) @ self.M_schlitten0
+        arme = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            ziel = rig.lokal(self.griff_mitte[s])
+            arme[s] = rig.arm(s, self.griff[s], ziel, self.griff_achse, Vector((sx * 0.6, 0.0, -0.8)).normalized(),
+                              self.STRECKUNG)
+        L, A = beine["L"], arme["L"]
+        rumpf = (rig.punkt("spine01", rig.kopf["spine01"]) - rig.punkt("spine05", rig.kopf["spine05"])).normalized()
+        oberschenkel = (L["knie"] - L["huefte"]).normalized()
+        schienbein = (L["knie"] - L["knoechel"]).normalized()
+        zehen = self._zehenrichtung("L")
+        # Knie über der Fußachse: Abstand des Knies von der Ebene durch Fußgelenk, Zehenrichtung und Plattennormale
+        n_achse = zehen.cross(self.d).normalized()
+        if n_achse.x < 0:
+            n_achse = -n_achse
+        self.werte = {
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüftwinkel (Grad)": math.degrees(oberschenkel.angle(rumpf)),
+            "Sprunggelenk gebeugt (Grad)": 90.0 - math.degrees(schienbein.angle(zehen)),
+            "Knie neben der Fußachse (cm, + außen)": (L["knie"] - L["knoechel"]).dot(n_achse) * 100,
+            "Schlitten: Weg von oben (cm)": (weg - self.s_oben) * -100,
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+        }
+
+    def zusatzwerte(self) -> dict:
+        """Körper im Polster von Lehne und Sitz (mm); Sohle auf der Platte misst `render.messen`."""
+        return polster_werte(self.koerper, self.polster_objekte())
+
+
+UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
+                               Beinpresse)}

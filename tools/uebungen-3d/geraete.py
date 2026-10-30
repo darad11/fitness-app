@@ -17,7 +17,7 @@ from __future__ import annotations
 import math
 
 import bpy
-from mathutils import Euler, Vector
+from mathutils import Euler, Matrix, Vector
 
 from szene import GERAET, GERAET_HELL, matt
 
@@ -215,3 +215,126 @@ def schraegbank(lehne: float, sitz: float = 0.0) -> bpy.types.Object:
         strebe = _kasten("Strebe", (0.05, 0.05, (oben - unten).length), (oben + unten) / 2, rahmen, 0.004, wurzel)
         strebe.rotation_euler = Euler((math.atan2(-(oben - unten).y, (oben - unten).z), 0, 0))
     return wurzel
+
+
+# Beinpresse 45° (D-464), Maße nach Herstellerangaben: Grundfläche wie Hammer Strength Linear Leg Press (241 × 165 ×
+# 145 cm) und Precor DPL0601 (244 × 145 × 145 cm), Fußplatte wie Bodykore G277 (28,35 × 19,92 Zoll, 72 × 50 cm),
+# Schlitten auf Schienen unter 45°, Lehne verstellbar (Benchfit Exceed ISO: 30 bis 50°)
+BEINPRESSE = {"platte": (0.72, 0.50, 0.03), "schiene": 45.0, "polster_breite": 0.38, "polster_dicke": 0.07,
+              "sitz": 0.40, "lehne": 0.85, "schienen_abstand": 0.56, "griff": (0.016, 0.30)}
+
+
+def _quader(name: str, groesse: tuple[float, float, float], mitte: Vector, drehung, mat, rund: float = 0.0,
+            eltern=None) -> bpy.types.Object:
+    """Kasten mit Mitte `mitte` (Welt) und Ausrichtung `drehung` (3 × 3: Spalten sind die Richtungen von x, y, z des
+    Kastens)."""
+    obj = _kasten(name, groesse, Vector(), mat, rund)
+    obj.matrix_world = Matrix.Translation(mitte) @ drehung.to_4x4()
+    if eltern is not None:
+        welt = obj.matrix_world.copy()
+        obj.parent = eltern
+        obj.matrix_world = welt
+    return obj
+
+
+def _stab(name: str, von: Vector, nach: Vector, radius: float, mat, eltern=None, ecken: int = 32) -> bpy.types.Object:
+    """Zylinder von `von` nach `nach` (Welt)."""
+    obj = _zylinder(name, radius, (nach - von).length, Vector(), "z", mat, ecken=ecken)
+    obj.matrix_world = Matrix.Translation((von + nach) / 2) @ (nach - von).to_track_quat("Z", "Y").to_matrix().to_4x4()
+    if eltern is not None:
+        welt = obj.matrix_world.copy()
+        obj.parent = eltern
+        obj.matrix_world = welt
+    return obj
+
+
+def beinpresse(ecke: Vector, lehne: float, sitz: float, platte: Vector, weg: tuple[float, float],
+               griffe: dict[str, Vector]) -> dict:
+    """Beinpresse 45°, Person mit dem Kopf nach +y, die Platte vorn oben bei -y (D-464).
+
+    `ecke`: Ecke zwischen den Oberflächen von Sitz und Lehne (Welt); die Lehne steigt um `lehne` Grad nach +y, der
+    Sitz um `sitz` Grad nach -y. `platte`: Mitte der Oberfläche der Fußplatte in der Ausgangsstellung des Schlittens;
+    der Schlitten fährt längs der Schienen (`schiene` Grad, nach -y und oben) um `weg` (kleinster und größter Abstand
+    von der Ausgangsstellung, m, negativ zur Person hin). `griffe`: je Seite Mitte und Richtung eines Haltegriffs
+    (Welt). Gibt Wurzel, Schlitten (Leerobjekt an der Mitte der Plattenoberfläche, wird je Bild verschoben), Polster
+    von Lehne und Sitz und die Richtungen der Schiene zurück."""
+    b = BEINPRESSE
+    polster = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    eisen = _mat("Eisen", GERAET, 0.55, 0.2)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Beinpresse", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    r = math.radians(b["schiene"])
+    d = Vector((0, -math.cos(r), math.sin(r)))  # längs der Schiene, von der Person weg
+    q = Vector((0, math.sin(r), math.cos(r)))  # in der Platte nach oben
+    # Polster: Lehne und Sitz als Kästen, Oberfläche durch die Ecke
+    a, s = math.radians(lehne), math.radians(sitz)
+    d_lehne, n_lehne = Vector((0, math.cos(a), math.sin(a))), Vector((0, -math.sin(a), math.cos(a)))
+    d_sitz, n_sitz = Vector((0, -math.cos(s), math.sin(s))), Vector((0, -math.sin(s), -math.cos(s)))
+    n_sitz = -n_sitz if n_sitz.z < 0 else n_sitz
+    dicke, breite = b["polster_dicke"], b["polster_breite"]
+    R_lehne = Matrix((X, d_lehne, n_lehne)).transposed()
+    R_sitz = Matrix((X, d_sitz, n_sitz)).transposed()
+    lehne_obj = _quader("Lehne", (breite, b["lehne"], dicke), ecke + d_lehne * (b["lehne"] / 2 + 0.01) - n_lehne * (dicke / 2),
+                        R_lehne, polster, 0.025, wurzel)
+    sitz_obj = _quader("Sitz", (breite, b["sitz"], dicke), ecke + d_sitz * (b["sitz"] / 2 + 0.01) - n_sitz * (dicke / 2),
+                       R_sitz, polster, 0.025, wurzel)
+    for teil, R, laenge, rich, n in (("Lehne", R_lehne, b["lehne"], d_lehne, n_lehne), ("Sitz", R_sitz, b["sitz"], d_sitz, n_sitz)):
+        _quader(f"{teil}Platte", (0.12, laenge - 0.06, 0.02), ecke + rich * (laenge / 2 + 0.01) - n * (dicke + 0.01), R, rahmen,
+                0.004, wurzel)
+    # Rahmen unter Sitz und Lehne: Träger am Boden, Stützen
+    unter_sitz = ecke + d_sitz * (b["sitz"] / 2) - n_sitz * (dicke + 0.02)
+    unter_lehne = ecke + d_lehne * (b["lehne"] * 0.6) - n_lehne * (dicke + 0.02)
+    for name, oben in (("Sitzstuetze", unter_sitz), ("Lehnenstuetze", unter_lehne)):
+        _stab(name, Vector((0, oben.y, 0.06)), oben, 0.03, rahmen, wurzel, ecken=16)
+    # Schienen: zwei Rohre unter dem Schlitten, von vorn am Sitz bis über den größten Weg hinaus
+    unten_mitte = platte + d * (weg[0] - 0.30) - q * 0.30
+    oben_mitte = platte + d * (weg[1] + 0.20) - q * 0.30
+    for seite in (-1, 1):
+        o = X * (seite * b["schienen_abstand"] / 2)
+        _stab("Schiene", unten_mitte + o, oben_mitte + o, 0.035, rahmen, wurzel, ecken=24)
+        # Stütze am oberen Ende und Fuß am unteren Ende
+        _stab("Schienenstuetze", Vector((o.x, oben_mitte.y, 0.06)), oben_mitte + o - d * 0.05, 0.035, rahmen, wurzel, ecken=16)
+        _stab("Schienenfuss", Vector((o.x, unten_mitte.y, 0.06)), unten_mitte + o, 0.035, rahmen, wurzel, ecken=16)
+    # Grundrahmen: Längsträger von hinter der Lehne bis unter das obere Ende, Querträger
+    y_hinten = (ecke + d_lehne * b["lehne"]).y + 0.05  # bis unter das Ende der Lehne
+    y_vorn = oben_mitte.y - 0.10
+    for seite in (-1, 1):
+        _kasten("Grundtraeger", (0.08, y_hinten - y_vorn, 0.06), Vector((seite * 0.34, (y_hinten + y_vorn) / 2, 0.03)), rahmen,
+                0.005, wurzel)
+    for y in (y_hinten - 0.04, unten_mitte.y, oben_mitte.y, unter_sitz.y):
+        _kasten("Quertraeger", (0.76, 0.06, 0.06), Vector((0, y, 0.06)), rahmen, 0.005, wurzel)
+    # Haltegriffe neben dem Sitz, je mit einem Halter an beiden Enden zum Sitzrahmen
+    for mitte, richtung in griffe.values():
+        halb = richtung.normalized() * (b["griff"][1] / 2)
+        _stab("Griff", mitte - halb, mitte + halb, b["griff"][0], gummi, wurzel)
+        for ende in (mitte - halb, mitte + halb):
+            _stab("Griffhalter", ende, Vector((math.copysign(breite / 2 - 0.02, mitte.x), ende.y, ende.z)), 0.015, rahmen, wurzel,
+                  ecken=16)
+    # Schlitten: Leerobjekt an der Mitte der Plattenoberfläche, Platte, Wagen, Hörner mit Scheiben
+    schlitten = bpy.data.objects.new("Schlitten", None)
+    bpy.context.scene.collection.objects.link(schlitten)
+    schlitten.parent = wurzel
+    R_platte = Matrix((X, q, -d)).transposed()  # z des Kastens zeigt zur Person
+    schlitten.matrix_world = Matrix.Translation(platte) @ R_platte.to_4x4()
+    pw, ph, pd = b["platte"]
+
+    def lokal(p: Vector) -> Vector:  # Welt → Raum des Schlittens in der Ausgangsstellung
+        return R_platte.transposed() @ (p - platte)
+
+    _kasten("Fussplatte", (pw, ph, pd), Vector((0, 0, -pd / 2)), _mat("Platte", GERAET, 0.75), 0.006, schlitten)
+    _kasten("Wagen", (b["schienen_abstand"] + 0.10, 0.20, 0.16), lokal(platte - q * 0.22 + d * 0.11), rahmen, 0.01, schlitten)
+    _kasten("Plattenstuetze", (0.50, 0.08, 0.10), lokal(platte + d * 0.06), rahmen, 0.008, schlitten)
+    for seite in (-1, 1):
+        # Hörner seitlich am Wagen, mit den Scheiben etwa so breit wie die Vorbilder (145 bis 165 cm)
+        fuss = platte - q * 0.22 + d * 0.11 + X * (seite * (b["schienen_abstand"] / 2 + 0.05))
+        spitze = fuss + X * (seite * 0.42)
+        _stab("Horn", fuss, spitze, 0.025, stahl, schlitten)
+        for i, dicke_s in enumerate((0.035, 0.035)):
+            m = fuss + X * (seite * (0.26 + i * 0.04 + dicke_s / 2))
+            _stab("Scheibe", m - X * (dicke_s / 2), m + X * (dicke_s / 2), 0.225, eisen, schlitten, ecken=96)
+    return {"wurzel": wurzel, "schlitten": schlitten, "polster": [lehne_obj, sitz_obj], "d": d, "q": q,
+            "R_platte": R_platte}

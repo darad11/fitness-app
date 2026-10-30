@@ -150,6 +150,8 @@ def messen(uebung) -> dict:
         if fusspunkte:
             erg["Fuß: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
         erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in fusspunkte[::25]]
+    if "Shorts" in o and "MaskeBeinvorn" in o["Shorts"].data.attributes:  # Shorts-F zum Streifen (D-461)
+        erg["Shorts: kleinster Abstand F zum Streifen (cm)"] = kleidung.f_streifen_abstand(o["Shorts"])["abstand_cm"]
     return erg
 
 

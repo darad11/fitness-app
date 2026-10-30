@@ -2533,3 +2533,18 @@ Schuh näher am Board und Rückenlogo als Standbilder (D-460).
 | Rückenlogo auf der Figur | F 9,50 cm (vorher 14,16), FORM 22,47 cm breit (vorher 22,47), Oberkante des F 13,93 cm unter dem Bündchen (vorher 11,68) |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (D-460) | bestanden; Startansicht 237,8 KB von 250 KB (unverändert, die App ist nicht geändert), Dateien der Übungsbilder 12 von 12; E2E mit WebKit in der CI zum Entwurfs-PR |
 
+
+### Phase Programme, Freigabe Abschnitt 1: Shorts-F und Schleifen · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Shorts-F weiter nach vorn, die drei Pilot-Übungen als Schleifen in der App (D-461).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Abstand Shorts-F zum Seitenstreifen auf dem Stoff, alle 60 Bilder je Übung (`tools/uebungen-3d/shorts_bilder.py kniebeuge bankdruecken latziehen`) | Kniebeuge, Bankdrücken, Latziehen: kleinster und größter Wert 2,54 cm; bis D-460 0,0 cm (berührt); Messung mit Nahaufnahmen 5 min 15 s |
+| Schleifen (`render.py kniebeuge`, `bankdruecken`, `latziehen`) | Renderzeit 1.463 s, 1.585 s, 1.183 s für je 60 Bilder (nebenher liefen Prüfungen); erstes und letztes Bild je Schleife pixelgleich (0 Pixel verschieden) |
+| Dateigrößen | abgerufen je Übung (MP4, Poster, Vorschau) 79,4 KB, 63,0 KB, 68,6 KB; alle zwölf Dateien 363,1 KB (vorher 365,3 KB) |
+| Bilder der Schleifen und der App angesehen | Kontaktbogen (Ausgangs- und Endposition je Übung), `pilot-uebersicht.png`, Blatt `shorts-f-abstand.webp`: Schuh, Rückenlogo und Shorts-F wie freigegeben |
+| Bilder aus der App (`node tools/pilot-screens.mjs` gegen `pnpm preview`) | `pilot-uebersicht.png`, Player zu und auf, Details, Liste; Aufnahme `pilot-player.mp4` und `.webm` (254 Bilder, 20 je Sekunde), `pilot-bewegung.mp4` |
+| `pnpm build`, `pnpm check:bundle` (D-461) | bestanden; Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 12 von 12 im Offline-Vorrat |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (15,4 min); WebKit in der CI zum Entwurfs-PR |
+| `pnpm format:check`, `pnpm check:docs` (D-461) | bestanden |

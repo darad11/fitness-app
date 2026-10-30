@@ -122,6 +122,11 @@ RUECKEN_SEITE = 6.2  # Seitenlänge des quadratischen Bilds „ruecken“ in Ver
 # wird damit rund ein Drittel kleiner (2,28 statt 3,40); die Mitte des Blocks bleibt, wo sie auf dem Board liegt.
 # Bis D-458 galt das Verhältnis des Boards (`BOARD["ruecken_versal"]`)
 RUECKEN_LOGO = {"f": 2.28, "abstand": 0.82}
+# Shorts-F (D-461): Mitte so weit von vorn nach außen (Grad um den Oberschenkel), dass zwischen F und Seitenstreifen
+# auf dem Stoff ein klarer Abstand bleibt (Board: rund die halbe Breite des F, mindestens 2 cm), in allen Bildern der
+# Pilot-Übungen. Bis D-460 lag die Mitte beim Punkt des Netzes nahe 24° (`BOARD["hose_f"]["winkel"]`, gemessen am
+# Board); dort berührte das F den Streifen. Höhe über dem Saum und Größe wie bisher
+HOSE_F_WINKEL = 10.0
 RUMPFKNOCHEN = ("root", "spine01", "spine02", "spine03", "spine04", "spine05", "neck01", "neck02", "neck03",
                 "pelvis.L", "pelvis.R", "clavicle.L", "clavicle.R", "breast.L", "breast.R", "shoulder01.L",
                 "shoulder01.R")
@@ -377,6 +382,27 @@ def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[s
         achse = (k.N - k.O).normalized()
     _, beste = min(kandidaten)
     P0 = verts[beste].co.copy()
+    if "genau" in lage:
+        # Genau auf den Winkel `genau` (D-461): Der Punkt des Netzes bei `winkel` gibt nur die Höhe vor (so bleibt
+        # das Logo so hoch wie bisher); die Mitte liegt auf der Haut, wo ein Strahl von der Achse des Knochens in
+        # dieser Höhe unter dem Winkel `genau` sie trifft. Bis D-460 sprang die Mitte zum nächsten Punkt des
+        # Netzes (am Oberschenkel rund 10° auseinander)
+        from mathutils.bvhtree import BVHTree
+
+        _, t0, Lk, _ = k.glied(P0, f"upperleg01.{s}", f"lowerleg01.{s}", Vector((0, -1, 0)), s)
+        A, B = k.kopf[f"upperleg01.{s}"], k.kopf[f"lowerleg01.{s}"]
+        ach = (B - A).normalized()
+        vorn = Vector((0, -1, 0))
+        ant = (vorn - vorn.dot(ach) * ach).normalized()
+        lat = ach.cross(ant) if s == "L" else ant.cross(ach)
+        if lat.x * (1 if s == "L" else -1) < 0:
+            lat = -lat
+        w = math.radians(lage["genau"])
+        haut = BVHTree.FromPolygons([v.co for v in verts], [list(f.vertices) for f in koerper.data.polygons])
+        C = A + ach * (t0 * Lk)
+        treffer, _, _, _ = haut.ray_cast(C, ant * math.cos(w) + lat * math.sin(w), 0.3)
+        if treffer is not None:
+            P0 = treffer
     n0 = sum((v.normal for v in verts if (v.co - P0).length < 0.03), Vector()).normalized()
     hoch = (achse - achse.dot(n0) * n0).normalized()
     quer = hoch.cross(n0)
@@ -913,6 +939,8 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     bein_h = hf["hoehe"] * schnitt["bein"]
     lage_f = schnitt["bein_t"] - (hf["ueber_saum"] * schnitt["bein"] + bein_h / 2) / schnitt["Lb"]
     beinvorn = {"teil": "hose", "winkel": hf["winkel"], "lage": lage_f, "teile": ("bein",), "x": 1, "tiefe": 0.05}
+    if HOSE_F_WINKEL is not None:  # None: Stand bis D-460 (für Vorher-Bilder)
+        beinvorn["genau"] = HOSE_F_WINKEL
     kordel_bilder = _kordel_bilder(schnitt)
     kordel = {"teil": "hose", "ziel": (0.0, schnitt["z_bund"] - BOARD["bund"] * schnitt["hose_laenge"]),
               "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.06}
@@ -966,3 +994,84 @@ def haut_ausblenden(mat: bpy.types.Material) -> None:
     rng.inputs["To Max"].default_value = 0.0
     links.new(attr.outputs["Fac"], rng.inputs["Value"])
     links.new(rng.outputs["Result"], bsdf.inputs["Alpha"])
+
+
+def f_streifen_abstand(hose: bpy.types.Object, schritte: int = 10) -> dict:
+    """Shorts-F und Seitenstreifen (D-461): kürzester Abstand auf dem Stoff in der aktuellen Haltung (cm). Das Netz
+    der Shorts ohne Glättung und Dicke (verformt, Welt) wird je Dreieck dicht abgetastet (`schritte` Teilungen je
+    Kante, am F rund 2 mm), jeder Punkt eingeordnet wie im Shader: **F**, wo Deckkraft des Bilds an der UV-Stelle
+    mal Maske (`MaskeBeinvorn`, 0,45 bis 0,55 weich) über 0,5 liegt; **Streifen**, wo das Feld „Streifen“
+    positiv ist. Gemessen am linken Bein (dort sitzt das F) als gerade Strecke zwischen den Punkten; auf 2 cm
+    weicht sie vom Weg über den gekrümmten Stoff (Radius rund 9 cm) um weniger als 0,1 mm ab. Gibt auch den
+    nächsten Punkt des F und des Streifens zurück (für Nahaufnahmen)."""
+    import numpy as np
+    from mathutils import kdtree
+
+    mesh = hose.data
+    aus = [m for m in hose.modifiers if m.type in ("SUBSURF", "SOLIDIFY") and m.show_viewport]
+    for m in aus:
+        m.show_viewport = False
+    deps = bpy.context.evaluated_depsgraph_get()
+    ev = hose.evaluated_get(deps)
+    em = ev.to_mesh()
+    welt = [ev.matrix_world @ v.co for v in em.vertices]
+    ev.to_mesh_clear()
+    for m in aus:
+        m.show_viewport = True
+    streifen = [a.value for a in mesh.attributes["Streifen"].data]
+    maske = [a.value for a in mesh.attributes["MaskeBeinvorn"].data]
+    uv = [None] * len(mesh.vertices)
+    for loop in mesh.loops:
+        uv[loop.vertex_index] = tuple(mesh.uv_layers["LogoBeinvorn"].data[loop.index].uv)
+    bild = _bilder("f")["f"]
+    w, h = bild.size
+    deck = np.array(bild.pixels[:], dtype=np.float32).reshape(h, w, 4)[..., 3]
+
+    def deckkraft(u: float, v: float) -> float:
+        if not (0.0 <= u <= 1.0 and 0.0 <= v <= 1.0):
+            return 0.0
+        x, y = u * (w - 1), v * (h - 1)
+        x0, y0 = int(x), int(y)
+        x1, y1 = min(x0 + 1, w - 1), min(y0 + 1, h - 1)
+        fx, fy = x - x0, y - y0
+        return float(deck[y0, x0] * (1 - fx) * (1 - fy) + deck[y0, x1] * fx * (1 - fy)
+                     + deck[y1, x0] * (1 - fx) * fy + deck[y1, x1] * fx * fy)
+
+    def weich(x: float) -> float:
+        x = max(0.0, min(1.0, (x - 0.45) / 0.10))
+        return x * x * (3 - 2 * x)
+
+    mesh.calc_loop_triangles()
+    f_pkte, s_pkte = [], []
+    for tri in mesh.loop_triangles:
+        a, b, c = tri.vertices
+        if min(mesh.vertices[i].co.x for i in (a, b, c)) <= 0.0:
+            continue
+        mit_f = max(maske[a], maske[b], maske[c]) > 0.05
+        mit_s = max(streifen[a], streifen[b], streifen[c]) > -0.02
+        if not (mit_f or mit_s):
+            continue
+        for i in range(schritte + 1):
+            for j in range(schritte + 1 - i):
+                la, lb = i / schritte, j / schritte
+                lc = 1.0 - la - lb
+                p = welt[a] * la + welt[b] * lb + welt[c] * lc
+                if mit_s and streifen[a] * la + streifen[b] * lb + streifen[c] * lc > 0.0:
+                    s_pkte.append(p)
+                if mit_f:
+                    m = maske[a] * la + maske[b] * lb + maske[c] * lc
+                    if m > 0.45:
+                        uu = uv[a][0] * la + uv[b][0] * lb + uv[c][0] * lc
+                        vv = uv[a][1] * la + uv[b][1] * lb + uv[c][1] * lc
+                        if deckkraft(uu, vv) * weich(m) > 0.5:
+                            f_pkte.append(p)
+    if not f_pkte or not s_pkte:
+        return {"abstand_cm": float("nan"), "f_punkte": len(f_pkte), "streifen_punkte": len(s_pkte)}
+    baum = kdtree.KDTree(len(s_pkte))
+    for i, p in enumerate(s_pkte):
+        baum.insert(p, i)
+    baum.balance()
+    beste = min(((baum.find(p), p) for p in f_pkte), key=lambda x: x[0][2])
+    (s_p, _, d), f_p = beste
+    return {"abstand_cm": d * 100, "f_punkt": f_p, "streifen_punkt": s_p, "f_punkte": len(f_pkte),
+            "streifen_punkte": len(s_pkte)}

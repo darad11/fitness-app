@@ -17,6 +17,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/kleidung --runde 7     # D-453: Kleidung nach dem Board, Handgelenk
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/latziehen --runde 8   # D-455: Griffblatt Latziehen vorher/nachher
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/schuh --runde 9       # D-460: Schuh und Rückenlogo, Player-Größe
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/shorts --runde 10     # D-461: Shorts-F und Streifen, Abstand
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -529,15 +530,47 @@ def blatt_ruecken9(paket: Path) -> "Image":
                   "vorher Verhältnis des Boards (F 3,40 Versalhöhen), nachher des Startbilds (F 2,28, Abstand 0,82); Mitte des Blocks gleich")
 
 
+# Runde „Shorts-F weiter nach vorn“ (D-461): Nahaufnahmen aus `tools/uebungen-3d/shorts_bilder.py`, Ordner `<paket>/` mit
+# `shorts-<Übung>.png` und `.json` (Abstand, Bild der Schleife, Lage der nächsten Punkte von F und Streifen im Bild)
+SHORTS10 = [("kniebeuge", "Kniebeuge"), ("bankdruecken", "Bankdrücken"), ("latziehen", "Latziehen")]
+
+
+def blatt_shorts10(paket: Path) -> "Image":
+    kacheln = []
+    for datei, titel in SHORTS10:
+        werte = json.loads((paket / f"shorts-{datei}.json").read_text(encoding="utf-8"))
+        bild = Image.open(paket / f"shorts-{datei}.png").convert("RGB")
+        d = ImageDraw.Draw(bild)
+        (fx, fy), (sx, sy) = werte["pixel"]["f"], werte["pixel"]["streifen"]
+        for x, y in ((fx, fy), (sx, sy)):
+            d.ellipse((x - 5, y - 5, x + 5, y + 5), outline=(255, 255, 255), width=2)
+        d.line((fx, fy, sx, sy), fill=(255, 255, 255), width=2)
+        abstand = f"{werte['abstand_cm']:.1f} cm".replace(".", ",")
+        # Maß rechts neben der Strecke, auf dunklem Feld, damit es nicht ins F oder den Streifen läuft
+        f = schrift(22, True)
+        x0, y0 = max(fx, sx) + 16, (fy + sy) / 2 - 14
+        box = d.textbbox((x0, y0), abstand, font=f)
+        d.rounded_rectangle((box[0] - 6, box[1] - 4, box[2] + 6, box[3] + 4), radius=6, fill=(14, 18, 24))
+        d.text((x0, y0), abstand, fill=(255, 255, 255), font=f)
+        bild_nr = werte["bild"]
+        kacheln.append(kachel(bild, f"{titel} · F zum Streifen {abstand}", 420, 420,
+                              f"kleinster Abstand über alle 60 Bilder (Bild {bild_nr}), größter {werte['groesster_cm']:.1f} cm".replace(".", ",")))
+    return gitter(kacheln, 3, "Shorts-F mit Abstand zum Seitenstreifen",
+                  "linkes Bein; gemessen auf dem Stoff zwischen den nächsten Punkten von F und Streifen; Höhe über dem Saum und Größe des F wie bisher")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen); 9: D-460 (Schuh und Rückenlogo)")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen); 9: D-460 (Schuh und Rückenlogo); 10: D-461 (Shorts-F und Streifen)")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 10:
+        speichern(blatt_shorts10(paket), ziel, "shorts-f-abstand")
+        return
     if args.runde == 9:
         speichern(blatt_schuh9(paket), ziel, "schuh-1-board")
         speichern(blatt_details9(paket), ziel, "schuh-2-details")

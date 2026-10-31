@@ -151,10 +151,15 @@ test('„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuf
   await openPage(page, '/heute');
   await expect(page.getByText('Heute geplant', { exact: true })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Bereit für dein Training?' })).toHaveCount(0);
-  // Mit laufendem Training: „Training läuft“.
+  // Mit laufendem Training: „Training läuft“. Zurück über den Pfeil im Player statt Neuladen: Der Player lädt die
+  // Videos der aktuellen und der nächsten Übung vor (D-397), ein Neuladen bricht das ab, und WebKit meldet
+  // abgebrochenes Laden als Konsolenfehler (wie D-447; seit Tag A Videos hat, D-463 bis D-469).
   await page.getByRole('button', { name: 'Training starten' }).click();
   await expect(page).toHaveURL(/\/training\/einheit\//);
-  await openPage(page, '/training');
+  await page.locator('.player-head').getByRole('link', { name: 'Training', exact: true }).click();
+  await expect(page).toHaveURL(/\/training$/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
   await expect(page.getByText('Training läuft', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('region', { name: 'Bereit für dein Training?' })).toHaveCount(0);
 });

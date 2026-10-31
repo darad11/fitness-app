@@ -2700,3 +2700,12 @@ Prüfseite der Familie „Waagrechtes Ziehen“ mit dem Rudern am Kabel, sitzend
 | Zeitablauf ohne Pause im Ausgang (`haltung.ablauf`, `pause_vorn`) | für die Vorgabe an allen 60 Bildern gleich der alten Formel; beim Rudern Phase 0 nur im ersten Bild, danach sofort in Bewegung |
 | Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) | `familie-waagrechtes-ziehen.webp`, angesehen: Arme gestreckt und Rumpf vorgeneigt, am Ende Griff vor dem Bauch, Füße flach; zuerst zwei leere Nahaufnahmen (Kopf und Fußplatte verdeckten), andere Richtungen gewählt |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-470; die App ändert sich nicht, E2E wie bei D-469) | bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36 |
+
+### Phase Programme, CI zum Entwurfs-PR · 31.10.2026, Cloud-Umgebung
+
+E2E in WebKit nach D-470 (D-471).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI Lauf 359 (`8affe32`) | Lint, Typen, Unit-Tests, Dokumente, Build, Datenbank, E2E (Chromium) bestanden; E2E (WebKit) 399 bestanden, 164 übersprungen, 1 fehlgeschlagen: `program-list.spec.ts:128` „„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuft und kein Programm aktiv ist“ (webkit-mobile, auch in der Wiederholung), Konsolenfehler „…/uebungen/medien/beinpresse.webm due to access control checks.“ und „…/bankdruecken_kh.webm …“. Lauf 358 (`a653c6e`) wurde in WebKit abgebrochen, als Lauf 359 begann |
+| Test geändert: zurück über den Pfeil im Player statt Neuladen | `npx playwright test e2e/program-list.spec.ts` (Chromium): 10 bestanden, 2 übersprungen; `…:128 --repeat-each=5`: 10 bestanden |

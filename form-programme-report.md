@@ -933,3 +933,7 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife ren
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite „Waagrechtes Ziehen“.
+
+## 13. CI: Test „Bereit für dein Training?“ in WebKit (D-471)
+
+Nach D-470 war die CI in WebKit rot: Der Test „„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuft und kein Programm aktiv ist“ startet ein Training aus „Ganzkörper A/B“ und lädt danach die Seite „Training“ neu. Der Player lädt die Videos der aktuellen und der nächsten Übung vor; seit Tag A Videos hat (Beinpresse, Bankdrücken mit Kurzhanteln), bricht das Neuladen diese Abrufe ab, und WebKit meldet das als Konsolenfehler. In der App selbst lädt nichts neu. Der Test geht jetzt über den Pfeil im Player zurück, wie man es in der App tut, und prüft danach dasselbe. In Chromium bestanden; WebKit prüft die CI.

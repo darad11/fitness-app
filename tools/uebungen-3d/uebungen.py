@@ -3258,6 +3258,7 @@ class BeinbeugerLiegend(Uebung):
         KL = rig.welt(rig.punkt("lowerleg01.L", k["lowerleg01.L"]))
         KR = rig.welt(rig.punkt("lowerleg01.R", k["lowerleg01.R"]))
         mitte = (KL + KR) / 2
+        self.becken0 = self._becken_mitte()
         self.achse = Vector((-b["hebel_x"], mitte.y, mitte.z))
         a = math.radians(self.NEIGUNG)
         u = Vector((0.0, math.cos(self.theta - a), math.sin(self.theta - a)))  # längs des Unterschenkels
@@ -3345,6 +3346,12 @@ class BeinbeugerLiegend(Uebung):
         super().setzen(p)
         self.delle = geraete.eindruecken(self.polster_objekte(), self.polster_ruhe, self.auflage())
 
+    def _becken_mitte(self) -> Vector:
+        """Mitte zwischen den Köpfen der Beckenknochen (Welt)."""
+        rig = self.rig
+        k = rig.kopf
+        return (rig.welt(rig.punkt("pelvis.L", k["pelvis.L"])) + rig.welt(rig.punkt("pelvis.R", k["pelvis.R"]))) / 2
+
     def _rolle(self) -> tuple[Vector, Vector, float, float]:
         """Mitte, Achse, Halbmesser und halbe Länge der Rolle (Welt)."""
         b = geraete.BEINBEUGER
@@ -3380,7 +3387,8 @@ class BeinbeugerLiegend(Uebung):
 
     def zusatzwerte(self) -> dict:
         """Rumpf und Oberschenkel im Polster (mm, Oberfläche vor dem Eindrücken), die Rolle auf Socke und Haut der
-        Unterschenkel und zu den Schuhen, Kopf und Hals zum Gerät, Dellen im Polster."""
+        Unterschenkel und zu den Schuhen, Kopf und Hals zum Gerät, das Becken gegenüber dem Ausgang (D-479), Dellen im
+        Polster."""
         from mathutils.bvhtree import BVHTree
 
         import schuhe
@@ -3429,6 +3437,10 @@ class BeinbeugerLiegend(Uebung):
                 if ort is not None:
                     beste = min(beste, d)
         aus["Kopf und Hals zum Gerät (mm)"] = beste * 1000
+        # Becken (Auftrag des Produktinhabers, D-479): bleibt in jeder Phase auf dem Polster und hebt sich beim Beugen
+        # nicht; gemessen als Verschiebung der Beckenmitte gegenüber dem Ausgang, senkrecht zum Oberschenkelpolster
+        # (+ vom Polster weg); die Auflage zeigt die Tiefe der Hüfte am Scheitel (oben)
+        aus["Becken gegenüber dem Ausgang angehoben (mm)"] = (self._becken_mitte() - self.becken0).dot(self.n_schenkel) * 1000
         aus["Polster: tiefste Delle (mm)"] = self.delle * 1000
         aus["Polster: Haut oder Kleidung durch die Oberfläche (mm)"] = geraete.durch_polster(self.polster_objekte(), self.auflage()) * 1000
         return aus

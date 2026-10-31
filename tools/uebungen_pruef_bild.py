@@ -119,6 +119,7 @@ MESSWERTE = (
     ("Rumpf zur Waagrechten (Grad, + Kopf tiefer)", "Rumpf zur Waagrechten (+ Kopf tiefer)", "spanne", "°"),
     ("Brust und Bauch im Polster (mm)", "Brust und Bauch im Polster", "spanne", " mm"),
     ("Hüfte am Scheitel im Polster (mm)", "Hüfte am Scheitel im Polster", "spanne", " mm"),
+    ("Becken gegenüber dem Ausgang angehoben (mm)", "Becken gegenüber dem Ausgang angehoben", "spanne", " mm"),
     ("Oberschenkel im Polster (mm)", "Oberschenkel im Polster", "spanne", " mm"),
     ("Kniegelenk zur Drehachse (mm)", "Kniegelenk zur Drehachse", "max", " mm"),
     ("Hebel gedreht (Grad)", "Hebel und Rolle gedreht", "spanne", "°"),

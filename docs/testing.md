@@ -2822,3 +2822,12 @@ Länge, Schnitt, Logos, Rückenlogo, Seitenstreifen, Kollision mit den Shorts, G
 | Haut an den Säumen | Shorts: mindestens 28,3 mm unter dem Stoff. Shirt: Rudern bis 5,5 mm durch den Ärmel nahe dem Saum (Arme hinten; die Haut ist dort halb ausgeblendet; Ärmel unverändert), Kniebeuge 0,05 mm am Kragen, Beinbeuger keine |
 | Standbilder | `kleidung2-1-board.webp` und `kleidung2-2-player.webp`, angesehen |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, vorab gespeichert 191 von 294 Dateien, Übungsbilder 40 von 40 |
+
+### Becken beim Beinbeuger · 31.10.2026, Cloud-Umgebung
+
+Messwert „Becken gegenüber dem Ausgang angehoben“ (D-479).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py beinbeuger_liegend --pruefen --nur-messwerte`, Kleidung nach D-477 mit Saum 7 cm unter dem Bund (Zwischenstand) | Becken 0,00 mm in allen 60 Bildern; Hüfte am Scheitel 2,74 mm im Polster (D-475: 4,00 mm), Oberschenkel 4,00 mm (D-475: 1,33 mm darüber), durch das Polster 0,00 mm; 147 s |
+| dasselbe mit der Kleidung nach D-478 | Becken 0,00 mm in allen 60 Bildern; Hüfte am Scheitel 2,74 mm, Brust und Bauch 4,00 mm, Oberschenkel 4,00 mm im Polster; durch das Polster 0,00 mm; Shorts-F zum Seitenstreifen 4,95 cm (D-475: 2,54 cm; F kleiner, Streifen schmaler); Kopf und Hals 58,4 mm vom Gerät (D-475: 60,7 mm); Socke zu den Shorts mindestens 6,3 cm (D-475: 9,5 cm, die Beine der Shorts sind weiter); tiefste Delle 3,6 mm (D-475: 3,4 mm); übrige Werte wie bei D-475; 156 s |

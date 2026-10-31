@@ -1277,4 +1277,12 @@ Bekannte Einschränkungen: Reste in der Hüftfalte (20.2); beim Rudern kommt die
 Nächste Schritte: Halt bis zur Freigabe; danach alle zehn fertigen Schleifen mit der neuen Kleidung neu, dann der Beinbeuger
 ```
 
+## 21. Becken beim Beinbeuger (D-479)
+
+Dein Auftrag: prüfen, dass das Becken in jeder Phase auf dem Polster bleibt und sich beim Beugen nicht anhebt.
+
+- **Messwert:** Das Becken hebt sich gegenüber dem Ausgang um **0,00 mm**, in allen 60 Bildern. Gemessen an der Mitte zwischen den Beckenknochen, senkrecht zum Oberschenkelpolster.
+- **Auflage:** Die Hüfte liegt am Scheitel in jedem Bild 2,74 mm im Polster, Brust und Bauch 4,00 mm, die Oberschenkel 4,00 mm. Nichts kommt durch die Oberfläche der Polster (0,00 mm).
+- Der Rumpf liegt in der Bewegung fest, nur Unterschenkel, Hebel und Rolle drehen. Der Messwert steht künftig auf der Prüfseite.
+
 **Halt:** Ich warte auf deine Freigabe der Kleidung.

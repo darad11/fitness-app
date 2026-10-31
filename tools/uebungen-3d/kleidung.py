@@ -104,22 +104,42 @@ HOSE_BUND = 0.22  # oberer Rand des Bunds knapp unter dem Nabel (Anteil Hüftgel
 AKROMION = 0.14  # Schulterpunkt (Ansatz des Ärmels) rund 0,14 Oberarmlängen vor dem Schultergelenk
 WEITE_VORN_HINTEN = 0.55  # Weite des Shirts vorn und hinten im Verhältnis zur Seite
 SCHRITT_ABSTAND = 0.03  # Saum des Shirts höchstens bis so weit über dem Schritt, m (bis D-477)
-# Saum des Shirts (D-478, Hinweis des Produktinhabers): 1 cm unter der Unterkante des Bunds der Shorts; das Shirt
-# bedeckt die Shorts also um die Höhe des Bunds plus 1 cm (rund 4 cm). Bis D-477 reichte es nach der Länge des Boards
-# bis 3 cm über den Schritt (21 cm über die Shorts), die Figur wirkte wie in einem Ganzkörperanzug
-SAUM_UNTER_BUND = 0.01
-# Fall des Shirts (D-478): Unter der Brust hängt der Stoff nach unten, statt Taille, Bauch und Hohlkreuz zu folgen:
-# je Richtung um den Rumpf bis `FALL` des Wegs zur Hülle aller Querschnitte darüber (von der Achsel abwärts); dazu Luft,
-# die zum Saum hin auf `LUFT_SAUM` wächst. Schultern und Brust liegen an wie bisher (Stange und Bank liegen auf dem Stoff)
-FALL = 0.85
-LUFT_SAUM = 0.010
-# Weite Beine der Shorts (D-478): Je Bein fällt der Stoff von Hüfte und Gesäß gerade nach unten (Hülle der Querschnitte
+# Saum des Shirts (D-477, D-478, Hinweise des Produktinhabers): 7 cm unter der Unterkante des Bunds der Shorts; das
+# Shirt bedeckt die Shorts also um die Höhe des Bunds plus 7 cm (rund 10 cm), etwa bis zum oberen Rand des Gesäßes. Bis
+# D-476 reichte es nach der Länge des Boards bis 3 cm über den Schritt (21 cm über die Shorts), die Figur wirkte wie in
+# einem Ganzkörperanzug; mit 1 cm (D-477, rund 4 cm) wirkte es wie ein kurzes T-Shirt für die Straße, nicht wie ein
+# Sport-Shirt
+SAUM_UNTER_BUND = 0.07
+# Fall des Shirts (D-477, D-478): Unter der Brust hängt der Stoff etwas nach unten, statt Taille, Bauch und Hohlkreuz
+# eng zu folgen: je Richtung um den Rumpf bis `FALL` des Wegs zur Hülle aller Querschnitte darüber (von der Achsel
+# abwärts); dazu Luft, die zum Saum hin auf `LUFT_SAUM` wächst. Schultern und Brust liegen an wie bisher (Stange und
+# Bank liegen auf dem Stoff). Mit 0,85 (D-477) fiel es kastig wie Straßenkleidung; enger nach den Hinweisen des
+# Produktinhabers (D-478): 0,25 und 5 mm
+FALL = 0.25
+LUFT_SAUM = 0.005
+# Weite aus dem Umriss des Boards (`_schnitt`): nur dieser Anteil der halben Differenz zwischen Umriss und Körper. Das
+# Board zeigt das Shirt ohne Körper, am Körper wirkte die volle Weite kastig (D-478, Hinweis „noch etwas enger“)
+WEITE_SCHNITT = 0.5
+# Weite Beine der Shorts (D-477): Je Bein fällt der Stoff von Hüfte und Gesäß gerade nach unten (Hülle der Querschnitte
 # um den Oberschenkel, Anteil `HOSE_FALL`), dazu Luft, die zum Saum hin wächst; innen nur wenig (die Beine stehen nah)
 HOSE_FALL = 0.9
 HOSE_LUFT = {"aussen": 0.022, "vorn_hinten": 0.018, "innen": 0.006}
 HOSE_INNEN_MAX = 0.012  # innen höchstens so viel Weite, m
-# Saumband des Shirts (D-478): Höhe, Dicke und Abstand über dem Stoff; die Kante wirft einen leichten Schatten
+# Brücke über die Gesäßfalte (D-478, `_bruecke`): Die Shorts überspannen sie ab `BRUECKE_SCHRITT` über dem Schritt,
+# gleitend über `BRUECKE_RAMPE`
+BRUECKE_SCHRITT = 0.04
+BRUECKE_RAMPE = 0.03
+# Seitenstreifen der Shorts (D-478, Hinweis des Produktinhabers „etwas schmäler“): halbe Breite je Höhe 75 % der
+# Werte des Boards (`BOARD["streifen"]`)
+STREIFEN_ANTEIL = 0.75
+# Saumband des Shirts (D-477): Höhe, Dicke und Abstand über dem Stoff; die Kante wirft einen leichten Schatten
 SAUMBAND = {"hoehe": 0.016, "dicke": 0.003, "ueber": 0.0015, "unter": 0.002}
+# Saum über den Shorts (D-478): In tiefer Hüftbeugung (Kniebeuge, Rudern) kamen die Shorts seitlich an der Hüfte bis
+# 7 mm durch das Shirt und bis 14 mm in das Saumband. Ein Shrinkwrap legt das Shirt (Zone bis `SAUM_ZONE` über dem
+# Saum, auslaufend) und das Saumband in jeder Haltung mindestens `UEBER_SHORTS` über die Fläche der Shorts (Hilfsnetz
+# „Kollision Shorts“ ohne Dicke, nicht gerendert). Die Zone endet unter dem Bund der Shorts (10 cm über dem Saum)
+SAUM_ZONE = (0.08, 0.09)
+UEBER_SHORTS = {"shirt": 0.002, "saumband": 0.0035}
 HOSE_WEITE = {"vorn_hinten": 0.45, "innen": 0.15, "steigung": 1.5}  # Weite der Shorts je Seite, zum Saum hin
 # Rundhalskragen (D-431): vorn unter der Drosselgrube, hinten über dem Halswirbel, seitlich Halsbreite plus Rand
 KRAGEN = {"unter_drosselgrube": 0.015, "ueber_halswirbel": 0.012,
@@ -138,6 +158,10 @@ RUECKEN_SEITE = 6.2  # Seitenlänge des quadratischen Bilds „ruecken“ in Ver
 # wird damit rund ein Drittel kleiner (2,28 statt 3,40); die Mitte des Blocks bleibt, wo sie auf dem Board liegt.
 # Bis D-458 galt das Verhältnis des Boards (`BOARD["ruecken_versal"]`)
 RUECKEN_LOGO = {"f": 2.28, "abstand": 0.82}
+# Größe der Logos (D-478, Hinweis des Produktinhabers): Brust-F, Shorts-F und Rückenlogo (F und Wortmarke) je 20 %
+# kleiner als nach dem Board. Das Brust-F behält seine Mitte, das Rückenlogo die Oberkante des F wie auf dem Board,
+# das Shorts-F seinen Abstand zum Saum
+LOGO_GROESSE = 0.8
 # Shorts-F (D-461): Mitte so weit von vorn nach außen (Grad um den Oberschenkel), dass zwischen F und Seitenstreifen
 # auf dem Stoff ein klarer Abstand bleibt (Board: rund die halbe Breite des F, mindestens 2 cm), in allen Bildern der
 # Pilot-Übungen. Bis D-460 lag die Mitte beim Punkt des Netzes nahe 24° (`BOARD["hose_f"]["winkel"]`, gemessen am
@@ -234,7 +258,7 @@ def _schnitt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, oeffnung: di
     # Saum: Länge vom Board, aber über dem Schritt. Darunter läge der Stoff um jedes Bein einzeln wie eine
     # Hose, weil er dem Körper folgt; ein Shirt hängt dort frei (Vereinfachung, D-450)
     z_schritt = min(v.co.z for v in verts if abs(v.co.x) < 0.015)
-    # Saum (D-478): knapp unter dem Bund der Shorts (`SAUM_UNTER_BUND`); Bund wie unten für die Shorts
+    # Saum (D-477, D-478): unter dem Bund der Shorts (`SAUM_UNTER_BUND`); Bund wie unten für die Shorts
     z_bund0 = k.O.z + HOSE_BUND * L
     B0 = _breite(koerper, teile, z_bund0, ("rumpf",)) + 2 * ABSTAND["hose"]
     z_saum = z_bund0 - BOARD["bund"] * BOARD["hose_laenge"] * B0 - SAUM_UNTER_BUND
@@ -251,7 +275,7 @@ def _schnitt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, oeffnung: di
         else:
             ziel = BOARD["taille"] * W + (BOARD["saum"] - BOARD["taille"]) * W * min(1.0, (z_taille - z) / (z_taille - z_saum))
         koerper_w = _breite(koerper, teile, z, ("rumpf", "bein")) + 2 * ABSTAND["shirt"]
-        weite.append((z, max(0.0, (ziel - koerper_w) / 2)))
+        weite.append((z, WEITE_SCHNITT * max(0.0, (ziel - koerper_w) / 2)))
     # Shorts: Bund und Saum
     z_bund = k.O.z + HOSE_BUND * L
     B = _breite(koerper, teile, z_bund, ("rumpf",)) + 2 * ABSTAND["hose"]
@@ -338,14 +362,14 @@ def _weite(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[st
                 anteil = max(c, 0.0) ** 2 + HOSE_WEITE["vorn_hinten"] * fb + HOSE_WEITE["innen"] * max(-c, 0.0) ** 2
                 e_hose = schnitt["weite_hose"] * vv * anteil
         hose.append(e_hose)
-    # Fall (D-478): Shirt unter der Brust und Beine der Shorts hängen gerade nach unten
+    # Fall (D-477, D-478): Shirt unter der Brust und Beine der Shorts hängen gerade nach unten
     fall_s, fall_h = _fall_shirt(koerper, k, teile, schnitt), _fall_hose(koerper, k, teile, schnitt)
     return [max(a, b) for a, b in zip(shirt, fall_s)], [max(a, b) for a, b in zip(hose, fall_h)]
 
 
 def _fall_shirt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict) -> list[float]:
-    """Fall des Shirts (D-478, Ruhehaltung): Für jede Richtung um den Rumpf (6°-Fächer, beide Seiten zusammen) und
-    jede Höhe (1 cm) unter der Achsel der größte Abstand der Haut von der Achse des Rumpfs; die Hülle nimmt von oben
+    """Fall des Shirts (D-477, D-478, Ruhehaltung): Für jede Richtung um den Rumpf (6°-Fächer, beide Seiten zusammen)
+    und jede Höhe (1 cm) unter der Achsel der größte Abstand der Haut von der Achse des Rumpfs; die Hülle nimmt von oben
     nach unten das Größte darüber mit. Der Stoff steht um `FALL` des Wegs zur Hülle ab: So hängt er von der Brust und
     den Schulterblättern gerade nach unten, statt in Taille, Bauch und Hohlkreuz einzufallen. Dazu Luft, die von der
     Achsel bis zum Saum auf `LUFT_SAUM` wächst."""
@@ -382,7 +406,7 @@ def _fall_shirt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: li
 
 
 def _fall_hose(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict) -> list[float]:
-    """Weite Beine der Shorts (D-478, Ruhehaltung): je Bein für jede Richtung um den Oberschenkel (12°-Fächer) und
+    """Weite Beine der Shorts (D-477, Ruhehaltung): je Bein für jede Richtung um den Oberschenkel (12°-Fächer) und
     jeden Abschnitt längs (2 cm) ab dem Hüftgelenk der größte Abstand der Haut von seiner Achse; die Hülle nimmt nach
     unten das Größte darüber mit (Gesäß, Hüfte). Der Stoff steht um `HOSE_FALL` des Wegs zur Hülle ab und bekommt Luft,
     die zum Saum hin wächst (`HOSE_LUFT`); innen höchstens `HOSE_INNEN_MAX`, damit sich die Beine nicht kreuzen."""
@@ -444,8 +468,8 @@ def _glatte_normalen(koerper: bpy.types.Object, radius: float = 0.03) -> list[Ve
 def _streifen(koerper: bpy.types.Object, schnitt: dict, normalen: list[Vector]) -> list[float]:
     """Feld des Lime-Streifens an der Seite der Shorts (m, positiv = Streifen): Winkel der geglätteten
     Normale zur Seite (0 = genau seitlich nach außen, vorn negativ, hinten positiv) gegen die halbe Breite,
-    die vom Bund zum Saum gleichmäßig wächst (`BOARD["streifen"]`, hinten oben breiter). Der Streifen
-    beginnt unter dem Bund und reicht bis zum Saum, auf beiden Beinen."""
+    die vom Bund zum Saum gleichmäßig wächst (`BOARD["streifen"]`, hinten oben breiter; seit D-478 mal
+    `STREIFEN_ANTEIL`). Der Streifen beginnt unter dem Bund und reicht bis zum Saum, auf beiden Beinen."""
     st = BOARD["streifen"]
     aus = []
     for v, n in zip(koerper.data.vertices, normalen):
@@ -455,7 +479,7 @@ def _streifen(koerper: bpy.types.Object, schnitt: dict, normalen: list[Vector]) 
         phi = math.degrees(math.atan2(n.y, n.x * sx))
         w = max(0.0, min(1.0, (vv - BOARD["bund"]) / (1 - BOARD["bund"])))
         oben = st["oben_hinten"] if phi > 0 else st["oben_vorn"]
-        alpha = oben + (st["saum"] - oben) * w
+        alpha = (oben + (st["saum"] - oben) * w) * STREIFEN_ANTEIL
         feld = (alpha - abs(phi)) * math.pi / 180 * 0.09
         aus.append(min(feld, (vv - BOARD["bund"]) * schnitt["hose_laenge"]))
     return aus
@@ -540,15 +564,46 @@ def _glaetten(bm: bmesh.types.BMesh, runden: int, anteil: float = 0.5) -> None:
             v.co = co
 
 
+def _bruecke(bm: bmesh.types.BMesh, haut: dict, teile: list[str], nummer, von: float, bis: float) -> None:
+    """Stoff überspannt hinten die Rinnen quer zum Körper (D-478): Gesäßfalte und Rinne der Wirbelsäule. Je Scheibe von
+    1 cm (Höhe der Haut in der Ruhehaltung, zwischen `von` und `bis`) auf der hinteren Hälfte von Rumpf und Hüfte je
+    Seite der hinterste Punkt des Stoffs; dazwischen liegt kein Punkt tiefer als die Gerade zwischen beiden. So folgt
+    der Stoff dem Gesäß nicht mehr in die Falte. Ab `von` setzt die Brücke über `BRUECKE_RAMPE` gleitend ein: Unten
+    am Schritt ist die Falte bis 7,7 cm tief, eine Brücke dort zog sich in tiefer Beugung zu einer Spitze."""
+    scheiben: dict[int, list] = {}
+    for v in bm.verts:
+        co0 = haut[v][0]
+        if von <= co0.z <= bis and teile[v[nummer]] in ("rumpf", "bein"):
+            scheiben.setdefault(int((co0.z - von) / 0.01), []).append(v)
+    for verts in scheiben.values():
+        y_mitte = sum(haut[v][0].y for v in verts) / len(verts)
+        hinten = [v for v in verts if haut[v][0].y > y_mitte]
+        links = [v for v in hinten if v.co.x >= 0.0]
+        rechts = [v for v in hinten if v.co.x < 0.0]
+        if not links or not rechts:
+            continue
+        a, b = max(links, key=lambda v: v.co.y).co.copy(), max(rechts, key=lambda v: v.co.y).co.copy()
+        if a.x - b.x < 0.01:
+            continue
+        for v in hinten:
+            if b.x < v.co.x < a.x:
+                w = min(1.0, (haut[v][0].z - von) / BRUECKE_RAMPE)
+                tiefe = b.y + (a.y - b.y) * (v.co.x - b.x) / (a.x - b.x) - v.co.y
+                if tiefe > 0.0:
+                    v.co.y += w * tiefe
+
+
 def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld: list[float],
           abstand: float, rahmen: dict[str, dict], rand: float = 0.03, kragen: list[float] | None = None,
-          weite: list[float] | None = None, attribute: dict[str, list[float]] | None = None) -> bpy.types.Object:
+          weite: list[float] | None = None, attribute: dict[str, list[float]] | None = None,
+          bruecke: tuple[float, float, list[str]] | None = None) -> bpy.types.Object:
     """Kleidungsstück: Flächen, deren Eckpunkte höchstens `rand` außerhalb des Saums liegen, kopiert,
     um `abstand` plus die Weite des Schnitts (`weite`, je Eckpunkt) versetzt und geglättet; mit denselben
     Gewichten am Skelett. Je Logo und Detail eine UV-Schicht (ebene Projektion auf die Bildebene) und eine
     Maske: nur Flächen des erlaubten Körperteils in Reichweite der Bildebene, die zu ihr zeigen. Mit
     `kragen` (Abstand zur Halsöffnung je Eckpunkt) hängt der Stoff nahe der Öffnung am Halsansatz
-    (`_kragen_binden`, D-431). `attribute`: weitere Felder je Eckpunkt für den Shader (z. B. Streifen)."""
+    (`_kragen_binden`, D-431). `attribute`: weitere Felder je Eckpunkt für den Shader (z. B. Streifen). Mit `bruecke`
+    (von, bis, Körperteil je Eckpunkt) überspannt der Stoff hinten die Rinnen quer zum Körper (`_bruecke`, D-478)."""
     quelle = koerper.data
     behalten = {v.index for v in quelle.vertices if feld[v.index] > -rand}
     bm = bmesh.new()
@@ -564,6 +619,8 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
     haut = {v: (v.co.copy(), v.normal.copy()) for v in bm.verts}
     for v in bm.verts:
         v.co = v.co + v.normal * (abstand + (weite[v[nummer]] if weite else 0.0))
+    if bruecke is not None:
+        _bruecke(bm, haut, bruecke[2], nummer, bruecke[0], bruecke[1])
     _glaetten(bm, 6)
     for v in bm.verts:
         co0, n0 = haut[v]
@@ -732,8 +789,9 @@ def _buendchen(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.
 
 def _saumband(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.types.Object, schnitt: dict,
               material: bpy.types.Material) -> bpy.types.Object:
-    """Saumband des Shirts (D-478): ein Band auf dem Saum am Rumpf wie das Kragenbündchen (`_buendchen`), damit
-    zwischen Shirt und Shorts eine Kante mit leichtem Schatten zu sehen ist, auch bäuchlings und von hinten. Aus den
+    """Saumband des Shirts (D-477, Gewichte D-478): ein Band auf dem Saum am Rumpf wie das Kragenbündchen
+    (`_buendchen`), damit zwischen Shirt und Shorts eine Kante mit leichtem Schatten zu sehen ist, auch bäuchlings und
+    von hinten. Aus den
     Punkten, in denen das Feld `Saum` des Shirts die Null kreuzt (nur nahe der Saumhöhe, nicht an den Ärmeln), nach
     dem Winkel um den Rumpf geordnet, geglättet und auf 96 Stützen verteilt; jede Stütze mindestens
     `SAUMBAND["ueber"]` über dem Stoff. Unterkante `SAUMBAND["unter"]` unter dem Saum (sie verdeckt die Schnittkante),
@@ -802,12 +860,21 @@ def _saumband(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.t
     obj = bpy.data.objects.new("Saumband", me)
     bpy.context.scene.collection.objects.link(obj)
     obj.parent = shirt.parent
+    # Gewichte je Stütze aus den zehn nächsten Punkten des Shirts (nach Abstand gewichtet), für beide Ecken gleich: So
+    # bleibt der Querschnitt des Bands in jeder Haltung gerade; mit den Gewichten des jeweils nächsten Punkts je Ecke
+    # verdrehte es sich in tiefer Beugung hinten am Gesäß zu einer Zickzackkante (D-478)
     kd = {g.index: g.name for g in shirt.vertex_groups}
     namen = {g.name: obj.vertex_groups.new(name=g.name) for g in koerper.vertex_groups}
-    for i, q in enumerate(ecken):
-        _, j, _ = baum.find(q)
-        for g in sv[j].groups:
-            namen[kd[g.group]].add([i], g.weight, "REPLACE")
+    for i, (p, _) in enumerate(stuetzen):
+        summe, gewichte = 0.0, {}
+        for _, j, d in baum.find_n(p, 10):
+            f = 1.0 / (d + 0.004)
+            summe += f
+            for g in sv[j].groups:
+                gewichte[g.group] = gewichte.get(g.group, 0.0) + f * g.weight
+        for gruppe, w in gewichte.items():
+            if w / summe > 1e-4:
+                namen[kd[gruppe]].add([2 * i, 2 * i + 1], w / summe, "REPLACE")
     mod = obj.modifiers.new("Skelett", "ARMATURE")
     mod.object = skelett
     dicke = obj.modifiers.new("Dicke", "SOLIDIFY")
@@ -818,6 +885,41 @@ def _saumband(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.t
     sub.render_levels = 2
     obj.data.materials.append(material)
     return obj
+
+
+def _ueber_shorts(shirt: bpy.types.Object, saumband: bpy.types.Object, hose: bpy.types.Object,
+                  skelett: bpy.types.Object, zone: list[float]) -> bpy.types.Object:
+    """Saum über den Shorts (D-478): Hilfsnetz „Kollision Shorts“ (dasselbe Netz wie die Shorts, nur mit dem Skelett,
+    ohne Dicke und Glättung, nicht gerendert) und je ein Shrinkwrap (nächster Punkt der Fläche, nur außen) am Shirt,
+    gewichtet mit `zone` je Eckpunkt des Körpers, und am Saumband. Er sitzt direkt nach dem Skelett, vor Dicke und
+    Glättung. Punkte, die in einer Haltung unter die Fläche der Shorts geraten oder näher als `UEBER_SHORTS` daran
+    liegen, rücken nach außen; alle anderen bleiben, wo das Skelett sie hinsetzt."""
+    # Dasselbe Netz: Gewichte und Namen der Gruppen gehören zum Netz (seit Blender 3.0), das Hilfsnetz hat sie schon
+    huelle = bpy.data.objects.new("Kollision Shorts", hose.data)
+    bpy.context.scene.collection.objects.link(huelle)
+    huelle.parent = hose.parent
+    mod = huelle.modifiers.new("Skelett", "ARMATURE")
+    mod.object = skelett
+    # unsichtbar für jeden Strahl: Die Prüfansichten und die Schleife setzen `hide_render` aller Objekte neu (wie bei
+    # der Liegefläche des Unterarmstützes); sonst läge ein zweites Netz der Shorts ohne Dicke genau auf ihnen
+    huelle.hide_render = True
+    for art in ("camera", "diffuse", "glossy", "transmission", "volume_scatter", "shadow"):
+        setattr(huelle, f"visible_{art}", False)
+    gruppe = shirt.vertex_groups.new(name="Saumzone")
+    for i, a in enumerate(shirt.data.attributes["nummer"].data):
+        w = zone[a.value]
+        if w > 0.0:
+            gruppe.add([i], w, "REPLACE")
+    for obj, abstand, gruppe_name in ((shirt, UEBER_SHORTS["shirt"], "Saumzone"),
+                                      (saumband, UEBER_SHORTS["saumband"], "")):
+        sw = obj.modifiers.new("Ueber den Shorts", "SHRINKWRAP")
+        sw.target = huelle
+        sw.wrap_method = "NEAREST_SURFACEPOINT"
+        sw.wrap_mode = "OUTSIDE"
+        sw.offset = abstand
+        sw.vertex_group = gruppe_name
+        obj.modifiers.move(len(obj.modifiers) - 1, 1)  # direkt nach dem Skelett
+    return huelle
 
 
 # ---------------------------------------------------------------------- Logos als Bild
@@ -1116,20 +1218,22 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     buendchen = KRAGEN["buendchen"]
     # Logos nach dem Board: Höhe des F, Mittelpunkt des Bilds; Seitenlänge des Bilds aus der Höhe
     bf, rf, rv, hf = BOARD["brust_f"], BOARD["ruecken_f"], BOARD["ruecken_versal"], BOARD["hose_f"]
-    brust_h = bf["hoehe"] * W
+    brust_h = bf["hoehe"] * W * LOGO_GROESSE
     brust = {"teil": "shirt", "ziel": (bf["quer"] * W, oeffnung["vorn"].z - buendchen - bf["unter_buendchen"] * W),
              "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.08}
-    # Rücken (D-459): Versalhöhe der Wortmarke wie auf dem Board, F in der Proportion des Startbilds
-    # (`RUECKEN_LOGO`); Mitte des Blocks (F, Abstand, Wortmarke) an der Stelle des Boards. Das Bild hat den
-    # Block senkrecht mittig, seine Mitte ist also die Mitte des Bilds
-    versal = rf["hoehe"] * W / rv["f"]
+    # Rücken (D-459): Versalhöhe der Wortmarke wie auf dem Board (seit D-478 mal `LOGO_GROESSE`), F in der
+    # Proportion des Startbilds (`RUECKEN_LOGO`). Lage (D-478, Hinweis des Produktinhabers „bisschen weiter nach
+    # oben“): Oberkante des F wie auf dem Board, der Block (F, Abstand, Wortmarke) hängt darunter; bis D-477 lag
+    # seine Mitte an der Stelle des Boards, das F begann damit 2,2 cm tiefer (mit `LOGO_GROESSE` 3,9 cm). Das Bild
+    # hat den Block senkrecht mittig, seine Mitte ist also die Mitte des Bilds
+    versal = rf["hoehe"] * W / rv["f"] * LOGO_GROESSE
     rl = RUECKEN_LOGO
     ruecken_h = rl["f"] * versal
     seite_r = RUECKEN_SEITE * versal
-    mitte_r = oeffnung["hinten"].z - buendchen - rf["oben"] * W - (rv["f"] + rv["abstand"] + 1.0) / 2 * versal
+    mitte_r = oeffnung["hinten"].z - buendchen - rf["oben"] * W - (rl["f"] + rl["abstand"] + 1.0) / 2 * versal
     f_oben_unter = oeffnung["hinten"].z - buendchen - (mitte_r + (rl["f"] + rl["abstand"] + 1.0) / 2 * versal)
     ruecken = {"teil": "shirt", "ziel": (0.0, mitte_r), "blick": (0.0, 1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.10}
-    bein_h = hf["hoehe"] * schnitt["bein"]
+    bein_h = hf["hoehe"] * schnitt["bein"] * LOGO_GROESSE
     lage_f = schnitt["bein_t"] - (hf["ueber_saum"] * schnitt["bein"] + bein_h / 2) / schnitt["Lb"]
     beinvorn = {"teil": "hose", "winkel": hf["winkel"], "lage": lage_f, "teile": ("bein",), "x": 1, "tiefe": 0.05}
     if HOSE_F_WINKEL is not None:  # None: Stand bis D-460 (für Vorher-Bilder)
@@ -1142,10 +1246,13 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
               "hose": {"Beinvorn": _rahmen(koerper, k, teile, beinvorn, bein_h / F_ANTEIL)}}
     # Kordel: Bildmitte an der Unterkante des Bunds, die Schnüre hängen in der unteren Hälfte des Bilds
     rahmen["hose"]["Kordel"] = _rahmen(koerper, k, teile, kordel, kordel_bilder["seite"])
+    # Hinten überspannt der Stoff die Gesäßfalte und die Rinne der Wirbelsäule (D-478): Shorts ab 4 cm über dem Schritt
+    # bis über den Bund, Shirt vom Saum bis unter die Achseln
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"], weite=weite_hose,
-                 attribute={"Streifen": streifen, "Bund": bund})
+                 attribute={"Streifen": streifen, "Bund": bund},
+                 bruecke=(schnitt["z_schritt"] + BRUECKE_SCHRITT, schnitt["z_bund"] + 0.02, teile))
     shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"],
-                  weite=weite_shirt)
+                  weite=weite_shirt, bruecke=(schnitt["z_saum"] - 0.04, schnitt["z_w"], teile))
     hose.data.materials.append(stoff_material("Shorts", SHORTS, [("Beinvorn", "f", {"f": LIME})],
                                               kordel=kordel_bilder, streifen=True,
                                               bund=BOARD["bund"] * schnitt["hose_laenge"]))
@@ -1153,7 +1260,16 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
                                                               ("Ruecken", "ruecken", {"f": LIME, "wort": WEISS})]))
     kragen = _buendchen(shirt, koerper, skelett, oeffnung, stoff_material("Kragen", TEE, [], mit_saum=False))
     saumband = _saumband(shirt, koerper, skelett, schnitt, stoff_material("Saumband", TEE, [], mit_saum=False))
-    teile_obj = [shirt, hose, kragen, saumband]
+    # Zone des Shirts über den Shorts (D-478): Rumpf und Hüfte bis `SAUM_ZONE` über dem Saum, nach dem Feld des Saums
+    # ohne Halsausschnitt; Ärmel und Hals nie (dort läge der nächste Punkt der Shorts weit weg)
+    L = (k.N - k.O).length
+    a, b = SAUM_ZONE
+    zone = []
+    for v, teil in zip(koerper.data.vertices, teile):
+        d = (k.rumpf(v.co)[1] - schnitt["saum_s"]) * L if teil in ("rumpf", "bein") else 1.0
+        zone.append(1.0 if d <= a else max(0.0, (b - d) / (b - a)))
+    huelle = _ueber_shorts(shirt, saumband, hose, skelett, zone)
+    teile_obj = [shirt, hose, kragen, saumband, huelle]
     bedeckt = [max(a, b) for a, b in zip(f["shirt"], f["hose"])]
     if mit_schuhen:
         import schuhe

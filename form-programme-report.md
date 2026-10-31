@@ -1231,3 +1231,50 @@ Dein Hinweis vom 31.10.2026: Shirt und Shorts sind nicht zu unterscheiden, die F
 - Farben, Logos und Seitenstreifen bleiben.
 
 Angesehen habe ich bisher nur die Ruhehaltung von vorn, von der Seite und von hinten. Die Bilder in Bewegung hast du angehalten; Standbilder neben dem Board und in Player-Größe folgen auf dein Zeichen.
+
+## 20. Kleidung nach deinen Hinweisen (D-478)
+
+Deine Hinweise vom 31.10.2026 zum Zwischenstand (D-477), im Werkzeug umgesetzt. Die Schleifen der App bleiben bis zu deiner Freigabe, wie sie sind.
+
+### 20.1 Was sich ändert
+
+- **Länge:** Der Saum liegt 7 cm unter dem Bund der Shorts. Das Shirt bedeckt die Shorts rund 10 cm und reicht etwa bis zum oberen Rand des Gesäßes. Mit 4 cm (D-477) wirkte es wie ein kurzes Shirt für die Straße.
+- **Schnitt:** enger. Unter der Brust fällt der Stoff nur noch wenig nach unten, am Saum ist weniger Luft, und die Weite aus dem Umriss des Boards zählt nur zur Hälfte (größte Weite 2,1 statt 4,2 cm).
+- **Logos:** je 20 % kleiner. Brust-F 3,5 statt 4,4 cm hoch, Shorts-F 3,7 statt 4,7 cm, Rücken-F 7,6 statt 9,5 cm, FORM 18,0 statt 22,5 cm breit.
+- **Rückenlogo:** höher. Die Oberkante des F liegt wie auf dem Board 11,7 cm unter dem Kragenbündchen, bisher 13,9 cm.
+- **Seitenstreifen:** 25 % schmaler.
+- **Saum über den Shorts:** Bei tiefer Hüftbeugung kamen die Shorts seitlich an der Hüfte durch das Shirt; unten in der Kniebeuge sah man dort Lime vom Seitenstreifen. Jetzt hält eine Kollision den unteren Teil des Shirts und das Saumband in jeder Haltung über den Shorts.
+- **Gesäß:** Shirt und Shorts überspannen hinten die Gesäßfalte, statt in sie hineinzufallen. Ganz unten am Schritt bleibt eine kleine Mulde; eine Brücke bis dort zog sich in tiefer Beugung zu einer Spitze.
+- **Saumband:** Hinten am Gesäß bildete es in der tiefen Kniebeuge eine Zickzackkante; jetzt bleibt es glatt.
+- Farben und Aufteilung wie auf dem Board.
+
+### 20.2 Messwerte
+
+Neun Phasen je Übung; gemessen am sichtbaren Teil des Shirts, ohne und mit Kollision und Brücke über die Gesäßfalte.
+
+| Messwert | Kniebeuge | Rudern am Kabel | Beinbeuger liegend |
+|---|---|---|---|
+| Shorts durch das Shirt, tiefster Punkt (ohne → mit) | 6,9 → 2,4 mm | 6,4 → 0,7 mm | keiner (9,0 mm darunter) |
+| Saumband in den Shorts, tiefster Punkt (ohne → mit) | 14,4 → 8,0 mm | 11,0 → 1,0 mm | keiner (8,4 mm darüber) |
+
+Die Reste bei der Kniebeuge liegen in der Falte zwischen Oberschenkel und Bauch, mitten in der Abwärtsbewegung. Im Bild der App sind sie nicht zu sehen; das habe ich in drei Phasen angesehen.
+
+### 20.3 Standbilder
+
+- `docs/screens/uebungen/kleidung2-1-board.webp`: die Figur von vorn, von der Seite und von hinten neben dem Board.
+- `docs/screens/uebungen/kleidung2-2-player.webp`: Beinbeuger, Kniebeuge und Rudern in Player-Größe (720 × 540), Ausgang und Ende.
+
+### 20.4 Bericht zum Paket
+
+```
+Arbeitspaket: D-478 Kleidung nach den Hinweisen des Produktinhabers (Länge, Schnitt, Logos, Rückenlogo, Seitenstreifen)
+Umgesetzte Funktionen: keine in der App; Werkzeug: Saum 7 cm unter dem Bund, engerer Schnitt, Logos 20 % kleiner, Rückenlogo mit der Oberkante des F wie auf dem Board, Seitenstreifen 25 % schmaler, Kollision von Shirt und Saumband mit den Shorts, Brücke über die Gesäßfalte, glattes Saumband; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/kleidung.py, tools/uebungen-3d/uebungen.py, docs/screens/uebungen/kleidung2-1-board.webp (neu), docs/screens/uebungen/kleidung2-2-player.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-478
+Ausgeführte Tests: Ruhehaltung von vorn, von der Seite und von hinten in sieben Ständen; Kniebeuge, Rudern und Beinbeuger in neun Phasen gemessen, ohne und mit Kollision; Nahaufnahmen der Hüfte unten in der Kniebeuge; Kniebeuge in drei Phasen in Player-Größe; Standbilder angesehen; pnpm format:check, pnpm check:docs, pnpm check:bundle; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 20.2)
+Bekannte Einschränkungen: Reste in der Hüftfalte (20.2); beim Rudern kommt die Haut am Ärmelsaum bis 5,5 mm durch den Ärmel (Arme hinten), dort ist sie zur Hälfte ausgeblendet; die Ärmel sind unverändert, das war schon vorher so
+Nächste Schritte: Halt bis zur Freigabe; danach alle zehn fertigen Schleifen mit der neuen Kleidung neu, dann der Beinbeuger
+```
+
+**Halt:** Ich warte auf deine Freigabe der Kleidung.

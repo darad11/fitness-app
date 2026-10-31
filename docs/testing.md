@@ -2801,3 +2801,24 @@ Saum, Fall, weite Beine und Saumband (D-477).
 | Maße jetzt | Saum bei z = 0,1893 m, 1 cm unter dem Bund: Überdeckung 4,1 cm |
 | Ruhehaltung von vorn, von der Seite und von hinten (600 × 900, 24 Proben) | angesehen: Kante am Saum mit Schatten, Shirt fällt gerade, Shorts mit weiten Beinen |
 | Haltungen (Kniebeuge, Beinbeuger, Rudern, Bankdrücken) | vom Produktinhaber während der Rechnung angehalten, nicht ausgewertet |
+
+### Kleidung nach den Hinweisen des Produktinhabers · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Länge, Schnitt, Logos, Rückenlogo, Seitenstreifen, Kollision mit den Shorts, Gesäßfalte, Saumband (D-478).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ruhehaltung, Saum 1 cm unter dem Bund (D-477) | Überdeckung 4,1 cm; Hinweis des Produktinhabers: zu kurz, wirkt wie Straßenkleidung |
+| Saum 7 cm unter dem Bund, Fall 0,4, Luft 8 mm | Saum bei z = 0,1293 m, Überdeckung 10,1 cm; angesehen: länger, Saumkante sichtbar |
+| enger: Fall 0,25, Luft 5 mm, Weite aus dem Umriss zur Hälfte | größte Weite 2,08 cm (vorher 4,15 cm); angesehen: Shirt läuft zur Taille schmaler |
+| Logos mal 0,8 | Brust-F 3,54 cm, Shorts-F 3,73 cm, Rücken-F 7,60 cm, Wortmarke 17,98 cm breit; Rückenblock zuerst mit gleicher Mitte (F beginnt 15,6 cm unter dem Bündchen), nach dem Hinweis „weiter nach oben“ mit der Oberkante des F wie auf dem Board: 11,68 cm |
+| Seitenstreifen mal 0,75 | angesehen: von vorn deutlich schmaler |
+| Kleidung in Haltungen (neun Phasen, `kleid_pruef`, erster Stand: ganzes Netz des Shirts) | Kniebeuge: Shorts ab der Hälfte der Abwärtsbewegung bis 11,2 mm durch das Shirt (7 bis 11 Punkte), Saumband bis 13,3 mm in den Shorts; Rudern 5,9 mm und 12,3 mm; Nahaufnahme: Lime vom Seitenstreifen an der Hüfte im Bild, hinten am Gesäß eine Zickzackkante im Saumband. Ein Teil der Punkte lag am unsichtbaren Stoff unter dem Saum: seither nur der sichtbare Teil |
+| Shrinkwrap gegen ein Hilfsnetz der Shorts, Saumband mit geglätteten Gewichten | Aufbau zuerst über 5 min statt 12 s: Das Hilfsnetz teilt das Netz der Shorts, die Namen der Gruppen gehören seit Blender 3.0 zum Netz; das zusätzliche Anlegen verdoppelte sie. Danach 11,9 s. Nahaufnahme: Saumband glatt, Zickzackkante weg |
+| ohne → mit Kollision und Brücke (neun Phasen, sichtbarer Teil des Shirts) | Kniebeuge: Shorts 6,9 → 2,4 mm, Saumband 14,4 → 8,0 mm; Rudern: 6,4 → 0,7 mm, 11,0 → 1,0 mm; Beinbeuger: Shorts 9,0 mm unter dem Shirt, Saumband 8,4 mm darüber |
+| Kniebeuge in Player-Größe, Phasen 0,5, 0,625 und 0,75 | angesehen: Saum liegt über den Shorts, kein Lime durch das Shirt |
+| Brücke über die Gesäßfalte, ab 0,5 cm über dem Schritt | angesehen von hinten: die senkrechte Linie zwischen den Gesäßhälften ist fast verschwunden; Nahaufnahme unten in der Kniebeuge: hinten unten zieht sich eine Spitze aus den Shorts. Tiefe der Falte je Höhe: am Schritt bis 7,7 cm, ab 4,5 cm darüber höchstens 5,0 cm |
+| Brücke ab 4 cm über dem Schritt, gleitend über 3 cm | Nahaufnahme: Spitze weg, Profil rund; unten bleibt eine kleine Mulde |
+| Haut an den Säumen | Shorts: mindestens 28,3 mm unter dem Stoff. Shirt: Rudern bis 5,5 mm durch den Ärmel nahe dem Saum (Arme hinten; die Haut ist dort halb ausgeblendet; Ärmel unverändert), Kniebeuge 0,05 mm am Kragen, Beinbeuger keine |
+| Standbilder | `kleidung2-1-board.webp` und `kleidung2-2-player.webp`, angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, vorab gespeichert 191 von 294 Dateien, Übungsbilder 40 von 40 |

@@ -3229,7 +3229,7 @@ class BeinbeugerLiegend(Uebung):
             netz = _netz(self.koerper)
             H = (rig.punkt("pelvis.L", k["upperleg01.L"]) + rig.punkt("pelvis.R", k["upperleg01.R"])) / 2
             Hw = rig.welt(H)
-            kleid = self._netz_mit("Shirt", "Shorts")
+            kleid = self._netz_mit("Shirt", "Shorts", "Saumband")
             rumpf = [netz[i] for i in self.rumpf_i] + [q for q in kleid if abs(q.x) < 0.14 and (q - Hw).dot(self.d_brust) > 0.12]
             schenkel = [netz[i] for i in self.schenkel_i] + [q for q in kleid if abs(q.x) < 0.20 and (q - Hw).dot(self.d_schenkel) > 0.10]
             c_b = min(q.dot(self.n_brust) for q in rumpf) + self.TIEF
@@ -3386,7 +3386,7 @@ class BeinbeugerLiegend(Uebung):
         import schuhe
 
         netz = _netz(self.koerper)
-        kleid = self._netz_mit("Shirt", "Shorts")
+        kleid = self._netz_mit("Shirt", "Shorts", "Saumband")
         brust, schenkel = self.laengen
         c_b, c_s = self.scheitel.dot(self.n_brust), self.scheitel.dot(self.n_schenkel)
         breite = geraete.BEINBEUGER["breite"] / 2

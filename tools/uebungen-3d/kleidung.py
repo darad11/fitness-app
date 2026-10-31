@@ -191,6 +191,16 @@ LOGO_GROESSE = 0.8
 # Pilot-Übungen. Bis D-460 lag die Mitte beim Punkt des Netzes nahe 24° (`BOARD["hose_f"]["winkel"]`, gemessen am
 # Board); dort berührte das F den Streifen. Höhe über dem Saum und Größe wie bisher
 HOSE_F_WINKEL = 10.0
+# Shorts-F so groß wie das Brust-F (D-484, Hinweis des Produktinhabers: „wirkt im Verhältnis zum Shirt zu groß“). Bis
+# D-483 lag das Bild auf der Haut (3,73 cm hoch nach dem Board mal `LOGO_GROESSE`); die Shorts stehen am Saum weit ab
+# und zogen es mit, auf dem Stoff gemessen 4,20 × 5,63 cm, das Brust-F 3,68 × 3,84 cm. Jetzt liegt es auf dem Stoff
+# (`auf_stoff` im Rahmen), in den Proportionen des Symbols. `faktor`: Höhe im Bild mal Höhe des Brust-F; gemessen in den
+# eigenen Achsen der Logos hat das Brust-F auf dem Stoff 3,79 × 3,85 cm, das Shorts-F mit 1,0475 dieselbe Fläche
+# (3,70 × 3,98 cm, Breite zu Höhe wie im Symbol). `senken` und `quer`: Mitte längs der Hochachse tiefer und längs der
+# Querachse nach außen (m), so dass Unterkante über dem Saum (2,44 cm) und Mitte auf dem Stoff bleiben, wo sie waren.
+# False für Vorher-Bilder
+HOSE_F_WIE_BRUST = True
+HOSE_F = {"faktor": 1.0475, "senken": 0.0020, "quer": -0.00565}
 RUMPFKNOCHEN = ("root", "spine01", "spine02", "spine03", "spine04", "spine05", "neck01", "neck02", "neck03",
                 "pelvis.L", "pelvis.R", "clavicle.L", "clavicle.R", "breast.L", "breast.R", "shoulder01.L",
                 "shoulder01.R")
@@ -740,6 +750,8 @@ def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[s
     n0 = sum((v.normal for v in verts if (v.co - P0).length < 0.03), Vector()).normalized()
     hoch = (achse - achse.dot(n0) * n0).normalized()
     quer = hoch.cross(n0)
+    if "senken" in lage:  # Mitte längs der Hoch- und der Querachse verschieben (D-484)
+        P0 = P0 - hoch * lage["senken"] + quer * lage.get("quer", 0.0)
     if "ziel" in lage:
         # genau auf den Zielpunkt schieben: längs der Hochachse auf z0, längs der Querachse auf x0
         x0, z0 = lage["ziel"]
@@ -751,7 +763,7 @@ def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[s
     erlaubt = {i for i, t in enumerate(teile)
                if t in lage.get("teile", (t,)) and (x is None or verts[i].co.x * x > 0)}
     return {"P0": P0, "n": n0, "hoch": hoch, "quer": quer, "seite": seite,
-            "erlaubt": erlaubt, "tiefe": lage.get("tiefe", 1.0)}
+            "erlaubt": erlaubt, "tiefe": lage.get("tiefe", 1.0), "auf_stoff": lage.get("auf_stoff", False)}
 
 
 # ---------------------------------------------------------------------- Netz der Teile
@@ -861,7 +873,10 @@ def _teil(name: str, koerper: bpy.types.Object, skelett: bpy.types.Object, feld:
         for neu_i, alt_i in enumerate(alt):
             v = quelle.vertices[alt_i]
             d = v.co - r["P0"]
-            uv.append((d.dot(r["quer"]) / r["seite"] + 0.5, d.dot(r["hoch"]) / r["seite"] + 0.5))
+            # Projektion auf den Stoff statt auf die Haut (D-484, Shorts-F): Wo der Stoff weit absteht, zog das Bild
+            # der Haut sonst mit dem Stoff in die Breite. Die Maske bleibt an der Haut
+            p = mesh.vertices[neu_i].co - r["P0"] if r["auf_stoff"] else d
+            uv.append((p.dot(r["quer"]) / r["seite"] + 0.5, p.dot(r["hoch"]) / r["seite"] + 0.5))
             if alt_i in r["erlaubt"] and abs(d.dot(r["n"])) <= r["tiefe"]:
                 maske.data[neu_i].value = max(0.0, min(1.0, (v.normal.dot(r["n"]) - 0.15) / 0.25))
             else:
@@ -1499,6 +1514,11 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     beinvorn = {"teil": "hose", "winkel": hf["winkel"], "lage": lage_f, "teile": ("bein",), "x": 1, "tiefe": 0.05}
     if HOSE_F_WINKEL is not None:  # None: Stand bis D-460 (für Vorher-Bilder)
         beinvorn["genau"] = HOSE_F_WINKEL
+    if HOSE_F_WIE_BRUST:  # D-484: auf dem Stoff, so hoch wie das Brust-F, die Unterkante bleibt
+        beinvorn["auf_stoff"] = True
+        beinvorn["senken"] = HOSE_F["senken"]
+        beinvorn["quer"] = HOSE_F["quer"]
+        bein_h = brust_h * HOSE_F["faktor"]
     kordel_bilder = _kordel_bilder(schnitt)
     kordel = {"teil": "hose", "ziel": (0.0, schnitt["z_bund"] - BOARD["bund"] * schnitt["hose_laenge"]),
               "blick": (0.0, -1.0, 0.0), "teile": ("rumpf",), "tiefe": 0.06}

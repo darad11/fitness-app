@@ -2891,3 +2891,17 @@ Schulterband zulaufend und Seitenstreifen nach Variante A (D-483).
 | Shorts unter dem Shirt, Saumband über den Shorts (neun Phasen) | gleich wie D-478 und D-480: Kniebeuge bis −2,36 mm (Shorts im Shirt) und −7,95 mm (Saumband in den Shorts), Rudern −0,70 und −0,97 mm, beides in der Hüftfalte, freigegeben; Seitheben 8,97 und 8,43 mm Abstand |
 | Standbilder: vorn, Seite, hinten, Shorts von der Seite nah; Seitheben oben, Rudern am Ende, Kniebeuge unten in Player-Größe | `kleidung-final.webp`, angesehen |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,9 KB, Übungsbilder 40 von 40 (die App ist unverändert; jeder Build bettet die Bauzeit in die Startansicht ein, daher 0,1 KB mehr als bei D-482) |
+
+### Shorts-F so groß wie das Brust-F · 31.10.2026, Cloud-Umgebung
+
+Shorts-F auf dem Stoff, so groß wie das Brust-F (D-484). Gemessen in der Ruhehaltung: Punkte des F auf dem Stoff (Netz ohne Glättung und Dicke), eingeordnet wie im Material.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erste Messung, je Dreieck 14 Teilungen je Kante, Höhe senkrecht und Breite waagrecht | Brust-F 3,68 × 3,84 cm; Shorts-F 4,20 × 5,63 cm; nur kleiner (3,54 cm, weiter auf der Haut) 3,91 × 5,41 cm |
+| Feiner (36 Teilungen) und in den Achsen des Logos (Hochachse wie im Rahmen: längs des Oberschenkels bzw. senkrecht) | Brust-F 3,79 × 3,85 cm (Breite zu Höhe 1,015); Shorts-F bisher 4,00 × 5,94 cm (1,487); das Symbol ist rund 1,07-mal so breit wie hoch |
+| Projektion auf den Stoff, Höhe im Bild wie das Brust-F | 3,49 × 3,81 cm (1,09); Mitte 5,7 mm weiter außen, Unterkante 2,80 statt 2,44 cm über dem Saum |
+| Faktor 1,0475 (Fläche wie das Brust-F), Mitte 2,81 mm tiefer und 5,65 mm innen | 3,70 × 3,98 cm; Mitte wie bisher; Unterkante 2,36 cm, 0,8 mm zu tief |
+| Endwerte: Faktor 1,0475, Mitte 2,0 mm tiefer und 5,65 mm innen | 3,69 × 3,97 cm (1,076); Mitte quer 10,49 cm wie bisher; Unterkante 2,46 cm über dem Saum; Abstand zum Streifen 10,30 cm (bisher 9,73 cm) |
+| Nahaufnahmen (orthografisch, 12 cm Bildbreite, Blick senkrecht auf das Logo) und von vorn (80 cm hoch), bisher und neu | `shorts-f-wie-brust-f.webp`, angesehen: das neue Shorts-F in Form und Größe wie das Brust-F, das bisherige sichtbar in die Breite gezogen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |

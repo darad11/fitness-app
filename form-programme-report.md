@@ -1353,3 +1353,15 @@ Deine Entscheidung vom 31.10.2026: Basis bleibt das Design-Board, dazu zwei bewu
 Standbilder: `docs/screens/uebungen/kleidung-final.webp`.
 
 **Halt:** Ich warte auf deine Freigabe. Danach rendere ich alle zehn fertigen Schleifen mit der finalen Kleidung neu, dann den Beinbeuger, und mache mit der Prüfseite der nächsten Familie weiter.
+
+## 26. Shorts-F so groß wie das Brust-F (D-484)
+
+Deine Freigabe vom 31.10.2026: Die Kleidung ist freigegeben, mit einer Änderung am Shorts-F.
+
+- **Befund:** Nach dem Entwurf waren beide F fast gleich groß, auf dem Stoff aber nicht. Das Logo lag auf der Haut, und die Shorts stehen am Saum weit ab. Dadurch war das Shorts-F auf dem Stoff 4,0 cm hoch und 5,9 cm breit, das Brust-F 3,8 × 3,9 cm. Dein Eindruck stimmte.
+- **Jetzt:** Das Shorts-F liegt direkt auf dem Stoff, in der Form des Symbols und mit derselben Fläche wie das Brust-F: 3,7 × 4,0 cm.
+- **Gleich geblieben:** die Lage, die Unterkante 2,46 cm über dem Saum (bisher 2,44 cm) und der Abstand zum Streifen, jetzt 10,3 cm (mindestens 2 cm).
+
+Blatt: `docs/screens/uebungen/shorts-f-wie-brust-f.webp`.
+
+Weiter ohne Halt: alle zehn fertigen Schleifen und der Beinbeuger mit der finalen Kleidung, dann die Prüfseite der nächsten Familie.

@@ -847,3 +847,89 @@ Ergebnis: siehe 11.3 und 11.4; Unit-Tests 1.209 bestanden (unter Last), E2E 431 
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Waagrechtes Ziehen)
 ```
+
+## 12. Nächste Familie: Waagrechtes Ziehen mit Rudern am Kabel, Prüfseite (D-470)
+
+Im Animationsplan kommt nach „Schulter und Brust isoliert“ die Familie „Waagrechtes Ziehen“. Aus „Ganzkörper A/B“ gehört nur das Rudern am Kabel, sitzend dazu (24 Einheiten); es ist zugleich die Referenz der Familie. Wie verlangt zuerst nur die Prüfseite.
+
+### 12.1 Gerät
+
+- **Station:** Long Pull Row mit Gewichtsblock wie die [Jerai Fitness Long Pull Row](https://www.jeraifitness.com/products/long-pull-row-dual--pulley) (239 × 102 × 229 cm, Block 100 kg). Zwei geneigte Fußplatten links und rechts der Rolle, 70° über der Waagrechten, 23 cm hoch wie die [Ironmaster Low Row Foot Plate](https://www.ironmaster.com/products/low-row-foot-plate/). Davor die Säule mit dem Gewichtsblock; er hebt sich um den Weg des Griffs.
+- **Sitz:** 43 cm hoch wie die Flachbank, lang wie bei Long-Pull-Stationen; das Polster gibt unter Gesäß und Oberschenkeln nach. Eine Sitzhöhe nennt keine der Quellen.
+- **V-Griff:** enger Parallelgriff nach Händlerangaben zu den Rudergriffen von Gorilla Sports: Griffe 12 cm lang ([Angebot bei Kaufland](https://www.kaufland.de/product/374230116/)), 2,5 cm dick, innen 12 cm auseinander und 19 cm lang (Parallelgriff, Angebot bei Decathlon). Er hängt drehbar am Kabel und richtet sich nach den Händen.
+
+Alle Maße stammen aus der Websuche (Angaben von Herstellern und Händlern).
+
+### 12.2 Bewegung
+
+- **Quelle:** Familie (Code), wie im Plan.
+- **Sitzen:** Rumpf aufrecht wie im Stand, Füße etwa hüftbreit flach auf den Platten, Knie leicht gebeugt (160°). Das Becken bleibt fest, das Gesäß liegt 4 mm im Polster.
+- **Ausgang:** Arme fast gestreckt, der Rumpf in der Lende 16° vorgeneigt, die Schultern nach vorn.
+- **Ziehen:** Der Griff kommt zur Taille, erst steigend, dann gerade heran. Dabei richtet sich der untere Rücken auf, und die Schulterblätter gehen zusammen. Am Ende steht der Griff vor dem Bauch, die Ellbogen hinter dem Rumpf und nah am Körper.
+- **Zurück** derselbe Weg, ohne Pause am vorderen Umkehrpunkt.
+
+### 12.3 Abgleich mit dem Ausführungstext
+
+Der Text in der App passt; geändert habe ich nichts. Dafür hat die Animation sich nach dem Text gerichtet:
+
+| Text in der App | Animation |
+|---|---|
+| „… stell die Füße auf die Fußplatten.“ / „… bis die Knie nur noch leicht gebeugt sind.“ | Sohlen flach auf den Platten, Knie 160° |
+| „Zieh den Griff zur Taille und richte dabei den unteren Rücken auf.“ | Griff am Ende vor dem Bauch auf Höhe der Taille; Lende von 16° auf 0° |
+| „Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind.“ | Ausgang mit fast gestreckten Armen |
+| „Beginn die nächste Wiederholung ohne Pause am vorderen Umkehrpunkt.“ | Zeitablauf ohne Pause im Ausgang; bisher hatten alle Schleifen an beiden Enden eine kurze Pause |
+
+### 12.4 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Ellbogen | 167,1° (Ausgang) bis 74,0° (Ende, 106° gebeugt) |
+| Rumpf zur Senkrechten / Lende gebeugt | 14,6° bis 0,9° / 16° bis 0° |
+| Schlüsselbein (Schulterblätter) | 8° nach vorn bis 10° zurück |
+| Oberarm hinter dem Rumpf / Ellbogen hinter dem Schultergelenk (Ende) | 16,1° / 7,2 cm |
+| Ellbogen neben dem Schultergelenk | 3,2 cm innen bis 4,8 cm außen |
+| Griff über dem Sitz / Weg des Griffs | 12,0 bis 26,3 cm / 39,7 cm |
+| Handgelenk gesamt | 2,4 bis 6,0° |
+| Finger am Griff | 4,3 mm eingedrückt (gewollt, wie bei allen Griffen) |
+| Hände und Griff vor dem Shirt | mindestens 10,0 mm (Ende) |
+| Hände, Unterarme und Griff über Beinen und Shorts | mindestens 7,6 mm |
+| Kabel zu Beinen, Shorts und Schuhen | mindestens 104,5 mm |
+| Knie / Hüfte (Oberschenkel zum Rumpf) / Sprunggelenk | 160° / 73,4 bis 87,1° / 2,3° gestreckt |
+| Sohlen auf den Platten (Ferse und Ballen) / verschoben | 0,0 mm / 0,0 mm |
+| Gesäß im Sitz / Oberschenkel im Polster | 3,8 bis 4,0 mm / 3,8 bis 4,0 mm |
+| Polster: tiefste Delle / Haut oder Kleidung durch das Polster | 14,3 bis 15,3 mm / 0,0 mm |
+| Kragen und Kragenpolster über der Socke | 1,6 mm |
+| Meldungen des Rigs | 0 |
+
+### 12.5 Prüfseite und Rechenzeit
+
+`docs/screens/uebungen/familie-waagrechtes-ziehen.webp`: Ausgangs- und Endposition mit der Kamera der App und von der Seite, V-Griff und Hände von der Seite und schräg von vorn, der linke Fuß von außen und von der Person aus, darunter die Messwerte. Rechenzeit: Messung und Prüfansichten 386 s, Nahaufnahmen 83 s.
+
+Beim Prüfen gefunden und behoben:
+- Die Prüfung „Hände vor dem Shirt“ zählte zuerst die Unterarme gegen die Ärmel; das Ende lag so 30 cm zu weit vorn, der Ellbogen blieb bei 152°. Jetzt Hände und Griff gegen das Shirt ohne Ärmel, an offenen Rändern ohne Vorzeichen.
+- Der Griff lag zuerst quer zum Kabel; das Handgelenk knickte bis 50° zur Seite. Ein V-Griff hängt drehbar am Kabel, jetzt liegt er quer zu den Unterarmen, mit dem Griff schräg in der Hand wie beim Bankdrücken (12°): Handgelenk höchstens 6,0°.
+- Am Ende lagen die Unterarme zuerst auf den Oberschenkeln (Griff 15 cm über dem Sitz), dann die Unterkanten der Fäuste 19 mm in den Shorts; jetzt endet der Griff auf Höhe des Nabels und steigt früher.
+- Zwei Nahaufnahmen zeigten nichts (von hinten oben verdeckt der Kopf die Hände, von vorn verdeckt die Fußplatte den Fuß); jetzt andere Richtungen.
+- Die Säule (2,1 m) machte die Figur im Bild klein; der Ausschnitt richtet sich jetzt nach Figur, Sitz, Fußplatten und Griff, die Säule darf oben angeschnitten sein.
+
+### 12.6 Abweichungen und offene Punkte
+
+- **Bahn des Griffs:** Auf einer Geraden streiften die Unterkanten der Fäuste kurz vor dem Ende die Shorts über dem Schoß. Jetzt steigt der Griff früher zur Taille und kommt dann gerade heran.
+- **Sitzhöhe:** 43 cm wie die Flachbank, ohne Herstellerangabe.
+- **Rumpf:** Im Ausgang neigt sich nur die Lende (16°), das Becken bleibt fest. Möglich wäre auch, das Becken etwas mitkippen zu lassen.
+- **Ellbogen am Ende:** 106° gebeugt, Oberarm 16° hinter dem Rumpf; die Familie nennt 15 bis 30°. Weiter zurück ginge mit einem tieferen Griff, dann kämen die Fäuste den Oberschenkeln näher.
+
+### 12.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-470 Phase Programme, Abschnitt 2: Familie „Waagrechtes Ziehen“ (Rudern am Kabel, sitzend), Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Kabelrudern-Station und V-Griff (geraete.kabelrudern, geraete.v_griff), Rudern am Kabel (uebungen.RudernKabel) mit Sitzen auf weichem Polster, Füßen flach auf geneigten Platten, V-Griff quer zu den Unterarmen und Bahn zur Taille, Zeitablauf ohne Pause im Ausgang (haltung.ablauf), Abstände von Händen, Armen, Griff und Kabel zu Shirt, Beinen und Shorts, neue Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/haltung.py, tools/uebungen-3d/render.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-waagrechtes-ziehen.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-470
+Ausgeführte Tests: render.py rudern_kabel --pruefen (alle 60 Bilder gemessen, Prüfansichten), Nahaufnahmen, Bilder angesehen; Zeitablauf der übrigen Übungen an allen 60 Bildern verglichen; pnpm format:check, pnpm check:docs, pnpm check:bundle; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 12.4)
+Bekannte Einschränkungen: 12.6
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife rendern und einbauen, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Waagrechtes Ziehen“.

@@ -2685,3 +2685,18 @@ Seitheben mit 30° vor der Schulterlinie, Schleife in der App (D-469).
 | `pnpm test` (unter Last: Prüfansichten der nächsten Familie liefen nebenher) | 135 Dateien, 1.209 Tests bestanden, kein Ausfall |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 36 von 36 im Build |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (15,2 min): `start-surface.spec.ts` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, 120 ms lang, danach die aufgeklappten – Logo nie an der falschen Stelle, am Ende mittig (D-394)“ (chromium-mobile), Meldung „Bilder ohne Logo davor“: Das Logo war schon im ersten abgetasteten Bild zu sehen. Einzeln fünfmal wiederholt bestanden (je beide Fälle der Zeile). Der geänderte Test der Übungsliste (neun Vorschaubilder, dazu das Seitheben) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Waagrechtes Ziehen“ · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Waagrechtes Ziehen“ mit dem Rudern am Kabel, sitzend (D-470).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Station und V-Griff nach Angaben aus der Websuche | Long Pull Row (Jerai Fitness 239 × 102 × 229 cm), Fußplatten 23 cm hoch (Ironmaster), V-Griff (Gorilla Sports: Griffe 12 cm, 2,5 cm dick, innen 12 cm, 19 cm lang); Sitzhöhe ohne Quelle, 43 cm wie die Flachbank |
+| Erster Lauf (drei Phasen) | Ende 30 cm zu weit vorn, Ellbogen 152°: Die Prüfung vor dem Shirt zählte die Unterarme gegen die Ärmel (−50 mm in jeder Phase). Handgelenk bis 50° zur Seite: Griff quer zum Kabel statt zu den Unterarmen |
+| Zweiter und dritter Lauf | Griff quer zu den Unterarmen, schräg 12° in der Hand: Handgelenk 2 bis 6°; Meldungen „nicht erreichbar“ kamen aus der ersten Runde der Nachführung, jetzt nur die letzte Runde gezählt |
+| Abstand zu Beinen und Shorts | an offenen Rändern zuerst falsches Vorzeichen (−98 mm); mit `Crunch._abstand`: Unterarme auf den Oberschenkeln (Griff 15 cm über dem Sitz, −36 mm), dann die Unterkanten der Fäuste 19 mm in den Shorts; mit Griff auf Nabelhöhe auf der Geraden bis 0,07 mm, mit früh steigender Bahn mindestens 7,6 mm |
+| `render.py rudern_kabel --pruefen` (alle 60 Bilder) | Ellbogen 167,1 bis 74,0°; Rumpf 14,6 bis 0,9°; Lende 16 bis 0°; Oberarm am Ende 16,1° hinter dem Rumpf, Ellbogen 7,2 cm hinter dem Schultergelenk; Griff 12,0 bis 26,3 cm über dem Sitz, Weg 39,7 cm; Handgelenk 2,4 bis 6,0°; Finger −4,3 mm; Hände und Griff mindestens 10,0 mm vor dem Shirt; Hände, Unterarme und Griff mindestens 7,6 mm über Beinen und Shorts; Kabel mindestens 104,5 mm von Beinen, Shorts und Schuhen; Knie 160°; Sohlen 0,0 mm, nicht verschoben; Gesäß 3,8 bis 4,0 mm; Delle 14,3 bis 15,3 mm; durch das Polster 0,0 mm; keine Meldungen. 386 s, Nahaufnahmen 83 s |
+| Zeitablauf ohne Pause im Ausgang (`haltung.ablauf`, `pause_vorn`) | für die Vorgabe an allen 60 Bildern gleich der alten Formel; beim Rudern Phase 0 nur im ersten Bild, danach sofort in Bewegung |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) | `familie-waagrechtes-ziehen.webp`, angesehen: Arme gestreckt und Rumpf vorgeneigt, am Ende Griff vor dem Bauch, Füße flach; zuerst zwei leere Nahaufnahmen (Kopf und Fußplatte verdeckten), andere Richtungen gewählt |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-470; die App ändert sich nicht, E2E wie bei D-469) | bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36 |

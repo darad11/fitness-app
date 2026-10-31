@@ -537,3 +537,94 @@ def beinpresse(ecke: Vector, lehne: float, sitz: float, platte: Vector, weg: tup
             _stab("Scheibe", m - X * (dicke_s / 2), m + X * (dicke_s / 2), 0.225, eisen, schlitten, ecken=96)
     return {"wurzel": wurzel, "schlitten": schlitten, "polster": [lehne_obj, sitz_obj], "d": d, "q": q,
             "R_platte": R_platte}
+
+
+# Kabelrudern-Station (D-470) nach Herstellerangaben aus der Websuche: Long Pull Row mit Gewichtsblock (Jerai Fitness, zwei
+# Rollen: 239 × 102 × 229 cm), Fußplatten 23 cm hoch wie die Ironmaster Low Row Foot Plate (deren Füße stehen 51 cm
+# auseinander; hier hüftbreit, die Platten 32 cm von Mitte zu Mitte); Sitz wie die Flachbank (`BANK`, 43 cm), lang wie bei
+# Long-Pull-Stationen. Eine Sitzhöhe nennt keine der Quellen. V-Griff (enger Parallelgriff) nach Händlerangaben zu den
+# Rudergriffen von Gorilla Sports: Griffe 12 cm lang und 2,5 cm dick, innen 12 cm auseinander, bis zur Öse 19 cm lang
+RUDERN = {"sitz_oben": 0.43, "sitz": (0.30, 1.10, 0.06), "platte": (0.18, 0.23, 0.03), "platten_mitte_x": 0.16,
+          "neigung": 70.0, "griff_d": 0.025, "griff_l": 0.12, "griff_abstand": 0.145, "griff_oese": 0.19}
+
+
+def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
+    """Kabelrudern-Station, Person mit Blick nach −y (D-470). `sitz_vorn_y`: Vorderkante des Sitzes (Welt), der Sitz
+    reicht 1,10 m nach hinten (+y). `platte`: Mitte der Oberfläche beider Fußplatten (Welt), die Platten stehen
+    `neigung` Grad über der Waagrechten, oben von der Person weg, links und rechts der Rolle. `rolle`: Punkt, an dem
+    das Kabel die untere Rolle verlässt. Vor den Platten die Säule mit dem Gewichtsblock. Gibt Wurzel, Sitzpolster,
+    Gewichtsblock (wird je Bild gehoben) und die Ebene der Platten (Punkt, Normale zur Person) zurück."""
+    r = RUDERN
+    polster = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Kabelrudern", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    sx, sl, sd = r["sitz"]
+    sitz_mitte_y = sitz_vorn_y + sl / 2
+    sitz = _kasten("Polster-Sitz", (sx, sl, sd), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd / 2)), polster, 0.025, wurzel)
+    # Längsträger vom Fuß der Säule bis zum hinteren Ende, Sitzträger und Beine
+    saeule_y = platte.y - 0.42
+    hinten_y = sitz_vorn_y + sl
+    _kasten("Laengstraeger", (0.10, hinten_y - saeule_y + 0.05, 0.06), Vector((0, (hinten_y + saeule_y) / 2, 0.03)), rahmen, 0.006, wurzel)
+    _kasten("Sitztraeger", (0.08, sl - 0.10, 0.05), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd - 0.025)), rahmen, 0.005, wurzel)
+    for y in (sitz_vorn_y + 0.12, hinten_y - 0.10):
+        _kasten("Sitzbein", (0.06, 0.06, r["sitz_oben"] - sd - 0.06), Vector((0, y, (r["sitz_oben"] - sd - 0.06) / 2 + 0.05)),
+                rahmen, 0.005, wurzel)
+    _kasten("Fuss-hinten", (0.50, 0.06, 0.04), Vector((0, hinten_y - 0.10, 0.02)), rahmen, 0.005, wurzel)
+    # Fußplatten: links und rechts der Rolle, geneigt; Stützen bis zum Längsträger
+    a = math.radians(r["neigung"])
+    oben = Vector((0, -math.cos(a), math.sin(a)))  # in der Platte nach oben
+    n = Vector((0, math.sin(a), math.cos(a)))  # zur Person
+    D = Matrix((Vector((1, 0, 0)), oben, n)).transposed()
+    px, ph, pd = r["platte"]
+    platten = []
+    for seite in (-1, 1):
+        m = platte + Vector((seite * r["platten_mitte_x"], 0, 0)) - n * (pd / 2)
+        platten.append(_quader("Fussplatte", (px, ph, pd), m, D, gummi, 0.008, wurzel))
+        _stab("Plattenstuetze", m - n * (pd / 2) - oben * (ph / 2 - 0.03), Vector((seite * r["platten_mitte_x"], m.y - 0.10, 0.06)),
+              0.018, rahmen, wurzel)
+    # Rolle zwischen den Platten (Achse quer), Halter zum Längsträger
+    _zylinder("Rolle", 0.045, 0.03, rolle + Vector((0, -0.045, 0)), "x", stahl, wurzel, ecken=48)
+    _kasten("Rollenhalter", (0.07, 0.06, rolle.z), Vector((0, rolle.y - 0.06, rolle.z / 2)), rahmen, 0.005, wurzel)
+    # Säule mit Gewichtsblock, Kabel von der Rolle zur Säule und hinauf zum Block
+    _kasten("Saeule", (0.10, 0.10, 2.10), Vector((0.26, saeule_y, 1.05)), rahmen, 0.008, wurzel)
+    _kasten("Saeule", (0.10, 0.10, 2.10), Vector((-0.26, saeule_y, 1.05)), rahmen, 0.008, wurzel)
+    _kasten("Saeulenkopf", (0.62, 0.12, 0.10), Vector((0, saeule_y, 2.12)), rahmen, 0.008, wurzel)
+    for seite in (-1, 1):
+        _zylinder("Fuehrung", 0.012, 1.90, Vector((seite * 0.10, saeule_y, 1.05)), "z", stahl, wurzel, ecken=24)
+    block = _kasten("Gewichtsblock", (0.30, 0.16, 0.65), Vector((0, saeule_y, 0.40)), rahmen, 0.01, wurzel)
+    oben_rolle = Vector((0, saeule_y, 2.02))
+    _zylinder("Rolle-oben", 0.05, 0.03, oben_rolle, "x", stahl, wurzel, ecken=48)
+    _zylinder("Rolle-unten", 0.045, 0.03, Vector((0, saeule_y + 0.06, 0.10)), "x", stahl, wurzel, ecken=48)
+    kabel("Kabel-unten", rolle + Vector((0, -0.09, -0.045)), Vector((0, saeule_y + 0.06, 0.055)))
+    kabel("Kabel-hoch", Vector((0, saeule_y + 0.105, 0.10)), oben_rolle + Vector((0, 0.05, 0)))
+    kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.05, 0.725)))
+    return {"wurzel": wurzel, "sitz": sitz, "platten": platten, "block": block, "block0": block.matrix_world.copy(),
+            "platte": (platte.copy(), n)}
+
+
+def v_griff(name: str) -> bpy.types.Object:
+    """Enger Parallelgriff (V-Griff, `RUDERN`): Leerobjekt in der Mitte zwischen den beiden Griffen; x quer, y zur Öse
+    (zum Kabel hin), z längs der Griffe. Je Griff zwei Streben zur Öse vorn."""
+    r = RUDERN
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    mitte = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(mitte)
+    oese = Vector((0, r["griff_oese"], 0))
+    halb = r["griff_abstand"] / 2
+    for seite in (-1, 1):
+        g = _zylinder(f"{name}-Griff", r["griff_d"] / 2, r["griff_l"], Vector((seite * halb, 0, 0)), "z", gummi, mitte, ecken=32)
+        g["griff"] = seite
+        for z in (-1, 1):
+            von = Vector((seite * halb, 0, z * (r["griff_l"] / 2 + 0.008)))
+            st = _stab(f"{name}-Strebe", von, oese + Vector((seite * 0.012, 0, 0)), 0.008, stahl)
+            st.parent = mitte
+        _zylinder(f"{name}-Kappe", r["griff_d"] / 2 + 0.002, 0.012, Vector((seite * halb, 0, (r["griff_l"] / 2 + 0.004))), "z",
+                  stahl, mitte, ecken=32)
+        _zylinder(f"{name}-Kappe", r["griff_d"] / 2 + 0.002, 0.012, Vector((seite * halb, 0, -(r["griff_l"] / 2 + 0.004))), "z",
+                  stahl, mitte, ecken=32)
+    _zylinder(f"{name}-Oese", 0.018, 0.012, oese, "z", stahl, mitte, ecken=32)
+    return mitte

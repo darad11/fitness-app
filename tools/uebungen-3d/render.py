@@ -178,7 +178,7 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
     fuss0 = None
     fuss_max = 0.0
     for bild in range(BILDER):
-        p = ablauf(bild, BILDER)
+        p = ablauf(bild, BILDER, **getattr(u, "ablauf", {}))
         u.setzen(p)
         w = {k: round(v, 2) for k, v in u.pruefwerte().items()}
         m = messen(u)
@@ -309,7 +309,7 @@ def main() -> None:
         datei = arbeit / f"{args.ansicht}-{bild:03d}.png"
         if args.fortsetzen and _lesbar(datei):
             continue
-        u.setzen(ablauf(bild, BILDER))
+        u.setzen(ablauf(bild, BILDER, **getattr(u, "ablauf", {})))
         s.render.filepath = str(datei)
         bpy.ops.render.render(write_still=True)
         gerendert += 1

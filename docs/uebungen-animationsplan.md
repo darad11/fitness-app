@@ -4,7 +4,7 @@ Stand: 2026-10-27 (Zuordnung D-411), Plan vom 28.10.2026 (D-429, Reihenfolge nac
 
 Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (GK), „Push/Pull/Beine, rotierend“ (PPB) und „Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026). Reihenfolge (sechste Nachricht): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch fehlenden aus „Push/Pull/Beine“, zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, Bankdrücken mit Langhantel, Latziehen) laufen als Schleifen in der App; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird in der Phase Programme (Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`) familienweise: erst eine Prüfseite, die Schleifen der Familie nach der Freigabe des Produktinhabers.
 
-**Fortschritt** (Stand 31.10.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; offen: 59.
+**Fortschritt** (Stand 31.10.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Prüfseite, wartet auf Freigabe (D-470): 1; offen: 58.
 
 ## 1. Was gezählt ist
 
@@ -63,7 +63,7 @@ Schulter und Brust isoliert: 1 Übungen, Aufwand 0,5 Std. (davon neue Geräte 0,
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
 |---|---|---|---|---|---|---|---|---|
-| Rudern am Kabel, sitzend | PPB, W26 | 24 | Familie (Code) | 2,50 | 2,00 | 26 | neues Gerät: Kabelrudern-Station (Sitz, Fußstütze, untere Rolle) | offen |
+| Rudern am Kabel, sitzend | PPB, W26 | 24 | Familie (Code) | 2,50 | 2,00 | 26 | neues Gerät: Kabelrudern-Station (Sitz, Fußstütze, untere Rolle) | Prüfseite, wartet auf Freigabe (D-470) |
 
 Waagrechtes Ziehen: 1 Übungen, Aufwand 2,5 Std. (davon neue Geräte 2,0) plus Basis der Familie 6,0 Std., Renderzeit 26 min.
 

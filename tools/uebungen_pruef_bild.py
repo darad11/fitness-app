@@ -163,6 +163,17 @@ MESSWERTE = (
     ("Schlüsselbein gehoben (Grad)", "Schlüsselbein gehoben", "spanne", "°"),
     ("Griffe auseinander (cm)", "Griffe auseinander", "spanne", " cm"),
     ("Kurzhantel: Köpfe vor Haut und Kleidung (mm)", "Köpfe vor Haut, Shorts und Shirt", "min", " mm"),
+    # Familie „Waagrechtes Ziehen“ (D-470)
+    ("Rumpf zur Senkrechten (Grad, + nach vorn)", "Rumpf zur Senkrechten (+ nach vorn)", "spanne", "°"),
+    ("Lende gebeugt (Grad)", "Lende gebeugt", "spanne", "°"),
+    ("Schlüsselbein zurück (Grad)", "Schlüsselbein zurück (Schulterblätter)", "spanne", "°"),
+    ("Oberarm hinter dem Rumpf (Grad)", "Oberarm hinter dem Rumpf (Ende)", "max", "°"),
+    ("Ellbogen hinter dem Schultergelenk (cm)", "Ellbogen hinter dem Schultergelenk (Ende)", "max", " cm"),
+    ("Griff über dem Sitz (cm)", "Griff über dem Sitz", "spanne", " cm"),
+    ("Weg des Griffs (cm)", "Weg des Griffs", "max", " cm"),
+    ("Hände und Griff vor dem Shirt (mm)", "Hände und Griff vor dem Shirt", "min", " mm"),
+    ("Hände, Unterarme und Griff über den Beinen (mm)", "Hände, Unterarme und Griff über Beinen und Shorts", "min", " mm"),
+    ("Kabel: Abstand zu Beinen, Shorts und Schuhen (mm)", "Kabel zu Beinen, Shorts und Schuhen", "min", " mm"),
 )
 
 
@@ -222,7 +233,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "oben": "Griff von oben", "unterarm_aussen": "Unterarm und Hand von außen",
               "unterarm_vorn": "Unterarm und Hand von vorn", "ruecken_seite": "Lende und Becken von der Seite",
               "ruecken_schraeg": "Rücken schräg vom Kopf her", "griff_vorn": "Griff und Hantel von vorn",
-              "griff_seite": "Griff und Hantel von außen"}
+              "griff_seite": "Griff und Hantel von außen", "vgriff_seite": "V-Griff und Hände von der Seite",
+              "vgriff_vorn": "V-Griff und Hände schräg von vorn"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

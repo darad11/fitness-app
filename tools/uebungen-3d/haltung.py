@@ -13,16 +13,19 @@ def weich(t: float) -> float:
     return t * t * t * (10 - 15 * t + 6 * t * t)
 
 
-def ablauf(bild: int, bilder: int, pause: float = 0.1) -> float:
-    """Phase 0 (Ausgang) bis 1 (Endposition) und zurück, mit Pausen an beiden Endpunkten."""
+def ablauf(bild: int, bilder: int, pause: float = 0.1, pause_vorn: float | None = None) -> float:
+    """Phase 0 (Ausgang) bis 1 (Endposition) und zurück, mit Pausen an beiden Endpunkten. `pause_vorn`: Pause im
+    Ausgang, Vorgabe wie `pause`; 0 beim Rudern am Kabel („ohne Pause am vorderen Umkehrpunkt“, D-470). Mit der
+    Vorgabe ist der Ablauf derselbe wie bis D-469."""
     t = (bild % bilder) / bilder
-    p = pause / 2
-    hin = 0.5 - 2 * p + 0.04
-    if t < p:
+    pv = (pause if pause_vorn is None else pause_vorn) / 2  # Pause im Ausgang, je Hälfte am Anfang und am Ende
+    pe = pause / 2  # Pause in der Endposition, je Hälfte
+    hin = 0.5 - pv - pe + 0.04
+    if t < pv:
         return 0.0
-    if t < p + hin:
-        return weich((t - p) / hin)
-    if t < 2 * p + hin + p:
+    if t < pv + hin:
+        return weich((t - pv) / hin)
+    if t < pv + hin + 2 * pe:
         return 1.0
-    zurueck_start = 3 * p + hin
-    return 1.0 - weich((t - zurueck_start) / (1.0 - p - zurueck_start))
+    zurueck_start = pv + hin + 2 * pe
+    return 1.0 - weich((t - zurueck_start) / (1.0 - pv - zurueck_start))

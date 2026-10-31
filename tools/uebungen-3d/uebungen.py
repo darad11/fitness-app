@@ -2698,7 +2698,9 @@ class RudernKabel(Uebung):
 
     name = "rudern_kabel"
     titel = "Rudern am Kabel, sitzend"
-    kamera = {"richtung": 75.0, "neigung": 12.0}
+    # Schräg von hinten wie beim Latziehen (Entscheidung des Produktinhabers, D-474): Die Schulterblätter gehen sichtbar
+    # zusammen, Arme, Griff und Kabel bleiben im Bild (bis D-473 schräg von vorn, 75° und 12°)
+    kamera = {"richtung": 135.0, "neigung": 10.0}
     vorschau_phase = 1.0
     # Zeitablauf (`haltung.ablauf`): ohne Pause am vorderen Umkehrpunkt, wie es der Ausführungstext verlangt
     ablauf = {"pause_vorn": 0.0}

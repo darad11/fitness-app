@@ -2745,3 +2745,19 @@ Hinweis des Produktinhabers: Die Ausführung der Schleife stimmt nicht, Vorlageb
 | Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) und Vergleich `rudern-ausfuehrung-vorher-jetzt.webp` | angesehen: aufrecht, Kabel waagrecht, Griff am Ende vor den unteren Rippen, Nahaufnahmen von Griff und Fuß frei |
 | `pnpm format:check`, `pnpm test`, `pnpm build`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium; WebKit in der CI) | Format bestanden; 135 Dateien, 1.209 Tests bestanden; Build bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36; E2E 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (17,1 min) |
 | `pnpm check:docs` | bestanden |
+
+### Phase Programme, Abschnitt 2, Freigabe „Waagrechtes Ziehen“ · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Freigabe mit drei Entscheidungen: Kamera schräg von hinten wie beim Latziehen, Quellenhinweis mit den Abweichungen von ExRx, Ellbogen am Ende 124° passt (D-474).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kamera, je Ausgang, Mitte und Ende | 135° mit 10°, 15° und 18° Neigung und 150° mit 15° verglichen: Bei 150° liegen Arme und Griff am Ende hinter dem Rücken; bei 135° sind Rücken, linker Arm, Griff und Kabel zu sehen, 15° und 18° bringen kaum etwas dazu; gewählt 135° und 10° wie beim Latziehen; Vorschaubild angesehen |
+| Quellenhinweis (`npx vitest run src/modules/exercises/data/media.test.ts`) | erste Fassung mit 308 Zeichen: Datei fehlgeschlagen, keine Tests gelaufen (das Schema erlaubt 300 Zeichen); gekürzt auf 296 Zeichen: 15 bestanden |
+| Schleife (`render.py rudern_kabel`, 60 Bilder, 720 × 540, 40 Proben) | 1.518 s; MP4 53,4 KB, WebM 47,5 KB, Poster 13,2 KB, Vorschau 6,1 KB; Kontaktbogen angesehen; das letzte Bild weicht vom ersten in 458 Pixeln um bis zu 63 von 255 Stufen ab (ohne Pause am vorderen Umkehrpunkt läuft die Bewegung dort weiter) |
+| Aufnahme (`uebungen_bewegung.py rudern rudern_kabel`) | `rudern-bewegung.mp4`, 102 KB, an den Produktinhaber |
+| `render.py rudern_kabel --pruefen` und Nahaufnahmen | 390 s und 72 s; alle Messwerte über alle 60 Bilder gleich wie bei D-473 |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen …`) | angesehen: Kamera der App schräg von hinten, Rücken, Arme, Griff und Kabel sichtbar |
+| `pnpm format:check`, `pnpm test`, `pnpm build`, `pnpm check:bundle` | Format bestanden; 135 Dateien, 1.209 Tests bestanden; Build bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+| `pnpm test:e2e` (Chromium, ohne Blender nebenher; WebKit in der CI) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen: `start-surface.spec.ts:484` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, nur beim Laden des Skripts wie beim vierten Start – Logo nie an der falschen Stelle, am Ende mittig (D-394)“ mit „Bilder ohne Logo davor“ (das Logo war schon im ersten abgetasteten Bild zu sehen, wie bei D-469); `npx playwright test e2e/start-surface.spec.ts:484 --repeat-each=5`: 10 bestanden (beide Fassungen des Tests je fünfmal) |
+| `pnpm check:docs` | bestanden |

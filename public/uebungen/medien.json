@@ -112,6 +112,17 @@
       },
       "alt": "Seitheben mit Kurzhanteln im Stand, schräg von vorn: Hanteln von vor den Oberschenkeln seitlich und leicht schräg nach vorn bis Schulterhöhe und zurück, Ellbogen leicht gebeugt, Rumpf leicht vorgeneigt.",
       "source": "form_3d_pilot"
+    },
+    "seated_cable_row": {
+      "preview": { "src": "medien/rudern_kabel-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/rudern_kabel.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/rudern_kabel.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/rudern_kabel-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Rudern am Kabel, sitzend, schräg von hinten: aufrecht, Knie gebeugt, Füße auf der Fußplatte; V-Griff am waagrechten Kabel zu den unteren Rippen ziehen, Schulterblätter zusammen, dann kontrolliert nach vorn bis zu gestreckten Armen.",
+      "source": "form_3d_pilot"
     }
   }
 }

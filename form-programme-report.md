@@ -1074,3 +1074,55 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife (sc
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite „Waagrechtes Ziehen“.
+
+## 16. Freigabe „Waagrechtes Ziehen“: Kamera schräg von hinten, Schleife in der App (D-474)
+
+Deine Freigabe vom 31.10.2026 mit drei Entscheidungen: die Kamera schräg von hinten wie beim Latziehen, der Quellenhinweis nennt offen die Abweichungen von ExRx, und die 124° im Ellbogen am Ende passen.
+
+### 16.1 Kamera
+
+Wie beim Latziehen 135° (schräg von hinten links) und 10° von oben; bisher schräg von vorn (75°, 12°). Verglichen habe ich 135° mit 10°, 15° und 18° und 150° mit 15°, jeweils im Ausgang, in der Mitte und am Ende:
+
+- Bei 150° verschwinden Arme und Griff am Ende hinter dem Rücken.
+- Bei 135° sieht man den Rücken mit den Schulterblättern, den linken Arm mit dem Ellbogen hinter dem Rumpf, den Griff und das Kabel bis zur Rolle; 15° und 18° bringen kaum etwas dazu.
+- Das Vorschaubild zeigt die Figur ebenfalls schräg von hinten.
+
+### 16.2 Quellenhinweis
+
+| vorher | jetzt |
+|---|---|
+| „Oberkörper aufrecht nach ExRx „Cable Straight Back Seated Row“, Griff zu den Rippen nach NASM; die Variante mit gebeugtem unterem Rücken ist nicht beschrieben. Knie stärker gebeugt als dort (Vorlagebild, 31.10.2026). Weiter Griff und Untergriff (Alias-Namen) sind nicht eigens beschrieben.“ | „Folgt ExRx „Cable Straight Back Seated Row“ mit aufrechtem Oberkörper. Abweichend davon sind die Knie deutlich statt leicht gebeugt, und der Griff kommt zu den unteren Rippen statt zur Taille (wie bei NASM), nach einem Vorlagebild vom 31.10.2026. Weiten Griff und Untergriff beschreibt sie nicht.“ |
+
+Die erste Fassung hatte 308 Zeichen; die Prüfung der Daten erlaubt 300 und hat sie verworfen. Die Animation und die übrigen Sätze bleiben wie bei D-473.
+
+### 16.3 Schleife in der App
+
+Gerendert wie die übrigen Schleifen (C männlich, 720 × 540, 60 Bilder, 40 Proben) und in `public/uebungen/medien.json` eingetragen, mit Bildbeschreibung.
+
+| | Rudern am Kabel, sitzend |
+|---|---|
+| Renderzeit, 60 Bilder | 1.518 s |
+| MP4 / WebM | 53,4 / 47,5 KB |
+| Poster / Vorschau | 13,2 / 6,1 KB |
+| abgerufen (MP4, Poster, Vorschau) | 72,7 KB (mit WebM 66,8 KB) |
+
+Ohne Pause am vorderen Umkehrpunkt ist das letzte Bild nicht gleich dem ersten (458 Pixel um bis zu 63 von 255 Stufen verschieden): Die Bewegung läuft dort weiter, die Schleife schließt ohne Sprung.
+
+### 16.4 Aufnahme und Prüfseite
+
+`docs/screens/uebungen/rudern-bewegung.mp4`: die Schleife der App, dreimal (7,5 s). `docs/screens/uebungen/familie-waagrechtes-ziehen.webp` neu mit der Kamera schräg von hinten; die Messwerte sind dieselben wie bei D-473 (15.4). Messung und Prüfansichten 390 s, Nahaufnahmen 72 s.
+
+**Tests:** Unit-Tests 1.209 bestanden. Die E2E-Tests liefen ohne Blender nebenher: 431 bestanden, 1 fehlgeschlagen, wieder der Zeittest der Startfläche (D-394), diesmal in der Fassung „… nur beim Laden des Skripts wie beim vierten Start …“: Das Logo war schon im ersten abgetasteten Bild zu sehen. Einzeln fünfmal wiederholt lief er fehlerfrei; mit dem Rudern hat er nichts zu tun. Er schlug lokal jetzt zum zweiten Mal einmalig fehl (zuerst bei D-469 unter Last) und ist damit ein Kandidat für eine eigene Prüfung.
+
+### 16.5 Bericht zum Paket
+
+```
+Arbeitspaket: D-474 Phase Programme, Abschnitt 2: Freigabe „Waagrechtes Ziehen“, Rudern am Kabel in der App
+Umgesetzte Funktionen: TP-06, TP-07 und TS-02 mit Schleife, Poster und Vorschaubild auch für das Rudern am Kabel, sitzend (Kamera schräg von hinten wie beim Latziehen); Quellenhinweis nennt die Abweichungen von ExRx; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/familien.json, src/modules/exercises/data/exercise-guides.v1.json, public/uebungen/medien.json, public/uebungen/medien/rudern_kabel.mp4, .webm, -poster.webp, -vorschau.webp (neu), e2e/uebungen.spec.ts, docs/screens/uebungen/rudern-bewegung.mp4 (neu), docs/screens/uebungen/familie-waagrechtes-ziehen.webp, docs/uebungen-animationsplan.md, docs/uebungen-bestand.md, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-474
+Ausgeführte Tests: Kameravergleich (vier Richtungen und Neigungen), render.py rudern_kabel (Schleife) und --pruefen, Nahaufnahmen, Bilder angesehen; npx vitest run media.test.ts; pnpm format:check, pnpm test, pnpm build, pnpm check:bundle, pnpm test:e2e (Chromium), pnpm check:docs; CI zum Entwurfs-PR
+Ergebnis: bestanden bis auf einen E2E-Zeittest der Startfläche (einmalig, einzeln fünfmal bestanden)
+Bekannte Einschränkungen: keine neuen; der Zeittest der Startfläche (D-394) schlug lokal zum zweiten Mal einmalig fehl
+Nächste Schritte: Prüfseite der nächsten Familie „Beine isoliert“ (Beinbeuger liegend), dann Halt
+```

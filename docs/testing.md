@@ -2858,3 +2858,18 @@ Drei Varianten zur Auswahl (D-481).
 | Abstand Akzent zu Brust-F und Rückendruck (`kleidung.akzent_logo_abstand`, Ruhehaltung und Seitheben oben) | Kit-Linie 13,5 / 11,8 cm und 13,0 / 11,7 cm; Kragen & Ärmel (nur Ärmelstreifen) 17,7 / 19,0 cm und 18,6 / 33,1 cm; Schulterband 15,9 / 14,4 cm und 16,1 / 14,1 cm; Kragenbündchen bis zur Oberkante des Brust-F 5,0 cm (aus dem Schnitt) |
 | Vergleichsblatt | `lime-varianten.webp` (2572 × 1779), angesehen |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Schulterband kräftiger · 31.10.2026, Cloud-Umgebung
+
+Vier Fassungen des Schulterbands (D-482).
+
+| Nachweis | Ergebnis |
+|---|---|
+| 6b zuerst (Ruhehaltung: vorn, Seite, hinten, Schulter nah) | Band von vorn, von der Seite und von hinten deutlich, zum Ärmelsaum breiter; Schlitz in der ganzen Figur nur wenige Pixel groß; 121 s |
+| Nahaufnahme des Saums in der Ruhehaltung, schräg von vorn | die linke Hand hängt vor dem Saum und verdeckt den Schlitz |
+| Nahaufnahme beim Seitheben oben, erster Versuch | Ziel war der äußerste Punkt in Saumhöhe, das war in der Ruhehaltung die Hand; Bild auf Brust und Hantel |
+| Nahaufnahme beim Seitheben oben, Ziel nur Rumpf und Hüfte | Schlitz mit Einfassung über dem Streifen der Shorts, das Saumband endet an den Kanten; 77 s |
+| Standbilder der übrigen Fassungen (je Ruhehaltung und Seitheben) | 3 cm 87 s und 71 s; zulaufend 81 s und 71 s; 6a 92 s und 70 s; 6b 118 s und 77 s; alle angesehen: Band von vorn, von der Seite und von hinten deutlich, 6a Linie am Saum in allen Ansichten, 6b Schlitz nur aus der Nähe |
+| Abstand Band zu Brust-F und Rückendruck (Ruhehaltung / Seitheben oben, cm) | alle vier Fassungen gleich, weil das Band auf der Schulter überall 3 cm breit ist: 15,0 / 13,8 und 15,2 / 13,6 |
+| Blatt | `schulterband-kraeftig.webp`, angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |

@@ -135,11 +135,20 @@ STREIFEN_ANTEIL = 0.75
 # Lime-Akzent am Shirt zur Auswahl (D-481, Varianten aus `docs/prompts/form-tshirt-lime-varianten.png`): None (Stand
 # D-478, kein Akzent), "kit" (Variante 1, Kit-Linie: Seitenpaneele längs der Seitennaht von der Achsel bis zum Saum,
 # an der Achsel 1 cm breit, zum Saum hin breiter wie die Streifen der Shorts), "kragen_aermel" (Variante 3:
-# Kragenbündchen in Lime und ein Streifen von 1 cm am Ärmelsaum), "schulterband" (Variante 6: ein Band von 1,2 cm vom
-# Kragenbündchen über die Oberkante der Schulter und außen am Ärmel bis zum Ärmelsaum)
+# Kragenbündchen in Lime und ein Streifen von 1 cm am Ärmelsaum), "schulterband" (Variante 6: ein Band vom
+# Kragenbündchen mittig über die Schulternaht und außen am Ärmel bis zum Ärmelsaum). Mit 1,2 cm (D-481) war es dem
+# Produktinhaber zu dezent; seit D-482 vier kräftigere Fassungen (`BAND`, Vorlage
+# `docs/prompts/form-tshirt-schulterband-kraeftig.png`): 3 cm gleich breit, zulaufend von 3 cm auf der Schulter bis 5 cm
+# am Ärmelsaum, zulaufend mit Lime-Linie am Saum des Shirts (6a) und zulaufend mit Saumschlitzen (6b)
 AKZENT = None
-AKZENT_MASS = {"kit_achsel": 0.005, "kit_saum": 0.035, "kit_ueber_w": 0.01, "kit_radius": 0.10, "aermel": 0.010,
-               "band": 0.012}
+AKZENT_MASS = {"kit_achsel": 0.005, "kit_saum": 0.035, "kit_ueber_w": 0.01, "kit_radius": 0.10, "aermel": 0.010}
+# Schulterband (D-482): Breite auf der Schulter und am Ärmelsaum (m), dazu der Akzent am Saum des Shirts
+BAND = {"schulterband": (0.03, 0.03, None), "schulterband_zu": (0.03, 0.05, None),
+        "schulterband_zu_saumlinie": (0.03, 0.05, "saumlinie"), "schulterband_zu_schlitze": (0.03, 0.05, "schlitze")}
+# 6a: Lime-Linie unten auf dem Saumband (m); 6b: Schlitze an den Seitennähten, Höhe, halbe Öffnung am Saum und oben,
+# Breite der Einfassung (m)
+SAUMLINIE = 0.006
+SCHLITZ = {"hoehe": 0.06, "auf_saum": 0.005, "auf_oben": 0.0015, "einfassung": 0.004, "radius": 0.10}
 # Saumband des Shirts (D-477): Höhe, Dicke und Abstand über dem Stoff; die Kante wirft einen leichten Schatten
 SAUMBAND = {"hoehe": 0.016, "dicke": 0.003, "ueber": 0.0015, "unter": 0.002}
 # Saum über den Shorts (D-478): In tiefer Hüftbeugung (Kniebeuge, Rudern) kamen die Shorts seitlich an der Hüfte bis
@@ -494,19 +503,20 @@ def _streifen(koerper: bpy.types.Object, schnitt: dict, normalen: list[Vector]) 
 
 
 def _schulterlinie(koerper: bpy.types.Object, k: koordinaten.Koordinaten, schnitt: dict, oeffnung: dict,
-                   seite: str) -> tuple[list[Vector], list[Vector]]:
+                   seite: str) -> tuple[list[Vector], list[Vector], list[float | None]]:
     """Mittellinie des Schulterbands (D-481) auf der Haut einer Seite (Ruhehaltung) und je Punkt die Richtung quer zur
     Linie auf der Haut. Über die Schulter: je 5 mm in x vom Rand der Halsöffnung bis kurz vor das Schultergelenk der
     höchste Punkt der Haut (Strahlen von oben, je 5 mm in y). Am Oberarm: je 2 % der Länge ab 8 % außen (Strahl von
     der Achse des Oberarms nach außen, 90° von vorn wie in `Koordinaten.glied`) bis 3 cm über den Ärmelsaum hinaus.
-    Dreimal geglättet, Endpunkte fest. Strahlen statt einzelner Eckpunkte: die Linie läuft ohne Zacken."""
+    Dreimal geglättet, Endpunkte fest. Strahlen statt einzelner Eckpunkte: die Linie läuft ohne Zacken. Dazu je Punkt die
+    Lage längs des Oberarms (Anteil der Länge; über der Schulter None)."""
     from mathutils.bvhtree import BVHTree
 
     me = koerper.data
     bvh = BVHTree.FromPolygons([v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
     sx = 1.0 if seite == "L" else -1.0
     S = k.kopf[f"upperarm01.{seite}"]
-    punkte, normalen = [], []
+    punkte, normalen, lagen = [], [], []
     x = oeffnung["b"] + 0.005
     while x < abs(S.x) - 0.01:
         beste = None
@@ -517,6 +527,7 @@ def _schulterlinie(koerper: bpy.types.Object, k: koordinaten.Koordinaten, schnit
         if beste is not None:
             punkte.append(beste[0].copy())
             normalen.append(beste[1].normalized())
+            lagen.append(None)
         x += 0.005
     A, B = k.kopf[f"upperarm01.{seite}"], k.kopf[f"lowerarm01.{seite}"]
     u = (B - A).normalized()
@@ -533,6 +544,7 @@ def _schulterlinie(koerper: bpy.types.Object, k: koordinaten.Koordinaten, schnit
         if treffer[0] is not None:
             punkte.append(treffer[0].copy())
             normalen.append(lat.copy())
+            lagen.append(ta)
         ta += 0.02
     for _ in range(3):
         punkte = [punkte[0]] + [(punkte[i - 1] + 2 * punkte[i] + punkte[i + 1]) / 4
@@ -543,7 +555,7 @@ def _schulterlinie(koerper: bpy.types.Object, k: koordinaten.Koordinaten, schnit
     for i in range(len(punkte)):
         tang = (punkte[min(i + 1, len(punkte) - 1)] - punkte[max(i - 1, 0)]).normalized()
         quer.append(normalen[i].cross(tang).normalized())
-    return punkte, quer
+    return punkte, quer, lagen
 
 
 def _akzent(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict, oeffnung: dict,
@@ -578,16 +590,28 @@ def _akzent(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[s
                 U[v.index] = feld_shirt[v.index] - m["aermel"] / 2
                 W[v.index] = m["aermel"] / 2
                 V[v.index] = 1.0
-    elif AKZENT == "schulterband":
+    elif AKZENT in BAND:
         # Quer zur Mittellinie zählt der Abstand längs der festen Querrichtung der Linie (je Punkt, zwischen zwei Punkten
-        # gemischt), damit das Vorzeichen nicht springt; mehr als 1,5 cm neben der Linie zählt nur das Vorzeichen
+        # gemischt), damit das Vorzeichen nicht springt; weiter als 2 cm außerhalb des Bands zählt nur das Vorzeichen.
+        # Halbe Breite: auf der Schulter die Hälfte der ersten Breite, am Oberarm linear bis zur Hälfte der zweiten am
+        # Ärmelsaum (D-482)
+        b_schulter, b_saum, _ = BAND[AKZENT]
         for seite in ("L", "R"):
             sx = 1.0 if seite == "L" else -1.0
-            linie, quer = _schulterlinie(koerper, k, schnitt, oeffnung, seite)
+            linie, quer, lagen = _schulterlinie(koerper, k, schnitt, oeffnung, seite)
             laengen = [0.0]
             for a, b in zip(linie, linie[1:]):
                 laengen.append(laengen[-1] + (b - a).length)
             gesamt = laengen[-1]
+            i_arm = next(i for i, lg in enumerate(lagen) if lg is not None)
+            s_schulter = laengen[i_arm]
+            s_saum = next((laengen[i] for i, lg in enumerate(lagen) if lg is not None and lg >= schnitt["aermel_t"]),
+                          gesamt)
+
+            def halbe_breite(s: float) -> float:
+                a = max(0.0, min(1.0, (s - s_schulter) / max(s_saum - s_schulter, 1e-6)))
+                return (b_schulter + (b_saum - b_schulter) * a) / 2
+
             for v, teil in zip(verts, teile):
                 if v.co.x * sx <= 0 or teil not in ("rumpf", "arm") or (teil == "rumpf" and v.co.z < schnitt["z_w"]):
                     continue
@@ -610,15 +634,27 @@ def _akzent(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[s
                         beste = (abstand, c, (quer[i] * (1 - t_q) + quer[i + 1] * t_q).normalized(),
                                  laengen[i] + tau * lang)
                 abstand, c, q, s = beste
-                if abstand > 0.04:
+                hb = halbe_breite(s)
+                if abstand > hb + 0.05:
                     continue
                 uq = (p - c).dot(q)
-                U[v.index] = uq if abstand <= 0.015 else math.copysign(1.0, uq)
-                W[v.index] = m["band"] / 2
+                U[v.index] = uq if abstand <= hb + 0.02 else math.copysign(1.0, uq)
+                W[v.index] = hb
                 V[v.index] = min(s, gesamt - s)
     else:
         raise ValueError(f"unbekannter Akzent: {AKZENT}")
-    return {"AkzentU": U, "AkzentW": W, "AkzentV": V}
+    felder = {"AkzentU": U, "AkzentW": W, "AkzentV": V}
+    if AKZENT in BAND and BAND[AKZENT][2] == "schlitze":
+        # 6b (D-482): Schlitze an den Seitennähten vom Saum aufwärts; quer zählt der Winkel der geglätteten Normale wie
+        # bei der Kit-Linie, längs die Höhe über dem Saum (Feld des Shirts)
+        SU, SH = [1.0] * n, [1.0] * n
+        for v, teil, nv in zip(verts, teile, normalen):
+            if teil in ("rumpf", "bein") and feld_shirt[v.index] < SCHLITZ["hoehe"] + 0.03:
+                sx = 1.0 if v.co.x >= 0 else -1.0
+                SU[v.index] = math.atan2(nv.y, nv.x * sx) * SCHLITZ["radius"]
+                SH[v.index] = feld_shirt[v.index]
+        felder.update({"SchlitzU": SU, "SchlitzH": SH})
+    return felder
 
 
 def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], lage: dict, seite: float) -> dict:
@@ -993,6 +1029,16 @@ def _saumband(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.t
         for poly in me.polygons:
             poly.flip()
         me.update()
+    # Höhe über der Unterkante des Bands (für die Lime-Linie, D-482) und, wo das Shirt Schlitze hat, deren Querabstand
+    # vom nächsten Punkt des Shirts (D-482)
+    band_h = me.attributes.new("BandH", "FLOAT", "POINT")
+    for i in range(len(me.vertices)):
+        band_h.data[i].value = 0.0 if i % 2 == 0 else SAUMBAND["unter"] + SAUMBAND["hoehe"]
+    if "SchlitzU" in mesh.attributes:
+        su_shirt = mesh.attributes["SchlitzU"].data
+        su = me.attributes.new("SchlitzU", "FLOAT", "POINT")
+        for i, q in enumerate(ecken):
+            su.data[i].value = su_shirt[baum.find(q)[1]].value
     obj = bpy.data.objects.new("Saumband", me)
     bpy.context.scene.collection.objects.link(obj)
     obj.parent = shirt.parent
@@ -1263,7 +1309,8 @@ def _stufe(nodes, links, wert, von: float, bis: float, nach: tuple[float, float]
 
 def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, str]]],
                    kordel: dict | None = None, streifen: bool = False, bund: float | None = None,
-                   mit_saum: bool = True, akzent: bool = False) -> bpy.types.Material:
+                   mit_saum: bool = True, akzent: bool = False, schlitz: dict | None = None,
+                   saumlinie: float | None = None, schlitz_band: dict | None = None) -> bpy.types.Material:
     """Stoff matt mit leichtem Glanz (Sheen); endet scharf am Saum (Attribut „Saum“, auch die
     Halsöffnung). Darauf, je nach Teil: der Bund etwas dunkler (`bund`: Höhe in m, Attribut „Bund“ =
     Abstand unter dem oberen Rand), der Streifen in Lime (Attribut „Streifen“), die Kordel (Bilder aus
@@ -1288,6 +1335,12 @@ def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, 
 
     def mal(a, b):
         return _rechne(nodes, links, "MULTIPLY", a, b)
+
+    def attribut(name_a: str):
+        a = nodes.new("ShaderNodeAttribute")
+        a.attribute_name = name_a
+        a.attribute_type = "GEOMETRY"
+        return a.outputs["Fac"]
 
     def mischen(faktor, a, b):
         mix = nodes.new("ShaderNodeMix")
@@ -1317,16 +1370,34 @@ def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, 
     if streifen:
         farbe_out = mischen(maske("Streifen", -0.0008, 0.0008), farbe_out, szene.srgb(LIME))
     if akzent:  # Lime-Akzent am Shirt (D-481): wo |AkzentU| < AkzentW und AkzentV > 0
-        def attribut(name_a: str):
-            a = nodes.new("ShaderNodeAttribute")
-            a.attribute_name = name_a
-            a.attribute_type = "GEOMETRY"
-            return a.outputs["Fac"]
-
         quer = _rechne(nodes, links, "SUBTRACT", attribut("AkzentW"),
                        _rechne(nodes, links, "ABSOLUTE", attribut("AkzentU")))
         innen = mal(_stufe(nodes, links, quer, -0.0004, 0.0004), _stufe(nodes, links, attribut("AkzentV"), -0.0004, 0.0004))
         farbe_out = mischen(innen, farbe_out, szene.srgb(LIME))
+    loch = None
+    if schlitz:  # Saumschlitze am Shirt (D-482): Öffnung durchsichtig, Einfassung in Lime
+        s = schlitz
+        h = attribut("SchlitzH")
+        u_abs = _rechne(nodes, links, "ABSOLUTE", attribut("SchlitzU"))
+        anteil = _stufe(nodes, links, h, 0.0, s["hoehe"])
+        offen = _rechne(nodes, links, "ADD", s["auf_saum"],
+                        _rechne(nodes, links, "MULTIPLY", anteil, s["auf_oben"] - s["auf_saum"]))
+        innen_s = mal(_stufe(nodes, links, _rechne(nodes, links, "SUBTRACT", offen, u_abs), -0.0003, 0.0003),
+                      _stufe(nodes, links, _rechne(nodes, links, "SUBTRACT", s["hoehe"], h), -0.0003, 0.0003))
+        aussen_s = mal(_stufe(nodes, links, _rechne(nodes, links, "SUBTRACT",
+                                                    _rechne(nodes, links, "ADD", offen, s["einfassung"]), u_abs),
+                              -0.0003, 0.0003),
+                       _stufe(nodes, links, _rechne(nodes, links, "SUBTRACT", s["hoehe"] + s["einfassung"], h),
+                              -0.0003, 0.0003))
+        rand = _rechne(nodes, links, "MAXIMUM", _rechne(nodes, links, "SUBTRACT", aussen_s, innen_s), 0.0)
+        farbe_out = mischen(rand, farbe_out, szene.srgb(LIME))
+        loch = innen_s
+    if saumlinie:  # Lime-Linie unten auf dem Saumband (D-482): Höhe über der Unterkante des Bands unter `saumlinie`
+        farbe_out = mischen(_stufe(nodes, links, _rechne(nodes, links, "SUBTRACT", saumlinie, attribut("BandH")),
+                                   -0.0003, 0.0003), farbe_out, szene.srgb(LIME))
+    if schlitz_band:  # Saumband endet an den Schlitzen (D-482)
+        loch = _stufe(nodes, links, _rechne(nodes, links, "SUBTRACT", schlitz_band["auf_saum"] + schlitz_band["einfassung"],
+                                            _rechne(nodes, links, "ABSOLUTE", attribut("SchlitzU"))), -0.0003, 0.0003)
     if kordel:
         sichtbar = maske("MaskeKordel", 0.45, 0.55)
         for teil, ton in (("schnur", KORDEL), ("huelse", KORDEL_ENDE)):
@@ -1341,7 +1412,12 @@ def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, 
     else:
         links.new(farbe_out, bsdf.inputs["Base Color"])
     if mit_saum:
-        links.new(maske("Saum", -0.0008, 0.0008), bsdf.inputs["Alpha"])
+        sichtbar = maske("Saum", -0.0008, 0.0008)
+        if loch is not None:
+            sichtbar = mal(sichtbar, _rechne(nodes, links, "SUBTRACT", 1.0, loch))
+        links.new(sichtbar, bsdf.inputs["Alpha"])
+    elif loch is not None:
+        links.new(_rechne(nodes, links, "SUBTRACT", 1.0, loch), bsdf.inputs["Alpha"])
     return mat
 
 
@@ -1404,12 +1480,17 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     hose.data.materials.append(stoff_material("Shorts", SHORTS, [("Beinvorn", "f", {"f": LIME})],
                                               kordel=kordel_bilder, streifen=True,
                                               bund=BOARD["bund"] * schnitt["hose_laenge"]))
+    saum_akzent = BAND[AKZENT][2] if AKZENT in BAND else None  # 6a Lime-Linie, 6b Schlitze (D-482)
     shirt.data.materials.append(stoff_material("Shirt", TEE, [("Brust", "f", {"f": LIME}),
                                                               ("Ruecken", "ruecken", {"f": LIME, "wort": WEISS})],
-                                               akzent=akzent is not None))
+                                               akzent=akzent is not None,
+                                               schlitz=SCHLITZ if saum_akzent == "schlitze" else None))
     kragen_farbe = LIME if AKZENT == "kragen_aermel" else TEE  # Variante 3: Kragenbündchen in Lime (D-481)
     kragen = _buendchen(shirt, koerper, skelett, oeffnung, stoff_material("Kragen", kragen_farbe, [], mit_saum=False))
-    saumband = _saumband(shirt, koerper, skelett, schnitt, stoff_material("Saumband", TEE, [], mit_saum=False))
+    saumband = _saumband(shirt, koerper, skelett, schnitt,
+                         stoff_material("Saumband", TEE, [], mit_saum=False,
+                                        saumlinie=SAUMLINIE if saum_akzent == "saumlinie" else None,
+                                        schlitz_band=SCHLITZ if saum_akzent == "schlitze" else None))
     # Zone des Shirts über den Shorts (D-478): Rumpf und Hüfte bis `SAUM_ZONE` über dem Saum, nach dem Feld des Saums
     # ohne Halsausschnitt; Ärmel und Hals nie (dort läge der nächste Punkt der Shorts weit weg)
     L = (k.N - k.O).length

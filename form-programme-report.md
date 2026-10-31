@@ -1323,3 +1323,19 @@ Dein Auftrag: drei Varianten aus `docs/prompts/form-tshirt-lime-varianten.png` a
 Vergleichsblatt: `docs/screens/uebungen/lime-varianten.webp`. Im Werkzeug schaltet `kleidung.AKZENT` die Variante um; bis zu deiner Auswahl bleibt es beim Stand D-478.
 
 **Halt:** Ich warte auf deine Auswahl. Danach rendere ich alle zehn fertigen Schleifen mit der neuen Kleidung und dem gewählten Akzent neu und dann den Beinbeuger.
+
+## 24. Schulterband kräftiger: vier Fassungen (D-482)
+
+Dein Hinweis: Kit-Linie und Kragen & Ärmel sind fertig verglichen, das Schulterband ist mit 1,2 cm viel zu dezent. Statt dessen vier Fassungen nach deinem Bild `docs/prompts/form-tshirt-schulterband-kraeftig.png`:
+
+- **6 · 3 cm:** gleich breit vom Kragenbündchen über die Schulter und außen am Ärmel bis zum Ärmelsaum.
+- **6 · zulaufend:** auf der Schulter 3 cm, zum Ärmelsaum hin breiter bis 5 cm, wie die Streifen der Shorts.
+- **6a:** zulaufend, dazu eine Lime-Linie von 0,6 cm unten auf dem Saumband, rund um das Shirt.
+- **6b:** zulaufend, dazu Schlitze an beiden Seiten vom Saum 6 cm aufwärts mit Lime-Einfassung, direkt über den Streifen der Shorts; durch den Schlitz sieht man die Shorts.
+- **Lage:** Das Band sitzt mittig auf der Schulternaht, je zur Hälfte vorn und hinten, am Ärmel außen. So ist es von vorn, von der Seite und von hinten klar zu sehen.
+- **Abstand zu den Logos:** mindestens 13,6 cm; kein Band berührt Brust-F oder Rückendruck.
+- **Nahaufnahme des Saums:** In der Ruhehaltung hängt die Hand vor dem Saum, deshalb zeigt das Blatt den Saum beim Seitheben oben.
+
+Blatt: `docs/screens/uebungen/schulterband-kraeftig.webp`.
+
+**Halt:** Ich warte auf deine endgültige Wahl. Danach setze ich den Akzent, rendere alle zehn fertigen Schleifen neu und dann den Beinbeuger.

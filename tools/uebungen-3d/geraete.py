@@ -62,9 +62,10 @@ def _kasten(name: str, groesse: tuple[float, float, float], ort: Vector, mat, ru
     return obj
 
 
-# Gymnastikmatte (D-466) nach Herstellerangaben: PROGYM Gymnastikmatte mit Ösen (gewerbliche Nutzung), Sissel
-# Gymnastikmatte und Trendy Sport ProfiGymMat, je 180 × 60 × 1,5 cm
-MATTE = {"laenge": 1.80, "breite": 0.60, "dicke": 0.015, "raster": 0.0075}
+# Gymnastikmatte nach Herstellerangaben: seit D-467 AIREX Coronella 185, 185 × 60 × 1,5 cm. Bis D-466 180 × 60 × 1,5 cm
+# (PROGYM Gymnastikmatte mit Ösen, Sissel Gymnastikmatte, Trendy Sport ProfiGymMat): Mit flachen Händen liegen beim
+# Unterarmstütz Fingerspitzen und Vorfuß 1,787 m auseinander, auf 180 cm blieben je Seite 6,6 mm Rand, auf 185 cm 3,2 cm
+MATTE = {"laenge": 1.85, "breite": 0.60, "dicke": 0.015, "raster": 0.0075}
 
 
 def matte(mitte: Vector) -> tuple[bpy.types.Object, tuple[list[Vector], list[Vector]]]:

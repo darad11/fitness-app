@@ -569,3 +569,131 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleifen re
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite „Rumpf“.
+
+## 9. Freigabe „Rumpf“: flache Hände, verschränkte Arme, Kopf angehoben, Schuh im Vorfuß, Schleifen in der App (D-467)
+
+Deine Freigabe vom 30.10.2026 mit drei Entscheidungen: Hände flach und Unterarme parallel beim Unterarmstütz; Arme vor der Brust verschränkt und Kopf leicht angehoben bei den Crunches. Dazu der Auftrag, dass sich der Schuh im Vorfuß biegt wie ein Laufschuh.
+
+### 9.1 Unterarmstütz: Hände flach, Unterarme parallel
+
+- **Hände:** Handflächen unten, Finger gestreckt nach vorn, wie ACE „Front Plank“ es beschreibt („palms down and hands facing forward“). Hand und Unterarm bilden eine Linie, das Handgelenk ist 1,3 bis 1,6° gestreckt.
+- **Unterarme:** parallel, 0,0° zueinander; Ellbogen senkrecht unter den Schultern.
+- **Finger:** Im Grundmodell sind sie leicht gekrümmt, der Daumen hängt nach unten. Mit der Handfläche auf der Matte lagen sie zuerst 9 bis 41 mm in ihr. Jetzt stelle ich jedes Glied waagrecht und drehe den Finger dann um sein erstes Gelenk auf die Matte.
+- **Matte 185 cm:** Mit flachen Händen und gebogenem Vorfuß liegen Fingerspitzen und Schuhspitzen 178,7 cm auseinander. Auf einer Matte von 180 cm blieben an jedem Ende 6,6 mm. Ich nehme darum die [AIREX Coronella 185](https://www.physioparts.co.uk/airex-coronella-185) (185 × 60 × 1,5 cm, auch bei [Galaxus](https://www.galaxus.nl/en/s3/product/airex-coronella-185-with-eyelets-blue-15-mm-yoga-mats-43816361)); jetzt bleiben 3,1 cm. Die Crunches liegen auf derselben Matte.
+
+### 9.2 Crunches: Arme verschränkt, Kopf angehoben
+
+- **Arme:** Die Handgelenke kreuzen sich auf dem oberen Brustbein, der rechte Unterarm liegt auf dem linken. Die Hände liegen flach auf der Brust und zeigen zur Gegenschulter, die Ellbogen zu den Knien. Die Arme gehen mit dem Brustkorb. Beim Einrollen heben sich die Ellbogen etwas, und die Hände passen ihre Beugung an, damit sie auf dem Shirt bleiben.
+- **Kopf:** Kopf und Nacken in Verlängerung der Wirbelsäule wie im Stand. Der Kopf bleibt in jeder Phase angehoben, mindestens 28,6 mm über der Matte; das Kinn ist 9,4 bis 10,2 cm vom Brustbein entfernt, etwa eine Faust. Bis D-466 lag der Kopf zu Beginn auf, der Hals war 20° gestreckt.
+
+### 9.3 Schuh im Vorfuß
+
+- **Biegung:** Der Schuh biegt sich jetzt mit den Zehen am Ballen, wie ein Laufschuh. Die Zone ist 7,5 cm lang und liegt mittig über den Grundgelenken der Zehen. Fuß, Socke, Schaft, Sohle, Lasche, Senkel, Ösen und Kragenpolster biegen sich um dieselbe Achse; so bleiben die Abstände zwischen den Schichten gleich.
+- **Unterarmstütz:** 55°. Die Sohle liegt vom Ballen bis zur Spitze auf der Matte, 2,1 mm eingedrückt. Bei 40° stand sie noch auf ihrem vorderen Teil. Die Ferse steht jetzt 132 mm über der Matte (vorher 172 mm), der Körper steigt zu den Schultern um 5,8° (vorher 4,2°).
+- **Nichts dringt durch:** Über alle 60 Bilder liegt der Fuß mindestens 3,7 mm unter der Außenseite des Schafts, die Socke in der Zehenbox mindestens 1,0 mm; Senkel und Ösen liegen 1,65 und 1,69 mm über der Socke. Kein Punkt von Fuß oder Socke liegt außerhalb des Schuhs.
+- **Künftig:** Jede Übung kann den Winkel je Phase vorgeben. Bei Liegestützen, Ausfallschritten und Wadenheben ist das im Animationsplan vermerkt.
+- **Nahaufnahme:** `docs/screens/uebungen/unterarmstuetz-vorfuss.webp`, linker Fuß vorher und jetzt aus vier Richtungen.
+
+### 9.4 Ausführungstext abgeglichen
+
+Geändert:
+
+| Übung | vorher | jetzt |
+|---|---|---|
+| Unterarmstütz, Vorbereitung | „Setz die Unterarme auf, die Ellbogen liegen unter den Schultern.“ | „Setz die Unterarme parallel auf, die Ellbogen liegen unter den Schultern, die Hände flach.“ |
+| Unterarmstütz, Quellen | ExRx „Front Plank“ | dazu ACE „Front Plank“ (Hände flach, Handflächen unten), mit Hinweis auf die Ergänzung |
+| Crunches, Vorbereitung | zwei Schritte | neuer dritter Schritt: „Verschränk die Arme vor der Brust.“ |
+| Crunches, Quellen | ExRx „Crunch (arms down)“ | ExRx „Crunch (arms crossed)“, mit Hinweis: Diese Quelle legt die Unterschenkel auf eine Bank |
+
+Unverändert, weil der Text schon passt:
+- Crunches, Kopf: „Halte den Nacken neutral und lass Platz zwischen Kinn und Brustbein.“ Das ist der angehobene Kopf mit einer Faust Abstand.
+- Crunches, Absenken: „… bis die Schulterblätter den Boden wieder berühren“. Unten liegen sie 3,0 mm auf der Matte, der Kopf bleibt oben.
+- Unterarmstütz, Füße: „die Fußballen stehen auf dem Boden“. Das ist der gebogene Vorfuß.
+
+exrx.net ist in dieser Umgebung gesperrt (Netzwerkregel). Die Seite „Crunch (arms crossed)“ habe ich über die Websuche geprüft, wie schon in D-398. Freigeben könntest du die Adresse in den Einstellungen der Umgebung unter „Network access“, „Allowed domains“.
+
+### 9.5 Messwerte über alle 60 Bilder
+
+**Unterarmstütz**
+
+| | Wert |
+|---|---|
+| Hüfte über der Linie Schulter–Fußgelenk | 1,6 bis 1,7 cm (gerade Linie) |
+| Körper steigt zu den Schultern | 5,8° |
+| Ellbogen vor der Schulter / Oberarm zur Senkrechten | 0,0 cm / höchstens 0,1° |
+| Unterarme zueinander / Ellbogen | 0,0° / 91,3 bis 91,6° |
+| Handgelenk gesamt (seitlich) | 1,3 bis 1,6° (0,0°) |
+| Unterarm / Hand / Finger in der Matte | 1,1 bis 2,0 / 2,9 / 2,0 mm |
+| Vorfuß gebogen / Sohle vom Ballen bis zur Spitze in der Matte | 55° / 2,1 mm |
+| Ferse über der Matte / Knie / Sprunggelenk gebeugt | 132 mm / 177° / 16,6° |
+| Fuß unter dem Schaft / Socke in der Zehenbox | mindestens 3,7 / 1,0 mm |
+| Senkel / Ösen / Kragenpolster über der Socke | 1,65 / 1,69 / 1,62 mm |
+| Fuß oder Socke außerhalb des Schuhs | 0 Punkte |
+| Körper sonst über der Matte | mindestens 18,0 mm |
+| Auflage vom Rand der Matte | mindestens 3,1 cm |
+| Matte: Delle / Haut, Kleidung oder Schuh durch die Matte | 2,1 / 0,0 mm |
+| Meldungen des Rigs | 0 |
+
+**Crunches**
+
+| | Wert |
+|---|---|
+| Oberkörper zur Matte | 9,5° (liegend) bis 38,1° (oben) |
+| Lende auf der Matte, schwächste Stelle | 1,45 bis 3,0 mm, in jeder Phase |
+| Gesäß / Kreuzbein auf der Matte | 3,0 / 3,0 mm |
+| Becken verschoben / gedreht | 0,0 mm / 0,0° |
+| Schulterblätter | unten 3,0 mm auf der Matte, oben 32,4 mm darüber |
+| Kopf über der Matte | mindestens 28,6 mm (unten), oben 250 mm |
+| Kinn zum Brustbein | 9,4 bis 10,2 cm |
+| Hand links / rechts auf dem Shirt | −0,4 bis +0,8 mm / 0,0 mm |
+| rechter Unterarm auf dem linken | −0,5 bis +2,1 mm |
+| Unterarme und Hände über dem Shirt | an der tiefsten Stelle −0,5 mm |
+| Ellbogen / Handgelenk links / rechts | 59,4° / 13,3 bis 19,9° / 16,3 bis 16,9° |
+| Knie / Hüfte (Oberschenkel zum Rumpf) | 70° / 128 bis 132° |
+| Sohlen auf der Matte / Kragen des Schuhs über der Socke | 0,0 mm / 0,5 mm |
+| Auflage vom Rand der Matte | mindestens 10,7 cm |
+| Matte: Delle / Haut, Kleidung oder Schuh durch die Matte | 3,0 / 0,0 mm |
+| Meldungen des Rigs | 0 |
+
+Bei den Händen und Armen heißt ein Wert unter 0, dass Haut den Stoff oder die Haut des anderen Arms höchstens 0,5 mm eindrückt; das ist weniger, als Gewebe dort nachgibt. Beim Unterarmstütz heißen positive Werte „in der Matte“.
+
+### 9.6 Schleifen in der App
+
+Gerendert wie die übrigen Schleifen (C männlich, 720 × 540, 60 Bilder, 40 Proben) und in `public/uebungen/medien.json` eingetragen, mit Bildbeschreibung.
+
+| | Unterarmstütz | Crunches |
+|---|---|---|
+| Renderzeit, 60 Bilder | 2.932 s | 1.929 s |
+| MP4 / WebM | 21,3 / 17,3 KB | 55,2 / 45,8 KB |
+| Poster / Vorschau | 10,2 / 3,0 KB | 12,3 / 4,1 KB |
+| abgerufen (MP4, Poster, Vorschau) | 34,5 KB (mit WebM 30,5 KB) | 71,7 KB (mit WebM 62,3 KB) |
+
+Die Renderzeiten sind länger als geschätzt (rund 26 min), weil nebenher die Prüfansichten beider Familien und die Nahaufnahmen liefen. Der Unterarmstütz ist klein, weil sich im Bild nur der Rücken beim Atmen bewegt. Erstes und letztes Bild sind bei beiden Schleifen pixelgleich. Startansicht unverändert 237,8 KB; die Liste nennt jetzt 32 Dateien, alle im Build vorhanden.
+
+### 9.7 Aufnahme
+
+`docs/screens/uebungen/rumpf-bewegung.mp4`: beide Schleifen der App nebeneinander, je dreimal (7,5 s).
+
+### 9.8 Prüfseite
+
+`docs/screens/uebungen/familie-rumpf.webp` neu mit dem freigegebenen Stand: flache Hände, Unterarme parallel und der gebogene Vorfuß beim Unterarmstütz, verschränkte Arme und angehobener Kopf bei den Crunches, dazu die neuen Messwerte. Rechenzeit: Unterarmstütz 767 s und 263 s, Crunches 888 s und 243 s; nebenher liefen die Schleifen.
+
+### 9.9 Abweichungen, Beobachtungen und offene Punkte
+
+- **Achsel:** Beim Prüfen der verschränkten Arme habe ich am Übergang von Oberarm und Rumpf gemessen. Dort liegt die Haut des Oberarms in jeder Übung 11 bis 28 mm im Rumpf, auch in den freigegebenen: Crunches 26 und 28 mm, Kniebeuge 17 und 26 mm, Unterarmstütz 12 und 16 mm, Beinpresse 13 und 21 mm, Latziehen 12 und 16 mm, Bankdrücken mit Kurzhanteln 11 und 12 mm (links und rechts). Das kommt aus der Verformung des Grundmodells in der Achsel, nicht von den Armen vor der Brust. Der Ärmel des Shirts deckt die Stelle; zu sehen ist sie nicht.
+- **D-465 berichtigt:** In `docs/decisions.md` standen bei D-465 Werte eines Zwischenstands (Delle 17,2 bis 23,4 mm, bis 0,65 mm durch die Oberfläche). Richtig sind, wie im Bericht 7.3: Delle 36,8 bis 44,5 mm, 0,0 mm durch die Oberfläche.
+- **Quelle Crunches:** ExRx „Crunch (arms crossed)“ legt die Unterschenkel auf eine Bank; die Animation und der Text bleiben bei den Füßen auf der Matte. Der Hinweis in der App nennt das.
+- **Tests unter Last:** Kein Ausfall. Die Unit-Tests liefen, während Blender die Schleife der Crunches rechnete (1.209 bestanden); die E2E-Tests liefen danach ohne Blender (432 bestanden).
+
+### 9.10 Bericht zum Paket
+
+```
+Arbeitspaket: D-467 Phase Programme, Abschnitt 2: Familie „Rumpf“ freigegeben; flache Hände, verschränkte Arme, Kopf angehoben, Schuh im Vorfuß, Schleifen in der App
+Umgesetzte Funktionen: Schleifen, Poster und Vorschaubilder von Unterarmstütz und Crunches in der App; Anleitung beider Übungen an die Animation angepasst; Werkzeug: Vorfuß gebogen (schuhe.Vorfuss, schuhe.im_schuh, vorfuss_grad), flache Hände (Unterarmstuetz._finger_flach), verschränkte Arme (Crunch._arm_ziele, _tabellen), Matte 185 cm, Nahaufnahme vorher und jetzt (vorfuss_bilder.py, uebungen_korrektur_bild.py --runde 11); erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/schuhe.py, tools/uebungen-3d/rig.py, tools/uebungen-3d/geraete.py, tools/uebungen-3d/render.py, tools/uebungen-3d/vorfuss_bilder.py (neu), tools/uebungen_korrektur_bild.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, src/modules/exercises/data/exercise-guides.v1.json, public/uebungen/medien.json, public/uebungen/medien/ (8 Dateien neu), e2e/uebungen.spec.ts, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/uebungen-bewegungsfamilien.md, docs/screens/uebungen/unterarmstuetz-vorfuss.webp (neu), docs/screens/uebungen/rumpf-bewegung.mp4 (neu), docs/screens/uebungen/familie-rumpf.webp, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-467 (dazu D-465 berichtigt)
+Ausgeführte Tests: Messung aller 60 Bilder beider Übungen, Nahaufnahme vorher und jetzt, Schleifen gerendert, erstes und letztes Bild verglichen, Prüfseite neu; pnpm format:check, pnpm lint, pnpm typecheck, pnpm check:docs, pnpm test (unter Last), pnpm build, pnpm check:bundle, pnpm test:e2e (Chromium, ohne Last); CI zum Entwurfs-PR mit WebKit
+Ergebnis: siehe 9.5 bis 9.8; Unit-Tests 1.209 bestanden (unter Last), E2E 432 bestanden, 0 fehlgeschlagen (ohne Last); WebKit in der CI
+Bekannte Einschränkungen: 9.9
+Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Schulter und Brust isoliert)
+```

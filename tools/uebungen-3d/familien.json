@@ -8,8 +8,8 @@
     "bench_press_dumbbell": "Schleife in der App (D-463)",
     "incline_bench_press_dumbbell": "Schleife in der App (D-463)",
     "leg_press": "Schleife in der App (D-465)",
-    "plank": "Prüfseite, wartet auf Freigabe (D-466)",
-    "crunch": "Prüfseite, wartet auf Freigabe (D-466)"
+    "plank": "Schleife in der App (D-467)",
+    "crunch": "Schleife in der App (D-467)"
   },
   "uebungen": {
     "bench_press_barbell": {
@@ -140,7 +140,7 @@
       "mixamo_name": "Push Up",
       "aufwand_stunden": 1.5,
       "geraet_neu_stunden": 0.0,
-      "hinweis": "Bodenübung, Kamera seitlich und niedrig; Hände und Fußspitzen per IK am Boden sperren. Keine CMU-Aufnahme (nur Handstand-Liegestütz 88_02)."
+      "hinweis": "Bodenübung, Kamera seitlich und niedrig; Hände und Fußspitzen per IK am Boden sperren. Keine CMU-Aufnahme (nur Handstand-Liegestütz 88_02). Auf den Fußballen: Schuh im Vorfuß gebogen wie beim Unterarmstütz (`vorfuss_grad`, D-467)."
     },
     "incline_press_cable": {
       "nr": 12,
@@ -993,7 +993,7 @@
       "aufwand_stunden": 0.5,
       "geraet_neu_stunden": 0.0,
       "referenz_der_familie": true,
-      "hinweis": "Fußkontakte schalten (IK-Sperre an und aus); kein Ausfallschritt bei CMU oder Mixamo belegt."
+      "hinweis": "Fußkontakte schalten (IK-Sperre an und aus); kein Ausfallschritt bei CMU oder Mixamo belegt. Hinterer Fuß auf dem Ballen: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "cable_pull_through": {
       "nr": 87,
@@ -1111,7 +1111,7 @@
       "quelle": "familie",
       "aufwand_stunden": 0.75,
       "geraet_neu_stunden": 0.0,
-      "hinweis": "–"
+      "hinweis": "Hinterer Fuß auf dem Ballen: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "leg_extension": {
       "nr": 97,
@@ -1239,7 +1239,7 @@
       "aufwand_stunden": 0.75,
       "geraet_neu_stunden": 3.0,
       "geraet_neu": ["Wadenmaschine, stehend"],
-      "hinweis": "Kleine Bewegung; seitliche Ansicht wichtig."
+      "hinweis": "Kleine Bewegung; seitliche Ansicht wichtig. Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "seated_calf_raise": {
       "nr": 108,
@@ -1251,7 +1251,7 @@
       "aufwand_stunden": 0.75,
       "geraet_neu_stunden": 3.0,
       "geraet_neu": ["Wadenmaschine, sitzend"],
-      "hinweis": "–"
+      "hinweis": "Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "calf_press_leg_press": {
       "nr": 109,
@@ -1262,7 +1262,7 @@
       "quelle": "familie",
       "aufwand_stunden": 0.75,
       "geraet_neu_stunden": 0.0,
-      "hinweis": "–"
+      "hinweis": "Vorfuß auf der Platte, Ferse frei: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "hip_adduction_machine": {
       "nr": 110,
@@ -1308,7 +1308,7 @@
       "quelle": "familie",
       "aufwand_stunden": 0.5,
       "geraet_neu_stunden": 0.0,
-      "hinweis": "–"
+      "hinweis": "Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "kettlebell_swing": {
       "nr": 114,

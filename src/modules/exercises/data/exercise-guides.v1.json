@@ -1656,7 +1656,7 @@
       "summary": "Haltende Übung für den Rumpf: Du stützt dich auf Unterarme und Fußballen und hältst den Körper in einer geraden Linie.",
       "setup": [
         "Leg dich bäuchlings auf eine Matte.",
-        "Setz die Unterarme auf, die Ellbogen liegen unter den Schultern.",
+        "Setz die Unterarme parallel auf, die Ellbogen liegen unter den Schultern, die Hände flach.",
         "Schließ die Beine, die Fußballen stehen auf dem Boden."
       ],
       "steps": [
@@ -1673,8 +1673,13 @@
         {
           "title": "ExRx.net: Front Plank",
           "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWFrontPlank"
+        },
+        {
+          "title": "ACE Exercise Library: Front Plank",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/"
         }
-      ]
+      ],
+      "sourceNote": "Die Quelle von ACE (Hände flach, Handflächen unten) ist am 30.10.2026 ergänzt."
     },
     "side_plank": {
       "summary": "Haltende Übung in Seitlage: Du stützt dich auf einen Unterarm und hältst den Körper als gerade Linie über dem Boden.",
@@ -1710,7 +1715,8 @@
       "summary": "Bauchübung in Rückenlage: Du rollst den oberen Rücken vom Boden ein, der untere Rücken bleibt liegen.",
       "setup": [
         "Leg dich auf den Rücken auf eine Matte.",
-        "Beuge Hüfte und Knie und stell die Füße auf den Boden."
+        "Beuge Hüfte und Knie und stell die Füße auf den Boden.",
+        "Verschränk die Arme vor der Brust."
       ],
       "steps": [
         "Roll den Oberkörper ein und heb den oberen Rücken vom Boden.",
@@ -1729,10 +1735,11 @@
           "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunch"
         },
         {
-          "title": "ExRx.net: Crunch (arms down)",
-          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunchAD"
+          "title": "ExRx.net: Crunch (arms crossed)",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunchX"
         }
-      ]
+      ],
+      "sourceNote": "Die Quelle zu den verschränkten Armen ist am 30.10.2026 ergänzt; sie legt die Unterschenkel auf eine Bank."
     },
     "cable_crunch": {
       "summary": "Bauchübung kniend am oberen Kabelzug: Du rollst den Rumpf ein und führst die Ellbogen Richtung Oberschenkel.",

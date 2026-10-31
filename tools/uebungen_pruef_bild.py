@@ -97,6 +97,13 @@ MESSWERTE = (
     ("Sohle R: Ballen über dem Boden (mm)", "Sohle rechts, Ballen über dem Boden", "betrag", " mm"),
     ("Kragen: Innenseite über der Socke (mm)", "Kragen über der Socke", "min", " mm"),
     ("Polster: kleinster Abstand über der Socke (mm)", "Kragenpolster über der Socke", "min", " mm"),
+    # Vorfuß gebogen (D-467)
+    ("Vorfuß L: Schuh am Ballen gebogen (Grad)", "Schuh am Ballen gebogen", "spanne", "°"),
+    ("Senkel: kleinster Abstand über der Socke (mm)", "Senkel über der Socke", "min", " mm"),
+    ("Ösen: kleinster Abstand über der Socke (mm)", "Ösen über der Socke", "min", " mm"),
+    ("Zehenbox: Socke unter der Außenseite des Schafts (mm)", "Socke unter der Außenseite des Schafts", "min", " mm"),
+    ("Fuß: Haut unter der Außenseite des Schafts (mm)", "Fuß (Haut) unter der Außenseite des Schafts", "min", " mm"),
+    ("Fuß und Socke: außerhalb des Schuhs (Punkte)", "Fuß und Socke außerhalb des Schuhs (Punkte)", "max", ""),
     ("Shorts: kleinster Abstand F zum Streifen (cm)", "Shorts-F zum Streifen", "min", " cm"),
     ("Bank: Rumpf im Polster (mm)", "Rumpf im Polster, tiefste Stelle", "max", " mm"),
     ("Bank: Oberschenkel über dem Polster (mm)", "Oberschenkel über dem Polster", "min", " mm"),
@@ -117,6 +124,9 @@ MESSWERTE = (
     ("Oberarm zur Senkrechten (Grad)", "Oberarm zur Senkrechten", "max", "°"),
     ("Unterarm auf der Matte (mm)", "Unterarm auf der Matte (unter 0 = Luft)", "spanne", " mm"),
     ("Faust auf der Matte (mm)", "Faust auf der Matte (unter 0 = Luft)", "spanne", " mm"),
+    ("Hand auf der Matte (mm)", "Handfläche auf der Matte (unter 0 = Luft)", "spanne", " mm"),
+    ("Finger auf der Matte (mm, alle)", "Finger auf der Matte, alle (unter 0 = Luft)", "spanne", " mm"),
+    ("Unterarme zueinander (Grad)", "Unterarme zueinander (parallel = 0)", "max", "°"),
     ("Körper sonst über der Matte (mm)", "Körper sonst über der Matte", "min", " mm"),
     ("Sohle: tiefster Punkt über der Matte (mm)", "Schuh: tiefster Punkt über der Matte", "spanne", " mm"),
     ("Sohle L: Ferse auf der Matte (mm)", "Sohle links: Ferse auf der Matte", "spanne", " mm"),
@@ -131,6 +141,12 @@ MESSWERTE = (
      "spanne", " mm"),
     ("Schulterblätter ohne Abflachen (mm)", "Schulterblätter ohne Abflachen", "spanne", " mm"),
     ("Hände über der Matte (mm)", "Hände über der Matte", "spanne", " mm"),
+    ("Hand links auf dem Shirt (mm, unter 0 = eingedrückt)", "Hand links auf dem Shirt (unter 0 = eingedrückt)", "spanne", " mm"),
+    ("Hand rechts auf dem Shirt (mm, unter 0 = eingedrückt)", "Hand rechts auf dem Shirt (unter 0 = eingedrückt)", "spanne", " mm"),
+    ("Unterarm rechts auf dem linken (mm, unter 0 = ineinander)", "Unterarm rechts auf dem linken", "spanne", " mm"),
+    ("Unterarme und Hände über dem Shirt (mm, unter 0 = im Shirt)", "Unterarme und Hände über dem Shirt", "min", " mm"),
+    ("Handgelenk gesamt (Grad, links)", "Handgelenk links, gesamt", "max", "°"),
+    ("Handgelenk gesamt (Grad, rechts)", "Handgelenk rechts, gesamt", "max", "°"),
     ("Kopf (Haare) auf der Matte (mm, unter 0 = abgehoben)", "Kopf auf der Matte (unter 0 = abgehoben)", "spanne", " mm"),
     ("Kinn zum Brustbein (cm)", "Kinn zum Brustbein", "min", " cm"),
     ("Matte: Auflage vom Rand (cm, mindestens)", "Auflage vom Rand der Matte", "min", " cm"),
@@ -140,6 +156,8 @@ MESSWERTE = (
 
 
 def _zahl(w: float, einheit: str) -> str:
+    if abs(w) < 0.05:  # gerundet 0: ohne Vorzeichen (sonst „−0,0“)
+        w = 0.0
     text = f"{w:.1f}".replace(".", ",").replace("-", "−")
     return f"{text}{einheit}"
 
@@ -190,8 +208,8 @@ def messtabelle(messwerte: Path, breite: int) -> Image.Image:
 
 # Beschriftung der Nahaufnahmen (Dateien aus `familie_bilder.py` und `render.py --pruefen`)
 GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff vom Handrücken", "aussen": "Griff von außen",
-              "oben": "Griff von oben", "unterarm_aussen": "Unterarm und Faust von außen",
-              "unterarm_vorn": "Unterarm und Faust von vorn", "ruecken_seite": "Lende und Becken von der Seite",
+              "oben": "Griff von oben", "unterarm_aussen": "Unterarm und Hand von außen",
+              "unterarm_vorn": "Unterarm und Hand von vorn", "ruecken_seite": "Lende und Becken von der Seite",
               "ruecken_schraeg": "Rücken schräg vom Kopf her"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}

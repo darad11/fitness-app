@@ -150,6 +150,10 @@ def messen(uebung) -> dict:
         erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts")))
         if "Senkel" in o:  # Schuh seit D-460: Senkel, Ösen, Polster, Zehenbox
             erg.update(schuhe.pruefung_neu(uebung.koerper, o["Socken"]))
+        if getattr(uebung, "vorfuss", None) is not None:  # Vorfuß gebogen (D-467): Fuß und Socke bleiben im Schuh
+            for s, g in uebung.vorfuss.winkel.items():
+                erg[f"Vorfuß {s}: Schuh am Ballen gebogen (Grad)"] = g
+            erg.update(schuhe.im_schuh(uebung.koerper, o["Socken"]))
         sohle = schuhe._verformt(o["Sohle"])[0]
         if hasattr(uebung, "schlitten"):  # auf der Platte: Lage im Raum des Schlittens, die Füße dürfen nicht rutschen
             Mi = uebung.schlitten.matrix_world.inverted()

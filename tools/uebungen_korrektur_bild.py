@@ -18,6 +18,7 @@ Ansichten `augen`, `hals`, `ruecken`, `shorts`, `griff-vorn`, `griff-seite`, `gr
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/latziehen --runde 8   # D-455: Griffblatt Latziehen vorher/nachher
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/schuh --runde 9       # D-460: Schuh und Rückenlogo, Player-Größe
     python3 tools/uebungen_korrektur_bild.py --paket /tmp/shorts --runde 10     # D-461: Shorts-F und Streifen, Abstand
+    python3 tools/uebungen_korrektur_bild.py --paket /tmp/vorfuss --runde 11    # D-467: Schuh im Vorfuß, vorher/nachher
 
 Braucht Pillow (nur für dieses Werkzeug, nicht für die App); Gestaltung wie `uebungen_paket_bild.py`.
 """
@@ -559,15 +560,47 @@ def blatt_shorts10(paket: Path) -> "Image":
                   "linkes Bein; gemessen auf dem Stoff zwischen den nächsten Punkten von F und Streifen; Höhe über dem Saum und Größe des F wie bisher")
 
 
+# Runde „Schuh im Vorfuß“ (D-467): Nahaufnahmen aus `tools/uebungen-3d/vorfuss_bilder.py`, Ordner `<paket>/vorher/` (Stand
+# D-466) und `<paket>/nachher/` mit `vorfuss-<Ansicht>.png` und `vorfuss.json`
+VORFUSS11 = [("aussen", "von außen"), ("ballen", "Ballen aus der Nähe"), ("vorn-aussen", "schräg von vorn außen"),
+             ("hinten-aussen", "schräg von hinten außen")]
+
+
+def blatt_vorfuss11(paket: Path) -> "Image":
+    """Linker Fuß beim Unterarmstütz, je Ansicht eine Zeile: links vorher (Schuh starr), rechts jetzt (Vorfuß gebogen)."""
+    w = {st: json.loads((paket / st / "vorfuss.json").read_text(encoding="utf-8"))["messwerte"] for st in ("vorher", "nachher")}
+    ferse = "Sohle L: Ferse auf der Matte (mm)"
+    n = w["nachher"]
+    zusatz = {
+        ("vorher", "aussen"): f"Schuh starr auf dem Rand der Sohle, Ferse {w['vorher'][ferse]:.0f} mm über der Matte",
+        ("nachher", "aussen"): f"Schuh am Ballen um {n['Vorfuß L: Schuh am Ballen gebogen (Grad)']:.0f}° gebogen, Ferse {n[ferse]:.0f} mm über der Matte",
+        ("vorher", "ballen"): "nur der vordere Rand der Sohle liegt auf",
+        ("nachher", "ballen"): f"Sohle vom Ballen bis zur Spitze auf der Matte, {_mm(-n['Sohle L: Ballen auf der Matte (mm)'])} eingedrückt",
+        ("vorher", "vorn-aussen"): "Zehenbox gerade",
+        ("nachher", "vorn-aussen"): f"Socke ≥ {_mm(n['Zehenbox: Socke unter der Außenseite des Schafts (mm)'])} unter dem Schaft, Senkel {n['Senkel: kleinster Abstand über der Socke (mm)']:.2f} mm darüber".replace(".", ","),
+        ("vorher", "hinten-aussen"): "Ferse und Sohle",
+        ("nachher", "hinten-aussen"): f"Fuß ≥ {_mm(n['Fuß: Haut unter der Außenseite des Schafts (mm)'])} unter dem Schaft, außerhalb: {n['Fuß und Socke: außerhalb des Schuhs (Punkte)']:.0f} Punkte",
+    }
+    kacheln = []
+    for datei, titel in VORFUSS11:
+        for stand, st in (("vorher", "Vorher"), ("nachher", "Jetzt")):
+            kacheln.append(kachel(paket / stand / f"vorfuss-{datei}.png", f"{st} · {titel}", 480, 360, zusatz[(stand, datei)]))
+    return gitter(kacheln, 2, "Vorfuß beim Unterarmstütz, vorher und jetzt",
+                  "linker Fuß, Licht wie in der App; vorher Stand D-466, jetzt biegt sich der Schuh mit den Zehen am Ballen")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--paket", required=True, help="Ordner mit bilder/ und nah/ (Runde 3: vorher/ und nachher/)")
     ap.add_argument("--ziel", default=str(HIER.parent / "docs/screens/uebungen"))
     ap.add_argument("--runde", type=int, default=1,
-                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen); 9: D-460 (Schuh und Rückenlogo); 10: D-461 (Shorts-F und Streifen)")
+                    help="1: Korrekturen D-421 bis D-424 (drei Körper); 2: D-425 bis D-428 (C männlich); 3: D-430 bis D-433 (vorher/nachher); 4: D-435 bis D-439; 5: D-440 bis D-443; 6: D-445; 7: D-449 bis D-453 (Kleidung nach dem Board); 8: D-455 (Griffblatt Latziehen); 9: D-460 (Schuh und Rückenlogo); 10: D-461 (Shorts-F und Streifen); 11: D-467 (Schuh im Vorfuß beim Unterarmstütz)")
     args = ap.parse_args()
     paket, ziel = Path(args.paket), Path(args.ziel)
     ziel.mkdir(parents=True, exist_ok=True)
+    if args.runde == 11:
+        speichern(blatt_vorfuss11(paket), ziel, "unterarmstuetz-vorfuss")
+        return
     if args.runde == 10:
         speichern(blatt_shorts10(paket), ziel, "shorts-f-abstand")
         return

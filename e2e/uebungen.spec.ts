@@ -65,15 +65,15 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
   const smith = row(page, 'Bankdrücken an der Multipresse');
   await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für sechs Übungen: die drei Pilot-Übungen (D-402), die Familie
-  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463) und die Beinpresse (D-465).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(6);
+  // Ausgeliefert sind Animationen für acht Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465) und die Familie „Rumpf“ (D-467).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(8);
   await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
     'src',
     '/uebungen/medien/bankdruecken_kh-vorschau.webp',
@@ -81,6 +81,12 @@ test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der
   const legPress = row(page, 'Beinpresse(?!,)').locator('img');
   await legPress.scrollIntoViewIfNeeded();
   await expect(legPress).toHaveAttribute('src', '/uebungen/medien/beinpresse-vorschau.webp');
+  const plank = row(page, 'Unterarmstütz').locator('img');
+  await plank.scrollIntoViewIfNeeded();
+  await expect(plank).toHaveAttribute('src', '/uebungen/medien/unterarmstuetz-vorschau.webp');
+  const crunch = row(page, 'Crunches(?! am)').locator('img');
+  await crunch.scrollIntoViewIfNeeded();
+  await expect(crunch).toHaveAttribute('src', '/uebungen/medien/crunch-vorschau.webp');
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
   await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');

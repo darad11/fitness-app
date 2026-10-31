@@ -919,10 +919,12 @@ class Rig:
         R = achse_winkel(k_neu, phi) @ R0
         return starr(g.mitte, mitte, R)
 
-    def arm_frei(self, seite: str, W: Vector, ellbogen_richtung: Vector, handflaeche: Vector) -> dict:
+    def arm_frei(self, seite: str, W: Vector, ellbogen_richtung: Vector, handflaeche: Vector,
+                 hand_laengs: Vector | None = None) -> dict:
         """Arm ohne Griff (D-466, Crunches): Handgelenk bei `W` (Raum des Skeletts), Ellbogen zur `ellbogen_richtung`,
-        Mittelhand in Verlängerung des Unterarms, Handfläche zu `handflaeche`; Finger wie in der Grundhaltung. Die
-        Knochen setzt es wie `arm` (Oberarm mit Achselhilfe, Unterarm mit verteilter Drehung, Hand)."""
+        Mittelhand in Verlängerung des Unterarms oder in Richtung `hand_laengs` (D-467: Hand flach auf der Matte),
+        Handfläche zu `handflaeche`; Finger wie in der Grundhaltung. Die Knochen setzt es wie `arm` (Oberarm mit
+        Achselhilfe, Unterarm mit verteilter Drehung, Hand)."""
         s = seite
         S0, E0, W0 = self.kopf["upperarm01." + s], self.kopf["lowerarm01." + s], self.kopf["wrist." + s]
         S = self.punkt("shoulder01." + s, S0)
@@ -942,7 +944,8 @@ class Rig:
         self.setze("upperarm02." + s, G_ober)
         self._schulterhilfe(s, S0, S, R_ober, u)
         R_unter0 = abbild(f0, scharnier0, f, scharnier)
-        R_hand = abbild(d["mittelhand"], senkrecht(d["n"], d["mittelhand"]), f, senkrecht(handflaeche, f))
+        laengs = f if hand_laengs is None else hand_laengs.normalized()
+        R_hand = abbild(d["mittelhand"], senkrecht(d["n"], d["mittelhand"]), laengs, senkrecht(handflaeche, laengs))
         G_hand = starr(W0, W, R_hand)
         tau = winkel_um(R_unter0 @ d["n"], R_hand @ d["n"], f)
         for name, anteil in (("lowerarm01." + s, 0.35), ("lowerarm02." + s, 0.85)):
@@ -950,8 +953,16 @@ class Rig:
         self.setze("wrist." + s, G_hand)
         for i in range(1, 5):
             self.setze(f"metacarpal{i}.{s}", G_hand)
+        # Handgelenk (wie `arm`, D-452): Streckung zum Handrücken positiv, seitlich positiv zum Daumen
+        el = (R_hand @ d["mittelhand"]).normalized()
+        ea = senkrecht(R_hand @ d["achse"], el)
+        en = el.cross(ea)
+        if en.dot(R_hand @ d["n"]) < 0:
+            en = -en
         return {"schulter": S, "ellbogen": E, "handgelenk": W, "ellbogenwinkel": 180 - math.degrees(u.angle(f)),
-                "pronation": tau}
+                "pronation": tau, "handgelenk_gesamt": math.degrees(f.angle(el)),
+                "handgelenk_streckung": math.degrees(math.atan2(f.dot(en), f.dot(el))),
+                "handgelenk_seitlich": math.degrees(math.atan2(f.dot(ea), f.dot(el)))}
 
     def arm(self, seite: str, g: Griff, mitte: Vector, stangen_achse: Vector, ellbogen_richtung: Vector,
             streckung: float = 0.0, ellbogen=None, phi: float | None = None) -> dict:

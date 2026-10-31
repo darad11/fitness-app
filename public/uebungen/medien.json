@@ -79,6 +79,28 @@
       },
       "alt": "Beinpresse 45°, schräg von der Seite: Platte von fast gestreckten Beinen bis Knie 95° heran und zurück, Rücken und Gesäß bleiben an Lehne und Sitz, Füße flach auf der Platte, Knie über den Zehen.",
       "source": "form_3d_pilot"
+    },
+    "plank": {
+      "preview": { "src": "medien/unterarmstuetz-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/unterarmstuetz.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/unterarmstuetz.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/unterarmstuetz-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Unterarmstütz auf der Matte, schräg von vorn: Unterarme parallel, Ellbogen unter den Schultern, Hände flach, Körper von Kopf bis Fersen in einer Linie auf den Fußballen, Schuhe am Ballen gebogen; gehalten mit ruhiger Atmung.",
+      "source": "form_3d_pilot"
+    },
+    "crunch": {
+      "preview": { "src": "medien/crunch-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/crunch.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/crunch.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/crunch-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Crunches auf der Matte, schräg von der Seite: Rückenlage, Knie gebeugt, Füße flach, Arme vor der Brust verschränkt; Oberkörper einrollen, bis die Schulterblätter abheben, und zurück, unterer Rücken bleibt liegen, Kopf leicht angehoben.",
+      "source": "form_3d_pilot"
     }
   }
 }

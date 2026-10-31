@@ -65,9 +65,9 @@ Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschni
 | Nr. | Übung | Variante | Gerät | Quelle | Std. Übung | Std. neues Gerät | Hinweis |
 |---|---|---|---|---|---|---|---|
 | 84 | Step-ups mit Kurzhanteln | einbeinig auf die Flachbank (43 cm) steigen und zurück, Kurzhanteln seitlich | Kurzhanteln + Flachbank | Familie (Code) | 1.5 | 0.0 | Fußkontakt wechselt zwischen Boden und Bank; CMU 111_31 („Stepping up / stepping down“, schwangere Person) nur als Referenz. |
-| 86 | Ausfallschritte rückwärts mit Kurzhanteln | Referenz der Familie: Schritt rückwärts, das hintere Knie senkt sich bis knapp über den Boden, zurück in den Stand | Kurzhanteln | Familie (Code) | 0.5 | 0.0 | Fußkontakte schalten (IK-Sperre an und aus); kein Ausfallschritt bei CMU oder Mixamo belegt. |
+| 86 | Ausfallschritte rückwärts mit Kurzhanteln | Referenz der Familie: Schritt rückwärts, das hintere Knie senkt sich bis knapp über den Boden, zurück in den Stand | Kurzhanteln | Familie (Code) | 0.5 | 0.0 | Fußkontakte schalten (IK-Sperre an und aus); kein Ausfallschritt bei CMU oder Mixamo belegt. Hinterer Fuß auf dem Ballen: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467). |
 | 95 | Bulgarische Kniebeuge mit Kurzhanteln | hinterer Fuß auf der Flachbank, das vordere Bein beugt, bis der Oberschenkel waagrecht ist | Kurzhanteln + Flachbank | Familie (Code) | 1.0 | 0.0 | Fußrücken liegt auf der Bank (Kontakt). |
-| 96 | Ausfallschritte mit Kurzhanteln | Schritt nach vorn und zurück (Alias abwechselnd) | Kurzhanteln | Familie (Code) | 0.75 | 0.0 | – |
+| 96 | Ausfallschritte mit Kurzhanteln | Schritt nach vorn und zurück (Alias abwechselnd) | Kurzhanteln | Familie (Code) | 0.75 | 0.0 | Hinterer Fuß auf dem Ballen: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467). |
 
 ### Waagrechtes Drücken
 
@@ -80,7 +80,7 @@ Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschni
 | 5 | Bankdrücken an der Multipresse | Stange in der Führung der Multipresse, senkrechte Bahn; das Aus- und Einhängen (Drehen der Haken) wird nicht gezeigt | Multipresse + Flachbank | Familie (Code) | 1.0 | 3.0 | Bank so unter die Führung stellen, dass die Stange über der unteren Brust läuft. |
 | 6 | Brustpresse an der Maschine | sitzend, Griffe auf Brusthöhe, Hebelarme führen die Hände auf einem Bogen nach vorn | Brustpresse-Maschine | Familie (Code) | 1.5 | 4.0 | Maschine mit vielen Teilen (Sitz, Lehne, Hebel, Gewichtsblock); Griffe drehen um den Hebeldrehpunkt, Hände per IK gebunden, Gewichtsblock hebt sich mit. |
 | 7 | Bodendrücken mit Kurzhanteln | Rückenlage am Boden, Knie gebeugt, Ellbogen setzen unten auf (kürzerer Bewegungsumfang) | Kurzhanteln + Matte | Familie (Code) | 1.0 | 0.3 | Bodenübung: Ellbogen berühren die Matte ohne Durchdringen; Kamera etwas höher als Standard. |
-| 11 | Liegestütze | Stütz in Bauchlage, Körper als Brett, Hände etwas weiter als schulterbreit am Boden; der Körper bewegt sich, Hände und Füße bleiben fest | keins | Mixamo „Push Up“ | 1.5 | 0.0 | Bodenübung, Kamera seitlich und niedrig; Hände und Fußspitzen per IK am Boden sperren. Keine CMU-Aufnahme (nur Handstand-Liegestütz 88_02). |
+| 11 | Liegestütze | Stütz in Bauchlage, Körper als Brett, Hände etwas weiter als schulterbreit am Boden; der Körper bewegt sich, Hände und Füße bleiben fest | keins | Mixamo „Push Up“ | 1.5 | 0.0 | Bodenübung, Kamera seitlich und niedrig; Hände und Fußspitzen per IK am Boden sperren. Keine CMU-Aufnahme (nur Handstand-Liegestütz 88_02). Auf den Fußballen: Schuh im Vorfuß gebogen wie beim Unterarmstütz (`vorfuss_grad`, D-467). |
 | 12 | Schrägbankdrücken am Kabel | Schrägbank zwischen den Kabelsäulen, untere Rollen, Drücken nach oben-vorn (laut Quelle einarmig geführt) | Kabelzug: zwei Säulen mit höhenverstellbaren Rollen + D-Griff + Schrägbank, verstellbar (auch fast senkrecht) | Familie (Code) | 1.5 | 0.0 | Kabel laufen von unten-hinten zu den Händen; Bank mittig zwischen den Säulen. |
 | 57 | Enges Bankdrücken | Griff schulterbreit, Ellbogen näher am Körper | Langhantel mit Scheiben + Flachbank | Familie (Code) | 0.5 | 0.0 | Nur Griffbreite und Ellbogenweg ändern sich gegenüber der Referenz. |
 | 59 | Dips | Stütz am Barren, Körper senkt sich, bis die Oberarme etwa waagrecht sind, Rumpf leicht vorgeneigt; Hände fest, der Körper bewegt sich | Dipbarren | Familie (Code) | 1.5 | 1.0 | Umgekehrte Kette wie beim Klimmzug; Beine leicht gebeugt. |
@@ -169,13 +169,13 @@ Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschni
 | 103 | Beinbeuger liegend | Bauchlage auf der Maschine, Rolle hinter den Fersen, das Knie beugt | Beinbeuger-Maschine, liegend | Familie (Code) | 1.0 | 3.0 | Liegende Haltung auf schräger Liegefläche. |
 | 104 | Beinbeuger sitzend | sitzend, Oberschenkelpolster, Rolle unter den Waden, das Knie beugt nach unten-hinten | Beinbeuger-Maschine, sitzend (vom Beinstrecker abgeleitet) | Familie (Code) | 0.75 | 1.5 | Gerät vom Beinstrecker ableitbar. |
 | 106 | Nordic Curls | kniend, Fersen fixiert, Körper gerade nach vorn senken, mit den Händen abfangen und zurückdrücken | Matte + Fersenhalter mit Kniepolster (Nordic Curls) | Familie (Code) | 1.5 | 1.5 | Schwer als Schleife (Rückweg mit Abstoßen der Hände); eventuell Ausgangs- und Endposition mit dezenter Bewegung. |
-| 107 | Wadenheben stehend | stehend unter den Schulterpolstern, Fußballen auf der Stufe, Fersen heben und senken | Wadenmaschine, stehend | Familie (Code) | 0.75 | 3.0 | Kleine Bewegung; seitliche Ansicht wichtig. |
-| 108 | Wadenheben sitzend | sitzend, Knie unter dem Polster, Fersen heben | Wadenmaschine, sitzend | Familie (Code) | 0.75 | 3.0 | – |
-| 109 | Wadenheben an der Beinpresse | an der Beinpresse, Beine gestreckt, nur das Sprunggelenk drückt die Plattform | Beinpresse 45° | Familie (Code) | 0.75 | 0.0 | – |
+| 107 | Wadenheben stehend | stehend unter den Schulterpolstern, Fußballen auf der Stufe, Fersen heben und senken | Wadenmaschine, stehend | Familie (Code) | 0.75 | 3.0 | Kleine Bewegung; seitliche Ansicht wichtig. Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467). |
+| 108 | Wadenheben sitzend | sitzend, Knie unter dem Polster, Fersen heben | Wadenmaschine, sitzend | Familie (Code) | 0.75 | 3.0 | Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467). |
+| 109 | Wadenheben an der Beinpresse | an der Beinpresse, Beine gestreckt, nur das Sprunggelenk drückt die Plattform | Beinpresse 45° | Familie (Code) | 0.75 | 0.0 | Vorfuß auf der Platte, Ferse frei: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467). |
 | 110 | Adduktorenmaschine | sitzend, Polster an der Knie-Innenseite, Beine schließen | Ab-/Adduktorenmaschine | Familie (Code) | 0.75 | 4.0 | Kamera eher frontal. |
 | 111 | Abduktorenmaschine | Polster außen, Beine öffnen | Ab-/Adduktorenmaschine | Familie (Code) | 0.5 | 0.0 | Gleiche Maschine, Polster umgesteckt. |
 | 112 | Seitliches Gehen mit Widerstandsband | halbe Hocke, Band über den Knien oder Knöcheln, seitliche Schritte | Widerstandsband (Mini-Band, dehnbar) | Familie (Code) | 1.5 | 1.5 | Band dehnt sich mit dem Beinabstand (Verformung); seitliche Fortbewegung als Schleife auf der Stelle oder mit mitlaufender Kamera. |
-| 113 | Wadenheben mit Kurzhanteln | stehend, Kurzhanteln seitlich, Fersen heben | Kurzhanteln | Familie (Code) | 0.5 | 0.0 | – |
+| 113 | Wadenheben mit Kurzhanteln | stehend, Kurzhanteln seitlich, Fersen heben | Kurzhanteln | Familie (Code) | 0.5 | 0.0 | Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467). |
 
 ### Rumpf
 

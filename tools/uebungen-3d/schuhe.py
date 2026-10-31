@@ -1632,3 +1632,135 @@ def pruefung_neu(koerper: bpy.types.Object, socke: bpy.types.Object) -> dict:
     aus["Zehenbox: Socke unter der Außenseite des Schafts (mm)"] = min(zehen) * 1000 if zehen else float("nan")
     aus["Socke: sichtbar außerhalb des Schuhs unter 5 cm (Punkte)"] = sichtbar
     return aus
+
+
+# ---------------------------------------------------------------------- Vorfuß biegt sich (D-467)
+# Der Schuh biegt sich mit den Zehen im Vorfuß wie ein Laufschuh, statt auf dem Rand der Sohle zu stehen (Unterarmstütz;
+# künftig Liegestütz, Ausfallschritt, Wadenheben). Zone von `laenge` (m) längs des Fußes, mittig über den Grundgelenken
+# der Zehen (Köpfe der Knochen toe1-1 und toe5-1); neutrale Schicht `neutral` (m) über der Unterkante der Sohle: Darüber
+# staucht sich der Schaft zur Falte über den Zehen, darunter dehnt sich die Laufsohle etwas. Verglichen bei 55° (D-467):
+# 6,5 cm bei 1,2 cm (enge Falte, Senkel 0,06 mm in der Socke), 8,5 cm bei 1,2 cm und 6,5 cm bei 2,2 cm (Senkel 1,6 und
+# 1,5 mm über der Socke, weiche Falte); gewählt 7,5 cm bei 1,6 cm (Senkel 1,65 mm über der Socke).
+VORFUSS = {"laenge": 0.075, "neutral": 0.016}
+VORFUSS_TEILE = ("Socken", "Schuhe", "Sohle", "Lasche", "Senkel", "Oesen", "Kragenpolster")
+
+
+class Vorfuss:
+    """Vorfuß biegen (D-467): je Fuß ein Bogen („Simple Deform“, Biegen) vor dem Skelett, auf Haut, Socke und allen
+    Teilen des Schuhs mit demselben Ursprung und derselben Krümmung. So bleiben die Schichten im Bogen übereinander:
+    Abstände quer zur Sohle bleiben gleich, längs staucht sich die Oberseite und dehnt sich die Unterseite. Hinter der
+    Zone bleibt alles am Fuß, davor dreht sich der Vorfuß starr mit; das Skelett bewegt danach den gebogenen Fuß. Die
+    Zehenknochen bleiben in Ruhe: Ihre Köpfe liegen bei MakeHuman rund 5 cm über der Sohle, ein Gelenk dort dehnte die
+    Sohle wie Gummi.
+
+    Beide Bögen haben dieselbe Längsachse (−y, die Füße stehen in der Ruhehaltung parallel): Blender rechnet die
+    Grenzen der Zone als Anteil der Ausdehnung des ganzen Netzes, das der Bogen des anderen Fußes schon verformt hat;
+    bei schräger Achse verschob der rechte Bogen die Zone des linken bis unter die Ferse. Die Seite eines Punkts gilt
+    nach seiner Lage (x), nicht nach den Gewichten: Einzelne Punkte der Zehen tragen bei MakeHuman ein winziges Gewicht
+    am Knochen der anderen Seite und würden sonst zweimal gebogen. Teile, die in der Zone beginnen oder enden (Senkel,
+    Ösen), bekommen einen kleineren Winkel, damit die Krümmung überall dieselbe ist."""
+
+    def __init__(self, koerper: bpy.types.Object, skelett: bpy.types.Object, laenge: float = VORFUSS["laenge"],
+                 neutral: float = VORFUSS["neutral"]):
+        from mathutils import Matrix
+
+        daten = _schaft(koerper.name)
+        kopf = {b.name: b.head_local.copy() for b in skelett.data.bones}
+        self.laenge = laenge
+        self.ursprung: dict[str, bpy.types.Object] = {}
+        self.zone: dict[str, tuple[float, float]] = {}
+        self.mods: dict[str, list] = {"L": [], "R": []}
+        self.winkel = {"L": 0.0, "R": 0.0}
+        for s in "LR":
+            r = daten["rahmen"][s]
+            u_mitte = (_koord(r, kopf[f"toe1-1.{s}"])[0] + _koord(r, kopf[f"toe5-1.{s}"])[0]) / 2
+            u0 = u_mitte - laenge / 2 / r["L"]
+            self.zone[s] = (u0, u0 + laenge / r["L"])
+            X = Vector((0.0, -1.0, 0.0))  # längs nach vorn, für beide Füße gleich (siehe oben)
+            Y = Vector((0.0, 0.0, 1.0))  # Bogen zur Oberseite: die Zehen heben sich zum Fußrücken
+            M = Matrix((X, Y, X.cross(Y))).transposed().to_4x4()
+            M.translation = _punkt(r, u0, neutral, 0.0)
+            leer = bpy.data.objects.new(f"Vorfuss.{s}", None)
+            bpy.context.scene.collection.objects.link(leer)
+            leer.parent = skelett
+            leer.matrix_basis = M
+            self.ursprung[s] = leer
+        bpy.context.view_layer.update()
+        for obj in [koerper] + [o for o in (bpy.data.objects.get(n) for n in VORFUSS_TEILE) if o]:
+            namen = {g.index: g.name for g in obj.vertex_groups}
+            fuss = {i for i, n in namen.items() if n.startswith(("foot.", "toe"))}
+            for s in "LR":
+                T = self.ursprung[s].matrix_world.inverted() @ obj.matrix_world
+                xs = [(T @ v.co).x for v in obj.data.vertices]
+                lo, hi = min(xs), max(xs)
+                if hi <= 0.0:
+                    continue
+                drin = [v.index for v in obj.data.vertices if (v.co.x > 0) == (s == "L")]
+                if obj == koerper or obj.name == "Socken":  # nur der Fuß, nicht Hände oder Gesicht vor der Zone
+                    drin = [i for i in drin if any(g.group in fuss and g.weight > 0.0 for g in obj.data.vertices[i].groups)]
+                gruppe = obj.vertex_groups.new(name=f"Vorfuss.{s}")
+                gruppe.add(drin, 1.0, "REPLACE")
+                mod = obj.modifiers.new(f"Vorfuss.{s}", "SIMPLE_DEFORM")
+                mod.deform_method = "BEND"
+                mod.deform_axis = "Z"
+                mod.origin = self.ursprung[s]
+                mod.vertex_group = gruppe.name
+                mod.angle = 0.0
+                mod.limits = (max(0.0, -lo / (hi - lo)), min(1.0, (laenge - lo) / (hi - lo)))
+                anteil = (min(hi, laenge) - max(lo, 0.0)) / laenge
+                with bpy.context.temp_override(object=obj, active_object=obj):
+                    bpy.ops.object.modifier_move_to_index(modifier=mod.name, index=0)
+                self.mods[s].append((mod, anteil))
+
+    def setze(self, grad: dict[str, float]) -> None:
+        """Winkel je Fuß (Grad, positiv: die Zehen heben sich zum Fußrücken)."""
+        for s, g in grad.items():
+            self.winkel[s] = g
+            for mod, anteil in self.mods[s]:
+                mod.angle = math.radians(g) * anteil
+
+
+def im_schuh(koerper: bpy.types.Object, socke: bpy.types.Object) -> dict:
+    """Fuß und Socke im Schuh (D-467; verformte Netze ohne Glättung, Welt), unten im Schuh bis 5 cm über dem Boden (Lage
+    in der Ruhehaltung):
+
+    - **Fuß unter der Außenseite des Schafts** (mm): wie die Zehenbox für die Socke, für die Haut der Füße über der
+      Oberkante der Sohle; negativ heißt, die Haut ragt durch den Schaft;
+    - **außerhalb des Schuhs** (Punkte, mm): Punkte von Haut und Socke, die weder in der Sohle liegen noch vom Schaft
+      umschlossen sind (`_im_schaft`), und wie weit der äußerste von ihnen aus der Sohle ragt."""
+    from mathutils.bvhtree import BVHTree
+
+    daten = _schaft(koerper.name)
+    o = bpy.data.objects
+    hp, hf, _ = _verformt(o["Schuhe"])
+    schaft = BVHTree.FromPolygons(hp, hf)
+    op, of, _ = _verformt(o["Sohle"])
+    sohle = BVHTree.FromPolygons(op, of)
+    namen = {g.index: g.name for g in koerper.vertex_groups}
+    fuss = {i for i, n in namen.items() if n.startswith(("foot.", "toe"))}
+    verts = koerper.data.vertices
+    kp, _, kn = _verformt(koerper)
+    punkte = [(kp[v.index], kn[v.index], v.co, True) for v in verts
+              if sum(g.weight for g in v.groups if g.group in fuss) > 0.5]
+    sp, _, sn = _verformt(socke)
+    nummer = [int(a.value) for a in socke.data.attributes["nummer"].data]
+    punkte += [(sp[i], sn[i], verts[nummer[i]].co + verts[nummer[i]].normal * SOCKE["abstand"], False) for i in range(len(sp))]
+    haut, aussen, weit = [], 0, 0.0
+    for p, n, ruhe, ist_haut in punkte:
+        r = daten["rahmen"]["L" if ruhe.x > 0 else "R"]
+        u, h, _ = _koord(r, ruhe)
+        if not -0.05 < u < 1.05 or h > 0.05:
+            continue
+        if ist_haut and h > _oben(u) + _hub(u):
+            ort, nn, _, _ = schaft.find_nearest(p, 0.05)
+            if ort is not None:
+                haut.append(-(p - ort).dot(nn))
+        ort, nn, _, _ = sohle.find_nearest(p, 0.1)
+        tief = -(p - ort).dot(nn) if ort is not None else -1.0
+        if tief >= 0.0 or _im_schaft(schaft, p, n):
+            continue
+        aussen += 1
+        weit = max(weit, -tief)
+    return {"Fuß: Haut unter der Außenseite des Schafts (mm)": min(haut) * 1000 if haut else float("nan"),
+            "Fuß und Socke: außerhalb des Schuhs (Punkte)": aussen,
+            "Fuß und Socke: außerhalb des Schuhs, am weitesten (mm)": weit * 1000}

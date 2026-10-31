@@ -111,9 +111,9 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 64 | Unterarmstütz (Plank) | Plank | Körpergewicht | Bauch | Unterer Rücken | – | fehlt | fertig (exrx.net) | – | `plank` · `c96d798b-9ae0-5162-9c18-33af65cfbb50` |
+| 64 | Unterarmstütz (Plank) | Plank | Körpergewicht | Bauch | Unterer Rücken | – | vorhanden | fertig (acefitness.org, exrx.net) | Die Quelle von ACE (Hände flach, Handflächen unten) ist am 30.10.2026 ergänzt. | `plank` · `c96d798b-9ae0-5162-9c18-33af65cfbb50` |
 | 65 | Seitstütz | Side Plank | Körpergewicht | Seitliche Bauchmuskeln | Bauch | – | fehlt | fertig (exrx.net) | – | `side_plank` · `314162b2-cd55-5c37-82d5-45c6e563019a` |
-| 66 | Crunches | Crunch | Körpergewicht | Bauch | – | Crunches am Kabel, kniend | fehlt | fertig (exrx.net) | – | `crunch` · `4c98384f-3eda-52eb-9332-1786d758387f` |
+| 66 | Crunches | Crunch | Körpergewicht | Bauch | – | Crunches am Kabel, kniend | vorhanden | fertig (exrx.net) | Die Quelle zu den verschränkten Armen ist am 30.10.2026 ergänzt; sie legt die Unterschenkel auf eine Bank. | `crunch` · `4c98384f-3eda-52eb-9332-1786d758387f` |
 | 67 | Crunches am Kabel, kniend | Cable Crunch | Kabelzug | Bauch | – | Crunches | fehlt | fertig (exrx.net) | – | `cable_crunch` · `8a51d6e5-9250-5e49-828b-5d04cd63b7df` |
 | 68 | Beinheben hängend | Hanging Leg Raise | Klimmzugstange | Bauch | Seitliche Bauchmuskeln | – | fehlt | fertig (exrx.net) | Die Quelle ordnet die Übung den Hüftbeugern zu; der Bauch arbeitet vor allem haltend. | `hanging_leg_raise` · `9697cc53-28cf-5dd1-950a-ecd1dfd7fddc` |
 | 69 | Beinheben liegend | Lying Leg Raise | Körpergewicht | Bauch | – | – | fehlt | fertig (exrx.net) | Die Quelle ordnet die Übung den Hüftbeugern zu; der Bauch arbeitet vor allem haltend. | `lying_leg_raise` · `00af2adf-83b4-56c4-b168-6613bb3acfc1` |
@@ -198,4 +198,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 123 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 124 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 124 Übungen · mit Visual 6 · ohne Visual 118 · Ausführung fertig 122 · offen 2
+Summe: 124 Übungen · mit Visual 8 · ohne Visual 116 · Ausführung fertig 122 · offen 2

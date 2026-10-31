@@ -53,7 +53,10 @@ def _fuss(koerper: bpy.types.Object, kopf: dict) -> tuple[float, float]:
 
 
 def auflage_objekte(koerper: bpy.types.Object, *namen: str) -> list:
-    """Haut und die Teile der Kleidung (`namen`), die vorhanden sind (D-465)."""
+    """Haut und die Teile der Kleidung (`namen`), die vorhanden sind (D-465); zum Shirt gehört sein Saumband
+    (D-478)."""
+    if "Shirt" in namen:
+        namen = (*namen, "Saumband")
     return [koerper] + [o for o in (bpy.data.objects.get(n) for n in namen) if o]
 
 

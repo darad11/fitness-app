@@ -1219,3 +1219,15 @@ Der Test „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, 
 Jetzt steht im Test die Uhr der Seite: Zeit, Zeitgeber und Bilder laufen nur, wenn der Test sie Bild für Bild um 16 ms vorstellt. Auch die CSS-Animationen stehen. Die Frist von 300 ms liegt damit in der vorgestellten Zeit, und der Test prüft nur noch die Reihenfolge der Bilder. Die App selbst ist unverändert.
 
 Unter Volllast (sechs Prozesse rechnen nebenher, vier Testprozesse gleichzeitig) liefen beide Fassungen zusammen 40-mal: alle bestanden. Mein erster Entwurf schlug unter Last noch fehl, weil die Uhr nach dem Einsetzen weiterlief und das Anhalten auf die Startzeit dann schon in der Vergangenheit lag; jetzt hält sie eine Minute später an.
+
+## 19. Kleidung nach dem Board: Zwischenstand (D-477)
+
+Dein Hinweis vom 31.10.2026: Shirt und Shorts sind nicht zu unterscheiden, die Figur wirkt wie in einem Ganzkörperanzug, das Gesäß wird stark betont. Im Werkzeug geändert, noch nicht in der App:
+
+- **Saum:** 1 cm unter dem Bund der Shorts; das Shirt bedeckt die Shorts 4,1 cm statt 21 cm.
+- **Shirt:** fällt unter der Brust gerade nach unten statt Taille, Bauch und Hohlkreuz zu folgen; dazu etwas Luft zum Saum hin. Schultern und Brust liegen an wie bisher.
+- **Shorts:** weite Beine, die von Hüfte und Gesäß gerade nach unten fallen; innen wenig Weite.
+- **Saumband:** eine Kante am Saum mit leichtem Schatten.
+- Farben, Logos und Seitenstreifen bleiben.
+
+Angesehen habe ich bisher nur die Ruhehaltung von vorn, von der Seite und von hinten. Die Bilder in Bewegung hast du angehalten; Standbilder neben dem Board und in Player-Größe folgen auf dein Zeichen.

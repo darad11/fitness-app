@@ -2790,3 +2790,14 @@ Test „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, … 
 | gleich nach dem Commit angehalten | bestanden; Logo erst ab dem Bild bei 144 ms, „stabil“ |
 | Unter Volllast (sechs rechnende Prozesse, vier Testprozesse, `--repeat-each`) | 30 Läufe: 23 bestanden, 7 fehlgeschlagen; 16 Läufe: 12 bestanden, 4 fehlgeschlagen, alle mit „clock.pauseAt: Error: Cannot fast-forward to the past“ (die Uhr läuft ab `install`); angehalten eine Minute nach dem Start: 40 von 40 bestanden |
 | `npx playwright test e2e/start-surface.spec.ts` (ohne Last), eslint, prettier | 18 bestanden, 16 übersprungen; Lint und Format bestanden |
+
+### Kleidung nach dem Board, Zwischenstand · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Saum, Fall, weite Beine und Saumband (D-477).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Maße des Schnitts vorher (Ruhehaltung, Raum des Skeletts) | Saum bei z = 0,0205 m, 3 cm über dem Schritt; oberer Rand der Shorts bei 0,2302 m, Bund 3,1 cm hoch: Das Shirt bedeckte die Shorts 21 cm |
+| Maße jetzt | Saum bei z = 0,1893 m, 1 cm unter dem Bund: Überdeckung 4,1 cm |
+| Ruhehaltung von vorn, von der Seite und von hinten (600 × 900, 24 Proben) | angesehen: Kante am Saum mit Schatten, Shirt fällt gerade, Shorts mit weiten Beinen |
+| Haltungen (Kniebeuge, Beinbeuger, Rudern, Bankdrücken) | vom Produktinhaber während der Rechnung angehalten, nicht ausgewertet |

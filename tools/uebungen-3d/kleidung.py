@@ -103,7 +103,23 @@ BOARD = {
 HOSE_BUND = 0.22  # oberer Rand des Bunds knapp unter dem Nabel (Anteil Hüftgelenk → Halsansatz)
 AKROMION = 0.14  # Schulterpunkt (Ansatz des Ärmels) rund 0,14 Oberarmlängen vor dem Schultergelenk
 WEITE_VORN_HINTEN = 0.55  # Weite des Shirts vorn und hinten im Verhältnis zur Seite
-SCHRITT_ABSTAND = 0.03  # Saum des Shirts höchstens bis so weit über dem Schritt, m
+SCHRITT_ABSTAND = 0.03  # Saum des Shirts höchstens bis so weit über dem Schritt, m (bis D-477)
+# Saum des Shirts (D-478, Hinweis des Produktinhabers): 1 cm unter der Unterkante des Bunds der Shorts; das Shirt
+# bedeckt die Shorts also um die Höhe des Bunds plus 1 cm (rund 4 cm). Bis D-477 reichte es nach der Länge des Boards
+# bis 3 cm über den Schritt (21 cm über die Shorts), die Figur wirkte wie in einem Ganzkörperanzug
+SAUM_UNTER_BUND = 0.01
+# Fall des Shirts (D-478): Unter der Brust hängt der Stoff nach unten, statt Taille, Bauch und Hohlkreuz zu folgen:
+# je Richtung um den Rumpf bis `FALL` des Wegs zur Hülle aller Querschnitte darüber (von der Achsel abwärts); dazu Luft,
+# die zum Saum hin auf `LUFT_SAUM` wächst. Schultern und Brust liegen an wie bisher (Stange und Bank liegen auf dem Stoff)
+FALL = 0.85
+LUFT_SAUM = 0.010
+# Weite Beine der Shorts (D-478): Je Bein fällt der Stoff von Hüfte und Gesäß gerade nach unten (Hülle der Querschnitte
+# um den Oberschenkel, Anteil `HOSE_FALL`), dazu Luft, die zum Saum hin wächst; innen nur wenig (die Beine stehen nah)
+HOSE_FALL = 0.9
+HOSE_LUFT = {"aussen": 0.022, "vorn_hinten": 0.018, "innen": 0.006}
+HOSE_INNEN_MAX = 0.012  # innen höchstens so viel Weite, m
+# Saumband des Shirts (D-478): Höhe, Dicke und Abstand über dem Stoff; die Kante wirft einen leichten Schatten
+SAUMBAND = {"hoehe": 0.016, "dicke": 0.003, "ueber": 0.0015, "unter": 0.002}
 HOSE_WEITE = {"vorn_hinten": 0.45, "innen": 0.15, "steigung": 1.5}  # Weite der Shorts je Seite, zum Saum hin
 # Rundhalskragen (D-431): vorn unter der Drosselgrube, hinten über dem Halswirbel, seitlich Halsbreite plus Rand
 KRAGEN = {"unter_drosselgrube": 0.015, "ueber_halswirbel": 0.012,
@@ -218,7 +234,10 @@ def _schnitt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, oeffnung: di
     # Saum: Länge vom Board, aber über dem Schritt. Darunter läge der Stoff um jedes Bein einzeln wie eine
     # Hose, weil er dem Körper folgt; ein Shirt hängt dort frei (Vereinfachung, D-450)
     z_schritt = min(v.co.z for v in verts if abs(v.co.x) < 0.015)
-    z_saum = max(z_hals - BOARD["shirt_laenge"] * W, z_schritt + SCHRITT_ABSTAND)
+    # Saum (D-478): knapp unter dem Bund der Shorts (`SAUM_UNTER_BUND`); Bund wie unten für die Shorts
+    z_bund0 = k.O.z + HOSE_BUND * L
+    B0 = _breite(koerper, teile, z_bund0, ("rumpf",)) + 2 * ABSTAND["hose"]
+    z_saum = z_bund0 - BOARD["bund"] * BOARD["hose_laenge"] * B0 - SAUM_UNTER_BUND
     # Weite je Höhe: Der Umriss des Shirts folgt dem des Boards, von W unter den Ärmeln zur Taille (0,945 W
     # bei 0,39 der Strecke zum Saum) und zum Saum (1,07 W); wo der Körper schmaler ist, steht der Stoff
     # seitlich um die halbe Differenz ab (seitlich an der Hüfte hängt die Haut schon am Oberschenkel: Rumpf
@@ -319,7 +338,91 @@ def _weite(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[st
                 anteil = max(c, 0.0) ** 2 + HOSE_WEITE["vorn_hinten"] * fb + HOSE_WEITE["innen"] * max(-c, 0.0) ** 2
                 e_hose = schnitt["weite_hose"] * vv * anteil
         hose.append(e_hose)
-    return shirt, hose
+    # Fall (D-478): Shirt unter der Brust und Beine der Shorts hängen gerade nach unten
+    fall_s, fall_h = _fall_shirt(koerper, k, teile, schnitt), _fall_hose(koerper, k, teile, schnitt)
+    return [max(a, b) for a, b in zip(shirt, fall_s)], [max(a, b) for a, b in zip(hose, fall_h)]
+
+
+def _fall_shirt(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict) -> list[float]:
+    """Fall des Shirts (D-478, Ruhehaltung): Für jede Richtung um den Rumpf (6°-Fächer, beide Seiten zusammen) und
+    jede Höhe (1 cm) unter der Achsel der größte Abstand der Haut von der Achse des Rumpfs; die Hülle nimmt von oben
+    nach unten das Größte darüber mit. Der Stoff steht um `FALL` des Wegs zur Hülle ab: So hängt er von der Brust und
+    den Schulterblättern gerade nach unten, statt in Taille, Bauch und Hohlkreuz einzufallen. Dazu Luft, die von der
+    Achsel bis zum Saum auf `LUFT_SAUM` wächst."""
+    u = (k.N - k.O).normalized()
+    z_w, z_saum = schnitt["z_w"], schnitt["z_saum"]
+    unten = z_saum - 0.04
+    daten, rmax = [], {}
+    for v, teil in zip(koerper.data.vertices, teile):
+        p = v.co
+        if teil not in ("rumpf", "bein") or p.z > z_w or p.z < unten:
+            daten.append(None)
+            continue
+        th, _, _ = k.rumpf(p)
+        rel = p - k.O
+        r = (rel - rel.dot(u) * u).length
+        fach, hoehe = min(29, int(th / 6.0)), int((z_w - p.z) / 0.01)
+        daten.append((fach, hoehe, r))
+        rmax[(fach, hoehe)] = max(rmax.get((fach, hoehe), 0.0), r)
+    huelle = {}
+    for fach in range(30):
+        m = 0.0
+        for hoehe in range(int((z_w - unten) / 0.01) + 2):
+            m = max(m, rmax.get((fach, hoehe), 0.0))
+            huelle[(fach, hoehe)] = m
+    aus = []
+    for d, v in zip(daten, koerper.data.vertices):
+        if d is None:
+            aus.append(0.0)
+            continue
+        fach, hoehe, r = d
+        luft = LUFT_SAUM * min(1.0, max(0.0, (z_w - v.co.z) / (z_w - z_saum)))
+        aus.append(FALL * max(0.0, huelle[(fach, hoehe)] - r) + luft)
+    return aus
+
+
+def _fall_hose(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict) -> list[float]:
+    """Weite Beine der Shorts (D-478, Ruhehaltung): je Bein für jede Richtung um den Oberschenkel (12°-Fächer) und
+    jeden Abschnitt längs (2 cm) ab dem Hüftgelenk der größte Abstand der Haut von seiner Achse; die Hülle nimmt nach
+    unten das Größte darüber mit (Gesäß, Hüfte). Der Stoff steht um `HOSE_FALL` des Wegs zur Hülle ab und bekommt Luft,
+    die zum Saum hin wächst (`HOSE_LUFT`); innen höchstens `HOSE_INNEN_MAX`, damit sich die Beine nicht kreuzen."""
+    bein_t = schnitt["bein_t"]
+    daten, rmax = [], {}
+    for v, teil in zip(koerper.data.vertices, teile):
+        p = v.co
+        s = "L" if p.x >= 0 else "R"
+        if teil not in ("rumpf", "bein") or p.z > schnitt["z_bund"]:
+            daten.append(None)
+            continue
+        th, tt, Lb, r = k.glied(p, f"upperleg01.{s}", f"lowerleg01.{s}", Vector((0, -1, 0)), s)
+        if tt < 0.0 or tt > bein_t + 0.05:
+            daten.append(None)
+            continue
+        fach, abschnitt = int((th + 180.0) / 12.0) % 30, int(tt * Lb / 0.02)
+        daten.append((s, fach, abschnitt, r, th, tt))
+        rmax[(s, fach, abschnitt)] = max(rmax.get((s, fach, abschnitt), 0.0), r)
+    huelle = {}
+    n = int((bein_t + 0.05) * schnitt["Lb"] / 0.02) + 2
+    for s in "LR":
+        for fach in range(30):
+            m = 0.0
+            for abschnitt in range(n):
+                m = max(m, rmax.get((s, fach, abschnitt), 0.0))
+                huelle[(s, fach, abschnitt)] = m
+    aus = []
+    for d in daten:
+        if d is None:
+            aus.append(0.0)
+            continue
+        s, fach, abschnitt, r, th, tt = d
+        sin, cos = math.sin(math.radians(th)), math.cos(math.radians(th))
+        luft = (HOSE_LUFT["aussen"] * max(sin, 0.0) ** 2 + HOSE_LUFT["vorn_hinten"] * cos ** 2
+                + HOSE_LUFT["innen"] * max(-sin, 0.0) ** 2) * min(1.0, max(0.0, tt / bein_t))
+        e = HOSE_FALL * max(0.0, huelle[(s, fach, abschnitt)] - r) + luft
+        if sin < -0.5:  # innen: kaum Weite, die Beine stehen nah beieinander
+            e = min(e, HOSE_INNEN_MAX)
+        aus.append(e)
+    return aus
 
 
 def _glatte_normalen(koerper: bpy.types.Object, radius: float = 0.03) -> list[Vector]:
@@ -619,6 +722,96 @@ def _buendchen(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.
     mod.object = skelett
     dicke = obj.modifiers.new("Dicke", "SOLIDIFY")
     dicke.thickness = KRAGEN["buendchen_dicke"]
+    dicke.offset = 1.0
+    sub = obj.modifiers.new("Glatt", "SUBSURF")
+    sub.levels = 1
+    sub.render_levels = 2
+    obj.data.materials.append(material)
+    return obj
+
+
+def _saumband(shirt: bpy.types.Object, koerper: bpy.types.Object, skelett: bpy.types.Object, schnitt: dict,
+              material: bpy.types.Material) -> bpy.types.Object:
+    """Saumband des Shirts (D-478): ein Band auf dem Saum am Rumpf wie das Kragenbündchen (`_buendchen`), damit
+    zwischen Shirt und Shorts eine Kante mit leichtem Schatten zu sehen ist, auch bäuchlings und von hinten. Aus den
+    Punkten, in denen das Feld `Saum` des Shirts die Null kreuzt (nur nahe der Saumhöhe, nicht an den Ärmeln), nach
+    dem Winkel um den Rumpf geordnet, geglättet und auf 96 Stützen verteilt; jede Stütze mindestens
+    `SAUMBAND["ueber"]` über dem Stoff. Unterkante `SAUMBAND["unter"]` unter dem Saum (sie verdeckt die Schnittkante),
+    Oberkante `SAUMBAND["hoehe"]` darüber am Stoff entlang; Dicke über Solidify nach außen. Gewichte vom nächsten
+    Eckpunkt des Shirts."""
+    mesh = shirt.data
+    saum = mesh.attributes["Saum"].data
+    z0 = schnitt["z_saum"]
+    roh = []
+    for ed in mesh.edges:
+        i, j = ed.vertices
+        a, b = saum[i].value, saum[j].value
+        if (a < 0) == (b < 0) or abs(a - b) < 1e-9:
+            continue
+        t = a / (a - b)
+        p = mesh.vertices[i].co.lerp(mesh.vertices[j].co, t)
+        if abs(p.z - z0) > 0.05:  # Ärmel und Hals liegen weit darüber
+            continue
+        n = mesh.vertices[i].normal.lerp(mesh.vertices[j].normal, t).normalized()
+        roh.append((p, n))
+    if len(roh) < 24:
+        raise ValueError("Saumband: zu wenige Schnittpunkte des Saums")
+    y_mitte = sum(p.y for p, _ in roh) / len(roh)
+    punkte = sorted(((math.atan2(p.x, -(p.y - y_mitte)), p, n) for p, n in roh), key=lambda x: x[0])
+    N = 96
+    stuetzen = []
+    for s_i in range(N):
+        w = -math.pi + 2 * math.pi * (s_i + 0.5) / N
+        nahe = [(p, n) for a, p, n in punkte if abs(((a - w + math.pi) % (2 * math.pi)) - math.pi) < 2.5 * 2 * math.pi / N]
+        if not nahe:
+            nahe = [min(punkte, key=lambda x: abs(((x[0] - w + math.pi) % (2 * math.pi)) - math.pi))[1:]]
+        stuetzen.append((sum((q for q, _ in nahe), Vector()) / len(nahe), sum((q for _, q in nahe), Vector()).normalized()))
+    for _ in range(3):
+        stuetzen = [((stuetzen[i - 1][0] + 2 * stuetzen[i][0] + stuetzen[(i + 1) % N][0]) / 4,
+                     (stuetzen[i - 1][1] + 2 * stuetzen[i][1] + stuetzen[(i + 1) % N][1]).normalized()) for i in range(N)]
+    sv = mesh.vertices
+    baum = kdtree.KDTree(len(sv))
+    for v in sv:
+        baum.insert(v.co, v.index)
+    baum.balance()
+    ecken = []
+    for i, (p, n) in enumerate(stuetzen):
+        tang = (stuetzen[(i + 1) % N][0] - stuetzen[i - 1][0]).normalized()
+        hoch = n.cross(tang).normalized()
+        if hoch.z < 0:
+            hoch = -hoch
+        for q in (p - hoch * SAUMBAND["unter"], p + hoch * SAUMBAND["hoehe"]):
+            _, j, _ = baum.find(q)
+            hoehe = (q - sv[j].co).dot(sv[j].normal)
+            if hoehe < SAUMBAND["ueber"]:
+                q = q + sv[j].normal * (SAUMBAND["ueber"] - hoehe)
+            ecken.append(q)
+    flaechen = [[2 * i, 2 * ((i + 1) % N), 2 * ((i + 1) % N) + 1, 2 * i + 1] for i in range(N)]
+    me = bpy.data.meshes.new("Saumband")
+    me.from_pydata([tuple(q) for q in ecken], [], flaechen)
+    me.update()
+    # Flächen nach außen (vom Rumpf weg)
+    mitte = sum(ecken, Vector()) / len(ecken)
+    for poly in me.polygons:
+        poly.use_smooth = True
+    aussen = sum(((me.vertices[poly.vertices[0]].co - mitte).dot(poly.normal) for poly in me.polygons))
+    if aussen < 0:
+        for poly in me.polygons:
+            poly.flip()
+        me.update()
+    obj = bpy.data.objects.new("Saumband", me)
+    bpy.context.scene.collection.objects.link(obj)
+    obj.parent = shirt.parent
+    kd = {g.index: g.name for g in shirt.vertex_groups}
+    namen = {g.name: obj.vertex_groups.new(name=g.name) for g in koerper.vertex_groups}
+    for i, q in enumerate(ecken):
+        _, j, _ = baum.find(q)
+        for g in sv[j].groups:
+            namen[kd[g.group]].add([i], g.weight, "REPLACE")
+    mod = obj.modifiers.new("Skelett", "ARMATURE")
+    mod.object = skelett
+    dicke = obj.modifiers.new("Dicke", "SOLIDIFY")
+    dicke.thickness = SAUMBAND["dicke"]
     dicke.offset = 1.0
     sub = obj.modifiers.new("Glatt", "SUBSURF")
     sub.levels = 1
@@ -959,7 +1152,8 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     shirt.data.materials.append(stoff_material("Shirt", TEE, [("Brust", "f", {"f": LIME}),
                                                               ("Ruecken", "ruecken", {"f": LIME, "wort": WEISS})]))
     kragen = _buendchen(shirt, koerper, skelett, oeffnung, stoff_material("Kragen", TEE, [], mit_saum=False))
-    teile_obj = [shirt, hose, kragen]
+    saumband = _saumband(shirt, koerper, skelett, schnitt, stoff_material("Saumband", TEE, [], mit_saum=False))
+    teile_obj = [shirt, hose, kragen, saumband]
     bedeckt = [max(a, b) for a, b in zip(f["shirt"], f["hose"])]
     if mit_schuhen:
         import schuhe

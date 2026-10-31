@@ -495,28 +495,43 @@
       "sourceNote": "Allgemeine Hinweise stammen von der Seite zum breiten Latziehen."
     },
     "seated_cable_row": {
-      "summary": "Am tiefen Kabelzug sitzend ziehst du den Griff zur Taille und streckst die Arme danach wieder kontrolliert nach vorn.",
+      "summary": "Am Kabelzug sitzend ziehst du den Griff waagrecht zu den unteren Rippen und streckst die Arme danach wieder kontrolliert nach vorn.",
       "setup": [
-        "Setz dich etwas nach vorn, um den Griff zu fassen, und stell die Füße auf die Fußplatten.",
-        "Schieb die Hüfte zurück, bis die Knie nur noch leicht gebeugt sind."
+        "Setz dich etwas nach vorn, um den Griff zu fassen, und stell die Füße auf die Fußplatte.",
+        "Schieb die Hüfte zurück und richte den Oberkörper auf. Die Knie bleiben gebeugt.",
+        "Fass den Griff so, dass die Handflächen zueinander zeigen."
       ],
       "steps": [
-        "Zieh den Griff zur Taille und richte dabei den unteren Rücken auf.",
-        "Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind.",
+        "Zieh den Griff zu den unteren Rippen und die Schulterblätter zusammen.",
+        "Der Oberkörper bleibt dabei aufrecht.",
+        "Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind und die Schultern nach vorn gehen.",
         "Beginn die nächste Wiederholung ohne Pause am vorderen Umkehrpunkt."
       ],
       "cues": [
         "Beginn mit wenig Gewicht und steigere es schrittweise.",
-        "Bleib am vorderen Umkehrpunkt in Bewegung, ohne abzufedern."
+        "Bleib am vorderen Umkehrpunkt in Bewegung, ohne abzufedern.",
+        "Lehn dich nicht nach vorn, um Schwung zu holen."
       ],
-      "mistakes": ["Gewicht federt am vorderen Umkehrpunkt ab.", "Pause am vorderen Umkehrpunkt."],
+      "mistakes": [
+        "Gewicht federt am vorderen Umkehrpunkt ab.",
+        "Pause am vorderen Umkehrpunkt.",
+        "Oberkörper kippt nach vorn und holt Schwung."
+      ],
       "sources": [
+        {
+          "title": "ExRx.net: Cable Straight Back Seated Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/CBStraightBackSeatedRow"
+        },
+        {
+          "title": "NASM: How to Perform a Close-Grip Seated Machine Row",
+          "url": "https://m.nasm.org/workout-exercise-guidance/how-to-seated-machine-row-close-grip"
+        },
         {
           "title": "ExRx.net: Cable Seated Row",
           "url": "https://exrx.net/WeightExercises/BackGeneral/CBSeatedRow"
         }
       ],
-      "sourceNote": "Folgt dem Standardgriff; weiter Griff und Untergriff (Alias-Namen) sind nicht eigens beschrieben."
+      "sourceNote": "Folgt ExRx „Cable Straight Back Seated Row“ mit aufrechtem Oberkörper. Abweichend davon sind die Knie deutlich statt leicht gebeugt, und der Griff kommt zu den unteren Rippen statt zur Taille (wie bei NASM), nach einem Vorlagebild vom 31.10.2026. Weiten Griff und Untergriff beschreibt sie nicht."
     },
     "bent_over_row_barbell": {
       "summary": "Vorgebeugt mit geradem Rücken ziehst du die Langhantel zum Bauch und senkst sie danach bis zur vollen Armstreckung.",
@@ -848,7 +863,7 @@
         "Beug dich in Hüfte und Knien leicht vor."
       ],
       "steps": [
-        "Heb die Oberarme seitlich an, bis die Ellbogen auf Schulterhöhe sind.",
+        "Heb die Oberarme seitlich und leicht schräg nach vorn an, bis die Ellbogen auf Schulterhöhe sind.",
         "Lass die Ellbogen dabei nach hinten zeigen.",
         "Senk die Hanteln kontrolliert ab und wiederhole."
       ],
@@ -871,7 +886,7 @@
           "url": "https://exrx.net/WeightTraining/Mistakes"
         }
       ],
-      "sourceNote": "Die Variante „Spider“ (Alias-Name) ist nicht eigens beschrieben."
+      "sourceNote": "Die Variante „Spider“ (Alias-Name) ist nicht eigens beschrieben. „Leicht schräg nach vorn“ (rund 30° vor der Schulterlinie) ist am 31.10.2026 ergänzt; die Quelle hebt die Arme zur Seite."
     },
     "lateral_raise_cable": {
       "summary": "Einarmiges Seitheben am unteren Kabelzug: Du hebst den Arm mit leicht gebeugtem Ellbogen seitlich bis auf Schulterhöhe.",
@@ -1656,7 +1671,7 @@
       "summary": "Haltende Übung für den Rumpf: Du stützt dich auf Unterarme und Fußballen und hältst den Körper in einer geraden Linie.",
       "setup": [
         "Leg dich bäuchlings auf eine Matte.",
-        "Setz die Unterarme auf, die Ellbogen liegen unter den Schultern.",
+        "Setz die Unterarme parallel auf, die Ellbogen liegen unter den Schultern, die Hände flach.",
         "Schließ die Beine, die Fußballen stehen auf dem Boden."
       ],
       "steps": [
@@ -1673,8 +1688,13 @@
         {
           "title": "ExRx.net: Front Plank",
           "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWFrontPlank"
+        },
+        {
+          "title": "ACE Exercise Library: Front Plank",
+          "url": "https://www.acefitness.org/resources/everyone/exercise-library/32/front-plank/"
         }
-      ]
+      ],
+      "sourceNote": "Die Quelle von ACE (Hände flach, Handflächen unten) ist am 30.10.2026 ergänzt."
     },
     "side_plank": {
       "summary": "Haltende Übung in Seitlage: Du stützt dich auf einen Unterarm und hältst den Körper als gerade Linie über dem Boden.",
@@ -1710,7 +1730,8 @@
       "summary": "Bauchübung in Rückenlage: Du rollst den oberen Rücken vom Boden ein, der untere Rücken bleibt liegen.",
       "setup": [
         "Leg dich auf den Rücken auf eine Matte.",
-        "Beuge Hüfte und Knie und stell die Füße auf den Boden."
+        "Beuge Hüfte und Knie und stell die Füße auf den Boden.",
+        "Verschränk die Arme vor der Brust."
       ],
       "steps": [
         "Roll den Oberkörper ein und heb den oberen Rücken vom Boden.",
@@ -1729,10 +1750,11 @@
           "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunch"
         },
         {
-          "title": "ExRx.net: Crunch (arms down)",
-          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunchAD"
+          "title": "ExRx.net: Crunch (arms crossed)",
+          "url": "https://exrx.net/WeightExercises/RectusAbdominis/BWCrunchX"
         }
-      ]
+      ],
+      "sourceNote": "Die Quelle zu den verschränkten Armen ist am 30.10.2026 ergänzt; sie legt die Unterschenkel auf eine Bank."
     },
     "cable_crunch": {
       "summary": "Bauchübung kniend am oberen Kabelzug: Du rollst den Rumpf ein und führst die Ellbogen Richtung Oberschenkel.",

@@ -2,9 +2,9 @@
   "version": 1,
   "sources": {
     "form_3d_pilot": {
-      "name": "FORM, eigene 3D-Darstellung (Pilot), Grundmodell MakeHuman",
-      "url": "https://github.com/makehuman/makehuman",
-      "license": "Grundmodell, Haut, Augen und Haare CC0 1.0 (MakeHuman), Darstellung eigenes Werk",
+      "name": "FORM, eigene 3D-Darstellung, Grundmodell MakeHuman",
+      "url": "https://github.com/makehumancommunity/makehuman",
+      "license": "Grundmodell, Haut, Augen, Haare und Schuhform CC0 1.0 (MakeHuman), Darstellung eigenes Werk",
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
       "commercialUse": true
     }
@@ -32,6 +32,32 @@
       "alt": "Bankdrücken auf der Flachbank, schräg von vorn oben: Stange von gestreckten Armen bis zur unteren Brust und zurück, Handgelenke gerade über den Ellbogen, Füße flach am Boden.",
       "source": "form_3d_pilot"
     },
+    "bench_press_dumbbell": {
+      "preview": { "src": "medien/bankdruecken_kh-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/bankdruecken_kh.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/bankdruecken_kh.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/bankdruecken_kh-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Bankdrücken mit Kurzhanteln auf der Flachbank, schräg von vorn oben: Hanteln von gestreckten Armen über den Schultern bis seitlich der Brust und zurück, Handgelenke gerade, Füße flach am Boden.",
+      "source": "form_3d_pilot"
+    },
+    "incline_bench_press_dumbbell": {
+      "preview": {
+        "src": "medien/schraegbankdruecken_kh-vorschau.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/schraegbankdruecken_kh.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/schraegbankdruecken_kh.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/schraegbankdruecken_kh-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Schrägbankdrücken mit Kurzhanteln, Lehne 30°, schräg von vorn: Hanteln von gestreckten Armen über den Schultern bis seitlich der oberen Brust und zurück, Rücken an der Lehne, Handgelenke gerade, Füße flach am Boden.",
+      "source": "form_3d_pilot"
+    },
     "lat_pulldown": {
       "preview": { "src": "medien/latziehen-vorschau.webp", "width": 240, "height": 240 },
       "demo": {
@@ -41,6 +67,61 @@
         "still": { "src": "medien/latziehen-poster.webp", "width": 720, "height": 540 }
       },
       "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Handgelenke gerade, Oberschenkel unter dem Polster.",
+      "source": "form_3d_pilot"
+    },
+    "leg_press": {
+      "preview": { "src": "medien/beinpresse-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/beinpresse.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/beinpresse.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/beinpresse-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Beinpresse 45°, schräg von der Seite: Platte von fast gestreckten Beinen bis Knie 95° heran und zurück, Rücken und Gesäß bleiben an Lehne und Sitz, Füße flach auf der Platte, Knie über den Zehen.",
+      "source": "form_3d_pilot"
+    },
+    "plank": {
+      "preview": { "src": "medien/unterarmstuetz-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/unterarmstuetz.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/unterarmstuetz.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/unterarmstuetz-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Unterarmstütz auf der Matte, schräg von vorn: Unterarme parallel, Ellbogen unter den Schultern, Hände flach, Körper von Kopf bis Fersen in einer Linie auf den Fußballen, Schuhe am Ballen gebogen; gehalten mit ruhiger Atmung.",
+      "source": "form_3d_pilot"
+    },
+    "crunch": {
+      "preview": { "src": "medien/crunch-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/crunch.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/crunch.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/crunch-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Crunches auf der Matte, schräg von der Seite: Rückenlage, Knie gebeugt, Füße flach, Arme vor der Brust verschränkt; Oberkörper einrollen, bis die Schulterblätter abheben, und zurück, unterer Rücken bleibt liegen, Kopf leicht angehoben.",
+      "source": "form_3d_pilot"
+    },
+    "lateral_raise_dumbbell": {
+      "preview": { "src": "medien/seitheben_kh-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/seitheben_kh.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/seitheben_kh.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/seitheben_kh-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Seitheben mit Kurzhanteln im Stand, schräg von vorn: Hanteln von vor den Oberschenkeln seitlich und leicht schräg nach vorn bis Schulterhöhe und zurück, Ellbogen leicht gebeugt, Rumpf leicht vorgeneigt.",
+      "source": "form_3d_pilot"
+    },
+    "seated_cable_row": {
+      "preview": { "src": "medien/rudern_kabel-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/rudern_kabel.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/rudern_kabel.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/rudern_kabel-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Rudern am Kabel, sitzend, schräg von hinten: aufrecht, Knie gebeugt, Füße auf der Fußplatte; V-Griff am waagrechten Kabel zu den unteren Rippen ziehen, Schulterblätter zusammen, dann kontrolliert nach vorn bis zu gestreckten Armen.",
       "source": "form_3d_pilot"
     }
   }

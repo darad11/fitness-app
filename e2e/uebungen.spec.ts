@@ -65,14 +65,35 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Pilot-Übungen mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
-  const dumbbells = row(page, 'Bankdrücken mit Kurzhanteln');
-  await expect(dumbbells.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für drei Übungen (Pilot 3D, D-402).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(3);
+  const smith = row(page, 'Bankdrücken an der Multipresse');
+  await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
+  // Ausgeliefert sind Animationen für zehn Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465), die Familie „Rumpf“ (D-467), das
+  // Seitheben mit Kurzhanteln (D-469) und das Rudern am Kabel, sitzend (D-474).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(10);
+  await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
+    'src',
+    '/uebungen/medien/bankdruecken_kh-vorschau.webp',
+  );
+  const legPress = row(page, 'Beinpresse(?!,)').locator('img');
+  await legPress.scrollIntoViewIfNeeded();
+  await expect(legPress).toHaveAttribute('src', '/uebungen/medien/beinpresse-vorschau.webp');
+  const plank = row(page, 'Unterarmstütz').locator('img');
+  await plank.scrollIntoViewIfNeeded();
+  await expect(plank).toHaveAttribute('src', '/uebungen/medien/unterarmstuetz-vorschau.webp');
+  const crunch = row(page, 'Crunches(?! am)').locator('img');
+  await crunch.scrollIntoViewIfNeeded();
+  await expect(crunch).toHaveAttribute('src', '/uebungen/medien/crunch-vorschau.webp');
+  const lateralRaise = row(page, 'Seitheben mit Kurzhanteln').locator('img');
+  await lateralRaise.scrollIntoViewIfNeeded();
+  await expect(lateralRaise).toHaveAttribute('src', '/uebungen/medien/seitheben_kh-vorschau.webp');
+  const cableRow = row(page, 'Rudern am Kabel, sitzend').locator('img');
+  await cableRow.scrollIntoViewIfNeeded();
+  await expect(cableRow).toHaveAttribute('src', '/uebungen/medien/rudern_kabel-vorschau.webp');
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
   await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');

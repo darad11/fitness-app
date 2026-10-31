@@ -2667,3 +2667,21 @@ Prüfseite der Familie „Schulter und Brust isoliert“ mit dem Seitheben mit K
 | Rechenzeit `render.py seitheben_kh --pruefen` / `familie_bilder.py seitheben_kh` | 676 s / 125 s (nebenher liefen die Schleifen der Familie „Rumpf“) |
 | Prüfseite (`tools/uebungen_pruef_bild.py seitheben_kh --familie schulter-brust-isoliert --titel "Schulter und Brust isoliert"`) | `familie-schulter-brust-isoliert.webp`, angesehen: Hanteln vor den Oberschenkeln, oben Arme waagrecht und Handflächen unten, Faust um den Griff, Füße flach; gerundete Nullen erschienen als „−0,0“, jetzt „0,0“ |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-468; die App ändert sich nicht, E2E wie bei D-467) | bestanden; Startansicht 237,8 KB, Übungsbilder 32 von 32 |
+
+### Phase Programme, Abschnitt 2, Seitheben in der App · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Seitheben mit 30° vor der Schulterlinie, Schleife in der App (D-469).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erster Lauf mit `EBENE` 30° (drei Phasen) | Start gesucht: Arm 13,57° nach vorn, 3,1° zur Seite (vorher 13,6° und 2,5°); Griffachse links −0,2°, rechts 0,5° gedreht; Köpfe 12,0 mm vor dem Körper |
+| Websuche nach einer zugelassenen Quelle für die Schulterblattebene beim Seitheben | keine bei ExRx, ACE, NASM, Human Kinetics oder Mayo Clinic gefunden; Hinweis zur Quelle in der App ergänzt |
+| `render.py seitheben_kh --pruefen` (alle 60 Bilder) | Armhebung 13,9 bis 90,0°; oben Oberarm 0,0° zur Waagrechten, Ellbogen 0,0 cm über dem Schultergelenk; Ebene 30,0 bis 35,9°; Ellbogen 165,07 bis 165,11°; Ellbogen mindestens 1,86 cm über dem Handgelenk; Handgelenk 4,97 bis 5,02°; Finger −4,1 mm; Hand 3,7 mm vor den Köpfen; Köpfe mindestens 12,0 mm vor Haut, Shorts und Shirt; Griffe 26,3 bis 131,4 cm auseinander; Sohlen 0,0 mm, nicht verschoben; keine Meldungen. 570 s, Nahaufnahmen 135 s |
+| `render.py seitheben_kh` (60 Bilder, 720 × 540, 40 Proben) | 1.879 s (nebenher liefen Prüfansichten); MP4 44,8 KB, WebM 41,8 KB, Poster 6,8 KB, Vorschau 3,0 KB; abgerufen 54,6 KB (mit WebM 51,6 KB); erstes und letztes Bild pixelgleich |
+| `tools/uebungen_bewegung.py seitheben seitheben_kh` | `seitheben-bewegung.mp4`, 98 KB, 720 × 540, 7,5 s |
+| Prüfseite neu (`uebungen_pruef_bild.py seitheben_kh --familie schulter-brust-isoliert …`) | angesehen: oben Arme waagrecht und schräg nach vorn, Handflächen unten |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm check:docs` | zuerst fehlgeschlagen: Der Animationsplan nannte D-469, bevor die Entscheidung eingetragen war; danach bestanden |
+| `pnpm test` (unter Last: Prüfansichten der nächsten Familie liefen nebenher) | 135 Dateien, 1.209 Tests bestanden, kein Ausfall |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 36 von 36 im Build |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (15,2 min): `start-surface.spec.ts` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, 120 ms lang, danach die aufgeklappten – Logo nie an der falschen Stelle, am Ende mittig (D-394)“ (chromium-mobile), Meldung „Bilder ohne Logo davor“: Das Logo war schon im ersten abgetasteten Bild zu sehen. Einzeln fünfmal wiederholt bestanden (je beide Fälle der Zeile). Der geänderte Test der Übungsliste (neun Vorschaubilder, dazu das Seitheben) bestanden |

@@ -65,15 +65,16 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
   const smith = row(page, 'Bankdrücken an der Multipresse');
   await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für acht Übungen: die drei Pilot-Übungen (D-402), die Familie
-  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465) und die Familie „Rumpf“ (D-467).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(8);
+  // Ausgeliefert sind Animationen für neun Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465), die Familie „Rumpf“ (D-467) und das
+  // Seitheben mit Kurzhanteln (D-469).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(9);
   await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
     'src',
     '/uebungen/medien/bankdruecken_kh-vorschau.webp',
@@ -87,6 +88,9 @@ test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der
   const crunch = row(page, 'Crunches(?! am)').locator('img');
   await crunch.scrollIntoViewIfNeeded();
   await expect(crunch).toHaveAttribute('src', '/uebungen/medien/crunch-vorschau.webp');
+  const lateralRaise = row(page, 'Seitheben mit Kurzhanteln').locator('img');
+  await lateralRaise.scrollIntoViewIfNeeded();
+  await expect(lateralRaise).toHaveAttribute('src', '/uebungen/medien/seitheben_kh-vorschau.webp');
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
   await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');

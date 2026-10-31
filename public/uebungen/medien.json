@@ -101,6 +101,17 @@
       },
       "alt": "Crunches auf der Matte, schräg von der Seite: Rückenlage, Knie gebeugt, Füße flach, Arme vor der Brust verschränkt; Oberkörper einrollen, bis die Schulterblätter abheben, und zurück, unterer Rücken bleibt liegen, Kopf leicht angehoben.",
       "source": "form_3d_pilot"
+    },
+    "lateral_raise_dumbbell": {
+      "preview": { "src": "medien/seitheben_kh-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/seitheben_kh.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/seitheben_kh.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/seitheben_kh-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Seitheben mit Kurzhanteln im Stand, schräg von vorn: Hanteln von vor den Oberschenkeln seitlich und leicht schräg nach vorn bis Schulterhöhe und zurück, Ellbogen leicht gebeugt, Rumpf leicht vorgeneigt.",
+      "source": "form_3d_pilot"
     }
   }
 }

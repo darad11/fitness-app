@@ -777,3 +777,73 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife ren
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite „Schulter und Brust isoliert“.
+
+## 11. Freigabe „Schulter und Brust isoliert“: Seitheben mit 30°, Schleife in der App (D-469)
+
+Deine Freigabe vom 31.10.2026 mit drei Entscheidungen: Der Start vor den Oberschenkeln bleibt, ebenso die 8° des Schlüsselbeins; oben steht der Arm 30° vor der Schulterlinie statt 20°.
+
+### 11.1 Ebene 30°
+
+- Oben steht der Oberarm jetzt 30,0° vor der Schulterlinie, waagrecht, der Ellbogen auf Schulterhöhe. Das ist die Ebene des Schulterblatts.
+- Der Start bleibt: Der Arm hängt 13,6° nach vorn (gesucht wie bisher, jetzt 13,57°), die Köpfe der Hanteln bleiben 12,0 mm vor Shorts und Shirt.
+- Die Griffe liegen oben 131,4 cm auseinander (vorher 142,7 cm), weil die Arme weiter vorn stehen.
+
+### 11.2 Ausführungstext
+
+Der Text sagte nur „seitlich“. Geändert:
+
+| | vorher | jetzt |
+|---|---|---|
+| Ausführung, Schritt 1 | „Heb die Oberarme seitlich an, bis die Ellbogen auf Schulterhöhe sind.“ | „Heb die Oberarme seitlich und leicht schräg nach vorn an, bis die Ellbogen auf Schulterhöhe sind.“ |
+| Hinweis zur Quelle | „Die Variante „Spider“ (Alias-Name) ist nicht eigens beschrieben.“ | dazu: „„Leicht schräg nach vorn“ (rund 30° vor der Schulterlinie) ist am 31.10.2026 ergänzt; die Quelle hebt die Arme zur Seite.“ |
+
+Eine der zugelassenen Quellen (ExRx, ACE, NASM, Human Kinetics, Mayo Clinic) mit der Schulterblattebene beim Seitheben habe ich nicht gefunden; ExRx sagt „zur Seite“. Der Hinweis in der App sagt darum offen, dass die Ergänzung von uns stammt. Unverändert: „Heb die Arme seitlich an, statt sie nach außen zu drehen.“ Der Satz meint die Drehung des Arms, nicht die Richtung. Derselbe Satz beim vorgebeugten Seitheben (Reverse Flys) bleibt, dort stehen die Arme quer zum Oberkörper.
+
+### 11.3 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Armhebung (0 = hängend) | 13,9° (Ausgang) bis 90,0° (oben) |
+| Oberarm oben zur Waagrechten / Ellbogen oben über dem Schultergelenk | 0,0° / 0,0 cm |
+| Oberarm vor der Schulterlinie (ab 60° Armhebung) | 30,0 bis 35,9° |
+| Ellbogen | 165,07 bis 165,11° |
+| Ellbogen über dem Handgelenk | mindestens 1,9 cm (oben) |
+| Handgelenk gesamt | 5,0° |
+| Finger am Griff / Hand zu den Köpfen | 4,1 mm eingedrückt (gewollt) / 3,7 mm |
+| Köpfe vor Haut, Shorts und Shirt | mindestens 12,0 mm |
+| Griffe auseinander | 26,3 bis 131,4 cm |
+| Knie / Rumpf vorgeneigt / Schlüsselbein gehoben | 168° / 10° / 0 bis 8° |
+| Sohlen am Boden / verschoben | 0,0 mm / 0,0 mm |
+| Meldungen des Rigs | 0 |
+
+### 11.4 Schleife in der App
+
+Gerendert wie die übrigen Schleifen (C männlich, 720 × 540, 60 Bilder, 40 Proben) und in `public/uebungen/medien.json` eingetragen, mit Bildbeschreibung.
+
+| | Seitheben mit Kurzhanteln |
+|---|---|
+| Renderzeit, 60 Bilder | 1.879 s |
+| MP4 / WebM | 44,8 / 41,8 KB |
+| Poster / Vorschau | 6,8 / 3,0 KB |
+| abgerufen (MP4, Poster, Vorschau) | 54,6 KB (mit WebM 51,6 KB) |
+
+Nebenher liefen die Prüfansichten des Seithebens und der nächsten Familie. Erstes und letztes Bild sind pixelgleich. Startansicht unverändert 237,8 KB; die Liste nennt jetzt 36 Dateien, alle im Build vorhanden.
+
+### 11.5 Aufnahme und Prüfseite
+
+`docs/screens/uebungen/seitheben-bewegung.mp4`: die Schleife der App, dreimal (7,5 s). `docs/screens/uebungen/familie-schulter-brust-isoliert.webp` neu mit der Ebene von 30° und den neuen Werten; Messung und Prüfansichten 570 s, Nahaufnahmen 135 s.
+
+**Tests:** Die Unit-Tests liefen unter Last (Blender rechnete die Prüfansichten der nächsten Familie): 1.209 bestanden, kein Ausfall. Die E2E-Tests liefen ohne Blender: 431 bestanden, 1 fehlgeschlagen, ein Zeittest der Startfläche: „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, 120 ms lang, danach die aufgeklappten – Logo nie an der falschen Stelle, am Ende mittig (D-394)“. Das Logo war schon im ersten abgetasteten Bild zu sehen. Einzeln lief der Test fünfmal fehlerfrei; mit dem Seitheben hat er nichts zu tun.
+
+### 11.6 Bericht zum Paket
+
+```
+Arbeitspaket: D-469 Phase Programme, Abschnitt 2: Seitheben freigegeben, Ebene 30°, Schleife in der App
+Umgesetzte Funktionen: Schleife, Poster und Vorschaubild des Seithebens mit Kurzhanteln in der App; Anleitung angepasst (leicht schräg nach vorn); Werkzeug: Ebene oben 30°; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, src/modules/exercises/data/exercise-guides.v1.json, public/uebungen/medien.json, public/uebungen/medien/ (4 Dateien neu), e2e/uebungen.spec.ts, docs/uebungen-bestand.md, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/seitheben-bewegung.mp4 (neu), docs/screens/uebungen/familie-schulter-brust-isoliert.webp, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-469
+Ausgeführte Tests: Messung aller 60 Bilder, Schleife gerendert, erstes und letztes Bild verglichen, Prüfseite neu; pnpm format:check, pnpm lint, pnpm typecheck, pnpm check:docs, pnpm test (unter Last), pnpm build, pnpm check:bundle, pnpm test:e2e (Chromium, ohne Last); CI zum Entwurfs-PR mit WebKit
+Ergebnis: siehe 11.3 und 11.4; Unit-Tests 1.209 bestanden (unter Last), E2E 431 bestanden und 1 Zeittest der Startfläche fehlgeschlagen (ohne Last; einzeln fünfmal bestanden); WebKit in der CI
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Waagrechtes Ziehen)
+```

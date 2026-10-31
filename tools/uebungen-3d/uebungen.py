@@ -2411,7 +2411,9 @@ class Seitheben(Uebung):
     KNIE = 168.0  # Knie leicht gebeugt
     NEIGUNG = 10.0  # Rumpf in der Hüfte leicht vorgeneigt, Grad zur Senkrechten
     ELLBOGEN = 165.0  # Ellbogen leicht gebeugt, über die ganze Bewegung gleich (Familie: 10 bis 20° gebeugt)
-    EBENE = 20.0  # oben: Oberarm so weit vor der Ebene von Schulter zu Schulter (Grad)
+    # oben: Oberarm so weit vor der Ebene von Schulter zu Schulter (Grad); 30° wie die Ebene des Schulterblatts
+    # (Entscheidung des Produktinhabers, D-469; bis D-468 20°)
+    EBENE = 30.0
     TIEFER = 4.0  # oben: Unterarm so weit unter der Waagrechten, der Ellbogen bleibt über dem Handgelenk (Grad)
     SCHULTER_HOCH = 8.0  # Schlüsselbein oben so weit gehoben (Grad)
     START_X = 0.11  # Ausgang: Mitte des Griffs so weit neben der Mitte des Körpers (vor dem Maß der Schultern), m

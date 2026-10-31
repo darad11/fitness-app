@@ -937,3 +937,58 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife ren
 ## 13. CI: Test „Bereit für dein Training?“ in WebKit (D-471)
 
 Nach D-470 war die CI in WebKit rot: Der Test „„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuft und kein Programm aktiv ist“ startet ein Training aus „Ganzkörper A/B“ und lädt danach die Seite „Training“ neu. Der Player lädt die Videos der aktuellen und der nächsten Übung vor; seit Tag A Videos hat (Beinpresse, Bankdrücken mit Kurzhanteln), bricht das Neuladen diese Abrufe ab, und WebKit meldet das als Konsolenfehler. In der App selbst lädt nichts neu. Der Test geht jetzt über den Pfeil im Player zurück, wie man es in der App tut, und prüft danach dasselbe. In Chromium bestanden; WebKit prüft die CI.
+
+## 14. Rudern: Sitz mittig nach deinem Hinweis (D-472)
+
+Dein Hinweis vom 31.10.2026: „es sieht so aus als würde er viel zu weit vorne sitzen“, dazu ein Bild einer Station, auf dem die Person mittig sitzt. Das stimmte: Die Vorderkante des Sitzes lag nur 8 cm vor den Hüftgelenken, nach hinten reichte der Sitz 1,10 m. Die Figur saß ganz vorn auf der Kante, die Oberschenkel ragten frei darüber hinaus.
+
+### 14.1 Änderung
+
+- **Sitz:** 95 cm lang statt 1,10 m. Er reicht von unter den Knien (Vorderkante 42 cm vor den Hüftgelenken) gleich weit hinter das Gesäß; seine Mitte liegt unter dem Gesäß. Ein erster Schritt mit der Vorderkante 25 cm vor den Hüftgelenken ließ die Figur noch im vorderen Drittel sitzen.
+- **Füße:** Die Fußgelenke liegen 5 statt 12 cm unter den Hüftgelenken, die Fußplatten stehen 7 cm höher. So liegen die Oberschenkel fast waagrecht; Gesäß und Ansatz der Oberschenkel liegen auf, unter den Knien bleiben gut 4 cm Luft. Mit 12 cm lägen die Kniekehlen auf der Vorderkante des Sitzes, die Waden hingen davor tiefer als der Sitz.
+- **Ende des Griffs:** 23 statt 20 cm über den Hüftgelenken, weil die Oberschenkel höher liegen. Bei 20 cm lagen die unteren Kappen des V-Griffs 7,8 mm in den Shorts.
+- **Bildausschnitt:** mit den Beinen des Sitzes bis zum Boden. Mit dem kürzeren Sitz waren Boden und Beine des Sitzes unten abgeschnitten.
+- **Nahaufnahme des Fußes von hinten:** Die Kamera steht höher. Im Ausgang stand sie im linken Unterarm; das war schon bei D-470 am Rand des Bildes zu sehen.
+- Unverändert: Knie 160°, Becken, Rumpf, Bahn des Griffs und Zeitablauf.
+
+### 14.2 Ausführungstext
+
+„Setz dich etwas nach vorn, um den Griff zu fassen, und stell die Füße auf die Fußplatten.“ und „Schieb die Hüfte zurück, bis die Knie nur noch leicht gebeugt sind.“ beschreiben das Aufsetzen; die Schleife zeigt die Haltung danach. Der Text passt, geändert habe ich nichts.
+
+### 14.3 Messwerte über alle 60 Bilder
+
+Nur was sich gegenüber 12.4 geändert hat:
+
+| | vorher (D-470) | jetzt |
+|---|---|---|
+| Ellbogen | 167,1° bis 74,0° | 168,0° bis 69,1° (Ende 111° gebeugt) |
+| Oberarm hinter dem Rumpf / Ellbogen hinter dem Schultergelenk (Ende) | 16,1° / 7,2 cm | 15,7° / 7,0 cm |
+| Griff über dem Sitz / Weg des Griffs | 12,0 bis 26,3 cm / 39,7 cm | 16,0 bis 29,2 cm / 42,1 cm |
+| Hände, Unterarme und Griff über Beinen und Shorts | mindestens 7,6 mm | mindestens 18,3 mm |
+| Kabel zu Beinen, Shorts und Schuhen | mindestens 104,5 mm | mindestens 105,6 mm |
+| Hüfte (Oberschenkel zum Rumpf) / Sprunggelenk | 73,4 bis 87,1° / 2,3° gestreckt | 68,6 bis 82,4° / 7,0° gestreckt |
+| Gesäß im Sitz / Oberschenkel im Polster | 3,8 bis 4,0 mm / 3,8 bis 4,0 mm | 1,8 bis 4,0 mm / 0,4 bis 0,6 mm |
+| Polster: tiefste Delle | 14,3 bis 15,3 mm | 14,1 bis 15,2 mm |
+
+Gleich geblieben: Rumpf 14,6 bis 0,9° zur Senkrechten, Lende 16 bis 0°, Schlüsselbein 8° nach vorn bis 10° zurück, Handgelenk 2,4 bis 6,0°, Finger 4,3 mm eingedrückt (gewollt), Hände und Griff mindestens 10,0 mm vor dem Shirt, Knie 160°, Sohlen 0,0 mm auf den Platten und nicht verschoben, nichts durch das Polster, keine Meldungen des Rigs.
+
+### 14.4 Bilder und Video
+
+- **Standbild:** `docs/screens/uebungen/rudern-sitz-vorher-jetzt.webp`, vorher und jetzt von der Seite und mit der Kamera der App.
+- **Prüfseite:** `docs/screens/uebungen/familie-waagrechtes-ziehen.webp` neu.
+- **Video:** die Schleife mit der Kamera der App, dreimal abgespielt, an dich geschickt. In die App kommt sie nach deiner Freigabe.
+
+### 14.5 Bericht zum Paket
+
+```
+Arbeitspaket: D-472 Phase Programme, Abschnitt 2: Rudern am Kabel, Sitz mittig (Hinweis des Produktinhabers)
+Umgesetzte Funktionen: keine in der App; Werkzeug: Sitz der Kabelrudern-Station 95 cm lang, Vorderkante unter den Knien (geraete.RUDERN, RudernKabel.SITZ_VOR), Füße 5 cm unter den Hüftgelenken (TIEFER), Ende des Griffs 23 cm über den Hüftgelenken (TAILLE), Bildausschnitt mit den Beinen des Sitzes, Nahaufnahme des Fußes von hinten höher; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-waagrechtes-ziehen.webp, docs/screens/uebungen/rudern-sitz-vorher-jetzt.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-472
+Ausgeführte Tests: drei Phasen je Schritt, Gegenprobe mit den alten Fußplatten, render.py rudern_kabel --pruefen (alle 60 Bilder, zweimal), Nahaufnahmen, Schleife mit 60 Bildern (nur zur Ansicht), Bilder angesehen; pnpm format:check, pnpm check:docs, pnpm check:bundle; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 14.3)
+Bekannte Einschränkungen: Sitzhöhe und Sitzlänge ohne Herstellerangabe; die Lage des Sitzes folgt dem Vorlagebild
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife (schon gerendert) in die App, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Waagrechtes Ziehen“.

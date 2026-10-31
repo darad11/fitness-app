@@ -541,19 +541,21 @@ def beinpresse(ecke: Vector, lehne: float, sitz: float, platte: Vector, weg: tup
 
 # Kabelrudern-Station (D-470) nach Herstellerangaben aus der Websuche: Long Pull Row mit Gewichtsblock (Jerai Fitness, zwei
 # Rollen: 239 × 102 × 229 cm), Fußplatten 23 cm hoch wie die Ironmaster Low Row Foot Plate (deren Füße stehen 51 cm
-# auseinander; hier hüftbreit, die Platten 32 cm von Mitte zu Mitte); Sitz wie die Flachbank (`BANK`, 43 cm), lang wie bei
-# Long-Pull-Stationen. Eine Sitzhöhe nennt keine der Quellen. V-Griff (enger Parallelgriff) nach Händlerangaben zu den
+# auseinander; hier hüftbreit, die Platten 32 cm von Mitte zu Mitte); Sitz wie die Flachbank (`BANK`, 43 cm). Eine
+# Sitzhöhe nennt keine der Quellen. Länge 95 cm: Der Sitz reicht von unter den Knien ebenso weit hinter das Gesäß, die
+# Person sitzt in der Mitte wie auf dem Vorlagebild des Produktinhabers (D-472; bis dahin 1,10 m, davon 0,85 m hinter
+# der Person). V-Griff (enger Parallelgriff) nach Händlerangaben zu den
 # Rudergriffen von Gorilla Sports: Griffe 12 cm lang und 2,5 cm dick, innen 12 cm auseinander, bis zur Öse 19 cm lang
-RUDERN = {"sitz_oben": 0.43, "sitz": (0.30, 1.10, 0.06), "platte": (0.18, 0.23, 0.03), "platten_mitte_x": 0.16,
+RUDERN = {"sitz_oben": 0.43, "sitz": (0.30, 0.95, 0.06), "platte": (0.18, 0.23, 0.03), "platten_mitte_x": 0.16,
           "neigung": 70.0, "griff_d": 0.025, "griff_l": 0.12, "griff_abstand": 0.145, "griff_oese": 0.19}
 
 
 def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
     """Kabelrudern-Station, Person mit Blick nach −y (D-470). `sitz_vorn_y`: Vorderkante des Sitzes (Welt), der Sitz
-    reicht 1,10 m nach hinten (+y). `platte`: Mitte der Oberfläche beider Fußplatten (Welt), die Platten stehen
+    reicht 0,95 m nach hinten (+y). `platte`: Mitte der Oberfläche beider Fußplatten (Welt), die Platten stehen
     `neigung` Grad über der Waagrechten, oben von der Person weg, links und rechts der Rolle. `rolle`: Punkt, an dem
-    das Kabel die untere Rolle verlässt. Vor den Platten die Säule mit dem Gewichtsblock. Gibt Wurzel, Sitzpolster,
-    Gewichtsblock (wird je Bild gehoben) und die Ebene der Platten (Punkt, Normale zur Person) zurück."""
+    das Kabel die untere Rolle verlässt. Vor den Platten die Säule mit dem Gewichtsblock. Gibt Wurzel, Sitzpolster, Beine
+    des Sitzes, Gewichtsblock (wird je Bild gehoben) und die Ebene der Platten (Punkt, Normale zur Person) zurück."""
     r = RUDERN
     polster = _mat("Polster", GERAET, 0.8)
     rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
@@ -569,9 +571,8 @@ def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
     hinten_y = sitz_vorn_y + sl
     _kasten("Laengstraeger", (0.10, hinten_y - saeule_y + 0.05, 0.06), Vector((0, (hinten_y + saeule_y) / 2, 0.03)), rahmen, 0.006, wurzel)
     _kasten("Sitztraeger", (0.08, sl - 0.10, 0.05), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd - 0.025)), rahmen, 0.005, wurzel)
-    for y in (sitz_vorn_y + 0.12, hinten_y - 0.10):
-        _kasten("Sitzbein", (0.06, 0.06, r["sitz_oben"] - sd - 0.06), Vector((0, y, (r["sitz_oben"] - sd - 0.06) / 2 + 0.05)),
-                rahmen, 0.005, wurzel)
+    beine = [_kasten("Sitzbein", (0.06, 0.06, r["sitz_oben"] - sd - 0.06), Vector((0, y, (r["sitz_oben"] - sd - 0.06) / 2 + 0.05)),
+                     rahmen, 0.005, wurzel) for y in (sitz_vorn_y + 0.12, hinten_y - 0.10)]
     _kasten("Fuss-hinten", (0.50, 0.06, 0.04), Vector((0, hinten_y - 0.10, 0.02)), rahmen, 0.005, wurzel)
     # Fußplatten: links und rechts der Rolle, geneigt; Stützen bis zum Längsträger
     a = math.radians(r["neigung"])
@@ -601,8 +602,8 @@ def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
     kabel("Kabel-unten", rolle + Vector((0, -0.09, -0.045)), Vector((0, saeule_y + 0.06, 0.055)))
     kabel("Kabel-hoch", Vector((0, saeule_y + 0.105, 0.10)), oben_rolle + Vector((0, 0.05, 0)))
     kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.05, 0.725)))
-    return {"wurzel": wurzel, "sitz": sitz, "platten": platten, "block": block, "block0": block.matrix_world.copy(),
-            "platte": (platte.copy(), n)}
+    return {"wurzel": wurzel, "sitz": sitz, "beine": beine, "platten": platten, "block": block,
+            "block0": block.matrix_world.copy(), "platte": (platte.copy(), n)}
 
 
 def v_griff(name: str) -> bpy.types.Object:

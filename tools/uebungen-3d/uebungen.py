@@ -2706,30 +2706,37 @@ class RudernKabel(Uebung):
     FUESSE = 0.12  # halber Abstand der Fußgelenke vor dem Maß der Schultern, m: etwa hüftbreit
     ZEHEN = 6.0
     KNIE = 160.0  # Knie leicht gebeugt
-    TIEFER = 0.12  # Fußgelenke so weit unter den Hüftgelenken, m
-    SITZ_VOR = 0.08  # Vorderkante des Sitzes so weit vor den Hüftgelenken, m
+    # Fußgelenke so weit unter den Hüftgelenken, m: die Oberschenkel liegen fast waagrecht auf dem Sitz (bis D-470 0,12;
+    # da fielen sie zu den Füßen ab und hätten weiter vorn im Sitz gesteckt)
+    TIEFER = 0.05
+    # Vorderkante des Sitzes so weit vor den Hüftgelenken, m: unter den Knien (41,5 cm vor den Hüftgelenken); der Sitz
+    # reicht ebenso weit hinter das Gesäß, die Person sitzt in der Mitte (D-472). Bis D-470 0,08 m: Da saß die Figur
+    # ganz vorn auf der Kante, Hinweis des Produktinhabers
+    SITZ_VOR = 0.42
     VOR = 16.0  # Ausgang: Rumpf in der Lende so weit vorgeneigt (auf drei Wirbel verteilt), Grad
     SCHULTER_VOR = -8.0  # Ausgang: Schlüsselbeine nach vorn, Grad
     SCHULTER_ZURUECK = 10.0  # Ende: Schlüsselbeine zurück, die Schulterblätter gehen zusammen, Grad
     ELLBOGEN_VORN = 168.0  # Ausgang: Arme fast gestreckt
     # Ende: Mitte des Griffs so weit über den Hüftgelenken (Taille, auf Höhe des Nabels), m; bei 15 cm lagen die
-    # Unterkanten der Fäuste 19 mm in den Shorts über dem Schoß
-    TAILLE = 0.20
+    # Unterkanten der Fäuste 19 mm in den Shorts über dem Schoß, mit den Oberschenkeln auf dem Sitz bei 20 cm die unteren
+    # Kappen des Griffs 7,8 mm
+    TAILLE = 0.23
     LUFT = 0.010  # Ende: Hände und Griff mindestens so weit vor dem Shirt, m
     GESAESS = 0.004  # Gesäß so tief im Sitz, m
     GRIFF_LAGE = 0.62
     # Griff schräg in der Hand wie beim Bankdrücken (D-452): Quer zur Knöchellinie knickte das Handgelenk 14° zum Daumen
     SCHRAEG = 12.0
     STRECKUNG = 0.0
-    # Nahaufnahmen: Fuß von außen und von der Person aus (von vorn verdeckt die Fußplatte den Fuß); Griff von der Seite
-    # und schräg von vorn oben (von hinten oben verdeckt am Ende der Kopf die Hände)
-    fuss_ansichten = ((90, 0.0), (180, 0.15), (0, 0.10), (270, 0.0))
+    # Nahaufnahmen: Fuß von außen und von der Person aus (von vorn verdeckt die Fußplatte den Fuß), von der Person aus
+    # höher (bei 0,15 stand die Kamera im Ausgang im linken Unterarm, D-472); Griff von der Seite und schräg von vorn oben
+    # (von hinten oben verdeckt am Ende der Kopf die Hände)
+    fuss_ansichten = ((90, 0.0), (180, 0.35), (0, 0.10), (270, 0.0))
     griff_ansichten = (("vgriff_seite", 90.0, 15.0), ("vgriff_vorn", 40.0, 30.0))
 
     def rahmen_objekte(self) -> list:
-        # Bildausschnitt aus Figur, Sitz, Fußplatten und Griff: Die Säule (2,1 m) darf oben angeschnitten sein, sonst
-        # wird die Figur klein
-        return [self.geraet["sitz"], *self.geraet["platten"], self.vgriff]
+        # Bildausschnitt aus Figur, Sitz mit den Beinen bis zum Boden, Fußplatten und Griff: Die Säule (2,1 m) darf oben
+        # angeschnitten sein, sonst wird die Figur klein
+        return [self.geraet["sitz"], *self.geraet["beine"], *self.geraet["platten"], self.vgriff]
 
     def polster_objekte(self) -> list:
         return [self.geraet["sitz"]]

@@ -1339,3 +1339,17 @@ Dein Hinweis: Kit-Linie und Kragen & Ärmel sind fertig verglichen, das Schulter
 Blatt: `docs/screens/uebungen/schulterband-kraeftig.webp`.
 
 **Halt:** Ich warte auf deine endgültige Wahl. Danach setze ich den Akzent, rendere alle zehn fertigen Schleifen neu und dann den Beinbeuger.
+
+## 25. Kleidung final (D-483)
+
+Deine Entscheidung vom 31.10.2026: Basis bleibt das Design-Board, dazu zwei bewusste Ergänzungen.
+
+- **Shirt:** Schulterband 6 · zulaufend in Lime, auf der Schulter 3 cm, zum Ärmelsaum hin bis 5 cm, mittig auf der Schulternaht und außen am Ärmel. Keine Saumlinie, keine Saumschlitze.
+- **Shorts:** schmalere Seitenstreifen nach Variante A, mittig auf der Seitennaht: auf dem Stoff gemessen 1,08 cm unter dem Bund und 2,58 cm am Saum. Das Shorts-F hat in jeder Haltung 9,73 cm Abstand zum Streifen (gefordert mindestens 2 cm).
+- **Sonst** wie D-478: Länge, Saumkante, Farben und Logos.
+- **Streifen gerade:** Der schmale Streifen zeigte, wie unruhig die bisherige Seitennaht lief. Jetzt ist die Naht eine glatte Kurve mittig an der Seite, der Streifen läuft im Profil gerade.
+- **Ärmel:** unverändert; mit der finalen Kleidung bleibt die Haut am Ärmelsaum 4,81 bis 5,49 mm unter dem Stoff, nirgends kommt sie durch.
+
+Standbilder: `docs/screens/uebungen/kleidung-final.webp`.
+
+**Halt:** Ich warte auf deine Freigabe. Danach rendere ich alle zehn fertigen Schleifen mit der finalen Kleidung neu, dann den Beinbeuger, und mache mit der Prüfseite der nächsten Familie weiter.

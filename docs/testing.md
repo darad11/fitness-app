@@ -2873,3 +2873,21 @@ Vier Fassungen des Schulterbands (D-482).
 | Abstand Band zu Brust-F und Rückendruck (Ruhehaltung / Seitheben oben, cm) | alle vier Fassungen gleich, weil das Band auf der Schulter überall 3 cm breit ist: 15,0 / 13,8 und 15,2 / 13,6 |
 | Blatt | `schulterband-kraeftig.webp`, angesehen |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Kleidung final · 31.10.2026, Cloud-Umgebung
+
+Schulterband zulaufend und Seitenstreifen nach Variante A (D-483).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Streifen über den Winkel der geglätteten Normale, Halbmesser fest 9 cm | auf dem Stoff 1,08 cm unter dem Bund, 2,99 cm am Saum; Mitte an der Hüfte sichtbar hin und her |
+| Halbmesser aus dem Abstand des Stoffs zur Achse des Oberschenkels | 1,28 cm und 2,76 cm |
+| Halbmesser vom Bund zum Saum 9 auf 10,8 cm, Normalen mit 6 cm geglättet | 1,08 und 2,56 cm, dann 1,07 und 2,96 cm; Mitte weiter unruhig |
+| Naht als Kurve durch den äußersten Punkt je Höhe | glatt, aber schräg nach hinten |
+| Naht mittig zwischen vorderstem und hinterstem Punkt je Höhe, kubisch | im Profil gerade; vorn feine Lime-Linien, wo das Vorzeichen an der inneren Beinhälfte sprang |
+| dazu außerhalb der äußeren Beinhälfte nur das Vorzeichen | vorn sauber; 1 cm unter dem Bund 1,08 cm breit, 1 cm über dem Saum 2,58 cm (Soll 1 und 2,5 cm; dicht abgetastet wie im Shader, je Höhe die größte Sehne); im Profil gerade |
+| Shorts-F zum Streifen (`f_streifen_abstand`, verformtes Netz) | Ruhehaltung 9,73 cm; Seitheben, Rudern und Kniebeuge in allen neun Phasen ebenso 9,73 cm (F und nächster Punkt des Streifens bewegen sich starr mit dem Oberschenkel) |
+| Ärmel mit der finalen Kleidung (neun Phasen) | Haut unter dem eigenen Ärmel bei Kniebeuge 4,81 mm, Rudern 4,96 bis 5,49 mm, Seitheben 5,46 mm, in keiner Phase ein Punkt durch; gleich wie D-480 |
+| Shorts unter dem Shirt, Saumband über den Shorts (neun Phasen) | gleich wie D-478 und D-480: Kniebeuge bis −2,36 mm (Shorts im Shirt) und −7,95 mm (Saumband in den Shorts), Rudern −0,70 und −0,97 mm, beides in der Hüftfalte, freigegeben; Seitheben 8,97 und 8,43 mm Abstand |
+| Standbilder: vorn, Seite, hinten, Shorts von der Seite nah; Seitheben oben, Rudern am Ende, Kniebeuge unten in Player-Größe | `kleidung-final.webp`, angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,9 KB, Übungsbilder 40 von 40 (die App ist unverändert; jeder Build bettet die Bauzeit in die Startansicht ein, daher 0,1 KB mehr als bei D-482) |

@@ -129,9 +129,14 @@ HOSE_INNEN_MAX = 0.012  # innen höchstens so viel Weite, m
 # gleitend über `BRUECKE_RAMPE`
 BRUECKE_SCHRITT = 0.04
 BRUECKE_RAMPE = 0.03
-# Seitenstreifen der Shorts (D-478, Hinweis des Produktinhabers „etwas schmäler“): halbe Breite je Höhe 75 % der
-# Werte des Boards (`BOARD["streifen"]`)
-STREIFEN_ANTEIL = 0.75
+# Seitenstreifen der Shorts (D-483, Entscheidung des Produktinhabers, Variante A aus
+# `docs/prompts/form-shorts-streifen-varianten.png`): mittig auf der Seitennaht, unter dem Bund 1 cm breit, zum Saum
+# hin linear bis 2,5 cm, gemessen auf dem Stoff. Die Seitennaht ist eine glatte Kurve (je Zentimeter Höhe mittig
+# zwischen vorderstem und hinterstem Punkt des Stoffs, kubisch ausgeglichen), quer zählt der Abstand in y dazu. Über den
+# Winkel der geglätteten Normale lief die Mitte des schmalen Streifens an der Hüfte sichtbar hin und her, über den
+# äußersten Punkt je Höhe lief sie schräg nach hinten. Bis D-477 nach dem Board (`BOARD["streifen"]`,
+# Winkel, hinten oben breiter), bis D-482 davon 75 %
+STREIFEN = {"oben": 0.010, "saum": 0.025}
 # Lime-Akzent am Shirt zur Auswahl (D-481, Varianten aus `docs/prompts/form-tshirt-lime-varianten.png`): None (Stand
 # D-478, kein Akzent), "kit" (Variante 1, Kit-Linie: Seitenpaneele längs der Seitennaht von der Achsel bis zum Saum,
 # an der Achsel 1 cm breit, zum Saum hin breiter wie die Streifen der Shorts), "kragen_aermel" (Variante 3:
@@ -140,7 +145,9 @@ STREIFEN_ANTEIL = 0.75
 # Produktinhaber zu dezent; seit D-482 vier kräftigere Fassungen (`BAND`, Vorlage
 # `docs/prompts/form-tshirt-schulterband-kraeftig.png`): 3 cm gleich breit, zulaufend von 3 cm auf der Schulter bis 5 cm
 # am Ärmelsaum, zulaufend mit Lime-Linie am Saum des Shirts (6a) und zulaufend mit Saumschlitzen (6b)
-AKZENT = None
+# Entscheidung des Produktinhabers (D-483): Variante 6 · zulaufend, ohne Saumlinie und ohne Schlitze. Die anderen
+# Werte bleiben für die Vergleichsblätter aus D-481 und D-482; None ist der Stand D-478 ohne Akzent
+AKZENT = "schulterband_zu"
 AKZENT_MASS = {"kit_achsel": 0.005, "kit_saum": 0.035, "kit_ueber_w": 0.01, "kit_radius": 0.10, "aermel": 0.010}
 # Schulterband (D-482): Breite auf der Schulter und am Ärmelsaum (m), dazu der Akzent am Saum des Shirts
 BAND = {"schulterband": (0.03, 0.03, None), "schulterband_zu": (0.03, 0.05, None),
@@ -482,24 +489,52 @@ def _glatte_normalen(koerper: bpy.types.Object, radius: float = 0.03) -> list[Ve
     return aus
 
 
-def _streifen(koerper: bpy.types.Object, schnitt: dict, normalen: list[Vector]) -> list[float]:
-    """Feld des Lime-Streifens an der Seite der Shorts (m, positiv = Streifen): Winkel der geglätteten
-    Normale zur Seite (0 = genau seitlich nach außen, vorn negativ, hinten positiv) gegen die halbe Breite,
-    die vom Bund zum Saum gleichmäßig wächst (`BOARD["streifen"]`, hinten oben breiter; seit D-478 mal
-    `STREIFEN_ANTEIL`). Der Streifen beginnt unter dem Bund und reicht bis zum Saum, auf beiden Beinen."""
-    st = BOARD["streifen"]
-    aus = []
-    for v, n in zip(koerper.data.vertices, normalen):
-        p = v.co
-        vv = (schnitt["z_bund"] - p.z) / schnitt["hose_laenge"]
-        sx = 1.0 if p.x >= 0 else -1.0
-        phi = math.degrees(math.atan2(n.y, n.x * sx))
-        w = max(0.0, min(1.0, (vv - BOARD["bund"]) / (1 - BOARD["bund"])))
-        oben = st["oben_hinten"] if phi > 0 else st["oben_vorn"]
-        alpha = (oben + (st["saum"] - oben) * w) * STREIFEN_ANTEIL
-        feld = (alpha - abs(phi)) * math.pi / 180 * 0.09
-        aus.append(min(feld, (vv - BOARD["bund"]) * schnitt["hose_laenge"]))
-    return aus
+def _streifen(koerper: bpy.types.Object, schnitt: dict, teile: list[str],
+              weite_hose: list[float]) -> dict[str, list[float]]:
+    """Felder des Lime-Streifens an der Seite der Shorts (D-483) je Eckpunkt, gemessen auf dem Stoff (Haut plus
+    `ABSTAND["hose"]` plus Weite längs der Normale): Je Bein und Zentimeter Höhe die Mitte zwischen vorderstem und
+    hinterstem Punkt, die Lage der Naht in y als kubische Kurve über die Höhe ausgeglichen. `StreifenU`: Abstand in y
+    zur Naht (vorn negativ; außerhalb der äußeren Hälfte des Beins nur das Vorzeichen, also 1 m weit weg),
+    `StreifenW`: halbe Breite, vom Bund zum Saum linear von der Hälfte von `STREIFEN["oben"]` bis zur Hälfte von
+    `STREIFEN["saum"]`, `StreifenV`: positiv unter dem Bund. Der Shader färbt, wo |U| < W und V > 0; `Streifen`
+    (W − |U|, höchstens V) bleibt als Feld für Prüfungen."""
+    import numpy as np
+
+    verts = koerper.data.vertices
+    n = len(verts)
+    U, W, V = [1.0] * n, [0.0] * n, [-1.0] * n
+    z_bund, z_saum, lang = schnitt["z_bund"], schnitt["z_hose_saum"], schnitt["hose_laenge"]
+    stoff = [v.co + v.normal * (ABSTAND["hose"] + e) for v, e in zip(verts, weite_hose)]
+    kurven, mitten = {}, {}
+    for sx in (1.0, -1.0):
+        scheiben: dict[int, list[int]] = {}
+        for v, teil in zip(verts, teile):
+            if teil in ("rumpf", "bein") and z_saum - 0.03 <= v.co.z <= z_bund + 0.02 and v.co.x * sx > 0.02:
+                scheiben.setdefault(round(v.co.z / 0.01), []).append(v.index)
+        hoehen, naht_y = [], []
+        for h, ii in sorted(scheiben.items()):
+            mitten[(sx, h)] = sum(stoff[i].x for i in ii) / len(ii)
+            ys = [stoff[i].y for i in ii]
+            hoehen.append(h * 0.01)
+            naht_y.append((min(ys) + max(ys)) / 2)
+        kurven[sx] = (np.polyfit(hoehen, naht_y, 3), min(hoehen), max(hoehen))
+    for v in verts:
+        sx = 1.0 if v.co.x >= 0 else -1.0
+        kurve, z0, z1 = kurven[sx]
+        z = v.co.z
+        q = stoff[v.index]
+        u = q.y - float(np.polyval(kurve, max(z0, min(z1, z))))
+        h = round(z / 0.01)
+        aussen = (sx, h) in mitten and (q.x - mitten[(sx, h)]) * sx >= 0 and abs(v.co.x) > 0.02
+        # Außerhalb der äußeren Beinhälfte nur das Vorzeichen: so kreuzt U zwischen zwei Eckpunkten nirgends die Null,
+        # wo kein Streifen sein soll (sonst feine Lime-Linien vorn auf den Shorts)
+        U[v.index] = u if aussen else math.copysign(1.0, u)
+        vv = (z_bund - z) / lang
+        a = max(0.0, min(1.0, (vv - BOARD["bund"]) / (1 - BOARD["bund"])))
+        W[v.index] = (STREIFEN["oben"] + (STREIFEN["saum"] - STREIFEN["oben"]) * a) / 2
+        V[v.index] = (vv - BOARD["bund"]) * lang
+    feld = [min(w - abs(u), v) for u, w, v in zip(U, W, V)]
+    return {"StreifenU": U, "StreifenW": W, "StreifenV": V, "Streifen": feld}
 
 
 def _schulterlinie(koerper: bpy.types.Object, k: koordinaten.Koordinaten, schnitt: dict, oeffnung: dict,
@@ -1367,8 +1402,11 @@ def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, 
     if bund:
         farbe_out = mischen(_rechne(nodes, links, "SUBTRACT", 1.0, maske("Bund", bund - 0.0008, bund + 0.0008)),
                             farbe_out, szene.srgb(BUND))
-    if streifen:
-        farbe_out = mischen(maske("Streifen", -0.0008, 0.0008), farbe_out, szene.srgb(LIME))
+    if streifen:  # Seitenstreifen der Shorts (D-483): wo |StreifenU| < StreifenW und StreifenV > 0
+        quer_s = _rechne(nodes, links, "SUBTRACT", attribut("StreifenW"),
+                         _rechne(nodes, links, "ABSOLUTE", attribut("StreifenU")))
+        farbe_out = mischen(mal(_stufe(nodes, links, quer_s, -0.0004, 0.0004),
+                                _stufe(nodes, links, attribut("StreifenV"), -0.0004, 0.0004)), farbe_out, szene.srgb(LIME))
     if akzent:  # Lime-Akzent am Shirt (D-481): wo |AkzentU| < AkzentW und AkzentV > 0
         quer = _rechne(nodes, links, "SUBTRACT", attribut("AkzentW"),
                        _rechne(nodes, links, "ABSOLUTE", attribut("AkzentU")))
@@ -1435,7 +1473,7 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     f = _felder(koerper, k, oeffnung, teile, schnitt)
     weite_shirt, weite_hose = _weite(koerper, k, teile, schnitt)
     normalen = _glatte_normalen(koerper)
-    streifen = _streifen(koerper, schnitt, normalen)
+    streifen = _streifen(koerper, schnitt, teile, weite_hose)
     bund = [schnitt["z_bund"] - v.co.z for v in koerper.data.vertices]
     W = schnitt["W"]
     buendchen = KRAGEN["buendchen"]
@@ -1472,7 +1510,7 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     # Hinten überspannt der Stoff die Gesäßfalte und die Rinne der Wirbelsäule (D-478): Shorts ab 4 cm über dem Schritt
     # bis über den Bund, Shirt vom Saum bis unter die Achseln
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"], weite=weite_hose,
-                 attribute={"Streifen": streifen, "Bund": bund},
+                 attribute={**streifen, "Bund": bund},
                  bruecke=(schnitt["z_schritt"] + BRUECKE_SCHRITT, schnitt["z_bund"] + 0.02, teile))
     akzent = _akzent(koerper, k, teile, schnitt, oeffnung, f["shirt"], normalen)  # Lime-Akzent zur Auswahl (D-481)
     shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"],
@@ -1688,6 +1726,8 @@ def f_streifen_abstand(hose: bpy.types.Object, schritte: int = 10) -> dict:
     for m in aus:
         m.show_viewport = True
     streifen = [a.value for a in mesh.attributes["Streifen"].data]
+    # Streifen seit D-483 aus Querabstand, halber Breite und Höhe unter dem Bund (wie im Shader)
+    su, sw, sv = ([a.value for a in mesh.attributes[n].data] for n in ("StreifenU", "StreifenW", "StreifenV"))
     maske = [a.value for a in mesh.attributes["MaskeBeinvorn"].data]
     uv = [None] * len(mesh.vertices)
     for loop in mesh.loops:
@@ -1725,7 +1765,8 @@ def f_streifen_abstand(hose: bpy.types.Object, schritte: int = 10) -> dict:
                 la, lb = i / schritte, j / schritte
                 lc = 1.0 - la - lb
                 p = welt[a] * la + welt[b] * lb + welt[c] * lc
-                if mit_s and streifen[a] * la + streifen[b] * lb + streifen[c] * lc > 0.0:
+                if mit_s and abs(su[a] * la + su[b] * lb + su[c] * lc) < sw[a] * la + sw[b] * lb + sw[c] * lc \
+                        and sv[a] * la + sv[b] * lb + sv[c] * lc > 0.0:
                     s_pkte.append(p)
                 if mit_f:
                     m = maske[a] * la + maske[b] * lb + maske[c] * lc

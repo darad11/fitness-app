@@ -11,7 +11,7 @@
     "plank": "Schleife in der App (D-467)",
     "crunch": "Schleife in der App (D-467)",
     "lateral_raise_dumbbell": "Schleife in der App (D-469)",
-    "seated_cable_row": "Prüfseite, wartet auf Freigabe (D-472)"
+    "seated_cable_row": "Prüfseite, wartet auf Freigabe (D-473)"
   },
   "uebungen": {
     "bench_press_barbell": {
@@ -230,12 +230,12 @@
       "nr": 19,
       "name": "Rudern am Kabel, sitzend",
       "familie": "waagrecht_ziehen",
-      "variante": "Referenz der Familie: sitzend, Füße an der Fußstütze, Knie leicht gebeugt, Rumpf aufrecht; V-Griff zum Bauch, Schulterblätter zusammen",
-      "geraet_modell": "Kabelrudern-Station (Sitz, Fußstütze, untere Rolle) + V-Griff",
+      "variante": "Referenz der Familie: sitzend, Füße auf der Fußplatte, Knie gebeugt, Rumpf aufrecht; V-Griff waagrecht zu den unteren Rippen, Schulterblätter zusammen (nach dem Vorlagebild des Produktinhabers, D-473)",
+      "geraet_modell": "Kabelrudern-Station (Sitz, Fußplatte, Rolle in Brusthöhe) + V-Griff",
       "quelle": "familie",
       "aufwand_stunden": 0.5,
       "geraet_neu_stunden": 2.0,
-      "geraet_neu": ["Kabelrudern-Station (Sitz, Fußstütze, untere Rolle)"],
+      "geraet_neu": ["Kabelrudern-Station (Sitz, Fußplatte, Rolle in Brusthöhe)"],
       "referenz_der_familie": true,
       "hinweis": "Weiter Griff und Untergriff (Alias-Namen) nur über einen anderen Griff; Rumpf schaukelt nicht."
     },

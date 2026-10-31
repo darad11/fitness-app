@@ -540,22 +540,25 @@ def beinpresse(ecke: Vector, lehne: float, sitz: float, platte: Vector, weg: tup
 
 
 # Kabelrudern-Station (D-470) nach Herstellerangaben aus der Websuche: Long Pull Row mit Gewichtsblock (Jerai Fitness, zwei
-# Rollen: 239 × 102 × 229 cm), Fußplatten 23 cm hoch wie die Ironmaster Low Row Foot Plate (deren Füße stehen 51 cm
-# auseinander; hier hüftbreit, die Platten 32 cm von Mitte zu Mitte); Sitz wie die Flachbank (`BANK`, 43 cm). Eine
-# Sitzhöhe nennt keine der Quellen. Länge 95 cm: Der Sitz reicht von unter den Knien ebenso weit hinter das Gesäß, die
-# Person sitzt in der Mitte wie auf dem Vorlagebild des Produktinhabers (D-472; bis dahin 1,10 m, davon 0,85 m hinter
-# der Person). V-Griff (enger Parallelgriff) nach Händlerangaben zu den
+# Rollen: 239 × 102 × 229 cm); Sitz wie die Flachbank (`BANK`, 43 cm). Eine Sitzhöhe nennt keine der Quellen. Länge 95 cm:
+# Der Sitz reicht von unter den Knien ebenso weit hinter das Gesäß, die Person sitzt in der Mitte wie auf dem Vorlagebild
+# des Produktinhabers (D-472; bis dahin 1,10 m, davon 0,85 m hinter der Person). Fußplatte und Rolle nach demselben
+# Vorlagebild (D-473): eine große, geneigte Platte für beide Füße (46 × 40 cm, geschätzt; bis D-472 zwei Platten 18 ×
+# 23 cm wie die Ironmaster Low Row Foot Plate), die Rolle vorn an der Säule in Höhe der unteren Brust, das Kabel läuft
+# waagrecht zum Griff (bis D-472 eine Rolle zwischen den Füßen). V-Griff (enger Parallelgriff) nach Händlerangaben zu den
 # Rudergriffen von Gorilla Sports: Griffe 12 cm lang und 2,5 cm dick, innen 12 cm auseinander, bis zur Öse 19 cm lang
-RUDERN = {"sitz_oben": 0.43, "sitz": (0.30, 0.95, 0.06), "platte": (0.18, 0.23, 0.03), "platten_mitte_x": 0.16,
-          "neigung": 70.0, "griff_d": 0.025, "griff_l": 0.12, "griff_abstand": 0.145, "griff_oese": 0.19}
+RUDERN = {"sitz_oben": 0.43, "sitz": (0.30, 0.95, 0.06), "platte": (0.46, 0.40, 0.03), "neigung": 70.0, "rolle_r": 0.045,
+          "griff_d": 0.025, "griff_l": 0.12, "griff_abstand": 0.145, "griff_oese": 0.19}
 
 
 def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
-    """Kabelrudern-Station, Person mit Blick nach −y (D-470). `sitz_vorn_y`: Vorderkante des Sitzes (Welt), der Sitz
-    reicht 0,95 m nach hinten (+y). `platte`: Mitte der Oberfläche beider Fußplatten (Welt), die Platten stehen
-    `neigung` Grad über der Waagrechten, oben von der Person weg, links und rechts der Rolle. `rolle`: Punkt, an dem
-    das Kabel die untere Rolle verlässt. Vor den Platten die Säule mit dem Gewichtsblock. Gibt Wurzel, Sitzpolster, Beine
-    des Sitzes, Gewichtsblock (wird je Bild gehoben) und die Ebene der Platten (Punkt, Normale zur Person) zurück."""
+    """Kabelrudern-Station, Person mit Blick nach −y (D-470, D-473). `sitz_vorn_y`: Vorderkante des Sitzes (Welt), der
+    Sitz reicht 0,95 m nach hinten (+y). `platte`: Mitte der Oberfläche der Fußplatte (Welt), die Platte steht `neigung`
+    Grad über der Waagrechten, oben von der Person weg. `rolle`: Punkt, an dem das Kabel die Rolle vorn an der Säule
+    verlässt (unten an der Rolle, das Kabel läuft von dort waagrecht zur Person, um die Rolle herum hinauf zur oberen
+    Rolle und hinab zum Gewichtsblock). Die Rolle sitzt in einer Gabel auf einem Querträger vor der Säule, eine Strebe
+    führt von der Oberkante der Platte zum Querträger. Gibt Wurzel, Sitzpolster, Beine des Sitzes, Fußplatte, Rolle, Gewichtsblock (wird je Bild gehoben) und die
+    Ebene der Platte (Punkt, Normale zur Person) zurück."""
     r = RUDERN
     polster = _mat("Polster", GERAET, 0.8)
     rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
@@ -566,43 +569,58 @@ def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
     sx, sl, sd = r["sitz"]
     sitz_mitte_y = sitz_vorn_y + sl / 2
     sitz = _kasten("Polster-Sitz", (sx, sl, sd), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd / 2)), polster, 0.025, wurzel)
-    # Längsträger vom Fuß der Säule bis zum hinteren Ende, Sitzträger und Beine
-    saeule_y = platte.y - 0.42
+    # Säule hinter der Rolle (das Kabel läuft 1 cm vor dem Gewichtsblock hinauf); Längsträger vom Fuß der Säule bis zum hinteren Ende,
+    # Sitzträger und Beine
+    R = r["rolle_r"]
+    mitte_rolle = rolle + Vector((0, 0, R))
+    saeule_y = mitte_rolle.y - R - 0.06
     hinten_y = sitz_vorn_y + sl
     _kasten("Laengstraeger", (0.10, hinten_y - saeule_y + 0.05, 0.06), Vector((0, (hinten_y + saeule_y) / 2, 0.03)), rahmen, 0.006, wurzel)
     _kasten("Sitztraeger", (0.08, sl - 0.10, 0.05), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd - 0.025)), rahmen, 0.005, wurzel)
     beine = [_kasten("Sitzbein", (0.06, 0.06, r["sitz_oben"] - sd - 0.06), Vector((0, y, (r["sitz_oben"] - sd - 0.06) / 2 + 0.05)),
                      rahmen, 0.005, wurzel) for y in (sitz_vorn_y + 0.12, hinten_y - 0.10)]
     _kasten("Fuss-hinten", (0.50, 0.06, 0.04), Vector((0, hinten_y - 0.10, 0.02)), rahmen, 0.005, wurzel)
-    # Fußplatten: links und rechts der Rolle, geneigt; Stützen bis zum Längsträger
+    # Fußplatte: eine Platte für beide Füße, geneigt; zwei Stützen zum Fuß vorn, eine Strebe von ihrer Oberkante zum
+    # Querträger unter der Rolle
     a = math.radians(r["neigung"])
     oben = Vector((0, -math.cos(a), math.sin(a)))  # in der Platte nach oben
     n = Vector((0, math.sin(a), math.cos(a)))  # zur Person
     D = Matrix((Vector((1, 0, 0)), oben, n)).transposed()
     px, ph, pd = r["platte"]
-    platten = []
+    m = platte - n * (pd / 2)
+    fussplatte = _quader("Fussplatte", (px, ph, pd), m, D, gummi, 0.02, wurzel)
+    unten_y = m.y + 0.06
+    _kasten("Fuss-vorn", (0.50, 0.06, 0.04), Vector((0, unten_y, 0.02)), rahmen, 0.005, wurzel)
     for seite in (-1, 1):
-        m = platte + Vector((seite * r["platten_mitte_x"], 0, 0)) - n * (pd / 2)
-        platten.append(_quader("Fussplatte", (px, ph, pd), m, D, gummi, 0.008, wurzel))
-        _stab("Plattenstuetze", m - n * (pd / 2) - oben * (ph / 2 - 0.03), Vector((seite * r["platten_mitte_x"], m.y - 0.10, 0.06)),
-              0.018, rahmen, wurzel)
-    # Rolle zwischen den Platten (Achse quer), Halter zum Längsträger
-    _zylinder("Rolle", 0.045, 0.03, rolle + Vector((0, -0.045, 0)), "x", stahl, wurzel, ecken=48)
-    _kasten("Rollenhalter", (0.07, 0.06, rolle.z), Vector((0, rolle.y - 0.06, rolle.z / 2)), rahmen, 0.005, wurzel)
-    # Säule mit Gewichtsblock, Kabel von der Rolle zur Säule und hinauf zum Block
+        _stab("Plattenstuetze", m - n * (pd / 2) - oben * (ph / 2 - 0.05) + Vector((seite * 0.15, 0, 0)),
+              Vector((seite * 0.15, unten_y, 0.04)), 0.018, rahmen, wurzel)
+    traeger_z = mitte_rolle.z - R - 0.035  # Querträger unter der Rolle, 1 cm unter dem Kabel zur Person
+    von = m - n * (pd / 2 + 0.03) + oben * (ph / 2 - 0.05)
+    nach = Vector((0, mitte_rolle.y + 0.02, traeger_z - 0.02))
+    lang = nach - von
+    Ds = Matrix((Vector((1, 0, 0)), lang.normalized(), Vector((1, 0, 0)).cross(lang.normalized()))).transposed()
+    _quader("Strebe", (0.07, lang.length, 0.05), (von + nach) / 2, Ds, rahmen, 0.006, wurzel)
+    # Rolle vor der Säule (Achse quer) in einer Gabel auf dem Querträger zwischen den Säulen; Säule mit Gewichtsblock,
+    # Kabel um die Rolle hinauf zur oberen Rolle und hinab zum Block
+    rolle_obj = _zylinder("Rolle", R, 0.03, mitte_rolle, "x", stahl, wurzel, ecken=48)
+    _zylinder("Rollenachse", 0.007, 0.07, mitte_rolle, "x", stahl, wurzel, ecken=16)
+    tiefe = mitte_rolle.y + 0.025 - (saeule_y + 0.05)
+    _kasten("Quertraeger", (0.62, tiefe, 0.05), Vector((0, saeule_y + 0.05 + tiefe / 2, traeger_z)), rahmen, 0.006, wurzel)
+    gabel_h = mitte_rolle.z + 0.015 - (traeger_z + 0.025)
+    for seite in (-1, 1):
+        _kasten("Rollengabel", (0.008, 0.05, gabel_h), Vector((seite * 0.026, mitte_rolle.y, traeger_z + 0.025 + gabel_h / 2)),
+                rahmen, 0.002, wurzel)
     _kasten("Saeule", (0.10, 0.10, 2.10), Vector((0.26, saeule_y, 1.05)), rahmen, 0.008, wurzel)
     _kasten("Saeule", (0.10, 0.10, 2.10), Vector((-0.26, saeule_y, 1.05)), rahmen, 0.008, wurzel)
     _kasten("Saeulenkopf", (0.62, 0.12, 0.10), Vector((0, saeule_y, 2.12)), rahmen, 0.008, wurzel)
     for seite in (-1, 1):
         _zylinder("Fuehrung", 0.012, 1.90, Vector((seite * 0.10, saeule_y, 1.05)), "z", stahl, wurzel, ecken=24)
-    block = _kasten("Gewichtsblock", (0.30, 0.16, 0.65), Vector((0, saeule_y, 0.40)), rahmen, 0.01, wurzel)
-    oben_rolle = Vector((0, saeule_y, 2.02))
+    block = _kasten("Gewichtsblock", (0.30, 0.16, 0.65), Vector((0, saeule_y - 0.03, 0.40)), rahmen, 0.01, wurzel)
+    oben_rolle = Vector((0, saeule_y + 0.01, 2.02))
     _zylinder("Rolle-oben", 0.05, 0.03, oben_rolle, "x", stahl, wurzel, ecken=48)
-    _zylinder("Rolle-unten", 0.045, 0.03, Vector((0, saeule_y + 0.06, 0.10)), "x", stahl, wurzel, ecken=48)
-    kabel("Kabel-unten", rolle + Vector((0, -0.09, -0.045)), Vector((0, saeule_y + 0.06, 0.055)))
-    kabel("Kabel-hoch", Vector((0, saeule_y + 0.105, 0.10)), oben_rolle + Vector((0, 0.05, 0)))
-    kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.05, 0.725)))
-    return {"wurzel": wurzel, "sitz": sitz, "beine": beine, "platten": platten, "block": block,
+    kabel("Kabel-hoch", mitte_rolle + Vector((0, -R, 0)), oben_rolle + Vector((0, 0.05, 0)))
+    kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.04, 0.725)))
+    return {"wurzel": wurzel, "sitz": sitz, "beine": beine, "fussplatte": fussplatte, "rolle": rolle_obj, "block": block,
             "block0": block.matrix_world.copy(), "platte": (platte.copy(), n)}
 
 

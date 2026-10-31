@@ -992,3 +992,85 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife (sc
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite „Waagrechtes Ziehen“.
+
+## 15. Rudern: Ausführung nach deinem Vorlagebild (D-473)
+
+Dein Hinweis vom 31.10.2026: „die ausführung des renders ist nicht korrekt orientiere dich an dieser ausführung hier“, mit demselben Bild der Station von hinten rechts oben.
+
+### 15.1 Die Unterschiede
+
+| | Vorlagebild | bisher (D-470 bis D-472) |
+|---|---|---|
+| Oberkörper | aufrecht, auch mit gestreckten Armen | im Ausgang in der Lende 16° vorgebeugt, richtet sich beim Ziehen auf |
+| Knie | deutlich gebeugt | 160°, fast gestreckt |
+| Füße | auf einer großen, geneigten Platte | auf zwei kleinen Platten |
+| Kabel | waagrecht in Brusthöhe, Rolle vorn an der Säule | von einer Rolle zwischen den Füßen schräg nach oben |
+| Arme im Ausgang | nach vorn gestreckt, Hände etwa in Brusthöhe | nach vorn unten zu den Füßen |
+
+Die alte Schleife folgte ExRx „Cable Seated Row“. Dort beugt sich der untere Rücken im Ausgang nach vorn und richtet sich beim Ziehen auf. Dein Bild zeigt die Variante mit geradem Rücken.
+
+### 15.2 Änderung
+
+- **Station:** eine Fußplatte für beide Füße (46 × 40 cm, geschätzt), die Rolle vorn an der Säule in Brusthöhe, eine Strebe von der Platte zur Rolle. Das Kabel läuft waagrecht zum Griff.
+- **Oberkörper:** aufrecht über die ganze Bewegung. Nur die Schultern gehen im Ausgang nach vorn und am Ende zurück, die Schulterblätter zusammen.
+- **Knie:** 130°. Die Füße liegen 11 cm unter den Hüftgelenken; bei 8 cm kamen Fäuste und Unterarme den Knien bis 16 mm nah.
+- **Griff:** waagrecht vom Ausgang mit fast gestreckten Armen bis vor die untere Brust, 10 mm vor dem Shirt.
+- **Ellbogen:** zeigen weiter nach hinten. Sonst endete der Oberarm nur 11° hinter dem Rumpf; die Familie nennt 15 bis 30°.
+- Unverändert: Sitz mittig (D-472), V-Griff, ohne Pause am vorderen Umkehrpunkt.
+
+### 15.3 Ausführungstext
+
+Der Text passte zur alten Variante („richte dabei den unteren Rücken auf“, „bis die Knie nur noch leicht gebeugt sind“). Neu:
+
+| | vorher | jetzt |
+|---|---|---|
+| Kurz | „Am tiefen Kabelzug sitzend ziehst du den Griff zur Taille …“ | „Am Kabelzug sitzend ziehst du den Griff waagrecht zu den unteren Rippen …“ |
+| Aufbau | „… stell die Füße auf die Fußplatten.“ / „Schieb die Hüfte zurück, bis die Knie nur noch leicht gebeugt sind.“ | „… stell die Füße auf die Fußplatte.“ / „Schieb die Hüfte zurück und richte den Oberkörper auf. Die Knie bleiben gebeugt.“ / „Fass den Griff so, dass die Handflächen zueinander zeigen.“ |
+| Ausführung | „Zieh den Griff zur Taille und richte dabei den unteren Rücken auf.“ / „Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind.“ | „Zieh den Griff zu den unteren Rippen und die Schulterblätter zusammen.“ / „Der Oberkörper bleibt dabei aufrecht.“ / „Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind und die Schultern nach vorn gehen.“ |
+| Hinweis, Fehler | – | „Lehn dich nicht nach vorn, um Schwung zu holen.“ / „Oberkörper kippt nach vorn und holt Schwung.“ |
+
+Quellen: ExRx „Cable Straight Back Seated Row“ (Oberkörper aufrecht, auch auf dem Rückweg), NASM „How to Perform a Close-Grip Seated Machine Row“ (Handflächen zueinander, Hände zu den unteren Rippen, Schulterblätter zusammen, nicht nach vorn lehnen), weiter ExRx „Cable Seated Row“ für den vorderen Umkehrpunkt. Die Quellen nennen „leicht gebeugte“ Knie; der Hinweis zur Quelle sagt, dass die Knie nach deinem Bild stärker gebeugt sind. Die Seiten ließen sich in der Cloud-Umgebung nicht öffnen; die Sätze stammen aus Suchauszügen. Bitte lies sie im Browser gegen. Das Kabel in Brusthöhe nennt keine Quelle, es folgt deinem Bild.
+
+### 15.4 Messwerte über alle 60 Bilder
+
+| | vorher (D-472) | jetzt |
+|---|---|---|
+| Rumpf zur Senkrechten / Lende gebeugt | 14,6 bis 0,9° / 16 bis 0° | 0,9° / 0°, über die ganze Schleife |
+| Ellbogen | 168,0° bis 69,1° | 166,3° bis 56,3° (Ende 124° gebeugt) |
+| Oberarm hinter dem Rumpf / Ellbogen hinter dem Schultergelenk (Ende) | 15,7° / 7,0 cm | 18,0° / 8,1 cm |
+| Ellbogen neben dem Schultergelenk | 3,2 cm innen bis 4,7 cm außen | 2,3 bis 3,9 cm innen |
+| Griff über dem Sitz / Weg des Griffs | 16,0 bis 29,2 cm / 42,1 cm | 38,0 cm, waagrecht / 38,2 cm |
+| Knie / Hüfte / Sprunggelenk | 160° / 68,6 bis 82,4° / 7,0° gestreckt | 130° / 71,9° / 12,2° gebeugt |
+| Hände, Unterarme und Griff über Beinen und Shorts | mindestens 18,3 mm | mindestens 22,8 mm |
+| Kabel zu Beinen, Shorts und Schuhen | mindestens 105,6 mm | mindestens 163,9 mm |
+| Gesäß im Sitz / Oberschenkel zum Polster | 1,8 bis 4,0 mm / 0,4 bis 0,6 mm darin | 4,0 mm / 5,2 mm darüber |
+| Polster: tiefste Delle | 14,1 bis 15,2 mm | 14,9 mm |
+
+Gleich geblieben: Schlüsselbein 8° nach vorn bis 10° zurück, Handgelenk 2,5 bis 5,9°, Finger 4,3 mm eingedrückt (gewollt), Hände und Griff mindestens 10,0 mm vor dem Shirt, Sohlen 0,0 mm auf der Platte und nicht verschoben, nichts durch das Polster, keine Meldungen des Rigs.
+
+**Abweichungen und offene Punkte**
+
+- **Ellbogen am Ende:** 124° gebeugt; die Familie nennt 90 bis 110°. Der Griff kommt bis 10 mm an die unteren Rippen heran, dafür muss der Ellbogen stärker beugen. Mit dem Griff weiter vor dem Körper wäre er weniger gebeugt.
+- **Fußplatte und Rolle:** Maße und Höhe nach deinem Bild geschätzt, ohne Herstellerangabe.
+- **Kamera der App:** unverändert schräg von vorn. Dein Bild zeigt die Person von hinten; diese Ansicht steht im Vergleichsbild.
+
+### 15.5 Bilder und Video
+
+- **Vergleich:** `docs/screens/uebungen/rudern-ausfuehrung-vorher-jetzt.webp`, vorher und jetzt von der Seite und mit der Kamera der App, dazu jetzt von hinten rechts oben wie dein Bild. Dein Bild selbst liegt nicht im Repository.
+- **Prüfseite:** `docs/screens/uebungen/familie-waagrechtes-ziehen.webp` neu.
+- **Video:** die Schleife mit der Kamera der App, dreimal abgespielt, an dich geschickt. In die App kommt sie nach deiner Freigabe.
+
+### 15.6 Bericht zum Paket
+
+```
+Arbeitspaket: D-473 Phase Programme, Abschnitt 2: Rudern am Kabel nach dem Vorlagebild des Produktinhabers
+Umgesetzte Funktionen: Anleitung „Rudern am Kabel, sitzend“ angepasst (Oberkörper aufrecht, Knie gebeugt, Griff zu den unteren Rippen, Quellen ExRx und NASM); Werkzeug: Kabelrudern-Station mit einer Fußplatte und der Rolle in Brusthöhe (geraete.kabelrudern), Rudern mit aufrechtem Rumpf, Knie 130°, waagrechter Bahn und Ellbogen weiter nach hinten (uebungen.RudernKabel); erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/familien.json, src/modules/exercises/data/exercise-guides.v1.json, docs/uebungen-animationsplan.md, docs/uebungen-bewegungsfamilien.md, docs/uebungen-bestand.md, docs/screens/uebungen/familie-waagrechtes-ziehen.webp, docs/screens/uebungen/rudern-ausfuehrung-vorher-jetzt.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-473
+Ausgeführte Tests: drei Phasen je Schritt, Vergleich mit dem Vorlagebild aus derselben Richtung, render.py rudern_kabel --pruefen (alle 60 Bilder), Nahaufnahmen, Schleife mit 60 Bildern (nur zur Ansicht), Bilder angesehen; pnpm format:check, pnpm test, pnpm check:docs, pnpm build, pnpm check:bundle, pnpm test:e2e (Chromium); CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 15.4; E2E 432 bestanden, 132 übersprungen)
+Bekannte Einschränkungen: Ellbogen am Ende stärker gebeugt als die Familie nennt; Fußplatte und Höhe der Rolle geschätzt; Quellen nur aus Suchauszügen gelesen
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife (schon gerendert) in die App, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Waagrechtes Ziehen“.

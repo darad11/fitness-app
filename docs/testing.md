@@ -2726,3 +2726,22 @@ Hinweis des Produktinhabers zur Prüfseite „Waagrechtes Ziehen“: Die Figur s
 | Standbild vorher und jetzt (Seite und Kamera der App, Ende; Seite, Ausgang) | `rudern-sitz-vorher-jetzt.webp` (vorher aus den Prüfansichten zu D-470), angesehen, an den Produktinhaber |
 | Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) | `familie-waagrechtes-ziehen.webp` neu, angesehen: Figur mittig auf dem Sitz, die Oberschenkel bis zu den Knien über dem Sitz, Boden und Beine des Sitzes im Bild, Fuß von hinten in beiden Positionen frei |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (D-472; die App ändert sich nicht, E2E in Chromium und WebKit in der CI) | bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36 |
+
+### Phase Programme, Abschnitt 2, Rudern am Kabel nach dem Vorlagebild · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Hinweis des Produktinhabers: Die Ausführung der Schleife stimmt nicht, Vorlagebild einer Kabelrudern-Station von hinten rechts oben (D-473).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorlagebild vergrößert angesehen | Oberkörper aufrecht bei gestreckten Armen, Knie deutlich gebeugt, Füße auf einer großen geneigten Platte, Kabel waagrecht in Brusthöhe von einer Rolle vorn an der Säule, V-Griff mit Handflächen zueinander |
+| Erster Lauf (drei Phasen) | Rolle 1,27 m statt 0,81 m hoch: Die Hüfte war im Stand gemessen; jetzt im Sitzen |
+| Zweiter Lauf | Kabel und Bahn waagrecht, Griff 38,0 cm über dem Sitz; am Ende Ellbogen 56,9°, Oberarm 11,0° hinter dem Rumpf (die Familie nennt 15 bis 30°) |
+| Richtung der Ellbogen (`POL`) | (0,3, 1,0, −1): Oberarm am Ende 14,9°; (0,3, 1,6, −1): 18,0°, Ellbogen 8,1 cm hinter dem Schultergelenk, 2,3 cm innen; gewählt (0,3, 1,6, −1). In der Mitte des Zugs Fäuste und Unterarme nur 16,2 mm über den Knien, mit den Fußgelenken 11 statt 8 cm unter den Hüftgelenken 23,1 mm |
+| Vergleich mit dem Vorlagebild aus derselben Richtung (135°, 25° geneigt) | angesehen: Haltung, Knie, Platte, Kabel und Arme wie auf dem Bild; Vergleichsbild an den Produktinhaber |
+| Quellen für den Ausführungstext (Websuche) | ExRx „Cable Straight Back Seated Row“, NASM „How to Perform a Close-Grip Seated Machine Row“, ACE (Studie, V-Griff, Knie gebeugt, Griff bis vor den Bauch), Mayo Clinic („knees bent“); Seiten in der Cloud-Umgebung nicht abrufbar (acefitness.org, exrx.net, nasm.org nicht im Netz der Umgebung), Wortlaut aus Suchauszügen, ExRx und NASM teils per Suche nach dem genauen Satz bestätigt |
+| `npx vitest run src/modules/exercises/data/media.test.ts` (neuer Text) | 15 bestanden |
+| `render.py rudern_kabel --pruefen` (alle 60 Bilder) | Ellbogen 166,3 bis 56,3°; Rumpf 0,9°, Lende 0°; Schlüsselbein −8 bis 10°; Oberarm am Ende 18,0° hinter dem Rumpf, Ellbogen 8,1 cm hinter dem Schultergelenk, 2,3 bis 3,9 cm innen; Griff 38,0 cm über dem Sitz, Weg 38,2 cm; Handgelenk 2,5 bis 5,9°; Finger −4,3 mm; Hände und Griff mindestens 10,0 mm vor dem Shirt; Hände, Unterarme und Griff mindestens 22,8 mm über Beinen und Shorts; Kabel mindestens 163,9 mm von Beinen, Shorts und Schuhen; Knie 130°, Hüfte 71,9°, Sprunggelenk 12,2° gebeugt; Sohlen 0,0 mm, nicht verschoben; Gesäß 4,0 mm, Oberschenkel 5,2 mm über dem Polster; Delle 14,9 mm; durch das Polster 0,0 mm; keine Meldungen. 373 s, Nahaufnahmen 76 s |
+| Schleife (`render.py rudern_kabel --ziel <Arbeitsordner>`, 60 Bilder, 720 × 540, 40 Proben) | 1.491 s; MP4 65,7 KB, WebM 61,1 KB, Poster 15,2 KB, Vorschau 5,6 KB; Kontaktbogen angesehen; nicht in der App (wartet auf Freigabe); Aufnahme dreimal abgespielt, 7,5 s, 127,2 KB, an den Produktinhaber |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) und Vergleich `rudern-ausfuehrung-vorher-jetzt.webp` | angesehen: aufrecht, Kabel waagrecht, Griff am Ende vor den unteren Rippen, Nahaufnahmen von Griff und Fuß frei |
+| `pnpm format:check`, `pnpm test`, `pnpm build`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium; WebKit in der CI) | Format bestanden; 135 Dateien, 1.209 Tests bestanden; Build bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36; E2E 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (17,1 min) |
+| `pnpm check:docs` | bestanden |

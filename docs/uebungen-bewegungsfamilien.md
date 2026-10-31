@@ -101,7 +101,7 @@ Stand: 27.10.2026 · Auftrag `prompts/uebungen-animation-gratis-FORM.md` Abschni
 
 | Nr. | Übung | Variante | Gerät | Quelle | Std. Übung | Std. neues Gerät | Hinweis |
 |---|---|---|---|---|---|---|---|
-| 19 | Rudern am Kabel, sitzend | Referenz der Familie: sitzend, Füße an der Fußstütze, Knie leicht gebeugt, Rumpf aufrecht; V-Griff zum Bauch, Schulterblätter zusammen | Kabelrudern-Station (Sitz, Fußstütze, untere Rolle) + V-Griff | Familie (Code) | 0.5 | 2.0 | Weiter Griff und Untergriff (Alias-Namen) nur über einen anderen Griff; Rumpf schaukelt nicht. |
+| 19 | Rudern am Kabel, sitzend | Referenz der Familie: sitzend, Füße auf der Fußplatte, Knie gebeugt, Rumpf aufrecht; V-Griff waagrecht zu den unteren Rippen, Schulterblätter zusammen (nach dem Vorlagebild des Produktinhabers, D-473) | Kabelrudern-Station (Sitz, Fußplatte, Rolle in Brusthöhe) + V-Griff | Familie (Code) | 0.5 | 2.0 | Weiter Griff und Untergriff (Alias-Namen) nur über einen anderen Griff; Rumpf schaukelt nicht. |
 | 20 | Rudern mit Langhantel, vorgebeugt | stehend in Vorbeuge (Rumpf etwa 30–45° zur Waagrechten, Haltung aus der Hüftbeuge-Familie), Obergriff, Zug zum Bauch | Langhantel mit Scheiben | Familie (Code) | 1.5 | 0.0 | Zwei Familien kombiniert (Haltung aus hueftbeuge, Bewegung aus waagrecht_ziehen); Stange bleibt über der Fußmitte. |
 | 21 | Rudern mit Kurzhanteln, vorgebeugt | Kurzhanteln, neutraler Griff, beidarmig | Kurzhanteln | Familie (Code) | 1.0 | 0.0 | – |
 | 22 | Einarmiges Rudern mit Kurzhantel | einarmig; Knie und Hand der Gegenseite auf der Flachbank, Rumpf waagrecht | Kurzhanteln + Flachbank | Familie (Code) | 1.5 | 0.0 | Asymmetrische Stützhaltung mit drei Kontakten; der Rumpf dreht nicht mit. |

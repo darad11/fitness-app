@@ -495,28 +495,43 @@
       "sourceNote": "Allgemeine Hinweise stammen von der Seite zum breiten Latziehen."
     },
     "seated_cable_row": {
-      "summary": "Am tiefen Kabelzug sitzend ziehst du den Griff zur Taille und streckst die Arme danach wieder kontrolliert nach vorn.",
+      "summary": "Am Kabelzug sitzend ziehst du den Griff waagrecht zu den unteren Rippen und streckst die Arme danach wieder kontrolliert nach vorn.",
       "setup": [
-        "Setz dich etwas nach vorn, um den Griff zu fassen, und stell die Füße auf die Fußplatten.",
-        "Schieb die Hüfte zurück, bis die Knie nur noch leicht gebeugt sind."
+        "Setz dich etwas nach vorn, um den Griff zu fassen, und stell die Füße auf die Fußplatte.",
+        "Schieb die Hüfte zurück und richte den Oberkörper auf. Die Knie bleiben gebeugt.",
+        "Fass den Griff so, dass die Handflächen zueinander zeigen."
       ],
       "steps": [
-        "Zieh den Griff zur Taille und richte dabei den unteren Rücken auf.",
-        "Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind.",
+        "Zieh den Griff zu den unteren Rippen und die Schulterblätter zusammen.",
+        "Der Oberkörper bleibt dabei aufrecht.",
+        "Lass den Griff kontrolliert nach vorn, bis die Arme gestreckt sind und die Schultern nach vorn gehen.",
         "Beginn die nächste Wiederholung ohne Pause am vorderen Umkehrpunkt."
       ],
       "cues": [
         "Beginn mit wenig Gewicht und steigere es schrittweise.",
-        "Bleib am vorderen Umkehrpunkt in Bewegung, ohne abzufedern."
+        "Bleib am vorderen Umkehrpunkt in Bewegung, ohne abzufedern.",
+        "Lehn dich nicht nach vorn, um Schwung zu holen."
       ],
-      "mistakes": ["Gewicht federt am vorderen Umkehrpunkt ab.", "Pause am vorderen Umkehrpunkt."],
+      "mistakes": [
+        "Gewicht federt am vorderen Umkehrpunkt ab.",
+        "Pause am vorderen Umkehrpunkt.",
+        "Oberkörper kippt nach vorn und holt Schwung."
+      ],
       "sources": [
+        {
+          "title": "ExRx.net: Cable Straight Back Seated Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/CBStraightBackSeatedRow"
+        },
+        {
+          "title": "NASM: How to Perform a Close-Grip Seated Machine Row",
+          "url": "https://m.nasm.org/workout-exercise-guidance/how-to-seated-machine-row-close-grip"
+        },
         {
           "title": "ExRx.net: Cable Seated Row",
           "url": "https://exrx.net/WeightExercises/BackGeneral/CBSeatedRow"
         }
       ],
-      "sourceNote": "Folgt dem Standardgriff; weiter Griff und Untergriff (Alias-Namen) sind nicht eigens beschrieben."
+      "sourceNote": "Oberkörper aufrecht nach ExRx „Cable Straight Back Seated Row“, Griff zu den Rippen nach NASM; die Variante mit gebeugtem unterem Rücken ist nicht beschrieben. Knie stärker gebeugt als dort (Vorlagebild, 31.10.2026). Weiter Griff und Untergriff (Alias-Namen) sind nicht eigens beschrieben."
     },
     "bent_over_row_barbell": {
       "summary": "Vorgebeugt mit geradem Rücken ziehst du die Langhantel zum Bauch und senkst sie danach bis zur vollen Armstreckung.",

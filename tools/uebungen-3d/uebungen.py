@@ -2685,17 +2685,16 @@ class Seitheben(Uebung):
 
 
 class RudernKabel(Uebung):
-    """Rudern am Kabel, sitzend, Referenz der Familie „Waagrechtes Ziehen“ (D-470), nach dem Ausführungstext der App
-    (ExRx „Cable Seated Row“). Sitzend auf dem Sitz der Kabelrudern-Station (`geraete.kabelrudern`), Rumpf aufrecht
-    wie im Stand, die Füße etwa hüftbreit flach auf den Fußplatten, Knie leicht gebeugt (`KNIE`); das Becken bleibt
+    """Rudern am Kabel, sitzend, Referenz der Familie „Waagrechtes Ziehen“ (D-470), Ausführung nach dem Vorlagebild des
+    Produktinhabers (D-473). Sitzend mittig auf dem Sitz der Kabelrudern-Station (`geraete.kabelrudern`), Rumpf aufrecht
+    über die ganze Bewegung, die Füße etwa hüftbreit flach auf der Fußplatte, Knie gebeugt (`KNIE`); das Becken bleibt
     fest, das Gesäß liegt `GESAESS` im Polster, das unter Haut und Kleidung nachgibt. Enger V-Griff
-    (`geraete.v_griff`), Handflächen zueinander, voller Griff mit dem Daumen oben; das Kabel läuft von der Rolle
-    zwischen den Füßen zur Öse des Griffs, der Griff hängt drehbar daran und liegt quer zu den Unterarmen. Ausgang: Arme fast gestreckt (`ELLBOGEN_VORN`),
-    der Rumpf in der Lende `VOR` Grad vorgeneigt, die Schultern nach vorn (`SCHULTER_VOR`). Der Griff kommt zur Taille,
-    erst steigend, dann gerade heran (`_bahn_punkt`); dabei richtet sich der untere Rücken auf („richte dabei den unteren Rücken auf“) und die Schulterblätter
-    gehen zusammen (`SCHULTER_ZURUECK`). Ende: Griff vor dem Bauch auf Höhe der Taille, `LUFT` vor dem Shirt, die
-    Ellbogen hinter dem Rumpf und nah am Körper. Der Gewichtsblock hebt sich um den Weg des Griffs. Zurück derselbe
-    Weg."""
+    (`geraete.v_griff`), Handflächen zueinander, voller Griff mit dem Daumen oben; das Kabel läuft waagrecht von der Rolle
+    vorn an der Säule in Höhe der unteren Brust (`HOEHE`) zur Öse des Griffs, der Griff hängt drehbar daran und liegt quer
+    zu den Unterarmen. Ausgang: Arme fast gestreckt (`ELLBOGEN_VORN`), die Schultern nach vorn (`SCHULTER_VOR`). Der Griff
+    kommt waagrecht zum Körper (`_bahn_punkt`), die Schulterblätter gehen zusammen (`SCHULTER_ZURUECK`). Ende: Griff vor
+    der unteren Brust, `LUFT` vor dem Shirt, die Ellbogen hinter dem Rumpf und nah am Körper. Der Gewichtsblock hebt sich
+    um den Weg des Griffs. Zurück derselbe Weg."""
 
     name = "rudern_kabel"
     titel = "Rudern am Kabel, sitzend"
@@ -2705,23 +2704,28 @@ class RudernKabel(Uebung):
     ablauf = {"pause_vorn": 0.0}
     FUESSE = 0.12  # halber Abstand der Fußgelenke vor dem Maß der Schultern, m: etwa hüftbreit
     ZEHEN = 6.0
-    KNIE = 160.0  # Knie leicht gebeugt
-    # Fußgelenke so weit unter den Hüftgelenken, m: die Oberschenkel liegen fast waagrecht auf dem Sitz (bis D-470 0,12;
-    # da fielen sie zu den Füßen ab und hätten weiter vorn im Sitz gesteckt)
-    TIEFER = 0.05
-    # Vorderkante des Sitzes so weit vor den Hüftgelenken, m: unter den Knien (41,5 cm vor den Hüftgelenken); der Sitz
-    # reicht ebenso weit hinter das Gesäß, die Person sitzt in der Mitte (D-472). Bis D-470 0,08 m: Da saß die Figur
-    # ganz vorn auf der Kante, Hinweis des Produktinhabers
+    KNIE = 130.0  # Knie gebeugt wie auf dem Vorlagebild (D-473; bis D-472 160°, fast gestreckt)
+    # Fußgelenke so weit unter den Hüftgelenken, m (D-473; bis D-472 0,05, bis D-470 0,12): bei 0,08 kamen Fäuste und
+    # Unterarme den Knien in der Mitte des Zugs bis 16 mm nah
+    TIEFER = 0.11
+    # Vorderkante des Sitzes so weit vor den Hüftgelenken, m: unter den Knien (bei D-472 41,5 cm vor den Hüftgelenken,
+    # mit 130° im Knie 39,3 cm); der Sitz reicht ebenso weit hinter das Gesäß, die Person sitzt in der Mitte (D-472). Bis
+    # D-470 0,08 m: Da saß die Figur ganz vorn auf der Kante, Hinweis des Produktinhabers
     SITZ_VOR = 0.42
-    VOR = 16.0  # Ausgang: Rumpf in der Lende so weit vorgeneigt (auf drei Wirbel verteilt), Grad
+    # Ausgang: Rumpf in der Lende so weit vorgeneigt (auf drei Wirbel verteilt), Grad: keine Neigung, der Rumpf bleibt
+    # aufrecht wie auf dem Vorlagebild (D-473; bis D-472 16°)
+    VOR = 0.0
     SCHULTER_VOR = -8.0  # Ausgang: Schlüsselbeine nach vorn, Grad
     SCHULTER_ZURUECK = 10.0  # Ende: Schlüsselbeine zurück, die Schulterblätter gehen zusammen, Grad
     ELLBOGEN_VORN = 168.0  # Ausgang: Arme fast gestreckt
-    # Ende: Mitte des Griffs so weit über den Hüftgelenken (Taille, auf Höhe des Nabels), m; bei 15 cm lagen die
-    # Unterkanten der Fäuste 19 mm in den Shorts über dem Schoß, mit den Oberschenkeln auf dem Sitz bei 20 cm die unteren
-    # Kappen des Griffs 7,8 mm
-    TAILLE = 0.23
+    # Kabel und Mitte des Griffs so weit über den Hüftgelenken (untere Brust), m: Das Kabel läuft waagrecht wie auf dem
+    # Vorlagebild (D-473; bis D-472 kam es von unten zwischen den Füßen, der Griff endete 23 cm über den Hüftgelenken)
+    HOEHE = 0.32
+    ROLLE_VOR = 0.30  # Rolle so weit hinter der Mitte der Fußplatte (zur Säule), m
     LUFT = 0.010  # Ende: Hände und Griff mindestens so weit vor dem Shirt, m
+    # Richtung, in die die Ellbogen zeigen (außen, hinten, unten; Raum des Skeletts): weiter nach hinten als bis D-472
+    # (0,3, 0,5, −1), sonst endete der Oberarm mit dem Griff vor der unteren Brust nur 11° hinter dem Rumpf (D-473)
+    POL = (0.3, 1.6, -1.0)
     GESAESS = 0.004  # Gesäß so tief im Sitz, m
     GRIFF_LAGE = 0.62
     # Griff schräg in der Hand wie beim Bankdrücken (D-452): Quer zur Knöchellinie knickte das Handgelenk 14° zum Daumen
@@ -2734,9 +2738,9 @@ class RudernKabel(Uebung):
     griff_ansichten = (("vgriff_seite", 90.0, 15.0), ("vgriff_vorn", 40.0, 30.0))
 
     def rahmen_objekte(self) -> list:
-        # Bildausschnitt aus Figur, Sitz mit den Beinen bis zum Boden, Fußplatten und Griff: Die Säule (2,1 m) darf oben
-        # angeschnitten sein, sonst wird die Figur klein
-        return [self.geraet["sitz"], *self.geraet["beine"], *self.geraet["platten"], self.vgriff]
+        # Bildausschnitt aus Figur, Sitz mit den Beinen bis zum Boden, Fußplatte, Rolle und Griff: Die Säule (2,1 m) darf
+        # oben angeschnitten sein, sonst wird die Figur klein
+        return [self.geraet["sitz"], *self.geraet["beine"], self.geraet["fussplatte"], self.geraet["rolle"], self.vgriff]
 
     def polster_objekte(self) -> list:
         return [self.geraet["sitz"]]
@@ -2756,9 +2760,12 @@ class RudernKabel(Uebung):
         self.verschiebung = Vector((0.0, 0.0, 0.0))
         self._sitzen()
         platte = self._sohlenmitte()
-        rolle = Vector((0.0, platte.y - 0.02, platte.z))
-        self.rolle = rolle
         hl = rig.welt(rig.punkt("pelvis.L", k["upperleg01.L"]))
+        rig.setze("root", self._becken())  # Hüftgelenke im Sitzen: Höhe des Kabels
+        sitzend = (rig.welt(rig.punkt("pelvis.L", k["upperleg01.L"])) + rig.welt(rig.punkt("pelvis.R", k["upperleg01.R"]))) / 2
+        rig.zuruecksetzen()
+        rolle = Vector((0.0, platte.y - self.ROLLE_VOR, sitzend.z + self.HOEHE))
+        self.rolle = rolle
         self.geraet = geraete.kabelrudern(hl.y - self.SITZ_VOR, platte, rolle)
         self.vgriff = geraete.v_griff("V-Griff")
         self.griff = {s: rig.griff(s, self.GRIFF_LAGE, geraete.RUDERN["griff_d"] / 2, schraeg=self.SCHRAEG) for s in "LR"}
@@ -2862,7 +2869,7 @@ class RudernKabel(Uebung):
             x, z = R.col[0].to_3d(), R.col[2].to_3d()
             aus = {}
             for s, sx in (("L", 1), ("R", -1)):
-                pol = Vector((sx * 0.3, 0.5, -1.0)).normalized()
+                pol = Vector((sx * self.POL[0], self.POL[1], self.POL[2])).normalized()
                 aus[s] = rig.arm(s, self.griff[s], mitte + x * (sx * halb), z, pol, self.STRECKUNG)
             vor = sum(((a["handgelenk"] - a["ellbogen"]).normalized() for a in aus.values()), Vector())
         return aus, R
@@ -2918,15 +2925,15 @@ class RudernKabel(Uebung):
         return punkte
 
     def _loesen(self) -> None:
-        """Bahn des Griffs, wenn Kleidung und Schuhe da sind: Ende vor der Taille (`TAILLE` über den Hüftgelenken),
-        so weit vor dem Bauch, dass Hände und Griff `LUFT` vor dem Shirt bleiben (Halbierung waagrecht nach vorn);
+        """Bahn des Griffs, wenn Kleidung und Schuhe da sind: Ende vor der unteren Brust (`HOEHE` über den Hüftgelenken),
+        so weit vor dem Körper, dass Hände und Griff `LUFT` vor dem Shirt bleiben (Halbierung waagrecht nach vorn);
         Ausgang auf der Geraden zur Rolle, wo der Ellbogen `ELLBOGEN_VORN` gestreckt ist."""
         rig = self.rig
         k = rig.kopf
         rig.zuruecksetzen()
         rig.setze("root", self._becken())
         H = (rig.punkt("pelvis.L", k["upperleg01.L"]) + rig.punkt("pelvis.R", k["upperleg01.R"])) / 2
-        basis = Vector((0.0, H.y - 0.05, H.z + self.TAILLE))
+        basis = Vector((0.0, H.y - 0.05, H.z + self.HOEHE))
         richtung = (rig.lokal(self.rolle) - basis).normalized()
 
         def frei(t: float) -> float:
@@ -2973,12 +2980,10 @@ class RudernKabel(Uebung):
         self.delle = geraete.eindruecken(self.polster_objekte(), self.polster_ruhe, self.auflage())
 
     def _bahn_punkt(self, p: float) -> Vector:
-        """Mitte des Griffs in Phase p: nach hinten gleichmäßig, in der Höhe mit weichem Auslauf (1 − (1 − p)²), so
-        steigt der Griff früh zur Taille und kommt dann gerade heran. Auf der Geraden streiften die Unterkanten der
-        Fäuste kurz vor dem Ende die Shorts über dem Schoß (bis 0,1 mm)."""
+        """Mitte des Griffs in Phase p: auf der Geraden zur Rolle, waagrecht wie das Kabel (D-473; bis D-472 stieg der
+        Griff von unten zur Taille)."""
         start, ende = self.bahn
-        h = 1.0 - (1.0 - p) ** 2
-        return Vector((0.0, start.y + (ende.y - start.y) * p, start.z + (ende.z - start.z) * h))
+        return start.lerp(ende, p)
 
     def haltung(self, p: float) -> None:
         rig = self.rig

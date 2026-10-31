@@ -115,6 +115,17 @@ MESSWERTE = (
     ("Kopf (Haare) in der Lehne (mm)", "Kopf an der Lehne (unter 0 = Luft)", "spanne", " mm"),
     ("Becken verschoben (mm)", "Becken verschoben", "max", " mm"),
     ("Becken gedreht (Grad)", "Becken gedreht (Einrollen)", "max", "°"),
+    # Beinbeuger liegend (D-475)
+    ("Rumpf zur Waagrechten (Grad, + Kopf tiefer)", "Rumpf zur Waagrechten (+ Kopf tiefer)", "spanne", "°"),
+    ("Brust und Bauch im Polster (mm)", "Brust und Bauch im Polster", "spanne", " mm"),
+    ("Hüfte am Scheitel im Polster (mm)", "Hüfte am Scheitel im Polster", "spanne", " mm"),
+    ("Oberschenkel im Polster (mm)", "Oberschenkel im Polster", "spanne", " mm"),
+    ("Kniegelenk zur Drehachse (mm)", "Kniegelenk zur Drehachse", "max", " mm"),
+    ("Hebel gedreht (Grad)", "Hebel und Rolle gedreht", "spanne", "°"),
+    ("Rolle: Socke und Haut (mm, negativ = eingedrückt)", "Rolle auf Socke und Haut (negativ = eingedrückt)", "spanne", " mm"),
+    ("Rolle zu den Schuhen (mm)", "Rolle zu den Schuhen", "min", " mm"),
+    ("Kopf und Hals zum Gerät (mm)", "Kopf und Hals zum Gerät", "min", " mm"),
+    ("Socke: Löcher über dem Schuh (Punkte)", "Socke: Löcher über dem Schuh (Punkte)", "max", ""),
     ("Polster: tiefste Delle (mm)", "Polster: tiefste Delle", "spanne", " mm"),
     ("Polster: Haut oder Kleidung durch die Oberfläche (mm)", "Haut oder Kleidung durch das Polster", "max", " mm"),
     # Familie „Rumpf“ (D-466)
@@ -234,7 +245,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "unterarm_vorn": "Unterarm und Hand von vorn", "ruecken_seite": "Lende und Becken von der Seite",
               "ruecken_schraeg": "Rücken schräg vom Kopf her", "griff_vorn": "Griff und Hantel von vorn",
               "griff_seite": "Griff und Hantel von außen", "vgriff_seite": "V-Griff und Hände von der Seite",
-              "vgriff_vorn": "V-Griff und Hände schräg von vorn"}
+              "vgriff_vorn": "V-Griff und Hände schräg von vorn", "beingriff_aussen": "Hand am Griff von außen",
+              "beingriff_vorn": "Hand am Griff von vorn"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

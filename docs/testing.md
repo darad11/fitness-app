@@ -2761,3 +2761,19 @@ Freigabe mit drei Entscheidungen: Kamera schräg von hinten wie beim Latziehen, 
 | `pnpm format:check`, `pnpm test`, `pnpm build`, `pnpm check:bundle` | Format bestanden; 135 Dateien, 1.209 Tests bestanden; Build bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
 | `pnpm test:e2e` (Chromium, ohne Blender nebenher; WebKit in der CI) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen: `start-surface.spec.ts:484` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, nur beim Laden des Skripts wie beim vierten Start – Logo nie an der falschen Stelle, am Ende mittig (D-394)“ mit „Bilder ohne Logo davor“ (das Logo war schon im ersten abgetasteten Bild zu sehen, wie bei D-469); `npx playwright test e2e/start-surface.spec.ts:484 --repeat-each=5`: 10 bestanden (beide Fassungen des Tests je fünfmal) |
 | `pnpm check:docs` | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Beine isoliert“ · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Beine isoliert“ mit dem Beinbeuger liegend (D-475).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Maschine nach Angaben aus der Websuche (nur Suchauszüge, die Seiten ließen sich nicht öffnen) | Life Fitness Insignia Leg Curl 159 × 106 × 148 cm, Block 85 kg; True Fitness FUSE-1800 Polster je 15°; Legend Fitness 912 Polster zusammen 108 cm; Rolle Ø 12 cm nur bei einem Heimgerät; Höhe der Liegefläche, Polsterbreite, Lage der Achse und der Griffe ohne Quelle |
+| Erster Lauf (drei Phasen) | ohne Fehler: Knie 175 bis 60°, Kniegelenk 0,0 mm von der Drehachse, Hebel 0 bis 115°. Rolle 1,0 mm in der Haut, aber 4,0 mm in der Socke und Hüfte am Scheitel 16 mm im Polster: Beim Bauen fehlten Kleidung und Socken. Handgelenk 10,1° zum kleinen Finger; Kopf und Hals 11 mm vom Gerät; Riemen schräg durchs Bild |
+| Zweiter Lauf (Lage erst nach dem Ankleiden, Brustpolster 3 cm vor dem Halsansatz, Riemen am Längsträger) | Brust und Bauch 4,0 mm, Hüfte am Scheitel 4,0 mm im Polster, Oberschenkel 1,3 mm darüber; Rolle 1,0 mm in Socke und Haut, 15,9 mm zu den Schuhen; Kopf und Hals 60,7 mm vom Gerät |
+| Richtung der Griffe (elf Richtungen, Handgelenk gesamt) | längs des Polsters 10,1°, senkrecht 66,2°, quer 30,9°, schräg 26,1 bis 37,3°, längs mit etwas nach außen oder innen 1,0 bis 1,5°; 6° zu den Füßen abfallend 5,1°, 11° abfallend 0,4° (gewählt) |
+| Kamera (Ausgang und Ende) | 70° und 15°, 100° und 20°, 120° und 25° verglichen; gewählt 100° und 20°: Kniebeugung, Rückseite der Oberschenkel und Rolle |
+| `render.py beinbeuger_liegend --pruefen` (alle 60 Bilder), erster Durchgang | „Socke: Löcher über dem Schuh“ 0 bis 48 Punkte, obwohl der Fuß fest am Unterschenkel sitzt (Strahlen in festen Richtungen); die Nahaufnahmen der Hand von außen fehlten auf der Prüfseite (Name unbekannt). 393 s, Nahaufnahmen 69 s |
+| Zweiter Durchgang (Strahlen drehen bei frei hängenden Füßen mit dem Fuß; Namen der Nahaufnahmen) | Knie 175 bis 60°; Hüfte 149,1°; Rumpf 15,9°; Sprunggelenk 1,5°; Kniegelenk 0,0 mm von der Drehachse; Hebel 0 bis 115°; Ellbogen 65,6°; Handgelenk 0,4°; Finger −4,5 mm; Brust und Bauch 4,0 mm, Hüfte 4,0 mm im Polster, Oberschenkel 1,3 mm darüber; Rolle −1,0 mm, Schuhe 15,9 mm; Kopf und Hals 60,7 mm; Socke ohne Löcher; Kragen 1,6 mm über der Socke; Delle 3,4 mm; durch das Polster 0,0 mm; keine Meldungen; alle übrigen Werte gleich wie im ersten Durchgang. 412 s, Nahaufnahmen 74 s |
+| Prüfseite (`uebungen_pruef_bild.py beinbeuger_liegend --familie beine-isoliert --titel "Beine isoliert"`) | `familie-beine-isoliert.webp`, angesehen: bäuchlings auf den Polstern, Knie knapp dahinter, Rolle über den Fersen, Hand um den Griff, Fuß und Rolle von außen und von hinten |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-475; die App ändert sich nicht, E2E wie bei D-474) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |

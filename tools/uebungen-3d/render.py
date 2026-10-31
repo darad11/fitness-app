@@ -143,11 +143,15 @@ def messen(uebung) -> dict:
     if "Sohle" in o:
         if ebene is not None:  # Füße auf einer Platte (D-464): Kontakt zur Platte statt zum Boden
             erg.update(schuhe.kontakt_ebene(o["Sohle"], *ebene, name=getattr(uebung, "sohle_auf", "Platte")))
+        elif getattr(uebung, "fuesse_frei", False):  # Füße in der Luft (Beinbeuger liegend, D-475): kein Bodenkontakt
+            pass
         else:
             if fusspunkte:
                 erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
             erg.update(schuhe.bodenkontakt(o["Sohle"], o["Schuhe"]))
-        erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts")))
+        # Füße in der Luft, gedreht (D-475): Die Prüfung auf Löcher dreht ihre Strahlen mit dem Fuß
+        drehung = ({s: uebung.rig.g("foot." + s).to_3x3() for s in "LR"} if getattr(uebung, "fuesse_frei", False) else None)
+        erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts"), drehung))
         if "Senkel" in o:  # Schuh seit D-460: Senkel, Ösen, Polster, Zehenbox
             erg.update(schuhe.pruefung_neu(uebung.koerper, o["Socken"]))
         if getattr(uebung, "vorfuss", None) is not None:  # Vorfuß gebogen (D-467): Fuß und Socke bleiben im Schuh
@@ -198,6 +202,8 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
         ("Sohle" if schuh else "Fuß") + ": größte Verschiebung über die Schleife (mm)": round(fuss_max * 1000, 2),
         "bilder": werte,
     }
+    if getattr(u, "fuesse_frei", False):  # die Füße bewegen sich mit dem Unterschenkel (D-475)
+        zusammen.pop(("Sohle" if schuh else "Fuß") + ": größte Verschiebung über die Schleife (mm)")
     (arbeit / f"{name}-messwerte.json").write_text(json.dumps(zusammen, ensure_ascii=False, indent=1), encoding="utf-8")
     if not bilder:
         return

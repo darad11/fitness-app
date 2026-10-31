@@ -1217,13 +1217,14 @@ _RICHTUNGEN = (Vector((0.0, 0.0, -1.0)), Vector((1.0, 0.0, 0.0)), Vector((-1.0, 
                Vector((0.0, 1.0, 0.0)), Vector((0.0, -1.0, 0.0)))
 
 
-def _im_schaft(bvh, p: Vector, n: Vector) -> bool:
+def _im_schaft(bvh, p: Vector, n: Vector, drehung=None) -> bool:
     """Liegt der Punkt (Normale `n`) im Schuh (`bvh`: Schaft)? Ja, wenn vier von fünf Strahlen (nach unten
     und waagrecht in vier Richtungen, bis 40 cm) den Schaft von innen treffen: Dann verdeckt ihn der Schaft
     von der Seite. Oder er ragt knapp durch den Schaft: Der Strahl gegen seine Normale trifft ihn bis
-    1,5 cm von außen, der Schaft liegt dahinter."""
+    1,5 cm von außen, der Schaft liegt dahinter. `drehung` (D-475): Drehung des Fußes gegenüber dem Stand; die
+    Strahlen drehen mit (Beinbeuger liegend: Fuß und Schuh hängen gedreht in der Luft)."""
     treffer = 0
-    for d in _RICHTUNGEN:
+    for d in (_RICHTUNGEN if drehung is None else [drehung @ r for r in _RICHTUNGEN]):
         ort, normale, _, _ = bvh.ray_cast(p, d, 0.4)
         if ort is not None and normale.dot(d) > 0:
             treffer += 1
@@ -1516,7 +1517,7 @@ def kontakt_ebene(sohle: bpy.types.Object, punkt: Vector, normale: Vector, name:
 
 
 def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bpy.types.Object,
-                  hose: bpy.types.Object | None = None) -> dict:
+                  hose: bpy.types.Object | None = None, drehung: dict | None = None) -> dict:
     """Socke und Schuh in der aktuellen Haltung (verformte Netze ohne Glättung, Welt). Im Schuh sind Socke
     und Haut ausgeblendet (Attribut „ImSchuh“ der Socke, `_im_schuh`); sichtbar durchdringen kann nur,
     was am Kragen aufeinandertrifft. Gemessen wird:
@@ -1527,7 +1528,8 @@ def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bp
     - **Socke über der Haut** (mm): kleinster Abstand der sichtbaren Socke über der Haut am selben Punkt
       des Netzes, negativ heißt, die Haut kommt durch;
     - **Löcher über dem Schuh**: ausgeblendete Punkte der Socke, die nicht mehr im Schuh liegen (dieselbe
-      Prüfung wie `_im_schuh`, in der aktuellen Haltung); dort sähe man in den Schuh;
+      Prüfung wie `_im_schuh`, in der aktuellen Haltung; mit `drehung` je Seite drehen die Strahlen mit dem Fuß,
+      D-475); dort sähe man in den Schuh;
     - **Abstand zu den Shorts** (cm): kleinster Abstand der Socke zu den Shorts."""
     from mathutils import kdtree
     from mathutils.bvhtree import BVHTree
@@ -1561,7 +1563,8 @@ def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bp
     bvh_schaft = BVHTree.FromPolygons(hp, hf)
     loecher = 0
     for i in range(len(sp)):
-        if saum[i] > 0.0 and im_schuh[i] >= 0.5 and not _im_schaft(bvh_schaft, sp[i], sn[i]):
+        R = drehung["L" if sp[i].x > 0 else "R"] if drehung else None
+        if saum[i] > 0.0 and im_schuh[i] >= 0.5 and not _im_schaft(bvh_schaft, sp[i], sn[i], R):
             loecher += 1
     aus["Socke: Löcher über dem Schuh (Punkte)"] = loecher
     if hose is not None:

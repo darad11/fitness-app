@@ -1126,3 +1126,88 @@ Ergebnis: bestanden bis auf einen E2E-Zeittest der Startfläche (einmalig, einze
 Bekannte Einschränkungen: keine neuen; der Zeittest der Startfläche (D-394) schlug lokal zum zweiten Mal einmalig fehl
 Nächste Schritte: Prüfseite der nächsten Familie „Beine isoliert“ (Beinbeuger liegend), dann Halt
 ```
+
+## 17. Nächste Familie: Beine isoliert mit Beinbeuger liegend, Prüfseite (D-475)
+
+Im Animationsplan kommt nach „Waagrechtes Ziehen“ die Familie „Beine isoliert“. Aus „Ganzkörper A/B“ gehört nur der Beinbeuger liegend dazu (23 Einheiten); er ist zugleich die Referenz der Familie. Wie verlangt zuerst nur die Prüfseite.
+
+### 17.1 Gerät
+
+- **Maschine:** liegender Beinbeuger mit Gewichtsblock; Grundfläche wie die Life Fitness Insignia Leg Curl (159 × 106 × 148 cm, Block 85 kg).
+- **Polster:** Brust- und Oberschenkelpolster fallen vom Scheitel unter der Hüfte je 15° ab, wie bei der True Fitness FUSE-1800 („Chest and thigh pads angled at 15º“). Zusammen sind sie 81 cm lang (Legend Fitness 912: 108 cm), weil sie sich nach der Figur richten: Das Brustpolster endet 3 cm vor dem Halsansatz, das Oberschenkelpolster 6 cm vor den Kniegelenken.
+- **Hebel und Rolle:** Die Drehachse liegt auf der Achse der Kniegelenke, die Rolle hinten auf den Unterschenkeln knapp über den Fersen. So verlangen es die Handbücher von Life Fitness („positioning the knees just off of the pad aligned with the machine pivot“, „lower leg pad should be positioned comfortably above the back of the ankles“) und Hoist. Die Nocke sitzt rechts an der Achse, ein Riemen läuft am Längsträger zur Säule mit dem Gewichtsblock vor dem Kopf.
+- **Griffe:** vorn neben dem Brustpolster, 11° zu den Füßen hin abfallend.
+- **Geschätzt**, weil keine Quelle es nennt: Scheitel 76 cm über dem Boden, Polster 30 cm breit und 7 cm dick, Rolle Ø 12 cm (Angabe eines Heimgeräts) und 46 cm lang, Lage der Griffe.
+
+Alle Werte stammen aus der Websuche. Die Seiten ließen sich in der Cloud-Umgebung nicht öffnen; gelesen habe ich nur die Auszüge der Suche.
+
+### 17.2 Bewegung
+
+- **Quelle:** Familie (Code), wie im Plan.
+- **Lage:** bäuchlings; der Rumpf fällt 15° zum Kopf hin ab, die Oberschenkel 15° zu den Knien, die Hüfte steht bei 149°. Brust, Bauch und Hüfte liegen mit Shirt und Shorts 4 mm im Polster, das unter dem Körper nachgibt. Die Knie liegen knapp hinter dem Polster.
+- **Hände** an den Griffen, **Kopf** in Verlängerung des Rumpfs.
+- **Beugen:** Das Knie beugt von 175° (fast gestreckt) bis 60°, also 120° gebeugt; die Familie nennt 110 bis 130°. Hebel und Rolle drehen um dieselbe Achse mit, die Rolle bleibt 1 mm in Socke und Haut. Der Gewichtsblock hebt sich um den Weg der Nocke. Das Sprunggelenk bleibt wie im Stand, Hüfte und Oberkörper liegen still.
+- **Zurück** derselbe Weg, mit der kurzen Pause an beiden Umkehrpunkten wie bei den übrigen Schleifen.
+- **Kamera der App:** von der Seite, etwas von hinten und oben (100°, 20°). So sieht man die Kniebeugung, die Rückseite der Oberschenkel und die Rolle. Verglichen habe ich auch schräg vom Kopf her (70°, 15°) und schräg von hinten (120°, 25°).
+
+### 17.3 Abgleich mit dem Ausführungstext
+
+Der Text in der App passt; geändert habe ich nichts.
+
+| Text in der App | Animation |
+|---|---|
+| „Leg dich bäuchlings auf die Bank. Die Knie liegen knapp über der Bankkante, die Unterschenkel unter dem Polster.“ | bäuchlings, Kniegelenke 6 cm hinter dem Oberschenkelpolster, Rolle hinten auf den Unterschenkeln |
+| „Beug die Knie und zieh das Polster nach oben.“ | Knie bis 120° gebeugt, Hebel und Rolle drehen mit |
+| „Senk das Polster ab, bis die Knie wieder gestreckt sind.“ | zurück bis 175° |
+| „Halt den Oberkörper auf der Bank.“ | Rumpf und Hüfte bleiben über die ganze Schleife 4 mm im Polster |
+
+### 17.4 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Knie | 175° (Ausgang) bis 60° (Ende, 120° gebeugt) |
+| Hüfte (Oberschenkel zum Rumpf) / Rumpf zur Waagrechten | 149,1° / 15,9°, Kopf tiefer |
+| Sprunggelenk | 1,5° gebeugt, wie im Stand |
+| Kniegelenk zur Drehachse / Hebel und Rolle gedreht | 0,0 mm / 0 bis 115° |
+| Ellbogen / Handgelenk / Finger am Griff | 65,6° / 0,4° / 4,5 mm eingedrückt (gewollt) |
+| Brust und Bauch / Hüfte am Scheitel im Polster | 4,0 mm / 4,0 mm |
+| Oberschenkel zum Polster | 1,3 mm darüber |
+| Rolle in Socke und Haut / zu den Schuhen | 1,0 mm / 15,9 mm |
+| Kopf und Hals zum Gerät | 60,7 mm |
+| Socke: Löcher über dem Schuh / Kragen über der Socke | 0 / 1,6 mm |
+| Polster: tiefste Delle / Haut oder Kleidung durch das Polster | 3,4 mm / 0,0 mm |
+| Meldungen des Rigs | 0 |
+
+### 17.5 Prüfseite und Rechenzeit
+
+`docs/screens/uebungen/familie-beine-isoliert.webp`: Ausgangs- und Endposition mit der Kamera der App und von der Seite, die linke Hand am Griff von außen und von vorn, der linke Fuß mit der Rolle von außen und von hinten, darunter die Messwerte. Rechenzeit: Messung und Prüfansichten 412 s, Nahaufnahmen 74 s.
+
+Beim Prüfen gefunden und behoben:
+- Beim Bauen der Übung gibt es Shirt, Shorts und Socken noch nicht. Die Rolle lag so 1 mm in der Haut, aber 4 mm in der Socke, und die Polster kannten die Kleidung nicht. Jetzt liegen Polster, Drehachse und Rolle erst beim ersten Bild fest, wenn die Figur angezogen ist (wie beim Rudern).
+- Mit den Griffen längs des Polsters knickte das Handgelenk 10° zum kleinen Finger. Gesucht unter elf Richtungen: 11° zu den Füßen hin abfallend 0,4°.
+- Der Riemen lief schräg durchs Bild; jetzt läuft er an der Nocke hinab und am Längsträger entlang.
+- Das Brustpolster reichte bis 2 cm hinter den Halsansatz, Hals und Kinn kamen dem Gerät 11 mm nah; jetzt endet es 3 cm davor, 60,7 mm Luft.
+- Die Prüfung auf Löcher in der Socke über dem Schuh schießt ihre Strahlen nach unten und waagrecht, gedacht für stehende Füße. Beim Beinbeuger drehen Fuß und Schuh mit dem Unterschenkel, sie meldete bis 48 Punkte, obwohl sich am Fuß nichts ändert. Bei frei hängenden Füßen drehen die Strahlen jetzt mit dem Fuß: 0 Punkte. Für alle übrigen Übungen bleibt die Prüfung, wie sie war.
+
+### 17.6 Abweichungen und offene Punkte
+
+- **Polsterlänge:** 81 statt 108 cm; die Polster richten sich nach der Figur.
+- **Geschätzte Maße:** Höhe der Liegefläche, Polsterbreite und -dicke, Rolle und Griffe (17.1).
+- **Ende bei 120° im Knie:** Mitte der Familie (110 bis 130°). Mehr Beugung ginge, dann käme die Rolle näher an die Oberschenkel.
+- **Rolle:** starr, sie liegt 1 mm in Socke und Haut; die Polster der Liegefläche geben nach, die Rolle nicht.
+- **Oberschenkel:** liegen nahe der Hüfte im Polster, zu den Knien hin 1,3 mm darüber (sie werden schlanker).
+
+### 17.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-475 Phase Programme, Abschnitt 2: Familie „Beine isoliert“ (Beinbeuger liegend), Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Beinbeuger-Maschine, liegend (geraete.beinbeuger) mit zwei geneigten Polstern, Hebel und Rolle auf der Achse der Kniegelenke, Griffen, Säule mit Gewichtsblock und Riemen; Beinbeuger liegend (uebungen.BeinbeugerLiegend) mit Lage auf den Polstern nach dem Ankleiden, Unterschenkel um die Kniegelenke gedreht, Fuß fest am Unterschenkel, Hände an den Griffen; render.messen ohne Bodenkontakt bei frei hängenden Füßen, Prüfung auf Löcher in der Socke mit dem Fuß gedreht; neue Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/render.py, tools/uebungen-3d/schuhe.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-beine-isoliert.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-475
+Ausgeführte Tests: drei Phasen in zwei Läufen, elf Griffrichtungen, drei Kameras, render.py beinbeuger_liegend --pruefen (alle 60 Bilder, zweimal), Nahaufnahmen, Bilder angesehen; pnpm format:check, pnpm check:docs, pnpm check:bundle; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 17.4)
+Bekannte Einschränkungen: 17.6
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife rendern und einbauen, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Beine isoliert“.

@@ -2819,7 +2819,7 @@ Länge, Schnitt, Logos, Rückenlogo, Seitenstreifen, Kollision mit den Shorts, G
 | Kniebeuge in Player-Größe, Phasen 0,5, 0,625 und 0,75 | angesehen: Saum liegt über den Shorts, kein Lime durch das Shirt |
 | Brücke über die Gesäßfalte, ab 0,5 cm über dem Schritt | angesehen von hinten: die senkrechte Linie zwischen den Gesäßhälften ist fast verschwunden; Nahaufnahme unten in der Kniebeuge: hinten unten zieht sich eine Spitze aus den Shorts. Tiefe der Falte je Höhe: am Schritt bis 7,7 cm, ab 4,5 cm darüber höchstens 5,0 cm |
 | Brücke ab 4 cm über dem Schritt, gleitend über 3 cm | Nahaufnahme: Spitze weg, Profil rund; unten bleibt eine kleine Mulde |
-| Haut an den Säumen | Shorts: mindestens 28,3 mm unter dem Stoff. Shirt: Rudern bis 5,5 mm durch den Ärmel nahe dem Saum (Arme hinten; die Haut ist dort halb ausgeblendet; Ärmel unverändert), Kniebeuge 0,05 mm am Kragen, Beinbeuger keine |
+| Haut an den Säumen | Shorts: mindestens 28,3 mm unter dem Stoff. Shirt: Rudern bis 5,5 mm durch den Ärmel nahe dem Saum (Arme hinten; die Haut ist dort halb ausgeblendet; Ärmel unverändert), Kniebeuge 0,05 mm am Kragen, Beinbeuger keine. Korrigiert in D-480: Messfehler, gemessen gegen die Seite des Shirts am Rumpf; gegen den eigenen Ärmel blieb die Haut beim Rudern 5,0 bis 5,5 mm darunter |
 | Standbilder | `kleidung2-1-board.webp` und `kleidung2-2-player.webp`, angesehen |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, vorab gespeichert 191 von 294 Dateien, Übungsbilder 40 von 40 |
 
@@ -2831,3 +2831,15 @@ Messwert „Becken gegenüber dem Ausgang angehoben“ (D-479).
 |---|---|
 | `render.py beinbeuger_liegend --pruefen --nur-messwerte`, Kleidung nach D-477 mit Saum 7 cm unter dem Bund (Zwischenstand) | Becken 0,00 mm in allen 60 Bildern; Hüfte am Scheitel 2,74 mm im Polster (D-475: 4,00 mm), Oberschenkel 4,00 mm (D-475: 1,33 mm darüber), durch das Polster 0,00 mm; 147 s |
 | dasselbe mit der Kleidung nach D-478 | Becken 0,00 mm in allen 60 Bildern; Hüfte am Scheitel 2,74 mm, Brust und Bauch 4,00 mm, Oberschenkel 4,00 mm im Polster; durch das Polster 0,00 mm; Shorts-F zum Seitenstreifen 4,95 cm (D-475: 2,54 cm; F kleiner, Streifen schmaler); Kopf und Hals 58,4 mm vom Gerät (D-475: 60,7 mm); Socke zu den Shorts mindestens 6,3 cm (D-475: 9,5 cm, die Beine der Shorts sind weiter); tiefste Delle 3,6 mm (D-475: 3,4 mm); übrige Werte wie bei D-475; 156 s |
+
+### Ärmel in allen fertigen Übungen · 31.10.2026, Cloud-Umgebung
+
+Haut unter dem Ärmel (D-480).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Rudern, Haut gegen die nächste Fläche des ganzen Shirts (wie in D-478) | −5,47 mm bei Phase 0,875, an zwei Punkten außen am Oberarm, 1,4 cm innerhalb des Ärmels; nächster Punkt des Shirts ist die Seite am Rumpf (12 bis 17 mm entfernt), der eigene Punkt des Ärmels liegt 6,7 mm darüber |
+| Kollision der Ärmel mit einem Hilfsnetz der Oberarme (Shrinkwrap, 3 mm) | kein Wert ändert sich; nicht im Werkzeug |
+| Rudern, Haut nur gegen die Flächen des Ärmels (alle Eckpunkte am Oberarm) | 4,96 bis 5,49 mm unter dem Ärmel, mit und ohne Kollision gleich |
+| Alle zehn fertigen Übungen und Beinbeuger, neun Phasen, gegen den eigenen Ärmel | Kniebeuge 4,81; Bankdrücken 4,85 bis 5,49; Latziehen 4,83 bis 5,47; Bankdrücken KH 5,06 bis 5,47; Schrägbank KH 4,99 bis 5,48; Beinpresse 5,48; Unterarmstütz 5,03; Crunches 5,05 bis 5,06; Seitheben 5,46; Rudern 4,96 bis 5,49; Beinbeuger 5,20 mm; nirgends ein Punkt durch |
+| `render.py rudern_kabel --pruefen --nur-messwerte` mit `kleidung.durchdringung` in `render.messen` (60 Bilder) | Shorts unter dem Shirt −0,70 mm, Saumband über den Shorts −0,97 mm (beides in der Hüftfalte, freigegeben), Haut unter dem Ärmel 4,96 bis 5,49 mm; 227 s |

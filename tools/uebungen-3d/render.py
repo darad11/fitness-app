@@ -169,6 +169,8 @@ def messen(uebung) -> dict:
         erg["_fuss"] = [tuple(round(c, 4) for c in p) for p in fusspunkte[::25]]
     if "Shorts" in o and "MaskeBeinvorn" in o["Shorts"].data.attributes:  # Shorts-F zum Streifen (D-461)
         erg["Shorts: kleinster Abstand F zum Streifen (cm)"] = kleidung.f_streifen_abstand(o["Shorts"])["abstand_cm"]
+    # Shorts unter dem Shirt, Saumband über den Shorts, Haut unter dem Ärmel (D-478, D-480)
+    erg.update(kleidung.durchdringung(uebung.koerper))
     if hasattr(uebung, "zusatzwerte"):  # Hanteln und Bank (D-462)
         erg.update(uebung.zusatzwerte())
     return erg

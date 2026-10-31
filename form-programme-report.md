@@ -1273,7 +1273,7 @@ Geänderte Dateien: tools/uebungen-3d/kleidung.py, tools/uebungen-3d/uebungen.py
 Technische Entscheidungen: D-478
 Ausgeführte Tests: Ruhehaltung von vorn, von der Seite und von hinten in sieben Ständen; Kniebeuge, Rudern und Beinbeuger in neun Phasen gemessen, ohne und mit Kollision; Nahaufnahmen der Hüfte unten in der Kniebeuge; Kniebeuge in drei Phasen in Player-Größe; Standbilder angesehen; pnpm format:check, pnpm check:docs, pnpm check:bundle; CI zum Entwurfs-PR
 Ergebnis: bestanden (Werte in 20.2)
-Bekannte Einschränkungen: Reste in der Hüftfalte (20.2); beim Rudern kommt die Haut am Ärmelsaum bis 5,5 mm durch den Ärmel (Arme hinten), dort ist sie zur Hälfte ausgeblendet; die Ärmel sind unverändert, das war schon vorher so
+Bekannte Einschränkungen: Reste in der Hüftfalte (20.2); beim Rudern kommt die Haut am Ärmelsaum bis 5,5 mm durch den Ärmel (Arme hinten), dort ist sie zur Hälfte ausgeblendet; die Ärmel sind unverändert, das war schon vorher so (korrigiert in D-480: Messfehler, die Haut blieb unter ihrem Ärmel)
 Nächste Schritte: Halt bis zur Freigabe; danach alle zehn fertigen Schleifen mit der neuen Kleidung neu, dann der Beinbeuger
 ```
 
@@ -1286,3 +1286,26 @@ Dein Auftrag: prüfen, dass das Becken in jeder Phase auf dem Polster bleibt und
 - Der Rumpf liegt in der Bewegung fest, nur Unterschenkel, Hebel und Rolle drehen. Der Messwert steht künftig auf der Prüfseite.
 
 **Halt:** Ich warte auf deine Freigabe der Kleidung.
+
+## 22. Ärmel in allen Übungen (D-480)
+
+Am 31.10.2026 hast du die Kleidung aus D-478 freigegeben; die Reste in der Hüftfalte bei Kniebeuge, Latziehen und Beinpresse bleiben. Dein Auftrag dazu: die Ärmel korrigieren, weil beim Rudern die Haut nahe dem Ärmelsaum bis 5,5 mm durch den Stoff kam, und die Ärmel in allen zehn fertigen Übungen und beim Beinbeuger prüfen.
+
+- **Ergebnis:** Die Haut kommt nirgends durch den Ärmel. In allen elf Übungen bleibt die sichtbare Haut am Ärmelsaum in jeder Phase 4,8 bis 5,5 mm unter ihrem Ärmel.
+- **Die 5,5 mm waren ein Messfehler von mir:** Ich hatte die Haut mit der nächsten Fläche des ganzen Shirts verglichen. Beim Rudern liegt der Oberarm am Rumpf an; die nächste Fläche war dann die Seite des Shirts am Rumpf, und die Haut des Arms liegt richtigerweise außerhalb davon. Gegen den eigenen Ärmel gemessen blieb sie beim Rudern 5,0 bis 5,5 mm darunter.
+- **Keine Änderung an den Ärmeln:** Eine Kollision der Ärmel mit den Oberarmen habe ich ausprobiert. Sie änderte keinen Wert und ist nicht im Werkzeug.
+- **Messung im Werkzeug:** Jede Prüfung misst jetzt die Kleidung mit: Shorts unter dem Shirt, Saumband über den Shorts und Haut unter dem eigenen Ärmel (`kleidung.durchdringung`, in `render.messen`).
+
+| Übung | Haut unter dem Ärmel am Saum (neun Phasen) |
+|---|---|
+| Kniebeuge | 4,81 mm |
+| Bankdrücken | 4,85 bis 5,49 mm |
+| Latziehen | 4,83 bis 5,47 mm |
+| Bankdrücken mit Kurzhanteln | 5,06 bis 5,47 mm |
+| Schrägbankdrücken mit Kurzhanteln | 4,99 bis 5,48 mm |
+| Beinpresse | 5,48 mm |
+| Unterarmstütz | 5,03 mm |
+| Crunches | 5,05 bis 5,06 mm |
+| Seitheben | 5,46 mm |
+| Rudern am Kabel | 4,96 bis 5,49 mm |
+| Beinbeuger liegend | 5,20 mm |

@@ -1281,12 +1281,69 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     for i, wert in enumerate(bedeckt):
         attr.data[i].value = wert
     anziehen.schnitt = schnitt
+    anziehen.teile = teile  # Körperteil je Eckpunkt, für `durchdringung`
     anziehen.logos = {"brust_f": brust_h, "ruecken_f": ruecken_h, "ruecken_wortmarke": versal * WORTMARKE_BREITE,
                       "ruecken_f_oben_unter_buendchen": f_oben_unter, "bein_f": bein_h}
     anziehen.oeffnung = oeffnung
     # Mittelpunkte der Logos auf der Haut (Ruhehaltung, Raum des Skeletts), für Nahaufnahmen (D-453)
     anziehen.mitten = {name: r["P0"].copy() for teil in rahmen.values() for name, r in teil.items() if name != "Kordel"}
     return teile_obj
+
+
+def durchdringung(koerper: bpy.types.Object) -> dict:
+    """Kleidung in der aktuellen Haltung (D-478, D-480): verformte Netze ohne Glättung und Dicke (Welt), Abstände zur
+    nächsten Fläche, positiv = darunter bzw. darüber wie vorgesehen:
+
+    - **Shorts unter dem Shirt** (mm): Punkte der Shorts mindestens 1 cm innerhalb des Shirt-Saums zur Fläche des
+      sichtbaren Shirts (Flächen ganz innerhalb des Saums); negativ = die Shorts kommen durch;
+    - **Saumband über den Shorts** (mm): Punkte des Saumbands zur Fläche der Shorts; negativ = es liegt in ihnen;
+    - **Haut unter dem Ärmel am Saum** (mm): sichtbare Haut des Oberarms (Attribut „Bedeckt“ unter 16 mm) innerhalb
+      des Ärmels zur Fläche des eigenen Ärmels (nur Flächen, deren Eckpunkte alle am Oberarm liegen). Gegen das
+      ganze Shirt gemessen zählte beim Rudern die Seite des Shirts am Rumpf, an der der Oberarm anliegt: 5,5 mm
+      „durch“, obwohl die Haut unter ihrem Ärmel blieb (D-480)."""
+    from mathutils.bvhtree import BVHTree
+
+    import schuhe
+
+    o = bpy.data.objects
+    shirt, hose = o.get("Shirt"), o.get("Shorts")
+    teile = getattr(anziehen, "teile", None)
+    if shirt is None or hose is None or teile is None:
+        return {}
+
+    def werte(obj, name):
+        return [a.value for a in obj.data.attributes[name].data]
+
+    def tiefe(bvh, q) -> float | None:
+        ort, normale, _, _ = bvh.find_nearest(q, 0.2)
+        return None if ort is None else -(q - ort).dot(normale)
+
+    s_num, s_saum = [int(a) for a in werte(shirt, "nummer")], werte(shirt, "Saum")
+    sp, sf, _ = schuhe._verformt(shirt)
+    s_bvh = BVHTree.FromPolygons(sp, [f for f in sf if min(s_saum[i] for i in f) >= 0.0])
+    arm_bvh = BVHTree.FromPolygons(sp, [f for f in sf if all(teile[s_num[i]] == "arm" for i in f)])
+    s_feld = dict(zip(s_num, s_saum))
+    hp, hf, _ = schuhe._verformt(hose)
+    h_bvh = BVHTree.FromPolygons(hp, hf)
+    h_num, h_saum = [int(a) for a in werte(hose, "nummer")], werte(hose, "Saum")
+    aus: dict[str, float] = {}
+    werte_s = [tiefe(s_bvh, q) for j, q in enumerate(hp) if h_saum[j] > 0.0 and s_feld.get(h_num[j], -1.0) > 0.01]
+    werte_s = [w for w in werte_s if w is not None]
+    if werte_s:
+        aus["Shorts unter dem Shirt (mm, negativ = durch)"] = min(werte_s) * 1000
+    if "Saumband" in o:
+        werte_b = [tiefe(h_bvh, q) for q in schuhe._verformt(o["Saumband"])[0]]
+        werte_b = [-w for w in werte_b if w is not None]
+        if werte_b:
+            aus["Saumband über den Shorts (mm, negativ = in den Shorts)"] = min(werte_b) * 1000
+    kp, _, _ = schuhe._verformt(koerper)
+    bedeckt = werte(koerper, "Bedeckt")
+    werte_a = [tiefe(arm_bvh, q) for i, q in enumerate(kp)
+               if teile[i] == "arm" and bedeckt[i] < 0.016 and s_feld.get(i, -1.0) > 0.002]
+    werte_a = [w for w in werte_a if w is not None]
+    if werte_a:
+        aus["Haut unter dem Ärmel am Saum (mm, negativ = durch)"] = min(werte_a) * 1000
+    return aus
 
 
 def haut_ausblenden(mat: bpy.types.Material) -> None:

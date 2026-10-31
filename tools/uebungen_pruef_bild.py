@@ -152,6 +152,17 @@ MESSWERTE = (
     ("Matte: Auflage vom Rand (cm, mindestens)", "Auflage vom Rand der Matte", "min", " cm"),
     ("Matte: tiefste Delle (mm)", "Matte: tiefste Delle", "max", " mm"),
     ("Matte: Haut, Kleidung oder Schuh durch die Oberfläche (mm)", "Haut, Kleidung oder Schuh durch die Matte", "max", " mm"),
+    # Familie „Schulter und Brust isoliert“ (D-468)
+    ("Armhebung (Grad, 0 = hängend)", "Armhebung (0 = hängend)", "spanne", "°"),
+    ("Oberarm zur Waagrechten (Grad, + darüber)", "Oberarm oben zur Waagrechten (+ darüber)", "max", "°"),
+    ("Ellbogen über dem Schultergelenk (cm)", "Ellbogen oben über dem Schultergelenk", "max", " cm"),
+    ("Ellbogen über dem Handgelenk (cm)", "Ellbogen über dem Handgelenk (unter 0 = darunter)", "min", " cm"),
+    ("Oberarm vor der Ebene der Schultern (Grad, ab 60° Armhebung)", "Oberarm vor der Ebene der Schultern (ab 60°)", "spanne",
+     "°"),
+    ("Rumpfneigung (Grad)", "Rumpf vorgeneigt", "spanne", "°"),
+    ("Schlüsselbein gehoben (Grad)", "Schlüsselbein gehoben", "spanne", "°"),
+    ("Griffe auseinander (cm)", "Griffe auseinander", "spanne", " cm"),
+    ("Kurzhantel: Köpfe vor Haut und Kleidung (mm)", "Köpfe vor Haut, Shorts und Shirt", "min", " mm"),
 )
 
 
@@ -210,7 +221,8 @@ def messtabelle(messwerte: Path, breite: int) -> Image.Image:
 GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff vom Handrücken", "aussen": "Griff von außen",
               "oben": "Griff von oben", "unterarm_aussen": "Unterarm und Hand von außen",
               "unterarm_vorn": "Unterarm und Hand von vorn", "ruecken_seite": "Lende und Becken von der Seite",
-              "ruecken_schraeg": "Rücken schräg vom Kopf her"}
+              "ruecken_schraeg": "Rücken schräg vom Kopf her", "griff_vorn": "Griff und Hantel von vorn",
+              "griff_seite": "Griff und Hantel von außen"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

@@ -2653,3 +2653,17 @@ Freigabe „Rumpf“: flache Hände, verschränkte Arme, Kopf angehoben, Schuh i
 | `pnpm test` (unter Last: die Schleife der Crunches lief nebenher) | 135 Dateien, 1.209 Tests bestanden, kein Ausfall |
 | `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 32 von 32 im Build |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (13,9 min); der geänderte Test der Übungsliste (acht Vorschaubilder, dazu Unterarmstütz und Crunches) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Schulter und Brust isoliert“ · 30. und 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Schulter und Brust isoliert“ mit dem Seitheben mit Kurzhanteln (D-468).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kurzhantel 8 kg nach Händlerangaben (Websuche; Händlerseite varle.lt gesperrt) | HMS HEX PRO 8 kg: 288 mm lang, Köpfe 110 mm, Griff 110 mm (zwei Angaben gleich, eine dritte abweichend: 308, 122, 95 mm); Griff 34 mm wie das Modell 10 kg |
+| Erster Lauf (`seitheben_kh`, drei Phasen, neun kleine Ansichten) | Aufbau mit Suche 21,9 s; Ausgang Arm 13,6° nach vorn, 2,5° zur Seite; Griffachse links −0,2°, rechts 0,3° gedreht; Bilder angesehen: Hanteln vor den Oberschenkeln, Arme seitlich bis waagrecht, oben Handflächen unten |
+| Finger am Griff zuerst −7,5 mm | gezählt waren auch Punkte, deren Gewicht sich auf mehrere Fingerglieder verteilt (Summe über 0,5); mit derselben Auswahl wie `render.messen` (ein Glied über 0,5) −4,1 mm, gleich dem Bankdrücken mit Kurzhanteln |
+| `render.py seitheben_kh --pruefen` (alle 60 Bilder) | Armhebung 13,85 bis 90,0°; oben Oberarm 0,0° zur Waagrechten, Ellbogen 0,0 cm über dem Schultergelenk; Ebene 20,0 bis 25,8°; Ellbogen 165,07 bis 165,11°; Ellbogen mindestens 1,86 cm über dem Handgelenk; Handgelenk 5,0 bis 5,1°; Finger −4,1 mm; Hand 3,7 mm vor den Köpfen; Köpfe mindestens 12,0 mm vor Haut, Shorts und Shirt; Sohlen 0,0 mm, nicht verschoben; Kragen und Kragenpolster 1,6 mm über der Socke; keine Meldungen |
+| Rechenzeit `render.py seitheben_kh --pruefen` / `familie_bilder.py seitheben_kh` | 676 s / 125 s (nebenher liefen die Schleifen der Familie „Rumpf“) |
+| Prüfseite (`tools/uebungen_pruef_bild.py seitheben_kh --familie schulter-brust-isoliert --titel "Schulter und Brust isoliert"`) | `familie-schulter-brust-isoliert.webp`, angesehen: Hanteln vor den Oberschenkeln, oben Arme waagrecht und Handflächen unten, Faust um den Griff, Füße flach; gerundete Nullen erschienen als „−0,0“, jetzt „0,0“ |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-468; die App ändert sich nicht, E2E wie bei D-467) | bestanden; Startansicht 237,8 KB, Übungsbilder 32 von 32 |

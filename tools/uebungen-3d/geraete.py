@@ -345,23 +345,32 @@ def kabel(name: str, von: Vector, nach: Vector) -> bpy.types.Object:
 
 # Kurzhantel und verstellbare Bank (D-462)
 KH = {"laenge": 0.365, "griff": 0.130, "griff_d": 0.034, "kopf": 0.145, "ring": (0.022, 0.012)}
+# Leichte Kurzhantel 8 kg (D-468) nach Händlerangaben zur HMS HEX PRO 8 kg: 288 mm lang, Köpfe 110 mm, Griff 110 mm
+# lang und gerieft. Die Dicke des Griffs nennt für 8 kg keine Quelle; 34 mm wie beim Modell 10 kg derselben Reihe (und wie
+# `KH`). Köpfe wie bei `KH` über die Ecken gemessen: So passt das Gewicht (je Kopf rund 0,7 l Gummi über Stahl). Ohne
+# Ringe: Der Griff reicht von Kopf zu Kopf
+KH8 = {"laenge": 0.288, "griff": 0.110, "griff_d": 0.034, "kopf": 0.110, "ring": None}
 BANK = {"oben": 0.43, "dicke": 0.06, "breite": 0.30, "lehne": 0.80, "sitz": 0.40, "spalt": 0.02}
 
 
-def kurzhantel(name: str) -> bpy.types.Object:
-    """Kurzhantel (`KH`) mit dem Griff entlang x, Mitte des Griffs im Ursprung des Leerobjekts `name`: Griff aus Stahl
-    mit je einem Ring (22 mm Radius, 12 mm) an den Köpfen, frei bleiben 106 mm; Köpfe als Sechskant aus Gummi, eine
-    flache Seite unten, Kanten gerundet."""
+def kurzhantel(name: str, masse: dict | None = None) -> bpy.types.Object:
+    """Kurzhantel mit dem Griff entlang x, Mitte des Griffs im Ursprung des Leerobjekts `name`; Maße `masse` (Vorgabe
+    `KH`, 20 kg; `KH8`, 8 kg, D-468), am Leerobjekt als „kh“ gemerkt. Griff aus Stahl, bei `KH` mit je einem Ring
+    (22 mm Radius, 12 mm) an den Köpfen, frei bleiben 106 mm; Köpfe als Sechskant aus Gummi, eine flache Seite unten,
+    Kanten gerundet."""
+    kh = masse or KH
     stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
     gummi = _mat("Gummi", GERAET, 0.7)
     mitte = bpy.data.objects.new(name, None)
     bpy.context.scene.collection.objects.link(mitte)
-    _zylinder(f"{name}-Griff", KH["griff_d"] / 2, KH["griff"], Vector(), "x", stahl, mitte)
-    kopf_l = (KH["laenge"] - KH["griff"]) / 2
-    r_ring, l_ring = KH["ring"]
+    mitte["kh"] = [kh["laenge"], kh["griff"], kh["griff_d"], kh["kopf"]]
+    _zylinder(f"{name}-Griff", kh["griff_d"] / 2, kh["griff"], Vector(), "x", stahl, mitte)
+    kopf_l = (kh["laenge"] - kh["griff"]) / 2
     for seite in (-1, 1):
-        _zylinder(f"{name}-Ring", r_ring, l_ring, Vector((seite * (KH["griff"] / 2 - l_ring / 2), 0, 0)), "x", stahl, mitte)
-        kopf = _zylinder(f"{name}-Kopf", KH["kopf"] / 2, kopf_l, Vector((seite * (KH["griff"] / 2 + kopf_l / 2), 0, 0)), "x",
+        if kh["ring"]:
+            r_ring, l_ring = kh["ring"]
+            _zylinder(f"{name}-Ring", r_ring, l_ring, Vector((seite * (kh["griff"] / 2 - l_ring / 2), 0, 0)), "x", stahl, mitte)
+        kopf = _zylinder(f"{name}-Kopf", kh["kopf"] / 2, kopf_l, Vector((seite * (kh["griff"] / 2 + kopf_l / 2), 0, 0)), "x",
                          gummi, mitte, ecken=6)
         # erst entlang x legen, dann 30° um die eigene Achse: Ecken bei 0, 60, 120 … Grad, unten eine flache Seite
         kopf.rotation_mode = "YXZ"

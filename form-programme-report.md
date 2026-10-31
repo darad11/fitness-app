@@ -697,3 +697,83 @@ Ergebnis: siehe 9.5 bis 9.8; Unit-Tests 1.209 bestanden (unter Last), E2E 432 be
 Bekannte Einschränkungen: 9.9
 Nächste Schritte: Prüfseite der nächsten Familie aus „Ganzkörper A/B“ (Schulter und Brust isoliert)
 ```
+
+## 10. Nächste Familie: Schulter und Brust isoliert mit Seitheben, Prüfseite (D-468)
+
+Im Animationsplan kommt nach „Rumpf“ die Familie „Schulter und Brust isoliert“. Aus „Ganzkörper A/B“ gehört nur das Seitheben mit Kurzhanteln dazu (24 Einheiten); es ist zugleich die Referenz der Familie. Wie verlangt zuerst nur die Prüfseite.
+
+### 10.1 Hantel
+
+Leichte Kurzhantel 8 kg, Sechskant, gummiert, nach Händlerangaben zur HMS HEX PRO 8 kg: 288 mm lang, Köpfe 110 mm, Griff 110 mm lang und gerieft ([e-catalog](https://e-catalog.co.uk/gtin/5907695518092/), eine litauische Händlerseite mit denselben Zahlen). Eine dritte Angabe weicht ab (308 mm lang, Griff 122 mm, Köpfe 95 mm, [nextag](https://www.nextag.de/preisvergleich/500001365648_hms-hex-pro-hantel-8.html)); ich nehme die Zahlen, die zweimal vorkommen. Die Dicke des Griffs nennt für 8 kg keine Quelle; 34 mm wie beim Modell 10 kg derselben Reihe (Händlerseite aio.lv) und wie bei der Hantel der Bankdrück-Übungen. Die Köpfe sind wie dort über die Ecken gemessen; so passt auch das Gewicht.
+
+Die Seite des litauischen Händlers (varle.lt) ist in dieser Umgebung gesperrt, wie exrx.net; die Zahlen stammen aus der Websuche. Freigeben könntest du beide unter „Network access“, „Allowed domains“.
+
+### 10.2 Bewegung
+
+- **Quelle:** Familie (Code), wie im Plan; für das Seitheben ist keine Mixamo-Animation belegt.
+- **Stand:** Füße etwa hüftbreit, Zehen 8° nach außen, die ganze Sohle am Boden. Knie leicht gebeugt (168°), Rumpf in der Hüfte 10° vorgeneigt, Kopf in Verlängerung des Rumpfs. Becken und Beine bleiben über die ganze Schleife fest.
+- **Ausgang:** Hanteln vor den Oberschenkeln, Handflächen zueinander, Ellbogen leicht gebeugt und nach hinten gerichtet. Mit den Handflächen zueinander liegt die Hantel längs; ihr hinterer Kopf stieße bei senkrecht hängendem Arm in den Oberschenkel. Der Arm hängt darum 13,6° nach vorn, gerade so weit, dass die Köpfe 12 mm vor Shorts und Shirt bleiben.
+- **Heben:** Die Arme heben sich seitlich, bis die Ellbogen auf Schulterhöhe sind. Oben steht der Oberarm waagrecht, 20° vor der Ebene der Schultern; die Handflächen zeigen nach unten, der Ellbogen liegt 1,9 cm über dem Handgelenk. Der Arm dreht als Ganzes um das Schultergelenk auf dem kürzesten Weg, ohne Drehung um den Oberarm: Der Ellbogen bleibt bei 165°, der Arm dreht nicht nach außen. Oben hebt sich das Schlüsselbein um 8°, wie es die Schulter beim Heben tut.
+- **Abwärts** derselbe Weg zurück.
+
+### 10.3 Abgleich mit dem Ausführungstext
+
+Der Text in der App passt zur Animation; ich habe nichts geändert:
+
+| Text in der App | Animation |
+|---|---|
+| „Halte die Kurzhanteln vor den Oberschenkeln, die Ellbogen leicht gebeugt.“ | Hanteln vor den Oberschenkeln, Ellbogen 165° |
+| „Beug dich in Hüfte und Knien leicht vor.“ | Rumpf 10° vorgeneigt, Knie 168° |
+| „Heb die Oberarme seitlich an, bis die Ellbogen auf Schulterhöhe sind.“ | oben Ellbogen 0,0 cm über dem Schultergelenk, Oberarm waagrecht |
+| „Lass die Ellbogen dabei nach hinten zeigen.“ | Ellbogen in jeder Phase nach hinten |
+| „Halte den Winkel im Ellbogen während der ganzen Bewegung gleich.“ | 165,1° ± 0,02° |
+| „Heb die Arme seitlich an, statt sie nach außen zu drehen.“ | keine Drehung um den Oberarm |
+| „Die Ellbogen sinken unter die Handgelenke“ (Fehler) | Ellbogen immer über dem Handgelenk, oben 1,9 cm |
+
+### 10.4 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Armhebung (0 = hängend) | 13,85° (Ausgang) bis 90,0° (oben) |
+| Oberarm oben zur Waagrechten / Ellbogen oben über dem Schultergelenk | 0,0° / 0,0 cm |
+| Oberarm vor der Ebene der Schultern (ab 60° Armhebung) | 20,0 bis 25,8° |
+| Ellbogen | 165,1° (gleich) |
+| Ellbogen über dem Handgelenk | mindestens 1,9 cm (oben) |
+| Handgelenk gesamt (gebeugt / zum Daumen) | 5,0 bis 5,1° (4,6° / 2,1°) |
+| Finger am Griff | 4,1 mm eingedrückt, wie beim Bankdrücken (gewollt) |
+| Hand zu den Köpfen / Köpfe vor Haut und Kleidung | 3,7 mm / mindestens 12,0 mm |
+| Griffe auseinander | 26,3 bis 142,7 cm |
+| Knie / Rumpf vorgeneigt / Schlüsselbein gehoben | 168° / 10° / 0 bis 8° |
+| Sohlen am Boden (Ferse und Ballen) / verschoben | 0,0 mm / 0,0 mm |
+| Kragen / Kragenpolster über der Socke | 1,6 / 1,6 mm |
+| Meldungen des Rigs | 0 |
+
+### 10.5 Prüfseite und Rechenzeit
+
+`docs/screens/uebungen/familie-schulter-brust-isoliert.webp`: Ausgangs- und Endposition mit der Kamera der App und von der Seite, Griff und Hantel der linken Hand von vorn und von außen, der linke Fuß von außen und von vorn, darunter die Messwerte. Rechenzeit: Messung und Prüfansichten 676 s, Nahaufnahmen 125 s; nebenher liefen die Schleifen der Familie „Rumpf“.
+
+Beim Prüfen gefunden und behoben:
+- Die Finger lagen laut Messung zuerst 7,5 mm im Griff. Gezählt waren auch Punkte, deren Gewicht sich auf mehrere Fingerglieder verteilt. Mit derselben Auswahl wie bei den übrigen Übungen sind es 4,1 mm, wie beim Bankdrücken mit Kurzhanteln (gewollt: Der Griff drückt etwas in die Haut der Finger).
+- Die Prüfseite zeigte gerundete Nullen als „−0,0“; jetzt „0,0“.
+
+### 10.6 Abweichungen und offene Punkte
+
+- **Ausgang vor den Oberschenkeln:** Wie im Text der App (ExRx). Viele andere Anleitungen beginnen mit den Hanteln seitlich neben den Oberschenkeln; dann hinge der Arm senkrecht, und der Text müsste sich ändern.
+- **Ebene oben:** 20° vor der Ebene der Schultern. Oft empfohlen wird die Ebene des Schulterblatts, rund 30°; ExRx sagt „zur Seite“.
+- **Gewicht der Hantel:** 8 kg als leichte Hantel; das Gewicht in der App hängt davon nicht ab.
+- **Schlüsselbein:** hebt sich oben um 8°, wie die Schulter beim seitlichen Heben mitgeht. Deutlich mehr wäre Hochziehen der Schultern; ganz ohne geht auch, wenn du das lieber siehst.
+
+### 10.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-468 Phase Programme, Abschnitt 2: Familie „Schulter und Brust isoliert“ (Seitheben mit Kurzhanteln), Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Kurzhantel 8 kg (geraete.KH8, Maße je Hantel), Seitheben (uebungen.Seitheben) mit Suche des Ausgangs vor den Oberschenkeln, Messwerte für Arme, Hanteln und Finger je Hand, neue Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-schulter-brust-isoliert.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-468
+Ausgeführte Tests: render.py seitheben_kh --pruefen (alle 60 Bilder gemessen, Prüfansichten), Nahaufnahmen, Bilder angesehen; pnpm format:check, pnpm check:docs; CI zum Entwurfs-PR
+Ergebnis: bestanden (Werte in 10.4)
+Bekannte Einschränkungen: 10.6
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife rendern und einbauen, dann die nächste Familie
+```
+
+**Halt:** Ich warte auf deine Freigabe der Prüfseite „Schulter und Brust isoliert“.

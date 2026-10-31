@@ -2843,3 +2843,18 @@ Haut unter dem Ärmel (D-480).
 | Rudern, Haut nur gegen die Flächen des Ärmels (alle Eckpunkte am Oberarm) | 4,96 bis 5,49 mm unter dem Ärmel, mit und ohne Kollision gleich |
 | Alle zehn fertigen Übungen und Beinbeuger, neun Phasen, gegen den eigenen Ärmel | Kniebeuge 4,81; Bankdrücken 4,85 bis 5,49; Latziehen 4,83 bis 5,47; Bankdrücken KH 5,06 bis 5,47; Schrägbank KH 4,99 bis 5,48; Beinpresse 5,48; Unterarmstütz 5,03; Crunches 5,05 bis 5,06; Seitheben 5,46; Rudern 4,96 bis 5,49; Beinbeuger 5,20 mm; nirgends ein Punkt durch |
 | `render.py rudern_kabel --pruefen --nur-messwerte` mit `kleidung.durchdringung` in `render.messen` (60 Bilder) | Shorts unter dem Shirt −0,70 mm, Saumband über den Shorts −0,97 mm (beides in der Hüftfalte, freigegeben), Haut unter dem Ärmel 4,96 bis 5,49 mm; 227 s |
+
+### Lime-Akzente am Shirt · 31.10.2026, Cloud-Umgebung
+
+Drei Varianten zur Auswahl (D-481).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kit-Linie, erster Versuch: quer der Abstand in y zum äußersten Punkt je Höhe | gezackte Kanten an der Seite, der äußerste Eckpunkt je 1 cm springt zwischen vorn und hinten |
+| Kit-Linie mit dem Winkel der geglätteten Normale (wie Streifen der Shorts) | Kanten glatt; von vorn und hinten schmale Kante, von der Seite das Paneel bis zum Saum |
+| Schulterband, erster Versuch: Mittellinie aus einzelnen Eckpunkten, quer über die Normale des Eckpunkts | Band am Ärmel wellig, feine Linien am Ärmel, wo das Vorzeichen quer zur Linie sprang |
+| Schulterband mit Strahlen auf die Haut und fester Querrichtung je Punkt der Linie | Band glatt vom Kragen über die Schulter bis zum Ärmelsaum, keine feinen Linien |
+| Standbilder je Variante: vorn, Seite, hinten (600 × 900, orthografisch, 32 Proben), Nahaufnahme (800 × 600), Seitheben oben (720 × 540, 40 Proben, Kamera der App) | Kit-Linie 81 s und 55 s, Kragen & Ärmel 126 s und 57 s, Schulterband 90 s und 42 s; alle angesehen |
+| Abstand Akzent zu Brust-F und Rückendruck (`kleidung.akzent_logo_abstand`, Ruhehaltung und Seitheben oben) | Kit-Linie 13,5 / 11,8 cm und 13,0 / 11,7 cm; Kragen & Ärmel (nur Ärmelstreifen) 17,7 / 19,0 cm und 18,6 / 33,1 cm; Schulterband 15,9 / 14,4 cm und 16,1 / 14,1 cm; Kragenbündchen bis zur Oberkante des Brust-F 5,0 cm (aus dem Schnitt) |
+| Vergleichsblatt | `lime-varianten.webp` (2572 × 1779), angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |

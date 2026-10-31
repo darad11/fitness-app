@@ -1309,3 +1309,17 @@ Am 31.10.2026 hast du die Kleidung aus D-478 freigegeben; die Reste in der Hüft
 | Seitheben | 5,46 mm |
 | Rudern am Kabel | 4,96 bis 5,49 mm |
 | Beinbeuger liegend | 5,20 mm |
+
+## 23. Lime-Akzent am Shirt: drei Varianten zur Auswahl (D-481)
+
+Dein Auftrag: drei Varianten aus `docs/prompts/form-tshirt-lime-varianten.png` auf der Figur vergleichen, sonst alles wie D-478 und kein weiteres Lime am Shirt.
+
+- **1 · Kit-Linie:** Seitenpaneele längs der Seitennaht, an der Achsel 1 cm breit, am Saum 7 cm; sie setzen die Streifen der Shorts nach oben fort, von vorn und hinten als schmale Kante zu sehen.
+- **3 · Kragen & Ärmel:** Kragenbündchen in Lime und ein Streifen von 1 cm am Ärmelsaum.
+- **6 · Schulterband:** ein Band von 1,2 cm vom Kragenbündchen über die Schulter und außen am Ärmel bis zum Saum. Von vorn und hinten nur als schmale Linie auf der Schulter zu sehen, beim Seitheben deutlich oben auf den Armen.
+- **Kanten:** scharf, als Aufdruck auf dem Stoff. Bei Kit-Linie und Schulterband gab der erste Versuch gezackte Kanten bzw. ein welliges Band; jetzt laufen die Kanten glatt.
+- **Abstand zu den Logos:** nirgends berührt ein Akzent Brust-F oder Rückendruck. Kit-Linie mindestens 11,7 cm, Streifen am Ärmel 17,7 cm, Schulterband 14,1 cm; das Kragenbündchen endet 5,0 cm über dem Brust-F.
+
+Vergleichsblatt: `docs/screens/uebungen/lime-varianten.webp`. Im Werkzeug schaltet `kleidung.AKZENT` die Variante um; bis zu deiner Auswahl bleibt es beim Stand D-478.
+
+**Halt:** Ich warte auf deine Auswahl. Danach rendere ich alle zehn fertigen Schleifen mit der neuen Kleidung und dem gewählten Akzent neu und dann den Beinbeuger.

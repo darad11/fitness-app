@@ -132,6 +132,14 @@ BRUECKE_RAMPE = 0.03
 # Seitenstreifen der Shorts (D-478, Hinweis des Produktinhabers „etwas schmäler“): halbe Breite je Höhe 75 % der
 # Werte des Boards (`BOARD["streifen"]`)
 STREIFEN_ANTEIL = 0.75
+# Lime-Akzent am Shirt zur Auswahl (D-481, Varianten aus `docs/prompts/form-tshirt-lime-varianten.png`): None (Stand
+# D-478, kein Akzent), "kit" (Variante 1, Kit-Linie: Seitenpaneele längs der Seitennaht von der Achsel bis zum Saum,
+# an der Achsel 1 cm breit, zum Saum hin breiter wie die Streifen der Shorts), "kragen_aermel" (Variante 3:
+# Kragenbündchen in Lime und ein Streifen von 1 cm am Ärmelsaum), "schulterband" (Variante 6: ein Band von 1,2 cm vom
+# Kragenbündchen über die Oberkante der Schulter und außen am Ärmel bis zum Ärmelsaum)
+AKZENT = None
+AKZENT_MASS = {"kit_achsel": 0.005, "kit_saum": 0.035, "kit_ueber_w": 0.01, "kit_radius": 0.10, "aermel": 0.010,
+               "band": 0.012}
 # Saumband des Shirts (D-477): Höhe, Dicke und Abstand über dem Stoff; die Kante wirft einen leichten Schatten
 SAUMBAND = {"hoehe": 0.016, "dicke": 0.003, "ueber": 0.0015, "unter": 0.002}
 # Saum über den Shorts (D-478): In tiefer Hüftbeugung (Kniebeuge, Rudern) kamen die Shorts seitlich an der Hüfte bis
@@ -483,6 +491,134 @@ def _streifen(koerper: bpy.types.Object, schnitt: dict, normalen: list[Vector]) 
         feld = (alpha - abs(phi)) * math.pi / 180 * 0.09
         aus.append(min(feld, (vv - BOARD["bund"]) * schnitt["hose_laenge"]))
     return aus
+
+
+def _schulterlinie(koerper: bpy.types.Object, k: koordinaten.Koordinaten, schnitt: dict, oeffnung: dict,
+                   seite: str) -> tuple[list[Vector], list[Vector]]:
+    """Mittellinie des Schulterbands (D-481) auf der Haut einer Seite (Ruhehaltung) und je Punkt die Richtung quer zur
+    Linie auf der Haut. Über die Schulter: je 5 mm in x vom Rand der Halsöffnung bis kurz vor das Schultergelenk der
+    höchste Punkt der Haut (Strahlen von oben, je 5 mm in y). Am Oberarm: je 2 % der Länge ab 8 % außen (Strahl von
+    der Achse des Oberarms nach außen, 90° von vorn wie in `Koordinaten.glied`) bis 3 cm über den Ärmelsaum hinaus.
+    Dreimal geglättet, Endpunkte fest. Strahlen statt einzelner Eckpunkte: die Linie läuft ohne Zacken."""
+    from mathutils.bvhtree import BVHTree
+
+    me = koerper.data
+    bvh = BVHTree.FromPolygons([v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
+    sx = 1.0 if seite == "L" else -1.0
+    S = k.kopf[f"upperarm01.{seite}"]
+    punkte, normalen = [], []
+    x = oeffnung["b"] + 0.005
+    while x < abs(S.x) - 0.01:
+        beste = None
+        for i in range(-12, 13):
+            treffer = bvh.ray_cast(Vector((sx * x, i * 0.005, schnitt["z_hals"] + 0.04)), Vector((0, 0, -1)), 0.3)
+            if treffer[0] is not None and (beste is None or treffer[0].z > beste[0].z):
+                beste = treffer
+        if beste is not None:
+            punkte.append(beste[0].copy())
+            normalen.append(beste[1].normalized())
+        x += 0.005
+    A, B = k.kopf[f"upperarm01.{seite}"], k.kopf[f"lowerarm01.{seite}"]
+    u = (B - A).normalized()
+    L = (B - A).length
+    ant = Vector((0, -1, 0))
+    ant = (ant - ant.dot(u) * u).normalized()
+    lat = u.cross(ant) if seite == "L" else ant.cross(u)
+    if lat.x * sx < 0:
+        lat = -lat
+    ende = schnitt["aermel_t"] + 0.03 / L
+    ta = 0.08
+    while ta <= ende:
+        treffer = bvh.ray_cast(A + u * (ta * L), lat, 0.2)
+        if treffer[0] is not None:
+            punkte.append(treffer[0].copy())
+            normalen.append(lat.copy())
+        ta += 0.02
+    for _ in range(3):
+        punkte = [punkte[0]] + [(punkte[i - 1] + 2 * punkte[i] + punkte[i + 1]) / 4
+                                for i in range(1, len(punkte) - 1)] + [punkte[-1]]
+        normalen = [normalen[0]] + [(normalen[i - 1] + 2 * normalen[i] + normalen[i + 1]).normalized()
+                                    for i in range(1, len(normalen) - 1)] + [normalen[-1]]
+    quer = []
+    for i in range(len(punkte)):
+        tang = (punkte[min(i + 1, len(punkte) - 1)] - punkte[max(i - 1, 0)]).normalized()
+        quer.append(normalen[i].cross(tang).normalized())
+    return punkte, quer
+
+
+def _akzent(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], schnitt: dict, oeffnung: dict,
+            feld_shirt: list[float], normalen: list[Vector]) -> dict[str, list[float]] | None:
+    """Felder des Lime-Akzents am Shirt (D-481, `AKZENT`) je Eckpunkt des Körpers: `AkzentU` (Abstand quer zur Mitte
+    des Akzents, m, mit Vorzeichen), `AkzentW` (halbe Breite, m), `AkzentV` (positiv, wo der Akzent liegen darf). Der
+    Shader färbt, wo |U| < W und V > 0; weil U linear über die Flächen läuft, bleiben auch schmale Akzente scharf.
+    Ohne Akzent (None) keine Felder."""
+    if AKZENT is None:
+        return None
+    verts = koerper.data.vertices
+    n = len(verts)
+    U, W, V = [1.0] * n, [0.0] * n, [-1.0] * n
+    m = AKZENT_MASS
+    if AKZENT == "kit":
+        # Quer zur Seitennaht zählt der Winkel der geglätteten Normale (wie beim Streifen der Shorts, 0 = genau seitlich,
+        # vorn negativ), mal einem Halbmesser von `kit_radius` als Bogen in m; die halbe Breite wächst von der Achsel
+        # bis zum Saum linear von `kit_achsel` auf `kit_saum`
+        z_a, z_s = schnitt["z_w"] + m["kit_ueber_w"], schnitt["z_saum"]
+        for v, teil, nv in zip(verts, teile, normalen):
+            if teil not in ("rumpf", "bein"):
+                continue
+            sx = 1.0 if v.co.x >= 0 else -1.0
+            a = max(0.0, min(1.0, (z_a - v.co.z) / (z_a - z_s)))
+            U[v.index] = math.atan2(nv.y, nv.x * sx) * m["kit_radius"]
+            W[v.index] = m["kit_achsel"] + (m["kit_saum"] - m["kit_achsel"]) * a
+            V[v.index] = z_a - v.co.z
+    elif AKZENT == "kragen_aermel":
+        # Streifen am Ärmelsaum: 0 bis 1 cm über dem Saum, gemessen längs des Oberarms (Feld des Shirts)
+        for v, teil in zip(verts, teile):
+            if teil == "arm":
+                U[v.index] = feld_shirt[v.index] - m["aermel"] / 2
+                W[v.index] = m["aermel"] / 2
+                V[v.index] = 1.0
+    elif AKZENT == "schulterband":
+        # Quer zur Mittellinie zählt der Abstand längs der festen Querrichtung der Linie (je Punkt, zwischen zwei Punkten
+        # gemischt), damit das Vorzeichen nicht springt; mehr als 1,5 cm neben der Linie zählt nur das Vorzeichen
+        for seite in ("L", "R"):
+            sx = 1.0 if seite == "L" else -1.0
+            linie, quer = _schulterlinie(koerper, k, schnitt, oeffnung, seite)
+            laengen = [0.0]
+            for a, b in zip(linie, linie[1:]):
+                laengen.append(laengen[-1] + (b - a).length)
+            gesamt = laengen[-1]
+            for v, teil in zip(verts, teile):
+                if v.co.x * sx <= 0 or teil not in ("rumpf", "arm") or (teil == "rumpf" and v.co.z < schnitt["z_w"]):
+                    continue
+                p = v.co
+                beste = None
+                for i, (a, b) in enumerate(zip(linie, linie[1:])):
+                    d = b - a
+                    lang = d.length
+                    tau = (p - a).dot(d) / (lang * lang)
+                    if 0 < i < len(linie) - 2:
+                        tau = max(0.0, min(1.0, tau))
+                    elif i == 0:
+                        tau = min(tau, 1.0)
+                    else:
+                        tau = max(tau, 0.0)
+                    c = a + d * tau
+                    abstand = (p - c).length
+                    if beste is None or abstand < beste[0]:
+                        t_q = max(0.0, min(1.0, tau))
+                        beste = (abstand, c, (quer[i] * (1 - t_q) + quer[i + 1] * t_q).normalized(),
+                                 laengen[i] + tau * lang)
+                abstand, c, q, s = beste
+                if abstand > 0.04:
+                    continue
+                uq = (p - c).dot(q)
+                U[v.index] = uq if abstand <= 0.015 else math.copysign(1.0, uq)
+                W[v.index] = m["band"] / 2
+                V[v.index] = min(s, gesamt - s)
+    else:
+        raise ValueError(f"unbekannter Akzent: {AKZENT}")
+    return {"AkzentU": U, "AkzentW": W, "AkzentV": V}
 
 
 def _rahmen(koerper: bpy.types.Object, k: koordinaten.Koordinaten, teile: list[str], lage: dict, seite: float) -> dict:
@@ -1127,7 +1263,7 @@ def _stufe(nodes, links, wert, von: float, bis: float, nach: tuple[float, float]
 
 def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, str]]],
                    kordel: dict | None = None, streifen: bool = False, bund: float | None = None,
-                   mit_saum: bool = True) -> bpy.types.Material:
+                   mit_saum: bool = True, akzent: bool = False) -> bpy.types.Material:
     """Stoff matt mit leichtem Glanz (Sheen); endet scharf am Saum (Attribut „Saum“, auch die
     Halsöffnung). Darauf, je nach Teil: der Bund etwas dunkler (`bund`: Höhe in m, Attribut „Bund“ =
     Abstand unter dem oberen Rand), der Streifen in Lime (Attribut „Streifen“), die Kordel (Bilder aus
@@ -1180,6 +1316,17 @@ def stoff_material(name: str, farbe: str, logos: list[tuple[str, str, dict[str, 
                             farbe_out, szene.srgb(BUND))
     if streifen:
         farbe_out = mischen(maske("Streifen", -0.0008, 0.0008), farbe_out, szene.srgb(LIME))
+    if akzent:  # Lime-Akzent am Shirt (D-481): wo |AkzentU| < AkzentW und AkzentV > 0
+        def attribut(name_a: str):
+            a = nodes.new("ShaderNodeAttribute")
+            a.attribute_name = name_a
+            a.attribute_type = "GEOMETRY"
+            return a.outputs["Fac"]
+
+        quer = _rechne(nodes, links, "SUBTRACT", attribut("AkzentW"),
+                       _rechne(nodes, links, "ABSOLUTE", attribut("AkzentU")))
+        innen = mal(_stufe(nodes, links, quer, -0.0004, 0.0004), _stufe(nodes, links, attribut("AkzentV"), -0.0004, 0.0004))
+        farbe_out = mischen(innen, farbe_out, szene.srgb(LIME))
     if kordel:
         sichtbar = maske("MaskeKordel", 0.45, 0.55)
         for teil, ton in (("schnur", KORDEL), ("huelse", KORDEL_ENDE)):
@@ -1251,14 +1398,17 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, mit_schuhen: 
     hose = _teil("Shorts", koerper, skelett, f["hose"], ABSTAND["hose"], rahmen["hose"], weite=weite_hose,
                  attribute={"Streifen": streifen, "Bund": bund},
                  bruecke=(schnitt["z_schritt"] + BRUECKE_SCHRITT, schnitt["z_bund"] + 0.02, teile))
+    akzent = _akzent(koerper, k, teile, schnitt, oeffnung, f["shirt"], normalen)  # Lime-Akzent zur Auswahl (D-481)
     shirt = _teil("Shirt", koerper, skelett, f["shirt"], ABSTAND["shirt"], rahmen["shirt"], kragen=f["hals"],
-                  weite=weite_shirt, bruecke=(schnitt["z_saum"] - 0.04, schnitt["z_w"], teile))
+                  weite=weite_shirt, bruecke=(schnitt["z_saum"] - 0.04, schnitt["z_w"], teile), attribute=akzent)
     hose.data.materials.append(stoff_material("Shorts", SHORTS, [("Beinvorn", "f", {"f": LIME})],
                                               kordel=kordel_bilder, streifen=True,
                                               bund=BOARD["bund"] * schnitt["hose_laenge"]))
     shirt.data.materials.append(stoff_material("Shirt", TEE, [("Brust", "f", {"f": LIME}),
-                                                              ("Ruecken", "ruecken", {"f": LIME, "wort": WEISS})]))
-    kragen = _buendchen(shirt, koerper, skelett, oeffnung, stoff_material("Kragen", TEE, [], mit_saum=False))
+                                                              ("Ruecken", "ruecken", {"f": LIME, "wort": WEISS})],
+                                               akzent=akzent is not None))
+    kragen_farbe = LIME if AKZENT == "kragen_aermel" else TEE  # Variante 3: Kragenbündchen in Lime (D-481)
+    kragen = _buendchen(shirt, koerper, skelett, oeffnung, stoff_material("Kragen", kragen_farbe, [], mit_saum=False))
     saumband = _saumband(shirt, koerper, skelett, schnitt, stoff_material("Saumband", TEE, [], mit_saum=False))
     # Zone des Shirts über den Shorts (D-478): Rumpf und Hüfte bis `SAUM_ZONE` über dem Saum, nach dem Feld des Saums
     # ohne Halsausschnitt; Ärmel und Hals nie (dort läge der nächste Punkt der Shorts weit weg)
@@ -1343,6 +1493,77 @@ def durchdringung(koerper: bpy.types.Object) -> dict:
     werte_a = [w for w in werte_a if w is not None]
     if werte_a:
         aus["Haut unter dem Ärmel am Saum (mm, negativ = durch)"] = min(werte_a) * 1000
+    return aus
+
+
+def akzent_logo_abstand(shirt: bpy.types.Object, schritte: int = 8) -> dict:
+    """Lime-Akzent und Logos des Shirts (D-481): kürzester Abstand auf dem Stoff in der aktuellen Haltung (cm), wie
+    `f_streifen_abstand` je Dreieck dicht abgetastet (Netz ohne Glättung und Dicke, Welt) und eingeordnet wie im
+    Shader: **Akzent**, wo |AkzentU| < AkzentW und AkzentV > 0; **Brust-F** bzw. **Rückendruck** (F und Wortmarke),
+    wo die Deckkraft des Bilds an der UV-Stelle mal Maske über 0,5 liegt. Ohne Akzent leer."""
+    import numpy as np
+    from mathutils import kdtree
+
+    import schuhe
+
+    mesh = shirt.data
+    if "AkzentU" not in mesh.attributes:
+        return {}
+    welt, _, _ = schuhe._verformt(shirt)
+    U, W, V = ([a.value for a in mesh.attributes[n].data] for n in ("AkzentU", "AkzentW", "AkzentV"))
+
+    def abtaster(bild):
+        b, h = bild.size
+        deck = np.array(bild.pixels[:], dtype=np.float32).reshape(h, b, 4)[..., 3]
+
+        def wert(u: float, v: float) -> float:
+            if not (0.0 <= u <= 1.0 and 0.0 <= v <= 1.0):
+                return 0.0
+            return float(deck[min(int(v * (h - 1) + 0.5), h - 1), min(int(u * (b - 1) + 0.5), b - 1)])
+        return wert
+
+    logos = {}
+    for name, motiv in (("Brust", "f"), ("Ruecken", "ruecken")):
+        maske = [a.value for a in mesh.attributes["Maske" + name].data]
+        uv = [None] * len(mesh.vertices)
+        for loop in mesh.loops:
+            uv[loop.vertex_index] = tuple(mesh.uv_layers["Logo" + name].data[loop.index].uv)
+        logos[name] = (maske, uv, [abtaster(b) for b in _bilder(motiv).values()])
+    mesh.calc_loop_triangles()
+    akzent, punkte = [], {"Brust": [], "Ruecken": []}
+    for tri in mesh.loop_triangles:
+        a, b, c = tri.vertices
+        mit_a = min(abs(U[i]) - W[i] for i in (a, b, c)) < 0.01 and max(V[i] for i in (a, b, c)) > 0.0
+        mit_l = {n: max(m[0][i] for i in (a, b, c)) > 0.05 for n, m in logos.items()}
+        if not (mit_a or any(mit_l.values())):
+            continue
+        for i in range(schritte + 1):
+            for j in range(schritte + 1 - i):
+                la, lb = i / schritte, j / schritte
+                lc = 1.0 - la - lb
+                p = welt[a] * la + welt[b] * lb + welt[c] * lc
+                if mit_a:
+                    uu = U[a] * la + U[b] * lb + U[c] * lc
+                    if abs(uu) < W[a] * la + W[b] * lb + W[c] * lc and V[a] * la + V[b] * lb + V[c] * lc > 0.0:
+                        akzent.append(p)
+                for n, (maske, uv, bilder) in logos.items():
+                    if not mit_l[n]:
+                        continue
+                    if maske[a] * la + maske[b] * lb + maske[c] * lc <= 0.5:
+                        continue
+                    uu = uv[a][0] * la + uv[b][0] * lb + uv[c][0] * lc
+                    vv = uv[a][1] * la + uv[b][1] * lb + uv[c][1] * lc
+                    if max(bild(uu, vv) for bild in bilder) > 0.5:
+                        punkte[n].append(p)
+    if not akzent:
+        return {"akzent_punkte": 0}
+    baum = kdtree.KDTree(len(akzent))
+    for i, p in enumerate(akzent):
+        baum.insert(p, i)
+    baum.balance()
+    aus = {"akzent_punkte": len(akzent)}
+    for n, pkte in punkte.items():
+        aus[n] = min(baum.find(p)[2] for p in pkte) * 100 if pkte else float("nan")
     return aus
 
 

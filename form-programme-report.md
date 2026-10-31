@@ -1211,3 +1211,11 @@ Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife ren
 ```
 
 **Halt:** Ich warte auf deine Freigabe der Prüfseite „Beine isoliert“.
+
+## 18. Zeittest der Startfläche unabhängig von der Rechenlast (D-476)
+
+Der Test „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, … (D-394)“ schlug bei D-469 und D-474 je einmal im vollen E2E-Lauf fehl: Das Logo war schon im ersten aufgezeichneten Bild zu sehen. Die Startfläche zeigt das Logo spätestens nach 300 ms, im Skript und als Netz zusätzlich per CSS-Animation. Unter Last kam das erste Bild erst danach.
+
+Jetzt steht im Test die Uhr der Seite: Zeit, Zeitgeber und Bilder laufen nur, wenn der Test sie Bild für Bild um 16 ms vorstellt. Auch die CSS-Animationen stehen. Die Frist von 300 ms liegt damit in der vorgestellten Zeit, und der Test prüft nur noch die Reihenfolge der Bilder. Die App selbst ist unverändert.
+
+Unter Volllast (sechs Prozesse rechnen nebenher, vier Testprozesse gleichzeitig) liefen beide Fassungen zusammen 40-mal: alle bestanden. Mein erster Entwurf schlug unter Last noch fehl, weil die Uhr nach dem Einsetzen weiterlief und das Anhalten auf die Startzeit dann schon in der Vergangenheit lag; jetzt hält sie eine Minute später an.

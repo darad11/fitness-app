@@ -2777,3 +2777,16 @@ Prüfseite der Familie „Beine isoliert“ mit dem Beinbeuger liegend (D-475).
 | Zweiter Durchgang (Strahlen drehen bei frei hängenden Füßen mit dem Fuß; Namen der Nahaufnahmen) | Knie 175 bis 60°; Hüfte 149,1°; Rumpf 15,9°; Sprunggelenk 1,5°; Kniegelenk 0,0 mm von der Drehachse; Hebel 0 bis 115°; Ellbogen 65,6°; Handgelenk 0,4°; Finger −4,5 mm; Brust und Bauch 4,0 mm, Hüfte 4,0 mm im Polster, Oberschenkel 1,3 mm darüber; Rolle −1,0 mm, Schuhe 15,9 mm; Kopf und Hals 60,7 mm; Socke ohne Löcher; Kragen 1,6 mm über der Socke; Delle 3,4 mm; durch das Polster 0,0 mm; keine Meldungen; alle übrigen Werte gleich wie im ersten Durchgang. 412 s, Nahaufnahmen 74 s |
 | Prüfseite (`uebungen_pruef_bild.py beinbeuger_liegend --familie beine-isoliert --titel "Beine isoliert"`) | `familie-beine-isoliert.webp`, angesehen: bäuchlings auf den Polstern, Knie knapp dahinter, Rolle über den Fersen, Hand um den Griff, Fuß und Rolle von außen und von hinten |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-475; die App ändert sich nicht, E2E wie bei D-474) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Zeittest der Startfläche · 31.10.2026, Cloud-Umgebung
+
+Test „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, … (D-394)“ unabhängig von der Rechenlast (D-476).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ursache | Das Logo erscheint spätestens nach 300 ms (`public/startflaeche.js`, Netz per CSS-Animation in `index.html`); unter Last kam das erste aufgezeichnete Bild erst danach: „Bilder ohne Logo davor“ 0 statt mehr als 0 |
+| Uhr der Seite angehalten, Bild für Bild 16 ms vorgestellt | „nur beim Laden des Skripts …“ 3 von 3 bestanden; „120 ms lang …“ 3 von 3 fehlgeschlagen: Logo im Bild bei 112 ms sichtbar, 42 pt neben der Mitte; das CSS-Netz zeigte es nach 300 ms echter Zeit |
+| CSS-Animationen vor dem Laden angehalten (`Animation.setPlaybackRate` 0) | weiter fehlgeschlagen, Logo ab 48 ms sichtbar: Die Einstellung galt für die neue Seite nicht |
+| gleich nach dem Commit angehalten | bestanden; Logo erst ab dem Bild bei 144 ms, „stabil“ |
+| Unter Volllast (sechs rechnende Prozesse, vier Testprozesse, `--repeat-each`) | 30 Läufe: 23 bestanden, 7 fehlgeschlagen; 16 Läufe: 12 bestanden, 4 fehlgeschlagen, alle mit „clock.pauseAt: Error: Cannot fast-forward to the past“ (die Uhr läuft ab `install`); angehalten eine Minute nach dem Start: 40 von 40 bestanden |
+| `npx playwright test e2e/start-surface.spec.ts` (ohne Last), eslint, prettier | 18 bestanden, 16 übersprungen; Lint und Format bestanden |

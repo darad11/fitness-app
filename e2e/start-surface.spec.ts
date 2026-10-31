@@ -80,6 +80,12 @@ async function installedStart(
      * ohne `resize`.
      */
     stale?: Size & { bis: 'bild' | number };
+    /**
+     * Uhr der Seite angehalten (D-394, Nachtrag D-476): Zeit, Zeitgeber und Bilder laufen nur, wenn
+     * der Test sie mit `page.clock.runFor` vorstellt. So hängt die Reihenfolge von Bildern und der
+     * Frist von 300 ms nicht mehr von der Rechenlast ab.
+     */
+    uhr?: boolean;
   } = {},
 ) {
   const context = await browser.newContext({
@@ -95,6 +101,13 @@ async function installedStart(
     reducedMotion: options.reducedMotion ?? 'no-preference',
   });
   const page = await context.newPage();
+  if (options.uhr) {
+    // Vor allen Init-Skripten, damit Mitschnitt und Maße die vorgestellte Uhr verwenden.
+    const start = new Date('2026-10-31T10:00:00+01:00');
+    await page.clock.install({ time: start });
+    // Eine Minute später anhalten: Die Uhr läuft ab `install`, unter Last wäre `start` schon vorbei.
+    await page.clock.pauseAt(new Date(start.getTime() + 60_000));
+  }
   if (options.quer !== undefined) {
     const viewport =
       options.viewport ??
@@ -493,22 +506,25 @@ for (const start of STALE_STARTS) {
       quer: true,
       frames: true,
       stale: { width: 466, height: 669, bis: start.bis },
+      uhr: true,
     });
+    // Auch die CSS-Animationen der Seite stehen: Das Netz in index.html zeigt das Logo sonst nach
+    // 300 ms echter Zeit, während die Uhr des Skripts steht. Gesetzt gleich nach dem Commit; vor dem
+    // Laden gesetzt, gilt es für die neue Seite nicht.
+    const animationen = await page.context().newCDPSession(page);
+    await animationen.send('Animation.enable');
     await page.goto('/heute', { waitUntil: 'commit' });
+    await animationen.send('Animation.setPlaybackRate', { playbackRate: 0 });
+    // Das Skript der Startfläche ist gelaufen; dann Bild für Bild (16 ms) vorstellen, bis das Logo
+    // freigegeben ist, und noch einige Bilder danach. Die Frist von 300 ms liegt in der vorgestellten
+    // Zeit und läuft nicht ab, nur weil der Rechner langsam ist.
+    await expect(page.locator('html')).toHaveAttribute('data-startlage', /warten|fest/);
+    for (let bild = 0; bild < 18; bild += 1) {
+      if ((await page.locator('html').getAttribute('data-startlage')) === 'fest') break;
+      await page.clock.runFor(16);
+    }
     await logoReady(page);
-    // Noch einige Bilder danach.
-    await page.evaluate(
-      () =>
-        new Promise<void>((resolve) => {
-          let count = 0;
-          const tick = () => {
-            count += 1;
-            if (count > 5) resolve();
-            else requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }),
-    );
+    await page.clock.runFor(96);
     const frames = await surfaceFrames(page);
     const visible = frames.filter((frame) => frame.visible);
     expect(visible.length, 'Bilder mit Logo').toBeGreaterThan(0);

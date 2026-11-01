@@ -43,8 +43,8 @@ export interface LoopPlayback {
  *
  * Die Durchläufe wiederholt der Browser selbst (`loop`), auch außerhalb des Players. Gezählt wird
  * der Sprung an den Anfang, den jeder Browser beim Wiederholen macht (`seeking`, `timeupdate`):
- * Nach dem ersten endet `loop`, der zweite Durchlauf läuft zu Ende, und das Video steht am letzten
- * Bild. Das braucht weder die Länge des Videos noch eine Uhr: WebKit unter Linux sprang schon bei
+ * Eine halbe Sekunde nach dem ersten endet `loop`, der zweite Durchlauf läuft zu Ende, und das
+ * Video steht am letzten Bild. Das braucht weder die Länge des Videos noch eine Uhr: WebKit unter Linux sprang schon bei
  * 1,91 s statt 2,5 s zurück und meldete die Länge nicht so, dass eine Rechnung damit griff; vorher
  * meldete es Enden doppelt oder gar nicht (Nachträge zu D-497).
  */
@@ -62,7 +62,9 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     element.playsInline = true;
     // Auch außerhalb des Players wiederholt der Browser selbst, bis zum letzten Durchlauf.
     element.loop = true;
-    /** Läuft der letzte Durchlauf (ohne `loop`)? */
+    /** Sprung an den Anfang gesehen: Der zweite Durchlauf läuft. */
+    let wrapped = false;
+    /** Läuft der letzte Durchlauf ohne `loop`? */
     let lastRun = false;
     let wanted = true;
     /** Zuletzt gesehene Stelle in Sekunden; ein Sprung zurück ist ein neuer Durchlauf. */
@@ -81,10 +83,15 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
         // wie abgelehnt
       }
     };
-    /** Sprung an den Anfang beim Wiederholen: Danach läuft der letzte Durchlauf. */
+    /**
+     * Sprung an den Anfang beim Wiederholen: Danach läuft der zweite Durchlauf. `loop` endet erst
+     * ein Stück darin; im Sprung selbst (`seeking`) abgeschaltet, blieb WebKit danach stehen
+     * (`waiting`, Nachtrag 5 zu D-497).
+     */
     const onPosition = () => {
       const now = element.currentTime;
-      if (!lastRun && now < last - JUMP) {
+      if (!wrapped && now < last - JUMP) wrapped = true;
+      else if (wrapped && !lastRun && now >= JUMP) {
         lastRun = true;
         element.loop = false;
       }
@@ -104,6 +111,7 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     };
     restart.current = () => {
       wanted = true;
+      wrapped = false;
       lastRun = false;
       // Vor `loop`: Mit `loop` gilt ein Video nie als zu Ende. An den Anfang nur angehalten; in
       // der laufenden Wiedergabe gesucht, blieb WebKit unter Linux an Stelle 0 hängen.

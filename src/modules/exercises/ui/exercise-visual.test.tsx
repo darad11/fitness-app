@@ -476,10 +476,15 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     expect(replay.hasAttribute('data-angehalten')).toBe(false);
     expect(replay.querySelector('svg')).toBeNull();
 
-    // Der Browser wiederholt selbst (`loop`). Nach dem ersten Sprung an den Anfang endet `loop`:
-    // Der zweite Durchlauf läuft zu Ende, dann steht das letzte Bild.
+    // Der Browser wiederholt selbst (`loop`). Eine halbe Sekunde nach dem ersten Sprung an den
+    // Anfang endet `loop` (im Sprung selbst blieb WebKit stehen): Der zweite Durchlauf läuft zu
+    // Ende, dann steht das letzte Bild.
     expect(video.loop).toBe(true);
     fake.wrap(video);
+    expect(video.loop).toBe(true);
+    fake.at(video, 0.3);
+    expect(video.loop).toBe(true);
+    fake.at(video, 0.6);
     expect(video.loop).toBe(false);
     expect(fake.playing(video)).toBe(true);
     fake.wrap(video);
@@ -501,6 +506,7 @@ describe('Wiedergabe der Schleife (D-497)', () => {
       expect(replay.hasAttribute('data-angehalten')).toBe(false);
     });
     fake.wrap(video);
+    fake.at(video, 0.6);
     expect(video.loop).toBe(false);
     fake.wrap(video);
     await waitFor(() => {
@@ -535,6 +541,8 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     // Der Browser springt an den Anfang und meldet nur `seeking`: erster Durchlauf zu Ende.
     fake.at(video, 1.9);
     fake.seekToStart(video);
+    expect(video.loop).toBe(true);
+    fake.at(video, 0.6);
     expect(video.loop).toBe(false);
     fake.wrap(video);
     await waitFor(() => {

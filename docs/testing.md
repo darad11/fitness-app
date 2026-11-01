@@ -3186,3 +3186,15 @@ Zweimal über den ersten Sprung an den Anfang statt über die gespielte Zeit (D-
 | Ablauf in Chromium, Details Latziehen | Sprung an den Anfang bei 2,47 s, `loop` danach aus, angehalten am Ende bei 4,97 s, Symbol da |
 | `e2e/uebungen-wiedergabe.spec.ts` (Chromium; neu: erst von selbst bis zum Halt, dann zweimal Tippen auf die angehaltene Animation) | 6 bestanden, 4 übersprungen |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle`; Player-Tests (`player-jetzt`, `duo-player`, `duo-player-befunde`, `uebungen`, `uebungen-details-breit`, `duo-tastatur`, Chromium) | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; Startansicht 238,9 KB, Übungsbilder 52 von 52; Player-Tests 58 bestanden, 40 übersprungen; WebKit in der CI |
+
+### Wiedergabe in WebKit, Nachtrag 5 · 01.11.2026, Cloud-Umgebung
+
+`loop` endet eine halbe Sekunde nach dem ersten Sprung an den Anfang statt im Sprung selbst (D-497).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `7ab9dac` | E2E Chromium, Lint, Typen, Unit-Tests, Dokumente, Build und Datenbank grün; E2E WebKit 3 fehlgeschlagen, 417 bestanden, 184 übersprungen: Details (Desktop, Handy) und Übungsinfo „von selbst nach 20 s nicht angehalten“, laut Ereignissen nach dem ersten Sprung (bei 1,91 bzw. 2,49 s) `seeking`, `waiting`, `seeked` an Stelle 0, danach nichts mehr; `loop` war im Sprung schon aus |
+| Unit-Tests `exercise-visual.test.tsx` (angepasst: `loop` bleibt im Sprung an, endet bei 0,6 s im zweiten Durchlauf) | 26 bestanden |
+| Ablauf in Chromium, Details Latziehen | Sprung bei 2,47 s mit `loop`, angehalten am Ende bei 4,96 s, Symbol da |
+| `e2e/uebungen-wiedergabe.spec.ts`, `player-jetzt.spec.ts`, `uebungen.spec.ts` (Chromium) | 27 bestanden, 11 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; Startansicht 238,9 KB; WebKit in der CI |

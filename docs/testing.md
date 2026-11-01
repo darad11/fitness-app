@@ -3149,3 +3149,17 @@ Rahmen der Animation in jeder Übung gleich groß, Figur in allen elf Schleifen 
 | Player-Tests (`uebungen-wiedergabe`, `player-jetzt`, `duo-player`, `duo-player-befunde`, `duo-tastatur`, `uebungen`, `uebungen-details-breit`, Chromium) | 64 bestanden, 44 übersprungen |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 139 Dateien, 1.245 Tests; Startansicht 238,9 KB, Übungsbilder 52 von 52 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 456 bestanden, 148 übersprungen, keiner fehlgeschlagen (20,0 min), am Stand vor dem flacheren „Jetzt“ (24-px-Bild, Zeilenhöhe); danach die Player-Tests wie oben |
+
+### Wiedergabe und „Jetzt“ in WebKit, Nachträge · 01.11.2026, Cloud-Umgebung
+
+Nachtrag 3 zu D-497 (zweimal über die gespielte Zeit statt über Enden) und Nachtrag 2 zu D-498 (Test wie die installierte App).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `69807ab`, E2E WebKit | 4 fehlgeschlagen, 415 bestanden, 183 übersprungen: Details zweimal (Desktop: gespielte Zeit 3,04 Längen; Handy: nach 20 s nicht angehalten), Übungsinfo (3,04 Längen), „Jetzt“ am Duo zugeklappt (Satz bis 710 px, Fußleiste ab 601 px); E2E Chromium, Lint, Typen, Unit-Tests, Build und Datenbank grün |
+| Testbericht der CI mit Bildern | nicht geladen: Das Netz dieser Umgebung lässt `productionresultssa13.blob.core.windows.net` nicht zu; die Tests nennen bei einem Fehlschlag deshalb Ereignisse und Lage in der Meldung |
+| Unit-Tests `exercise-visual.test.tsx` (nachgestellte Uhr; 1 neu: zählt nur, solange sie spielt, ein Ende mit `loop` hält nicht an; 2 angepasst) | 26 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build` | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; erster Lauf von `pnpm lint` mit zwei Meldungen (Bedingung mit `LOOP_RUNS <= 1` immer falsch) und `pnpm typecheck` mit einer (Element in einer Funktionsdeklaration möglicherweise leer), beide behoben |
+| Ablauf in Chromium, Details Latziehen, Zeitstempel der Ereignisse | erster Durchlauf bis 2,38 s, der Browser springt selbst an den Anfang (`seeked`, `playing`), bei 3,75 s endet `loop`, bei 4,89 s angehalten am Ende (`pause`, `ended`), das Symbol erscheint |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI), Stand mit D-500 und beiden Nachträgen | 455 bestanden, 148 übersprungen, 1 fehlgeschlagen (18,7 min): `uebungen-wiedergabe.spec.ts:142` am Start von Tag B, das Kreuzheben spielte das WebM statt des MP4. Laut Mitschnitt kamen alle Anfragen für das MP4 mit 200 bzw. 206 zurück, danach wich die App wie vorgesehen auf das WebM aus; eine Meldung in der Konsole gab es nicht. Der Weg im Player ist in den Nachträgen unverändert. Einzeln viermal wiederholt: 4 bestanden. In der CI läuft der Test mit einer Wiederholung |
+| Player-Tests (7 Dateien, Chromium) auf demselben Stand | 64 bestanden, 44 übersprungen |

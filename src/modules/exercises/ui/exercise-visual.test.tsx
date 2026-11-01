@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { coreExerciseId } from '../data/coreLibrary';
 import { resetMediaCacheForTests } from '../data/media';
@@ -248,9 +248,12 @@ describe('Demonstration (D-397)', () => {
     expect(video.muted).toBe(true);
     expect(video.hasAttribute('muted')).toBe(true);
     // Die App startet die Schleife selbst; `autoplay` startet Safari nur, wenn es das Video für
-    // sichtbar hält (D-497). Außerhalb des Players zwei Durchläufe, gezählt am Ende: ohne `loop`.
+    // sichtbar hält (D-497). Auch außerhalb des Players wiederholt der Browser selbst (`loop`),
+    // bis die gespielte Zeit für zwei Durchläufe reicht.
     expect(video.autoplay).toBe(false);
-    expect(video.loop).toBe(false);
+    await waitFor(() => {
+      expect(video.loop).toBe(true);
+    });
     expect(video.controls).toBe(false);
     expect(video.hasAttribute('playsinline')).toBe(true);
     expect(video.getAttribute('aria-label')).toBe('Bild zu back_squat_barbell');
@@ -329,7 +332,8 @@ describe('Demonstration (D-397)', () => {
 
 /**
  * Nachgestellte Wiedergabe: jsdom spielt keine Videos ab. `play` startet (oder lehnt ab wie iOS
- * ohne Geste im Stromsparmodus), `paused` und `currentTime` folgen dem.
+ * ohne Geste im Stromsparmodus) und meldet danach `playing`, `pause` meldet `pause`; `paused`,
+ * `currentTime` und `duration` (2,5 s wie die Schleifen) folgen dem.
  */
 function fakeMedia(allow: () => boolean = () => true) {
   const playing = new WeakSet<HTMLMediaElement>();
@@ -338,19 +342,28 @@ function fakeMedia(allow: () => boolean = () => true) {
     this: HTMLMediaElement,
   ) {
     if (!allow()) return Promise.reject(new DOMException('Geste nötig', 'NotAllowedError'));
-    playing.add(this);
+    if (!playing.has(this)) {
+      playing.add(this);
+      // Wie im Browser danach, nicht im Aufruf.
+      queueMicrotask(() => {
+        if (playing.has(this)) this.dispatchEvent(new Event('playing'));
+      });
+    }
     return Promise.resolve();
   });
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(function (
     this: HTMLMediaElement,
   ) {
+    if (!playing.has(this)) return;
     playing.delete(this);
+    this.dispatchEvent(new Event('pause'));
   });
   vi.spyOn(HTMLMediaElement.prototype, 'paused', 'get').mockImplementation(function (
     this: HTMLMediaElement,
   ) {
     return !playing.has(this);
   });
+  vi.spyOn(HTMLMediaElement.prototype, 'duration', 'get').mockReturnValue(2.5);
   vi.spyOn(HTMLMediaElement.prototype, 'currentTime', 'get').mockImplementation(function (
     this: HTMLMediaElement,
   ) {
@@ -377,9 +390,27 @@ function fakeMedia(allow: () => boolean = () => true) {
         this.at(video, 0.02);
         return;
       }
+      this.at(video, 2.5);
       playing.delete(video);
+      fireEvent(video, new Event('pause'));
       fireEvent(video, new Event('ended'));
     },
+  };
+}
+
+/**
+ * Uhr der Tests: `setTimeout` und `performance.now()` gehen mit der echten Zeit (wenige
+ * Millisekunden je Test) und springen auf Ansage.
+ */
+function fakeClock() {
+  vi.useFakeTimers({
+    toFake: ['setTimeout', 'clearTimeout', 'performance'],
+    shouldAdvanceTime: true,
+  });
+  return (ms: number) => {
+    act(() => {
+      vi.advanceTimersByTime(ms);
+    });
   };
 }
 
@@ -388,6 +419,7 @@ describe('Wiedergabe der Schleife (D-497)', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.useRealTimers();
   });
 
   it('MP4 zuerst, wo der Browser H.264 kann; WebM nur ohne H.264', async () => {
@@ -447,26 +479,32 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     serve(media('loop'));
     reducedMotion(false);
     const fake = fakeMedia();
+    const advance = fakeClock();
     const { container } = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
     const video = await waitFor(() => need(container.querySelector('video')));
     const replay = screen.getByRole('button', { name: 'Animation wiederholen' });
     await waitFor(() => {
       expect(fake.playing(video)).toBe(true);
     });
+    await act(async () => {
+      await Promise.resolve();
+    });
     expect(replay.hasAttribute('data-angehalten')).toBe(false);
     expect(replay.querySelector('svg')).toBeNull();
 
-    // Erster Durchlauf zu Ende: Der zweite beginnt von vorn (ohne `loop`, gezählt am Ende).
-    expect(video.loop).toBe(false);
+    // Der Browser wiederholt selbst (`loop`); gezählt wird die gespielte Zeit.
+    expect(video.loop).toBe(true);
     fake.wrap(video);
     expect(fake.playing(video)).toBe(true);
-    expect(video.currentTime).toBe(0);
-    // Zweiter Durchlauf: Ende, angehalten, das Symbol erscheint.
+    advance(3000);
+    expect(video.loop).toBe(true);
+    // Mitten im zweiten Durchlauf (3,75 s) endet `loop`: Er läuft zu Ende, dann steht das Bild.
+    advance(1000);
+    expect(video.loop).toBe(false);
+    expect(fake.playing(video)).toBe(true);
     fake.wrap(video);
     expect(fake.playing(video)).toBe(false);
-    await waitFor(() => {
-      expect(replay.hasAttribute('data-angehalten')).toBe(true);
-    });
+    expect(replay.hasAttribute('data-angehalten')).toBe(true);
     expect(replay.querySelector('svg')).not.toBeNull();
     // Angehalten bleibt angehalten, auch bei Gesten anderswo.
     const calls = fake.play.mock.calls.length;
@@ -476,15 +514,51 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     fireEvent.click(replay);
     expect(fake.playing(video)).toBe(true);
     expect(video.currentTime).toBe(0);
+    expect(video.loop).toBe(true);
+    expect(replay.hasAttribute('data-angehalten')).toBe(false);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    advance(3000);
+    expect(video.loop).toBe(true);
+    advance(1000);
     expect(video.loop).toBe(false);
-    await waitFor(() => {
-      expect(replay.hasAttribute('data-angehalten')).toBe(false);
-    });
     fake.wrap(video);
-    fake.wrap(video);
+    expect(replay.hasAttribute('data-angehalten')).toBe(true);
+  });
+
+  it('zählt nur, solange sie spielt; ein Ende mitten in den Durchläufen hält sie nicht an', async () => {
+    serve(media('loop'));
+    reducedMotion(false);
+    const fake = fakeMedia();
+    const advance = fakeClock();
+    const { container } = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
+    const video = await waitFor(() => need(container.querySelector('video')));
+    const replay = screen.getByRole('button', { name: 'Animation wiederholen' });
     await waitFor(() => {
-      expect(replay.hasAttribute('data-angehalten')).toBe(true);
+      expect(fake.playing(video)).toBe(true);
     });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    advance(2000);
+    // Angehalten (weggescrollt, im Hintergrund): Die Zeit zählt nicht weiter.
+    act(() => {
+      video.pause();
+    });
+    advance(10_000);
+    expect(video.loop).toBe(true);
+    // Ein Ende, obwohl `loop` gilt (WebKit unter Linux): kein Durchlauf, sie läuft weiter.
+    fireEvent(video, new Event('ended'));
+    expect(fake.playing(video)).toBe(true);
+    expect(replay.hasAttribute('data-angehalten')).toBe(false);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    advance(1000);
+    expect(video.loop).toBe(true);
+    advance(1000);
+    expect(video.loop).toBe(false);
   });
 
   it('lehnt das System ab (Stromsparmodus), startet sie bei der nächsten Geste', async () => {

@@ -252,35 +252,78 @@ test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () =>
 });
 
 test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () => {
-  /** Zwei Durchläufe in normaler Geschwindigkeit (5 s); eine schnellere Wiedergabe ließ WebKit
-   *  unter Linux bei 0 stehen. Gezählt wird mit, wie oft das Video endet. */
   /**
-   * Gespielte Zeit in Sekunden, in jedem Bild gemessen: Summe der Fortschritte, ein Sprung zurück
-   * zählt nicht. So zählen die Durchläufe auch dort, wo der Browser ein Ende doppelt meldet
-   * (WebKit unter Linux).
+   * Durchläufe nach einem Tippen auf die Animation, in normaler Geschwindigkeit (eine schnellere
+   * ließ WebKit unter Linux bei 0 stehen). Gezählt wird in jedem Bild der Sprung zurück an den
+   * Anfang, höchstens einer je halbe Länge: So zählt ein doppelt gemeldeter Sprung nicht doppelt,
+   * gleich ob der Browser mit `loop` wiederholt oder die App neu startet. Die Zählung beginnt, wenn
+   * das Video nach dem Tippen am Anfang läuft. Dazu die Ereignisse des Videos mit Zeit und Stelle,
+   * für die Meldung bei einem Fehlschlag (WebKit läuft nur in der CI).
    */
-  async function trackPlayed(video: Locator) {
+  async function runsAfterReplay(video: Locator, replay: Locator, label: string) {
+    await replay.click();
+    await expect
+      .poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.currentTime < 1), {
+        message: `${label}: läuft von vorn`,
+        timeout: 10_000,
+        intervals: [50],
+      })
+      .toBe(true);
     await video.evaluate((v: HTMLVideoElement) => {
-      const tracked = v as HTMLVideoElement & { spielzeit?: number; messung?: number };
-      // Jede Messung beginnt bei 0; eine frühere hört auf zu zählen.
-      const own = (tracked.messung ?? 0) + 1;
-      tracked.messung = own;
-      tracked.spielzeit = 0;
+      const w = v as HTMLVideoElement & {
+        beobachtung?: number;
+        spruenge?: number;
+        ereignisse?: string[];
+      };
+      const own = (w.beobachtung ?? 0) + 1;
+      w.beobachtung = own;
+      w.spruenge = 0;
+      w.ereignisse = [];
+      const start = performance.now();
+      const note = (what: string) => {
+        if (w.beobachtung !== own || (w.ereignisse?.length ?? 0) >= 60) return;
+        const flags = `${v.paused ? ' angehalten' : ''}${v.ended ? ' Ende' : ''}${v.loop ? ' loop' : ''}`;
+        w.ereignisse?.push(
+          `${((performance.now() - start) / 1000).toFixed(2)} s ${what} bei ${v.currentTime.toFixed(2)}${flags}`,
+        );
+      };
+      for (const type of ['play', 'playing', 'pause', 'waiting', 'seeking', 'seeked', 'ended']) {
+        v.addEventListener(type, () => {
+          note(type);
+        });
+      }
+      const half = (Number.isFinite(v.duration) && v.duration > 0 ? v.duration : 2.5) / 2;
       let last = v.currentTime;
+      let lastJump = -Infinity;
       const step = () => {
-        if (tracked.messung !== own) return;
+        if (w.beobachtung !== own) return;
         const now = v.currentTime;
-        if (now > last) tracked.spielzeit = (tracked.spielzeit ?? 0) + (now - last);
+        const at = performance.now();
+        if (now < last - half && at - lastJump > half * 1000) {
+          w.spruenge = (w.spruenge ?? 0) + 1;
+          lastJump = at;
+          note(`Sprung zurück von ${last.toFixed(2)}`);
+        }
         last = now;
         requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
     });
-    return async () =>
-      video.evaluate((v: HTMLVideoElement) => ({
-        played: (v as HTMLVideoElement & { spielzeit?: number }).spielzeit ?? 0,
-        duration: v.duration,
-      }));
+    const seen = () =>
+      video.evaluate((v: HTMLVideoElement) => {
+        const w = v as HTMLVideoElement & { spruenge?: number; ereignisse?: string[] };
+        return { runs: (w.spruenge ?? 0) + 1, events: (w.ereignisse ?? []).join(' | ') };
+      });
+    try {
+      await expect
+        .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
+          timeout: 20_000,
+        })
+        .toBe(true);
+    } catch {
+      throw new Error(`${label}: nach 20 s nicht angehalten; ${(await seen()).events}`);
+    }
+    return seen();
   }
 
   async function expectStoppedAfterTwoRuns(scope: Locator, label: string) {
@@ -291,39 +334,15 @@ test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () =>
         message: `${label}: Länge`,
       })
       .toBeGreaterThan(0);
-    // Von vorn zählen: Tippen auf die Animation beginnt die zwei Durchläufe neu.
-    let played = await trackPlayed(video);
-    await replay.click();
-    await expect
-      .poll(() => playhead(video), { message: `${label}: läuft`, timeout: 10_000 })
-      .toBeGreaterThan(0);
-    await expect
-      .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
-        message: `${label}: nach zwei Durchläufen angehalten`,
-        timeout: 20_000,
-      })
-      .toBe(true);
-    let result = await played();
-    expect(result.played / result.duration, `${label}: zwei Durchläufe`).toBeGreaterThan(1.7);
-    expect(result.played / result.duration, `${label}: zwei Durchläufe`).toBeLessThan(2.3);
+    // Tippen auf die Animation beginnt die zwei Durchläufe von vorn.
+    let result = await runsAfterReplay(video, replay, label);
+    expect(result.runs, `${label}: zwei Durchläufe; ${result.events}`).toBe(2);
     await expect(replay).toHaveAttribute('data-angehalten', '');
     await expect(replay.locator('svg')).toBeVisible();
     // Angehalten: Tippen spielt sie erneut zweimal ab.
-    played = await trackPlayed(video);
-    await replay.click();
-    await expect
-      .poll(() => playhead(video), { message: `${label}: wieder` })
-      .toBeGreaterThanOrEqual(0);
-    await expect(replay).not.toHaveAttribute('data-angehalten');
-    await expect
-      .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
-        message: `${label}: wieder angehalten`,
-        timeout: 20_000,
-      })
-      .toBe(true);
-    result = await played();
-    expect(result.played / result.duration, `${label}: wieder zwei`).toBeGreaterThan(1.7);
-    expect(result.played / result.duration, `${label}: wieder zwei`).toBeLessThan(2.3);
+    result = await runsAfterReplay(video, replay, `${label}, wieder`);
+    expect(result.runs, `${label}: wieder zwei; ${result.events}`).toBe(2);
+    await expect(replay).toHaveAttribute('data-angehalten', '');
   }
 
   test('Details: zweimal, Symbol, Tippen wiederholt', async ({ page }) => {

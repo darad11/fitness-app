@@ -30,7 +30,21 @@ const loop = (stem: string) => new RegExp(`^/uebungen/medien/${stem}-[0-9a-f]{8}
 const preview = (stem: string) =>
   new RegExp(`^/uebungen/medien/${stem}-vorschau-[0-9a-f]{8}\\.webp$`);
 
+/**
+ * Wie die installierte App vom Home-Bildschirm, in der am Gerät gemessen wurde (D-393): Mit der
+ * Kennung des iPhone im Browser-Tab (WebKit in der CI) zeigt die App sonst über jeder Seite den
+ * Hinweis zur Installation (AK-PWA-04), am Duo zugeklappt rutschte der Satz damit unter die
+ * Fußleiste (Nachtrag zu D-498).
+ */
+function installed() {
+  Object.defineProperty(Navigator.prototype, 'standalone', {
+    configurable: true,
+    get: () => true,
+  });
+}
+
 async function startDayA(page: Page, width: number, height: number) {
+  await page.addInitScript(installed);
   await page.setViewportSize({ width, height });
   await openPage(page, '/training/vorlagen/compound_ab_4');
   await page.getByRole('button', { name: 'Programm aktivieren' }).click();
@@ -38,6 +52,33 @@ async function startDayA(page: Page, width: number, height: number) {
   await openPage(page, '/heute');
   await page.getByRole('button', { name: 'Training starten' }).click();
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
+}
+
+/** Lage der Teile des Players von oben nach unten, für die Meldung bei einem Fehlschlag. */
+function layoutReport(page: Page): Promise<string> {
+  return page.evaluate(() => {
+    const span = (el: Element | null | undefined) => {
+      if (!el) return 'fehlt';
+      const r = el.getBoundingClientRect();
+      return `${r.top.toFixed(0)} bis ${r.bottom.toFixed(0)}`;
+    };
+    const q = (selector: string) => document.querySelector(selector);
+    const current = q('li[aria-current="step"]');
+    return [
+      `Fenster ${String(window.innerWidth)} × ${String(window.innerHeight)}`,
+      `niedrig ${String(q('.player-frame')?.hasAttribute('data-niedrig'))}`,
+      `Scroll ${String(document.getElementById('seite')?.scrollTop)}`,
+      `Kopf ${span(q('.player-head'))}`,
+      `Jetzt ${span(q('.player-now'))}`,
+      `Name ${span(q('.player-now-name'))}`,
+      `Angaben ${span(q('.player-now-info'))}`,
+      `Danach ${span(q('.player-next-line'))}`,
+      `Schleife ${span(q('[data-demo-compact]'))}`,
+      `Übung ${span(current?.closest('section'))}`,
+      `Satz ${span(current)}`,
+      `Fuß ${span(q('.player-foot'))}`,
+    ].join('; ');
+  });
 }
 
 /** Bild neben „Danach:“: Vorschau der nächsten Übung, stumm; 32 px, im niedrigen Fenster 24 px. */
@@ -70,9 +111,11 @@ for (const [label, width, height, frameWidth, thumb] of [
     const size = await box(frame);
     expect(size.width).toBe(frameWidth);
     expect(size.height).toBe((frameWidth * 3) / 4);
-    // Der aktuelle Satz bleibt über der Fußleiste.
+    // Der aktuelle Satz bleibt über der Fußleiste; die Meldung nennt die Lage der Teile (WebKit
+    // läuft nur in der CI).
     const footTop = (await box(page.locator('.player-foot'))).top;
-    expect((await box(page.locator('li[aria-current="step"]'))).bottom).toBeLessThan(footTop);
+    const setBottom = (await box(page.locator('li[aria-current="step"]'))).bottom;
+    expect(setBottom, await layoutReport(page)).toBeLessThan(footTop);
     await expectNextThumb(now, 'bankdruecken_kh', 'Bankdrücken mit Kurzhanteln', thumb);
 
     await now.getByRole('button', { name: 'Beinpresse: Ausführung und Angaben' }).click();

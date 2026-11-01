@@ -15,6 +15,9 @@ export const LOOP_RUNS = 2;
  */
 const GESTURES = ['pointerup', 'touchend', 'click', 'keydown'] as const;
 
+/** Ereignisse, mit denen die Wiedergabe steht: Die gespielte Zeit zählt dann nicht weiter. */
+const HALTS = ['pause', 'waiting', 'emptied', 'ended'] as const;
+
 export interface LoopPlayback {
   /** Gehört an das `<video>`. */
   ref: RefObject<HTMLVideoElement | null>;
@@ -37,11 +40,15 @@ export interface LoopPlayback {
  *   wird und bei Rückkehr in die App; unsichtbar (andere Spalte, weggescrollt) hält es an,
  * - lehnt das System ab (Stromsparmodus: nur aus einer Geste), startet es bei der nächsten Geste
  *   irgendwo in der App,
- * - `endless` (Player) mit `loop` ohne Ende, sonst `LOOP_RUNS` Durchläufe ohne `loop`: Nach jedem
- *   Ende (`ended`) beginnt der nächste, nach dem letzten steht das letzte Bild. Gezählt wird am
- *   Ende, nicht am Rücksprung der Zeit: Den meldet nicht jeder Browser (WebKit unter Linux ließ
- *   die Schleife so ohne Ende laufen). Ein Ende zählt nur, wenn der Durchlauf mindestens zur
- *   Hälfte lief: WebKit meldet nach dem Neustart teils ein zweites Ende.
+ * - `endless` (Player) ohne Ende, sonst `LOOP_RUNS` Durchläufe, dann steht das letzte Bild.
+ *
+ * Die Durchläufe wiederholt der Browser selbst (`loop`), auch außerhalb des Players; gezählt wird
+ * die gespielte Zeit, nicht Ereignisse. Nach anderthalb Durchläufen, mitten im letzten, endet
+ * `loop`; der Durchlauf läuft zu Ende, und das Video steht am letzten Bild. Die Zeit zählt, solange
+ * das Video spielt (`playing` bis `pause`, `waiting`, `ended`): Weggescrollt, im Hintergrund oder
+ * beim Nachladen zählt sie nicht. Vorher zählte die App die Enden (`ended`) und startete jeden
+ * Durchlauf neu; WebKit unter Linux meldete dabei Enden doppelt oder gar nicht, die Schleife lief
+ * dreimal oder ohne Ende (Nachträge zu D-497).
  */
 export function useLoopPlayback(endless: boolean): LoopPlayback {
   const ref = useRef<HTMLVideoElement>(null);
@@ -55,11 +62,16 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     element.defaultMuted = true;
     element.setAttribute('muted', '');
     element.playsInline = true;
-    element.loop = endless;
-    let runs = 0;
-    /** Weiteste Stelle des laufenden Durchlaufs (Sekunden). */
-    let reached = 0;
+    // Auch außerhalb des Players wiederholt der Browser selbst, bis zum letzten Durchlauf.
+    element.loop = true;
+    /** Läuft der letzte Durchlauf (ohne `loop`)? */
+    let lastRun = false;
     let wanted = true;
+    /** Gespielte Zeit in Sekunden der Schleife, ohne den laufenden Abschnitt. */
+    let played = 0;
+    /** Beginn des laufenden Abschnitts (`performance.now()`), solange das Video spielt. */
+    let since: number | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     // Ohne IntersectionObserver (sehr alte Browser, Tests) gilt das Video als sichtbar.
     const observed = typeof IntersectionObserver !== 'undefined';
     let visible = !observed;
@@ -74,44 +86,78 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
         // wie abgelehnt
       }
     };
-    const onTime = () => {
-      if (element.currentTime > reached) reached = element.currentTime;
+
+    const rate = () => (element.playbackRate > 0 ? element.playbackRate : 1);
+    const length = () =>
+      Number.isFinite(element.duration) && element.duration > 0 ? element.duration : 0;
+    const elapsed = () =>
+      played + (since === null ? 0 : ((performance.now() - since) / 1000) * rate());
+    /** Ab hier endet `loop`: mitten im letzten Durchlauf. */
+    const budget = () => (LOOP_RUNS - 0.5) * length();
+
+    const schedule = () => {
+      clearTimeout(timer);
+      timer = undefined;
+      if (endless || lastRun || since === null || length() === 0) return;
+      const rest = Math.max(0, budget() - elapsed());
+      timer = setTimeout(
+        () => {
+          timer = undefined;
+          if (elapsed() + 0.01 < budget()) {
+            schedule();
+            return;
+          }
+          lastRun = true;
+          element.loop = false;
+        },
+        (rest / rate()) * 1000,
+      );
     };
-    /** Von vorn; nach dem Ende tut das `play()` selbst. */
-    const rewind = () => {
-      reached = 0;
-      if (!element.ended) element.currentTime = 0;
+    const onPlaying = () => {
+      since ??= performance.now();
+      schedule();
+    };
+    const onHalt = () => {
+      if (since !== null) {
+        played = elapsed();
+        since = null;
+      }
+      clearTimeout(timer);
+      timer = undefined;
     };
     const onEnded = () => {
       if (endless) return;
-      const length = Number.isFinite(element.duration) ? element.duration : 0;
-      if (length > 0 && reached < length / 2) {
-        // Zweites Ende gleich nach dem Neustart: kein Durchlauf, weiterspielen.
-        attempt();
-        return;
-      }
-      runs += 1;
-      if (runs < LOOP_RUNS) {
-        rewind();
+      if (!lastRun) {
+        // Mit `loop` endet ein Video nicht; meldet der Browser es doch, läuft es weiter.
         attempt();
         return;
       }
       wanted = false;
+      // Manche Browser melden das Ende, ohne anzuhalten.
+      if (!element.paused) element.pause();
       setStopped(true);
     };
     restart.current = () => {
-      runs = 0;
       wanted = true;
-      rewind();
+      lastRun = false;
+      element.loop = true;
+      played = 0;
+      if (since !== null) since = performance.now();
+      element.currentTime = 0;
       setStopped(false);
       attempt();
+      schedule();
     };
 
     for (const name of GESTURES) document.addEventListener(name, attempt, true);
     document.addEventListener('visibilitychange', attempt);
     element.addEventListener('canplay', attempt);
-    element.addEventListener('timeupdate', onTime);
     element.addEventListener('ended', onEnded);
+    if (!endless) {
+      element.addEventListener('playing', onPlaying);
+      for (const name of HALTS) element.addEventListener(name, onHalt);
+      element.addEventListener('durationchange', schedule);
+    }
     let observer: IntersectionObserver | undefined;
     if (observed) {
       observer = new IntersectionObserver((entries) => {
@@ -126,11 +172,14 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     attempt();
 
     return () => {
+      clearTimeout(timer);
       for (const name of GESTURES) document.removeEventListener(name, attempt, true);
       document.removeEventListener('visibilitychange', attempt);
       element.removeEventListener('canplay', attempt);
-      element.removeEventListener('timeupdate', onTime);
       element.removeEventListener('ended', onEnded);
+      element.removeEventListener('playing', onPlaying);
+      for (const name of HALTS) element.removeEventListener(name, onHalt);
+      element.removeEventListener('durationchange', schedule);
       observer?.disconnect();
       restart.current = () => undefined;
     };

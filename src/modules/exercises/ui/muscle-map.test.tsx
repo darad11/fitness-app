@@ -71,3 +71,17 @@ describe('Muskelkarte (D-401)', () => {
     expect(all.has('hands')).toBe(false);
   });
 });
+
+describe('Muskelkarte neben der Animation (D-499)', () => {
+  it('füllt ihren Platz statt eines Abstands darunter', () => {
+    const { container, rerender } = render(<MuscleMap primary={['lats']} secondary={[]} />);
+    const map = container.querySelector('[data-muscle-map]');
+    expect(map?.className).toBe('mb-4');
+    rerender(<MuscleMap primary={['lats']} secondary={[]} fill />);
+    expect(container.querySelector('[data-muscle-map]')?.className).toBe('muscle-map-fill');
+    expect(container.querySelector('.muscle-map-views')?.children).toHaveLength(2);
+    expect(screen.getByRole('img', { name: /^Muskelkarte\. Hauptmuskeln: Latissimus/ })).toBe(
+      container.querySelector('[data-muscle-map]'),
+    );
+  });
+});

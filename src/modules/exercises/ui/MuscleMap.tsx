@@ -108,9 +108,12 @@ function View({
 export function MuscleMap({
   primary,
   secondary,
+  fill = false,
 }: {
   primary: readonly Muscle[];
   secondary: readonly Muscle[];
+  /** So hoch wie der Platz: neben der Animation in den Übungsdetails (D-499). */
+  fill?: boolean;
 }) {
   // Je Übung einmal berechnet. Nebenbei hält der Import aus `react` die Aufteilung der Startdateien
   // wie vorher: Ein nachgeladener Teil nur mit JSX trennte `react` von `jsx-runtime` (+0,4 KB).
@@ -127,11 +130,11 @@ export function MuscleMap({
   return (
     <div
       data-muscle-map=""
-      className="mb-4"
+      className={fill ? 'muscle-map-fill' : 'mb-4'}
       role="img"
       aria-label={tExerciseMedia.muscleMapLabel(text)}
     >
-      <div className="grid grid-cols-2 gap-3">
+      <div className="muscle-map-views grid grid-cols-2 gap-3">
         <View view={MUSCLE_MAP_VIEWS.front} levels={front} label={tExerciseMedia.muscleMapFront} />
         <View view={MUSCLE_MAP_VIEWS.back} levels={back} label={tExerciseMedia.muscleMapBack} />
       </div>

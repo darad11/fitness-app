@@ -1864,3 +1864,21 @@ Bekannte Einschränkungen: am Gerät nicht geprüft
 Nächste Schritte: D-499 Details breit, D-500 Messung und Vorschlag
 ```
 
+## 41. Übungsdetails aufgeklappt: Animation und Muskelkarte nebeneinander (D-499)
+
+- Am Duo aufgeklappt (quer und hoch) steht die Muskelkarte direkt neben der Animation, mit 20 px Abstand und genau so hoch wie sie (quer 268 px, hoch 283 px); die Figuren der Karte passen sich an. Ein erster Entwurf ließ die Karte in ihrer eigenen Größe stehen (419 px hoch), das schob die Reiter unter die Tab-Leiste.
+- Im Reiter „Muskeln“ steht dann keine zweite Karte mehr, nur die Angaben (Hauptmuskeln, mitarbeitend, Gerät, Erfassung).
+- Zugeklappt und am iPhone bleibt alles wie bisher: die Animation allein oben, die Karte im Reiter „Muskeln“.
+- Klappst du das Duo auf oder zu, wechselt die Karte ihren Platz, ohne dass die Seite neu lädt.
+
+```
+Arbeitspaket: D-499 Phase Programme, Übungsdetails breit
+Umgesetzte Funktionen: Muskelkarte neben der Animation ab 40 rem Breite, gleich hoch, im Reiter dann nur die Angaben; schmal wie bisher; erfüllte AK: –
+Geänderte Dateien: src/modules/progress/ui/ExerciseDetailPage.tsx, src/modules/exercises/ui/MuscleMap.tsx, src/modules/exercises/ui/muscle-map.css, src/modules/exercises/index.ts, src/shared/ui/breakpoints.ts, Tests (e2e/uebungen-details-breit.spec.ts neu, breakpoints.test.ts neu, muscle-map.test.tsx), Dokumentation
+Technische Entscheidungen: D-499
+Ausgeführte Tests: format:check, lint, typecheck, test (1.242), check:docs, build, check:bundle (238,9 KB), test:e2e Chromium
+Ergebnis: bestanden; WebKit läuft in der CI
+Bekannte Einschränkungen: am Gerät nicht geprüft
+Nächste Schritte: D-500 Messung und Vorschlag zur Größe der Figur
+```
+

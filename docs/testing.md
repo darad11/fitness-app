@@ -3118,3 +3118,15 @@ Vorschaubild der nächsten Übung neben „Danach:“, schmal laufende Schleife 
 | `e2e/player-jetzt.spec.ts` (neu, 4 Tests, Handy-Profil) | 4 bestanden; erster Lauf: 1 Fehlschlag im Test selbst (nach dem Wechsel scrollt der Player zum nächsten Satz, „Jetzt“ lag außerhalb des Bilds, die Schleife stand dort wie gewollt); der Test scrollt jetzt zurück und prüft auch das Anhalten außerhalb des Bilds |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.239 Tests; Startansicht 238,6 KB, Übungsbilder 52 von 52; erster Lauf von `pnpm typecheck` mit einem Typfehler im neuen Unit-Test (`querySelector` ohne Elementtyp), behoben |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 449 bestanden, 142 übersprungen, 1 fehlgeschlagen (22,4 min, parallel zu einer Rechnung in Blender, Last um 14 auf 4 Kernen): der Zeittest der Startfläche „beim schnellen Start“ (`start-surface.spec.ts:579`, „Heute“ nach 1.364 ms statt unter 1.143 ms bereit); er berührt den Player nicht. Einzeln wiederholt ohne die Rechnung: 3 von 3 bestanden |
+
+### Übungsdetails breit · 01.11.2026, Cloud-Umgebung
+
+Animation und Muskelkarte nebeneinander ab 40 rem Breite, gleich hoch (D-499).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probe in Chromium (Latziehen) | Duo quer 867 × 669: Animation 357 × 268, Karte 384 × 268, 20 px dazwischen, oben und unten bündig; Duo hoch 669 × 869: 377 × 283 und 232 × 283; iPhone 390 × 844: Animation 350 × 263, keine Karte daneben. Erster Entwurf ohne Anpassung der Höhe: Karte 384 × 419, die Reiter rutschten unter die Tab-Leiste |
+| `e2e/uebungen-details-breit.spec.ts` (neu, 5 Tests, Handy-Profil) und `uebungen.spec.ts` | 22 bestanden, 8 übersprungen (Desktop-Profil); die Muskelkarte im Desktop-Profil steht daneben, der Test „Muskelkarte“ findet sie dort |
+| Unit-Tests `breakpoints.test.ts` (neu, 2: folgt dem Fenster beim Auf- und Zuklappen, ab genau 640 px), `muscle-map.test.tsx` (1 neu) | bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 138 Dateien, 1.242 Tests; Startansicht 238,9 KB (vorher 238,6 KB, `useAtLeast` in `breakpoints.ts`), Übungsbilder 52 von 52; erster Lauf von `pnpm format:check` meldete die neue Testdatei, formatiert |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 455 bestanden, 147 übersprungen, keiner fehlgeschlagen (24,4 min, parallel zu Standbildern in Blender) |

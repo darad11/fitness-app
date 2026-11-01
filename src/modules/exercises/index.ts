@@ -57,7 +57,7 @@ export const ExerciseThumb = visualLazy((m) => m.ExerciseThumb);
 export const ExerciseDemo = visualLazy((m) => m.ExerciseDemo);
 /** Ausführung mit Quellen (D-398). */
 export const ExerciseGuideView = visualLazy((m) => m.ExerciseGuideView);
-/** Muskelkarte, vorne und hinten (D-401); lädt erst im Reiter „Muskeln“. */
+/** Muskelkarte, vorne und hinten (D-401); lädt erst im Reiter „Muskeln“ oder breit neben der Animation (D-499). */
 export const ExerciseMuscleMap = lazy<ComponentType<MuscleMapProps>>(async () => {
   try {
     return { default: (await (await visuals()).loadMuscleMap()).MuscleMap };

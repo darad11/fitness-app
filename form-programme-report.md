@@ -1729,3 +1729,30 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Gerätetest von „Ganzkörper A/B“ durch den Produktinhaber, danach Entscheidung über den Merge von #54
 ```
+
+## 36. Alte Kleidung im Gerätetest: Prüfsumme im Dateinamen (D-494)
+
+Du hast im Gerätetest bei den meisten Übungen noch die alte Kleidung gesehen. Die Dateien im Branch tragen die finale Kleidung; dein Gerät hat alte Fassungen aus seinem Speicher gezeigt.
+
+**Ursache.** Die App legt jede Schleife beim ersten Anzeigen im Speicher des Geräts ab und spielt sie danach von dort, auch ohne Netz (D-403). Erkannt wird eine Datei an ihrem Namen. D-485 hat zehn Schleifen mit der finalen Kleidung unter ihren alten Namen ersetzt; unter `kniebeuge.mp4` liegt seit D-412 schon die fünfte Fassung. Ein Gerät, das eine Datei schon hatte, holte die neue nicht. Neue Namen hatten nur Beinbeuger, Rumänisches Kreuzheben und Schulterdrücken. Deshalb zeigten 8 der 11 Übungen von „Ganzkörper A/B“ die alte Kleidung.
+
+**Behebung.**
+
+- Jede Datei trägt jetzt die Prüfsumme ihres Inhalts im Namen, etwa `kniebeuge-8ccb4065.mp4`. Ändert sich der Inhalt, ändert sich der Name, und das Gerät lädt die neue Datei. Alle 52 Dateien der 13 Übungen sind umbenannt, ihr Inhalt bleibt gleich.
+- Nach dem Laden der Bildliste löscht die App aus dem Speicher, was die Liste nicht mehr nennt. So verschwinden die alten Fassungen auch vom Gerät; alles Aktuelle bleibt offline verfügbar.
+- Nach dem Rendern vergibt `python3 tools/uebungen_medien_version.py` die Namen. `pnpm check:docs` meldet jede Datei ohne passende Prüfsumme und jede Datei im Ordner, die die Liste nicht nennt. Eine neu gerenderte Schleife, die noch nicht eingebaut ist, fällt so vor dem E2E-Lauf auf.
+- Die Werkzeuge für Aufnahmen und Ansichten finden die Dateien weiter über ihren Namen ohne Prüfsumme.
+
+**Am Gerät.** Öffne die App mit Netz. Erscheint „Neue Version verfügbar“, tippe auf „Jetzt aktualisieren“; sonst schließ die App ganz und öffne sie neu. Danach lädt sie die Schleifen neu.
+
+```
+Arbeitspaket: D-494 Phase Programme, Übungsbilder mit Prüfsumme im Dateinamen
+Umgesetzte Funktionen: neue Fassungen der Übungsbilder erreichen das Gerät (neuer Name je Inhalt), alte Fassungen fallen aus dem Speicher; Werkzeug und Prüfung für die Namen; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien.json, public/uebungen/medien/ (52 Dateien umbenannt), src/modules/exercises/data/media.ts, src/modules/exercises/data/media.test.ts, vite.config.ts (Hinweis), e2e/uebungen.spec.ts, e2e/uebungen-offline.spec.ts, tools/uebungen_medien_version.py (neu), tools/uebungen-medien.mjs (neu), tools/check_medien.py, tools/uebungen_bewegung.py, tools/pilot-screens.mjs, tools/uebungen-fassungen-screens.mjs, tools/uebungen-3d/render.py (Hinweis), docs/architecture.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/feature-inventory.csv, form-programme-report.md
+Technische Entscheidungen: D-494
+Ausgeführte Tests: Unit-Tests 1.217 (4 neu, mit Gegenprobe), Werkzeug in vier Fällen, check:docs, Build, check:bundle, E2E Chromium 434 bestanden, 132 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: wie bisher braucht eine Schleife, die das Gerät noch nicht geladen hat, einmal Netz (D-403)
+Nächste Schritte: Gerätetest von „Ganzkörper A/B“ durch den Produktinhaber fortsetzen, danach Entscheidung über den Merge von #54
+```
+

@@ -65,6 +65,14 @@ async function serveVisuals(
   });
 }
 
+/** Adresse einer ausgelieferten Datei der Übungsbilder: Der Name trägt die Prüfsumme des Inhalts
+ *  (`kniebeuge-poster-1a2b3c4d.webp`, D-494), damit eine neu gerenderte Schleife eine neue Adresse
+ *  bekommt. Geprüft werden Übung und Art der Datei, nicht die Prüfsumme selbst. */
+function medium(name: string): RegExp {
+  const dot = name.lastIndexOf('.');
+  return new RegExp(`^/uebungen/medien/${name.slice(0, dot)}-[0-9a-f]{8}\\${name.slice(dot)}$`);
+}
+
 /** Zeile der Übungsliste mit diesem Namen. */
 function row(page: Page, name: string) {
   return page.getByRole('link', { name: new RegExp(`^${name}`) }).first();
@@ -89,41 +97,38 @@ test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der
   await expect(page.locator('ul[aria-label] img')).toHaveCount(13);
   await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
     'src',
-    '/uebungen/medien/bankdruecken_kh-vorschau.webp',
+    medium('bankdruecken_kh-vorschau.webp'),
   );
   const legPress = row(page, 'Beinpresse(?!,)').locator('img');
   await legPress.scrollIntoViewIfNeeded();
-  await expect(legPress).toHaveAttribute('src', '/uebungen/medien/beinpresse-vorschau.webp');
+  await expect(legPress).toHaveAttribute('src', medium('beinpresse-vorschau.webp'));
   const plank = row(page, 'Unterarmstütz').locator('img');
   await plank.scrollIntoViewIfNeeded();
-  await expect(plank).toHaveAttribute('src', '/uebungen/medien/unterarmstuetz-vorschau.webp');
+  await expect(plank).toHaveAttribute('src', medium('unterarmstuetz-vorschau.webp'));
   const crunch = row(page, 'Crunches(?! am)').locator('img');
   await crunch.scrollIntoViewIfNeeded();
-  await expect(crunch).toHaveAttribute('src', '/uebungen/medien/crunch-vorschau.webp');
+  await expect(crunch).toHaveAttribute('src', medium('crunch-vorschau.webp'));
   const lateralRaise = row(page, 'Seitheben mit Kurzhanteln').locator('img');
   await lateralRaise.scrollIntoViewIfNeeded();
-  await expect(lateralRaise).toHaveAttribute('src', '/uebungen/medien/seitheben_kh-vorschau.webp');
+  await expect(lateralRaise).toHaveAttribute('src', medium('seitheben_kh-vorschau.webp'));
   const cableRow = row(page, 'Rudern am Kabel, sitzend').locator('img');
   await cableRow.scrollIntoViewIfNeeded();
-  await expect(cableRow).toHaveAttribute('src', '/uebungen/medien/rudern_kabel-vorschau.webp');
+  await expect(cableRow).toHaveAttribute('src', medium('rudern_kabel-vorschau.webp'));
   const legCurl = row(page, 'Beinbeuger liegend').locator('img');
   await legCurl.scrollIntoViewIfNeeded();
-  await expect(legCurl).toHaveAttribute('src', '/uebungen/medien/beinbeuger_liegend-vorschau.webp');
+  await expect(legCurl).toHaveAttribute('src', medium('beinbeuger_liegend-vorschau.webp'));
   const shoulderPress = row(page, 'Schulterdrücken an der Maschine').locator('img');
   await shoulderPress.scrollIntoViewIfNeeded();
   await expect(shoulderPress).toHaveAttribute(
     'src',
-    '/uebungen/medien/schulterdruecken_maschine-vorschau.webp',
+    medium('schulterdruecken_maschine-vorschau.webp'),
   );
   const romanian = row(page, 'Rumänisches Kreuzheben mit Kurzhanteln').locator('img');
   await romanian.scrollIntoViewIfNeeded();
-  await expect(romanian).toHaveAttribute(
-    'src',
-    '/uebungen/medien/rumaenisches_kreuzheben_kh-vorschau.webp',
-  );
+  await expect(romanian).toHaveAttribute('src', medium('rumaenisches_kreuzheben_kh-vorschau.webp'));
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
-  await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');
+  await expect(squat).toHaveAttribute('src', medium('kniebeuge-vorschau.webp'));
   await expect.poll(() => squat.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(240);
   await expect(row(page, 'Latziehen').locator('[data-visual="bild"]')).toHaveAttribute(
     'data-shape',
@@ -448,7 +453,7 @@ test('Pilot-Animation: Schleife im Player aufgeklappt und in den Details, Standb
   await startTemplateDay(page);
   const demo = page.getByRole('region', { name: 'Ausführung der aktuellen Übung' });
   const video = demo.locator('video');
-  await expect(video).toHaveAttribute('poster', '/uebungen/medien/kniebeuge-poster.webp');
+  await expect(video).toHaveAttribute('poster', medium('kniebeuge-poster.webp'));
   await expect(video).toHaveJSProperty('muted', true);
   await expect(video).toHaveJSProperty('loop', true);
   // Die Schleife läuft wirklich (Zeit schreitet fort).
@@ -460,15 +465,12 @@ test('Pilot-Animation: Schleife im Player aufgeklappt und in den Details, Standb
   await openPage(page, '/uebungen');
   await row(page, 'Latziehen').click();
   const detail = page.locator('[data-demo="bild"] video');
-  await expect(detail.locator('source').last()).toHaveAttribute(
-    'src',
-    '/uebungen/medien/latziehen.mp4',
-  );
+  await expect(detail.locator('source').last()).toHaveAttribute('src', medium('latziehen.mp4'));
 
   // Weniger Bewegung: nur das Standbild, kein Video.
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.reload();
   const still = page.locator('[data-demo="bild"] img');
-  await expect(still).toHaveAttribute('src', '/uebungen/medien/latziehen-poster.webp');
+  await expect(still).toHaveAttribute('src', medium('latziehen-poster.webp'));
   await expect(page.locator('[data-demo="bild"] video')).toHaveCount(0);
 });

@@ -12,7 +12,8 @@ Aufruf mit dem Python von Blender als Modul (`pip install bpy==4.2.0`, Python 3.
     python -I tools/uebungen-3d/render.py kniebeuge --ansicht vorn --breite 360 --hoehe 270 \\
         --proben 16 --nur-bilder --arbeit /tmp/vergleich             # Einzelbilder einer Ansicht
 
-Ergebnis der Schleife in `public/uebungen/medien/` (MP4, WebM, Poster, Vorschau). Die Kamera folgt
+Ergebnis der Schleife in `public/uebungen/medien/` (MP4, WebM, Poster, Vorschau), noch ohne Prüfsumme im
+Namen: Nach allen Renderläufen einmal `python3 tools/uebungen_medien_version.py` (D-494). Die Kamera folgt
 der Regel der Übung (`kamera`); der Abstand ergibt sich aus Figur und Gerät über die ganze Bewegung.
 Schleife und Prüfung zeigen die Figur der App, `FIGUR` (D-447); mit `--variante` eine andere Fassung
 (Dateinamen mit Zusatz), mit `--grau` die graue Figur ohne Kleidung in der Körperform `--form`. Muskelzonen

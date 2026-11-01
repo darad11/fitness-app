@@ -13,11 +13,13 @@ import {
 import { recentErrors } from '@/shared/db';
 import { coreExerciseId } from './coreLibrary';
 import {
+  MEDIA_CACHE,
   demoFiles,
   loadGuides,
   loadVisualIndex,
   mediaUrl,
   preloadVisual,
+  pruneMediaCache,
   resetMediaCacheForTests,
   useGuide,
   useVisualIndex,
@@ -227,6 +229,92 @@ describe('Liste der Visuals (D-397)', () => {
       '/uebungen/medien/goblet_squat-ende.webp',
     ]);
     vi.unstubAllGlobals();
+  });
+});
+
+/** Speicher des Service Workers zum Testen, mit Adressen wie in der Cache API (D-494). */
+function fakeMediaCache(paths: string[], exists = true) {
+  const stored = new Set(paths);
+  const open = vi.fn(() =>
+    Promise.resolve({
+      keys: () => Promise.resolve([...stored].map((path) => ({ url: `https://form.test${path}` }))),
+      delete: (request: { url: string }) =>
+        Promise.resolve(stored.delete(new URL(request.url).pathname)),
+    }),
+  );
+  vi.stubGlobal('caches', {
+    has: (name: string) => Promise.resolve(exists && name === MEDIA_CACHE),
+    open,
+  });
+  return { stored, open };
+}
+
+describe('Speicher der Bilddateien (D-494)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('löscht nur Dateien, die die Liste nicht mehr nennt; Vorschau und jede Datei der Demonstration bleiben', async () => {
+    const list = manifest(['goblet_squat']);
+    list.visuals.back_squat_barbell = {
+      preview: { src: 'medien/kniebeuge-vorschau-6b73396c.webp', width: 240, height: 240 },
+      demo: {
+        kind: 'animation',
+        file: { src: 'medien/kniebeuge-8ccb4065.mp4', width: 720, height: 540 },
+        webm: { src: 'medien/kniebeuge-10878655.webm', width: 720, height: 540 },
+        still: { src: 'medien/kniebeuge-poster-267197bc.webp', width: 720, height: 540 },
+      },
+      alt: 'Testbild Kniebeuge',
+      source: 'test',
+    };
+    const current = [
+      '/uebungen/medien/goblet_squat-vorschau.webp',
+      '/uebungen/medien/goblet_squat-start.webp',
+      '/uebungen/medien/goblet_squat-ende.webp',
+      '/uebungen/medien/kniebeuge-vorschau-6b73396c.webp',
+      '/uebungen/medien/kniebeuge-8ccb4065.mp4',
+      '/uebungen/medien/kniebeuge-10878655.webm',
+      '/uebungen/medien/kniebeuge-poster-267197bc.webp',
+    ];
+    // Alte Fassungen: Namen ohne Prüfsumme (vor D-494) und eine frühere Prüfsumme.
+    const old = [
+      '/uebungen/medien/kniebeuge.mp4',
+      '/uebungen/medien/kniebeuge-poster.webp',
+      '/uebungen/medien/kniebeuge-0badc0de.mp4',
+    ];
+    const { stored } = fakeMediaCache([...old, ...current]);
+    expect(await pruneMediaCache(list)).toBe(3);
+    expect([...stored].sort()).toEqual([...current].sort());
+  });
+
+  it('ohne Speicher des Service Workers geschieht nichts, es wird auch keiner angelegt', async () => {
+    const { open } = fakeMediaCache([], false);
+    expect(await pruneMediaCache(manifest(['goblet_squat']))).toBe(0);
+    expect(open).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+    // Ohne Cache API (Node, ältere Browser).
+    expect(await pruneMediaCache(manifest(['goblet_squat']))).toBe(0);
+  });
+
+  it('das Laden der Liste räumt den Speicher auf', async () => {
+    const { stored } = fakeMediaCache([
+      '/uebungen/medien/goblet_squat-vorschau.webp',
+      '/uebungen/medien/kniebeuge.mp4',
+    ]);
+    serve(manifest(['goblet_squat']));
+    expect((await loadVisualIndex()).size).toBe(1);
+    await waitFor(() => {
+      expect([...stored]).toEqual(['/uebungen/medien/goblet_squat-vorschau.webp']);
+    });
+  });
+
+  it('ein Fehler beim Aufräumen ändert nichts an den Visuals', async () => {
+    vi.stubGlobal('caches', {
+      has: () => Promise.reject(new Error('SecurityError')),
+      open: vi.fn(),
+    });
+    serve(manifest(['goblet_squat']));
+    expect((await loadVisualIndex()).size).toBe(1);
   });
 });
 

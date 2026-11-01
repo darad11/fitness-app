@@ -3040,3 +3040,20 @@ Liste aller elf Übungen mit Stand und Dateigrößen, Bild in Player-Größe (D-
 |---|---|
 | `python3 tools/uebungen_programm_uebersicht.py compound_ab_4 --name ganzkoerper-ab` | elf Übungen in der Reihenfolge der Tage (A: 5, B: 6), alle „Schleife in der App“, zusammen 1.254,6 KB; `ganzkoerper-ab-uebersicht.webp` (98 KB, 1600 × 1118), angesehen |
 | `python3 -m py_compile tools/uebungen_programm_uebersicht.py`, `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 52 von 52 |
+
+### Übungsbilder mit Prüfsumme im Namen · 01.11.2026, Cloud-Umgebung
+
+Ursache der alten Kleidung im Gerätetest, Dateinamen mit Prüfsumme, Aufräumen des Speichers (D-494).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Poster im Branch gegen den Stand vor D-485 (`git show 8d9dc92:…`), Kniebeuge und Seitheben | im Branch die finale Kleidung (Schulterband, Seitenstreifen Variante A), vorher die alte; die Dateien stimmten, nur ihre Namen blieben gleich |
+| `git log -- public/uebungen/medien/kniebeuge.mp4` | fünf Fassungen unter demselben Namen (D-412, D-447, D-456, D-461, D-485) |
+| `python3 tools/check_medien.py` vor der Umbenennung | 52 Probleme, je Datei „ohne passende Prüfsumme im Namen“, Exit-Code 1 |
+| `python3 tools/uebungen_medien_version.py` | 52 Dateien umbenannt, in der Liste nur die Adressen geändert, Prettier ohne Abweichung; zweiter Lauf: 0 Dateien |
+| Werkzeug in einer Kopie: neu gerenderte Datei, gleich gerenderte Datei, an Ort und Stelle überschriebene Datei, neuer Eintrag ohne Prüfsumme | wie vorgesehen: neue Prüfsumme und alte Fassung gelöscht; keine Änderung; die Prüfung meldet die falsche Prüfsumme, das Werkzeug berichtigt sie; neuer Name vergeben. Eine nicht eingebaute Datei meldet die Prüfung („liegt im Ordner, steht aber nicht in der Liste“) |
+| `aktuelle_datei` (Python), `aktuelleDatei` (Node), `uebungen_bewegung.py` mit Kniebeuge und Latziehen | richtige Dateien gefunden, fehlende gemeldet; Aufnahme 7,5 s (Probe, danach gelöscht) |
+| Unit-Tests `media.test.ts`, 4 neu (Aufräumen löscht nur, was die Liste nicht nennt; ohne Speicher nichts, auch kein neuer Speicher; Laden der Liste räumt auf; Fehler beim Aufräumen ändert nichts) | 22 bestanden; Gegenprobe mit absichtlich falscher Bedingung und ohne Aufruf: 2 Fehlschläge, danach wieder 22 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.217 Tests; „13 Einträge geprüft, … 52 Dateien mit Prüfsumme im Namen“; Startansicht 237,9 KB, Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,2 min); der erweiterte Offline-Test (alte Fassung im Speicher wird gelöscht, die aktuelle Schleife läuft danach ohne Netz) in beiden Profilen bestanden, ebenso Übungsliste und Pilot-Animation mit den Namen mit Prüfsumme |
+

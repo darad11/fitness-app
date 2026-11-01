@@ -167,6 +167,8 @@ export default defineConfig({
             urlPattern: ({ url }) => url.pathname.startsWith('/uebungen/medien/'),
             handler: 'CacheFirst',
             options: {
+              // Derselbe Name wie `MEDIA_CACHE` in src/modules/exercises/data/media.ts: Dort räumt
+              // die App alte Fassungen weg (D-494).
               cacheName: 'uebungen-medien',
               expiration: { maxEntries: 600 },
               // Nur vollständige Antworten speichern; Teilanfragen für Videos (Safari) bedient

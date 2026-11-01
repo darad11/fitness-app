@@ -4,7 +4,7 @@ aus `tools/pilot-screens.mjs`), für die Übungen einer Familie (D-463).
 
     python3 tools/uebungen_bewegung.py waagrechtes-druecken schraegbankdruecken_kh bankdruecken_kh
 
-Schreibt `docs/screens/uebungen/<name>-bewegung.mp4` aus `public/uebungen/medien/<übung>.mp4`; eine einzelne Übung
+Schreibt `docs/screens/uebungen/<name>-bewegung.mp4` aus `public/uebungen/medien/<übung>-<prüfsumme>.mp4` (D-494); eine einzelne Übung
 bleibt in der Größe der App (720 × 540). Ab vier Übungen ein Raster mit vier Spalten (je 360 × 270, D-485); mit
 `<übung>=<Beschriftung>` steht der Name unten links im Bild. Braucht ffmpeg.
 
@@ -15,6 +15,8 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+
+from uebungen_medien_version import aktuelle_datei
 
 HIER = Path(__file__).resolve().parent.parent
 
@@ -36,7 +38,7 @@ def main() -> None:
     texte = [a.split("=", 1)[1] if "=" in a else "" for a in angaben]
     eingaben = []
     for u in uebungen:
-        eingaben += ["-stream_loop", "2", "-i", str(HIER / "public/uebungen/medien" / f"{u}.mp4")]
+        eingaben += ["-stream_loop", "2", "-i", str(aktuelle_datei(f"{u}.mp4"))]
     n = len(uebungen)
     if n == 1:  # eine Übung: in voller Größe der App (D-465)
         filter_ = "[0:v]null" + _beschriftung(texte[0])

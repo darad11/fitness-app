@@ -23,6 +23,8 @@ import { loadCoreExercises } from './coreLibrary';
 export const MEDIA_URL = '/uebungen/medien.json';
 /** Ordner der Bilddateien, `src` im Manifest ist relativ dazu. */
 const MEDIA_BASE = '/uebungen/';
+/** Speicher des Service Workers für die Bilddateien (`vite.config.ts`, `runtimeCaching`). */
+export const MEDIA_CACHE = 'uebungen-medien';
 
 export interface VisualEntry {
   visual: ExerciseVisual;
@@ -63,6 +65,8 @@ function reportSkipped(skipped: readonly SkippedMediaEntry[]): void {
 export function loadVisualIndex(): Promise<VisualIndex> {
   visualsPending ??= Promise.all([fetchMedia(), loadCoreExercises()])
     .then(([media, core]) => {
+      // Aufräumen ist Nebensache: Ein Fehler dabei ändert nichts an der Anzeige.
+      pruneMediaCache(media).catch(() => undefined);
       const index = new Map<string, VisualEntry>();
       for (const exercise of core) {
         const visual = media.visuals[exercise.key];
@@ -140,6 +144,42 @@ export function demoFiles(visual: ExerciseVisual): MediaFile[] {
     case 'image':
       return [demo.file];
   }
+}
+
+/** Alle Dateien eines Visuals: Vorschau und jede Datei der Demonstration. */
+function visualFiles(visual: ExerciseVisual): MediaFile[] {
+  const demo = visual.demo;
+  if (!demo) return [visual.preview];
+  switch (demo.kind) {
+    case 'animation':
+      return [visual.preview, demo.file, ...(demo.webm ? [demo.webm] : []), demo.still];
+    case 'video':
+      return [visual.preview, demo.file, demo.poster];
+    case 'phases':
+      return [visual.preview, demo.start, demo.end];
+    case 'image':
+      return [visual.preview, demo.file];
+  }
+}
+
+/**
+ * Räumt den Speicher der Bilddateien auf (D-494). Jede Datei trägt die Prüfsumme ihres Inhalts im
+ * Namen; eine neu gerenderte Schleife hat also eine neue Adresse, und die alte Datei braucht die
+ * App nie wieder. Gelöscht wird nur, was die aktuelle Liste nicht mehr nennt; alles, was sie
+ * nennt, bleibt für unterwegs gespeichert (D-403). Ohne den Speicher des Service Workers
+ * (Entwicklung, Tests, Browser ohne Cache API) geschieht nichts. Gibt die Zahl der gelöschten
+ * Dateien zurück.
+ */
+export async function pruneMediaCache(media: ExerciseMedia): Promise<number> {
+  if (typeof caches === 'undefined' || !(await caches.has(MEDIA_CACHE))) return 0;
+  const current = new Set(Object.values(media.visuals).flatMap(visualFiles).map(mediaUrl));
+  const cache = await caches.open(MEDIA_CACHE);
+  let removed = 0;
+  for (const request of await cache.keys()) {
+    if (current.has(new URL(request.url).pathname)) continue;
+    if (await cache.delete(request)) removed += 1;
+  }
+  return removed;
 }
 
 const preloaded = new Set<string>();

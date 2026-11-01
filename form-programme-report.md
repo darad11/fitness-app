@@ -1938,3 +1938,11 @@ Ergebnis: bestanden; WebKit läuft in der CI
 Bekannte Einschränkungen: am Gerät nicht geprüft; Figur noch nicht neu gerendert (Freigabe offen); Animation im Fenster mit Streifen 164 × 123 px (Vorschlag Kopf links offen)
 Nächste Schritte: Freigabe des Maßstabs und der Lage des Kopfs durch den Produktinhaber
 ```
+
+## 43. Bilder und Aufnahmen zu D-497 bis D-500
+
+- `docs/screens/duo/wiedergabe-schmal.webp`: iPhone und Duo zugeklappt, je Player (die kleine Animation läuft in „Jetzt“, daneben „Danach:“ mit Bild), Übungsinfo nach zwei Durchläufen mit dem Symbol zum Wiederholen, Übungsdetails wie bisher.
+- `docs/screens/duo/wiedergabe-aufgeklappt.webp`: Duo quer beim Start (867 × 669) und im Training mit dem Streifen oben (867 × 587), Übungsinfo nach zwei Durchläufen, Details mit Muskelkarte daneben, quer und hoch. Hier sieht man, wie klein die Animation im Fenster mit Streifen bleibt (Abschnitt 42, zur Entscheidung).
+- `docs/screens/duo/wiedergabe-iphone.mp4` (18 s): Start, die Animation der Beinpresse läuft sofort; Übungsinfo, zweimal, Symbol, Tippen spielt sie wieder ab; Wechsel zur nächsten Übung, deren Animation gleich läuft.
+- `docs/screens/duo/wiedergabe-duo-quer.mp4` (23 s): dasselbe am Duo quer im Training (867 × 587), mit zwei Wechseln; Rahmen und „Jetzt“ bleiben gleich groß.
+- Nebenbefund: Zweimal heute spielte ein Video statt des MP4 das WebM (im vollen E2E-Lauf und im ersten Versuch der Duo-Aufnahme). Die App weicht so aus, wenn eine Datei nicht lädt; das ist gewollt. In acht gezielten Versuchen kam der Fehler nicht wieder. Am iPhone spielt Safari das MP4 mit dem Decoder des Geräts; ob es dort vorkommt, zeigt der Gerätetest.

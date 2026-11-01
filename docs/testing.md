@@ -3163,3 +3163,13 @@ Nachtrag 3 zu D-497 (zweimal über die gespielte Zeit statt über Enden) und Nac
 | Ablauf in Chromium, Details Latziehen, Zeitstempel der Ereignisse | erster Durchlauf bis 2,38 s, der Browser springt selbst an den Anfang (`seeked`, `playing`), bei 3,75 s endet `loop`, bei 4,89 s angehalten am Ende (`pause`, `ended`), das Symbol erscheint |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI), Stand mit D-500 und beiden Nachträgen | 455 bestanden, 148 übersprungen, 1 fehlgeschlagen (18,7 min): `uebungen-wiedergabe.spec.ts:142` am Start von Tag B, das Kreuzheben spielte das WebM statt des MP4. Laut Mitschnitt kamen alle Anfragen für das MP4 mit 200 bzw. 206 zurück, danach wich die App wie vorgesehen auf das WebM aus; eine Meldung in der Konsole gab es nicht. Der Weg im Player ist in den Nachträgen unverändert. Einzeln viermal wiederholt: 4 bestanden. In der CI läuft der Test mit einer Wiederholung |
 | Player-Tests (7 Dateien, Chromium) auf demselben Stand | 64 bestanden, 44 übersprungen |
+
+### Bilder und Aufnahmen zur Wiedergabe · 01.11.2026, Cloud-Umgebung
+
+Bilder von iPhone und Duo, Aufnahmen des Players (D-497 bis D-500).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/player-wiedergabe-bilder.mjs` (iPhone 390 × 844, Duo zugeklappt 382 × 678, quer 867 × 669 und 867 × 587, hoch 669 × 869; sichere Bereiche wie am Gerät) | Player: kleine Schleife 112 × 84 (iPhone, Duo hoch) bzw. 96 × 72 (zugeklappt) läuft, große 273,5 × 205,1 bzw. 164,2 × 123,1 läuft; Übungsinfo nach zwei Durchläufen angehalten mit Symbol (318 × 238,5, 226 × 169,5, 356,8 × 267,6, 408 × 306); Details: Duo quer Animation 356,8 × 267,6 und Muskelkarte 384 × 267,6, Duo hoch 377,4 × 283 und 231,6 × 283 |
+| `HALTUNG=iphone node tools/player-wiedergabe-aufnahme.mjs` | 370 Bilder, 18,2 s: Beinpresse läuft nach dem Start (MP4), Übungsinfo läuft, steht nach zwei Durchläufen am Ende (2,5 s), läuft nach dem Tippen wieder; nach dem Wechsel läuft Bankdrücken |
+| `HALTUNG=duo-quer-streifen node tools/player-wiedergabe-aufnahme.mjs` | 561 Bilder, 22,7 s: Rahmen 164,2 × 123,1 bei Beinpresse, Bankdrücken und Rudern, alle drei laufen; Übungsinfo wie oben. Der erste Versuch spielte die Beinpresse als WebM: Das MP4 meldete einen Fehler, die App wich wie vorgesehen aus (wie im vollen E2E-Lauf beim Kreuzheben). Acht gezielte Starts mit Mitschnitt der Fehler, auch mit Bildschirm, sicherem Bereich und Screencast wie in der Aufnahme: kein Fehler, immer MP4. Zweiter Versuch mit MP4 |

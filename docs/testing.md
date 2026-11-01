@@ -2939,3 +2939,21 @@ Schleife des Beinbeugers mit der finalen Kleidung, Eintrag in der App und Aufnah
 | `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 11, ohne Visual 113; Animationsplan und Familien neu geschrieben |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm check:bundle`, `pnpm check:docs` | bestanden; Unit-Tests 135 Dateien, 1.209 Tests; Startansicht 237,8 KB, Übungsbilder 44 von 44 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | Erster Lauf nach 286 Tests abgebrochen: 2 fehlgeschlagen (Desktop), `uebungen.spec.ts` „Übungsliste: Übungen mit Animation …“ mit 0 statt 11 Bildern und `uebungen-offline.spec.ts` „Animation einmal online gesehen, danach offline“; Ursache: Alternativtext des Beinbeugers mit 297 Zeichen, das Schema erlaubt 240 und verwirft sonst die ganze Liste. Nach dem Kürzen auf 233 Zeichen: 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,1 min); der geänderte Test der Übungsliste (elf Vorschaubilder, dazu der Beinbeuger) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Hüftbeuge“ · 31.10. bis 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Hüftbeuge“ mit dem Rumänischen Kreuzheben mit Kurzhanteln (D-487).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen (Websuche) | exrx.net und nasm.org in der Cloud-Umgebung nicht erreichbar; Suchauszüge ohne die Schritte; gestützt auf den Ausführungstext der App und die Werte der Familie |
+| Erster Lauf (Hanteln über der Fußmitte, Luft 10 mm, fünf Stützen) | ohne Fehler; oben Hüfte 18 cm hinter dem Ausgang und 30° gebeugt, Arme 24° nach vorn, Handgelenk 14° seitlich |
+| Zweiter Lauf (Schwerpunkt über der Fußmitte, Luft 4 mm, Griff schräg) | Schwerpunkt ±0,3 cm, oben aufrecht, Handgelenk höchstens 7°; Mitte: Köpfe −46 mm, Ellbogen 162° statt 172° (Zustand zwischen den Aufrufen) |
+| Dritter bis fünfter Lauf (Arm ohne Zustand, Entfernung des Griffs gesucht, Drehung der Hand fest) | Ellbogen 164 bis 178°, dann 178,4° (außer Reichweite), dann 172,0° in jeder Phase |
+| Luft über den Winkel der Arme bei Phase 0,5 (−6 bis 4°) | Haut 22 mm, Shorts −30 bis −50 mm unter dem offenen Saum; nach der Behandlung der Ränder 0,8 bis 22 mm |
+| Kameras (720 × 540) | 90°/5°, 75°/8°, 60°/10°, 45°/10° verglichen; gewählt 75°/8° |
+| `render.py rumaenisches_kreuzheben_kh --pruefen`, erster Durchgang (fünf Stützen) | Köpfe −8,2 mm an den Knien (Phase 0,8 bis 0,97), 360 Meldungen aus den Suchschritten |
+| Zweiter Durchgang (17 Stützen, Spline, Rumpf unten 66°) | Knie 160,0°; Hüfte 17,5° bis 91,2° gebeugt (Rumpf zum Oberschenkel 162,5° bis 88,8°); Rumpf 83,8° bis 20,8°; Schwerpunkt −0,04 bis 0,05 cm; Griffe 1,8 cm unter den Kniegelenken; Ellbogen 172,0°; Handgelenk 6,4°; Köpfe 1,4 bis 6,5 mm; Sohlen 0,0 mm, verschoben 0,1 mm; Shorts unter dem Shirt −5,9 mm, Saumband −12,9 mm; Meldungen 0. 755 s, Nahaufnahmen 312 s |
+| Hüftfalte bei Phase 0,986 und 1,0 (Kamera der App 720 × 540 und Nahaufnahme von vorn unten) | angesehen: nichts sichtbar |
+| Prüfseite (`uebungen_pruef_bild.py rumaenisches_kreuzheben_kh --familie hueftbeuge --titel "Hüftbeuge"`) | `familie-hueftbeuge.webp`, angesehen: Stand und Endposition, Griff und Hantel, Fuß; Messwerte mit den Zeilen der Kleidung |
+| `python3 -m py_compile` (uebungen.py, uebungen_pruef_bild.py), `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (die App ändert sich nicht; E2E mit WebKit in der CI) | bestanden; Startansicht 237,8 KB, Übungsbilder 44 von 44 |

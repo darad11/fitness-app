@@ -186,6 +186,21 @@ MESSWERTE = (
     ("Hände und Griff vor dem Shirt (mm)", "Hände und Griff vor dem Shirt", "min", " mm"),
     ("Hände, Unterarme und Griff über den Beinen (mm)", "Hände, Unterarme und Griff über Beinen und Shorts", "min", " mm"),
     ("Kabel: Abstand zu Beinen, Shorts und Schuhen (mm)", "Kabel zu Beinen, Shorts und Schuhen", "min", " mm"),
+    # Kleidung (D-478, D-480): Shorts unter dem Shirt, Saumband über den Shorts, Haut unter dem Ärmel
+    ("Shorts unter dem Shirt (mm, negativ = durch)", "Shorts unter dem Shirt (unter 0 = durch)", "min", " mm"),
+    ("Saumband über den Shorts (mm, negativ = in den Shorts)", "Saumband über den Shorts (unter 0 = darin)", "min", " mm"),
+    ("Haut unter dem Ärmel am Saum (mm, negativ = durch)", "Haut unter dem Ärmel (unter 0 = durch)", "min", " mm"),
+    # Familie „Hüftbeuge“ (D-487)
+    ("Hüfte (Rumpf zum Oberschenkel, Grad, 180 = gestreckt)", "Hüfte, Rumpf zum Oberschenkel (180 = gestreckt)", "spanne",
+     "°"),
+    ("Rumpf zur Waagrechten (Grad)", "Rumpf zur Waagrechten", "spanne", "°"),
+    ("Unterschenkel zur Senkrechten (Grad)", "Unterschenkel zur Senkrechten", "spanne", "°"),
+    ("Schwerpunkt über der Fußmitte (cm, + dahinter)", "Schwerpunkt mit Hanteln über der Fußmitte (+ dahinter)", "spanne",
+     " cm"),
+    ("Hanteln über der Fußmitte (cm, + dahinter)", "Hanteln über der Fußmitte (+ dahinter)", "spanne", " cm"),
+    ("Griffe unter dem Kniegelenk (cm)", "Griffe unter dem Kniegelenk", "spanne", " cm"),
+    ("Arme vor der Senkrechten (Grad)", "Arme vor der Senkrechten (unter 0 = zurück)", "spanne", "°"),
+    ("Kurzhanteln zueinander (mm)", "Hanteln zueinander", "min", " mm"),
 )
 
 

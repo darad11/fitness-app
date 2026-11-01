@@ -1413,3 +1413,91 @@ Ergebnis: bestanden, nach der Korrektur des Alternativtexts
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Prüfseite der nächsten Familie „Hüftbeuge“ (Rumänisches Kreuzheben mit Kurzhanteln), dann Halt
 ```
+
+## 29. Nächste Familie: Hüftbeuge mit Rumänischem Kreuzheben mit Kurzhanteln, Prüfseite (D-487)
+
+Im Animationsplan kommt nach „Beine isoliert“ die Familie „Hüftbeuge“. Aus „Ganzkörper A/B“ gehört nur das Rumänische Kreuzheben mit Kurzhanteln dazu (21 Einheiten); es ist zugleich die Referenz der Familie. Wie verlangt zuerst nur die Prüfseite.
+
+### 29.1 Gerät
+
+- **Kurzhanteln:** zwei Hanteln mit 8 kg, dieselben wie beim Seitheben (288 mm lang, Köpfe 110 mm).
+- **Warum nicht 20 kg:** Die Hanteln mit 20 kg sind 36,5 cm lang. Bei dieser Griffbreite blieben zwischen den inneren Köpfen nur 6 mm. Schwerere Hanteln gehen, wenn du sie möchtest; dann prüfe ich den Abstand neu.
+
+### 29.2 Bewegung
+
+- **Quelle:** Familie (Code), nach dem Ausführungstext der App und den Werten der Familie. Die Seiten von ExRx und NASM ließen sich in der Cloud-Umgebung nicht öffnen.
+- **Stand:** hüftbreit, Zehen 8° nach außen, Sohlen flach. Die Knie sind 20° gebeugt und bleiben so (Familie: 15 bis 25°).
+- **Hanteln:** im Obergriff vor den Oberschenkeln, die Griffe quer, 10,8° schräg in der Hand. So bleibt das Handgelenk gerade (höchstens 6,4°). Die Arme sind fast gestreckt (Ellbogen 172,0°).
+- **Abwärts:** Die Hüfte schiebt nach hinten, der Rumpf neigt sich mit geradem Rücken um die Hüftgelenke. Die Hanteln gleiten an der Vorderseite der Beine nach unten, 1,4 bis 6,5 mm vor Haut, Shorts und Shirt.
+- **Unten:** Rumpf 20,8° zur Waagrechten (Familie: 0 bis 45°), Hüfte 91,2° gebeugt (Familie: 70 bis 100°), die Griffe 1,8 cm unter den Kniegelenken.
+- **Gleichgewicht:** Der gemeinsame Schwerpunkt von Körper und Hanteln bleibt über der Fußmitte (−0,04 bis 0,05 cm). Für den Körper habe ich 75 kg angenommen, die Anteile der Körperteile stammen aus einer Standardtabelle (Winter 2009).
+- **Kopf:** in Verlängerung des Rumpfs, Kinn leicht eingezogen, der Blick geht zum Boden.
+- **Zurück** derselbe Weg, mit der kurzen Pause an beiden Umkehrpunkten wie bei den übrigen Schleifen.
+- **Kamera der App:** 75° von der Seite, 8° von oben. So sieht man die Hüftbeuge und den geraden Rücken, und beide Hanteln bleiben im Bild. Verglichen habe ich 90°, 60° und 45° (`docs/screens/uebungen/hueftbeuge-kameras.webp`).
+
+### 29.3 Abgleich mit dem Ausführungstext
+
+Der Text in der App passt; geändert habe ich nichts.
+
+| Text in der App | Animation |
+|---|---|
+| „Halt in jeder Hand eine Kurzhantel vor den Oberschenkeln.“ | Obergriff, Hanteln quer vor den Oberschenkeln |
+| „Stell die Füße etwa hüftbreit. Die Knie sind leicht gebeugt, der Rücken ist gerade.“ | hüftbreit, Knie 20° gebeugt, Rücken gerade |
+| „Schieb die Hüfte nach hinten und senk die Hanteln an der Vorderseite der Beine ab.“ | Hüfte nach hinten, Hanteln 1,4 bis 6,5 mm vor den Beinen |
+| „Geh nur so tief, bis du eine Dehnung hinten im Oberschenkel spürst und der Rücken lang bleibt.“ | unten Rumpf 20,8° zur Waagrechten, Griffe knapp unter den Knien |
+| „Streck Hüfte und Knie, bis du wieder aufrecht stehst.“ und „Halt die Knie die ganze Zeit leicht gebeugt.“ | zurück bis zum aufrechten Stand, die Knie bleiben 20° gebeugt |
+| „Halt das Kinn leicht eingezogen und schau Richtung Boden.“ | Kopf in Verlängerung des Rumpfs, Kinn 4° eingezogen |
+
+### 29.4 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Knie | 160,0°, fest |
+| Hüfte | 17,5° bis 91,2° gebeugt (Rumpf zum Oberschenkel 162,5° bis 88,8°) |
+| Rumpf zur Waagrechten | 83,8° bis 20,8° |
+| Unterschenkel zur Senkrechten | 0,3° bis 8,8° |
+| Schwerpunkt mit Hanteln über der Fußmitte | −0,04 bis 0,05 cm |
+| Hanteln über der Fußmitte | 2,2 bis 15,0 cm davor |
+| Griffe unter den Kniegelenken (unten) | 1,8 cm |
+| Arme | oben 17,8° nach vorn, unten 16,1° zurück |
+| Ellbogen / Handgelenk gesamt | 172,0° / höchstens 6,4° |
+| Köpfe vor Haut, Shorts und Shirt | 1,4 bis 6,5 mm |
+| Hanteln zueinander / Hand zu den Köpfen | 67,4 mm / 6,9 mm |
+| Finger am Griff | −4,3 mm (gewollt eingedrückt) |
+| Sohlen über dem Boden / verschoben | 0,0 mm / 0,1 mm |
+| Kragen über der Socke | 1,6 mm |
+| Shorts-F zum Streifen | 10,3 cm |
+| Haut unter dem Ärmel | 5,4 mm |
+| Shorts unter dem Shirt / Saumband über den Shorts | −5,9 mm / −12,9 mm (vordere Hüftfalte, siehe 29.6) |
+| Meldungen des Rigs | 0 |
+
+### 29.5 Prüfseite und Rechenzeit
+
+`docs/screens/uebungen/familie-hueftbeuge.webp`: Ausgangs- und Endposition mit der Kamera der App und von der Seite, Griff und Hantel von vorn und von außen, der linke Fuß von außen und von vorn, darunter die Messwerte. Rechenzeit: Messung und Prüfansichten 755 s, Nahaufnahmen 312 s (neben zwei Strömen der Schleifen).
+
+Beim Prüfen gefunden und behoben:
+- Mit „Hanteln über der Fußmitte“ stand die Hüfte schon oben 18 cm hinter der Ausgangslage und war 30° gebeugt. Jetzt zählt der gemeinsame Schwerpunkt: Die Figur steht oben aufrecht.
+- Der Ellbogen sprang zwischen 164° und 178°: Die Hand drehte sich um den Griff in eine andere Lösung, und 172° liegen nur 1,3 mm vor der vollen Streckung. Jetzt wird die Drehung der Hand einmal bestimmt und dann die Entfernung des Griffs gesucht: 172,0° in jedem Bild.
+- Unter dem offenen Saum der Shorts zeigt die Normale der Randfläche zur Seite; ein Kopf 22 mm vor der Haut galt als 40 mm in den Shorts. Jetzt zählen Punkte hinter Randflächen nicht als darin.
+- Mit fünf Stützen kamen die Köpfe beim Vorbeigleiten an den Knien bis 8 mm in Haut und Kleidung; mit 17 Stützen und einem Spline nicht mehr.
+- Die Suchschritte meldeten „Handgelenk nicht erreichbar“ (360 Meldungen); es zählt jetzt nur die gewählte Haltung: 0 Meldungen.
+
+### 29.6 Abweichungen und offene Punkte
+
+- **Hanteln:** 8 kg statt einer schwereren Hantel (29.1).
+- **Tiefe:** Die Griffe enden knapp unter den Knien, der Rumpf 20,8° über der Waagrechten. Tiefer geht, solange der Rücken gerade bleibt.
+- **Kleidung:** In der vorderen Hüftfalte kommt das Saumband bis 12,9 mm in die Shorts und die Shorts bis 5,9 mm ins Shirt (Phase 0,7 bis 1,0). In der Kamera der App und von vorn unten ist nichts zu sehen, wie bei den freigegebenen Resten von Kniebeuge, Latziehen und Beinpresse.
+- **Körpergewicht** für den Schwerpunkt: 75 kg angenommen.
+
+### 29.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-487 Phase Programme, Abschnitt 2: Familie „Hüftbeuge“ (Rumänisches Kreuzheben mit Kurzhanteln), Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Rumänisches Kreuzheben mit Kurzhanteln (uebungen.RumaenischesKreuzhebenKH) mit Schwerpunkt über der Fußmitte, Hanteln an den Beinen entlang, Griffachse und Entfernung des Griffs gesucht; Abstand der Hanteln zur Kleidung an offenen Rändern; neue Zeilen der Prüfseite (Kleidung, Hüftbeuge); erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-hueftbeuge.webp (neu), docs/screens/uebungen/hueftbeuge-kameras.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-487
+Ausgeführte Tests: fünf Testläufe in drei Phasen, Abtastung der Luft über den Winkel der Arme, vier Kameras, render.py rumaenisches_kreuzheben_kh --pruefen (alle 60 Bilder, zweimal), Nahaufnahmen der Griffe und der Hüftfalte, Bilder angesehen; bestanden; Startansicht 237,8 KB, Übungsbilder 44 von 44
+Ergebnis: bestanden (Werte in 29.4)
+Bekannte Einschränkungen: 29.6
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife des Rumänischen Kreuzhebens
+```

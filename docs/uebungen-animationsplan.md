@@ -4,7 +4,7 @@ Stand: 2026-10-27 (Zuordnung D-411), Plan vom 28.10.2026 (D-429, Reihenfolge nac
 
 Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (GK), „Push/Pull/Beine, rotierend“ (PPB) und „Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026). Reihenfolge (sechste Nachricht): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch fehlenden aus „Push/Pull/Beine“, zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, Bankdrücken mit Langhantel, Latziehen) laufen als Schleifen in der App; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird in der Phase Programme (Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`) familienweise: erst eine Prüfseite, die Schleifen der Familie nach der Freigabe des Produktinhabers.
 
-**Fortschritt** (Stand 01.11.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Schleife in der App (D-474): 1; Schleife in der App (D-486): 1; offen: 57.
+**Fortschritt** (Stand 01.11.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Schleife in der App (D-474): 1; Schleife in der App (D-486): 1; Prüfseite, wartet auf Freigabe (D-487): 1; offen: 56.
 
 ## 1. Was gezählt ist
 
@@ -79,7 +79,7 @@ Beine isoliert: 1 Übungen, Aufwand 4,0 Std. (davon neue Geräte 3,0) plus Basis
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
 |---|---|---|---|---|---|---|---|---|
-| Rumänisches Kreuzheben mit Kurzhanteln | W26 | 21 | Familie (Code) | 0,50 | 0,00 | 26 |  | offen |
+| Rumänisches Kreuzheben mit Kurzhanteln | W26 | 21 | Familie (Code) | 0,50 | 0,00 | 26 |  | Prüfseite, wartet auf Freigabe (D-487) |
 
 Hüftbeuge: 1 Übungen, Aufwand 0,5 Std. (davon neue Geräte 0,0) plus Basis der Familie 10,0 Std., Renderzeit 26 min.
 

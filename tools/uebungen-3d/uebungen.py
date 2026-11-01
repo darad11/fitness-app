@@ -3446,6 +3446,348 @@ class BeinbeugerLiegend(Uebung):
         return aus
 
 
+class RumaenischesKreuzhebenKH(Uebung):
+    """Rumänisches Kreuzheben mit Kurzhanteln, Referenz der Familie „Hüftbeuge“ (D-487), nach dem Ausführungstext der
+    App (ACE „Technique Series – Romanian Deadlift“, ExRx „Romanian Deadlift“) und den Werten der Familie (Hüfte 70 bis
+    100° gebeugt, Knie 15 bis 25° fest, Rumpf unten 0 bis 45° zur Waagrechten, Last nah am Körper über der Fußmitte).
+    Stand etwa hüftbreit (`FUESSE`), Zehen leicht nach außen, ganze Sohle am Boden; die Knie leicht gebeugt und fest
+    (`KNIE`). In jeder Hand eine Kurzhantel (8 kg wie beim Seitheben) im Obergriff vor den Oberschenkeln, die Griffe quer
+    (`GRIFF_X` neben der Mitte), die Arme fast gestreckt (`ELLBOGEN`). Abwärts schiebt sich die Hüfte nach hinten, der
+    Rumpf neigt sich mit geradem Rücken um die Hüftgelenke bis `NEIGUNG_UNTEN`. Die Hanteln gleiten `LUFT` vor Beinen
+    und Shorts an der Vorderseite der Beine nach unten; der gemeinsame Schwerpunkt von Körper und Hanteln bleibt über
+    der Fußmitte (`_stuetzen`, `_schwerpunkt`). Kopf in Verlängerung des Rumpfs, Kinn leicht eingezogen (`KINN`), der
+    Blick geht zum Boden. Zurück derselbe Weg."""
+
+    name = "rumaenisches_kreuzheben_kh"
+    titel = "Rumänisches Kreuzheben mit Kurzhanteln"
+    kamera = {"richtung": 75.0, "neigung": 8.0}
+    vorschau_phase = 1.0
+    KH = geraete.KH8
+    KH_R = geraete.KH8["griff_d"] / 2
+    FUESSE = 0.105  # halber Abstand der Fußgelenke, m (vor dem Maß der Schultern): etwa hüftbreit wie beim Seitheben
+    ZEHEN = 8.0
+    KNIE = 160.0  # Knie 20° gebeugt und fest (Familie: 15 bis 25°)
+    NEIGUNG_OBEN = 3.0  # Rumpf zur Senkrechten im Stand, Grad
+    NEIGUNG_UNTEN = 66.0  # Rumpf zur Senkrechten unten, Grad: Griffe knapp unter den Kniegelenken
+    KINN = 4.0  # Kopf gegenüber dem Rumpf leicht gebeugt (Kinn eingezogen), Grad
+    GRIFF_X = 0.155  # Mitte des Griffs neben der Körpermitte (vor dem Maß der Schultern), m
+    ELLBOGEN = 172.0  # Arme fast gestreckt
+    LUFT = 0.004  # Köpfe der Hanteln so weit vor Haut, Shorts und Shirt, m: Sie gleiten an den Beinen entlang
+    GRIFF_LAGE = 0.65  # Lage des Griffs in der Hand wie beim Seitheben
+    SCHRAEG = 0.0
+    # Phasen, an denen Hüfte und Arme gesucht werden: Mit fünf Stützen kamen die Köpfe an den Knien (Phase 0,8 bis 0,97)
+    # zwischen zwei Stützen bis 8 mm in Haut und Kleidung
+    STUETZEN = tuple(i / 16 for i in range(17))
+    # Schwerpunkt (`_schwerpunkt`): Anteile der Körperteile an der Masse und Lage ihres Schwerpunkts vom ersten zum
+    # zweiten Gelenk (Winter, Biomechanics and Motor Control of Human Movement, 4. Aufl. 2009, Tabelle 4.1); Körper
+    # 75 kg angenommen, zwei Kurzhanteln je 8 kg
+    KOERPER_KG = 75.0
+    HANTEL_KG = 8.0
+    fuss_ansichten = ((90, 0.08), (0, 0.12), (180, 0.10), (270, 0.08))
+    griff_ansichten = (("griff_vorn", 15.0, 10.0), ("griff_seite", 100.0, 20.0))
+
+    def rahmen_objekte(self) -> list:
+        return list(self.hanteln.values())
+
+    def bauen(self) -> None:
+        super().bauen()
+        rig = self.rig
+        k = rig.kopf
+        self.hanteln = {s: geraete.kurzhantel(f"Kurzhantel.{s}", self.KH) for s in "LR"}
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, self.KH_R, schraeg=self.SCHRAEG) for s in "LR"}
+        A0 = k["foot.L"]
+        w = math.radians(self.ZEHEN)
+        x = self.FUESSE * self.mass
+        self.knoechel = {"L": Vector((x, A0.y, A0.z)), "R": Vector((-x, A0.y, A0.z))}
+        self.zehen = {"L": Vector((math.sin(w), -math.cos(w), 0)), "R": Vector((-math.sin(w), -math.cos(w), 0))}
+        ferse, spitze = _fuss(self.koerper, k)
+        self.fussmitte_y = A0.y - (A0.y - (ferse + spitze) / 2) * math.cos(w)
+        self.H0 = (k["upperleg01.L"] + k["upperleg01.R"]) / 2
+        self.S0 = (k["upperarm01.L"] + k["upperarm01.R"]) / 2
+        l1 = (k["lowerarm01.L"] - k["upperarm01.L"]).length
+        l2 = (k["wrist.L"] - k["lowerarm01.L"]).length
+        self.armlaengen = (l1, l2)
+        # Schulter bis Handgelenk bei `ELLBOGEN`
+        self.reichweite = math.sqrt(l1 * l1 + l2 * l2 - 2 * l1 * l2 * math.cos(math.radians(self.ELLBOGEN)))
+        self.sigma = 0.0
+        self.raender: dict[str, set] = {}
+        self.tabelle = None
+
+    # ------------------------------------------------------------------ Rumpf und Beine
+
+    def _neigung(self, p: float) -> float:
+        return self.NEIGUNG_OBEN + (self.NEIGUNG_UNTEN - self.NEIGUNG_OBEN) * p
+
+    def _becken(self, a: float, dy: float, dz: float) -> Matrix:
+        return starr(self.H0, self.H0 + Vector((0, dy, dz)), achse_winkel(X, a))
+
+    def _hoehe(self, a: float, dy: float) -> float:
+        """Hüfthöhe per Halbierung, bis das Knie `KNIE` gebeugt ist."""
+        rig = self.rig
+        lo, hi = -0.30, 0.05
+        for _ in range(36):
+            dz = (lo + hi) / 2
+            rig.zuruecksetzen()
+            rig.setze("root", self._becken(a, dy, dz))
+            if self.kniewinkel(rig.bein("L", self.knoechel["L"], self.zehen["L"], self.ZEHEN)) > self.KNIE:
+                hi = dz
+            else:
+                lo = dz
+        return (lo + hi) / 2
+
+    def _rumpf(self, a: float, dy: float, dz: float) -> dict:
+        """Becken, Kopf und Beine; gibt die Werte der Beine zurück."""
+        rig = self.rig
+        rig.zuruecksetzen()
+        rig.setze("root", self._becken(a, dy, dz))
+        rig.dreh("neck01", achse_winkel(X, self.KINN))
+        return {s: rig.bein(s, self.knoechel[s], self.zehen[s], self.ZEHEN) for s in "LR"}
+
+    # ------------------------------------------------------------------ Arme und Hanteln
+
+    def _arm(self, s: str, alpha: float) -> dict:
+        """Arm `s` vom Schultergelenk um `alpha` Grad vor der Senkrechten nach unten, die Mitte des Griffs `GRIFF_X` neben
+        der Körpermitte und so weit von der Schulter, dass der Ellbogen `ELLBOGEN` hat (die Drehung der Hand um den Griff
+        verschiebt das Handgelenk, deshalb gesucht). Ohne Zustand zwischen den Aufrufen: dieselbe Lage ergibt dieselbe
+        Haltung. Obergriff, Griff quer (schräg in der Hand, `sigma`), Ellbogen nach hinten außen."""
+        rig = self.rig
+        sx = 1 if s == "L" else -1
+        S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+        k = achse_winkel(Y, sx * self.sigma) @ (X * sx)
+        pol = Vector((0.4 * sx, 1.0, 0.0))
+        a = math.radians(alpha)
+
+        def setze(weite: float, phi: float | None) -> tuple[dict, Vector]:
+            b = math.asin(max(-1.0, min(1.0, (sx * self.GRIFF_X * self.mass - S.x) / weite)))
+            d = Vector((math.sin(b), -math.sin(a) * math.cos(b), -math.cos(a) * math.cos(b)))
+            mitte = S + d * weite
+            return rig.arm(s, self.griff[s], mitte, k, pol, 0.0, phi=phi), mitte
+
+        # Drehung der Hand um den Griff einmal frei gesucht (Handgelenk am geradesten), dann fest: Sonst springt sie bei
+        # winzigen Änderungen zwischen zwei Lösungen, und mit ihr das Handgelenk. Danach die Entfernung per Halbierung
+        # auf den Ellbogenwinkel (172° liegen nur 1,3 mm vor der vollen Streckung); bei fester Drehung wächst er stetig
+        vorher = len(rig.meldungen)  # Suchschritte außer Reichweite melden sich; es zählt nur die gewählte Haltung
+        phi = setze(self.reichweite + 0.075, None)[0]["phi"]
+        lo, hi = self.reichweite - 0.04, self.reichweite + 0.14
+        for _ in range(18):
+            weite = (lo + hi) / 2
+            if setze(weite, phi)[0]["ellbogenwinkel"] < self.ELLBOGEN:
+                lo = weite
+            else:
+                hi = weite
+        del rig.meldungen[vorher:]
+        arm, mitte = setze((lo + hi) / 2, phi)
+        f = (arm["handgelenk"] - arm["ellbogen"]).normalized()
+        self.hantel_setzen(s, mitte, k, f)
+        arm["mitte"] = mitte
+        return arm
+
+    def hantel_setzen(self, s: str, mitte: Vector, k: Vector, f: Vector) -> None:
+        Seitheben.hantel_setzen(self, s, mitte, k, f)
+
+    def _koepfe_frei(self) -> float:
+        """Kleinster Abstand der Köpfe beider Hanteln zu Haut, Shorts und Shirt (m, negativ = darin) wie beim Seitheben,
+        aber an den offenen Rändern der Kleidung (Saum, Bund): Liegt ein Punkt hinter einer Fläche am Rand, zählt er nicht
+        als darin. Unter dem Saum der Shorts zeigt deren Normale zur Seite, nicht zum Punkt; so galt ein Kopf 22 mm vor
+        der Haut als 40 mm in den Shorts. Zur Haut zählt der Abstand wie beim Seitheben."""
+        from mathutils.bvhtree import BVHTree
+
+        import schuhe
+
+        punkte = [q for s in "LR" for q in kopf_punkte(self.hanteln[s], 4)]
+        beste = abstand_koerper(self.koerper, punkte)
+        for name in ("Shorts", "Shirt"):
+            obj = bpy.data.objects.get(name)
+            if obj is None:
+                continue
+            if name not in self.raender:
+                zaehler: dict = {}
+                for f in obj.data.polygons:
+                    for e in f.edge_keys:
+                        zaehler[e] = zaehler.get(e, 0) + 1
+                offen = {e for e, n in zaehler.items() if n == 1}
+                self.raender[name] = {f.index for f in obj.data.polygons if any(e in offen for e in f.edge_keys)}
+            rand = self.raender[name]
+            pk, pf, _ = schuhe._verformt(obj)
+            bvh = BVHTree.FromPolygons(pk, pf)
+            for q in punkte:
+                ort, n, i, d = bvh.find_nearest(q, 0.05)
+                if ort is not None:
+                    beste = min(beste, -d if (q - ort).dot(n) < 0 and i not in rand else d)
+        return beste
+
+    def _schwerpunkt(self, beine: dict, arme: dict) -> Vector:
+        """Gemeinsamer Schwerpunkt von Körper und Hanteln (Raum des Skeletts) nach `KOERPER_KG`, `HANTEL_KG` und den
+        Anteilen von Winter: Kopf und Hals 8,1 % (Mitte des Kopfes), Rumpf 49,7 % (Mitte zwischen Hüft- und
+        Schultergelenken), Oberarm 2,8 % (43,6 % vom Schultergelenk), Unterarm 1,6 % (43 % vom Ellbogen), Hand 0,6 %
+        (am Griff), Oberschenkel 10 % (43,3 % vom Hüftgelenk), Unterschenkel 4,65 % (43,3 % vom Knie), Fuß 1,45 %
+        (Fußmitte)."""
+        rig = self.rig
+        k = rig.kopf
+        m, summe = self.KOERPER_KG, Vector()
+        teile = []
+        H = (beine["L"]["huefte"] + beine["R"]["huefte"]) / 2
+        S = (arme["L"]["schulter"] + arme["R"]["schulter"]) / 2
+        teile.append((0.081, rig.punkt("head", k["head"] + Vector((0.0, 0.0, 0.09)))))
+        teile.append((0.497, (H + S) / 2))
+        for s in "LR":
+            a, b = arme[s], beine[s]
+            teile += [(0.028, a["schulter"].lerp(a["ellbogen"], 0.436)),
+                      (0.016, a["ellbogen"].lerp(a["handgelenk"], 0.43)),
+                      (0.006, a["mitte"]), (0.100, b["huefte"].lerp(b["knie"], 0.433)),
+                      (0.0465, b["knie"].lerp(b["knoechel"], 0.433)),
+                      (0.0145, Vector((self.knoechel[s].x, self.fussmitte_y, self.knoechel[s].z)))]
+        gesamt = 0.0
+        for anteil, p in teile:
+            summe += p * (anteil * m)
+            gesamt += anteil * m
+        for s in "LR":
+            summe += arme[s]["mitte"] * self.HANTEL_KG
+            gesamt += self.HANTEL_KG
+        return summe / gesamt
+
+    def _griffachse(self) -> None:
+        """Griff schräg in der Hand: Neigung der Griffachse in der Ebene der Handfläche, bei der das Handgelenk in der
+        Mitte der Bewegung am geradesten ist (gesucht von −35 bis 35°, dann fein); für beide Hände gespiegelt."""
+        a = self._neigung(0.5)
+
+        def gesamt(sigma: float) -> float:
+            self.sigma = sigma
+            dz = self._hoehe(a, 0.05)
+            self._rumpf(a, 0.05, dz)
+            return self._arm("L", 0.0)["handgelenk_gesamt"]
+
+        beste = min(range(-35, 36, 5), key=gesamt)
+        lo, hi = beste - 5.0, beste + 5.0
+        for _ in range(14):
+            m1, m2 = hi - 0.618 * (hi - lo), lo + 0.618 * (hi - lo)
+            if gesamt(m1) < gesamt(m2):
+                hi = m2
+            else:
+                lo = m1
+        self.sigma = (lo + hi) / 2
+
+    def _pose(self, a: float, dy: float, alpha: float) -> tuple[dict, dict]:
+        dz = self._hoehe(a, dy)
+        beine = self._rumpf(a, dy, dz)
+        arme = {s: self._arm(s, alpha) for s in "LR"}
+        return beine, arme
+
+    def _stuetzen(self) -> None:
+        """Hüfte und Arme an den `STUETZEN`, gesucht, wenn Kleidung und Schuhe da sind: Für die Neigung der Phase rückt die
+        Hüfte so weit nach hinten (`dy`), dass der gemeinsame Schwerpunkt über der Fußmitte steht; die Arme hängen so weit
+        vor der Senkrechten (`alpha`, per Halbierung), dass die Köpfe der Hanteln `LUFT` vor Haut, Shorts und Shirt
+        bleiben. Jede Stütze beginnt bei den Werten der vorigen (`alpha` erst ±12°, bei Bedarf weiter)."""
+        rig = self.rig
+        self._griffachse()
+
+        def frei(a: float, dy: float, alpha: float) -> float:
+            self._pose(a, dy, alpha)
+            rig.anwenden()
+            return self._koepfe_frei()
+
+        def arme_suchen(a: float, dy: float, start: float) -> float:
+            lo, hi = start - 12.0, start + 12.0
+            while frei(a, dy, lo) >= self.LUFT and lo > -60.0:
+                lo -= 12.0
+            while frei(a, dy, hi) < self.LUFT and hi < 60.0:
+                hi += 12.0
+            for _ in range(9):
+                alpha = (lo + hi) / 2
+                if frei(a, dy, alpha) < self.LUFT:
+                    lo = alpha
+                else:
+                    hi = alpha
+            return hi
+
+        dys, alphas = [], []
+        dy, alpha = 0.0, 15.0
+        for p in self.STUETZEN:
+            a = self._neigung(p)
+            for _ in range(6):
+                alpha = arme_suchen(a, dy, alpha)
+                beine, arme = self._pose(a, dy, alpha)
+                fehler = self._schwerpunkt(beine, arme).y - self.fussmitte_y
+                if abs(fehler) < 0.0005:
+                    break
+                dy -= fehler / 0.8
+            else:  # nicht unter 0,5 mm: Arme noch einmal zur letzten Lage der Hüfte
+                alpha = arme_suchen(a, dy, alpha)
+            dys.append(dy)
+            alphas.append(alpha)
+        self.tabelle = {"sigma": self.sigma, "dy": dys, "alpha": alphas, "werte": list(zip(self.STUETZEN, dys, alphas))}
+        rig.zuruecksetzen()
+
+    @staticmethod
+    def _glatt(werte: list[float], p: float) -> float:
+        """Catmull-Rom-Spline durch die Werte an gleich weit auseinander liegenden Stützen (0 bis 1): stetig, mit stetiger
+        Steigung, ohne das Überschwingen eines Polynoms hohen Grades."""
+        n = len(werte) - 1
+        x = min(max(p, 0.0), 1.0) * n
+        i = min(int(x), n - 1)
+        t = x - i
+        p1, p2 = werte[i], werte[i + 1]
+        p0 = werte[i - 1] if i > 0 else 2 * p1 - p2
+        p3 = werte[i + 2] if i + 2 <= n else 2 * p2 - p1
+        return 0.5 * (2 * p1 + (p2 - p0) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t
+                      + (3 * p1 - p0 - 3 * p2 + p3) * t ** 3)
+
+    def setzen(self, p: float) -> None:
+        if self.tabelle is None:
+            self._stuetzen()
+        super().setzen(p)
+
+    def haltung(self, p: float) -> None:
+        a = self._neigung(p)
+        dy = self._glatt(self.tabelle["dy"], p)
+        alpha = self._glatt(self.tabelle["alpha"], p)
+        beine, arme = self._pose(a, dy, alpha)
+        rig = self.rig
+        L, A = beine["L"], arme["L"]
+        schultern = (rig.punkt("shoulder01.L", rig.kopf["upperarm01.L"])
+                     + rig.punkt("shoulder01.R", rig.kopf["upperarm01.R"])) / 2
+        huefte = (beine["L"]["huefte"] + beine["R"]["huefte"]) / 2
+        rumpf = schultern - huefte
+        oberschenkel = L["knie"] - L["huefte"]
+        unterschenkel = L["knie"] - L["knoechel"]
+        mitte = (arme["L"]["mitte"] + arme["R"]["mitte"]) / 2
+        schwer = self._schwerpunkt(beine, arme)
+        self.werte = {
+            "Schwerpunkt über der Fußmitte (cm, + dahinter)": (schwer.y - self.fussmitte_y) * 100,
+            "Griff schräg in der Hand (Grad)": self.sigma,
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüfte (Rumpf zum Oberschenkel, Grad, 180 = gestreckt)": math.degrees(rumpf.angle(oberschenkel)),
+            "Rumpf zur Waagrechten (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, rumpf.normalized().z)))),
+            "Unterschenkel zur Senkrechten (Grad)": math.degrees(unterschenkel.angle(Z)),
+            "Hanteln über der Fußmitte (cm, + dahinter)": (mitte.y - self.fussmitte_y) * 100,
+            "Griffe unter dem Kniegelenk (cm)": (L["knie"].z - mitte.z) * 100,
+            "Arme vor der Senkrechten (Grad)": alpha,
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Pronation": A["pronation"],
+            "Griffe auseinander (cm)": (arme["L"]["mitte"] - arme["R"]["mitte"]).length * 100,
+        }
+
+    def nah_punkte(self) -> list[Vector]:
+        """Punkte für die Nahaufnahme des Griffs: linke Hand und beide Köpfe ihrer Hantel (Welt)."""
+        rig = self.rig
+        hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        M = self.hanteln["L"].matrix_world
+        ende = self.KH["laenge"] / 2
+        return ([q for q in _netz(self.koerper) if (q - hand).length < 0.10]
+                + [M @ Vector((ende, 0, 0)), M @ Vector((-ende, 0, 0))])
+
+    def zusatzwerte(self) -> dict:
+        """Hanteln und Hände (mm) wie beim Seitheben, dazu der Abstand der beiden Hanteln zueinander."""
+        werte = Seitheben.zusatzwerte(self)
+        links = kopf_punkte(self.hanteln["L"], 4)
+        rechts = kopf_punkte(self.hanteln["R"], 4)
+        werte["Kurzhanteln zueinander (mm)"] = min((p - q).length for p in links for q in rechts) * 1000
+        return werte
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
-                               BeinbeugerLiegend)}
+                               BeinbeugerLiegend, RumaenischesKreuzhebenKH)}

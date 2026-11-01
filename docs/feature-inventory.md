@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.86 (Phase Programme, Prüfseite Hüftbeuge, 01.11.2026): Funktionen und Status unverändert; im Werkzeug das Rumänische Kreuzheben mit Kurzhanteln als Prüfseite, die Schleife folgt nach der Freigabe (D-487).
 - Version 0.85 (Phase Programme, Beinbeuger in der App, 01.11.2026): Funktionen und Status unverändert; elf Übungen mit Animation, neu der Beinbeuger liegend (D-486).
 - Version 0.84 (Phase Programme, Schleifen mit finaler Kleidung, 01.11.2026): Funktionen und Status unverändert; die zehn Schleifen der App zeigen die finale Kleidung (D-485).
 - Version 0.83 (Phase Programme, Shorts-F wie Brust-F, 31.10.2026): Funktionen und Status unverändert; im Werkzeug liegt das Shorts-F auf dem Stoff und ist so groß wie das Brust-F; die Schleifen der App folgen (D-484).

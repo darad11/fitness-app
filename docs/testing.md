@@ -2905,3 +2905,24 @@ Shorts-F auf dem Stoff, so groß wie das Brust-F (D-484). Gemessen in der Ruheha
 | Endwerte: Faktor 1,0475, Mitte 2,0 mm tiefer und 5,65 mm innen | 3,69 × 3,97 cm (1,076); Mitte quer 10,49 cm wie bisher; Unterkante 2,46 cm über dem Saum; Abstand zum Streifen 10,30 cm (bisher 9,73 cm) |
 | Nahaufnahmen (orthografisch, 12 cm Bildbreite, Blick senkrecht auf das Logo) und von vorn (80 cm hoch), bisher und neu | `shorts-f-wie-brust-f.webp`, angesehen: das neue Shorts-F in Form und Größe wie das Brust-F, das bisherige sichtbar in die Breite gezogen |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Zehn Schleifen mit der finalen Kleidung · 31.10. bis 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Alle zehn fertigen Schleifen mit der Kleidung aus D-483 und dem Shorts-F aus D-484 (D-485). Zwei Ströme nebeneinander auf vier Kernen (`render.py <übung> --ziel <Arbeitsordner>`), danach in `public/uebungen/medien/` kopiert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py kniebeuge` (Kniebeuge) | 3.576 s für 60 Bilder, mit Aufbau und Kodieren 3.676 s; MP4 69,4 KB, WebM 60,8 KB, Poster 7,5 KB, Vorschau 4,8 KB; erstes und letztes Bild pixelgleich |
+| `render.py bankdruecken` (Bankdrücken) | 3.991 s für 60 Bilder, mit Aufbau und Kodieren 4.067 s; MP4 49,5 KB, WebM 41,5 KB, Poster 8,8 KB, Vorschau 4,4 KB; erstes und letztes Bild pixelgleich |
+| `render.py latziehen` (Latziehen) | 2.314 s für 60 Bilder, mit Aufbau und Kodieren 2.363 s; MP4 59,2 KB, WebM 56,9 KB, Poster 9,8 KB, Vorschau 4,4 KB; erstes und letztes Bild pixelgleich |
+| `render.py bankdruecken_kh` (Bankdrücken mit Kurzhanteln) | 3.029 s für 60 Bilder, mit Aufbau und Kodieren 3.085 s; MP4 43,3 KB, WebM 35,7 KB, Poster 8,3 KB, Vorschau 4,2 KB; erstes und letztes Bild pixelgleich |
+| `render.py schraegbankdruecken_kh` (Schrägbankdrücken mit Kurzhanteln) | 3.123 s für 60 Bilder, mit Aufbau und Kodieren 3.182 s; MP4 40,9 KB, WebM 35,7 KB, Poster 8,9 KB, Vorschau 4,1 KB; erstes und letztes Bild pixelgleich |
+| `render.py beinpresse` (Beinpresse) | 2.038 s für 60 Bilder, mit Aufbau und Kodieren 2.082 s; MP4 63,5 KB, WebM 55,4 KB, Poster 15,0 KB, Vorschau 6,9 KB; erstes und letztes Bild pixelgleich |
+| `render.py unterarmstuetz` (Unterarmstütz) | 4.534 s für 60 Bilder, mit Aufbau und Kodieren 4.825 s; MP4 22,1 KB, WebM 18,0 KB, Poster 10,7 KB, Vorschau 3,2 KB; erstes und letztes Bild pixelgleich |
+| `render.py crunch` (Crunches) | 3.733 s für 60 Bilder, mit Aufbau und Kodieren 4.138 s; MP4 57,6 KB, WebM 48,8 KB, Poster 12,7 KB, Vorschau 4,2 KB; erstes und letztes Bild pixelgleich |
+| `render.py seitheben_kh` (Seitheben) | 2.188 s für 60 Bilder, mit Aufbau und Kodieren 2.246 s; MP4 48,8 KB, WebM 47,5 KB, Poster 7,0 KB, Vorschau 3,1 KB; erstes und letztes Bild pixelgleich |
+| `render.py rudern_kabel` (Rudern am Kabel) | 2.751 s für 60 Bilder, mit Aufbau und Kodieren 2.822 s; MP4 56,0 KB, WebM 51,3 KB, Poster 13,6 KB, Vorschau 6,4 KB; letztes Bild weicht vom ersten in 7.333 Pixeln um bis zu 63 von 255 Stufen ab (an Arm und Griff, dazu vereinzeltes Rauschen im ganzen Bild; kleiner als die Schritte zu den Nachbarbildern mit 14.370 und 6.107 Pixeln, weil die Bewegung am vorderen Umkehrpunkt ohne Pause weiterläuft, wie bei D-474) |
+| Kontaktbögen aller 60 Bilder je Schleife | angesehen: Bewegung wie bisher, Schulterband, schmale Seitenstreifen und Shorts-F in jedem Bild |
+| Raster der Aufnahme (`uebungen_bewegung.py` mit zehn Schleifen, Probe mit den alten Dateien) | 1440 × 810, 7,5 s, Beschriftung lesbar; Probedatei wieder gelöscht |
+| `pnpm format:check`, `pnpm build`, `pnpm check:bundle`, `pnpm check:docs` | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 (dieselben Dateinamen wie bisher) |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,4 min); der Test der Übungsliste (zehn Vorschaubilder) bestanden |

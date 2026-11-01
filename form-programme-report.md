@@ -1365,3 +1365,31 @@ Deine Freigabe vom 31.10.2026: Die Kleidung ist freigegeben, mit einer Änderung
 Blatt: `docs/screens/uebungen/shorts-f-wie-brust-f.webp`.
 
 Weiter ohne Halt: alle zehn fertigen Schleifen und der Beinbeuger mit der finalen Kleidung, dann die Prüfseite der nächsten Familie.
+
+## 27. Zehn Schleifen mit der finalen Kleidung (D-485)
+
+Nach deiner Freigabe habe ich alle zehn fertigen Schleifen mit der finalen Kleidung neu gerendert und in die App eingebaut: Schulterband, schmale Seitenstreifen und das neue Shorts-F. Bewegung, Kamera und Ablauf sind gleich geblieben, die Dateinamen auch.
+
+- **Kniebeuge:** 61 min, erstes und letztes Bild pixelgleich.
+- **Bankdrücken:** 68 min, erstes und letztes Bild pixelgleich.
+- **Latziehen:** 39 min, erstes und letztes Bild pixelgleich.
+- **Bankdrücken mit Kurzhanteln:** 51 min, erstes und letztes Bild pixelgleich.
+- **Schrägbankdrücken mit Kurzhanteln:** 53 min, erstes und letztes Bild pixelgleich.
+- **Beinpresse:** 35 min, erstes und letztes Bild pixelgleich.
+- **Unterarmstütz:** 80 min, erstes und letztes Bild pixelgleich.
+- **Crunches:** 69 min, erstes und letztes Bild pixelgleich.
+- **Seitheben:** 37 min, erstes und letztes Bild pixelgleich.
+- **Rudern am Kabel:** 47 min, letztes Bild weicht vom ersten in 7.333 Pixeln um bis zu 63 von 255 Stufen ab (an Arm und Griff, dazu vereinzeltes Rauschen im ganzen Bild; kleiner als die Schritte zu den Nachbarbildern mit 14.370 und 6.107 Pixeln, weil die Bewegung am vorderen Umkehrpunkt ohne Pause weiterläuft, wie bei D-474).
+
+Alle Kontaktbögen habe ich angesehen. Die Aufnahme aller Schleifen folgt mit dem Beinbeuger (D-486).
+
+```
+Arbeitspaket: D-485 Phase Programme, zehn fertige Schleifen mit der finalen Kleidung
+Umgesetzte Funktionen: neue Schleifen, Poster und Vorschaubilder für zehn Übungen (Kleidung D-483, Shorts-F D-484); Werkzeug: uebungen_bewegung.py mit Raster und Beschriftung; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/ (40 Dateien), tools/uebungen_bewegung.py, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-485
+Ausgeführte Tests: zehn Schleifen gerendert, Kontaktbögen und erstes/letztes Bild geprüft; format:check, build, check:bundle (Startansicht 237,8 KB), check:docs; E2E Chromium 432 bestanden, 132 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Beinbeuger liegend in die App (D-486), dann die Prüfseite der nächsten Familie
+```

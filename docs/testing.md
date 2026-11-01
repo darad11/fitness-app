@@ -3173,3 +3173,16 @@ Bilder von iPhone und Duo, Aufnahmen des Players (D-497 bis D-500).
 | `node tools/player-wiedergabe-bilder.mjs` (iPhone 390 × 844, Duo zugeklappt 382 × 678, quer 867 × 669 und 867 × 587, hoch 669 × 869; sichere Bereiche wie am Gerät) | Player: kleine Schleife 112 × 84 (iPhone, Duo hoch) bzw. 96 × 72 (zugeklappt) läuft, große 273,5 × 205,1 bzw. 164,2 × 123,1 läuft; Übungsinfo nach zwei Durchläufen angehalten mit Symbol (318 × 238,5, 226 × 169,5, 356,8 × 267,6, 408 × 306); Details: Duo quer Animation 356,8 × 267,6 und Muskelkarte 384 × 267,6, Duo hoch 377,4 × 283 und 231,6 × 283 |
 | `HALTUNG=iphone node tools/player-wiedergabe-aufnahme.mjs` | 370 Bilder, 18,2 s: Beinpresse läuft nach dem Start (MP4), Übungsinfo läuft, steht nach zwei Durchläufen am Ende (2,5 s), läuft nach dem Tippen wieder; nach dem Wechsel läuft Bankdrücken |
 | `HALTUNG=duo-quer-streifen node tools/player-wiedergabe-aufnahme.mjs` | 561 Bilder, 22,7 s: Rahmen 164,2 × 123,1 bei Beinpresse, Bankdrücken und Rudern, alle drei laufen; Übungsinfo wie oben. Der erste Versuch spielte die Beinpresse als WebM: Das MP4 meldete einen Fehler, die App wich wie vorgesehen aus (wie im vollen E2E-Lauf beim Kreuzheben). Acht gezielte Starts mit Mitschnitt der Fehler, auch mit Bildschirm, sicherem Bereich und Screencast wie in der Aufnahme: kein Fehler, immer MP4. Zweiter Versuch mit MP4 |
+
+### Wiedergabe in WebKit, Nachtrag 4 · 01.11.2026, Cloud-Umgebung
+
+Zweimal über den ersten Sprung an den Anfang statt über die gespielte Zeit (D-497).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `28b3d53` | Lint, Typen, Unit-Tests, Dokumente, Build, Datenbank und E2E Chromium grün; E2E WebKit 3 fehlgeschlagen, 417 bestanden, 184 übersprungen: Details (Desktop und Handy) nach 20 s nicht angehalten, laut Ereignissen springt WebKit alle 1,93 s bei 1,91 s an den Anfang, `loop` blieb an; Übungsinfo (Handy) nach dem Tippen Suchen an Stelle 0 alle 30 ms, keine Wiedergabe. „Jetzt“ am Duo zugeklappt jetzt grün (Test wie die installierte App) |
+| Dateien geprüft (`ffprobe`, Latziehen und Beinpresse, MP4 und WebM) | je 60 Bilder, 24 je Sekunde, 2,5 s |
+| Unit-Tests `exercise-visual.test.tsx` (2 neu gefasst: zweimal mit Wiederholen; Sprung nur über `seeking`, Ende mit `loop`, kleine Sprünge zählen nicht, Tippen mitten im Durchlauf) | 26 bestanden |
+| Ablauf in Chromium, Details Latziehen | Sprung an den Anfang bei 2,47 s, `loop` danach aus, angehalten am Ende bei 4,97 s, Symbol da |
+| `e2e/uebungen-wiedergabe.spec.ts` (Chromium; neu: erst von selbst bis zum Halt, dann zweimal Tippen auf die angehaltene Animation) | 6 bestanden, 4 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle`; Player-Tests (`player-jetzt`, `duo-player`, `duo-player-befunde`, `uebungen`, `uebungen-details-breit`, `duo-tastatur`, Chromium) | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; Startansicht 238,9 KB, Übungsbilder 52 von 52; Player-Tests 58 bestanden, 40 übersprungen; WebKit in der CI |

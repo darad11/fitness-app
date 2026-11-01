@@ -1810,3 +1810,36 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: E1 bis E4 offen, zur Entscheidung
 Nächste Schritte: Gerätetest des Produktinhabers, Entscheidung zu E1 bis E4, danach über den Merge von #54
 ```
+
+## 39. Wiedergabe: Start im Player, zweimal und Wiederholen (D-497)
+
+**Ursache, warum die Beinpresse nicht lief.** Die Animationen starteten nur über das Attribut `autoplay`. Safari startet ein solches Video erst, wenn es das Video für sichtbar hält, und hält es an, sobald es das nicht mehr tut. Die rechte Spalte des Players steht seit D-495 fest: Sie klebt oben, hat einen negativen Rand und schneidet ab, alles in einem eigenen Scrollbereich. Dort hielt Safari das Video der ersten Übung nach dem Start offenbar für unsichtbar. In der Übungsinfo und in den Details liegt es einfach im Bild, deshalb lief es dort. Am Gerät kann ich das nicht nachprüfen; Chromium spielt die Beinpresse auch am alten Stand. Mit einem Skript, das `autoplay` wirkungslos macht, steht sie am alten Stand nach dem Start still, genau wie bei dir.
+
+**Was jetzt gilt.**
+
+- Die App startet die Animation selbst, sobald sie im Bild ist, und auch nach der Rückkehr in die App. Dafür gilt Safaris Regel zur Sichtbarkeit nicht. Ist sie ausgeblendet (andere Spalte, weggescrollt), hält sie an.
+- Im Stromsparmodus lässt iOS ein Video nur nach einem Tippen starten. Dann läuft die Animation ab dem ersten Tippen irgendwo im Player. Das ist eine Grenze von iOS, ich habe sie in `known-limitations.md` eingetragen.
+- Im Player läuft sie ohne Ende, nach dem Start und nach jedem Wechsel.
+- In Übungsinfo und Details läuft sie zweimal (5 Sekunden) und bleibt auf dem letzten Bild stehen. Unten rechts erscheint dann ein kleiner Pfeil im Kreis. Ein Tippen auf die Animation spielt sie wieder zweimal ab, von vorn.
+- Safari bekommt jetzt die MP4-Datei (H.264), die das iPhone in Hardware abspielt; vorher bekam es die WebM-Datei. Die 13 WebM-Dateien hatten außerdem einen Alphakanal, den kein Bild braucht. Ich habe sie aus denselben Einzelbildern ohne ihn neu kodiert: Das Bild ist gleich, jede Datei ist rund 2,8 KB kleiner. Das Render-Skript macht das künftig selbst.
+
+**Alle elf Übungen geprüft.** Der neue Test geht „Ganzkörper A/B“ ganz durch: Tag A mit fünf, Tag B mit sechs Übungen, jeweils gleich nach dem Start, gleich nach jedem Wechsel (ohne weiteres Tippen) und nach der Pause. Er stellt Safaris Verhalten nach (`autoplay` wirkungslos). Am alten Stand scheitert er bei der Beinpresse, am neuen laufen alle elf.
+
+| Prüfung | alter Stand | neu |
+|---|---|---|
+| Beinpresse nach dem Start, `autoplay` wirkungslos | angehalten | läuft |
+| alle elf Übungen nach Start und Wechsel | – (scheitert bei der ersten) | alle laufen |
+| Stromsparmodus nachgestellt | auch nach dem Tippen angehalten | ab dem ersten Tippen |
+| Details und Übungsinfo | laufen ohne Ende | zweimal, Symbol, Tippen wiederholt |
+
+```
+Arbeitspaket: D-497 Phase Programme, Wiedergabe der Übungsschleifen
+Umgesetzte Funktionen: Start der Schleifen durch die App statt `autoplay`, nur sichtbar, erneut bei der nächsten Geste; Player ohne Ende, Übungsinfo und Details zweimal mit Symbol und Wiederholen per Tippen; eine Datei, MP4 vor WebM; WebM ohne Alphakanal; erfüllte AK: –
+Geänderte Dateien: src/modules/exercises/ui/useLoopPlayback.ts (neu), src/modules/exercises/ui/ExerciseVisual.tsx, src/modules/exercises/data/media.ts, src/modules/training/ui/player/SessionPage.tsx, src/shared/i18n/de-exercise-media.ts, src/shared/ui/tokens.css, src/app/styles.css, src/test-setup.ts, Tests (exercise-visual.test.tsx, tokens.test.ts, e2e/uebungen-wiedergabe.spec.ts neu, e2e/uebungen.spec.ts), public/uebungen/medien.json und 13 WebM, tools/uebungen-3d/render.py, Dokumentation
+Technische Entscheidungen: D-497
+Ausgeführte Tests: format:check, lint, typecheck, test (1.235), check:docs, build, check:bundle (238,6 KB), test:e2e Chromium (446 bestanden), Gegenprobe am alten Stand
+Ergebnis: bestanden; WebKit läuft in der CI
+Bekannte Einschränkungen: am Gerät nicht prüfbar; im Stromsparmodus startet die Animation erst beim ersten Tippen
+Nächste Schritte: D-498 Karte „Jetzt“, D-499 Details breit, D-500 Messung
+```
+

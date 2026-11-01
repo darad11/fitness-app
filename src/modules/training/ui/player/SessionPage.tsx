@@ -490,6 +490,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   name={currentExercise.nameSnapshot}
                   muscles={currentEntry?.primaryMuscles ?? []}
                   variant="large"
+                  endless
                   className="w-full"
                   onOpen={() => {
                     setInfo(currentExercise);

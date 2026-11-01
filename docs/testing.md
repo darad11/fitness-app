@@ -3087,3 +3087,20 @@ Systematische Prüfung aller Schritte im Player, weitere Befunde mit Bild (D-496
 | Weitere Befunde | E1 „Ziel“ und Zahl getrennt (Pausenkarte rechts am Duo quer, „Jetzt“ am iPhone), E2 kleine Pause am iPhone nur „Beinpresse,…“, E3 zugeklappt Dialoge 266 statt 350 pt (Folge von A), E4 „Als Nächstes“ am Duo quer ohne Platz (Folge von D); Bild `docs/screens/duo/player-weitere-befunde.webp` |
 | `pnpm check:docs` (die App ändert sich nicht) | bestanden |
 
+
+### Wiedergabe der Übungsschleifen · 01.11.2026, Cloud-Umgebung
+
+Start im Player, zwei Durchläufe und Wiederholen in Übungsinfo und Details, MP4 vor WebM, WebM ohne Alphakanal (D-497). Safaris Regeln lassen sich unter Linux nicht direkt auslösen; nachgestellt mit Skripten vor dem Laden der Seite: `autoplay` wirkungslos (Safari hält das Video für unsichtbar) und `play()` nur während einer Geste (Stromsparmodus).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Am alten Stand in Chromium ohne Nachstellung | Beinpresse läuft nach dem Start und nach dem Wechsel (der Fehler zeigt sich nur in Safari) |
+| `ffprobe` der 13 WebM | alle `alpha_mode=1`; Einzelbilder RGBA mit Deckkraft 255; MP4 `avc1.64001E` (H.264 High 3.0) |
+| Einzelbilder gegen die ausgelieferten Dateien (PSNR) | MP4 46,1 bis 50,5 dB (die Einzelbilder sind die der Schleifen); WebM alt und neu je Übung gleich auf sechs Nachkommastellen (30,3 bis 50,9 dB); neu ohne Alphakanal, 60 Bilder, 720 × 540, 24 fps, je 2,8 KB kleiner (Beinpresse 56.769 → 53.965 B) |
+| `canPlayType` in Chromium der Cloud-Umgebung | `video/mp4; codecs="avc1.64001E"` und `video/webm; codecs="vp9"`: „probably“ |
+| Unit-Tests `exercise-visual.test.tsx` (6 neu, 1 angepasst) | 21 bestanden; am alten Stand 7 fehlgeschlagen |
+| `e2e/uebungen-wiedergabe.spec.ts` (neu, 4 Tests) und angepasste `uebungen.spec.ts`, dazu `duo-player-befunde`, `duo-player`, `player` | 34 bestanden, 12 übersprungen (Desktop-Profil); alle elf Übungen nach Start, Wechsel und Pause mit wirkungslosem `autoplay` |
+| Gegenprobe der 4 neuen E2E-Tests am alten Stand | alle fehlgeschlagen, am Verhalten: „Tag 1: beinpresse nach dem Start“ −1 (angehalten) statt > 0,2; „nach dem ersten Tippen“ −1; Details und Übungsinfo „nach zwei Durchläufen angehalten“ false (laufen ohne Ende) |
+| `tokens.test.ts` | Symbol `--media-control-fg` auf `--media-control` über `--media-bg` und über Weiß ≥ 4,5:1, beide Modi |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.235 Tests; Startansicht 238,6 KB (vorher 238,5 KB), Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 446 bestanden, 138 übersprungen, keiner fehlgeschlagen (21,6 min, parallel zu einer Messung in Blender) |

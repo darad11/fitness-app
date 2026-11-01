@@ -465,7 +465,11 @@ test('Pilot-Animation: Schleife im Player aufgeklappt und in den Details, Standb
   await openPage(page, '/uebungen');
   await row(page, 'Latziehen').click();
   const detail = page.locator('[data-demo="bild"] video');
-  await expect(detail.locator('source').last()).toHaveAttribute('src', medium('latziehen.mp4'));
+  // Eine Datei: MP4 (H.264), wo der Browser es kann, sonst WebM (D-497).
+  const h264 = await page.evaluate(
+    () => document.createElement('video').canPlayType('video/mp4; codecs="avc1.64001E"') !== '',
+  );
+  await expect(detail).toHaveAttribute('src', medium(h264 ? 'latziehen.mp4' : 'latziehen.webm'));
 
   // Weniger Bewegung: nur das Standbild, kein Video.
   await page.emulateMedia({ reducedMotion: 'reduce' });

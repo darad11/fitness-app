@@ -126,6 +126,8 @@
   --color-elevated: var(--bg-elevated);
   --color-surface: var(--surface);
   --color-media: var(--media-bg);
+  --color-media-control: var(--media-control);
+  --color-media-control-fg: var(--media-control-fg);
   --color-surface-2: var(--surface-2);
   --color-panel: var(--panel);
   --color-fg: var(--fg);

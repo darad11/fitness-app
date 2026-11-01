@@ -1,3 +1,4 @@
+import { RotateCcw } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { t } from '@/shared/i18n/de';
 import { tExerciseMedia } from '@/shared/i18n/de-exercise-media';
@@ -7,6 +8,7 @@ import {
   demoFiles,
   isVideo,
   loopFile,
+  loopFiles,
   mediaUrl,
   preloadVisual,
   useVisualIndex,
@@ -15,6 +17,7 @@ import {
 import type { Muscle } from '../model/exercise';
 import type { ExerciseVisual as Visual, MediaFile } from '../model/media';
 import { SymbolTile, type TileLook } from './SymbolTile';
+import { useLoopPlayback } from './useLoopPlayback';
 import './exercise-media.css';
 
 /**
@@ -173,6 +176,11 @@ export interface ExerciseDemoProps {
   variant: 'large' | 'compact';
   /** Antippen öffnet die Übungsinfo (Player). Ohne: nur Anzeige. */
   onOpen?: () => void;
+  /**
+   * Schleife ohne Ende (Player). Sonst läuft sie zweimal und hält an; ohne `onOpen` spielt ein
+   * Tippen auf die Animation sie von vorn wieder zweimal ab (D-497).
+   */
+  endless?: boolean;
   /** Ohne Visual nichts zeigen, wo Muskeln und Gerät ohnehin daneben stehen (Übungsinfo). */
   onlyWithVisual?: boolean;
   className?: string;
@@ -193,6 +201,7 @@ function Demo({
   muscles,
   variant,
   onOpen,
+  endless = false,
   onlyWithVisual,
   className,
   entry,
@@ -242,7 +251,15 @@ function Demo({
       </span>
     );
   } else {
-    body = <LargeDemo visual={visual} name={name} onError={fail} />;
+    body = (
+      <LargeDemo
+        visual={visual}
+        name={name}
+        endless={endless}
+        replayable={!onOpen}
+        onError={fail}
+      />
+    );
   }
 
   const data = visual ? 'bild' : 'symbol';
@@ -269,46 +286,83 @@ function Demo({
   );
 }
 
+/**
+ * Stumme Schleife ohne Bedienelemente (D-403, D-497); das Standbild steht, bis das Video läuft.
+ * Eine Datei statt einer Liste von `<source>`: dieselbe Wahl wie beim Vorladen und bei der Prüfung
+ * ohne Netz (`loopFiles`), MP4 zuerst. Lädt sie nicht, versucht das Video die andere Fassung, erst
+ * danach steht der Rückfall da.
+ */
 function LoopVideo({
   demo,
   alt,
   className,
+  endless,
+  replayable,
   onError,
 }: {
   demo: { file: MediaFile; webm?: MediaFile; still: MediaFile };
   alt: string;
   className: string;
+  endless: boolean;
+  /** Tippen auf die Animation spielt sie von vorn wieder ab (nicht im Knopf „Übungsinfo“). */
+  replayable: boolean;
   onError: () => void;
 }) {
+  const { ref, stopped, replay } = useLoopPlayback(endless);
+  const files = loopFiles(demo);
+  const [attempt, setAttempt] = useState(0);
+  const file = files[attempt] ?? demo.file;
   return (
-    <video
-      className={className}
-      poster={mediaUrl(demo.still)}
-      width={demo.file.width}
-      height={demo.file.height}
-      muted
-      loop
-      playsInline
-      autoPlay
-      preload="auto"
-      disablePictureInPicture
-      aria-label={alt}
-      onError={onError}
-    >
-      {demo.webm ? <source src={mediaUrl(demo.webm)} type="video/webm" /> : null}
-      {/* Fehlt auch die letzte Quelle, meldet erst sie den Fehler. */}
-      <source src={mediaUrl(demo.file)} type="video/mp4" onError={onError} />
-    </video>
+    <>
+      <video
+        ref={ref}
+        className={className}
+        src={mediaUrl(file)}
+        poster={mediaUrl(demo.still)}
+        width={demo.file.width}
+        height={demo.file.height}
+        muted
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        aria-label={alt}
+        onError={() => {
+          if (attempt + 1 < files.length) setAttempt(attempt + 1);
+          else onError();
+        }}
+      />
+      {replayable && !endless ? (
+        // Über der ganzen Animation: Tippen spielt sie von vorn zweimal ab. Angehalten zeigt ein
+        // dezentes Symbol in der Ecke, dass das geht; die Figur in der Mitte bleibt frei.
+        <button
+          type="button"
+          aria-label={tExerciseMedia.replay}
+          data-angehalten={stopped ? '' : undefined}
+          className="absolute inset-0 block size-full cursor-pointer rounded-tile focus-visible:-outline-offset-2"
+          onClick={replay}
+        >
+          {stopped ? (
+            <span className="absolute right-2 bottom-2 grid size-9 place-items-center rounded-full bg-media-control text-media-control-fg">
+              <RotateCcw aria-hidden="true" className="size-5" />
+            </span>
+          ) : null}
+        </button>
+      ) : null}
+    </>
   );
 }
 
 function LargeDemo({
   visual,
   name,
+  endless,
+  replayable,
   onError,
 }: {
   visual: Visual;
   name: string;
+  endless: boolean;
+  replayable: boolean;
   onError: () => void;
 }) {
   const reduced = useReducedMotion();
@@ -350,9 +404,15 @@ function LargeDemo({
         );
       }
       if (isVideo(demo.file)) {
-        // Stumme Schleife ohne Bedienelemente; das Standbild steht, bis das Video läuft.
         return frame(
-          <LoopVideo demo={demo} alt={visual.alt} className={media} onError={onError} />,
+          <LoopVideo
+            demo={demo}
+            alt={visual.alt}
+            className={media}
+            endless={endless}
+            replayable={replayable}
+            onError={onError}
+          />,
         );
       }
       return frame(

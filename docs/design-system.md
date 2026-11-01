@@ -52,6 +52,7 @@ Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,
 | `--accent-soft`, `--success-soft`, `--warning-soft`, `--danger-soft` | `#e6edf9`, `#e2f3ea`, `#fbf0da`, `#fbe7e7` | `#15263f`, `#10302a`, `#33290f`, `#3a1c1f` | Tonflächen für Chips, Etiketten, Hinweise, aktiven Tab; Text darauf in der Vollfarbe | je ≥ 4,5 (Test) |
 | `--ink` | `#151b2b` | `#1a2030` | früher Bühne; seit FORM nur noch Fläche hinter dem Kamerabild des Scanners (die Bühne nutzt `--bg-elevated`); `--ink-2`, `--on-ink` und `--on-ink-muted` entfallen (D-320) | – |
 | `--media-bg` | `#0d121a` | `#0d121a` | Grund der gerenderten Übungsanimationen (immer dunkel); ihr Rahmen hat genau diese Farbe, ohne Rand, damit an den Kanten nichts aufblitzt (D-495) | – |
+| `--media-control`, `--media-control-fg` | `#0d121ad9`, `#f2f3f4` | gleich | Symbol „Animation wiederholen“ auf der angehaltenen Animation: dunkle Scheibe, helles Zeichen (D-497) | ≥ 4,5 auch über Weiß (Test) |
 | `--shadow-card`, `--shadow-float` | weich, 4 bis 6 % | 25 bis 45 % | Karten; schwebende Elemente (Sheet, Toast, Menü) | – |
 
 Statusfarben erscheinen nie allein: immer mit Symbol und Text.

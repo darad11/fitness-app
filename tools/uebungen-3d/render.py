@@ -347,8 +347,10 @@ def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:
     gemeinsam = ["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", muster, "-an"]
     subprocess.run(gemeinsam + ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "24", "-preset", "slow",
                                 "-movflags", "+faststart", str(ziel / f"{name}.mp4")], check=True)
-    subprocess.run(gemeinsam + ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "36", "-row-mt", "1",
-                                str(ziel / f"{name}.webm")], check=True)
+    # `yuv420p` auch hier (D-497): Die Einzelbilder sind RGBA, ohne die Angabe schrieb libvpx einen
+    # Alphakanal mit (`alpha_mode=1`), den kein Bild braucht und den Safari nicht kennt.
+    subprocess.run(gemeinsam + ["-c:v", "libvpx-vp9", "-pix_fmt", "yuv420p", "-b:v", "0", "-crf", "36",
+                                "-row-mt", "1", str(ziel / f"{name}.webm")], check=True)
     # Poster: Endposition (Mitte der Pause unten). Das Vorschaubild rendert `vorschau` eigens.
     poster = arbeit / f"{ansicht}-{BILDER // 2:03d}.png"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(poster), "-q:v", "80",

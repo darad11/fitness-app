@@ -114,20 +114,40 @@ export function isVideo(file: MediaFile): boolean {
 }
 
 /**
- * Die Datei der Schleife, die der Browser abspielen wird: dieselbe Wahl wie `<video>` mit WebM
- * zuerst, dann MP4. So liegt beim Vorladen genau die Datei im Speicher, die später läuft.
+ * Formate der Schleifen, wie `tools/uebungen-3d/render.py` (`kodiere`) sie schreibt: H.264 High
+ * Profile Level 3.0 und VP9 ohne Alphakanal (D-497). Mit dem Codec antwortet der Browser genau.
  */
+const LOOP_TYPES = {
+  mp4: 'video/mp4; codecs="avc1.64001E"',
+  webm: 'video/webm; codecs="vp9"',
+} as const;
+
+let playable: { mp4: boolean; webm: boolean } | undefined;
+
+function playableFormats(): { mp4: boolean; webm: boolean } {
+  if (playable) return playable;
+  if (typeof document === 'undefined') return { mp4: true, webm: false };
+  const probe = document.createElement('video');
+  const can = (type: string) =>
+    typeof probe.canPlayType === 'function' && probe.canPlayType(type) !== '';
+  playable = { mp4: can(LOOP_TYPES.mp4), webm: can(LOOP_TYPES.webm) };
+  return playable;
+}
+
+/**
+ * Dateien einer Schleife in der Reihenfolge, in der die App sie versucht (D-497): MP4 (H.264)
+ * zuerst, das spielt jedes iPhone in Hardware; WebM (VP9) nur, wo H.264 fehlt. Vorher stand WebM
+ * vorn, Safari bekam so VP9 statt H.264.
+ */
+export function loopFiles(demo: { file: MediaFile; webm?: MediaFile }): MediaFile[] {
+  if (!demo.webm) return [demo.file];
+  const can = playableFormats();
+  return can.mp4 || !can.webm ? [demo.file, demo.webm] : [demo.webm, demo.file];
+}
+
+/** Die Datei der Schleife, die zuerst läuft: Genau sie liegt nach dem Vorladen im Speicher. */
 export function loopFile(demo: { file: MediaFile; webm?: MediaFile }): MediaFile {
-  if (demo.webm && typeof document !== 'undefined') {
-    const probe = document.createElement('video');
-    if (
-      typeof probe.canPlayType === 'function' &&
-      probe.canPlayType('video/webm; codecs="vp9"') !== ''
-    ) {
-      return demo.webm;
-    }
-  }
-  return demo.file;
+  return loopFiles(demo)[0] ?? demo.file;
 }
 
 /** Dateien, die die Demonstration zuerst braucht (für das Vorausladen im Player). */
@@ -264,5 +284,6 @@ export function resetMediaCacheForTests(): void {
   visualsPending = undefined;
   visualsLoaded = undefined;
   guidesPending = undefined;
+  playable = undefined;
   preloaded.clear();
 }

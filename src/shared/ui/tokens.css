@@ -47,6 +47,10 @@
   /* Grund der gerenderten Übungsanimationen (immer dunkel, auch im hellen Modus): Ihr
      Rahmen hat genau diese Farbe, damit an seinen Kanten nichts aufblitzt (D-495). */
   --media-bg: #0d121a;
+  /* Symbol „Animation wiederholen“ auf der Animation (D-497): dunkle Scheibe, helles Zeichen, in
+     beiden Modi gleich wie der Grund der Animation. */
+  --media-control: #0d121ad9;
+  --media-control-fg: #f2f3f4;
   /* Kachel hinter dem F in der Kopfzeile. */
   --tile: #0d1118;
   --tile-border: #3c424e;
@@ -137,6 +141,8 @@
   --danger-soft: #e5484d0f;
   --ink: #0c1219;
   --media-bg: #0d121a;
+  --media-control: #0d121ad9;
+  --media-control-fg: #f2f3f4;
   --tile: #0d1118;
   --tile-border: #3c424e;
   /* Hell (angelegt): Vorschlag aus F6, Türkis etwas dunkler für 3:1 auf surface-2 und der Spur. */

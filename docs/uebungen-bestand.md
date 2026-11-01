@@ -165,7 +165,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 100 | Rumänisches Kreuzheben mit Langhantel | Romanian Deadlift | Langhantel | Oberschenkel hinten, Gesäß | Unterer Rücken | Rumänisches Kreuzheben mit Kurzhanteln | fehlt | fertig (acefitness.org, exrx.net) | – | `romanian_deadlift_barbell` · `9914d540-9c0c-5a4d-9a46-0e9d0ac1b619` |
 | 101 | Rumänisches Kreuzheben mit Kurzhanteln | Dumbbell Romanian Deadlift | Kurzhantel | Oberschenkel hinten, Gesäß | Unterer Rücken | Rumänisches Kreuzheben mit Langhantel | fehlt | fertig (acefitness.org, exrx.net) | Gestützt auf einen ACE-Technikartikel, der Kurzhanteln erlaubt, und die Seite zur Langhantel. | `romanian_deadlift_dumbbell` · `3b203ddc-70a3-595e-b0d8-868f0c584c8c` |
 | 102 | Einbeiniges Rumänisches Kreuzheben mit Kurzhantel | Single-Leg RDL | Kurzhantel | Oberschenkel hinten, Gesäß | Unterer Rücken | – | fehlt | fertig (exrx.net) | Quelle arbeitet mit je einer Hantel pro Hand; der Text deckt eine oder zwei Hanteln ab. | `single_leg_rdl_dumbbell` · `7cb49da4-3ea3-5cbf-8537-a732b12ef30a` |
-| 103 | Beinbeuger liegend | Lying Leg Curl | Maschine | Oberschenkel hinten | Waden | – | fehlt | fertig (exrx.net) | – | `lying_leg_curl` · `7164e5ec-706f-55b0-861b-fde498f8f28c` |
+| 103 | Beinbeuger liegend | Lying Leg Curl | Maschine | Oberschenkel hinten | Waden | – | vorhanden | fertig (exrx.net) | – | `lying_leg_curl` · `7164e5ec-706f-55b0-861b-fde498f8f28c` |
 | 104 | Beinbeuger sitzend | Seated Leg Curl | Maschine | Oberschenkel hinten | – | – | fehlt | fertig (exrx.net) | – | `seated_leg_curl` · `ff340a95-597e-5376-938a-004a8a26ec6b` |
 | 105 | Good Mornings mit Langhantel | Good Morning | Langhantel | Oberschenkel hinten, Unterer Rücken | Gesäß | – | fehlt | fertig (exrx.net) | Folgt der Variante mit gestreckten Knien. | `good_morning` · `c490f632-2f33-5aa0-9527-a030c31b74d1` |
 | 106 | Nordic Curls | Nordic Hamstring Curl | Körpergewicht | Oberschenkel hinten | – | – | fehlt | fertig (exrx.net) | Quelle führt die Übung als „Inverse Leg Curl“; beschrieben ist die Variante am Boden mit Abfangen. | `nordic_curl` · `d55cf0cf-ae23-5c0c-8798-663aa03cb218` |
@@ -198,4 +198,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 123 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 124 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 124 Übungen · mit Visual 10 · ohne Visual 114 · Ausführung fertig 122 · offen 2
+Summe: 124 Übungen · mit Visual 11 · ohne Visual 113 · Ausführung fertig 122 · offen 2

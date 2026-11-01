@@ -123,6 +123,17 @@
       },
       "alt": "Rudern am Kabel, sitzend, schräg von hinten: aufrecht, Knie gebeugt, Füße auf der Fußplatte; V-Griff am waagrechten Kabel zu den unteren Rippen ziehen, Schulterblätter zusammen, dann kontrolliert nach vorn bis zu gestreckten Armen.",
       "source": "form_3d_pilot"
+    },
+    "lying_leg_curl": {
+      "preview": { "src": "medien/beinbeuger_liegend-vorschau.webp", "width": 240, "height": 240 },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/beinbeuger_liegend.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/beinbeuger_liegend.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/beinbeuger_liegend-poster.webp", "width": 720, "height": 540 }
+      },
+      "alt": "Beinbeuger liegend, von der Seite, leicht von hinten und oben: bäuchlings auf dem Polster, Knie knapp dahinter, Rolle über den Fersen; Knie bis etwa 120° beugen und kontrolliert strecken, Hüfte und Oberkörper bleiben auf dem Polster.",
+      "source": "form_3d_pilot"
     }
   }
 }

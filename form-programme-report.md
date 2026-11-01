@@ -1393,3 +1393,23 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Beinbeuger liegend in die App (D-486), dann die Prüfseite der nächsten Familie
 ```
+
+## 28. Beinbeuger liegend in der App (D-486)
+
+Nach den zehn Schleifen kam der Beinbeuger: mit der finalen Kleidung, Bewegung und Kamera wie auf der Prüfseite (D-475). In der Übungsliste hat er jetzt ein Vorschaubild, in den Details läuft die Schleife.
+
+- **Messwerte über alle 60 Bilder:** Knie 175,0° bis 60,0°, Becken gegenüber dem Ausgang angehoben 0,00 mm, Hüfte am Scheitel 2,74 mm im Polster, Rolle zu den Schuhen mindestens 15,9 mm, Kopf und Hals zum Gerät mindestens 58,4 mm, Haut unter dem Ärmel mindestens 5,20 mm, Shorts unter dem Shirt mindestens 8,96 mm, Saumband über den Shorts mindestens 8,39 mm, Shorts-F zum Streifen 10,30 cm, Meldungen des Rigs 0.
+- **Text:** passt zur Animation (D-475), keine Änderung.
+- **Beim Einbau gefunden:** Der erste Alternativtext war mit 297 Zeichen zu lang (erlaubt sind 240). Dann verwirft die App die ganze Liste der Bilder, und die Übungsliste zeigt nur Symbole. Der erste E2E-Lauf hat das gezeigt; der Text ist jetzt kürzer (233 Zeichen). Den Unit-Test, der die Liste prüft, hatte ich vorher nicht laufen lassen; er hätte es auch gefunden.
+- **Aufnahme aller elf Schleifen:** `docs/screens/uebungen/schleifen-bewegung.mp4`, 1440 × 810, 7,5 s, 454 KB; elf beschriftete Felder in vier Spalten, jede Schleife dreimal; angesehen und dem Produktinhaber geschickt.
+
+```
+Arbeitspaket: D-486 Phase Programme, Beinbeuger liegend in der App
+Umgesetzte Funktionen: Schleife, Poster und Vorschaubild des Beinbeugers liegend (medien.json: lying_leg_curl); Aufnahme aller elf Schleifen; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/beinbeuger_liegend*.{mp4,webm,webp} (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/schleifen-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-486
+Ausgeführte Tests: Schleife gerendert, Kontaktbogen und erstes/letztes Bild geprüft, Messwerte über alle 60 Bilder; Unit-Tests 1.209 bestanden; format:check, lint, typecheck, build, check:bundle (Startansicht 237,8 KB, Übungsbilder 44 von 44), check:docs; E2E Chromium im ersten Lauf 2 fehlgeschlagen (Alternativtext zu lang), nach der Korrektur 432 bestanden, 132 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden, nach der Korrektur des Alternativtexts
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Prüfseite der nächsten Familie „Hüftbeuge“ (Rumänisches Kreuzheben mit Kurzhanteln), dann Halt
+```

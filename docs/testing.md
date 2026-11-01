@@ -2926,3 +2926,16 @@ Alle zehn fertigen Schleifen mit der Kleidung aus D-483 und dem Shorts-F aus D-4
 | Raster der Aufnahme (`uebungen_bewegung.py` mit zehn Schleifen, Probe mit den alten Dateien) | 1440 × 810, 7,5 s, Beschriftung lesbar; Probedatei wieder gelöscht |
 | `pnpm format:check`, `pnpm build`, `pnpm check:bundle`, `pnpm check:docs` | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 (dieselben Dateinamen wie bisher) |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,4 min); der Test der Übungsliste (zehn Vorschaubilder) bestanden |
+
+### Beinbeuger liegend in der App · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schleife des Beinbeugers mit der finalen Kleidung, Eintrag in der App und Aufnahme aller Schleifen (D-486).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py beinbeuger_liegend` (60 Bilder, 720 × 540, 40 Proben) | 3.013 s für 60 Bilder, mit Aufbau und Kodieren 3.075 s; MP4 72,8 KB, WebM 73,2 KB, Poster 12,1 KB, Vorschau 5,2 KB; erstes und letztes Bild pixelgleich; Kontaktbogen angesehen |
+| `render.py beinbeuger_liegend --pruefen --nur-messwerte` (alle 60 Bilder, finale Kleidung) | Knie 175,0° bis 60,0°, Becken gegenüber dem Ausgang angehoben 0,00 mm, Hüfte am Scheitel 2,74 mm im Polster, Rolle zu den Schuhen mindestens 15,9 mm, Kopf und Hals zum Gerät mindestens 58,4 mm, Haut unter dem Ärmel mindestens 5,20 mm, Shorts unter dem Shirt mindestens 8,96 mm, Saumband über den Shorts mindestens 8,39 mm, Shorts-F zum Streifen 10,30 cm, Meldungen des Rigs 0 |
+| Aufnahme (`uebungen_bewegung.py` mit allen elf Schleifen) | 1440 × 810, 7,5 s, 454 KB; elf beschriftete Felder in vier Spalten, jede Schleife dreimal; angesehen und dem Produktinhaber geschickt |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 11, ohne Visual 113; Animationsplan und Familien neu geschrieben |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm check:bundle`, `pnpm check:docs` | bestanden; Unit-Tests 135 Dateien, 1.209 Tests; Startansicht 237,8 KB, Übungsbilder 44 von 44 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | Erster Lauf nach 286 Tests abgebrochen: 2 fehlgeschlagen (Desktop), `uebungen.spec.ts` „Übungsliste: Übungen mit Animation …“ mit 0 statt 11 Bildern und `uebungen-offline.spec.ts` „Animation einmal online gesehen, danach offline“; Ursache: Alternativtext des Beinbeugers mit 297 Zeichen, das Schema erlaubt 240 und verwirft sonst die ganze Liste. Nach dem Kürzen auf 233 Zeichen: 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,1 min); der geänderte Test der Übungsliste (elf Vorschaubilder, dazu der Beinbeuger) bestanden |

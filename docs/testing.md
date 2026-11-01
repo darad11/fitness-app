@@ -3207,3 +3207,20 @@ Logik „zweimal, dann anhalten“ in Chromium und WebKit mit nachgestelltem Vid
 | Nachweis | Ergebnis |
 |---|---|
 | `e2e/uebungen-wiedergabe.spec.ts` (Chromium; neu: Details und Übungsinfo mit nachgestelltem Video, je drei Runden; die Tests mit echten Videos nur noch in Chromium) | 9 bestanden, 5 übersprungen (Desktop-Profil bei den Tests nur fürs Handy) |
+
+### Kopf links im niedrigen Fenster am Duo quer · 01.11.2026, Cloud-Umgebung
+
+Kopf mit Programm, Fortschritt, „Beenden“ und Pause links über der Liste, Animation rechts 336 × 252 px; Öffnen ohne Sprung (D-502).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `tools/player-rahmen-messen.mjs` (`HALTUNGEN=duo-quer,duo-quer-streifen,ipad-quer`, alle elf Übungen mit Satz, Timer und Pause) | Duo quer 867 × 669 und 867 × 587 überall 336 × 252 px, auch mit Timer und in der Pause; iPad 1180 × 820 wie vorher 336 × 252 px |
+| Kopf und Liste, gemessen in Chromium (sicherer Bereich unten 34 px) | Duo quer 867 × 669 und 867 × 587: Kopf 24 bis 144 px (im Satz 120 px hoch), in der Pause 192 px hoch und oben angeheftet; „Als Nächstes“ in der Pause vier bzw. zwei Einträge und „und 2 weitere“, im Satz ausgeblendet. Duo zugeklappt 382 × 678: vorher (`2323765`) Scroll 39 px, erster Satz bis 570 px, Fußleiste ab 567 px; jetzt Scroll 46 px, Satz bis 563 px, „Jetzt“ ab 114 px unter dem Kopf bis 120 px. iPhone 390 × 844: vorher Scroll 13 px, jetzt 0 |
+| Öffnen Bild für Bild (rAF, 2,5 s ab „Training starten“, 867 × 587) | vorher (Kopf links ohne Warten auf die Daten): Kopf bei 24 px, 26 ms später bei 11 px, Scroll 13 px, die erste Karte 13,2 px höher; jetzt ein einziger Stand: Kopf 24 px, Karte 160,2 px, Scroll 0 |
+| `src/modules/training/ui/player/useTwoColumns.test.ts` | 3 bestanden |
+| `pnpm vitest run src/modules/training` | 30 Dateien, 187 Tests bestanden |
+| Player-Suiten E2E (Chromium): `duo-player`, `duo-player-befunde`, `duo-tastatur`, `duo-resize`, `player-jetzt`, `player`, `session-head`, `session`, `training-scroll`, `uebungen-wiedergabe` | 60 bestanden, 44 übersprungen (Desktop-Profil und Tests nur für WebKit); vorher am Stand mit Kopf links und Warten auf die Daten, ohne Zeigen beim Öffnen 2 fehlgeschlagen: `duo-player.spec.ts:40` (Kopf noch rechts erwartet) und `player-jetzt.spec.ts:101` am Duo zugeklappt (Satz bis 609 px, Fußleiste ab 601 px) |
+| `e2e/duo-player.spec.ts` „Öffnen ohne Sprung“ (669 und 587 px) | 2 bestanden |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 461 bestanden, 151 übersprungen, 0 fehlgeschlagen (25,6 min); nach dem letzten Build `duo-player` und `player-jetzt` noch einmal: 9 bestanden, 9 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB |
+| `pnpm test` | erster Lauf neben dem Rendern der Schleifen (Blender) und der E2E-Suite: 6 Dateien, 13 Tests mit Zeitüberschreitung (5 s), auch in nicht geänderten Modulen (Wasser, Tagesaufgaben, Körpergewicht); mit 3 Workern: 139 Dateien bestanden, 1 Test mit Zeitüberschreitung (`habits-ui.test.tsx`, 5089 ms, nicht geändert), allein: 11 bestanden. Zusammen 1.249 Tests, 1.248 im Lauf bestanden |

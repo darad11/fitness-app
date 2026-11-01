@@ -81,6 +81,7 @@ import { SetHeader, SetRow } from './SetRow';
 import { useFittingRows } from './useFittingRows';
 import { useFootClearOfField } from './useFootClearOfField';
 import { useShortWindow } from './useShortWindow';
+import { useTwoColumns } from './useTwoColumns';
 import { useStableSetView } from './useStableSetView';
 import './player-layout.css';
 import { Demo, Guide, Thumb } from '../exerciseVisuals';
@@ -92,7 +93,16 @@ export function SessionPage() {
   const [search] = useSearchParams();
   const light = search.get('leicht') === '1';
   const session = useSession(id);
-  if (session === undefined) {
+  const history = usePreviousHistory(session);
+  const allExercises = useExercises();
+  // Der Player erscheint erst mit Übungen und Vorwerten (D-502): Kämen sie nach dem ersten Bild,
+  // wüchse die Karte über dem aktiven Satz (Muskel-Etiketten, Notiz vom letzten Mal), und der
+  // Player schöbe die Liste um diese Höhe, mit dem Kopf links sichtbar als Sprung. Danach bleibt
+  // er stehen, auch wenn eine neue Abfrage (Übung hinzugefügt) kurz nichts liefert.
+  const loaded = history !== undefined && allExercises !== undefined;
+  const [shown, setShown] = useState(false);
+  if (loaded && !shown) setShown(true);
+  if (session === undefined || (session && session.status !== 'completed' && !loaded && !shown)) {
     return (
       <div aria-busy="true" className="grid gap-4">
         <Skeleton className="h-16" />
@@ -112,7 +122,7 @@ export function SessionPage() {
   if (session.status === 'completed') {
     return <Navigate to={`/training/einheit/${session.id}/zusammenfassung`} replace />;
   }
-  return <Player session={session} light={light} />;
+  return <Player session={session} light={light} history={history} allExercises={allExercises} />;
 }
 
 type Confirm =
@@ -203,21 +213,30 @@ function useRestEndSound(timer: Session['restTimer'], now: Date, enabled: boolea
 }
 
 /** Basis- und eigene Übungen nach ID, für Übungsinfo und Alternativen; leer, bis sie geladen sind. */
-function useLibrary(): ReadonlyMap<string, Exercise> {
-  const exercises = useExercises();
+function useLibrary(exercises: readonly Exercise[] | undefined): ReadonlyMap<string, Exercise> {
   return useMemo(
     () => new Map((exercises ?? []).map((exercise) => [exercise.id, exercise])),
     [exercises],
   );
 }
 
-function Player({ session, light }: { session: Session; light: boolean }) {
+function Player({
+  session,
+  light,
+  history,
+  allExercises,
+}: {
+  session: Session;
+  light: boolean;
+  /** Vorwerte und Übungen lädt `SessionPage` vor dem ersten Bild (D-502). */
+  history: ReadonlyMap<string, HistoryRow> | undefined;
+  allExercises: readonly Exercise[] | undefined;
+}) {
   const rt = useDb();
   const navigate = useNavigate();
   const settings = useSettings() ?? SETTINGS_DEFAULTS;
   const fmt = useFormatters();
-  const history = usePreviousHistory(session);
-  const library = useLibrary();
+  const library = useLibrary(allExercises);
   const prefs = useExercisePrefs();
   const now = useNow(session.restTimer || session.setTimer ? 250 : 1000);
   useRestEndSound(session.restTimer ?? null, now, settings.restSound);
@@ -244,11 +263,16 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const progress = sessionProgress(session);
   const current = currentSet(session);
   const rootRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLElement>(null);
   const footRef = useRef<HTMLDivElement>(null);
-  useStableSetView(rootRef, headRef, footRef, current?.id ?? null);
   // Niedriges Fenster: „Jetzt“ einspaltig kompakter (D-498, Nachtrag).
   const short = useShortWindow();
+  // Niedrig und zwei Spalten (Duo quer): Der Kopf steht links fest über der Liste, die Animation
+  // rechts hat ihre volle Größe (D-502).
+  const twoColumns = useTwoColumns(frameRef);
+  const headLeft = short && twoColumns;
+  useStableSetView(rootRef, headRef, footRef, current?.id ?? null, headLeft);
   useFootClearOfField(footRef);
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
@@ -365,6 +389,102 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       ? null
       : tSession.freeSource;
 
+  // Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS (D-332).
+  // Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. Seitlich reicht er bis an
+  // den Fensterrand, auch über einen sicheren Bereich (D-377). Er steht in einer Spalte oben, in
+  // zwei Spalten rechts über der Animation, im niedrigen Fenster mit zwei Spalten links fest über
+  // der Liste (D-502).
+  const head = (
+    <header
+      ref={headRef}
+      className="player-head page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
+    >
+      <div className="flex items-start justify-between gap-2">
+        {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
+        <Link
+          to="/training"
+          aria-label={t.training.title}
+          title={t.training.title}
+          className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
+        >
+          <ChevronLeft aria-hidden="true" className="size-6" />
+        </Link>
+        <div className="min-w-0 flex-1 pt-0.5">
+          {session.program ? (
+            // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
+            // (F6, D-338): „Winterprogramm 20… · Woche 3“.
+            <p className="eyebrow flex min-w-0 text-muted">
+              <span className="min-w-0 truncate">{session.program.programName}</span>
+              <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
+            </p>
+          ) : eyebrow ? (
+            <p className="eyebrow truncate text-muted">{eyebrow}</p>
+          ) : null}
+          <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            const open = progress.total - progress.done;
+            if (open > 0) setConfirm({ kind: 'finish', open });
+            else void finish(false);
+          }}
+        >
+          {tSession.finish}
+        </Button>
+      </div>
+      <div className="mt-3 flex items-center gap-3">
+        <Meter
+          value={progress.total > 0 ? progress.done / progress.total : 0}
+          label={t.session.progress(progress.done, progress.total)}
+          className="flex-1"
+        />
+        <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
+          <span className="sr-only">{tSession.duration}: </span>
+          {formatClock(sessionDurationSec(session, now))}
+        </p>
+      </div>
+      <p className="mt-1 text-sm text-muted tabular-nums">
+        {t.session.progress(progress.done, progress.total)}
+      </p>
+      {errors.session ? (
+        <p role="alert" className="mt-2 text-sm text-danger">
+          {errors.session.message}{' '}
+          {errors.session.retry ? (
+            <button
+              type="button"
+              className="font-semibold underline"
+              onClick={errors.session.retry}
+            >
+              {tSession.retry}
+            </button>
+          ) : null}
+        </p>
+      ) : null}
+      {restTimer ? (
+        <RestStage
+          timer={restTimer}
+          now={now}
+          next={
+            afterRest
+              ? {
+                  ...afterRest,
+                  name: names.get(afterRest.set.id)?.name ?? afterRest.exercise.nameSnapshot,
+                }
+              : null
+          }
+          previous={(() => {
+            const values = afterRest ? previousFor(afterRest.exercise, afterRest.set) : null;
+            return afterRest && values ? formatValues(afterRest.exercise, values) : undefined;
+          })()}
+          onAdjust={(delta) => void run('rest', () => adjustRest(rt, session.id, delta))}
+          onSkip={() => void run('rest', () => skipRest(rt, session.id))}
+        />
+      ) : null}
+    </header>
+  );
+
   return (
     <div
       ref={rootRef}
@@ -375,105 +495,10 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       {/* Rahmen, Spalten und Steuerung (D-380, `player-layout.css`): schmal eine Spalte wie bisher,
           ab 48 rem Inhaltsbreite links die Übungen, rechts mitlaufend Kopf, nächster Satz und die
           nächsten Übungen. Nur angeordnet, nichts neu aufgebaut. */}
-      <div className="player-frame" data-niedrig={short ? '' : undefined}>
+      <div ref={frameRef} className="player-frame" data-niedrig={short ? '' : undefined}>
         <div className="player-columns">
           <div className="player-side">
-            {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
-          (D-332). Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. Seitlich
-          reicht er bis an den Fensterrand, auch über einen sicheren Bereich (D-377). */}
-            <header
-              ref={headRef}
-              className="player-head page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
-            >
-              <div className="flex items-start justify-between gap-2">
-                {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
-                <Link
-                  to="/training"
-                  aria-label={t.training.title}
-                  title={t.training.title}
-                  className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
-                >
-                  <ChevronLeft aria-hidden="true" className="size-6" />
-                </Link>
-                <div className="min-w-0 flex-1 pt-0.5">
-                  {session.program ? (
-                    // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
-                    // (F6, D-338): „Winterprogramm 20… · Woche 3“.
-                    <p className="eyebrow flex min-w-0 text-muted">
-                      <span className="min-w-0 truncate">{session.program.programName}</span>
-                      <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
-                    </p>
-                  ) : eyebrow ? (
-                    <p className="eyebrow truncate text-muted">{eyebrow}</p>
-                  ) : null}
-                  <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
-                </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    const open = progress.total - progress.done;
-                    if (open > 0) setConfirm({ kind: 'finish', open });
-                    else void finish(false);
-                  }}
-                >
-                  {tSession.finish}
-                </Button>
-              </div>
-              <div className="mt-3 flex items-center gap-3">
-                <Meter
-                  value={progress.total > 0 ? progress.done / progress.total : 0}
-                  label={t.session.progress(progress.done, progress.total)}
-                  className="flex-1"
-                />
-                <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
-                  <span className="sr-only">{tSession.duration}: </span>
-                  {formatClock(sessionDurationSec(session, now))}
-                </p>
-              </div>
-              <p className="mt-1 text-sm text-muted tabular-nums">
-                {t.session.progress(progress.done, progress.total)}
-              </p>
-              {errors.session ? (
-                <p role="alert" className="mt-2 text-sm text-danger">
-                  {errors.session.message}{' '}
-                  {errors.session.retry ? (
-                    <button
-                      type="button"
-                      className="font-semibold underline"
-                      onClick={errors.session.retry}
-                    >
-                      {tSession.retry}
-                    </button>
-                  ) : null}
-                </p>
-              ) : null}
-              {restTimer ? (
-                <RestStage
-                  timer={restTimer}
-                  now={now}
-                  next={
-                    afterRest
-                      ? {
-                          ...afterRest,
-                          name:
-                            names.get(afterRest.set.id)?.name ?? afterRest.exercise.nameSnapshot,
-                        }
-                      : null
-                  }
-                  previous={(() => {
-                    const values = afterRest
-                      ? previousFor(afterRest.exercise, afterRest.set)
-                      : null;
-                    return afterRest && values
-                      ? formatValues(afterRest.exercise, values)
-                      : undefined;
-                  })()}
-                  onAdjust={(delta) => void run('rest', () => adjustRest(rt, session.id, delta))}
-                  onSkip={() => void run('rest', () => skipRest(rt, session.id))}
-                />
-              ) : null}
-            </header>
+            {headLeft ? null : head}
             {light ? (
               <p
                 role="note"
@@ -612,6 +637,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
             ) : null}
           </div>
           <div className="player-main">
+            {headLeft ? head : null}
             {exercises.length === 0 ? <p className="mb-4 text-muted">{tSession.empty}</p> : null}
 
             <div className="grid gap-4">

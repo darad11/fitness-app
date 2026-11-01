@@ -37,7 +37,7 @@ async function startWithRest(page: Page) {
   await expect(page.getByRole('region', { name: 'Pause' })).toBeVisible();
 }
 
-test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes“ (D-380, D-495)', async ({
+test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst rechts mit Pause und „Als Nächstes“ (D-380, D-495, D-502)', async ({
   page,
 }) => {
   test.slow();
@@ -47,27 +47,60 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
   const list = page.getByRole('region', { name: 'Beinpresse' });
   const upNext = page.getByRole('region', { name: 'Als Nächstes' });
   const rest = page.getByRole('region', { name: 'Pause' });
+  const axe = async () => {
+    const results = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  };
+  /**
+   * Im niedrigen Fenster (Duo quer) steht der Kopf mit der Pause links über der Liste, oben im
+   * Fenster, mit seiner Fläche bis an den linken Rand (D-502). Die Meldung nennt die Lage der Teile.
+   */
+  const expectHeadLeft = async () => {
+    await expect
+      .poll(async () => {
+        const [h, l, r] = [await box(head), await box(list), await box(rest)];
+        const ok =
+          h.left <= l.left + 1 &&
+          Math.abs(h.right - l.right) <= 1 &&
+          h.top >= 0 &&
+          h.top <= 40 &&
+          r.left >= h.left - 1 &&
+          r.right <= h.right + 1 &&
+          r.top >= h.top &&
+          r.bottom <= h.bottom + 1;
+        const where = (b: Box) =>
+          [b.left, b.right, b.top, b.bottom].map((v) => String(Math.round(v))).join('/');
+        return ok ? 'links' : `Kopf ${where(h)}, Liste ${where(l)}, Pause ${where(r)}`;
+      })
+      .toBe('links');
+    await expect(rest.getByRole('button', { name: 'Pause überspringen' })).toBeVisible();
+  };
 
-  // Rechts die Steuerung mit Pause und den nächsten Übungen, links die Sätze. „Als Nächstes“ zeigt
-  // nur ganze Einträge (D-495): Am Duo quer passt neben Kopf, Pause und Animation keiner, die Karte
-  // steht dann nicht da, den nächsten Satz nennt die Pause. In einem höheren Fenster stehen alle da.
-  await expect(upNext).toBeHidden();
+  // Links die Sätze, darüber der Kopf mit Programm, Fortschritt, „Beenden“ und der Pause in einer
+  // Zeile (D-502); rechts die Animation, in der Pause darunter „Als Nächstes“ („Jetzt“ entfällt),
+  // nur ganze Einträge (D-495).
+  await expect(upNext.getByRole('listitem').first()).toBeVisible();
   await expect(rest).toContainText('Beinpresse, Aufwärmsatz 2');
-  await page.setViewportSize({ width: 951, height: 1100 });
+  await expectHeadLeft();
+  await axe();
+
+  // In einem höheren Fenster steht rechts die Steuerung mit Kopf, Pause (±15 s) und allen nächsten
+  // Übungen, links nur die Sätze. Mit neuer Breite: Ob das Fenster niedrig ist, misst der Player
+  // beim Öffnen und bei neuer Breite, nicht bei der Tastatur (D-498).
+  await page.setViewportSize({ width: 1000, height: 1100 });
   await expect(upNext).toBeVisible();
   await expect(upNext.getByRole('listitem')).toHaveCount(4);
   await expect(upNext).toContainText('Bankdrücken mit Kurzhanteln');
-  await setDuoPose(page, 'auf');
-  await expect(upNext).toBeHidden();
-  expect((await box(head)).left).toBeGreaterThan((await box(list)).right);
+  await expect.poll(async () => (await box(head)).left > (await box(list)).right).toBe(true);
   expect((await box(rest)).left).toBeGreaterThan((await box(list)).right);
   await expect(rest.getByRole('button', { name: '15 s weniger' })).toBeVisible();
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .analyze();
-  expect(results.violations.map((v) => v.id)).toEqual([]);
+  await axe();
+  await setDuoPose(page, 'auf');
+  await expectHeadLeft();
 
-  // Nach jedem Satz bleibt der nächste ganz sichtbar; der Kopf steht daneben, nicht darüber. Bis
+  // Nach jedem Satz bleibt der nächste ganz sichtbar, unter dem Kopf und über der Fußleiste. Bis
   // zu 5 s warten; scheitert es, nennt die Meldung Lage und Verlauf (Nachtrag zu D-384).
   await startScrollLog(page);
   for (let i = 0; i < 3; i += 1) {
@@ -82,20 +115,22 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
     let where = '';
     for (let attempt = 0; attempt < 25 && !shown; attempt += 1) {
       const row = await box(page.locator('li[aria-current="step"]'));
-      shown = row.top >= 0 && row.bottom <= footer.top;
-      where = `Satz ${String(Math.round(row.top))} bis ${String(Math.round(row.bottom))}, Fußleiste ab ${String(Math.round(footer.top))}`;
+      const top = (await box(head)).bottom;
+      shown = row.top >= top - 1 && row.bottom <= footer.top;
+      where = `Satz ${String(Math.round(row.top))} bis ${String(Math.round(row.bottom))}, Kopf bis ${String(Math.round(top))}, Fußleiste ab ${String(Math.round(footer.top))}`;
       if (!shown) await page.waitForTimeout(200);
     }
     const history = shown ? '' : await takeScrollLog(page);
     expect(shown, `Satz ${String(i + 2)} sichtbar (${where}; ${history})`).toBe(true);
   }
 
-  // Aufgeklappt den aktuellen Satz nach oben scrollen, dann zuklappen: Der Kopf steht wieder über
-  // der Liste; der Satz rutscht nicht dahinter, sondern bleibt darunter sichtbar.
+  // Aufgeklappt den aktuellen Satz knapp unter den Kopf scrollen, dann zuklappen: Der Kopf steht
+  // über der ganzen Breite; der Satz rutscht nicht dahinter, sondern bleibt darunter sichtbar.
   const active = page.locator('li[aria-current="step"]');
-  await active.evaluate((row) => {
-    document.getElementById('seite')?.scrollBy(0, row.getBoundingClientRect().top - 40);
-  });
+  const headBottom = (await box(head)).bottom;
+  await active.evaluate((row, below) => {
+    document.getElementById('seite')?.scrollBy(0, row.getBoundingClientRect().top - below - 16);
+  }, headBottom);
   await page.waitForTimeout(700);
   await takeScrollLog(page);
   await setDuoPose(page, 'zu');
@@ -128,6 +163,52 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
       .toBe(true);
   }
 });
+
+// Beim Öffnen steht der Kopf von Anfang an links, nichts springt: Vorher kamen Muskel-Etiketten und
+// Vorwerte erst nach dem ersten Bild, die erste Karte wuchs um 13 px, und der Player schob die
+// Seite samt Kopf um diese Höhe (D-502). Bild für Bild gemessen, 2,5 s ab „Training starten“.
+for (const height of [669, 587]) {
+  test(`Duo quer ${String(height)} px hoch: Öffnen ohne Sprung, Kopf links von Anfang an (D-502)`, async ({
+    page,
+  }) => {
+    await setDuoPose(page, 'auf');
+    await page.setViewportSize({ width: 951, height });
+    await openPage(page, '/training/vorlagen/compound_ab_4');
+    await page.getByRole('button', { name: 'Programm aktivieren' }).click();
+    await expect(
+      page.getByRole('heading', { level: 2, name: /^Trainingstag 1 von/ }),
+    ).toBeVisible();
+    await openPage(page, '/heute');
+    await page.evaluate(() => {
+      const log: string[] = [];
+      (window as unknown as { __bilder: string[] }).__bilder = log;
+      const start = performance.now();
+      const step = () => {
+        const head = document.querySelector('main header');
+        const card = document.querySelector('.player-main section');
+        if (head && card) {
+          const h = head.getBoundingClientRect();
+          const c = card.getBoundingClientRect();
+          const scroll = document.getElementById('seite')?.scrollTop ?? -1;
+          const left = head.closest('.player-main') ? 'links' : 'rechts';
+          const entry = `${left} Kopf ${String(Math.round(h.top))} Karte ${String(Math.round(c.top))}/${String(Math.round(c.height))} Scroll ${String(Math.round(scroll))}`;
+          if (log.at(-1) !== entry) log.push(entry);
+        }
+        if (performance.now() - start < 2500) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+    await page.getByRole('button', { name: 'Training starten' }).click();
+    await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
+    await page.waitForTimeout(2600);
+    const frames = await page.evaluate(
+      () => (window as unknown as { __bilder: string[] }).__bilder,
+    );
+    // Ein einziger Stand vom ersten Bild an: Kopf links, Seite nicht gescrollt.
+    expect(frames, frames.join(' | ')).toHaveLength(1);
+    expect(frames[0]).toMatch(/^links .* Scroll 0$/);
+  });
+}
 
 test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', async ({ page }) => {
   await setDuoPose(page, 'zu');

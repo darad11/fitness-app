@@ -131,6 +131,17 @@
     grid-area: hint;
   }
 
+  /*
+   * Niedriges Fenster mit zwei Spalten (Duo quer, D-502): Der Kopf mit Programm, Fortschritt und
+   * „Beenden“ steht links über der Liste und klebt oben wie in einer Spalte; er scrollt nicht mit,
+   * „Beenden“ bleibt erreichbar. Rechts bleibt so die Höhe für die Animation in voller Größe und
+   * „Jetzt“. Links reicht er bis an den Fensterrand, rechts endet er mit der Spalte.
+   */
+  .player-main > .player-head {
+    margin-right: 0;
+    padding-right: 0;
+  }
+
   .player-side > .player-now {
     grid-area: now;
   }
@@ -331,6 +342,50 @@
       white-space: nowrap;
     }
   }
+}
+
+/*
+ * Kopf links im niedrigen Fenster mit zwei Spalten (D-502): Die Pause steht dort im Kopf über der
+ * Liste, in einer Zeile wie bei einer Spalte (oben), damit die Liste sichtbar bleibt. Den Kopf
+ * stellt der Player nur im niedrigen Fenster dorthin.
+ */
+.player-main > .player-head .rest-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.player-main > .player-head .rest-card .rest-row,
+.player-main > .player-head .rest-card .rest-controls,
+.player-main > .player-head .rest-card .rest-controls > div {
+  display: contents;
+}
+
+.player-main > .player-head .rest-card .rest-adjust {
+  display: none;
+}
+
+.player-main > .player-head .rest-card .rest-clock {
+  font-size: var(--text-headline);
+}
+
+.player-main > .player-head .rest-card .rest-label,
+.player-main > .player-head .rest-card .rest-next-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.player-main > .player-head .rest-card .rest-next-text {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 /*

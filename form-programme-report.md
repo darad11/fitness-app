@@ -1949,6 +1949,19 @@ Nächste Schritte: Freigabe des Maßstabs und der Lage des Kopfs durch den Produ
 
 ## 44. Nach deinen Entscheidungen: Figur, Kopf links, Tests (D-501 bis D-503)
 
+**Kopf links (D-502).** Im niedrigen Fenster am Duo quer steht der Kopf mit Programm, Fortschritt und „Beenden“ jetzt links über der Liste. Er bleibt oben stehen, wenn du scrollst; „Beenden“ ist immer erreichbar. Die Pause steht darin in einer Zeile wie zugeklappt, ±15 s gibt es in der großen Pause. Rechts ist die Animation in allen elf Übungen 336 × 252 px groß, bei 669 und bei 587 px Fensterhöhe, auch mit Timer und in der Pause. In der Pause zeigt die rechte Spalte unter der Animation „Als Nächstes“, weil „Jetzt“ dann entfällt: bei 669 px vier Einträge, bei 587 px zwei. Dabei fiel ein Sprung beim Öffnen auf: Muskel-Etiketten und Vorwerte kamen erst nach dem ersten Bild, die erste Karte wurde 13 px höher, und die Seite rutschte samt Kopf um diese Höhe. Jetzt erscheint der Player erst, wenn beides geladen ist; nichts springt mehr. Ragt der erste Satz beim Öffnen unten unter die Fußleiste, rückt der Player ihn gleich ganz darüber. Das betrifft das Duo zugeklappt: Dort lag er schon vorher 3 px darunter, jetzt steht er 4 px darüber, und der obere Rand von „Jetzt“ liegt 6 px unter dem Kopf. Das bitte beim Gerätetest mit ansehen.
+
+```
+Arbeitspaket: D-502 Phase Programme, Kopf links im niedrigen Fenster am Duo quer
+Umgesetzte Funktionen: Kopf mit Pause links über der Liste, fest; Animation rechts 336 × 252 px; Öffnen ohne Sprung; aktiver Satz beim Öffnen über der Fußleiste; erfüllte AK: –
+Geänderte Dateien: src/modules/training/ui/player/SessionPage.tsx, useStableSetView.ts, useTwoColumns.ts (neu), useTwoColumns.test.ts (neu), player-layout.css, src/modules/training/data/useSession.ts, e2e/duo-player.spec.ts, Dokumentation
+Technische Entscheidungen: D-502
+Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Kopf links im niedrigen Fenster am Duo quer“
+Ergebnis: siehe dort
+Bekannte Einschränkungen: Schwung-Scrollen und Gummiband des iPhone nicht nachstellbar; WebKit läuft in der CI
+Nächste Schritte: D-501 Schleifen neu, Gerätetest des Produktinhabers
+```
+
 **Tests der Wiedergabe (D-503).** Die drei Tests „zweimal, dann anhalten“ hängen nicht mehr am Nachladen echter Videos. Im Test ersetzt ein nachgestelltes Video die Wiedergabe: Es läuft nur weiter, springt an den Anfang oder endet, wenn der Test es sagt, mit denselben Ereignissen wie im Browser. Geprüft wird in drei Runden: von selbst, nach dem Tippen, nach dem zweiten Tippen. Jede Runde läuft zweimal, dann steht das letzte Bild mit dem Symbol. Eine Taste anderswo startet die angehaltene Animation nicht, und hinter der Übungsinfo läuft der Player weiter ohne Ende. Das läuft in Chromium und WebKit gleich. Die echte Wiedergabe prüfen die bisherigen Tests nur noch in Chromium; am Gerät prüfst du sie.
 
 ```

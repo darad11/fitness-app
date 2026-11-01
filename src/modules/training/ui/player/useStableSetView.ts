@@ -11,6 +11,8 @@ import {
 
 /** Abstand des aktiven Satzes zum Kopf (mit Pausenkarte) und zur Fußleiste, in px. */
 const GAP = 12;
+/** Beim Öffnen kleiner (D-502): Möglichst wenig über dem Satz rückt dafür unter den Kopf. */
+const OPEN_GAP = 4;
 
 /**
  * So viele Bilder lang (rund 0,5 s) hält ein Größenwechsel mit neuer Breite den aktiven Satz an
@@ -87,19 +89,20 @@ function topVisible(row: HTMLElement, head: HTMLElement | null, foot: HTMLElemen
 }
 
 /**
- * Zeigt die Zeile ganz zwischen Kopf und Fußleiste, mit möglichst kleiner Bewegung; `instant`
- * beim Größenwechsel, der die Anordnung ohnehin auf einmal ändert.
+ * Zeigt die Zeile ganz zwischen Kopf und Fußleiste, mit möglichst kleiner Bewegung und `gap`
+ * Abstand; `instant` beim Größenwechsel, der die Anordnung ohnehin auf einmal ändert.
  */
 function reveal(
   row: HTMLElement,
   head: HTMLElement | null,
   foot: HTMLElement | null,
   instant = false,
+  gap = GAP,
 ): void {
   const rect = row.getBoundingClientRect();
   // Ohne Ausmaße (nicht dargestellt, z. B. in Tests ohne Layout) gibt es nichts zu zeigen.
   if (rect.height === 0) return;
-  const { top, bottom } = band(head, foot);
+  const { top, bottom } = band(head, foot, gap);
   let delta = 0;
   if (rect.top < top) delta = rect.top - top;
   else if (rect.bottom > bottom) delta = Math.min(rect.bottom - bottom, rect.top - top);
@@ -164,6 +167,8 @@ export function useStableSetView(
   head: RefObject<HTMLElement | null>,
   foot: RefObject<HTMLElement | null>,
   currentId: string | null,
+  /** Steht der Kopf links über der Liste (D-502)? Er ist dann ein neues Element, das beobachtet wird. */
+  headLeft = false,
 ): void {
   const anchor = useRef<Anchor | null>(null);
   const shownCurrent = useRef<string | null>(currentId);
@@ -250,7 +255,7 @@ export function useStableSetView(
       observer.disconnect();
       cleanup();
     };
-  }, [root, head, foot]);
+  }, [root, head, foot, headLeft]);
 
   useEffect(() => {
     let frame = 0;
@@ -354,6 +359,23 @@ export function useStableSetView(
     };
   }, [root, head, foot]);
 
+  // Erst nach dem ersten gezeichneten Bild gibt es eine Lage, die zu halten ist: Stellt der Player
+  // den Kopf gleich nach dem Öffnen nach links (D-502), schob der Ausgleich die Liste sonst um die
+  // Höhe des Kopfs, der Name der ersten Übung lag dahinter.
+  // Erst im nächsten Bild: React arbeitet vor der zweiten Darstellung gleich nach dem Öffnen noch
+  // die Effekte der ersten ab.
+  const painted = useRef(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      painted.current = true;
+    });
+    return () => {
+      cancelAnimationFrame(id);
+    };
+  }, []);
+  /** Vor dem ersten Bild gescrollt, damit der aktive Satz ganz zu sehen ist (px). */
+  const opening = useRef(0);
+
   // Nach jeder Darstellung, vor dem Zeichnen; ohne Abhängigkeiten, weil sich Kopf und Liste bei
   // jeder Änderung der Einheit verschieben können.
   useLayoutEffect(() => {
@@ -363,11 +385,26 @@ export function useStableSetView(
     const wasVisible = visible.current;
     const row = before ? rowById(container, before.id) : null;
     let shifted = false;
-    if (before && row) {
+    if (before && row && painted.current) {
       const shift =
         row.getBoundingClientRect().top + pageScrollTop() - (before.top + before.scrollY);
       shifted = Math.abs(shift) > 1;
       if (shifted) scrollPageBy(shift);
+    }
+    if (!painted.current) {
+      // Beim Öffnen: Ragt der aktive Satz unten unter die Fußleiste, steht er im ersten Bild ganz
+      // darüber, mit kleinem Abstand (D-502; am Duo zugeklappt 46 px, „Jetzt“ dann 6 px unter dem
+      // Kopf). Ein Satz weiter unten (Training fortgesetzt) bleibt, wo er ist. Vor dem ersten Bild
+      // kann die Anordnung noch wechseln (Kopf nach links); gemessen wird jedes Mal an der Lage
+      // ohne diesen Schritt.
+      if (opening.current) scrollPageBy(-opening.current);
+      opening.current = 0;
+      const current = currentId ? rowById(container, currentId) : null;
+      if (current && topVisible(current, head.current, foot.current)) {
+        const scrollTop = pageScrollTop();
+        reveal(current, head.current, foot.current, true, OPEN_GAP);
+        opening.current = pageScrollTop() - scrollTop;
+      }
     }
     if (currentId !== shownCurrent.current) {
       shownCurrent.current = currentId;

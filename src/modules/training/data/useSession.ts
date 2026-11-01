@@ -34,13 +34,22 @@ export function useHistoryRows(): HistoryRow[] | undefined {
   return useLiveQuery(() => listHistoryRows(db), [db]);
 }
 
-/** Letzte abgeschlossene Einheit je Übung, ohne die laufende (AK-TRN-05). */
+/**
+ * Letzte abgeschlossene Einheit je Übung, ohne die laufende (AK-TRN-05). `undefined`, solange die
+ * Einheit oder ihre Vorwerte laden, nicht die leere Liste: Der Player wartet darauf (D-502).
+ */
 export function usePreviousHistory(
   session: Session | null | undefined,
 ): ReadonlyMap<string, HistoryRow> | undefined {
   const { db } = useDb();
-  const key = session ? `${session.id}|${session.exerciseIds.join(',')}` : '';
+  const key =
+    session === undefined
+      ? undefined
+      : session
+        ? `${session.id}|${session.exerciseIds.join(',')}`
+        : '';
   return useLiveQuery(async () => {
+    if (session === undefined) return undefined;
     const map = new Map<string, HistoryRow>();
     if (!session) return map;
     for (const exerciseId of session.exerciseIds) {

@@ -181,27 +181,32 @@ test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () =>
 });
 
 test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () => {
-  /** Schneller abspielen, damit zwei Durchläufe nicht 5 s dauern. */
-  async function speedUp(video: Locator) {
-    await expect
-      .poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState))
-      .toBeGreaterThan(0);
-    await video.evaluate((v: HTMLVideoElement) => {
-      v.playbackRate = 3;
-    });
-  }
-
+  /** Zwei Durchläufe in normaler Geschwindigkeit (5 s); eine schnellere Wiedergabe ließ WebKit
+   *  unter Linux bei 0 stehen. Gezählt wird mit, wie oft das Video endet. */
   async function expectStoppedAfterTwoRuns(scope: Locator, label: string) {
     const video = scope.locator('video');
     const replay = scope.getByRole('button', { name: 'Animation wiederholen' });
-    await speedUp(video);
-    await expect.poll(() => playhead(video), { message: `${label}: läuft` }).toBeGreaterThan(0);
+    await video.evaluate((v: HTMLVideoElement) => {
+      const counted = v as HTMLVideoElement & { endedCount?: number };
+      counted.endedCount = 0;
+      v.addEventListener('ended', () => {
+        counted.endedCount = (counted.endedCount ?? 0) + 1;
+      });
+    });
+    const endedCount = () =>
+      video.evaluate(
+        (v: HTMLVideoElement) => (v as HTMLVideoElement & { endedCount?: number }).endedCount ?? 0,
+      );
+    await expect
+      .poll(() => playhead(video), { message: `${label}: läuft`, timeout: 10_000 })
+      .toBeGreaterThan(0);
     await expect
       .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
         message: `${label}: nach zwei Durchläufen angehalten`,
-        timeout: 10_000,
+        timeout: 15_000,
       })
       .toBe(true);
+    expect(await endedCount(), `${label}: zweimal zu Ende`).toBe(2);
     await expect(replay).toHaveAttribute('data-angehalten', '');
     await expect(replay.locator('svg')).toBeVisible();
     // Tippen spielt sie erneut zweimal ab.
@@ -210,13 +215,13 @@ test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () =>
       .poll(() => playhead(video), { message: `${label}: wieder` })
       .toBeGreaterThanOrEqual(0);
     await expect(replay).not.toHaveAttribute('data-angehalten');
-    await expect(video).toHaveJSProperty('loop', true);
     await expect
       .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
         message: `${label}: wieder angehalten`,
-        timeout: 10_000,
+        timeout: 15_000,
       })
       .toBe(true);
+    expect(await endedCount(), `${label}: wieder zweimal zu Ende`).toBe(4);
   }
 
   test('Details: zweimal, Symbol, Tippen wiederholt', async ({ page }) => {

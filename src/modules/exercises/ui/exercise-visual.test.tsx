@@ -248,9 +248,9 @@ describe('Demonstration (D-397)', () => {
     expect(video.muted).toBe(true);
     expect(video.hasAttribute('muted')).toBe(true);
     // Die App startet die Schleife selbst; `autoplay` startet Safari nur, wenn es das Video für
-    // sichtbar hält (D-497).
+    // sichtbar hält (D-497). Außerhalb des Players zwei Durchläufe, gezählt am Ende: ohne `loop`.
     expect(video.autoplay).toBe(false);
-    expect(video.loop).toBe(true);
+    expect(video.loop).toBe(false);
     expect(video.controls).toBe(false);
     expect(video.hasAttribute('playsinline')).toBe(true);
     expect(video.getAttribute('aria-label')).toBe('Bild zu back_squat_barbell');
@@ -451,10 +451,11 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     expect(replay.hasAttribute('data-angehalten')).toBe(false);
     expect(replay.querySelector('svg')).toBeNull();
 
-    // Erster Durchlauf: nahtlos weiter, ab jetzt ohne `loop`.
-    fake.wrap(video);
+    // Erster Durchlauf zu Ende: Der zweite beginnt von vorn (ohne `loop`, gezählt am Ende).
     expect(video.loop).toBe(false);
+    fake.wrap(video);
     expect(fake.playing(video)).toBe(true);
+    expect(video.currentTime).toBe(0);
     // Zweiter Durchlauf: Ende, angehalten, das Symbol erscheint.
     fake.wrap(video);
     expect(fake.playing(video)).toBe(false);
@@ -470,7 +471,7 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     fireEvent.click(replay);
     expect(fake.playing(video)).toBe(true);
     expect(video.currentTime).toBe(0);
-    expect(video.loop).toBe(true);
+    expect(video.loop).toBe(false);
     await waitFor(() => {
       expect(replay.hasAttribute('data-angehalten')).toBe(false);
     });

@@ -3104,6 +3104,8 @@ Start im Player, zwei Durchläufe und Wiederholen in Übungsinfo und Details, MP
 | `tokens.test.ts` | Symbol `--media-control-fg` auf `--media-control` über `--media-bg` und über Weiß ≥ 4,5:1, beide Modi |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.235 Tests; Startansicht 238,6 KB (vorher 238,5 KB), Übungsbilder 52 von 52 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 446 bestanden, 138 übersprungen, keiner fehlgeschlagen (21,6 min, parallel zu einer Messung in Blender) |
+| CI zu `6e68714` (GitHub Actions) | Chromium bestanden; WebKit 407 bestanden, 174 übersprungen, 3 fehlgeschlagen, alle in `uebungen-wiedergabe.spec.ts` bei „zweimal, dann angehalten“: Details (Desktop und Handy) nach 10 s nicht angehalten, die Schleife lief weiter; Übungsinfo (Handy) Zeit blieb bei 0 nach `playbackRate = 3`. Alle elf Übungen und der Stromsparmodus bestanden auch in WebKit |
+| Nachtrag: Durchläufe am Ende gezählt (`ended`, ohne `loop`), Test in normaler Geschwindigkeit mit gezählten Enden (2, nach dem Tippen 4) | Unit-Tests 140 bestanden (Module Übungen und Player); E2E Chromium `uebungen-wiedergabe`, `player-jetzt`, `uebungen`: 26 bestanden, 10 übersprungen (Desktop-Profil); die ganze Suite in beiden Engines in der CI |
 
 ### Karte „Jetzt“ · 01.11.2026, Cloud-Umgebung
 

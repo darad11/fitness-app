@@ -1832,6 +1832,8 @@ Nächste Schritte: Gerätetest des Produktinhabers, Entscheidung zu E1 bis E4, d
 | Stromsparmodus nachgestellt | auch nach dem Tippen angehalten | ab dem ersten Tippen |
 | Details und Übungsinfo | laufen ohne Ende | zweimal, Symbol, Tippen wiederholt |
 
+**Nachtrag nach der CI.** In WebKit (die Engine von Safari, in der CI unter Linux) blieb die Animation in den Details nach zwei Durchläufen nicht stehen: Ich hatte die Durchläufe am Rücksprung der Zeit an den Anfang gezählt, und den meldet WebKit dort nicht so. Jetzt zählt die App, wie oft das Video zu Ende ist, und startet es danach selbst neu; das meldet jeder Browser. Die elf Übungen im Player und der Stromsparmodus waren auch in WebKit schon grün.
+
 ```
 Arbeitspaket: D-497 Phase Programme, Wiedergabe der Übungsschleifen
 Umgesetzte Funktionen: Start der Schleifen durch die App statt `autoplay`, nur sichtbar, erneut bei der nächsten Geste; Player ohne Ende, Übungsinfo und Details zweimal mit Symbol und Wiederholen per Tippen; eine Datei, MP4 vor WebM; WebM ohne Alphakanal; erfüllte AK: –

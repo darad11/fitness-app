@@ -1832,7 +1832,7 @@ Nächste Schritte: Gerätetest des Produktinhabers, Entscheidung zu E1 bis E4, d
 | Stromsparmodus nachgestellt | auch nach dem Tippen angehalten | ab dem ersten Tippen |
 | Details und Übungsinfo | laufen ohne Ende | zweimal, Symbol, Tippen wiederholt |
 
-**Nachtrag nach der CI.** In WebKit (die Engine von Safari, in der CI unter Linux) blieb die Animation in den Details nach zwei Durchläufen nicht stehen: Ich hatte die Durchläufe am Rücksprung der Zeit an den Anfang gezählt, und den meldet WebKit dort nicht so. Jetzt zählt die App, wie oft das Video zu Ende ist, und startet es danach selbst neu; das meldet jeder Browser. Die elf Übungen im Player und der Stromsparmodus waren auch in WebKit schon grün.
+**Nachtrag nach der CI.** In WebKit (die Engine von Safari, in der CI unter Linux) blieb die Animation in den Details nach zwei Durchläufen nicht stehen: Ich hatte die Durchläufe am Rücksprung der Zeit an den Anfang gezählt, und den meldet WebKit dort nicht so. Jetzt zählt die App, wie oft das Video zu Ende ist, und startet es danach selbst neu; das meldet jeder Browser. Die elf Übungen im Player und der Stromsparmodus waren auch in WebKit schon grün. Danach meldete WebKit nach dem Neustart teils ein zweites „Ende“ gleich hinterher; ein Ende zählt jetzt erst, wenn der Durchlauf mindestens zur Hälfte lief.
 
 ```
 Arbeitspaket: D-497 Phase Programme, Wiedergabe der Übungsschleifen
@@ -1852,6 +1852,7 @@ Nächste Schritte: D-498 Karte „Jetzt“, D-499 Details breit, D-500 Messung
 - Aufgeklappt bleibt die kleine Animation aus; dort läuft die große in der rechten Spalte.
 - Scrollst du zu den Sätzen, sodass „Jetzt“ nicht mehr im Bild ist, hält die kleine Animation an und läuft weiter, sobald die Karte wieder zu sehen ist. Das spart Akku.
 - Der aktuelle Satz bleibt am iPhone und zugeklappt über der Fußleiste (gemessen: Satz bis 575 px, Fußleiste ab 767 bzw. 601 px).
+- Nachtrag nach der CI: In WebKit (Safari) rutschte am Duo zugeklappt der erste Satz unter die Fußleiste. Bei niedrigem Fenster ist „Jetzt“ deshalb kompakter: Animation 96 × 72 px, Name eine Stufe kleiner, Vorschaubild 24 px. Die Karte ist dort jetzt sogar etwas niedriger als vor D-498; das Gewichtsfeld steht 82 px über der Fußleiste. Die Tastatur ändert daran nichts.
 
 ```
 Arbeitspaket: D-498 Phase Programme, Karte „Jetzt“

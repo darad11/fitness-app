@@ -40,7 +40,8 @@ export interface LoopPlayback {
  * - `endless` (Player) mit `loop` ohne Ende, sonst `LOOP_RUNS` Durchläufe ohne `loop`: Nach jedem
  *   Ende (`ended`) beginnt der nächste, nach dem letzten steht das letzte Bild. Gezählt wird am
  *   Ende, nicht am Rücksprung der Zeit: Den meldet nicht jeder Browser (WebKit unter Linux ließ
- *   die Schleife so ohne Ende laufen).
+ *   die Schleife so ohne Ende laufen). Ein Ende zählt nur, wenn der Durchlauf mindestens zur
+ *   Hälfte lief: WebKit meldet nach dem Neustart teils ein zweites Ende.
  */
 export function useLoopPlayback(endless: boolean): LoopPlayback {
   const ref = useRef<HTMLVideoElement>(null);
@@ -56,6 +57,8 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     element.playsInline = true;
     element.loop = endless;
     let runs = 0;
+    /** Weiteste Stelle des laufenden Durchlaufs (Sekunden). */
+    let reached = 0;
     let wanted = true;
     // Ohne IntersectionObserver (sehr alte Browser, Tests) gilt das Video als sichtbar.
     const observed = typeof IntersectionObserver !== 'undefined';
@@ -71,11 +74,25 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
         // wie abgelehnt
       }
     };
+    const onTime = () => {
+      if (element.currentTime > reached) reached = element.currentTime;
+    };
+    /** Von vorn; nach dem Ende tut das `play()` selbst. */
+    const rewind = () => {
+      reached = 0;
+      if (!element.ended) element.currentTime = 0;
+    };
     const onEnded = () => {
       if (endless) return;
+      const length = Number.isFinite(element.duration) ? element.duration : 0;
+      if (length > 0 && reached < length / 2) {
+        // Zweites Ende gleich nach dem Neustart: kein Durchlauf, weiterspielen.
+        attempt();
+        return;
+      }
       runs += 1;
       if (runs < LOOP_RUNS) {
-        element.currentTime = 0;
+        rewind();
         attempt();
         return;
       }
@@ -85,7 +102,7 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     restart.current = () => {
       runs = 0;
       wanted = true;
-      element.currentTime = 0;
+      rewind();
       setStopped(false);
       attempt();
     };
@@ -93,6 +110,7 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
     for (const name of GESTURES) document.addEventListener(name, attempt, true);
     document.addEventListener('visibilitychange', attempt);
     element.addEventListener('canplay', attempt);
+    element.addEventListener('timeupdate', onTime);
     element.addEventListener('ended', onEnded);
     let observer: IntersectionObserver | undefined;
     if (observed) {
@@ -111,6 +129,7 @@ export function useLoopPlayback(endless: boolean): LoopPlayback {
       for (const name of GESTURES) document.removeEventListener(name, attempt, true);
       document.removeEventListener('visibilitychange', attempt);
       element.removeEventListener('canplay', attempt);
+      element.removeEventListener('timeupdate', onTime);
       element.removeEventListener('ended', onEnded);
       observer?.disconnect();
       restart.current = () => undefined;

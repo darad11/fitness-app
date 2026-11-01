@@ -432,8 +432,11 @@ describe('Wiedergabe der Schleife (D-497)', () => {
       <ExerciseDemo exerciseId={SQUAT} {...props} endless onOpen={() => undefined} />,
     );
     const video = await waitFor(() => need(container.querySelector('video')));
+    // Der Effekt startet die Schleife nach dem Anlegen des Videos.
+    await waitFor(() => {
+      expect(fake.playing(video)).toBe(true);
+    });
     expect(fake.play).toHaveBeenCalled();
-    expect(fake.playing(video)).toBe(true);
     for (let run = 0; run < 4; run += 1) fake.wrap(video);
     expect(video.loop).toBe(true);
     expect(fake.playing(video)).toBe(true);
@@ -447,7 +450,9 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     const { container } = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
     const video = await waitFor(() => need(container.querySelector('video')));
     const replay = screen.getByRole('button', { name: 'Animation wiederholen' });
-    expect(fake.playing(video)).toBe(true);
+    await waitFor(() => {
+      expect(fake.playing(video)).toBe(true);
+    });
     expect(replay.hasAttribute('data-angehalten')).toBe(false);
     expect(replay.querySelector('svg')).toBeNull();
 
@@ -491,7 +496,9 @@ describe('Wiedergabe der Schleife (D-497)', () => {
       <ExerciseDemo exerciseId={SQUAT} {...props} endless onOpen={() => undefined} />,
     );
     const video = await waitFor(() => need(container.querySelector('video')));
-    expect(fake.play).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(fake.play).toHaveBeenCalled();
+    });
     expect(fake.playing(video)).toBe(false);
     gesture = true;
     fireEvent.pointerUp(document.body);
@@ -532,6 +539,9 @@ describe('Wiedergabe der Schleife (D-497)', () => {
       <ExerciseDemo exerciseId={SQUAT} {...props} endless onOpen={() => undefined} />,
     );
     const video = await waitFor(() => need(container.querySelector('video')));
+    await waitFor(() => {
+      expect(observers.some((observer) => observer.targets.length > 0)).toBe(true);
+    });
     expect(fake.play).not.toHaveBeenCalled();
     show(false);
     expect(fake.playing(video)).toBe(false);
@@ -557,7 +567,9 @@ describe('Karte „Jetzt“ im schmalen Player (D-498)', () => {
       need(container.querySelector<HTMLVideoElement>('[data-demo-compact] video')),
     );
     expect(video.getAttribute('src')).toBe('/uebungen/medien/back_squat_barbell.mp4');
-    expect(fake.playing(video)).toBe(true);
+    await waitFor(() => {
+      expect(fake.playing(video)).toBe(true);
+    });
     expect(video.loop).toBe(true);
     const frame = need(container.querySelector<HTMLElement>('[data-demo-compact]'));
     expect(frame.style.aspectRatio).toBe('640 / 480');

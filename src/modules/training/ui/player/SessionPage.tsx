@@ -80,6 +80,7 @@ import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
 import { useFittingRows } from './useFittingRows';
 import { useFootClearOfField } from './useFootClearOfField';
+import { useShortWindow } from './useShortWindow';
 import { useStableSetView } from './useStableSetView';
 import './player-layout.css';
 import { Demo, Guide, Thumb } from '../exerciseVisuals';
@@ -246,6 +247,8 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const headRef = useRef<HTMLElement>(null);
   const footRef = useRef<HTMLDivElement>(null);
   useStableSetView(rootRef, headRef, footRef, current?.id ?? null);
+  // Niedriges Fenster: „Jetzt“ einspaltig kompakter (D-498, Nachtrag).
+  const short = useShortWindow();
   useFootClearOfField(footRef);
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
@@ -372,7 +375,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       {/* Rahmen, Spalten und Steuerung (D-380, `player-layout.css`): schmal eine Spalte wie bisher,
           ab 48 rem Inhaltsbreite links die Übungen, rechts mitlaufend Kopf, nächster Satz und die
           nächsten Übungen. Nur angeordnet, nichts neu aufgebaut. */}
-      <div className="player-frame">
+      <div className="player-frame" data-niedrig={short ? '' : undefined}>
         <div className="player-columns">
           <div className="player-side">
             {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
@@ -519,7 +522,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   }}
                 />
                 <p className="eyebrow text-muted">{tSession.now}</p>
-                <p className="mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
+                <p className="player-now-name mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
                   {currentExercise.nameSnapshot}
                 </p>
                 <p className="mt-1 text-muted">

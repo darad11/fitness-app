@@ -40,6 +40,29 @@
 }
 
 /*
+ * „Jetzt“ kompakter in einer Spalte bei niedrigem Fenster (D-498, Nachtrag): Mit der laufenden
+ * Schleife (7 rem) und dem Vorschaubild der nächsten Übung wurde die Karte am Duo zugeklappt 46 px
+ * höher, in WebKit rutschte der erste Satz unter die Fußleiste. Hier ist die Schleife 6 rem breit,
+ * der Name eine Stufe kleiner und das Vorschaubild bei „Danach:“ 24 px. „Niedrig“ setzt der Player
+ * (`data-niedrig`, `useShortWindow`) beim Öffnen und bei neuer Breite, nicht bei der Tastatur.
+ */
+@container player (max-width: 47.99rem) {
+  .player-frame[data-niedrig] .player-now .player-now-demo [data-demo-compact] {
+    width: 6rem;
+  }
+
+  .player-frame[data-niedrig] .player-now .player-now-name {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+  }
+
+  .player-frame[data-niedrig] .player-now .player-next-line [data-visual] {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/*
  * Ab 48 rem Inhaltsbreite (Duo aufgeklappt, iPad quer) zwei Spalten: links die Übungen mit den
  * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), dem
  * nächsten Satz und den nächsten Übungen.

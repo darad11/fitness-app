@@ -183,33 +183,62 @@ test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () =>
 test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () => {
   /** Zwei Durchläufe in normaler Geschwindigkeit (5 s); eine schnellere Wiedergabe ließ WebKit
    *  unter Linux bei 0 stehen. Gezählt wird mit, wie oft das Video endet. */
+  /**
+   * Gespielte Zeit in Sekunden, in jedem Bild gemessen: Summe der Fortschritte, ein Sprung zurück
+   * zählt nicht. So zählen die Durchläufe auch dort, wo der Browser ein Ende doppelt meldet
+   * (WebKit unter Linux).
+   */
+  async function trackPlayed(video: Locator) {
+    await video.evaluate((v: HTMLVideoElement) => {
+      const tracked = v as HTMLVideoElement & { spielzeit?: number; messung?: number };
+      // Jede Messung beginnt bei 0; eine frühere hört auf zu zählen.
+      const own = (tracked.messung ?? 0) + 1;
+      tracked.messung = own;
+      tracked.spielzeit = 0;
+      let last = v.currentTime;
+      const step = () => {
+        if (tracked.messung !== own) return;
+        const now = v.currentTime;
+        if (now > last) tracked.spielzeit = (tracked.spielzeit ?? 0) + (now - last);
+        last = now;
+        requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+    return async () =>
+      video.evaluate((v: HTMLVideoElement) => ({
+        played: (v as HTMLVideoElement & { spielzeit?: number }).spielzeit ?? 0,
+        duration: v.duration,
+      }));
+  }
+
   async function expectStoppedAfterTwoRuns(scope: Locator, label: string) {
     const video = scope.locator('video');
     const replay = scope.getByRole('button', { name: 'Animation wiederholen' });
-    await video.evaluate((v: HTMLVideoElement) => {
-      const counted = v as HTMLVideoElement & { endedCount?: number };
-      counted.endedCount = 0;
-      v.addEventListener('ended', () => {
-        counted.endedCount = (counted.endedCount ?? 0) + 1;
-      });
-    });
-    const endedCount = () =>
-      video.evaluate(
-        (v: HTMLVideoElement) => (v as HTMLVideoElement & { endedCount?: number }).endedCount ?? 0,
-      );
+    await expect
+      .poll(() => video.evaluate((v: HTMLVideoElement) => v.duration), {
+        message: `${label}: Länge`,
+      })
+      .toBeGreaterThan(0);
+    // Von vorn zählen: Tippen auf die Animation beginnt die zwei Durchläufe neu.
+    let played = await trackPlayed(video);
+    await replay.click();
     await expect
       .poll(() => playhead(video), { message: `${label}: läuft`, timeout: 10_000 })
       .toBeGreaterThan(0);
     await expect
       .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
         message: `${label}: nach zwei Durchläufen angehalten`,
-        timeout: 15_000,
+        timeout: 20_000,
       })
       .toBe(true);
-    expect(await endedCount(), `${label}: zweimal zu Ende`).toBe(2);
+    let result = await played();
+    expect(result.played / result.duration, `${label}: zwei Durchläufe`).toBeGreaterThan(1.7);
+    expect(result.played / result.duration, `${label}: zwei Durchläufe`).toBeLessThan(2.3);
     await expect(replay).toHaveAttribute('data-angehalten', '');
     await expect(replay.locator('svg')).toBeVisible();
-    // Tippen spielt sie erneut zweimal ab.
+    // Angehalten: Tippen spielt sie erneut zweimal ab.
+    played = await trackPlayed(video);
     await replay.click();
     await expect
       .poll(() => playhead(video), { message: `${label}: wieder` })
@@ -218,10 +247,12 @@ test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () =>
     await expect
       .poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.ended), {
         message: `${label}: wieder angehalten`,
-        timeout: 15_000,
+        timeout: 20_000,
       })
       .toBe(true);
-    expect(await endedCount(), `${label}: wieder zweimal zu Ende`).toBe(4);
+    result = await played();
+    expect(result.played / result.duration, `${label}: wieder zwei`).toBeGreaterThan(1.7);
+    expect(result.played / result.duration, `${label}: wieder zwei`).toBeLessThan(2.3);
   }
 
   test('Details: zweimal, Symbol, Tippen wiederholt', async ({ page }) => {

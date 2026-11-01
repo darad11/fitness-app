@@ -40,20 +40,22 @@ async function startDayA(page: Page, width: number, height: number) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-/** Bild neben „Danach:“: Vorschau der nächsten Übung, 32 px, stumm. */
-async function expectNextThumb(now: Locator, stem: string, name: string) {
+/** Bild neben „Danach:“: Vorschau der nächsten Übung, stumm; 32 px, im niedrigen Fenster 24 px. */
+async function expectNextThumb(now: Locator, stem: string, name: string, size = 32) {
   const line = now.locator('p', { hasText: `Danach: ${name}` });
   const img = line.locator('img');
   await expect(img).toHaveAttribute('src', preview(stem));
   await expect(img).toHaveAttribute('alt', '');
-  const size = await box(img);
-  expect(Math.round(size.width)).toBe(32);
-  expect(Math.round(size.height)).toBe(32);
+  const thumb = await box(img);
+  expect(Math.round(thumb.width)).toBe(size);
+  expect(Math.round(thumb.height)).toBe(size);
 }
 
-for (const [label, width, height] of [
-  ['iPhone', 390, 844],
-  ['Duo zugeklappt', 382, 678],
+// Unter 45 rem Fensterhöhe (Duo zugeklappt) ist „Jetzt“ kompakter: Schleife 6 statt 7 rem,
+// Vorschaubild 24 statt 32 px; der erste Satz bleibt so auch in WebKit über der Fußleiste.
+for (const [label, width, height, frameWidth, thumb] of [
+  ['iPhone', 390, 844, 112, 32],
+  ['Duo zugeklappt', 382, 678, 96, 24],
 ] as const) {
   test(`${label}: die Schleife läuft klein in „Jetzt“, Tippen öffnet die Übungsinfo`, async ({
     page,
@@ -66,12 +68,12 @@ for (const [label, width, height] of [
     await expect.poll(() => playhead(video), { timeout: 10_000 }).toBeGreaterThan(0.2);
     // Größer als das Vorschaubild vorher (56 × 56), im Seitenverhältnis des Videos.
     const size = await box(frame);
-    expect(size.width).toBe(112);
-    expect(size.height).toBe(84);
+    expect(size.width).toBe(frameWidth);
+    expect(size.height).toBe((frameWidth * 3) / 4);
     // Der aktuelle Satz bleibt über der Fußleiste.
     const footTop = (await box(page.locator('.player-foot'))).top;
     expect((await box(page.locator('li[aria-current="step"]'))).bottom).toBeLessThan(footTop);
-    await expectNextThumb(now, 'bankdruecken_kh', 'Bankdrücken mit Kurzhanteln');
+    await expectNextThumb(now, 'bankdruecken_kh', 'Bankdrücken mit Kurzhanteln', thumb);
 
     await now.getByRole('button', { name: 'Beinpresse: Ausführung und Angaben' }).click();
     const dialog = page.getByRole('dialog', { name: 'Beinpresse' });

@@ -201,6 +201,14 @@ MESSWERTE = (
     ("Griffe unter dem Kniegelenk (cm)", "Griffe unter dem Kniegelenk", "spanne", " cm"),
     ("Arme vor der Senkrechten (Grad)", "Arme vor der Senkrechten (unter 0 = zurück)", "spanne", "°"),
     ("Kurzhanteln zueinander (mm)", "Hanteln zueinander", "min", " mm"),
+    # Lende, Nacken und Blick (D-490)
+    ("Lende: Wirbel gegen das Becken gedreht (Grad)", "Lende: Wirbel gegen das Becken gedreht", "max", "°"),
+    ("Lende: Krümmung gegenüber dem Stand (Grad, + flacher)", "Lende: Krümmung gegenüber dem Stand (+ flacher)",
+     "spanne", "°"),
+    ("Lende: Hautlinie gegenüber dem Stand verschoben (mm)", "Lende: Hautlinie gegenüber dem Stand verschoben",
+     "max", " mm"),
+    ("Nacken: Kopf gegen den Rumpf gebeugt (Grad)", "Nacken: Kopf gegen den Rumpf gebeugt", "spanne", "°"),
+    ("Blick unter der Waagrechten (Grad)", "Blick unter der Waagrechten", "spanne", "°"),
 )
 
 

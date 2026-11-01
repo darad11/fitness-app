@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.89 (Phase Programme, Kreuzheben in der App, 01.11.2026): Funktionen und Status unverändert; zwölf Übungen mit Animation, neu das Rumänische Kreuzheben mit Kurzhanteln (D-490).
 - Version 0.88 (Phase Programme, Rudern geprüft, 01.11.2026): Funktionen und Status unverändert; die Schleife des Ruderns am Kabel läuft ohne Sprung über die Naht (D-489).
 - Version 0.87 (Phase Programme, Bildliste robust, 01.11.2026): Status unverändert; TP-06 und TP-07: Ein ungültiger Eintrag der Bildliste fällt allein heraus, die Übung zeigt ihr Symbol, Warnung in Konsole und Fehlerprotokoll (D-488).
 - Version 0.86 (Phase Programme, Prüfseite Hüftbeuge, 01.11.2026): Funktionen und Status unverändert; im Werkzeug das Rumänische Kreuzheben mit Kurzhanteln als Prüfseite, die Schleife folgt nach der Freigabe (D-487).

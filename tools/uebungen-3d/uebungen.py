@@ -3735,6 +3735,7 @@ class RumaenischesKreuzhebenKH(Uebung):
     def setzen(self, p: float) -> None:
         if self.tabelle is None:
             self._stuetzen()
+        self._phase = p  # für den Stand in `_ruecken`
         super().setzen(p)
 
     def haltung(self, p: float) -> None:
@@ -3780,12 +3781,72 @@ class RumaenischesKreuzhebenKH(Uebung):
                 + [M @ Vector((ende, 0, 0)), M @ Vector((-ende, 0, 0))])
 
     def zusatzwerte(self) -> dict:
-        """Hanteln und Hände (mm) wie beim Seitheben, dazu der Abstand der beiden Hanteln zueinander."""
+        """Hanteln und Hände (mm) wie beim Seitheben, dazu der Abstand der beiden Hanteln zueinander; Lende, Nacken und
+        Blick (D-490, `_ruecken`)."""
         werte = Seitheben.zusatzwerte(self)
         links = kopf_punkte(self.hanteln["L"], 4)
         rechts = kopf_punkte(self.hanteln["R"], 4)
         werte["Kurzhanteln zueinander (mm)"] = min((p - q).length for p in links for q in rechts) * 1000
+        werte.update(self._ruecken())
         return werte
+
+    # ------------------------------------------------------------------ Lende, Nacken und Blick (D-490)
+
+    def _lende(self) -> list[float]:
+        """Hautlinie der Rückenmitte von 2 cm über `spine05` bis 1 cm über `spine03` (etwa L5 bis L1), alle 5 mm per
+        Strahl von hinten auf das verformte Netz, im Raum des Beckens der Grundhaltung (hinten = +y)."""
+        from mathutils.bvhtree import BVHTree
+        rig = self.rig
+        k = rig.kopf
+        Gi = rig.g("root").inverted()
+        punkte = [Gi @ rig.lokal(q) for q in _netz(self.koerper)]
+        bvh = BVHTree.FromPolygons(punkte, [tuple(f.vertices) for f in self.koerper.data.polygons])
+        z0, z1 = k["spine05"].z + 0.02, k["spine03"].z + 0.01
+        n = int(round((z1 - z0) / 0.005))
+        linie = []
+        for i in range(n + 1):
+            treffer = bvh.ray_cast(Vector((0.0, 0.6, z0 + i * 0.005)), Vector((0.0, -1.0, 0.0)))[0]
+            linie.append(treffer.y if treffer is not None else float("nan"))
+        return linie
+
+    @staticmethod
+    def _kruemmung(linie: list[float]) -> float:
+        """Winkel zwischen der Tangente der unteren und der oberen 3 cm der Linie (Grad; negativ = hohl wie im Stand)."""
+        def tangente(ys: list[float]) -> float:
+            zs = [i * 0.005 for i in range(len(ys))]
+            mz, my = sum(zs) / len(zs), sum(ys) / len(ys)
+            return math.degrees(math.atan2(sum((z - mz) * (y - my) for z, y in zip(zs, ys)),
+                                           sum((z - mz) ** 2 for z in zs)))
+        return tangente(linie[:7]) - tangente(linie[-7:])
+
+    def _ruecken(self) -> dict:
+        """Lende: Drehung der Lendenwirbel (`spine05` bis `spine03`) gegen das Becken und Krümmung der Hautlinie
+        (`_lende`) gegenüber dem Stand (Phase 0); Nacken: Beugung des Kopfs gegen den Rumpf (`spine01` zu `head`);
+        Blick: Vorwärtsrichtung des Kopfs unter der Waagrechten. Der Stand wird einmal gemessen und gemerkt."""
+        rig = self.rig
+
+        def gedreht(a: str, b: str) -> float:
+            """Drehung von `b` gegen `a` (Grad); positiv, wenn sie um +x geht (nach vorn gebeugt)."""
+            q = (rig.g(a).to_3x3().inverted() @ rig.g(b).to_3x3()).to_quaternion()
+            return math.degrees(q.angle) * (1.0 if q.axis.x >= 0 else -1.0)
+
+        linie = self._lende()
+        if getattr(self, "_lende_stand", None) is None:
+            jetzt = self._phase
+            self.setzen(0.0)
+            self._lende_stand = self._lende()
+            self.setzen(jetzt)
+        stand = self._lende_stand
+        blick = (rig.g("head").to_3x3() @ Vector((0.0, -1.0, 0.0))).normalized()
+        return {
+            "Lende: Wirbel gegen das Becken gedreht (Grad)": max(abs(gedreht("root", b)) for b in ("spine05", "spine04",
+                                                                                                   "spine03")),
+            "Lende: Krümmung der Hautlinie (Grad, negativ = hohl)": self._kruemmung(linie),
+            "Lende: Krümmung gegenüber dem Stand (Grad, + flacher)": self._kruemmung(linie) - self._kruemmung(stand),
+            "Lende: Hautlinie gegenüber dem Stand verschoben (mm)": max(abs(a - b) for a, b in zip(linie, stand)) * 1000,
+            "Nacken: Kopf gegen den Rumpf gebeugt (Grad)": gedreht("spine01", "head"),
+            "Blick unter der Waagrechten (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, -blick.z)))),
+        }
 
 
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,

@@ -2983,3 +2983,19 @@ Prüfung auf einen Sprung zwischen letztem und erstem Bild (D-489).
 | Pixel: Schritt 59 → 0 gegen die Nachbarschritte | 7.333 Pixel, höchstens 63 Stufen; 58 → 59: 14.370 Pixel, 0 → 1: 6.107 Pixel |
 | `ffprobe` der Videos | MP4 und WebM je 60 Bilder, jedes 1/24 s (MP4 0,041667 s, WebM 0,041 s), kein doppeltes Bild am Ende |
 | `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,9 KB, Übungsbilder 44 von 44 |
+
+### Rumänisches Kreuzheben in der App · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Lende, Nacken und Blick gemessen, Schleife gerendert und eingebaut (D-490).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Wirbel und Kopf am Skelett (Stand, Phase 0,5, unten) | Lendenwirbel (`spine05` bis `spine03`) und Brustwirbel gegen das Becken 0,0° in allen drei; Kopf gegen den Rumpf 4,0°; Blick 7,0°, 38,5° und 70,0° unter der Waagrechten; unten Augen 108 cm hoch, Blick trifft den Boden 70 cm vor den Schuhspitzen |
+| Hautlinie der Lende, Punkte des Netzes in der Rückenmitte (erster Versuch) | zu wenige Punkte (5 Punkte, 2 bis 3 Höhen), verworfen |
+| Hautlinie per Strahl von hinten auf das verformte Netz, alle 5 mm von 2,6 bis 16,6 cm über dem Hüftgelenk, im Raum des Beckens | Mitte: Stand −9,5°, Phase 0,5 −6,7°, unten −5,5° (Tangenten über je 3 cm unten und oben), Linie höchstens 1,1 mm verschoben; 3 cm links und rechts der Mitte: −20,8 und −20,6°, −17,5°, −15,4 und −15,5°, höchstens 6,1 und 6,2 mm |
+| `render.py rumaenisches_kreuzheben_kh --pruefen --nur-messwerte` mit den neuen Werten (alle 60 Bilder) | Wirbel der Lende gegen das Becken gedreht höchstens 0,0°; Hautlinie der Rückenmitte zwischen L5 und L1 im Stand −9,5° hohl, unten −5,5° (bis 3,9° flacher, die Linie verschiebt sich höchstens 1,2 mm); Nacken 4,0° gebeugt in jeder Phase; Blick 7,0° (Stand) bis 70,0° (unten) unter der Waagrechten; Rumpf unten 20,8° über der Waagrechten, Hüfte 91,2° gebeugt, Griffe 1,8 cm unter den Kniegelenken, Köpfe mindestens 1,4 mm vor Haut und Kleidung, Shorts unter dem Shirt −5,9 mm, Saumband −12,9 mm (Hüftfalte, D-487); Meldungen 0; 241 s |
+| `render.py rumaenisches_kreuzheben_kh` (60 Bilder, 720 × 540, 40 Proben) | 1455 s für 60 Bilder, mit Aufbau und Kodieren 1605 s; MP4 53,1 KB, WebM 49,1 KB, Poster 6,1 KB, Vorschau 3,9 KB; erstes und letztes Bild pixelgleich; Kontaktbogen und Endposition angesehen |
+| Aufnahme (`uebungen_bewegung.py kreuzheben`) | 720 × 540, 7,5 s, 117 KB, die Schleife dreimal; angesehen und dem Produktinhaber geschickt |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 12, ohne Visual 112; Animationsplan und Familien neu geschrieben |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; „public/uebungen/medien.json: 12 Einträge geprüft“; Startansicht 237,9 KB, Übungsbilder 48 von 48 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,5 min); der geänderte Test der Übungsliste (zwölf Vorschaubilder, dazu das Rumänische Kreuzheben) bestanden |

@@ -1543,3 +1543,41 @@ Ergebnis: kein Sprung, keine Änderung nötig
 Bekannte Einschränkungen: keine
 Nächste Schritte: Rumänisches Kreuzheben in die App (D-490)
 ```
+
+## 32. Rumänisches Kreuzheben in der App (D-490)
+
+Deine Freigabe der Prüfseite: Hanteln 8 kg, Kamera 75°, Knie 20°, Schwerpunkt über der Fußmitte und Hanteln dicht an den Beinen bleiben, das Saumband in der Hüftfalte auch. Die Tiefe sollte sich nach dem geraden Rücken richten.
+
+### 32.1 Rücken, Nacken und Blick unten
+
+| | Stand | unten |
+|---|---|---|
+| Lendenwirbel gegen das Becken gedreht | 0,0° | 0,0° |
+| Hautlinie der Lende, Mitte (hohl, Winkel zwischen unten und oben) | −9,5° | −5,5° |
+| Hautlinie der Lende, 3 cm neben der Mitte | −20,6° | −15,4° |
+| Hautlinie verschoben gegenüber dem Stand | – | höchstens 1,2 mm (Mitte), 6,2 mm (daneben) |
+| Nacken: Kopf gegen den Rumpf gebeugt | 4,0° | 4,0° |
+| Blick unter der Waagrechten | 7,0° | 70,0° |
+| Blick trifft den Boden | weit vorn | 70 cm vor den Schuhspitzen |
+
+- **Lende:** Die Figur beugt nur in der Hüfte; Lende, Brustkorb und Kopf bleiben in sich wie im Stand. Die Hautlinie wird unten um bis zu 3,9° flacher, weil die Haut über dem Kreuzbein ein wenig mit dem Oberschenkel mitgeht. Die Linie verschiebt sich dabei um gut einen Millimeter. Ein Rundrücken entsteht nicht.
+- **Nacken und Blick:** Der Kopf bleibt in der Verlängerung des Rumpfs, das Kinn 4,0° eingezogen. Unten geht der Blick schräg nach unten auf den Boden vor den Füßen, nicht nach vorn.
+- **Tiefe:** Der Rücken bleibt bei 20,8° über der Waagrechten neutral. Deshalb bleibt die Tiefe: Hüfte 91,2° gebeugt, Griffe 1,8 cm unter den Kniegelenken. Das setzt hintere Oberschenkel voraus, die diese Hüftbeugung bei 20° gebeugten Knien zulassen; das liegt im Bereich der Familie (70 bis 100°).
+- **Neu im Werkzeug:** Diese Werte misst die Prüfung jetzt bei jedem Bild mit (wie das Becken beim Beinbeuger, D-479), damit spätere Änderungen sie zeigen.
+
+### 32.2 Schleife
+
+- 27 min Rechenzeit, erstes und letztes Bild pixelgleich, Kontaktbogen angesehen.
+- In der Übungsliste hat das Kreuzheben jetzt ein Vorschaubild, in den Details läuft die Schleife.
+- **Aufnahme:** `docs/screens/uebungen/kreuzheben-bewegung.mp4`, 720 × 540, 7,5 s, 117 KB, die Schleife dreimal; angesehen und dem Produktinhaber geschickt.
+
+```
+Arbeitspaket: D-490 Phase Programme, Rumänisches Kreuzheben mit Kurzhanteln in der App
+Umgesetzte Funktionen: Schleife, Poster und Vorschaubild des Rumänischen Kreuzhebens (medien.json: romanian_deadlift_dumbbell); Werkzeug: Messwerte für Lende, Nacken und Blick; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/rumaenisches_kreuzheben_kh*.{mp4,webm,webp} (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/kreuzheben-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-490
+Ausgeführte Tests: Messung von Lende, Nacken und Blick am Skelett und am verformten Netz, Messwerte über alle 60 Bilder, Schleife gerendert, Kontaktbogen und erstes/letztes Bild geprüft; Unit-Tests 1.213 bestanden; format:check, lint, typecheck, check:docs, build, check:bundle (Startansicht 237,9 KB, Übungsbilder 48 von 48); E2E Chromium 434 bestanden, 132 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Prüfseite der letzten Familie aus „Ganzkörper A/B“: Senkrechtes Drücken mit Schulterdrücken an der Maschine (D-491), dann Halt
+```

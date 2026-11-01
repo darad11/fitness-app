@@ -76,16 +76,17 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486, D-490)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
   const smith = row(page, 'Bankdrücken an der Multipresse');
   await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für elf Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // Ausgeliefert sind Animationen für zwölf Übungen: die drei Pilot-Übungen (D-402), die Familie
   // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465), die Familie „Rumpf“ (D-467), das
-  // Seitheben mit Kurzhanteln (D-469), das Rudern am Kabel, sitzend (D-474) und der Beinbeuger liegend (D-486).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(11);
+  // Seitheben mit Kurzhanteln (D-469), das Rudern am Kabel, sitzend (D-474), der Beinbeuger liegend (D-486) und das
+  // Rumänische Kreuzheben mit Kurzhanteln (D-490).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(12);
   await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
     'src',
     '/uebungen/medien/bankdruecken_kh-vorschau.webp',
@@ -108,6 +109,12 @@ test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der
   const legCurl = row(page, 'Beinbeuger liegend').locator('img');
   await legCurl.scrollIntoViewIfNeeded();
   await expect(legCurl).toHaveAttribute('src', '/uebungen/medien/beinbeuger_liegend-vorschau.webp');
+  const romanian = row(page, 'Rumänisches Kreuzheben mit Kurzhanteln').locator('img');
+  await romanian.scrollIntoViewIfNeeded();
+  await expect(romanian).toHaveAttribute(
+    'src',
+    '/uebungen/medien/rumaenisches_kreuzheben_kh-vorschau.webp',
+  );
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
   await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');

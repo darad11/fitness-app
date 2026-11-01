@@ -762,3 +762,100 @@ def v_griff(name: str) -> bpy.types.Object:
                   stahl, mitte, ecken=32)
     _zylinder(f"{name}-Oese", 0.018, 0.012, oese, "z", stahl, mitte, ecken=32)
     return mitte
+
+
+# Schulterdrückmaschine (D-491) nach Angaben aus der Websuche; die Seiten der Hersteller waren in der Cloud-Umgebung
+# nicht abrufbar, alle Werte stammen aus Suchauszügen: Grundfläche und Höhe wie die Life Fitness Insignia Shoulder Press
+# (164 × 144 × 185 cm, Gewichtsblock 85 kg), unabhängige, zusammenlaufende Arme („independent converging arms“), Griffe
+# im Obergriff auf Schulterhöhe oder knapp darüber (Handbücher von Precor, Hammer Strength, Body-Solid: Sitz so
+# einstellen). Geschätzt: Polster (Sitz 40 × 40 cm, Rückenpolster 32 × 62 cm), Griffe (Ø 32 mm, 14 cm lang), Form von
+# Hebeln und Rahmen, Hub des Gewichtsblocks.
+SCHULTERPRESSE = {"sitz": (0.40, 0.40, 0.08), "lehne": (0.32, 0.62, 0.07), "griff_d": 0.032, "griff_l": 0.14,
+                  "hebel": (0.045, 0.06), "hoehe": 1.85, "block_hub": 0.22}
+
+
+def schulterpresse(sitz: Vector, lehne: tuple[Vector, Vector], hebel: dict, griffe: dict) -> dict:
+    """Schulterdrückmaschine, Person mit Blick nach −y (D-491). `sitz`: Mitte der Oberseite des Sitzpolsters (Welt).
+    `lehne`: Mitte der Vorderseite des Rückenpolsters und seine Richtung nach oben (Welt); die Normale zur Person ist
+    x × oben. `hebel`: je Seite ein Punkt auf der Drehachse und ihre Richtung (Welt). `griffe`: je Seite Mitte und
+    Richtung des Griffs im Ausgang (Welt, die Richtung zeigt nach außen). Hinter dem Rückenpolster die Säule mit dem
+    Gewichtsblock, oben ein Querträger mit den beiden Lagern; jeder Hebel ist ein Leerobjekt auf seiner Achse, Hebelarm
+    und Griff hängen daran (je Bild um die Achse gedreht). Gibt Wurzel, Polster, Hebel und ihre Ausgangslage, Griffe,
+    Gewichtsblock und Rahmen zurück."""
+    p = SCHULTERPRESSE
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Schulterpresse", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    teile = []
+    # Sitzpolster auf einer Säule
+    sx, sy, sd = p["sitz"]
+    sitz_obj = _kasten("Sitzpolster", (sx, sy, sd), sitz - Vector((0, 0, sd / 2)), polster_mat, 0.025, wurzel)
+    unter_sitz = sitz.z - sd
+    # Rückenpolster, geneigt
+    mitte, oben = lehne
+    oben = oben.normalized()
+    n = X.cross(oben)
+    lx, ly, ld = p["lehne"]
+    lehne_obj = _quader("Rueckenpolster", (lx, ly, ld), mitte - n * (ld / 2), Matrix((X, oben, n)).transposed(), polster_mat,
+                        0.025, wurzel)
+    hinten = mitte - n * (ld + 0.03)  # Mitte der Rückseite, Träger dahinter
+    # Säule mit Gewichtsblock hinter dem Rückenpolster, Längsträger am Boden vom Sitz bis hinter die Säule
+    saeule_y = hinten.y + 0.30
+    vorn_y = sitz.y - sy / 2 - 0.05
+    teile.append(_kasten("Laengstraeger", (0.10, saeule_y + 0.12 - vorn_y, 0.06), Vector((0, (saeule_y + 0.12 + vorn_y) / 2, 0.03)),
+                         rahmen, 0.006, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.62, 0.07, 0.04), Vector((0, vorn_y + 0.04, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.90, 0.08, 0.04), Vector((0, saeule_y + 0.08, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Sitzsaeule", (0.08, 0.08, unter_sitz - 0.09), Vector((0, sitz.y, 0.06 + (unter_sitz - 0.09) / 2)), rahmen,
+                         0.006, wurzel))
+    teile.append(_kasten("Sitztraeger", (0.24, sy - 0.08, 0.03), Vector((0, sitz.y, unter_sitz - 0.015)), rahmen, 0.004, wurzel))
+    # Träger des Rückenpolsters: senkrecht hinter ihm, unten zum Längsträger, oben zur Säule
+    unten_lehne = hinten - oben * (ly / 2 - 0.06)
+    oben_lehne = hinten + oben * (ly / 2 - 0.08)
+    teile.append(_balken("Lehnentraeger", unten_lehne, oben_lehne, (0.06, 0.04), rahmen, eltern=wurzel))
+    teile.append(_balken("Lehnenstuetze", Vector((0, unten_lehne.y, 0.06)), unten_lehne, (0.07, 0.07), rahmen, eltern=wurzel))
+    teile.append(_balken("Lehnenhalter", oben_lehne, Vector((0, saeule_y - 0.06, oben_lehne.z)), (0.06, 0.05), rahmen, eltern=wurzel))
+    h = p["hoehe"]
+    for seite in (-1, 1):
+        teile.append(_kasten("Saeule", (0.08, 0.10, h), Vector((seite * 0.21, saeule_y, h / 2)), rahmen, 0.008, wurzel))
+        teile.append(_zylinder("Fuehrung", 0.012, h - 0.25, Vector((seite * 0.09, saeule_y, (h - 0.25) / 2 + 0.06)), "z", stahl,
+                               wurzel, ecken=24))
+    teile.append(_kasten("Saeulenkopf", (0.52, 0.12, 0.08), Vector((0, saeule_y, h - 0.04)), rahmen, 0.008, wurzel))
+    block = _kasten("Gewichtsblock", (0.28, 0.15, 0.60), Vector((0, saeule_y, 0.06 + 0.30)), rahmen, 0.01, wurzel)
+    # Lager der Hebel auf einem Querträger, der hinten an der Säule hängt
+    lager = {s: a[0] for s, a in hebel.items()}
+    quer_z = (lager["L"].z + lager["R"].z) / 2
+    quer_y = (lager["L"].y + lager["R"].y) / 2
+    teile.append(_balken("Quertraeger", Vector((lager["R"].x - 0.05, quer_y, quer_z)), Vector((lager["L"].x + 0.05, quer_y, quer_z)),
+                         (0.06, 0.07), rahmen, eltern=wurzel))
+    teile.append(_balken("Querhalter", Vector((0, quer_y, quer_z)), Vector((0, saeule_y, quer_z)), (0.07, 0.06), rahmen, eltern=wurzel))
+    hebel_obj, hebel0, griff_obj = {}, {}, {}
+    for s, (punkt, achse) in hebel.items():
+        a = achse.normalized()
+        _zylinder("Lager", 0.045, 0.10, punkt.copy(), "z", stahl, wurzel, ecken=32).matrix_world = (
+            Matrix.Translation(punkt) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        leer = bpy.data.objects.new("Hebel." + s, None)
+        bpy.context.scene.collection.objects.link(leer)
+        leer.matrix_world = Matrix.Translation(punkt)
+        leer.parent = wurzel
+        leer.matrix_world = Matrix.Translation(punkt)
+        m, k = griffe[s]
+        k = k.normalized()
+        ende = m + k * (p["griff_l"] / 2 + 0.02)  # Hebel greift außen am Griff an
+        fuss = punkt + a * (ende - punkt).dot(a)  # Punkt der Achse auf Höhe des Hebelendes
+        _anhaengen(_balken("Hebelarm", fuss, ende, p["hebel"], rahmen), leer)
+        _anhaengen(_zylinder("Hebelnabe", 0.035, 0.06, fuss.copy(), "z", stahl, ecken=32), leer).matrix_world = (
+            Matrix.Translation(fuss) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        _anhaengen(_kasten("Griffplatte", (0.02, 0.06, 0.06), ende.copy(), rahmen, 0.004), leer).matrix_world = (
+            Matrix.Translation(ende) @ k.to_track_quat("X", "Z").to_matrix().to_4x4())
+        g = _stab("Griff." + s, m - k * (p["griff_l"] / 2), ende - k * 0.01, p["griff_d"] / 2, gummi)
+        _anhaengen(g, leer)
+        griff_obj[s] = g
+        hebel_obj[s] = leer
+        hebel0[s] = leer.matrix_world.copy()
+    return {"wurzel": wurzel, "sitz": sitz_obj, "lehne": lehne_obj, "polster": [sitz_obj, lehne_obj], "hebel": hebel_obj,
+            "hebel0": hebel0, "griffe": griff_obj, "block": block, "block0": block.matrix_world.copy(), "rahmen": teile}

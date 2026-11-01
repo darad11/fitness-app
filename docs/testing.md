@@ -2999,3 +2999,18 @@ Lende, Nacken und Blick gemessen, Schleife gerendert und eingebaut (D-490).
 | `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 12, ohne Visual 112; Animationsplan und Familien neu geschrieben |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; „public/uebungen/medien.json: 12 Einträge geprüft“; Startansicht 237,9 KB, Übungsbilder 48 von 48 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,5 min); der geänderte Test der Übungsliste (zwölf Vorschaubilder, dazu das Rumänische Kreuzheben) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Senkrechtes Drücken“ · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Senkrechtes Drücken“ mit dem Schulterdrücken an der Maschine (D-491).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen (Websuche) | Life Fitness Insignia Shoulder Press 164 × 144 × 185 cm, 85 kg, zusammenlaufende Arme; Griffe auf oder knapp über Schulterhöhe (Handbücher in Suchauszügen); lifefitness.com nicht erreichbar |
+| Erster Lauf (Griffe oben 19 cm neben der Mitte) | Ellbogen oben 178,4° statt 172°; Unterarm in der Mitte 17° nach innen; Rücken 7,1 mm im Polster; Gesäß 0 mm (Messung nahm ein Netz um den Ursprung an, der Sitz liegt in Weltkoordinaten) |
+| Polster nach dem Neuvernetzen | Oberfläche des Sitzes 4,6 mm tiefer, des Rückenpolsters gut 2 mm weiter vorn als die Fläche des Kastens; jetzt danach ausgerichtet: Gesäß und Rücken 4,0 mm |
+| Griff fest quer im Ausgang gegen quer in der Mitte des Wegs (fünf Phasen) | Handgelenk höchstens 12,9° gegen 13,3°, Unterarm gedreht 51° gegen 54°; gewählt: quer im Ausgang |
+| Kameras (720 × 540) | 15°/6°, 30°/8°, 45°/10°, 60°/10° verglichen; gewählt 30°/8° |
+| `render.py schulterdruecken_maschine --pruefen` (alle 60 Bilder) | Ellbogen unten 77,8°, oben 172,0°; Oberarm unten 10,1° unter der Waagrechten, 25,6° vor der Ebene der Schultern; Unterarm zur Senkrechten unten 2,1°, höchstens 13,5°; Handgelenk höchstens 12,9°; Griffe 82,9 → 57,4 cm auseinander, 29,9 → 58,2 cm über den Schultergelenken; Gesäß 4,0 bis 4,0 mm im Sitz, Rücken 4,0 bis 4,0 mm im Polster, Delle höchstens 4,0 mm, nichts durch die Oberfläche (0,0 mm); Kopf und Hals mindestens 159 mm vom Gerät, Arme mindestens 46 mm von Hebeln, Griffen und Rahmen; Finger −4,1 mm; Sohlen 0,0 mm, verschoben 0,0 mm; Shorts unter dem Shirt −1,1 mm, Saumband 0,7 mm, Ärmel 5,2 mm; Meldungen 0. Messung und Prüfansichten 338 s, Nahaufnahmen des Griffs 50 s |
+| Prüfseite (`uebungen_pruef_bild.py schulterdruecken_maschine --familie senkrechtes-druecken --titel "Senkrechtes Drücken"`) | `familie-senkrechtes-druecken.webp`, angesehen |
+| `python3 -m py_compile` (geraete.py, uebungen.py, uebungen_pruef_bild.py), `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht; E2E mit WebKit in der CI) | bestanden; Startansicht 237,9 KB, Übungsbilder 48 von 48 |

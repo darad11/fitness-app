@@ -209,6 +209,17 @@ MESSWERTE = (
      "max", " mm"),
     ("Nacken: Kopf gegen den Rumpf gebeugt (Grad)", "Nacken: Kopf gegen den Rumpf gebeugt", "spanne", "°"),
     ("Blick unter der Waagrechten (Grad)", "Blick unter der Waagrechten", "spanne", "°"),
+    # Familie „Senkrechtes Drücken“: Schulterdrücken an der Maschine (D-491)
+    ("Oberarm zur Waagrechten (Grad, + darüber, ganze Bewegung)", "Oberarm zur Waagrechten (+ darüber)", "spanne", "°"),
+    ("Hebel der Maschine gedreht (Grad)", "Hebel gedreht", "spanne", "°"),
+    ("Oberarm vor der Ebene der Schultern (Grad, bis 30° über der Waagrechten)",
+     "Oberarm vor der Ebene der Schultern (bis 30° über der Waagrechten)", "spanne", "°"),
+    ("Griffe über dem Schultergelenk (cm)", "Griffe über dem Schultergelenk", "spanne", " cm"),
+    ("Griffe vor dem Schultergelenk (cm)", "Griffe vor dem Schultergelenk", "spanne", " cm"),
+    ("Rücken im Polster (mm)", "Rücken mit Shirt im Polster", "max", " mm"),
+    ("Arme zu Hebeln, Griffen und Rahmen (mm)", "Arme zu Hebeln, Griffen und Rahmen", "min", " mm"),
+    ("Finger: geringster Abstand zum Griff (mm, negativ = eingedrückt)", "Finger am Griff (gewollt 4 mm eingedrückt)",
+     "min", " mm"),
 )
 
 
@@ -270,7 +281,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "ruecken_schraeg": "Rücken schräg vom Kopf her", "griff_vorn": "Griff und Hantel von vorn",
               "griff_seite": "Griff und Hantel von außen", "vgriff_seite": "V-Griff und Hände von der Seite",
               "vgriff_vorn": "V-Griff und Hände schräg von vorn", "beingriff_aussen": "Hand am Griff von außen",
-              "beingriff_vorn": "Hand am Griff von vorn"}
+              "beingriff_vorn": "Hand am Griff von vorn", "presse_vorn": "Hand am Griff von vorn",
+              "presse_aussen": "Hand am Griff von außen"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

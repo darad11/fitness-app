@@ -1581,3 +1581,90 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Prüfseite der letzten Familie aus „Ganzkörper A/B“: Senkrechtes Drücken mit Schulterdrücken an der Maschine (D-491), dann Halt
 ```
+
+## 33. Letzte Familie: Senkrechtes Drücken mit Schulterdrücken an der Maschine, Prüfseite (D-491)
+
+Nach dem Kreuzheben fehlt in „Ganzkörper A/B“ nur noch eine Übung: das Schulterdrücken an der Maschine (20 Einheiten). Das Programm ist also noch nicht ganz animiert; deshalb wie verlangt zuerst die Prüfseite dieser Familie.
+
+### 33.1 Stand von „Ganzkörper A/B“
+
+| Übung | Familie | Stand |
+|---|---|---|
+| Schrägbankdrücken mit Kurzhanteln | Waagrechtes Drücken | Schleife in der App (D-463, Kleidung D-485) |
+| Bankdrücken mit Kurzhanteln | Waagrechtes Drücken | Schleife in der App (D-463, Kleidung D-485) |
+| Beinpresse | Kniebeuge | Schleife in der App (D-465, Kleidung D-485) |
+| Latziehen | Senkrechtes Ziehen | Schleife in der App (D-461, Kleidung D-485) |
+| Unterarmstütz | Rumpf | Schleife in der App (D-467, Kleidung D-485) |
+| Crunches | Rumpf | Schleife in der App (D-467, Kleidung D-485) |
+| Seitheben mit Kurzhanteln | Schulter und Brust isoliert | Schleife in der App (D-469, Kleidung D-485) |
+| Rudern am Kabel, sitzend | Waagrechtes Ziehen | Schleife in der App (D-474, Kleidung D-485) |
+| Beinbeuger liegend | Beine isoliert | Schleife in der App (D-486) |
+| Rumänisches Kreuzheben mit Kurzhanteln | Hüftbeuge | Schleife in der App (D-490) |
+| Schulterdrücken an der Maschine | Senkrechtes Drücken | Prüfseite, wartet auf deine Freigabe (D-491) |
+
+### 33.2 Gerät
+
+- **Vorbild:** Life Fitness Insignia Shoulder Press, 164 × 144 × 185 cm, Gewichtsblock 85 kg, zwei unabhängige Arme, die beim Drücken zusammenlaufen. Die Seite des Herstellers ließ sich in der Cloud-Umgebung nicht öffnen; die Werte stammen aus Suchauszügen.
+- **Sitz und Rückenpolster:** Sitz 40 × 40 cm, Rückenpolster 32 × 62 cm, 10° nach hinten geneigt (geschätzt). Gesäß und Rücken liegen mit Shorts und Shirt 4 mm im Polster.
+- **Hebel:** Jeder Arm dreht um eine eigene Achse hinter dir, 70 cm von der Achse bis zum Griff. Die Griffe laufen auf einem Bogen nach oben und zusammen. Der Gewichtsblock hebt sich dabei.
+
+### 33.3 Bewegung
+
+- **Sitzen:** Füße schulterbreit flach am Boden, Knie 95°, Rücken am Polster, Kopf gerade, Blick nach vorn.
+- **Unten (Ausgang):** Obergriff, Oberarm 10,1° unter der Waagrechten und 25,6° vor der Ebene der Schultern, Unterarm senkrecht, Ellbogen 77,8° (Familie: 70 bis 90°). Die Griffe stehen damit auf Stirnhöhe, 82,9 cm auseinander.
+- **Oben:** Arme fast gestreckt (Ellbogen 172,0°), die Griffe 57,4 cm auseinander über den Schultergelenken. Die Schulterblätter drehen mit nach oben.
+- **Kamera der App:** 30° von vorn seitlich, 8° von oben. So sieht man Gesicht, beide Arme und das Zusammenlaufen der Hebel. Verglichen habe ich 15°, 45° und 60° (`docs/screens/uebungen/senkrechtes-druecken-kameras.webp`); ab 45° verdeckt oben der Kopf den rechten Arm.
+
+### 33.4 Abgleich mit dem Ausführungstext
+
+Der Text in der App passt; geändert habe ich nichts.
+
+| Text in der App | Animation |
+|---|---|
+| „Stell den Sitz so ein, dass du die Schulter im ganzen Umfang bewegen kannst.“ | unten Oberarm knapp unter der Waagrechten, oben Arme fast gestreckt |
+| „Setz dich und greif die Griffe seitlich im Obergriff.“ | Obergriff an den waagrechten Griffen links und rechts |
+| „Drück die Griffe nach oben, bis die Arme über dem Kopf gestreckt sind.“ | oben Ellbogen 172,0°, Griffe über den Schultergelenken |
+| „Senk sie kontrolliert wieder ab und wiederhole.“ | derselbe Weg zurück, mit der kurzen Pause an beiden Umkehrpunkten |
+
+### 33.5 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Ellbogen unten / oben | 77,8° / 172,0° |
+| Oberarm zur Waagrechten unten / oben | −10,1° / 75,2° |
+| Unterarm zur Senkrechten unten / oben / höchstens | 2,1° / 6,8° / 13,5° |
+| Handgelenk unten / oben / höchstens | 3,3° / 8,8° / 12,9° |
+| Unterarm gedreht unten → oben | 22,7° → −27,8° |
+| Griffe auseinander unten / oben | 82,9 / 57,4 cm |
+| Griffe über dem Schultergelenk unten / oben | 29,9 / 58,2 cm |
+| Griffe vor dem Schultergelenk unten / oben | 12,4 / 0,0 cm |
+| Hebel gedreht / Schlüsselbein gehoben | 31,0° / 14,0° |
+| Gesäß im Sitz / Rücken im Polster | 4,0 bis 4,0 mm / 4,0 bis 4,0 mm |
+| Delle / durch die Oberfläche | 4,0 mm / 0,0 mm |
+| Kopf und Hals zum Gerät / Arme zu Hebeln, Griffen und Rahmen | 159 mm / 46 mm |
+| Finger am Griff | −4,1 mm (gewollt eingedrückt) |
+| Sohlen über dem Boden / verschoben | 0,0 mm / 0,0 mm |
+| Shorts unter dem Shirt / Saumband / Haut unter dem Ärmel | −1,1 / 0,7 / 5,2 mm |
+| Shorts-F zum Streifen / Kragen über der Socke | 10,3 cm / 1,6 mm |
+| Meldungen des Rigs | 0 |
+
+### 33.6 Abweichungen und offene Punkte
+
+- **Unterarm in der Mitte:** Er kippt bis 13,5° nach innen, das Handgelenk knickt bis 12,8° zum kleinen Finger. Die Griffe laufen auf dem Bogen des Hebels früher zusammen, als die Ellbogen folgen. Mit den Griffen oben 19 cm neben der Mitte waren es 17°; jetzt stehen sie oben 24 cm daneben.
+- **Unterarm gedreht:** Der Griff ist fest am Hebel und dreht sich mit ihm. Der Unterarm dreht sich dadurch über den Weg um 50°. Ein Griff, der sich frei drehen kann, würde das vermeiden; dann sähe die Maschine aber anders aus als das Vorbild.
+- **Griffhöhe unten:** Die Handbücher stellen den Sitz so ein, dass die Griffe auf Schulterhöhe stehen. Mit senkrechtem Unterarm und dem Oberarm knapp unter der Waagrechten (Werte der Familie) liegen sie bei mir auf Stirnhöhe. Tiefer würden die Ellbogen deutlich unter die Schultern sinken.
+- **Kleidung:** Vorn an der Hüftfalte kommen die Shorts an je einem Punkt links und rechts 1,1 mm durch das Shirt, in jedem Bild gleich. In der Kamera der App ist das nicht zu sehen (Nahansicht der Hüfte angesehen).
+- **Rückenpolster und Sitz:** geschätzt, nicht vom Vorbild abgemessen.
+
+### 33.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-491 Phase Programme, Abschnitt 2: Familie „Senkrechtes Drücken“ (Schulterdrücken an der Maschine), Prüfseite
+Umgesetzte Funktionen: keine in der App; Werkzeug: Schulterdrückmaschine (geraete.schulterpresse) mit zwei zusammenlaufenden Hebeln, Übung uebungen.SchulterdrueckenMaschine (Polster an der echten Oberfläche ausgerichtet, Griffe auf dem Bogen der Hebel, Ellbogen oben gesucht), neue Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-senkrechtes-druecken.webp (neu), docs/screens/uebungen/senkrechtes-druecken-kameras.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-491
+Ausgeführte Tests: drei Probeläufe, Vergleich der Griffstellung in fünf Phasen, vier Kameras, render.py schulterdruecken_maschine --pruefen (alle 60 Bilder), Nahaufnahmen des Griffs, Bilder angesehen; bestanden; Startansicht 237,9 KB, Übungsbilder 48 von 48
+Ergebnis: bestanden (Werte in 33.5)
+Bekannte Einschränkungen: 33.6
+Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife. Dann ist „Ganzkörper A/B“ vollständig animiert
+```

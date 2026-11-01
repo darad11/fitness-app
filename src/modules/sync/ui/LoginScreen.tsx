@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import { useEffect, useId, useRef, useState } from 'react';
 import { tSync } from '@/shared/i18n/de-sync';
-import { Button } from '@/shared/ui';
+import { Button, useScreenCenter } from '@/shared/ui';
 
 export type LoginMode = 'signIn' | 'signUp';
 
@@ -36,6 +36,7 @@ export function LoginScreen({
   const ref = useRef<HTMLDialogElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const id = useId();
+  useScreenCenter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
@@ -63,8 +64,9 @@ export function LoginScreen({
       }}
       className="login-screen m-0 h-dvh max-h-none w-screen max-w-none p-0 backdrop:bg-transparent"
     >
-      {/* Seitenrand mindestens so breit wie der sichere Bereich (D-372, iPhone Duo). */}
-      <div className="login-body page-gutters relative flex min-h-full flex-col items-center pb-[calc(env(safe-area-inset-bottom)+2rem)]">
+      {/* Seitenrand mindestens so breit wie der sichere Bereich (D-372), Inhalt in der Mitte des
+          ganzen Bildschirms wie die Startfläche (iPhone Duo, D-495). */}
+      <div className="login-body screen-center-x relative flex min-h-full flex-col items-center pb-[calc(env(safe-area-inset-bottom)+2rem)]">
         <Button
           variant="secondary"
           onClick={onLater}

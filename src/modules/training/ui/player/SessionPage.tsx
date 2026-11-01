@@ -78,6 +78,7 @@ import {
 } from '../../service/sessionService';
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
+import { useFittingRows } from './useFittingRows';
 import { useFootClearOfField } from './useFootClearOfField';
 import { useStableSetView } from './useStableSetView';
 import './player-layout.css';
@@ -349,6 +350,9 @@ function Player({ session, light }: { session: Session; light: boolean }) {
         }))
         .filter(({ open }) => open > 0)
     : [];
+  // In zwei Spalten nur so viele, wie ganz in die feste rechte Spalte passen (D-495).
+  const upNextRef = useRef<HTMLElement>(null);
+  const upcomingShown = useFittingRows(upNextRef, Math.min(upcoming.length, UPCOMING_MAX));
   // Oben klein Programm und Woche, als Titel nur der Trainingstag; nichts doppelt (F5, D-323).
   const heading = session.program ? session.program.dayName : session.title;
   // Ohne Programm: „Freies Training“, außer der Titel sagt es schon (D-323).
@@ -554,12 +558,17 @@ function Player({ session, light }: { session: Session; light: boolean }) {
           Sätzen; schmal nennt die Karte „Jetzt“ die nächste Übung. */}
             {upcoming.length > 0 ? (
               <section
+                ref={upNextRef}
                 aria-label={tSession.upNext}
+                // Passt kein ganzer Eintrag, steht die Karte nicht da (D-495).
+                data-leer={upcomingShown === 0 ? '' : undefined}
                 className="player-next mb-4 rounded-card bg-surface p-card shadow-card"
               >
                 <p className="eyebrow text-muted">{tSession.upNext}</p>
-                <ol className="mt-2 grid gap-2">
-                  {upcoming.slice(0, UPCOMING_MAX).map(({ exercise, open }) => (
+                {/* Eine Spalte mit Mindestbreite 0: Sonst wäre jeder Eintrag so breit wie sein
+                    ganzer Name, und die Zahl der Sätze rutschte aus der Karte (D-495). */}
+                <ol className="mt-2 grid grid-cols-[minmax(0,1fr)] gap-2">
+                  {upcoming.slice(0, upcomingShown).map(({ exercise, open }) => (
                     <li key={exercise.id} className="flex items-center gap-3">
                       <Thumb exerciseId={exercise.exerciseId} size="small" />
                       <span className="min-w-0 flex-1 truncate font-medium">
@@ -571,9 +580,9 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     </li>
                   ))}
                 </ol>
-                {upcoming.length > UPCOMING_MAX ? (
-                  <p className="mt-2 text-sm text-muted">
-                    {tSession.moreExercises(upcoming.length - UPCOMING_MAX)}
+                {upcoming.length > upcomingShown ? (
+                  <p data-mehr="" className="mt-2 text-sm text-muted">
+                    {tSession.moreExercises(upcoming.length - upcomingShown)}
                   </p>
                 ) : null}
               </section>

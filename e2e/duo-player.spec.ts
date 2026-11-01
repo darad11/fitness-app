@@ -37,7 +37,7 @@ async function startWithRest(page: Page) {
   await expect(page.getByRole('region', { name: 'Pause' })).toBeVisible();
 }
 
-test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes“ (D-380)', async ({
+test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes“ (D-380, D-495)', async ({
   page,
 }) => {
   test.slow();
@@ -48,10 +48,17 @@ test('Player aufgeklappt: zwei Spalten, rechts Kopf, Pause und „Als Nächstes�
   const upNext = page.getByRole('region', { name: 'Als Nächstes' });
   const rest = page.getByRole('region', { name: 'Pause' });
 
-  // Rechts die Steuerung mit Pause und den nächsten Übungen, links die Sätze.
+  // Rechts die Steuerung mit Pause und den nächsten Übungen, links die Sätze. „Als Nächstes“ zeigt
+  // nur ganze Einträge (D-495): Am Duo quer passt neben Kopf, Pause und Animation keiner, die Karte
+  // steht dann nicht da, den nächsten Satz nennt die Pause. In einem höheren Fenster stehen alle da.
+  await expect(upNext).toBeHidden();
+  await expect(rest).toContainText('Beinpresse, Aufwärmsatz 2');
+  await page.setViewportSize({ width: 951, height: 1100 });
   await expect(upNext).toBeVisible();
   await expect(upNext.getByRole('listitem')).toHaveCount(4);
   await expect(upNext).toContainText('Bankdrücken mit Kurzhanteln');
+  await setDuoPose(page, 'auf');
+  await expect(upNext).toBeHidden();
   expect((await box(head)).left).toBeGreaterThan((await box(list)).right);
   expect((await box(rest)).left).toBeGreaterThan((await box(list)).right);
   await expect(rest.getByRole('button', { name: '15 s weniger' })).toBeVisible();

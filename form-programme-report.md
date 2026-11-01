@@ -1756,3 +1756,31 @@ Bekannte Einschränkungen: wie bisher braucht eine Schleife, die das Gerät noch
 Nächste Schritte: Gerätetest von „Ganzkörper A/B“ durch den Produktinhaber fortsetzen, danach Entscheidung über den Merge von #54
 ```
 
+## 37. Player am iPhone Duo: Befunde A bis D behoben (D-495)
+
+Dein Gerätetest am Duo, aufgeklappt quer, im eigenen Training: Die Animationen passten, der Player hatte vier Fehler. Den Anhang `duo-player-befunde.png` habe ich nicht bekommen; nachgestellt habe ich alles nach deiner Bildschirmaufnahme und den drei Bildern vom Vormittag, mit den Fenstern, die wir am Gerät gemessen haben (D-393).
+
+**A · Pause und andere Vollbildansichten in der Mitte des Bildschirms.** Die große Pause stand in der Mitte des Fensters, also 42 pt links der Bildschirmmitte; kam oben der Streifen dazu, auch 41 pt zu tief. Jetzt rechnet die App wie die Startfläche aus, wo die Mitte des ganzen Bildschirms liegt, und stellt den Inhalt dorthin. Die Knöpfe bleiben im Fenster: Der Inhalt wird auf der Seite gegenüber dem Streifen schmaler, er rutscht nie hinein. Dasselbe gilt jetzt für die Anmeldung, die Wiederherstellung und Dialoge in der Mitte, etwa die Übungsinfo und „Training beenden?“. Zugeklappt bleiben der großen Pause 266 pt, dort stehen ±15 s nebeneinander und „Überspringen“ darunter.
+
+**B · Ränder neben der Animation.** Der Rahmen war 4:3, aber höchstens 40 % der Fensterhöhe hoch. Griff diese Grenze, wurde er breiter als das Video, und links und rechts stand die Fläche in einer helleren Farbe (in den Details bei 867 × 669: Seitenverhältnis 1,674 statt 1,333). Jetzt hat der Rahmen immer das Seitenverhältnis des Videos und wird schmaler statt breiter. Das Video füllt ihn ganz, und er hat dieselbe Farbe wie der Grund des Videos, ohne Rand. So blitzt auch an halben Pixeln keine Linie auf. Geprüft im Player, in der Übungsinfo und in den Details bei allen Breiten von iPhone und Duo.
+
+**C · Abgeschnittenes.** In „Als Nächstes“ war jeder Eintrag so breit wie der ganze Name (359 px in 304 px), die Zahl der Sätze rutschte aus der Spalte: „3 S“. Jetzt kürzt sich der Name mit Auslassungspunkten, „3 Sätze“ bleibt ganz. Die Animation bleibt immer ganz sichtbar, siehe D.
+
+**D · Scrollen.** Die rechte Spalte war 558 px hoch, ihr Inhalt 853 px; sie scrollte für sich, und am Seitenende schob der Rahmen sie 147 px nach oben. Daher kam das Mitlaufen und Springen. Jetzt ist sie genau so hoch wie der Platz über der Fußleiste, scrollt nicht mehr für sich und steht von Anfang an fest, auch am Seitenende. Nur die Sätze links scrollen. Die Animation skaliert mit dem Platz. „Als Nächstes“ zeigt nur ganze Einträge, und am Duo quer bleibt neben Kopf, „Jetzt“ und Animation für keinen Eintrag Platz. Die nächste Übung steht dann in „Jetzt“ unter „Danach“ und in der Pause. Ist das Fenster niedriger als 36 rem (iPhone quer), scrollt die Spalte wie bisher für sich, sonst bliebe für die Animation nichts.
+
+**Tests.** Neu `e2e/duo-player-befunde.spec.ts` mit fünf Tests für A bis D. Am alten Stand schlagen alle fünf fehl: Pause und Übungsinfo bei 433,5 statt 475,5 pt; Rahmen 1,674 statt 1,333; die Spalte scrollt 120 px für sich; der Eintrag reicht bis 1186,6 statt höchstens 1132,5 px. Dazu Unit-Tests für die Mitte des Bildschirms (mit der Rechnung der Startfläche) und für die ganzen Einträge.
+
+**Bilder und Aufnahme.** `docs/screens/duo/player-duo-quer.webp` (acht Ansichten quer), `player-duo-lagen.webp` (quer mit Streifen oben, hoch, zugeklappt), `player-vorher-nachher.webp` (die Befunde vorher und nachher) und `player-scrollen.mp4` (Scrollen quer bis ans Seitenende und zurück, 13 s). In der Aufnahme stand die rechte Spalte in allen 719 Bildern bei 0 px. Die Systemstreifen sind in den Bildern dunkel ergänzt, die Linie in Lime ist die Mitte des Bildschirms.
+
+**Grenze.** Schwung-Scrollen und das Nachfedern am Seitenende des iPhone lassen sich hier nicht nachstellen. Geprüft ist das Scrollen Bild für Bild in Chromium (Gesten mit Nachlauf) und mit Schritten in WebKit (CI). Das letzte Wort hat dein Gerätetest.
+
+```
+Arbeitspaket: D-495 Phase Programme, Player am iPhone Duo (Befunde A bis D)
+Umgesetzte Funktionen: Vollbildansichten und Dialoge in der Mitte des ganzen Bildschirms; Rahmen der Animation im Seitenverhältnis des Videos ohne Kanten; rechte Spalte fest über der Fußleiste, nur ganze Einträge in „Als Nächstes“; erfüllte AK: –
+Geänderte Dateien: src/shared/ui/screenCenter.ts (neu), src/shared/ui/screenCenter.test.ts (neu), src/shared/ui/index.ts, src/shared/ui/Dialog.tsx, src/shared/ui/tokens.css, src/app/styles.css, src/main.tsx, src/app/RecoveryScreen.tsx, src/modules/sync/ui/LoginScreen.tsx, src/modules/exercises/ui/ExerciseVisual.tsx, src/modules/training/ui/player/SessionPage.tsx, src/modules/training/ui/player/RestStage.tsx, src/modules/training/ui/player/player-layout.css, src/modules/training/ui/player/useFittingRows.ts (neu), src/modules/training/ui/player/useFittingRows.test.ts (neu), e2e/duo-player-befunde.spec.ts (neu), e2e/duo-player.spec.ts, tools/duo-player-rundgang.mjs (neu), tools/duo-player-aufnahme.mjs (neu), tools/duo_player_bilder.py (neu), docs/screens/duo/player-*.webp, docs/screens/duo/player-scrollen.mp4, docs/decisions.md, docs/design-system.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/feature-inventory.csv, form-programme-report.md
+Technische Entscheidungen: D-495
+Ausgeführte Tests: Unit-Tests 1.227 (137 Dateien); E2E Chromium 441 bestanden, 135 übersprungen, 0 fehlgeschlagen; Gegenprobe am alten Stand: 5 von 5 neuen Tests fehlgeschlagen; Startansicht 238,5 KB; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Schwung-Scrollen und Nachfedern nur am Gerät prüfbar; unter 36 rem Fensterhöhe scrollt die rechte Spalte für sich
+Nächste Schritte: Gerätetest des Produktinhabers, danach Entscheidung über den Merge von #54
+```

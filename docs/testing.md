@@ -3057,3 +3057,20 @@ Ursache der alten Kleidung im Gerätetest, Dateinamen mit Prüfsumme, Aufräumen
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.217 Tests; „13 Einträge geprüft, … 52 Dateien mit Prüfsumme im Namen“; Startansicht 237,9 KB, Übungsbilder 52 von 52 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,2 min); der erweiterte Offline-Test (alte Fassung im Speicher wird gelöscht, die aktuelle Schleife läuft danach ohne Netz) in beiden Profilen bestanden, ebenso Übungsliste und Pilot-Animation mit den Namen mit Prüfsumme |
 
+### Player am iPhone Duo, Befunde A bis D · 01.11.2026, Cloud-Umgebung
+
+Große Pause und Dialoge in der Mitte des Bildschirms, Rahmen der Animation, rechte Spalte fest (D-495). Fenster wie am Gerät gemessen (D-393), Bildschirm hochkant 466 × 678 und Ausrichtung über das Chrome-Protokoll.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgestellt am alten Stand `b9eb461`, 867 × 669 | große Pause bei 433 statt 475,5 px; rechte Spalte 558 px hoch, Inhalt 853 px, scrollt für sich; am Seitenende 147 px nach oben geschoben; Einträge in „Als Nächstes“ 359 px breit in 304 px, Zahl bis 882 px (Spalte endet bei 843) |
+| Messung nach D-495 (867 × 669, 867 × 587, 382 × 678) | große Pause: Zeit bei x 475, Mitte des Inhalts senkrecht bei 335 bzw. 253 (Bildschirmmitte 334,5 bzw. 252,5), zugeklappt bei 233; Knöpfe bis 700 bzw. 362 px; Spalte in jedem Scrollschritt bei 0 px, Animation 4:3 (326 × 245, mit Pause 285 × 214, mit Streifen oben 175 × 132) |
+| Rahmen der Animation in Details, Player und Übungsinfo bei 867 × 669, 867 × 587, 382 × 678, 669 × 869, 390 × 844, 844 × 390, 951 × 669 | überall Seitenverhältnis 1,333, das Video deckt den Rahmen (`cover`); Kante der kleinen Animation nach der Fläche `--media-bg` ohne Linie (13, 18, 25 neben 12, 18, 25) |
+| „Als Nächstes“ bei 1180 × 820 und 844 × 390 | 1 bzw. 4 Einträge, jede Zahl endet am Eintrag (1132 = 1132, 804 = 804); am Duo quer kein ganzer Eintrag, Karte steht nicht da |
+| `e2e/duo-player-befunde.spec.ts` (neu) | 7 bestanden, 3 übersprungen (B bis D nur Handy-Profil) |
+| Gegenprobe derselben Tests am alten Stand `b9eb461` | alle 5 Tests im Handy-Profil fehlgeschlagen: 433,5 statt 475,5 (Pause, Übungsinfo); Seitenverhältnis 1,674; Spalte scrollt 120 px; Eintrag bis 1186,6 statt 1132,5 px |
+| Unit-Tests `screenCenter.test.ts` (6, mit der Rechnung aus `public/startflaeche.js`), `useFittingRows.test.ts` (4) | bestanden |
+| Aufnahme `tools/duo-player-aufnahme.mjs` (867 × 669, Pause läuft, Gesten mit Nachlauf und Mausrad bis ans Ende und zurück) | 719 Bilder, Scrollposition 0 bis 1953, rechte Spalte in jedem Bild bei 0 px, Animation bei 328,5 px; `player-scrollen.mp4` 13 s |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.227 Tests; Startansicht 238,5 KB (vorher 237,9 KB), Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 441 bestanden, 135 übersprungen, keiner fehlgeschlagen (17,3 min), darunter die neuen Tests und der angepasste Test „Player aufgeklappt“ (`duo-player.spec.ts`: am Duo quer steht „Als Nächstes“ nicht da, bei 951 × 1100 vier Einträge) |
+

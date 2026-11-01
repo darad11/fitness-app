@@ -60,20 +60,37 @@
     grid-row: 1;
   }
 
+  /*
+   * Die rechte Spalte steht fest und passt immer ganz in die sichtbare Höhe über der Fußleiste
+   * (D-495): Sie ist genau so hoch, scrollt nicht für sich und klebt oben. Kopf (mit Pause) und
+   * „Jetzt“ behalten ihre Höhe; die Demonstration bekommt, was übrig bleibt, höchstens ihre Größe
+   * bei voller Breite (21 rem breit, 4:3, dazu 1 rem Abstand), „Als Nächstes“ den Rest und zeigt
+   * nur ganze Einträge (`useFittingRows`). Vorher war die Spalte höher als der Bildschirm und
+   * scrollte für sich; am Seitenende schob der Rahmen sie nach oben, die Animation rutschte aus
+   * dem Bild.
+   */
   .player-side {
     grid-column: 2;
     grid-row: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 16.75rem) auto minmax(0, 1fr);
     grid-template-areas: 'head' 'hint' 'demo' 'now' 'next';
     position: sticky;
     top: 0;
-    /* Wie der Kopf in einer Spalte bis an den oberen Rand, unter der Unschärfe von iOS (D-332). */
-    margin-top: calc(-1 * var(--spacing-edge-clear));
-    /* Nie hinter der Fußleiste; reicht die Höhe nicht, scrollt die Steuerung für sich. */
-    max-height: calc(100dvh - var(--player-foot, 0px));
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    /* Von Anfang an oben am Rand, wie der Kopf in einer Spalte unter der Unschärfe von iOS (D-332):
+       Der negative Rand hebt die Spalte über den Abstand oberhalb des Players, `top: 0` hält sie am
+       Rand. Vorher stand sie ungescrollt 11 bis 24 px tiefer, ragte so weit hinter die Fußleiste
+       und lief beim ersten Scrollen ein Stück mit, bevor sie klebte (D-495). */
+    margin-top: -100dvh;
+    height: calc(100dvh - var(--player-foot, 0px));
+    /* Klebt bis zum Seitenende: Ohne den negativen Rand endet die Spalte mit der Satzliste, und
+       die Abstände darunter (Fußleiste, Seitenrand) schöben sie am Ende nach oben. Der Rand ändert
+       weder die Höhe der Zeile noch die Scrollhöhe. */
+    margin-bottom: -100dvh;
+    /* `clip` statt `hidden`: Die Spalte ist kein Scrollbereich, auch ein Fokus darin scrollt sie
+       nicht. */
+    overflow: clip;
   }
 
   /* Der Kopf steht in der Spalte: nicht bis an den Fensterrand, ohne eigenes Kleben. */
@@ -96,18 +113,56 @@
 
   /* Der vorbereitete Bereich „demo“ (D-380) zeigt jetzt die Demonstration der aktuellen Übung;
      die kompakte Fassung in „Jetzt“ entfällt, damit nichts doppelt steht (D-397). */
+  /* Die Demonstration skaliert mit der Höhe ihres Bereichs: Rahmen im Seitenverhältnis des
+     Videos, so breit wie möglich, höchstens so hoch wie der Bereich (`--demo-max-h`, D-495). */
   .player-side > .player-demo {
     display: block;
     grid-area: demo;
+    min-height: 0;
+    container: demo / size;
+    --demo-max-h: 100cqh;
   }
 
   .player-now .player-now-demo {
     display: none;
   }
 
+  /* „Als Nächstes“ füllt den Rest und schneidet nichts an: nur ganze Einträge (D-495). */
   .player-next {
-    display: block;
+    display: flex;
+    flex-direction: column;
     grid-area: next;
+    min-height: 0;
+    overflow: hidden;
+    /* Für `useFittingRows`: Die Höhe ist vorgegeben, es zählen nur ganze Einträge. */
+    --nur-ganze: 1;
+  }
+
+  .player-next[data-leer] {
+    visibility: hidden;
+  }
+
+  /* Niedriger als 36 rem (iPhone quer, sehr niedrige Fenster): Kopf und „Jetzt“ allein füllten
+     die feste Spalte, für die Demonstration bliebe nichts. Dort scrollt die Spalte wie bisher für
+     sich, jeder Bereich in seiner Größe; sie klebt weiter bis zum Seitenende (D-495). */
+  @media (max-height: 35.99rem) {
+    .player-side {
+      grid-template-rows: none;
+      height: auto;
+      max-height: calc(100dvh - var(--player-foot, 0px));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .player-side > .player-demo {
+      container-type: normal;
+      --demo-max-h: 40dvh;
+    }
+
+    .player-next {
+      display: block;
+      --nur-ganze: 0;
+    }
   }
 
   /* In der schmalen Spalte stünde vom nächsten Satz neben der Zeit nur „Beinpresse,…“: Er darf
@@ -180,5 +235,24 @@
       clip-path: inset(50%);
       white-space: nowrap;
     }
+  }
+}
+
+/*
+ * Große Pause (D-495): Sie steht in der Mitte des ganzen Bildschirms und wird dafür am Duo um den
+ * Systemstreifen schmaler. Zugeklappt bleiben so 266 px; nebeneinander passten „−15 s“, „+15 s“ und
+ * „Überspringen“ nicht mehr. Unter 20 rem stehen ±15 s nebeneinander, „Überspringen“ darunter.
+ */
+.rest-big {
+  container: rest-big / inline-size;
+}
+
+@container rest-big (max-width: 19.99rem) {
+  .rest-big-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rest-big-controls > :last-child {
+    grid-column: 1 / -1;
   }
 }

@@ -44,6 +44,9 @@
   --danger-soft: #e5484d10;
   /* Dunkle Fläche hinter dem Kamerabild des Scanners. Die Bühne nutzt `--bg-elevated`. */
   --ink: #10161f;
+  /* Grund der gerenderten Übungsanimationen (immer dunkel, auch im hellen Modus): Ihr
+     Rahmen hat genau diese Farbe, damit an seinen Kanten nichts aufblitzt (D-495). */
+  --media-bg: #0d121a;
   /* Kachel hinter dem F in der Kopfzeile. */
   --tile: #0d1118;
   --tile-border: #3c424e;
@@ -133,6 +136,7 @@
   --danger: #bb292f;
   --danger-soft: #e5484d0f;
   --ink: #0c1219;
+  --media-bg: #0d121a;
   --tile: #0d1118;
   --tile-border: #3c424e;
   /* Hell (angelegt): Vorschlag aus F6, Türkis etwas dunkler für 3:1 auf surface-2 und der Spur. */

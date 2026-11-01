@@ -317,52 +317,65 @@ function LargeDemo({
     preloadVisual(visual);
   }, [visual]);
   const demo = visual.demo ?? { kind: 'image' as const, file: visual.preview };
-  const frame =
-    'relative block aspect-[4/3] max-h-[40dvh] w-full overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]';
-  const media = 'absolute inset-0 size-full object-contain';
+  // Rahmen im Seitenverhältnis der Datei (D-495): Er ist nie breiter als das Bild bei seiner
+  // Höchsthöhe (`--demo-max-h`, sonst 40 % der Fensterhöhe; in der rechten Spalte des Players die
+  // Höhe ihres Bereichs) und steht dann mittig. So füllt das Bild den Rahmen immer ganz; vorher
+  // zeigte ein breiter Rahmen links und rechts Streifen in der Farbe der Fläche.
+  const size = demo.kind === 'phases' ? demo.start : demo.file;
+  const frameStyle = {
+    aspectRatio: `${String(size.width)} / ${String(size.height)}`,
+    width: `min(100%, calc(var(--demo-max-h, 40dvh) * ${String(size.width / size.height)}))`,
+  };
+  // Fläche in der Farbe des Videos, ohne Rand: Auch wo Kanten beim Skalieren halbe Pixel treffen,
+  // blitzt nichts auf. Eine Funktion, keine Komponente: Sonst baute React das Video bei jeder
+  // Darstellung neu auf.
+  const frame = (children: ReactNode, extra?: string) => (
+    <span
+      data-demo-frame=""
+      style={frameStyle}
+      className={cn('relative mx-auto block overflow-hidden rounded-tile bg-media', extra)}
+    >
+      {children}
+    </span>
+  );
+  // `cover` statt `contain`: Bei gleichem Seitenverhältnis bleibt auch beim Runden auf ganze Pixel
+  // kein Spalt zum Rand.
+  const media = 'absolute inset-0 size-full object-cover';
   switch (demo.kind) {
     case 'animation':
       // Animation nur ohne Wunsch nach weniger Bewegung, sonst das Standbild (Kapitel 9, D-403).
       if (reduced) {
-        return (
-          <span className={frame}>
-            <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />
-          </span>
+        return frame(
+          <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />,
         );
       }
       if (isVideo(demo.file)) {
         // Stumme Schleife ohne Bedienelemente; das Standbild steht, bis das Video läuft.
-        return (
-          <span className={frame}>
-            <LoopVideo demo={demo} alt={visual.alt} className={media} onError={onError} />
-          </span>
+        return frame(
+          <LoopVideo demo={demo} alt={visual.alt} className={media} onError={onError} />,
         );
       }
-      return (
-        <span className={frame}>
-          <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />
-        </span>
+      return frame(
+        <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />,
       );
     case 'video':
       // Stumm, ohne Ton und ohne Vollbild; bei weniger Bewegung erst auf Wunsch.
-      return (
-        <span className={frame}>
-          <video
-            className={media}
-            src={mediaUrl(demo.file)}
-            poster={mediaUrl(demo.poster)}
-            width={demo.file.width}
-            height={demo.file.height}
-            muted
-            loop
-            playsInline
-            autoPlay={!reduced}
-            controls={reduced}
-            preload="metadata"
-            aria-label={visual.alt}
-            onError={onError}
-          />
-        </span>
+      return frame(
+        <video
+          className={media}
+          src={mediaUrl(demo.file)}
+          poster={mediaUrl(demo.poster)}
+          width={demo.file.width}
+          height={demo.file.height}
+          muted
+          loop
+          playsInline
+          autoPlay={!reduced}
+          controls={reduced}
+          preload="metadata"
+          aria-label={visual.alt}
+          onError={onError}
+        />,
       );
     case 'phases':
       // Zwei Phasen im Wechsel; bei weniger Bewegung nebeneinander mit Beschriftung.
@@ -373,42 +386,43 @@ function LargeDemo({
             { file: demo.end, label: tExerciseMedia.phaseEnd },
           ].map(({ file, label }) => (
             <span key={label} className="grid gap-1">
-              <span className={frame}>
+              {frame(
                 <Img
                   file={file}
                   alt={`${name}: ${label}`}
                   eager
                   className={media}
                   onError={onError}
-                />
-              </span>
+                />,
+              )}
               <span className="text-caption text-muted">{label}</span>
             </span>
           ))}
         </span>
       ) : (
-        <span className={cn(frame, 'demo-phases')}>
-          <Img
-            file={demo.start}
-            alt={tExerciseMedia.phasesAlt(visual.alt)}
-            eager
-            className={media}
-            onError={onError}
-          />
-          <Img
-            file={demo.end}
-            alt=""
-            eager
-            className={cn(media, 'demo-phase-end')}
-            onError={onError}
-          />
-        </span>
+        frame(
+          <>
+            <Img
+              file={demo.start}
+              alt={tExerciseMedia.phasesAlt(visual.alt)}
+              eager
+              className={media}
+              onError={onError}
+            />
+            <Img
+              file={demo.end}
+              alt=""
+              eager
+              className={cn(media, 'demo-phase-end')}
+              onError={onError}
+            />
+          </>,
+          'demo-phases',
+        )
       );
     case 'image':
-      return (
-        <span className={frame}>
-          <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />
-        </span>
+      return frame(
+        <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />,
       );
   }
 }

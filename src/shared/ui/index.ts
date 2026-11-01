@@ -21,3 +21,4 @@ export * from './Toast';
 export * from './theme';
 export * from './breakpoints';
 export * from './pageScroll';
+export * from './screenCenter';

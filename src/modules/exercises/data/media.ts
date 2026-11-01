@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import { logWarning } from '@/shared/db';
 import {
   exerciseGuidesSchema,
-  exerciseMediaSchema,
+  parseExerciseMedia,
   type ExerciseGuide,
   type ExerciseGuides,
   type ExerciseMedia,
   type ExerciseVisual,
   type MediaFile,
   type MediaSource,
+  type SkippedMediaEntry,
 } from '../model/media';
 import { loadCoreExercises } from './coreLibrary';
 
@@ -36,10 +38,28 @@ let visualsLoaded: VisualIndex | undefined;
 async function fetchMedia(): Promise<ExerciseMedia> {
   const response = await fetch(MEDIA_URL, { cache: 'no-cache' });
   if (!response.ok) throw new Error(`Visuals nicht geladen: ${String(response.status)}`);
-  return exerciseMediaSchema.parse(await response.json());
+  const { media, skipped } = parseExerciseMedia(await response.json());
+  reportSkipped(skipped);
+  return media;
 }
 
-/** Visuals nach Übungs-ID. Fehlt die Liste oder ist sie ungültig, gibt es keine (Rückfall). */
+/**
+ * Meldet übersprungene Einträge (D-488) als Warnung in der Konsole des Browsers und im
+ * Fehlerprotokoll der App; beides bleibt auf dem Gerät, nichts geht nach außen. Die Übung zeigt
+ * dann ihr Symbol statt des Bilds, alle anderen bleiben. Der Schlüssel steht ohne
+ * Anführungszeichen in der Meldung, weil das Protokoll Text in Anführungszeichen entfernt.
+ */
+function reportSkipped(skipped: readonly SkippedMediaEntry[]): void {
+  for (const entry of skipped) {
+    const what = entry.part === 'visuals' ? 'Eintrag' : 'Quelle';
+    const message = `Übungsbilder: ${what} ${entry.key} übersprungen (${entry.reason})`;
+    console.warn(message);
+    void logWarning('uebungsbilder', message);
+  }
+}
+
+/** Visuals nach Übungs-ID. Fehlt die Liste oder stimmt ihr Rahmen nicht, gibt es keine (Rückfall);
+ *  ein einzelner ungültiger Eintrag fällt allein heraus (D-488). */
 export function loadVisualIndex(): Promise<VisualIndex> {
   visualsPending ??= Promise.all([fetchMedia(), loadCoreExercises()])
     .then(([media, core]) => {

@@ -1501,3 +1501,23 @@ Ergebnis: bestanden (Werte in 29.4)
 Bekannte Einschränkungen: 29.6
 Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife des Rumänischen Kreuzhebens
 ```
+
+## 30. Bildliste robust (D-488)
+
+Dein Auftrag: Ein zu langer Text darf nicht mehr die ganze Bildliste verwerfen, und eine Prüfung soll so etwas vor dem E2E-Lauf finden.
+
+- **Jetzt:** Die App prüft die Liste Eintrag für Eintrag. Ein ungültiger Eintrag fällt allein heraus; diese Übung zeigt ihr Symbol, alle anderen ihr Bild. Nur wenn die ganze Liste kaputt ist (falsche Version, falscher Aufbau), gilt sie wie bisher als nicht vorhanden.
+- **Meldung:** Jeder übersprungene Eintrag steht als Warnung in der Konsole und im Fehlerprotokoll der App, mit Schlüssel und Grund. Beides bleibt auf dem Gerät.
+- **Vor dem E2E-Lauf:** Ein Unit-Test und `pnpm check:docs` (neu `tools/check_medien.py`) finden zu lange Alternativtexte, fehlende Dateien und fehlende Quellen. Die Grenze von 240 Zeichen liest die Prüfung aus dem Schema der App, damit beide nicht auseinanderlaufen. Gegenprobe mit 294 Zeichen: Beide schlagen an und nennen den Eintrag.
+- **E2E:** Ein neuer Test liefert eine Liste mit einem zu langen Text: Bankdrücken zeigt das Symbol, die Kniebeuge ihr Bild, die Warnung steht genau einmal in der Konsole.
+
+```
+Arbeitspaket: D-488 Phase Programme, Bildliste robust
+Umgesetzte Funktionen: ungültiger Eintrag der Bildliste fällt allein heraus und wird als Warnung gemeldet (Konsole, Fehlerprotokoll); Prüfung der Liste in check:docs und im Unit-Test; erfüllte AK: –
+Geänderte Dateien: src/modules/exercises/model/media.ts, src/modules/exercises/data/media.ts, src/modules/exercises/data/media.test.ts, src/shared/db/errorLog.ts, src/shared/db/browser.test.ts, e2e/uebungen.spec.ts, tools/check_medien.py (neu), package.json, docs/architecture.md, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-488
+Ausgeführte Tests: Unit-Tests 1.213 bestanden (4 neu), Gegenprobe mit 294 Zeichen in Unit-Test und check_medien.py; format:check, lint, typecheck, check:docs, build, check:bundle (Startansicht 237,9 KB); E2E Chromium 434 bestanden, 132 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Rudern: Naht geprüft (D-489); Rumänisches Kreuzheben in die App (D-490)
+```

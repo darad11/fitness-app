@@ -177,6 +177,7 @@ Nach einem Neustart der App liest die Startseite die laufende Einheit aus der Da
 | Absturz einer Ansicht | React-Fehlergrenze je Route | Fehleransicht mit „Neu laden"; andere Bereiche bleiben nutzbar | AK-DAT-09 |
 | Fehler in einer Hinweisleiste (z. B. ungültiges laufendes Training) | Fehlergrenze je Leiste, Eintrag im Fehlerprotokoll (D-346) | Nur die Leiste fehlt; Navigation und Seiten bleiben | B-04 |
 | Ungültige Importdatei | Zod-Prüfung vor dem Schreiben | Ablehnung ohne Änderung, mit Grund | AK-DAT-05 |
+| Ungültiger Eintrag in der Liste der Übungsbilder (`public/uebungen/medien.json`), z. B. ein zu langer Alternativtext | Zod-Prüfung je Eintrag beim Laden (`parseExerciseMedia`); vorher schon `check_medien.py` in `pnpm check:docs` und ein Unit-Test | Nur dieser Eintrag fällt heraus, die Übung zeigt ihr Symbol; Warnung in der Konsole und im Fehlerprotokoll (`logWarning`); nur ein falscher Rahmen der Liste verwirft alle | D-488 |
 | Neue App-Version während des Trainings | Service Worker meldet Update | Hinweis erst nach Abschluss der Einheit; Aktivierung nur nach Bestätigung | AK-PWA-03 |
 | Zweiter Tab mit älterer Version | Dexie-Ereignis `versionchange` | Der ältere Tab schließt seine Verbindung und bittet um Neuladen | Integrationstest |
 

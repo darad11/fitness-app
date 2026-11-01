@@ -28,8 +28,22 @@ function visual(key: string) {
   };
 }
 
-/** Testliste mit Visuals für Kniebeuge und Bankdrücken; `broken` liefert 404 für diese Dateien. */
-async function serveVisuals(context: BrowserContext, broken: string[] = []) {
+/** Testliste mit Visuals für Kniebeuge und Bankdrücken; `broken` liefert 404 für diese Dateien,
+ *  `change` ändert die Einträge vor dem Ausliefern (D-488). */
+function testVisuals() {
+  return {
+    back_squat_barbell: visual('back_squat_barbell'),
+    bench_press_barbell: visual('bench_press_barbell'),
+  };
+}
+
+async function serveVisuals(
+  context: BrowserContext,
+  broken: string[] = [],
+  change?: (visuals: ReturnType<typeof testVisuals>) => void,
+) {
+  const visuals = testVisuals();
+  change?.(visuals);
   await context.route('**/uebungen/medien.json', (route) =>
     route.fulfill({
       json: {
@@ -37,10 +51,7 @@ async function serveVisuals(context: BrowserContext, broken: string[] = []) {
         sources: {
           test: { name: 'Test', url: 'https://example.org/', license: 'CC0', commercialUse: true },
         },
-        visuals: {
-          back_squat_barbell: visual('back_squat_barbell'),
-          bench_press_barbell: visual('bench_press_barbell'),
-        },
+        visuals,
       },
     }),
   );
@@ -138,6 +149,35 @@ test('Übungsliste mit Visuals: richtiges Bild je Übung, Fehler beim Laden zeig
   await expect(
     row(page, 'Bankdrücken mit Kurzhanteln').locator('[data-visual="symbol"]'),
   ).toBeVisible();
+});
+
+test('Übungsliste: Ein ungültiger Eintrag der Bildliste fällt allein heraus und steht als Warnung in der Konsole (D-488)', async ({
+  page,
+  context,
+}) => {
+  const warnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'warning') warnings.push(message.text());
+  });
+  // Bankdrücken mit einem Alternativtext über der Grenze von 240 Zeichen
+  await serveVisuals(context, [], (visuals) => {
+    visuals.bench_press_barbell.alt = 'x'.repeat(241);
+  });
+  await openPage(page, '/uebungen');
+  const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
+  await squat.scrollIntoViewIfNeeded();
+  await expect(squat).toHaveAttribute('src', '/uebungen/medien/back_squat_barbell-vorschau.svg');
+  const bench = row(page, 'Bankdrücken mit Langhantel');
+  await bench.scrollIntoViewIfNeeded();
+  await expect(bench.locator('[data-visual="symbol"]')).toBeVisible();
+  await expect(bench.locator('img')).toHaveCount(0);
+  await expect
+    .poll(() =>
+      warnings.filter((text) =>
+        text.startsWith('Übungsbilder: Eintrag bench_press_barbell übersprungen (alt: '),
+      ),
+    )
+    .toHaveLength(1);
 });
 
 test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur aktuellen Übung (D-397)', async ({

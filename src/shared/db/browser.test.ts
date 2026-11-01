@@ -4,7 +4,7 @@ import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createTestRuntime } from '../testing/db';
 import { setConnectionState, useConnectionState } from './connection';
-import { installGlobalErrorHandlers, listErrorLog } from './errorLog';
+import { installGlobalErrorHandlers, listErrorLog, logWarning, recentErrors } from './errorLog';
 import { watchDatabaseHealth } from './health';
 import type { DbRuntime } from './runtime';
 
@@ -86,5 +86,24 @@ describe('installGlobalErrorHandlers', () => {
       ]);
     });
     remove();
+  });
+
+  it('logWarning schreibt mit der Datenbank der App, nach dem Abbau nur in den Arbeitsspeicher (D-488)', async () => {
+    const remove = installGlobalErrorHandlers(() => rt.db);
+    await logWarning(
+      'uebungsbilder',
+      'Übungsbilder: Eintrag back_squat_barbell übersprungen (alt: zu lang)',
+    );
+    expect(await listErrorLog(rt.db)).toMatchObject([
+      {
+        level: 'warn',
+        area: 'uebungsbilder',
+        message: 'Error: Übungsbilder: Eintrag back_squat_barbell übersprungen (alt: zu lang)',
+      },
+    ]);
+    remove();
+    await logWarning('uebungsbilder', 'danach');
+    expect(await listErrorLog(rt.db)).toHaveLength(1);
+    expect(recentErrors().at(-1)?.message).toBe('Error: danach');
   });
 });

@@ -2957,3 +2957,16 @@ Prüfseite der Familie „Hüftbeuge“ mit dem Rumänischen Kreuzheben mit Kurz
 | Hüftfalte bei Phase 0,986 und 1,0 (Kamera der App 720 × 540 und Nahaufnahme von vorn unten) | angesehen: nichts sichtbar |
 | Prüfseite (`uebungen_pruef_bild.py rumaenisches_kreuzheben_kh --familie hueftbeuge --titel "Hüftbeuge"`) | `familie-hueftbeuge.webp`, angesehen: Stand und Endposition, Griff und Hantel, Fuß; Messwerte mit den Zeilen der Kleidung |
 | `python3 -m py_compile` (uebungen.py, uebungen_pruef_bild.py), `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (die App ändert sich nicht; E2E mit WebKit in der CI) | bestanden; Startansicht 237,8 KB, Übungsbilder 44 von 44 |
+
+### Bildliste robust · 01.11.2026, Cloud-Umgebung
+
+Ein ungültiger Eintrag in `public/uebungen/medien.json` fällt allein heraus und wird gemeldet; zu lange Alternativtexte findet schon `pnpm check:docs` (D-488).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Unit-Tests `media.test.ts`: kein Eintrag der ausgelieferten Liste fiele heraus; ein Eintrag mit 241 Zeichen fällt allein heraus, Warnung in der Konsole und im Fehlerprotokoll; Quelle ohne Adresse, Datei außerhalb des Ordners, falscher Schlüssel; falscher Rahmen wirft weiter | bestanden (18 Tests in der Datei, 3 neu) |
+| Unit-Test `browser.test.ts`: `logWarning` schreibt mit der Datenbank aus `installGlobalErrorHandlers`, nach dem Abbau nur in den Arbeitsspeicher | bestanden |
+| Gegenprobe: Alternativtext des Beinbeugers auf 294 Zeichen verlängert | `media.test.ts`: 2 fehlgeschlagen, die Meldung nennt `lying_leg_curl`; `check_medien.py`: „lying_leg_curl: Alternativtext 294 Zeichen, höchstens 240“, dazu eine fehlende Datei erkannt, Exit-Code 1; Liste danach zurückgesetzt |
+| `pnpm check:docs` mit `check_medien.py` | bestanden; „public/uebungen/medien.json: 11 Einträge geprüft, Alternativtexte höchstens 240 Zeichen“ |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; Startansicht 237,9 KB (0,1 KB mehr: `logWarning` und die Bauzeit), Übungsbilder 44 von 44 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,3 min); der neue Test „Ein ungültiger Eintrag der Bildliste fällt allein heraus und steht als Warnung in der Konsole (D-488)“ in beiden Profilen bestanden |

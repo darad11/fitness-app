@@ -1695,3 +1695,37 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Übersicht aller elf Übungen von „Ganzkörper A/B“ (D-493), dann Halt für den Gerätetest
 ```
+
+## 35. Übersicht „Ganzkörper A/B“ (D-493)
+
+Alle elf Übungen von „Ganzkörper A/B“ laufen jetzt als Schleife in der App, in der Reihenfolge der Tage. Die Größen sind die Dateien in `public/uebungen/medien/`; der Stand nennt die Entscheidung, mit der die Schleife in die App kam. Seit D-485 tragen alle Schleifen die finale Kleidung; Beinbeuger, Kreuzheben und Schulterdrücken wurden gleich mit ihr gerendert.
+
+| Nr. | Tag | Übung | Stand | MP4 | WebM | Poster | Vorschau | zusammen |
+|---|---|---|---|---|---|---|---|---|
+| 1 | A | Beinpresse | Schleife in der App (D-465) | 63,5 KB | 55,4 KB | 15,0 KB | 6,9 KB | 140,8 KB |
+| 2 | A | Bankdrücken mit Kurzhanteln | Schleife in der App (D-463) | 43,3 KB | 35,7 KB | 8,3 KB | 4,2 KB | 91,4 KB |
+| 3 | A | Rudern am Kabel, sitzend | Schleife in der App (D-474) | 56,0 KB | 51,3 KB | 13,6 KB | 6,4 KB | 127,3 KB |
+| 4 | A | Schulterdrücken an der Maschine | Schleife in der App (D-492) | 52,5 KB | 48,9 KB | 10,4 KB | 4,3 KB | 116,2 KB |
+| 5 | A | Unterarmstütz (Plank) | Schleife in der App (D-467) | 22,1 KB | 18,0 KB | 10,7 KB | 3,2 KB | 54,1 KB |
+| 6 | B | Rumänisches Kreuzheben mit Kurzhanteln | Schleife in der App (D-490) | 53,1 KB | 49,1 KB | 6,1 KB | 3,9 KB | 112,2 KB |
+| 7 | B | Latziehen | Schleife in der App (D-461) | 59,2 KB | 56,9 KB | 9,8 KB | 4,4 KB | 130,3 KB |
+| 8 | B | Schrägbankdrücken mit Kurzhanteln | Schleife in der App (D-463) | 40,9 KB | 35,7 KB | 8,9 KB | 4,1 KB | 89,6 KB |
+| 9 | B | Beinbeuger liegend | Schleife in der App (D-486) | 72,8 KB | 73,2 KB | 12,1 KB | 5,2 KB | 163,2 KB |
+| 10 | B | Seitheben mit Kurzhanteln | Schleife in der App (D-469) | 48,8 KB | 47,5 KB | 7,0 KB | 3,1 KB | 106,3 KB |
+| 11 | B | Crunches | Schleife in der App (D-467) | 57,6 KB | 48,8 KB | 12,7 KB | 4,2 KB | 123,3 KB |
+| | | **zusammen** | | | | | | **1.254,6 KB** |
+
+Übersichtsbild: `docs/screens/uebungen/ganzkoerper-ab-uebersicht.webp`, das Poster jeder Übung in Player-Größe (390 × 292 px, wie der große Player am iPhone). Die Liste entsteht mit `python3 tools/uebungen_programm_uebersicht.py compound_ab_4 --name ganzkoerper-ab`.
+
+Jetzt halte ich an: Du machst den Gerätetest von „Ganzkörper A/B“, danach entscheiden wir über den Merge von #54.
+
+```
+Arbeitspaket: D-493 Phase Programme, Übersicht „Ganzkörper A/B“
+Umgesetzte Funktionen: keine in der App; Werkzeug: Übersicht eines Programms (Liste mit Stand und Dateigrößen, Bild in Player-Größe); erfüllte AK: –
+Geänderte Dateien: tools/uebungen_programm_uebersicht.py (neu), docs/screens/uebungen/ganzkoerper-ab-uebersicht.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-493
+Ausgeführte Tests: Werkzeug ausgeführt, Bild angesehen; bestanden; Startansicht 237,8 KB, Übungsbilder 52 von 52
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Gerätetest von „Ganzkörper A/B“ durch den Produktinhaber, danach Entscheidung über den Merge von #54
+```

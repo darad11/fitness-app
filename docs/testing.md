@@ -3031,3 +3031,12 @@ Ausgangslage mit Griffen zwischen Kinn und Ohr, Schleife und Eintrag in der App 
 | `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 13, ohne Visual 111; Animationsplan und Familien neu geschrieben |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; „public/uebungen/medien.json: 13 Einträge geprüft“; Startansicht 237,8 KB, Übungsbilder 52 von 52 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,5 min); der geänderte Test der Übungsliste (13 Vorschaubilder, dazu das Schulterdrücken an der Maschine) bestanden |
+
+### Übersicht „Ganzkörper A/B“ · 01.11.2026, Cloud-Umgebung
+
+Liste aller elf Übungen mit Stand und Dateigrößen, Bild in Player-Größe (D-493).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/uebungen_programm_uebersicht.py compound_ab_4 --name ganzkoerper-ab` | elf Übungen in der Reihenfolge der Tage (A: 5, B: 6), alle „Schleife in der App“, zusammen 1.254,6 KB; `ganzkoerper-ab-uebersicht.webp` (98 KB, 1600 × 1118), angesehen |
+| `python3 -m py_compile tools/uebungen_programm_uebersicht.py`, `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 52 von 52 |

@@ -540,3 +540,62 @@ describe('Wiedergabe der Schleife (D-497)', () => {
     expect(fake.playing(video)).toBe(false);
   });
 });
+
+describe('Karte „Jetzt“ im schmalen Player (D-498)', () => {
+  const props = { name: 'Kniebeuge', muscles: [] as const, variant: 'compact' as const };
+
+  it('mit Schleife: läuft klein im Seitenverhältnis des Videos, Tippen öffnet die Übungsinfo', async () => {
+    serve(media('loop'));
+    reducedMotion(false);
+    const fake = fakeMedia();
+    const onOpen = vi.fn();
+    const { container } = render(
+      <ExerciseDemo exerciseId={SQUAT} {...props} endless onOpen={onOpen} />,
+    );
+    const video = await waitFor(() =>
+      need(container.querySelector<HTMLVideoElement>('[data-demo-compact] video')),
+    );
+    expect(video.getAttribute('src')).toBe('/uebungen/medien/back_squat_barbell.mp4');
+    expect(fake.playing(video)).toBe(true);
+    expect(video.loop).toBe(true);
+    const frame = need(container.querySelector<HTMLElement>('[data-demo-compact]'));
+    expect(frame.style.aspectRatio).toBe('640 / 480');
+    expect(frame.className).toContain('w-28');
+    // Kein zweiter Knopf im Knopf: Tippen öffnet die Übungsinfo.
+    expect(screen.queryByRole('button', { name: 'Animation wiederholen' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Kniebeuge: Ausführung und Angaben' }));
+    expect(onOpen).toHaveBeenCalledTimes(1);
+  });
+
+  it('bei weniger Bewegung das Standbild im selben Rahmen, ohne Video', async () => {
+    serve(media('loop'));
+    reducedMotion(true);
+    const { container } = render(<ExerciseDemo exerciseId={SQUAT} {...props} endless />);
+    await waitFor(() => {
+      expect(srcs(container)).toEqual(['/uebungen/medien/back_squat_barbell-poster.webp']);
+    });
+    expect(container.querySelector('[data-demo-compact]')).not.toBeNull();
+    expect(container.querySelector('video')).toBeNull();
+  });
+
+  it('ohne Schleife wie bisher das Vorschaubild', async () => {
+    serve(media('phases'));
+    reducedMotion(false);
+    const { container } = render(<ExerciseDemo exerciseId={SQUAT} {...props} />);
+    await waitFor(() => {
+      expect(srcs(container)).toEqual(['/uebungen/medien/back_squat_barbell-vorschau.webp']);
+    });
+    expect(container.querySelector('[data-demo-compact]')).toBeNull();
+  });
+
+  it('Vorschaubild neben „Danach:“ 32 px, stumm', async () => {
+    serve(media('loop'));
+    const { container } = render(<ExerciseThumb exerciseId={GOBLET} size="mini" />);
+    const tile = await waitFor(() => need(container.querySelector('[data-visual="bild"]')));
+    expect(tile.className).toContain('size-8');
+    expect(tile.querySelector('img')?.getAttribute('alt')).toBe('');
+    expect(tile.querySelector('img')?.getAttribute('src')).toBe(
+      '/uebungen/medien/goblet_squat-vorschau.webp',
+    );
+  });
+});

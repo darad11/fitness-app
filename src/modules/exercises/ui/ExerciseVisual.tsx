@@ -16,7 +16,7 @@ import {
 } from '../data/media';
 import type { Muscle } from '../model/exercise';
 import type { ExerciseVisual as Visual, MediaFile } from '../model/media';
-import { SymbolTile, type TileLook } from './SymbolTile';
+import { SymbolTile, tileSize, type TileLook } from './SymbolTile';
 import { useLoopPlayback } from './useLoopPlayback';
 import './exercise-media.css';
 
@@ -82,8 +82,10 @@ function neededFiles(
   variant: 'large' | 'compact' | 'thumb',
 ): MediaFile[] {
   if (!visual) return [];
-  if (variant !== 'large') return [visual.preview];
   const demo = visual.demo;
+  const loop = demo?.kind === 'animation' && isVideo(demo.file);
+  // Kompakt läuft die Schleife selbst, sonst steht dort wie in Listen das Vorschaubild (D-498).
+  if (variant === 'thumb' || (variant === 'compact' && !loop)) return [visual.preview];
   if (demo?.kind === 'animation')
     return isVideo(demo.file) ? [demo.still, loopFile(demo)] : [demo.still, demo.file];
   return demoFiles(visual);
@@ -151,7 +153,7 @@ function Thumb({
       className={cn(
         'block shrink-0 overflow-hidden bg-surface shadow-[inset_0_0_0_1px_var(--border)]',
         circle ? 'rounded-full' : 'rounded-tile',
-        size === 'small' ? 'size-tile' : 'size-thumb',
+        tileSize(size),
         className,
       )}
     >
@@ -172,7 +174,10 @@ export interface ExerciseDemoProps {
   name: string;
   /** Hauptmuskeln für den Rückfall ohne Visual (Etiketten neben dem Symbol). */
   muscles: readonly Muscle[];
-  /** `large`: Player aufgeklappt, Übungsdetails, Übungsinfo; `compact`: Karte „Jetzt“ schmal. */
+  /**
+   * `large`: Player aufgeklappt, Übungsdetails, Übungsinfo; `compact`: Karte „Jetzt“ schmal, die
+   * laufende Schleife klein (D-498).
+   */
   variant: 'large' | 'compact';
   /** Antippen öffnet die Übungsinfo (Player). Ohne: nur Anzeige. */
   onOpen?: () => void;
@@ -239,17 +244,7 @@ function Demo({
         </span>
       );
   } else if (variant === 'compact') {
-    body = (
-      <span className="block size-thumb shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]">
-        <Img
-          file={visual.preview}
-          alt={visual.alt}
-          eager
-          className="size-full object-contain"
-          onError={fail}
-        />
-      </span>
-    );
+    body = <CompactDemo visual={visual} endless={endless} onError={fail} />;
   } else {
     body = (
       <LargeDemo
@@ -349,6 +344,59 @@ function LoopVideo({
         </button>
       ) : null}
     </>
+  );
+}
+
+/**
+ * Kompakt in der Karte „Jetzt“ (Player schmal: iPhone, Duo zugeklappt). Mit Schleife läuft sie hier
+ * klein mit (D-498), im Seitenverhältnis des Videos, 7 rem breit statt des Vorschaubilds von
+ * 3,5 rem; bei weniger Bewegung ihr Standbild. Ohne Schleife das Vorschaubild wie bisher.
+ */
+function CompactDemo({
+  visual,
+  endless,
+  onError,
+}: {
+  visual: Visual;
+  endless: boolean;
+  onError: () => void;
+}) {
+  const reduced = useReducedMotion();
+  const demo = visual.demo;
+  if (demo?.kind === 'animation' && isVideo(demo.file)) {
+    const media = 'absolute inset-0 size-full object-cover';
+    return (
+      <span
+        data-demo-frame=""
+        data-demo-compact=""
+        style={{ aspectRatio: `${String(demo.file.width)} / ${String(demo.file.height)}` }}
+        className="relative block w-28 shrink-0 overflow-hidden rounded-tile bg-media"
+      >
+        {reduced ? (
+          <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />
+        ) : (
+          <LoopVideo
+            demo={demo}
+            alt={visual.alt}
+            className={media}
+            endless={endless}
+            replayable={false}
+            onError={onError}
+          />
+        )}
+      </span>
+    );
+  }
+  return (
+    <span className="block size-thumb shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]">
+      <Img
+        file={visual.preview}
+        alt={visual.alt}
+        eager
+        className="size-full object-contain"
+        onError={onError}
+      />
+    </span>
   );
 }
 

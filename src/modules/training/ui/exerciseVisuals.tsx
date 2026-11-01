@@ -8,23 +8,37 @@ import { cn } from '@/shared/lib/cn';
  * „exercises“; bis dahin steht hier das Symbol in der Kachel, gleich groß wie das Vorschaubild,
  * damit beim ersten Laden nichts springt. Liegt nur in nachgeladenen Seiten.
  */
-function Placeholder({ className, small }: { className?: string; small?: boolean }) {
+const SIZES = {
+  list: 'size-thumb',
+  small: 'size-tile',
+  mini: 'size-8',
+  // Kompakte Demonstration in „Jetzt“: 7 rem breit im Seitenverhältnis der Schleifen (D-498).
+  compact: 'w-28 aspect-[4/3]',
+} as const;
+
+function Placeholder({
+  className,
+  size = 'list',
+}: {
+  className?: string;
+  size?: keyof typeof SIZES;
+}) {
   return (
     <span
       className={cn(
         'flex shrink-0 items-center justify-center rounded-tile bg-surface-2 text-fg',
-        small ? 'size-tile' : 'size-thumb',
+        SIZES[size],
         className,
       )}
     >
-      <Dumbbell aria-hidden="true" className="size-6" />
+      <Dumbbell aria-hidden="true" className={size === 'mini' ? 'size-4' : 'size-6'} />
     </span>
   );
 }
 
 export function Thumb(props: ComponentProps<typeof ExerciseThumb>) {
   return (
-    <Suspense fallback={<Placeholder className={props.className} small={props.size === 'small'} />}>
+    <Suspense fallback={<Placeholder className={props.className} size={props.size} />}>
       <ExerciseThumb {...props} />
     </Suspense>
   );
@@ -33,7 +47,11 @@ export function Thumb(props: ComponentProps<typeof ExerciseThumb>) {
 export function Demo(props: ComponentProps<typeof ExerciseDemo>) {
   return (
     <Suspense
-      fallback={props.variant === 'compact' ? <Placeholder className={props.className} /> : null}
+      fallback={
+        props.variant === 'compact' ? (
+          <Placeholder className={props.className} size="compact" />
+        ) : null
+      }
     >
       <ExerciseDemo {...props} />
     </Suspense>

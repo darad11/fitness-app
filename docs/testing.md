@@ -3104,3 +3104,15 @@ Start im Player, zwei Durchläufe und Wiederholen in Übungsinfo und Details, MP
 | `tokens.test.ts` | Symbol `--media-control-fg` auf `--media-control` über `--media-bg` und über Weiß ≥ 4,5:1, beide Modi |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.235 Tests; Startansicht 238,6 KB (vorher 238,5 KB), Übungsbilder 52 von 52 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 446 bestanden, 138 übersprungen, keiner fehlgeschlagen (21,6 min, parallel zu einer Messung in Blender) |
+
+### Karte „Jetzt“ · 01.11.2026, Cloud-Umgebung
+
+Vorschaubild der nächsten Übung neben „Danach:“, schmal laufende Schleife der aktuellen Übung (D-498).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probe in Chromium (390 × 844, 382 × 678, 867 × 669) | kleine Schleife 112 × 84 px, läuft (iPhone, zugeklappt); aufgeklappt ausgeblendet und angehalten; „Danach:“ mit Vorschaubild der Kurzhantel-Bankdrücken, 32 × 32 px; aktueller Satz bis 575 px, Fußleiste ab 767 bzw. 601 px |
+| Unit-Tests `exercise-visual.test.tsx` (4 neu: Schleife kompakt läuft im Seitenverhältnis, kein Knopf im Knopf, Tippen öffnet; weniger Bewegung Standbild; ohne Schleife Vorschaubild; Kachel 32 px stumm) | 25 bestanden |
+| `e2e/player-jetzt.spec.ts` (neu, 4 Tests, Handy-Profil) | 4 bestanden; erster Lauf: 1 Fehlschlag im Test selbst (nach dem Wechsel scrollt der Player zum nächsten Satz, „Jetzt“ lag außerhalb des Bilds, die Schleife stand dort wie gewollt); der Test scrollt jetzt zurück und prüft auch das Anhalten außerhalb des Bilds |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.239 Tests; Startansicht 238,6 KB, Übungsbilder 52 von 52; erster Lauf von `pnpm typecheck` mit einem Typfehler im neuen Unit-Test (`querySelector` ohne Elementtyp), behoben |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 449 bestanden, 142 übersprungen, 1 fehlgeschlagen (22,4 min, parallel zu einer Rechnung in Blender, Last um 14 auf 4 Kernen): der Zeittest der Startfläche „beim schnellen Start“ (`start-surface.spec.ts:579`, „Heute“ nach 1.364 ms statt unter 1.143 ms bereit); er berührt den Player nicht. Einzeln wiederholt ohne die Rechnung: 3 von 3 bestanden |

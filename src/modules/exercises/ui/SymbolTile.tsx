@@ -29,17 +29,23 @@ function DumbbellIcon() {
   );
 }
 export interface TileLook {
-  /** `list`: 56 px in Listen; `small`: 40 px wie die Symbol-Kachel (Karten im Training). */
-  size?: 'list' | 'small';
+  /**
+   * `list`: 56 px in Listen; `small`: 40 px wie die Symbol-Kachel (Karten im Training); `mini`:
+   * 32 px neben einer Textzeile („Danach:“ in der Karte „Jetzt“, D-498).
+   */
+  size?: 'list' | 'small' | 'mini';
   /** Fläche darunter: auf `card` liegt die Kachel auf card-2, auf `card-2` umgekehrt. */
   on?: 'card' | 'card-2';
 }
 
+const TILE_SIZES = { list: 'size-thumb', small: 'size-tile', mini: 'size-8' } as const;
+
+export function tileSize(size: TileLook['size'] = 'list'): string {
+  return TILE_SIZES[size];
+}
+
 export function tileClasses({ size = 'list', on = 'card' }: TileLook): string {
-  return cn(
-    size === 'small' ? 'size-tile' : 'size-thumb',
-    on === 'card-2' ? 'bg-surface' : 'bg-surface-2',
-  );
+  return cn(tileSize(size), on === 'card-2' ? 'bg-surface' : 'bg-surface-2');
 }
 
 export function SymbolTile({ className, ...look }: TileLook & { className?: string }) {

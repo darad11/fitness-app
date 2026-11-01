@@ -1843,3 +1843,22 @@ Bekannte Einschränkungen: am Gerät nicht prüfbar; im Stromsparmodus startet d
 Nächste Schritte: D-498 Karte „Jetzt“, D-499 Details breit, D-500 Messung
 ```
 
+## 40. Karte „Jetzt“: nächste Übung und laufende Animation (D-498)
+
+- Neben „Danach:“ steht jetzt ein kleines Vorschaubild der nächsten Übung (32 px), am iPhone, am Duo zugeklappt und aufgeklappt.
+- Am iPhone und am Duo zugeklappt läuft in „Jetzt“ die Animation der aktuellen Übung klein mit, statt des Standbilds: 112 × 84 px statt 56 × 56 px, im Seitenverhältnis der Videos. Ein Tippen öffnet wie bisher die Übungsinfo mit großer Animation und Ausführung.
+- Aufgeklappt bleibt die kleine Animation aus; dort läuft die große in der rechten Spalte.
+- Scrollst du zu den Sätzen, sodass „Jetzt“ nicht mehr im Bild ist, hält die kleine Animation an und läuft weiter, sobald die Karte wieder zu sehen ist. Das spart Akku.
+- Der aktuelle Satz bleibt am iPhone und zugeklappt über der Fußleiste (gemessen: Satz bis 575 px, Fußleiste ab 767 bzw. 601 px).
+
+```
+Arbeitspaket: D-498 Phase Programme, Karte „Jetzt“
+Umgesetzte Funktionen: Vorschaubild der nächsten Übung neben „Danach:“; schmal laufende Schleife der aktuellen Übung in „Jetzt“, Tippen öffnet die Übungsinfo; erfüllte AK: –
+Geänderte Dateien: src/modules/exercises/ui/ExerciseVisual.tsx, src/modules/exercises/ui/SymbolTile.tsx, src/modules/training/ui/exerciseVisuals.tsx, src/modules/training/ui/player/SessionPage.tsx, Tests (exercise-visual.test.tsx, e2e/player-jetzt.spec.ts neu), Dokumentation
+Technische Entscheidungen: D-498
+Ausgeführte Tests: format:check, lint, typecheck, test, check:docs, build, check:bundle, test:e2e Chromium
+Ergebnis: bestanden bis auf den Zeittest der Startfläche unter Last (einzeln 3 von 3 bestanden); WebKit läuft in der CI
+Bekannte Einschränkungen: am Gerät nicht geprüft
+Nächste Schritte: D-499 Details breit, D-500 Messung und Vorschlag
+```
+

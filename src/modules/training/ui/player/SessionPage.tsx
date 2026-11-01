@@ -505,12 +505,14 @@ function Player({ session, light }: { session: Session; light: boolean }) {
               >
                 {/* Schmal kompakt rechts, der Text fließt darum (D-397): Das Bild nimmt dem Namen
                     nur in den ersten Zeilen Breite, die Karte wird kaum höher, der Satz bleibt über
-                    der Fußleiste. Antippen öffnet die Übungsinfo. */}
+                    der Fußleiste. Die Schleife läuft hier klein mit (D-498); Antippen öffnet die
+                    Übungsinfo mit großer Animation und Ausführung. */}
                 <Demo
                   exerciseId={currentExercise.exerciseId}
                   name={currentExercise.nameSnapshot}
                   muscles={currentEntry?.primaryMuscles ?? []}
                   variant="compact"
+                  endless
                   className="player-now-demo float-right mb-1 ml-3"
                   onOpen={() => {
                     setInfo(currentExercise);
@@ -539,11 +541,18 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 {currentExercise.notes ? (
                   <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
                 ) : null}
-                <p className="mt-3 text-sm text-muted">
-                  {nextExercise
-                    ? tSession.nextExercise(nextExercise.nameSnapshot)
-                    : tSession.lastExercise}
-                </p>
+                {/* Neben „Danach:“ ein kleines Vorschaubild der nächsten Übung (D-498); der Name
+                    steht daneben, das Bild ist für Screenreader stumm. */}
+                {nextExercise ? (
+                  <p className="player-next-line mt-3 flex items-center gap-2 text-sm text-muted">
+                    <Thumb exerciseId={nextExercise.exerciseId} size="mini" />
+                    <span className="min-w-0">
+                      {tSession.nextExercise(nextExercise.nameSnapshot)}
+                    </span>
+                  </p>
+                ) : (
+                  <p className="mt-3 text-sm text-muted">{tSession.lastExercise}</p>
+                )}
               </section>
             ) : null}
             {!restTimer && !current && exercises.length > 0 ? (

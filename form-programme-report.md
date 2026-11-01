@@ -1883,3 +1883,57 @@ Bekannte Einschränkungen: am Gerät nicht geprüft
 Nächste Schritte: D-500 Messung und Vorschlag zur Größe der Figur
 ```
 
+
+## 42. Gleich große Animation im Player: Rahmen und Figur (D-500)
+
+Du hattest geschrieben, die Animationen wirken im Training nicht alle gleich groß. Gemessen habe ich zwei Dinge: den Rahmen der Animation im Player und die Figur im Bild.
+
+**Rahmen.** Gemessen in „Ganzkörper A/B“, Tag A und B mit allen Sätzen, am ersten Satz jeder Übung, dazu mit laufendem Timer (Unterarmstütz) und in der Pause. Fenster und sichere Bereiche wie am Gerät gemessen (D-393). Ungleich war der Rahmen nur am Duo quer: Dort bekommt die Animation die Höhe, die neben Kopf und „Jetzt“ bleibt, und „Jetzt“ war je nach Länge von Name und Angaben 146 bis 226 px hoch.
+
+| Fenster | vorher, elf Übungen | jetzt, elf Übungen |
+|---|---|---|
+| iPhone 390 × 844 | 112 × 84 | 112 × 84 |
+| iPhone quer 844 × 390 | 96 × 72 | 96 × 72 |
+| Duo zugeklappt 382 × 678 | 96 × 72 | 96 × 72 |
+| Duo hoch 669 × 869 | 112 × 84 | 112 × 84 |
+| Duo quer beim Start 867 × 669 | 220,2 × 165,1 bis 326,3 × 244,7, mit Timer 241 × 180,7 | 273,5 × 205,1, auch mit Timer |
+| Duo quer im Training (Streifen oben) 867 × 587 | 110,8 × 83,1 bis 217 × 162,7, mit Timer 131,6 × 98,7 | 164,2 × 123,1, auch mit Timer |
+| iPad 1180 × 820, Computer 1440 × 900 | 336 × 252 | 336 × 252 |
+
+- Am Duo quer ist „Jetzt“ jetzt immer gleich hoch (186 px): Name etwas kleiner mit Platz für zwei Zeilen, Angaben mit Platz für zwei Zeilen, „Danach:“ in einer Zeile mit kleinerem Bild (24 px), „Letzte Übung“ gleich hoch; der laufende Satz-Timer steht an der Stelle von „Danach:“ und ist dort 1,5 statt 3,5 rem groß. Die Notiz steht links in der Karte der Übung.
+- Gekürzt wird in keiner der elf Übungen etwas, auch nicht mit Vorwerten aus einem früheren Training. Nur „Danach:“ endet bei zwei langen Namen mit „…“ (Schulterdrücken an der Maschine, Schrägbankdrücken mit Kurzhanteln); ganz stehen sie links.
+- Gleich groß heißt am Duo quer: größer als vorher bei sechs Übungen, kleiner bei fünf mit kurzem Namen (Beinpresse, Unterarmstütz, Latziehen, Beinbeuger, Crunches).
+- In der Pause steht statt „Jetzt“ die Pausenanzeige; der Rahmen ist dann in allen elf Übungen 284,7 × 213,5 bzw. 175,4 × 131,5 px, wie bisher etwas größer als im Satz.
+- **Zur Entscheidung:** Im Fenster mit dem Streifen oben bleibt die Animation klein (164 × 123 px). Kopf und „Jetzt“ brauchen dort 322 der 476 px der rechten Spalte. Stünde der Kopf (Programm, Fortschritt, „Beenden“) im niedrigen Fenster links über der Liste, hätte die Animation in beiden Querlagen ihre volle Größe 336 × 252 px. Das ist gerechnet, nicht gebaut; links wäre die Liste dafür 135 px kürzer. Sag mir, ob ich das umsetzen soll.
+
+**Figur.** Gemessen in Blender mit der Kamera jeder Schleife, in jedem zweiten Bild, über alle Punkte von Körper, Kleidung und Schuhen. „Maßstab“ heißt: so viele Pixel ist ein Meter an der Mitte der Figur im Bild 720 × 540. Gleicher Maßstab heißt gleich groß wirkende Figur, auch wenn sie liegt.
+
+| Übung | Maßstab jetzt (px/m) | Figur jetzt hoch × breit (px im Bild) | davon im Player, Duo quer (px hoch) | kleinster Rand (px) | Vorschlag: Faktor | Figur danach hoch (px) | Geräte angeschnitten |
+|---|---|---|---|---|---|---|---|
+| Beinpresse | 279 | 292 × 386 | 111 | 58 | 0,97 | 286 | ja |
+| Bankdrücken mit Kurzhanteln | 289 | 491 × 372 | 187 | 7 | 0,94 | 456 | nein |
+| Rudern am Kabel, sitzend | 330 | 339 × 331 | 129 | 10 | 0,82 | 267 | ja |
+| Schulterdrücken an der Maschine | 286 | 517 × 262 | 196 | 7 | 0,95 | 486 | ja |
+| Unterarmstütz (Plank) | 379 | 228 × 692 | 86 | 7 | 0,71 | 154 | nein |
+| Rumänisches Kreuzheben mit Kurzhanteln | 284 | 522 × 252 | 198 | 7 | 0,95 | 496 | nein |
+| Latziehen | 288 | 521 × 247 | 198 | 3 | 0,94 | 488 | ja |
+| Schrägbankdrücken mit Kurzhanteln | 273 | 497 × 344 | 189 | 7 | 0,99 | 491 | nein |
+| Beinbeuger liegend | 412 | 405 × 713 | 154 | −9 | 0,66 | 265 | ja |
+| Seitheben mit Kurzhanteln | 291 | 521 × 441 | 198 | 9 | 0,93 | 483 | nein |
+| Crunches | 493 | 324 × 686 | 123 | 17 | 0,55 | 174 | nein |
+
+- Der Maßstab reicht von 273 bis 493 px/m: Die Figur in Crunches wirkt 1,8-mal so groß wie beim Schrägbankdrücken. Bisher passt die Kamera Figur und Gerät zusammen ins Bild ein; liegende und flache Übungen sind niedriger, die Kamera kommt näher.
+- Beim Beinbeuger ragt die Figur in einem Teil der Bewegung 9 px über den rechten Rand. Das widerspricht deiner Regel „die Figur nie“ schon heute.
+- **Vorschlag:** ein Maßstab für alle elf, 271 px/m. Das ist der größte, bei dem jede Figur in jedem Bild mit 4 % Rand ganz im Bild bleibt; die Grenze setzt das Rumänische Kreuzheben (stehend, fast bildhoch). Die Kamera behält Richtung und Neigung, zielt auf die Mitte der Figur und steht überall 3,69 m entfernt. Stehende Figuren werden dadurch kaum kleiner (0,93 bis 0,99), liegende und sitzende deutlich (Crunches 0,55, Beinbeuger 0,66, Unterarmstütz 0,71, Rudern 0,82). Geräte sind am Rand angeschnitten bei Beinpresse, Rudern, Schulterdrücken, Latziehen und Beinbeuger, die Figur nirgends.
+- Das Vergleichsblatt zeigt je Übung das Bild jetzt und mit dem Vorschlag, mit dem Rahmen der Figur über die ganze Bewegung: `docs/screens/uebungen/groesse-vorschlag.webp`. Neu gerendert wird erst nach deiner Freigabe; die Kameras dafür rechnet `tools/uebungen-3d/figur_vorschlag.py`.
+
+```
+Arbeitspaket: D-500 Phase Programme, Größe der Animation im Player
+Umgesetzte Funktionen: Rahmen der Animation im Player in jeder Übung gleich groß (Duo quer: „Jetzt“ gleich hoch, auch mit Timer und bei „Letzte Übung“); Messung der Figur in allen elf Schleifen; Vorschlag gemeinsamer Maßstab 271 px/m mit Vergleichsblatt; erfüllte AK: –
+Geänderte Dateien: src/modules/training/ui/player/SessionPage.tsx, src/modules/training/ui/player/player-layout.css, Tests (e2e/uebungen-wiedergabe.spec.ts, e2e/player-jetzt.spec.ts), tools/player-rahmen-messen.mjs (neu), tools/uebungen-3d/figur_messen.py (neu), tools/uebungen-3d/figur_vorschlag.py (neu), docs/screens/uebungen/groesse-vorschlag.webp (neu), Dokumentation
+Technische Entscheidungen: D-500
+Ausgeführte Tests: format:check, lint, typecheck, test (1.245), check:docs, build, check:bundle (238,9 KB), test:e2e Chromium (456 bestanden), Player-Tests nach dem letzten Schritt (64 bestanden), Gegenprobe am alten Stand, Messungen mit `tools/player-rahmen-messen.mjs` und in Blender
+Ergebnis: bestanden; WebKit läuft in der CI
+Bekannte Einschränkungen: am Gerät nicht geprüft; Figur noch nicht neu gerendert (Freigabe offen); Animation im Fenster mit Streifen 164 × 123 px (Vorschlag Kopf links offen)
+Nächste Schritte: Freigabe des Maßstabs und der Lage des Kopfs durch den Produktinhaber
+```

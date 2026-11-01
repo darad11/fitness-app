@@ -132,5 +132,7 @@ test('Duo aufgeklappt: die kleine Schleife ist aus und läuft nicht, die große 
   await expect.poll(() => playhead(big), { timeout: 10_000 }).toBeGreaterThan(0.2);
   await page.waitForTimeout(500);
   expect(await playhead(now.locator('[data-demo-compact] video'))).toBe(-1);
-  await expectNextThumb(now, 'bankdruecken_kh', 'Bankdrücken mit Kurzhanteln');
+  // Niedriges Fenster (unter 45 rem): auch in zwei Spalten 24 px, damit „Jetzt“ flach bleibt
+  // und die Animation darüber mehr Platz hat (D-500).
+  await expectNextThumb(now, 'bankdruecken_kh', 'Bankdrücken mit Kurzhanteln', 24);
 });

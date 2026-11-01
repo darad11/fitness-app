@@ -505,6 +505,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
               <section
                 aria-label={tSession.now}
                 className="player-now stage mb-4 rounded-card p-card text-fg"
+                data-timer-laeuft={setTimer?.setId === current.id ? '' : undefined}
               >
                 {/* Schmal kompakt rechts, der Text fließt darum (D-397): Das Bild nimmt dem Namen
                     nur in den ersten Zeilen Breite, die Karte wird kaum höher, der Satz bleibt über
@@ -522,27 +523,34 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   }}
                 />
                 <p className="eyebrow text-muted">{tSession.now}</p>
-                <p className="player-now-name mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
-                  {currentExercise.nameSnapshot}
-                </p>
-                <p className="mt-1 text-muted">
-                  {[
-                    `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
-                    currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
-                    currentPrevious
-                      ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
-                </p>
+                <div className="player-now-text">
+                  <p className="player-now-name mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
+                    {currentExercise.nameSnapshot}
+                  </p>
+                  <p className="player-now-info mt-1 text-muted">
+                    {[
+                      `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
+                      currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
+                      currentPrevious
+                        ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                </div>
                 {setTimer?.setId === current.id ? (
-                  <p className="mt-2 text-timer font-semibold tabular-nums" role="timer">
+                  <p
+                    className="player-now-timer mt-2 text-timer font-semibold tabular-nums"
+                    role="timer"
+                  >
                     {formatClock(timerElapsed)}
                   </p>
                 ) : null}
                 {currentExercise.notes ? (
-                  <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
+                  <p className="player-now-notes mt-2 text-sm text-muted">
+                    {currentExercise.notes}
+                  </p>
                 ) : null}
                 {/* Neben „Danach:“ ein kleines Vorschaubild der nächsten Übung (D-498); der Name
                     steht daneben, das Bild ist für Screenreader stumm. */}
@@ -554,7 +562,9 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                     </span>
                   </p>
                 ) : (
-                  <p className="mt-3 text-sm text-muted">{tSession.lastExercise}</p>
+                  <p className="player-last-line mt-3 text-sm text-muted">
+                    {tSession.lastExercise}
+                  </p>
                 )}
               </section>
             ) : null}

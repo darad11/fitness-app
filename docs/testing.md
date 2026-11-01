@@ -3132,3 +3132,20 @@ Animation und Muskelkarte nebeneinander ab 40 rem Breite, gleich hoch (D-499).
 | Unit-Tests `breakpoints.test.ts` (neu, 2: folgt dem Fenster beim Auf- und Zuklappen, ab genau 640 px), `muscle-map.test.tsx` (1 neu) | bestanden |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 138 Dateien, 1.242 Tests; Startansicht 238,9 KB (vorher 238,6 KB, `useAtLeast` in `breakpoints.ts`), Übungsbilder 52 von 52; erster Lauf von `pnpm format:check` meldete die neue Testdatei, formatiert |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 455 bestanden, 147 übersprungen, keiner fehlgeschlagen (24,4 min, parallel zu Standbildern in Blender) |
+
+### Größe der Animation im Player · 01.11.2026, Cloud-Umgebung
+
+Rahmen der Animation in jeder Übung gleich groß, Figur in allen elf Schleifen gemessen, Vorschlag zum Maßstab (D-500).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/player-rahmen-messen.mjs` (neu; „Ganzkörper A/B“ Tag A und B mit allen Sätzen, am ersten Satz jeder Übung, mit Timer und in der Pause; acht Fenster mit sicheren Bereichen wie am Gerät), alter Stand `69807ab` | iPhone 390 × 844 und Duo hoch 669 × 869 überall 112 × 84, Duo zugeklappt und iPhone quer überall 96 × 72, iPad 1180 × 820 und Computer 1440 × 900 überall 336 × 252; Duo quer 867 × 669 sechs Größen von 220,2 × 165,1 bis 326,3 × 244,7 („Jetzt“ 146 bis 226 px), 867 × 587 von 110,8 × 83,1 bis 217 × 162,7; mit laufendem Timer 241 × 180,7 bzw. 131,6 × 98,7; Pause 284,7 × 213,5 bzw. 175,4 × 131,5 |
+| dasselbe, neuer Stand | Duo quer 867 × 669 überall 273,5 × 205,1, 867 × 587 überall 164,2 × 123,1, „Jetzt“ überall 186 px, auch mit Timer und bei „Letzte Übung“; die übrigen Fenster und die Pause unverändert |
+| dasselbe mit Vorwerten (`RUNDEN=2`, Duo quer in beiden Höhen) | Rahmen und „Jetzt“ wie oben; Name höchstens zwei Zeilen, Angaben zwei Zeilen, nichts gekürzt; „Danach:“ endet bei zwei Namen mit „…“ |
+| Erster Entwurf mit gleich hohem „Jetzt“ auch in hohen Fenstern (867 × 669 ohne sicheren Bereich gemessen) | `duo-player-befunde.spec.ts:328` rot: bei 1180 × 820 kein ganzer Eintrag in „Als Nächstes“; jetzt gilt die Regel nur im niedrigen Fenster |
+| `tools/uebungen-3d/figur_messen.py` (neu, Blender 4.2 über `bpy`, alle elf Schleifen) | Maßstab 273 bis 493 px/m, Figur 228 bis 522 px hoch; Beinbeuger 9 px über dem rechten Rand; Gegenprobe der Projektion mit `world_to_camera_view` auf 0,05 px |
+| `tools/uebungen-3d/figur_vorschlag.py` (neu; größter Maßstab mit 4 % Rand je Übung, dann gemeinsam 271 px/m mit Standbild) | größter Maßstab je Übung 271,2 (Rumänisches Kreuzheben) bis 476,1 px/m (Crunches); mit 271 px/m passt jede Figur in jedem Bild, Faktor 0,55 bis 0,99, Geräte bei fünf Übungen angeschnitten; Vergleichsblatt `docs/screens/uebungen/groesse-vorschlag.webp` |
+| `e2e/uebungen-wiedergabe.spec.ts` (alle elf Übungen: Rahmen gleich; neu: Tag A mit allen Sätzen, Rahmen und „Jetzt“ gleich mit Timer und bei „Letzte Übung“), `e2e/player-jetzt.spec.ts` (aufgeklappt Vorschaubild 24 px) | bestanden; Gegenprobe am alten Stand `69807ab`: beide Rahmen-Tests rot (Rahmen im Test 238,8 × 179,1 bis 328,4 × 246,3, mit Timer 259,6 × 194,7) |
+| Player-Tests (`uebungen-wiedergabe`, `player-jetzt`, `duo-player`, `duo-player-befunde`, `duo-tastatur`, `uebungen`, `uebungen-details-breit`, Chromium) | 64 bestanden, 44 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 139 Dateien, 1.245 Tests; Startansicht 238,9 KB, Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 456 bestanden, 148 übersprungen, keiner fehlgeschlagen (20,0 min), am Stand vor dem flacheren „Jetzt“ (24-px-Bild, Zeilenhöhe); danach die Player-Tests wie oben |

@@ -139,17 +139,29 @@ async function endSession(page: Page) {
 test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () => {
   test.skip(({ isMobile }) => !isMobile, 'Handy-Profil');
 
-  test('startet von selbst nach dem Start und nach jedem Wechsel, alle elf Übungen, ohne `autoplay`', async ({
+  test('startet von selbst nach dem Start und nach jedem Wechsel, alle elf Übungen, ohne `autoplay`, Rahmen überall gleich', async ({
     page,
   }) => {
     test.slow();
     await page.addInitScript(AUTOPLAY_IGNORED);
     await setDuoPose(page, 'auf');
+    // Rahmen der Animation je Übung (D-500): überall gleich groß.
+    const frames: string[] = [];
+    const frameSize = async (stem: string) => {
+      const b = await page
+        .getByRole('region', { name: 'Ausführung der aktuellen Übung' })
+        .locator('[data-demo-frame]')
+        .boundingBox();
+      frames.push(`${stem} ${b ? `${b.width.toFixed(1)} × ${b.height.toFixed(1)}` : 'fehlt'}`);
+      return b ? `${b.width.toFixed(1)} × ${b.height.toFixed(1)}` : 'fehlt';
+    };
+    const sizes = new Set<string>();
     for (const [day, stems] of DAYS.entries()) {
       await startDay(page, day === 0);
       const video = demoVideo(page);
       const first = stems[0] ?? '';
       await expectPlaying(video, first, `Tag ${String(day + 1)}: ${first} nach dem Start`);
+      sizes.add(await frameSize(first));
       // MP4 (H.264) vor WebM, wo der Browser H.264 kann.
       expect(await playingFile(video)).toMatch(medium(first, await loopExt(page)));
       for (const stem of stems.slice(1)) {
@@ -158,9 +170,68 @@ test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () =>
         await expectPlaying(video, stem, `nach dem Wechsel zu ${stem}`);
         await page.getByRole('button', { name: 'Pause überspringen' }).first().click();
         await expectPlaying(video, stem, `${stem} nach der Pause`);
+        sizes.add(await frameSize(stem));
       }
       await endSession(page);
     }
+    expect(sizes.size, `Rahmen je Übung: ${frames.join('; ')}`).toBe(1);
+  });
+
+  test('Rahmen und „Jetzt“ gleich groß, auch bei laufendem Timer und bei „Letzte Übung“ (D-500)', async ({
+    page,
+  }) => {
+    test.slow();
+    await setDuoPose(page, 'auf');
+    await startDay(page, true);
+    const now = page.getByRole('region', { name: 'Jetzt' });
+    const frame = page
+      .getByRole('region', { name: 'Ausführung der aktuellen Übung' })
+      .locator('[data-demo-frame]');
+    const seen: string[] = [];
+    const sizes = new Set<string>();
+    const note = async (label: string) => {
+      const f = await frame.boundingBox();
+      const n = await now.boundingBox();
+      const size = `Rahmen ${f ? `${f.width.toFixed(1)} × ${f.height.toFixed(1)}` : 'fehlt'}, „Jetzt“ ${n ? n.height.toFixed(1) : 'fehlt'}`;
+      seen.push(`${label}: ${size}`);
+      sizes.add(size);
+    };
+    const current = page.locator('li[data-set-id][aria-current="step"]');
+    const skip = page.getByRole('button', { name: 'Pause überspringen' });
+    const allDone = page.getByRole('region', { name: 'Alle Sätze erledigt' });
+    // Tag A der Reihe nach, alle Sätze; gemessen am ersten Satz jeder Übung.
+    let last = '';
+    while ((await current.count()) > 0) {
+      const name = (await now.locator('.player-now-name').textContent())?.trim() ?? '';
+      if (name !== last) {
+        if (name.startsWith('Unterarmstütz')) {
+          await expect(now.getByText('Letzte Übung', { exact: true })).toBeVisible();
+        }
+        await note(name);
+        const start = current.getByRole('button', { name: /^Timer starten, / });
+        if ((await start.count()) > 0) {
+          await start.click();
+          await expect(now.getByRole('timer')).toBeVisible();
+          await note(`${name} mit laufendem Timer`);
+          await current.getByRole('button', { name: /^Timer stoppen, / }).click();
+          await expect(now.getByRole('timer')).toHaveCount(0);
+        }
+        last = name;
+      }
+      for (const input of await current.locator('input').all()) {
+        const label = (await input.getAttribute('aria-label')) ?? '';
+        await input.fill(
+          label.startsWith('Gewicht') ? '40' : label.startsWith('Wieder') ? '10' : '30',
+        );
+      }
+      await current.getByRole('button', { name: /^Satz erledigt, / }).click();
+      await expect(skip.first().or(allDone)).toBeVisible();
+      if (await skip.first().isVisible()) await skip.first().click();
+    }
+    // Die letzte Übung (Unterarmstütz) mit „Letzte Übung“ statt „Danach:“, einmal mit Timer.
+    expect(seen.length, seen.join('; ')).toBe(6);
+    expect(seen.at(-2) ?? '', 'zuletzt der Unterarmstütz').toMatch(/^Unterarmstütz/);
+    expect(sizes.size, seen.join('; ')).toBe(1);
   });
 
   test('Stromsparmodus: ohne Geste steht sie, das nächste Tippen irgendwo startet sie', async ({

@@ -1784,3 +1784,29 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Schwung-Scrollen und Nachfedern nur am Gerät prüfbar; unter 36 rem Fensterhöhe scrollt die rechte Spalte für sich
 Nächste Schritte: Gerätetest des Produktinhabers, danach Entscheidung über den Merge von #54
 ```
+
+## 38. Rundgang durch den Player, weitere Befunde (D-496)
+
+Den Player bin ich in fünf Haltungen durchgegangen: Duo aufgeklappt quer (867 × 669 und mit Streifen oben 867 × 587), aufgeklappt hoch (669 × 869), zugeklappt (382 × 678) und iPhone (390 × 844). Die Schritte waren Start, Scrollen bis ans Ende, Satz erledigen, Pause klein und groß, Übungsinfo, Übung hinzufügen, Wechsel zur nächsten Übung, Rückfrage „Training beenden?“ und Zusammenfassung; dazu eine Übung wirklich hinzugefügt und die Pause überzogen. Zu jedem Schritt gibt es ein Bild und automatische Prüfungen (`tools/duo-player-rundgang.mjs`). Nach D-495 melden sie nichts mehr. Am alten Stand meldeten sie quer in jedem Schritt die rechte Spalte hinter der Fußleiste und am Seitenende 131 px oben aus dem Bild.
+
+Weitere Befunde, nicht behoben und zu deiner Entscheidung (Bild `docs/screens/duo/player-weitere-befunde.webp`):
+
+| Nr. | Wo | Befund | Vorschlag |
+|---|---|---|---|
+| E1 | Pausenkarte rechts am Duo quer; „Jetzt“ am iPhone | „Ziel“ und die Zahl stehen in verschiedenen Zeilen: „Ziel“ / „5“, „Ziel“ / „10“ | geschütztes Leerzeichen zwischen „Ziel“ und Wert (ebenso „Satz 1 von 5“) |
+| E2 | kleine Pause am iPhone hoch | vom nächsten Satz steht nur „Beinpresse,…“ da; „Aufwärmsatz 2 · Ziel 5“ fehlt, weil „Nächster Satz:“ eine der zwei Zeilen braucht | drei Zeilen, oder die Bezeichnung nur für Screenreader wie zugeklappt |
+| E3 | zugeklappt, Dialoge in der Mitte | Folge von A: 266 statt 350 pt breit, „Training beenden?“ bricht um, die Knöpfe stehen untereinander | so lassen (Mitte des Bildschirms) oder zugeklappt in der Mitte des Fensters |
+| E4 | Duo quer | Folge von D: „Als Nächstes“ steht nicht da, weil neben Kopf, „Jetzt“ und Animation kein ganzer Eintrag passt; mit Streifen oben wird die Animation in der Pause klein (rund 175 × 132 px) | so lassen, oder die Animation zugunsten eines Eintrags verkleinern |
+
+Ohne Befund geprüft: Wechsel zur nächsten Übung (die Animation wechselt), Übung hinzufügen (sie steht am Ende, 19 Sätze), überzogene Pause (Rand in Lime, „Pause vorbei“) und Rückfrage mit Zusammenfassung in allen Haltungen.
+
+```
+Arbeitspaket: D-496 Phase Programme, Rundgang durch den Player am Duo
+Umgesetzte Funktionen: keine in der App; Liste weiterer Befunde mit Bild; Werkzeug für den Rundgang; erfüllte AK: –
+Geänderte Dateien: docs/screens/duo/player-weitere-befunde.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/feature-inventory.csv
+Technische Entscheidungen: D-496
+Ausgeführte Tests: Rundgang in fünf Haltungen, Prüfungen ohne Meldung; check:docs
+Ergebnis: bestanden
+Bekannte Einschränkungen: E1 bis E4 offen, zur Entscheidung
+Nächste Schritte: Gerätetest des Produktinhabers, Entscheidung zu E1 bis E4, danach über den Merge von #54
+```

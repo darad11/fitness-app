@@ -3074,3 +3074,16 @@ Große Pause und Dialoge in der Mitte des Bildschirms, Rahmen der Animation, rec
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.227 Tests; Startansicht 238,5 KB (vorher 237,9 KB), Übungsbilder 52 von 52 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 441 bestanden, 135 übersprungen, keiner fehlgeschlagen (17,3 min), darunter die neuen Tests und der angepasste Test „Player aufgeklappt“ (`duo-player.spec.ts`: am Duo quer steht „Als Nächstes“ nicht da, bei 951 × 1100 vier Einträge) |
 
+### Rundgang durch den Player am Duo · 01.11.2026, Cloud-Umgebung
+
+Systematische Prüfung aller Schritte im Player, weitere Befunde mit Bild (D-496).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/duo-player-rundgang.mjs` in fünf Haltungen (Duo quer 867 × 669 und 867 × 587, hoch 669 × 869, zugeklappt 382 × 678, iPhone 390 × 844), je 11 Schritte | keine Meldung der Prüfungen; Mitte von großer Pause und Dialogen 475,5 (quer), 334,5 (hoch), 233 (zugeklappt), 195 (iPhone); das Blatt „Übung auswählen“ zugeklappt über die ganze Breite (191) |
+| Derselbe Rundgang am alten Stand `b9eb461` (quer, zugeklappt) | quer in jedem Schritt „rechte Spalte hinter der Fußleiste“, am Seitenende „oben aus dem Bild“ ab −131 px; zugeklappt Dialoge bei 191 statt 233 |
+| Ergänzung: Übung „Crunches“ hinzufügen, Pause überziehen (quer, zugeklappt) | Übung am Ende, „0 von 19 Sätzen“; „Pause vorbei +0:03“ mit Rand in Lime, groß in der Mitte des Bildschirms |
+| Bilder | Erste Rundgänge mit `page.screenshot`: Das setzt den nachgestellten Bildschirm zurück (466 → 867), die große Pause stand im Bild wieder mittig im Fenster; das Werkzeug nimmt die Bilder deshalb über das Chrome-Protokoll |
+| Weitere Befunde | E1 „Ziel“ und Zahl getrennt (Pausenkarte rechts am Duo quer, „Jetzt“ am iPhone), E2 kleine Pause am iPhone nur „Beinpresse,…“, E3 zugeklappt Dialoge 266 statt 350 pt (Folge von A), E4 „Als Nächstes“ am Duo quer ohne Platz (Folge von D); Bild `docs/screens/duo/player-weitere-befunde.webp` |
+| `pnpm check:docs` (die App ändert sich nicht) | bestanden |
+

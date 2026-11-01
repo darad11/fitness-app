@@ -3198,3 +3198,4 @@ Zweimal über den ersten Sprung an den Anfang statt über die gespielte Zeit (D-
 | Ablauf in Chromium, Details Latziehen | Sprung bei 2,47 s mit `loop`, angehalten am Ende bei 4,96 s, Symbol da |
 | `e2e/uebungen-wiedergabe.spec.ts`, `player-jetzt.spec.ts`, `uebungen.spec.ts` (Chromium) | 27 bestanden, 11 übersprungen |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; Startansicht 238,9 KB; WebKit in der CI |
+| CI zu `80e6298` | E2E Chromium, Lint, Typen, Unit-Tests, Dokumente, Build und Datenbank grün; E2E WebKit 3 fehlgeschlagen (dieselben drei Tests), 417 bestanden, 184 übersprungen: Details nach dem ersten Sprung an den Anfang (bei 1,91 bzw. 1,92 s) `seeking`, `waiting`, `seeked`, danach nichts mehr, `loop` an; Übungsinfo nach dem ersten Sprung (bei 2,49 s) Suchen an Stelle 0 alle 20 ms. Offen, siehe D-497 |

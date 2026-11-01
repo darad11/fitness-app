@@ -14,7 +14,7 @@
     "seated_cable_row": "Schleife in der App (D-474)",
     "lying_leg_curl": "Schleife in der App (D-486)",
     "romanian_deadlift_dumbbell": "Schleife in der App (D-490)",
-    "shoulder_press_machine": "Prüfseite, wartet auf Freigabe (D-491)"
+    "shoulder_press_machine": "Schleife in der App (D-492)"
   },
   "uebungen": {
     "bench_press_barbell": {
@@ -1489,7 +1489,7 @@
     },
     "senkrecht_druecken": {
       "grundmuster": "Last von Schulterhöhe senkrecht über den Kopf drücken und kontrolliert zurück; beim Langhanteldrücken weicht der Kopf kurz nach hinten aus; Rumpf stabil, Last endet über Schulter und Fußmitte.",
-      "gelenke": "Schulterbeugung und -abduktion von etwa 80–90° auf 170–180°; Ellbogen 90–110° → 0–5°; Unterarme senkrecht; Schulterblatt dreht nach oben (Schlüsselbein-Knochen); stehend Knie und Hüfte gestreckt; Arnold Press zusätzlich Unterarmdrehung um etwa 180° und Außenrotation.",
+      "gelenke": "Schulterbeugung und -abduktion von etwa 80–90° auf 170–180°; Ellbogen 90–110° → 0–5°; Unterarme senkrecht; Schulterblatt dreht nach oben (Schlüsselbein-Knochen); stehend Knie und Hüfte gestreckt; Arnold Press zusätzlich Unterarmdrehung um etwa 180° und Außenrotation. An der Maschine (D-492, Entscheidung des Produktinhabers): Griffe unten zwischen Kinn und Ohr, Oberarm etwa 30° unter der Waagrechten, Ellbogen unten etwa 115° gebeugt, Unterarme annähernd senkrecht (bis etwa 12°), oben fast gestreckt (172°).",
       "basis_stunden": 5,
       "referenz": "overhead_press_barbell"
     },

@@ -153,6 +153,25 @@
       },
       "alt": "Rumänisches Kreuzheben mit Kurzhanteln, von der Seite, leicht von vorn: Knie leicht gebeugt, Rücken gerade; die Hüfte schiebt nach hinten, die Hanteln gleiten an den Beinen bis knapp unter die Knie und zurück in den Stand.",
       "source": "form_3d_pilot"
+    },
+    "shoulder_press_machine": {
+      "preview": {
+        "src": "medien/schulterdruecken_maschine-vorschau.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/schulterdruecken_maschine.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/schulterdruecken_maschine.webm", "width": 720, "height": 540 },
+        "still": {
+          "src": "medien/schulterdruecken_maschine-poster.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schulterdrücken an der Maschine, schräg von vorn: sitzend am Rückenpolster, Obergriff an den Griffen neben dem Kopf zwischen Kinn und Ohr; die Griffe nach oben drücken, bis die Arme fast gestreckt sind, und kontrolliert zurück.",
+      "source": "form_3d_pilot"
     }
   }
 }

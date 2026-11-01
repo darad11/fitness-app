@@ -3854,12 +3854,14 @@ class RumaenischesKreuzhebenKH(Uebung):
 
 class SchulterdrueckenMaschine(Uebung):
     """Schulterdrücken an der Maschine, sitzend (Familie „Senkrechtes Drücken“, D-491), nach dem Ausführungstext der App
-    (ExRx „Lever Shoulder Press“) und den Werten der Familie (Ellbogen unten 90 bis 110° gebeugt, Unterarme senkrecht,
-    oben fast gestreckt). Sitzend auf dem Sitz der Maschine (`geraete.schulterpresse`), das Gesäß mit den Shorts `TIEF`
+    (ExRx „Lever Shoulder Press“) und den Werten der Familie, für die Maschine angepasst (D-492): Griffe unten zwischen
+    Kinn und Ohr, Oberarm etwa 30° unter der Waagrechten, Ellbogen etwa 115° gebeugt, Unterarme annähernd senkrecht,
+    oben fast gestreckt. Sitzend auf dem Sitz der Maschine (`geraete.schulterpresse`), das Gesäß mit den Shorts `TIEF`
     im Polster, der Rücken mit dem Shirt ebenso tief im Rückenpolster, das `LEHNE` Grad nach hinten geneigt ist. Füße
     etwa schulterbreit flach am Boden, Knie `KNIE`. Hände im Obergriff an den waagrechten Griffen der beiden Hebel.
-    Ausgang: Oberarme `OBERARM_UNTEN` unter der Waagrechten und `VOR` vor der Ebene der Schultern, Unterarme senkrecht,
-    die Griffe neben dem Kopf. Jeder Hebel dreht um eine eigene Achse hinter der Person (`HEBEL` lang): Die Griffe laufen
+    Ausgang: Griffe etwa auf Höhe von Kinn bis Ohr (`GRIFF_UNTEN`), `VOR` vor der Ebene der Schultern und so weit
+    entfernt, dass der Ellbogen `ELLBOGEN_UNTEN` hat; der Oberarm steht etwas unter der Waagrechten, der Unterarm
+    annähernd senkrecht, die Griffe neben dem Kopf. Jeder Hebel dreht um eine eigene Achse hinter der Person (`HEBEL` lang): Die Griffe laufen
     auf einem Bogen nach oben und zusammen (zusammenlaufende Arme), oben sind die Arme fast gestreckt (`ELLBOGEN_OBEN`),
     die Griffe `X_OBEN` neben der Mitte über den Schultergelenken; die Schulterblätter drehen mit nach oben
     (`SCHULTER_HOCH`). Kopf gerade, Blick nach vorn. Der Gewichtsblock hebt sich mit den Hebeln. Zurück derselbe Weg."""
@@ -3876,12 +3878,21 @@ class SchulterdrueckenMaschine(Uebung):
     ZEHEN = 10.0
     SITZ_UNTER_KNIE = 0.07  # Oberseite des Sitzes so weit unter den Kniegelenken im Stand, m: Oberschenkel fast waagrecht
     TIEF = 0.004  # Gesäß und Rücken mit der Kleidung so tief in den Polstern, m
-    OBERARM_UNTEN = 10.0  # Ausgang: Oberarm unter der Waagrechten, Grad
-    VOR = 30.0  # Ausgang: Oberarm vor der Ebene der Schultern, Grad
-    HAND = 0.075  # Mitte des Griffs über dem Handgelenk bei senkrechtem Unterarm, m
+    # Ausgang (D-492, Entscheidung des Produktinhabers): Griffe etwa auf Höhe von Kinn bis Ohr, Oberarm etwas unter der
+    # Waagrechten, Unterarm annähernd senkrecht. Höhe der Mitte des Griffs als Anteil von der Höhe des Kinns (0) zur
+    # Mitte des Ohrs (1), am Netz gemessen; bis D-491 Oberarm 10° unter der Waagrechten, Unterarm senkrecht, die Griffe
+    # standen 30 cm über den Schultergelenken (Stirn). Tiefer als das Ohr ginge mit senkrechtem Unterarm nur mit einem
+    # Ellbogen unter 55°
+    GRIFF_UNTEN = 0.75
+    # Ellbogen im Ausgang: Die Entfernung der Griffe von den Schultergelenken wird darauf gesucht (Unterarm so senkrecht
+    # wie möglich); mit senkrechtem Unterarm und Griffen auf Ohrhöhe wären es 60°
+    ELLBOGEN_UNTEN = 65.0
+    VOR = 45.0  # Ausgang: Griff so weit vor der Ebene der Schultern (Richtung vom Schultergelenk, waagrecht), Grad
+    HAND = 0.075  # Mitte des Griffs vom Handgelenk längs des Unterarms, m
     # oben: Mitte des Griffs neben der Mitte des Körpers (vor dem Maß der Schultern), m; bei 0,19 liefen die Griffe so
-    # früh zusammen, dass der Unterarm in der Mitte 17° nach innen kippte, mit 0,24 höchstens 13°
-    X_OBEN = 0.24
+    # früh zusammen, dass der Unterarm in der Mitte 17° nach innen kippte, mit 0,24 höchstens 13° (D-491); mit den
+    # tieferen Griffen im Ausgang (D-492) knickte das Handgelenk bei 0,24 bis 12,2°, bei 0,26 bis 10,6°
+    X_OBEN = 0.26
     Y_OBEN = 0.0  # oben: Griff so weit vor dem Schultergelenk, m
     ELLBOGEN_OBEN = 172.0
     HEBEL = 0.70  # Drehachse bis Mitte des Griffs, m
@@ -4018,7 +4029,9 @@ class SchulterdrueckenMaschine(Uebung):
             c = min(q.dot(n) for q in ueber) + self.TIEF
         # Bahn der Griffe
         l1, l2 = self.armlaengen
-        e, v = math.radians(self.OBERARM_UNTEN), math.radians(self.VOR)
+        v = math.radians(self.VOR)
+        self.kinn_z, self.ohr_z = self._kopf_hoehen(netz)
+        ziel_z = self.kinn_z + self.GRIFF_UNTEN * (self.ohr_z - self.kinn_z)
         rig.zuruecksetzen()
         self._torso(1.0)
         S1 = {s: rig.welt(rig.punkt("shoulder01." + s, k["upperarm01." + s])) for s in "LR"}
@@ -4026,8 +4039,24 @@ class SchulterdrueckenMaschine(Uebung):
         self.bahn = {}
         hebel, griffe = {}, {}
         for s, sx in (("L", 1), ("R", -1)):
-            E0 = S[s] + Vector((sx * math.cos(e) * math.cos(v), -math.cos(e) * math.sin(v), -math.sin(e))) * l1
-            G0 = E0 + Z * (l2 + self.HAND)
+            # Griff auf der Höhe `ziel_z`, waagrecht `VOR` vor der Ebene der Schultern; Entfernung per Halbierung, bis der
+            # Ellbogen `ELLBOGEN_UNTEN` hat
+            richtung = Vector((sx * math.cos(v), -math.sin(v), 0.0))
+            lo, hi = 0.05, 0.50
+            for _ in range(24):
+                G0 = Vector((S[s].x, S[s].y, ziel_z)) + richtung * ((lo + hi) / 2)
+                rig.zuruecksetzen()
+                self._torso(0.0)
+                vorher = len(rig.meldungen)
+                arm = rig.arm(s, self.griff[s], rig.lokal(G0), Vector((sx, 0.0, 0.0)), Vector((sx, -0.3, -1.0)).normalized(),
+                              self.STRECKUNG, ellbogen=self._regel)
+                del rig.meldungen[vorher:]
+                if arm["ellbogenwinkel"] < self.ELLBOGEN_UNTEN:
+                    lo = (lo + hi) / 2
+                else:
+                    hi = (lo + hi) / 2
+            G0 = Vector((S[s].x, S[s].y, ziel_z)) + richtung * ((lo + hi) / 2)
+            rig.zuruecksetzen()
             G1 = Vector((sx * self.X_OBEN * self.mass, S1[s].y - self.Y_OBEN, 0.0))
             k0 = Vector((sx, 0.0, 0.0))  # Griff im Ausgang quer, nach außen; fest am Hebel
             k_oben = k0.copy()
@@ -4100,6 +4129,22 @@ class SchulterdrueckenMaschine(Uebung):
                 tiefe = max(tiefe, hi.z - ql.z)
         return tiefe
 
+    def _kopf_hoehen(self, netz: list[Vector]) -> tuple[float, float]:
+        """Höhe (Welt) des Kinns (tiefster Punkt vorn in der Mitte des Kopfs) und der Mitte des Ohrs (Mitte der seitlichsten
+        Punkte des Kopfs zwischen 7 cm unter und 2 cm über den Augen)."""
+        rig = self.rig
+        k = rig.kopf
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+        kopf = [q for v, q in zip(self.koerper.data.vertices, netz)
+                if sum(x.weight for x in v.groups if namen[x.group].startswith(("head", "jaw", "eye", "special", "tongue",
+                                                                                 "levator", "oris", "orbicularis",
+                                                                                 "temporalis"))) > 0.5]
+        auge = rig.welt((rig.punkt("eye.L", k["eye.L"]) + rig.punkt("eye.R", k["eye.R"])) / 2)
+        mitte_y = sum(q.y for q in kopf) / len(kopf)
+        kinn = min(q.z for q in kopf if abs(q.x) < 0.015 and q.y < mitte_y - 0.05)
+        ohr = [q.z for q in kopf if abs(q.x) > 0.07 and auge.z - 0.07 < q.z < auge.z + 0.02]
+        return kinn, sum(ohr) / len(ohr)
+
     def _griff_lage(self, s: str, p: float) -> tuple[Vector, Vector, Matrix]:
         """Mitte und Richtung des Griffs (Welt) in Phase p und die Drehung des Hebels."""
         P, achse, delta, G0, k0 = self.bahn[s]
@@ -4154,6 +4199,8 @@ class SchulterdrueckenMaschine(Uebung):
             "Griffe auseinander (cm)": (griffe["L"].x - griffe["R"].x) * 100,
             "Griffe über dem Schultergelenk (cm)": (griffe["L"].z - S.z) * 100,
             "Griffe vor dem Schultergelenk (cm)": (S.y - griffe["L"].y) * 100,
+            "Griffe über dem Kinn (cm)": (griffe["L"].z - self.kinn_z) * 100,
+            "Griffe unter der Mitte des Ohrs (cm)": (self.ohr_z - griffe["L"].z) * 100,
             "Hebel der Maschine gedreht (Grad)": math.degrees(self.bahn["L"][2] * p),
             "Kniewinkel (Grad)": self.kniewinkel(L),
         }

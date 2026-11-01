@@ -1668,3 +1668,30 @@ Ergebnis: bestanden (Werte in 33.5)
 Bekannte Einschränkungen: 33.6
 Nächste Schritte: Halt bis zur Freigabe der Prüfseite; danach die Schleife. Dann ist „Ganzkörper A/B“ vollständig animiert
 ```
+
+## 34. Schulterdrücken an der Maschine in der App (D-492)
+
+Deine Freigabe: Feste Griffe und Kamera 30° bleiben, die Griffe sollen unten aber auf Höhe von Kinn bis Ohr beginnen, der Oberarm etwas unter der Waagrechten, die Unterarme annähernd senkrecht.
+
+- **Gemessen:** Über dem Schultergelenk liegen beim Sitzen das Kinn 15,1 cm, die Mitte des Ohrs 22,7 cm und die Augen 25,7 cm hoch. Die Griffe standen bei 29,9 cm, also über den Augen.
+- **Neu:** Die Griffe stehen unten 5,7 cm über dem Kinn und 1,9 cm unter der Mitte des Ohrs. Der Oberarm steht 31,4° unter der Waagrechten, der Unterarm 6,4° zur Senkrechten, der Ellbogen hat 65,0°.
+- **Warum nicht tiefer:** Mit annähernd senkrechtem Unterarm müsste der Ellbogen bei Griffen auf Kinnhöhe unter 40° schließen. Auf Ohrhöhe wären es 60°; ich habe 65° gewählt, damit die Bewegung nicht gequetscht wirkt.
+- **Handgelenk:** Oben stehen die Griffe jetzt 26 statt 24 cm neben der Mitte. So knickt das Handgelenk über den ganzen Weg höchstens 11,4° (vorher 12,9°).
+- **Werte der Familie für die Maschine:** Griffe unten zwischen Kinn und Ohr, Oberarm etwa 30° unter der Waagrechten, Ellbogen unten etwa 115° gebeugt, Unterarme annähernd senkrecht (bis etwa 12°), oben fast gestreckt.
+- **Text:** Er nennt keine Griffhöhe, sondern den ganzen Bewegungsumfang. Das passt, geändert habe ich nichts.
+- **Messwerte über alle 60 Bilder:** Ellbogen 65,0° → 172,0°, Oberarm unten 31,4° unter der Waagrechten und 40,3° vor der Ebene der Schultern, Unterarm unten 6,4° zur Senkrechten (höchstens 12,7°), Handgelenk höchstens 11,4°, Unterarm gedreht 37,7° → −20,6°, Griffe 77,4 → 62,2 cm auseinander, unten 20,8 cm über den Schultergelenken, 5,7 cm über dem Kinn und 1,9 cm unter der Mitte des Ohrs, Hebel 38,6°; Gesäß und Rücken 4,0 mm im Polster, nichts durch die Oberfläche; Arme mindestens 43 mm von Hebeln, Griffen und Rahmen, Kopf 159 mm vom Gerät; Shorts 1,1 mm im Shirt (Hüftfalte, bleibt), Ärmel 5,1 mm; Meldungen 0.
+- **Schleife:** 23 min, erstes und letztes Bild pixelgleich. In der Übungsliste hat das Schulterdrücken jetzt ein Vorschaubild, in den Details läuft die Schleife.
+- **Aufnahme:** `docs/screens/uebungen/schulterdruecken-bewegung.mp4`, 720 × 540, 7,5 s, 107 KB, die Schleife dreimal; angesehen und dem Produktinhaber geschickt.
+
+Damit haben alle elf Übungen von „Ganzkörper A/B“ eine Schleife in der App.
+
+```
+Arbeitspaket: D-492 Phase Programme, Schulterdrücken an der Maschine in der App
+Umgesetzte Funktionen: Schleife, Poster und Vorschaubild des Schulterdrückens an der Maschine (medien.json: shoulder_press_machine); Werkzeug: Ausgangslage über Griffhöhe zwischen Kinn und Ohr und Ellbogenwinkel, Werte für Griffe zu Kinn und Ohr; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/schulterdruecken_maschine*.{mp4,webm,webp} (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/uebungen-bewegungsfamilien.md, docs/screens/uebungen/schulterdruecken-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-492
+Ausgeführte Tests: Kopf am Netz gemessen, neun Varianten der Ausgangslage, Messwerte über alle 60 Bilder, Schleife gerendert, Kontaktbogen und erstes/letztes Bild geprüft; Unit-Tests 1.213 bestanden; format:check, lint, typecheck, check:docs, build, check:bundle (Startansicht 237,8 KB, Übungsbilder 52 von 52); E2E Chromium 434 bestanden, 132 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Übersicht aller elf Übungen von „Ganzkörper A/B“ (D-493), dann Halt für den Gerätetest
+```

@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.91 (Phase Programme, Schulterdrücken in der App, 01.11.2026): Funktionen und Status unverändert; 13 Übungen mit Animation, neu das Schulterdrücken an der Maschine; alle elf Übungen von „Ganzkörper A/B“ animiert (D-492).
 - Version 0.90 (Phase Programme, Prüfseite Senkrechtes Drücken, 01.11.2026): Funktionen und Status unverändert; im Werkzeug die Schulterdrückmaschine und das Schulterdrücken an der Maschine als Prüfseite, die Schleife folgt nach der Freigabe (D-491).
 - Version 0.89 (Phase Programme, Kreuzheben in der App, 01.11.2026): Funktionen und Status unverändert; zwölf Übungen mit Animation, neu das Rumänische Kreuzheben mit Kurzhanteln (D-490).
 - Version 0.88 (Phase Programme, Rudern geprüft, 01.11.2026): Funktionen und Status unverändert; die Schleife des Ruderns am Kabel läuft ohne Sprung über die Naht (D-489).

@@ -24,34 +24,7 @@ B, H = 720, 540
 F_PX = B * 50.0 / 36.0  # Brennweite 50 mm auf 36 mm Sensorbreite
 
 
-def figur_objekte(u):
-    return [o for o in bpy.data.objects if o.type == "MESH" and not o.hide_render and any(
-        m.type == "ARMATURE" and m.object == u.skelett for m in o.modifiers)]
-
-
-def punkte(objs):
-    """Eckpunkte der Netze in Weltkoordinaten (n × 3), Körper ohne Glättung wie `_netz`."""
-    for o in objs:
-        sub = o.modifiers.get("Glatt")
-        if sub:
-            sub.show_viewport = False
-    deps = bpy.context.evaluated_depsgraph_get()
-    deps.update()
-    teile = []
-    for o in objs:
-        ev = o.evaluated_get(deps)
-        me = ev.to_mesh()
-        co = np.empty(len(me.vertices) * 3)
-        me.vertices.foreach_get("co", co)
-        co = co.reshape(-1, 3)
-        mw = np.array(ev.matrix_world)
-        teile.append(co @ mw[:3, :3].T + mw[:3, 3])
-        ev.to_mesh_clear()
-    for o in objs:
-        sub = o.modifiers.get("Glatt")
-        if sub:
-            sub.show_viewport = True
-    return np.concatenate(teile)
+from figur_rahmen import figur_objekte, punkte  # noqa: E402,F401
 
 
 def projiziert(cam, pkte):

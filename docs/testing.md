@@ -3208,6 +3208,23 @@ Logik „zweimal, dann anhalten“ in Chromium und WebKit mit nachgestelltem Vid
 |---|---|
 | `e2e/uebungen-wiedergabe.spec.ts` (Chromium; neu: Details und Übungsinfo mit nachgestelltem Video, je drei Runden; die Tests mit echten Videos nur noch in Chromium) | 9 bestanden, 5 übersprungen (Desktop-Profil bei den Tests nur fürs Handy) |
 
+### Figur füllt ihren Rahmen · 01.11.2026, Cloud-Umgebung
+
+Beinbeuger, Beinpresse und Rudern am Kabel mit 2 % Rand neu gerendert (D-501).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `tools/uebungen-3d/figur_messen.py beinbeuger_liegend beinpresse rudern_kabel` (Kamera aus `render.py`, jedes zweite Bild, 720 × 540) | Beinbeuger 400,6 px/m (vorher 411,7), Ränder links, oben, rechts, unten 14,4 / 73,2 / 14,4 / 73,2 px (vorher 15,9 / 61,5 / −9,2 / 73,6); Beinpresse 490,3 px/m (vorher 278,8), 14,4 / 12,7 / 14,4 / 12,7 px (vorher 241,4 / 58,3 / 92,7 / 190,0); Rudern 478,2 px/m (vorher 329,9), 112,7 / 10,8 / 112,7 / 11,2 px (vorher 145,1 / 9,8 / 243,8 / 191,4) |
+| Rendern (`render.py`, Blender 4.2, nacheinander, Zeiten UTC) | Beinbeuger 19:03 bis 19:37, Beinpresse bis 20:35, Rudern bis 21:00, jeweils Status 0 |
+| `ffprobe` der neuen Dateien | je 60 Bilder, 24 Bilder/s, 2,5 s, 720 × 540, MP4 (H.264) und WebM (VP9) |
+| Dateigrößen MP4 / WebM / Poster (KB, vorher → nachher) | Beinbeuger 72,8 → 70,5 / 70,5 → 68,6 / 12,1 → 11,6; Beinpresse 63,5 → 91,8 / 52,7 → 72,2 / 15,0 → 17,9; Rudern 56,0 → 78,5 / 48,6 → 66,1 / 13,6 → 16,0; Vorschaubilder unverändert (gleiche Prüfsumme) |
+| `python3 tools/uebungen_medien_version.py` | 9 Dateien mit neuer Prüfsumme im Namen, die alten gelöscht |
+| `pnpm check:docs` | bestanden; 13 Einträge, 52 Dateien mit Prüfsumme im Namen |
+| Sichtprüfung `docs/screens/uebungen/figur-fuellen.webp` und Bilder 0, 15, 30, 45 je Schleife, vorher und nachher | Figur mittig, an keiner Stelle am Rand; Beinpresse mit Fußplatte und Polster, Rudern mit Kabel, Griff und Fußplatte |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 461 bestanden, 151 übersprungen, 0 fehlgeschlagen (18,3 min) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB, Übungsbilder 52 von 52 vorab gespeichert |
+| `pnpm vitest run --maxWorkers=3` (neben der E2E-Suite) | 1.247 von 1.249 bestanden, 2 mit Zeitüberschreitung (5 s): `habits-ui.test.tsx` (5232 ms) und in `player-ui.test.tsx` der Übungstimer (5035 ms); allein: Player 15 bestanden (Übungstimer 2886 ms), Tagesaufgaben 11 bestanden |
+
 ### Kopf links im niedrigen Fenster am Duo quer · 01.11.2026, Cloud-Umgebung
 
 Kopf mit Programm, Fortschritt, „Beenden“ und Pause links über der Liste, Animation rechts 336 × 252 px; Öffnen ohne Sprung (D-502).

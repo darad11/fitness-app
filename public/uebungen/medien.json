@@ -97,9 +97,9 @@
       "preview": { "src": "medien/beinpresse-vorschau-aa2dde84.webp", "width": 240, "height": 240 },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/beinpresse-3e0b41fb.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/beinpresse-2166b1be.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/beinpresse-poster-ac732f08.webp", "width": 720, "height": 540 }
+        "file": { "src": "medien/beinpresse-e67294c1.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/beinpresse-2f6e032c.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/beinpresse-poster-4e5510c4.webp", "width": 720, "height": 540 }
       },
       "alt": "Beinpresse 45°, schräg von der Seite: Platte von fast gestreckten Beinen bis Knie 95° heran und zurück, Rücken und Gesäß bleiben an Lehne und Sitz, Füße flach auf der Platte, Knie über den Zehen.",
       "source": "form_3d_pilot"
@@ -157,9 +157,9 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/rudern_kabel-51b0d36d.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/rudern_kabel-8e918c0b.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/rudern_kabel-poster-06a17787.webp", "width": 720, "height": 540 }
+        "file": { "src": "medien/rudern_kabel-34385aaf.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/rudern_kabel-b66e573e.webm", "width": 720, "height": 540 },
+        "still": { "src": "medien/rudern_kabel-poster-90a924ad.webp", "width": 720, "height": 540 }
       },
       "alt": "Rudern am Kabel, sitzend, schräg von hinten: aufrecht, Knie gebeugt, Füße auf der Fußplatte; V-Griff am waagrechten Kabel zu den unteren Rippen ziehen, Schulterblätter zusammen, dann kontrolliert nach vorn bis zu gestreckten Armen.",
       "source": "form_3d_pilot"
@@ -172,10 +172,10 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/beinbeuger_liegend-61703fee.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/beinbeuger_liegend-6b51633b.webm", "width": 720, "height": 540 },
+        "file": { "src": "medien/beinbeuger_liegend-794e162c.mp4", "width": 720, "height": 540 },
+        "webm": { "src": "medien/beinbeuger_liegend-ccd35385.webm", "width": 720, "height": 540 },
         "still": {
-          "src": "medien/beinbeuger_liegend-poster-97bd5a86.webp",
+          "src": "medien/beinbeuger_liegend-poster-d381e02c.webp",
           "width": 720,
           "height": 540
         }

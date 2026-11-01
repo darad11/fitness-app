@@ -1216,7 +1216,8 @@ class Beinpresse(Uebung):
 
     name = "beinpresse"
     titel = "Beinpresse"
-    kamera = {"richtung": 115.0, "neigung": 22.0}
+    # Die Figur füllt ihren Rahmen mit 2 % Rand, Gerät am Rand angeschnitten (D-501).
+    kamera = {"richtung": 115.0, "neigung": 22.0, "fuellen": 0.02}
     vorschau_phase = 1.0
     LEHNE = 30.0  # Lehne, Grad über der Waagrechten
     SITZ = 15.0  # Sitz steigt nach vorn
@@ -2703,7 +2704,8 @@ class RudernKabel(Uebung):
     titel = "Rudern am Kabel, sitzend"
     # Schräg von hinten wie beim Latziehen (Entscheidung des Produktinhabers, D-474): Die Schulterblätter gehen sichtbar
     # zusammen, Arme, Griff und Kabel bleiben im Bild (bis D-473 schräg von vorn, 75° und 12°)
-    kamera = {"richtung": 135.0, "neigung": 10.0}
+    # Die Figur füllt ihren Rahmen mit 2 % Rand, Gerät am Rand angeschnitten (D-501).
+    kamera = {"richtung": 135.0, "neigung": 10.0, "fuellen": 0.02}
     vorschau_phase = 1.0
     # Zeitablauf (`haltung.ablauf`): ohne Pause am vorderen Umkehrpunkt, wie es der Ausführungstext verlangt
     ablauf = {"pause_vorn": 0.0}
@@ -3109,7 +3111,8 @@ class BeinbeugerLiegend(Uebung):
     fuesse_frei = True  # die Füße hängen frei (`render.messen`: kein Bodenkontakt)
     # Von der Seite, etwas von hinten und oben: Kniebeugung, Rückseite der Oberschenkel und Rolle (verglichen mit 70° und
     # 15° schräg vom Kopf her und 120° und 25° schräg von hinten)
-    kamera = {"richtung": 100.0, "neigung": 20.0}
+    # Die Figur füllt ihren Rahmen mit 2 % Rand, Gerät am Rand angeschnitten (D-501).
+    kamera = {"richtung": 100.0, "neigung": 20.0, "fuellen": 0.02}
     vorschau_phase = 1.0
     NEIGUNG = 15.0  # Brust- und Oberschenkelpolster fallen vom Scheitel so weit ab, Grad
     KNIE_AUS = 175.0  # Ausgang: Knie fast gestreckt („bis die Knie wieder gestreckt sind“)

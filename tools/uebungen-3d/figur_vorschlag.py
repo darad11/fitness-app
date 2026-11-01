@@ -1,13 +1,15 @@
 """Vorschlag für gleich große Figuren in allen Schleifen (D-500).
 
 Ohne `--massstab`: je Übung der größte Maßstab (Pixel je Meter an der Mitte der Figur), bei dem die
-Figur in jedem Bild der Schleife mit 4 % Rand ganz ins Bild 720 × 540 passt; Kamera in Richtung und
-Neigung unverändert, die Bildmitte auf der Figur statt auf Figur und Gerät. Mit `--massstab S` die
+Figur in jedem Bild der Schleife mit Rand (`--rand`, Anteil der Bildseite, sonst 4 %) ganz ins Bild
+720 × 540 passt; Kamera in Richtung und Neigung unverändert, die Bildmitte auf der Figur statt auf
+Figur und Gerät. Mit `--fuellen` gilt dieser Maßstab je Übung gleich weiter (D-501). Mit `--massstab S` die
 Kamera jeder Übung für diesen gemeinsamen Maßstab (Ziel und Abstand), Lage der Figur und der Geräte
 im Bild; Geräte dürfen angeschnitten sein, die Figur nie. Mit `--bild ordner` dazu ein Standbild
 (Mitte der Schleife) mit dieser Kamera. Ausgabe JSON je Zeile.
 
-    <python mit bpy> -I -u tools/uebungen-3d/figur_vorschlag.py [--massstab S] [--bild ordner] <übung> …
+    <python mit bpy> -I -u tools/uebungen-3d/figur_vorschlag.py [--rand 0.02] [--fuellen | --massstab S]
+        [--bild ordner] <übung> …
 """
 import json
 import math
@@ -23,11 +25,11 @@ import render  # noqa: E402
 import szene  # noqa: E402
 from figur_messen import B, H, F_PX, figur_objekte, punkte, projiziert  # noqa: E402
 
-RAND_X, RAND_Y = 0.04 * B, 0.04 * H  # Mindestabstand der Figur zum Bildrand
-
 args = sys.argv[1:]
 massstab = None
 bildordner = None
+rand = 0.04
+fuellen = False
 if "--massstab" in args:
     i = args.index("--massstab")
     massstab = float(args[i + 1])
@@ -36,6 +38,15 @@ if "--bild" in args:
     i = args.index("--bild")
     bildordner = args[i + 1]
     del args[i:i + 2]
+if "--rand" in args:
+    i = args.index("--rand")
+    rand = float(args[i + 1])
+    del args[i:i + 2]
+if "--fuellen" in args:
+    # Je Übung der eigene größte Maßstab: Die Figur füllt ihren Rahmen mit dem Rand (D-501).
+    fuellen = True
+    args.remove("--fuellen")
+RAND_X, RAND_Y = rand * B, rand * H  # Mindestabstand der Figur zum Bildrand
 
 
 def kamera_setzen(u, ziel, abstand):
@@ -111,8 +122,10 @@ for name in args:
                 hi = mid
         print(json.dumps({"uebung": name, "massstab_jetzt": round(alt_S, 1), "massstab_hoechstens": round(lo, 1),
                           "box_jetzt": [round(v, 1) for v in alt_box]}), flush=True)
-        continue
-    ziel, abstand = einpassen(u, P, massstab)
+        if not fuellen:
+            continue
+    ziel_massstab = lo if massstab is None else massstab
+    ziel, abstand = einpassen(u, P, ziel_massstab)
     cam = kamera_setzen(u, ziel, abstand)
     b = box(cam, P)
     # Geräte: Anteil der Hüllquader-Ecken außerhalb des Bilds, über die Bewegung
@@ -126,7 +139,7 @@ for name in args:
             gx += list(x[z > 0])
             gy += list(y[z > 0])
     print(json.dumps({
-        "uebung": name, "massstab": massstab, "faktor": round(massstab / alt_S, 3),
+        "uebung": name, "massstab": round(ziel_massstab, 1), "faktor": round(ziel_massstab / alt_S, 3),
         "figur_box_px": [round(v, 1) for v in b], "figur_hoehe_px": round(b[3] - b[1], 1),
         "figur_passt": passt(b),
         "geraet_box_px": [round(min(gx), 1), round(min(gy), 1), round(max(gx), 1), round(max(gy), 1)] if gx else None,

@@ -1949,6 +1949,19 @@ Nächste Schritte: Freigabe des Maßstabs und der Lage des Kopfs durch den Produ
 
 ## 44. Nach deinen Entscheidungen: Figur, Kopf links, Tests (D-501 bis D-503)
 
+**Figur (D-501).** Kein gemeinsamer Maßstab, wie du entschieden hast; stattdessen füllt jede Figur ihren Rahmen mit gleichem Rand. Neu gerendert habe ich die drei, die du freigegeben hast. Die Kamera behält Richtung und Neigung, zielt auf die Mitte der Figur und kommt so nah, dass die Figur über die ganze Bewegung 2 % Rand behält. Der Beinbeuger ragt nicht mehr über den rechten Rand, die Figur ist dafür 3 % kleiner. Die Beinpresse füllt jetzt 96 % statt 54 % des Rahmens, die Figur ist 1,76-mal so groß; von der Maschine bleiben Fußplatte, Polster und ein Teil der Gewichte im Bild. Das Rudern füllt 96 % statt 63 %, die Figur ist 1,45-mal so groß; Kabel, Griff und Fußplatte bleiben im Bild. Damit füllen alle elf Figuren ihren Rahmen zu 91 bis 97 %. Die Vorschaubilder der Liste haben ihre eigene Kamera und bleiben gleich. Vorher und nachher: `docs/screens/uebungen/figur-fuellen.webp`.
+
+```
+Arbeitspaket: D-501 Phase Programme, Figur füllt ihren Rahmen
+Umgesetzte Funktionen: Kamera „füllen“ für Schleifen (2 % Rand, mittig, Gerät angeschnitten); Beinbeuger, Beinpresse und Rudern am Kabel neu gerendert und eingebaut; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/figur_rahmen.py (neu), render.py, uebungen.py, figur_messen.py, figur_vorschlag.py, public/uebungen/medien.json und 9 Dateien in public/uebungen/medien, docs/screens/uebungen/figur-fuellen.webp, Dokumentation
+Technische Entscheidungen: D-501
+Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Figur füllt ihren Rahmen“
+Ergebnis: siehe dort
+Bekannte Einschränkungen: Die übrigen acht Figuren bleiben, wie sie sind (91 bis 97 %), ihre Ränder sind nicht überall gleich
+Nächste Schritte: Gerätetest des Produktinhabers
+```
+
 **Kopf links (D-502).** Im niedrigen Fenster am Duo quer steht der Kopf mit Programm, Fortschritt und „Beenden“ jetzt links über der Liste. Er bleibt oben stehen, wenn du scrollst; „Beenden“ ist immer erreichbar. Die Pause steht darin in einer Zeile wie zugeklappt, ±15 s gibt es in der großen Pause. Rechts ist die Animation in allen elf Übungen 336 × 252 px groß, bei 669 und bei 587 px Fensterhöhe, auch mit Timer und in der Pause. In der Pause zeigt die rechte Spalte unter der Animation „Als Nächstes“, weil „Jetzt“ dann entfällt: bei 669 px vier Einträge, bei 587 px zwei. Dabei fiel ein Sprung beim Öffnen auf: Muskel-Etiketten und Vorwerte kamen erst nach dem ersten Bild, die erste Karte wurde 13 px höher, und die Seite rutschte samt Kopf um diese Höhe. Jetzt erscheint der Player erst, wenn beides geladen ist; nichts springt mehr. Ragt der erste Satz beim Öffnen unten unter die Fußleiste, rückt der Player ihn gleich ganz darüber. Das betrifft das Duo zugeklappt: Dort lag er schon vorher 3 px darunter, jetzt steht er 4 px darüber, und der obere Rand von „Jetzt“ liegt 6 px unter dem Kopf. Das bitte beim Gerätetest mit ansehen.
 
 ```

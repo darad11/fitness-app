@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import subprocess
 import sys
 import time
@@ -33,7 +34,10 @@ HIER = Path(__file__).resolve().parent
 sys.path.insert(0, str(HIER))
 
 import bpy  # noqa: E402
+import numpy as np  # noqa: E402
 from mathutils import Vector  # noqa: E402
+
+import figur_rahmen  # noqa: E402
 
 import kleidung  # noqa: E402
 import koerperform  # noqa: E402
@@ -101,11 +105,31 @@ def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral",
     return s, uebung, punkte
 
 
+def figur_punkte(uebung) -> np.ndarray:
+    """Eckpunkte der Figur (Körper, Kleidung, Schuhe) in jedem zweiten Bild der Schleife."""
+    objs = figur_rahmen.figur_objekte(uebung)
+    alle = []
+    for bild in range(0, BILDER, 2):
+        uebung.setzen(ablauf(bild, BILDER, **getattr(uebung, "ablauf", {})))
+        alle.append(figur_rahmen.punkte(objs))
+    return np.concatenate(alle)
+
+
 def kamera(uebung, punkte, ansicht: str, breite: int, hoehe: int) -> None:
+    """Kamera der Ansicht. Standard: Figur und Gerät mit Rand im Bild; mit `fuellen` in der Kamera der
+    Übung (Anteil der Bildseite) füllt die Figur ihren Rahmen über die ganze Bewegung, mittig, mit
+    diesem Rand, Geräte dürfen angeschnitten sein (D-501)."""
     for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
         bpy.data.objects.remove(o)
     if ansicht == "standard":
         richtung, neigung = uebung.kamera["richtung"], uebung.kamera["neigung"]
+        if "fuellen" in uebung.kamera:
+            ziel, abstand = figur_rahmen.fuellen(figur_punkte(uebung), richtung, neigung, breite, hoehe,
+                                                 uebung.kamera["fuellen"])
+            e = math.radians(neigung)
+            szene.licht_und_kamera(ziel, richtung, abstand * math.cos(e), abstand * math.sin(e),
+                                   kantenlicht=getattr(uebung, "kantenlicht", True))
+            return
     else:
         richtung, neigung = ANSICHTEN[ansicht]
         if uebung.name == "bankdruecken" and ansicht == "vorn":

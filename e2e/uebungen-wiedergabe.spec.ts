@@ -251,7 +251,206 @@ test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () =>
   });
 });
 
-test.describe('Übungsinfo und Details: zweimal, dann angehalten (D-497)', () => {
+/**
+ * Video mit nachgestellter Wiedergabe (D-503): Die App sieht ein Video, das nur auf Ansage des
+ * Tests weiterläuft, an den Anfang springt oder endet, mit den Ereignissen wie im Browser
+ * (`seeking` und `play` kommen danach, nicht im Aufruf). So prüfen Chromium und WebKit dieselbe
+ * Logik „zweimal, dann anhalten, Tippen spielt erneut zweimal ab“, unabhängig davon, wie der
+ * Browser echte Videos nachlädt: WebKit unter Linux blieb beim ersten Sprung an den Anfang hängen
+ * (D-497). Die echte Wiedergabe prüfen die Tests weiter unten nur in Chromium.
+ */
+const SIMULATED_VIDEO = `(() => {
+  const states = new WeakMap();
+  const state = (v) => {
+    let s = states.get(v);
+    if (!s) {
+      s = { playing: false, time: 0, ended: false, pending: 0 };
+      states.set(v, s);
+    }
+    return s;
+  };
+  const fire = (v, type) => v.dispatchEvent(new Event(type));
+  const later = (v, types) => {
+    const s = state(v);
+    s.pending += 1;
+    setTimeout(() => {
+      for (const type of types) fire(v, type);
+      s.pending -= 1;
+    }, 0);
+  };
+  const proto = HTMLMediaElement.prototype;
+  proto.play = function () {
+    const s = state(this);
+    if (!s.playing) {
+      s.playing = true;
+      s.ended = false;
+      later(this, ['play', 'playing']);
+    }
+    return Promise.resolve();
+  };
+  proto.pause = function () {
+    const s = state(this);
+    if (s.playing) {
+      s.playing = false;
+      later(this, ['pause']);
+    }
+  };
+  Object.defineProperty(proto, 'paused', { configurable: true, get() { return !state(this).playing; } });
+  Object.defineProperty(proto, 'ended', { configurable: true, get() { return state(this).ended; } });
+  Object.defineProperty(proto, 'duration', { configurable: true, get() { return 2.5; } });
+  Object.defineProperty(proto, 'currentTime', {
+    configurable: true,
+    get() { return state(this).time; },
+    set(value) {
+      const s = state(this);
+      s.time = value;
+      s.ended = false;
+      later(this, ['seeking', 'seeked', 'timeupdate']);
+    },
+  });
+  window.__video = {
+    state: (v) => ({ ...state(v), loop: v.loop }),
+    at(v, time) {
+      state(v).time = time;
+      fire(v, 'timeupdate');
+    },
+    // Ende eines Durchlaufs wie im Browser: mit loop zurück an den Anfang, sonst Ende.
+    end(v) {
+      const s = state(v);
+      s.time = 2.45;
+      fire(v, 'timeupdate');
+      if (v.loop) {
+        s.time = 0;
+        fire(v, 'seeking');
+        fire(v, 'seeked');
+        fire(v, 'timeupdate');
+        return;
+      }
+      s.time = 2.5;
+      fire(v, 'timeupdate');
+      s.playing = false;
+      s.ended = true;
+      fire(v, 'pause');
+      fire(v, 'ended');
+    },
+  };
+})();`;
+
+interface SimulatedState {
+  playing: boolean;
+  time: number;
+  ended: boolean;
+  pending: number;
+  loop: boolean;
+}
+interface SimulatedVideo {
+  state: (v: HTMLVideoElement) => SimulatedState;
+  at: (v: HTMLVideoElement, time: number) => void;
+  end: (v: HTMLVideoElement) => void;
+}
+
+const simulated = {
+  state: (video: Locator) =>
+    video.evaluate((v: HTMLVideoElement) =>
+      (globalThis as unknown as { __video: SimulatedVideo }).__video.state(v),
+    ),
+  at: (video: Locator, time: number) =>
+    video.evaluate((v: HTMLVideoElement, t: number) => {
+      (globalThis as unknown as { __video: SimulatedVideo }).__video.at(v, t);
+    }, time),
+  end: (video: Locator) =>
+    video.evaluate((v: HTMLVideoElement) => {
+      (globalThis as unknown as { __video: SimulatedVideo }).__video.end(v);
+    }),
+};
+
+/**
+ * Zweimal, dann angehalten mit Symbol; Tippen spielt sie erneut zweimal ab, auch ein zweites Mal;
+ * eine Geste anderswo startet die angehaltene Animation nicht.
+ */
+async function expectTwoRunsSimulated(scope: Locator, label: string) {
+  const video = scope.locator('video');
+  const replay = scope.getByRole('button', { name: 'Animation wiederholen' });
+  const state = () => simulated.state(video);
+  await expect
+    .poll(async () => (await state()).playing, { message: `${label}: startet von selbst` })
+    .toBe(true);
+  for (const round of ['von selbst', 'nach dem Tippen', 'nach dem zweiten Tippen']) {
+    const where = `${label}, ${round}`;
+    if (round !== 'von selbst') {
+      await replay.click();
+      await expect
+        .poll(state, { message: `${where}: von vorn` })
+        .toMatchObject({ playing: true, time: 0, ended: false, loop: true, pending: 0 });
+      await expect(replay).not.toHaveAttribute('data-angehalten');
+    }
+    expect((await state()).loop, `${where}: der Browser wiederholt selbst`).toBe(true);
+    // Erster Durchlauf zu Ende: Sprung an den Anfang, `loop` bleibt im Sprung an.
+    await simulated.end(video);
+    expect(await state(), `${where}: zweiter Durchlauf`).toMatchObject({
+      playing: true,
+      loop: true,
+    });
+    await simulated.at(video, 0.3);
+    expect((await state()).loop, `${where}: kurz nach dem Sprung noch mit loop`).toBe(true);
+    await simulated.at(video, 0.6);
+    expect((await state()).loop, `${where}: im zweiten Durchlauf ohne loop`).toBe(false);
+    await expect(replay).not.toHaveAttribute('data-angehalten');
+    // Zweiter Durchlauf zu Ende: Das Video steht am letzten Bild, das Symbol erscheint.
+    await simulated.end(video);
+    await expect(replay, `${where}: angehalten`).toHaveAttribute('data-angehalten', '');
+    await expect(replay.locator('svg')).toBeVisible();
+    expect(await state(), `${where}: steht am Ende`).toMatchObject({
+      playing: false,
+      ended: true,
+    });
+  }
+  // Eine Geste anderswo (Taste) startet die angehaltene Animation nicht.
+  await video.page().keyboard.press('Shift');
+  await expect.poll(async () => (await state()).pending).toBe(0);
+  expect((await state()).playing, `${label}: bleibt angehalten`).toBe(false);
+}
+
+test.describe('Übungsinfo und Details: zweimal, dann angehalten, nachgestelltes Video (D-497, D-503)', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(SIMULATED_VIDEO);
+  });
+
+  test('Details: zweimal, Symbol, Tippen wiederholt', async ({ page }) => {
+    await openPage(page, '/uebungen');
+    await page
+      .getByRole('link', { name: /^Latziehen/ })
+      .first()
+      .click();
+    const demo = page.locator('[data-demo="bild"]');
+    await expect.poll(() => playingFile(demo.locator('video'))).toMatch(medium('latziehen'));
+    await expectTwoRunsSimulated(demo, 'Details');
+  });
+
+  test('Übungsinfo aus dem Player: zweimal, Symbol, Tippen wiederholt; der Player läuft ohne Ende', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(!isMobile, 'Handy-Profil');
+    await setDuoPose(page, 'auf');
+    await startDay(page, true);
+    const player = demoVideo(page);
+    await expect.poll(async () => (await simulated.state(player)).playing).toBe(true);
+    await page.getByRole('button', { name: 'Beinpresse: Ausführung und Angaben' }).first().click();
+    const dialog = page.getByRole('dialog', { name: 'Beinpresse' });
+    await expect.poll(() => playingFile(dialog.locator('video'))).toMatch(medium('beinpresse'));
+    await expectTwoRunsSimulated(dialog, 'Übungsinfo');
+    // Die Schleife im Player dahinter wiederholt weiter ohne Ende, auch über mehrere Enden.
+    for (let run = 0; run < 3; run += 1) await simulated.end(player);
+    expect(await simulated.state(player)).toMatchObject({ playing: true, loop: true });
+  });
+});
+
+test.describe('Übungsinfo und Details: echte Wiedergabe (D-497, nur Chromium)', () => {
+  test.skip(
+    ({ browserName }) => browserName !== 'chromium',
+    'Echte Videos nur in Chromium: WebKit unter Linux lädt sie anders als Safari am Gerät; die Logik prüfen die Tests mit nachgestelltem Video in beiden (D-503)',
+  );
   /**
    * Beobachtet das Video ab jetzt in jedem Bild: Gezählt wird der Sprung zurück an den Anfang,
    * höchstens einer je halbe Länge (so zählt ein doppelt gemeldeter Sprung nicht doppelt), gleich

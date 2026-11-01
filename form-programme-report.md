@@ -1946,3 +1946,18 @@ Nächste Schritte: Freigabe des Maßstabs und der Lage des Kopfs durch den Produ
 - `docs/screens/duo/wiedergabe-iphone.mp4` (18 s): Start, die Animation der Beinpresse läuft sofort; Übungsinfo, zweimal, Symbol, Tippen spielt sie wieder ab; Wechsel zur nächsten Übung, deren Animation gleich läuft.
 - `docs/screens/duo/wiedergabe-duo-quer.mp4` (23 s): dasselbe am Duo quer im Training (867 × 587), mit zwei Wechseln; Rahmen und „Jetzt“ bleiben gleich groß.
 - Nebenbefund: Zweimal heute spielte ein Video statt des MP4 das WebM (im vollen E2E-Lauf und im ersten Versuch der Duo-Aufnahme). Die App weicht so aus, wenn eine Datei nicht lädt; das ist gewollt. In acht gezielten Versuchen kam der Fehler nicht wieder. Am iPhone spielt Safari das MP4 mit dem Decoder des Geräts; ob es dort vorkommt, zeigt der Gerätetest.
+
+## 44. Nach deinen Entscheidungen: Figur, Kopf links, Tests (D-501 bis D-503)
+
+**Tests der Wiedergabe (D-503).** Die drei Tests „zweimal, dann anhalten“ hängen nicht mehr am Nachladen echter Videos. Im Test ersetzt ein nachgestelltes Video die Wiedergabe: Es läuft nur weiter, springt an den Anfang oder endet, wenn der Test es sagt, mit denselben Ereignissen wie im Browser. Geprüft wird in drei Runden: von selbst, nach dem Tippen, nach dem zweiten Tippen. Jede Runde läuft zweimal, dann steht das letzte Bild mit dem Symbol. Eine Taste anderswo startet die angehaltene Animation nicht, und hinter der Übungsinfo läuft der Player weiter ohne Ende. Das läuft in Chromium und WebKit gleich. Die echte Wiedergabe prüfen die bisherigen Tests nur noch in Chromium; am Gerät prüfst du sie.
+
+```
+Arbeitspaket: D-503 Phase Programme, Tests der Wiedergabe mit nachgestelltem Video
+Umgesetzte Funktionen: Logik „zweimal, dann anhalten, Tippen spielt erneut zweimal ab“ in Chromium und WebKit mit nachgestelltem Videoende; echte Wiedergabe nur in Chromium; erfüllte AK: –
+Geänderte Dateien: e2e/uebungen-wiedergabe.spec.ts, Dokumentation
+Technische Entscheidungen: D-503
+Ausgeführte Tests: format:check, lint, typecheck, check:docs, test:e2e Chromium (uebungen-wiedergabe 9 bestanden)
+Ergebnis: bestanden; WebKit läuft in der CI
+Bekannte Einschränkungen: echte Wiedergabe in WebKit nicht mehr in der CI geprüft, am Gerät durch den Produktinhaber
+Nächste Schritte: D-501 Schleifen neu, D-502 Kopf links
+```

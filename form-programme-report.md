@@ -1521,3 +1521,25 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Rudern: Naht geprüft (D-489); Rumänisches Kreuzheben in die App (D-490)
 ```
+
+## 31. Rudern: Schleifenende geprüft (D-489)
+
+Du wolltest wissen, ob man am Ende der Rudern-Schleife einen Sprung sieht. Nein: Die Bewegung läuft über die Naht stetig weiter.
+
+- **Warum:** Ohne Pause vorn endet der Rückweg genau dort, wo der nächste Zug beginnt. Beide Wege werden zum Umkehrpunkt hin weich langsamer und danach weich schneller.
+- **Gemessen** in den Bildern 57, 58, 59, 0, 1, 2: Weg des Griffs 0,57 → 0,18 → 0,02 → 0,00 → 0,01 → 0,11 cm, Ellbogen 159,2 → 163,4 → 165,9 → 166,3 → 166,0 → 164,5°. Der Schritt über die Naht ist so klein wie die Schritte direkt daneben, wie an jedem weichen Umkehrpunkt.
+- **Im Bild:** `docs/screens/uebungen/rudern-naht.webp` zeigt die Bilder 56 bis 3; vorn steht die Bewegung kurz fast still, ohne Ruck.
+- **Videos:** je 60 gleich lange Bilder, kein doppeltes Bild am Ende.
+
+Deshalb habe ich nichts geändert und nichts neu gerendert.
+
+```
+Arbeitspaket: D-489 Phase Programme, Rudern am Kabel: Schleifenende geprüft
+Umgesetzte Funktionen: keine; Prüfung der Naht mit Messwerten, Bildern und den Videodateien; erfüllte AK: –
+Geänderte Dateien: docs/screens/uebungen/rudern-naht.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-489
+Ausgeführte Tests: Messwerte aller 60 Bilder, Phase des Ablaufs, Bilder 56 bis 3, Pixelvergleich, ffprobe; bestanden; Startansicht 237,9 KB, Übungsbilder 44 von 44
+Ergebnis: kein Sprung, keine Änderung nötig
+Bekannte Einschränkungen: keine
+Nächste Schritte: Rumänisches Kreuzheben in die App (D-490)
+```

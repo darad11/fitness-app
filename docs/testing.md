@@ -2970,3 +2970,16 @@ Ein ungültiger Eintrag in `public/uebungen/medien.json` fällt allein heraus un
 | `pnpm check:docs` mit `check_medien.py` | bestanden; „public/uebungen/medien.json: 11 Einträge geprüft, Alternativtexte höchstens 240 Zeichen“ |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; Startansicht 237,9 KB (0,1 KB mehr: `logWarning` und die Bauzeit), Übungsbilder 44 von 44 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,3 min); der neue Test „Ein ungültiger Eintrag der Bildliste fällt allein heraus und steht als Warnung in der Konsole (D-488)“ in beiden Profilen bestanden |
+
+### Rudern am Kabel: Schleifenende · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfung auf einen Sprung zwischen letztem und erstem Bild (D-489).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Phase aus `haltung.ablauf` (pause_vorn 0) in den Bildern 58, 59, 0, 1, 2 | 0,0047 → 0,0006 → 0 → 0,0004 → 0,0028; stetig, an der Naht Geschwindigkeit null |
+| `render.py rudern_kabel --pruefen --nur-messwerte` (alle 60 Bilder, finale Kleidung) | Weg des Griffs in den Bildern 57 bis 2: 0,57 → 0,18 → 0,02 → 0,00 → 0,01 → 0,11 cm; Ellbogen 159,2 → 163,4 → 165,9 → 166,3 → 166,0 → 164,5°; Meldungen 0 |
+| Bilder 56 bis 3 nebeneinander (`docs/screens/uebungen/rudern-naht.webp`) | angesehen: Bilder 58, 59, 0 und 1 fast gleich, kein Sprung |
+| Pixel: Schritt 59 → 0 gegen die Nachbarschritte | 7.333 Pixel, höchstens 63 Stufen; 58 → 59: 14.370 Pixel, 0 → 1: 6.107 Pixel |
+| `ffprobe` der Videos | MP4 und WebM je 60 Bilder, jedes 1/24 s (MP4 0,041667 s, WebM 0,041 s), kein doppeltes Bild am Ende |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,9 KB, Übungsbilder 44 von 44 |

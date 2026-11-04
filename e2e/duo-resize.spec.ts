@@ -6,22 +6,31 @@ import { expect, openPage, test } from './fixtures';
 // verloren gehen (Leitlinien Kapitel 6). Chromium und WebKit, Handy-Profil.
 test.skip(({ isMobile }) => !isMobile, 'Handy-Profil');
 
-/** Element des Inhalts auf der Leselinie (ein Viertel der Fensterhöhe), markiert für den Test. */
+/**
+ * Element des Inhalts auf der Leselinie (ein Viertel der Fensterhöhe), markiert für den Test. Wie
+ * die App (`readingAnchor`): Liegt dort eine Lücke zwischen Karten, gilt das Element knapp darunter
+ * oder darüber.
+ */
 async function markReadingLine(page: Page): Promise<Locator> {
   const found = await page.evaluate(() => {
     const main = document.getElementById('inhalt');
     if (!main) return false;
     const box = main.getBoundingClientRect();
-    const hit = document
-      .elementsFromPoint(box.left + box.width / 2, window.innerHeight / 4)
-      .find(
-        (element) =>
-          element !== main &&
-          main.contains(element) &&
-          element.getBoundingClientRect().height < window.innerHeight,
-      );
-    hit?.setAttribute('data-test-reading', '');
-    return Boolean(hit);
+    for (const offset of [0, 12, -12, 24, -24, 36, -36, 48, -48]) {
+      const hit = document
+        .elementsFromPoint(box.left + box.width / 2, window.innerHeight / 4 + offset)
+        .find(
+          (element) =>
+            element !== main &&
+            main.contains(element) &&
+            element.getBoundingClientRect().height < window.innerHeight,
+        );
+      if (hit) {
+        hit.setAttribute('data-test-reading', '');
+        return true;
+      }
+    }
+    return false;
   });
   expect(found, 'Element auf der Leselinie').toBe(true);
   return page.locator('[data-test-reading]');

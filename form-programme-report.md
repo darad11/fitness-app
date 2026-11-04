@@ -1994,12 +1994,14 @@ Nächste Schritte: D-501 Schleifen neu, D-502 Kopf links
 
 **Zuordnung.** Fast alles war eindeutig. Drei Annahmen: „Machine Squat“ ist die Hackenschmidt-Kniebeuge, „Machine Leg Curl“ der Beinbeuger liegend wie in Ganzkörper A/B, „Machine Calf Raise“ das Wadenheben stehend. Für das „Leverage Machine High Row“ gab es keine passende Übung; es ist neu in der Bibliothek als „High Row an der Maschine“, getrennt vom Rudern an der Maschine, damit beide ihren eigenen Vorwert haben. Seine Anleitung fehlt noch, weil die Quelle (ExRx) aus der Arbeitsumgebung nicht erreichbar war.
 
+**Nachtrag nach der CI.** Mit der zusätzlichen Karte fiel in WebKit beim Auf- und Zuklappen die Leselinie der Programmseite in eine Lücke zwischen zwei Karten; dort hielt die App die Leseposition nicht. Jetzt nimmt sie dann das Element knapp darunter oder darüber.
+
 **Einschätzung und Vorschläge** stehen in der Nachricht an dich; umgesetzt ist nur dein Plan, so wie du ihn geschickt hast.
 
 ```
 Arbeitspaket: D-504 Phase Programme, Dali’s PPLC
 Umgesetzte Funktionen: gebündeltes Programm „Dali’s PPLC“ (4 Tage, 8 Wochen, wiederholt); neue Übung „High Row an der Maschine“; erfüllte AK: –
-Geänderte Dateien: tools/data/programs.source.json, tools/programs_build.py, src/modules/training/data/programs.v1.json, src/modules/exercises/data/core-exercises.v1.json, exercise-guides.v1.json, tools/uebungen-3d/familien.json, tools/uebungen_familien.py, Tests mit der Zahl der Übungen und der Liste der Programme, erzeugte Übersichten in docs/, Dokumentation
+Geänderte Dateien: tools/data/programs.source.json, tools/programs_build.py, src/modules/training/data/programs.v1.json, src/app/layout/ScrollManager.tsx (Nachtrag), src/modules/exercises/data/core-exercises.v1.json, exercise-guides.v1.json, tools/uebungen-3d/familien.json, tools/uebungen_familien.py, Tests mit der Zahl der Übungen und der Liste der Programme, erzeugte Übersichten in docs/, Dokumentation
 Technische Entscheidungen: D-504
 Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Dali’s PPLC“
 Ergebnis: siehe dort

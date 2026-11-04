@@ -126,6 +126,50 @@ describe('Fortschritt (S-27, TH-05, TH-06)', () => {
     expect(within(screen.getByRole('table')).getAllByRole('row')[1]).toHaveTextContent('84 kg');
   });
 
+  it('Unterstützung: Bestleistung mit der geringsten, Verlauf mit Hinweis „weniger ist Fortschritt“ (D-507)', async () => {
+    const user = userEvent.setup();
+    const pullUp = exercises.find((e) => e.key === 'assisted_pull_up')!;
+    // Pull-Tag von Dali’s PPLC: erster Arbeitssatz Pull-Up, dann beenden.
+    const completePull = async (day: number, assistKg: number, reps: number) => {
+      const template = (await loadSampleTemplate('dali_pplc'))!;
+      const session = await startSession(
+        rt,
+        planFromTemplateDay(template, 0, 1, (id) => exercises.find((e) => e.id === id)),
+        { now: at(day) },
+      );
+      const exercise = liveExercises(session).find((e) => e.exerciseId === pullUp.id)!;
+      const working = liveSets(exercise).find((set) => set.type === 'working')!;
+      await completeSet(rt, session.id, working.id, {
+        previous: { assistKg, reps },
+        restDefaultSec: 90,
+        autoStartRest: false,
+        now: at(day, 600),
+      });
+      await finishSession(rt, session.id, { skipOpen: true, now: at(day, 3000) });
+    };
+    await completePull(0, 30, 8);
+    await completePull(7, 25, 8);
+    await completePull(14, 35, 12);
+    await renderAt('/fortschritt', 'Fortschritt');
+    const records = await screen.findByRole('region', { name: 'Bestleistungen' });
+    expect(within(records).getByText('Klimmzüge mit Unterstützung')).toBeVisible();
+    expect(within(records).getByText('−25 kg × 8')).toBeVisible();
+    await user.click(
+      within(screen.getByRole('region', { name: 'Übungsverläufe' })).getByRole('link', {
+        name: /Klimmzüge mit Unterstützung/,
+      }),
+    );
+    await screen.findByRole('heading', { level: 1, name: 'Klimmzüge mit Unterstützung' });
+    expect(
+      await screen.findByRole('region', { name: 'Unterstützung im besten Satz' }),
+    ).toBeVisible();
+    expect(
+      screen.getByText('Weniger Unterstützung ist Fortschritt: Sinkt der Wert, wirst du stärker.'),
+    ).toBeVisible();
+    // Keine Kennzahl 1RM bei Unterstützung.
+    expect(screen.queryByRole('radio', { name: 'Geschätztes 1RM' })).toBeNull();
+  });
+
   it('meldet eine unbekannte Übung als nicht gefunden', async () => {
     const router = createMemoryRouter(progressRoutes, {
       initialEntries: ['/fortschritt/uebung/00000000-0000-4000-8000-000000000000'],

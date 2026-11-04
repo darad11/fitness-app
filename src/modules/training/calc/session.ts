@@ -143,7 +143,7 @@ export function sessionVolume(session: Pick<Session, 'exercises'>): number {
 /**
  * Bester erledigter Satz ohne Aufwärmsätze: höchstes Gewicht, bei Gleichstand mehr
  * Wiederholungen; bei Wiederholungen die meisten; bei Zeit die längste Dauer; bei Distanz die
- * größte Distanz; bei Entlastung die geringste, bei Gleichstand mehr Wiederholungen (D-241).
+ * größte Distanz; bei Unterstützung die geringste, bei Gleichstand mehr Wiederholungen (D-241, D-507).
  */
 export function bestSet(exercise: SessionExercise): SessionSet | null {
   const done = liveSets(exercise).filter(countsForVolume);

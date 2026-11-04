@@ -174,7 +174,9 @@
       "secondaryMuscles": ["biceps", "upper_back"],
       "equipment": ["machine"],
       "category": "strength",
-      "trackingMode": "assisted_reps"
+      "trackingMode": "assisted_reps",
+      "goal": "pull_up",
+      "alternatives": ["lat_pulldown"]
     },
     {
       "key": "chin_up",
@@ -697,7 +699,8 @@
       "secondaryMuscles": ["front_delts"],
       "equipment": ["machine"],
       "category": "strength",
-      "trackingMode": "assisted_reps"
+      "trackingMode": "assisted_reps",
+      "goal": "dip"
     },
     {
       "key": "bench_dip",

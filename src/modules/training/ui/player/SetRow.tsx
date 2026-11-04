@@ -201,7 +201,10 @@ export function SetRow(props: SetRowProps) {
                 onClick={() => {
                   stepValue(-1);
                 }}
-                aria-label={tSession.stepDown(props.number(props.weightStep))}
+                aria-label={tSession.stepDown(
+                  props.number(props.weightStep),
+                  weight.field === 'assistKg',
+                )}
               >
                 <Minus aria-hidden="true" className="size-4" />
                 {props.number(props.weightStep)}
@@ -212,7 +215,10 @@ export function SetRow(props: SetRowProps) {
                 onClick={() => {
                   stepValue(1);
                 }}
-                aria-label={tSession.stepUp(props.number(props.weightStep))}
+                aria-label={tSession.stepUp(
+                  props.number(props.weightStep),
+                  weight.field === 'assistKg',
+                )}
               >
                 <Plus aria-hidden="true" className="size-4" />
                 {props.number(props.weightStep)}

@@ -391,6 +391,46 @@ describe('Player ausgebaut (Schritt D): Info, Umsortieren, Ersetzen, Übungstime
     expect(await within(dialog).findByText('Ersetzt Kniebeuge mit Langhantel')).toBeVisible();
   });
 
+  it('Unterstützung: Knöpfe ändern die Unterstützung, beim Ersetzen zuerst das Ziel ohne Unterstützung (D-507)', async () => {
+    const user = userEvent.setup();
+    const exercises = await loadCoreExercises();
+    const pullUp = exercises.find((e) => e.key === 'assisted_pull_up')!;
+    const session = await startSession(rt, {
+      source: 'free',
+      title: 'Freies Training',
+      exercises: [
+        {
+          exerciseId: pullUp.id,
+          name: pullUp.name,
+          trackingMode: pullUp.trackingMode,
+          sets: [{ type: 'working', target: { repsMin: 8, repsMax: 12 } }],
+        },
+      ],
+    });
+    renderAt(`/training/einheit/${session.id}`);
+    const set = 'Klimmzüge mit Unterstützung, Arbeitssatz 1';
+    await screen.findByLabelText(`Unterstützung in kg, ${set}`);
+    expect(screen.queryByRole('button', { name: /^Gewicht [+−]/ })).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Unterstützung + 2,5' }));
+    await waitFor(() => {
+      expect(screen.getByLabelText(`Unterstützung in kg, ${set}`)).toHaveValue('2,5');
+    });
+    expect(screen.getByRole('button', { name: 'Unterstützung − 2,5' })).toBeVisible();
+
+    await user.click(
+      screen.getByRole('button', { name: 'Weitere Aktionen, Klimmzüge mit Unterstützung' }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Übung ersetzen' }));
+    const picker = await screen.findByRole('dialog', {
+      name: 'Klimmzüge mit Unterstützung ersetzen',
+    });
+    const alternatives = await within(picker).findByRole('region', { name: 'Alternativen' });
+    const [goal, lat] = within(alternatives).getAllByRole('button');
+    expect(goal).toHaveTextContent(/^KlimmzügeZiel/);
+    expect(lat).toHaveTextContent(/^Latziehen/);
+    expect(within(alternatives).getAllByText('Ziel')).toHaveLength(1);
+  });
+
   it('startet und stoppt den Übungstimer eines Zeitsatzes und speichert die Dauer (AK-TRN-14)', async () => {
     const user = userEvent.setup();
     const session = await startTemplate();

@@ -3292,4 +3292,19 @@ Einstellung „Übungsnamen auf Englisch“, in Dali’s PPLC an; englische Name
 | `search.test.ts` (neu: sechs englische Namen aus Dali’s PPLC; „Machine Squat“ findet Hackenschmidt-Kniebeuge, danach Kniebeuge an der Multipresse) | 10 bestanden |
 | `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.266 Tests: 1.265 bestanden, 1 fehlgeschlagen (siehe Zeile davor, berichtigt) |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,4 KB |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 465 bestanden, 151 übersprungen, 2 fehlgeschlagen (25,0 min), parallel liefen die Unit-Tests: `start-surface.spec.ts:579` (Startfläche beim schnellen Start, Zeitmessung) und `uebungen-wiedergabe.spec.ts:142` (Schleife startet nach jedem Wechsel). Einzeln wiederholt: die Wiedergabe bestanden, die Startfläche im ersten Lauf wieder rot, im zweiten bestanden. In der CI zu `d8d4992` beide grün, E2E Chromium und WebKit bestanden |
+
+### Unterstützung als Fortschritt · 04.11.2026, Cloud-Umgebung
+
+Weniger Unterstützung ist Fortschritt, Wort „Unterstützung“, Knöpfe ±, Hinweis im Fortschritt, Ziel und Alternativen bei Dip und Pull-Up (D-507).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `alternatives.test.ts` (neu: Ziel und ausdrückliche Alternativen zuerst, Gerätefilter, Obergrenze) | 4 bestanden |
+| `coreLibrary.test.ts` (neu: Ziel und Alternativen bei Dips und Klimmzügen mit Unterstützung; Prüfung lehnt unbekannte Schlüssel und Verweise auf sich selbst ab) | bestanden; erster Lauf rot, weil der Test im falschen Block stand (`exercises` dort nicht bekannt), berichtigt |
+| `stats.test.ts` (neu: Bestleistung mit der geringsten Unterstützung, neue Bestleistung, Verlauf der Unterstützung) | 10 bestanden |
+| `progress-ui.test.tsx` (neu: Bestleistung „−25 kg × 8“, Überschrift „Unterstützung im besten Satz“, Hinweis, kein 1RM) | 4 bestanden; erster Lauf rot, weil die Seite noch lud (Test wartet jetzt auf die Karte) |
+| `player-ui.test.tsx` (neu: Knöpfe „Unterstützung + 2,5“ und „− 2,5“, beim Ersetzen zuerst Klimmzüge mit „Ziel“, dann Latziehen) | bestanden |
+| `pnpm vitest run --maxWorkers=2` (parallel zur E2E-Suite von D-506) | 140 Dateien, 1.273 Tests: 1.271 bestanden, 2 mit Zeitüberschreitung (5 s): `habits-ui.test.tsx` und `player-ui.test.tsx` „speichert Eingaben verzögert“; nicht geändert. Ohne Last wiederholt: 27 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | lief beim Commit noch; das Ergebnis trägt der nächste Commit nach |

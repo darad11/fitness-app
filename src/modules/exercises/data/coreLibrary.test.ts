@@ -85,6 +85,26 @@ describe('Prüfung der gebündelten Daten', () => {
     overlap.exercises[0]!.secondaryMuscles = [overlap.exercises[0]!.primaryMuscles[0]!];
     expect(() => parseCoreLibrary(overlap)).toThrow(/Haupt- und Nebenmuskel/);
   });
+
+  it('Ziel und Alternativen: Dip und Pull-Up ohne Unterstützung, beim Pull-Up Latziehen (D-507)', () => {
+    const exercises = parseCoreLibrary(raw);
+    const byKey = new Map(exercises.map((exercise) => [exercise.key, exercise]));
+    expect(byKey.get('assisted_dip')).toMatchObject({ goal: 'dip' });
+    expect(byKey.get('assisted_pull_up')).toMatchObject({
+      goal: 'pull_up',
+      alternatives: ['lat_pulldown'],
+    });
+    expect(exercises.filter((exercise) => exercise.goal).map((e) => e.key)).toEqual([
+      'assisted_pull_up',
+      'assisted_dip',
+    ]);
+    const unknown = clone();
+    Object.assign(unknown.exercises[0]!, { goal: 'gibt_es_nicht' });
+    expect(() => parseCoreLibrary(unknown)).toThrow(/Unbekannter Schlüssel/);
+    const self = clone();
+    Object.assign(self.exercises[0]!, { alternatives: [self.exercises[0]!.key] });
+    expect(() => parseCoreLibrary(self)).toThrow(/Übung selbst/);
+  });
 });
 
 describe('Fehler beim Nachladen', () => {

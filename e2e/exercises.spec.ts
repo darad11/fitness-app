@@ -24,3 +24,18 @@ test('Übungen: Weg über Training, Suche mit Umlaut-Ersatz und Filter (AK-EXL-0
   await expect(page.getByLabel('Muskelgruppe')).toHaveValue('calves');
   await expect(page.getByRole('list', { name: '3 Treffer' })).toBeVisible();
 });
+
+test('Dips mit Unterstützung: Alternativen mit dem Ziel ohne Unterstützung zuerst (D-507)', async ({
+  page,
+}) => {
+  await openPage(page, '/uebungen');
+  await page.getByLabel('Übungen suchen').fill('Dips mit Unterstützung');
+  await page.getByRole('link', { name: /^Dips mit Unterstützung/ }).click();
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Dips mit Unterstützung' }),
+  ).toBeVisible();
+  await page.getByRole('tab', { name: 'Alternativen' }).click();
+  const first = page.getByRole('tabpanel').getByRole('listitem').first();
+  await expect(first).toContainText('Dips');
+  await expect(first).toContainText('Ziel');
+});

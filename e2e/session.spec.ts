@@ -163,7 +163,7 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
   await picker.getByRole('button', { name: /^Klimmzüge mit Unterstützung/ }).click();
   await expect(picker).toBeHidden();
   const set = 'Klimmzüge mit Unterstützung, Arbeitssatz 1';
-  await page.getByLabel(`Entlastung in kg, ${set}`).fill('20');
+  await page.getByLabel(`Unterstützung in kg, ${set}`).fill('20');
   await page.getByLabel(`Wiederholungen, ${set}`).fill('6');
   await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();
   await expect(page.getByText('1 von 1 Sätzen')).toBeVisible();
@@ -180,7 +180,7 @@ test('Freies Training: Übung auswählen, verwerfen und rückgängig machen (AK-
   await expect(page.getByText('Training verworfen')).toBeVisible();
   await page.getByRole('button', { name: 'Rückgängig' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Freies Training' })).toBeVisible();
-  await expect(page.getByLabel(`Entlastung in kg, ${set}`)).toHaveValue('20');
+  await expect(page.getByLabel(`Unterstützung in kg, ${set}`)).toHaveValue('20');
 
   // Ein zweiter Start bietet das Fortsetzen an (AK-TRN-22).
   await openPage(page, '/training');

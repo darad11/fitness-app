@@ -133,6 +133,33 @@ describe('Bestleistungen (TH-05)', () => {
   });
 });
 
+describe('Unterstützung: weniger ist Fortschritt (Dip und Pull-Up an der Maschine, D-507)', () => {
+  const assisted = { trackingMode: 'assisted_reps' as const, bestOneRepMax: null };
+  const rows = [
+    row('1', A, '2026-09-01T10:00:00.000Z', { assistKg: 40, reps: 10 }, assisted),
+    row('2', A, '2026-09-15T10:00:00.000Z', { assistKg: 30, reps: 8 }, assisted),
+    row('3', A, '2026-10-01T10:00:00.000Z', { assistKg: 35, reps: 12 }, assisted),
+  ];
+
+  it('Bestwert ist der Satz mit der geringsten Unterstützung, ohne 1RM', () => {
+    expect(bestRecords(rows).map((r) => [r.row.id, r.values, r.oneRepMax])).toEqual([
+      ['2', { assistKg: 30, reps: 8 }, null],
+    ]);
+  });
+
+  it('neue Bestleistung nur mit weniger Unterstützung oder mehr Wiederholungen bei gleicher', () => {
+    const next = 'x';
+    expect(isNewRecord(rows, A, 'assisted_reps', { assistKg: 25, reps: 6 }, next)).toBe(true);
+    expect(isNewRecord(rows, A, 'assisted_reps', { assistKg: 30, reps: 9 }, next)).toBe(true);
+    expect(isNewRecord(rows, A, 'assisted_reps', { assistKg: 30, reps: 8 }, next)).toBe(false);
+    expect(isNewRecord(rows, A, 'assisted_reps', { assistKg: 45, reps: 15 }, next)).toBe(false);
+  });
+
+  it('Verlauf zeigt die Unterstützung des besten Satzes; sie sinkt mit dem Fortschritt', () => {
+    expect(exerciseSeries(rows, A, 'best', 'all', NOW).map((p) => p.value)).toEqual([40, 30, 35]);
+  });
+});
+
 describe('Übungsverlauf (C-02, AK-HIS-05)', () => {
   const rows = [
     row('1', A, '2026-01-10T10:00:00.000Z', { weightKg: 70, reps: 8 }),

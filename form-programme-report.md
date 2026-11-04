@@ -2071,3 +2071,24 @@ Ergebnis: siehe dort
 Bekannte Einschränkungen: Übungen ohne englischen Namen und ersetzte Übungen bleiben deutsch
 Nächste Schritte: Unterstützung als Fortschritt und Alternativen bei Dip und Pull-Up; Animationsliste und erste Prüfseite
 ```
+
+## 48. Unterstützung als Fortschritt; Ziel und Alternativen (D-507)
+
+**Was schon richtig war.** Bei Dip und Pull-Up an der Maschine erfasst die App die Unterstützung in kg, getrennt vom Gewicht. Bester Satz, Bestleistungen und „Neue Bestleistung“ werten weniger Unterstützung als besser, bei gleicher Unterstützung mehr Wiederholungen. Vorwerte und Verlauf zeigen z. B. „−20 kg × 8“. Ins Volumen und ins 1RM geht die Unterstützung nicht ein. Das ist jetzt zusätzlich durch Tests abgesichert.
+
+**Was neu ist.**
+- Überall heißt es „Unterstützung“ statt „Entlastung“, wie in deiner Nachricht.
+- Die Knöpfe ± im Player heißen bei diesen Übungen „Unterstützung − 2,5“ und „Unterstützung + 2,5“.
+- Im Fortschritt der Übung steht „Unterstützung im besten Satz“ und der Hinweis „Weniger Unterstützung ist Fortschritt: Sinkt der Wert, wirst du stärker.“
+- Alternativen: Bei Dips mit Unterstützung steht Dips als „Ziel“ zuerst, bei Klimmzügen mit Unterstützung Klimmzüge als „Ziel“ und danach Latziehen. Das gilt in den Übungsdetails und beim Ersetzen im Player und im Editor.
+
+```
+Arbeitspaket: D-507 Phase Programme, Unterstützung als Fortschritt
+Umgesetzte Funktionen: Wort „Unterstützung“, Knöpfe ± mit Unterstützung, Hinweis im Fortschritt, Ziel und Alternativen in der Bibliothek; erfüllte AK: –
+Geänderte Dateien: src/modules/exercises/model/exercise.ts, calc/alternatives.ts, ui/ExercisePicker.tsx, data/core-exercises.v1.json, src/modules/progress/ui/ExerciseDetailPage.tsx, ExerciseProgressPage.tsx, src/modules/training/ui/player/SetRow.tsx, src/shared/i18n/de.ts, de-session.ts, de-training-pages.ts, Tests, e2e/session.spec.ts, e2e/exercises.spec.ts, Dokumentation
+Technische Entscheidungen: D-507
+Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Unterstützung als Fortschritt“
+Ergebnis: siehe dort
+Bekannte Einschränkungen: keine
+Nächste Schritte: Animationsliste und erste Prüfseite
+```

@@ -330,6 +330,8 @@ export const de = {
     alternatives: 'Alternativen',
     alternativesHint:
       'Gleiche Hauptmuskelgruppe wie die bisherige Übung; der Gerätefilter gilt auch hier.',
+    // Ziel einer Übung, z. B. die Variante ohne Unterstützung (D-507).
+    goalBadge: 'Ziel',
     allExercises: 'Alle Übungen',
     // Eigene Übungen und persönliche Angaben (AP 2.5, D-258)
     customBadge: 'Eigene',

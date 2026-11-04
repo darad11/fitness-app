@@ -44,16 +44,21 @@ export function ExercisePicker({
       }),
     [index, query, muscle, equipment],
   );
+  const original = useMemo(
+    () =>
+      alternativesForId
+        ? exercises.find((exercise) => exercise.id === alternativesForId)
+        : undefined,
+    [alternativesForId, exercises],
+  );
   const alternatives = useMemo(() => {
-    const original = alternativesForId
-      ? exercises.find((exercise) => exercise.id === alternativesForId)
-      : undefined;
     if (!original || query.trim() !== '') return [];
     return findAlternatives(exercises, original, {
       ...(equipment ? { equipment } : {}),
     }).filter((exercise) => !muscle || exercise.primaryMuscles.includes(muscle));
-  }, [alternativesForId, exercises, query, muscle, equipment]);
-  const renderList = (list: readonly Exercise[]) => (
+  }, [original, exercises, query, muscle, equipment]);
+  /** `goal`: Schlüssel des Ziels der bisherigen Übung, z. B. ohne Unterstützung (D-507). */
+  const renderList = (list: readonly Exercise[], goal?: string) => (
     <ul className="divide-y divide-line overflow-hidden rounded-card bg-surface-2">
       {list.map((exercise) => (
         <li key={exercise.id}>
@@ -71,6 +76,9 @@ export function ExercisePicker({
                 <span className="font-medium">{exercise.name}</span>
                 {exercise.source === 'custom' ? (
                   <Badge tone="accent">{t.exercises.customBadge}</Badge>
+                ) : null}
+                {goal !== undefined && exercise.key === goal ? (
+                  <Badge tone="success">{t.exercises.goalBadge}</Badge>
                 ) : null}
               </span>
               <span className="block text-sm text-muted">{describeExercise(exercise)}</span>
@@ -111,7 +119,7 @@ export function ExercisePicker({
             {t.exercises.alternatives}
           </h3>
           <p className="mb-2 text-sm text-muted">{t.exercises.alternativesHint}</p>
-          {renderList(alternatives)}
+          {renderList(alternatives, original?.goal)}
         </section>
       ) : null}
       {alternatives.length > 0 ? (

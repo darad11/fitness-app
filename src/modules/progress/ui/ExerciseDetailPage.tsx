@@ -274,7 +274,13 @@ function Detail({
                       <ExerciseThumb exerciseId={alternative.id} />
                     </Suspense>
                     <span className="min-w-0 flex-1">
-                      <span className="block font-semibold">{alternative.name}</span>
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold">{alternative.name}</span>
+                        {/* Ziel der Übung, z. B. ohne Unterstützung (D-507). */}
+                        {exercise.goal !== undefined && alternative.key === exercise.goal ? (
+                          <Badge tone="success">{t.exercises.goalBadge}</Badge>
+                        ) : null}
+                      </span>
                       <span className="block text-caption text-muted">
                         {describeExercise(alternative)}
                       </span>

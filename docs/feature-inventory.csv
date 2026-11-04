@@ -28,7 +28,7 @@ B. Trainingsplanung (TP);TP-08;Satzschema (Typ, Wiederholungsbereich, Zielgewich
 B. Trainingsplanung (TP);TP-09;Pausenzeiten je Übung und Satz;"Vorgegeben; Pausentimer vorhanden";"AS 3.1.6; WEB";V;OV;H;TS-07;S;P0;MVP;R1 · M1/M2;Übernehmen;Implementiert;AK-PRG-04, AK-TRN-10
 B. Trainingsplanung (TP);TP-10;Drop-Sätze;"„Refined dropsets""";"AS 3.1.7; WEB";V;OV;M;TP-08;M;P1;MVP;R1 · M2;Übernehmen (D-108);Implementiert;AK-TRN-03, AK-PRG-04
 B. Trainingsplanung (TP);TP-11;Supersätze und Zirkel;Nicht belegt;–;P;ON;M;TP-04;M;P2;Später;R4 · M11;Später: Gruppenfeld im Datenmodell reserviert (D-108);Spezifiziert;"Übungen gruppierbar; Wechsel innerhalb der Gruppe; Pause nach der Gruppe"
-B. Trainingsplanung (TP);TP-12;Übung im Plan ersetzen, mit Alternativen;Alternativen bei fehlendem Gerät (laut Rezensionen);REV;V-R;OV;H;TP-06;S;P1;MVP;R1 · M2;Übernehmen;Implementiert;AK-PRG-03
+B. Trainingsplanung (TP);TP-12;Übung im Plan ersetzen, mit Alternativen;Alternativen bei fehlendem Gerät (laut Rezensionen);REV;V-R;OV;H;TP-06;S;P1;MVP;R1 · M2;"Übernehmen; Ziel und ausdrückliche Alternativen der Bibliothek zuerst (D-507)";Implementiert;AK-PRG-03
 B. Trainingsplanung (TP);TP-13;Eigene Übungen;Nicht belegt;–;P;ON;H;TP-06;S;P1;MVP;R1 · M2;Übernehmen;Implementiert;AK-EXL-03
 B. Trainingsplanung (TP);TP-14;Eigenes Programm erstellen und bearbeiten;Nur Trainerprogramme (laut Rezensionen);REV;VF;EV;H;TP-03;L;P0;MVP;R1 · M2;Verbesserung (D-107);Implementiert;AK-PRG-01 bis AK-PRG-04, AK-PRG-10
 B. Trainingsplanung (TP);TP-15;Sätze im Plan hinzufügen und entfernen;Laut Rezensionen nicht möglich;REV;VF;EV;H;TP-08;S;P0;MVP;R1 · M2;Verbesserung;Implementiert;AK-PRG-04

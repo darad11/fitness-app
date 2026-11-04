@@ -58,6 +58,8 @@ export const APP_PAGES = [
   '/training/nachtragen',
   '/training/vorlagen/full_body_ab',
   '/training/vorlagen/winterprogramm-2026',
+  // Wochen zum Aufklappen (D-505).
+  '/training/vorlagen/dalis-pplc',
   '/uebungen',
   '/ernaehrung',
   '/ernaehrung/hinzufuegen',

@@ -7,6 +7,8 @@ export const tProgramEditor = {
   details: 'Angaben',
   repeat: 'Nach der letzten Woche von vorn beginnen',
   repeatHint: 'Sonst gilt das Programm nach dem letzten Tag als abgeschlossen.',
+  repeatFrom: 'Wiederholen ab',
+  repeatFromHint: 'Nach der letzten Woche geht es mit dieser Woche weiter.',
   detailsSaved: 'Gespeichert',
   weeksTitle: 'Wochen und Tage',
   addWeek: 'Woche hinzufügen',

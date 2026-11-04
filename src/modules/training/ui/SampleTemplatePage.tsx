@@ -122,10 +122,15 @@ export function ProgramDetail({
   hint,
 }: ProgramDetailProps) {
   const own = !('key' in template);
-  const groups = own ? allDays(template) : groupDays(template);
+  // Alle Tage zeigen, wenn gleich benannte Tage je Woche andere Sätze haben (D-505); sonst stünde
+  // nur die erste Woche da, und „Heute trainieren“ begänne einen früheren Tag.
+  const everyDay = own || hasVariants(template);
+  const groups = everyDay ? allDays(template) : groupDays(template);
   const perSide = new Set(exercises.filter((e) => e.isUnilateral).map((e) => e.id));
   const byId = new Map(exercises.map((exercise) => [exercise.id, exercise]));
   const { start, error, busy } = useStartSession();
+  // Von Hand auf- oder zugeklappte Wochen (D-505).
+  const [toggled, setToggled] = useState<ReadonlyMap<string, boolean>>(() => new Map());
   const state = useTrainingState();
   const sessions = useCompletedSessions();
   const restDefaultSec = (useSettings() ?? SETTINGS_DEFAULTS).restDefaultSec;
@@ -135,6 +140,9 @@ export function ProgramDetail({
   // Erledigte Tage nur markieren, wenn jeder Tag genau einmal vorkommt (z. B. Programm C);
   // bei wiederholten Tagen (A, B, A, B) wäre die Markierung mehrdeutig.
   const markDone = progress?.total === groups.reduce((sum, group) => sum + group.days.length, 0);
+  const foldWeeks = everyDay && !own;
+  const openWeekId = template.weeks[progress?.next?.weekIndex ?? 0]?.id;
+  const isOpen = (weekId: string) => toggled.get(weekId) ?? weekId === openWeekId;
 
   const startDay = (weekIndex: number, dayIndex: number) => {
     // Der Plan entsteht erst im Start; scheitert er, erscheint die Meldung (B-07).
@@ -183,20 +191,11 @@ export function ProgramDetail({
             }}
           />
         ) : null}
-        {groups.map((group) => (
-          <section key={group.week.id} aria-labelledby={`woche-${group.week.id}`}>
-            {groups.length > 1 || own ? (
-              <h2 id={`woche-${group.week.id}`} className="eyebrow mb-3 text-muted">
-                {group.week.name}
-              </h2>
-            ) : (
-              <h2 id={`woche-${group.week.id}`} className="sr-only">
-                {t.programs.daysTitle}
-              </h2>
-            )}
+        {groups.map((group) => {
+          const days = () => (
             <div className="grid gap-4">
               {group.days.map(({ day, index, weekIndex, dayIndex }) => {
-                const isNext = own
+                const isNext = everyDay
                   ? progress?.next?.dayId === day.id
                   : progress?.next?.name === day.name;
                 const isDone = markDone && progress.doneInRound.has(index);
@@ -269,8 +268,50 @@ export function ProgramDetail({
                 );
               })}
             </div>
-          </section>
-        ))}
+          );
+          // Viele Wochen mit verschiedenen Sätzen (D-505): je Woche aufklappbar, offen ist die Woche
+          // des nächsten Tages; sonst stünden alle Tage aller Wochen untereinander. Die Tage einer
+          // zugeklappten Woche entstehen erst beim Aufklappen.
+          if (foldWeeks) {
+            const open = isOpen(group.week.id);
+            return (
+              <details
+                key={group.week.id}
+                open={open}
+                onToggle={(event) => {
+                  const now = event.currentTarget.open;
+                  if (now !== isOpen(group.week.id)) {
+                    setToggled((before) => new Map(before).set(group.week.id, now));
+                  }
+                }}
+              >
+                <summary className="cursor-pointer py-2">
+                  <h2 id={`woche-${group.week.id}`} className="eyebrow inline text-muted">
+                    {group.week.name}
+                  </h2>
+                  <span className="block text-sm text-muted">
+                    {group.days.map(({ day }) => day.name).join(', ')}
+                  </span>
+                </summary>
+                {open ? <div className="mt-3">{days()}</div> : null}
+              </details>
+            );
+          }
+          return (
+            <section key={group.week.id} aria-labelledby={`woche-${group.week.id}`}>
+              {groups.length > 1 || own ? (
+                <h2 id={`woche-${group.week.id}`} className="eyebrow mb-3 text-muted">
+                  {group.week.name}
+                </h2>
+              ) : (
+                <h2 id={`woche-${group.week.id}`} className="sr-only">
+                  {t.programs.daysTitle}
+                </h2>
+              )}
+              {days()}
+            </section>
+          );
+        })}
         <Card title={t.programs.schedule}>
           <ul className="space-y-1">
             {template.weeks.map((week) => (
@@ -280,7 +321,11 @@ export function ProgramDetail({
             ))}
           </ul>
           {template.repeat ? (
-            <p className="mt-2 text-sm text-muted">{t.programs.scheduleRepeat}</p>
+            <p className="mt-2 text-sm text-muted">
+              {template.repeatFromWeek && template.repeatFromWeek > 1
+                ? t.programs.scheduleRepeatFrom(template.weeks[template.repeatFromWeek - 1]?.name)
+                : t.programs.scheduleRepeat}
+            </p>
           ) : null}
           <p className="mt-2 text-sm text-muted">{t.training.startDayHint}</p>
         </Card>
@@ -302,6 +347,29 @@ function allDays(template: PlanTree): DayGroup[] {
     week,
     days: week.days.map((day, dayIndex) => ({ day, index: index++, weekIndex, dayIndex })),
   }));
+}
+
+/**
+ * Haben gleich benannte Tage verschiedene Inhalte (Satzzahl je Woche, Wechsel zweier Übungen,
+ * D-505)? Verglichen werden Übungen, Sätze und Hinweis, ohne IDs.
+ */
+function hasVariants(template: PlanTree): boolean {
+  const byName = new Map<string, string>();
+  for (const week of template.weeks) {
+    for (const day of week.days) {
+      const content = JSON.stringify([
+        day.notes ?? '',
+        day.exercises.map((e) => [
+          e.exerciseId,
+          e.sets.map((set) => [set.type, set.repsMin, set.repsMax]),
+        ]),
+      ]);
+      const seen = byName.get(day.name);
+      if (seen !== undefined && seen !== content) return true;
+      byName.set(day.name, content);
+    }
+  }
+  return false;
 }
 
 /** Tage ohne Wiederholung, gruppiert nach der Woche ihres ersten Auftretens. */

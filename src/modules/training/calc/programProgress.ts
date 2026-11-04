@@ -72,7 +72,8 @@ export function dayNumber(
  * Fortschritt eines aktiven Programms aus den abgeschlossenen Einheiten (AK-PRG-08, D-249).
  * Gezählt werden Einheiten dieses Programms seit `activeSince`. Der nächste Tag folgt auf den
  * zuletzt abgeschlossenen; ein frei gewählter früherer Tag beginnt einen neuen Durchlauf.
- * Nach dem letzten Tag beginnt ein Programm mit `repeat` von vorn, sonst ist es abgeschlossen.
+ * Nach dem letzten Tag beginnt ein Programm mit `repeat` von vorn, mit `repeatFromWeek` bei
+ * dieser Woche (D-505); sonst ist es abgeschlossen.
  */
 export function programProgress(
   template: PlanTree,
@@ -124,8 +125,17 @@ export function programProgress(
   if (total === 0) return { ...base, finished: false };
   if (last === undefined) return { ...base, next: days[0], finished: false };
   if (last + 1 < total) return { ...base, next: days[last + 1], finished: false };
-  if (template.repeat) return { ...base, next: days[0], finished: false };
+  if (template.repeat) return { ...base, next: repeatStart(template, days), finished: false };
   return { ...base, finished: true };
+}
+
+/** Erster Tag der Wiederholung: Woche `repeatFromWeek`, wenn es sie gibt, sonst Woche 1. */
+function repeatStart(
+  template: PlanTree,
+  days: readonly ProgramDayRef[],
+): ProgramDayRef | undefined {
+  const week = (template.repeatFromWeek ?? 1) - 1;
+  return days.find((day) => day.weekIndex === week) ?? days[0];
 }
 
 /** ISO-Wochentag (1 = Montag … 7 = Sonntag) eines Datums in lokaler Zeit. */

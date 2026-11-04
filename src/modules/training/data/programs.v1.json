@@ -6,42 +6,56 @@
       "slug": "dalis-pplc",
       "program": true,
       "name": "Dali’s PPLC",
-      "description": "Push, Pull, Beine und Compound: vier Einheiten pro Woche in dieser Reihenfolge, 8 Wochen, danach von vorn. Sätze, Ziele und Pausen wie in Ganzkörper A/B und Push/Pull/Beine: 3 Arbeitssätze, Aufwärmsätze bei der ersten Übung des Tages und vor schweren Grundübungen wie Kreuzheben und Kniebeuge. Steigerung: Wenn alle Arbeitssätze die obere Grenze erreichen, beim nächsten Mal einen Gewichtsschritt mehr; bei Klimmzügen und Dips mit Unterstützung etwas weniger Entlastung. Keine Gewichtsvorgaben; der Player zeigt den letzten Wert der Übung, auch aus anderen Programmen.",
+      "description": "So steigerst du: Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Sätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: zwei bis drei Arbeitssätze je Übung. Ab Woche 4: drei bis vier Sätze bei den Grundübungen, zwei bis drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.",
       "level": "intermediate",
       "location": "gym",
       "daysPerWeek": "4",
       "repeat": true,
+      "repeatFromWeek": 8,
       "days": [
         {
-          "name": "Push",
+          "name": "push_einstieg2",
+          "label": "Push",
+          "weekday": 1,
           "exercises": [
-            {
-              "exercise": "assisted_dip",
-              "originalName": "Dip Assisted",
-              "warmup": 1,
-              "working": 3,
-              "target": {
-                "repsMin": 8,
-                "repsMax": 12
-              },
-              "restSec": 90
-            },
             {
               "exercise": "bench_press_dumbbell",
               "originalName": "Dumbbell Bench Press",
               "warmup": 1,
-              "working": 3,
+              "working": 2,
               "target": {
-                "repsMin": 8,
-                "repsMax": 12
+                "repsMin": 6,
+                "repsMax": 10
               },
-              "restSec": 120
+              "restSec": 150
             },
             {
               "exercise": "incline_bench_press_dumbbell",
               "originalName": "Dumbbell Incline Bench Press",
               "warmup": 0,
-              "working": 3,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "originalName": "Dumbbell Seated Shoulder Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 2,
               "target": {
                 "repsMin": 8,
                 "repsMax": 12
@@ -49,57 +63,429 @@
               "restSec": 120
             },
             {
-              "exercise": "shoulder_press_dumbbell_seated",
-              "originalName": "Dumbbell Seated Shoulder Press",
-              "warmup": 0,
-              "working": 3,
-              "target": {
-                "repsMin": 8,
-                "repsMax": 12
-              },
-              "restSec": 90
-            },
-            {
               "exercise": "lateral_raise_dumbbell",
               "originalName": "Dumbbell Lateral Raise",
               "warmup": 0,
-              "working": 3,
+              "working": 2,
               "target": {
                 "repsMin": 12,
-                "repsMax": 15
+                "repsMax": 20
               },
               "restSec": 60
             },
             {
-              "exercise": "chest_press_machine",
-              "originalName": "Leverage Chest Press",
+              "exercise": "cable_fly",
+              "originalName": "Cable Fly",
               "warmup": 0,
-              "working": 3,
+              "working": 2,
               "target": {
                 "repsMin": 10,
-                "repsMax": 12
+                "repsMax": 15
               },
-              "restSec": 90
+              "restSec": 75
             },
             {
               "exercise": "triceps_pushdown_cable",
               "originalName": "Cable Tricep Pushdown",
               "warmup": 0,
-              "working": 3,
+              "working": 2,
               "target": {
                 "repsMin": 10,
-                "repsMax": 12
+                "repsMax": 15
               },
               "restSec": 75
             }
           ]
         },
         {
-          "name": "Pull",
+          "name": "pull_einstieg2",
+          "label": "Pull",
+          "weekday": 2,
+          "exercises": [
+            {
+              "exercise": "deadlift_barbell",
+              "originalName": "Barbell Deadlift",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 6
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "machine_row",
+              "originalName": "Leverage Machine Iso Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "high_row_machine",
+              "originalName": "Leverage Machine High Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "reverse_pec_deck",
+              "originalName": "Machine Reverse Fly",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hammer_curl",
+              "originalName": "Dumbbell Alternating Hammer Curl",
+              "note": "wechselseitig",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "legs_einstieg2",
+          "label": "Legs",
+          "weekday": 4,
+          "exercises": [
+            {
+              "exercise": "hack_squat",
+              "originalName": "Machine Squat",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Machine Leg Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "originalName": "Machine Seated Leg Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Machine Leg Extension",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Machine Seated Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_einstieg2_bench_press_dumbbell",
+          "label": "Compound",
+          "weekday": 6,
           "exercises": [
             {
               "exercise": "assisted_pull_up",
-              "originalName": "Pull Up Assisted",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_einstieg2_assisted_dip",
+          "label": "Compound",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "push_einstieg3",
+          "label": "Push",
+          "weekday": 1,
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
               "warmup": 1,
               "working": 3,
               "target": {
@@ -109,26 +495,99 @@
               "restSec": 150
             },
             {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Dumbbell Incline Bench Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "originalName": "Dumbbell Seated Shoulder Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "pull_einstieg3",
+          "label": "Pull",
+          "weekday": 2,
+          "exercises": [
+            {
               "exercise": "deadlift_barbell",
               "originalName": "Barbell Deadlift",
               "warmup": 2,
               "working": 3,
               "target": {
                 "repsMin": 5,
-                "repsMax": 7
+                "repsMax": 6
               },
               "restSec": 180
             },
             {
-              "exercise": "bent_over_row_barbell",
-              "originalName": "Barbell Bent Over Row",
-              "warmup": 0,
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
               "working": 3,
               "target": {
-                "repsMin": 6,
-                "repsMax": 8
+                "repsMin": 8,
+                "repsMax": 12
               },
-              "restSec": 150
+              "restSec": 120
             },
             {
               "exercise": "machine_row",
@@ -153,15 +612,15 @@
               "restSec": 90
             },
             {
-              "exercise": "seated_cable_row",
-              "originalName": "Cable Seated Row",
+              "exercise": "reverse_pec_deck",
+              "originalName": "Machine Reverse Fly",
               "warmup": 0,
               "working": 3,
               "target": {
-                "repsMin": 10,
-                "repsMax": 12
+                "repsMin": 12,
+                "repsMax": 20
               },
-              "restSec": 90
+              "restSec": 60
             },
             {
               "exercise": "hammer_curl",
@@ -171,63 +630,21 @@
               "working": 3,
               "target": {
                 "repsMin": 10,
-                "repsMax": 12
+                "repsMax": 15
               },
-              "restSec": 60
+              "restSec": 75
             }
           ]
         },
         {
-          "name": "Beine",
+          "name": "legs_einstieg3",
+          "label": "Legs",
+          "weekday": 4,
           "exercises": [
-            {
-              "exercise": "leg_extension",
-              "originalName": "Machine Leg Extension",
-              "warmup": 1,
-              "working": 3,
-              "target": {
-                "repsMin": 10,
-                "repsMax": 12
-              },
-              "restSec": 75
-            },
-            {
-              "exercise": "lying_leg_curl",
-              "originalName": "Machine Leg Curl",
-              "warmup": 0,
-              "working": 3,
-              "target": {
-                "repsMin": 10,
-                "repsMax": 12
-              },
-              "restSec": 75
-            },
-            {
-              "exercise": "standing_calf_raise",
-              "originalName": "Machine Calf Raise",
-              "warmup": 0,
-              "working": 3,
-              "target": {
-                "repsMin": 12,
-                "repsMax": 15
-              },
-              "restSec": 60
-            },
-            {
-              "exercise": "seated_calf_raise",
-              "originalName": "Machine Seated Calf Raise",
-              "warmup": 0,
-              "working": 3,
-              "target": {
-                "repsMin": 12,
-                "repsMax": 15
-              },
-              "restSec": 60
-            },
             {
               "exercise": "hack_squat",
               "originalName": "Machine Squat",
-              "warmup": 1,
+              "warmup": 2,
               "working": 3,
               "target": {
                 "repsMin": 8,
@@ -245,15 +662,94 @@
                 "repsMax": 12
               },
               "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Machine Leg Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "originalName": "Machine Seated Leg Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Machine Leg Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Machine Seated Calf Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
             }
           ]
         },
         {
-          "name": "Compound",
+          "name": "compound_einstieg3_bench_press_dumbbell",
+          "label": "Compound",
+          "weekday": 6,
           "exercises": [
             {
               "exercise": "assisted_pull_up",
-              "originalName": "Pull Up Assisted",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
               "warmup": 1,
               "working": 3,
               "target": {
@@ -263,30 +759,1289 @@
               "restSec": 150
             },
             {
-              "exercise": "overhead_press_barbell",
-              "originalName": "Barbell Military Press",
-              "warmup": 1,
-              "working": 3,
-              "target": {
-                "repsMin": 6,
-                "repsMax": 8
-              },
-              "restSec": 150
-            },
-            {
               "exercise": "bent_over_row_barbell",
-              "originalName": "Barbell Bent Over Row",
+              "originalName": "Barbell Bent-Over Row",
               "warmup": 0,
               "working": 3,
               "target": {
                 "repsMin": 6,
-                "repsMax": 8
+                "repsMax": 10
               },
               "restSec": 150
             },
             {
               "exercise": "bench_press_dumbbell",
               "originalName": "Dumbbell Bench Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "push_aufbau_hinweis",
+          "label": "Push",
+          "weekday": 1,
+          "notes": "Ab dieser Woche mehr Sätze: Grundübungen 4, übrige 3.",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Dumbbell Incline Bench Press",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "originalName": "Dumbbell Seated Shoulder Press",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "pull_aufbau",
+          "label": "Pull",
+          "weekday": 2,
+          "exercises": [
+            {
+              "exercise": "deadlift_barbell",
+              "originalName": "Barbell Deadlift",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 6
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "machine_row",
+              "originalName": "Leverage Machine Iso Row",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "high_row_machine",
+              "originalName": "Leverage Machine High Row",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "reverse_pec_deck",
+              "originalName": "Machine Reverse Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hammer_curl",
+              "originalName": "Dumbbell Alternating Hammer Curl",
+              "note": "wechselseitig",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "legs_aufbau",
+          "label": "Legs",
+          "weekday": 4,
+          "exercises": [
+            {
+              "exercise": "hack_squat",
+              "originalName": "Machine Squat",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Machine Leg Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "originalName": "Machine Seated Leg Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Machine Leg Extension",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Machine Seated Calf Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_aufbau_assisted_dip",
+          "label": "Compound",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "push_aufbau",
+          "label": "Push",
+          "weekday": 1,
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Dumbbell Incline Bench Press",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "originalName": "Dumbbell Seated Shoulder Press",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Cable Fly",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "compound_aufbau_bench_press_dumbbell",
+          "label": "Compound",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 0,
+              "working": 4,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 4,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "push_leicht_hinweis",
+          "label": "Push · leicht",
+          "weekday": 1,
+          "notes": "Diese Woche ist leichter: etwa die Hälfte der Sätze.",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Dumbbell Incline Bench Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "originalName": "Dumbbell Seated Shoulder Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Cable Fly",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "pull_leicht",
+          "label": "Pull · leicht",
+          "weekday": 2,
+          "exercises": [
+            {
+              "exercise": "deadlift_barbell",
+              "originalName": "Barbell Deadlift",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 6
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "machine_row",
+              "originalName": "Leverage Machine Iso Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "high_row_machine",
+              "originalName": "Leverage Machine High Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "reverse_pec_deck",
+              "originalName": "Machine Reverse Fly",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hammer_curl",
+              "originalName": "Dumbbell Alternating Hammer Curl",
+              "note": "wechselseitig",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "legs_leicht",
+          "label": "Legs · leicht",
+          "weekday": 4,
+          "exercises": [
+            {
+              "exercise": "hack_squat",
+              "originalName": "Machine Squat",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Machine Leg Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "originalName": "Machine Seated Leg Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Machine Leg Extension",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Machine Seated Calf Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_leicht_bench_press_dumbbell",
+          "label": "Compound · leicht",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "push_neuer_block_hinweis",
+          "label": "Push",
+          "weekday": 1,
+          "notes": "Neuer Aufbaublock: Diese Woche steigst du mit etwas weniger Sätzen ein.",
+          "exercises": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "incline_bench_press_dumbbell",
+              "originalName": "Dumbbell Incline Bench Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "shoulder_press_dumbbell_seated",
+              "originalName": "Dumbbell Seated Shoulder Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_fly",
+              "originalName": "Cable Fly",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "triceps_pushdown_cable",
+              "originalName": "Cable Tricep Pushdown",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "pull_neuer_block",
+          "label": "Pull",
+          "weekday": 2,
+          "exercises": [
+            {
+              "exercise": "deadlift_barbell",
+              "originalName": "Barbell Deadlift",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 5,
+                "repsMax": 6
+              },
+              "restSec": 180
+            },
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "machine_row",
+              "originalName": "Leverage Machine Iso Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "high_row_machine",
+              "originalName": "Leverage Machine High Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 90
+            },
+            {
+              "exercise": "reverse_pec_deck",
+              "originalName": "Machine Reverse Fly",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "hammer_curl",
+              "originalName": "Dumbbell Alternating Hammer Curl",
+              "note": "wechselseitig",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            }
+          ]
+        },
+        {
+          "name": "legs_neuer_block",
+          "label": "Legs",
+          "weekday": 4,
+          "exercises": [
+            {
+              "exercise": "hack_squat",
+              "originalName": "Machine Squat",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lying_leg_curl",
+              "originalName": "Machine Leg Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "seated_leg_curl",
+              "originalName": "Machine Seated Leg Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "leg_extension",
+              "originalName": "Machine Leg Extension",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "seated_calf_raise",
+              "originalName": "Machine Seated Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "plank",
+              "originalName": "Plank",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "durationMinSec": 30,
+                "durationMaxSec": 45
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_neuer_block_assisted_dip",
+          "label": "Compound",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
               "warmup": 0,
               "working": 3,
               "target": {
@@ -307,67 +2062,390 @@
               "restSec": 120
             },
             {
-              "exercise": "assisted_dip",
-              "originalName": "Dip Assisted",
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
               "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_leicht_assisted_dip",
+          "label": "Compound · leicht",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 2,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 1,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
+            }
+          ]
+        },
+        {
+          "name": "compound_neuer_block_bench_press_dumbbell",
+          "label": "Compound",
+          "weekday": 6,
+          "exercises": [
+            {
+              "exercise": "assisted_pull_up",
+              "originalName": "Pull-Up",
+              "warmup": 1,
               "working": 3,
               "target": {
                 "repsMin": 8,
                 "repsMax": 12
               },
-              "restSec": 90
+              "restSec": 120
+            },
+            {
+              "exercise": "overhead_press_barbell",
+              "originalName": "Barbell Military Press",
+              "warmup": 1,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bent_over_row_barbell",
+              "originalName": "Barbell Bent-Over Row",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "warmup": 0,
+              "working": 3,
+              "target": {
+                "repsMin": 6,
+                "repsMax": 10
+              },
+              "restSec": 150
+            },
+            {
+              "exercise": "leg_press",
+              "originalName": "Machine Leg Press",
+              "warmup": 2,
+              "working": 3,
+              "target": {
+                "repsMin": 8,
+                "repsMax": 12
+              },
+              "restSec": 120
+            },
+            {
+              "exercise": "lateral_raise_dumbbell",
+              "originalName": "Dumbbell Lateral Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "biceps_curl_dumbbell",
+              "originalName": "Dumbbell Curl",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 10,
+                "repsMax": 15
+              },
+              "restSec": 75
+            },
+            {
+              "exercise": "standing_calf_raise",
+              "originalName": "Machine Calf Raise",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 20
+              },
+              "restSec": 60
+            },
+            {
+              "exercise": "cable_crunch",
+              "originalName": "Cable Crunch",
+              "warmup": 0,
+              "working": 2,
+              "target": {
+                "repsMin": 12,
+                "repsMax": 15
+              },
+              "restSec": 45
             }
           ]
         }
       ],
       "weeks": [
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_einstieg2",
+          "pull_einstieg2",
+          "legs_einstieg2",
+          "compound_einstieg2_bench_press_dumbbell"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_einstieg2",
+          "pull_einstieg2",
+          "legs_einstieg2",
+          "compound_einstieg2_assisted_dip"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_einstieg3",
+          "pull_einstieg3",
+          "legs_einstieg3",
+          "compound_einstieg3_bench_press_dumbbell"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_aufbau_hinweis",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_bench_press_dumbbell"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_leicht_hinweis",
+          "pull_leicht",
+          "legs_leicht",
+          "compound_leicht_bench_press_dumbbell"
         ],
         [
-          "Push",
-          "Pull",
-          "Beine",
-          "Compound"
+          "push_neuer_block_hinweis",
+          "pull_neuer_block",
+          "legs_neuer_block",
+          "compound_neuer_block_assisted_dip"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_bench_press_dumbbell"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_bench_press_dumbbell"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_bench_press_dumbbell"
+        ],
+        [
+          "push_leicht_hinweis",
+          "pull_leicht",
+          "legs_leicht",
+          "compound_leicht_assisted_dip"
+        ],
+        [
+          "push_neuer_block_hinweis",
+          "pull_neuer_block",
+          "legs_neuer_block",
+          "compound_neuer_block_bench_press_dumbbell"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_bench_press_dumbbell"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_bench_press_dumbbell"
+        ],
+        [
+          "push_aufbau",
+          "pull_aufbau",
+          "legs_aufbau",
+          "compound_aufbau_assisted_dip"
+        ],
+        [
+          "push_leicht_hinweis",
+          "pull_leicht",
+          "legs_leicht",
+          "compound_leicht_bench_press_dumbbell"
         ]
       ]
     },

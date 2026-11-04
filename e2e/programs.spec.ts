@@ -79,3 +79,32 @@ test('Programm C: Wochen, Hinweise und Dropsets ohne Pause sind sichtbar', async
     /Laufband1 Satz · 30:00 min · ohne Pause/,
   );
 });
+
+test('Dali’s PPLC: Wochen zum Aufklappen, Hinweis der leichten Woche, Wiederholung ab Woche 8 (D-505)', async ({
+  page,
+}) => {
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  await expect(page.getByRole('heading', { level: 1, name: 'Dali’s PPLC' })).toBeVisible();
+  const weeks = page.locator('details');
+  await expect(weeks).toHaveCount(21);
+  // Ohne aktives Programm ist Woche 1 offen; nur ihre vier Tage stehen auf der Seite.
+  await expect(page.locator('details[open]')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: / heute trainieren$/ })).toHaveCount(4);
+  await expect(page.getByRole('region', { name: 'Push' })).toContainText('Dumbbell Bench Press');
+
+  // Woche 7 aufklappen: leichte Woche mit Hinweis am ersten Tag.
+  const light = weeks.nth(6);
+  await light.locator('summary').click();
+  await expect(light).toHaveAttribute('open', '');
+  const push = light.getByRole('region', { name: 'Push · leicht' });
+  await expect(push).toContainText('Diese Woche ist leichter: etwa die Hälfte der Sätze.');
+  await expect(page.getByRole('button', { name: / heute trainieren$/ })).toHaveCount(8);
+  await light.locator('summary').click();
+  await expect(page.getByRole('button', { name: / heute trainieren$/ })).toHaveCount(4);
+
+  await expect(
+    page.getByText(
+      'Danach geht es mit Woche 8 weiter. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.',
+    ),
+  ).toBeVisible();
+});

@@ -110,6 +110,26 @@ describe('Folge der Trainingstage (D-214, D-249)', () => {
     expect([...second.doneInRound]).toEqual([0]);
   });
 
+  it('wiederholt ab der Woche aus `repeatFromWeek`, ohne die Wochen davor (D-505)', () => {
+    const block = {
+      ...template([['Einstieg'], ['Aufbau'], ['Leicht']], true),
+      repeatFromWeek: 2,
+    };
+    const sessions = [0, 1, 2].map((w) => done(w, 0, `2026-10-2${String(w)}T10:00:00.000Z`));
+    const after = programProgress(block, sessions);
+    expect(after.next).toMatchObject({ index: 1, weekIndex: 1, name: 'Aufbau' });
+    // Zweiter Durchlauf: Aufbau, Leicht, dann wieder Aufbau.
+    const second = programProgress(block, [
+      ...sessions,
+      done(1, 0, '2026-10-24T10:00:00.000Z'),
+      done(2, 0, '2026-10-25T10:00:00.000Z'),
+    ]);
+    expect(second).toMatchObject({ round: 2, completed: 5 });
+    expect(second.next?.name).toBe('Aufbau');
+    // Gibt es die Woche nicht mehr (im Editor gelöscht), beginnt die Wiederholung bei Woche 1.
+    expect(programProgress({ ...block, repeatFromWeek: 9 }, sessions).next?.index).toBe(0);
+  });
+
   it('ist ohne Wiederholung nach dem letzten Tag abgeschlossen', () => {
     const once = template([['A', 'B']], false);
     const progress = programProgress(once, [

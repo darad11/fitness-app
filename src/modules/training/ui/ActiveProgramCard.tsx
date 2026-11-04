@@ -58,6 +58,12 @@ export function ActiveProgramCard({
         {week ? ` · ${week.name}` : ''}
       </p>
       {day ? <p className="mt-1 text-sm text-muted">{describeDay(day, restDefaultSec)}</p> : null}
+      {/* Hinweis des Tages, z. B. zu Beginn einer leichten Woche (D-505). */}
+      {day?.notes ? (
+        <p role="note" className="mt-3 rounded-tile bg-surface-2 px-3 py-2 text-sm">
+          {day.notes}
+        </p>
+      ) : null}
       {rest ? <p className="mt-3 font-medium">{t.today.restPlanned}</p> : null}
       <Meter
         className="mt-4"

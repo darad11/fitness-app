@@ -5,7 +5,16 @@ import { SETTINGS_DEFAULTS, useSettings } from '@/modules/settings';
 import { uuidv4 } from '@/shared/lib/uuid';
 import { t } from '@/shared/i18n/de';
 import { tProgramEditor } from '@/shared/i18n/de-program-editor';
-import { Button, ButtonLink, Card, IconButton, PageHeader, Skeleton, Switch } from '@/shared/ui';
+import {
+  Button,
+  ButtonLink,
+  Card,
+  IconButton,
+  PageHeader,
+  SelectField,
+  Skeleton,
+  Switch,
+} from '@/shared/ui';
 import {
   addDay,
   addWeek,
@@ -350,6 +359,27 @@ function DetailsCard({
           checked={program.repeat}
           onChange={(repeat) => void onSave((plan) => ({ ...plan, repeat }))}
         />
+        {/* Wiederholen ab Woche n, z. B. ohne die Einstiegswochen (D-505). */}
+        {program.repeat && program.weeks.length > 1 ? (
+          <div className="mt-2">
+            <SelectField
+              label={tProgramEditor.repeatFrom}
+              hint={tProgramEditor.repeatFromHint}
+              value={String(
+                program.repeatFromWeek && program.repeatFromWeek <= program.weeks.length
+                  ? program.repeatFromWeek
+                  : 1,
+              )}
+              options={program.weeks.map((week, index) => ({
+                value: String(index + 1),
+                label: week.name,
+              }))}
+              onChange={(value) =>
+                void onSave((plan) => ({ ...plan, repeatFromWeek: Number(value) }))
+              }
+            />
+          </div>
+        ) : null}
       </div>
     </Card>
   );

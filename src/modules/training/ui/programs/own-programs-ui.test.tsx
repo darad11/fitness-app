@@ -10,7 +10,9 @@ import { listOwnPrograms } from '../../data/programRepository';
 import { findActiveSession } from '../../data/sessionRepository';
 import { loadTrainingState } from '../../data/trainingStateRepository';
 import { trainingRoutes } from '../../routes';
-import { createProgram } from '../../service/programService';
+import { addWeek } from '../../calc/programEdit';
+import { createProgram, editProgram } from '../../service/programService';
+import { uuidv4 } from '@/shared/lib/uuid';
 
 let rt: DbRuntime;
 beforeEach(async () => {
@@ -165,6 +167,45 @@ describe('Eigene Programme (AP 2.1 bis 2.4, D-257)', () => {
       await user.click(screen.getByRole('button', { name: 'Rückgängig' }));
       await screen.findByRole('link', { name: /^Alt/ });
       expect((await listOwnPrograms(rt.db)).map((p) => p.name)).toEqual(['Alt']);
+    },
+  );
+
+  it(
+    'Wiederholen ab: nur mit Wiederholung, speichert die gewählte Woche (D-505)',
+    { timeout: 20_000 },
+    async () => {
+      const user = userEvent.setup();
+      const created = await createProgram(rt, {
+        name: 'Block',
+        firstWeek: 'Einstieg',
+        firstDay: 'A',
+      });
+      await editProgram(rt, created.id, (plan) => ({
+        ...plan,
+        weeks: addWeek(plan.weeks, { week: 'Aufbau', day: 'A' }, uuidv4),
+      }));
+      await renderAt(`/training/programme/${created.id}/bearbeiten`, 'Block');
+      // Neue Programme wiederholen; ohne Wiederholung gibt es kein „Wiederholen ab“.
+      const from = screen.getByLabelText('Wiederholen ab');
+      expect(from).toHaveValue('1');
+      expect(
+        within(from)
+          .getAllByRole('option')
+          .map((o) => o.textContent),
+      ).toEqual(['Einstieg', 'Aufbau']);
+      const repeat = screen.getByRole('switch', {
+        name: /^Nach der letzten Woche von vorn beginnen/,
+      });
+      await user.click(repeat);
+      await waitFor(() => {
+        expect(screen.queryByLabelText('Wiederholen ab')).toBeNull();
+      });
+      await user.click(repeat);
+      await user.selectOptions(await screen.findByLabelText('Wiederholen ab'), 'Aufbau');
+      await waitFor(async () => {
+        expect((await listOwnPrograms(rt.db))[0]?.repeatFromWeek).toBe(2);
+      });
+      expect(screen.getByLabelText('Wiederholen ab')).toHaveValue('2');
     },
   );
 

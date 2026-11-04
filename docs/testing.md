@@ -3259,3 +3259,21 @@ Programm nach dem Plan des Produktinhabers und neue Übung „High Row an der Ma
 | Leselinie in einer Lücke (`ScrollManager.test.tsx`, neu) | bestanden; Gegenprobe mit dem alten `ScrollManager.tsx`: rot |
 | Chromium an derselben Stelle (466 × 678, Seite auf halber Höhe gescrollt) | auf der Leselinie Text einer Karte, 36 px darunter eine Lücke zwischen zwei Karten |
 | E2E Chromium zu Scrollen und Leseposition (`duo-resize`, `duo-feste-leisten`, `duo-player`, `duo-safe-area`, `duo-tabbar`, `header-logo`, `marks`, `program-list`, `rahmen-tastatur`, `scrollbars`, `shopping`, `tabbar`, `training-scroll`, `templates`) | 63 bestanden, 35 übersprungen |
+
+### Dali’s PPLC neu · 04.11.2026, Cloud-Umgebung
+
+Satzzahl je Woche, Wiederholen ab Woche 8, Hinweise auf „Heute“, Wochen zum Aufklappen, Einstellung „Wiederholen ab“ im Editor (D-505).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py --check` | „Programme: 4, Trainingstage: 168“; davon Dali’s PPLC 21 Wochen mit 84 Tagen, wiederholen ab Woche 8 (`docs/programs.md`) |
+| `src/modules/training/calc/programs.test.ts` (Dali’s PPLC, 4 Tests neu) | bestanden: Wochen, Wiederholung und Infotext wörtlich; Satzzahl je Woche (2, 2, 3, 4/3 …, leicht 2/1, Einstieg 3/2); englische Namen, Bereiche, Pausen, Wechsel Bench Press und Dip; Hinweise am ersten Tag von Woche 4, der leichten Wochen und der Einstiegswochen danach |
+| `programProgress.test.ts` (neu: Wiederholung ab Woche n) | 16 bestanden |
+| `sampleTemplates.test.ts` (neu: Schema lehnt Wiederholung ohne `repeat` oder ab fehlender Woche ab) | bestanden |
+| `programService.test.ts` (neu: Kopie behält Wiederholung, Wochentage, Hinweise; Bearbeiten speichert ab Woche 2, Woche 1 ohne Feld, nach dem Löschen der Woche wieder Woche 1) | 16 bestanden |
+| `active-program-card.test.tsx` (neu: Hinweis des nächsten Tages, ohne Hinweis kein Feld) | 4 bestanden |
+| `programs-ui.test.tsx` (neu: 21 Wochen zum Aufklappen, offen Woche 2 nach Push der Woche 2, nur 4 Tage auf der Seite, „Als Nächstes“ genau einmal, „Danach geht es mit Woche 8 weiter.“) | bestanden |
+| `own-programs-ui.test.tsx` (neu: „Wiederholen ab“ nur mit Wiederholung, Auswahl speichert Woche 2) | 5 bestanden |
+| `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.262 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,2 KB; der erste Lauf von `check:docs` fand einen Verweis auf ein noch nicht vergebenes Paket in `decisions.md`, berichtigt |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | lief beim Commit noch (bis dahin rund 100 bestanden, keiner fehlgeschlagen); das Ergebnis trägt der nächste Commit nach |

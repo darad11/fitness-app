@@ -6,6 +6,7 @@ import type {
   SampleTemplate,
   SampleTemplateSourceEntry,
   SetTarget,
+  Weekday,
 } from '../model/program';
 
 /** Wiederholungen der Aufwärmsätze: zwei Sätze 10 und 5, ein Satz 5 (sample-templates.md, D-243). */
@@ -38,6 +39,7 @@ export function expandSampleTemplate(
     location: source.location,
     daysPerWeek: source.daysPerWeek,
     repeat: source.repeat,
+    ...(source.repeatFromWeek ? { repeatFromWeek: source.repeatFromWeek } : {}),
     weeks: source.weeks.map((dayNames, w) => ({
       id: stableId(`${base}:w${String(w)}`),
       position: w,
@@ -49,7 +51,10 @@ export function expandSampleTemplate(
         return {
           id: stableId(dayBase),
           position: d,
-          name: day.name,
+          // Mehrere Tage dürfen gleich heißen, wenn sie je Woche andere Sätze haben (D-505).
+          name: day.label ?? day.name,
+          ...(day.weekday ? { weekdayHint: day.weekday as Weekday } : {}),
+          ...(day.notes ? { notes: day.notes } : {}),
           exercises: day.exercises.map((entry, e): PlannedExercise => {
             const exercise = findExercise(entry.exercise);
             if (!exercise) throw new Error(`Unbekannte Übung in ${source.key}: ${entry.exercise}`);

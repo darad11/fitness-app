@@ -1,0 +1,301 @@
+{
+  "$comment": "Programm Dali’s PPLC nach dem Plan des Produktinhabers (D-504, umgebaut in D-505). tools/programs_build.py erzeugt daraus je Woche die Tage mit ihrer Satzzahl: Grundübungen und übrige nach der Phase der Woche, die Wechselübung am Compound-Tag nach gerader oder ungerader Woche, die Hinweise am ersten Tag einer Woche. Englische Namen wörtlich wie vom Produktinhaber.",
+  "key": "dali_pplc",
+  "slug": "dalis-pplc",
+  "name": "Dali’s PPLC",
+  "description": "So steigerst du: Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Sätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: zwei bis drei Arbeitssätze je Übung. Ab Woche 4: drei bis vier Sätze bei den Grundübungen, zwei bis drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.",
+  "level": "intermediate",
+  "location": "gym",
+  "daysPerWeek": "4",
+  "repeatFromWeek": 8,
+  "phases": {
+    "einstieg2": { "grund": 2, "uebrig": 2, "fest": 2 },
+    "einstieg3": { "grund": 3, "uebrig": 3, "fest": 2 },
+    "aufbau": { "grund": 4, "uebrig": 3, "fest": 2 },
+    "neuer_block": { "grund": 3, "uebrig": 2, "fest": 2 },
+    "leicht": { "grund": 2, "uebrig": 1, "fest": 1, "label": "leicht" }
+  },
+  "weeks": [
+    "einstieg2",
+    "einstieg2",
+    "einstieg3",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "leicht",
+    "neuer_block",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "leicht",
+    "neuer_block",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "aufbau",
+    "leicht"
+  ],
+  "notes": {
+    "week4": "Ab dieser Woche mehr Sätze: Grundübungen 4, übrige 3.",
+    "leicht": "Diese Woche ist leichter: etwa die Hälfte der Sätze.",
+    "neuer_block": "Neuer Aufbaublock: Diese Woche steigst du mit etwas weniger Sätzen ein."
+  },
+  "days": [
+    {
+      "name": "Push",
+      "weekday": 1,
+      "exercises": [
+        {
+          "exercise": "bench_press_dumbbell",
+          "originalName": "Dumbbell Bench Press",
+          "class": "grund",
+          "warmup": 1,
+          "reps": [6, 10],
+          "restSec": 150
+        },
+        {
+          "exercise": "incline_bench_press_dumbbell",
+          "originalName": "Dumbbell Incline Bench Press",
+          "class": "grund",
+          "reps": [6, 10],
+          "restSec": 150
+        },
+        {
+          "exercise": "shoulder_press_dumbbell_seated",
+          "originalName": "Dumbbell Seated Shoulder Press",
+          "class": "grund",
+          "reps": [6, 10],
+          "restSec": 150
+        },
+        {
+          "exercise": "assisted_dip",
+          "originalName": "Dip",
+          "class": "grund",
+          "reps": [8, 12],
+          "restSec": 120
+        },
+        {
+          "exercise": "lateral_raise_dumbbell",
+          "originalName": "Dumbbell Lateral Raise",
+          "class": "uebrig",
+          "reps": [12, 20],
+          "restSec": 60
+        },
+        {
+          "exercise": "cable_fly",
+          "originalName": "Cable Fly",
+          "class": "uebrig",
+          "reps": [10, 15],
+          "restSec": 75
+        },
+        {
+          "exercise": "triceps_pushdown_cable",
+          "originalName": "Cable Tricep Pushdown",
+          "class": "uebrig",
+          "reps": [10, 15],
+          "restSec": 75
+        }
+      ]
+    },
+    {
+      "name": "Pull",
+      "weekday": 2,
+      "exercises": [
+        {
+          "exercise": "deadlift_barbell",
+          "originalName": "Barbell Deadlift",
+          "class": "grund",
+          "warmup": 2,
+          "reps": [5, 6],
+          "restSec": 180
+        },
+        {
+          "exercise": "assisted_pull_up",
+          "originalName": "Pull-Up",
+          "class": "grund",
+          "warmup": 1,
+          "reps": [8, 12],
+          "restSec": 120
+        },
+        {
+          "exercise": "machine_row",
+          "originalName": "Leverage Machine Iso Row",
+          "class": "grund",
+          "reps": [8, 12],
+          "restSec": 90
+        },
+        {
+          "exercise": "high_row_machine",
+          "originalName": "Leverage Machine High Row",
+          "class": "grund",
+          "reps": [8, 12],
+          "restSec": 90
+        },
+        {
+          "exercise": "reverse_pec_deck",
+          "originalName": "Machine Reverse Fly",
+          "class": "uebrig",
+          "reps": [12, 20],
+          "restSec": 60
+        },
+        {
+          "exercise": "hammer_curl",
+          "originalName": "Dumbbell Alternating Hammer Curl",
+          "class": "uebrig",
+          "note": "wechselseitig",
+          "reps": [10, 15],
+          "restSec": 75
+        }
+      ]
+    },
+    {
+      "name": "Legs",
+      "weekday": 4,
+      "exercises": [
+        {
+          "exercise": "hack_squat",
+          "originalName": "Machine Squat",
+          "class": "grund",
+          "warmup": 2,
+          "reps": [8, 12],
+          "restSec": 120
+        },
+        {
+          "exercise": "leg_press",
+          "originalName": "Machine Leg Press",
+          "class": "grund",
+          "reps": [8, 12],
+          "restSec": 120
+        },
+        {
+          "exercise": "lying_leg_curl",
+          "originalName": "Machine Leg Curl",
+          "class": "uebrig",
+          "reps": [10, 15],
+          "restSec": 75
+        },
+        {
+          "exercise": "seated_leg_curl",
+          "originalName": "Machine Seated Leg Curl",
+          "class": "uebrig",
+          "reps": [10, 15],
+          "restSec": 75
+        },
+        {
+          "exercise": "leg_extension",
+          "originalName": "Machine Leg Extension",
+          "class": "uebrig",
+          "reps": [10, 15],
+          "restSec": 75
+        },
+        {
+          "exercise": "standing_calf_raise",
+          "originalName": "Machine Calf Raise",
+          "class": "uebrig",
+          "reps": [12, 20],
+          "restSec": 60
+        },
+        {
+          "exercise": "seated_calf_raise",
+          "originalName": "Machine Seated Calf Raise",
+          "class": "uebrig",
+          "reps": [12, 20],
+          "restSec": 60
+        },
+        {
+          "exercise": "plank",
+          "originalName": "Plank",
+          "class": "uebrig",
+          "durationSec": [30, 45],
+          "restSec": 45
+        }
+      ]
+    },
+    {
+      "name": "Compound",
+      "weekday": 6,
+      "exercises": [
+        {
+          "exercise": "assisted_pull_up",
+          "originalName": "Pull-Up",
+          "class": "grund",
+          "warmup": 1,
+          "reps": [8, 12],
+          "restSec": 120
+        },
+        {
+          "exercise": "overhead_press_barbell",
+          "originalName": "Barbell Military Press",
+          "class": "grund",
+          "warmup": 1,
+          "reps": [6, 10],
+          "restSec": 150
+        },
+        {
+          "exercise": "bent_over_row_barbell",
+          "originalName": "Barbell Bent-Over Row",
+          "class": "grund",
+          "reps": [6, 10],
+          "restSec": 150
+        },
+        {
+          "alternate": [
+            {
+              "exercise": "bench_press_dumbbell",
+              "originalName": "Dumbbell Bench Press",
+              "class": "grund",
+              "reps": [6, 10],
+              "restSec": 150
+            },
+            {
+              "exercise": "assisted_dip",
+              "originalName": "Dip",
+              "class": "grund",
+              "reps": [8, 12],
+              "restSec": 120
+            }
+          ]
+        },
+        {
+          "exercise": "leg_press",
+          "originalName": "Machine Leg Press",
+          "class": "grund",
+          "warmup": 2,
+          "reps": [8, 12],
+          "restSec": 120
+        },
+        {
+          "exercise": "lateral_raise_dumbbell",
+          "originalName": "Dumbbell Lateral Raise",
+          "class": "uebrig",
+          "reps": [12, 20],
+          "restSec": 60
+        },
+        {
+          "exercise": "biceps_curl_dumbbell",
+          "originalName": "Dumbbell Curl",
+          "class": "uebrig",
+          "reps": [10, 15],
+          "restSec": 75
+        },
+        {
+          "exercise": "standing_calf_raise",
+          "originalName": "Machine Calf Raise",
+          "class": "fest",
+          "reps": [12, 20],
+          "restSec": 60
+        },
+        {
+          "exercise": "cable_crunch",
+          "originalName": "Cable Crunch",
+          "class": "uebrig",
+          "reps": [12, 15],
+          "restSec": 45
+        }
+      ]
+    }
+  ]
+}

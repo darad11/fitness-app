@@ -102,6 +102,11 @@ export interface PlanTree {
   description?: string;
   /** Nach der letzten Woche wieder bei Woche 1 beginnen. */
   repeat: boolean;
+  /**
+   * Mit `repeat`: nach der letzten Woche bei dieser Woche weiter (ab 1) statt bei Woche 1, z. B.
+   * nach einem Einstiegsblock (D-505). Gibt es die Woche nicht mehr, gilt Woche 1.
+   */
+  repeatFromWeek?: number;
   weeks: Week[];
 }
 
@@ -156,10 +161,19 @@ export const sampleTemplateSourceSchema = z
             location: locationSchema,
             daysPerWeek: z.string().min(1),
             repeat: z.boolean(),
+            /** Nach der letzten Woche hier weiter statt bei Woche 1 (ab 1, nur mit `repeat`, D-505). */
+            repeatFromWeek: z.number().int().min(1).optional(),
             days: z
               .array(
                 z.strictObject({
+                  /** Schlüssel, auf den `weeks` verweist; angezeigt, wenn `label` fehlt. */
                   name: z.string().min(1),
+                  /** Angezeigter Name, wenn mehrere Tage gleich heißen (Satzzahl je Woche, D-505). */
+                  label: z.string().min(1).optional(),
+                  /** Geplanter Wochentag (1 = Montag … 7 = Sonntag, AK-PRG-09). */
+                  weekday: z.number().int().min(1).max(7).optional(),
+                  /** Kurzer Hinweis zum Tag, auch auf „Heute“ (D-505). */
+                  notes: z.string().min(1).max(300).optional(),
                   exercises: z.array(sourceExerciseSchema).min(1),
                 }),
               )
@@ -169,6 +183,11 @@ export const sampleTemplateSourceSchema = z
           .refine(
             (t) => t.weeks.flat().every((name) => t.days.some((day) => day.name === name)),
             'Woche verweist auf einen unbekannten Tag',
+          )
+          .refine(
+            (t) =>
+              t.repeatFromWeek === undefined || (t.repeat && t.repeatFromWeek <= t.weeks.length),
+            'Wiederholung ab einer Woche, die es nicht gibt',
           ),
       )
       .min(1),
@@ -256,6 +275,8 @@ export const programSchema = defineDocSchema('program', {
   level: levelSchema.optional(),
   location: locationSchema.optional(),
   repeat: z.boolean(),
+  /** Wiederholen ab dieser Woche (ab 1), aus einem gebündelten Programm übernommen (D-505). */
+  repeatFromWeek: z.number().int().min(1).max(PLAN_LIMITS.weeks).optional(),
   archivedAt: isoDateTimeSchema.optional(),
   weeks: z.array(weekDocSchema).max(1000),
 });
@@ -280,4 +301,7 @@ export interface OwnProgram extends PlanTree {
 }
 
 /** Bearbeitbare Felder eines eigenen Programms. */
-export type ProgramPlan = Pick<OwnProgram, 'name' | 'description' | 'repeat' | 'weeks'>;
+export type ProgramPlan = Pick<
+  OwnProgram,
+  'name' | 'description' | 'repeat' | 'repeatFromWeek' | 'weeks'
+>;

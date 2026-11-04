@@ -111,6 +111,18 @@ describe('Beispielvorlagen aus sample-templates.md', () => {
     ).toThrow(/Unbekannter Tag/);
   });
 
+  it('Wiederholung ab Woche n: nur mit `repeat` und nur ab einer Woche, die es gibt (D-505)', () => {
+    const from = (repeat: boolean, repeatFromWeek: number) => {
+      const changed = structuredClone(raw);
+      Object.assign(changed.templates[0]!, { repeat, repeatFromWeek });
+      return () => parseSampleTemplates(changed, exercises);
+    };
+    expect(from(true, 2)()[0]).toMatchObject({ repeat: true, repeatFromWeek: 2 });
+    expect(from(true, 3)).toThrow(/Woche, die es nicht gibt/);
+    expect(from(false, 1)).toThrow(/Woche, die es nicht gibt/);
+    expect(from(true, 0)).toThrow();
+  });
+
   it('lehnt unvollständige oder verkehrte Bereiche und doppelte Schlüssel ab', () => {
     const reversed = structuredClone(raw);
     reversed.templates[0]!.days[0]!.exercises[0]!.target = { repsMin: 8, repsMax: 6 };

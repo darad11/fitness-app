@@ -48,9 +48,11 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     // Programme zuerst, mit Beschreibung, das eigene des Produktinhabers vorn (D-504); danach die
     // Beispielvorlagen.
     expect(cards[0]).toHaveTextContent(
-      'Dali’s PPLCProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
+      'Dali’s PPLCProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 21 Wochen, 84 Trainingstage',
     );
-    expect(cards[0]).toHaveTextContent('Push, Pull, Beine und Compound');
+    expect(cards[0]).toHaveTextContent(
+      'So steigerst du: Jede Übung hat einen Wiederholungsbereich.',
+    );
     expect(cards[1]).toHaveTextContent(
       'Ganzkörper A/B, 4 TageProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
     );
@@ -241,6 +243,40 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     expect(await screen.findByRole('button', { name: 'Programm aktivieren' })).toBeVisible();
     expect((await loadTrainingState(rt.db)).activeProgramId).toBeUndefined();
     expect(screen.queryByText('Als Nächstes')).toBeNull();
+  });
+
+  it('Dali’s PPLC: Wochen zum Aufklappen, offen die Woche des nächsten Tages, Wiederholung ab Woche 8 (D-505)', async () => {
+    const key = 'dali_pplc';
+    await activateProgram(rt, stableId(`sample-template:${key}`));
+    const [template, exercises] = await Promise.all([loadSampleTemplate(key), loadCoreExercises()]);
+    const byId = new Map(exercises.map((e) => [e.id, e]));
+    // Push der Woche 2 abschließen: Als Nächstes folgt Pull der Woche 2.
+    const session = await startSession(
+      rt,
+      planFromTemplateDay(template!, 1, 0, (id) => byId.get(id), 'program'),
+    );
+    await finishSession(rt, session.id, { skipOpen: true });
+    await renderAt('/training/vorlagen/dalis-pplc', 'Dali’s PPLC');
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'Trainingstag 6 von 84' }),
+    ).toBeVisible();
+    const weeks = [...document.querySelectorAll('details')];
+    expect(weeks).toHaveLength(21);
+    const open = weeks.filter((week) => week.open);
+    expect(open.map((week) => week.querySelector('h2')?.textContent)).toEqual(['Woche 2']);
+    expect(weeks[6]?.querySelector('summary')).toHaveTextContent(
+      'Woche 7Push · leicht, Pull · leicht, Legs · leicht, Compound · leicht',
+    );
+    // Nur die Tage der offenen Woche stehen auf der Seite; „Als Nächstes“ genau einmal.
+    expect(screen.getAllByRole('button', { name: / heute trainieren$/ })).toHaveLength(4);
+    const next = screen.getByText('Als Nächstes').closest('section');
+    expect(next).toHaveAccessibleName('Pull');
+    expect(next?.closest('details')).toBe(open[0]);
+    expect(
+      screen.getByText(
+        'Danach geht es mit Woche 8 weiter. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.',
+      ),
+    ).toBeVisible();
   });
 
   it('Programm C: Wochenüberschriften, Hinweise, englische Namen und „Erledigt" je Tag', async () => {

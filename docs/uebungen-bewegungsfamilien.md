@@ -339,16 +339,16 @@ Gezählt in `src/modules/training/data/programs.v1.json` (4 Programme) und `src/
 
 | Rang | Familie | Einheiten in Programmen | Übungen in Programmen | nur in Vorlagen | übrige (Symbol und Muskelkarte) | Aufwand für die Programm-Übungen (Std.) |
 |---|---|---|---|---|---|---|
-| 1 | Kniebeuge | 64 | 5 | 0 | 4 | 23.2 |
-| 2 | Waagrechtes Drücken | 114 | 9 | 1 | 3 | 33.2 |
-| 3 | Beine isoliert | 86 | 7 | 0 | 5 | 24.0 |
-| 4 | Waagrechtes Ziehen | 80 | 7 | 2 | 0 | 29.8 |
-| 5 | Arme beugen und strecken | 73 | 14 | 0 | 4 | 19.1 |
-| 6 | Rumpf | 68 | 11 | 1 | 4 | 25.1 |
-| 7 | Schulter und Brust isoliert | 56 | 7 | 0 | 3 | 17.0 |
-| 8 | Hüftbeuge | 52 | 5 | 2 | 6 | 14.5 |
-| 9 | Senkrechtes Ziehen | 51 | 5 | 1 | 1 | 13.5 |
-| 10 | Senkrechtes Drücken | 42 | 4 | 0 | 1 | 13.2 |
+| 1 | Kniebeuge | 103 | 5 | 0 | 4 | 23.2 |
+| 2 | Beine isoliert | 180 | 7 | 0 | 5 | 24.0 |
+| 3 | Waagrechtes Drücken | 150 | 8 | 1 | 4 | 27.8 |
+| 4 | Schulter und Brust isoliert | 132 | 8 | 0 | 2 | 18.3 |
+| 5 | Arme beugen und strecken | 120 | 14 | 0 | 4 | 19.8 |
+| 6 | Rumpf | 110 | 12 | 1 | 3 | 26.3 |
+| 7 | Waagrechtes Ziehen | 103 | 7 | 2 | 0 | 28.8 |
+| 8 | Senkrechtes Ziehen | 77 | 5 | 1 | 1 | 13.5 |
+| 9 | Senkrechtes Drücken | 68 | 4 | 0 | 1 | 13.2 |
+| 10 | Hüftbeuge | 65 | 5 | 2 | 6 | 14.5 |
 | 11 | Kondition | 39 | 1 | 0 | 8 | 15.5 |
 | 12 | Ausfallschritt und einbeinig | 9 | 1 | 1 | 2 | 8.8 |
 
@@ -358,39 +358,38 @@ Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, 
 
 | Familie | Übung | Einheiten in Programmen | Programme | Tage in Vorlagen | Vorlagen |
 |---|---|---|---|---|---|
-| Kniebeuge | Beinpresse | 39 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Kniebeuge | Beinpresse | 65 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Kniebeuge | Hackenschmidt-Kniebeuge | 21 | Dali’s PPLC | 0 | – |
 | Kniebeuge | Kniebeuge mit Langhantel | 8 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
-| Kniebeuge | Hackenschmidt-Kniebeuge | 8 | Dali’s PPLC | 0 | – |
 | Kniebeuge | Beinpresse, einbeinig | 5 | Winterprogramm 2026 | 0 | – |
 | Kniebeuge | Goblet Squat | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
-| Waagrechtes Drücken | Bankdrücken mit Kurzhanteln | 38 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
-| Waagrechtes Drücken | Schrägbankdrücken mit Kurzhanteln | 31 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
-| Waagrechtes Drücken | Dips mit Unterstützung | 16 | Dali’s PPLC | 0 | – |
-| Waagrechtes Drücken | Brustpresse an der Maschine | 8 | Dali’s PPLC | 0 | – |
+| Beine isoliert | Beinbeuger liegend | 44 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 2 | Ganzkörper A/B, Oberkörper/Unterkörper |
+| Beine isoliert | Wadenheben stehend | 42 | Dali’s PPLC | 1 | Oberkörper/Unterkörper |
+| Beine isoliert | Wadenheben sitzend | 32 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 1 | Push/Pull/Beine |
+| Beine isoliert | Beinstrecker | 28 | Dali’s PPLC, Winterprogramm 2026 | 1 | Oberkörper/Unterkörper |
+| Beine isoliert | Beinbeuger sitzend | 25 | Dali’s PPLC, Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Beine isoliert | Wadenheben mit Kurzhanteln | 7 | Winterprogramm 2026 | 0 | – |
+| Beine isoliert | Wadenheben an der Beinpresse | 2 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Drücken | Bankdrücken mit Kurzhanteln | 54 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Waagrechtes Drücken | Schrägbankdrücken mit Kurzhanteln | 44 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Drücken | Dips mit Unterstützung | 31 | Dali’s PPLC | 0 | – |
 | Waagrechtes Drücken | Schrägbankdrücken am Kabel | 7 | Winterprogramm 2026 | 0 | – |
 | Waagrechtes Drücken | Bankdrücken mit Langhantel | 4 | Push/Pull/Beine, rotierend | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
 | Waagrechtes Drücken | Liegestütze | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
 | Waagrechtes Drücken | Dips | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
 | Waagrechtes Drücken | Enges Bankdrücken | 2 | Winterprogramm 2026 | 0 | – |
 | Waagrechtes Drücken | Bodendrücken mit Kurzhanteln | 0 | – | 1 | Zuhause mit Kurzhanteln |
-| Beine isoliert | Beinbeuger liegend | 31 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 2 | Ganzkörper A/B, Oberkörper/Unterkörper |
-| Beine isoliert | Wadenheben sitzend | 19 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 1 | Push/Pull/Beine |
-| Beine isoliert | Beinstrecker | 15 | Dali’s PPLC, Winterprogramm 2026 | 1 | Oberkörper/Unterkörper |
-| Beine isoliert | Wadenheben stehend | 8 | Dali’s PPLC | 1 | Oberkörper/Unterkörper |
-| Beine isoliert | Wadenheben mit Kurzhanteln | 7 | Winterprogramm 2026 | 0 | – |
-| Beine isoliert | Beinbeuger sitzend | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
-| Beine isoliert | Wadenheben an der Beinpresse | 2 | Winterprogramm 2026 | 0 | – |
-| Waagrechtes Ziehen | Rudern am Kabel, sitzend | 32 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
-| Waagrechtes Ziehen | Rudern mit Langhantel, vorgebeugt | 20 | Dali’s PPLC, Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
-| Waagrechtes Ziehen | Rudern an der Maschine | 8 | Dali’s PPLC | 0 | – |
-| Waagrechtes Ziehen | High Row an der Maschine | 8 | Dali’s PPLC | 0 | – |
-| Waagrechtes Ziehen | Rudern an der Multipresse, vorgebeugt | 5 | Winterprogramm 2026 | 0 | – |
-| Waagrechtes Ziehen | Face Pulls am Kabel | 4 | Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
-| Waagrechtes Ziehen | T-Bar-Rudern | 3 | Winterprogramm 2026 | 0 | – |
-| Waagrechtes Ziehen | Rudern mit Kurzhanteln, vorgebeugt | 0 | – | 1 | Zuhause mit Kurzhanteln |
-| Waagrechtes Ziehen | Einarmiges Rudern mit Kurzhantel | 0 | – | 1 | Zuhause mit Kurzhanteln |
-| Arme beugen und strecken | Trizepsdrücken am Kabel | 16 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
-| Arme beugen und strecken | Hammercurls | 12 | Dali’s PPLC, Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Schulter und Brust isoliert | Seitheben mit Kurzhanteln | 66 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Schulter und Brust isoliert | Fliegende am Kabel | 26 | Dali’s PPLC, Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Reverse Butterfly an der Maschine | 21 | Dali’s PPLC | 0 | – |
+| Schulter und Brust isoliert | Butterfly an der Maschine | 5 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Seitheben am Kabel | 5 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Reverse Flys mit Kurzhanteln | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Schulter und Brust isoliert | Frontheben mit Kurzhanteln | 3 | Winterprogramm 2026 | 0 | – |
+| Schulter und Brust isoliert | Frontheben am Kabel | 2 | Winterprogramm 2026 | 0 | – |
+| Arme beugen und strecken | Trizepsdrücken am Kabel | 29 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Arme beugen und strecken | Hammercurls | 25 | Dali’s PPLC, Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Arme beugen und strecken | Bizepscurls mit Kurzhanteln | 24 | Dali’s PPLC, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
 | Arme beugen und strecken | Bizepscurls am Kabel | 6 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | Trizepsdrücken am Kabel, über Kreuz | 6 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | Hammercurls am Kabel mit Seil | 5 | Winterprogramm 2026 | 0 | – |
@@ -398,12 +397,12 @@ Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, 
 | Arme beugen und strecken | Scottcurls mit Kurzhanteln | 4 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | Trizepsstrecken über Kopf am Kabel | 4 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | French Press mit SZ-Stange | 4 | Winterprogramm 2026 | 0 | – |
-| Arme beugen und strecken | Bizepscurls mit Kurzhanteln | 3 | Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
 | Arme beugen und strecken | Schrägbank-Curls mit Kurzhanteln | 3 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | Reverse Curls mit SZ-Stange | 3 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | French Press mit Kurzhanteln | 2 | Winterprogramm 2026 | 0 | – |
 | Arme beugen und strecken | Trizepsstrecken über Kopf mit Kurzhantel | 1 | Winterprogramm 2026 | 0 | – |
-| Rumpf | Unterarmstütz (Plank) | 22 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
+| Rumpf | Unterarmstütz (Plank) | 43 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
+| Rumpf | Crunches am Kabel, kniend | 21 | Dali’s PPLC | 0 | – |
 | Rumpf | Crunches | 20 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 0 | – |
 | Rumpf | Beinheben liegend | 5 | Winterprogramm 2026 | 0 | – |
 | Rumpf | Beinheben hängend | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
@@ -415,30 +414,32 @@ Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, 
 | Rumpf | Dead Bug | 1 | Winterprogramm 2026 | 0 | – |
 | Rumpf | Windshield Wipers | 1 | Winterprogramm 2026 | 0 | – |
 | Rumpf | Seitstütz | 0 | – | 2 | Ganzkörper A/B, Zuhause mit Kurzhanteln |
-| Schulter und Brust isoliert | Seitheben mit Kurzhanteln | 32 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
-| Schulter und Brust isoliert | Fliegende am Kabel | 5 | Winterprogramm 2026 | 0 | – |
-| Schulter und Brust isoliert | Butterfly an der Maschine | 5 | Winterprogramm 2026 | 0 | – |
-| Schulter und Brust isoliert | Seitheben am Kabel | 5 | Winterprogramm 2026 | 0 | – |
-| Schulter und Brust isoliert | Reverse Flys mit Kurzhanteln | 4 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
-| Schulter und Brust isoliert | Frontheben mit Kurzhanteln | 3 | Winterprogramm 2026 | 0 | – |
-| Schulter und Brust isoliert | Frontheben am Kabel | 2 | Winterprogramm 2026 | 0 | – |
-| Hüftbeuge | Rumänisches Kreuzheben mit Kurzhanteln | 21 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
-| Hüftbeuge | Rumänisches Kreuzheben mit Langhantel | 9 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
-| Hüftbeuge | Hip Thrust mit Kurzhantel | 9 | Winterprogramm 2026 | 0 | – |
-| Hüftbeuge | Kreuzheben mit Langhantel | 8 | Dali’s PPLC | 1 | Oberkörper/Unterkörper |
-| Hüftbeuge | Pull-Throughs am Kabel | 5 | Winterprogramm 2026 | 0 | – |
-| Hüftbeuge | Hip Thrust mit Langhantel | 0 | – | 1 | Oberkörper/Unterkörper |
-| Hüftbeuge | Hüftheben am Boden (Glute Bridge) | 0 | – | 1 | Zuhause mit Kurzhanteln |
-| Senkrechtes Ziehen | Klimmzüge mit Unterstützung | 21 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 0 | – |
+| Waagrechtes Ziehen | Rudern mit Langhantel, vorgebeugt | 25 | Dali’s PPLC, Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Ziehen | Rudern am Kabel, sitzend | 24 | Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Ziehen | Rudern an der Maschine | 21 | Dali’s PPLC | 0 | – |
+| Waagrechtes Ziehen | High Row an der Maschine | 21 | Dali’s PPLC | 0 | – |
+| Waagrechtes Ziehen | Rudern an der Multipresse, vorgebeugt | 5 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Ziehen | Face Pulls am Kabel | 4 | Push/Pull/Beine, rotierend | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Waagrechtes Ziehen | T-Bar-Rudern | 3 | Winterprogramm 2026 | 0 | – |
+| Waagrechtes Ziehen | Rudern mit Kurzhanteln, vorgebeugt | 0 | – | 1 | Zuhause mit Kurzhanteln |
+| Waagrechtes Ziehen | Einarmiges Rudern mit Kurzhantel | 0 | – | 1 | Zuhause mit Kurzhanteln |
+| Senkrechtes Ziehen | Klimmzüge mit Unterstützung | 47 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 0 | – |
 | Senkrechtes Ziehen | Latziehen | 17 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 2 | Ganzkörper A/B, Oberkörper/Unterkörper |
 | Senkrechtes Ziehen | Einarmiges Latziehen am Kabel, kniend | 5 | Winterprogramm 2026 | 0 | – |
 | Senkrechtes Ziehen | Latziehen, enger Griff | 4 | Winterprogramm 2026 | 0 | – |
 | Senkrechtes Ziehen | Überzüge am Kabel | 4 | Winterprogramm 2026 | 0 | – |
 | Senkrechtes Ziehen | Klimmzüge | 0 | – | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |
+| Senkrechtes Drücken | Schulterdrücken mit Langhantel, stehend | 25 | Dali’s PPLC, Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
+| Senkrechtes Drücken | Schulterdrücken mit Kurzhanteln, sitzend | 21 | Dali’s PPLC | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
 | Senkrechtes Drücken | Schulterdrücken an der Maschine | 20 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 0 | – |
-| Senkrechtes Drücken | Schulterdrücken mit Langhantel, stehend | 12 | Dali’s PPLC, Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
-| Senkrechtes Drücken | Schulterdrücken mit Kurzhanteln, sitzend | 8 | Dali’s PPLC | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
 | Senkrechtes Drücken | Schulterdrücken mit Kurzhanteln, stehend | 2 | Winterprogramm 2026 | 0 | – |
+| Hüftbeuge | Kreuzheben mit Langhantel | 21 | Dali’s PPLC | 1 | Oberkörper/Unterkörper |
+| Hüftbeuge | Rumänisches Kreuzheben mit Kurzhanteln | 21 | Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
+| Hüftbeuge | Rumänisches Kreuzheben mit Langhantel | 9 | Push/Pull/Beine, rotierend, Winterprogramm 2026 | 3 | Ganzkörper A/B, Oberkörper/Unterkörper, Push/Pull/Beine |
+| Hüftbeuge | Hip Thrust mit Kurzhantel | 9 | Winterprogramm 2026 | 0 | – |
+| Hüftbeuge | Pull-Throughs am Kabel | 5 | Winterprogramm 2026 | 0 | – |
+| Hüftbeuge | Hip Thrust mit Langhantel | 0 | – | 1 | Oberkörper/Unterkörper |
+| Hüftbeuge | Hüftheben am Boden (Glute Bridge) | 0 | – | 1 | Zuhause mit Kurzhanteln |
 | Kondition | Laufband | 39 | Winterprogramm 2026 | 0 | – |
 | Ausfallschritt und einbeinig | Ausfallschritte mit Kurzhanteln | 9 | Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
 | Ausfallschritt und einbeinig | Bulgarische Kniebeuge mit Kurzhanteln | 0 | – | 2 | Oberkörper/Unterkörper, Zuhause mit Kurzhanteln |
@@ -446,7 +447,7 @@ Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, 
 ### 8.3 Aufwand der ersten drei Familien
 
 - **Kniebeuge: rund 23 Std.** Basis 8, Übungen 5.25 (Kniebeuge mit Langhantel (1), Goblet Squat (1), Beinpresse (1.25), Hackenschmidt-Kniebeuge (1.25), Beinpresse, einbeinig (0.75)), neue Geräte 9 (Kurzhanteln (1), Beinpresse 45° (4), Hackenschmidt-Maschine (4)), Prüfseite 1.
-- **Waagrechtes Drücken: rund 33 Std.** Basis 8, Übungen 9.75 (Bankdrücken mit Langhantel (0.5), Bankdrücken mit Kurzhanteln (1), Schrägbankdrücken mit Kurzhanteln (0.75), Brustpresse an der Maschine (1.5), Liegestütze (1.5), Schrägbankdrücken am Kabel (1.5), Enges Bankdrücken (0.5), Dips (1.5), Dips mit Unterstützung (1)), neue Geräte 14.5 (Schrägbank, verstellbar (auch fast senkrecht) (2), Brustpresse-Maschine (4), Kabelzug: zwei Säulen mit höhenverstellbaren Rollen (1.75), D-Griff (1.75), Dipbarren (1), Gegengewichtsmaschine für Klimmzug und Dip (4)), Prüfseite 1. Bewegung aus Mixamo: Liegestütze; dafür einmalig die Übertragung aufs Skelett (Abschnitt 4) und bei Mixamo die Dateien von dir, sonst aus der Familie im Code.
 - **Beine isoliert: rund 24 Std.** Basis 4, Übungen 5 (Beinstrecker (0.5), Beinbeuger liegend (1), Beinbeuger sitzend (0.75), Wadenheben stehend (0.75), Wadenheben sitzend (0.75), Wadenheben an der Beinpresse (0.75), Wadenheben mit Kurzhanteln (0.5)), neue Geräte 14 (Beinstrecker-Maschine (3.5), Beinbeuger-Maschine, liegend (3), Beinbeuger-Maschine, sitzend (vom Beinstrecker abgeleitet) (1.5), Wadenmaschine, stehend (3), Wadenmaschine, sitzend (3)), Prüfseite 1.
+- **Waagrechtes Drücken: rund 28 Std.** Basis 8, Übungen 8.25 (Bankdrücken mit Langhantel (0.5), Bankdrücken mit Kurzhanteln (1), Schrägbankdrücken mit Kurzhanteln (0.75), Liegestütze (1.5), Schrägbankdrücken am Kabel (1.5), Enges Bankdrücken (0.5), Dips (1.5), Dips mit Unterstützung (1)), neue Geräte 10.5 (Schrägbank, verstellbar (auch fast senkrecht) (2), Kabelzug: zwei Säulen mit höhenverstellbaren Rollen (1.75), D-Griff (1.75), Dipbarren (1), Gegengewichtsmaschine für Klimmzug und Dip (4)), Prüfseite 1. Bewegung aus Mixamo: Liegestütze; dafür einmalig die Übertragung aufs Skelett (Abschnitt 4) und bei Mixamo die Dateien von dir, sonst aus der Familie im Code.
 
 Die Zahlen sind meine Schätzung der Arbeitszeit, ohne Rechenzeit; die Rechenzeit hängt von der gewählten Variante der Figur ab (Renderzeiten in `form-uebungen-report.md` Abschnitt 11).

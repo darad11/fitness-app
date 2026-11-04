@@ -2008,3 +2008,45 @@ Ergebnis: siehe dort
 Bekannte Einschränkungen: Anleitung zum High Row offen; Animationen gibt es für 6 der 21 Übungen des Programms
 Nächste Schritte: deine Rückmeldung zu den Annahmen und Vorschlägen; Gerätetest; Merge von PR #54
 ```
+
+## 46. Dali’s PPLC neu: Satzzahl je Woche, Wiederholen ab Woche 8, Hinweise (D-505)
+
+**Was neu ist.** „Dali’s PPLC“ ist nach deinen Nachrichten neu gebaut: Push am Montag, Pull am Dienstag, Legs am Donnerstag, Compound am Samstag, mit deinen englischen Namen, Übungen, Wiederholungsbereichen und Pausen. Der Infotext steht wörtlich in der Beschreibung. Am Pull-Tag stehen jetzt Machine Reverse Fly und Iso Row; das Langhantelrudern ist am Compound-Tag, das Rudern am Kabel ist weg. Am Compound-Tag wechseln Dumbbell Bench Press (ungerade Wochen) und Dip (gerade Wochen).
+
+**Satzzahl je Woche.** Die App rechnet nichts um; jede Woche hat ihre eigenen Tage mit der passenden Satzzahl.
+
+| Wochen | Grundübungen | übrige |
+|---|---|---|
+| 1–2 | 2 | 2 |
+| 3 | 3 | 3 |
+| 4–6 | 4 | 3 |
+| 7 (leicht) | 2 | 1 |
+| 8 (Einstieg) | 3 | 2 |
+| 9–13 | 4 | 3 |
+| 14 (leicht) | 2 | 1 |
+| 15 (Einstieg) | 3 | 2 |
+| 16–20 | 4 | 3 |
+| 21 (leicht) | 2 | 1 |
+
+Nach Woche 21 geht es mit Woche 8 weiter, so folgt die leichte Woche immer nach sechs Wochen. Machine Calf Raise am Compound-Tag hat fest 2 Sätze, in leichten Wochen 1. In leichten Wochen heißen die Tage „Push · leicht“ usw.
+
+**Hinweise auf „Heute“.** Am ersten Tag von Woche 4: „Ab dieser Woche mehr Sätze: Grundübungen 4, übrige 3.“ Am ersten Tag jeder leichten Woche: „Diese Woche ist leichter: etwa die Hälfte der Sätze.“ Am ersten Tag jeder Einstiegswoche danach: „Neuer Aufbaublock: Diese Woche steigst du mit etwas weniger Sätzen ein.“ Die Karte „Aktives Programm“ zeigt den Hinweis unter dem Tag. Auch die Notiz zum Tag in eigenen Programmen erscheint dort; so behält eine Kopie von Dali’s PPLC die Hinweise.
+
+**Wiederholen ab Woche.** Neue Einstellung der Programme. Bei eigenen Programmen wählst du im Editor unter „Wiederholen ab“ die Woche, mit der es nach der letzten Woche weitergeht. Sie erscheint nur, wenn „Nach der letzten Woche von vorn beginnen“ an ist.
+
+**Programmseite.** 84 Tage untereinander wären zu lang. Darum lässt sich jede Woche aufklappen; offen ist die Woche des nächsten Tages, ohne aktives Programm Woche 1. „Als Nächstes“ steht nur beim richtigen Tag, nicht bei jedem Tag mit gleichem Namen.
+
+**Annahmen.** Supersätze kann die App nicht; Lateral Raise und Dumbbell Curl stehen hintereinander. Die Wochentage sind ein Plan; trainierst du an einem anderen Tag, geht es trotzdem mit dem nächsten Tag weiter.
+
+**Noch offen, folgt in eigenen Paketen:** die Einstellung „Übungsnamen auf Englisch“, die Wertung der Unterstützung bei Dip und Pull-Up mit den Alternativen, die Animationen.
+
+```
+Arbeitspaket: D-505 Phase Programme, Dali’s PPLC neu
+Umgesetzte Funktionen: Satzzahl je Woche (21 Wochen), Wiederholen ab Woche n (gebündelte und eigene Programme, Editor), Hinweise auf „Heute“, Wochen zum Aufklappen, Wochentage; erfüllte AK: –
+Geänderte Dateien: tools/data/dali-pplc.source.json (neu), tools/data/programs.source.json, tools/programs_build.py, src/modules/training/data/programs.v1.json, src/modules/training/model/program.ts, calc/sampleTemplates.ts, calc/programProgress.ts, calc/programTree.ts, service/programService.ts, ui/SampleTemplatePage.tsx, ui/ActiveProgramCard.tsx, ui/programs/ProgramEditPage.tsx, src/shared/i18n/de.ts, de-program-editor.ts, Tests, e2e/programs.spec.ts, e2e/fixtures.ts, erzeugte Übersichten in docs/, Dokumentation
+Technische Entscheidungen: D-505
+Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Dali’s PPLC neu“
+Ergebnis: siehe dort
+Bekannte Einschränkungen: keine Supersätze; Namen noch deutsch mit englischem Namen darunter, bis die Einstellung „Übungsnamen auf Englisch“ steht
+Nächste Schritte: Einstellung „Übungsnamen auf Englisch“, Unterstützung als Fortschritt, Animationsliste und erste Prüfseite
+```

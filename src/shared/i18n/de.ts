@@ -218,6 +218,8 @@ export const de = {
     schedule: 'Ablauf',
     scheduleRepeat:
       'Danach beginnt der Ablauf von vorn. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.',
+    scheduleRepeatFrom: (week = 'der ersten Woche') =>
+      `Danach geht es mit ${week} weiter. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.`,
     week: (name: string, days: string) => `${name}: ${days}`,
     exerciseCount: (n: number) => (n === 1 ? '1 Übung' : `${n} Übungen`),
     warmupSets: (n: number) => (n === 1 ? '1 Aufwärmsatz' : `${n} Aufwärmsätze`),

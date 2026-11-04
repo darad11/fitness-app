@@ -70,6 +70,7 @@ export function toOwnProgram(doc: ProgramDoc): OwnProgram {
     ...(doc.location ? { location: doc.location } : {}),
     ...(doc.archivedAt ? { archivedAt: doc.archivedAt } : {}),
     repeat: doc.repeat,
+    ...(doc.repeatFromWeek ? { repeatFromWeek: doc.repeatFromWeek } : {}),
     createdAt: doc.createdAt,
     weeks: live(doc.weeks).map(weekView),
   };

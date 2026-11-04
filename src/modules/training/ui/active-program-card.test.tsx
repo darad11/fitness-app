@@ -58,14 +58,14 @@ const program = {
 const monday = new Date(2026, 9, 19, 12);
 const thursday = new Date(2026, 9, 22, 12);
 
-function renderCard(now: Date) {
+function renderCard(now: Date, shown: ActiveProgram = program) {
   render(
     <DbProvider runtime={rt}>
       <MemoryRouter>
         <ActiveProgramCard
-          program={program}
-          eyebrow={plannedEyebrow(program, now)}
-          rest={plannedRest(program, now)}
+          program={shown}
+          eyebrow={plannedEyebrow(shown, now)}
+          rest={plannedRest(shown, now)}
           busy={false}
           onStart={() => undefined}
         />
@@ -86,5 +86,33 @@ describe('Ruhetag auf „Heute“ (Leitplanken Regel 6, D-318)', () => {
     renderCard(monday);
     expect(screen.getByText('Heute geplant')).toBeVisible();
     expect(screen.queryByText('Heute ist Pause eingeplant.')).toBeNull();
+  });
+});
+
+describe('Hinweis des nächsten Tages auf „Heute“ (D-505)', () => {
+  /** Dasselbe Programm; der nächste Tag (Tag A) trägt einen Hinweis. */
+  function withNote(notes: string): ActiveProgram {
+    const [week] = program.template.weeks;
+    return {
+      ...program,
+      template: {
+        ...program.template,
+        weeks: [
+          { ...week!, days: week!.days.map((day, i) => (i === 0 ? { ...day, notes } : day)) },
+        ],
+      },
+    };
+  }
+
+  it('zeigt den Hinweis des Tages unter der Beschreibung', () => {
+    renderCard(monday, withNote('Diese Woche ist leichter: etwa die Hälfte der Sätze.'));
+    expect(screen.getByRole('note')).toHaveTextContent(
+      'Diese Woche ist leichter: etwa die Hälfte der Sätze.',
+    );
+  });
+
+  it('ohne Hinweis kein Feld', () => {
+    renderCard(monday);
+    expect(screen.queryByRole('note')).toBeNull();
   });
 });

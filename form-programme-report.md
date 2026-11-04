@@ -2230,3 +2230,62 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: keine neuen
 Nächste Schritte: Prüfseiten der nächsten Familien gemeinsam: Dip an derselben Maschine (Waagrechtes Drücken) und Machine Squat (Kniebeuge, Hackenschmidt-Maschine), dann Halt
 ```
+
+## 51. Prüfseiten Dip und Machine Squat (D-510, D-511)
+
+Wie gewünscht zwei Familien zusammen: Waagrechtes Drücken mit dem Dip an derselben Maschine wie der Pull-Up und Kniebeuge mit Machine Squat an der Hackenschmidt-Maschine. Entscheidungen, die bei dir liegen, stehen gesammelt in 51.3.
+
+### 51.1 Dips mit Unterstützung (Waagrechtes Drücken, D-510)
+
+Prüfseite: `docs/screens/uebungen/familie-waagrechtes-druecken-dip.webp`, Kameravergleich: `docs/screens/uebungen/waagrechtes-druecken-dip-kameras.webp`.
+
+- **Dieselbe Maschine:** Turm, Ausleger, Kniepolster, Hebel und Lager sind genau die des Pull-Ups. Das Polster läuft auf demselben Bogen, der Gewichtsblock hebt sich, wenn das Polster sinkt.
+- **Diparme neu:** Die Dipgriffe der ersten Prüfseite (40 cm vorn am Turm) reichten nicht bis zu dir, denn du kniest 75 cm vor dem Turm. Jetzt hat jede Seite einen Arm auf einem Lager außen an der Säule, 67,5 cm lang bis zum Gummigriff. Zum Dip ist er zu dir geschwenkt, zum Pull-Up nach vorn. Schwenkbare Dipgriffe gibt es so auch bei anderen Herstellern; die Maße sind geschätzt. Die Schleife des Pull-Ups zeigt noch die kurzen Griffe; mit deiner Freigabe rendere ich sie neu.
+- **Bewegung:** kniend wie beim Pull-Up, Hände im neutralen Griff, Daumen vorn, oben senkrecht unter den Schultern. Oben sind die Arme gestreckt (Ellbogen 172°), die Schultern gesenkt, der Oberkörper 5° vor. Ab, bis der Oberarm etwa waagrecht ist (3° darunter, Ellbogen 80°), der Oberkörper dann 24° vor, die Ellbogen nach hinten.
+- **Kamera:** 115°, mehr von der Seite als beim Pull-Up: So sind Tiefe, Ellbogen und Vorneigung zu sehen und beide Arme.
+
+| Messwert über alle 60 Bilder | Wert |
+|---|---|
+| Ellbogen oben / unten | 172,0° / 80,3° |
+| Oberarm zur Waagrechten oben / unten | 75,1° / 3,0° darunter |
+| Oberarm zum Rumpf unten (Dehnung in der Schulter) | 59,1° |
+| Unterarm zur Senkrechten, höchstens / unten | 16,0° / 12,8° (Ellbogen 5,5 cm hinter dem Handgelenk) |
+| Handgelenk, höchstens | 9,7° |
+| Oberkörper vorgeneigt | 5° bis 24° |
+| Schultern unten: Ohr längs des Rumpfs über dem Schultergelenk | 23,4 bis 24,3 cm, im Stand 22,4 cm |
+| Schultergelenk vor der Mitte des Griffs oben / unten | 0,0 / 14,6 cm |
+| Kniepolster über dem Boden / Hüfte waagrecht | 99,4 bis 78,8 cm / höchstens 0,6 cm |
+| Hände auseinander (Mitte der Griffe) | 54,1 cm (Schultergelenke 39,8 cm) |
+| Knie im Polster / durch die Oberfläche | 4,0 mm / 0,0 mm |
+| Rumpf zu den Diparmen / Arme / Kopf zur Maschine | mindestens 95 / 105 / 181 mm |
+| Finger im Gummigriff | 8,4 mm (Pull-Up 4,2 mm), in den Nahaufnahmen nicht zu sehen |
+| Kleidung, Meldungen des Rigs | ohne Durchdringung, 0 |
+
+**Abgleich mit dem Ausführungstext:** passt, geändert habe ich nichts.
+
+| Text in der App | Animation |
+|---|---|
+| „Stütz dich mit gestreckten Armen auf die schulterbreiten Griffe, die Schultern über den Händen.“ | oben Ellbogen 172°, Schultergelenk senkrecht über der Mitte des Griffs; Griffe 54 cm auseinander |
+| „Stell dich auf den Hebel; bei manchen Maschinen kniest du auf einem Polster.“ | kniend auf dem Kniepolster, wie beim Pull-Up |
+| „Beug die Arme und senk den Körper, bis du eine leichte Dehnung in den Schultern spürst.“ | unten Oberarm etwa waagrecht, 59° hinter dem Rumpf |
+| „Drück dich hoch, bis die Arme gestreckt sind.“ | zurück bis 172° im Ellbogen |
+
+### 51.3 Deine Entscheidungen
+
+Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
+
+1. **Dip, Vorneigung:** Unten neigt sich der Oberkörper 24° vor (Brust und Trizeps). Aufrechter betont den Trizeps; dann stehen die Unterarme unten schräger (mit 16° Vorneigung gemessen 18,7°, mit 24° 12,8°). Vorschlag: 24° lassen.
+2. **Dip, Diparme:** lange Arme, außen an den Säulen geschwenkt (Annahme). Hat die Maschine in deinem Studio feste Dipgriffe an eigenen Stützen, baue ich sie so.
+
+### 51.4 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-510 Phase Programme, Prüfseite Dips mit Unterstützung (Waagrechtes Drücken) an derselben Gegengewichtsmaschine
+Umgesetzte Funktionen: keine in der App; Werkzeug: Übung uebungen.DipUnterstuetzt auf der Bahn des Pull-Ups, Diparme (geraete.dipgriffe), Messwerte für Schultern längs des Rumpfs, Ellbogen, Schultergelenk über dem Griff und Abstände zu den Diparmen, Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-waagrechtes-druecken-dip.webp (neu), docs/screens/uebungen/waagrechtes-druecken-dip-kameras.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-510
+Ausgeführte Tests: drei Probeläufe, Kameravergleich, render.py dip_unterstuetzt --pruefen (alle 60 Bilder), Nahaufnahmen, Bilder angesehen, Pull-Up nach dem Umbau gleich (60 Bilder); format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 51.1)
+Bekannte Einschränkungen: Maße der Diparme geschätzt; die Schleife des Pull-Ups zeigt bis zum Neu-Rendern die kurzen Dipgriffe
+Nächste Schritte: Prüfseite Machine Squat (D-511), dann Halt bis zu deiner Freigabe beider Prüfseiten
+```

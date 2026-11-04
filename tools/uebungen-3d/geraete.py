@@ -875,20 +875,46 @@ KLIMMZUGMASCHINE = {
     "griff_d": 0.032,  # Klimmzuggriffe, Durchmesser, m
     "griff_l": 0.16,  # Länge eines Griffs, m
     "dip_z": 1.30,  # Dipgriffe über dem Boden, m
-    "dip_x": 0.27,
+    "dip_x": 0.27,  # Mitte der Dipgriffe so weit von der Mitte, m
+    # Diparme (D-510): auf senkrechten Lagern außen an den Säulen, zum Dip zur Person geschwenkt, zum Klimmzug nach vorn;
+    # so lang, dass die Hände unter den Schultern greifen (die Person kniet 75 cm vor dem Turm)
+    "diplager_x": 0.32,
+    "diparm": 0.675,  # vom Lager bis zum Gummigriff, m
+    "diparm_quer": (0.05, 0.06),
+    "dipgriff_l": 0.24,
+    "dipgriff_d": 0.036,
     "block_hub": 0.22,  # Weg des Gewichtsblocks über die ganze Bewegung des Polsters, m
     "hebel_quer": (0.05, 0.06),
     "stufe_z": 0.42,  # Trittstufen links und rechts, m
 }
 
 
-def klimmzugmaschine(griffe: dict, polster: Vector, lager: Vector, turm_y: float) -> dict:
+def dipgriffe(turm_y: float, zum_koerper: bool) -> dict:
+    """Lage der Diparme (D-510, Welt): je Seite Lager, Anfang und Ende des Gummigriffs und Richtung des Arms. Die Arme
+    drehen sich um senkrechte Lager außen an den Säulen (`diplager_x`): zum Dip zur Person hin (`zum_koerper`), dabei
+    leicht nach innen, damit die Mitte der Griffe `dip_x` von der Mitte liegt; zum Klimmzug um 180° nach vorn."""
+    m = KLIMMZUGMASCHINE
+    turm_mitte = turm_y - 0.13
+    bis_mitte = m["diparm"] + m["dipgriff_l"] / 2
+    aus = {}
+    for s, sx in (("L", 1), ("R", -1)):
+        lager = Vector((sx * m["diplager_x"], turm_mitte, m["dip_z"]))
+        dx = sx * (m["dip_x"] - m["diplager_x"])
+        d = Vector((dx, math.sqrt(bis_mitte ** 2 - dx ** 2), 0.0)).normalized()
+        if not zum_koerper:
+            d = -d
+        anfang = lager + d * m["diparm"]
+        aus[s] = {"lager": lager, "anfang": anfang, "ende": anfang + d * m["dipgriff_l"], "richtung": d}
+    return aus
+
+
+def klimmzugmaschine(griffe: dict, polster: Vector, lager: Vector, turm_y: float, dip: bool = False) -> dict:
     """Gegengewichtsmaschine für Klimmzug und Dip, Person kniend mit Blick nach −y (D-508). `griffe`: je Seite Mitte und
     Richtung (nach außen) des Klimmzuggriffs (Welt). `polster`: Mitte der Oberseite des Kniepolsters im Ausgang (Welt).
     `lager`: oberes Lager der Hebel (Welt, x = 0; die Hebel liegen links und rechts davon, das untere Lager 12 cm darunter).
     `turm_y`: Rückseite des Turms. Das Polster mit seinem Träger hängt an einem Leerobjekt, die beiden Hebel je an einem
-    eigenen auf ihrem Lager; `polster_lage` stellt sie je Bild. Gibt Wurzel, Polster, Leerobjekte, Gewichtsblock und
-    Griffe zurück."""
+    eigenen auf ihrem Lager; `polster_lage` stellt sie je Bild. `dip`: Diparme zur Person geschwenkt (D-510), sonst
+    nach vorn. Gibt Wurzel, Polster, Leerobjekte, Gewichtsblock und Griffe zurück."""
     m = KLIMMZUGMASCHINE
     polster_mat = _mat("Polster", GERAET, 0.8)
     rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
@@ -936,12 +962,16 @@ def klimmzugmaschine(griffe: dict, polster: Vector, lager: Vector, turm_y: float
         teile.append(_stab("Griffkappe", innen - k * 0.008, innen + k * 0.004, m["griff_d"] / 2 + 0.004, stahl, wurzel))
         g = _stab("Griff." + s, innen, aussen + k * 0.02, m["griff_d"] / 2, gummi, wurzel)
         griff_obj[s] = g
-    # Dipgriffe am Turm, für Klimmzüge nach vorn geklappt (zeigen von der Person weg)
-    for seite in (-1, 1):
-        x = seite * m["dip_x"]
-        teile.append(_kasten("Saeulen-Diplager", (0.07, 0.08, 0.10), Vector((x, turm_mitte - 0.10, m["dip_z"])), rahmen, 0.006, wurzel))
-        teile.append(_stab("Saeulen-Dipgriff", Vector((x, turm_mitte - 0.12, m["dip_z"])), Vector((x, turm_mitte - 0.52, m["dip_z"])), 0.018,
-                           gummi, wurzel))
+    # Diparme (D-510): Lager außen an den Säulen (Name „Saeulen-…“: in der Prüfansicht von vorn mit dem Turm
+    # ausgeblendet), Arm aus Vierkantrohr, vorn der Gummigriff mit Kappe; zum Dip zur Person, zum Klimmzug nach vorn
+    dip_obj = {}
+    for s, lage in dipgriffe(turm_y, dip).items():
+        L, A, E, d = lage["lager"], lage["anfang"], lage["ende"], lage["richtung"]
+        teile.append(_kasten("Saeulen-Diplager", (0.08, 0.08, 0.14), L, rahmen, 0.006, wurzel))
+        teile.append(_zylinder("Saeulen-Diplagerbolzen", 0.012, 0.20, L.copy(), "z", stahl, wurzel, ecken=24))
+        teile.append(_balken("Diparm", L, A, m["diparm_quer"], rahmen, eltern=wurzel))
+        teile.append(_stab("Dipkappe", E - d * 0.004, E + d * 0.010, m["dipgriff_d"] / 2 + 0.004, stahl, wurzel))
+        dip_obj[s] = _stab("Dipgriff." + s, A - d * 0.01, E, m["dipgriff_d"] / 2, gummi, wurzel)
     # Kniepolster mit Träger an einem Leerobjekt; je Seite ein Paar paralleler Hebel vom Turm
     traeger = bpy.data.objects.new("Polstertraeger", None)
     bpy.context.scene.collection.objects.link(traeger)
@@ -974,5 +1004,5 @@ def klimmzugmaschine(griffe: dict, polster: Vector, lager: Vector, turm_y: float
                            Vector((seite * hebel_x, polster.y - py / 2 + 0.06, polster.z - pd - 0.02)), (0.05, 0.05), rahmen),
                    traeger)
     return {"wurzel": wurzel, "polster": [kissen], "traeger": traeger, "traeger0": traeger.matrix_world.copy(),
-            "hebel": hebel_obj, "hebel0": hebel0, "griffe": griff_obj, "block": block, "block0": block.matrix_world.copy(),
-            "rahmen": teile}
+            "hebel": hebel_obj, "hebel0": hebel0, "griffe": griff_obj, "dipgriffe": dip_obj, "block": block,
+            "block0": block.matrix_world.copy(), "rahmen": teile}

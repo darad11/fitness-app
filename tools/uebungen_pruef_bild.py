@@ -234,6 +234,24 @@ MESSWERTE = (
      " cm"),
     ("Körpermitte hinter der Linie der Griffe (cm)", "Körpermitte (Mittel aller Punkte) hinter der Linie der Griffe", "spanne",
      " cm"),
+    # Dips mit Unterstützung (D-510)
+    ("Oberarm zum Rumpf (Grad)", "Oberarm zum Rumpf (Schulter gestreckt)", "spanne", "°"),
+    ("Lehne vor", "Oberkörper vorgeneigt", "spanne", "°"),
+    ("Ellbogen hinter dem Handgelenk (cm)", "Ellbogen hinter dem Handgelenk", "spanne", " cm"),
+    ("Ellbogen neben dem Handgelenk (cm, + außen)", "Ellbogen neben dem Handgelenk (+ außen)", "spanne", " cm"),
+    ("Schultergelenk vor der Mitte des Griffs (cm)", "Schultergelenk vor der Mitte des Griffs", "spanne", " cm"),
+    ("Schultergelenk über der Mitte des Griffs (cm)", "Schultergelenk über der Mitte des Griffs", "spanne", " cm"),
+    ("Hände auseinander (cm)", "Hände auseinander (Mitte der Griffe)", "max", " cm"),
+    ("Polster gegenüber dem Ausgang gesenkt (cm)", "Kniepolster gesenkt", "max", " cm"),
+    ("Ohr über dem Schultergelenk längs des Rumpfs (cm)", "Ohr über dem Schultergelenk längs des Rumpfs (Schultern unten: größer)",
+     "spanne", " cm"),
+    ("Ohr über dem Schultergelenk längs des Rumpfs im Stand (cm)", "Ohr über dem Schultergelenk längs des Rumpfs im Stand", "max",
+     " cm"),
+    ("Körpermitte hinter der Mitte der Griffe (cm)", "Körpermitte (Mittel aller Punkte) hinter der Mitte der Griffe", "spanne",
+     " cm"),
+    ("Arme zur Maschine (mm, ohne die Dipgriffe)", "Arme zur Maschine (ohne die Dipgriffe)", "min", " mm"),
+    ("Rumpf, Beine, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Dipgriffe)",
+     "Rumpf, Beine, Kleidung und Schuhe zur Maschine (ohne Polster und Dipgriffe)", "min", " mm"),
     ("Kopf und Hals zur Maschine (mm)", "Kopf und Hals zur Maschine", "min", " mm"),
     ("Arme zur Maschine (mm)", "Arme zur Maschine", "min", " mm"),
     ("Körper, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Griffe)",
@@ -301,7 +319,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "vgriff_vorn": "V-Griff und Hände schräg von vorn", "beingriff_aussen": "Hand am Griff von außen",
               "beingriff_vorn": "Hand am Griff von vorn", "presse_vorn": "Hand am Griff von vorn",
               "presse_aussen": "Hand am Griff von außen", "klimmzug_vorn": "Hand am Griff von vorn",
-              "klimmzug_hinten": "Hand am Griff von hinten"}
+              "klimmzug_hinten": "Hand am Griff von hinten", "dip_aussen": "Hand am Dipgriff von außen",
+              "dip_hinten": "Hand am Dipgriff von hinten"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

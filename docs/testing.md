@@ -3340,3 +3340,19 @@ Endlage gemessen, Griffe 14 statt 3 cm vor den Schultern, Schleife und Eintrag i
 | `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 14; Animationsplan mit „Schleife in der App (D-509)“ |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 140 Dateien, 1.273 Tests; „public/uebungen/medien.json: 14 Einträge geprüft“; Startansicht 239,7 KB, Übungsbilder 56 von 56 |
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 469 bestanden, 151 übersprungen, keiner fehlgeschlagen (20,9 min); der geänderte Test der Übungsliste (14 Vorschaubilder, dazu die Klimmzüge mit Unterstützung) bestanden |
+
+### Prüfseite Dips mit Unterstützung · 04.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Dip an derselben Gegengewichtsmaschine wie der Pull-Up, Diparme neu; nur Werkzeug, Bilder und Dokumente (D-510).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probelauf `uebungen.DipUnterstuetzt` (drei Phasen, Diparme 62 cm, Oberkörper 4° → 16° vor, Oberarm unten waagrecht) | Polster 99,3 → 72,9 cm, Hand 17,4 cm weit auf dem 24-cm-Griff (Arm danach 67,5 cm lang); unten Ellbogen 71,5°, Unterarm 18,7° schräg, Handgelenk höchstens 11,6°; keine Meldung des Rigs |
+| Zweiter Probelauf (Oberkörper 5° → 24° vor, Schlüsselbeine −6° → −3°) | unten Ellbogen 77,6°, Unterarm 12,6°; Ohr senkrecht über dem Schultergelenk unten 19,1 cm (Stand 22,3 cm) täuschte wegen der Vorneigung, darum der Messwert längs des Rumpfs |
+| Dritter Probelauf (Oberarm unten 3° unter der Waagrechten), fünf Phasen, Abstand zu den Diparmen | unten Ellbogen 80,3°, Unterarm 12,8°; Ohr längs des Rumpfs 24,3 → 23,3 cm (Stand 22,4 cm); Rumpf mindestens 95 mm, Arme 105 mm von den Diparmen |
+| Kameravergleich 135°, 115°, 95°, 160° (`docs/screens/uebungen/waagrechtes-druecken-dip-kameras.webp`) | 115° gewählt: Tiefe, Ellbogen und Vorneigung, beide Arme |
+| `render.py dip_unterstuetzt --pruefen` (60 Bilder), `familie_bilder.py dip_unterstuetzt` | Messwerte in `form-programme-report.md` 51.1: Ellbogen 172,0° → 80,3°, Handgelenk höchstens 9,7°, Knie 4,0 mm im Polster, nichts durch die Oberfläche, Kleidung ohne Durchdringung, 0 Meldungen; 553 s und 99 s |
+| Prüfansichten und Nahaufnahmen angesehen | von der Seite, von vorn (Turm ausgeblendet) und in der Kamera der App wie erwartet; Hand um den Gummigriff von außen und von hinten |
+| Prüfseite (`tools/uebungen_pruef_bild.py dip_unterstuetzt --familie waagrechtes-druecken-dip --titel "Waagrechtes Drücken (Dali’s PPLC)"`) | `familie-waagrechtes-druecken-dip.webp`, angesehen |
+| Pull-Up nach dem Umbau (`render.py klimmzug_unterstuetzt --pruefen --nur-messwerte`, 60 Bilder) | alle Messwerte gleich wie in D-509 (größter Unterschied 0,000000) |
+| `pnpm format:check`, `pnpm check:docs` | bestanden |

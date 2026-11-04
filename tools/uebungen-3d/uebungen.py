@@ -4466,7 +4466,13 @@ class KlimmzugUnterstuetzt(Uebung):
         return self.rig.lokal(polster - self.versatz)
 
     def _loesen(self) -> None:
-        """Bahn und Maschine, wenn Kleidung und Schuhe da sind (erstes `setzen`). Griffe weit über den Schultern, oben
+        """Bahn und Maschine, wenn Kleidung und Schuhe da sind (erstes `setzen`)."""
+        self._loesen_maschine()
+        self.polster0 = self._bahn_polster(0.0)
+        self._geraet_bauen()
+
+    def _loesen_maschine(self) -> None:
+        """Bahn und Maschine des Klimmzugs (auch Grundlage des Dips, D-510). Griffe weit über den Schultern, oben
         so hoch über dem Boden, dass die Mitte des Halses dann auf ihrer Höhe ist; unten so tief, dass der Ellbogen
         `ELLBOGEN_UNTEN` hat. Das Polster läuft auf dem Bogen der Hebel, die Hüfte folgt ihm; das Lager liegt auf halber
         Höhe der Hebelenden `HEBEL` vor ihnen. Darum dreimal: Lager, untere Lage."""
@@ -4506,9 +4512,13 @@ class KlimmzugUnterstuetzt(Uebung):
             unten = (lo + hi) / 2
         self.lager.z = (unten + oben) / 2 - self.ende_unter
         self.polster_z = (unten, oben)
+        self.zug_z = self.polster_z  # Weg des Polsters beim Klimmzug: Bezug für den Gewichtsblock (D-510)
         rig.zuruecksetzen()
-        self.polster0 = self._bahn_polster(0.0)
-        self.geraet = geraete.klimmzugmaschine(self.griffe, self.polster0, self.lager, self.lager.y + 0.06)
+
+    def _geraet_bauen(self, dip: bool = False) -> None:
+        """Maschine mit dem Polster in der Lage `polster0`; Diparme zur Person geschwenkt mit `dip` (D-510)."""
+        rig = self.rig
+        self.geraet = geraete.klimmzugmaschine(self.griffe, self.polster0, self.lager, self.lager.y + 0.06, dip=dip)
         self.polster_ruhe = {o.name: geraete.weiches_polster(o) for o in self.polster_objekte()}
         # Das neue Netz liegt einige Millimeter neben der Fläche des Kastens (wie beim Schulterdrücken, D-491): das
         # Polster so verschieben, dass Knie und Schienbeine im Ausgang `TIEF` darin liegen
@@ -4543,7 +4553,8 @@ class KlimmzugUnterstuetzt(Uebung):
         for name, M0 in g["hebel0"].items():
             P = M0.to_translation()
             g["hebel"][name].matrix_world = Matrix.Translation(P) @ D @ Matrix.Translation(-P) @ M0
-        hub = geraete.KLIMMZUGMASCHINE["block_hub"] * (1.0 - p)
+        # Der Block hebt sich, wenn das Polster sinkt: über den Weg des Klimmzugs um `block_hub`, beim Dip ebenso (D-510)
+        hub = geraete.KLIMMZUGMASCHINE["block_hub"] * (self.zug_z[1] - polster.z) / (self.zug_z[1] - self.zug_z[0])
         g["block"].matrix_world = Matrix.Translation(Vector((0, 0, hub))) @ g["block0"]
         return polster
 
@@ -4598,39 +4609,7 @@ class KlimmzugUnterstuetzt(Uebung):
 
     def zusatzwerte(self) -> dict:
         """Knie im Polster (Delle, nichts ragt durch), Abstand von Kopf und Armen zur Maschine, Finger am Griff (mm)."""
-        from mathutils.bvhtree import BVHTree
-
-        dg = bpy.context.evaluated_depsgraph_get()
-        g = self.geraet
-        werte = {"Polster: tiefste Delle (mm)": self.delle * 1000,
-                 "Polster: Haut oder Kleidung durch die Oberfläche (mm)": geraete.durch_polster(self.polster_objekte(), self.auflage()) * 1000}
-        teile = [o for o in g["wurzel"].children_recursive if o.type == "MESH" and o not in g["polster"]
-                 and not o.name.startswith("Griff.")]
-        # Alle Teile in einem Baum: Die Suche läuft einmal je Punkt statt einmal je Teil
-        ecken, flaechen = [], []
-        for obj in teile:
-            oe = obj.evaluated_get(dg)
-            me = oe.to_mesh()
-            n = len(ecken)
-            ecken += [oe.matrix_world @ v.co for v in me.vertices]
-            flaechen += [tuple(n + i for i in f.vertices) for f in me.polygons]
-            oe.to_mesh_clear()
-        baeume = [BVHTree.FromPolygons(ecken, flaechen)]
-        namen = {gr.index: gr.name for gr in self.koerper.vertex_groups}
-        netz = _netz(self.koerper)
-
-        def gruppe(v, *anfang) -> bool:
-            return sum(x.weight for x in v.groups if namen[x.group].startswith(anfang)) > 0.5
-
-        def abstand(pkte) -> float:
-            best = 1.0
-            for q in pkte:
-                for b in baeume:
-                    t = b.find_nearest(q, best)
-                    if t[0] is not None:
-                        best = min(best, t[3])
-            return best
-
+        werte, netz, gruppe, abstand = self._abstaende(("Griff.",))
         kopf = [q for v, q in zip(self.koerper.data.vertices, netz) if gruppe(v, "head", "neck", "jaw", "eye")]
         kopf += self._punkte("Haare")
         arme = [q for v, q in zip(self.koerper.data.vertices, netz) if gruppe(v, "upperarm", "lowerarm", "shoulder")]
@@ -4658,6 +4637,43 @@ class KlimmzugUnterstuetzt(Uebung):
         werte["Körper, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Griffe)"] = abstand(koerper) * 1000
         return werte
 
+    def _abstaende(self, ausser: tuple[str, ...]):
+        """Polster (tiefste Delle, nichts durch die Oberfläche), Netz des Körpers, Prüfung der Gruppen und Abstand von
+        Punkten zur Maschine ohne Polster und ohne die Teile, deren Name mit `ausser` beginnt (Griffe in der Hand)."""
+        from mathutils.bvhtree import BVHTree
+
+        dg = bpy.context.evaluated_depsgraph_get()
+        g = self.geraet
+        werte = {"Polster: tiefste Delle (mm)": self.delle * 1000,
+                 "Polster: Haut oder Kleidung durch die Oberfläche (mm)": geraete.durch_polster(self.polster_objekte(), self.auflage()) * 1000}
+        teile = [o for o in g["wurzel"].children_recursive if o.type == "MESH" and o not in g["polster"]
+                 and not o.name.startswith(ausser)]
+        # Alle Teile in einem Baum: Die Suche läuft einmal je Punkt statt einmal je Teil
+        ecken, flaechen = [], []
+        for obj in teile:
+            oe = obj.evaluated_get(dg)
+            me = oe.to_mesh()
+            n = len(ecken)
+            ecken += [oe.matrix_world @ v.co for v in me.vertices]
+            flaechen += [tuple(n + i for i in f.vertices) for f in me.polygons]
+            oe.to_mesh_clear()
+        baum = BVHTree.FromPolygons(ecken, flaechen)
+        namen = {gr.index: gr.name for gr in self.koerper.vertex_groups}
+        netz = _netz(self.koerper)
+
+        def gruppe(v, *anfang) -> bool:
+            return sum(x.weight for x in v.groups if namen[x.group].startswith(anfang)) > 0.5
+
+        def abstand(pkte) -> float:
+            best = 1.0
+            for q in pkte:
+                t = baum.find_nearest(q, best)
+                if t[0] is not None:
+                    best = min(best, t[3])
+            return best
+
+        return werte, netz, gruppe, abstand
+
     def _ohr_hoehe(self, netz: list[Vector]) -> float:
         """Höhe (Welt) der Mitte des linken Ohrs: Mitte der seitlichsten Punkte des Kopfs zwischen 7 cm unter und 2 cm über
         den Augen (wie beim Schulterdrücken, D-492)."""
@@ -4676,7 +4692,219 @@ class KlimmzugUnterstuetzt(Uebung):
         return aus
 
 
+class DipUnterstuetzt(KlimmzugUnterstuetzt):
+    """Dips mit Unterstützung an derselben Gegengewichtsmaschine, kniend (Familie „Waagrechtes Drücken“, D-510), nach dem
+    Ausführungstext der App (ExRx „Machine-assisted Triceps Dip“, kniende Fassung). Maschine, Lager, Hebel und Polster
+    wie beim Pull-Up: Erst löst die Übung dessen Bahn (`KlimmzugUnterstuetzt._loesen_maschine`, Modus „klimmzug“), dann
+    ihre eigene auf demselben Bogen; die Diparme sind zur Person geschwenkt (`geraete.dipgriffe`). Kniend wie beim
+    Pull-Up. Hände im neutralen Griff auf den Dipgriffen, die Daumen nach vorn, senkrecht unter den Schultergelenken im
+    Ausgang. Ausgang oben: Arme gestreckt (Ellbogen `ELLBOGEN_OBEN`), Schultern gesenkt (`SCHULTER_OBEN`), Oberkörper
+    `VOR_OBEN` vor. Ab, bis der Oberarm waagrecht ist (`OBERARM_UNTEN`; Text: „bis du eine leichte Dehnung in den
+    Schultern spürst“); die Ellbogen gehen nach hinten, die Unterarme bleiben fast senkrecht (`UNTERARM_VOR`), der
+    Oberkörper neigt sich `VOR_UNTEN` vor. Das Polster folgt den Knien auf dem Bogen seiner Hebel, der Gewichtsblock
+    hebt sich, wenn das Polster sinkt. Zurück derselbe Weg."""
+
+    name = "dip_unterstuetzt"
+    titel = "Dips mit Unterstützung"
+    # Schräg von hinten, mehr von der Seite als beim Pull-Up: Tiefe, Ellbogen und Vorneigung, beide Arme (verglichen mit
+    # 135°, 95° und 160°, D-510)
+    kamera = {"richtung": 115.0, "neigung": 10.0, "fuellen": 0.02}
+    vorschau_phase = 1.0
+    ELLBOGEN_OBEN = 172.0  # „bis die Arme gestreckt sind“
+    # unten: Oberarm so weit über der Waagrechten (unter 0: Ellbogen unter der Schulter), Grad. „Etwa waagrecht“ (Familie);
+    # mit 0° hatte der Ellbogen 77,6° (102° gebeugt), die Familie nennt 80 bis 100° Beugung
+    OBERARM_UNTEN = -3.0
+    # Oberkörper vorgeneigt, Grad (eigene Namen: LEHNE_… gehören dem Pull-Up, dessen Bahn die Maschine bestimmt)
+    VOR_OBEN, VOR_UNTEN = 5.0, 24.0
+    SCHULTER_OBEN, SCHULTER_UNTEN = -6.0, -3.0  # Schlüsselbeine gehoben (unter 0 gesenkt), Grad
+    UNTERARM_VOR = 4.0  # Unterarm (Ellbogen → Hand) so weit nach vorn: Der Ellbogen bleibt hinter der Hand
+    DIP_LAGE = 0.6  # Griff in der Hand (0 Handgelenk, 1 Fingeransatz)
+    DIP_SCHRAEG = 10.0
+    griff_ansichten = (("dip_aussen", 90.0, 15.0), ("dip_hinten", 200.0, 20.0))
+    fuss_ansichten = ((90, 0.10), (180, 0.20))
+
+    def bauen(self) -> None:
+        super().bauen()
+        self.modus = "klimmzug"
+        self.dipgriff = {s: self.rig.griff(s, self.DIP_LAGE, geraete.KLIMMZUGMASCHINE["dipgriff_d"] / 2,
+                                           schraeg=self.DIP_SCHRAEG) for s in "LR"}
+
+    def rahmen_objekte(self) -> list:
+        if self.geraet is None:
+            return []
+        return [*self.geraet["dipgriffe"].values(), *self.geraet["polster"]]
+
+    def stange_achse(self):
+        mitte, k = self.dipgriffe["L"]
+        return mitte.copy(), k.normalized(), geraete.KLIMMZUGMASCHINE["dipgriff_d"] / 2
+
+    def nah_punkte(self) -> list[Vector]:
+        rig = self.rig
+        hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        mitte, kk = self.dipgriffe["L"]
+        return [q for q in _netz(self.koerper) if (q - hand).length < 0.10] + [mitte - kk * 0.08, mitte + kk * 0.08]
+
+    # ------------------------------------------------------------------ Haltung
+
+    def _vor(self, p: float) -> float:
+        return self.VOR_OBEN + (self.VOR_UNTEN - self.VOR_OBEN) * p
+
+    def _torso(self, p: float, huefte: Vector) -> float:
+        if self.modus == "klimmzug":
+            return super()._torso(p, huefte)
+        rig = self.rig
+        rig.setze("root", starr(self.H0, huefte, achse_winkel(X, self._vor(p))))
+        hoch = self.SCHULTER_OBEN + (self.SCHULTER_UNTEN - self.SCHULTER_OBEN) * p
+        rig.dreh("clavicle.L", achse_winkel(-Y, hoch))
+        rig.dreh("clavicle.R", achse_winkel(Y, hoch))
+        return hoch
+
+    def _regel(self, s: str):
+        if self.modus == "klimmzug":
+            return super()._regel(s)
+        w = math.radians(self.UNTERARM_VOR)
+        richtung = Vector((0.0, -math.sin(w), -math.cos(w)))
+        return lambda S, W, l1, l2: ellbogen_zur_richtung(S, W, l1, l2, richtung)
+
+    def _arme(self) -> dict:
+        if self.modus == "klimmzug":
+            return super()._arme()
+        rig = self.rig
+        # Griffachse vom Zeigefinger zum kleinen Finger: nach hinten (+y), die Daumen zeigen nach vorn
+        return {s: rig.arm(s, self.dipgriff[s], rig.lokal(self.dipgriffe[s][0]), self.dipgriffe[s][1], Y, 0.0,
+                           ellbogen=self._regel(s)) for s in "LR"}
+
+    # ------------------------------------------------------------------ Bahn
+
+    def _ohr_rumpf(self, netz: list[Vector]) -> float:
+        """Mitte des linken Ohrs über dem linken Schultergelenk längs des Rumpfs (Becken → Halsansatz), cm. Neigt sich
+        der Oberkörper vor, misst die Senkrechte zu wenig; die Punkte des Ohrs stehen aus dem Stand fest (`ohr_i`)."""
+        rig, k = self.rig, self.rig.kopf
+        ohr = sum((netz[i] for i in self.ohr_i), Vector()) / len(self.ohr_i)
+        S = rig.welt(rig.punkt("shoulder01.L", k["upperarm01.L"]))
+        hals = rig.welt(rig.punkt("neck01", k["neck01"]))
+        becken = rig.welt((rig.punkt("pelvis.L", k["upperleg01.L"]) + rig.punkt("pelvis.R", k["upperleg01.R"])) / 2)
+        return (ohr - S).dot((hals - becken).normalized()) * 100
+
+    def _oberarm(self, arm: dict) -> float:
+        return math.degrees(math.asin(max(-1.0, min(1.0, (arm["ellbogen"] - arm["schulter"]).normalized().z))))
+
+    def _loesen(self) -> None:
+        """Erst die Maschine wie beim Pull-Up (dieselben Griffe, Lager, Hebel und Polster), dann die Bahn des Dips auf
+        demselben Bogen: oben so hoch, dass der Ellbogen `ELLBOGEN_OBEN` hat, unten so tief, dass der Oberarm waagrecht
+        ist. Die Hände greifen senkrecht unter den Schultergelenken im Ausgang; darum dreimal."""
+        rig = self.rig
+        m = geraete.KLIMMZUGMASCHINE
+        # Ohr im Stand: Punkte der Mitte des linken Ohrs (wie `_ohr_hoehe`) und Bezug für „Schultern unten“
+        rig.zuruecksetzen()
+        rig.anwenden()
+        netz = _netz(self.koerper)
+        k = rig.kopf
+        auge = rig.welt((rig.punkt("eye.L", k["eye.L"]) + rig.punkt("eye.R", k["eye.R"])) / 2)
+        self.ohr_i = [i for i in self.kopf_i if netz[i].x > 0.06 and auge.z - 0.07 < netz[i].z < auge.z + 0.02]
+        self.ohr_stand_rumpf = self._ohr_rumpf(netz)
+        self.modus = "klimmzug"
+        self._loesen_maschine()
+        self.modus = "dip"
+        lage = geraete.dipgriffe(self.lager.y + 0.06, True)
+        oben = sum(self.zug_z) / 2
+        self.griff_t = {}
+        for _ in range(3):
+            self._pose(0.0, self._huefte_fuer(self._auf_bogen(oben)), arme=False)
+            self.dipgriffe = {}
+            for s in "LR":
+                S = rig.welt(rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s]))
+                g = lage[s]
+                t = (S.y - g["anfang"].y) / g["richtung"].y
+                self.griff_t[s] = t
+                t = max(0.06, min(m["dipgriff_l"] - 0.06, t))
+                self.dipgriffe[s] = (g["anfang"] + g["richtung"] * t, g["richtung"].copy())
+            lo, hi = oben - 0.40, oben + 0.40
+            for _ in range(28):
+                z = (lo + hi) / 2
+                vorher = len(rig.meldungen)
+                arme = self._pose(0.0, self._huefte_fuer(self._auf_bogen(z)))
+                del rig.meldungen[vorher:]
+                if arme["L"]["ellbogenwinkel"] < self.ELLBOGEN_OBEN:
+                    lo = z
+                else:
+                    hi = z
+            oben = (lo + hi) / 2
+        lo, hi = oben - 0.60, oben
+        for _ in range(28):
+            z = (lo + hi) / 2
+            vorher = len(rig.meldungen)
+            arme = self._pose(1.0, self._huefte_fuer(self._auf_bogen(z)))
+            del rig.meldungen[vorher:]
+            if self._oberarm(arme["L"]) < self.OBERARM_UNTEN:
+                hi = z
+            else:
+                lo = z
+        unten = (lo + hi) / 2
+        self.polster_z = (oben, unten)
+        rig.zuruecksetzen()
+        self.polster0 = self._bahn_polster(0.0)
+        self._geraet_bauen(dip=True)
+
+    # ------------------------------------------------------------------ Messwerte
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        polster = self._maschine(p)
+        huefte = self._huefte_fuer(polster)
+        hoch = self._torso(p, huefte)
+        beine = self._beine()
+        arme = self._arme()
+        A, B, L = arme["L"], arme["R"], beine["L"]
+        ober = A["ellbogen"] - A["schulter"]
+        unter = A["handgelenk"] - A["ellbogen"]
+        S, E, W = rig.welt(A["schulter"]), rig.welt(A["ellbogen"]), rig.welt(A["handgelenk"])
+        H = rig.welt(huefte)
+        rumpf = (S - H).normalized()
+        G = self.dipgriffe["L"][0]
+        self.werte = {
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Unterarm zur Senkrechten": math.degrees(unter.angle(-Z)),
+            "Oberarm zur Waagrechten (Grad, + darüber, ganze Bewegung)": self._oberarm(A),
+            # Oberarm hinter dem Rumpf: Winkel zwischen Oberarm und Rumpf (Hüfte → Schulter umgekehrt), seitlich gesehen
+            "Oberarm zum Rumpf (Grad)": math.degrees(Vector((0.0, ober.y, ober.z)).angle(Vector((0.0, -rumpf.y, -rumpf.z)))),
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Lehne vor": self._vor(p),
+            "Schlüsselbein gehoben (Grad)": hoch,
+            "Ellbogen hinter dem Handgelenk (cm)": (E.y - W.y) * 100,
+            "Ellbogen neben dem Handgelenk (cm, + außen)": (E.x - W.x) * 100,
+            "Schultergelenk vor der Mitte des Griffs (cm)": (G.y - S.y) * 100,
+            "Schultergelenk über der Mitte des Griffs (cm)": (S.z - G.z) * 100,
+            "Hände auseinander (cm)": (self.dipgriffe["L"][0].x - self.dipgriffe["R"][0].x) * 100,
+            "Ellbogen L/R gleich (Grad)": abs(A["ellbogenwinkel"] - B["ellbogenwinkel"]),
+            "Polster über dem Boden (cm)": polster.z * 100,
+            "Polster gegenüber dem Ausgang gesenkt (cm)": (self.polster0.z - polster.z) * 100,
+            "Hüfte waagrecht gegenüber dem Ausgang (cm, + zum Turm)": (self.polster0.y - polster.y) * 100,
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+        }
+
+    def zusatzwerte(self) -> dict:
+        """Knie im Polster, Abstand von Kopf, Armen und Rumpf zur Maschine (die Diparme laufen neben dem Rumpf),
+        Schultern unten (Ohr über dem Schultergelenk), Mitte des Körpers."""
+        werte, netz, gruppe, abstand = self._abstaende(("Dipgriff.", "Dipkappe"))
+        verts = self.koerper.data.vertices
+        kopf = [q for v, q in zip(verts, netz) if gruppe(v, "head", "neck", "jaw", "eye")] + self._punkte("Haare")
+        arme = [q for v, q in zip(verts, netz) if gruppe(v, "upperarm", "lowerarm", "shoulder")]
+        rumpf = [q for v, q in zip(verts, netz) if not gruppe(v, "finger", "wrist", "metacarpal", "upperarm", "lowerarm")]
+        rumpf += self._punkte("Shirt", "Saumband", "Shorts", "Socken", "Schuhe", "Sohle")
+        werte["Ohr über dem Schultergelenk längs des Rumpfs (cm)"] = self._ohr_rumpf(netz)
+        werte["Ohr über dem Schultergelenk längs des Rumpfs im Stand (cm)"] = self.ohr_stand_rumpf
+        mitte = sum(netz, Vector()) / len(netz)
+        werte["Körpermitte hinter der Mitte der Griffe (cm)"] = (mitte.y - self.dipgriffe["L"][0].y) * 100
+        werte["Kopf und Hals zur Maschine (mm)"] = abstand(kopf) * 1000
+        werte["Arme zur Maschine (mm, ohne die Dipgriffe)"] = abstand(arme) * 1000
+        werte["Rumpf, Beine, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Dipgriffe)"] = abstand(rumpf) * 1000
+        return werte
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
-                               SchulterdrueckenMaschine, KlimmzugUnterstuetzt)}
+                               SchulterdrueckenMaschine, KlimmzugUnterstuetzt, DipUnterstuetzt)}

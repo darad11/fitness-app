@@ -3307,4 +3307,20 @@ Weniger Unterstützung ist Fortschritt, Wort „Unterstützung“, Knöpfe ±, H
 | `player-ui.test.tsx` (neu: Knöpfe „Unterstützung + 2,5“ und „− 2,5“, beim Ersetzen zuerst Klimmzüge mit „Ziel“, dann Latziehen) | bestanden |
 | `pnpm vitest run --maxWorkers=2` (parallel zur E2E-Suite von D-506) | 140 Dateien, 1.273 Tests: 1.271 bestanden, 2 mit Zeitüberschreitung (5 s): `habits-ui.test.tsx` und `player-ui.test.tsx` „speichert Eingaben verzögert“; nicht geändert. Ohne Last wiederholt: 27 bestanden |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB |
-| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | lief beim Commit noch; das Ergebnis trägt der nächste Commit nach |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 468 bestanden, 151 übersprungen, 1 fehlgeschlagen (24,1 min), parallel liefen Probeläufe in Blender: `start-surface.spec.ts:579` (Zeitmessung der Startfläche); allein wiederholt bestanden. In der CI zu `e92e490` E2E Chromium und WebKit bestanden |
+
+### Animationen für Dali’s PPLC: Liste und Prüfseite Pull-Up · 04.11.2026, Cloud-Umgebung
+
+Liste nach Familien, Animationsplan mit Dali’s PPLC, Prüfseite „Senkrechtes Ziehen“ mit Klimmzügen mit Unterstützung an der neuen Gegengewichtsmaschine (D-508). Nur Werkzeug, Bilder und Dokumente; die App ist unverändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/uebungen_animationsplan.py --check`, `python3 tools/uebungen_familien.py --check` | Plan mit Dali’s PPLC als zweitem Programm: 19 Übungen in 10 Familien; Familien aktuell |
+| Probelauf `uebungen.KlimmzugUnterstuetzt` (Aufbau und drei Phasen) | gebaut in 60 s, Ellbogen unten 165°, oben Hals auf Höhe der Griffe, keine Meldung des Rigs; Polster erst 0,5 statt 4 mm eingedrückt (das neue Netz lag neben der Fläche des Kastens), danach wie beim Schulterdrücken nachgeführt: 4,0 mm |
+| Vergleich der Griffhaltung (je Fassung sieben Phasen) | 20° Schräge wie beim Latziehen: Handgelenk −22,4° bis +4,7°; Griffe nach außen 15° und 25° abfallend: bis −47,9°; 15° und 25° ansteigend: bis +33,3°; 10°: −10,7° bis +16,0°; 12°: −13,0° bis +13,7°; 12° mit Unterarm 10° nach außen: −7,8° bis +14,3°; 15° mit 15°: −4,7° bis +13,3°; gewählt 14° mit 10°: −9,9° bis +12,1° |
+| `render.py klimmzug_unterstuetzt --pruefen` (60 Bilder) | Messwerte in `form-programme-report.md` 49.5: Handgelenk −10,2° bis +12,1°, Polster 4,0 mm, nichts durch die Oberfläche, Kopf ≥ 190,7 mm, Arme ≥ 77,9 mm, Körper, Kleidung und Schuhe ≥ 66,0 mm von der Maschine, Kleidung ohne Durchdringung, 0 Meldungen des Rigs |
+| Prüfansichten angesehen | vorn und von der Seite in allen fünf Phasen wie erwartet; **Fehler:** Die Ansicht „Kamera der App“ zeigte in jeder Phase die Ausgangslage (Kamera mit „Füllen“ ging die Schleife durch und ließ die Figur im letzten Bild stehen). Behoben in `render.py`, die Ansicht neu gerendert |
+| Nahaufnahmen (`familie_bilder.py`, `render.py --pruefen`) | Griff von vorn und von hinten, Fuß von außen und von hinten, je Ausgang und Endposition; die Ansicht des Griffs von außen zeigte die Hand hinter dem Griffhalter, ersetzt durch die Ansicht von hinten |
+| Kameravergleich 135°, 160°, 110° und 45° (`docs/screens/uebungen/senkrechtes-ziehen-kameras.webp`) | 135° wie beim Latziehen gewählt |
+| Prüfseite `docs/screens/uebungen/familie-senkrechtes-ziehen.webp` | zusammengesetzt und angesehen |
+| `pnpm format:check`, `pnpm check:docs` | bestanden |

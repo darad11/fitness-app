@@ -2092,3 +2092,117 @@ Ergebnis: siehe dort
 Bekannte Einschränkungen: keine
 Nächste Schritte: Animationsliste und erste Prüfseite
 ```
+
+## 49. Animationen für Dali’s PPLC: Liste und erste Prüfseite, Pull-Up an der Gegengewichtsmaschine (D-508)
+
+### 49.1 Alle Übungen des Programms nach Bewegungsfamilien
+
+25 verschiedene Übungen: 6 haben schon eine Schleife in der App, 19 sind neu. „Einheiten“ zählt, wie oft die Übung in den 21 Wochen vorkommt.
+
+| Familie | Übung (dein Name) | in der App | Einheiten | Stand | Gerät |
+|---|---|---|---|---|---|
+| Senkrechtes Ziehen | Pull-Up | Klimmzüge mit Unterstützung | 42 | neu, **Prüfseite (D-508)** | Gegengewichtsmaschine für Klimmzug und Dip (neu) |
+| Waagrechtes Drücken | Dumbbell Bench Press | Bankdrücken mit Kurzhanteln | 32 | Schleife in der App | Kurzhanteln, Flachbank |
+| Waagrechtes Drücken | Dip | Dips mit Unterstützung | 31 | neu | dieselbe Gegengewichtsmaschine |
+| Waagrechtes Drücken | Dumbbell Incline Bench Press | Schrägbankdrücken mit Kurzhanteln | 21 | Schleife in der App | Kurzhanteln, Schrägbank |
+| Kniebeuge | Machine Leg Press | Beinpresse | 42 | Schleife in der App | Beinpresse 45° |
+| Kniebeuge | Machine Squat | Hackenschmidt-Kniebeuge | 21 | neu | Hackenschmidt-Maschine (neu) |
+| Beine isoliert | Machine Calf Raise | Wadenheben stehend | 42 | neu | Wadenmaschine, stehend (neu) |
+| Beine isoliert | Machine Leg Curl | Beinbeuger liegend | 21 | Schleife in der App | Beinbeuger-Maschine |
+| Beine isoliert | Machine Seated Leg Curl | Beinbeuger sitzend | 21 | neu | Beinbeuger-Maschine, sitzend (neu) |
+| Beine isoliert | Machine Leg Extension | Beinstrecker | 21 | neu | Beinstrecker-Maschine (neu) |
+| Beine isoliert | Machine Seated Calf Raise | Wadenheben sitzend | 21 | neu | Wadenmaschine, sitzend (neu) |
+| Arme beugen und strecken | Cable Tricep Pushdown | Trizepsdrücken am Kabel | 21 | neu | Kabelzug mit Stange (neu) |
+| Arme beugen und strecken | Dumbbell Alternating Hammer Curl | Hammercurls | 21 | neu | Kurzhanteln |
+| Arme beugen und strecken | Dumbbell Curl | Bizepscurls mit Kurzhanteln | 21 | neu | Kurzhanteln |
+| Waagrechtes Ziehen | Leverage Machine Iso Row | Rudern an der Maschine | 21 | neu | Rudermaschine, brustgestützt (neu) |
+| Waagrechtes Ziehen | Leverage Machine High Row | High Row an der Maschine | 21 | neu | High-Row-Maschine (neu) |
+| Waagrechtes Ziehen | Barbell Bent-Over Row | Rudern mit Langhantel, vorgebeugt | 21 | neu | Langhantel |
+| Schulter und Brust isoliert | Dumbbell Lateral Raise | Seitheben mit Kurzhanteln | 42 | Schleife in der App | Kurzhanteln |
+| Schulter und Brust isoliert | Cable Fly | Fliegende am Kabel | 21 | neu | Kabelzug mit zwei Säulen (neu) |
+| Schulter und Brust isoliert | Machine Reverse Fly | Reverse Butterfly an der Maschine | 21 | neu | Butterfly-Maschine (neu) |
+| Senkrechtes Drücken | Dumbbell Seated Shoulder Press | Schulterdrücken mit Kurzhanteln, sitzend | 21 | neu | Kurzhanteln, Bank fast senkrecht |
+| Senkrechtes Drücken | Barbell Military Press | Schulterdrücken mit Langhantel, stehend | 21 | neu | Langhantel |
+| Hüftbeuge | Barbell Deadlift | Kreuzheben mit Langhantel | 21 | neu | Langhantel |
+| Rumpf | Plank | Unterarmstütz (Plank) | 21 | Schleife in der App | Matte |
+| Rumpf | Cable Crunch | Crunches am Kabel, kniend | 21 | neu | Kabelzug mit Seil (neu) |
+
+**Reihenfolge der Familien** (wie bisher: Familien mit fertiger Grundlage aus den Piloten zuerst, dann nach Einheiten; `docs/uebungen-animationsplan.md`, Abschnitt 2.2): Senkrechtes Ziehen (Pull-Up), Waagrechtes Drücken (Dip, an derselben Maschine), Kniebeuge (Machine Squat), Beine isoliert (vier Maschinen), Arme beugen und strecken, Waagrechtes Ziehen, Schulter und Brust isoliert, Senkrechtes Drücken, Hüftbeuge, Rumpf. Geschätzt rund 49 Arbeitsstunden, davon 31 für die neuen Geräte, dazu 8 Stunden Rechenzeit.
+
+**Machine Squat:** Ich nehme wie besprochen eine Hackenschmidt-Maschine (Schulterpolster, Rückenpolster auf einem schrägen Schlitten, Fußplatte). Sieht sie in deinem Studio anders aus, passe ich sie später an.
+
+### 49.2 Gerät: Gegengewichtsmaschine für Klimmzug und Dip
+
+- **Vorbild:** die übliche Bauart mit Kniepolster (Life Fitness Assisted Chin/Dip, StairMaster Gravitron, Technogym Selection). Die Seiten der Hersteller ließen sich in der Cloud-Umgebung nicht öffnen; die Maße sind geschätzt.
+- **Aufbau:** vorn ein Turm, 2,32 m hoch, mit dem Gewichtsblock hinter einer Rückwand. Oben gehen zwei Ausleger nach hinten zu den offenen Klimmzuggriffen: Zwischen den Griffen ist frei, der Kopf geht hindurch. Die Griffe sind waagrecht, 2,20 m hoch, ihre Mitten 72 cm auseinander. Die Dipgriffe sitzen am Turm auf 1,30 m und sind für Klimmzüge nach vorn geklappt. Links und rechts je eine Trittstufe auf 42 cm.
+- **Kniepolster:** 42 × 34 cm, an zwei parallelen Hebeln von 70 cm, die am Turm gelagert sind. Das Polster bleibt dadurch waagrecht und läuft auf einem Bogen. Das Gegengewicht drückt es nach oben; der Gewichtsblock hebt sich, wenn das Polster sinkt (22 cm über die ganze Bewegung).
+
+### 49.3 Bewegung
+
+- **Knien:** Oberschenkel fast senkrecht (8° vor der Senkrechten), Unterschenkel waagrecht auf dem Polster, Knie 82°. Knie und Schienbeine liegen 4 mm im Polster, die Füße hängen dahinter frei, die Zehen zeigen nach unten.
+- **Griff:** weit im Obergriff, Handflächen nach vorn. Die Griffe stehen im Ausgang über den Schultergelenken.
+- **Unten (Ausgang):** Arme und Schultern gestreckt: Ellbogen 165°, Schlüsselbeine 22° angehoben, Oberkörper 5° zurück.
+- **Oben:** Die Mitte des Halses ist auf Höhe der Griffe. Ellbogen 42°, die Ellbogen sind nach unten und etwas nach hinten gezogen, die Unterarme fast senkrecht, die Schulterblätter gesenkt und etwas zurück, Oberkörper 15° zurück.
+- **Weg:** Das Polster steigt mit den Knien um 49 cm (von 66 auf 115 cm über dem Boden) und läuft dabei auf seinem Bogen; die Griffe bleiben fest.
+- **Handgelenk:** Mit dem Griff so schräg in der Hand wie beim Latziehen (20°) knickte es in der Mitte bis 22° zum kleinen Finger. Verglichen habe ich 13 Fassungen: 10°, 12°, 14°, 15°, 20° und 30° Schräge, den Unterarm senkrecht oder 10° bis 15° nach außen, Griffe nach außen 15° und 25° ab- oder ansteigend. Abfallende Griffe machten es schlimmer (bis 48°). Gewählt: 14° Schräge, Unterarm 10° nach außen, waagrechte Griffe; das Handgelenk bleibt zwischen −10° und +12°.
+
+- **Kamera der App:** 135° von hinten seitlich, 10° von oben, wie beim Latziehen. So sieht man Rücken, Schulterblätter und beide Arme, dazu Kniepolster und Turm. Verglichen habe ich 160°, 110° und 45° (`docs/screens/uebungen/senkrechtes-ziehen-kameras.webp`): Fast von hinten stehen die Arme genau nebeneinander und das Polster verschwindet hinter den Beinen; von der Seite verdeckt ein Arm den anderen; von vorn seitlich sieht man das Gesicht, der Rücken als arbeitender Teil aber fehlt.
+- **Prüfseite:** `docs/screens/uebungen/familie-senkrechtes-ziehen.webp`.
+
+### 49.4 Abgleich mit dem Ausführungstext
+
+Der Text in der App passt; geändert habe ich nichts.
+
+| Text in der App | Animation |
+|---|---|
+| „Greif die Stange weit.“ | Griffe 72 cm auseinander, deutlich breiter als die Schultern |
+| „Stell oder knie dich auf die Plattform der Maschine, je nach Bauart.“ | kniend auf dem Kniepolster |
+| „Zieh dich nach oben, bis der Hals etwa auf Höhe der Hände ist.“ | oben die Mitte des Halses auf Höhe der Griffe |
+| „Senk dich ab, bis Arme und Schultern ganz gestreckt sind.“ | unten Ellbogen 165°, Schlüsselbeine angehoben |
+| „Senk dich ruhig und gleichmäßig ab.“ | derselbe Weg zurück, mit der kurzen Pause an beiden Umkehrpunkten wie bei allen Schleifen |
+
+### 49.5 Messwerte über alle 60 Bilder
+
+| | Wert |
+|---|---|
+| Ellbogen unten / oben | 165,0° / 42,5° |
+| Oberarm zur Waagrechten unten / oben | 63,6° darüber / 48,6° darunter |
+| Unterarm zur Senkrechten, höchstens | 17,4° (oben 3,3°) |
+| Handgelenk zur Seite / nach hinten / gesamt | −10,2° bis +12,1° / −4,6° bis +6,5° / höchstens 12,1° |
+| Griffe auseinander | 71,8 cm |
+| Griffe über dem Schultergelenk unten / oben | 56,1 / 15,5 cm |
+| Griffe vor dem Schultergelenk | −1,4 bis 9,0 cm |
+| Griffe über der Mitte des Halses unten / oben | 47,7 / 0,0 cm |
+| Oberkörper zurückgelehnt / Schlüsselbeine angehoben | 5° bis 15° / 22° bis 0° |
+| Knie | 82,0° |
+| Kniepolster über dem Boden / gehoben | 66,3 bis 115,2 cm / 48,9 cm |
+| Knie und Schienbeine im Polster / durch die Oberfläche | 4,0 mm / 0,0 mm |
+| Kopf und Hals zur Maschine | mindestens 190,7 mm |
+| Arme zur Maschine | mindestens 77,9 mm |
+| Körper, Kleidung und Schuhe zur Maschine (ohne Polster und Griffe) | mindestens 66,0 mm |
+| Finger am Griff | −4,2 mm (gewollt eingedrückt), 442 Punkte in Kontakt |
+| Shorts unter dem Shirt / Saumband über den Shorts / Haut unter dem Ärmel | 9,0 / 8,7 / 4,8 mm |
+| Shorts-F zum Streifen / Kragen über der Socke | 10,3 cm / 1,6 mm |
+| Meldungen des Rigs | 0 |
+
+### 49.6 Abweichungen und offene Punkte
+
+- **Maße der Maschine:** geschätzt, nicht von einem Vorbild abgemessen; die Seiten der Hersteller waren aus der Arbeitsumgebung nicht erreichbar. Steht in deinem Studio eine andere Bauart (z. B. mit Trittplattform zum Stehen statt Kniepolster), passe ich Maschine und Haltung an. Der Ausführungstext erlaubt beides („Stell oder knie dich …“).
+- **Griffe:** waagrecht und gerade. Viele Maschinen haben zusätzlich abgewinkelte weite Griffe und parallele Griffe; mit nach außen abfallenden Griffen knickte das Handgelenk bis 48°, darum gerade.
+- **Bogen des Polsters:** Das Polster läuft an seinen Hebeln auf einem Bogen; Knie und Hüfte wandern dadurch unten und oben um 4,4 cm zum Turm hin. Die Griffe bleiben fest, die Arme gleichen das aus.
+- **Füße:** Das Sprunggelenk bleibt wie im Stand, die Zehen zeigen hinter dem Polster nach unten. Manche knien mit gestreckten Füßen; das wäre eine kleine Änderung.
+- **Handgelenk:** höchstens 12° zur Seite, ähnlich wie beim Latziehen (13°).
+- **Werkzeug:** Die Ansicht „Kamera der App“ auf der Prüfseite zeigte in jeder Phase die Ausgangslage, weil die Kamera mit „Füllen“ (D-501) für den Ausschnitt die ganze Schleife durchgeht und die Figur danach nicht zurückgesetzt wurde. Behoben in `render.py`; die Schleifen in der App waren nicht betroffen (dort entsteht die Kamera einmal vor dem ersten Bild).
+
+### 49.7 Bericht zum Paket
+
+```
+Arbeitspaket: D-508 Phase Programme, Animationen für Dali’s PPLC: Liste und Prüfseite der ersten Familie (Senkrechtes Ziehen, Klimmzüge mit Unterstützung)
+Umgesetzte Funktionen: keine in der App; Liste nach Familien, Animationsplan mit Dali’s PPLC, Werkzeug: Gegengewichtsmaschine für Klimmzug und Dip (geraete.klimmzugmaschine), Übung uebungen.KlimmzugUnterstuetzt, neue Zeilen der Prüfseite, Ansicht der App auf der Prüfseite in der richtigen Phase; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/render.py, tools/uebungen_pruef_bild.py, tools/uebungen_animationsplan.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-senkrechtes-ziehen.webp (neu), docs/screens/uebungen/senkrechtes-ziehen-kameras.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-508
+Ausgeführte Tests: Probelauf, Vergleich von 13 Griffhaltungen, render.py klimmzug_unterstuetzt --pruefen (alle 60 Bilder), Nahaufnahmen von Griff und Fuß, vier Kameras, Bilder angesehen; Dokumente geprüft
+Ergebnis: bestanden (Werte in 49.5); Fehler in der Ansicht der App auf der Prüfseite gefunden und behoben
+Bekannte Einschränkungen: 49.6
+Nächste Schritte: Halt bis zu deiner Freigabe der Prüfseite; danach die Schleife des Pull-Ups, dann die nächste Familie (Dip an derselben Maschine)
+```

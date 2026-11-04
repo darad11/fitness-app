@@ -220,6 +220,15 @@ MESSWERTE = (
     ("Arme zu Hebeln, Griffen und Rahmen (mm)", "Arme zu Hebeln, Griffen und Rahmen", "min", " mm"),
     ("Finger: geringster Abstand zum Griff (mm, negativ = eingedrückt)", "Finger am Griff (gewollt 4 mm eingedrückt)",
      "min", " mm"),
+    # Familie „Senkrechtes Ziehen“: Klimmzüge mit Unterstützung (D-508)
+    ("Lehne zurück", "Oberkörper zurückgelehnt", "spanne", "°"),
+    ("Griffe über der Mitte des Halses (cm)", "Griffe über der Mitte des Halses", "spanne", " cm"),
+    ("Polster über dem Boden (cm)", "Kniepolster über dem Boden", "spanne", " cm"),
+    ("Polster gegenüber dem Ausgang gehoben (cm)", "Kniepolster gehoben", "max", " cm"),
+    ("Kopf und Hals zur Maschine (mm)", "Kopf und Hals zur Maschine", "min", " mm"),
+    ("Arme zur Maschine (mm)", "Arme zur Maschine", "min", " mm"),
+    ("Körper, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Griffe)",
+     "Körper, Kleidung und Schuhe zur Maschine (ohne Polster und Griffe)", "min", " mm"),
 )
 
 
@@ -282,7 +291,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "griff_seite": "Griff und Hantel von außen", "vgriff_seite": "V-Griff und Hände von der Seite",
               "vgriff_vorn": "V-Griff und Hände schräg von vorn", "beingriff_aussen": "Hand am Griff von außen",
               "beingriff_vorn": "Hand am Griff von vorn", "presse_vorn": "Hand am Griff von vorn",
-              "presse_aussen": "Hand am Griff von außen"}
+              "presse_aussen": "Hand am Griff von außen", "klimmzug_vorn": "Hand am Griff von vorn",
+              "klimmzug_hinten": "Hand am Griff von hinten"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

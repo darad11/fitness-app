@@ -240,6 +240,9 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
             for o in bpy.data.objects:
                 o.hide_render = o.name.startswith(AUSBLENDEN.get(ansicht, ()))
             kamera(u, punkte, ansicht, 480, 360)
+            # Die Kamera mit `fuellen` (D-501) geht für den Ausschnitt die ganze Schleife durch: danach die Phase wieder
+            # setzen, sonst zeigt die Ansicht der App in jeder Phase das letzte Bild der Schleife (D-508)
+            u.setzen(p)
             s.render.filepath = str(arbeit / f"pruef-{ansicht}-{p:.2f}.png")
             bpy.ops.render.render(write_still=True)
     # Griff aus der Nähe: linke Hand von vorn, von außen und von hinten, Ausgang und Endposition

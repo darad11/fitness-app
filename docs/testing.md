@@ -3324,3 +3324,19 @@ Liste nach Familien, Animationsplan mit Dali’s PPLC, Prüfseite „Senkrechtes
 | Kameravergleich 135°, 160°, 110° und 45° (`docs/screens/uebungen/senkrechtes-ziehen-kameras.webp`) | 135° wie beim Latziehen gewählt |
 | Prüfseite `docs/screens/uebungen/familie-senkrechtes-ziehen.webp` | zusammengesetzt und angesehen |
 | `pnpm format:check`, `pnpm check:docs` | bestanden |
+
+### Klimmzüge mit Unterstützung in der App · 04.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Endlage gemessen, Griffe 14 statt 3 cm vor den Schultern, Schleife und Eintrag in der App (D-509).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Endlage mit den Werten der Prüfseite (Messskript, Ohr und Brust am Netz) | Ohr oben 23,2 cm über dem Schultergelenk, im Stand 22,3 cm (Schultern unten); Brust oben 10,0 cm vor der Linie der Griffe |
+| Vergleich Griffe vor den Schultern und Rücklage (je alle Phasen): 3 cm/15°, 10 cm/15°, 14 cm/15°, 10 cm/22°, 14 cm/22° | Brust oben −10,0, −3,0, +1,1, −0,6 und +3,5 cm hinter der Linie (unter 0 davor); Handgelenk mit 14 cm/15° 5,1° bis 13,2°, mit 22° Rücklage bis 16,1°; gewählt 14 cm und 15° |
+| `render.py klimmzug_unterstuetzt --pruefen` (60 Bilder) mit den neuen Zeilen der Prüfseite | Ohr über dem Schultergelenk 15,7 → 23,2 cm (Stand 22,3 cm), Brust oben 1,1 cm hinter der Linie der Griffe, Halsgrube 7,1 cm darunter, Hüfte 0 bis 4,3 cm vom Turm weg und zurück, Mitte des Körpers 10,7 → 16,3 → 15,3 cm hinter der Linie, Lehne gleichmäßig 5° → 15°; Ellbogen 165,0° → 55,1°, Handgelenk 5,0° bis 13,2°, Polster 4,0 mm, nichts durch die Oberfläche, Kopf ≥ 235 mm, Arme ≥ 77 mm, Körper ≥ 66 mm von der Maschine, Kleidung ohne Durchdringung, 0 Meldungen des Rigs |
+| Prüfansichten und Nahaufnahmen (`familie_bilder.py`) angesehen | Hand um den Griff, Handgelenk gerade, oben Kinn über den Griffen und Brust darunter; Vergleichsbild `docs/screens/uebungen/klimmzug-oben-vergleich.webp` |
+| `render.py klimmzug_unterstuetzt` (60 Bilder, 720 × 540, 40 Proben) | 1324 s für 60 Bilder, mit Aufbau und Kodieren 1401 s; MP4 66,3 KB, WebM 57,3 KB, Poster 9,8 KB, Vorschau 4,8 KB; erstes und letztes Bild pixelgleich; Kontaktbogen angesehen |
+| Aufnahme (`uebungen_bewegung.py klimmzug klimmzug_unterstuetzt`) | 720 × 540, 7,5 s, 144 KB, die Schleife dreimal; angesehen |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 14; Animationsplan mit „Schleife in der App (D-509)“ |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 140 Dateien, 1.273 Tests; „public/uebungen/medien.json: 14 Einträge geprüft“; Startansicht 239,7 KB, Übungsbilder 56 von 56 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 469 bestanden, 151 übersprungen, keiner fehlgeschlagen (20,9 min); der geänderte Test der Übungsliste (14 Vorschaubilder, dazu die Klimmzüge mit Unterstützung) bestanden |

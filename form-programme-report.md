@@ -2206,3 +2206,27 @@ Ergebnis: bestanden (Werte in 49.5); Fehler in der Ansicht der App auf der Prüf
 Bekannte Einschränkungen: 49.6
 Nächste Schritte: Halt bis zu deiner Freigabe der Prüfseite; danach die Schleife des Pull-Ups, dann die nächste Familie (Dip an derselben Maschine)
 ```
+
+## 50. Pull-Up in der App (D-509)
+
+Deine Freigabe: Maße, Knien am Kniepolster und hängende Füße bleiben. Geprüft werden sollte noch, dass oben die Schultern unten sind, die Brust zur Stange geht und der Körper nicht schwingt, mit Messwert.
+
+- **Schultern oben:** Die Mitte des Ohrs steht oben 23,2 cm über dem Schultergelenk, im Stand 22,3 cm. Die Schultern sind oben also 0,9 cm tiefer als im Stand und nicht zu den Ohren gezogen. Unten im Hang sind es 15,7 cm, weil Arme und Schultern dort ganz gestreckt sind, wie im Text.
+- **Brust zur Stange:** Mit den Werten der Prüfseite lag die Brust oben 10,0 cm vor der Linie der Griffe. Sie ging an der Stange vorbei, der Kopf kam dicht an die Ausleger. Jetzt stehen die Griffe im Ausgang 14 statt 3 cm vor den Schultergelenken. Oben liegt die Brust 1,1 cm hinter der Linie der Griffe, die Halsgrube 7,1 cm unter ihnen, die Mitte des Halses auf ihrer Höhe. Vergleich: `docs/screens/uebungen/klimmzug-oben-vergleich.webp`.
+- **Kein Schwingen:** Die Rücklage nimmt gleichmäßig von 5° auf 15° zu und wieder ab. Die Mitte des Körpers wandert bis zwei Drittel des Wegs 5,6 cm nach hinten, dann 1,0 cm zurück. Die Hüfte folgt dem Bogen des Polsters: bis zur Mitte des Wegs 4,3 cm vom Turm weg, dann zurück. Das ist der Bogen der Hebel aus der Prüfseite. An beiden Umkehrpunkten steht alles still.
+- **Verglichen:** Griffe 10 cm vor den Schultern: Brust oben 3,0 cm vor der Linie. 22° statt 15° Rücklage: Brust 3,5 cm dahinter, aber das Handgelenk knickt bis 16,1°. Gewählt sind 14 cm und 15°: Handgelenk höchstens 13,2°.
+- **Text:** passt („bis der Hals etwa auf Höhe der Hände ist“), geändert habe ich nichts.
+- **Messwerte über alle 60 Bilder:** Ellbogen 165,0° → 55,1°, Unterarm 7,9° bis 13,3° zur Senkrechten, Handgelenk 5,0° bis 13,2° zum Daumen, Griffe 9,7 bis 20,0 cm vor den Schultergelenken, Kniepolster 66,8 bis 115,2 cm über dem Boden, Knie 4,0 mm im Polster, nichts durch die Oberfläche; Kopf und Hals mindestens 235 mm, Arme 77 mm, Körper, Kleidung und Schuhe 66 mm von der Maschine; Kleidung ohne Durchdringung; Meldungen 0.
+- **Schleife:** 22 min, erstes und letztes Bild pixelgleich. In der Übungsliste haben die Klimmzüge mit Unterstützung jetzt ein Vorschaubild, in den Details läuft die Schleife.
+- **Aufnahme:** `docs/screens/uebungen/klimmzug-bewegung.mp4`, 720 × 540, 7,5 s, 144 KB, die Schleife dreimal.
+
+```
+Arbeitspaket: D-509 Phase Programme, Klimmzüge mit Unterstützung in der App
+Umgesetzte Funktionen: Schleife, Poster und Vorschaubild der Klimmzüge mit Unterstützung (medien.json: assisted_pull_up); Werkzeug: Griffe 14 cm vor den Schultern, Messwerte für Schultern, Brust, Hüfte und Mitte des Körpers; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/klimmzug_unterstuetzt*.{mp4,webm,webp} (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/klimmzug-bewegung.mp4 (neu), docs/screens/uebungen/klimmzug-oben-vergleich.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-509
+Ausgeführte Tests: Messung der Endlage (Ohr, Brust, Halsgrube, Hüfte, Mitte des Körpers), Vergleich von drei Fassungen, render.py klimmzug_unterstuetzt --pruefen (alle 60 Bilder), Nahaufnahmen, Schleife gerendert, Kontaktbogen und erstes/letztes Bild geprüft, Aufnahme angesehen; Unit-Tests 1.273 bestanden; format:check, lint, typecheck, check:docs, build, check:bundle (Startansicht 239,7 KB, Übungsbilder 56 von 56); E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: keine neuen
+Nächste Schritte: Prüfseiten der nächsten Familien gemeinsam: Dip an derselben Maschine (Waagrechtes Drücken) und Machine Squat (Kniebeuge, Hackenschmidt-Maschine), dann Halt
+```

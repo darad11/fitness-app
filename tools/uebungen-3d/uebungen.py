@@ -4300,7 +4300,10 @@ class KlimmzugUnterstuetzt(Uebung):
     vorschau_phase = 1.0
     GRIFF_X = 0.30  # Mitte der Griffe so weit von der Mitte (vor dem Maß der Schultern), m: weiter Griff
     GRIFF_Z = 2.20  # Mitte der Griffe über dem Boden, m (geschätzt)
-    GRIFF_VOR = 0.03  # Griffe so weit vor den Schultergelenken im Ausgang, m
+    # Griffe so weit vor den Schultergelenken im Ausgang, m. Mit 3 cm (Prüfseite D-508) lag die Brust oben 10 cm vor der
+    # Linie der Griffe, sie ging an der Stange vorbei; mit 14 cm geht sie zur Stange und bleibt 1 cm dahinter (D-509,
+    # verglichen mit 10 cm und 22° statt 15° Rücklage)
+    GRIFF_VOR = 0.14
     GRIFF_LAGE = 0.65
     # Griff schräg in der Hand (vom Zeigefinger zum Handballen) und Unterarm leicht nach außen: 13 Fassungen verglichen,
     # 10° bis 30° Schräge, 0°, 10° und 15° Unterarm, Griffe nach außen 15° und 25° ab- oder ansteigend (D-508). Mit 20°
@@ -4356,6 +4359,9 @@ class KlimmzugUnterstuetzt(Uebung):
                       for s in "LR"}
         self.griff_x = self.GRIFF_X * self.mass
         self.huefte = self.H0.copy()  # Hüfte in Ruhe: Bezug für Polster, Schultern und Hals
+        kopf_gruppen = ("head", "jaw", "eye", "special", "tongue", "levator", "oris", "orbicularis", "temporalis")
+        self.kopf_i = [v.index for v in self.koerper.data.vertices
+                       if sum(g.weight for g in v.groups if namen[g.group].startswith(kopf_gruppen)) > 0.5]
         self.geraet = None
         self.geloest = False
         self.delle = 0.0
@@ -4466,6 +4472,11 @@ class KlimmzugUnterstuetzt(Uebung):
         Höhe der Hebelenden `HEBEL` vor ihnen. Darum dreimal: Lager, untere Lage."""
         rig = self.rig
         m = geraete.KLIMMZUGMASCHINE
+        # Stand ohne Haltung: Ohr über dem Schultergelenk, Bezug für „Schultern nicht zu den Ohren“ (D-509)
+        rig.zuruecksetzen()
+        rig.anwenden()
+        S = rig.welt(rig.punkt("shoulder01.L", rig.kopf["upperarm01.L"]))
+        self.ohr_stand = (self._ohr_hoehe(_netz(self.koerper)) - S.z) * 100
         self.versatz, py = self._polster_versatz()
         pd = m["polster"][2]
         self.ende_unter = pd + 0.03  # oberes Hebelende unter der Oberseite des Polsters
@@ -4572,6 +4583,8 @@ class KlimmzugUnterstuetzt(Uebung):
             "Griffe über der Mitte des Halses (cm)": (G.z - hals.z) * 100,
             "Polster über dem Boden (cm)": polster.z * 100,
             "Polster gegenüber dem Ausgang gehoben (cm)": (polster.z - self.polster0.z) * 100,
+            # Schwingen (D-509): Hüfte waagrecht gegenüber dem Ausgang, + zum Turm
+            "Hüfte waagrecht gegenüber dem Ausgang (cm, + zum Turm)": (self._bahn_polster(0.0).y - polster.y) * 100,
             "Kniewinkel (Grad)": self.kniewinkel(L),
         }
 
@@ -4623,10 +4636,35 @@ class KlimmzugUnterstuetzt(Uebung):
         arme = [q for v, q in zip(self.koerper.data.vertices, netz) if gruppe(v, "upperarm", "lowerarm", "shoulder")]
         koerper = [q for v, q in zip(self.koerper.data.vertices, netz) if not gruppe(v, "finger", "wrist", "metacarpal")]
         koerper += self._punkte("Shirt", "Saumband", "Shorts", "Socken", "Schuhe", "Sohle")
+        # Schultern unten, Brust zur Stange (D-509): Ohr über dem Schultergelenk (im Stand `ohr_stand`), vorderste Stelle
+        # der Brust 5 bis 25 cm unter dem Halsansatz und die Halsgrube gegenüber der Linie der Griffe
+        rig, k = self.rig, self.rig.kopf
+        S = rig.welt(rig.punkt("shoulder01.L", k["upperarm01.L"]))
+        werte["Ohr über dem Schultergelenk (cm)"] = (self._ohr_hoehe(netz) - S.z) * 100
+        werte["Ohr über dem Schultergelenk im Stand (cm)"] = self.ohr_stand
+        G = self.griffe["L"][0]
+        hals = rig.welt(rig.punkt("neck01", k["neck01"]))
+        rumpf = [q for v, q in zip(self.koerper.data.vertices, netz)
+                 if gruppe(v, "spine", "chest", "breast", "pectoral", "clavicle") and abs(q.x) < 0.06]
+        vorn = min((q for q in rumpf if hals.z - 0.25 < q.z < hals.z - 0.05), key=lambda q: q.y)
+        werte["Brust hinter der Linie der Griffe (cm, unter 0 = davor)"] = (vorn.y - G.y) * 100
+        grube = min((q for q in rumpf if abs(q.z - hals.z) < 0.02), key=lambda q: q.y)
+        werte["Halsgrube unter den Griffen (cm)"] = (G.z - grube.z) * 100
+        # Schwingen (D-509): Mitte aller Punkte des Körpers waagrecht gegenüber der Linie der Griffe
+        mitte = sum(netz, Vector()) / len(netz)
+        werte["Körpermitte hinter der Linie der Griffe (cm)"] = (mitte.y - G.y) * 100
         werte["Kopf und Hals zur Maschine (mm)"] = abstand(kopf) * 1000
         werte["Arme zur Maschine (mm)"] = abstand(arme) * 1000
         werte["Körper, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Griffe)"] = abstand(koerper) * 1000
         return werte
+
+    def _ohr_hoehe(self, netz: list[Vector]) -> float:
+        """Höhe (Welt) der Mitte des linken Ohrs: Mitte der seitlichsten Punkte des Kopfs zwischen 7 cm unter und 2 cm über
+        den Augen (wie beim Schulterdrücken, D-492)."""
+        rig, k = self.rig, self.rig.kopf
+        auge = rig.welt((rig.punkt("eye.L", k["eye.L"]) + rig.punkt("eye.R", k["eye.R"])) / 2)
+        ohr = [netz[i].z for i in self.kopf_i if netz[i].x > 0.06 and auge.z - 0.07 < netz[i].z < auge.z + 0.02]
+        return sum(ohr) / len(ohr)
 
     def _punkte(self, *namen: str) -> list[Vector]:
         import schuhe

@@ -236,6 +236,29 @@
       },
       "alt": "Schulterdrücken an der Maschine, schräg von vorn: sitzend am Rückenpolster, Obergriff an den Griffen neben dem Kopf zwischen Kinn und Ohr; die Griffe nach oben drücken, bis die Arme fast gestreckt sind, und kontrolliert zurück.",
       "source": "form_3d_pilot"
+    },
+    "assisted_pull_up": {
+      "preview": {
+        "src": "medien/klimmzug_unterstuetzt-vorschau-5d10c2dc.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": { "src": "medien/klimmzug_unterstuetzt-a9a4d94b.mp4", "width": 720, "height": 540 },
+        "webm": {
+          "src": "medien/klimmzug_unterstuetzt-4569e9d4.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/klimmzug_unterstuetzt-poster-5b3de6bc.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Klimmzüge mit Unterstützung, schräg von hinten: kniend auf dem Kniepolster, weiter Obergriff an den Griffen oben; hochziehen, bis der Hals auf Höhe der Hände ist und die Brust zur Stange kommt, und ruhig zurück in den Hang.",
+      "source": "form_3d_pilot"
     }
   }
 }

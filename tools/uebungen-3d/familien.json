@@ -356,8 +356,20 @@
       "geraet_neu_stunden": 0.0,
       "hinweis": "–"
     },
-    "overhead_press_barbell": {
+    "high_row_machine": {
       "nr": 30,
+      "name": "High Row an der Maschine",
+      "familie": "waagrecht_ziehen",
+      "variante": "sitzend, Brust am Polster, Griffe vorn oben an Hebelarmen, Zug schräg nach unten zu den unteren Rippen",
+      "geraet_modell": "High-Row-Maschine, brustgestützt",
+      "quelle": "familie",
+      "aufwand_stunden": 1.0,
+      "geraet_neu_stunden": 4.0,
+      "geraet_neu": ["High-Row-Maschine, brustgestützt"],
+      "hinweis": "Neu mit Dali’s PPLC (D-504); wie die Rudermaschine, Hebelbahn schräg von oben."
+    },
+    "overhead_press_barbell": {
+      "nr": 31,
       "name": "Schulterdrücken mit Langhantel, stehend",
       "familie": "senkrecht_druecken",
       "variante": "Referenz der Familie: stehend, Stange von der Schulterablage senkrecht über den Kopf, der Kopf weicht kurz zurück",
@@ -369,7 +381,7 @@
       "hinweis": "Stangenbahn senkrecht über der Fußmitte; Schulterblätter drehen mit."
     },
     "shoulder_press_dumbbell_seated": {
-      "nr": 31,
+      "nr": 32,
       "name": "Schulterdrücken mit Kurzhanteln, sitzend",
       "familie": "senkrecht_druecken",
       "variante": "sitzend an fast senkrechter Lehne, Kurzhanteln",
@@ -380,7 +392,7 @@
       "hinweis": "Lehne der verstellbaren Bank fast senkrecht."
     },
     "shoulder_press_machine": {
-      "nr": 32,
+      "nr": 33,
       "name": "Schulterdrücken an der Maschine",
       "familie": "senkrecht_druecken",
       "variante": "sitzend, Griffe an Hebelarmen",
@@ -392,7 +404,7 @@
       "hinweis": "Maschine mit vielen Teilen."
     },
     "arnold_press": {
-      "nr": 33,
+      "nr": 34,
       "name": "Arnold Press mit Kurzhanteln",
       "familie": "senkrecht_druecken",
       "variante": "sitzend; Start mit den Handflächen zum Gesicht vor dem Kinn, beim Drücken drehen die Unterarme nach außen",
@@ -403,7 +415,7 @@
       "hinweis": "Unterarmdrehung um etwa 180° braucht Drehknochen im Unterarm, sonst verdreht sich die Haut; neue Bewegungskopplung."
     },
     "lateral_raise_dumbbell": {
-      "nr": 34,
+      "nr": 35,
       "name": "Seitheben mit Kurzhanteln",
       "familie": "schulter_brust_isoliert",
       "variante": "Referenz der Familie: stehend, Arme seitlich bis Schulterhöhe, Ellbogen leicht gebeugt",
@@ -415,7 +427,7 @@
       "hinweis": "Alias Spider Lateral Raise (auf der Schrägbank liegend) wird nicht dargestellt; keine Mixamo-Animation belegt."
     },
     "lateral_raise_cable": {
-      "nr": 35,
+      "nr": 36,
       "name": "Seitheben am Kabel",
       "familie": "schulter_brust_isoliert",
       "variante": "einarmig, Kabel von der unteren Rolle vor dem Körper, D-Griff",
@@ -426,7 +438,7 @@
       "hinweis": "Freie Hand hält sich an der Säule."
     },
     "front_raise_dumbbell": {
-      "nr": 36,
+      "nr": 37,
       "name": "Frontheben mit Kurzhanteln",
       "familie": "schulter_brust_isoliert",
       "variante": "Arme nach vorn bis Schulterhöhe",
@@ -438,7 +450,7 @@
       "hinweis": "Mixamo-Figur hält keine Hantel: Griffpose und Hantel per IK ergänzen."
     },
     "reverse_fly_dumbbell": {
-      "nr": 37,
+      "nr": 38,
       "name": "Reverse Flys mit Kurzhanteln",
       "familie": "schulter_brust_isoliert",
       "variante": "vorgebeugt (Rumpf fast waagrecht, Haltung aus der Hüftbeuge-Familie), Arme seitlich nach oben",
@@ -449,7 +461,7 @@
       "hinweis": "–"
     },
     "reverse_pec_deck": {
-      "nr": 38,
+      "nr": 39,
       "name": "Reverse Butterfly an der Maschine",
       "familie": "schulter_brust_isoliert",
       "variante": "an der Butterfly-Maschine mit der Brust zum Polster, Arme auf dem Bogen nach hinten",
@@ -460,7 +472,7 @@
       "hinweis": "Gleiche Maschine wie Butterfly, andere Sitzrichtung."
     },
     "face_pull": {
-      "nr": 39,
+      "nr": 40,
       "name": "Face Pulls am Kabel",
       "familie": "waagrecht_ziehen",
       "variante": "stehend, Kabel auf Gesichtshöhe, Seilgriff, Zug zum Gesicht mit Außendrehung, Ellbogen hoch",
@@ -472,7 +484,7 @@
       "hinweis": "Seilenden biegen sich mit den Händen; Außendrehung der Schulter deutlich zeigen."
     },
     "front_raise_cable": {
-      "nr": 40,
+      "nr": 41,
       "name": "Frontheben am Kabel",
       "familie": "schulter_brust_isoliert",
       "variante": "Rücken zur unteren Rolle, Kabel zwischen den Beinen, gerade Stange, Arme nach vorn bis Schulterhöhe",
@@ -483,7 +495,7 @@
       "hinweis": "Bewegung wie Mixamo „Front Raises“ (Referenz); Alias Spider Cable Front Raise nicht dargestellt."
     },
     "shoulder_press_dumbbell_standing": {
-      "nr": 41,
+      "nr": 42,
       "name": "Schulterdrücken mit Kurzhanteln, stehend",
       "familie": "senkrecht_druecken",
       "variante": "stehend mit Kurzhanteln, beidarmig (Alias abwechselnd)",
@@ -494,7 +506,7 @@
       "hinweis": "–"
     },
     "biceps_curl_barbell": {
-      "nr": 42,
+      "nr": 43,
       "name": "Bizepscurls mit Langhantel",
       "familie": "arme",
       "variante": "Referenz der Familie: stehend, Langhantel im Untergriff schulterbreit, Ellbogen am Körper, Beugung bis vor die Schultern",
@@ -506,7 +518,7 @@
       "hinweis": "Oberarm ruhig, kein Schwung aus dem Rücken."
     },
     "biceps_curl_dumbbell": {
-      "nr": 43,
+      "nr": 44,
       "name": "Bizepscurls mit Kurzhanteln",
       "familie": "arme",
       "variante": "Kurzhanteln, Unterarm dreht beim Heben nach außen; Alias abwechselnd",
@@ -518,7 +530,7 @@
       "hinweis": "Prüfen, ob die Mixamo-Animation beidarmig oder abwechselnd ist; Hanteln per IK."
     },
     "biceps_curl_ez_bar": {
-      "nr": 44,
+      "nr": 45,
       "name": "Bizepscurls mit SZ-Stange",
       "familie": "arme",
       "variante": "SZ-Stange, halb gedrehter Griff",
@@ -530,7 +542,7 @@
       "hinweis": "SZ-Stange neu (Knicke im Griffteil)."
     },
     "hammer_curl": {
-      "nr": 45,
+      "nr": 46,
       "name": "Hammercurls",
       "familie": "arme",
       "variante": "Kurzhanteln, neutraler Griff (Daumen oben)",
@@ -541,7 +553,7 @@
       "hinweis": "Aus dem Kurzhantelcurl ableitbar, Unterarmdrehung gesperrt; Mixamo „Bicep Curl“ als Vorlage."
     },
     "preacher_curl": {
-      "nr": 46,
+      "nr": 47,
       "name": "Scottcurls",
       "familie": "arme",
       "variante": "sitzend an der Scottbank, Oberarme auf dem schrägen Polster, SZ-Stange",
@@ -553,7 +565,7 @@
       "hinweis": "Oberarm liegt auf dem Polster (Kontakt ohne Durchdringen)."
     },
     "biceps_curl_cable": {
-      "nr": 47,
+      "nr": 48,
       "name": "Bizepscurls am Kabel",
       "familie": "arme",
       "variante": "stehend vor der unteren Rolle, gerade Stange (Alias Bayesian und High Cable nicht dargestellt)",
@@ -564,7 +576,7 @@
       "hinweis": "–"
     },
     "incline_curl_dumbbell": {
-      "nr": 48,
+      "nr": 49,
       "name": "Schrägbank-Curls mit Kurzhanteln",
       "familie": "arme",
       "variante": "Rücken an der Schrägbank (45–60°), Arme hängen hinter dem Körper, Curl",
@@ -575,7 +587,7 @@
       "hinweis": "–"
     },
     "wrist_curl": {
-      "nr": 49,
+      "nr": 50,
       "name": "Handgelenkcurls",
       "familie": "arme",
       "variante": "sitzend, Unterarme auf den Oberschenkeln, nur das Handgelenk beugt und streckt",
@@ -586,7 +598,7 @@
       "hinweis": "Sehr kleine Bewegung: engerer Bildausschnitt oder Ausgangs- und Endposition; Handgelenk und Griffpose müssen sauber sein."
     },
     "hammer_curl_cable": {
-      "nr": 50,
+      "nr": 51,
       "name": "Hammercurls am Kabel mit Seil",
       "familie": "arme",
       "variante": "untere Rolle, Seilgriff, neutraler Griff",
@@ -597,7 +609,7 @@
       "hinweis": "–"
     },
     "preacher_curl_dumbbell": {
-      "nr": 51,
+      "nr": 52,
       "name": "Scottcurls mit Kurzhanteln",
       "familie": "arme",
       "variante": "Scottbank mit Kurzhantel (einarmig oder beidarmig)",
@@ -608,7 +620,7 @@
       "hinweis": "–"
     },
     "reverse_curl_ez_bar": {
-      "nr": 52,
+      "nr": 53,
       "name": "Reverse Curls mit SZ-Stange",
       "familie": "arme",
       "variante": "SZ-Stange im Obergriff",
@@ -619,7 +631,7 @@
       "hinweis": "–"
     },
     "triceps_pushdown_cable": {
-      "nr": 53,
+      "nr": 54,
       "name": "Trizepsdrücken am Kabel",
       "familie": "arme",
       "variante": "stehend an der oberen Rolle, Ellbogen am Körper, Strecken nach unten, gerade Stange",
@@ -630,7 +642,7 @@
       "hinweis": "Alias mit Seil möglich (Seilgriff vorhanden)."
     },
     "overhead_extension_cable": {
-      "nr": 54,
+      "nr": 55,
       "name": "Trizepsstrecken über Kopf am Kabel",
       "familie": "arme",
       "variante": "Rücken zur Rolle, Seil über dem Kopf, Oberarme neben dem Kopf, Strecken nach vorn-oben; Schrittstellung",
@@ -641,7 +653,7 @@
       "hinweis": "Kabel läuft über die Schulter: Abstand zum Kopf prüfen."
     },
     "overhead_extension_dumbbell": {
-      "nr": 55,
+      "nr": 56,
       "name": "Trizepsstrecken über Kopf mit Kurzhantel",
       "familie": "arme",
       "variante": "sitzend, eine Kurzhantel mit beiden Händen hinter dem Kopf (Alias einarmig), Ellbogen zeigen nach oben",
@@ -652,7 +664,7 @@
       "hinweis": "Hantel darf den Kopf nicht durchdringen."
     },
     "skull_crusher": {
-      "nr": 56,
+      "nr": 57,
       "name": "French Press mit SZ-Stange",
       "familie": "arme",
       "variante": "Rückenlage auf der Flachbank, SZ-Stange von über der Stirn nach oben strecken, Oberarme leicht nach hinten geneigt und fix",
@@ -663,7 +675,7 @@
       "hinweis": "–"
     },
     "close_grip_bench_press": {
-      "nr": 57,
+      "nr": 58,
       "name": "Enges Bankdrücken",
       "familie": "waagrecht_druecken",
       "variante": "Griff schulterbreit, Ellbogen näher am Körper",
@@ -674,7 +686,7 @@
       "hinweis": "Nur Griffbreite und Ellbogenweg ändern sich gegenüber der Referenz."
     },
     "triceps_kickback": {
-      "nr": 58,
+      "nr": 59,
       "name": "Trizeps-Kickbacks mit Kurzhantel",
       "familie": "arme",
       "variante": "vorgebeugt mit Abstützen auf der Bank, Oberarm parallel zum Rumpf und fix, Ellbogen streckt nach hinten (einarmig)",
@@ -685,7 +697,7 @@
       "hinweis": "Stützhaltung vom einarmigen Rudern übernehmen."
     },
     "dip": {
-      "nr": 59,
+      "nr": 60,
       "name": "Dips",
       "familie": "waagrecht_druecken",
       "variante": "Stütz am Barren, Körper senkt sich, bis die Oberarme etwa waagrecht sind, Rumpf leicht vorgeneigt; Hände fest, der Körper bewegt sich",
@@ -697,7 +709,7 @@
       "hinweis": "Umgekehrte Kette wie beim Klimmzug; Beine leicht gebeugt."
     },
     "assisted_dip": {
-      "nr": 60,
+      "nr": 61,
       "name": "Dips mit Unterstützung",
       "familie": "waagrecht_druecken",
       "variante": "kniend auf der Plattform der Gegengewichtsmaschine",
@@ -708,7 +720,7 @@
       "hinweis": "Gleiche Maschine wie Klimmzüge mit Unterstützung."
     },
     "bench_dip": {
-      "nr": 61,
+      "nr": 62,
       "name": "Dips an der Bank",
       "familie": "waagrecht_druecken",
       "variante": "Hände hinter dem Körper auf der Bankkante, Füße am Boden, Ellbogen beugen nach hinten",
@@ -719,7 +731,7 @@
       "hinweis": "Becken nah an der Bank; Schulter nicht zu tief."
     },
     "triceps_extension_cable_cross_body": {
-      "nr": 62,
+      "nr": 63,
       "name": "Trizepsdrücken am Kabel, über Kreuz",
       "familie": "arme",
       "variante": "einarmig, Kabel von der oberen Rolle der Gegenseite, der Arm streckt sich schräg vor dem Körper nach außen",
@@ -730,7 +742,7 @@
       "hinweis": "Kabel kreuzt vor dem Körper: Durchdringung prüfen."
     },
     "skull_crusher_dumbbell": {
-      "nr": 63,
+      "nr": 64,
       "name": "French Press mit Kurzhanteln",
       "familie": "arme",
       "variante": "Kurzhanteln, neutraler Griff",
@@ -741,7 +753,7 @@
       "hinweis": "–"
     },
     "plank": {
-      "nr": 64,
+      "nr": 65,
       "name": "Unterarmstütz (Plank)",
       "familie": "rumpf",
       "variante": "Unterarmstütz statisch, Körperlinie gerade",
@@ -752,7 +764,7 @@
       "hinweis": "Statisch: Schleife zeigt Halten mit dezenter Atmung. Aus dem Code statt Mixamo „Plank“ (D-466): Die Dateien brauchen das Konto des Produktinhabers, und eine gehaltene Haltung braucht keine Aufnahme."
     },
     "side_plank": {
-      "nr": 65,
+      "nr": 66,
       "name": "Seitstütz",
       "familie": "rumpf",
       "variante": "Seitstütz auf einem Unterarm, Körper seitlich gestreckt, statisch",
@@ -763,7 +775,7 @@
       "hinweis": "Statisch; frontale Kamera zeigt die Körperlinie besser als die Standardansicht."
     },
     "crunch": {
-      "nr": 66,
+      "nr": 67,
       "name": "Crunches",
       "familie": "rumpf",
       "variante": "Referenz für Rumpfbeugung: Rückenlage, Knie gebeugt, Oberkörper rollt etwa 30° ein, Schulterblätter lösen sich vom Boden",
@@ -775,7 +787,7 @@
       "hinweis": "Mixamo „Situps“ nur als Vorlage (Bewegungsumfang begrenzen); Beugung über die Wirbel verteilen."
     },
     "cable_crunch": {
-      "nr": 67,
+      "nr": 68,
       "name": "Crunches am Kabel, kniend",
       "familie": "rumpf",
       "variante": "kniend vor der oberen Rolle, Seil am Kopf, Rumpf rollt ein, Hüfte bleibt",
@@ -786,7 +798,7 @@
       "hinweis": "Kniestand; Hände halten das Seil neben dem Kopf."
     },
     "hanging_leg_raise": {
-      "nr": 68,
+      "nr": 69,
       "name": "Beinheben hängend",
       "familie": "rumpf",
       "variante": "hängend an der Klimmzugstange, Beine heben bis waagrecht",
@@ -797,7 +809,7 @@
       "hinweis": "Hängen wie beim Klimmzug; kein Pendeln, Becken kippt leicht mit."
     },
     "lying_leg_raise": {
-      "nr": 69,
+      "nr": 70,
       "name": "Beinheben liegend",
       "familie": "rumpf",
       "variante": "Rückenlage, gestreckte Beine heben bis senkrecht und senken bis knapp über den Boden",
@@ -808,7 +820,7 @@
       "hinweis": "–"
     },
     "russian_twist": {
-      "nr": 70,
+      "nr": 71,
       "name": "Russian Twist",
       "familie": "rumpf",
       "variante": "sitzend, Oberkörper etwa 45° zurückgelehnt, Füße leicht angehoben, Drehung nach links und rechts mit Gewicht",
@@ -819,7 +831,7 @@
       "hinweis": "Drehung über Brust- und Lendenwirbel verteilen; Gewicht (Kurzhantel) in beiden Händen."
     },
     "ab_wheel": {
-      "nr": 71,
+      "nr": 72,
       "name": "Bauchroller",
       "familie": "rumpf",
       "variante": "kniend, der Bauchroller rollt nach vorn, bis der Körper fast gestreckt ist, und zurück",
@@ -831,7 +843,7 @@
       "hinweis": "Rad rollt ohne Rutschen (Drehung aus dem Weg berechnen); Hände per IK am Griff."
     },
     "dead_bug": {
-      "nr": 72,
+      "nr": 73,
       "name": "Dead Bug",
       "familie": "rumpf",
       "variante": "Rückenlage, Arme senkrecht, Hüfte und Knie 90°; gegengleich Arm und Bein strecken",
@@ -842,7 +854,7 @@
       "hinweis": "Lendenwirbel bleiben am Boden."
     },
     "bird_dog": {
-      "nr": 73,
+      "nr": 74,
       "name": "Vierfüßlerstand diagonal (Bird Dog)",
       "familie": "rumpf",
       "variante": "Vierfüßlerstand, gegengleich Arm nach vorn und Bein nach hinten strecken",
@@ -853,7 +865,7 @@
       "hinweis": "Becken bleibt waagrecht; drei Kontakte am Boden."
     },
     "pallof_press": {
-      "nr": 74,
+      "nr": 75,
       "name": "Pallof Press am Kabel",
       "familie": "rumpf",
       "variante": "seitlich zur Rolle auf Brusthöhe, D-Griff vor der Brust, Arme nach vorn strecken und zurück, Rumpf bleibt gerade",
@@ -864,7 +876,7 @@
       "hinweis": "Die eigentliche Arbeit (gegen die Drehung halten) ist unsichtbar; der seitliche Kabelzug muss die Idee tragen."
     },
     "bicycle_crunch": {
-      "nr": 75,
+      "nr": 76,
       "name": "Bicycle Crunches",
       "familie": "rumpf",
       "variante": "Rückenlage, Ellbogen zum Gegenknie mit Drehung, Beine radeln",
@@ -876,7 +888,7 @@
       "hinweis": "–"
     },
     "heel_tap": {
-      "nr": 76,
+      "nr": 77,
       "name": "Heel Taps",
       "familie": "rumpf",
       "variante": "Rückenlage, Knie gebeugt, Schultern leicht angehoben, Rumpf neigt seitlich, die Hand tippt abwechselnd an die Ferse",
@@ -887,7 +899,7 @@
       "hinweis": "Seitneigung statt Drehung."
     },
     "sit_up": {
-      "nr": 77,
+      "nr": 78,
       "name": "Sit-ups",
       "familie": "rumpf",
       "variante": "Rückenlage, Knie gebeugt, Oberkörper richtet sich ganz auf",
@@ -899,7 +911,7 @@
       "hinweis": "Füße bleiben am Boden (Fußsperre)."
     },
     "windshield_wiper": {
-      "nr": 78,
+      "nr": 79,
       "name": "Windshield Wipers",
       "familie": "rumpf",
       "variante": "Rückenlage, Arme seitlich, Beine senkrecht; die Beine kippen gemeinsam nach links und rechts",
@@ -910,7 +922,7 @@
       "hinweis": "Schultern bleiben am Boden; Drehung in Becken und unterem Rücken."
     },
     "standing_knee_raise": {
-      "nr": 79,
+      "nr": 80,
       "name": "Knieheben stehend",
       "familie": "rumpf",
       "variante": "stehend, Knie abwechselnd bis über Hüfthöhe heben",
@@ -921,7 +933,7 @@
       "hinweis": "Gleichgewicht auf einem Bein; CMU „Marching“ (138_01 bis 138_10) nur als Referenz."
     },
     "hip_thrust_barbell": {
-      "nr": 80,
+      "nr": 81,
       "name": "Hip Thrust mit Langhantel",
       "familie": "hueftbeuge",
       "variante": "Schulterblätter an der Flachbank, Langhantel auf der Hüfte, Hüfte streckt, bis der Rumpf waagrecht ist",
@@ -932,7 +944,7 @@
       "hinweis": "Drehpunkt an der Bankkante; Stange liegt auf der Hüfte, die Hände halten sie."
     },
     "hip_thrust_machine": {
-      "nr": 81,
+      "nr": 82,
       "name": "Hip Thrust an der Maschine",
       "familie": "hueftbeuge",
       "variante": "an der Maschine mit Rückenpolster und Hüftpolster",
@@ -944,7 +956,7 @@
       "hinweis": "Maschine mit vielen Teilen."
     },
     "glute_bridge": {
-      "nr": 82,
+      "nr": 83,
       "name": "Hüftheben am Boden (Glute Bridge)",
       "familie": "hueftbeuge",
       "variante": "Rückenlage am Boden, Füße aufgestellt, Becken heben bis zur Linie Knie–Schulter",
@@ -955,7 +967,7 @@
       "hinweis": "–"
     },
     "cable_kickback": {
-      "nr": 83,
+      "nr": 84,
       "name": "Kickbacks am Kabel",
       "familie": "beine_isoliert",
       "variante": "stehend vor der unteren Rolle, Fußschlaufe am Knöchel, ein Bein streckt nach hinten, Oberkörper leicht vorgeneigt, Hände an der Säule",
@@ -967,7 +979,7 @@
       "hinweis": "Standbein mit Fußsperre; Becken nicht verdrehen."
     },
     "step_up_dumbbell": {
-      "nr": 84,
+      "nr": 85,
       "name": "Step-ups mit Kurzhanteln",
       "familie": "ausfallschritt",
       "variante": "einbeinig auf die Flachbank (43 cm) steigen und zurück, Kurzhanteln seitlich",
@@ -978,7 +990,7 @@
       "hinweis": "Fußkontakt wechselt zwischen Boden und Bank; CMU 111_31 („Stepping up / stepping down“, schwangere Person) nur als Referenz."
     },
     "sumo_deadlift": {
-      "nr": 85,
+      "nr": 86,
       "name": "Kreuzheben Sumo mit Langhantel",
       "familie": "hueftbeuge",
       "variante": "weiter Stand, Zehen 30–45° nach außen, Griff innen zwischen den Knien, aufrechterer Rumpf, mehr Kniebeugung",
@@ -989,7 +1001,7 @@
       "hinweis": "Mixamo „Sumo High Pull“ nur als Referenz (zieht zusätzlich hoch)."
     },
     "reverse_lunge_dumbbell": {
-      "nr": 86,
+      "nr": 87,
       "name": "Ausfallschritte rückwärts mit Kurzhanteln",
       "familie": "ausfallschritt",
       "variante": "Referenz der Familie: Schritt rückwärts, das hintere Knie senkt sich bis knapp über den Boden, zurück in den Stand",
@@ -1001,7 +1013,7 @@
       "hinweis": "Fußkontakte schalten (IK-Sperre an und aus); kein Ausfallschritt bei CMU oder Mixamo belegt. Hinterer Fuß auf dem Ballen: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "cable_pull_through": {
-      "nr": 87,
+      "nr": 88,
       "name": "Pull-Throughs am Kabel",
       "familie": "hueftbeuge",
       "variante": "Rücken zur unteren Rolle, Seil zwischen den Beinen, Hüftbeuge und Streckung nach vorn",
@@ -1012,7 +1024,7 @@
       "hinweis": "Kabel läuft zwischen den Beinen: Durchdringung prüfen."
     },
     "hip_thrust_dumbbell": {
-      "nr": 88,
+      "nr": 89,
       "name": "Hip Thrust mit Kurzhantel",
       "familie": "hueftbeuge",
       "variante": "Kurzhantel auf der Hüfte gehalten",
@@ -1023,7 +1035,7 @@
       "hinweis": "–"
     },
     "back_squat_barbell": {
-      "nr": 89,
+      "nr": 90,
       "name": "Kniebeuge mit Langhantel",
       "familie": "kniebeuge",
       "variante": "Stange auf dem oberen Rücken, Füße schulterbreit, Zehen leicht nach außen, Tiefe bis die Oberschenkel waagrecht sind",
@@ -1040,7 +1052,7 @@
       "hinweis": "Pilot, neu auf dem IK-Rig gebaut (D-407); Mixamo „Back Squat“ kann den Zeitverlauf gegenprüfen, Stange und Hände bleiben beim Rig."
     },
     "front_squat_barbell": {
-      "nr": 90,
+      "nr": 91,
       "name": "Frontkniebeuge mit Langhantel",
       "familie": "kniebeuge",
       "variante": "Stange vorn auf den Schultern, Ellbogen hoch, Rumpf aufrechter",
@@ -1051,7 +1063,7 @@
       "hinweis": "Front-Rack-Griff per IK; Mixamo „Air Squat“ oder CMU-Kniebeugen ohne Gewicht als Vorlage möglich."
     },
     "goblet_squat": {
-      "nr": 91,
+      "nr": 92,
       "name": "Goblet Squat",
       "familie": "kniebeuge",
       "variante": "Kurzhantel senkrecht vor der Brust, aufrecht, Ellbogen unten zwischen den Knien (Alias: Fersen erhöht)",
@@ -1062,7 +1074,7 @@
       "hinweis": "Kettlebell als Alternative; Mixamo „Air Squat Bent Arms“ oder CMU-Kniebeugen ohne Gewicht (86_02, 14_06) als Vorlage prüfen."
     },
     "squat_smith": {
-      "nr": 92,
+      "nr": 93,
       "name": "Kniebeuge an der Multipresse",
       "familie": "kniebeuge",
       "variante": "Stange in der Multipresse geführt, Füße etwas vor der Stange",
@@ -1073,7 +1085,7 @@
       "hinweis": "–"
     },
     "leg_press": {
-      "nr": 93,
+      "nr": 94,
       "name": "Beinpresse",
       "familie": "kniebeuge",
       "variante": "Rückenlage im 45°-Schlitten, Füße auf der Plattform; die Plattform bewegt sich mit den Füßen, das Becken bleibt am Polster",
@@ -1085,7 +1097,7 @@
       "hinweis": "Schlitten auf Schienen, Plattform an die Füße gebunden; Knie unten etwa 90°."
     },
     "hack_squat": {
-      "nr": 94,
+      "nr": 95,
       "name": "Hackenschmidt-Kniebeuge",
       "familie": "kniebeuge",
       "variante": "Rücken am Polster des Schlittens, Schultern unter den Polstern, Kniebeuge entlang der Schiene",
@@ -1097,7 +1109,7 @@
       "hinweis": "Maschine mit vielen Teilen."
     },
     "bulgarian_split_squat_dumbbell": {
-      "nr": 95,
+      "nr": 96,
       "name": "Bulgarische Kniebeuge mit Kurzhanteln",
       "familie": "ausfallschritt",
       "variante": "hinterer Fuß auf der Flachbank, das vordere Bein beugt, bis der Oberschenkel waagrecht ist",
@@ -1108,7 +1120,7 @@
       "hinweis": "Fußrücken liegt auf der Bank (Kontakt)."
     },
     "lunge_dumbbell": {
-      "nr": 96,
+      "nr": 97,
       "name": "Ausfallschritte mit Kurzhanteln",
       "familie": "ausfallschritt",
       "variante": "Schritt nach vorn und zurück (Alias abwechselnd)",
@@ -1119,7 +1131,7 @@
       "hinweis": "Hinterer Fuß auf dem Ballen: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "leg_extension": {
-      "nr": 97,
+      "nr": 98,
       "name": "Beinstrecker",
       "familie": "beine_isoliert",
       "variante": "Referenz der Familie: sitzend, Polster vor den Schienbeinen, Knie streckt von 90° bis fast gestreckt",
@@ -1132,7 +1144,7 @@
       "hinweis": "Hebeldrehpunkt auf Höhe der Kniegelenkachse."
     },
     "wall_sit": {
-      "nr": 98,
+      "nr": 99,
       "name": "Wandsitzen",
       "familie": "kniebeuge",
       "variante": "statisch, Rücken an der Wand, Knie und Hüfte 90°",
@@ -1144,7 +1156,7 @@
       "hinweis": "Statisch: Schleife mit dezenter Atmung."
     },
     "leg_press_single_leg": {
-      "nr": 99,
+      "nr": 100,
       "name": "Beinpresse, einbeinig",
       "familie": "kniebeuge",
       "variante": "einbeinig an der Beinpresse, der andere Fuß ruht",
@@ -1155,7 +1167,7 @@
       "hinweis": "–"
     },
     "romanian_deadlift_barbell": {
-      "nr": 100,
+      "nr": 101,
       "name": "Rumänisches Kreuzheben mit Langhantel",
       "familie": "hueftbeuge",
       "variante": "Start im Stand, Knie leicht gebeugt und fest, Hüfte nach hinten, bis die Stange unter Kniehöhe ist",
@@ -1166,7 +1178,7 @@
       "hinweis": "–"
     },
     "romanian_deadlift_dumbbell": {
-      "nr": 101,
+      "nr": 102,
       "name": "Rumänisches Kreuzheben mit Kurzhanteln",
       "familie": "hueftbeuge",
       "variante": "Kurzhanteln vor den Oberschenkeln",
@@ -1177,7 +1189,7 @@
       "hinweis": "–"
     },
     "single_leg_rdl_dumbbell": {
-      "nr": 102,
+      "nr": 103,
       "name": "Einbeiniges Rumänisches Kreuzheben mit Kurzhantel",
       "familie": "hueftbeuge",
       "variante": "einbeinig, das freie Bein streckt nach hinten, Becken bleibt waagrecht, Kurzhantel in der Gegenhand",
@@ -1188,7 +1200,7 @@
       "hinweis": "Gleichgewicht auf einem Bein (Schwerpunkt über dem Standfuß)."
     },
     "lying_leg_curl": {
-      "nr": 103,
+      "nr": 104,
       "name": "Beinbeuger liegend",
       "familie": "beine_isoliert",
       "variante": "Bauchlage auf der Maschine, Rolle hinter den Fersen, das Knie beugt",
@@ -1200,7 +1212,7 @@
       "hinweis": "Liegende Haltung auf schräger Liegefläche."
     },
     "seated_leg_curl": {
-      "nr": 104,
+      "nr": 105,
       "name": "Beinbeuger sitzend",
       "familie": "beine_isoliert",
       "variante": "sitzend, Oberschenkelpolster, Rolle unter den Waden, das Knie beugt nach unten-hinten",
@@ -1212,7 +1224,7 @@
       "hinweis": "Gerät vom Beinstrecker ableitbar."
     },
     "good_morning": {
-      "nr": 105,
+      "nr": 106,
       "name": "Good Mornings mit Langhantel",
       "familie": "hueftbeuge",
       "variante": "Stange auf dem oberen Rücken, Hüftbeugung, bis der Rumpf fast waagrecht ist, Knie leicht gebeugt",
@@ -1223,7 +1235,7 @@
       "hinweis": "–"
     },
     "nordic_curl": {
-      "nr": 106,
+      "nr": 107,
       "name": "Nordic Curls",
       "familie": "beine_isoliert",
       "variante": "kniend, Fersen fixiert, Körper gerade nach vorn senken, mit den Händen abfangen und zurückdrücken",
@@ -1235,7 +1247,7 @@
       "hinweis": "Schwer als Schleife (Rückweg mit Abstoßen der Hände); eventuell Ausgangs- und Endposition mit dezenter Bewegung."
     },
     "standing_calf_raise": {
-      "nr": 107,
+      "nr": 108,
       "name": "Wadenheben stehend",
       "familie": "beine_isoliert",
       "variante": "stehend unter den Schulterpolstern, Fußballen auf der Stufe, Fersen heben und senken",
@@ -1247,7 +1259,7 @@
       "hinweis": "Kleine Bewegung; seitliche Ansicht wichtig. Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "seated_calf_raise": {
-      "nr": 108,
+      "nr": 109,
       "name": "Wadenheben sitzend",
       "familie": "beine_isoliert",
       "variante": "sitzend, Knie unter dem Polster, Fersen heben",
@@ -1259,7 +1271,7 @@
       "hinweis": "Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "calf_press_leg_press": {
-      "nr": 109,
+      "nr": 110,
       "name": "Wadenheben an der Beinpresse",
       "familie": "beine_isoliert",
       "variante": "an der Beinpresse, Beine gestreckt, nur das Sprunggelenk drückt die Plattform",
@@ -1270,7 +1282,7 @@
       "hinweis": "Vorfuß auf der Platte, Ferse frei: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "hip_adduction_machine": {
-      "nr": 110,
+      "nr": 111,
       "name": "Adduktorenmaschine",
       "familie": "beine_isoliert",
       "variante": "sitzend, Polster an der Knie-Innenseite, Beine schließen",
@@ -1282,7 +1294,7 @@
       "hinweis": "Kamera eher frontal."
     },
     "hip_abduction_machine": {
-      "nr": 111,
+      "nr": 112,
       "name": "Abduktorenmaschine",
       "familie": "beine_isoliert",
       "variante": "Polster außen, Beine öffnen",
@@ -1293,7 +1305,7 @@
       "hinweis": "Gleiche Maschine, Polster umgesteckt."
     },
     "lateral_band_walk": {
-      "nr": 112,
+      "nr": 113,
       "name": "Seitliches Gehen mit Widerstandsband",
       "familie": "beine_isoliert",
       "variante": "halbe Hocke, Band über den Knien oder Knöcheln, seitliche Schritte",
@@ -1305,7 +1317,7 @@
       "hinweis": "Band dehnt sich mit dem Beinabstand (Verformung); seitliche Fortbewegung als Schleife auf der Stelle oder mit mitlaufender Kamera."
     },
     "calf_raise_dumbbell": {
-      "nr": 113,
+      "nr": 114,
       "name": "Wadenheben mit Kurzhanteln",
       "familie": "beine_isoliert",
       "variante": "stehend, Kurzhanteln seitlich, Fersen heben",
@@ -1316,7 +1328,7 @@
       "hinweis": "Ferse hebt sich: Schuh im Vorfuß gebogen, je Phase (`vorfuss_grad`, D-467)."
     },
     "kettlebell_swing": {
-      "nr": 114,
+      "nr": 115,
       "name": "Kettlebell Swing",
       "familie": "hueftbeuge",
       "variante": "ballistische Hüftbeuge und -streckung, die Kettlebell schwingt zwischen den Beinen nach hinten und bis Brusthöhe nach vorn",
@@ -1329,7 +1341,7 @@
       "hinweis": "Kettlebell an beiden Händen; ihre Bahn muss zum Schwung passen."
     },
     "thruster_dumbbell": {
-      "nr": 115,
+      "nr": 116,
       "name": "Thruster mit Kurzhanteln",
       "familie": "kniebeuge",
       "variante": "Kurzhanteln auf Schulterhöhe, aus der Kniebeuge ohne Pause über den Kopf drücken",
@@ -1340,7 +1352,7 @@
       "hinweis": "Kombination aus Kniebeuge und Schulterdrücken; beide Familien müssen fertig sein."
     },
     "farmers_walk": {
-      "nr": 116,
+      "nr": 117,
       "name": "Farmer's Walk",
       "familie": "kondition",
       "variante": "Gehen mit schweren Kurzhanteln in beiden Händen, Rumpf aufrecht, Schultern unten",
@@ -1356,7 +1368,7 @@
       "hinweis": "Gehen aus CMU auf der Stelle, Arme per IK mit Last; CMU 70_01 bis 70_13 („carry … suitcase“, einseitige Last) als Referenz für den Gang unter Last."
     },
     "burpee": {
-      "nr": 117,
+      "nr": 118,
       "name": "Burpees",
       "familie": "kondition",
       "variante": "Hocke, Hände auf den Boden, Sprung in den Stütz, zurück, Strecksprung",
@@ -1368,7 +1380,7 @@
       "hinweis": "Kontakte wechseln (Hände, Füße); Mixamo „Burpee Start“ und „Burpee End“ helfen bei der Schleife."
     },
     "mountain_climber": {
-      "nr": 118,
+      "nr": 119,
       "name": "Bergsteiger (Mountain Climbers)",
       "familie": "kondition",
       "variante": "Stütz mit den Händen unter den Schultern, Knie abwechselnd zügig zur Brust",
@@ -1379,7 +1391,7 @@
       "hinweis": "Hände fest, Becken ruhig; Ausgangshaltung aus Mixamo „Plank“ oder „Push Up“ ableitbar; als Mixamo-Animation nicht belegt."
     },
     "jumping_jack": {
-      "nr": 119,
+      "nr": 120,
       "name": "Hampelmann",
       "familie": "kondition",
       "variante": "Sprung in die Grätsche mit den Armen über dem Kopf und zurück",
@@ -1395,7 +1407,7 @@
       "hinweis": "Abschnitt aus einer langen Aufnahme schneiden und zur Schleife schließen; Kandidaten in der GIF-Vorschau vergleichen (CMU rät, mit höheren Subject-Nummern zu beginnen)."
     },
     "jump_rope": {
-      "nr": 120,
+      "nr": 121,
       "name": "Seilspringen",
       "familie": "kondition",
       "variante": "kleine Sprünge auf den Fußballen, Handgelenke kreisen, das Seil dreht sich",
@@ -1408,7 +1420,7 @@
       "hinweis": "Seil als Kurve zwischen den Händen, Drehung an die Sprünge gekoppelt (Seil unter den Füßen, wenn sie in der Luft sind)."
     },
     "rowing_machine": {
-      "nr": 121,
+      "nr": 122,
       "name": "Rudergerät",
       "familie": "kondition",
       "variante": "Zyklus: Auslage (Knie gebeugt, Arme gestreckt), Beinstoß, Rumpf zurück, Armzug; Rückweg umgekehrt; Rollsitz gleitet, Füße fest im Stemmbrett",
@@ -1420,7 +1432,7 @@
       "hinweis": "Neue mehrphasige Bewegung; Griff und Kette per IK; Verhältnis Zug zu Rückweg etwa 1:2. Keine Mocap-Quelle (CMU 79_95 „rowing“ ist vermutlich Pantomime)."
     },
     "stationary_bike": {
-      "nr": 122,
+      "nr": 123,
       "name": "Fahrradergometer",
       "familie": "kondition",
       "variante": "sitzend, Füße an den Pedalen, Kurbel dreht 360°, Hände am Lenker",
@@ -1432,7 +1444,7 @@
       "hinweis": "Bewegung vollständig aus dem Kurbelwinkel ableitbar (Fuß-IK an den Pedalen); gute Schleife."
     },
     "treadmill": {
-      "nr": 123,
+      "nr": 124,
       "name": "Laufband",
       "familie": "kondition",
       "variante": "Joggen auf der Stelle, das Band läuft",
@@ -1450,7 +1462,7 @@
       "hinweis": "Vorwärtsbewegung der CMU-Aufnahme entfernen (die Füße gleiten dann wie auf dem Band); Bandtextur mitlaufen lassen."
     },
     "elliptical": {
-      "nr": 124,
+      "nr": 125,
       "name": "Crosstrainer",
       "familie": "kondition",
       "variante": "Füße auf den Pedalen (elliptische Bahn), Hände an den beweglichen Griffen, gegengleich",

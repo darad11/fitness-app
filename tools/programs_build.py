@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Erzeugt die gebündelten Programme A, B und C und docs/programs.md.
+"""Erzeugt die gebündelten Programme (Dali’s PPLC, A, B und C) und docs/programs.md.
 
-Quellen: tools/data/programs.source.json (A und B, Dropset-Liste, Metadaten für C),
+Quellen: tools/data/programs.source.json (Dali’s PPLC, A und B, Dropset-Liste, Metadaten für C),
 tools/data/winterprogramm-2026.source.json und tools/data/winterprogramm-2026-uebungen.json (C).
 Ziel: src/modules/training/data/programs.v1.json im Format der Beispielvorlagen
 (sample-templates.v1.json, erweitert um description, program, slug, note, originalName).
@@ -158,9 +158,10 @@ def describe_target(t: dict) -> str:
 def render_doc(templates: list[dict], core: dict) -> str:
     names = {e["key"]: e["name"] for e in core["exercises"]}
     out = [
-        "# Programme A, B und C\n\n",
+        "# Programme: Dali’s PPLC, A, B und C\n\n",
         "Erzeugt von `tools/programs_build.py` aus `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; ",
-        "`pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15. ",
+        "`pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; ",
+        "Dali’s PPLC nach dem Plan des Produktinhabers (D-504). ",
         "Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.\n\n",
     ]
     for t in templates:

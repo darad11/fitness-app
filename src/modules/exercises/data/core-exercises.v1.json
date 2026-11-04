@@ -336,6 +336,17 @@
       "trackingMode": "weight_reps"
     },
     {
+      "key": "high_row_machine",
+      "name": "High Row an der Maschine",
+      "group": "back",
+      "aliases": ["High Row", "Lever High Row", "Iso-Lateral High Row", "Rudern von oben"],
+      "primaryMuscles": ["lats", "upper_back"],
+      "secondaryMuscles": ["biceps", "rear_delts"],
+      "equipment": ["machine"],
+      "category": "strength",
+      "trackingMode": "weight_reps"
+    },
+    {
       "key": "overhead_press_barbell",
       "name": "Schulterdrücken mit Langhantel, stehend",
       "group": "shoulders",

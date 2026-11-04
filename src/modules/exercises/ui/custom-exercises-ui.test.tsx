@@ -110,7 +110,7 @@ describe('Eigene Übungen und persönliche Angaben (AK-EXL-03 bis AK-EXL-05, D-2
     await user.click(screen.getByRole('link', { name: 'Übungen' }));
     await screen.findByText('Archivierte eigene Übungen (1)', {}, { timeout: 10_000 });
     expect(screen.queryByRole('heading', { level: 2, name: 'Eigene Übungen' })).toBeNull();
-    expect(screen.getByText('124 Übungen')).toBeInTheDocument();
+    expect(screen.getByText('125 Übungen')).toBeInTheDocument();
   });
 
   it(

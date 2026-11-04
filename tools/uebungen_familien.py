@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Erzeugt docs/uebungen-bewegungsfamilien.md aus tools/uebungen-3d/familien.json (D-411).
 
-Die Zuordnung der 124 Basisübungen zu Bewegungsfamilien, Geräten und Quellen der Bewegung
+Die Zuordnung der Basisübungen (125 seit D-504) zu Bewegungsfamilien, Geräten und Quellen der Bewegung
 (CMU-Motion-Capture, Mixamo oder im Code aus der Familie) steht als Daten in der JSON-Datei;
 dieses Skript macht daraus die lesbare Übersicht mit Aufwandsschätzung. Abschnitt 8 zählt, wie oft
 jede Übung in den Programmen (`programs.v1.json`) und Vorlagen (`sample-templates.v1.json`)
@@ -221,7 +221,7 @@ def main() -> None:
             f"| {name} | {zelle(info['grundmuster'])} | {zelle(info['gelenke'])} | {len(nach_familie[f])} | "
             f"{info['basis_stunden']} |"
         )
-    zeilen += ["", "## 3. Zuordnung aller 124 Übungen", ""]
+    zeilen += ["", f"## 3. Zuordnung aller {len(d['uebungen'])} Übungen", ""]
     for f, name in NAMEN.items():
         zeilen += [
             f"### {name}",

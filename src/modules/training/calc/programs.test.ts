@@ -10,9 +10,10 @@ const exercises = await loadCoreExercises();
 const programs = parseSampleTemplates(raw, exercises);
 const byKey = (key: string) => programs.find((p) => p.key === key)!;
 
-describe('Programme A, B und C (evolution-plan.md Abschnitt 4, programs.md)', () => {
-  it('enthält drei Programme mit 84 Trainingstagen', () => {
+describe('Programme Dali’s PPLC, A, B und C (evolution-plan.md Abschnitt 4, programs.md)', () => {
+  it('enthält vier Programme mit 116 Trainingstagen, das eigene des Produktinhabers zuerst', () => {
     expect(programs.map((p) => [p.key, p.program, flattenDays(p).length, p.repeat])).toEqual([
+      ['dali_pplc', true, 32, true],
       ['compound_ab_4', true, 32, true],
       ['ppl_rotation_4', true, 12, true],
       [PROGRAM_C_KEY, true, 40, false],
@@ -67,6 +68,81 @@ describe('Programme A, B und C (evolution-plan.md Abschnitt 4, programs.md)', ()
     expect(days.length).toBe(40);
     for (const day of distinctDays(c)) {
       for (const exercise of day.exercises) expect(exercise.originalName).toBeTruthy();
+    }
+  });
+});
+
+describe('Dali’s PPLC (Plan des Produktinhabers vom 04.11.2026, D-504)', () => {
+  const pplc = () => byKey('dali_pplc');
+
+  it('Push, Pull, Beine und Compound in jeder der 8 Wochen, danach von vorn', () => {
+    expect(pplc().slug).toBe('dalis-pplc');
+    expect(pplc().name).toBe('Dali’s PPLC');
+    expect(pplc().weeks.map((w) => w.days.map((d) => d.name))).toEqual(
+      Array.from({ length: 8 }, () => ['Push', 'Pull', 'Beine', 'Compound']),
+    );
+  });
+
+  it('enthält die Übungen des Plans in seiner Reihenfolge, jede mit ihrem englischen Namen', () => {
+    expect(distinctDays(pplc()).map((d) => d.exercises.map((e) => e.originalName))).toEqual([
+      [
+        'Dip Assisted',
+        'Dumbbell Bench Press',
+        'Dumbbell Incline Bench Press',
+        'Dumbbell Seated Shoulder Press',
+        'Dumbbell Lateral Raise',
+        'Leverage Chest Press',
+        'Cable Tricep Pushdown',
+      ],
+      [
+        'Pull Up Assisted',
+        'Barbell Deadlift',
+        'Barbell Bent Over Row',
+        'Leverage Machine Iso Row',
+        'Leverage Machine High Row',
+        'Cable Seated Row',
+        'Dumbbell Alternating Hammer Curl',
+      ],
+      [
+        'Machine Leg Extension',
+        'Machine Leg Curl',
+        'Machine Calf Raise',
+        'Machine Seated Calf Raise',
+        'Machine Squat',
+        'Machine Leg Press',
+      ],
+      [
+        'Pull Up Assisted',
+        'Barbell Military Press',
+        'Barbell Bent Over Row',
+        'Dumbbell Bench Press',
+        'Machine Leg Press',
+        'Dip Assisted',
+      ],
+    ]);
+    const pull = distinctDays(pplc())[1]!;
+    // Iso Row und High Row sind zwei Übungen mit eigenem Vorwert, nicht zweimal dieselbe.
+    expect(pull.exercises.map((e) => e.nameSnapshot).slice(3, 5)).toEqual([
+      'Rudern an der Maschine',
+      'High Row an der Maschine',
+    ]);
+    expect(new Set(pull.exercises.map((e) => e.exerciseId)).size).toBe(7);
+  });
+
+  it('übernimmt Sätze und Ziele der bisherigen Programme', () => {
+    const [push, pull, legs, compound] = distinctDays(pplc());
+    const [a] = distinctDays(byKey('compound_ab_4'));
+    // Bankdrücken mit Kurzhanteln wie in Ganzkörper A/B: 1 Aufwärmen + 3 × 8–12.
+    expect(summarizeSets(push!.exercises[1]!)).toEqual(summarizeSets(a!.exercises[1]!));
+    expect(summarizeSets(pull!.exercises[1]!)).toMatchObject({
+      warmup: 2,
+      working: 3,
+      target: { repsMin: 5, repsMax: 7 },
+    });
+    expect(summarizeSets(legs!.exercises[4]!)).toMatchObject({ warmup: 1, working: 3 });
+    expect(summarizeSets(compound!.exercises[4]!)).toMatchObject({ warmup: 2, working: 3 });
+    for (const day of distinctDays(pplc())) {
+      for (const exercise of day.exercises) expect(summarizeSets(exercise).working).toBe(3);
     }
   });
 });

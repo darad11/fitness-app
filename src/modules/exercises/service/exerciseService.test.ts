@@ -106,7 +106,7 @@ describe('Eigene Übungen (AK-EXL-03, D-258)', () => {
     expect(archived.archivedAt).toBe('2026-10-19T09:00:00.000Z');
     const all = await loadExercises(rt.db);
     expect(all.find((e) => e.id === exercise.id)?.archivedAt).toBe('2026-10-19T09:00:00.000Z');
-    expect(all.filter((e) => e.source === 'core')).toHaveLength(124);
+    expect(all.filter((e) => e.source === 'core')).toHaveLength(125);
     await setCustomExerciseArchived(rt, exercise.id, false);
     expect((await listCustomExercises(rt.db))[0]).not.toHaveProperty('archivedAt');
   });

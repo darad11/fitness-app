@@ -1987,3 +1987,22 @@ Ergebnis: bestanden; WebKit läuft in der CI
 Bekannte Einschränkungen: echte Wiedergabe in WebKit nicht mehr in der CI geprüft, am Gerät durch den Produktinhaber
 Nächste Schritte: D-501 Schleifen neu, D-502 Kopf links
 ```
+
+## 45. Dali’s PPLC (D-504)
+
+**Was entstanden ist.** Dein Plan steht als Programm „Dali’s PPLC“ in der App, in der Liste der Programme ganz oben: Push, Pull, Beine und Compound, vier Einheiten pro Woche in dieser Reihenfolge, 8 Wochen, danach von vorn. Übungen und Reihenfolge sind genau wie in deinem Plan; unter jeder Übung steht dein englischer Name. Sätze, Ziele und Pausen kommen aus Ganzkörper A/B und Push/Pull/Beine: 3 Arbeitssätze, bei derselben Übung dieselben Ziele und Pausen, Aufwärmsätze bei der ersten Übung des Tages und vor schweren Grundübungen. Deine Vorwerte aus anderen Programmen erscheinen bei denselben Übungen. Mit „Übernehmen und anpassen“ machst du daraus eine Kopie, die du selbst ändern kannst.
+
+**Zuordnung.** Fast alles war eindeutig. Drei Annahmen: „Machine Squat“ ist die Hackenschmidt-Kniebeuge, „Machine Leg Curl“ der Beinbeuger liegend wie in Ganzkörper A/B, „Machine Calf Raise“ das Wadenheben stehend. Für das „Leverage Machine High Row“ gab es keine passende Übung; es ist neu in der Bibliothek als „High Row an der Maschine“, getrennt vom Rudern an der Maschine, damit beide ihren eigenen Vorwert haben. Seine Anleitung fehlt noch, weil die Quelle (ExRx) aus der Arbeitsumgebung nicht erreichbar war.
+
+**Einschätzung und Vorschläge** stehen in der Nachricht an dich; umgesetzt ist nur dein Plan, so wie du ihn geschickt hast.
+
+```
+Arbeitspaket: D-504 Phase Programme, Dali’s PPLC
+Umgesetzte Funktionen: gebündeltes Programm „Dali’s PPLC“ (4 Tage, 8 Wochen, wiederholt); neue Übung „High Row an der Maschine“; erfüllte AK: –
+Geänderte Dateien: tools/data/programs.source.json, tools/programs_build.py, src/modules/training/data/programs.v1.json, src/modules/exercises/data/core-exercises.v1.json, exercise-guides.v1.json, tools/uebungen-3d/familien.json, tools/uebungen_familien.py, Tests mit der Zahl der Übungen und der Liste der Programme, erzeugte Übersichten in docs/, Dokumentation
+Technische Entscheidungen: D-504
+Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Dali’s PPLC“
+Ergebnis: siehe dort
+Bekannte Einschränkungen: Anleitung zum High Row offen; Animationen gibt es für 6 der 21 Übungen des Programms
+Nächste Schritte: deine Rückmeldung zu den Annahmen und Vorschlägen; Gerätetest; Merge von PR #54
+```

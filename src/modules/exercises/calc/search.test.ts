@@ -92,7 +92,7 @@ describe('Übungssuche (AK-EXL-02)', () => {
 
   it('liefert ohne Suche und Filter alle Übungen alphabetisch', () => {
     const all = names('');
-    expect(all).toHaveLength(124);
+    expect(all).toHaveLength(125);
     expect(all[0]).toBe('Abduktorenmaschine');
     expect(names('   ')).toEqual(all);
   });

@@ -1,6 +1,69 @@
-# Programme A, B und C
+# Programme: Dali’s PPLC, A, B und C
 
-Erzeugt von `tools/programs_build.py` aus `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; `pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15. Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.
+Erzeugt von `tools/programs_build.py` aus `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; `pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; Dali’s PPLC nach dem Plan des Produktinhabers (D-504). Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.
+
+## Dali’s PPLC (`dalis-pplc`)
+
+Push, Pull, Beine und Compound: vier Einheiten pro Woche in dieser Reihenfolge, 8 Wochen, danach von vorn. Sätze, Ziele und Pausen wie in Ganzkörper A/B und Push/Pull/Beine: 3 Arbeitssätze, Aufwärmsätze bei der ersten Übung des Tages und vor schweren Grundübungen wie Kreuzheben und Kniebeuge. Steigerung: Wenn alle Arbeitssätze die obere Grenze erreichen, beim nächsten Mal einen Gewichtsschritt mehr; bei Klimmzügen und Dips mit Unterstützung etwas weniger Entlastung. Keine Gewichtsvorgaben; der Player zeigt den letzten Wert der Übung, auch aus anderen Programmen.
+
+Niveau intermediate · Ort gym · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage · wiederholen: ja
+
+| Woche | Tage |
+|---|---|
+| 1 | Push, Pull, Beine, Compound |
+| 2 | Push, Pull, Beine, Compound |
+| 3 | Push, Pull, Beine, Compound |
+| 4 | Push, Pull, Beine, Compound |
+| 5 | Push, Pull, Beine, Compound |
+| 6 | Push, Pull, Beine, Compound |
+| 7 | Push, Pull, Beine, Compound |
+| 8 | Push, Pull, Beine, Compound |
+
+**Push**
+
+| Übung | Sätze | Ziel | Pause | Hinweis |
+|---|---|---|---|---|
+| Dips mit Unterstützung | 1 Aufwärmen + 3 | 8–12 | 90 s | Englisch: Dip Assisted |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Dumbbell Bench Press |
+| Schrägbankdrücken mit Kurzhanteln | 3 | 8–12 | 120 s | Englisch: Dumbbell Incline Bench Press |
+| Schulterdrücken mit Kurzhanteln, sitzend | 3 | 8–12 | 90 s | Englisch: Dumbbell Seated Shoulder Press |
+| Seitheben mit Kurzhanteln | 3 | 12–15 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Brustpresse an der Maschine | 3 | 10–12 | 90 s | Englisch: Leverage Chest Press |
+| Trizepsdrücken am Kabel | 3 | 10–12 | 75 s | Englisch: Cable Tricep Pushdown |
+
+**Pull**
+
+| Übung | Sätze | Ziel | Pause | Hinweis |
+|---|---|---|---|---|
+| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Pull Up Assisted |
+| Kreuzheben mit Langhantel | 2 Aufwärmen + 3 | 5–7 | 180 s | Englisch: Barbell Deadlift |
+| Rudern mit Langhantel, vorgebeugt | 3 | 6–8 | 150 s | Englisch: Barbell Bent Over Row |
+| Rudern an der Maschine | 3 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
+| High Row an der Maschine | 3 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
+| Rudern am Kabel, sitzend | 3 | 10–12 | 90 s | Englisch: Cable Seated Row |
+| Hammercurls | 3 | 10–12 | 60 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
+
+**Beine**
+
+| Übung | Sätze | Ziel | Pause | Hinweis |
+|---|---|---|---|---|
+| Beinstrecker | 1 Aufwärmen + 3 | 10–12 | 75 s | Englisch: Machine Leg Extension |
+| Beinbeuger liegend | 3 | 10–12 | 75 s | Englisch: Machine Leg Curl |
+| Wadenheben stehend | 3 | 12–15 | 60 s | Englisch: Machine Calf Raise |
+| Wadenheben sitzend | 3 | 12–15 | 60 s | Englisch: Machine Seated Calf Raise |
+| Hackenschmidt-Kniebeuge | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Squat |
+| Beinpresse | 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+
+**Compound**
+
+| Übung | Sätze | Ziel | Pause | Hinweis |
+|---|---|---|---|---|
+| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Pull Up Assisted |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 3 | 6–8 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 3 | 6–8 | 150 s | Englisch: Barbell Bent Over Row |
+| Bankdrücken mit Kurzhanteln | 3 | 8–12 | 120 s | Englisch: Dumbbell Bench Press |
+| Beinpresse | 2 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Dips mit Unterstützung | 3 | 8–12 | 90 s | Englisch: Dip Assisted |
 
 ## Ganzkörper A/B, 4 Tage (`compound_ab_4`)
 

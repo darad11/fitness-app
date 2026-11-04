@@ -32,7 +32,7 @@ describe('Übungen (S-12, AK-EXL-01, AK-EXL-02)', () => {
   it('zeigt alle Übungen nach Gruppen mit Muskeln und Gerät', async () => {
     await renderPage();
     expect(screen.getByRole('heading', { level: 1, name: 'Übungen' })).toBeInTheDocument();
-    expect(screen.getByText('124 Übungen')).toBeInTheDocument();
+    expect(screen.getByText('125 Übungen')).toBeInTheDocument();
     const groups = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
     expect(groups).toEqual([
       'Brust',
@@ -47,7 +47,7 @@ describe('Übungen (S-12, AK-EXL-01, AK-EXL-02)', () => {
       'Waden, Adduktoren, Abduktoren',
       'Ganzkörper und Kondition',
     ]);
-    expect(screen.getAllByRole('listitem')).toHaveLength(124);
+    expect(screen.getAllByRole('listitem')).toHaveLength(125);
     const chest = screen.getByRole('list', { name: 'Brust' });
     expect(within(chest).getAllByRole('listitem')[0]).toHaveTextContent(
       'Bankdrücken an der MultipresseBrust · Multipresse, Bank',
@@ -112,6 +112,6 @@ describe('Übungen (S-12, AK-EXL-01, AK-EXL-02)', () => {
     expect(screen.getByRole('status')).toHaveTextContent('0 Treffer');
     await user.click(screen.getByRole('button', { name: 'Suche und Filter zurücksetzen' }));
     expect(router.state.location.search).toBe('');
-    expect(screen.getAllByRole('listitem')).toHaveLength(124);
+    expect(screen.getAllByRole('listitem')).toHaveLength(125);
   });
 });

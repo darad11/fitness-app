@@ -3241,3 +3241,17 @@ Kopf mit Programm, Fortschritt, „Beenden“ und Pause links über der Liste, A
 | `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 461 bestanden, 151 übersprungen, 0 fehlgeschlagen (25,6 min); nach dem letzten Build `duo-player` und `player-jetzt` noch einmal: 9 bestanden, 9 übersprungen |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB |
 | `pnpm test` | erster Lauf neben dem Rendern der Schleifen (Blender) und der E2E-Suite: 6 Dateien, 13 Tests mit Zeitüberschreitung (5 s), auch in nicht geänderten Modulen (Wasser, Tagesaufgaben, Körpergewicht); mit 3 Workern: 139 Dateien bestanden, 1 Test mit Zeitüberschreitung (`habits-ui.test.tsx`, 5089 ms, nicht geändert), allein: 11 bestanden. Zusammen 1.249 Tests, 1.248 im Lauf bestanden |
+
+### Dali’s PPLC · 04.11.2026, Cloud-Umgebung
+
+Programm nach dem Plan des Produktinhabers und neue Übung „High Row an der Maschine“ (D-504).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py --check` | 4 Programme, 116 Trainingstage |
+| `src/modules/training/calc/programs.test.ts` | bestanden: vier Programme in der Reihenfolge Dali’s PPLC, A, B, C; Dali’s PPLC mit 8 Wochen Push, Pull, Beine, Compound, 26 Übungen in der Reihenfolge des Plans mit englischem Namen, Iso Row und High Row als zwei Übungen, Sätze wie in Ganzkörper A/B |
+| Zählung der Bibliothek 124 → 125 (`coreLibrary.test.ts`, `search.test.ts`, `exerciseService.test.ts`, `exercise-library.test.tsx`, `custom-exercises-ui.test.tsx`, `e2e/exercises.spec.ts`), Liste der Programme (`programs-ui.test.tsx`, `sampleTemplates.test.ts`, `e2e/templates.spec.ts`) | angepasst, bestanden |
+| `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.252 Tests bestanden; ein erster Lauf neben der E2E-Suite hatte 7 Zeitüberschreitungen (5 s) in Player, Wasser, Tagesaufgaben und Übungen |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 459 bestanden, 151 übersprungen, 2 fehlgeschlagen (22,1 min): `templates.spec.ts` am Desktop und Handy erwartete drei Programme; nach der Anpassung 2 bestanden. Vorher gezielt Programme, Vorlagen und Bibliothek: 56 bestanden, 26 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB |
+| Sichtprüfung der Programmseite `/training/vorlagen/dalis-pplc` (390 × 844) | Beschreibung, vier Trainingstage mit Sätzen, Zielen, Pausen und englischen Namen, geschätzte Dauer 40 bis 60 min, Ablauf über 8 Wochen |

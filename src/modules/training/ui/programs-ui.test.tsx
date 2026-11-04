@@ -44,20 +44,25 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
     await user.click(screen.getByRole('link', { name: 'Programme und Vorlagen' }));
     await screen.findByRole('heading', { level: 1, name: 'Programme und Vorlagen' });
     const cards = screen.getAllByRole('listitem');
-    expect(cards).toHaveLength(7);
-    // Programme zuerst, mit Beschreibung; danach die Beispielvorlagen.
+    expect(cards).toHaveLength(8);
+    // Programme zuerst, mit Beschreibung, das eigene des Produktinhabers vorn (D-504); danach die
+    // Beispielvorlagen.
     expect(cards[0]).toHaveTextContent(
+      'Dali’s PPLCProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
+    );
+    expect(cards[0]).toHaveTextContent('Push, Pull, Beine und Compound');
+    expect(cards[1]).toHaveTextContent(
       'Ganzkörper A/B, 4 TageProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',
     );
-    expect(cards[0]).toHaveTextContent('Wiedereinstieg nach längerer Pause');
-    expect(cards[2]).toHaveTextContent('Winterprogramm 2026Programm');
-    expect(cards[3]).toHaveTextContent(
+    expect(cards[1]).toHaveTextContent('Wiedereinstieg nach längerer Pause');
+    expect(cards[3]).toHaveTextContent('Winterprogramm 2026Programm');
+    expect(cards[4]).toHaveTextContent(
       'Ganzkörper A/BBeispielEinsteiger · Studio · 3 Tage pro Woche · 2 Trainingstage',
     );
-    expect(cards[5]).toHaveTextContent('Fortgeschritten · Studio · 3–6 Tage pro Woche');
-    expect(cards[6]).toHaveTextContent('Zuhause mit Kurzhanteln');
-    expect(cards[6]).toHaveTextContent('Einsteiger · Zuhause');
-    await user.click(within(cards[3]!).getByRole('link'));
+    expect(cards[6]).toHaveTextContent('Fortgeschritten · Studio · 3–6 Tage pro Woche');
+    expect(cards[7]).toHaveTextContent('Zuhause mit Kurzhanteln');
+    expect(cards[7]).toHaveTextContent('Einsteiger · Zuhause');
+    await user.click(within(cards[4]!).getByRole('link'));
     await screen.findByRole('heading', { level: 1, name: 'Ganzkörper A/B' });
     expect(router.state.location.pathname).toBe('/training/vorlagen/full_body_ab');
   });
@@ -221,10 +226,11 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
     cleanup();
     await renderAt('/training/programme', 'Programme und Vorlagen');
     const cards = screen.getAllByRole('listitem');
+    // Ganzkörper A/B steht hinter Dali’s PPLC (D-504).
     await waitFor(() => {
-      expect(within(cards[0]!).getByText('Aktiv')).toBeVisible();
+      expect(within(cards[1]!).getByText('Aktiv')).toBeVisible();
     });
-    expect(within(cards[1]!).getByText('Programm')).toBeVisible();
+    expect(within(cards[0]!).getByText('Programm')).toBeVisible();
   });
 
   it('beendet das Programm wieder', async () => {

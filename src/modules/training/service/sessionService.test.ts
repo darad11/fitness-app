@@ -5,6 +5,7 @@ import { createTestRuntime } from '@/shared/testing/db';
 import { previousValues } from '../calc/history';
 import { liveExercises, liveSets, setSlot } from '../calc/session';
 import { loadSampleTemplate } from '../data/sampleTemplates';
+import { PROGRAM_C_KEY } from '../data/programC';
 import { findActiveSession, getSession, latestHistory } from '../data/sessionRepository';
 import type { Session } from '../model/session';
 import {
@@ -127,6 +128,29 @@ describe('Starten (AK-TRN-01, AK-TRN-22, AK-PRG-06 Beispiel starten)', () => {
     expect(
       liveExercises(lower).find((e) => e.nameSnapshot.startsWith('Bulgarische'))?.perSide,
     ).toBe(true);
+  });
+
+  it('Übungsnamen auf Englisch: Player, Pause und Verlauf mit dem englischen Namen (D-506)', async () => {
+    const push = await startSession(rt, await templatePlan('dali_pplc'));
+    expect(liveExercises(push).map((e) => e.nameSnapshot)).toEqual([
+      'Dumbbell Bench Press',
+      'Dumbbell Incline Bench Press',
+      'Dumbbell Seated Shoulder Press',
+      'Dip',
+      'Dumbbell Lateral Raise',
+      'Cable Fly',
+      'Cable Tricep Pushdown',
+    ]);
+    // Ohne die Einstellung der Name aus der Bibliothek, auch wo es einen englischen gibt.
+    const dali = (await loadSampleTemplate('dali_pplc'))!;
+    const german = planFromTemplateDay({ ...dali, englishNames: false }, 0, 0, lookup);
+    expect(german.exercises.map((e) => e.name).slice(0, 2)).toEqual([
+      'Bankdrücken mit Kurzhanteln',
+      'Schrägbankdrücken mit Kurzhanteln',
+    ]);
+    // Programm C hat englische Namen, aber nicht die Einstellung.
+    const winter = await templatePlan(PROGRAM_C_KEY);
+    for (const e of winter.exercises) expect(e.name).toBe(lookup(e.exerciseId)?.name);
   });
 
   it('erlaubt höchstens eine laufende Einheit', async () => {

@@ -277,6 +277,12 @@ describe('Programme aktivieren und den nächsten Tag starten (AK-PRG-07, AK-PRG-
         'Danach geht es mit Woche 8 weiter. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.',
       ),
     ).toBeVisible();
+    // Übungsnamen auf Englisch (D-506): der englische Name als Name, keine Zeile „Englisch: …“.
+    const pull = within(next!);
+    expect(pull.getByText('Barbell Deadlift')).toBeVisible();
+    expect(pull.getByText('Leverage Machine Iso Row')).toBeVisible();
+    expect(pull.queryByText('Kreuzheben mit Langhantel')).toBeNull();
+    expect(screen.queryAllByText(/^Englisch: /)).toEqual([]);
   });
 
   it('Programm C: Wochenüberschriften, Hinweise, englische Namen und „Erledigt" je Tag', async () => {

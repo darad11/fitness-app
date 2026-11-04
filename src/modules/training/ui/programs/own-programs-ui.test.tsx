@@ -11,7 +11,8 @@ import { findActiveSession } from '../../data/sessionRepository';
 import { loadTrainingState } from '../../data/trainingStateRepository';
 import { trainingRoutes } from '../../routes';
 import { addWeek } from '../../calc/programEdit';
-import { createProgram, editProgram } from '../../service/programService';
+import { loadSampleTemplate } from '../../data/sampleTemplates';
+import { copyProgram, createProgram, editProgram } from '../../service/programService';
 import { uuidv4 } from '@/shared/lib/uuid';
 
 let rt: DbRuntime;
@@ -205,7 +206,36 @@ describe('Eigene Programme (AP 2.1 bis 2.4, D-257)', () => {
       await waitFor(async () => {
         expect((await listOwnPrograms(rt.db))[0]?.repeatFromWeek).toBe(2);
       });
-      expect(screen.getByLabelText('Wiederholen ab')).toHaveValue('2');
+      // Die Auswahl folgt dem gespeicherten Programm, also erst nach dem Speichern (unter Last
+      // im ersten vollen Lauf noch „1“).
+      await waitFor(() => {
+        expect(screen.getByLabelText('Wiederholen ab')).toHaveValue('2');
+      });
+    },
+  );
+
+  it(
+    'Übungsnamen auf Englisch: Schalter nur mit englischen Namen, speichert sofort (D-506)',
+    { timeout: 30_000 },
+    async () => {
+      const user = userEvent.setup();
+      const plain = await createProgram(rt, { name: 'Ohne', firstWeek: 'Woche 1', firstDay: 'A' });
+      await renderAt(`/training/programme/${plain.id}/bearbeiten`, 'Ohne');
+      expect(screen.queryByRole('switch', { name: /^Übungsnamen auf Englisch/ })).toBeNull();
+      cleanup();
+      const sample = (await loadSampleTemplate('dali_pplc'))!;
+      const copy = await copyProgram(rt, sample, { name: 'Kopie', kind: 'program' });
+      await renderAt(`/training/programme/${copy.id}/bearbeiten`, 'Kopie');
+      const english = screen.getByRole('switch', { name: /^Übungsnamen auf Englisch/ });
+      expect(english).toBeChecked();
+      await user.click(english);
+      await waitFor(async () => {
+        const stored = (await listOwnPrograms(rt.db)).find((p) => p.id === copy.id);
+        expect(stored).not.toHaveProperty('englishNames');
+      });
+      await waitFor(() => {
+        expect(screen.getByRole('switch', { name: /^Übungsnamen auf Englisch/ })).not.toBeChecked();
+      });
     },
   );
 

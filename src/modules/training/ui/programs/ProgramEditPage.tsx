@@ -29,6 +29,7 @@ import {
 import { useOwnProgram } from '../../data/programRepository';
 import type { Day, OwnProgram, Week } from '../../model/program';
 import { describeDay } from '../../calc/describe';
+import { hasEnglishNames } from '../../calc/exerciseName';
 import {
   ConfirmDialog,
   ErrorMessage,
@@ -379,6 +380,15 @@ function DetailsCard({
               }
             />
           </div>
+        ) : null}
+        {/* Nur mit englischen Namen im Programm, sonst bewirkt der Schalter nichts (D-506). */}
+        {hasEnglishNames(program) ? (
+          <Switch
+            label={tProgramEditor.englishNames}
+            hint={tProgramEditor.englishNamesHint}
+            checked={program.englishNames === true}
+            onChange={(englishNames) => void onSave((plan) => ({ ...plan, englishNames }))}
+          />
         ) : null}
       </div>
     </Card>

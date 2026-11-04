@@ -9,6 +9,9 @@ export const tProgramEditor = {
   repeatHint: 'Sonst gilt das Programm nach dem letzten Tag als abgeschlossen.',
   repeatFrom: 'Wiederholen ab',
   repeatFromHint: 'Nach der letzten Woche geht es mit dieser Woche weiter.',
+  englishNames: 'Übungsnamen auf Englisch',
+  englishNamesHint:
+    'Programmansicht, Player, Pause und Verlauf zeigen den englischen Namen, wo das Programm einen hat. Die Bibliothek bleibt deutsch.',
   detailsSaved: 'Gespeichert',
   weeksTitle: 'Wochen und Tage',
   addWeek: 'Woche hinzufügen',

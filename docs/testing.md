@@ -3276,4 +3276,20 @@ Satzzahl je Woche, Wiederholen ab Woche 8, Hinweise auf „Heute“, Wochen zum 
 | `own-programs-ui.test.tsx` (neu: „Wiederholen ab“ nur mit Wiederholung, Auswahl speichert Woche 2) | 5 bestanden |
 | `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.262 Tests bestanden |
 | `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,2 KB; der erste Lauf von `check:docs` fand einen Verweis auf ein noch nicht vergebenes Paket in `decisions.md`, berichtigt |
-| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | lief beim Commit noch (bis dahin rund 100 bestanden, keiner fehlgeschlagen); das Ergebnis trägt der nächste Commit nach |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 465 bestanden, 151 übersprungen, 0 fehlgeschlagen (21,5 min); lief beim Commit `d535296` noch, hier nachgetragen |
+
+### Übungsnamen auf Englisch · 04.11.2026, Cloud-Umgebung
+
+Einstellung „Übungsnamen auf Englisch“, in Dali’s PPLC an; englische Namen für die Suche (D-506).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `sessionService.test.ts` (neu: Einheit aus Dali’s PPLC mit den sieben englischen Namen des Push-Tags; ohne Einstellung deutsch; Programm C deutsch) | bestanden |
+| `programs.test.ts` (neu: nur Dali’s PPLC mit der Einstellung) | bestanden |
+| `programs-ui.test.tsx` (Dali’s PPLC: „Barbell Deadlift“ und „Leverage Machine Iso Row“ als Namen, keine Zeile „Englisch: …“) | bestanden |
+| `programService.test.ts` (Kopie behält die Einstellung; aus und wieder an) | bestanden |
+| `own-programs-ui.test.tsx` (neu: Schalter nur mit englischen Namen, speichert sofort) | 6 bestanden; im ersten vollen Lauf schlug der Test „Wiederholen ab“ aus D-505 fehl (Auswahl zeigte unter Last noch „1“, gespeichert war 2); jetzt wartet er auf die Anzeige, danach 6 bestanden |
+| `search.test.ts` (neu: sechs englische Namen aus Dali’s PPLC; „Machine Squat“ findet Hackenschmidt-Kniebeuge, danach Kniebeuge an der Multipresse) | 10 bestanden |
+| `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.266 Tests: 1.265 bestanden, 1 fehlgeschlagen (siehe Zeile davor, berichtigt) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,4 KB |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | lief beim Commit noch; das Ergebnis trägt der nächste Commit nach |

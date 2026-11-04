@@ -140,6 +140,7 @@ export async function copyProgram(
     ...(source.location ? { location: source.location } : {}),
     repeat: source.repeat,
     ...(source.repeatFromWeek ? { repeatFromWeek: source.repeatFromWeek } : {}),
+    ...(source.englishNames ? { englishNames: true } : {}),
     weeks: mergeWeeks([], weeks, hlc),
   }));
   return toOwnProgram(doc);
@@ -162,10 +163,11 @@ export async function editProgram(
       ...(view.description ? { description: view.description } : {}),
       repeat: view.repeat,
       ...(view.repeatFromWeek ? { repeatFromWeek: view.repeatFromWeek } : {}),
+      ...(view.englishNames ? { englishNames: true } : {}),
       weeks: view.weeks,
     });
     checkStructure(next.weeks);
-    const { description: _old, repeatFromWeek: _from, ...rest } = current;
+    const { description: _old, repeatFromWeek: _from, englishNames: _english, ...rest } = current;
     // Woche 1 ist der Normalfall und wird nicht gespeichert; fehlt die Woche nach dem Löschen von
     // Wochen, gilt wieder Woche 1 (D-505).
     const from = next.repeatFromWeek;
@@ -175,6 +177,7 @@ export async function editProgram(
       ...cleanDescription(next.description),
       repeat: next.repeat,
       ...(from && from > 1 && from <= next.weeks.length ? { repeatFromWeek: from } : {}),
+      ...(next.englishNames ? { englishNames: true } : {}),
       weeks: mergeWeeks(current.weeks, next.weeks, hlc),
     };
   });

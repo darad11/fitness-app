@@ -180,6 +180,7 @@ def build_dali(plan: dict, core: dict) -> dict:
         "daysPerWeek": plan["daysPerWeek"],
         "repeat": True,
         "repeatFromWeek": plan["repeatFromWeek"],
+        **({"englishNames": True} if plan.get("englishNames") else {}),
         "days": list(days.values()),
         "weeks": weeks,
     }
@@ -244,7 +245,9 @@ def render_doc(templates: list[dict], core: dict) -> str:
             repeat = f"ja, ab Woche {t['repeatFromWeek']}" if t.get("repeatFromWeek", 1) > 1 else "ja"
         out.append(
             f"Niveau {t['level']} · Ort {t['location']} · {t['daysPerWeek']} Tage pro Woche · "
-            f"{len(t['weeks'])} Wochen, {total} Trainingstage · wiederholen: {repeat}\n\n"
+            f"{len(t['weeks'])} Wochen, {total} Trainingstage · wiederholen: {repeat}"
+            + (" · Übungsnamen auf Englisch (D-506)" if t.get("englishNames") else "")
+            + "\n\n"
         )
         if "source" in t:
             out.append(f"Quelle: {t['source']}\n\n")

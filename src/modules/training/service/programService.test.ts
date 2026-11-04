@@ -167,6 +167,12 @@ describe('Eigene Programme (AK-PRG-01 bis AK-PRG-06, AK-PRG-10, AK-PRG-11, D-257
       'Diese Woche ist leichter: etwa die Hälfte der Sätze.',
     );
     expect((await getOwnProgram(rt.db, copy.id))?.repeatFromWeek).toBe(8);
+    // Übungsnamen auf Englisch bleiben in der Kopie und lassen sich abschalten (D-506).
+    expect(copy.englishNames).toBe(true);
+    const german = await editProgram(rt, copy.id, (plan) => ({ ...plan, englishNames: false }));
+    expect(german).not.toHaveProperty('englishNames');
+    const english = await editProgram(rt, copy.id, (plan) => ({ ...plan, englishNames: true }));
+    expect(english.englishNames).toBe(true);
   });
 
   it('dupliziert, speichert als Vorlage und verwendet eine Vorlage (AK-PRG-05, AK-PRG-06)', async () => {

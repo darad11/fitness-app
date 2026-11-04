@@ -2050,3 +2050,24 @@ Ergebnis: siehe dort
 Bekannte Einschränkungen: keine Supersätze; Namen noch deutsch mit englischem Namen darunter, bis die Einstellung „Übungsnamen auf Englisch“ steht
 Nächste Schritte: Einstellung „Übungsnamen auf Englisch“, Unterstützung als Fortschritt, Animationsliste und erste Prüfseite
 ```
+
+## 47. Übungsnamen auf Englisch (D-506)
+
+**Was neu ist.** Programme haben die Einstellung „Übungsnamen auf Englisch“. In „Dali’s PPLC“ ist sie an. Dann stehen deine englischen Namen überall im Programm: auf der Programmseite, im Player, in der Übungsinfo, in der Pause, in der Zusammenfassung und im Verlauf. Die Anleitung zur Übung, die Muskeln, die Bibliothek und „Fortschritt“ bleiben deutsch.
+
+**Suche.** Die Bibliothek findet die Übungen weiter auf Deutsch und Englisch. 15 Namen aus deinem Plan fand sie bisher nicht als Ganzes, z. B. „Machine Squat“ oder „Leverage Machine Iso Row“; sie stehen jetzt als weitere Namen bei der Übung.
+
+**Eigene Programme.** Übernimmst du Dali’s PPLC, bleibt die Einstellung an. Im Editor kannst du sie unter „Angaben“ ausschalten. Der Schalter erscheint nur, wenn das Programm englische Namen hat.
+
+**Gut zu wissen.** Ersetzt du im Player eine Übung, trägt die neue den deutschen Namen aus der Bibliothek. Einheiten, die du schon begonnen oder beendet hast, behalten ihre Namen.
+
+```
+Arbeitspaket: D-506 Phase Programme, Übungsnamen auf Englisch
+Umgesetzte Funktionen: Einstellung „Übungsnamen auf Englisch“ (gebündelte und eigene Programme, Schalter im Editor), englische Namen in Programmseite, Player, Pause, Verlauf; 15 weitere Namen in der Bibliothek für die Suche; erfüllte AK: –
+Geänderte Dateien: src/modules/training/model/program.ts, calc/exerciseName.ts (neu), calc/plan.ts, calc/sampleTemplates.ts, calc/programTree.ts, service/programService.ts, ui/SampleTemplatePage.tsx, ui/programs/ProgramEditPage.tsx, ui/programs/DayEditPage.tsx, src/shared/i18n/de-program-editor.ts, src/modules/exercises/data/core-exercises.v1.json, tools/data/dali-pplc.source.json, tools/programs_build.py, src/modules/training/data/programs.v1.json, Tests, e2e/programs.spec.ts, erzeugte Übersichten in docs/, Dokumentation
+Technische Entscheidungen: D-506
+Ausgeführte Tests: siehe docs/testing.md, Abschnitt „Übungsnamen auf Englisch“
+Ergebnis: siehe dort
+Bekannte Einschränkungen: Übungen ohne englischen Namen und ersetzte Übungen bleiben deutsch
+Nächste Schritte: Unterstützung als Fortschritt und Alternativen bei Dip und Pull-Up; Animationsliste und erste Prüfseite
+```

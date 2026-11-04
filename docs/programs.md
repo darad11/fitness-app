@@ -6,7 +6,7 @@ Erzeugt von `tools/programs_build.py` aus `tools/data/dali-pplc.source.json`, `t
 
 So steigerst du: Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Sätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: zwei bis drei Arbeitssätze je Übung. Ab Woche 4: drei bis vier Sätze bei den Grundübungen, zwei bis drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.
 
-Niveau intermediate · Ort gym · 4 Tage pro Woche · 21 Wochen, 84 Trainingstage · wiederholen: ja, ab Woche 8
+Niveau intermediate · Ort gym · 4 Tage pro Woche · 21 Wochen, 84 Trainingstage · wiederholen: ja, ab Woche 8 · Übungsnamen auf Englisch (D-506)
 
 | Woche | Tage |
 |---|---|

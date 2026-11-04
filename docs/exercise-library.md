@@ -68,7 +68,7 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 | 1 | Bankdrücken mit Langhantel | Bench Press, Flachbankdrücken | Brust | Trizeps, Vordere Schulter | Langhantel, Bank | Gewicht × Wdh. |  | ✓ | `bench_press_barbell` |
 | 2 | Bankdrücken mit Kurzhanteln | Dumbbell Bench Press, KH-Bankdrücken, Alternating Dumbbell Press | Brust | Trizeps, Vordere Schulter | Kurzhantel, Bank | Gewicht × Wdh. |  | ✓ | `bench_press_dumbbell` |
 | 3 | Schrägbankdrücken mit Langhantel | Incline Bench Press | Brust | Vordere Schulter, Trizeps | Langhantel, Bank | Gewicht × Wdh. |  |  | `incline_bench_press_barbell` |
-| 4 | Schrägbankdrücken mit Kurzhanteln | Incline Dumbbell Press, Alternating Incline Dumbbell Press | Brust | Vordere Schulter, Trizeps | Kurzhantel, Bank | Gewicht × Wdh. |  | ✓ | `incline_bench_press_dumbbell` |
+| 4 | Schrägbankdrücken mit Kurzhanteln | Incline Dumbbell Press, Alternating Incline Dumbbell Press, Dumbbell Incline Bench Press | Brust | Vordere Schulter, Trizeps | Kurzhantel, Bank | Gewicht × Wdh. |  | ✓ | `incline_bench_press_dumbbell` |
 | 5 | Bankdrücken an der Multipresse | Smith Machine Bench Press | Brust | Trizeps, Vordere Schulter | Multipresse, Bank | Gewicht × Wdh. |  |  | `bench_press_smith` |
 | 6 | Brustpresse an der Maschine | Chest Press, Brustpresse | Brust | Trizeps, Vordere Schulter | Maschine | Gewicht × Wdh. |  |  | `chest_press_machine` |
 | 7 | Bodendrücken mit Kurzhanteln | Dumbbell Floor Press, Floor Press | Brust | Trizeps | Kurzhantel | Gewicht × Wdh. |  | ✓ | `floor_press_dumbbell` |
@@ -82,38 +82,38 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 
 | Nr. | Name | Alias-Namen (Suche) | Hauptmuskeln | Nebenmuskeln | Gerät | Erfassung | Je Seite | Vorlage | Schlüssel |
 |---|---|---|---|---|---|---|---|---|---|
-| 13 | Kreuzheben mit Langhantel | Deadlift | Unterer Rücken, Gesäß, Oberschenkel hinten | Oberschenkel vorne, Trapez, Unterarme | Langhantel | Gewicht × Wdh. |  | ✓ | `deadlift_barbell` |
+| 13 | Kreuzheben mit Langhantel | Deadlift, Barbell Deadlift | Unterer Rücken, Gesäß, Oberschenkel hinten | Oberschenkel vorne, Trapez, Unterarme | Langhantel | Gewicht × Wdh. |  | ✓ | `deadlift_barbell` |
 | 14 | Klimmzüge | Pull-up, Klimmzug, Obergriff | Latissimus | Bizeps, Oberer Rücken | Klimmzugstange | Gewicht × Wdh. |  | ✓ | `pull_up` |
 | 15 | Klimmzüge mit Unterstützung | Assisted Pull-up, Klimmzugmaschine, Gravitron, Pull-Ups | Latissimus | Bizeps, Oberer Rücken | Maschine | Entlastung × Wdh. |  |  | `assisted_pull_up` |
 | 16 | Klimmzüge im Untergriff | Chin-up, Untergriff | Latissimus, Bizeps | Oberer Rücken | Klimmzugstange | Gewicht × Wdh. |  |  | `chin_up` |
 | 17 | Latziehen | Lat Pulldown, Latzug, Wide Grip Lat Pulldown | Latissimus | Bizeps, Oberer Rücken | Kabelzug | Gewicht × Wdh. |  | ✓ | `lat_pulldown` |
 | 18 | Latziehen, enger Griff | Close-Grip Lat Pulldown, V-Griff, Close Grip Lat Pulldown | Latissimus | Bizeps, Oberer Rücken | Kabelzug | Gewicht × Wdh. |  |  | `lat_pulldown_close` |
 | 19 | Rudern am Kabel, sitzend | Seated Cable Row, Kabelrudern, enger Griff, Close-Grip Cable Row, Underhand Cable Row, Wide Grip Cable Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter | Kabelzug | Gewicht × Wdh. |  | ✓ | `seated_cable_row` |
-| 20 | Rudern mit Langhantel, vorgebeugt | Barbell Row, Bent-over Row, Langhantelrudern | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter, Unterer Rücken | Langhantel | Gewicht × Wdh. |  | ✓ | `bent_over_row_barbell` |
+| 20 | Rudern mit Langhantel, vorgebeugt | Barbell Row, Bent-over Row, Langhantelrudern, Barbell Bent-Over Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter, Unterer Rücken | Langhantel | Gewicht × Wdh. |  | ✓ | `bent_over_row_barbell` |
 | 21 | Rudern mit Kurzhanteln, vorgebeugt | Dumbbell Bent-over Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter | Kurzhantel | Gewicht × Wdh. |  | ✓ | `bent_over_row_dumbbell` |
 | 22 | Einarmiges Rudern mit Kurzhantel | One-Arm Dumbbell Row, Kurzhantelrudern | Latissimus, Oberer Rücken | Bizeps, Hintere Schulter | Kurzhantel, Bank | Gewicht × Wdh. | ja | ✓ | `one_arm_row_dumbbell` |
 | 23 | T-Bar-Rudern | T-Bar Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter, Unterer Rücken | Langhantel | Gewicht × Wdh. |  |  | `t_bar_row` |
-| 24 | Rudern an der Maschine | Machine Row, Chest-supported Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter | Maschine | Gewicht × Wdh. |  |  | `machine_row` |
+| 24 | Rudern an der Maschine | Machine Row, Chest-supported Row, Leverage Machine Iso Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter | Maschine | Gewicht × Wdh. |  |  | `machine_row` |
 | 25 | Überzüge am Kabel | Straight-Arm Pulldown, Pullover am Kabel, Cable Pullover | Latissimus | Trizeps | Kabelzug | Gewicht × Wdh. |  |  | `straight_arm_pulldown` |
 | 26 | Rückenstrecken | Back Extension, Hyperextension, Hyperextensions | Unterer Rücken | Gesäß, Oberschenkel hinten | Maschine | Gewicht × Wdh. |  |  | `back_extension` |
 | 27 | Schulterheben mit Kurzhanteln | Dumbbell Shrug, Shrugs | Trapez | Unterarme | Kurzhantel | Gewicht × Wdh. |  |  | `shrug_dumbbell` |
 | 28 | Einarmiges Latziehen am Kabel, kniend | Kneeling Single-Arm Lat Pulldown, Single Arm Lat Pulldown | Latissimus | Bizeps | Kabelzug | Gewicht × Wdh. | ja |  | `lat_pulldown_single_arm` |
 | 29 | Rudern an der Multipresse, vorgebeugt | Smith Machine Row | Oberer Rücken, Latissimus | Bizeps, Hintere Schulter | Multipresse | Gewicht × Wdh. |  |  | `bent_over_row_smith` |
-| 30 | High Row an der Maschine | High Row, Lever High Row, Iso-Lateral High Row, Rudern von oben | Latissimus, Oberer Rücken | Bizeps, Hintere Schulter | Maschine | Gewicht × Wdh. |  |  | `high_row_machine` |
+| 30 | High Row an der Maschine | High Row, Lever High Row, Iso-Lateral High Row, Rudern von oben, Leverage Machine High Row | Latissimus, Oberer Rücken | Bizeps, Hintere Schulter | Maschine | Gewicht × Wdh. |  |  | `high_row_machine` |
 
 ### Schultern
 
 | Nr. | Name | Alias-Namen (Suche) | Hauptmuskeln | Nebenmuskeln | Gerät | Erfassung | Je Seite | Vorlage | Schlüssel |
 |---|---|---|---|---|---|---|---|---|---|
-| 31 | Schulterdrücken mit Langhantel, stehend | Overhead Press, OHP, Military Press | Vordere Schulter | Trizeps, Seitliche Schulter | Langhantel | Gewicht × Wdh. |  | ✓ | `overhead_press_barbell` |
+| 31 | Schulterdrücken mit Langhantel, stehend | Overhead Press, OHP, Military Press, Barbell Military Press | Vordere Schulter | Trizeps, Seitliche Schulter | Langhantel | Gewicht × Wdh. |  | ✓ | `overhead_press_barbell` |
 | 32 | Schulterdrücken mit Kurzhanteln, sitzend | Seated Dumbbell Shoulder Press | Vordere Schulter | Trizeps, Seitliche Schulter | Kurzhantel, Bank | Gewicht × Wdh. |  | ✓ | `shoulder_press_dumbbell_seated` |
 | 33 | Schulterdrücken an der Maschine | Machine Shoulder Press | Vordere Schulter | Trizeps, Seitliche Schulter | Maschine | Gewicht × Wdh. |  |  | `shoulder_press_machine` |
 | 34 | Arnold Press mit Kurzhanteln | Arnold Press, Arnold-Drücken | Vordere Schulter, Seitliche Schulter | Trizeps | Kurzhantel, Bank | Gewicht × Wdh. |  |  | `arnold_press` |
-| 35 | Seitheben mit Kurzhanteln | Lateral Raise, Spider Lateral Raise | Seitliche Schulter | Trapez | Kurzhantel | Gewicht × Wdh. |  | ✓ | `lateral_raise_dumbbell` |
+| 35 | Seitheben mit Kurzhanteln | Lateral Raise, Spider Lateral Raise, Dumbbell Lateral Raise | Seitliche Schulter | Trapez | Kurzhantel | Gewicht × Wdh. |  | ✓ | `lateral_raise_dumbbell` |
 | 36 | Seitheben am Kabel | Cable Lateral Raise | Seitliche Schulter | – | Kabelzug | Gewicht × Wdh. | ja |  | `lateral_raise_cable` |
 | 37 | Frontheben mit Kurzhanteln | Front Raise, Seated Front Raise | Vordere Schulter | – | Kurzhantel | Gewicht × Wdh. |  |  | `front_raise_dumbbell` |
 | 38 | Reverse Flys mit Kurzhanteln | Reverse Fly, Rear Delt Fly, vorgebeugtes Seitheben | Hintere Schulter | Oberer Rücken | Kurzhantel | Gewicht × Wdh. |  | ✓ | `reverse_fly_dumbbell` |
-| 39 | Reverse Butterfly an der Maschine | Reverse Pec Deck | Hintere Schulter | Oberer Rücken | Maschine | Gewicht × Wdh. |  |  | `reverse_pec_deck` |
+| 39 | Reverse Butterfly an der Maschine | Reverse Pec Deck, Machine Reverse Fly | Hintere Schulter | Oberer Rücken | Maschine | Gewicht × Wdh. |  |  | `reverse_pec_deck` |
 | 40 | Face Pulls am Kabel | Face Pull | Hintere Schulter | Oberer Rücken, Trapez | Kabelzug | Gewicht × Wdh. |  | ✓ | `face_pull` |
 | 41 | Frontheben am Kabel | Cable Front Raise, Spider Cable Front Raise | Vordere Schulter | – | Kabelzug | Gewicht × Wdh. |  |  | `front_raise_cable` |
 | 42 | Schulterdrücken mit Kurzhanteln, stehend | Standing Dumbbell Shoulder Press, Standing Alternating Shoulder Press | Vordere Schulter | Seitliche Schulter, Trizeps | Kurzhantel | Gewicht × Wdh. |  |  | `shoulder_press_dumbbell_standing` |
@@ -125,7 +125,7 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 | 43 | Bizepscurls mit Langhantel | Barbell Curl, Langhantelcurls | Bizeps | Unterarme | Langhantel | Gewicht × Wdh. |  | ✓ | `biceps_curl_barbell` |
 | 44 | Bizepscurls mit Kurzhanteln | Dumbbell Curl, Kurzhantelcurls, Alternating Dumbbell Curl | Bizeps | Unterarme | Kurzhantel | Gewicht × Wdh. |  | ✓ | `biceps_curl_dumbbell` |
 | 45 | Bizepscurls mit SZ-Stange | EZ-Bar Curl, SZ-Curls | Bizeps | Unterarme | SZ-Stange | Gewicht × Wdh. |  |  | `biceps_curl_ez_bar` |
-| 46 | Hammercurls | Hammer Curl | Bizeps, Unterarme | – | Kurzhantel | Gewicht × Wdh. |  | ✓ | `hammer_curl` |
+| 46 | Hammercurls | Hammer Curl, Dumbbell Alternating Hammer Curl | Bizeps, Unterarme | – | Kurzhantel | Gewicht × Wdh. |  | ✓ | `hammer_curl` |
 | 47 | Scottcurls | Preacher Curl, Larry-Scott-Curls | Bizeps | – | SZ-Stange, Bank | Gewicht × Wdh. |  |  | `preacher_curl` |
 | 48 | Bizepscurls am Kabel | Cable Curl, Bayesian Curl, High Cable Curl | Bizeps | Unterarme | Kabelzug | Gewicht × Wdh. |  |  | `biceps_curl_cable` |
 | 49 | Schrägbank-Curls mit Kurzhanteln | Incline Dumbbell Curl | Bizeps | – | Kurzhantel, Bank | Gewicht × Wdh. |  |  | `incline_curl_dumbbell` |
@@ -194,10 +194,10 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 | 92 | Goblet Squat | Becherkniebeuge, Heel-Elevated Goblet Squat | Oberschenkel vorne, Gesäß | Bauch | Kurzhantel, Kettlebell | Gewicht × Wdh. |  | ✓ | `goblet_squat` |
 | 93 | Kniebeuge an der Multipresse | Smith Machine Squat | Oberschenkel vorne, Gesäß | – | Multipresse | Gewicht × Wdh. |  |  | `squat_smith` |
 | 94 | Beinpresse | Leg Press, Leg Press Machine | Oberschenkel vorne, Gesäß | Oberschenkel hinten | Maschine | Gewicht × Wdh. |  | ✓ | `leg_press` |
-| 95 | Hackenschmidt-Kniebeuge | Hack Squat | Oberschenkel vorne | Gesäß | Maschine | Gewicht × Wdh. |  |  | `hack_squat` |
+| 95 | Hackenschmidt-Kniebeuge | Hack Squat, Machine Squat | Oberschenkel vorne | Gesäß | Maschine | Gewicht × Wdh. |  |  | `hack_squat` |
 | 96 | Bulgarische Kniebeuge mit Kurzhanteln | Bulgarian Split Squat | Oberschenkel vorne, Gesäß | Oberschenkel hinten | Kurzhantel, Bank | Gewicht × Wdh. | ja | ✓ | `bulgarian_split_squat_dumbbell` |
 | 97 | Ausfallschritte mit Kurzhanteln | Dumbbell Lunge, Lunges, Alternating Dumbbell Lunges | Oberschenkel vorne, Gesäß | Oberschenkel hinten | Kurzhantel | Gewicht × Wdh. | ja | ✓ | `lunge_dumbbell` |
-| 98 | Beinstrecker | Leg Extension, Quad Extension | Oberschenkel vorne | – | Maschine | Gewicht × Wdh. |  | ✓ | `leg_extension` |
+| 98 | Beinstrecker | Leg Extension, Quad Extension, Machine Leg Extension | Oberschenkel vorne | – | Maschine | Gewicht × Wdh. |  | ✓ | `leg_extension` |
 | 99 | Wandsitzen | Wall Sit | Oberschenkel vorne | Gesäß | Körpergewicht | Dauer |  |  | `wall_sit` |
 | 100 | Beinpresse, einbeinig | Single Leg Press | Oberschenkel vorne, Gesäß | – | Maschine | Gewicht × Wdh. | ja |  | `leg_press_single_leg` |
 
@@ -208,8 +208,8 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 | 101 | Rumänisches Kreuzheben mit Langhantel | Romanian Deadlift, RDL, Barbell Romanian Deadlift | Oberschenkel hinten, Gesäß | Unterer Rücken | Langhantel | Gewicht × Wdh. |  | ✓ | `romanian_deadlift_barbell` |
 | 102 | Rumänisches Kreuzheben mit Kurzhanteln | Dumbbell Romanian Deadlift, Dumbbell RDL | Oberschenkel hinten, Gesäß | Unterer Rücken | Kurzhantel | Gewicht × Wdh. |  | ✓ | `romanian_deadlift_dumbbell` |
 | 103 | Einbeiniges Rumänisches Kreuzheben mit Kurzhantel | Single-Leg RDL | Oberschenkel hinten, Gesäß | Unterer Rücken | Kurzhantel | Gewicht × Wdh. | ja |  | `single_leg_rdl_dumbbell` |
-| 104 | Beinbeuger liegend | Lying Leg Curl, Lying Hamstring Curl | Oberschenkel hinten | Waden | Maschine | Gewicht × Wdh. |  | ✓ | `lying_leg_curl` |
-| 105 | Beinbeuger sitzend | Seated Leg Curl | Oberschenkel hinten | – | Maschine | Gewicht × Wdh. |  | ✓ | `seated_leg_curl` |
+| 104 | Beinbeuger liegend | Lying Leg Curl, Lying Hamstring Curl, Machine Leg Curl | Oberschenkel hinten | Waden | Maschine | Gewicht × Wdh. |  | ✓ | `lying_leg_curl` |
+| 105 | Beinbeuger sitzend | Seated Leg Curl, Machine Seated Leg Curl | Oberschenkel hinten | – | Maschine | Gewicht × Wdh. |  | ✓ | `seated_leg_curl` |
 | 106 | Good Mornings mit Langhantel | Good Morning | Oberschenkel hinten, Unterer Rücken | Gesäß | Langhantel | Gewicht × Wdh. |  |  | `good_morning` |
 | 107 | Nordic Curls | Nordic Hamstring Curl | Oberschenkel hinten | – | Körpergewicht | Wdh. |  |  | `nordic_curl` |
 
@@ -217,8 +217,8 @@ Stand: 18.10.2026 · Version 0.2 · Status: vom Produktinhaber durchgesehen (Q-0
 
 | Nr. | Name | Alias-Namen (Suche) | Hauptmuskeln | Nebenmuskeln | Gerät | Erfassung | Je Seite | Vorlage | Schlüssel |
 |---|---|---|---|---|---|---|---|---|---|
-| 108 | Wadenheben stehend | Standing Calf Raise | Waden | – | Maschine | Gewicht × Wdh. |  | ✓ | `standing_calf_raise` |
-| 109 | Wadenheben sitzend | Seated Calf Raise, Calf Raise Machine | Waden | – | Maschine | Gewicht × Wdh. |  | ✓ | `seated_calf_raise` |
+| 108 | Wadenheben stehend | Standing Calf Raise, Machine Calf Raise | Waden | – | Maschine | Gewicht × Wdh. |  | ✓ | `standing_calf_raise` |
+| 109 | Wadenheben sitzend | Seated Calf Raise, Calf Raise Machine, Machine Seated Calf Raise | Waden | – | Maschine | Gewicht × Wdh. |  | ✓ | `seated_calf_raise` |
 | 110 | Wadenheben an der Beinpresse | Calf Press, Leg Press Calf Raise | Waden | – | Maschine | Gewicht × Wdh. |  |  | `calf_press_leg_press` |
 | 111 | Adduktorenmaschine | Hip Adduction, Adduktoren | Adduktoren | – | Maschine | Gewicht × Wdh. |  |  | `hip_adduction_machine` |
 | 112 | Abduktorenmaschine | Hip Abduction, Abduktoren | Abduktoren | Gesäß | Maschine | Gewicht × Wdh. |  |  | `hip_abduction_machine` |

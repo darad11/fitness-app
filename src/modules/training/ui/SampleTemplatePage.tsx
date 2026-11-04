@@ -8,6 +8,7 @@ import type { Exercise } from '@/modules/exercises';
 import { Badge, Button, ButtonLink, Card, Meter, PageHeader } from '@/shared/ui';
 import { programProgress, type ProgramProgress } from '../calc/programProgress';
 import { describeDay, describeSets, describeTemplate } from '../calc/describe';
+import { plannedName } from '../calc/exerciseName';
 import { useCompletedSessions } from '../data/useSession';
 import { useTrainingState } from '../data/useTrainingState';
 import type { Day, PlanTree, SampleTemplate, Week } from '../model/program';
@@ -234,14 +235,16 @@ export function ProgramDetail({
                             {/* Vorschaubild links neben dem Namen (D-397). */}
                             <Thumb exerciseId={exercise.exerciseId} />
                             <span className="min-w-0">
-                              <span className="block font-medium">{exercise.nameSnapshot}</span>
+                              <span className="block font-medium">
+                                {plannedName(template, exercise)}
+                              </span>
                               <span className="block text-sm text-muted">
                                 {describeSets(exercise, perSide.has(exercise.exerciseId))}
                               </span>
                               {exercise.notes ? (
                                 <span className="mt-1 block text-sm">{exercise.notes}</span>
                               ) : null}
-                              {exercise.originalName ? (
+                              {exercise.originalName && !template.englishNames ? (
                                 <span className="block text-xs text-muted">
                                   {t.programs.originalName(exercise.originalName)}
                                 </span>

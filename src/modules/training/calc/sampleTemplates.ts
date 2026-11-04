@@ -40,6 +40,7 @@ export function expandSampleTemplate(
     daysPerWeek: source.daysPerWeek,
     repeat: source.repeat,
     ...(source.repeatFromWeek ? { repeatFromWeek: source.repeatFromWeek } : {}),
+    ...(source.englishNames ? { englishNames: true } : {}),
     weeks: source.weeks.map((dayNames, w) => ({
       id: stableId(`${base}:w${String(w)}`),
       position: w,

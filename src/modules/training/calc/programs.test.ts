@@ -79,6 +79,13 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
   const sets = (week: number, day: number, exercise: number) =>
     summarizeSets(dayOf(week, day).exercises[exercise]!);
 
+  it('zeigt die Übungsnamen auf Englisch, die übrigen Programme nicht (D-506)', () => {
+    expect(pplc().englishNames).toBe(true);
+    expect(
+      programs.filter((program) => program.englishNames).map((program) => program.key),
+    ).toEqual(['dali_pplc']);
+  });
+
   it('Wochen 1 bis 21, danach ab Woche 8; der Infotext steht wörtlich da', () => {
     expect(pplc().weeks).toHaveLength(21);
     expect(pplc().repeat).toBe(true);

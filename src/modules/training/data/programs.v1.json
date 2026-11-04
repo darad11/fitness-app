@@ -12,6 +12,7 @@
       "daysPerWeek": "4",
       "repeat": true,
       "repeatFromWeek": 8,
+      "englishNames": true,
       "days": [
         {
           "name": "push_einstieg2",

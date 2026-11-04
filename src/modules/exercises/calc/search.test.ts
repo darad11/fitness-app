@@ -51,6 +51,19 @@ describe('Übungssuche (AK-EXL-02)', () => {
     expect(names('enger griff')).toContain('Rudern am Kabel, sitzend');
   });
 
+  it('findet die englischen Namen aus Dali’s PPLC (D-506)', () => {
+    // „Machine Squat“ trifft auch die Multipresse (Alias „Smith Machine Squat“), alphabetisch danach.
+    expect(names('Machine Squat')).toEqual([
+      'Hackenschmidt-Kniebeuge',
+      'Kniebeuge an der Multipresse',
+    ]);
+    expect(names('Leverage Machine Iso Row')).toEqual(['Rudern an der Maschine']);
+    expect(names('Leverage Machine High Row')).toEqual(['High Row an der Maschine']);
+    expect(names('Barbell Military Press')).toEqual(['Schulterdrücken mit Langhantel, stehend']);
+    expect(names('Dumbbell Alternating Hammer Curl')).toEqual(['Hammercurls']);
+    expect(names('Machine Seated Calf Raise')).toEqual(['Wadenheben sitzend']);
+  });
+
   it('verlangt alle Wörter in einem Namen oder Alias, in beliebiger Reihenfolge', () => {
     expect(names('kurzhanteln rudern')).toEqual(['Rudern mit Kurzhanteln, vorgebeugt']);
     expect(names('bankdrücken xyz')).toEqual([]);

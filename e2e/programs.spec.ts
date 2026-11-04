@@ -108,3 +108,25 @@ test('Dali’s PPLC: Wochen zum Aufklappen, Hinweis der leichten Woche, Wiederho
     ),
   ).toBeVisible();
 });
+
+test('Dali’s PPLC: Player mit den englischen Übungsnamen, Bibliothek deutsch (D-506)', async ({
+  page,
+}) => {
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  const push = page.getByRole('region', { name: 'Push' });
+  await expect(push.getByText('Dumbbell Bench Press')).toBeVisible();
+  await expect(push.getByText(/^Englisch: /)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Push heute trainieren' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Push', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2 }).nth(0)).toHaveText('Dumbbell Bench Press');
+  await page.getByRole('button', { name: 'Übungsinfo, Dumbbell Bench Press' }).click();
+  const info = page.getByRole('dialog', { name: 'Dumbbell Bench Press' });
+  await expect(info.getByText('Hauptmuskeln')).toBeVisible();
+  await info.getByRole('button', { name: 'Schließen' }).click();
+
+  // Die Bibliothek bleibt deutsch; die Suche findet den englischen Namen.
+  await openPage(page, '/uebungen');
+  await page.getByLabel('Übungen suchen').fill('Machine Squat');
+  const results = page.getByRole('list', { name: '2 Treffer' }).getByRole('listitem');
+  await expect(results.first()).toContainText('Hackenschmidt-Kniebeuge');
+});

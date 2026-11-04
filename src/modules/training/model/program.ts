@@ -107,6 +107,11 @@ export interface PlanTree {
    * nach einem Einstiegsblock (D-505). Gibt es die Woche nicht mehr, gilt Woche 1.
    */
   repeatFromWeek?: number;
+  /**
+   * Übungsnamen auf Englisch: Programmansicht, Player, Pause und Verlauf zeigen den englischen
+   * Namen (`originalName`), wo es einen gibt; die Bibliothek bleibt deutsch (D-506).
+   */
+  englishNames?: boolean;
   weeks: Week[];
 }
 
@@ -163,6 +168,8 @@ export const sampleTemplateSourceSchema = z
             repeat: z.boolean(),
             /** Nach der letzten Woche hier weiter statt bei Woche 1 (ab 1, nur mit `repeat`, D-505). */
             repeatFromWeek: z.number().int().min(1).optional(),
+            /** Übungsnamen auf Englisch (D-506). */
+            englishNames: z.literal(true).optional(),
             days: z
               .array(
                 z.strictObject({
@@ -277,6 +284,8 @@ export const programSchema = defineDocSchema('program', {
   repeat: z.boolean(),
   /** Wiederholen ab dieser Woche (ab 1), aus einem gebündelten Programm übernommen (D-505). */
   repeatFromWeek: z.number().int().min(1).max(PLAN_LIMITS.weeks).optional(),
+  /** Übungsnamen auf Englisch, wo es einen englischen Namen gibt (D-506). */
+  englishNames: z.boolean().optional(),
   archivedAt: isoDateTimeSchema.optional(),
   weeks: z.array(weekDocSchema).max(1000),
 });
@@ -303,5 +312,5 @@ export interface OwnProgram extends PlanTree {
 /** Bearbeitbare Felder eines eigenen Programms. */
 export type ProgramPlan = Pick<
   OwnProgram,
-  'name' | 'description' | 'repeat' | 'repeatFromWeek' | 'weeks'
+  'name' | 'description' | 'repeat' | 'repeatFromWeek' | 'englishNames' | 'weeks'
 >;

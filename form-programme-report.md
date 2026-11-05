@@ -2900,6 +2900,27 @@ Unterwegs korrigiert: Mit dem Schwerpunkt über der Fußmitte als Bedingung beug
 
 Kleidung: In der vorderen Hüftfalte liegt das Saumband bis 12,8 mm in den Shorts, die Shorts bis 5,4 mm im Shirt (Rumpf 41 bis 53°), von Bild zu Bild wechselnd, wie beim Rumänischen Kreuzheben (D-490, dort so freigegeben); in den Prüfansichten fällt es nicht auf.
 
+### 58.3 Rumpf (D-524)
+
+Prüfseite: `docs/screens/uebungen/familie-rumpf-pplc.webp`.
+
+**Crunches am Kabel, kniend.** Neuer Seilgriff am Kabelzug mit oberer Rolle, wie beim Trizepsdrücken. Kniend auf der Matte, die Hüfte etwas zurück, die Zehen aufgestellt wie beim Unterarmstütz. Die Hände halten das Seil seitlich am Kopf, die Handgelenke an den Schläfen, wie im Text. Der Rumpf rollt sich ein, verteilt über fünf Wirbel von der Lende bis zum Brustkorb, und die Ellbogen gehen zu den Oberschenkeln. Becken und Beine bleiben, wo sie sind, der Nacken bleibt in Verlängerung des Rumpfs. Das Seil hängt als V vom Haken zu den Händen und legt sich um den Hinterkopf.
+
+| Messwert über alle 60 Bilder | Wert |
+|---|---|
+| Rumpf eingerollt | 0 → 90° |
+| Rumpf vor der Senkrechten | 36° → 95° |
+| Oberschenkel hinter der Senkrechten / Knie | 15,0° / 54,6° in jedem Bild |
+| Ellbogengelenk zu den Oberschenkeln | 34 → 3,0 cm |
+| Arme zu Oberschenkeln und Shorts, mindestens | 18 mm |
+| Seil zu Kopf und Haaren, mindestens | 1,8 mm |
+| Ellbogen / Handgelenk | 56° / 17,2°, fest |
+| Knie / Schuhe in der Matte | 4,0 / 2,0 mm |
+| Gewichtsblock gehoben, höchstens | 70 cm |
+| Meldungen des Rigs | 0 |
+
+Unterwegs korrigiert: Mit dem Seil in Linie mit dem Unterarm knickte das Handgelenk 99°; jetzt liegt das Seil quer durch die Faust. Mit der Rolle 10 cm vor den Händen lag sie am Ende hinter dem Kopf, und das Seil lief durch die Haare; jetzt liegt sie 40 cm davor, das Seil legt sich um den Hinterkopf. Die Ellbogen zeigten beim Einrollen in eine feste Richtung; jetzt dreht ihre Richtung mit dem Brustkorb. Mit 25° Vorneigung und 70° Einrollen blieben die Ellbogen 32 cm vor den Oberschenkeln; mit 35° und 90° kommen sie bis 3 cm heran.
+
 ### 58.4 Deine Entscheidungen
 
 Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
@@ -2908,6 +2929,7 @@ Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
 2. **Schulterdrücken stehend, am Kopf vorbei:** Kopf und Rumpf gehen bis 14° zurück, das Handgelenk knickt dort bis 21°; oben steht der Rumpf wieder senkrecht. Die Alternative wäre eine Stange, die vor dem Gesicht einen Bogen nach vorn macht. Vorschlag: so lassen.
 3. **Kreuzheben, oben:** Die Stange bleibt über der Fußmitte und 1 cm vor den Oberschenkeln. Dadurch hängen die Arme oben 18° vor der Senkrechten, und der Schwerpunkt liegt 8 cm hinter der Fußmitte (unten 6 cm). Vorschlag: so lassen. Alternative: oben die Stange 3 bis 4 cm näher zu den Fersen, die Arme fast senkrecht.
 4. **Kreuzheben, Griff:** Obergriff; der Text erlaubt auch den Kreuzgriff. Vorschlag: Obergriff.
+5. **Crunches am Kabel, Füße:** Zehen aufgestellt wie beim Unterarmstütz; der Text sagt dazu nichts, flach aufliegende Fußrücken gingen auch. Vorschlag: so lassen.
 
 ### 58.5 Berichte zu den Paketen
 
@@ -2931,4 +2953,15 @@ Ausgeführte Tests: Probeläufe, Probe Stange zu den Shorts ohne Vorzeichen, Pro
 Ergebnis: bestanden (Werte in 58.2)
 Bekannte Einschränkungen: Schwerpunkt 5 bis 8 cm hinter der Fußmitte, Arme oben 18° vor der Senkrechten (Frage 3); Saumband in der Hüftfalte wie bei D-490
 Nächste Schritte: Prüfseite „Rumpf“ (D-524), dann Halt bis zu deiner Freigabe
+```
+
+```
+Arbeitspaket: D-524 Phase Programme, Prüfseite „Rumpf“ (Crunches am Kabel, kniend)
+Umgesetzte Funktionen: keine in der App; Werkzeug: Seilgriff (geraete.seil), Kabelzug mit oberer Rolle ohne Stange, uebungen.KabelcrunchKniend (Rumpf rollt über fünf Wirbel ein, Seil um den Hinterkopf), Zeilen und Bildunterschriften der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/geraete.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-rumpf-pplc.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-524
+Ausgeführte Tests: Probeläufe, render.py --pruefen und Nahaufnahmen, Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 58.3)
+Bekannte Einschränkungen: Maße von Seil und Kabelzug geschätzt; Zehen aufgestellt (Frage 5)
+Nächste Schritte: Halt bis zu deiner Freigabe der drei Prüfseiten und deinen Antworten in 58.4; danach die Schleifen
 ```

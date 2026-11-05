@@ -3595,3 +3595,16 @@ Kreuzheben mit Langhantel vom Boden; nur Werkzeug, Bilder und Dokumente (D-523).
 | Messwerte | in `form-programme-report.md` 58.2 |
 | Prüfseite (`tools/uebungen_pruef_bild.py kreuzheben_langhantel --familie hueftbeuge-pplc --titel "Hüftbeuge (Dali’s PPLC)"`) | `familie-hueftbeuge-pplc.webp`, 1480 × 1700, angesehen |
 | `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |
+
+### Prüfseite „Rumpf“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Crunches am Kabel, kniend, an einem neuen Seilgriff; nur Werkzeug, Bilder und Dokumente (D-524).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Crunches am Kabel | Seil in Linie mit dem Unterarm: Handgelenk 99° (jetzt quer durch die Faust: 17,2°); Rolle 10 cm vor den Händen: am Ende hinter dem Kopf, Seil durch die Haare (jetzt 40 cm, Seil um den Hinterkopf, mindestens 1,8 mm); Richtung der Ellbogen fest im Raum (jetzt mit dem Brustkorb); Rumpf 25° vor und 70° eingerollt: Ellbogen 32 cm vor den Oberschenkeln, mit 35° und 90° 3,0 cm |
+| `render.py kabelcrunch_kniend --pruefen`, `familie_bilder.py` | 60 Bilder, 0 Meldungen; 20 min und 4 min, neben den Schleifen |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | eine: Saumband über den Shorts in Bild 17 (2,1 → −0,7 → 1,9 mm, Hüftfalte) |
+| Messwerte | in `form-programme-report.md` 58.3 |
+| Prüfseite (`tools/uebungen_pruef_bild.py kabelcrunch_kniend --familie rumpf-pplc --titel "Rumpf (Dali’s PPLC)"`) | `familie-rumpf-pplc.webp`, 1480 × 1604, angesehen |
+| `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |

@@ -8590,6 +8590,286 @@ class KreuzhebenLanghantel(RudernLanghantel):
         return werte
 
 
+# ---------------------------------------------------------------------- Familie „Rumpf“ für Dali’s PPLC (D-524)
+
+
+class KabelcrunchKniend(Boden):
+    """Crunches am Kabel, kniend (Familie „Rumpf“, D-524), nach dem Ausführungstext der App (ExRx „Cable Kneeling
+    Crunch“) und den Werten der Familie (Rumpfbeugung über mehrere Wirbel verteilt, Kontakte ohne Durchdringen der
+    Matte). Kniend auf der Matte vor dem Kabelzug mit oberer Rolle (`geraete.kabelzug_oben`, ohne Stange): die Knie
+    `FUESSE` neben der Mitte auf der Matte, die Oberschenkel `OBERSCHENKEL` hinter der Senkrechten (die Hüfte etwas
+    zurück), die Zehen aufgestellt wie beim Unterarmstütz (Schuh am Ballen gebogen, `VORFUSS`, der Vorfuß auf der Matte),
+    die Schienbeine steigen von den Knien zu den Fußgelenken. Der Rumpf ist aus der Hüfte `RUMPF` vorgeneigt; die Hände
+    halten das Seil (`geraete.seil`) seitlich am Kopf, die Handgelenke an den Schläfen, die Ellbogen nach unten vorn.
+    Bewegung: Der Rumpf rollt sich ein, `EINROLLEN` Grad, verteilt auf fünf Wirbel (`VERTEILUNG`, von der Lende zum
+    Brustkorb), die Ellbogen gehen zu den Oberschenkeln; Becken und Beine bleiben, wo sie sind („Die Hüfte bleibt dabei
+    an ihrem Platz“). Kopf und Hals bleiben in Verlängerung des Rumpfs („Halte den Nacken neutral“). Das Seil hängt als V
+    vom Haken zu den Händen, das Kabel läuft von der Rolle zum Haken; der Gewichtsblock hebt sich um den Weg des Kabels.
+    Zurück derselbe Weg."""
+
+    name = "kabelcrunch_kniend"
+    titel = "Crunches am Kabel, kniend"
+    kamera = {"richtung": 70.0, "neigung": 10.0}
+    vorschau_phase = 1.0
+    FUESSE = 0.10  # Knie und Fußgelenke so weit neben der Mitte (vor dem Maß der Schultern), m
+    KNIE_Y = -0.05  # Kniegelenke über der Matte (Welt, y)
+    OBERSCHENKEL = 15.0  # Oberschenkel hinter der Senkrechten (Hüfte zu den Füßen hin, ExRx: „Position hips back“), Grad
+    RUMPF = 35.0  # Ausgang: Rumpf aus der Hüfte vor der Senkrechten, Grad
+    # Mit 25° und 70° blieben die Ellbogen 32 cm vor den Oberschenkeln („führ die Ellbogen zu den Oberschenkeln“), mit 35°
+    # und 90° kommen sie bis 3 cm heran
+    EINROLLEN = 90.0
+    VERTEILUNG = (0.10, 0.15, 0.20, 0.25, 0.30)  # spine05 … spine01
+    FUSS = 63.0  # hinterer Teil des Fußes gegen die Matte gekippt (Zehen nach unten), Grad, wie beim Unterarmstütz
+    VORFUSS = 55.0
+    TIEF = 0.002  # Schuhe so tief in der Matte, m
+    KNIE_TIEF = 0.004  # Haut am Knie so tief in der Matte, m
+    SEIL_L = 0.40  # Seil vom Haken bis zur Mitte der Hand, m
+    SEIL_LUFT = 0.018  # Seil so weit über der Haut des Kopfs, wo es am Hinterkopf anliegt (über den Haaren), m
+    # Mitte des Griffs am Kopf (Raum des Kopfs: seitlich, vorn, über dem Halsende), m: das Handgelenk an der Schläfe
+    GRIFF_KOPF = (0.09, -0.04, 0.07)
+    POL = (0.3, -0.6, -1.0)  # Ellbogen nach unten vorn, etwas außen (linke Seite)
+    GRIFF_LAGE = 0.6
+    SCHRAEG = 0.0
+    # Rolle so weit vor der Mitte der Griffe im Ausgang, m: Mit 0,10 lag sie am Ende hinter dem Kopf, das Seil lief durch
+    # die Haare; weiter vorn öffnet sich das V des Seils vor dem Gesicht
+    ROLLE_VOR = 0.40
+    ROLLE_Z = 2.10  # Rolle über dem Boden, m
+    fuss_ansichten = ((90, 0.0), (180, 0.10), (0, 0.10), (270, 0.0))
+    griff_ansichten = (("seil_vorn", 20.0, 10.0), ("seil_seite", 100.0, 15.0))
+
+    def vorfuss_grad(self, p: float) -> dict:
+        return {"L": self.VORFUSS, "R": self.VORFUSS}
+
+    def fuss_ziel(self, sohle: list[Vector]) -> Vector:
+        unten = [q for q in sohle if q.z < self.oben + 0.002]
+        m = sum(unten, Vector()) / len(unten) if unten else min(sohle, key=lambda q: q.z)
+        return Vector((m.x, m.y + 0.03, self.oben + 0.06))
+
+    def rahmen_objekte(self) -> list:
+        return [o for o in (bpy.data.objects.get(n) for n in ("Seil.L", "Seil.R")) if o]
+
+    def nah_punkte(self) -> list[Vector]:
+        rig = self.rig
+        hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        return [q for q in _netz(self.koerper) if (q - hand).length < 0.12]
+
+    def bauen(self) -> None:
+        Uebung.bauen(self)
+        self.matte_bauen()
+        rig = self.rig
+        k = rig.kopf
+        self.l1 = (k["lowerleg01.L"] - k["upperleg01.L"]).length
+        self.l2 = (k["foot.L"] - k["lowerleg01.L"]).length
+        self.H0 = (k["upperleg01.L"] + k["upperleg01.R"]) / 2
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, geraete.SEIL["d"] / 2, schraeg=self.SCHRAEG) for s in "LR"}
+        self.knie_i = self.gruppenpunkte("lowerleg01", "upperleg02", mindestens=0.3)
+        # Kopf (ohne Hals) für den Weg des Seils: Ecken der Grundhaltung, sie gehen mit dem Knochen „head“
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+        self.kopf_ruhe = [v.co.copy() for v in self.koerper.data.vertices
+                          if sum(x.weight for x in v.groups if namen[x.group].startswith(("head", "jaw", "eye"))) > 0.5][::3]
+        self.knie_z = 0.05
+        self.schien = 15.0
+        self.geraet = None
+        self.haken0 = None
+
+    def _beine_und_becken(self) -> dict:
+        """Knie fest auf der Matte, Fußgelenke hinter ihnen um `schien` angehoben, Hüfte `OBERSCHENKEL` hinter der
+        Senkrechten über den Knien; das Becken mit dem Rumpf `RUMPF` vorgeneigt."""
+        rig = self.rig
+        th, a = math.radians(self.OBERSCHENKEL), math.radians(self.schien)
+        knie_z = rig.lokal(Vector((0.0, 0.0, self.oben + self.knie_z))).z
+        knie_y = rig.lokal(Vector((0.0, self.KNIE_Y, 0.0))).y
+        K = Vector((0.0, knie_y, knie_z))
+        H = K + Vector((0.0, math.sin(th), math.cos(th))) * self.l1
+        rig.setze("root", starr(self.H0, Vector((self.H0.x, H.y, H.z)), achse_winkel(X, self.RUMPF)))
+        beine = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            A = Vector((sx * self.FUESSE * self.mass, K.y + math.cos(a) * self.l2, K.z + math.sin(a) * self.l2))
+            beine[s] = rig.bein(s, A, Vector((0.0, -1.0, -1.0)).normalized(), 3.0, fuss_ebene=achse_winkel(X, self.FUSS))
+        return beine
+
+    def _wirbel(self, p: float) -> None:
+        for n, f in zip(("spine05", "spine04", "spine03", "spine02", "spine01"), self.VERTEILUNG):
+            self.rig.dreh(n, achse_winkel(X, self.EINROLLEN * f * p))
+
+    def _griffe(self) -> dict:
+        """Mitte der Griffe (Raum des Skeletts) seitlich am Kopf, fest am Kopf."""
+        rig = self.rig
+        G = rig.g("head")
+        h = rig.kopf["head"]
+        gx, gy, gz = self.GRIFF_KOPF
+        return {s: G @ (h + Vector((sx * gx * self.mass, gy, gz))) for s, sx in (("L", 1), ("R", -1))}
+
+    def _haken(self, griffe: dict, rolle: Vector) -> Vector:
+        """Haken über den Händen: beide Stränge `SEIL_L` lang, zur Rolle hin (Raum des Skeletts)."""
+        M = (griffe["L"] + griffe["R"]) / 2
+        quer = griffe["L"] - griffe["R"]
+        halb = quer.length / 2
+        n = senkrecht(rolle - M, quer)
+        return M + n * math.sqrt(max(self.SEIL_L ** 2 - halb * halb, 0.0))
+
+    def _um_den_kopf(self, a: Vector, b: Vector) -> list[Vector]:
+        """Weg eines Strangs von der Hand `a` zum Haken `b` (Raum des Skeletts): gerade, wenn er am Kopf vorbeigeht; sonst
+        über den Punkt, an dem er den Kopf mit den Haaren (`SEIL_LUFT` darüber) gerade berührt, wie ein Seil, das am
+        Hinterkopf anliegt."""
+        G = self.rig.g("head")
+        pkte = [G @ q for q in self.kopf_ruhe]
+        c = sum(pkte, Vector()) / len(pkte)
+        ab = b - a
+        t = max(0.0, min(1.0, (c - a).dot(ab) / ab.length_squared))
+        q = a + ab * t
+        n = q - c
+        if n.length < 1e-6:
+            return [a, b]
+        n.normalize()
+        rand = max((x - c).dot(n) for x in pkte) + self.SEIL_LUFT + geraete.SEIL["d"] / 2
+        if (q - c).dot(n) >= rand:
+            return [a, b]
+        return [a, c + n * rand, b]
+
+    def _haltung_ohne_werte(self, p: float) -> dict:
+        rig = self.rig
+        beine = self._beine_und_becken()
+        self._wirbel(p)
+        return beine
+
+    def _spitze(self) -> float:
+        dg = bpy.context.evaluated_depsgraph_get()
+        sohle = bpy.data.objects.get("Sohle")
+        if sohle is None:
+            netz = _netz(self.koerper)
+            return min(netz[i].z for i in self.gruppenpunkte("foot", "toe")) - self.oben
+        oe = sohle.evaluated_get(dg)
+        me = oe.to_mesh()
+        z = min((oe.matrix_world @ v.co).z for v in me.vertices)
+        oe.to_mesh_clear()
+        return z - self.oben
+
+    def loesen(self) -> None:
+        """Höhe der Kniegelenke (Haut `KNIE_TIEF` in der Matte) und Anstieg der Schienbeine (Schuhe `TIEF` in der Matte),
+        abwechselnd nachgeführt; dann Rolle und Kabelzug vor der Person, Haken und Seil im Ausgang."""
+        rig = self.rig
+        for _ in range(6):
+            lo, hi = -10.0, 45.0
+            for _ in range(20):
+                self.schien = (lo + hi) / 2
+                rig.zuruecksetzen()
+                self._haltung_ohne_werte(0.0)
+                rig.anwenden()
+                if self._spitze() > -self.TIEF:
+                    hi = self.schien  # Schuhe über der Matte: Fußgelenke tiefer
+                else:
+                    lo = self.schien
+            rig.zuruecksetzen()
+            self._haltung_ohne_werte(0.0)
+            rig.anwenden()
+            tief = self.in_matte(_netz(self.koerper), self.knie_i)
+            self.knie_z += tief - self.KNIE_TIEF
+            if abs(tief - self.KNIE_TIEF) < 2e-4:
+                break
+        rig.zuruecksetzen()
+        self._haltung_ohne_werte(0.0)
+        g = self._griffe()
+        M = rig.welt((g["L"] + g["R"]) / 2)
+        rolle = Vector((0.0, M.y - self.ROLLE_VOR, self.ROLLE_Z))
+        self.geraet = geraete.kabelzug_oben(rolle, None, rolle.y - 0.35)
+        self.haken0 = rig.welt(self._haken(g, rig.lokal(rolle)))
+        rig.zuruecksetzen()
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        beine = self._haltung_ohne_werte(p)
+        g = self._griffe()
+        arme = {}
+        if self.geraet is not None:
+            rolle = self.geraet["rolle"]
+            haken_l = self._haken(g, rig.lokal(rolle))
+            hinten = (rig.g("head").to_3x3() @ Vector((0.0, 1.0, 0.0))).normalized()
+            brust = rig.g("spine01").to_3x3()
+            self.seilwege = {}
+            for s, sx in (("L", 1), ("R", -1)):
+                # Das Seil liegt quer in der Faust (vom Gesicht zum Ohr) und biegt sich vorn zum Haken hinauf; gerade vom
+                # Haken durch die Faust knickte das Handgelenk bis 99°. Der Pol des Ellbogens geht mit dem Brustkorb
+                pol = (brust @ Vector((sx * self.POL[0], self.POL[1], self.POL[2]))).normalized()
+                kk = hinten
+                vorher = len(rig.meldungen)
+                arm = rig.arm(s, self.griff[s], g[s], kk, pol, 0.0)
+                for _ in range(2):
+                    kk = senkrecht(kk, (arm["handgelenk"] - arm["ellbogen"]).normalized())
+                    del rig.meldungen[vorher:]
+                    arm = rig.arm(s, self.griff[s], g[s], kk, pol, 0.0)
+                arme[s] = arm
+                gw = rig.welt(g[s])
+                weg = [rig.welt(q) for q in self._um_den_kopf(g[s] - kk * 0.045, haken_l)]
+                self.seilwege[s] = weg
+                geraete.seil("Seil." + s, weg[1], weg[0])
+                geraete.seil("Seil2." + s, weg[-1], weg[-2] if len(weg) == 3 else weg[-1] + (weg[0] - weg[-1]) * 1e-4)
+                geraete.seil("Seilquer." + s, gw - kk * 0.045, gw + kk * 0.06)
+                geraete.seil("Seilende." + s, gw - kk * 0.045, gw + kk * 0.075, kappe=True)
+            haken = rig.welt(haken_l)
+            geraete.kabel("Kabel-Zug", rolle, haken)
+            hub = (rolle - haken).length - (rolle - self.haken0).length
+            self.geraet["block"].matrix_world = Matrix.Translation(Vector((0, 0, hub))) @ self.geraet["block0"]
+            k = rig.kopf
+            L, A = beine["L"], arme["L"]
+            rumpf = rig.punkt("neck01", k["neck01"]) - rig.punkt("spine05", k["spine05"])
+            ober = L["huefte"] - L["knie"]
+            E = rig.welt(A["ellbogen"])
+            K = rig.welt((L["knie"] + L["huefte"]) / 2)
+            self.werte = {
+                "Rumpf eingerollt (Grad)": self.EINROLLEN * p,
+                "Rumpf zur Senkrechten (Grad, Halsansatz über der Lende)": math.degrees(math.atan2(-rumpf.y, rumpf.z)),
+                "Oberschenkel zur Senkrechten (Grad, + Hüfte zurück)": math.degrees(math.atan2(ober.y, ober.z)),
+                "Kniewinkel (Grad)": self.kniewinkel(L),
+                "Ellbogen zur Mitte des Oberschenkels (cm)": (E - K).length * 100,
+                "Ellbogenwinkel": A["ellbogenwinkel"],
+                "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+                "Kabel zur Senkrechten (Grad)": math.degrees((rolle - haken).angle(Z)),
+                "Gewichtsblock gehoben (cm)": hub * 100,
+                "Schienbein zur Matte (Grad)": self.schien,
+            }
+
+    def zusatzwerte(self) -> dict:
+        """Knie, Schienbeine und Schuhe auf der Matte; Ellbogen zu den Oberschenkeln; Seil zu Kopf und Haaren; Handgelenke
+        am Kopf (mm)."""
+        from mathutils.bvhtree import BVHTree
+
+        rig = self.rig
+        netz = _netz(self.koerper)
+        werte = {"Knie in der Matte (mm)": self.in_matte(netz, self.knie_i) * 1000,
+                 "Schuhe in der Matte (mm)": -self._spitze() * 1000,
+                 "Matte: tiefste Delle (mm)": self.delle * 1000}
+        namen = {gr.index: gr.name for gr in self.koerper.vertex_groups}
+
+        def gruppe(v, *anfang) -> bool:
+            return sum(x.weight for x in v.groups if namen[x.group].startswith(anfang)) > 0.5
+
+        verts = self.koerper.data.vertices
+        ober = [q for v, q in zip(verts, netz) if gruppe(v, "upperleg")]
+        kopf = [q for v, q in zip(verts, netz) if gruppe(v, "head", "jaw", "eye", "neck")]
+        for name in ("Shorts", "Haare"):
+            if name in bpy.data.objects:
+                import schuhe
+
+                pk = schuhe._verformt(bpy.data.objects[name])[0]
+                (ober if name == "Shorts" else kopf).extend(pk[::2])
+        ell = [rig.welt(rig.punkt("lowerarm01." + s, rig.kopf["lowerarm01." + s])) for s in "LR"]
+        arm = [q for v, q in zip(verts, netz) if gruppe(v, "upperarm", "lowerarm")]
+        bvh = BVHTree.FromPolygons(ober, []) if False else None
+        werte["Arme zu Oberschenkeln und Shorts (mm)"] = min(min((a - b).length for b in ober[::3]) for a in arm[::6]) * 1000
+        werte["Ellbogengelenk zu den Oberschenkeln (cm)"] = min(min((e - b).length for b in ober[::3]) for e in ell) * 100
+        seil = []
+        for weg in getattr(self, "seilwege", {}).values():
+            for a, b in zip(weg, weg[1:]):
+                seil += [a.lerp(b, i / 16) for i in range(17)]
+            seil = [q for q in seil if (q - weg[0]).length > 0.03]  # ohne das Stück an der Hand
+        if seil:
+            werte["Seil zu Kopf und Haaren (mm)"] = (min(min((a - b).length for b in kopf[::2]) for a in seil) - geraete.SEIL["d"] / 2) * 1000
+        hand = [rig.welt(rig.punkt("wrist." + s, rig.kopf["wrist." + s])) for s in "LR"]
+        werte["Handgelenk zum Kopf (mm)"] = min(min((h - b).length for b in kopf[::2]) for h in hand) * 1000
+        return werte
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
@@ -8597,4 +8877,5 @@ UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, Bankdruecken
                                Hackenschmidt, Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend,
                                Bizepscurl, Hammercurl, Trizepsdruecken, RudernLanghantel, RudernMaschine,
                                HighRowMaschine, FliegendeKabel, ReverseButterfly, SchulterdrueckenKH,
-                               SchulterdrueckenLanghantel, KreuzhebenLanghantel)}
+                               SchulterdrueckenLanghantel, KreuzhebenLanghantel,
+                               KabelcrunchKniend)}

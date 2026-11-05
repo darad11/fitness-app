@@ -345,6 +345,17 @@ MESSWERTE = (
     ("Arm zur Senkrechten (Grad, + Hand hinter der Schulter)", "Arm zur Senkrechten (+ Hand hinter der Schulter)", "spanne", "°"),
     ("Hüfte über den Knien (cm)", "Hüfte über den Knien", "spanne", " cm"),
     ("Schultern vor der Stange (cm)", "Schultern vor der Stange", "spanne", " cm"),
+    # Rumpf für Dali’s PPLC (D-524)
+    ("Rumpf eingerollt (Grad)", "Rumpf eingerollt", "spanne", "°"),
+    ("Rumpf zur Senkrechten (Grad, Halsansatz über der Lende)", "Rumpf zur Senkrechten", "spanne", "°"),
+    ("Oberschenkel zur Senkrechten (Grad, + Hüfte zurück)", "Oberschenkel zur Senkrechten (+ Hüfte zurück)", "spanne", "°"),
+    ("Schienbein zur Matte (Grad)", "Schienbein zur Matte", "spanne", "°"),
+    ("Knie in der Matte (mm)", "Knie in der Matte", "spanne", " mm"),
+    ("Schuhe in der Matte (mm)", "Schuhe in der Matte", "spanne", " mm"),
+    ("Ellbogengelenk zu den Oberschenkeln (cm)", "Ellbogengelenk zu den Oberschenkeln", "spanne", " cm"),
+    ("Arme zu Oberschenkeln und Shorts (mm)", "Arme zu Oberschenkeln und Shorts", "min", " mm"),
+    ("Seil zu Kopf und Haaren (mm)", "Seil zu Kopf und Haaren", "min", " mm"),
+    ("Handgelenk zum Kopf (mm)", "Handgelenk zum Kopf (Gelenk zur Haut)", "spanne", " mm"),
 )
 
 
@@ -416,7 +427,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "stange_hinten": "Stange von hinten", "rudern_aussen": "Hand am Griff von außen",
               "rudern_hinten": "Hand am Griff von hinten", "butterfly_oben": "Griff von hinten oben",
               "butterfly_vorn": "Hand am Griff von vorn", "dgriff_vorn": "Hand am D-Griff von vorn",
-              "dgriff_seite": "Hand am D-Griff von außen"}
+              "dgriff_seite": "Hand am D-Griff von außen", "seil_vorn": "Hand am Seil von vorn",
+              "seil_seite": "Hand am Seil von außen"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

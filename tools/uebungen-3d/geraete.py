@@ -1388,11 +1388,12 @@ KABELZUG = {"saeule_x": 0.22, "hoehe": 2.30, "rolle_r": 0.045, "stange_l": 0.50,
             "block_z": 0.08, "haken": 0.07}
 
 
-def kabelzug_oben(rolle: Vector, stange: Vector, saeule_y: float) -> dict:
+def kabelzug_oben(rolle: Vector, stange: Vector | None, saeule_y: float) -> dict:
     """Kabelzug mit oberer Rolle, Person mit Blick nach −y vor den Säulen (D-515). `rolle`: Punkt, an dem das Kabel die
     Rolle unten verlässt (Welt); `stange`: Mitte der Stange im Ausgang (Welt), ihre Achse quer (x); `saeule_y`: Mitte der
     Säulen. Die Stange hängt mit ihrem Haken am Leerobjekt „Stange“ (wird je Bild gesetzt), das Kabel `Kabel-Zug` setzt
-    `kabel` je Bild neu. Gibt Wurzel, Leerobjekt der Stange, Gewichtsblock und Lage der Rolle zurück."""
+    `kabel` je Bild neu. Ohne `stange` (D-524, Seilgriff: `seil`) bleibt der Leerobjekt der Stange leer. Gibt Wurzel,
+    Leerobjekt der Stange, Gewichtsblock und Lage der Rolle zurück."""
     k = KABELZUG
     rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
     stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
@@ -1427,6 +1428,8 @@ def kabelzug_oben(rolle: Vector, stange: Vector, saeule_y: float) -> dict:
     leer = bpy.data.objects.new("Stange", None)
     bpy.context.scene.collection.objects.link(leer)
     leer.parent = wurzel
+    if stange is None:
+        return {"wurzel": wurzel, "stange": leer, "block": block, "block0": block.matrix_world.copy(), "rolle": rolle.copy()}
     leer.matrix_world = Matrix.Translation(stange)
     l, d = k["stange_l"], k["stange_d"]
     X_ = Vector((1, 0, 0))
@@ -1436,6 +1439,33 @@ def kabelzug_oben(rolle: Vector, stange: Vector, saeule_y: float) -> dict:
                          gummi, ecken=32), leer)
     _anhaengen(_zylinder("Haken", 0.012, k["haken"], stange + Vector((0, 0, k["haken"] / 2 + d / 2)), "z", stahl, ecken=16), leer)
     return {"wurzel": wurzel, "stange": leer, "block": block, "block0": block.matrix_world.copy(), "rolle": rolle.copy()}
+
+
+# Seilgriff (Trizepsseil, D-524): ein Seil, in der Mitte am Haken, die beiden Enden mit Gummikappen; Maße geschätzt
+# (übliche Seile 70 cm lang, 2,5 cm dick)
+SEIL = {"d": 0.025, "kappe": (0.022, 0.035), "haken": 0.05}
+
+
+def seil(name: str, von: Vector, nach: Vector, kappe: bool = False) -> bpy.types.Object:
+    """Ein Strang des Seilgriffs zwischen zwei Punkten (wird je Bild neu gesetzt wie `kabel`); mit `kappe` die Gummikappe
+    am Ende (`nach` ist dann ihre Mitte, `von` gibt die Richtung)."""
+    if kappe:
+        r, l = SEIL["kappe"]
+        obj = bpy.data.objects.get(name)
+        if obj is None:
+            obj = _zylinder(name, r, l, Vector(), "z", _mat("Gummi", GERAET, 0.7), ecken=24)
+        richtung = nach - von
+        obj.location = nach
+        obj.rotation_euler = richtung.to_track_quat("Z", "Y").to_euler()
+        return obj
+    obj = bpy.data.objects.get(name)
+    if obj is None:
+        obj = _zylinder(name, SEIL["d"] / 2, 1.0, Vector(), "z", _mat("Seil", GERAET, 0.85), ecken=16)
+    richtung = nach - von
+    obj.location = (von + nach) / 2
+    obj.rotation_euler = richtung.to_track_quat("Z", "Y").to_euler()
+    obj.scale = (1, 1, richtung.length)
+    return obj
 
 
 # Rudermaschine mit Brustpolster (D-518) für „Rudern an der Maschine“ und „High Row an der Maschine“, nach der üblichen

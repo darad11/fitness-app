@@ -3633,3 +3633,15 @@ Crunches am Kabel, kniend, als Schleife (D-526).
 | Messwerte | unverändert gegenüber der Prüfseite (D-524, `docs/testing.md` dort), Code der Übung seitdem nicht geändert |
 | Schleifen (`render.py`, je 60 Bilder) | erstes und letztes Bild pixelgleich; Crunches am Kabel, kniend MP4 65,6 KB, WebM 52,3 KB, Poster 8,9 KB, Vorschau 5,0 KB, geladen (MP4, Poster, Vorschau) 79,4 KB |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.274 von 1.276 neben zwei Blender-Renderläufen (zwei Tests der Tagesaufgaben mit Zeitüberschreitung, 5,1 s; die Datei allein 11 von 11 bestanden); Build, Startansicht 239,9 KB, Übungsbilder 116 von 116; E2E Chromium 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Scanner zugeklappt, Rückfrage zu Open Food Facts kam unter Last nicht; allein 3 von 3 bestanden); Naht pixelgleich |
+
+### Hüftbeuge in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Kreuzheben mit Langhantel, oben aufrecht ohne Zurücklehnen, als Schleife (D-527).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erste Fassung von `_oben_aufrecht` | Suche fand oben keinen Abstand (−205 bis −84 mm bei jeder Neigung der Arme), Lauf mit 94 Meldungen und Rumpf −95,9°; Ursache: `_abstand_beine` überschrieb die Lage der Stange mit der letzten Schnittstelle (Variable `y` doppelt); behoben |
+| Probe oben nach der Behebung | Knie 176,0°, Rumpf −0,9°, Hüfte 175,4°, Arm −16,1°, Stange 7,8 cm vor der Fußmitte und 84,4 cm hoch, Schwerpunkt −0,1 cm, Stange 10,0 mm vor den Beinen; Schultern 2,6 cm vor der Hüfte, Hüftgelenk 8,8 cm hinter der Fußmitte |
+| `render.py kreuzheben_langhantel --pruefen --nur-messwerte` (alle 60 Bilder) | Knie 105,1 → 176,0°, nur streckend (141,8 bis 143,1° in Bild 17 bis 22); Hüfte 39,8 → 175,4°; Schwerpunkt 5,7 cm hinter (unten) bis 0,1 cm vor der Fußmitte (oben); Stange in jedem Bild 10,0 mm vor den Beinen (schnell), mindestens 8,7 mm vor der Kleidung, 7,3 mm vor der Haut; Lendenwirbel 0,0°, Hautlinie oben 0,2° flacher als im aufrechten Stand; Saumband bis 6,8 mm in den Shorts, Shorts bis 3,4 mm im Shirt; Sohle 0,14 mm verschoben; 0 Meldungen; 3 min 37 s |
+| Schleifen (`render.py`, je 60 Bilder) | erstes und letztes Bild pixelgleich; Kreuzheben mit Langhantel MP4 59,8 KB, WebM 49,2 KB, Poster 6,1 KB, Vorschau 5,3 KB, geladen (MP4, Poster, Vorschau) 71,1 KB |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.276 bestanden (140 Dateien); Build, Startansicht 239,9 KB, Übungsbilder 120 von 120; E2E Chromium (drei Worker) 473 bestanden, 153 übersprungen, 0 fehlgeschlagen; Naht pixelgleich |

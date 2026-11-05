@@ -8308,8 +8308,9 @@ class KreuzhebenLanghantel(RudernLanghantel):
     Stange nah am Körper über der Fußmitte). Stand etwa hüftbreit, die Füße flach, Zehen leicht nach außen, die Knie in
     Richtung der Füße. Die Langhantel (`SCHEIBEN`, 45 cm) steht auf dem Boden über der Fußmitte (Mitte der Stange 22,5 cm
     hoch), die Hände im Obergriff etwas weiter als schulterbreit (`GRIFF_X`), die Arme gestreckt (`ELLBOGEN`). Die Stange
-    steigt senkrecht über der Fußmitte bis zum aufrechten Stand (Knie `KNIE_OBEN`) und gleitet dabei `LUFT` vor Schienbeinen
-    und Oberschenkeln hoch („Halte die Stange nah am Körper“). Die Schultergelenke stehen unten `VOR_UNTEN` vor der Stange,
+    steigt über der Fußmitte bis an die Knie, dann sanft so weit davor, wie der aufrechte Stand oben verlangt (D-527,
+    `_oben_aufrecht`, Knie `KNIE_OBEN`), und gleitet dabei `LUFT` vor Schienbeinen und Oberschenkeln hoch („Halte die
+    Stange nah am Körper“). Die Schultergelenke stehen unten `VOR_UNTEN` vor der Stange,
     die Arme fast senkrecht; bis oben gehen sie sanft hinter die Stange, wo sie im aufrechten Stand vor den Oberschenkeln
     hängt. Je Höhe der Stange gesucht: die Neigung des Rumpfs mit geradem Rücken, bei der die Stange die Beine so knapp
     verfehlt; daraus Hüfte und Knie. Der gemeinsame Schwerpunkt von Körper und Stange ist ein Messwert. Kopf in
@@ -8327,6 +8328,13 @@ class KreuzhebenLanghantel(RudernLanghantel):
     # Anteil des Wegs, ab dem die Schultern hinter die Stange gehen: Gleich von unten an blieben die Knie bis kurz vor dem
     # Stand gebeugt (bei 80 % noch 132°, der Rumpf schon fast aufrecht)
     VOR_AB = 0.45
+    # Oben aufrecht (D-527): Becken und Rumpf wie im Stand, die Knie `KNIE_OBEN`, die gestreckten Arme hängen von den
+    # Schultern so weit nach vorn, bis die Stange `LUFT` vor Oberschenkeln und Shorts liegt (`_oben_aufrecht`). Im aufrechten
+    # Stand liegt die Vorderseite der Oberschenkel auf Höhe der Stange 3 bis 4 cm vor der Fußmitte (Haut; die Shorts liegen
+    # bis 2 cm darüber); genau über der Fußmitte stand die Figur oben 10 cm zurück (Hüfte 169°, Beine schräg nach hinten,
+    # Schwerpunkt 8 cm hinter der Fußmitte). Ab `STANGE_AB` des Wegs (an den Knien) kommt die Stange darum sanft so weit vor
+    # die Fußmitte, wie die aufrechte Haltung oben verlangt (`stange_vor_oben`)
+    STANGE_AB = 0.45
     KINN = 4.0
     GRIFF_X = 0.22  # Mitte der Hand neben der Mitte (vor dem Maß der Schultern), m: außen an den Knien vorbei
     ELLBOGEN = 178.0
@@ -8362,11 +8370,20 @@ class KreuzhebenLanghantel(RudernLanghantel):
                            if e.vertices[0] in index and e.vertices[1] in index]
         self._a = 0.0
 
+    def _stange_y(self, z: float) -> float:
+        """Lage der Stange längs (Raum des Skeletts) auf Höhe `z`: über der Fußmitte, ab `STANGE_AB` des Wegs sanft bis
+        `stange_vor_oben` davor (D-527)."""
+        vor = getattr(self, "stange_vor_oben", 0.0)
+        if not vor:
+            return self.fussmitte_y
+        t = max(0.0, min(1.0, ((z - self.z0) / (self.z1 - self.z0) - self.STANGE_AB) / (1.0 - self.STANGE_AB)))
+        return self.fussmitte_y - vor * t * t * (3.0 - 2.0 * t)
+
     def _pose_mit(self, a: float, z: float, vor: float) -> tuple[dict, dict, Vector]:
         """Haltung bei Rumpfneigung `a`, die Schultergelenke `vor` vor der Stange auf Höhe `z`, so hoch über ihr, wie der
         gestreckte Arm reicht; gibt Beine, Arme und den Schwerpunkt zurück."""
         rig = self.rig
-        mitte = Vector((0.0, self.fussmitte_y, z))
+        mitte = Vector((0.0, self._stange_y(z), z))
         dx = self.GRIFF_X * self.mass - abs(self.S0x)
         hoch = math.sqrt(max(self.reichweite_griff ** 2 - dx * dx - vor * vor, 0.0))
         S = Vector((0.0, mitte.y - vor, z + hoch))
@@ -8383,7 +8400,7 @@ class KreuzhebenLanghantel(RudernLanghantel):
     # Höhen über den Querschnitt der Stange (Anteil des Halbmessers), auf denen die Beine geschnitten werden
     SCHNITTE = (-0.9, -0.5, 0.0, 0.5, 0.9)
 
-    def _abstand_beine(self, z: float) -> float:
+    def _abstand_beine(self, z: float, y: float | None = None) -> float:
         """Wie weit Haut und Shorts der Beine hinter der Stange liegen (m, negativ = davor oder darin), schnell: Ecken an
         ihrem Knochen, die Kanten des Netzes auf fünf Höhen über den Querschnitt der Stange geschnitten (`SCHNITTE`), je
         Höhe zählt die vorderste Schnittstelle gegen die Breite der Stange dort. Gemessen nach vorn, nicht als Abstand: Der
@@ -8391,6 +8408,8 @@ class KreuzhebenLanghantel(RudernLanghantel):
         von ±1,5 cm traf nur 12 bis 20 Ecken und sprang; nur auf Höhe der Achse geschnitten, lag die Stange am Saum der
         Shorts 0,6 mm im Stoff, weil er knapp darüber vorsteht."""
         rig = self.rig
+        if y is None:
+            y = self._stange_y(z)
         G = {}
         pkte = []
         for knochen, q in self.beinpunkte:
@@ -8405,10 +8424,10 @@ class KreuzhebenLanghantel(RudernLanghantel):
             for n, (h, _) in enumerate(hoehen):
                 da, db = a.z - h, b.z - h
                 if da * db <= 0.0 and da != db:
-                    y = a.y + (b.y - a.y) * (da / (da - db))
-                    if vorn[n] is None or y < vorn[n]:
-                        vorn[n] = y
-        frei = [v - self.fussmitte_y - breite for v, (_, breite) in zip(vorn, hoehen) if v is not None]
+                    s = a.y + (b.y - a.y) * (da / (da - db))
+                    if vorn[n] is None or s < vorn[n]:
+                        vorn[n] = s
+        frei = [v - y - breite for v, (_, breite) in zip(vorn, hoehen) if v is not None]
         return min(frei) if frei else 1.0
 
     def _pose_a(self, a: float, z: float) -> tuple[dict, dict, Vector, float, float]:
@@ -8530,22 +8549,41 @@ class KreuzhebenLanghantel(RudernLanghantel):
         self.beinkanten += [(index[e.vertices[0]], index[e.vertices[1]]) for e in obj.data.edges
                             if e.vertices[0] in index and e.vertices[1] in index]
 
+    def _oben_aufrecht(self) -> None:
+        """Endlage aufrecht (D-527): Becken und Rumpf wie im Stand, die Hüfte so tief, dass die Knie `KNIE_OBEN` haben; die
+        gestreckten Arme hängen von den Schultern so weit nach vorn (per Halbierung), bis die Stange `LUFT` vor Oberschenkeln
+        und Shorts liegt. Setzt Höhe (`z1`) und Lage der Stange (`stange_vor_oben`) und die Lage der Schultern zu ihr."""
+        lo, hi = -0.15, 0.05
+        for _ in range(30):
+            dz = (lo + hi) / 2
+            if self.kniewinkel(self._rumpf(0.0, 0.0, dz)["L"]) > self.KNIE_OBEN:
+                hi = dz
+            else:
+                lo = dz
+        dz = (lo + hi) / 2
+        self._rumpf(0.0, 0.0, dz)
+        S = self.S_ruhe + Vector((0.0, 0.0, dz))
+        dx = self.GRIFF_X * self.mass - abs(self.S0x)
+        r = math.sqrt(max(self.reichweite_griff ** 2 - dx * dx, 0.0))
+        lo, hi = 0.0, math.radians(45.0)
+        for _ in range(30):
+            th = (lo + hi) / 2
+            if self._abstand_beine(S.z - r * math.cos(th), S.y - r * math.sin(th)) < self.LUFT:
+                lo = th
+            else:
+                hi = th
+        y, self.z1 = S.y - r * math.sin(hi), S.z - r * math.cos(hi)
+        self.stange_vor_oben = self.fussmitte_y - y
+        self.vor_oben = y - S.y
+
     def _loesen(self) -> None:
-        """Höhe der Stange unten (Scheiben auf dem Boden) und oben (aufrechter Rumpf, Knie `KNIE_OBEN`, per Halbierung,
-        die Schultern je so, dass die Stange `LUFT` vor den Oberschenkeln liegt)."""
+        """Höhe der Stange unten (Scheiben auf dem Boden), oben die aufrechte Endlage (`_oben_aufrecht`, D-527); dazwischen
+        die Tafel der Schultern (`_vor_glatt`)."""
         self._shorts_dazu()
         rig = self.rig
         self.z0 = self.SCHEIBEN[0][0] / 2 - rig.versatz.z
-        lo, hi = self.z0 + 0.2, self.z0 + 0.8
-        for _ in range(18):
-            z = (lo + hi) / 2
-            beine = self._pose_a(0.0, z)[0]
-            if self.kniewinkel(beine["L"]) > self.KNIE_OBEN:
-                hi = z
-            else:
-                lo = z
-        self.z1 = (lo + hi) / 2
-        self.vor_oben = self._pose_a(0.0, self.z1)[4]
+        self.stange_vor_oben = 0.0
+        self._oben_aufrecht()
         self._vor_tafel = None
         self._vor_tafel = self._vor_glatt()
         self.stand = (0.0, 0.0)
@@ -8555,7 +8593,7 @@ class KreuzhebenLanghantel(RudernLanghantel):
         rig = self.rig
         z = self.z0 + (self.z1 - self.z0) * p
         beine, arme, schwer, frei, vor = self._pose_z(z)
-        mitte = Vector((0.0, self.fussmitte_y, z))
+        mitte = Vector((0.0, self._stange_y(z), z))
         self.stange.location = rig.welt(mitte)
         L, A = beine["L"], arme["L"]
         S = (arme["L"]["schulter"] + arme["R"]["schulter"]) / 2
@@ -8573,10 +8611,12 @@ class KreuzhebenLanghantel(RudernLanghantel):
             "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
             "Griffe auseinander (cm)": (arme["L"]["mitte"] - arme["R"]["mitte"]).length * 100,
             "Rumpf zur Waagrechten (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, rumpf.normalized().z)))),
+            "Rumpf zur Senkrechten (Grad, + nach hinten)": math.degrees(math.atan2(rumpf.y, rumpf.z)),
             "Hüfte (Rumpf zum Oberschenkel, Grad, 180 = gestreckt)": math.degrees(rumpf.angle(oberschenkel)),
             "Kniewinkel (Grad)": self.kniewinkel(L),
             "Hüfte über den Knien (cm)": (H.z - K.z) * 100,
             "Schultern über der Hüfte (cm)": (S.z - H.z) * 100,
+            "Schultern vor der Hüfte (cm, waagrecht)": (H.y - S.y) * 100,
             "Schultern vor der Stange (cm)": (mitte.y - S.y) * 100,
             "Stange vor den Beinen, schnell (mm)": frei * 1000,
             "Stange über der Fußmitte (cm, + dahinter)": (mitte.y - self.fussmitte_y) * 100,

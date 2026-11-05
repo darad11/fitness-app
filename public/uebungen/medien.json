@@ -792,6 +792,33 @@
       },
       "alt": "Crunches am Kabel, kniend, von der Seite, leicht von vorn: Zehen aufgestellt, das Seil seitlich am Kopf; den Rumpf einrollen, bis die Ellbogen zu den Oberschenkeln kommen, Becken und Beine bleiben, wo sie sind, und zurück.",
       "source": "form_3d_pilot"
+    },
+    "deadlift_barbell": {
+      "preview": {
+        "src": "medien/kreuzheben_langhantel-vorschau-d5f1363f.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/kreuzheben_langhantel-ef2b59e3.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/kreuzheben_langhantel-71c44126.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/kreuzheben_langhantel-poster-24f80552.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Kreuzheben mit Langhantel, von der Seite, leicht von vorn: Füße hüftbreit, Obergriff, Rücken gerade; die Stange nah an den Beinen vom Boden bis in den aufrechten Stand heben, Hüfte und Knie gestreckt, und kontrolliert zurück auf den Boden.",
+      "source": "form_3d_pilot"
     }
   }
 }

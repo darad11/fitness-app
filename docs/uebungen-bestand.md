@@ -40,7 +40,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 13 | Kreuzheben mit Langhantel | Deadlift | Langhantel | Unterer Rücken, Gesäß, Oberschenkel hinten | Oberschenkel vorne, Trapez, Unterarme | – | fehlt | fertig (acefitness.org, exrx.net) | – | `deadlift_barbell` · `724dfde0-3231-5172-86c5-265fc5511b6f` |
+| 13 | Kreuzheben mit Langhantel | Deadlift | Langhantel | Unterer Rücken, Gesäß, Oberschenkel hinten | Oberschenkel vorne, Trapez, Unterarme | – | vorhanden | fertig (acefitness.org, exrx.net) | – | `deadlift_barbell` · `724dfde0-3231-5172-86c5-265fc5511b6f` |
 | 14 | Klimmzüge | Pull-up | Klimmzugstange | Latissimus | Bizeps, Oberer Rücken | Klimmzüge mit Unterstützung · Klimmzüge im Untergriff | fehlt | fertig (acefitness.org, exrx.net) | – | `pull_up` · `23775e80-9bcc-5529-a8e1-0af70bbc4923` |
 | 15 | Klimmzüge mit Unterstützung | Assisted Pull-up | Maschine | Latissimus | Bizeps, Oberer Rücken | Klimmzüge · Klimmzüge im Untergriff | vorhanden | fertig (exrx.net) | Die Quellen sagen nichts zur Einstellung des Gegengewichts; dieser Punkt fehlt. | `assisted_pull_up` · `86549491-6d57-5eaa-a0b3-d27986e90ce1` |
 | 16 | Klimmzüge im Untergriff | Chin-up | Klimmzugstange | Latissimus, Bizeps | Oberer Rücken | Klimmzüge · Klimmzüge mit Unterstützung | fehlt | fertig (acefitness.org, exrx.net) | – | `chin_up` · `ac317cae-6fcd-5a05-b0af-cab99086661b` |
@@ -199,4 +199,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 124 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 125 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 125 Übungen · mit Visual 29 · ohne Visual 96 · Ausführung fertig 123 · offen 2
+Summe: 125 Übungen · mit Visual 30 · ohne Visual 95 · Ausführung fertig 123 · offen 2

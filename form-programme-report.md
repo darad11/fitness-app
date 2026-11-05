@@ -2985,7 +2985,31 @@ Neue Tests: E1 und E2 am iPhone hoch (390 × 844), E3 am nachgestellten Duo zuge
 
 **Crunches am Kabel, kniend (deine Entscheidung 5):** Zehen aufgestellt, bleibt. Die Schleife ist wie auf der Prüfseite (D-524).
 
-### 59.3 Berichte zu den Paketen
+### 59.3 Hüftbeuge (D-527)
+
+**Kreuzheben oben (deine Entscheidung 3).** Oben steht die Figur jetzt aufrecht wie im Stand: Becken und Rumpf wie im Stand, die Knie 176°. Die gestreckten Arme hängen von den Schultern nach vorn, bis die Stange 1 cm vor Oberschenkeln und Shorts liegt. Bis D-523 blieb die Stange auch oben über der Fußmitte; dafür lehnte sich die Figur zurück (Hüfte 169°). Jetzt kommt die Stange ab den Knien sanft so weit vor die Fußmitte, wie der aufrechte Stand oben verlangt.
+
+Oben gemessen (Bild 29 bis 36):
+
+| Messwert | Prüfseite (D-523) | jetzt |
+|---|---|---|
+| Rumpf zur Senkrechten | zurückgelehnt, Hüfte 169° | 0,9° vor der Senkrechten, Hüfte 175,4° |
+| Schultern zur Hüfte, waagrecht | – | 2,6 cm vor der Hüfte |
+| Knie | 176° | 176,0° |
+| Arm zur Senkrechten | 18° vor | 16,1° vor |
+| Lende: Wirbel gegen das Becken | 0,0° | 0,0° |
+| Lende: Hautlinie gegen den aufrechten Stand | über die Bewegung 0,8 bis 5,1° flacher | oben 0,2° flacher, 1,2 mm verschoben: neutral |
+| Gemeinsamer Schwerpunkt von Körper und Stange | 8 cm hinter der Fußmitte | 0,1 cm vor der Fußmitte |
+| Stange zur Fußmitte | darüber | 7,8 cm davor, 84,4 cm hoch |
+| Stange zur Kleidung, mindestens | 6,3 mm | 8,7 mm, oben 9,2 mm |
+
+**Was nicht zusammen geht:** Arme senkrecht und die Stange genau über der Fußmitte passen aufrecht nicht zur Stange an den Oberschenkeln. Die Vorderseite der Oberschenkel mit den Shorts liegt auf Höhe der Stange 5,5 cm vor der Fußmitte, die Schultergelenke 6,3 cm dahinter. Senkrechte Arme brächten die Stange in die Oberschenkel; genau über der Fußmitte müsste sich die Figur zurücklehnen wie bis D-523. Ich habe es nach dem Gleichgewicht entschieden: Der gemeinsame Schwerpunkt von Körper und Stange steht über der Fußmitte, die Arme hängen 16° vor der Senkrechten. Auch beim echten Kreuzheben liegt die Stange oben vorn an den Oberschenkeln, die Arme etwas schräg.
+
+Über die ganze Bewegung: Knie 105° → 176°, sie strecken sich nur (an den Oberschenkeln 142° gehalten, dann in sieben Bildern gleichmäßig auf 176°); Hüfte 40° → 175°; Schwerpunkt unten 5,7 cm hinter der Fußmitte, oben darüber; Stange mindestens 8,7 mm vor der Kleidung und 7,3 mm vor der Haut; in der Hüftfalte das Saumband bis 6,8 mm in den Shorts und die Shorts bis 3,4 mm im Shirt (auf der Prüfseite 12,8 und 5,4 mm); 0 Meldungen des Rigs.
+
+**Griff (deine Entscheidung 4):** Obergriff, wie auf der Prüfseite.
+
+### 59.4 Berichte zu den Paketen
 
 ```
 Arbeitspaket: D-525 Phase Programme, Befunde E1 bis E3 im Player (Entscheidung des Produktinhabers zu E1 bis E4)
@@ -3007,4 +3031,15 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.27
 Ergebnis: bestanden
 Bekannte Einschränkungen: Maße von Seil und Kabelzug geschätzt (wie D-524)
 Nächste Schritte: Schleife „Hüftbeuge“ (D-527)
+```
+
+```
+Arbeitspaket: D-527 Phase Programme, Schleife „Hüftbeuge“ (Kreuzheben mit Langhantel)
+Umgesetzte Funktionen: Animation in der App; oben aufrecht ohne Zurücklehnen (`_oben_aufrecht`), die Stange ab den Knien sanft vor die Fußmitte (`_stange_y`), Obergriff; Fehler in `_abstand_beine` behoben (Lage der Stange überschrieben); Messwert „Schultern vor der Hüfte“; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/uebungen-bestand.md, public/uebungen/medien.json, public/uebungen/medien/ (vier Dateien neu), e2e/uebungen.spec.ts, docs/screens/uebungen/hueftbeuge-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-527
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.276 bestanden (140 Dateien); Build, Startansicht 239,9 KB, Übungsbilder 120 von 120; E2E Chromium (drei Worker) 473 bestanden, 153 übersprungen, 0 fehlgeschlagen; Naht pixelgleich
+Ergebnis: bestanden (Werte in 59.3)
+Bekannte Einschränkungen: Arme oben 16° vor der Senkrechten und die Stange 7,8 cm vor der Fußmitte (aufrecht mit der Stange an den Oberschenkeln geht es nicht anders, Begründung in 59.3); Saumband in der Hüftfalte bis 6,8 mm in den Shorts wie bei D-490
+Nächste Schritte: Schleifen „Senkrechtes Drücken“ (D-528)
 ```

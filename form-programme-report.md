@@ -2586,3 +2586,56 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Maße der Maschinen geschätzt, wie freigegeben; oben begrenzt das Polster am Kragen des Schuhs den Weg (stehend 38°, sitzend 29°)
 Nächste Schritte: Arme in der App (D-517), danach die Prüfseiten „Waagrechtes Ziehen“ und „Schulter und Brust isoliert“, Halt bis zu deiner Freigabe
 ```
+
+## 56. Prüfseiten Waagrechtes Ziehen und Schulter und Brust isoliert (D-518, D-519)
+
+Wie gewünscht zwei Familien zusammen, in der Reihenfolge des Animationsplans: „Waagrechtes Ziehen“ mit drei Übungen und „Schulter und Brust isoliert“ mit zwei. Entscheidungen, die bei dir liegen, stehen gesammelt in 56.3.
+
+### 56.1 Waagrechtes Ziehen (D-518)
+
+Prüfseite: `docs/screens/uebungen/familie-waagrechtes-ziehen-pplc.webp`.
+
+**Rudern mit Langhantel, vorgebeugt.** Die Haltung kommt vom Rumänischen Kreuzheben, das du freigegeben hast: Knie 22° gebeugt (158°), der Rumpf mit geradem Rücken 37° zur Waagrechten (Familie 30 bis 60°), die Hüfte so weit hinten, dass der Schwerpunkt mit der hängenden Stange über der Fußmitte steht; Rumpf und Beine bleiben danach fest. Langhantel mit zwei Scheiben zu 20 kg, breit im Obergriff (Hände 60 cm auseinander). Die Stange hängt unten unter den Schultern und kommt auf einer Geraden an den oberen Bauch, 1,5 cm vor das Shirt; die Schulterblätter gehen dabei zurück. Die Stange liegt schräg in der Hand wie bei breiten Griffen (D-452), sonst knickte das Handgelenk unten 22° zur Seite. Kamera 45° schräg von vorn: verglichen mit 30° bis 90°, ab 60° verdeckt die nahe Scheibe den Körper.
+
+**Rudern an der Maschine.** Neue Hebelmaschine mit Scheiben nach der üblichen Bauart (Maße geschätzt): Sitz, Brustpolster, vorn ein Turm, für jeden Arm ein eigener Hebel, am Ende ein drehbarer Griff. Du sitzt mit der Brust am Polster (4 mm eingedrückt), der Rumpf 12° vor, Knie 100°. Neutraler Griff, Daumen oben; der Griff dreht sich mit dem Unterarm, fest am Hebel knickte das Handgelenk bis 55°. Ausgang mit fast gestreckten Armen und den Schultern vorn, Ende mit den Oberarmen 15° hinter dem Rumpf und den Schulterblättern zusammen.
+
+**High Row an der Maschine.** Dieselbe Maschine, die Hebel kommen von einer Achse vorn unten (1,30 m lang; mit 0,80 m lief der Griff in der Mitte nah am Gesicht vorbei). Ausgang mit den Armen etwa 40° über der Waagrechten nach vorn oben, Zug schräg nach unten, bis die Ellbogen unten am Rumpf sind. Einen Ausführungstext hat die Übung in der App noch nicht (D-504: die Quelle war nicht erreichbar, auch heute nicht); die Bewegung folgt der Beschreibung im Plan: „sitzend, Brust am Polster, Griffe vorn oben an Hebelarmen, Zug schräg nach unten zu den unteren Rippen“.
+
+| Messwert über alle 60 Bilder | Rudern Langhantel | Rudern Maschine | High Row |
+|---|---|---|---|
+| Ellbogen Ausgang → Ende | 169° → 69° | 166° → 73° | 166° → 59° (unterwegs 54°) |
+| Oberarm am Ende hinter dem Rumpf | 40° | 16° | 6° |
+| Ellbogen vom Rumpf zur Seite | 16° bis 43° | 8° bis 18° | 14° bis 48° |
+| Handgelenk, höchstens | 11° (Stange schräg in der Hand) | 3,5° | 2,2° |
+| Schulterblätter zurück (Schlüsselbein) | −6° → 8° | −8° → 10° | −8° → 10° |
+| Stange zur Kleidung / zur Haut ohne Hände, mindestens | 15 / 30 mm | – | – |
+| Scheiben über dem Boden, mindestens | 35 cm | – | – |
+| Schwerpunkt hinter der Fußmitte | 0,0 bis 7,9 cm | – | – |
+| Brust / Gesäß im Polster | – | 4 / 4 mm, nichts durch | 4 / 4 mm, nichts durch |
+| Maschine zum Körper (ohne Polster und Griffe), mindestens | – | 55 mm | 7,9 mm (am Ende) |
+| Arme zum Brustpolster, mindestens | – | 24 mm | 87 mm |
+| Lende / Blick | wie im Stand / 56° unter der Waagrechten | – | – |
+| Meldungen des Rigs | 0 | 0 Meldungen | 0 |
+
+Unterwegs korrigiert: Beim Rudern an der Maschine zeigte der Ellbogen erst nach innen, das Brustpolster wurde beim Einpassen von Oberschenkeln und Armen 7 cm verschoben, die Fußspitzen stießen an den Turm, und an festen Griffen knickte das Handgelenk bis 55° (jetzt drehbare Griffe, wie an solchen Maschinen üblich). Die Meldungen „Handgelenk nicht erreichbar“ kamen aus Zwischenschritten der drehbaren Griffe; ohne sie nachgemessen: 0 Meldungen. Ein kleiner Würfel oben links in einer Nebenansicht der High Row war eine Platte am Hebelende, die doppelt verschoben frei im Raum lag. Ich habe sie entfernt, auch an der Schulterpresse; dort lag sie in keinem der 60 Bilder der Schleife, die Schleife bleibt, wie sie ist. Auf der Prüfseite zeige ich die Füße von außen und von hinten, weil von vorn der Turm davor steht.
+
+### 56.3 Deine Entscheidungen
+
+Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
+
+1. **Rudern mit Langhantel, Weg der Stange:** wie im Text bis an den oberen Bauch; der Oberarm steht am Ende dafür 40° hinter dem Rumpf (Familie 15 bis 30°). Vorschlag: so lassen.
+2. **Maschine (Annahme):** eine Hebelmaschine mit Brustpolster für Rudern und High Row: je Arm ein Hebel, drehbare Griffe, für die High Row Hebel von vorn unten. Weicht die Maschine in deinem Studio ab, nenn mir die Bauart.
+3. **High Row, Text:** Die App hat für „High Row an der Maschine“ noch keinen Ausführungstext. Vorschlag: einen Text nach der Animation schreiben, zusammen mit der Schleife (Brust am Polster, Griffe vorn oben, Zug schräg nach unten, bis die Ellbogen am Rumpf sind).
+
+### 56.4 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-518 Phase Programme, Prüfseite „Waagrechtes Ziehen“ (Rudern mit Langhantel, Rudern an der Maschine, High Row an der Maschine) an einer neuen Rudermaschine
+Umgesetzte Funktionen: keine in der App; Werkzeug: Rudermaschine mit Brustpolster, Hebeln je Arm und drehbaren Griffen (geraete.rudermaschine), Übungen uebungen.RudernLanghantel (aus der Hüftbeuge), RudernMaschine und HighRowMaschine mit Messwerten, Zeilen der Prüfseite; Platte am Hebelende der Schulterpresse entfernt (lag außerhalb des Bildes); erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-waagrechtes-ziehen-pplc.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-518
+Ausgeführte Tests: Kameravergleich Rudern mit Langhantel, Probeläufe, render.py --pruefen und Nahaufnahmen für alle drei (je 60 Bilder), Rudern an der Maschine nach dem Bereinigen der Meldungen nachgemessen, Lage der verschobenen Platte in allen Ansichten nachgerechnet, Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 56.1)
+Bekannte Einschränkungen: Maße der Maschine geschätzt; High Row ohne Ausführungstext in der App (Frage 3)
+Nächste Schritte: Prüfseite „Schulter und Brust isoliert“ (D-519), dann Halt bis zu deiner Freigabe beider Prüfseiten
+```

@@ -3460,3 +3460,21 @@ Nach der Freigabe der Prüfseite D-514: Wadenheben mit mehr Bewegungsweite, Text
 | `pnpm test` (Blender angehalten) | 140 Dateien, 1273 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 80 von 80 Dateien |
 | `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 22,1 min; Übungsliste mit 20 Bildern |
+
+### Prüfseite „Waagrechtes Ziehen“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Rudern mit Langhantel, Rudern an der Maschine und High Row an einer neuen Rudermaschine; nur Werkzeug, Bilder und Dokumente (D-518).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kameravergleich Rudern mit Langhantel (30° bis 90°) | ab 60° verdeckt die nahe Scheibe den Körper; gewählt 45° |
+| Probeläufe Rudern mit Langhantel | Handgelenk unten 22° zur Seite mit der Stange quer in der Hand; schräg (11°, D-452): höchstens 11,2° |
+| Probeläufe Rudern an der Maschine | Ellbogen nach innen (Vorzeichen der Drehung berichtigt); Brustpolster beim Einpassen von Oberschenkeln und Armen 7 cm verschoben (höher, nur Punkte der Brust); Fußspitzen im Turm (Turm vor die Füße); Handgelenk 40 bis 55° an festen Griffen (drehbare Griffe, Griff 14° schräg in der Hand: 3,5°); Ellbogen am Ende 52° (Oberarm 15° statt 22° hinter dem Rumpf: 73°) |
+| Probeläufe High Row | Ausgang 178° im Ellbogen (Suche nach dem Handgelenk statt nach der Entfernung: 166°); Hebel 0,80 m: Griff in der Mitte nah am Gesicht, 1,30 m |
+| `render.py <übung> --pruefen` und `familie_bilder.py` für alle drei | je 60 Bilder, 0 Meldungen außer beim Rudern an der Maschine (unten); mit Nahaufnahmen 15, 19 und 18 min, neben den Schleifen |
+| Rudern an der Maschine, erster Lauf | 22 Meldungen „Handgelenk nicht erreichbar“ aus Zwischenschritten der drehbaren Griffe; verworfen, `--nur-messwerte` neu: 0 Meldungen |
+| Kleiner Würfel oben links in `pruef-vorn-1.00` der High Row | Platte am Hebelende doppelt verschoben (`_kasten` legt die Lage ins Netz, die Matrix verschob sie noch einmal); nachgerechnet in Kamera der App, von der Seite und von vorn: High Row in 7 bzw. 27 Bildern der Nebenansichten, auf den Bildern der Prüfseite nie; Rudern an der Maschine nie; Schulterpresse (D-492) in keinem der 60 Bilder der Schleife; Platte an beiden Geräten entfernt |
+| Fuß aus der Nähe beim Rudern an der Maschine | von vorn steht der Turm davor; auf der Prüfseite jetzt von außen und von hinten |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | keine; High Row: Ellbogen 54° in der Mitte des Zugs, am Ende 59° (stetig) |
+| Messwerte | in `form-programme-report.md` 56.1 |
+| Prüfseite (`tools/uebungen_pruef_bild.py rudern_langhantel rudern_maschine high_row_maschine --familie waagrechtes-ziehen-pplc --titel "Waagrechtes Ziehen (Dali’s PPLC)"`) | `familie-waagrechtes-ziehen-pplc.webp`, 1480 × 4744, angesehen |

@@ -853,8 +853,8 @@ def schulterpresse(sitz: Vector, lehne: tuple[Vector, Vector], hebel: dict, grif
         _anhaengen(_balken("Hebelarm", fuss, ende, p["hebel"], rahmen), leer)
         _anhaengen(_zylinder("Hebelnabe", 0.035, 0.06, fuss.copy(), "z", stahl, ecken=32), leer).matrix_world = (
             Matrix.Translation(fuss) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
-        _anhaengen(_kasten("Griffplatte", (0.02, 0.06, 0.06), ende.copy(), rahmen, 0.004), leer).matrix_world = (
-            Matrix.Translation(ende) @ k.to_track_quat("X", "Z").to_matrix().to_4x4())
+        # Keine Platte am Hebelende (D-518): `_kasten` legt seine Lage ins Netz, die Matrix verschob sie ein zweites Mal,
+        # die Platte lag außerhalb des Bildes (in keinem Bild der Schleife zu sehen) und fehlte am Griff
         g = _stab("Griff." + s, m - k * (p["griff_l"] / 2), ende - k * 0.01, p["griff_d"] / 2, gummi)
         _anhaengen(g, leer)
         griff_obj[s] = g
@@ -1433,3 +1433,116 @@ def kabelzug_oben(rolle: Vector, stange: Vector, saeule_y: float) -> dict:
                          gummi, ecken=32), leer)
     _anhaengen(_zylinder("Haken", 0.012, k["haken"], stange + Vector((0, 0, k["haken"] / 2 + d / 2)), "z", stahl, ecken=16), leer)
     return {"wurzel": wurzel, "stange": leer, "block": block, "block0": block.matrix_world.copy(), "rolle": rolle.copy()}
+
+
+# Rudermaschine mit Brustpolster (D-518) für „Rudern an der Maschine“ und „High Row an der Maschine“, nach der üblichen
+# Bauart der Hebelmaschinen mit Scheiben (iso-lateral: jeder Arm hat seinen eigenen Hebel; Maße geschätzt, die Seiten
+# der Hersteller sind in der Cloud-Umgebung nicht erreichbar): Sitz auf einer Säule, davor das Brustpolster an einem
+# Träger, vorn ein Rahmen mit den Lagern der beiden Hebel. Jeder Hebel dreht um seine eigene Achse quer zur Person; am
+# Ende der Griff, nahe dem Lager ein Horn mit einer Scheibe.
+RUDERMASCHINE = {"sitz": (0.36, 0.34, 0.08), "brust": (0.32, 0.34, 0.08), "griff_d": 0.032, "griff_l": 0.15,
+                 "hebel": (0.05, 0.07), "scheibe": (0.45, 0.035)}
+
+
+def rudermaschine(name: str, sitz: Vector, brust: tuple[Vector, Vector], hebel: dict, griffe: dict,
+                  turm_y: float | None = None, scheiben: bool = True, haengend: bool = False) -> dict:
+    """Rudermaschine, Person mit Blick nach −y (D-518). `sitz`: Mitte der Oberseite des Sitzpolsters (Welt). `brust`:
+    Mitte der Vorderseite des Brustpolsters (die Seite zur Person) und seine Richtung nach oben (Welt); die Normale zur
+    Person ist oben × x. `hebel`: je Seite ein Punkt auf der Drehachse und ihre Richtung (Welt). `griffe`: je Seite Mitte
+    und Richtung des Griffs im Ausgang (Welt). `turm_y`: Lage des Turms vorn (vor den Füßen), sonst vor Lagern und
+    Brustpolster. `haengend` (Butterfly, D-519): Der Hebel läuft vom Lager waagrecht über den Griff und senkrecht zu ihm
+    hinab (senkrechte Achse über der Schulter). Jeder Hebel ist ein Leerobjekt auf seiner Achse; Hebelarm, Horn und Scheibe hängen daran und drehen je
+    Bild um die Achse. Die Griffe sind drehbar am Ende des Hebels gelagert (D-518): Sie folgen dem Hebel, bleiben aber
+    senkrecht; ihre Lage setzt die Übung je Bild (Ausgangslage `griffe0`). Gibt Wurzel, Sitz, Brustpolster, Polster,
+    Hebel und ihre Ausgangslage, Griffe und Rahmen zurück."""
+    p = RUDERMASCHINE
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    eisen = _mat("Eisen", GERAET, 0.55, 0.2)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    teile = []
+    # Sitz auf einer Säule
+    sx, sy, sd = p["sitz"]
+    sitz_obj = _kasten("Sitzpolster", (sx, sy, sd), sitz - Vector((0, 0, sd / 2)), polster_mat, 0.025, wurzel)
+    unter_sitz = sitz.z - sd
+    # Brustpolster, geneigt, mit Träger nach vorn unten
+    mitte, oben = brust
+    oben = oben.normalized()
+    n = oben.cross(X)  # zur Person (+y)
+    bx, by, bd = p["brust"]
+    brust_obj = _quader("Brustpolster", (bx, by, bd), mitte - n * (bd / 2), Matrix((X, oben, n)).transposed(), polster_mat, 0.03,
+                        wurzel)
+    vorn_brust = mitte - n * (bd + 0.02)
+    lager = {s: a[0] for s, a in hebel.items()}
+    if turm_y is None:
+        turm_y = min(min(q.y for q in lager.values()) - 0.08, vorn_brust.y - 0.25)
+    hinten_y = sitz.y + sy / 2 + 0.05
+    # Längsträger am Boden vom Sitz bis zum Turm, Querfüße
+    teile.append(_kasten("Laengstraeger", (0.10, hinten_y - turm_y + 0.10, 0.06), Vector((0, (hinten_y + turm_y) / 2, 0.03)), rahmen,
+                         0.006, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.60, 0.07, 0.04), Vector((0, hinten_y - 0.02, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Fuss-quer", (1.00, 0.08, 0.04), Vector((0, turm_y, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Sitzsaeule", (0.08, 0.08, unter_sitz - 0.09), Vector((0, sitz.y, 0.06 + (unter_sitz - 0.09) / 2)), rahmen,
+                         0.006, wurzel))
+    teile.append(_kasten("Sitztraeger", (0.22, sy - 0.08, 0.03), Vector((0, sitz.y, unter_sitz - 0.015)), rahmen, 0.004, wurzel))
+    # Träger des Brustpolsters: hinter dem Polster nach unten, dann schräg zum Längsträger
+    unten_brust = vorn_brust - oben * (by / 2 - 0.06)
+    teile.append(_balken("Brusttraeger", vorn_brust + oben * (by / 2 - 0.08), unten_brust, (0.06, 0.04), rahmen, eltern=wurzel))
+    teile.append(_balken("Brustarm", unten_brust, Vector((0, unten_brust.y - 0.10, 0.06)), (0.07, 0.07), rahmen, eltern=wurzel))
+    # Turm vorn mit Querträger auf Höhe der Lager
+    lz = max(q.z for q in lager.values())
+    for seite in (-1, 1):
+        teile.append(_kasten("Turm", (0.08, 0.10, lz + 0.10), Vector((seite * 0.16, turm_y, (lz + 0.10) / 2)), rahmen, 0.008, wurzel))
+    teile.append(_kasten("Turmkopf", (0.42, 0.12, 0.08), Vector((0, turm_y, lz + 0.06)), rahmen, 0.008, wurzel))
+    hebel_obj, hebel0, griff_obj = {}, {}, {}
+    for s, (punkt, achse) in hebel.items():
+        a = achse.normalized()
+        # Ausleger vom Turm zum Lager
+        teile.append(_balken("Lagerarm", Vector((math.copysign(0.16, punkt.x), turm_y, punkt.z)), punkt, (0.06, 0.06), rahmen,
+                             eltern=wurzel))
+        _zylinder("Lager", 0.045, 0.10, punkt.copy(), "z", stahl, wurzel, ecken=32).matrix_world = (
+            Matrix.Translation(punkt) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        leer = bpy.data.objects.new("Hebel." + s, None)
+        bpy.context.scene.collection.objects.link(leer)
+        leer.parent = wurzel
+        leer.matrix_world = Matrix.Translation(punkt)
+        m, k = griffe[s]
+        k = k.normalized()
+        ende = m + k * (p["griff_l"] / 2 + 0.02)
+        fuss = punkt + a * (ende - punkt).dot(a)
+        if haengend:  # vom Lager waagrecht bis über den Griff, dann senkrecht hinab
+            fuss = punkt.copy()
+            knick = Vector((ende.x, ende.y, punkt.z))
+            _anhaengen(_balken("Hebelarm", punkt, knick, p["hebel"], rahmen), leer)
+            _anhaengen(_balken("Hebelarm", knick, ende, p["hebel"], rahmen), leer)
+        else:
+            _anhaengen(_balken("Hebelarm", fuss, ende, p["hebel"], rahmen), leer)
+        _anhaengen(_zylinder("Hebelnabe", 0.035, 0.06, fuss.copy(), "z", stahl, ecken=32), leer).matrix_world = (
+            Matrix.Translation(fuss) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        g = _stab("Griff." + s, m - k * (p["griff_l"] / 2), ende - k * 0.01, p["griff_d"] / 2, gummi)
+        g.parent = wurzel
+        g.matrix_world = _stab_matrix(m - k * (p["griff_l"] / 2), ende - k * 0.01)
+        if fuss != punkt:  # Welle vom Lager zur Nabe
+            _anhaengen(_stab("Welle", punkt, fuss, 0.02, stahl), leer)
+        if scheiben:  # Horn mit Scheibe: am Hebelarm nahe dem Lager, nach außen
+            aussen = Vector((math.copysign(1.0, punkt.x), 0, 0))
+            horn_fuss = fuss.lerp(ende, 0.30)
+            _anhaengen(_stab("Horn", horn_fuss, horn_fuss + aussen * 0.26, 0.025, stahl), leer)
+            d_s, t_s = p["scheibe"]
+            _anhaengen(_stab("Scheibe", horn_fuss + aussen * 0.06, horn_fuss + aussen * (0.06 + t_s), d_s / 2, eisen, ecken=96),
+                       leer)
+        griff_obj[s] = g
+        hebel_obj[s] = leer
+        hebel0[s] = leer.matrix_world.copy()
+    return {"wurzel": wurzel, "sitz": sitz_obj, "brust": brust_obj, "polster": [sitz_obj, brust_obj], "hebel": hebel_obj,
+            "hebel0": hebel0, "griffe": griff_obj, "griffe0": {s: o.matrix_world.copy() for s, o in griff_obj.items()},
+            "rahmen": teile}
+
+
+def _stab_matrix(von: Vector, nach: Vector) -> Matrix:
+    """Lage eines Zylinders von `von` nach `nach` (wie `_stab`)."""
+    return Matrix.Translation((von + nach) / 2) @ (nach - von).to_track_quat("Z", "Y").to_matrix().to_4x4()

@@ -301,6 +301,19 @@ MESSWERTE = (
     ("Ellbogen am Rumpf (mm, Haut zu Haut)", "Ellbogen am Rumpf (Haut zu Haut)", "spanne", " mm"),
     ("Stange zur Kleidung (mm)", "Stange zur Kleidung", "min", " mm"),
     ("Stange zur Haut (mm)", "Stange zur Haut", "min", " mm"),
+    # Waagrechtes Ziehen für Dali’s PPLC (D-518)
+    ("Oberarm hinter dem Rumpf (Grad, + zum Rücken)", "Oberarm hinter dem Rumpf (+ zum Rücken)", "spanne", "°"),
+    ("Ellbogen vom Rumpf weg (Grad, Oberarm zur Ebene längs des Rumpfs)", "Ellbogen vom Rumpf zur Seite", "spanne", "°"),
+    ("Oberarm vom Rumpf zur Seite (Grad)", "Oberarm vom Rumpf zur Seite", "spanne", "°"),
+    ("Unterarm zur Waagrechten (Grad, + Hand höher)", "Unterarm zur Waagrechten (+ Hand höher)", "spanne", "°"),
+    ("Stange über der Fußmitte (cm, + dahinter)", "Stange über der Fußmitte (+ dahinter)", "spanne", " cm"),
+    ("Stange zur Haut ohne Hände (mm)", "Stange zur Haut (ohne Hände)", "min", " mm"),
+    ("Scheiben über dem Boden (mm)", "Scheiben über dem Boden", "min", " mm"),
+    ("Scheiben zur Haut (mm)", "Scheiben zur Haut", "min", " mm"),
+    ("Brust im Polster (mm)", "Brust im Polster", "spanne", " mm"),
+    ("Arme zum Brustpolster (mm)", "Arme zum Brustpolster", "min", " mm"),
+    ("Körper und Shirt zur Maschine ohne Polster und Griffe (mm)", "Körper und Shirt zur Maschine (ohne Polster und Griffe)",
+     "min", " mm"),
 )
 
 
@@ -369,7 +382,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "hack_aussen": "Hand am Griff von außen", "sitzgriff_aussen": "Hand am Sitzgriff von außen",
               "sitzgriff_vorn": "Hand am Sitzgriff von vorn", "waden_hand": "Hand am Griff von außen",
               "waden_hand_vorn": "Hand am Griff von vorn", "stange_schraeg": "Stange schräg von vorn",
-              "stange_hinten": "Stange von hinten"}
+              "stange_hinten": "Stange von hinten", "rudern_aussen": "Hand am Griff von außen",
+              "rudern_hinten": "Hand am Griff von hinten"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

@@ -341,6 +341,10 @@ MESSWERTE = (
     ("Kopf zurück (Grad)", "Kopf zurück (Hals gestreckt, Blick geradeaus)", "max", "°"),
     ("Rumpf zur Senkrechten (Grad, + nach hinten)", "Rumpf zur Senkrechten (+ nach hinten)", "spanne", "°"),
     ("Lende: Krümmung der Hautlinie (Grad, negativ = hohl)", "Lende: Hautlinie (unter 0 = hohl)", "spanne", "°"),
+    # Hüftbeuge für Dali’s PPLC (D-523)
+    ("Arm zur Senkrechten (Grad, + Hand hinter der Schulter)", "Arm zur Senkrechten (+ Hand hinter der Schulter)", "spanne", "°"),
+    ("Hüfte über den Knien (cm)", "Hüfte über den Knien", "spanne", " cm"),
+    ("Schultern vor der Stange (cm)", "Schultern vor der Stange", "spanne", " cm"),
 )
 
 

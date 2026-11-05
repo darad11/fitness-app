@@ -3575,3 +3575,23 @@ Schulterdrücken mit Langhantel stehend und mit Kurzhanteln sitzend; nur Werkzeu
 | Messwerte | in `form-programme-report.md` 58.1 |
 | Prüfseite (`tools/uebungen_pruef_bild.py schulterdruecken_langhantel schulterdruecken_kh_sitzend --familie senkrechtes-druecken-pplc --titel "Senkrechtes Drücken (Dali’s PPLC)"`) | `familie-senkrechtes-druecken-pplc.webp`, 1480 × 3330, angesehen |
 | `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |
+
+### Prüfseite „Hüftbeuge“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Kreuzheben mit Langhantel vom Boden; nur Werkzeug, Bilder und Dokumente (D-523).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Kreuzheben | Schwerpunkt über der Fußmitte als Bedingung: Knie unten 35°; vorgegebener Verlauf des Knies: Schultern in der Mitte bis 30 cm vor der Stange; vorgegebene Lage der Schultern: zweite Lösung (Rumpf aufrecht, Knie 42°), jetzt die erste von 95° abwärts; Schultern gleich von unten hinter die Stange: bei 80 % des Wegs Knie noch 132° (jetzt erst ab 45 %) |
+| Abstand der Stange zu den Beinen | schnell ohne Vorzeichen: Stange im Schienbein galt als frei; Schicht von Punkten zu dünn; jetzt Kanten des Netzes geschnitten (vorn mit Vorzeichen), Shorts dazu; mit 6 mm Luft am verformten Netz bis 0,1 mm in der Haut, jetzt 10 mm |
+| `render.py kreuzheben_langhantel --pruefen`, `familie_bilder.py`, erster vollständiger Lauf | 60 Bilder, 0 Meldungen; 17 min und 3 min, neben den Schleifen; Knie an den Oberschenkeln 141,7° → 135,2° → 176° (beugt sich wieder, Bild 17 bis 20) |
+| „Stange zur Kleidung“ in Bild 20, 21 und 43: −49,5 / −35,5 / −49,0 mm | Probe ohne Vorzeichen (Stange alle 1 cm, 24 Richtungen) und mit Strahlen nach vorn und hinten: Stange 26,7 / 1,4 / 22,5 mm vor den Shorts, kein Stoff vor der Stange, Shirt weiter als 10 cm; das Vorzeichen kippte am Saum der Shorts; Messung jetzt ohne Vorzeichen von der Achse aus, alle 2 mm |
+| Knie gegen die Lage der Schultern (Probe, sechs Höhen, je fünf Lagen) | das Knie streckt sich mit den Schultern weiter vorn um 1,1 bis 1,5° je cm, in jeder Höhe gleichsinnig |
+| Knie nur strecken (`_vor_glatt`), `--nur-messwerte` | Knie 142,3° von Bild 17 bis 21, größter Rückgang 0,04°; Stange in Bild 21 0,6 mm im Saum der Shorts (Schnitt nur auf Höhe der Achse) |
+| Beine auf fünf Höhen geschnitten (`SCHNITTE`), `--nur-messwerte` | Stange mindestens 6,3 mm vor der Kleidung und 7,4 mm vor der Haut (ohne Hände), Knie 105,1° → 175,6°, größter Rückgang 0,07°, Schwerpunkt 4,9 bis 8,3 cm hinter der Fußmitte, 0 Meldungen |
+| `render.py kreuzheben_langhantel --pruefen`, `familie_bilder.py`, letzter Lauf | 60 Bilder, 0 Meldungen; 16 min und 3 min; Werte gleich wie in der Probe davor (größte Abweichung 0) |
+| Kleidung in der Hüftfalte | Saumband bis 12,8 mm in den Shorts (Bild 17), Shorts bis 5,4 mm im Shirt (Bild 44), von Bild zu Bild wechselnd; in den Prüfansichten nicht auffällig; wie D-490 |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | in der Haltung keine; gemeldet: Schwerpunkt in Bild 44 (4,9 cm zwischen 5,3 und 5,2 cm, ein flaches Minimum, beim Heben ebenso in Bild 19), Saumband in Bild 17 (Hüftfalte, s. o.), Stange zur Haut am verformten Netz in Bild 46 (14,1 mm zwischen 10,4 und 7,4 mm, Form der Knie; schnell gemessen 10,0 mm in jedem Bild) |
+| Messwerte | in `form-programme-report.md` 58.2 |
+| Prüfseite (`tools/uebungen_pruef_bild.py kreuzheben_langhantel --familie hueftbeuge-pplc --titel "Hüftbeuge (Dali’s PPLC)"`) | `familie-hueftbeuge-pplc.webp`, 1480 × 1700, angesehen |
+| `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |

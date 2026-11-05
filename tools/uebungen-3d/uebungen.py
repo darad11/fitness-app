@@ -8298,6 +8298,298 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
         return schuhe._verformt(bpy.data.objects["Haare"])[0]
 
 
+# ---------------------------------------------------------------------- Familie „Hüftbeuge“ für Dali’s PPLC (D-523)
+
+
+class KreuzhebenLanghantel(RudernLanghantel):
+    """Kreuzheben mit Langhantel vom Boden, Referenz der Familie „Hüftbeuge“ (D-523), nach dem Ausführungstext der App
+    (ExRx „Barbell Deadlift“, ACE „Deadlift“) und den Werten der Familie (Hüfte 70 bis 100° gebeugt, Knie beim
+    Kreuzheben vom Boden unten 60 bis 80° gebeugt, Rumpf im Umkehrpunkt 0 bis 45° zur Waagrechten, Wirbelsäule neutral,
+    Stange nah am Körper über der Fußmitte). Stand etwa hüftbreit, die Füße flach, Zehen leicht nach außen, die Knie in
+    Richtung der Füße. Die Langhantel (`SCHEIBEN`, 45 cm) steht auf dem Boden über der Fußmitte (Mitte der Stange 22,5 cm
+    hoch), die Hände im Obergriff etwas weiter als schulterbreit (`GRIFF_X`), die Arme gestreckt (`ELLBOGEN`). Die Stange
+    steigt senkrecht über der Fußmitte bis zum aufrechten Stand (Knie `KNIE_OBEN`) und gleitet dabei `LUFT` vor Schienbeinen
+    und Oberschenkeln hoch („Halte die Stange nah am Körper“). Die Schultergelenke stehen unten `VOR_UNTEN` vor der Stange,
+    die Arme fast senkrecht; bis oben gehen sie sanft hinter die Stange, wo sie im aufrechten Stand vor den Oberschenkeln
+    hängt. Je Höhe der Stange gesucht: die Neigung des Rumpfs mit geradem Rücken, bei der die Stange die Beine so knapp
+    verfehlt; daraus Hüfte und Knie. Der gemeinsame Schwerpunkt von Körper und Stange ist ein Messwert. Kopf in
+    Verlängerung des Rumpfs (`KINN`). Zurück derselbe Weg."""
+
+    name = "kreuzheben_langhantel"
+    titel = "Kreuzheben mit Langhantel"
+    kamera = {"richtung": 70.0, "neigung": 8.0}
+    vorschau_phase = 0.0
+    # Mit dem Schwerpunkt genau über der Fußmitte als Bedingung beugten sich die Knie unten bis 35° wie in der tiefen
+    # Hocke; mit einem vorgegebenen Verlauf des Knies wanderten die Schultern in der Mitte bis 30 cm vor die Stange. Jetzt
+    # ist die Lage der Schultern zur Stange vorgegeben, der Schwerpunkt ist ein Messwert
+    KNIE_OBEN = 176.0
+    VOR_UNTEN = 0.05  # unten: Schultergelenke so weit vor der Stange (waagrecht), m; oben folgt die Lage aus dem Stand
+    # Anteil des Wegs, ab dem die Schultern hinter die Stange gehen: Gleich von unten an blieben die Knie bis kurz vor dem
+    # Stand gebeugt (bei 80 % noch 132°, der Rumpf schon fast aufrecht)
+    VOR_AB = 0.45
+    KINN = 4.0
+    GRIFF_X = 0.22  # Mitte der Hand neben der Mitte (vor dem Maß der Schultern), m: außen an den Knien vorbei
+    ELLBOGEN = 178.0
+    # Stange so weit vor der Haut von Schienbeinen und Oberschenkeln (schnell gemessen, an den Knochen), m: Mit 6 mm lag sie
+    # am verformten Netz bis 0,1 mm in der Haut
+    LUFT = 0.010
+    SCHEIBEN = [(0.45, 0.05)]  # je Seite eine Scheibe, 20 kg
+    HANTEL_KG = 30.0  # je Hand die Hälfte von Stange (20 kg) und Scheiben (2 × 20 kg), für den Schwerpunkt
+    SCHRAEG = 11.0
+    POL = (0.6, 0.6, 0.0)  # Ellbogen nach außen und hinten (linke Seite)
+
+    def bauen(self) -> None:
+        super().bauen()
+        k = self.rig.kopf
+        self.S0x = k["upperarm01.L"].x
+        self.S_ruhe = (k["upperarm01.L"] + k["upperarm01.R"]) / 2
+        l1, l2 = self.armlaengen
+        # Schultergelenk bis Mitte des Griffs bei gestrecktem Arm (Handgelenk plus etwa 7 cm Hand)
+        self.reichweite_griff = math.sqrt(l1 * l1 + l2 * l2 - 2 * l1 * l2 * math.cos(math.radians(self.ELLBOGEN))) + 0.07
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+        grenze = self.GRIFF_X * self.mass - 0.04
+        self.beinpunkte = []
+        index = {}
+        for v in self.koerper.data.vertices:
+            gruppen = [(x.weight, namen[x.group]) for x in v.groups if x.weight > 0.3]
+            if gruppen and abs(v.co.x) < grenze:
+                g = max(gruppen)[1]
+                if g.startswith(("upperleg", "lowerleg")) and g in self.rig.knochen:
+                    index[v.index] = len(self.beinpunkte)
+                    self.beinpunkte.append((g, v.co.copy()))
+        # Kanten zwischen diesen Punkten: Ihr Schnitt mit der Höhe der Stange gibt die vorderste Stelle des Beins
+        self.beinkanten = [(index[e.vertices[0]], index[e.vertices[1]]) for e in self.koerper.data.edges
+                           if e.vertices[0] in index and e.vertices[1] in index]
+        self._a = 0.0
+
+    def _pose_mit(self, a: float, z: float, vor: float) -> tuple[dict, dict, Vector]:
+        """Haltung bei Rumpfneigung `a`, die Schultergelenke `vor` vor der Stange auf Höhe `z`, so hoch über ihr, wie der
+        gestreckte Arm reicht; gibt Beine, Arme und den Schwerpunkt zurück."""
+        rig = self.rig
+        mitte = Vector((0.0, self.fussmitte_y, z))
+        dx = self.GRIFF_X * self.mass - abs(self.S0x)
+        hoch = math.sqrt(max(self.reichweite_griff ** 2 - dx * dx - vor * vor, 0.0))
+        S = Vector((0.0, mitte.y - vor, z + hoch))
+        H = S - achse_winkel(X, a) @ (self.S_ruhe - self.H0)
+        beine = self._rumpf(a, H.y - self.H0.y, H.z - self.H0.z)
+        arme = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            ziel = Vector((sx * self.GRIFF_X * self.mass, mitte.y, mitte.z))
+            pol = Vector((sx * self.POL[0], self.POL[1], self.POL[2])).normalized()
+            arme[s] = rig.arm(s, self.griff[s], ziel, X * sx, pol, 0.0)
+            arme[s]["mitte"] = ziel
+        return beine, arme, self._schwerpunkt(beine, arme)
+
+    # Höhen über den Querschnitt der Stange (Anteil des Halbmessers), auf denen die Beine geschnitten werden
+    SCHNITTE = (-0.9, -0.5, 0.0, 0.5, 0.9)
+
+    def _abstand_beine(self, z: float) -> float:
+        """Wie weit Haut und Shorts der Beine hinter der Stange liegen (m, negativ = davor oder darin), schnell: Ecken an
+        ihrem Knochen, die Kanten des Netzes auf fünf Höhen über den Querschnitt der Stange geschnitten (`SCHNITTE`), je
+        Höhe zählt die vorderste Schnittstelle gegen die Breite der Stange dort. Gemessen nach vorn, nicht als Abstand: Der
+        Abstand ohne Richtung hielt eine Stange mitten im Schienbein für frei (der Rand lag 3 cm um sie herum); eine Schicht
+        von ±1,5 cm traf nur 12 bis 20 Ecken und sprang; nur auf Höhe der Achse geschnitten, lag die Stange am Saum der
+        Shorts 0,6 mm im Stoff, weil er knapp darüber vorsteht."""
+        rig = self.rig
+        G = {}
+        pkte = []
+        for knochen, q in self.beinpunkte:
+            M = G.get(knochen)
+            if M is None:
+                M = G[knochen] = rig.g(knochen)
+            pkte.append(M @ q)
+        hoehen = [(z + f * STANGE_R, STANGE_R * math.sqrt(1.0 - f * f)) for f in self.SCHNITTE]
+        vorn = [None] * len(hoehen)
+        for i, j in self.beinkanten:
+            a, b = pkte[i], pkte[j]
+            for n, (h, _) in enumerate(hoehen):
+                da, db = a.z - h, b.z - h
+                if da * db <= 0.0 and da != db:
+                    y = a.y + (b.y - a.y) * (da / (da - db))
+                    if vorn[n] is None or y < vorn[n]:
+                        vorn[n] = y
+        frei = [v - self.fussmitte_y - breite for v, (_, breite) in zip(vorn, hoehen) if v is not None]
+        return min(frei) if frei else 1.0
+
+    def _pose_a(self, a: float, z: float) -> tuple[dict, dict, Vector, float, float]:
+        """Rumpfneigung `a`, Stange auf Höhe `z`: die Schultern so weit vor der Stange, dass sie `LUFT` vor den Beinen
+        liegt (weiter vorn schiebt sich die Hüfte nach vorn, die Knie mit ihr). Gibt Beine, Arme, Schwerpunkt, Abstand
+        und Lage der Schultern zurück."""
+        rig = self.rig
+        lo, hi = -0.25, 0.30
+        for _ in range(18):
+            vor = (lo + hi) / 2
+            vorher = len(rig.meldungen)
+            self._pose_mit(a, z, vor)
+            frei = self._abstand_beine(z)
+            del rig.meldungen[vorher:]
+            if frei < self.LUFT:
+                hi = vor
+            else:
+                lo = vor
+        vor = lo
+        beine, arme, schwer = self._pose_mit(a, z, vor)
+        return beine, arme, schwer, self._abstand_beine(z), vor
+
+    def _vor_bei_roh(self, z: float) -> float:
+        """Schultergelenke vor der Stange je Höhe: unten `VOR_UNTEN`; ab `VOR_AB` des Wegs (die Stange ist an den Knien)
+        sanft bis zur Lage oben (aufrechter Rumpf)."""
+        t = max(0.0, min(1.0, ((z - self.z0) / (self.z1 - self.z0) - self.VOR_AB) / (1.0 - self.VOR_AB)))
+        return self.VOR_UNTEN + (self.vor_oben - self.VOR_UNTEN) * t * t * (3.0 - 2.0 * t)
+
+    def _vor_bei(self, z: float) -> float:
+        """Wie `_vor_bei_roh`, aber aus der Tafel `_vor_glatt` (linear zwischen den Stellen), sobald sie da ist."""
+        tafel = getattr(self, "_vor_tafel", None)
+        if tafel is None:
+            return self._vor_bei_roh(z)
+        zs, vors = tafel
+        x = max(0.0, min(1.0, (z - zs[0]) / (zs[-1] - zs[0]))) * (len(zs) - 1)
+        i = min(int(x), len(zs) - 2)
+        return vors[i] + (vors[i + 1] - vors[i]) * (x - i)
+
+    def _vor_glatt(self) -> tuple[list, list]:
+        """Lage der Schultern je Höhe der Stange so, dass sich die Knie beim Heben nur strecken (D-523): Mit der Lage aus
+        `_vor_bei_roh` beugten sie sich an den Oberschenkeln kurz wieder um 6° (142° → 135°), weil die Schultern dort
+        schnell hinter die Stange gingen. Wo das Knie unter seinen bisher größten Winkel fiele, bleiben die Schultern weiter
+        vorn (per Halbierung: das Knie streckt sich mit der Lage der Schultern, etwa 1,2° je cm), bis es ihn hält."""
+        n = 41
+        zs = [self.z0 + (self.z1 - self.z0) * i / (n - 1) for i in range(n)]
+
+        def knie(z: float, vor: float) -> float:
+            return self.kniewinkel(self._pose_z(z, vor)[0]["L"])
+
+        vors = []
+        groesster = 0.0
+        for z in zs:
+            vor = self._vor_bei_roh(z)
+            k = knie(z, vor)
+            if k < groesster:
+                lo, hi = vor, vor + 0.15
+                for _ in range(16):
+                    m = (lo + hi) / 2
+                    if knie(z, m) < groesster:
+                        lo = m
+                    else:
+                        hi = m
+                vor = hi
+                k = knie(z, vor)
+            vors.append(vor)
+            groesster = max(groesster, k)
+        return zs, vors
+
+    def _pose_z(self, z: float, vor: float | None = None) -> tuple[dict, dict, Vector, float, float]:
+        """Rumpfneigung per Halbierung, bis die Stange `LUFT` vor den Beinen liegt, die Schultern `vor` (sonst `_vor_bei`)
+        vor ihr: flacher geneigt geht die Hüfte zurück und mit ihr die Beine."""
+        rig = self.rig
+        if vor is None:
+            vor = self._vor_bei(z)
+
+        def frei_bei(a: float) -> float:
+            vorher = len(rig.meldungen)
+            self._pose_mit(a, z, vor)
+            frei = self._abstand_beine(z)
+            del rig.meldungen[vorher:]
+            return frei
+
+        # Von der vorgeneigten Seite her die erste Neigung, bei der die Beine an die Stange kommen: Weiter aufrecht gibt es
+        # eine zweite Lösung in tiefer Hocke mit den Knien vor der Stange (in fünf Bildern nahe dem Boden gefunden)
+        hi = 95.0
+        lo = hi - 5.0
+        while lo > -10.0 and frei_bei(lo) >= self.LUFT:
+            hi, lo = lo, lo - 5.0
+        for _ in range(16):
+            a = (lo + hi) / 2
+            if frei_bei(a) < self.LUFT:
+                lo = a
+            else:
+                hi = a
+        self._a = hi
+        beine, arme, schwer = self._pose_mit(self._a, z, vor)
+        return beine, arme, schwer, self._abstand_beine(z), vor
+
+    def _shorts_dazu(self) -> None:
+        """Die Shorts in die schnelle Messung (`_abstand_beine`): Am Oberschenkel liegt der weite Stoff bis 2 cm über der
+        Haut, mit `LUFT` nur zur Haut lag die Stange oben bis 22 mm darin. Ihre Ecken hängen wie die Haut am Knochen mit
+        dem größten Gewicht (die Kleidung hat die Gruppen des Körpers); erst jetzt da, die Kleidung entsteht nach `bauen`."""
+        obj = bpy.data.objects.get("Shorts")
+        if obj is None or getattr(self, "_shorts_drin", False):
+            return
+        self._shorts_drin = True
+        namen = {g.index: g.name for g in obj.vertex_groups}
+        M = self.koerper.matrix_world.inverted() @ obj.matrix_world
+        grenze = self.GRIFF_X * self.mass - 0.04
+        index = {}
+        for v in obj.data.vertices:
+            gruppen = [(x.weight, namen[x.group]) for x in v.groups if x.weight > 0.3]
+            q = M @ v.co
+            if gruppen and abs(q.x) < grenze:
+                g = max(gruppen)[1]
+                if g.startswith(("upperleg", "lowerleg", "pelvis", "root")) and g in self.rig.knochen:
+                    index[v.index] = len(self.beinpunkte)
+                    self.beinpunkte.append((g, q))
+        self.beinkanten += [(index[e.vertices[0]], index[e.vertices[1]]) for e in obj.data.edges
+                            if e.vertices[0] in index and e.vertices[1] in index]
+
+    def _loesen(self) -> None:
+        """Höhe der Stange unten (Scheiben auf dem Boden) und oben (aufrechter Rumpf, Knie `KNIE_OBEN`, per Halbierung,
+        die Schultern je so, dass die Stange `LUFT` vor den Oberschenkeln liegt)."""
+        self._shorts_dazu()
+        rig = self.rig
+        self.z0 = self.SCHEIBEN[0][0] / 2 - rig.versatz.z
+        lo, hi = self.z0 + 0.2, self.z0 + 0.8
+        for _ in range(18):
+            z = (lo + hi) / 2
+            beine = self._pose_a(0.0, z)[0]
+            if self.kniewinkel(beine["L"]) > self.KNIE_OBEN:
+                hi = z
+            else:
+                lo = z
+        self.z1 = (lo + hi) / 2
+        self.vor_oben = self._pose_a(0.0, self.z1)[4]
+        self._vor_tafel = None
+        self._vor_tafel = self._vor_glatt()
+        self.stand = (0.0, 0.0)
+        rig.zuruecksetzen()
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        z = self.z0 + (self.z1 - self.z0) * p
+        beine, arme, schwer, frei, vor = self._pose_z(z)
+        mitte = Vector((0.0, self.fussmitte_y, z))
+        self.stange.location = rig.welt(mitte)
+        L, A = beine["L"], arme["L"]
+        S = (arme["L"]["schulter"] + arme["R"]["schulter"]) / 2
+        H = (beine["L"]["huefte"] + beine["R"]["huefte"]) / 2
+        K = (beine["L"]["knie"] + beine["R"]["knie"]) / 2
+        k = rig.kopf
+        rumpf = rig.punkt("neck01", k["neck01"]) - rig.punkt("spine05", k["spine05"])
+        oberschenkel = L["knie"] - L["huefte"]
+        ober = (A["ellbogen"] - A["schulter"]).normalized()
+        self.werte = {
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Arm zur Senkrechten (Grad, + Hand hinter der Schulter)": math.degrees(math.atan2(ober.y, -ober.z)),
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Griffe auseinander (cm)": (arme["L"]["mitte"] - arme["R"]["mitte"]).length * 100,
+            "Rumpf zur Waagrechten (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, rumpf.normalized().z)))),
+            "Hüfte (Rumpf zum Oberschenkel, Grad, 180 = gestreckt)": math.degrees(rumpf.angle(oberschenkel)),
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüfte über den Knien (cm)": (H.z - K.z) * 100,
+            "Schultern über der Hüfte (cm)": (S.z - H.z) * 100,
+            "Schultern vor der Stange (cm)": (mitte.y - S.y) * 100,
+            "Stange vor den Beinen, schnell (mm)": frei * 1000,
+            "Stange über der Fußmitte (cm, + dahinter)": (mitte.y - self.fussmitte_y) * 100,
+            "Stange über dem Boden (cm)": rig.welt(mitte).z * 100,
+            "Schwerpunkt über der Fußmitte (cm, + dahinter)": (schwer.y - self.fussmitte_y) * 100,
+        }
+
+    def zusatzwerte(self) -> dict:
+        werte = super().zusatzwerte()
+        werte["Stange zur Kleidung (mm)"] = stange_zur_kleidung(self.stange.location, 0.30) * 1000
+        return werte
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
@@ -8305,4 +8597,4 @@ UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, Bankdruecken
                                Hackenschmidt, Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend,
                                Bizepscurl, Hammercurl, Trizepsdruecken, RudernLanghantel, RudernMaschine,
                                HighRowMaschine, FliegendeKabel, ReverseButterfly, SchulterdrueckenKH,
-                               SchulterdrueckenLanghantel)}
+                               SchulterdrueckenLanghantel, KreuzhebenLanghantel)}

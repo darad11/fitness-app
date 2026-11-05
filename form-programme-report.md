@@ -2873,12 +2873,41 @@ Prüfseite: `docs/screens/uebungen/familie-senkrechtes-druecken-pplc.webp`.
 
 Unterwegs korrigiert, stehend: Mit der Stange quer in der Hand knickte das Handgelenk oben 25°, mit 11° schräg in der Mitte 23°; mit 6° sind es höchstens 21°. Der Blick ging mit dem Rumpf bis 14° nach oben; jetzt gleicht der Kopf das aus. Die Stange streifte an der Stirn die Haare (1,2 mm darin); jetzt zählen die Haare in der Suche mit, es bleiben 8,0 mm. Sitzend: Mit den Werten aus der Planung (Griffe mittig zwischen Kinn und Ohr, Ellbogen 80°) standen die Hanteln 94 cm auseinander, und das Handgelenk knickte 31°; der Hinterkopf lag 38 mm vor der Lehne; die Finger lagen 8,8 mm im Griff; der Unterarm stand in der Mitte 18° schräg. Ein Messfehler: „Stange zur Kleidung“ zählte bis −299 mm, weil die Suche weit über dem Kopf die Innenseite des Kragens fand; jetzt wird nur in der Nähe gemessen.
 
+### 58.2 Hüftbeuge (D-523)
+
+Prüfseite: `docs/screens/uebungen/familie-hueftbeuge-pplc.webp`.
+
+**Kreuzheben mit Langhantel.** Wie im Text: Füße flach etwa hüftbreit, die Stange über der Fußmitte, Obergriff etwas weiter als schulterbreit, Rücken gerade. Langhantel mit zwei Scheiben zu 20 kg auf dem Boden. Die Stange steigt senkrecht über der Fußmitte und gleitet 1 cm vor Schienbeinen und Oberschenkeln hoch, bis du aufrecht stehst; unten kommt sie kurz auf dem Boden zur Ruhe. Unten stehen die Schultern 5 cm vor der Stange, ab knapp der Hälfte des Wegs gehen sie hinter die Stange. Für jede Höhe der Stange habe ich die Neigung des Rumpfs gesucht, bei der die Stange die Beine knapp verfehlt; daraus folgen Hüfte und Knie.
+
+| Messwert über alle 60 Bilder | Wert |
+|---|---|
+| Knie unten → oben | 105° → 176°, an den Oberschenkeln 142° gehalten (Familie unten 60 bis 80° gebeugt) |
+| Hüfte unten → oben | 40° → 169° |
+| Rumpf zur Waagrechten | 16° → 89° (Familie unten 0 bis 45°) |
+| Schultern über der Hüfte | 11 bis 45 cm („die Schultern bleiben höher als die Hüfte“) |
+| Schultern zur Stange | 5 cm davor → 16 cm dahinter |
+| Arm zur Senkrechten | unten 3° hinter, oben 18° vor der Schulter |
+| Stange über der Fußmitte | in jedem Bild (0,0 cm) |
+| Stange zu den Beinen / zur Haut am verformten Netz, mindestens | 10 mm / 7,4 mm |
+| Stange zur Kleidung, mindestens | 6,3 mm |
+| Schwerpunkt hinter der Fußmitte | 4,9 bis 8,3 cm |
+| Lende: Wirbel gegen das Becken / Hautlinie gegen den Stand | 0,0° / 0,8 bis 5,1° flacher (neutral) |
+| Nacken / Blick unter der Waagrechten | 4° / 77° → 4° |
+| Handgelenk, höchstens | 10,3° |
+| Meldungen des Rigs | 0 |
+
+Unterwegs korrigiert: Mit dem Schwerpunkt über der Fußmitte als Bedingung beugten sich die Knie unten bis 35° wie in einer tiefen Hocke. Mit einem vorgegebenen Verlauf des Knies wanderten die Schultern in der Mitte bis 30 cm vor die Stange. Jetzt ist die Lage der Schultern zur Stange vorgegeben, der Schwerpunkt ist ein Messwert. Die Suche fand dann eine zweite Lösung mit aufrechtem Rumpf und 42° im Knie; jetzt nimmt sie die erste von oben. Die Knie beugten sich an den Oberschenkeln kurz wieder um 6°, weil die Schultern dort schnell hinter die Stange gingen; das passt nicht zu „streck Hüfte und Knie“. Jetzt bleiben die Schultern dort etwas länger vorn, und das Knie hält 142°, bis es sich weiter streckt. Der schnelle Abstand hielt eine Stange im Schienbein für frei; jetzt schneidet das Werkzeug die Beine auf fünf Höhen über den Querschnitt der Stange, die Shorts zählen mit (nur auf Höhe der Achse lag die Stange am Saum der Shorts 0,6 mm im Stoff). Ein Messfehler: „Stange zur Kleidung“ zählte in drei Bildern −49 mm, obwohl die Stange 27 mm vor den Shorts lag; jetzt wird ohne Vorzeichen von der Achse der Stange aus gemessen.
+
+Kleidung: In der vorderen Hüftfalte liegt das Saumband bis 12,8 mm in den Shorts, die Shorts bis 5,4 mm im Shirt (Rumpf 41 bis 53°), von Bild zu Bild wechselnd, wie beim Rumänischen Kreuzheben (D-490, dort so freigegeben); in den Prüfansichten fällt es nicht auf.
+
 ### 58.4 Deine Entscheidungen
 
 Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
 
 1. **Schulterdrücken stehend, Ausgang:** wie im Text vorn auf Höhe des Halses. Der Ellbogen ist dort 35°; die Familie nennt unten 70 bis 90°, das passt eher zu einer Stange auf Höhe des Kinns. Vorschlag: wie im Text lassen.
 2. **Schulterdrücken stehend, am Kopf vorbei:** Kopf und Rumpf gehen bis 14° zurück, das Handgelenk knickt dort bis 21°; oben steht der Rumpf wieder senkrecht. Die Alternative wäre eine Stange, die vor dem Gesicht einen Bogen nach vorn macht. Vorschlag: so lassen.
+3. **Kreuzheben, oben:** Die Stange bleibt über der Fußmitte und 1 cm vor den Oberschenkeln. Dadurch hängen die Arme oben 18° vor der Senkrechten, und der Schwerpunkt liegt 8 cm hinter der Fußmitte (unten 6 cm). Vorschlag: so lassen. Alternative: oben die Stange 3 bis 4 cm näher zu den Fersen, die Arme fast senkrecht.
+4. **Kreuzheben, Griff:** Obergriff; der Text erlaubt auch den Kreuzgriff. Vorschlag: Obergriff.
 
 ### 58.5 Berichte zu den Paketen
 
@@ -2891,4 +2920,15 @@ Ausgeführte Tests: Probeläufe beider Übungen, render.py --pruefen und Nahaufn
 Ergebnis: bestanden (Werte in 58.1)
 Bekannte Einschränkungen: Ellbogen unten 35° statt 70 bis 90° (Frage 1); Gewichte angenommen (Langhantel 40 kg, Kurzhanteln 8 kg)
 Nächste Schritte: Prüfseiten „Hüftbeuge“ (D-523) und „Rumpf“ (D-524), dann Halt bis zu deiner Freigabe
+```
+
+```
+Arbeitspaket: D-523 Phase Programme, Prüfseite „Hüftbeuge“ (Kreuzheben mit Langhantel)
+Umgesetzte Funktionen: keine in der App; Werkzeug: uebungen.KreuzhebenLanghantel (Stange über der Fußmitte nah an den Beinen, Rumpf je Höhe gesucht, Knie strecken sich durchgehend, Schwerpunkt als Messwert), Messung Stange zur Kleidung ohne Vorzeichen, Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-hueftbeuge-pplc.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-523
+Ausgeführte Tests: Probeläufe, Probe Stange zu den Shorts ohne Vorzeichen, Probe Knie gegen die Lage der Schultern, render.py --pruefen und Nahaufnahmen (zweimal, zuletzt mit durchgehend gestreckten Knien und fünf Schnitten), Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 58.2)
+Bekannte Einschränkungen: Schwerpunkt 5 bis 8 cm hinter der Fußmitte, Arme oben 18° vor der Senkrechten (Frage 3); Saumband in der Hüftfalte wie bei D-490
+Nächste Schritte: Prüfseite „Rumpf“ (D-524), dann Halt bis zu deiner Freigabe
 ```

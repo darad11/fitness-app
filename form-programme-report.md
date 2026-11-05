@@ -2527,3 +2527,62 @@ Ergebnis: bestanden (Werte in 54.2)
 Bekannte Einschränkungen: Maße des Kabelzugs geschätzt; Curls gleichzeitig statt abwechselnd (Frage 4)
 Nächste Schritte: Halt bis zu deiner Freigabe beider Prüfseiten und deinen Antworten in 54.3; danach die Schleifen beider Familien, dann die nächsten Familien (Waagrechtes Ziehen, Schulter und Brust isoliert)
 ```
+
+## 55. Beine isoliert und Arme in der App (D-516, D-517)
+
+Nach deiner Freigabe beider Prüfseiten mit deinen fünf Entscheidungen: zuerst die Beine (55.1), dann die Arme (55.2), je gerendert und eingebaut. Geändert habe ich nur, was du entschieden hast.
+
+### 55.1 Beine isoliert (D-516)
+
+**Wadenheben, Bewegungsweite (deine Entscheidung 2).** Unten mehr Dehnung, oben so hoch auf die Ballen, wie Fuß und Schuh es sauber zulassen. Gemessen über alle 60 Bilder:
+
+| | vorher (D-514) | stehend jetzt | sitzend jetzt |
+|---|---|---|---|
+| Sprunggelenk unten (gebeugt) | 12° | 18° | 20° |
+| Ferse unten unter dem Block | 3,5 / 3,0 cm | 5,5 cm | 5,4 cm |
+| Sprunggelenk oben (gestreckt) | 25° | 38° | 29° |
+| Ferse oben über dem Block | 6,2 / 5,8 cm | 9,2 cm | 6,6 cm |
+| Fuß geneigt unten → oben | | −16° → 34° | −16° → 24° |
+| Schuh am Ballen gebogen, höchstens | 22,8 / 21,2° | 34,2° | 24,3° |
+| Kragenpolster über der Socke, mindestens | | 0,2 mm | 0,2 mm |
+| Innenseite des Kragens über der Socke, mindestens | | 0,7 mm | 0,7 mm |
+| Sohle über dem Block | 0,0 bis 0,8 / 0,1 bis 0,9 mm | 0,0 bis 0,9 mm | 0,0 bis 0,9 mm |
+
+Warum oben nicht gleich: Was oben begrenzt, ist das Polster am Kragen des Schuhs. Stehend berührt es die Socke ab 39° (bei 40° läge es 0,2 mm darin), sitzend schon ab 31°, weil Unterschenkel und Wade bei gebeugtem Knie anders zum Schuh stehen. Darum stehend 38°, sitzend 29°, je mit 0,2 mm Luft. Für dieselbe Tiefe unten braucht das Sprunggelenk sitzend 2° mehr; die Neigung des Fußes ist in beiden gleich (16°). Nahaufnahmen des Fußes unten und oben habe ich angesehen.
+
+Sitzend drücken die Oberschenkel den Sitz unten tiefer ein (Gesäß 4 bis 18 mm im Polster, vorher bis 15 mm), das Kniepolster gleitet höchstens 3,6 mm längs der Oberschenkel (vorher 2,0 mm).
+
+**Text Wadenheben sitzend (deine Entscheidung 1):**
+
+| | Text |
+|---|---|
+| vorher | „Leg die Hände auf die Polster und löse den Sicherungshebel.“ |
+| jetzt | „Halt dich an den Griffen am Polster fest und löse den Sicherungshebel.“ |
+
+Dazu in der Zeile davor „unter das Polster“ statt „unter die Polster“, weil die Maschine eine Rolle hat; ein Quellenhinweis nennt die Abweichung.
+
+**Beinstrecker und Beinbeuger sitzend:** unverändert wie auf der Prüfseite.
+
+**In der App:**
+
+| Übung | MP4 | WebM | Poster | Vorschau | zusammen | Alternativtext |
+|---|---|---|---|---|---|---|
+| Beinstrecker | 66,0 KB | 59,0 KB | 14,0 KB | 4,9 KB | 143,9 KB | 215 Zeichen |
+| Beinbeuger sitzend | 68,7 KB | 61,3 KB | 13,1 KB | 5,7 KB | 148,8 KB | 236 Zeichen |
+| Wadenheben stehend | 36,8 KB | 29,5 KB | 7,3 KB | 3,2 KB | 76,8 KB | 219 Zeichen |
+| Wadenheben sitzend | 52,3 KB | 44,4 KB | 12,1 KB | 5,3 KB | 114,2 KB | 235 Zeichen |
+
+Je 60 Bilder, gerendert in 2409 bis 3276 s (neben den Prüfläufen für die nächsten Prüfseiten); erstes und letztes Bild pixelgleich, kein Sprung am Ende; Kontaktbögen angesehen. 20 Übungen haben jetzt eine Animation (vorher 16). Aufnahme: `docs/screens/uebungen/beine-isoliert-pplc-bewegung.mp4`, die vier Schleifen nebeneinander, 1440 × 270, 7,5 s.
+
+### 55.3 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-516 Phase Programme, Beine isoliert in der App, Wadenheben mit mehr Bewegungsweite, Text Wadenheben sitzend
+Umgesetzte Funktionen: Animationen für Beinstrecker, Beinbeuger sitzend, Wadenheben stehend und sitzend in der App; Wadenheben stehend 18° → 38°, sitzend 20° → 29°; Ausführungstext seated_calf_raise zu den Griffen am Polster; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py (WadenhebenStehend, WadenhebenSitzend), public/uebungen/medien/beinstrecker*, beinbeuger_sitzend*, wadenheben_stehend*, wadenheben_sitzend* (neu), public/uebungen/medien.json, src/modules/exercises/data/exercise-guides.v1.json, e2e/uebungen.spec.ts, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/beine-isoliert-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-516
+Ausgeführte Tests: Winkel unten und oben in Proben und über alle 60 Bilder gemessen, Nahaufnahmen des Fußes; vier Schleifen je 60 Bilder, Naht pixelgleich, Kontaktbögen angesehen; format:check, lint, typecheck; Unit-Tests 1.273 bestanden (140 Dateien); build, check:bundle (Startansicht 239,7 KB, Übungsbilder 80 von 80); check:docs; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Maße der Maschinen geschätzt, wie freigegeben; oben begrenzt das Polster am Kragen des Schuhs den Weg (stehend 38°, sitzend 29°)
+Nächste Schritte: Arme in der App (D-517), danach die Prüfseiten „Waagrechtes Ziehen“ und „Schulter und Brust isoliert“, Halt bis zu deiner Freigabe
+```

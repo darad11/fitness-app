@@ -2640,8 +2640,8 @@
       "summary": "Wadenübung im Sitzen: Die Oberschenkel liegen unter dem Polster, du hebst und senkst die Fersen.",
       "setup": [
         "Setz dich mit dem Gesicht zum Hebel auf den Sitz.",
-        "Stell die Vorfüße auf die Plattform, die Fersen stehen über. Schieb die unteren Oberschenkel unter die Polster.",
-        "Leg die Hände auf die Polster und löse den Sicherungshebel."
+        "Stell die Vorfüße auf die Plattform, die Fersen stehen über. Schieb die unteren Oberschenkel unter das Polster.",
+        "Halt dich an den Griffen am Polster fest und löse den Sicherungshebel."
       ],
       "steps": [
         "Heb die Fersen so hoch wie möglich, indem du die Sprunggelenke streckst.",
@@ -2657,7 +2657,8 @@
           "title": "ExRx.net: Lever Seated Calf Raise",
           "url": "https://exrx.net/WeightExercises/Soleus/LVSeatedCalfRaise"
         }
-      ]
+      ],
+      "sourceNote": "Hände an den Griffen am Polster wie in der Animation (Entscheidung des Produktinhabers); vorher lagen sie im Text auf den Polstern."
     },
     "calf_press_leg_press": {
       "summary": "Wadenübung an der 45-Grad-Beinpresse: Du drückst die Plattform nur durch Strecken der Sprunggelenke weg.",

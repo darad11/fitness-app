@@ -155,7 +155,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 95 | Hackenschmidt-Kniebeuge | Hack Squat | Maschine | Oberschenkel vorne | Gesäß | – | vorhanden | fertig (exrx.net) | Tiefe wie in der Animation: Oberschenkel etwa parallel zur Plattform (Entscheidung des Produktinhabers); die Quelle nennt „bis die Knie kurz vor der vollen Beugung sind“. | `hack_squat` · `62a9f45c-b5a4-5dec-b773-0b8781ee4a10` |
 | 96 | Bulgarische Kniebeuge mit Kurzhanteln | Bulgarian Split Squat | Kurzhantel, Bank | Oberschenkel vorne, Gesäß | Oberschenkel hinten | – | fehlt | fertig (exrx.net) | – | `bulgarian_split_squat_dumbbell` · `7d604fd8-b795-53b4-b4e6-b089d07e98a0` |
 | 97 | Ausfallschritte mit Kurzhanteln | Dumbbell Lunge | Kurzhantel | Oberschenkel vorne, Gesäß | Oberschenkel hinten | – | fehlt | fertig (exrx.net) | – | `lunge_dumbbell` · `22ab398c-7994-500f-b17a-45b482c2d086` |
-| 98 | Beinstrecker | Leg Extension | Maschine | Oberschenkel vorne | – | – | fehlt | fertig (exrx.net) | – | `leg_extension` · `ae365731-444a-5d44-bf6b-bba38ec0a46f` |
+| 98 | Beinstrecker | Leg Extension | Maschine | Oberschenkel vorne | – | – | vorhanden | fertig (exrx.net) | – | `leg_extension` · `ae365731-444a-5d44-bf6b-bba38ec0a46f` |
 | 99 | Wandsitzen | Wall Sit | Körpergewicht | Oberschenkel vorne | Gesäß | – | fehlt | fertig (nasm.org) | Einzige Quelle ist ein Fachartikel von NASM; ExRx und ACE haben keinen Eintrag. | `wall_sit` · `4061cd08-ea58-53ff-bbca-3cc064ef116a` |
 | 100 | Beinpresse, einbeinig | Single Leg Press | Maschine | Oberschenkel vorne, Gesäß | – | Beinpresse | fehlt | fertig (exrx.net) | – | `leg_press_single_leg` · `6484e8f1-97c1-58b0-a8cc-da40dd91cfb9` |
 
@@ -167,7 +167,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 102 | Rumänisches Kreuzheben mit Kurzhanteln | Dumbbell Romanian Deadlift | Kurzhantel | Oberschenkel hinten, Gesäß | Unterer Rücken | Rumänisches Kreuzheben mit Langhantel | vorhanden | fertig (acefitness.org, exrx.net) | Gestützt auf einen ACE-Technikartikel, der Kurzhanteln erlaubt, und die Seite zur Langhantel. | `romanian_deadlift_dumbbell` · `3b203ddc-70a3-595e-b0d8-868f0c584c8c` |
 | 103 | Einbeiniges Rumänisches Kreuzheben mit Kurzhantel | Single-Leg RDL | Kurzhantel | Oberschenkel hinten, Gesäß | Unterer Rücken | – | fehlt | fertig (exrx.net) | Quelle arbeitet mit je einer Hantel pro Hand; der Text deckt eine oder zwei Hanteln ab. | `single_leg_rdl_dumbbell` · `7cb49da4-3ea3-5cbf-8537-a732b12ef30a` |
 | 104 | Beinbeuger liegend | Lying Leg Curl | Maschine | Oberschenkel hinten | Waden | – | vorhanden | fertig (exrx.net) | – | `lying_leg_curl` · `7164e5ec-706f-55b0-861b-fde498f8f28c` |
-| 105 | Beinbeuger sitzend | Seated Leg Curl | Maschine | Oberschenkel hinten | – | – | fehlt | fertig (exrx.net) | – | `seated_leg_curl` · `ff340a95-597e-5376-938a-004a8a26ec6b` |
+| 105 | Beinbeuger sitzend | Seated Leg Curl | Maschine | Oberschenkel hinten | – | – | vorhanden | fertig (exrx.net) | – | `seated_leg_curl` · `ff340a95-597e-5376-938a-004a8a26ec6b` |
 | 106 | Good Mornings mit Langhantel | Good Morning | Langhantel | Oberschenkel hinten, Unterer Rücken | Gesäß | – | fehlt | fertig (exrx.net) | Folgt der Variante mit gestreckten Knien. | `good_morning` · `c490f632-2f33-5aa0-9527-a030c31b74d1` |
 | 107 | Nordic Curls | Nordic Hamstring Curl | Körpergewicht | Oberschenkel hinten | – | – | fehlt | fertig (exrx.net) | Quelle führt die Übung als „Inverse Leg Curl“; beschrieben ist die Variante am Boden mit Abfangen. | `nordic_curl` · `d55cf0cf-ae23-5c0c-8798-663aa03cb218` |
 
@@ -175,8 +175,8 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 108 | Wadenheben stehend | Standing Calf Raise | Maschine | Waden | – | – | fehlt | fertig (exrx.net) | – | `standing_calf_raise` · `e3dcd2e3-7922-5f0f-923b-f00dec3ad1b6` |
-| 109 | Wadenheben sitzend | Seated Calf Raise | Maschine | Waden | – | – | fehlt | fertig (exrx.net) | – | `seated_calf_raise` · `081603ec-9881-515b-858f-b7c3798e98f9` |
+| 108 | Wadenheben stehend | Standing Calf Raise | Maschine | Waden | – | – | vorhanden | fertig (exrx.net) | – | `standing_calf_raise` · `e3dcd2e3-7922-5f0f-923b-f00dec3ad1b6` |
+| 109 | Wadenheben sitzend | Seated Calf Raise | Maschine | Waden | – | – | vorhanden | fertig (exrx.net) | Hände an den Griffen am Polster wie in der Animation (Entscheidung des Produktinhabers); vorher lagen sie im Text auf den Polstern. | `seated_calf_raise` · `081603ec-9881-515b-858f-b7c3798e98f9` |
 | 110 | Wadenheben an der Beinpresse | Calf Press | Maschine | Waden | – | Wadenheben mit Kurzhanteln | fehlt | fertig (exrx.net) | – | `calf_press_leg_press` · `2dcf2e1f-de66-580e-903d-d981ee5499c5` |
 | 111 | Adduktorenmaschine | Hip Adduction | Maschine | Adduktoren | – | – | fehlt | fertig (exrx.net) | – | `hip_adduction_machine` · `7d11734a-3f5c-589f-8396-cd6a46bde826` |
 | 112 | Abduktorenmaschine | Hip Abduction | Maschine | Abduktoren | Gesäß | – | fehlt | fertig (exrx.net) | – | `hip_abduction_machine` · `8bf042b1-22c0-55d8-858d-57731d35d88f` |
@@ -199,4 +199,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 124 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 125 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 125 Übungen · mit Visual 16 · ohne Visual 109 · Ausführung fertig 122 · offen 3
+Summe: 125 Übungen · mit Visual 20 · ohne Visual 105 · Ausführung fertig 122 · offen 3

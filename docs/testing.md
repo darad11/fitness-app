@@ -3436,3 +3436,27 @@ Bizepscurls, Hammercurls und Trizepsdrücken am Kabel an einem neuen Kabelzug; n
 | Ursache | die freie Suche der Drehung der Hand um den Griff wechselte beim Nachführen des Griffs nahe der Streckung in eine zweite Lösung; jetzt einmal gesucht, dann fest: Ellbogen in 31 Phasen stetig 165,0° → 40,0°, Handgelenk höchstens 7,5°, Hand 0,0 mm vom Ziel |
 | `render.py trizepsdruecken_kabel --pruefen` (erster Lauf) | Sohlen 13,8 mm im Boden: `_griffe` setzte das Rig nach den Beinen zurück; Reihenfolge getauscht, Sohlen 0,0 mm |
 | Nahaufnahmen der Stange | von vorn (15°) standen oben Säule und Gewichtsblock vor den Händen (Bild schwarz); jetzt schräg von vorn (60°) und von hinten (135°), beide verglichen und angesehen |
+
+### Beine isoliert in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-514: Wadenheben mit mehr Bewegungsweite, Text Wadenheben sitzend, vier Schleifen in der App (D-516).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Wadenheben stehend, Winkel unten 12° bis 24° und oben 25° bis 45° (je Probe Ferse, Kragen, Socke, Fuß im Schuh) | Ferse 5,5 cm unter dem Block bei 18°, 6,1 cm bei 20°; Innenseite des Kragens über der Socke bis 40° (0,46 mm), bei 45° −0,46 mm |
+| Wadenheben sitzend, ebenso (Maschine noch zu den Winkeln aus D-514) | Ferse 5,4 cm bei 20°; Kragen bis 35° darüber (0,09 mm), bei 40° −0,57 mm |
+| Nahaufnahmen des Fußes unten (18°, 19°, 20°) und oben (35° bis 42°), stehend und sitzend | sauber; oben biegt sich der Schuh am Ballen, die Zwischensohle wirft dort eine Falte |
+| `render.py wadenheben_stehend --pruefen --nur-messwerte` mit 40° oben | Polster am Kragen über der Socke −0,17 mm ab Bild 27 (−39,6°), 0,0 mm bei −39,0°: oben jetzt 38° |
+| `render.py wadenheben_sitzend --pruefen --nur-messwerte` mit 34° oben | Polster am Kragen −0,57 mm, 0,0 mm bei −30,6°: oben jetzt 29° |
+| Endmessung stehend (18° → −38°) über alle 60 Bilder | Ferse −5,47 bis +9,19 cm, Schuh am Ballen bis 34,2°, Kragen mindestens 0,69 mm, Polster am Kragen mindestens 0,22 mm, Sohle 0,01 bis 0,87 mm über dem Block, Fuß und Socke im Schuh, 0 Meldungen |
+| Endmessung sitzend (20° → −29°) über alle 60 Bilder | Ferse −5,43 bis +6,60 cm, Schuh am Ballen bis 24,3°, Kragen mindestens 0,73 mm, Polster am Kragen mindestens 0,23 mm, Sohle 0,02 bis 0,91 mm, Gesäß im Sitz 4,0 bis 18,5 mm, Kniepolster gleitet bis 3,6 mm, 0 Meldungen |
+| `render.py beinstrecker`, `beinbeuger_sitzend`, `wadenheben_stehend`, `wadenheben_sitzend` (nacheinander, neben den Prüfläufen für die nächsten Prüfseiten) | 3276 s, 3229 s, 2622 s, 2409 s für je 60 Bilder, 720 × 540; erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Einträge `leg_extension`, `seated_leg_curl`, `standing_calf_raise`, `seated_calf_raise` in `public/uebungen/medien.json` | Alternativtexte 215, 236, 219, 235 Zeichen (Beinbeuger zuerst 267 Zeichen, gekürzt) |
+| `python3 tools/uebungen_medien_version.py` | 16 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py beine-isoliert-pplc …` | 1440 × 270, 7,5 s, 177 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 20; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm check:docs` | erster Lauf: zwei Verweise auf noch nicht eingetragene Entscheidungen in dieser Tabelle, berichtigt; dann bestanden (Bildliste: 20 Einträge, 80 Dateien mit Prüfsumme) |
+| `pnpm test` (Blender angehalten) | 140 Dateien, 1273 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 80 von 80 Dateien |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 22,1 min; Übungsliste mit 20 Bildern |

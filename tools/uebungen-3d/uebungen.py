@@ -5691,8 +5691,13 @@ class WadenhebenStehend(Uebung):
     kamera = {"richtung": 85.0, "neigung": 6.0, "fuellen": 0.02}
     vorschau_phase = 1.0
     BLOCK = 0.10  # Höhe des Blocks, m
-    DORSAL = 12.0  # Ausgang: Sprunggelenk gebeugt (Familie 10 bis 15°), Grad
-    PLANTAR = 25.0  # oben: Sprunggelenk gestreckt (Familie 20 bis 30°), Grad
+    # Bewegungsweite nach der Entscheidung des Produktinhabers (D-516): unten die Fersen etwa 5 bis 6 cm unter dem Block
+    # (bis D-515 12° gebeugt, 3,5 cm), oben so hoch auf die Ballen, wie Fuß und Schuh es sauber zulassen (bis D-515 25°).
+    # Gemessen: 18° → Ferse 5,5 cm unter dem Block. Oben bleibt die Innenseite des Kragens bis 40° über der Socke
+    # (0,5 mm, bei 45° 0,5 mm darin); das Polster am Kragen berührt sie aber schon bei 39° (40°: 0,2 mm darin), daher 38°
+    # (0,2 mm darüber)
+    DORSAL = 18.0  # Ausgang: Sprunggelenk gebeugt, Grad
+    PLANTAR = 38.0  # oben: Sprunggelenk gestreckt, Grad
     KNIE = 176.0  # „Halt die Knie gerade“: fast gestreckt
     KANTE = 0.0  # Kante des Blocks so weit hinter der Mitte des Bogens am Ballen (zur Ferse), m
     SCHULTER_TIEF = 0.004  # Schulterpolster so tief auf den Schultern, m
@@ -6001,6 +6006,11 @@ class WadenhebenSitzend(WadenhebenStehend):
     VOR = 6.0  # Rumpf vorgeneigt, Grad
     BLOCK = 0.12
     TIEF = 0.004
+    # Bewegungsweite (D-516): Bei gebeugtem Knie steht der Unterschenkel anders zum Fuß als im Stand; für dieselbe Tiefe
+    # der Fersen (5,4 cm unter dem Block) 20° statt 18°. Oben berührt das Polster am Kragen die Socke hier schon bei 31°
+    # (34°: 0,6 mm darin; die Innenseite des Kragens erst ab etwa 36°), daher 29° (0,2 mm darüber)
+    DORSAL = 20.0
+    PLANTAR = 29.0
     # Vorderkante des Sitzes so weit vor den Hüftgelenken, m: Weiter vorn heben sich die Oberschenkel mit den Knien vom
     # Sitz (unten drücken sie ihn ein)
     SITZ_VOR = 0.06

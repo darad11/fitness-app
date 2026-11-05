@@ -441,6 +441,114 @@
       },
       "alt": "Hackenschmidt-Kniebeuge an der Maschine, schräg von vorn: Rücken am Polster des Schlittens, Schultern unter den Polstern, Füße auf der Plattform; in die Knie gehen, bis die Oberschenkel etwa parallel zur Plattform sind, und zurück.",
       "source": "form_3d_pilot"
+    },
+    "leg_extension": {
+      "preview": {
+        "src": "medien/beinstrecker-vorschau-2bbf6ebe.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/beinstrecker-782dad70.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinstrecker-38f1fd96.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinstrecker-poster-afcaedc9.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Beinstrecker an der Maschine, schräg von vorn: sitzend an der Lehne, Hände an den Griffen am Sitz, Rolle vorn auf den Schienbeinen; die Knie strecken, bis die Beine fast gerade sind, und kontrolliert zurück bis 90°.",
+      "source": "form_3d_pilot"
+    },
+    "seated_leg_curl": {
+      "preview": {
+        "src": "medien/beinbeuger_sitzend-vorschau-9450a908.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/beinbeuger_sitzend-22089bfe.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinbeuger_sitzend-9566f5cb.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinbeuger_sitzend-poster-4cd60f8a.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Beinbeuger sitzend an der Maschine, von der Seite: an der Lehne, Polster über den Oberschenkeln, Rolle hinter den Unterschenkeln über den Knöcheln; die Knie beugen, bis die Unterschenkel unter den Sitz zeigen, und kontrolliert strecken.",
+      "source": "form_3d_pilot"
+    },
+    "standing_calf_raise": {
+      "preview": {
+        "src": "medien/wadenheben_stehend-vorschau-2393f4f8.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/wadenheben_stehend-e0565856.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/wadenheben_stehend-b27c1a56.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/wadenheben_stehend-poster-ccef743c.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Wadenheben stehend an der Maschine, von der Seite: Schultern unter den Polstern, Ballen auf der Kante des Blocks, Knie gerade; die Fersen aus der Dehnung 5 cm unter dem Block so hoch wie möglich heben und wieder senken.",
+      "source": "form_3d_pilot"
+    },
+    "seated_calf_raise": {
+      "preview": {
+        "src": "medien/wadenheben_sitzend-vorschau-5ff836ba.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/wadenheben_sitzend-e966afe1.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/wadenheben_sitzend-1f12d5f2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/wadenheben_sitzend-poster-4a56f39c.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Wadenheben sitzend an der Maschine, von der Seite: Polsterrolle auf den unteren Oberschenkeln, Hände an den Griffen, Ballen auf der Kante des Blocks; die Fersen aus der Dehnung 5 cm unter dem Block so hoch wie möglich heben und senken.",
+      "source": "form_3d_pilot"
     }
   }
 }

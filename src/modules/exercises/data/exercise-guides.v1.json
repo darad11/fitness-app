@@ -640,6 +640,30 @@
         }
       ]
     },
+    "high_row_machine": {
+      "summary": "An der Maschine mit Brustpolster ziehst du die Griffe von vorn oben schräg nach hinten unten, bis die Ellbogen hinter dem Rücken sind.",
+      "setup": [
+        "Setz dich und leg die Brust an das Polster.",
+        "Stell das Brustpolster so ein, dass die Schultern bei gestreckten Armen nach vorn gehen können.",
+        "Stell Sitz oder Griffe so ein, dass die Handgelenke den Ellbogen folgen können.",
+        "Greif die Griffe im Obergriff."
+      ],
+      "steps": [
+        "Zieh die Griffe nach hinten, bis die Ellbogen hinter dem Rücken sind und die Schultern zurückgezogen sind.",
+        "Lass die Griffe zurück, bis die Arme gestreckt sind und die Schultern nach vorn gehen."
+      ],
+      "cues": [
+        "Zieh am Ende des Zugs die Schultern zurück.",
+        "Lass am Ende des Rückwegs die Schultern nach vorn gehen, so nutzt du den ganzen Weg."
+      ],
+      "sources": [
+        {
+          "title": "ExRx.net: Lever Isolateral Seated High Row",
+          "url": "https://exrx.net/WeightExercises/BackGeneral/LVSeatedHighRow"
+        }
+      ],
+      "sourceNote": "Quelle für diese Übung am 05.11.2026 gelesen. Die Richtung schräg nach unten ergibt sich aus den Griffen vorn oben; die Quelle sagt nur „zurück“."
+    },
     "straight_arm_pulldown": {
       "summary": "Am oberen Kabelzug ziehst du den Griff mit fast gestreckten Armen in einem Bogen nach unten zu den Körperseiten.",
       "setup": [
@@ -3370,10 +3394,6 @@
     {
       "key": "heel_tap",
       "reason": "Keine Quelle zur liegenden Form mit der Hand zur Ferse. ACE führt unter „heel tap“ eine andere Übung (Beine in 90 Grad, Ferse absenken); ExRx und NASM nur andere Bauchübungen."
-    },
-    {
-      "key": "high_row_machine",
-      "reason": "Neu mit Dali’s PPLC (D-504). ExRx (Lever High Row) war in der Arbeitsumgebung nicht erreichbar; die übrigen Treffer sind Hersteller und Fitness-Apps. Die Anleitung folgt mit Quelle."
     }
   ]
 }

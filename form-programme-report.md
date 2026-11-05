@@ -2721,3 +2721,75 @@ Ergebnis: bestanden (Werte in 56.2)
 Bekannte Einschränkungen: Maße von Kabelturm und Butterfly geschätzt; Stand parallel statt Schrittstellung (Frage 4)
 Nächste Schritte: Halt bis zu deiner Freigabe beider Prüfseiten und deinen Antworten in 56.3; danach die Schleifen beider Familien
 ```
+
+## 57. Waagrechtes Ziehen und Schulter und Brust isoliert in der App (D-520, D-521)
+
+Nach deiner Freigabe beider Prüfseiten mit deinen fünf Entscheidungen: zuerst „Waagrechtes Ziehen“ (57.1), dann „Schulter und Brust isoliert“ (57.2), je gerendert und eingebaut.
+
+### 57.1 Waagrechtes Ziehen (D-520)
+
+**Rudern mit Langhantel, Rumpf und Lende (deine Entscheidung 1).** Die 40° am Oberarm bleiben. Gemessen über alle 60 Bilder:
+
+| Messwert | Wert |
+|---|---|
+| Rumpf zur Waagrechten | 37,1° in jedem Bild (Spanne 0,0°) |
+| Hüfte, Rumpf zum Oberschenkel | 100,0° in jedem Bild |
+| Knie | 158,0° in jedem Bild |
+| Lendenwirbel gegen das Becken gedreht | 0,0° in jedem Bild |
+| Hautlinie der Lende (L5 bis L1) | −5,6° hohl; im aufrechten Stand −10,6°, also 5,0° flacher; höchstens 1,5 mm verschoben |
+| Nacken / Blick | 4° gebeugt / 56° unter der Waagrechten |
+
+Rumpf und Beine stehen still, es bewegen sich nur Arme und Schulterblätter: kein Aufrichten mit Schwung. Der untere Rücken bleibt neutral: Die Wirbel der Lende sind gegen das Becken nicht gedreht. Die Hautlinie ist 5° flacher als im Stand, weil die Haut über dem Kreuzbein mit dem gebeugten Oberschenkel mitgeht; beim Rumänischen Kreuzheben, das du freigegeben hast, waren es unten 3,9° (D-490). Bisher verglich das Werkzeug die Lende mit dem ersten Bild der Schleife, das hier schon vorgebeugt ist; jetzt mit dem aufrechten Stand.
+
+**High Row, Text (deine Entscheidung 3).** Quelle: ExRx „Lever Isolateral Seated High Row“, eine zugelassene Quelle. Die Seiten von exrx.net und acefitness.org lässt das Netz dieser Arbeitsumgebung nicht zu; den Text der Seite habe ich über die Websuche gelesen.
+
+| Teil | Text in der App |
+|---|---|
+| Kurz | „An der Maschine mit Brustpolster ziehst du die Griffe von vorn oben schräg nach hinten unten, bis die Ellbogen hinter dem Rücken sind.“ |
+| Ausgangsposition | „Setz dich und leg die Brust an das Polster.“ · „Stell das Brustpolster so ein, dass die Schultern bei gestreckten Armen nach vorn gehen können.“ · „Stell Sitz oder Griffe so ein, dass die Handgelenke den Ellbogen folgen können.“ · „Greif die Griffe im Obergriff.“ |
+| Ausführung | „Zieh die Griffe nach hinten, bis die Ellbogen hinter dem Rücken sind und die Schultern zurückgezogen sind.“ · „Lass die Griffe zurück, bis die Arme gestreckt sind und die Schultern nach vorn gehen.“ |
+| Hinweise | „Zieh am Ende des Zugs die Schultern zurück.“ · „Lass am Ende des Rückwegs die Schultern nach vorn gehen, so nutzt du den ganzen Weg.“ |
+| Quellenhinweis | „Quelle für diese Übung am 05.11.2026 gelesen. Die Richtung schräg nach unten ergibt sich aus den Griffen vorn oben; die Quelle sagt nur „zurück“.“ |
+
+**High Row, Animation an den Text angeglichen.** Gemessen über alle 60 Bilder:
+
+| | Prüfseite (D-518) | jetzt |
+|---|---|---|
+| Griff | Daumen oben an senkrechten Griffen | Obergriff an waagrechten Griffen |
+| Hebel | von einer Achse vorn unten, 1,30 m | hängend von Lagern über und hinter dir, 0,80 m, ohne Scheiben |
+| Oberarm am Ende hinter dem Rumpf | 6° | 21° |
+| Ellbogengelenk am Ende zur Haut des Rückens | 5,1 cm davor | 1,0 cm dahinter (Haut am Ellbogen 4,0 cm) |
+| Ellbogen Ausgang → Ende | 166° → 59° | 166° → 71° (Familie 70 bis 90°) |
+| Unterarm zur Zugrichtung | 7° bis 74° | 29° bis 49° |
+| Handgelenk, höchstens | 2,2° | 10,5° |
+| Maschine zum Körper, mindestens | 7,9 mm | 36,4 mm |
+| Arme zum Brustpolster, mindestens | 87 mm | 110 mm |
+| Brust im Polster | 4 mm | 4 mm, nichts durch |
+| Meldungen des Rigs | 0 | 0 |
+
+„The seat or grip should be adjusted to allow wrists to follow elbows“ heißt: Der Unterarm zeigt in die Richtung, in die der Griff gezogen wird. Mit der Achse vorn unten wich er am Ende 74° davon ab, an hängenden Hebeln höchstens 49°. Ganz in Linie geht es auf einem Kreisbogen nicht, weil die Hände von vorn oben steil zum Bauch kommen. Die Scheiben habe ich weggelassen: An den hängenden Hebeln verdeckten sie von hinten den Kopf. Im Obergriff liegt der Griff 8° schräg in der Hand; mit 14° wie beim Rudern knickte das Handgelenk 11,6°.
+
+**Rudern an der Maschine.** Wie auf der Prüfseite; mit dem Code dieses Pakets nachgemessen, alle Werte gleich. Neu gemessen: Am Ende liegt das Ellbogengelenk 1,1 cm vor der Haut des Rückens, die Haut am Ellbogen 2,3 cm dahinter. Die Ellbogen sind also hinter dem Rücken, wie im Text.
+
+**In der App:**
+
+| Übung | MP4 | WebM | Poster | Vorschau | zusammen | Alternativtext |
+|---|---|---|---|---|---|---|
+| Rudern mit Langhantel, vorgebeugt | 67,6 KB | 52,8 KB | 10,9 KB | 4,3 KB | 135,6 KB | 215 Zeichen |
+| Rudern an der Maschine | 58,0 KB | 43,0 KB | 11,8 KB | 5,2 KB | 118,0 KB | 197 Zeichen |
+| High Row an der Maschine | 79,4 KB | 66,9 KB | 13,1 KB | 5,8 KB | 165,2 KB | 209 Zeichen |
+
+Je 60 Bilder, gerendert in 3024 bis 4668 s (zum Teil zwei Schleifen gleichzeitig, daneben die Prüfläufe der nächsten Familien); erstes und letztes Bild pixelgleich, kein Sprung am Ende; Kontaktbögen angesehen. Die rund 120 KB aus deiner Entscheidung zu den Hammercurls (D-517) habe ich auf deren doppelt lange Schleife bezogen. Die High Row liegt mit 165 KB im Bereich der anderen Maschinen (Rudern am Kabel 167 KB, Beinpresse 189 KB). 26 Übungen haben jetzt eine Animation (vorher 23). Aufnahme: `docs/screens/uebungen/waagrechtes-ziehen-pplc-bewegung.mp4`, die drei Schleifen nebeneinander mit Namen, 1440 × 360, 7,5 s.
+
+### 57.3 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-520 Phase Programme, Waagrechtes Ziehen in der App: Rudern mit Langhantel, Rudern an der Maschine, High Row mit Ausführungstext nach ExRx
+Umgesetzte Funktionen: Animationen für Rudern mit Langhantel, Rudern an der Maschine und High Row an der Maschine in der App; Ausführungstext high_row_machine nach ExRx; High Row im Obergriff an hängenden Hebeln, bis die Ellbogen hinter dem Rücken sind; neue Messwerte: Lende gegen den aufrechten Stand, Ellbogen hinter dem Rücken, Unterarm zur Zugrichtung; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py (RudernLanghantel, RudernMaschine, HighRowMaschine, ReverseButterfly), src/modules/exercises/data/exercise-guides.v1.json, public/uebungen/medien/rudern_langhantel*, rudern_maschine*, high_row_maschine* (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/waagrechtes-ziehen-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-520
+Ausgeführte Tests: Rumpf und Lende über alle 60 Bilder, High Row nach dem Abgleich und Rudern an der Maschine mit dem neuen Code gemessen, Probe Ellbogen zur Haut des Rückens; drei Schleifen je 60 Bilder, Naht pixelgleich, Kontaktbögen angesehen; format:check, lint, typecheck; Unit-Tests 1.273 bestanden (140 Dateien; im ersten Lauf unter Last 10 Zeitüberschreitungen, ohne Last alle bestanden); build, check:bundle (Startansicht 239,7 KB, Übungsbilder 104 von 104); check:docs; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Maße der Rudermaschine geschätzt, wie freigegeben; exrx.net nur über die Websuche gelesen (Netz der Arbeitsumgebung); bei der High Row folgt der Unterarm dem Zug nicht ganz (29 bis 49°)
+Nächste Schritte: Schleifen „Schulter und Brust isoliert“ (D-521), danach die Prüfseiten „Senkrechtes Drücken“, „Hüftbeuge“ und „Rumpf“, Halt bis zu deiner Freigabe
+```

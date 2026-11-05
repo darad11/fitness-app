@@ -6888,6 +6888,14 @@ class RudernLanghantel(RumaenischesKreuzhebenKH):
         rand = [M + Vector((sx * x0, math.cos(w) * r, math.sin(w) * r)) for sx in (-1, 1) for x0 in (0.70, 0.735)
                 for w in [j * math.pi / 24 for j in range(48)]]
         werte["Scheiben zur Haut (mm)"] = abstand_koerper(self.koerper, rand) * 1000
+        # Lende gegenüber dem aufrechten Stand (D-520): Phase 0 ist hier schon vorgebeugt, verglichen wird darum mit der
+        # Grundhaltung der Figur (aufrecht, ohne Drehung der Gelenke)
+        if getattr(self, "_lende_stand", None) is None:
+            jetzt = self._phase
+            self.rig.zuruecksetzen()
+            self.rig.anwenden()
+            self._lende_stand = self._lende()
+            self.setzen(jetzt)
         werte.update(self._ruecken())
         return werte
 
@@ -6941,6 +6949,11 @@ class RudernMaschine(SchulterdrueckenMaschine):
     # Griff drehbar um die Querachse (D-518): Er stellt sich quer zum Unterarm, das Handgelenk bleibt gerade; fest am
     # Hebel knickte es bei der High Row in der Mitte des Zugs 17° zur Seite
     DREHGRIFF = True
+    # Obergriff an waagrechten Griffen (D-520, High Row nach ExRx): Der Griff liegt quer (längs x) fest am Hebel, der um
+    # eine Achse längs x dreht; die Hand rollt um den Griff
+    QUERGRIFF = False
+    # Zusätzliche Werte des Zugs (D-520): Ellbogen hinter der Rückenfläche, Unterarm zur Zugrichtung des Griffs
+    ZUGWERTE = True
     MASCHINE = {}  # weitere Angaben für `geraete.rudermaschine`
     griff_ansichten = (("rudern_aussen", 100.0, 15.0), ("rudern_hinten", 160.0, 25.0))
     # Fuß aus der Nähe wie `render.FUSS_ANSICHTEN`, auf der Prüfseite aber von außen und von hinten: von vorn steht beim
@@ -6960,6 +6973,8 @@ class RudernMaschine(SchulterdrueckenMaschine):
         ruhe = [v.co for v in self.koerper.data.vertices]
         huefte, hals = k["upperleg01.L"].z, k["neck01"].z
         self.brust_i = [i for i, q in enumerate(ruhe) if abs(q.x) < 0.15 and huefte + 0.15 < q.z < hals - 0.02 and q.y < 0.0]
+        # Rücken zwischen Lende und Hals (Schulterblätter), für „Ellbogen hinter dem Rücken“ (D-520)
+        self.ruecken_i = [i for i, q in enumerate(ruhe) if abs(q.x) < 0.15 and huefte + 0.25 < q.z < hals - 0.03 and q.y > 0.0]
         self.griff = {s: rig.griff(s, self.GRIFF_LAGE, geraete.RUDERMASCHINE["griff_d"] / 2, schraeg=self.SCHRAEG) for s in "LR"}
         self._phase_jetzt = 0.0
 
@@ -7144,7 +7159,7 @@ class RudernMaschine(SchulterdrueckenMaschine):
             E1 = S1[s] + u * l1
             W1 = E1 + f * l2
             G1 = W1 + f * self.HAND
-            k0 = achse_winkel(X, -self.GRIFF_KIPP) @ Z
+            k0 = Vector((sx, 0.0, 0.0)) if self.QUERGRIFF else achse_winkel(X, -self.GRIFF_KIPP) @ Z
             # Griff am Ende nachgeführt, bis das Handgelenk am Ende des geplanten Unterarms liegt (die Mitte des Griffs liegt
             # nicht auf der Linie des Unterarms; ohne Nachführen endete der Ellbogen bei 52° statt etwa 80°)
             for _ in range(8):
@@ -7260,30 +7275,56 @@ class RudernMaschine(SchulterdrueckenMaschine):
         teile = [o for o in g["wurzel"].children_recursive if o.type == "MESH" and o not in g["polster"] and o not in griffe]
         werte["Körper und Shirt zur Maschine ohne Polster und Griffe (mm)"] = naechster(teile, ohne_haende[::2]) * 1000
         werte["Arme zum Brustpolster (mm)"] = naechster([g["brust"]], arme[::2]) * 1000
+        if self.ZUGWERTE:
+            werte.update(self._zugwerte(netz))
         return werte
+
+    def _zugwerte(self, netz: list[Vector]) -> dict:
+        """Linker Arm (D-520): Ellbogengelenk hinter der Rückenfläche (größter Abstand der Haut des Rückens nach hinten,
+        senkrecht zur Längsachse des Rumpfs); Unterarm (Handgelenk zum Ellbogen) zur Richtung, in die sich der Griff auf
+        dem Bogen des Hebels gerade bewegt („die Handgelenke folgen den Ellbogen“, ExRx)."""
+        rig = self.rig
+        k = rig.kopf
+        E = rig.welt(rig.punkt("lowerarm01.L", k["lowerarm01.L"]))
+        W = rig.welt(rig.punkt("wrist.L", k["wrist.L"]))
+        hinten = (self.R @ Y).normalized()
+        rand = max(netz[i].dot(hinten) for i in self.ruecken_i)
+        P, achse, _, _, _ = self.bahn["L"]
+        G, _, _ = self._griff_lage("L", self._phase_jetzt)
+        zug = achse.cross(G - P).normalized()
+        return {"Ellbogen hinter der Rückenfläche (cm, + dahinter)": (E.dot(hinten) - rand) * 100,
+                "Unterarm zur Zugrichtung (Grad)": math.degrees((E - W).angle(zug))}
 
 
 class HighRowMaschine(RudernMaschine):
-    """High Row an der Maschine mit Brustpolster (Familie „Waagrechtes Ziehen“, D-518), nach den Werten der Familie und
-    der Beschreibung im Plan („sitzend, Brust am Polster, Griffe vorn oben an Hebelarmen, Zug schräg nach unten zu den
-    unteren Rippen“); einen Ausführungstext hat die Übung in der App noch nicht (D-504, die Quelle war nicht erreichbar).
-    Wie das Rudern an der Maschine, aber: Ausgang mit den Armen schräg nach vorn oben (`START_HOCH`), Ende mit den
-    Ellbogen unten seitlich am Rumpf, die Unterarme schräg nach vorn oben (`UNTERARM_HOCH`); die Drehachse des Hebels
-    liegt vorn unter der Bahn, der Hebel ist lang (`HEBEL`), die Bahn der Griffe fast gerade."""
+    """High Row an der Maschine mit Brustpolster (Familie „Waagrechtes Ziehen“, D-518), nach dem Ausführungstext der App
+    (ExRx „Lever Isolateral Seated High Row“, D-520) und den Werten der Familie. Wie das Rudern an der Maschine, aber:
+    Obergriff an waagrechten Griffen (`QUERGRIFF`, „Grasp lever handles with overhand grip“); Ausgang mit den Armen schräg
+    nach vorn oben (`START_HOCH`), die Schultern nach vorn; Ende mit den Ellbogen hinter dem Rücken (`OBERARM_HINTEN`,
+    „until elbows are behind back“), etwas vom Rumpf weg (`OBERARM_SEITE`), die Unterarme fast waagrecht nach vorn
+    (`UNTERARM_HOCH`), die Schulterblätter zusammen. Die Hebel hängen von Lagern über der Bahn (`ACHSE_OBEN`): Auf ihrem
+    Bogen folgt die Richtung des Zugs dem Unterarm besser als mit der Achse vorn unten (D-518: Unterarm bis 74° zur
+    Zugrichtung am Ende, jetzt 29 bis 49°; „The seat or grip should be adjusted to allow wrists to follow elbows“)."""
 
     name = "high_row_maschine"
     titel = "High Row an der Maschine"
     START_HOCH = 40.0
-    # Ende: Unterarm 15° über der Waagrechten, Oberarm 5° hinter dem Rumpf; mit 30° und 15° endete der Ellbogen bei 36°
-    UNTERARM_HOCH = 15.0
-    OBERARM_HINTEN = 5.0
-    OBERARM_SEITE = 12.0
-    ACHSE_OBEN = False
-    # Hebel lang, die Bahn fast gerade: Mit 0,80 m lief der Griff in der Mitte nah am Gesicht vorbei
-    HEBEL = 1.30
-    # Richtung der Griffe im Ausgang, oben zur Person gekippt (der Unterarm steht dort 42° über der Waagrechten); danach
-    # stellt sich der drehbare Griff je Bild quer zum Unterarm (`DREHGRIFF`)
-    GRIFF_KIPP = 36.0
+    # Ende (D-520): Oberarm 20° hinter dem Rumpf, das Ellbogengelenk liegt dann 1 cm hinter der Haut des Rückens (mit 5°
+    # wie auf der Prüfseite D-518 5 cm davor); Unterarm 13° unter der Waagrechten, so endet der Ellbogen bei 70° wie in
+    # der Familie (mit 10° bei 67,5°, mit waagrechtem Unterarm bei 59°)
+    OBERARM_HINTEN = 20.0
+    OBERARM_SEITE = 25.0
+    UNTERARM_HOCH = -13.0
+    QUERGRIFF = True
+    DREHGRIFF = False
+    # Hebel hängend, 0,8 m: Unterarm zur Zugrichtung am Anfang 47°, am Ende 49°, dazwischen bis 29° (Proben mit
+    # waagrechtem Unterarm: 0,65 m 48° und 31°, 0,9 m 40° und 39°); vorn unten mit 1,30 m wie auf der Prüfseite 7° und 74°
+    ACHSE_OBEN = True
+    HEBEL = 0.80
+    # Griff schräg in der Hand: mit 14° wie beim Rudern knickte das Handgelenk im Obergriff 11,6°, mit 8° höchstens 10,4°
+    SCHRAEG = 8.0
+    # Ohne Scheiben (das Gewicht steckt im Turm): An den hängenden Hebeln verdeckten sie in der Ansicht von hinten den Kopf
+    MASCHINE = {"scheiben": False}
 
 
 # ---------------------------------------------------------------------- Familie „Schulter und Brust isoliert“ für Dali’s PPLC (D-519)
@@ -7602,6 +7643,7 @@ class ReverseButterfly(RudernMaschine):
     BRUST_MASS = (0.32, 0.24, 0.08)
     SCHRAEG = 14.0  # Griff schräg in der Hand: am senkrechten Griff mit waagrechtem Unterarm knickte das Handgelenk sonst 16°
     MASCHINE = {"haengend": True, "scheiben": False}
+    ZUGWERTE = False  # kein Zug zum Rumpf: die Arme drehen gestreckt um die Schulter
     griff_ansichten = (("butterfly_oben", 160.0, 40.0), ("butterfly_vorn", 20.0, 15.0))
 
     def _bahnen(self, S0: dict) -> tuple[dict, dict]:

@@ -3517,3 +3517,24 @@ Nach der Freigabe der Prüfseite D-515: Trizepsdrücken mit festen Ellbogen, Ham
 | `pnpm test` | 140 Dateien, 1273 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 92 von 92 Dateien |
 | `pnpm test:e2e` (Chromium, Blender fertig) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 20,1 min; Übungsliste mit 23 Bildern |
+
+### Waagrechtes Ziehen in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-518: Rumpf und Lende beim Rudern mit Langhantel über die ganze Bewegung, Ausführungstext der High Row nach ExRx und die Animation daran angeglichen; drei Schleifen in der App (D-520).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Rudern mit Langhantel, Rumpf und Lende (`render.py rudern_langhantel --pruefen --nur-messwerte`, alle 60 Bilder) | Rumpf 37,1° zur Waagrechten, Hüfte 100,0°, Knie 158,0° in jedem Bild (Spanne je 0,0°); Lendenwirbel 0,0° gegen das Becken gedreht; Hautlinie der Lende −5,6°, im aufrechten Stand −10,6° (5,0° flacher), Linie höchstens 1,5 mm verschoben; Nacken 4° gebeugt, Blick 56° unter der Waagrechten; Ellbogen 169° → 69°; 0 Meldungen |
+| Quelle High Row: ExRx „Lever Isolateral Seated High Row“ | exrx.net und acefitness.org lässt das Netz der Arbeitsumgebung nicht zu; Vorbereitung, Ausführung und Hinweise der Seite über die Websuche gelesen |
+| Eintrag `high_row_machine` in `exercise-guides.v1.json` | Eintrag in `open` entfernt; Bestand: Ausführung 123, offen 2 |
+| High Row nach dem Abgleich (`render.py high_row_maschine --pruefen`, alle 60 Bilder) | Ellbogen 166,0° → 70,9° (unterwegs 69,6°), Oberarm am Ende 20,9° hinter dem Rumpf und 16 bis 35° zur Seite, Ellbogengelenk am Ende 1,0 cm hinter der Haut des Rückens (Probe: Haut am Ellbogen 4,0 cm dahinter), Unterarm am Ende 11° unter der Waagrechten, Unterarm zur Zugrichtung 29 bis 49° (mit der Achse vorn unten wie in D-518: 7 bis 74°), Handgelenk höchstens 10,5°, Brust 4,0 mm im Polster in jedem Bild, nichts durch das Polster, Körper und Shirt mindestens 36,4 mm von der Maschine, Arme mindestens 110 mm vom Brustpolster, 0 Meldungen; Prüfansichten angesehen |
+| Rudern an der Maschine mit dem Code von D-520 (`render.py rudern_maschine --pruefen --nur-messwerte`, alle 60 Bilder) | alle Werte der Prüfseite D-518 gleich (größte Abweichung 0); neu: Ellbogengelenk am Ende 1,1 cm vor der Haut des Rückens (Probe: Haut am Ellbogen 2,3 cm dahinter), Unterarm zur Zugrichtung 5 bis 35°; 0 Meldungen |
+| `render.py rudern_langhantel`, `rudern_maschine`, `high_row_maschine` | 3024 s, 4538 s, 4668 s für je 60 Bilder, 720 × 540 (zum Teil zwei Schleifen gleichzeitig, daneben Prüfläufe); erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Einträge `bent_over_row_barbell`, `machine_row`, `high_row_machine` in `public/uebungen/medien.json` | Alternativtexte 215, 197, 209 Zeichen |
+| `python3 tools/uebungen_medien_version.py` | 12 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py waagrechtes-ziehen-pplc …` (mit Namen) | 1440 × 360, 7,5 s, 250 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 26, Ausführung 123, offen 2; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden (Bildliste: 26 Einträge, 104 Dateien mit Prüfsumme) |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden (zweiter Lauf, Blender angehalten, 93,8 s); im ersten Lauf neben drei Blender-Prozessen 10 Zeitüberschreitungen (5 s) in Oberflächen-Tests von Übungen, Tagesaufgaben, Wasser und Player, ohne Bezug zu diesem Paket (275 s) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 104 von 104 Dateien |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 20,7 min; Übungsliste mit 26 Bildern |

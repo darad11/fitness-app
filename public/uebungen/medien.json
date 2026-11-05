@@ -630,6 +630,87 @@
       },
       "alt": "Trizepsdrücken am Kabel, schräg von vorn: Oberkörper leicht vor, Ellbogen fest seitlich am Rumpf, enger Obergriff an der Stange; aus dem gebeugten Arm nach unten strecken, bis die Arme gerade sind, und zurück.",
       "source": "form_3d_pilot"
+    },
+    "bent_over_row_barbell": {
+      "preview": {
+        "src": "medien/rudern_langhantel-vorschau-69b13d22.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/rudern_langhantel-e364d31f.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rudern_langhantel-39007b93.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rudern_langhantel-poster-f7a54f66.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Rudern mit Langhantel, vorgebeugt, schräg von vorn: Knie leicht gebeugt, Rücken gerade, Oberkörper fest; die Stange im Obergriff aus den hängenden Armen zum oberen Bauch ziehen, Schulterblätter zusammen, und senken.",
+      "source": "form_3d_pilot"
+    },
+    "machine_row": {
+      "preview": {
+        "src": "medien/rudern_maschine-vorschau-f39bbc0c.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/rudern_maschine-1bac5faf.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rudern_maschine-bac989b2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rudern_maschine-poster-86ba9a26.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Rudern an der Maschine, schräg von hinten: Brust am Polster, Daumen oben an drehbaren Griffen; nach hinten ziehen, bis die Ellbogen hinter dem Rücken sind, dann zurück, bis die Arme gestreckt sind.",
+      "source": "form_3d_pilot"
+    },
+    "high_row_machine": {
+      "preview": {
+        "src": "medien/high_row_maschine-vorschau-6252d2ed.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/high_row_maschine-80a7a21f.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/high_row_maschine-54af559c.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/high_row_maschine-poster-af3803d4.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "High Row an der Maschine, schräg von hinten: Brust am Polster, Obergriff; die Griffe von vorn oben schräg nach hinten unten ziehen, bis die Ellbogen hinter dem Rücken sind, und zurück bis zu gestreckten Armen.",
+      "source": "form_3d_pilot"
     }
   }
 }

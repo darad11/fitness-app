@@ -2400,3 +2400,82 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Maße der Maschinen geschätzt, wie freigegeben; weicht deine Maschine ab, passen wir sie später an
 Nächste Schritte: Prüfseiten der Familien „Beine isoliert“ und „Arme beugen und strecken“, Halt bis zur Freigabe; nach diesem PR die Messungen der Lage in den übrigen Tests
 ```
+
+## 54. Prüfseiten Beine isoliert und Arme beugen und strecken (D-514, D-515)
+
+Wie gewünscht zwei Familien zusammen: „Beine isoliert“ mit vier neuen Maschinen und „Arme beugen und strecken“ mit Curls und Trizepsdrücken am Kabel. Entscheidungen, die bei dir liegen, stehen gesammelt in 54.3.
+
+### 54.1 Beine isoliert: vier neue Maschinen (D-514)
+
+Prüfseite: `docs/screens/uebungen/familie-beine-isoliert-pplc.webp`. Alle vier Maschinen nach der üblichen Bauart mit Gewichtsblock, die Maße geschätzt; die Seiten der Hersteller sind in der Cloud-Umgebung nicht erreichbar.
+
+- **Beinstrecker:** Sitz und Rückenlehne, 15° zurückgeneigt. Dein Kniegelenk liegt genau auf der Drehachse des Hebels (0,0 mm), die Rolle vorn auf den Schienbeinen, 9 cm über dem Fußgelenk. Knie von 90° bis 177° (fast gestreckt). Die Hände halten Griffe seitlich am Sitz. Kamera 75°: schräg von vorn, Beine und Rolle frei.
+- **Beinbeuger sitzend:** dieselbe Bauart, Lehne 20° zurück. Ein Oberschenkelpolster liegt quer über den Oberschenkeln, 10 cm hinter den Knien; die Rolle hinter den Unterschenkeln knapp über den Knöcheln. Knie von 172° (fast gestreckt) bis 60° (120° gebeugt, Familie 110 bis 130°), die Fußspitzen 10° angezogen, wie der Text sagt. Kamera 80°.
+- **Wadenheben stehend:** Schultern unter den Polstern eines Schlittens, der am Turm vor dir senkrecht läuft; die Ballen auf der Kante eines 10 cm hohen Blocks, die Fersen frei. Sprunggelenk von 12° gebeugt (Fersen 3,5 cm unter der Oberseite des Blocks) bis 25° gestreckt (Ferse 6,2 cm darüber), Knie fast gestreckt. Unter der Kante kippt der ganze Schuh um die Kante; darüber bleibt der Vorfuß flach auf dem Block und der Schuh biegt sich am Ballen, wie beim Unterarmstütz. Hände an Griffen quer vor der Brust. Kamera 85°, von der Seite: Dort sieht man die Fersen.
+- **Wadenheben sitzend:** Sitz ohne Lehne, das Kniepolster eine Rolle auf den unteren Oberschenkeln, an einem Hebel von der Säule vor dem Block. Derselbe Weg im Sprunggelenk; die Knie heben sich dabei, die Rolle folgt den Oberschenkeln und gleitet höchstens 2 mm. Die Hände halten Griffe an den Enden der Rolle (siehe 54.3). Kamera 80°.
+- **Unterwegs korrigiert:** Beim Beinbeuger sitzend streiften die Schuhe in einem Bild den Längsträger am Boden (0,08 mm): Sitz und Knie jetzt 3 cm höher, beide Sitzmaschinen neu geprüft. Beim Wadenheben sitzend lagen die Hände zuerst flach auf zwei weichen Polstern; das Werkzeug drückte die Unterseite der Polster bis zu den Händen ein. Mit der Rolle und Griffen ist das sauber.
+
+| Messwert über alle 60 Bilder | Beinstrecker | Beinbeuger sitzend |
+|---|---|---|
+| Knie Ausgang → Ende | 90,0° → 177,0° | 172,0° → 60,0° |
+| Kniegelenk zur Drehachse des Hebels | 0,0 mm | 0,0 mm |
+| Hüfte (Oberschenkel zum Rumpf), Lehne | 104,1°, 15° zurück | 109,1°, 20° zurück |
+| Sprunggelenk (+ Fußspitzen angezogen) | 1,5° (wie im Stand) | 11,5° („Zieh die Fußspitzen zu dir“) |
+| Rolle in Socke und Haut / zu den Schuhen | −1,0 / 16,8 mm | −1,0 / 30,8 mm |
+| Oberschenkelpolster auf Haut und Shorts | – | −2,9 bis −1,8 mm |
+| Gesäß im Sitz / Rücken im Polster / Delle / durch die Oberfläche | 4,0 / 4,0 / 4,0 / 0,0 mm | 4,0 / 4,0 / 4,0 / 0,0 mm |
+| Unterschenkel zur Sitzkante, mindestens | 15,1 mm | 19,9 mm |
+| Schuhe zum Gerät (ohne Rolle), mindestens | 24,6 mm | 19,2 mm |
+| Gewichtsblock gehoben | 12,2 cm | 15,6 cm |
+| Ellbogen / Handgelenk an den Sitzgriffen | 124,7° / 1,0° | 121,0° / 4,1° |
+| Shorts unter dem Shirt / Saumband über den Shorts | −2,5 / −7,5 mm (Hüftfalte) | 0,1 / −3,2 mm |
+| Meldungen des Rigs | 0 | 0 |
+
+| Messwert über alle 60 Bilder | Wadenheben stehend | Wadenheben sitzend |
+|---|---|---|
+| Sprunggelenk Ausgang → Ende (+ gebeugt, − gestreckt) | 12,0° → −25,0° | 12,0° → −25,0° |
+| Ferse zur Oberseite des Blocks | −3,5 bis +6,2 cm | −3,0 bis +5,8 cm |
+| Schuh am Ballen gebogen, höchstens | 22,8° | 21,2° |
+| Sohle über dem Block, tiefster Punkt | 0,0 bis 0,8 mm | 0,1 bis 0,9 mm |
+| Fuß und Socke im Schuh | 0 Punkte außerhalb, Haut 3,8 mm unter dem Schaft | 0 Punkte außerhalb, Haut 3,8 mm unter dem Schaft |
+| Knie | 176,0° („Halt die Knie gerade“) | 87,7° bis 89,8° |
+| Körper gehoben / Oberschenkel zur Waagrechten | −2,6 bis +4,2 cm | −2,7° bis +5,8° |
+| Schulterpolster: Delle / durch die Oberfläche / Kopf und Haare zum Gerät | 7,6 / 0,0 / 34,1 mm | – |
+| Kniepolster auf der Haut / gleitet längs des Oberschenkels | – | −4,7 bis −2,0 mm / höchstens 2,0 mm |
+| Gesäß im Sitz / Delle | – | 4,0 bis 14,7 mm (oben am wenigsten) / höchstens 13,7 mm |
+| Ellbogen / Handgelenk | 57,0° / 2,9° | 82,1° bis 96,0° / höchstens 5,4° |
+| Shorts unter dem Shirt / Saumband über den Shorts | 9,0 / 8,6 mm | −0,8 / −12,3 mm (Hüftfalte) |
+| Meldungen des Rigs | 0 | 0 |
+
+**Abgleich mit den Ausführungstexten:** Beinstrecker, Beinbeuger sitzend und Wadenheben stehend passen, ich habe nichts geändert. Beim Wadenheben sitzend weicht nur die Haltung der Hände ab:
+
+| Text in der App | Animation |
+|---|---|
+| Beinstrecker: „Stell die Maschine so ein, dass dein Kniegelenk auf Höhe der Drehachse des Hebels liegt. Halt dich an den seitlichen Griffen fest.“ | Kniegelenk 0,0 mm von der Drehachse, Hände an den Griffen am Sitz |
+| Beinstrecker: „Streck die Knie und drück den Hebel nach vorn und oben, bis die Beine gerade sind.“ | Knie 90° → 177° |
+| Beinbeuger: „Leg die Rückseite der Unterschenkel auf das Polster, knapp über den Knöcheln.“ | Mitte der Rolle 8 cm über dem Fußgelenk |
+| Beinbeuger: „Zieh die Fußspitzen zu dir.“ | Fußspitzen 10° angezogen |
+| Wadenheben: „Heb die Fersen so hoch wie möglich …“ / „Senk die Fersen ab, bis du eine Dehnung in der Wade spürst.“ | 25° gestreckt / 12° gebeugt (Familie 20 bis 30° / 10 bis 15°) |
+| Wadenheben stehend: „Halt die Knie gerade.“ | Knie 176° in jedem Bild |
+| Wadenheben sitzend: „Leg die Hände auf die Polster und löse den Sicherungshebel.“ | Hände an Griffen an den Enden der Polsterrolle (Frage 3) |
+
+### 54.3 Deine Entscheidungen
+
+Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
+
+1. **Wadenheben sitzend, Hände:** an Griffen an den Enden der Polsterrolle statt flach auf den Polstern, wie der Text sagt („Leg die Hände auf die Polster“). Vorschlag: so lassen und den Text anpassen: „Halt dich an den Griffen am Polster fest und löse den Sicherungshebel.“
+2. **Wadenheben, Weg im Sprunggelenk:** 12° gebeugt (Fersen 3,5 cm unter dem Block) bis 25° gestreckt (Ferse 6,2 cm darüber), stehend und sitzend gleich. Vorschlag: so lassen.
+3. **Maschinen (Annahmen):** Beinstrecker und Beinbeuger sitzend je eine Maschine mit Lehne und Gewichtsblock, der Hebel rechts; Wadenmaschine stehend mit Turm, Schlitten und Griffen vor der Brust; Wadenmaschine sitzend mit Hebel von der Säule vorn. Weicht eine Maschine in deinem Studio ab, sag mir die Bauart, dann baue ich sie danach.
+
+### 54.4 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-514 Phase Programme, Prüfseite „Beine isoliert“ (Beinstrecker, Beinbeuger sitzend, Wadenheben stehend und sitzend) an vier neuen Maschinen
+Umgesetzte Funktionen: keine in der App; Werkzeug: Sitzmaschine für Beinstrecker und Beinbeuger (geraete.beinmaschine_sitzend), Wadenmaschinen stehend und sitzend (geraete.wadenmaschine_stehend, geraete.wadenmaschine_sitzend), vier Übungen mit Messwerten (uebungen.Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend), Fuß auf der Kante mit gebogenem Schuh, geraete.eindruecken mit wählbarer Tiefe, Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-beine-isoliert-pplc.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-514
+Ausgeführte Tests: Probeläufe je Maschine, Griffe gesucht, render.py --pruefen und Nahaufnahmen für alle vier (je 60 Bilder), Beinstrecker und Beinbeuger nach der Korrektur ein zweites Mal, Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 54.1)
+Bekannte Einschränkungen: Maße der Maschinen geschätzt; Wadenheben sitzend: Hände an Griffen statt flach auf den Polstern (Frage 1)
+Nächste Schritte: Prüfseite „Arme beugen und strecken“ (D-515), dann Halt bis zu deiner Freigabe beider Prüfseiten
+```

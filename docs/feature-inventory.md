@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.111 (Phase Programme, Prüfseite Beine isoliert, 05.11.2026): Status unverändert; Prüfseite „Beine isoliert“ mit Beinstrecker, Beinbeuger sitzend, Wadenheben stehend und sitzend an vier neuen Maschinen, noch nicht in der App (D-514).
 - Version 0.110 (Phase Programme, Dip und Machine Squat in der App, 05.11.2026): Status unverändert; Animationen für „Dips mit Unterstützung“ und „Hackenschmidt-Kniebeuge“ in der App, der Pull-Up mit den Diparmen neu, 16 Übungen mit Animation; Text der Hackenschmidt-Kniebeuge an die Tiefe der Animation angepasst (D-513).
 - Version 0.109 (Phase Programme, Prüfseite Machine Squat, 05.11.2026): Status unverändert; Prüfseite „Hackenschmidt-Kniebeuge“ an einer neuen Maschine, noch nicht in der App (D-511).
 - Version 0.108 (Phase Programme, Prüfseite Dip, 04.11.2026): Status unverändert; Prüfseite „Dips mit Unterstützung“ an derselben Gegengewichtsmaschine mit neuen Diparmen, noch nicht in der App (D-510).

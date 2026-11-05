@@ -266,6 +266,29 @@ MESSWERTE = (
     ("Arme zur Maschine (mm)", "Arme zur Maschine", "min", " mm"),
     ("Körper, Kleidung und Schuhe zur Maschine (mm, ohne Polster und Griffe)",
      "Körper, Kleidung und Schuhe zur Maschine (ohne Polster und Griffe)", "min", " mm"),
+    # Beine isoliert: Beinstrecker, Beinbeuger sitzend, Wadenheben (D-514)
+    ("Sprunggelenk gebeugt (Grad, + Fußspitzen zum Schienbein)", "Sprunggelenk (+ Fußspitzen zum Schienbein)", "spanne", "°"),
+    ("Gewichtsblock gehoben (cm)", "Gewichtsblock gehoben", "max", " cm"),
+    ("Unterschenkel zum Sitz (mm, negativ = darin)", "Unterschenkel zum Sitz (unter 0 = darin)", "min", " mm"),
+    ("Oberschenkelpolster: Haut und Shorts (mm, negativ = eingedrückt)", "Oberschenkelpolster auf Haut und Shorts (unter 0 = darin)",
+     "spanne", " mm"),
+    ("Schuhe zum Gerät ohne Rolle (mm)", "Schuhe zum Gerät (ohne Rolle)", "min", " mm"),
+    ("Sprunggelenk (Grad, + gebeugt, − gestreckt)", "Sprunggelenk (+ gebeugt, − gestreckt)", "spanne", "°"),
+    ("Fuß geneigt (Grad, + Ferse hoch)", "Fuß geneigt (+ Ferse hoch)", "spanne", "°"),
+    ("Körper gehoben (cm, gegenüber dem flachen Fuß)", "Körper gehoben (gegenüber dem flachen Fuß)", "spanne", " cm"),
+    ("Sohle über dem Block: tiefster Punkt über der Oberseite (mm, negativ = darin)",
+     "Sohle über dem Block: tiefster Punkt über der Oberseite", "spanne", " mm"),
+    ("Sohle: Spitze über der Oberseite des Blocks (mm)", "Schuhspitze über dem Block", "spanne", " mm"),
+    ("Ferse: Unterkante zur Oberseite des Blocks (cm, + darüber)", "Ferse zur Oberseite des Blocks (+ darüber)", "spanne", " cm"),
+    ("Bogen am Ballen: Abweichung der Sohle vorn von starr (mm)", "Bogen am Ballen: Vorfuß starr (Abweichung)", "max", " mm"),
+    ("Schulterpolster: tiefste Delle (mm)", "Schulterpolster: tiefste Delle", "max", " mm"),
+    ("Schulterpolster: Haut, Shirt oder Haare durch die Oberfläche (mm)", "Schulterpolster: etwas durch die Oberfläche", "max",
+     " mm"),
+    ("Kopf und Haare zum Gerät ohne Polster (mm)", "Kopf und Haare zum Gerät (ohne Polster)", "min", " mm"),
+    ("Oberschenkel zur Waagrechten (Grad, + Knie höher)", "Oberschenkel zur Waagrechten (+ Knie höher)", "spanne", "°"),
+    ("Kniepolster: gleiten längs des Oberschenkels (mm)", "Kniepolster gleiten längs des Oberschenkels", "max", " mm"),
+    ("Kniepolster: Haut und Shorts (mm, negativ = eingedrückt)", "Kniepolster auf Haut und Shorts (unter 0 = darin)", "spanne",
+     " mm"),
 )
 
 
@@ -331,7 +354,9 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "presse_aussen": "Hand am Griff von außen", "klimmzug_vorn": "Hand am Griff von vorn",
               "klimmzug_hinten": "Hand am Griff von hinten", "dip_aussen": "Hand am Dipgriff von außen",
               "dip_hinten": "Hand am Dipgriff von hinten", "hack_vorn": "Hand am Griff von vorn",
-              "hack_aussen": "Hand am Griff von außen"}
+              "hack_aussen": "Hand am Griff von außen", "sitzgriff_aussen": "Hand am Sitzgriff von außen",
+              "sitzgriff_vorn": "Hand am Sitzgriff von vorn", "waden_hand": "Hand am Griff von außen",
+              "waden_hand_vorn": "Hand am Griff von vorn"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

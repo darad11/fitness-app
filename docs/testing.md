@@ -3403,3 +3403,22 @@ Schleifen für Dips mit Unterstützung und Hackenschmidt-Kniebeuge, Pull-Up mit 
 | `pnpm test` | 140 Dateien, 1273 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 64 von 64 Dateien |
 | `pnpm test:e2e` (Chromium, Blender ruhte) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 14,4 min; Übungsliste mit 16 Bildern |
+
+### Prüfseite „Beine isoliert“ mit vier neuen Maschinen · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Beinstrecker, Beinbeuger sitzend, Wadenheben stehend und sitzend; nur Werkzeug, Bilder und Dokumente (D-514).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Beinstrecker (drei Phasen, drei Ansichten) | erster Lauf: Sitzkante in den Waden (Unterschenkel 2,1 mm im Sitz), das Verschieben des Polsters setzte den Sitz 53 mm zu tief; jetzt Vorderkante aus den Waden gerechnet: Gesäß und Rücken 4,0 mm, Rolle −1,0 mm, Kniegelenk 0,0 mm von der Drehachse |
+| Griffe des Beinstreckers unter 17 Richtungen und drei Ellbogenrichtungen | längs nach vorn: Handgelenk 52,6°; gewählt waagrecht, 41° zur Mitte gedreht: 1,0° |
+| Probelauf Beinbeuger sitzend | Knie 172° → 60°, Oberschenkelpolster −2,0 bis −2,9 mm, Rolle −1,0 mm, Fußspitzen 11,5° angezogen |
+| Probeläufe Wadenheben stehend (Fuß auf der Kante) | Bogen am Ballen je 5° gemessen, Vorfuß starr (Abweichung 0,0 mm); ohne Ausgleich der gebogenen Schuhspitze lag die Sohle oben 3,4 mm über dem Block, mit Ausgleich 0,0 bis 0,9 mm |
+| Griffe Wadenheben stehend in vier Lagen, 12 bis 13 Richtungen, zwei bis drei Ellbogenrichtungen | neben den Polstern (wie Hackenschmidt) Handgelenk 52°, vor den Schultern Ellbogen unter 37°; gewählt quer vor der Brust: Ellbogen 57°, Handgelenk 2,9° |
+| Probeläufe Wadenheben sitzend | Kastenpolster mit flachen Händen: Delle 66 bis 100 mm, weil das Eindrücken die Hände durch das Polster fand; Shorts 6,4 cm über der Haut ab 14 cm hinter dem Knie; jetzt Rolle auf der Haut davor, Griffe an den Enden (12 Richtungen, drei Ellbogenrichtungen: Handgelenk 6,0°); Hebelachse so, dass die Rolle in Richtung der Oberschenkel läuft: gleitet 2,0 statt 35,7 mm |
+| `render.py <übung> --pruefen` und `familie_bilder.py` für alle vier | 6 min 6 s, 6 min 31 s, 5 min 42 s, 6 min 1 s; Nahaufnahmen je etwa 45 s |
+| Beinbeuger sitzend über alle 60 Bilder | Schuhe in Bild 20 und 43 0,08 mm am Längsträger: Sohle bei 90° 9 statt 6 cm über dem Boden, Beinstrecker und Beinbeuger neu geprüft: Schuhe mindestens 24,6 und 19,2 mm vom Gerät |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | keine; nur Rauschen unter 1 mm bei Sohle und Ösen |
+| Messwerte | in `form-programme-report.md` 54.1; 0 Meldungen des Rigs |
+| Prüfansichten und Nahaufnahmen angesehen | in der Kamera der App, von der Seite und von vorn wie erwartet; Hände an den Griffen, Rolle an Schienbein oder Wade, Ferse unter und über dem Block |
+| Prüfseite (`tools/uebungen_pruef_bild.py beinstrecker beinbeuger_sitzend wadenheben_stehend wadenheben_sitzend --familie beine-isoliert-pplc --titel "Beine isoliert (Dali’s PPLC)"`) | `familie-beine-isoliert-pplc.webp`, 1480 × 6086, angesehen; zwei doppelte Zeilen der Messwerte entfernt |

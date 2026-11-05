@@ -5262,8 +5262,1000 @@ class Hackenschmidt(Uebung):
         return abstand
 
 
+# ---------------------------------------------------------------------- Familie „Beine isoliert“: Sitzmaschinen und Waden (D-514)
+
+
+class Beinstrecker(Uebung):
+    """Beinstrecker, Familie „Beine isoliert“ (D-514), nach dem Ausführungstext der App (ExRx „Lever Leg Extension“) und
+    den Werten der Familie (Knie von 90° bis 0–5° gebeugt). Sitzend auf der Maschine (`geraete.beinmaschine_sitzend`), der
+    Rücken am Rückenpolster, das `LEHNE` Grad nach hinten geneigt ist; Gesäß und Rücken liegen mit der Kleidung `TIEF` in
+    den Polstern, die Oberschenkel waagrecht auf dem Sitz, die Kniekehlen knapp vor der Sitzkante (`KNIE_FREI`). Die
+    Drehachse des Hebels liegt auf der Achse der Kniegelenke („Kniegelenk auf Höhe der Drehachse“), die Rolle vorn auf
+    den Unterschenkeln `ROLLE_UEBER` über den Fußgelenken. Die Hände halten die Griffe seitlich am Sitz. Die Knie strecken
+    von `KNIE_AUS` bis `KNIE_EIN` („bis die Beine gerade sind“); Hebel und Rolle drehen mit den Unterschenkeln um
+    dieselbe Achse, der Gewichtsblock hebt sich um den Weg der Nocke. Das Sprunggelenk bleibt wie im Stand. Zurück
+    derselbe Weg."""
+
+    name = "beinstrecker"
+    titel = "Beinstrecker"
+    fuesse_frei = True  # die Füße hängen frei (`render.messen`: kein Bodenkontakt)
+    kamera = {"richtung": 75.0, "neigung": 12.0, "fuellen": 0.02}
+    vorschau_phase = 1.0
+    LEHNE = 15.0  # Rückenpolster gegen die Senkrechte nach hinten geneigt, Grad
+    KNIE_AUS = 90.0  # Ausgang: Knie 90° gebeugt (Familie)
+    KNIE_EIN = 177.0  # Ende: fast gestreckt (Familie: 0 bis 5° gebeugt)
+    KINN = 12.0  # Kopf gegenüber dem Rumpf gebeugt, damit der Blick trotz der Lehne etwa waagrecht bleibt, Grad
+    FUSS = 0.0  # Sprunggelenk gegenüber dem Stand angezogen (+, Fußspitzen zum Schienbein), Grad
+    TIEF = 0.004  # Gesäß und Rücken mit der Kleidung so tief in den Polstern, m
+    # Sohle bei 90° im Knie so weit über dem Boden, m: mit 6 cm streiften die Schuhe beim Beinbeuger sitzend den
+    # Längsträger (0,08 mm), der zwischen den Füßen 6 cm hoch ist
+    FREI = 0.09
+    KNIE_FREI = 0.015  # Vorderkante des Sitzes so weit hinter den Waden (im Ausgang), m
+    ROLLE_UEBER = 0.09  # Mitte der Rolle so weit über dem Fußgelenk (längs des Unterschenkels), m
+    ROLLE_TIEF = 0.001  # Rolle so tief in Socke und Haut, m
+    ROLLE_VORN = True  # Rolle vor den Unterschenkeln (Beinstrecker) oder hinter ihnen (Beinbeuger)
+    GRIFF_X = 0.25  # Mitte der Griffe so weit von der Mitte, m
+    GRIFF_VOR = 0.02  # Mitte der Griffe so weit vor den Hüftgelenken, m
+    GRIFF_HOCH = 0.06  # Mitte der Griffe so weit über dem Sitz, m
+    # Achse der Griffe (Welt, linke Seite) vom Zeigefinger zum kleinen Finger: waagrecht, 41° zur Mitte hin gedreht
+    # (gesucht unter 17 Richtungen und drei Ellbogenrichtungen: längs nach hinten knickte das Handgelenk 18,7°, quer 9,1°)
+    GRIFF_RICHTUNG = (-0.75, 0.66, 0.0)
+    GRIFF_LAGE = 0.6
+    STRECKUNG = 0.0
+    POL = (0.6, 0.6, -0.2)  # Ellbogen nach außen und hinten (Raum des Skeletts, linke Seite)
+    fuss_ansichten = ((90, 0.10), (0, 0.10), (180, 0.15), (270, 0.05))
+    griff_ansichten = (("sitzgriff_aussen", 90.0, 20.0), ("sitzgriff_vorn", 15.0, 25.0))
+
+    def rahmen_objekte(self) -> list:
+        if self.geraet is None:
+            return []
+        g = self.geraet
+        return [g["sitz"], g["lehne"], g["rolle"], *g["griffe"].values()]
+
+    def polster_objekte(self) -> list:
+        return self.geraet["polster"] if self.geraet else []
+
+    def auflage(self) -> list:
+        return auflage_objekte(self.koerper, "Shirt", "Shorts")
+
+    def stange_achse(self):
+        m, richtung = self.griffe["L"]
+        return m.copy(), richtung, geraete.SITZMASCHINE["griff_d"] / 2
+
+    def bauen(self) -> None:
+        super().bauen()
+        rig = self.rig
+        k = rig.kopf
+        self.l1 = (k["lowerleg01.L"] - k["upperleg01.L"]).length
+        self.l2 = (k["foot.L"] - k["lowerleg01.L"]).length
+        self.H0 = (k["upperleg01.L"] + k["upperleg01.R"]) / 2
+        self.R = achse_winkel(X, -self.LEHNE)
+        # Kniegelenke so hoch wie im Stand plus `FREI`: Bei 90° hängen die Schuhe so weit über dem Boden
+        knie_z = k["lowerleg01.L"].z + self.FREI
+        self.verschiebung = Vector((0.0, -self.H0.y, knie_z - self.H0.z))
+        ruhe = [v.co for v in self.koerper.data.vertices]
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+
+        def gruppe(*anfaenge: str) -> list[int]:
+            return [v.index for v in self.koerper.data.vertices
+                    if sum(g.weight for g in v.groups if namen[g.group].startswith(anfaenge)) > 0.5]
+
+        huefte, hals = k["upperleg01.L"].z, k["neck01"].z
+        self.gesaess_i = [i for i, q in enumerate(ruhe) if abs(q.x) < 0.17 and huefte - 0.12 < q.z < huefte + 0.06 and q.y > 0.02]
+        self.schenkel_i = gruppe("upperleg")
+        self.ruecken_i = [i for i, q in enumerate(ruhe) if abs(q.x) < 0.14 and huefte + 0.12 < q.z < hals - 0.05 and q.y > 0.0]
+        self.unterschenkel_i = gruppe("lowerleg")
+        self.phi0 = math.radians(180.0 - self.KNIE_AUS)
+        self.geraet = None
+        self.geloest = False
+        self.delle = 0.0
+        self._phase_jetzt = 0.0
+
+    # ------------------------------------------------------------------ Haltung der Beine
+
+    def _becken(self) -> Matrix:
+        return starr(self.H0, self.H0 + self.verschiebung, self.R)
+
+    @staticmethod
+    def _unter(phi: float) -> tuple[Vector, Vector]:
+        """Richtung des Unterschenkels (Knie → Fußgelenk) bei Beugung `phi` aus der Streckung (Raum des Skeletts) und
+        die Richtung zu seiner Vorderseite."""
+        return Vector((0.0, -math.cos(phi), -math.sin(phi))), Vector((0.0, -math.sin(phi), math.cos(phi)))
+
+    def _beine(self, phi: float) -> dict:
+        """Oberschenkel waagrecht nach vorn, Unterschenkel um `phi` aus der Streckung gebeugt; der Fuß fest am
+        Unterschenkel wie im Stand, um `FUSS` angezogen."""
+        from rig import abbild
+
+        rig = self.rig
+        k = rig.kopf
+        u, v = self._unter(phi)
+        aus = {}
+        for s in "LR":
+            H = rig.punkt("pelvis." + s, k["upperleg01." + s])
+            K = H + Vector((0.0, -self.l1, 0.0))
+            A = K + u * self.l2
+            bein = rig.bein(s, A, Vector((0.0, -0.4, 1.0)).normalized(), 0.0)
+            A0, K0 = k["foot." + s], k["lowerleg01." + s]
+            R_unter = abbild(A0 - K0, -Y, bein["knoechel"] - bein["knie"], bein["richtung"])
+            if self.FUSS:
+                R_unter = achse_winkel(X, -self.FUSS) @ R_unter  # + zieht die Fußspitzen zum Schienbein
+            rig.setze("foot." + s, starr(A0, bein["knoechel"], R_unter))
+            aus[s] = bein
+        return aus
+
+    # ------------------------------------------------------------------ Maschine
+
+    def _punkte(self, *namen: str) -> list[Vector]:
+        import schuhe
+
+        aus = []
+        for n in namen:
+            if n in bpy.data.objects:
+                aus += schuhe._verformt(bpy.data.objects[n])[0]
+        return aus
+
+    def _loesen(self) -> None:
+        """Polster und Maschine, wenn Kleidung und Schuhe da sind (erstes `setzen`): Sitz unter Gesäß und Oberschenkeln
+        (Haut und Shorts) `TIEF` tief, Rückenpolster ebenso unter Rücken und Shirt; Drehachse auf der Achse der
+        Kniegelenke, Rolle auf den Unterschenkeln, Griffe seitlich am Sitz."""
+        import schuhe
+
+        rig = self.rig
+        k = rig.kopf
+        m = geraete.SITZMASCHINE
+        # Waden bei der stärksten Beugung (Lage der Sitzkante), dann der Ausgang
+        rig.zuruecksetzen()
+        rig.setze("root", self._becken())
+        self._beine(max(self.phi0, math.radians(180.0 - self._knie(1.0))))
+        rig.anwenden()
+        wade = [q.copy() for q in (lambda n_: [n_[i] for i in self.unterschenkel_i])(_netz(self.koerper))] + self._punkte("Socken")
+        rig.zuruecksetzen()
+        rig.setze("root", self._becken())
+        self._beine(self.phi0)
+        rig.anwenden()
+        netz = _netz(self.koerper)
+        kleid = self._punkte("Shirt", "Saumband", "Shorts")
+        H = rig.welt((rig.punkt("pelvis.L", k["upperleg01.L"]) + rig.punkt("pelvis.R", k["upperleg01.R"])) / 2)
+        KL = rig.welt(rig.punkt("lowerleg01.L", k["lowerleg01.L"]))
+        KR = rig.welt(rig.punkt("lowerleg01.R", k["lowerleg01.R"]))
+        knie = (KL + KR) / 2
+        S = {s: rig.welt(rig.punkt("shoulder01." + s, k["upperarm01." + s])) for s in "LR"}
+        sb, sd = m["sitz"]
+        # Rückenpolster: Ebene mit der Normale n zur Person, `TIEF` hinter dem hintersten Punkt von Rücken und Shirt
+        a = math.radians(self.LEHNE)
+        oben = Vector((0.0, math.sin(a), math.cos(a)))
+        n = X.cross(oben)
+        schulter_z = (S["L"].z + S["R"].z) / 2
+        ruecken = [netz[i] for i in self.ruecken_i] + [q for q in kleid if abs(q.x) < 0.14 and q.y > H.y and H.z + 0.12 < q.z < schulter_z - 0.02]
+        c = min(q.dot(n) for q in ruecken) + self.TIEF
+        # Sitz: tiefste Stelle von Gesäß, Oberschenkeln und Shorts über der Fläche des Sitzes (vor dem Rückenpolster)
+        # Vorderkante `KNIE_FREI` hinter den Waden (Haut und Socke) unter der Sitzfläche, im Ausgang mit 90° im Knie
+        unten = [netz[i] for i in self.gesaess_i + self.schenkel_i] + kleid
+        vorn_y = knie.y + 0.10
+        for _ in range(3):
+            auf = [q for q in unten if abs(q.x) < sb / 2 and vorn_y < q.y and q.dot(n) > c - 0.01 and q.z < H.z]
+            sitz_z = min(q.z for q in auf) + self.TIEF
+            hinter = [q.y for q in wade if sitz_z - sd - 0.03 < q.z < sitz_z + 0.01 and abs(q.x) < sb / 2]
+            vorn_y = (max(hinter) if hinter else knie.y) + self.KNIE_FREI
+        lx, ly, _ = m["lehne"]
+        z_mitte = sitz_z + 0.04 + ly / 2 * oben.z
+        for _ in range(3):  # alle Punkte von Haut und Kleidung über der Fläche des Polsters
+            y_mitte = (n.z * z_mitte - c) / -n.y
+            lehne = Vector((0.0, y_mitte, z_mitte))
+            ueber = [q for q in netz + kleid
+                     if abs(q.x) < lx / 2 and abs((q - lehne).dot(oben)) < ly / 2 and -0.05 < (q - lehne).dot(n) < 0.10]
+            c = min(q.dot(n) for q in ueber) + self.TIEF
+        y_mitte = (n.z * z_mitte - c) / -n.y
+        lehne = Vector((0.0, y_mitte, z_mitte))
+        hinten_y = (lehne - oben * (ly / 2)).y + 0.02
+        # Drehachse auf der Achse der Kniegelenke, rechts neben dem rechten Knie
+        self.achse = Vector((-m["hebel_x"], knie.y, knie.z))
+        u, v = self._unter(self.phi0)
+        if not self.ROLLE_VORN:
+            v = -v
+        L = self.l2 - self.ROLLE_UEBER
+        r = m["rolle_d"] / 2 - self.ROLLE_TIEF
+        bein = [netz[i] for i in self.unterschenkel_i] + self._punkte("Socken")
+        hoch = -1.0
+        for q in bein:
+            w = q - Vector((q.x, knie.y, knie.z))
+            du = w.dot(u) - L
+            if abs(du) < r and abs(q.x) < m["rolle_l"] / 2:
+                hoch = max(hoch, w.dot(v) + math.sqrt(r * r - du * du))
+        rolle = Vector((0.0, knie.y, knie.z)) + u * L + v * hoch
+        self.rolle0 = rolle
+        # Griffe seitlich am Sitz
+        self.griffe = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            gm = Vector((sx * self.GRIFF_X * self.mass, H.y - self.GRIFF_VOR, sitz_z + self.GRIFF_HOCH))
+            g0, g1, g2 = self.GRIFF_RICHTUNG
+            self.griffe[s] = (gm, Vector((sx * g0, g1, g2)).normalized())
+        schenkel = self._schenkelpolster(netz, kleid, knie) if hasattr(self, "_schenkelpolster") else None
+        rig.zuruecksetzen()
+        self.sitz_z, self.sitz_vorn = sitz_z, vorn_y
+        self.lehne_welt = (lehne, oben)
+        self.geraet = geraete.beinmaschine_sitzend(self.titel, (sitz_z, vorn_y, hinten_y), (lehne, oben), self.achse, rolle,
+                                                   self.griffe, schenkel)
+        self.polster_ruhe = {o.name: geraete.weiches_polster(o) for o in self.polster_objekte()}
+        # Das neue Netz der Polster liegt einige Millimeter neben der Fläche des Kastens: jedes Polster längs seiner
+        # Normale so verschieben, dass die tiefste Stelle von Haut und Kleidung `TIEF` darin liegt
+        rig.zuruecksetzen()
+        rig.setze("root", self._becken())
+        self._beine(self.phi0)
+        rig.anwenden()
+        punkte = SchulterdrueckenMaschine._auflage_punkte(self)
+        for obj in self.polster_objekte():
+            n_welt = (obj.matrix_world.to_3x3() @ Z).normalized()
+            obj.matrix_world = Matrix.Translation(n_welt * (self.TIEF - SchulterdrueckenMaschine._tiefe(obj, punkte))) @ obj.matrix_world
+        rig.zuruecksetzen()
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, m["griff_d"] / 2) for s in "LR"}
+
+    # ------------------------------------------------------------------ Haltung
+
+    def _arme(self) -> dict:
+        rig = self.rig
+        aus = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            gm, richtung = self.griffe[s]
+            pol = Vector((sx * self.POL[0], self.POL[1], self.POL[2])).normalized()
+            aus[s] = rig.arm(s, self.griff[s], rig.lokal(gm), richtung, pol, self.STRECKUNG)
+        return aus
+
+    def _knie(self, p: float) -> float:
+        return self.KNIE_AUS + (self.KNIE_EIN - self.KNIE_AUS) * p
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        k = rig.kopf
+        phi = math.radians(180.0 - self._knie(p))
+        rig.setze("root", self._becken())
+        rig.dreh("neck01", achse_winkel(X, self.KINN))
+        beine = self._beine(phi)
+        arme = self._arme()
+        dreh = math.degrees(phi - self.phi0)
+        g = self.geraet
+        g["hebel"].matrix_world = (Matrix.Translation(self.achse) @ achse_winkel(X, dreh).to_4x4()
+                                   @ Matrix.Translation(-self.achse) @ g["hebel0"])
+        weg = geraete.SITZMASCHINE["nocke_r"] * abs(phi - self.phi0)
+        g["block"].matrix_world = Matrix.Translation(Vector((0, 0, weg))) @ g["block0"]
+        L, A = beine["L"], arme["L"]
+        rumpf = (rig.punkt("neck01", k["neck01"]) - rig.punkt("spine05", k["spine05"])).normalized()
+        oberschenkel = (L["knie"] - L["huefte"]).normalized()
+        schienbein = (L["knie"] - L["knoechel"]).normalized()
+        zehen = (rig.g("foot.L").to_3x3() @ Vector((0.0, -1.0, 0.0))).normalized()
+        K = rig.welt(L["knie"])
+        self.werte = {
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüftwinkel (Grad)": math.degrees(oberschenkel.angle(rumpf)),
+            "Sprunggelenk gebeugt (Grad, + Fußspitzen zum Schienbein)": 90.0 - math.degrees(schienbein.angle(zehen)),
+            "Kniegelenk zur Drehachse (mm)": math.hypot(K.y - self.achse.y, K.z - self.achse.z) * 1000,
+            "Hebel gedreht (Grad)": dreh,
+            "Gewichtsblock gehoben (cm)": weg * 100,
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+        }
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self.geloest = True
+            self._loesen()
+        self._phase_jetzt = p
+        super().setzen(p)
+        self.delle = geraete.eindruecken(self.polster_objekte(), self.polster_ruhe, self.auflage())
+
+    # ------------------------------------------------------------------ Messwerte und Nahaufnahmen
+
+    def _rolle(self) -> tuple[Vector, Vector, float, float]:
+        m = geraete.SITZMASCHINE
+        M = self.geraet["rolle"].matrix_world
+        return M.translation.copy(), (M.to_3x3() @ Vector((0, 0, 1))).normalized(), m["rolle_d"] / 2, m["rolle_l"] / 2
+
+    _zur_rolle = BeinbeugerLiegend._zur_rolle
+
+    def fuss_ziel(self, sohle: list[Vector]) -> Vector:
+        rig = self.rig
+        A = rig.welt(rig.punkt("foot.L", rig.kopf["foot.L"]))
+        c, ax, _, _ = self._rolle()
+        return (A + c + ax * (A - c).dot(ax)) / 2
+
+    def nah_punkte(self) -> list[Vector]:
+        rig = self.rig
+        hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        gm, richtung = self.griffe["L"]
+        halb = geraete.SITZMASCHINE["griff_l"] / 2
+        return [q for q in _netz(self.koerper) if (q - hand).length < 0.10] + [gm + richtung * halb, gm - richtung * halb]
+
+    def zusatzwerte(self) -> dict:
+        """Gesäß und Rücken in den Polstern, Delle, nichts ragt durch; die Rolle auf Socke und Haut der Unterschenkel und
+        zu den Schuhen; die Waden zur Sitzkante (mm)."""
+        from mathutils.bvhtree import BVHTree
+
+        g = self.geraet
+        punkte = SchulterdrueckenMaschine._auflage_punkte(self)
+        werte = {"Gesäß im Sitz (mm)": SchulterdrueckenMaschine._tiefe(g["sitz"], punkte) * 1000,
+                 "Rücken im Polster (mm)": SchulterdrueckenMaschine._tiefe(g["lehne"], punkte) * 1000,
+                 "Polster: tiefste Delle (mm)": self.delle * 1000,
+                 "Polster: Haut oder Kleidung durch die Oberfläche (mm)": geraete.durch_polster(self.polster_objekte(),
+                                                                                                 self.auflage()) * 1000}
+        netz = _netz(self.koerper)
+        socke = self._punkte("Socken")
+        werte["Rolle: Socke und Haut (mm, negativ = eingedrückt)"] = self._zur_rolle([netz[i] for i in self.unterschenkel_i] + socke) * 1000
+        schuh = self._punkte("Schuhe", "Sohle")
+        if schuh:
+            werte["Rolle zu den Schuhen (mm)"] = self._zur_rolle(schuh) * 1000
+        # Waden (Haut und Socke) zum Sitzpolster: an der Vorderkante darf nichts hineinragen
+        dg = bpy.context.evaluated_depsgraph_get()
+        oe = g["sitz"].evaluated_get(dg)
+        me = oe.to_mesh()
+        M = oe.matrix_world
+        bvh = BVHTree.FromPolygons([M @ v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
+        oe.to_mesh_clear()
+        beste = 1.0
+        for q in [netz[i] for i in self.unterschenkel_i] + socke:
+            ort, nn, _, d = bvh.find_nearest(q, 0.2)
+            if ort is not None:
+                beste = min(beste, d if (q - ort).dot(nn) >= 0 else -d)
+        werte["Unterschenkel zum Sitz (mm, negativ = darin)"] = beste * 1000
+        # Schuhe zum Gerät ohne Rolle (Längsträger, Füße des Rahmens, Hebel)
+        teile = [o for o in g["wurzel"].children_recursive if o.type == "MESH" and o is not g["rolle"]]
+        schuh = self._punkte("Schuhe", "Sohle")
+        beste = 1.0
+        for o in teile:
+            oe = o.evaluated_get(dg)
+            me = oe.to_mesh()
+            M = oe.matrix_world
+            bvh = BVHTree.FromPolygons([M @ v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
+            oe.to_mesh_clear()
+            for q in schuh[::3]:
+                ort, _, _, d = bvh.find_nearest(q, 0.3)
+                if ort is not None:
+                    beste = min(beste, d)
+        werte["Schuhe zum Gerät ohne Rolle (mm)"] = beste * 1000
+        return werte
+
+class BeinbeugerSitzend(Beinstrecker):
+    """Beinbeuger sitzend, Familie „Beine isoliert“ (D-514), nach dem Ausführungstext der App (ExRx „Lever Seated Leg
+    Curl“) und den Werten der Familie (Knie von gestreckt bis 110–130° gebeugt). Dieselbe Sitzmaschine wie beim
+    Beinstrecker (`geraete.beinmaschine_sitzend`), die Lehne `LEHNE` Grad nach hinten geneigt; die Kniegelenke auf der
+    Drehachse des Hebels, die Rolle hinter den Unterschenkeln `ROLLE_UEBER` über den Fußgelenken („knapp über den
+    Knöcheln“), das Oberschenkelpolster quer über den Oberschenkeln `SCHENKEL_HINTER` hinter den Kniegelenken, mit der
+    Haut `SCHENKEL_TIEF` darin. Die Fußspitzen sind `FUSS` zum Schienbein angezogen („Zieh die Fußspitzen zu dir“). Die
+    Knie beugen von `KNIE_AUS` bis `KNIE_EIN`, die Unterschenkel gehen unter den Sitz; Hebel und Rolle drehen mit.
+    Zurück derselbe Weg bis zu gestreckten Knien. Die Vorderkante des Sitzes liegt `KNIE_FREI` hinter den Waden bei der
+    stärksten Beugung."""
+
+    name = "beinbeuger_sitzend"
+    titel = "Beinbeuger sitzend"
+    kamera = {"richtung": 80.0, "neigung": 14.0, "fuellen": 0.02}
+    LEHNE = 20.0
+    KNIE_AUS = 172.0  # Ausgang: Knie fast gestreckt („bis die Knie gestreckt sind“)
+    KNIE_EIN = 60.0  # Ende: Knie 120° gebeugt (Familie: 110 bis 130°)
+    FUSS = 10.0
+    ROLLE_VORN = False
+    ROLLE_UEBER = 0.08
+    SCHENKEL_HINTER = 0.10  # Mitte des Oberschenkelpolsters so weit hinter den Kniegelenken, m
+    SCHENKEL_TIEF = 0.002  # Oberschenkelpolster so tief in Haut und Shorts, m
+
+    def rahmen_objekte(self) -> list:
+        aus = super().rahmen_objekte()
+        if self.geraet is not None and self.geraet["schenkelpolster"] is not None:
+            aus.append(self.geraet["schenkelpolster"])
+        return aus
+
+    def _schenkelpolster(self, netz: list, kleid: list, knie: Vector) -> Vector:
+        """Mitte des Oberschenkelpolsters (Welt): `SCHENKEL_HINTER` hinter den Kniegelenken, so tief, dass es
+        `SCHENKEL_TIEF` in Haut und Shorts der Oberschenkel liegt."""
+        m = geraete.SITZMASCHINE
+        r = m["schenkel_d"] / 2 - self.SCHENKEL_TIEF
+        y = knie.y + self.SCHENKEL_HINTER
+        hoch = -1.0
+        for q in [netz[i] for i in self.schenkel_i + self.unterschenkel_i] + kleid:
+            dy = q.y - y
+            if abs(dy) < r and abs(q.x) < m["schenkel_l"] / 2 and q.z > knie.z - 0.02:
+                hoch = max(hoch, q.z + math.sqrt(r * r - dy * dy))
+        self.schenkel_mitte = Vector((0.0, y, hoch))
+        return self.schenkel_mitte
+
+    def zusatzwerte(self) -> dict:
+        """Dazu: das Oberschenkelpolster auf Haut und Shorts, die Schuhe zum Rahmen (mm)."""
+        from mathutils.bvhtree import BVHTree
+
+        werte = super().zusatzwerte()
+        m = geraete.SITZMASCHINE
+        netz = _netz(self.koerper)
+        c, r = self.schenkel_mitte, m["schenkel_d"] / 2
+        beste = 1.0
+        for q in [netz[i] for i in self.schenkel_i] + self._punkte("Shorts"):
+            if abs(q.x) <= m["schenkel_l"] / 2:
+                beste = min(beste, math.hypot(q.y - c.y, q.z - c.z) - r)
+        werte["Oberschenkelpolster: Haut und Shorts (mm, negativ = eingedrückt)"] = beste * 1000
+        return werte
+
+class WadenhebenStehend(Uebung):
+    """Wadenheben stehend an der Maschine, Familie „Beine isoliert“ (D-514), nach dem Ausführungstext der App (ExRx „Lever
+    Standing Calf Raise“) und den Werten der Familie (Sprunggelenk von 10–15° gebeugt bis 20–30° gestreckt). Die
+    Schultern unter den Polstern des Schlittens (`geraete.wadenmaschine_stehend`), die Vorfüße auf dem Block, die Ballen
+    über seiner hinteren Kante, die Fersen frei; Füße parallel und hüftbreit, Knie fast gestreckt (`KNIE`), der Rumpf
+    aufrecht; die Hände an den Griffen neben den Polstern. Das Sprunggelenk geht von `DORSAL` gebeugt (Fersen unter der
+    Kante, „bis du eine Dehnung spürst“) bis `PLANTAR` gestreckt („so hoch wie möglich“). Unter der Kante dreht sich der
+    ganze Schuh um die Kante; über ihr bleibt der Vorfuß flach auf dem Block, der Schuh biegt sich am Ballen
+    (`schuhe.Vorfuss`, D-467), die Ferse hebt sich. Der Körper fährt mit dem Schlitten senkrecht; der Gewichtsblock hebt
+    sich ebenso. Zurück derselbe Weg."""
+
+    name = "wadenheben_stehend"
+    titel = "Wadenheben stehend"
+    fuesse_frei = True  # Füße auf der Kante, Fersen frei: kein Bodenkontakt (`render.messen`); Messung am Block
+    kamera = {"richtung": 85.0, "neigung": 6.0, "fuellen": 0.02}
+    vorschau_phase = 1.0
+    BLOCK = 0.10  # Höhe des Blocks, m
+    DORSAL = 12.0  # Ausgang: Sprunggelenk gebeugt (Familie 10 bis 15°), Grad
+    PLANTAR = 25.0  # oben: Sprunggelenk gestreckt (Familie 20 bis 30°), Grad
+    KNIE = 176.0  # „Halt die Knie gerade“: fast gestreckt
+    KANTE = 0.0  # Kante des Blocks so weit hinter der Mitte des Bogens am Ballen (zur Ferse), m
+    SCHULTER_TIEF = 0.004  # Schulterpolster so tief auf den Schultern, m
+    SCHULTERPOLSTER_X = 0.125  # wie bei der Hackenschmidt-Maschine: innen frei von Kopf und Haaren
+    GRIFF_R = 0.016
+    POL = (0.6, 0.2, -0.8)  # Ellbogen nach unten, außen und etwas hinten (linke Seite)
+    STRECKUNG = 0.0
+    # Griffe quer vor der Brust, an Haltern vom Schlitten: so weit außen, vor und unter dem Schultergelenk (m), Obergriff
+    # (Achse vom Zeigefinger zum kleinen Finger nach außen), Ellbogen unten und etwas außen. Gesucht unter vier Lagen,
+    # zwölf Richtungen und drei Ellbogenrichtungen: neben den Polstern wie bei der Hackenschmidt-Maschine standen die
+    # Ellbogen weit nach hinten außen, vor den Schultern auf ihrer Höhe war der Ellbogen unter 37° gebeugt
+    GRIFF_SEITE, GRIFF_VOR, GRIFF_TIEF = 0.06, 0.22, 0.20
+    GRIFF_ACHSE = (1.0, 0.0, 0.0)
+    fuss_ansichten = ((90, 0.06), (180, 0.10), (0, 0.10), (270, 0.06))
+    griff_ansichten = (("waden_hand", 100.0, 10.0), ("waden_hand_vorn", 20.0, 20.0))
+
+    def rahmen_objekte(self) -> list:
+        if self.geraet is None:
+            return []
+        return [*self.geraet["polster"], *self.geraet["griffe"].values()]
+
+    def polster_objekte(self) -> list:
+        return self.geraet["polster"] if self.geraet else []
+
+    def auflage(self) -> list:
+        return auflage_objekte(self.koerper, "Shirt", "Haare")
+
+    def stange_achse(self):
+        mitte, k = self.griff_lage["L"]
+        return self.rig.welt(mitte + self.T), k.normalized(), self.GRIFF_R
+
+    def bauen(self) -> None:
+        super().bauen()
+        rig = self.rig
+        k = rig.kopf
+        self.l1 = (k["lowerleg01.L"] - k["upperleg01.L"]).length
+        self.l2 = (k["foot.L"] - k["lowerleg01.L"]).length
+        self.H0 = (k["upperleg01.L"] + k["upperleg01.R"]) / 2
+        schulter_z = k["upperarm01.L"].z
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+        px = self.SCHULTERPOLSTER_X * self.mass
+        self.schulter_i = {s: [v.index for v in self.koerper.data.vertices
+                               if abs(sx * v.co.x - px) < 0.05 and v.co.z > schulter_z - 0.02
+                               and not any(namen[g.group].startswith(("head", "neck", "jaw")) and g.weight > 0.3 for g in v.groups)]
+                           for s, sx in (("L", 1), ("R", -1))}
+        self.T = Vector()
+        self.beta_jetzt = 0.0
+        self.geraet = None
+        self.geloest = False
+        self.delle = 0.0
+        self._beta_cache = {}
+
+    # ------------------------------------------------------------------ Fuß auf der Kante
+
+    def vorfuss_grad(self, p: float) -> dict:
+        g = max(self._beta(p), 0.0) if self.geloest else 0.0
+        return {"L": g, "R": g}
+
+    def _fuss_tabelle(self) -> None:
+        """Bogen am Ballen (`schuhe.Vorfuss`): Für Winkel g die starre Bewegung der Sohle vor dem Bogen (Raum des
+        Skeletts, Ruhehaltung), Drehung −g um x und Verschiebung t(g); dazu die Kante unter der Mitte des Bogens."""
+        import schuhe
+
+        rig = self.rig
+        if self.vorfuss is None:
+            self.vorfuss = schuhe.Vorfuss(self.koerper, self.skelett)
+        sohle = bpy.data.objects["Sohle"]
+        u = [a.value for a in sohle.data.attributes["SchuhU"].data]
+        rig.zuruecksetzen()
+        rig.anwenden()
+        self.vorfuss.setze({"L": 0.0, "R": 0.0})
+        p0 = [rig.lokal(q) for q in schuhe._verformt(sohle)[0]]
+        z0, z1 = self.vorfuss.zone["L"]
+        vorn = [i for i, (q, uu) in enumerate(zip(p0, u)) if q.x > 0 and uu > z1 + 0.03]
+        # Mitte des Bogens (Raum des Skeletts): Ursprung des Bogens (hinteres Ende der Zone) plus halbe Länge nach vorn;
+        # dort liegt die Kante des Blocks
+        M = self.vorfuss.ursprung["L"].matrix_basis
+        self.bogen_mitte = M.translation + (M.to_3x3() @ Vector((1.0, 0.0, 0.0))) * (self.vorfuss.laenge / 2)
+        self.kante_y = self.bogen_mitte.y + self.KANTE
+        self.sohle_z0 = min(q.z for q in p0)  # Unterkante der Sohle in Ruhe (Raum des Skeletts)
+        links = [i for i, q in enumerate(p0) if q.x > 0]
+        self.t_tabelle = []
+        self.t_rest = 0.0
+        for g in range(0, 46, 5):
+            self.vorfuss.setze({"L": float(g), "R": float(g)})
+            pg = [rig.lokal(q) for q in schuhe._verformt(sohle)[0]]
+            R = achse_winkel(X, -float(g))
+            t = sum((pg[i] - R @ p0[i] for i in vorn), Vector()) / len(vorn)
+            self.t_rest = max(self.t_rest, max((pg[i] - R @ p0[i] - t).length for i in vorn))
+            t = Vector((0.0, t.y, t.z))
+            # Lücke: tiefster Punkt der Sohle über dem Block, wenn der Fuß um g geneigt ist und der Vorfuß liegt, gegenüber
+            # der Unterkante in Ruhe (Vorfuß mit gebogener Spitze: liegt sonst einige Millimeter hoch)
+            Rb = achse_winkel(X, float(g))
+            ueber = [(Rb @ (pg[i] - t)).z for i in links if (Rb @ (pg[i] - t)).y < self.kante_y]
+            luecke = (min(ueber) - self.sohle_z0) if (g > 0 and ueber) else 0.0
+            self.t_tabelle.append((float(g), t, luecke))
+        self.vorfuss.setze({"L": 0.0, "R": 0.0})
+        rig.zuruecksetzen()
+
+    def _t(self, g: float) -> tuple[Vector, float]:
+        tab = self.t_tabelle
+        if g <= 0:
+            return Vector(), 0.0
+        for (g0, t0, l0), (g1, t1, l1) in zip(tab, tab[1:]):
+            if g <= g1:
+                a = (g - g0) / (g1 - g0)
+                return t0.lerp(t1, a), l0 + (l1 - l0) * a
+        return tab[-1][1], tab[-1][2]
+
+    def _knoechel(self, s: str, beta: float) -> Vector:
+        """Fußgelenk bei der Neigung `beta` des Fußes (Grad, + Ferse hoch): Unter null dreht der ganze Schuh um die Kante,
+        darüber bleibt der Vorfuß flach (Bogen `beta`), das Fußgelenk folgt aus der Bewegung des Bogens."""
+        A0 = self.rig.kopf["foot." + s]
+        A_null = A0 + self.hoch
+        R = achse_winkel(X, beta)
+        if beta <= 0.0:
+            E = Vector((A0.x, self.kante_y, self.kante_z))
+            return E + R @ (A_null - E)
+        t, luecke = self._t(beta)
+        return A_null - A0 + R @ (A0 - t) - Vector((0.0, 0.0, luecke))
+
+    # ------------------------------------------------------------------ Beine und Becken
+
+    def _bein_lage(self, beta: float) -> tuple[Vector, dict, dict]:
+        """Becken (Verschiebung), Fußgelenke und Knie bei `beta`: Hüftgelenke senkrecht über ihrer Lage im Stand, so hoch,
+        dass das Knie `KNIE` hat."""
+        from rig import zwei_glieder
+
+        k = self.rig.kopf
+        D = math.sqrt(self.l1 ** 2 + self.l2 ** 2 - 2 * self.l1 * self.l2 * math.cos(math.radians(self.KNIE)))
+        A = {s: self._knoechel(s, beta) for s in "LR"}
+        H0 = k["upperleg01.L"]
+        dx, dy = H0.x - A["L"].x, H0.y - A["L"].y
+        tz = A["L"].z - H0.z + math.sqrt(max(D * D - dx * dx - dy * dy, 0.0))
+        T = Vector((0.0, 0.0, tz))
+        K = {s: zwei_glieder(k["upperleg01." + s] + T, A[s], self.l1, self.l2, Vector((0.0, -1.0, 0.0)))[0] for s in "LR"}
+        return T, A, K
+
+    def _sprung(self, beta: float, A: Vector, K: Vector) -> float:
+        """Sprunggelenk (Grad, + gebeugt: Fußspitzen zum Schienbein) aus Unterschenkel und Fuß."""
+        zehen = achse_winkel(X, beta) @ Vector((0.0, -1.0, 0.0))
+        return 90.0 - math.degrees((K - A).angle(zehen))
+
+    def _beta(self, p: float) -> float:
+        """Neigung des Fußes, bei der das Sprunggelenk in Phase p seinen Wert hat (Gebeugt `DORSAL` → gestreckt
+        `PLANTAR`)."""
+        schluessel = round(p, 6)
+        if schluessel in self._beta_cache:
+            return self._beta_cache[schluessel]
+        ziel = self.DORSAL - (self.DORSAL + self.PLANTAR) * p
+        beta = -ziel
+        for _ in range(30):
+            _, A, K = self._bein_lage(beta)
+            w = self._sprung(beta, A["L"], K["L"])
+            if abs(w - ziel) < 1e-4:
+                break
+            beta += w - ziel
+        self._beta_cache[schluessel] = beta
+        return beta
+
+    # ------------------------------------------------------------------ Maschine
+
+    def _loesen(self) -> None:
+        """Bogen am Ballen, Kante des Blocks, Schulterpolster und Griffe; dann die Maschine (Welt)."""
+        rig = self.rig
+        k = rig.kopf
+        self._fuss_tabelle()
+        # Die Figur steht um die Höhe des Blocks höher als im Stand
+        self.hoch = Vector((0.0, 0.0, self.BLOCK))
+        self.kante_z = self.sohle_z0 + self.BLOCK
+        self.geloest = True
+        T, A, K = self._bein_lage(0.0)
+        self.T0 = T
+        rig.zuruecksetzen()
+        rig.setze("root", starr(Vector(), T, Matrix.Identity(3)))
+        rig.anwenden()
+        netz = [rig.lokal(q) for q in _netz(self.koerper)]
+        # Schulterpolster: Unterseite auf der höchsten Stelle der Schultern, `SCHULTER_TIEF` darin; Lage gegenüber dem
+        # Becken (fährt mit ihm)
+        self.schulter_lage = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            pk = [netz[i] for i in self.schulter_i[s]]
+            top = max(q.z for q in pk)
+            mitte = sum(pk, Vector()) / len(pk)
+            self.schulter_lage[s] = Vector((sx * self.SCHULTERPOLSTER_X * self.mass, mitte.y, top - self.SCHULTER_TIEF)) - T
+        self.griff_lage = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            S = k["upperarm01." + s]
+            mitte = S + Vector((sx * self.GRIFF_SEITE * self.mass, -self.GRIFF_VOR, -self.GRIFF_TIEF))
+            self.griff_lage[s] = (mitte, Vector((sx * self.GRIFF_ACHSE[0], self.GRIFF_ACHSE[1], self.GRIFF_ACHSE[2])).normalized())
+        rig.zuruecksetzen()
+        self.geraet = geraete.wadenmaschine_stehend(self.BLOCK, rig.welt(Vector((0.0, self.kante_y, 0.0))).y,
+                                                    {s: rig.welt(q + T) for s, q in self.schulter_lage.items()},
+                                                    {s: (rig.welt(m + T), kk) for s, (m, kk) in self.griff_lage.items()})
+        self.polster_ruhe = {o.name: geraete.weiches_polster(o) for o in self.polster_objekte()}
+        self.griff = {s: rig.griff(s, 0.6, self.GRIFF_R, schraeg=0.0) for s in "LR"}
+
+    # ------------------------------------------------------------------ Haltung
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self._loesen()
+        super().setzen(p)
+        self.delle = geraete.eindruecken(self.polster_objekte(), self.polster_ruhe, self.auflage())
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        beta = self._beta(p)
+        self.beta_jetzt = beta
+        T, A, K = self._bein_lage(beta)
+        self.T = T
+        rig.setze("root", starr(Vector(), T, Matrix.Identity(3)))
+        R = achse_winkel(X, beta)
+        beine = {s: rig.bein(s, A[s], Vector((0.0, -1.0, 0.0)), 0.0, fuss_ebene=R) for s in "LR"}
+        arme = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            m, kk = self.griff_lage[s]
+            pol = Vector((sx * self.POL[0], self.POL[1], self.POL[2])).normalized()
+            arme[s] = rig.arm(s, self.griff[s], m + T, kk, pol, self.STRECKUNG)
+        dz = (T - self.T0).z
+        g = self.geraet
+        g["schlitten"].matrix_world = Matrix.Translation(Vector((0, 0, dz))) @ g["schlitten0"]
+        g["block"].matrix_world = Matrix.Translation(Vector((0, 0, dz))) @ g["block0"]
+        L, Ar = beine["L"], arme["L"]
+        self.werte = {
+            "Sprunggelenk (Grad, + gebeugt, − gestreckt)": self._sprung(beta, A["L"], K["L"]),
+            "Fuß geneigt (Grad, + Ferse hoch)": beta,
+            "Schuh am Ballen gebogen (Grad)": max(beta, 0.0),
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Körper gehoben (cm, gegenüber dem flachen Fuß)": dz * 100,
+            "Ellbogenwinkel": Ar["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": Ar["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": Ar["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": Ar["handgelenk_seitlich"],
+        }
+
+    # ------------------------------------------------------------------ Messwerte
+
+    def _block_werte(self, top_welt: float, kante_welt: float) -> dict:
+        import schuhe
+
+        sohle = bpy.data.objects["Sohle"]
+        pk, _, _ = schuhe._verformt(sohle)
+        u = [a.value for a in sohle.data.attributes["SchuhU"].data]
+        auf = [q.z - top_welt for q in pk if q.y < kante_welt]
+        ferse = [q.z - top_welt for q, uu in zip(pk, u) if uu < 0.15]
+        vorn = [q.z - top_welt for q, uu in zip(pk, u) if uu > 0.85]
+        return {"Sohle über dem Block: tiefster Punkt über der Oberseite (mm, negativ = darin)": min(auf) * 1000 if auf else float("nan"),
+                "Sohle: Spitze über der Oberseite des Blocks (mm)": min(vorn) * 1000,
+                "Ferse: Unterkante zur Oberseite des Blocks (cm, + darüber)": min(ferse) * 100}
+
+    def zusatzwerte(self) -> dict:
+        """Sohle auf dem Block, Ferse zur Oberseite, Schulterpolster (Delle, nichts durch), Kopf und Haare zum Gerät."""
+        from mathutils.bvhtree import BVHTree
+
+        rig = self.rig
+        top = rig.welt(Vector((0.0, 0.0, self.kante_z))).z
+        werte = self._block_werte(top, rig.welt(Vector((0.0, self.kante_y, 0.0))).y)
+        werte["Schulterpolster: tiefste Delle (mm)"] = self.delle * 1000
+        werte["Schulterpolster: Haut, Shirt oder Haare durch die Oberfläche (mm)"] = geraete.durch_polster(self.polster_objekte(),
+                                                                                                          self.auflage()) * 1000
+        g = self.geraet
+        teile = [o for o in g["wurzel"].children_recursive if o.type == "MESH" and o not in g["polster"]]
+        dg = bpy.context.evaluated_depsgraph_get()
+        namen = {gr.index: gr.name for gr in self.koerper.vertex_groups}
+        netz = _netz(self.koerper)
+        kopf = [q for v, q in zip(self.koerper.data.vertices, netz)
+                if sum(x.weight for x in v.groups if namen[x.group].startswith(("head", "neck", "jaw"))) > 0.5]
+        import schuhe
+
+        if "Haare" in bpy.data.objects:
+            kopf += schuhe._verformt(bpy.data.objects["Haare"])[0][::4]
+        beste = 1.0
+        for o in teile:
+            oe = o.evaluated_get(dg)
+            me = oe.to_mesh()
+            M = oe.matrix_world
+            bvh = BVHTree.FromPolygons([M @ v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
+            oe.to_mesh_clear()
+            for q in kopf[::2]:
+                ort, _, _, d = bvh.find_nearest(q, 0.3)
+                if ort is not None:
+                    beste = min(beste, d)
+        werte["Kopf und Haare zum Gerät ohne Polster (mm)"] = beste * 1000
+        werte["Bogen am Ballen: Abweichung der Sohle vorn von starr (mm)"] = self.t_rest * 1000
+        return werte
+
+    def fuss_ziel(self, sohle: list[Vector]) -> Vector:
+        rig = self.rig
+        return rig.welt(Vector((self.rig.kopf["foot.L"].x, self.kante_y, self.kante_z + 0.05)))
+
+
+class WadenhebenSitzend(WadenhebenStehend):
+    """Wadenheben sitzend an der Maschine, Familie „Beine isoliert“ (D-514), nach dem Ausführungstext der App (ExRx „Lever
+    Seated Calf Raise“) und den Werten der Familie. Sitzend auf dem Sitz ohne Lehne (`geraete.wadenmaschine_sitzend`),
+    der Rumpf `VOR` Grad vorgeneigt; die Oberschenkel etwa waagrecht unter dem Kniepolster, einer Rolle quer über den
+    unteren Oberschenkeln `POLSTER_HINTER` hinter den Kniegelenken; die Vorfüße auf dem Block, die Ballen über seiner
+    hinteren Kante, die Fersen frei; die Hände an den Griffen an den Enden des Polsters. Das Sprunggelenk geht wie beim
+    Wadenheben stehend von `DORSAL` gebeugt bis `PLANTAR` gestreckt; die Hüftgelenke bleiben fest, Knie und Polster heben
+    sich mit den Fersen, der Hebel dreht um seine Achse an der Säule vor dem Block. Der Sitz liegt in der höchsten Stellung
+    `TIEF` unter dem Gesäß; weiter unten drücken die Oberschenkel ihn weiter ein. Zurück derselbe Weg."""
+
+    name = "wadenheben_sitzend"
+    titel = "Wadenheben sitzend"
+    kamera = {"richtung": 80.0, "neigung": 10.0, "fuellen": 0.02}
+    VOR = 6.0  # Rumpf vorgeneigt, Grad
+    BLOCK = 0.12
+    TIEF = 0.004
+    # Vorderkante des Sitzes so weit vor den Hüftgelenken, m: Weiter vorn heben sich die Oberschenkel mit den Knien vom
+    # Sitz (unten drücken sie ihn ein)
+    SITZ_VOR = 0.06
+    # Mitte des Kniepolsters so weit hinter den Kniegelenken (längs des Oberschenkels), m: auf der Haut vor dem Saum der
+    # Shorts (er beginnt im Sitzen 14 cm hinter den Kniegelenken und steht dort bis 6,4 cm über der Haut)
+    POLSTER_HINTER = 0.075
+    POLSTER_TIEF = 0.002  # Kniepolster so tief in der Haut, m
+    GRIFF_X = 0.27  # Mitte der Griffe so weit von der Mitte, m (das Polster ist 40 cm lang)
+    # Griffe in Verlängerung der Rolle, vom Zeigefinger zum kleinen Finger nach außen (linke Seite); gesucht unter zwölf
+    # Richtungen und drei Ellbogenrichtungen: längs nach hinten knickte das Handgelenk über 15°, so 6°
+    GRIFF_ACHSE = (1.0, 0.0, 0.0)
+    GRIFF_LAGE = 0.6
+    STRECKUNG = 0.0
+    POL = (0.9, 0.0, -0.4)  # Ellbogen nach außen und unten (linke Seite)
+    griff_ansichten = (("waden_hand", 95.0, 20.0), ("waden_hand_vorn", 20.0, 30.0))
+
+    def rahmen_objekte(self) -> list:
+        if self.geraet is None:
+            return []
+        return [self.geraet["sitz"], self.geraet["kniepolster"], *self.geraet["griffe"].values()]
+
+    def polster_objekte(self) -> list:
+        return self.geraet["polster"] if self.geraet else []
+
+    def auflage(self) -> list:
+        return auflage_objekte(self.koerper, "Shirt", "Shorts")
+
+    def stange_achse(self):
+        m, k = self._griff_lage("L", self.dreh_jetzt)
+        return self.rig.welt(m), k, geraete.WADE_SITZEND["griff_d"] / 2
+
+    def bauen(self) -> None:
+        super().bauen()
+        k = self.rig.kopf
+        ruhe = [v.co for v in self.koerper.data.vertices]
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+
+        def gruppe(*anfaenge: str) -> list[int]:
+            return [v.index for v in self.koerper.data.vertices
+                    if sum(g.weight for g in v.groups if namen[g.group].startswith(anfaenge)) > 0.5]
+
+        huefte = k["upperleg01.L"].z
+        self.gesaess_i = [i for i, q in enumerate(ruhe) if abs(q.x) < 0.17 and huefte - 0.12 < q.z < huefte + 0.06 and q.y > 0.02]
+        self.schenkel_i = gruppe("upperleg")
+        self.unterschenkel_i = gruppe("lowerleg")
+        self.R = achse_winkel(X, self.VOR)
+        self.verschiebung = Vector()
+        self.dreh_jetzt = 0.0
+
+    def _becken(self) -> Matrix:
+        return starr(self.H0, self.H0 + self.verschiebung, self.R)
+
+    def _huefte(self, s: str) -> Vector:
+        return self._becken() @ self.rig.kopf["upperleg01." + s]
+
+    def _bein_lage(self, beta: float) -> tuple[Vector, dict, dict]:
+        from rig import zwei_glieder
+
+        A = {s: self._knoechel(s, beta) for s in "LR"}
+        K = {s: zwei_glieder(self._huefte(s), A[s], self.l1, self.l2, Vector((0.0, -0.5, 1.0)))[0] for s in "LR"}
+        return self.verschiebung, A, K
+
+    def _schenkel_rahmen(self, s: str, K: Vector) -> Matrix:
+        """Rahmen des Oberschenkels (Raum des Skeletts): Spalten längs zum Knie, nach oben, quer; Ursprung im Hüftgelenk."""
+        H = self._huefte(s)
+        d = (K - H).normalized()
+        n = senkrecht(Z, d)
+        e = d.cross(n)
+        M = Matrix((d, n, e)).transposed().to_4x4()
+        M.translation = H
+        return M
+
+    def _stellen(self, p: float) -> tuple[float, dict, dict]:
+        beta = self._beta(p)
+        _, A, K = self._bein_lage(beta)
+        rig = self.rig
+        rig.zuruecksetzen()
+        rig.setze("root", self._becken())
+        for s in "LR":
+            rig.bein(s, A[s], Vector((0.0, -0.5, 1.0)), 0.0, fuss_ebene=achse_winkel(X, beta))
+        rig.anwenden()
+        return beta, A, K
+
+    def _loesen(self) -> None:
+        """Bogen am Ballen; Becken so, dass bei flachem Fuß der Oberschenkel waagrecht und der Unterschenkel wie im Stand
+        steht und die Sohle auf dem Block liegt; Sitz (in der höchsten Stellung), Kniepolster (im Ausgang), Griffe und
+        Hebel; dann die Maschine."""
+        rig = self.rig
+        k = rig.kopf
+        self._fuss_tabelle()
+        K0 = k["lowerleg01.L"]
+        for _ in range(3):
+            K_null = self._huefte("L") + Vector((0.0, -self.l1, 0.0))
+            self.hoch = K_null - K0
+            self.kante_y = self.bogen_mitte.y + self.hoch.y + self.KANTE
+            self.kante_z = self.sohle_z0 + self.hoch.z
+            dz = self.BLOCK - rig.welt(Vector((0.0, 0.0, self.kante_z))).z
+            self.verschiebung = self.verschiebung + Vector((0.0, 0.0, dz))
+        self.geloest = True
+        w = geraete.WADE_SITZEND
+        sb, sl, sd = w["sitz"]
+        # Sitz: höchste Stellung (Knie oben)
+        self._stellen(1.0)
+        netz = [rig.lokal(q) for q in _netz(self.koerper)]
+        kleid = [rig.lokal(q) for q in self._punkte("Shirt", "Saumband", "Shorts")]
+        H = (self._huefte("L") + self._huefte("R")) / 2
+        unten = [netz[i] for i in self.gesaess_i + self.schenkel_i] + kleid
+        vorn_y = H.y - self.SITZ_VOR
+        auf = [q for q in unten if abs(q.x) < sb / 2 and vorn_y < q.y < vorn_y + sl and q.z < H.z]
+        sitz_z = min(q.z for q in auf) + self.TIEF
+        self.sitz = Vector((0.0, vorn_y + sl / 2, sitz_z))
+        # Kniepolster im Ausgang: Rolle quer, `POLSTER_TIEF` in der Haut der Oberschenkel
+        _, _, K = self._stellen(0.0)
+        netz = [rig.lokal(q) for q in _netz(self.koerper)]
+        r = w["polster_d"] / 2 - self.POLSTER_TIEF
+        y_c = (K["L"].y + K["R"].y) / 2 + self.POLSTER_HINTER
+        hoch = -1.0
+        for q in [netz[i] for i in self.schenkel_i]:
+            dy = q.y - y_c
+            if abs(dy) < r and abs(q.x) < w["polster_l"] / 2:
+                hoch = max(hoch, q.z + math.sqrt(r * r - dy * dy))
+        self.polster0 = Vector((0.0, y_c, hoch))
+        self.polster_rel = {s: self._schenkel_rahmen(s, K[s]).inverted() @ self.polster0 for s in "LR"}
+        # Achse des Hebels an der Säule vor dem Block, so hoch, dass das Polster am Anfang in die Richtung läuft, in die die
+        # Oberschenkel es tragen (Mittel bis zur höchsten Stellung): es gleitet so am wenigsten
+        saeule_y = self.kante_y - w["block"][1] - 0.10
+        _, _, K1 = self._stellen(1.0)
+        weg = sum(((self._schenkel_rahmen(s, K1[s]) @ self.polster_rel[s]) - self.polster0 for s in "LR"), Vector()) / 2
+        weg.x = 0.0
+        quer = Vector((0.0, -weg.z, weg.y)).normalized()
+        if quer.y > 0:
+            quer = -quer
+        rho = (saeule_y + 0.02 - self.polster0.y) / quer.y
+        self.achse = Vector((-w["hebel_x"], 0.0, 0.0)) + Vector((0.0, self.polster0.y, self.polster0.z)) + quer * rho
+        g0, g1, g2 = self.GRIFF_ACHSE
+        self.griff0 = {s: (self.polster0 + Vector((sx * self.GRIFF_X * self.mass, 0.0, 0.0)), Vector((sx * g0, g1, g2)).normalized())
+                       for s, sx in (("L", 1), ("R", -1))}
+        rig.zuruecksetzen()
+        self.geraet = geraete.wadenmaschine_sitzend(rig.welt(self.sitz), self.BLOCK, rig.welt(Vector((0.0, self.kante_y, 0.0))).y,
+                                                    rig.welt(self.achse), rig.welt(self.polster0),
+                                                    {s: (rig.welt(m), kk) for s, (m, kk) in self.griff0.items()})
+        self.polster_ruhe = {o.name: geraete.weiches_polster(o) for o in self.polster_objekte()}
+        # Sitz längs seiner Normale so, dass die tiefste Stelle von Haut und Kleidung in der höchsten Stellung `TIEF` darin
+        # liegt
+        self._stellen(1.0)
+        punkte = SchulterdrueckenMaschine._auflage_punkte(self)
+        sitz = self.geraet["sitz"]
+        n_welt = (sitz.matrix_world.to_3x3() @ Z).normalized()
+        sitz.matrix_world = Matrix.Translation(n_welt * (self.TIEF - SchulterdrueckenMaschine._tiefe(sitz, punkte))) @ sitz.matrix_world
+        rig.zuruecksetzen()
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, w["griff_d"] / 2) for s in "LR"}
+
+    _punkte = Beinstrecker._punkte
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self._loesen()
+        Uebung.setzen(self, p)
+        self.delle = geraete.eindruecken(self.polster_objekte(), self.polster_ruhe, self.auflage())
+
+    def _hebel(self, K: dict) -> tuple[float, float]:
+        """Drehung des Hebels (Grad), mit der das Polster den Oberschenkeln folgt (Mittel beider Seiten), und wie weit es
+        dabei längs der Oberschenkel gleitet (mm)."""
+        P = self.achse
+        ideal = sum((self._schenkel_rahmen(s, K[s]) @ self.polster_rel[s] for s in "LR"), Vector()) / 2
+        r0 = Vector((0.0, self.polster0.y - P.y, self.polster0.z - P.z))
+        r1 = Vector((0.0, ideal.y - P.y, ideal.z - P.z))
+        d = math.degrees(math.atan2(r0.cross(r1).x, r0.dot(r1)))
+        wirklich = P + achse_winkel(X, d) @ (self.polster0 - P)
+        ideal.x = wirklich.x
+        return d, (ideal - wirklich).length * 1000
+
+    def _griff_lage(self, s: str, dreh: float) -> tuple[Vector, Vector]:
+        """Mitte und Achse eines Griffs (Raum des Skeletts) bei der Drehung des Hebels."""
+        m, k = self.griff0[s]
+        D = achse_winkel(X, dreh)
+        return self.achse + D @ (m - self.achse), D @ k
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        k = rig.kopf
+        beta = self._beta(p)
+        self.beta_jetzt = beta
+        _, A, K = self._bein_lage(beta)
+        rig.setze("root", self._becken())
+        Rb = achse_winkel(X, beta)
+        beine = {s: rig.bein(s, A[s], Vector((0.0, -0.5, 1.0)), 0.0, fuss_ebene=Rb) for s in "LR"}
+        dreh, gleiten = self._hebel({s: beine[s]["knie"] for s in "LR"})
+        self.dreh_jetzt = dreh
+        g = self.geraet
+        P = rig.welt(self.achse)
+        g["hebel"].matrix_world = Matrix.Translation(P) @ achse_winkel(X, dreh).to_4x4() @ Matrix.Translation(-P) @ g["hebel0"]
+        weg = geraete.WADE_SITZEND["nocke_r"] * math.radians(abs(dreh))
+        g["block"].matrix_world = Matrix.Translation(Vector((0, 0, weg))) @ g["block0"]
+        arme = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            m, kk = self._griff_lage(s, dreh)
+            pol = Vector((sx * self.POL[0], self.POL[1], self.POL[2])).normalized()
+            arme[s] = rig.arm(s, self.griff[s], m, kk, pol, self.STRECKUNG)
+        L, Ar = beine["L"], arme["L"]
+        rumpf = (rig.punkt("neck01", k["neck01"]) - rig.punkt("spine05", k["spine05"])).normalized()
+        oberschenkel = (L["knie"] - L["huefte"]).normalized()
+        self.werte = {
+            "Sprunggelenk (Grad, + gebeugt, − gestreckt)": self._sprung(beta, A["L"], K["L"]),
+            "Fuß geneigt (Grad, + Ferse hoch)": beta,
+            "Schuh am Ballen gebogen (Grad)": max(beta, 0.0),
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüftwinkel (Grad)": math.degrees(oberschenkel.angle(rumpf)),
+            "Oberschenkel zur Waagrechten (Grad, + Knie höher)": math.degrees(math.asin(max(-1.0, min(1.0, oberschenkel.z)))),
+            "Hebel gedreht (Grad)": dreh,
+            "Kniepolster: gleiten längs des Oberschenkels (mm)": gleiten,
+            "Ellbogenwinkel": Ar["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": Ar["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": Ar["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": Ar["handgelenk_seitlich"],
+        }
+
+    def zusatzwerte(self) -> dict:
+        rig = self.rig
+        top = rig.welt(Vector((0.0, 0.0, self.kante_z))).z
+        werte = self._block_werte(top, rig.welt(Vector((0.0, self.kante_y, 0.0))).y)
+        g = self.geraet
+        punkte = SchulterdrueckenMaschine._auflage_punkte(self)
+        werte["Gesäß im Sitz (mm)"] = SchulterdrueckenMaschine._tiefe(g["sitz"], punkte) * 1000
+        werte["Polster: tiefste Delle (mm)"] = self.delle * 1000
+        werte["Polster: Haut oder Kleidung durch die Oberfläche (mm)"] = geraete.durch_polster(self.polster_objekte(), self.auflage()) * 1000
+        netz = _netz(self.koerper)
+        M = g["kniepolster"].matrix_world
+        c, ax = M.translation.copy(), (M.to_3x3() @ Vector((0, 0, 1))).normalized()
+        w = geraete.WADE_SITZEND
+        r, halb = w["polster_d"] / 2, w["polster_l"] / 2
+
+        def zum_polster(pkte) -> float:
+            beste = 1.0
+            for q in pkte:
+                v = q - c
+                t = v.dot(ax)
+                if abs(t) <= halb:
+                    beste = min(beste, (v - ax * t).length - r)
+            return beste
+
+        werte["Kniepolster: Haut und Shorts (mm, negativ = eingedrückt)"] = zum_polster([netz[i] for i in self.schenkel_i] + self._punkte("Shorts")) * 1000
+        return werte
+
+    def nah_punkte(self) -> list[Vector]:
+        rig = self.rig
+        hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        m, k = self._griff_lage("L", self.dreh_jetzt)
+        halb = geraete.WADE_SITZEND["griff_l"] / 2
+        m = rig.welt(m)
+        return [q for q in _netz(self.koerper) if (q - hand).length < 0.10] + [m + k * halb, m - k * halb]
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
                                SchulterdrueckenMaschine, KlimmzugUnterstuetzt, DipUnterstuetzt,
-                               Hackenschmidt)}
+                               Hackenschmidt, Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend)}

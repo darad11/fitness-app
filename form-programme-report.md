@@ -3038,7 +3038,48 @@ Eine Folge: Wenn die Stange an der Stirn vorbeigeht, steht der Unterarm bis 35°
 
 **Naht der Schleifen.** Beim Schulterdrücken mit Kurzhanteln sind erstes und letztes Bild pixelgleich. Bei der Military Press weicht das letzte Bild um weniger als einen zehntel Pixel ab. Die Suche nach der Lage der Hüfte geht vom vorherigen Bild aus und landet nach dem Hin und Zurück 0,3 mm daneben. In der Schleife ist das nicht zu sehen; deshalb habe ich nicht neu gerendert.
 
-### 59.5 Berichte zu den Paketen
+### 59.5 Übersicht Dali’s PPLC (D-529)
+
+Bild in Player-Größe: `docs/screens/uebungen/dalis-pplc-uebersicht.webp`.
+
+Geladen wird je Übung, was die App zeigt: das Vorschaubild in Listen, das Poster und eine Datei der Schleife, MP4 zuerst. WebM lädt sie nur, wenn MP4 nicht läuft. Die Dateien kommen erst, wenn die Übung gebraucht wird, nicht vorab.
+
+| Nr. | Tag | Übung | Stand | MP4 | WebM | Poster | Vorschau | geladen | alle Dateien |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Push, Compound | Bankdrücken mit Kurzhanteln | Schleife in der App (D-463) | 43,3 KB | 32,9 KB | 8,3 KB | 4,2 KB | 55,7 KB | 88,6 KB |
+| 2 | Push | Schrägbankdrücken mit Kurzhanteln | Schleife in der App (D-463) | 40,9 KB | 33,0 KB | 8,9 KB | 4,1 KB | 53,9 KB | 86,9 KB |
+| 3 | Push | Schulterdrücken mit Kurzhanteln, sitzend | Schleife in der App (D-528) | 39,5 KB | 33,7 KB | 8,3 KB | 3,4 KB | 51,1 KB | 84,8 KB |
+| 4 | Push, Compound | Dips mit Unterstützung | Schleife in der App (D-513) | 63,9 KB | 53,6 KB | 12,2 KB | 5,1 KB | 81,2 KB | 134,8 KB |
+| 5 | Push, Compound | Seitheben mit Kurzhanteln | Schleife in der App (D-469) | 48,8 KB | 44,7 KB | 7,0 KB | 3,1 KB | 58,8 KB | 103,6 KB |
+| 6 | Push | Fliegende am Kabel | Schleife in der App (D-521) | 79,4 KB | 71,0 KB | 13,0 KB | 4,1 KB | 96,5 KB | 167,4 KB |
+| 7 | Push | Trizepsdrücken am Kabel | Schleife in der App (D-517) | 40,1 KB | 35,2 KB | 8,2 KB | 3,4 KB | 51,8 KB | 87,0 KB |
+| 8 | Pull | Kreuzheben mit Langhantel | Schleife in der App (D-527) | 59,8 KB | 49,2 KB | 6,1 KB | 5,3 KB | 71,1 KB | 120,4 KB |
+| 9 | Pull, Compound | Klimmzüge mit Unterstützung | Schleife in der App (D-509, mit den Diparmen neu in D-513) | 66,5 KB | 57,9 KB | 10,1 KB | 4,9 KB | 81,5 KB | 139,3 KB |
+| 10 | Pull | Rudern an der Maschine | Schleife in der App (D-520) | 58,0 KB | 43,0 KB | 11,8 KB | 5,2 KB | 75,0 KB | 118,0 KB |
+| 11 | Pull | High Row an der Maschine | Schleife in der App (D-520) | 79,4 KB | 66,9 KB | 13,1 KB | 5,8 KB | 98,3 KB | 165,2 KB |
+| 12 | Pull | Reverse Butterfly an der Maschine | Schleife in der App (D-521) | 76,1 KB | 61,7 KB | 13,3 KB | 5,1 KB | 94,5 KB | 156,1 KB |
+| 13 | Pull | Hammercurls | Schleife in der App (D-517) | 48,6 KB | 40,9 KB | 6,6 KB | 2,8 KB | 57,9 KB | 98,9 KB |
+| 14 | Legs | Hackenschmidt-Kniebeuge | Schleife in der App (D-513) | 88,0 KB | 71,0 KB | 16,9 KB | 6,4 KB | 111,3 KB | 182,3 KB |
+| 15 | Legs, Compound | Beinpresse | Schleife in der App (D-465) | 91,8 KB | 72,2 KB | 17,9 KB | 6,9 KB | 116,6 KB | 188,8 KB |
+| 16 | Legs | Beinbeuger liegend | Schleife in der App (D-486) | 70,5 KB | 68,6 KB | 11,6 KB | 5,2 KB | 87,2 KB | 155,9 KB |
+| 17 | Legs | Beinbeuger sitzend | Schleife in der App (D-516) | 68,7 KB | 61,3 KB | 13,1 KB | 5,7 KB | 87,5 KB | 148,8 KB |
+| 18 | Legs | Beinstrecker | Schleife in der App (D-516) | 66,0 KB | 59,0 KB | 14,0 KB | 4,9 KB | 84,9 KB | 143,9 KB |
+| 19 | Legs, Compound | Wadenheben stehend | Schleife in der App (D-516) | 36,8 KB | 29,5 KB | 7,3 KB | 3,2 KB | 47,4 KB | 76,8 KB |
+| 20 | Legs | Wadenheben sitzend | Schleife in der App (D-516) | 52,3 KB | 44,4 KB | 12,1 KB | 5,3 KB | 69,8 KB | 114,2 KB |
+| 21 | Legs | Unterarmstütz (Plank) | Schleife in der App (D-467) | 22,1 KB | 15,3 KB | 10,7 KB | 3,2 KB | 36,0 KB | 51,4 KB |
+| 22 | Compound | Schulterdrücken mit Langhantel, stehend | Schleife in der App (D-528) | 46,9 KB | 44,3 KB | 6,8 KB | 3,0 KB | 56,7 KB | 101,0 KB |
+| 23 | Compound | Rudern mit Langhantel, vorgebeugt | Schleife in der App (D-520) | 67,6 KB | 52,8 KB | 10,9 KB | 4,3 KB | 82,8 KB | 135,6 KB |
+| 24 | Compound | Bizepscurls mit Kurzhanteln | Schleife in der App (D-517) | 43,9 KB | 40,1 KB | 6,7 KB | 2,8 KB | 53,4 KB | 93,5 KB |
+| 25 | Compound | Crunches am Kabel, kniend | Schleife in der App (D-526) | 65,6 KB | 52,3 KB | 8,9 KB | 5,0 KB | 79,4 KB | 131,8 KB |
+| | | **zusammen** | | | | | | **1.840,3 KB** | **3.074,9 KB** |
+
+Größen gemessen an den Dateien in `public/uebungen/medien` (1 KB = 1.024 Byte). „Tag“ fasst die Wochen zusammen: Push, Pull, Legs und Compound.
+
+### 59.6 Texte von High Row und Fliegenden, Netz
+
+Du hast exrx.net und acefitness.org im Netz freigegeben. Beide sind jetzt erreichbar, die Verbindung steht. Die Seiten selbst lassen automatische Abrufe aber nicht zu: exrx.net antwortet mit 403 und einer Prüfung von Cloudflare („cf-mitigated: challenge“), www.acefitness.org mit 403 von Azure Front Door. Das Werkzeug zum Abrufen von Seiten findet exrx.net gar nicht. Eine solche Sperre umgehe ich nicht. Abgleichen konnte ich die Texte deshalb nicht; sie bleiben, wie sie sind: High Row nach den Auszügen der Seite aus der Websuche (D-520), Fliegende am Kabel nach Human Kinetics (D-521). Wenn du mir den Text der beiden Seiten schickst, gleiche ich ihn ab.
+
+### 59.7 Berichte zu den Paketen
 
 ```
 Arbeitspaket: D-525 Phase Programme, Befunde E1 bis E3 im Player (Entscheidung des Produktinhabers zu E1 bis E4)
@@ -3082,4 +3123,15 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.27
 Ergebnis: bestanden (Werte in 59.2)
 Bekannte Einschränkungen: Unterarm zur Senkrechten bis 35°, wenn die Stange an der Stirn vorbeigeht (Prüfseite 29°); Naht der Military Press um weniger als 0,1 px versetzt; Schwerpunkt in zwei Bildern bis 0,9 cm neben der Fußmitte; Gewichte angenommen (Langhantel 40 kg, Kurzhanteln 8 kg)
 Nächste Schritte: Übersicht Dali’s PPLC (D-529), dann Halt für den Gerätetest
+```
+
+```
+Arbeitspaket: D-529 Phase Programme, Übersicht „Dali’s PPLC“ (Liste mit Stand und Dateigrößen, Bild in Player-Größe)
+Umgesetzte Funktionen: keine in der App; Werkzeug: uebungen_programm_uebersicht.py mit Spalte „geladen“ (MP4, Poster, Vorschau) und Tagen nach Bezeichnung; erfüllte AK: –
+Geänderte Dateien: tools/uebungen_programm_uebersicht.py, docs/screens/uebungen/dalis-pplc-uebersicht.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/feature-inventory.csv
+Technische Entscheidungen: D-529
+Ausgeführte Tests: Format und Dokumente bestanden; die App ist gegenüber D-528 unverändert (dort Unit-Tests 1.276 bestanden und E2E vollständig), deshalb E2E nur für die Übungsliste: e2e/uebungen.spec.ts 17 bestanden, 3 übersprungen
+Ergebnis: bestanden (Liste in 59.5)
+Bekannte Einschränkungen: Texte von High Row und Fliegenden nicht mit den Originalseiten abgeglichen, beide Seiten sperren automatische Abrufe (59.6)
+Nächste Schritte: Gerätetest des Produktinhabers, danach die Entscheidung über den Merge von #54
 ```

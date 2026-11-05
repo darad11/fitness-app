@@ -3656,3 +3656,15 @@ Schulterdrücken mit Langhantel stehend (Kopf zuerst, Rumpf höchstens 7°, Hand
 | `render.py schulterdruecken_langhantel --pruefen --nur-messwerte` (alle 60 Bilder) | Rumpf höchstens 5,45° zurück, oben −0,86°; Lendenwirbel 0,0°, Hautlinie 0,15 bis 0,78° hohler als im aufrechten Stand, höchstens 1,78 mm verschoben; Kopf bis 25,0°, Blick 0,0°; Handgelenk 3,9 bis 10,7°; Gesicht, Hals und Haare mindestens 6,29 mm; Schwerpunkt −0,69 bis 0,91 cm; Ellbogen 37,2 → 176,0°; Unterarm zur Senkrechten bis 35,1°; 0 Meldungen; 7 min |
 | Schleifen (`render.py`, je 60 Bilder) | Naht beim Schulterdrücken mit Kurzhanteln pixelgleich; bei der Military Press weicht das letzte Bild um weniger als 0,1 px vom ersten ab (61 Pixel um mehr als 10 von 255, höchstens 30): Die Suche nach der Lage der Hüfte geht vom vorherigen Bild aus und endet nach Hin und Zurück 0,3 mm daneben (Ellbogen 37,2 statt 37,1°); in der Schleife nicht zu sehen; Schulterdrücken mit Langhantel, stehend MP4 46,9 KB, WebM 44,3 KB, Poster 6,8 KB, Vorschau 3,0 KB, geladen (MP4, Poster, Vorschau) 56,7 KB; Schulterdrücken mit Kurzhanteln, sitzend MP4 39,5 KB, WebM 33,7 KB, Poster 8,3 KB, Vorschau 3,4 KB, geladen (MP4, Poster, Vorschau) 51,1 KB |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.276 bestanden (140 Dateien); Build, Startansicht 239,9 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Zeittest der Startfläche, 1.371 statt höchstens 1.307 ms unter drei Workern; die Datei allein 18 von 18 bestanden) |
+
+### Übersicht Dali’s PPLC · 05.11.2026, Cloud-Umgebung
+
+Liste aller 25 Übungen mit Stand und Dateigrößen, was je Übung geladen wird, Bild in Player-Größe (D-529).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Was die App je Übung lädt (Code gelesen) | `demoFiles` lädt Poster und `loopFile` (MP4 zuerst, WebM nur, wenn MP4 nicht läuft), Listen das Vorschaubild; `vite.config.ts`: Übungsbilder nicht vorab, sondern beim ersten Abruf (runtimeCaching) |
+| Erreichbarkeit exrx.net und acefitness.org (curl ohne eigene Kennung, über den Proxy) | Verbindung steht (CONNECT 200); exrx.net 403 mit `cf-mitigated: challenge` (Cloudflare), www.acefitness.org 403 (Azure Front Door), acefitness.org 301 auf www; WebFetch: exrx.net nicht auflösbar; nicht umgangen |
+| `python3 tools/uebungen_programm_uebersicht.py dali_pplc --name dalis-pplc` | 25 Übungen, alle mit Schleife in der App; geladen zusammen 1.840,3 KB, alle Dateien 3.074,9 KB; je Übung geladen 36,0 KB (Unterarmstütz (Plank)) bis 116,6 KB (Beinpresse); Bild 1600 × 2494 px, angesehen |
+| Dasselbe für `compound_ab_4` | geladen 787,3 KB, alle Dateien 1.313,0 KB (wie D-501) |
+| Prüfungen vor dem Commit | Format und Dokumente bestanden; die App ist gegenüber D-528 unverändert (dort Unit-Tests 1.276 bestanden und E2E vollständig), deshalb E2E nur für die Übungsliste: e2e/uebungen.spec.ts 17 bestanden, 3 übersprungen |

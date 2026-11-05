@@ -2843,3 +2843,52 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: Maße von Kabelturm und Butterfly geschätzt, wie freigegeben; Human Kinetics und ExRx nur über die Websuche gelesen (Netz der Arbeitsumgebung)
 Nächste Schritte: Prüfseiten „Senkrechtes Drücken“, „Hüftbeuge“ und „Rumpf“, Halt bis zu deiner Freigabe
 ```
+
+## 58. Prüfseiten Senkrechtes Drücken, Hüftbeuge und Rumpf (D-522, D-523, D-524)
+
+Wie gewünscht die letzten drei Familien aus Dali’s PPLC zusammen, in der Reihenfolge des Animationsplans: „Senkrechtes Drücken“ mit zwei Übungen, „Hüftbeuge“ und „Rumpf“ mit je einer. Entscheidungen, die bei dir liegen, stehen gesammelt in 58.4.
+
+### 58.1 Senkrechtes Drücken (D-522)
+
+Prüfseite: `docs/screens/uebungen/familie-senkrechtes-druecken-pplc.webp`.
+
+**Schulterdrücken mit Langhantel, stehend.** Wie im Text: Obergriff etwas breiter als schulterbreit, die Stange vorn auf Höhe des Halses, dann nach oben, bis die Arme gestreckt sind. Stand etwa hüftbreit, Knie fast gestreckt, Langhantel mit zwei Scheiben zu 10 kg. Die Stange steigt senkrecht und kommt dabei von 4 cm vor der Fußmitte über die Fußmitte; ganz über der Fußmitte lag sie unten im Hals. Damit sie an Kinn, Nase und Stirn vorbeikommt, gehen Kopf und Rumpf etwas zurück, so wenig wie nötig: Vor Gesicht und Hals bleiben 12 mm frei, vor den Haaren 5 mm. Der Kopf gleicht die Neigung des Rumpfs aus, der Blick bleibt waagrecht. Oben steht der Rumpf wieder senkrecht unter der Stange. Die Hüfte steht in jedem Bild so, dass der Schwerpunkt von Körper und Stange über der Fußmitte liegt.
+
+**Schulterdrücken mit Kurzhanteln, sitzend.** Auf der Bank mit fast senkrechter Lehne (80°), Kopf, Schultern und Gesäß an der Lehne, wie im Text; die Lehne ist dafür 90 cm lang. Kurzhanteln zu 8 kg, Handflächen nach vorn. Der Ausgang ist wie an der Schulterpresse, die du freigegeben hast (D-492): Griffe zwischen Kinn und Ohr, die Ellbogen leicht vor dem Körper und unter den Handgelenken. Die Hanteln steigen auf einer Geraden, bis die Arme fast gestreckt sind.
+
+| Messwert über alle 60 Bilder | Langhantel stehend | Kurzhanteln sitzend |
+|---|---|---|
+| Ellbogen Ausgang → Ende | 35° → 176° | 64° → 178° |
+| Unterarm zur Senkrechten, höchstens | 29° (wenn die Stange am Kopf vorbeigeht) | 13° |
+| Handgelenk, höchstens | 21° | 9,4° |
+| Ausgang | Stange 154,6 cm hoch, auf Höhe des Halses | Griffe 5,5 cm über dem Kinn |
+| Kopf / Rumpf zurück, höchstens | 14,3° / 13,5°; Blick in jedem Bild waagrecht | an der Lehne, Hinterkopf 1,0 mm im Polster |
+| Gesicht, Hals und Haare zur Stange, mindestens | 8,0 mm | – |
+| Köpfe der Hanteln zur Haut / zu den Haaren, mindestens | – | 34 / 164 mm |
+| Schwerpunkt neben der Fußmitte, höchstens | 0,3 mm | – |
+| Lende gegenüber dem Stand | höchstens 1,6° hohler | – |
+| Gesäß / Rücken im Polster | – | 4,0 / 4,0 mm, nichts durch |
+| Arme zur Bank, mindestens | – | 79 mm |
+| Meldungen des Rigs | 0 | 0 |
+
+Unterwegs korrigiert, stehend: Mit der Stange quer in der Hand knickte das Handgelenk oben 25°, mit 11° schräg in der Mitte 23°; mit 6° sind es höchstens 21°. Der Blick ging mit dem Rumpf bis 14° nach oben; jetzt gleicht der Kopf das aus. Die Stange streifte an der Stirn die Haare (1,2 mm darin); jetzt zählen die Haare in der Suche mit, es bleiben 8,0 mm. Sitzend: Mit den Werten aus der Planung (Griffe mittig zwischen Kinn und Ohr, Ellbogen 80°) standen die Hanteln 94 cm auseinander, und das Handgelenk knickte 31°; der Hinterkopf lag 38 mm vor der Lehne; die Finger lagen 8,8 mm im Griff; der Unterarm stand in der Mitte 18° schräg. Ein Messfehler: „Stange zur Kleidung“ zählte bis −299 mm, weil die Suche weit über dem Kopf die Innenseite des Kragens fand; jetzt wird nur in der Nähe gemessen.
+
+### 58.4 Deine Entscheidungen
+
+Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
+
+1. **Schulterdrücken stehend, Ausgang:** wie im Text vorn auf Höhe des Halses. Der Ellbogen ist dort 35°; die Familie nennt unten 70 bis 90°, das passt eher zu einer Stange auf Höhe des Kinns. Vorschlag: wie im Text lassen.
+2. **Schulterdrücken stehend, am Kopf vorbei:** Kopf und Rumpf gehen bis 14° zurück, das Handgelenk knickt dort bis 21°; oben steht der Rumpf wieder senkrecht. Die Alternative wäre eine Stange, die vor dem Gesicht einen Bogen nach vorn macht. Vorschlag: so lassen.
+
+### 58.5 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-522 Phase Programme, Prüfseite „Senkrechtes Drücken“ (Schulterdrücken mit Langhantel stehend, Schulterdrücken mit Kurzhanteln sitzend)
+Umgesetzte Funktionen: keine in der App; Werkzeug: uebungen.SchulterdrueckenLanghantel (Kopf und Rumpf weichen der Stange aus, Blick waagrecht, Haare in der Suche) und uebungen.SchulterdrueckenKH (Bank mit langer Lehne, geraete.schraegbank mit lehne_laenge), Messung Stange zur Kleidung (stange_zur_kleidung), Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/geraete.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-senkrechtes-druecken-pplc.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-522
+Ausgeführte Tests: Probeläufe beider Übungen, render.py --pruefen und Nahaufnahmen (stehend dreimal, zuletzt mit den Haaren in der Suche), Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 58.1)
+Bekannte Einschränkungen: Ellbogen unten 35° statt 70 bis 90° (Frage 1); Gewichte angenommen (Langhantel 40 kg, Kurzhanteln 8 kg)
+Nächste Schritte: Prüfseiten „Hüftbeuge“ (D-523) und „Rumpf“ (D-524), dann Halt bis zu deiner Freigabe
+```

@@ -3557,3 +3557,21 @@ Nach der Freigabe der Prüfseite D-519: Fliegende am Kabel in Schrittstellung mi
 | `pnpm test` | 140 Dateien, 1273 Tests bestanden (90,2 s, ohne Blender) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 112 von 112 Dateien |
 | `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 19,9 min; Übungsliste mit 28 Bildern |
+
+### Prüfseite „Senkrechtes Drücken“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schulterdrücken mit Langhantel stehend und mit Kurzhanteln sitzend; nur Werkzeug, Bilder und Dokumente (D-522).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Schulterdrücken sitzend | Werte aus der Planung (Griffe mittig zwischen Kinn und Ohr, Ellbogen 80°): Hanteln 94 cm auseinander, Handgelenk 31°; Werte der Schulterpresse (75 %, 65°, 30° vor); Hinterkopf 38 mm vor der Lehne, mit Brustkorb 10° und Kopf 14° 42 mm darin, mit 5° und 6° 1,0 mm darin; Finger 8,8 mm im Griff, mit dem Griff bei 65 % und 12° schräg 4,1 mm wie an den anderen Hanteln; Unterarm in der Mitte 18° schräg, mit spätem Weg nach innen höchstens 13° |
+| Probeläufe Schulterdrücken stehend | Stange genau über der Fußmitte: Schultergelenke 2,8 cm dahinter, Stange im Hals (jetzt 4 cm davor im Ausgang); Handgelenk mit der Stange quer in der Hand oben 25°, 11° schräg in der Mitte 23°, 6° schräg höchstens 21° |
+| `render.py schulterdruecken_kh_sitzend --pruefen`, `familie_bilder.py` | 60 Bilder, 0 Meldungen; 17 min und 6 min, neben den Schleifen |
+| `render.py schulterdruecken_langhantel --pruefen`, erster Lauf | „Stange zur Kleidung“ bis −299 mm (Innenseite des Kragens, bis 30 cm weit gesucht; jetzt bis 5 cm); Blick bis 14° nach oben mit dem Rumpf (jetzt Ausgleich im Kopf) |
+| `render.py schulterdruecken_langhantel --pruefen`, zweiter Lauf | Blick in jedem Bild 0,0°; Gesicht, Hals und Haare bis −1,2 mm (Bild 14, Stange an der Stirn in den Haaren) |
+| Haare in der Suche (`LUFT_HAARE` 5 mm, `--nur-messwerte`) | erster Versuch ohne Wirkung: Die Haare entstehen nach `bauen`, die Liste war leer (jetzt beim Lösen gesammelt); dann Gesicht, Hals und Haare mindestens 8,0 mm, Kopf bis 14,3°, Rumpf bis 13,5° zurück, 0 Meldungen |
+| `render.py schulterdruecken_langhantel --pruefen`, `familie_bilder.py`, letzter Lauf | 60 Bilder, 0 Meldungen; 60 Bilder, 0 Meldungen; 16 min und 3 min; Werte gleich wie in der Probe davor |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | stehend keine; sitzend eine Spitze von 1,1° im seitlichen Handgelenk (Bild 36: 2,1° → 3,3° → 2,3°), zu klein, um im Bild aufzufallen |
+| Messwerte | in `form-programme-report.md` 58.1 |
+| Prüfseite (`tools/uebungen_pruef_bild.py schulterdruecken_langhantel schulterdruecken_kh_sitzend --familie senkrechtes-druecken-pplc --titel "Senkrechtes Drücken (Dali’s PPLC)"`) | `familie-senkrechtes-druecken-pplc.webp`, 1480 × 3330, angesehen |
+| `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |

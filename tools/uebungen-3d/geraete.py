@@ -386,13 +386,16 @@ def kurzhantel(name: str, masse: dict | None = None) -> bpy.types.Object:
     return mitte
 
 
-def schraegbank(lehne: float, sitz: float = 0.0) -> bpy.types.Object:
+def schraegbank(lehne: float, sitz: float = 0.0, lehne_laenge: float | None = None) -> bpy.types.Object:
     """Verstellbare Bank (`BANK`), Person mit dem Kopf nach +y: Gelenk zwischen Sitz und Lehne bei y = 0 an der
     Unterkante der Polster; die Lehne steigt um `lehne` Grad zum Kopf, der Sitz um `sitz` Grad zu den Füßen. Polster
-    „Lehne“ und „Sitz“ auf Platten, Rahmen mit Träger, Füßen, Stütze unter dem Gelenk und Strebe unter der Lehne."""
+    „Lehne“ und „Sitz“ auf Platten, Rahmen mit Träger, Füßen, Stütze unter dem Gelenk und Strebe unter der Lehne.
+    `lehne_laenge`: Länge der Lehne, sonst wie `BANK` (D-522: sitzend reicht sie bis an den Hinterkopf)."""
     polster = _mat("Polster", GERAET, 0.8)
     rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
-    b = BANK
+    b = dict(BANK)
+    if lehne_laenge is not None:
+        b["lehne"] = lehne_laenge
     wurzel = bpy.data.objects.new("Bank", None)
     bpy.context.scene.collection.objects.link(wurzel)
     gelenk = Vector((0, 0, b["oben"] - b["dicke"]))

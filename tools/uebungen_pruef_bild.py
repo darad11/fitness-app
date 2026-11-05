@@ -326,6 +326,21 @@ MESSWERTE = (
     ("D-Griff um die Stange gekippt (Grad)", "D-Griff um die Stange gekippt (liegt am Handgelenk an)", "max", "°"),
     ("Hände zueinander (mm)", "Hände zueinander", "min", " mm"),
     ("Kabel: Block gehoben (cm)", "Gewichtsblock gehoben", "max", " cm"),
+    # Senkrechtes Drücken für Dali’s PPLC (D-522)
+    ("Oberarm vor der Ebene der Schultern (Grad)", "Oberarm vor der Ebene der Schultern", "spanne", "°"),
+    ("Griffe über dem Kinn (cm)", "Griffe über dem Kinn", "spanne", " cm"),
+    ("Rücken in der Lehne (mm)", "Rücken in der Lehne", "spanne", " mm"),
+    ("Hinterkopf vor der Lehne (mm)", "Hinterkopf vor der Lehne (unter 0 = am Polster)", "spanne", " mm"),
+    ("Köpfe der Hanteln zur Haut ohne Hände (mm)", "Köpfe der Hanteln zur Haut (ohne Hände)", "min", " mm"),
+    ("Köpfe der Hanteln zu den Haaren (mm)", "Köpfe der Hanteln zu den Haaren", "min", " mm"),
+    ("Hanteln zueinander (mm, innere Köpfe)", "Hanteln zueinander (innere Köpfe)", "min", " mm"),
+    ("Arme zur Bank (mm)", "Arme zur Bank", "min", " mm"),
+    ("Stange vor dem Schultergelenk (cm)", "Stange vor dem Schultergelenk", "spanne", " cm"),
+    ("Stange über dem Boden (cm)", "Stange über dem Boden", "spanne", " cm"),
+    ("Gesicht, Hals und Haare vor der Stange (mm)", "Gesicht, Hals und Haare vor der Stange", "min", " mm"),
+    ("Kopf zurück (Grad)", "Kopf zurück (Hals gestreckt, Blick geradeaus)", "max", "°"),
+    ("Rumpf zur Senkrechten (Grad, + nach hinten)", "Rumpf zur Senkrechten (+ nach hinten)", "spanne", "°"),
+    ("Lende: Krümmung der Hautlinie (Grad, negativ = hohl)", "Lende: Hautlinie (unter 0 = hohl)", "spanne", "°"),
 )
 
 

@@ -11,15 +11,40 @@ import { useLayoutEffect } from 'react';
  * `screen-center-y` und `dialog-mitte` (src/app/styles.css) rücken damit den Inhalt in die Mitte
  * des Bildschirms; Bedienelemente bleiben im Fenster, nie im Streifen.
  *
+ * Dialoge rücken mit `--dialog-dx` und `--dialog-dy` nur aufgeklappt in die Mitte des Bildschirms:
+ * Zugeklappt stehen sie mittig im Fenster mit voller Breite (D-525, E3). In der Mitte des
+ * Bildschirms waren sie dort 266 statt 350 pt breit, „Training beenden?“ brach um und die Knöpfe
+ * standen untereinander.
+ *
  * Widersprechen sich die Werte (Ausrichtung passt nicht zur Form des Fensters, D-394), bleiben die
  * letzten stimmigen. Ohne das Skript der Startfläche oder ohne Streifen (iPhone, iPad, Computer)
  * ist die Verschiebung 0, und alles steht wie bisher mittig im Fenster.
  */
 
 interface Placement {
+  /** Größe des Bildschirms (pt), bei unbekannter Lage die des Fensters. */
+  b: number;
+  h: number;
   dx: number;
   dy: number;
   widerspruch: string | null;
+}
+
+/** Display des iPhone Duo zugeklappt, hochkant (pt), wie in `public/startflaeche.js` (D-393). */
+const DUO_ZU = { b: 466, h: 678 };
+/** So viele pt Abweichung gelten noch als gleich (wie in der Startfläche). */
+const TOLERANZ = 2;
+
+function near(a: number, b: number): boolean {
+  return Math.abs(a - b) <= TOLERANZ;
+}
+
+/** Ist der Bildschirm das zugeklappte Duo, in einer der beiden Ausrichtungen? */
+function folded(lage: Placement): boolean {
+  return (
+    (near(lage.b, DUO_ZU.b) && near(lage.h, DUO_ZU.h)) ||
+    (near(lage.b, DUO_ZU.h) && near(lage.h, DUO_ZU.b))
+  );
 }
 
 type StartLage = (messung: {
@@ -48,13 +73,15 @@ function alignment(win: Window): 'hoch' | 'quer' | null {
   return null;
 }
 
-/**
- * Verschiebung der Bildschirmmitte gegenüber der Fenstermitte jetzt. `null`, wenn die Werte sich
- * widersprechen; ohne Rechnung der Startfläche keine Verschiebung.
- */
-export function measureScreenOffset(win: Window = window): ScreenOffset | null {
+interface Measurement extends ScreenOffset {
+  /** Das Duo ist zugeklappt (Bildschirm 466 × 678). */
+  folded: boolean;
+}
+
+/** Rechnung der Startfläche jetzt; `null`, wenn die Werte sich widersprechen. */
+function measure(win: Window): Measurement | null {
   const startLage = (win as Window & { __formStartLage?: StartLage }).__formStartLage;
-  if (typeof startLage !== 'function') return { dx: 0, dy: 0 };
+  if (typeof startLage !== 'function') return { dx: 0, dy: 0, folded: false };
   const root = win.document.documentElement;
   const display = win.screen as Screen | undefined;
   const lage = startLage({
@@ -63,16 +90,37 @@ export function measureScreenOffset(win: Window = window): ScreenOffset | null {
     ausrichtung: alignment(win),
   });
   if (lage.widerspruch) return null;
-  return { dx: lage.dx, dy: lage.dy };
+  return { dx: lage.dx, dy: lage.dy, folded: folded(lage) };
 }
 
-/** Setzt die Verschiebung als CSS-Variablen, wenn die Werte stimmig sind. */
+/**
+ * Verschiebung der Bildschirmmitte gegenüber der Fenstermitte jetzt. `null`, wenn die Werte sich
+ * widersprechen; ohne Rechnung der Startfläche keine Verschiebung.
+ */
+export function measureScreenOffset(win: Window = window): ScreenOffset | null {
+  const m = measure(win);
+  return m ? { dx: m.dx, dy: m.dy } : null;
+}
+
+/**
+ * Verschiebung für Dialoge in der Mitte (D-525, E3): aufgeklappt wie die Bildschirmmitte,
+ * zugeklappt keine (mittig im Fenster, volle Breite).
+ */
+export function measureDialogOffset(win: Window = window): ScreenOffset | null {
+  const m = measure(win);
+  if (!m) return null;
+  return m.folded ? { dx: 0, dy: 0 } : { dx: m.dx, dy: m.dy };
+}
+
+/** Setzt die Verschiebungen als CSS-Variablen, wenn die Werte stimmig sind. */
 export function applyScreenOffset(win: Window = window): void {
-  const offset = measureScreenOffset(win);
-  if (!offset) return;
+  const m = measure(win);
+  if (!m) return;
   const style = win.document.documentElement.style;
-  style.setProperty('--bildschirm-dx', `${String(offset.dx)}px`);
-  style.setProperty('--bildschirm-dy', `${String(offset.dy)}px`);
+  style.setProperty('--bildschirm-dx', `${String(m.dx)}px`);
+  style.setProperty('--bildschirm-dy', `${String(m.dy)}px`);
+  style.setProperty('--dialog-dx', `${String(m.folded ? 0 : m.dx)}px`);
+  style.setProperty('--dialog-dy', `${String(m.folded ? 0 : m.dy)}px`);
 }
 
 /**

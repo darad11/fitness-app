@@ -2965,3 +2965,31 @@ Ergebnis: bestanden (Werte in 58.3)
 Bekannte Einschränkungen: Maße von Seil und Kabelzug geschätzt; Zehen aufgestellt (Frage 5)
 Nächste Schritte: Halt bis zu deiner Freigabe der drei Prüfseiten und deinen Antworten in 58.4; danach die Schleifen
 ```
+
+## 59. Schleifen der letzten drei Familien, E1 bis E3 und Übersicht Dali’s PPLC (ab D-525)
+
+Du hast die Prüfseiten „Senkrechtes Drücken“, „Hüftbeuge“ und „Rumpf“ freigegeben, mit fünf Entscheidungen, und zu den Befunden E1 bis E4 aus dem Rundgang durch den Player (D-496) entschieden. Die Pakete kommen einzeln: zuerst E1 bis E3 (D-525), dann die Schleifen der drei Familien und die Übersicht.
+
+### 59.1 E1 bis E4 im Player (D-525)
+
+| Befund | Deine Entscheidung | Umgesetzt |
+|---|---|---|
+| E1 „Ziel“ und Zahl in verschiedenen Zeilen | geschütztes Leerzeichen zwischen Wort und Zahl | „Ziel 10“, „Satz 1 von 5“, „Aufwärmsatz 2“ und „Vorwert 60“ bleiben zusammen, ebenso Zahl und Einheit („45 s“, „60 kg“). In „Jetzt“ und in der Pause, klein und groß. |
+| E2 kleine Pause am iPhone hoch: nur „Beinpresse,…“ | voller Name der nächsten Übung | „Nächster Satz“ steht dort nur noch für Screenreader, wie schon im niedrigen Fenster. Der Text hat bis zu drei Zeilen, der Name steht vorn und damit ganz da. |
+| E3 zugeklappt: Dialoge 266 statt 350 pt breit | mittig im Fenster mit voller Breite | Zugeklappt stehen Rückfragen und Übungsinfo mittig im Fenster, 350 pt breit, „Training beenden?“ in einer Zeile. Aufgeklappt bleiben sie in der Mitte des Bildschirms. |
+| E4 „Als Nächstes“ fehlt aufgeklappt quer | bleibt so | keine Änderung |
+
+Neue Tests: E1 und E2 am iPhone hoch (390 × 844), E3 am nachgestellten Duo zugeklappt und aufgeklappt. Gegen den Stand davor sind alle drei rot, mit der Änderung grün.
+
+### 59.2 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-525 Phase Programme, Befunde E1 bis E3 im Player (Entscheidung des Produktinhabers zu E1 bis E4)
+Umgesetzte Funktionen: geschütztes Leerzeichen zwischen Wort und Zahl in „Jetzt“ und in der Pause (keepNumbersTogether); kleine Pause am iPhone hoch mit vollem Namen der nächsten Übung, „Nächster Satz“ nur für Screenreader; Dialoge am Duo zugeklappt mittig im Fenster mit voller Breite (--dialog-dx, --dialog-dy); erfüllte AK: –
+Geänderte Dateien: src/modules/training/calc/format.ts, src/modules/training/calc/format.test.ts, src/modules/training/ui/player/SessionPage.tsx, src/modules/training/ui/player/RestStage.tsx, src/modules/training/ui/player/player-layout.css, src/shared/ui/screenCenter.ts, src/shared/ui/screenCenter.test.ts, src/app/styles.css, e2e/player-befunde-e.spec.ts (neu), e2e/duo-player-befunde.spec.ts, e2e/duo-player.spec.ts, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/feature-inventory.csv
+Technische Entscheidungen: D-525
+Ausgeführte Tests: format:check, lint, typecheck; Unit-Tests 1.276 bestanden (140 Dateien); check:docs; build; check:bundle (Startansicht 239,9 KB); pnpm test:e2e (Chromium) 472 bestanden, 153 übersprungen, 1 fehlgeschlagen: duo-player.spec.ts „Pause zugeklappt in einer Zeile“ suchte „Aufwärmsatz 2“ mit normalem Leerzeichen; Muster auf \s geändert, danach duo-player.spec.ts 5 bestanden, 5 übersprungen; Gegenprobe der drei neuen E2E-Tests gegen den Stand davor: alle drei rot
+Ergebnis: bestanden
+Bekannte Einschränkungen: E4 bleibt wie entschieden; WebKit läuft in der CI
+Nächste Schritte: Schleifen „Senkrechtes Drücken“ (D-526), „Hüftbeuge“ (D-527) und „Rumpf“ (D-528), Übersicht Dali’s PPLC (D-529), dann Halt für den Gerätetest
+```

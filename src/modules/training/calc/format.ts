@@ -48,3 +48,18 @@ export function restRemainingSec(endsAt: string, now: Date): number {
 export function formatRestRemaining(remainingSec: number): string {
   return remainingSec > 0 ? formatClock(remainingSec) : `+${formatClock(-remainingSec)}`;
 }
+
+/** Geschütztes Leerzeichen: hält zwei Wörter in einer Zeile. */
+const NBSP = ' ';
+
+/**
+ * Hält Zahlen in einer Zeile mit dem Wort davor und mit ihrer Einheit dahinter (E1, D-525): „Ziel 5“,
+ * „Satz 1 von 5“, „Aufwärmsatz 2“, „60 kg“, „45 s“. Vorher stand im Player „Ziel“ am Ende der
+ * Zeile und die Zahl allein in der nächsten. Leerzeichen an anderen Stellen bleiben, damit der Text
+ * weiter umbrechen kann.
+ */
+export function keepNumbersTogether(text: string): string {
+  return text
+    .replace(/ (?=\d)/g, NBSP)
+    .replace(/(\d) (?=(?:s|min|kg|km|m|Wdh\.)(?![\p{L}\d]))/gu, `$1${NBSP}`);
+}

@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.122 (Phase Programme, Befunde E1 bis E3 im Player, 05.11.2026): Status unverändert; TS-02 und TS-07: Zahlen bleiben in einer Zeile mit dem Wort davor („Ziel 10“), die kleine Pause zeigt am iPhone hoch den vollen Namen der nächsten Übung; Dialoge stehen am Duo zugeklappt mittig im Fenster mit voller Breite (D-525).
 - Version 0.121 (Phase Programme, Prüfseite Rumpf, 05.11.2026): Status unverändert; Prüfseite mit Crunches am Kabel, kniend, an einem neuen Seilgriff, noch nicht in der App (D-524).
 - Version 0.120 (Phase Programme, Prüfseite Hüftbeuge, 05.11.2026): Status unverändert; Prüfseite mit Kreuzheben mit Langhantel, noch nicht in der App (D-523).
 - Version 0.119 (Phase Programme, Prüfseite Senkrechtes Drücken, 05.11.2026): Status unverändert; Prüfseite mit Schulterdrücken mit Langhantel stehend und mit Kurzhanteln sitzend, noch nicht in der App (D-522).
@@ -258,12 +259,12 @@ Automatisch erzeugt von `tools/feature_inventory_to_csv.py`.
 | ID | Funktion | Originalverhalten (Referenz-App) | Evidenz | Konfidenz | Herkunft | Nutzen | Abhängigkeiten | Aufwand | Prio | Umfang | Release | Entscheidung | Status | Akzeptanzkriterien |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | TS-01 | Training starten: aus Programm, Vorlage oder frei | Start des Tagestrainings von Home | HC-G; SD | V | OV | H | TP-21 | M | P0 | MVP | R1 · M1 | Übernehmen | Zur Umsetzung ausgewählt | AK-TRN-01, AK-TRN-02, AK-TRN-22 |
-| TS-02 | Übungsliste mit Sätzen | Video, Satzliste, Eingaben je Übung | SD 13:04 | V | OV | H | TP-06 | M | P0 | MVP | R1 · M1 | Anpassen: alle Übungen in einer Liste; Schleife der aktuellen Übung auch schmal in „Jetzt“, Vorschau der nächsten (D-498); Duo quer niedrig: Kopf links über der Liste (D-502) | Implementiert | AK-TRN-08, AK-UX-03 |
+| TS-02 | Übungsliste mit Sätzen | Video, Satzliste, Eingaben je Übung | SD 13:04 | V | OV | H | TP-06 | M | P0 | MVP | R1 · M1 | Anpassen: alle Übungen in einer Liste; Schleife der aktuellen Übung auch schmal in „Jetzt“, Vorschau der nächsten (D-498); Duo quer niedrig: Kopf links über der Liste (D-502); Zahlen beim Wort (D-525) | Implementiert | AK-TRN-08, AK-UX-03 |
 | TS-03 | Vorherige Leistungswerte | Vorherige Wiederholungen seit einem Update sichtbar | REV; AS | V | OV | H | SY-18 | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-05 |
 | TS-04 | Gewicht eingeben | Verbesserte Gewichtsauswahl | AS 3.1.6 | V | OV | H | SY-16 | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-04 |
 | TS-05 | Wiederholungen eingeben | Vorhanden | HC-G | V | OV | H | – | S | P0 | MVP | R1 · M1 | Übernehmen | Implementiert | AK-TRN-04 |
 | TS-06 | Satz abschließen, mit Vorschlag | „log reps and weight after each set" | HC-G | V | OV | H | TS-04 | S | P0 | MVP | R1 · M1 | Übernehmen (D-225) | Implementiert | AK-TRN-06, AK-TRN-07 |
-| TS-07 | Pausentimer | Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter | AS 3.1.6; SD 13:18 | V | OV | H | TP-09 | M | P0 | MVP | R1 · M1 | Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215) | Implementiert | AK-TRN-10, AK-TRN-11, AK-TRN-12 |
+| TS-07 | Pausentimer | Startet nach dem Satz; läuft seit 3.1.6 im Hintergrund weiter | AS 3.1.6; SD 13:18 | V | OV | H | TP-09 | M | P0 | MVP | R1 · M1 | Anpassen: zeitstempelbasiert; kein Hintergrundton zugesagt (D-215); kleine Pause mit vollem Namen der nächsten Übung (D-525) | Implementiert | AK-TRN-10, AK-TRN-11, AK-TRN-12 |
 | TS-08 | Übungstimer für Zeitsätze | Vorhanden | AS 3.1.6 | V | OV | M | TS-07 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-TRN-14 |
 | TS-09 | Nächster Satz im Pausentimer | Fehlt laut Videoanalyse | SD 13:18 | VF | EV | M | TS-07 | S | P1 | MVP | R1 · M1 | Verbesserung | Implementiert | AK-TRN-10 |
 | TS-10 | Übung im Training ersetzen | Möglich (laut Rezensionen) | REV | V-R | OV | H | TP-12 | S | P1 | MVP | R1 · M2 | Übernehmen | Implementiert | AK-TRN-09 |

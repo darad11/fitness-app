@@ -244,7 +244,8 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
   // Der nächste Satz bleibt für Screenreader genannt und steht sichtbar neben der Zeit, in
   // höchstens zwei Zeilen (vorher eine Zeile mit „Beinpress…“).
   await expect(rest).toContainText('Nächster Satz:');
-  const nextSet = rest.getByText(/Aufwärmsatz 2/);
+  // `\s`: Zwischen Wort und Zahl steht ein geschütztes Leerzeichen (D-525).
+  const nextSet = rest.getByText(/Aufwärmsatz\s2/);
   const nextBox = await box(nextSet);
   expect(nextBox.right - nextBox.left).toBeGreaterThan(60);
   expect(nextBox.height).toBeGreaterThan(30);

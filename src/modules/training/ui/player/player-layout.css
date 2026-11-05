@@ -280,6 +280,30 @@
 }
 
 /*
+ * Kleine Pause in einer Spalte und hohem Fenster (iPhone hoch, D-525, E2): Der nächste Satz steht
+ * mit dem vollen Namen der Übung da. Vorher brauchte „Nächster Satz:“ eine der zwei Zeilen, vom
+ * Rest blieb nur „Beinpresse,…“. Die Bezeichnung bleibt für Screenreader wie im niedrigen Fenster;
+ * der Text hat bis zu drei Zeilen, der Name steht vorn.
+ */
+@media (min-height: 45rem) {
+  @container player (max-width: 47.99rem) {
+    .rest-card .rest-next-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .rest-card .rest-next-text {
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
+  }
+}
+
+/*
  * Eine Spalte und niedriges Fenster (unter 45 rem, Duo zugeklappt, iPhone quer): Pause in einer
  * Zeile mit Zeit, nächstem Satz und „Überspringen“. ±15 s gibt es in der großen Pause; der Name
  * „Nächster Satz“ und „Pause“ bleiben für Screenreader.

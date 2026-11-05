@@ -3608,3 +3608,18 @@ Crunches am Kabel, kniend, an einem neuen Seilgriff; nur Werkzeug, Bilder und Do
 | Messwerte | in `form-programme-report.md` 58.3 |
 | Prüfseite (`tools/uebungen_pruef_bild.py kabelcrunch_kniend --familie rumpf-pplc --titel "Rumpf (Dali’s PPLC)"`) | `familie-rumpf-pplc.webp`, 1480 × 1604, angesehen |
 | `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |
+
+### Befunde E1 bis E3 im Player · 05.11.2026, Cloud-Umgebung
+
+Geschütztes Leerzeichen zwischen Wort und Zahl, kleine Pause mit vollem Namen der nächsten Übung, Dialoge am Duo zugeklappt mittig im Fenster (D-525).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Unit `format.test.ts`, `screenCenter.test.ts` | 12 bestanden, davon 3 neu |
+| Unit `src/modules/training` | 31 Dateien, 208 Tests bestanden |
+| E2E `player-befunde-e.spec.ts`, `duo-player-befunde.spec.ts`, `duo-safe-area.spec.ts` (Chromium) | 14 bestanden, 8 übersprungen (Desktop-Profil oder nur Chromium) |
+| Gegenprobe: die drei neuen E2E-Tests gegen einen Build mit dem Stand davor (Chromium, Handy-Profil) | alle drei rot: E1 „Satz 1“ ohne geschütztes Leerzeichen nicht gefunden, E2 „Nächster Satz“ 99 px breit sichtbar, E3 Rückfrage 42 pt neben der Mitte des Fensters |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 140 Dateien, 1.276 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,9 KB (Grenze 250 KB), Übungsbilder 112 von 112 |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 472 bestanden, 153 übersprungen, 1 fehlgeschlagen: `duo-player.spec.ts` „Pause zugeklappt in einer Zeile“ suchte `/Aufwärmsatz 2/` mit normalem Leerzeichen, die App setzt dort jetzt ein geschütztes (E1); Muster auf `/Aufwärmsatz\s2/` geändert, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen |

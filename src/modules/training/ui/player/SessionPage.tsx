@@ -32,7 +32,12 @@ import { Button, ButtonLink, Dialog, IconButton, Meter, Skeleton } from '@/share
 import { previousValues } from '../../calc/history';
 import { NoteDialog } from './NoteDialog';
 import { formatSetValues } from '../../calc/fields';
-import { formatClock, formatTargetRange, restRemainingSec } from '../../calc/format';
+import {
+  formatClock,
+  formatTargetRange,
+  keepNumbersTogether,
+  restRemainingSec,
+} from '../../calc/format';
 import {
   currentSet,
   liveExercises,
@@ -553,15 +558,18 @@ function Player({
                     {currentExercise.nameSnapshot}
                   </p>
                   <p className="player-now-info mt-1 text-muted">
-                    {[
-                      `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
-                      currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
-                      currentPrevious
-                        ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
-                        : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
+                    {/* Zahlen bleiben beim Wort: „Ziel 10“ in einer Zeile (E1, D-525). */}
+                    {keepNumbersTogether(
+                      [
+                        `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
+                        currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
+                        currentPrevious
+                          ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
+                          : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · '),
+                    )}
                   </p>
                 </div>
                 {setTimer?.setId === current.id ? (

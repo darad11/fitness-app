@@ -148,6 +148,40 @@ test.describe('A: Vollbildansichten in der Mitte des ganzen Bildschirms (D-495)'
     }
   });
 
+  test('E3: Dialoge zugeklappt mittig im Fenster mit voller Breite, aufgeklappt in der Mitte des Bildschirms (D-525)', async ({
+    page,
+  }) => {
+    test.slow();
+    const cdp = await emulateDevice(page, GERAET.zu);
+    await startTraining(page);
+    const confirm = page.getByRole('dialog', { name: 'Training beenden?' });
+    await page.getByRole('button', { name: 'Beenden', exact: true }).click();
+    await expect(confirm).toBeVisible();
+    // Mittig im Fenster (382 pt), nicht in der Mitte des Bildschirms (233 pt); volle Breite
+    // 382 − 2 × 16 = 350 pt statt 266 pt.
+    const zu = await box(confirm);
+    expect(Math.abs(center(zu).x - GERAET.zu.width / 2)).toBeLessThanOrEqual(1);
+    expect(zu.width).toBeCloseTo(350, 0);
+    // Der Titel in einer Zeile (vorher „Training“ / „beenden?“).
+    const title = await box(confirm.getByRole('heading', { name: 'Training beenden?' }));
+    const lineHeight = await confirm
+      .getByRole('heading', { name: 'Training beenden?' })
+      .evaluate((h) => parseFloat(getComputedStyle(h).lineHeight));
+    expect(title.height).toBeLessThan(lineHeight * 1.5 + 8);
+    await confirm.getByRole('button', { name: 'Abbrechen' }).click();
+    await expect(confirm).toHaveCount(0);
+
+    // Aufgeklappt quer bleibt es bei der Mitte des Bildschirms (D-495).
+    await emulateDevice(page, GERAET.quer, cdp);
+    await expect.poll(() => page.evaluate(() => window.innerWidth)).toBe(GERAET.quer.width);
+    await page.getByRole('button', { name: 'Beenden', exact: true }).click();
+    await expect(confirm).toBeVisible();
+    await expect
+      .poll(async () => Math.round(center(await box(confirm)).x * 2) / 2)
+      .toBeCloseTo(GERAET.quer.mitte.x, 0);
+    expect((await box(confirm)).right).toBeLessThanOrEqual(GERAET.quer.width);
+  });
+
   test('Übungsinfo und Anmeldung: in der Mitte des Bildschirms, ganz im Fenster', async ({
     page,
   }) => {

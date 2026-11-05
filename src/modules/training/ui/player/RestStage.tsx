@@ -5,7 +5,12 @@ import { tSession } from '@/shared/i18n/de-session';
 import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { cn } from '@/shared/lib/cn';
 import { Button, Chip, IconButton, useScreenCenter } from '@/shared/ui';
-import { formatRestRemaining, formatTargetRange, restRemainingSec } from '../../calc/format';
+import {
+  formatRestRemaining,
+  formatTargetRange,
+  keepNumbersTogether,
+  restRemainingSec,
+} from '../../calc/format';
 import type { Session, SessionExercise, SessionSet } from '../../model/session';
 
 export const REST_STEP_SEC = 15;
@@ -36,14 +41,17 @@ export function RestStage(props: RestStageProps) {
     ? tTrainingPages.rest.overBy(time.slice(1))
     : `${tTrainingPages.rest.remaining} ${time}`;
   const target = props.next?.set.target ? formatTargetRange(props.next.set.target) : null;
+  // Zahlen bleiben beim Wort: „Ziel 5“ und „Aufwärmsatz 2“ in einer Zeile (E1, D-525).
   const nextText = props.next
-    ? [
-        props.next.name,
-        target ? `${tTrainingPages.rest.target} ${target.text}` : null,
-        props.previous ? `${tSession.previous} ${props.previous}` : null,
-      ]
-        .filter(Boolean)
-        .join(' · ')
+    ? keepNumbersTogether(
+        [
+          props.next.name,
+          target ? `${tTrainingPages.rest.target} ${target.text}` : null,
+          props.previous ? `${tSession.previous} ${props.previous}` : null,
+        ]
+          .filter(Boolean)
+          .join(' · '),
+      )
     : tTrainingPages.rest.noNext;
 
   const controls = (size: 'sm' | 'lg') => (

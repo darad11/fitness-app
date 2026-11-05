@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import script from '../../../public/startflaeche.js?raw';
-import { applyScreenOffset, installScreenCenter, measureScreenOffset } from './screenCenter';
+import {
+  applyScreenOffset,
+  installScreenCenter,
+  measureDialogOffset,
+  measureScreenOffset,
+} from './screenCenter';
 
 /**
  * Mitte des ganzen Bildschirms für Vollbildansichten (D-495) mit der Rechnung der Startfläche
@@ -142,6 +147,35 @@ describe('Mitte des Bildschirms (D-495)', () => {
     page.resize(466, 669, 'landscape-primary');
     applyScreenOffset(page.win);
     expect(page.styles.get('--bildschirm-dx')).toBe('42px');
+  });
+
+  it('Dialoge (E3, D-525): zugeklappt mittig im Fenster, aufgeklappt in der Mitte des Bildschirms', () => {
+    // Zugeklappt hoch und quer (Safari quer 594 pt breit): keine Verschiebung für Dialoge.
+    expect(measureDialogOffset(fakeWindow({ width: 382, height: 678 }).win)).toEqual({
+      dx: 0,
+      dy: 0,
+    });
+    expect(measureDialogOffset(fakeWindow({ width: 594, height: 466 }).win)).toEqual({
+      dx: 0,
+      dy: 0,
+    });
+    // Aufgeklappt quer wie die Bildschirmmitte.
+    expect(measureDialogOffset(fakeWindow({ width: 867, height: 587 }).win)).toEqual({
+      dx: 42,
+      dy: -41,
+    });
+    const folded = fakeWindow({ width: 382, height: 678 });
+    applyScreenOffset(folded.win);
+    expect(folded.styles.get('--bildschirm-dx')).toBe('42px');
+    expect(folded.styles.get('--dialog-dx')).toBe('0px');
+    expect(folded.styles.get('--dialog-dy')).toBe('0px');
+    folded.resize(867, 587);
+    applyScreenOffset(folded.win);
+    expect(folded.styles.get('--dialog-dx')).toBe('42px');
+    expect(folded.styles.get('--dialog-dy')).toBe('-41px');
+    // Kein Duo: wie bisher keine Verschiebung.
+    const iphone = { width: 390, height: 844, screen: { width: 390, height: 844 } };
+    expect(measureDialogOffset(fakeWindow(iphone).win)).toEqual({ dx: 0, dy: 0 });
   });
 
   it('misst nach jeder Größenänderung neu, sofort und im nächsten Bild', () => {

@@ -175,7 +175,9 @@ def messen(uebung) -> dict:
                 erg["Fuß im Schuh: tiefster Punkt über dem Boden (mm)"] = min(p.z for p in fusspunkte) * 1000
             erg.update(schuhe.bodenkontakt(o["Sohle"], o["Schuhe"]))
         # Füße in der Luft, gedreht (D-475): Die Prüfung auf Löcher dreht ihre Strahlen mit dem Fuß
-        drehung = ({s: uebung.rig.g("foot." + s).to_3x3() for s in "LR"} if getattr(uebung, "fuesse_frei", False) else None)
+        # … und Füße auf einer geneigten Platte (D-511: Hackenschmidt, `fuss_gedreht`), sonst meldet sie Löcher, die keine sind
+        gedreht = getattr(uebung, "fuesse_frei", False) or getattr(uebung, "fuss_gedreht", False)
+        drehung = ({s: uebung.rig.g("foot." + s).to_3x3() for s in "LR"} if gedreht else None)
         erg.update(schuhe.durchdringung(uebung.koerper, o["Socken"], o["Schuhe"], o.get("Shorts"), drehung))
         if "Senkel" in o:  # Schuh seit D-460: Senkel, Ösen, Polster, Zehenbox
             erg.update(schuhe.pruefung_neu(uebung.koerper, o["Socken"]))

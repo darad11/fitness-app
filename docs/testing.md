@@ -3356,3 +3356,22 @@ Dip an derselben Gegengewichtsmaschine wie der Pull-Up, Diparme neu; nur Werkzeu
 | Prüfseite (`tools/uebungen_pruef_bild.py dip_unterstuetzt --familie waagrechtes-druecken-dip --titel "Waagrechtes Drücken (Dali’s PPLC)"`) | `familie-waagrechtes-druecken-dip.webp`, angesehen |
 | Pull-Up nach dem Umbau (`render.py klimmzug_unterstuetzt --pruefen --nur-messwerte`, 60 Bilder) | alle Messwerte gleich wie in D-509 (größter Unterschied 0,000000) |
 | `pnpm format:check`, `pnpm check:docs` | bestanden |
+
+### Prüfseite Hackenschmidt-Kniebeuge · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Machine Squat an einer neuen Hackenschmidt-Maschine; nur Werkzeug, Bilder und Dokumente (D-511).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erster Probelauf (Bein im Ausgang 16° vor der Senkrechten, Platte 20°) | unten Knie 75°, aber Knie 23,1 cm vor der Zehenspitze und Sprunggelenk 75,3° gebeugt; Handgelenk 75°; tiefste Delle 98,8 mm |
+| Fußstellung gerechnet (Platte 10°, 15°, 20°; Bein 36° bis 48°; Knie unten 75°, 80°, 85°) | gewählt Platte 15°, Bein 44°: gerechnet Sprunggelenk oben 22,9° gestreckt, unten 25,0° gebeugt, Knie 12 cm hinter den Zehen |
+| Zweiter Probelauf mit Bein 44°, Platte 15° | Knie 168° → 75°, Hüfte 174,9° → 130,6°, Sprunggelenk −23,0° → +21,9°, Knie unten 3,2 cm hinter der Zehenspitze |
+| Rücken am Polster in zwölf Fassungen (Lende 20° bis 40°, Drehung zur Lehne 0° bis 12°, Brustkorb, Kopf) | gewählt Lende 35°, Drehung 9°: Gesäß 21,1 mm (mit 25° 33,0 mm), oberer Rücken 6,6 mm, Haare 2,8 mm; ohne Drehung bis 110 mm Haare im Polster; Haare bis 9,0 cm von der Mitte |
+| Griffe in 15 Fassungen (Lage und Achse) | Achse vom Polster weg: Handgelenk 33° bis 72°; gewählt 20 cm unter dem Schultergelenk: Ellbogen 48,8°, Handgelenk 8,6° |
+| Delle je Polster | Rückenpolster 36,7 bis 38,4 mm (Shorts am Gesäß), Schulterpolster 10,4 mm; vorher stießen die Haare in die Schulterpolster |
+| Kameravergleich 45°, 60°, 75°, 90° (`docs/screens/uebungen/kniebeuge-hackenschmidt-kameras.webp`) | 60° gewählt |
+| `render.py hackenschmidt --pruefen` (60 Bilder) | Socke mit einem Loch: mit festen Strahlen bei geneigtem Fuß falsch gemeldet; die Prüfung dreht jetzt mit (`fuss_gedreht`), danach 0. Arme 0,8 mm an einem Griffhalter: Halter neu geführt, danach 50,7 mm |
+| `render.py hackenschmidt --pruefen` neu (der erste Lauf brach mit dem Neustart der Umgebung ab, wiederholt), `familie_bilder.py hackenschmidt` | Messwerte in `form-programme-report.md` 51.2: Knie 168,0° → 75,0°, Sohlen flach, Rücken am Polster, nichts durch die Oberfläche, Kleidung ohne Durchdringung, 0 Meldungen |
+| Prüfansichten und Nahaufnahmen angesehen | von der Seite, von vorn und in der Kamera der App wie erwartet; Hand um den Griff, Fuß flach auf der Platte |
+| Prüfseite (`tools/uebungen_pruef_bild.py hackenschmidt --familie kniebeuge-hackenschmidt --titel "Kniebeuge (Dali’s PPLC)"`) | `familie-kniebeuge-hackenschmidt.webp`, angesehen; „Füße auf der Platte verschoben 332,7 mm“ war der Weg des Schlittens (gemessen am Leerobjekt `schlitten` wie bei der Beinpresse), Attribut in `wagen` umbenannt, neu gemessen (`--nur-messwerte`): 0,1 mm, alle übrigen Werte gleich, Prüfseite neu zusammengesetzt |
+| `pnpm format:check`, `pnpm check:docs` | bestanden |

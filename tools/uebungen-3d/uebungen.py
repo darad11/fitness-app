@@ -4904,7 +4904,366 @@ class DipUnterstuetzt(KlimmzugUnterstuetzt):
         return werte
 
 
+class Hackenschmidt(Uebung):
+    """Hackenschmidt-Kniebeuge an der Maschine (Familie „Kniebeuge“, D-511), nach dem Ausführungstext der App (ExRx „Sled
+    Hack Squat“). Der Rücken liegt am Polster des Schlittens (`geraete.hackenschmidt`), das unter `SCHIENE` Grad längs
+    der Schienen läuft; die Schulterpolster liegen auf den Schultern, die Hände an den Griffen daneben. Der Rumpf liegt in
+    der ganzen Schleife gleich am Polster (Lende `LENDE` flacher als im Stand, Kopf an der Lehne) und fährt mit dem
+    Schlitten: Nur Hüfte, Knie und Sprunggelenke beugen sich. Füße etwas weiter als hüftbreit, Zehen `ZEHEN` nach außen,
+    flach auf der festen Fußplatte (`PLATTE` Grad, vorn höher), etwas über ihrem unteren Rand. Ausgang oben mit fast
+    gestreckten Knien (`KNIE_OBEN`, nicht durchgedrückt), ab bis `KNIE_UNTEN`; die Knie zeigen über die Zehen, die
+    Fersen bleiben auf der Platte, Rücken und Becken am Polster. Aufwärts derselbe Weg."""
+
+    name = "hackenschmidt"
+    titel = "Hackenschmidt-Kniebeuge"
+    # Schräg von vorn links: Knie, Füße auf der Platte und der Weg des Schlittens (verglichen mit 45°, 75° und 90°)
+    kamera = {"richtung": 60.0, "neigung": 10.0, "fuellen": 0.02}
+    vorschau_phase = 1.0
+    griff_ansichten = (("hack_vorn", 30.0, 25.0), ("hack_aussen", 100.0, 10.0))
+    fuss_ansichten = ((90, 0.10), (0, 0.12))
+    fuss_gedreht = True  # Füße auf der geneigten Platte: die Prüfung auf Löcher in der Socke dreht mit (`render.messen`)
+    SCHIENE = 45.0  # Schienen und Rückenpolster, Grad über der Waagrechten
+    PLATTE = 15.0  # Fußplatte vorn höher, Grad
+    KNIE_OBEN = 168.0
+    KNIE_UNTEN = 75.0  # unten: Oberschenkel etwa parallel zur Platte (Familie: Knie 100 bis 120° gebeugt)
+    # Linie Hüfte → Fußgelenk im Ausgang so weit vor der Senkrechten, Grad: fast in der Richtung der Schiene, damit die
+    # Hüfte geradewegs zu den Füßen fährt (mit 16° standen die Knie unten 23 cm vor den Zehen, das Sprunggelenk 75°
+    # gebeugt; gerechnet: mit 44° und der Platte 15° unten rund 25° gebeugt, oben rund 23° gestreckt)
+    BEIN = 44.0
+    FUESSE = 0.13  # halber Abstand der Fußgelenke vor dem Maß der Schultern, m
+    ZEHEN = 15.0
+    KNIE_AUSSEN = 0.05
+    # Rumpf am Polster wie bei der Beinpresse (D-465): Lende flacher, Rumpf unterhalb des oberen Brustkorbs zur Lehne
+    # gedreht, oberer Brustkorb gestreckt, Kopf zurück an die Lehne (Blick wie zuvor), Grad. Die Lende stärker flach
+    # als dort (35 statt 25°): Mit gestreckter Hüfte lag das Gesäß sonst 33 mm im Polster, jetzt 21 mm wie das Kreuzbein
+    # an der Beinpresse (verglichen mit 25° bis 40° und KIPP 0° bis 12°)
+    LENDE, KIPP, BRUST, KOPF = 35.0, 9.0, 10.0, 14.0
+    RUECKEN = 0.003  # Lende so tief im Polster, an der Stelle mit dem geringsten Wert, m
+    SCHULTER_TIEF = 0.004  # Schulterpolster so tief auf den Schultern, m
+    PLATTE_Z = 0.30  # Mitte der Fußplatte über dem Boden, m (geschätzt)
+    GRIFF_R = 0.016
+    STRECKUNG = 0.0
+    # Griffe neben den Schulterpolstern: so weit außen, vor und unter dem Schultergelenk (m), Achse längs der Normalen
+    # des Polsters (Vorzeichen: Zeigefinger → kleiner Finger)
+    # (verglichen: 10 cm unter dem Schultergelenk Ellbogen 31°, 20 cm 49°, 24 cm 56°; Achse vom Polster weg: Handgelenk
+    # bis 72°, zum Polster hin unter 10°)
+    GRIFF_SEITE, GRIFF_VOR, GRIFF_TIEF, GRIFF_ACHSE = 0.16, 0.04, 0.20, -1.0
+    # Schulterpolster so weit von der Mitte (vor dem Maß der Schultern, m): innen frei von Kopf und Haaren (bis 9 cm)
+    SCHULTERPOLSTER_X = 0.125
+
+    def rahmen_objekte(self) -> list:
+        return [*self.geraet["griffe"].values(), *self.geraet["polster"]] if hasattr(self, "geraet") else []
+
+    def polster_objekte(self) -> list:
+        return self.geraet["polster"]
+
+    def auflage(self) -> list:
+        return auflage_objekte(self.koerper, "Shirt", "Shorts", "Haare")
+
+    def stange_achse(self):
+        # linker Griff (Welt) in der aktuellen Stellung des Schlittens: für den Abstand der Finger in
+        # `render.messen`
+        mitte, k = self.griff_lage["L"]
+        return self.rig.welt(mitte + self.u * self.weg_jetzt), k.normalized(), self.GRIFF_R
+
+    # ------------------------------------------------------------------ Aufbau
+
+    def bauen(self) -> None:
+        super().bauen()
+        rig = self.rig
+        k = rig.kopf
+        a = math.radians(self.SCHIENE)
+        self.v = Vector((0, math.cos(a), math.sin(a)))  # die Schiene hinauf
+        self.u = -self.v  # Weg des Schlittens nach unten
+        self.n = Vector((0, -math.sin(a), math.cos(a)))  # aus dem Polster zur Person
+        self.R_liegen = achse_winkel(X, self.SCHIENE - 90.0)  # Stand → am Polster: um 90° − Schiene zurückgelehnt
+        self.R_fuss = achse_winkel(X, -self.PLATTE)  # Boden → Fußplatte: vorn höher
+        self.pn = self.R_fuss @ Z  # Normale der Platte
+        self.l1 = (k["lowerleg01.L"] - k["upperleg01.L"]).length
+        self.l2 = (k["foot.L"] - k["lowerleg01.L"]).length
+        huefte = k["upperleg01.L"].z
+        ruhe = [v.co.copy() for v in self.koerper.data.vertices]
+        self.lenden_baender = [[i for i, r in enumerate(ruhe) if abs(r.x) < 0.10 and r.y > 0.0
+                                and huefte + z / 100 <= r.z < huefte + (z + 2) / 100] for z in range(12, 26, 2)]
+        self.kreuz_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.10 and r.y > 0.0 and huefte <= r.z < huefte + 0.12]
+        self.brust_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.14 and r.y > 0.0 and huefte + 0.26 <= r.z < huefte + 0.50]
+        self.gesaess_i = [i for i, r in enumerate(ruhe) if abs(r.x) < 0.17 and huefte - 0.12 < r.z < huefte + 0.06 and r.y > 0.02]
+        schulter_z = k["upperarm01.L"].z
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+        # Oberseite der Schultern (Trapez bis Schulterhöhe), je Seite: dort liegen die Schulterpolster
+        px = self.SCHULTERPOLSTER_X * self.mass
+        self.schulter_i = {s: [v.index for v in self.koerper.data.vertices
+                               if abs(sx * v.co.x - px) < 0.05 and v.co.z > schulter_z - 0.02
+                               and not any(namen[g.group].startswith(("head", "neck", "jaw")) and g.weight > 0.3 for g in v.groups)]
+                           for s, sx in (("L", 1), ("R", -1))}
+        ferse, spitze = _fuss(self.koerper, k)
+        self.zehen_laenge = k["foot.L"].y - spitze  # Fußgelenk bis Zehenspitze, längs des Fußes
+        self.geraet = None
+        self.geloest = False
+        self.delle = 0.0
+        self.weg_jetzt = 0.0
+
+    def _torso(self, weg: float) -> None:
+        """Rumpf am Polster, um `weg` die Schiene hinab, in der Haltung der Beinpresse (D-465): Lende `LENDE` flacher als
+        im Stand, Rumpf unterhalb des oberen Brustkorbs `KIPP` zur Lehne gedreht, oberer Brustkorb `BRUST` gestreckt,
+        Kopf `KOPF` zurück an die Lehne (Blick wie zuvor)."""
+        rig = self.rig
+        rig.setze("root", starr(Vector(), self.verschiebung + self.u * weg,
+                                self.R_liegen @ achse_winkel(X, self.KIPP - self.LENDE)))
+        for n_ in ("spine05", "spine04", "spine03"):
+            rig.dreh(n_, achse_winkel(X, self.LENDE / 3))
+        if self.BRUST:
+            rig.dreh("spine01", achse_winkel(X, -self.BRUST))
+        if self.KOPF:
+            rig.dreh("neck01", achse_winkel(X, -self.KOPF))
+            rig.dreh("head", achse_winkel(X, self.KOPF))
+
+    def _zehenrichtung(self, s: str) -> Vector:
+        w = math.radians(self.ZEHEN) * (1 if s == "L" else -1)
+        return self.R_fuss @ Vector((math.sin(w), -math.cos(w), 0.0))
+
+    def _knierichtung(self, s: str) -> Vector:
+        return self._zehenrichtung(s) + X * (self.KNIE_AUSSEN * (1 if s == "L" else -1))
+
+    def _beine(self) -> dict:
+        return {s: self.rig.bein(s, self.knoechel[s], self._knierichtung(s), self.ZEHEN, fuss_ebene=self.R_fuss) for s in "LR"}
+
+    def _huefte(self, s: str) -> Vector:
+        return self.rig.punkt("pelvis." + s, self.rig.kopf["upperleg01." + s])
+
+    def _weg_fuer(self, knie: float) -> float:
+        """Weg des Schlittens von oben, bei dem das linke Knie den Innenwinkel `knie` hat (Hüfte auf der Linie längs der
+        Schiene, Fußgelenk fest)."""
+        D = math.sqrt(self.l1 ** 2 + self.l2 ** 2 - 2 * self.l1 * self.l2 * math.cos(math.radians(knie)))
+        r = self.huefte0["L"] - self.knoechel["L"]
+        b = self.u.dot(r)
+        c = r.length_squared - D * D
+        if b * b - c < 0:
+            return -b
+        return -b - math.sqrt(b * b - c)
+
+    def _lage(self) -> None:
+        """Rücken an das Polster (wie bei der Beinpresse, D-465): Rumpf geneigt, dann so verschoben, dass die Lende in
+        Streifen zu 2 cm von 12 bis 26 cm über den Hüftgelenken an jeder Stelle anliegt, auch der Streifen mit dem
+        geringsten Wert `RUECKEN` tief. Die Oberfläche des Polsters ist eine Ebene durch den Ursprung des Skeletts
+        mit der Normalen `n`; die Höhe stimmt erst `_loesen` ab."""
+        rig = self.rig
+        self.verschiebung = Vector((0, 0.40, 1.0))
+        for _ in range(8):
+            rig.zuruecksetzen()
+            self._torso(0.0)
+            rig.anwenden()
+            netz = [rig.lokal(p) for p in _netz(self.koerper)]
+            d_r = max(min(netz[i].dot(self.n) for i in band) for band in self.lenden_baender)
+            self.verschiebung += self.n * (-d_r - self.RUECKEN)
+
+    def _loesen(self) -> None:
+        """Lage am Polster, Füße auf der Platte, Weg des Schlittens, Griffe und Schulterpolster; dann die Maschine. Alles
+        im Raum des Skeletts, die Maschine in der Welt (`rig.welt`)."""
+        rig = self.rig
+        k = rig.kopf
+        self._lage()
+        rig.zuruecksetzen()
+        self._torso(0.0)
+        rig.anwenden()
+        self.huefte0 = {s: self._huefte(s) for s in "LR"}
+        D = math.sqrt(self.l1 ** 2 + self.l2 ** 2 - 2 * self.l1 * self.l2 * math.cos(math.radians(self.KNIE_OBEN)))
+        b = math.radians(self.BEIN)
+        x = self.FUESSE * self.mass
+        self.knoechel = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            H = self.huefte0[s]
+            seit = sx * x - H.x
+            vorn = math.sqrt(max(D * D - seit * seit, 0.0))
+            self.knoechel[s] = H + Vector((seit, -vorn * math.sin(b), -vorn * math.cos(b)))
+        # Platte unter den Sohlen: Unterkante der Sohle so tief unter dem Fußgelenk wie im Stand, Mitte des Fußes
+        ueber_sohle = k["foot.L"].z + rig.versatz.z
+        ferse, spitze = _fuss(self.koerper, k)
+        mitte_vor = k["foot.L"].y - (ferse + spitze) / 2
+        sohlen = [self.knoechel[s] - self.pn * ueber_sohle + self._zehenrichtung(s) * mitte_vor for s in "LR"]
+        platte = (sohlen[0] + sohlen[1]) / 2
+        platte.x = 0.0
+        # Höhe: die Platte `PLATTE_Z` über dem Boden; alles im Raum des Skeletts um dieselbe Höhe verschieben
+        dz = self.PLATTE_Z - rig.welt(platte).z
+        hoch = Vector((0, 0, dz))
+        self.verschiebung += hoch
+        self.ebene = hoch.copy()  # ein Punkt der Polsteroberfläche (Raum des Skeletts), Normale n
+        for s in "LR":
+            self.knoechel[s] = self.knoechel[s] + hoch
+            self.huefte0[s] = self.huefte0[s] + hoch
+        platte = platte + hoch
+        # Die Füße etwas über dem unteren Rand der Platte (Text): Platte so lang, dass vor den Zehen und hinter den
+        # Fersen Platz bleibt; ihre Mitte etwas vor der Mitte der Füße
+        vorn_p = Vector((0, -math.cos(math.radians(self.PLATTE)), math.sin(math.radians(self.PLATTE))))
+        self.platte = platte + vorn_p * 0.04
+        self.weg = (0.0, self._weg_fuer(self.KNIE_UNTEN))
+        # Schulterpolster: Unterseite auf der Oberseite der Schultern (am weitesten die Schiene hinauf), `SCHULTER_TIEF`
+        rig.zuruecksetzen()
+        self._torso(0.0)
+        self._beine()
+        rig.anwenden()
+        netz = [rig.lokal(p) for p in _netz(self.koerper)]
+        self.schulter_lage = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            pk = [netz[i] for i in self.schulter_i[s]]
+            top = max(pk, key=lambda q: q.dot(self.v))
+            mitte = sum(pk, Vector()) / len(pk)
+            # Mitte der Auflage: quer bei `SCHULTERPOLSTER_X`, längs der Normalen in der Mitte der Schulterpunkte, längs
+            # der Schiene am höchsten Punkt, `SCHULTER_TIEF` darin
+            auflage = Vector((sx * self.SCHULTERPOLSTER_X * self.mass, mitte.y, mitte.z))
+            auflage = auflage + self.v * ((top - auflage).dot(self.v) - self.SCHULTER_TIEF)
+            self.schulter_lage[s] = auflage
+        # Griffe neben den Schulterpolstern: vor und unter dem Schultergelenk, Achse aus dem Polster zur Person
+        self.griff_lage = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            S = rig.punkt("shoulder01." + s, k["upperarm01." + s])
+            mitte = S + X * (sx * self.GRIFF_SEITE * self.mass) + self.n * self.GRIFF_VOR - self.v * self.GRIFF_TIEF
+            # Achse vom Zeigefinger zum kleinen Finger: zum Polster hin (Daumen vorn, Handflächen zueinander)
+            self.griff_lage[s] = (mitte, self.n * self.GRIFF_ACHSE)
+        rig.zuruecksetzen()
+        # Mitte der Polsteroberfläche: auf der Ebene `ebene` mit der Normalen n, längs der Schiene 32 cm über der Mitte
+        # der Hüftgelenke (das Polster reicht vom Gesäß bis zum Kopf)
+        H = (self.huefte0["L"] + self.huefte0["R"]) / 2
+        mitte_lehne = H + self.v * 0.32
+        mitte_lehne = mitte_lehne - self.n * (mitte_lehne - self.ebene).dot(self.n)
+        self.lehne_mitte = mitte_lehne
+        import geraete as g
+
+        self.geraet = g.hackenschmidt(rig.welt(mitte_lehne), {s: rig.welt(p) for s, p in self.schulter_lage.items()},
+                                      {s: (rig.welt(m), kk) for s, (m, kk) in self.griff_lage.items()}, rig.welt(self.platte),
+                                      self.PLATTE, self.weg[1])
+        # Leerobjekt des Schlittens; nicht `schlitten` genannt: Daran misst `render.pruefen` die Sohlen (Beinpresse, Platte am
+        # Schlitten), hier steht die Platte fest
+        self.wagen = self.geraet["schlitten"]
+        self.M_wagen0 = self.wagen.matrix_world.copy()
+        self.polster_ruhe = {o.name: geraete.weiches_polster(o) for o in self.polster_objekte()}
+        self.griff = {s: rig.griff(s, 0.6, self.GRIFF_R, schraeg=0.0) for s in "LR"}
+
+    def _welt_im_schlitten(self, p: Vector, weg: float) -> Vector:
+        """Punkt am Schlitten (Raum des Skeletts im Ausgang) in der Welt, wenn der Schlitten um `weg` hinab gefahren ist."""
+        return self.rig.welt(p + self.u * weg)
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self.geloest = True
+            self._loesen()
+        super().setzen(p)
+        self.delle = geraete.eindruecken(self.polster_objekte(), self.polster_ruhe, self.auflage())
+
+    def sohle_ebene(self) -> tuple[Vector, Vector]:
+        return self.rig.welt(self.platte), self.pn.copy()
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        weg = self.weg[0] + (self.weg[1] - self.weg[0]) * p
+        self.weg_jetzt = weg
+        self.wagen.matrix_world = Matrix.Translation(self.u * weg) @ self.M_wagen0
+        self._torso(weg)
+        beine = self._beine()
+        arme = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            mitte, kk = self.griff_lage[s]
+            arme[s] = rig.arm(s, self.griff[s], mitte + self.u * weg, kk, (-self.v + X * (sx * 0.4)).normalized(),
+                              self.STRECKUNG)
+        L, A = beine["L"], arme["L"]
+        rumpf = (rig.punkt("spine01", rig.kopf["spine01"]) - rig.punkt("spine05", rig.kopf["spine05"])).normalized()
+        oberschenkel = (L["knie"] - L["huefte"]).normalized()
+        schienbein = (L["knie"] - L["knoechel"]).normalized()
+        zehen = self._zehenrichtung("L")
+        n_achse = zehen.cross(self.pn).normalized()
+        if n_achse.x < 0:
+            n_achse = -n_achse
+        self.werte = {
+            "Kniewinkel (Grad)": self.kniewinkel(L),
+            "Hüftwinkel (Grad)": math.degrees(oberschenkel.angle(rumpf)),
+            "Sprunggelenk gebeugt (Grad)": 90.0 - math.degrees(schienbein.angle(zehen)),
+            "Knie neben der Fußachse (cm, + außen)": (L["knie"] - L["knoechel"]).dot(n_achse) * 100,
+            "Knie vor der Zehenspitze (cm, längs des Fußes)": (L["knie"] - (L["knoechel"] + zehen * self.zehen_laenge)).dot(zehen) * 100,
+            "Schlitten: Weg von oben (cm)": weg * 100,
+            "Oberschenkel zur Platte (Grad, + Knie höher)": 90.0 - math.degrees(oberschenkel.angle(self.pn)),
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+        }
+
+    def zusatzwerte(self) -> dict:
+        """Rücken, Kreuzbein und Kopf am Polster (mm, an der Oberfläche vor dem Eindrücken), Schulterpolster auf den
+        Schultern, tiefste Delle und was durch die eingedrückte Oberfläche ragt; Sohlen auf der Platte misst
+        `render.messen`."""
+        aus = {}
+        netz = _netz(self.koerper)
+        lehne, *schulter = self.polster_objekte()
+        aus["Unterer Rücken im Polster (mm, schwächste Stelle)"] = min(Beinpresse._im_polster(netz, b, lehne)
+                                                                       for b in self.lenden_baender) * 1000
+        aus["Kreuzbein im Polster (mm)"] = Beinpresse._im_polster(netz, self.kreuz_i, lehne) * 1000
+        aus["Oberer Rücken im Polster (mm)"] = Beinpresse._im_polster(netz, self.brust_i, lehne) * 1000
+        aus["Gesäß im Polster (mm)"] = Beinpresse._im_polster(netz, self.gesaess_i, lehne) * 1000
+        haare = bpy.data.objects.get("Haare")
+        if haare is not None:
+            he = haare.evaluated_get(bpy.context.evaluated_depsgraph_get())
+            me = he.to_mesh()
+            punkte = [he.matrix_world @ v.co for v in me.vertices]
+            he.to_mesh_clear()
+            aus["Kopf (Haare) in der Lehne (mm)"] = Beinpresse._im_polster(punkte, range(len(punkte)), lehne) * 1000
+        for s, obj in zip("LR", schulter):
+            aus[f"Schulterpolster {s} auf der Schulter (mm)"] = Beinpresse._im_polster(netz, self.schulter_i[s], obj) * 1000
+        aus["Polster: tiefste Delle (mm)"] = self.delle * 1000
+        aus["Polster: Haut oder Kleidung durch die Oberfläche (mm)"] = geraete.durch_polster(self.polster_objekte(),
+                                                                                           self.auflage()) * 1000
+        # Abstand zu den übrigen Teilen der Maschine (Griffhalter, Schienen, Rahmen): ohne Polster, Griffe und Fußplatte
+        import schuhe
+
+        namen = {gr.index: gr.name for gr in self.koerper.vertex_groups}
+        verts = self.koerper.data.vertices
+
+        def gruppe(v, *anfang) -> bool:
+            return sum(x.weight for x in v.groups if namen[x.group].startswith(anfang)) > 0.5
+
+        def kleidung(*teile) -> list[Vector]:
+            return [q for t in teile if t in bpy.data.objects for q in schuhe._verformt(bpy.data.objects[t])[0]]
+
+        abstand = self._maschine_abstand()
+        aus["Arme zur Maschine (mm, ohne Polster und Griffe)"] = abstand(
+            [q for v, q in zip(verts, netz) if gruppe(v, "upperarm", "lowerarm", "shoulder")]) * 1000
+        aus["Beine, Shorts und Socken zur Maschine (mm, ohne Fußplatte)"] = abstand(
+            [q for v, q in zip(verts, netz) if gruppe(v, "upperleg", "lowerleg")] + kleidung("Shorts", "Socken")) * 1000
+        aus["Kopf und Haare zur Maschine (mm, ohne Polster)"] = abstand(
+            [q for v, q in zip(verts, netz) if gruppe(v, "head", "neck", "jaw", "eye")] + kleidung("Haare")) * 1000
+        return aus
+
+    def _maschine_abstand(self):
+        """Abstand von Punkten zur Maschine ohne Rücken- und Schulterpolster, Griffe und Fußplatte (m)."""
+        from mathutils.bvhtree import BVHTree
+
+        dg = bpy.context.evaluated_depsgraph_get()
+        g = self.geraet
+        frei = set(self.polster_objekte()) | set(g["griffe"].values())
+        ecken, flaechen = [], []
+        for obj in g["wurzel"].children_recursive:
+            if obj.type != "MESH" or obj in frei or obj.name.startswith("Fussplatte"):
+                continue
+            oe = obj.evaluated_get(dg)
+            me = oe.to_mesh()
+            n0 = len(ecken)
+            ecken += [oe.matrix_world @ v.co for v in me.vertices]
+            flaechen += [tuple(n0 + i for i in f.vertices) for f in me.polygons]
+            oe.to_mesh_clear()
+        baum = BVHTree.FromPolygons(ecken, flaechen)
+
+        def abstand(pkte) -> float:
+            best = 1.0
+            for q in pkte:
+                t = baum.find_nearest(q, best)
+                if t[0] is not None:
+                    best = min(best, t[3])
+            return best
+
+        return abstand
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
-                               SchulterdrueckenMaschine, KlimmzugUnterstuetzt, DipUnterstuetzt)}
+                               SchulterdrueckenMaschine, KlimmzugUnterstuetzt, DipUnterstuetzt,
+                               Hackenschmidt)}

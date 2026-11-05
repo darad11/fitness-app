@@ -234,6 +234,16 @@ MESSWERTE = (
      " cm"),
     ("Körpermitte hinter der Linie der Griffe (cm)", "Körpermitte (Mittel aller Punkte) hinter der Linie der Griffe", "spanne",
      " cm"),
+    # Hackenschmidt-Kniebeuge (D-511)
+    ("Knie vor der Zehenspitze (cm, längs des Fußes)", "Knie vor der Zehenspitze (unter 0 = dahinter)", "spanne", " cm"),
+    ("Oberschenkel zur Platte (Grad, + Knie höher)", "Oberschenkel zur Platte (unter 0 = Hüfte höher)", "spanne", "°"),
+    ("Gesäß im Polster (mm)", "Gesäß im Rückenpolster", "spanne", " mm"),
+    ("Schulterpolster L auf der Schulter (mm)", "Schulterpolster auf der Schulter (links)", "spanne", " mm"),
+    ("Schulterpolster R auf der Schulter (mm)", "Schulterpolster auf der Schulter (rechts)", "spanne", " mm"),
+    ("Arme zur Maschine (mm, ohne Polster und Griffe)", "Arme zur Maschine (ohne Polster und Griffe)", "min", " mm"),
+    ("Beine, Shorts und Socken zur Maschine (mm, ohne Fußplatte)", "Beine, Shorts und Socken zur Maschine (ohne Platte)", "min",
+     " mm"),
+    ("Kopf und Haare zur Maschine (mm, ohne Polster)", "Kopf und Haare zur Maschine (ohne Polster)", "min", " mm"),
     # Dips mit Unterstützung (D-510)
     ("Oberarm zum Rumpf (Grad)", "Oberarm zum Rumpf (Schulter gestreckt)", "spanne", "°"),
     ("Lehne vor", "Oberkörper vorgeneigt", "spanne", "°"),
@@ -320,7 +330,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "beingriff_vorn": "Hand am Griff von vorn", "presse_vorn": "Hand am Griff von vorn",
               "presse_aussen": "Hand am Griff von außen", "klimmzug_vorn": "Hand am Griff von vorn",
               "klimmzug_hinten": "Hand am Griff von hinten", "dip_aussen": "Hand am Dipgriff von außen",
-              "dip_hinten": "Hand am Dipgriff von hinten"}
+              "dip_hinten": "Hand am Dipgriff von hinten", "hack_vorn": "Hand am Griff von vorn",
+              "hack_aussen": "Hand am Griff von außen"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

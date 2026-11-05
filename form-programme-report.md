@@ -2270,12 +2270,53 @@ Prüfseite: `docs/screens/uebungen/familie-waagrechtes-druecken-dip.webp`, Kamer
 | „Beug die Arme und senk den Körper, bis du eine leichte Dehnung in den Schultern spürst.“ | unten Oberarm etwa waagrecht, 59° hinter dem Rumpf |
 | „Drück dich hoch, bis die Arme gestreckt sind.“ | zurück bis 172° im Ellbogen |
 
+### 51.2 Hackenschmidt-Kniebeuge (Kniebeuge, D-511)
+
+Prüfseite: `docs/screens/uebungen/familie-kniebeuge-hackenschmidt.webp`, Kameravergleich: `docs/screens/uebungen/kniebeuge-hackenschmidt-kameras.webp`.
+
+- **Maschine (neu):** Hack-Squat-Maschine mit Scheiben nach der üblichen Bauart, Maße geschätzt. Zwei Schienen unter 45° hinter dir, darauf der Schlitten mit Rückenpolster, Schulterpolstern und Griffen; vorn unten die feste Fußplatte, vorn 15° höher.
+- **Bewegung:** Der Rücken liegt die ganze Zeit gleich am Polster und fährt mit dem Schlitten 33 cm die Schiene hinab. Nur Hüfte, Knie und Sprunggelenke beugen sich. Oben sind die Beine fast gestreckt (Knie 168°), unten hat das Knie 75°, die Oberschenkel stehen fast parallel zur Platte.
+- **Füße:** Die Linie von der Hüfte zum Fußgelenk steht oben fast in der Richtung der Schiene. Im ersten Versuch standen die Füße unter der Hüfte; dann schoben sich die Knie unten 23 cm vor die Zehen. Jetzt bleiben sie 3 cm dahinter, das Sprunggelenk beugt sich unten 22°.
+- **Rücken am Polster:** wie bei der Beinpresse, die Lende etwas flacher. Das Gesäß drückt das Polster 17 bis 19 mm ein (an der Beinpresse das Kreuzbein 19 bis 26 mm); Lende, oberer Rücken und Kopf liegen an.
+- **Schulterpolster und Griffe:** Die Schulterpolster sitzen außen auf den Schultern; weiter innen lagen die Haare darin. Die Hände halten Griffe neben der Brust, der Ellbogen ist 49° gebeugt, das Handgelenk gerade.
+- **Kamera:** 60° schräg von vorn: Knie, Füße und der Weg des Schlittens sind gut zu sehen.
+
+| Messwert über alle 60 Bilder | Wert |
+|---|---|
+| Knie oben / unten | 168,0° / 75,0° |
+| Hüfte (Oberschenkel zum Rumpf) oben / unten | 174,3° / 132,6° |
+| Sprunggelenk oben / unten | 23,0° gestreckt / 21,9° gebeugt |
+| Knie neben der Fußachse / unten hinter der Zehenspitze | 3,5 bis 4,4 cm außen / 3,2 cm |
+| Oberschenkel unten zur Platte | 7° vor parallel |
+| Weg des Schlittens | 33,3 cm |
+| Sohlen auf der Platte | flach (0,0 mm), nicht verschoben (0,1 mm) |
+| Lende / Gesäß / oberer Rücken / Kopf im Polster | 2,7 bis 3,0 / 16,9 bis 19,2 / 4,1 / 2,8 mm |
+| Schulterpolster auf den Schultern | 5,7 mm |
+| Tiefste Delle / durch die Oberfläche | 38,4 mm (Shorts am Gesäß) / 0,0 mm |
+| Arme / Beine / Kopf zur Maschine | mindestens 50,7 / 45,4 / 67,2 mm |
+| Ellbogen / Handgelenk / Finger im Griff | 48,8° / 8,6° / 4,6 mm |
+| Kleidung, Meldungen des Rigs | ohne Durchdringung, 0 |
+
+**Abgleich mit dem Ausführungstext:** passt bis auf die Tiefe (Frage 3).
+
+| Text in der App | Animation |
+|---|---|
+| „Lehn dich mit dem Rücken an das Polster, die Schultern liegen unter den Schulterpolstern.“ | Rücken am Polster, Schulterpolster auf den Schultern |
+| „Stell die Füße etwas höher als den unteren Rand auf die Plattform.“ | Platte 50 cm tief, ihre Mitte 4 cm vor der Mitte der Füße: die Fersen stehen ein Stück über dem unteren Rand |
+| „Senk den Schlitten ab, indem du Knie und Hüfte beugst.“ | Knie 168° → 75°, Hüfte 174° → 133° |
+| „Geh so tief, bis die Knie kurz vor der vollen Beugung sind.“ | unten 75° im Knie, Oberschenkel fast parallel zur Platte |
+| „Drück dich zurück nach oben, bis die Beine gestreckt sind.“ | oben 168°, nicht durchgedrückt |
+| „Führ die Knie in Linie mit den Füßen.“ | Knie über der Fußachse, 3,5 bis 4,4 cm außen |
+| „Geh nur so tief, wie der Rücken am Polster bleibt.“; Fehler „Fersen heben sich“, „Becken löst sich“ | Rücken und Becken in jeder Phase am Polster, Sohlen flach |
+
 ### 51.3 Deine Entscheidungen
 
 Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
 
 1. **Dip, Vorneigung:** Unten neigt sich der Oberkörper 24° vor (Brust und Trizeps). Aufrechter betont den Trizeps; dann stehen die Unterarme unten schräger (mit 16° Vorneigung gemessen 18,7°, mit 24° 12,8°). Vorschlag: 24° lassen.
 2. **Dip, Diparme:** lange Arme, außen an den Säulen geschwenkt (Annahme). Hat die Maschine in deinem Studio feste Dipgriffe an eigenen Stützen, baue ich sie so.
+3. **Machine Squat, Tiefe:** unten 75° im Knie, die Oberschenkel fast parallel zur Platte (Familie: 100 bis 120° gebeugt). Der Text sagt „kurz vor der vollen Beugung“; tiefer ginge, dann beugen sich Hüfte und Sprunggelenk weiter. Vorschlag: 75° lassen.
+4. **Machine Squat, Maschine:** Hack-Squat-Maschine mit Scheiben, Schlitten unter 45°, Fußplatte 15° geneigt, Griffe neben der Brust (Annahme). Steht in deinem Studio eine andere Bauart, etwa mit Gewichtsblock oder Griffen an den Schulterpolstern, baue ich sie danach.
 
 ### 51.4 Berichte zu den Paketen
 
@@ -2288,4 +2329,15 @@ Ausgeführte Tests: drei Probeläufe, Kameravergleich, render.py dip_unterstuetz
 Ergebnis: bestanden (Werte in 51.1)
 Bekannte Einschränkungen: Maße der Diparme geschätzt; die Schleife des Pull-Ups zeigt bis zum Neu-Rendern die kurzen Dipgriffe
 Nächste Schritte: Prüfseite Machine Squat (D-511), dann Halt bis zu deiner Freigabe beider Prüfseiten
+```
+
+```
+Arbeitspaket: D-511 Phase Programme, Prüfseite Hackenschmidt-Kniebeuge (Kniebeuge, Machine Squat) an einer neuen Maschine
+Umgesetzte Funktionen: keine in der App; Werkzeug: Hackenschmidt-Maschine (geraete.hackenschmidt), Übung uebungen.Hackenschmidt mit Messwerten zu Knie, Hüfte, Sprunggelenk, Rücken- und Schulterpolstern und Abständen zur Maschine, Zeilen der Prüfseite, Prüfung der Socke bei geneigter Platte (render.messen); erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/render.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-kniebeuge-hackenschmidt.webp (neu), docs/screens/uebungen/kniebeuge-hackenschmidt-kameras.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-511
+Ausgeführte Tests: Probeläufe (Fußstellung gerechnet und gemessen, Rücken in zwölf Fassungen, Griffe in 15 Fassungen), Kameravergleich, render.py hackenschmidt --pruefen (alle 60 Bilder), Nahaufnahmen, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 51.2)
+Bekannte Einschränkungen: Maße der Maschine geschätzt
+Nächste Schritte: Halt bis zu deiner Freigabe beider Prüfseiten und deinen Antworten in 51.3; danach Schleifen Dip und Machine Squat, Pull-Up neu mit den Diparmen, dann die nächsten Familien (Beine isoliert, Arme beugen und strecken)
 ```

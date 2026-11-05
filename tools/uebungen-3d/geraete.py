@@ -1006,3 +1006,112 @@ def klimmzugmaschine(griffe: dict, polster: Vector, lager: Vector, turm_y: float
     return {"wurzel": wurzel, "polster": [kissen], "traeger": traeger, "traeger0": traeger.matrix_world.copy(),
             "hebel": hebel_obj, "hebel0": hebel0, "griffe": griff_obj, "dipgriffe": dip_obj, "block": block,
             "block0": block.matrix_world.copy(), "rahmen": teile}
+
+
+# Hackenschmidt-Maschine (D-511) nach der üblichen Bauart der Hack-Squat-Maschinen mit Scheiben (Hammer Strength, Cybex,
+# Life Fitness; die Seiten der Hersteller lassen sich in der Cloud-Umgebung nicht öffnen, die Maße sind geschätzt): zwei
+# Schienen unter 45° hinter der Person, darauf der Schlitten mit Rückenpolster, zwei Schulterpolstern und Griffen,
+# hinten die Hörner für die Scheiben; vorn unten die feste Fußplatte, vorn höher geneigt.
+HACKENSCHMIDT = {"schiene": 45.0, "platte": (0.74, 0.50, 0.03), "lehne": (0.36, 1.00, 0.07), "schulter": (0.10, 0.20, 0.08),
+                 "schienen_abstand": 0.52, "griff_d": 0.032, "griff_l": 0.13, "polster_rund": 0.025}
+
+
+def hackenschmidt(lehne: Vector, schulter: dict, griffe: dict, platte: Vector, platte_neigung: float, weg: float) -> dict:
+    """Hackenschmidt-Maschine, Person mit Blick nach −y, das Rückenpolster hinter ihr (D-511).
+
+    `lehne`: Mitte der Oberfläche des Rückenpolsters im Ausgang (Welt); Polster und Schienen steigen unter `schiene` Grad
+    nach +y. `schulter`: je Seite Mitte der Unterseite eines Schulterpolsters (Welt, liegt auf der Schulter). `griffe`:
+    je Seite Mitte und Richtung eines Griffs (Welt). `platte`: Mitte der Oberfläche der Fußplatte, `platte_neigung` Grad
+    vorn höher. `weg`: so weit fährt der Schlitten von oben nach unten (m, längs der Schiene). Polster, Griffe und Wagen
+    hängen am Leerobjekt „Schlitten“ in der Mitte der Oberfläche des Rückenpolsters; `polster` sind Rücken- und
+    Schulterpolster."""
+    b = HACKENSCHMIDT
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    X = Vector((1, 0, 0))
+    a = math.radians(b["schiene"])
+    v = Vector((0, math.cos(a), math.sin(a)))  # die Schiene hinauf, nach hinten oben
+    n = Vector((0, -math.sin(a), math.cos(a)))  # aus dem Polster zur Person
+    wurzel = bpy.data.objects.new("Hackenschmidt", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    lw, ll, ld = b["lehne"]
+    R_lehne = Matrix((X, v, n)).transposed()
+    # Schienen hinter dem Polster, von knapp über dem Boden bis über das obere Ende des Schlittens hinaus
+    tief = n * (ld + 0.12)
+    oben = lehne + v * (ll / 2 + 0.25) - tief
+    unten = lehne - v * (ll / 2 + weg + 0.10) - tief
+    if unten.z < 0.12:
+        unten = unten + v * ((0.12 - unten.z) / v.z)
+    for seite in (-1, 1):
+        o = X * (seite * b["schienen_abstand"] / 2)
+        _stab("Schiene", unten + o, oben + o, 0.03, stahl, wurzel, ecken=24)
+        _stab("Schienenstuetze", Vector((o.x, oben.y + 0.04, 0.05)), oben + o + Vector((0, 0.04, 0.03)), 0.04, rahmen, wurzel, ecken=16)
+        _stab("Schienenfuss", Vector((o.x, unten.y, 0.05)), unten + o, 0.04, rahmen, wurzel, ecken=16)
+        _kasten("Schienenkopf", (0.09, 0.12, 0.10), oben + o + Vector((0, 0.02, 0.02)), rahmen, 0.006, wurzel)
+    # Fußplatte: fest, vorn höher, auf einem Bock vom Boden
+    pw, pt, pd = b["platte"]
+    w = math.radians(platte_neigung)
+    vorn = Vector((0, -math.cos(w), math.sin(w)))  # längs der Platte nach vorn (oben)
+    pn = Vector((0, math.sin(w), math.cos(w)))  # Normale der Platte
+    R_platte = Matrix((X, -vorn, pn)).transposed()
+    _quader("Fussplatte", (pw, pt, pd), platte - pn * (pd / 2), R_platte, _mat("Platte", GERAET, 0.75), 0.006, wurzel)
+    for seite in (-1, 1):
+        for ende in (-1, 1):
+            fuss = platte + X * (seite * (pw / 2 - 0.06)) + vorn * (ende * (pt / 2 - 0.06)) - pn * pd
+            _stab("Plattenbock", Vector((fuss.x, fuss.y, 0.05)), fuss, 0.025, rahmen, wurzel, ecken=16)
+    # Grundrahmen: Längsträger von vor der Platte bis hinter die Stützen, Querträger
+    y_vorn = platte.y - pt / 2 - 0.10
+    y_hinten = oben.y + 0.12
+    for seite in (-1, 1):
+        _kasten("Grundtraeger", (0.08, y_hinten - y_vorn, 0.06), Vector((seite * 0.40, (y_vorn + y_hinten) / 2, 0.03)), rahmen,
+                0.005, wurzel)
+    for y in (y_vorn + 0.04, platte.y, unten.y, y_hinten - 0.04):
+        _kasten("Quertraeger", (0.88, 0.06, 0.06), Vector((0, y, 0.06)), rahmen, 0.005, wurzel)
+    # Schlitten: Leerobjekt in der Mitte der Polsteroberfläche, Rückenpolster, Wagen mit Lagern auf den Schienen
+    schlitten = bpy.data.objects.new("Schlitten", None)
+    bpy.context.scene.collection.objects.link(schlitten)
+    schlitten.parent = wurzel
+    schlitten.matrix_world = Matrix.Translation(lehne) @ R_lehne.to_4x4()
+    kissen = _quader("Rueckenpolster", (lw, ll, ld), lehne - n * (ld / 2), R_lehne, polster_mat, b["polster_rund"])
+    _anhaengen(kissen, schlitten)
+    _anhaengen(_quader("Polsterplatte", (lw - 0.04, ll - 0.04, 0.02), lehne - n * (ld + 0.01), R_lehne, rahmen, 0.004), schlitten)
+    wagen = lehne - n * (ld + 0.06)
+    _anhaengen(_quader("Wagen", (b["schienen_abstand"] + 0.08, ll * 0.7, 0.04), wagen, R_lehne, rahmen, 0.006), schlitten)
+    for seite in (-1, 1):
+        for ende in (-1, 1):
+            m = lehne - tief + X * (seite * b["schienen_abstand"] / 2) + v * (ende * ll * 0.3)
+            _anhaengen(_quader("Schienenlager", (0.09, 0.14, 0.09), m, R_lehne, rahmen, 0.008), schlitten)
+        # Horn für Scheiben hinten am Wagen, seitlich
+        fuss = wagen - n * 0.04 + X * (seite * (b["schienen_abstand"] / 2 + 0.04)) - v * 0.10
+        _anhaengen(_stab("Horn", fuss, fuss + X * (seite * 0.30), 0.025, stahl), schlitten)
+    # Schulterpolster: vom Rückenpolster nach vorn über die Schultern; Träger hinten zum Wagen
+    sw, sl, sd = b["schulter"]
+    schulter_obj = []
+    for s, unterseite in schulter.items():
+        ab = (unterseite - lehne).dot(n)  # Abstand der Auflage vor der Polsteroberfläche
+        # Oberseite des Kastens (+z, dort drückt `eindruecken` ein) zur Schulter hin, also die Schiene hinab
+        mitte = unterseite + v * (sd / 2) - n * ab + n * (sl / 2)
+        obj = _quader("Schulterpolster." + s, (sw, sl, sd), mitte, Matrix((X, n, -v)).transposed(), polster_mat, 0.03)
+        _anhaengen(obj, schlitten)
+        schulter_obj.append(obj)
+        traeger_von = unterseite + v * (sd + 0.03) - n * ab
+        _anhaengen(_balken("Schultertraeger", traeger_von, traeger_von - n * (ld + 0.06), (0.05, 0.05), rahmen), schlitten)
+    # Griffe neben den Schulterpolstern, mit Haltern zum Schulterträger
+    griff_obj = {}
+    for s, (mitte, k) in griffe.items():
+        k = k.normalized()
+        halb = k * (b["griff_l"] / 2)
+        g = _stab("Griff." + s, mitte - halb, mitte + halb, b["griff_d"] / 2, gummi)
+        _anhaengen(g, schlitten)
+        griff_obj[s] = g
+        # Halter vom Ende am Polster gerade nach hinten bis auf Höhe des Wagens, dann quer zu ihm: So liegt er nicht unter
+        # dem Unterarm (quer zum Rückenpolster kam der Unterarm bis 0,8 mm an ihn heran)
+        hinten = mitte + halb if (mitte + halb - lehne).dot(n) < (mitte - halb - lehne).dot(n) else mitte - halb
+        unten_h = hinten - n * ((hinten - lehne).dot(n) + ld + 0.04)
+        seite = Vector((math.copysign(b["schienen_abstand"] / 2 + 0.04, mitte.x), unten_h.y, unten_h.z))
+        _anhaengen(_stab("Griffhalter", hinten, unten_h, 0.014, rahmen, ecken=16), schlitten)
+        _anhaengen(_stab("Griffhalter", unten_h, seite, 0.014, rahmen, ecken=16), schlitten)
+    return {"wurzel": wurzel, "schlitten": schlitten, "polster": [kissen, *schulter_obj], "griffe": griff_obj,
+            "v": v, "n": n, "R_platte": R_platte, "platte": platte, "pn": pn}

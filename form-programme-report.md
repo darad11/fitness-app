@@ -2781,6 +2781,45 @@ Rumpf und Beine stehen still, es bewegen sich nur Arme und Schulterblätter: kei
 
 Je 60 Bilder, gerendert in 3024 bis 4668 s (zum Teil zwei Schleifen gleichzeitig, daneben die Prüfläufe der nächsten Familien); erstes und letztes Bild pixelgleich, kein Sprung am Ende; Kontaktbögen angesehen. Die rund 120 KB aus deiner Entscheidung zu den Hammercurls (D-517) habe ich auf deren doppelt lange Schleife bezogen. Die High Row liegt mit 165 KB im Bereich der anderen Maschinen (Rudern am Kabel 167 KB, Beinpresse 189 KB). 26 Übungen haben jetzt eine Animation (vorher 23). Aufnahme: `docs/screens/uebungen/waagrechtes-ziehen-pplc-bewegung.mp4`, die drei Schleifen nebeneinander mit Namen, 1440 × 360, 7,5 s.
 
+### 57.2 Schulter und Brust isoliert (D-521)
+
+**Fliegende am Kabel, Schrittstellung (deine Entscheidung 4).** Ein Fuß steht vor dem anderen, die Füße etwa schulterbreit: die Fußgelenke 17 cm neben der Mitte (33 cm auseinander), das linke 18 cm vor, das rechte 18 cm hinter der Stelle, über der der Rumpf steht. Beide Sohlen liegen flach. Der Oberkörper bleibt wie auf der Prüfseite 15° aus der Hüfte vorgeneigt, die Knie leicht gebeugt. Gemessen über alle 60 Bilder:
+
+| Messwert | Prüfseite (D-519) | jetzt |
+|---|---|---|
+| Stand | hüftbreit, parallel | Schrittstellung, Füße 36 cm vor- und hintereinander, etwa schulterbreit |
+| Knie | 165° | vorn 165,0°, hinten 162,9° |
+| Oberkörper aus der Hüfte vor | 15° | 15° |
+| Sohlen (Ferse und Ballen) über dem Boden | 0,0 mm | 0,0 mm, nicht verschoben |
+| Ellbogen | 160° fest | 160° fest |
+| Handgelenk, höchstens | 2,5° | 2,5° |
+| Kabel zur Haut (ohne Hände), mindestens | 34 mm | 34 mm |
+| Streben des D-Griffs zur Haut, mindestens | 1,0 mm | 1,0 mm |
+| Hände am Ende auseinander | 24 mm | 24 mm |
+| Gewichtsblock gehoben, höchstens | 89 cm | 89 cm |
+| Meldungen des Rigs | 0 | 0 |
+
+**Text (deine Entscheidung 4: „Passe den Text an, falls nötig“).** Nötig war es, der Text nannte keinen Stand. ExRx („Cable Isolateral Standing Fly“) nennt keinen. ACE („Standing Decline Cable Flyes“) nennt die Schrittstellung, will den Oberkörper aber senkrecht. Human Kinetics („Try this move: cable fly“, aus Brad Schoenfelds „The M.A.X. Muscle Plan 2.0“, eine zugelassene Quelle) beschreibt genau deine Ausführung: Schrittstellung, Füße etwa schulterbreit, Oberkörper leicht vorgeneigt, obere Rollen, die Hände treffen sich etwa auf Höhe der Taille. Gelesen habe ich die Seiten über die Websuche, weil das Netz dieser Arbeitsumgebung acefitness.org und exrx.net nicht zulässt.
+
+| | vorher | jetzt |
+|---|---|---|
+| Ausgangsposition | „Beug Hüfte und Knie leicht, beug auch die Ellbogen leicht.“ | „Stell einen Fuß vor den anderen, die Füße etwa schulterbreit auseinander.“ · „Beug Hüfte und Knie leicht und neig den Oberkörper aus der Hüfte leicht nach vorn. Beug auch die Ellbogen leicht.“ |
+| Ausführung, Schritt 1 | „Führ die Griffe in einer umarmenden Bewegung vor dem Körper zusammen.“ | „…, bis sich die Hände etwa auf Höhe der Taille treffen.“ |
+| Hinweis 2 | „Lehn dich aus der Hüfte leicht nach vorn, so hält dein Oberkörper dem Zug der Kabel stand.“ | „Halte den Oberkörper fest. Die Neigung aus der Hüfte hilft ihm, dem Zug der Kabel standzuhalten.“ |
+| Quellen | ExRx | ExRx, Human Kinetics |
+| Quellenhinweis | „Beschreibt die Variante im Stand an den oberen Rollen; …“ | ergänzt: „Schrittstellung und Hände auf Höhe der Taille nach Human Kinetics, am 05.11.2026 gelesen.“ |
+
+**Reverse Butterfly (deine Entscheidung 5):** Daumen oben, wie auf der Prüfseite. Mit dem Code dieses Pakets nachgemessen: alle Werte wie auf der Prüfseite, 0 Meldungen.
+
+**In der App:**
+
+| Übung | MP4 | WebM | Poster | Vorschau | zusammen | Alternativtext |
+|---|---|---|---|---|---|---|
+| Fliegende am Kabel | 79,4 KB | 71,0 KB | 13,0 KB | 4,1 KB | 167,4 KB | 225 Zeichen |
+| Reverse Butterfly an der Maschine | 76,1 KB | 61,7 KB | 13,3 KB | 5,1 KB | 156,1 KB | 222 Zeichen |
+
+Je 60 Bilder, gerendert in 6219 und 6661 s (gleichzeitig, daneben die Prüfläufe der nächsten Familien; darin rund 23 min angehalten, während die E2E-Tests von D-520 liefen); erstes und letztes Bild pixelgleich, kein Sprung am Ende; Kontaktbögen angesehen. 28 Übungen haben jetzt eine Animation (vorher 26). Aufnahme: `docs/screens/uebungen/schulter-brust-pplc-bewegung.mp4`, beide Schleifen nebeneinander mit Namen, 960 × 360, 7,5 s.
+
 ### 57.3 Berichte zu den Paketen
 
 ```
@@ -2792,4 +2831,15 @@ Ausgeführte Tests: Rumpf und Lende über alle 60 Bilder, High Row nach dem Abgl
 Ergebnis: bestanden
 Bekannte Einschränkungen: Maße der Rudermaschine geschätzt, wie freigegeben; exrx.net nur über die Websuche gelesen (Netz der Arbeitsumgebung); bei der High Row folgt der Unterarm dem Zug nicht ganz (29 bis 49°)
 Nächste Schritte: Schleifen „Schulter und Brust isoliert“ (D-521), danach die Prüfseiten „Senkrechtes Drücken“, „Hüftbeuge“ und „Rumpf“, Halt bis zu deiner Freigabe
+```
+
+```
+Arbeitspaket: D-521 Phase Programme, Schulter und Brust isoliert in der App: Fliegende am Kabel in Schrittstellung, Reverse Butterfly mit Daumen oben
+Umgesetzte Funktionen: Animationen für Fliegende am Kabel und Reverse Butterfly an der Maschine in der App; Fliegende in Schrittstellung mit leicht vorgeneigtem Oberkörper; Ausführungstext cable_fly mit Schrittstellung und Händen auf Höhe der Taille nach Human Kinetics; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py (FliegendeKabel), src/modules/exercises/data/exercise-guides.v1.json, public/uebungen/medien/fliegende_kabel*, reverse_butterfly* (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/schulter-brust-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-521
+Ausgeführte Tests: Fliegende in Schrittstellung über alle 60 Bilder, beide Übungen mit dem neuen Code nachgemessen (unverändert); zwei Schleifen je 60 Bilder, Naht pixelgleich, Kontaktbögen angesehen; format:check, lint, typecheck; Unit-Tests 1.273 bestanden (140 Dateien); build, check:bundle (Startansicht 239,7 KB, Übungsbilder 112 von 112); check:docs; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Maße von Kabelturm und Butterfly geschätzt, wie freigegeben; Human Kinetics und ExRx nur über die Websuche gelesen (Netz der Arbeitsumgebung)
+Nächste Schritte: Prüfseiten „Senkrechtes Drücken“, „Hüftbeuge“ und „Rumpf“, Halt bis zu deiner Freigabe
 ```

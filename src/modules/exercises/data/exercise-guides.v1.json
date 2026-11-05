@@ -216,16 +216,17 @@
       "summary": "Isolationsübung im Stand zwischen zwei Kabelzügen: Du führst die Griffe mit leicht gebeugten Armen im Bogen vor dem Körper zusammen.",
       "setup": [
         "Stell dich zwischen zwei Seilzüge und nimm in jede Hand einen Griff der oberen Rollen.",
-        "Beug Hüfte und Knie leicht, beug auch die Ellbogen leicht."
+        "Stell einen Fuß vor den anderen, die Füße etwa schulterbreit auseinander.",
+        "Beug Hüfte und Knie leicht und neig den Oberkörper aus der Hüfte leicht nach vorn. Beug auch die Ellbogen leicht."
       ],
       "steps": [
-        "Führ die Griffe in einer umarmenden Bewegung vor dem Körper zusammen.",
+        "Führ die Griffe in einer umarmenden Bewegung vor dem Körper zusammen, bis sich die Hände etwa auf Höhe der Taille treffen.",
         "Lass die Griffe zurückgehen, bis du eine Dehnung in der Brust spürst.",
         "Wiederhole die Bewegung für alle Wiederholungen."
       ],
       "cues": [
         "Halte die Ellbogen in einem festen, leicht gebeugten Winkel.",
-        "Lehn dich aus der Hüfte leicht nach vorn, so hält dein Oberkörper dem Zug der Kabel stand.",
+        "Halte den Oberkörper fest. Die Neigung aus der Hüfte hilft ihm, dem Zug der Kabel standzuhalten.",
         "Führ die Griffe in beide Richtungen kontrolliert."
       ],
       "mistakes": [
@@ -235,9 +236,13 @@
         {
           "title": "ExRx.net: Cable Isolateral Standing Fly",
           "url": "https://exrx.net/WeightExercises/PectoralSternal/CBStandingFly"
+        },
+        {
+          "title": "Human Kinetics: Try this move: cable fly (Schoenfeld, The M.A.X. Muscle Plan 2.0)",
+          "url": "https://us.humankinetics.com/blogs/excerpt/try-this-move-cable-fly"
         }
       ],
-      "sourceNote": "Beschreibt die Variante im Stand an den oberen Rollen; Schräg- und Negativvarianten (Alias-Namen) deckt der Text nicht ab."
+      "sourceNote": "Beschreibt die Variante im Stand an den oberen Rollen; Schräg- und Negativvarianten (Alias-Namen) deckt der Text nicht ab. Schrittstellung und Hände auf Höhe der Taille nach Human Kinetics, am 05.11.2026 gelesen."
     },
     "pec_deck": {
       "summary": "Isolationsübung im Sitzen an der Maschine: Du führst die Griffe mit leicht gebeugten Armen im Bogen vor der Brust zusammen.",

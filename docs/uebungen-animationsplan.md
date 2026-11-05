@@ -4,7 +4,7 @@ Stand: 2026-10-27 (Zuordnung D-411), Plan vom 28.10.2026 (D-429, Reihenfolge nac
 
 Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (GK), „Push/Pull/Beine, rotierend“ (PPB) und „Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026), dazu „Dali’s PPLC“ (DP, D-504): Der Produktinhaber will alle fehlenden Animationen dieses Programms jetzt (Nachricht vom 04.11.2026, D-508); es folgt deshalb direkt auf „Ganzkörper A/B“. Reihenfolge (sechste Nachricht vom 28.10.2026): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch fehlenden aus „Dali’s PPLC“, dann aus „Push/Pull/Beine“, zuletzt aus „Winterprogramm 2026“; innerhalb jedes Programms nach Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, Bankdrücken mit Langhantel, Latziehen) laufen als Schleifen in der App; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird in der Phase Programme (Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`) familienweise: erst eine Prüfseite, die Schleifen der Familie nach der Freigabe des Produktinhabers.
 
-**Fortschritt** (Stand 05.11.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Schleife in der App (D-474): 1; Schleife in der App (D-486): 1; Schleife in der App (D-490): 1; Schleife in der App (D-492): 1; Schleife in der App (D-509, mit den Diparmen neu in D-513): 1; Schleife in der App (D-513): 2; Schleife in der App (D-516): 4; Schleife in der App (D-517): 3; Schleife in der App (D-520): 3; Prüfseite, wartet auf deine Freigabe (D-519): 2; offen: 49.
+**Fortschritt** (Stand 05.11.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Schleife in der App (D-474): 1; Schleife in der App (D-486): 1; Schleife in der App (D-490): 1; Schleife in der App (D-492): 1; Schleife in der App (D-509, mit den Diparmen neu in D-513): 1; Schleife in der App (D-513): 2; Schleife in der App (D-516): 4; Schleife in der App (D-517): 3; Schleife in der App (D-520): 3; Schleife in der App (D-521): 2; offen: 49.
 
 ## 1. Was gezählt ist
 
@@ -156,8 +156,8 @@ Waagrechtes Ziehen: 3 Übungen, Aufwand 11,5 Std. (davon neue Geräte 8,0) (Basi
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
 |---|---|---|---|---|---|---|---|---|
-| Fliegende am Kabel | W26 | 26 | Familie (Code) | 5,00 | 3,50 | 26 | neues Gerät: Kabelzug: zwei Säulen mit höhenverstellbaren Rollen, D-Griff | Prüfseite, wartet auf deine Freigabe (D-519) |
-| Reverse Butterfly an der Maschine | – | 21 | Familie (Code) | 1,00 | 0,00 | 26 |  | Prüfseite, wartet auf deine Freigabe (D-519) |
+| Fliegende am Kabel | W26 | 26 | Familie (Code) | 5,00 | 3,50 | 26 | neues Gerät: Kabelzug: zwei Säulen mit höhenverstellbaren Rollen, D-Griff | Schleife in der App (D-521) |
+| Reverse Butterfly an der Maschine | – | 21 | Familie (Code) | 1,00 | 0,00 | 26 |  | Schleife in der App (D-521) |
 
 Schulter und Brust isoliert: 2 Übungen, Aufwand 6,0 Std. (davon neue Geräte 3,5) (Basis schon geleistet), Renderzeit 53 min.
 

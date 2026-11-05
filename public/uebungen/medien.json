@@ -711,6 +711,60 @@
       },
       "alt": "High Row an der Maschine, schräg von hinten: Brust am Polster, Obergriff; die Griffe von vorn oben schräg nach hinten unten ziehen, bis die Ellbogen hinter dem Rücken sind, und zurück bis zu gestreckten Armen.",
       "source": "form_3d_pilot"
+    },
+    "cable_fly": {
+      "preview": {
+        "src": "medien/fliegende_kabel-vorschau-59207c37.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/fliegende_kabel-7b8a24e2.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/fliegende_kabel-f8021a64.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/fliegende_kabel-poster-7315537f.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Fliegende am Kabel, schräg von vorn: Schrittstellung, Oberkörper leicht vor, Ellbogen leicht gebeugt; die Griffe der oberen Rollen im Bogen vor dem Körper zusammenführen, bis sich die Hände vor der Taille treffen, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "reverse_pec_deck": {
+      "preview": {
+        "src": "medien/reverse_butterfly-vorschau-f2acdfab.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/reverse_butterfly-e7bdfbc7.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/reverse_butterfly-8e527761.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/reverse_butterfly-poster-901f59a2.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Reverse Butterfly an der Maschine, schräg von hinten: Brust am Polster, Arme leicht gebeugt auf Schulterhöhe, Daumen oben; die Griffe im Bogen nach hinten führen, bis die Ellbogen auf Höhe des Oberkörpers sind, und zurück.",
+      "source": "form_3d_pilot"
     }
   }
 }

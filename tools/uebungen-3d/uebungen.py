@@ -7333,7 +7333,9 @@ class HighRowMaschine(RudernMaschine):
 class FliegendeKabel(Seitheben):
     """Fliegende am Kabel, stehend zwischen zwei Säulen (Familie „Schulter und Brust isoliert“, D-519), nach dem
     Ausführungstext der App (ExRx „Cable Isolateral Standing Fly“) und den Werten der Familie (Ellbogen 10 bis 20° fest;
-    horizontale Adduktion von 10 bis 20° hinter der Körperebene bis 80 bis 90° nach vorn). Stand etwa hüftbreit, Hüfte
+    horizontale Adduktion von 10 bis 20° hinter der Körperebene bis 80 bis 90° nach vorn). Stand in Schrittstellung
+    (D-521, Human Kinetics „Try this move: cable fly“: „staggered stance“, Füße etwa schulterbreit): die Fußgelenke
+    `FUESSE` neben der Mitte, das linke `SCHRITT` vor, das rechte ebenso weit hinter der Mitte, beide Sohlen flach; Hüfte
     und Knie leicht gebeugt, der Oberkörper aus der Hüfte `NEIGUNG` vor („so hält dein Oberkörper dem Zug der Kabel
     stand“). In jeder Hand ein D-Griff an einem Kabel von der oberen Rolle (`geraete.kabelturm`). Die Ellbogen bleiben in
     einem festen, leicht gebeugten Winkel (`ELLBOGEN`); der ganze Arm dreht um das Schultergelenk auf dem kürzesten Weg
@@ -7349,6 +7351,8 @@ class FliegendeKabel(Seitheben):
     vorschau_phase = 1.0
     NEIGUNG = 15.0
     KNIE = 165.0
+    FUESSE = 0.14  # halber Abstand der Fußgelenke quer (vor dem Maß der Schultern), m: Füße etwa schulterbreit
+    SCHRITT = 0.18  # Schrittstellung (D-521): linkes Fußgelenk so weit vor, rechtes so weit hinter der Mitte, m
     ELLBOGEN = 160.0  # fest, leicht gebeugt (Familie 10 bis 20°)
     HINTEN = 12.0  # Ausgang: Oberarm so weit hinter der Ebene der Schultern, Grad (Familie 10 bis 20°)
     HOCH = 12.0  # Ausgang: Oberarm so weit über der Waagrechten, Grad
@@ -7387,7 +7391,8 @@ class FliegendeKabel(Seitheben):
         A0 = k["foot.L"]
         w = math.radians(self.ZEHEN)
         x = self.FUESSE * self.mass
-        self.knoechel = {"L": Vector((x, A0.y, A0.z)), "R": Vector((-x, A0.y, A0.z))}
+        # Schrittstellung (D-521): links vor, rechts zurück; die Mitte zwischen den Füßen bleibt, über ihr steht der Rumpf
+        self.knoechel = {"L": Vector((x, A0.y - self.SCHRITT, A0.z)), "R": Vector((-x, A0.y + self.SCHRITT, A0.z))}
         self.zehen = {"L": Vector((math.sin(w), -math.cos(w), 0)), "R": Vector((-math.sin(w), -math.cos(w), 0))}
         ferse, spitze = _fuss(self.koerper, k)
         self.fussmitte_y = A0.y - (A0.y - (ferse + spitze) / 2) * math.cos(w)
@@ -7545,6 +7550,10 @@ class FliegendeKabel(Seitheben):
         self.werte["Oberarm vor der Ebene der Schultern (Grad, waagrecht gemessen)"] = math.degrees(math.atan2(-u.y, abs(u.x)))
         self.werte["Kabel: Block gehoben (cm)"] = (self.geraet["bloecke"]["L"].matrix_world.translation.z
                                                   - self.geraet["bloecke0"]["L"].translation.z) * 100
+        # Schrittstellung (D-521): das hintere Bein (rechts)
+        k = rig.kopf
+        H, K, A = (rig.punkt(b, k[b]) for b in ("upperleg01.R", "lowerleg01.R", "foot.R"))
+        self.werte["Kniewinkel rechts, hinten (Grad)"] = math.degrees((H - K).angle(A - K))
 
     def nah_punkte(self) -> list[Vector]:
         rig = self.rig

@@ -84,20 +84,20 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486, D-490, D-492, D-509, D-513, D-516, D-517, D-520)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486, D-490, D-492, D-509, D-513, D-516, D-517, D-520, D-521)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
   const smith = row(page, 'Bankdrücken an der Multipresse');
   await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für 26 Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // Ausgeliefert sind Animationen für 28 Übungen: die drei Pilot-Übungen (D-402), die Familie
   // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465), die Familie „Rumpf“ (D-467), das
   // Seitheben mit Kurzhanteln (D-469), das Rudern am Kabel, sitzend (D-474), der Beinbeuger liegend (D-486), das
   // Rumänische Kreuzheben mit Kurzhanteln (D-490), das Schulterdrücken an der Maschine (D-492), die Klimmzüge
   // mit Unterstützung (D-509), die Dips mit Unterstützung und die Hackenschmidt-Kniebeuge (D-513) und die
-  // Familien „Beine isoliert“ (D-516), „Arme beugen und strecken“ (D-517) und „Waagrechtes Ziehen“ (D-520) aus
-  // Dali’s PPLC.
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(26);
+  // Familien „Beine isoliert“ (D-516), „Arme beugen und strecken“ (D-517), „Waagrechtes Ziehen“ (D-520) und
+  // „Schulter und Brust isoliert“ (D-521) aus Dali’s PPLC.
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(28);
   await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
     'src',
     medium('bankdruecken_kh-vorschau.webp'),
@@ -146,6 +146,8 @@ test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der
     ['Rudern mit Langhantel, vorgebeugt', 'rudern_langhantel'],
     ['Rudern an der Maschine', 'rudern_maschine'],
     ['High Row an der Maschine', 'high_row_maschine'],
+    ['Fliegende am Kabel', 'fliegende_kabel'],
+    ['Reverse Butterfly an der Maschine', 'reverse_butterfly'],
   ] as const) {
     const bild = row(page, name).locator('img');
     await bild.scrollIntoViewIfNeeded();

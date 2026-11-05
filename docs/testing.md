@@ -3538,3 +3538,22 @@ Nach der Freigabe der Prüfseite D-518: Rumpf und Lende beim Rudern mit Langhant
 | `pnpm test` | 140 Dateien, 1273 Tests bestanden (zweiter Lauf, Blender angehalten, 93,8 s); im ersten Lauf neben drei Blender-Prozessen 10 Zeitüberschreitungen (5 s) in Oberflächen-Tests von Übungen, Tagesaufgaben, Wasser und Player, ohne Bezug zu diesem Paket (275 s) |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 104 von 104 Dateien |
 | `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 20,7 min; Übungsliste mit 26 Bildern |
+
+### Schulter und Brust isoliert in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-519: Fliegende am Kabel in Schrittstellung mit leicht vorgeneigtem Oberkörper, Text dazu nach Human Kinetics, Reverse Butterfly mit Daumen oben; zwei Schleifen in der App (D-521).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen zur Schrittstellung | ExRx „Cable Isolateral Standing Fly“ nennt keinen Stand; ACE „Standing Decline Cable Flyes“ Schrittstellung, Oberkörper senkrecht; Human Kinetics „Try this move: cable fly“ Schrittstellung, Füße etwa schulterbreit, Oberkörper leicht vor, Hände auf Höhe der Taille; über die Websuche gelesen (exrx.net und acefitness.org im Netz der Umgebung gesperrt) |
+| Fliegende in Schrittstellung (`render.py fliegende_kabel --pruefen`, alle 60 Bilder) | Ferse und Ballen beider Schuhe 0,0 mm über dem Boden, Sohle 0,0 mm verschoben, Knie vorn 165,0°, hinten 162,9°, Oberkörper 15° vor, Ellbogen 160° fest, Handgelenk höchstens 2,5°, D-Griff bis 20,4° gekippt, Streben mindestens 1,0 mm vor der Haut, Kabel mindestens 34 mm von der Haut, Hände am Ende 23,8 mm auseinander, Block bis 88,9 cm gehoben, 0 Meldungen; Prüfansichten angesehen |
+| Nachmessung mit dem Code von D-521 (`render.py reverse_butterfly`, `fliegende_kabel --pruefen --nur-messwerte`) | alle Werte wie auf der Prüfseite D-519 (Butterfly) und in der Prüfung der Schrittstellung (Fliegende), größte Abweichung 0; je 0 Meldungen |
+| `render.py reverse_butterfly`, `fliegende_kabel` | 6661 s, 6219 s für je 60 Bilder, 720 × 540 (gleichzeitig, daneben Prüfläufe; rund 23 min angehalten für die E2E-Tests von D-520); erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Einträge `reverse_pec_deck`, `cable_fly` in `public/uebungen/medien.json` | Alternativtexte 222, 225 Zeichen |
+| `python3 tools/uebungen_medien_version.py` | 8 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py schulter-brust-pplc …` (mit Namen) | 960 × 360, 7,5 s, 194 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 28, Ausführung 123, offen 2; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden (Bildliste: 28 Einträge, 112 Dateien mit Prüfsumme) |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden (90,2 s, ohne Blender) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 112 von 112 Dateien |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 19,9 min; Übungsliste mit 28 Bildern |

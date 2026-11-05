@@ -301,6 +301,8 @@ MESSWERTE = (
     ("Ellbogen am Rumpf (mm, Haut zu Haut)", "Ellbogen am Rumpf (Haut zu Haut)", "spanne", " mm"),
     ("Stange zur Kleidung (mm)", "Stange zur Kleidung", "min", " mm"),
     ("Stange zur Haut (mm)", "Stange zur Haut", "min", " mm"),
+    ("Kabel zu Kopf und Haaren (mm)", "Kabel zu Kopf und Haaren", "min", " mm"),
+    ("Ellbogen weg vom festen Punkt (mm)", "Ellbogen weg vom festen Punkt", "max", " mm"),
     # Waagrechtes Ziehen für Dali’s PPLC (D-518)
     ("Oberarm hinter dem Rumpf (Grad, + zum Rücken)", "Oberarm hinter dem Rumpf (+ zum Rücken)", "spanne", "°"),
     ("Ellbogen vom Rumpf weg (Grad, Oberarm zur Ebene längs des Rumpfs)", "Ellbogen vom Rumpf zur Seite", "spanne", "°"),

@@ -3498,3 +3498,22 @@ Fliegende am Kabel an einem neuen Kabelturm und Reverse Butterfly an der Maschin
 | Sprünge in den Messwerten (alle 60 Bilder) | keine |
 | Messwerte | in `form-programme-report.md` 56.2 |
 | Prüfseite (`tools/uebungen_pruef_bild.py fliegende_kabel reverse_butterfly --familie schulter-brust-pplc --titel "Schulter und Brust isoliert (Dali’s PPLC)"`) | `familie-schulter-brust-pplc.webp`, 1480 × 3162, angesehen; Bildunterschriften der D-Griffe und eine zu lange Unterschrift berichtigt |
+
+### Arme in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-515: Trizepsdrücken mit festen Ellbogen, Hammercurls abwechselnd in einer doppelt langen Schleife, Bizepscurls gleichzeitig; drei Schleifen in der App (D-517).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Trizepsdrücken, Ellbogen fest (`render.py trizepsdruecken_kabel --pruefen --nur-messwerte`, alle 60 Bilder) | Ellbogen 0,0 mm vom festen Punkt, 0,0 mm nach vorn und oben längs des Rumpfs, Oberarm 21,4° vor dem Rumpf in jedem Bild, Ellbogen am Rumpf 6,7 bis 12,2 mm (Haut zu Haut), Ellbogen 48° → 176°, Oberarm 4,8 bis 17,1° um die Längsachse gedreht, Handgelenk höchstens 8,7°, Hand am Ziel 0,0 mm, Stange 141,6 cm über dem Boden oben, Kabel mindestens 41 mm von Kopf und Haaren, 0 Meldungen |
+| Hammercurls abwechselnd (`render.py hammercurl_kh --pruefen --nur-messwerte`, alle 120 Bilder) | Ellbogen links und rechts 165° → 40°, Handgelenk höchstens 3,6°, Hand am Ziel 0,0 mm, Köpfe der Hanteln mindestens 11,5 mm vor Haut und Kleidung, 0 Meldungen |
+| `render.py trizepsdruecken_kabel`, `bizepscurl_kh`, `hammercurl_kh` (nacheinander) | 3014 s (davon rund 25 min angehalten, während die E2E-Tests von D-516 liefen), 1273 s und 2651 s für 60, 60 und 120 Bilder, 720 × 540; erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Größe der Hammercurls mit der üblichen Kodierung (H.264 CRF 24, VP9 CRF 36) | MP4 48,6 KB, WebM 40,9 KB, Poster 6,6 KB, Vorschau 2,8 KB, zusammen 98,9 KB (Ziel rund 120 KB): keine stärkere Kodierung nötig; die dafür vorbereitete Angabe je Übung wieder entfernt |
+| Einträge `triceps_pushdown_cable`, `biceps_curl_dumbbell`, `hammer_curl` in `public/uebungen/medien.json` | Alternativtexte 209, 211, 216 Zeichen |
+| `python3 tools/uebungen_medien_version.py` | 12 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py arme-pplc …` (dreimal die längste Schleife, kürzere entsprechend öfter) | 1440 × 360, 15 s, 268 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 23; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden (Bildliste: 23 Einträge, 92 Dateien mit Prüfsumme) |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 92 von 92 Dateien |
+| `pnpm test:e2e` (Chromium, Blender fertig) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 20,1 min; Übungsliste mit 23 Bildern |

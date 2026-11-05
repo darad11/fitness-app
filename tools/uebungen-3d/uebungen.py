@@ -6294,6 +6294,7 @@ class Bizepscurl(Seitheben):
     def bauen(self) -> None:
         super().bauen()
         self.seite_grad = 6.0  # Oberarm zur Seite, Grad; `_ausgang` sucht ihn
+        self.phasen = None  # je Arm eigene Phase (abwechselnd, `Hammercurl.setzen_bild`); sonst beide gleich
 
     def _curl_rahmen(self, s: str, p: float) -> tuple[Vector, Vector, Vector, Vector, Vector]:
         """Oberarm `u`, Unterarm `f`, Beugerichtung `b`, Griffachse `k` (Zeigefinger → kleiner Finger) und Handfläche `n`
@@ -6337,7 +6338,7 @@ class Bizepscurl(Seitheben):
             versatz = versatz + fehler
         self.rest = fehler.length
         self.hantel_setzen(s, mitte, k, f)
-        arm.update({"mitte": mitte, "u": u, "f": f, "k": k})
+        arm.update({"mitte": mitte, "u": u, "f": f, "k": k, "rest": fehler.length})
         return arm
 
     def _ausgang(self) -> None:
@@ -6372,12 +6373,15 @@ class Bizepscurl(Seitheben):
     def haltung(self, p: float) -> None:
         rig = self.rig
         beine = self._stand(p)
-        arme = {s: self._curl_arm(s, p) for s in "LR"}
+        phasen = self.phasen or {"L": p, "R": p}
+        arme = {s: self._curl_arm(s, phasen[s]) for s in "LR"}
         A = arme["L"]
         S, E, W = A["schulter"], A["ellbogen"], A["handgelenk"]
         u, f = (E - S).normalized(), (W - E).normalized()
         self.werte = {
             "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Ellbogenwinkel rechts": arme["R"]["ellbogenwinkel"],
+            "Handgelenk gesamt rechts (Grad)": arme["R"]["handgelenk_gesamt"],
             "Oberarm vor der Senkrechten (Grad)": math.degrees(math.atan2(-u.y, -u.z)),
             "Oberarm zur Seite (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, u.x)))),
             "Unterarm zur Senkrechten (Grad, 0 = nach oben)": math.degrees(f.angle(Z)),
@@ -6387,27 +6391,49 @@ class Bizepscurl(Seitheben):
             "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
             "Kniewinkel (Grad)": self.kniewinkel(beine["L"]),
             "Griffe auseinander (cm)": (arme["L"]["mitte"] - arme["R"]["mitte"]).length * 100,
-            "Handgelenk am Ziel (mm)": self.rest * 1000,
+            "Handgelenk am Ziel (mm)": max(a["rest"] for a in arme.values()) * 1000,
         }
 
 
 class Hammercurl(Bizepscurl):
     """Hammercurls mit Kurzhanteln (Familie „Arme beugen und strecken“, D-515), nach dem Ausführungstext der App: wie
     die Bizepscurls, aber im neutralen Griff über den ganzen Weg (`DREHUNG` 0): Die Daumen zeigen unten nach vorn und oben
-    zur Schulter."""
+    zur Schulter. Abwechselnd (D-517, Entscheidung des Produktinhabers; im Plan „Dumbbell Alternating Hammer Curl“): In
+    der ersten Hälfte der Schleife beugt der linke Arm, in der zweiten der rechte, der andere hängt so lange unten; die
+    Schleife hat doppelt so viele Bilder (`bilder`). Mit der üblichen Kodierung bleibt die Übung unter rund 120 KB (MP4,
+    WebM, Poster und Vorschau zusammen 98,9 KB): In jeder Hälfte bewegt sich nur ein Arm."""
 
     name = "hammercurl_kh"
     titel = "Hammercurls"
     DREHUNG = 0.0
+    bilder = 120
+    vorschau_bild = 30  # linker Arm oben (Mitte seiner Pause oben), rechter unten; wie das Poster
+
+    def setzen_bild(self, bild: int, bilder: int) -> float:
+        """Bild `bild` der doppelten Schleife: erste Hälfte links, zweite rechts, je eine Wiederholung im Ablauf der
+        Familie; gibt die Phase des bewegten Arms zurück."""
+        from haltung import ablauf
+
+        halb = bilder // 2
+        t = bild % bilder
+        p = ablauf(t % halb, halb, **getattr(self, "ablauf", {}))
+        self.phasen = {"L": p, "R": 0.0} if t < halb else {"L": 0.0, "R": p}
+        try:
+            self.setzen(p)
+        finally:
+            self.phasen = None
+        return p
 
 class Trizepsdruecken(Uebung):
     """Trizepsdrücken am Kabel, stehend (Familie „Arme beugen und strecken“, D-515), nach dem Ausführungstext der App
     (ExRx „Cable Pushdown“). Vor dem Kabelzug mit oberer Rolle (`geraete.kabelzug_oben`), Stand etwa hüftbreit, Knie
     leicht gebeugt, Oberkörper `NEIGUNG` vor. Hände eng im Obergriff an der kurzen geraden Stange (`GRIFF_X`), die
-    Ellbogen seitlich am Körper. Ausgang oben: der Unterarm nahe am Oberarm (`ELLBOGEN_OBEN`), der Oberarm `VOR_OBEN`
-    vor dem Rumpf („Oben darf der Ellbogen etwas nach oben wandern“); die Arme strecken nach unten, bis sie gestreckt
-    sind (`ELLBOGEN_UNTEN`), der Oberarm kommt dabei an den Rumpf zurück. Das Kabel läuft von der Rolle über der Stange
-    zu ihr hinab; der Gewichtsblock hebt sich, wenn die Stange sinkt. Zurück derselbe Weg."""
+    Ellbogen seitlich am Körper. Die Ellbogen bleiben in jedem Bild an derselben Stelle am Rumpf (D-517, Entscheidung des
+    Produktinhabers: „fest am Körper … oben nicht nach vorn wandern“); die Stelle ist die der gestreckten Arme aus D-515
+    (`_ellbogen_fest`). Nur die Unterarme bewegen sich: Ausgang oben mit dem Unterarm nahe am Oberarm (`ELLBOGEN_OBEN`),
+    dann strecken, bis die Arme gestreckt sind (`ELLBOGEN_UNTEN`). Damit die Hände an der Stange bleiben, dreht der
+    Oberarm dabei etwas um seine Längsachse (`_arm_fest`). Das Kabel läuft von der Rolle über der Stange zu ihr hinab;
+    der Gewichtsblock hebt sich, wenn die Stange sinkt. Zurück derselbe Weg."""
 
     name = "trizepsdruecken_kabel"
     titel = "Trizepsdrücken am Kabel"
@@ -6417,11 +6443,12 @@ class Trizepsdruecken(Uebung):
     ZEHEN = 8.0
     KNIE = 168.0
     NEIGUNG = 10.0  # Oberkörper in der Hüfte vor, Grad
-    ELLBOGEN_OBEN = 50.0  # Ausgang: „bis der Unterarm nahe am Oberarm ist“
-    # „bis sie ganz gestreckt sind“, nicht durchgedrückt; das Ziel der Hand liegt dann etwas weiter innen als der Arm,
-    # der Ellbogen öffnet sich dadurch noch etwas weiter (mit 172° war das Handgelenk nicht mehr zu erreichen)
-    ELLBOGEN_UNTEN = 164.0
-    VOR_OBEN = 12.0  # Oberarm im Ausgang so weit vor dem Rumpf, Grad
+    ELLBOGEN_OBEN = 48.0  # Ausgang: „bis der Unterarm nahe am Oberarm ist“ (wie in D-515)
+    ELLBOGEN_UNTEN = 176.0  # „bis sie ganz gestreckt sind“, nicht durchgedrückt
+    # Lage der festen Ellbogen (D-517): die der gestreckten Arme aus D-515. Dort stand der Oberarm senkrecht, das Ziel der
+    # Hand wurde mit dem Winkel `ELLBOGEN_D515` gerechnet und dann `GRIFF_X` nach innen gelegt; der Arm streckte sich dabei
+    # auf 178°, der Ellbogen lag 7,8 mm am Rumpf
+    ELLBOGEN_D515 = 164.0
     GRIFF_X = 0.10  # Mitte der Hände so weit von der Mitte (vor dem Maß der Schultern), m: eng
     GRIFF_LAGE = 0.62
     SCHRAEG = 0.0
@@ -6453,11 +6480,12 @@ class Trizepsdruecken(Uebung):
         self.armlaengen = ((k["lowerarm01.L"] - k["upperarm01.L"]).length, (k["wrist.L"] - k["lowerarm01.L"]).length)
         self.becken = Seitheben._becken_suchen(self)
         self.griff = {s: rig.griff(s, self.GRIFF_LAGE, geraete.KABELZUG["stange_d"] / 2, schraeg=self.SCHRAEG) for s in "LR"}
+        self.ellbogen_fest = self._ellbogen_fest()
         # Bahn der Stange (Raum des Skeletts) und Maschine
-        self.bahn = [self._griffe(p) for p in (0.0, 0.25, 0.5, 0.75, 1.0)]
-        mitte_y = sum(rig.welt(g["mitte"]).y for g in self.bahn) / len(self.bahn)
+        self.bahn = [self._stange(p) for p in (0.0, 0.25, 0.5, 0.75, 1.0)]
+        mitte_y = sum(rig.welt(m).y for m in self.bahn) / len(self.bahn)
         rolle = Vector((0.0, mitte_y - 0.02, self.ROLLE_Z))
-        self.stange0 = rig.welt(self.bahn[0]["mitte"])
+        self.stange0 = rig.welt(self.bahn[0])
         self.geraet = geraete.kabelzug_oben(rolle, self.stange0, rolle.y - self.SAEULE_VOR)
         self.L0 = (rolle - self._haken(self.stange0)).length
         self.stange_mitte = self.stange0.copy()
@@ -6473,40 +6501,92 @@ class Trizepsdruecken(Uebung):
         R = achse_winkel(X, self.NEIGUNG)
         return R @ Vector((0, 0, -1.0)), R @ Vector((0, -1.0, 0))
 
-    def _griffe(self, p: float) -> dict:
-        """Ziele der Hände in Phase p (Raum des Skeletts): Oberarm senkrecht, im Ausgang `VOR_OBEN` vor (längs des
-        vorgeneigten Rumpfs lagen die Hände unten in den Oberschenkeln); Unterarm
-        um den Ellbogenwinkel nach vorn oben; die Hände `GRIFF_X` von der Mitte. Gibt Mitte der Stange und die Ziele je
-        Seite zurück."""
+    def _ellbogen_fest(self) -> dict:
+        """Feste Lage der Ellbogen (Raum des Skeletts): die der gestreckten Arme aus D-515. Oberarm senkrecht, das Ziel der
+        Hand mit `ELLBOGEN_D515` nach vorn oben gerechnet und `GRIFF_X` von der Mitte; der Ellbogen nach dem Pol von
+        dort."""
         rig = self.rig
         rig.zuruecksetzen()
         rig.setze("root", self.becken)
-        unten, vor = Vector((0, 0, -1.0)), Vector((0, -1.0, 0))
         l1, l2 = self.armlaengen
-        ziele = {}
+        unten, vor = Vector((0, 0, -1.0)), Vector((0, -1.0, 0))
+        fest = {}
         for s, sx in (("L", 1), ("R", -1)):
             S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
-            a = math.radians(self.VOR_OBEN * (1 - p))
-            u = (unten * math.cos(a) + vor * math.sin(a)).normalized()
-            b = senkrecht(vor, u)
-            beta = math.radians(180.0 - (self.ELLBOGEN_OBEN + (self.ELLBOGEN_UNTEN - self.ELLBOGEN_OBEN) * p))
-            f = (u * math.cos(beta) + b * math.sin(beta)).normalized()
-            G = S + u * l1 + f * (l2 + self.HAND)
+            b = senkrecht(vor, unten)
+            beta = math.radians(180.0 - self.ELLBOGEN_D515)
+            f = (unten * math.cos(beta) + b * math.sin(beta)).normalized()
+            G = S + unten * l1 + f * (l2 + self.HAND)
             G.x = sx * self.GRIFF_X * self.mass
-            ziele[s] = G
+            arm = rig.arm(s, self.griff[s], G, Vector((sx, 0.0, 0.0)), Vector((sx * 0.3, 0.4, -1.0)).normalized(), self.STRECKUNG)
+            fest[s] = arm["ellbogen"].copy()
         rig.zuruecksetzen()
-        return {"mitte": (ziele["L"] + ziele["R"]) / 2, "ziele": ziele}
+        return fest
+
+    def _arm_fest(self, s: str, p: float) -> dict:
+        """Arm `s` in Phase p mit festem Ellbogen: Der Unterarm steht im Ellbogenwinkel der Phase zum Oberarm; um den
+        Oberarm dreht er so weit, dass die Mitte des Griffs `GRIFF_X` von der Mitte liegt (die Hände bleiben an der
+        Stange). Das Ziel des Griffs wird wie bei den Curls nachgeführt, bis das Handgelenk am Ende des Unterarms liegt;
+        der Ellbogen folgt der Regel „so nah wie möglich am festen Punkt“. Gibt die Werte von `rig.arm` und die Mitte des
+        Griffs zurück."""
+        from rig import zwei_glieder
+
+        rig = self.rig
+        sx = 1 if s == "L" else -1
+        l1, l2 = self.armlaengen
+        S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+        E = self.ellbogen_fest[s]
+        u = (E - S).normalized()
+        v1 = senkrecht(Vector((0, -1.0, 0)), u)  # nach vorn, senkrecht zum Oberarm
+        v2 = u.cross(v1).normalized()  # quer
+        beta = math.radians(180.0 - (self.ELLBOGEN_OBEN + (self.ELLBOGEN_UNTEN - self.ELLBOGEN_OBEN) * p))
+        x_ziel = sx * self.GRIFF_X * self.mass
+
+        def unterarm(psi: float) -> Vector:
+            return (u * math.cos(beta) + (v1 * math.cos(psi) + v2 * math.sin(psi)) * math.sin(beta)).normalized()
+
+        def regel(S_, W_, a, b):
+            return zwei_glieder(S_, W_, a, b, E - (S_ + W_) / 2)[0]
+
+        psi, phi, versatz = 0.0, None, unterarm(0.0) * self.HAND
+        for _ in range(30):
+            for _ in range(30):  # Drehung um den Oberarm: Mitte des Griffs bei x_ziel (Newton)
+                f = unterarm(psi)
+                fehler_x = x_ziel - (E + f * l2 + versatz).x
+                if abs(fehler_x) < 1e-6:
+                    break
+                ableitung = (unterarm(psi + 1e-4) - f).x * l2 / 1e-4
+                if abs(ableitung) < 1e-9:
+                    break
+                psi += max(-0.3, min(0.3, fehler_x / ableitung))
+            W_ziel = E + f * l2
+            mitte = W_ziel + versatz
+            arm = rig.arm(s, self.griff[s], mitte, Vector((sx, 0.0, 0.0)), Vector((sx * 0.3, 0.4, -1.0)).normalized(),
+                          self.STRECKUNG, ellbogen=regel, phi=phi)
+            phi = arm["phi"]
+            fehler = W_ziel - arm["handgelenk"]
+            if fehler.length < 2e-4:
+                break
+            versatz = versatz + fehler
+        arm.update({"mitte": mitte, "rest": fehler.length, "psi": math.degrees(psi)})
+        return arm
+
+    def _stange(self, p: float) -> Vector:
+        """Mitte der Stange in Phase p (Raum des Skeletts), für die Bahn und die Maschine."""
+        rig = self.rig
+        rig.zuruecksetzen()
+        rig.setze("root", self.becken)
+        mitte = sum((self._arm_fest(s, p)["mitte"] for s in "LR"), Vector()) / 2
+        rig.zuruecksetzen()
+        return mitte
 
     def haltung(self, p: float) -> None:
         rig = self.rig
-        g = self._griffe(p)  # zuerst: `_griffe` setzt das Rig zurück (danach standen die Beine in der Grundhaltung, 14 mm im Boden)
         rig.setze("root", self.becken)
         beine = {s: rig.bein(s, self.knoechel[s], self.zehen[s], self.ZEHEN) for s in "LR"}
-        arme = {}
-        for s, sx in (("L", 1), ("R", -1)):
-            arme[s] = rig.arm(s, self.griff[s], g["ziele"][s], Vector((sx, 0.0, 0.0)), Vector((sx * 0.3, 0.4, -1.0)).normalized(),
-                              self.STRECKUNG)
-        mitte = rig.welt(g["mitte"])
+        arme = {s: self._arm_fest(s, p) for s in "LR"}
+        GL, GR = arme["L"]["mitte"], arme["R"]["mitte"]
+        mitte = rig.welt((GL + GR) / 2)
         self.stange_mitte = mitte
         self.geraet["stange"].matrix_world = Matrix.Translation(mitte)
         rolle = self.geraet["rolle"]
@@ -6519,15 +6599,24 @@ class Trizepsdruecken(Uebung):
         unten, vor = self._rumpf()
         ober = (E - S).normalized()
         kabel = (rolle - haken).normalized()
+        weg = E - self.ellbogen_fest["L"]
         self.werte = {
             "Ellbogenwinkel": A["ellbogenwinkel"],
             "Oberarm vor dem Rumpf (Grad)": math.degrees(math.atan2(ober.dot(vor), ober.dot(unten))),
+            "Oberarm vor der Senkrechten (Grad)": math.degrees(math.atan2(-ober.y, -ober.z)),
             "Ellbogen zur Mitte (cm, gegenüber dem Schultergelenk)": (S.x - E.x) * 100,
+            "Ellbogen weg vom festen Punkt (mm)": weg.length * 1000,
+            "Ellbogen nach vorn (mm, längs des Rumpfs)": weg.dot(vor) * 1000,
+            "Ellbogen nach oben (mm, längs des Rumpfs)": -weg.dot(unten) * 1000,
+            "Oberarm um die Längsachse gedreht (Grad)": A["psi"],
             "Unterarm zur Senkrechten (Grad, 0 = nach unten)": math.degrees((W - E).angle(-Z)),
             "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
             "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
             "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
-            "Hände auseinander (cm)": (rig.welt(g["ziele"]["L"]) - rig.welt(g["ziele"]["R"])).length * 100,
+            "Handgelenk am Ziel (mm)": max(arme["L"]["rest"], arme["R"]["rest"]) * 1000,
+            "Hände auseinander (cm)": (GL - GR).length * 100,
+            "Stange schief (mm, Griffe in Höhe und Tiefe)": (Vector((0, GL.y - GR.y, GL.z - GR.z))).length * 1000,
+            "Stange: Höhe über dem Boden (cm)": mitte.z * 100,
             "Kabel zur Senkrechten (Grad)": math.degrees(kabel.angle(Z)),
             "Gewichtsblock gehoben (cm)": hub * 100,
             "Kniewinkel (Grad)": self.kniewinkel(beine["L"]),
@@ -6573,8 +6662,18 @@ class Trizepsdruecken(Uebung):
                 if ort is not None:
                     beste = min(beste, dd if (q - ort).dot(n) >= 0 else -dd)
         haut = abstand_koerper(self.koerper, stange)
+        # Kabel zu Kopf und Haaren: Punkte längs des Kabels von der Rolle zum Haken (D-517: oben liegt die Stange tiefer
+        # und weiter vorn, das Kabel läuft vor dem Gesicht)
+        rolle, haken = self.geraet["rolle"], self._haken(self.stange_mitte)
+        kabel = [rolle.lerp(haken, i / 40) for i in range(41)]
+        kopf = [q for v, q in zip(verts, netz) if gruppe(v, "head", "neck", "jaw")]
+        if "Haare" in bpy.data.objects:
+            kopf += schuhe._verformt(bpy.data.objects["Haare"])[0][::3]
+        kabel_kopf = min((a - b).length for a in kabel for b in kopf[::2])
         return {"Ellbogen am Rumpf (mm, Haut zu Haut)": am_rumpf * 1000,
-                "Stange zur Kleidung (mm)": beste * 1000, "Stange zur Haut (mm)": haut * 1000}
+                "Stange zur Kleidung (mm)": beste * 1000, "Stange zur Haut (mm)": haut * 1000,
+                "Kabel zu Kopf und Haaren (mm)": kabel_kopf * 1000}
+
 
 # ---------------------------------------------------------------------- Familie „Waagrechtes Ziehen“ für Dali’s PPLC (D-518)
 

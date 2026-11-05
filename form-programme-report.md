@@ -2574,6 +2574,38 @@ Dazu in der Zeile davor „unter das Polster“ statt „unter die Polster“, w
 
 Je 60 Bilder, gerendert in 2409 bis 3276 s (neben den Prüfläufen für die nächsten Prüfseiten); erstes und letztes Bild pixelgleich, kein Sprung am Ende; Kontaktbögen angesehen. 20 Übungen haben jetzt eine Animation (vorher 16). Aufnahme: `docs/screens/uebungen/beine-isoliert-pplc-bewegung.mp4`, die vier Schleifen nebeneinander, 1440 × 270, 7,5 s.
 
+### 55.2 Arme (D-517)
+
+**Trizepsdrücken, Ellbogen (deine Entscheidung 5).** Auf der Prüfseite wanderte der Ellbogen nach oben hin 4° nach vorn und stand oben 4,9 cm vom Rumpf weg (unten 7,8 mm). Jetzt bleibt er in jedem Bild an derselben Stelle seitlich am Rumpf; nur der Unterarm bewegt sich. Gemessen über alle 60 Bilder:
+
+| Messwert | Prüfseite (D-515) | jetzt |
+|---|---|---|
+| Ellbogen weg von seiner festen Stelle | – | 0,0 mm in jedem Bild |
+| Ellbogen nach vorn längs des Rumpfs | – | 0,0 mm in jedem Bild |
+| Oberarm vor dem Rumpf | 25,7° oben, 21,4° unten | 21,4° in jedem Bild |
+| Ellbogen am Rumpf (Haut zu Haut) | 48,6 mm oben, 7,8 mm unten | 6,7 bis 12,2 mm |
+| Ellbogen oben → unten | 48° → 178° | 48° → 176° |
+| Stange oben | Kinnhöhe | 141,6 cm über dem Boden, etwas unter Schulterhöhe |
+| Handgelenk, höchstens | 9,0° | 8,7° |
+| Stange zur Haut / zur Kleidung, mindestens | 49 / 31 mm | 52 / 55 mm |
+| Kabel zu Kopf und Haaren, mindestens | – | 41 mm |
+
+Start wie im Text mit dem Unterarm nahe am Oberarm (48°). Damit die Hände an der Stange bleiben, dreht der Oberarm dabei 5 bis 17° um seine Längsachse; das ist im Bild nicht zu sehen. Weil der Ellbogen nicht mehr nach oben wandert, kommt die Stange oben nur bis unter die Schulter statt bis zum Kinn.
+
+**Hammercurls abwechselnd (deine Entscheidung 4):** erst links, dann rechts, je eine Wiederholung im Ablauf der Familie; die Schleife hat 120 statt 60 Bilder (5 s). Ellbogen 165° → 40°, Handgelenk höchstens 3,6°, Hand am Ziel 0,0 mm, Köpfe der Hanteln mindestens 11,5 mm vor Haut und Kleidung. Die Bizepscurls bleiben gleichzeitig.
+
+**Dateigröße (deine Vorgabe: je Übung höchstens rund 120 KB):** MP4 48,6 KB, WebM 40,9 KB, Poster 6,6 KB, Vorschau 2,8 KB, zusammen 98,9 KB. Gelesen habe ich das wie die Spalte „Dateien zusammen“ in der Übersicht. Die Hammercurls bleiben damit unter rund 120 KB, ohne stärkere Kodierung: In jeder Hälfte bewegt sich nur ein Arm, das Video wird dadurch kaum größer. Zum Vergleich die Bizepscurls, gleichzeitig und halb so lang: 93,5 KB.
+
+**In der App:**
+
+| Übung | Bilder | MP4 | WebM | Poster | Vorschau | zusammen | Alternativtext |
+|---|---|---|---|---|---|---|---|
+| Trizepsdrücken am Kabel | 60 | 40,1 KB | 35,2 KB | 8,2 KB | 3,4 KB | 87,0 KB | 209 Zeichen |
+| Bizepscurls mit Kurzhanteln | 60 | 43,9 KB | 40,1 KB | 6,7 KB | 2,8 KB | 93,5 KB | 211 Zeichen |
+| Hammercurls (abwechselnd) | 120 | 48,6 KB | 40,9 KB | 6,6 KB | 2,8 KB | 98,9 KB | 216 Zeichen |
+
+Erstes und letztes Bild je pixelgleich, kein Sprung am Ende; Kontaktbögen angesehen. 23 Übungen haben jetzt eine Animation (vorher 20). Aufnahme: `docs/screens/uebungen/arme-pplc-bewegung.mp4`, die drei Schleifen nebeneinander, 1440 × 360, 15 s (dreimal die Hammercurls).
+
 ### 55.3 Berichte zu den Paketen
 
 ```
@@ -2585,6 +2617,17 @@ Ausgeführte Tests: Winkel unten und oben in Proben und über alle 60 Bilder gem
 Ergebnis: bestanden
 Bekannte Einschränkungen: Maße der Maschinen geschätzt, wie freigegeben; oben begrenzt das Polster am Kragen des Schuhs den Weg (stehend 38°, sitzend 29°)
 Nächste Schritte: Arme in der App (D-517), danach die Prüfseiten „Waagrechtes Ziehen“ und „Schulter und Brust isoliert“, Halt bis zu deiner Freigabe
+```
+
+```
+Arbeitspaket: D-517 Phase Programme, Arme in der App: Bizepscurls gleichzeitig, Hammercurls abwechselnd, Trizepsdrücken mit festen Ellbogen
+Umgesetzte Funktionen: Animationen für Bizepscurls mit Kurzhanteln, Hammercurls (abwechselnd, 120 Bilder) und Trizepsdrücken am Kabel in der App; Trizepsdrücken mit dem Ellbogen an einer festen Stelle am Rumpf; render.py für Schleifen mit eigener Zahl an Bildern und eigener Haltung je Bild, tools/uebungen_bewegung.py für unterschiedlich lange Schleifen; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py (Bizepscurl, Hammercurl, Trizepsdruecken), tools/uebungen-3d/render.py, tools/uebungen_bewegung.py, tools/uebungen_pruef_bild.py, public/uebungen/medien/trizepsdruecken_kabel*, bizepscurl_kh*, hammercurl_kh* (neu), public/uebungen/medien.json, e2e/uebungen.spec.ts, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/arme-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-517
+Ausgeführte Tests: Trizepsdrücken und Hammercurls über alle Bilder gemessen; drei Schleifen, Naht pixelgleich, Kontaktbögen angesehen; format:check, lint, typecheck; Unit-Tests 1.273 bestanden (140 Dateien); build, check:bundle (Startansicht 239,7 KB, Übungsbilder 92 von 92); check:docs; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Maße des Kabelzugs geschätzt, wie freigegeben; die Stange kommt beim Trizepsdrücken oben bis unter die Schulter statt bis zum Kinn, weil der Ellbogen nicht mehr wandert
+Nächste Schritte: Halt bis zu deiner Freigabe der Prüfseiten „Waagrechtes Ziehen“ und „Schulter und Brust isoliert“ (56.3)
 ```
 
 ## 56. Prüfseiten Waagrechtes Ziehen und Schulter und Brust isoliert (D-518, D-519)

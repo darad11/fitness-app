@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Kurze Aufnahme der Bewegung: Schleifen der App nebeneinander, je dreimal abgespielt (wie `pilot-bewegung.mp4`
-aus `tools/pilot-screens.mjs`), für die Übungen einer Familie (D-463).
+"""Kurze Aufnahme der Bewegung: Schleifen der App nebeneinander, dreimal so lang wie die längste Schleife, kürzere laufen
+entsprechend öfter (wie `pilot-bewegung.mp4` aus `tools/pilot-screens.mjs`), für die Übungen einer Familie (D-463,
+D-517).
 
     python3 tools/uebungen_bewegung.py waagrechtes-druecken schraegbankdruecken_kh bankdruecken_kh
 
@@ -32,13 +33,24 @@ def _beschriftung(text: str) -> str:
     return f",drawtext=fontfile={SCHRIFT}:text='{text}':x=10:y=h-th-10:fontsize=18:fontcolor=0xE6E8EB:box=1:boxcolor=0x0B1018@0.65:boxborderw=6"
 
 
+def _bilder(datei: Path) -> int:
+    """Zahl der Bilder eines Videos (ffprobe)."""
+    aus = subprocess.run(["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v:0", "-show_entries",
+                          "stream=nb_read_frames", "-of", "csv=p=0", str(datei)], capture_output=True, text=True, check=True)
+    return int(aus.stdout.strip())
+
+
 def main() -> None:
     name, angaben = sys.argv[1], sys.argv[2:]
     uebungen = [a.split("=", 1)[0] for a in angaben]
     texte = [a.split("=", 1)[1] if "=" in a else "" for a in angaben]
     eingaben = []
-    for u in uebungen:
-        eingaben += ["-stream_loop", "2", "-i", str(aktuelle_datei(f"{u}.mp4"))]
+    dateien = [aktuelle_datei(f"{u}.mp4") for u in uebungen]
+    # Dreimal die längste Schleife; kürzere laufen entsprechend öfter (die abwechselnden Hammercurls haben 120 statt
+    # 60 Bilder, D-517), sonst stünden sie am Ende still
+    bilder = [_bilder(d) for d in dateien]
+    for d, b in zip(dateien, bilder):
+        eingaben += ["-stream_loop", str(3 * max(bilder) // b - 1), "-i", str(d)]
     n = len(uebungen)
     if n == 1:  # eine Übung: in voller Größe der App (D-465)
         filter_ = "[0:v]null" + _beschriftung(texte[0])
@@ -51,7 +63,7 @@ def main() -> None:
         b, h = 360, 270
         skaliert = "".join(f"[{i}:v]scale={b}:{h}{_beschriftung(texte[i])}[v{i}];" for i in range(n))
         for i in range(n, felder):
-            eingaben += ["-f", "lavfi", "-i", f"color=c=0x0B1018:s={b}x{h}:r=24:d=7.5"]
+            eingaben += ["-f", "lavfi", "-i", f"color=c=0x0B1018:s={b}x{h}:r=24:d={3 * max(bilder) / 24}"]
             skaliert += f"[{i}:v]null[v{i}];"
         lage = "|".join(f"{(i % SPALTEN) * b}_{(i // SPALTEN) * h}" for i in range(felder))
         filter_ = skaliert + "".join(f"[v{i}]" for i in range(felder)) + f"xstack=inputs={felder}:layout={lage}"

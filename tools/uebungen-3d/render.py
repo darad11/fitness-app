@@ -113,12 +113,29 @@ def baue(name: str, breite: int, hoehe: int, proben: int, form: str = "neutral",
     return s, uebung, punkte
 
 
+def bilder_von(uebung) -> int:
+    """Bilder der Schleife: `BILDER`, bei abwechselnden Übungen (erst links, dann rechts) doppelt so viele (D-517)."""
+    return getattr(uebung, "bilder", BILDER)
+
+
+def stellen(uebung, bild: int) -> float:
+    """Haltung zum Bild `bild` der Schleife; gibt die Phase zurück. Abwechselnde Übungen (`setzen_bild`, D-517)
+    bewegen in der ersten Hälfte der Schleife den linken Arm, in der zweiten den rechten; die Phase ist die des bewegten
+    Arms."""
+    n = bilder_von(uebung)
+    if hasattr(uebung, "setzen_bild"):
+        return uebung.setzen_bild(bild, n)
+    p = ablauf(bild, n, **getattr(uebung, "ablauf", {}))
+    uebung.setzen(p)
+    return p
+
+
 def figur_punkte(uebung) -> np.ndarray:
     """Eckpunkte der Figur (Körper, Kleidung, Schuhe) in jedem zweiten Bild der Schleife."""
     objs = figur_rahmen.figur_objekte(uebung)
     alle = []
-    for bild in range(0, BILDER, 2):
-        uebung.setzen(ablauf(bild, BILDER, **getattr(uebung, "ablauf", {})))
+    for bild in range(0, bilder_von(uebung), 2):
+        stellen(uebung, bild)
         alle.append(figur_rahmen.punkte(objs))
     return np.concatenate(alle)
 
@@ -218,9 +235,8 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
     werte = []
     fuss0 = None
     fuss_max = 0.0
-    for bild in range(BILDER):
-        p = ablauf(bild, BILDER, **getattr(u, "ablauf", {}))
-        u.setzen(p)
+    for bild in range(bilder_von(u)):
+        p = stellen(u, bild)
         w = {k: round(v, 2) for k, v in u.pruefwerte().items()}
         m = messen(u)
         fuss = m.pop("_fuss")
@@ -291,7 +307,10 @@ def vorschau(u, s, arbeit: Path, ziel: Path, name: str, phase: float | None = No
     (`vorschau_phase` der Übung), Kamera in Richtung und Neigung wie die Schleife, Ausschnitt eng auf
     die Figur (nur der Körper, 5 % Rand), quadratisch; gerendert mit 480 × 480, verkleinert auf
     240 × 240. So bleibt die Figur auch klein gut lesbar."""
-    u.setzen(u.vorschau_phase if phase is None else phase)
+    if phase is None and hasattr(u, "vorschau_bild"):  # abwechselnd (D-517): ein Arm oben, einer unten
+        stellen(u, u.vorschau_bild)
+    else:
+        u.setzen(u.vorschau_phase if phase is None else phase)
     punkte = _netz(u.koerper)
     richtung, neigung = u.kamera["richtung"], u.kamera["neigung"]
     for o in [o for o in bpy.data.objects if o.type in ("CAMERA", "LIGHT")]:
@@ -351,11 +370,11 @@ def main() -> None:
     kamera(u, punkte, args.ansicht, args.breite, args.hoehe)
     start = time.time()
     gerendert = 0
-    for bild in range(BILDER):
+    for bild in range(bilder_von(u)):
         datei = arbeit / f"{args.ansicht}-{bild:03d}.png"
         if args.fortsetzen and _lesbar(datei):
             continue
-        u.setzen(ablauf(bild, BILDER, **getattr(u, "ablauf", {})))
+        stellen(u, bild)
         s.render.filepath = str(datei)
         bpy.ops.render.render(write_still=True)
         gerendert += 1

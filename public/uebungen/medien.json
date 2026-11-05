@@ -549,6 +549,87 @@
       },
       "alt": "Wadenheben sitzend an der Maschine, von der Seite: Polsterrolle auf den unteren Oberschenkeln, Hände an den Griffen, Ballen auf der Kante des Blocks; die Fersen aus der Dehnung 5 cm unter dem Block so hoch wie möglich heben und senken.",
       "source": "form_3d_pilot"
+    },
+    "biceps_curl_dumbbell": {
+      "preview": {
+        "src": "medien/bizepscurl_kh-vorschau-b90336ee.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/bizepscurl_kh-0501adee.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/bizepscurl_kh-0b781351.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/bizepscurl_kh-poster-d9714f0e.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Bizepscurls mit Kurzhanteln im Stand, schräg von vorn: beide Arme gleichzeitig, Ellbogen an den Seiten; die Hanteln bis vor die Schultern beugen, die Unterarme drehen dabei nach außen, und kontrolliert strecken.",
+      "source": "form_3d_pilot"
+    },
+    "hammer_curl": {
+      "preview": {
+        "src": "medien/hammercurl_kh-vorschau-ab8f6495.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/hammercurl_kh-770c90db.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/hammercurl_kh-5d8ec4b8.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/hammercurl_kh-poster-47d96552.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Hammercurls mit Kurzhanteln im Stand, schräg von vorn: abwechselnd erst links, dann rechts, Daumen oben, Ellbogen an den Seiten; die Hantel bis vor die Schulter beugen und kontrolliert strecken, der andere Arm hängt.",
+      "source": "form_3d_pilot"
+    },
+    "triceps_pushdown_cable": {
+      "preview": {
+        "src": "medien/trizepsdruecken_kabel-vorschau-ba4d0da3.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/trizepsdruecken_kabel-e78c6d4c.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/trizepsdruecken_kabel-712f546b.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/trizepsdruecken_kabel-poster-8721ecb9.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Trizepsdrücken am Kabel, schräg von vorn: Oberkörper leicht vor, Ellbogen fest seitlich am Rumpf, enger Obergriff an der Stange; aus dem gebeugten Arm nach unten strecken, bis die Arme gerade sind, und zurück.",
+      "source": "form_3d_pilot"
     }
   }
 }

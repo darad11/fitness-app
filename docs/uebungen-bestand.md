@@ -81,9 +81,9 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
 | 43 | Bizepscurls mit Langhantel | Barbell Curl | Langhantel | Bizeps | Unterarme | Bizepscurls mit Kurzhanteln · Bizepscurls mit SZ-Stange · Bizepscurls am Kabel | fehlt | fertig (exrx.net) | – | `biceps_curl_barbell` · `a76a187c-15b9-584a-b47d-7812fca4d96f` |
-| 44 | Bizepscurls mit Kurzhanteln | Dumbbell Curl | Kurzhantel | Bizeps | Unterarme | Bizepscurls mit Langhantel · Bizepscurls mit SZ-Stange · Bizepscurls am Kabel | fehlt | fertig (exrx.net) | – | `biceps_curl_dumbbell` · `e8c85f72-b101-5d91-bade-0aba356dbfb9` |
+| 44 | Bizepscurls mit Kurzhanteln | Dumbbell Curl | Kurzhantel | Bizeps | Unterarme | Bizepscurls mit Langhantel · Bizepscurls mit SZ-Stange · Bizepscurls am Kabel | vorhanden | fertig (exrx.net) | – | `biceps_curl_dumbbell` · `e8c85f72-b101-5d91-bade-0aba356dbfb9` |
 | 45 | Bizepscurls mit SZ-Stange | EZ-Bar Curl | SZ-Stange | Bizeps | Unterarme | Bizepscurls mit Langhantel · Bizepscurls mit Kurzhanteln · Bizepscurls am Kabel | fehlt | fertig (exrx.net) | Quelle ist die Seite zum Curl mit Langhantel, die eine gewinkelte Stange zeigt. | `biceps_curl_ez_bar` · `44e23806-ccdf-5f6b-993f-ace229ec9c6b` |
-| 46 | Hammercurls | Hammer Curl | Kurzhantel | Bizeps, Unterarme | – | Hammercurls am Kabel mit Seil | fehlt | fertig (exrx.net) | – | `hammer_curl` · `17811cdb-d676-5b2b-bb5f-2b574bb93bee` |
+| 46 | Hammercurls | Hammer Curl | Kurzhantel | Bizeps, Unterarme | – | Hammercurls am Kabel mit Seil | vorhanden | fertig (exrx.net) | – | `hammer_curl` · `17811cdb-d676-5b2b-bb5f-2b574bb93bee` |
 | 47 | Scottcurls | Preacher Curl | SZ-Stange, Bank | Bizeps | – | Scottcurls mit Kurzhanteln | fehlt | fertig (exrx.net) | – | `preacher_curl` · `73fcde66-60d7-538c-bc5b-ed871aec4925` |
 | 48 | Bizepscurls am Kabel | Cable Curl | Kabelzug | Bizeps | Unterarme | Bizepscurls mit Langhantel · Bizepscurls mit Kurzhanteln · Bizepscurls mit SZ-Stange | fehlt | fertig (exrx.net) | – | `biceps_curl_cable` · `62dac099-2ba1-5afd-8c2c-0632c8252cb7` |
 | 49 | Schrägbank-Curls mit Kurzhanteln | Incline Dumbbell Curl | Kurzhantel, Bank | Bizeps | – | – | fehlt | fertig (exrx.net) | – | `incline_curl_dumbbell` · `a294d246-c15a-59e2-ae97-5741f1d3dd34` |
@@ -96,7 +96,7 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 
 | Nr. | Name | Englisch | Gerät | Hauptmuskeln | Nebenmuskeln | Varianten in der Bibliothek | Visual | Ausführung | Hinweis zur Quelle | Schlüssel und ID |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 54 | Trizepsdrücken am Kabel | Triceps Pushdown | Kabelzug | Trizeps | – | Trizepsdrücken am Kabel, über Kreuz | fehlt | fertig (exrx.net) | Hauptquelle beschreibt die Ausführung mit Stange, das Seil nur als Hinweis. | `triceps_pushdown_cable` · `87804d4d-a15f-5ac0-b1e5-39b81b6e65d6` |
+| 54 | Trizepsdrücken am Kabel | Triceps Pushdown | Kabelzug | Trizeps | – | Trizepsdrücken am Kabel, über Kreuz | vorhanden | fertig (exrx.net) | Hauptquelle beschreibt die Ausführung mit Stange, das Seil nur als Hinweis. | `triceps_pushdown_cable` · `87804d4d-a15f-5ac0-b1e5-39b81b6e65d6` |
 | 55 | Trizepsstrecken über Kopf am Kabel | Overhead Cable Triceps Extension | Kabelzug | Trizeps | – | Trizepsstrecken über Kopf mit Kurzhantel | fehlt | fertig (exrx.net) | – | `overhead_extension_cable` · `3c167a61-474d-5bfa-aa0b-371394cb6fe1` |
 | 56 | Trizepsstrecken über Kopf mit Kurzhantel | Dumbbell Overhead Triceps Extension | Kurzhantel | Trizeps | – | Trizepsstrecken über Kopf am Kabel | fehlt | fertig (exrx.net) | Hauptquelle beidhändig, die einarmige Variante als zweite Quelle. | `overhead_extension_dumbbell` · `4f10a575-9d50-5750-a6cb-e582c936d9ef` |
 | 57 | French Press mit SZ-Stange | Skull Crusher | SZ-Stange, Bank | Trizeps | – | French Press mit Kurzhanteln | fehlt | fertig (exrx.net) | – | `skull_crusher` · `1114442e-da56-5eda-8db7-95fb4f64853a` |
@@ -199,4 +199,4 @@ Stand: 27.10.2026 · Phase Übungen, Phase 1 (D-397, D-398) · Auftrag `prompts/
 | 124 | Laufband | Treadmill | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für ein motorisiertes Laufband. | `treadmill` · `9d892e37-e39e-5b73-b0dc-7d19aabe927b` |
 | 125 | Crosstrainer | Elliptical | Cardiogerät | Ganzkörper | – | – | fehlt | fertig (exrx.net) | Gilt für Geräte mit beweglichen Armhebeln. | `elliptical` · `972a9661-bf1c-58a8-8023-2639b57bd504` |
 
-Summe: 125 Übungen · mit Visual 20 · ohne Visual 105 · Ausführung fertig 122 · offen 3
+Summe: 125 Übungen · mit Visual 23 · ohne Visual 102 · Ausführung fertig 122 · offen 3

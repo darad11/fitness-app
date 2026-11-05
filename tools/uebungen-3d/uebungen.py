@@ -8040,12 +8040,13 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
     170 bis 180°, Ellbogen 90 bis 110° → 0 bis 5° gebeugt, Unterarme senkrecht, die Schulterblätter drehen nach oben,
     Knie und Hüfte gestreckt; der Kopf weicht kurz zurück; die Last endet über Schulter und Fußmitte). Stand etwa
     hüftbreit, Knie fast gestreckt (`KNIE`); die Langhantel im Obergriff etwas breiter als schulterbreit (`GRIFF_X`).
-    Ausgang: die Stange vorn auf Höhe des Halses (`HALS` über dem Halsansatz), die Ellbogen vor und unter ihr. Die Stange
-    steigt senkrecht über der Fußmitte, bis die Arme gestreckt sind (`ELLBOGEN_OBEN`). Damit sie an Kinn und Nase
-    vorbeikommt, weicht der Kopf zurück (Hals gestreckt, Kopf ebenso weit gebeugt, Blick geradeaus, bis `KOPF_MAX`) und
-    der Rumpf neigt sich aus der Hüfte etwas nach hinten (bis `LEHNE_MAX`), beides um den kleinsten gemeinsamen Anteil,
-    bei dem vor Gesicht und Hals `LUFT` und vor den Haaren `LUFT_HAARE` frei bleibt (je Stelle der Stange gesucht,
-    geglättet); oben steht der Rumpf wieder senkrecht unter der Stange. Die Hüfte steht in jedem Bild so, dass der
+    Ausgang: die Stange vorn auf Höhe des Halses (`HALS` über dem Halsansatz), `VOR_START` vor der Fußmitte, die Ellbogen
+    vor und unter ihr. Die Stange steigt und kommt dabei gleichmäßig über die Fußmitte, bis die Arme gestreckt sind
+    (`ELLBOGEN_OBEN`). Damit sie an Kinn, Nase und Stirn vorbeikommt, weicht zuerst der Kopf zurück (Hals gestreckt, Kopf
+    ebenso weit gebeugt, Blick geradeaus, bis `KOPF_MAX`), erst danach neigt sich der Rumpf aus der Hüfte etwas nach
+    hinten (bis `LEHNE_MAX`, D-528), um den kleinsten Anteil, bei dem vor Gesicht und Hals `LUFT` und vor den Haaren
+    `LUFT_HAARE` frei bleibt (je Stelle der Stange gesucht, geglättet); oben steht der Rumpf wieder senkrecht unter der
+    Stange. Die Hüfte steht in jedem Bild so, dass der
     gemeinsame Schwerpunkt von Körper und Stange über der Fußmitte liegt; die Schlüsselbeine heben sich mit den Armen
     (`SCHULTER_HOCH`). Zurück derselbe Weg."""
 
@@ -8062,17 +8063,23 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
     LUFT = 0.012  # vor Gesicht und Hals frei, m
     # vor den Haaren frei, m: Ohne sie in der Suche streifte die Stange an der Stirn die Haare (1,2 mm darin)
     LUFT_HAARE = 0.005
-    KOPF_MAX = 15.0  # Grad
-    LEHNE_MAX = 15.0  # Rumpf aus der Hüfte nach hinten, Grad
+    # Platz für die Stange schafft zuerst der Kopf (Hals gestreckt, Kopf ebenso weit gebeugt, Blick geradeaus), erst
+    # danach der Rumpf aus der Hüfte (D-528: höchstens etwa 5 bis 8°, ohne Hohlkreuz; bis D-524 beide gemeinsam je bis 15°)
+    KOPF_MAX = 25.0  # Grad
+    LEHNE_MAX = 7.0  # Rumpf aus der Hüfte nach hinten, Grad
     # Ausgang: Stange so weit vor der Fußmitte, m; bis oben gleichmäßig zurück über die Fußmitte. Genau über der Fußmitte
-    # standen die Schultergelenke nur 2,8 cm hinter der Stange, sie lag im Hals
-    VOR_START = 0.04
+    # standen die Schultergelenke nur 2,8 cm hinter der Stange, sie lag im Hals. Mit dem Rumpf höchstens 7° zurück (D-528)
+    # reichte 4 cm nicht mehr (die Stange lag mit dem Kopf 25° zurück bis 13 mm im Gesicht, mit 6 cm 9 mm in den Haaren)
+    VOR_START = 0.08
     SCHULTER_HOCH = 14.0  # oben: Schlüsselbeine angehoben, Grad
     SCHEIBEN = [(0.45, 0.03)]  # je Seite eine Scheibe, 10 kg
     HANTEL_KG = 20.0  # je Hand die Hälfte von Stange (20 kg) und Scheiben (2 × 10 kg), für den Schwerpunkt
-    # Stange schräg in der Hand: Die Stange bleibt waagrecht, der Unterarm kippt von senkrecht (unten) nach innen (Mitte)
-    # und oben nach außen; mit 11° knickte das Handgelenk in der Mitte 23°, mit 0° oben 25°, mit 6° höchstens rund 18°
-    SCHRAEG = 6.0
+    # Stange tiefer im Handballen, über dem Unterarm (D-528: `GRIFF_LAGE` 0,45 statt 0,62), und schräg in der Hand: mit dem
+    # Unterarm von vorn senkrecht knickte das Handgelenk mit 0° Schräge 14° zur Seite, mit 6° 8°, mit 14° 0° (oben, beim
+    # fast gestreckten Arm, 8°); bis D-524 6° mit dem Unterarm „so senkrecht wie möglich“, das Handgelenk bis 21°
+    GRIFF_LAGE = 0.45
+    SCHRAEG = 14.0
+    UNTERARM_SEITE = 10.0  # Unterarm von vorn höchstens so weit zur Seite geneigt, Grad (`_regel`)
     POL = (0.35, -0.8, -0.5)  # Ellbogen nach vorn, unten und etwas außen (linke Seite)
     PROBEN = 31
 
@@ -8141,10 +8148,11 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
         Iteration so, dass der Schwerpunkt über der Fußmitte liegt. Gibt Beine, Arme und den Abstand von Gesicht und Hals
         zur Stange (m, schnell: Ecken an ihrem Knochen) zurück."""
         rig = self.rig
-        self._kopf = self.KOPF_MAX * t
-        self._lehne = self.LEHNE_MAX * t
+        # t von 0 bis 1: der Kopf geht zurück; t von 1 bis 2: dazu der Rumpf (D-528)
+        self._kopf = self.KOPF_MAX * min(t, 1.0)
+        self._lehne = self.LEHNE_MAX * max(0.0, t - 1.0)
         self._hoch = hoch
-        a = -self.LEHNE_MAX * t
+        a = -self._lehne
         dy = self._dy if hasattr(self, "_dy") else 0.0
         mitte = self._mitte(z)
         for _ in range(14):
@@ -8182,10 +8190,34 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
         anteil = max(0.0, min(1.0, (z - self.z0) / (self.z1 - self.z0)))
         return Vector((0.0, self.fussmitte_y - self.VOR_START * (1.0 - anteil), z))
 
-    @staticmethod
-    def _regel(S: Vector, W: Vector, l1: float, l2: float) -> Vector:
-        """Ellbogen so, dass der Unterarm möglichst senkrecht steht (Ellbogen unter der Stange)."""
-        return ellbogen_zur_richtung(S, W, l1, l2, Z)
+    @classmethod
+    def _regel(cls, S: Vector, W: Vector, l1: float, l2: float) -> Vector:
+        """Ellbogen unter der Stange, der Unterarm so senkrecht wie möglich, von vorn gesehen aber höchstens
+        `UNTERARM_SEITE` zur Seite geneigt (D-528): Die Stange bleibt waagrecht, kippt der Unterarm zur Seite, knickt das
+        Handgelenk zur Seite (bis D-524 ohne Grenze bis 20°; ganz ohne Neigung stand der Unterarm von der Seite bis 38°
+        schräg). Liegt die senkrechteste Lage außerhalb der Grenze, die Lage auf der Grenze mit dem steileren Unterarm; geht
+        auch das nicht (Arm fast gestreckt), die Lage, die am nächsten herankommt."""
+        E = ellbogen_zur_richtung(S, W, l1, l2, Z)
+        f = W - E
+        seite = math.degrees(math.atan2(f.x, f.z))
+        grenze = cls.UNTERARM_SEITE
+        if abs(seite) <= grenze:
+            return E
+        t = math.radians(math.copysign(grenze, seite))
+        M, h, e1, e2 = gelenkkreis(S, W, l1, l2)
+        m = Vector((math.cos(t), 0.0, -math.sin(t)))  # Unterarm in der Ebene mit f.x / f.z = tan t
+        A, B = e1.dot(m), e2.dot(m)
+        R = math.hypot(A, B)
+        if h < 1e-6 or R < 1e-9:
+            return E
+        C = (W - M).dot(m) / h
+        basis = math.atan2(B, A)
+        if abs(C) <= R:
+            d = math.acos(C / R)
+            lagen = [M + (e1 * math.cos(p) + e2 * math.sin(p)) * h for p in (basis + d, basis - d)]
+            return max(lagen, key=lambda L: (W - L).normalized().z)
+        p = basis if C > 0 else basis + math.pi
+        return M + (e1 * math.cos(p) + e2 * math.sin(p)) * h
 
     def _loesen(self) -> None:
         """Stange unten und oben, dann je Stelle der kleinste Anteil `t`, bei dem vor Gesicht und Hals `LUFT` und vor den
@@ -8219,8 +8251,8 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
             if self._pose_mit(0.0, z, hoch)[2] >= self.LUFT:
                 roh.append(0.0)
                 continue
-            lo, hi = 0.0, 1.0
-            for _ in range(12):
+            lo, hi = 0.0, 2.0
+            for _ in range(13):
                 t = (lo + hi) / 2
                 if self._pose_mit(t, z, hoch)[2] >= self.LUFT:
                     hi = t

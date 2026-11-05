@@ -3009,7 +3009,36 @@ Oben gemessen (Bild 29 bis 36):
 
 **Griff (deine Entscheidung 4):** Obergriff, wie auf der Prüfseite.
 
-### 59.4 Berichte zu den Paketen
+### 59.4 Senkrechtes Drücken (D-528)
+
+**Military Press, Ausgang (deine Entscheidung 1).** Die Stange bleibt vorn auf Höhe des Halses.
+
+**Military Press, am Kopf vorbei (deine Entscheidung 2).** Jetzt schafft zuerst der Kopf Platz: Hals gestreckt, Kopf ebenso weit gebeugt, der Blick bleibt waagrecht, bis 25°. Erst wenn das nicht reicht, geht der Rumpf aus der Hüfte zurück, höchstens 7°. Bis D-524 gingen Kopf und Rumpf gemeinsam je bis 15°. Damit die Stange mit so wenig Rumpf am Gesicht vorbeikommt, steht sie unten 8 statt 4 cm vor der Fußmitte und kommt bis oben gleichmäßig über die Fußmitte. Mit 4 cm lag sie bis 13 mm im Gesicht, mit 6 cm 9 mm in den Haaren.
+
+Das Handgelenk: Die Stange liegt tiefer im Handballen, über dem Unterarm, und 14° schräg in der Hand. Der Unterarm neigt sich von vorn höchstens 10° zur Seite; so muss das Handgelenk nicht zur Seite knicken. Verglichen habe ich 0°, 6°, 10°, 12° und 14° Schräge, 6 bis 18° Seitenneigung und drei Lagen der Stange im Ausgang.
+
+Gemessen über alle 60 Bilder:
+
+| Messwert | Prüfseite (D-522) | jetzt |
+|---|---|---|
+| Rumpf zurück, höchstens | 13,5° | 5,5° (oben 0,9° vor der Senkrechten) |
+| Lende: Wirbel gegen das Becken | – | 0,0° in jedem Bild |
+| Lende: Hautlinie gegen den aufrechten Stand | höchstens 1,6° hohler | 0,2 bis 0,8° hohler, höchstens 1,8 mm verschoben: kein Hohlkreuz |
+| Kopf zurück, höchstens | 14,3° | 25°; Blick in jedem Bild waagrecht |
+| Handgelenk, höchstens | 21° | 10,7° (gestreckt −5,1 bis 4,0°, zur Seite −9,7 bis 10,0°) |
+| Gesicht, Hals und Haare zur Stange, mindestens | 8,0 mm | 6,3 mm |
+| Schwerpunkt neben der Fußmitte | höchstens 0,3 mm | 0,0 cm; in den zwei Bildern, in denen der Kopf zurückkommt, 0,9 und 0,7 cm |
+| Ellbogen Ausgang → Ende | 35° → 176° | 37° → 176° |
+| Unterarm zur Senkrechten, höchstens | 29° | 35° |
+| Meldungen des Rigs | 0 | 0 |
+
+Eine Folge: Wenn die Stange an der Stirn vorbeigeht, steht der Unterarm bis 35° schräg (vorher 29°). Der Rumpf geht weniger zurück, die Ellbogen stehen dort vor der Stange. Oben und unten steht der Unterarm wie vorher fast senkrecht.
+
+**Schulterdrücken mit Kurzhanteln, sitzend** wie auf der Prüfseite.
+
+**Naht der Schleifen.** Beim Schulterdrücken mit Kurzhanteln sind erstes und letztes Bild pixelgleich. Bei der Military Press weicht das letzte Bild um weniger als einen zehntel Pixel ab. Die Suche nach der Lage der Hüfte geht vom vorherigen Bild aus und landet nach dem Hin und Zurück 0,3 mm daneben. In der Schleife ist das nicht zu sehen; deshalb habe ich nicht neu gerendert.
+
+### 59.5 Berichte zu den Paketen
 
 ```
 Arbeitspaket: D-525 Phase Programme, Befunde E1 bis E3 im Player (Entscheidung des Produktinhabers zu E1 bis E4)
@@ -3042,4 +3071,15 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.27
 Ergebnis: bestanden (Werte in 59.3)
 Bekannte Einschränkungen: Arme oben 16° vor der Senkrechten und die Stange 7,8 cm vor der Fußmitte (aufrecht mit der Stange an den Oberschenkeln geht es nicht anders, Begründung in 59.3); Saumband in der Hüftfalte bis 6,8 mm in den Shorts wie bei D-490
 Nächste Schritte: Schleifen „Senkrechtes Drücken“ (D-528)
+```
+
+```
+Arbeitspaket: D-528 Phase Programme, Schleifen „Senkrechtes Drücken“ (Schulterdrücken mit Langhantel stehend, Schulterdrücken mit Kurzhanteln sitzend)
+Umgesetzte Funktionen: Animationen beider Übungen in der App, damit alle 25 Übungen von Dali’s PPLC animiert; Military Press nach der Entscheidung des Produktinhabers: der Kopf schafft zuerst Platz, der Rumpf höchstens 7° zurück, die Stange tiefer im Handballen und 14° schräg, der Unterarm von vorn höchstens 10° zur Seite (`_regel`), Ausgang 8 cm vor der Fußmitte; Messwert „Rumpf zur Senkrechten“; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/uebungen-bestand.md, public/uebungen/medien.json, public/uebungen/medien/ (acht Dateien neu), e2e/uebungen.spec.ts, docs/screens/uebungen/senkrechtes-druecken-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-528
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.276 bestanden (140 Dateien); Build, Startansicht 239,9 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Zeittest der Startfläche, 1.371 statt höchstens 1.307 ms unter drei Workern; die Datei allein 18 von 18 bestanden)
+Ergebnis: bestanden (Werte in 59.2)
+Bekannte Einschränkungen: Unterarm zur Senkrechten bis 35°, wenn die Stange an der Stirn vorbeigeht (Prüfseite 29°); Naht der Military Press um weniger als 0,1 px versetzt; Schwerpunkt in zwei Bildern bis 0,9 cm neben der Fußmitte; Gewichte angenommen (Langhantel 40 kg, Kurzhanteln 8 kg)
+Nächste Schritte: Übersicht Dali’s PPLC (D-529), dann Halt für den Gerätetest
 ```

@@ -819,6 +819,60 @@
       },
       "alt": "Kreuzheben mit Langhantel, von der Seite, leicht von vorn: Füße hüftbreit, Obergriff, Rücken gerade; die Stange nah an den Beinen vom Boden bis in den aufrechten Stand heben, Hüfte und Knie gestreckt, und kontrolliert zurück auf den Boden.",
       "source": "form_3d_pilot"
+    },
+    "overhead_press_barbell": {
+      "preview": {
+        "src": "medien/schulterdruecken_langhantel-vorschau-aa8f4d88.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/schulterdruecken_langhantel-064917b1.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/schulterdruecken_langhantel-091a4c32.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/schulterdruecken_langhantel-poster-c802435a.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schulterdrücken mit Langhantel, stehend, schräg von vorn: Obergriff etwas breiter als schulterbreit, die Stange vorn auf Halshöhe; der Kopf weicht kurz zurück, die Stange steigt senkrecht, bis die Arme gestreckt sind, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "shoulder_press_dumbbell_seated": {
+      "preview": {
+        "src": "medien/schulterdruecken_kh_sitzend-vorschau-fa0728dd.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/schulterdruecken_kh_sitzend-b564c3cd.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/schulterdruecken_kh_sitzend-d862f487.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/schulterdruecken_kh_sitzend-poster-26204e78.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schulterdrücken mit Kurzhanteln, sitzend, schräg von vorn: Kopf, Schultern und Gesäß an der fast senkrechten Lehne, Handflächen nach vorn; die Hanteln von Kinnhöhe nach oben drücken, bis die Arme fast gestreckt sind, und zurück.",
+      "source": "form_3d_pilot"
     }
   }
 }

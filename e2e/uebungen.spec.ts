@@ -84,18 +84,18 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486, D-490, D-492, D-509)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486, D-490, D-492, D-509, D-513)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
   const smith = row(page, 'Bankdrücken an der Multipresse');
   await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für 14 Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // Ausgeliefert sind Animationen für 16 Übungen: die drei Pilot-Übungen (D-402), die Familie
   // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465), die Familie „Rumpf“ (D-467), das
   // Seitheben mit Kurzhanteln (D-469), das Rudern am Kabel, sitzend (D-474), der Beinbeuger liegend (D-486), das
-  // Rumänische Kreuzheben mit Kurzhanteln (D-490), das Schulterdrücken an der Maschine (D-492) und die Klimmzüge
-  // mit Unterstützung (D-509).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(14);
+  // Rumänische Kreuzheben mit Kurzhanteln (D-490), das Schulterdrücken an der Maschine (D-492), die Klimmzüge
+  // mit Unterstützung (D-509), die Dips mit Unterstützung und die Hackenschmidt-Kniebeuge (D-513).
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(16);
   await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
     'src',
     medium('bankdruecken_kh-vorschau.webp'),
@@ -127,6 +127,12 @@ test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der
   const pullUp = row(page, 'Klimmzüge mit Unterstützung').locator('img');
   await pullUp.scrollIntoViewIfNeeded();
   await expect(pullUp).toHaveAttribute('src', medium('klimmzug_unterstuetzt-vorschau.webp'));
+  const dip = row(page, 'Dips mit Unterstützung').locator('img');
+  await dip.scrollIntoViewIfNeeded();
+  await expect(dip).toHaveAttribute('src', medium('dip_unterstuetzt-vorschau.webp'));
+  const hackSquat = row(page, 'Hackenschmidt-Kniebeuge').locator('img');
+  await hackSquat.scrollIntoViewIfNeeded();
+  await expect(hackSquat).toHaveAttribute('src', medium('hackenschmidt-vorschau.webp'));
   const romanian = row(page, 'Rumänisches Kreuzheben mit Kurzhanteln').locator('img');
   await romanian.scrollIntoViewIfNeeded();
   await expect(romanian).toHaveAttribute('src', medium('rumaenisches_kreuzheben_kh-vorschau.webp'));

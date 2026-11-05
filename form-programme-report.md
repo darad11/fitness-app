@@ -2359,3 +2359,44 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: dieselbe Art Messung steht noch in anderen Tests (Duo, Übungsdetails, „Jetzt“); dort war sie bisher nicht rot
 Nächste Schritte: Halt bis zu deiner Freigabe der Prüfseiten Dip und Machine Squat
 ```
+
+## 53. Dip und Machine Squat in der App, Pull-Up neu (D-513)
+
+Nach deiner Freigabe beider Prüfseiten: Die Schleifen für Dip und Machine Squat sind gerendert und eingebaut, der Pull-Up ist mit den schwenkbaren Diparmen neu gerendert. Der Code ist der Stand der Prüfseiten, nichts daran geändert.
+
+- **Dip:** 24° Vorneigung unten, Oberarm etwa waagrecht (3° darunter), wie auf der Prüfseite. Schleife 60 Bilder, 1082 s.
+- **Machine Squat:** Hackenschmidt-Maschine mit 45°-Schlitten, unten 75° im Knie. Schleife 1189 s.
+- **Pull-Up:** dieselbe Bewegung wie in D-509, jetzt mit den Diparmen der Dip-Prüfseite, zum Pull-Up nach vorn geschwenkt. Schleife 1103 s.
+- **Alle drei:** erstes und letztes Bild pixelgleich, kein Sprung am Ende; Kontaktbogen angesehen.
+
+**Textänderung Hackenschmidt-Kniebeuge, wie gewünscht:**
+
+| | Text |
+|---|---|
+| vorher | „Geh so tief, bis die Knie kurz vor der vollen Beugung sind.“ |
+| jetzt | „Geh so tief, bis die Oberschenkel etwa parallel zur Plattform sind.“ |
+
+„Plattform“ statt „Platte“, weil der Text der Übung die Fußplatte schon so nennt („Stell die Füße … auf die Plattform“, „Fersen heben sich von der Plattform ab“). Ein Quellenhinweis unter dem Text nennt die Abweichung von ExRx.
+
+**In der App:**
+
+| Übung | MP4 | WebM | Poster | Vorschau | Alternativtext |
+|---|---|---|---|---|---|
+| Dips mit Unterstützung | 63,9 KB | 53,6 KB | 12,2 KB | 5,1 KB | 216 Zeichen |
+| Hackenschmidt-Kniebeuge | 88,0 KB | 71,0 KB | 16,9 KB | 6,4 KB | 231 Zeichen |
+| Klimmzüge mit Unterstützung (neu) | 66,5 KB | 57,9 KB | 10,1 KB | 4,9 KB | unverändert |
+
+16 Übungen haben jetzt eine Animation (vorher 14). Neue Dateinamen mit Prüfsumme, damit dein Gerät die neue Fassung lädt (D-494). Aufnahmen: `docs/screens/uebungen/dip-bewegung.mp4`, `hackenschmidt-bewegung.mp4` und `klimmzug-bewegung.mp4` (neu), je 720 × 540, 7,5 s, die Schleife dreimal.
+
+**Eigene Aufgabe nach diesem PR (deine Antwort):** die Messungen der Lage in den übrigen Tests (Duo, Übungsdetails, „Jetzt“) so robust machen wie in D-512. Steht im Plan.
+
+```
+Arbeitspaket: D-513 Phase Programme, Dip und Machine Squat in der App, Pull-Up mit den Diparmen neu
+Umgesetzte Funktionen: Animationen für Dips mit Unterstützung und Hackenschmidt-Kniebeuge in der App, Pull-Up neu; Ausführungstext der Hackenschmidt-Kniebeuge; erfüllte AK: –
+Geänderte Dateien: public/uebungen/medien/dip_unterstuetzt*, hackenschmidt*, klimmzug_unterstuetzt* (neu, die alten Pull-Up-Dateien gelöscht), public/uebungen/medien.json, src/modules/exercises/data/exercise-guides.v1.json, e2e/uebungen.spec.ts, tools/uebungen-3d/familien.json, docs/uebungen-bestand.md, docs/uebungen-animationsplan.md, docs/screens/uebungen/dip-bewegung.mp4, hackenschmidt-bewegung.mp4 (neu), klimmzug-bewegung.mp4, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/feature-inventory.csv
+Technische Entscheidungen: D-513
+Ausgeführte Tests: drei Schleifen je 60 Bilder, Naht pixelgleich, Kontaktbogen angesehen; format:check, lint, typecheck; Unit-Tests 1.273 bestanden; build, check:bundle (Startansicht 239,7 KB, Übungsbilder 64 von 64); check:docs; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: Maße der Maschinen geschätzt, wie freigegeben; weicht deine Maschine ab, passen wir sie später an
+Nächste Schritte: Prüfseiten der Familien „Beine isoliert“ und „Arme beugen und strecken“, Halt bis zur Freigabe; nach diesem PR die Messungen der Lage in den übrigen Tests
+```

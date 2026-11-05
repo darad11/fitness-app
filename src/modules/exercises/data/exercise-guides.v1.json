@@ -3197,7 +3197,7 @@
       ],
       "steps": [
         "Senk den Schlitten ab, indem du Knie und Hüfte beugst.",
-        "Geh so tief, bis die Knie kurz vor der vollen Beugung sind.",
+        "Geh so tief, bis die Oberschenkel etwa parallel zur Plattform sind.",
         "Drück dich zurück nach oben, bis die Beine gestreckt sind."
       ],
       "cues": [
@@ -3214,7 +3214,8 @@
           "title": "ExRx.net: Sled Hack Squat",
           "url": "https://exrx.net/WeightExercises/Quadriceps/SLHackSquat"
         }
-      ]
+      ],
+      "sourceNote": "Tiefe wie in der Animation: Oberschenkel etwa parallel zur Plattform (Entscheidung des Produktinhabers); die Quelle nennt „bis die Knie kurz vor der vollen Beugung sind“."
     },
     "bulgarian_split_squat_dumbbell": {
       "summary": "Einbeinige Kniebeuge mit Kurzhanteln: Der hintere Fuß liegt auf einer Bank, du beugst das vordere Bein, bis das hintere Knie fast den Boden berührt.",

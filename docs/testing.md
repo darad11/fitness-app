@@ -3387,3 +3387,19 @@ Abfragen der Lage im Test warten, statt beim Umbau des Players abzubrechen (D-51
 | Nachgestellt (Element erscheint nach 0,5 s) | mit `box`: Fehler nach 72 ms; mit `lage`: bestanden nach 907 ms |
 | `pnpm test:e2e e2e/duo-player.spec.ts --repeat-each=3` (Chromium) | 15 bestanden, 15 übersprungen (WebKit nur in der CI) |
 | `pnpm lint` für die Datei, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium) | bestanden; Startansicht 239,7 KB, Übungsbilder 56 von 56; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen (14,4 min); WebKit in der CI |
+
+### Dip und Machine Squat in der App, Pull-Up neu · 05.11.2026, Cloud-Umgebung
+
+Schleifen für Dips mit Unterstützung und Hackenschmidt-Kniebeuge, Pull-Up mit den schwenkbaren Diparmen neu, Text der Hackenschmidt-Kniebeuge an die Animation angepasst (D-513).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py dip_unterstuetzt`, `render.py hackenschmidt`, `render.py klimmzug_unterstuetzt` (nacheinander, Stand der Prüfseiten D-510 und D-511) | 1082 s, 1189 s, 1103 s für je 60 Bilder, 720 × 540; erstes und letztes Bild pixelgleich (Unterschied 0,0), Kontaktbogen angesehen |
+| `python3 tools/uebungen_medien_version.py` | 12 Dateien mit Prüfsumme im Namen, die vier alten Dateien des Pull-Ups gelöscht |
+| Einträge `assisted_dip`, `hack_squat` in `public/uebungen/medien.json` | Alternativtexte 216 und 231 Zeichen |
+| `tools/uebungen_bewegung.py` (dip, hackenschmidt, klimmzug) | je 720 × 540, 7,5 s; 136 KB, 186 KB, 145 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py`, `uebungen_animationsplan.py`, `exercise_library_to_md.py --check`, `feature_inventory_to_csv.py` | Visuals 16; Plan mit dem neuen Stand; Texte aktuell; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 64 von 64 Dateien |
+| `pnpm test:e2e` (Chromium, Blender ruhte) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 14,4 min; Übungsliste mit 16 Bildern |

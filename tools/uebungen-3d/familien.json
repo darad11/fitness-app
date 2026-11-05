@@ -1,6 +1,6 @@
 {
   "stand": "2026-10-27",
-  "fortschritt_stand": "04.11.2026",
+  "fortschritt_stand": "05.11.2026",
   "fortschritt": {
     "back_squat_barbell": "Schleife in der App (D-461)",
     "bench_press_barbell": "Schleife in der App (D-461)",
@@ -15,9 +15,9 @@
     "lying_leg_curl": "Schleife in der App (D-486)",
     "romanian_deadlift_dumbbell": "Schleife in der App (D-490)",
     "shoulder_press_machine": "Schleife in der App (D-492)",
-    "assisted_pull_up": "Schleife in der App (D-509)",
-    "assisted_dip": "Prüfseite, wartet auf deine Freigabe (D-510)",
-    "hack_squat": "Prüfseite, wartet auf deine Freigabe (D-511)"
+    "assisted_pull_up": "Schleife in der App (D-509, mit den Diparmen neu in D-513)",
+    "assisted_dip": "Schleife in der App (D-513)",
+    "hack_squat": "Schleife in der App (D-513)"
   },
   "uebungen": {
     "bench_press_barbell": {

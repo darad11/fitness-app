@@ -11,12 +11,28 @@
   },
   "visuals": {
     "back_squat_barbell": {
-      "preview": { "src": "medien/kniebeuge-vorschau-6b73396c.webp", "width": 240, "height": 240 },
+      "preview": {
+        "src": "medien/kniebeuge-vorschau-6b73396c.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/kniebeuge-8ccb4065.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/kniebeuge-d813c2d2.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/kniebeuge-poster-267197bc.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/kniebeuge-8ccb4065.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/kniebeuge-d813c2d2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/kniebeuge-poster-267197bc.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Kniebeuge mit Langhantel auf dem oberen Rücken, schräg von vorn: Hüfte nach unten und hinten bis Oberschenkel waagrecht, Knie über den Zehen, Füße flach am Boden, und zurück.",
       "source": "form_3d_pilot"
@@ -29,9 +45,21 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/bankdruecken-ddbc29ea.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/bankdruecken-67b21bbe.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/bankdruecken-poster-6f385648.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/bankdruecken-ddbc29ea.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/bankdruecken-67b21bbe.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/bankdruecken-poster-6f385648.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Bankdrücken auf der Flachbank, schräg von vorn oben: Stange von gestreckten Armen bis zur unteren Brust und zurück, Handgelenke gerade über den Ellbogen, Füße flach am Boden.",
       "source": "form_3d_pilot"
@@ -44,8 +72,16 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/bankdruecken_kh-5e6bb756.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/bankdruecken_kh-2d05e433.webm", "width": 720, "height": 540 },
+        "file": {
+          "src": "medien/bankdruecken_kh-5e6bb756.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/bankdruecken_kh-2d05e433.webm",
+          "width": 720,
+          "height": 540
+        },
         "still": {
           "src": "medien/bankdruecken_kh-poster-4468c502.webp",
           "width": 720,
@@ -83,23 +119,55 @@
       "source": "form_3d_pilot"
     },
     "lat_pulldown": {
-      "preview": { "src": "medien/latziehen-vorschau-4576ccc7.webp", "width": 240, "height": 240 },
+      "preview": {
+        "src": "medien/latziehen-vorschau-4576ccc7.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/latziehen-1c75e4f5.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/latziehen-138491c1.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/latziehen-poster-7e910920.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/latziehen-1c75e4f5.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/latziehen-138491c1.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/latziehen-poster-7e910920.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Handgelenke gerade, Oberschenkel unter dem Polster.",
       "source": "form_3d_pilot"
     },
     "leg_press": {
-      "preview": { "src": "medien/beinpresse-vorschau-aa2dde84.webp", "width": 240, "height": 240 },
+      "preview": {
+        "src": "medien/beinpresse-vorschau-aa2dde84.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/beinpresse-e67294c1.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/beinpresse-2f6e032c.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/beinpresse-poster-4e5510c4.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/beinpresse-e67294c1.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinpresse-2f6e032c.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinpresse-poster-4e5510c4.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Beinpresse 45°, schräg von der Seite: Platte von fast gestreckten Beinen bis Knie 95° heran und zurück, Rücken und Gesäß bleiben an Lehne und Sitz, Füße flach auf der Platte, Knie über den Zehen.",
       "source": "form_3d_pilot"
@@ -112,8 +180,16 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/unterarmstuetz-82d47471.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/unterarmstuetz-3a3cab6d.webm", "width": 720, "height": 540 },
+        "file": {
+          "src": "medien/unterarmstuetz-82d47471.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/unterarmstuetz-3a3cab6d.webm",
+          "width": 720,
+          "height": 540
+        },
         "still": {
           "src": "medien/unterarmstuetz-poster-e186d6c5.webp",
           "width": 720,
@@ -124,12 +200,28 @@
       "source": "form_3d_pilot"
     },
     "crunch": {
-      "preview": { "src": "medien/crunch-vorschau-a848eef2.webp", "width": 240, "height": 240 },
+      "preview": {
+        "src": "medien/crunch-vorschau-a848eef2.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/crunch-c284e730.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/crunch-47baf19a.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/crunch-poster-79b1c4ac.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/crunch-c284e730.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/crunch-47baf19a.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/crunch-poster-79b1c4ac.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Crunches auf der Matte, schräg von der Seite: Rückenlage, Knie gebeugt, Füße flach, Arme vor der Brust verschränkt; Oberkörper einrollen, bis die Schulterblätter abheben, und zurück, unterer Rücken bleibt liegen, Kopf leicht angehoben.",
       "source": "form_3d_pilot"
@@ -142,9 +234,21 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/seitheben_kh-48862ed0.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/seitheben_kh-ac582440.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/seitheben_kh-poster-c806b7d6.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/seitheben_kh-48862ed0.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/seitheben_kh-ac582440.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/seitheben_kh-poster-c806b7d6.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Seitheben mit Kurzhanteln im Stand, schräg von vorn: Hanteln von vor den Oberschenkeln seitlich und leicht schräg nach vorn bis Schulterhöhe und zurück, Ellbogen leicht gebeugt, Rumpf leicht vorgeneigt.",
       "source": "form_3d_pilot"
@@ -157,9 +261,21 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/rudern_kabel-34385aaf.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/rudern_kabel-b66e573e.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/rudern_kabel-poster-90a924ad.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/rudern_kabel-34385aaf.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rudern_kabel-b66e573e.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rudern_kabel-poster-90a924ad.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Rudern am Kabel, sitzend, schräg von hinten: aufrecht, Knie gebeugt, Füße auf der Fußplatte; V-Griff am waagrechten Kabel zu den unteren Rippen ziehen, Schulterblätter zusammen, dann kontrolliert nach vorn bis zu gestreckten Armen.",
       "source": "form_3d_pilot"
@@ -172,8 +288,16 @@
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/beinbeuger_liegend-794e162c.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/beinbeuger_liegend-ccd35385.webm", "width": 720, "height": 540 },
+        "file": {
+          "src": "medien/beinbeuger_liegend-794e162c.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinbeuger_liegend-ccd35385.webm",
+          "width": 720,
+          "height": 540
+        },
         "still": {
           "src": "medien/beinbeuger_liegend-poster-d381e02c.webp",
           "width": 720,
@@ -239,25 +363,83 @@
     },
     "assisted_pull_up": {
       "preview": {
-        "src": "medien/klimmzug_unterstuetzt-vorschau-5d10c2dc.webp",
+        "src": "medien/klimmzug_unterstuetzt-vorschau-c9cd32a3.webp",
         "width": 240,
         "height": 240
       },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/klimmzug_unterstuetzt-a9a4d94b.mp4", "width": 720, "height": 540 },
+        "file": {
+          "src": "medien/klimmzug_unterstuetzt-df57aa80.mp4",
+          "width": 720,
+          "height": 540
+        },
         "webm": {
-          "src": "medien/klimmzug_unterstuetzt-4569e9d4.webm",
+          "src": "medien/klimmzug_unterstuetzt-d42959f7.webm",
           "width": 720,
           "height": 540
         },
         "still": {
-          "src": "medien/klimmzug_unterstuetzt-poster-5b3de6bc.webp",
+          "src": "medien/klimmzug_unterstuetzt-poster-3f90cfc6.webp",
           "width": 720,
           "height": 540
         }
       },
       "alt": "Klimmzüge mit Unterstützung, schräg von hinten: kniend auf dem Kniepolster, weiter Obergriff an den Griffen oben; hochziehen, bis der Hals auf Höhe der Hände ist und die Brust zur Stange kommt, und ruhig zurück in den Hang.",
+      "source": "form_3d_pilot"
+    },
+    "assisted_dip": {
+      "preview": {
+        "src": "medien/dip_unterstuetzt-vorschau-dfeba79f.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/dip_unterstuetzt-70bd1627.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/dip_unterstuetzt-a55daeb2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/dip_unterstuetzt-poster-d2753639.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Dips mit Unterstützung, schräg von hinten: kniend auf dem Kniepolster, Hände neben den Hüften auf den Dipgriffen; den Körper absenken, bis die Oberarme etwa waagrecht sind, und mit gestreckten Armen zurück nach oben.",
+      "source": "form_3d_pilot"
+    },
+    "hack_squat": {
+      "preview": {
+        "src": "medien/hackenschmidt-vorschau-489b3771.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/hackenschmidt-06fe687b.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/hackenschmidt-f7d1668a.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/hackenschmidt-poster-04fd80f3.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Hackenschmidt-Kniebeuge an der Maschine, schräg von vorn: Rücken am Polster des Schlittens, Schultern unter den Polstern, Füße auf der Plattform; in die Knie gehen, bis die Oberschenkel etwa parallel zur Plattform sind, und zurück.",
       "source": "form_3d_pilot"
     }
   }

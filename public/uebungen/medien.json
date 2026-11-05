@@ -765,6 +765,33 @@
       },
       "alt": "Reverse Butterfly an der Maschine, schräg von hinten: Brust am Polster, Arme leicht gebeugt auf Schulterhöhe, Daumen oben; die Griffe im Bogen nach hinten führen, bis die Ellbogen auf Höhe des Oberkörpers sind, und zurück.",
       "source": "form_3d_pilot"
+    },
+    "cable_crunch": {
+      "preview": {
+        "src": "medien/kabelcrunch_kniend-vorschau-c35ce9d8.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/kabelcrunch_kniend-25ec96db.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/kabelcrunch_kniend-b3a08770.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/kabelcrunch_kniend-poster-d273428a.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Crunches am Kabel, kniend, von der Seite, leicht von vorn: Zehen aufgestellt, das Seil seitlich am Kopf; den Rumpf einrollen, bis die Ellbogen zu den Oberschenkeln kommen, Becken und Beine bleiben, wo sie sind, und zurück.",
+      "source": "form_3d_pilot"
     }
   }
 }

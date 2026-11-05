@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.123 (Phase Programme, Rumpf in der App, 05.11.2026): Status unverändert; Animation für „Crunches am Kabel, kniend“ in der App, 29 Übungen mit Animation (D-526).
 - Version 0.122 (Phase Programme, Befunde E1 bis E3 im Player, 05.11.2026): Status unverändert; TS-02 und TS-07: Zahlen bleiben in einer Zeile mit dem Wort davor („Ziel 10“), die kleine Pause zeigt am iPhone hoch den vollen Namen der nächsten Übung; Dialoge stehen am Duo zugeklappt mittig im Fenster mit voller Breite (D-525).
 - Version 0.121 (Phase Programme, Prüfseite Rumpf, 05.11.2026): Status unverändert; Prüfseite mit Crunches am Kabel, kniend, an einem neuen Seilgriff, noch nicht in der App (D-524).
 - Version 0.120 (Phase Programme, Prüfseite Hüftbeuge, 05.11.2026): Status unverändert; Prüfseite mit Kreuzheben mit Langhantel, noch nicht in der App (D-523).

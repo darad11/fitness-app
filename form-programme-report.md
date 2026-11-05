@@ -2981,7 +2981,11 @@ Du hast die Prüfseiten „Senkrechtes Drücken“, „Hüftbeuge“ und „Rump
 
 Neue Tests: E1 und E2 am iPhone hoch (390 × 844), E3 am nachgestellten Duo zugeklappt und aufgeklappt. Gegen den Stand davor sind alle drei rot, mit der Änderung grün.
 
-### 59.2 Berichte zu den Paketen
+### 59.2 Rumpf (D-526)
+
+**Crunches am Kabel, kniend (deine Entscheidung 5):** Zehen aufgestellt, bleibt. Die Schleife ist wie auf der Prüfseite (D-524).
+
+### 59.3 Berichte zu den Paketen
 
 ```
 Arbeitspaket: D-525 Phase Programme, Befunde E1 bis E3 im Player (Entscheidung des Produktinhabers zu E1 bis E4)
@@ -2991,5 +2995,16 @@ Technische Entscheidungen: D-525
 Ausgeführte Tests: format:check, lint, typecheck; Unit-Tests 1.276 bestanden (140 Dateien); check:docs; build; check:bundle (Startansicht 239,9 KB); pnpm test:e2e (Chromium) 472 bestanden, 153 übersprungen, 1 fehlgeschlagen: duo-player.spec.ts „Pause zugeklappt in einer Zeile“ suchte „Aufwärmsatz 2“ mit normalem Leerzeichen; Muster auf \s geändert, danach duo-player.spec.ts 5 bestanden, 5 übersprungen; Gegenprobe der drei neuen E2E-Tests gegen den Stand davor: alle drei rot
 Ergebnis: bestanden
 Bekannte Einschränkungen: E4 bleibt wie entschieden; WebKit läuft in der CI
-Nächste Schritte: Schleifen „Senkrechtes Drücken“ (D-526), „Hüftbeuge“ (D-527) und „Rumpf“ (D-528), Übersicht Dali’s PPLC (D-529), dann Halt für den Gerätetest
+Nächste Schritte: Schleifen „Rumpf“ (D-526), „Hüftbeuge“ (D-527) und „Senkrechtes Drücken“ (D-528), Übersicht Dali’s PPLC (D-529), dann Halt für den Gerätetest
+```
+
+```
+Arbeitspaket: D-526 Phase Programme, Schleife „Rumpf“ (Crunches am Kabel, kniend)
+Umgesetzte Funktionen: Animation in der App; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/uebungen-bestand.md, public/uebungen/medien.json, public/uebungen/medien/ (vier Dateien neu), e2e/uebungen.spec.ts, docs/screens/uebungen/rumpf-pplc-bewegung.mp4 (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-526
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.274 von 1.276 neben zwei Blender-Renderläufen (zwei Tests der Tagesaufgaben mit Zeitüberschreitung, 5,1 s; die Datei allein 11 von 11 bestanden); Build, Startansicht 239,9 KB, Übungsbilder 116 von 116; E2E Chromium 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Scanner zugeklappt, Rückfrage zu Open Food Facts kam unter Last nicht; allein 3 von 3 bestanden); Naht pixelgleich
+Ergebnis: bestanden
+Bekannte Einschränkungen: Maße von Seil und Kabelzug geschätzt (wie D-524)
+Nächste Schritte: Schleife „Hüftbeuge“ (D-527)
 ```

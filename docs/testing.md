@@ -3623,3 +3623,13 @@ Geschütztes Leerzeichen zwischen Wort und Zahl, kleine Pause mit vollem Namen d
 | `pnpm test` | 140 Dateien, 1.276 Tests bestanden |
 | `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,9 KB (Grenze 250 KB), Übungsbilder 112 von 112 |
 | `pnpm test:e2e` (Chromium, Blender angehalten) | 472 bestanden, 153 übersprungen, 1 fehlgeschlagen: `duo-player.spec.ts` „Pause zugeklappt in einer Zeile“ suchte `/Aufwärmsatz 2/` mit normalem Leerzeichen, die App setzt dort jetzt ein geschütztes (E1); Muster auf `/Aufwärmsatz\s2/` geändert, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen |
+
+### Rumpf in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Crunches am Kabel, kniend, als Schleife (D-526).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Messwerte | unverändert gegenüber der Prüfseite (D-524, `docs/testing.md` dort), Code der Übung seitdem nicht geändert |
+| Schleifen (`render.py`, je 60 Bilder) | erstes und letztes Bild pixelgleich; Crunches am Kabel, kniend MP4 65,6 KB, WebM 52,3 KB, Poster 8,9 KB, Vorschau 5,0 KB, geladen (MP4, Poster, Vorschau) 79,4 KB |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.274 von 1.276 neben zwei Blender-Renderläufen (zwei Tests der Tagesaufgaben mit Zeitüberschreitung, 5,1 s; die Datei allein 11 von 11 bestanden); Build, Startansicht 239,9 KB, Übungsbilder 116 von 116; E2E Chromium 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Scanner zugeklappt, Rückfrage zu Open Food Facts kam unter Last nicht; allein 3 von 3 bestanden); Naht pixelgleich |

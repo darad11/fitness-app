@@ -2341,3 +2341,21 @@ Ergebnis: bestanden (Werte in 51.2)
 Bekannte Einschränkungen: Maße der Maschine geschätzt
 Nächste Schritte: Halt bis zu deiner Freigabe beider Prüfseiten und deinen Antworten in 51.3; danach Schleifen Dip und Machine Squat, Pull-Up neu mit den Diparmen, dann die nächsten Familien (Beine isoliert, Arme beugen und strecken)
 ```
+
+## 52. Roter E2E-Lauf zu D-509: Test robust (D-512)
+
+In der CI war zum Commit des Pull-Ups (`1027d78`) ein E2E-Test rot: „Player aufgeklappt“ am Duo, mit der Meldung „nicht sichtbar“. Der nächste Commit mit gleichem App-Code war grün, lokal auch.
+
+- **Ursache:** Der Test misst die Lage von Kopf, Liste und Pause wiederholt, bis sie stimmt. Hat ein Teil gerade keine Fläche, weil der Player nach dem Wechsel der Fenstergröße umbaut, warf die Messung einen Fehler, und Playwright bricht die Wiederholung bei einem Fehler sofort ab. Nachgestellt: Fehler nach 72 ms, obwohl das Element nach 0,5 s da ist.
+- **Behoben:** Die Messung meldet jetzt „noch nicht sichtbar“ und wartet weiter. Dreimal hintereinander grün; die App ist unverändert.
+
+```
+Arbeitspaket: D-512 Phase Programme, E2E „Player aufgeklappt“ am Duo robust
+Umgesetzte Funktionen: keine in der App; Test: Abfragen der Lage mit expect.poll warten, statt abzubrechen; erfüllte AK: –
+Geänderte Dateien: e2e/duo-player.spec.ts, form-programme-report.md, docs/decisions.md, docs/testing.md
+Technische Entscheidungen: D-512
+Ausgeführte Tests: Ursache im Quelltext von Playwright und nachgestellt; duo-player.spec.ts dreimal (15 bestanden); lint, typecheck, format:check, check:docs, check:bundle (Startansicht 239,7 KB); E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen; WebKit in der CI
+Ergebnis: bestanden
+Bekannte Einschränkungen: dieselbe Art Messung steht noch in anderen Tests (Duo, Übungsdetails, „Jetzt“); dort war sie bisher nicht rot
+Nächste Schritte: Halt bis zu deiner Freigabe der Prüfseiten Dip und Machine Squat
+```

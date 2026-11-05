@@ -17,10 +17,25 @@ interface Box {
 }
 
 async function box(locator: Locator): Promise<Box> {
-  const b = await locator.boundingBox();
+  const b = await lage(locator);
   if (!b) throw new Error('nicht sichtbar');
-  return { left: b.x, right: b.x + b.width, top: b.y, bottom: b.y + b.height, height: b.height };
+  return b;
 }
+
+/**
+ * Wie `box`, aber für `expect.poll` (D-512): Ohne Fläche, etwa während der Player nach einer neuen
+ * Fenstergröße umbaut, gibt es `null`, und die Abfrage wartet weiter. `box` würde werfen, und
+ * `expect.poll` bricht bei einem Fehler in der Abfrage sofort ab, statt sie zu wiederholen.
+ */
+async function lage(locator: Locator): Promise<Box | null> {
+  const b = await locator.boundingBox();
+  return b
+    ? { left: b.x, right: b.x + b.width, top: b.y, bottom: b.y + b.height, height: b.height }
+    : null;
+}
+
+/** Breite für `expect.poll`; ohne Fläche `NaN`, das keinen Vergleich besteht. */
+const breite = (b: Box | null) => (b ? b.right - b.left : Number.NaN);
 
 /** Programm aktivieren, Training starten, ersten Satz mit Werten erledigen: Die Pause läuft. */
 async function startWithRest(page: Page) {
@@ -60,7 +75,10 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
   const expectHeadLeft = async () => {
     await expect
       .poll(async () => {
-        const [h, l, r] = [await box(head), await box(list), await box(rest)];
+        const [h, l, r] = [await lage(head), await lage(list), await lage(rest)];
+        if (!h || !l || !r) {
+          return `nicht sichtbar: Kopf ${h ? 'ja' : 'nein'}, Liste ${l ? 'ja' : 'nein'}, Pause ${r ? 'ja' : 'nein'}`;
+        }
         const ok =
           h.left <= l.left + 1 &&
           Math.abs(h.right - l.right) <= 1 &&
@@ -93,7 +111,12 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
   await expect(upNext).toBeVisible();
   await expect(upNext.getByRole('listitem')).toHaveCount(4);
   await expect(upNext).toContainText('Bankdrücken mit Kurzhanteln');
-  await expect.poll(async () => (await box(head)).left > (await box(list)).right).toBe(true);
+  await expect
+    .poll(async () => {
+      const [h, l] = [await lage(head), await lage(list)];
+      return h !== null && l !== null && h.left > l.right;
+    })
+    .toBe(true);
   expect((await box(rest)).left).toBeGreaterThan((await box(list)).right);
   await expect(rest.getByRole('button', { name: '15 s weniger' })).toBeVisible();
   await axe();
@@ -215,7 +238,7 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
   await startWithRest(page);
   const rest = page.getByRole('region', { name: 'Pause' });
   // Eine Zeile: Zeit, nächster Satz, „Überspringen“; vorher rund 150 px hoch.
-  await expect.poll(async () => (await box(rest)).height).toBeLessThanOrEqual(80);
+  await expect.poll(async () => (await lage(rest))?.height ?? Number.NaN).toBeLessThanOrEqual(80);
   await expect(rest.getByRole('button', { name: 'Pause überspringen' })).toBeVisible();
   await expect(rest.getByRole('button', { name: '15 s mehr' })).toBeHidden();
   // Der nächste Satz bleibt für Screenreader genannt und steht sichtbar neben der Zeit, in
@@ -265,7 +288,7 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
     `erstes Bild nach dem Wechsel (vorher ${String(before)}, Kopf bis ${String(headBottom)})`,
   ).toBeLessThanOrEqual(4);
   await expect(rest.getByRole('button', { name: '15 s mehr' })).toBeVisible();
-  await expect.poll(async () => (await box(rest)).height).toBeGreaterThan(100);
+  await expect.poll(async () => (await lage(rest))?.height ?? Number.NaN).toBeGreaterThan(100);
   // ±15 s wirken in der Karte wie bisher.
   const timer = rest.getByRole('timer');
   const seconds = async () => {
@@ -278,8 +301,8 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
 
   // iPhone SE (320 × 568): eine Zeile ohne Wortrest; der nächste Satz nur für Screenreader.
   await page.setViewportSize({ width: 320, height: 568 });
-  await expect.poll(async () => (await box(rest)).height).toBeLessThanOrEqual(80);
-  await expect.poll(async () => (await box(nextSet)).right - (await box(nextSet)).left).toBe(1);
+  await expect.poll(async () => (await lage(rest))?.height ?? Number.NaN).toBeLessThanOrEqual(80);
+  await expect.poll(async () => breite(await lage(nextSet))).toBe(1);
   await expect(rest).toContainText('Nächster Satz:');
 });
 
@@ -314,21 +337,22 @@ test('Satzzeile unter 20 rem: Vorwert in einer zweiten Zeile, Felder breit genug
   await page.setViewportSize({ width: 390, height: 800 });
   await expect
     .poll(async () => {
-      const [p, w] = [await box(previous), await box(weight)];
-      return p.top < w.bottom && p.bottom > w.top;
+      const [p, w] = [await lage(previous), await lage(weight)];
+      return p !== null && w !== null && p.top < w.bottom && p.bottom > w.top;
     })
     .toBe(true);
 
   // 360 pt: Vorwert mit Namen unter den Feldern; „102,5“ passt ins Feld.
   await page.setViewportSize({ width: 360, height: 800 });
-  await expect.poll(async () => (await box(previous)).top >= (await box(weight)).bottom).toBe(true);
+  await expect
+    .poll(async () => {
+      const [p, w] = [await lage(previous), await lage(weight)];
+      return p !== null && w !== null && p.top >= w.bottom;
+    })
+    .toBe(true);
   // Der Name „Vorwert:“ steht jetzt sichtbar davor (sonst nur für Screenreader).
   await expect
-    .poll(
-      async () =>
-        (await box(row.getByText('Vorwert:', { exact: true }))).right -
-        (await box(row.getByText('Vorwert:', { exact: true }))).left,
-    )
+    .poll(async () => breite(await lage(row.getByText('Vorwert:', { exact: true }))))
     .toBeGreaterThan(20);
   await weight.fill('102,5');
   await weight.blur();
@@ -338,7 +362,5 @@ test('Satzzeile unter 20 rem: Vorwert in einer zweiten Zeile, Felder breit genug
 
   // 320 pt: weiter zwei Zeilen, die Felder mindestens 44 px breit (vorher 25 px).
   await page.setViewportSize({ width: 320, height: 640 });
-  await expect
-    .poll(async () => (await box(weight)).right - (await box(weight)).left)
-    .toBeGreaterThanOrEqual(44);
+  await expect.poll(async () => breite(await lage(weight))).toBeGreaterThanOrEqual(44);
 });

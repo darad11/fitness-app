@@ -3375,3 +3375,15 @@ Machine Squat an einer neuen Hackenschmidt-Maschine; nur Werkzeug, Bilder und Do
 | Prüfansichten und Nahaufnahmen angesehen | von der Seite, von vorn und in der Kamera der App wie erwartet; Hand um den Griff, Fuß flach auf der Platte |
 | Prüfseite (`tools/uebungen_pruef_bild.py hackenschmidt --familie kniebeuge-hackenschmidt --titel "Kniebeuge (Dali’s PPLC)"`) | `familie-kniebeuge-hackenschmidt.webp`, angesehen; „Füße auf der Platte verschoben 332,7 mm“ war der Weg des Schlittens (gemessen am Leerobjekt `schlitten` wie bei der Beinpresse), Attribut in `wagen` umbenannt, neu gemessen (`--nur-messwerte`): 0,1 mm, alle übrigen Werte gleich, Prüfseite neu zusammengesetzt |
 | `pnpm format:check`, `pnpm check:docs` | bestanden |
+
+### E2E „Player aufgeklappt“ am Duo robust · 05.11.2026, Cloud-Umgebung
+
+Abfragen der Lage im Test warten, statt beim Umbau des Players abzubrechen (D-512).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `1027d78`, E2E Chromium | 1 fehlgeschlagen: `duo-player.spec.ts` „Player aufgeklappt …“ (Handy), Lauf und Wiederholung „Error: nicht sichtbar“; 468 bestanden, 151 übersprungen. Zu `ec5f498` (gleicher App-Code) grün |
+| Quelltext Playwright 1.64.1 (`invokePollMatcher`) | die Abfrage von `expect.poll` steht vor dem `try`: ein Fehler darin beendet die Abfrage sofort |
+| Nachgestellt (Element erscheint nach 0,5 s) | mit `box`: Fehler nach 72 ms; mit `lage`: bestanden nach 907 ms |
+| `pnpm test:e2e e2e/duo-player.spec.ts --repeat-each=3` (Chromium) | 15 bestanden, 15 übersprungen (WebKit nur in der CI) |
+| `pnpm lint` für die Datei, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium) | bestanden; Startansicht 239,7 KB, Übungsbilder 56 von 56; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen (14,4 min); WebKit in der CI |

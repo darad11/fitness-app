@@ -6254,8 +6254,322 @@ class WadenhebenSitzend(WadenhebenStehend):
         return [q for q in _netz(self.koerper) if (q - hand).length < 0.10] + [m + k * halb, m - k * halb]
 
 
+# ---------------------------------------------------------------------- Familie „Arme beugen und strecken“ (D-515)
+
+
+class Bizepscurl(Seitheben):
+    """Bizepscurls mit Kurzhanteln, stehend (Familie „Arme beugen und strecken“, D-515), nach dem Ausführungstext der App
+    (ExRx „Dumbbell Curl“). Stand wie beim Seitheben, der Rumpf aufrecht (`NEIGUNG`), die Knie leicht gebeugt. Je Hand
+    eine Kurzhantel (`geraete.KH8`), die Hanteln hängen an den Seiten, die Handflächen zum Körper (Daumen vorn); der
+    Oberarm so weit zur Seite, dass die Köpfe `LUFT` vor Oberschenkeln und Shorts bleiben (`_ausgang`). Beide Arme
+    beugen gleichzeitig (der Text erlaubt beides): der Ellbogen von `ELLBOGEN_UNTEN` bis `ELLBOGEN_OBEN`, der Oberarm geht
+    dabei bis `VOR` nach vorn („Der Ellbogen darf oben leicht nach vorn gehen“), der Unterarm dreht nach außen
+    (`DREHUNG`), bis die Handfläche oben zur Schulter zeigt. Abwärts derselbe Weg."""
+
+    name = "bizepscurl_kh"
+    titel = "Bizepscurls mit Kurzhanteln"
+    kamera = {"richtung": 30.0, "neigung": 8.0}
+    vorschau_phase = 1.0
+    NEIGUNG = 0.0
+    KNIE = 172.0
+    # „bis der Arm gestreckt ist“, nicht durchgedrückt: Mit 168° fand die Hand den Griff unten nicht (6,8 mm daneben), im
+    # dritten Bild sprang der Arm auf 178°; mit 165° liegt die Hand in jedem Bild am Ziel (höchstens 0,2 mm)
+    ELLBOGEN_UNTEN = 165.0
+    ELLBOGEN_OBEN = 40.0  # Familie: 130 bis 145° gebeugt
+    VOR = 25.0  # Oberarm oben so weit vor der Senkrechten, Grad
+    DREHUNG = 90.0  # Unterarm oben so weit nach außen gedreht (Handfläche zur Schulter), Grad
+    LUFT = 0.012  # Köpfe der Hanteln unten mindestens so weit vor Haut, Shorts und Shirt, m
+    griff_ansichten = (("griff_vorn", 15.0, 10.0), ("griff_seite", 100.0, 20.0))
+
+    def bauen(self) -> None:
+        super().bauen()
+        self.seite_grad = 6.0  # Oberarm zur Seite, Grad; `_ausgang` sucht ihn
+
+    def _curl_rahmen(self, s: str, p: float) -> tuple[Vector, Vector, Vector, Vector, Vector]:
+        """Oberarm `u`, Unterarm `f`, Beugerichtung `b`, Griffachse `k` (Zeigefinger → kleiner Finger) und Handfläche `n`
+        in Phase p (Raum des Skeletts, Blick nach −y)."""
+        sx = 1 if s == "L" else -1
+        a = math.radians(self.seite_grad)
+        u = achse_winkel(X, -self.VOR * p) @ Vector((sx * math.sin(a), 0.0, -math.cos(a)))
+        b = senkrecht(-Y, u)
+        beta = math.radians(180.0 - (self.ELLBOGEN_UNTEN + (self.ELLBOGEN_OBEN - self.ELLBOGEN_UNTEN) * p))
+        f = (u * math.cos(beta) + b * math.sin(beta)).normalized()
+        achse = u.cross(b).normalized()
+        k = senkrecht(achse_winkel(achse, math.degrees(beta)) @ senkrecht(Y, u), f)
+        if self.DREHUNG:
+            k = achse_winkel(f, -sx * self.DREHUNG * p) @ k
+        n = (k.cross(f) * sx).normalized()
+        return u, f, b, k, n
+
+    def _curl_arm(self, s: str, p: float) -> dict:
+        """Arm `s` in Phase p: Handgelenk aus Ober- und Unterarm, die Mitte des Griffs so, dass das Handgelenk dort liegt
+        (wie beim Seitheben nachgeführt); Hantel an den Griff."""
+        rig = self.rig
+        u, f, b, k, n = self._curl_rahmen(s, p)
+        S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+        l1, l2 = self.armlaengen
+        W = S + u * l1 + f * l2
+        versatz = f * 0.07 + n * 0.025
+        # Ellbogen nach unten und etwas nach hinten: oben läuft die Linie Schulter → Hand nach vorn, „nach hinten“ allein
+        # stünde längs dieser Linie und ließe den Ellbogen zur Seite fallen
+        pol = Vector((0.0, 0.3, -1.0)).normalized()
+        # Drehung der Hand um den Griff einmal frei gesucht (am Griff in der Verlängerung des Unterarms), dann fest: Beim
+        # Nachführen des Griffs sprang die freie Suche nahe der Streckung in eine zweite, fast gleich gute Lösung (Ellbogen
+        # 178° in einem Bild, D-515)
+        phi = None
+        for _ in range(20):
+            mitte = W + versatz
+            arm = rig.arm(s, self.griff[s], mitte, k, pol, 0.0, phi=phi)
+            phi = arm["phi"]
+            fehler = W - arm["handgelenk"]
+            if fehler.length < 2e-4:
+                break
+            versatz = versatz + fehler
+        self.rest = fehler.length
+        self.hantel_setzen(s, mitte, k, f)
+        arm.update({"mitte": mitte, "u": u, "f": f, "k": k})
+        return arm
+
+    def _ausgang(self) -> None:
+        """Oberarm zur Seite per Halbierung, bis die Köpfe der Hanteln unten `LUFT` vor Haut, Shorts und Shirt bleiben."""
+        rig = self.rig
+        lo, hi = 0.0, 25.0
+        for _ in range(12):
+            self.seite_grad = (lo + hi) / 2
+            rig.zuruecksetzen()
+            self._stand(0.0)
+            for s in "LR":
+                self._curl_arm(s, 0.0)
+            rig.anwenden()
+            if self._koepfe_frei() < self.LUFT:
+                lo = self.seite_grad
+            else:
+                hi = self.seite_grad
+        self.seite_grad = hi
+        rig.zuruecksetzen()
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self.geloest = True
+            self._ausgang()
+        Uebung.setzen(self, p)
+
+    def _stand(self, p: float) -> dict:
+        rig = self.rig
+        rig.setze("root", self.becken)
+        return {s: rig.bein(s, self.knoechel[s], self.zehen[s], self.ZEHEN) for s in "LR"}
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        beine = self._stand(p)
+        arme = {s: self._curl_arm(s, p) for s in "LR"}
+        A = arme["L"]
+        S, E, W = A["schulter"], A["ellbogen"], A["handgelenk"]
+        u, f = (E - S).normalized(), (W - E).normalized()
+        self.werte = {
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Oberarm vor der Senkrechten (Grad)": math.degrees(math.atan2(-u.y, -u.z)),
+            "Oberarm zur Seite (Grad)": math.degrees(math.asin(max(-1.0, min(1.0, u.x)))),
+            "Unterarm zur Senkrechten (Grad, 0 = nach oben)": math.degrees(f.angle(Z)),
+            "Unterarm gedreht (Grad)": A["pronation"],
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Kniewinkel (Grad)": self.kniewinkel(beine["L"]),
+            "Griffe auseinander (cm)": (arme["L"]["mitte"] - arme["R"]["mitte"]).length * 100,
+            "Handgelenk am Ziel (mm)": self.rest * 1000,
+        }
+
+
+class Hammercurl(Bizepscurl):
+    """Hammercurls mit Kurzhanteln (Familie „Arme beugen und strecken“, D-515), nach dem Ausführungstext der App: wie
+    die Bizepscurls, aber im neutralen Griff über den ganzen Weg (`DREHUNG` 0): Die Daumen zeigen unten nach vorn und oben
+    zur Schulter."""
+
+    name = "hammercurl_kh"
+    titel = "Hammercurls"
+    DREHUNG = 0.0
+
+class Trizepsdruecken(Uebung):
+    """Trizepsdrücken am Kabel, stehend (Familie „Arme beugen und strecken“, D-515), nach dem Ausführungstext der App
+    (ExRx „Cable Pushdown“). Vor dem Kabelzug mit oberer Rolle (`geraete.kabelzug_oben`), Stand etwa hüftbreit, Knie
+    leicht gebeugt, Oberkörper `NEIGUNG` vor. Hände eng im Obergriff an der kurzen geraden Stange (`GRIFF_X`), die
+    Ellbogen seitlich am Körper. Ausgang oben: der Unterarm nahe am Oberarm (`ELLBOGEN_OBEN`), der Oberarm `VOR_OBEN`
+    vor dem Rumpf („Oben darf der Ellbogen etwas nach oben wandern“); die Arme strecken nach unten, bis sie gestreckt
+    sind (`ELLBOGEN_UNTEN`), der Oberarm kommt dabei an den Rumpf zurück. Das Kabel läuft von der Rolle über der Stange
+    zu ihr hinab; der Gewichtsblock hebt sich, wenn die Stange sinkt. Zurück derselbe Weg."""
+
+    name = "trizepsdruecken_kabel"
+    titel = "Trizepsdrücken am Kabel"
+    kamera = {"richtung": 75.0, "neigung": 8.0, "fuellen": 0.02}
+    vorschau_phase = 1.0
+    FUESSE = 0.105  # halber Abstand der Fußgelenke vor dem Maß der Schultern, m: etwa hüftbreit
+    ZEHEN = 8.0
+    KNIE = 168.0
+    NEIGUNG = 10.0  # Oberkörper in der Hüfte vor, Grad
+    ELLBOGEN_OBEN = 50.0  # Ausgang: „bis der Unterarm nahe am Oberarm ist“
+    # „bis sie ganz gestreckt sind“, nicht durchgedrückt; das Ziel der Hand liegt dann etwas weiter innen als der Arm,
+    # der Ellbogen öffnet sich dadurch noch etwas weiter (mit 172° war das Handgelenk nicht mehr zu erreichen)
+    ELLBOGEN_UNTEN = 164.0
+    VOR_OBEN = 12.0  # Oberarm im Ausgang so weit vor dem Rumpf, Grad
+    GRIFF_X = 0.10  # Mitte der Hände so weit von der Mitte (vor dem Maß der Schultern), m: eng
+    GRIFF_LAGE = 0.62
+    SCHRAEG = 0.0
+    STRECKUNG = 0.0
+    HAND = 0.07  # Mitte des Griffs vom Handgelenk längs des Unterarms, m
+    ROLLE_Z = 2.05  # Unterkante der Rolle über dem Boden, m
+    SAEULE_VOR = 0.30  # Säulen so weit vor der Rolle, m
+    # Hände an der Stange schräg von vorn und von hinten (von vorn stehen oben Säule und Gewichtsblock davor)
+    griff_ansichten = (("stange_schraeg", 60.0, 15.0), ("stange_hinten", 135.0, 30.0))
+
+    def rahmen_objekte(self) -> list:
+        return [self.geraet["stange"], *self.geraet["stange"].children]
+
+    def stange_achse(self):
+        return self.stange_mitte.copy(), Vector((1.0, 0.0, 0.0)), geraete.KABELZUG["stange_d"] / 2
+
+    def bauen(self) -> None:
+        super().bauen()
+        rig = self.rig
+        k = rig.kopf
+        A0 = k["foot.L"]
+        w = math.radians(self.ZEHEN)
+        x = self.FUESSE * self.mass
+        self.knoechel = {"L": Vector((x, A0.y, A0.z)), "R": Vector((-x, A0.y, A0.z))}
+        self.zehen = {"L": Vector((math.sin(w), -math.cos(w), 0)), "R": Vector((-math.sin(w), -math.cos(w), 0))}
+        ferse, spitze = _fuss(self.koerper, k)
+        self.fussmitte_y = A0.y - (A0.y - (ferse + spitze) / 2) * math.cos(w)
+        self.H0 = (k["upperleg01.L"] + k["upperleg01.R"]) / 2
+        self.armlaengen = ((k["lowerarm01.L"] - k["upperarm01.L"]).length, (k["wrist.L"] - k["lowerarm01.L"]).length)
+        self.becken = Seitheben._becken_suchen(self)
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, geraete.KABELZUG["stange_d"] / 2, schraeg=self.SCHRAEG) for s in "LR"}
+        # Bahn der Stange (Raum des Skeletts) und Maschine
+        self.bahn = [self._griffe(p) for p in (0.0, 0.25, 0.5, 0.75, 1.0)]
+        mitte_y = sum(rig.welt(g["mitte"]).y for g in self.bahn) / len(self.bahn)
+        rolle = Vector((0.0, mitte_y - 0.02, self.ROLLE_Z))
+        self.stange0 = rig.welt(self.bahn[0]["mitte"])
+        self.geraet = geraete.kabelzug_oben(rolle, self.stange0, rolle.y - self.SAEULE_VOR)
+        self.L0 = (rolle - self._haken(self.stange0)).length
+        self.stange_mitte = self.stange0.copy()
+
+    _becken = Seitheben._becken
+
+    def _haken(self, mitte: Vector) -> Vector:
+        k = geraete.KABELZUG
+        return mitte + Vector((0, 0, k["stange_d"] / 2 + k["haken"]))
+
+    def _rumpf(self) -> tuple[Vector, Vector]:
+        """Richtung des Rumpfs nach unten und nach vorn (Raum des Skeletts), nach der Neigung."""
+        R = achse_winkel(X, self.NEIGUNG)
+        return R @ Vector((0, 0, -1.0)), R @ Vector((0, -1.0, 0))
+
+    def _griffe(self, p: float) -> dict:
+        """Ziele der Hände in Phase p (Raum des Skeletts): Oberarm senkrecht, im Ausgang `VOR_OBEN` vor (längs des
+        vorgeneigten Rumpfs lagen die Hände unten in den Oberschenkeln); Unterarm
+        um den Ellbogenwinkel nach vorn oben; die Hände `GRIFF_X` von der Mitte. Gibt Mitte der Stange und die Ziele je
+        Seite zurück."""
+        rig = self.rig
+        rig.zuruecksetzen()
+        rig.setze("root", self.becken)
+        unten, vor = Vector((0, 0, -1.0)), Vector((0, -1.0, 0))
+        l1, l2 = self.armlaengen
+        ziele = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+            a = math.radians(self.VOR_OBEN * (1 - p))
+            u = (unten * math.cos(a) + vor * math.sin(a)).normalized()
+            b = senkrecht(vor, u)
+            beta = math.radians(180.0 - (self.ELLBOGEN_OBEN + (self.ELLBOGEN_UNTEN - self.ELLBOGEN_OBEN) * p))
+            f = (u * math.cos(beta) + b * math.sin(beta)).normalized()
+            G = S + u * l1 + f * (l2 + self.HAND)
+            G.x = sx * self.GRIFF_X * self.mass
+            ziele[s] = G
+        rig.zuruecksetzen()
+        return {"mitte": (ziele["L"] + ziele["R"]) / 2, "ziele": ziele}
+
+    def haltung(self, p: float) -> None:
+        rig = self.rig
+        g = self._griffe(p)  # zuerst: `_griffe` setzt das Rig zurück (danach standen die Beine in der Grundhaltung, 14 mm im Boden)
+        rig.setze("root", self.becken)
+        beine = {s: rig.bein(s, self.knoechel[s], self.zehen[s], self.ZEHEN) for s in "LR"}
+        arme = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            arme[s] = rig.arm(s, self.griff[s], g["ziele"][s], Vector((sx, 0.0, 0.0)), Vector((sx * 0.3, 0.4, -1.0)).normalized(),
+                              self.STRECKUNG)
+        mitte = rig.welt(g["mitte"])
+        self.stange_mitte = mitte
+        self.geraet["stange"].matrix_world = Matrix.Translation(mitte)
+        rolle = self.geraet["rolle"]
+        haken = self._haken(mitte)
+        geraete.kabel("Kabel-Zug", rolle, haken)
+        hub = (rolle - haken).length - self.L0
+        self.geraet["block"].matrix_world = Matrix.Translation(Vector((0, 0, hub))) @ self.geraet["block0"]
+        A = arme["L"]
+        S, E, W = A["schulter"], A["ellbogen"], A["handgelenk"]
+        unten, vor = self._rumpf()
+        ober = (E - S).normalized()
+        kabel = (rolle - haken).normalized()
+        self.werte = {
+            "Ellbogenwinkel": A["ellbogenwinkel"],
+            "Oberarm vor dem Rumpf (Grad)": math.degrees(math.atan2(ober.dot(vor), ober.dot(unten))),
+            "Ellbogen zur Mitte (cm, gegenüber dem Schultergelenk)": (S.x - E.x) * 100,
+            "Unterarm zur Senkrechten (Grad, 0 = nach unten)": math.degrees((W - E).angle(-Z)),
+            "Handgelenk gesamt (Grad)": A["handgelenk_gesamt"],
+            "Handgelenk gestreckt (Grad)": A["handgelenk_streckung"],
+            "Handgelenk seitlich (Grad, + zum Daumen)": A["handgelenk_seitlich"],
+            "Hände auseinander (cm)": (rig.welt(g["ziele"]["L"]) - rig.welt(g["ziele"]["R"])).length * 100,
+            "Kabel zur Senkrechten (Grad)": math.degrees(kabel.angle(Z)),
+            "Gewichtsblock gehoben (cm)": hub * 100,
+            "Kniewinkel (Grad)": self.kniewinkel(beine["L"]),
+            "Rumpfneigung (Grad)": self.NEIGUNG,
+        }
+
+    def zusatzwerte(self) -> dict:
+        """Stange zum Körper und zur Kleidung (mm), Abstand der Ellbogen zum Rumpf (mm)."""
+        from mathutils.bvhtree import BVHTree
+
+        import schuhe
+
+        netz = _netz(self.koerper)
+        namen = {g.index: g.name for g in self.koerper.vertex_groups}
+
+        def gruppe(v, *anfang) -> bool:
+            return sum(x.weight for x in v.groups if namen[x.group].startswith(anfang)) > 0.5
+
+        verts = self.koerper.data.vertices
+        rumpf = [q for v, q in zip(verts, netz) if gruppe(v, "spine", "chest", "breast", "pectoral", "pelvis", "clavicle")]
+        arme = [q for v, q in zip(verts, netz) if gruppe(v, "upperarm", "lowerarm") and not gruppe(v, "wrist")]
+        kd = __import__("mathutils").kdtree.KDTree(len(rumpf))
+        for i, q in enumerate(rumpf):
+            kd.insert(q, i)
+        kd.balance()
+        ellbogen = rig_e = self.rig.welt(self.rig.punkt("lowerarm01.L", self.rig.kopf["lowerarm01.L"]))
+        nah = [q for q in arme if (q - ellbogen).length < 0.06]
+        am_rumpf = min(kd.find(q)[2] for q in nah) if nah else float("nan")
+        # Stange: Punkte auf ihrer Oberfläche zu Haut, Shorts und Shirt
+        M = self.stange_mitte
+        l, d = geraete.KABELZUG["stange_l"], geraete.KABELZUG["stange_d"]
+        stange = [M + Vector((t, math.cos(w) * d / 2, math.sin(w) * d / 2)) for t in [l * (i / 20 - 0.5) for i in range(21)]
+                  for w in [j * math.pi / 6 for j in range(12)]]
+        beste = 1.0
+        for name in ("Shorts", "Shirt"):
+            obj = bpy.data.objects.get(name)
+            if obj is None:
+                continue
+            pk, pf, _ = schuhe._verformt(obj)
+            bvh = BVHTree.FromPolygons(pk, pf)
+            for q in stange:
+                ort, n, _, dd = bvh.find_nearest(q, 0.2)
+                if ort is not None:
+                    beste = min(beste, dd if (q - ort).dot(n) >= 0 else -dd)
+        haut = abstand_koerper(self.koerper, stange)
+        return {"Ellbogen am Rumpf (mm, Haut zu Haut)": am_rumpf * 1000,
+                "Stange zur Kleidung (mm)": beste * 1000, "Stange zur Haut (mm)": haut * 1000}
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
                                SchulterdrueckenMaschine, KlimmzugUnterstuetzt, DipUnterstuetzt,
-                               Hackenschmidt, Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend)}
+                               Hackenschmidt, Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend,
+                               Bizepscurl, Hammercurl, Trizepsdruecken)}

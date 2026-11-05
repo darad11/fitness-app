@@ -2459,13 +2459,50 @@ Prüfseite: `docs/screens/uebungen/familie-beine-isoliert-pplc.webp`. Alle vier 
 | Wadenheben stehend: „Halt die Knie gerade.“ | Knie 176° in jedem Bild |
 | Wadenheben sitzend: „Leg die Hände auf die Polster und löse den Sicherungshebel.“ | Hände an Griffen an den Enden der Polsterrolle (Frage 3) |
 
+### 54.2 Arme beugen und strecken (D-515)
+
+Prüfseite: `docs/screens/uebungen/familie-arme.webp`.
+
+- **Bizepscurls und Hammercurls:** Stand wie beim Seitheben, Kurzhanteln wie dort (8 kg). Die Oberarme hängen so weit zur Seite, dass die Hanteln unten frei von Oberschenkeln und Shorts bleiben. Beide Arme beugen gleichzeitig (siehe 54.3). Oben geht der Ellbogen etwas nach vorn, bis der Unterarm fast senkrecht steht, nicht weiter. Beim Bizepscurl dreht der Unterarm nach außen, bis die Handfläche zur Schulter zeigt; beim Hammercurl bleibt der Daumen oben. Kamera 30°, schräg von vorn. Korrigiert: Unten fand die Hand mit 168° im Ellbogen den Griff nicht ganz (6,8 mm daneben), und gleich nach dem Ausgang sprang der Arm in einem Bild kurz in die volle Streckung, weil die Drehung der Hand um den Griff zwischen zwei fast gleich guten Lösungen wechselte. Jetzt unten 165°, die Drehung wird je Bild einmal gesucht und dann festgehalten: Die Hand liegt in jedem Bild am Ziel, der Ellbogen läuft ohne Sprung.
+- **Trizepsdrücken am Kabel:** neuer Kabelzug mit oberer Rolle und kurzer gerader Stange (50 cm). Stand etwa hüftbreit, Knie leicht gebeugt, Oberkörper 10° vor; Hände eng im Obergriff. Oben, wie im Text, „bis der Unterarm nahe am Oberarm ist“: Ellbogen 48°, die Stange auf Höhe des Kinns, der Ellbogen etwas nach vorn oben gewandert. Unten gestreckt (178°), die Ellbogen an den Seiten. Kamera 75°, schräg von vorn-seitlich; von vorn stünde die Säule im Bild. Korrigiert: Die Beine standen in der ersten Prüfung 14 mm im Boden (ein Fehler in der Reihenfolge der Rechnung), jetzt flach am Boden.
+
+| Messwert über alle 60 Bilder | Bizepscurls | Hammercurls |
+|---|---|---|
+| Ellbogen unten → oben | 165,0° → 40,0° | 165,0° → 40,0° |
+| Oberarm vor der Senkrechten, oben | 24,5° | 24,5° |
+| Unterarm oben zur Senkrechten | 15,5° (vor der Senkrechten) | 15,5° |
+| Unterarm gedreht, unten → oben | 17,1° → −88,7° | 17,1° → 1,6° |
+| Handgelenk, höchstens | 7,5° | 3,6° |
+| Hand am Ziel, höchstens daneben | 0,0 mm | 0,0 mm |
+| Köpfe der Hanteln vor Haut und Kleidung, mindestens | 2,9 mm | 11,5 mm |
+| Sohlen am Boden / verschoben | 0,0 mm / 0,0 mm | 0,0 mm / 0,0 mm |
+| Meldungen des Rigs | 0 | 0 |
+
+| Messwert über alle 60 Bilder | Trizepsdrücken am Kabel |
+|---|---|
+| Ellbogen oben → unten | 48,0° → 178,4° |
+| Oberarm vor dem Rumpf oben / unten (Rumpf 10° vor) | 25,7° / 21,4° |
+| Ellbogen am Rumpf oben / unten (Haut zu Haut) | 48,6 / 7,8 mm |
+| Unterarm zur Senkrechten oben / unten (0 = nach unten) | 144,5° / 14,6° |
+| Handgelenk, höchstens | 9,0° |
+| Hände auseinander | 23,9 cm |
+| Kabel zur Senkrechten | 0,0° bis 9,6° |
+| Stange zur Haut / zur Kleidung, mindestens | 49,0 / 31,0 mm |
+| Gewichtsblock gehoben | 61,1 cm |
+| Knie / Sohlen am Boden | 168,0° / 0,0 mm |
+| Meldungen des Rigs | 0 |
+
+**Abgleich mit den Ausführungstexten:** passt, geändert habe ich nichts. Die Texte beschreiben die Curls abwechselnd und erlauben beide Arme gleichzeitig („Du kannst auch beide Arme gleichzeitig beugen.“).
+
 ### 54.3 Deine Entscheidungen
 
 Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
 
 1. **Wadenheben sitzend, Hände:** an Griffen an den Enden der Polsterrolle statt flach auf den Polstern, wie der Text sagt („Leg die Hände auf die Polster“). Vorschlag: so lassen und den Text anpassen: „Halt dich an den Griffen am Polster fest und löse den Sicherungshebel.“
 2. **Wadenheben, Weg im Sprunggelenk:** 12° gebeugt (Fersen 3,5 cm unter dem Block) bis 25° gestreckt (Ferse 6,2 cm darüber), stehend und sitzend gleich. Vorschlag: so lassen.
-3. **Maschinen (Annahmen):** Beinstrecker und Beinbeuger sitzend je eine Maschine mit Lehne und Gewichtsblock, der Hebel rechts; Wadenmaschine stehend mit Turm, Schlitten und Griffen vor der Brust; Wadenmaschine sitzend mit Hebel von der Säule vorn. Weicht eine Maschine in deinem Studio ab, sag mir die Bauart, dann baue ich sie danach.
+3. **Maschinen (Annahmen):** Beinstrecker und Beinbeuger sitzend je eine Maschine mit Lehne und Gewichtsblock, der Hebel rechts; Wadenmaschine stehend mit Turm, Schlitten und Griffen vor der Brust; Wadenmaschine sitzend mit Hebel von der Säule vorn; Kabelzug mit einer Säule und Ausleger. Weicht eine Maschine in deinem Studio ab, sag mir die Bauart, dann baue ich sie danach.
+4. **Hammercurls abwechselnd?** In deinem Plan heißt die Übung „Dumbbell Alternating Hammer Curl“; jetzt beugen beide Arme gleichzeitig. Abwechselnd hieße: eine Schleife mit erst links, dann rechts, doppelt so lang (etwa 4 statt 2 Sekunden) und etwa doppelt so groß. Vorschlag: Hammercurls abwechselnd, Bizepscurls („Dumbbell Curl“) gleichzeitig.
+5. **Trizepsdrücken, Ausgang oben:** wie im Text mit dem Unterarm nahe am Oberarm (Ellbogen 48°, Stange auf Kinnhöhe). Viele beginnen erst mit etwa waagrechten Unterarmen (Ellbogen um 90°, Stange auf Brusthöhe); das wäre ein kürzerer Weg und eine Änderung am Text. Vorschlag: wie im Text lassen.
 
 ### 54.4 Berichte zu den Paketen
 
@@ -2478,4 +2515,15 @@ Ausgeführte Tests: Probeläufe je Maschine, Griffe gesucht, render.py --pruefen
 Ergebnis: bestanden (Werte in 54.1)
 Bekannte Einschränkungen: Maße der Maschinen geschätzt; Wadenheben sitzend: Hände an Griffen statt flach auf den Polstern (Frage 1)
 Nächste Schritte: Prüfseite „Arme beugen und strecken“ (D-515), dann Halt bis zu deiner Freigabe beider Prüfseiten
+```
+
+```
+Arbeitspaket: D-515 Phase Programme, Prüfseite „Arme beugen und strecken“ (Bizepscurls, Hammercurls, Trizepsdrücken am Kabel)
+Umgesetzte Funktionen: keine in der App; Werkzeug: Kabelzug mit oberer Rolle und gerader Stange (geraete.kabelzug_oben), Übungen uebungen.Bizepscurl, Hammercurl (vom Seitheben abgeleitet) und Trizepsdruecken mit Messwerten, Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-arme.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-515
+Ausgeführte Tests: Probeläufe, Kameravergleich Trizepsdrücken, render.py --pruefen und Nahaufnahmen für alle drei (je 60 Bilder), nach den Korrekturen (Handdrehung der Curls, Reihenfolge beim Trizepsdrücken) neu, Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 54.2)
+Bekannte Einschränkungen: Maße des Kabelzugs geschätzt; Curls gleichzeitig statt abwechselnd (Frage 4)
+Nächste Schritte: Halt bis zu deiner Freigabe beider Prüfseiten und deinen Antworten in 54.3; danach die Schleifen beider Familien, dann die nächsten Familien (Waagrechtes Ziehen, Schulter und Brust isoliert)
 ```

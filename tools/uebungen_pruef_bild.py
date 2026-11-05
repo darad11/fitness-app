@@ -289,6 +289,18 @@ MESSWERTE = (
     ("Kniepolster: gleiten längs des Oberschenkels (mm)", "Kniepolster gleiten längs des Oberschenkels", "max", " mm"),
     ("Kniepolster: Haut und Shorts (mm, negativ = eingedrückt)", "Kniepolster auf Haut und Shorts (unter 0 = darin)", "spanne",
      " mm"),
+    # Arme beugen und strecken: Curls, Trizepsdrücken am Kabel (D-515)
+    ("Oberarm vor der Senkrechten (Grad)", "Oberarm vor der Senkrechten", "spanne", "°"),
+    ("Oberarm zur Seite (Grad)", "Oberarm zur Seite", "spanne", "°"),
+    ("Unterarm zur Senkrechten (Grad, 0 = nach oben)", "Unterarm zur Senkrechten (0 = nach oben)", "spanne", "°"),
+    ("Unterarm gedreht (Grad)", "Unterarm gedreht", "spanne", "°"),
+    ("Handgelenk am Ziel (mm)", "Handgelenk am Ziel (Abweichung)", "max", " mm"),
+    ("Oberarm vor dem Rumpf (Grad)", "Oberarm vor dem Rumpf", "spanne", "°"),
+    ("Unterarm zur Senkrechten (Grad, 0 = nach unten)", "Unterarm zur Senkrechten (0 = nach unten)", "spanne", "°"),
+    ("Kabel zur Senkrechten (Grad)", "Kabel zur Senkrechten", "spanne", "°"),
+    ("Ellbogen am Rumpf (mm, Haut zu Haut)", "Ellbogen am Rumpf (Haut zu Haut)", "spanne", " mm"),
+    ("Stange zur Kleidung (mm)", "Stange zur Kleidung", "min", " mm"),
+    ("Stange zur Haut (mm)", "Stange zur Haut", "min", " mm"),
 )
 
 
@@ -356,7 +368,8 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "dip_hinten": "Hand am Dipgriff von hinten", "hack_vorn": "Hand am Griff von vorn",
               "hack_aussen": "Hand am Griff von außen", "sitzgriff_aussen": "Hand am Sitzgriff von außen",
               "sitzgriff_vorn": "Hand am Sitzgriff von vorn", "waden_hand": "Hand am Griff von außen",
-              "waden_hand_vorn": "Hand am Griff von vorn"}
+              "waden_hand_vorn": "Hand am Griff von vorn", "stange_schraeg": "Stange schräg von vorn",
+              "stange_hinten": "Stange von hinten"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

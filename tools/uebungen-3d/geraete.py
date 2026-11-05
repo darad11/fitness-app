@@ -1374,3 +1374,62 @@ def wadenmaschine_sitzend(sitz: Vector, block_h: float, kante_y: float, achse: V
             eltern=wurzel)
     return {"wurzel": wurzel, "sitz": sitz_obj, "polster": [sitz_obj], "hebel": hebel, "hebel0": hebel.matrix_world.copy(),
             "kniepolster": kissen, "griffe": griff_obj, "block": gewicht, "block0": gewicht.matrix_world.copy(), "achse": achse.copy()}
+
+
+
+# Kabelzug mit oberer Rolle und kurzer gerader Stange (D-515), nach der üblichen Bauart einer Kabelstation mit
+# Gewichtsblock (Maße geschätzt): zwei Säulen mit dem Block vor der Person, oben ein Ausleger mit der Rolle über der
+# Stange; das Kabel läuft von der Rolle senkrecht zur Stange hinab, über den Ausleger zur oberen Rolle und hinab zum
+# Block. Stange 50 cm, Ø 28 mm, in der Mitte ein drehbarer Haken.
+KABELZUG = {"saeule_x": 0.22, "hoehe": 2.30, "rolle_r": 0.045, "stange_l": 0.50, "stange_d": 0.028, "block": (0.30, 0.16, 0.60),
+            "block_z": 0.08, "haken": 0.07}
+
+
+def kabelzug_oben(rolle: Vector, stange: Vector, saeule_y: float) -> dict:
+    """Kabelzug mit oberer Rolle, Person mit Blick nach −y vor den Säulen (D-515). `rolle`: Punkt, an dem das Kabel die
+    Rolle unten verlässt (Welt); `stange`: Mitte der Stange im Ausgang (Welt), ihre Achse quer (x); `saeule_y`: Mitte der
+    Säulen. Die Stange hängt mit ihrem Haken am Leerobjekt „Stange“ (wird je Bild gesetzt), das Kabel `Kabel-Zug` setzt
+    `kabel` je Bild neu. Gibt Wurzel, Leerobjekt der Stange, Gewichtsblock und Lage der Rolle zurück."""
+    k = KABELZUG
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Kabelzug", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    h, sx = k["hoehe"], k["saeule_x"]
+    # Grundplatte, Säulen, Kopf, Führungen und Block
+    _kasten("Grundplatte", (2 * sx + 0.22, 0.60, 0.04), Vector((0, saeule_y, 0.02)), rahmen, 0.006, wurzel)
+    for seite in (-1, 1):
+        _kasten("Saeule", (0.10, 0.12, h), Vector((seite * sx, saeule_y, h / 2)), rahmen, 0.008, wurzel)
+        _zylinder("Fuehrung", 0.012, h - 0.30, Vector((seite * 0.10, saeule_y, (h - 0.30) / 2 + 0.06)), "z", stahl, wurzel, ecken=24)
+    _kasten("Saeulenkopf", (2 * sx + 0.10, 0.16, 0.10), Vector((0, saeule_y, h - 0.05)), rahmen, 0.008, wurzel)
+    bx, by, bz = k["block"]
+    block = _kasten("Gewichtsblock", (bx, by, bz), Vector((0, saeule_y, k["block_z"] + bz / 2)), rahmen, 0.01, wurzel)
+    # Ausleger vom Kopf zur Person bis über die Rolle, Gabel mit der Rolle (Achse quer)
+    R = k["rolle_r"]
+    mitte_rolle = rolle + Vector((0, 0, R))
+    _kasten("Ausleger", (0.08, rolle.y - saeule_y + 0.10, 0.08), Vector((0, (rolle.y + saeule_y) / 2 + 0.02, h - 0.14)), rahmen, 0.006,
+            wurzel)
+    gabel_h = (h - 0.18) - (mitte_rolle.z - 0.02)
+    for seite in (-1, 1):
+        _kasten("Rollengabel", (0.008, 0.06, gabel_h), Vector((seite * 0.026, mitte_rolle.y, mitte_rolle.z - 0.02 + gabel_h / 2)), rahmen,
+                0.002, wurzel)
+    _zylinder("Rolle", R, 0.03, mitte_rolle, "x", stahl, wurzel, ecken=48)
+    _zylinder("Rollenachse", 0.007, 0.07, mitte_rolle, "x", stahl, wurzel, ecken=16)
+    oben_rolle = Vector((0, saeule_y + 0.02, h - 0.14))
+    _zylinder("Rolle-oben", 0.05, 0.03, oben_rolle, "x", stahl, wurzel, ecken=48)
+    kabel("Kabel-hoch", mitte_rolle + Vector((0, 0, R)), oben_rolle + Vector((0, 0, 0.05)))
+    kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.03, k["block_z"] + bz)))
+    # Stange: gerade, mit Gummigriffen außen und Haken in der Mitte, an einem Leerobjekt
+    leer = bpy.data.objects.new("Stange", None)
+    bpy.context.scene.collection.objects.link(leer)
+    leer.parent = wurzel
+    leer.matrix_world = Matrix.Translation(stange)
+    l, d = k["stange_l"], k["stange_d"]
+    X_ = Vector((1, 0, 0))
+    _anhaengen(_stab("Kabelstange", stange - X_ * (l / 2), stange + X_ * (l / 2), d / 2, stahl, ecken=32), leer)
+    for seite in (-1, 1):
+        _anhaengen(_stab("Stangenkappe", stange + X_ * (seite * (l / 2 - 0.004)), stange + X_ * (seite * (l / 2 + 0.008)), d / 2 + 0.004,
+                         gummi, ecken=32), leer)
+    _anhaengen(_zylinder("Haken", 0.012, k["haken"], stange + Vector((0, 0, k["haken"] / 2 + d / 2)), "z", stahl, ecken=16), leer)
+    return {"wurzel": wurzel, "stange": leer, "block": block, "block0": block.matrix_world.copy(), "rolle": rolle.copy()}

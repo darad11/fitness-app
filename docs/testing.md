@@ -3422,3 +3422,17 @@ Beinstrecker, Beinbeuger sitzend, Wadenheben stehend und sitzend; nur Werkzeug, 
 | Messwerte | in `form-programme-report.md` 54.1; 0 Meldungen des Rigs |
 | Prüfansichten und Nahaufnahmen angesehen | in der Kamera der App, von der Seite und von vorn wie erwartet; Hände an den Griffen, Rolle an Schienbein oder Wade, Ferse unter und über dem Block |
 | Prüfseite (`tools/uebungen_pruef_bild.py beinstrecker beinbeuger_sitzend wadenheben_stehend wadenheben_sitzend --familie beine-isoliert-pplc --titel "Beine isoliert (Dali’s PPLC)"`) | `familie-beine-isoliert-pplc.webp`, 1480 × 6086, angesehen; zwei doppelte Zeilen der Messwerte entfernt |
+
+### Prüfseite „Arme beugen und strecken“ · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Bizepscurls, Hammercurls und Trizepsdrücken am Kabel an einem neuen Kabelzug; nur Werkzeug, Bilder und Dokumente (D-515).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Curls (drei Phasen) | Ellbogen zuerst ohne Richtung nach unten: Oberarm 80° zur Seite; mit Richtung nach unten und etwas hinten: Oberarm oben 24° vor der Senkrechten, Unterarm 16° davor; Köpfe der Hanteln unten mindestens 12 mm vor Haut und Kleidung (Oberarm zur Seite gesucht) |
+| Probeläufe Trizepsdrücken | Oberarm längs des vorgeneigten Rumpfs: Stange unten in den Oberschenkeln; Oberarm senkrecht: Stange 31 mm vor den Shorts; unten mit 172° war das Handgelenk nicht erreichbar, jetzt Ziel 164° (gemessen 178°, die Hände liegen enger als die Schultern) |
+| Kameravergleich Trizepsdrücken 30°, 60°, 75°, 90°, 105° | 75° gewählt: Gesicht, beide Arme und das Kabel, die Säule nicht davor |
+| `render.py bizepscurl_kh --pruefen` (erster Lauf), Sprünge in den Messwerten | Bild 6 und 55: Ellbogen 178,4° statt etwa 163°, Hand 8,7 mm vom Ziel; mit 165° unten Bild 4 und 56 noch 178,4° |
+| Ursache | die freie Suche der Drehung der Hand um den Griff wechselte beim Nachführen des Griffs nahe der Streckung in eine zweite Lösung; jetzt einmal gesucht, dann fest: Ellbogen in 31 Phasen stetig 165,0° → 40,0°, Handgelenk höchstens 7,5°, Hand 0,0 mm vom Ziel |
+| `render.py trizepsdruecken_kabel --pruefen` (erster Lauf) | Sohlen 13,8 mm im Boden: `_griffe` setzte das Rig nach den Beinen zurück; Reihenfolge getauscht, Sohlen 0,0 mm |
+| Nahaufnahmen der Stange | von vorn (15°) standen oben Säule und Gewichtsblock vor den Händen (Bild schwarz); jetzt schräg von vorn (60°) und von hinten (135°), beide verglichen und angesehen |

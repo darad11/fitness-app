@@ -21,7 +21,10 @@
     "leg_extension": "Prüfseite, wartet auf deine Freigabe (D-514)",
     "seated_leg_curl": "Prüfseite, wartet auf deine Freigabe (D-514)",
     "standing_calf_raise": "Prüfseite, wartet auf deine Freigabe (D-514)",
-    "seated_calf_raise": "Prüfseite, wartet auf deine Freigabe (D-514)"
+    "seated_calf_raise": "Prüfseite, wartet auf deine Freigabe (D-514)",
+    "biceps_curl_dumbbell": "Prüfseite, wartet auf deine Freigabe (D-515)",
+    "hammer_curl": "Prüfseite, wartet auf deine Freigabe (D-515)",
+    "triceps_pushdown_cable": "Prüfseite, wartet auf deine Freigabe (D-515)"
   },
   "uebungen": {
     "bench_press_barbell": {

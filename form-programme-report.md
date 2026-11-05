@@ -2619,13 +2619,41 @@ Prüfseite: `docs/screens/uebungen/familie-waagrechtes-ziehen-pplc.webp`.
 
 Unterwegs korrigiert: Beim Rudern an der Maschine zeigte der Ellbogen erst nach innen, das Brustpolster wurde beim Einpassen von Oberschenkeln und Armen 7 cm verschoben, die Fußspitzen stießen an den Turm, und an festen Griffen knickte das Handgelenk bis 55° (jetzt drehbare Griffe, wie an solchen Maschinen üblich). Die Meldungen „Handgelenk nicht erreichbar“ kamen aus Zwischenschritten der drehbaren Griffe; ohne sie nachgemessen: 0 Meldungen. Ein kleiner Würfel oben links in einer Nebenansicht der High Row war eine Platte am Hebelende, die doppelt verschoben frei im Raum lag. Ich habe sie entfernt, auch an der Schulterpresse; dort lag sie in keinem der 60 Bilder der Schleife, die Schleife bleibt, wie sie ist. Auf der Prüfseite zeige ich die Füße von außen und von hinten, weil von vorn der Turm davor steht.
 
+### 56.2 Schulter und Brust isoliert (D-519)
+
+Prüfseite: `docs/screens/uebungen/familie-schulter-brust-pplc.webp`.
+
+**Fliegende am Kabel.** Neuer Kabelturm mit zwei Säulen und Rollen oben, D-Griffe. Wie im Text: obere Rollen, Hüfte und Knie leicht gebeugt (Knie 165°, Oberkörper 15° vor), Ellbogen leicht gebeugt und fest (160°). Ausgang mit den Armen zur Seite, 12° hinter der Ebene der Schultern, Ende mit den Händen vor dem unteren Bauch. Drei Dinge habe ich unterwegs gerade gezogen:
+
+- Am Ende läuft das Kabel fast in Linie mit dem Unterarm. Ein starrer D-Griff stand dann mit den Streben bis 4,8 mm im Handgelenk. Jetzt kippt der Griff um seine Stange, so wenig wie nötig, und liegt mit 1 mm Luft am Handgelenk an, wie sich ein echter Griff anlegt (bis 20°).
+- Mit den Händen 6 cm neben der Mitte berührten sich die Hände, und die beiden Griffe lagen 12,9 mm ineinander. Jetzt enden die Griffe 7,5 cm neben der Mitte, 31 mm auseinander.
+- Von der Seite verdeckte die nahe Säule den Körper; in dieser Prüfansicht blende ich sie aus.
+
+**Reverse Butterfly an der Maschine.** Dieselbe Bauart wie die Rudermaschine, aber die Hebel hängen von senkrechten Achsen über den Schultern. Neutraler Griff (Daumen oben) auf Schulterhöhe, Ellbogen fest (165°); die Arme gehen als Ganzes von vorn bis auf Höhe des Rumpfs („bis die Ellbogen etwa auf Höhe des Oberkörpers sind“). Das Brustpolster ist 24 cm hoch: Mit 34 cm wie beim Rudern reichte es unten 2 cm in die Oberschenkel.
+
+| Messwert über alle 60 Bilder | Fliegende am Kabel | Reverse Butterfly |
+|---|---|---|
+| Ellbogen | 160° fest | 165° fest |
+| Arm Ausgang → Ende | 12° hinter → 90° vor der Ebene der Schultern | 88° vor → 6° hinter der Ebene der Schultern |
+| Ellbogen auf Schulterhöhe | – | 0,05 cm darüber, in jedem Bild |
+| Handgelenk, höchstens | 2,5° | 0,3° |
+| Kabel zur Haut / zur Kleidung, mindestens | 34 mm / weiter als 50 mm (so weit gesucht) | – |
+| Streben des D-Griffs zur Haut, mindestens | 1,0 mm | – |
+| Griffe / Hände zueinander am Ende | Griffe 31 mm, Hände 24 mm | – |
+| Gewichtsblock gehoben, höchstens | 89 cm | – |
+| Brust / Gesäß im Polster | – | 4 / 4 mm, nichts durch |
+| Maschine zum Körper / Arme zum Brustpolster, mindestens | – | 24 / 46 mm |
+| Meldungen des Rigs | 0 | 0 |
+
 ### 56.3 Deine Entscheidungen
 
 Bitte kurz zu jedem Punkt; ohne Antwort bleibt es beim Vorschlag.
 
 1. **Rudern mit Langhantel, Weg der Stange:** wie im Text bis an den oberen Bauch; der Oberarm steht am Ende dafür 40° hinter dem Rumpf (Familie 15 bis 30°). Vorschlag: so lassen.
-2. **Maschine (Annahme):** eine Hebelmaschine mit Brustpolster für Rudern und High Row: je Arm ein Hebel, drehbare Griffe, für die High Row Hebel von vorn unten. Weicht die Maschine in deinem Studio ab, nenn mir die Bauart.
+2. **Maschinen (Annahmen):** eine Hebelmaschine mit Brustpolster für Rudern und High Row (je Arm ein Hebel, drehbare Griffe; für die High Row Hebel von vorn unten), der Reverse Butterfly mit hängenden Hebeln, ein Kabelturm mit zwei Säulen. Weicht ein Gerät in deinem Studio ab, nenn mir die Bauart.
 3. **High Row, Text:** Die App hat für „High Row an der Maschine“ noch keinen Ausführungstext. Vorschlag: einen Text nach der Animation schreiben, zusammen mit der Schleife (Brust am Polster, Griffe vorn oben, Zug schräg nach unten, bis die Ellbogen am Rumpf sind).
+4. **Fliegende am Kabel, Stand:** hüftbreit parallel, wie es der Text nahelegt („Beug Hüfte und Knie leicht“); in meinem Plan stand eine Schrittstellung. Vorschlag: parallel lassen.
+5. **Reverse Butterfly, Griff:** Daumen oben; der Text lässt Daumen oben oder unten zu, je nach Maschine. Vorschlag: so lassen.
 
 ### 56.4 Berichte zu den Paketen
 
@@ -2638,4 +2666,15 @@ Ausgeführte Tests: Kameravergleich Rudern mit Langhantel, Probeläufe, render.p
 Ergebnis: bestanden (Werte in 56.1)
 Bekannte Einschränkungen: Maße der Maschine geschätzt; High Row ohne Ausführungstext in der App (Frage 3)
 Nächste Schritte: Prüfseite „Schulter und Brust isoliert“ (D-519), dann Halt bis zu deiner Freigabe beider Prüfseiten
+```
+
+```
+Arbeitspaket: D-519 Phase Programme, Prüfseite „Schulter und Brust isoliert“ (Fliegende am Kabel, Reverse Butterfly an der Maschine)
+Umgesetzte Funktionen: keine in der App; Werkzeug: Kabelturm mit zwei Säulen und D-Griffen (geraete.kabelturm, geraete.d_griff), Übungen uebungen.FliegendeKabel (vom Seitheben abgeleitet, D-Griff legt sich an das Handgelenk) und ReverseButterfly (Rudermaschine mit hängenden Hebeln, Brustpolster mit eigenem Maß), Teile je Übung in Prüfansichten ausblenden (render.ausblenden), Zeilen der Prüfseite; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/geraete.py, tools/uebungen-3d/uebungen.py, tools/uebungen-3d/render.py, tools/uebungen_pruef_bild.py, tools/uebungen-3d/familien.json, docs/uebungen-animationsplan.md, docs/screens/uebungen/familie-schulter-brust-pplc.webp (neu), form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-519
+Ausgeführte Tests: Probeläufe, Proben zu Öse, Griff und Kippen des D-Griffs, render.py --pruefen und Nahaufnahmen (Fliegende dreimal, Butterfly zweimal nach den Korrekturen, je 60 Bilder), Abstand der beiden D-Griffe zueinander, Polster gegen Oberschenkel und Arme, Sprünge in den Messwerten geprüft, Bilder angesehen; format:check und check:docs bestanden
+Ergebnis: bestanden (Werte in 56.2)
+Bekannte Einschränkungen: Maße von Kabelturm und Butterfly geschätzt; Stand parallel statt Schrittstellung (Frage 4)
+Nächste Schritte: Halt bis zu deiner Freigabe beider Prüfseiten und deinen Antworten in 56.3; danach die Schleifen beider Familien
 ```

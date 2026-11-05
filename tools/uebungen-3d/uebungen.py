@@ -6817,6 +6817,7 @@ class RudernMaschine(SchulterdrueckenMaschine):
     # Mitte des Brustpolsters: Anteil von den Hüftgelenken zu den Schultergelenken; bei 0,62 und 42 cm Höhe reichte das
     # Polster unten bis auf die Oberschenkel
     BRUST_HOEHE = 0.72
+    BRUST_MASS = None  # Breite, Höhe und Dicke des Brustpolsters (m); None: wie `geraete.RUDERMASCHINE`
     ELLBOGEN_VORN = 166.0
     GRIFF_DZ = 0.03  # Ausgang: Griff so viel höher als am Ende, m
     # Ende: Oberarm so weit hinter dem Rumpf (Familie 15 bis 30°); der Rumpf ist 12° vorgeneigt, der Oberarm steht damit
@@ -6994,7 +6995,7 @@ class RudernMaschine(SchulterdrueckenMaschine):
         n = oben.cross(X)  # zur Person
         Sm = (S0["L"] + S0["R"]) / 2
         mitte = H.lerp(Sm, self.BRUST_HOEHE)
-        bx, by, _ = geraete.RUDERMASCHINE["brust"]
+        bx, by, _ = self.BRUST_MASS or geraete.RUDERMASCHINE["brust"]
         self.huefte_z = H.z
         vorne = [netz[i] for i in self.brust_i] + [q for q in kleid if abs(q.x) < 0.15 and q.y < H.y and q.z > H.z + 0.12]
         im_feld = [q for q in vorne if abs(q.x) < bx / 2 and abs((q - mitte).dot(oben)) < by / 2]
@@ -7009,7 +7010,7 @@ class RudernMaschine(SchulterdrueckenMaschine):
         spitzen = min(q.y for q in schuhe._verformt(bpy.data.objects["Sohle"])[0]) if "Sohle" in bpy.data.objects else -0.7
         turm_y = min(spitzen - 0.15, min(h[0].y for h in hebel.values()) - 0.08)
         self.geraet = geraete.rudermaschine("Rudermaschine", sitz, (brust, oben), hebel, griffe, turm_y=turm_y,
-                                            **self.MASCHINE)
+                                            brust_mass=self.BRUST_MASS, **self.MASCHINE)
         self.polster_ruhe = {o.name: geraete.weiches_polster(o) for o in self.polster_objekte()}
         # Polster nachführen in der Haltung des Ausgangs (mit den Armen an den Griffen; in der Grundhaltung lagen die Arme
         # vor dem Brustpolster)
@@ -7186,10 +7187,389 @@ class HighRowMaschine(RudernMaschine):
     GRIFF_KIPP = 36.0
 
 
+# ---------------------------------------------------------------------- Familie „Schulter und Brust isoliert“ für Dali’s PPLC (D-519)
+
+
+class FliegendeKabel(Seitheben):
+    """Fliegende am Kabel, stehend zwischen zwei Säulen (Familie „Schulter und Brust isoliert“, D-519), nach dem
+    Ausführungstext der App (ExRx „Cable Isolateral Standing Fly“) und den Werten der Familie (Ellbogen 10 bis 20° fest;
+    horizontale Adduktion von 10 bis 20° hinter der Körperebene bis 80 bis 90° nach vorn). Stand etwa hüftbreit, Hüfte
+    und Knie leicht gebeugt, der Oberkörper aus der Hüfte `NEIGUNG` vor („so hält dein Oberkörper dem Zug der Kabel
+    stand“). In jeder Hand ein D-Griff an einem Kabel von der oberen Rolle (`geraete.kabelturm`). Die Ellbogen bleiben in
+    einem festen, leicht gebeugten Winkel (`ELLBOGEN`); der ganze Arm dreht um das Schultergelenk auf dem kürzesten Weg
+    vom Ausgang zum Ende. Ausgang: die Arme zur Seite, `HINTEN` hinter der Ebene der Schultern und `HOCH` über der
+    Waagrechten („bis du eine Dehnung in der Brust spürst“), die Ellbogen nach hinten. Ende: die Hände vor dem unteren
+    Bauch (`ENDE_UNTER` unter den Schultergelenken), die Griffe `ENDE_X` neben der Mitte („in einer umarmenden Bewegung
+    vor dem Körper zusammen“), die Ellbogen nach außen. Die Kabel laufen von den Rollen zu den Ösen der Griffe, die Blöcke
+    heben sich um den Weg der Kabel. Zurück derselbe Weg."""
+
+    name = "fliegende_kabel"
+    titel = "Fliegende am Kabel"
+    kamera = {"richtung": 20.0, "neigung": 10.0}
+    vorschau_phase = 1.0
+    NEIGUNG = 15.0
+    KNIE = 165.0
+    ELLBOGEN = 160.0  # fest, leicht gebeugt (Familie 10 bis 20°)
+    HINTEN = 12.0  # Ausgang: Oberarm so weit hinter der Ebene der Schultern, Grad (Familie 10 bis 20°)
+    HOCH = 12.0  # Ausgang: Oberarm so weit über der Waagrechten, Grad
+    # Ende: Mitte der Griffe so weit neben der Mitte (vor dem Maß der Schultern), m. Mit 0,06 berührten sich die Hände, und
+    # die beiden D-Griffe lagen 12,9 mm ineinander; mit 0,075 bleiben sie 31 mm auseinander
+    ENDE_X = 0.075
+    ENDE_UNTER = 0.42  # Ende: Handgelenke so weit unter den Schultergelenken, m (vor dem unteren Bauch)
+    ENDE_POL = (1.0, 0.4, 0.3)  # Ende: Ellbogen nach außen, etwas hinten und oben (linke Seite)
+    ROLLE_Z = 2.05  # Rolle oben: Unterkante über dem Boden, m
+    ROLLE_X = 1.10  # Rolle so weit neben der Mitte, m
+    # Säulen und Rollen so weit hinter den Schultergelenken, m: Am Ende laufen die Kabel am Unterarm vorbei, mit 0,30 m
+    # 0,06 mm, mit 0,12 m 3,3 mm, in der Ebene der Schultern 7,6 mm davon
+    SAEULE_HINTEN = 0.0
+    SCHULTER_HOCH = 0.0
+    GRIFF_LAGE = 0.62
+    SCHRAEG = 0.0
+    # D-Griff an das Handgelenk gelegt: Zum Ende hin läuft das Kabel fast in Linie mit dem Unterarm; mit der Öse genau zur
+    # Rolle lagen die zusammenlaufenden Streben dann bis 4,8 mm in Handgelenk und Unterarm (Kleinfingerseite; Griff schräg
+    # in der Hand ±10° oder eine höhere Öse halfen nicht). Der Griff kippt je Bild so wenig wie möglich um seine Stange, bis
+    # die Streben `STREBE_LUFT` vor der Haut liegen, wie sich ein echter Griff an das Handgelenk anlegt
+    STREBE_LUFT = 0.001  # m
+    KIPP_MAX = 40.0  # Grad
+    griff_ansichten = (("dgriff_vorn", 15.0, 10.0), ("dgriff_seite", 100.0, 20.0))  # wie beim Seitheben, mit D-Griff
+    # Von der Seite (Kamera auf der Seite von `L`) verdeckt die nahe Säule den Körper: in dieser Prüfansicht ausgeblendet
+    ausblenden = {"seite": ("Saeulenfuss.L", "Saeule.L", "Fuehrung.L", "Saeulenkopf.L", "Gewichtsblock.L", "Schiene.L",
+                            "Schlitten.L", "Rollenhalter.L", "Rolle.L", "Kabel-Saeule.L")}
+
+    def rahmen_objekte(self) -> list:
+        return list(self.hanteln.values())
+
+    def bauen(self) -> None:
+        Uebung.bauen(self)
+        rig = self.rig
+        k = rig.kopf
+        self.griff = {s: rig.griff(s, self.GRIFF_LAGE, geraete.KABELTURM["d_griff_d"] / 2, schraeg=self.SCHRAEG) for s in "LR"}
+        A0 = k["foot.L"]
+        w = math.radians(self.ZEHEN)
+        x = self.FUESSE * self.mass
+        self.knoechel = {"L": Vector((x, A0.y, A0.z)), "R": Vector((-x, A0.y, A0.z))}
+        self.zehen = {"L": Vector((math.sin(w), -math.cos(w), 0)), "R": Vector((-math.sin(w), -math.cos(w), 0))}
+        ferse, spitze = _fuss(self.koerper, k)
+        self.fussmitte_y = A0.y - (A0.y - (ferse + spitze) / 2) * math.cos(w)
+        self.H0 = (k["upperleg01.L"] + k["upperleg01.R"]) / 2
+        self.armlaengen = ((k["lowerarm01.L"] - k["upperarm01.L"]).length, (k["wrist.L"] - k["lowerarm01.L"]).length)
+        self.becken = self._becken_suchen()
+        self.oben_rahmen = {s: self._rahmen_oben(s) for s in "LR"}
+        self.versatz = {s: None for s in "LR"}
+        self.start = None
+        self.geloest = False
+        # Kabelturm: Rollen hinter und neben den Schultern, oben
+        rig.zuruecksetzen()
+        self._stand(0.0)
+        S = rig.welt((rig.punkt("shoulder01.L", k["upperarm01.L"]) + rig.punkt("shoulder01.R", k["upperarm01.R"])) / 2)
+        rig.zuruecksetzen()
+        y = S.y + self.SAEULE_HINTEN
+        rollen = {"L": Vector((self.ROLLE_X, y, self.ROLLE_Z)), "R": Vector((-self.ROLLE_X, y, self.ROLLE_Z))}
+        self.geraet = geraete.kabelturm(rollen, y)
+        self.hanteln = self.geraet["griffe"]
+        self.kabel_l0 = None
+
+    def _rahmen_oben(self, s: str) -> dict:
+        """Arm am Ende (Raum des Skeletts): Handgelenk vor dem unteren Bauch, `ENDE_UNTER` unter dem Schultergelenk und so
+        weit vorn, dass der Ellbogen `ELLBOGEN` hat; Ellbogen nach außen (`ENDE_POL`); Griffachse vom Zeigefinger zum
+        kleinen Finger nach unten, quer zum Unterarm, Handflächen zueinander."""
+        rig = self.rig
+        sx = 1 if s == "L" else -1
+        rig.zuruecksetzen()
+        self._stand(1.0)
+        S = rig.punkt("shoulder01." + s, rig.kopf["upperarm01." + s])
+        rig.zuruecksetzen()
+        l1, l2 = self.armlaengen
+        d = math.sqrt(l1 * l1 + l2 * l2 - 2 * l1 * l2 * math.cos(math.radians(self.ELLBOGEN)))
+        x = sx * (self.ENDE_X * self.mass + 0.02)
+        dz = -self.ENDE_UNTER
+        dx = x - S.x
+        dy = -math.sqrt(max(d * d - dx * dx - dz * dz, 0.0))
+        W = S + Vector((dx, dy, dz))
+        from rig import zwei_glieder
+
+        pol = Vector((sx * self.ENDE_POL[0], self.ENDE_POL[1], self.ENDE_POL[2])).normalized()
+        E = zwei_glieder(S, W, l1, l2, pol)[0]
+        u, f = (E - S).normalized(), (W - E).normalized()
+        b = senkrecht(f, u)
+        k = senkrecht(-Z, f)
+        n = f.cross(k).normalized()
+        if n.x * sx > 0:  # Handfläche zur Mitte
+            n = -n
+        return {"u": u, "f": f, "b": b, "k": k, "n": n}
+
+    def _ausgang(self) -> None:
+        """Ausgang: Oberarm zur Seite, `HINTEN` hinter der Ebene der Schultern und `HOCH` über der Waagrechten; der Arm als
+        Ganzes vom Ende dorthin gedreht, dazu um den Oberarm, bis die Beugung des Ellbogens nach vorn zeigt (Ellbogen
+        hinten)."""
+        h, e = math.radians(self.HINTEN), math.radians(self.HOCH)
+        self.start = {}
+        for s, sx in (("L", 1), ("R", -1)):
+            o = self.oben_rahmen[s]
+            u1 = Vector((sx * math.cos(h) * math.cos(e), math.sin(h) * math.cos(e), math.sin(e)))
+            q = o["u"].rotation_difference(u1)
+            b1 = q @ o["b"]
+            ziel = senkrecht(Vector((0.0, -1.0, 0.0)), u1)
+            dreh = Quaternion(u1, math.atan2(b1.cross(ziel).dot(u1), b1.dot(ziel)))
+            self.start[s] = dreh @ q
+
+    def hantel_setzen(self, s: str, mitte: Vector, k: Vector, f: Vector) -> None:
+        """D-Griff an die Hand: Griff längs `k`, die Öse zur Rolle (`_griff_anlegen` kippt ihn danach, wo nötig)."""
+        M_w = self.rig.welt(mitte)
+        rolle = self.geraet["rollen"][s]
+        x = k.normalized()
+        y = senkrecht(rolle - M_w, x)
+        M = Matrix((x, y, x.cross(y))).transposed().to_4x4()
+        M.translation = M_w
+        self._griff_setzen(s, M)
+
+    def _griff_setzen(self, s: str, M: Matrix) -> None:
+        """D-Griff in der Lage `M`, dazu das Kabel von der Rolle zur Öse und der Block."""
+        g = self.geraet
+        self.hanteln[s].matrix_world = M
+        rolle = g["rollen"][s]
+        oese = M @ Vector((0, geraete.KABELTURM["d_oese"], 0))
+        geraete.kabel(f"Kabel-Griff.{s}", rolle, oese)
+        laenge = (rolle - oese).length
+        if self.kabel_l0 is None:
+            self.kabel_l0 = {}
+        self.kabel_l0.setdefault(s, laenge)
+        g["bloecke"][s].matrix_world = Matrix.Translation(Vector((0, 0, laenge - self.kabel_l0[s]))) @ g["bloecke0"][s]
+
+    def setzen(self, p: float) -> None:
+        if not self.geloest:
+            self.geloest = True
+            self._griffachse()
+            self._ausgang()
+            Uebung.setzen(self, 0.0)  # Länge der Kabel im Ausgang
+            self.kabel_l0 = None
+            Uebung.setzen(self, 0.0)
+        Uebung.setzen(self, p)
+        self._griff_anlegen()  # erst hier: die Haltung muss am verformten Körper angekommen sein (`rig.anwenden`)
+
+    def _strebe_punkte(self) -> list[Vector]:
+        """Punkte auf den Mittellinien der beiden Streben eines D-Griffs (im Griff: x längs, y zur Öse)."""
+        l, h = geraete.KABELTURM["d_griff_l"], geraete.KABELTURM["d_oese"]
+        punkte = []
+        for sx in (-1, 1):
+            a, b = Vector((sx * (l / 2 + 0.006), 0, 0)), Vector((sx * (l / 2 + 0.006), 0.03, 0))
+            c = Vector((sx * 0.008, h, 0))
+            punkte += [a.lerp(b, i / 4) for i in range(5)] + [b.lerp(c, i / 10) for i in range(11)]
+        return punkte
+
+    def _griff_anlegen(self) -> None:
+        """Jeden D-Griff so wenig wie möglich um seine Stange kippen, bis die Streben `STREBE_LUFT` vor der Haut liegen
+        (Suche je Grad in beide Richtungen, dann halbiert); Wert „D-Griff um die Stange gekippt“."""
+        from mathutils import kdtree
+
+        netz = _netz(self.koerper)
+        baum = kdtree.KDTree(len(netz))
+        for i, q in enumerate(netz):
+            baum.insert(q, i)
+        baum.balance()
+        lokal = self._strebe_punkte()
+        kipp = {}
+        for s in "LR":
+            M0 = self.hanteln[s].matrix_world.copy()
+
+            def luft(grad: float) -> float:
+                M = M0 @ Matrix.Rotation(math.radians(grad), 4, "X")
+                return min(baum.find(M @ q)[2] for q in lokal) - 0.006
+
+            grad = 0.0
+            if luft(0.0) < self.STREBE_LUFT:
+                gefunden = None
+                for n in range(1, int(self.KIPP_MAX) + 1):
+                    gefunden = next((g for g in (n, -n) if luft(g) >= self.STREBE_LUFT), None)
+                    if gefunden is not None:
+                        break
+                if gefunden is None:
+                    self.rig.meldungen.append(f"D-Griff {s}: Streben bis {self.KIPP_MAX:.0f}° nicht frei")
+                    gefunden = self.KIPP_MAX
+                innen, aussen = math.copysign(abs(gefunden) - 1, gefunden), gefunden
+                for _ in range(12):
+                    mitte = (innen + aussen) / 2
+                    innen, aussen = (mitte, aussen) if luft(mitte) < self.STREBE_LUFT else (innen, mitte)
+                grad = aussen
+                self._griff_setzen(s, M0 @ Matrix.Rotation(math.radians(grad), 4, "X"))
+            kipp[s] = abs(grad)
+        self.werte["D-Griff um die Stange gekippt (Grad)"] = max(kipp.values())
+
+    def haltung(self, p: float) -> None:
+        Seitheben.haltung(self, p)
+        # Der Winkel des Seithebens gilt erst ab 60° Armhebung und fehlt am Ende; hier zählt er waagrecht gemessen (unten)
+        self.werte.pop("Oberarm vor der Ebene der Schultern (Grad, ab 60° Armhebung)", None)
+        rig = self.rig
+        S = rig.punkt("shoulder01.L", rig.kopf["upperarm01.L"])
+        u = (rig.punkt("lowerarm01.L", rig.kopf["lowerarm01.L"]) - S).normalized()
+        self.werte["Oberarm vor der Ebene der Schultern (Grad, waagrecht gemessen)"] = math.degrees(math.atan2(-u.y, abs(u.x)))
+        self.werte["Kabel: Block gehoben (cm)"] = (self.geraet["bloecke"]["L"].matrix_world.translation.z
+                                                  - self.geraet["bloecke0"]["L"].translation.z) * 100
+
+    def nah_punkte(self) -> list[Vector]:
+        rig = self.rig
+        hand = rig.welt(rig.punkt("wrist.L", rig.kopf["metacarpal2.L"]))
+        M = self.hanteln["L"].matrix_world
+        halb = geraete.KABELTURM["d_griff_l"] / 2
+        return ([q for q in _netz(self.koerper) if (q - hand).length < 0.10]
+                + [M @ Vector((halb, 0, 0)), M @ Vector((-halb, 0, 0)), M @ Vector((0, geraete.KABELTURM["d_oese"], 0))])
+
+    def zusatzwerte(self) -> dict:
+        """Kabel zu Haut und Kleidung (mm), Streben der D-Griffe zu den Händen (mm), Hände zueinander (mm)."""
+        import schuhe
+
+        g = self.geraet
+        punkte = []
+        for s in "LR":
+            M = self.hanteln[s].matrix_world
+            oese = M @ Vector((0, geraete.KABELTURM["d_oese"], 0))
+            rolle = g["rollen"][s]
+            punkte += [rolle.lerp(oese, i / 40) for i in range(41)]
+        werte = {"Kabel zur Haut ohne Hände (mm)": abstand_koerper(self.koerper, punkte) * 1000}
+        from mathutils.bvhtree import BVHTree
+
+        beste = 1.0
+        for name in ("Shirt", "Shorts"):
+            obj = bpy.data.objects.get(name)
+            if obj is None:
+                continue
+            pk, pf, _ = schuhe._verformt(obj)
+            bvh = BVHTree.FromPolygons(pk, pf)
+            for q in punkte:
+                # nur nahe Punkte: weit weg zeigt die Normale der nächsten Fläche nichts über innen und außen
+                ort, n, _, d = bvh.find_nearest(q, 0.05)
+                if ort is not None:
+                    beste = min(beste, d if (q - ort).dot(n) >= 0 else -d)
+        # gesucht wird nur 5 cm weit: weiter weg zählt als 50 mm (bis D-519 stand dann 1000 mm auf der Prüfseite)
+        werte["Kabel zur Kleidung (mm)"] = min(beste, 0.05) * 1000
+        # Streben der Griffe zur Haut (mit Händen): Punkte auf den Streben
+        streben = []
+        l, h = geraete.KABELTURM["d_griff_l"], geraete.KABELTURM["d_oese"]
+        for s in "LR":
+            M = self.hanteln[s].matrix_world
+            for sx in (-1, 1):
+                a, b = Vector((sx * (l / 2 + 0.006), 0, 0)), Vector((sx * (l / 2 + 0.006), 0.03, 0))
+                c = Vector((sx * 0.008, h, 0))
+                streben += [M @ a.lerp(b, i / 4) for i in range(5)] + [M @ b.lerp(c, i / 10) for i in range(11)]
+        netz = _netz(self.koerper)
+        from mathutils import kdtree
+
+        baum = kdtree.KDTree(len(netz))
+        for i, q in enumerate(netz):
+            baum.insert(q, i)
+        baum.balance()
+        werte["D-Griff: Streben zur Haut (mm, Mitte der Strebe)"] = (min(baum.find(q)[2] for q in streben) - 0.006) * 1000
+        # Hände zueinander: kleinster Abstand zwischen Punkten der linken und der rechten Hand
+        namen = {gr.index: gr.name for gr in self.koerper.vertex_groups}
+        haende = {s: [q for v, q in zip(self.koerper.data.vertices, netz)
+                      if sum(x.weight for x in v.groups if namen[x.group].startswith(HAND) and namen[x.group].endswith("." + s)) > 0.5]
+                  for s in "LR"}
+        rechts = kdtree.KDTree(len(haende["R"]))
+        for i, q in enumerate(haende["R"]):
+            rechts.insert(q, i)
+        rechts.balance()
+        werte["Hände zueinander (mm)"] = min(rechts.find(q)[2] for q in haende["L"]) * 1000
+        return werte
+
+
+class ReverseButterfly(RudernMaschine):
+    """Reverse Butterfly an der Maschine (Familie „Schulter und Brust isoliert“, D-519), nach dem Ausführungstext der App
+    (ExRx „Lever Seated Reverse Fly“ mit parallelen Griffen) und den Werten der Familie (Reverse Fly: Gegenrichtung der
+    horizontalen Adduktion, Brust am Polster; Ellbogen 10 bis 20° fest). Sitzend mit der Brust am Polster einer Maschine
+    der Bauart der Rudermaschine (D-518: Sitz, Brustpolster, Turm vorn), der Rumpf `-LEHNE` Grad vorgeneigt, Füße flach am
+    Boden. Hände im neutralen Griff (Daumen oben) an senkrechten Griffen auf Schulterhöhe („Arme auf Schulterhöhe“). Die
+    Arme bleiben leicht gebeugt (`ELLBOGEN`) und drehen als Ganzes um die senkrechte Achse durch das Schultergelenk:
+    Ausgang mit den Armen nach vorn, `START_INNEN` nach innen; Ende mit den Ellbogen auf Höhe des Rumpfs („bis die
+    Ellbogen etwa auf Höhe des Oberkörpers sind“, `ENDE_HINTEN` hinter der Ebene der Schultern). Die Ellbogen bleiben auf
+    Schulterhöhe. Jeder Hebel hängt von einem Lager senkrecht über dem Schultergelenk (`LAGER_HOCH`) und dreht um seine
+    senkrechte Achse. Zurück derselbe Weg."""
+
+    name = "reverse_butterfly"
+    titel = "Reverse Butterfly an der Maschine"
+    kamera = {"richtung": 160.0, "neigung": 25.0, "fuellen": 0.02}
+    LEHNE = -6.0
+    ELLBOGEN = 165.0
+    START_INNEN = 8.0  # Ausgang: Arme so weit aus der Richtung nach vorn zur Mitte, Grad
+    ENDE_HINTEN = 0.0  # Ende: Oberarm so weit hinter der Ebene der Schultern, Grad
+    LAGER_HOCH = 0.42  # Lager so weit über den Schultergelenken, m
+    # Schlüsselbeine fest: Der Griff läuft auf einem Kreis um die senkrechte Achse über dem Schultergelenk; bewegte sich
+    # das Gelenk mit (−3° → 6°), änderte sich der Ellbogen in der ersten Probe von 149° auf 166°
+    SCHULTER_VOR = 0.0
+    SCHULTER_ZURUECK = 0.0
+    # Brustpolster tiefer und niedriger als beim Rudern: Die Arme gehen auf Schulterhöhe darüber nach vorn (bei 0,66 lagen
+    # sie im Ausgang über seinem oberen Rand im Polster); mit 34 cm Höhe und Mitte bei 0,50 reichte es unten 2 cm in die
+    # Oberschenkel (20 Punkte der Haut im Polster, die Delle zum Schein 10 cm tief). Jetzt 24 cm hoch, die Mitte höher
+    BRUST_HOEHE = 0.615
+    BRUST_MASS = (0.32, 0.24, 0.08)
+    SCHRAEG = 14.0  # Griff schräg in der Hand: am senkrechten Griff mit waagrechtem Unterarm knickte das Handgelenk sonst 16°
+    MASCHINE = {"haengend": True, "scheiben": False}
+    griff_ansichten = (("butterfly_oben", 160.0, 40.0), ("butterfly_vorn", 20.0, 15.0))
+
+    def _bahnen(self, S0: dict) -> tuple[dict, dict]:
+        """Senkrechte Achse durch das Schultergelenk (Mitte aus Ausgang und Ende); die Griffe auf einem waagrechten Kreis
+        auf Schulterhöhe, so weit vom Gelenk, wie der Arm mit `ELLBOGEN` und der Hand reicht."""
+        rig = self.rig
+        k = rig.kopf
+        l1, l2 = self.armlaengen
+        rig.zuruecksetzen()
+        self._torso(1.0)
+        S1 = {s: rig.welt(rig.punkt("shoulder01." + s, k["upperarm01." + s])) for s in "LR"}
+        rig.zuruecksetzen()
+        self.bahn = {}
+        self.pol0 = {"L": Vector((1.0, 0.0, 0.0)), "R": Vector((-1.0, 0.0, 0.0))}  # Ellbogen im Ausgang nach außen
+        hebel, griffe = {}, {}
+        for s, sx in (("L", 1), ("R", -1)):
+            S = (S0[s] + S1[s]) / 2
+            a0, a1 = math.radians(self.START_INNEN), math.radians(self.ENDE_HINTEN)
+            r0 = Vector((-sx * math.sin(a0), -math.cos(a0), 0.0))
+            r1 = Vector((sx * math.cos(a1), math.sin(a1), 0.0))
+            # Halbmesser per Halbierung, bis der Ellbogen im Ausgang `ELLBOGEN` hat (die Mitte des Griffs liegt nicht auf
+            # der Linie des Unterarms; mit der Reichweite des Arms allein waren es 149°)
+            lo, hi = 0.40, 0.90
+            for _ in range(22):
+                reich = (lo + hi) / 2
+                rig.zuruecksetzen()
+                self._torso(0.0)
+                vorher = len(rig.meldungen)
+                arm = rig.arm(s, self.griff[s], rig.lokal(S + r0 * reich), Z, self.pol0[s], self.STRECKUNG)
+                del rig.meldungen[vorher:]
+                if arm["ellbogenwinkel"] < self.ELLBOGEN:
+                    lo = reich
+                else:
+                    hi = reich
+            rig.zuruecksetzen()
+            reich = (lo + hi) / 2
+            G0, G1 = S + r0 * reich, S + r1 * reich
+            P = Vector((S.x, S.y, S.z + self.LAGER_HOCH))
+            winkel = math.atan2(r0.cross(r1).z, r0.dot(r1))
+            achse = Z.copy() if winkel > 0 else -Z
+            k0 = Z.copy()
+            self.bahn[s] = (P, achse, abs(winkel), G0, k0)
+            hebel[s] = (P, achse)
+            griffe[s] = (G0, k0)
+        return hebel, griffe
+
+    def _pol(self, s: str, p: float) -> Vector:
+        P, achse, delta, G0, k0 = self.bahn[s]
+        return Matrix.Rotation(delta * p, 3, achse) @ self.pol0[s]
+
+    def haltung(self, p: float) -> None:
+        super().haltung(p)
+        rig = self.rig
+        S = rig.welt(rig.punkt("shoulder01.L", rig.kopf["upperarm01.L"]))
+        E = rig.welt(rig.punkt("lowerarm01.L", rig.kopf["lowerarm01.L"]))
+        u = (E - S).normalized()
+        self.werte["Oberarm vor der Ebene der Schultern (Grad, waagrecht)"] = math.degrees(math.atan2(-u.y, abs(u.x)))
+        self.werte["Ellbogen über dem Schultergelenk (cm)"] = (E.z - S.z) * 100
+        # Der Winkel des Ruderns (in der Ebene längs des Rumpfs) sagt beim waagrechten Arm nichts und springt bei der
+        # Seitenlage von −109° auf +109°; hier zählt die Ebene der Schultern (oben)
+        self.werte.pop("Oberarm hinter dem Rumpf (Grad, + zum Rücken)", None)
+
+
 UEBUNGEN = {u.name: u for u in (Kniebeuge, Bankdruecken, Latziehen, BankdrueckenKH, SchraegbankdrueckenKH,
                                Beinpresse, Unterarmstuetz, Crunch, Seitheben, RudernKabel,
                                BeinbeugerLiegend, RumaenischesKreuzhebenKH,
                                SchulterdrueckenMaschine, KlimmzugUnterstuetzt, DipUnterstuetzt,
                                Hackenschmidt, Beinstrecker, BeinbeugerSitzend, WadenhebenStehend, WadenhebenSitzend,
                                Bizepscurl, Hammercurl, Trizepsdruecken, RudernLanghantel, RudernMaschine,
-                               HighRowMaschine)}
+                               HighRowMaschine, FliegendeKabel, ReverseButterfly)}

@@ -314,6 +314,16 @@ MESSWERTE = (
     ("Arme zum Brustpolster (mm)", "Arme zum Brustpolster", "min", " mm"),
     ("Körper und Shirt zur Maschine ohne Polster und Griffe (mm)", "Körper und Shirt zur Maschine (ohne Polster und Griffe)",
      "min", " mm"),
+    # Schulter und Brust isoliert für Dali’s PPLC (D-519)
+    ("Oberarm vor der Ebene der Schultern (Grad, waagrecht gemessen)", "Oberarm vor der Ebene der Schultern (waagrecht)",
+     "spanne", "°"),
+    ("Oberarm vor der Ebene der Schultern (Grad, waagrecht)", "Oberarm vor der Ebene der Schultern (waagrecht)", "spanne", "°"),
+    ("Kabel zur Haut ohne Hände (mm)", "Kabel zur Haut (ohne Hände)", "min", " mm"),
+    ("Kabel zur Kleidung (mm)", "Kabel zur Kleidung (gesucht bis 50 mm)", "min", " mm"),
+    ("D-Griff: Streben zur Haut (mm, Mitte der Strebe)", "Streben des D-Griffs zur Haut", "min", " mm"),
+    ("D-Griff um die Stange gekippt (Grad)", "D-Griff um die Stange gekippt (liegt am Handgelenk an)", "max", "°"),
+    ("Hände zueinander (mm)", "Hände zueinander", "min", " mm"),
+    ("Kabel: Block gehoben (cm)", "Gewichtsblock gehoben", "max", " cm"),
 )
 
 
@@ -383,7 +393,9 @@ GRIFF_TEXT = {"handflaeche": "Griff von der Handfläche", "handruecken": "Griff 
               "sitzgriff_vorn": "Hand am Sitzgriff von vorn", "waden_hand": "Hand am Griff von außen",
               "waden_hand_vorn": "Hand am Griff von vorn", "stange_schraeg": "Stange schräg von vorn",
               "stange_hinten": "Stange von hinten", "rudern_aussen": "Hand am Griff von außen",
-              "rudern_hinten": "Hand am Griff von hinten"}
+              "rudern_hinten": "Hand am Griff von hinten", "butterfly_oben": "Griff von hinten oben",
+              "butterfly_vorn": "Hand am Griff von vorn", "dgriff_vorn": "Hand am D-Griff von vorn",
+              "dgriff_seite": "Hand am D-Griff von außen"}
 FUSS_TEXT = {"90": "linker Fuß von außen", "0": "linker Fuß von vorn", "180": "linker Fuß von hinten",
              "270": "linker Fuß von innen"}
 

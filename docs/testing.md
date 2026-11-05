@@ -3478,3 +3478,23 @@ Rudern mit Langhantel, Rudern an der Maschine und High Row an einer neuen Ruderm
 | Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | keine; High Row: Ellbogen 54° in der Mitte des Zugs, am Ende 59° (stetig) |
 | Messwerte | in `form-programme-report.md` 56.1 |
 | Prüfseite (`tools/uebungen_pruef_bild.py rudern_langhantel rudern_maschine high_row_maschine --familie waagrechtes-ziehen-pplc --titel "Waagrechtes Ziehen (Dali’s PPLC)"`) | `familie-waagrechtes-ziehen-pplc.webp`, 1480 × 4744, angesehen |
+
+### Prüfseite „Schulter und Brust isoliert“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Fliegende am Kabel an einem neuen Kabelturm und Reverse Butterfly an der Maschine; nur Werkzeug, Bilder und Dokumente (D-519).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Fliegende | Säulen 30 cm hinter den Schultern: Kabel am Ende 0,06 mm am Unterarm, in der Ebene der Schultern 7,6 mm; Kabel zur Kleidung −209 mm aus weit entfernten Flächen (nur noch 5 cm weit gesucht) |
+| Probeläufe Reverse Butterfly | Ellbogen 149° → 166° mit beweglichen Schlüsselbeinen (fest: 165° in jedem Bild); Brustpolster von den Armen verschoben (tiefer); Handgelenk 16° am senkrechten Griff (14° schräg in der Hand: 0,3°) |
+| `render.py fliegende_kabel --pruefen` (erster Lauf) | Streben des D-Griffs bis 4,8 mm in Handgelenk und Unterarm (Kleinfingerseite, ab etwa 3/4 des Wegs); nahe Säule verdeckt von der Seite den Körper; Kabel zur Kleidung 1000 mm (nichts in 5 cm) |
+| Streben gegen Handgelenk, Proben | Öse 13 bzw. 15 cm statt 10: −5,2 / −1,9 mm; Griff ±10° schräg in der Hand: −3,5 bzw. −5,0 mm; Griff um die Stange gekippt, 20°: −0,1 mm; gewählt: je Bild so wenig gekippt, bis die Streben 1 mm vor der Haut liegen |
+| Erste Fassung des Kippens | wirkte nicht: Der Körper war noch in der Haltung des vorigen Bildes (`rig.anwenden` nach `haltung`); jetzt nach `Uebung.setzen` |
+| `render.py fliegende_kabel --pruefen` (zweiter Lauf) | Streben 1,0 mm, Griff bis 21,4° gekippt; am Ende berührten sich die Hände (0,1 mm) und die beiden D-Griffe lagen 12,9 mm ineinander |
+| Ende der Griffe 7,5 / 9 cm neben der Mitte (statt 6) | Griffe zueinander 31 / 75 mm; gewählt 7,5 cm |
+| `render.py reverse_butterfly --pruefen` (erster Lauf) | Brustpolster unten 2 cm in den Oberschenkeln (20 Punkte der Haut im Polster, die Delle zum Schein 99,7 mm); Winkel des Ruderns sprang von −109° auf +109° |
+| Brustpolster des Butterfly 24 cm hoch, Mitte bei 0,615 | 3,0 cm über den Oberschenkeln, 2,7 cm unter den Armen, Delle 4,0 mm |
+| `render.py <übung> --pruefen` und `familie_bilder.py`, letzte Läufe | je 60 Bilder, 0 Meldungen; mit Nahaufnahmen 13 und 18 min, neben den Schleifen |
+| Sprünge in den Messwerten (alle 60 Bilder) | keine |
+| Messwerte | in `form-programme-report.md` 56.2 |
+| Prüfseite (`tools/uebungen_pruef_bild.py fliegende_kabel reverse_butterfly --familie schulter-brust-pplc --titel "Schulter und Brust isoliert (Dali’s PPLC)"`) | `familie-schulter-brust-pplc.webp`, 1480 × 3162, angesehen; Bildunterschriften der D-Griffe und eine zu lange Unterschrift berichtigt |

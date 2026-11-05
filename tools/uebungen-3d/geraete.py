@@ -1445,13 +1445,15 @@ RUDERMASCHINE = {"sitz": (0.36, 0.34, 0.08), "brust": (0.32, 0.34, 0.08), "griff
 
 
 def rudermaschine(name: str, sitz: Vector, brust: tuple[Vector, Vector], hebel: dict, griffe: dict,
-                  turm_y: float | None = None, scheiben: bool = True, haengend: bool = False) -> dict:
+                  turm_y: float | None = None, scheiben: bool = True, haengend: bool = False,
+                  brust_mass: tuple[float, float, float] | None = None) -> dict:
     """Rudermaschine, Person mit Blick nach −y (D-518). `sitz`: Mitte der Oberseite des Sitzpolsters (Welt). `brust`:
     Mitte der Vorderseite des Brustpolsters (die Seite zur Person) und seine Richtung nach oben (Welt); die Normale zur
     Person ist oben × x. `hebel`: je Seite ein Punkt auf der Drehachse und ihre Richtung (Welt). `griffe`: je Seite Mitte
     und Richtung des Griffs im Ausgang (Welt). `turm_y`: Lage des Turms vorn (vor den Füßen), sonst vor Lagern und
     Brustpolster. `haengend` (Butterfly, D-519): Der Hebel läuft vom Lager waagrecht über den Griff und senkrecht zu ihm
-    hinab (senkrechte Achse über der Schulter). Jeder Hebel ist ein Leerobjekt auf seiner Achse; Hebelarm, Horn und Scheibe hängen daran und drehen je
+    hinab (senkrechte Achse über der Schulter); `brust_mass`: Breite, Höhe und Dicke des Brustpolsters, sonst wie
+    `RUDERMASCHINE`. Jeder Hebel ist ein Leerobjekt auf seiner Achse; Hebelarm, Horn und Scheibe hängen daran und drehen je
     Bild um die Achse. Die Griffe sind drehbar am Ende des Hebels gelagert (D-518): Sie folgen dem Hebel, bleiben aber
     senkrecht; ihre Lage setzt die Übung je Bild (Ausgangslage `griffe0`). Gibt Wurzel, Sitz, Brustpolster, Polster,
     Hebel und ihre Ausgangslage, Griffe und Rahmen zurück."""
@@ -1473,7 +1475,7 @@ def rudermaschine(name: str, sitz: Vector, brust: tuple[Vector, Vector], hebel: 
     mitte, oben = brust
     oben = oben.normalized()
     n = oben.cross(X)  # zur Person (+y)
-    bx, by, bd = p["brust"]
+    bx, by, bd = brust_mass or p["brust"]
     brust_obj = _quader("Brustpolster", (bx, by, bd), mitte - n * (bd / 2), Matrix((X, oben, n)).transposed(), polster_mat, 0.03,
                         wurzel)
     vorn_brust = mitte - n * (bd + 0.02)
@@ -1546,3 +1548,72 @@ def rudermaschine(name: str, sitz: Vector, brust: tuple[Vector, Vector], hebel: 
 def _stab_matrix(von: Vector, nach: Vector) -> Matrix:
     """Lage eines Zylinders von `von` nach `nach` (wie `_stab`)."""
     return Matrix.Translation((von + nach) / 2) @ (nach - von).to_track_quat("Z", "Y").to_matrix().to_4x4()
+
+
+# Kabelzug mit zwei Säulen (Kabelturm, D-519) für Fliegende am Kabel, nach der üblichen Bauart (Maße geschätzt, die Seiten
+# der Hersteller sind in der Cloud-Umgebung nicht erreichbar): links und rechts je eine Säule mit Gewichtsblock und
+# einer höhenverstellbaren Rolle an einem Schlitten, dazwischen frei. Von jeder Rolle läuft ein Kabel zu einem D-Griff;
+# über die Säule läuft es hinab zum Block, der sich um die Länge hebt, die das Kabel aus der Rolle kommt.
+KABELTURM = {"abstand": 2.70, "hoehe": 2.30, "rolle_r": 0.045, "d_griff_l": 0.12, "d_griff_d": 0.030, "d_oese": 0.10,
+             "block": (0.28, 0.16, 0.60), "block_z": 0.08}
+
+
+def d_griff(name: str) -> bpy.types.Object:
+    """D-Griff (Steigbügel): Leerobjekt in der Mitte des Griffs; x längs des Griffs, y zur Öse (zum Kabel hin). Je Ende
+    eine Strebe zur Öse."""
+    k = KABELTURM
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    mitte = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(mitte)
+    l, d, h = k["d_griff_l"], k["d_griff_d"], k["d_oese"]
+    _zylinder(f"{name}-Griff", d / 2, l, Vector(), "x", gummi, mitte, ecken=32)
+    oese = Vector((0, h, 0))
+    for seite in (-1, 1):
+        ende = Vector((seite * (l / 2 + 0.006), 0, 0))
+        st = _stab(f"{name}-Strebe", ende, ende + Vector((0, 0.03, 0)), 0.006, stahl)
+        st.parent = mitte
+        st2 = _stab(f"{name}-Strebe", ende + Vector((0, 0.03, 0)), oese + Vector((seite * 0.008, 0, 0)), 0.006, stahl)
+        st2.parent = mitte
+    _zylinder(f"{name}-Oese", 0.014, 0.010, oese, "z", stahl, mitte, ecken=24)
+    return mitte
+
+
+def kabelturm(rollen: dict, saeule_y: float) -> dict:
+    """Kabelturm mit zwei Säulen, Person mit Blick nach −y in der Mitte (D-519). `rollen`: je Seite der Punkt, an dem das
+    Kabel die Rolle verlässt (Welt); `saeule_y`: Mitte der Säulen. Die D-Griffe (`Griff.L`, `Griff.R`) und die Kabel
+    setzt die Übung je Bild. Die Teile einer Säule tragen ihre Seite im Namen (`Saeule.L`, `Rolle.R` …), damit eine
+    Prüfansicht die nahe Säule ausblenden kann (`render.AUSBLENDEN`, `ausblenden` der Übung). Gibt Wurzel, Griffe,
+    Blöcke und ihre Ausgangslage zurück."""
+    k = KABELTURM
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    wurzel = bpy.data.objects.new("Kabelturm", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    h, R = k["hoehe"], k["rolle_r"]
+    bloecke, bloecke0, griffe = {}, {}, {}
+    for s, rolle in rollen.items():
+        sx = 1.0 if s == "L" else -1.0
+        x = sx * k["abstand"] / 2
+        # Säule (zwei Profile mit Führungen dazwischen), Fuß, Kopf
+        _kasten(f"Saeulenfuss.{s}", (0.50, 0.60, 0.04), Vector((x, saeule_y, 0.02)), rahmen, 0.006, wurzel)
+        for dx in (-0.17, 0.17):
+            _kasten(f"Saeule.{s}", (0.06, 0.10, h), Vector((x + dx, saeule_y, h / 2)), rahmen, 0.006, wurzel)
+        for dx in (-0.06, 0.06):
+            _zylinder(f"Fuehrung.{s}", 0.011, h - 0.30, Vector((x + dx, saeule_y, (h - 0.30) / 2 + 0.06)), "z", stahl, wurzel, ecken=24)
+        _kasten(f"Saeulenkopf.{s}", (0.42, 0.14, 0.08), Vector((x, saeule_y, h - 0.04)), rahmen, 0.008, wurzel)
+        bx, by, bz = k["block"]
+        block = _kasten(f"Gewichtsblock.{s}", (bx, by, bz), Vector((x, saeule_y, k["block_z"] + bz / 2)), rahmen, 0.01, wurzel)
+        bloecke[s], bloecke0[s] = block, block.matrix_world.copy()
+        # Schiene der verstellbaren Rolle an der Innenseite, Schlitten auf Höhe der Rolle
+        innen_x = x - sx * 0.24
+        _kasten(f"Schiene.{s}", (0.05, 0.06, h - 0.20), Vector((innen_x, saeule_y, (h - 0.20) / 2 + 0.10)), rahmen, 0.004, wurzel)
+        _kasten(f"Schlitten.{s}", (0.08, 0.10, 0.16), Vector((innen_x, saeule_y, rolle.z + R)), rahmen, 0.006, wurzel)
+        mitte_rolle = rolle + Vector((0, 0, R))
+        _balken(f"Rollenhalter.{s}", Vector((innen_x, saeule_y, mitte_rolle.z)), mitte_rolle + Vector((sx * 0.02, 0, 0)), (0.04, 0.04),
+                rahmen, eltern=wurzel)
+        _zylinder(f"Rolle.{s}", R, 0.03, mitte_rolle, "y", stahl, wurzel, ecken=48)
+        kabel(f"Kabel-Saeule.{s}", Vector((innen_x, saeule_y, mitte_rolle.z + 0.08)), Vector((innen_x, saeule_y, h - 0.10)))
+        griffe[s] = d_griff(f"Griff.{s}")
+        griffe[s].parent = wurzel
+    return {"wurzel": wurzel, "griffe": griffe, "bloecke": bloecke, "bloecke0": bloecke0, "rollen": dict(rollen)}

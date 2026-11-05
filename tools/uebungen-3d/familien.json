@@ -27,7 +27,9 @@
     "triceps_pushdown_cable": "Prüfseite, wartet auf deine Freigabe (D-515)",
     "bent_over_row_barbell": "Prüfseite, wartet auf deine Freigabe (D-518)",
     "machine_row": "Prüfseite, wartet auf deine Freigabe (D-518)",
-    "high_row_machine": "Prüfseite, wartet auf deine Freigabe (D-518)"
+    "high_row_machine": "Prüfseite, wartet auf deine Freigabe (D-518)",
+    "cable_fly": "Prüfseite, wartet auf deine Freigabe (D-519)",
+    "reverse_pec_deck": "Prüfseite, wartet auf deine Freigabe (D-519)"
   },
   "uebungen": {
     "bench_press_barbell": {

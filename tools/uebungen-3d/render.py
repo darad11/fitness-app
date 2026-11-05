@@ -69,6 +69,14 @@ ANSICHTEN = {"vorn": (0.0, 5.0), "seite": (90.0, 5.0)}
 # Schleife für die App zeigt alle Geräteteile): Hantelscheiben verdecken von der Seite den Oberkörper,
 # Säule und Gewichtsblock des Latzugs von vorn den Rumpf.
 AUSBLENDEN = {"vorn": ("Saeule", "Gewichtsblock"), "seite": ("Scheibe", "Verschluss")}
+
+
+def ausblenden(uebung, ansicht: str) -> tuple:
+    """Namensanfänge der Teile, die in dieser Ansicht nicht gerendert werden: `AUSBLENDEN` und die der Übung
+    (`ausblenden`, D-519: beim Kabelturm die nahe Säule in der Ansicht von der Seite)."""
+    return AUSBLENDEN.get(ansicht, ()) + tuple(getattr(uebung, "ausblenden", {}).get(ansicht, ()))
+
+
 # Linker Fuß aus der Nähe (D-451): Richtung und Höhe der Kamera; eine Übung kann eigene nennen (`fuss_ansichten`)
 FUSS_ANSICHTEN = ((90, 0.08), (0, 0.12), (180, 0.10), (270, 0.08))
 
@@ -240,7 +248,7 @@ def pruefen(name: str, arbeit: Path, form: str, variante: str | None = None, bil
         u.setzen(p)
         for ansicht in ("vorn", "seite", "standard"):
             for o in bpy.data.objects:
-                o.hide_render = o.name.startswith(AUSBLENDEN.get(ansicht, ()))
+                o.hide_render = o.name.startswith(ausblenden(u, ansicht))
             kamera(u, punkte, ansicht, 480, 360)
             # Die Kamera mit `fuellen` (D-501) geht für den Ausschnitt die ganze Schleife durch: danach die Phase wieder
             # setzen, sonst zeigt die Ansicht der App in jeder Phase das letzte Bild der Schleife (D-508)
@@ -339,7 +347,7 @@ def main() -> None:
         print(vorschau(u, s, arbeit, Path(args.ziel), name, args.vorschau_phase))
         return
     for o in bpy.data.objects:
-        o.hide_render = o.name.startswith(AUSBLENDEN.get(args.ansicht, ()))
+        o.hide_render = o.name.startswith(ausblenden(u, args.ansicht))
     kamera(u, punkte, args.ansicht, args.breite, args.hoehe)
     start = time.time()
     gerendert = 0

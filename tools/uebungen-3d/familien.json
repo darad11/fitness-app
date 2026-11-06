@@ -5,8 +5,8 @@
     "back_squat_barbell": "Schleife in der App (D-461)",
     "bench_press_barbell": "Schleife in der App (D-461)",
     "lat_pulldown": "Schleife in der App (D-461)",
-    "bench_press_dumbbell": "Schleife in der App (D-463)",
-    "incline_bench_press_dumbbell": "Schleife in der App (D-463)",
+    "bench_press_dumbbell": "Schleife in der App (D-463, neu in D-536)",
+    "incline_bench_press_dumbbell": "Schleife in der App (D-463, neu in D-536)",
     "leg_press": "Schleife in der App (D-465)",
     "plank": "Schleife in der App (D-467)",
     "crunch": "Schleife in der App (D-467)",
@@ -30,9 +30,9 @@
     "high_row_machine": "Schleife in der App (D-520)",
     "cable_fly": "Schleife in der App (D-521)",
     "reverse_pec_deck": "Schleife in der App (D-521)",
-    "overhead_press_barbell": "Schleife in der App (D-528)",
+    "overhead_press_barbell": "Schleife in der App (D-528, neu in D-536)",
     "shoulder_press_dumbbell_seated": "Schleife in der App (D-528)",
-    "deadlift_barbell": "Schleife in der App (D-527)",
+    "deadlift_barbell": "Schleife in der App (D-527, neu in D-536)",
     "cable_crunch": "Schleife in der App (D-526)"
   },
   "uebungen": {

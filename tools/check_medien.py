@@ -14,6 +14,11 @@ Prüfung schon in `pnpm check:docs`:
 - jede Datei trägt die Prüfsumme ihres Inhalts im Namen, und im Ordner liegt keine Datei, die die
   Liste nicht nennt (D-494). So fällt eine neu gerenderte Schleife auf, die noch nicht mit
   `tools/uebungen_medien_version.py` eingebaut ist; das Gerät sähe sonst weiter die alte.
+- die Messung der Schleifen (`src/modules/exercises/data/schleifen-messung.v1.json`, D-536) nennt genau
+  die MP4- und WebM-Dateien der Liste: Eine neue Fassung verlangt eine neue Messung
+  (`python3 tools/uebungen_schleifen_messen.py`), die `schleifen.test.ts` gegen Grenzen prüft; ebenso die Bahnen
+  (`src/modules/exercises/data/schleifen-bahnen.v1.json`, `tools/uebungen-3d/bahnen_messen.py`) die WebM-Datei ihres
+  Renderlaufs.
 
 Fehler mit Schlüssel und Grund, Exit-Code 1.
 
@@ -32,6 +37,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LISTE = ROOT / "public/uebungen/medien.json"
 SCHEMA = ROOT / "src/modules/exercises/model/media.ts"
 BIBLIOTHEK = ROOT / "src/modules/exercises/data/core-exercises.v1.json"
+MESSUNG = ROOT / "src/modules/exercises/data/schleifen-messung.v1.json"
+BAHNEN = ROOT / "src/modules/exercises/data/schleifen-bahnen.v1.json"
 SCHLUESSEL = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*$")
 DATEI = re.compile(r"^medien/[a-z0-9_-]+\.(?:webp|avif|png|jpg|svg|gif|mp4|webm)$")
 DEMO_DATEIEN = ("file", "webm", "still", "poster", "start", "end")
@@ -67,6 +74,31 @@ def datei_fehler(name: str, datei: object) -> list[str]:
         wert = datei.get(mass)
         if not isinstance(wert, int) or isinstance(wert, bool) or wert <= 0:
             fehler.append(f"{name}.{mass} ungültig: {wert!r}")
+    return fehler
+
+
+def messung_fehler(visuals: dict) -> list[str]:
+    """Die Messung der Schleifen nennt genau die MP4- und WebM-Dateien der Liste (D-536)."""
+    if not MESSUNG.exists():
+        return [f"{MESSUNG.relative_to(ROOT)} fehlt (python3 tools/uebungen_schleifen_messen.py)"]
+    gemessen = json.loads(MESSUNG.read_text(encoding="utf-8")).get("schleifen", {})
+    soll = {
+        schluessel: {"mp4": e["demo"]["file"]["src"], "webm": e["demo"]["webm"]["src"]}
+        for schluessel, e in visuals.items()
+        if isinstance(e.get("demo"), dict) and e["demo"].get("kind") == "animation"
+    }
+    ist = {s: {art: m.get(art, {}).get("datei") for art in ("mp4", "webm")} for s, m in gemessen.items()}
+    fehler = []
+    if ist != soll:
+        anders = sorted(set(soll) ^ set(ist) | {s for s in set(soll) & set(ist) if soll[s] != ist[s]})
+        fehler.append(f"Messung der Schleifen veraltet für {', '.join(anders)} (python3 tools/uebungen_schleifen_messen.py)")
+    # Bahnen (D-536): je Schleife der Renderlauf, zu dem die Messung gehört (WebM, ändert sich nur mit ihm)
+    if not BAHNEN.exists():
+        return fehler + [f"{BAHNEN.relative_to(ROOT)} fehlt (tools/uebungen-3d/bahnen_messen.py)"]
+    bahnen = json.loads(BAHNEN.read_text(encoding="utf-8")).get("schleifen", {})
+    alt = sorted(s for s, m in bahnen.items() if soll.get(s, {}).get("webm") != m.get("datei"))
+    if alt:
+        fehler.append(f"Bahnen der Schleifen veraltet für {', '.join(alt)} (tools/uebungen-3d/bahnen_messen.py)")
     return fehler
 
 
@@ -108,6 +140,7 @@ def main() -> int:
     for datei in sorted(p.name for p in ORDNER.iterdir() if p.is_file()):
         if datei not in genannt:
             fehler.append(f"medien/{datei}: liegt im Ordner, steht aber nicht in der Liste (neu gerendert? {HINWEIS})")
+    fehler += messung_fehler(visuals)
     if fehler:
         print(f"{LISTE.relative_to(ROOT)}: {len(fehler)} Probleme", file=sys.stderr)
         for f in fehler:

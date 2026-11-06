@@ -50,6 +50,7 @@ from uebungen import UEBUNGEN, _netz  # noqa: E402
 
 BILDER = 60
 FPS = 24
+NAHT_GUETE = 18  # feste Güte (Quantisierer) der drei Bilder vor der Naht im MP4, `naht_zonen` (D-536)
 # Figur der App: C männlich (Entscheidung des Produktinhabers vom 28.10.2026, D-428) in der Kleidung nach
 # dem Design-Board mit Socken und Schuhen (D-450); ohne Muskelzonen seit D-449
 FIGUR = "Cm"
@@ -397,11 +398,21 @@ def _lesbar(datei: Path) -> bool:
         bpy.data.images.remove(bild)
 
 
+def naht_zonen(arbeit: Path, ansicht: str, guete: int = NAHT_GUETE) -> str:
+    """x264: die letzten drei Bilder der Schleife (die Pause vor dem Anfang) in fester, hoher Güte (D-536). Das erste Bild
+    ist ein Schlüsselbild und anders komprimiert als die Bilder davor; ohne das wich das letzte Bild um bis 29
+    Helligkeitsstufen vom ersten ab, und die Naht zuckte bei jeder Wiederholung. Mit Güte 18 bleiben einzelne Pixel bis
+    12 Stufen, die Datei wird etwa 8 % größer. WebM (VP9) hatte die Abweichung nicht."""
+    n = len(list(arbeit.glob(f"{ansicht}-*.png")))
+    return f"zones={n - 3},{n - 1},q={guete}"
+
+
 def kodiere(arbeit: Path, ziel: Path, name: str, ansicht: str) -> None:
     ziel.mkdir(parents=True, exist_ok=True)
     muster = str(arbeit / f"{ansicht}-%03d.png")
     gemeinsam = ["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", muster, "-an"]
     subprocess.run(gemeinsam + ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "24", "-preset", "slow",
+                                "-x264-params", naht_zonen(arbeit, ansicht),
                                 "-movflags", "+faststart", str(ziel / f"{name}.mp4")], check=True)
     # `yuv420p` auch hier (D-497): Die Einzelbilder sind RGBA, ohne die Angabe schrieb libvpx einen
     # Alphakanal mit (`alpha_mode=1`), den kein Bild braucht und den Safari nicht kennt.

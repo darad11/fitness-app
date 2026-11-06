@@ -10,3 +10,5 @@ public/icons/
 src/modules/training/data/programs.v1.json
 src/modules/nutrition/data/basicFoods.json
 src/modules/exercises/ui/muscleMapPaths.ts
+src/modules/exercises/data/schleifen-messung.v1.json
+src/modules/exercises/data/schleifen-bahnen.v1.json

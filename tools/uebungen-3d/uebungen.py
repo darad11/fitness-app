@@ -15,6 +15,7 @@ from mathutils import Matrix, Quaternion, Vector
 import figur
 import geraete
 import koerperform
+from haltung import weich
 from rig import X, Y, Z, Rig, achse_winkel, ellbogen_zur_richtung, gelenkkreis, senkrecht, starr, um_punkt, winkel_um
 
 STANGE_R = 0.014  # Griffteil der olympischen Stange, 28 mm
@@ -838,6 +839,7 @@ class BankdrueckenKH(Bankdruecken):
     HAND = 0.075  # Mitte des Griffs über dem Handgelenk bei senkrechtem Unterarm, m
     LUFT = 0.005  # innerer Kopf mindestens so weit über dem Körper, m
     STUETZEN = 21  # Stützstellen der Bahn
+    ELLBOGEN_ANTEIL = 0.4  # Anteil des Wegs des Ellbogens beim Verteilen der Stützstellen (D-536)
     # Bahn (D-463): unten das Handgelenk auf einer Kurve, die nach oben nur enger wird, bis zum Bogen mit senkrechtem
     # Unterarm bei `ANSCHLUSS` (Oberarm 45° über der Waagrechten); von dort die Griffe auf einer zweiten Kurve, die in
     # Richtung des Bogens beginnt und am Ausgang über den Schultern endet. `EINWAERTS`: Richtung am Anfang der unteren
@@ -1087,7 +1089,37 @@ class BankdrueckenKH(Bankdruecken):
                 q0, q1 = unten[k], unten[k + 1]
                 q = q0.lerp(q1, (q0.z - z) / (q0.z - q1.z) if q0.z > q1.z else 1.0)
             self.stuetzen.append((Vector((0, q.y, z)), q.x / self.mass))
+        self.stuetzen = self._gleich_lang(self.stuetzen)
         rig.meldungen.clear()
+
+    def _gleich_lang(self, stuetzen: list) -> list:
+        """Stützstellen gleich weit längs der Bewegung statt gleich hoch (D-536): Oben läuft die Bahn fast waagrecht,
+        gleich hoch verteilt bewegten sich die Hände am Anfang des Absenkens und am Ende des Drückens kurz doppelt so
+        schnell wie davor und danach, der Unterarm ruckte. Als Weg zählt der des Griffs und `ELLBOGEN_ANTEIL` des Wegs
+        des Ellbogens (linke Seite, die rechte ist gleich): Fast gestreckt beugt sich der Ellbogen bei gleichem Weg der
+        Hand am schnellsten. Größte Änderung je Bild (`bahnen_messen.py`): gleich hoch 12,4 px, nur nach dem Griff (0)
+        8,0 px im Unterarm, mit dem ganzen Weg des Ellbogens (1) 5,7 px, mit 0,4 5,2 px; nach dem Ellbogenwinkel statt
+        seinem Weg eilten die Hände (12,2 px). Oben und unten dieselbe Lage."""
+        punkte = []
+        for m, x in stuetzen:
+            arme = self._pose(m, x)
+            punkte.append((Vector((x * self.mass, m.y, m.z)), arme["L"]["ellbogen"].copy()))
+        laengen = [0.0]
+        for (g0, e0), (g1, e1) in zip(punkte, punkte[1:]):
+            laengen.append(laengen[-1] + (g1 - g0).length + self.ELLBOGEN_ANTEIL * (e1 - e0).length)
+        gesamt = laengen[-1]
+        if gesamt <= 0.0:
+            return stuetzen
+        aus = []
+        n = len(stuetzen)
+        for i in range(n):
+            ziel = gesamt * i / (n - 1)
+            k = min(next((k for k in range(n - 1) if laengen[k + 1] >= ziel), n - 2), n - 2)
+            spanne = laengen[k + 1] - laengen[k]
+            t = (ziel - laengen[k]) / spanne if spanne > 0 else 0.0
+            (m0, x0), (m1, x1) = stuetzen[k], stuetzen[k + 1]
+            aus.append((m0.lerp(m1, t), x0 * (1 - t) + x1 * t))
+        return aus
 
     def _stuetze(self, p: float) -> tuple[Vector, float]:
         f = p * (self.STUETZEN - 1)
@@ -8080,8 +8112,16 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
     GRIFF_LAGE = 0.45
     SCHRAEG = 14.0
     UNTERARM_SEITE = 10.0  # Unterarm von vorn höchstens so weit zur Seite geneigt, Grad (`_regel`)
+    # Ellbogen (D-536): bis `MISCHEN_AB` (Anteil des Wegs der Stange) vor der Stange auf der Grenze `UNTERARM_SEITE`, dann
+    # weich zur Lage mit dem senkrechtesten Unterarm, ganz oben (`MISCHEN_BIS`). Dort streckt sich der Arm, der Kreis der
+    # möglichen Ellbogen ist klein und die Stange langsam: Der Übergang verteilt sich auf mehrere Bilder. Bis D-528 nahm die
+    # Regel je Bild den steileren von zwei Ellbogen auf der Grenze (vor oder hinter der Stange): Zwischen 56 und 87 % des
+    # Wegs sprang sie hin und her, bis 34 cm, die Suche nach dem Schwerpunkt fand keinen festen Wert, und die Arme ruckten.
+    MISCHEN_AB = 0.92
+    MISCHEN_BIS = 1.0
     POL = (0.35, -0.8, -0.5)  # Ellbogen nach vorn, unten und etwas außen (linke Seite)
     PROBEN = 31
+    KOPF_GLAETTEN = 4  # weitere Mittel über die Tafel von Kopf und Rumpf (D-536)
 
     def bauen(self) -> None:
         super().bauen()
@@ -8143,15 +8183,34 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
         rig.dreh("clavicle.R", achse_winkel(Y, self._hoch))
         return {s: rig.bein(s, self.knoechel[s], self.zehen[s], self.ZEHEN) for s in "LR"}
 
+    WECHSEL = 0.3  # halbe Breite des weichen Wechsels von Kopf zu Rumpf um t = 1 (D-536)
+
+    def _weich_bis_eins(self, t: float) -> float:
+        """min(t, 1), um 1 auf `WECHSEL` weich gerundet (quadratisch, mit stetiger Steigung)."""
+        b = self.WECHSEL
+        if t <= 1.0 - b:
+            return t
+        if t >= 1.0 + b:
+            return 1.0
+        x = t - (1.0 - b)
+        return t - x * x / (4.0 * b)
+
     def _pose_mit(self, t: float, z: float, hoch: float) -> tuple[dict, dict, float]:
         """Haltung mit dem Anteil `t` (Kopf und Rumpf zurück) und der Stange auf Höhe `z` über der Fußmitte: Hüfte per
         Iteration so, dass der Schwerpunkt über der Fußmitte liegt. Gibt Beine, Arme und den Abstand von Gesicht und Hals
         zur Stange (m, schnell: Ecken an ihrem Knochen) zurück."""
         rig = self.rig
-        # t von 0 bis 1: der Kopf geht zurück; t von 1 bis 2: dazu der Rumpf (D-528)
-        self._kopf = self.KOPF_MAX * min(t, 1.0)
-        self._lehne = self.LEHNE_MAX * max(0.0, t - 1.0)
+        # t von 0 bis 1: der Kopf geht zurück; t von 1 bis 2: dazu der Rumpf (D-528). Der Wechsel weich über
+        # `WECHSEL` um 1 (D-536): Mit dem harten Wechsel blieb der Kopf stehen, sobald der Rumpf begann, und Rumpf, Hals
+        # und Kragen ruckten von einem Bild zum nächsten
+        kopf = self._weich_bis_eins(t)
+        self._kopf = self.KOPF_MAX * kopf
+        self._lehne = self.LEHNE_MAX * (t - kopf)
         self._hoch = hoch
+        # Anteil des Wegs der Stange für den Übergang der Ellbogenregel (D-536); vor `_loesen` gibt es ihn noch nicht
+        weg = (z - self.z0) / (self.z1 - self.z0) if getattr(self, "z1", None) else 0.0
+        self._weg = weg
+        self._mischung = weich((weg - self.MISCHEN_AB) / (self.MISCHEN_BIS - self.MISCHEN_AB))
         a = -self._lehne
         dy = self._dy if hasattr(self, "_dy") else 0.0
         mitte = self._mitte(z)
@@ -8190,34 +8249,55 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
         anteil = max(0.0, min(1.0, (z - self.z0) / (self.z1 - self.z0)))
         return Vector((0.0, self.fussmitte_y - self.VOR_START * (1.0 - anteil), z))
 
-    @classmethod
-    def _regel(cls, S: Vector, W: Vector, l1: float, l2: float) -> Vector:
+    def _regel(self, S: Vector, W: Vector, l1: float, l2: float) -> Vector:
         """Ellbogen unter der Stange, der Unterarm so senkrecht wie möglich, von vorn gesehen aber höchstens
         `UNTERARM_SEITE` zur Seite geneigt (D-528): Die Stange bleibt waagrecht, kippt der Unterarm zur Seite, knickt das
         Handgelenk zur Seite (bis D-524 ohne Grenze bis 20°; ganz ohne Neigung stand der Unterarm von der Seite bis 38°
-        schräg). Liegt die senkrechteste Lage außerhalb der Grenze, die Lage auf der Grenze mit dem steileren Unterarm; geht
-        auch das nicht (Arm fast gestreckt), die Lage, die am nächsten herankommt."""
+        schräg). Liegt die senkrechteste Lage außerhalb der Grenze, die Lage auf der Grenze mit dem Ellbogen vor der
+        Stange (D-536, bis dahin die mit dem steileren Unterarm; sie wechselte mitten in der Bewegung die Seite); ab
+        `MISCHEN_AB` des Wegs weich zur senkrechtesten Lage, auf dem Kreis der möglichen Ellbogen (`_mischung`)."""
         E = ellbogen_zur_richtung(S, W, l1, l2, Z)
+        w = getattr(self, "_mischung", 0.0)
+        if w >= 1.0:
+            return E
         f = W - E
         seite = math.degrees(math.atan2(f.x, f.z))
-        grenze = cls.UNTERARM_SEITE
-        if abs(seite) <= grenze:
+        # Nur in der unteren Hälfte des Wegs gilt die senkrechteste Lage, solange sie die Grenze einhält; danach bleibt der
+        # Ellbogen vor der Stange bis zum Übergang. Sprang die Regel oben auf die senkrechteste, sprang der Ellbogen bis
+        # 14 cm (D-536). Die Seite der Grenze folgt dem Arm (links −, rechts +), nicht `seite`: Ganz oben kippt der
+        # senkrechteste Unterarm zur anderen Seite.
+        if getattr(self, "_weg", 0.0) < 0.5 and abs(seite) <= self.UNTERARM_SEITE:
             return E
-        t = math.radians(math.copysign(grenze, seite))
+        V = self._vorn(S, W, l1, l2, -1.0 if W.x > 0 else 1.0, E)
+        if w <= 0.0:
+            return V
+        M, h, _, _ = gelenkkreis(S, W, l1, l2)
+        u = (W - S).normalized()
+        r = (V - M) * (1.0 - w) + (E - M) * w
+        r -= u * r.dot(u)
+        if r.length < 1e-9:
+            return E
+        return M + r.normalized() * h
+
+    def _vorn(self, S: Vector, W: Vector, l1: float, l2: float, seite: float, E: Vector) -> Vector:
+        """Ellbogen auf der Grenze `UNTERARM_SEITE` (Unterarm von vorn zur Seite `seite`: − links, + rechts), von den zwei
+        Lagen die vor der Stange (kleineres y); wo es die Grenze nicht mehr gibt, weich die nächste Lage."""
+        t = math.radians(math.copysign(self.UNTERARM_SEITE, seite))
         M, h, e1, e2 = gelenkkreis(S, W, l1, l2)
         m = Vector((math.cos(t), 0.0, -math.sin(t)))  # Unterarm in der Ebene mit f.x / f.z = tan t
         A, B = e1.dot(m), e2.dot(m)
         R = math.hypot(A, B)
         if h < 1e-6 or R < 1e-9:
             return E
-        C = (W - M).dot(m) / h
+        x = (W - M).dot(m) / h / R
+        # Weich gesättigt (D-536): Laufen die beiden Lagen zusammen (|x| gegen 1), ändert sich ihr Winkel unendlich schnell
+        # (acos), der Ellbogen ruckte dort. Bis 0,9 wie gerechnet, darüber weich gegen 1; die Grenze gilt dort nur ungefähr.
+        if abs(x) > 0.9:
+            x = math.copysign(1.0 - 0.1 * math.exp(-(abs(x) - 0.9) / 0.1), x)
         basis = math.atan2(B, A)
-        if abs(C) <= R:
-            d = math.acos(C / R)
-            lagen = [M + (e1 * math.cos(p) + e2 * math.sin(p)) * h for p in (basis + d, basis - d)]
-            return max(lagen, key=lambda L: (W - L).normalized().z)
-        p = basis if C > 0 else basis + math.pi
-        return M + (e1 * math.cos(p) + e2 * math.sin(p)) * h
+        d = math.acos(x)
+        lagen = [M + (e1 * math.cos(p) + e2 * math.sin(p)) * h for p in (basis + d, basis - d)]
+        return min(lagen, key=lambda L: L.y)
 
     def _loesen(self) -> None:
         """Stange unten und oben, dann je Stelle der kleinste Anteil `t`, bei dem vor Gesicht und Hals `LUFT` und vor den
@@ -8260,7 +8340,15 @@ class SchulterdrueckenLanghantel(RudernLanghantel):
                     lo = t
             roh.append(hi)
         breit = [max(roh[max(0, i - 2):i + 3]) for i in range(n)]
-        self.anteile = [sum(breit[max(0, i - 2):i + 3]) / len(breit[max(0, i - 2):i + 3]) for i in range(n)]
+        anteile = [sum(breit[max(0, i - 2):i + 3]) / len(breit[max(0, i - 2):i + 3]) for i in range(n)]
+        # Weicher (D-536): Mit einem Mittel blieben die Rampen gerade, der Kopf begann und endete seine Bewegung von einem
+        # Bild zum nächsten (Hals 4,3 px gegen 1,1 px davor). Weitere Mittel runden die Ecken; nie unter dem Größten der
+        # Nachbarstellen, so bleibt zwischen den Stellen die Luft wie bisher.
+        nah = [max(roh[max(0, i - 1):i + 2]) for i in range(n)]
+        for _ in range(self.KOPF_GLAETTEN):
+            mittel = [sum(anteile[max(0, i - 2):i + 3]) / len(anteile[max(0, i - 2):i + 3]) for i in range(n)]
+            anteile = [max(m, g) for m, g in zip(mittel, nah)]
+        self.anteile = anteile
         self.anteile_roh = roh
         self.stand = (0.0, 0.0)
         rig.zuruecksetzen()
@@ -8373,6 +8461,12 @@ class KreuzhebenLanghantel(RudernLanghantel):
     # Stange so weit vor der Haut von Schienbeinen und Oberschenkeln (schnell gemessen, an den Knochen), m: Mit 6 mm lag sie
     # am verformten Netz bis 0,1 mm in der Haut
     LUFT = 0.010
+    # Saum der Shorts (D-536): Der lockere Stoff steht dort etwa 1,5 cm vor der Haut. Auf `SAUM_WEG` über dem Saum gibt er
+    # nach, am Saum um `NACHGIEBIG`, darüber weich weniger (`_shorts_dazu`): Sonst sprang die Anlage der Stange von der
+    # Haut auf den Stoff, und das Knie streckte sich von einem Bild zum nächsten um 11°. Höchstens um `LUFT`: So berührt
+    # die Stange den Saum (am Saum gemessen 1,3 mm), liegt aber nie im Stoff; mit 1,5 cm lag sie 3 mm darin
+    SAUM_WEG = 0.10
+    NACHGIEBIG = 0.010
     SCHEIBEN = [(0.45, 0.05)]  # je Seite eine Scheibe, 20 kg
     HANTEL_KG = 30.0  # je Hand die Hälfte von Stange (20 kg) und Scheiben (2 × 20 kg), für den Schwerpunkt
     SCHRAEG = 11.0
@@ -8451,12 +8545,16 @@ class KreuzhebenLanghantel(RudernLanghantel):
             pkte.append(M @ q)
         hoehen = [(z + f * STANGE_R, STANGE_R * math.sqrt(1.0 - f * f)) for f in self.SCHNITTE]
         vorn = [None] * len(hoehen)
+        nach = getattr(self, "_nachgiebig", None)
         for i, j in self.beinkanten:
             a, b = pkte[i], pkte[j]
             for n, (h, _) in enumerate(hoehen):
                 da, db = a.z - h, b.z - h
                 if da * db <= 0.0 and da != db:
-                    s = a.y + (b.y - a.y) * (da / (da - db))
+                    f = da / (da - db)
+                    s = a.y + (b.y - a.y) * f
+                    if nach is not None:
+                        s += nach[i] + (nach[j] - nach[i]) * f
                     if vorn[n] is None or s < vorn[n]:
                         vorn[n] = s
         frei = [v - y - breite for v, (_, breite) in zip(vorn, hoehen) if v is not None]
@@ -8509,31 +8607,98 @@ class KreuzhebenLanghantel(RudernLanghantel):
         def knie(z: float, vor: float) -> float:
             return self.kniewinkel(self._pose_z(z, vor)[0]["L"])
 
-        vors = []
-        groesster = 0.0
-        for z in zs:
-            vor = self._vor_bei_roh(z)
-            k = knie(z, vor)
-            if k < groesster:
-                lo, hi = vor, vor + 0.15
-                for _ in range(16):
-                    m = (lo + hi) / 2
-                    if knie(z, m) < groesster:
-                        lo = m
-                    else:
-                        hi = m
-                vor = hi
+        def knie_nur_strecken(basis: list) -> list:
+            vors = []
+            groesster = 0.0
+            for z, vor in zip(zs, basis):
                 k = knie(z, vor)
-            vors.append(vor)
-            groesster = max(groesster, k)
+                if k < groesster:
+                    lo, hi = vor, vor + 0.15
+                    for _ in range(16):
+                        m = (lo + hi) / 2
+                        if knie(z, m) < groesster:
+                            lo = m
+                        else:
+                            hi = m
+                    vor = hi
+                    k = knie(z, vor)
+                vors.append(vor)
+                groesster = max(groesster, k)
+            return vors
+
+        # Bedingung und Glätten im Wechsel (D-536): Das Glätten allein ließ das Knie oben kurz wieder um 2° beugen, die
+        # Bedingung allein die Schultern in wenigen Bildern 15 cm zurückgehen. Zuletzt die Bedingung, das Knie streckt sich.
+        vors = knie_nur_strecken([self._vor_bei_roh(z) for z in zs])
+        for _ in range(3):
+            vors = knie_nur_strecken(self._glaetten(vors))
         return zs, vors
+
+    @staticmethod
+    def _glaetten(vors: list) -> list:
+        """Glättet die Tafel der Schultern (D-536): erst das Größte der Nachbarn (die Schultern bleiben so weit vorn wie
+        verlangt, das Knie streckt sich mit ihnen), dann das Mittel über fünf Stellen (je 2,5 % des Wegs). Ohne das hielt
+        die Bedingung „Knie nur strecken“ die Schultern bis 68 % des Wegs vorn, danach gingen sie in wenigen Bildern 15 cm
+        hinter die Stange, und Rumpf und Arme ruckten. Die Fenster werden zu den Enden kleiner: Unten und oben bleibt die
+        Lage, wie sie ist (oben der aufrechte Stand, D-527)."""
+        n = len(vors)
+        groesste = [max(vors[i - min(1, i, n - 1 - i):i + min(1, i, n - 1 - i) + 1]) for i in range(n)]
+        aus = []
+        for i in range(n):
+            k = min(2, i, n - 1 - i)
+            fenster = groesste[i - k:i + k + 1]
+            aus.append(sum(fenster) / len(fenster))
+        return aus
+
+    # Tafel der Rumpfneigung (D-536): Stellen über den Weg der Stange, Halbmesser des Mittels (Stellen), Durchgänge
+    A_STELLEN = 101
+    A_FENSTER = 5
+    A_DURCHGAENGE = 60
+
+    def _a_glatt(self) -> tuple[list, list]:
+        """Rumpfneigung je Höhe der Stange (D-536): Je Stelle die Grenze, bei der die Stange `LUFT` vor den Beinen liegt
+        (`_pose_z` mit den Schultern aus der Tafel); dann im Wechsel das Mittel über das Fenster und wieder mindestens die
+        Grenze. So füllt sich eine Stufe der Grenze von der Seite her auf, an der sie ansteigt, wo die Kurve gerade oder
+        nach unten gebogen ist, bleibt sie, wie sie ist, und nirgends kommt die Stange den Beinen näher als `LUFT`. Am Saum
+        der Shorts (77 bis 82 % des Wegs, zwischen den Bildern 20 und 21) steht der Stoff etwa 1,5 cm vor der Haut: Mit
+        der Grenze selbst blieb der Rumpf dort kurz stehen, und das Knie streckte sich von einem Bild zum nächsten um 11°.
+        Die Fenster werden zu den Enden kleiner: Unten und oben bleibt die Lage, wie sie ist."""
+        n = self.A_STELLEN
+        zs = [self.z0 + (self.z1 - self.z0) * i / (n - 1) for i in range(n)]
+        grenze = []
+        for z in zs:
+            self._pose_z(z, self._vor_bei(z))
+            grenze.append(self._a)
+        werte = list(grenze)
+        for _ in range(self.A_DURCHGAENGE):
+            mittel = []
+            for i in range(n):
+                k = min(self.A_FENSTER, i, n - 1 - i)
+                fenster = werte[i - k:i + k + 1]
+                mittel.append(sum(fenster) / len(fenster))
+            werte = [max(g, m) for g, m in zip(grenze, mittel)]
+        return zs, werte
+
+    @staticmethod
+    def _aus_tafel(tafel: tuple[list, list], z: float) -> float:
+        """Wert der Tafel bei Höhe `z`, linear zwischen den Stellen."""
+        zs, werte = tafel
+        x = max(0.0, min(1.0, (z - zs[0]) / (zs[-1] - zs[0]))) * (len(zs) - 1)
+        i = min(int(x), len(zs) - 2)
+        return werte[i] + (werte[i + 1] - werte[i]) * (x - i)
 
     def _pose_z(self, z: float, vor: float | None = None) -> tuple[dict, dict, Vector, float, float]:
         """Rumpfneigung per Halbierung, bis die Stange `LUFT` vor den Beinen liegt, die Schultern `vor` (sonst `_vor_bei`)
         vor ihr: flacher geneigt geht die Hüfte zurück und mit ihr die Beine."""
         rig = self.rig
+        tafel = getattr(self, "_a_tafel", None) if vor is None else None
         if vor is None:
             vor = self._vor_bei(z)
+        if tafel is not None:
+            # Neigung aus der geglätteten Tafel (D-536), nie aufrechter als die Grenze: Die Stange bleibt `LUFT` oder weiter
+            # vor den Beinen
+            self._a = self._aus_tafel(tafel, z)
+            beine, arme, schwer = self._pose_mit(self._a, z, vor)
+            return beine, arme, schwer, self._abstand_beine(z), vor
 
         def frei_bei(a: float) -> float:
             vorher = len(rig.meldungen)
@@ -8580,6 +8745,22 @@ class KreuzhebenLanghantel(RudernLanghantel):
                     self.beinpunkte.append((g, q))
         self.beinkanten += [(index[e.vertices[0]], index[e.vertices[1]]) for e in obj.data.edges
                             if e.vertices[0] in index and e.vertices[1] in index]
+        # Nachgeben am Saum (D-536): je Bein der tiefste Punkt der Shorts am Oberschenkel ist der Saum; darüber nimmt das
+        # Nachgeben auf `SAUM_WEG` weich ab (smoothstep). Die Haut gibt nicht nach.
+        erste = min(index.values()) if index else len(self.beinpunkte)
+        saum = {}
+        for knochen, q in self.beinpunkte[erste:]:
+            if knochen.startswith("upperleg"):
+                seite = q.x > 0
+                saum[seite] = min(saum.get(seite, q.z), q.z)
+        self._nachgiebig = [0.0] * erste
+        for knochen, q in self.beinpunkte[erste:]:
+            h = saum.get(q.x > 0)
+            if h is None:
+                self._nachgiebig.append(0.0)
+                continue
+            u = max(0.0, min(1.0, (q.z - h) / self.SAUM_WEG))
+            self._nachgiebig.append(self.NACHGIEBIG * (1.0 - u * u * (3.0 - 2.0 * u)))
 
     def _oben_aufrecht(self) -> None:
         """Endlage aufrecht (D-527): Becken und Rumpf wie im Stand, die Hüfte so tief, dass die Knie `KNIE_OBEN` haben; die
@@ -8617,7 +8798,9 @@ class KreuzhebenLanghantel(RudernLanghantel):
         self.stange_vor_oben = 0.0
         self._oben_aufrecht()
         self._vor_tafel = None
+        self._a_tafel = None
         self._vor_tafel = self._vor_glatt()
+        self._a_tafel = self._a_glatt()
         self.stand = (0.0, 0.0)
         rig.zuruecksetzen()
 

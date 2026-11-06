@@ -4,7 +4,7 @@ Stand: 2026-10-27 (Zuordnung D-411), Plan vom 28.10.2026 (D-429, Reihenfolge nac
 
 Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (GK), „Push/Pull/Beine, rotierend“ (PPB) und „Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026), dazu „Dali’s PPLC“ (DP, D-504): Der Produktinhaber will alle fehlenden Animationen dieses Programms jetzt (Nachricht vom 04.11.2026, D-508); es folgt deshalb direkt auf „Ganzkörper A/B“. Reihenfolge (sechste Nachricht vom 28.10.2026): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch fehlenden aus „Dali’s PPLC“, dann aus „Push/Pull/Beine“, zuletzt aus „Winterprogramm 2026“; innerhalb jedes Programms nach Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, Bankdrücken mit Langhantel, Latziehen) laufen als Schleifen in der App; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird in der Phase Programme (Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`) familienweise: erst eine Prüfseite, die Schleifen der Familie nach der Freigabe des Produktinhabers.
 
-**Fortschritt** (Stand 05.11.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Schleife in der App (D-474): 1; Schleife in der App (D-486): 1; Schleife in der App (D-490): 1; Schleife in der App (D-492): 1; Schleife in der App (D-509, mit den Diparmen neu in D-513): 1; Schleife in der App (D-513): 2; Schleife in der App (D-516): 4; Schleife in der App (D-517): 3; Schleife in der App (D-520): 3; Schleife in der App (D-521): 2; Schleife in der App (D-526): 1; Schleife in der App (D-527): 1; Schleife in der App (D-528): 2; offen: 45.
+**Fortschritt** (Stand 05.11.2026, Spalte „Stand“ in den Tabellen): Schleife in der App (D-461): 3; Schleife in der App (D-463, neu in D-536): 2; Schleife in der App (D-465): 1; Schleife in der App (D-467): 2; Schleife in der App (D-469): 1; Schleife in der App (D-474): 1; Schleife in der App (D-486): 1; Schleife in der App (D-490): 1; Schleife in der App (D-492): 1; Schleife in der App (D-509, mit den Diparmen neu in D-513): 1; Schleife in der App (D-513): 2; Schleife in der App (D-516): 4; Schleife in der App (D-517): 3; Schleife in der App (D-520): 3; Schleife in der App (D-521): 2; Schleife in der App (D-526): 1; Schleife in der App (D-527, neu in D-536): 1; Schleife in der App (D-528): 1; Schleife in der App (D-528, neu in D-536): 1; offen: 45.
 
 ## 1. Was gezählt ist
 
@@ -21,8 +21,8 @@ Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (G
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
 |---|---|---|---|---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | DP, W26 | 54 | Familie (Code) | 2,00 | 1,00 | 26 | neues Gerät: Kurzhanteln | Schleife in der App (D-463) |
-| Schrägbankdrücken mit Kurzhanteln | DP, PPB, W26 | 44 | Familie (Code) | 0,75 | 0,00 | 26 |  | Schleife in der App (D-463) |
+| Bankdrücken mit Kurzhanteln | DP, W26 | 54 | Familie (Code) | 2,00 | 1,00 | 26 | neues Gerät: Kurzhanteln | Schleife in der App (D-463, neu in D-536) |
+| Schrägbankdrücken mit Kurzhanteln | DP, PPB, W26 | 44 | Familie (Code) | 0,75 | 0,00 | 26 |  | Schleife in der App (D-463, neu in D-536) |
 
 Waagrechtes Drücken: 2 Übungen, Aufwand 2,8 Std. (davon neue Geräte 1,0) (Basis schon geleistet), Renderzeit 53 min.
 
@@ -164,7 +164,7 @@ Schulter und Brust isoliert: 2 Übungen, Aufwand 6,0 Std. (davon neue Geräte 3,
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
 |---|---|---|---|---|---|---|---|---|
-| Schulterdrücken mit Langhantel, stehend | PPB | 25 | Familie (Code) | 0,50 | 0,00 | 26 |  | Schleife in der App (D-528) |
+| Schulterdrücken mit Langhantel, stehend | PPB | 25 | Familie (Code) | 0,50 | 0,00 | 26 |  | Schleife in der App (D-528, neu in D-536) |
 | Schulterdrücken mit Kurzhanteln, sitzend | – | 21 | Familie (Code) | 1,00 | 0,00 | 26 |  | Schleife in der App (D-528) |
 
 Senkrechtes Drücken: 2 Übungen, Aufwand 1,5 Std. (davon neue Geräte 0,0) (Basis schon geleistet), Renderzeit 53 min.
@@ -173,7 +173,7 @@ Senkrechtes Drücken: 2 Übungen, Aufwand 1,5 Std. (davon neue Geräte 0,0) (Bas
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
 |---|---|---|---|---|---|---|---|---|
-| Kreuzheben mit Langhantel | – | 21 | Familie (Code) | 0,50 | 0,00 | 26 |  | Schleife in der App (D-527) |
+| Kreuzheben mit Langhantel | – | 21 | Familie (Code) | 0,50 | 0,00 | 26 |  | Schleife in der App (D-527, neu in D-536) |
 
 Hüftbeuge: 1 Übungen, Aufwand 0,5 Std. (davon neue Geräte 0,0) (Basis schon geleistet), Renderzeit 26 min.
 

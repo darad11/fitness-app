@@ -19,7 +19,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/kniebeuge-8ccb4065.mp4",
+          "src": "medien/kniebeuge-765cf8e2.mp4",
           "width": 720,
           "height": 540
         },
@@ -46,7 +46,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/bankdruecken-ddbc29ea.mp4",
+          "src": "medien/bankdruecken-41f245d0.mp4",
           "width": 720,
           "height": 540
         },
@@ -66,24 +66,24 @@
     },
     "bench_press_dumbbell": {
       "preview": {
-        "src": "medien/bankdruecken_kh-vorschau-ff41e354.webp",
+        "src": "medien/bankdruecken_kh-vorschau-9fe63cd8.webp",
         "width": 240,
         "height": 240
       },
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/bankdruecken_kh-5e6bb756.mp4",
+          "src": "medien/bankdruecken_kh-80419406.mp4",
           "width": 720,
           "height": 540
         },
         "webm": {
-          "src": "medien/bankdruecken_kh-2d05e433.webm",
+          "src": "medien/bankdruecken_kh-bb2676e9.webm",
           "width": 720,
           "height": 540
         },
         "still": {
-          "src": "medien/bankdruecken_kh-poster-4468c502.webp",
+          "src": "medien/bankdruecken_kh-poster-24226821.webp",
           "width": 720,
           "height": 540
         }
@@ -93,24 +93,24 @@
     },
     "incline_bench_press_dumbbell": {
       "preview": {
-        "src": "medien/schraegbankdruecken_kh-vorschau-0b59b294.webp",
+        "src": "medien/schraegbankdruecken_kh-vorschau-752e3d04.webp",
         "width": 240,
         "height": 240
       },
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/schraegbankdruecken_kh-2d302ca1.mp4",
+          "src": "medien/schraegbankdruecken_kh-062dd66e.mp4",
           "width": 720,
           "height": 540
         },
         "webm": {
-          "src": "medien/schraegbankdruecken_kh-7264230d.webm",
+          "src": "medien/schraegbankdruecken_kh-14044853.webm",
           "width": 720,
           "height": 540
         },
         "still": {
-          "src": "medien/schraegbankdruecken_kh-poster-084d3a29.webp",
+          "src": "medien/schraegbankdruecken_kh-poster-d1ee5e57.webp",
           "width": 720,
           "height": 540
         }
@@ -127,7 +127,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/latziehen-1c75e4f5.mp4",
+          "src": "medien/latziehen-4316a2f3.mp4",
           "width": 720,
           "height": 540
         },
@@ -154,7 +154,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/beinpresse-e67294c1.mp4",
+          "src": "medien/beinpresse-1dace891.mp4",
           "width": 720,
           "height": 540
         },
@@ -181,7 +181,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/unterarmstuetz-82d47471.mp4",
+          "src": "medien/unterarmstuetz-3458fed2.mp4",
           "width": 720,
           "height": 540
         },
@@ -208,7 +208,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/crunch-c284e730.mp4",
+          "src": "medien/crunch-ae947b23.mp4",
           "width": 720,
           "height": 540
         },
@@ -235,7 +235,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/seitheben_kh-48862ed0.mp4",
+          "src": "medien/seitheben_kh-e4eb59ed.mp4",
           "width": 720,
           "height": 540
         },
@@ -262,7 +262,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/rudern_kabel-34385aaf.mp4",
+          "src": "medien/rudern_kabel-bfbc07d5.mp4",
           "width": 720,
           "height": 540
         },
@@ -289,7 +289,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/beinbeuger_liegend-794e162c.mp4",
+          "src": "medien/beinbeuger_liegend-61a8e19f.mp4",
           "width": 720,
           "height": 540
         },
@@ -316,7 +316,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/rumaenisches_kreuzheben_kh-c578d88d.mp4",
+          "src": "medien/rumaenisches_kreuzheben_kh-b714b2e7.mp4",
           "width": 720,
           "height": 540
         },
@@ -343,7 +343,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/schulterdruecken_maschine-afcba6f8.mp4",
+          "src": "medien/schulterdruecken_maschine-69c62749.mp4",
           "width": 720,
           "height": 540
         },
@@ -370,7 +370,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/klimmzug_unterstuetzt-df57aa80.mp4",
+          "src": "medien/klimmzug_unterstuetzt-941c504e.mp4",
           "width": 720,
           "height": 540
         },
@@ -397,7 +397,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/dip_unterstuetzt-70bd1627.mp4",
+          "src": "medien/dip_unterstuetzt-12d2a113.mp4",
           "width": 720,
           "height": 540
         },
@@ -424,7 +424,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/hackenschmidt-06fe687b.mp4",
+          "src": "medien/hackenschmidt-afeb2841.mp4",
           "width": 720,
           "height": 540
         },
@@ -451,7 +451,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/beinstrecker-782dad70.mp4",
+          "src": "medien/beinstrecker-04f08042.mp4",
           "width": 720,
           "height": 540
         },
@@ -478,7 +478,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/beinbeuger_sitzend-22089bfe.mp4",
+          "src": "medien/beinbeuger_sitzend-e988e078.mp4",
           "width": 720,
           "height": 540
         },
@@ -505,7 +505,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/wadenheben_stehend-e0565856.mp4",
+          "src": "medien/wadenheben_stehend-21dcdc00.mp4",
           "width": 720,
           "height": 540
         },
@@ -532,7 +532,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/wadenheben_sitzend-e966afe1.mp4",
+          "src": "medien/wadenheben_sitzend-8428be1f.mp4",
           "width": 720,
           "height": 540
         },
@@ -559,7 +559,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/bizepscurl_kh-0501adee.mp4",
+          "src": "medien/bizepscurl_kh-756c2a9b.mp4",
           "width": 720,
           "height": 540
         },
@@ -586,7 +586,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/hammercurl_kh-770c90db.mp4",
+          "src": "medien/hammercurl_kh-513d30b1.mp4",
           "width": 720,
           "height": 540
         },
@@ -613,7 +613,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/trizepsdruecken_kabel-e78c6d4c.mp4",
+          "src": "medien/trizepsdruecken_kabel-cad109c1.mp4",
           "width": 720,
           "height": 540
         },
@@ -640,7 +640,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/rudern_langhantel-e364d31f.mp4",
+          "src": "medien/rudern_langhantel-a1360501.mp4",
           "width": 720,
           "height": 540
         },
@@ -667,7 +667,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/rudern_maschine-1bac5faf.mp4",
+          "src": "medien/rudern_maschine-f1723a96.mp4",
           "width": 720,
           "height": 540
         },
@@ -694,7 +694,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/high_row_maschine-80a7a21f.mp4",
+          "src": "medien/high_row_maschine-ffd6cfbb.mp4",
           "width": 720,
           "height": 540
         },
@@ -721,7 +721,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/fliegende_kabel-7b8a24e2.mp4",
+          "src": "medien/fliegende_kabel-4e139b24.mp4",
           "width": 720,
           "height": 540
         },
@@ -748,7 +748,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/reverse_butterfly-e7bdfbc7.mp4",
+          "src": "medien/reverse_butterfly-6a9ad4aa.mp4",
           "width": 720,
           "height": 540
         },
@@ -775,7 +775,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/kabelcrunch_kniend-25ec96db.mp4",
+          "src": "medien/kabelcrunch_kniend-e6192352.mp4",
           "width": 720,
           "height": 540
         },
@@ -795,24 +795,24 @@
     },
     "deadlift_barbell": {
       "preview": {
-        "src": "medien/kreuzheben_langhantel-vorschau-d5f1363f.webp",
+        "src": "medien/kreuzheben_langhantel-vorschau-4aefb62e.webp",
         "width": 240,
         "height": 240
       },
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/kreuzheben_langhantel-ef2b59e3.mp4",
+          "src": "medien/kreuzheben_langhantel-0c9ee3e7.mp4",
           "width": 720,
           "height": 540
         },
         "webm": {
-          "src": "medien/kreuzheben_langhantel-71c44126.webm",
+          "src": "medien/kreuzheben_langhantel-5aec16c2.webm",
           "width": 720,
           "height": 540
         },
         "still": {
-          "src": "medien/kreuzheben_langhantel-poster-24f80552.webp",
+          "src": "medien/kreuzheben_langhantel-poster-eab10bcc.webp",
           "width": 720,
           "height": 540
         }
@@ -822,24 +822,24 @@
     },
     "overhead_press_barbell": {
       "preview": {
-        "src": "medien/schulterdruecken_langhantel-vorschau-aa8f4d88.webp",
+        "src": "medien/schulterdruecken_langhantel-vorschau-fd371ce0.webp",
         "width": 240,
         "height": 240
       },
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/schulterdruecken_langhantel-064917b1.mp4",
+          "src": "medien/schulterdruecken_langhantel-c0e37add.mp4",
           "width": 720,
           "height": 540
         },
         "webm": {
-          "src": "medien/schulterdruecken_langhantel-091a4c32.webm",
+          "src": "medien/schulterdruecken_langhantel-95ad32ac.webm",
           "width": 720,
           "height": 540
         },
         "still": {
-          "src": "medien/schulterdruecken_langhantel-poster-c802435a.webp",
+          "src": "medien/schulterdruecken_langhantel-poster-d3170d71.webp",
           "width": 720,
           "height": 540
         }
@@ -856,7 +856,7 @@
       "demo": {
         "kind": "animation",
         "file": {
-          "src": "medien/schulterdruecken_kh_sitzend-b564c3cd.mp4",
+          "src": "medien/schulterdruecken_kh_sitzend-456b6b66.mp4",
           "width": 720,
           "height": 540
         },

@@ -3179,6 +3179,26 @@ Am nachgestellten Duo quer (Fenster 867 × 669 wie am Gerät gemessen) hat die l
 
 „Ziel 8–12“ bleibt jetzt in einer Zeile: Nach dem Strich steht ein unsichtbarer Wortverbinder, wie bisher das geschützte Leerzeichen zwischen Wort und Zahl. Die Pause verdeckt die Spaltenköpfe nicht mehr: Erscheint sie, zeigt der Player mit dem nächsten Satz auch die Spaltenköpfe seiner Übung und die erledigten Sätze darüber, wenn alles Platz hat. Passt es nicht (am Duo zugeklappt mit Vorwerten ab dem dritten Satz), kleben die Spaltenköpfe direkt unter der Pause. Eine Grenze bleibt: Dann liegen erledigte Sätze weiter oben unter der Pause, der aktive Satz hat Vorrang.
 
+### 60.7 Schleifen Bild für Bild (D-536)
+
+Geprüft habe ich alle 24 Schleifen von Dali’s PPLC, Bild für Bild: die Bahnen von rund 100 Körperteilen und allen Teilen von Gerät und Kleidung, dazu jede ausgelieferte MP4 und WebM. Gefunden:
+
+1. **Military Press:** Der Ruckler war echt und der größte. Die Ellbogen sprangen zwischen 56 und 87 % des Wegs hin und her (bis 40 px in einem Bild), dazu stockte der Kopf, sobald der Rumpf zurückging. Jetzt bleibt der Ellbogen vor der Stange und geht erst oben weich in die senkrechte Lage, Kopf und Rumpf wechseln weich. Größte Änderung je Bild 67,5 → 3,1 px.
+2. **Kreuzheben:** Ruck in Bild 20 und 43, wo die Stange von der Haut auf die Shorts gleitet; Schultern 8 cm in einem Bild, der Kopf sprang. Jetzt laufen Schultern, Rumpf und Kopf gleichmäßig, der Saum gibt etwas nach, die Stange berührt ihn, liegt aber nie im Stoff. 28,9 → 6,6 px. Ein kleines Wippen des Knies im selben Bild bleibt (3 bis 5 px).
+3. **Bankdrücken mit Kurzhanteln, flach und schräg:** Der Unterarm ruckte am Anfang des Absenkens und am Ende des Drückens, weil die Hände dort kurz doppelt so schnell waren. Jetzt gleichmäßig: 12,4 → 5,2 px, 8,3 → 3,1 px.
+4. **Naht:** In allen MP4 (die spielt das iPhone) zuckte das Bild bei jeder Wiederholung kurz, ein Fehler der Kodierung, nicht der Animation. Jetzt sind die Bilder vor der Naht genauer kodiert; die MP4 werden dadurch zusammen 10,3 % größer.
+5. **Unauffällig:** die übrigen 20 Schleifen. Das Schulterdrücken mit Kurzhanteln sitzend rastet oben um 3 px ein, so wenig wie die weichsten anderen.
+6. **Start:** Alle 24 Schleifen starten sofort: im Player aufgeklappt nach dem Start und nach jedem Wechsel in 13 bis 135 ms, in den Details in 25 bis 138 ms (gemessen in Chromium, MP4). Zugeklappt in 42 bis 106 ms, sobald „Jetzt“ zu sehen ist; nach einem Wechsel liegt „Jetzt“ dort meist über dem Bildrand (44 von 48 Fällen), weil der Player zum nächsten Satz scrollt. Eine Schleife außerhalb des Bildes hält die App bewusst an und startet sie, sobald man hochscrollt.
+
+Der neue Test `schleifen.test.ts` prüft alle 24 Schleifen auf Sprünge, Ruck und Naht und war mit den Messungen vom Stand davor rot.
+
+### 60.8 Bilder und Aufnahme für den Gerätetest
+
+- Duo zugeklappt (382 × 678) mit laufender Pause: `docs/screens/duo/pplc-pause-zugeklappt.webp`. Die kleine Pause zeigt hier nur Zeit und „Überspringen“: Unter 22 rem Breite stünde vom nächsten Satz kaum ein Wort, er steht in der Satzliste und in der großen Pause (unverändert). Die Spaltenköpfe liegen frei.
+- Duo aufgeklappt (867 × 669) mit laufender Pause: `docs/screens/duo/pplc-pause-aufgeklappt.webp`. Rechts Animation und „Jetzt“ mit „Danach“ und Vorschaubild, keine Karte „Als Nächstes“; links die Pause mit „Ziel 6–10“ in einer Zeile.
+- Aufnahme des Players mit Pause, Duo aufgeklappt, Tag Compound: `docs/screens/duo/pplc-player-pause.mp4` (12,6 s). Satz erledigt, die Pause läuft, rechts bleibt alles stehen, die Schleife läuft weiter.
+- Aufgefallen, nicht geändert: „Jetzt“ zählt den Aufwärmsatz mit („Arbeitssatz · Satz 2 von 4“), die Pause zählt nur die Arbeitssätze („Arbeitssatz 1“).
+
 ### 60.9 Berichte zu den Paketen
 
 ```
@@ -3245,5 +3265,16 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests des 
 Ergebnis: bestanden
 Bekannte Einschränkungen: Passt der Block nicht, liegen erledigte Sätze unter der Pause; WebKit läuft in der CI
 Nächste Schritte: Schleifen (D-536)
+```
+
+```
+Arbeitspaket: D-536 Phase Programme, Schleifen Bild für Bild (Gerätetest, Punkt 3)
+Umgesetzte Funktionen: Military Press, Kreuzheben, Bankdrücken mit Kurzhanteln flach und schräg ohne Ruck neu gerendert; Naht aller MP4 ohne Zucken; Messung der Videos und der Bahnen mit Test; Start im Player und in den Details gemessen; erfüllte AK: –
+Geänderte Dateien: tools/uebungen-3d/uebungen.py, tools/uebungen-3d/render.py, tools/uebungen-3d/bahnen_messen.py, tools/uebungen_schleifen_messen.py, tools/check_medien.py, tools/uebungen-3d/familien.json, public/uebungen/medien.json, public/uebungen/medien/ (32 MP4, 4 WebM, 4 Poster, 4 Vorschaubilder), src/modules/exercises/data/schleifen.test.ts, src/modules/exercises/data/schleifen-messung.v1.json, src/modules/exercises/data/schleifen-bahnen.v1.json, .prettierignore, docs/screens/uebungen/dalis-pplc-uebersicht.webp, docs/screens/uebungen/ganzkoerper-ab-uebersicht.webp, docs/screens/duo/pplc-pause-zugeklappt.webp, docs/screens/duo/pplc-pause-aufgeklappt.webp, docs/screens/duo/pplc-player-pause.mp4, docs/uebungen-animationsplan.md, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md, docs/architecture.md
+Technische Entscheidungen: D-536
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Übungsmoduls 97 bestanden (11 Dateien, darunter `schleifen.test.ts` mit 5 Tests); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (14,9 min)
+Ergebnis: bestanden
+Bekannte Einschränkungen: Kreuzheben: Knie wippt in Bild 20 und 43 um 3 bis 5 px; drei Schleifen ohne Einzelbilder aus der bisherigen MP4 neu kodiert (zweite Kodierung); WebKit läuft in der CI
+Nächste Schritte: Bilder vom Duo, Aufnahme, Gerätetest des Produktinhabers
 ```
 

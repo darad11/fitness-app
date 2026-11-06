@@ -3732,3 +3732,21 @@ CI-Lauf 42189209043 zu `9bc2bf0`: Chromium grün; WebKit 433 bestanden, 196 übe
 | Nachweis | Ergebnis |
 |---|---|
 | Test C ohne Chrome-Protokoll, nur mit der Fenstergröße | Chromium Desktop und Handy: `duo-player-befunde.spec.ts` 11 bestanden, 3 übersprungen; gegen den Build vor D-533 weiter rot („Jetzt“ in der Pause nicht vorhanden); WebKit prüft die CI |
+
+### Schleifen Bild für Bild · 06.11.2026, Cloud-Umgebung
+
+Alle 24 Schleifen von Dali’s PPLC Bild für Bild geprüft; Military Press, Kreuzheben und Bankdrücken mit Kurzhanteln (flach und schräg) neu, Naht der MP4 ohne Zucken (D-536).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Bahnen am Stand davor (größte Änderung je Bild, px je Bild²) | Military Press 67,5 (Unterarm, Bild 16), Kreuzheben 28,9 (Haare, Bild 42), Bankdrücken mit Kurzhanteln 12,4, Schrägbank 8,3; die übrigen 20 bis 2,9 |
+| Videos am Stand davor | Military Press springt in MP4 und WebM (Übergang 83 gegen 45 bei den Nachbarn); Naht in der Pause in 28 MP4 über 40 Pixel (bis 472 Pixel, bis 29 Stufen), WebM 0 |
+| Kreuzheben, Varianten je Bild gemessen | Schultern wie bisher, nur der Saum gibt nach: 25,2 px (Kopf springt weiter), dazu die Neigung aufgefüllt: 21,9 px; Schultern geglättet ohne Auffüllen: 9,3 px (Schienbein stockt); geglättet und aufgefüllt, Saum 1,2 cm auf 6 cm: 7,0 px; Saum 1,5 cm auf 10 cm: 6,0 px, aber die Stange 3 mm im Stoff; gewählt Saum 1 cm auf 10 cm: 6,6 px, am Saum 1,3 mm Luft, vorher bis 23,5 mm |
+| Bankdrücken mit Kurzhanteln, Varianten | nach dem Weg des Griffs 8,0 px; dazu der ganze Weg des Ellbogens 5,7 px; nach dem Ellbogenwinkel 12,2 px (die Hände eilen); gewählt 0,4 des Ellbogenwegs: 5,2 px (Schrägbank 3,1) |
+| Military Press, Werte | Handgelenk seitlich höchstens 9,6°, gesamt 10,4°, Rumpf höchstens 3,8°; größte Änderung 3,1 px |
+| Naht nach dem Neukodieren | In der Pause höchstens 15 Pixel über 8 Stufen (Beinpresse), Military Press 11, die übrigen 0 bis 8; WebM 0 bis 3; Rudern am Kabel bewegt sich durch die Naht (MP4 177, WebM 147 Pixel), dort ohne Sprung. MP4 aller 32 zusammen 1.883,9 → 2.077,3 KB (+10,3 %) |
+| Unit `schleifen.test.ts` mit den neuen Messungen | 5 bestanden; Übungsmodul 97 bestanden (11 Dateien) |
+| Gegenprobe `schleifen.test.ts` mit den Messungen des Stands davor | 3 von 5 rot: Sprung (Military Press, MP4 und WebM), 28 Nähte, Bahnen (Military Press 67,5, Kreuzheben 28,9, Bankdrücken 12,4, Schrägbank 8,3 px) |
+| Start im Player und in den Details | Player aufgeklappt (867 × 669): 24 Übungen, 48 Starts und Wechsel, 13 bis 135 ms; zugeklappt (382 × 678): 42 bis 106 ms, sobald „Jetzt“ im Bild ist (44 von 48 lagen nach dem Wechsel über dem Bildrand, dort steht die Schleife bis zum Hochscrollen); Details: 24 Übungen, 25 bis 138 ms; immer die MP4 |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Übungsmoduls 97 bestanden (11 Dateien, darunter `schleifen.test.ts` mit 5 Tests); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (14,9 min) |
+

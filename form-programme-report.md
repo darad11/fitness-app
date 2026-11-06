@@ -3135,3 +3135,24 @@ Ergebnis: bestanden (Liste in 59.5)
 Bekannte Einschränkungen: Texte von High Row und Fliegenden nicht mit den Originalseiten abgeglichen, beide Seiten sperren automatische Abrufe (59.6)
 Nächste Schritte: Gerätetest des Produktinhabers, danach die Entscheidung über den Merge von #54
 ```
+
+## 60. Gerätetest Dali’s PPLC am Duo: Korrekturen (ab D-530)
+
+Gerätetest des Produktinhabers vom 06.11.2026: Englische Namen und Wochenwechsel am Compound-Tag passen. Korrigiert werden die Sätze, der Beinbeuger sitzend, die Schleifen und vier Befunde im Player.
+
+### 60.1 Zwei feste Regeln (D-530)
+
+In `CLAUDE.md` unter „Dauerhafte Anweisungen des Produktinhabers“ stehen jetzt wörtlich: „Antworte immer auf Deutsch, auch in Zwischenmeldungen.“ und „Netzwerkfreigaben, Berechtigungen und Einstellungen der Umgebung änderst du nie selbst. Brauchst du eine Freigabe, fragst du mich.“ Nebenbei berichtigt: D-526 bis D-529 standen in `docs/decisions.md` in der Tabelle der Datenquellen, jetzt nach D-525.
+
+### 60.9 Berichte zu den Paketen
+
+```
+Arbeitspaket: D-530 Phase Programme, zwei feste Regeln in CLAUDE.md
+Umgesetzte Funktionen: keine in der App; Regeln „immer Deutsch, auch in Zwischenmeldungen“ und „Netzwerkfreigaben, Berechtigungen und Einstellungen der Umgebung nie selbst ändern“; Reihenfolge in docs/decisions.md berichtigt; erfüllte AK: –
+Geänderte Dateien: CLAUDE.md, docs/decisions.md, docs/implementation-plan.md, form-programme-report.md
+Technische Entscheidungen: D-530
+Ausgeführte Tests: format:check und check:docs bestanden; die App ist unverändert, die CI prüft wie immer alles einschließlich WebKit
+Ergebnis: bestanden
+Bekannte Einschränkungen: –
+Nächste Schritte: Sätze von Dali’s PPLC (D-531)
+```

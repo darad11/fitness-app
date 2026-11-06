@@ -15,6 +15,8 @@ Diese Regeln gelten für jede Sitzung und gehen den übrigen Abschnitten vor.
 - Texte in der App nach `form-markenleitplanken.md`: Du-Form, keine Ausrufezeichen, keine Emojis, keine Streaks oder Challenge-Zähler.
 - Gemergt wird nur nach Freigabe des Produktinhabers.
 - Rückfragen nur, wenn eine Entscheidung die Richtung ändert; alles andere selbst entscheiden und begründen.
+- Antworte immer auf Deutsch, auch in Zwischenmeldungen.
+- Netzwerkfreigaben, Berechtigungen und Einstellungen der Umgebung änderst du nie selbst. Brauchst du eine Freigabe, fragst du mich.
 
 ## Zuerst lesen
 

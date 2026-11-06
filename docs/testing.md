@@ -3725,3 +3725,10 @@ Spannen bleiben zusammen, die Spaltenköpfe liegen nicht mehr unter der Pause (D
 | E2E Player, Pause, Scrollen, Tastatur, Auf- und Zuklappen (12 Dateien) | in vier Durchgängen angepasst: Spaltenköpfe nur beim Satzwechsel und in der Pause zeigen (D-375), klebend nur in der Pause (D-391), `duo-resize.spec.ts` rechnet mit ihnen; zuletzt 65 bestanden, 46 übersprungen, 1 fehlgeschlagen (`duo-resize.spec.ts` Erwartung), nach der Anpassung die Datei 4 bestanden, 4 übersprungen |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 208 bestanden (30 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (15,2 min) |
 
+### Nachtrag zu D-533 nach der CI (WebKit) · 06.11.2026, Cloud-Umgebung
+
+CI-Lauf 42189209043 zu `9bc2bf0`: Chromium grün; WebKit 433 bestanden, 196 übersprungen, 1 fehlgeschlagen, Test C aus `duo-player-befunde.spec.ts` mit „browserContext.newCDPSession: CDP session is only available in Chromium“.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Test C ohne Chrome-Protokoll, nur mit der Fenstergröße | Chromium Desktop und Handy: `duo-player-befunde.spec.ts` 11 bestanden, 3 übersprungen; gegen den Build vor D-533 weiter rot („Jetzt“ in der Pause nicht vorhanden); WebKit prüft die CI |

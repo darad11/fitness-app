@@ -364,8 +364,9 @@ test.describe('B bis D: Player aufgeklappt quer (D-495)', () => {
     page,
   }) => {
     test.slow();
-    // Duo quer wie am Gerät gemessen, dazu ein höheres Fenster (iPad quer).
-    const cdp = await emulateDevice(page, GERAET.quer);
+    // Fenster wie am Gerät gemessen (Duo quer, D-393), dazu ein höheres Fenster (iPad quer). Nur die
+    // Fenstergröße, ohne Chrome-Protokoll: So läuft der Test auch in WebKit (Nachtrag zu D-533).
+    await page.setViewportSize({ width: GERAET.quer.width, height: GERAET.quer.height });
     await startTraining(page, true);
     for (const [name, size] of [
       ['Duo quer', null],
@@ -392,7 +393,7 @@ test.describe('B bis D: Player aufgeklappt quer (D-495)', () => {
       expect(card.bottom, `${name}: über der Fußleiste`).toBeLessThanOrEqual(foot.top);
     }
     // Zugeklappt (eine Spalte) nimmt die Pause den Platz von „Jetzt“ ein, wie bisher.
-    await emulateDevice(page, GERAET.zu, cdp);
+    await page.setViewportSize({ width: GERAET.zu.width, height: GERAET.zu.height });
     await expect(page.getByRole('region', { name: 'Pause' })).toBeVisible();
     await expect(page.getByRole('region', { name: 'Jetzt' })).toHaveCount(0);
   });

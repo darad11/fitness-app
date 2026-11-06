@@ -3712,3 +3712,16 @@ Der Rand der Karten läuft ganz unter dem Kopf durch (D-534).
 | E2E `duo-player.spec.ts`, `duo-player-befunde.spec.ts`, `session-head.spec.ts`, `player-befunde-e.spec.ts`, `duo-safe-area.spec.ts`, `duo-feste-leisten.spec.ts` | 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (`duo-player.spec.ts` verlangte die rechte Kante des Kopfs genau an der Liste; jetzt bis 4 px darüber, danach die Datei 5 bestanden, 5 übersprungen) |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium Duo und Player (6 Dateien) 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (Kante des Kopfs, Test angepasst, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen); der neue Test mit dem CSS davor 2 rot, mit der Änderung 2 grün |
 
+### Kleine Pause · 06.11.2026, Cloud-Umgebung
+
+Spannen bleiben zusammen, die Spaltenköpfe liegen nicht mehr unter der Pause (D-535).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Bild der kleinen Pause am iPhone hoch und am Duo zugeklappt, vorher | „Ziel 6–“ am Zeilenende, „10“ darunter; Spaltenköpfe 72 px (iPhone) bzw. 117 px (Duo) unter dem Kopf mit der Pause |
+| Unit `format.test.ts` | 6 bestanden; mit `keepNumbersTogether` davor 3 rot |
+| E2E `player-befunde-e.spec.ts`, die zwei neuen Tests (Chromium Handy) | gegen den Build davor beide rot (Spanne über 2 Zeilen; Spaltenköpfe bei 220 px, Kopf bis 293 px), danach grün |
+| Lage nach drei Sätzen, Duo zugeklappt, zweites Training mit Vorwerten | Kopf bis 192 px, Spaltenköpfe klebend 192 bis 213 px, aktiver Satz 291 bis 399 px, Fußleiste ab 614 px |
+| E2E Player, Pause, Scrollen, Tastatur, Auf- und Zuklappen (12 Dateien) | in vier Durchgängen angepasst: Spaltenköpfe nur beim Satzwechsel und in der Pause zeigen (D-375), klebend nur in der Pause (D-391), `duo-resize.spec.ts` rechnet mit ihnen; zuletzt 65 bestanden, 46 übersprungen, 1 fehlgeschlagen (`duo-resize.spec.ts` Erwartung), nach der Anpassung die Datei 4 bestanden, 4 übersprungen |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 208 bestanden (30 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (15,2 min) |
+

@@ -108,3 +108,76 @@ test('E2: kleine Pause mit vollem Namen der nächsten Übung, auch bei langem Na
   await expect(text).toContainText('Bankdrücken mit Kurzhanteln');
   expect(await placeOf(text, 'Bankdrücken mit Kurzhanteln')).toMatchObject({ visible: true });
 });
+
+/** Dali’s PPLC, Push, mit dem Fenster `size`: zuerst Dumbbell Bench Press, Ziel 6–10. */
+async function startPush(page: Page, size: { width: number; height: number }) {
+  await page.addInitScript(installed);
+  await page.setViewportSize(size);
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  await page.getByRole('button', { name: 'Push heute trainieren' }).click();
+  await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
+}
+
+test('Kleine Pause: Spannen wie „6–10“ bleiben in einer Zeile (D-535)', async ({ page }) => {
+  await startPush(page, { width: 390, height: 844 });
+  await finishSet(page);
+  await page.getByRole('button', { name: 'Pause überspringen' }).first().click();
+  await finishSet(page);
+  const text = page.getByRole('region', { name: 'Pause' }).locator('.rest-next-text');
+  await expect(text).toContainText('Arbeitssatz');
+  // Vorher brach der Text nach dem Strich um: „Ziel 6–“ am Zeilenende, „10“ darunter.
+  const range = await text.evaluate((el) => {
+    const match = /6\u2013\u2060?10/.exec(el.textContent);
+    return match ? match[0] : '';
+  });
+  expect(range, 'Spanne im Text').not.toBe('');
+  expect(await placeOf(text, range)).toEqual({ lines: 1, visible: true });
+});
+
+test('Kleine Pause: Die Spaltenköpfe der aktuellen Übung bleiben unter der Pause sichtbar (D-535)', async ({
+  page,
+}) => {
+  test.slow();
+  // iPhone hoch und Duo zugeklappt wie am Gerät gemessen (D-393).
+  for (const size of [
+    { width: 390, height: 844 },
+    { width: 382, height: 678 },
+  ]) {
+    await startPush(page, size);
+    const head = page.locator('main header.player-head');
+    const card = page.locator('section', {
+      has: page.getByRole('heading', { level: 2, name: 'Dumbbell Bench Press', exact: true }),
+    });
+    const columns = card.getByText('#', { exact: true });
+    const foot = page.getByRole('button', { name: 'Satz erledigt', exact: true });
+    // Aufwärmsatz, Arbeitssatz 1 und 2: Jedes Mal erscheint die Pause und schiebt den Kopf nach unten.
+    for (let i = 0; i < 3; i += 1) {
+      if (i > 0) await page.getByRole('button', { name: 'Pause überspringen' }).first().click();
+      await finishSet(page);
+      await page.waitForTimeout(400);
+      const label = `${String(size.width)} × ${String(size.height)}, Satz ${String(i + 1)}`;
+      const h = await head.boundingBox();
+      const c = await columns.boundingBox();
+      const row = await page.locator('li[aria-current="step"]').boundingBox();
+      const f = await foot.boundingBox();
+      expect(h && c && row && f, label).toBeTruthy();
+      if (!h || !c || !row || !f) return;
+      expect(c.y, `${label}: Spaltenköpfe unter der Pause`).toBeGreaterThanOrEqual(
+        h.y + h.height - 1,
+      );
+      expect(row.y + row.height, `${label}: aktiver Satz über der Fußleiste`).toBeLessThanOrEqual(
+        f.y,
+      );
+    }
+    await page.getByRole('button', { name: 'Beenden', exact: true }).click();
+    await page
+      .getByRole('dialog')
+      .last()
+      .getByRole('button', { name: /beenden/i })
+      .last()
+      .click();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Training abgeschlossen' }),
+    ).toBeVisible();
+  }
+});

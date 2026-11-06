@@ -24,6 +24,18 @@
   display: none;
 }
 
+/* Spaltenköpfe laufen in der Pause mit (D-535): Steht der Kopf über der Liste (eine Spalte, Duo quer im
+   niedrigen Fenster), macht ihn die kleine Pause höher; die Spaltenköpfe einer Übung kleben dann direkt
+   unter ihm, solange ihre Karte zu sehen ist. Vorher lagen sie unter der Pause. Außerhalb der Pause
+   bleiben sie in der Karte: Mit offener Tastatur hätte ein Feld sonst keinen Platz mehr über der
+   Fußleiste (D-391). `data-kopf-oben` und `--player-head` setzt `useStableSetView`. */
+[data-kopf-oben] .player-frame[data-pause] [data-satzkopf] {
+  position: sticky;
+  top: var(--player-head, 0px);
+  z-index: 1;
+  background-color: var(--color-surface);
+}
+
 /* Vorschaubild in der Übungskarte (D-397) erst ab 30 rem Breite des Players: Schmal (Duo
    zugeklappt, iPhone) nähme es dem Namen und den Muskel-Etiketten Breite, die Karte würde höher
    und der erste Satz rutschte unter die Fußleiste (in WebKit gemessen). Die aktuelle Übung zeigt

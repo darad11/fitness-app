@@ -11,6 +11,7 @@ Quelle der Wahrheit ist diese Datei. `feature-inventory.csv` wird daraus mit `py
 - MVP-Zeilen verweisen in den Akzeptanzkriterien auf die AK-IDs in `requirements.md` Abschnitt 6.
 - Alle 138 Zeilen aus Version 0.1 bleiben mit ihrer ID erhalten. 27 neue Zeilen: ON-18, TP-21 bis TP-26, TS-23 bis TS-27, NU-21 bis NU-25, SY-11 bis SY-20.
 - Version 0.14 (Rebranding FORM, Paket F4, 22.10.2026): TH-04 (Streaks) „Ausgeschlossen“ und „Verworfen“: keine Serien-Zähler nach den Markenleitplanken (D-318); die Serie in der Auswertung der Tagesaufgaben (D-284) entfällt, dort steht jetzt „Diese Woche x von y“ (AK-HAB-03).
+- Version 0.131 (Phase Programme, kleine Pause, 06.11.2026): Status unverändert; Player: Spannen wie „8–12“ brechen nicht um, die kleine Pause verdeckt die Spaltenköpfe der Satztabelle nicht mehr (D-535).
 - Version 0.130 (Phase Programme, Rand der Karten am Duo quer, 06.11.2026): Status unverändert; Player im niedrigen Fenster mit zwei Spalten: Der Rand der Karten läuft ganz unter dem Kopf durch, keine graue Linie neben ihm (D-534).
 - Version 0.129 (Phase Programme, rechte Spalte in der Pause, 06.11.2026): Status unverändert; Player in zwei Spalten: rechts auch in der Pause Animation und „Jetzt“, die Karte „Als Nächstes“ entfällt (D-533).
 - Version 0.128 (Phase Programme, Dali’s PPLC ohne Beinbeuger sitzend, 06.11.2026): Status unverändert; TP-01: „Machine Seated Leg Curl“ nicht mehr in Dali’s PPLC (24 Übungen), Übung und Animation bleiben in der Bibliothek (D-532).

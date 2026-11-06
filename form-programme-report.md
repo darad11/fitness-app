@@ -3175,6 +3175,10 @@ Am Duo aufgeklappt zeigt die rechte Spalte jetzt immer dasselbe: die Animation u
 
 Am nachgestellten Duo quer (Fenster 867 × 669 wie am Gerät gemessen) hat die linke Spalte keinen eigenen Scrollbereich. Gefunden habe ich aber eine dünne graue Linie genau am rechten Rand der Karten: Im niedrigen Fenster klebt der Kopf links oben, und die Karten laufen beim Scrollen darunter durch. Ihr 1-px-Rand ragte dabei rechts neben dem Kopf heraus und sah aus wie eine Scrollleiste über dem Rand der Karte. Jetzt reicht der Kopf rechts 4 px weiter, der Rand läuft ganz darunter durch. Falls du am Gerät eine andere Leiste gesehen hast, schick mir bitte ein Bildschirmfoto.
 
+### 60.6 Kleine Pause (D-535)
+
+„Ziel 8–12“ bleibt jetzt in einer Zeile: Nach dem Strich steht ein unsichtbarer Wortverbinder, wie bisher das geschützte Leerzeichen zwischen Wort und Zahl. Die Pause verdeckt die Spaltenköpfe nicht mehr: Erscheint sie, zeigt der Player mit dem nächsten Satz auch die Spaltenköpfe seiner Übung und die erledigten Sätze darüber, wenn alles Platz hat. Passt es nicht (am Duo zugeklappt mit Vorwerten ab dem dritten Satz), kleben die Spaltenköpfe direkt unter der Pause. Eine Grenze bleibt: Dann liegen erledigte Sätze weiter oben unter der Pause, der aktive Satz hat Vorrang.
+
 ### 60.9 Berichte zu den Paketen
 
 ```
@@ -3230,5 +3234,16 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Build, Startans
 Ergebnis: bestanden
 Bekannte Einschränkungen: Ursache am nachgestellten Gerät gefunden, nicht am Gerät selbst; WebKit läuft in der CI
 Nächste Schritte: kleine Pause (D-535)
+```
+
+```
+Arbeitspaket: D-535 Phase Programme, kleine Pause (Gerätetest, Punkt 6)
+Umgesetzte Funktionen: Spannen wie „8–12“ ohne Umbruch (Wortverbinder); Spaltenköpfe mit dem aktiven Satz zeigen, in der Pause klebend unter dem Kopf; erfüllte AK: –
+Geänderte Dateien: src/modules/training/calc/format.ts, src/modules/training/calc/format.test.ts, src/modules/training/ui/player/useStableSetView.ts, src/modules/training/ui/player/SetRow.tsx, src/modules/training/ui/player/player-layout.css, e2e/player-befunde-e.spec.ts, e2e/duo-resize.spec.ts, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-535
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 208 bestanden (30 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (15,2 min)
+Ergebnis: bestanden
+Bekannte Einschränkungen: Passt der Block nicht, liegen erledigte Sätze unter der Pause; WebKit läuft in der CI
+Nächste Schritte: Schleifen (D-536)
 ```
 

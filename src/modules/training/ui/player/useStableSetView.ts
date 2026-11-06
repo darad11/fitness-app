@@ -85,12 +85,50 @@ function topVisible(row: HTMLElement, head: HTMLElement | null, foot: HTMLElemen
   const rect = row.getBoundingClientRect();
   if (rect.height === 0) return true;
   const { top, bottom } = band(head, foot, 0);
-  return rect.top >= top - 1 && rect.top <= bottom;
+  // Unter den klebenden Spaltenköpfen (in der Pause) gilt ein Satz als verdeckt (D-535).
+  return rect.top >= top + stuckColumns(row) - 1 && rect.top <= bottom;
 }
 
 /**
- * Zeigt die Zeile ganz zwischen Kopf und Fußleiste, mit möglichst kleiner Bewegung und `gap`
- * Abstand; `instant` beim Größenwechsel, der die Anordnung ohnehin auf einmal ändert.
+ * Oberkante dessen, was mit dem Satz zu sehen sein soll (D-535): die Spaltenköpfe seiner Übung, wenn
+ * sie mit dem Satz zusammen zwischen Kopf und Fußleiste passen (`room`), sonst der Satz selbst.
+ * Vorher zeigte der Player nur den Satz knapp unter dem Kopf; erschien die kleine Pause, lagen die
+ * Spaltenköpfe (# · Vorwert · kg · Wdh.) und die erledigten Sätze darunter verdeckt.
+ */
+function blockTop(row: HTMLElement, rect: DOMRect, room: number): number {
+  const card = row.closest('section');
+  const columns = card?.querySelector<HTMLElement>('[data-satzkopf]');
+  const first = card?.querySelector<HTMLElement>('[data-set-id]');
+  if (!columns || !first) return rect.top;
+  // Natürliche Lage der Spaltenköpfe über dem ersten Satz: Kleben sie, zeigt ihr Rechteck die
+  // geklebte Lage, nicht die in der Karte.
+  const top = first.getBoundingClientRect().top - columns.offsetHeight;
+  if (top > rect.top || rect.bottom - top > room) return rect.top - stuckColumns(row);
+  return top;
+}
+
+/** Höhe der Spaltenköpfe, die über dem Satz kleben können (in der Pause, D-535), sonst 0. */
+function stuckColumns(row: HTMLElement): number {
+  const columns = row.closest('section')?.querySelector<HTMLElement>('[data-satzkopf]');
+  return columns && getComputedStyle(columns).position === 'sticky' ? columns.offsetHeight : 0;
+}
+
+/** Liegen die Spaltenköpfe zum Satz unter dem Kopf, obwohl beide zusammen Platz hätten (D-535)? */
+function columnsCovered(
+  row: HTMLElement,
+  head: HTMLElement | null,
+  foot: HTMLElement | null,
+): boolean {
+  const rect = row.getBoundingClientRect();
+  if (rect.height === 0) return false;
+  const { top, bottom } = band(head, foot);
+  return blockTop(row, rect, bottom - top) < top - GAP - 1;
+}
+
+/**
+ * Zeigt die Zeile ganz zwischen Kopf und Fußleiste, mit den Spaltenköpfen ihrer Übung, wenn beides
+ * Platz hat (D-535), mit möglichst kleiner Bewegung und `gap` Abstand; `instant` beim
+ * Größenwechsel, der die Anordnung ohnehin auf einmal ändert.
  */
 function reveal(
   row: HTMLElement,
@@ -98,14 +136,17 @@ function reveal(
   foot: HTMLElement | null,
   instant = false,
   gap = GAP,
+  /** Mit den Spaltenköpfen (neuer aktiver Satz, Pause erscheint; D-535). */
+  columns = false,
 ): void {
   const rect = row.getBoundingClientRect();
   // Ohne Ausmaße (nicht dargestellt, z. B. in Tests ohne Layout) gibt es nichts zu zeigen.
   if (rect.height === 0) return;
   const { top, bottom } = band(head, foot, gap);
+  const upper = columns ? blockTop(row, rect, bottom - top) : rect.top - stuckColumns(row);
   let delta = 0;
-  if (rect.top < top) delta = rect.top - top;
-  else if (rect.bottom > bottom) delta = Math.min(rect.bottom - bottom, rect.top - top);
+  if (upper < top) delta = upper - top;
+  else if (rect.bottom > bottom) delta = Math.min(rect.bottom - bottom, upper - top);
   if (Math.abs(delta) < 1) return;
   const reduce = instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   scrollPageBy(delta, reduce ? 'instant' : 'smooth');
@@ -138,12 +179,19 @@ function settle(
   foot: HTMLElement | null,
   before: Anchor | null,
   wasVisible: boolean,
+  /** Kopf höher bei gleicher Breite (die Pause erscheint): Spaltenköpfe mit zeigen (D-535). */
+  columns = false,
 ): void {
   const row = before ? rowById(container, before.id) : null;
   if (!before || !row || !wasVisible) return;
   const delta = row.getBoundingClientRect().top - before.top;
   if (Math.abs(delta) > 1) scrollPageBy(delta);
-  if (!topVisible(row, head, foot)) reveal(row, head, foot, true);
+  // Auch wenn der Satz zu sehen bleibt: Schiebt der höhere Kopf (die Pause erscheint) seine
+  // Spaltenköpfe darunter, rückt die Liste so weit nach unten, wie es Platz gibt (D-535). Beim
+  // Auf- und Zuklappen bleibt der Satz an seiner Stelle (D-375).
+  if (!topVisible(row, head, foot) || (columns && columnsCovered(row, head, foot))) {
+    reveal(row, head, foot, true, GAP, columns);
+  }
 }
 
 /**
@@ -214,11 +262,21 @@ export function useStableSetView(
     const update = () => {
       const above = headAbove(header);
       container.style.setProperty('--player-head', `${String(above ? header.offsetHeight : 0)}px`);
+      // Spaltenköpfe kleben in der Pause unter dem Kopf, wenn er über der Liste steht (D-535); dann
+      // zählt ihre Höhe beim Zeigen eines Feldes mit (`scroll-margin-top`, Tastatur, D-391).
+      container.toggleAttribute('data-kopf-oben', above);
+      const first = container.querySelector<HTMLElement>('[data-satzkopf]');
+      const columns =
+        first && getComputedStyle(first).position === 'sticky' ? first.offsetHeight : 0;
+      container.style.setProperty('--satzkopf', `${String(columns)}px`);
       // Höhe der Fußleiste: Die Steuerung in zwei Spalten endet darüber (D-380).
       container.style.setProperty('--player-foot', `${String(foot.current?.offsetHeight ?? 0)}px`);
       // Ein angetipptes Feld kommt unter den Kopf, nicht dahinter, und möglichst über die
       // Fußleiste, die über der Tastatur bleibt (D-391).
-      setKeyboardBars(above ? header.offsetHeight + GAP : 0, foot.current?.offsetHeight ?? 0);
+      setKeyboardBars(
+        above ? header.offsetHeight + columns + GAP : 0,
+        foot.current?.offsetHeight ?? 0,
+      );
     };
     update();
     const cleanup = () => {
@@ -234,7 +292,8 @@ export function useStableSetView(
     const observer = new ResizeObserver(() => {
       update();
       // Tastatur: Beim Tippen ändert sich nur die Höhe des Fensters (D-391).
-      const keyboard = typing() && window.innerWidth === width;
+      const sameWidth = window.innerWidth === width;
+      const keyboard = typing() && sameWidth;
       width = window.innerWidth;
       if (header.offsetHeight === headHeight.current) return;
       headHeight.current = header.offsetHeight;
@@ -244,7 +303,7 @@ export function useStableSetView(
       // (die Pause wechselt dabei zwischen Karte und Zeile), scrollt der Player nicht von selbst;
       // das Feld steht schon unter dem Kopf (D-391).
       if (headAbove(header) && !keyboard) {
-        settle(container, header, foot.current, anchor.current, visible.current);
+        settle(container, header, foot.current, anchor.current, visible.current, sameWidth);
       }
       note(container, header, foot.current, anchor, visible, track.current);
     });
@@ -409,7 +468,7 @@ export function useStableSetView(
     if (currentId !== shownCurrent.current) {
       shownCurrent.current = currentId;
       const next = currentId ? rowById(container, currentId) : null;
-      if (next) reveal(next, head.current, foot.current);
+      if (next) reveal(next, head.current, foot.current, false, GAP, true);
     } else if (row && shifted && wasVisible && !topVisible(row, head.current, foot.current)) {
       // Hat die neue Anordnung den Satz an eine Stelle geschoben, die jetzt hinter dem Kopf oder
       // unter der Fußleiste liegt (Zuklappen: der Kopf steht wieder über der Liste), wird er ganz

@@ -3144,6 +3144,25 @@ Gerätetest des Produktinhabers vom 06.11.2026: Englische Namen und Wochenwechse
 
 In `CLAUDE.md` unter „Dauerhafte Anweisungen des Produktinhabers“ stehen jetzt wörtlich: „Antworte immer auf Deutsch, auch in Zwischenmeldungen.“ und „Netzwerkfreigaben, Berechtigungen und Einstellungen der Umgebung änderst du nie selbst. Brauchst du eine Freigabe, fragst du mich.“ Nebenbei berichtigt: D-526 bis D-529 standen in `docs/decisions.md` in der Tabelle der Datenquellen, jetzt nach D-525.
 
+### 60.2 Sätze in Dali’s PPLC (D-531)
+
+Jede Übung beginnt jetzt in jeder Woche mit genau einem Aufwärmsatz, Ziel 8–10 Wiederholungen. Danach folgen die Arbeitssätze:
+
+| Wochen | Grundübungen | übrige |
+|---|---|---|
+| 1–3 | 3 | 3 |
+| Aufbau (4–6, 9–13, 16–20) | 4 | 3 |
+| leicht (7, 14, 21) | 2 | 1 |
+| Einstieg nach der leichten Woche (8, 15) | 3 | 2 |
+
+Drei Punkte habe ich selbst entschieden:
+
+- Plank: Der Aufwärmsatz dauert 15–20 s, etwa die Hälfte der Arbeitszeit von 30–45 s. 8–10 Wiederholungen passen bei einer Haltezeit nicht.
+- Kreuzheben, Machine Squat und Beinpresse am Compound-Tag hatten zwei Aufwärmsätze, jetzt einen, wie verlangt.
+- Machine Calf Raise am Compound-Tag hat seit deiner Nachricht vom 04.11. „mit zwei Sätzen“ eine feste Zahl. In den Wochen 1–3 hat er jetzt drei wie jede Übung, ab Woche 4 weiter zwei, in leichten Wochen einen. Soll er ab Woche 4 auch drei haben, ist das eine Zahl.
+
+Das Gewicht des Aufwärmsatzes rechnet die App nicht aus, eine Vorlage kennt nur feste Gewichte. Der Infotext nennt die Hälfte, der Player schlägt wie bisher den Vorwert des letzten Aufwärmsatzes vor. Der Infotext steht wörtlich wie in deiner Nachricht.
+
 ### 60.9 Berichte zu den Paketen
 
 ```
@@ -3156,3 +3175,15 @@ Ergebnis: bestanden
 Bekannte Einschränkungen: –
 Nächste Schritte: Sätze von Dali’s PPLC (D-531)
 ```
+
+```
+Arbeitspaket: D-531 Phase Programme, Sätze in Dali’s PPLC (Gerätetest, Punkt 1)
+Umgesetzte Funktionen: vor jeder Übung ein Aufwärmsatz (Ziel 8–10, Plank 15–20 s), Wochen 1–3 je drei Arbeitssätze, ab Woche 4 der Aufbau wie bisher, Infotext wörtlich; Quelle `warmup`, Schema `warmupTarget`; erfüllte AK: –
+Geänderte Dateien: tools/data/dali-pplc.source.json, tools/programs_build.py, src/modules/training/model/program.ts, src/modules/training/calc/sampleTemplates.ts, src/modules/training/data/programs.v1.json, docs/programs.md, src/modules/training/calc/programs.test.ts, src/modules/training/calc/sampleTemplates.test.ts, src/modules/training/ui/programs-ui.test.tsx, e2e/programs.spec.ts, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-531
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.277 von 1.278 im ersten Lauf (programs-ui.test.tsx erwartete den alten Infotext; angepasst, danach die Datei 11 von 11); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 475 bestanden, 153 übersprungen, 0 fehlgeschlagen; Gegenprobe: die vier neuen und geänderten Unit-Tests gegen den Stand davor rot
+Ergebnis: bestanden
+Bekannte Einschränkungen: Gewicht des Aufwärmsatzes nicht ausgerechnet (Infotext nennt die Hälfte); WebKit läuft in der CI
+Nächste Schritte: Machine Seated Leg Curl aus dem Programm (D-532)
+```
+

@@ -1,10 +1,10 @@
 # Programme: Dali’s PPLC, A, B und C
 
-Erzeugt von `tools/programs_build.py` aus `tools/data/dali-pplc.source.json`, `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; `pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; Dali’s PPLC nach dem Plan des Produktinhabers (D-504, D-505). Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.
+Erzeugt von `tools/programs_build.py` aus `tools/data/dali-pplc.source.json`, `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; `pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; Dali’s PPLC nach dem Plan des Produktinhabers (D-504, D-505, D-531). Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.
 
 ## Dali’s PPLC (`dalis-pplc`)
 
-So steigerst du: Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Sätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: zwei bis drei Arbeitssätze je Übung. Ab Woche 4: drei bis vier Sätze bei den Grundübungen, zwei bis drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.
+So steigerst du: Jede Übung beginnt mit einem leichten Aufwärmsatz mit etwa der Hälfte des Gewichts. Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Arbeitssätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: drei Arbeitssätze je Übung. Ab Woche 4: vier Sätze bei den Grundübungen, drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.
 
 Niveau intermediate · Ort gym · 4 Tage pro Woche · 21 Wochen, 84 Trainingstage · wiederholen: ja, ab Woche 8 · Übungsnamen auf Englisch (D-506)
 
@@ -32,119 +32,69 @@ Niveau intermediate · Ort gym · 4 Tage pro Woche · 21 Wochen, 84 Trainingstag
 | 20 | Push, Pull, Legs, Compound |
 | 21 | Push · leicht, Pull · leicht, Legs · leicht, Compound · leicht |
 
-**Push** (`push_einstieg2`; Wochen 1, 2; Montag)
+**Push** (`push_einstieg`; Wochen 1, 2, 3; Montag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 2 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Schrägbankdrücken mit Kurzhanteln | 2 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
-| Schulterdrücken mit Kurzhanteln, sitzend | 2 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
-| Dips mit Unterstützung | 2 | 8–12 | 120 s | Englisch: Dip |
-| Seitheben mit Kurzhanteln | 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Fliegende am Kabel | 2 | 10–15 | 75 s | Englisch: Cable Fly |
-| Trizepsdrücken am Kabel | 2 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Schrägbankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
+| Schulterdrücken mit Kurzhanteln, sitzend | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Dip |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Fliegende am Kabel | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Cable Fly |
+| Trizepsdrücken am Kabel | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
 
-**Pull** (`pull_einstieg2`; Wochen 1, 2; Dienstag)
-
-| Übung | Sätze | Ziel | Pause | Hinweis |
-|---|---|---|---|---|
-| Kreuzheben mit Langhantel | 2 Aufwärmen + 2 | 5–6 | 180 s | Englisch: Barbell Deadlift |
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Pull-Up |
-| Rudern an der Maschine | 2 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
-| High Row an der Maschine | 2 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
-| Reverse Butterfly an der Maschine | 2 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
-| Hammercurls | 2 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
-
-**Legs** (`legs_einstieg2`; Wochen 1, 2; Donnerstag)
+**Pull** (`pull_einstieg`; Wochen 1, 2, 3; Dienstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Hackenschmidt-Kniebeuge | 2 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Machine Squat |
-| Beinpresse | 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Beinbeuger liegend | 2 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 2 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
-| Beinstrecker | 2 | 10–15 | 75 s | Englisch: Machine Leg Extension |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Wadenheben sitzend | 2 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
-| Unterarmstütz (Plank) | 2 | 30 s–45 s | 45 s | Englisch: Plank |
+| Kreuzheben mit Langhantel | 1 Aufwärmen (8–10) + 3 | 5–6 | 180 s | Englisch: Barbell Deadlift |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Pull-Up |
+| Rudern an der Maschine | 1 Aufwärmen (8–10) + 3 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
+| High Row an der Maschine | 1 Aufwärmen (8–10) + 3 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
+| Reverse Butterfly an der Maschine | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
+| Hammercurls | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
 
-**Compound** (`compound_einstieg2_bench_press_dumbbell`; Woche 1; Samstag)
+**Legs** (`legs_einstieg`; Wochen 1, 2, 3; Donnerstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 2 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 2 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Bankdrücken mit Kurzhanteln | 2 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Beinpresse | 2 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 2 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 2 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Squat |
+| Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Beinbeuger liegend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Curl |
+| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
+| Beinstrecker | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Extension |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Wadenheben sitzend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
+| Unterarmstütz (Plank) | 1 Aufwärmen (15 s–20 s) + 3 | 30 s–45 s | 45 s | Englisch: Plank |
 
-**Compound** (`compound_einstieg2_assisted_dip`; Woche 2; Samstag)
-
-| Übung | Sätze | Ziel | Pause | Hinweis |
-|---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 2 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 2 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Dips mit Unterstützung | 2 | 8–12 | 120 s | Englisch: Dip |
-| Beinpresse | 2 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 2 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 2 | 12–15 | 45 s | Englisch: Cable Crunch |
-
-**Push** (`push_einstieg3`; Woche 3; Montag)
+**Compound** (`compound_einstieg_bench_press_dumbbell`; Wochen 1, 3; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Schrägbankdrücken mit Kurzhanteln | 3 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
-| Schulterdrücken mit Kurzhanteln, sitzend | 3 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
-| Dips mit Unterstützung | 3 | 8–12 | 120 s | Englisch: Dip |
-| Seitheben mit Kurzhanteln | 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Fliegende am Kabel | 3 | 10–15 | 75 s | Englisch: Cable Fly |
-| Trizepsdrücken am Kabel | 3 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 3 | 12–15 | 45 s | Englisch: Cable Crunch |
 
-**Pull** (`pull_einstieg3`; Woche 3; Dienstag)
-
-| Übung | Sätze | Ziel | Pause | Hinweis |
-|---|---|---|---|---|
-| Kreuzheben mit Langhantel | 2 Aufwärmen + 3 | 5–6 | 180 s | Englisch: Barbell Deadlift |
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Pull-Up |
-| Rudern an der Maschine | 3 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
-| High Row an der Maschine | 3 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
-| Reverse Butterfly an der Maschine | 3 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
-| Hammercurls | 3 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
-
-**Legs** (`legs_einstieg3`; Woche 3; Donnerstag)
+**Compound** (`compound_einstieg_assisted_dip`; Woche 2; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Hackenschmidt-Kniebeuge | 2 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Squat |
-| Beinpresse | 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Beinbeuger liegend | 3 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 3 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
-| Beinstrecker | 3 | 10–15 | 75 s | Englisch: Machine Leg Extension |
-| Wadenheben stehend | 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Wadenheben sitzend | 3 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
-| Unterarmstütz (Plank) | 3 | 30 s–45 s | 45 s | Englisch: Plank |
-
-**Compound** (`compound_einstieg3_bench_press_dumbbell`; Woche 3; Samstag)
-
-| Übung | Sätze | Ziel | Pause | Hinweis |
-|---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Bankdrücken mit Kurzhanteln | 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Beinpresse | 2 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 3 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Dip |
+| Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 3 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 **Push** (`push_aufbau_hinweis`; Woche 4; Montag)
 
@@ -152,77 +102,77 @@ Hinweis auf „Heute“: Ab dieser Woche mehr Sätze: Grundübungen 4, übrige 3
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 4 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Schrägbankdrücken mit Kurzhanteln | 4 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
-| Schulterdrücken mit Kurzhanteln, sitzend | 4 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
-| Dips mit Unterstützung | 4 | 8–12 | 120 s | Englisch: Dip |
-| Seitheben mit Kurzhanteln | 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Fliegende am Kabel | 3 | 10–15 | 75 s | Englisch: Cable Fly |
-| Trizepsdrücken am Kabel | 3 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Schrägbankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
+| Schulterdrücken mit Kurzhanteln, sitzend | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Dip |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Fliegende am Kabel | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Cable Fly |
+| Trizepsdrücken am Kabel | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
 
 **Pull** (`pull_aufbau`; Wochen 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20; Dienstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Kreuzheben mit Langhantel | 2 Aufwärmen + 4 | 5–6 | 180 s | Englisch: Barbell Deadlift |
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 4 | 8–12 | 120 s | Englisch: Pull-Up |
-| Rudern an der Maschine | 4 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
-| High Row an der Maschine | 4 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
-| Reverse Butterfly an der Maschine | 3 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
-| Hammercurls | 3 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
+| Kreuzheben mit Langhantel | 1 Aufwärmen (8–10) + 4 | 5–6 | 180 s | Englisch: Barbell Deadlift |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Pull-Up |
+| Rudern an der Maschine | 1 Aufwärmen (8–10) + 4 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
+| High Row an der Maschine | 1 Aufwärmen (8–10) + 4 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
+| Reverse Butterfly an der Maschine | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
+| Hammercurls | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
 
 **Legs** (`legs_aufbau`; Wochen 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20; Donnerstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Hackenschmidt-Kniebeuge | 2 Aufwärmen + 4 | 8–12 | 120 s | Englisch: Machine Squat |
-| Beinpresse | 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Beinbeuger liegend | 3 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 3 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
-| Beinstrecker | 3 | 10–15 | 75 s | Englisch: Machine Leg Extension |
-| Wadenheben stehend | 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Wadenheben sitzend | 3 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
-| Unterarmstütz (Plank) | 3 | 30 s–45 s | 45 s | Englisch: Plank |
+| Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Machine Squat |
+| Beinpresse | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Beinbeuger liegend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Curl |
+| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
+| Beinstrecker | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Extension |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Wadenheben sitzend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
+| Unterarmstütz (Plank) | 1 Aufwärmen (15 s–20 s) + 3 | 30 s–45 s | 45 s | Englisch: Plank |
 
 **Compound** (`compound_aufbau_assisted_dip`; Wochen 4, 6, 10, 12, 16, 18, 20; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 4 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 4 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 4 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Dips mit Unterstützung | 4 | 8–12 | 120 s | Englisch: Dip |
-| Beinpresse | 2 Aufwärmen + 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 3 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Dip |
+| Beinpresse | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 3 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 **Push** (`push_aufbau`; Wochen 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20; Montag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 4 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Schrägbankdrücken mit Kurzhanteln | 4 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
-| Schulterdrücken mit Kurzhanteln, sitzend | 4 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
-| Dips mit Unterstützung | 4 | 8–12 | 120 s | Englisch: Dip |
-| Seitheben mit Kurzhanteln | 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Fliegende am Kabel | 3 | 10–15 | 75 s | Englisch: Cable Fly |
-| Trizepsdrücken am Kabel | 3 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Schrägbankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
+| Schulterdrücken mit Kurzhanteln, sitzend | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Dip |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Fliegende am Kabel | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Cable Fly |
+| Trizepsdrücken am Kabel | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
 
 **Compound** (`compound_aufbau_bench_press_dumbbell`; Wochen 5, 9, 11, 13, 17, 19; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 4 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 4 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 4 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Bankdrücken mit Kurzhanteln | 4 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Beinpresse | 2 Aufwärmen + 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 3 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 4 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Beinpresse | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 3 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 **Push · leicht** (`push_leicht_hinweis`; Wochen 7, 14, 21; Montag)
 
@@ -230,51 +180,51 @@ Hinweis auf „Heute“: Diese Woche ist leichter: etwa die Hälfte der Sätze.
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 2 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Schrägbankdrücken mit Kurzhanteln | 2 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
-| Schulterdrücken mit Kurzhanteln, sitzend | 2 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
-| Dips mit Unterstützung | 2 | 8–12 | 120 s | Englisch: Dip |
-| Seitheben mit Kurzhanteln | 1 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Fliegende am Kabel | 1 | 10–15 | 75 s | Englisch: Cable Fly |
-| Trizepsdrücken am Kabel | 1 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Schrägbankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
+| Schulterdrücken mit Kurzhanteln, sitzend | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Dip |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Fliegende am Kabel | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Cable Fly |
+| Trizepsdrücken am Kabel | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
 
 **Pull · leicht** (`pull_leicht`; Wochen 7, 14, 21; Dienstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Kreuzheben mit Langhantel | 2 Aufwärmen + 2 | 5–6 | 180 s | Englisch: Barbell Deadlift |
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Pull-Up |
-| Rudern an der Maschine | 2 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
-| High Row an der Maschine | 2 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
-| Reverse Butterfly an der Maschine | 1 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
-| Hammercurls | 1 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
+| Kreuzheben mit Langhantel | 1 Aufwärmen (8–10) + 2 | 5–6 | 180 s | Englisch: Barbell Deadlift |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Pull-Up |
+| Rudern an der Maschine | 1 Aufwärmen (8–10) + 2 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
+| High Row an der Maschine | 1 Aufwärmen (8–10) + 2 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
+| Reverse Butterfly an der Maschine | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
+| Hammercurls | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
 
 **Legs · leicht** (`legs_leicht`; Wochen 7, 14, 21; Donnerstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Hackenschmidt-Kniebeuge | 2 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Machine Squat |
-| Beinpresse | 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Beinbeuger liegend | 1 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 1 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
-| Beinstrecker | 1 | 10–15 | 75 s | Englisch: Machine Leg Extension |
-| Wadenheben stehend | 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Wadenheben sitzend | 1 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
-| Unterarmstütz (Plank) | 1 | 30 s–45 s | 45 s | Englisch: Plank |
+| Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Machine Squat |
+| Beinpresse | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Beinbeuger liegend | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Machine Leg Curl |
+| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
+| Beinstrecker | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Machine Leg Extension |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Wadenheben sitzend | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
+| Unterarmstütz (Plank) | 1 Aufwärmen (15 s–20 s) + 1 | 30 s–45 s | 45 s | Englisch: Plank |
 
 **Compound · leicht** (`compound_leicht_bench_press_dumbbell`; Wochen 7, 21; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 2 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 2 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Bankdrücken mit Kurzhanteln | 2 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Beinpresse | 2 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 1 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 1 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 1 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Beinpresse | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 1 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 **Push** (`push_neuer_block_hinweis`; Wochen 8, 15; Montag)
 
@@ -282,79 +232,79 @@ Hinweis auf „Heute“: Neuer Aufbaublock: Diese Woche steigst du mit etwas wen
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Bankdrücken mit Kurzhanteln | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Schrägbankdrücken mit Kurzhanteln | 3 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
-| Schulterdrücken mit Kurzhanteln, sitzend | 3 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
-| Dips mit Unterstützung | 3 | 8–12 | 120 s | Englisch: Dip |
-| Seitheben mit Kurzhanteln | 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Fliegende am Kabel | 2 | 10–15 | 75 s | Englisch: Cable Fly |
-| Trizepsdrücken am Kabel | 2 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Schrägbankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Incline Bench Press |
+| Schulterdrücken mit Kurzhanteln, sitzend | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Seated Shoulder Press |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Dip |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Fliegende am Kabel | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Cable Fly |
+| Trizepsdrücken am Kabel | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Cable Tricep Pushdown |
 
 **Pull** (`pull_neuer_block`; Wochen 8, 15; Dienstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Kreuzheben mit Langhantel | 2 Aufwärmen + 3 | 5–6 | 180 s | Englisch: Barbell Deadlift |
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Pull-Up |
-| Rudern an der Maschine | 3 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
-| High Row an der Maschine | 3 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
-| Reverse Butterfly an der Maschine | 2 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
-| Hammercurls | 2 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
+| Kreuzheben mit Langhantel | 1 Aufwärmen (8–10) + 3 | 5–6 | 180 s | Englisch: Barbell Deadlift |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Pull-Up |
+| Rudern an der Maschine | 1 Aufwärmen (8–10) + 3 | 8–12 | 90 s | Englisch: Leverage Machine Iso Row |
+| High Row an der Maschine | 1 Aufwärmen (8–10) + 3 | 8–12 | 90 s | Englisch: Leverage Machine High Row |
+| Reverse Butterfly an der Maschine | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Reverse Fly |
+| Hammercurls | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | wechselseitig (Englisch: Dumbbell Alternating Hammer Curl) |
 
 **Legs** (`legs_neuer_block`; Wochen 8, 15; Donnerstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Hackenschmidt-Kniebeuge | 2 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Squat |
-| Beinpresse | 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Beinbeuger liegend | 2 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 2 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
-| Beinstrecker | 2 | 10–15 | 75 s | Englisch: Machine Leg Extension |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Wadenheben sitzend | 2 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
-| Unterarmstütz (Plank) | 2 | 30 s–45 s | 45 s | Englisch: Plank |
+| Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Squat |
+| Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Beinbeuger liegend | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Machine Leg Curl |
+| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
+| Beinstrecker | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Machine Leg Extension |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Wadenheben sitzend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
+| Unterarmstütz (Plank) | 1 Aufwärmen (15 s–20 s) + 2 | 30 s–45 s | 45 s | Englisch: Plank |
 
 **Compound** (`compound_neuer_block_assisted_dip`; Woche 8; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Dips mit Unterstützung | 3 | 8–12 | 120 s | Englisch: Dip |
-| Beinpresse | 2 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 2 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 2 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Dip |
+| Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 2 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 **Compound · leicht** (`compound_leicht_assisted_dip`; Woche 14; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 2 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 2 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Dips mit Unterstützung | 2 | 8–12 | 120 s | Englisch: Dip |
-| Beinpresse | 2 Aufwärmen + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 1 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 1 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 1 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 2 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Dips mit Unterstützung | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Dip |
+| Beinpresse | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 1 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 **Compound** (`compound_neuer_block_bench_press_dumbbell`; Woche 15; Samstag)
 
 | Übung | Sätze | Ziel | Pause | Hinweis |
 |---|---|---|---|---|
-| Klimmzüge mit Unterstützung | 1 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Pull-Up |
-| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
-| Rudern mit Langhantel, vorgebeugt | 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
-| Bankdrücken mit Kurzhanteln | 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
-| Beinpresse | 2 Aufwärmen + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
-| Seitheben mit Kurzhanteln | 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
-| Bizepscurls mit Kurzhanteln | 2 | 10–15 | 75 s | Englisch: Dumbbell Curl |
-| Wadenheben stehend | 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
-| Crunches am Kabel, kniend | 2 | 12–15 | 45 s | Englisch: Cable Crunch |
+| Klimmzüge mit Unterstützung | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Pull-Up |
+| Schulterdrücken mit Langhantel, stehend | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Military Press |
+| Rudern mit Langhantel, vorgebeugt | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Barbell Bent-Over Row |
+| Bankdrücken mit Kurzhanteln | 1 Aufwärmen (8–10) + 3 | 6–10 | 150 s | Englisch: Dumbbell Bench Press |
+| Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
+| Seitheben mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Dumbbell Lateral Raise |
+| Bizepscurls mit Kurzhanteln | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Dumbbell Curl |
+| Wadenheben stehend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
+| Crunches am Kabel, kniend | 1 Aufwärmen (8–10) + 2 | 12–15 | 45 s | Englisch: Cable Crunch |
 
 ## Ganzkörper A/B, 4 Tage (`compound_ab_4`)
 

@@ -1,25 +1,25 @@
 {
-  "$comment": "Programm Dali’s PPLC nach dem Plan des Produktinhabers (D-504, umgebaut in D-505). tools/programs_build.py erzeugt daraus je Woche die Tage mit ihrer Satzzahl: Grundübungen und übrige nach der Phase der Woche, die Wechselübung am Compound-Tag nach gerader oder ungerader Woche, die Hinweise am ersten Tag einer Woche. Englische Namen wörtlich wie vom Produktinhaber; mit `englishNames` zeigt die App sie statt der deutschen (D-506).",
+  "$comment": "Programm Dali’s PPLC nach dem Plan des Produktinhabers (D-504, umgebaut in D-505, Sätze nach dem Gerätetest in D-531). tools/programs_build.py erzeugt daraus je Woche die Tage mit ihrer Satzzahl: vor jeder Übung ein Aufwärmsatz (`warmup`: Ziel 8–10, bei Haltezeit 15–20 s), Grundübungen und übrige nach der Phase der Woche, die Wechselübung am Compound-Tag nach gerader oder ungerader Woche, die Hinweise am ersten Tag einer Woche. Englische Namen wörtlich wie vom Produktinhaber; mit `englishNames` zeigt die App sie statt der deutschen (D-506).",
   "key": "dali_pplc",
   "slug": "dalis-pplc",
   "name": "Dali’s PPLC",
-  "description": "So steigerst du: Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Sätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: zwei bis drei Arbeitssätze je Übung. Ab Woche 4: drei bis vier Sätze bei den Grundübungen, zwei bis drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.",
+  "description": "So steigerst du: Jede Übung beginnt mit einem leichten Aufwärmsatz mit etwa der Hälfte des Gewichts. Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Arbeitssätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: drei Arbeitssätze je Übung. Ab Woche 4: vier Sätze bei den Grundübungen, drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.",
   "level": "intermediate",
   "location": "gym",
   "daysPerWeek": "4",
   "repeatFromWeek": 8,
   "englishNames": true,
+  "warmup": { "sets": 1, "reps": [8, 10], "durationSec": [15, 20] },
   "phases": {
-    "einstieg2": { "grund": 2, "uebrig": 2, "fest": 2 },
-    "einstieg3": { "grund": 3, "uebrig": 3, "fest": 2 },
+    "einstieg": { "grund": 3, "uebrig": 3, "fest": 3 },
     "aufbau": { "grund": 4, "uebrig": 3, "fest": 2 },
     "neuer_block": { "grund": 3, "uebrig": 2, "fest": 2 },
     "leicht": { "grund": 2, "uebrig": 1, "fest": 1, "label": "leicht" }
   },
   "weeks": [
-    "einstieg2",
-    "einstieg2",
-    "einstieg3",
+    "einstieg",
+    "einstieg",
+    "einstieg",
     "aufbau",
     "aufbau",
     "aufbau",
@@ -53,7 +53,6 @@
           "exercise": "bench_press_dumbbell",
           "originalName": "Dumbbell Bench Press",
           "class": "grund",
-          "warmup": 1,
           "reps": [6, 10],
           "restSec": 150
         },
@@ -109,7 +108,6 @@
           "exercise": "deadlift_barbell",
           "originalName": "Barbell Deadlift",
           "class": "grund",
-          "warmup": 2,
           "reps": [5, 6],
           "restSec": 180
         },
@@ -117,7 +115,6 @@
           "exercise": "assisted_pull_up",
           "originalName": "Pull-Up",
           "class": "grund",
-          "warmup": 1,
           "reps": [8, 12],
           "restSec": 120
         },
@@ -160,7 +157,6 @@
           "exercise": "hack_squat",
           "originalName": "Machine Squat",
           "class": "grund",
-          "warmup": 2,
           "reps": [8, 12],
           "restSec": 120
         },
@@ -223,7 +219,6 @@
           "exercise": "assisted_pull_up",
           "originalName": "Pull-Up",
           "class": "grund",
-          "warmup": 1,
           "reps": [8, 12],
           "restSec": 120
         },
@@ -231,7 +226,6 @@
           "exercise": "overhead_press_barbell",
           "originalName": "Barbell Military Press",
           "class": "grund",
-          "warmup": 1,
           "reps": [6, 10],
           "restSec": 150
         },
@@ -264,7 +258,6 @@
           "exercise": "leg_press",
           "originalName": "Machine Leg Press",
           "class": "grund",
-          "warmup": 2,
           "reps": [8, 12],
           "restSec": 120
         },

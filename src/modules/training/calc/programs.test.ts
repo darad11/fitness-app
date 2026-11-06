@@ -91,7 +91,7 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
     expect(pplc().repeat).toBe(true);
     expect(pplc().repeatFromWeek).toBe(8);
     expect(pplc().description).toBe(
-      'So steigerst du: Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Sätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: zwei bis drei Arbeitssätze je Übung. Ab Woche 4: drei bis vier Sätze bei den Grundübungen, zwei bis drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.',
+      'So steigerst du: Jede Übung beginnt mit einem leichten Aufwärmsatz mit etwa der Hälfte des Gewichts. Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Arbeitssätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: drei Arbeitssätze je Übung. Ab Woche 4: vier Sätze bei den Grundübungen, drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.',
     );
     const light = ['Push · leicht', 'Pull · leicht', 'Legs · leicht', 'Compound · leicht'];
     pplc().weeks.forEach((week, index) => {
@@ -103,12 +103,12 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
     });
   });
 
-  it('Satzzahl je Woche: Einstieg 2, 2, 3; Aufbau 4 und 3; leicht 2 und 1; neuer Block 3 und 2', () => {
+  it('Satzzahl je Woche: Wochen 1–3 je 3; Aufbau 4 und 3; leicht 2 und 1; neuer Block 3 und 2 (D-531)', () => {
     // Push: Bankdrücken (Grundübung) und Seitheben (übrige) je Woche.
     const push = (week: number) => [sets(week, 0, 0).working, sets(week, 0, 4).working];
     expect([1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 20, 21].map(push)).toEqual([
-      [2, 2],
-      [2, 2],
+      [3, 3],
+      [3, 3],
       [3, 3],
       [4, 3],
       [4, 3],
@@ -122,10 +122,38 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
       [4, 3],
       [2, 1],
     ]);
-    // Wadenheben am Compound-Tag fest mit zwei Sätzen, in der leichten Woche einer.
-    expect([1, 3, 4, 7, 8].map((week) => sets(week, 3, 7).working)).toEqual([2, 2, 2, 1, 2]);
-    // Aufwärmsätze: Kreuzheben 2, Kniebeuge an der Maschine 2, Beinpresse am Compound-Tag 2.
-    expect([sets(4, 1, 0).warmup, sets(4, 2, 0).warmup, sets(4, 3, 4).warmup]).toEqual([2, 2, 2]);
+    // Wochen 1–3 hat jede Übung drei Arbeitssätze, auch das Wadenheben am Compound-Tag; ab Woche 4
+    // bleibt es dort fest bei zwei, in der leichten Woche einer (D-505).
+    for (const week of [1, 2, 3]) {
+      for (const day of pplc().weeks[week - 1]!.days) {
+        for (const exercise of day.exercises) expect(summarizeSets(exercise).working).toBe(3);
+      }
+    }
+    expect([1, 3, 4, 7, 8].map((week) => sets(week, 3, 7).working)).toEqual([3, 3, 2, 1, 2]);
+  });
+
+  it('jede Übung beginnt mit genau einem Aufwärmsatz, Ziel 8–10, beim Plank 15–20 s (D-531)', () => {
+    let count = 0;
+    for (const week of pplc().weeks) {
+      for (const day of week.days) {
+        for (const exercise of day.exercises) {
+          const [first, ...rest] = exercise.sets;
+          expect(first?.type, `${day.name}: ${exercise.nameSnapshot}`).toBe('warmup');
+          expect(rest.some((set) => set.type === 'warmup')).toBe(false);
+          const timed = summarizeSets(exercise).target.durationMinSec !== undefined;
+          expect({
+            repsMin: first?.repsMin,
+            repsMax: first?.repsMax,
+            durationMinSec: first?.durationMinSec,
+            durationMaxSec: first?.durationMaxSec,
+          }).toEqual(
+            timed ? { durationMinSec: 15, durationMaxSec: 20 } : { repsMin: 8, repsMax: 10 },
+          );
+          count++;
+        }
+      }
+    }
+    expect(count).toBeGreaterThan(600);
   });
 
   it('Übungen, englische Namen, Bereiche und Pausen wie im Plan; Bench und Dip im Wochenwechsel', () => {

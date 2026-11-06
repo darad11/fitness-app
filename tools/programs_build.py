@@ -117,11 +117,12 @@ def build_program_c(source: dict, plan: dict, mapping: dict, core: dict) -> dict
 
 
 def build_dali(plan: dict, core: dict) -> dict:
-    """Dali’s PPLC (D-505): je Woche die Tage mit der Satzzahl ihrer Phase (Grundübungen, übrige
-    und feste Satzzahl), am Compound-Tag in ungeraden Wochen die erste, in geraden die zweite
+    """Dali’s PPLC (D-505, D-531): je Woche die Tage mit der Satzzahl ihrer Phase (Grundübungen, übrige
+    und feste Satzzahl), vor jeder Übung der Aufwärmsatz aus `warmup` (Ziel 8–10, bei Haltezeit eigene Zeit), am Compound-Tag in ungeraden Wochen die erste, in geraden die zweite
     Wechselübung, Hinweise am ersten Tag von Woche 4, jeder leichten Woche und jedes neuen
     Aufbaublocks. Gleiche Tage bekommen denselben Schlüssel; angezeigt wird `label`."""
     keys = {e["key"] for e in core["exercises"]}
+    warm = plan["warmup"]
     days: dict[str, dict] = {}
     weeks: list[list[str]] = []
     for number, phase_key in enumerate(plan["weeks"], 1):
@@ -138,13 +139,16 @@ def build_dali(plan: dict, core: dict) -> dict:
                     raise ValueError(f"Übung fehlt in der Bibliothek: {entry['exercise']}")
                 if "reps" in entry:
                     target = {"repsMin": entry["reps"][0], "repsMax": entry["reps"][1]}
+                    warm_target = {"repsMin": warm["reps"][0], "repsMax": warm["reps"][1]}
                 else:
                     target = {"durationMinSec": entry["durationSec"][0], "durationMaxSec": entry["durationSec"][1]}
+                    warm_target = {"durationMinSec": warm["durationSec"][0], "durationMaxSec": warm["durationSec"][1]}
                 exercise = {"exercise": entry["exercise"], "originalName": entry["originalName"]}
                 if entry.get("note"):
                     exercise["note"] = entry["note"]
                 exercise.update({
-                    "warmup": entry.get("warmup", 0),
+                    "warmup": warm["sets"],
+                    "warmupTarget": warm_target,
                     "working": phase[entry["class"]],
                     "target": target,
                     "restSec": entry["restSec"],
@@ -210,7 +214,9 @@ def validate(templates: list[dict], core: dict) -> list[str]:
 
 def describe_sets(e: dict) -> str:
     parts = []
-    if e["warmup"]:
+    if e["warmup"] and e.get("warmupTarget"):
+        parts.append(f"{e['warmup']} Aufwärmen ({describe_target(e['warmupTarget'])}) + {e['working']}")
+    elif e["warmup"]:
         parts.append(f"{e['warmup']} Aufwärmen + {e['working']}")
     else:
         parts.append(str(e["working"]))
@@ -233,7 +239,7 @@ def render_doc(templates: list[dict], core: dict) -> str:
         "# Programme: Dali’s PPLC, A, B und C\n\n",
         "Erzeugt von `tools/programs_build.py` aus `tools/data/dali-pplc.source.json`, `tools/data/programs.source.json` und ",
         "`tools/data/winterprogramm-2026.source.json`; `pnpm check:docs` prüft die Übereinstimmung. Grundlage: ",
-        "`evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; Dali’s PPLC nach dem Plan des Produktinhabers (D-504, D-505). ",
+        "`evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; Dali’s PPLC nach dem Plan des Produktinhabers (D-504, D-505, D-531). ",
         "Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.\n\n",
     ]
     for t in templates:

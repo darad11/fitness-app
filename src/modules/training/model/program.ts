@@ -138,13 +138,16 @@ const sourceExerciseSchema = z
     note: z.string().min(1).max(300).optional(),
     originalName: z.string().min(1).optional(),
     warmup: z.number().int().min(0).max(2),
+    /** Ziel der Aufwärmsätze, z. B. 8–10 (D-531); fehlt es, gelten die festen Wiederholungen aus D-243. */
+    warmupTarget: setTargetSchema.optional(),
     working: z.number().int().min(1).max(10),
     target: setTargetSchema,
     restSec: seconds,
     drop: z.number().int().min(1).max(3).optional(),
     dropTarget: setTargetSchema.optional(),
   })
-  .refine((e) => (e.drop === undefined) === (e.dropTarget === undefined), 'Drop unvollständig');
+  .refine((e) => (e.drop === undefined) === (e.dropTarget === undefined), 'Drop unvollständig')
+  .refine((e) => e.warmupTarget === undefined || e.warmup > 0, 'Ziel ohne Aufwärmsatz');
 
 export const sampleTemplateSourceSchema = z
   .strictObject({

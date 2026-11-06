@@ -94,9 +94,11 @@ function buildSets(
     sets.push(set);
     return set;
   };
-  for (const reps of WARMUP_REPS[entry.warmup] ?? []) {
-    add('warmup', { repsMin: reps, repsMax: reps });
-  }
+  // Mit eigenem Ziel (D-531) bekommt jeder Aufwärmsatz dieses Ziel, sonst die festen Wiederholungen.
+  const warmups = entry.warmupTarget
+    ? Array.from({ length: entry.warmup }, () => entry.warmupTarget ?? {})
+    : (WARMUP_REPS[entry.warmup] ?? []).map((reps) => ({ repsMin: reps, repsMax: reps }));
+  for (const target of warmups) add('warmup', target);
   let last: PlannedSet | undefined;
   for (let i = 0; i < entry.working; i++) last = add('working', entry.target);
   if (entry.drop && entry.dropTarget && last) {

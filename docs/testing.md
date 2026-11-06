@@ -3668,3 +3668,15 @@ Liste aller 25 Übungen mit Stand und Dateigrößen, was je Übung geladen wird,
 | `python3 tools/uebungen_programm_uebersicht.py dali_pplc --name dalis-pplc` | 25 Übungen, alle mit Schleife in der App; geladen zusammen 1.840,3 KB, alle Dateien 3.074,9 KB; je Übung geladen 36,0 KB (Unterarmstütz (Plank)) bis 116,6 KB (Beinpresse); Bild 1600 × 2494 px, angesehen |
 | Dasselbe für `compound_ab_4` | geladen 787,3 KB, alle Dateien 1.313,0 KB (wie D-501) |
 | Prüfungen vor dem Commit | Format und Dokumente bestanden; die App ist gegenüber D-528 unverändert (dort Unit-Tests 1.276 bestanden und E2E vollständig), deshalb E2E nur für die Übungsliste: e2e/uebungen.spec.ts 17 bestanden, 3 übersprungen |
+
+### Sätze in Dali’s PPLC · 06.11.2026, Cloud-Umgebung
+
+Vor jeder Übung ein Aufwärmsatz, Wochen 1–3 drei Arbeitssätze, Infotext (D-531).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py` | `programs.v1.json` und `docs/programs.md` neu; 163 Tage mit `warmupTarget` je Übung; 21 Wochen, 84 Trainingstage wie bisher |
+| `programs.test.ts`, `sampleTemplates.test.ts` | 21 bestanden; gegen den Stand davor (Daten, Schema und `buildSets` von HEAD) 4 rot: Infotext, Satzzahl je Woche, Aufwärmsatz je Übung, Ziel der Aufwärmsätze |
+| E2E `programs.spec.ts` (Chromium) | 10 bestanden, darunter „jede Übung mit Aufwärmsatz, in Woche 1 drei Arbeitssätze“: Push zeigt „0 von 28 Sätzen“ (vorher wären es 15) |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.277 von 1.278 im ersten Lauf (programs-ui.test.tsx erwartete den alten Infotext; angepasst, danach die Datei 11 von 11); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 475 bestanden, 153 übersprungen, 0 fehlgeschlagen; Gegenprobe: die vier neuen und geänderten Unit-Tests gegen den Stand davor rot |
+

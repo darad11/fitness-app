@@ -51,7 +51,7 @@ describe('Programme und Vorlagen (S-04, S-49, AK-PRG-06)', () => {
       'Dali’s PPLCProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 21 Wochen, 84 Trainingstage',
     );
     expect(cards[0]).toHaveTextContent(
-      'So steigerst du: Jede Übung hat einen Wiederholungsbereich.',
+      'So steigerst du: Jede Übung beginnt mit einem leichten Aufwärmsatz mit etwa der Hälfte des Gewichts.',
     );
     expect(cards[1]).toHaveTextContent(
       'Ganzkörper A/B, 4 TageProgrammFortgeschrittene Einsteiger · Studio · 4 Tage pro Woche · 8 Wochen, 32 Trainingstage',

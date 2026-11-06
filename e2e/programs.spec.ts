@@ -109,6 +109,27 @@ test('Dali’s PPLC: Wochen zum Aufklappen, Hinweis der leichten Woche, Wiederho
   ).toBeVisible();
 });
 
+test('Dali’s PPLC: jede Übung mit Aufwärmsatz, in Woche 1 drei Arbeitssätze (D-531)', async ({
+  page,
+}) => {
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  await page.getByRole('button', { name: 'Push heute trainieren' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Push', exact: true })).toBeVisible();
+  // Sieben Übungen mit je einem Aufwärmsatz und drei Arbeitssätzen.
+  await expect(page.getByText('0 von 28 Sätzen')).toBeVisible();
+  for (const name of ['Dumbbell Bench Press', 'Dumbbell Incline Bench Press', 'Cable Fly']) {
+    await expect(
+      page.getByRole('button', { name: `Satz erledigt, ${name}, Aufwärmsatz 1` }),
+    ).toHaveCount(1);
+    await expect(
+      page.getByRole('button', { name: `Satz erledigt, ${name}, Arbeitssatz 3` }),
+    ).toHaveCount(1);
+    await expect(
+      page.getByRole('button', { name: `Satz erledigt, ${name}, Arbeitssatz 4` }),
+    ).toHaveCount(0);
+  }
+});
+
 test('Dali’s PPLC: Player mit den englischen Übungsnamen, Bibliothek deutsch (D-506)', async ({
   page,
 }) => {

@@ -3701,3 +3701,14 @@ Duo aufgeklappt: rechts auch in der Pause Animation und „Jetzt“, die Karte �
 | Player-Tests (`src/modules/training/ui/player`) | 30 bestanden (5 Dateien); `useFittingRows` mit seinen Tests entfernt |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Player-Tests 30 bestanden (5 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Player, Pause, Duo, Wiedergabe und Übungen (9 Dateien) 55 bestanden, 24 übersprungen, 1 fehlgeschlagen: `uebungen-wiedergabe.spec.ts` „Rahmen und „Jetzt“ gleich groß“ fand nach dem letzten Satz Pause und „Alle Sätze erledigt“ zugleich (gewollt, D-533); Abfrage angepasst, danach bestanden; der neue Test C gegen den Build davor rot |
 
+### Rand der Karten am Duo quer · 06.11.2026, Cloud-Umgebung
+
+Der Rand der Karten läuft ganz unter dem Kopf durch (D-534).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Duo quer nachgestellt (867 × 669), alle Scrollbereiche gelistet | nur `#seite` (0 bis 867 px breit); linke Spalte 24 bis 483 px, rechte 507 bis 843 px; Bild: neben dem Kopf eine graue Linie bei 483 px, solange eine Karte darunter liegt |
+| E2E `duo-player-befunde.spec.ts` „Karten laufen ganz unter dem Kopf durch …“ (Chromium Desktop und Handy) | mit dem CSS davor 2 rot (Streifen neben dem Kopf verändert), mit der Änderung 2 grün |
+| E2E `duo-player.spec.ts`, `duo-player-befunde.spec.ts`, `session-head.spec.ts`, `player-befunde-e.spec.ts`, `duo-safe-area.spec.ts`, `duo-feste-leisten.spec.ts` | 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (`duo-player.spec.ts` verlangte die rechte Kante des Kopfs genau an der Liste; jetzt bis 4 px darüber, danach die Datei 5 bestanden, 5 übersprungen) |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium Duo und Player (6 Dateien) 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (Kante des Kopfs, Test angepasst, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen); der neue Test mit dem CSS davor 2 rot, mit der Änderung 2 grün |
+

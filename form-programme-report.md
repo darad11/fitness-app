@@ -3171,6 +3171,10 @@ Der Legs-Tag hat jetzt sieben Übungen, das Programm 24. „Beinbeuger sitzend�
 
 Am Duo aufgeklappt zeigt die rechte Spalte jetzt immer dasselbe: die Animation und „Jetzt“ mit „Danach“ und Vorschaubild, auch in der Pause. Die Karte „Als Nächstes“ gibt es nicht mehr, auch nicht auf größeren Bildschirmen; die nächste Übung steht in „Jetzt“, alle stehen links in der Liste. Zugeklappt nimmt die Pause wie bisher den Platz von „Jetzt“ ein.
 
+### 60.5 Rand der Karten am Duo quer (D-534)
+
+Am nachgestellten Duo quer (Fenster 867 × 669 wie am Gerät gemessen) hat die linke Spalte keinen eigenen Scrollbereich. Gefunden habe ich aber eine dünne graue Linie genau am rechten Rand der Karten: Im niedrigen Fenster klebt der Kopf links oben, und die Karten laufen beim Scrollen darunter durch. Ihr 1-px-Rand ragte dabei rechts neben dem Kopf heraus und sah aus wie eine Scrollleiste über dem Rand der Karte. Jetzt reicht der Kopf rechts 4 px weiter, der Rand läuft ganz darunter durch. Falls du am Gerät eine andere Leiste gesehen hast, schick mir bitte ein Bildschirmfoto.
+
 ### 60.9 Berichte zu den Paketen
 
 ```
@@ -3215,5 +3219,16 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Player-Tests 30
 Ergebnis: bestanden
 Bekannte Einschränkungen: WebKit läuft in der CI
 Nächste Schritte: Rand der Karten links am Duo quer (D-534)
+```
+
+```
+Arbeitspaket: D-534 Phase Programme, Rand der Karten am Duo quer (Gerätetest, Punkt 5)
+Umgesetzte Funktionen: Kopf links im niedrigen Fenster deckt den Rand der Karten ab (4 px über die Spalte); erfüllte AK: –
+Geänderte Dateien: src/modules/training/ui/player/player-layout.css, e2e/duo-player-befunde.spec.ts, e2e/duo-player.spec.ts, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-534
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium Duo und Player (6 Dateien) 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (Kante des Kopfs, Test angepasst, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen); der neue Test mit dem CSS davor 2 rot, mit der Änderung 2 grün
+Ergebnis: bestanden
+Bekannte Einschränkungen: Ursache am nachgestellten Gerät gefunden, nicht am Gerät selbst; WebKit läuft in der CI
+Nächste Schritte: kleine Pause (D-535)
 ```
 

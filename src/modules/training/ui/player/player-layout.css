@@ -139,9 +139,12 @@
    * „Beenden“ bleibt erreichbar. Rechts bleibt so die Höhe für die Animation in voller Größe und
    * „Jetzt“. Links reicht er bis an den Fensterrand, rechts endet er mit der Spalte.
    */
+  /* Rechts reicht die Fläche des Kopfs 4 px über die Spalte: Der Rand der Karten (1 px außen, `--shadow-card`) läuft
+     beim Scrollen ganz darunter durch. Vorher ragte er neben dem Kopf heraus und stand dort als dünne graue Linie, wie
+     eine Scrollleiste über dem rechten Rand der Karten (Gerätetest, D-534). */
   .player-main > .player-head {
-    margin-right: 0;
-    padding-right: 0;
+    margin-right: -0.25rem;
+    padding-right: 0.25rem;
   }
 
   .player-side > .player-now {

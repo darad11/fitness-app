@@ -397,3 +397,46 @@ test.describe('B bis D: Player aufgeklappt quer (D-495)', () => {
     await expect(page.getByRole('region', { name: 'Jetzt' })).toHaveCount(0);
   });
 });
+
+test.describe('Duo quer: Rand der Karten unter dem Kopf (D-534)', () => {
+  test.skip(
+    ({ browserName }) => browserName !== 'chromium',
+    'Bildschirm und Ausrichtung lassen sich nur in Chromium nachstellen (wie D-393, D-394).',
+  );
+
+  test('Karten laufen ganz unter dem Kopf durch; neben ihm ragt kein Rand heraus', async ({
+    page,
+  }) => {
+    // Fenster wie am Gerät gemessen (Duo quer, D-393), ohne Geräteemulation: Bildschirmfotos brauchen das Fenster.
+    await page.setViewportSize({ width: GERAET.quer.width, height: GERAET.quer.height });
+    await startTraining(page);
+    const head = page.locator('main header.player-head');
+    const card = page.locator('.player-main section.rounded-card').first();
+    // Im niedrigen Fenster steht der Kopf links über der Liste (D-502).
+    await expect(page.locator('.player-frame[data-niedrig]')).toHaveCount(1);
+    const scroll = (dy: number) =>
+      page.evaluate((by) => {
+        document.getElementById('seite')?.scrollBy(0, by);
+      }, dy);
+    // Erst so weit, dass der Kopf oben klebt; die erste Karte steht noch darunter.
+    await scroll(24);
+    await expect.poll(async () => Math.round((await box(head)).top)).toBe(0);
+    const h = await box(head);
+    const c = await box(card);
+    expect(c.top, 'die Karte steht noch unter dem Kopf').toBeGreaterThanOrEqual(h.bottom - 1);
+    // Ein Streifen von 3 px rechts neben dem Rand der Karte, unten im Kopf (auf Höhe von „0 von … Sätzen“, rechts
+    // steht dort nichts): Liegt keine Karte unter dem Kopf und liegt eine darunter, muss er gleich aussehen.
+    // Vorher ragte ihr Rand (1 px, `--shadow-card`) rechts neben dem Kopf heraus und stand dort als dünne graue
+    // Linie (Gerätetest, Punkt 5).
+    const clip = { x: c.right, y: h.bottom - 26, width: 3, height: 18 };
+    const frei = await page.screenshot({ clip });
+    await scroll(c.top - h.top + 24);
+    await expect.poll(async () => (await box(card)).top).toBeLessThan(h.top);
+    expect((await box(card)).bottom, 'die Karte reicht unter dem Kopf hindurch').toBeGreaterThan(
+      h.bottom,
+    );
+    expect(Math.round((await box(head)).top), 'der Kopf steht still').toBe(0);
+    const darunter = await page.screenshot({ clip });
+    expect(darunter.equals(frei), 'Streifen neben dem Kopf unverändert').toBe(true);
+  });
+});

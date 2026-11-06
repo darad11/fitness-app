@@ -82,7 +82,9 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
         }
         const ok =
           h.left <= l.left + 1 &&
-          Math.abs(h.right - l.right) <= 1 &&
+          // Rechts reicht der Kopf 4 px über die Liste und deckt so den Rand der Karten ab (D-534).
+          h.right >= l.right - 1 &&
+          h.right <= l.right + 5 &&
           h.top >= 0 &&
           h.top <= 40 &&
           r.left >= h.left - 1 &&

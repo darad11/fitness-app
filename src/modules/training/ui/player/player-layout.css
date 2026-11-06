@@ -18,8 +18,9 @@
   display: contents;
 }
 
-/* „Als Nächstes“ gibt es nur in zwei Spalten; schmal sagt die Karte „Jetzt“ die nächste Übung. */
-.player-next {
+/* In einer Spalte nimmt die Pause den Platz von „Jetzt“ ein: In der Pause steht die Karte nicht da.
+   In zwei Spalten bleibt sie rechts stehen (D-533, unten). */
+.player-frame[data-pause] .player-now {
   display: none;
 }
 
@@ -65,8 +66,9 @@
 
 /*
  * Ab 48 rem Inhaltsbreite (Duo aufgeklappt, iPad quer) zwei Spalten: links die Übungen mit den
- * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), dem
- * nächsten Satz und den nächsten Übungen.
+ * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), der
+ * Animation und „Jetzt“ mit „Danach“. Rechts steht immer dasselbe, auch in der Pause; die Karte
+ * „Als Nächstes“ mit den nächsten Übungen gibt es nicht mehr (D-533).
  *
  * Der Bereich „demo“ zeigt die Demonstration der aktuellen Übung (D-397); ohne Visual das Symbol
  * in der Kachel mit den Muskel-Etiketten. Abstände über Ränder statt `gap`.
@@ -88,8 +90,8 @@
    * Die rechte Spalte steht fest und passt immer ganz in die sichtbare Höhe über der Fußleiste
    * (D-495): Sie ist genau so hoch, scrollt nicht für sich und klebt oben. Kopf (mit Pause) und
    * „Jetzt“ behalten ihre Höhe; die Demonstration bekommt, was übrig bleibt, höchstens ihre Größe
-   * bei voller Breite (21 rem breit, 4:3, dazu 1 rem Abstand), „Als Nächstes“ den Rest und zeigt
-   * nur ganze Einträge (`useFittingRows`). Vorher war die Spalte höher als der Bildschirm und
+   * bei voller Breite (21 rem breit, 4:3, dazu 1 rem Abstand); darunter bleibt der Rest frei
+   * (bis D-532 stand dort „Als Nächstes“). Vorher war die Spalte höher als der Bildschirm und
    * scrollte für sich; am Seitenende schob der Rahmen sie nach oben, die Animation rutschte aus
    * dem Bild.
    */
@@ -99,7 +101,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto minmax(0, 16.75rem) auto minmax(0, 1fr);
-    grid-template-areas: 'head' 'hint' 'demo' 'now' 'next';
+    grid-template-areas: 'head' 'hint' 'demo' 'now' '.';
     position: sticky;
     top: 0;
     /* Von Anfang an oben am Rand, wie der Kopf in einer Spalte unter der Unschärfe von iOS (D-332):
@@ -146,6 +148,11 @@
     grid-area: now;
   }
 
+  /* Rechts steht „Jetzt“ auch in der Pause (D-533). */
+  .player-frame[data-pause] .player-side > .player-now {
+    display: block;
+  }
+
   /* Der vorbereitete Bereich „demo“ (D-380) zeigt jetzt die Demonstration der aktuellen Übung;
      die kompakte Fassung in „Jetzt“ entfällt, damit nichts doppelt steht (D-397). */
   /* Die Demonstration skaliert mit der Höhe ihres Bereichs: Rahmen im Seitenverhältnis des
@@ -169,7 +176,7 @@
    * immer gleich hoch: der Name in Titelgröße mit Platz für zwei Zeilen (ganz steht er links in der
    * Karte der Übung), die Angaben mit Platz für zwei Zeilen, längeres jeweils gekürzt; die Notiz
    * steht links, „Danach:“ in einer Zeile. Höher (iPad, Computer) hat der Rahmen in jeder Übung
-   * seine volle Größe (21 rem breit, 4:3), dort behält „Als Nächstes“ den Platz.
+   * seine volle Größe (21 rem breit, 4:3).
    */
   .player-frame[data-niedrig] .player-side > .player-now .player-now-name {
     margin-top: 0;
@@ -233,21 +240,6 @@
     display: none;
   }
 
-  /* „Als Nächstes“ füllt den Rest und schneidet nichts an: nur ganze Einträge (D-495). */
-  .player-next {
-    display: flex;
-    flex-direction: column;
-    grid-area: next;
-    min-height: 0;
-    overflow: hidden;
-    /* Für `useFittingRows`: Die Höhe ist vorgegeben, es zählen nur ganze Einträge. */
-    --nur-ganze: 1;
-  }
-
-  .player-next[data-leer] {
-    visibility: hidden;
-  }
-
   /* Niedriger als 36 rem (iPhone quer, sehr niedrige Fenster): Kopf und „Jetzt“ allein füllten
      die feste Spalte, für die Demonstration bliebe nichts. Dort scrollt die Spalte wie bisher für
      sich, jeder Bereich in seiner Größe; sie klebt weiter bis zum Seitenende (D-495). */
@@ -263,11 +255,6 @@
     .player-side > .player-demo {
       container-type: normal;
       --demo-max-h: 40dvh;
-    }
-
-    .player-next {
-      display: block;
-      --nur-ganze: 0;
     }
   }
 

@@ -167,8 +167,10 @@ describe('Trainingsplayer (S-07)', () => {
     await waitFor(() => {
       expect(toSec(timer.textContent)).toBeGreaterThanOrEqual(before - 2);
     });
-    // Während der Pause ist die Bühne „Jetzt" ausgeblendet; der nächste Satz bleibt hervorgehoben.
-    expect(screen.queryByRole('region', { name: 'Jetzt' })).toBeNull();
+    // Während der Pause trägt der Rahmen `data-pause`: In einer Spalte blendet das die Bühne „Jetzt"
+    // aus (player-layout.css), in zwei Spalten bleibt sie rechts stehen (D-533). Der nächste Satz
+    // bleibt hervorgehoben.
+    expect(document.querySelector('.player-frame')).toHaveAttribute('data-pause');
     expect(
       screen.getByRole('listitem', { name: 'Kniebeuge mit Langhantel, Aufwärmsatz 2' }),
     ).toHaveAttribute('aria-current', 'step');
@@ -183,6 +185,7 @@ describe('Trainingsplayer (S-07)', () => {
     await waitFor(() => {
       expect(screen.queryByRole('region', { name: 'Pause' })).toBeNull();
     });
+    expect(document.querySelector('.player-frame')).not.toHaveAttribute('data-pause');
     expect(screen.getByRole('region', { name: 'Jetzt' })).toHaveTextContent(
       'Kniebeuge mit Langhantel',
     );

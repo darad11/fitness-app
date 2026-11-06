@@ -52,7 +52,7 @@ async function startWithRest(page: Page) {
   await expect(page.getByRole('region', { name: 'Pause' })).toBeVisible();
 }
 
-test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst rechts mit Pause und „Als Nächstes“ (D-380, D-495, D-502)', async ({
+test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst rechts mit Pause, Animation und „Jetzt“ (D-380, D-495, D-502, D-533)', async ({
   page,
 }) => {
   test.slow();
@@ -61,6 +61,7 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
   const head = page.locator('main header');
   const list = page.getByRole('region', { name: 'Beinpresse' });
   const upNext = page.getByRole('region', { name: 'Als Nächstes' });
+  const now = page.getByRole('region', { name: 'Jetzt' });
   const rest = page.getByRole('region', { name: 'Pause' });
   const axe = async () => {
     const results = await new AxeBuilder({ page })
@@ -97,20 +98,19 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
   };
 
   // Links die Sätze, darüber der Kopf mit Programm, Fortschritt, „Beenden“ und der Pause in einer
-  // Zeile (D-502); rechts die Animation, in der Pause darunter „Als Nächstes“ („Jetzt“ entfällt),
-  // nur ganze Einträge (D-495).
-  await expect(upNext.getByRole('listitem').first()).toBeVisible();
+  // Zeile (D-502); rechts auch in der Pause die Animation und „Jetzt“, ohne „Als Nächstes“ (D-533).
+  await expect(now).toBeVisible();
+  await expect(upNext).toHaveCount(0);
   await expect(rest).toContainText('Beinpresse, Aufwärmsatz 2');
   await expectHeadLeft();
   await axe();
 
-  // In einem höheren Fenster steht rechts die Steuerung mit Kopf, Pause (±15 s) und allen nächsten
-  // Übungen, links nur die Sätze. Mit neuer Breite: Ob das Fenster niedrig ist, misst der Player
+  // In einem höheren Fenster steht rechts die Steuerung mit Kopf, Pause (±15 s), Animation und
+  // „Jetzt“, links nur die Sätze. Mit neuer Breite: Ob das Fenster niedrig ist, misst der Player
   // beim Öffnen und bei neuer Breite, nicht bei der Tastatur (D-498).
   await page.setViewportSize({ width: 1000, height: 1100 });
-  await expect(upNext).toBeVisible();
-  await expect(upNext.getByRole('listitem')).toHaveCount(4);
-  await expect(upNext).toContainText('Bankdrücken mit Kurzhanteln');
+  await expect(now).toBeVisible();
+  await expect(upNext).toHaveCount(0);
   await expect
     .poll(async () => {
       const [h, l] = [await lage(head), await lage(list)];
@@ -174,7 +174,7 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
   expect(below, `unter dem Kopf (${states.join(' | ')}; ${history})`).toBe(true);
 
   // Zugeklappt und im Zwischenmaß eine Spalte: Der Kopf steht über der Liste, so breit wie die
-  // Seite, nicht daneben; „Als Nächstes“ entfällt. Unabhängig davon, wohin die Seite gescrollt ist.
+  // Seite, nicht daneben; „Als Nächstes“ gibt es nicht. Unabhängig davon, wohin die Seite gescrollt ist.
   for (const pose of ['zu', 'hoch'] as const) {
     await setDuoPose(page, pose);
     await expect(upNext, pose).toBeHidden();

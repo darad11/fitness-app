@@ -3691,3 +3691,13 @@ Machine Seated Leg Curl aus dem Programm, Übung und Animation bleiben in der Bi
 | `python3 tools/uebungen_programm_uebersicht.py dali_pplc --name dalis-pplc` | 24 Übungen, alle mit Schleife; geladen zusammen 1.752,8 KB, alle Dateien 2.926,1 KB; Bild 1600 × 2150 px |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 211 bestanden (31 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Programme, Vorlagen, Programmliste, eigene Programme und Übungen 43 bestanden, 5 übersprungen, 0 fehlgeschlagen (die ganze Suite lief zu D-531 mit denselben übrigen Dateien) |
 
+### Rechte Spalte in der Pause · 06.11.2026, Cloud-Umgebung
+
+Duo aufgeklappt: rechts auch in der Pause Animation und „Jetzt“, die Karte „Als Nächstes“ entfällt (D-533).
+
+| Nachweis | Ergebnis |
+|---|---|
+| E2E `duo-player-befunde.spec.ts` „C: In der Pause zeigt die rechte Spalte dasselbe …“ (Chromium, Duo quer 867 × 669 wie am Gerät und 1180 × 820) | gegen den Build davor rot („Jetzt“ in der Pause nicht vorhanden), mit der Änderung grün |
+| Player-Tests (`src/modules/training/ui/player`) | 30 bestanden (5 Dateien); `useFittingRows` mit seinen Tests entfernt |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Player-Tests 30 bestanden (5 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Player, Pause, Duo, Wiedergabe und Übungen (9 Dateien) 55 bestanden, 24 übersprungen, 1 fehlgeschlagen: `uebungen-wiedergabe.spec.ts` „Rahmen und „Jetzt“ gleich groß“ fand nach dem letzten Satz Pause und „Alle Sätze erledigt“ zugleich (gewollt, D-533); Abfrage angepasst, danach bestanden; der neue Test C gegen den Build davor rot |
+

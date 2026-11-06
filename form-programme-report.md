@@ -3167,6 +3167,10 @@ Das Gewicht des Aufwärmsatzes rechnet die App nicht aus, eine Vorlage kennt nur
 
 Der Legs-Tag hat jetzt sieben Übungen, das Programm 24. „Beinbeuger sitzend“ bleibt in der Bibliothek mit Animation und Ausführung, die Suche findet ihn weiter auch unter dem englischen Namen. Die Übersicht ist neu: geladen werden zusammen 1.752,8 KB (vorher 1.840,3 KB), alle Dateien 2.926,1 KB; das Bild `docs/screens/uebungen/dalis-pplc-uebersicht.webp` zeigt 24 Übungen.
 
+### 60.4 Rechte Spalte in der Pause (D-533)
+
+Am Duo aufgeklappt zeigt die rechte Spalte jetzt immer dasselbe: die Animation und „Jetzt“ mit „Danach“ und Vorschaubild, auch in der Pause. Die Karte „Als Nächstes“ gibt es nicht mehr, auch nicht auf größeren Bildschirmen; die nächste Übung steht in „Jetzt“, alle stehen links in der Liste. Zugeklappt nimmt die Pause wie bisher den Platz von „Jetzt“ ein.
+
 ### 60.9 Berichte zu den Paketen
 
 ```
@@ -3200,5 +3204,16 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests des 
 Ergebnis: bestanden
 Bekannte Einschränkungen: WebKit läuft in der CI
 Nächste Schritte: rechte Spalte am Duo aufgeklappt in der Pause (D-533)
+```
+
+```
+Arbeitspaket: D-533 Phase Programme, rechte Spalte am Duo aufgeklappt in der Pause (Gerätetest, Punkt 4)
+Umgesetzte Funktionen: „Jetzt“ in zwei Spalten auch in der Pause; Karte „Als Nächstes“ entfernt; in einer Spalte blendet `data-pause` „Jetzt“ in der Pause aus; erfüllte AK: –
+Geänderte Dateien: src/modules/training/ui/player/SessionPage.tsx, src/modules/training/ui/player/player-layout.css, src/modules/training/ui/player/useFittingRows.ts (entfernt), src/modules/training/ui/player/useFittingRows.test.ts (entfernt), src/modules/training/ui/player/player-ui.test.tsx, src/shared/i18n/de-session.ts, e2e/duo-player-befunde.spec.ts, e2e/duo-player.spec.ts, e2e/uebungen-wiedergabe.spec.ts, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-533
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Player-Tests 30 bestanden (5 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Player, Pause, Duo, Wiedergabe und Übungen (9 Dateien) 55 bestanden, 24 übersprungen, 1 fehlgeschlagen: `uebungen-wiedergabe.spec.ts` „Rahmen und „Jetzt“ gleich groß“ fand nach dem letzten Satz Pause und „Alle Sätze erledigt“ zugleich (gewollt, D-533); Abfrage angepasst, danach bestanden; der neue Test C gegen den Build davor rot
+Ergebnis: bestanden
+Bekannte Einschränkungen: WebKit läuft in der CI
+Nächste Schritte: Rand der Karten links am Duo quer (D-534)
 ```
 

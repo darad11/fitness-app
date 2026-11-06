@@ -9,7 +9,8 @@ import { expect, openPage, test } from './fixtures';
  * - A: Vollbildansichten stehen in der Mitte des ganzen Bildschirms, wie die Startfläche
  *   (D-393, D-394); Bedienelemente bleiben im Fenster.
  * - B: Die Animation füllt ihren Rahmen, ohne Streifen in einer anderen Farbe.
- * - C: Die Animation bleibt ganz sichtbar; in „Als Nächstes“ ist die Zahl der Sätze ganz zu lesen.
+ * - C: Die Animation bleibt ganz sichtbar. Seit D-533 zeigt die rechte Spalte auch in der Pause
+ *   Animation und „Jetzt“; die Karte „Als Nächstes“ gibt es nicht mehr.
  * - D: Die rechte Spalte passt in die Höhe über der Fußleiste und steht fest; nur die Sätze
  *   scrollen, auch am Seitenende.
  */
@@ -359,41 +360,40 @@ test.describe('B bis D: Player aufgeklappt quer (D-495)', () => {
     }
   });
 
-  test('C: „Als Nächstes“ zeigt nur ganze Einträge, die Zahl der Sätze immer ganz', async ({
+  test('C: In der Pause zeigt die rechte Spalte dasselbe, Animation und „Jetzt“, ohne „Als Nächstes“ (D-533)', async ({
     page,
   }) => {
     test.slow();
-    // Größer (iPad quer) zeigt die Spalte Einträge, niedrig (iPhone quer) scrollt sie für sich.
-    for (const [width, height] of [
-      [1180, 820],
-      [844, 390],
+    // Duo quer wie am Gerät gemessen, dazu ein höheres Fenster (iPad quer).
+    const cdp = await emulateDevice(page, GERAET.quer);
+    await startTraining(page, true);
+    for (const [name, size] of [
+      ['Duo quer', null],
+      ['1180 × 820', { width: 1180, height: 820 }],
     ] as const) {
-      await page.setViewportSize({ width, height });
-      if (width === 1180) await startTraining(page);
-      const upNext = page.getByRole('region', { name: 'Als Nächstes' });
-      const items = upNext.getByRole('listitem');
-      await expect(items.first()).toBeVisible();
-      const card = await box(upNext);
-      for (const item of await items.all()) {
-        const row = await box(item);
-        const count = item.locator('span').last();
-        const c = await box(count);
-        const label = `${String(width)} × ${String(height)}: ${(await item.textContent()) ?? ''}`;
-        expect(await count.textContent(), label).toMatch(/^\d+ Sätze?$/);
-        expect(c.right, `${label}: Zahl ragt aus dem Eintrag`).toBeLessThanOrEqual(row.right + 0.5);
-        expect(row.right, `${label}: Eintrag ragt aus der Karte`).toBeLessThanOrEqual(
-          card.right - 15.5,
-        );
-        expect(
-          await count.evaluate((el) => el.scrollWidth <= el.clientWidth),
-          `${label}: Zahl abgeschnitten`,
-        ).toBe(true);
-        if (height === 820) {
-          expect(row.bottom, `${label}: Eintrag angeschnitten`).toBeLessThanOrEqual(
-            card.bottom + 0.5,
-          );
-        }
-      }
+      if (size) await page.setViewportSize(size);
+      const rest = page.getByRole('region', { name: 'Pause' });
+      await expect(rest, name).toBeVisible();
+      const now = page.getByRole('region', { name: 'Jetzt' });
+      const demo = page.getByRole('region', { name: 'Ausführung der aktuellen Übung' });
+      await expect(now, `${name}: „Jetzt“ in der Pause`).toBeVisible();
+      await expect(demo, `${name}: Animation in der Pause`).toBeVisible();
+      await expect(now).toContainText('Danach: ');
+      await expect(now.locator('.player-next-line [data-visual]')).toBeVisible();
+      await expect(page.getByRole('region', { name: 'Als Nächstes' }), name).toHaveCount(0);
+      // Rechts von der Liste, unter der Animation, ganz über der Fußleiste.
+      const list = await box(page.locator('.player-main'));
+      const card = await box(now);
+      expect(card.left, `${name}: rechts neben der Liste`).toBeGreaterThan(list.right);
+      expect(card.top, `${name}: unter der Animation`).toBeGreaterThanOrEqual(
+        (await box(demo)).bottom - 0.5,
+      );
+      const foot = await box(page.getByRole('button', { name: 'Satz erledigt', exact: true }));
+      expect(card.bottom, `${name}: über der Fußleiste`).toBeLessThanOrEqual(foot.top);
     }
+    // Zugeklappt (eine Spalte) nimmt die Pause den Platz von „Jetzt“ ein, wie bisher.
+    await emulateDevice(page, GERAET.zu, cdp);
+    await expect(page.getByRole('region', { name: 'Pause' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Jetzt' })).toHaveCount(0);
   });
 });

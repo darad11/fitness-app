@@ -225,7 +225,8 @@ test.describe('Player aufgeklappt: Schleife der aktuellen Übung (D-497)', () =>
         );
       }
       await current.getByRole('button', { name: /^Satz erledigt, / }).click();
-      await expect(skip.first().or(allDone)).toBeVisible();
+      // Nach dem letzten Satz stehen Pause und „Alle Sätze erledigt“ zugleich da (D-533).
+      await expect(skip.first().or(allDone).first()).toBeVisible();
       if (await skip.first().isVisible()) await skip.first().click();
     }
     // Die letzte Übung (Unterarmstütz) mit „Letzte Übung“ statt „Danach:“, einmal mit Timer.

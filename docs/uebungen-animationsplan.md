@@ -128,9 +128,8 @@ Kniebeuge: 1 Übungen, Aufwand 5,2 Std. (davon neue Geräte 4,0) (Basis schon ge
 | Wadenheben stehend | – | 42 | Familie (Code) | 3,75 | 3,00 | 26 | neues Gerät: Wadenmaschine, stehend | Schleife in der App (D-516) |
 | Wadenheben sitzend | PPB, W26 | 32 | Familie (Code) | 3,75 | 3,00 | 26 | neues Gerät: Wadenmaschine, sitzend | Schleife in der App (D-516) |
 | Beinstrecker | W26 | 28 | Familie (Code) | 4,00 | 3,50 | 26 | neues Gerät: Beinstrecker-Maschine | Schleife in der App (D-516) |
-| Beinbeuger sitzend | PPB | 25 | Familie (Code) | 2,25 | 1,50 | 26 | neues Gerät: Beinbeuger-Maschine, sitzend (vom Beinstrecker abgeleitet) | Schleife in der App (D-516) |
 
-Beine isoliert: 4 Übungen, Aufwand 13,8 Std. (davon neue Geräte 11,0) (Basis schon geleistet), Renderzeit 105 min.
+Beine isoliert: 3 Übungen, Aufwand 11,5 Std. (davon neue Geräte 9,5) (Basis schon geleistet), Renderzeit 79 min.
 
 #### Arme beugen und strecken
 
@@ -186,11 +185,11 @@ Hüftbeuge: 1 Übungen, Aufwand 0,5 Std. (davon neue Geräte 0,0) (Basis schon g
 
 Rumpf: 1 Übungen, Aufwand 1,2 Std. (davon neue Geräte 0,0) (Basis schon geleistet), Renderzeit 26 min.
 
-**Dali’s PPLC: 19 Übungen in 10 Familien, Aufwand 48,5 Std. (davon neue Geräte 30,5) plus Basis 4,0 Std., Renderzeit 500 min (8,3 Std.).**
+**Dali’s PPLC: 18 Übungen in 10 Familien, Aufwand 46,2 Std. (davon neue Geräte 29,0) plus Basis 4,0 Std., Renderzeit 473 min (7,9 Std.).**
 
 ### 3. Push/Pull/Beine, rotierend (PPB)
 
-Schon in den Programmen davor: 11 Übungen (Beinbeuger sitzend, Beinpresse, Hammercurls, Klimmzüge mit Unterstützung, Rudern am Kabel, sitzend, Rudern mit Langhantel, vorgebeugt, Schrägbankdrücken mit Kurzhanteln, Schulterdrücken mit Langhantel, stehend, Seitheben mit Kurzhanteln, Trizepsdrücken am Kabel, Wadenheben sitzend).
+Schon in den Programmen davor: 10 Übungen (Beinpresse, Hammercurls, Klimmzüge mit Unterstützung, Rudern am Kabel, sitzend, Rudern mit Langhantel, vorgebeugt, Schrägbankdrücken mit Kurzhanteln, Schulterdrücken mit Langhantel, stehend, Seitheben mit Kurzhanteln, Trizepsdrücken am Kabel, Wadenheben sitzend).
 
 #### Kniebeuge
 
@@ -225,6 +224,14 @@ Hüftbeuge: 1 Übungen, Aufwand 0,8 Std. (davon neue Geräte 0,0) (Basis schon g
 
 Arme beugen und strecken: 1 Übungen, Aufwand 0,5 Std. (davon neue Geräte 0,0) (Basis schon geleistet), Renderzeit 26 min.
 
+#### Beine isoliert
+
+| Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
+|---|---|---|---|---|---|---|---|---|
+| Beinbeuger sitzend | – | 4 | Familie (Code) | 2,25 | 1,50 | 26 | neues Gerät: Beinbeuger-Maschine, sitzend (vom Beinstrecker abgeleitet) | Schleife in der App (D-516) |
+
+Beine isoliert: 1 Übungen, Aufwand 2,2 Std. (davon neue Geräte 1,5) (Basis schon geleistet), Renderzeit 26 min.
+
 #### Rumpf
 
 | Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |
@@ -241,7 +248,7 @@ Rumpf: 1 Übungen, Aufwand 1,5 Std. (davon neue Geräte 0,0) (Basis schon geleis
 
 Waagrechtes Ziehen: 1 Übungen, Aufwand 2,5 Std. (davon neue Geräte 1,0) (Basis schon geleistet), Renderzeit 26 min.
 
-**Push/Pull/Beine, rotierend: 7 Übungen in 6 Familien, Aufwand 9,2 Std. (davon neue Geräte 2,0) plus Basis 0,0 Std., Renderzeit 184 min (3,1 Std.).**
+**Push/Pull/Beine, rotierend: 8 Übungen in 7 Familien, Aufwand 11,5 Std. (davon neue Geräte 3,5) plus Basis 0,0 Std., Renderzeit 210 min (3,5 Std.).**
 
 ### 4. Winterprogramm 2026 (W26)
 
@@ -378,10 +385,10 @@ Senkrechtes Drücken: 1 Übungen, Aufwand 0,8 Std. (davon neue Geräte 0,0) (Bas
 | Reihenfolge | Programm | Übungen | Familien | Einheiten | Aufwand Übungen (Std.) | davon neue Geräte | Basis (Std.) | Renderzeit (min) |
 |---|---|---|---|---|---|---|---|---|
 | 1 | Ganzkörper A/B, 4 Tage | 11 | 9 | 418 | 22,2 | 14,0 | 42,0 | 289 |
-| 2 | Dali’s PPLC | 19 | 10 | 506 | 48,5 | 30,5 | 4,0 | 500 |
-| 3 | Push/Pull/Beine, rotierend | 7 | 6 | 37 | 9,2 | 2,0 | 0,0 | 184 |
+| 2 | Dali’s PPLC | 18 | 10 | 481 | 46,2 | 29,0 | 4,0 | 473 |
+| 3 | Push/Pull/Beine, rotierend | 8 | 7 | 41 | 11,5 | 3,5 | 0,0 | 210 |
 | 4 | Winterprogramm 2026 | 40 | 12 | 195 | 46,8 | 8,3 | 17,0 | 1047 |
-| | **Summe** | **77** | **12** | **1156** | **126,8** | **54,8** | **63,0** | **2021** |
+| | **Summe** | **77** | **12** | **1135** | **126,8** | **54,8** | **63,0** | **2021** |
 
 Einmalige Arbeiten für die genutzten Quellen:
 

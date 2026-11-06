@@ -3680,3 +3680,14 @@ Vor jeder Übung ein Aufwärmsatz, Wochen 1–3 drei Arbeitssätze, Infotext (D-
 | E2E `programs.spec.ts` (Chromium) | 10 bestanden, darunter „jede Übung mit Aufwärmsatz, in Woche 1 drei Arbeitssätze“: Push zeigt „0 von 28 Sätzen“ (vorher wären es 15) |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.277 von 1.278 im ersten Lauf (programs-ui.test.tsx erwartete den alten Infotext; angepasst, danach die Datei 11 von 11); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 475 bestanden, 153 übersprungen, 0 fehlgeschlagen; Gegenprobe: die vier neuen und geänderten Unit-Tests gegen den Stand davor rot |
 
+### Dali’s PPLC ohne Beinbeuger sitzend · 06.11.2026, Cloud-Umgebung
+
+Machine Seated Leg Curl aus dem Programm, Übung und Animation bleiben in der Bibliothek (D-532).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py` | Legs-Tag mit sieben Übungen in allen 21 Wochen; 24 Übungen im Programm |
+| `programs.test.ts` | 12 bestanden; gegen die Daten davor 2 rot (Übungen des Legs-Tags, neuer Test „ohne Machine Seated Leg Curl“) |
+| `python3 tools/uebungen_programm_uebersicht.py dali_pplc --name dalis-pplc` | 24 Übungen, alle mit Schleife; geladen zusammen 1.752,8 KB, alle Dateien 2.926,1 KB; Bild 1600 × 2150 px |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 211 bestanden (31 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Programme, Vorlagen, Programmliste, eigene Programme und Übungen 43 bestanden, 5 übersprungen, 0 fehlgeschlagen (die ganze Suite lief zu D-531 mit denselben übrigen Dateien) |
+

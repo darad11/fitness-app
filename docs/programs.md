@@ -62,7 +62,6 @@ Niveau intermediate · Ort gym · 4 Tage pro Woche · 21 Wochen, 84 Trainingstag
 | Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Squat |
 | Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
 | Beinbeuger liegend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
 | Beinstrecker | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Extension |
 | Wadenheben stehend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
 | Wadenheben sitzend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
@@ -128,7 +127,6 @@ Hinweis auf „Heute“: Ab dieser Woche mehr Sätze: Grundübungen 4, übrige 3
 | Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Machine Squat |
 | Beinpresse | 1 Aufwärmen (8–10) + 4 | 8–12 | 120 s | Englisch: Machine Leg Press |
 | Beinbeuger liegend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
 | Beinstrecker | 1 Aufwärmen (8–10) + 3 | 10–15 | 75 s | Englisch: Machine Leg Extension |
 | Wadenheben stehend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Calf Raise |
 | Wadenheben sitzend | 1 Aufwärmen (8–10) + 3 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
@@ -206,7 +204,6 @@ Hinweis auf „Heute“: Diese Woche ist leichter: etwa die Hälfte der Sätze.
 | Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Machine Squat |
 | Beinpresse | 1 Aufwärmen (8–10) + 2 | 8–12 | 120 s | Englisch: Machine Leg Press |
 | Beinbeuger liegend | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
 | Beinstrecker | 1 Aufwärmen (8–10) + 1 | 10–15 | 75 s | Englisch: Machine Leg Extension |
 | Wadenheben stehend | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Calf Raise |
 | Wadenheben sitzend | 1 Aufwärmen (8–10) + 1 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |
@@ -258,7 +255,6 @@ Hinweis auf „Heute“: Neuer Aufbaublock: Diese Woche steigst du mit etwas wen
 | Hackenschmidt-Kniebeuge | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Squat |
 | Beinpresse | 1 Aufwärmen (8–10) + 3 | 8–12 | 120 s | Englisch: Machine Leg Press |
 | Beinbeuger liegend | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Machine Leg Curl |
-| Beinbeuger sitzend | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Machine Seated Leg Curl |
 | Beinstrecker | 1 Aufwärmen (8–10) + 2 | 10–15 | 75 s | Englisch: Machine Leg Extension |
 | Wadenheben stehend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Calf Raise |
 | Wadenheben sitzend | 1 Aufwärmen (8–10) + 2 | 12–20 | 60 s | Englisch: Machine Seated Calf Raise |

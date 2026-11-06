@@ -275,21 +275,6 @@
               "restSec": 75
             },
             {
-              "exercise": "seated_leg_curl",
-              "originalName": "Machine Seated Leg Curl",
-              "warmup": 1,
-              "warmupTarget": {
-                "repsMin": 8,
-                "repsMax": 10
-              },
-              "working": 3,
-              "target": {
-                "repsMin": 10,
-                "repsMax": 15
-              },
-              "restSec": 75
-            },
-            {
               "exercise": "leg_extension",
               "originalName": "Machine Leg Extension",
               "warmup": 1,
@@ -884,21 +869,6 @@
             {
               "exercise": "lying_leg_curl",
               "originalName": "Machine Leg Curl",
-              "warmup": 1,
-              "warmupTarget": {
-                "repsMin": 8,
-                "repsMax": 10
-              },
-              "working": 3,
-              "target": {
-                "repsMin": 10,
-                "repsMax": 15
-              },
-              "restSec": 75
-            },
-            {
-              "exercise": "seated_leg_curl",
-              "originalName": "Machine Seated Leg Curl",
               "warmup": 1,
               "warmupTarget": {
                 "repsMin": 8,
@@ -1631,21 +1601,6 @@
               "restSec": 75
             },
             {
-              "exercise": "seated_leg_curl",
-              "originalName": "Machine Seated Leg Curl",
-              "warmup": 1,
-              "warmupTarget": {
-                "repsMin": 8,
-                "repsMax": 10
-              },
-              "working": 1,
-              "target": {
-                "repsMin": 10,
-                "repsMax": 15
-              },
-              "restSec": 75
-            },
-            {
               "exercise": "leg_extension",
               "originalName": "Machine Leg Extension",
               "warmup": 1,
@@ -2098,21 +2053,6 @@
             {
               "exercise": "lying_leg_curl",
               "originalName": "Machine Leg Curl",
-              "warmup": 1,
-              "warmupTarget": {
-                "repsMin": 8,
-                "repsMax": 10
-              },
-              "working": 2,
-              "target": {
-                "repsMin": 10,
-                "repsMax": 15
-              },
-              "restSec": 75
-            },
-            {
-              "exercise": "seated_leg_curl",
-              "originalName": "Machine Seated Leg Curl",
               "warmup": 1,
               "warmupTarget": {
                 "repsMin": 8,

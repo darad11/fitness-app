@@ -3163,6 +3163,10 @@ Drei Punkte habe ich selbst entschieden:
 
 Das Gewicht des Aufwärmsatzes rechnet die App nicht aus, eine Vorlage kennt nur feste Gewichte. Der Infotext nennt die Hälfte, der Player schlägt wie bisher den Vorwert des letzten Aufwärmsatzes vor. Der Infotext steht wörtlich wie in deiner Nachricht.
 
+### 60.3 Ohne Machine Seated Leg Curl (D-532)
+
+Der Legs-Tag hat jetzt sieben Übungen, das Programm 24. „Beinbeuger sitzend“ bleibt in der Bibliothek mit Animation und Ausführung, die Suche findet ihn weiter auch unter dem englischen Namen. Die Übersicht ist neu: geladen werden zusammen 1.752,8 KB (vorher 1.840,3 KB), alle Dateien 2.926,1 KB; das Bild `docs/screens/uebungen/dalis-pplc-uebersicht.webp` zeigt 24 Übungen.
+
 ### 60.9 Berichte zu den Paketen
 
 ```
@@ -3185,5 +3189,16 @@ Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.27
 Ergebnis: bestanden
 Bekannte Einschränkungen: Gewicht des Aufwärmsatzes nicht ausgerechnet (Infotext nennt die Hälfte); WebKit läuft in der CI
 Nächste Schritte: Machine Seated Leg Curl aus dem Programm (D-532)
+```
+
+```
+Arbeitspaket: D-532 Phase Programme, Dali’s PPLC ohne Machine Seated Leg Curl (Gerätetest, Punkt 2)
+Umgesetzte Funktionen: Legs-Tag ohne Beinbeuger sitzend; Übung und Animation bleiben in der Bibliothek; Übersicht mit 24 Übungen; erfüllte AK: –
+Geänderte Dateien: tools/data/dali-pplc.source.json, src/modules/training/data/programs.v1.json, docs/programs.md, src/modules/training/calc/programs.test.ts, docs/uebungen-animationsplan.md, docs/uebungen-bewegungsfamilien.md, docs/screens/uebungen/dalis-pplc-uebersicht.webp, form-programme-report.md, docs/decisions.md, docs/testing.md, docs/implementation-plan.md, docs/feature-inventory.md
+Technische Entscheidungen: D-532
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 211 bestanden (31 Dateien), der neue Test gegen den Stand davor rot; Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium (Programme, Vorlagen, Programmliste, eigene Programme, Übungen) 43 bestanden, 5 übersprungen, 0 fehlgeschlagen
+Ergebnis: bestanden
+Bekannte Einschränkungen: WebKit läuft in der CI
+Nächste Schritte: rechte Spalte am Duo aufgeklappt in der Pause (D-533)
 ```
 

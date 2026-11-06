@@ -340,7 +340,7 @@ Gezählt in `src/modules/training/data/programs.v1.json` (4 Programme) und `src/
 | Rang | Familie | Einheiten in Programmen | Übungen in Programmen | nur in Vorlagen | übrige (Symbol und Muskelkarte) | Aufwand für die Programm-Übungen (Std.) |
 |---|---|---|---|---|---|---|
 | 1 | Kniebeuge | 103 | 5 | 0 | 4 | 23.2 |
-| 2 | Beine isoliert | 180 | 7 | 0 | 5 | 24.0 |
+| 2 | Beine isoliert | 159 | 7 | 0 | 5 | 24.0 |
 | 3 | Waagrechtes Drücken | 150 | 8 | 1 | 4 | 27.8 |
 | 4 | Schulter und Brust isoliert | 132 | 8 | 0 | 2 | 18.3 |
 | 5 | Arme beugen und strecken | 120 | 14 | 0 | 4 | 19.8 |
@@ -367,8 +367,8 @@ Aufwand je Familie = Basis der Familie + Übungen in Programmen + neue Geräte, 
 | Beine isoliert | Wadenheben stehend | 42 | Dali’s PPLC | 1 | Oberkörper/Unterkörper |
 | Beine isoliert | Wadenheben sitzend | 32 | Dali’s PPLC, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 1 | Push/Pull/Beine |
 | Beine isoliert | Beinstrecker | 28 | Dali’s PPLC, Winterprogramm 2026 | 1 | Oberkörper/Unterkörper |
-| Beine isoliert | Beinbeuger sitzend | 25 | Dali’s PPLC, Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
 | Beine isoliert | Wadenheben mit Kurzhanteln | 7 | Winterprogramm 2026 | 0 | – |
+| Beine isoliert | Beinbeuger sitzend | 4 | Push/Pull/Beine, rotierend | 1 | Push/Pull/Beine |
 | Beine isoliert | Wadenheben an der Beinpresse | 2 | Winterprogramm 2026 | 0 | – |
 | Waagrechtes Drücken | Bankdrücken mit Kurzhanteln | 54 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Winterprogramm 2026 | 1 | Zuhause mit Kurzhanteln |
 | Waagrechtes Drücken | Schrägbankdrücken mit Kurzhanteln | 44 | Dali’s PPLC, Ganzkörper A/B, 4 Tage, Push/Pull/Beine, rotierend, Winterprogramm 2026 | 2 | Oberkörper/Unterkörper, Push/Pull/Beine |

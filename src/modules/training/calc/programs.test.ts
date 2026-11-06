@@ -181,7 +181,6 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
         'Machine Squat',
         'Machine Leg Press',
         'Machine Leg Curl',
-        'Machine Seated Leg Curl',
         'Machine Leg Extension',
         'Machine Calf Raise',
         'Machine Seated Calf Raise',
@@ -222,7 +221,7 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
       plan(4, 1, 2),
       plan(4, 0, 5),
       plan(4, 0, 4),
-      plan(4, 2, 7),
+      plan(4, 2, 6),
       plan(4, 3, 8),
     ]).toEqual([
       [{ repsMin: 5, repsMax: 6 }, 180],
@@ -241,6 +240,20 @@ describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', (
       'High Row an der Maschine',
     ]);
     expect(new Set(pull.exercises.map((e) => e.exerciseId)).size).toBe(6);
+  });
+
+  it('ohne Machine Seated Leg Curl; Übung und Animation bleiben in der Bibliothek (D-532)', () => {
+    const seated = exercises.find((exercise) => exercise.key === 'seated_leg_curl');
+    expect(seated?.name).toBe('Beinbeuger sitzend');
+    const used = new Set(
+      pplc().weeks.flatMap((week) =>
+        week.days.flatMap((day) => day.exercises.map((exercise) => exercise.exerciseId)),
+      ),
+    );
+    expect(used.has(seated!.id)).toBe(false);
+    expect(used.size).toBe(24);
+    // Legs: sieben Übungen in jeder Woche.
+    for (const week of pplc().weeks) expect(week.days[2]!.exercises).toHaveLength(7);
   });
 
   it('Hinweise auf „Heute“: erster Tag von Woche 4, jeder leichten Woche und jedes neuen Blocks', () => {

@@ -1,5 +1,5 @@
 {
-  "$comment": "Programm Dali’s PPLC nach dem Plan des Produktinhabers (D-504, umgebaut in D-505, Sätze nach dem Gerätetest in D-531). tools/programs_build.py erzeugt daraus je Woche die Tage mit ihrer Satzzahl: vor jeder Übung ein Aufwärmsatz (`warmup`: Ziel 8–10, bei Haltezeit 15–20 s), Grundübungen und übrige nach der Phase der Woche, die Wechselübung am Compound-Tag nach gerader oder ungerader Woche, die Hinweise am ersten Tag einer Woche. Englische Namen wörtlich wie vom Produktinhaber; mit `englishNames` zeigt die App sie statt der deutschen (D-506).",
+  "$comment": "Programm Dali’s PPLC nach dem Plan des Produktinhabers (D-504, umgebaut in D-505, Sätze nach dem Gerätetest in D-531, ohne Machine Seated Leg Curl seit D-532). tools/programs_build.py erzeugt daraus je Woche die Tage mit ihrer Satzzahl: vor jeder Übung ein Aufwärmsatz (`warmup`: Ziel 8–10, bei Haltezeit 15–20 s), Grundübungen und übrige nach der Phase der Woche, die Wechselübung am Compound-Tag nach gerader oder ungerader Woche, die Hinweise am ersten Tag einer Woche. Englische Namen wörtlich wie vom Produktinhaber; mit `englishNames` zeigt die App sie statt der deutschen (D-506).",
   "key": "dali_pplc",
   "slug": "dalis-pplc",
   "name": "Dali’s PPLC",
@@ -170,13 +170,6 @@
         {
           "exercise": "lying_leg_curl",
           "originalName": "Machine Leg Curl",
-          "class": "uebrig",
-          "reps": [10, 15],
-          "restSec": 75
-        },
-        {
-          "exercise": "seated_leg_curl",
-          "originalName": "Machine Seated Leg Curl",
           "class": "uebrig",
           "reps": [10, 15],
           "restSec": 75

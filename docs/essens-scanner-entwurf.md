@@ -1,6 +1,6 @@
 # Essens-Scanner – Entwurf (D-538)
 
-Stand: 07.11.2026 · Status: **Entwurf zur Freigabe**. Gebaut wird nichts, bevor der Gerätetest und der Merge von PR #54 erledigt sind. Danach bekommt der Scanner einen eigenen Branch und einen eigenen PR (Entscheidung des Produktinhabers vom 07.11.2026).
+Stand: 07.11.2026 · Status: **freigegeben am 07.11.2026, mit Ergänzungen (D-539)**. Gebaut wird nichts, bevor der Gerätetest und der Merge von PR #54 erledigt sind. Danach bekommt der Scanner einen eigenen Branch und einen eigenen PR (Entscheidung des Produktinhabers vom 07.11.2026).
 
 Grundsatz aus dem Auftrag: Erkennen, was sichtbar ist. Prüfen, was sich prüfen lässt. Schätzen nur, wenn es nötig ist. Unsicherheit zeigen. Du bestätigst alles.
 
@@ -22,7 +22,14 @@ Grundsatz aus dem Auftrag: Erkennen, was sichtbar ist. Prüfen, was sich prüfen
 | Nährwerte | aus BLS 4.0, Barcode-Scanner und Open Food Facts; dazu geprüft: Nährwerttabellen auf dem Gerät auslesen, ohne Dritte (Abschnitt 7) |
 | Sprache | alle Texte in der App bleiben deutsch |
 
-**Offen, deine Freigabe:** dieser Entwurf; das Standardmodell nach dem Vergleich; das Einspielen der Edge Function; Oberfläche im Web oder erst nativ (meine Empfehlung: Abschnitt 8.2).
+**Ergänzungen bei der Freigabe (07.11.2026, D-539):**
+
+1. Eigene Umgebung „fitness-app“ für die Arbeitssitzungen, damit der Test-Schlüssel nicht für andere Projekte gilt (angelegt am 07.11.2026, Abschnitt 13).
+2. Im Vergleichstest wird zusätzlich die Zuordnungsquote gemessen; ist sie niedrig, folgt ein Vorschlag zum Ausbau des Katalogs mit Größe und Folgen für den Offline-Betrieb (Abschnitte 6.3 und 6.4).
+3. Web oder nativ entscheidet sich nach der Machbarkeitsprüfung für iOS; dauert die Migration länger als etwa zwei Monate, entsteht die schlanke Web-Oberfläche (Abschnitt 8.2).
+4. Den Datenschutz-Artikel von Anthropic liest Claude direkt, sobald der Produktinhaber privacy.claude.com freigegeben hat, und passt den Einwilligungstext an, falls nötig (Abschnitt 5.2).
+
+**Offen:** das Standardmodell nach dem Vergleich; das Einspielen der Edge Function; Web oder nativ nach der Machbarkeitsprüfung für iOS.
 
 ## 2. Bestand (Prüfung vom 07.11.2026)
 
@@ -178,7 +185,7 @@ Ohne Einwilligung verlässt nichts das Gerät, wie bei Open Food Facts.
 | API and data retention (platform.claude.com/docs/en/manage-claude/api-and-data-retention) | „Retained data is never used for model training without your express permission.“ Gesprächsinhalte (Eingaben und Antworten) werden standardmäßig nicht aufbewahrt; Ausnahme sind die „Covered Models“ (Fable 5, Fable 5.1, Mythos 5, Mythos 5.1) mit 30 Tagen. Opus 5.5 und Sonnet 5.5 gehören nicht dazu. Unabhängig davon: Markieren die automatischen Sicherheitsprüfungen eine Anfrage, kann Anthropic Eingaben und Antworten bis zu 2 Jahre aufbewahren; außerdem, wo das Gesetz es verlangt. | direkt gelesen |
 | Commercial data retention policy (privacy.claude.com, Artikel 7996866) | Eingaben und Antworten der API werden innerhalb von 30 Tagen gelöscht, außer in den genannten Ausnahmen. | **nicht direkt gelesen:** das Netz dieser Arbeitsumgebung sperrt privacy.claude.com; Aussage aus dem Suchergebnis zu dieser Seite |
 
-Für den Text heißt das: Kein Training. Aufbewahrung höchstens 30 Tage, das ist die strengere der beiden Angaben und stimmt mit beiden. Dazu die Ausnahme für markierte Anfragen (bis 2 Jahre), weil sie zur ehrlichen Antwort gehört. Vor dem Einbau lese ich die Seiten noch einmal; den Datenschutz-Artikel direkt, wenn du privacy.claude.com für die Umgebung freigibst.
+Für den Text heißt das: Kein Training. Aufbewahrung höchstens 30 Tage, das ist die strengere der beiden Angaben und stimmt mit beiden. Dazu die Ausnahme für markierte Anfragen (bis 2 Jahre), weil sie zur ehrlichen Antwort gehört. Den Datenschutz-Artikel lese ich direkt, sobald du privacy.claude.com in der Umgebung „fitness-app“ freigegeben hast, und passe den Text an, falls er etwas anderes sagt; vor dem Einbau prüfe ich alle drei Seiten noch einmal.
 
 ### 5.3 Einwilligungstext (Vorschlag, wörtlich)
 
@@ -231,8 +238,21 @@ Gerechnet werden die echten Werte aus `usage` jeder Antwort. Größere Bilder (b
   - Portion: Abweichung in Prozent zum gewogenen Wert, und ob die Spanne den echten Wert enthält;
   - Ehrlichkeit: meldet das Modell, was nicht sichtbar ist (Öl, Soße, Brust oder Keule, Marke), statt zu raten;
   - Dauer: Median und langsamster Lauf;
-  - Kosten: Token aus `usage`, mal Preis.
+  - Kosten: Token aus `usage`, mal Preis;
+  - Zuordnungsquote: Anteil der erkannten Posten, für die FORM ohne Suchen einen passenden Eintrag vorschlägt (der erste Vorschlag passt). Gemessen mit dem Katalog, wie du ihn nutzt (Grundauswahl, eigene Lebensmittel, ÖNWT-Import), und zum Vergleich nur mit der Grundauswahl. Ein Posten zählt als passend, wenn Lebensmittel und Zustand (gekocht oder roh) stimmen.
 - **Ergebnis:** Tabelle je Foto und Summe je Modell, mit Empfehlung für den Standard. Die Läufe gehen über deinen Test-Schlüssel mit niedrigem Limit; vorher nenne ich die erwarteten Kosten (rund 1 bis 2 $ für 20 Fotos, 2 Modelle, 2 Läufe, 2 Denkstufen).
+
+### 6.4 Wenn die Zuordnungsquote niedrig ist: Katalog ausbauen
+
+Welche Wege es gibt, mit Größe und Folgen für den Offline-Betrieb (Vorschlag mit Empfehlung, sobald die Quote gemessen ist):
+
+| Weg | Umfang | Größe | offline | Was zu beachten ist |
+|---|---|---|---|---|
+| ÖNWT-Import (gibt es schon, D-263) | 7.476 österreichische Lebensmittel aus deiner eigenen Datei | rund 0,6 MB in IndexedDB, nicht im App-Paket | ja, nach dem Import | nur mit deiner Datei; zählt in der Messung mit, wenn du ihn nutzt |
+| Vollständiger BLS 4.0 (CC BY 4.0) | rund 7.140 Lebensmittel, 8 Nährwerte | gemessen an der früheren Datei (`bls-4.0.json`, Commit `160a2fb`): 864 KB, gezippt 183 KB | ja, wie die Grundauswahl: erst bei Bedarf geladen und vom Service Worker gespeichert; die Startansicht bleibt unberührt; in der Expo-App als mitgelieferte Datei oder in SQLite | War schon einmal eingebaut (D-301) und wurde am 20.10.2026 auf deinen Wunsch entfernt, weil die Suche Treffer doppelt zeigte, BLS neben ÖNWT (D-279). Vorschlag dann: den vollen BLS nur für die Zuordnung des Scanners nutzen, nicht in der normalen Suche; im Treffer steht die Quelle |
+| Gezielter Ausbau der Grundauswahl | 100 bis 300 Einträge, ausgewählt nach den Posten, die im Vergleich keinen Treffer fanden; Gerichte nur als „Annäherung“ gekennzeichnet | rund 15 bis 40 KB | ja | österreichische Namen und Suchbegriffe, keine Doppelten; Freigabe der Liste durch dich wie bei D-358 |
+
+Für die Expo-App gilt dasselbe: Der Katalog ist eine Datei des gemeinsamen Kerns, gespeichert im Gerät.
 
 ## 7. Nährwerttabellen auf dem Gerät auslesen, ohne Dritte
 
@@ -281,6 +301,8 @@ Machbar, ohne Dritte. **Auf dem iPhone mit Apple Vision, also mit der Expo-App;*
 Die Regel aus `CLAUDE.md` (`model/` und `calc/` ohne React und Dexie) passt dazu; der Scanner hält sie streng ein.
 
 ### 8.2 Oberfläche: im Web oder erst nativ?
+
+**Entschieden wird nach der Machbarkeitsprüfung für iOS** (Produktinhaber, 07.11.2026): Zeigt sie, dass die Migration länger als etwa zwei Monate dauert, entsteht die schlanke Web-Oberfläche; sonst gleich nativ.
 
 **Empfehlung: erst nativ in Expo.** Vorher, direkt nach dem Merge von #54, entstehen der gemeinsame Kern und die Edge Function mit Tests und dem Vergleich der Modelle. Beides braucht keine Oberfläche und nützt Web und App gleich.
 
@@ -353,10 +375,10 @@ Jedes Paket mit D-Nummer, Commit, Push, Tests und Bericht wie bisher.
 
 ## 13. Was du einrichten musst
 
-- **Test-Schlüssel** (dein eigener, mit niedrigem Ausgabelimit): Sag Bescheid, wenn er da ist. Dann öffne ich das sichere Formular für `api.anthropic.com`. Gespeichert wird er in deiner Umgebung „Default“, also für alle Sitzungen, die sie nutzen; soll er nur für dieses Repository gelten, lege ich auf deinen Wunsch eine eigene Umgebung dafür an. Ich sehe den Schlüssel nie.
+- **Test-Schlüssel** (dein eigener, mit niedrigem Ausgabelimit): Sag Bescheid, wenn er da ist. Dann öffne ich das sichere Formular für `api.anthropic.com`. Gespeichert wird er in der Umgebung „fitness-app“ (am 07.11.2026 für FORM angelegt, mit denselben Netzfreigaben wie „Default“: MakeHuman, ExRx, ACE, Paketquellen); er gilt damit nicht für Sitzungen anderer Projekte. Ich sehe den Schlüssel nie.
 - **Fotos** für den Vergleich (Abschnitt 6.3), am besten mit gewogenen Mengen.
 - **Für den Betrieb**, nach deinem OK zum Einspielen: einen eigenen Schlüssel für den Betrieb als Secret `ANTHROPIC_API_KEY` in Supabase (Edge Functions → Secrets), dazu `SCANNER_ALLOWED_USERS` mit deiner `user_id`; ein Ausgabelimit in der Konsole von Anthropic.
-- Optional: privacy.claude.com für die Umgebung freigeben, damit ich den Datenschutz-Artikel direkt lese.
+- privacy.claude.com in der Umgebung „fitness-app“ freigeben (Einstellungen der Umgebung, „Network access“); dann lese ich den Datenschutz-Artikel direkt.
 
 ## 14. Grenzen und offene Punkte
 

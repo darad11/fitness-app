@@ -12,6 +12,7 @@ import { formatSetValues } from '../calc/fields';
 import { formatClock } from '../calc/format';
 import { summarizeSession } from '../calc/history';
 import { liveExercises, liveSets } from '../calc/session';
+import { setName, setPositions } from '../calc/setNames';
 import { useSession } from '../data/useSession';
 import { deleteCompletedSession } from '../service/historyService';
 import { HistoryEditForm } from './HistoryEditForm';
@@ -143,9 +144,6 @@ export function HistoryDetailPage() {
       ) : null}
       <div className="grid gap-4">
         {liveExercises(session).map((exercise) => {
-          let working = 0;
-          let warmup = 0;
-          let drop = 0;
           return (
             <Card key={exercise.id} title={exercise.nameSnapshot}>
               {exercise.notes ? (
@@ -158,10 +156,9 @@ export function HistoryDetailPage() {
                 </p>
               ) : null}
               <ol className="divide-y divide-line">
-                {liveSets(exercise).map((set) => {
-                  const ordinal =
-                    set.type === 'working' ? ++working : set.type === 'warmup' ? ++warmup : ++drop;
-                  const name = tSession.setLabel(tSession.setTypeLabel[set.type], ordinal);
+                {setPositions(liveSets(exercise)).map(({ set, position }) => {
+                  // Gleiche Namen wie im Player: „Aufwärmsatz“, „Arbeitssatz 2 von 3“ (D-537).
+                  const name = setName(position);
                   return (
                     <li
                       key={set.id}

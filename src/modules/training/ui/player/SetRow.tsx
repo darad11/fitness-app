@@ -13,7 +13,7 @@ export interface SetRowProps {
   set: SessionSet;
   /** Anzeige wie „1", „A" oder „D". */
   label: string;
-  /** Lesbare Bezeichnung für Screenreader, z. B. „Arbeitssatz 2". */
+  /** Lesbare Bezeichnung für Screenreader, z. B. „Kniebeuge, Arbeitssatz 2 von 3“ (D-537). */
   name: string;
   previous: SetValues | undefined;
   suggestion: SetValues;

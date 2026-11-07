@@ -103,7 +103,7 @@ test('Player aufgeklappt: zwei Spalten, Kopf links im niedrigen Fenster, sonst r
   // Zeile (D-502); rechts auch in der Pause die Animation und „Jetzt“, ohne „Als Nächstes“ (D-533).
   await expect(now).toBeVisible();
   await expect(upNext).toHaveCount(0);
-  await expect(rest).toContainText('Beinpresse, Aufwärmsatz 2');
+  await expect(rest).toContainText('Beinpresse, Aufwärmsatz 2 von 2');
   await expectHeadLeft();
   await axe();
 
@@ -247,7 +247,7 @@ test('Pause zugeklappt in einer Zeile, ±15 s in der großen Pause (D-380)', asy
   // höchstens zwei Zeilen (vorher eine Zeile mit „Beinpress…“).
   await expect(rest).toContainText('Nächster Satz:');
   // `\s`: Zwischen Wort und Zahl steht ein geschütztes Leerzeichen (D-525).
-  const nextSet = rest.getByText(/Aufwärmsatz\s2/);
+  const nextSet = rest.getByText(/Aufwärmsatz\s2\svon\s2/);
   const nextBox = await box(nextSet);
   expect(nextBox.right - nextBox.left).toBeGreaterThan(60);
   expect(nextBox.height).toBeGreaterThan(30);
@@ -323,7 +323,7 @@ test('Satzzeile unter 20 rem: Vorwert in einer zweiten Zeile, Felder breit genug
     await picker.getByRole('button', { name: /^Beinpresse Oberschenkel/ }).click();
     await expect(picker).toBeHidden();
     if (round === 2) break;
-    const set = 'Beinpresse, Arbeitssatz 1';
+    const set = 'Beinpresse, Arbeitssatz';
     await page.getByLabel(`Gewicht in kg, ${set}`).fill('102,5');
     await page.getByLabel(`Wiederholungen, ${set}`).fill('10');
     await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();

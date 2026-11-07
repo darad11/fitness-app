@@ -412,7 +412,7 @@ test('Teil für Übungsbilder lädt nicht: Training läuft mit Symbol weiter, ke
   await picker.getByLabel('Übungen suchen').fill('kniebeuge mit lang');
   await picker.getByRole('button', { name: /^Kniebeuge mit Langhantel/ }).click();
   await expect(picker).toBeHidden();
-  const set = 'Kniebeuge mit Langhantel, Arbeitssatz 1';
+  const set = 'Kniebeuge mit Langhantel, Arbeitssatz';
   await page.getByLabel(`Gewicht in kg, ${set}`).fill('60');
   await page.getByLabel(`Wiederholungen, ${set}`).fill('5');
   await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();

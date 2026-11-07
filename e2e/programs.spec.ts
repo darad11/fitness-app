@@ -117,15 +117,15 @@ test('Dali’s PPLC: jede Übung mit Aufwärmsatz, in Woche 1 drei Arbeitssätze
   await expect(page.getByRole('heading', { level: 1, name: 'Push', exact: true })).toBeVisible();
   // Sieben Übungen mit je einem Aufwärmsatz und drei Arbeitssätzen.
   await expect(page.getByText('0 von 28 Sätzen')).toBeVisible();
+  // Ein einziger Aufwärmsatz heißt ohne Zahl, die Arbeitssätze „1 von 3“ bis „3 von 3“ (D-537).
   for (const name of ['Dumbbell Bench Press', 'Dumbbell Incline Bench Press', 'Cable Fly']) {
+    const done = (set: string) =>
+      page.getByRole('button', { name: `Satz erledigt, ${name}, ${set}`, exact: true });
+    await expect(done('Aufwärmsatz')).toHaveCount(1);
+    await expect(done('Arbeitssatz 1 von 3')).toHaveCount(1);
+    await expect(done('Arbeitssatz 3 von 3')).toHaveCount(1);
     await expect(
-      page.getByRole('button', { name: `Satz erledigt, ${name}, Aufwärmsatz 1` }),
-    ).toHaveCount(1);
-    await expect(
-      page.getByRole('button', { name: `Satz erledigt, ${name}, Arbeitssatz 3` }),
-    ).toHaveCount(1);
-    await expect(
-      page.getByRole('button', { name: `Satz erledigt, ${name}, Arbeitssatz 4` }),
+      page.getByRole('button', { name: new RegExp(`^Satz erledigt, ${name}, Arbeitssatz 4`) }),
     ).toHaveCount(0);
   }
 });

@@ -3197,7 +3197,7 @@ Der neue Test `schleifen.test.ts` prüft alle 24 Schleifen auf Sprünge, Ruck un
 - Duo zugeklappt (382 × 678) mit laufender Pause: `docs/screens/duo/pplc-pause-zugeklappt.webp`. Die kleine Pause zeigt hier nur Zeit und „Überspringen“: Unter 22 rem Breite stünde vom nächsten Satz kaum ein Wort, er steht in der Satzliste und in der großen Pause (unverändert). Die Spaltenköpfe liegen frei.
 - Duo aufgeklappt (867 × 669) mit laufender Pause: `docs/screens/duo/pplc-pause-aufgeklappt.webp`. Rechts Animation und „Jetzt“ mit „Danach“ und Vorschaubild, keine Karte „Als Nächstes“; links die Pause mit „Ziel 6–10“ in einer Zeile.
 - Aufnahme des Players mit Pause, Duo aufgeklappt, Tag Compound: `docs/screens/duo/pplc-player-pause.mp4` (12,6 s). Satz erledigt, die Pause läuft, rechts bleibt alles stehen, die Schleife läuft weiter.
-- Aufgefallen, nicht geändert: „Jetzt“ zählt den Aufwärmsatz mit („Arbeitssatz · Satz 2 von 4“), die Pause zählt nur die Arbeitssätze („Arbeitssatz 1“).
+- Aufgefallen, nicht geändert: „Jetzt“ zählt den Aufwärmsatz mit („Arbeitssatz · Satz 2 von 4“), die Pause zählt nur die Arbeitssätze („Arbeitssatz 1“). Mit D-537 angeglichen, Abschnitt 61; Bild und Aufnahme vom Duo aufgeklappt sind dafür neu aufgenommen (61.2).
 
 ### 60.9 Berichte zu den Paketen
 
@@ -3278,3 +3278,52 @@ Bekannte Einschränkungen: Kreuzheben: Knie wippt in Bild 20 und 43 um 3 bis 5 p
 Nächste Schritte: Bilder vom Duo, Aufnahme, Gerätetest des Produktinhabers
 ```
 
+## 61. Gleiche Satznamen (D-537)
+
+Entscheidungen des Produktinhabers vom 07.11.2026 zu den zwei Beobachtungen aus Abschnitt 60.8:
+
+1. „Satzzählung angleichen: Der Aufwärmsatz heißt überall „Aufwärmsatz“, danach „Arbeitssatz 1 von 3“ usw. – in „Jetzt“, in der Pause und überall sonst gleich.“
+2. „Kleine Pause zugeklappt nur mit Uhr und Knöpfen: bleibt so.“
+
+### 61.1 Umsetzung
+
+Ein Satz heißt jetzt überall gleich. Gezählt wird je Typ, so wie die Kennungen A, 1, 2, 3 in der Satzliste; eine Funktion liefert den Namen für alle Stellen (`src/modules/training/calc/setNames.ts`).
+
+| Stelle | vorher | jetzt |
+|---|---|---|
+| „Jetzt“ | Arbeitssatz · Satz 3 von 4 · Ziel 6–10 | Arbeitssatz 2 von 3 · Ziel 6–10 |
+| Pause, klein und groß | Dumbbell Bench Press, Arbeitssatz 2 · Ziel 6–10 | Dumbbell Bench Press, Arbeitssatz 2 von 3 · Ziel 6–10 |
+| Aufwärmsatz (Dali’s PPLC, einer je Übung) | „Aufwärmsatz · Satz 1 von 4“ bzw. „Aufwärmsatz 1“ | „Aufwärmsatz“ |
+| Bezeichnungen für Screenreader, Verlauf, Nachtragen | „Aufwärmsatz 1“, „Arbeitssatz 2“ | „Aufwärmsatz“, „Arbeitssatz 2 von 3“ |
+| Kennungen in der Satzliste | A, 1, 2, 3 | unverändert |
+
+Selbst entschieden, mit Begründung in D-537:
+
+- Ein Satz, der als einziger seines Typs in der Übung steht, heißt ohne Zahl, wie der Aufwärmsatz: „Arbeitssatz“ statt „Arbeitssatz 1 von 1“ (leichte Wochen von Dali’s PPLC mit einem Arbeitssatz, eine neu hinzugefügte Übung im freien Training).
+- Mehrere Aufwärm- oder Drop-Sätze werden gezählt, damit jeder Name eindeutig bleibt, auch für Screenreader: „Aufwärmsatz 1 von 2“ in Ganzkörper A/B.
+- Unverändert bleiben der Fortschritt im Kopf („2 von 28 Sätzen“ zählt alle Sätze des Trainings) und der Programm-Editor: Dort sind die Zeilen nach ihrer Stelle nummeriert („Satz 2“), den Typ wählt man im Feld daneben; ein Name nach Typ wechselte beim Umstellen seine Zahl.
+
+Die kleine Pause zugeklappt bleibt wie sie ist: Uhr und Knöpfe, der nächste Satz steht in der Liste darunter und für Screenreader in der Pause.
+
+Auf den neuen Bildern vom Duo aufgefallen und behoben: In der kleinen Pause im Kopf am Duo quer passte mit dem längeren Namen das Ziel nicht mehr in die zwei Zeilen neben der Zeit; dort stand „Dumbbell Bench Press, Arbeitssatz 2 von 3 ·…“. Jetzt hat der Text dort bis zu drei Zeilen wie am iPhone hoch (E2), die Pause wird dafür eine Zeile höher (60 → 75 px); „Jetzt“ rechts daneben zeigt denselben Satz mit Ziel.
+
+### 61.2 Bilder und Aufnahme
+
+Neu aufgenommen, gleiche Dateien wie in 60.8:
+
+- Duo aufgeklappt mit laufender Pause: `docs/screens/duo/pplc-pause-aufgeklappt.webp`. Links die Pause „Dumbbell Bench Press, Arbeitssatz 2 von 3 · Ziel 6–10“ in drei Zeilen, rechts „Jetzt“ mit „Arbeitssatz 2 von 3 · Ziel 6–10“.
+- Duo zugeklappt: `docs/screens/duo/pplc-pause-zugeklappt.webp`, unverändert (die kleine Pause zeigt dort Uhr und Knöpfe).
+- Aufnahme, Tag Compound: `docs/screens/duo/pplc-player-pause.mp4` (12,2 s). Vorher „Aufwärmsatz · Ziel 8–10“, nach dem Satz in Pause und „Jetzt“ „Arbeitssatz 1 von 3 · Ziel 8–12“.
+
+### 61.3 Bericht zum Paket
+
+```
+Arbeitspaket: D-537 Phase Programme, gleiche Satznamen (Entscheidung des Produktinhabers vom 07.11.2026)
+Umgesetzte Funktionen: TS-02, TS-07, Verlauf und Nachtragen: ein Satz heißt überall gleich, „Aufwärmsatz“, danach „Arbeitssatz 1 von 3“ (je Typ gezählt, ein einziger Satz seines Typs ohne Zahl), in „Jetzt“, in der kleinen und der großen Pause, in der Satzliste für Screenreader, im Verlauf, beim Bearbeiten und beim Nachtragen; kleine Pause im Kopf am Duo quer bis zu drei Zeilen; erfüllte AK: –
+Geänderte Dateien: src/modules/training/calc/setNames.ts (neu), src/modules/training/calc/setNames.test.ts (neu), src/shared/i18n/de-session.ts, src/modules/training/ui/player/SessionPage.tsx, src/modules/training/ui/player/SetRow.tsx, src/modules/training/ui/player/RestStage.tsx, src/modules/training/ui/player/player-layout.css, src/modules/training/ui/LogPage.tsx, src/modules/training/ui/HistoryDetailPage.tsx, src/modules/training/ui/HistoryEditForm.tsx, src/modules/training/calc/format.ts (Kommentar), src/modules/training/ui/player/player-ui.test.tsx, src/modules/training/ui/history-ui.test.tsx, src/modules/training/ui/log-ui.test.tsx, e2e/satznamen.spec.ts (neu), e2e/session.spec.ts, e2e/resilience.spec.ts, e2e/player.spec.ts, e2e/duo-player.spec.ts, e2e/duo-progress.spec.ts, e2e/programs.spec.ts, e2e/uebungen.spec.ts, e2e/player-befunde-e.spec.ts, docs/screens/duo/pplc-pause-aufgeklappt.webp, docs/screens/duo/pplc-player-pause.mp4, docs/decisions.md, docs/testing.md, docs/feature-inventory.md, docs/implementation-plan.md, docs/design-system.md, form-programme-report.md
+Technische Entscheidungen: D-537
+Ausgeführte Tests: Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.285 bestanden (141 Dateien); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite mit der Korrektur der Pause: 481 bestanden, 157 übersprungen, 0 fehlgeschlagen (12,5 min); Gegenprobe: gegen den Code davor 14 Unit-Tests rot, gegen den Build davor die drei neuen und geänderten E2E-Tests rot, ohne die drei Zeilen der Pause der Test am Duo rot
+Ergebnis: bestanden
+Bekannte Einschränkungen: Der Programm-Editor nummeriert die Zeilen weiter nach ihrer Stelle („Satz 2“); in der Pause im Kopf am Duo quer kann bei langen Namen mit Vorwert die dritte Zeile enden, bevor der Vorwert ganz dasteht („Jetzt“ daneben zeigt ihn ganz); WebKit läuft in der CI
+Nächste Schritte: erneuter Gerätetest des Produktinhabers
+```

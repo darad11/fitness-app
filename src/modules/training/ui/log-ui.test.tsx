@@ -74,18 +74,20 @@ describe('Nachtragen (S-10, AK-TRN-23)', () => {
     // Drei Arbeitssätze vorbelegt; einen entfernen, einen Aufwärmsatz davor.
     expect(within(card).getAllByRole('listitem')).toHaveLength(3);
     await user.click(
-      within(card).getByRole('button', { name: 'Satz entfernen, Beinpresse, Arbeitssatz 3' }),
+      within(card).getByRole('button', {
+        name: 'Satz entfernen, Beinpresse, Arbeitssatz 3 von 3',
+      }),
     );
     await user.click(within(card).getByRole('button', { name: 'Aufwärmsatz hinzufügen' }));
-    await user.type(within(card).getByLabelText('Gewicht in kg, Beinpresse, Aufwärmsatz 1'), '60');
-    await user.type(within(card).getByLabelText('Wiederholungen, Beinpresse, Aufwärmsatz 1'), '10');
+    await user.type(within(card).getByLabelText('Gewicht in kg, Beinpresse, Aufwärmsatz'), '60');
+    await user.type(within(card).getByLabelText('Wiederholungen, Beinpresse, Aufwärmsatz'), '10');
     for (const n of [1, 2]) {
       await user.type(
-        within(card).getByLabelText(`Gewicht in kg, Beinpresse, Arbeitssatz ${String(n)}`),
+        within(card).getByLabelText(`Gewicht in kg, Beinpresse, Arbeitssatz ${String(n)} von 2`),
         '120',
       );
       await user.type(
-        within(card).getByLabelText(`Wiederholungen, Beinpresse, Arbeitssatz ${String(n)}`),
+        within(card).getByLabelText(`Wiederholungen, Beinpresse, Arbeitssatz ${String(n)} von 2`),
         '10',
       );
     }

@@ -24,10 +24,11 @@ export const tSession = {
   firstTime: 'Erstes Mal',
   setTypeShort: { warmup: 'A', drop: 'D' },
   setTypeLabel: { warmup: 'Aufwärmsatz', working: 'Arbeitssatz', drop: 'Drop-Satz' },
-  setLabel: (type: string, n: number) => `${type} ${n}`,
+  /** „Aufwärmsatz“, „Arbeitssatz 2 von 3“: gezählt je Typ, ein einzelner Satz ohne Zahl (D-537). */
+  setName: (type: string, n: number, total: number) =>
+    total > 1 ? `${type} ${n} von ${total}` : type,
   previous: 'Vorwert',
   now: 'Jetzt',
-  setOf: (n: number, total: number) => `Satz ${n} von ${total}`,
   target: 'Ziel',
   nextExercise: (name: string) => `Danach: ${name}`,
   lastExercise: 'Letzte Übung',

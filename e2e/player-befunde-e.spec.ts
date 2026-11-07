@@ -4,8 +4,9 @@ import { expect, openPage, test } from './fixtures';
 /**
  * Befunde E1 und E2 aus dem Rundgang durch den Player (D-496), entschieden vom Produktinhaber
  * (D-525), am iPhone hoch wie im Befund (390 × 844):
- * - E1: Zahlen bleiben beim Wort. „Ziel 10“ und „Satz 1 von 5“ brechen nicht zwischen Wort und
- *   Zahl um (geschütztes Leerzeichen); vorher stand „Ziel“ am Zeilenende und „10“ allein darunter.
+ * - E1: Zahlen bleiben beim Wort. „Ziel 10“ und „Aufwärmsatz 1 von 2“ (seit D-537, vorher „Satz 1
+ *   von 5“) brechen nicht zwischen Wort und Zahl um (geschütztes Leerzeichen); vorher stand „Ziel“
+ *   am Zeilenende und „10“ allein darunter.
  * - E2: In der kleinen Pause steht der nächste Satz mit vollem Namen der Übung; vorher nur
  *   „Beinpresse,…“, weil „Nächster Satz:“ eine der zwei Zeilen brauchte. Die Bezeichnung bleibt
  *   für Screenreader.
@@ -70,13 +71,14 @@ function placeOf(
   }, part);
 }
 
-test('E1: „Ziel“, „Satz“ und „von“ bleiben in „Jetzt“ in einer Zeile mit ihrer Zahl', async ({
+test('E1: „Ziel“, „Aufwärmsatz“ und „von“ bleiben in „Jetzt“ in einer Zeile mit ihrer Zahl', async ({
   page,
 }) => {
   await startDayA(page);
   const info = page.locator('.player-now-info');
   await expect(info).toContainText('Ziel');
-  for (const part of [`Satz${NBSP}1`, `von${NBSP}5`, `Ziel${NBSP}10`]) {
+  // Erster Satz des Tages: „Aufwärmsatz 1 von 2 · Ziel 10“ (D-537).
+  for (const part of [`Aufwärmsatz${NBSP}1`, `von${NBSP}2`, `Ziel${NBSP}10`]) {
     expect(await placeOf(info, part), part).toEqual({ lines: 1, visible: true });
   }
 });

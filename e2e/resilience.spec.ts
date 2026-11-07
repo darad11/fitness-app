@@ -22,7 +22,7 @@ test('Pausentimer: Sichtbarkeitswechsel, Neuladen und Überziehung (E-04, AK-TRN
   test.slow();
   await openPage(page, '/training/vorlagen/full_body_ab');
   await page.getByRole('button', { name: 'Tag A heute trainieren' }).click();
-  const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1';
+  const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1 von 2';
   await page.getByLabel(`Gewicht in kg, ${warmup}`).fill('40');
   await page.getByRole('button', { name: `Satz erledigt, ${warmup}` }).click();
   const rest = page.getByRole('region', { name: 'Pause' });
@@ -83,7 +83,7 @@ test('Offline: Übung hinzufügen, Sätze erfassen, neu laden (E-05, AK-PWA-02, 
   await picker.getByLabel('Übungen suchen').fill('liegest');
   await picker.getByRole('button', { name: /^Liegestütze/ }).click();
   await expect(picker).toBeHidden();
-  const set = 'Liegestütze, Arbeitssatz 1';
+  const set = 'Liegestütze, Arbeitssatz';
   await page.getByLabel(`Gewicht in kg, ${set}`).fill('0');
   await page.getByLabel(`Wiederholungen, ${set}`).fill('15');
   await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();

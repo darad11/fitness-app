@@ -41,7 +41,7 @@ export function RestStage(props: RestStageProps) {
     ? tTrainingPages.rest.overBy(time.slice(1))
     : `${tTrainingPages.rest.remaining} ${time}`;
   const target = props.next?.set.target ? formatTargetRange(props.next.set.target) : null;
-  // Zahlen bleiben beim Wort: „Ziel 5“ und „Aufwärmsatz 2“ in einer Zeile (E1, D-525).
+  // Zahlen bleiben beim Wort: „Ziel 5“ und „Arbeitssatz 2“ in einer Zeile (E1, D-525).
   const nextText = props.next
     ? keepNumbersTogether(
         [

@@ -279,7 +279,7 @@ Schritt G Grundausbau (D-261): Navigation mit fünf Bereichen (Heute, Training, 
 - **Übungsblöcke:** Name, Hauptmuskelgruppe, Notiz; darunter Satzzeilen. Jede Zeile zeigt Typ (A = Aufwärmen, Zahl = Arbeitssatz, D = Drop-Satz, eingerückt), Vorwert („60 × 8"), Felder für Gewicht und Wiederholungen (bzw. Zeit mit Start-Knopf) und den Knopf „erledigt". Erledigte Sätze erscheinen in Erfolgsfarbe mit Häkchen.
 - **Freie Reihenfolge:** Jede Zeile ist jederzeit bedienbar; die App hebt den nächsten offenen Satz hervor, erzwingt ihn aber nicht.
 - **Vorschläge:** Platzhalter zeigen Vorwert oder festen Zielwert; „erledigt" übernimmt sichtbare Vorschläge (D-225).
-- **Bühne „Jetzt":** Unter dem Kopf eine Karte in `--ink` mit der aktuellen Übung, Satz x von n, Ziel, Vorwert und der nächsten Übung; nach dem letzten Satz „Alle Sätze erledigt".
+- **Bühne „Jetzt":** Unter dem Kopf eine Karte in `--ink` mit der aktuellen Übung, dem Namen des Satzes („Aufwärmsatz“, „Arbeitssatz 2 von 3“, je Typ gezählt wie in Pause, Satzliste und Verlauf, D-537), Ziel, Vorwert und der nächsten Übung; nach dem letzten Satz „Alle Sätze erledigt".
 - **Pause als Bühne (`RestStage`):** Erscheint nach „erledigt" im klebenden Kopf und ersetzt „Jetzt": Restzeit 40 px, nächster Satz mit Ziel und Vorwert, −15 s, +15 s, Überspringen; Pfeil öffnet die Vollansicht mit Timer 64 px. Überziehung „+0:42" färbt die Bühne in Akzent (AK-TRN-12).
 - **Kopf:** Vorzeile (Programm und Woche oder „Freies Training"), Titel, Fortschrittsbalken mit Dauer, „x von n Sätzen", Schaltfläche „Beenden".
 - **Aktionsleiste:** „Satz erledigt" (groß) für den hervorgehobenen Satz und „Übung hinzufügen"; „Beenden" steht im Kopf, „Training verwerfen" am Ende der Liste.

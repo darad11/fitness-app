@@ -407,11 +407,16 @@
   white-space: nowrap;
 }
 
+/* Bis zu drei Zeilen wie am iPhone hoch (E2, D-525): Mit den Satznamen „Arbeitssatz 2 von 3“
+   (D-537) passte am Duo quer nach „Dumbbell Bench Press,“ das Ziel nicht mehr in die zweite Zeile,
+   es stand nur „Arbeitssatz 2 von 3 ·…“ da. Die Pause wird dafür eine Zeile höher. */
 .player-main > .player-head .rest-card .rest-next-text {
   margin-top: 0;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
   hyphens: auto;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /*

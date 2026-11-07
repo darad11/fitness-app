@@ -49,6 +49,7 @@ import {
   REQUIRED_FIELDS,
   suggestValues,
 } from '../../calc/session';
+import { setName, setPositions } from '../../calc/setNames';
 import { usePreviousHistory, useSession } from '../../data/useSession';
 import type { HistoryRow } from '../../model/history';
 import {
@@ -156,33 +157,30 @@ function useNow(intervalMs: number): Date {
 }
 
 interface SetName {
+  /** Kennung in der Satzliste: „A“, „1“, „2“ … „D“. */
   label: string;
+  /** Satz ohne Übung: „Aufwärmsatz“, „Arbeitssatz 2 von 3“ (D-537). */
+  set: string;
+  /** Mit Übung, für die Pause und für Screenreader: „Kniebeuge mit Langhantel, Arbeitssatz 2 von 3“. */
   name: string;
-  /** Position unter den lebenden Sätzen der Übung, 1-basiert. */
-  index: number;
-  total: number;
 }
 
-/** Lesbare Namen aller Sätze („Kniebeuge mit Langhantel, Arbeitssatz 2"), je Übung gezählt. */
+/**
+ * Lesbare Namen aller Sätze, je Übung und Typ gezählt (D-537): In „Jetzt“, in der Pause und in der
+ * Satzliste heißt derselbe Satz gleich, „Arbeitssatz 2 von 3“ statt „Satz 3 von 4“ und
+ * „Arbeitssatz 2“.
+ */
 function setNames(exercises: SessionExercise[]): Map<string, SetName> {
   const names = new Map<string, SetName>();
   for (const exercise of exercises) {
-    let working = 0;
-    let warmup = 0;
-    let drop = 0;
-    const sets = liveSets(exercise);
-    sets.forEach((set, position) => {
-      const ordinal =
-        set.type === 'working' ? ++working : set.type === 'warmup' ? ++warmup : ++drop;
-      const label = set.type === 'working' ? String(ordinal) : tSession.setTypeShort[set.type];
-      const name = tSession.setLabel(tSession.setTypeLabel[set.type], ordinal);
+    for (const { set, position } of setPositions(liveSets(exercise))) {
+      const own = setName(position);
       names.set(set.id, {
-        label,
-        name: `${exercise.nameSnapshot}, ${name}`,
-        index: position + 1,
-        total: sets.length,
+        label: set.type === 'working' ? String(position.n) : tSession.setTypeShort[set.type],
+        set: own,
+        name: `${exercise.nameSnapshot}, ${own}`,
       });
-    });
+    }
   }
   return names;
 }
@@ -552,7 +550,7 @@ function Player({
                     {/* Zahlen bleiben beim Wort: „Ziel 10“ in einer Zeile (E1, D-525). */}
                     {keepNumbersTogether(
                       [
-                        `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
+                        currentName.set,
                         currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
                         currentPrevious
                           ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`

@@ -3750,3 +3750,19 @@ Alle 24 Schleifen von Dali’s PPLC Bild für Bild geprüft; Military Press, Kre
 | Start im Player und in den Details | Player aufgeklappt (867 × 669): 24 Übungen, 48 Starts und Wechsel, 13 bis 135 ms; zugeklappt (382 × 678): 42 bis 106 ms, sobald „Jetzt“ im Bild ist (44 von 48 lagen nach dem Wechsel über dem Bildrand, dort steht die Schleife bis zum Hochscrollen); Details: 24 Übungen, 25 bis 138 ms; immer die MP4 |
 | Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Übungsmoduls 97 bestanden (11 Dateien, darunter `schleifen.test.ts` mit 5 Tests); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (14,9 min) |
 
+### Gleiche Satznamen · 07.11.2026, Cloud-Umgebung
+
+Entscheidung des Produktinhabers: Der Aufwärmsatz heißt überall „Aufwärmsatz“, danach „Arbeitssatz 1 von 3“ usw.; die kleine Pause zugeklappt bleibt mit Uhr und Knöpfen (D-537).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Unit `setNames.test.ts` (neu) | 3 bestanden: ein Aufwärmsatz ohne Zahl, danach „Arbeitssatz 1 von 3“ bis „3 von 3“; mehrere Aufwärm- und Drop-Sätze gezählt, ein einziger Arbeitssatz ohne Zahl; Stelle je Typ wie die Ziffern der Satzliste |
+| Unit Training (`src/modules/training`) | 212 bestanden (31 Dateien), darunter in `player-ui.test.tsx` der neue Test „nennt jeden Satz in „Jetzt“, in der Pause und in der Satzliste gleich“ |
+| Gegenprobe Unit: die neuen und geänderten Tests gegen den Code davor | 14 rot in 4 Dateien: der neue Test („Jetzt“ zeigte „Aufwärmsatz · Satz 1 von 5“), die Namen in Player, Verlauf und Nachtragen; `setNames.test.ts` ohne das Modul |
+| E2E `satznamen.spec.ts` (neu), Chromium Handy | 2 bestanden: Duo aufgeklappt 867 × 669, Dali’s PPLC Push: „Jetzt“, Pause und hervorgehobener Satz nennen nach dem Aufwärmsatz und den Arbeitssätzen 1 und 2 jeweils denselben Namen, „Arbeitssatz 1 von 3“ bis „3 von 3“, „Satz … von …“ steht nirgends mehr; iPhone 390 × 844: Pause und danach „Jetzt“ „Arbeitssatz 1 von 3“ |
+| Gegenprobe E2E gegen den Build davor | 3 rot: beide Tests aus `satznamen.spec.ts` und E1 in `player-befunde-e.spec.ts`; „Jetzt“ zeigte „Aufwärmsatz · Satz 1 von 4 · Ziel 8–10“ |
+| E2E der 11 betroffenen Dateien, Chromium | 64 bestanden, 22 übersprungen, 0 fehlgeschlagen |
+| E2E Chromium, ganze Suite (vor der Korrektur der Pause im Kopf) | 481 bestanden, 157 übersprungen, 0 fehlgeschlagen (12,0 min) |
+| Bilder vom Duo neu aufgenommen | aufgeklappt (867 × 669): in der kleinen Pause im Kopf stand „Dumbbell Bench Press, Arbeitssatz 2 von 3 ·…“, das Ziel passte nicht mehr in die zwei Zeilen; mit bis zu drei Zeilen steht „Ziel 6–10“ da, die Pause ist 75 statt 60 px hoch |
+| `satznamen.spec.ts`, neue Prüfung „Ziel in der Pause“ (letztes Zeichen in den sichtbaren Zeilen) | mit drei Zeilen bestanden; ohne die Korrektur rot: „Ziel in der Pause vor Arbeitssatz 1 von 3“ |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.285 bestanden (141 Dateien); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite mit der Korrektur der Pause: 481 bestanden, 157 übersprungen, 0 fehlgeschlagen (12,5 min); WebKit prüft die CI |

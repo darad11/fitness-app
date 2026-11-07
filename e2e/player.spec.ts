@@ -46,10 +46,10 @@ test('Player: Vorschau, Übungsinfo, Ersetzen mit Alternativen, Umsortieren, Üb
   await expect(picker).toBeHidden();
   await expect(page.getByRole('region', { name: 'Beinpresse' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Kniebeuge mit Langhantel' })).toHaveCount(0);
-  await expect(page.getByLabel('Gewicht in kg, Beinpresse, Arbeitssatz 1')).toBeVisible();
+  await expect(page.getByLabel('Gewicht in kg, Beinpresse, Arbeitssatz 1 von 3')).toBeVisible();
 
   // Übungstimer am Zeitsatz: starten, stoppen, Dauer gespeichert, übersteht Neuladen.
-  const plankSet = 'Unterarmstütz (Plank), Arbeitssatz 1';
+  const plankSet = 'Unterarmstütz (Plank), Arbeitssatz 1 von 3';
   await page.getByRole('button', { name: `Weitere Aktionen, ${plankSet}` }).click();
   await page.getByRole('button', { name: `Timer starten, ${plankSet}` }).click();
   await expect(page.getByRole('button', { name: `Timer stoppen, ${plankSet}` })).toBeVisible();

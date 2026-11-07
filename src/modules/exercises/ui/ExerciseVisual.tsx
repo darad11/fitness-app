@@ -1,3 +1,4 @@
+import { RotateCcw } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
 import { t } from '@/shared/i18n/de';
 import { tExerciseMedia } from '@/shared/i18n/de-exercise-media';
@@ -7,6 +8,7 @@ import {
   demoFiles,
   isVideo,
   loopFile,
+  loopFiles,
   mediaUrl,
   preloadVisual,
   useVisualIndex,
@@ -14,7 +16,8 @@ import {
 } from '../data/media';
 import type { Muscle } from '../model/exercise';
 import type { ExerciseVisual as Visual, MediaFile } from '../model/media';
-import { SymbolTile, type TileLook } from './SymbolTile';
+import { SymbolTile, tileSize, type TileLook } from './SymbolTile';
+import { useLoopPlayback } from './useLoopPlayback';
 import './exercise-media.css';
 
 /**
@@ -79,8 +82,10 @@ function neededFiles(
   variant: 'large' | 'compact' | 'thumb',
 ): MediaFile[] {
   if (!visual) return [];
-  if (variant !== 'large') return [visual.preview];
   const demo = visual.demo;
+  const loop = demo?.kind === 'animation' && isVideo(demo.file);
+  // Kompakt läuft die Schleife selbst, sonst steht dort wie in Listen das Vorschaubild (D-498).
+  if (variant === 'thumb' || (variant === 'compact' && !loop)) return [visual.preview];
   if (demo?.kind === 'animation')
     return isVideo(demo.file) ? [demo.still, loopFile(demo)] : [demo.still, demo.file];
   return demoFiles(visual);
@@ -148,7 +153,7 @@ function Thumb({
       className={cn(
         'block shrink-0 overflow-hidden bg-surface shadow-[inset_0_0_0_1px_var(--border)]',
         circle ? 'rounded-full' : 'rounded-tile',
-        size === 'small' ? 'size-tile' : 'size-thumb',
+        tileSize(size),
         className,
       )}
     >
@@ -169,10 +174,18 @@ export interface ExerciseDemoProps {
   name: string;
   /** Hauptmuskeln für den Rückfall ohne Visual (Etiketten neben dem Symbol). */
   muscles: readonly Muscle[];
-  /** `large`: Player aufgeklappt, Übungsdetails, Übungsinfo; `compact`: Karte „Jetzt“ schmal. */
+  /**
+   * `large`: Player aufgeklappt, Übungsdetails, Übungsinfo; `compact`: Karte „Jetzt“ schmal, die
+   * laufende Schleife klein (D-498).
+   */
   variant: 'large' | 'compact';
   /** Antippen öffnet die Übungsinfo (Player). Ohne: nur Anzeige. */
   onOpen?: () => void;
+  /**
+   * Schleife ohne Ende (Player). Sonst läuft sie zweimal und hält an; ohne `onOpen` spielt ein
+   * Tippen auf die Animation sie von vorn wieder zweimal ab (D-497).
+   */
+  endless?: boolean;
   /** Ohne Visual nichts zeigen, wo Muskeln und Gerät ohnehin daneben stehen (Übungsinfo). */
   onlyWithVisual?: boolean;
   className?: string;
@@ -193,6 +206,7 @@ function Demo({
   muscles,
   variant,
   onOpen,
+  endless = false,
   onlyWithVisual,
   className,
   entry,
@@ -230,19 +244,17 @@ function Demo({
         </span>
       );
   } else if (variant === 'compact') {
-    body = (
-      <span className="block size-thumb shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]">
-        <Img
-          file={visual.preview}
-          alt={visual.alt}
-          eager
-          className="size-full object-contain"
-          onError={fail}
-        />
-      </span>
-    );
+    body = <CompactDemo visual={visual} endless={endless} onError={fail} />;
   } else {
-    body = <LargeDemo visual={visual} name={name} onError={fail} />;
+    body = (
+      <LargeDemo
+        visual={visual}
+        name={name}
+        endless={endless}
+        replayable={!onOpen}
+        onError={fail}
+      />
+    );
   }
 
   const data = visual ? 'bild' : 'symbol';
@@ -269,46 +281,136 @@ function Demo({
   );
 }
 
+/**
+ * Stumme Schleife ohne Bedienelemente (D-403, D-497); das Standbild steht, bis das Video läuft.
+ * Eine Datei statt einer Liste von `<source>`: dieselbe Wahl wie beim Vorladen und bei der Prüfung
+ * ohne Netz (`loopFiles`), MP4 zuerst. Lädt sie nicht, versucht das Video die andere Fassung, erst
+ * danach steht der Rückfall da.
+ */
 function LoopVideo({
   demo,
   alt,
   className,
+  endless,
+  replayable,
   onError,
 }: {
   demo: { file: MediaFile; webm?: MediaFile; still: MediaFile };
   alt: string;
   className: string;
+  endless: boolean;
+  /** Tippen auf die Animation spielt sie von vorn wieder ab (nicht im Knopf „Übungsinfo“). */
+  replayable: boolean;
   onError: () => void;
 }) {
+  const { ref, stopped, replay } = useLoopPlayback(endless);
+  const files = loopFiles(demo);
+  const [attempt, setAttempt] = useState(0);
+  const file = files[attempt] ?? demo.file;
   return (
-    <video
-      className={className}
-      poster={mediaUrl(demo.still)}
-      width={demo.file.width}
-      height={demo.file.height}
-      muted
-      loop
-      playsInline
-      autoPlay
-      preload="auto"
-      disablePictureInPicture
-      aria-label={alt}
-      onError={onError}
-    >
-      {demo.webm ? <source src={mediaUrl(demo.webm)} type="video/webm" /> : null}
-      {/* Fehlt auch die letzte Quelle, meldet erst sie den Fehler. */}
-      <source src={mediaUrl(demo.file)} type="video/mp4" onError={onError} />
-    </video>
+    <>
+      <video
+        ref={ref}
+        className={className}
+        src={mediaUrl(file)}
+        poster={mediaUrl(demo.still)}
+        width={demo.file.width}
+        height={demo.file.height}
+        muted
+        playsInline
+        preload="auto"
+        disablePictureInPicture
+        aria-label={alt}
+        onError={() => {
+          if (attempt + 1 < files.length) setAttempt(attempt + 1);
+          else onError();
+        }}
+      />
+      {replayable && !endless ? (
+        // Über der ganzen Animation: Tippen spielt sie von vorn zweimal ab. Angehalten zeigt ein
+        // dezentes Symbol in der Ecke, dass das geht; die Figur in der Mitte bleibt frei.
+        <button
+          type="button"
+          aria-label={tExerciseMedia.replay}
+          data-angehalten={stopped ? '' : undefined}
+          className="absolute inset-0 block size-full cursor-pointer rounded-tile focus-visible:-outline-offset-2"
+          onClick={replay}
+        >
+          {stopped ? (
+            <span className="absolute right-2 bottom-2 grid size-9 place-items-center rounded-full bg-media-control text-media-control-fg">
+              <RotateCcw aria-hidden="true" className="size-5" />
+            </span>
+          ) : null}
+        </button>
+      ) : null}
+    </>
+  );
+}
+
+/**
+ * Kompakt in der Karte „Jetzt“ (Player schmal: iPhone, Duo zugeklappt). Mit Schleife läuft sie hier
+ * klein mit (D-498), im Seitenverhältnis des Videos, 7 rem breit statt des Vorschaubilds von
+ * 3,5 rem; bei weniger Bewegung ihr Standbild. Ohne Schleife das Vorschaubild wie bisher.
+ */
+function CompactDemo({
+  visual,
+  endless,
+  onError,
+}: {
+  visual: Visual;
+  endless: boolean;
+  onError: () => void;
+}) {
+  const reduced = useReducedMotion();
+  const demo = visual.demo;
+  if (demo?.kind === 'animation' && isVideo(demo.file)) {
+    const media = 'absolute inset-0 size-full object-cover';
+    return (
+      <span
+        data-demo-frame=""
+        data-demo-compact=""
+        style={{ aspectRatio: `${String(demo.file.width)} / ${String(demo.file.height)}` }}
+        className="relative block w-28 shrink-0 overflow-hidden rounded-tile bg-media"
+      >
+        {reduced ? (
+          <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />
+        ) : (
+          <LoopVideo
+            demo={demo}
+            alt={visual.alt}
+            className={media}
+            endless={endless}
+            replayable={false}
+            onError={onError}
+          />
+        )}
+      </span>
+    );
+  }
+  return (
+    <span className="block size-thumb shrink-0 overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]">
+      <Img
+        file={visual.preview}
+        alt={visual.alt}
+        eager
+        className="size-full object-contain"
+        onError={onError}
+      />
+    </span>
   );
 }
 
 function LargeDemo({
   visual,
   name,
+  endless,
+  replayable,
   onError,
 }: {
   visual: Visual;
   name: string;
+  endless: boolean;
+  replayable: boolean;
   onError: () => void;
 }) {
   const reduced = useReducedMotion();
@@ -317,52 +419,71 @@ function LargeDemo({
     preloadVisual(visual);
   }, [visual]);
   const demo = visual.demo ?? { kind: 'image' as const, file: visual.preview };
-  const frame =
-    'relative block aspect-[4/3] max-h-[40dvh] w-full overflow-hidden rounded-tile bg-surface shadow-[inset_0_0_0_1px_var(--border)]';
-  const media = 'absolute inset-0 size-full object-contain';
+  // Rahmen im Seitenverhältnis der Datei (D-495): Er ist nie breiter als das Bild bei seiner
+  // Höchsthöhe (`--demo-max-h`, sonst 40 % der Fensterhöhe; in der rechten Spalte des Players die
+  // Höhe ihres Bereichs) und steht dann mittig. So füllt das Bild den Rahmen immer ganz; vorher
+  // zeigte ein breiter Rahmen links und rechts Streifen in der Farbe der Fläche.
+  const size = demo.kind === 'phases' ? demo.start : demo.file;
+  const frameStyle = {
+    aspectRatio: `${String(size.width)} / ${String(size.height)}`,
+    width: `min(100%, calc(var(--demo-max-h, 40dvh) * ${String(size.width / size.height)}))`,
+  };
+  // Fläche in der Farbe des Videos, ohne Rand: Auch wo Kanten beim Skalieren halbe Pixel treffen,
+  // blitzt nichts auf. Eine Funktion, keine Komponente: Sonst baute React das Video bei jeder
+  // Darstellung neu auf.
+  const frame = (children: ReactNode, extra?: string) => (
+    <span
+      data-demo-frame=""
+      style={frameStyle}
+      className={cn('relative mx-auto block overflow-hidden rounded-tile bg-media', extra)}
+    >
+      {children}
+    </span>
+  );
+  // `cover` statt `contain`: Bei gleichem Seitenverhältnis bleibt auch beim Runden auf ganze Pixel
+  // kein Spalt zum Rand.
+  const media = 'absolute inset-0 size-full object-cover';
   switch (demo.kind) {
     case 'animation':
       // Animation nur ohne Wunsch nach weniger Bewegung, sonst das Standbild (Kapitel 9, D-403).
       if (reduced) {
-        return (
-          <span className={frame}>
-            <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />
-          </span>
+        return frame(
+          <Img file={demo.still} alt={visual.alt} eager className={media} onError={onError} />,
         );
       }
       if (isVideo(demo.file)) {
-        // Stumme Schleife ohne Bedienelemente; das Standbild steht, bis das Video läuft.
-        return (
-          <span className={frame}>
-            <LoopVideo demo={demo} alt={visual.alt} className={media} onError={onError} />
-          </span>
+        return frame(
+          <LoopVideo
+            demo={demo}
+            alt={visual.alt}
+            className={media}
+            endless={endless}
+            replayable={replayable}
+            onError={onError}
+          />,
         );
       }
-      return (
-        <span className={frame}>
-          <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />
-        </span>
+      return frame(
+        <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />,
       );
     case 'video':
       // Stumm, ohne Ton und ohne Vollbild; bei weniger Bewegung erst auf Wunsch.
-      return (
-        <span className={frame}>
-          <video
-            className={media}
-            src={mediaUrl(demo.file)}
-            poster={mediaUrl(demo.poster)}
-            width={demo.file.width}
-            height={demo.file.height}
-            muted
-            loop
-            playsInline
-            autoPlay={!reduced}
-            controls={reduced}
-            preload="metadata"
-            aria-label={visual.alt}
-            onError={onError}
-          />
-        </span>
+      return frame(
+        <video
+          className={media}
+          src={mediaUrl(demo.file)}
+          poster={mediaUrl(demo.poster)}
+          width={demo.file.width}
+          height={demo.file.height}
+          muted
+          loop
+          playsInline
+          autoPlay={!reduced}
+          controls={reduced}
+          preload="metadata"
+          aria-label={visual.alt}
+          onError={onError}
+        />,
       );
     case 'phases':
       // Zwei Phasen im Wechsel; bei weniger Bewegung nebeneinander mit Beschriftung.
@@ -373,42 +494,43 @@ function LargeDemo({
             { file: demo.end, label: tExerciseMedia.phaseEnd },
           ].map(({ file, label }) => (
             <span key={label} className="grid gap-1">
-              <span className={frame}>
+              {frame(
                 <Img
                   file={file}
                   alt={`${name}: ${label}`}
                   eager
                   className={media}
                   onError={onError}
-                />
-              </span>
+                />,
+              )}
               <span className="text-caption text-muted">{label}</span>
             </span>
           ))}
         </span>
       ) : (
-        <span className={cn(frame, 'demo-phases')}>
-          <Img
-            file={demo.start}
-            alt={tExerciseMedia.phasesAlt(visual.alt)}
-            eager
-            className={media}
-            onError={onError}
-          />
-          <Img
-            file={demo.end}
-            alt=""
-            eager
-            className={cn(media, 'demo-phase-end')}
-            onError={onError}
-          />
-        </span>
+        frame(
+          <>
+            <Img
+              file={demo.start}
+              alt={tExerciseMedia.phasesAlt(visual.alt)}
+              eager
+              className={media}
+              onError={onError}
+            />
+            <Img
+              file={demo.end}
+              alt=""
+              eager
+              className={cn(media, 'demo-phase-end')}
+              onError={onError}
+            />
+          </>,
+          'demo-phases',
+        )
       );
     case 'image':
-      return (
-        <span className={frame}>
-          <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />
-        </span>
+      return frame(
+        <Img file={demo.file} alt={visual.alt} eager className={media} onError={onError} />,
       );
   }
 }

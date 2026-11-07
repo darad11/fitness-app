@@ -6,6 +6,7 @@ import type {
   SampleTemplate,
   SampleTemplateSourceEntry,
   SetTarget,
+  Weekday,
 } from '../model/program';
 
 /** Wiederholungen der Aufwärmsätze: zwei Sätze 10 und 5, ein Satz 5 (sample-templates.md, D-243). */
@@ -38,6 +39,8 @@ export function expandSampleTemplate(
     location: source.location,
     daysPerWeek: source.daysPerWeek,
     repeat: source.repeat,
+    ...(source.repeatFromWeek ? { repeatFromWeek: source.repeatFromWeek } : {}),
+    ...(source.englishNames ? { englishNames: true } : {}),
     weeks: source.weeks.map((dayNames, w) => ({
       id: stableId(`${base}:w${String(w)}`),
       position: w,
@@ -49,7 +52,10 @@ export function expandSampleTemplate(
         return {
           id: stableId(dayBase),
           position: d,
-          name: day.name,
+          // Mehrere Tage dürfen gleich heißen, wenn sie je Woche andere Sätze haben (D-505).
+          name: day.label ?? day.name,
+          ...(day.weekday ? { weekdayHint: day.weekday as Weekday } : {}),
+          ...(day.notes ? { notes: day.notes } : {}),
           exercises: day.exercises.map((entry, e): PlannedExercise => {
             const exercise = findExercise(entry.exercise);
             if (!exercise) throw new Error(`Unbekannte Übung in ${source.key}: ${entry.exercise}`);
@@ -88,9 +94,11 @@ function buildSets(
     sets.push(set);
     return set;
   };
-  for (const reps of WARMUP_REPS[entry.warmup] ?? []) {
-    add('warmup', { repsMin: reps, repsMax: reps });
-  }
+  // Mit eigenem Ziel (D-531) bekommt jeder Aufwärmsatz dieses Ziel, sonst die festen Wiederholungen.
+  const warmups = entry.warmupTarget
+    ? Array.from({ length: entry.warmup }, () => entry.warmupTarget ?? {})
+    : (WARMUP_REPS[entry.warmup] ?? []).map((reps) => ({ repsMin: reps, repsMax: reps }));
+  for (const target of warmups) add('warmup', target);
   let last: PlannedSet | undefined;
   for (let i = 0; i < entry.working; i++) last = add('working', entry.target);
   if (entry.drop && entry.dropTarget && last) {

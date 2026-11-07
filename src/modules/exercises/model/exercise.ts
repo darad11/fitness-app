@@ -103,6 +103,10 @@ export const coreExerciseSchema = z
     trackingMode: trackingModeSchema,
     isUnilateral: z.literal(true).optional(),
     distanceUnit: distanceUnitSchema.optional(),
+    /** Ziel dieser Übung als Schlüssel, z. B. die Variante ohne Unterstützung (D-507). */
+    goal: z.string().regex(CORE_KEY_PATTERN).optional(),
+    /** Ausdrückliche Alternativen als Schlüssel; sie stehen vor den errechneten (D-507). */
+    alternatives: uniqueList(z.string().regex(CORE_KEY_PATTERN)).optional(),
   })
   .refine(
     (exercise) =>
@@ -112,6 +116,12 @@ export const coreExerciseSchema = z
   .refine(
     (exercise) => !exercise.primaryMuscles.some((m) => exercise.secondaryMuscles.includes(m)),
     { message: 'Muskel zugleich Haupt- und Nebenmuskel', path: ['secondaryMuscles'] },
+  )
+  .refine(
+    (exercise) =>
+      exercise.goal !== exercise.key &&
+      !(exercise.alternatives ?? []).some((key) => key === exercise.key || key === exercise.goal),
+    { message: 'Ziel oder Alternative verweist auf die Übung selbst oder doppelt', path: ['goal'] },
   );
 
 export type CoreExerciseData = z.infer<typeof coreExerciseSchema>;
@@ -123,6 +133,18 @@ export const coreLibrarySchema = z
     exercises: z.array(coreExerciseSchema).min(1),
   })
   .superRefine((library, ctx) => {
+    const keys = new Set(library.exercises.map((exercise) => exercise.key));
+    library.exercises.forEach((exercise, index) => {
+      for (const key of [exercise.goal, ...(exercise.alternatives ?? [])]) {
+        if (key !== undefined && !keys.has(key)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `Unbekannter Schlüssel in Ziel oder Alternativen: ${key}`,
+            path: ['exercises', index, 'goal'],
+          });
+        }
+      }
+    });
     for (const field of ['key', 'name'] as const) {
       const seen = new Set<string>();
       library.exercises.forEach((exercise, index) => {

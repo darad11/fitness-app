@@ -101,10 +101,11 @@ describe('Verlauf (S-11, AK-HIS-01, AK-HIS-02)', () => {
     expect(screen.getByText('Abgeschlossenes Training')).toBeInTheDocument();
     const squat = screen.getByRole('region', { name: 'Kniebeuge mit Langhantel' });
     const rows = within(squat).getAllByRole('listitem');
-    expect(rows[0]).toHaveTextContent('Aufwärmsatz 1–Übersprungen');
-    expect(rows[2]).toHaveTextContent('Arbeitssatz 160 × 8Erledigt');
+    // Gezählt je Typ wie im Player (D-537): „Aufwärmsatz 1 von 2“, „Arbeitssatz 1 von 3“.
+    expect(rows[0]).toHaveTextContent(['Aufwärmsatz 1 von 2', '–', 'Übersprungen'].join(''));
+    expect(rows[2]).toHaveTextContent(['Arbeitssatz 1 von 3', '60 × 8', 'Erledigt'].join(''));
     // „Beenden“ mit offenen Sätzen markiert sie als übersprungen (AK-TRN-19).
-    expect(rows[3]).toHaveTextContent('Arbeitssatz 2–Übersprungen');
+    expect(rows[3]).toHaveTextContent(['Arbeitssatz 2 von 3', '–', 'Übersprungen'].join(''));
     expect(screen.getAllByRole('definition').map((d) => d.textContent)).toEqual([
       '25:00',
       '5',
@@ -129,7 +130,9 @@ describe('Verlauf bearbeiten und löschen (AK-HIS-03, AK-HIS-04)', () => {
     const title = await screen.findByLabelText('Titel');
     await user.clear(title);
     await user.type(title, 'Tag A schwer');
-    const weight = screen.getByLabelText('Gewicht in kg, Kniebeuge mit Langhantel, Arbeitssatz 1');
+    const weight = screen.getByLabelText(
+      'Gewicht in kg, Kniebeuge mit Langhantel, Arbeitssatz 1 von 3',
+    );
     expect(weight).toHaveValue('60');
     await user.clear(weight);
     await user.type(weight, '62,5');
@@ -142,7 +145,7 @@ describe('Verlauf bearbeiten und löschen (AK-HIS-03, AK-HIS-04)', () => {
     await user.click(screen.getByRole('button', { name: 'Bearbeiten' }));
     await user.click(
       await screen.findByRole('button', {
-        name: 'Satz entfernen, Kniebeuge mit Langhantel, Arbeitssatz 1',
+        name: 'Satz entfernen, Kniebeuge mit Langhantel, Arbeitssatz 1 von 3',
       }),
     );
     await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
@@ -186,9 +189,9 @@ describe('Verlauf bearbeiten und löschen (AK-HIS-03, AK-HIS-04)', () => {
     renderAt(`/training/verlauf/${session.id}`);
     await screen.findByRole('heading', { level: 1, name: 'Rudern' });
     await user.click(screen.getByRole('button', { name: 'Bearbeiten' }));
-    const distance = await screen.findByLabelText('Distanz in m, Rudergerät, Arbeitssatz 1');
+    const distance = await screen.findByLabelText('Distanz in m, Rudergerät, Arbeitssatz');
     expect(distance).toHaveValue('2000');
-    expect(screen.getByLabelText('Zeit in Minuten, Rudergerät, Arbeitssatz 1')).toHaveValue('10');
+    expect(screen.getByLabelText('Zeit in Minuten, Rudergerät, Arbeitssatz')).toHaveValue('10');
     await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));
     await waitFor(() => {
       expect(screen.queryByRole('button', { name: 'Änderungen speichern' })).toBeNull();
@@ -203,7 +206,7 @@ describe('Verlauf bearbeiten und löschen (AK-HIS-03, AK-HIS-04)', () => {
     renderAt(`/training/verlauf/${session.id}`);
     await user.click(await screen.findByRole('button', { name: 'Bearbeiten' }));
     const weight = await screen.findByLabelText(
-      'Gewicht in kg, Kniebeuge mit Langhantel, Arbeitssatz 1',
+      'Gewicht in kg, Kniebeuge mit Langhantel, Arbeitssatz 1 von 3',
     );
     await user.clear(weight);
     await user.click(screen.getByRole('button', { name: 'Änderungen speichern' }));

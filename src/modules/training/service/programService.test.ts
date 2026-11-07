@@ -4,7 +4,7 @@ import { stableId } from '@/shared/lib/uuid';
 import { createTestRuntime } from '@/shared/testing/db';
 import { loadTrainingState, TRAINING_STATE_ID } from '../data/trainingStateRepository';
 import { loadCoreExercises } from '@/modules/exercises';
-import { addExercise, updateSet } from '../calc/programEdit';
+import { addExercise, addWeek, removeWeek, updateSet } from '../calc/programEdit';
 import { getOwnProgram, listOwnPrograms, programDef } from '../data/programRepository';
 import { loadSampleTemplate } from '../data/sampleTemplates';
 import { getDoc } from '@/shared/db';
@@ -151,6 +151,30 @@ describe('Eigene Programme (AK-PRG-01 bis AK-PRG-06, AK-PRG-10, AK-PRG-11, D-257
     expect(firstExercise?.originalName).toBe(sample.weeks[0]?.days[0]?.exercises[0]?.originalName);
   });
 
+  it('übernimmt Dali’s PPLC mit Wiederholung ab Woche 8, Wochentagen und Hinweisen (D-505)', async () => {
+    const sample = await loadSampleTemplate('dali_pplc');
+    if (!sample) throw new Error('Dali’s PPLC fehlt');
+    const copy = await copyProgram(rt, sample, { name: sample.name, kind: 'program' });
+    expect(copy).toMatchObject({ repeat: true, repeatFromWeek: 8 });
+    const days = copy.weeks.flatMap((week) => week.days);
+    expect(days.slice(0, 4).map((day) => [day.name, day.weekdayHint])).toEqual([
+      ['Push', 1],
+      ['Pull', 2],
+      ['Legs', 4],
+      ['Compound', 6],
+    ]);
+    expect(copy.weeks[6]?.days[0]?.notes).toBe(
+      'Diese Woche ist leichter: etwa die Hälfte der Sätze.',
+    );
+    expect((await getOwnProgram(rt.db, copy.id))?.repeatFromWeek).toBe(8);
+    // Übungsnamen auf Englisch bleiben in der Kopie und lassen sich abschalten (D-506).
+    expect(copy.englishNames).toBe(true);
+    const german = await editProgram(rt, copy.id, (plan) => ({ ...plan, englishNames: false }));
+    expect(german).not.toHaveProperty('englishNames');
+    const english = await editProgram(rt, copy.id, (plan) => ({ ...plan, englishNames: true }));
+    expect(english.englishNames).toBe(true);
+  });
+
   it('dupliziert, speichert als Vorlage und verwendet eine Vorlage (AK-PRG-05, AK-PRG-06)', async () => {
     const original = await createProgram(rt, { name: 'Plan', ...names });
     const duplicate = await copyProgram(rt, original, { name: 'Plan (Kopie)', kind: 'program' });
@@ -202,6 +226,33 @@ describe('Eigene Programme (AK-PRG-01 bis AK-PRG-06, AK-PRG-10, AK-PRG-11, D-257
     const plan = planFromTemplateDay(program, 0, 0, (id) => lookup.get(id), 'program');
     expect(plan.exercises[0]?.sets[0]?.target).toEqual({ repsMin: 3, repsMax: 5, weightKg: 100 });
     expect(plan.program).not.toHaveProperty('sampleKey');
+  });
+
+  it('Wiederholen ab Woche n: speichert ab Woche 2, Woche 1 ohne Feld, fehlt die Woche, gilt Woche 1 (D-505)', async () => {
+    const program = await createProgram(rt, { name: 'Block', firstWeek: 'Woche 1', firstDay: 'A' });
+    const three = await editProgram(rt, program.id, (plan) => ({
+      ...plan,
+      repeat: true,
+      repeatFromWeek: 3,
+      weeks: addWeek(
+        addWeek(plan.weeks, { week: 'Woche 2', day: 'A' }, uuidv4),
+        { week: 'Woche 3', day: 'A' },
+        uuidv4,
+      ),
+    }));
+    expect(three.repeatFromWeek).toBe(3);
+    const first = await editProgram(rt, program.id, (plan) => ({ ...plan, repeatFromWeek: 1 }));
+    expect(first).not.toHaveProperty('repeatFromWeek');
+    await editProgram(rt, program.id, (plan) => ({ ...plan, repeatFromWeek: 3 }));
+    const shorter = await editProgram(rt, program.id, (plan) => ({
+      ...plan,
+      weeks: removeWeek(plan.weeks, plan.weeks[2]!.id),
+    }));
+    expect(shorter).not.toHaveProperty('repeatFromWeek');
+    // Andere Änderungen behalten die Einstellung.
+    await editProgram(rt, program.id, (plan) => ({ ...plan, repeatFromWeek: 2 }));
+    const renamed = await editProgram(rt, program.id, (plan) => ({ ...plan, name: 'Block 2' }));
+    expect(renamed.repeatFromWeek).toBe(2);
   });
 
   it('lehnt ein Programm ohne Woche oder mit leerer Woche ab, ohne zu speichern', async () => {

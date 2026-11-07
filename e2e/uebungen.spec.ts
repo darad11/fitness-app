@@ -28,8 +28,22 @@ function visual(key: string) {
   };
 }
 
-/** Testliste mit Visuals für Kniebeuge und Bankdrücken; `broken` liefert 404 für diese Dateien. */
-async function serveVisuals(context: BrowserContext, broken: string[] = []) {
+/** Testliste mit Visuals für Kniebeuge und Bankdrücken; `broken` liefert 404 für diese Dateien,
+ *  `change` ändert die Einträge vor dem Ausliefern (D-488). */
+function testVisuals() {
+  return {
+    back_squat_barbell: visual('back_squat_barbell'),
+    bench_press_barbell: visual('bench_press_barbell'),
+  };
+}
+
+async function serveVisuals(
+  context: BrowserContext,
+  broken: string[] = [],
+  change?: (visuals: ReturnType<typeof testVisuals>) => void,
+) {
+  const visuals = testVisuals();
+  change?.(visuals);
   await context.route('**/uebungen/medien.json', (route) =>
     route.fulfill({
       json: {
@@ -37,10 +51,7 @@ async function serveVisuals(context: BrowserContext, broken: string[] = []) {
         sources: {
           test: { name: 'Test', url: 'https://example.org/', license: 'CC0', commercialUse: true },
         },
-        visuals: {
-          back_squat_barbell: visual('back_squat_barbell'),
-          bench_press_barbell: visual('bench_press_barbell'),
-        },
+        visuals,
       },
     }),
   );
@@ -54,6 +65,14 @@ async function serveVisuals(context: BrowserContext, broken: string[] = []) {
   });
 }
 
+/** Adresse einer ausgelieferten Datei der Übungsbilder: Der Name trägt die Prüfsumme des Inhalts
+ *  (`kniebeuge-poster-1a2b3c4d.webp`, D-494), damit eine neu gerenderte Schleife eine neue Adresse
+ *  bekommt. Geprüft werden Übung und Art der Datei, nicht die Prüfsumme selbst. */
+function medium(name: string): RegExp {
+  const dot = name.lastIndexOf('.');
+  return new RegExp(`^/uebungen/medien/${name.slice(0, dot)}-[0-9a-f]{8}\\${name.slice(dot)}$`);
+}
+
 /** Zeile der Übungsliste mit diesem Namen. */
 function row(page: Page, name: string) {
   return page.getByRole('link', { name: new RegExp(`^${name}`) }).first();
@@ -65,17 +84,86 @@ async function startTemplateDay(page: Page) {
   await expect(page.getByRole('button', { name: 'Beenden', exact: true })).toBeVisible();
 }
 
-test('Übungsliste: Pilot-Übungen mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403)', async ({
+test('Übungsliste: Übungen mit Animation mit Vorschaubild, sonst Symbol in der Kachel, nie ein leerer Kasten (D-397, D-403, D-463, D-465, D-467, D-469, D-474, D-486, D-490, D-492, D-509, D-513, D-516, D-517, D-520, D-521, D-526, D-527, D-528)', async ({
   page,
 }) => {
   await openPage(page, '/uebungen');
-  const dumbbells = row(page, 'Bankdrücken mit Kurzhanteln');
-  await expect(dumbbells.locator('[data-visual="symbol"] svg')).toBeVisible();
-  // Ausgeliefert sind Animationen für drei Übungen (Pilot 3D, D-402).
-  await expect(page.locator('ul[aria-label] img')).toHaveCount(3);
+  const smith = row(page, 'Bankdrücken an der Multipresse');
+  await expect(smith.locator('[data-visual="symbol"] svg')).toBeVisible();
+  // Ausgeliefert sind Animationen für 32 Übungen: die drei Pilot-Übungen (D-402), die Familie
+  // „Waagrechtes Drücken“ mit Kurzhanteln (D-463), die Beinpresse (D-465), die Familie „Rumpf“ (D-467), das
+  // Seitheben mit Kurzhanteln (D-469), das Rudern am Kabel, sitzend (D-474), der Beinbeuger liegend (D-486), das
+  // Rumänische Kreuzheben mit Kurzhanteln (D-490), das Schulterdrücken an der Maschine (D-492), die Klimmzüge
+  // mit Unterstützung (D-509), die Dips mit Unterstützung und die Hackenschmidt-Kniebeuge (D-513) und die
+  // Familien „Beine isoliert“ (D-516), „Arme beugen und strecken“ (D-517), „Waagrechtes Ziehen“ (D-520),
+  // „Schulter und Brust isoliert“ (D-521), „Rumpf“ (D-526) und „Hüftbeuge“
+  // (D-527) und „Senkrechtes Drücken“ (D-528) aus Dali’s PPLC.
+  await expect(page.locator('ul[aria-label] img')).toHaveCount(32);
+  await expect(row(page, 'Bankdrücken mit Kurzhanteln').locator('img')).toHaveAttribute(
+    'src',
+    medium('bankdruecken_kh-vorschau.webp'),
+  );
+  const legPress = row(page, 'Beinpresse(?!,)').locator('img');
+  await legPress.scrollIntoViewIfNeeded();
+  await expect(legPress).toHaveAttribute('src', medium('beinpresse-vorschau.webp'));
+  const plank = row(page, 'Unterarmstütz').locator('img');
+  await plank.scrollIntoViewIfNeeded();
+  await expect(plank).toHaveAttribute('src', medium('unterarmstuetz-vorschau.webp'));
+  const crunch = row(page, 'Crunches(?! am)').locator('img');
+  await crunch.scrollIntoViewIfNeeded();
+  await expect(crunch).toHaveAttribute('src', medium('crunch-vorschau.webp'));
+  const lateralRaise = row(page, 'Seitheben mit Kurzhanteln').locator('img');
+  await lateralRaise.scrollIntoViewIfNeeded();
+  await expect(lateralRaise).toHaveAttribute('src', medium('seitheben_kh-vorschau.webp'));
+  const cableRow = row(page, 'Rudern am Kabel, sitzend').locator('img');
+  await cableRow.scrollIntoViewIfNeeded();
+  await expect(cableRow).toHaveAttribute('src', medium('rudern_kabel-vorschau.webp'));
+  const legCurl = row(page, 'Beinbeuger liegend').locator('img');
+  await legCurl.scrollIntoViewIfNeeded();
+  await expect(legCurl).toHaveAttribute('src', medium('beinbeuger_liegend-vorschau.webp'));
+  const shoulderPress = row(page, 'Schulterdrücken an der Maschine').locator('img');
+  await shoulderPress.scrollIntoViewIfNeeded();
+  await expect(shoulderPress).toHaveAttribute(
+    'src',
+    medium('schulterdruecken_maschine-vorschau.webp'),
+  );
+  const pullUp = row(page, 'Klimmzüge mit Unterstützung').locator('img');
+  await pullUp.scrollIntoViewIfNeeded();
+  await expect(pullUp).toHaveAttribute('src', medium('klimmzug_unterstuetzt-vorschau.webp'));
+  const dip = row(page, 'Dips mit Unterstützung').locator('img');
+  await dip.scrollIntoViewIfNeeded();
+  await expect(dip).toHaveAttribute('src', medium('dip_unterstuetzt-vorschau.webp'));
+  const hackSquat = row(page, 'Hackenschmidt-Kniebeuge').locator('img');
+  await hackSquat.scrollIntoViewIfNeeded();
+  await expect(hackSquat).toHaveAttribute('src', medium('hackenschmidt-vorschau.webp'));
+  for (const [name, datei] of [
+    ['Beinstrecker', 'beinstrecker'],
+    ['Beinbeuger sitzend', 'beinbeuger_sitzend'],
+    ['Wadenheben stehend', 'wadenheben_stehend'],
+    ['Wadenheben sitzend', 'wadenheben_sitzend'],
+    ['Bizepscurls mit Kurzhanteln', 'bizepscurl_kh'],
+    ['Hammercurls(?! am)', 'hammercurl_kh'],
+    ['Trizepsdrücken am Kabel(?!,)', 'trizepsdruecken_kabel'],
+    ['Rudern mit Langhantel, vorgebeugt', 'rudern_langhantel'],
+    ['Rudern an der Maschine', 'rudern_maschine'],
+    ['High Row an der Maschine', 'high_row_maschine'],
+    ['Fliegende am Kabel', 'fliegende_kabel'],
+    ['Reverse Butterfly an der Maschine', 'reverse_butterfly'],
+    ['Crunches am Kabel, kniend', 'kabelcrunch_kniend'],
+    ['Kreuzheben mit Langhantel', 'kreuzheben_langhantel'],
+    ['Schulterdrücken mit Langhantel, stehend', 'schulterdruecken_langhantel'],
+    ['Schulterdrücken mit Kurzhanteln, sitzend', 'schulterdruecken_kh_sitzend'],
+  ] as const) {
+    const bild = row(page, name).locator('img');
+    await bild.scrollIntoViewIfNeeded();
+    await expect(bild).toHaveAttribute('src', medium(`${datei}-vorschau.webp`));
+  }
+  const romanian = row(page, 'Rumänisches Kreuzheben mit Kurzhanteln').locator('img');
+  await romanian.scrollIntoViewIfNeeded();
+  await expect(romanian).toHaveAttribute('src', medium('rumaenisches_kreuzheben_kh-vorschau.webp'));
   const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
   await squat.scrollIntoViewIfNeeded();
-  await expect(squat).toHaveAttribute('src', '/uebungen/medien/kniebeuge-vorschau.webp');
+  await expect(squat).toHaveAttribute('src', medium('kniebeuge-vorschau.webp'));
   await expect.poll(() => squat.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBe(240);
   await expect(row(page, 'Latziehen').locator('[data-visual="bild"]')).toHaveAttribute(
     'data-shape',
@@ -114,6 +202,35 @@ test('Übungsliste mit Visuals: richtiges Bild je Übung, Fehler beim Laden zeig
   await expect(
     row(page, 'Bankdrücken mit Kurzhanteln').locator('[data-visual="symbol"]'),
   ).toBeVisible();
+});
+
+test('Übungsliste: Ein ungültiger Eintrag der Bildliste fällt allein heraus und steht als Warnung in der Konsole (D-488)', async ({
+  page,
+  context,
+}) => {
+  const warnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'warning') warnings.push(message.text());
+  });
+  // Bankdrücken mit einem Alternativtext über der Grenze von 240 Zeichen
+  await serveVisuals(context, [], (visuals) => {
+    visuals.bench_press_barbell.alt = 'x'.repeat(241);
+  });
+  await openPage(page, '/uebungen');
+  const squat = row(page, 'Kniebeuge mit Langhantel').locator('img');
+  await squat.scrollIntoViewIfNeeded();
+  await expect(squat).toHaveAttribute('src', '/uebungen/medien/back_squat_barbell-vorschau.svg');
+  const bench = row(page, 'Bankdrücken mit Langhantel');
+  await bench.scrollIntoViewIfNeeded();
+  await expect(bench.locator('[data-visual="symbol"]')).toBeVisible();
+  await expect(bench.locator('img')).toHaveCount(0);
+  await expect
+    .poll(() =>
+      warnings.filter((text) =>
+        text.startsWith('Übungsbilder: Eintrag bench_press_barbell übersprungen (alt: '),
+      ),
+    )
+    .toHaveLength(1);
 });
 
 test('Player: Demonstration zugeklappt kompakt, aufgeklappt groß, gehört zur aktuellen Übung (D-397)', async ({
@@ -295,7 +412,7 @@ test('Teil für Übungsbilder lädt nicht: Training läuft mit Symbol weiter, ke
   await picker.getByLabel('Übungen suchen').fill('kniebeuge mit lang');
   await picker.getByRole('button', { name: /^Kniebeuge mit Langhantel/ }).click();
   await expect(picker).toBeHidden();
-  const set = 'Kniebeuge mit Langhantel, Arbeitssatz 1';
+  const set = 'Kniebeuge mit Langhantel, Arbeitssatz';
   await page.getByLabel(`Gewicht in kg, ${set}`).fill('60');
   await page.getByLabel(`Wiederholungen, ${set}`).fill('5');
   await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();
@@ -371,7 +488,7 @@ test('Pilot-Animation: Schleife im Player aufgeklappt und in den Details, Standb
   await startTemplateDay(page);
   const demo = page.getByRole('region', { name: 'Ausführung der aktuellen Übung' });
   const video = demo.locator('video');
-  await expect(video).toHaveAttribute('poster', '/uebungen/medien/kniebeuge-poster.webp');
+  await expect(video).toHaveAttribute('poster', medium('kniebeuge-poster.webp'));
   await expect(video).toHaveJSProperty('muted', true);
   await expect(video).toHaveJSProperty('loop', true);
   // Die Schleife läuft wirklich (Zeit schreitet fort).
@@ -383,15 +500,16 @@ test('Pilot-Animation: Schleife im Player aufgeklappt und in den Details, Standb
   await openPage(page, '/uebungen');
   await row(page, 'Latziehen').click();
   const detail = page.locator('[data-demo="bild"] video');
-  await expect(detail.locator('source').last()).toHaveAttribute(
-    'src',
-    '/uebungen/medien/latziehen.mp4',
+  // Eine Datei: MP4 (H.264), wo der Browser es kann, sonst WebM (D-497).
+  const h264 = await page.evaluate(
+    () => document.createElement('video').canPlayType('video/mp4; codecs="avc1.64001E"') !== '',
   );
+  await expect(detail).toHaveAttribute('src', medium(h264 ? 'latziehen.mp4' : 'latziehen.webm'));
 
   // Weniger Bewegung: nur das Standbild, kein Video.
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.reload();
   const still = page.locator('[data-demo="bild"] img');
-  await expect(still).toHaveAttribute('src', '/uebungen/medien/latziehen-poster.webp');
+  await expect(still).toHaveAttribute('src', medium('latziehen-poster.webp'));
   await expect(page.locator('[data-demo="bild"] video')).toHaveCount(0);
 });

@@ -13,7 +13,7 @@ export interface SetRowProps {
   set: SessionSet;
   /** Anzeige wie „1", „A" oder „D". */
   label: string;
-  /** Lesbare Bezeichnung für Screenreader, z. B. „Arbeitssatz 2". */
+  /** Lesbare Bezeichnung für Screenreader, z. B. „Kniebeuge, Arbeitssatz 2 von 3“ (D-537). */
   name: string;
   previous: SetValues | undefined;
   suggestion: SetValues;
@@ -57,7 +57,7 @@ export function SetRow(props: SetRowProps) {
       className={cn(
         // Scroll-Abstand zum klebenden Kopf mit Pause (gemessen, `useStableSetView`) und zur
         // Fußleiste: Fokus und Tastatur scrollen ein Feld nie hinter den Kopf (F5, D-323).
-        'scroll-mt-[calc(var(--player-head,0px)+0.75rem)] scroll-mb-32 rounded-input px-2 py-1.5',
+        'scroll-mt-[calc(var(--player-head,0px)+var(--satzkopf,0px)+0.75rem)] scroll-mb-32 rounded-input px-2 py-1.5',
         set.type === 'drop' && 'ml-6',
         current && 'bg-accent-soft',
         skipped && 'opacity-70',
@@ -201,7 +201,10 @@ export function SetRow(props: SetRowProps) {
                 onClick={() => {
                   stepValue(-1);
                 }}
-                aria-label={tSession.stepDown(props.number(props.weightStep))}
+                aria-label={tSession.stepDown(
+                  props.number(props.weightStep),
+                  weight.field === 'assistKg',
+                )}
               >
                 <Minus aria-hidden="true" className="size-4" />
                 {props.number(props.weightStep)}
@@ -212,7 +215,10 @@ export function SetRow(props: SetRowProps) {
                 onClick={() => {
                   stepValue(1);
                 }}
-                aria-label={tSession.stepUp(props.number(props.weightStep))}
+                aria-label={tSession.stepUp(
+                  props.number(props.weightStep),
+                  weight.field === 'assistKg',
+                )}
               >
                 <Plus aria-hidden="true" className="size-4" />
                 {props.number(props.weightStep)}
@@ -243,7 +249,11 @@ export function SetHeader({ exercise }: { exercise: SessionExercise }) {
   return (
     <div
       aria-hidden="true"
-      className="eyebrow mb-1 flex items-center gap-2 px-2 text-muted @max-sm:gap-1.5"
+      // Spaltenköpfe laufen mit (D-535): Steht der Kopf über der Liste, kleben sie unter ihm
+      // (`player-layout.css`); die Fläche reicht über das Polster der Karte, der Abstand zu den
+      // Sätzen ist Innenabstand, so verdecken sie die Sätze darunter ganz.
+      data-satzkopf=""
+      className="eyebrow -mx-3 flex items-center gap-2 px-5 pb-1 text-muted @max-sm:gap-1.5"
     >
       <span className="w-8 shrink-0 text-center">#</span>
       <span className="w-14 shrink-0 @max-sm:w-12 @max-[20rem]:hidden">{tSession.previous}</span>

@@ -138,6 +138,9 @@ export const tTrainingPages = {
       listTitle: 'Einheiten',
       notFound: 'Für diese Übung gibt es noch keine Einheit.',
       ormHint: 'Geschätzt nach Epley, nur für 1 bis 10 Wiederholungen.',
+      // Übungen mit Unterstützung, z. B. Dip und Pull-Up an der Maschine (D-507).
+      assistBest: 'Unterstützung im besten Satz',
+      assistHint: 'Weniger Unterstützung ist Fortschritt: Sinkt der Wert, wirst du stärker.',
     },
   },
   rest: {

@@ -7,7 +7,8 @@
  * Voraussetzung: `pnpm build`, ein laufendes `pnpm preview` (http://localhost:4173) und je Fassung
  * ein Ordner `<FASSUNGEN_MEDIEN>/<Fassung>/` mit `kniebeuge-poster.webp`, `kniebeuge-vorschau.webp`,
  * `bankdruecken-poster.webp`, `bankdruecken-vorschau.webp`, `latziehen-vorschau.webp`. Die Dateien
- * werden nur in `dist/uebungen/medien/` getauscht (Ausgabe des Builds, nicht im Repository) und am
+ * werden nur in `dist/uebungen/medien/` getauscht (Ausgabe des Builds, nicht im Repository; dort
+ * tragen sie die Prüfsumme im Namen, D-494, der Name bleibt beim Tausch) und am
  * Ende zurückgesetzt; die Seiten laufen mit „Bewegung reduzieren“, dann zeigt der Player das
  * Standbild (D-403). Aufruf:
  *
@@ -18,6 +19,7 @@
  */
 import { copyFile, mkdir, readdir } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
+import { aktuelleDatei } from './uebungen-medien.mjs';
 
 const BASE = process.env.SCREENS_BASE_URL ?? 'http://localhost:4173';
 const MEDIEN = process.env.FASSUNGEN_MEDIEN ?? '/tmp/app-medien';
@@ -43,7 +45,8 @@ if (fassungen.length === 0) {
 await mkdir(OUT, { recursive: true });
 const sicherung = `${OUT}/_original`;
 await mkdir(sicherung, { recursive: true });
-for (const datei of DATEIEN) await copyFile(`${DIST}/${datei}`, `${sicherung}/${datei}`);
+const ZIELE = Object.fromEntries(DATEIEN.map((datei) => [datei, aktuelleDatei(DIST, datei)]));
+for (const datei of DATEIEN) await copyFile(ZIELE[datei], `${sicherung}/${datei}`);
 
 const browser = await chromium.launch(
   process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {},
@@ -105,7 +108,7 @@ try {
     const vorhanden = await readdir(`${MEDIEN}/${fassung}`);
     for (const datei of DATEIEN) {
       if (!vorhanden.includes(datei)) throw new Error(`${fassung}: ${datei} fehlt`);
-      await copyFile(`${MEDIEN}/${fassung}/${datei}`, `${DIST}/${datei}`);
+      await copyFile(`${MEDIEN}/${fassung}/${datei}`, ZIELE[datei]);
     }
     const page = await newPage();
     await startWith(page, 'kniebeuge mit lang', 'Kniebeuge mit Langhantel');
@@ -131,7 +134,7 @@ try {
     await seite.context().close();
   }
 } finally {
-  for (const datei of DATEIEN) await copyFile(`${sicherung}/${datei}`, `${DIST}/${datei}`);
+  for (const datei of DATEIEN) await copyFile(`${sicherung}/${datei}`, ZIELE[datei]);
   await browser.close();
   console.log('dist/uebungen/medien zurückgesetzt');
 }

@@ -71,9 +71,11 @@ describe('Leseposition beim Größenwechsel (D-375, Nachtrag zu D-384)', () => {
 
   /**
    * Rahmen mit einem Absatz auf der Leselinie. jsdom misst nichts: Lage des Absatzes und
-   * `elementsFromPoint` sind nachgestellt. Gibt Rahmen und Setzer für die Oberkante zurück.
+   * `elementsFromPoint` sind nachgestellt. Mit `gap` liegt auf der Linie selbst nur der Rahmen
+   * (Lücke zwischen Karten), der Absatz erst darunter. Gibt Rahmen und Setzer für die Oberkante
+   * zurück.
    */
-  async function renderReading() {
+  async function renderReading(gap = false) {
     const router = createMemoryRouter([
       {
         path: '/',
@@ -99,7 +101,9 @@ describe('Leseposition beim Größenwechsel (D-375, Nachtrag zu D-384)', () => {
     vi.spyOn(main, 'getBoundingClientRect').mockReturnValue(
       DOMRect.fromRect({ x: 0, y: 0, width: 400, height: 2000 }),
     );
-    document.elementsFromPoint = () => [text, main];
+    const line = window.innerHeight * 0.25;
+    document.elementsFromPoint = (_x: number, y: number) =>
+      gap && y <= line ? [main] : [text, main];
     // Gescrollt: Der Absatz auf der Leselinie wird zum Bezug.
     frame.scrollTop = 200;
     frame.dispatchEvent(new Event('scroll'));
@@ -118,6 +122,13 @@ describe('Leseposition beim Größenwechsel (D-375, Nachtrag zu D-384)', () => {
 
   it('gleicht aus, wenn sich der Absatz verschiebt', async () => {
     const { frame, moveTo } = await renderReading();
+    moveTo(150);
+    window.dispatchEvent(new Event('resize'));
+    expect(frame.scrollTop).toBe(250);
+  });
+
+  it('nimmt bei einer Lücke auf der Leselinie das Element knapp darunter (D-504)', async () => {
+    const { frame, moveTo } = await renderReading(true);
     moveTo(150);
     window.dispatchEvent(new Event('resize'));
     expect(frame.scrollTop).toBe(250);

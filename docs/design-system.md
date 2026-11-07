@@ -51,6 +51,8 @@ Geprüft mit einem eigenen WCAG-Kontrastskript (Werte gerundet). Text braucht 4,
 | `--danger` | `#C53030` | `#F26D6D` | Löschen, Fehler | 5,5 / 6,0 |
 | `--accent-soft`, `--success-soft`, `--warning-soft`, `--danger-soft` | `#e6edf9`, `#e2f3ea`, `#fbf0da`, `#fbe7e7` | `#15263f`, `#10302a`, `#33290f`, `#3a1c1f` | Tonflächen für Chips, Etiketten, Hinweise, aktiven Tab; Text darauf in der Vollfarbe | je ≥ 4,5 (Test) |
 | `--ink` | `#151b2b` | `#1a2030` | früher Bühne; seit FORM nur noch Fläche hinter dem Kamerabild des Scanners (die Bühne nutzt `--bg-elevated`); `--ink-2`, `--on-ink` und `--on-ink-muted` entfallen (D-320) | – |
+| `--media-bg` | `#0d121a` | `#0d121a` | Grund der gerenderten Übungsanimationen (immer dunkel); ihr Rahmen hat genau diese Farbe, ohne Rand, damit an den Kanten nichts aufblitzt (D-495) | – |
+| `--media-control`, `--media-control-fg` | `#0d121ad9`, `#f2f3f4` | gleich | Symbol „Animation wiederholen“ auf der angehaltenen Animation: dunkle Scheibe, helles Zeichen (D-497) | ≥ 4,5 auch über Weiß (Test) |
 | `--shadow-card`, `--shadow-float` | weich, 4 bis 6 % | 25 bis 45 % | Karten; schwebende Elemente (Sheet, Toast, Menü) | – |
 
 Statusfarben erscheinen nie allein: immer mit Symbol und Text.
@@ -277,11 +279,13 @@ Schritt G Grundausbau (D-261): Navigation mit fünf Bereichen (Heute, Training, 
 - **Übungsblöcke:** Name, Hauptmuskelgruppe, Notiz; darunter Satzzeilen. Jede Zeile zeigt Typ (A = Aufwärmen, Zahl = Arbeitssatz, D = Drop-Satz, eingerückt), Vorwert („60 × 8"), Felder für Gewicht und Wiederholungen (bzw. Zeit mit Start-Knopf) und den Knopf „erledigt". Erledigte Sätze erscheinen in Erfolgsfarbe mit Häkchen.
 - **Freie Reihenfolge:** Jede Zeile ist jederzeit bedienbar; die App hebt den nächsten offenen Satz hervor, erzwingt ihn aber nicht.
 - **Vorschläge:** Platzhalter zeigen Vorwert oder festen Zielwert; „erledigt" übernimmt sichtbare Vorschläge (D-225).
-- **Bühne „Jetzt":** Unter dem Kopf eine Karte in `--ink` mit der aktuellen Übung, Satz x von n, Ziel, Vorwert und der nächsten Übung; nach dem letzten Satz „Alle Sätze erledigt".
+- **Bühne „Jetzt":** Unter dem Kopf eine Karte in `--ink` mit der aktuellen Übung, dem Namen des Satzes („Aufwärmsatz“, „Arbeitssatz 2 von 3“, je Typ gezählt wie in Pause, Satzliste und Verlauf, D-537), Ziel, Vorwert und der nächsten Übung; nach dem letzten Satz „Alle Sätze erledigt".
 - **Pause als Bühne (`RestStage`):** Erscheint nach „erledigt" im klebenden Kopf und ersetzt „Jetzt": Restzeit 40 px, nächster Satz mit Ziel und Vorwert, −15 s, +15 s, Überspringen; Pfeil öffnet die Vollansicht mit Timer 64 px. Überziehung „+0:42" färbt die Bühne in Akzent (AK-TRN-12).
 - **Kopf:** Vorzeile (Programm und Woche oder „Freies Training"), Titel, Fortschrittsbalken mit Dauer, „x von n Sätzen", Schaltfläche „Beenden".
 - **Aktionsleiste:** „Satz erledigt" (groß) für den hervorgehobenen Satz und „Übung hinzufügen"; „Beenden" steht im Kopf, „Training verwerfen" am Ende der Liste.
 - **Speicherung:** Ohne Speichern-Knopf; jede Änderung wird sofort gesichert. Bei einem Fehler erscheint ein Hinweis direkt am betroffenen Satz.
+- **Zwei Spalten (ab 48 rem Inhaltsbreite, D-380, D-495):** Links die Übungen mit den Sätzen, nur sie scrollen. Rechts steht die Steuerung fest und passt in die Höhe über der Fußleiste: Kopf mit Pause, Demonstration (skaliert mit dem Platz, Rahmen im Seitenverhältnis des Videos), „Jetzt“, „Als Nächstes“ nur mit ganzen Einträgen. Unter 36 rem Fensterhöhe scrollt die rechte Spalte für sich.
+- **Vollbildansichten (D-495):** Große Pause, Anmeldung, Wiederherstellung und Dialoge in der Mitte stehen in der Mitte des ganzen Bildschirms, wie die Startfläche (D-393, D-394); liegen Systemstreifen neben dem Fenster (iPhone Duo), wird der Inhalt schmaler statt verschoben in den Streifen (`screen-center-x`, `screen-center-y`, `dialog-mitte`).
 
 ## 12. Texte und Ton
 

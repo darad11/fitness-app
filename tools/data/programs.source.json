@@ -1,5 +1,5 @@
 {
-  "$comment": "Programme A und B (evolution-plan.md Abschnitt 4, Q-14 und Q-15). Programm C entsteht aus tools/data/winterprogramm-2026.source.json. tools/programs_build.py erzeugt daraus src/modules/training/data/programs.v1.json und docs/programs.md. Keine Gewichte: Der Player zeigt den Vorwert.",
+  "$comment": "Programme A und B (evolution-plan.md Abschnitt 4, Q-14 und Q-15). Programm C entsteht aus tools/data/winterprogramm-2026.source.json, Dali’s PPLC aus tools/data/dali-pplc.source.json (D-505). tools/programs_build.py erzeugt daraus src/modules/training/data/programs.v1.json und docs/programs.md. Keine Gewichte: Der Player zeigt den Vorwert.",
   "version": 1,
   "dropsets": {
     "$comment": "Dropset-Markierungen (orangefarbener Stern) in Programm C nach den Notizen zur Aufnahme; [Kalendertag, Position]. Die Liste ist aus den Notizen und noch nicht vollständig gegen alle 40 Tage geprüft (winterprogramm-2026.md U-1).",

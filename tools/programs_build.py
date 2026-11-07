@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Erzeugt die gebündelten Programme A, B und C und docs/programs.md.
+"""Erzeugt die gebündelten Programme (Dali’s PPLC, A, B und C) und docs/programs.md.
 
-Quellen: tools/data/programs.source.json (A und B, Dropset-Liste, Metadaten für C),
+Quellen: tools/data/dali-pplc.source.json (Dali’s PPLC: Tage, Phasen je Woche, Wechselübung und
+Hinweise, D-505), tools/data/programs.source.json (A und B, Dropset-Liste, Metadaten für C),
 tools/data/winterprogramm-2026.source.json und tools/data/winterprogramm-2026-uebungen.json (C).
 Ziel: src/modules/training/data/programs.v1.json im Format der Beispielvorlagen
 (sample-templates.v1.json, erweitert um description, program, slug, note, originalName).
@@ -18,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "tools/data/programs.source.json"
+DALI = ROOT / "tools/data/dali-pplc.source.json"
 PROGRAM_C = ROOT / "tools/data/winterprogramm-2026.source.json"
 MAP = ROOT / "tools/data/winterprogramm-2026-uebungen.json"
 CORE = ROOT / "src/modules/exercises/data/core-exercises.v1.json"
@@ -114,6 +116,80 @@ def build_program_c(source: dict, plan: dict, mapping: dict, core: dict) -> dict
     }
 
 
+def build_dali(plan: dict, core: dict) -> dict:
+    """Dali’s PPLC (D-505, D-531): je Woche die Tage mit der Satzzahl ihrer Phase (Grundübungen, übrige
+    und feste Satzzahl), vor jeder Übung der Aufwärmsatz aus `warmup` (Ziel 8–10, bei Haltezeit eigene Zeit), am Compound-Tag in ungeraden Wochen die erste, in geraden die zweite
+    Wechselübung, Hinweise am ersten Tag von Woche 4, jeder leichten Woche und jedes neuen
+    Aufbaublocks. Gleiche Tage bekommen denselben Schlüssel; angezeigt wird `label`."""
+    keys = {e["key"] for e in core["exercises"]}
+    warm = plan["warmup"]
+    days: dict[str, dict] = {}
+    weeks: list[list[str]] = []
+    for number, phase_key in enumerate(plan["weeks"], 1):
+        phase = plan["phases"][phase_key]
+        previous = plan["weeks"][number - 2] if number > 1 else None
+        names = []
+        for position, day in enumerate(plan["days"]):
+            exercises, chosen = [], []
+            for entry in day["exercises"]:
+                if "alternate" in entry:
+                    entry = entry["alternate"][(number + 1) % 2]
+                    chosen.append(entry["exercise"])
+                if entry["exercise"] not in keys:
+                    raise ValueError(f"Übung fehlt in der Bibliothek: {entry['exercise']}")
+                if "reps" in entry:
+                    target = {"repsMin": entry["reps"][0], "repsMax": entry["reps"][1]}
+                    warm_target = {"repsMin": warm["reps"][0], "repsMax": warm["reps"][1]}
+                else:
+                    target = {"durationMinSec": entry["durationSec"][0], "durationMaxSec": entry["durationSec"][1]}
+                    warm_target = {"durationMinSec": warm["durationSec"][0], "durationMaxSec": warm["durationSec"][1]}
+                exercise = {"exercise": entry["exercise"], "originalName": entry["originalName"]}
+                if entry.get("note"):
+                    exercise["note"] = entry["note"]
+                exercise.update({
+                    "warmup": warm["sets"],
+                    "warmupTarget": warm_target,
+                    "working": phase[entry["class"]],
+                    "target": target,
+                    "restSec": entry["restSec"],
+                })
+                exercises.append(exercise)
+            note = None
+            if position == 0:
+                if number == 4:
+                    note = plan["notes"]["week4"]
+                elif phase_key == "leicht":
+                    note = plan["notes"]["leicht"]
+                elif phase_key == "neuer_block" and previous == "leicht":
+                    note = plan["notes"]["neuer_block"]
+            key = "_".join([day["name"].lower(), phase_key, *chosen, *(["hinweis"] if note else [])])
+            label = day["name"] + (f" · {phase['label']}" if phase.get("label") else "")
+            entry_day = {"name": key, "label": label, "weekday": day["weekday"]}
+            if note:
+                entry_day["notes"] = note
+            entry_day["exercises"] = exercises
+            if key in days and days[key] != entry_day:
+                raise ValueError(f"Tag {key} mit verschiedenem Inhalt")
+            days.setdefault(key, entry_day)
+            names.append(key)
+        weeks.append(names)
+    return {
+        "key": plan["key"],
+        "slug": plan["slug"],
+        "program": True,
+        "name": plan["name"],
+        "description": plan["description"],
+        "level": plan["level"],
+        "location": plan["location"],
+        "daysPerWeek": plan["daysPerWeek"],
+        "repeat": True,
+        "repeatFromWeek": plan["repeatFromWeek"],
+        **({"englishNames": True} if plan.get("englishNames") else {}),
+        "days": list(days.values()),
+        "weeks": weeks,
+    }
+
+
 def validate(templates: list[dict], core: dict) -> list[str]:
     errors: list[str] = []
     keys = {e["key"] for e in core["exercises"]}
@@ -138,7 +214,9 @@ def validate(templates: list[dict], core: dict) -> list[str]:
 
 def describe_sets(e: dict) -> str:
     parts = []
-    if e["warmup"]:
+    if e["warmup"] and e.get("warmupTarget"):
+        parts.append(f"{e['warmup']} Aufwärmen ({describe_target(e['warmupTarget'])}) + {e['working']}")
+    elif e["warmup"]:
         parts.append(f"{e['warmup']} Aufwärmen + {e['working']}")
     else:
         parts.append(str(e["working"]))
@@ -158,27 +236,47 @@ def describe_target(t: dict) -> str:
 def render_doc(templates: list[dict], core: dict) -> str:
     names = {e["key"]: e["name"] for e in core["exercises"]}
     out = [
-        "# Programme A, B und C\n\n",
-        "Erzeugt von `tools/programs_build.py` aus `tools/data/programs.source.json` und `tools/data/winterprogramm-2026.source.json`; ",
-        "`pnpm check:docs` prüft die Übereinstimmung. Grundlage: `evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15. ",
+        "# Programme: Dali’s PPLC, A, B und C\n\n",
+        "Erzeugt von `tools/programs_build.py` aus `tools/data/dali-pplc.source.json`, `tools/data/programs.source.json` und ",
+        "`tools/data/winterprogramm-2026.source.json`; `pnpm check:docs` prüft die Übereinstimmung. Grundlage: ",
+        "`evolution-plan.md` Abschnitt 4, Antworten Q-13 bis Q-15; Dali’s PPLC nach dem Plan des Produktinhabers (D-504, D-505, D-531). ",
         "Kein Programm gibt Gewichte vor; der Player zeigt den Vorwert (AK-TRN-05). Varianten stehen als Hinweis je Übung.\n\n",
     ]
     for t in templates:
         total = sum(len(w) for w in t["weeks"])
         out.append(f"## {t['name']} (`{t.get('slug', t['key'])}`)\n\n")
         out.append(f"{t['description']}\n\n")
+        repeat = "nein"
+        if t["repeat"]:
+            repeat = f"ja, ab Woche {t['repeatFromWeek']}" if t.get("repeatFromWeek", 1) > 1 else "ja"
         out.append(
             f"Niveau {t['level']} · Ort {t['location']} · {t['daysPerWeek']} Tage pro Woche · "
-            f"{len(t['weeks'])} Wochen, {total} Trainingstage · wiederholen: {'ja' if t['repeat'] else 'nein'}\n\n"
+            f"{len(t['weeks'])} Wochen, {total} Trainingstage · wiederholen: {repeat}"
+            + (" · Übungsnamen auf Englisch (D-506)" if t.get("englishNames") else "")
+            + "\n\n"
         )
         if "source" in t:
             out.append(f"Quelle: {t['source']}\n\n")
+        labels = {d["name"]: d.get("label", d["name"]) for d in t["days"]}
+        used: dict[str, list[int]] = {}
         out.append("| Woche | Tage |\n|---|---|\n")
         for w, names_in_week in enumerate(t["weeks"], 1):
-            out.append(f"| {w} | {', '.join(names_in_week)} |\n")
+            out.append(f"| {w} | {', '.join(labels[n] for n in names_in_week)} |\n")
+            for n in names_in_week:
+                used.setdefault(n, []).append(w)
         out.append("\n")
+        weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
         for d in t["days"]:
-            out.append(f"**{d['name']}**\n\n")
+            if "label" in d:
+                in_weeks = used.get(d["name"], [])
+                extra = [f"{'Woche' if len(in_weeks) == 1 else 'Wochen'} {', '.join(str(w) for w in in_weeks)}"]
+                if d.get("weekday"):
+                    extra.append(weekdays[d["weekday"] - 1])
+                out.append(f"**{d['label']}** (`{d['name']}`; {'; '.join(extra)})\n\n")
+            else:
+                out.append(f"**{d['name']}**\n\n")
+            if d.get("notes"):
+                out.append(f"Hinweis auf „Heute“: {d['notes']}\n\n")
             out.append("| Übung | Sätze | Ziel | Pause | Hinweis |\n|---|---|---|---|---|\n")
             for e in d["exercises"]:
                 hint = e.get("note", "")
@@ -195,7 +293,11 @@ def render_doc(templates: list[dict], core: dict) -> str:
 def main() -> int:
     check = "--check" in sys.argv
     source, plan, mapping, core = load(SOURCE), load(PROGRAM_C), load(MAP), load(CORE)
-    templates = [*source["templates"], build_program_c(source, plan, mapping, core)]
+    templates = [
+        build_dali(load(DALI), core),
+        *source["templates"],
+        build_program_c(source, plan, mapping, core),
+    ]
     errors = validate(templates, core)
     if errors:
         print(f"{len(errors)} Probleme:")

@@ -9,6 +9,7 @@ import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { parseDecimal } from '@/shared/lib/format';
 import { Button, Card, IconButton, PageHeader, SegmentedControl, SelectField } from '@/shared/ui';
 import { fieldsFor, toStored, type FieldSpec } from '../calc/fields';
+import { setName, setPositions } from '../calc/setNames';
 import { ACTIVITY_TYPES, type ActivityType, type SetValues } from '../model/session';
 import { InvalidLogError, logActivity, logStrength } from '../service/logService';
 
@@ -333,8 +334,6 @@ function StrengthForm() {
 
       {exercises.map((draft) => {
         const specs = fieldsFor(draft.exercise.trackingMode, draft.exercise.distanceUnit);
-        let working = 0;
-        let warmup = 0;
         return (
           <Card
             key={draft.key}
@@ -351,16 +350,16 @@ function StrengthForm() {
             }
           >
             <ol className="grid gap-2">
-              {draft.sets.map((set) => {
-                const ordinal = set.type === 'working' ? ++working : ++warmup;
-                const name = `${draft.exercise.name}, ${tSession.setLabel(tSession.setTypeLabel[set.type], ordinal)}`;
+              {setPositions(draft.sets).map(({ set, position }) => {
+                // Gleiche Namen wie im Player: „Aufwärmsatz“, „Arbeitssatz 2 von 3“ (D-537).
+                const name = `${draft.exercise.name}, ${setName(position)}`;
                 return (
                   <li key={set.key} className="flex items-center gap-2">
                     <span
                       className="w-8 shrink-0 text-sm font-semibold text-muted tabular-nums"
                       aria-hidden="true"
                     >
-                      {set.type === 'warmup' ? tSession.setTypeShort.warmup : String(ordinal)}
+                      {set.type === 'warmup' ? tSession.setTypeShort.warmup : String(position.n)}
                     </span>
                     <div
                       className={

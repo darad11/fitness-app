@@ -247,6 +247,12 @@ interface ReadingAnchor {
 
 /** Die Leselinie liegt auf einem Viertel der Fensterhöhe. */
 const READING_LINE = 0.25;
+/**
+ * Fällt die Leselinie in eine Lücke zwischen zwei Karten, gilt das nächste Element knapp darunter
+ * oder darüber (px, in dieser Reihenfolge). Sonst hielt der Größenwechsel dort keine Lage
+ * (in WebKit auf „Programme und Vorlagen“ nach D-504).
+ */
+const READING_OFFSETS = [0, 12, -12, 24, -24, 36, -36, 48, -48];
 
 /** So lange nach einer Größenänderung wählt Scrollen keinen neuen Bezug (ms). */
 const RESIZE_SETTLE_MS = 500;
@@ -261,14 +267,16 @@ function readingAnchor(): ReadingAnchor | null {
   const atTop = pageScrollTop() <= 8;
   const height = pageViewportHeight();
   // Der Rahmen beginnt oben im Fenster (`inset: 0`); die Leselinie gilt also im Fenster.
-  const y = height * READING_LINE;
   const box = main.getBoundingClientRect();
-  for (const x of [box.left + box.width / 2, box.left + box.width / 4, box.left + 24]) {
-    for (const element of document.elementsFromPoint(x, y)) {
-      if (element === main || !main.contains(element) || element.closest('dialog')) continue;
-      const rect = element.getBoundingClientRect();
-      if (rect.height === 0 || rect.height >= height || pinned(element, main)) continue;
-      return { element, top: rect.top, atTop };
+  for (const offset of READING_OFFSETS) {
+    const y = height * READING_LINE + offset;
+    for (const x of [box.left + box.width / 2, box.left + box.width / 4, box.left + 24]) {
+      for (const element of document.elementsFromPoint(x, y)) {
+        if (element === main || !main.contains(element) || element.closest('dialog')) continue;
+        const rect = element.getBoundingClientRect();
+        if (rect.height === 0 || rect.height >= height || pinned(element, main)) continue;
+        return { element, top: rect.top, atTop };
+      }
     }
   }
   return null;

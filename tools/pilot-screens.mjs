@@ -16,6 +16,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdir, rm } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
+import { aktuelleDatei } from './uebungen-medien.mjs';
 
 const BASE = process.env.SCREENS_BASE_URL ?? 'http://localhost:4173';
 const OUT = 'docs/screens/uebungen';
@@ -207,7 +208,12 @@ execFileSync('ffmpeg', [
   '-y',
   '-loglevel',
   'error',
-  ...PILOT.flatMap(([key]) => ['-stream_loop', '2', '-i', `public/uebungen/medien/${key}.mp4`]),
+  ...PILOT.flatMap(([key]) => [
+    '-stream_loop',
+    '2',
+    '-i',
+    aktuelleDatei('public/uebungen/medien', `${key}.mp4`),
+  ]),
   '-filter_complex',
   '[0:v]scale=480:360[a];[1:v]scale=480:360[b];[2:v]scale=480:360[c];[a][b][c]hstack=inputs=3',
   '-an',

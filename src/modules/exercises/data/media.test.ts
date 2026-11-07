@@ -4,14 +4,22 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import mediaFile from '../../../../public/uebungen/medien.json';
 import guidesFile from './exercise-guides.v1.json';
 import coreFile from './core-exercises.v1.json';
-import { exerciseGuidesSchema, exerciseMediaSchema, type ExerciseMedia } from '../model/media';
+import {
+  exerciseGuidesSchema,
+  exerciseMediaSchema,
+  parseExerciseMedia,
+  type ExerciseMedia,
+} from '../model/media';
+import { recentErrors } from '@/shared/db';
 import { coreExerciseId } from './coreLibrary';
 import {
+  MEDIA_CACHE,
   demoFiles,
   loadGuides,
   loadVisualIndex,
   mediaUrl,
   preloadVisual,
+  pruneMediaCache,
   resetMediaCacheForTests,
   useGuide,
   useVisualIndex,
@@ -67,6 +75,12 @@ describe('Liste der Visuals (D-397)', () => {
     for (const key of Object.keys(media.visuals)) expect(CORE_KEYS).toContain(key);
   });
 
+  it('in der ausgelieferten Liste fiele kein Eintrag heraus, etwa durch einen zu langen Alternativtext (D-488)', () => {
+    // Prüft vor jedem E2E-Lauf, was die App sonst still überspringen würde; die Meldung nennt
+    // Schlüssel und Grund.
+    expect(parseExerciseMedia(mediaFile).skipped).toEqual([]);
+  });
+
   it('IDs wie in der Bestandsaufnahme (tools/exercise_inventory.py rechnet sie in Python)', () => {
     expect(coreExerciseId('bench_press_barbell')).toBe('d9e18691-fe6c-5885-8a52-a9004e985f9a');
     expect(coreExerciseId('back_squat_barbell')).toBe('572e6fea-7c72-5622-a62c-c844a1eb72ce');
@@ -113,6 +127,57 @@ describe('Liste der Visuals (D-397)', () => {
   it('eine ungültige Liste zählt wie keine', async () => {
     serve({ version: 2, visuals: [] });
     expect((await loadVisualIndex()).size).toBe(0);
+  });
+
+  it('ein ungültiger Eintrag fällt allein heraus und wird gemeldet, die übrigen bleiben (D-488)', async () => {
+    const list = manifest(['back_squat_barbell', 'goblet_squat']);
+    const squat = list.visuals.back_squat_barbell;
+    if (squat) squat.alt = 'x'.repeat(241);
+    serve(list);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const index = await loadVisualIndex();
+    expect([...index.keys()]).toEqual([coreExerciseId('goblet_squat')]);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0]?.[0]).toMatch(
+      /^Übungsbilder: Eintrag back_squat_barbell übersprungen \(alt: /,
+    );
+    warn.mockRestore();
+    // Dieselbe Meldung als Warnung im Fehlerprotokoll (hier ohne Datenbank: im Arbeitsspeicher).
+    await waitFor(() => {
+      expect(recentErrors().at(-1)).toMatchObject({ level: 'warn', area: 'uebungsbilder' });
+    });
+    expect(recentErrors().at(-1)?.message).toContain(
+      'Übungsbilder: Eintrag back_squat_barbell übersprungen (alt:',
+    );
+  });
+
+  it('übersprungen werden auch Einträge ohne gültige Quelle, mit Datei außerhalb des Ordners oder mit falschem Schlüssel (D-488)', () => {
+    const list = manifest(['goblet_squat', 'back_squat_barbell', 'front_squat_barbell']);
+    const raw = JSON.parse(JSON.stringify(list)) as {
+      sources: Record<string, unknown>;
+      visuals: Record<string, { source: string; preview: { src: string } }>;
+    };
+    raw.sources.kaputt = { name: 'ohne Adresse', license: 'CC0 1.0', commercialUse: true };
+    const back = raw.visuals.back_squat_barbell;
+    if (back) back.source = 'kaputt';
+    const front = raw.visuals.front_squat_barbell;
+    if (front) front.preview.src = '../geheim.webp';
+    raw.visuals['Falscher Schlüssel'] = visual('goblet_squat');
+    const { media, skipped } = parseExerciseMedia(raw);
+    expect(Object.keys(media.visuals)).toEqual(['goblet_squat']);
+    expect(Object.keys(media.sources)).toEqual(['test']);
+    expect(skipped.map(({ part, key }) => `${part}:${key}`)).toEqual([
+      'sources:kaputt',
+      'visuals:back_squat_barbell',
+      'visuals:front_squat_barbell',
+      'visuals:Falscher Schlüssel',
+    ]);
+    expect(skipped[1]?.reason).toBe('Quelle fehlt: kaputt');
+    expect(skipped[2]?.reason).toMatch(/^preview\.src: /);
+    expect(skipped[3]?.reason).toBe('Schlüssel ungültig');
+    // Der Rahmen bleibt streng: falsche Version oder fehlende Teile werfen.
+    expect(() => parseExerciseMedia({ version: 2, sources: {}, visuals: {} })).toThrow();
+    expect(() => parseExerciseMedia({ version: 1, visuals: {} })).toThrow();
   });
 
   it('useVisualIndex lädt einmal und liefert danach sofort', async () => {
@@ -164,6 +229,92 @@ describe('Liste der Visuals (D-397)', () => {
       '/uebungen/medien/goblet_squat-ende.webp',
     ]);
     vi.unstubAllGlobals();
+  });
+});
+
+/** Speicher des Service Workers zum Testen, mit Adressen wie in der Cache API (D-494). */
+function fakeMediaCache(paths: string[], exists = true) {
+  const stored = new Set(paths);
+  const open = vi.fn(() =>
+    Promise.resolve({
+      keys: () => Promise.resolve([...stored].map((path) => ({ url: `https://form.test${path}` }))),
+      delete: (request: { url: string }) =>
+        Promise.resolve(stored.delete(new URL(request.url).pathname)),
+    }),
+  );
+  vi.stubGlobal('caches', {
+    has: (name: string) => Promise.resolve(exists && name === MEDIA_CACHE),
+    open,
+  });
+  return { stored, open };
+}
+
+describe('Speicher der Bilddateien (D-494)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('löscht nur Dateien, die die Liste nicht mehr nennt; Vorschau und jede Datei der Demonstration bleiben', async () => {
+    const list = manifest(['goblet_squat']);
+    list.visuals.back_squat_barbell = {
+      preview: { src: 'medien/kniebeuge-vorschau-6b73396c.webp', width: 240, height: 240 },
+      demo: {
+        kind: 'animation',
+        file: { src: 'medien/kniebeuge-8ccb4065.mp4', width: 720, height: 540 },
+        webm: { src: 'medien/kniebeuge-10878655.webm', width: 720, height: 540 },
+        still: { src: 'medien/kniebeuge-poster-267197bc.webp', width: 720, height: 540 },
+      },
+      alt: 'Testbild Kniebeuge',
+      source: 'test',
+    };
+    const current = [
+      '/uebungen/medien/goblet_squat-vorschau.webp',
+      '/uebungen/medien/goblet_squat-start.webp',
+      '/uebungen/medien/goblet_squat-ende.webp',
+      '/uebungen/medien/kniebeuge-vorschau-6b73396c.webp',
+      '/uebungen/medien/kniebeuge-8ccb4065.mp4',
+      '/uebungen/medien/kniebeuge-10878655.webm',
+      '/uebungen/medien/kniebeuge-poster-267197bc.webp',
+    ];
+    // Alte Fassungen: Namen ohne Prüfsumme (vor D-494) und eine frühere Prüfsumme.
+    const old = [
+      '/uebungen/medien/kniebeuge.mp4',
+      '/uebungen/medien/kniebeuge-poster.webp',
+      '/uebungen/medien/kniebeuge-0badc0de.mp4',
+    ];
+    const { stored } = fakeMediaCache([...old, ...current]);
+    expect(await pruneMediaCache(list)).toBe(3);
+    expect([...stored].sort()).toEqual([...current].sort());
+  });
+
+  it('ohne Speicher des Service Workers geschieht nichts, es wird auch keiner angelegt', async () => {
+    const { open } = fakeMediaCache([], false);
+    expect(await pruneMediaCache(manifest(['goblet_squat']))).toBe(0);
+    expect(open).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+    // Ohne Cache API (Node, ältere Browser).
+    expect(await pruneMediaCache(manifest(['goblet_squat']))).toBe(0);
+  });
+
+  it('das Laden der Liste räumt den Speicher auf', async () => {
+    const { stored } = fakeMediaCache([
+      '/uebungen/medien/goblet_squat-vorschau.webp',
+      '/uebungen/medien/kniebeuge.mp4',
+    ]);
+    serve(manifest(['goblet_squat']));
+    expect((await loadVisualIndex()).size).toBe(1);
+    await waitFor(() => {
+      expect([...stored]).toEqual(['/uebungen/medien/goblet_squat-vorschau.webp']);
+    });
+  });
+
+  it('ein Fehler beim Aufräumen ändert nichts an den Visuals', async () => {
+    vi.stubGlobal('caches', {
+      has: () => Promise.reject(new Error('SecurityError')),
+      open: vi.fn(),
+    });
+    serve(manifest(['goblet_squat']));
+    expect((await loadVisualIndex()).size).toBe(1);
   });
 });
 

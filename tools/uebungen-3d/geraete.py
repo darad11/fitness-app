@@ -5,13 +5,19 @@ Scheiben aus Eisen, 20 kg mit 450 mm und 10 kg mit 330 mm Durchmesser.
 Flachbank: Polster 1,20 × 0,30 m, Oberkante 0,43 m.
 Latzug: Sitz 0,48 m hoch, Knierolle, Säule, obere Rolle 12 cm, Kabel 5 mm, Latzugstange 1,20 m
 mit abgewinkelten Enden.
+Kurzhantel 20 kg (D-462), Sechskant, gummiert, nach Herstellerangabe (Fitcom Hex 20 kg): 365 mm lang, Griff 130 mm
+lang und 34 mm dick, Köpfe 145 mm über die Ecken.
+Verstellbare Bank (D-462) nach Herstellerangaben (Factory Weights Adjustable Commercial Bench: 43 cm hoch, Lehne
+30 cm breit, Stufen der Lehne 0, 15, 30, 45 … Grad, des Sitzes 0, 10, 20 Grad; Life Fitness Signature Series
+Multi-Adjustable Bench: Rückenpolster 81 cm, Sitz 43 cm hoch): Polster 6 cm dick und 30 cm breit, Lehne 80 cm, Sitz
+40 cm lang, 2 cm Spalt am Gelenk.
 """
 from __future__ import annotations
 
 import math
 
 import bpy
-from mathutils import Euler, Vector
+from mathutils import Euler, Matrix, Vector
 
 from szene import GERAET, GERAET_HELL, matt
 
@@ -54,6 +60,199 @@ def _kasten(name: str, groesse: tuple[float, float, float], ort: Vector, mat, ru
     if eltern:
         obj.parent = eltern
     return obj
+
+
+# Gymnastikmatte nach Herstellerangaben: seit D-467 AIREX Coronella 185, 185 × 60 × 1,5 cm. Bis D-466 180 × 60 × 1,5 cm
+# (PROGYM Gymnastikmatte mit Ösen, Sissel Gymnastikmatte, Trendy Sport ProfiGymMat): Mit flachen Händen liegen beim
+# Unterarmstütz Fingerspitzen und Vorfuß 1,787 m auseinander, auf 180 cm blieben je Seite 6,6 mm Rand, auf 185 cm 3,2 cm
+MATTE = {"laenge": 1.85, "breite": 0.60, "dicke": 0.015, "raster": 0.0075}
+
+
+def matte(mitte: Vector) -> tuple[bpy.types.Object, tuple[list[Vector], list[Vector]]]:
+    """Gymnastikmatte flach auf dem Boden, Länge längs y, Mitte der Unterseite bei `mitte` (Welt). Die Oberseite ist
+    ein Raster von `raster`, damit `eindruecken` sie unter Körper und Schuhen absenken kann; Rand und Unterseite
+    schlicht (1,5 cm Schaum). Gibt das Objekt und Punkte und Normalen in Ruhe zurück (Raum der Matte)."""
+    b = MATTE
+    nx, ny = round(b["breite"] / b["raster"]), round(b["laenge"] / b["raster"])
+    hx, hy, d = b["breite"] / 2, b["laenge"] / 2, b["dicke"]
+
+    def idx(i: int, j: int) -> int:
+        return j * (nx + 1) + i
+
+    punkte = [Vector((-hx + i * b["breite"] / nx, -hy + j * b["laenge"] / ny, d)) for j in range(ny + 1) for i in range(nx + 1)]
+    flaechen = [[idx(i, j), idx(i + 1, j), idx(i + 1, j + 1), idx(i, j + 1)] for j in range(ny) for i in range(nx)]
+    rand = ([idx(i, 0) for i in range(nx)] + [idx(nx, j) for j in range(ny)] + [idx(i, ny) for i in range(nx, 0, -1)]
+            + [idx(0, j) for j in range(ny, 0, -1)])
+    unten = len(punkte)
+    punkte += [Vector((punkte[k].x, punkte[k].y, 0.0)) for k in rand]
+    n = len(rand)
+    flaechen += [[rand[a], unten + a, unten + (a + 1) % n, rand[(a + 1) % n]] for a in range(n)]
+    flaechen.append([unten + a for a in range(n - 1, -1, -1)])
+    me = bpy.data.meshes.new("Matte")
+    me.from_pydata([tuple(p) for p in punkte], [], flaechen)
+    me.update()
+    for f in me.polygons:
+        f.use_smooth = len(f.vertices) == 4 and f.normal.z > 0.9
+    obj = bpy.data.objects.new("Matte", me)
+    bpy.context.scene.collection.objects.link(obj)
+    obj.location = mitte
+    obj.data.materials.append(_mat("Matte", GERAET, 0.85))
+    bpy.context.view_layer.update()
+    return obj, ([v.co.copy() for v in me.vertices], [v.normal.copy() for v in me.vertices])
+
+
+def weiches_polster(obj: bpy.types.Object, raster: float = 0.006) -> tuple[list[Vector], list[Vector]]:
+    """Polster als gleichmäßig feines Netz (D-465), damit `eindruecken` die Oberfläche unter dem Körper absenken kann:
+    erst gerundet wie zuvor, dann mit Würfeln von `raster` neu vernetzt, auch in den Rundungen; die Modifikatoren
+    werden angewandt. Gibt Punkte und Normalen des Netzes in Ruhe zurück (Raum des Polsters)."""
+    neu = obj.modifiers.new("Raster", "REMESH")
+    neu.mode = "VOXEL"
+    neu.voxel_size = raster
+    dg = bpy.context.evaluated_depsgraph_get()
+    netz = bpy.data.meshes.new_from_object(obj.evaluated_get(dg))
+    obj.modifiers.clear()
+    obj.data = netz
+    for f in netz.polygons:
+        f.use_smooth = True
+    return [v.co.copy() for v in netz.vertices], [v.normal.copy() for v in netz.vertices]
+
+
+def eindruecken(polster: list, ruhe: dict, auflage: list, glaetten: int = 4, wand: tuple[float, float] = (0.02, 0.07),
+                radius: float = 0.01, strahl: float = 0.10) -> float:
+    """Polster unter dem Körper eindrücken (D-465), wie Schaumstoff unter Last: Für jeden Punkt der Oberseite und
+    der oberen Rundung wird von unten längs der Normalen des Polsters gemessen; liegt die erste Oberfläche von Haut
+    oder Kleidung (`auflage`) tiefer als der Punkt, sinkt er bis dorthin. Danach `glaetten` Schritte, in denen jeder
+    Punkt auf das Mittel seiner Nachbarn sinkt, nie aber weniger tief als der Körper verlangt: So läuft die Delle
+    weich aus, und kein Punkt bleibt im Körper. `ruhe`: Punkte und Normalen jedes Polsters in Ruhe (Raum des
+    Polsters). `wand`: Die Seitenwände sinken bis `wand[0]` unter der Oberseite ganz mit, bis `wand[1]` immer weniger
+    (Matte, D-466: die Unterseite bleibt am Boden). `radius`: Umkreis, in dem ein Punkt von Haut oder Kleidung das
+    Polster mitnimmt (etwas mehr als das Raster). `strahl`: so tief unter der Oberseite beginnt die Suche (D-514: bei
+    den Kniepolstern der Wadenmaschine liegen die Hände auf der anderen Seite des Polsters, 10 cm fanden sie). Gibt die
+    tiefste Delle zurück (m)."""
+    from mathutils.bvhtree import BVHTree
+    from mathutils.kdtree import KDTree
+
+    dg = bpy.context.evaluated_depsgraph_get()
+    baeume, alle = [], []
+    for obj in auflage:
+        oe = obj.evaluated_get(dg)
+        me = oe.to_mesh()
+        M = oe.matrix_world
+        me.calc_loop_triangles()
+        welt = [M @ v.co for v in me.vertices]
+        alle += welt
+        baeume.append(BVHTree.FromPolygons(welt, [tuple(t.vertices) for t in me.loop_triangles]))
+        oe.to_mesh_clear()
+    tiefste = 0.0
+    for obj in polster:
+        me = obj.data
+        punkte, normalen = ruhe[obj.name]
+        M = obj.matrix_world
+        n = (M.to_3x3() @ Vector((0, 0, 1))).normalized()
+        # Nur wo Haut oder Kleidung bis 1 cm an die Oberseite kommt (mit Rand für das Glätten): gleiches Ergebnis,
+        # weniger Strahlen
+        Mi = M.inverted()
+        oben = max(p.z for p in punkte)
+        nah = [q for q in (Mi @ w for w in alle) if q.z < oben + 0.01]
+        if not nah:
+            me.vertices.foreach_set("co", [c for p in punkte for c in p])
+            me.update()
+            continue
+        x0, x1 = min(q.x for q in nah) - 0.05, max(q.x for q in nah) + 0.05
+        y0, y1 = min(q.y for q in nah) - 0.05, max(q.y for q in nah) + 0.05
+        zone = [i for i, nv in enumerate(normalen) if nv.z > 0.2 and x0 <= punkte[i].x <= x1 and y0 <= punkte[i].y <= y1]
+        tief = {}
+        for i in zone:
+            start = M @ punkte[i] - n * strahl
+            beste = None
+            for b in baeume:
+                treffer = b.ray_cast(start, n, strahl)
+                if treffer[0] is not None and (beste is None or treffer[3] < beste):
+                    beste = treffer[3]
+            tief[i] = strahl - beste if beste is not None else 0.0
+        # Zweiter Weg: jeder Punkt von Haut oder Kleidung über der Fläche und unter der Oberseite drückt die Punkte des
+        # Polsters im Umkreis `radius` mindestens bis auf seine Höhe (schmale Grate wie eine Naht fallen sonst
+        # zwischen zwei Strahlen durch)
+        if zone:
+            kd_zone = KDTree(len(zone))
+            for k, i in enumerate(zone):
+                kd_zone.insert(Vector((punkte[i].x, punkte[i].y, 0.0)), k)
+            kd_zone.balance()
+            lo = Vector((min(p.x for p in punkte), min(p.y for p in punkte), min(p.z for p in punkte)))
+            hi = Vector((max(p.x for p in punkte), max(p.y for p in punkte), oben))
+            unten = max(lo.z, hi.z - strahl)  # nur bis `strahl` unter der Oberseite (D-514; dicker als 10 cm ist kein Polster)
+            for q in nah:
+                if not (lo.x <= q.x <= hi.x and lo.y <= q.y <= hi.y and unten <= q.z < hi.z):
+                    continue
+                for _, k, _ in kd_zone.find_range(Vector((q.x, q.y, 0.0)), radius):
+                    i = zone[k]
+                    if punkte[i].z - q.z > tief[i]:
+                        tief[i] = punkte[i].z - q.z
+        roh = dict(tief)
+        nachbarn = {i: [] for i in zone}
+        for e in me.edges:
+            a, b = e.vertices
+            if a in nachbarn and b in nachbarn:
+                nachbarn[a].append(b)
+                nachbarn[b].append(a)
+        for _ in range(glaetten):
+            tief = {i: max(roh[i], sum(tief[j] for j in nb) / len(nb)) if nb else roh[i] for i, nb in nachbarn.items()}
+        co = [c for p in punkte for c in p]
+        for i, d in tief.items():
+            co[3 * i + 2] = punkte[i].z - d
+            tiefste = max(tiefste, d)
+        # Seitenwände sinken unter einer Delle am Rand mit, oben ganz, `wand[1]` unter der Oberseite nicht mehr: So
+        # bleibt an der Kante keine Lippe stehen, und die Wand faltet sich nicht (Delle kleiner als wand[1] − wand[0])
+        if tiefste > 0 and zone:
+            kd = KDTree(len(zone))
+            for k, i in enumerate(zone):
+                kd.insert(Vector((punkte[i].x, punkte[i].y, 0.0)), k)
+            kd.balance()
+            for i, nv in enumerate(normalen):
+                if nv.z > 0.2:
+                    continue
+                gewicht = min(max((punkte[i].z - (oben - wand[1])) / (wand[1] - wand[0]), 0.0), 1.0)
+                if gewicht <= 0.0:
+                    continue
+                d = tief[zone[kd.find(Vector((punkte[i].x, punkte[i].y, 0.0)))[1]]] * gewicht
+                if d > 0.0:
+                    co[3 * i + 2] = punkte[i].z - d
+        me.vertices.foreach_set("co", co)
+        me.update()
+    return tiefste
+
+
+def durch_polster(polster: list, auflage: list) -> float:
+    """Wie weit Haut oder Kleidung (`auflage`) noch durch die eingedrückte Oberfläche der Polster ragen (m, 0 =
+    nirgends): je Punkt über der Fläche eines Polsters von oben längs der Normalen bis zur Oberfläche gemessen."""
+    from mathutils.bvhtree import BVHTree
+
+    dg = bpy.context.evaluated_depsgraph_get()
+    punkte = []
+    for obj in auflage:
+        oe = obj.evaluated_get(dg)
+        me = oe.to_mesh()
+        M = oe.matrix_world
+        punkte += [M @ v.co for v in me.vertices]
+        oe.to_mesh_clear()
+    schlimmste = 0.0
+    for obj in polster:
+        me = obj.data
+        M = obj.matrix_world
+        baum = BVHTree.FromPolygons([M @ v.co for v in me.vertices], [tuple(f.vertices) for f in me.polygons])
+        Mi = M.inverted()
+        n = (M.to_3x3() @ Vector((0, 0, 1))).normalized()
+        bb = [Vector(c) for c in obj.bound_box]
+        lo = Vector((min(c.x for c in bb), min(c.y for c in bb), min(c.z for c in bb)))
+        hi = Vector((max(c.x for c in bb), max(c.y for c in bb), max(c.z for c in bb)))
+        for q in punkte:
+            ql = Mi @ q
+            if not (lo.x <= ql.x <= hi.x and lo.y <= ql.y <= hi.y and hi.z - 0.06 <= ql.z <= hi.z + 0.005):
+                continue
+            treffer = baum.ray_cast(q + n * 0.08, -n, 0.16)
+            if treffer[0] is not None:
+                schlimmste = max(schlimmste, (treffer[0] - q).dot(n))
+    return schlimmste
 
 
 def langhantel(scheiben: list[tuple[float, float]]) -> bpy.types.Object:
@@ -145,3 +344,1309 @@ def kabel(name: str, von: Vector, nach: Vector) -> bpy.types.Object:
     obj.rotation_euler = richtung.to_track_quat("Z", "Y").to_euler()
     obj.scale = (1, 1, richtung.length)
     return obj
+
+
+# Kurzhantel und verstellbare Bank (D-462)
+KH = {"laenge": 0.365, "griff": 0.130, "griff_d": 0.034, "kopf": 0.145, "ring": (0.022, 0.012)}
+# Leichte Kurzhantel 8 kg (D-468) nach Händlerangaben zur HMS HEX PRO 8 kg: 288 mm lang, Köpfe 110 mm, Griff 110 mm
+# lang und gerieft. Die Dicke des Griffs nennt für 8 kg keine Quelle; 34 mm wie beim Modell 10 kg derselben Reihe (und wie
+# `KH`). Köpfe wie bei `KH` über die Ecken gemessen: So passt das Gewicht (je Kopf rund 0,7 l Gummi über Stahl). Ohne
+# Ringe: Der Griff reicht von Kopf zu Kopf
+KH8 = {"laenge": 0.288, "griff": 0.110, "griff_d": 0.034, "kopf": 0.110, "ring": None}
+BANK = {"oben": 0.43, "dicke": 0.06, "breite": 0.30, "lehne": 0.80, "sitz": 0.40, "spalt": 0.02}
+
+
+def kurzhantel(name: str, masse: dict | None = None) -> bpy.types.Object:
+    """Kurzhantel mit dem Griff entlang x, Mitte des Griffs im Ursprung des Leerobjekts `name`; Maße `masse` (Vorgabe
+    `KH`, 20 kg; `KH8`, 8 kg, D-468), am Leerobjekt als „kh“ gemerkt. Griff aus Stahl, bei `KH` mit je einem Ring
+    (22 mm Radius, 12 mm) an den Köpfen, frei bleiben 106 mm; Köpfe als Sechskant aus Gummi, eine flache Seite unten,
+    Kanten gerundet."""
+    kh = masse or KH
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    mitte = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(mitte)
+    mitte["kh"] = [kh["laenge"], kh["griff"], kh["griff_d"], kh["kopf"]]
+    _zylinder(f"{name}-Griff", kh["griff_d"] / 2, kh["griff"], Vector(), "x", stahl, mitte)
+    kopf_l = (kh["laenge"] - kh["griff"]) / 2
+    for seite in (-1, 1):
+        if kh["ring"]:
+            r_ring, l_ring = kh["ring"]
+            _zylinder(f"{name}-Ring", r_ring, l_ring, Vector((seite * (kh["griff"] / 2 - l_ring / 2), 0, 0)), "x", stahl, mitte)
+        kopf = _zylinder(f"{name}-Kopf", kh["kopf"] / 2, kopf_l, Vector((seite * (kh["griff"] / 2 + kopf_l / 2), 0, 0)), "x",
+                         gummi, mitte, ecken=6)
+        # erst entlang x legen, dann 30° um die eigene Achse: Ecken bei 0, 60, 120 … Grad, unten eine flache Seite
+        kopf.rotation_mode = "YXZ"
+        kopf.rotation_euler = Euler((math.radians(30), math.pi / 2, 0), "YXZ")
+        bpy.context.view_layer.objects.active = kopf
+        bpy.ops.object.shade_flat()
+        rund = kopf.modifiers.new("Rund", "BEVEL")
+        rund.width = 0.008
+        rund.segments = 3
+    return mitte
+
+
+def schraegbank(lehne: float, sitz: float = 0.0, lehne_laenge: float | None = None) -> bpy.types.Object:
+    """Verstellbare Bank (`BANK`), Person mit dem Kopf nach +y: Gelenk zwischen Sitz und Lehne bei y = 0 an der
+    Unterkante der Polster; die Lehne steigt um `lehne` Grad zum Kopf, der Sitz um `sitz` Grad zu den Füßen. Polster
+    „Lehne“ und „Sitz“ auf Platten, Rahmen mit Träger, Füßen, Stütze unter dem Gelenk und Strebe unter der Lehne.
+    `lehne_laenge`: Länge der Lehne, sonst wie `BANK` (D-522: sitzend reicht sie bis an den Hinterkopf)."""
+    polster = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    b = dict(BANK)
+    if lehne_laenge is not None:
+        b["lehne"] = lehne_laenge
+    wurzel = bpy.data.objects.new("Bank", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    gelenk = Vector((0, 0, b["oben"] - b["dicke"]))
+    for name, winkel, laenge, richt in (("Lehne", lehne, b["lehne"], 1), ("Sitz", -sitz, b["sitz"], -1)):
+        dreh = bpy.data.objects.new(f"{name}Dreh", None)
+        bpy.context.scene.collection.objects.link(dreh)
+        dreh.location = gelenk
+        dreh.rotation_euler = Euler((math.radians(winkel), 0, 0))
+        dreh.parent = wurzel
+        _kasten(name, (b["breite"], laenge, b["dicke"]), Vector((0, richt * (b["spalt"] / 2 + laenge / 2), b["dicke"] / 2)),
+                polster, 0.02, dreh)
+        _kasten(f"{name}Platte", (0.10, laenge - 0.06, 0.02), Vector((0, richt * (b["spalt"] / 2 + laenge / 2), -0.01)),
+                rahmen, 0.004, dreh)
+    _kasten("Traeger", (0.08, 1.10, 0.05), Vector((0, 0.0, 0.055)), rahmen, 0.005, wurzel)
+    for y in (-0.52, 0.52):
+        _kasten("Fuss", (0.42, 0.06, 0.04), Vector((0, y, 0.02)), rahmen, 0.005, wurzel)
+    _kasten("Stuetze", (0.06, 0.06, gelenk.z - 0.08), Vector((0, 0, (gelenk.z + 0.08) / 2)), rahmen, 0.005, wurzel)
+    if lehne > 1.0:
+        a = math.radians(lehne)
+        oben = gelenk + Vector((0, math.cos(a), math.sin(a))) * (b["lehne"] * 0.55) - Vector((0, -math.sin(a), math.cos(a))) * 0.02
+        unten = Vector((0, oben.y + 0.05, 0.08))
+        strebe = _kasten("Strebe", (0.05, 0.05, (oben - unten).length), (oben + unten) / 2, rahmen, 0.004, wurzel)
+        strebe.rotation_euler = Euler((math.atan2(-(oben - unten).y, (oben - unten).z), 0, 0))
+    return wurzel
+
+
+# Beinpresse 45° (D-464), Maße nach Herstellerangaben: Grundfläche wie Hammer Strength Linear Leg Press (241 × 165 ×
+# 145 cm) und Precor DPL0601 (244 × 145 × 145 cm), Fußplatte wie Bodykore G277 (28,35 × 19,92 Zoll, 72 × 50 cm),
+# Schlitten auf Schienen unter 45°, Lehne verstellbar (Benchfit Exceed ISO: 30 bis 50°)
+BEINPRESSE = {"platte": (0.72, 0.50, 0.03), "schiene": 45.0, "polster_breite": 0.38, "polster_dicke": 0.07, "polster_rund": 0.025,
+              "sitz": 0.40, "lehne": 0.85, "schienen_abstand": 0.56, "griff": (0.016, 0.30)}
+
+
+def _quader(name: str, groesse: tuple[float, float, float], mitte: Vector, drehung, mat, rund: float = 0.0,
+            eltern=None) -> bpy.types.Object:
+    """Kasten mit Mitte `mitte` (Welt) und Ausrichtung `drehung` (3 × 3: Spalten sind die Richtungen von x, y, z des
+    Kastens)."""
+    obj = _kasten(name, groesse, Vector(), mat, rund)
+    obj.matrix_world = Matrix.Translation(mitte) @ drehung.to_4x4()
+    if eltern is not None:
+        welt = obj.matrix_world.copy()
+        obj.parent = eltern
+        obj.matrix_world = welt
+    return obj
+
+
+def _stab(name: str, von: Vector, nach: Vector, radius: float, mat, eltern=None, ecken: int = 32) -> bpy.types.Object:
+    """Zylinder von `von` nach `nach` (Welt)."""
+    obj = _zylinder(name, radius, (nach - von).length, Vector(), "z", mat, ecken=ecken)
+    obj.matrix_world = Matrix.Translation((von + nach) / 2) @ (nach - von).to_track_quat("Z", "Y").to_matrix().to_4x4()
+    if eltern is not None:
+        welt = obj.matrix_world.copy()
+        obj.parent = eltern
+        obj.matrix_world = welt
+    return obj
+
+
+def beinpresse(ecke: Vector, lehne: float, sitz: float, platte: Vector, weg: tuple[float, float],
+               griffe: dict[str, Vector]) -> dict:
+    """Beinpresse 45°, Person mit dem Kopf nach +y, die Platte vorn oben bei -y (D-464).
+
+    `ecke`: Ecke zwischen den Oberflächen von Sitz und Lehne (Welt); die Lehne steigt um `lehne` Grad nach +y, der
+    Sitz um `sitz` Grad nach -y. `platte`: Mitte der Oberfläche der Fußplatte in der Ausgangsstellung des Schlittens;
+    der Schlitten fährt längs der Schienen (`schiene` Grad, nach -y und oben) um `weg` (kleinster und größter Abstand
+    von der Ausgangsstellung, m, negativ zur Person hin). `griffe`: je Seite Mitte und Richtung eines Haltegriffs
+    (Welt). Gibt Wurzel, Schlitten (Leerobjekt an der Mitte der Plattenoberfläche, wird je Bild verschoben), Polster
+    von Lehne und Sitz und die Richtungen der Schiene zurück."""
+    b = BEINPRESSE
+    polster = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    eisen = _mat("Eisen", GERAET, 0.55, 0.2)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Beinpresse", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    r = math.radians(b["schiene"])
+    d = Vector((0, -math.cos(r), math.sin(r)))  # längs der Schiene, von der Person weg
+    q = Vector((0, math.sin(r), math.cos(r)))  # in der Platte nach oben
+    # Polster: Lehne und Sitz als Kästen, Oberfläche durch die Ecke
+    a, s = math.radians(lehne), math.radians(sitz)
+    d_lehne, n_lehne = Vector((0, math.cos(a), math.sin(a))), Vector((0, -math.sin(a), math.cos(a)))
+    d_sitz, n_sitz = Vector((0, -math.cos(s), math.sin(s))), Vector((0, -math.sin(s), -math.cos(s)))
+    n_sitz = -n_sitz if n_sitz.z < 0 else n_sitz
+    dicke, breite = b["polster_dicke"], b["polster_breite"]
+    R_lehne = Matrix((X, d_lehne, n_lehne)).transposed()
+    R_sitz = Matrix((X, d_sitz, n_sitz)).transposed()
+    lehne_obj = _quader("Lehne", (breite, b["lehne"], dicke), ecke + d_lehne * (b["lehne"] / 2 + 0.01) - n_lehne * (dicke / 2),
+                        R_lehne, polster, b["polster_rund"], wurzel)
+    sitz_obj = _quader("Sitz", (breite, b["sitz"], dicke), ecke + d_sitz * (b["sitz"] / 2 + 0.01) - n_sitz * (dicke / 2),
+                       R_sitz, polster, b["polster_rund"], wurzel)
+    for teil, R, laenge, rich, n in (("Lehne", R_lehne, b["lehne"], d_lehne, n_lehne), ("Sitz", R_sitz, b["sitz"], d_sitz, n_sitz)):
+        _quader(f"{teil}Platte", (0.12, laenge - 0.06, 0.02), ecke + rich * (laenge / 2 + 0.01) - n * (dicke + 0.01), R, rahmen,
+                0.004, wurzel)
+    # Rahmen unter Sitz und Lehne: Träger am Boden, Stützen
+    unter_sitz = ecke + d_sitz * (b["sitz"] / 2) - n_sitz * (dicke + 0.02)
+    unter_lehne = ecke + d_lehne * (b["lehne"] * 0.6) - n_lehne * (dicke + 0.02)
+    for name, oben in (("Sitzstuetze", unter_sitz), ("Lehnenstuetze", unter_lehne)):
+        _stab(name, Vector((0, oben.y, 0.06)), oben, 0.03, rahmen, wurzel, ecken=16)
+    # Schienen: zwei Rohre unter dem Schlitten, von vorn am Sitz bis über den größten Weg hinaus
+    unten_mitte = platte + d * (weg[0] - 0.30) - q * 0.30
+    oben_mitte = platte + d * (weg[1] + 0.20) - q * 0.30
+    for seite in (-1, 1):
+        o = X * (seite * b["schienen_abstand"] / 2)
+        _stab("Schiene", unten_mitte + o, oben_mitte + o, 0.035, rahmen, wurzel, ecken=24)
+        # Stütze am oberen Ende und Fuß am unteren Ende
+        _stab("Schienenstuetze", Vector((o.x, oben_mitte.y, 0.06)), oben_mitte + o - d * 0.05, 0.035, rahmen, wurzel, ecken=16)
+        _stab("Schienenfuss", Vector((o.x, unten_mitte.y, 0.06)), unten_mitte + o, 0.035, rahmen, wurzel, ecken=16)
+    # Grundrahmen: Längsträger von hinter der Lehne bis unter das obere Ende, Querträger
+    y_hinten = (ecke + d_lehne * b["lehne"]).y + 0.05  # bis unter das Ende der Lehne
+    y_vorn = oben_mitte.y - 0.10
+    for seite in (-1, 1):
+        _kasten("Grundtraeger", (0.08, y_hinten - y_vorn, 0.06), Vector((seite * 0.34, (y_hinten + y_vorn) / 2, 0.03)), rahmen,
+                0.005, wurzel)
+    for y in (y_hinten - 0.04, unten_mitte.y, oben_mitte.y, unter_sitz.y):
+        _kasten("Quertraeger", (0.76, 0.06, 0.06), Vector((0, y, 0.06)), rahmen, 0.005, wurzel)
+    # Haltegriffe neben dem Sitz, je mit einem Halter an beiden Enden zum Sitzrahmen
+    for mitte, richtung in griffe.values():
+        halb = richtung.normalized() * (b["griff"][1] / 2)
+        _stab("Griff", mitte - halb, mitte + halb, b["griff"][0], gummi, wurzel)
+        for ende in (mitte - halb, mitte + halb):
+            _stab("Griffhalter", ende, Vector((math.copysign(breite / 2 - 0.02, mitte.x), ende.y, ende.z)), 0.015, rahmen, wurzel,
+                  ecken=16)
+    # Schlitten: Leerobjekt an der Mitte der Plattenoberfläche, Platte, Wagen, Hörner mit Scheiben
+    schlitten = bpy.data.objects.new("Schlitten", None)
+    bpy.context.scene.collection.objects.link(schlitten)
+    schlitten.parent = wurzel
+    R_platte = Matrix((X, q, -d)).transposed()  # z des Kastens zeigt zur Person
+    schlitten.matrix_world = Matrix.Translation(platte) @ R_platte.to_4x4()
+    pw, ph, pd = b["platte"]
+
+    def lokal(p: Vector) -> Vector:  # Welt → Raum des Schlittens in der Ausgangsstellung
+        return R_platte.transposed() @ (p - platte)
+
+    _kasten("Fussplatte", (pw, ph, pd), Vector((0, 0, -pd / 2)), _mat("Platte", GERAET, 0.75), 0.006, schlitten)
+    _kasten("Wagen", (b["schienen_abstand"] + 0.10, 0.20, 0.16), lokal(platte - q * 0.22 + d * 0.11), rahmen, 0.01, schlitten)
+    _kasten("Plattenstuetze", (0.50, 0.08, 0.10), lokal(platte + d * 0.06), rahmen, 0.008, schlitten)
+    for seite in (-1, 1):
+        # Hörner seitlich am Wagen, mit den Scheiben etwa so breit wie die Vorbilder (145 bis 165 cm)
+        fuss = platte - q * 0.22 + d * 0.11 + X * (seite * (b["schienen_abstand"] / 2 + 0.05))
+        spitze = fuss + X * (seite * 0.42)
+        _stab("Horn", fuss, spitze, 0.025, stahl, schlitten)
+        for i, dicke_s in enumerate((0.035, 0.035)):
+            m = fuss + X * (seite * (0.26 + i * 0.04 + dicke_s / 2))
+            _stab("Scheibe", m - X * (dicke_s / 2), m + X * (dicke_s / 2), 0.225, eisen, schlitten, ecken=96)
+    return {"wurzel": wurzel, "schlitten": schlitten, "polster": [lehne_obj, sitz_obj], "d": d, "q": q,
+            "R_platte": R_platte}
+
+
+# Kabelrudern-Station (D-470) nach Herstellerangaben aus der Websuche: Long Pull Row mit Gewichtsblock (Jerai Fitness, zwei
+# Rollen: 239 × 102 × 229 cm); Sitz wie die Flachbank (`BANK`, 43 cm). Eine Sitzhöhe nennt keine der Quellen. Länge 95 cm:
+# Der Sitz reicht von unter den Knien ebenso weit hinter das Gesäß, die Person sitzt in der Mitte wie auf dem Vorlagebild
+# des Produktinhabers (D-472; bis dahin 1,10 m, davon 0,85 m hinter der Person). Fußplatte und Rolle nach demselben
+# Vorlagebild (D-473): eine große, geneigte Platte für beide Füße (46 × 40 cm, geschätzt; bis D-472 zwei Platten 18 ×
+# 23 cm wie die Ironmaster Low Row Foot Plate), die Rolle vorn an der Säule in Höhe der unteren Brust, das Kabel läuft
+# waagrecht zum Griff (bis D-472 eine Rolle zwischen den Füßen). V-Griff (enger Parallelgriff) nach Händlerangaben zu den
+# Rudergriffen von Gorilla Sports: Griffe 12 cm lang und 2,5 cm dick, innen 12 cm auseinander, bis zur Öse 19 cm lang
+RUDERN = {"sitz_oben": 0.43, "sitz": (0.30, 0.95, 0.06), "platte": (0.46, 0.40, 0.03), "neigung": 70.0, "rolle_r": 0.045,
+          "griff_d": 0.025, "griff_l": 0.12, "griff_abstand": 0.145, "griff_oese": 0.19}
+
+
+def kabelrudern(sitz_vorn_y: float, platte: Vector, rolle: Vector) -> dict:
+    """Kabelrudern-Station, Person mit Blick nach −y (D-470, D-473). `sitz_vorn_y`: Vorderkante des Sitzes (Welt), der
+    Sitz reicht 0,95 m nach hinten (+y). `platte`: Mitte der Oberfläche der Fußplatte (Welt), die Platte steht `neigung`
+    Grad über der Waagrechten, oben von der Person weg. `rolle`: Punkt, an dem das Kabel die Rolle vorn an der Säule
+    verlässt (unten an der Rolle, das Kabel läuft von dort waagrecht zur Person, um die Rolle herum hinauf zur oberen
+    Rolle und hinab zum Gewichtsblock). Die Rolle sitzt in einer Gabel auf einem Querträger vor der Säule, eine Strebe
+    führt von der Oberkante der Platte zum Querträger. Gibt Wurzel, Sitzpolster, Beine des Sitzes, Fußplatte, Rolle, Gewichtsblock (wird je Bild gehoben) und die
+    Ebene der Platte (Punkt, Normale zur Person) zurück."""
+    r = RUDERN
+    polster = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Kabelrudern", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    sx, sl, sd = r["sitz"]
+    sitz_mitte_y = sitz_vorn_y + sl / 2
+    sitz = _kasten("Polster-Sitz", (sx, sl, sd), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd / 2)), polster, 0.025, wurzel)
+    # Säule hinter der Rolle (das Kabel läuft 1 cm vor dem Gewichtsblock hinauf); Längsträger vom Fuß der Säule bis zum hinteren Ende,
+    # Sitzträger und Beine
+    R = r["rolle_r"]
+    mitte_rolle = rolle + Vector((0, 0, R))
+    saeule_y = mitte_rolle.y - R - 0.06
+    hinten_y = sitz_vorn_y + sl
+    _kasten("Laengstraeger", (0.10, hinten_y - saeule_y + 0.05, 0.06), Vector((0, (hinten_y + saeule_y) / 2, 0.03)), rahmen, 0.006, wurzel)
+    _kasten("Sitztraeger", (0.08, sl - 0.10, 0.05), Vector((0, sitz_mitte_y, r["sitz_oben"] - sd - 0.025)), rahmen, 0.005, wurzel)
+    beine = [_kasten("Sitzbein", (0.06, 0.06, r["sitz_oben"] - sd - 0.06), Vector((0, y, (r["sitz_oben"] - sd - 0.06) / 2 + 0.05)),
+                     rahmen, 0.005, wurzel) for y in (sitz_vorn_y + 0.12, hinten_y - 0.10)]
+    _kasten("Fuss-hinten", (0.50, 0.06, 0.04), Vector((0, hinten_y - 0.10, 0.02)), rahmen, 0.005, wurzel)
+    # Fußplatte: eine Platte für beide Füße, geneigt; zwei Stützen zum Fuß vorn, eine Strebe von ihrer Oberkante zum
+    # Querträger unter der Rolle
+    a = math.radians(r["neigung"])
+    oben = Vector((0, -math.cos(a), math.sin(a)))  # in der Platte nach oben
+    n = Vector((0, math.sin(a), math.cos(a)))  # zur Person
+    D = Matrix((Vector((1, 0, 0)), oben, n)).transposed()
+    px, ph, pd = r["platte"]
+    m = platte - n * (pd / 2)
+    fussplatte = _quader("Fussplatte", (px, ph, pd), m, D, gummi, 0.02, wurzel)
+    unten_y = m.y + 0.06
+    _kasten("Fuss-vorn", (0.50, 0.06, 0.04), Vector((0, unten_y, 0.02)), rahmen, 0.005, wurzel)
+    for seite in (-1, 1):
+        _stab("Plattenstuetze", m - n * (pd / 2) - oben * (ph / 2 - 0.05) + Vector((seite * 0.15, 0, 0)),
+              Vector((seite * 0.15, unten_y, 0.04)), 0.018, rahmen, wurzel)
+    traeger_z = mitte_rolle.z - R - 0.035  # Querträger unter der Rolle, 1 cm unter dem Kabel zur Person
+    von = m - n * (pd / 2 + 0.03) + oben * (ph / 2 - 0.05)
+    nach = Vector((0, mitte_rolle.y + 0.02, traeger_z - 0.02))
+    lang = nach - von
+    Ds = Matrix((Vector((1, 0, 0)), lang.normalized(), Vector((1, 0, 0)).cross(lang.normalized()))).transposed()
+    _quader("Strebe", (0.07, lang.length, 0.05), (von + nach) / 2, Ds, rahmen, 0.006, wurzel)
+    # Rolle vor der Säule (Achse quer) in einer Gabel auf dem Querträger zwischen den Säulen; Säule mit Gewichtsblock,
+    # Kabel um die Rolle hinauf zur oberen Rolle und hinab zum Block
+    rolle_obj = _zylinder("Rolle", R, 0.03, mitte_rolle, "x", stahl, wurzel, ecken=48)
+    _zylinder("Rollenachse", 0.007, 0.07, mitte_rolle, "x", stahl, wurzel, ecken=16)
+    tiefe = mitte_rolle.y + 0.025 - (saeule_y + 0.05)
+    _kasten("Quertraeger", (0.62, tiefe, 0.05), Vector((0, saeule_y + 0.05 + tiefe / 2, traeger_z)), rahmen, 0.006, wurzel)
+    gabel_h = mitte_rolle.z + 0.015 - (traeger_z + 0.025)
+    for seite in (-1, 1):
+        _kasten("Rollengabel", (0.008, 0.05, gabel_h), Vector((seite * 0.026, mitte_rolle.y, traeger_z + 0.025 + gabel_h / 2)),
+                rahmen, 0.002, wurzel)
+    _kasten("Saeule", (0.10, 0.10, 2.10), Vector((0.26, saeule_y, 1.05)), rahmen, 0.008, wurzel)
+    _kasten("Saeule", (0.10, 0.10, 2.10), Vector((-0.26, saeule_y, 1.05)), rahmen, 0.008, wurzel)
+    _kasten("Saeulenkopf", (0.62, 0.12, 0.10), Vector((0, saeule_y, 2.12)), rahmen, 0.008, wurzel)
+    for seite in (-1, 1):
+        _zylinder("Fuehrung", 0.012, 1.90, Vector((seite * 0.10, saeule_y, 1.05)), "z", stahl, wurzel, ecken=24)
+    block = _kasten("Gewichtsblock", (0.30, 0.16, 0.65), Vector((0, saeule_y - 0.03, 0.40)), rahmen, 0.01, wurzel)
+    oben_rolle = Vector((0, saeule_y + 0.01, 2.02))
+    _zylinder("Rolle-oben", 0.05, 0.03, oben_rolle, "x", stahl, wurzel, ecken=48)
+    kabel("Kabel-hoch", mitte_rolle + Vector((0, -R, 0)), oben_rolle + Vector((0, 0.05, 0)))
+    kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.04, 0.725)))
+    return {"wurzel": wurzel, "sitz": sitz, "beine": beine, "fussplatte": fussplatte, "rolle": rolle_obj, "block": block,
+            "block0": block.matrix_world.copy(), "platte": (platte.copy(), n)}
+
+
+# Beinbeuger-Maschine, liegend (D-475), nach Angaben aus der Websuche; die Seiten waren in der Cloud-Umgebung nicht
+# abrufbar, alle Werte stammen aus Suchauszügen: Grundfläche und Höhe wie die Life Fitness Insignia Leg Curl (159 × 106
+# × 148 cm, Gewichtsblock 85 kg, Rolle in vier Stufen verstellbar), Brust- und Oberschenkelpolster je 15° geneigt wie bei
+# der True Fitness FUSE-1800 („Chest and thigh pads angled at 15º“), beide Polster zusammen etwa 108 cm lang wie bei der
+# Legend Fitness 912. Geschätzt: Höhe der Liegefläche, Breite und Dicke der Polster, die Rolle (Ø 12 cm wie bei einem
+# Heimgerät), die Griffe vorn am Brustpolster. Die Drehachse liegt auf der Achse der Kniegelenke, die Rolle hinten knapp
+# über den Fersen, wie es die Handbücher von Life Fitness und Hoist verlangen.
+BEINBEUGER = {"neigung": 15.0, "polster": 1.08, "breite": 0.30, "dicke": 0.07, "rolle_d": 0.12, "rolle_l": 0.46,
+              "hebel_x": 0.25, "nocke_r": 0.09, "griff_d": 0.032, "griff_l": 0.12}
+
+
+def _anhaengen(obj: bpy.types.Object, eltern: bpy.types.Object) -> bpy.types.Object:
+    """`obj` an `eltern` hängen, seine Lage in der Welt bleibt."""
+    welt = obj.matrix_world.copy()
+    obj.parent = eltern
+    obj.matrix_world = welt
+    return obj
+
+
+def _balken(name: str, von: Vector, nach: Vector, quer: tuple[float, float], mat, rund: float = 0.005,
+            eltern=None) -> bpy.types.Object:
+    """Kasten von `von` nach `nach` (Welt), Querschnitt `quer` (Breite in x, Höhe)."""
+    d = (nach - von).normalized()
+    x = Vector((1, 0, 0)) if abs(d.x) < 0.9 else Vector((0, 1, 0))
+    x = (x - d * x.dot(d)).normalized()
+    R = Matrix((x, d, x.cross(d))).transposed()
+    return _quader(name, (quer[0], (nach - von).length, quer[1]), (von + nach) / 2, R, mat, rund, eltern)
+
+
+def beinbeuger(scheitel: Vector, brust: float, schenkel: float, achse: Vector, rolle: Vector, griffe: dict) -> dict:
+    """Beinbeuger-Maschine, liegend, Person bäuchlings mit dem Kopf nach −y (D-475). `scheitel`: Mitte der Kante, an
+    der Brust- und Oberschenkelpolster oben zusammenstoßen (Welt); beide fallen um `neigung` Grad ab, das Brustpolster
+    `brust` lang nach −y, das Oberschenkelpolster `schenkel` lang nach +y (die Knie liegen knapp dahinter). `achse`:
+    Drehachse des Hebels (Welt), auf der Achse der Kniegelenke, rechts neben dem rechten Knie (x = −`hebel_x`).
+    `rolle`: Mitte der Rolle bei gestreckten Knien (Welt). `griffe`: je Seite Mitte und Richtung eines Griffs (Welt).
+    Vor dem Kopf die Säule mit dem Gewichtsblock, ein Riemen läuft von der Nocke an der Achse zu ihr. Gibt Wurzel,
+    Polster, Hebel (Leerobjekt auf der Achse, Hebelarm und Rolle hängen daran; je Bild um x gedreht), Rolle,
+    Gewichtsblock und Griffe zurück."""
+    b = BEINBEUGER
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Beinbeuger", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    a = math.radians(b["neigung"])
+    d_brust, n_brust = Vector((0, -math.cos(a), -math.sin(a))), Vector((0, -math.sin(a), math.cos(a)))
+    d_schenkel, n_schenkel = Vector((0, math.cos(a), -math.sin(a))), Vector((0, math.sin(a), math.cos(a)))
+    dicke, breite = b["dicke"], b["breite"]
+    # Polster: zwei Kästen, deren Oberseiten am Scheitel zusammenstoßen (rechtshändig: x × Länge = Normale)
+    polster = []
+    for name, d, n, lang, x in (("Brustpolster", d_brust, n_brust, brust, -X), ("Oberschenkelpolster", d_schenkel, n_schenkel, schenkel, X)):
+        R = Matrix((x, d, n)).transposed()
+        polster.append(_quader(name, (breite, lang, dicke), scheitel + d * (lang / 2) - n * (dicke / 2), R, polster_mat, 0.02, wurzel))
+    # Rahmen: Polsterträger unter beiden Polstern, Stützen zum Längsträger am Boden
+    unten_brust = scheitel + d_brust * (brust - 0.08) - n_brust * (dicke + 0.03)
+    unten_schenkel = scheitel + d_schenkel * (schenkel - 0.06) - n_schenkel * (dicke + 0.03)
+    mitte_unten = scheitel - Vector((0, 0, dicke + 0.04))
+    _balken("Polstertraeger", unten_brust, mitte_unten, (0.10, 0.05), rahmen, eltern=wurzel)
+    _balken("Polstertraeger", mitte_unten, unten_schenkel, (0.10, 0.05), rahmen, eltern=wurzel)
+    saeule_y = scheitel.y - brust * math.cos(a) - 0.55
+    hinten_y = achse.y + 0.10
+    _kasten("Laengstraeger", (0.10, hinten_y - saeule_y + 0.05, 0.06), Vector((0, (hinten_y + saeule_y) / 2, 0.03)), rahmen, 0.006, wurzel)
+    for y in (unten_brust.y, mitte_unten.y):
+        p = Vector((0, y, 0.06))
+        z_oben = unten_brust.z if y == unten_brust.y else mitte_unten.z
+        _balken("Stuetze", p, Vector((0, y, z_oben)), (0.07, 0.07), rahmen, eltern=wurzel)
+    _kasten("Fuss-quer", (0.60, 0.06, 0.04), Vector((0, unten_brust.y, 0.02)), rahmen, 0.005, wurzel)
+    _kasten("Fuss-quer", (0.60, 0.06, 0.04), Vector((0, hinten_y - 0.02, 0.02)), rahmen, 0.005, wurzel)
+    # Drehachse: Lagerbock rechts außen, vom Längsträger hinauf, mit Nocke
+    hx = achse.x
+    _balken("Lagerbock", Vector((hx - 0.05, achse.y, 0.04)), Vector((hx - 0.05, achse.y, achse.z)), (0.06, 0.08), rahmen, eltern=wurzel)
+    _balken("Lagerfuss", Vector((0, achse.y, 0.03)), Vector((hx - 0.05, achse.y, 0.03)), (0.06, 0.05), rahmen, eltern=wurzel)
+    _zylinder("Achse", 0.015, 0.12, achse + Vector((-0.03, 0, 0)), "x", stahl, wurzel, ecken=24)
+    # Hebel: Leerobjekt auf der Achse, y längs des Unterschenkels bei gestreckten Knien, z zur Rückseite der Beine
+    hebel = bpy.data.objects.new("Hebel", None)
+    bpy.context.scene.collection.objects.link(hebel)
+    R0 = Matrix((X, d_schenkel, n_schenkel)).transposed()
+    hebel.matrix_world = Matrix.Translation(achse) @ R0.to_4x4()
+    hebel.parent = wurzel
+    hebel.matrix_world = Matrix.Translation(achse) @ R0.to_4x4()
+    _anhaengen(_zylinder("Nocke", b["nocke_r"], 0.03, achse.copy(), "x", rahmen, ecken=48), hebel)
+    ende = Vector((achse.x, rolle.y, rolle.z))
+    _anhaengen(_balken("Hebelarm", achse, ende, (0.04, 0.05), rahmen), hebel)
+    rolle_obj = _zylinder("Rolle", b["rolle_d"] / 2, b["rolle_l"], Vector((0, rolle.y, rolle.z)), "x", gummi, ecken=48)
+    _anhaengen(rolle_obj, hebel)
+    _anhaengen(_zylinder("Rollenachse", 0.012, -achse.x - b["rolle_l"] / 2 + 0.03, Vector(((achse.x - b["rolle_l"] / 2) / 2, rolle.y, rolle.z)),
+                         "x", stahl, ecken=24), hebel)
+    # Griffe vorn am Brustpolster, je mit Stütze zum Polsterträger
+    griff_obj = {}
+    for s, (m, richtung) in griffe.items():
+        g = _stab("Griff", m - richtung * (b["griff_l"] / 2), m + richtung * (b["griff_l"] / 2), b["griff_d"] / 2, gummi, wurzel)
+        griff_obj[s] = g
+        _balken("Griffstuetze", Vector((m.x, m.y, m.z - 0.02)), Vector((m.x * 0.4, unten_brust.y + 0.05, unten_brust.z - 0.02)),
+                (0.03, 0.03), rahmen, eltern=wurzel)
+    # Säule mit Gewichtsblock vor dem Kopf; Riemen von der Nocke unten am Rahmen entlang zur Säule
+    _kasten("Saeule", (0.10, 0.10, 1.48), Vector((0.26, saeule_y, 0.74)), rahmen, 0.008, wurzel)
+    _kasten("Saeule", (0.10, 0.10, 1.48), Vector((-0.26, saeule_y, 0.74)), rahmen, 0.008, wurzel)
+    _kasten("Saeulenkopf", (0.62, 0.12, 0.08), Vector((0, saeule_y, 1.50)), rahmen, 0.008, wurzel)
+    for seite in (-1, 1):
+        _zylinder("Fuehrung", 0.012, 1.30, Vector((seite * 0.10, saeule_y, 0.75)), "z", stahl, wurzel, ecken=24)
+    block = _kasten("Gewichtsblock", (0.30, 0.16, 0.55), Vector((0, saeule_y, 0.36)), rahmen, 0.01, wurzel)
+    # Riemen: von der Nocke senkrecht hinab, am Längsträger entlang zur Säule, dort unter dem Block zur Mitte
+    rx = achse.x - 0.03
+    unten = Vector((rx, achse.y + b["nocke_r"], 0.10))
+    _balken("Riemen", Vector((rx, achse.y + b["nocke_r"], achse.z)), unten, (0.004, 0.03), gummi, rund=0.0, eltern=wurzel)
+    vorn = Vector((rx, saeule_y + 0.10, 0.10))
+    _balken("Riemen", unten, vorn, (0.03, 0.004), gummi, rund=0.0, eltern=wurzel)
+    _balken("Riemen", vorn, Vector((0, saeule_y + 0.10, 0.10)), (0.004, 0.03), gummi, rund=0.0, eltern=wurzel)
+    _zylinder("Umlenkrolle", 0.035, 0.03, Vector((rx, achse.y + b["nocke_r"] - 0.035, 0.135)), "x", stahl, wurzel, ecken=32)
+    return {"wurzel": wurzel, "polster": polster, "hebel": hebel, "hebel0": hebel.matrix_world.copy(), "rolle": rolle_obj,
+            "block": block, "block0": block.matrix_world.copy(), "griffe": griff_obj, "achse": achse.copy()}
+
+
+def v_griff(name: str) -> bpy.types.Object:
+    """Enger Parallelgriff (V-Griff, `RUDERN`): Leerobjekt in der Mitte zwischen den beiden Griffen; x quer, y zur Öse
+    (zum Kabel hin), z längs der Griffe. Je Griff zwei Streben zur Öse vorn."""
+    r = RUDERN
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    mitte = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(mitte)
+    oese = Vector((0, r["griff_oese"], 0))
+    halb = r["griff_abstand"] / 2
+    for seite in (-1, 1):
+        g = _zylinder(f"{name}-Griff", r["griff_d"] / 2, r["griff_l"], Vector((seite * halb, 0, 0)), "z", gummi, mitte, ecken=32)
+        g["griff"] = seite
+        for z in (-1, 1):
+            von = Vector((seite * halb, 0, z * (r["griff_l"] / 2 + 0.008)))
+            st = _stab(f"{name}-Strebe", von, oese + Vector((seite * 0.012, 0, 0)), 0.008, stahl)
+            st.parent = mitte
+        _zylinder(f"{name}-Kappe", r["griff_d"] / 2 + 0.002, 0.012, Vector((seite * halb, 0, (r["griff_l"] / 2 + 0.004))), "z",
+                  stahl, mitte, ecken=32)
+        _zylinder(f"{name}-Kappe", r["griff_d"] / 2 + 0.002, 0.012, Vector((seite * halb, 0, -(r["griff_l"] / 2 + 0.004))), "z",
+                  stahl, mitte, ecken=32)
+    _zylinder(f"{name}-Oese", 0.018, 0.012, oese, "z", stahl, mitte, ecken=32)
+    return mitte
+
+
+# Schulterdrückmaschine (D-491) nach Angaben aus der Websuche; die Seiten der Hersteller waren in der Cloud-Umgebung
+# nicht abrufbar, alle Werte stammen aus Suchauszügen: Grundfläche und Höhe wie die Life Fitness Insignia Shoulder Press
+# (164 × 144 × 185 cm, Gewichtsblock 85 kg), unabhängige, zusammenlaufende Arme („independent converging arms“), Griffe
+# im Obergriff auf Schulterhöhe oder knapp darüber (Handbücher von Precor, Hammer Strength, Body-Solid: Sitz so
+# einstellen). Geschätzt: Polster (Sitz 40 × 40 cm, Rückenpolster 32 × 62 cm), Griffe (Ø 32 mm, 14 cm lang), Form von
+# Hebeln und Rahmen, Hub des Gewichtsblocks.
+SCHULTERPRESSE = {"sitz": (0.40, 0.40, 0.08), "lehne": (0.32, 0.62, 0.07), "griff_d": 0.032, "griff_l": 0.14,
+                  "hebel": (0.045, 0.06), "hoehe": 1.85, "block_hub": 0.22}
+
+
+def schulterpresse(sitz: Vector, lehne: tuple[Vector, Vector], hebel: dict, griffe: dict) -> dict:
+    """Schulterdrückmaschine, Person mit Blick nach −y (D-491). `sitz`: Mitte der Oberseite des Sitzpolsters (Welt).
+    `lehne`: Mitte der Vorderseite des Rückenpolsters und seine Richtung nach oben (Welt); die Normale zur Person ist
+    x × oben. `hebel`: je Seite ein Punkt auf der Drehachse und ihre Richtung (Welt). `griffe`: je Seite Mitte und
+    Richtung des Griffs im Ausgang (Welt, die Richtung zeigt nach außen). Hinter dem Rückenpolster die Säule mit dem
+    Gewichtsblock, oben ein Querträger mit den beiden Lagern; jeder Hebel ist ein Leerobjekt auf seiner Achse, Hebelarm
+    und Griff hängen daran (je Bild um die Achse gedreht). Gibt Wurzel, Polster, Hebel und ihre Ausgangslage, Griffe,
+    Gewichtsblock und Rahmen zurück."""
+    p = SCHULTERPRESSE
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Schulterpresse", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    teile = []
+    # Sitzpolster auf einer Säule
+    sx, sy, sd = p["sitz"]
+    sitz_obj = _kasten("Sitzpolster", (sx, sy, sd), sitz - Vector((0, 0, sd / 2)), polster_mat, 0.025, wurzel)
+    unter_sitz = sitz.z - sd
+    # Rückenpolster, geneigt
+    mitte, oben = lehne
+    oben = oben.normalized()
+    n = X.cross(oben)
+    lx, ly, ld = p["lehne"]
+    lehne_obj = _quader("Rueckenpolster", (lx, ly, ld), mitte - n * (ld / 2), Matrix((X, oben, n)).transposed(), polster_mat,
+                        0.025, wurzel)
+    hinten = mitte - n * (ld + 0.03)  # Mitte der Rückseite, Träger dahinter
+    # Säule mit Gewichtsblock hinter dem Rückenpolster, Längsträger am Boden vom Sitz bis hinter die Säule
+    saeule_y = hinten.y + 0.30
+    vorn_y = sitz.y - sy / 2 - 0.05
+    teile.append(_kasten("Laengstraeger", (0.10, saeule_y + 0.12 - vorn_y, 0.06), Vector((0, (saeule_y + 0.12 + vorn_y) / 2, 0.03)),
+                         rahmen, 0.006, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.62, 0.07, 0.04), Vector((0, vorn_y + 0.04, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.90, 0.08, 0.04), Vector((0, saeule_y + 0.08, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Sitzsaeule", (0.08, 0.08, unter_sitz - 0.09), Vector((0, sitz.y, 0.06 + (unter_sitz - 0.09) / 2)), rahmen,
+                         0.006, wurzel))
+    teile.append(_kasten("Sitztraeger", (0.24, sy - 0.08, 0.03), Vector((0, sitz.y, unter_sitz - 0.015)), rahmen, 0.004, wurzel))
+    # Träger des Rückenpolsters: senkrecht hinter ihm, unten zum Längsträger, oben zur Säule
+    unten_lehne = hinten - oben * (ly / 2 - 0.06)
+    oben_lehne = hinten + oben * (ly / 2 - 0.08)
+    teile.append(_balken("Lehnentraeger", unten_lehne, oben_lehne, (0.06, 0.04), rahmen, eltern=wurzel))
+    teile.append(_balken("Lehnenstuetze", Vector((0, unten_lehne.y, 0.06)), unten_lehne, (0.07, 0.07), rahmen, eltern=wurzel))
+    teile.append(_balken("Lehnenhalter", oben_lehne, Vector((0, saeule_y - 0.06, oben_lehne.z)), (0.06, 0.05), rahmen, eltern=wurzel))
+    h = p["hoehe"]
+    for seite in (-1, 1):
+        teile.append(_kasten("Saeule", (0.08, 0.10, h), Vector((seite * 0.21, saeule_y, h / 2)), rahmen, 0.008, wurzel))
+        teile.append(_zylinder("Fuehrung", 0.012, h - 0.25, Vector((seite * 0.09, saeule_y, (h - 0.25) / 2 + 0.06)), "z", stahl,
+                               wurzel, ecken=24))
+    teile.append(_kasten("Saeulenkopf", (0.52, 0.12, 0.08), Vector((0, saeule_y, h - 0.04)), rahmen, 0.008, wurzel))
+    block = _kasten("Gewichtsblock", (0.28, 0.15, 0.60), Vector((0, saeule_y, 0.06 + 0.30)), rahmen, 0.01, wurzel)
+    # Lager der Hebel auf einem Querträger, der hinten an der Säule hängt
+    lager = {s: a[0] for s, a in hebel.items()}
+    quer_z = (lager["L"].z + lager["R"].z) / 2
+    quer_y = (lager["L"].y + lager["R"].y) / 2
+    teile.append(_balken("Quertraeger", Vector((lager["R"].x - 0.05, quer_y, quer_z)), Vector((lager["L"].x + 0.05, quer_y, quer_z)),
+                         (0.06, 0.07), rahmen, eltern=wurzel))
+    teile.append(_balken("Querhalter", Vector((0, quer_y, quer_z)), Vector((0, saeule_y, quer_z)), (0.07, 0.06), rahmen, eltern=wurzel))
+    hebel_obj, hebel0, griff_obj = {}, {}, {}
+    for s, (punkt, achse) in hebel.items():
+        a = achse.normalized()
+        _zylinder("Lager", 0.045, 0.10, punkt.copy(), "z", stahl, wurzel, ecken=32).matrix_world = (
+            Matrix.Translation(punkt) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        leer = bpy.data.objects.new("Hebel." + s, None)
+        bpy.context.scene.collection.objects.link(leer)
+        leer.matrix_world = Matrix.Translation(punkt)
+        leer.parent = wurzel
+        leer.matrix_world = Matrix.Translation(punkt)
+        m, k = griffe[s]
+        k = k.normalized()
+        ende = m + k * (p["griff_l"] / 2 + 0.02)  # Hebel greift außen am Griff an
+        fuss = punkt + a * (ende - punkt).dot(a)  # Punkt der Achse auf Höhe des Hebelendes
+        _anhaengen(_balken("Hebelarm", fuss, ende, p["hebel"], rahmen), leer)
+        _anhaengen(_zylinder("Hebelnabe", 0.035, 0.06, fuss.copy(), "z", stahl, ecken=32), leer).matrix_world = (
+            Matrix.Translation(fuss) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        # Keine Platte am Hebelende (D-518): `_kasten` legt seine Lage ins Netz, die Matrix verschob sie ein zweites Mal,
+        # die Platte lag außerhalb des Bildes (in keinem Bild der Schleife zu sehen) und fehlte am Griff
+        g = _stab("Griff." + s, m - k * (p["griff_l"] / 2), ende - k * 0.01, p["griff_d"] / 2, gummi)
+        _anhaengen(g, leer)
+        griff_obj[s] = g
+        hebel_obj[s] = leer
+        hebel0[s] = leer.matrix_world.copy()
+    return {"wurzel": wurzel, "sitz": sitz_obj, "lehne": lehne_obj, "polster": [sitz_obj, lehne_obj], "hebel": hebel_obj,
+            "hebel0": hebel0, "griffe": griff_obj, "block": block, "block0": block.matrix_world.copy(), "rahmen": teile}
+
+
+# Gegengewichtsmaschine für Klimmzug und Dip (D-508), kniend, nach der üblichen Bauart (Life Fitness Assisted Chin/Dip,
+# StairMaster Gravitron, Technogym Selection Assisted Chin/Dip; die Seiten der Hersteller ließen sich in der
+# Cloud-Umgebung nicht öffnen, die Maße sind geschätzt): vorn ein Turm mit dem Gewichtsblock, oben daran zwei Ausleger
+# mit den offenen Klimmzuggriffen (zwischen den Griffen ist frei, der Kopf geht hindurch), in der Mitte die Dipgriffe
+# (für Klimmzüge nach vorn geklappt), unten ein Kniepolster an zwei parallelen Hebeln: Das Polster bleibt waagrecht und
+# läuft auf einem Bogen um die Lager am Turm. Das Gegengewicht drückt das Polster nach oben; es hebt sich, wenn das
+# Polster sinkt.
+KLIMMZUGMASCHINE = {
+    "hoehe": 2.32,  # Turm, m
+    "turm_x": 0.24,  # Säulen des Turms so weit von der Mitte, m
+    "polster": (0.42, 0.34, 0.07),  # Kniepolster: Breite, Tiefe, Dicke, m
+    "griff_d": 0.032,  # Klimmzuggriffe, Durchmesser, m
+    "griff_l": 0.16,  # Länge eines Griffs, m
+    "dip_z": 1.30,  # Dipgriffe über dem Boden, m
+    "dip_x": 0.27,  # Mitte der Dipgriffe so weit von der Mitte, m
+    # Diparme (D-510): auf senkrechten Lagern außen an den Säulen, zum Dip zur Person geschwenkt, zum Klimmzug nach vorn;
+    # so lang, dass die Hände unter den Schultern greifen (die Person kniet 75 cm vor dem Turm)
+    "diplager_x": 0.32,
+    "diparm": 0.675,  # vom Lager bis zum Gummigriff, m
+    "diparm_quer": (0.05, 0.06),
+    "dipgriff_l": 0.24,
+    "dipgriff_d": 0.036,
+    "block_hub": 0.22,  # Weg des Gewichtsblocks über die ganze Bewegung des Polsters, m
+    "hebel_quer": (0.05, 0.06),
+    "stufe_z": 0.42,  # Trittstufen links und rechts, m
+}
+
+
+def dipgriffe(turm_y: float, zum_koerper: bool) -> dict:
+    """Lage der Diparme (D-510, Welt): je Seite Lager, Anfang und Ende des Gummigriffs und Richtung des Arms. Die Arme
+    drehen sich um senkrechte Lager außen an den Säulen (`diplager_x`): zum Dip zur Person hin (`zum_koerper`), dabei
+    leicht nach innen, damit die Mitte der Griffe `dip_x` von der Mitte liegt; zum Klimmzug um 180° nach vorn."""
+    m = KLIMMZUGMASCHINE
+    turm_mitte = turm_y - 0.13
+    bis_mitte = m["diparm"] + m["dipgriff_l"] / 2
+    aus = {}
+    for s, sx in (("L", 1), ("R", -1)):
+        lager = Vector((sx * m["diplager_x"], turm_mitte, m["dip_z"]))
+        dx = sx * (m["dip_x"] - m["diplager_x"])
+        d = Vector((dx, math.sqrt(bis_mitte ** 2 - dx ** 2), 0.0)).normalized()
+        if not zum_koerper:
+            d = -d
+        anfang = lager + d * m["diparm"]
+        aus[s] = {"lager": lager, "anfang": anfang, "ende": anfang + d * m["dipgriff_l"], "richtung": d}
+    return aus
+
+
+def klimmzugmaschine(griffe: dict, polster: Vector, lager: Vector, turm_y: float, dip: bool = False) -> dict:
+    """Gegengewichtsmaschine für Klimmzug und Dip, Person kniend mit Blick nach −y (D-508). `griffe`: je Seite Mitte und
+    Richtung (nach außen) des Klimmzuggriffs (Welt). `polster`: Mitte der Oberseite des Kniepolsters im Ausgang (Welt).
+    `lager`: oberes Lager der Hebel (Welt, x = 0; die Hebel liegen links und rechts davon, das untere Lager 12 cm darunter).
+    `turm_y`: Rückseite des Turms. Das Polster mit seinem Träger hängt an einem Leerobjekt, die beiden Hebel je an einem
+    eigenen auf ihrem Lager; `polster_lage` stellt sie je Bild. `dip`: Diparme zur Person geschwenkt (D-510), sonst
+    nach vorn. Gibt Wurzel, Polster, Leerobjekte, Gewichtsblock und Griffe zurück."""
+    m = KLIMMZUGMASCHINE
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Klimmzugmaschine", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    teile = []
+    h, tx = m["hoehe"], m["turm_x"]
+    turm_mitte = turm_y - 0.13
+    # Grundrahmen: zwei Längsträger von vorn bis hinter das Polster, Querträger vorn und hinten
+    hinten_y = polster.y + m["polster"][1] / 2 + 0.30
+    vorn_y = turm_mitte - 0.22
+    for seite in (-1, 1):
+        teile.append(_kasten("Laengstraeger", (0.08, hinten_y - vorn_y, 0.06), Vector((seite * 0.42, (hinten_y + vorn_y) / 2, 0.03)),
+                             rahmen, 0.006, wurzel))
+        # Trittstufe links und rechts neben dem Polster, auf einer Stütze vom Längsträger
+        stufe_y = polster.y + 0.05
+        teile.append(_kasten("Trittstufe", (0.16, 0.24, 0.03), Vector((seite * 0.40, stufe_y, m["stufe_z"])), gummi, 0.006, wurzel))
+        teile.append(_kasten("Stufenstuetze", (0.05, 0.05, m["stufe_z"] - 0.06), Vector((seite * 0.42, stufe_y, 0.06 + (m["stufe_z"] - 0.06) / 2)),
+                             rahmen, 0.005, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.92, 0.08, 0.05), Vector((0, vorn_y + 0.04, 0.025)), rahmen, 0.006, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.92, 0.08, 0.05), Vector((0, hinten_y - 0.04, 0.025)), rahmen, 0.006, wurzel))
+    # Turm: zwei Säulen, Kopf, Führungen und Gewichtsblock, Rückwand zur Person; die Namen beginnen mit „Saeule“, damit
+    # die Prüfansicht von vorn den Turm ausblendet (`render.AUSBLENDEN`)
+    for seite in (-1, 1):
+        teile.append(_kasten("Saeule", (0.08, 0.12, h), Vector((seite * tx, turm_mitte, h / 2)), rahmen, 0.008, wurzel))
+        teile.append(_zylinder("Saeulenfuehrung", 0.012, h - 0.30, Vector((seite * 0.09, turm_mitte - 0.02, (h - 0.30) / 2 + 0.06)), "z",
+                               stahl, wurzel, ecken=24))
+    teile.append(_kasten("Saeulenkopf", (2 * tx + 0.10, 0.16, 0.10), Vector((0, turm_mitte, h - 0.05)), rahmen, 0.008, wurzel))
+    teile.append(_kasten("Saeulenwand", (2 * tx - 0.06, 0.02, h - 0.55), Vector((0, turm_y - 0.01, 0.35 + (h - 0.55) / 2)), rahmen,
+                         0.004, wurzel))
+    block = _kasten("Gewichtsblock", (0.28, 0.15, 0.62), Vector((0, turm_mitte - 0.02, 0.07 + 0.31)), rahmen, 0.01, wurzel)
+    # Klimmzuggriffe: je Seite ein Ausleger vom Turmkopf nach hinten, außen herab zum Griff; die Griffe zeigen nach
+    # innen und enden offen
+    griff_obj = {}
+    for s, (mitte, k) in griffe.items():
+        k = k.normalized()
+        aussen = mitte + k * (m["griff_l"] / 2)
+        innen = mitte - k * (m["griff_l"] / 2)
+        oben = aussen + Vector((0, 0, 0.16)) + k * 0.04
+        start = Vector((math.copysign(tx, k.x), turm_mitte + 0.04, h - 0.08))
+        teile.append(_balken("Ausleger", start, oben, (0.06, 0.06), rahmen, eltern=wurzel))
+        teile.append(_balken("Griffhalter", oben, aussen + k * 0.025, (0.05, 0.05), rahmen, eltern=wurzel))
+        teile.append(_stab("Griffkappe", innen - k * 0.008, innen + k * 0.004, m["griff_d"] / 2 + 0.004, stahl, wurzel))
+        g = _stab("Griff." + s, innen, aussen + k * 0.02, m["griff_d"] / 2, gummi, wurzel)
+        griff_obj[s] = g
+    # Diparme (D-510): Lager außen an den Säulen (Name „Saeulen-…“: in der Prüfansicht von vorn mit dem Turm
+    # ausgeblendet), Arm aus Vierkantrohr, vorn der Gummigriff mit Kappe; zum Dip zur Person, zum Klimmzug nach vorn
+    dip_obj = {}
+    for s, lage in dipgriffe(turm_y, dip).items():
+        L, A, E, d = lage["lager"], lage["anfang"], lage["ende"], lage["richtung"]
+        teile.append(_kasten("Saeulen-Diplager", (0.08, 0.08, 0.14), L, rahmen, 0.006, wurzel))
+        teile.append(_zylinder("Saeulen-Diplagerbolzen", 0.012, 0.20, L.copy(), "z", stahl, wurzel, ecken=24))
+        teile.append(_balken("Diparm", L, A, m["diparm_quer"], rahmen, eltern=wurzel))
+        teile.append(_stab("Dipkappe", E - d * 0.004, E + d * 0.010, m["dipgriff_d"] / 2 + 0.004, stahl, wurzel))
+        dip_obj[s] = _stab("Dipgriff." + s, A - d * 0.01, E, m["dipgriff_d"] / 2, gummi, wurzel)
+    # Kniepolster mit Träger an einem Leerobjekt; je Seite ein Paar paralleler Hebel vom Turm
+    traeger = bpy.data.objects.new("Polstertraeger", None)
+    bpy.context.scene.collection.objects.link(traeger)
+    traeger.matrix_world = Matrix.Translation(polster)
+    traeger.parent = wurzel
+    traeger.matrix_world = Matrix.Translation(polster)
+    px, py, pd = m["polster"]
+    kissen = _kasten("Kniepolster", (px, py, pd), polster - Vector((0, 0, pd / 2)), polster_mat, 0.025)
+    _anhaengen(kissen, traeger)
+    platte = _kasten("Polsterplatte", (px - 0.04, py - 0.04, 0.02), polster - Vector((0, 0, pd + 0.01)), rahmen, 0.004)
+    _anhaengen(platte, traeger)
+    hebel_x = px / 2 - 0.03
+    unten = Vector((0, 0, 0.12))
+    hebel_obj, hebel0 = {}, {}
+    for seite, name in ((1, "L"), (-1, "R")):
+        for stufe, versatz in (("oben", Vector()), ("unten", -unten)):
+            drehpunkt = Vector((seite * hebel_x, lager.y, lager.z)) + versatz
+            ende = Vector((seite * hebel_x, polster.y - py / 2 + 0.06, polster.z - pd - 0.03)) + versatz
+            leer = bpy.data.objects.new(f"Hebel.{name}.{stufe}", None)
+            bpy.context.scene.collection.objects.link(leer)
+            leer.matrix_world = Matrix.Translation(drehpunkt)
+            leer.parent = wurzel
+            leer.matrix_world = Matrix.Translation(drehpunkt)
+            _anhaengen(_balken("Hebelarm", drehpunkt, ende, m["hebel_quer"], rahmen), leer)
+            _anhaengen(_zylinder("Hebellager", 0.03, 0.06, drehpunkt.copy(), "x", stahl, ecken=32), leer)
+            hebel_obj[f"{name}.{stufe}"] = leer
+            hebel0[f"{name}.{stufe}"] = leer.matrix_world.copy()
+        # Stütze vom unteren Hebel zur Polsterplatte (hängt am Polster)
+        _anhaengen(_balken("Polsterstuetze", Vector((seite * hebel_x, polster.y - py / 2 + 0.06, polster.z - pd - 0.15)),
+                           Vector((seite * hebel_x, polster.y - py / 2 + 0.06, polster.z - pd - 0.02)), (0.05, 0.05), rahmen),
+                   traeger)
+    return {"wurzel": wurzel, "polster": [kissen], "traeger": traeger, "traeger0": traeger.matrix_world.copy(),
+            "hebel": hebel_obj, "hebel0": hebel0, "griffe": griff_obj, "dipgriffe": dip_obj, "block": block,
+            "block0": block.matrix_world.copy(), "rahmen": teile}
+
+
+# Hackenschmidt-Maschine (D-511) nach der üblichen Bauart der Hack-Squat-Maschinen mit Scheiben (Hammer Strength, Cybex,
+# Life Fitness; die Seiten der Hersteller lassen sich in der Cloud-Umgebung nicht öffnen, die Maße sind geschätzt): zwei
+# Schienen unter 45° hinter der Person, darauf der Schlitten mit Rückenpolster, zwei Schulterpolstern und Griffen,
+# hinten die Hörner für die Scheiben; vorn unten die feste Fußplatte, vorn höher geneigt.
+HACKENSCHMIDT = {"schiene": 45.0, "platte": (0.74, 0.50, 0.03), "lehne": (0.36, 1.00, 0.07), "schulter": (0.10, 0.20, 0.08),
+                 "schienen_abstand": 0.52, "griff_d": 0.032, "griff_l": 0.13, "polster_rund": 0.025}
+
+
+def hackenschmidt(lehne: Vector, schulter: dict, griffe: dict, platte: Vector, platte_neigung: float, weg: float) -> dict:
+    """Hackenschmidt-Maschine, Person mit Blick nach −y, das Rückenpolster hinter ihr (D-511).
+
+    `lehne`: Mitte der Oberfläche des Rückenpolsters im Ausgang (Welt); Polster und Schienen steigen unter `schiene` Grad
+    nach +y. `schulter`: je Seite Mitte der Unterseite eines Schulterpolsters (Welt, liegt auf der Schulter). `griffe`:
+    je Seite Mitte und Richtung eines Griffs (Welt). `platte`: Mitte der Oberfläche der Fußplatte, `platte_neigung` Grad
+    vorn höher. `weg`: so weit fährt der Schlitten von oben nach unten (m, längs der Schiene). Polster, Griffe und Wagen
+    hängen am Leerobjekt „Schlitten“ in der Mitte der Oberfläche des Rückenpolsters; `polster` sind Rücken- und
+    Schulterpolster."""
+    b = HACKENSCHMIDT
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    X = Vector((1, 0, 0))
+    a = math.radians(b["schiene"])
+    v = Vector((0, math.cos(a), math.sin(a)))  # die Schiene hinauf, nach hinten oben
+    n = Vector((0, -math.sin(a), math.cos(a)))  # aus dem Polster zur Person
+    wurzel = bpy.data.objects.new("Hackenschmidt", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    lw, ll, ld = b["lehne"]
+    R_lehne = Matrix((X, v, n)).transposed()
+    # Schienen hinter dem Polster, von knapp über dem Boden bis über das obere Ende des Schlittens hinaus
+    tief = n * (ld + 0.12)
+    oben = lehne + v * (ll / 2 + 0.25) - tief
+    unten = lehne - v * (ll / 2 + weg + 0.10) - tief
+    if unten.z < 0.12:
+        unten = unten + v * ((0.12 - unten.z) / v.z)
+    for seite in (-1, 1):
+        o = X * (seite * b["schienen_abstand"] / 2)
+        _stab("Schiene", unten + o, oben + o, 0.03, stahl, wurzel, ecken=24)
+        _stab("Schienenstuetze", Vector((o.x, oben.y + 0.04, 0.05)), oben + o + Vector((0, 0.04, 0.03)), 0.04, rahmen, wurzel, ecken=16)
+        _stab("Schienenfuss", Vector((o.x, unten.y, 0.05)), unten + o, 0.04, rahmen, wurzel, ecken=16)
+        _kasten("Schienenkopf", (0.09, 0.12, 0.10), oben + o + Vector((0, 0.02, 0.02)), rahmen, 0.006, wurzel)
+    # Fußplatte: fest, vorn höher, auf einem Bock vom Boden
+    pw, pt, pd = b["platte"]
+    w = math.radians(platte_neigung)
+    vorn = Vector((0, -math.cos(w), math.sin(w)))  # längs der Platte nach vorn (oben)
+    pn = Vector((0, math.sin(w), math.cos(w)))  # Normale der Platte
+    R_platte = Matrix((X, -vorn, pn)).transposed()
+    _quader("Fussplatte", (pw, pt, pd), platte - pn * (pd / 2), R_platte, _mat("Platte", GERAET, 0.75), 0.006, wurzel)
+    for seite in (-1, 1):
+        for ende in (-1, 1):
+            fuss = platte + X * (seite * (pw / 2 - 0.06)) + vorn * (ende * (pt / 2 - 0.06)) - pn * pd
+            _stab("Plattenbock", Vector((fuss.x, fuss.y, 0.05)), fuss, 0.025, rahmen, wurzel, ecken=16)
+    # Grundrahmen: Längsträger von vor der Platte bis hinter die Stützen, Querträger
+    y_vorn = platte.y - pt / 2 - 0.10
+    y_hinten = oben.y + 0.12
+    for seite in (-1, 1):
+        _kasten("Grundtraeger", (0.08, y_hinten - y_vorn, 0.06), Vector((seite * 0.40, (y_vorn + y_hinten) / 2, 0.03)), rahmen,
+                0.005, wurzel)
+    for y in (y_vorn + 0.04, platte.y, unten.y, y_hinten - 0.04):
+        _kasten("Quertraeger", (0.88, 0.06, 0.06), Vector((0, y, 0.06)), rahmen, 0.005, wurzel)
+    # Schlitten: Leerobjekt in der Mitte der Polsteroberfläche, Rückenpolster, Wagen mit Lagern auf den Schienen
+    schlitten = bpy.data.objects.new("Schlitten", None)
+    bpy.context.scene.collection.objects.link(schlitten)
+    schlitten.parent = wurzel
+    schlitten.matrix_world = Matrix.Translation(lehne) @ R_lehne.to_4x4()
+    kissen = _quader("Rueckenpolster", (lw, ll, ld), lehne - n * (ld / 2), R_lehne, polster_mat, b["polster_rund"])
+    _anhaengen(kissen, schlitten)
+    _anhaengen(_quader("Polsterplatte", (lw - 0.04, ll - 0.04, 0.02), lehne - n * (ld + 0.01), R_lehne, rahmen, 0.004), schlitten)
+    wagen = lehne - n * (ld + 0.06)
+    _anhaengen(_quader("Wagen", (b["schienen_abstand"] + 0.08, ll * 0.7, 0.04), wagen, R_lehne, rahmen, 0.006), schlitten)
+    for seite in (-1, 1):
+        for ende in (-1, 1):
+            m = lehne - tief + X * (seite * b["schienen_abstand"] / 2) + v * (ende * ll * 0.3)
+            _anhaengen(_quader("Schienenlager", (0.09, 0.14, 0.09), m, R_lehne, rahmen, 0.008), schlitten)
+        # Horn für Scheiben hinten am Wagen, seitlich
+        fuss = wagen - n * 0.04 + X * (seite * (b["schienen_abstand"] / 2 + 0.04)) - v * 0.10
+        _anhaengen(_stab("Horn", fuss, fuss + X * (seite * 0.30), 0.025, stahl), schlitten)
+    # Schulterpolster: vom Rückenpolster nach vorn über die Schultern; Träger hinten zum Wagen
+    sw, sl, sd = b["schulter"]
+    schulter_obj = []
+    for s, unterseite in schulter.items():
+        ab = (unterseite - lehne).dot(n)  # Abstand der Auflage vor der Polsteroberfläche
+        # Oberseite des Kastens (+z, dort drückt `eindruecken` ein) zur Schulter hin, also die Schiene hinab
+        mitte = unterseite + v * (sd / 2) - n * ab + n * (sl / 2)
+        obj = _quader("Schulterpolster." + s, (sw, sl, sd), mitte, Matrix((X, n, -v)).transposed(), polster_mat, 0.03)
+        _anhaengen(obj, schlitten)
+        schulter_obj.append(obj)
+        traeger_von = unterseite + v * (sd + 0.03) - n * ab
+        _anhaengen(_balken("Schultertraeger", traeger_von, traeger_von - n * (ld + 0.06), (0.05, 0.05), rahmen), schlitten)
+    # Griffe neben den Schulterpolstern, mit Haltern zum Schulterträger
+    griff_obj = {}
+    for s, (mitte, k) in griffe.items():
+        k = k.normalized()
+        halb = k * (b["griff_l"] / 2)
+        g = _stab("Griff." + s, mitte - halb, mitte + halb, b["griff_d"] / 2, gummi)
+        _anhaengen(g, schlitten)
+        griff_obj[s] = g
+        # Halter vom Ende am Polster gerade nach hinten bis auf Höhe des Wagens, dann quer zu ihm: So liegt er nicht unter
+        # dem Unterarm (quer zum Rückenpolster kam der Unterarm bis 0,8 mm an ihn heran)
+        hinten = mitte + halb if (mitte + halb - lehne).dot(n) < (mitte - halb - lehne).dot(n) else mitte - halb
+        unten_h = hinten - n * ((hinten - lehne).dot(n) + ld + 0.04)
+        seite = Vector((math.copysign(b["schienen_abstand"] / 2 + 0.04, mitte.x), unten_h.y, unten_h.z))
+        _anhaengen(_stab("Griffhalter", hinten, unten_h, 0.014, rahmen, ecken=16), schlitten)
+        _anhaengen(_stab("Griffhalter", unten_h, seite, 0.014, rahmen, ecken=16), schlitten)
+    return {"wurzel": wurzel, "schlitten": schlitten, "polster": [kissen, *schulter_obj], "griffe": griff_obj,
+            "v": v, "n": n, "R_platte": R_platte, "platte": platte, "pn": pn}
+
+
+# Beinstrecker und Beinbeuger sitzend (D-514), nach der üblichen Bauart der Maschinen mit Gewichtsblock (Maße geschätzt;
+# die Ausführungstexte der App verlangen die Kniegelenke auf der Drehachse des Hebels): Sitz und Rückenpolster auf einem
+# Rahmen, die Drehachse rechts neben dem rechten Knie auf einem Lagerbock, der Hebel trägt die Rolle quer vor den
+# Unterschenkeln (Beinstrecker) oder hinter ihnen (Beinbeuger); beim Beinbeuger hält ein zweites Polster die
+# Oberschenkel knapp vor den Knien. Hinter dem Rückenpolster die Säule mit dem Gewichtsblock; ein Riemen läuft von der
+# Nocke an der Achse am Längsträger entlang zu ihr. Griffe seitlich am Sitz.
+SITZMASCHINE = {"sitz": (0.34, 0.08), "lehne": (0.34, 0.56, 0.07), "rolle_d": 0.10, "rolle_l": 0.38, "hebel_x": 0.25,
+                "nocke_r": 0.08, "griff_d": 0.032, "griff_l": 0.13, "schenkel_d": 0.09, "schenkel_l": 0.38, "hoehe": 1.40}
+
+
+def beinmaschine_sitzend(name: str, sitz: tuple[float, float, float], lehne: tuple[Vector, Vector], achse: Vector,
+                         rolle: Vector, griffe: dict, schenkelpolster: Vector | None = None) -> dict:
+    """Sitzmaschine für die Beine, Person mit Blick nach −y (D-514). `sitz`: Höhe der Oberseite des Sitzpolsters,
+    y seiner Vorderkante und seines hinteren Endes (Welt). `lehne`: Mitte der Vorderseite des Rückenpolsters und seine
+    Richtung nach oben (Welt). `achse`: Punkt der Drehachse (Welt), rechts neben dem rechten Knie (x = −`hebel_x`).
+    `rolle`: Mitte der Rolle im Ausgang (Welt). `griffe`: je Seite Mitte und Richtung eines Griffs (Welt).
+    `schenkelpolster`: Mitte des Polsters über den Oberschenkeln (Beinbeuger sitzend). Gibt Wurzel, Polster (weich),
+    Hebel (Leerobjekt auf der Achse, Hebelarm, Nocke und Rolle hängen daran; je Bild um x gedreht), Rolle,
+    Oberschenkelpolster, Gewichtsblock und Griffe zurück."""
+    m = SITZMASCHINE
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    oben_z, vorn_y, hinten_y = sitz
+    sb, sd = m["sitz"]
+    sitz_obj = _kasten("Sitzpolster", (sb, hinten_y - vorn_y, sd), Vector((0, (vorn_y + hinten_y) / 2, oben_z - sd / 2)), polster_mat,
+                       0.025, wurzel)
+    unter_sitz = oben_z - sd
+    mitte, oben = lehne
+    oben = oben.normalized()
+    n = X.cross(oben)
+    lx, ly, ld = m["lehne"]
+    lehne_obj = _quader("Rueckenpolster", (lx, ly, ld), mitte - n * (ld / 2), Matrix((X, oben, n)).transposed(), polster_mat, 0.025,
+                        wurzel)
+    hinten = mitte - n * (ld + 0.03)
+    saeule_y = max(hinten_y, hinten.y) + 0.30
+    vorn = min(vorn_y, achse.y) - 0.12
+    _kasten("Laengstraeger", (0.10, saeule_y + 0.12 - vorn, 0.06), Vector((0, (saeule_y + 0.12 + vorn) / 2, 0.03)), rahmen, 0.006, wurzel)
+    _kasten("Fuss-quer", (0.62, 0.07, 0.04), Vector((0, vorn + 0.04, 0.02)), rahmen, 0.005, wurzel)
+    _kasten("Fuss-quer", (0.90, 0.08, 0.04), Vector((0, saeule_y + 0.08, 0.02)), rahmen, 0.005, wurzel)
+    sitz_y = (vorn_y + hinten_y) / 2
+    _kasten("Sitzsaeule", (0.08, 0.08, unter_sitz - 0.09), Vector((0, sitz_y, 0.06 + (unter_sitz - 0.09) / 2)), rahmen, 0.006, wurzel)
+    _kasten("Sitztraeger", (0.24, hinten_y - vorn_y - 0.06, 0.03), Vector((0, sitz_y, unter_sitz - 0.015)), rahmen, 0.004, wurzel)
+    unten_lehne = hinten - oben * (ly / 2 - 0.06)
+    oben_lehne = hinten + oben * (ly / 2 - 0.08)
+    _balken("Lehnentraeger", unten_lehne, oben_lehne, (0.06, 0.04), rahmen, eltern=wurzel)
+    _balken("Lehnenstuetze", Vector((0, unten_lehne.y, unter_sitz - 0.03)), unten_lehne, (0.06, 0.05), rahmen, eltern=wurzel)
+    _balken("Lehnenhalter", oben_lehne, Vector((0, saeule_y - 0.06, oben_lehne.z)), (0.06, 0.05), rahmen, eltern=wurzel)
+    h = m["hoehe"]
+    for seite in (-1, 1):
+        _kasten("Saeule", (0.08, 0.10, h), Vector((seite * 0.21, saeule_y, h / 2)), rahmen, 0.008, wurzel)
+        _zylinder("Fuehrung", 0.012, h - 0.25, Vector((seite * 0.09, saeule_y, (h - 0.25) / 2 + 0.06)), "z", stahl, wurzel, ecken=24)
+    _kasten("Saeulenkopf", (0.52, 0.12, 0.08), Vector((0, saeule_y, h - 0.04)), rahmen, 0.008, wurzel)
+    block = _kasten("Gewichtsblock", (0.28, 0.15, 0.50), Vector((0, saeule_y, 0.06 + 0.25)), rahmen, 0.01, wurzel)
+    # Lagerbock rechts außen mit der Achse, Fuß quer zum Längsträger
+    bx = achse.x - 0.055
+    _balken("Lagerbock", Vector((bx, achse.y, 0.04)), Vector((bx, achse.y, achse.z + 0.05)), (0.06, 0.08), rahmen, eltern=wurzel)
+    _balken("Lagerfuss", Vector((0, achse.y, 0.03)), Vector((bx, achse.y, 0.03)), (0.06, 0.05), rahmen, eltern=wurzel)
+    _zylinder("Achse", 0.015, 0.11, achse + Vector((-0.03, 0, 0)), "x", stahl, wurzel, ecken=24)
+    # Hebel: Leerobjekt auf der Achse
+    hebel = bpy.data.objects.new("Hebel", None)
+    bpy.context.scene.collection.objects.link(hebel)
+    hebel.parent = wurzel
+    hebel.matrix_world = Matrix.Translation(achse)
+    _anhaengen(_zylinder("Nocke", m["nocke_r"], 0.03, achse + Vector((0.005, 0, 0)), "x", rahmen, ecken=48), hebel)
+    ende = Vector((achse.x, rolle.y, rolle.z))
+    _anhaengen(_balken("Hebelarm", achse, ende, (0.04, 0.05), rahmen), hebel)
+    rolle_obj = _zylinder("Rolle", m["rolle_d"] / 2, m["rolle_l"], Vector((0, rolle.y, rolle.z)), "x", gummi, ecken=48)
+    _anhaengen(rolle_obj, hebel)
+    _anhaengen(_zylinder("Rollenachse", 0.012, -achse.x - m["rolle_l"] / 2 + 0.03,
+                         Vector(((achse.x - m["rolle_l"] / 2) / 2, rolle.y, rolle.z)), "x", stahl, ecken=24), hebel)
+    # Riemen: von der Nocke hinab zum Längsträger, an ihm entlang zur Säule
+    rx = achse.x + 0.005
+    unten = Vector((rx, achse.y + m["nocke_r"], 0.10))
+    _balken("Riemen", Vector((rx, achse.y + m["nocke_r"], achse.z)), unten, (0.004, 0.03), gummi, rund=0.0, eltern=wurzel)
+    hinten_r = Vector((rx, saeule_y - 0.10, 0.10))
+    _balken("Riemen", unten, hinten_r, (0.03, 0.004), gummi, rund=0.0, eltern=wurzel)
+    _balken("Riemen", hinten_r, Vector((0, saeule_y - 0.10, 0.10)), (0.004, 0.03), gummi, rund=0.0, eltern=wurzel)
+    _zylinder("Umlenkrolle", 0.035, 0.03, Vector((rx, achse.y + m["nocke_r"] + 0.035, 0.135)), "x", stahl, wurzel, ecken=32)
+    # Oberschenkelpolster (Beinbeuger sitzend): quer über den Oberschenkeln, am Lagerbock gehalten
+    schenkel_obj = None
+    if schenkelpolster is not None:
+        schenkel_obj = _zylinder("Oberschenkelpolster", m["schenkel_d"] / 2, m["schenkel_l"], schenkelpolster.copy(), "x", polster_mat,
+                                 wurzel, ecken=48)
+        aussen = Vector((bx, schenkelpolster.y, schenkelpolster.z))
+        _zylinder("Polsterachse", 0.012, -bx - m["schenkel_l"] / 2 + 0.02, Vector(((bx - m["schenkel_l"] / 2) / 2, schenkelpolster.y,
+                                                                                   schenkelpolster.z)), "x", stahl, wurzel, ecken=24)
+        _balken("Polsterhalter", Vector((bx, achse.y, achse.z + 0.05)), aussen, (0.05, 0.05), rahmen, eltern=wurzel)
+    # Griffe seitlich am Sitz, je mit Stütze zum Sitzträger
+    griff_obj = {}
+    for s, (gm, richtung) in griffe.items():
+        richtung = richtung.normalized()
+        g = _stab("Griff", gm - richtung * (m["griff_l"] / 2), gm + richtung * (m["griff_l"] / 2), m["griff_d"] / 2, gummi, wurzel)
+        griff_obj[s] = g
+        hinten_g = gm + richtung * (m["griff_l"] / 2 + 0.01) if richtung.y > 0 else gm - richtung * (m["griff_l"] / 2 + 0.01)
+        _balken("Griffstuetze", hinten_g, Vector((hinten_g.x * 0.3, hinten_g.y, unter_sitz - 0.02)), (0.03, 0.03), rahmen, eltern=wurzel)
+    return {"wurzel": wurzel, "sitz": sitz_obj, "lehne": lehne_obj, "polster": [sitz_obj, lehne_obj], "hebel": hebel,
+            "hebel0": hebel.matrix_world.copy(), "rolle": rolle_obj, "schenkelpolster": schenkel_obj, "block": block,
+            "block0": block.matrix_world.copy(), "griffe": griff_obj, "achse": achse.copy()}
+
+
+# Wadenmaschine stehend (D-514) nach der üblichen Bauart mit Gewichtsblock (Maße geschätzt): ein Block für die Vorfüße,
+# davor ein Turm mit zwei Führungen, an denen ein Schlitten läuft; vom Schlitten reichen zwei Ausleger nach hinten über
+# die Schultern, unter ihnen die Schulterpolster, daneben die Griffe. Der Gewichtsblock im Turm hebt sich mit dem Schlitten.
+WADE_STEHEND = {"block": (0.70, 0.32), "schulter": (0.11, 0.22, 0.08), "hoehe": 2.15, "griff_d": 0.032, "griff_l": 0.13,
+                "polster_rund": 0.03}
+
+
+def wadenmaschine_stehend(block_h: float, kante_y: float, schulter: dict, griffe: dict) -> dict:
+    """Wadenmaschine stehend, Person mit Blick nach −y (D-514). `block_h`: Höhe des Blocks, `kante_y`: seine hintere Kante
+    unter den Ballen (Welt); der Block reicht von dort nach −y. `schulter`: je Seite Mitte der Unterseite eines
+    Schulterpolsters (Welt). `griffe`: je Seite Mitte und Richtung eines Griffs (Welt). Schlitten, Ausleger, Polster und
+    Griffe hängen am Leerobjekt „Schlitten“, das je Bild senkrecht verschoben wird; der Gewichtsblock hebt sich ebenso."""
+    w = WADE_STEHEND
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    X = Vector((1, 0, 0))
+    wurzel = bpy.data.objects.new("Wadenmaschine", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    bx, by = w["block"]
+    block_y = kante_y - by / 2
+    _kasten("Block", (bx, by, block_h - 0.012), Vector((0, block_y, (block_h - 0.012) / 2)), rahmen, 0.004, wurzel)
+    _kasten("Blockbelag", (bx - 0.01, by - 0.004, 0.012), Vector((0, block_y, block_h - 0.006)), _mat("Platte", GERAET, 0.75), 0.003,
+            wurzel)
+    # Turm vor dem Block: zwei Säulen, Kopf, Führungen, Gewichtsblock
+    turm_y = kante_y - by - 0.16
+    h = w["hoehe"]
+    _kasten("Grundplatte", (0.80, by + 0.40, 0.03), Vector((0, (kante_y + turm_y - 0.10) / 2, 0.015)), rahmen, 0.004, wurzel)
+    for seite in (-1, 1):
+        _kasten("Saeule", (0.08, 0.12, h), Vector((seite * 0.22, turm_y, h / 2)), rahmen, 0.008, wurzel)
+        _zylinder("Fuehrung", 0.014, h - 0.20, Vector((seite * 0.10, turm_y, (h - 0.20) / 2 + 0.05)), "z", stahl, wurzel, ecken=24)
+    _kasten("Saeulenkopf", (0.56, 0.14, 0.08), Vector((0, turm_y, h - 0.04)), rahmen, 0.008, wurzel)
+    gewicht = _kasten("Gewichtsblock", (0.30, 0.14, 0.50), Vector((0, turm_y, 0.06 + 0.25)), rahmen, 0.01, wurzel)
+    # Schlitten an der Vorderseite des Turms (zur Person), Joch quer, Ausleger nach hinten über die Schultern
+    schlitten = bpy.data.objects.new("Schlitten", None)
+    bpy.context.scene.collection.objects.link(schlitten)
+    schlitten.parent = wurzel
+    sw, sl, sd = w["schulter"]
+    oben_z = max(u.z for u in schulter.values()) + sd + 0.03  # Oberkante der Polster plus Träger
+    schlitten.matrix_world = Matrix.Translation(Vector((0, turm_y, oben_z)))
+    _anhaengen(_kasten("Schlittenplatte", (0.50, 0.04, 0.30), Vector((0, turm_y + 0.09, oben_z - 0.08)), rahmen, 0.006), schlitten)
+    for seite in (-1, 1):
+        _anhaengen(_kasten("Fuehrungslager", (0.06, 0.08, 0.14), Vector((seite * 0.10, turm_y + 0.04, oben_z - 0.08)), stahl, 0.006),
+                   schlitten)
+    polster = []
+    griff_obj = {}
+    for s, unterseite in schulter.items():
+        sx = 1 if s == "L" else -1
+        arm_von = Vector((unterseite.x, turm_y + 0.11, oben_z))
+        arm_nach = Vector((unterseite.x, unterseite.y + sl / 2 - 0.02, oben_z))
+        _anhaengen(_balken("Ausleger", arm_von, arm_nach, (0.06, 0.05), rahmen), schlitten)
+        _anhaengen(_quader("Polsterplatte", (sw - 0.02, sl - 0.02, 0.015), unterseite + Vector((0, 0, sd + 0.0075)),
+                           Matrix.Identity(3), rahmen, 0.003), schlitten)
+        # Polster: Oberseite des Kastens (+z, dort drückt `eindruecken` ein) nach unten zur Schulter
+        obj = _quader("Schulterpolster." + s, (sw, sl, sd), unterseite + Vector((0, 0, sd / 2)), Matrix((X, Vector((0, -1, 0)), Vector((0, 0, -1)))).transposed(),
+                      polster_mat, w["polster_rund"])
+        _anhaengen(obj, schlitten)
+        polster.append(obj)
+        # Griff neben dem Polster, mit Halter von seinem vorderen Ende schräg nach vorn oben zum Ausleger
+        m, k = griffe[s]
+        k = k.normalized()
+        halb = k * (w["griff_l"] / 2)
+        g = _stab("Griff." + s, m - halb, m + halb, w["griff_d"] / 2, gummi)
+        _anhaengen(g, schlitten)
+        griff_obj[s] = g
+        vorn = m - halb if (m - halb).y < (m + halb).y else m + halb
+        ziel = Vector((unterseite.x + sx * 0.03, vorn.y - 0.06, oben_z))
+        _anhaengen(_balken("Griffhalter", vorn + (vorn - m).normalized() * 0.01, ziel, (0.03, 0.03), rahmen), schlitten)
+    return {"wurzel": wurzel, "schlitten": schlitten, "schlitten0": schlitten.matrix_world.copy(), "polster": polster,
+            "griffe": griff_obj, "block": gewicht, "block0": gewicht.matrix_world.copy(), "kante": (kante_y, block_h)}
+
+
+
+# Wadenmaschine sitzend (D-514), Bauart mit Gewichtsblock (Maße geschätzt): Sitz ohne Lehne, vorn ein Block für die
+# Vorfüße, davor eine Säule mit dem Gewichtsblock; an ihr dreht ein Hebel um eine waagrechte Achse, er trägt das
+# Kniepolster, eine Rolle quer über den Oberschenkeln knapp vor den Knien, mit einem Griff an jedem Ende. Eine Nocke an
+# der Achse hebt den Gewichtsblock.
+WADE_SITZEND = {"sitz": (0.36, 0.40, 0.08), "block": (0.62, 0.30), "polster_d": 0.10, "polster_l": 0.40, "hebel_x": 0.37,
+                "nocke_r": 0.07, "hoehe": 1.20, "griff_d": 0.032, "griff_l": 0.12}
+
+
+def wadenmaschine_sitzend(sitz: Vector, block_h: float, kante_y: float, achse: Vector, polster: Vector, griffe: dict) -> dict:
+    """Wadenmaschine sitzend, Person mit Blick nach −y (D-514). `sitz`: Mitte der Oberseite des Sitzes (Welt). `block_h`,
+    `kante_y`: Höhe des Blocks und seine hintere Kante unter den Ballen. `achse`: Punkt der Drehachse des Hebels (Welt,
+    rechts außen an der Säule). `polster`: Mitte des Kniepolsters im Ausgang (Welt), Achse quer. `griffe`: je Seite Mitte
+    und Richtung eines Griffs an den Enden des Polsters (Welt). Hebelarm, Polster und Griffe hängen am Leerobjekt „Hebel“
+    auf der Achse (je Bild um x gedreht); der Gewichtsblock hebt sich um den Weg der Nocke."""
+    w = WADE_SITZEND
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Wadenmaschine", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    sx_, sy_, sd = w["sitz"]
+    sitz_obj = _kasten("Sitzpolster", (sx_, sy_, sd), sitz - Vector((0, 0, sd / 2)), polster_mat, 0.025, wurzel)
+    unter = sitz.z - sd
+    _kasten("Sitztraeger", (0.24, sy_ - 0.08, 0.03), Vector((0, sitz.y, unter - 0.015)), rahmen, 0.004, wurzel)
+    _kasten("Sitzsaeule", (0.08, 0.08, unter - 0.09), Vector((0, sitz.y, 0.06 + (unter - 0.09) / 2)), rahmen, 0.006, wurzel)
+    bx, by = w["block"]
+    block_y = kante_y - by / 2
+    _kasten("Block", (bx, by, block_h - 0.012), Vector((0, block_y, (block_h - 0.012) / 2)), rahmen, 0.004, wurzel)
+    _kasten("Blockbelag", (bx - 0.01, by - 0.004, 0.012), Vector((0, block_y, block_h - 0.006)), _mat("Platte", GERAET, 0.75), 0.003,
+            wurzel)
+    saeule_y = kante_y - by - 0.10
+    hinten = sitz.y + sy_ / 2
+    _kasten("Laengstraeger", (0.10, hinten - saeule_y + 0.10, 0.06), Vector((0, (hinten + saeule_y) / 2, 0.03)), rahmen, 0.006, wurzel)
+    _kasten("Fuss-quer", (0.62, 0.07, 0.04), Vector((0, hinten - 0.04, 0.02)), rahmen, 0.005, wurzel)
+    _kasten("Fuss-quer", (0.80, 0.10, 0.04), Vector((0, saeule_y, 0.02)), rahmen, 0.005, wurzel)
+    h = w["hoehe"]
+    for seite in (-1, 1):
+        _kasten("Saeule", (0.08, 0.10, h), Vector((seite * 0.20, saeule_y, h / 2)), rahmen, 0.008, wurzel)
+        _zylinder("Fuehrung", 0.012, h - 0.25, Vector((seite * 0.09, saeule_y, (h - 0.25) / 2 + 0.06)), "z", stahl, wurzel, ecken=24)
+    _kasten("Saeulenkopf", (0.48, 0.12, 0.08), Vector((0, saeule_y, h - 0.04)), rahmen, 0.008, wurzel)
+    gewicht = _kasten("Gewichtsblock", (0.28, 0.14, 0.45), Vector((0, saeule_y, 0.06 + 0.225)), rahmen, 0.01, wurzel)
+    # Lagerbock rechts an der Säule, Achse quer
+    bx_ = achse.x - 0.05
+    _balken("Lagerbock", Vector((bx_, saeule_y + 0.02, 0.04)), Vector((bx_, achse.y, achse.z + 0.05)), (0.06, 0.08), rahmen, eltern=wurzel)
+    _balken("Lagerfuss", Vector((-0.20, saeule_y, 0.03)), Vector((bx_, saeule_y + 0.02, 0.03)), (0.06, 0.05), rahmen, eltern=wurzel)
+    _zylinder("Achse", 0.015, 0.11, achse + Vector((-0.03, 0, 0)), "x", stahl, wurzel, ecken=24)
+    hebel = bpy.data.objects.new("Hebel", None)
+    bpy.context.scene.collection.objects.link(hebel)
+    hebel.parent = wurzel
+    hebel.matrix_world = Matrix.Translation(achse)
+    _anhaengen(_zylinder("Nocke", w["nocke_r"], 0.03, achse + Vector((0.005, 0, 0)), "x", rahmen, ecken=48), hebel)
+    # Hebelarm von der Achse zum rechten Ende der Polsterachse; Polster als Rolle quer, Griffe an beiden Enden
+    ende = Vector((achse.x, polster.y, polster.z))
+    _anhaengen(_balken("Hebelarm", achse, ende, (0.04, 0.05), rahmen), hebel)
+    kissen = _zylinder("Kniepolster", w["polster_d"] / 2, w["polster_l"], polster.copy(), "x", polster_mat, ecken=48)
+    _anhaengen(kissen, hebel)
+    aussen = max(abs(m.x) for m, _ in griffe.values()) + w["griff_l"] / 2 + 0.01  # Achse bis hinter die Griffe
+    _anhaengen(_zylinder("Polsterachse", 0.012, 2 * aussen, polster.copy(), "x", stahl, ecken=24), hebel)
+    _anhaengen(_balken("Polsterachse-rechts", Vector((-aussen, polster.y, polster.z)), ende, (0.03, 0.03), rahmen), hebel)
+    griff_obj = {}
+    for s, (m, k) in griffe.items():
+        k = k.normalized()
+        halb = k * (w["griff_l"] / 2)
+        g = _stab("Griff." + s, m - halb, m + halb, w["griff_d"] / 2, gummi)
+        _anhaengen(g, hebel)
+        griff_obj[s] = g
+    # Riemen von der Nocke hinab zum Fuß der Säule
+    rx = achse.x + 0.005
+    _balken("Riemen", Vector((rx, achse.y - w["nocke_r"], achse.z)), Vector((rx, achse.y - w["nocke_r"], 0.10)), (0.004, 0.03), gummi,
+            rund=0.0, eltern=wurzel)
+    _balken("Riemen", Vector((rx, achse.y - w["nocke_r"], 0.10)), Vector((0, saeule_y + 0.08, 0.10)), (0.03, 0.004), gummi, rund=0.0,
+            eltern=wurzel)
+    return {"wurzel": wurzel, "sitz": sitz_obj, "polster": [sitz_obj], "hebel": hebel, "hebel0": hebel.matrix_world.copy(),
+            "kniepolster": kissen, "griffe": griff_obj, "block": gewicht, "block0": gewicht.matrix_world.copy(), "achse": achse.copy()}
+
+
+
+# Kabelzug mit oberer Rolle und kurzer gerader Stange (D-515), nach der üblichen Bauart einer Kabelstation mit
+# Gewichtsblock (Maße geschätzt): zwei Säulen mit dem Block vor der Person, oben ein Ausleger mit der Rolle über der
+# Stange; das Kabel läuft von der Rolle senkrecht zur Stange hinab, über den Ausleger zur oberen Rolle und hinab zum
+# Block. Stange 50 cm, Ø 28 mm, in der Mitte ein drehbarer Haken.
+KABELZUG = {"saeule_x": 0.22, "hoehe": 2.30, "rolle_r": 0.045, "stange_l": 0.50, "stange_d": 0.028, "block": (0.30, 0.16, 0.60),
+            "block_z": 0.08, "haken": 0.07}
+
+
+def kabelzug_oben(rolle: Vector, stange: Vector | None, saeule_y: float) -> dict:
+    """Kabelzug mit oberer Rolle, Person mit Blick nach −y vor den Säulen (D-515). `rolle`: Punkt, an dem das Kabel die
+    Rolle unten verlässt (Welt); `stange`: Mitte der Stange im Ausgang (Welt), ihre Achse quer (x); `saeule_y`: Mitte der
+    Säulen. Die Stange hängt mit ihrem Haken am Leerobjekt „Stange“ (wird je Bild gesetzt), das Kabel `Kabel-Zug` setzt
+    `kabel` je Bild neu. Ohne `stange` (D-524, Seilgriff: `seil`) bleibt der Leerobjekt der Stange leer. Gibt Wurzel,
+    Leerobjekt der Stange, Gewichtsblock und Lage der Rolle zurück."""
+    k = KABELZUG
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new("Kabelzug", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    h, sx = k["hoehe"], k["saeule_x"]
+    # Grundplatte, Säulen, Kopf, Führungen und Block
+    _kasten("Grundplatte", (2 * sx + 0.22, 0.60, 0.04), Vector((0, saeule_y, 0.02)), rahmen, 0.006, wurzel)
+    for seite in (-1, 1):
+        _kasten("Saeule", (0.10, 0.12, h), Vector((seite * sx, saeule_y, h / 2)), rahmen, 0.008, wurzel)
+        _zylinder("Fuehrung", 0.012, h - 0.30, Vector((seite * 0.10, saeule_y, (h - 0.30) / 2 + 0.06)), "z", stahl, wurzel, ecken=24)
+    _kasten("Saeulenkopf", (2 * sx + 0.10, 0.16, 0.10), Vector((0, saeule_y, h - 0.05)), rahmen, 0.008, wurzel)
+    bx, by, bz = k["block"]
+    block = _kasten("Gewichtsblock", (bx, by, bz), Vector((0, saeule_y, k["block_z"] + bz / 2)), rahmen, 0.01, wurzel)
+    # Ausleger vom Kopf zur Person bis über die Rolle, Gabel mit der Rolle (Achse quer)
+    R = k["rolle_r"]
+    mitte_rolle = rolle + Vector((0, 0, R))
+    _kasten("Ausleger", (0.08, rolle.y - saeule_y + 0.10, 0.08), Vector((0, (rolle.y + saeule_y) / 2 + 0.02, h - 0.14)), rahmen, 0.006,
+            wurzel)
+    gabel_h = (h - 0.18) - (mitte_rolle.z - 0.02)
+    for seite in (-1, 1):
+        _kasten("Rollengabel", (0.008, 0.06, gabel_h), Vector((seite * 0.026, mitte_rolle.y, mitte_rolle.z - 0.02 + gabel_h / 2)), rahmen,
+                0.002, wurzel)
+    _zylinder("Rolle", R, 0.03, mitte_rolle, "x", stahl, wurzel, ecken=48)
+    _zylinder("Rollenachse", 0.007, 0.07, mitte_rolle, "x", stahl, wurzel, ecken=16)
+    oben_rolle = Vector((0, saeule_y + 0.02, h - 0.14))
+    _zylinder("Rolle-oben", 0.05, 0.03, oben_rolle, "x", stahl, wurzel, ecken=48)
+    kabel("Kabel-hoch", mitte_rolle + Vector((0, 0, R)), oben_rolle + Vector((0, 0, 0.05)))
+    kabel("Kabel-block", oben_rolle + Vector((0, -0.05, 0)), Vector((0, saeule_y - 0.03, k["block_z"] + bz)))
+    # Stange: gerade, mit Gummigriffen außen und Haken in der Mitte, an einem Leerobjekt
+    leer = bpy.data.objects.new("Stange", None)
+    bpy.context.scene.collection.objects.link(leer)
+    leer.parent = wurzel
+    if stange is None:
+        return {"wurzel": wurzel, "stange": leer, "block": block, "block0": block.matrix_world.copy(), "rolle": rolle.copy()}
+    leer.matrix_world = Matrix.Translation(stange)
+    l, d = k["stange_l"], k["stange_d"]
+    X_ = Vector((1, 0, 0))
+    _anhaengen(_stab("Kabelstange", stange - X_ * (l / 2), stange + X_ * (l / 2), d / 2, stahl, ecken=32), leer)
+    for seite in (-1, 1):
+        _anhaengen(_stab("Stangenkappe", stange + X_ * (seite * (l / 2 - 0.004)), stange + X_ * (seite * (l / 2 + 0.008)), d / 2 + 0.004,
+                         gummi, ecken=32), leer)
+    _anhaengen(_zylinder("Haken", 0.012, k["haken"], stange + Vector((0, 0, k["haken"] / 2 + d / 2)), "z", stahl, ecken=16), leer)
+    return {"wurzel": wurzel, "stange": leer, "block": block, "block0": block.matrix_world.copy(), "rolle": rolle.copy()}
+
+
+# Seilgriff (Trizepsseil, D-524): ein Seil, in der Mitte am Haken, die beiden Enden mit Gummikappen; Maße geschätzt
+# (übliche Seile 70 cm lang, 2,5 cm dick)
+SEIL = {"d": 0.025, "kappe": (0.022, 0.035), "haken": 0.05}
+
+
+def seil(name: str, von: Vector, nach: Vector, kappe: bool = False) -> bpy.types.Object:
+    """Ein Strang des Seilgriffs zwischen zwei Punkten (wird je Bild neu gesetzt wie `kabel`); mit `kappe` die Gummikappe
+    am Ende (`nach` ist dann ihre Mitte, `von` gibt die Richtung)."""
+    if kappe:
+        r, l = SEIL["kappe"]
+        obj = bpy.data.objects.get(name)
+        if obj is None:
+            obj = _zylinder(name, r, l, Vector(), "z", _mat("Gummi", GERAET, 0.7), ecken=24)
+        richtung = nach - von
+        obj.location = nach
+        obj.rotation_euler = richtung.to_track_quat("Z", "Y").to_euler()
+        return obj
+    obj = bpy.data.objects.get(name)
+    if obj is None:
+        obj = _zylinder(name, SEIL["d"] / 2, 1.0, Vector(), "z", _mat("Seil", GERAET, 0.85), ecken=16)
+    richtung = nach - von
+    obj.location = (von + nach) / 2
+    obj.rotation_euler = richtung.to_track_quat("Z", "Y").to_euler()
+    obj.scale = (1, 1, richtung.length)
+    return obj
+
+
+# Rudermaschine mit Brustpolster (D-518) für „Rudern an der Maschine“ und „High Row an der Maschine“, nach der üblichen
+# Bauart der Hebelmaschinen mit Scheiben (iso-lateral: jeder Arm hat seinen eigenen Hebel; Maße geschätzt, die Seiten
+# der Hersteller sind in der Cloud-Umgebung nicht erreichbar): Sitz auf einer Säule, davor das Brustpolster an einem
+# Träger, vorn ein Rahmen mit den Lagern der beiden Hebel. Jeder Hebel dreht um seine eigene Achse quer zur Person; am
+# Ende der Griff, nahe dem Lager ein Horn mit einer Scheibe.
+RUDERMASCHINE = {"sitz": (0.36, 0.34, 0.08), "brust": (0.32, 0.34, 0.08), "griff_d": 0.032, "griff_l": 0.15,
+                 "hebel": (0.05, 0.07), "scheibe": (0.45, 0.035)}
+
+
+def rudermaschine(name: str, sitz: Vector, brust: tuple[Vector, Vector], hebel: dict, griffe: dict,
+                  turm_y: float | None = None, scheiben: bool = True, haengend: bool = False,
+                  brust_mass: tuple[float, float, float] | None = None) -> dict:
+    """Rudermaschine, Person mit Blick nach −y (D-518). `sitz`: Mitte der Oberseite des Sitzpolsters (Welt). `brust`:
+    Mitte der Vorderseite des Brustpolsters (die Seite zur Person) und seine Richtung nach oben (Welt); die Normale zur
+    Person ist oben × x. `hebel`: je Seite ein Punkt auf der Drehachse und ihre Richtung (Welt). `griffe`: je Seite Mitte
+    und Richtung des Griffs im Ausgang (Welt). `turm_y`: Lage des Turms vorn (vor den Füßen), sonst vor Lagern und
+    Brustpolster. `haengend` (Butterfly, D-519): Der Hebel läuft vom Lager waagrecht über den Griff und senkrecht zu ihm
+    hinab (senkrechte Achse über der Schulter); `brust_mass`: Breite, Höhe und Dicke des Brustpolsters, sonst wie
+    `RUDERMASCHINE`. Jeder Hebel ist ein Leerobjekt auf seiner Achse; Hebelarm, Horn und Scheibe hängen daran und drehen je
+    Bild um die Achse. Die Griffe sind drehbar am Ende des Hebels gelagert (D-518): Sie folgen dem Hebel, bleiben aber
+    senkrecht; ihre Lage setzt die Übung je Bild (Ausgangslage `griffe0`). Gibt Wurzel, Sitz, Brustpolster, Polster,
+    Hebel und ihre Ausgangslage, Griffe und Rahmen zurück."""
+    p = RUDERMASCHINE
+    polster_mat = _mat("Polster", GERAET, 0.8)
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    eisen = _mat("Eisen", GERAET, 0.55, 0.2)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    wurzel = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    X = Vector((1, 0, 0))
+    teile = []
+    # Sitz auf einer Säule
+    sx, sy, sd = p["sitz"]
+    sitz_obj = _kasten("Sitzpolster", (sx, sy, sd), sitz - Vector((0, 0, sd / 2)), polster_mat, 0.025, wurzel)
+    unter_sitz = sitz.z - sd
+    # Brustpolster, geneigt, mit Träger nach vorn unten
+    mitte, oben = brust
+    oben = oben.normalized()
+    n = oben.cross(X)  # zur Person (+y)
+    bx, by, bd = brust_mass or p["brust"]
+    brust_obj = _quader("Brustpolster", (bx, by, bd), mitte - n * (bd / 2), Matrix((X, oben, n)).transposed(), polster_mat, 0.03,
+                        wurzel)
+    vorn_brust = mitte - n * (bd + 0.02)
+    lager = {s: a[0] for s, a in hebel.items()}
+    if turm_y is None:
+        turm_y = min(min(q.y for q in lager.values()) - 0.08, vorn_brust.y - 0.25)
+    hinten_y = sitz.y + sy / 2 + 0.05
+    # Längsträger am Boden vom Sitz bis zum Turm, Querfüße
+    teile.append(_kasten("Laengstraeger", (0.10, hinten_y - turm_y + 0.10, 0.06), Vector((0, (hinten_y + turm_y) / 2, 0.03)), rahmen,
+                         0.006, wurzel))
+    teile.append(_kasten("Fuss-quer", (0.60, 0.07, 0.04), Vector((0, hinten_y - 0.02, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Fuss-quer", (1.00, 0.08, 0.04), Vector((0, turm_y, 0.02)), rahmen, 0.005, wurzel))
+    teile.append(_kasten("Sitzsaeule", (0.08, 0.08, unter_sitz - 0.09), Vector((0, sitz.y, 0.06 + (unter_sitz - 0.09) / 2)), rahmen,
+                         0.006, wurzel))
+    teile.append(_kasten("Sitztraeger", (0.22, sy - 0.08, 0.03), Vector((0, sitz.y, unter_sitz - 0.015)), rahmen, 0.004, wurzel))
+    # Träger des Brustpolsters: hinter dem Polster nach unten, dann schräg zum Längsträger
+    unten_brust = vorn_brust - oben * (by / 2 - 0.06)
+    teile.append(_balken("Brusttraeger", vorn_brust + oben * (by / 2 - 0.08), unten_brust, (0.06, 0.04), rahmen, eltern=wurzel))
+    teile.append(_balken("Brustarm", unten_brust, Vector((0, unten_brust.y - 0.10, 0.06)), (0.07, 0.07), rahmen, eltern=wurzel))
+    # Turm vorn mit Querträger auf Höhe der Lager
+    lz = max(q.z for q in lager.values())
+    for seite in (-1, 1):
+        teile.append(_kasten("Turm", (0.08, 0.10, lz + 0.10), Vector((seite * 0.16, turm_y, (lz + 0.10) / 2)), rahmen, 0.008, wurzel))
+    teile.append(_kasten("Turmkopf", (0.42, 0.12, 0.08), Vector((0, turm_y, lz + 0.06)), rahmen, 0.008, wurzel))
+    hebel_obj, hebel0, griff_obj = {}, {}, {}
+    for s, (punkt, achse) in hebel.items():
+        a = achse.normalized()
+        # Ausleger vom Turm zum Lager
+        teile.append(_balken("Lagerarm", Vector((math.copysign(0.16, punkt.x), turm_y, punkt.z)), punkt, (0.06, 0.06), rahmen,
+                             eltern=wurzel))
+        _zylinder("Lager", 0.045, 0.10, punkt.copy(), "z", stahl, wurzel, ecken=32).matrix_world = (
+            Matrix.Translation(punkt) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        leer = bpy.data.objects.new("Hebel." + s, None)
+        bpy.context.scene.collection.objects.link(leer)
+        leer.parent = wurzel
+        leer.matrix_world = Matrix.Translation(punkt)
+        m, k = griffe[s]
+        k = k.normalized()
+        ende = m + k * (p["griff_l"] / 2 + 0.02)
+        fuss = punkt + a * (ende - punkt).dot(a)
+        if haengend:  # vom Lager waagrecht bis über den Griff, dann senkrecht hinab
+            fuss = punkt.copy()
+            knick = Vector((ende.x, ende.y, punkt.z))
+            _anhaengen(_balken("Hebelarm", punkt, knick, p["hebel"], rahmen), leer)
+            _anhaengen(_balken("Hebelarm", knick, ende, p["hebel"], rahmen), leer)
+        else:
+            _anhaengen(_balken("Hebelarm", fuss, ende, p["hebel"], rahmen), leer)
+        _anhaengen(_zylinder("Hebelnabe", 0.035, 0.06, fuss.copy(), "z", stahl, ecken=32), leer).matrix_world = (
+            Matrix.Translation(fuss) @ a.to_track_quat("Z", "Y").to_matrix().to_4x4())
+        g = _stab("Griff." + s, m - k * (p["griff_l"] / 2), ende - k * 0.01, p["griff_d"] / 2, gummi)
+        g.parent = wurzel
+        g.matrix_world = _stab_matrix(m - k * (p["griff_l"] / 2), ende - k * 0.01)
+        if fuss != punkt:  # Welle vom Lager zur Nabe
+            _anhaengen(_stab("Welle", punkt, fuss, 0.02, stahl), leer)
+        if scheiben:  # Horn mit Scheibe: am Hebelarm nahe dem Lager, nach außen
+            aussen = Vector((math.copysign(1.0, punkt.x), 0, 0))
+            horn_fuss = fuss.lerp(ende, 0.30)
+            _anhaengen(_stab("Horn", horn_fuss, horn_fuss + aussen * 0.26, 0.025, stahl), leer)
+            d_s, t_s = p["scheibe"]
+            _anhaengen(_stab("Scheibe", horn_fuss + aussen * 0.06, horn_fuss + aussen * (0.06 + t_s), d_s / 2, eisen, ecken=96),
+                       leer)
+        griff_obj[s] = g
+        hebel_obj[s] = leer
+        hebel0[s] = leer.matrix_world.copy()
+    return {"wurzel": wurzel, "sitz": sitz_obj, "brust": brust_obj, "polster": [sitz_obj, brust_obj], "hebel": hebel_obj,
+            "hebel0": hebel0, "griffe": griff_obj, "griffe0": {s: o.matrix_world.copy() for s, o in griff_obj.items()},
+            "rahmen": teile}
+
+
+def _stab_matrix(von: Vector, nach: Vector) -> Matrix:
+    """Lage eines Zylinders von `von` nach `nach` (wie `_stab`)."""
+    return Matrix.Translation((von + nach) / 2) @ (nach - von).to_track_quat("Z", "Y").to_matrix().to_4x4()
+
+
+# Kabelzug mit zwei Säulen (Kabelturm, D-519) für Fliegende am Kabel, nach der üblichen Bauart (Maße geschätzt, die Seiten
+# der Hersteller sind in der Cloud-Umgebung nicht erreichbar): links und rechts je eine Säule mit Gewichtsblock und
+# einer höhenverstellbaren Rolle an einem Schlitten, dazwischen frei. Von jeder Rolle läuft ein Kabel zu einem D-Griff;
+# über die Säule läuft es hinab zum Block, der sich um die Länge hebt, die das Kabel aus der Rolle kommt.
+KABELTURM = {"abstand": 2.70, "hoehe": 2.30, "rolle_r": 0.045, "d_griff_l": 0.12, "d_griff_d": 0.030, "d_oese": 0.10,
+             "block": (0.28, 0.16, 0.60), "block_z": 0.08}
+
+
+def d_griff(name: str) -> bpy.types.Object:
+    """D-Griff (Steigbügel): Leerobjekt in der Mitte des Griffs; x längs des Griffs, y zur Öse (zum Kabel hin). Je Ende
+    eine Strebe zur Öse."""
+    k = KABELTURM
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    gummi = _mat("Gummi", GERAET, 0.7)
+    mitte = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(mitte)
+    l, d, h = k["d_griff_l"], k["d_griff_d"], k["d_oese"]
+    _zylinder(f"{name}-Griff", d / 2, l, Vector(), "x", gummi, mitte, ecken=32)
+    oese = Vector((0, h, 0))
+    for seite in (-1, 1):
+        ende = Vector((seite * (l / 2 + 0.006), 0, 0))
+        st = _stab(f"{name}-Strebe", ende, ende + Vector((0, 0.03, 0)), 0.006, stahl)
+        st.parent = mitte
+        st2 = _stab(f"{name}-Strebe", ende + Vector((0, 0.03, 0)), oese + Vector((seite * 0.008, 0, 0)), 0.006, stahl)
+        st2.parent = mitte
+    _zylinder(f"{name}-Oese", 0.014, 0.010, oese, "z", stahl, mitte, ecken=24)
+    return mitte
+
+
+def kabelturm(rollen: dict, saeule_y: float) -> dict:
+    """Kabelturm mit zwei Säulen, Person mit Blick nach −y in der Mitte (D-519). `rollen`: je Seite der Punkt, an dem das
+    Kabel die Rolle verlässt (Welt); `saeule_y`: Mitte der Säulen. Die D-Griffe (`Griff.L`, `Griff.R`) und die Kabel
+    setzt die Übung je Bild. Die Teile einer Säule tragen ihre Seite im Namen (`Saeule.L`, `Rolle.R` …), damit eine
+    Prüfansicht die nahe Säule ausblenden kann (`render.AUSBLENDEN`, `ausblenden` der Übung). Gibt Wurzel, Griffe,
+    Blöcke und ihre Ausgangslage zurück."""
+    k = KABELTURM
+    rahmen = _mat("Rahmen", GERAET_HELL, 0.45, 0.4)
+    stahl = _mat("Stahl", GERAET_HELL, 0.35, 0.6)
+    wurzel = bpy.data.objects.new("Kabelturm", None)
+    bpy.context.scene.collection.objects.link(wurzel)
+    h, R = k["hoehe"], k["rolle_r"]
+    bloecke, bloecke0, griffe = {}, {}, {}
+    for s, rolle in rollen.items():
+        sx = 1.0 if s == "L" else -1.0
+        x = sx * k["abstand"] / 2
+        # Säule (zwei Profile mit Führungen dazwischen), Fuß, Kopf
+        _kasten(f"Saeulenfuss.{s}", (0.50, 0.60, 0.04), Vector((x, saeule_y, 0.02)), rahmen, 0.006, wurzel)
+        for dx in (-0.17, 0.17):
+            _kasten(f"Saeule.{s}", (0.06, 0.10, h), Vector((x + dx, saeule_y, h / 2)), rahmen, 0.006, wurzel)
+        for dx in (-0.06, 0.06):
+            _zylinder(f"Fuehrung.{s}", 0.011, h - 0.30, Vector((x + dx, saeule_y, (h - 0.30) / 2 + 0.06)), "z", stahl, wurzel, ecken=24)
+        _kasten(f"Saeulenkopf.{s}", (0.42, 0.14, 0.08), Vector((x, saeule_y, h - 0.04)), rahmen, 0.008, wurzel)
+        bx, by, bz = k["block"]
+        block = _kasten(f"Gewichtsblock.{s}", (bx, by, bz), Vector((x, saeule_y, k["block_z"] + bz / 2)), rahmen, 0.01, wurzel)
+        bloecke[s], bloecke0[s] = block, block.matrix_world.copy()
+        # Schiene der verstellbaren Rolle an der Innenseite, Schlitten auf Höhe der Rolle
+        innen_x = x - sx * 0.24
+        _kasten(f"Schiene.{s}", (0.05, 0.06, h - 0.20), Vector((innen_x, saeule_y, (h - 0.20) / 2 + 0.10)), rahmen, 0.004, wurzel)
+        _kasten(f"Schlitten.{s}", (0.08, 0.10, 0.16), Vector((innen_x, saeule_y, rolle.z + R)), rahmen, 0.006, wurzel)
+        mitte_rolle = rolle + Vector((0, 0, R))
+        _balken(f"Rollenhalter.{s}", Vector((innen_x, saeule_y, mitte_rolle.z)), mitte_rolle + Vector((sx * 0.02, 0, 0)), (0.04, 0.04),
+                rahmen, eltern=wurzel)
+        _zylinder(f"Rolle.{s}", R, 0.03, mitte_rolle, "y", stahl, wurzel, ecken=48)
+        kabel(f"Kabel-Saeule.{s}", Vector((innen_x, saeule_y, mitte_rolle.z + 0.08)), Vector((innen_x, saeule_y, h - 0.10)))
+        griffe[s] = d_griff(f"Griff.{s}")
+        griffe[s].parent = wurzel
+    return {"wurzel": wurzel, "griffe": griffe, "bloecke": bloecke, "bloecke0": bloecke0, "rollen": dict(rollen)}

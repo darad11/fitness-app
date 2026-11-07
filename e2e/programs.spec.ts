@@ -79,3 +79,75 @@ test('Programm C: Wochen, Hinweise und Dropsets ohne Pause sind sichtbar', async
     /Laufband1 Satz · 30:00 min · ohne Pause/,
   );
 });
+
+test('Dali’s PPLC: Wochen zum Aufklappen, Hinweis der leichten Woche, Wiederholung ab Woche 8 (D-505)', async ({
+  page,
+}) => {
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  await expect(page.getByRole('heading', { level: 1, name: 'Dali’s PPLC' })).toBeVisible();
+  const weeks = page.locator('details');
+  await expect(weeks).toHaveCount(21);
+  // Ohne aktives Programm ist Woche 1 offen; nur ihre vier Tage stehen auf der Seite.
+  await expect(page.locator('details[open]')).toHaveCount(1);
+  await expect(page.getByRole('button', { name: / heute trainieren$/ })).toHaveCount(4);
+  await expect(page.getByRole('region', { name: 'Push' })).toContainText('Dumbbell Bench Press');
+
+  // Woche 7 aufklappen: leichte Woche mit Hinweis am ersten Tag.
+  const light = weeks.nth(6);
+  await light.locator('summary').click();
+  await expect(light).toHaveAttribute('open', '');
+  const push = light.getByRole('region', { name: 'Push · leicht' });
+  await expect(push).toContainText('Diese Woche ist leichter: etwa die Hälfte der Sätze.');
+  await expect(page.getByRole('button', { name: / heute trainieren$/ })).toHaveCount(8);
+  await light.locator('summary').click();
+  await expect(page.getByRole('button', { name: / heute trainieren$/ })).toHaveCount(4);
+
+  await expect(
+    page.getByText(
+      'Danach geht es mit Woche 8 weiter. Feste Ruhetage gibt es nicht: Du startest den nächsten Tag, wann es dir passt.',
+    ),
+  ).toBeVisible();
+});
+
+test('Dali’s PPLC: jede Übung mit Aufwärmsatz, in Woche 1 drei Arbeitssätze (D-531)', async ({
+  page,
+}) => {
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  await page.getByRole('button', { name: 'Push heute trainieren' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Push', exact: true })).toBeVisible();
+  // Sieben Übungen mit je einem Aufwärmsatz und drei Arbeitssätzen.
+  await expect(page.getByText('0 von 28 Sätzen')).toBeVisible();
+  // Ein einziger Aufwärmsatz heißt ohne Zahl, die Arbeitssätze „1 von 3“ bis „3 von 3“ (D-537).
+  for (const name of ['Dumbbell Bench Press', 'Dumbbell Incline Bench Press', 'Cable Fly']) {
+    const done = (set: string) =>
+      page.getByRole('button', { name: `Satz erledigt, ${name}, ${set}`, exact: true });
+    await expect(done('Aufwärmsatz')).toHaveCount(1);
+    await expect(done('Arbeitssatz 1 von 3')).toHaveCount(1);
+    await expect(done('Arbeitssatz 3 von 3')).toHaveCount(1);
+    await expect(
+      page.getByRole('button', { name: new RegExp(`^Satz erledigt, ${name}, Arbeitssatz 4`) }),
+    ).toHaveCount(0);
+  }
+});
+
+test('Dali’s PPLC: Player mit den englischen Übungsnamen, Bibliothek deutsch (D-506)', async ({
+  page,
+}) => {
+  await openPage(page, '/training/vorlagen/dalis-pplc');
+  const push = page.getByRole('region', { name: 'Push' });
+  await expect(push.getByText('Dumbbell Bench Press')).toBeVisible();
+  await expect(push.getByText(/^Englisch: /)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Push heute trainieren' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Push', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2 }).nth(0)).toHaveText('Dumbbell Bench Press');
+  await page.getByRole('button', { name: 'Übungsinfo, Dumbbell Bench Press' }).click();
+  const info = page.getByRole('dialog', { name: 'Dumbbell Bench Press' });
+  await expect(info.getByText('Hauptmuskeln')).toBeVisible();
+  await info.getByRole('button', { name: 'Schließen' }).click();
+
+  // Die Bibliothek bleibt deutsch; die Suche findet den englischen Namen.
+  await openPage(page, '/uebungen');
+  await page.getByLabel('Übungen suchen').fill('Machine Squat');
+  const results = page.getByRole('list', { name: '2 Treffer' }).getByRole('listitem');
+  await expect(results.first()).toContainText('Hackenschmidt-Kniebeuge');
+});

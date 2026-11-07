@@ -48,3 +48,23 @@ export function restRemainingSec(endsAt: string, now: Date): number {
 export function formatRestRemaining(remainingSec: number): string {
   return remainingSec > 0 ? formatClock(remainingSec) : `+${formatClock(-remainingSec)}`;
 }
+
+/** Geschütztes Leerzeichen: hält zwei Wörter in einer Zeile. */
+const NBSP = ' ';
+
+/** Wortverbinder: unsichtbar, verhindert einen Umbruch an seiner Stelle. */
+const WORD_JOINER = '\u2060';
+
+/**
+ * Hält Zahlen in einer Zeile mit dem Wort davor und mit ihrer Einheit dahinter (E1, D-525): „Ziel 5“,
+ * „Arbeitssatz 2 von 3“, „60 kg“, „45 s“; dazu Spannen wie „8–12“ (D-535: Nach dem
+ * Strich darf der Browser umbrechen, in der kleinen Pause stand „Ziel 6–“ am Zeilenende und „10“
+ * darunter). Vorher stand im Player „Ziel“ am Ende der Zeile und die Zahl allein in der nächsten.
+ * Leerzeichen an anderen Stellen bleiben, damit der Text weiter umbrechen kann.
+ */
+export function keepNumbersTogether(text: string): string {
+  return text
+    .replace(/ (?=\d)/g, NBSP)
+    .replace(/(\d) (?=(?:s|min|kg|km|m|Wdh\.)(?![\p{L}\d]))/gu, `$1${NBSP}`)
+    .replace(/(\d)–(?=\d)/g, `$1–${WORD_JOINER}`);
+}

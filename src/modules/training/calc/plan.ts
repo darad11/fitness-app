@@ -1,6 +1,7 @@
 import type { DistanceUnit, TrackingMode } from '@/modules/exercises';
 import type { PlanTree, SetType } from '../model/program';
 import type { Session, SessionSetTarget } from '../model/session';
+import { plannedName } from './exerciseName';
 
 /**
  * Eingaben zum Start einer Einheit und die Planung aus einem Programmtag. Ohne Datenbank, damit
@@ -82,7 +83,11 @@ export function planFromTemplateDay(
       if (!info) throw new ItemNotFoundError(`Übung fehlt: ${planned.nameSnapshot}`);
       return {
         exerciseId: info.id,
-        name: info.name,
+        // Mit „Übungsnamen auf Englisch“ zeigen Player, Pause und Verlauf den englischen Namen (D-506).
+        name: plannedName(template, {
+          nameSnapshot: info.name,
+          originalName: planned.originalName,
+        }),
         trackingMode: info.trackingMode,
         ...(info.distanceUnit ? { distanceUnit: info.distanceUnit } : {}),
         ...(info.isUnilateral ? { perSide: true } : {}),

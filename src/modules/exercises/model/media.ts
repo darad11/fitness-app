@@ -97,6 +97,65 @@ export const exerciseMediaSchema = z
 
 export type ExerciseMedia = z.infer<typeof exerciseMediaSchema>;
 
+/** Ein Eintrag der Liste, den die App übersprungen hat, mit Grund (D-488). */
+export interface SkippedMediaEntry {
+  part: 'sources' | 'visuals';
+  key: string;
+  reason: string;
+}
+
+/** Rahmen der Liste; die Einträge prüft `parseExerciseMedia` einzeln. */
+const mediaFrameSchema = z.strictObject({
+  version: z.literal(1),
+  sources: z.record(z.string(), z.unknown()),
+  visuals: z.record(z.string(), z.unknown()),
+});
+
+function issueText(error: z.ZodError): string {
+  return error.issues
+    .map((issue) => `${issue.path.length > 0 ? issue.path.join('.') : 'Eintrag'}: ${issue.message}`)
+    .join('; ');
+}
+
+/**
+ * Liest die Liste der Visuals Eintrag für Eintrag (D-488). Ein ungültiger Eintrag, etwa ein zu
+ * langer Alternativtext oder eine fehlende Quelle, fällt allein heraus und steht in `skipped`;
+ * alle übrigen bleiben. Nur wenn der Rahmen nicht stimmt (Version, Aufbau), wirft die Funktion.
+ * `exerciseMediaSchema` bleibt die strenge Prüfung für Tests und Werkzeuge.
+ */
+export function parseExerciseMedia(raw: unknown): {
+  media: ExerciseMedia;
+  skipped: SkippedMediaEntry[];
+} {
+  const frame = mediaFrameSchema.parse(raw);
+  const skipped: SkippedMediaEntry[] = [];
+  const sources: ExerciseMedia['sources'] = {};
+  for (const [key, value] of Object.entries(frame.sources)) {
+    const result = mediaSourceSchema.safeParse(value);
+    if (!CORE_KEY_PATTERN.test(key)) {
+      skipped.push({ part: 'sources', key, reason: 'Schlüssel ungültig' });
+    } else if (!result.success) {
+      skipped.push({ part: 'sources', key, reason: issueText(result.error) });
+    } else {
+      sources[key] = result.data;
+    }
+  }
+  const visuals: ExerciseMedia['visuals'] = {};
+  for (const [key, value] of Object.entries(frame.visuals)) {
+    const result = exerciseVisualSchema.safeParse(value);
+    if (!CORE_KEY_PATTERN.test(key)) {
+      skipped.push({ part: 'visuals', key, reason: 'Schlüssel ungültig' });
+    } else if (!result.success) {
+      skipped.push({ part: 'visuals', key, reason: issueText(result.error) });
+    } else if (!Object.hasOwn(sources, result.data.source)) {
+      skipped.push({ part: 'visuals', key, reason: `Quelle fehlt: ${result.data.source}` });
+    } else {
+      visuals[key] = result.data;
+    }
+  }
+  return { media: { version: 1, sources, visuals }, skipped };
+}
+
 // ---------------------------------------------------------------------------------------------
 // Ausführung (Leitlinien Kapitel 4)
 

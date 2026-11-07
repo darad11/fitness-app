@@ -111,6 +111,36 @@ describe('Beispielvorlagen aus sample-templates.md', () => {
     ).toThrow(/Unbekannter Tag/);
   });
 
+  it('Aufwärmsätze mit eigenem Ziel vor den Arbeitssätzen, nur mit Aufwärmsatz (D-531)', () => {
+    const withTarget = (warmup: number) => {
+      const changed = structuredClone(raw);
+      Object.assign(changed.templates[0]!.days[0]!.exercises[0]!, {
+        warmup,
+        warmupTarget: { repsMin: 8, repsMax: 10 },
+      });
+      return () => parseSampleTemplates(changed, exercises);
+    };
+    const first = withTarget(1)()[0]!.weeks[0]!.days[0]!.exercises[0]!;
+    expect(first.sets.map((set) => [set.type, set.repsMin, set.repsMax])).toEqual([
+      ['warmup', 8, 10],
+      ...first.sets.slice(1).map((set) => ['working', set.repsMin, set.repsMax]),
+    ]);
+    expect(summarizeSets(first).warmup).toBe(1);
+    expect(withTarget(0)).toThrow(/Ziel ohne Aufwärmsatz/);
+  });
+
+  it('Wiederholung ab Woche n: nur mit `repeat` und nur ab einer Woche, die es gibt (D-505)', () => {
+    const from = (repeat: boolean, repeatFromWeek: number) => {
+      const changed = structuredClone(raw);
+      Object.assign(changed.templates[0]!, { repeat, repeatFromWeek });
+      return () => parseSampleTemplates(changed, exercises);
+    };
+    expect(from(true, 2)()[0]).toMatchObject({ repeat: true, repeatFromWeek: 2 });
+    expect(from(true, 3)).toThrow(/Woche, die es nicht gibt/);
+    expect(from(false, 1)).toThrow(/Woche, die es nicht gibt/);
+    expect(from(true, 0)).toThrow();
+  });
+
   it('lehnt unvollständige oder verkehrte Bereiche und doppelte Schlüssel ab', () => {
     const reversed = structuredClone(raw);
     reversed.templates[0]!.days[0]!.exercises[0]!.target = { repsMin: 8, repsMax: 6 };

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Erzeugt docs/uebungen-animationsplan.md (D-429, Reihenfolge nach Programmen D-434): die Animationen,
-die vorerst gebaut werden, nämlich für die Übungen der Programme „Ganzkörper A/B, 4 Tage“,
-„Push/Pull/Beine, rotierend“ und „Winterprogramm 2026“ (`programs.v1.json`). Je Übung die
+"""Erzeugt docs/uebungen-animationsplan.md (D-429, Reihenfolge nach Programmen D-434, Dali’s PPLC D-508): die
+Animationen, die vorerst gebaut werden, nämlich für die Übungen der Programme „Ganzkörper A/B, 4 Tage“,
+„Dali’s PPLC“, „Push/Pull/Beine, rotierend“ und „Winterprogramm 2026“ (`programs.v1.json`). Je Übung die
 Bewegungsfamilie, die Quelle der Bewegung, der geschätzte Aufwand und die Renderzeit (aus
 `tools/uebungen-3d/familien.json`, D-411, und den gemessenen Renderzeiten der Pilot-Übungen).
-Reihenfolge: erst alle Übungen aus „Ganzkörper A/B“, dann die noch fehlenden aus „Push/Pull/Beine“,
-zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach Familien.
+Reihenfolge: erst alle Übungen aus „Ganzkörper A/B“, dann die noch fehlenden aus „Dali’s PPLC“, dann aus
+„Push/Pull/Beine“, zuletzt aus „Winterprogramm 2026“; innerhalb jedes Programms nach Familien.
 
     python3 tools/uebungen_animationsplan.py           # schreibt den Plan
     python3 tools/uebungen_animationsplan.py --check   # prüft, ob der Plan zu den Daten passt
@@ -21,9 +21,16 @@ ROOT = Path(__file__).resolve().parent.parent
 DATEN = ROOT / "tools/uebungen-3d/familien.json"
 PROGRAMME = ROOT / "src/modules/training/data/programs.v1.json"
 ZIEL = ROOT / "docs/uebungen-animationsplan.md"
-# Die drei Programme (Name in `programs.v1.json`) und ihr Kürzel in den Tabellen, in der Reihenfolge
+# Die Programme (Name in `programs.v1.json`) und ihr Kürzel in den Tabellen, in der Reihenfolge
 # der Umsetzung (D-434): Der Produktinhaber startet mit „Ganzkörper A/B“
-PROGRAMM_KUERZEL = {"Ganzkörper A/B, 4 Tage": "GK", "Push/Pull/Beine, rotierend": "PPB", "Winterprogramm 2026": "W26"}
+# Dali’s PPLC (D-504) folgt auf „Ganzkörper A/B“: Auftrag des Produktinhabers vom 04.11.2026, alle fehlenden
+# Animationen dieses Programms jetzt zu erstellen (D-508).
+PROGRAMM_KUERZEL = {
+    "Ganzkörper A/B, 4 Tage": "GK",
+    "Dali’s PPLC": "DP",
+    "Push/Pull/Beine, rotierend": "PPB",
+    "Winterprogramm 2026": "W26",
+}
 # Pilot-Übungen: Rig, Kamera und Bewegung stehen (D-407, D-408); ihre Familienbasis ist geleistet
 PILOTEN = {"back_squat_barbell", "bench_press_barbell", "lat_pulldown"}
 # Renderzeit je Übung: 60 Bilder der Schleife à 23 s (C männlich, Fassung A1, 720 × 540, 40 Proben,
@@ -60,7 +67,7 @@ def zelle(text) -> str:
 
 
 def einheiten_je_uebung() -> tuple[dict[str, int], dict[str, set[str]]]:
-    """Einheiten je Übung im Verlauf der drei Programme (je Woche die Tage laut `weeks`) und die
+    """Einheiten je Übung im Verlauf der Programme (je Woche die Tage laut `weeks`) und die
     Programme, in denen sie vorkommt."""
     programme = json.loads(PROGRAMME.read_text(encoding="utf-8"))["templates"]
     einheiten: dict[str, int] = defaultdict(int)
@@ -107,30 +114,45 @@ def bauen() -> str:
     unbekannt = sorted(k for k in einheiten if k not in uebungen)
     pilot_familien = [uebungen[p]["familie"] for p in ("back_squat_barbell", "bench_press_barbell", "lat_pulldown")]
 
+    def stand(k: str) -> str:
+        """Fortschritt je Übung in der Phase Programme (`fortschritt` in familien.json), sonst „offen“."""
+        return d.get("fortschritt", {}).get(k, "offen")
+
+    zaehler: dict[str, int] = defaultdict(int)
+    for k in keys:
+        zaehler[stand(k)] += 1
+    # Reihenfolge: in der App, dann zur Freigabe, dann alles Übrige, zuletzt offen
+    fortschritt_summen = sorted(zaehler.items(), key=lambda kv: (kv[0] == "offen", not kv[0].startswith("Schleife"), kv[0]))
+
     def familien_reihe(ks: list[str]) -> list[str]:
         """Familien in der Reihenfolge: Pilot-Familien zuerst (Basis steht), dann nach Einheiten."""
         fam = sorted({uebungen[k]["familie"] for k in ks})
         return sorted(fam, key=lambda f: (f not in pilot_familien, -sum(einheiten[k] for k in ks if uebungen[k]["familie"] == f), NAMEN[f]))
 
     zeilen = [
-        "# Animationsplan: Übungen der drei Programme",
+        "# Animationsplan: Übungen der Programme",
         "",
         f"Stand: {d['stand']} (Zuordnung D-411), Plan vom 28.10.2026 (D-429, Reihenfolge nach Programmen D-434). Erzeugt aus "
         "`tools/uebungen-3d/familien.json` und `src/modules/training/data/programs.v1.json` mit `tools/uebungen_animationsplan.py`; "
         "Änderungen dort, nicht hier.",
         "",
         "Vorerst bekommen nur die Übungen der Programme „Ganzkörper A/B, 4 Tage“ (GK), „Push/Pull/Beine, rotierend“ (PPB) und "
-        "„Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026). Reihenfolge "
-        "(sechste Nachricht): erst alle Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch "
-        "fehlenden aus „Push/Pull/Beine“, zuletzt die noch fehlenden aus „Winterprogramm 2026“; innerhalb jedes Programms nach "
+        "„Winterprogramm 2026“ (W26) eine Animation (Entscheidung des Produktinhabers, fünfte Nachricht vom 28.10.2026), dazu "
+        "„Dali’s PPLC“ (DP, D-504): Der Produktinhaber will alle fehlenden Animationen dieses Programms jetzt (Nachricht vom "
+        "04.11.2026, D-508); es folgt deshalb direkt auf „Ganzkörper A/B“. Reihenfolge (sechste Nachricht vom 28.10.2026): erst alle "
+        "Übungen aus „Ganzkörper A/B“, weil der Produktinhaber dort nach einer Pause startet, dann die noch fehlenden aus "
+        "„Dali’s PPLC“, dann aus „Push/Pull/Beine“, zuletzt aus „Winterprogramm 2026“; innerhalb jedes Programms nach "
         "Bewegungsfamilien, damit gemeinsame Grundlagen nur einmal entstehen. Die drei Pilot-Übungen (Kniebeuge mit Langhantel, "
-        "Bankdrücken mit Langhantel, Latziehen) sind gebaut und werden in der gewählten Fassung (C männlich, A1, Brust-F 4 cm) neu "
-        "gerendert; ihre Familien haben die Basis (Rig-Muster, Kamera) schon. Umgesetzt wird erst nach der Freigabe der Pilot-Übungen "
-        "und dem Merge von PR #53, auf einem eigenen Branch, familienweise mit Prüfseite.",
+        "Bankdrücken mit Langhantel, Latziehen) laufen als Schleifen in der App; ihre Familien haben die Basis (Rig-Muster, Kamera) "
+        "schon. Umgesetzt wird in der Phase Programme (Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`) familienweise: erst eine "
+        "Prüfseite, die Schleifen der Familie nach der Freigabe des Produktinhabers.",
+        "",
+        f"**Fortschritt** (Stand {d['fortschritt_stand']}, Spalte „Stand“ in den Tabellen): "
+        + "; ".join(f"{text}: {n}" for text, n in fortschritt_summen) + ".",
         "",
         "## 1. Was gezählt ist",
         "",
-        "- **Einheiten:** wie oft die Übung im Verlauf der drei Programme vorkommt (je Woche die Tage laut Plan).",
+        "- **Einheiten:** wie oft die Übung im Verlauf der vier Programme vorkommt (je Woche die Tage laut Plan).",
         "- **Quelle der Bewegung:** „Familie (Code)“ heißt aus dem Grundmuster der Familie im Rig gebaut (wie die Piloten); "
         "„Mixamo“ und „CMU“ sind Aufnahmen, die übertragen werden (`docs/uebungen-bewegungsfamilien.md` Abschnitt 5).",
         "- **Aufwand:** Arbeitsstunden je Übung aus D-411 (Variante bauen und prüfen) plus das neue Gerät, einmal gezählt bei der "
@@ -148,7 +170,12 @@ def bauen() -> str:
     familien_gezaehlt: set[str] = set()
     erledigt: set[str] = set()
     je_programm = []
-    for kuerzel, titel in (("GK", "Ganzkörper A/B, 4 Tage"), ("PPB", "Push/Pull/Beine, rotierend"), ("W26", "Winterprogramm 2026")):
+    for kuerzel, titel in (
+        ("GK", "Ganzkörper A/B, 4 Tage"),
+        ("DP", "Dali’s PPLC"),
+        ("PPB", "Push/Pull/Beine, rotierend"),
+        ("W26", "Winterprogramm 2026"),
+    ):
         ks = [k for k in keys if kuerzel in in_programm[k] and k not in erledigt]
         reihe = familien_reihe(ks)
         schon = [k for k in keys if kuerzel in in_programm[k] and k in erledigt]
@@ -161,8 +188,8 @@ def bauen() -> str:
             basis = 0.0 if (f in pilot_familien or f in familien_gezaehlt) else float(familien[f]["basis_stunden"])
             familien_gezaehlt.add(f)
             zeilen += [f"#### {NAMEN[f]}", "",
-                       "| Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis |",
-                       "|---|---|---|---|---|---|---|---|"]
+                       "| Übung | auch in | Einheiten | Quelle der Bewegung | Aufwand (Std.) | davon neues Gerät | Renderzeit (min) | Hinweis | Stand |",
+                       "|---|---|---|---|---|---|---|---|---|"]
             std_f = ger_f = ren_f = 0.0
             ein_f = 0
             for k in fks:
@@ -174,12 +201,12 @@ def bauen() -> str:
                     geraete_gezaehlt.update(neu)
                 std = float(e["aufwand_stunden"]) + geraet
                 ren = renderzeit_min(e)
-                hinweis = "Pilot, gebaut (neu rendern)" if k in PILOTEN else ("neues Gerät: " + ", ".join(neu) if neu else "")
+                hinweis = "Pilot" if k in PILOTEN else ("neues Gerät: " + ", ".join(neu) if neu else "")
                 if e.get("geraet_neu") and not neu and k not in PILOTEN:
                     hinweis = "Gerät schon gezählt"
                 auch = ", ".join(sorted(in_programm[k] - {kuerzel})) or "–"
                 zeilen.append(f"| {zelle(e['name'])} | {auch} | {einheiten[k]} | {zelle(quelle_text(e))} | "
-                              f"{z(std, 2)} | {z(geraet, 2)} | {z(ren, 0)} | {zelle(hinweis)} |")
+                              f"{z(std, 2)} | {z(geraet, 2)} | {z(ren, 0)} | {zelle(hinweis)} | {zelle(stand(k))} |")
                 std_f += std
                 ger_f += geraet
                 ren_f += ren

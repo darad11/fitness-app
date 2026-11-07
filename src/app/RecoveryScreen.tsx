@@ -35,7 +35,7 @@ export function RecoveryScreen({ error }: { error: unknown }) {
     hideStartSurface();
   }, []);
   return (
-    <main className="page-gutters mx-auto max-w-xl py-12">
+    <main className="screen-center-x mx-auto max-w-xl py-12">
       <DatabaseZap aria-hidden="true" className="mb-4 size-10 text-warning" />
       <h1 className="mb-3 text-2xl font-semibold">{t.recovery.title}</h1>
       <p className="mb-4">{t.recovery.text}</p>

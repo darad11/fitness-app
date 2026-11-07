@@ -80,3 +80,14 @@ if (typeof window !== 'undefined') {
     return original(input, init);
   };
 }
+
+// jsdom spielt keine Videos ab und meldet `play()` als nicht umgesetzt. Die Übungsschleifen rufen
+// es selbst auf (D-497); hier geschieht nichts, Tests der Wiedergabe stellen sie eigens nach.
+if (typeof HTMLMediaElement !== 'undefined') {
+  HTMLMediaElement.prototype.play = function play() {
+    return Promise.resolve();
+  };
+  HTMLMediaElement.prototype.pause = function pause() {
+    // nichts
+  };
+}

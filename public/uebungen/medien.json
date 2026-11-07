@@ -2,45 +2,876 @@
   "version": 1,
   "sources": {
     "form_3d_pilot": {
-      "name": "FORM, eigene 3D-Darstellung (Pilot), Grundmodell MakeHuman",
-      "url": "https://github.com/makehuman/makehuman",
-      "license": "Grundmodell, Haut, Augen und Haare CC0 1.0 (MakeHuman), Darstellung eigenes Werk",
+      "name": "FORM, eigene 3D-Darstellung, Grundmodell MakeHuman",
+      "url": "https://github.com/makehumancommunity/makehuman",
+      "license": "Grundmodell, Haut, Augen, Haare und Schuhform CC0 1.0 (MakeHuman), Darstellung eigenes Werk",
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
       "commercialUse": true
     }
   },
   "visuals": {
     "back_squat_barbell": {
-      "preview": { "src": "medien/kniebeuge-vorschau.webp", "width": 240, "height": 240 },
+      "preview": {
+        "src": "medien/kniebeuge-vorschau-6b73396c.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/kniebeuge.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/kniebeuge.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/kniebeuge-poster.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/kniebeuge-765cf8e2.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/kniebeuge-d813c2d2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/kniebeuge-poster-267197bc.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Kniebeuge mit Langhantel auf dem oberen Rücken, schräg von vorn: Hüfte nach unten und hinten bis Oberschenkel waagrecht, Knie über den Zehen, Füße flach am Boden, und zurück.",
       "source": "form_3d_pilot"
     },
     "bench_press_barbell": {
-      "preview": { "src": "medien/bankdruecken-vorschau.webp", "width": 240, "height": 240 },
+      "preview": {
+        "src": "medien/bankdruecken-vorschau-7ed26684.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/bankdruecken.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/bankdruecken.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/bankdruecken-poster.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/bankdruecken-41f245d0.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/bankdruecken-67b21bbe.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/bankdruecken-poster-6f385648.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Bankdrücken auf der Flachbank, schräg von vorn oben: Stange von gestreckten Armen bis zur unteren Brust und zurück, Handgelenke gerade über den Ellbogen, Füße flach am Boden.",
       "source": "form_3d_pilot"
     },
-    "lat_pulldown": {
-      "preview": { "src": "medien/latziehen-vorschau.webp", "width": 240, "height": 240 },
+    "bench_press_dumbbell": {
+      "preview": {
+        "src": "medien/bankdruecken_kh-vorschau-9fe63cd8.webp",
+        "width": 240,
+        "height": 240
+      },
       "demo": {
         "kind": "animation",
-        "file": { "src": "medien/latziehen.mp4", "width": 720, "height": 540 },
-        "webm": { "src": "medien/latziehen.webm", "width": 720, "height": 540 },
-        "still": { "src": "medien/latziehen-poster.webp", "width": 720, "height": 540 }
+        "file": {
+          "src": "medien/bankdruecken_kh-80419406.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/bankdruecken_kh-bb2676e9.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/bankdruecken_kh-poster-24226821.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Bankdrücken mit Kurzhanteln auf der Flachbank, schräg von vorn oben: Hanteln von gestreckten Armen über den Schultern bis seitlich der Brust und zurück, Handgelenke gerade, Füße flach am Boden.",
+      "source": "form_3d_pilot"
+    },
+    "incline_bench_press_dumbbell": {
+      "preview": {
+        "src": "medien/schraegbankdruecken_kh-vorschau-752e3d04.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/schraegbankdruecken_kh-062dd66e.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/schraegbankdruecken_kh-14044853.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/schraegbankdruecken_kh-poster-d1ee5e57.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schrägbankdrücken mit Kurzhanteln, Lehne 30°, schräg von vorn: Hanteln von gestreckten Armen über den Schultern bis seitlich der oberen Brust und zurück, Rücken an der Lehne, Handgelenke gerade, Füße flach am Boden.",
+      "source": "form_3d_pilot"
+    },
+    "lat_pulldown": {
+      "preview": {
+        "src": "medien/latziehen-vorschau-4576ccc7.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/latziehen-4316a2f3.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/latziehen-138491c1.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/latziehen-poster-7e910920.webp",
+          "width": 720,
+          "height": 540
+        }
       },
       "alt": "Latziehen am Kabel im Sitzen, schräg von hinten: Stange von oben vor dem Gesicht vorbei bis zur oberen Brust und zurück, Handgelenke gerade, Oberschenkel unter dem Polster.",
+      "source": "form_3d_pilot"
+    },
+    "leg_press": {
+      "preview": {
+        "src": "medien/beinpresse-vorschau-aa2dde84.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/beinpresse-1dace891.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinpresse-2f6e032c.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinpresse-poster-4e5510c4.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Beinpresse 45°, schräg von der Seite: Platte von fast gestreckten Beinen bis Knie 95° heran und zurück, Rücken und Gesäß bleiben an Lehne und Sitz, Füße flach auf der Platte, Knie über den Zehen.",
+      "source": "form_3d_pilot"
+    },
+    "plank": {
+      "preview": {
+        "src": "medien/unterarmstuetz-vorschau-8a0177f7.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/unterarmstuetz-3458fed2.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/unterarmstuetz-3a3cab6d.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/unterarmstuetz-poster-e186d6c5.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Unterarmstütz auf der Matte, schräg von vorn: Unterarme parallel, Ellbogen unter den Schultern, Hände flach, Körper von Kopf bis Fersen in einer Linie auf den Fußballen, Schuhe am Ballen gebogen; gehalten mit ruhiger Atmung.",
+      "source": "form_3d_pilot"
+    },
+    "crunch": {
+      "preview": {
+        "src": "medien/crunch-vorschau-a848eef2.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/crunch-ae947b23.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/crunch-47baf19a.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/crunch-poster-79b1c4ac.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Crunches auf der Matte, schräg von der Seite: Rückenlage, Knie gebeugt, Füße flach, Arme vor der Brust verschränkt; Oberkörper einrollen, bis die Schulterblätter abheben, und zurück, unterer Rücken bleibt liegen, Kopf leicht angehoben.",
+      "source": "form_3d_pilot"
+    },
+    "lateral_raise_dumbbell": {
+      "preview": {
+        "src": "medien/seitheben_kh-vorschau-7f298cc0.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/seitheben_kh-e4eb59ed.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/seitheben_kh-ac582440.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/seitheben_kh-poster-c806b7d6.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Seitheben mit Kurzhanteln im Stand, schräg von vorn: Hanteln von vor den Oberschenkeln seitlich und leicht schräg nach vorn bis Schulterhöhe und zurück, Ellbogen leicht gebeugt, Rumpf leicht vorgeneigt.",
+      "source": "form_3d_pilot"
+    },
+    "seated_cable_row": {
+      "preview": {
+        "src": "medien/rudern_kabel-vorschau-e5c67daa.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/rudern_kabel-bfbc07d5.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rudern_kabel-b66e573e.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rudern_kabel-poster-90a924ad.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Rudern am Kabel, sitzend, schräg von hinten: aufrecht, Knie gebeugt, Füße auf der Fußplatte; V-Griff am waagrechten Kabel zu den unteren Rippen ziehen, Schulterblätter zusammen, dann kontrolliert nach vorn bis zu gestreckten Armen.",
+      "source": "form_3d_pilot"
+    },
+    "lying_leg_curl": {
+      "preview": {
+        "src": "medien/beinbeuger_liegend-vorschau-1d099947.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/beinbeuger_liegend-61a8e19f.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinbeuger_liegend-ccd35385.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinbeuger_liegend-poster-d381e02c.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Beinbeuger liegend, von der Seite, leicht von hinten und oben: bäuchlings auf dem Polster, Knie knapp dahinter, Rolle über den Fersen; Knie bis etwa 120° beugen und kontrolliert strecken, Hüfte und Oberkörper bleiben auf dem Polster.",
+      "source": "form_3d_pilot"
+    },
+    "romanian_deadlift_dumbbell": {
+      "preview": {
+        "src": "medien/rumaenisches_kreuzheben_kh-vorschau-fcd0e9f9.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/rumaenisches_kreuzheben_kh-b714b2e7.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rumaenisches_kreuzheben_kh-6d437c01.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rumaenisches_kreuzheben_kh-poster-4278ceb0.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Rumänisches Kreuzheben mit Kurzhanteln, von der Seite, leicht von vorn: Knie leicht gebeugt, Rücken gerade; die Hüfte schiebt nach hinten, die Hanteln gleiten an den Beinen bis knapp unter die Knie und zurück in den Stand.",
+      "source": "form_3d_pilot"
+    },
+    "shoulder_press_machine": {
+      "preview": {
+        "src": "medien/schulterdruecken_maschine-vorschau-48674054.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/schulterdruecken_maschine-69c62749.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/schulterdruecken_maschine-d9f85f6e.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/schulterdruecken_maschine-poster-9088d08d.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schulterdrücken an der Maschine, schräg von vorn: sitzend am Rückenpolster, Obergriff an den Griffen neben dem Kopf zwischen Kinn und Ohr; die Griffe nach oben drücken, bis die Arme fast gestreckt sind, und kontrolliert zurück.",
+      "source": "form_3d_pilot"
+    },
+    "assisted_pull_up": {
+      "preview": {
+        "src": "medien/klimmzug_unterstuetzt-vorschau-c9cd32a3.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/klimmzug_unterstuetzt-941c504e.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/klimmzug_unterstuetzt-d42959f7.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/klimmzug_unterstuetzt-poster-3f90cfc6.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Klimmzüge mit Unterstützung, schräg von hinten: kniend auf dem Kniepolster, weiter Obergriff an den Griffen oben; hochziehen, bis der Hals auf Höhe der Hände ist und die Brust zur Stange kommt, und ruhig zurück in den Hang.",
+      "source": "form_3d_pilot"
+    },
+    "assisted_dip": {
+      "preview": {
+        "src": "medien/dip_unterstuetzt-vorschau-dfeba79f.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/dip_unterstuetzt-12d2a113.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/dip_unterstuetzt-a55daeb2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/dip_unterstuetzt-poster-d2753639.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Dips mit Unterstützung, schräg von hinten: kniend auf dem Kniepolster, Hände neben den Hüften auf den Dipgriffen; den Körper absenken, bis die Oberarme etwa waagrecht sind, und mit gestreckten Armen zurück nach oben.",
+      "source": "form_3d_pilot"
+    },
+    "hack_squat": {
+      "preview": {
+        "src": "medien/hackenschmidt-vorschau-489b3771.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/hackenschmidt-afeb2841.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/hackenschmidt-f7d1668a.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/hackenschmidt-poster-04fd80f3.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Hackenschmidt-Kniebeuge an der Maschine, schräg von vorn: Rücken am Polster des Schlittens, Schultern unter den Polstern, Füße auf der Plattform; in die Knie gehen, bis die Oberschenkel etwa parallel zur Plattform sind, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "leg_extension": {
+      "preview": {
+        "src": "medien/beinstrecker-vorschau-2bbf6ebe.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/beinstrecker-04f08042.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinstrecker-38f1fd96.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinstrecker-poster-afcaedc9.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Beinstrecker an der Maschine, schräg von vorn: sitzend an der Lehne, Hände an den Griffen am Sitz, Rolle vorn auf den Schienbeinen; die Knie strecken, bis die Beine fast gerade sind, und kontrolliert zurück bis 90°.",
+      "source": "form_3d_pilot"
+    },
+    "seated_leg_curl": {
+      "preview": {
+        "src": "medien/beinbeuger_sitzend-vorschau-9450a908.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/beinbeuger_sitzend-e988e078.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/beinbeuger_sitzend-9566f5cb.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/beinbeuger_sitzend-poster-4cd60f8a.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Beinbeuger sitzend an der Maschine, von der Seite: an der Lehne, Polster über den Oberschenkeln, Rolle hinter den Unterschenkeln über den Knöcheln; die Knie beugen, bis die Unterschenkel unter den Sitz zeigen, und kontrolliert strecken.",
+      "source": "form_3d_pilot"
+    },
+    "standing_calf_raise": {
+      "preview": {
+        "src": "medien/wadenheben_stehend-vorschau-2393f4f8.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/wadenheben_stehend-21dcdc00.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/wadenheben_stehend-b27c1a56.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/wadenheben_stehend-poster-ccef743c.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Wadenheben stehend an der Maschine, von der Seite: Schultern unter den Polstern, Ballen auf der Kante des Blocks, Knie gerade; die Fersen aus der Dehnung 5 cm unter dem Block so hoch wie möglich heben und wieder senken.",
+      "source": "form_3d_pilot"
+    },
+    "seated_calf_raise": {
+      "preview": {
+        "src": "medien/wadenheben_sitzend-vorschau-5ff836ba.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/wadenheben_sitzend-8428be1f.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/wadenheben_sitzend-1f12d5f2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/wadenheben_sitzend-poster-4a56f39c.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Wadenheben sitzend an der Maschine, von der Seite: Polsterrolle auf den unteren Oberschenkeln, Hände an den Griffen, Ballen auf der Kante des Blocks; die Fersen aus der Dehnung 5 cm unter dem Block so hoch wie möglich heben und senken.",
+      "source": "form_3d_pilot"
+    },
+    "biceps_curl_dumbbell": {
+      "preview": {
+        "src": "medien/bizepscurl_kh-vorschau-b90336ee.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/bizepscurl_kh-756c2a9b.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/bizepscurl_kh-0b781351.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/bizepscurl_kh-poster-d9714f0e.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Bizepscurls mit Kurzhanteln im Stand, schräg von vorn: beide Arme gleichzeitig, Ellbogen an den Seiten; die Hanteln bis vor die Schultern beugen, die Unterarme drehen dabei nach außen, und kontrolliert strecken.",
+      "source": "form_3d_pilot"
+    },
+    "hammer_curl": {
+      "preview": {
+        "src": "medien/hammercurl_kh-vorschau-ab8f6495.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/hammercurl_kh-513d30b1.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/hammercurl_kh-5d8ec4b8.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/hammercurl_kh-poster-47d96552.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Hammercurls mit Kurzhanteln im Stand, schräg von vorn: abwechselnd erst links, dann rechts, Daumen oben, Ellbogen an den Seiten; die Hantel bis vor die Schulter beugen und kontrolliert strecken, der andere Arm hängt.",
+      "source": "form_3d_pilot"
+    },
+    "triceps_pushdown_cable": {
+      "preview": {
+        "src": "medien/trizepsdruecken_kabel-vorschau-ba4d0da3.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/trizepsdruecken_kabel-cad109c1.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/trizepsdruecken_kabel-712f546b.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/trizepsdruecken_kabel-poster-8721ecb9.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Trizepsdrücken am Kabel, schräg von vorn: Oberkörper leicht vor, Ellbogen fest seitlich am Rumpf, enger Obergriff an der Stange; aus dem gebeugten Arm nach unten strecken, bis die Arme gerade sind, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "bent_over_row_barbell": {
+      "preview": {
+        "src": "medien/rudern_langhantel-vorschau-69b13d22.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/rudern_langhantel-a1360501.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rudern_langhantel-39007b93.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rudern_langhantel-poster-f7a54f66.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Rudern mit Langhantel, vorgebeugt, schräg von vorn: Knie leicht gebeugt, Rücken gerade, Oberkörper fest; die Stange im Obergriff aus den hängenden Armen zum oberen Bauch ziehen, Schulterblätter zusammen, und senken.",
+      "source": "form_3d_pilot"
+    },
+    "machine_row": {
+      "preview": {
+        "src": "medien/rudern_maschine-vorschau-f39bbc0c.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/rudern_maschine-f1723a96.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/rudern_maschine-bac989b2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/rudern_maschine-poster-86ba9a26.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Rudern an der Maschine, schräg von hinten: Brust am Polster, Daumen oben an drehbaren Griffen; nach hinten ziehen, bis die Ellbogen hinter dem Rücken sind, dann zurück, bis die Arme gestreckt sind.",
+      "source": "form_3d_pilot"
+    },
+    "high_row_machine": {
+      "preview": {
+        "src": "medien/high_row_maschine-vorschau-6252d2ed.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/high_row_maschine-ffd6cfbb.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/high_row_maschine-54af559c.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/high_row_maschine-poster-af3803d4.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "High Row an der Maschine, schräg von hinten: Brust am Polster, Obergriff; die Griffe von vorn oben schräg nach hinten unten ziehen, bis die Ellbogen hinter dem Rücken sind, und zurück bis zu gestreckten Armen.",
+      "source": "form_3d_pilot"
+    },
+    "cable_fly": {
+      "preview": {
+        "src": "medien/fliegende_kabel-vorschau-59207c37.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/fliegende_kabel-4e139b24.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/fliegende_kabel-f8021a64.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/fliegende_kabel-poster-7315537f.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Fliegende am Kabel, schräg von vorn: Schrittstellung, Oberkörper leicht vor, Ellbogen leicht gebeugt; die Griffe der oberen Rollen im Bogen vor dem Körper zusammenführen, bis sich die Hände vor der Taille treffen, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "reverse_pec_deck": {
+      "preview": {
+        "src": "medien/reverse_butterfly-vorschau-f2acdfab.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/reverse_butterfly-6a9ad4aa.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/reverse_butterfly-8e527761.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/reverse_butterfly-poster-901f59a2.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Reverse Butterfly an der Maschine, schräg von hinten: Brust am Polster, Arme leicht gebeugt auf Schulterhöhe, Daumen oben; die Griffe im Bogen nach hinten führen, bis die Ellbogen auf Höhe des Oberkörpers sind, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "cable_crunch": {
+      "preview": {
+        "src": "medien/kabelcrunch_kniend-vorschau-c35ce9d8.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/kabelcrunch_kniend-e6192352.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/kabelcrunch_kniend-b3a08770.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/kabelcrunch_kniend-poster-d273428a.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Crunches am Kabel, kniend, von der Seite, leicht von vorn: Zehen aufgestellt, das Seil seitlich am Kopf; den Rumpf einrollen, bis die Ellbogen zu den Oberschenkeln kommen, Becken und Beine bleiben, wo sie sind, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "deadlift_barbell": {
+      "preview": {
+        "src": "medien/kreuzheben_langhantel-vorschau-4aefb62e.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/kreuzheben_langhantel-0c9ee3e7.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/kreuzheben_langhantel-5aec16c2.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/kreuzheben_langhantel-poster-eab10bcc.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Kreuzheben mit Langhantel, von der Seite, leicht von vorn: Füße hüftbreit, Obergriff, Rücken gerade; die Stange nah an den Beinen vom Boden bis in den aufrechten Stand heben, Hüfte und Knie gestreckt, und kontrolliert zurück auf den Boden.",
+      "source": "form_3d_pilot"
+    },
+    "overhead_press_barbell": {
+      "preview": {
+        "src": "medien/schulterdruecken_langhantel-vorschau-fd371ce0.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/schulterdruecken_langhantel-c0e37add.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/schulterdruecken_langhantel-95ad32ac.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/schulterdruecken_langhantel-poster-d3170d71.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schulterdrücken mit Langhantel, stehend, schräg von vorn: Obergriff etwas breiter als schulterbreit, die Stange vorn auf Halshöhe; der Kopf weicht kurz zurück, die Stange steigt senkrecht, bis die Arme gestreckt sind, und zurück.",
+      "source": "form_3d_pilot"
+    },
+    "shoulder_press_dumbbell_seated": {
+      "preview": {
+        "src": "medien/schulterdruecken_kh_sitzend-vorschau-fa0728dd.webp",
+        "width": 240,
+        "height": 240
+      },
+      "demo": {
+        "kind": "animation",
+        "file": {
+          "src": "medien/schulterdruecken_kh_sitzend-456b6b66.mp4",
+          "width": 720,
+          "height": 540
+        },
+        "webm": {
+          "src": "medien/schulterdruecken_kh_sitzend-d862f487.webm",
+          "width": 720,
+          "height": 540
+        },
+        "still": {
+          "src": "medien/schulterdruecken_kh_sitzend-poster-26204e78.webp",
+          "width": 720,
+          "height": 540
+        }
+      },
+      "alt": "Schulterdrücken mit Kurzhanteln, sitzend, schräg von vorn: Kopf, Schultern und Gesäß an der fast senkrechten Lehne, Handflächen nach vorn; die Hanteln von Kinnhöhe nach oben drücken, bis die Arme fast gestreckt sind, und zurück.",
       "source": "form_3d_pilot"
     }
   }

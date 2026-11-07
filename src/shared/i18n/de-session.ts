@@ -24,17 +24,15 @@ export const tSession = {
   firstTime: 'Erstes Mal',
   setTypeShort: { warmup: 'A', drop: 'D' },
   setTypeLabel: { warmup: 'Aufwärmsatz', working: 'Arbeitssatz', drop: 'Drop-Satz' },
-  setLabel: (type: string, n: number) => `${type} ${n}`,
+  /** „Aufwärmsatz“, „Arbeitssatz 2 von 3“: gezählt je Typ, ein einzelner Satz ohne Zahl (D-537). */
+  setName: (type: string, n: number, total: number) =>
+    total > 1 ? `${type} ${n} von ${total}` : type,
   previous: 'Vorwert',
   now: 'Jetzt',
-  setOf: (n: number, total: number) => `Satz ${n} von ${total}`,
   target: 'Ziel',
   nextExercise: (name: string) => `Danach: ${name}`,
   lastExercise: 'Letzte Übung',
   /** Zwei Spalten im Player (D-380): Übungen nach der aktuellen. */
-  upNext: 'Als Nächstes',
-  openSets: (n: number) => (n === 1 ? '1 Satz' : `${n} Sätze`),
-  moreExercises: (n: number) => (n === 1 ? 'und 1 weitere Übung' : `und ${n} weitere Übungen`),
   allDone: 'Alle Sätze erledigt',
   freeSource: 'Freies Training',
   done: 'Satz erledigt',
@@ -51,7 +49,7 @@ export const tSession = {
     durationMin: 'Zeit in Minuten',
     distanceM: 'Distanz in m',
     distanceKm: 'Distanz in km',
-    assistKg: 'Entlastung in kg',
+    assistKg: 'Unterstützung in kg',
   },
   units: {
     weightKg: 'kg',
@@ -62,15 +60,16 @@ export const tSession = {
     distanceKm: 'km',
     assistKg: 'kg',
   },
-  stepDown: (step: string) => `Gewicht − ${step}`,
-  stepUp: (step: string) => `Gewicht + ${step}`,
+  // Bei Übungen mit Unterstützung ändern die Knöpfe die Unterstützung (D-507).
+  stepDown: (step: string, assist = false) => `${assist ? 'Unterstützung' : 'Gewicht'} − ${step}`,
+  stepUp: (step: string, assist = false) => `${assist ? 'Unterstützung' : 'Gewicht'} + ${step}`,
   missing: 'Trag zuerst die Werte ein; für Bereiche wie 8–10 gibt es keinen Vorschlag.',
   invalid: {
     weightKg: 'Gewicht von 0 bis 500 kg',
     reps: 'Wiederholungen als ganze Zahl von 0 bis 200',
     durationSec: 'Zeit als ganze Zahl',
     distanceM: 'Distanz von 0 bis 1000 km',
-    assistKg: 'Entlastung von 0 bis 500 kg',
+    assistKg: 'Unterstützung von 0 bis 500 kg',
   },
   saveFailed: 'Nicht gespeichert.',
   retry: 'Erneut versuchen',
@@ -117,6 +116,6 @@ export const tSession = {
     time: 'Zeit',
     weight_time: 'Gewicht und Zeit',
     time_distance: 'Zeit und Distanz',
-    assisted_reps: 'Entlastung und Wiederholungen',
+    assisted_reps: 'Unterstützung und Wiederholungen',
   },
 } as const;

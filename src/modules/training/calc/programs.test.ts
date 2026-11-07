@@ -10,9 +10,10 @@ const exercises = await loadCoreExercises();
 const programs = parseSampleTemplates(raw, exercises);
 const byKey = (key: string) => programs.find((p) => p.key === key)!;
 
-describe('Programme A, B und C (evolution-plan.md Abschnitt 4, programs.md)', () => {
-  it('enthält drei Programme mit 84 Trainingstagen', () => {
+describe('Programme Dali’s PPLC, A, B und C (evolution-plan.md Abschnitt 4, programs.md)', () => {
+  it('enthält vier Programme mit 168 Trainingstagen, das eigene des Produktinhabers zuerst', () => {
     expect(programs.map((p) => [p.key, p.program, flattenDays(p).length, p.repeat])).toEqual([
+      ['dali_pplc', true, 84, true],
       ['compound_ab_4', true, 32, true],
       ['ppl_rotation_4', true, 12, true],
       [PROGRAM_C_KEY, true, 40, false],
@@ -67,6 +68,208 @@ describe('Programme A, B und C (evolution-plan.md Abschnitt 4, programs.md)', ()
     expect(days.length).toBe(40);
     for (const day of distinctDays(c)) {
       for (const exercise of day.exercises) expect(exercise.originalName).toBeTruthy();
+    }
+  });
+});
+
+describe('Dali’s PPLC (Plan des Produktinhabers, D-504, umgebaut in D-505)', () => {
+  const pplc = () => byKey('dali_pplc');
+  /** Tag `day` (0 = Push … 3 = Compound) in Woche `week` (ab 1). */
+  const dayOf = (week: number, day: number) => pplc().weeks[week - 1]!.days[day]!;
+  const sets = (week: number, day: number, exercise: number) =>
+    summarizeSets(dayOf(week, day).exercises[exercise]!);
+
+  it('zeigt die Übungsnamen auf Englisch, die übrigen Programme nicht (D-506)', () => {
+    expect(pplc().englishNames).toBe(true);
+    expect(
+      programs.filter((program) => program.englishNames).map((program) => program.key),
+    ).toEqual(['dali_pplc']);
+  });
+
+  it('Wochen 1 bis 21, danach ab Woche 8; der Infotext steht wörtlich da', () => {
+    expect(pplc().weeks).toHaveLength(21);
+    expect(pplc().repeat).toBe(true);
+    expect(pplc().repeatFromWeek).toBe(8);
+    expect(pplc().description).toBe(
+      'So steigerst du: Jede Übung beginnt mit einem leichten Aufwärmsatz mit etwa der Hälfte des Gewichts. Jede Übung hat einen Wiederholungsbereich. Schaffst du in allen Arbeitssätzen das obere Ende sauber, erhöhst du beim nächsten Mal das Gewicht – Langhantel um 2,5 kg, Kurzhanteln und Maschinen um die nächste Stufe. Bei Dip und Pull-Up mit Unterstützung steigerst du, indem du die Unterstützung verringerst. Lass in jedem Satz ein bis drei Wiederholungen Reserve. Wochen 1–3: drei Arbeitssätze je Übung. Ab Woche 4: vier Sätze bei den Grundübungen, drei bei den übrigen. Alle sechs Wochen folgt eine leichtere Woche mit etwa der Hälfte der Sätze.',
+    );
+    const light = ['Push · leicht', 'Pull · leicht', 'Legs · leicht', 'Compound · leicht'];
+    pplc().weeks.forEach((week, index) => {
+      expect(
+        week.days.map((d) => d.name),
+        `Woche ${String(index + 1)}`,
+      ).toEqual([7, 14, 21].includes(index + 1) ? light : ['Push', 'Pull', 'Legs', 'Compound']);
+      expect(week.days.map((d) => d.weekdayHint)).toEqual([1, 2, 4, 6]);
+    });
+  });
+
+  it('Satzzahl je Woche: Wochen 1–3 je 3; Aufbau 4 und 3; leicht 2 und 1; neuer Block 3 und 2 (D-531)', () => {
+    // Push: Bankdrücken (Grundübung) und Seitheben (übrige) je Woche.
+    const push = (week: number) => [sets(week, 0, 0).working, sets(week, 0, 4).working];
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 15, 20, 21].map(push)).toEqual([
+      [3, 3],
+      [3, 3],
+      [3, 3],
+      [4, 3],
+      [4, 3],
+      [4, 3],
+      [2, 1],
+      [3, 2],
+      [4, 3],
+      [4, 3],
+      [2, 1],
+      [3, 2],
+      [4, 3],
+      [2, 1],
+    ]);
+    // Wochen 1–3 hat jede Übung drei Arbeitssätze, auch das Wadenheben am Compound-Tag; ab Woche 4
+    // bleibt es dort fest bei zwei, in der leichten Woche einer (D-505).
+    for (const week of [1, 2, 3]) {
+      for (const day of pplc().weeks[week - 1]!.days) {
+        for (const exercise of day.exercises) expect(summarizeSets(exercise).working).toBe(3);
+      }
+    }
+    expect([1, 3, 4, 7, 8].map((week) => sets(week, 3, 7).working)).toEqual([3, 3, 2, 1, 2]);
+  });
+
+  it('jede Übung beginnt mit genau einem Aufwärmsatz, Ziel 8–10, beim Plank 15–20 s (D-531)', () => {
+    let count = 0;
+    for (const week of pplc().weeks) {
+      for (const day of week.days) {
+        for (const exercise of day.exercises) {
+          const [first, ...rest] = exercise.sets;
+          expect(first?.type, `${day.name}: ${exercise.nameSnapshot}`).toBe('warmup');
+          expect(rest.some((set) => set.type === 'warmup')).toBe(false);
+          const timed = summarizeSets(exercise).target.durationMinSec !== undefined;
+          expect({
+            repsMin: first?.repsMin,
+            repsMax: first?.repsMax,
+            durationMinSec: first?.durationMinSec,
+            durationMaxSec: first?.durationMaxSec,
+          }).toEqual(
+            timed ? { durationMinSec: 15, durationMaxSec: 20 } : { repsMin: 8, repsMax: 10 },
+          );
+          count++;
+        }
+      }
+    }
+    expect(count).toBeGreaterThan(600);
+  });
+
+  it('Übungen, englische Namen, Bereiche und Pausen wie im Plan; Bench und Dip im Wochenwechsel', () => {
+    const names = (week: number, day: number) =>
+      dayOf(week, day).exercises.map((e) => e.originalName);
+    expect([0, 1, 2, 3].map((day) => names(1, day))).toEqual([
+      [
+        'Dumbbell Bench Press',
+        'Dumbbell Incline Bench Press',
+        'Dumbbell Seated Shoulder Press',
+        'Dip',
+        'Dumbbell Lateral Raise',
+        'Cable Fly',
+        'Cable Tricep Pushdown',
+      ],
+      [
+        'Barbell Deadlift',
+        'Pull-Up',
+        'Leverage Machine Iso Row',
+        'Leverage Machine High Row',
+        'Machine Reverse Fly',
+        'Dumbbell Alternating Hammer Curl',
+      ],
+      [
+        'Machine Squat',
+        'Machine Leg Press',
+        'Machine Leg Curl',
+        'Machine Leg Extension',
+        'Machine Calf Raise',
+        'Machine Seated Calf Raise',
+        'Plank',
+      ],
+      [
+        'Pull-Up',
+        'Barbell Military Press',
+        'Barbell Bent-Over Row',
+        'Dumbbell Bench Press',
+        'Machine Leg Press',
+        'Dumbbell Lateral Raise',
+        'Dumbbell Curl',
+        'Machine Calf Raise',
+        'Cable Crunch',
+      ],
+    ]);
+    // Wechsel Woche für Woche, auch über die Wiederholung: Woche 21 Bench, danach Woche 8 Dip.
+    expect([1, 2, 3, 4, 7, 8, 14, 15, 21].map((week) => names(week, 3)[3])).toEqual([
+      'Dumbbell Bench Press',
+      'Dip',
+      'Dumbbell Bench Press',
+      'Dip',
+      'Dumbbell Bench Press',
+      'Dip',
+      'Dip',
+      'Dumbbell Bench Press',
+      'Dumbbell Bench Press',
+    ]);
+    const plan = (week: number, day: number, exercise: number) => {
+      const planned = dayOf(week, day).exercises[exercise]!;
+      return [summarizeSets(planned).target, planned.restSec];
+    };
+    expect([
+      plan(4, 1, 0),
+      plan(4, 3, 1),
+      plan(4, 0, 3),
+      plan(4, 1, 2),
+      plan(4, 0, 5),
+      plan(4, 0, 4),
+      plan(4, 2, 6),
+      plan(4, 3, 8),
+    ]).toEqual([
+      [{ repsMin: 5, repsMax: 6 }, 180],
+      [{ repsMin: 6, repsMax: 10 }, 150],
+      [{ repsMin: 8, repsMax: 12 }, 120],
+      [{ repsMin: 8, repsMax: 12 }, 90],
+      [{ repsMin: 10, repsMax: 15 }, 75],
+      [{ repsMin: 12, repsMax: 20 }, 60],
+      [{ durationMinSec: 30, durationMaxSec: 45 }, 45],
+      [{ repsMin: 12, repsMax: 15 }, 45],
+    ]);
+    // Iso Row und High Row sind zwei Übungen mit eigenem Vorwert, nicht zweimal dieselbe.
+    const pull = dayOf(1, 1);
+    expect(pull.exercises.map((e) => e.nameSnapshot).slice(2, 4)).toEqual([
+      'Rudern an der Maschine',
+      'High Row an der Maschine',
+    ]);
+    expect(new Set(pull.exercises.map((e) => e.exerciseId)).size).toBe(6);
+  });
+
+  it('ohne Machine Seated Leg Curl; Übung und Animation bleiben in der Bibliothek (D-532)', () => {
+    const seated = exercises.find((exercise) => exercise.key === 'seated_leg_curl');
+    expect(seated?.name).toBe('Beinbeuger sitzend');
+    const used = new Set(
+      pplc().weeks.flatMap((week) =>
+        week.days.flatMap((day) => day.exercises.map((exercise) => exercise.exerciseId)),
+      ),
+    );
+    expect(used.has(seated!.id)).toBe(false);
+    expect(used.size).toBe(24);
+    // Legs: sieben Übungen in jeder Woche.
+    for (const week of pplc().weeks) expect(week.days[2]!.exercises).toHaveLength(7);
+  });
+
+  it('Hinweise auf „Heute“: erster Tag von Woche 4, jeder leichten Woche und jedes neuen Blocks', () => {
+    const notes = pplc().weeks.map((week) => week.days[0]!.notes ?? null);
+    expect(notes[3]).toBe('Ab dieser Woche mehr Sätze: Grundübungen 4, übrige 3.');
+    for (const week of [7, 14, 21]) {
+      expect(notes[week - 1]).toBe('Diese Woche ist leichter: etwa die Hälfte der Sätze.');
+    }
+    for (const week of [8, 15]) {
+      expect(notes[week - 1]).toBe(
+        'Neuer Aufbaublock: Diese Woche steigst du mit etwas weniger Sätzen ein.',
+      );
+    }
+    expect(notes.filter((note) => note !== null)).toHaveLength(6);
+    for (const week of pplc().weeks) {
+      for (const day of week.days.slice(1)) expect(day.notes).toBeUndefined();
     }
   });
 });

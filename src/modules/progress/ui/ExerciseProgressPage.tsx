@@ -73,10 +73,13 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
           ? 'm'
           : 'kg';
   const formatValue = (value: number) => `${number(value)} ${unit}`;
+  const assisted = exercise.trackingMode === 'assisted_reps';
   const metricLabel =
     metric === 'orm' && canOrm
       ? tTrainingPages.progress.exercise.orm
-      : tTrainingPages.progress.exercise.best;
+      : assisted
+        ? tTrainingPages.progress.exercise.assistBest
+        : tTrainingPages.progress.exercise.best;
 
   return (
     <>
@@ -120,6 +123,12 @@ function ExerciseProgress({ exercise }: { exercise: Exercise }) {
                 />
               </div>
             </div>
+            {/* Weniger ist hier besser; der beste Satz hat die geringste Unterstützung (D-507). */}
+            {assisted && points.length > 0 ? (
+              <p className="mb-3 text-sm text-muted">
+                {tTrainingPages.progress.exercise.assistHint}
+              </p>
+            ) : null}
             {points.length === 0 ? (
               <p className="text-muted">{tTrainingPages.progress.exercise.none}</p>
             ) : table || points.length < 3 ? (

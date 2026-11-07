@@ -22,7 +22,16 @@ import { logError, useDb } from '@/shared/db';
 import { t } from '@/shared/i18n/de';
 import { tExerciseMedia } from '@/shared/i18n/de-exercise-media';
 import { tSession } from '@/shared/i18n/de-session';
-import { Badge, Button, ButtonLink, Card, PageHeader, Skeleton, Tabs } from '@/shared/ui';
+import {
+  Badge,
+  Button,
+  ButtonLink,
+  Card,
+  PageHeader,
+  Skeleton,
+  Tabs,
+  useAtLeast,
+} from '@/shared/ui';
 import { ExerciseNotFound } from './ExerciseProgressPage';
 
 const RECENT_LIMIT = 5;
@@ -73,6 +82,9 @@ function Detail({
   const [editing, setEditing] = useState(false);
   const [failed, setFailed] = useState(false);
   const [section, setSection] = useState<Section>('guide');
+  // Ab 40 rem (Duo aufgeklappt, iPad, Computer) steht die Muskelkarte neben der Animation, im
+  // Reiter „Muskeln“ dann nur die Angaben; schmal (iPhone, Duo zugeklappt) wie bisher (D-499).
+  const wide = useAtLeast('sm');
   const custom = exercise.source === 'custom';
   // Alternativen aus der vorhandenen Logik des Players (AK-TRN-09), ohne archivierte Übungen.
   const alternatives = useMemo(
@@ -102,16 +114,35 @@ function Detail({
         back={{ to: '/uebungen', label: t.exercises.title }}
       />
       {/* Demonstration der Übung (D-397); ohne Visual das Symbol in der Kachel mit den
-          Muskel-Etiketten, wie bisher die Etiketten allein. */}
-      <Suspense fallback={null}>
-        <ExerciseDemo
-          exerciseId={exercise.id}
-          name={exercise.name}
-          muscles={exercise.primaryMuscles}
-          variant="large"
-          className="-mt-2 mb-5 max-w-md"
-        />
-      </Suspense>
+          Muskel-Etiketten, wie bisher die Etiketten allein. Breit daneben die Muskelkarte (D-499):
+          Die erste Spalte ist so breit wie die Animation bei ihrer Höchsthöhe (40 % der
+          Fensterhöhe, 4:3), höchstens 28 rem und 60 %, die Karte steht direkt daneben. */}
+      <div className="-mt-2 mb-5 sm:grid sm:grid-cols-[min(28rem,calc(40dvh*4/3),60%)_minmax(0,1fr)] sm:items-start sm:gap-5">
+        <Suspense fallback={null}>
+          <ExerciseDemo
+            exerciseId={exercise.id}
+            name={exercise.name}
+            muscles={exercise.primaryMuscles}
+            variant="large"
+            className="max-w-md"
+          />
+        </Suspense>
+        {wide ? (
+          // So hoch wie die Animation: Die Karte zählt für die Höhe der Zeile nicht mit
+          // (`contain: size`), mindestens 12 rem (ohne Visual steht links nur das Symbol).
+          <div data-muscle-map-beside="" className="min-h-48 max-w-sm self-stretch [contain:size]">
+            <Card as="div" className="h-full">
+              <Suspense fallback={<Skeleton className="h-full" />}>
+                <ExerciseMuscleMap
+                  primary={exercise.primaryMuscles}
+                  secondary={exercise.secondaryMuscles}
+                  fill
+                />
+              </Suspense>
+            </Card>
+          </div>
+        ) : null}
+      </div>
       {custom ? (
         <div className="mb-4 flex flex-wrap gap-2">
           <Button
@@ -194,13 +225,16 @@ function Detail({
             </Card>
           ) : section === 'muscles' ? (
             <Card>
-              {/* Muskelkarte (D-401): Hauptmuskeln Lime, mitarbeitende Lime mit wenig Deckkraft. */}
-              <Suspense fallback={<Skeleton className="mb-4 h-24" />}>
-                <ExerciseMuscleMap
-                  primary={exercise.primaryMuscles}
-                  secondary={exercise.secondaryMuscles}
-                />
-              </Suspense>
+              {/* Muskelkarte (D-401): Hauptmuskeln Lime, mitarbeitende Lime mit wenig Deckkraft.
+                  Breit steht sie schon neben der Animation (D-499). */}
+              {wide ? null : (
+                <Suspense fallback={<Skeleton className="mb-4 h-24" />}>
+                  <ExerciseMuscleMap
+                    primary={exercise.primaryMuscles}
+                    secondary={exercise.secondaryMuscles}
+                  />
+                </Suspense>
+              )}
               <dl className="grid gap-3 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm text-muted">{t.session.info.primary}</dt>
@@ -240,7 +274,13 @@ function Detail({
                       <ExerciseThumb exerciseId={alternative.id} />
                     </Suspense>
                     <span className="min-w-0 flex-1">
-                      <span className="block font-semibold">{alternative.name}</span>
+                      <span className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold">{alternative.name}</span>
+                        {/* Ziel der Übung, z. B. ohne Unterstützung (D-507). */}
+                        {exercise.goal !== undefined && alternative.key === exercise.goal ? (
+                          <Badge tone="success">{t.exercises.goalBadge}</Badge>
+                        ) : null}
+                      </span>
                       <span className="block text-caption text-muted">
                         {describeExercise(alternative)}
                       </span>

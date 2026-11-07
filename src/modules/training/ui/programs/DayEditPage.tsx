@@ -35,6 +35,7 @@ import { useOwnProgram } from '../../data/programRepository';
 import type { Day, OwnProgram, PlannedExercise, PlannedSet, Weekday } from '../../model/program';
 import { ValueInput } from '../player/ValueInput';
 import { describeDay } from '../../calc/describe';
+import { plannedName } from '../../calc/exerciseName';
 import { ConfirmDialog, ErrorMessage, INPUT, TEXTAREA, useProgramEdit } from './editorParts';
 import { useLibrary } from './useLibrary';
 import { Thumb } from '../exerciseVisuals';
@@ -115,6 +116,7 @@ function DayEditor({
             <ExerciseEditor
               key={exercise.id}
               exercise={exercise}
+              name={plannedName(program, exercise)}
               info={byId.get(exercise.exerciseId)}
               index={index}
               count={day.exercises.length}
@@ -147,7 +149,7 @@ function DayEditor({
             open
             title={
               picker.replace
-                ? tProgramEditor.replaceTitle(picker.replace.nameSnapshot)
+                ? tProgramEditor.replaceTitle(plannedName(program, picker.replace))
                 : tProgramEditor.pickTitle
             }
             alternativesForId={picker.replace?.exerciseId}
@@ -169,7 +171,7 @@ function DayEditor({
       ) : null}
       {pending ? (
         <ConfirmDialog
-          title={tProgramEditor.removeExerciseTitle(pending.exercise.nameSnapshot)}
+          title={tProgramEditor.removeExerciseTitle(plannedName(program, pending.exercise))}
           confirmLabel={tProgramEditor.remove}
           onClose={() => {
             setPending(null);
@@ -309,6 +311,7 @@ const METERS: FieldSpec = { field: 'distanceM', label: 'distanceM', scale: 1, de
 
 function ExerciseEditor({
   exercise,
+  name,
   info,
   index,
   count,
@@ -318,6 +321,8 @@ function ExerciseEditor({
   onRemove,
 }: {
   exercise: PlannedExercise;
+  /** Angezeigter Name, mit „Übungsnamen auf Englisch“ der englische (D-506). */
+  name: string;
   info: Exercise | undefined;
   index: number;
   count: number;
@@ -337,7 +342,6 @@ function ExerciseEditor({
     });
     return (value: number) => plain.format(value);
   }, [fmt.locale]);
-  const name = exercise.nameSnapshot;
   const restValues: number[] = [...REST_CHOICES];
   if (exercise.restSec !== undefined && !restValues.includes(exercise.restSec)) {
     restValues.push(exercise.restSec);

@@ -4,8 +4,13 @@ import { createPortal } from 'react-dom';
 import { tSession } from '@/shared/i18n/de-session';
 import { tTrainingPages } from '@/shared/i18n/de-training-pages';
 import { cn } from '@/shared/lib/cn';
-import { Button, Chip, IconButton } from '@/shared/ui';
-import { formatRestRemaining, formatTargetRange, restRemainingSec } from '../../calc/format';
+import { Button, Chip, IconButton, useScreenCenter } from '@/shared/ui';
+import {
+  formatRestRemaining,
+  formatTargetRange,
+  keepNumbersTogether,
+  restRemainingSec,
+} from '../../calc/format';
 import type { Session, SessionExercise, SessionSet } from '../../model/session';
 
 export const REST_STEP_SEC = 15;
@@ -27,6 +32,8 @@ export interface RestStageProps {
  */
 export function RestStage(props: RestStageProps) {
   const [expanded, setExpanded] = useState(false);
+  // Groß in der Mitte des ganzen Bildschirms, frisch gemessen beim Öffnen (D-495).
+  useScreenCenter(expanded);
   const remaining = restRemainingSec(props.timer.endsAt, props.now);
   const over = remaining <= 0;
   const time = formatRestRemaining(remaining);
@@ -34,21 +41,26 @@ export function RestStage(props: RestStageProps) {
     ? tTrainingPages.rest.overBy(time.slice(1))
     : `${tTrainingPages.rest.remaining} ${time}`;
   const target = props.next?.set.target ? formatTargetRange(props.next.set.target) : null;
+  // Zahlen bleiben beim Wort: „Ziel 5“ und „Arbeitssatz 2“ in einer Zeile (E1, D-525).
   const nextText = props.next
-    ? [
-        props.next.name,
-        target ? `${tTrainingPages.rest.target} ${target.text}` : null,
-        props.previous ? `${tSession.previous} ${props.previous}` : null,
-      ]
-        .filter(Boolean)
-        .join(' · ')
+    ? keepNumbersTogether(
+        [
+          props.next.name,
+          target ? `${tTrainingPages.rest.target} ${target.text}` : null,
+          props.previous ? `${tSession.previous} ${props.previous}` : null,
+        ]
+          .filter(Boolean)
+          .join(' · '),
+      )
     : tTrainingPages.rest.noNext;
 
   const controls = (size: 'sm' | 'lg') => (
     <div
       className={cn(
         'grid items-center gap-2',
-        size === 'lg' ? 'w-full max-w-md grid-cols-[1fr_1fr_1.6fr]' : 'grid-cols-[1fr_1fr_1.5fr]',
+        size === 'lg'
+          ? 'rest-big-controls w-full max-w-md grid-cols-[1fr_1fr_1.6fr]'
+          : 'grid-cols-[1fr_1fr_1.5fr]',
       )}
     >
       {/* ±15 s als Chips, „Überspringen“ in Blau: Trainingsaktion im aktiven Workout (D-315).
@@ -96,8 +108,9 @@ export function RestStage(props: RestStageProps) {
       <section
         aria-label={tTrainingPages.rest.label}
         className={cn(
-          // page-gutters: Seitenrand mindestens so breit wie der sichere Bereich (D-372).
-          'stage page-gutters fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 text-center text-fg',
+          // Seitenrand mindestens so breit wie der sichere Bereich (D-372), dazu in der Mitte des
+          // ganzen Bildschirms, nicht nur des Fensters (iPhone Duo, D-495).
+          'rest-big stage screen-center-x screen-center-y fixed inset-0 z-30 flex flex-col items-center justify-center gap-6 text-center text-fg',
           overClass,
         )}
       >

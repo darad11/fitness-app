@@ -9,9 +9,9 @@ test('Beispielvorlagen: Liste und Vorlage mit Etikett und Hinweis (AK-PRG-06, TP
   await expect(
     page.getByRole('heading', { level: 1, name: 'Programme und Vorlagen' }),
   ).toBeVisible();
-  // Drei Programme (A, B, C) und vier Beispielvorlagen.
-  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(7);
-  await expect(page.getByText('Programm', { exact: true })).toHaveCount(3);
+  // Vier Programme (Dali’s PPLC, A, B, C; D-504) und vier Beispielvorlagen.
+  await expect(page.getByRole('main').getByRole('listitem')).toHaveCount(8);
+  await expect(page.getByText('Programm', { exact: true })).toHaveCount(4);
 
   await page
     .getByRole('listitem')

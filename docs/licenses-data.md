@@ -97,7 +97,7 @@ Gestrichen (keine Einheit, nur Gramm), weil die Werte zu stark schwanken oder si
 
 | Punkt | Angabe |
 |---|---|
-| Grundmodell | MakeHuman, Repository `makehuman/makehuman` (Zweig `master`), Dateien `makehuman/data/3dobjs/base.obj` (Grundmodell), `makehuman/data/rigs/default.mhskel` (Skelett) und `default_weights.mhw` (Gewichte); geladen am 27.10.2026 über `raw.githubusercontent.com`, mit `LICENSE.md` |
+| Grundmodell | MakeHuman, Repository `makehumancommunity/makehuman` (Zweig `master`; bis D-458 unter `makehuman/makehuman`, das am 29.10.2026 auf jede Datei 404 lieferte), Dateien `makehuman/data/3dobjs/base.obj` (Grundmodell), `makehuman/data/rigs/default.mhskel` (Skelett) und `default_weights.mhw` (Gewichte); geladen am 27.10.2026 über `raw.githubusercontent.com`, mit `LICENSE.md` |
 | Lizenz | CC0 1.0 Universal für alle Assets: „The assets are defined as any data contributing to the graphical output of MakeHuman“, darunter Grundmodell, Ziele, Posen (`LICENSE.md` Abschnitt C). Keine Pflicht zur Namensnennung, keine Weitergabe unter gleicher Lizenz |
 | Was das für die Bilder heißt | `LICENSE.md` Abschnitt D: Das Projekt erhebt keinen Anspruch auf Ausgaben, ausdrücklich auch nicht auf „Renderings“ und „Graphical data generated via scripting or plugins“; „there is no limitation on what you can do with this combined output“. Die gerenderten Schleifen, Standbilder und Vorschaubilder sind damit frei nutzbar, auch in der App und im öffentlichen Repository; die Quelle nennen wir trotzdem (`medien.json`, Quelle `form_3d_pilot`) |
 | Werkzeug | Blender 4.2 als Python-Modul `bpy` (GPL), nur zum Rendern, nicht Teil der App. Was Blender rendert, gehört dem, der es rendert; die GPL gilt nicht für die Bilder |

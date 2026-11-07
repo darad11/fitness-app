@@ -24,7 +24,7 @@ test('Fortschritt: Kacheln gleich hoch, Erklärung der Kalorien darunter (D-382)
   await picker.getByLabel('Übungen suchen').fill('beinpresse');
   await picker.getByRole('button', { name: /^Beinpresse Oberschenkel/ }).click();
   await expect(picker).toBeHidden();
-  const set = 'Beinpresse, Arbeitssatz 1';
+  const set = 'Beinpresse, Arbeitssatz';
   await page.getByLabel(`Gewicht in kg, ${set}`).fill('100');
   await page.getByLabel(`Wiederholungen, ${set}`).fill('10');
   await page.getByRole('button', { name: `Satz erledigt, ${set}` }).click();

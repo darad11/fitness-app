@@ -18,9 +18,22 @@
   display: contents;
 }
 
-/* „Als Nächstes“ gibt es nur in zwei Spalten; schmal sagt die Karte „Jetzt“ die nächste Übung. */
-.player-next {
+/* In einer Spalte nimmt die Pause den Platz von „Jetzt“ ein: In der Pause steht die Karte nicht da.
+   In zwei Spalten bleibt sie rechts stehen (D-533, unten). */
+.player-frame[data-pause] .player-now {
   display: none;
+}
+
+/* Spaltenköpfe laufen in der Pause mit (D-535): Steht der Kopf über der Liste (eine Spalte, Duo quer im
+   niedrigen Fenster), macht ihn die kleine Pause höher; die Spaltenköpfe einer Übung kleben dann direkt
+   unter ihm, solange ihre Karte zu sehen ist. Vorher lagen sie unter der Pause. Außerhalb der Pause
+   bleiben sie in der Karte: Mit offener Tastatur hätte ein Feld sonst keinen Platz mehr über der
+   Fußleiste (D-391). `data-kopf-oben` und `--player-head` setzt `useStableSetView`. */
+[data-kopf-oben] .player-frame[data-pause] [data-satzkopf] {
+  position: sticky;
+  top: var(--player-head, 0px);
+  z-index: 1;
+  background-color: var(--color-surface);
 }
 
 /* Vorschaubild in der Übungskarte (D-397) erst ab 30 rem Breite des Players: Schmal (Duo
@@ -40,9 +53,34 @@
 }
 
 /*
+ * „Jetzt“ kompakter in einer Spalte bei niedrigem Fenster (D-498, Nachtrag): Mit der laufenden
+ * Schleife (7 rem) und dem Vorschaubild der nächsten Übung wurde die Karte am Duo zugeklappt 46 px
+ * höher, in WebKit rutschte der erste Satz unter die Fußleiste. Hier ist die Schleife 6 rem breit,
+ * der Name eine Stufe kleiner und das Vorschaubild bei „Danach:“ 24 px (dieses auch in zwei
+ * Spalten, D-500). „Niedrig“ setzt der Player (`data-niedrig`, `useShortWindow`) beim Öffnen und
+ * bei neuer Breite, nicht bei der Tastatur.
+ */
+.player-frame[data-niedrig] .player-now .player-next-line [data-visual] {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+@container player (max-width: 47.99rem) {
+  .player-frame[data-niedrig] .player-now .player-now-demo [data-demo-compact] {
+    width: 6rem;
+  }
+
+  .player-frame[data-niedrig] .player-now .player-now-name {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+  }
+}
+
+/*
  * Ab 48 rem Inhaltsbreite (Duo aufgeklappt, iPad quer) zwei Spalten: links die Übungen mit den
- * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), dem
- * nächsten Satz und den nächsten Übungen.
+ * Sätzen, rechts mitlaufend die Steuerung mit Kopf (Trainingstag, Fortschritt, Pause), der
+ * Animation und „Jetzt“ mit „Danach“. Rechts steht immer dasselbe, auch in der Pause; die Karte
+ * „Als Nächstes“ mit den nächsten Übungen gibt es nicht mehr (D-533).
  *
  * Der Bereich „demo“ zeigt die Demonstration der aktuellen Übung (D-397); ohne Visual das Symbol
  * in der Kachel mit den Muskel-Etiketten. Abstände über Ränder statt `gap`.
@@ -60,20 +98,37 @@
     grid-row: 1;
   }
 
+  /*
+   * Die rechte Spalte steht fest und passt immer ganz in die sichtbare Höhe über der Fußleiste
+   * (D-495): Sie ist genau so hoch, scrollt nicht für sich und klebt oben. Kopf (mit Pause) und
+   * „Jetzt“ behalten ihre Höhe; die Demonstration bekommt, was übrig bleibt, höchstens ihre Größe
+   * bei voller Breite (21 rem breit, 4:3, dazu 1 rem Abstand); darunter bleibt der Rest frei
+   * (bis D-532 stand dort „Als Nächstes“). Vorher war die Spalte höher als der Bildschirm und
+   * scrollte für sich; am Seitenende schob der Rahmen sie nach oben, die Animation rutschte aus
+   * dem Bild.
+   */
   .player-side {
     grid-column: 2;
     grid-row: 1;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'head' 'hint' 'demo' 'now' 'next';
+    grid-template-rows: auto auto minmax(0, 16.75rem) auto minmax(0, 1fr);
+    grid-template-areas: 'head' 'hint' 'demo' 'now' '.';
     position: sticky;
     top: 0;
-    /* Wie der Kopf in einer Spalte bis an den oberen Rand, unter der Unschärfe von iOS (D-332). */
-    margin-top: calc(-1 * var(--spacing-edge-clear));
-    /* Nie hinter der Fußleiste; reicht die Höhe nicht, scrollt die Steuerung für sich. */
-    max-height: calc(100dvh - var(--player-foot, 0px));
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    /* Von Anfang an oben am Rand, wie der Kopf in einer Spalte unter der Unschärfe von iOS (D-332):
+       Der negative Rand hebt die Spalte über den Abstand oberhalb des Players, `top: 0` hält sie am
+       Rand. Vorher stand sie ungescrollt 11 bis 24 px tiefer, ragte so weit hinter die Fußleiste
+       und lief beim ersten Scrollen ein Stück mit, bevor sie klebte (D-495). */
+    margin-top: -100dvh;
+    height: calc(100dvh - var(--player-foot, 0px));
+    /* Klebt bis zum Seitenende: Ohne den negativen Rand endet die Spalte mit der Satzliste, und
+       die Abstände darunter (Fußleiste, Seitenrand) schöben sie am Ende nach oben. Der Rand ändert
+       weder die Höhe der Zeile noch die Scrollhöhe. */
+    margin-bottom: -100dvh;
+    /* `clip` statt `hidden`: Die Spalte ist kein Scrollbereich, auch ein Fokus darin scrollt sie
+       nicht. */
+    overflow: clip;
   }
 
   /* Der Kopf steht in der Spalte: nicht bis an den Fensterrand, ohne eigenes Kleben. */
@@ -90,24 +145,132 @@
     grid-area: hint;
   }
 
+  /*
+   * Niedriges Fenster mit zwei Spalten (Duo quer, D-502): Der Kopf mit Programm, Fortschritt und
+   * „Beenden“ steht links über der Liste und klebt oben wie in einer Spalte; er scrollt nicht mit,
+   * „Beenden“ bleibt erreichbar. Rechts bleibt so die Höhe für die Animation in voller Größe und
+   * „Jetzt“. Links reicht er bis an den Fensterrand, rechts endet er mit der Spalte.
+   */
+  /* Rechts reicht die Fläche des Kopfs 4 px über die Spalte: Der Rand der Karten (1 px außen, `--shadow-card`) läuft
+     beim Scrollen ganz darunter durch. Vorher ragte er neben dem Kopf heraus und stand dort als dünne graue Linie, wie
+     eine Scrollleiste über dem rechten Rand der Karten (Gerätetest, D-534). */
+  .player-main > .player-head {
+    margin-right: -0.25rem;
+    padding-right: 0.25rem;
+  }
+
   .player-side > .player-now {
     grid-area: now;
   }
 
+  /* Rechts steht „Jetzt“ auch in der Pause (D-533). */
+  .player-frame[data-pause] .player-side > .player-now {
+    display: block;
+  }
+
   /* Der vorbereitete Bereich „demo“ (D-380) zeigt jetzt die Demonstration der aktuellen Übung;
      die kompakte Fassung in „Jetzt“ entfällt, damit nichts doppelt steht (D-397). */
+  /* Die Demonstration skaliert mit der Höhe ihres Bereichs: Rahmen im Seitenverhältnis des
+     Videos, so breit wie möglich, höchstens so hoch wie der Bereich (`--demo-max-h`, D-495). */
   .player-side > .player-demo {
     display: block;
     grid-area: demo;
+    min-height: 0;
+    container: demo / size;
+    --demo-max-h: 100cqh;
   }
 
   .player-now .player-now-demo {
     display: none;
   }
 
-  .player-next {
-    display: block;
-    grid-area: next;
+  /*
+   * Gleich großer Rahmen der Animation in jeder Übung (D-500). Im niedrigen Fenster (Duo quer)
+   * bekommt die Animation die Höhe, die neben Kopf und „Jetzt“ bleibt; vorher machten lange Namen
+   * „Jetzt“ höher und den Rahmen kleiner (336 × 252 bis 266 × 199 px). „Jetzt“ ist dort deshalb
+   * immer gleich hoch: der Name in Titelgröße mit Platz für zwei Zeilen (ganz steht er links in der
+   * Karte der Übung), die Angaben mit Platz für zwei Zeilen, längeres jeweils gekürzt; die Notiz
+   * steht links, „Danach:“ in einer Zeile. Höher (iPad, Computer) hat der Rahmen in jeder Übung
+   * seine volle Größe (21 rem breit, 4:3).
+   */
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-name {
+    margin-top: 0;
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-info {
+    line-height: var(--text-base--line-height);
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-name,
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-info {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+
+  /* Platz für je zwei Zeilen Name (Titel 1,25 rem × 1,3) und Angaben (1 rem × 1,4) samt ihrer
+     Abstände nach oben (je 0,25 rem, beim Namen als Innenabstand des Blocks); was kürzer ist, lässt
+     den Platz darunter frei. */
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-text {
+    min-height: calc(0.25rem + 2 * 1.25rem * 1.3 + 0.25rem + 2 * 1rem * 1.4);
+    padding-top: 0.25rem;
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-notes {
+    display: none;
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now .player-next-line > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* „Danach:“ mit dem Vorschaubild (1,5 rem) und „Letzte Übung“ gleich hoch, 0,5 rem darüber. Ein
+     laufender Satz-Timer steht an ihrer Stelle, 1,5 rem groß statt 3,5 rem, mit demselben Abstand;
+     so wird „Jetzt“ auch dann nicht höher. Die nächste Übung steht links in der Liste. */
+  .player-frame[data-niedrig] .player-side > .player-now .player-next-line,
+  .player-frame[data-niedrig] .player-side > .player-now .player-last-line {
+    margin-top: 0.5rem;
+    min-height: 1.5rem;
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now .player-last-line {
+    display: flex;
+    align-items: center;
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now .player-now-timer {
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+  }
+
+  .player-frame[data-niedrig] .player-side > .player-now[data-timer-laeuft] .player-next-line,
+  .player-frame[data-niedrig] .player-side > .player-now[data-timer-laeuft] .player-last-line {
+    display: none;
+  }
+
+  /* Niedriger als 36 rem (iPhone quer, sehr niedrige Fenster): Kopf und „Jetzt“ allein füllten
+     die feste Spalte, für die Demonstration bliebe nichts. Dort scrollt die Spalte wie bisher für
+     sich, jeder Bereich in seiner Größe; sie klebt weiter bis zum Seitenende (D-495). */
+  @media (max-height: 35.99rem) {
+    .player-side {
+      grid-template-rows: none;
+      height: auto;
+      max-height: calc(100dvh - var(--player-foot, 0px));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .player-side > .player-demo {
+      container-type: normal;
+      --demo-max-h: 40dvh;
+    }
   }
 
   /* In der schmalen Spalte stünde vom nächsten Satz neben der Zeit nur „Beinpresse,…“: Er darf
@@ -115,6 +278,30 @@
   .player-side .rest-next-text {
     -webkit-line-clamp: 4;
     line-clamp: 4;
+  }
+}
+
+/*
+ * Kleine Pause in einer Spalte und hohem Fenster (iPhone hoch, D-525, E2): Der nächste Satz steht
+ * mit dem vollen Namen der Übung da. Vorher brauchte „Nächster Satz:“ eine der zwei Zeilen, vom
+ * Rest blieb nur „Beinpresse,…“. Die Bezeichnung bleibt für Screenreader wie im niedrigen Fenster;
+ * der Text hat bis zu drei Zeilen, der Name steht vorn.
+ */
+@media (min-height: 45rem) {
+  @container player (max-width: 47.99rem) {
+    .rest-card .rest-next-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .rest-card .rest-next-text {
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+    }
   }
 }
 
@@ -180,5 +367,73 @@
       clip-path: inset(50%);
       white-space: nowrap;
     }
+  }
+}
+
+/*
+ * Kopf links im niedrigen Fenster mit zwei Spalten (D-502): Die Pause steht dort im Kopf über der
+ * Liste, in einer Zeile wie bei einer Spalte (oben), damit die Liste sichtbar bleibt. Den Kopf
+ * stellt der Player nur im niedrigen Fenster dorthin.
+ */
+.player-main > .player-head .rest-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.player-main > .player-head .rest-card .rest-row,
+.player-main > .player-head .rest-card .rest-controls,
+.player-main > .player-head .rest-card .rest-controls > div {
+  display: contents;
+}
+
+.player-main > .player-head .rest-card .rest-adjust {
+  display: none;
+}
+
+.player-main > .player-head .rest-card .rest-clock {
+  font-size: var(--text-headline);
+}
+
+.player-main > .player-head .rest-card .rest-label,
+.player-main > .player-head .rest-card .rest-next-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Bis zu drei Zeilen wie am iPhone hoch (E2, D-525): Mit den Satznamen „Arbeitssatz 2 von 3“
+   (D-537) passte am Duo quer nach „Dumbbell Bench Press,“ das Ziel nicht mehr in die zweite Zeile,
+   es stand nur „Arbeitssatz 2 von 3 ·…“ da. Die Pause wird dafür eine Zeile höher. */
+.player-main > .player-head .rest-card .rest-next-text {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/*
+ * Große Pause (D-495): Sie steht in der Mitte des ganzen Bildschirms und wird dafür am Duo um den
+ * Systemstreifen schmaler. Zugeklappt bleiben so 266 px; nebeneinander passten „−15 s“, „+15 s“ und
+ * „Überspringen“ nicht mehr. Unter 20 rem stehen ±15 s nebeneinander, „Überspringen“ darunter.
+ */
+.rest-big {
+  container: rest-big / inline-size;
+}
+
+@container rest-big (max-width: 19.99rem) {
+  .rest-big-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rest-big-controls > :last-child {
+    grid-column: 1 / -1;
   }
 }

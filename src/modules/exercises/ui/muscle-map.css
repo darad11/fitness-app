@@ -24,3 +24,28 @@
   aspect-ratio: 1;
   max-width: 20rem;
 }
+
+/* Neben der Animation (D-499): Die Karte ist so hoch wie ihr Platz, die Figuren passen sich an. */
+.muscle-map-fill {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.muscle-map-fill > .muscle-map-views {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.muscle-map-fill .muscle-map-view {
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.muscle-map-fill .muscle-map-view svg {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  min-height: 0;
+}

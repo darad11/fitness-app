@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { formatRest, formatRestRemaining, formatTargetRange, restRemainingSec } from './format';
+import {
+  formatRest,
+  formatRestRemaining,
+  formatTargetRange,
+  keepNumbersTogether,
+  restRemainingSec,
+} from './format';
 
 describe('Anzeige von Zielen und Pausen', () => {
   it('zeigt Wiederholungs- und Zeitbereiche', () => {
@@ -36,5 +42,36 @@ describe('Anzeige von Zielen und Pausen', () => {
     expect(formatRestRemaining(90)).toBe('1:30');
     expect(formatRestRemaining(0)).toBe('+0:00');
     expect(formatRestRemaining(-42)).toBe('+0:42');
+  });
+});
+
+describe('Zahlen bleiben beim Wort (E1, D-525)', () => {
+  const nbsp = '\u00a0';
+  const wj = '\u2060';
+  it('Wort und Zahl mit geschütztem Leerzeichen, die übrigen Leerzeichen bleiben', () => {
+    expect(keepNumbersTogether('Aufwärmsatz · Satz 1 von 5 · Ziel 10')).toBe(
+      `Aufwärmsatz · Satz${nbsp}1 von${nbsp}5 · Ziel${nbsp}10`,
+    );
+    expect(keepNumbersTogether('Beinpresse, Aufwärmsatz 2 · Ziel 8–12')).toBe(
+      `Beinpresse, Aufwärmsatz${nbsp}2 · Ziel${nbsp}8–${wj}12`,
+    );
+  });
+
+  it('Spannen bleiben zusammen: nach dem Strich kein Umbruch (D-535)', () => {
+    expect(keepNumbersTogether('Ziel 8–12')).toBe(`Ziel${nbsp}8–${wj}12`);
+    expect(keepNumbersTogether('Ziel 6–10 · Vorwert 60 kg × 8')).toBe(
+      `Ziel${nbsp}6–${wj}10 · Vorwert${nbsp}60${nbsp}kg ×${nbsp}8`,
+    );
+    // Nur zwischen Zahlen: ein Gedankenstrich im Satz darf weiter umbrechen.
+    expect(keepNumbersTogether('Langhantel – 2,5 kg')).toBe(`Langhantel –${nbsp}2,5${nbsp}kg`);
+  });
+
+  it('Zahl und Einheit bleiben zusammen, Wörter danach nicht', () => {
+    expect(keepNumbersTogether('Ziel 30–45 s · Vorwert 60 kg × 8')).toBe(
+      `Ziel${nbsp}30–${wj}45${nbsp}s · Vorwert${nbsp}60${nbsp}kg ×${nbsp}8`,
+    );
+    expect(keepNumbersTogether('Ziel 1:30 min')).toBe(`Ziel${nbsp}1:30${nbsp}min`);
+    expect(keepNumbersTogether('Satz 1 von 5')).not.toContain(`1${nbsp}von`);
+    expect(keepNumbersTogether('2 sehr lange Sätze')).toBe(`2 sehr lange Sätze`);
   });
 });

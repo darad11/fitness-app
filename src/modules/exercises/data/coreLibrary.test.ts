@@ -14,7 +14,7 @@ describe('Basisbibliothek (AK-EXL-01)', () => {
   });
 
   it('enthält mindestens 100 gültige Übungen mit Name, Hauptmuskeln, Gerät und Erfassungsart', () => {
-    expect(exercises.length).toBe(124);
+    expect(exercises.length).toBe(125);
     for (const exercise of exercises) {
       expect(exercise.name.length).toBeGreaterThan(0);
       expect(exercise.primaryMuscles.length).toBeGreaterThan(0);
@@ -85,6 +85,26 @@ describe('Prüfung der gebündelten Daten', () => {
     overlap.exercises[0]!.secondaryMuscles = [overlap.exercises[0]!.primaryMuscles[0]!];
     expect(() => parseCoreLibrary(overlap)).toThrow(/Haupt- und Nebenmuskel/);
   });
+
+  it('Ziel und Alternativen: Dip und Pull-Up ohne Unterstützung, beim Pull-Up Latziehen (D-507)', () => {
+    const exercises = parseCoreLibrary(raw);
+    const byKey = new Map(exercises.map((exercise) => [exercise.key, exercise]));
+    expect(byKey.get('assisted_dip')).toMatchObject({ goal: 'dip' });
+    expect(byKey.get('assisted_pull_up')).toMatchObject({
+      goal: 'pull_up',
+      alternatives: ['lat_pulldown'],
+    });
+    expect(exercises.filter((exercise) => exercise.goal).map((e) => e.key)).toEqual([
+      'assisted_pull_up',
+      'assisted_dip',
+    ]);
+    const unknown = clone();
+    Object.assign(unknown.exercises[0]!, { goal: 'gibt_es_nicht' });
+    expect(() => parseCoreLibrary(unknown)).toThrow(/Unbekannter Schlüssel/);
+    const self = clone();
+    Object.assign(self.exercises[0]!, { alternatives: [self.exercises[0]!.key] });
+    expect(() => parseCoreLibrary(self)).toThrow(/Übung selbst/);
+  });
 });
 
 describe('Fehler beim Nachladen', () => {
@@ -99,7 +119,7 @@ describe('Fehler beim Nachladen', () => {
     await expect(fresh.loadCoreExercises()).rejects.toThrow();
     fail = false;
     vi.resetModules();
-    await expect(fresh.loadCoreExercises()).resolves.toHaveLength(124);
+    await expect(fresh.loadCoreExercises()).resolves.toHaveLength(125);
     vi.doUnmock('./core-exercises.v1.json');
   });
 });

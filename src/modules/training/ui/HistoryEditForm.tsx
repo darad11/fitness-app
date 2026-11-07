@@ -7,6 +7,7 @@ import { parseDecimal } from '@/shared/lib/format';
 import { Button, Card, IconButton } from '@/shared/ui';
 import { fieldsFor, toDisplay, toStored } from '../calc/fields';
 import { liveExercises, liveSets } from '../calc/session';
+import { setName, setPositions } from '../calc/setNames';
 import { NOTE_MAX, type Session, type SetValues } from '../model/session';
 import { editCompletedSession, InvalidEditError } from '../service/historyService';
 import { InvalidValueError } from '../service/sessionService';
@@ -174,9 +175,6 @@ export function HistoryEditForm({
       </Card>
       {liveExercises(session).map((exercise) => {
         const specs = fieldsFor(exercise.trackingMode, exercise.distanceUnit);
-        let working = 0;
-        let warmup = 0;
-        let drop = 0;
         const done = liveSets(exercise).filter((set) => set.status === 'done');
         if (done.length === 0 && !exercise.note) return null;
         return (
@@ -194,14 +192,13 @@ export function HistoryEditForm({
               />
             </Labeled>
             <ol className="grid gap-2">
-              {liveSets(exercise).map((set) => {
-                const ordinal =
-                  set.type === 'working' ? ++working : set.type === 'warmup' ? ++warmup : ++drop;
+              {setPositions(liveSets(exercise)).map(({ set, position }) => {
                 if (set.status !== 'done') return null;
                 const gone =
                   removed.has(set.id) ||
                   (set.parentSetId !== undefined && removed.has(set.parentSetId));
-                const name = `${exercise.nameSnapshot}, ${tSession.setLabel(tSession.setTypeLabel[set.type], ordinal)}`;
+                // Gleiche Namen wie im Player: „Aufwärmsatz“, „Arbeitssatz 2 von 3“ (D-537).
+                const name = `${exercise.nameSnapshot}, ${setName(position)}`;
                 return (
                   <li
                     key={set.id}
@@ -213,7 +210,9 @@ export function HistoryEditForm({
                       aria-hidden="true"
                       className="w-8 shrink-0 text-sm font-semibold text-muted tabular-nums"
                     >
-                      {set.type === 'working' ? String(ordinal) : tSession.setTypeShort[set.type]}
+                      {set.type === 'working'
+                        ? String(position.n)
+                        : tSession.setTypeShort[set.type]}
                     </span>
                     <div
                       className={

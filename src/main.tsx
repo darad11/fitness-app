@@ -19,6 +19,7 @@ import {
 import { hasActiveSession } from './modules/training';
 import { listenForInstallPrompt } from './shared/pwa/installPrompt';
 import { startServiceWorker } from './shared/pwa/register';
+import { installScreenCenter } from './shared/ui/screenCenter';
 import './app/styles.css';
 
 let runtime: DbRuntime | null = null;
@@ -35,6 +36,8 @@ async function start(): Promise<void> {
 
   installGlobalErrorHandlers(() => runtime?.db ?? null);
   listenForInstallPrompt();
+  // Mitte des ganzen Bildschirms für Vollbildansichten, wie die Startfläche (D-495).
+  installScreenCenter();
   // Läuft ein Training, lädt die App nie von selbst neu (E-16, D-343).
   const trainingRunning = async () => (runtime ? hasActiveSession(runtime.db) : false);
   installChunkRecovery(trainingRunning);

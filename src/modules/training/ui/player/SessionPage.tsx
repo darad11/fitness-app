@@ -32,7 +32,12 @@ import { Button, ButtonLink, Dialog, IconButton, Meter, Skeleton } from '@/share
 import { previousValues } from '../../calc/history';
 import { NoteDialog } from './NoteDialog';
 import { formatSetValues } from '../../calc/fields';
-import { formatClock, formatTargetRange, restRemainingSec } from '../../calc/format';
+import {
+  formatClock,
+  formatTargetRange,
+  keepNumbersTogether,
+  restRemainingSec,
+} from '../../calc/format';
 import {
   currentSet,
   liveExercises,
@@ -44,6 +49,7 @@ import {
   REQUIRED_FIELDS,
   suggestValues,
 } from '../../calc/session';
+import { setName, setPositions } from '../../calc/setNames';
 import { usePreviousHistory, useSession } from '../../data/useSession';
 import type { HistoryRow } from '../../model/history';
 import {
@@ -79,6 +85,8 @@ import {
 import { RestStage } from './RestStage';
 import { SetHeader, SetRow } from './SetRow';
 import { useFootClearOfField } from './useFootClearOfField';
+import { useShortWindow } from './useShortWindow';
+import { useTwoColumns } from './useTwoColumns';
 import { useStableSetView } from './useStableSetView';
 import './player-layout.css';
 import { Demo, Guide, Thumb } from '../exerciseVisuals';
@@ -90,7 +98,16 @@ export function SessionPage() {
   const [search] = useSearchParams();
   const light = search.get('leicht') === '1';
   const session = useSession(id);
-  if (session === undefined) {
+  const history = usePreviousHistory(session);
+  const allExercises = useExercises();
+  // Der Player erscheint erst mit Übungen und Vorwerten (D-502): Kämen sie nach dem ersten Bild,
+  // wüchse die Karte über dem aktiven Satz (Muskel-Etiketten, Notiz vom letzten Mal), und der
+  // Player schöbe die Liste um diese Höhe, mit dem Kopf links sichtbar als Sprung. Danach bleibt
+  // er stehen, auch wenn eine neue Abfrage (Übung hinzugefügt) kurz nichts liefert.
+  const loaded = history !== undefined && allExercises !== undefined;
+  const [shown, setShown] = useState(false);
+  if (loaded && !shown) setShown(true);
+  if (session === undefined || (session && session.status !== 'completed' && !loaded && !shown)) {
     return (
       <div aria-busy="true" className="grid gap-4">
         <Skeleton className="h-16" />
@@ -110,7 +127,7 @@ export function SessionPage() {
   if (session.status === 'completed') {
     return <Navigate to={`/training/einheit/${session.id}/zusammenfassung`} replace />;
   }
-  return <Player session={session} light={light} />;
+  return <Player session={session} light={light} history={history} allExercises={allExercises} />;
 }
 
 type Confirm =
@@ -122,9 +139,6 @@ interface RowError {
   message: string;
   retry?: () => void;
 }
-
-/** Höchstens so viele Übungen unter „Als Nächstes“ (D-380); die Steuerung bleibt kurz. */
-const UPCOMING_MAX = 4;
 
 function useNow(intervalMs: number): Date {
   const [now, setNow] = useState(() => new Date());
@@ -143,33 +157,30 @@ function useNow(intervalMs: number): Date {
 }
 
 interface SetName {
+  /** Kennung in der Satzliste: „A“, „1“, „2“ … „D“. */
   label: string;
+  /** Satz ohne Übung: „Aufwärmsatz“, „Arbeitssatz 2 von 3“ (D-537). */
+  set: string;
+  /** Mit Übung, für die Pause und für Screenreader: „Kniebeuge mit Langhantel, Arbeitssatz 2 von 3“. */
   name: string;
-  /** Position unter den lebenden Sätzen der Übung, 1-basiert. */
-  index: number;
-  total: number;
 }
 
-/** Lesbare Namen aller Sätze („Kniebeuge mit Langhantel, Arbeitssatz 2"), je Übung gezählt. */
+/**
+ * Lesbare Namen aller Sätze, je Übung und Typ gezählt (D-537): In „Jetzt“, in der Pause und in der
+ * Satzliste heißt derselbe Satz gleich, „Arbeitssatz 2 von 3“ statt „Satz 3 von 4“ und
+ * „Arbeitssatz 2“.
+ */
 function setNames(exercises: SessionExercise[]): Map<string, SetName> {
   const names = new Map<string, SetName>();
   for (const exercise of exercises) {
-    let working = 0;
-    let warmup = 0;
-    let drop = 0;
-    const sets = liveSets(exercise);
-    sets.forEach((set, position) => {
-      const ordinal =
-        set.type === 'working' ? ++working : set.type === 'warmup' ? ++warmup : ++drop;
-      const label = set.type === 'working' ? String(ordinal) : tSession.setTypeShort[set.type];
-      const name = tSession.setLabel(tSession.setTypeLabel[set.type], ordinal);
+    for (const { set, position } of setPositions(liveSets(exercise))) {
+      const own = setName(position);
       names.set(set.id, {
-        label,
-        name: `${exercise.nameSnapshot}, ${name}`,
-        index: position + 1,
-        total: sets.length,
+        label: set.type === 'working' ? String(position.n) : tSession.setTypeShort[set.type],
+        set: own,
+        name: `${exercise.nameSnapshot}, ${own}`,
       });
-    });
+    }
   }
   return names;
 }
@@ -201,21 +212,30 @@ function useRestEndSound(timer: Session['restTimer'], now: Date, enabled: boolea
 }
 
 /** Basis- und eigene Übungen nach ID, für Übungsinfo und Alternativen; leer, bis sie geladen sind. */
-function useLibrary(): ReadonlyMap<string, Exercise> {
-  const exercises = useExercises();
+function useLibrary(exercises: readonly Exercise[] | undefined): ReadonlyMap<string, Exercise> {
   return useMemo(
     () => new Map((exercises ?? []).map((exercise) => [exercise.id, exercise])),
     [exercises],
   );
 }
 
-function Player({ session, light }: { session: Session; light: boolean }) {
+function Player({
+  session,
+  light,
+  history,
+  allExercises,
+}: {
+  session: Session;
+  light: boolean;
+  /** Vorwerte und Übungen lädt `SessionPage` vor dem ersten Bild (D-502). */
+  history: ReadonlyMap<string, HistoryRow> | undefined;
+  allExercises: readonly Exercise[] | undefined;
+}) {
   const rt = useDb();
   const navigate = useNavigate();
   const settings = useSettings() ?? SETTINGS_DEFAULTS;
   const fmt = useFormatters();
-  const history = usePreviousHistory(session);
-  const library = useLibrary();
+  const library = useLibrary(allExercises);
   const prefs = useExercisePrefs();
   const now = useNow(session.restTimer || session.setTimer ? 250 : 1000);
   useRestEndSound(session.restTimer ?? null, now, settings.restSound);
@@ -242,9 +262,16 @@ function Player({ session, light }: { session: Session; light: boolean }) {
   const progress = sessionProgress(session);
   const current = currentSet(session);
   const rootRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLElement>(null);
   const footRef = useRef<HTMLDivElement>(null);
-  useStableSetView(rootRef, headRef, footRef, current?.id ?? null);
+  // Niedriges Fenster: „Jetzt“ einspaltig kompakter (D-498, Nachtrag).
+  const short = useShortWindow();
+  // Niedrig und zwei Spalten (Duo quer): Der Kopf steht links fest über der Liste, die Animation
+  // rechts hat ihre volle Größe (D-502).
+  const twoColumns = useTwoColumns(frameRef);
+  const headLeft = short && twoColumns;
+  useStableSetView(rootRef, headRef, footRef, current?.id ?? null, headLeft);
   useFootClearOfField(footRef);
   const names = setNames(exercises);
   const restTimer = session.restTimer ?? null;
@@ -339,16 +366,6 @@ function Player({ session, light }: { session: Session; light: boolean }) {
     afterCurrent && afterCurrent.exercise.id !== currentExercise?.id ? afterCurrent.exercise : null;
   usePreloadDemos(currentExercise?.exerciseId, nextExercise?.exerciseId);
   const currentEntry = currentExercise ? library.get(currentExercise.exerciseId) : undefined;
-  // „Als Nächstes“ in zwei Spalten (D-380): Übungen nach der aktuellen mit offenen Sätzen.
-  const upcoming = currentExercise
-    ? exercises
-        .slice(exercises.indexOf(currentExercise) + 1)
-        .map((exercise) => ({
-          exercise,
-          open: liveSets(exercise).filter((s) => s.status === 'planned').length,
-        }))
-        .filter(({ open }) => open > 0)
-    : [];
   // Oben klein Programm und Woche, als Titel nur der Trainingstag; nichts doppelt (F5, D-323).
   const heading = session.program ? session.program.dayName : session.title;
   // Ohne Programm: „Freies Training“, außer der Titel sagt es schon (D-323).
@@ -358,6 +375,102 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       ? null
       : tSession.freeSource;
 
+  // Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS (D-332).
+  // Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. Seitlich reicht er bis an
+  // den Fensterrand, auch über einen sicheren Bereich (D-377). Er steht in einer Spalte oben, in
+  // zwei Spalten rechts über der Animation, im niedrigen Fenster mit zwei Spalten links fest über
+  // der Liste (D-502).
+  const head = (
+    <header
+      ref={headRef}
+      className="player-head page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
+    >
+      <div className="flex items-start justify-between gap-2">
+        {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
+        <Link
+          to="/training"
+          aria-label={t.training.title}
+          title={t.training.title}
+          className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
+        >
+          <ChevronLeft aria-hidden="true" className="size-6" />
+        </Link>
+        <div className="min-w-0 flex-1 pt-0.5">
+          {session.program ? (
+            // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
+            // (F6, D-338): „Winterprogramm 20… · Woche 3“.
+            <p className="eyebrow flex min-w-0 text-muted">
+              <span className="min-w-0 truncate">{session.program.programName}</span>
+              <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
+            </p>
+          ) : eyebrow ? (
+            <p className="eyebrow truncate text-muted">{eyebrow}</p>
+          ) : null}
+          <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => {
+            const open = progress.total - progress.done;
+            if (open > 0) setConfirm({ kind: 'finish', open });
+            else void finish(false);
+          }}
+        >
+          {tSession.finish}
+        </Button>
+      </div>
+      <div className="mt-3 flex items-center gap-3">
+        <Meter
+          value={progress.total > 0 ? progress.done / progress.total : 0}
+          label={t.session.progress(progress.done, progress.total)}
+          className="flex-1"
+        />
+        <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
+          <span className="sr-only">{tSession.duration}: </span>
+          {formatClock(sessionDurationSec(session, now))}
+        </p>
+      </div>
+      <p className="mt-1 text-sm text-muted tabular-nums">
+        {t.session.progress(progress.done, progress.total)}
+      </p>
+      {errors.session ? (
+        <p role="alert" className="mt-2 text-sm text-danger">
+          {errors.session.message}{' '}
+          {errors.session.retry ? (
+            <button
+              type="button"
+              className="font-semibold underline"
+              onClick={errors.session.retry}
+            >
+              {tSession.retry}
+            </button>
+          ) : null}
+        </p>
+      ) : null}
+      {restTimer ? (
+        <RestStage
+          timer={restTimer}
+          now={now}
+          next={
+            afterRest
+              ? {
+                  ...afterRest,
+                  name: names.get(afterRest.set.id)?.name ?? afterRest.exercise.nameSnapshot,
+                }
+              : null
+          }
+          previous={(() => {
+            const values = afterRest ? previousFor(afterRest.exercise, afterRest.set) : null;
+            return afterRest && values ? formatValues(afterRest.exercise, values) : undefined;
+          })()}
+          onAdjust={(delta) => void run('rest', () => adjustRest(rt, session.id, delta))}
+          onSkip={() => void run('rest', () => skipRest(rt, session.id))}
+        />
+      ) : null}
+    </header>
+  );
+
   return (
     <div
       ref={rootRef}
@@ -366,107 +479,17 @@ function Player({ session, light }: { session: Session; light: boolean }) {
       onKeyDownCapture={settings.restSound ? unlockSound : undefined}
     >
       {/* Rahmen, Spalten und Steuerung (D-380, `player-layout.css`): schmal eine Spalte wie bisher,
-          ab 48 rem Inhaltsbreite links die Übungen, rechts mitlaufend Kopf, nächster Satz und die
-          nächsten Übungen. Nur angeordnet, nichts neu aufgebaut. */}
-      <div className="player-frame">
+          ab 48 rem Inhaltsbreite links die Übungen, rechts mitlaufend Kopf, Animation und „Jetzt“,
+          auch in der Pause (D-533). Nur angeordnet, nichts neu aufgebaut. */}
+      <div
+        ref={frameRef}
+        className="player-frame"
+        data-niedrig={short ? '' : undefined}
+        data-pause={restTimer ? '' : undefined}
+      >
         <div className="player-columns">
           <div className="player-side">
-            {/* Klebender Kopf: Fläche bis an den oberen Rand, die Schrift unter der Unschärfe von iOS
-          (D-332). Der zusätzliche Innenabstand liegt in Ruhe auf dem Abstand der Seite. Seitlich
-          reicht er bis an den Fensterrand, auch über einen sicheren Bereich (D-377). */}
-            <header
-              ref={headRef}
-              className="player-head page-gutters page-bleed sticky top-0 z-10 -mt-edge-clear mb-4 border-b border-line bg-bg pt-[calc(0.5rem+var(--spacing-edge-clear))] pb-3"
-            >
-              <div className="flex items-start justify-between gap-2">
-                {/* Zurück zu „Training“; die Einheit läuft weiter (Leiste „Training läuft“). */}
-                <Link
-                  to="/training"
-                  aria-label={t.training.title}
-                  title={t.training.title}
-                  className="-ml-2 flex size-touch shrink-0 items-center justify-center rounded-pill text-muted hover:bg-surface-2 hover:text-fg"
-                >
-                  <ChevronLeft aria-hidden="true" className="size-6" />
-                </Link>
-                <div className="min-w-0 flex-1 pt-0.5">
-                  {session.program ? (
-                    // „Woche n“ bleibt immer sichtbar; wird es eng, kürzt sich der Programmname
-                    // (F6, D-338): „Winterprogramm 20… · Woche 3“.
-                    <p className="eyebrow flex min-w-0 text-muted">
-                      <span className="min-w-0 truncate">{session.program.programName}</span>
-                      <span className="shrink-0 whitespace-pre">{` · ${session.program.weekName}`}</span>
-                    </p>
-                  ) : eyebrow ? (
-                    <p className="eyebrow truncate text-muted">{eyebrow}</p>
-                  ) : null}
-                  <h1 className="truncate text-title leading-tight font-semibold">{heading}</h1>
-                </div>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    const open = progress.total - progress.done;
-                    if (open > 0) setConfirm({ kind: 'finish', open });
-                    else void finish(false);
-                  }}
-                >
-                  {tSession.finish}
-                </Button>
-              </div>
-              <div className="mt-3 flex items-center gap-3">
-                <Meter
-                  value={progress.total > 0 ? progress.done / progress.total : 0}
-                  label={t.session.progress(progress.done, progress.total)}
-                  className="flex-1"
-                />
-                <p className="shrink-0 text-sm font-semibold text-muted tabular-nums">
-                  <span className="sr-only">{tSession.duration}: </span>
-                  {formatClock(sessionDurationSec(session, now))}
-                </p>
-              </div>
-              <p className="mt-1 text-sm text-muted tabular-nums">
-                {t.session.progress(progress.done, progress.total)}
-              </p>
-              {errors.session ? (
-                <p role="alert" className="mt-2 text-sm text-danger">
-                  {errors.session.message}{' '}
-                  {errors.session.retry ? (
-                    <button
-                      type="button"
-                      className="font-semibold underline"
-                      onClick={errors.session.retry}
-                    >
-                      {tSession.retry}
-                    </button>
-                  ) : null}
-                </p>
-              ) : null}
-              {restTimer ? (
-                <RestStage
-                  timer={restTimer}
-                  now={now}
-                  next={
-                    afterRest
-                      ? {
-                          ...afterRest,
-                          name:
-                            names.get(afterRest.set.id)?.name ?? afterRest.exercise.nameSnapshot,
-                        }
-                      : null
-                  }
-                  previous={(() => {
-                    const values = afterRest
-                      ? previousFor(afterRest.exercise, afterRest.set)
-                      : null;
-                    return afterRest && values
-                      ? formatValues(afterRest.exercise, values)
-                      : undefined;
-                  })()}
-                  onAdjust={(delta) => void run('rest', () => adjustRest(rt, session.id, delta))}
-                  onSkip={() => void run('rest', () => skipRest(rt, session.id))}
-                />
-              ) : null}
-            </header>
+            {headLeft ? null : head}
             {light ? (
               <p
                 role="note"
@@ -486,6 +509,7 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                   name={currentExercise.nameSnapshot}
                   muscles={currentEntry?.primaryMuscles ?? []}
                   variant="large"
+                  endless
                   className="w-full"
                   onOpen={() => {
                     setInfo(currentExercise);
@@ -493,55 +517,80 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 />
               </section>
             ) : null}
-            {!restTimer && current && currentExercise && currentName ? (
+            {/* „Jetzt“ steht auch in der Pause im DOM: In einer Spalte nimmt die Pause seinen Platz ein
+                (`data-pause` blendet es aus), in zwei Spalten bleibt rechts immer dasselbe stehen,
+                Animation und „Jetzt“ mit „Danach“ (D-533). */}
+            {current && currentExercise && currentName ? (
               <section
                 aria-label={tSession.now}
                 className="player-now stage mb-4 rounded-card p-card text-fg"
+                data-timer-laeuft={setTimer?.setId === current.id ? '' : undefined}
               >
                 {/* Schmal kompakt rechts, der Text fließt darum (D-397): Das Bild nimmt dem Namen
                     nur in den ersten Zeilen Breite, die Karte wird kaum höher, der Satz bleibt über
-                    der Fußleiste. Antippen öffnet die Übungsinfo. */}
+                    der Fußleiste. Die Schleife läuft hier klein mit (D-498); Antippen öffnet die
+                    Übungsinfo mit großer Animation und Ausführung. */}
                 <Demo
                   exerciseId={currentExercise.exerciseId}
                   name={currentExercise.nameSnapshot}
                   muscles={currentEntry?.primaryMuscles ?? []}
                   variant="compact"
+                  endless
                   className="player-now-demo float-right mb-1 ml-3"
                   onOpen={() => {
                     setInfo(currentExercise);
                   }}
                 />
                 <p className="eyebrow text-muted">{tSession.now}</p>
-                <p className="mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
-                  {currentExercise.nameSnapshot}
-                </p>
-                <p className="mt-1 text-muted">
-                  {[
-                    `${tSession.setTypeLabel[current.type]} · ${tSession.setOf(currentName.index, currentName.total)}`,
-                    currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
-                    currentPrevious
-                      ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
-                </p>
+                <div className="player-now-text">
+                  <p className="player-now-name mt-1 text-2xl font-semibold [overflow-wrap:anywhere]">
+                    {currentExercise.nameSnapshot}
+                  </p>
+                  <p className="player-now-info mt-1 text-muted">
+                    {/* Zahlen bleiben beim Wort: „Ziel 10“ in einer Zeile (E1, D-525). */}
+                    {keepNumbersTogether(
+                      [
+                        currentName.set,
+                        currentTarget ? `${tSession.target} ${currentTarget.text}` : null,
+                        currentPrevious
+                          ? `${tSession.previous} ${formatValues(currentExercise, currentPrevious)}`
+                          : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · '),
+                    )}
+                  </p>
+                </div>
                 {setTimer?.setId === current.id ? (
-                  <p className="mt-2 text-timer font-semibold tabular-nums" role="timer">
+                  <p
+                    className="player-now-timer mt-2 text-timer font-semibold tabular-nums"
+                    role="timer"
+                  >
                     {formatClock(timerElapsed)}
                   </p>
                 ) : null}
                 {currentExercise.notes ? (
-                  <p className="mt-2 text-sm text-muted">{currentExercise.notes}</p>
+                  <p className="player-now-notes mt-2 text-sm text-muted">
+                    {currentExercise.notes}
+                  </p>
                 ) : null}
-                <p className="mt-3 text-sm text-muted">
-                  {nextExercise
-                    ? tSession.nextExercise(nextExercise.nameSnapshot)
-                    : tSession.lastExercise}
-                </p>
+                {/* Neben „Danach:“ ein kleines Vorschaubild der nächsten Übung (D-498); der Name
+                    steht daneben, das Bild ist für Screenreader stumm. */}
+                {nextExercise ? (
+                  <p className="player-next-line mt-3 flex items-center gap-2 text-sm text-muted">
+                    <Thumb exerciseId={nextExercise.exerciseId} size="mini" />
+                    <span className="min-w-0">
+                      {tSession.nextExercise(nextExercise.nameSnapshot)}
+                    </span>
+                  </p>
+                ) : (
+                  <p className="player-last-line mt-3 text-sm text-muted">
+                    {tSession.lastExercise}
+                  </p>
+                )}
               </section>
             ) : null}
-            {!restTimer && !current && exercises.length > 0 ? (
+            {!current && exercises.length > 0 ? (
               <section
                 aria-label={tSession.allDone}
                 className="player-now stage mb-4 rounded-card p-card text-fg"
@@ -550,36 +599,9 @@ function Player({ session, light }: { session: Session; light: boolean }) {
                 <p className="mt-1 text-2xl font-semibold">{tSession.allDone}</p>
               </section>
             ) : null}
-            {/* Nur in zwei Spalten sichtbar (D-380): die Übungen nach der aktuellen mit ihren offenen
-          Sätzen; schmal nennt die Karte „Jetzt“ die nächste Übung. */}
-            {upcoming.length > 0 ? (
-              <section
-                aria-label={tSession.upNext}
-                className="player-next mb-4 rounded-card bg-surface p-card shadow-card"
-              >
-                <p className="eyebrow text-muted">{tSession.upNext}</p>
-                <ol className="mt-2 grid gap-2">
-                  {upcoming.slice(0, UPCOMING_MAX).map(({ exercise, open }) => (
-                    <li key={exercise.id} className="flex items-center gap-3">
-                      <Thumb exerciseId={exercise.exerciseId} size="small" />
-                      <span className="min-w-0 flex-1 truncate font-medium">
-                        {exercise.nameSnapshot}
-                      </span>
-                      <span className="shrink-0 text-sm text-muted tabular-nums">
-                        {tSession.openSets(open)}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-                {upcoming.length > UPCOMING_MAX ? (
-                  <p className="mt-2 text-sm text-muted">
-                    {tSession.moreExercises(upcoming.length - UPCOMING_MAX)}
-                  </p>
-                ) : null}
-              </section>
-            ) : null}
           </div>
           <div className="player-main">
+            {headLeft ? head : null}
             {exercises.length === 0 ? <p className="mb-4 text-muted">{tSession.empty}</p> : null}
 
             <div className="grid gap-4">

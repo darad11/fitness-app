@@ -13,7 +13,7 @@ import { describeOwn } from './programs/describe';
 
 /**
  * Programme und Vorlagen (S-04): eigene Programme und Vorlagen mit Archiv (D-257), gebündelte
- * Programme A, B, C mit Aktivierung (D-249) und die Beispielvorlagen.
+ * Programme (Dali’s PPLC, D-504, sowie A, B, C, D-249) mit Aktivierung und die Beispielvorlagen.
  */
 export function ProgramsPage() {
   const templates = useLoaderData<readonly SampleTemplate[]>();

@@ -10,6 +10,8 @@ export const tExerciseMedia = {
   muscleMapBack: 'Hinten',
   /** Knopf über der Demonstration im Player. */
   openInfo: (name: string) => `${name}: Ausführung und Angaben`,
+  /** Knopf über der angehaltenen Animation in Übungsinfo und Details (D-497). */
+  replay: 'Animation wiederholen',
   phaseStart: 'Ausgangsposition',
   phaseEnd: 'Endposition',
   phasesAlt: (alt: string) => `${alt} Zwei Bilder im Wechsel: Ausgangs- und Endposition.`,

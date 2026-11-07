@@ -17,6 +17,20 @@ schwarzes F oben auf der Zunge.
   viel höher, wie die Sohle unter dem Fuß dick ist (`sohle_unter_fuss`).
 - **Fersenlasche**: kleines eigenes Netz oben an der Ferse, in Lime.
 
+**Laufschuh seit D-460** (`NEU`; Auftrag `docs/prompts/programme-ganzkoerper-FORM.md` Abschnitt 1), näher am Board:
+
+- **Schnürung als Geometrie** (`_schnuerung`, `SENKEL`): sechs Paar Ösen als kleine Ringe auf dem Rist, flache
+  Senkel über Kreuz von Öse zu Öse, unten ein Steg, oben ein Knoten mit zwei Schlaufen und zwei Enden mit Hülsen;
+  alles sitzt auf der Oberfläche des Schafts und hängt an dessen Knochen. Die aufgemalten Fugen entfallen.
+- **Profil und angehobene Spitze** (`_stollen`, `PROFIL`, `SPITZE`): Stollen quer zum Fuß, in der Mitte geteilt,
+  unter dem Körper der Sohle; seitlich als Kerben in der schwarzen Laufsohle zu sehen. Ab dem Ballen hebt sich der
+  Schuh zur Spitze um bis 12 mm; Ferse und Ballen stehen flach.
+- **Polster am Knöchel** (`_polster`, `POLSTER`): schwarzer Wulst entlang der Oberkante um die Ferse, seitlich am
+  Knöchel etwas aufgepolstert; das Futter im Kragen und hinter der Zunge ist schwarz (Attribut „SchuhFutter“).
+- **Zehenbox eines Laufschuhs** (`_form_neu`, `ZEHENBOX`): vorn schmaler, flacher und zur großen Zehe gerichtet;
+  der Schaft bleibt dabei mindestens 3,5 mm über der Socke und rückt dort nach außen, wo die Socke im Schuh von
+  MakeHuman bis 4 mm durch den Schaft ragte (verdeckt, aber eine Durchdringung).
+
 **Socke** (Board unten links): weiße Crew-Socke aus dem Netz der Figur wie Shirt und Shorts (versetzt,
 dieselben Gewichte, `kleidung._teil`), der Bund bei `SOCKE["bund"]` der Strecke Knöchel → Knie,
 schwarzes F außen am Schaft, schwarze Spitze. Was im Schuh liegt, ist ausgeblendet (Attribut „ImSchuh“),
@@ -70,11 +84,39 @@ LASCHE = {"breite": 0.020, "hoehe": 0.026, "ueber": 0.016, "dicke": 0.003, "neig
 # der Fußlänge entlang des Schafts), Abstand zur Haut; F außen: Höhe in Breiten des Schafts, Mitte unter
 # dem Bund in Anteilen der Schaftlänge
 SCHAFT_DICKE = 0.002  # Dicke des Schafts nach innen (Futter), m
+FUTTER_DICKE = 0.0003  # Dicke des Futters im Kragen seit D-460 (vom Umschlag nach innen), m
 # Außenseite von Kragen und Zunge mindestens so weit über der Haut (Socke 3 mm, Schaft 2 mm, 2,5 mm Luft, damit
 # auch in der Bewegung nichts in die Socke schneidet), m
 KRAGEN_ABSTAND = 0.0075
 SOCKE = {"bund": 0.45, "abstand": 0.0025, "f_hoehe": 0.39, "f_unter_bund": 0.16}
 _SCHAEFTE: dict[str, dict] = {}
+
+# ---------------------------------------------------------------------- Schuh nach D-460 (Laufschuh nach dem Board)
+# NEU: Schnürung mit Senkeln und Ösen als Geometrie, Profil an der Laufsohle, angehobene Spitze, Polster am Knöchel,
+# Zehenbox eines Laufschuhs, schwarzes Futter im Kragen. False: Schuh bis D-459 (für Vorher-Bilder)
+NEU = True
+# Zehenbox: ab u schmaler und flacher zur Spitze hin (Anteile an der Spitze), die Spitze zur Innenseite (große
+# Zehe) verschoben (m); Verlauf mit glatt((u - ab) / (1 - ab)) hoch `exp`. Die Außenseite bleibt mindestens `luft`
+# über der Socke (m; innen dann 1,5 mm), sonst gibt der Schaft dort nach
+ZEHENBOX = {"ab": 0.56, "breite": 0.20, "hoehe": 0.30, "innen": 0.006, "exp": 1.4, "luft": 0.0035}
+# Angehobene Spitze (Toe Spring): ab u hebt sich der Schuh quadratisch bis `hub` an der Spitze (m); Ferse und
+# Ballen bleiben flach am Boden
+SPITZE = {"ab": 0.70, "hub": 0.012}
+# Profil der Laufsohle: Stollen quer zum Fuß, in der Mitte geteilt; Länge und Fuge längs (m), halbe Fuge in der Mitte
+# (m), Höhe (m), von u bis u. Der Körper der Sohle beginnt um die Höhe des Profils über dem Boden
+PROFIL = {"hoehe": 0.0025, "laenge": 0.0062, "fuge": 0.0034, "mitte": 0.0016, "von": 0.035, "bis": 0.955,
+          "rand": 0.0004, "ueber": 0.0006}
+# Schnürung: Ösen paarweise von u bis u (unten nach oben), halber Abstand quer unten und oben (m); Senkel flach
+# (halbe Breite, halbe Dicke, m), Abstand über dem Schaft (m); oben ein Knoten mit zwei Schlaufen und zwei Enden
+SENKEL = {"paare": 6, "unten": 0.785, "oben": 0.555, "quer": (0.0135, 0.0185), "breite": 0.0019,
+          "dicke": 0.0009, "ueber": 0.0012, "kreuz": 0.0013, "oese": (0.0025, 0.0007),
+          "schlaufe": {"quer": 0.028, "laenge": 0.012, "zurueck": -0.004}, "ende": {"quer": 0.012, "vor": 0.050}}
+# Polster am Kragen: Wulst entlang der Oberkante (Umschlag des Schafts) um die Ferse, Radius (m), endet bei u (vor
+# der Zunge, zu den Enden schmaler); die Mitte liegt `tiefe` Radien unter der Oberkante. Seitlich am Knöchel ist der
+# Schaft um `knoechel` (m) aufgepolstert
+POLSTER = {"radius": 0.0040, "bis": 0.37, "knoechel": 0.0025, "knoechel_u": (0.10, 0.40), "tiefe": 0.30}
+SENKEL_WEISS = "#E4E6E8"  # Senkel weiß, etwas grauer als der Schaft (Board)
+OESE_GRAU = "#8E949C"
 
 
 def hole() -> None:
@@ -280,6 +322,442 @@ def _kragen_frei(daten: dict, koerper: bpy.types.Object) -> None:
     daten["kragen_frei"] = True
 
 
+# ---------------------------------------------------------------------- Laufschuh nach dem Board (D-460)
+
+
+def _glatt(x: float) -> float:
+    x = max(0.0, min(1.0, x))
+    return x * x * (3 - 2 * x)
+
+
+def _hub(u: float) -> float:
+    """Angehobene Spitze (`SPITZE`): Höhe über der flachen Sohle bei u (m); bis `SPITZE["ab"]` null."""
+    if not NEU or u <= SPITZE["ab"]:
+        return 0.0
+    t = min(1.0, (u - SPITZE["ab"]) / (1.0 - SPITZE["ab"]))
+    return SPITZE["hub"] * t * t
+
+
+def _punkt(r: dict, u: float, h: float, q: float) -> Vector:
+    """Punkt aus den Koordinaten am Schuh (Umkehrung von `_koord`)."""
+    return r["c"] + r["vor"] * (u * r["L"] + r["ferse"]) + r["seit"] * q + Vector((0.0, 0.0, r["boden"] + h - r["c"].z))
+
+
+def _ringe(daten: dict) -> None:
+    """Ringe um die Öffnung des Schafts (Ruhehaltung, einmal je Figur): Abstand in Kanten vom Rand des Netzes. Der
+    Schaft von MakeHuman hat nur diesen einen Rand, den unteren Rand des Futters im Schuh (Ring 0, 6,4 bis 9,2 cm
+    über dem Boden); von dort läuft das Futter nach oben, schlägt am Kragen und an der Zunge um und läuft außen
+    hinunter. Der Umschlag, die sichtbare Oberkante, ist der Ring mit der größten mittleren Höhe (Ring 3, 9,2 bis
+    12,4 cm). Setzt `daten["ring"]` (je Punkt), `daten["umschlag_ring"]` und `daten["umschlag"]` (je Seite die
+    Punkte des Umschlags als geschlossene Schleife)."""
+    from collections import Counter, deque
+
+    P, F, S = daten["punkte"], daten["flaechen"], daten["seite"]
+    kanten: Counter = Counter()
+    nachbarn: list[set[int]] = [set() for _ in P]
+    for f in F:
+        for a, b in zip(f, f[1:] + f[:1]):
+            kanten[(min(a, b), max(a, b))] += 1
+            nachbarn[a].add(b)
+            nachbarn[b].add(a)
+    ring = [-1] * len(P)
+    schlange = deque()
+    for (a, b), n in kanten.items():
+        if n == 1:
+            for i in (a, b):
+                if ring[i] < 0:
+                    ring[i] = 0
+                    schlange.append(i)
+    while schlange:
+        a = schlange.popleft()
+        for b in nachbarn[a]:
+            if ring[b] < 0:
+                ring[b] = ring[a] + 1
+                schlange.append(b)
+    daten["ring"] = ring
+    daten["umschlag_ring"] = {}
+    daten["umschlag"] = {}
+    for s in "LR":
+        r = daten["rahmen"][s]
+        hoehen: dict[int, list[float]] = {}
+        for i, p in enumerate(P):
+            if S[i] == s and 0 <= ring[i] <= 8:
+                hoehen.setdefault(ring[i], []).append(_koord(r, p)[1])
+        k = max(hoehen, key=lambda j: sum(hoehen[j]) / len(hoehen[j]))
+        daten["umschlag_ring"][s] = k
+        glieder = {i for i in range(len(P)) if S[i] == s and ring[i] == k}
+        start = min(glieder, key=lambda i: _koord(r, P[i])[0])  # an der Ferse
+        schleife, vorher = [start], None
+        while True:
+            weiter = [j for j in nachbarn[schleife[-1]] if j in glieder and j != vorher and j not in schleife]
+            if not weiter:
+                break
+            # beim ersten Schritt nach außen (q > 0), damit die Schleife immer gleich herum läuft
+            if vorher is None:
+                weiter.sort(key=lambda j: -_koord(r, P[j])[2])
+            vorher = schleife[-1]
+            schleife.append(weiter[0])
+        daten["umschlag"][s] = schleife
+
+
+def _form_neu(daten: dict, koerper: bpy.types.Object) -> None:
+    """Form eines Laufschuhs (D-460), einmal je Figur, nach `_kragen_frei` und vor dem Bau der Netze:
+
+    - **Zehenbox**: ab `ZEHENBOX["ab"]` wird der Schaft zur Spitze hin schmaler und flacher (an der Spitze um
+      `breite` bzw. `hoehe`), die Spitze rückt um `innen` zur großen Zehe; der Schuh von MakeHuman ist vorn rund
+      und breit wie ein Freizeitschuh. Die Höhe wird über dem Boden des Schafts gestaucht, die Sohle folgt dem
+      Umriss. Wo der Schaft dabei näher als `ZEHENBOX["luft"]` an die Socke käme (Socke in der Ruhehaltung, 2,5 mm
+      über der Haut), geht er nur so weit, wie die Luft reicht (Anteil der Verschiebung je Punkt, über die
+      Nachbarn geglättet, nie über das Erlaubte); die Zehen bewegen sich in den Übungen nicht gegen den Fuß.
+    - **Polster am Knöchel**: außen unter dem Umschlag (Ringe 1 bis 4 darunter) zwischen `POLSTER["knoechel_u"]`
+      wölbt sich der Schaft um bis `POLSTER["knoechel"]` nach außen, nur nach außen, damit nichts in die Socke
+      rückt.
+    - **Angehobene Spitze**: ab `SPITZE["ab"]` hebt sich der Schaft um `_hub(u)`.
+    - **Passform**: Wo die Socke schon im Schuh von MakeHuman durch den Schaft ragte (außen am Vorfuß bis 4 mm), rückt
+      der sichtbare Schaft über der Sohle nach außen, bis `luft` plus 1,5 mm reichen (die Flächen zwischen den Ecken
+      liegen näher an der Socke als die Ecken); die Verschiebung verteilt sich über die Nachbarn."""
+    from mathutils.bvhtree import BVHTree
+
+    if daten.get("form_neu"):
+        return
+    _ringe(daten)
+    P, S, ring = daten["punkte"], daten["seite"], daten["ring"]
+    normalen = _normalen(P, daten["flaechen"])
+    zb = ZEHENBOX
+    h0 = SOHLE["unter"]  # Boden des Schafts über dem Boden
+    socke = BVHTree.FromPolygons([v.co + v.normal * SOCKE["abstand"] for v in koerper.data.vertices],
+                                 [list(f.vertices) for f in koerper.data.polygons])
+
+    def luft(x: Vector) -> float:
+        ort, n, _, _ = socke.find_nearest(x, 0.2)
+        return 1.0 if ort is None else (x - ort).dot(n)
+
+    # Zehenbox: volle Verschiebung je Punkt (mit dem Hub der Spitze), erlaubter Anteil (Luft zur Socke), geglättet
+    weg, hub = [], []
+    for i, p in enumerate(P):
+        r = daten["rahmen"][S[i]]
+        u, h, q = _koord(r, p)
+        t = _glatt((u - zb["ab"]) / (1.0 - zb["ab"])) ** zb["exp"]
+        q2 = q * (1.0 - zb["breite"] * t) - zb["innen"] * t
+        h2 = h0 + (h - h0) * (1.0 - zb["hoehe"] * t) if h > h0 else h
+        weg.append(r["seit"] * (q2 - q) + Vector((0.0, 0.0, h2 - h)))
+        hub.append(Vector((0.0, 0.0, _hub(u))))
+    erlaubt = []
+    for p, d, z in zip(P, weg, hub):
+        if d.length < 1e-7 or luft(p + z + d) >= zb["luft"]:
+            erlaubt.append(1.0)
+            continue
+        if luft(p + z) < zb["luft"]:
+            erlaubt.append(0.0)
+            continue
+        lo, hi = 0.0, 1.0
+        for _ in range(12):
+            mid = (lo + hi) / 2
+            if luft(p + z + d * mid) >= zb["luft"]:
+                lo = mid
+            else:
+                hi = mid
+        erlaubt.append(lo)
+    nachbarn: list[set[int]] = [set() for _ in P]
+    for f in daten["flaechen"]:
+        for a, b in zip(f, f[1:] + f[:1]):
+            nachbarn[a].add(b)
+            nachbarn[b].add(a)
+    anteil = list(erlaubt)
+    for _ in range(8):
+        anteil = [min(erlaubt[i], (anteil[i] + sum(anteil[j] for j in nachbarn[i])) / (1 + len(nachbarn[i])))
+                  for i in range(len(P))]
+    neu = [p + z + d * f for p, z, d, f in zip(P, hub, weg, anteil)]
+    # Wo die Socke schon im Schuh von MakeHuman durch den Schaft ragt (außen am Vorfuß bis 4 mm, im Schuh
+    # verdeckt), rückt der sichtbare Schaft über der Sohle nach außen, bis die Luft reicht; die Verschiebung
+    # verteilt sich auf die Nachbarn (nie kleiner als nötig). Nur vor dem Kragen (u > 0,45): dort sorgt
+    # `_kragen_frei` für Abstand
+    noetig = [Vector() for _ in P]
+    for i, p in enumerate(neu):
+        r = daten["rahmen"][S[i]]
+        u, h, _ = _koord(r, P[i])
+        if u < 0.45 or h < _oben(u) - 0.004:
+            continue
+        ort, n, _, _ = socke.find_nearest(p, 0.2)
+        if ort is not None:
+            # 1,5 mm mehr als die Luft: zwischen den Ecken liegen die Flächen des Schafts näher an der Socke
+            fehlt = zb["luft"] + 0.0015 - (p - ort).dot(n)
+            if fehlt > 0:
+                noetig[i] = n * fehlt
+    schub = list(noetig)
+    for _ in range(6):
+        schub = [max((schub[i] + sum((schub[j] for j in nachbarn[i]), Vector())) / (1 + len(nachbarn[i])), noetig[i],
+                     key=lambda v: v.length) for i in range(len(P))]
+    daten["zehenbox"] = {"anteil": anteil, "schub_mm": max(v.length for v in schub) * 1000}
+    k_u0, k_u1 = POLSTER["knoechel_u"]
+    for i in range(len(P)):
+        r = daten["rahmen"][S[i]]
+        u = _koord(r, P[i])[0]
+        p2 = neu[i] + schub[i]
+        # Polster am Knöchel: außen unter dem Umschlag
+        k = ring[i] - daten["umschlag_ring"][S[i]]
+        if 1 <= k <= 4:
+            w = _glatt((u - k_u0) / 0.06) * (1.0 - _glatt((u - (k_u1 - 0.06)) / 0.06)) * (1.0 if k <= 2 else (5 - k) / 3)
+            p2 = p2 + normalen[i] * (POLSTER["knoechel"] * w)
+        neu[i] = p2
+    for i, p in enumerate(neu):
+        P[i] = p
+    daten["form_neu"] = True
+
+
+def _oberseite(bvh, p: Vector) -> tuple[Vector | None, Vector | None]:
+    """Punkt der Oberseite des Schafts unter p (Strahl senkrecht von oben) mit nach oben gerichteter Normale."""
+    ort, normale, _, _ = bvh.ray_cast(p + Vector((0.0, 0.0, 0.25)), Vector((0.0, 0.0, -1.0)), 0.6)
+    if ort is None:
+        return None, None
+    return ort, (normale if normale.z >= 0 else -normale)
+
+
+def _roehre(mitten: list[Vector], oben: list[Vector], a, b, n: int = 8, zu: bool = False,
+            punkte: list | None = None, flaechen: list | None = None) -> tuple[list[Vector], list[list[int]]]:
+    """Röhre mit elliptischem Querschnitt entlang der Mitten: halbe Breite `a` quer zur Bahn in der Fläche, halbe
+    Dicke `b` längs `oben` (Normale der Fläche darunter); `a`, `b` als Zahl oder je Mitte. `zu`: geschlossene
+    Schleife (ohne Kappen), sonst mit Kappen an beiden Enden. Hängt an `punkte`/`flaechen` an."""
+    punkte = [] if punkte is None else punkte
+    flaechen = [] if flaechen is None else flaechen
+    m = len(mitten)
+    a_l = a if isinstance(a, list) else [a] * m
+    b_l = b if isinstance(b, list) else [b] * m
+    start = len(punkte)
+    for k in range(m):
+        if zu:
+            t = mitten[(k + 1) % m] - mitten[k - 1]
+        else:
+            t = mitten[min(k + 1, m - 1)] - mitten[max(k - 1, 0)]
+        t.normalize()
+        quer = oben[k].cross(t)
+        if quer.length < 1e-6:
+            quer = Vector((1.0, 0.0, 0.0)).cross(t)
+        quer.normalize()
+        hoch = t.cross(quer).normalized()
+        for j in range(n):
+            w = 2.0 * math.pi * j / n
+            punkte.append(mitten[k] + quer * (a_l[k] * math.cos(w)) + hoch * (b_l[k] * math.sin(w)))
+    ringe = m if zu else m - 1
+    for k in range(ringe):
+        k2 = (k + 1) % m
+        for j in range(n):
+            j2 = (j + 1) % n
+            flaechen.append([start + k * n + j, start + k * n + j2, start + k2 * n + j2, start + k2 * n + j])
+    if not zu:
+        for k, rich in ((0, -1), (m - 1, 1)):
+            mitte = len(punkte)
+            punkte.append(mitten[k].copy())
+            for j in range(n):
+                j2 = (j + 1) % n
+                f = [mitte, start + k * n + j, start + k * n + j2]
+                flaechen.append(f if rich > 0 else f[::-1])
+    return punkte, flaechen
+
+
+def _schnuerung(daten: dict) -> dict:
+    """Schnürung als Geometrie (D-460) auf dem Rist des fertigen Schafts (Ruhehaltung): `SENKEL["paare"]` Ösen
+    je Seite von u `unten` bis `oben`, quer von `quer[0]` bis `quer[1]`, als kleine Ringe auf der Oberfläche;
+    Senkel als flache Röhren über Kreuz von Öse zu Öse (die Bahn nach außen oben liegt über der anderen), unten ein
+    Steg quer, oben ein Knoten mit zwei Schlaufen und zwei Enden, die auf dem Rist liegen. Jeder Punkt der Bahn
+    sitzt senkrecht über der Oberfläche des Schafts (Strahl von oben). Gibt je Teil Punkte, Flächen, Seiten und
+    Gewichte (vom nächsten Punkt des Schafts, so laufen Senkel und Ösen mit dem Fuß)."""
+    from mathutils import kdtree
+    from mathutils.bvhtree import BVHTree
+
+    sn = SENKEL
+    P = daten["punkte"]
+    bvh = BVHTree.FromPolygons(P, daten["flaechen"])
+    baum = kdtree.KDTree(len(P))
+    for i, p in enumerate(P):
+        baum.insert(p, i)
+    baum.balance()
+    teile = {"Senkel": ([], [], []), "Oesen": ([], [], [])}
+    basis = sn["ueber"] + sn["dicke"]  # Mitte des Senkels über dem Schaft
+    for s in "LR":
+        r = daten["rahmen"][s]
+        oesen = {+1: [], -1: []}
+        for k in range(sn["paare"]):
+            t = k / (sn["paare"] - 1)
+            u = sn["unten"] + (sn["oben"] - sn["unten"]) * t
+            q = sn["quer"][0] + (sn["quer"][1] - sn["quer"][0]) * t
+            for z in (+1, -1):
+                ort, n = _oberseite(bvh, _punkt(r, u, 0.0, z * q))
+                oesen[z].append((ort, n))
+        # Ösen: Ringe auf der Oberfläche
+        pk, fl, sei = teile["Oesen"]
+        for z in (+1, -1):
+            for ort, n in oesen[z]:
+                R, rr = sn["oese"]
+                tang = n.cross(r["vor"]).normalized()
+                bi = n.cross(tang).normalized()
+                kreis = [ort + n * (rr * 0.6) + (tang * math.cos(w) + bi * math.sin(w)) * R
+                         for w in (2 * math.pi * j / 14 for j in range(14))]
+                vor_n = len(pk)
+                _roehre(kreis, [n] * len(kreis), rr, rr, n=6, zu=True, punkte=pk, flaechen=fl)
+                sei += [s] * (len(pk) - vor_n)
+
+        def bahn(A: Vector, B: Vector, anhub, schritte: int = 12, tauchen: bool = True):
+            mitten, normalen = [], []
+            for j in range(schritte + 1):
+                x = j / schritte
+                X = A.lerp(B, x)
+                ort, n = _oberseite(bvh, X)
+                if ort is None:
+                    ort, n = X, Vector((0.0, 0.0, 1.0))
+                tief = -sn["dicke"] * 0.4 if tauchen and j in (0, schritte) else basis
+                mitten.append(ort + n * (tief + anhub(x) if 0 < j < schritte or not tauchen else tief))
+                normalen.append(n)
+            return mitten, normalen
+
+        pk, fl, sei = teile["Senkel"]
+
+        def senkel(mitten, normalen, zu=False, dicker_ab=None):
+            vor_n = len(pk)
+            a = [sn["breite"]] * len(mitten)
+            b = [sn["dicke"]] * len(mitten)
+            if dicker_ab is not None:  # Endhülse (Aglet)
+                for j in range(dicker_ab, len(mitten)):
+                    a[j], b[j] = sn["breite"] * 0.75, sn["breite"] * 0.75
+            _roehre(mitten, normalen, a, b, n=8, zu=zu, punkte=pk, flaechen=fl)
+            sei.extend([s] * (len(pk) - vor_n))
+
+        ob = [o[0] for o in oesen[+1]]
+        un = [o[0] for o in oesen[-1]]
+        # Steg unten quer
+        senkel(*bahn(ob[0], un[0], lambda x: 0.0))
+        # über Kreuz: außen unten nach innen oben über, innen unten nach außen oben darunter
+        for k in range(sn["paare"] - 1):
+            senkel(*bahn(ob[k], un[k + 1], lambda x: sn["kreuz"] * math.sin(math.pi * x)))
+            senkel(*bahn(un[k], ob[k + 1], lambda x: -sn["kreuz"] * 0.8 * math.sin(math.pi * x)))
+        # Knoten oben in der Mitte, etwas zur Spitze hin; Wege von den oberen Ösen dorthin
+        u_k = sn["oben"] + 0.010
+        K, nK = _oberseite(bvh, _punkt(r, u_k, 0.0, 0.0))
+        hoch_k = basis + sn["kreuz"] + 2 * sn["dicke"]
+        K = K + nK * hoch_k
+        for oese in (ob[-1], un[-1]):
+            mitten, normalen = bahn(oese, K - nK * hoch_k, lambda x: (hoch_k - basis) * x)
+            senkel(mitten[:-1] + [K], normalen)
+        vor_n = len(pk)
+        knoten = []
+        for j in range(10):
+            w = 2 * math.pi * j / 10
+            knoten.append(K + r["seit"] * (0.0022 * math.cos(w)) + r["vor"] * (0.0016 * math.sin(w)))
+        _roehre(knoten, [nK] * 10, 0.0016, 0.0013, n=8, zu=True, punkte=pk, flaechen=fl)
+        sei.extend([s] * (len(pk) - vor_n))
+        # zwei Schlaufen zur Seite und etwas zur Spitze, zwei Enden zur Spitze hin; sie liegen auf dem Rist
+        sl, en = sn["schlaufe"], sn["ende"]
+        for z in (+1, -1):
+            lang = (r["seit"] * (z * math.cos(math.radians(28))) + r["vor"] * math.sin(math.radians(28))).normalized()
+            seit = Vector((0.0, 0.0, 1.0)).cross(lang).normalized()
+            mitten, normalen = [], []
+            for j in range(24):
+                w = 2 * math.pi * j / 24
+                along = sl["quer"] * (1 - math.cos(w)) / 2
+                X = K + lang * along + seit * (sl["laenge"] / 2 * math.sin(w)) - r["vor"] * (sl["zurueck"] * math.sin(w / 2))
+                ort, n = _oberseite(bvh, X)
+                if ort is None:
+                    ort, n = X - nK * hoch_k, nK
+                x = along / sl["quer"]
+                mitten.append(ort + n * (hoch_k + 0.0012 - (hoch_k - basis + 0.0004) * x))
+                normalen.append(n)
+            senkel(mitten, normalen, zu=True)
+            richt = (r["vor"] * math.cos(math.radians(12)) + r["seit"] * (z * math.sin(math.radians(12)))).normalized()
+            mitten, normalen = [], []
+            for j in range(15):
+                x = j / 14
+                X = K + richt * (en["vor"] * x) + r["seit"] * (z * en["quer"] * x * x)
+                ort, n = _oberseite(bvh, X)
+                if ort is None:
+                    ort, n = X - nK * hoch_k, nK
+                mitten.append(ort + n * (hoch_k - (hoch_k - basis - 0.0004) * min(1.0, x * 1.6)))
+                normalen.append(n)
+            senkel(mitten, normalen, dicker_ab=13)
+    aus = {}
+    for name, (pk, fl, sei) in teile.items():
+        gew = [daten["gewichte"][baum.find(p)[1]] for p in pk]
+        aus[name] = (pk, fl, sei, gew)
+    return aus
+
+
+def _polster(daten: dict, socke_bvh) -> tuple[list[Vector], list[list[int]], list[str], list[dict]]:
+    """Polster am Kragen (D-460): Wulst entlang des Umschlags von der Zunge (bis u `POLSTER["bis"]`) außen um die
+    Ferse zur Zunge innen, Radius `POLSTER["radius"]`, an den Enden schmaler. Die Mitte liegt unter der
+    Oberkante, der Wulst umschließt sie; zur Socke hin bleiben mindestens 2,5 mm (`socke_bvh`: Socke in der
+    Ruhehaltung), sonst rückt die Mitte nach außen. Gewichte vom nächsten Punkt des Schafts."""
+    from mathutils import kdtree
+
+    P = daten["punkte"]
+    normalen = _normalen(P, daten["flaechen"])
+    baum = kdtree.KDTree(len(P))
+    for i, p in enumerate(P):
+        baum.insert(p, i)
+    baum.balance()
+    R = POLSTER["radius"]
+    punkte, flaechen, seiten = [], [], []
+    for s in "LR":
+        r = daten["rahmen"][s]
+        schleife = daten["umschlag"][s]
+        # offene Bahn: Punkte hinter der Zunge, beginnend an der Ferse in beide Richtungen
+        hinten = [i for i in schleife if _koord(r, P[i])[0] <= POLSTER["bis"]]
+        k0 = schleife.index(min(hinten, key=lambda i: _koord(r, P[i])[0]))
+        bahn_aussen, bahn_innen = [], []
+        for k in range(1, len(schleife)):
+            i = schleife[(k0 + k) % len(schleife)]
+            if _koord(r, P[i])[0] > POLSTER["bis"]:
+                break
+            bahn_aussen.append(i)
+        for k in range(1, len(schleife)):
+            i = schleife[(k0 - k) % len(schleife)]
+            if _koord(r, P[i])[0] > POLSTER["bis"]:
+                break
+            bahn_innen.append(i)
+        bahn = bahn_innen[::-1] + [schleife[k0]] + bahn_aussen
+        # glätten (der Umschlag springt von Punkt zu Punkt um einige Millimeter in der Höhe), dann gleichmäßig alle
+        # 2,5 mm neu verteilen
+        roh = [P[i].copy() for i in bahn]
+        for _ in range(12):
+            roh = [roh[0]] + [(roh[j - 1] + 2 * roh[j] + roh[j + 1]) / 4 for j in range(1, len(roh) - 1)] + [roh[-1]]
+        laengen = [0.0]
+        for a, b in zip(roh, roh[1:]):
+            laengen.append(laengen[-1] + (b - a).length)
+        anzahl = max(2, int(laengen[-1] / 0.0025))
+        dicht, j = [], 0
+        for k in range(anzahl + 1):
+            ziel_l = laengen[-1] * k / anzahl
+            while j < len(roh) - 2 and laengen[j + 1] < ziel_l:
+                j += 1
+            t = (ziel_l - laengen[j]) / max(laengen[j + 1] - laengen[j], 1e-9)
+            dicht.append(roh[j].lerp(roh[j + 1], min(1.0, max(0.0, t))))
+        mitten, oben, radien = [], [], []
+        m = len(dicht)
+        for j, p in enumerate(dicht):
+            n = sum((normalen[i] for _, i, _ in baum.find_n(p, 6)), Vector()).normalized()
+            ende = _glatt(min(j, m - 1 - j) / 10.0)
+            # zu den Enden taucht der Wulst in die Kante, statt spitz auszulaufen
+            c = p - n * (R * (POLSTER["tiefe"] + (1.2 - POLSTER["tiefe"]) * (1.0 - ende)))
+            if socke_bvh is not None:
+                for _ in range(6):
+                    ort, nn, _, _ = socke_bvh.find_nearest(c, 0.05)
+                    if ort is None:
+                        break
+                    frei = (c - ort).dot(nn) - R
+                    if frei >= 0.0025:
+                        break
+                    waag = Vector((nn.x, nn.y, 0.0))
+                    if waag.length < 1e-6:
+                        break
+                    c = c + waag.normalized() * (0.0025 - frei + 0.0002)
+            mitten.append(c)
+            oben.append(n)
+            radien.append(R * (0.55 + 0.45 * ende))
+        vor_n = len(punkte)
+        _roehre(mitten, oben, radien, radien, n=10, punkte=punkte, flaechen=flaechen)
+        seiten += [s] * (len(punkte) - vor_n)
+    gewichte = [daten["gewichte"][baum.find(p)[1]] for p in punkte]
+    return punkte, flaechen, seiten, gewichte
+
+
 def sohle_unter_fuss(koerper: bpy.types.Object) -> float:
     """So viel höher steht die Figur in Schuhen (m): tiefster Punkt des Fußes in der Ruhehaltung minus
     Unterkante der Sohle (D-450)."""
@@ -342,7 +820,7 @@ def _attribute_schuh(daten: dict, punkte: list[Vector], seiten: list[str]) -> di
     for p, s in zip(punkte, seiten):
         u, h, q = _koord(daten["rahmen"][s], p)
         werte["SchuhU"].append(u)
-        werte["SchuhH"].append(h)
+        werte["SchuhH"].append(h - _hub(u))  # über der flachen Sohle: Farbfelder folgen der angehobenen Spitze
         werte["SchuhQ"].append(q)
     return werte
 
@@ -388,23 +866,31 @@ def _sohle(daten: dict) -> tuple[list[Vector], list[list[int]], list[str], list[
     zur Oberkante `SOHLE["oben"]`, unten leicht gerundet; oben läuft eine Lippe nach innen und unter den
     Schaft, darunter schließt der Boden. Die Sohle hängt nur am Fuß und steht damit fest und flach. Bis
     D-450 entstand sie aus dem unteren Teil des Schafts; wo dessen Unterseite fehlte oder sich hob (an
-    Ferse, Gewölbe und Spitze), war sie zerklüftet oder vorn offen."""
+    Ferse, Gewölbe und Spitze), war sie zerklüftet oder vorn offen.
+
+    Seit D-460 (`NEU`): Der Körper der Sohle beginnt um die Höhe des Profils (`PROFIL["hoehe"]`) über dem Boden,
+    darunter tragen die Stollen (`_stollen`); der Boden ist ein Netz aus Ringen statt eines Fächers, damit er der
+    angehobenen Spitze folgt (`_hub`, auf alle Punkte nach ihrem u). Die Punkte der Stollen stehen in
+    `_sohle.profil` (für Kanten und flache Schattierung)."""
     P, seiten = daten["punkte"], daten["seite"]
     N = SOHLE_RINGE
     punkte: list[Vector] = []
     flaechen: list[list[int]] = []
     s_neu: list[str] = []
     gewichte: list[dict] = []
+    profil: list[int] = []
+    T = PROFIL["hoehe"] if NEU else 0.0
     for s in "LR":
         r = daten["rahmen"][s]
         vor, seit = r["vor"], r["seit"]
         kq = [(_koord(r, P[i]), i) for i in range(len(P)) if seiten[i] == s]
-        unten = [P[i] for (u, h, _), i in kq if h < _oben(u)]
+        unten = [P[i] for (u, h, _), i in kq if h - _hub(u) < _oben(u)]
         c = sum(unten, Vector()) / len(unten)
         c.z = r["boden"]
         rad = _umriss(unten, c, vor, seit, N)
         start = len(punkte)
         ringe = []  # je Richtung: Boden innen, Boden außen, Wand unten, Wand oben, Kante, Lippe
+        umriss = []  # Umriss unten in (u, q), für die Stollen
         for k in range(N):
             w = -math.pi + (k + 0.5) * 2 * math.pi / N
             richt = vor * math.cos(w) + seit * math.sin(w)
@@ -413,9 +899,16 @@ def _sohle(daten: dict) -> tuple[list[Vector], list[list[int]], list[str], list[
             aussen = aussen + richt * _profil(SOHLE["wand"], u)
             oben = _oben(u)
             lippe = c + (aussen - c) * 0.80
-            ringe.append([aussen - richt * 0.004, aussen + Vector((0, 0, 0.0015)), aussen + Vector((0, 0, 0.004)),
-                          aussen + Vector((0, 0, oben - 0.003)), aussen + Vector((0, 0, oben)),
-                          lippe + Vector((0, 0, oben - 0.002))])
+            if NEU:
+                umriss.append(_koord(r, aussen)[::2])
+                z = Vector((0, 0, _hub(_koord(r, aussen)[0])))
+                ringe.append([aussen - richt * 0.0015 + Vector((0, 0, T)) + z, aussen + Vector((0, 0, T + 0.0008)) + z,
+                              aussen + Vector((0, 0, T + 0.0025)) + z, aussen + Vector((0, 0, oben - 0.003)) + z,
+                              aussen + Vector((0, 0, oben)) + z, lippe + Vector((0, 0, oben - 0.002)) + z])
+            else:
+                ringe.append([aussen - richt * 0.004, aussen + Vector((0, 0, 0.0015)), aussen + Vector((0, 0, 0.004)),
+                              aussen + Vector((0, 0, oben - 0.003)), aussen + Vector((0, 0, oben)),
+                              lippe + Vector((0, 0, oben - 0.002))])
         for ring in ringe:
             for q in ring:
                 punkte.append(q)
@@ -426,19 +919,84 @@ def _sohle(daten: dict) -> tuple[list[Vector], list[list[int]], list[str], list[
                 a0, a1 = start + k * R + j, start + k * R + j + 1
                 b0, b1 = start + k2 * R + j, start + k2 * R + j + 1
                 flaechen.append([a0, b0, b1, a1])
-        # Boden und Deckel: je ein Fächer um die Mitte
-        mitte_unten = len(punkte)
-        punkte.append(c.copy())
+        # Deckel: Fächer um die Mitte (im Schuh, nicht zu sehen)
         mitte_oben = len(punkte)
         punkte.append(c + Vector((0, 0, _oben(0.5) - 0.002)))
         for k in range(N):
             k2 = (k + 1) % N
-            flaechen.append([mitte_unten, start + k2 * R, start + k * R])
             flaechen.append([mitte_oben, start + k * R + R - 1, start + k2 * R + R - 1])
+        if NEU:
+            # Boden: Ringe zwischen dem inneren Rand und der Mitte, jeder Punkt um `_hub` angehoben
+            anteile = (0.8, 0.6, 0.4, 0.2)
+            innen = [ringe[k][0] for k in range(N)]
+            vorige = [start + k * R for k in range(N)]
+            for f in anteile:
+                neu_ring = []
+                for k in range(N):
+                    x = c + (innen[k] - c) * f
+                    x.z = r["boden"] + T + _hub(_koord(r, x)[0])
+                    neu_ring.append(len(punkte))
+                    punkte.append(x)
+                for k in range(N):
+                    k2 = (k + 1) % N
+                    flaechen.append([vorige[k], neu_ring[k], neu_ring[k2], vorige[k2]])
+                vorige = neu_ring
+            mitte_unten = len(punkte)
+            punkte.append(Vector((c.x, c.y, r["boden"] + T + _hub(_koord(r, c)[0]))))
+            for k in range(N):
+                flaechen.append([mitte_unten, vorige[(k + 1) % N], vorige[k]])
+        else:
+            mitte_unten = len(punkte)
+            punkte.append(c.copy())
+            for k in range(N):
+                k2 = (k + 1) % N
+                flaechen.append([mitte_unten, start + k2 * R, start + k * R])
+        if NEU:
+            vor_n = len(punkte)
+            _stollen(r, umriss, punkte, flaechen)
+            profil += list(range(vor_n, len(punkte)))
         anzahl = len(punkte) - start
         s_neu += [s] * anzahl
         gewichte += [{f"foot.{s}": 1.0} for _ in range(anzahl)]
+    _sohle.profil = profil
     return punkte, flaechen, s_neu, gewichte
+
+
+def _stollen(r: dict, umriss: list[tuple[float, float]], punkte: list[Vector], flaechen: list[list[int]]) -> None:
+    """Profil der Laufsohle (D-460): Stollen quer zum Fuß, in der Mitte durch eine Fuge geteilt, von u
+    `PROFIL["von"]` bis `bis`, je `laenge` lang mit `fuge` Abstand; jeder Stollen reicht von der Mittelfuge bis
+    knapp an den Umriss der Sohle (`umriss` in (u, q)), vom Boden bis `ueber` in den Körper der Sohle. Seitlich
+    sieht man das Profil als Kerben in der schwarzen Laufsohle. Alle Punkte folgen der angehobenen Spitze."""
+    pr = PROFIL
+
+    def q_rand(u: float, z: int) -> float | None:
+        werte = []
+        for (u1, q1), (u2, q2) in zip(umriss, umriss[1:] + umriss[:1]):
+            if (u1 - u) * (u2 - u) <= 0 and u1 != u2:
+                werte.append(q1 + (u - u1) / (u2 - u1) * (q2 - q1))
+        if not werte:
+            return None
+        return max(werte) if z > 0 else min(werte)
+
+    schritt = (pr["laenge"] + pr["fuge"]) / r["L"]
+    u0 = pr["von"]
+    while u0 + pr["laenge"] / r["L"] <= pr["bis"]:
+        u1 = u0 + pr["laenge"] / r["L"]
+        for z in (+1, -1):
+            qa, qb = q_rand(u0, z), q_rand(u1, z)
+            if qa is None or qb is None or min(abs(qa), abs(qb)) - pr["mitte"] - pr["rand"] < 0.003:
+                continue
+            ecken = [(u0, z * pr["mitte"]), (u0, qa - z * pr["rand"]), (u1, qb - z * pr["rand"]), (u1, z * pr["mitte"])]
+            i0 = len(punkte)
+            for h_unten in (True, False):
+                for u, q in ecken:
+                    h = _hub(u) + (0.0 if h_unten else pr["hoehe"] + pr["ueber"])
+                    punkte.append(_punkt(r, u, h, q))
+            flaechen += [[i0, i0 + 1, i0 + 2, i0 + 3], [i0 + 7, i0 + 6, i0 + 5, i0 + 4]]
+            for j in range(4):
+                j2 = (j + 1) % 4
+                flaechen.append([i0 + j, i0 + 4 + j, i0 + 4 + j2, i0 + j2])
+        u0 += schritt
 
 
 def _lasche(daten: dict) -> tuple[list[Vector], list[list[int]], list[str], list[dict]]:
@@ -569,8 +1127,9 @@ def _schuh_material(name: str, teil: str) -> bpy.types.Material:
                     stufe(rech("SUBTRACT", grenze, anteil), -0.02, 0.02))
         farbe = mischen(keil, farbe, szene.srgb(SCHWARZ))
         # Laufsohle unten, an der Spitze höher (Zehenkappe)
-        kappe = rech("MULTIPLY", stufe(rech("SUBTRACT", u, sf["kappe"][0]), -0.01, 0.03), sf["kappe"][1] - sf["laufsohle"])
-        unten = stufe(rech("SUBTRACT", rech("ADD", sf["laufsohle"], kappe), h), -0.0006, 0.0006)
+        lauf = sf["laufsohle"] + (PROFIL["hoehe"] if NEU else 0.0)  # seit D-460 über dem Profil
+        kappe = rech("MULTIPLY", stufe(rech("SUBTRACT", u, sf["kappe"][0]), -0.01, 0.03), sf["kappe"][1] - lauf)
+        unten = stufe(rech("SUBTRACT", rech("ADD", lauf, kappe), h), -0.0006, 0.0006)
         farbe = mischen(unten, farbe, szene.srgb(SCHWARZ))
     else:
         fk = FERSENKAPPE
@@ -578,7 +1137,10 @@ def _schuh_material(name: str, teil: str) -> bpy.types.Material:
         linie = rech("SUBTRACT", fk["h_ferse"], rech("MULTIPLY", u, (fk["h_ferse"] - fk["h_sohle"]) / fk["u"]))
         kappe = rech("MULTIPLY", stufe(rech("SUBTRACT", linie, h), -0.0012, 0.0012), stufe(rech("SUBTRACT", fk["u"], u), -0.004, 0.004))
         farbe = mischen(kappe, farbe, szene.srgb(SCHWARZ))
-        # Schnürung: Schnüre quer über den Rist, Fugen in Grau
+        # Futter (D-460): innen am Kragen und an der Zunge schwarz bis zum Umschlag
+        if NEU:
+            farbe = mischen(stufe(attr("SchuhFutter"), 0.45, 0.55), farbe, szene.srgb(SCHWARZ))
+        # Schnürung bis D-459: Schnüre quer über den Rist, Fugen in Grau (seit D-460 als Geometrie, `_schnuerung`)
         sn = SCHNUER
         auf_rist = rech("MULTIPLY", rech("MULTIPLY", stufe(rech("SUBTRACT", u, sn["von"]), -0.01, 0.01),
                                          stufe(rech("SUBTRACT", sn["bis"], u), -0.01, 0.01)),
@@ -588,7 +1150,8 @@ def _schuh_material(name: str, teil: str) -> bpy.types.Material:
         links.new(rech("DIVIDE", rech("MULTIPLY", u, 0.27), sn["abstand"]), welle.inputs[0])  # Fußlänge rund 0,27 m
         fuge = rech("MULTIPLY", auf_rist, rech("MULTIPLY", stufe(rech("SUBTRACT", welle.outputs[0], sn["schatten"][0]), -0.02, 0.02),
                                                 stufe(rech("SUBTRACT", sn["schatten"][1], welle.outputs[0]), -0.02, 0.02)))
-        farbe = mischen(fuge, farbe, szene.srgb(SCHNUERUNG))
+        if not NEU:
+            farbe = mischen(fuge, farbe, szene.srgb(SCHNUERUNG))
         for logo in ("Seite", "Zunge"):
             uvn = nodes.new("ShaderNodeUVMap")
             uvn.uv_map = "Logo" + logo
@@ -654,13 +1217,14 @@ _RICHTUNGEN = (Vector((0.0, 0.0, -1.0)), Vector((1.0, 0.0, 0.0)), Vector((-1.0, 
                Vector((0.0, 1.0, 0.0)), Vector((0.0, -1.0, 0.0)))
 
 
-def _im_schaft(bvh, p: Vector, n: Vector) -> bool:
+def _im_schaft(bvh, p: Vector, n: Vector, drehung=None) -> bool:
     """Liegt der Punkt (Normale `n`) im Schuh (`bvh`: Schaft)? Ja, wenn vier von fünf Strahlen (nach unten
     und waagrecht in vier Richtungen, bis 40 cm) den Schaft von innen treffen: Dann verdeckt ihn der Schaft
     von der Seite. Oder er ragt knapp durch den Schaft: Der Strahl gegen seine Normale trifft ihn bis
-    1,5 cm von außen, der Schaft liegt dahinter."""
+    1,5 cm von außen, der Schaft liegt dahinter. `drehung` (D-475): Drehung des Fußes gegenüber dem Stand; die
+    Strahlen drehen mit (Beinbeuger liegend: Fuß und Schuh hängen gedreht in der Luft)."""
     treffer = 0
-    for d in _RICHTUNGEN:
+    for d in (_RICHTUNGEN if drehung is None else [drehung @ r for r in _RICHTUNGEN]):
         ort, normale, _, _ = bvh.ray_cast(p, d, 0.4)
         if ort is not None and normale.dot(d) > 0:
             treffer += 1
@@ -697,11 +1261,18 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, k) -> dict:
     das Attribut „Bedeckt“ zurück."""
     daten = _schaft(koerper.name)
     _kragen_frei(daten, koerper)
+    if NEU:
+        _form_neu(daten, koerper)  # Zehenbox, Polster am Knöchel, angehobene Spitze (D-460)
     P, seiten, F = daten["punkte"], daten["seite"], daten["flaechen"]
     normalen = _normalen(P, F)
     teile = []
-    # Schaft: weiß mit Fersenkappe, Schnürung und Logos; Innenseite (Futter) und Kante schwarz
-    schaft = _netz("Schuhe", P, F, daten["gewichte"], koerper, skelett, _attribute_schuh(daten, P, seiten))
+    # Schaft: weiß mit Fersenkappe und Logos; Innenseite (Futter) und Kante schwarz; seit D-460 auch das Futter
+    # bis zum Umschlag (Attribut „SchuhFutter“)
+    attribute = _attribute_schuh(daten, P, seiten)
+    if NEU:
+        attribute["SchuhFutter"] = [1.0 if rg < daten["umschlag_ring"][sd] else (0.5 if rg == daten["umschlag_ring"][sd] else 0.0)
+                                    for rg, sd in zip(daten["ring"], seiten)]
+    schaft = _netz("Schuhe", P, F, daten["gewichte"], koerper, skelett, attribute)
     # FORM-F außen an jedem Schuh und klein oben auf der Zunge
     uv_seite = [(0.5, 0.5)] * len(P)
     m_seite = [0.0] * len(P)
@@ -735,6 +1306,14 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, k) -> dict:
     dicke.offset = -1.0
     dicke.material_offset = 1
     dicke.material_offset_rim = 1
+    if NEU:
+        # Futter dünn (D-460): Seine Normalen zeigen zum Bein, die Dicke wächst also nach außen zur Außenlage. Wo das
+        # Futter näher als 2 mm an der Außenlage lag (an der Ferse bis 1 mm), schaute seine schwarze Rückseite durch
+        # die Außenseite (beim Bankdrücken innen an der Ferse, auch im Schuh bis D-459). Jetzt 0,3 mm
+        gruppe = schaft.vertex_groups.new(name="Dicke")
+        for i, (rg, sd) in enumerate(zip(daten["ring"], seiten)):
+            gruppe.add([i], 1.0 if rg > daten["umschlag_ring"][sd] else FUTTER_DICKE / SCHAFT_DICKE, "REPLACE")
+        dicke.vertex_group = "Dicke"
     schaft.modifiers.move(schaft.modifiers.find("Dicke"), schaft.modifiers.find("Glatt"))
     schaft.data.materials.append(_schuh_material("Schaft", "schaft"))
     schaft.data.materials.append(szene.matt("Futter", SCHWARZ, 0.7))
@@ -747,6 +1326,17 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, k) -> dict:
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.to_mesh(sohle.data)
     bm.free()
+    if NEU:
+        # Stollen des Profils: Kanten scharf (Falte für die Glättung), Flächen flach schattiert
+        profil = set(_sohle.profil)
+        mesh = sohle.data
+        falte = mesh.attributes.get("crease_edge") or mesh.attributes.new("crease_edge", "FLOAT", "EDGE")
+        for e in mesh.edges:
+            if e.vertices[0] in profil and e.vertices[1] in profil:
+                falte.data[e.index].value = 1.0
+        for poly in mesh.polygons:
+            if poly.vertices[0] in profil:
+                poly.use_smooth = False
     sohle.data.materials.append(_schuh_material("Sohle", "sohle"))
     teile.append(sohle)
     # Fersenlasche
@@ -758,11 +1348,51 @@ def anziehen(koerper: bpy.types.Object, skelett: bpy.types.Object, k) -> dict:
     lasche.modifiers.move(lasche.modifiers.find("Dicke"), lasche.modifiers.find("Glatt"))
     lasche.data.materials.append(_schuh_material("Lasche", "lasche"))
     teile.append(lasche)
+    if NEU:
+        teile += _teile_neu(daten, koerper, skelett)
     # Socke aus dem Netz der Figur
     socke, feld = _socke(koerper, skelett, k, daten)
     teile.append(socke)
     anziehen.daten = daten
     return {"teile": teile, "socke": feld}
+
+
+def _geschlossen(obj: bpy.types.Object) -> None:
+    """Normalen eines Netzes aus geschlossenen Körpern nach außen."""
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.to_mesh(obj.data)
+    bm.free()
+
+
+def _teile_neu(daten: dict, koerper: bpy.types.Object, skelett: bpy.types.Object) -> list[bpy.types.Object]:
+    """Senkel, Ösen und Polster am Kragen (D-460) als eigene Netze an denselben Knochen wie der Schaft."""
+    from mathutils.bvhtree import BVHTree
+
+    teile = []
+    for name, (pk, fl, sei, gew) in _schnuerung(daten).items():
+        obj = _netz(name, pk, fl, gew, koerper, skelett, {}, glatt=1)
+        _geschlossen(obj)
+        if name == "Senkel":
+            mat = szene.matt("Senkel", SENKEL_WEISS, 0.8)
+            mat.node_tree.nodes["Principled BSDF"].inputs["Sheen Weight"].default_value = 0.3
+        else:
+            mat = szene.matt("Oesen", OESE_GRAU, 0.4)
+        obj.data.materials.append(mat)
+        teile.append(obj)
+    verts = koerper.data.vertices
+    socke = BVHTree.FromPolygons([v.co + v.normal * SOCKE["abstand"] for v in verts],
+                                 [list(f.vertices) for f in koerper.data.polygons])
+    pk, fl, sei, gew = _polster(daten, socke)
+    # „Kragenpolster“: die Bank des Bankdrückens hat schon ein Teil namens „Polster“
+    polster = _netz("Kragenpolster", pk, fl, gew, koerper, skelett, {}, glatt=2)
+    _geschlossen(polster)
+    mat = szene.matt("Kragenpolster", SCHWARZ, 0.75)
+    mat.node_tree.nodes["Principled BSDF"].inputs["Sheen Weight"].default_value = 0.1
+    polster.data.materials.append(mat)
+    teile.append(polster)
+    return teile
 
 
 def _socke(koerper: bpy.types.Object, skelett: bpy.types.Object, k, daten: dict):
@@ -869,8 +1499,25 @@ def bodenkontakt(sohle: bpy.types.Object, schaft: bpy.types.Object | None = None
     return aus
 
 
+
+def kontakt_ebene(sohle: bpy.types.Object, punkt: Vector, normale: Vector, name: str = "Platte") -> dict:
+    """Wie `bodenkontakt`, aber zu einer beliebigen Ebene (D-464, Fußplatte der Beinpresse; D-466 die Matte, `name`):
+    Abstand der Unterseite der Sohle über der Ebene (mm, negativ = in ihr), tiefster Punkt, Ferse (u < 0,3) und Ballen
+    (u > 0,6) je Seite."""
+    pkte, _, _ = _verformt(sohle)
+    u = [a.value for a in sohle.data.attributes["SchuhU"].data]
+    ab = [(p - punkt).dot(normale) for p in pkte]
+    aus = {f"Sohle: tiefster Punkt über der {name} (mm)": min(ab) * 1000}
+    for s, x in (("L", 1), ("R", -1)):
+        ferse = [a for a, p, uu in zip(ab, pkte, u) if uu < 0.3 and p.x * x > 0]
+        ballen = [a for a, p, uu in zip(ab, pkte, u) if uu > 0.6 and p.x * x > 0]
+        aus[f"Sohle {s}: Ferse auf der {name} (mm)"] = min(ferse) * 1000
+        aus[f"Sohle {s}: Ballen auf der {name} (mm)"] = min(ballen) * 1000
+    return aus
+
+
 def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bpy.types.Object,
-                  hose: bpy.types.Object | None = None) -> dict:
+                  hose: bpy.types.Object | None = None, drehung: dict | None = None) -> dict:
     """Socke und Schuh in der aktuellen Haltung (verformte Netze ohne Glättung, Welt). Im Schuh sind Socke
     und Haut ausgeblendet (Attribut „ImSchuh“ der Socke, `_im_schuh`); sichtbar durchdringen kann nur,
     was am Kragen aufeinandertrifft. Gemessen wird:
@@ -881,7 +1528,8 @@ def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bp
     - **Socke über der Haut** (mm): kleinster Abstand der sichtbaren Socke über der Haut am selben Punkt
       des Netzes, negativ heißt, die Haut kommt durch;
     - **Löcher über dem Schuh**: ausgeblendete Punkte der Socke, die nicht mehr im Schuh liegen (dieselbe
-      Prüfung wie `_im_schuh`, in der aktuellen Haltung); dort sähe man in den Schuh;
+      Prüfung wie `_im_schuh`, in der aktuellen Haltung; mit `drehung` je Seite drehen die Strahlen mit dem Fuß,
+      D-475); dort sähe man in den Schuh;
     - **Abstand zu den Shorts** (cm): kleinster Abstand der Socke zu den Shorts."""
     from mathutils import kdtree
     from mathutils.bvhtree import BVHTree
@@ -915,7 +1563,8 @@ def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bp
     bvh_schaft = BVHTree.FromPolygons(hp, hf)
     loecher = 0
     for i in range(len(sp)):
-        if saum[i] > 0.0 and im_schuh[i] >= 0.5 and not _im_schaft(bvh_schaft, sp[i], sn[i]):
+        R = drehung["L" if sp[i].x > 0 else "R"] if drehung else None
+        if saum[i] > 0.0 and im_schuh[i] >= 0.5 and not _im_schaft(bvh_schaft, sp[i], sn[i], R):
             loecher += 1
     aus["Socke: Löcher über dem Schuh (Punkte)"] = loecher
     if hose is not None:
@@ -926,3 +1575,195 @@ def durchdringung(koerper: bpy.types.Object, socke: bpy.types.Object, schaft: bp
         baum.balance()
         aus["Socke: kleinster Abstand zu den Shorts (cm)"] = min(baum.find(q)[2] for q in sp) * 100
     return aus
+
+
+def pruefung_neu(koerper: bpy.types.Object, socke: bpy.types.Object) -> dict:
+    """Prüfung der Teile seit D-460 in der aktuellen Haltung (verformte Netze ohne Glättung, Welt):
+
+    - **Senkel, Ösen, Polster über der Socke** (mm): kleinster Abstand ihrer Punkte über der Socke, negativ heißt,
+      das Teil schneidet in die Socke (oder das Bein);
+    - **Zehenbox über der Socke** (mm): kleinster Abstand der Socke im Schuh unter der Außenseite des Schafts,
+      zwischen Oberkante der Sohle (an der Spitze mit angehoben) und 5 cm über dem Boden (Lage in der
+      Ruhehaltung), negativ heißt, die Socke ragt durch den Schaft; darunter umschließt die Sohle die Socke;
+    - **Socke sichtbar außerhalb des Schuhs** (Punkte): sichtbare Punkte der Socke unter 5 cm, die weder im Schaft
+      noch in der Sohle liegen; dort sähe man die Socke durch den Schuh."""
+    from mathutils.bvhtree import BVHTree
+
+    o = bpy.data.objects
+    daten = anziehen.daten
+    sp, sf, sn = _verformt(socke)
+    bvh_socke = BVHTree.FromPolygons(sp, sf)
+    aus: dict[str, float] = {}
+    for name, titel in (("Senkel", "Senkel"), ("Oesen", "Ösen"), ("Kragenpolster", "Polster")):
+        if name not in o:
+            continue
+        abst = []
+        for q in _verformt(o[name])[0]:
+            ort, n, _, _ = bvh_socke.find_nearest(q, 0.05)
+            if ort is not None:
+                abst.append((q - ort).dot(n))
+        aus[f"{titel}: kleinster Abstand über der Socke (mm)"] = min(abst) * 1000 if abst else float("nan")
+    hp, hf, _ = _verformt(o["Schuhe"])
+    bvh_schaft = BVHTree.FromPolygons(hp, hf)
+    op, of, _ = _verformt(o["Sohle"])
+    bvh_sohle = BVHTree.FromPolygons(op, of)
+    saum = [a.value for a in socke.data.attributes["Saum"].data]
+    im_schuh = [a.value for a in socke.data.attributes["ImSchuh"].data]
+    nummer = [int(a.value) for a in socke.data.attributes["nummer"].data]
+    verts = koerper.data.vertices
+    zehen, sichtbar = [], 0
+    for i, p in enumerate(sp):
+        if saum[i] <= 0.0:
+            continue
+        ruhe = verts[nummer[i]].co + verts[nummer[i]].normal * SOCKE["abstand"]
+        seite = "L" if ruhe.x > 0 else "R"
+        u, h, _ = _koord(daten["rahmen"][seite], ruhe)
+        if not -0.05 < u < 1.05 or h > 0.05:
+            continue
+        if im_schuh[i] >= 0.5:
+            if h > _oben(u) + _hub(u):  # über der Oberkante der Sohle, die an der Spitze mit angehoben ist
+                ort, n, _, _ = bvh_schaft.find_nearest(p, 0.05)
+                if ort is not None:
+                    zehen.append(-(p - ort).dot(n))
+        else:
+            if _im_schaft(bvh_schaft, p, sn[i]):
+                continue
+            ort, n, _, _ = bvh_sohle.ray_cast(p, Vector((0.0, 0.0, 1.0)), 0.2)
+            if ort is not None and n.z > 0:
+                continue
+            sichtbar += 1
+    aus["Zehenbox: Socke unter der Außenseite des Schafts (mm)"] = min(zehen) * 1000 if zehen else float("nan")
+    aus["Socke: sichtbar außerhalb des Schuhs unter 5 cm (Punkte)"] = sichtbar
+    return aus
+
+
+# ---------------------------------------------------------------------- Vorfuß biegt sich (D-467)
+# Der Schuh biegt sich mit den Zehen im Vorfuß wie ein Laufschuh, statt auf dem Rand der Sohle zu stehen (Unterarmstütz;
+# künftig Liegestütz, Ausfallschritt, Wadenheben). Zone von `laenge` (m) längs des Fußes, mittig über den Grundgelenken
+# der Zehen (Köpfe der Knochen toe1-1 und toe5-1); neutrale Schicht `neutral` (m) über der Unterkante der Sohle: Darüber
+# staucht sich der Schaft zur Falte über den Zehen, darunter dehnt sich die Laufsohle etwas. Verglichen bei 55° (D-467):
+# 6,5 cm bei 1,2 cm (enge Falte, Senkel 0,06 mm in der Socke), 8,5 cm bei 1,2 cm und 6,5 cm bei 2,2 cm (Senkel 1,6 und
+# 1,5 mm über der Socke, weiche Falte); gewählt 7,5 cm bei 1,6 cm (Senkel 1,65 mm über der Socke).
+VORFUSS = {"laenge": 0.075, "neutral": 0.016}
+VORFUSS_TEILE = ("Socken", "Schuhe", "Sohle", "Lasche", "Senkel", "Oesen", "Kragenpolster")
+
+
+class Vorfuss:
+    """Vorfuß biegen (D-467): je Fuß ein Bogen („Simple Deform“, Biegen) vor dem Skelett, auf Haut, Socke und allen
+    Teilen des Schuhs mit demselben Ursprung und derselben Krümmung. So bleiben die Schichten im Bogen übereinander:
+    Abstände quer zur Sohle bleiben gleich, längs staucht sich die Oberseite und dehnt sich die Unterseite. Hinter der
+    Zone bleibt alles am Fuß, davor dreht sich der Vorfuß starr mit; das Skelett bewegt danach den gebogenen Fuß. Die
+    Zehenknochen bleiben in Ruhe: Ihre Köpfe liegen bei MakeHuman rund 5 cm über der Sohle, ein Gelenk dort dehnte die
+    Sohle wie Gummi.
+
+    Beide Bögen haben dieselbe Längsachse (−y, die Füße stehen in der Ruhehaltung parallel): Blender rechnet die
+    Grenzen der Zone als Anteil der Ausdehnung des ganzen Netzes, das der Bogen des anderen Fußes schon verformt hat;
+    bei schräger Achse verschob der rechte Bogen die Zone des linken bis unter die Ferse. Die Seite eines Punkts gilt
+    nach seiner Lage (x), nicht nach den Gewichten: Einzelne Punkte der Zehen tragen bei MakeHuman ein winziges Gewicht
+    am Knochen der anderen Seite und würden sonst zweimal gebogen. Teile, die in der Zone beginnen oder enden (Senkel,
+    Ösen), bekommen einen kleineren Winkel, damit die Krümmung überall dieselbe ist."""
+
+    def __init__(self, koerper: bpy.types.Object, skelett: bpy.types.Object, laenge: float = VORFUSS["laenge"],
+                 neutral: float = VORFUSS["neutral"]):
+        from mathutils import Matrix
+
+        daten = _schaft(koerper.name)
+        kopf = {b.name: b.head_local.copy() for b in skelett.data.bones}
+        self.laenge = laenge
+        self.ursprung: dict[str, bpy.types.Object] = {}
+        self.zone: dict[str, tuple[float, float]] = {}
+        self.mods: dict[str, list] = {"L": [], "R": []}
+        self.winkel = {"L": 0.0, "R": 0.0}
+        for s in "LR":
+            r = daten["rahmen"][s]
+            u_mitte = (_koord(r, kopf[f"toe1-1.{s}"])[0] + _koord(r, kopf[f"toe5-1.{s}"])[0]) / 2
+            u0 = u_mitte - laenge / 2 / r["L"]
+            self.zone[s] = (u0, u0 + laenge / r["L"])
+            X = Vector((0.0, -1.0, 0.0))  # längs nach vorn, für beide Füße gleich (siehe oben)
+            Y = Vector((0.0, 0.0, 1.0))  # Bogen zur Oberseite: die Zehen heben sich zum Fußrücken
+            M = Matrix((X, Y, X.cross(Y))).transposed().to_4x4()
+            M.translation = _punkt(r, u0, neutral, 0.0)
+            leer = bpy.data.objects.new(f"Vorfuss.{s}", None)
+            bpy.context.scene.collection.objects.link(leer)
+            leer.parent = skelett
+            leer.matrix_basis = M
+            self.ursprung[s] = leer
+        bpy.context.view_layer.update()
+        for obj in [koerper] + [o for o in (bpy.data.objects.get(n) for n in VORFUSS_TEILE) if o]:
+            namen = {g.index: g.name for g in obj.vertex_groups}
+            fuss = {i for i, n in namen.items() if n.startswith(("foot.", "toe"))}
+            for s in "LR":
+                T = self.ursprung[s].matrix_world.inverted() @ obj.matrix_world
+                xs = [(T @ v.co).x for v in obj.data.vertices]
+                lo, hi = min(xs), max(xs)
+                if hi <= 0.0:
+                    continue
+                drin = [v.index for v in obj.data.vertices if (v.co.x > 0) == (s == "L")]
+                if obj == koerper or obj.name == "Socken":  # nur der Fuß, nicht Hände oder Gesicht vor der Zone
+                    drin = [i for i in drin if any(g.group in fuss and g.weight > 0.0 for g in obj.data.vertices[i].groups)]
+                gruppe = obj.vertex_groups.new(name=f"Vorfuss.{s}")
+                gruppe.add(drin, 1.0, "REPLACE")
+                mod = obj.modifiers.new(f"Vorfuss.{s}", "SIMPLE_DEFORM")
+                mod.deform_method = "BEND"
+                mod.deform_axis = "Z"
+                mod.origin = self.ursprung[s]
+                mod.vertex_group = gruppe.name
+                mod.angle = 0.0
+                mod.limits = (max(0.0, -lo / (hi - lo)), min(1.0, (laenge - lo) / (hi - lo)))
+                anteil = (min(hi, laenge) - max(lo, 0.0)) / laenge
+                with bpy.context.temp_override(object=obj, active_object=obj):
+                    bpy.ops.object.modifier_move_to_index(modifier=mod.name, index=0)
+                self.mods[s].append((mod, anteil))
+
+    def setze(self, grad: dict[str, float]) -> None:
+        """Winkel je Fuß (Grad, positiv: die Zehen heben sich zum Fußrücken)."""
+        for s, g in grad.items():
+            self.winkel[s] = g
+            for mod, anteil in self.mods[s]:
+                mod.angle = math.radians(g) * anteil
+
+
+def im_schuh(koerper: bpy.types.Object, socke: bpy.types.Object) -> dict:
+    """Fuß und Socke im Schuh (D-467; verformte Netze ohne Glättung, Welt), unten im Schuh bis 5 cm über dem Boden (Lage
+    in der Ruhehaltung):
+
+    - **Fuß unter der Außenseite des Schafts** (mm): wie die Zehenbox für die Socke, für die Haut der Füße über der
+      Oberkante der Sohle; negativ heißt, die Haut ragt durch den Schaft;
+    - **außerhalb des Schuhs** (Punkte, mm): Punkte von Haut und Socke, die weder in der Sohle liegen noch vom Schaft
+      umschlossen sind (`_im_schaft`), und wie weit der äußerste von ihnen aus der Sohle ragt."""
+    from mathutils.bvhtree import BVHTree
+
+    daten = _schaft(koerper.name)
+    o = bpy.data.objects
+    hp, hf, _ = _verformt(o["Schuhe"])
+    schaft = BVHTree.FromPolygons(hp, hf)
+    op, of, _ = _verformt(o["Sohle"])
+    sohle = BVHTree.FromPolygons(op, of)
+    namen = {g.index: g.name for g in koerper.vertex_groups}
+    fuss = {i for i, n in namen.items() if n.startswith(("foot.", "toe"))}
+    verts = koerper.data.vertices
+    kp, _, kn = _verformt(koerper)
+    punkte = [(kp[v.index], kn[v.index], v.co, True) for v in verts
+              if sum(g.weight for g in v.groups if g.group in fuss) > 0.5]
+    sp, _, sn = _verformt(socke)
+    nummer = [int(a.value) for a in socke.data.attributes["nummer"].data]
+    punkte += [(sp[i], sn[i], verts[nummer[i]].co + verts[nummer[i]].normal * SOCKE["abstand"], False) for i in range(len(sp))]
+    haut, aussen, weit = [], 0, 0.0
+    for p, n, ruhe, ist_haut in punkte:
+        r = daten["rahmen"]["L" if ruhe.x > 0 else "R"]
+        u, h, _ = _koord(r, ruhe)
+        if not -0.05 < u < 1.05 or h > 0.05:
+            continue
+        if ist_haut and h > _oben(u) + _hub(u):
+            ort, nn, _, _ = schaft.find_nearest(p, 0.05)
+            if ort is not None:
+                haut.append(-(p - ort).dot(nn))
+        ort, nn, _, _ = sohle.find_nearest(p, 0.1)
+        tief = -(p - ort).dot(nn) if ort is not None else -1.0
+        if tief >= 0.0 or _im_schaft(schaft, p, n):
+            continue
+        aussen += 1
+        weit = max(weit, -tief)
+    return {"Fuß: Haut unter der Außenseite des Schafts (mm)": min(haut) * 1000 if haut else float("nan"),
+            "Fuß und Socke: außerhalb des Schuhs (Punkte)": aussen,
+            "Fuß und Socke: außerhalb des Schuhs, am weitesten (mm)": weit * 1000}

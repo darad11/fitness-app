@@ -62,7 +62,7 @@ function renderAt(path: string) {
   return router;
 }
 
-const SQUAT_W1 = 'Kniebeuge mit Langhantel, Arbeitssatz 1';
+const SQUAT_W1 = 'Kniebeuge mit Langhantel, Arbeitssatz 1 von 3';
 
 describe('Trainingsplayer (S-07)', () => {
   it('zeigt Kopf, Übungen, Satzzeilen und den hervorgehobenen Satz', async () => {
@@ -85,11 +85,13 @@ describe('Trainingsplayer (S-07)', () => {
       'Beinbeuger liegend',
       'Unterarmstütz (Plank)',
     ]);
-    const first = screen.getByRole('listitem', { name: 'Kniebeuge mit Langhantel, Aufwärmsatz 1' });
+    const first = screen.getByRole('listitem', {
+      name: 'Kniebeuge mit Langhantel, Aufwärmsatz 1 von 2',
+    });
     expect(first).toHaveAttribute('aria-current', 'step');
     expect(within(first).getByLabelText(/^Wiederholungen/)).toHaveAttribute('placeholder', '10');
     expect(
-      screen.getByLabelText('Zeit in Sekunden, Unterarmstütz (Plank), Arbeitssatz 1'),
+      screen.getByLabelText('Zeit in Sekunden, Unterarmstütz (Plank), Arbeitssatz 1 von 3'),
     ).toBeInTheDocument();
     expect(screen.getAllByText('Erstes Mal')).toHaveLength(5);
   });
@@ -107,7 +109,7 @@ describe('Trainingsplayer (S-07)', () => {
     const set = withRower.exercises.at(-1)!.sets[0]!;
     await setValues(rt, session.id, set.id, { distanceM: 2000 });
     renderAt(`/training/einheit/${session.id}`);
-    expect(await screen.findByLabelText('Distanz in m, Rudergerät, Arbeitssatz 1')).toHaveValue(
+    expect(await screen.findByLabelText('Distanz in m, Rudergerät, Arbeitssatz')).toHaveValue(
       '2000',
     );
   });
@@ -132,7 +134,7 @@ describe('Trainingsplayer (S-07)', () => {
       await screen.findByText('Wiederholungen als ganze Zahl von 0 bis 200'),
     ).toBeInTheDocument();
 
-    const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1';
+    const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1 von 2';
     await user.click(screen.getByRole('button', { name: 'Gewicht + 2,5' }));
     await waitFor(() => {
       expect(screen.getByLabelText(`Gewicht in kg, ${warmup}`)).toHaveValue('2,5');
@@ -144,11 +146,43 @@ describe('Trainingsplayer (S-07)', () => {
     expect(screen.getByText(/1 von 17 Sätzen/)).toBeInTheDocument();
   });
 
+  it('nennt jeden Satz in „Jetzt“, in der Pause und in der Satzliste gleich (D-537)', async () => {
+    const user = userEvent.setup();
+    const session = await startTemplate();
+    renderAt(`/training/einheit/${session.id}`);
+    const squat = 'Kniebeuge mit Langhantel';
+    // Gezählt je Typ wie die Kennungen der Liste (A, A, 1, 2, 3), nicht über alle fünf Sätze:
+    // vorher stand hier „Aufwärmsatz · Satz 1 von 5“ und in der Pause „Aufwärmsatz 2“.
+    const info = () =>
+      screen.getByRole('region', { name: 'Jetzt' }).querySelector('.player-now-info');
+    expect(await screen.findByRole('region', { name: 'Jetzt' })).toBeInTheDocument();
+    expect(info()).toHaveTextContent(/^Aufwärmsatz 1 von 2 · Ziel/);
+    for (const name of ['Aufwärmsatz 1 von 2', 'Aufwärmsatz 2 von 2']) {
+      await user.type(screen.getByLabelText(`Gewicht in kg, ${squat}, ${name}`), '40');
+      await user.click(screen.getByRole('button', { name: `Satz erledigt, ${squat}, ${name}` }));
+      await screen.findByRole('button', { name: `Erledigt zurücknehmen, ${squat}, ${name}` });
+    }
+    const stage = await screen.findByRole('region', { name: 'Pause' });
+    expect(stage).toHaveTextContent(`Nächster Satz: ${squat}, Arbeitssatz 1 von 3 · Ziel`);
+    expect(info()).toHaveTextContent(/^Arbeitssatz 1 von 3 · Ziel/);
+    expect(screen.getByRole('listitem', { name: `${squat}, Arbeitssatz 1 von 3` })).toHaveAttribute(
+      'aria-current',
+      'step',
+    );
+    // Ein einziger Aufwärmsatz heißt ohne Zahl, die Arbeitssätze zählen weiter mit „von“.
+    expect(
+      screen.getByRole('listitem', { name: 'Bankdrücken mit Langhantel, Aufwärmsatz' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('listitem', { name: 'Bankdrücken mit Langhantel, Arbeitssatz 3 von 3' }),
+    ).toBeInTheDocument();
+  });
+
   it('zeigt die Pause mit Restzeit, nächstem Satz, ±15 s, Vollansicht und Überspringen (AK-TRN-10, -11)', async () => {
     const user = userEvent.setup();
     const session = await startTemplate();
     renderAt(`/training/einheit/${session.id}`);
-    const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1';
+    const warmup = 'Kniebeuge mit Langhantel, Aufwärmsatz 1 von 2';
     await user.type(await screen.findByLabelText(`Gewicht in kg, ${warmup}`), '40');
     await user.click(screen.getByRole('button', { name: `Satz erledigt, ${warmup}` }));
     const stage = await screen.findByRole('region', { name: 'Pause' });
@@ -157,7 +191,7 @@ describe('Trainingsplayer (S-07)', () => {
     const before = toSec(timer.textContent);
     expect(before).toBeGreaterThan(30);
     expect(stage).toHaveTextContent(
-      'Nächster Satz: Kniebeuge mit Langhantel, Aufwärmsatz 2 · Ziel 5',
+      'Nächster Satz: Kniebeuge mit Langhantel, Aufwärmsatz 2 von 2 · Ziel 5',
     );
     await user.click(within(stage).getByRole('button', { name: '15 s weniger' }));
     await waitFor(() => {
@@ -167,10 +201,12 @@ describe('Trainingsplayer (S-07)', () => {
     await waitFor(() => {
       expect(toSec(timer.textContent)).toBeGreaterThanOrEqual(before - 2);
     });
-    // Während der Pause ist die Bühne „Jetzt" ausgeblendet; der nächste Satz bleibt hervorgehoben.
-    expect(screen.queryByRole('region', { name: 'Jetzt' })).toBeNull();
+    // Während der Pause trägt der Rahmen `data-pause`: In einer Spalte blendet das die Bühne „Jetzt"
+    // aus (player-layout.css), in zwei Spalten bleibt sie rechts stehen (D-533). Der nächste Satz
+    // bleibt hervorgehoben.
+    expect(document.querySelector('.player-frame')).toHaveAttribute('data-pause');
     expect(
-      screen.getByRole('listitem', { name: 'Kniebeuge mit Langhantel, Aufwärmsatz 2' }),
+      screen.getByRole('listitem', { name: 'Kniebeuge mit Langhantel, Aufwärmsatz 2 von 2' }),
     ).toHaveAttribute('aria-current', 'step');
 
     await user.click(screen.getByRole('button', { name: 'Pause groß anzeigen' }));
@@ -183,6 +219,7 @@ describe('Trainingsplayer (S-07)', () => {
     await waitFor(() => {
       expect(screen.queryByRole('region', { name: 'Pause' })).toBeNull();
     });
+    expect(document.querySelector('.player-frame')).not.toHaveAttribute('data-pause');
     expect(screen.getByRole('region', { name: 'Jetzt' })).toHaveTextContent(
       'Kniebeuge mit Langhantel',
     );
@@ -249,7 +286,7 @@ describe('Trainingsplayer (S-07)', () => {
     });
     await user.click(
       within(plank).getByRole('button', {
-        name: 'Weitere Aktionen, Unterarmstütz (Plank), Arbeitssatz 4',
+        name: 'Weitere Aktionen, Unterarmstütz (Plank), Arbeitssatz 4 von 4',
       }),
     );
     await user.click(within(plank).getByRole('button', { name: 'Satz entfernen' }));
@@ -391,12 +428,52 @@ describe('Player ausgebaut (Schritt D): Info, Umsortieren, Ersetzen, Übungstime
     expect(await within(dialog).findByText('Ersetzt Kniebeuge mit Langhantel')).toBeVisible();
   });
 
+  it('Unterstützung: Knöpfe ändern die Unterstützung, beim Ersetzen zuerst das Ziel ohne Unterstützung (D-507)', async () => {
+    const user = userEvent.setup();
+    const exercises = await loadCoreExercises();
+    const pullUp = exercises.find((e) => e.key === 'assisted_pull_up')!;
+    const session = await startSession(rt, {
+      source: 'free',
+      title: 'Freies Training',
+      exercises: [
+        {
+          exerciseId: pullUp.id,
+          name: pullUp.name,
+          trackingMode: pullUp.trackingMode,
+          sets: [{ type: 'working', target: { repsMin: 8, repsMax: 12 } }],
+        },
+      ],
+    });
+    renderAt(`/training/einheit/${session.id}`);
+    const set = 'Klimmzüge mit Unterstützung, Arbeitssatz';
+    await screen.findByLabelText(`Unterstützung in kg, ${set}`);
+    expect(screen.queryByRole('button', { name: /^Gewicht [+−]/ })).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'Unterstützung + 2,5' }));
+    await waitFor(() => {
+      expect(screen.getByLabelText(`Unterstützung in kg, ${set}`)).toHaveValue('2,5');
+    });
+    expect(screen.getByRole('button', { name: 'Unterstützung − 2,5' })).toBeVisible();
+
+    await user.click(
+      screen.getByRole('button', { name: 'Weitere Aktionen, Klimmzüge mit Unterstützung' }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Übung ersetzen' }));
+    const picker = await screen.findByRole('dialog', {
+      name: 'Klimmzüge mit Unterstützung ersetzen',
+    });
+    const alternatives = await within(picker).findByRole('region', { name: 'Alternativen' });
+    const [goal, lat] = within(alternatives).getAllByRole('button');
+    expect(goal).toHaveTextContent(/^KlimmzügeZiel/);
+    expect(lat).toHaveTextContent(/^Latziehen/);
+    expect(within(alternatives).getAllByText('Ziel')).toHaveLength(1);
+  });
+
   it('startet und stoppt den Übungstimer eines Zeitsatzes und speichert die Dauer (AK-TRN-14)', async () => {
     const user = userEvent.setup();
     const session = await startTemplate();
     renderAt(`/training/einheit/${session.id}`);
     await screen.findByRole('heading', { level: 1 });
-    const plankSet = 'Unterarmstütz (Plank), Arbeitssatz 1';
+    const plankSet = 'Unterarmstütz (Plank), Arbeitssatz 1 von 3';
     // Kein Timer an Übungen ohne Zeitfeld.
     await user.click(screen.getByRole('button', { name: `Weitere Aktionen, ${SQUAT_W1}` }));
     expect(screen.queryByRole('button', { name: /^Timer starten/ })).toBeNull();
@@ -442,7 +519,7 @@ describe('Persönliche Angaben im Player (AK-EXL-04, D-258)', () => {
       ],
     });
     renderAt(`/training/einheit/${session.id}`);
-    const first = 'Bankdrücken mit Langhantel, Arbeitssatz 1';
+    const first = 'Bankdrücken mit Langhantel, Arbeitssatz 1 von 2';
     await user.click(await screen.findByRole('button', { name: 'Gewicht + 1,25' }));
     await waitFor(() => {
       expect(screen.getByLabelText(`Gewicht in kg, ${first}`)).toHaveValue('1,25');

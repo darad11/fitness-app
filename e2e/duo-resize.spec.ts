@@ -6,22 +6,31 @@ import { expect, openPage, test } from './fixtures';
 // verloren gehen (Leitlinien Kapitel 6). Chromium und WebKit, Handy-Profil.
 test.skip(({ isMobile }) => !isMobile, 'Handy-Profil');
 
-/** Element des Inhalts auf der Leselinie (ein Viertel der Fensterhöhe), markiert für den Test. */
+/**
+ * Element des Inhalts auf der Leselinie (ein Viertel der Fensterhöhe), markiert für den Test. Wie
+ * die App (`readingAnchor`): Liegt dort eine Lücke zwischen Karten, gilt das Element knapp darunter
+ * oder darüber.
+ */
 async function markReadingLine(page: Page): Promise<Locator> {
   const found = await page.evaluate(() => {
     const main = document.getElementById('inhalt');
     if (!main) return false;
     const box = main.getBoundingClientRect();
-    const hit = document
-      .elementsFromPoint(box.left + box.width / 2, window.innerHeight / 4)
-      .find(
-        (element) =>
-          element !== main &&
-          main.contains(element) &&
-          element.getBoundingClientRect().height < window.innerHeight,
-      );
-    hit?.setAttribute('data-test-reading', '');
-    return Boolean(hit);
+    for (const offset of [0, 12, -12, 24, -24, 36, -36, 48, -48]) {
+      const hit = document
+        .elementsFromPoint(box.left + box.width / 2, window.innerHeight / 4 + offset)
+        .find(
+          (element) =>
+            element !== main &&
+            main.contains(element) &&
+            element.getBoundingClientRect().height < window.innerHeight,
+        );
+      if (hit) {
+        hit.setAttribute('data-test-reading', '');
+        return true;
+      }
+    }
+    return false;
   });
   expect(found, 'Element auf der Leselinie').toBe(true);
   return page.locator('[data-test-reading]');
@@ -34,9 +43,20 @@ async function topOf(locator: Locator): Promise<number> {
 }
 
 /** Oberste Stelle für einen Satz unter dem Kopf im Training: 12 px darunter (D-380). */
-async function belowHead(page: Page): Promise<number> {
+/**
+ * Wo der aktive Satz nach dem Größenwechsel stehen muss: an seiner Stelle, wenn er dort zu sehen ist,
+ * sonst direkt unter dem Kopf (12 px Abstand). Klebende Spaltenköpfe (in der Pause, D-535) zählen zum
+ * Kopf.
+ */
+async function expectedTop(page: Page, rowTop: number): Promise<number> {
   const head = await page.locator('main header').boundingBox();
-  return head ? head.y + head.height + 12 : 0;
+  if (!head) return rowTop;
+  const columns = await page.locator('li[aria-current="step"]').evaluate((row) => {
+    const c = row.closest('section')?.querySelector<HTMLElement>('[data-satzkopf]');
+    return c && getComputedStyle(c).position === 'sticky' ? c.offsetHeight : 0;
+  });
+  const bottom = head.y + head.height + columns;
+  return rowTop >= bottom - 1 ? rowTop : bottom + 12;
 }
 
 for (const path of ['/heute', '/training/programme']) {
@@ -211,7 +231,7 @@ test('Training: Satz, Werte, Pause, Menü, Notiz und Position bleiben beim Auf- 
       // Kopf höher wird und darüber läge, steht er direkt darunter (D-380). Das ist der Fall, seit
       // das Antippen eines Feldes den Satz unter den Kopf holt (D-391). In der Meldung der Verlauf
       // seit dem Größenwechsel, falls nicht (WebKit war 52 und 53 px daneben, Nachtrag zu D-384).
-      const expected = Math.max(rowTop, await belowHead(page));
+      const expected = await expectedTop(page, rowTop);
       const offset = Math.abs((await topOf(current)) - expected);
       const anchoring = await page.evaluate(() => CSS.supports('overflow-anchor', 'none'));
       const where =
@@ -271,7 +291,7 @@ test('Training: Scrollt die Seite kurz nach dem Größenwechsel noch, steht der 
   await setDuoPose(page, 'hoch');
   await page.waitForTimeout(700);
   // An seiner Stelle, oder direkt unter dem Kopf, wenn dieser höher wurde und darüber läge.
-  const expected = Math.max(rowTop, await belowHead(page));
+  const expected = await expectedTop(page, rowTop);
   expect(Math.abs((await topOf(current)) - expected), 'Satz an seiner Stelle').toBeLessThanOrEqual(
     4,
   );

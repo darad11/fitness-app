@@ -1654,3 +1654,7 @@ Bekannte Einschränkungen: getestet im Browser, nicht am Gerät
 Nächste Schritte: Gerätetest des Produktinhabers, dann seine Freigabe des Merge von PR #53; danach eigener Branch für die Programme, zuerst Schuh und Rückenlogo
 ```
 
+## 23. Gerätetest und Merge
+
+Dein Gerätetest der Phase Übungen am iPhone ist bestanden (29.10.2026). PR #53 ist auf deine Anweisung als normaler Merge nach `main` gemergt (`8b2ab96`). Die Arbeit geht im Branch `form-programme` weiter, Bericht `form-programme-report.md` (D-458).
+

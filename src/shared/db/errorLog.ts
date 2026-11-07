@@ -105,8 +105,21 @@ export async function listErrorLog(db: AppDb): Promise<ErrorLogEntry[]> {
   return db.errorLog.toArray();
 }
 
+/** Datenbank für `logWarning`; gesetzt von `installGlobalErrorHandlers`. */
+let globalDb: () => AppDb | null = () => null;
+
+/**
+ * Warnung ins Fehlerprotokoll von Stellen ohne Zugriff auf die Datenbank, etwa beim Laden der
+ * Übungsbilder (D-488). Vor dem Start der App oder in Tests bleibt der Eintrag im Arbeitsspeicher.
+ * Die Meldung wird bereinigt wie jede andere: Text in Anführungszeichen und Zahlen fallen weg.
+ */
+export function logWarning(area: string, message: string): Promise<void> {
+  return logError(globalDb(), { level: 'warn', area, error: new Error(message) });
+}
+
 /** Unbehandelte Fehler und abgelehnte Promises protokollieren. */
 export function installGlobalErrorHandlers(getDb: () => AppDb | null): () => void {
+  globalDb = getDb;
   const route = () => window.location.pathname;
   const onError = (event: ErrorEvent) => {
     void logError(getDb(), {
@@ -123,5 +136,6 @@ export function installGlobalErrorHandlers(getDb: () => AppDb | null): () => voi
   return () => {
     window.removeEventListener('error', onError);
     window.removeEventListener('unhandledrejection', onRejection);
+    globalDb = () => null;
   };
 }

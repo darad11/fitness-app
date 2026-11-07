@@ -2492,3 +2492,1277 @@ Freigabe der Standbilder durch den Produktinhaber (D-454): Handgelenk beim Latzi
 | E2E lokal, Chromium (`pnpm test:e2e`, chromium-desktop und chromium-mobile) mit den neuen Schleifen (D-456) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (13,9 min); WebKit in der CI |
 | Bilder und Aufnahmen der App (D-457): `PILOT_FRAMES=<Arbeitsordner> node tools/pilot-screens.mjs` gegen `pnpm preview` (Build mit den Schleifen aus D-456) | 10 Bilder und Übersicht in 1 min 25 s; Aufnahme des Players 253 Bilder mit 20 je Sekunde, 12,65 s, 950 × 668, MP4 112,2 KB, WebM 306,1 KB; `pilot-bewegung.mp4` 7,5 s, 1440 × 360, 209,0 KB; Übersicht 2636 × 1970, 551,7 KB. Selbst angesehen, die Aufnahmen als Kontaktbogen: Liste mit Vorschaubild, Player zugeklappt mit Bild in „Jetzt“, aufgeklappt mit großer Schleife, Übungsdetails mit Schleife oben, überall die neue Kleidung; in der Aufnahme bewegen sich alle drei Übungen; kein Symbol statt Bild |
 
+### Phase Programme, Abschnitt 0 · 29.10.2026, Cloud-Umgebung (Node 22.22, Chromium 1243)
+
+Auftrag `docs/prompts/programme-ganzkoerper-FORM.md`; Merge der Phase Übungen und neuer Branch (D-458).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Gerätetest der Phase Übungen am iPhone (Produktinhaber) | bestanden (Nachricht vom 29.10.2026) |
+| CI Lauf 345 zu aa03bbd (Kopf von PR #53, D-457) | alle vier Jobs grün, auch E2E (webkit); E2E Chromium 10,8 min, WebKit 12,7 min |
+| Merge von PR #53 nach `main` (normaler Merge, auf Anweisung des Produktinhabers) | `8b2ab96` |
+| CI auf `main` zu 8b2ab96 | Lauf 40942580965 (Nr. 346): alle vier Jobs grün, auch E2E (webkit); E2E Chromium 11,0 min, WebKit 15,4 min |
+| `pnpm format:check`, `pnpm check:docs` (D-458) | bestanden |
+
+### Phase Programme, Abschnitt 1 (begonnen) · 29.10.2026, Cloud-Umgebung
+
+Rückenlogo im Verhältnis des Startbilds in der Konfiguration (D-459); Schuh und Standbilder ausstehend.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Syntax `tools/uebungen-3d/kleidung.py` (`python3 -m py_compile`) | bestanden |
+| Nachrechnung der neuen Formel mit den Maßen aus D-450 (W 35,5 cm) | mit den Werten des Boards genau die bisherige Größe und Lage (F 14,2 cm, Mitte 22,5 cm, Oberkante 11,7 cm unter dem Bündchen); neu F 9,5 cm, Wortmarke 22,5 cm, Mitte 22,5 cm, Oberkante 14,0 cm |
+| Quellen der Figur (`render.py --hole`) | Grundmodell, Skelett, Gewichte von `makehumancommunity/makehuman` geladen (19.158 Eckpunkte, 18.486 Flächen; unter `makehuman/makehuman` 404); Formziele von `makehumancommunity/mpfb2` erreichbar; Paket von `files2.makehumancommunity.org` gesperrt (Proxy 403), kein Ersatz (`makehuman-assets` über raw 404, `github.com` und `codeload.github.com` 403, PyPI-Paket `makehuman` 1.3.2 ohne die Dateien) |
+| Standbilder Schuh und Rückenlogo | nicht gerendert (Paket von MakeHuman gesperrt) |
+| `pnpm format:check`, `pnpm check:docs` (D-459) | bestanden |
+| CI zum Entwurfs-PR #54 zu f6a5f24 (D-459) | Lauf 40954039802: alle vier Jobs grün, auch E2E (webkit) |
+
+### Phase Programme, Abschnitt 1 · 29.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schuh näher am Board und Rückenlogo als Standbilder (D-460).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen der Figur nach der Freigabe von `*.makehumancommunity.org` (`render.py --hole`) | Paket von MakeHuman geladen (280 MB), Formziele und Grundmodell vollständig |
+| Messung aller 60 Bilder je Pilot-Übung mit dem neuen Schuh (`render.py <Übung> --pruefen`, dann `--nur-messwerte` mit der Prüfung der Zehenbox über der angehobenen Sohle) | Kniebeuge, Bankdrücken, Latziehen: Ferse und Ballen beider Füße 0,0 mm über dem Boden, Verschiebung höchstens 0,1 mm, Standhöhe 27,0 mm; Kragen mindestens 0,95 mm, Polster 0,63 mm, Senkel 4,55 mm, Ösen 4,36 mm über der Socke; Socke im Schuh mindestens 1,0 mm unter der Außenseite der Zehenbox; Socke mindestens 2,76 mm über der Haut; 0 Löcher, 0 sichtbare Punkte der Socke außerhalb des Schuhs; keine Meldungen des Rigs; Messung 46 bis 48 s je Übung |
+| Alter Schuh (Stand D-459) zum Vergleich, Ruhehaltung | Socke außen am Vorfuß bis 4,0 mm durch den Schaft (verdeckt); beim Bankdrücken schwarzer Fleck innen an der Ferse (Rückseite des Futters) |
+| Versuch: Gewichte am Kragen glätten (verworfen) | Fleck weg, aber Kragen beim Bankdrücken −0,77 mm (Futter an der Ferse in der Socke); stattdessen Futter 0,3 mm dick: Fleck weg, Kragen 0,95 mm |
+| Prüfansichten der Füße (24 Bilder: drei Übungen, vier Richtungen, Ausgangs- und Endposition) | selbst angesehen: Schnürung, Polster und Profil in jeder Haltung, nichts schaut durch |
+| Standbilder (`schuh_bilder.py schuh`, `details`, `ruecken`, je mit `--vorher`; `varianten_bilder.py Cm`) | 34 Bilder, je 16 bis 45 s, zusammen rund 15 min; selbst angesehen |
+| Blätter (`tools/uebungen_korrektur_bild.py --runde 9`) | `schuh-1-board.webp` 79 KB, `schuh-2-details.webp` 66 KB, `ruecken-vorher-nachher.webp` 79 KB, `schuh-3-player.webp` 54 KB |
+| Rückenlogo auf der Figur | F 9,50 cm (vorher 14,16), FORM 22,47 cm breit (vorher 22,47), Oberkante des F 13,93 cm unter dem Bündchen (vorher 11,68) |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (D-460) | bestanden; Startansicht 237,8 KB von 250 KB (unverändert, die App ist nicht geändert), Dateien der Übungsbilder 12 von 12; E2E mit WebKit in der CI zum Entwurfs-PR |
+
+
+### Phase Programme, Freigabe Abschnitt 1: Shorts-F und Schleifen · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Shorts-F weiter nach vorn, die drei Pilot-Übungen als Schleifen in der App (D-461).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Abstand Shorts-F zum Seitenstreifen auf dem Stoff, alle 60 Bilder je Übung (`tools/uebungen-3d/shorts_bilder.py kniebeuge bankdruecken latziehen`) | Kniebeuge, Bankdrücken, Latziehen: kleinster und größter Wert 2,54 cm; bis D-460 0,0 cm (berührt); Messung mit Nahaufnahmen 5 min 15 s |
+| Schleifen (`render.py kniebeuge`, `bankdruecken`, `latziehen`) | Renderzeit 1.463 s, 1.585 s, 1.183 s für je 60 Bilder (nebenher liefen Prüfungen); erstes und letztes Bild je Schleife pixelgleich (0 Pixel verschieden) |
+| Dateigrößen | abgerufen je Übung (MP4, Poster, Vorschau) 79,4 KB, 63,0 KB, 68,6 KB; alle zwölf Dateien 363,1 KB (vorher 365,3 KB) |
+| Bilder der Schleifen und der App angesehen | Kontaktbogen (Ausgangs- und Endposition je Übung), `pilot-uebersicht.png`, Blatt `shorts-f-abstand.webp`: Schuh, Rückenlogo und Shorts-F wie freigegeben |
+| Bilder aus der App (`node tools/pilot-screens.mjs` gegen `pnpm preview`) | `pilot-uebersicht.png`, Player zu und auf, Details, Liste; Aufnahme `pilot-player.mp4` und `.webm` (254 Bilder, 20 je Sekunde), `pilot-bewegung.mp4` |
+| `pnpm build`, `pnpm check:bundle` (D-461) | bestanden; Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 12 von 12 im Offline-Vorrat |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (15,4 min); WebKit in der CI zum Entwurfs-PR |
+| `pnpm format:check`, `pnpm check:docs` (D-461) | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Waagrechtes Drücken“ · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite für Schrägbankdrücken und Bankdrücken mit Kurzhanteln (D-462).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py bankdruecken_kh --pruefen`, `schraegbankdruecken_kh --pruefen` (alle 60 Bilder, Prüfansichten vorn, Seite, Standard in fünf Phasen, Hand und Fuß aus der Nähe) | Bankdrücken 316 s, Schrägbankdrücken 304 s; Werte in `form-programme-report.md` 4.3: Handgelenk gesamt höchstens 7,9°, Unterarm höchstens 4,5° zur Senkrechten, Sohlen 0,0 mm, Köpfe mindestens 37,4 mm vom Körper (ohne Hände), Hand 13,7 mm von den Köpfen, Finger 4,1 mm eingedrückt (gewollt), Rücken und Gesäß 2,8 mm bzw. 3,9 bis 5,1 mm im Polster, Oberschenkel 7,8 bzw. 14,6 mm über dem Polster, keine Meldungen des Rigs |
+| `familie_bilder.py` (Griff von der Handfläche und vom Handrücken, Ausgangs- und Endposition) | je Übung 4 Bilder, 55 und 57 s |
+| Prüfbilder angesehen | Lage auf beiden Bänken, Hanteln über den Schultern und seitlich der Brust, Unterarme senkrecht, Griff geschlossen mit dem Daumen über den Fingern, Füße flach mit Sohlenkontakt |
+| Beim Bau gefunden und behoben | Köpfe der Hantel 30° schief zur Achse (Reihenfolge der Drehungen); Abstand der Köpfe zum Körper maß die eigene Hand mit (19 mm in allen Bildern), beim ersten Versuch ohne Hände kippte das Vorzeichen an der offenen Kante am Handgelenk (−159 mm) und die Bahn endete zu hoch; jetzt am geschlossenen Netz mit eigenem Wert für die Hand |
+| Prüfseite (`tools/uebungen_pruef_bild.py ... --familie waagrechtes-druecken`) | `familie-waagrechtes-druecken.webp`, 230 KB, 1480 × 2898 |
+| `python3 tools/uebungen_animationsplan.py --check` | Plan passt zu den Daten (Spalte „Stand“) |
+| `pnpm format:check`, `pnpm check:docs` (D-462) | bestanden |
+
+### Phase Programme, Abschnitt 2, „Waagrechtes Drücken“ in der App · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Bahn der Hanteln nie breiter als unten, beide Schleifen in der App (D-463).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Bahn in 41 Phasen (Probe) und über alle 60 Bilder (`render.py <Übung> --pruefen --nur-messwerte`) | Griffmitten auseinander unten / Mitte / oben: flach 73,8 / 71,8 / 44,5 cm, schräg 76,3 / 74,6 / 44,5 cm; Breite nimmt mit der Phase nur zu (vorher in der Mitte bis 77,4 und 82,6 cm); Unterarm höchstens 6,8° und 9,1° zur Senkrechten, Ellbogen bis 1,8 und 3,2 cm weiter außen als unten, Handgelenk gesamt höchstens 8,6° und 10,2°; Köpfe mindestens 37,4 mm vom Körper ohne Hände, Hand 13,7 mm von den Köpfen, Sohlen 0,0 mm, keine Meldungen des Rigs |
+| Bilder in fünf Phasen, Kamera der App und von vorn | angesehen: Hanteln steigen fast senkrecht und laufen oben zusammen, nie breiter als unten |
+| Schleifen (`render.py schraegbankdruecken_kh`, `bankdruecken_kh`) | 1.791 s und 1.596 s für je 60 Bilder; Bankdrücken in zwei Teilen nach einem Neustart der Umgebung (`--fortsetzen`); schräg erstes und letztes Bild pixelgleich, flach 511 Pixel um höchstens 5 von 255 Stufen verschieden |
+| Dateigrößen | abgerufen je Übung (MP4, Poster, Vorschau) 54,2 KB und 55,7 KB |
+| Aufnahme (`tools/uebungen_bewegung.py waagrechtes-druecken …`) | `waagrechtes-druecken-bewegung.mp4`, 95 KB |
+| `pnpm build`, `pnpm check:bundle` (D-463) | bestanden; Startansicht 237,8 KB von 250 KB, Dateien der Übungsbilder 20 von 20 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (16,1 min): `task-rows.spec.ts` „Zeilen ohne Überlauf, Abhakfeld und Chevron auf gleicher Höhe (390 pt)“, Abhakfeld 75,6 px neben der Mitte der Zeile; einzeln wiederholt (`--repeat-each=3`) 30 von 30 bestanden; der Test berührt nichts aus diesem Paket. Der geänderte Test der Übungsliste (fünf Vorschaubilder) bestanden |
+| `pnpm format:check`, `pnpm check:docs` (D-463) | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Kniebeuge“: Beinpresse · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Beinpresse (D-464).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorab gerechnet: Sprunggelenk und Hüfte je nach Lehne (30, 35°), Höhe der Füße auf der Platte (0 bis 10 cm über der Linie Hüfte–Schiene) und Knie unten (90 bis 110°) | gewählt Lehne 30°, 10 cm, Knie 95°: Sprunggelenk unten rund 31°, mit den Füßen auf der Linie über 40° |
+| Griffrichtung und Lage gesucht (längs, quer, senkrecht, schräg; 4 × 3 Lagen) | schräg, 10 cm vor der Hüfte: Handgelenk gesamt 3,2°, Ellbogen 139°; längs zum Sitz war es 46,6° |
+| `render.py beinpresse --pruefen` (alle 60 Bilder) | Knie 95 bis 165°, Hüfte 62,6 bis 99,6°, Sprunggelenk bis 31,3°, Knie −0,8 bis +0,2 cm neben der Fußachse; Ferse und Ballen beider Füße 0,0 mm auf der Platte (höchstens 0,01 mm), Füße 0,1 mm verschoben; Handgelenk 3,2°, Finger 4,5 mm eingedrückt (gewollt); Rücken und Gesäß 5,1 mm im Polster, Oberschenkel mindestens 64 mm über dem Sitz; Kragen 1,6 mm, Kragenpolster 1,6 mm über der Socke; keine Meldungen des Rigs; Messung und Ansichten rund 5,3 min, Griffbilder rund 1 min |
+| Maße des Geräts im Modell | 179 × 150 × 149 cm (Schlitten oben); Vorbilder 241 × 165 × 145 und 244 × 145 × 145 cm |
+| Prüfseite (`tools/uebungen_pruef_bild.py beinpresse --familie kniebeuge …`) | `familie-kniebeuge.webp`, angesehen: Füße flach auf der Platte, Knie über den Zehen, Rücken an der Lehne, Hände an den Griffen |
+| `pnpm format:check`, `pnpm check:docs` (D-464) | bestanden |
+
+### Phase Programme, Abschnitt 2, Beinpresse in der App · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Sitz und Lehne korrigiert, Schleife der Beinpresse in der App (D-465).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Neue Messwerte am Stand D-464 (`render.py beinpresse --pruefen --nur-messwerte`, alle 60 Bilder) | Gesäß 56,6 bis 60,0 mm über dem Sitz, Lende 15,4 mm vor der Lehne (an der tiefsten Stelle 31 mm), Kopf 22 mm über der Lehne; Becken verschoben 0,0 mm, gedreht 0,0° |
+| Haltung gesucht: Lende flacher (0 bis 40°), Rumpf zur Lehne gedreht (0 bis 12°), oberer Brustkorb gestreckt (0 bis 10°), drei Verteilungen auf die Lendenwirbel; Kopf zurück (0, 12, 18°) | gewählt Lende 25°, Rumpf 9°, Brustkorb 10°, Kopf 14°: Lende in jedem Streifen an der Lehne, Schultern wie vorher |
+| Gesäß mit gebeugten Beinen auf den Sitz | zuerst sprang die Lage zwischen zwei Werten (Punkt an der Kante des Sitzes); mit gerundeter Oberfläche gemessen stetig, Gesäß unten 4,0 mm |
+| Polster geben nach, Prüfung je Bild | erste Fassung (dichter Kasten) verlor die Rundung der Kanten und ließ an der Kante eine Lippe stehen (bis 12,9 mm); neu vernetzt (Würfel 6 mm) mit mitsinkenden Seitenwänden. Dann gab das Polster nur unter der Haut nach (Kleidung entsteht erst nach dem Aufbau), Shirt bis 4,2 mm durch; behoben, dazu ein zweiter Weg für schmale Grate: 0,0 mm |
+| `render.py beinpresse --pruefen --nur-messwerte` (alle 60 Bilder, Endstand) | Gesäß im Sitz 4,0 bis 18,4 mm; Lende schwächste Stelle 2,0 bis 2,2 mm; Kreuzbein 19,3 bis 25,7 mm, oberer Rücken 7,0 mm, Kopf 2,1 mm im Polster; Becken verschoben 0,0 mm, gedreht 0,0°; tiefste Delle 36,8 bis 44,5 mm; Haut oder Kleidung durch das Polster 0,0 mm; Hüftgelenk zum Becken 68 bis 107°; Knie, Sprunggelenk, Sohle und Finger wie D-464; Handgelenk 1,9°; keine Meldungen des Rigs |
+| Standbilder Ausgang und Ende, Seite und schräg, Polster ohne Figur | angesehen: Rücken und Gesäß an Lehne und Sitz, Kopf an der Lehne, Dellen weich, Kanten gerundet |
+| `render.py beinpresse` (60 Bilder, 720 × 540, 40 Proben, ein Prozess auf vier CPU-Kernen) | 2.960 s (nebenher liefen Prüfansichten); MP4 64,1 KB, WebM 54,7 KB, Poster 14,6 KB, Vorschau 6,6 KB; abgerufen 85,3 KB (mit WebM 76,0 KB); erstes und letztes Bild pixelgleich |
+| `tools/uebungen_bewegung.py beinpresse beinpresse` | `beinpresse-bewegung.mp4`, 131 KB, 720 × 540, 7,5 s (dreimal die Schleife) |
+| Prüfseite neu (`render.py beinpresse --pruefen`, `familie_bilder.py beinpresse`, `uebungen_pruef_bild.py beinpresse --familie kniebeuge …`) | 840 s und 225 s (nebenher lief die Schleife); angesehen: neue Werte für Gesäß, Lende, Kreuzbein, Kopf, Becken und Polster |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | fünf Läufe, alle unter Last (Blender-Prozesse nebenher): einmal 2 Tests in 1 Datei fehlgeschlagen, die Namen sind nicht festgehalten (die Ausgabe war gekürzt); die übrigen bestanden, zuletzt zweimal 135 Dateien, 1.209 Tests |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 24 von 24 im Build |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (18,6 min, nebenher liefen Blender-Prozesse): `start-surface.spec.ts` „Startfläche beim schnellen Start …“, „Heute“ stand erst 1.195 ms nach dem ersten Bild statt vor 1.121 ms; einzeln fünfmal wiederholt bestanden. Der Test zu den Aufgabenzeilen (360, 390 und 768 pt) bestanden; der geänderte Test der Übungsliste (sechs Vorschaubilder, Beinpresse) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Rumpf“ · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Rumpf“ mit Unterarmstütz und Crunches (D-466).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Matte 180 × 60 × 1,5 cm nach Herstellerangaben (Websuche: PROGYM, Sissel, Trendy Sport) | Oberseite als Raster von 7,5 mm, gibt unter Haut, Kleidung und Schuhen nach, Unterseite bleibt am Boden |
+| Unterarmstütz: Neigung des Körpers gesucht (Halbierung, Schuhe 2,5 mm in der Matte), Lage der gedachten Stange in der Faust (Ellbogen unter der Schulter), Höhe von Ellbogen und Faust (je 2 mm in der Matte) | Neigung 4,2°; Stange 20° schräg in der Faust: Handgelenk 4,8° (gerade Stange 21,0°); Fuß 15° zurück (Sprunggelenk 16,6° gebeugt): der Schuh steht auf dem vorderen Rand der Sohle statt auf der Spitze |
+| Crunches: Liegen gesucht mit der Figur der App (Lende 40 und 50° flacher, Rumpf 3 bis 9°, Brustkorb 0 und 10°, Kopf 10 und 25°), Lende 2 mm an jeder Stelle | gewählt Lende 45°, Rumpf 9°, Brustkorb 10°, Kopf 20°: Gesäß 12,8 mm, Schulterblätter 9,0 mm, Kopf liegt auf. Erst mit der grauen Figur gesucht; deren Maße passen nicht zur Figur der App, darum neu gerechnet |
+| Crunches: Einrollen verteilt (erst mit dem Wirbel spine03: Lende oben 4,6 mm abgehoben), dann ein Viertel ab spine02, drei Viertel ab spine01 | Lende in jeder Phase an jeder Stelle auf der Matte |
+| Gewebe flacht ab: erste Fassung mit der Haut unter dem Stoff und mit den Händen | Haut lag unter der Kleidung, Hände konnten nicht aufliegen; Haut jetzt über dem Stoff, Hände und Arme ausgenommen |
+| `render.py unterarmstuetz --pruefen` (alle 60 Bilder) | Hüfte 1,6 bis 1,7 cm über der Linie Schulter–Fußgelenk, Ellbogen 0,0 cm vor der Schulter, Oberarm höchstens 0,1° zur Senkrechten, Ellbogen 89°, Handgelenk 4,8 bis 5,0°, Knie 177°, Unterarm 1,0 bis 2,0 mm, Faust 2,0 mm, Schuhe 2,5 mm in der Matte, übriger Körper mindestens 16 mm darüber, Auflage mindestens 5,2 cm vom Rand, Delle 1,9 mm, nichts durch die Matte, Sohlen 0,0 mm verschoben, keine Meldungen |
+| `render.py crunch --pruefen` (alle 60 Bilder, Knie 70°) | Oberkörper 9,5 bis 38,1° zur Matte; Lende 1,5 bis 3,0 mm auf der Matte; Gesäß und Kreuzbein 3,0 mm (ohne Abflachen 12,6 mm); Becken 0,0 mm und 0,0°; Schulterblätter oben 32,6 mm über der Matte; Kinn 10,5 bis 11,5 cm vom Brustbein; Hände zu Beginn 2,0 mm auf der Matte, mindestens 68 mm vom Körper; Sohlen 0,0 mm, nicht verschoben; Kragen des Schuhs 0,5 mm über der Socke; Auflage mindestens 10,7 cm vom Rand; Delle 3,0 mm, nichts durch die Matte; keine Meldungen |
+| Crunches: Knie 85° gegen 75° und 70° | Sprunggelenk 44,4°, 39,9° und 37,6° gestreckt; Kragen des Schuhs −0,7 mm (schneidet in die Socke), +0,14 und +0,5 mm: gewählt 70° |
+| Lage auf der Matte (Auflage bis 2 mm über der Oberseite) | Unterarmstütz zuerst Schuhspitzen 8 mm vor dem Ende, Crunches Hände neben der Matte; mittig gelegt und Arme näher am Körper: mindestens 5,2 und 10,7 cm vom Rand |
+| Prüfansichten angesehen | Fläche für das Abflachen erschien weiß um die Matte (die Prüfansichten setzen die Sichtbarkeit aller Objekte neu); jetzt für jeden Strahl unsichtbar. Fuß beim Unterarmstütz und Rücken bei den Crunches zuerst ohne die Auflage im Bild; Bildmittelpunkt und Ausschnitt angepasst |
+| Prüfseite (`tools/uebungen_pruef_bild.py unterarmstuetz crunch --familie rumpf --titel Rumpf`) | `familie-rumpf.webp`, angesehen: Körperlinie gerade, Ellbogen unter den Schultern, Schuhe auf der Matte; Lende und Becken liegen, oben nur der obere Rücken gehoben |
+| `pnpm format:check`, `pnpm check:docs` (D-466) | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Rumpf“ in der App · 30.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Freigabe „Rumpf“: flache Hände, verschränkte Arme, Kopf angehoben, Schuh im Vorfuß, Schleifen in der App (D-467).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorfuß als Bogen vor dem Skelett (Blender „Simple Deform“): erste Fassung Zone 6,5 cm, neutrale Lage 1,2 cm; Proben mit 40 und 55° | gewählt 55°, Zone 7,5 cm, neutrale Lage 1,6 cm: Sohle vom Ballen bis zur Spitze auf der Matte; bei 40° stand sie noch auf ihrem vorderen Teil |
+| Fehler beim Bau des Bogens gefunden und behoben | rechter Fuß verschob die Zone des linken (Ferse 20 mm; jetzt beide Achsen gleich); Senkel und Ösen 12 mm in der Socke (Bogen über die Grenzen des Teils gerechnet; jetzt Winkel nach Anteil an der Zone); ein Punkt der Socke doppelt gebogen (Gewicht der anderen Seite; jetzt Seite nach der Lage) |
+| Unterarmstütz mit flachen Händen | Finger zuerst 9 bis 41 mm in der Matte (Grundhaltung gekrümmt); jetzt je Glied waagrecht, dann auf die Matte gedreht: Finger 2,0 mm, Hand 2,9 mm; Länge Fingerspitzen bis Schuhspitzen 178,7 cm, Matte 185 cm |
+| Crunches mit verschränkten Armen | Unterarme zuerst 29 mm ineinander, Hände zur Schulter mit Handgelenk bis 102°; Abstand am Rand des Shirts gemessen (offene Kante zählt als außen, vorher scheinbar −8,7 mm); Ellbogen und Hände je Phase aus fünf Stützstellen |
+| `render.py unterarmstuetz --pruefen --nur-messwerte` (alle 60 Bilder) | Körperlinie 1,6 bis 1,7 cm, Neigung 5,8°, Unterarme 0,0° zueinander, Ellbogen 91,3 bis 91,6°, Handgelenk 1,3 bis 1,6°, Unterarm 1,1 bis 2,0 mm, Hand 2,9 mm, Finger 2,0 mm in der Matte; Vorfuß 55°, Sohle 2,1 mm in der Matte, Ferse 132 mm; Fuß mindestens 3,7 mm unter dem Schaft, Socke in der Zehenbox 1,0 mm, Senkel 1,65 mm, Ösen 1,69 mm, Kragenpolster 1,62 mm über der Socke, Fuß und Socke außerhalb 0 Punkte; Rand mindestens 3,1 cm, Delle 2,1 mm, durch die Matte 0,0 mm; keine Meldungen |
+| `render.py crunch --pruefen --nur-messwerte` (alle 60 Bilder) | Oberkörper 9,5 bis 38,1°, Lende 1,45 bis 3,0 mm, Gesäß und Kreuzbein 3,0 mm, Becken 0,0 mm und 0,0°, Schulterblätter unten 3,0 mm auf, oben 32,4 mm über der Matte, Kopf mindestens 28,6 mm über der Matte, Kinn 9,4 bis 10,2 cm; Hand links −0,4 bis +0,8 mm, rechts 0,0 mm auf dem Shirt, rechter Unterarm auf dem linken −0,5 bis +2,1 mm, Arme an der tiefsten Stelle 0,5 mm im Stoff; Ellbogen 59,4°, Handgelenk links 13,3 bis 19,9°, rechts 16,3 bis 16,9°; Sohlen 0,0 mm, Kragen 0,5 mm über der Socke, Rand 10,7 cm, Delle 3,0 mm, durch die Matte 0,0 mm; keine Meldungen |
+| Achsel in allen Übungen gemessen (Haut des Oberarms im Rumpf, links/rechts) | Crunches 26/28 mm, Kniebeuge 17/26, Unterarmstütz 12/16, Beinpresse 13/21, Latziehen 12/16, Bankdrücken mit Kurzhanteln 11/12 mm: Verformung des Grundmodells, vom Ärmel gedeckt |
+| Nahaufnahme Vorfuß (`vorfuss_bilder.py`, vorher mit dem Stand D-466 aus einem eigenen Arbeitsbaum; `uebungen_korrektur_bild.py --runde 11`) | `unterarmstuetz-vorfuss.webp`, angesehen: vorher Schuh starr auf dem Rand der Sohle, jetzt Zehenbox flach auf der Matte, Biegung am Ballen; erste Fassung zu nah (Schuh abgeschnitten), Abstand vergrößert. Aufbau 92 s und 27 s, je Ansicht 45 bis 67 s |
+| `render.py unterarmstuetz` (60 Bilder, 720 × 540, 40 Proben) | 2.932 s (nebenher liefen Prüfansichten beider Familien und die Nahaufnahmen); MP4 21,3 KB, WebM 17,3 KB, Poster 10,2 KB, Vorschau 3,0 KB; abgerufen 34,5 KB (mit WebM 30,5 KB); erstes und letztes Bild pixelgleich |
+| `render.py crunch` (60 Bilder, 720 × 540, 40 Proben) | 1.929 s (anfangs liefen Nahaufnahmen nebenher); MP4 55,2 KB, WebM 45,8 KB, Poster 12,3 KB, Vorschau 4,1 KB; abgerufen 71,7 KB (mit WebM 62,3 KB); erstes und letztes Bild pixelgleich |
+| `tools/uebungen_bewegung.py rumpf unterarmstuetz crunch` | `rumpf-bewegung.mp4`, 78 KB, 960 × 360, 7,5 s (beide Schleifen nebeneinander, je dreimal) |
+| Prüfseite neu (`render.py … --pruefen`, `familie_bilder.py`, `uebungen_pruef_bild.py unterarmstuetz crunch --familie rumpf --titel Rumpf`) | Unterarmstütz 767 s und 263 s, Crunches 888 s und 243 s (nebenher liefen die Schleifen); angesehen: flache Hände, Vorfuß, verschränkte Arme, angehobener Kopf |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm check:docs` | zuerst fehlgeschlagen: `docs/uebungen-bewegungsfamilien.md` passte nicht mehr zu `familien.json` (neue Hinweise zum Vorfuß); mit `tools/uebungen_familien.py` neu erzeugt, dann bestanden |
+| `pnpm test` (unter Last: die Schleife der Crunches lief nebenher) | 135 Dateien, 1.209 Tests bestanden, kein Ausfall |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 32 von 32 im Build |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte) | 432 bestanden, 132 übersprungen, 0 fehlgeschlagen (13,9 min); der geänderte Test der Übungsliste (acht Vorschaubilder, dazu Unterarmstütz und Crunches) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Schulter und Brust isoliert“ · 30. und 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Schulter und Brust isoliert“ mit dem Seitheben mit Kurzhanteln (D-468).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kurzhantel 8 kg nach Händlerangaben (Websuche; Händlerseite varle.lt gesperrt) | HMS HEX PRO 8 kg: 288 mm lang, Köpfe 110 mm, Griff 110 mm (zwei Angaben gleich, eine dritte abweichend: 308, 122, 95 mm); Griff 34 mm wie das Modell 10 kg |
+| Erster Lauf (`seitheben_kh`, drei Phasen, neun kleine Ansichten) | Aufbau mit Suche 21,9 s; Ausgang Arm 13,6° nach vorn, 2,5° zur Seite; Griffachse links −0,2°, rechts 0,3° gedreht; Bilder angesehen: Hanteln vor den Oberschenkeln, Arme seitlich bis waagrecht, oben Handflächen unten |
+| Finger am Griff zuerst −7,5 mm | gezählt waren auch Punkte, deren Gewicht sich auf mehrere Fingerglieder verteilt (Summe über 0,5); mit derselben Auswahl wie `render.messen` (ein Glied über 0,5) −4,1 mm, gleich dem Bankdrücken mit Kurzhanteln |
+| `render.py seitheben_kh --pruefen` (alle 60 Bilder) | Armhebung 13,85 bis 90,0°; oben Oberarm 0,0° zur Waagrechten, Ellbogen 0,0 cm über dem Schultergelenk; Ebene 20,0 bis 25,8°; Ellbogen 165,07 bis 165,11°; Ellbogen mindestens 1,86 cm über dem Handgelenk; Handgelenk 5,0 bis 5,1°; Finger −4,1 mm; Hand 3,7 mm vor den Köpfen; Köpfe mindestens 12,0 mm vor Haut, Shorts und Shirt; Sohlen 0,0 mm, nicht verschoben; Kragen und Kragenpolster 1,6 mm über der Socke; keine Meldungen |
+| Rechenzeit `render.py seitheben_kh --pruefen` / `familie_bilder.py seitheben_kh` | 676 s / 125 s (nebenher liefen die Schleifen der Familie „Rumpf“) |
+| Prüfseite (`tools/uebungen_pruef_bild.py seitheben_kh --familie schulter-brust-isoliert --titel "Schulter und Brust isoliert"`) | `familie-schulter-brust-isoliert.webp`, angesehen: Hanteln vor den Oberschenkeln, oben Arme waagrecht und Handflächen unten, Faust um den Griff, Füße flach; gerundete Nullen erschienen als „−0,0“, jetzt „0,0“ |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-468; die App ändert sich nicht, E2E wie bei D-467) | bestanden; Startansicht 237,8 KB, Übungsbilder 32 von 32 |
+
+### Phase Programme, Abschnitt 2, Seitheben in der App · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Seitheben mit 30° vor der Schulterlinie, Schleife in der App (D-469).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erster Lauf mit `EBENE` 30° (drei Phasen) | Start gesucht: Arm 13,57° nach vorn, 3,1° zur Seite (vorher 13,6° und 2,5°); Griffachse links −0,2°, rechts 0,5° gedreht; Köpfe 12,0 mm vor dem Körper |
+| Websuche nach einer zugelassenen Quelle für die Schulterblattebene beim Seitheben | keine bei ExRx, ACE, NASM, Human Kinetics oder Mayo Clinic gefunden; Hinweis zur Quelle in der App ergänzt |
+| `render.py seitheben_kh --pruefen` (alle 60 Bilder) | Armhebung 13,9 bis 90,0°; oben Oberarm 0,0° zur Waagrechten, Ellbogen 0,0 cm über dem Schultergelenk; Ebene 30,0 bis 35,9°; Ellbogen 165,07 bis 165,11°; Ellbogen mindestens 1,86 cm über dem Handgelenk; Handgelenk 4,97 bis 5,02°; Finger −4,1 mm; Hand 3,7 mm vor den Köpfen; Köpfe mindestens 12,0 mm vor Haut, Shorts und Shirt; Griffe 26,3 bis 131,4 cm auseinander; Sohlen 0,0 mm, nicht verschoben; keine Meldungen. 570 s, Nahaufnahmen 135 s |
+| `render.py seitheben_kh` (60 Bilder, 720 × 540, 40 Proben) | 1.879 s (nebenher liefen Prüfansichten); MP4 44,8 KB, WebM 41,8 KB, Poster 6,8 KB, Vorschau 3,0 KB; abgerufen 54,6 KB (mit WebM 51,6 KB); erstes und letztes Bild pixelgleich |
+| `tools/uebungen_bewegung.py seitheben seitheben_kh` | `seitheben-bewegung.mp4`, 98 KB, 720 × 540, 7,5 s |
+| Prüfseite neu (`uebungen_pruef_bild.py seitheben_kh --familie schulter-brust-isoliert …`) | angesehen: oben Arme waagrecht und schräg nach vorn, Handflächen unten |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm check:docs` | zuerst fehlgeschlagen: Der Animationsplan nannte D-469, bevor die Entscheidung eingetragen war; danach bestanden |
+| `pnpm test` (unter Last: Prüfansichten der nächsten Familie liefen nebenher) | 135 Dateien, 1.209 Tests bestanden, kein Ausfall |
+| `pnpm build`, `pnpm check:bundle` | Startansicht 237,8 KB (Grenze 250 KB); Übungsbilder 36 von 36 im Build |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen (15,2 min): `start-surface.spec.ts` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, 120 ms lang, danach die aufgeklappten – Logo nie an der falschen Stelle, am Ende mittig (D-394)“ (chromium-mobile), Meldung „Bilder ohne Logo davor“: Das Logo war schon im ersten abgetasteten Bild zu sehen. Einzeln fünfmal wiederholt bestanden (je beide Fälle der Zeile). Der geänderte Test der Übungsliste (neun Vorschaubilder, dazu das Seitheben) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Waagrechtes Ziehen“ · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Waagrechtes Ziehen“ mit dem Rudern am Kabel, sitzend (D-470).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Station und V-Griff nach Angaben aus der Websuche | Long Pull Row (Jerai Fitness 239 × 102 × 229 cm), Fußplatten 23 cm hoch (Ironmaster), V-Griff (Gorilla Sports: Griffe 12 cm, 2,5 cm dick, innen 12 cm, 19 cm lang); Sitzhöhe ohne Quelle, 43 cm wie die Flachbank |
+| Erster Lauf (drei Phasen) | Ende 30 cm zu weit vorn, Ellbogen 152°: Die Prüfung vor dem Shirt zählte die Unterarme gegen die Ärmel (−50 mm in jeder Phase). Handgelenk bis 50° zur Seite: Griff quer zum Kabel statt zu den Unterarmen |
+| Zweiter und dritter Lauf | Griff quer zu den Unterarmen, schräg 12° in der Hand: Handgelenk 2 bis 6°; Meldungen „nicht erreichbar“ kamen aus der ersten Runde der Nachführung, jetzt nur die letzte Runde gezählt |
+| Abstand zu Beinen und Shorts | an offenen Rändern zuerst falsches Vorzeichen (−98 mm); mit `Crunch._abstand`: Unterarme auf den Oberschenkeln (Griff 15 cm über dem Sitz, −36 mm), dann die Unterkanten der Fäuste 19 mm in den Shorts; mit Griff auf Nabelhöhe auf der Geraden bis 0,07 mm, mit früh steigender Bahn mindestens 7,6 mm |
+| `render.py rudern_kabel --pruefen` (alle 60 Bilder) | Ellbogen 167,1 bis 74,0°; Rumpf 14,6 bis 0,9°; Lende 16 bis 0°; Oberarm am Ende 16,1° hinter dem Rumpf, Ellbogen 7,2 cm hinter dem Schultergelenk; Griff 12,0 bis 26,3 cm über dem Sitz, Weg 39,7 cm; Handgelenk 2,4 bis 6,0°; Finger −4,3 mm; Hände und Griff mindestens 10,0 mm vor dem Shirt; Hände, Unterarme und Griff mindestens 7,6 mm über Beinen und Shorts; Kabel mindestens 104,5 mm von Beinen, Shorts und Schuhen; Knie 160°; Sohlen 0,0 mm, nicht verschoben; Gesäß 3,8 bis 4,0 mm; Delle 14,3 bis 15,3 mm; durch das Polster 0,0 mm; keine Meldungen. 386 s, Nahaufnahmen 83 s |
+| Zeitablauf ohne Pause im Ausgang (`haltung.ablauf`, `pause_vorn`) | für die Vorgabe an allen 60 Bildern gleich der alten Formel; beim Rudern Phase 0 nur im ersten Bild, danach sofort in Bewegung |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) | `familie-waagrechtes-ziehen.webp`, angesehen: Arme gestreckt und Rumpf vorgeneigt, am Ende Griff vor dem Bauch, Füße flach; zuerst zwei leere Nahaufnahmen (Kopf und Fußplatte verdeckten), andere Richtungen gewählt |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-470; die App ändert sich nicht, E2E wie bei D-469) | bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36 |
+
+### Phase Programme, CI zum Entwurfs-PR · 31.10.2026, Cloud-Umgebung
+
+E2E in WebKit nach D-470 (D-471).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI Lauf 359 (`8affe32`) | Lint, Typen, Unit-Tests, Dokumente, Build, Datenbank, E2E (Chromium) bestanden; E2E (WebKit) 399 bestanden, 164 übersprungen, 1 fehlgeschlagen: `program-list.spec.ts:128` „„Bereit für dein Training?“ auf Heute und Training, wenn nichts läuft und kein Programm aktiv ist“ (webkit-mobile, auch in der Wiederholung), Konsolenfehler „…/uebungen/medien/beinpresse.webm due to access control checks.“ und „…/bankdruecken_kh.webm …“. Lauf 358 (`a653c6e`) wurde in WebKit abgebrochen, als Lauf 359 begann |
+| Test geändert: zurück über den Pfeil im Player statt Neuladen | `npx playwright test e2e/program-list.spec.ts` (Chromium): 10 bestanden, 2 übersprungen; `…:128 --repeat-each=5`: 10 bestanden |
+
+### Phase Programme, Abschnitt 2, Rudern am Kabel: Sitz mittig · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Hinweis des Produktinhabers zur Prüfseite „Waagrechtes Ziehen“: Die Figur sitzt viel zu weit vorn; Vorlagebild mit der Person mittig auf dem Sitz (D-472).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erster Schritt (drei Phasen): Vorderkante des Sitzes 25 cm vor den Hüftgelenken, Füße 5 cm unter den Hüftgelenken | Griff am Ende 20 cm über den Hüftgelenken: die unteren Kappen des V-Griffs 7,8 mm in den Shorts; mit 23 cm mindestens 20,2 mm; Oberschenkel 0,4 bis 0,6 mm im Polster; Bild angesehen: Die Figur saß noch im vorderen Drittel des Sitzes (1,10 m) |
+| Sitz mittig (95 cm, Vorderkante 42 cm vor den Hüftgelenken, die Knie 41,5 cm), drei Phasen | Werte wie im ersten Schritt, durch das Polster 0,0 mm, keine Meldungen; Bild angesehen: mittig wie auf dem Vorlagebild, aber Boden und Beine des Sitzes unten abgeschnitten; jetzt Bildausschnitt mit den Beinen des Sitzes |
+| Unterseite der Beine über dem Sitz (Füße 5 cm unter den Hüftgelenken) | bis 10 cm vor den Hüftgelenken höchstens 6 mm über dem Sitz (Gesäß und Ansatz der Oberschenkel liegen auf), ab 15 cm 1,9 bis 5,3 cm, unter den Knien 4,4 cm |
+| Gegenprobe: Füße 12 cm unter den Hüftgelenken (wie D-470) mit dem neuen Sitz | Oberschenkel 3,8 bis 4,0 mm im Polster, an der Vorderkante 1 mm darin (Kniekehle), die Waden davor bis 15 mm unter der Oberkante des Sitzes |
+| `render.py rudern_kabel --pruefen` (alle 60 Bilder) | Ellbogen 168,0 bis 69,1°; Rumpf 14,6 bis 0,9°; Lende 16 bis 0°; Oberarm am Ende 15,7° hinter dem Rumpf, Ellbogen 7,0 cm hinter dem Schultergelenk; Griff 16,0 bis 29,2 cm über dem Sitz, Weg 42,1 cm; Handgelenk 2,4 bis 6,0°; Finger −4,3 mm; Hände und Griff mindestens 10,0 mm vor dem Shirt; Hände, Unterarme und Griff mindestens 18,3 mm über Beinen und Shorts; Kabel mindestens 105,6 mm von Beinen, Shorts und Schuhen; Knie 160°; Hüfte 68,6 bis 82,4°; Sohlen 0,0 mm, nicht verschoben; Gesäß 1,8 bis 4,0 mm; Oberschenkel 0,4 bis 0,6 mm im Polster; Delle 14,1 bis 15,2 mm; durch das Polster 0,0 mm; keine Meldungen. 396 s, Nahaufnahmen 82 s |
+| Nahaufnahme linker Fuß von hinten, Ausgang | Höhe 0,15: Die Kamera stand im linken Unterarm (schwarze Scheibe über dem Schuh; bei D-470 am Rand). Sechs Richtungen und Höhen verglichen, frei in beiden Positionen: 135° und 150° schräg von hinten, 180° mit Höhe 0,35; gewählt 180° mit 0,35 (weiter „von hinten“). Zweiter Lauf `--pruefen`: 406 s, Nahaufnahmen 78 s, Messwerte gleich |
+| Schleife (`render.py rudern_kabel --ziel <Arbeitsordner>`, 60 Bilder, 720 × 540, 40 Proben) | 1.528 s (nebenher kurz die Standbilder); MP4 78,3 KB, WebM 72,5 KB, Poster 13,8 KB, Vorschau 5,1 KB; Kontaktbogen angesehen; nicht in der App (wartet auf Freigabe); Aufnahme dreimal abgespielt, 7,5 s, 163,9 KB, an den Produktinhaber |
+| Standbild vorher und jetzt (Seite und Kamera der App, Ende; Seite, Ausgang) | `rudern-sitz-vorher-jetzt.webp` (vorher aus den Prüfansichten zu D-470), angesehen, an den Produktinhaber |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) | `familie-waagrechtes-ziehen.webp` neu, angesehen: Figur mittig auf dem Sitz, die Oberschenkel bis zu den Knien über dem Sitz, Boden und Beine des Sitzes im Bild, Fuß von hinten in beiden Positionen frei |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (D-472; die App ändert sich nicht, E2E in Chromium und WebKit in der CI) | bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36 |
+
+### Phase Programme, Abschnitt 2, Rudern am Kabel nach dem Vorlagebild · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Hinweis des Produktinhabers: Die Ausführung der Schleife stimmt nicht, Vorlagebild einer Kabelrudern-Station von hinten rechts oben (D-473).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Vorlagebild vergrößert angesehen | Oberkörper aufrecht bei gestreckten Armen, Knie deutlich gebeugt, Füße auf einer großen geneigten Platte, Kabel waagrecht in Brusthöhe von einer Rolle vorn an der Säule, V-Griff mit Handflächen zueinander |
+| Erster Lauf (drei Phasen) | Rolle 1,27 m statt 0,81 m hoch: Die Hüfte war im Stand gemessen; jetzt im Sitzen |
+| Zweiter Lauf | Kabel und Bahn waagrecht, Griff 38,0 cm über dem Sitz; am Ende Ellbogen 56,9°, Oberarm 11,0° hinter dem Rumpf (die Familie nennt 15 bis 30°) |
+| Richtung der Ellbogen (`POL`) | (0,3, 1,0, −1): Oberarm am Ende 14,9°; (0,3, 1,6, −1): 18,0°, Ellbogen 8,1 cm hinter dem Schultergelenk, 2,3 cm innen; gewählt (0,3, 1,6, −1). In der Mitte des Zugs Fäuste und Unterarme nur 16,2 mm über den Knien, mit den Fußgelenken 11 statt 8 cm unter den Hüftgelenken 23,1 mm |
+| Vergleich mit dem Vorlagebild aus derselben Richtung (135°, 25° geneigt) | angesehen: Haltung, Knie, Platte, Kabel und Arme wie auf dem Bild; Vergleichsbild an den Produktinhaber |
+| Quellen für den Ausführungstext (Websuche) | ExRx „Cable Straight Back Seated Row“, NASM „How to Perform a Close-Grip Seated Machine Row“, ACE (Studie, V-Griff, Knie gebeugt, Griff bis vor den Bauch), Mayo Clinic („knees bent“); Seiten in der Cloud-Umgebung nicht abrufbar (acefitness.org, exrx.net, nasm.org nicht im Netz der Umgebung), Wortlaut aus Suchauszügen, ExRx und NASM teils per Suche nach dem genauen Satz bestätigt |
+| `npx vitest run src/modules/exercises/data/media.test.ts` (neuer Text) | 15 bestanden |
+| `render.py rudern_kabel --pruefen` (alle 60 Bilder) | Ellbogen 166,3 bis 56,3°; Rumpf 0,9°, Lende 0°; Schlüsselbein −8 bis 10°; Oberarm am Ende 18,0° hinter dem Rumpf, Ellbogen 8,1 cm hinter dem Schultergelenk, 2,3 bis 3,9 cm innen; Griff 38,0 cm über dem Sitz, Weg 38,2 cm; Handgelenk 2,5 bis 5,9°; Finger −4,3 mm; Hände und Griff mindestens 10,0 mm vor dem Shirt; Hände, Unterarme und Griff mindestens 22,8 mm über Beinen und Shorts; Kabel mindestens 163,9 mm von Beinen, Shorts und Schuhen; Knie 130°, Hüfte 71,9°, Sprunggelenk 12,2° gebeugt; Sohlen 0,0 mm, nicht verschoben; Gesäß 4,0 mm, Oberschenkel 5,2 mm über dem Polster; Delle 14,9 mm; durch das Polster 0,0 mm; keine Meldungen. 373 s, Nahaufnahmen 76 s |
+| Schleife (`render.py rudern_kabel --ziel <Arbeitsordner>`, 60 Bilder, 720 × 540, 40 Proben) | 1.491 s; MP4 65,7 KB, WebM 61,1 KB, Poster 15,2 KB, Vorschau 5,6 KB; Kontaktbogen angesehen; nicht in der App (wartet auf Freigabe); Aufnahme dreimal abgespielt, 7,5 s, 127,2 KB, an den Produktinhaber |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen --titel "Waagrechtes Ziehen"`) und Vergleich `rudern-ausfuehrung-vorher-jetzt.webp` | angesehen: aufrecht, Kabel waagrecht, Griff am Ende vor den unteren Rippen, Nahaufnahmen von Griff und Fuß frei |
+| `pnpm format:check`, `pnpm test`, `pnpm build`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium; WebKit in der CI) | Format bestanden; 135 Dateien, 1.209 Tests bestanden; Build bestanden; Startansicht 237,8 KB, Übungsbilder 36 von 36; E2E 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (17,1 min) |
+| `pnpm check:docs` | bestanden |
+
+### Phase Programme, Abschnitt 2, Freigabe „Waagrechtes Ziehen“ · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Freigabe mit drei Entscheidungen: Kamera schräg von hinten wie beim Latziehen, Quellenhinweis mit den Abweichungen von ExRx, Ellbogen am Ende 124° passt (D-474).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kamera, je Ausgang, Mitte und Ende | 135° mit 10°, 15° und 18° Neigung und 150° mit 15° verglichen: Bei 150° liegen Arme und Griff am Ende hinter dem Rücken; bei 135° sind Rücken, linker Arm, Griff und Kabel zu sehen, 15° und 18° bringen kaum etwas dazu; gewählt 135° und 10° wie beim Latziehen; Vorschaubild angesehen |
+| Quellenhinweis (`npx vitest run src/modules/exercises/data/media.test.ts`) | erste Fassung mit 308 Zeichen: Datei fehlgeschlagen, keine Tests gelaufen (das Schema erlaubt 300 Zeichen); gekürzt auf 296 Zeichen: 15 bestanden |
+| Schleife (`render.py rudern_kabel`, 60 Bilder, 720 × 540, 40 Proben) | 1.518 s; MP4 53,4 KB, WebM 47,5 KB, Poster 13,2 KB, Vorschau 6,1 KB; Kontaktbogen angesehen; das letzte Bild weicht vom ersten in 458 Pixeln um bis zu 63 von 255 Stufen ab (ohne Pause am vorderen Umkehrpunkt läuft die Bewegung dort weiter) |
+| Aufnahme (`uebungen_bewegung.py rudern rudern_kabel`) | `rudern-bewegung.mp4`, 102 KB, an den Produktinhaber |
+| `render.py rudern_kabel --pruefen` und Nahaufnahmen | 390 s und 72 s; alle Messwerte über alle 60 Bilder gleich wie bei D-473 |
+| Prüfseite (`uebungen_pruef_bild.py rudern_kabel --familie waagrechtes-ziehen …`) | angesehen: Kamera der App schräg von hinten, Rücken, Arme, Griff und Kabel sichtbar |
+| `pnpm format:check`, `pnpm test`, `pnpm build`, `pnpm check:bundle` | Format bestanden; 135 Dateien, 1.209 Tests bestanden; Build bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+| `pnpm test:e2e` (Chromium, ohne Blender nebenher; WebKit in der CI) | 431 bestanden, 132 übersprungen, 1 fehlgeschlagen: `start-surface.spec.ts:484` „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, nur beim Laden des Skripts wie beim vierten Start – Logo nie an der falschen Stelle, am Ende mittig (D-394)“ mit „Bilder ohne Logo davor“ (das Logo war schon im ersten abgetasteten Bild zu sehen, wie bei D-469); `npx playwright test e2e/start-surface.spec.ts:484 --repeat-each=5`: 10 bestanden (beide Fassungen des Tests je fünfmal) |
+| `pnpm check:docs` | bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Beine isoliert“ · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Beine isoliert“ mit dem Beinbeuger liegend (D-475).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Maschine nach Angaben aus der Websuche (nur Suchauszüge, die Seiten ließen sich nicht öffnen) | Life Fitness Insignia Leg Curl 159 × 106 × 148 cm, Block 85 kg; True Fitness FUSE-1800 Polster je 15°; Legend Fitness 912 Polster zusammen 108 cm; Rolle Ø 12 cm nur bei einem Heimgerät; Höhe der Liegefläche, Polsterbreite, Lage der Achse und der Griffe ohne Quelle |
+| Erster Lauf (drei Phasen) | ohne Fehler: Knie 175 bis 60°, Kniegelenk 0,0 mm von der Drehachse, Hebel 0 bis 115°. Rolle 1,0 mm in der Haut, aber 4,0 mm in der Socke und Hüfte am Scheitel 16 mm im Polster: Beim Bauen fehlten Kleidung und Socken. Handgelenk 10,1° zum kleinen Finger; Kopf und Hals 11 mm vom Gerät; Riemen schräg durchs Bild |
+| Zweiter Lauf (Lage erst nach dem Ankleiden, Brustpolster 3 cm vor dem Halsansatz, Riemen am Längsträger) | Brust und Bauch 4,0 mm, Hüfte am Scheitel 4,0 mm im Polster, Oberschenkel 1,3 mm darüber; Rolle 1,0 mm in Socke und Haut, 15,9 mm zu den Schuhen; Kopf und Hals 60,7 mm vom Gerät |
+| Richtung der Griffe (elf Richtungen, Handgelenk gesamt) | längs des Polsters 10,1°, senkrecht 66,2°, quer 30,9°, schräg 26,1 bis 37,3°, längs mit etwas nach außen oder innen 1,0 bis 1,5°; 6° zu den Füßen abfallend 5,1°, 11° abfallend 0,4° (gewählt) |
+| Kamera (Ausgang und Ende) | 70° und 15°, 100° und 20°, 120° und 25° verglichen; gewählt 100° und 20°: Kniebeugung, Rückseite der Oberschenkel und Rolle |
+| `render.py beinbeuger_liegend --pruefen` (alle 60 Bilder), erster Durchgang | „Socke: Löcher über dem Schuh“ 0 bis 48 Punkte, obwohl der Fuß fest am Unterschenkel sitzt (Strahlen in festen Richtungen); die Nahaufnahmen der Hand von außen fehlten auf der Prüfseite (Name unbekannt). 393 s, Nahaufnahmen 69 s |
+| Zweiter Durchgang (Strahlen drehen bei frei hängenden Füßen mit dem Fuß; Namen der Nahaufnahmen) | Knie 175 bis 60°; Hüfte 149,1°; Rumpf 15,9°; Sprunggelenk 1,5°; Kniegelenk 0,0 mm von der Drehachse; Hebel 0 bis 115°; Ellbogen 65,6°; Handgelenk 0,4°; Finger −4,5 mm; Brust und Bauch 4,0 mm, Hüfte 4,0 mm im Polster, Oberschenkel 1,3 mm darüber; Rolle −1,0 mm, Schuhe 15,9 mm; Kopf und Hals 60,7 mm; Socke ohne Löcher; Kragen 1,6 mm über der Socke; Delle 3,4 mm; durch das Polster 0,0 mm; keine Meldungen; alle übrigen Werte gleich wie im ersten Durchgang. 412 s, Nahaufnahmen 74 s |
+| Prüfseite (`uebungen_pruef_bild.py beinbeuger_liegend --familie beine-isoliert --titel "Beine isoliert"`) | `familie-beine-isoliert.webp`, angesehen: bäuchlings auf den Polstern, Knie knapp dahinter, Rolle über den Fersen, Hand um den Griff, Fuß und Rolle von außen und von hinten |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (D-475; die App ändert sich nicht, E2E wie bei D-474) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Zeittest der Startfläche · 31.10.2026, Cloud-Umgebung
+
+Test „Startfläche am iPhone Duo: zuerst Maße des zugeklappten Zustands, … (D-394)“ unabhängig von der Rechenlast (D-476).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ursache | Das Logo erscheint spätestens nach 300 ms (`public/startflaeche.js`, Netz per CSS-Animation in `index.html`); unter Last kam das erste aufgezeichnete Bild erst danach: „Bilder ohne Logo davor“ 0 statt mehr als 0 |
+| Uhr der Seite angehalten, Bild für Bild 16 ms vorgestellt | „nur beim Laden des Skripts …“ 3 von 3 bestanden; „120 ms lang …“ 3 von 3 fehlgeschlagen: Logo im Bild bei 112 ms sichtbar, 42 pt neben der Mitte; das CSS-Netz zeigte es nach 300 ms echter Zeit |
+| CSS-Animationen vor dem Laden angehalten (`Animation.setPlaybackRate` 0) | weiter fehlgeschlagen, Logo ab 48 ms sichtbar: Die Einstellung galt für die neue Seite nicht |
+| gleich nach dem Commit angehalten | bestanden; Logo erst ab dem Bild bei 144 ms, „stabil“ |
+| Unter Volllast (sechs rechnende Prozesse, vier Testprozesse, `--repeat-each`) | 30 Läufe: 23 bestanden, 7 fehlgeschlagen; 16 Läufe: 12 bestanden, 4 fehlgeschlagen, alle mit „clock.pauseAt: Error: Cannot fast-forward to the past“ (die Uhr läuft ab `install`); angehalten eine Minute nach dem Start: 40 von 40 bestanden |
+| `npx playwright test e2e/start-surface.spec.ts` (ohne Last), eslint, prettier | 18 bestanden, 16 übersprungen; Lint und Format bestanden |
+
+### Kleidung nach dem Board, Zwischenstand · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Saum, Fall, weite Beine und Saumband (D-477).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Maße des Schnitts vorher (Ruhehaltung, Raum des Skeletts) | Saum bei z = 0,0205 m, 3 cm über dem Schritt; oberer Rand der Shorts bei 0,2302 m, Bund 3,1 cm hoch: Das Shirt bedeckte die Shorts 21 cm |
+| Maße jetzt | Saum bei z = 0,1893 m, 1 cm unter dem Bund: Überdeckung 4,1 cm |
+| Ruhehaltung von vorn, von der Seite und von hinten (600 × 900, 24 Proben) | angesehen: Kante am Saum mit Schatten, Shirt fällt gerade, Shorts mit weiten Beinen |
+| Haltungen (Kniebeuge, Beinbeuger, Rudern, Bankdrücken) | vom Produktinhaber während der Rechnung angehalten, nicht ausgewertet |
+
+### Kleidung nach den Hinweisen des Produktinhabers · 31.10.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Länge, Schnitt, Logos, Rückenlogo, Seitenstreifen, Kollision mit den Shorts, Gesäßfalte, Saumband (D-478).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Ruhehaltung, Saum 1 cm unter dem Bund (D-477) | Überdeckung 4,1 cm; Hinweis des Produktinhabers: zu kurz, wirkt wie Straßenkleidung |
+| Saum 7 cm unter dem Bund, Fall 0,4, Luft 8 mm | Saum bei z = 0,1293 m, Überdeckung 10,1 cm; angesehen: länger, Saumkante sichtbar |
+| enger: Fall 0,25, Luft 5 mm, Weite aus dem Umriss zur Hälfte | größte Weite 2,08 cm (vorher 4,15 cm); angesehen: Shirt läuft zur Taille schmaler |
+| Logos mal 0,8 | Brust-F 3,54 cm, Shorts-F 3,73 cm, Rücken-F 7,60 cm, Wortmarke 17,98 cm breit; Rückenblock zuerst mit gleicher Mitte (F beginnt 15,6 cm unter dem Bündchen), nach dem Hinweis „weiter nach oben“ mit der Oberkante des F wie auf dem Board: 11,68 cm |
+| Seitenstreifen mal 0,75 | angesehen: von vorn deutlich schmaler |
+| Kleidung in Haltungen (neun Phasen, `kleid_pruef`, erster Stand: ganzes Netz des Shirts) | Kniebeuge: Shorts ab der Hälfte der Abwärtsbewegung bis 11,2 mm durch das Shirt (7 bis 11 Punkte), Saumband bis 13,3 mm in den Shorts; Rudern 5,9 mm und 12,3 mm; Nahaufnahme: Lime vom Seitenstreifen an der Hüfte im Bild, hinten am Gesäß eine Zickzackkante im Saumband. Ein Teil der Punkte lag am unsichtbaren Stoff unter dem Saum: seither nur der sichtbare Teil |
+| Shrinkwrap gegen ein Hilfsnetz der Shorts, Saumband mit geglätteten Gewichten | Aufbau zuerst über 5 min statt 12 s: Das Hilfsnetz teilt das Netz der Shorts, die Namen der Gruppen gehören seit Blender 3.0 zum Netz; das zusätzliche Anlegen verdoppelte sie. Danach 11,9 s. Nahaufnahme: Saumband glatt, Zickzackkante weg |
+| ohne → mit Kollision und Brücke (neun Phasen, sichtbarer Teil des Shirts) | Kniebeuge: Shorts 6,9 → 2,4 mm, Saumband 14,4 → 8,0 mm; Rudern: 6,4 → 0,7 mm, 11,0 → 1,0 mm; Beinbeuger: Shorts 9,0 mm unter dem Shirt, Saumband 8,4 mm darüber |
+| Kniebeuge in Player-Größe, Phasen 0,5, 0,625 und 0,75 | angesehen: Saum liegt über den Shorts, kein Lime durch das Shirt |
+| Brücke über die Gesäßfalte, ab 0,5 cm über dem Schritt | angesehen von hinten: die senkrechte Linie zwischen den Gesäßhälften ist fast verschwunden; Nahaufnahme unten in der Kniebeuge: hinten unten zieht sich eine Spitze aus den Shorts. Tiefe der Falte je Höhe: am Schritt bis 7,7 cm, ab 4,5 cm darüber höchstens 5,0 cm |
+| Brücke ab 4 cm über dem Schritt, gleitend über 3 cm | Nahaufnahme: Spitze weg, Profil rund; unten bleibt eine kleine Mulde |
+| Haut an den Säumen | Shorts: mindestens 28,3 mm unter dem Stoff. Shirt: Rudern bis 5,5 mm durch den Ärmel nahe dem Saum (Arme hinten; die Haut ist dort halb ausgeblendet; Ärmel unverändert), Kniebeuge 0,05 mm am Kragen, Beinbeuger keine. Korrigiert in D-480: Messfehler, gemessen gegen die Seite des Shirts am Rumpf; gegen den eigenen Ärmel blieb die Haut beim Rudern 5,0 bis 5,5 mm darunter |
+| Standbilder | `kleidung2-1-board.webp` und `kleidung2-2-player.webp`, angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, vorab gespeichert 191 von 294 Dateien, Übungsbilder 40 von 40 |
+
+### Becken beim Beinbeuger · 31.10.2026, Cloud-Umgebung
+
+Messwert „Becken gegenüber dem Ausgang angehoben“ (D-479).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py beinbeuger_liegend --pruefen --nur-messwerte`, Kleidung nach D-477 mit Saum 7 cm unter dem Bund (Zwischenstand) | Becken 0,00 mm in allen 60 Bildern; Hüfte am Scheitel 2,74 mm im Polster (D-475: 4,00 mm), Oberschenkel 4,00 mm (D-475: 1,33 mm darüber), durch das Polster 0,00 mm; 147 s |
+| dasselbe mit der Kleidung nach D-478 | Becken 0,00 mm in allen 60 Bildern; Hüfte am Scheitel 2,74 mm, Brust und Bauch 4,00 mm, Oberschenkel 4,00 mm im Polster; durch das Polster 0,00 mm; Shorts-F zum Seitenstreifen 4,95 cm (D-475: 2,54 cm; F kleiner, Streifen schmaler); Kopf und Hals 58,4 mm vom Gerät (D-475: 60,7 mm); Socke zu den Shorts mindestens 6,3 cm (D-475: 9,5 cm, die Beine der Shorts sind weiter); tiefste Delle 3,6 mm (D-475: 3,4 mm); übrige Werte wie bei D-475; 156 s |
+
+### Ärmel in allen fertigen Übungen · 31.10.2026, Cloud-Umgebung
+
+Haut unter dem Ärmel (D-480).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Rudern, Haut gegen die nächste Fläche des ganzen Shirts (wie in D-478) | −5,47 mm bei Phase 0,875, an zwei Punkten außen am Oberarm, 1,4 cm innerhalb des Ärmels; nächster Punkt des Shirts ist die Seite am Rumpf (12 bis 17 mm entfernt), der eigene Punkt des Ärmels liegt 6,7 mm darüber |
+| Kollision der Ärmel mit einem Hilfsnetz der Oberarme (Shrinkwrap, 3 mm) | kein Wert ändert sich; nicht im Werkzeug |
+| Rudern, Haut nur gegen die Flächen des Ärmels (alle Eckpunkte am Oberarm) | 4,96 bis 5,49 mm unter dem Ärmel, mit und ohne Kollision gleich |
+| Alle zehn fertigen Übungen und Beinbeuger, neun Phasen, gegen den eigenen Ärmel | Kniebeuge 4,81; Bankdrücken 4,85 bis 5,49; Latziehen 4,83 bis 5,47; Bankdrücken KH 5,06 bis 5,47; Schrägbank KH 4,99 bis 5,48; Beinpresse 5,48; Unterarmstütz 5,03; Crunches 5,05 bis 5,06; Seitheben 5,46; Rudern 4,96 bis 5,49; Beinbeuger 5,20 mm; nirgends ein Punkt durch |
+| `render.py rudern_kabel --pruefen --nur-messwerte` mit `kleidung.durchdringung` in `render.messen` (60 Bilder) | Shorts unter dem Shirt −0,70 mm, Saumband über den Shorts −0,97 mm (beides in der Hüftfalte, freigegeben), Haut unter dem Ärmel 4,96 bis 5,49 mm; 227 s |
+
+### Lime-Akzente am Shirt · 31.10.2026, Cloud-Umgebung
+
+Drei Varianten zur Auswahl (D-481).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kit-Linie, erster Versuch: quer der Abstand in y zum äußersten Punkt je Höhe | gezackte Kanten an der Seite, der äußerste Eckpunkt je 1 cm springt zwischen vorn und hinten |
+| Kit-Linie mit dem Winkel der geglätteten Normale (wie Streifen der Shorts) | Kanten glatt; von vorn und hinten schmale Kante, von der Seite das Paneel bis zum Saum |
+| Schulterband, erster Versuch: Mittellinie aus einzelnen Eckpunkten, quer über die Normale des Eckpunkts | Band am Ärmel wellig, feine Linien am Ärmel, wo das Vorzeichen quer zur Linie sprang |
+| Schulterband mit Strahlen auf die Haut und fester Querrichtung je Punkt der Linie | Band glatt vom Kragen über die Schulter bis zum Ärmelsaum, keine feinen Linien |
+| Standbilder je Variante: vorn, Seite, hinten (600 × 900, orthografisch, 32 Proben), Nahaufnahme (800 × 600), Seitheben oben (720 × 540, 40 Proben, Kamera der App) | Kit-Linie 81 s und 55 s, Kragen & Ärmel 126 s und 57 s, Schulterband 90 s und 42 s; alle angesehen |
+| Abstand Akzent zu Brust-F und Rückendruck (`kleidung.akzent_logo_abstand`, Ruhehaltung und Seitheben oben) | Kit-Linie 13,5 / 11,8 cm und 13,0 / 11,7 cm; Kragen & Ärmel (nur Ärmelstreifen) 17,7 / 19,0 cm und 18,6 / 33,1 cm; Schulterband 15,9 / 14,4 cm und 16,1 / 14,1 cm; Kragenbündchen bis zur Oberkante des Brust-F 5,0 cm (aus dem Schnitt) |
+| Vergleichsblatt | `lime-varianten.webp` (2572 × 1779), angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Schulterband kräftiger · 31.10.2026, Cloud-Umgebung
+
+Vier Fassungen des Schulterbands (D-482).
+
+| Nachweis | Ergebnis |
+|---|---|
+| 6b zuerst (Ruhehaltung: vorn, Seite, hinten, Schulter nah) | Band von vorn, von der Seite und von hinten deutlich, zum Ärmelsaum breiter; Schlitz in der ganzen Figur nur wenige Pixel groß; 121 s |
+| Nahaufnahme des Saums in der Ruhehaltung, schräg von vorn | die linke Hand hängt vor dem Saum und verdeckt den Schlitz |
+| Nahaufnahme beim Seitheben oben, erster Versuch | Ziel war der äußerste Punkt in Saumhöhe, das war in der Ruhehaltung die Hand; Bild auf Brust und Hantel |
+| Nahaufnahme beim Seitheben oben, Ziel nur Rumpf und Hüfte | Schlitz mit Einfassung über dem Streifen der Shorts, das Saumband endet an den Kanten; 77 s |
+| Standbilder der übrigen Fassungen (je Ruhehaltung und Seitheben) | 3 cm 87 s und 71 s; zulaufend 81 s und 71 s; 6a 92 s und 70 s; 6b 118 s und 77 s; alle angesehen: Band von vorn, von der Seite und von hinten deutlich, 6a Linie am Saum in allen Ansichten, 6b Schlitz nur aus der Nähe |
+| Abstand Band zu Brust-F und Rückendruck (Ruhehaltung / Seitheben oben, cm) | alle vier Fassungen gleich, weil das Band auf der Schulter überall 3 cm breit ist: 15,0 / 13,8 und 15,2 / 13,6 |
+| Blatt | `schulterband-kraeftig.webp`, angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Kleidung final · 31.10.2026, Cloud-Umgebung
+
+Schulterband zulaufend und Seitenstreifen nach Variante A (D-483).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Streifen über den Winkel der geglätteten Normale, Halbmesser fest 9 cm | auf dem Stoff 1,08 cm unter dem Bund, 2,99 cm am Saum; Mitte an der Hüfte sichtbar hin und her |
+| Halbmesser aus dem Abstand des Stoffs zur Achse des Oberschenkels | 1,28 cm und 2,76 cm |
+| Halbmesser vom Bund zum Saum 9 auf 10,8 cm, Normalen mit 6 cm geglättet | 1,08 und 2,56 cm, dann 1,07 und 2,96 cm; Mitte weiter unruhig |
+| Naht als Kurve durch den äußersten Punkt je Höhe | glatt, aber schräg nach hinten |
+| Naht mittig zwischen vorderstem und hinterstem Punkt je Höhe, kubisch | im Profil gerade; vorn feine Lime-Linien, wo das Vorzeichen an der inneren Beinhälfte sprang |
+| dazu außerhalb der äußeren Beinhälfte nur das Vorzeichen | vorn sauber; 1 cm unter dem Bund 1,08 cm breit, 1 cm über dem Saum 2,58 cm (Soll 1 und 2,5 cm; dicht abgetastet wie im Shader, je Höhe die größte Sehne); im Profil gerade |
+| Shorts-F zum Streifen (`f_streifen_abstand`, verformtes Netz) | Ruhehaltung 9,73 cm; Seitheben, Rudern und Kniebeuge in allen neun Phasen ebenso 9,73 cm (F und nächster Punkt des Streifens bewegen sich starr mit dem Oberschenkel) |
+| Ärmel mit der finalen Kleidung (neun Phasen) | Haut unter dem eigenen Ärmel bei Kniebeuge 4,81 mm, Rudern 4,96 bis 5,49 mm, Seitheben 5,46 mm, in keiner Phase ein Punkt durch; gleich wie D-480 |
+| Shorts unter dem Shirt, Saumband über den Shorts (neun Phasen) | gleich wie D-478 und D-480: Kniebeuge bis −2,36 mm (Shorts im Shirt) und −7,95 mm (Saumband in den Shorts), Rudern −0,70 und −0,97 mm, beides in der Hüftfalte, freigegeben; Seitheben 8,97 und 8,43 mm Abstand |
+| Standbilder: vorn, Seite, hinten, Shorts von der Seite nah; Seitheben oben, Rudern am Ende, Kniebeuge unten in Player-Größe | `kleidung-final.webp`, angesehen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,9 KB, Übungsbilder 40 von 40 (die App ist unverändert; jeder Build bettet die Bauzeit in die Startansicht ein, daher 0,1 KB mehr als bei D-482) |
+
+### Shorts-F so groß wie das Brust-F · 31.10.2026, Cloud-Umgebung
+
+Shorts-F auf dem Stoff, so groß wie das Brust-F (D-484). Gemessen in der Ruhehaltung: Punkte des F auf dem Stoff (Netz ohne Glättung und Dicke), eingeordnet wie im Material.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erste Messung, je Dreieck 14 Teilungen je Kante, Höhe senkrecht und Breite waagrecht | Brust-F 3,68 × 3,84 cm; Shorts-F 4,20 × 5,63 cm; nur kleiner (3,54 cm, weiter auf der Haut) 3,91 × 5,41 cm |
+| Feiner (36 Teilungen) und in den Achsen des Logos (Hochachse wie im Rahmen: längs des Oberschenkels bzw. senkrecht) | Brust-F 3,79 × 3,85 cm (Breite zu Höhe 1,015); Shorts-F bisher 4,00 × 5,94 cm (1,487); das Symbol ist rund 1,07-mal so breit wie hoch |
+| Projektion auf den Stoff, Höhe im Bild wie das Brust-F | 3,49 × 3,81 cm (1,09); Mitte 5,7 mm weiter außen, Unterkante 2,80 statt 2,44 cm über dem Saum |
+| Faktor 1,0475 (Fläche wie das Brust-F), Mitte 2,81 mm tiefer und 5,65 mm innen | 3,70 × 3,98 cm; Mitte wie bisher; Unterkante 2,36 cm, 0,8 mm zu tief |
+| Endwerte: Faktor 1,0475, Mitte 2,0 mm tiefer und 5,65 mm innen | 3,69 × 3,97 cm (1,076); Mitte quer 10,49 cm wie bisher; Unterkante 2,46 cm über dem Saum; Abstand zum Streifen 10,30 cm (bisher 9,73 cm) |
+| Nahaufnahmen (orthografisch, 12 cm Bildbreite, Blick senkrecht auf das Logo) und von vorn (80 cm hoch), bisher und neu | `shorts-f-wie-brust-f.webp`, angesehen: das neue Shorts-F in Form und Größe wie das Brust-F, das bisherige sichtbar in die Breite gezogen |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 |
+
+### Zehn Schleifen mit der finalen Kleidung · 31.10. bis 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Alle zehn fertigen Schleifen mit der Kleidung aus D-483 und dem Shorts-F aus D-484 (D-485). Zwei Ströme nebeneinander auf vier Kernen (`render.py <übung> --ziel <Arbeitsordner>`), danach in `public/uebungen/medien/` kopiert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py kniebeuge` (Kniebeuge) | 3.576 s für 60 Bilder, mit Aufbau und Kodieren 3.676 s; MP4 69,4 KB, WebM 60,8 KB, Poster 7,5 KB, Vorschau 4,8 KB; erstes und letztes Bild pixelgleich |
+| `render.py bankdruecken` (Bankdrücken) | 3.991 s für 60 Bilder, mit Aufbau und Kodieren 4.067 s; MP4 49,5 KB, WebM 41,5 KB, Poster 8,8 KB, Vorschau 4,4 KB; erstes und letztes Bild pixelgleich |
+| `render.py latziehen` (Latziehen) | 2.314 s für 60 Bilder, mit Aufbau und Kodieren 2.363 s; MP4 59,2 KB, WebM 56,9 KB, Poster 9,8 KB, Vorschau 4,4 KB; erstes und letztes Bild pixelgleich |
+| `render.py bankdruecken_kh` (Bankdrücken mit Kurzhanteln) | 3.029 s für 60 Bilder, mit Aufbau und Kodieren 3.085 s; MP4 43,3 KB, WebM 35,7 KB, Poster 8,3 KB, Vorschau 4,2 KB; erstes und letztes Bild pixelgleich |
+| `render.py schraegbankdruecken_kh` (Schrägbankdrücken mit Kurzhanteln) | 3.123 s für 60 Bilder, mit Aufbau und Kodieren 3.182 s; MP4 40,9 KB, WebM 35,7 KB, Poster 8,9 KB, Vorschau 4,1 KB; erstes und letztes Bild pixelgleich |
+| `render.py beinpresse` (Beinpresse) | 2.038 s für 60 Bilder, mit Aufbau und Kodieren 2.082 s; MP4 63,5 KB, WebM 55,4 KB, Poster 15,0 KB, Vorschau 6,9 KB; erstes und letztes Bild pixelgleich |
+| `render.py unterarmstuetz` (Unterarmstütz) | 4.534 s für 60 Bilder, mit Aufbau und Kodieren 4.825 s; MP4 22,1 KB, WebM 18,0 KB, Poster 10,7 KB, Vorschau 3,2 KB; erstes und letztes Bild pixelgleich |
+| `render.py crunch` (Crunches) | 3.733 s für 60 Bilder, mit Aufbau und Kodieren 4.138 s; MP4 57,6 KB, WebM 48,8 KB, Poster 12,7 KB, Vorschau 4,2 KB; erstes und letztes Bild pixelgleich |
+| `render.py seitheben_kh` (Seitheben) | 2.188 s für 60 Bilder, mit Aufbau und Kodieren 2.246 s; MP4 48,8 KB, WebM 47,5 KB, Poster 7,0 KB, Vorschau 3,1 KB; erstes und letztes Bild pixelgleich |
+| `render.py rudern_kabel` (Rudern am Kabel) | 2.751 s für 60 Bilder, mit Aufbau und Kodieren 2.822 s; MP4 56,0 KB, WebM 51,3 KB, Poster 13,6 KB, Vorschau 6,4 KB; letztes Bild weicht vom ersten in 7.333 Pixeln um bis zu 63 von 255 Stufen ab (an Arm und Griff, dazu vereinzeltes Rauschen im ganzen Bild; kleiner als die Schritte zu den Nachbarbildern mit 14.370 und 6.107 Pixeln, weil die Bewegung am vorderen Umkehrpunkt ohne Pause weiterläuft, wie bei D-474) |
+| Kontaktbögen aller 60 Bilder je Schleife | angesehen: Bewegung wie bisher, Schulterband, schmale Seitenstreifen und Shorts-F in jedem Bild |
+| Raster der Aufnahme (`uebungen_bewegung.py` mit zehn Schleifen, Probe mit den alten Dateien) | 1440 × 810, 7,5 s, Beschriftung lesbar; Probedatei wieder gelöscht |
+| `pnpm format:check`, `pnpm build`, `pnpm check:bundle`, `pnpm check:docs` | bestanden; Startansicht 237,8 KB, Übungsbilder 40 von 40 (dieselben Dateinamen wie bisher) |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,4 min); der Test der Übungsliste (zehn Vorschaubilder) bestanden |
+
+### Beinbeuger liegend in der App · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schleife des Beinbeugers mit der finalen Kleidung, Eintrag in der App und Aufnahme aller Schleifen (D-486).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py beinbeuger_liegend` (60 Bilder, 720 × 540, 40 Proben) | 3.013 s für 60 Bilder, mit Aufbau und Kodieren 3.075 s; MP4 72,8 KB, WebM 73,2 KB, Poster 12,1 KB, Vorschau 5,2 KB; erstes und letztes Bild pixelgleich; Kontaktbogen angesehen |
+| `render.py beinbeuger_liegend --pruefen --nur-messwerte` (alle 60 Bilder, finale Kleidung) | Knie 175,0° bis 60,0°, Becken gegenüber dem Ausgang angehoben 0,00 mm, Hüfte am Scheitel 2,74 mm im Polster, Rolle zu den Schuhen mindestens 15,9 mm, Kopf und Hals zum Gerät mindestens 58,4 mm, Haut unter dem Ärmel mindestens 5,20 mm, Shorts unter dem Shirt mindestens 8,96 mm, Saumband über den Shorts mindestens 8,39 mm, Shorts-F zum Streifen 10,30 cm, Meldungen des Rigs 0 |
+| Aufnahme (`uebungen_bewegung.py` mit allen elf Schleifen) | 1440 × 810, 7,5 s, 454 KB; elf beschriftete Felder in vier Spalten, jede Schleife dreimal; angesehen und dem Produktinhaber geschickt |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 11, ohne Visual 113; Animationsplan und Familien neu geschrieben |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm check:bundle`, `pnpm check:docs` | bestanden; Unit-Tests 135 Dateien, 1.209 Tests; Startansicht 237,8 KB, Übungsbilder 44 von 44 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | Erster Lauf nach 286 Tests abgebrochen: 2 fehlgeschlagen (Desktop), `uebungen.spec.ts` „Übungsliste: Übungen mit Animation …“ mit 0 statt 11 Bildern und `uebungen-offline.spec.ts` „Animation einmal online gesehen, danach offline“; Ursache: Alternativtext des Beinbeugers mit 297 Zeichen, das Schema erlaubt 240 und verwirft sonst die ganze Liste. Nach dem Kürzen auf 233 Zeichen: 432 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,1 min); der geänderte Test der Übungsliste (elf Vorschaubilder, dazu der Beinbeuger) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Hüftbeuge“ · 31.10. bis 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Hüftbeuge“ mit dem Rumänischen Kreuzheben mit Kurzhanteln (D-487).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen (Websuche) | exrx.net und nasm.org in der Cloud-Umgebung nicht erreichbar; Suchauszüge ohne die Schritte; gestützt auf den Ausführungstext der App und die Werte der Familie |
+| Erster Lauf (Hanteln über der Fußmitte, Luft 10 mm, fünf Stützen) | ohne Fehler; oben Hüfte 18 cm hinter dem Ausgang und 30° gebeugt, Arme 24° nach vorn, Handgelenk 14° seitlich |
+| Zweiter Lauf (Schwerpunkt über der Fußmitte, Luft 4 mm, Griff schräg) | Schwerpunkt ±0,3 cm, oben aufrecht, Handgelenk höchstens 7°; Mitte: Köpfe −46 mm, Ellbogen 162° statt 172° (Zustand zwischen den Aufrufen) |
+| Dritter bis fünfter Lauf (Arm ohne Zustand, Entfernung des Griffs gesucht, Drehung der Hand fest) | Ellbogen 164 bis 178°, dann 178,4° (außer Reichweite), dann 172,0° in jeder Phase |
+| Luft über den Winkel der Arme bei Phase 0,5 (−6 bis 4°) | Haut 22 mm, Shorts −30 bis −50 mm unter dem offenen Saum; nach der Behandlung der Ränder 0,8 bis 22 mm |
+| Kameras (720 × 540) | 90°/5°, 75°/8°, 60°/10°, 45°/10° verglichen; gewählt 75°/8° |
+| `render.py rumaenisches_kreuzheben_kh --pruefen`, erster Durchgang (fünf Stützen) | Köpfe −8,2 mm an den Knien (Phase 0,8 bis 0,97), 360 Meldungen aus den Suchschritten |
+| Zweiter Durchgang (17 Stützen, Spline, Rumpf unten 66°) | Knie 160,0°; Hüfte 17,5° bis 91,2° gebeugt (Rumpf zum Oberschenkel 162,5° bis 88,8°); Rumpf 83,8° bis 20,8°; Schwerpunkt −0,04 bis 0,05 cm; Griffe 1,8 cm unter den Kniegelenken; Ellbogen 172,0°; Handgelenk 6,4°; Köpfe 1,4 bis 6,5 mm; Sohlen 0,0 mm, verschoben 0,1 mm; Shorts unter dem Shirt −5,9 mm, Saumband −12,9 mm; Meldungen 0. 755 s, Nahaufnahmen 312 s |
+| Hüftfalte bei Phase 0,986 und 1,0 (Kamera der App 720 × 540 und Nahaufnahme von vorn unten) | angesehen: nichts sichtbar |
+| Prüfseite (`uebungen_pruef_bild.py rumaenisches_kreuzheben_kh --familie hueftbeuge --titel "Hüftbeuge"`) | `familie-hueftbeuge.webp`, angesehen: Stand und Endposition, Griff und Hantel, Fuß; Messwerte mit den Zeilen der Kleidung |
+| `python3 -m py_compile` (uebungen.py, uebungen_pruef_bild.py), `pnpm format:check`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` (die App ändert sich nicht; E2E mit WebKit in der CI) | bestanden; Startansicht 237,8 KB, Übungsbilder 44 von 44 |
+
+### Bildliste robust · 01.11.2026, Cloud-Umgebung
+
+Ein ungültiger Eintrag in `public/uebungen/medien.json` fällt allein heraus und wird gemeldet; zu lange Alternativtexte findet schon `pnpm check:docs` (D-488).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Unit-Tests `media.test.ts`: kein Eintrag der ausgelieferten Liste fiele heraus; ein Eintrag mit 241 Zeichen fällt allein heraus, Warnung in der Konsole und im Fehlerprotokoll; Quelle ohne Adresse, Datei außerhalb des Ordners, falscher Schlüssel; falscher Rahmen wirft weiter | bestanden (18 Tests in der Datei, 3 neu) |
+| Unit-Test `browser.test.ts`: `logWarning` schreibt mit der Datenbank aus `installGlobalErrorHandlers`, nach dem Abbau nur in den Arbeitsspeicher | bestanden |
+| Gegenprobe: Alternativtext des Beinbeugers auf 294 Zeichen verlängert | `media.test.ts`: 2 fehlgeschlagen, die Meldung nennt `lying_leg_curl`; `check_medien.py`: „lying_leg_curl: Alternativtext 294 Zeichen, höchstens 240“, dazu eine fehlende Datei erkannt, Exit-Code 1; Liste danach zurückgesetzt |
+| `pnpm check:docs` mit `check_medien.py` | bestanden; „public/uebungen/medien.json: 11 Einträge geprüft, Alternativtexte höchstens 240 Zeichen“ |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; Startansicht 237,9 KB (0,1 KB mehr: `logWarning` und die Bauzeit), Übungsbilder 44 von 44 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,3 min); der neue Test „Ein ungültiger Eintrag der Bildliste fällt allein heraus und steht als Warnung in der Konsole (D-488)“ in beiden Profilen bestanden |
+
+### Rudern am Kabel: Schleifenende · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfung auf einen Sprung zwischen letztem und erstem Bild (D-489).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Phase aus `haltung.ablauf` (pause_vorn 0) in den Bildern 58, 59, 0, 1, 2 | 0,0047 → 0,0006 → 0 → 0,0004 → 0,0028; stetig, an der Naht Geschwindigkeit null |
+| `render.py rudern_kabel --pruefen --nur-messwerte` (alle 60 Bilder, finale Kleidung) | Weg des Griffs in den Bildern 57 bis 2: 0,57 → 0,18 → 0,02 → 0,00 → 0,01 → 0,11 cm; Ellbogen 159,2 → 163,4 → 165,9 → 166,3 → 166,0 → 164,5°; Meldungen 0 |
+| Bilder 56 bis 3 nebeneinander (`docs/screens/uebungen/rudern-naht.webp`) | angesehen: Bilder 58, 59, 0 und 1 fast gleich, kein Sprung |
+| Pixel: Schritt 59 → 0 gegen die Nachbarschritte | 7.333 Pixel, höchstens 63 Stufen; 58 → 59: 14.370 Pixel, 0 → 1: 6.107 Pixel |
+| `ffprobe` der Videos | MP4 und WebM je 60 Bilder, jedes 1/24 s (MP4 0,041667 s, WebM 0,041 s), kein doppeltes Bild am Ende |
+| `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,9 KB, Übungsbilder 44 von 44 |
+
+### Rumänisches Kreuzheben in der App · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Lende, Nacken und Blick gemessen, Schleife gerendert und eingebaut (D-490).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Wirbel und Kopf am Skelett (Stand, Phase 0,5, unten) | Lendenwirbel (`spine05` bis `spine03`) und Brustwirbel gegen das Becken 0,0° in allen drei; Kopf gegen den Rumpf 4,0°; Blick 7,0°, 38,5° und 70,0° unter der Waagrechten; unten Augen 108 cm hoch, Blick trifft den Boden 70 cm vor den Schuhspitzen |
+| Hautlinie der Lende, Punkte des Netzes in der Rückenmitte (erster Versuch) | zu wenige Punkte (5 Punkte, 2 bis 3 Höhen), verworfen |
+| Hautlinie per Strahl von hinten auf das verformte Netz, alle 5 mm von 2,6 bis 16,6 cm über dem Hüftgelenk, im Raum des Beckens | Mitte: Stand −9,5°, Phase 0,5 −6,7°, unten −5,5° (Tangenten über je 3 cm unten und oben), Linie höchstens 1,1 mm verschoben; 3 cm links und rechts der Mitte: −20,8 und −20,6°, −17,5°, −15,4 und −15,5°, höchstens 6,1 und 6,2 mm |
+| `render.py rumaenisches_kreuzheben_kh --pruefen --nur-messwerte` mit den neuen Werten (alle 60 Bilder) | Wirbel der Lende gegen das Becken gedreht höchstens 0,0°; Hautlinie der Rückenmitte zwischen L5 und L1 im Stand −9,5° hohl, unten −5,5° (bis 3,9° flacher, die Linie verschiebt sich höchstens 1,2 mm); Nacken 4,0° gebeugt in jeder Phase; Blick 7,0° (Stand) bis 70,0° (unten) unter der Waagrechten; Rumpf unten 20,8° über der Waagrechten, Hüfte 91,2° gebeugt, Griffe 1,8 cm unter den Kniegelenken, Köpfe mindestens 1,4 mm vor Haut und Kleidung, Shorts unter dem Shirt −5,9 mm, Saumband −12,9 mm (Hüftfalte, D-487); Meldungen 0; 241 s |
+| `render.py rumaenisches_kreuzheben_kh` (60 Bilder, 720 × 540, 40 Proben) | 1455 s für 60 Bilder, mit Aufbau und Kodieren 1605 s; MP4 53,1 KB, WebM 49,1 KB, Poster 6,1 KB, Vorschau 3,9 KB; erstes und letztes Bild pixelgleich; Kontaktbogen und Endposition angesehen |
+| Aufnahme (`uebungen_bewegung.py kreuzheben`) | 720 × 540, 7,5 s, 117 KB, die Schleife dreimal; angesehen und dem Produktinhaber geschickt |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 12, ohne Visual 112; Animationsplan und Familien neu geschrieben |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; „public/uebungen/medien.json: 12 Einträge geprüft“; Startansicht 237,9 KB, Übungsbilder 48 von 48 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,5 min); der geänderte Test der Übungsliste (zwölf Vorschaubilder, dazu das Rumänische Kreuzheben) bestanden |
+
+### Phase Programme, Abschnitt 2, Familie „Senkrechtes Drücken“ · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Prüfseite der Familie „Senkrechtes Drücken“ mit dem Schulterdrücken an der Maschine (D-491).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen (Websuche) | Life Fitness Insignia Shoulder Press 164 × 144 × 185 cm, 85 kg, zusammenlaufende Arme; Griffe auf oder knapp über Schulterhöhe (Handbücher in Suchauszügen); lifefitness.com nicht erreichbar |
+| Erster Lauf (Griffe oben 19 cm neben der Mitte) | Ellbogen oben 178,4° statt 172°; Unterarm in der Mitte 17° nach innen; Rücken 7,1 mm im Polster; Gesäß 0 mm (Messung nahm ein Netz um den Ursprung an, der Sitz liegt in Weltkoordinaten) |
+| Polster nach dem Neuvernetzen | Oberfläche des Sitzes 4,6 mm tiefer, des Rückenpolsters gut 2 mm weiter vorn als die Fläche des Kastens; jetzt danach ausgerichtet: Gesäß und Rücken 4,0 mm |
+| Griff fest quer im Ausgang gegen quer in der Mitte des Wegs (fünf Phasen) | Handgelenk höchstens 12,9° gegen 13,3°, Unterarm gedreht 51° gegen 54°; gewählt: quer im Ausgang |
+| Kameras (720 × 540) | 15°/6°, 30°/8°, 45°/10°, 60°/10° verglichen; gewählt 30°/8° |
+| `render.py schulterdruecken_maschine --pruefen` (alle 60 Bilder) | Ellbogen unten 77,8°, oben 172,0°; Oberarm unten 10,1° unter der Waagrechten, 25,6° vor der Ebene der Schultern; Unterarm zur Senkrechten unten 2,1°, höchstens 13,5°; Handgelenk höchstens 12,9°; Griffe 82,9 → 57,4 cm auseinander, 29,9 → 58,2 cm über den Schultergelenken; Gesäß 4,0 bis 4,0 mm im Sitz, Rücken 4,0 bis 4,0 mm im Polster, Delle höchstens 4,0 mm, nichts durch die Oberfläche (0,0 mm); Kopf und Hals mindestens 159 mm vom Gerät, Arme mindestens 46 mm von Hebeln, Griffen und Rahmen; Finger −4,1 mm; Sohlen 0,0 mm, verschoben 0,0 mm; Shorts unter dem Shirt −1,1 mm, Saumband 0,7 mm, Ärmel 5,2 mm; Meldungen 0. Messung und Prüfansichten 338 s, Nahaufnahmen des Griffs 50 s |
+| Prüfseite (`uebungen_pruef_bild.py schulterdruecken_maschine --familie senkrechtes-druecken --titel "Senkrechtes Drücken"`) | `familie-senkrechtes-druecken.webp`, angesehen |
+| `python3 -m py_compile` (geraete.py, uebungen.py, uebungen_pruef_bild.py), `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht; E2E mit WebKit in der CI) | bestanden; Startansicht 237,9 KB, Übungsbilder 48 von 48 |
+
+### Schulterdrücken an der Maschine in der App · 01.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Ausgangslage mit Griffen zwischen Kinn und Ohr, Schleife und Eintrag in der App (D-492).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kopf am Netz, sitzend (Phase 0), über dem Schultergelenk | Kinn 15,1 cm, Mitte des Ohrs 22,7 cm, Augen 25,7 cm, Scheitel 35,3 cm; Griffe bisher 29,9 cm |
+| Erster Versuch: Griffe auf drei Vierteln vom Kinn zum Ohr, Unterarm 10° nach hinten | Griffe 20,8 cm über dem Schultergelenk, aber Ellbogen 52,6°, Handgelenk in der Mitte bis 21,3° |
+| Unterarm senkrecht, Griffe auf Ohrhöhe, 30° bis 45° vor der Ebene der Schultern, oben 24 oder 26 cm neben der Mitte (vier Varianten, fünf Phasen) | Ellbogen unten 59,7 bis 60,5°, Handgelenk höchstens 13,6 bis 16,3° |
+| Griffe auf drei Vierteln vom Kinn zum Ohr, Ellbogen unten 65° gesucht, 35° oder 45° vor der Ebene, oben 24 oder 26 cm (vier Varianten) | gewählt 45° und 26 cm: Oberarm unten 31,4° unter der Waagrechten, Unterarm 6,4°, Handgelenk höchstens 10,6° in fünf Phasen |
+| `render.py schulterdruecken_maschine --pruefen --nur-messwerte` (alle 60 Bilder) | Ellbogen 65,0° → 172,0°, Oberarm unten 31,4° unter der Waagrechten und 40,3° vor der Ebene der Schultern, Unterarm unten 6,4° zur Senkrechten (höchstens 12,7°), Handgelenk höchstens 11,4°, Unterarm gedreht 37,7° → −20,6°, Griffe 77,4 → 62,2 cm auseinander, unten 20,8 cm über den Schultergelenken, 5,7 cm über dem Kinn und 1,9 cm unter der Mitte des Ohrs, Hebel 38,6°; Gesäß und Rücken 4,0 mm im Polster, nichts durch die Oberfläche; Arme mindestens 43 mm von Hebeln, Griffen und Rahmen, Kopf 159 mm vom Gerät; Shorts 1,1 mm im Shirt (Hüftfalte, bleibt), Ärmel 5,1 mm; Meldungen 0 |
+| `render.py schulterdruecken_maschine` (60 Bilder, 720 × 540, 40 Proben) | 1338 s für 60 Bilder, mit Aufbau und Kodieren 1375 s (Messung nebenher); MP4 52,5 KB, WebM 48,9 KB, Poster 10,4 KB, Vorschau 4,3 KB; erstes und letztes Bild pixelgleich; Kontaktbogen angesehen |
+| Aufnahme (`uebungen_bewegung.py schulterdruecken`) | 720 × 540, 7,5 s, 107 KB, die Schleife dreimal; angesehen und dem Produktinhaber geschickt |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 13, ohne Visual 111; Animationsplan und Familien neu geschrieben |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.213 Tests; „public/uebungen/medien.json: 13 Einträge geprüft“; Startansicht 237,8 KB, Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (15,5 min); der geänderte Test der Übungsliste (13 Vorschaubilder, dazu das Schulterdrücken an der Maschine) bestanden |
+
+### Übersicht „Ganzkörper A/B“ · 01.11.2026, Cloud-Umgebung
+
+Liste aller elf Übungen mit Stand und Dateigrößen, Bild in Player-Größe (D-493).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/uebungen_programm_uebersicht.py compound_ab_4 --name ganzkoerper-ab` | elf Übungen in der Reihenfolge der Tage (A: 5, B: 6), alle „Schleife in der App“, zusammen 1.254,6 KB; `ganzkoerper-ab-uebersicht.webp` (98 KB, 1600 × 1118), angesehen |
+| `python3 -m py_compile tools/uebungen_programm_uebersicht.py`, `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle` (die App ändert sich nicht) | bestanden; Startansicht 237,8 KB, Übungsbilder 52 von 52 |
+
+### Übungsbilder mit Prüfsumme im Namen · 01.11.2026, Cloud-Umgebung
+
+Ursache der alten Kleidung im Gerätetest, Dateinamen mit Prüfsumme, Aufräumen des Speichers (D-494).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Poster im Branch gegen den Stand vor D-485 (`git show 8d9dc92:…`), Kniebeuge und Seitheben | im Branch die finale Kleidung (Schulterband, Seitenstreifen Variante A), vorher die alte; die Dateien stimmten, nur ihre Namen blieben gleich |
+| `git log -- public/uebungen/medien/kniebeuge.mp4` | fünf Fassungen unter demselben Namen (D-412, D-447, D-456, D-461, D-485) |
+| `python3 tools/check_medien.py` vor der Umbenennung | 52 Probleme, je Datei „ohne passende Prüfsumme im Namen“, Exit-Code 1 |
+| `python3 tools/uebungen_medien_version.py` | 52 Dateien umbenannt, in der Liste nur die Adressen geändert, Prettier ohne Abweichung; zweiter Lauf: 0 Dateien |
+| Werkzeug in einer Kopie: neu gerenderte Datei, gleich gerenderte Datei, an Ort und Stelle überschriebene Datei, neuer Eintrag ohne Prüfsumme | wie vorgesehen: neue Prüfsumme und alte Fassung gelöscht; keine Änderung; die Prüfung meldet die falsche Prüfsumme, das Werkzeug berichtigt sie; neuer Name vergeben. Eine nicht eingebaute Datei meldet die Prüfung („liegt im Ordner, steht aber nicht in der Liste“) |
+| `aktuelle_datei` (Python), `aktuelleDatei` (Node), `uebungen_bewegung.py` mit Kniebeuge und Latziehen | richtige Dateien gefunden, fehlende gemeldet; Aufnahme 7,5 s (Probe, danach gelöscht) |
+| Unit-Tests `media.test.ts`, 4 neu (Aufräumen löscht nur, was die Liste nicht nennt; ohne Speicher nichts, auch kein neuer Speicher; Laden der Liste räumt auf; Fehler beim Aufräumen ändert nichts) | 22 bestanden; Gegenprobe mit absichtlich falscher Bedingung und ohne Aufruf: 2 Fehlschläge, danach wieder 22 |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 135 Dateien, 1.217 Tests; „13 Einträge geprüft, … 52 Dateien mit Prüfsumme im Namen“; Startansicht 237,9 KB, Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 434 bestanden, 132 übersprungen, keiner fehlgeschlagen (16,2 min); der erweiterte Offline-Test (alte Fassung im Speicher wird gelöscht, die aktuelle Schleife läuft danach ohne Netz) in beiden Profilen bestanden, ebenso Übungsliste und Pilot-Animation mit den Namen mit Prüfsumme |
+
+### Player am iPhone Duo, Befunde A bis D · 01.11.2026, Cloud-Umgebung
+
+Große Pause und Dialoge in der Mitte des Bildschirms, Rahmen der Animation, rechte Spalte fest (D-495). Fenster wie am Gerät gemessen (D-393), Bildschirm hochkant 466 × 678 und Ausrichtung über das Chrome-Protokoll.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Nachgestellt am alten Stand `b9eb461`, 867 × 669 | große Pause bei 433 statt 475,5 px; rechte Spalte 558 px hoch, Inhalt 853 px, scrollt für sich; am Seitenende 147 px nach oben geschoben; Einträge in „Als Nächstes“ 359 px breit in 304 px, Zahl bis 882 px (Spalte endet bei 843) |
+| Messung nach D-495 (867 × 669, 867 × 587, 382 × 678) | große Pause: Zeit bei x 475, Mitte des Inhalts senkrecht bei 335 bzw. 253 (Bildschirmmitte 334,5 bzw. 252,5), zugeklappt bei 233; Knöpfe bis 700 bzw. 362 px; Spalte in jedem Scrollschritt bei 0 px, Animation 4:3 (326 × 245, mit Pause 285 × 214, mit Streifen oben 175 × 132) |
+| Rahmen der Animation in Details, Player und Übungsinfo bei 867 × 669, 867 × 587, 382 × 678, 669 × 869, 390 × 844, 844 × 390, 951 × 669 | überall Seitenverhältnis 1,333, das Video deckt den Rahmen (`cover`); Kante der kleinen Animation nach der Fläche `--media-bg` ohne Linie (13, 18, 25 neben 12, 18, 25) |
+| „Als Nächstes“ bei 1180 × 820 und 844 × 390 | 1 bzw. 4 Einträge, jede Zahl endet am Eintrag (1132 = 1132, 804 = 804); am Duo quer kein ganzer Eintrag, Karte steht nicht da |
+| `e2e/duo-player-befunde.spec.ts` (neu) | 7 bestanden, 3 übersprungen (B bis D nur Handy-Profil) |
+| Gegenprobe derselben Tests am alten Stand `b9eb461` | alle 5 Tests im Handy-Profil fehlgeschlagen: 433,5 statt 475,5 (Pause, Übungsinfo); Seitenverhältnis 1,674; Spalte scrollt 120 px; Eintrag bis 1186,6 statt 1132,5 px |
+| Unit-Tests `screenCenter.test.ts` (6, mit der Rechnung aus `public/startflaeche.js`), `useFittingRows.test.ts` (4) | bestanden |
+| Aufnahme `tools/duo-player-aufnahme.mjs` (867 × 669, Pause läuft, Gesten mit Nachlauf und Mausrad bis ans Ende und zurück) | 719 Bilder, Scrollposition 0 bis 1953, rechte Spalte in jedem Bild bei 0 px, Animation bei 328,5 px; `player-scrollen.mp4` 13 s |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.227 Tests; Startansicht 238,5 KB (vorher 237,9 KB), Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 441 bestanden, 135 übersprungen, keiner fehlgeschlagen (17,3 min), darunter die neuen Tests und der angepasste Test „Player aufgeklappt“ (`duo-player.spec.ts`: am Duo quer steht „Als Nächstes“ nicht da, bei 951 × 1100 vier Einträge) |
+
+### Rundgang durch den Player am Duo · 01.11.2026, Cloud-Umgebung
+
+Systematische Prüfung aller Schritte im Player, weitere Befunde mit Bild (D-496).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/duo-player-rundgang.mjs` in fünf Haltungen (Duo quer 867 × 669 und 867 × 587, hoch 669 × 869, zugeklappt 382 × 678, iPhone 390 × 844), je 11 Schritte | keine Meldung der Prüfungen; Mitte von großer Pause und Dialogen 475,5 (quer), 334,5 (hoch), 233 (zugeklappt), 195 (iPhone); das Blatt „Übung auswählen“ zugeklappt über die ganze Breite (191) |
+| Derselbe Rundgang am alten Stand `b9eb461` (quer, zugeklappt) | quer in jedem Schritt „rechte Spalte hinter der Fußleiste“, am Seitenende „oben aus dem Bild“ ab −131 px; zugeklappt Dialoge bei 191 statt 233 |
+| Ergänzung: Übung „Crunches“ hinzufügen, Pause überziehen (quer, zugeklappt) | Übung am Ende, „0 von 19 Sätzen“; „Pause vorbei +0:03“ mit Rand in Lime, groß in der Mitte des Bildschirms |
+| Bilder | Erste Rundgänge mit `page.screenshot`: Das setzt den nachgestellten Bildschirm zurück (466 → 867), die große Pause stand im Bild wieder mittig im Fenster; das Werkzeug nimmt die Bilder deshalb über das Chrome-Protokoll |
+| Weitere Befunde | E1 „Ziel“ und Zahl getrennt (Pausenkarte rechts am Duo quer, „Jetzt“ am iPhone), E2 kleine Pause am iPhone nur „Beinpresse,…“, E3 zugeklappt Dialoge 266 statt 350 pt (Folge von A), E4 „Als Nächstes“ am Duo quer ohne Platz (Folge von D); Bild `docs/screens/duo/player-weitere-befunde.webp` |
+| `pnpm check:docs` (die App ändert sich nicht) | bestanden |
+
+
+### Wiedergabe der Übungsschleifen · 01.11.2026, Cloud-Umgebung
+
+Start im Player, zwei Durchläufe und Wiederholen in Übungsinfo und Details, MP4 vor WebM, WebM ohne Alphakanal (D-497). Safaris Regeln lassen sich unter Linux nicht direkt auslösen; nachgestellt mit Skripten vor dem Laden der Seite: `autoplay` wirkungslos (Safari hält das Video für unsichtbar) und `play()` nur während einer Geste (Stromsparmodus).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Am alten Stand in Chromium ohne Nachstellung | Beinpresse läuft nach dem Start und nach dem Wechsel (der Fehler zeigt sich nur in Safari) |
+| `ffprobe` der 13 WebM | alle `alpha_mode=1`; Einzelbilder RGBA mit Deckkraft 255; MP4 `avc1.64001E` (H.264 High 3.0) |
+| Einzelbilder gegen die ausgelieferten Dateien (PSNR) | MP4 46,1 bis 50,5 dB (die Einzelbilder sind die der Schleifen); WebM alt und neu je Übung gleich auf sechs Nachkommastellen (30,3 bis 50,9 dB); neu ohne Alphakanal, 60 Bilder, 720 × 540, 24 fps, je 2,8 KB kleiner (Beinpresse 56.769 → 53.965 B) |
+| `canPlayType` in Chromium der Cloud-Umgebung | `video/mp4; codecs="avc1.64001E"` und `video/webm; codecs="vp9"`: „probably“ |
+| Unit-Tests `exercise-visual.test.tsx` (6 neu, 1 angepasst) | 21 bestanden; am alten Stand 7 fehlgeschlagen |
+| `e2e/uebungen-wiedergabe.spec.ts` (neu, 4 Tests) und angepasste `uebungen.spec.ts`, dazu `duo-player-befunde`, `duo-player`, `player` | 34 bestanden, 12 übersprungen (Desktop-Profil); alle elf Übungen nach Start, Wechsel und Pause mit wirkungslosem `autoplay` |
+| Gegenprobe der 4 neuen E2E-Tests am alten Stand | alle fehlgeschlagen, am Verhalten: „Tag 1: beinpresse nach dem Start“ −1 (angehalten) statt > 0,2; „nach dem ersten Tippen“ −1; Details und Übungsinfo „nach zwei Durchläufen angehalten“ false (laufen ohne Ende) |
+| `tokens.test.ts` | Symbol `--media-control-fg` auf `--media-control` über `--media-bg` und über Weiß ≥ 4,5:1, beide Modi |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.235 Tests; Startansicht 238,6 KB (vorher 238,5 KB), Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 446 bestanden, 138 übersprungen, keiner fehlgeschlagen (21,6 min, parallel zu einer Messung in Blender) |
+| CI zu `6e68714` (GitHub Actions) | Chromium bestanden; WebKit 407 bestanden, 174 übersprungen, 3 fehlgeschlagen, alle in `uebungen-wiedergabe.spec.ts` bei „zweimal, dann angehalten“: Details (Desktop und Handy) nach 10 s nicht angehalten, die Schleife lief weiter; Übungsinfo (Handy) Zeit blieb bei 0 nach `playbackRate = 3`. Alle elf Übungen und der Stromsparmodus bestanden auch in WebKit |
+| Nachtrag: Durchläufe am Ende gezählt (`ended`, ohne `loop`), Test in normaler Geschwindigkeit mit gezählten Enden (2, nach dem Tippen 4) | Unit-Tests 140 bestanden (Module Übungen und Player); E2E Chromium `uebungen-wiedergabe`, `player-jetzt`, `uebungen`: 26 bestanden, 10 übersprungen (Desktop-Profil); die ganze Suite in beiden Engines in der CI |
+| CI zu `c2cfe4a` (GitHub Actions) | Chromium bestanden; WebKit 409 bestanden, 178 übersprungen, 5 fehlgeschlagen: Details (Desktop, Handy) und Übungsinfo „zweimal zu Ende“ 3 statt 2 (einmal nach 15 s nicht angehalten); `duo-tastatur.spec.ts` zugeklappt und `player-jetzt.spec.ts` Duo zugeklappt: erster Satz unter der Fußleiste (Feld bei 631 px, Satz bis 723 px, Fußleiste ab 601 px) |
+| Nachtrag 2: Ende zählt erst nach halbem Durchlauf; „Jetzt“ bei niedrigem Fenster kompakter (`useShortWindow`) | Chromium Duo zugeklappt, Start „Tag A“ mit Kniebeuge: „Jetzt“ 174 px (vor D-498 180, mit D-498 226), Gewichtsfeld 471 bis 519 px, Fußleiste ab 601 px; Unit-Tests `useShortWindow.test.ts` (3), `exercise-visual.test.tsx` 5 Läufe hintereinander 25 von 25; E2E Chromium `uebungen-wiedergabe`, `player-jetzt`, `duo-tastatur`, `duo-player`, `uebungen`: 51 bestanden, 35 übersprungen; erster Lauf: 3 Fehlschläge im neuen Messen der Spielzeit (die Messschleife des ersten Durchgangs zählte im zweiten weiter, 3,98 statt 2 Längen) und `duo-tastatur` iPhone „App scrollt nicht“ 18 px (Kompaktregel über `max-height` sprang mit der Tastatur um), beides behoben; Unit-Tests 139 Dateien, 1.245 Tests; Startansicht 238,9 KB |
+
+### Karte „Jetzt“ · 01.11.2026, Cloud-Umgebung
+
+Vorschaubild der nächsten Übung neben „Danach:“, schmal laufende Schleife der aktuellen Übung (D-498).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probe in Chromium (390 × 844, 382 × 678, 867 × 669) | kleine Schleife 112 × 84 px, läuft (iPhone, zugeklappt); aufgeklappt ausgeblendet und angehalten; „Danach:“ mit Vorschaubild der Kurzhantel-Bankdrücken, 32 × 32 px; aktueller Satz bis 575 px, Fußleiste ab 767 bzw. 601 px |
+| Unit-Tests `exercise-visual.test.tsx` (4 neu: Schleife kompakt läuft im Seitenverhältnis, kein Knopf im Knopf, Tippen öffnet; weniger Bewegung Standbild; ohne Schleife Vorschaubild; Kachel 32 px stumm) | 25 bestanden |
+| `e2e/player-jetzt.spec.ts` (neu, 4 Tests, Handy-Profil) | 4 bestanden; erster Lauf: 1 Fehlschlag im Test selbst (nach dem Wechsel scrollt der Player zum nächsten Satz, „Jetzt“ lag außerhalb des Bilds, die Schleife stand dort wie gewollt); der Test scrollt jetzt zurück und prüft auch das Anhalten außerhalb des Bilds |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 137 Dateien, 1.239 Tests; Startansicht 238,6 KB, Übungsbilder 52 von 52; erster Lauf von `pnpm typecheck` mit einem Typfehler im neuen Unit-Test (`querySelector` ohne Elementtyp), behoben |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 449 bestanden, 142 übersprungen, 1 fehlgeschlagen (22,4 min, parallel zu einer Rechnung in Blender, Last um 14 auf 4 Kernen): der Zeittest der Startfläche „beim schnellen Start“ (`start-surface.spec.ts:579`, „Heute“ nach 1.364 ms statt unter 1.143 ms bereit); er berührt den Player nicht. Einzeln wiederholt ohne die Rechnung: 3 von 3 bestanden |
+
+### Übungsdetails breit · 01.11.2026, Cloud-Umgebung
+
+Animation und Muskelkarte nebeneinander ab 40 rem Breite, gleich hoch (D-499).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probe in Chromium (Latziehen) | Duo quer 867 × 669: Animation 357 × 268, Karte 384 × 268, 20 px dazwischen, oben und unten bündig; Duo hoch 669 × 869: 377 × 283 und 232 × 283; iPhone 390 × 844: Animation 350 × 263, keine Karte daneben. Erster Entwurf ohne Anpassung der Höhe: Karte 384 × 419, die Reiter rutschten unter die Tab-Leiste |
+| `e2e/uebungen-details-breit.spec.ts` (neu, 5 Tests, Handy-Profil) und `uebungen.spec.ts` | 22 bestanden, 8 übersprungen (Desktop-Profil); die Muskelkarte im Desktop-Profil steht daneben, der Test „Muskelkarte“ findet sie dort |
+| Unit-Tests `breakpoints.test.ts` (neu, 2: folgt dem Fenster beim Auf- und Zuklappen, ab genau 640 px), `muscle-map.test.tsx` (1 neu) | bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 138 Dateien, 1.242 Tests; Startansicht 238,9 KB (vorher 238,6 KB, `useAtLeast` in `breakpoints.ts`), Übungsbilder 52 von 52; erster Lauf von `pnpm format:check` meldete die neue Testdatei, formatiert |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 455 bestanden, 147 übersprungen, keiner fehlgeschlagen (24,4 min, parallel zu Standbildern in Blender) |
+
+### Größe der Animation im Player · 01.11.2026, Cloud-Umgebung
+
+Rahmen der Animation in jeder Übung gleich groß, Figur in allen elf Schleifen gemessen, Vorschlag zum Maßstab (D-500).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/player-rahmen-messen.mjs` (neu; „Ganzkörper A/B“ Tag A und B mit allen Sätzen, am ersten Satz jeder Übung, mit Timer und in der Pause; acht Fenster mit sicheren Bereichen wie am Gerät), alter Stand `69807ab` | iPhone 390 × 844 und Duo hoch 669 × 869 überall 112 × 84, Duo zugeklappt und iPhone quer überall 96 × 72, iPad 1180 × 820 und Computer 1440 × 900 überall 336 × 252; Duo quer 867 × 669 sechs Größen von 220,2 × 165,1 bis 326,3 × 244,7 („Jetzt“ 146 bis 226 px), 867 × 587 von 110,8 × 83,1 bis 217 × 162,7; mit laufendem Timer 241 × 180,7 bzw. 131,6 × 98,7; Pause 284,7 × 213,5 bzw. 175,4 × 131,5 |
+| dasselbe, neuer Stand | Duo quer 867 × 669 überall 273,5 × 205,1, 867 × 587 überall 164,2 × 123,1, „Jetzt“ überall 186 px, auch mit Timer und bei „Letzte Übung“; die übrigen Fenster und die Pause unverändert |
+| dasselbe mit Vorwerten (`RUNDEN=2`, Duo quer in beiden Höhen) | Rahmen und „Jetzt“ wie oben; Name höchstens zwei Zeilen, Angaben zwei Zeilen, nichts gekürzt; „Danach:“ endet bei zwei Namen mit „…“ |
+| Erster Entwurf mit gleich hohem „Jetzt“ auch in hohen Fenstern (867 × 669 ohne sicheren Bereich gemessen) | `duo-player-befunde.spec.ts:328` rot: bei 1180 × 820 kein ganzer Eintrag in „Als Nächstes“; jetzt gilt die Regel nur im niedrigen Fenster |
+| `tools/uebungen-3d/figur_messen.py` (neu, Blender 4.2 über `bpy`, alle elf Schleifen) | Maßstab 273 bis 493 px/m, Figur 228 bis 522 px hoch; Beinbeuger 9 px über dem rechten Rand; Gegenprobe der Projektion mit `world_to_camera_view` auf 0,05 px |
+| `tools/uebungen-3d/figur_vorschlag.py` (neu; größter Maßstab mit 4 % Rand je Übung, dann gemeinsam 271 px/m mit Standbild) | größter Maßstab je Übung 271,2 (Rumänisches Kreuzheben) bis 476,1 px/m (Crunches); mit 271 px/m passt jede Figur in jedem Bild, Faktor 0,55 bis 0,99, Geräte bei fünf Übungen angeschnitten; Vergleichsblatt `docs/screens/uebungen/groesse-vorschlag.webp` |
+| `e2e/uebungen-wiedergabe.spec.ts` (alle elf Übungen: Rahmen gleich; neu: Tag A mit allen Sätzen, Rahmen und „Jetzt“ gleich mit Timer und bei „Letzte Übung“), `e2e/player-jetzt.spec.ts` (aufgeklappt Vorschaubild 24 px) | bestanden; Gegenprobe am alten Stand `69807ab`: beide Rahmen-Tests rot (Rahmen im Test 238,8 × 179,1 bis 328,4 × 246,3, mit Timer 259,6 × 194,7) |
+| Player-Tests (`uebungen-wiedergabe`, `player-jetzt`, `duo-player`, `duo-player-befunde`, `duo-tastatur`, `uebungen`, `uebungen-details-breit`, Chromium) | 64 bestanden, 44 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 139 Dateien, 1.245 Tests; Startansicht 238,9 KB, Übungsbilder 52 von 52 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 456 bestanden, 148 übersprungen, keiner fehlgeschlagen (20,0 min), am Stand vor dem flacheren „Jetzt“ (24-px-Bild, Zeilenhöhe); danach die Player-Tests wie oben |
+
+### Wiedergabe und „Jetzt“ in WebKit, Nachträge · 01.11.2026, Cloud-Umgebung
+
+Nachtrag 3 zu D-497 (zweimal über die gespielte Zeit statt über Enden) und Nachtrag 2 zu D-498 (Test wie die installierte App).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `69807ab`, E2E WebKit | 4 fehlgeschlagen, 415 bestanden, 183 übersprungen: Details zweimal (Desktop: gespielte Zeit 3,04 Längen; Handy: nach 20 s nicht angehalten), Übungsinfo (3,04 Längen), „Jetzt“ am Duo zugeklappt (Satz bis 710 px, Fußleiste ab 601 px); E2E Chromium, Lint, Typen, Unit-Tests, Build und Datenbank grün |
+| Testbericht der CI mit Bildern | nicht geladen: Das Netz dieser Umgebung lässt `productionresultssa13.blob.core.windows.net` nicht zu; die Tests nennen bei einem Fehlschlag deshalb Ereignisse und Lage in der Meldung |
+| Unit-Tests `exercise-visual.test.tsx` (nachgestellte Uhr; 1 neu: zählt nur, solange sie spielt, ein Ende mit `loop` hält nicht an; 2 angepasst) | 26 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build` | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; erster Lauf von `pnpm lint` mit zwei Meldungen (Bedingung mit `LOOP_RUNS <= 1` immer falsch) und `pnpm typecheck` mit einer (Element in einer Funktionsdeklaration möglicherweise leer), beide behoben |
+| Ablauf in Chromium, Details Latziehen, Zeitstempel der Ereignisse | erster Durchlauf bis 2,38 s, der Browser springt selbst an den Anfang (`seeked`, `playing`), bei 3,75 s endet `loop`, bei 4,89 s angehalten am Ende (`pause`, `ended`), das Symbol erscheint |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI), Stand mit D-500 und beiden Nachträgen | 455 bestanden, 148 übersprungen, 1 fehlgeschlagen (18,7 min): `uebungen-wiedergabe.spec.ts:142` am Start von Tag B, das Kreuzheben spielte das WebM statt des MP4. Laut Mitschnitt kamen alle Anfragen für das MP4 mit 200 bzw. 206 zurück, danach wich die App wie vorgesehen auf das WebM aus; eine Meldung in der Konsole gab es nicht. Der Weg im Player ist in den Nachträgen unverändert. Einzeln viermal wiederholt: 4 bestanden. In der CI läuft der Test mit einer Wiederholung |
+| Player-Tests (7 Dateien, Chromium) auf demselben Stand | 64 bestanden, 44 übersprungen |
+
+### Bilder und Aufnahmen zur Wiedergabe · 01.11.2026, Cloud-Umgebung
+
+Bilder von iPhone und Duo, Aufnahmen des Players (D-497 bis D-500).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `node tools/player-wiedergabe-bilder.mjs` (iPhone 390 × 844, Duo zugeklappt 382 × 678, quer 867 × 669 und 867 × 587, hoch 669 × 869; sichere Bereiche wie am Gerät) | Player: kleine Schleife 112 × 84 (iPhone, Duo hoch) bzw. 96 × 72 (zugeklappt) läuft, große 273,5 × 205,1 bzw. 164,2 × 123,1 läuft; Übungsinfo nach zwei Durchläufen angehalten mit Symbol (318 × 238,5, 226 × 169,5, 356,8 × 267,6, 408 × 306); Details: Duo quer Animation 356,8 × 267,6 und Muskelkarte 384 × 267,6, Duo hoch 377,4 × 283 und 231,6 × 283 |
+| `HALTUNG=iphone node tools/player-wiedergabe-aufnahme.mjs` | 370 Bilder, 18,2 s: Beinpresse läuft nach dem Start (MP4), Übungsinfo läuft, steht nach zwei Durchläufen am Ende (2,5 s), läuft nach dem Tippen wieder; nach dem Wechsel läuft Bankdrücken |
+| `HALTUNG=duo-quer-streifen node tools/player-wiedergabe-aufnahme.mjs` | 561 Bilder, 22,7 s: Rahmen 164,2 × 123,1 bei Beinpresse, Bankdrücken und Rudern, alle drei laufen; Übungsinfo wie oben. Der erste Versuch spielte die Beinpresse als WebM: Das MP4 meldete einen Fehler, die App wich wie vorgesehen aus (wie im vollen E2E-Lauf beim Kreuzheben). Acht gezielte Starts mit Mitschnitt der Fehler, auch mit Bildschirm, sicherem Bereich und Screencast wie in der Aufnahme: kein Fehler, immer MP4. Zweiter Versuch mit MP4 |
+
+### Wiedergabe in WebKit, Nachtrag 4 · 01.11.2026, Cloud-Umgebung
+
+Zweimal über den ersten Sprung an den Anfang statt über die gespielte Zeit (D-497).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `28b3d53` | Lint, Typen, Unit-Tests, Dokumente, Build, Datenbank und E2E Chromium grün; E2E WebKit 3 fehlgeschlagen, 417 bestanden, 184 übersprungen: Details (Desktop und Handy) nach 20 s nicht angehalten, laut Ereignissen springt WebKit alle 1,93 s bei 1,91 s an den Anfang, `loop` blieb an; Übungsinfo (Handy) nach dem Tippen Suchen an Stelle 0 alle 30 ms, keine Wiedergabe. „Jetzt“ am Duo zugeklappt jetzt grün (Test wie die installierte App) |
+| Dateien geprüft (`ffprobe`, Latziehen und Beinpresse, MP4 und WebM) | je 60 Bilder, 24 je Sekunde, 2,5 s |
+| Unit-Tests `exercise-visual.test.tsx` (2 neu gefasst: zweimal mit Wiederholen; Sprung nur über `seeking`, Ende mit `loop`, kleine Sprünge zählen nicht, Tippen mitten im Durchlauf) | 26 bestanden |
+| Ablauf in Chromium, Details Latziehen | Sprung an den Anfang bei 2,47 s, `loop` danach aus, angehalten am Ende bei 4,97 s, Symbol da |
+| `e2e/uebungen-wiedergabe.spec.ts` (Chromium; neu: erst von selbst bis zum Halt, dann zweimal Tippen auf die angehaltene Animation) | 6 bestanden, 4 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle`; Player-Tests (`player-jetzt`, `duo-player`, `duo-player-befunde`, `uebungen`, `uebungen-details-breit`, `duo-tastatur`, Chromium) | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; Startansicht 238,9 KB, Übungsbilder 52 von 52; Player-Tests 58 bestanden, 40 übersprungen; WebKit in der CI |
+
+### Wiedergabe in WebKit, Nachtrag 5 · 01.11.2026, Cloud-Umgebung
+
+`loop` endet eine halbe Sekunde nach dem ersten Sprung an den Anfang statt im Sprung selbst (D-497).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `7ab9dac` | E2E Chromium, Lint, Typen, Unit-Tests, Dokumente, Build und Datenbank grün; E2E WebKit 3 fehlgeschlagen, 417 bestanden, 184 übersprungen: Details (Desktop, Handy) und Übungsinfo „von selbst nach 20 s nicht angehalten“, laut Ereignissen nach dem ersten Sprung (bei 1,91 bzw. 2,49 s) `seeking`, `waiting`, `seeked` an Stelle 0, danach nichts mehr; `loop` war im Sprung schon aus |
+| Unit-Tests `exercise-visual.test.tsx` (angepasst: `loop` bleibt im Sprung an, endet bei 0,6 s im zweiten Durchlauf) | 26 bestanden |
+| Ablauf in Chromium, Details Latziehen | Sprung bei 2,47 s mit `loop`, angehalten am Ende bei 4,96 s, Symbol da |
+| `e2e/uebungen-wiedergabe.spec.ts`, `player-jetzt.spec.ts`, `uebungen.spec.ts` (Chromium) | 27 bestanden, 11 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 139 Dateien, 1.246 Tests; Startansicht 238,9 KB; WebKit in der CI |
+| CI zu `80e6298` | E2E Chromium, Lint, Typen, Unit-Tests, Dokumente, Build und Datenbank grün; E2E WebKit 3 fehlgeschlagen (dieselben drei Tests), 417 bestanden, 184 übersprungen: Details nach dem ersten Sprung an den Anfang (bei 1,91 bzw. 1,92 s) `seeking`, `waiting`, `seeked`, danach nichts mehr, `loop` an; Übungsinfo nach dem ersten Sprung (bei 2,49 s) Suchen an Stelle 0 alle 20 ms. Offen, siehe D-497 |
+
+### Tests der Wiedergabe mit nachgestelltem Video · 01.11.2026, Cloud-Umgebung
+
+Logik „zweimal, dann anhalten“ in Chromium und WebKit mit nachgestelltem Videoende, echte Wiedergabe nur in Chromium (D-503).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `e2e/uebungen-wiedergabe.spec.ts` (Chromium; neu: Details und Übungsinfo mit nachgestelltem Video, je drei Runden; die Tests mit echten Videos nur noch in Chromium) | 9 bestanden, 5 übersprungen (Desktop-Profil bei den Tests nur fürs Handy) |
+
+### Figur füllt ihren Rahmen · 01.11.2026, Cloud-Umgebung
+
+Beinbeuger, Beinpresse und Rudern am Kabel mit 2 % Rand neu gerendert (D-501).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `tools/uebungen-3d/figur_messen.py beinbeuger_liegend beinpresse rudern_kabel` (Kamera aus `render.py`, jedes zweite Bild, 720 × 540) | Beinbeuger 400,6 px/m (vorher 411,7), Ränder links, oben, rechts, unten 14,4 / 73,2 / 14,4 / 73,2 px (vorher 15,9 / 61,5 / −9,2 / 73,6); Beinpresse 490,3 px/m (vorher 278,8), 14,4 / 12,7 / 14,4 / 12,7 px (vorher 241,4 / 58,3 / 92,7 / 190,0); Rudern 478,2 px/m (vorher 329,9), 112,7 / 10,8 / 112,7 / 11,2 px (vorher 145,1 / 9,8 / 243,8 / 191,4) |
+| Rendern (`render.py`, Blender 4.2, nacheinander, Zeiten UTC) | Beinbeuger 19:03 bis 19:37, Beinpresse bis 20:35, Rudern bis 21:00, jeweils Status 0 |
+| `ffprobe` der neuen Dateien | je 60 Bilder, 24 Bilder/s, 2,5 s, 720 × 540, MP4 (H.264) und WebM (VP9) |
+| Dateigrößen MP4 / WebM / Poster (KB, vorher → nachher) | Beinbeuger 72,8 → 70,5 / 70,5 → 68,6 / 12,1 → 11,6; Beinpresse 63,5 → 91,8 / 52,7 → 72,2 / 15,0 → 17,9; Rudern 56,0 → 78,5 / 48,6 → 66,1 / 13,6 → 16,0; Vorschaubilder unverändert (gleiche Prüfsumme) |
+| `python3 tools/uebungen_medien_version.py` | 9 Dateien mit neuer Prüfsumme im Namen, die alten gelöscht |
+| `pnpm check:docs` | bestanden; 13 Einträge, 52 Dateien mit Prüfsumme im Namen |
+| Sichtprüfung `docs/screens/uebungen/figur-fuellen.webp` und Bilder 0, 15, 30, 45 je Schleife, vorher und nachher | Figur mittig, an keiner Stelle am Rand; Beinpresse mit Fußplatte und Polster, Rudern mit Kabel, Griff und Fußplatte |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 461 bestanden, 151 übersprungen, 0 fehlgeschlagen (18,3 min) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB, Übungsbilder 52 von 52 vorab gespeichert |
+| `pnpm vitest run --maxWorkers=3` (neben der E2E-Suite) | 1.247 von 1.249 bestanden, 2 mit Zeitüberschreitung (5 s): `habits-ui.test.tsx` (5232 ms) und in `player-ui.test.tsx` der Übungstimer (5035 ms); allein: Player 15 bestanden (Übungstimer 2886 ms), Tagesaufgaben 11 bestanden |
+
+### Kopf links im niedrigen Fenster am Duo quer · 01.11.2026, Cloud-Umgebung
+
+Kopf mit Programm, Fortschritt, „Beenden“ und Pause links über der Liste, Animation rechts 336 × 252 px; Öffnen ohne Sprung (D-502).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `tools/player-rahmen-messen.mjs` (`HALTUNGEN=duo-quer,duo-quer-streifen,ipad-quer`, alle elf Übungen mit Satz, Timer und Pause) | Duo quer 867 × 669 und 867 × 587 überall 336 × 252 px, auch mit Timer und in der Pause; iPad 1180 × 820 wie vorher 336 × 252 px |
+| Kopf und Liste, gemessen in Chromium (sicherer Bereich unten 34 px) | Duo quer 867 × 669 und 867 × 587: Kopf 24 bis 144 px (im Satz 120 px hoch), in der Pause 192 px hoch und oben angeheftet; „Als Nächstes“ in der Pause vier bzw. zwei Einträge und „und 2 weitere“, im Satz ausgeblendet. Duo zugeklappt 382 × 678: vorher (`2323765`) Scroll 39 px, erster Satz bis 570 px, Fußleiste ab 567 px; jetzt Scroll 46 px, Satz bis 563 px, „Jetzt“ ab 114 px unter dem Kopf bis 120 px. iPhone 390 × 844: vorher Scroll 13 px, jetzt 0 |
+| Öffnen Bild für Bild (rAF, 2,5 s ab „Training starten“, 867 × 587) | vorher (Kopf links ohne Warten auf die Daten): Kopf bei 24 px, 26 ms später bei 11 px, Scroll 13 px, die erste Karte 13,2 px höher; jetzt ein einziger Stand: Kopf 24 px, Karte 160,2 px, Scroll 0 |
+| `src/modules/training/ui/player/useTwoColumns.test.ts` | 3 bestanden |
+| `pnpm vitest run src/modules/training` | 30 Dateien, 187 Tests bestanden |
+| Player-Suiten E2E (Chromium): `duo-player`, `duo-player-befunde`, `duo-tastatur`, `duo-resize`, `player-jetzt`, `player`, `session-head`, `session`, `training-scroll`, `uebungen-wiedergabe` | 60 bestanden, 44 übersprungen (Desktop-Profil und Tests nur für WebKit); vorher am Stand mit Kopf links und Warten auf die Daten, ohne Zeigen beim Öffnen 2 fehlgeschlagen: `duo-player.spec.ts:40` (Kopf noch rechts erwartet) und `player-jetzt.spec.ts:101` am Duo zugeklappt (Satz bis 609 px, Fußleiste ab 601 px) |
+| `e2e/duo-player.spec.ts` „Öffnen ohne Sprung“ (669 und 587 px) | 2 bestanden |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 461 bestanden, 151 übersprungen, 0 fehlgeschlagen (25,6 min); nach dem letzten Build `duo-player` und `player-jetzt` noch einmal: 9 bestanden, 9 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB |
+| `pnpm test` | erster Lauf neben dem Rendern der Schleifen (Blender) und der E2E-Suite: 6 Dateien, 13 Tests mit Zeitüberschreitung (5 s), auch in nicht geänderten Modulen (Wasser, Tagesaufgaben, Körpergewicht); mit 3 Workern: 139 Dateien bestanden, 1 Test mit Zeitüberschreitung (`habits-ui.test.tsx`, 5089 ms, nicht geändert), allein: 11 bestanden. Zusammen 1.249 Tests, 1.248 im Lauf bestanden |
+
+### Dali’s PPLC · 04.11.2026, Cloud-Umgebung
+
+Programm nach dem Plan des Produktinhabers und neue Übung „High Row an der Maschine“ (D-504).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py --check` | 4 Programme, 116 Trainingstage |
+| `src/modules/training/calc/programs.test.ts` | bestanden: vier Programme in der Reihenfolge Dali’s PPLC, A, B, C; Dali’s PPLC mit 8 Wochen Push, Pull, Beine, Compound, 26 Übungen in der Reihenfolge des Plans mit englischem Namen, Iso Row und High Row als zwei Übungen, Sätze wie in Ganzkörper A/B |
+| Zählung der Bibliothek 124 → 125 (`coreLibrary.test.ts`, `search.test.ts`, `exerciseService.test.ts`, `exercise-library.test.tsx`, `custom-exercises-ui.test.tsx`, `e2e/exercises.spec.ts`), Liste der Programme (`programs-ui.test.tsx`, `sampleTemplates.test.ts`, `e2e/templates.spec.ts`) | angepasst, bestanden |
+| `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.252 Tests bestanden; ein erster Lauf neben der E2E-Suite hatte 7 Zeitüberschreitungen (5 s) in Player, Wasser, Tagesaufgaben und Übungen |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 459 bestanden, 151 übersprungen, 2 fehlgeschlagen (22,1 min): `templates.spec.ts` am Desktop und Handy erwartete drei Programme; nach der Anpassung 2 bestanden. Vorher gezielt Programme, Vorlagen und Bibliothek: 56 bestanden, 26 übersprungen |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 238,9 KB |
+| Sichtprüfung der Programmseite `/training/vorlagen/dalis-pplc` (390 × 844) | Beschreibung, vier Trainingstage mit Sätzen, Zielen, Pausen und englischen Namen, geschätzte Dauer 40 bis 60 min, Ablauf über 8 Wochen |
+| CI zu `85d0960` | Lint, Typen, Unit-Tests, Dokumente, Build, Datenbank und E2E Chromium grün; E2E WebKit 1 fehlgeschlagen, 421 bestanden, 190 übersprungen: `duo-resize.spec.ts:43` „Leseposition auf /training/programme“, „Element auf der Leselinie“ nicht gefunden (auch in der Wiederholung) |
+| Leselinie in einer Lücke (`ScrollManager.test.tsx`, neu) | bestanden; Gegenprobe mit dem alten `ScrollManager.tsx`: rot |
+| Chromium an derselben Stelle (466 × 678, Seite auf halber Höhe gescrollt) | auf der Leselinie Text einer Karte, 36 px darunter eine Lücke zwischen zwei Karten |
+| E2E Chromium zu Scrollen und Leseposition (`duo-resize`, `duo-feste-leisten`, `duo-player`, `duo-safe-area`, `duo-tabbar`, `header-logo`, `marks`, `program-list`, `rahmen-tastatur`, `scrollbars`, `shopping`, `tabbar`, `training-scroll`, `templates`) | 63 bestanden, 35 übersprungen |
+
+### Dali’s PPLC neu · 04.11.2026, Cloud-Umgebung
+
+Satzzahl je Woche, Wiederholen ab Woche 8, Hinweise auf „Heute“, Wochen zum Aufklappen, Einstellung „Wiederholen ab“ im Editor (D-505).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py --check` | „Programme: 4, Trainingstage: 168“; davon Dali’s PPLC 21 Wochen mit 84 Tagen, wiederholen ab Woche 8 (`docs/programs.md`) |
+| `src/modules/training/calc/programs.test.ts` (Dali’s PPLC, 4 Tests neu) | bestanden: Wochen, Wiederholung und Infotext wörtlich; Satzzahl je Woche (2, 2, 3, 4/3 …, leicht 2/1, Einstieg 3/2); englische Namen, Bereiche, Pausen, Wechsel Bench Press und Dip; Hinweise am ersten Tag von Woche 4, der leichten Wochen und der Einstiegswochen danach |
+| `programProgress.test.ts` (neu: Wiederholung ab Woche n) | 16 bestanden |
+| `sampleTemplates.test.ts` (neu: Schema lehnt Wiederholung ohne `repeat` oder ab fehlender Woche ab) | bestanden |
+| `programService.test.ts` (neu: Kopie behält Wiederholung, Wochentage, Hinweise; Bearbeiten speichert ab Woche 2, Woche 1 ohne Feld, nach dem Löschen der Woche wieder Woche 1) | 16 bestanden |
+| `active-program-card.test.tsx` (neu: Hinweis des nächsten Tages, ohne Hinweis kein Feld) | 4 bestanden |
+| `programs-ui.test.tsx` (neu: 21 Wochen zum Aufklappen, offen Woche 2 nach Push der Woche 2, nur 4 Tage auf der Seite, „Als Nächstes“ genau einmal, „Danach geht es mit Woche 8 weiter.“) | bestanden |
+| `own-programs-ui.test.tsx` (neu: „Wiederholen ab“ nur mit Wiederholung, Auswahl speichert Woche 2) | 5 bestanden |
+| `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.262 Tests bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,2 KB; der erste Lauf von `check:docs` fand einen Verweis auf ein noch nicht vergebenes Paket in `decisions.md`, berichtigt |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 465 bestanden, 151 übersprungen, 0 fehlgeschlagen (21,5 min); lief beim Commit `d535296` noch, hier nachgetragen |
+
+### Übungsnamen auf Englisch · 04.11.2026, Cloud-Umgebung
+
+Einstellung „Übungsnamen auf Englisch“, in Dali’s PPLC an; englische Namen für die Suche (D-506).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `sessionService.test.ts` (neu: Einheit aus Dali’s PPLC mit den sieben englischen Namen des Push-Tags; ohne Einstellung deutsch; Programm C deutsch) | bestanden |
+| `programs.test.ts` (neu: nur Dali’s PPLC mit der Einstellung) | bestanden |
+| `programs-ui.test.tsx` (Dali’s PPLC: „Barbell Deadlift“ und „Leverage Machine Iso Row“ als Namen, keine Zeile „Englisch: …“) | bestanden |
+| `programService.test.ts` (Kopie behält die Einstellung; aus und wieder an) | bestanden |
+| `own-programs-ui.test.tsx` (neu: Schalter nur mit englischen Namen, speichert sofort) | 6 bestanden; im ersten vollen Lauf schlug der Test „Wiederholen ab“ aus D-505 fehl (Auswahl zeigte unter Last noch „1“, gespeichert war 2); jetzt wartet er auf die Anzeige, danach 6 bestanden |
+| `search.test.ts` (neu: sechs englische Namen aus Dali’s PPLC; „Machine Squat“ findet Hackenschmidt-Kniebeuge, danach Kniebeuge an der Multipresse) | 10 bestanden |
+| `pnpm vitest run --maxWorkers=3` | 140 Dateien, 1.266 Tests: 1.265 bestanden, 1 fehlgeschlagen (siehe Zeile davor, berichtigt) |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,4 KB |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 465 bestanden, 151 übersprungen, 2 fehlgeschlagen (25,0 min), parallel liefen die Unit-Tests: `start-surface.spec.ts:579` (Startfläche beim schnellen Start, Zeitmessung) und `uebungen-wiedergabe.spec.ts:142` (Schleife startet nach jedem Wechsel). Einzeln wiederholt: die Wiedergabe bestanden, die Startfläche im ersten Lauf wieder rot, im zweiten bestanden. In der CI zu `d8d4992` beide grün, E2E Chromium und WebKit bestanden |
+
+### Unterstützung als Fortschritt · 04.11.2026, Cloud-Umgebung
+
+Weniger Unterstützung ist Fortschritt, Wort „Unterstützung“, Knöpfe ±, Hinweis im Fortschritt, Ziel und Alternativen bei Dip und Pull-Up (D-507).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `alternatives.test.ts` (neu: Ziel und ausdrückliche Alternativen zuerst, Gerätefilter, Obergrenze) | 4 bestanden |
+| `coreLibrary.test.ts` (neu: Ziel und Alternativen bei Dips und Klimmzügen mit Unterstützung; Prüfung lehnt unbekannte Schlüssel und Verweise auf sich selbst ab) | bestanden; erster Lauf rot, weil der Test im falschen Block stand (`exercises` dort nicht bekannt), berichtigt |
+| `stats.test.ts` (neu: Bestleistung mit der geringsten Unterstützung, neue Bestleistung, Verlauf der Unterstützung) | 10 bestanden |
+| `progress-ui.test.tsx` (neu: Bestleistung „−25 kg × 8“, Überschrift „Unterstützung im besten Satz“, Hinweis, kein 1RM) | 4 bestanden; erster Lauf rot, weil die Seite noch lud (Test wartet jetzt auf die Karte) |
+| `player-ui.test.tsx` (neu: Knöpfe „Unterstützung + 2,5“ und „− 2,5“, beim Ersetzen zuerst Klimmzüge mit „Ziel“, dann Latziehen) | bestanden |
+| `pnpm vitest run --maxWorkers=2` (parallel zur E2E-Suite von D-506) | 140 Dateien, 1.273 Tests: 1.271 bestanden, 2 mit Zeitüberschreitung (5 s): `habits-ui.test.tsx` und `player-ui.test.tsx` „speichert Eingaben verzögert“; nicht geändert. Ohne Last wiederholt: 27 bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs`, `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; WebKit in der CI) | 468 bestanden, 151 übersprungen, 1 fehlgeschlagen (24,1 min), parallel liefen Probeläufe in Blender: `start-surface.spec.ts:579` (Zeitmessung der Startfläche); allein wiederholt bestanden. In der CI zu `e92e490` E2E Chromium und WebKit bestanden |
+
+### Animationen für Dali’s PPLC: Liste und Prüfseite Pull-Up · 04.11.2026, Cloud-Umgebung
+
+Liste nach Familien, Animationsplan mit Dali’s PPLC, Prüfseite „Senkrechtes Ziehen“ mit Klimmzügen mit Unterstützung an der neuen Gegengewichtsmaschine (D-508). Nur Werkzeug, Bilder und Dokumente; die App ist unverändert.
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/uebungen_animationsplan.py --check`, `python3 tools/uebungen_familien.py --check` | Plan mit Dali’s PPLC als zweitem Programm: 19 Übungen in 10 Familien; Familien aktuell |
+| Probelauf `uebungen.KlimmzugUnterstuetzt` (Aufbau und drei Phasen) | gebaut in 60 s, Ellbogen unten 165°, oben Hals auf Höhe der Griffe, keine Meldung des Rigs; Polster erst 0,5 statt 4 mm eingedrückt (das neue Netz lag neben der Fläche des Kastens), danach wie beim Schulterdrücken nachgeführt: 4,0 mm |
+| Vergleich der Griffhaltung (je Fassung sieben Phasen) | 20° Schräge wie beim Latziehen: Handgelenk −22,4° bis +4,7°; Griffe nach außen 15° und 25° abfallend: bis −47,9°; 15° und 25° ansteigend: bis +33,3°; 10°: −10,7° bis +16,0°; 12°: −13,0° bis +13,7°; 12° mit Unterarm 10° nach außen: −7,8° bis +14,3°; 15° mit 15°: −4,7° bis +13,3°; gewählt 14° mit 10°: −9,9° bis +12,1° |
+| `render.py klimmzug_unterstuetzt --pruefen` (60 Bilder) | Messwerte in `form-programme-report.md` 49.5: Handgelenk −10,2° bis +12,1°, Polster 4,0 mm, nichts durch die Oberfläche, Kopf ≥ 190,7 mm, Arme ≥ 77,9 mm, Körper, Kleidung und Schuhe ≥ 66,0 mm von der Maschine, Kleidung ohne Durchdringung, 0 Meldungen des Rigs |
+| Prüfansichten angesehen | vorn und von der Seite in allen fünf Phasen wie erwartet; **Fehler:** Die Ansicht „Kamera der App“ zeigte in jeder Phase die Ausgangslage (Kamera mit „Füllen“ ging die Schleife durch und ließ die Figur im letzten Bild stehen). Behoben in `render.py`, die Ansicht neu gerendert |
+| Nahaufnahmen (`familie_bilder.py`, `render.py --pruefen`) | Griff von vorn und von hinten, Fuß von außen und von hinten, je Ausgang und Endposition; die Ansicht des Griffs von außen zeigte die Hand hinter dem Griffhalter, ersetzt durch die Ansicht von hinten |
+| Kameravergleich 135°, 160°, 110° und 45° (`docs/screens/uebungen/senkrechtes-ziehen-kameras.webp`) | 135° wie beim Latziehen gewählt |
+| Prüfseite `docs/screens/uebungen/familie-senkrechtes-ziehen.webp` | zusammengesetzt und angesehen |
+| `pnpm format:check`, `pnpm check:docs` | bestanden |
+
+### Klimmzüge mit Unterstützung in der App · 04.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Endlage gemessen, Griffe 14 statt 3 cm vor den Schultern, Schleife und Eintrag in der App (D-509).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Endlage mit den Werten der Prüfseite (Messskript, Ohr und Brust am Netz) | Ohr oben 23,2 cm über dem Schultergelenk, im Stand 22,3 cm (Schultern unten); Brust oben 10,0 cm vor der Linie der Griffe |
+| Vergleich Griffe vor den Schultern und Rücklage (je alle Phasen): 3 cm/15°, 10 cm/15°, 14 cm/15°, 10 cm/22°, 14 cm/22° | Brust oben −10,0, −3,0, +1,1, −0,6 und +3,5 cm hinter der Linie (unter 0 davor); Handgelenk mit 14 cm/15° 5,1° bis 13,2°, mit 22° Rücklage bis 16,1°; gewählt 14 cm und 15° |
+| `render.py klimmzug_unterstuetzt --pruefen` (60 Bilder) mit den neuen Zeilen der Prüfseite | Ohr über dem Schultergelenk 15,7 → 23,2 cm (Stand 22,3 cm), Brust oben 1,1 cm hinter der Linie der Griffe, Halsgrube 7,1 cm darunter, Hüfte 0 bis 4,3 cm vom Turm weg und zurück, Mitte des Körpers 10,7 → 16,3 → 15,3 cm hinter der Linie, Lehne gleichmäßig 5° → 15°; Ellbogen 165,0° → 55,1°, Handgelenk 5,0° bis 13,2°, Polster 4,0 mm, nichts durch die Oberfläche, Kopf ≥ 235 mm, Arme ≥ 77 mm, Körper ≥ 66 mm von der Maschine, Kleidung ohne Durchdringung, 0 Meldungen des Rigs |
+| Prüfansichten und Nahaufnahmen (`familie_bilder.py`) angesehen | Hand um den Griff, Handgelenk gerade, oben Kinn über den Griffen und Brust darunter; Vergleichsbild `docs/screens/uebungen/klimmzug-oben-vergleich.webp` |
+| `render.py klimmzug_unterstuetzt` (60 Bilder, 720 × 540, 40 Proben) | 1324 s für 60 Bilder, mit Aufbau und Kodieren 1401 s; MP4 66,3 KB, WebM 57,3 KB, Poster 9,8 KB, Vorschau 4,8 KB; erstes und letztes Bild pixelgleich; Kontaktbogen angesehen |
+| Aufnahme (`uebungen_bewegung.py klimmzug klimmzug_unterstuetzt`) | 720 × 540, 7,5 s, 144 KB, die Schleife dreimal; angesehen |
+| `python3 tools/exercise_inventory.py`, `tools/uebungen_animationsplan.py`, `tools/uebungen_familien.py` | Bestand: mit Visual 14; Animationsplan mit „Schleife in der App (D-509)“ |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:docs` (mit `check_medien.py`), `pnpm build`, `pnpm check:bundle` | bestanden; Unit-Tests 140 Dateien, 1.273 Tests; „public/uebungen/medien.json: 14 Einträge geprüft“; Startansicht 239,7 KB, Übungsbilder 56 von 56 |
+| `pnpm test:e2e` (Chromium, nach `pnpm build`; Blender ruhte; WebKit in der CI) | 469 bestanden, 151 übersprungen, keiner fehlgeschlagen (20,9 min); der geänderte Test der Übungsliste (14 Vorschaubilder, dazu die Klimmzüge mit Unterstützung) bestanden |
+
+### Prüfseite Dips mit Unterstützung · 04.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Dip an derselben Gegengewichtsmaschine wie der Pull-Up, Diparme neu; nur Werkzeug, Bilder und Dokumente (D-510).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probelauf `uebungen.DipUnterstuetzt` (drei Phasen, Diparme 62 cm, Oberkörper 4° → 16° vor, Oberarm unten waagrecht) | Polster 99,3 → 72,9 cm, Hand 17,4 cm weit auf dem 24-cm-Griff (Arm danach 67,5 cm lang); unten Ellbogen 71,5°, Unterarm 18,7° schräg, Handgelenk höchstens 11,6°; keine Meldung des Rigs |
+| Zweiter Probelauf (Oberkörper 5° → 24° vor, Schlüsselbeine −6° → −3°) | unten Ellbogen 77,6°, Unterarm 12,6°; Ohr senkrecht über dem Schultergelenk unten 19,1 cm (Stand 22,3 cm) täuschte wegen der Vorneigung, darum der Messwert längs des Rumpfs |
+| Dritter Probelauf (Oberarm unten 3° unter der Waagrechten), fünf Phasen, Abstand zu den Diparmen | unten Ellbogen 80,3°, Unterarm 12,8°; Ohr längs des Rumpfs 24,3 → 23,3 cm (Stand 22,4 cm); Rumpf mindestens 95 mm, Arme 105 mm von den Diparmen |
+| Kameravergleich 135°, 115°, 95°, 160° (`docs/screens/uebungen/waagrechtes-druecken-dip-kameras.webp`) | 115° gewählt: Tiefe, Ellbogen und Vorneigung, beide Arme |
+| `render.py dip_unterstuetzt --pruefen` (60 Bilder), `familie_bilder.py dip_unterstuetzt` | Messwerte in `form-programme-report.md` 51.1: Ellbogen 172,0° → 80,3°, Handgelenk höchstens 9,7°, Knie 4,0 mm im Polster, nichts durch die Oberfläche, Kleidung ohne Durchdringung, 0 Meldungen; 553 s und 99 s |
+| Prüfansichten und Nahaufnahmen angesehen | von der Seite, von vorn (Turm ausgeblendet) und in der Kamera der App wie erwartet; Hand um den Gummigriff von außen und von hinten |
+| Prüfseite (`tools/uebungen_pruef_bild.py dip_unterstuetzt --familie waagrechtes-druecken-dip --titel "Waagrechtes Drücken (Dali’s PPLC)"`) | `familie-waagrechtes-druecken-dip.webp`, angesehen |
+| Pull-Up nach dem Umbau (`render.py klimmzug_unterstuetzt --pruefen --nur-messwerte`, 60 Bilder) | alle Messwerte gleich wie in D-509 (größter Unterschied 0,000000) |
+| `pnpm format:check`, `pnpm check:docs` | bestanden |
+
+### Prüfseite Hackenschmidt-Kniebeuge · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Machine Squat an einer neuen Hackenschmidt-Maschine; nur Werkzeug, Bilder und Dokumente (D-511).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erster Probelauf (Bein im Ausgang 16° vor der Senkrechten, Platte 20°) | unten Knie 75°, aber Knie 23,1 cm vor der Zehenspitze und Sprunggelenk 75,3° gebeugt; Handgelenk 75°; tiefste Delle 98,8 mm |
+| Fußstellung gerechnet (Platte 10°, 15°, 20°; Bein 36° bis 48°; Knie unten 75°, 80°, 85°) | gewählt Platte 15°, Bein 44°: gerechnet Sprunggelenk oben 22,9° gestreckt, unten 25,0° gebeugt, Knie 12 cm hinter den Zehen |
+| Zweiter Probelauf mit Bein 44°, Platte 15° | Knie 168° → 75°, Hüfte 174,9° → 130,6°, Sprunggelenk −23,0° → +21,9°, Knie unten 3,2 cm hinter der Zehenspitze |
+| Rücken am Polster in zwölf Fassungen (Lende 20° bis 40°, Drehung zur Lehne 0° bis 12°, Brustkorb, Kopf) | gewählt Lende 35°, Drehung 9°: Gesäß 21,1 mm (mit 25° 33,0 mm), oberer Rücken 6,6 mm, Haare 2,8 mm; ohne Drehung bis 110 mm Haare im Polster; Haare bis 9,0 cm von der Mitte |
+| Griffe in 15 Fassungen (Lage und Achse) | Achse vom Polster weg: Handgelenk 33° bis 72°; gewählt 20 cm unter dem Schultergelenk: Ellbogen 48,8°, Handgelenk 8,6° |
+| Delle je Polster | Rückenpolster 36,7 bis 38,4 mm (Shorts am Gesäß), Schulterpolster 10,4 mm; vorher stießen die Haare in die Schulterpolster |
+| Kameravergleich 45°, 60°, 75°, 90° (`docs/screens/uebungen/kniebeuge-hackenschmidt-kameras.webp`) | 60° gewählt |
+| `render.py hackenschmidt --pruefen` (60 Bilder) | Socke mit einem Loch: mit festen Strahlen bei geneigtem Fuß falsch gemeldet; die Prüfung dreht jetzt mit (`fuss_gedreht`), danach 0. Arme 0,8 mm an einem Griffhalter: Halter neu geführt, danach 50,7 mm |
+| `render.py hackenschmidt --pruefen` neu (der erste Lauf brach mit dem Neustart der Umgebung ab, wiederholt), `familie_bilder.py hackenschmidt` | Messwerte in `form-programme-report.md` 51.2: Knie 168,0° → 75,0°, Sohlen flach, Rücken am Polster, nichts durch die Oberfläche, Kleidung ohne Durchdringung, 0 Meldungen |
+| Prüfansichten und Nahaufnahmen angesehen | von der Seite, von vorn und in der Kamera der App wie erwartet; Hand um den Griff, Fuß flach auf der Platte |
+| Prüfseite (`tools/uebungen_pruef_bild.py hackenschmidt --familie kniebeuge-hackenschmidt --titel "Kniebeuge (Dali’s PPLC)"`) | `familie-kniebeuge-hackenschmidt.webp`, angesehen; „Füße auf der Platte verschoben 332,7 mm“ war der Weg des Schlittens (gemessen am Leerobjekt `schlitten` wie bei der Beinpresse), Attribut in `wagen` umbenannt, neu gemessen (`--nur-messwerte`): 0,1 mm, alle übrigen Werte gleich, Prüfseite neu zusammengesetzt |
+| `pnpm format:check`, `pnpm check:docs` | bestanden |
+
+### E2E „Player aufgeklappt“ am Duo robust · 05.11.2026, Cloud-Umgebung
+
+Abfragen der Lage im Test warten, statt beim Umbau des Players abzubrechen (D-512).
+
+| Nachweis | Ergebnis |
+|---|---|
+| CI zu `1027d78`, E2E Chromium | 1 fehlgeschlagen: `duo-player.spec.ts` „Player aufgeklappt …“ (Handy), Lauf und Wiederholung „Error: nicht sichtbar“; 468 bestanden, 151 übersprungen. Zu `ec5f498` (gleicher App-Code) grün |
+| Quelltext Playwright 1.64.1 (`invokePollMatcher`) | die Abfrage von `expect.poll` steht vor dem `try`: ein Fehler darin beendet die Abfrage sofort |
+| Nachgestellt (Element erscheint nach 0,5 s) | mit `box`: Fehler nach 72 ms; mit `lage`: bestanden nach 907 ms |
+| `pnpm test:e2e e2e/duo-player.spec.ts --repeat-each=3` (Chromium) | 15 bestanden, 15 übersprungen (WebKit nur in der CI) |
+| `pnpm lint` für die Datei, `pnpm typecheck`, `pnpm format:check`, `pnpm check:docs`, `pnpm check:bundle`, `pnpm test:e2e` (Chromium) | bestanden; Startansicht 239,7 KB, Übungsbilder 56 von 56; E2E Chromium 469 bestanden, 151 übersprungen, 0 fehlgeschlagen (14,4 min); WebKit in der CI |
+
+### Dip und Machine Squat in der App, Pull-Up neu · 05.11.2026, Cloud-Umgebung
+
+Schleifen für Dips mit Unterstützung und Hackenschmidt-Kniebeuge, Pull-Up mit den schwenkbaren Diparmen neu, Text der Hackenschmidt-Kniebeuge an die Animation angepasst (D-513).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `render.py dip_unterstuetzt`, `render.py hackenschmidt`, `render.py klimmzug_unterstuetzt` (nacheinander, Stand der Prüfseiten D-510 und D-511) | 1082 s, 1189 s, 1103 s für je 60 Bilder, 720 × 540; erstes und letztes Bild pixelgleich (Unterschied 0,0), Kontaktbogen angesehen |
+| `python3 tools/uebungen_medien_version.py` | 12 Dateien mit Prüfsumme im Namen, die vier alten Dateien des Pull-Ups gelöscht |
+| Einträge `assisted_dip`, `hack_squat` in `public/uebungen/medien.json` | Alternativtexte 216 und 231 Zeichen |
+| `tools/uebungen_bewegung.py` (dip, hackenschmidt, klimmzug) | je 720 × 540, 7,5 s; 136 KB, 186 KB, 145 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py`, `uebungen_animationsplan.py`, `exercise_library_to_md.py --check`, `feature_inventory_to_csv.py` | Visuals 16; Plan mit dem neuen Stand; Texte aktuell; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 64 von 64 Dateien |
+| `pnpm test:e2e` (Chromium, Blender ruhte) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 14,4 min; Übungsliste mit 16 Bildern |
+
+### Prüfseite „Beine isoliert“ mit vier neuen Maschinen · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Beinstrecker, Beinbeuger sitzend, Wadenheben stehend und sitzend; nur Werkzeug, Bilder und Dokumente (D-514).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Beinstrecker (drei Phasen, drei Ansichten) | erster Lauf: Sitzkante in den Waden (Unterschenkel 2,1 mm im Sitz), das Verschieben des Polsters setzte den Sitz 53 mm zu tief; jetzt Vorderkante aus den Waden gerechnet: Gesäß und Rücken 4,0 mm, Rolle −1,0 mm, Kniegelenk 0,0 mm von der Drehachse |
+| Griffe des Beinstreckers unter 17 Richtungen und drei Ellbogenrichtungen | längs nach vorn: Handgelenk 52,6°; gewählt waagrecht, 41° zur Mitte gedreht: 1,0° |
+| Probelauf Beinbeuger sitzend | Knie 172° → 60°, Oberschenkelpolster −2,0 bis −2,9 mm, Rolle −1,0 mm, Fußspitzen 11,5° angezogen |
+| Probeläufe Wadenheben stehend (Fuß auf der Kante) | Bogen am Ballen je 5° gemessen, Vorfuß starr (Abweichung 0,0 mm); ohne Ausgleich der gebogenen Schuhspitze lag die Sohle oben 3,4 mm über dem Block, mit Ausgleich 0,0 bis 0,9 mm |
+| Griffe Wadenheben stehend in vier Lagen, 12 bis 13 Richtungen, zwei bis drei Ellbogenrichtungen | neben den Polstern (wie Hackenschmidt) Handgelenk 52°, vor den Schultern Ellbogen unter 37°; gewählt quer vor der Brust: Ellbogen 57°, Handgelenk 2,9° |
+| Probeläufe Wadenheben sitzend | Kastenpolster mit flachen Händen: Delle 66 bis 100 mm, weil das Eindrücken die Hände durch das Polster fand; Shorts 6,4 cm über der Haut ab 14 cm hinter dem Knie; jetzt Rolle auf der Haut davor, Griffe an den Enden (12 Richtungen, drei Ellbogenrichtungen: Handgelenk 6,0°); Hebelachse so, dass die Rolle in Richtung der Oberschenkel läuft: gleitet 2,0 statt 35,7 mm |
+| `render.py <übung> --pruefen` und `familie_bilder.py` für alle vier | 6 min 6 s, 6 min 31 s, 5 min 42 s, 6 min 1 s; Nahaufnahmen je etwa 45 s |
+| Beinbeuger sitzend über alle 60 Bilder | Schuhe in Bild 20 und 43 0,08 mm am Längsträger: Sohle bei 90° 9 statt 6 cm über dem Boden, Beinstrecker und Beinbeuger neu geprüft: Schuhe mindestens 24,6 und 19,2 mm vom Gerät |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | keine; nur Rauschen unter 1 mm bei Sohle und Ösen |
+| Messwerte | in `form-programme-report.md` 54.1; 0 Meldungen des Rigs |
+| Prüfansichten und Nahaufnahmen angesehen | in der Kamera der App, von der Seite und von vorn wie erwartet; Hände an den Griffen, Rolle an Schienbein oder Wade, Ferse unter und über dem Block |
+| Prüfseite (`tools/uebungen_pruef_bild.py beinstrecker beinbeuger_sitzend wadenheben_stehend wadenheben_sitzend --familie beine-isoliert-pplc --titel "Beine isoliert (Dali’s PPLC)"`) | `familie-beine-isoliert-pplc.webp`, 1480 × 6086, angesehen; zwei doppelte Zeilen der Messwerte entfernt |
+
+### Prüfseite „Arme beugen und strecken“ · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Bizepscurls, Hammercurls und Trizepsdrücken am Kabel an einem neuen Kabelzug; nur Werkzeug, Bilder und Dokumente (D-515).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Curls (drei Phasen) | Ellbogen zuerst ohne Richtung nach unten: Oberarm 80° zur Seite; mit Richtung nach unten und etwas hinten: Oberarm oben 24° vor der Senkrechten, Unterarm 16° davor; Köpfe der Hanteln unten mindestens 12 mm vor Haut und Kleidung (Oberarm zur Seite gesucht) |
+| Probeläufe Trizepsdrücken | Oberarm längs des vorgeneigten Rumpfs: Stange unten in den Oberschenkeln; Oberarm senkrecht: Stange 31 mm vor den Shorts; unten mit 172° war das Handgelenk nicht erreichbar, jetzt Ziel 164° (gemessen 178°, die Hände liegen enger als die Schultern) |
+| Kameravergleich Trizepsdrücken 30°, 60°, 75°, 90°, 105° | 75° gewählt: Gesicht, beide Arme und das Kabel, die Säule nicht davor |
+| `render.py bizepscurl_kh --pruefen` (erster Lauf), Sprünge in den Messwerten | Bild 6 und 55: Ellbogen 178,4° statt etwa 163°, Hand 8,7 mm vom Ziel; mit 165° unten Bild 4 und 56 noch 178,4° |
+| Ursache | die freie Suche der Drehung der Hand um den Griff wechselte beim Nachführen des Griffs nahe der Streckung in eine zweite Lösung; jetzt einmal gesucht, dann fest: Ellbogen in 31 Phasen stetig 165,0° → 40,0°, Handgelenk höchstens 7,5°, Hand 0,0 mm vom Ziel |
+| `render.py trizepsdruecken_kabel --pruefen` (erster Lauf) | Sohlen 13,8 mm im Boden: `_griffe` setzte das Rig nach den Beinen zurück; Reihenfolge getauscht, Sohlen 0,0 mm |
+| Nahaufnahmen der Stange | von vorn (15°) standen oben Säule und Gewichtsblock vor den Händen (Bild schwarz); jetzt schräg von vorn (60°) und von hinten (135°), beide verglichen und angesehen |
+
+### Beine isoliert in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-514: Wadenheben mit mehr Bewegungsweite, Text Wadenheben sitzend, vier Schleifen in der App (D-516).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Wadenheben stehend, Winkel unten 12° bis 24° und oben 25° bis 45° (je Probe Ferse, Kragen, Socke, Fuß im Schuh) | Ferse 5,5 cm unter dem Block bei 18°, 6,1 cm bei 20°; Innenseite des Kragens über der Socke bis 40° (0,46 mm), bei 45° −0,46 mm |
+| Wadenheben sitzend, ebenso (Maschine noch zu den Winkeln aus D-514) | Ferse 5,4 cm bei 20°; Kragen bis 35° darüber (0,09 mm), bei 40° −0,57 mm |
+| Nahaufnahmen des Fußes unten (18°, 19°, 20°) und oben (35° bis 42°), stehend und sitzend | sauber; oben biegt sich der Schuh am Ballen, die Zwischensohle wirft dort eine Falte |
+| `render.py wadenheben_stehend --pruefen --nur-messwerte` mit 40° oben | Polster am Kragen über der Socke −0,17 mm ab Bild 27 (−39,6°), 0,0 mm bei −39,0°: oben jetzt 38° |
+| `render.py wadenheben_sitzend --pruefen --nur-messwerte` mit 34° oben | Polster am Kragen −0,57 mm, 0,0 mm bei −30,6°: oben jetzt 29° |
+| Endmessung stehend (18° → −38°) über alle 60 Bilder | Ferse −5,47 bis +9,19 cm, Schuh am Ballen bis 34,2°, Kragen mindestens 0,69 mm, Polster am Kragen mindestens 0,22 mm, Sohle 0,01 bis 0,87 mm über dem Block, Fuß und Socke im Schuh, 0 Meldungen |
+| Endmessung sitzend (20° → −29°) über alle 60 Bilder | Ferse −5,43 bis +6,60 cm, Schuh am Ballen bis 24,3°, Kragen mindestens 0,73 mm, Polster am Kragen mindestens 0,23 mm, Sohle 0,02 bis 0,91 mm, Gesäß im Sitz 4,0 bis 18,5 mm, Kniepolster gleitet bis 3,6 mm, 0 Meldungen |
+| `render.py beinstrecker`, `beinbeuger_sitzend`, `wadenheben_stehend`, `wadenheben_sitzend` (nacheinander, neben den Prüfläufen für die nächsten Prüfseiten) | 3276 s, 3229 s, 2622 s, 2409 s für je 60 Bilder, 720 × 540; erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Einträge `leg_extension`, `seated_leg_curl`, `standing_calf_raise`, `seated_calf_raise` in `public/uebungen/medien.json` | Alternativtexte 215, 236, 219, 235 Zeichen (Beinbeuger zuerst 267 Zeichen, gekürzt) |
+| `python3 tools/uebungen_medien_version.py` | 16 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py beine-isoliert-pplc …` | 1440 × 270, 7,5 s, 177 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 20; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck` | bestanden |
+| `pnpm check:docs` | erster Lauf: zwei Verweise auf noch nicht eingetragene Entscheidungen in dieser Tabelle, berichtigt; dann bestanden (Bildliste: 20 Einträge, 80 Dateien mit Prüfsumme) |
+| `pnpm test` (Blender angehalten) | 140 Dateien, 1273 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 80 von 80 Dateien |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 22,1 min; Übungsliste mit 20 Bildern |
+
+### Prüfseite „Waagrechtes Ziehen“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Rudern mit Langhantel, Rudern an der Maschine und High Row an einer neuen Rudermaschine; nur Werkzeug, Bilder und Dokumente (D-518).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Kameravergleich Rudern mit Langhantel (30° bis 90°) | ab 60° verdeckt die nahe Scheibe den Körper; gewählt 45° |
+| Probeläufe Rudern mit Langhantel | Handgelenk unten 22° zur Seite mit der Stange quer in der Hand; schräg (11°, D-452): höchstens 11,2° |
+| Probeläufe Rudern an der Maschine | Ellbogen nach innen (Vorzeichen der Drehung berichtigt); Brustpolster beim Einpassen von Oberschenkeln und Armen 7 cm verschoben (höher, nur Punkte der Brust); Fußspitzen im Turm (Turm vor die Füße); Handgelenk 40 bis 55° an festen Griffen (drehbare Griffe, Griff 14° schräg in der Hand: 3,5°); Ellbogen am Ende 52° (Oberarm 15° statt 22° hinter dem Rumpf: 73°) |
+| Probeläufe High Row | Ausgang 178° im Ellbogen (Suche nach dem Handgelenk statt nach der Entfernung: 166°); Hebel 0,80 m: Griff in der Mitte nah am Gesicht, 1,30 m |
+| `render.py <übung> --pruefen` und `familie_bilder.py` für alle drei | je 60 Bilder, 0 Meldungen außer beim Rudern an der Maschine (unten); mit Nahaufnahmen 15, 19 und 18 min, neben den Schleifen |
+| Rudern an der Maschine, erster Lauf | 22 Meldungen „Handgelenk nicht erreichbar“ aus Zwischenschritten der drehbaren Griffe; verworfen, `--nur-messwerte` neu: 0 Meldungen |
+| Kleiner Würfel oben links in `pruef-vorn-1.00` der High Row | Platte am Hebelende doppelt verschoben (`_kasten` legt die Lage ins Netz, die Matrix verschob sie noch einmal); nachgerechnet in Kamera der App, von der Seite und von vorn: High Row in 7 bzw. 27 Bildern der Nebenansichten, auf den Bildern der Prüfseite nie; Rudern an der Maschine nie; Schulterpresse (D-492) in keinem der 60 Bilder der Schleife; Platte an beiden Geräten entfernt |
+| Fuß aus der Nähe beim Rudern an der Maschine | von vorn steht der Turm davor; auf der Prüfseite jetzt von außen und von hinten |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | keine; High Row: Ellbogen 54° in der Mitte des Zugs, am Ende 59° (stetig) |
+| Messwerte | in `form-programme-report.md` 56.1 |
+| Prüfseite (`tools/uebungen_pruef_bild.py rudern_langhantel rudern_maschine high_row_maschine --familie waagrechtes-ziehen-pplc --titel "Waagrechtes Ziehen (Dali’s PPLC)"`) | `familie-waagrechtes-ziehen-pplc.webp`, 1480 × 4744, angesehen |
+
+### Prüfseite „Schulter und Brust isoliert“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Fliegende am Kabel an einem neuen Kabelturm und Reverse Butterfly an der Maschine; nur Werkzeug, Bilder und Dokumente (D-519).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Fliegende | Säulen 30 cm hinter den Schultern: Kabel am Ende 0,06 mm am Unterarm, in der Ebene der Schultern 7,6 mm; Kabel zur Kleidung −209 mm aus weit entfernten Flächen (nur noch 5 cm weit gesucht) |
+| Probeläufe Reverse Butterfly | Ellbogen 149° → 166° mit beweglichen Schlüsselbeinen (fest: 165° in jedem Bild); Brustpolster von den Armen verschoben (tiefer); Handgelenk 16° am senkrechten Griff (14° schräg in der Hand: 0,3°) |
+| `render.py fliegende_kabel --pruefen` (erster Lauf) | Streben des D-Griffs bis 4,8 mm in Handgelenk und Unterarm (Kleinfingerseite, ab etwa 3/4 des Wegs); nahe Säule verdeckt von der Seite den Körper; Kabel zur Kleidung 1000 mm (nichts in 5 cm) |
+| Streben gegen Handgelenk, Proben | Öse 13 bzw. 15 cm statt 10: −5,2 / −1,9 mm; Griff ±10° schräg in der Hand: −3,5 bzw. −5,0 mm; Griff um die Stange gekippt, 20°: −0,1 mm; gewählt: je Bild so wenig gekippt, bis die Streben 1 mm vor der Haut liegen |
+| Erste Fassung des Kippens | wirkte nicht: Der Körper war noch in der Haltung des vorigen Bildes (`rig.anwenden` nach `haltung`); jetzt nach `Uebung.setzen` |
+| `render.py fliegende_kabel --pruefen` (zweiter Lauf) | Streben 1,0 mm, Griff bis 21,4° gekippt; am Ende berührten sich die Hände (0,1 mm) und die beiden D-Griffe lagen 12,9 mm ineinander |
+| Ende der Griffe 7,5 / 9 cm neben der Mitte (statt 6) | Griffe zueinander 31 / 75 mm; gewählt 7,5 cm |
+| `render.py reverse_butterfly --pruefen` (erster Lauf) | Brustpolster unten 2 cm in den Oberschenkeln (20 Punkte der Haut im Polster, die Delle zum Schein 99,7 mm); Winkel des Ruderns sprang von −109° auf +109° |
+| Brustpolster des Butterfly 24 cm hoch, Mitte bei 0,615 | 3,0 cm über den Oberschenkeln, 2,7 cm unter den Armen, Delle 4,0 mm |
+| `render.py <übung> --pruefen` und `familie_bilder.py`, letzte Läufe | je 60 Bilder, 0 Meldungen; mit Nahaufnahmen 13 und 18 min, neben den Schleifen |
+| Sprünge in den Messwerten (alle 60 Bilder) | keine |
+| Messwerte | in `form-programme-report.md` 56.2 |
+| Prüfseite (`tools/uebungen_pruef_bild.py fliegende_kabel reverse_butterfly --familie schulter-brust-pplc --titel "Schulter und Brust isoliert (Dali’s PPLC)"`) | `familie-schulter-brust-pplc.webp`, 1480 × 3162, angesehen; Bildunterschriften der D-Griffe und eine zu lange Unterschrift berichtigt |
+
+### Arme in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-515: Trizepsdrücken mit festen Ellbogen, Hammercurls abwechselnd in einer doppelt langen Schleife, Bizepscurls gleichzeitig; drei Schleifen in der App (D-517).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Trizepsdrücken, Ellbogen fest (`render.py trizepsdruecken_kabel --pruefen --nur-messwerte`, alle 60 Bilder) | Ellbogen 0,0 mm vom festen Punkt, 0,0 mm nach vorn und oben längs des Rumpfs, Oberarm 21,4° vor dem Rumpf in jedem Bild, Ellbogen am Rumpf 6,7 bis 12,2 mm (Haut zu Haut), Ellbogen 48° → 176°, Oberarm 4,8 bis 17,1° um die Längsachse gedreht, Handgelenk höchstens 8,7°, Hand am Ziel 0,0 mm, Stange 141,6 cm über dem Boden oben, Kabel mindestens 41 mm von Kopf und Haaren, 0 Meldungen |
+| Hammercurls abwechselnd (`render.py hammercurl_kh --pruefen --nur-messwerte`, alle 120 Bilder) | Ellbogen links und rechts 165° → 40°, Handgelenk höchstens 3,6°, Hand am Ziel 0,0 mm, Köpfe der Hanteln mindestens 11,5 mm vor Haut und Kleidung, 0 Meldungen |
+| `render.py trizepsdruecken_kabel`, `bizepscurl_kh`, `hammercurl_kh` (nacheinander) | 3014 s (davon rund 25 min angehalten, während die E2E-Tests von D-516 liefen), 1273 s und 2651 s für 60, 60 und 120 Bilder, 720 × 540; erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Größe der Hammercurls mit der üblichen Kodierung (H.264 CRF 24, VP9 CRF 36) | MP4 48,6 KB, WebM 40,9 KB, Poster 6,6 KB, Vorschau 2,8 KB, zusammen 98,9 KB (Ziel rund 120 KB): keine stärkere Kodierung nötig; die dafür vorbereitete Angabe je Übung wieder entfernt |
+| Einträge `triceps_pushdown_cable`, `biceps_curl_dumbbell`, `hammer_curl` in `public/uebungen/medien.json` | Alternativtexte 209, 211, 216 Zeichen |
+| `python3 tools/uebungen_medien_version.py` | 12 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py arme-pplc …` (dreimal die längste Schleife, kürzere entsprechend öfter) | 1440 × 360, 15 s, 268 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 23; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden (Bildliste: 23 Einträge, 92 Dateien mit Prüfsumme) |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 92 von 92 Dateien |
+| `pnpm test:e2e` (Chromium, Blender fertig) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 20,1 min; Übungsliste mit 23 Bildern |
+
+### Waagrechtes Ziehen in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-518: Rumpf und Lende beim Rudern mit Langhantel über die ganze Bewegung, Ausführungstext der High Row nach ExRx und die Animation daran angeglichen; drei Schleifen in der App (D-520).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Rudern mit Langhantel, Rumpf und Lende (`render.py rudern_langhantel --pruefen --nur-messwerte`, alle 60 Bilder) | Rumpf 37,1° zur Waagrechten, Hüfte 100,0°, Knie 158,0° in jedem Bild (Spanne je 0,0°); Lendenwirbel 0,0° gegen das Becken gedreht; Hautlinie der Lende −5,6°, im aufrechten Stand −10,6° (5,0° flacher), Linie höchstens 1,5 mm verschoben; Nacken 4° gebeugt, Blick 56° unter der Waagrechten; Ellbogen 169° → 69°; 0 Meldungen |
+| Quelle High Row: ExRx „Lever Isolateral Seated High Row“ | exrx.net und acefitness.org lässt das Netz der Arbeitsumgebung nicht zu; Vorbereitung, Ausführung und Hinweise der Seite über die Websuche gelesen |
+| Eintrag `high_row_machine` in `exercise-guides.v1.json` | Eintrag in `open` entfernt; Bestand: Ausführung 123, offen 2 |
+| High Row nach dem Abgleich (`render.py high_row_maschine --pruefen`, alle 60 Bilder) | Ellbogen 166,0° → 70,9° (unterwegs 69,6°), Oberarm am Ende 20,9° hinter dem Rumpf und 16 bis 35° zur Seite, Ellbogengelenk am Ende 1,0 cm hinter der Haut des Rückens (Probe: Haut am Ellbogen 4,0 cm dahinter), Unterarm am Ende 11° unter der Waagrechten, Unterarm zur Zugrichtung 29 bis 49° (mit der Achse vorn unten wie in D-518: 7 bis 74°), Handgelenk höchstens 10,5°, Brust 4,0 mm im Polster in jedem Bild, nichts durch das Polster, Körper und Shirt mindestens 36,4 mm von der Maschine, Arme mindestens 110 mm vom Brustpolster, 0 Meldungen; Prüfansichten angesehen |
+| Rudern an der Maschine mit dem Code von D-520 (`render.py rudern_maschine --pruefen --nur-messwerte`, alle 60 Bilder) | alle Werte der Prüfseite D-518 gleich (größte Abweichung 0); neu: Ellbogengelenk am Ende 1,1 cm vor der Haut des Rückens (Probe: Haut am Ellbogen 2,3 cm dahinter), Unterarm zur Zugrichtung 5 bis 35°; 0 Meldungen |
+| `render.py rudern_langhantel`, `rudern_maschine`, `high_row_maschine` | 3024 s, 4538 s, 4668 s für je 60 Bilder, 720 × 540 (zum Teil zwei Schleifen gleichzeitig, daneben Prüfläufe); erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Einträge `bent_over_row_barbell`, `machine_row`, `high_row_machine` in `public/uebungen/medien.json` | Alternativtexte 215, 197, 209 Zeichen |
+| `python3 tools/uebungen_medien_version.py` | 12 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py waagrechtes-ziehen-pplc …` (mit Namen) | 1440 × 360, 7,5 s, 250 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 26, Ausführung 123, offen 2; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden (Bildliste: 26 Einträge, 104 Dateien mit Prüfsumme) |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden (zweiter Lauf, Blender angehalten, 93,8 s); im ersten Lauf neben drei Blender-Prozessen 10 Zeitüberschreitungen (5 s) in Oberflächen-Tests von Übungen, Tagesaufgaben, Wasser und Player, ohne Bezug zu diesem Paket (275 s) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 104 von 104 Dateien |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 20,7 min; Übungsliste mit 26 Bildern |
+
+### Schulter und Brust isoliert in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Nach der Freigabe der Prüfseite D-519: Fliegende am Kabel in Schrittstellung mit leicht vorgeneigtem Oberkörper, Text dazu nach Human Kinetics, Reverse Butterfly mit Daumen oben; zwei Schleifen in der App (D-521).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Quellen zur Schrittstellung | ExRx „Cable Isolateral Standing Fly“ nennt keinen Stand; ACE „Standing Decline Cable Flyes“ Schrittstellung, Oberkörper senkrecht; Human Kinetics „Try this move: cable fly“ Schrittstellung, Füße etwa schulterbreit, Oberkörper leicht vor, Hände auf Höhe der Taille; über die Websuche gelesen (exrx.net und acefitness.org im Netz der Umgebung gesperrt) |
+| Fliegende in Schrittstellung (`render.py fliegende_kabel --pruefen`, alle 60 Bilder) | Ferse und Ballen beider Schuhe 0,0 mm über dem Boden, Sohle 0,0 mm verschoben, Knie vorn 165,0°, hinten 162,9°, Oberkörper 15° vor, Ellbogen 160° fest, Handgelenk höchstens 2,5°, D-Griff bis 20,4° gekippt, Streben mindestens 1,0 mm vor der Haut, Kabel mindestens 34 mm von der Haut, Hände am Ende 23,8 mm auseinander, Block bis 88,9 cm gehoben, 0 Meldungen; Prüfansichten angesehen |
+| Nachmessung mit dem Code von D-521 (`render.py reverse_butterfly`, `fliegende_kabel --pruefen --nur-messwerte`) | alle Werte wie auf der Prüfseite D-519 (Butterfly) und in der Prüfung der Schrittstellung (Fliegende), größte Abweichung 0; je 0 Meldungen |
+| `render.py reverse_butterfly`, `fliegende_kabel` | 6661 s, 6219 s für je 60 Bilder, 720 × 540 (gleichzeitig, daneben Prüfläufe; rund 23 min angehalten für die E2E-Tests von D-520); erstes und letztes Bild pixelgleich (Unterschied 0), Kontaktbögen angesehen |
+| Einträge `reverse_pec_deck`, `cable_fly` in `public/uebungen/medien.json` | Alternativtexte 222, 225 Zeichen |
+| `python3 tools/uebungen_medien_version.py` | 8 Dateien mit Prüfsumme im Namen |
+| `tools/uebungen_bewegung.py schulter-brust-pplc …` (mit Namen) | 960 × 360, 7,5 s, 194 KB; angesehen |
+| `tools/exercise_inventory.py`, `uebungen_familien.py --check`, `uebungen_animationsplan.py`, `feature_inventory_to_csv.py` | Visuals 28, Ausführung 123, offen 2; Plan mit dem neuen Stand; Konsistenzprüfung bestanden |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden (Bildliste: 28 Einträge, 112 Dateien mit Prüfsumme) |
+| `pnpm test` | 140 Dateien, 1273 Tests bestanden (90,2 s, ohne Blender) |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,7 KB, Übungsbilder 112 von 112 Dateien |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 469 bestanden, 151 übersprungen (WebKit nur in der CI), 0 fehlgeschlagen; 19,9 min; Übungsliste mit 28 Bildern |
+
+### Prüfseite „Senkrechtes Drücken“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schulterdrücken mit Langhantel stehend und mit Kurzhanteln sitzend; nur Werkzeug, Bilder und Dokumente (D-522).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Schulterdrücken sitzend | Werte aus der Planung (Griffe mittig zwischen Kinn und Ohr, Ellbogen 80°): Hanteln 94 cm auseinander, Handgelenk 31°; Werte der Schulterpresse (75 %, 65°, 30° vor); Hinterkopf 38 mm vor der Lehne, mit Brustkorb 10° und Kopf 14° 42 mm darin, mit 5° und 6° 1,0 mm darin; Finger 8,8 mm im Griff, mit dem Griff bei 65 % und 12° schräg 4,1 mm wie an den anderen Hanteln; Unterarm in der Mitte 18° schräg, mit spätem Weg nach innen höchstens 13° |
+| Probeläufe Schulterdrücken stehend | Stange genau über der Fußmitte: Schultergelenke 2,8 cm dahinter, Stange im Hals (jetzt 4 cm davor im Ausgang); Handgelenk mit der Stange quer in der Hand oben 25°, 11° schräg in der Mitte 23°, 6° schräg höchstens 21° |
+| `render.py schulterdruecken_kh_sitzend --pruefen`, `familie_bilder.py` | 60 Bilder, 0 Meldungen; 17 min und 6 min, neben den Schleifen |
+| `render.py schulterdruecken_langhantel --pruefen`, erster Lauf | „Stange zur Kleidung“ bis −299 mm (Innenseite des Kragens, bis 30 cm weit gesucht; jetzt bis 5 cm); Blick bis 14° nach oben mit dem Rumpf (jetzt Ausgleich im Kopf) |
+| `render.py schulterdruecken_langhantel --pruefen`, zweiter Lauf | Blick in jedem Bild 0,0°; Gesicht, Hals und Haare bis −1,2 mm (Bild 14, Stange an der Stirn in den Haaren) |
+| Haare in der Suche (`LUFT_HAARE` 5 mm, `--nur-messwerte`) | erster Versuch ohne Wirkung: Die Haare entstehen nach `bauen`, die Liste war leer (jetzt beim Lösen gesammelt); dann Gesicht, Hals und Haare mindestens 8,0 mm, Kopf bis 14,3°, Rumpf bis 13,5° zurück, 0 Meldungen |
+| `render.py schulterdruecken_langhantel --pruefen`, `familie_bilder.py`, letzter Lauf | 60 Bilder, 0 Meldungen; 60 Bilder, 0 Meldungen; 16 min und 3 min; Werte gleich wie in der Probe davor |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | stehend keine; sitzend eine Spitze von 1,1° im seitlichen Handgelenk (Bild 36: 2,1° → 3,3° → 2,3°), zu klein, um im Bild aufzufallen |
+| Messwerte | in `form-programme-report.md` 58.1 |
+| Prüfseite (`tools/uebungen_pruef_bild.py schulterdruecken_langhantel schulterdruecken_kh_sitzend --familie senkrechtes-druecken-pplc --titel "Senkrechtes Drücken (Dali’s PPLC)"`) | `familie-senkrechtes-druecken-pplc.webp`, 1480 × 3330, angesehen |
+| `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |
+
+### Prüfseite „Hüftbeuge“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Kreuzheben mit Langhantel vom Boden; nur Werkzeug, Bilder und Dokumente (D-523).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Kreuzheben | Schwerpunkt über der Fußmitte als Bedingung: Knie unten 35°; vorgegebener Verlauf des Knies: Schultern in der Mitte bis 30 cm vor der Stange; vorgegebene Lage der Schultern: zweite Lösung (Rumpf aufrecht, Knie 42°), jetzt die erste von 95° abwärts; Schultern gleich von unten hinter die Stange: bei 80 % des Wegs Knie noch 132° (jetzt erst ab 45 %) |
+| Abstand der Stange zu den Beinen | schnell ohne Vorzeichen: Stange im Schienbein galt als frei; Schicht von Punkten zu dünn; jetzt Kanten des Netzes geschnitten (vorn mit Vorzeichen), Shorts dazu; mit 6 mm Luft am verformten Netz bis 0,1 mm in der Haut, jetzt 10 mm |
+| `render.py kreuzheben_langhantel --pruefen`, `familie_bilder.py`, erster vollständiger Lauf | 60 Bilder, 0 Meldungen; 17 min und 3 min, neben den Schleifen; Knie an den Oberschenkeln 141,7° → 135,2° → 176° (beugt sich wieder, Bild 17 bis 20) |
+| „Stange zur Kleidung“ in Bild 20, 21 und 43: −49,5 / −35,5 / −49,0 mm | Probe ohne Vorzeichen (Stange alle 1 cm, 24 Richtungen) und mit Strahlen nach vorn und hinten: Stange 26,7 / 1,4 / 22,5 mm vor den Shorts, kein Stoff vor der Stange, Shirt weiter als 10 cm; das Vorzeichen kippte am Saum der Shorts; Messung jetzt ohne Vorzeichen von der Achse aus, alle 2 mm |
+| Knie gegen die Lage der Schultern (Probe, sechs Höhen, je fünf Lagen) | das Knie streckt sich mit den Schultern weiter vorn um 1,1 bis 1,5° je cm, in jeder Höhe gleichsinnig |
+| Knie nur strecken (`_vor_glatt`), `--nur-messwerte` | Knie 142,3° von Bild 17 bis 21, größter Rückgang 0,04°; Stange in Bild 21 0,6 mm im Saum der Shorts (Schnitt nur auf Höhe der Achse) |
+| Beine auf fünf Höhen geschnitten (`SCHNITTE`), `--nur-messwerte` | Stange mindestens 6,3 mm vor der Kleidung und 7,4 mm vor der Haut (ohne Hände), Knie 105,1° → 175,6°, größter Rückgang 0,07°, Schwerpunkt 4,9 bis 8,3 cm hinter der Fußmitte, 0 Meldungen |
+| `render.py kreuzheben_langhantel --pruefen`, `familie_bilder.py`, letzter Lauf | 60 Bilder, 0 Meldungen; 16 min und 3 min; Werte gleich wie in der Probe davor (größte Abweichung 0) |
+| Kleidung in der Hüftfalte | Saumband bis 12,8 mm in den Shorts (Bild 17), Shorts bis 5,4 mm im Shirt (Bild 44), von Bild zu Bild wechselnd; in den Prüfansichten nicht auffällig; wie D-490 |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | in der Haltung keine; gemeldet: Schwerpunkt in Bild 44 (4,9 cm zwischen 5,3 und 5,2 cm, ein flaches Minimum, beim Heben ebenso in Bild 19), Saumband in Bild 17 (Hüftfalte, s. o.), Stange zur Haut am verformten Netz in Bild 46 (14,1 mm zwischen 10,4 und 7,4 mm, Form der Knie; schnell gemessen 10,0 mm in jedem Bild) |
+| Messwerte | in `form-programme-report.md` 58.2 |
+| Prüfseite (`tools/uebungen_pruef_bild.py kreuzheben_langhantel --familie hueftbeuge-pplc --titel "Hüftbeuge (Dali’s PPLC)"`) | `familie-hueftbeuge-pplc.webp`, 1480 × 1700, angesehen |
+| `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |
+
+### Prüfseite „Rumpf“ für Dali’s PPLC · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Crunches am Kabel, kniend, an einem neuen Seilgriff; nur Werkzeug, Bilder und Dokumente (D-524).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Crunches am Kabel | Seil in Linie mit dem Unterarm: Handgelenk 99° (jetzt quer durch die Faust: 17,2°); Rolle 10 cm vor den Händen: am Ende hinter dem Kopf, Seil durch die Haare (jetzt 40 cm, Seil um den Hinterkopf, mindestens 1,8 mm); Richtung der Ellbogen fest im Raum (jetzt mit dem Brustkorb); Rumpf 25° vor und 70° eingerollt: Ellbogen 32 cm vor den Oberschenkeln, mit 35° und 90° 3,0 cm |
+| `render.py kabelcrunch_kniend --pruefen`, `familie_bilder.py` | 60 Bilder, 0 Meldungen; 20 min und 4 min, neben den Schleifen |
+| Sprünge in den Messwerten (Wert gegen beide Nachbarn, alle 60 Bilder) | eine: Saumband über den Shorts in Bild 17 (2,1 → −0,7 → 1,9 mm, Hüftfalte) |
+| Messwerte | in `form-programme-report.md` 58.3 |
+| Prüfseite (`tools/uebungen_pruef_bild.py kabelcrunch_kniend --familie rumpf-pplc --titel "Rumpf (Dali’s PPLC)"`) | `familie-rumpf-pplc.webp`, 1480 × 1604, angesehen |
+| `pnpm format:check`, `pnpm check:docs` | format:check und check:docs bestanden |
+
+### Befunde E1 bis E3 im Player · 05.11.2026, Cloud-Umgebung
+
+Geschütztes Leerzeichen zwischen Wort und Zahl, kleine Pause mit vollem Namen der nächsten Übung, Dialoge am Duo zugeklappt mittig im Fenster (D-525).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Unit `format.test.ts`, `screenCenter.test.ts` | 12 bestanden, davon 3 neu |
+| Unit `src/modules/training` | 31 Dateien, 208 Tests bestanden |
+| E2E `player-befunde-e.spec.ts`, `duo-player-befunde.spec.ts`, `duo-safe-area.spec.ts` (Chromium) | 14 bestanden, 8 übersprungen (Desktop-Profil oder nur Chromium) |
+| Gegenprobe: die drei neuen E2E-Tests gegen einen Build mit dem Stand davor (Chromium, Handy-Profil) | alle drei rot: E1 „Satz 1“ ohne geschütztes Leerzeichen nicht gefunden, E2 „Nächster Satz“ 99 px breit sichtbar, E3 Rückfrage 42 pt neben der Mitte des Fensters |
+| `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm check:docs` | bestanden |
+| `pnpm test` | 140 Dateien, 1.276 Tests bestanden |
+| `pnpm build`, `pnpm check:bundle` | bestanden; Startansicht 239,9 KB (Grenze 250 KB), Übungsbilder 112 von 112 |
+| `pnpm test:e2e` (Chromium, Blender angehalten) | 472 bestanden, 153 übersprungen, 1 fehlgeschlagen: `duo-player.spec.ts` „Pause zugeklappt in einer Zeile“ suchte `/Aufwärmsatz 2/` mit normalem Leerzeichen, die App setzt dort jetzt ein geschütztes (E1); Muster auf `/Aufwärmsatz\s2/` geändert, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen |
+
+### Rumpf in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Crunches am Kabel, kniend, als Schleife (D-526).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Messwerte | unverändert gegenüber der Prüfseite (D-524, `docs/testing.md` dort), Code der Übung seitdem nicht geändert |
+| Schleifen (`render.py`, je 60 Bilder) | erstes und letztes Bild pixelgleich; Crunches am Kabel, kniend MP4 65,6 KB, WebM 52,3 KB, Poster 8,9 KB, Vorschau 5,0 KB, geladen (MP4, Poster, Vorschau) 79,4 KB |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.274 von 1.276 neben zwei Blender-Renderläufen (zwei Tests der Tagesaufgaben mit Zeitüberschreitung, 5,1 s; die Datei allein 11 von 11 bestanden); Build, Startansicht 239,9 KB, Übungsbilder 116 von 116; E2E Chromium 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Scanner zugeklappt, Rückfrage zu Open Food Facts kam unter Last nicht; allein 3 von 3 bestanden); Naht pixelgleich |
+
+### Hüftbeuge in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Kreuzheben mit Langhantel, oben aufrecht ohne Zurücklehnen, als Schleife (D-527).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Erste Fassung von `_oben_aufrecht` | Suche fand oben keinen Abstand (−205 bis −84 mm bei jeder Neigung der Arme), Lauf mit 94 Meldungen und Rumpf −95,9°; Ursache: `_abstand_beine` überschrieb die Lage der Stange mit der letzten Schnittstelle (Variable `y` doppelt); behoben |
+| Probe oben nach der Behebung | Knie 176,0°, Rumpf −0,9°, Hüfte 175,4°, Arm −16,1°, Stange 7,8 cm vor der Fußmitte und 84,4 cm hoch, Schwerpunkt −0,1 cm, Stange 10,0 mm vor den Beinen; Schultern 2,6 cm vor der Hüfte, Hüftgelenk 8,8 cm hinter der Fußmitte |
+| `render.py kreuzheben_langhantel --pruefen --nur-messwerte` (alle 60 Bilder) | Knie 105,1 → 176,0°, nur streckend (141,8 bis 143,1° in Bild 17 bis 22); Hüfte 39,8 → 175,4°; Schwerpunkt 5,7 cm hinter (unten) bis 0,1 cm vor der Fußmitte (oben); Stange in jedem Bild 10,0 mm vor den Beinen (schnell), mindestens 8,7 mm vor der Kleidung, 7,3 mm vor der Haut; Lendenwirbel 0,0°, Hautlinie oben 0,2° flacher als im aufrechten Stand; Saumband bis 6,8 mm in den Shorts, Shorts bis 3,4 mm im Shirt; Sohle 0,14 mm verschoben; 0 Meldungen; 3 min 37 s |
+| Schleifen (`render.py`, je 60 Bilder) | erstes und letztes Bild pixelgleich; Kreuzheben mit Langhantel MP4 59,8 KB, WebM 49,2 KB, Poster 6,1 KB, Vorschau 5,3 KB, geladen (MP4, Poster, Vorschau) 71,1 KB |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.276 bestanden (140 Dateien); Build, Startansicht 239,9 KB, Übungsbilder 120 von 120; E2E Chromium (drei Worker) 473 bestanden, 153 übersprungen, 0 fehlgeschlagen; Naht pixelgleich |
+
+### Senkrechtes Drücken in der App · 05.11.2026, Cloud-Umgebung (Blender 4.2 als Python-Modul, Python 3.11)
+
+Schulterdrücken mit Langhantel stehend (Kopf zuerst, Rumpf höchstens 7°, Handgelenk) und mit Kurzhanteln sitzend als Schleifen (D-528).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Probeläufe Military Press über 21 Phasen (ein Blender-Prozess, Einstellungen nacheinander) | Ausgang 4 / 6 / 8 cm vor der Fußmitte: Stange bis 13,5 mm im Gesicht / 8,8 mm in den Haaren / frei (13,6 und 4,1 mm); Schräge der Stange in der Hand 0 / 6 / 12 / 14°: Handgelenk 25,0 / 18,5 / 12,2 / 9,4°; Seitenneigung des Unterarms 6 / 10 / 14 / 18°: Handgelenk 10,7 / 10,7 / 13,3 / 17,0°; Rumpf in allen höchstens 5,3 bis 6,1° |
+| `render.py schulterdruecken_langhantel --pruefen --nur-messwerte` (alle 60 Bilder) | Rumpf höchstens 5,45° zurück, oben −0,86°; Lendenwirbel 0,0°, Hautlinie 0,15 bis 0,78° hohler als im aufrechten Stand, höchstens 1,78 mm verschoben; Kopf bis 25,0°, Blick 0,0°; Handgelenk 3,9 bis 10,7°; Gesicht, Hals und Haare mindestens 6,29 mm; Schwerpunkt −0,69 bis 0,91 cm; Ellbogen 37,2 → 176,0°; Unterarm zur Senkrechten bis 35,1°; 0 Meldungen; 7 min |
+| Schleifen (`render.py`, je 60 Bilder) | Naht beim Schulterdrücken mit Kurzhanteln pixelgleich; bei der Military Press weicht das letzte Bild um weniger als 0,1 px vom ersten ab (61 Pixel um mehr als 10 von 255, höchstens 30): Die Suche nach der Lage der Hüfte geht vom vorherigen Bild aus und endet nach Hin und Zurück 0,3 mm daneben (Ellbogen 37,2 statt 37,1°); in der Schleife nicht zu sehen; Schulterdrücken mit Langhantel, stehend MP4 46,9 KB, WebM 44,3 KB, Poster 6,8 KB, Vorschau 3,0 KB, geladen (MP4, Poster, Vorschau) 56,7 KB; Schulterdrücken mit Kurzhanteln, sitzend MP4 39,5 KB, WebM 33,7 KB, Poster 8,3 KB, Vorschau 3,4 KB, geladen (MP4, Poster, Vorschau) 51,1 KB |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.276 bestanden (140 Dateien); Build, Startansicht 239,9 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 472 bestanden, 153 übersprungen, 1 fehlgeschlagen (Zeittest der Startfläche, 1.371 statt höchstens 1.307 ms unter drei Workern; die Datei allein 18 von 18 bestanden) |
+
+### Übersicht Dali’s PPLC · 05.11.2026, Cloud-Umgebung
+
+Liste aller 25 Übungen mit Stand und Dateigrößen, was je Übung geladen wird, Bild in Player-Größe (D-529).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Was die App je Übung lädt (Code gelesen) | `demoFiles` lädt Poster und `loopFile` (MP4 zuerst, WebM nur, wenn MP4 nicht läuft), Listen das Vorschaubild; `vite.config.ts`: Übungsbilder nicht vorab, sondern beim ersten Abruf (runtimeCaching) |
+| Erreichbarkeit exrx.net und acefitness.org (curl ohne eigene Kennung, über den Proxy) | Verbindung steht (CONNECT 200); exrx.net 403 mit `cf-mitigated: challenge` (Cloudflare), www.acefitness.org 403 (Azure Front Door), acefitness.org 301 auf www; WebFetch: exrx.net nicht auflösbar; nicht umgangen |
+| `python3 tools/uebungen_programm_uebersicht.py dali_pplc --name dalis-pplc` | 25 Übungen, alle mit Schleife in der App; geladen zusammen 1.840,3 KB, alle Dateien 3.074,9 KB; je Übung geladen 36,0 KB (Unterarmstütz (Plank)) bis 116,6 KB (Beinpresse); Bild 1600 × 2494 px, angesehen |
+| Dasselbe für `compound_ab_4` | geladen 787,3 KB, alle Dateien 1.313,0 KB (wie D-501) |
+| Prüfungen vor dem Commit | Format und Dokumente bestanden; die App ist gegenüber D-528 unverändert (dort Unit-Tests 1.276 bestanden und E2E vollständig), deshalb E2E nur für die Übungsliste: e2e/uebungen.spec.ts 17 bestanden, 3 übersprungen |
+
+### Sätze in Dali’s PPLC · 06.11.2026, Cloud-Umgebung
+
+Vor jeder Übung ein Aufwärmsatz, Wochen 1–3 drei Arbeitssätze, Infotext (D-531).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py` | `programs.v1.json` und `docs/programs.md` neu; 163 Tage mit `warmupTarget` je Übung; 21 Wochen, 84 Trainingstage wie bisher |
+| `programs.test.ts`, `sampleTemplates.test.ts` | 21 bestanden; gegen den Stand davor (Daten, Schema und `buildSets` von HEAD) 4 rot: Infotext, Satzzahl je Woche, Aufwärmsatz je Übung, Ziel der Aufwärmsätze |
+| E2E `programs.spec.ts` (Chromium) | 10 bestanden, darunter „jede Übung mit Aufwärmsatz, in Woche 1 drei Arbeitssätze“: Push zeigt „0 von 28 Sätzen“ (vorher wären es 15) |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.277 von 1.278 im ersten Lauf (programs-ui.test.tsx erwartete den alten Infotext; angepasst, danach die Datei 11 von 11); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium (drei Worker) 475 bestanden, 153 übersprungen, 0 fehlgeschlagen; Gegenprobe: die vier neuen und geänderten Unit-Tests gegen den Stand davor rot |
+
+### Dali’s PPLC ohne Beinbeuger sitzend · 06.11.2026, Cloud-Umgebung
+
+Machine Seated Leg Curl aus dem Programm, Übung und Animation bleiben in der Bibliothek (D-532).
+
+| Nachweis | Ergebnis |
+|---|---|
+| `python3 tools/programs_build.py` | Legs-Tag mit sieben Übungen in allen 21 Wochen; 24 Übungen im Programm |
+| `programs.test.ts` | 12 bestanden; gegen die Daten davor 2 rot (Übungen des Legs-Tags, neuer Test „ohne Machine Seated Leg Curl“) |
+| `python3 tools/uebungen_programm_uebersicht.py dali_pplc --name dalis-pplc` | 24 Übungen, alle mit Schleife; geladen zusammen 1.752,8 KB, alle Dateien 2.926,1 KB; Bild 1600 × 2150 px |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 211 bestanden (31 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Programme, Vorlagen, Programmliste, eigene Programme und Übungen 43 bestanden, 5 übersprungen, 0 fehlgeschlagen (die ganze Suite lief zu D-531 mit denselben übrigen Dateien) |
+
+### Rechte Spalte in der Pause · 06.11.2026, Cloud-Umgebung
+
+Duo aufgeklappt: rechts auch in der Pause Animation und „Jetzt“, die Karte „Als Nächstes“ entfällt (D-533).
+
+| Nachweis | Ergebnis |
+|---|---|
+| E2E `duo-player-befunde.spec.ts` „C: In der Pause zeigt die rechte Spalte dasselbe …“ (Chromium, Duo quer 867 × 669 wie am Gerät und 1180 × 820) | gegen den Build davor rot („Jetzt“ in der Pause nicht vorhanden), mit der Änderung grün |
+| Player-Tests (`src/modules/training/ui/player`) | 30 bestanden (5 Dateien); `useFittingRows` mit seinen Tests entfernt |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Player-Tests 30 bestanden (5 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium für Player, Pause, Duo, Wiedergabe und Übungen (9 Dateien) 55 bestanden, 24 übersprungen, 1 fehlgeschlagen: `uebungen-wiedergabe.spec.ts` „Rahmen und „Jetzt“ gleich groß“ fand nach dem letzten Satz Pause und „Alle Sätze erledigt“ zugleich (gewollt, D-533); Abfrage angepasst, danach bestanden; der neue Test C gegen den Build davor rot |
+
+### Rand der Karten am Duo quer · 06.11.2026, Cloud-Umgebung
+
+Der Rand der Karten läuft ganz unter dem Kopf durch (D-534).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Duo quer nachgestellt (867 × 669), alle Scrollbereiche gelistet | nur `#seite` (0 bis 867 px breit); linke Spalte 24 bis 483 px, rechte 507 bis 843 px; Bild: neben dem Kopf eine graue Linie bei 483 px, solange eine Karte darunter liegt |
+| E2E `duo-player-befunde.spec.ts` „Karten laufen ganz unter dem Kopf durch …“ (Chromium Desktop und Handy) | mit dem CSS davor 2 rot (Streifen neben dem Kopf verändert), mit der Änderung 2 grün |
+| E2E `duo-player.spec.ts`, `duo-player-befunde.spec.ts`, `session-head.spec.ts`, `player-befunde-e.spec.ts`, `duo-safe-area.spec.ts`, `duo-feste-leisten.spec.ts` | 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (`duo-player.spec.ts` verlangte die rechte Kante des Kopfs genau an der Liste; jetzt bis 4 px darüber, danach die Datei 5 bestanden, 5 übersprungen) |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium Duo und Player (6 Dateien) 28 bestanden, 19 übersprungen, 1 fehlgeschlagen (Kante des Kopfs, Test angepasst, danach `duo-player.spec.ts` 5 bestanden, 5 übersprungen); der neue Test mit dem CSS davor 2 rot, mit der Änderung 2 grün |
+
+### Kleine Pause · 06.11.2026, Cloud-Umgebung
+
+Spannen bleiben zusammen, die Spaltenköpfe liegen nicht mehr unter der Pause (D-535).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Bild der kleinen Pause am iPhone hoch und am Duo zugeklappt, vorher | „Ziel 6–“ am Zeilenende, „10“ darunter; Spaltenköpfe 72 px (iPhone) bzw. 117 px (Duo) unter dem Kopf mit der Pause |
+| Unit `format.test.ts` | 6 bestanden; mit `keepNumbersTogether` davor 3 rot |
+| E2E `player-befunde-e.spec.ts`, die zwei neuen Tests (Chromium Handy) | gegen den Build davor beide rot (Spanne über 2 Zeilen; Spaltenköpfe bei 220 px, Kopf bis 293 px), danach grün |
+| Lage nach drei Sätzen, Duo zugeklappt, zweites Training mit Vorwerten | Kopf bis 192 px, Spaltenköpfe klebend 192 bis 213 px, aktiver Satz 291 bis 399 px, Fußleiste ab 614 px |
+| E2E Player, Pause, Scrollen, Tastatur, Auf- und Zuklappen (12 Dateien) | in vier Durchgängen angepasst: Spaltenköpfe nur beim Satzwechsel und in der Pause zeigen (D-375), klebend nur in der Pause (D-391), `duo-resize.spec.ts` rechnet mit ihnen; zuletzt 65 bestanden, 46 übersprungen, 1 fehlgeschlagen (`duo-resize.spec.ts` Erwartung), nach der Anpassung die Datei 4 bestanden, 4 übersprungen |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Trainings 208 bestanden (30 Dateien); Build, Startansicht 240,0 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (15,2 min) |
+
+### Nachtrag zu D-533 nach der CI (WebKit) · 06.11.2026, Cloud-Umgebung
+
+CI-Lauf 42189209043 zu `9bc2bf0`: Chromium grün; WebKit 433 bestanden, 196 übersprungen, 1 fehlgeschlagen, Test C aus `duo-player-befunde.spec.ts` mit „browserContext.newCDPSession: CDP session is only available in Chromium“.
+
+| Nachweis | Ergebnis |
+|---|---|
+| Test C ohne Chrome-Protokoll, nur mit der Fenstergröße | Chromium Desktop und Handy: `duo-player-befunde.spec.ts` 11 bestanden, 3 übersprungen; gegen den Build vor D-533 weiter rot („Jetzt“ in der Pause nicht vorhanden); WebKit prüft die CI |
+
+### Schleifen Bild für Bild · 06.11.2026, Cloud-Umgebung
+
+Alle 24 Schleifen von Dali’s PPLC Bild für Bild geprüft; Military Press, Kreuzheben und Bankdrücken mit Kurzhanteln (flach und schräg) neu, Naht der MP4 ohne Zucken (D-536).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Bahnen am Stand davor (größte Änderung je Bild, px je Bild²) | Military Press 67,5 (Unterarm, Bild 16), Kreuzheben 28,9 (Haare, Bild 42), Bankdrücken mit Kurzhanteln 12,4, Schrägbank 8,3; die übrigen 20 bis 2,9 |
+| Videos am Stand davor | Military Press springt in MP4 und WebM (Übergang 83 gegen 45 bei den Nachbarn); Naht in der Pause in 28 MP4 über 40 Pixel (bis 472 Pixel, bis 29 Stufen), WebM 0 |
+| Kreuzheben, Varianten je Bild gemessen | Schultern wie bisher, nur der Saum gibt nach: 25,2 px (Kopf springt weiter), dazu die Neigung aufgefüllt: 21,9 px; Schultern geglättet ohne Auffüllen: 9,3 px (Schienbein stockt); geglättet und aufgefüllt, Saum 1,2 cm auf 6 cm: 7,0 px; Saum 1,5 cm auf 10 cm: 6,0 px, aber die Stange 3 mm im Stoff; gewählt Saum 1 cm auf 10 cm: 6,6 px, am Saum 1,3 mm Luft, vorher bis 23,5 mm |
+| Bankdrücken mit Kurzhanteln, Varianten | nach dem Weg des Griffs 8,0 px; dazu der ganze Weg des Ellbogens 5,7 px; nach dem Ellbogenwinkel 12,2 px (die Hände eilen); gewählt 0,4 des Ellbogenwegs: 5,2 px (Schrägbank 3,1) |
+| Military Press, Werte | Handgelenk seitlich höchstens 9,6°, gesamt 10,4°, Rumpf höchstens 3,8°; größte Änderung 3,1 px |
+| Naht nach dem Neukodieren | In der Pause höchstens 15 Pixel über 8 Stufen (Beinpresse), Military Press 11, die übrigen 0 bis 8; WebM 0 bis 3; Rudern am Kabel bewegt sich durch die Naht (MP4 177, WebM 147 Pixel), dort ohne Sprung. MP4 aller 32 zusammen 1.883,9 → 2.077,3 KB (+10,3 %) |
+| Unit `schleifen.test.ts` mit den neuen Messungen | 5 bestanden; Übungsmodul 97 bestanden (11 Dateien) |
+| Gegenprobe `schleifen.test.ts` mit den Messungen des Stands davor | 3 von 5 rot: Sprung (Military Press, MP4 und WebM), 28 Nähte, Bahnen (Military Press 67,5, Kreuzheben 28,9, Bankdrücken 12,4, Schrägbank 8,3 px) |
+| Start im Player und in den Details | Player aufgeklappt (867 × 669): 24 Übungen, 48 Starts und Wechsel, 13 bis 135 ms; zugeklappt (382 × 678): 42 bis 106 ms, sobald „Jetzt“ im Bild ist (44 von 48 lagen nach dem Wechsel über dem Bildrand, dort steht die Schleife bis zum Hochscrollen); Details: 24 Übungen, 25 bis 138 ms; immer die MP4 |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests des Übungsmoduls 97 bestanden (11 Dateien, darunter `schleifen.test.ts` mit 5 Tests); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite: 479 bestanden, 155 übersprungen, 0 fehlgeschlagen (14,9 min) |
+
+### Gleiche Satznamen · 07.11.2026, Cloud-Umgebung
+
+Entscheidung des Produktinhabers: Der Aufwärmsatz heißt überall „Aufwärmsatz“, danach „Arbeitssatz 1 von 3“ usw.; die kleine Pause zugeklappt bleibt mit Uhr und Knöpfen (D-537).
+
+| Nachweis | Ergebnis |
+|---|---|
+| Unit `setNames.test.ts` (neu) | 3 bestanden: ein Aufwärmsatz ohne Zahl, danach „Arbeitssatz 1 von 3“ bis „3 von 3“; mehrere Aufwärm- und Drop-Sätze gezählt, ein einziger Arbeitssatz ohne Zahl; Stelle je Typ wie die Ziffern der Satzliste |
+| Unit Training (`src/modules/training`) | 212 bestanden (31 Dateien), darunter in `player-ui.test.tsx` der neue Test „nennt jeden Satz in „Jetzt“, in der Pause und in der Satzliste gleich“ |
+| Gegenprobe Unit: die neuen und geänderten Tests gegen den Code davor | 14 rot in 4 Dateien: der neue Test („Jetzt“ zeigte „Aufwärmsatz · Satz 1 von 5“), die Namen in Player, Verlauf und Nachtragen; `setNames.test.ts` ohne das Modul |
+| E2E `satznamen.spec.ts` (neu), Chromium Handy | 2 bestanden: Duo aufgeklappt 867 × 669, Dali’s PPLC Push: „Jetzt“, Pause und hervorgehobener Satz nennen nach dem Aufwärmsatz und den Arbeitssätzen 1 und 2 jeweils denselben Namen, „Arbeitssatz 1 von 3“ bis „3 von 3“, „Satz … von …“ steht nirgends mehr; iPhone 390 × 844: Pause und danach „Jetzt“ „Arbeitssatz 1 von 3“ |
+| Gegenprobe E2E gegen den Build davor | 3 rot: beide Tests aus `satznamen.spec.ts` und E1 in `player-befunde-e.spec.ts`; „Jetzt“ zeigte „Aufwärmsatz · Satz 1 von 4 · Ziel 8–10“ |
+| E2E der 11 betroffenen Dateien, Chromium | 64 bestanden, 22 übersprungen, 0 fehlgeschlagen |
+| E2E Chromium, ganze Suite (vor der Korrektur der Pause im Kopf) | 481 bestanden, 157 übersprungen, 0 fehlgeschlagen (12,0 min) |
+| Bilder vom Duo neu aufgenommen | aufgeklappt (867 × 669): in der kleinen Pause im Kopf stand „Dumbbell Bench Press, Arbeitssatz 2 von 3 ·…“, das Ziel passte nicht mehr in die zwei Zeilen; mit bis zu drei Zeilen steht „Ziel 6–10“ da, die Pause ist 75 statt 60 px hoch |
+| `satznamen.spec.ts`, neue Prüfung „Ziel in der Pause“ (letztes Zeichen in den sichtbaren Zeilen) | mit drei Zeilen bestanden; ohne die Korrektur rot: „Ziel in der Pause vor Arbeitssatz 1 von 3“ |
+| Prüfungen vor dem Commit | Format, Lint, Typen und Dokumente bestanden; Unit-Tests 1.285 bestanden (141 Dateien); Build, Startansicht 240,1 KB, Übungsbilder 128 von 128; E2E Chromium, ganze Suite mit der Korrektur der Pause: 481 bestanden, 157 übersprungen, 0 fehlgeschlagen (12,5 min); WebKit prüft die CI |

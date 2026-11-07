@@ -185,6 +185,18 @@ describe('Farbtokens', () => {
     expect(worst).toBeGreaterThanOrEqual(4.5);
   });
 
+  it.each(MODES)(
+    '%s: Symbol zum Wiederholen auf der Animation erreicht 4,5:1, auch über Hellem (D-497)',
+    (_mode, tokens) => {
+      // Die Scheibe liegt auf dem dunklen Grund der Animation, im ungünstigsten Fall auf einem
+      // hellen Teil des Bilds (Gerät, Figur).
+      for (const below of [opaque(token(tokens, 'media-bg')), [255, 255, 255] as Rgb]) {
+        const disc = over(token(tokens, 'media-control'), below);
+        expect(ratio(opaque(token(tokens, 'media-control-fg')), disc)).toBeGreaterThanOrEqual(4.5);
+      }
+    },
+  );
+
   it.each(MODES)('alle Datenreihen erreichen %s 3:1', (_mode, tokens) => {
     for (let i = 1; i <= 8; i++) {
       expect(minContrast(tokens, `data-${String(i)}`, 'surface')).toBeGreaterThanOrEqual(3);
